@@ -86,7 +86,16 @@
   ["meta.tag.r",">"]
 ],[
    "start",
-  ["text","        Only {{ product.price | format_as_money }}"]
+  ["text","        Only "],
+  ["variable","{{"],
+  ["text"," "],
+  ["identifier","product"],
+  ["text","."],
+  ["identifier","price"],
+  ["text"," | "],
+  ["identifier","format_as_money"],
+  ["text"," "],
+  ["variable","}}"]
 ],[
    "start"
 ],[
@@ -156,7 +165,15 @@
   ["meta.tag","<"],
   ["meta.tag.tag-name","p"],
   ["meta.tag.r",">"],
-  ["text"," The word \"tobi\" in uppercase: {{ 'tobi' | upcase }} "],
+  ["text"," The word \"tobi\" in uppercase: "],
+  ["variable","{{"],
+  ["text"," "],
+  ["string","'tobi'"],
+  ["text"," | "],
+  ["support.function","upcase"],
+  ["text"," "],
+  ["variable","}}"],
+  ["text"," "],
   ["meta.tag","</"],
   ["meta.tag.tag-name","p"],
   ["meta.tag.r",">"]
@@ -165,7 +182,15 @@
   ["meta.tag","<"],
   ["meta.tag.tag-name","p"],
   ["meta.tag.r",">"],
-  ["text","The word \"tobi\" has {{ 'tobi' | size }} letters! "],
+  ["text","The word \"tobi\" has "],
+  ["variable","{{"],
+  ["text"," "],
+  ["string","'tobi'"],
+  ["text"," | "],
+  ["support.function","size"],
+  ["text"," "],
+  ["variable","}}"],
+  ["text"," letters! "],
   ["meta.tag","</"],
   ["meta.tag.tag-name","p"],
   ["meta.tag.r",">"]
@@ -174,7 +199,19 @@
   ["meta.tag","<"],
   ["meta.tag.tag-name","p"],
   ["meta.tag.r",">"],
-  ["text","Change \"Hello world\" to \"Hi world\": {{ 'Hello world' | replace: 'Hello', 'Hi' }} "],
+  ["text","Change \"Hello world\" to \"Hi world\": "],
+  ["variable","{{"],
+  ["text"," "],
+  ["string","'Hello world'"],
+  ["text"," | "],
+  ["support.function","replace"],
+  ["text",": "],
+  ["string","'Hello'"],
+  ["text",", "],
+  ["string","'Hi'"],
+  ["text"," "],
+  ["variable","}}"],
+  ["text"," "],
   ["meta.tag","</"],
   ["meta.tag.tag-name","p"],
   ["meta.tag.r",">"]
@@ -183,7 +220,17 @@
   ["meta.tag","<"],
   ["meta.tag.tag-name","p"],
   ["meta.tag.r",">"],
-  ["text","The date today is {{ 'now' | date: \"%Y %b %d\" }} "],
+  ["text","The date today is "],
+  ["variable","{{"],
+  ["text"," "],
+  ["string","'now'"],
+  ["text"," | "],
+  ["support.function","date"],
+  ["text",": "],
+  ["string","\"%Y %b %d\""],
+  ["text"," "],
+  ["variable","}}"],
+  ["text"," "],
   ["meta.tag","</"],
   ["meta.tag.tag-name","p"],
   ["meta.tag.r",">"]
@@ -311,7 +358,14 @@
   ["identifier","link_to_vendor"],
   ["text"," "],
   ["variable","}}"],
-  ["text"," / {{ product.title }}"]
+  ["text"," / "],
+  ["variable","{{"],
+  ["text"," "],
+  ["identifier","product"],
+  ["text","."],
+  ["identifier","title"],
+  ["text"," "],
+  ["variable","}}"]
 ],[
    "start",
   ["text","    "],
@@ -445,7 +499,14 @@
   ["variable","%}"]
 ],[
    "start",
-  ["text","      First column: {{ item.variable }}"]
+  ["text","      First column: "],
+  ["variable","{{"],
+  ["text"," "],
+  ["identifier","item"],
+  ["text","."],
+  ["identifier","variable"],
+  ["text"," "],
+  ["variable","}}"]
 ],[
    "start",
   ["text","    "],
@@ -456,7 +517,14 @@
   ["variable","%}"]
 ],[
    "start",
-  ["text","      Different column: {{ item.variable }}"]
+  ["text","      Different column: "],
+  ["variable","{{"],
+  ["text"," "],
+  ["identifier","item"],
+  ["text","."],
+  ["identifier","variable"],
+  ["text"," "],
+  ["variable","}}"]
 ],[
    "start",
   ["text","    "],

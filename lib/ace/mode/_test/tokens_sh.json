@@ -271,6 +271,18 @@
    "start"
 ],[
    "start",
+  ["support.function.builtin","echo"],
+  ["text"," $"],
+  ["paren.lparen","{"],
+  ["text","#"],
+  ["identifier","x"],
+  ["paren.lparen","["],
+  ["text","@"],
+  ["paren.rparen","]}"]
+],[
+   "start"
+],[
+   "start",
   ["keyword","if"],
   ["text"," "],
   ["variable","repo="],

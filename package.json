@@ -4,7 +4,7 @@
     "version": "1.0.0",
     "homepage" : "http://github.com/ajaxorg/ace",
     "engines": {"node": ">= 0.6.0"},
-    "author": "Fabian Jakobs <fabian@ajax.org>",
+    "author": "Fabian Jakobs <fabian@c9.io>",
     "main": "lib/ace",
     "repository" : {
         "type" : "git",

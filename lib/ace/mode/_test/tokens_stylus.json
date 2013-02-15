@@ -32,7 +32,8 @@
 ],[
    "start",
   ["entity.name.function.stylus","asdasdasdad"],
-  ["text","(df, ad"],
+  ["text","("],
+  ["text","df, ad"],
   ["keyword.operator.stylus","="],
   ["constant.numeric","23"],
   ["text",")"]

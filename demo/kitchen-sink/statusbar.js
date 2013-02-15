@@ -9,14 +9,14 @@ var StatusBar = function(editor, parentNode) {
 	this.element.style.cssText = "color: gray; position:absolute; right:0; border-left:1px solid";
 	parentNode.appendChild(this.element);
 
-	var statusUpdate = lang.deferredCall(function(){
+	var statusUpdate = lang.delayedCall(function(){
 		this.updateStatus(editor)
 	}.bind(this));
 	editor.on("changeStatus", function() {
-		statusUpdate.schedule(50);
+		statusUpdate.schedule(100);
 	});
 	editor.on("changeSelection", function() {
-		statusUpdate.schedule(50);
+		statusUpdate.schedule(100);
 	});
 };
 
