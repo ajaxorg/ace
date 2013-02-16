@@ -50,7 +50,7 @@
 ],[
    "start"
 ],[
-   "js-regex_allowed",
+   "js-start",
   ["text","  "],
   ["meta.tag","<"],
   ["meta.tag.tag-name","script"],
@@ -64,7 +64,7 @@
   ["identifier","CDATA"],
   ["paren.lparen","["]
 ],[
-   "js-regex_allowed",
+   "js-start",
   ["text","    "],
   ["storage.type","var"],
   ["text"," "],
@@ -75,7 +75,7 @@
   ["constant.numeric","0"],
   ["punctuation.operator",";"]
 ],[
-   "js-regex_allowed",
+   "js-start",
   ["text","    "],
   ["storage.type","var"],
   ["text"," "],
@@ -86,7 +86,7 @@
   ["constant.numeric","1"],
   ["punctuation.operator",";"]
 ],[
-   "js-regex_allowed",
+   "js-start",
   ["text","    "],
   ["storage.type","var"],
   ["text"," "],
@@ -97,28 +97,28 @@
   ["constant.numeric","100"],
   ["punctuation.operator",";"]
 ],[
-   "js-regex_allowed",
+   "js-start",
   ["text","    "],
   ["storage.type","var"],
   ["text"," "],
   ["identifier","hickory"],
   ["punctuation.operator",";"]
 ],[
-   "js-regex_allowed",
+   "js-start",
   ["text","    "],
   ["storage.type","var"],
   ["text"," "],
   ["identifier","dickory"],
   ["punctuation.operator",";"]
 ],[
-   "js-regex_allowed",
+   "js-start",
   ["text","    "],
   ["storage.type","var"],
   ["text"," "],
   ["identifier","dock"],
   ["punctuation.operator",";"]
 ],[
-   "js-regex_allowed",
+   "js-start",
   ["text","    "],
   ["storage.type","var"],
   ["text"," "],
@@ -127,7 +127,7 @@
 ],[
    "js-start"
 ],[
-   "js-regex_allowed",
+   "js-start",
   ["text","    "],
   ["storage.type","function"],
   ["text"," "],
@@ -138,7 +138,7 @@
   ["text"," "],
   ["paren.lparen","{"]
 ],[
-   "js-regex_allowed",
+   "js-start",
   ["text","        "],
   ["identifier","hickory"],
   ["text","  "],
@@ -156,7 +156,7 @@
   ["paren.rparen",")"],
   ["punctuation.operator",";"]
 ],[
-   "js-regex_allowed",
+   "js-start",
   ["text","        "],
   ["identifier","dickory"],
   ["text"," "],
@@ -174,7 +174,7 @@
   ["paren.rparen",")"],
   ["punctuation.operator",";"]
 ],[
-   "js-regex_allowed",
+   "js-start",
   ["text","        "],
   ["identifier","dock"],
   ["text"," "],
@@ -194,18 +194,18 @@
 ],[
    "js-start"
 ],[
-   "js-regex_allowed",
+   "js-start",
   ["text","        "],
   ["identifier","ShowAndGrowElement"],
   ["paren.lparen","("],
   ["paren.rparen",")"],
   ["punctuation.operator",";"]
 ],[
-   "js-start",
+   "js-no_regex",
   ["text","    "],
   ["paren.rparen","}"]
 ],[
-   "js-regex_allowed",
+   "js-start",
   ["text","    "],
   ["storage.type","function"],
   ["text"," "],
@@ -215,7 +215,7 @@
   ["text"," "],
   ["paren.lparen","{"]
 ],[
-   "js-regex_allowed",
+   "js-start",
   ["text","        "],
   ["identifier","timevalue"],
   ["text"," "],
@@ -228,7 +228,7 @@
   ["identifier","timer_increment"],
   ["punctuation.operator",";"]
 ],[
-   "js-start",
+   "js-no_regex",
   ["text","        "],
   ["keyword","if"],
   ["text"," "],
@@ -240,7 +240,7 @@
   ["identifier","max_time"],
   ["paren.rparen",")"]
 ],[
-   "js-regex_allowed",
+   "js-start",
   ["text","            "],
   ["keyword","return"],
   ["punctuation.operator",";"]
@@ -249,7 +249,7 @@
   ["text","        "],
   ["comment","// Scale the text string gradually until it is 20 times larger"]
 ],[
-   "js-regex_allowed",
+   "js-start",
   ["text","        "],
   ["identifier","scalefactor"],
   ["text"," "],
@@ -270,7 +270,7 @@
 ],[
    "js-start"
 ],[
-   "js-regex_allowed",
+   "js-start",
   ["text","        "],
   ["keyword","if"],
   ["text"," "],
@@ -284,7 +284,7 @@
   ["text"," "],
   ["paren.lparen","{"]
 ],[
-   "js-regex_allowed",
+   "js-start",
   ["text","            "],
   ["identifier","hickory"],
   ["punctuation.operator","."],
@@ -297,7 +297,7 @@
   ["paren.rparen",")"],
   ["punctuation.operator",";"]
 ],[
-   "js-regex_allowed",
+   "js-start",
   ["text","            "],
   ["identifier","hickory"],
   ["punctuation.operator","."],
@@ -327,13 +327,13 @@
   ["paren.rparen",")"],
   ["punctuation.operator",";"]
 ],[
-   "js-start",
+   "js-no_regex",
   ["text","        "],
   ["paren.rparen","}"]
 ],[
-   "js-start"
+   "js-no_regex"
 ],[
-   "js-regex_allowed",
+   "js-start",
   ["text","        "],
   ["keyword","if"],
   ["text"," "],
@@ -355,7 +355,7 @@
   ["text"," "],
   ["paren.lparen","{"]
 ],[
-   "js-regex_allowed",
+   "js-start",
   ["text","            "],
   ["identifier","dickory"],
   ["punctuation.operator","."],
@@ -368,7 +368,7 @@
   ["paren.rparen",")"],
   ["punctuation.operator",";"]
 ],[
-   "js-regex_allowed",
+   "js-start",
   ["text","            "],
   ["identifier","dickory"],
   ["punctuation.operator","."],
@@ -395,11 +395,11 @@
   ["paren.rparen",")"],
   ["punctuation.operator",";"]
 ],[
-   "js-start",
+   "js-no_regex",
   ["text","        "],
   ["paren.rparen","}"]
 ],[
-   "js-regex_allowed",
+   "js-start",
   ["text","        "],
   ["keyword","if"],
   ["text"," "],
@@ -413,7 +413,7 @@
   ["text"," "],
   ["paren.lparen","{"]
 ],[
-   "js-regex_allowed",
+   "js-start",
   ["text","            "],
   ["identifier","dock"],
   ["punctuation.operator","."],
@@ -426,7 +426,7 @@
   ["paren.rparen",")"],
   ["punctuation.operator",";"]
 ],[
-   "js-regex_allowed",
+   "js-start",
   ["text","            "],
   ["identifier","dock"],
   ["punctuation.operator","."],
@@ -455,17 +455,17 @@
   ["paren.rparen",")"],
   ["punctuation.operator",";"]
 ],[
-   "js-start",
+   "js-no_regex",
   ["text","        "],
   ["paren.rparen","}"]
 ],[
-   "js-start"
+   "js-no_regex"
 ],[
-   "js-start",
+   "js-no_regex",
   ["text","        "],
   ["comment","// Call ShowAndGrowElement again <timer_increment> milliseconds later."]
 ],[
-   "js-start",
+   "js-no_regex",
   ["text","        "],
   ["identifier","setTimeout"],
   ["paren.lparen","("],
@@ -475,11 +475,11 @@
   ["identifier","timer_increment"],
   ["paren.rparen",")"]
 ],[
-   "js-start",
+   "js-no_regex",
   ["text","    "],
   ["paren.rparen","}"]
 ],[
-   "js-start",
+   "js-no_regex",
   ["text","    "],
   ["variable.language","window"],
   ["punctuation.operator","."],

@@ -20,7 +20,9 @@
   ["punctuation.operator","."],
   ["identifier","WriteLine"],
   ["paren.lparen","("],
-  ["string","\"Hello World\""],
+  ["string.start","\""],
+  ["string","Hello World"],
+  ["string.end","\""],
   ["paren.rparen",")"],
   ["punctuation.operator",";"]
 ],[

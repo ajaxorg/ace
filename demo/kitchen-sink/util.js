@@ -40,6 +40,10 @@ var Renderer = require("ace/virtual_renderer").VirtualRenderer;
 var Editor = require("ace/editor").Editor;
 var MultiSelect = require("ace/multi_select").MultiSelect;
 
+exports.createEditor = function(el) {
+    return new Editor(new Renderer(el));
+}
+
 exports.createSplitEditor = function(el) {
     if (typeof(el) == "string")
         el = document.getElementById(el);
@@ -54,8 +58,8 @@ exports.createSplitEditor = function(el) {
     el.style.position = "relative";
     var split = {$container: el};
 
-    split.editor0 = split[0] = new Editor(new Renderer(e0, require("ace/theme/textmate")));
-    split.editor1 = split[1] = new Editor(new Renderer(e1, require("ace/theme/textmate")));
+    split.editor0 = split[0] = new Editor(new Renderer(e0));
+    split.editor1 = split[1] = new Editor(new Renderer(e1));
     split.splitter = s;
 
     MultiSelect(split.editor0);
