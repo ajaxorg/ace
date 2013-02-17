@@ -15,7 +15,7 @@
   ["meta.tag.tag-name.script","script"],
   ["meta.tag.r",">"]
 ],[
-   "js-regex_allowed",
+   "js-start",
   ["text","        "],
   ["storage.type","var"],
   ["text"," "],
@@ -26,7 +26,7 @@
   ["string","\"abc\""],
   ["punctuation.operator",";"]
 ],[
-   "js-regex_allowed",
+   "js-start",
   ["text","        "],
   ["storage.type","function"],
   ["text"," "],
@@ -34,7 +34,7 @@
   ["text"," "],
   ["paren.lparen","{"]
 ],[
-   "js-start",
+   "js-no_regex",
   ["text","        "],
   ["paren.rparen","}"]
 ],[

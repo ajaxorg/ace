@@ -14,6 +14,7 @@ var EditSession = require("ace/edit_session").EditSession;
 var UndoManager = require("ace/undomanager").UndoManager;
 
 var DebugTokenizer = require("ace/tokenizer_dev").Tokenizer;
+var Tokenizer = require("ace/tokenizer").Tokenizer;
 
 // createEditor
 var splitEditor = window.splitEditor = util.createSplitEditor("editor");
@@ -74,6 +75,33 @@ util.bindDropdown(modeEl, function(value) {
     });
 });
 
+document.getElementById("syncToMode").onclick = function() {
+    docEl.value = modelist.modesByName[modeEl.value].desc;
+    docEl.onchange();
+    run();
+}
+document.getElementById("perfTest").onclick = function() {
+    var lines = editor2.session.doc.getAllLines()
+    if (!lines.length)
+        return
+    while (lines.length < 1000) {
+        lines = lines.concat(lines)
+    }
+
+    var tk = new Tokenizer(currentRules);
+    var testPerf = function(lines, tk){
+        var state = "start"
+        for (var i=0, l = lines.length; i <l; i++) {
+            state = tk.getLineTokens(lines[i], state).state
+        }
+    }
+
+    var t = performance.now();
+    testPerf(lines, tk);
+    t = t - performance.now(t);
+    log("tokenized " + lines.length + " lines in " + t + " ms");
+}
+
 util.fillDropdown("themeEl", {
     bright: [
         "chrome", "clouds", "crimson_editor", "dawn", "dreamweaver", "eclipse", "github",
@@ -118,24 +146,50 @@ function run() {
     var path = "ace/mode/new";
     var deps = getDeps(src, path);
     src = src.replace("define(", 'define("' + path +'", ["require","exports","module",' + deps +'],');
-    src += ';require(["ace/mode/new"], continueRun, function(e){console.log(e);window.require.undef("ace/mode/new")})';
+    src += ';require(["ace/mode/new"], function(e) {\
+        try{continueRun(e)}catch(e){log(e)}\
+    }, function(e){\
+        log(e);\
+        window.require.undef("ace/mode/new")\
+    });';
     try {
         eval(src);
+        hideLog()
     } catch(e) {
-        console.log(e);
+        log(e);
     }
 }
+var currentRules
 var continueRun = function(rules) {
     rules = rules[Object.keys(rules)[0]];
+    currentRules = new rules().getRules()
     var Tokenizer = DebugTokenizer;
 
-    var tk = new Tokenizer(new rules().getRules());
+    var tk = new Tokenizer(currentRules);
     editor2.session.$mode.$tokenizer = tk;
     editor2.session.bgTokenizer.setTokenizer(tk);
     editor2.renderer.updateText();
 };
 
 editor1.commands.bindKey("ctrl-Return", run);
+
+var logEditor
+function log(e) {
+    console.log(e)
+    if (!logEditor) {
+        logEditor = util.createEditor(document.getElementById("consoleEditor"));
+        logEditor.session.setMode("ace/mode/javascript")
+        logEditor.session.setUseWorker(false)
+    }
+    logEditor.container.parentNode.style.display = '';
+    logEditor.resize()
+    logEditor.navigateFileEnd(e);
+    logEditor.insert(e + "\n");
+}
+function hideLog() {
+    if (logEditor)
+        logEditor.container.parentNode.style.display = 'none';
+}
 
 });
 
