@@ -252,7 +252,7 @@
 
 .ace_gutter-tooltip {
     background-color: #FFF;
-    background-image: -webkit-linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.1));
+    background-image: -webkit-linear-gradient(top, transparent, rgba(0, 0, 0, 0.1));
     background-image: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.1));
     border: 1px solid gray;
     border-radius: 1px;
@@ -342,9 +342,7 @@
     -webkit-box-shadow: 0 1px 1px rgba(255, 255, 255, 0.2);
     box-shadow: 0 1px 1px rgba(255, 255, 255, 0.2);
 }
-    
-    
-    
+
 .ace_fold-widget.ace_invalid {
     background-color: #FFB4B4;
     border-color: #DE5555;
