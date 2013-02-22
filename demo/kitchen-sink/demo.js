@@ -360,30 +360,31 @@ bindCheckbox("read_only", function(checked) {
     env.editor.setReadOnly(checked);
 });
 
-var secondSession = null;
 bindDropdown("split", function(value) {
     var sp = env.split;
-    if (value == "none") {
-        if (sp.getSplits() == 2) {
-            secondSession = sp.getEditor(1).session;
-        }
+    if (value == "none") {        
         sp.setSplits(1);
     } else {
         var newEditor = (sp.getSplits() == 1);
-        if (value == "below") {
-            sp.setOrientation(sp.BELOW);
-        } else {
-            sp.setOrientation(sp.BESIDE);
-        }
+        sp.setOrientation(value == "below" ? sp.BELOW : sp.BESIDE);        
         sp.setSplits(2);
 
         if (newEditor) {
-            var session = secondSession || sp.getEditor(0).session;
+            var session = sp.getEditor(0).session;
             var newSession = sp.setSession(session, 1);
             newSession.name = session.name;
         }
     }
 });
+
+function synchroniseScrolling() {
+    var s1 = env.split.$editors[0].session;
+    var s2 = env.split.$editors[1].session;
+    s1.on('changeScrollTop', function(pos) {s2.setScrollTop(pos)});
+    s2.on('changeScrollTop', function(pos) {s1.setScrollTop(pos)});
+    s1.on('changeScrollLeft', function(pos) {s2.setScrollLeft(pos)});
+    s2.on('changeScrollLeft', function(pos) {s1.setScrollLeft(pos)});
+}
 
 bindCheckbox("highlight_token", function(checked) {
     var editor = env.editor;
