@@ -62,7 +62,7 @@ var fillDropdown = util.fillDropdown;
 var bindCheckbox = util.bindCheckbox;
 var bindDropdown = util.bindDropdown;
 
-var ElasticTabstopsLite = require("ace/elastic_tabstops_lite").ElasticTabstopsLite;
+var ElasticTabstopsLite = require("ace/ext/elastic_tabstops_lite").ElasticTabstopsLite;
 
 /*********** create editor ***************************/
 var container = document.getElementById("editor-container");
