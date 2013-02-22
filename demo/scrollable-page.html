@@ -88,6 +88,7 @@ require("ace/commands/default_commands").commands.push({
 	exec: function(editor) {
 		dom.toggleCssClass(document.body, "fullScreen")
 		dom.toggleCssClass(editor.container, "fullScreen")
+        editor.setAutoScrollEditorIntoView()
 		editor.resize()
 	}
 })
@@ -96,7 +97,7 @@ require("ace/commands/default_commands").commands.push({
 var editor = ace.edit("editor");
 editor.setTheme("ace/theme/twilight");
 editor.session.setMode("ace/mode/javascript");
-
+editor.setAutoScrollEditorIntoView();
 
 var count = 1;
 function add() {
@@ -113,6 +114,8 @@ function add() {
     editor = ace.edit(el)
     editor.setTheme(theme)
     editor.session.setMode("ace/mode/javascript")
+    
+    editor.setAutoScrollEditorIntoView()
 
     editor.setValue([
         "this is editor number: ", count, "\n",
