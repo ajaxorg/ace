@@ -37,6 +37,9 @@
   ["text","test: # followed be only space is not a valid header"]
 ],[
    "start",
+  ["text","# "]
+],[
+   "start",
   ["text","test: only space between #s is not a valid header"]
 ],[
    "start",
@@ -62,6 +65,13 @@
   ["markup.underline","http://ajaxorg.github.com/ace/"],
   ["text",")"],
   ["markup.list"," "]
+],[
+   "listblock",
+  ["markup.list","* usually "],
+  ["string","*work*"],
+  ["markup.list"," fine ("],
+  ["string","_em_"],
+  ["markup.list",")"]
 ],[
    "listblock",
   ["markup.list","in lists"]
