@@ -27,7 +27,9 @@
    "start",
   ["identifier","bio"],
   ["text"," = "],
-  ["string","\"GitHub Cofounder & CEO\\nLikes tater tots and beer.\""]
+  ["string","\"GitHub Cofounder & CEO"],
+  ["constant.language.escape","\\n"],
+  ["string","Likes tater tots and beer.\""]
 ],[
    "start",
   ["identifier","dob"],
