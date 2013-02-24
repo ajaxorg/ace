@@ -123,6 +123,7 @@ var docs = {
     "docs/tex.tex": "Tex",
     "docs/textile.textile": {name: "Textile", wrapped: true},
     "docs/tmSnippet.tmSnippet": "tmSnippet",
+    "docs/toml.toml": "TOML",
     "docs/typescript.ts": "Typescript",
     "docs/vbscript.vbs": "VBScript",
     "docs/xml.xml": "XML",
