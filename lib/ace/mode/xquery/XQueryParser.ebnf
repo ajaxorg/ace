@@ -177,7 +177,9 @@ GroupByClause
 GroupingSpecList
          ::= GroupingSpec ( ',' GroupingSpec )*
 GroupingSpec
-         ::= '$' VarName ( TypeDeclaration? ':=' ExprSingle )? ( 'collation' URILiteral )?
+         ::= GroupingVariable ( TypeDeclaration? ':=' ExprSingle )? ( 'collation' URILiteral )?
+GroupingVariable
+         ::= '$' VarName
 OrderByClause
          ::= ( 'order' 'by' | 'stable' 'order' 'by' ) OrderSpecList
 OrderSpecList
@@ -773,6 +775,9 @@ FunctionName
            | 'constraint'
            | 'loop'
            | 'returning'
+           | 'object'
+           | 'json-item'
+           | 'array'
 NCName   ::= NCName^Token
            | 'after'
            | 'and'

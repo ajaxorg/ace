@@ -469,13 +469,13 @@ CharRef  ::= '&#' [0-9]+ ';'
            | '&#x' [0-9A-Fa-f]+ ';'
 Digits   ::= [0-9]+
 CommentContents
-         ::= ( Char+ - ( Char* ( '(:' | ':)' ) Char* ) ) & '('
+         ::= ( Char+ - ( Char* ( '(:' | ':)' ) Char* ) ) & '(:'
            | ( Char+ - ( Char* ( '(:' | ':)' ) Char* ) ) & $
-           | ( ( Char+ - ( Char* ( '(:' | ':)' | ' @' ) Char* ) ) - ( Char* '(' ) ) & ':'
+           | ( ( Char+ - ( Char* ( '(:' | ':)' ) Char* ) ) - ( Char* '(' ) ) & ':'
 DocTag   ::= ' @' NCName?
 DocCommentContents
          ::= ( ( Char+ - ( Char* ( '(:' | ':)' | ' @' ) Char* ) ) - ( Char* '(' ) ) & ':'
-           |   ( Char+ - ( Char* ( '(:' | ':)' | ' @' ) Char* ) )                   & '('
+           |   ( Char+ - ( Char* ( '(:' | ':)' | ' @' ) Char* ) )                   & '(:'
            |   ( Char+ - ( Char* ( '(:' | ':)' | ' @' ) Char* ) )                   & ' @'
            | ( Char+ - ( Char* ( '(:' | ':)' | ' @') Char* ) ) & $
 EOF      ::= $
