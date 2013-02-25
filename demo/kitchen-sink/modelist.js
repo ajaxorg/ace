@@ -68,6 +68,7 @@ var modesByName = {
     lua:        ["Lua"          , "lua"],
     luapage:    ["LuaPage"      , "lp"], // http://keplerproject.github.com/cgilua/manual.html#templates
     lucene:     ["Lucene"       , "lucene"],
+    lsl:        ["LSL"          , "lsl"],
     makefile:   ["Makefile"     , "^GNUmakefile|^makefile|^Makefile|^OCamlMakefile|make"],
     markdown:   ["Markdown"     , "md|markdown"],
     objectivec: ["Objective-C"  , "m"],
