@@ -38,7 +38,7 @@ var modesByName = {
     abap:       ["ABAP"         , "abap"],
     asciidoc:   ["AsciiDoc"     , "asciidoc"],
     c9search:   ["C9Search"     , "c9search_results"],
-    coffee:     ["CoffeeScript" , "^Cakefile|coffee|cf"],
+    coffee:     ["CoffeeScript" , "^Cakefile|coffee|cf|cson"],
     coldfusion: ["ColdFusion"   , "cfm"],
     csharp:     ["C#"           , "cs"],
     css:        ["CSS"          , "css"],
