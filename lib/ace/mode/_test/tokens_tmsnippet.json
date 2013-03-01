@@ -1,0 +1,132 @@
+[[
+   "start",
+  ["doc,comment","$$------------------------------------"]
+],[
+   "start"
+],[
+   "start",
+  ["text","tabTrigger: t"]
+],[
+   "start"
+],[
+   "start",
+  ["text","name: Heading 3"]
+],[
+   "start"
+],[
+   "start",
+  ["text","scope: language"]
+],[
+   "start"
+],[
+   "start",
+  ["text","content: -----------------------------"]
+],[
+   "start"
+],[
+   "start",
+  ["text","\\begin{"],
+  ["markup.list","${"],
+  ["constant.numeric","1"],
+  ["punctuation.operator",":"],
+  ["text","documnet"],
+  ["markup.list","}"],
+  ["text","}"]
+],[
+   "start"
+],[
+   "start",
+  ["text","    "],
+  ["markup.list","${"],
+  ["constant.numeric","2"],
+  ["punctuation.operator",":"],
+  ["keyword","$TM_SELECTED_TEXT"],
+  ["text",":some latex"],
+  ["markup.list","}"]
+],[
+   "start"
+],[
+   "start",
+  ["text","    "],
+  ["markup.list","${"],
+  ["constant.numeric","3"],
+  ["punctuation.operator",":"],
+  ["keyword","$TM_SELECTED_TEXT"],
+  ["text","/a/b/c"],
+  ["markup.list","}"]
+],[
+   "start"
+],[
+   "start",
+  ["text","    "],
+  ["markup.list","${"],
+  ["constant.numeric","4"],
+  ["punctuation.operator",":"],
+  ["markup.list","${"],
+  ["keyword","TM_SELECTED_TEXT"],
+  ["string.regex","/(.)/"],
+  ["string","\\"],
+  ["keyword","\\u"],
+  ["variable","$1"],
+  ["string.regex","/g:"],
+  ["text","7"],
+  ["markup.list","}}"]
+],[
+   "start"
+],[
+   "start",
+  ["text","\\end{"],
+  ["variable","$1"],
+  ["text","}"]
+],[
+   "start"
+],[
+   "start",
+  ["variable","$0"],
+  ["constant.language.escape","\\\\"],
+  ["text","$$"]
+],[
+   "start"
+],[
+   "start",
+  ["doc,comment","$$------------------------------------"]
+],[
+   "start"
+],[
+   "start",
+  ["text","tabTrigger: ^3"]
+],[
+   "start"
+],[
+   "start",
+  ["text","name: Heading 3"]
+],[
+   "start"
+],[
+   "start",
+  ["text","scope: language"]
+],[
+   "start"
+],[
+   "start",
+  ["text","content: -----------------------------"]
+],[
+   "start"
+],[
+   "start"
+],[
+   "start"
+],[
+   "start",
+  ["markup.list","${"],
+  ["keyword","TM_CURRENT_LINE"],
+  ["string.regex","/./"],
+  ["string","^"],
+  ["string.regex","/g"],
+  ["markup.list","}"]
+],[
+   "start"
+],[
+   "start",
+  ["doc,comment","$$------------------------------------"]
+]]
