@@ -196,6 +196,16 @@
     z-index: 6;
 }
 
+.ace_marker-layer .ace_bracket_bad {
+    position: absolute;
+    z-index: 6;
+}
+
+.ace_marker-layer .ace_bracket_start {
+    position: absolute;
+    z-index: 6;
+}
+
 .ace_marker-layer .ace_active-line {
     position: absolute;
     z-index: 2;
