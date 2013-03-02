@@ -40,6 +40,16 @@
 
 .ace-terminal-theme .ace_marker-layer .ace_bracket {
   margin: -1px 0 0 -1px;
+  border: 1px solid #0F0
+}
+
+.ace-terminal-theme .ace_marker-layer .ace_bracket_start {
+  margin: -1px 0 0 -1px;
+  border: 1px solid #0F0
+}
+
+.ace-terminal-theme .ace_marker-layer .ace_bracket_bad {
+  margin: -1px 0 0 -1px;
   border: 1px solid #F00
 }
 
