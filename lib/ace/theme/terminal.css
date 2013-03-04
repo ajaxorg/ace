@@ -48,7 +48,7 @@
   background: #090;
 }
 
-.ace-terminal-theme .ace_marker-layer .ace_bracket-bad {
+.ace-terminal-theme .ace_marker-layer .ace_bracket-unmatched {
   margin: -1px 0 0 -1px;
   border: 1px solid #900
 }
