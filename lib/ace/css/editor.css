@@ -196,12 +196,12 @@
     z-index: 6;
 }
 
-.ace_marker-layer .ace_bracket_bad {
+.ace_marker-layer .ace_bracket-unmatched {
     position: absolute;
     z-index: 6;
 }
 
-.ace_marker-layer .ace_bracket_start {
+.ace_marker-layer .ace_bracket-start {
     position: absolute;
     z-index: 6;
 }
