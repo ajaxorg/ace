@@ -40,17 +40,17 @@
 
 .ace-terminal-theme .ace_marker-layer .ace_bracket {
   margin: -1px 0 0 -1px;
-  border: 1px solid #0F0
+  background: #090;
 }
 
-.ace-terminal-theme .ace_marker-layer .ace_bracket_start {
+.ace-terminal-theme .ace_marker-layer .ace_bracket-start {
   margin: -1px 0 0 -1px;
-  border: 1px solid #0F0
+  background: #090;
 }
 
-.ace-terminal-theme .ace_marker-layer .ace_bracket_bad {
+.ace-terminal-theme .ace_marker-layer .ace_bracket-bad {
   margin: -1px 0 0 -1px;
-  border: 1px solid #F00
+  border: 1px solid #900
 }
 
 .ace-terminal-theme .ace_marker-layer .ace_active-line {
