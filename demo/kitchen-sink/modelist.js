@@ -65,6 +65,7 @@ var modesByName = {
     lisp:       ["Lisp"         , "lisp"],
     scheme:     ["Scheme"       , "scm|rkt"],
     liquid:     ["Liquid"       , "liquid"],
+    logicblox:  ["LogicBlox"    , "logic"],
     lua:        ["Lua"          , "lua"],
     luapage:    ["LuaPage"      , "lp"], // http://keplerproject.github.com/cgilua/manual.html#templates
     lucene:     ["Lucene"       , "lucene"],
