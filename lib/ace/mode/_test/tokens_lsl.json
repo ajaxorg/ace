@@ -1,0 +1,1680 @@
+[[
+   "start",
+  ["comment.line","//////////////////////////////////////////////////////////////////// "]
+],[
+   "start",
+  ["comment.line","//"]
+],[
+   "start",
+  ["comment.line","//  AbcText"]
+],[
+   "start",
+  ["comment.line","//  by Ange Capalini"]
+],[
+   "start",
+  ["comment.line","//  Originally Written  10/31/2011"]
+],[
+   "start",
+  ["comment.line","//  code released to the public domain"]
+],[
+   "start",
+  ["comment.line","// "]
+],[
+   "start",
+  ["comment.line","//////////////////////////////////////////////////////////////////// "]
+],[
+   "start",
+  ["text"," "]
+],[
+   "start",
+  ["text"," "]
+],[
+   "start",
+  ["comment.line","//=================================================================="]
+],[
+   "start",
+  ["comment.line","//               INSTRUCTIONS"]
+],[
+   "start",
+  ["comment.line","//=================================================================="]
+],[
+   "start",
+  ["comment.line","//"]
+],[
+   "start",
+  ["comment.line","//  - set Max Particles to 4096"]
+],[
+   "start",
+  ["comment.line","//  - create white cube \"board\" <15.500, 0.010, 0.800>"]
+],[
+   "start",
+  ["comment.line","//  - create red cube \"cursor\" <0.050, 0.010, 0.030> & drop AbcText"]
+],[
+   "start",
+  ["comment.line","//  - link cursor (child) to board (root)"]
+],[
+   "start",
+  ["comment.line","//  - send message <= 25 char. to chanel 20"]
+],[
+   "start",
+  ["comment.line","//  - that's all folk's"]
+],[
+   "start",
+  ["comment.line","//"]
+],[
+   "start",
+  ["comment.line","/////////////////////////////////////////////////////////////////////"]
+],[
+   "start",
+  ["text"," "]
+],[
+   "start",
+  ["text"," "]
+],[
+   "start",
+  ["comment.line","//==========================================="]
+],[
+   "start",
+  ["comment.line","//               CONSTANTS"]
+],[
+   "start",
+  ["comment.line","//==========================================="]
+],[
+   "start",
+  ["storage.type","float"],
+  ["text","  "],
+  ["identifier","Size_Point"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","0.1"],
+  ["punctuation.operator",";"],
+  ["text"," "],
+  ["comment.line","//pixel size"]
+],[
+   "start",
+  ["storage.type","string"],
+  ["text"," "],
+  ["identifier","Txt_Point"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["string.double","\"\""],
+  ["punctuation.operator",";"],
+  ["text","  "],
+  ["comment.line","//pixel texture"]
+],[
+   "start",
+  ["storage.type","vector"],
+  ["text"," "],
+  ["identifier","Color_Point"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["keyword.operator","<"],
+  ["text"," "],
+  ["constant.numeric","0"],
+  ["punctuation.operator",".,"],
+  ["text"," "],
+  ["constant.numeric","0"],
+  ["punctuation.operator",".,"],
+  ["text"," "],
+  ["constant.numeric","1"],
+  ["punctuation.operator","."],
+  ["text"," "],
+  ["keyword.operator",">"],
+  ["punctuation.operator",";"],
+  ["text"," "],
+  ["comment.line","//pixel color"]
+],[
+   "start",
+  ["storage.type","vector"],
+  ["text"," "],
+  ["identifier","Size_Affich"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["keyword.operator","<"],
+  ["constant.numeric","15.5"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["punctuation.operator","."],
+  ["constant.numeric","01"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["punctuation.operator","."],
+  ["constant.numeric","8"],
+  ["keyword.operator",">"],
+  ["punctuation.operator",";"],
+  ["text"," "],
+  ["comment.line","//display size"]
+],[
+   "start",
+  ["text"," "]
+],[
+   "start",
+  ["comment.line","//==========================================="]
+],[
+   "start",
+  ["comment.line","//           GLOBALS VARIABLES"]
+],[
+   "start",
+  ["comment.line","//==========================================="]
+],[
+   "start",
+  ["storage.type","list"],
+  ["text"," "],
+  ["identifier","Alphabet"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["paren.lparen","["],
+  ["text","   "],
+  ["string.double","\" \""],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"A\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.double","\"B\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.double","\"C\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.double","\"D\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.double","\"E\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.double","\"F\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.double","\"G\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.double","\"H\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.double","\"I\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.double","\"J\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.double","\"K\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.double","\"L\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.double","\"M\""],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"N\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.double","\"O\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.double","\"P\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.double","\"Q\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.double","\"R\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.double","\"S\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.double","\"T\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.double","\"U\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.double","\"V\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.double","\"W\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.double","\"X\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.double","\"Y\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.double","\"Z\""],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text"," "]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"a\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.double","\"b\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.double","\"c\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.double","\"d\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.double","\"e\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.double","\"f\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.double","\"g\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.double","\"h\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.double","\"i\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.double","\"j\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.double","\"k\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.double","\"l\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.double","\"m\""],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"n\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.double","\"o\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.double","\"p\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.double","\"q\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.double","\"r\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.double","\"s\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.double","\"t\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.double","\"u\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.double","\"v\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.double","\"w\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.double","\"x\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.double","\"y\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.double","\"z\""],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text"," "]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"0\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.double","\"1\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.double","\"2\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.double","\"3\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.double","\"4\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.double","\"5\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.double","\"6\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.double","\"7\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.double","\"8\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.double","\"9\""],
+  ["punctuation.operator",","],
+  ["text"," "]
+],[
+   "start",
+  ["text"," "]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\":\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.double","\"'\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.double","\",\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.double","\"!\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.double","\"?\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.double","\"#\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.double","\".\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.double","\"/\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.double","\"-\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.double","\"�\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.double","\"�\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.double","\"�\""],
+  ["text","     "],
+  ["paren.rparen","]"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["text"," "]
+],[
+   "start",
+  ["comment.line","//char matrix 6 x 5 points"]
+],[
+   "start",
+  ["storage.type","list"],
+  ["text"," "],
+  ["identifier","Matrices"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["paren.lparen","["],
+  ["text"," "],
+  ["string.double","\" \""],
+  ["punctuation.operator",","],
+  ["text"," "]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"011001001010010111101001000000\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["comment.line","//A"]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"111001001011100100101110000000\""],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"011001000010000100000110000000\""],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"111001001010010100101110000000\""],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"111001000011100100001110000000\""],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"111001000011100100001000000000\""],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"011101000010110100100111000000\""],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"100101001011110100101001000000\""],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"111000100001000010001110000000\""],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"001100001000010100100110000000\""],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"100101010011000101001001000000\""],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"100001000010000100001110000000\""],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"100011101110101100011000100000\""],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"100101101010110100101001000000\""],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"011001001010010100100110000000\""],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"111001001010010111001000000000\""],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"011001001010010100100110000010\""],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"111001001010010111001001000000\""],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"011101000001100000101110000000\""],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"111000100001000010000100000000\""],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"100101001010010100100110000000\""],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"100101001010100101000100000000\""],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"100011010110101101010101000000\""],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"100101001001100100101001000000\""],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"100101001001110000100110000000\""],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"111100001001100100001111000000\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["comment.line","//Z"]
+],[
+   "start",
+  ["text"," "]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"000000110010010100100111000000\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["comment.line","//a"]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"100001110010010100101110000000\""],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"000000110010000100000110000000\""],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"000100111010010100100111000000\""],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"000000111010010101000111000000\""],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"011001000011000100001000000000\""],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"011001001010010011100001001100\""],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"100001110010010100101001000000\""],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"100000000010000100001000000000\""],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"001000000000100001000010011000\""],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"100001001010100110101001000000\""],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"100001000010000100001000000000\""],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"000001101010101101011010100000\""],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"000001110010010100101001000000\""],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"000000110010010100100110000000\""],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"111001001010010111001000010000\""],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"011101001010010011100001000010\""],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"000001010011000100001000000000\""],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"000000111011000001101110000000\""],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"010001110001000010000100000000\""],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"000001001010010100100111000000\""],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"000001001010010100100110000000\""],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"000001010110101101010101000000\""],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"000001001001100011001001000000\""],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"100101001010010011100001001100\""],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"000001111000100010001111000000\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["comment.line","//z"]
+],[
+   "start",
+  ["text"," "]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"011001001010010100100110000000\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["comment.line","//0"]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"011000010000100001000010000000\""],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"111000001001100100001111000000\""],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"111000001001100000101110000000\""],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"001000110010100111100010000000\""],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"111101000011100000101110000000\""],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"011001000011100100100110000000\""],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"111100001000100010000100000000\""],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"011001001001100100100110000000\""],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"011001001001110000100110000000\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["comment.line","//9"]
+],[
+   "start",
+  ["text"," "]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"000000000000100000000010000000\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["comment.line","//:"]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"000100010000000000000000000000\""],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"000000000000000000100010000000\""],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"001000010000100000000010000000\""],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"001000101000010001000000000100\""],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"010101111101010111110101000000\""],
+  ["punctuation.operator",","],
+  ["text"," "]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"000000000000000000000010000000\""],
+  ["punctuation.operator",","],
+  ["text"," "]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"000010001000100010001000000000\""],
+  ["punctuation.operator",","],
+  ["text"," "]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"000000000001110000000000000000\""],
+  ["punctuation.operator",","],
+  ["text"," "]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"000100110010010101000111000000\""],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"010000111010010101000111000000\""],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","                    "],
+  ["string.double","\"010000110010010100100111000000\""],
+  ["text","  "],
+  ["comment.line","//�"]
+],[
+   "start",
+  ["text","                    "],
+  ["paren.rparen","]"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["text"," "]
+],[
+   "start",
+  ["storage.type","list"],
+  ["text","    "],
+  ["identifier","Particle_Parameters"],
+  ["keyword.operator","="],
+  ["paren.lparen","["],
+  ["paren.rparen","]"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["storage.type","vector"],
+  ["text","  "],
+  ["identifier","Origine"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["storage.type","string"],
+  ["text","  "],
+  ["identifier","Texte"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["storage.type","integer"],
+  ["text"," "],
+  ["identifier","id_Phrase"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["storage.type","integer"],
+  ["text"," "],
+  ["identifier","len_Phrase"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["storage.type","integer"],
+  ["text"," "],
+  ["identifier","id_Lettre"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["storage.type","string"],
+  ["text","  "],
+  ["identifier","Lettre"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["storage.type","string"],
+  ["text","  "],
+  ["identifier","matrice_Lettre"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["storage.type","vector"],
+  ["text","  "],
+  ["identifier","point_zero"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["storage.type","integer"],
+  ["text"," "],
+  ["identifier","x"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["storage.type","integer"],
+  ["text"," "],
+  ["identifier","z"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["text"," "]
+],[
+   "start",
+  ["comment.line","//==========================================="]
+],[
+   "start",
+  ["comment.line","//        SET PARTICLES"]
+],[
+   "start",
+  ["comment.line","//==========================================="]
+],[
+   "start",
+  ["text"," "]
+],[
+   "start",
+  ["identifier","init_particles"],
+  ["paren.lparen","("],
+  ["paren.rparen",")"],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text"," "]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","Particle_Parameters"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["paren.lparen","["],
+  ["text","  "]
+],[
+   "start",
+  ["text","           "],
+  ["identifier","PSYS_SRC_TEXTURE"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["identifier","Txt_Point"],
+  ["punctuation.operator",","],
+  ["text"," "]
+],[
+   "start",
+  ["text","           "],
+  ["identifier","PSYS_PART_START_SCALE"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["keyword.operator","<"],
+  ["text"," "],
+  ["identifier","Size_Point"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["identifier","Size_Point"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["constant.language","FALSE"],
+  ["text"," "],
+  ["keyword.operator",">"],
+  ["punctuation.operator",","],
+  ["text"," "]
+],[
+   "start",
+  ["text","           "],
+  ["identifier","PSYS_PART_END_SCALE"],
+  ["punctuation.operator",","],
+  ["text","   "],
+  ["keyword.operator","<"],
+  ["text"," "],
+  ["identifier","Size_Point"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["identifier","Size_Point"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["constant.language","FALSE"],
+  ["text"," "],
+  ["keyword.operator",">"],
+  ["punctuation.operator",","],
+  ["text"," "]
+],[
+   "start",
+  ["text","           "],
+  ["identifier","PSYS_PART_START_COLOR"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["identifier","Color_Point"],
+  ["punctuation.operator",","],
+  ["text","    "]
+],[
+   "start",
+  ["text","           "],
+  ["identifier","PSYS_PART_END_COLOR"],
+  ["punctuation.operator",","],
+  ["text","   "],
+  ["identifier","Color_Point"],
+  ["punctuation.operator",","],
+  ["text"," "]
+],[
+   "start",
+  ["text"," "]
+],[
+   "start",
+  ["text","           "],
+  ["identifier","PSYS_SRC_BURST_PART_COUNT"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["storage.type","integer"],
+  ["paren.rparen",")"],
+  ["constant.numeric","1"],
+  ["punctuation.operator",","],
+  ["text"," "]
+],[
+   "start",
+  ["text","           "],
+  ["identifier","PSYS_SRC_BURST_RATE"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["storage.type","float"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["constant.numeric","0.0"],
+  ["punctuation.operator",","],
+  ["text","  "]
+],[
+   "start",
+  ["text","           "],
+  ["identifier","PSYS_PART_MAX_AGE"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["storage.type","float"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["constant.numeric","30.0"],
+  ["punctuation.operator",","],
+  ["text"," "]
+],[
+   "start",
+  ["text"," "]
+],[
+   "start",
+  ["text","           "],
+  ["identifier","PSYS_SRC_PATTERN"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["storage.type","integer"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["constant.numeric","1"],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text"," "]
+],[
+   "start",
+  ["text","           "],
+  ["identifier","PSYS_PART_FLAGS"],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","           "],
+  ["identifier","PSYS_PART_EMISSIVE_MASK"]
+],[
+   "start",
+  ["text","           "],
+  ["paren.rparen","]"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["text"," "]
+],[
+   "start",
+  ["comment.line","//==========================================="]
+],[
+   "start",
+  ["comment.line","//          SET DISPLAY"]
+],[
+   "start",
+  ["comment.line","//==========================================="]
+],[
+   "start",
+  ["identifier","affichage"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["storage.type","string"],
+  ["text"," "],
+  ["identifier","phrase"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text"," "]
+],[
+   "start",
+  ["text","    "],
+  ["storage.type","integer"],
+  ["text"," "],
+  ["identifier","len_Phrase"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["support.function","llStringLength"],
+  ["paren.lparen","("],
+  ["identifier","phrase"],
+  ["paren.rparen",")"],
+  ["constant.numeric","-1"],
+  ["punctuation.operator",";"],
+  ["text","  "]
+],[
+   "start",
+  ["text","    "],
+  ["keyword.control","for"],
+  ["paren.lparen","("],
+  ["identifier","id_Phrase"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","0"],
+  ["punctuation.operator",";"],
+  ["text"," "],
+  ["identifier","id_Phrase"],
+  ["text"," "],
+  ["keyword.operator","<="],
+  ["text"," "],
+  ["identifier","len_Phrase"],
+  ["punctuation.operator",";"],
+  ["keyword.operator","++"],
+  ["identifier","id_Phrase"],
+  ["paren.rparen",")"],
+  ["paren.lparen","{"],
+  ["text"," "]
+],[
+   "start",
+  ["text","        "],
+  ["identifier","Lettre"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["support.function","llGetSubString"],
+  ["paren.lparen","("],
+  ["identifier","phrase"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["identifier","id_Phrase"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["identifier","id_Phrase"],
+  ["paren.rparen",")"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["text","        "],
+  ["identifier","id_Lettre"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["support.function","llListFindList"],
+  ["paren.lparen","("],
+  ["identifier","Alphabet"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["paren.lparen","["],
+  ["identifier","Lettre"],
+  ["paren.rparen","])"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["text","        "],
+  ["identifier","matrice_Lettre"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["support.function","llList2String"],
+  ["paren.lparen","("],
+  ["identifier","Matrices"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["identifier","id_Lettre"],
+  ["paren.rparen",")"],
+  ["punctuation.operator",";"],
+  ["text"," "]
+],[
+   "start",
+  ["text","        "],
+  ["identifier","z"],
+  ["keyword.operator","="],
+  ["constant.numeric","0"],
+  ["punctuation.operator",";"],
+  ["text"," "]
+],[
+   "start",
+  ["text","        "],
+  ["keyword.control","do"],
+  ["paren.lparen","{"],
+  ["text"," "]
+],[
+   "start",
+  ["text","            "],
+  ["identifier","x"],
+  ["keyword.operator","="],
+  ["constant.numeric","0"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["text","            "],
+  ["keyword.control","do"],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","                "],
+  ["keyword.control","if"],
+  ["paren.lparen","("],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["storage.type","integer"],
+  ["paren.rparen",")"],
+  ["support.function","llGetSubString"],
+  ["paren.lparen","("],
+  ["identifier","matrice_Lettre"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["identifier","x"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["constant.numeric","5"],
+  ["keyword.operator","*"],
+  ["identifier","z"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["identifier","x"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["constant.numeric","5"],
+  ["keyword.operator","*"],
+  ["identifier","z"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","                    "],
+  ["support.function","llSetLinkPrimitiveParamsFast"],
+  ["paren.lparen","("],
+  ["constant.language","LINK_THIS"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["paren.lparen","["],
+  ["constant.language","PRIM_POSITION"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["identifier","point_zero"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["keyword.operator","<"],
+  ["text"," "],
+  ["identifier","x"],
+  ["keyword.operator","*"],
+  ["identifier","Size_Point"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["constant.numeric","0.0"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["keyword.operator","-"],
+  ["identifier","z"],
+  ["keyword.operator","*"],
+  ["identifier","Size_Point"],
+  ["text"," "],
+  ["keyword.operator",">"],
+  ["text"," "],
+  ["paren.rparen","])"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["text","                    "],
+  ["support.function","llParticleSystem"],
+  ["paren.lparen","("],
+  ["text"," "],
+  ["identifier","Particle_Parameters"],
+  ["text"," "],
+  ["paren.rparen",")"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["text","                    "],
+  ["support.function","llSleep"],
+  ["paren.lparen","("],
+  ["constant.numeric","0.12"],
+  ["paren.rparen",")"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["text","                    "],
+  ["support.function","llParticleSystem"],
+  ["paren.lparen","("],
+  ["text"," "],
+  ["paren.lparen","["],
+  ["paren.rparen","]"],
+  ["text"," "],
+  ["paren.rparen",")"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["text","                "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["text","            "],
+  ["paren.rparen","}"],
+  ["text"," "],
+  ["keyword.control","while"],
+  ["paren.lparen","("],
+  ["text"," "],
+  ["keyword.operator","++"],
+  ["identifier","x"],
+  ["text"," "],
+  ["keyword.operator","<="],
+  ["text"," "],
+  ["constant.numeric","4"],
+  ["paren.rparen",")"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["text","        "],
+  ["paren.rparen","}"],
+  ["text"," "],
+  ["keyword.control","while"],
+  ["paren.lparen","("],
+  ["text"," "],
+  ["keyword.operator","++"],
+  ["identifier","z"],
+  ["text"," "],
+  ["keyword.operator","<="],
+  ["text"," "],
+  ["constant.numeric","5"],
+  ["paren.rparen",")"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["text"," "]
+],[
+   "start",
+  ["text","        "],
+  ["identifier","point_zero"],
+  ["text"," "],
+  ["keyword.operator","+="],
+  ["text"," "],
+  ["keyword.operator","<"],
+  ["text"," "],
+  ["constant.numeric","6"],
+  ["punctuation.operator","."],
+  ["text"," "],
+  ["keyword.operator","*"],
+  ["text"," "],
+  ["identifier","Size_Point"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["constant.numeric","0.0"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["constant.numeric","0.0"],
+  ["text"," "],
+  ["keyword.operator",">"],
+  ["punctuation.operator",";"],
+  ["text"," "],
+  ["comment.line","//locate next char"]
+],[
+   "start",
+  ["text","    "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["comment.line","/////////////////////////////////////"]
+],[
+   "start",
+  ["comment.line","///////////////////////////////////// "]
+],[
+   "start",
+  ["comment.line","/////////////////////////////////////"]
+],[
+   "start",
+  ["comment.line","/////////////////////////////////////"]
+],[
+   "start",
+  ["text"," "]
+],[
+   "start",
+  ["text"," "]
+],[
+   "start",
+  ["keyword.other","default"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text"," "]
+],[
+   "start",
+  ["text","    "],
+  ["keyword.other","state_entry"],
+  ["paren.lparen","("],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text"," "]
+],[
+   "start",
+  ["text","        "],
+  ["support.function","llListen"],
+  ["paren.lparen","("],
+  ["constant.numeric","20"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.double","\"\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["support.function","llGetOwner"],
+  ["paren.lparen","("],
+  ["paren.rparen",")"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.double","\"\""],
+  ["paren.rparen",")"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["text","        "],
+  ["identifier","init_particles"],
+  ["paren.lparen","("],
+  ["paren.rparen",")"],
+  ["punctuation.operator",";"],
+  ["text"," "]
+],[
+   "start",
+  ["text","        "],
+  ["identifier","Origine"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["keyword.operator","<"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["constant.numeric","-0.48"],
+  ["text"," "],
+  ["keyword.operator","*"],
+  ["text"," "],
+  ["identifier","Size_Affich"],
+  ["punctuation.operator","."],
+  ["identifier","x"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["constant.numeric","-1.25"],
+  ["text"," "],
+  ["keyword.operator","*"],
+  ["text"," "],
+  ["identifier","Size_Point"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["constant.numeric","0.3"],
+  ["text"," "],
+  ["keyword.operator","*"],
+  ["text"," "],
+  ["identifier","Size_Affich"],
+  ["punctuation.operator","."],
+  ["identifier","z"],
+  ["paren.rparen",")"],
+  ["text","  "],
+  ["keyword.operator",">"],
+  ["punctuation.operator",";"],
+  ["text"," "],
+  ["comment.line","//raz cursor"]
+],[
+   "start",
+  ["text","    "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["text"," "]
+],[
+   "start",
+  ["text","    "],
+  ["keyword.other","listen"],
+  ["paren.lparen","("],
+  ["text"," "],
+  ["storage.type","integer"],
+  ["text"," "],
+  ["identifier","channel"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["storage.type","string"],
+  ["text"," "],
+  ["identifier","name"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["storage.type","key"],
+  ["text"," "],
+  ["identifier","id"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["storage.type","string"],
+  ["text"," "],
+  ["identifier","msg"],
+  ["text"," "],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text"," "]
+],[
+   "start",
+  ["text","        "],
+  ["identifier","Texte"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["identifier","msg"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["text","        "],
+  ["identifier","point_zero"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["identifier","Origine"],
+  ["punctuation.operator",";"],
+  ["text","    "],
+  ["comment.line","//raz cursor         "]
+],[
+   "start",
+  ["text","        "],
+  ["support.function","llSetTimerEvent"],
+  ["paren.lparen","("],
+  ["constant.numeric","30"],
+  ["punctuation.operator","."],
+  ["paren.rparen",")"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["text","        "],
+  ["identifier","affichage"],
+  ["paren.lparen","("],
+  ["identifier","Texte"],
+  ["paren.rparen",")"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["text","    "],
+  ["paren.rparen","}"],
+  ["text"," "]
+],[
+   "start",
+  ["text"," "]
+],[
+   "start",
+  ["text","    "],
+  ["keyword.other","timer"],
+  ["paren.lparen","("],
+  ["paren.rparen",")"],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text"," "]
+],[
+   "start",
+  ["text","        "],
+  ["identifier","point_zero"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["identifier","Origine"],
+  ["punctuation.operator",";"],
+  ["text","  "],
+  ["comment.line","//raz cursor"]
+],[
+   "start",
+  ["text","        "],
+  ["identifier","affichage"],
+  ["paren.lparen","("],
+  ["identifier","Texte"],
+  ["paren.rparen",")"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["text","    "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["text"," "]
+],[
+   "start",
+  ["text","    "],
+  ["keyword.other","on_rez"],
+  ["paren.lparen","("],
+  ["storage.type","integer"],
+  ["text"," "],
+  ["identifier","param"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","{"],
+  ["support.function","llResetScript"],
+  ["paren.lparen","("],
+  ["paren.rparen",")"],
+  ["punctuation.operator",";"],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword.other","changed"],
+  ["paren.lparen","("],
+  ["storage.type","integer"],
+  ["text"," "],
+  ["identifier","mask"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","{"],
+  ["keyword.control","if"],
+  ["paren.lparen","("],
+  ["identifier","mask"],
+  ["text"," "],
+  ["keyword.operator","&"],
+  ["text"," "],
+  ["constant.language","CHANGED_OWNER"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","{"],
+  ["support.function","llResetScript"],
+  ["paren.lparen","("],
+  ["paren.rparen",")"],
+  ["punctuation.operator",";"],
+  ["paren.rparen","}}"],
+  ["text"," "]
+],[
+   "start",
+  ["text"," "]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+]]

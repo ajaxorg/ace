@@ -27,28 +27,29 @@
 ],[
    "start"
 ],[
-   "comment_block",
-  ["punctuation.section.comment","// "]
+   ["comment_block",0,"start"],
+  ["comment","// "]
 ],[
-   "comment_block",
-  ["comment.block.jade","  here it is. a block comment!"]
+   ["comment_block",0,"start"],
+  ["comment","  here it is. a block comment!"]
 ],[
-   "comment_block",
-  ["comment.block.jade"," and another row!"]
+   ["comment_block",0,"start"],
+  ["comment"," and another row!"]
 ],[
    "start",
-  ["text","but not here."]
+  ["meta.tag.any.jade","but"],
+  ["text"," not here."]
 ],[
    "start"
 ],[
-   "comment_block",
-  ["punctuation.section.comment","     // "]
+   ["comment_block",5,"start"],
+  ["comment","     // "]
 ],[
-   "comment_block",
-  ["comment.block.jade","        a far spaced"]
+   ["comment_block",5,"start"],
+  ["comment","        a far spaced"]
 ],[
-   "comment_block",
-  ["comment.block.jade","    should be lack of block"]
+   "start",
+  ["text","    should be lack of block"]
 ],[
    "start"
 ],[
