@@ -1,4 +1,4 @@
-var fs = require("fs"); 
+var fs = require("fs");
 var util = require("util");
 var lib = require("./lib");
 var parseLanguage = lib.parsePlist;
@@ -29,7 +29,7 @@ function processRepository(r) {
             var stateObj = [processPattern(r[key])];
         else if (p.patterns && !p.repository)
             var stateObj = processPatterns(p.patterns);
-        else 
+        else
             var stateObj = [processPattern(r[key])];
 
         if (stateObj)
@@ -46,12 +46,12 @@ function processPattern(p) {
     }
     else if (p.begin && p.end) {
         var rule = simpleRule(p.begin, p.name, p.beginCaptures || p.captures)
-        
+
         var next = processPatterns(p.patterns || []);
         var endRule = simpleRule(p.end, p.name, p.endCaptures || p.captures);
         endRule.next = "pop";
         next.push(endRule);
-        
+
         if (p.name || p.contentName)
             next.push({defaultToken: p.name || p.contentName});
 
@@ -63,7 +63,7 @@ function processPattern(p) {
     else if (p.include) {
         var rule =  {include: p.include};
     }
-    
+
     if (p.comment)
         rule.comment = (rule.comment || "") +  p.comment;
 
@@ -74,7 +74,8 @@ function processPattern(p) {
 function simpleRule(regex, name, captures) {
     name = name || "text";
     var rule = {};
-    
+
+    var origRegex = regex
     regex = transformRegExp(regex, rule);
     if (captures) {
         var tokenArray = [];
@@ -91,9 +92,10 @@ function simpleRule(regex, name, captures) {
             rule.todo = "fix grouping";
         }
     }
-    
+
     try {new RegExp(regex);} catch(e) {
         rule.TODO = "FIXME: regexp doesn't have js equivalent";
+        rule.originalRegex = origRegex
     }
     rule.token = name;
     rule.regex = regex;
@@ -111,26 +113,29 @@ function removeXFlag(str) {
             if (s[0] == "\\")
                 return /[#\s]/.test(s[1]) ? s[1] : s;
             return "";
-        });
+        }).substr(4);
     }
     return str;
 }
 
 function transformRegExp(str, rule) {
     str = removeXFlag(str);
+    //str = str.replace(/\\n\$|\$\\n/g, '$');
     str = str.replace(/\\n(?!\?).?/g, '$'); // replace newlines by $ except if its postfixed by ?
-    if (/\(\?[i]\:/g.test(str)) {
+    if (/\(\?[i]\:|\(?\w*i\w*\)/g.test(str)) {
         str = str.replace(/\(\?[ims\-]\:/g, "(?:"); // checkForInvariantRegex
+        str = str.replace(/\(\?[imsx\-]\)/g, "");
         rule && (rule.caseInsensitive = true);
     }
+    str = str.replace(/(\\[xu]){([a-fA-F\d]+)}/g, '$1$2');
     return str;
 }
 
-// 
+//
 function extractPatterns(tmRules) {
     var patterns = processRules(tmRules);
     return lib.restoreJSONComments(lib.formatJSON(patterns, "    "));
-    
+
 }
 
 
@@ -140,21 +145,22 @@ var modeTemplate = fs.readFileSync(__dirname + "/mode.tmpl.js", "utf8");
 var modeHighlightTemplate = fs.readFileSync(__dirname + "/mode_highlight_rules.tmpl.js", "utf8");
 
 function convertLanguageFile(name) {
-    var tmLanguage = fs.readFileSync(process.cwd() + "/" + name, "utf8");
+    var path = /^(\/|\w:)/.test(name) ? name : process.cwd() + "/" + name
+    var tmLanguage = fs.readFileSync(path, "utf8");
     parseLanguage(tmLanguage, function(language) {
         var languageHighlightFilename = language.name.replace(/[-_]/g, "").toLowerCase();
         var languageNameSanitized = language.name.replace(/-/g, "");
-        
+
         var languageHighlightFile = __dirname + "/../lib/ace/mode/" + languageHighlightFilename + "_highlight_rules.js";
         var languageModeFile = __dirname + "/../lib/ace/mode/" + languageHighlightFilename + ".js";
-        
+
         console.log("Converting " + name + " to " + languageHighlightFile);
-      
+
         if (devMode) {
             console.log(util.inspect(language.patterns, false, 4));
             console.log(util.inspect(language.repository, false, 4));
         }
-        
+
         var languageMode = lib.fillTemplate(modeTemplate, {
             language: languageNameSanitized,
             languageHighlightFilename: languageHighlightFilename
