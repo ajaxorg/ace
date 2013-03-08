@@ -13,3 +13,22 @@
     [1, +1, -1, 12_345, 0.000_1,
     _, 3_1, 1_2, 1_.0, 0._1];
  
+{:id => 34, :key => "value"}
+
+=begin
+=end
+
+=begin x
+=end-
+=end   x
+
+    herDocs = [<<'FOO', <<BAR, <<-BAZ, <<-`EXEC`] #comment
+  FOO #{literal}
+FOO
+  BAR #{fact(10)}
+BAR
+  BAZ indented
+    BAZ
+        echo hi
+    EXEC
+puts herDocs
