@@ -105,9 +105,8 @@ void function(){
 			if (!data)
 				return
 			if (x.name == "parser.js") {
-				console.log(data)
 				data = data.replace("var parser = (function(){", "")
-					.replace(/\nreturn parser[\x00-\uffff]*$/, "\n\nmodule.exports = parser;\n\n")
+					.replace(/\nreturn (new Parser)[\s\S]*$/, "\n\nmodule.exports = $1;\n\n")
 			} else {
 				data = data.replace("(function() {", "")
 					.replace(/}\).call\(this\);\s*$/, "")
