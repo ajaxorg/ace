@@ -83,6 +83,9 @@ env.editor.setAnimatedScroll(true);
 // add multiple cursor support to editor
 require("ace/multi_select").MultiSelect(env.editor);
 
+// add incremental search
+window.iSearch = new (require("ace/incremental_search").IncrementalSearch)();
+
 var consoleEl = dom.createElement("div");
 container.parentNode.appendChild(consoleEl);
 consoleEl.style.cssText = "position:fixed; bottom:1px; right:0;\
