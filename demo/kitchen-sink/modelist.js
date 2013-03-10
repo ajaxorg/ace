@@ -46,6 +46,7 @@ var modesByName = {
     dart:       ["Dart"         , "dart"],
     diff:       ["Diff"         , "diff|patch"],
     dot:        ["Dot"          , "dot"],
+    ftl:        ["FreeMarker"   , "ftl"],
     glsl:       ["Glsl"         , "glsl|frag|vert"],
     golang:     ["Go"           , "go"],
     groovy:     ["Groovy"       , "groovy"],
