@@ -23,6 +23,10 @@ var deps = [{
 	path: "../../demo/kitchen-sink/require.js",
 	url: "https://raw.github.com/jrburke/requirejs/master/require.js",
 	needsFixup: false
+}, {
+	path: "mode/lua/luaparse.js",
+	url: "https://raw.github.com/oxyc/luaparse/master/lib/luaparse.js",
+	needsFixup: true
 }]
 
 var download = function(href, callback) {
