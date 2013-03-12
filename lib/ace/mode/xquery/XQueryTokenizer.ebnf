@@ -92,10 +92,10 @@ XMLComment
          ::= DirCommentContents | '-->' | EOF
           /* ws: explicit */
 
-PI       ::= DirPIContents | '?>' | EOF
+PI       ::= DirPIContents | '?' | '?>' | EOF
           /* ws: explicit */
 
-Pragma   ::= PragmaContents | '#)' | EOF
+Pragma   ::= PragmaContents | '#' | '#)' | EOF
           /* ws: explicit */
 
 Comment  ::= ':)' | '(:' | CommentContents | EOF
@@ -406,7 +406,7 @@ PragmaContents
 DirCommentContents
          ::= ( ( Char - '-' ) | '-' ( Char - '-' ) )+
 DirPIContents
-         ::= ( Char* - ( Char* '?' Char* ) ) 
+         ::= ( Char* - ( Char* '?' Char* ) )+ 
 CDataSectionContents
          ::= ( Char+ - ( Char* ']]>' Char* ) ) & ']]'
            | ( Char+ - ( Char* ']]>' Char* ) ) & $ 
