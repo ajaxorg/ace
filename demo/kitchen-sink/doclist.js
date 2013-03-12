@@ -93,7 +93,7 @@ var docs = {
     "docs/lsl.lsl": "LSL",
     "docs/scheme.scm": "Scheme",
     "docs/liquid.liquid": "Liquid",
-    "docs/logicblox.logic": "LogicBlox",
+    "docs/logicql.logic": "LogicQL",
     "docs/lua.lua": "Lua",
     "docs/lucene.lucene": "Lucene",
     "docs/luapage.lp": "LuaPage",
