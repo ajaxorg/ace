@@ -2,6 +2,17 @@
    "start",
   ["comment","#!/usr/bin/perl"]
 ],[
+   "block_comment",
+  ["comment.doc","=begin"]
+],[
+   "block_comment",
+  ["comment.doc"," perl example code for Ace"]
+],[
+   "start",
+  ["comment.doc","=cut"]
+],[
+   "start"
+],[
    "start",
   ["keyword","use"],
   ["text"," "],
@@ -209,6 +220,8 @@
   ["text"," "],
   ["string","\"\\n\""],
   ["text",";"]
+],[
+   "start"
 ],[
    "start"
 ]]
