@@ -67,7 +67,7 @@ var modesByName = {
     scheme:     ["Scheme"       , "scm|rkt"],
     liquid:     ["Liquid"       , "liquid"],
     livescript: ["LiveScript"   , "ls"],
-    logicql:    ["LogicQL"      , "logic"],
+    logiql:     ["LogiQL"       , "logic|lql"],
     lua:        ["Lua"          , "lua"],
     luapage:    ["LuaPage"      , "lp"], // http://keplerproject.github.com/cgilua/manual.html#templates
     lucene:     ["Lucene"       , "lucene"],

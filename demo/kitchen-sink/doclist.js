@@ -95,7 +95,7 @@ var docs = {
     "docs/scheme.scm": "Scheme",
     "docs/livescript.ls": "LiveScript",
     "docs/liquid.liquid": "Liquid",
-    "docs/logicql.logic": "LogicQL",
+    "docs/logiql.logic": "LogiQL",
     "docs/lua.lua": "Lua",
     "docs/lucene.lucene": "Lucene",
     "docs/luapage.lp": "LuaPage",
