@@ -1,6 +1,6 @@
 # Prototype
 snippet proto
-	${1:class_name}.prototype.${2:method_name} = function(${3:first_argument}) {
+	${1:class_name}.prototype.${2:method_name} = function(${3irst_argument}) {
 		${4:// body...}
 	};
 # Function
@@ -9,17 +9,17 @@ snippet fun
 		${3:// body...}
 	}
 # Anonymous Function
-regex /\b(\()?/f//(\))?/
+regex /(=)\s*|(:)\s*|(\()|\b/f/(\))?/
 name f
-	function($1) {
+	function${M1||M2||M3? ${1:functionName $: }}($2) {
 		${0:$TM_SELECTED_TEXT}
-	};
+	}${M1?;}${M2?,}${M3?)}
 # Immediate function
 trigger \(?f\(
 endTrigger \)?
 snippet f(
 	(function(${1}) {
-		${3:/* code */}
+		${0:${TM_SELECTED_TEXT:/* code */}}
 	}(${1}));
 # if
 snippet if
@@ -72,8 +72,9 @@ snippet do
 	} while (${1:/* condition */});
 # Object Method
 snippet :f
+regex /([,{[])|^\s*/:f/
 	${1:method_name}: function(${2:attribute}) {
-		${4}
+		${0}
 	}${3:,}
 # setTimeout function
 snippet timeout
@@ -105,6 +106,7 @@ snippet /**
 	 *
 	 */
 snippet @par
+regex /^\s*\*\s*/@(para?m?)?/
 	@param {${1:type}} ${2:name} ${3:description}
 snippet @ret
 	@return {${1:type}} ${2:description}
@@ -176,14 +178,14 @@ snippet for-
 snippet for ?in
 
 
-regex /^\s*/for (\w+\b)?( \d+)( \d+)?/
-	
+regex /^\s*/for\b\s*(\w+\b)?(\s*\d+\b)(\s*\d*)/
+	78789
 regex /^\s*/for (\w+) in (\w+)/
-	${include:for $1=$M1,$2=$M2}
-regex /^\s*/for (\w*) (\w+)(.l?e?n?[ght]{0,3})/
-	${include:for $1=$M1,$2=$M2}
+	${include:for $1=$M1,$2=$M2}44
+regex /^\s*/for\b( \w+\b)?( \w+\b)(\.l?e?n?[ght]{0,3})/
+	${include:for $1=$M1,$2=$M2}44
 regex /^\s*/for (\w+) in (\w+)/
-	${include:for $1=$M1,$2=$M2}
+	${include:for $1=$M1,$2=$M2}44
 
 
 #modules
@@ -200,5 +202,5 @@ guard ^\s*
 	$0
 snippet Req
 guard ^\s*
-	var ${1/.*\/(.)/\u$1/} = require("${1}").${1_0};
+	var ${1/.*\/(.)/\u$1/} = require("${1}").${1!0};
 	$0
