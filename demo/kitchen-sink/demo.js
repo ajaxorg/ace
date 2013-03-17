@@ -461,6 +461,14 @@ event.addListener(container, "drop", function(e) {
 var StatusBar = require("./statusbar").StatusBar;
 new StatusBar(env.editor, cmdLine.container);
 
+
+var Emmet = require("ace/ext/emmet");
+net.loadScript("https://rawgithub.com/nightwing/emmet-core/master/emmet.js", function() {
+    Emmet.setCore(window.emmet);
+    env.editor.setOption("enableEmmet", true);
+})
+
+
 require("ace/placeholder").PlaceHolder;
 
 var SnippetManager = require("ace/snippets").SnippetManager
