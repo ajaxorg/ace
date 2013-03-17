@@ -392,8 +392,12 @@ bindCheckbox("elastic_tabstops", function(checked) {
     env.editor.setOption("useElasticTabstops", checked);
 });
 
-bindCheckbox("isearch", function(checked) {
+var iSearchCheckbox = bindCheckbox("isearch", function(checked) {
     env.editor.setOption("useIncrementalSearch", checked);
+});
+
+env.editor.addEventListener('incrementalSearchSettingChanged', function(event) {
+    iSearchCheckbox.checked = event.isEnabled;
 });
 
 

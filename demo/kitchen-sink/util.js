@@ -171,6 +171,7 @@ exports.bindCheckbox = function(id, callback, noInit) {
     };
     el.onclick = onCheck;
     noInit || onCheck();
+    return el;
 };
 
 exports.bindDropdown = function(id, callback, noInit) {
@@ -235,4 +236,3 @@ function dropdown(values) {
 
 
 });
-
