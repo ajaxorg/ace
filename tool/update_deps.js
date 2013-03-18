@@ -23,6 +23,10 @@ var deps = [{
 	path: "../../demo/kitchen-sink/require.js",
 	url: "https://raw.github.com/jrburke/requirejs/master/require.js",
 	needsFixup: false
+}, {
+	path: "mode/lua/luaparse.js",
+	url: "https://raw.github.com/oxyc/luaparse/master/lib/luaparse.js",
+	needsFixup: true
 }]
 
 var download = function(href, callback) {
@@ -105,9 +109,8 @@ void function(){
 			if (!data)
 				return
 			if (x.name == "parser.js") {
-				console.log(data)
 				data = data.replace("var parser = (function(){", "")
-					.replace(/\nreturn parser[\x00-\uffff]*$/, "\n\nmodule.exports = parser;\n\n")
+					.replace(/\nreturn (new Parser)[\s\S]*$/, "\n\nmodule.exports = $1;\n\n")
 			} else {
 				data = data.replace("(function() {", "")
 					.replace(/}\).call\(this\);\s*$/, "")

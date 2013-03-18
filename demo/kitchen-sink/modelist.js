@@ -46,6 +46,7 @@ var modesByName = {
     dart:       ["Dart"         , "dart"],
     diff:       ["Diff"         , "diff|patch"],
     dot:        ["Dot"          , "dot"],
+    ftl:        ["FreeMarker"   , "ftl"],
     glsl:       ["Glsl"         , "glsl|frag|vert"],
     golang:     ["Go"           , "go"],
     groovy:     ["Groovy"       , "groovy"],
@@ -65,6 +66,8 @@ var modesByName = {
     lisp:       ["Lisp"         , "lisp"],
     scheme:     ["Scheme"       , "scm|rkt"],
     liquid:     ["Liquid"       , "liquid"],
+    livescript: ["LiveScript"   , "ls"],
+    logiql:     ["LogiQL"       , "logic|lql"],
     lua:        ["Lua"          , "lua"],
     luapage:    ["LuaPage"      , "lp"], // http://keplerproject.github.com/cgilua/manual.html#templates
     lucene:     ["Lucene"       , "lucene"],
@@ -101,6 +104,7 @@ var modesByName = {
     vbscript:   ["VBScript"     , "vbs"],
     xml:        ["XML"          , "xml|rdf|rss|wsdl|xslt|atom|mathml|mml|xul|xbl"],
     xquery:     ["XQuery"       , "xq"],
+    jsoniq:     ["JSONiq"       , "jq"],
     yaml:       ["YAML"         , "yaml"]
 };
 

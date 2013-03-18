@@ -52,6 +52,8 @@ var Renderer = require("ace/virtual_renderer").VirtualRenderer;
 var Editor = require("ace/editor").Editor;
 var MultiSelect = require("ace/multi_select").MultiSelect;
 
+var whitespace = require("ace/ext/whitespace");
+
 var doclist = require("./doclist");
 var modelist = require("./modelist");
 var layout = require("./layout");
@@ -91,6 +93,12 @@ border:1px solid #baf; zIndex:100";
 var cmdLine = new layout.singleLineEditor(consoleEl);
 cmdLine.editor = env.editor;
 env.editor.cmdLine = cmdLine;
+
+env.editor.showCommandLine = function(val) {
+    this.cmdLine.focus();
+    if (typeof val == "string")
+        this.cmdLine.setValue(val, 1);
+};
 
 /**
  * This demonstrates how you can define commands and bind shortcuts to them.
@@ -141,6 +149,9 @@ env.editor.commands.addCommands([{
     },
     readOnly: true
 }]);
+
+
+env.editor.commands.addCommands(whitespace.commands);
 
 cmdLine.commands.bindKeys({
     "Shift-Return|Ctrl-Return|Alt-Return": function(cmdLine) { cmdLine.insert("\n"); },
@@ -225,6 +236,7 @@ bindDropdown("doc", function(name) {
         if (!session)
             return;
         session = env.split.setSession(session);
+        whitespace.detectIndentation(session);
         updateUIEditorOptions();
         env.editor.focus();
     });

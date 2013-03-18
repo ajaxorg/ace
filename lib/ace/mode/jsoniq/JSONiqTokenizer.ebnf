@@ -1,0 +1,544 @@
+<?xqlint
+/* ***** BEGIN LICENSE BLOCK *****
+ * Distributed under the BSD license:
+ *
+ * Copyright (c) 2010, Ajax.org B.V.
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in the
+ *       documentation and/or other materials provided with the distribution.
+ *     * Neither the name of Ajax.org B.V. nor the
+ *       names of its contributors may be used to endorse or promote products
+ *       derived from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL AJAX.ORG B.V. BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * ***** END LICENSE BLOCK ***** */
+
+define(function(require, exports, module){
+var JSONiqTokenizer = exports.JSONiqTokenizer = function JSONiqTokenizer(string, parsingEventHandler)
+{
+  init(string, parsingEventHandler);
+?>
+
+start   ::= '<![CDATA['
+          | '<!--'
+          | '<?'
+          | '(#'
+          | '(:~'
+          | '(:'
+          | '"'
+          | "'"
+          | "}"
+          | "{"
+          | "("
+          | ")"
+          | "/"
+          | "["
+          | "]"
+          | ","
+          | "."
+          | ";"
+          | ":"
+          | "!"
+          | "|"
+          | Annotation
+          | ModuleDecl
+          | OptionDecl
+          | AttrTest
+          | Wildcard
+          | IntegerLiteral
+          | DecimalLiteral
+          | DoubleLiteral
+          | Variable
+          | EQName
+          | Tag
+          | Operator
+          | EOF
+
+StartTag  ::= '>' | '/>' | QName | "=" | '"' | "'" | EOF
+
+
+TagContent
+         ::= ElementContentChar | Tag | EndTag | '<![CDATA[' | '<!--' | PredefinedEntityRef | CharRef | '{{' | '}}' | '{' | EOF
+          /* ws: explicit */
+
+AposAttr
+        ::= EscapeApos | AposAttrContentChar | PredefinedEntityRef | CharRef | '{{' | '}}' | '{' | "'" | EOF
+          /* ws: explicit */
+
+QuotAttr
+        ::= EscapeQuot | QuotAttrContentChar | PredefinedEntityRef | CharRef | '{{' | '}}' | '{' | '"' | EOF
+          /* ws: explicit */
+
+CData    ::= CDataSectionContents | ']]>' | EOF
+          /* ws: explicit */
+
+XMLComment
+         ::= DirCommentContents | '-->' | EOF
+          /* ws: explicit */
+
+PI       ::= DirPIContents | '?' | '?>' | EOF
+          /* ws: explicit */
+
+Pragma   ::= PragmaContents | '#' | '#)' | EOF
+          /* ws: explicit */
+
+Comment  ::= ':)' | '(:' | CommentContents | EOF
+          /* ws: explicit */
+
+CommentDoc
+         ::= DocTag | DocCommentContents | ':)' | '(:' | EOF
+          /* ws: explicit */
+
+QuotString
+         ::= PredefinedEntityRef | CharRef | EscapeQuot | QuotChar | '"' | EOF
+          /* ws: explicit */
+
+AposString
+         ::= PredefinedEntityRef | CharRef | EscapeApos | AposChar | "'" | EOF
+          /* ws: explicit */
+
+Prefix  ::= NCName
+
+_EQName ::= EQName
+
+Whitespace
+         ::= S^WS
+          /* ws: definition */
+
+EQName   ::= FunctionName
+           | 'attribute'
+           | 'comment'
+           | 'document-node'
+           | 'element'
+           | 'empty-sequence'
+           | 'function'
+           | 'if'
+           | 'item'
+           | 'namespace-node'
+           | 'node'
+           | 'processing-instruction'
+           | 'schema-attribute'
+           | 'schema-element'
+           | 'switch'
+           | 'text'
+           | 'typeswitch'
+FunctionName
+         ::= EQName^Token
+           | 'after'
+           | 'ancestor'
+           | 'ancestor-or-self'
+           | 'and'
+           | 'as'
+           | 'ascending'
+           | 'before'
+           | 'case'
+           | 'cast'
+           | 'castable'
+           | 'child'
+           | 'collation'
+           | 'copy'
+           | 'count'
+           | 'declare'
+           | 'default'
+           | 'delete'
+           | 'descendant'
+           | 'descendant-or-self'
+           | 'descending'
+           | 'div'
+           | 'document'
+           | 'else'
+           | 'empty'
+           | 'end'
+           | 'eq'
+           | 'every'
+           | 'except'
+           | 'first'
+           | 'following'
+           | 'following-sibling'
+           | 'for'
+           | 'ge'
+           | 'group'
+           | 'gt'
+           | 'idiv'
+           | 'import'
+           | 'insert'
+           | 'instance'
+           | 'intersect'
+           | 'into'
+           | 'is'
+           | 'last'
+           | 'le'
+           | 'let'
+           | 'lt'
+           | 'mod'
+           | 'modify'
+           | 'module'
+           | 'namespace'
+           | 'ne'
+           | 'only'
+           | 'or'
+           | 'order'
+           | 'ordered'
+           | 'parent'
+           | 'preceding'
+           | 'preceding-sibling'
+           | 'rename'
+           | 'replace'
+           | 'return'
+           | 'satisfies'
+           | 'self'
+           | 'some'
+           | 'stable'
+           | 'start'
+           | 'to'
+           | 'treat'
+           | 'try'
+           | 'union'
+           | 'unordered'
+           | 'validate'
+           | 'where'
+           | 'with'
+           | 'xquery'
+           | 'allowing'
+           | 'at'
+           | 'base-uri'
+           | 'boundary-space'
+           | 'break'
+           | 'catch'
+           | 'construction'
+           | 'context'
+           | 'continue'
+           | 'copy-namespaces'
+           | 'decimal-format'
+           | 'encoding'
+           | 'exit'
+           | 'external'
+           | 'ft-option'
+           | 'in'
+           | 'index'
+           | 'integrity'
+           | 'lax'
+           | 'nodes'
+           | 'option'
+           | 'ordering'
+           | 'revalidation'
+           | 'schema'
+           | 'score'
+           | 'sliding'
+           | 'strict'
+           | 'tumbling'
+           | 'type'
+           | 'updating'
+           | 'value'
+           | 'variable'
+           | 'version'
+           | 'while'
+           | 'constraint'
+           | 'loop'
+           | 'returning'
+NCName   ::= NCName^Token
+           | 'after'
+           | 'and'
+           | 'as'
+           | 'ascending'
+           | 'before'
+           | 'case'
+           | 'cast'
+           | 'castable'
+           | 'collation'
+           | 'count'
+           | 'default'
+           | 'descending'
+           | 'div'
+           | 'else'
+           | 'empty'
+           | 'end'
+           | 'eq'
+           | 'except'
+           | 'for'
+           | 'ge'
+           | 'group'
+           | 'gt'
+           | 'idiv'
+           | 'instance'
+           | 'intersect'
+           | 'into'
+           | 'is'
+           | 'le'
+           | 'let'
+           | 'lt'
+           | 'mod'
+           | 'modify'
+           | 'ne'
+           | 'only'
+           | 'or'
+           | 'order'
+           | 'return'
+           | 'satisfies'
+           | 'stable'
+           | 'start'
+           | 'to'
+           | 'treat'
+           | 'union'
+           | 'where'
+           | 'with'
+           | 'ancestor'
+           | 'ancestor-or-self'
+           | 'attribute'
+           | 'child'
+           | 'comment'
+           | 'copy'
+           | 'declare'
+           | 'delete'
+           | 'descendant'
+           | 'descendant-or-self'
+           | 'document'
+           | 'document-node'
+           | 'element'
+           | 'empty-sequence'
+           | 'every'
+           | 'first'
+           | 'following'
+           | 'following-sibling'
+           | 'function'
+           | 'if'
+           | 'import'
+           | 'insert'
+           | 'item'
+           | 'last'
+           | 'module'
+           | 'namespace'
+           | 'namespace-node'
+           | 'node'
+           | 'ordered'
+           | 'parent'
+           | 'preceding'
+           | 'preceding-sibling'
+           | 'processing-instruction'
+           | 'rename'
+           | 'replace'
+           | 'schema-attribute'
+           | 'schema-element'
+           | 'self'
+           | 'some'
+           | 'switch'
+           | 'text'
+           | 'try'
+           | 'typeswitch'
+           | 'unordered'
+           | 'validate'
+           | 'variable'
+           | 'xquery'
+           | 'allowing'
+           | 'at'
+           | 'base-uri'
+           | 'boundary-space'
+           | 'break'
+           | 'catch'
+           | 'construction'
+           | 'context'
+           | 'continue'
+           | 'copy-namespaces'
+           | 'decimal-format'
+           | 'encoding'
+           | 'exit'
+           | 'external'
+           | 'ft-option'
+           | 'in'
+           | 'index'
+           | 'integrity'
+           | 'lax'
+           | 'nodes'
+           | 'option'
+           | 'ordering'
+           | 'revalidation'
+           | 'schema'
+           | 'score'
+           | 'sliding'
+           | 'strict'
+           | 'tumbling'
+           | 'type'
+           | 'updating'
+           | 'value'
+           | 'version'
+           | 'while'
+           | 'constraint'
+           | 'loop'
+           | 'returning'
+<?TOKENS?>
+
+ModuleDecl
+         ::= ('import' S)? ('module' | 'schema') S 'namespace'
+
+Annotation
+         ::= '%' EQName ?
+
+OptionDecl
+         ::= 'declare' S ( ( 'decimal-format' | 'option' ) 
+           |  ('default' S 'decimal-format') ) 
+
+Operator ::= '!=' | ':=' | '>=' | '<=' | '=' | '<' | '>' | '-' | '+' | 'div' | '||' | '?'
+
+Variable ::= '$' EQName
+
+Tag      ::= '<' QName
+
+EndTag   ::= '</' QName S? '>'
+
+PragmaContents
+         ::= ( Char* - ( Char* '#' Char* ) )+
+DirCommentContents
+         ::= ( ( Char - '-' ) | '-' ( Char - '-' ) )+
+DirPIContents
+         ::= ( Char* - ( Char* '?' Char* ) )+ 
+CDataSectionContents
+         ::= ( Char+ - ( Char* ']]>' Char* ) ) & ']]'
+           | ( Char+ - ( Char* ']]>' Char* ) ) & $ 
+AttrTest  ::= "@" ( Wildcard | QName )
+Wildcard ::= "*"
+         | (NCName ":" "*")
+         | ("*" ":" NCName)
+         | (BracedURILiteral "*")
+EQName   ::= QName
+           | URIQualifiedName
+URIQualifiedName
+         ::= BracedURILiteral NCName
+BracedURILiteral
+         ::= 'Q' '{' (PredefinedEntityRef | CharRef  | [^&{}] )* '}'
+URILiteral
+         ::= StringLiteral
+IntegerLiteral
+         ::= Digits
+DecimalLiteral
+         ::= '.' Digits
+           | Digits '.' [0-9]*
+          /* ws: explicit */
+DoubleLiteral
+         ::= ( '.' Digits | Digits ( '.' [0-9]* )? ) [Ee] [+#x002D]? Digits
+          /* ws: explicit */
+PredefinedEntityRef
+         ::= '&' ( 'lt' | 'gt' | 'amp' | 'quot' | 'apos' ) ';'
+          /* ws: explicit */
+EscapeQuot
+         ::= '""'
+EscapeApos
+         ::= "''"
+QuotChar ::= (Char - ["&])+
+AposChar ::= (Char - [&'])+
+ElementContentChar
+         ::= (Char - [&<{}])+
+QuotAttrContentChar
+         ::= (Char - ["&<{}])+
+AposAttrContentChar
+         ::= (Char - [&'<{}])+
+PITarget ::= NCName - ( ( 'X' | 'x' ) ( 'M' | 'm' ) ( 'L' | 'l' ) )
+Name     ::= NameStartChar NameChar*
+NameStartChar
+         ::= [:A-Z_a-z#x00C0-#x00D6#x00D8-#x00F6#x00F8-#x02FF#x0370-#x037D#x037F-#x1FFF#x200C-#x200D#x2070-#x218F#x2C00-#x2FEF#x3001-#xD7FF#xF900-#xFDCF#xFDF0-#xFFFD#x10000-#xEFFFF]
+NameChar ::= NameStartChar
+           | [-.0-9#x00B7#x0300-#x036F#x203F-#x2040]
+NCName   ::= Name - ( Char* (':' | '.') Char* )
+Char     ::= [#x0009#x000A#x000D#x0020-#xD7FF#xE000-#xFFFD#x10000-#x10FFFF]
+QName    ::= PrefixedName
+           | UnprefixedName
+PrefixedName
+         ::= Prefix ':' LocalPart
+UnprefixedName
+         ::= LocalPart
+Prefix   ::= NCName
+LocalPart
+         ::= NCName
+S        ::= [#x0009#x000A#x000D#x0020]+
+CharRef  ::= '&#' [0-9]+ ';'
+           | '&#x' [0-9A-Fa-f]+ ';'
+Digits   ::= [0-9]+
+CommentContents
+         ::= ( Char+ - ( Char* ( '(:' | ':)' ) Char* ) ) & '(:'
+           | ( Char+ - ( Char* ( '(:' | ':)' ) Char* ) ) & $
+           | ( ( Char+ - ( Char* ( '(:' | ':)' ) Char* ) ) - ( Char* '(' ) ) & ':'
+DocTag   ::= ' @' NCName?
+DocCommentContents
+         ::= ( ( Char+ - ( Char* ( '(:' | ':)' | ' @' ) Char* ) ) - ( Char* '(' ) ) & ':'
+           |   ( Char+ - ( Char* ( '(:' | ':)' | ' @' ) Char* ) )                   & '(:'
+           |   ( Char+ - ( Char* ( '(:' | ':)' | ' @' ) Char* ) )                   & ' @'
+           | ( Char+ - ( Char* ( '(:' | ':)' | ' @') Char* ) ) & $
+EOF      ::= $
+NonNCNameChar
+          ::= $
+            | ':'
+            | '.'
+            | ( Char - NameChar )
+DelimitingChar
+          ::= NonNCNameChar
+            | '-'
+            | '.'
+DelimitingChar
+           \\ IntegerLiteral DecimalLiteral DoubleLiteral 
+NonNCNameChar
+           \\ EQName^Token QName NCName^Token 'NaN' 'after' 'all'
+              'allowing' 'ancestor' 'ancestor-or-self' 'and' 'any' 
+              'append' 'array' 'as' 'ascending' 'at' 'attribute' 
+              'base-uri' 'before' 'boundary-space' 'break' 'by' 'case'
+              'cast' 'castable' 'catch' 'check' 'child' 'collation' 
+              'collection' 'comment' 'constraint' 'construction'
+              'contains' 'content' 'context' 'continue' 'copy' 
+              'copy-namespaces' 'count' 'decimal-format' 
+              'decimal-separator' 'declare' 'default' 'delete' 
+              'descendant' 'descendant-or-self' 'descending' 
+              'diacritics' 'different' 'digit' 'distance' 'div' 
+              'document' 'document-node' 'element' 'else' 'empty'
+              'empty-sequence' 'encoding' 'end' 'entire' 'eq' 'every'
+              'exactly' 'except' 'exit' 'external' 'first' 'following'
+              'following-sibling' 'for' 'foreach' 'foreign' 'from'
+              'ft-option' 'ftand' 'ftnot' 'ftor' 'function' 'ge'
+              'greatest' 'group' 'grouping-separator' 'gt' 'idiv' 'if'
+              'import' 'in' 'index' 'infinity' 'inherit' 'insensitive'
+              'insert' 'instance' 'integrity' 'intersect' 'into' 'is'
+              'item' 'json' 'json-item' 'key' 'language' 'last' 'lax'
+              'le' 'least' 'let' 'levels' 'loop' 'lowercase' 'lt'
+              'minus-sign' 'mod' 'modify' 'module' 'most' 'namespace'
+              'namespace-node' 'ne' 'next' 'no' 'no-inherit'
+              'no-preserve' 'node' 'nodes' 'not' 'object' 'occurs'
+              'of' 'on' 'only' 'option' 'or' 'order' 'ordered'
+              'ordering' 'paragraph' 'paragraphs' 'parent'
+              'pattern-separator' 'per-mille' 'percent' 'phrase'
+              'position' 'preceding' 'preceding-sibling' 'preserve'
+              'previous' 'processing-instruction' 'relationship'
+              'rename' 'replace' 'return' 'returning' 'revalidation'
+              'same' 'satisfies' 'schema' 'schema-attribute'
+              'schema-element' 'score' 'self' 'sensitive' 'sentence'
+              'sentences' 'skip' 'sliding' 'some' 'stable' 'start'
+              'stemming' 'stop' 'strict' 'strip' 'structured-item'
+              'switch' 'text' 'then' 'thesaurus' 'times' 'to'
+              'treat' 'try' 'tumbling' 'type' 'typeswitch' 'union'
+              'unique' 'unordered' 'updating' 'uppercase' 'using'
+              'validate' 'value' 'variable' 'version' 'weight'
+              'when' 'where' 'while' 'wildcards' 'window' 'with'
+              'without' 'word' 'words' 'xquery' 'zero-digit'
+'*'       << Wildcard '*'^OccurrenceIndicator
+EQName^Token
+          << 'after' 'ancestor' 'ancestor-or-self' 'and' 'as' 'ascending' 'attribute' 'before' 'case' 'cast' 'castable' 'child' 'collation' 'comment' 'copy' 'count' 'declare' 'default' 'delete' 'descendant' 'descendant-or-self' 'descending' 'div' 'document' 'document-node' 'element' 'else' 'empty' 'empty-sequence' 'end' 'eq' 'every' 'except' 'first' 'following' 'following-sibling' 'for' 'function' 'ge' 'group' 'gt' 'idiv' 'if' 'import' 'insert' 'instance' 'intersect' 'into' 'is' 'item' 'last' 'le' 'let' 'lt' 'mod' 'modify' 'module' 'namespace' 'namespace-node' 'ne' 'node' 'only' 'or' 'order' 'ordered' 'parent' 'preceding' 'preceding-sibling' 'processing-instruction' 'rename' 'replace' 'return' 'satisfies' 'schema-attribute' 'schema-element' 'self' 'some' 'stable' 'start' 'switch' 'text' 'to' 'treat' 'try' 'typeswitch' 'union' 'unordered' 'validate' 'where' 'with' 'xquery' 'contains' 'paragraphs' 'sentences' 'times' 'words' 'by' 'collection' 'allowing' 'at' 'base-uri' 'boundary-space' 'break' 'catch' 'construction' 'context' 'continue' 'copy-namespaces' 'decimal-format' 'encoding' 'exit' 'external' 'ft-option' 'in' 'index' 'integrity' 'lax' 'nodes' 'option' 'ordering' 'revalidation' 'schema' 'score' 'sliding' 'strict' 'tumbling' 'type' 'updating' 'value' 'variable' 'version' 'while' 'constraint' 'loop' 'returning' 'append' 'array' 'json-item' 'object' 'structured-item'
+NCName^Token
+          << 'after' 'and' 'as' 'ascending' 'before' 'case' 'cast' 'castable' 'collation' 'count' 'default' 'descending' 'div' 'else' 'empty' 'end' 'eq' 'except' 'for' 'ge' 'group' 'gt' 'idiv' 'instance' 'intersect' 'into' 'is' 'le' 'let' 'lt' 'mod' 'modify' 'ne' 'only' 'or' 'order' 'return' 'satisfies' 'stable' 'start' 'to' 'treat' 'union' 'where' 'with' 'contains' 'paragraphs' 'sentences' 'times' 'words' 'by' 'ancestor' 'ancestor-or-self' 'attribute' 'child' 'comment' 'copy' 'declare' 'delete' 'descendant' 'descendant-or-self' 'document' 'document-node' 'element' 'empty-sequence' 'every' 'first' 'following' 'following-sibling' 'function' 'if' 'import' 'insert' 'item' 'last' 'module' 'namespace' 'namespace-node' 'node' 'ordered' 'parent' 'preceding' 'preceding-sibling' 'processing-instruction' 'rename' 'replace' 'schema-attribute' 'schema-element' 'self' 'some' 'switch' 'text' 'try' 'typeswitch' 'unordered' 'validate' 'variable' 'xquery' 'allowing' 'at' 'base-uri' 'boundary-space' 'break' 'catch' 'construction' 'context' 'continue' 'copy-namespaces' 'decimal-format' 'encoding' 'exit' 'external' 'ft-option' 'in' 'index' 'integrity' 'lax' 'nodes' 'option' 'ordering' 'revalidation' 'schema' 'score' 'sliding' 'strict' 'tumbling' 'type' 'updating' 'value' 'version' 'while' 'constraint' 'loop' 'returning'
+
+<?ENCORE?>
+
+<?xqlint
+});
+?>
