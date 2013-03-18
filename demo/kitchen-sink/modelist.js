@@ -98,7 +98,7 @@ var modesByName = {
     tex:        ["Tex"          , "tex"],
     text:       ["Text"         , "txt"],
     textile:    ["Textile"      , "textile"],
-    tm_snippet: ["tmSnippet"    , "tmSnippet"],
+    tmsnippet: ["tmSnippet"    , "tmSnippet"],
     toml:       ["toml"         , "toml"],
     typescript: ["Typescript"   , "typescript|ts|str"],
     vbscript:   ["VBScript"     , "vbs"],
