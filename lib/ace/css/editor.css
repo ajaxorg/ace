@@ -209,6 +209,14 @@
     box-sizing: border-box;
 }
 
+.ace_marker-layer .ace_occur-highlight {
+    position: absolute;
+    z-index: 4;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
 .ace_line .ace_fold {
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
