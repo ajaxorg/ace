@@ -116,20 +116,21 @@ env.editor.commands.addCommands([{
             editor.gotoLine(line);
     },
     readOnly: true
-}/*, {
-    name: "find",
-    bindKey: {win: "Ctrl-F", mac: "Command-F"},
+}, {
+    name: "snippet",
+    bindKey: {win: "Alt-C", mac: "Command-Alt-C"},
     exec: function(editor, needle) {
-        if (typeof needle == "object") {
-            var arg = this.name + " " + editor.getCopyText();
-            editor.cmdLine.setValue(arg, 1);
+        if (typeof needle == "object") {            
+            editor.cmdLine.setValue("snippet ", 1);
             editor.cmdLine.focus();
             return;
         }
-        editor.find(needle);
+		var s = SnippetManager.getSnippetByName(needle, editor);
+		if (s)
+			SnippetManager.insertSnippet(editor, s.content);
     },
     readOnly: true
-}*/, {
+}, {
     name: "focusCommandLine",
     bindKey: "shift-esc",
     exec: function(editor, needle) { editor.cmdLine.focus(); },
@@ -461,8 +462,8 @@ SnippetManager.register({
     name: "testSnippet"
 })
 jsSnippets.snippets = SnippetManager.parseSnippetFile(jsSnippets.snippetText)
-SnippetManager.register(jsSnippets.snippets)
-
+SnippetManager.register(jsSnippets.snippets, "javascript")
+window.SnippetManager = SnippetManager
 
 ace.commands.bindKey("Tab", function(editor) {
     var success = SnippetManager.expandWithTab(editor);

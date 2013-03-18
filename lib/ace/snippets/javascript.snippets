@@ -5,15 +5,15 @@ snippet proto
 	};
 # Function
 snippet fun
-	function ${1:function_name}(${2:argument}) {
+	function ${1?:function_name}(${2:argument}) {
 		${3:// body...}
 	}
 # Anonymous Function
-regex /(=)\s*|(:)\s*|(\()|\b/f/(\))?/
+regex /((=)\s*|(:)\s*|(\()|\b)/f/(\))?/
 name f
-	function${M1||M2||M3? ${1:functionName $: }}($2) {
+	function${M1?: ${1:functionName}}($2) {
 		${0:$TM_SELECTED_TEXT}
-	}${M1?;}${M2?,}${M3?)}
+	}${M2?;}${M3?,}${M4?)}
 # Immediate function
 trigger \(?f\(
 endTrigger \)?
@@ -165,7 +165,7 @@ snippet for-
 	}
 # for (...) {...}
 snippet for
-	for (var ${1\n:i} = 0; $1 < ${2/\n/:Things}.length; $1${3/\n/:++}) {
+	for (var ${1:i} = 0; $1 < ${2:Things}.length; $1${3:++}) {
 		${0:$2[$1]}
 	}
 # for (...) {...} (Improved Native For-Loop)
@@ -173,26 +173,13 @@ snippet forr
 	for (var ${1:i} = ${2:Things}.length - 1; $1 >= 0; $1${3:--}) {
 		${0:$2[$1]}
 	}
-snippet for-
-
-snippet for ?in
-
-
-regex /^\s*/for\b\s*(\w+\b)?(\s*\d+\b)(\s*\d*)/
-	78789
-regex /^\s*/for (\w+) in (\w+)/
-	${include:for $1=$M1,$2=$M2}44
-regex /^\s*/for\b( \w+\b)?( \w+\b)(\.l?e?n?[ght]{0,3})/
-	${include:for $1=$M1,$2=$M2}44
-regex /^\s*/for (\w+) in (\w+)/
-	${include:for $1=$M1,$2=$M2}44
 
 
 #modules
 snippet def
 	define(function(require, exports, module) {
 	"use strict";
-	${includeRepeated:Req}
+	var ${1/.*\///} = require("${1}");
 	
 	$TM_SELECTED_TEXT
 	});
@@ -202,5 +189,5 @@ guard ^\s*
 	$0
 snippet Req
 guard ^\s*
-	var ${1/.*\/(.)/\u$1/} = require("${1}").${1!0};
+	var ${1/.*\/(.)/\u$1/} = require("${1}").${1/.*\/(.)/\u$1/};
 	$0
