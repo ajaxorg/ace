@@ -52,6 +52,8 @@ var Renderer = require("ace/virtual_renderer").VirtualRenderer;
 var Editor = require("ace/editor").Editor;
 var MultiSelect = require("ace/multi_select").MultiSelect;
 
+var whitespace = require("ace/ext/whitespace");
+
 var doclist = require("./doclist");
 var modelist = require("./modelist");
 var layout = require("./layout");
@@ -148,6 +150,9 @@ env.editor.commands.addCommands([{
     readOnly: true
 }]);
 
+
+env.editor.commands.addCommands(whitespace.commands);
+
 cmdLine.commands.bindKeys({
     "Shift-Return|Ctrl-Return|Alt-Return": function(cmdLine) { cmdLine.insert("\n"); },
     "Esc|Shift-Esc": function(cmdLine){ cmdLine.editor.focus(); },
@@ -231,6 +236,7 @@ bindDropdown("doc", function(name) {
         if (!session)
             return;
         session = env.split.setSession(session);
+        whitespace.detectIndentation(session);
         updateUIEditorOptions();
         env.editor.focus();
     });
