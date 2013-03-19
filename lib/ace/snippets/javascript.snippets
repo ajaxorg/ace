@@ -163,13 +163,13 @@ snippet for-
 	}
 # for (...) {...}
 snippet for
-	for (var ${1:i} = 0; $1 < ${2:Things}.length; $1${3:++}) {
-		${0:$2[$1]}
+	for (var ${1:i} = 0; $1 < ${2:Things}.length; $1$++) {
+		${3:$2[$1]}$0
 	}
 # for (...) {...} (Improved Native For-Loop)
 snippet forr
-	for (var ${1:i} = ${2:Things}.length - 1; $1 >= 0; $1${3:--}) {
-		${0:$2[$1]}
+	for (var ${1:i} = ${2:Things}.length - 1; $1 >= 0; $1$--) {
+		${3:$2[$1]}$0
 	}
 
 

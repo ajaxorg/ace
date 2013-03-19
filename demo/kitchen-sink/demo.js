@@ -450,14 +450,20 @@ require("ace/placeholder").PlaceHolder;
 var SnippetManager = require("ace/snippets").SnippetManager
 var jsSnippets = require("ace/snippets/javascript");
 window.SnippetManager = SnippetManager
+saveSnippets()
 
 function saveSnippets() {
     jsSnippets.snippets = SnippetManager.parseSnippetFile(jsSnippets.snippetText);
+    SnippetManager.snipp
     SnippetManager.register(jsSnippets.snippets, "javascript")
 }
 
 env.editSnippets = function() {
     var sp = env.split;
+    if (sp.getSplits() == 2) {
+        sp.setSplits(1);
+        return;
+    }
     sp.setSplits(1);
     sp.setSplits(2);
     sp.setOrientation(sp.BESIDE);
