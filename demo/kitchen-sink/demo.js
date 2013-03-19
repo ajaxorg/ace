@@ -120,14 +120,14 @@ env.editor.commands.addCommands([{
     name: "snippet",
     bindKey: {win: "Alt-C", mac: "Command-Alt-C"},
     exec: function(editor, needle) {
-        if (typeof needle == "object") {            
+        if (typeof needle == "object") {
             editor.cmdLine.setValue("snippet ", 1);
             editor.cmdLine.focus();
             return;
         }
-		var s = SnippetManager.getSnippetByName(needle, editor);
-		if (s)
-			SnippetManager.insertSnippet(editor, s.content);
+        var s = SnippetManager.getSnippetByName(needle, editor);
+        if (s)
+            SnippetManager.insertSnippet(editor, s.content);
     },
     readOnly: true
 }, {
@@ -169,7 +169,7 @@ commands.addCommand({
     exec: function() {alert("Fake Save File");}
 });
 
-var keybindings = {    
+var keybindings = {
     ace: null, // Null = use "default" keymapping
     vim: require("ace/keyboard/vim").handler,
     emacs: "ace/keyboard/emacs",
@@ -375,7 +375,7 @@ bindDropdown("split", function(value) {
         sp.setSplits(1);
     } else {
         var newEditor = (sp.getSplits() == 1);
-        sp.setOrientation(value == "below" ? sp.BELOW : sp.BESIDE);        
+        sp.setOrientation(value == "below" ? sp.BELOW : sp.BESIDE);
         sp.setSplits(2);
 
         if (newEditor) {
@@ -449,21 +449,32 @@ require("ace/placeholder").PlaceHolder;
 
 var SnippetManager = require("ace/snippets").SnippetManager
 var jsSnippets = require("ace/snippets/javascript");
-var testSnippet = "\
-\\begin{${1:document}}\n\
-    ${2:$TM_SELECTED_TEXT:some ${3:latex}}\n\
-    ${3:$TM_SELECTED_TEXT/a/b/c}\n\
-    ${4:${TM_SELECTED_TEXT/(.)/\\u$1/c:7}}\n\
-\\end{$1}\n\
-$0";
-SnippetManager.register({
-    content: testSnippet,
-    tabTrigger: "t",
-    name: "testSnippet"
-})
-jsSnippets.snippets = SnippetManager.parseSnippetFile(jsSnippets.snippetText)
-SnippetManager.register(jsSnippets.snippets, "javascript")
 window.SnippetManager = SnippetManager
+
+function saveSnippets() {
+    jsSnippets.snippets = SnippetManager.parseSnippetFile(jsSnippets.snippetText);
+    SnippetManager.register(jsSnippets.snippets, "javascript")
+}
+
+env.editSnippets = function() {
+    var sp = env.split;
+    sp.setSplits(1);
+    sp.setSplits(2);
+    sp.setOrientation(sp.BESIDE);
+    var editor = sp.$editors[1]
+    if (!env.snippetSession) {
+        var file = jsSnippets.snippetText;
+        env.snippetSession = doclist.initDoc(file, "", {});
+        env.snippetSession.setMode("ace/mode/tmsnippet");
+        env.snippetSession.setUseSoftTabs(false);
+    }
+    editor.on("blur", function() {
+        jsSnippets.snippetText = editor.getValue();
+        saveSnippets();
+    })
+    editor.setSession(env.snippetSession, 1);
+    editor.focus();
+}
 
 ace.commands.bindKey("Tab", function(editor) {
     var success = SnippetManager.expandWithTab(editor);

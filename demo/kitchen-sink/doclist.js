@@ -54,6 +54,7 @@ function initDoc(file, path, doc) {
     var mode = modelist.getModeFromPath(path);
     session.modeName = mode.name;
     session.setMode(mode.mode);
+    return session;
 }
 
 

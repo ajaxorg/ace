@@ -1,132 +1,209 @@
 [[
    "start",
-  ["doc,comment","$$------------------------------------"]
+  ["comment","# Function"]
 ],[
    "start"
 ],[
    "start",
-  ["text","tabTrigger: t"]
+  ["constant.language.escape","snippet"],
+  ["text"," fun"]
 ],[
    "start"
 ],[
-   "start",
-  ["text","name: Heading 3"]
-],[
-   "start"
-],[
-   "start",
-  ["text","scope: language"]
-],[
-   "start"
-],[
-   "start",
-  ["text","content: -----------------------------"]
-],[
-   "start"
-],[
-   "start",
-  ["text","\\begin{"],
+   "sn-start",
+  ["text","\tfunction "],
   ["markup.list","${"],
   ["constant.numeric","1"],
-  ["punctuation.operator",":"],
-  ["text","documnet"],
+  ["text","?:function_name"],
   ["markup.list","}"],
-  ["text","}"]
-],[
-   "start"
-],[
-   "start",
-  ["text","    "],
+  ["text","("],
   ["markup.list","${"],
   ["constant.numeric","2"],
   ["punctuation.operator",":"],
-  ["keyword","$TM_SELECTED_TEXT"],
-  ["text",":some latex"],
-  ["markup.list","}"]
+  ["text","argument"],
+  ["markup.list","}"],
+  ["text",") {"]
 ],[
    "start"
 ],[
-   "start",
-  ["text","    "],
+   "sn-start",
+  ["text","\t\t"],
   ["markup.list","${"],
   ["constant.numeric","3"],
   ["punctuation.operator",":"],
+  ["text","// body..."],
+  ["markup.list","}"]
+],[
+   "start"
+],[
+   "sn-start",
+  ["text","\t}"]
+],[
+   "start"
+],[
+   "start",
+  ["comment","# Anonymous Function"]
+],[
+   "start"
+],[
+   "start",
+  ["constant.language.escape","regex "],
+  ["keyword","/"],
+  ["text","((=)\\s*|(:)\\s*|(\\()|\\b)"],
+  ["keyword","/"],
+  ["text","f"],
+  ["keyword","/"],
+  ["text","(\\))?"],
+  ["keyword","/"]
+],[
+   "start"
+],[
+   "start",
+  ["constant.language.escape","name"],
+  ["text"," f"]
+],[
+   "start"
+],[
+   "sn-start",
+  ["text","\tfunction"],
+  ["markup.list","${"],
+  ["variable","M1"],
+  ["text","?: "],
+  ["markup.list","${"],
+  ["constant.numeric","1"],
+  ["punctuation.operator",":"],
+  ["text","functionName"],
+  ["markup.list","}}"],
+  ["text","("],
+  ["variable","$2"],
+  ["text",") {"]
+],[
+   "start"
+],[
+   "sn-start",
+  ["text","\t\t"],
+  ["markup.list","${"],
+  ["constant.numeric","0"],
+  ["punctuation.operator",":"],
   ["keyword","$TM_SELECTED_TEXT"],
-  ["text","/a/b/c"],
+  ["markup.list","}"]
+],[
+   "start"
+],[
+   "sn-start",
+  ["text","\t}"],
+  ["markup.list","${"],
+  ["variable","M2"],
+  ["text","?;"],
+  ["markup.list","}${"],
+  ["variable","M3"],
+  ["text","?,"],
+  ["markup.list","}${"],
+  ["variable","M4"],
+  ["text","?)"],
   ["markup.list","}"]
 ],[
    "start"
 ],[
    "start",
-  ["text","    "],
+  ["comment","# Immediate function"]
+],[
+   "start"
+],[
+   "start",
+  ["constant.language.escape","trigger"],
+  ["text"," \\(?f\\("]
+],[
+   "start"
+],[
+   "start",
+  ["constant.language.escape","endTrigger"],
+  ["text"," \\)?"]
+],[
+   "start"
+],[
+   "start",
+  ["constant.language.escape","snippet"],
+  ["text"," f("]
+],[
+   "start"
+],[
+   "sn-start",
+  ["text","\t(function("],
   ["markup.list","${"],
-  ["constant.numeric","4"],
+  ["constant.numeric","1"],
+  ["markup.list","}"],
+  ["text",") {"]
+],[
+   "start"
+],[
+   "sn-start",
+  ["text","\t\t"],
+  ["markup.list","${"],
+  ["constant.numeric","0"],
   ["punctuation.operator",":"],
   ["markup.list","${"],
   ["keyword","TM_SELECTED_TEXT"],
-  ["string.regex","/(.)/"],
-  ["string","\\"],
-  ["keyword","\\u"],
-  ["variable","$1"],
-  ["string.regex","/g:"],
-  ["text","7"],
+  ["punctuation.operator",":"],
+  ["text","/* code */"],
   ["markup.list","}}"]
 ],[
    "start"
 ],[
-   "start",
-  ["text","\\end{"],
-  ["variable","$1"],
-  ["text","}"]
-],[
-   "start"
-],[
-   "start",
-  ["variable","$0"],
-  ["constant.language.escape","\\\\"],
-  ["text","$$"]
-],[
-   "start"
-],[
-   "start",
-  ["doc,comment","$$------------------------------------"]
-],[
-   "start"
-],[
-   "start",
-  ["text","tabTrigger: ^3"]
-],[
-   "start"
-],[
-   "start",
-  ["text","name: Heading 3"]
-],[
-   "start"
-],[
-   "start",
-  ["text","scope: language"]
-],[
-   "start"
-],[
-   "start",
-  ["text","content: -----------------------------"]
-],[
-   "start"
-],[
-   "start"
-],[
-   "start"
-],[
-   "start",
+   "sn-start",
+  ["text","\t}("],
   ["markup.list","${"],
-  ["keyword","TM_CURRENT_LINE"],
-  ["string.regex","/./"],
-  ["string","^"],
-  ["string.regex","/g"],
+  ["constant.numeric","1"],
+  ["markup.list","}"],
+  ["text","));"]
+],[
+   "start"
+],[
+   "start",
+  ["comment","# if"]
+],[
+   "start"
+],[
+   "start",
+  ["constant.language.escape","snippet"],
+  ["text"," if"]
+],[
+   "start"
+],[
+   "sn-start",
+  ["text","\tif ("],
+  ["markup.list","${"],
+  ["constant.numeric","1"],
+  ["punctuation.operator",":"],
+  ["text","true"],
+  ["markup.list","}"],
+  ["text",") {"]
+],[
+   "start"
+],[
+   "sn-start",
+  ["text","\t\t"],
+  ["markup.list","${"],
+  ["constant.numeric","0"],
   ["markup.list","}"]
 ],[
    "start"
 ],[
-   "start",
-  ["doc,comment","$$------------------------------------"]
+   "sn-start",
+  ["text","\t}"]
+],[
+   "start"
+],[
+   "sn-start",
+  ["text","\t"]
+],[
+   "start"
+],[
+   "sn-start",
+  ["text","\t"]
+],[
+   "start"
+],[
+   "sn-start",
+  ["text","\t"]
 ]]
