@@ -203,8 +203,8 @@ function quoteString(str) {
     return '"' + str.replace(/\\/, "\\\\").replace(/"/g, '\\"').replace(/\n/g, "\\\n") + '"';
 }
 
-var cssTemplate = fs.readFileSync(__dirname + "/Theme.tmpl.css", "utf8");
-var jsTemplate = fs.readFileSync(__dirname + "/Theme.tmpl.js", "utf8");
+var cssTemplate = fs.readFileSync(__dirname + "/theme.tmpl.css", "utf8");
+var jsTemplate = fs.readFileSync(__dirname + "/theme.tmpl.js", "utf8");
 
 function normalizeStylesheet(rules) {
     for (var i = rules.length; i--; ) {
