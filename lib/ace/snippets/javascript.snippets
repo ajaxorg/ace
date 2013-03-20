@@ -148,6 +148,7 @@ snippet sing
 		return instance;
 	}
 # class
+name class
 regex /^\s*/clas{0,2}/
 	var ${1:class} = function(${20}) {
 		$40$0
@@ -156,6 +157,8 @@ regex /^\s*/clas{0,2}/
 	(function() {
 		${60:this.prop = ""}
 	}).call(${1:class}.prototype);
+	
+	exports.${1:class} = ${1:class};
 # 
 snippet for-
 	for (var ${1:i} = ${2:Things}.length; ${1:i}--; ) {
