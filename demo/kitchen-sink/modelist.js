@@ -74,6 +74,7 @@ var modesByName = {
     lsl:        ["LSL"          , "lsl"],
     makefile:   ["Makefile"     , "^GNUmakefile|^makefile|^Makefile|^OCamlMakefile|make"],
     markdown:   ["Markdown"     , "md|markdown"],
+    mushcode:   ["TinyMUSH"     , "mc|mush"],
     objectivec: ["Objective-C"  , "m"],
     ocaml:      ["OCaml"        , "ml|mli"],
     pascal:     ["Pascal"       , "pas|p"],

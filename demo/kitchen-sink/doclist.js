@@ -101,6 +101,7 @@ var docs = {
     "docs/luapage.lp": "LuaPage",
     "docs/Makefile": "Makefile",
     "docs/markdown.md": {name: "Markdown", wrapped: true},
+    "docs/tinymush.mc": {name: "TinyMUSH"},
     "docs/objectivec.m": {name: "Objective-C"},
     "docs/ocaml.ml": "OCaml",
     "docs/OpenSCAD.scad": "OpenSCAD",
