@@ -66,6 +66,8 @@ var bindDropdown = util.bindDropdown;
 
 var ElasticTabstopsLite = require("ace/ext/elastic_tabstops_lite").ElasticTabstopsLite;
 
+var IncrementalSearch = require("ace/incremental_search").IncrementalSearch;
+
 /*********** create editor ***************************/
 var container = document.getElementById("editor-container");
 
@@ -173,7 +175,7 @@ commands.addCommand({
     exec: function() {alert("Fake Save File");}
 });
 
-var keybindings = {    
+var keybindings = {
     ace: null, // Null = use "default" keymapping
     vim: require("ace/keyboard/vim").handler,
     emacs: "ace/keyboard/emacs",
@@ -380,7 +382,7 @@ bindDropdown("split", function(value) {
         sp.setSplits(1);
     } else {
         var newEditor = (sp.getSplits() == 1);
-        sp.setOrientation(value == "below" ? sp.BELOW : sp.BESIDE);        
+        sp.setOrientation(value == "below" ? sp.BELOW : sp.BESIDE);
         sp.setSplits(2);
 
         if (newEditor) {
@@ -394,6 +396,14 @@ bindDropdown("split", function(value) {
 
 bindCheckbox("elastic_tabstops", function(checked) {
     env.editor.setOption("useElasticTabstops", checked);
+});
+
+var iSearchCheckbox = bindCheckbox("isearch", function(checked) {
+    env.editor.setOption("useIncrementalSearch", checked);
+});
+
+env.editor.addEventListener('incrementalSearchSettingChanged', function(event) {
+    iSearchCheckbox.checked = event.isEnabled;
 });
 
 
@@ -451,4 +461,3 @@ var StatusBar = require("./statusbar").StatusBar;
 new StatusBar(env.editor, cmdLine.container);
 
 });
-
