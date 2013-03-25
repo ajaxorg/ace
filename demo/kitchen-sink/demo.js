@@ -120,20 +120,21 @@ env.editor.commands.addCommands([{
             editor.gotoLine(line);
     },
     readOnly: true
-}/*, {
-    name: "find",
-    bindKey: {win: "Ctrl-F", mac: "Command-F"},
+}, {
+    name: "snippet",
+    bindKey: {win: "Alt-C", mac: "Command-Alt-C"},
     exec: function(editor, needle) {
         if (typeof needle == "object") {
-            var arg = this.name + " " + editor.getCopyText();
-            editor.cmdLine.setValue(arg, 1);
+            editor.cmdLine.setValue("snippet ", 1);
             editor.cmdLine.focus();
             return;
         }
-        editor.find(needle);
+        var s = SnippetManager.getSnippetByName(needle, editor);
+        if (s)
+            SnippetManager.insertSnippet(editor, s.content);
     },
     readOnly: true
-}*/, {
+}, {
     name: "focusCommandLine",
     bindKey: "shift-esc",
     exec: function(editor, needle) { editor.cmdLine.focus(); },
@@ -459,5 +460,48 @@ event.addListener(container, "drop", function(e) {
 
 var StatusBar = require("./statusbar").StatusBar;
 new StatusBar(env.editor, cmdLine.container);
+
+require("ace/placeholder").PlaceHolder;
+
+var SnippetManager = require("ace/snippets").SnippetManager
+var jsSnippets = require("ace/snippets/javascript");
+window.SnippetManager = SnippetManager
+saveSnippets()
+
+function saveSnippets() {
+    jsSnippets.snippets = SnippetManager.parseSnippetFile(jsSnippets.snippetText);
+    SnippetManager.snipp
+    SnippetManager.register(jsSnippets.snippets, "javascript")
+}
+
+env.editSnippets = function() {
+    var sp = env.split;
+    if (sp.getSplits() == 2) {
+        sp.setSplits(1);
+        return;
+    }
+    sp.setSplits(1);
+    sp.setSplits(2);
+    sp.setOrientation(sp.BESIDE);
+    var editor = sp.$editors[1]
+    if (!env.snippetSession) {
+        var file = jsSnippets.snippetText;
+        env.snippetSession = doclist.initDoc(file, "", {});
+        env.snippetSession.setMode("ace/mode/tmsnippet");
+        env.snippetSession.setUseSoftTabs(false);
+    }
+    editor.on("blur", function() {
+        jsSnippets.snippetText = editor.getValue();
+        saveSnippets();
+    })
+    editor.setSession(env.snippetSession, 1);
+    editor.focus();
+}
+
+ace.commands.bindKey("Tab", function(editor) {
+    var success = SnippetManager.expandWithTab(editor);
+    if (!success)
+        editor.execCommand("indent");
+})
 
 });
