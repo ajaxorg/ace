@@ -75,8 +75,9 @@ regex /([,{[])|^\s*/:f/
 		${0}
 	}${3:,}
 # setTimeout function
-snippet timeout
-	setTimeout(function() {${3}}${2}, ${1:10});
+snippet setTimeout
+regex /\b/st|timeout|setTimeo?u?t?/
+	setTimeout(function() {${3:$TM_SELECTED_TEXT}}, ${1:10});
 # Get Elements
 snippet gett
 	getElementsBy${1:TagName}('${2}')${3}
@@ -166,12 +167,12 @@ snippet for-
 	}
 # for (...) {...}
 snippet for
-	for (var ${1:i} = 0; $1 < ${2:Things}.length; $1$++) {
+	for (var ${1:i} = 0; $1 < ${2:Things}.length; $1++) {
 		${3:$2[$1]}$0
 	}
 # for (...) {...} (Improved Native For-Loop)
 snippet forr
-	for (var ${1:i} = ${2:Things}.length - 1; $1 >= 0; $1$--) {
+	for (var ${1:i} = ${2:Things}.length - 1; $1 >= 0; $1--) {
 		${3:$2[$1]}$0
 	}
 

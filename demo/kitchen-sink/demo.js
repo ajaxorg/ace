@@ -129,9 +129,9 @@ env.editor.commands.addCommands([{
             editor.cmdLine.focus();
             return;
         }
-        var s = SnippetManager.getSnippetByName(needle, editor);
+        var s = snippetManager.getSnippetByName(needle, editor);
         if (s)
-            SnippetManager.insertSnippet(editor, s.content);
+            snippetManager.insertSnippet(editor, s.content);
     },
     readOnly: true
 }, {
@@ -471,15 +471,14 @@ net.loadScript("https://rawgithub.com/nightwing/emmet-core/master/emmet.js", fun
 
 require("ace/placeholder").PlaceHolder;
 
-var SnippetManager = require("ace/snippets").SnippetManager
+var snippetManager = require("ace/snippets").snippetManager
 var jsSnippets = require("ace/snippets/javascript");
-window.SnippetManager = SnippetManager
+window.snippetManager = snippetManager
 saveSnippets()
 
 function saveSnippets() {
-    jsSnippets.snippets = SnippetManager.parseSnippetFile(jsSnippets.snippetText);
-    SnippetManager.snipp
-    SnippetManager.register(jsSnippets.snippets, "javascript")
+    jsSnippets.snippets = snippetManager.parseSnippetFile(jsSnippets.snippetText);
+    snippetManager.register(jsSnippets.snippets, "javascript")
 }
 
 env.editSnippets = function() {
@@ -507,7 +506,7 @@ env.editSnippets = function() {
 }
 
 ace.commands.bindKey("Tab", function(editor) {
-    var success = SnippetManager.expandWithTab(editor);
+    var success = snippetManager.expandWithTab(editor);
     if (!success)
         editor.execCommand("indent");
 })
