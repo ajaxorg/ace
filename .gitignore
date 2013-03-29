@@ -4,13 +4,8 @@
 *.tmp
 
 # Project files that should not be in the repo
-.project
-.settings/
-.settings.xml
-.settings
-.c9settings.xml
-.c9revisions
-.settings.xml.old
+.*
+!/.gitignore
 .*.gz
 
 # A handy place to put stuff that git should ignore:
