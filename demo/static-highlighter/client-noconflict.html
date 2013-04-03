@@ -33,7 +33,8 @@ function wobble (flam) {
         "ace/lib/dom"
     ], function(highlighter, JavaScriptMode, theme, dom) {
         var codeEl = document.getElementById("code");
-        codeEl.style.cssText = 'position: relative; width: 300px; height: 300px;';
+        codeEl.style.cssText = 'margin: 0; padding: 0; position: relative; ' +
+            'width: 300px; height: 300px;';
         var data = codeEl.textContent;
 
         var highlighted = highlighter.render(data, new JavaScriptMode.Mode(), theme);
