@@ -17,6 +17,28 @@
 function wobble (flam) {
     return flam.wobbled = true;
 }
+var longString = 'this will not wrap ******************************************';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// the scrollbars are from overflow auto on .ace_editor.
 </div>
 
 <script src="../../build/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
@@ -36,12 +58,14 @@ function wobble (flam) {
         codeEl.style.cssText = 'margin: 0; padding: 0; position: relative; ' +
             'width: 300px; height: 300px;';
         var data = codeEl.textContent;
-
+        
         var highlighted = highlighter.render(data, new JavaScriptMode.Mode(), theme);
-
+        
         dom.importCssString(highlighted.css, "ace_highlight");
-        dom.importCssString('.ace_editor { position:absolute; ' +
-            'top:0; bottom:0; right:0; left:0; }', 'atropa_hial');
+        dom.importCssString('.ace_editor { overflow: auto; ' +
+            'position:absolute; top:0; bottom:0; right:0; left:0; }' +
+            '.ace_gutter { position: relative; }',
+            'atropa_hial');
         codeEl.innerHTML = highlighted.html;
     });
 }());
