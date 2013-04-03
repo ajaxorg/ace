@@ -13,10 +13,12 @@
 
 <p>Syntax highlighting using Ace language modes and themes.</p>
     
-<div id="code">
+<pre id="code">
 function wobble (flam) {
     return flam.wobbled = true;
 }
+// I'm not exactly sure how to
+// turn on softwrap like effects.
 var longString = 'this will not wrap ******************************************';
 
 
@@ -39,7 +41,7 @@ var longString = 'this will not wrap ******************************************'
 
 
 // the scrollbars are from overflow auto on .ace_editor.
-</div>
+</pre>
 
 <script src="../../build/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
 <script src="../../build/src-noconflict/ext-static_highlight.js" type="text/javascript" charset="utf-8"></script>
@@ -55,18 +57,18 @@ var longString = 'this will not wrap ******************************************'
         "ace/lib/dom"
     ], function(highlighter, JavaScriptMode, theme, dom) {
         var codeEl = document.getElementById("code");
-        codeEl.style.cssText = 'margin: 0; padding: 0; position: relative; ' +
+        var container = document.createElement('div');
+        container.style.cssText = 'margin: 0; padding: 0; position: relative; ' +
             'width: 300px; height: 300px;';
         var data = codeEl.textContent;
-        
         var highlighted = highlighter.render(data, new JavaScriptMode.Mode(), theme);
-        
         dom.importCssString(highlighted.css, "ace_highlight");
         dom.importCssString('.ace_editor { overflow: auto; ' +
             'position:absolute; top:0; bottom:0; right:0; left:0; }' +
             '.ace_gutter { position: relative; }',
             'atropa_hial');
-        codeEl.innerHTML = highlighted.html;
+        container.innerHTML = highlighted.html;
+        codeEl.parentNode.replaceChild(container, codeEl);
     });
 }());
 </script>
