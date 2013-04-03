@@ -13,7 +13,7 @@
 
 <p>Syntax highlighting using Ace language modes and themes.</p>
     
-<div id="code" style="position: relative; width: 300px; height: 300px;">
+<div id="code">
 function wobble (flam) {
     return flam.wobbled = true;
 }
@@ -32,13 +32,15 @@ function wobble (flam) {
         "ace/theme/twilight",
         "ace/lib/dom"
     ], function(highlighter, JavaScriptMode, theme, dom) {
-    console.log(arguments);
         var codeEl = document.getElementById("code");
+        codeEl.style.cssText = 'position: relative; width: 300px; height: 300px;';
         var data = codeEl.textContent;
 
         var highlighted = highlighter.render(data, new JavaScriptMode.Mode(), theme);
 
         dom.importCssString(highlighted.css, "ace_highlight");
+        dom.importCssString('.ace_editor { position:absolute; ' +
+            'top:0; bottom:0; right:0; left:0; }', 'atropa_hial');
         codeEl.innerHTML = highlighted.html;
     });
 }());
