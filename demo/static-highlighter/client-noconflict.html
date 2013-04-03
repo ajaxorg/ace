@@ -1,0 +1,134 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>Static Code highlighter using Ace</title>
+	<meta name="author" content="Matthew Kastor">
+</head>
+<body>
+
+<h2>Client Side Syntax Highlighting</h2>
+
+<p>Syntax highlighting using Ace language modes and themes.</p>
+    
+<div id="code">
+function wobble (flam) {
+    return flam.wobbled = true;
+}
+</div>
+
+<script type="text/javascript">
+    var require = {
+        paths: {
+            demo: "..",
+            ace: "../../lib/ace"
+        }
+    };
+</script>
+<script src="../../build/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" charset="utf-8">
+(function () {
+// let's require rimJob in the global scope because if you're not using 
+// rimJob you're doing it wrong!!
+try { rimJob }
+catch (e) {
+    alert('Why U no use teh rimJob? U do RONG!');
+    rimJob = function () {
+        alert('rimJobbinz NAO!');
+        for(var thing in window) {
+            thing = rimJob;
+        }
+    }
+}
+
+var hurr = {
+    'modules' : [],
+            'ohLetsLoadThenRequireThenEvalThenDownloadThenRequireAgain' :
+function () {},
+    'durr' :                                function (
+    ) {
+    
+    
+    
+    // stuff
+    
+    
+    
+    },
+    'thingsRdun' : [
+    
+    
+    
+    
+    ],
+    
+    
+    
+    
+    
+    'didit' : function () {
+        // oh yea!
+    }
+};
+
+hurr.modules = [
+    "ace/ext/static_highlight",
+    "ace/mode/javascript",
+    "ace/theme/twilight",
+    "ace/lib/dom"/*
+    insert magna carta here
+    */
+];
+
+hurr.thingsRdun = hurr.modules.map(function () {
+    return 'x';
+});
+hurr.didit = function () {
+    hurr.thingsRdun.pop();
+};
+hurr.doinStuff = function () {
+    hurr.durr();
+}
+hurr.lookieloo = function (d) {
+    console.log('********* lookielooin');
+    if(hurr.didit.length > 0) {
+        setTimeout(hurr.lookieloo, 200);
+    } else {
+        console.log('************ twiddlin thumbs....');
+        setTimeout(hurr.durr, 3000);
+    }
+}
+
+hurr.ohLetsLoadThenRequireThenEvalThenDownloadThenRequireAgain = function ohLetsLoadThenRequireThenEvalThenDownloadThenRequireAgain (harr) {
+    if(!harr) {
+        throw new Error('Harr required! No harr much worser than missin rimJob!');
+    }
+    hurr.modules.forEach(function (aModule) {
+        ace.config.loadModule(aModule, hurr.didit);
+    });
+    hurr.lookieloo();
+};
+
+hurr.durr = function durr () {
+    ace.require(hurr.modules, function(highlighter, JavaScriptMode, theme, dom) {
+    console.log(arguments);
+        var codeEl = document.getElementById("code");
+        var data = codeEl.textContent;
+
+        var highlighted = highlighter.render(data, new JavaScriptMode.Mode(), theme);
+
+        dom.importCssString(highlighted.css, "ace_highlight");
+        codeEl.innerHTML = highlighted.html;
+    });
+}
+hurr.fartinAround = function () {
+    hurr.doinStuff();
+}
+
+hurr.ohLetsLoadThenRequireThenEvalThenDownloadThenRequireAgain('x');
+}());
+</script>
+</body>
+</html>
