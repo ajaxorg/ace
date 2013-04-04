@@ -45,29 +45,27 @@ var longString = 'this will not wrap ******************************************'
 
 <script src="../../build/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
 <script src="../../build/src-noconflict/ext-static_highlight.js" type="text/javascript" charset="utf-8"></script>
-<script src="../../build/src-noconflict/mode-javascript.js" type="text/javascript" charset="utf-8"></script>
-<script src="../../build/src-noconflict/theme-twilight.js" type="text/javascript" charset="utf-8"></script>
 
 <script type="text/javascript" charset="utf-8">
 (function () {
     ace.require([
         "ace/ext/static_highlight",
-        "ace/theme/twilight",
         "ace/lib/dom"
-    ], function(highlighter, theme, dom) {
+    ], function(highlighter, dom) {
         var codeEl = document.getElementById("code");
         var container = document.createElement('div');
         container.style.cssText = 'margin: 0; padding: 0; position: relative; ' +
             'width: 300px; height: 300px;';
         var data = codeEl.textContent;
-        var highlighted = highlighter.render(data, "ace/mode/javascript", theme);
-        dom.importCssString(highlighted.css, "ace_highlight");
-        dom.importCssString('.ace_editor { overflow: auto; ' +
-            'position:absolute; top:0; bottom:0; right:0; left:0; }' +
-            '.ace_gutter { position: relative; }',
-            'atropa_hial');
-        container.innerHTML = highlighted.html;
-        codeEl.parentNode.replaceChild(container, codeEl);
+        highlighter.render(data, "ace/mode/javascript", "ace/theme/twilight", 1, false, function (highlighted) {
+            dom.importCssString(highlighted.css, "ace_highlight");
+            dom.importCssString('.ace_editor { overflow: auto; ' +
+                'position:absolute; top:0; bottom:0; right:0; left:0; }' +
+                '.ace_gutter { position: relative; }',
+                'atropa_hial');
+            container.innerHTML = highlighted.html;
+            codeEl.parentNode.replaceChild(container, codeEl);
+        });
     });
 }());
 </script>
