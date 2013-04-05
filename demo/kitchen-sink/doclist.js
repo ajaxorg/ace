@@ -35,7 +35,7 @@ var EditSession = require("ace/edit_session").EditSession;
 var UndoManager = require("ace/undomanager").UndoManager;
 var net = require("ace/lib/net");
 
-var modelist = require("./modelist");
+var modelist = require("ace/ext/modelist");
 /*********** demo documents ***************************/
 var fileCache = {};
 

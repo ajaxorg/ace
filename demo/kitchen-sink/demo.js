@@ -55,7 +55,7 @@ var MultiSelect = require("ace/multi_select").MultiSelect;
 var whitespace = require("ace/ext/whitespace");
 
 var doclist = require("./doclist");
-var modelist = require("./modelist");
+var modelist = require("ace/ext/modelist");
 var layout = require("./layout");
 var TokenTooltip = require("./token_tooltip").TokenTooltip;
 var util = require("./util");
