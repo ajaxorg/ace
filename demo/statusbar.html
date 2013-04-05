@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Editor</title>
+  <style type="text/css" media="screen">
+    body {
+        overflow: hidden;
+    }
+    
+    #editor { 
+        margin: 0;
+        position: absolute;
+        top: 0;
+        bottom: 20px;
+        left: 0;
+        right: 0;
+    }
+    #statusBar {
+        margin: 0;
+        padding: 0;
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 20px;
+        background-color: rgb(245, 245, 245);
+        color: gray;
+    }
+    #statusbar#lineColIndicator {
+        border-left:1px solid;
+    }
+  </style>
+</head>
+<body>
+
+<pre id="editor">
+    var editor = ace.edit("editor");
+    var StatusBar = ace.require('ace/ext/statusbar').StatusBar;
+    var statusBar = new StatusBar(editor, document.getElementById('statusBar'));
+    editor.setTheme("ace/theme/twilight");
+    editor.getSession().setMode("ace/mode/javascript");
+</pre>
+<div id="statusBar">ace rocks!</div>
+    
+<script src="../build/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+<script src="../build/src-noconflict/ext-statusbar.js" type="text/javascript" charset="utf-8"></script>
+<script>
+    var editor = ace.edit("editor");
+    var StatusBar = ace.require('ace/ext/statusbar').StatusBar;
+    var statusBar = new StatusBar(editor, document.getElementById('statusBar'));
+    editor.setTheme("ace/theme/twilight");
+    editor.getSession().setMode("ace/mode/javascript");
+</script>
+
+</body>
+</html>
