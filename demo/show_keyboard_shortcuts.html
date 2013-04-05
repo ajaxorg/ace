@@ -21,12 +21,17 @@
 </head>
 <body>
 
-<pre id="editor">function foo(items) {
-    var i;
-    for (i = 0; i &lt; items.length; i++) {
-        alert("Ace Rocks " + items[i]);
+<pre id="editor">Editor.prototype.showKeyboardShortcuts = function () {
+    showKeyboardShortcuts(this);
+};
+editor.commands.addCommands([{
+    name: "showKeyboardShortcuts",
+    bindKey: {win: "Ctrl-Alt-h", mac: "Command-Alt-h"},
+    exec: function(editor, line) {
+        editor.showKeyboardShortcuts();
     }
-}</pre>
+}]);
+</pre>
     
 <script src="../build/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
 <script src="../build/src-noconflict/ext-show_keyboard_shortcuts.js" type="text/javascript" charset="utf-8"></script>
