@@ -31,8 +31,8 @@
 <script src="../build/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
 <script src="../build/src-noconflict/ext-show_settings_menu.js" type="text/javascript" charset="utf-8"></script>
 <script>
-    ace.require('ace/ext/show_settings_menu');
     var editor = ace.edit("editor");
+    ace.require('ace/ext/show_settings_menu').init(editor);
     editor.setTheme("ace/theme/twilight");
     editor.getSession().setMode("ace/mode/javascript");
 </script>
