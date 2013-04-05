@@ -42,3 +42,9 @@ body {
 #controls td + td {
     text-align: left;
 }
+#lineColIndicator {
+    color: gray;
+    position: absolute;
+    right: 0;
+    border-left: 1px solid;
+}
