@@ -6,7 +6,7 @@ var net = require("ace/lib/net");
 var Range = require("ace/range").Range;
 var util = require("demo/kitchen-sink/util");
 var layout = require("demo/kitchen-sink/layout");
-var modelist = require("demo/kitchen-sink/modelist");
+var modelist = require("ace/ext/modelist");
 var doclist = require("demo/kitchen-sink/doclist");
 var TokenTooltip = require("demo/kitchen-sink/token_tooltip").TokenTooltip;
 
