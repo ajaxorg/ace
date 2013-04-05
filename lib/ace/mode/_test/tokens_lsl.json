@@ -948,7 +948,7 @@
 ],[
    "start",
   ["text","           "],
-  ["identifier","PSYS_SRC_TEXTURE"],
+  ["constant.language","PSYS_SRC_TEXTURE"],
   ["punctuation.operator",","],
   ["text"," "],
   ["identifier","Txt_Point"],
@@ -957,7 +957,7 @@
 ],[
    "start",
   ["text","           "],
-  ["identifier","PSYS_PART_START_SCALE"],
+  ["constant.language","PSYS_PART_START_SCALE"],
   ["punctuation.operator",","],
   ["text"," "],
   ["keyword.operator","<"],
@@ -976,7 +976,7 @@
 ],[
    "start",
   ["text","           "],
-  ["identifier","PSYS_PART_END_SCALE"],
+  ["constant.language","PSYS_PART_END_SCALE"],
   ["punctuation.operator",","],
   ["text","   "],
   ["keyword.operator","<"],
@@ -995,7 +995,7 @@
 ],[
    "start",
   ["text","           "],
-  ["identifier","PSYS_PART_START_COLOR"],
+  ["constant.language","PSYS_PART_START_COLOR"],
   ["punctuation.operator",","],
   ["text"," "],
   ["identifier","Color_Point"],
@@ -1004,7 +1004,7 @@
 ],[
    "start",
   ["text","           "],
-  ["identifier","PSYS_PART_END_COLOR"],
+  ["constant.language","PSYS_PART_END_COLOR"],
   ["punctuation.operator",","],
   ["text","   "],
   ["identifier","Color_Point"],
@@ -1016,7 +1016,7 @@
 ],[
    "start",
   ["text","           "],
-  ["identifier","PSYS_SRC_BURST_PART_COUNT"],
+  ["constant.language","PSYS_SRC_BURST_PART_COUNT"],
   ["punctuation.operator",","],
   ["text"," "],
   ["paren.lparen","("],
@@ -1028,7 +1028,7 @@
 ],[
    "start",
   ["text","           "],
-  ["identifier","PSYS_SRC_BURST_RATE"],
+  ["constant.language","PSYS_SRC_BURST_RATE"],
   ["punctuation.operator",","],
   ["text"," "],
   ["paren.lparen","("],
@@ -1041,7 +1041,7 @@
 ],[
    "start",
   ["text","           "],
-  ["identifier","PSYS_PART_MAX_AGE"],
+  ["constant.language","PSYS_PART_MAX_AGE"],
   ["punctuation.operator",","],
   ["text"," "],
   ["paren.lparen","("],
@@ -1057,7 +1057,7 @@
 ],[
    "start",
   ["text","           "],
-  ["identifier","PSYS_SRC_PATTERN"],
+  ["constant.language","PSYS_SRC_PATTERN"],
   ["punctuation.operator",","],
   ["text"," "],
   ["paren.lparen","("],
@@ -1072,12 +1072,12 @@
 ],[
    "start",
   ["text","           "],
-  ["identifier","PSYS_PART_FLAGS"],
+  ["constant.language","PSYS_PART_FLAGS"],
   ["punctuation.operator",","]
 ],[
    "start",
   ["text","           "],
-  ["identifier","PSYS_PART_EMISSIVE_MASK"]
+  ["constant.language","PSYS_PART_EMISSIVE_MASK"]
 ],[
    "start",
   ["text","           "],
@@ -1427,7 +1427,7 @@
 ],[
    "start",
   ["text","    "],
-  ["keyword.other","state_entry"],
+  ["support.function.event","state_entry"],
   ["paren.lparen","("],
   ["paren.rparen",")"],
   ["text"," "],
@@ -1517,7 +1517,7 @@
 ],[
    "start",
   ["text","    "],
-  ["keyword.other","listen"],
+  ["support.function.event","listen"],
   ["paren.lparen","("],
   ["text"," "],
   ["storage.type","integer"],
@@ -1593,7 +1593,7 @@
 ],[
    "start",
   ["text","    "],
-  ["keyword.other","timer"],
+  ["support.function.event","timer"],
   ["paren.lparen","("],
   ["paren.rparen",")"],
   ["paren.lparen","{"]
@@ -1629,7 +1629,7 @@
 ],[
    "start",
   ["text","    "],
-  ["keyword.other","on_rez"],
+  ["support.function.event","on_rez"],
   ["paren.lparen","("],
   ["storage.type","integer"],
   ["text"," "],
@@ -1645,7 +1645,7 @@
 ],[
    "start",
   ["text","    "],
-  ["keyword.other","changed"],
+  ["support.function.event","changed"],
   ["paren.lparen","("],
   ["storage.type","integer"],
   ["text"," "],
