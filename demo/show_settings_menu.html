@@ -21,12 +21,18 @@
 </head>
 <body>
 
-<pre id="editor">function foo(items) {
-    var i;
-    for (i = 0; i &lt; items.length; i++) {
-        alert("Ace Rocks " + items[i]);
-    }
-}</pre>
+<pre id="editor">Editor.prototype.showSettingsMenu = function () {
+    showSettingsMenu(this);
+};
+editor.commands.addCommands([{
+    name: "showSettingsMenu",
+    bindKey: {win: "Ctrl-q", mac: "Command-q"},
+    exec: function(editor, line) {
+        editor.showSettingsMenu();
+    },
+    readOnly: true
+}]);
+</pre>
     
 <script src="../build/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
 <script src="../build/src-noconflict/ext-show_settings_menu.js" type="text/javascript" charset="utf-8"></script>
