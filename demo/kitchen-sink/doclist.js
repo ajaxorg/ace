@@ -132,6 +132,7 @@ var docs = {
     "docs/toml.toml": "TOML",
     "docs/typescript.ts": "Typescript",
     "docs/vbscript.vbs": "VBScript",
+    "docs/velocity.vm": "Velocity",
     "docs/xml.xml": "XML",
     "docs/xquery.xq": "XQuery",
     "docs/yaml.yaml": "YAML",
