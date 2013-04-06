@@ -110,13 +110,10 @@ var modesByName = {
     actionscript: ["ActionScript"  ,"as"],
     erlang:       ["Erlang"  ,"erl|hrl"],
     forth:        ["Forth",  ,"frt|fs|ldr"],
-    fortran_modern: ["Fortran - Modern",  ,"f90|F90|f95|F95|f03|F03|f08|F08"],
     haskell: ["Haskell", "hs"],
     julia:   ["Julia",   "jl"],
     prolog:  ["Prolog",  "plg|prolog"],
-    rust:    ["Rust",    "rs|rc"]
-    
-    
+    rust:    ["Rust",    "rs"]
 };
 
 for (var name in modesByName) {
