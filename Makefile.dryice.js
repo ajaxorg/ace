@@ -470,9 +470,16 @@ var detectTextModules = function(input, source) {
         input = input.toString();
 
     var module = source.isLocation ? source.path : source;
-
+    
     input = input.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
-    input = '"' + input.replace(/\r?\n/g, '\\n') + '"';
+    if (/\.css$/.test(module)) {
+        // remove unnecessary whitespace from css
+        input = input.replace(/\n\s+/g, "\n");
+        input = '"' + input.replace(/\r?\n/g, '\\\n') + '"';
+    } else {
+        // but don't break other files!
+        input = '"' + input.replace(/\r?\n/g, '\\n\\\n') + '"';
+    }
     textModules[module] = input;
 
     return "";
