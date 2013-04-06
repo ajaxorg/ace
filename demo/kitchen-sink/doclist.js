@@ -135,7 +135,16 @@ var docs = {
     "docs/xml.xml": "XML",
     "docs/xquery.xq": "XQuery",
     "docs/yaml.yaml": "YAML",
-    "docs/c9search.c9search_results": "C9 Search Results"
+    "docs/c9search.c9search_results": "C9 Search Results",
+    
+    "docs/actionscript.as": "ActionScript",
+    "docs/erlang/erl": "Erlang",
+    "docs/forth.frt": "Forth",
+    "docs/fortran.f95": "Fortran",
+    "docs/haskell.hs": "Haskell",
+    "docs/julia.js": "Julia",
+    "docs/prolog/plg": "Prolog",
+    "docs/rust.rs": "Rust"
 };
 
 var ownSource = {

@@ -7,6 +7,7 @@
 .*
 !/.gitignore
 .*.gz
+*.tmTheme.js
 
 # A handy place to put stuff that git should ignore:
 /ignore/

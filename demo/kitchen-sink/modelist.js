@@ -35,7 +35,6 @@ Mode.prototype.supportsFile = function(filename) {
 };
 
 var modesByName = {
-    abap:       ["ABAP"         , "abap"],
     asciidoc:   ["AsciiDoc"     , "asciidoc"],
     c9search:   ["C9Search"     , "c9search_results"],
     coffee:     ["CoffeeScript" , "^Cakefile|coffee|cf|cson"],
@@ -100,12 +99,24 @@ var modesByName = {
     text:       ["Text"         , "txt"],
     textile:    ["Textile"      , "textile"],
     tmsnippet:  ["tmSnippet"    , "tmSnippet"],
-    toml:       ["toml"         , "toml"],
+    toml:       ["Toml"         , "toml"],
     typescript: ["Typescript"   , "typescript|ts|str"],
     vbscript:   ["VBScript"     , "vbs"],
     xml:        ["XML"          , "xml|rdf|rss|wsdl|xslt|atom|mathml|mml|xul|xbl"],
     xquery:     ["XQuery"       , "xq"],
-    yaml:       ["YAML"         , "yaml"]
+    yaml:       ["YAML"         , "yaml"],
+    
+    abap:         ["ABAP"          , "abap"],
+    actionscript: ["ActionScript"  ,"as"],
+    erlang:       ["Erlang"  ,"erl|hrl"],
+    forth:        ["Forth",  ,"frt|fs|ldr"],
+    fortran_modern: ["Fortran - Modern",  ,"f90|F90|f95|F95|f03|F03|f08|F08"],
+    haskell: ["Haskell", "hs"],
+    julia:   ["Julia",   "jl"],
+    prolog:  ["Prolog",  "plg|prolog"],
+    rust:    ["Rust",    "rs|rc"]
+    
+    
 };
 
 for (var name in modesByName) {
