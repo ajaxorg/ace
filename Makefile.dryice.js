@@ -472,8 +472,7 @@ var detectTextModules = function(input, source) {
     var module = source.isLocation ? source.path : source;
 
     input = input.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
-    input = input.replace(/\n\s+/g, "\n");
-    input = '"' + input.replace(/\r?\n/g, '\\\n') + '"';
+    input = '"' + input.replace(/\r?\n/g, '\\n') + '"';
     textModules[module] = input;
 
     return "";
