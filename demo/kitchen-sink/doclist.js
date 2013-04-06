@@ -138,6 +138,7 @@ var docs = {
     "docs/c9search.c9search_results": "C9 Search Results",
     
     "docs/actionscript.as": "ActionScript",
+    "docs/autohotkey.ahk": "AutoHotKey",
     "docs/erlang/erl": "Erlang",
     "docs/forth.frt": "Forth",
     "docs/haskell.hs": "Haskell",

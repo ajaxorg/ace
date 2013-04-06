@@ -108,6 +108,7 @@ var modesByName = {
     
     abap:         ["ABAP"          , "abap"],
     actionscript: ["ActionScript"  ,"as"],
+    autohotkey:   ["AutoHotKey"    , "ahk"],
     erlang:       ["Erlang"  ,"erl|hrl"],
     forth:        ["Forth",  ,"frt|fs|ldr"],
     haskell: ["Haskell", "hs"],
