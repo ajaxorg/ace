@@ -96,13 +96,13 @@
    "start"
 ],[
    "start",
-  ["keyword.other.import.dart","#import"],
+  ["keyword.other.import.dart","import"],
   ["text","("],
   ["string","\"http://dartwatch.com/myOtherLibrary.dart\""],
   ["text",");"]
 ],[
    "start",
-  ["keyword.other.import.dart","#import"],
+  ["keyword.other.import.dart","import"],
   ["text","("],
   ["string","\"myOtherLibrary.dart\""],
   ["text",", "],
