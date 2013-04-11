@@ -559,7 +559,7 @@ ace.commands.bindKey("Tab", function(editor) {
         editor.execCommand("indent");
 })
 
-var Autocompleter = require("./autocompleter").Autocompleter;
+var Autocompleter = require("ace/autocomplete").Autocomplete;
 Autocompleter.addTo(env.editor)
 
 });
