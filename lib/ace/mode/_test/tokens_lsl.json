@@ -20,7 +20,7 @@
     "start",
     ["storage.type.lsl", "integer"],
     ["text.lsl", " "],
-    ["text.lsl", "someIntNormal"],                                              // variable name
+    ["text.lsl", "someIntNormal"],
     ["text.lsl", "       "],
     ["keyword.operator.lsl", "="],
     ["text.lsl", " "],
@@ -30,7 +30,7 @@
     "start",
     ["storage.type.lsl", "integer"],
     ["text.lsl", " "],
-    ["text.lsl", "someIntHex"],                                                 // variable name
+    ["text.lsl", "someIntHex"],
     ["text.lsl", "          "],
     ["keyword.operator.lsl", "="],
     ["text.lsl", " "],
@@ -40,7 +40,7 @@
     "start",
     ["storage.type.lsl", "integer"],
     ["text.lsl", " "],
-    ["text.lsl", "someIntMath"],                                                // variable name
+    ["text.lsl", "someIntMath"],
     ["text.lsl", "         "],
     ["keyword.operator.lsl", "="],
     ["text.lsl", " "],
@@ -68,7 +68,7 @@
     "start",
     ["storage.type.lsl", "key"],
     ["text.lsl", " "],
-    ["text.lsl", "someKeyTexture"],                                             // variable name
+    ["text.lsl", "someKeyTexture"],
     ["text.lsl", "          "],
     ["keyword.operator.lsl", "="],
     ["text.lsl", " "],
@@ -78,7 +78,7 @@
     "start",
     ["storage.type.lsl", "string"],
     ["text.lsl", " "],
-    ["text.lsl", "someStringSpecial"],                                          // variable name
+    ["text.lsl", "someStringSpecial"],
     ["text.lsl", "    "],
     ["keyword.operator.lsl", "="],
     ["text.lsl", " "],
@@ -93,7 +93,7 @@
     ["paren.lparen.lsl", "("],
     ["storage.type.lsl", "string"],
     ["text.lsl", " "],
-    ["text.lsl", "inputAsString"],                                              // variable name
+    ["text.lsl", "inputAsString"],
     ["paren.rparen.lsl", ")"]
 ],[
     "start",
@@ -106,7 +106,7 @@
     ["constant.language.integer.lsl", "PUBLIC_CHANNEL"],
     ["punctuation.operator.lsl", ","],
     ["text.lsl", " "],
-    ["text.lsl", "inputAsString"],                                              // variable name
+    ["text.lsl", "inputAsString"],
     ["paren.rparen.lsl", ")"],
     ["punctuation.operator.lsl", ";"]
 ],[
@@ -123,7 +123,7 @@
     ["paren.lparen.lsl", "("],
     ["storage.type.lsl", "key"],
     ["text.lsl", " "],
-    ["text.lsl", "inputAsKey"],                                                 // variable name
+    ["text.lsl", "inputAsKey"],
     ["paren.rparen.lsl", ")"]
 ],[
     "start",
@@ -136,7 +136,7 @@
     ["paren.lparen.lsl", "("],
     ["storage.type.lsl", "string"],
     ["paren.rparen.lsl", ")"],
-    ["text.lsl", "inputAsKey"],                                                 // variable name
+    ["text.lsl", "inputAsKey"],
     ["punctuation.operator.lsl", ";"]
 ],[
     "start",
@@ -165,7 +165,7 @@
     ["text.lsl", "        "],
     ["storage.type.lsl", "key"],
     ["text.lsl", " "],
-    ["text.lsl", "someKey"],                                                    // variable name
+    ["text.lsl", "someKey"],
     ["text.lsl", " "],
     ["keyword.operator.lsl", "="],
     ["text.lsl", " "],
@@ -174,7 +174,7 @@
 ],[
     "start",
     ["text.lsl", "        "],
-    ["text.lsl", "someKey"],                                                    // variable name
+    ["text.lsl", "someKey"],
     ["text.lsl", " "],
     ["keyword.operator.lsl", "="],
     ["text.lsl", " "],
@@ -190,13 +190,13 @@
     ["text.lsl", "        "],
     ["storage.type.lsl", "string"],
     ["text.lsl", " "],
-    ["text.lsl", "someString"],                                                 // variable name
+    ["text.lsl", "someString"],
     ["text.lsl", " "],
     ["keyword.operator.lsl", "="],
     ["text.lsl", " "],
     ["support.function.user-defined.lsl", "user_defined_function_returning_a_string"],
     ["paren.lparen.lsl", "("],
-    ["text.lsl", "someKey"],                                                    // variable name
+    ["text.lsl", "someKey"],
     ["paren.rparen.lsl", ")"],
     ["punctuation.operator.lsl", ";"]
 ],[
@@ -207,7 +207,7 @@
     ["text.lsl", "        "],
     ["support.function.user-defined.lsl", "some_user_defined_function_without_return_type"],
     ["paren.lparen.lsl", "("],
-    ["text.lsl", "someString"],                                                 // variable name
+    ["text.lsl", "someString"],
     ["paren.rparen.lsl", ")"],
     ["punctuation.operator.lsl", ";"]
 ],[
@@ -224,7 +224,7 @@
     ["paren.lparen.lsl", "("],
     ["storage.type.lsl", "integer"],
     ["text.lsl", " "],
-    ["text.lsl", "num_detected"],                                               // variable name
+    ["text.lsl", "num_detected"],
     ["paren.rparen.lsl", ")"]
 ][
     "start",
@@ -235,7 +235,7 @@
     ["text.lsl", "        "],
     ["storage.type.lsl", "list"],
     ["text.lsl", " "],
-    ["text.lsl", "agentsInRegion"],                                             // variable name
+    ["text.lsl", "agentsInRegion"],
     ["text.lsl", " "],
     ["keyword.operator.lsl", "="],
     ["text.lsl", " "],
@@ -253,13 +253,13 @@
     ["text.lsl", "        "],
     ["storage.type.lsl", "integer"],
     ["text.lsl", " "],
-    ["text.lsl", "numOfAgents"],                                                // variable name
+    ["text.lsl", "numOfAgents"],
     ["text.lsl", " "],
     ["keyword.operator.lsl", "="],
     ["text.lsl", " "],
     ["support.function.lsl", "llListLength"],
     ["paren.lparen.lsl", "("],
-    ["text.lsl", "agentsInRegion"],                                             // variable name
+    ["text.lsl", "agentsInRegion"],
     ["paren.rparen.lsl", ")"],
     ["punctuation.operator.lsl", ";"]
 ],[
@@ -270,7 +270,7 @@
     ["text.lsl", "        "],
     ["storage.type.lsl", "integer"],
     ["text.lsl", " "],
-    ["text.lsl", "index"],                                                      // variable name
+    ["text.lsl", "index"],
     ["punctuation.operator.lsl", ";"],
     ["text.lsl", "                                                          "],
     ["comment.line.double-slash.lsl", "// defaults to 0"],
@@ -282,17 +282,17 @@
     ["paren.lparen.lsl", "("],
     ["punctuation.operator.lsl", ";"],
     ["text.lsl", " "],
-    ["text.lsl", "index"],                                                      // variable name
+    ["text.lsl", "index"],
     ["keyword.operator.lsl", "<="],
     ["text.lsl", " "],
-    ["text.lsl", "numOfAgents"],                                                // variable name
+    ["text.lsl", "numOfAgents"],
     ["text.lsl", " "],
     ["keyword.operator.lsl", "-"],
     ["text.lsl", " "],
     ["constant.numeric.lsl", "1"],
     ["punctuation.operator.lsl", ";"],
     ["text.lsl", " "],
-    ["text.lsl", "index"],                                                      // variable name
+    ["text.lsl", "index"],
     ["keyword.operator.lsl", "++"],
     ["paren.rparen.lsl", ")"],
     ["text.lsl", "                               "],
@@ -311,16 +311,14 @@
     ["", "agentsInRegion"],
     ["punctuation.operator.lsl", ","],
     ["text.lsl", " "],
-    ["text.lsl", "index"],                                                      // variable name
+    ["text.lsl", "index"],
     ["paren.rparen.lsl", ")"],
     ["punctuation.operator.lsl", ","],
     ["text.lsl", " "],
     ["constant.language.integer.lsl", "PUBLIC_CHANNEL"],
     ["punctuation.operator.lsl", ","],
     ["text.lsl", " "],
-    ["string.quoted.double.lsl", "\\\""],                                       // string?
-    ["string.quoted.double.lsl", "Hello, Avatar!"],
-    ["string.quoted.double.lsl", "\\\""],                                       // string?
+    ["string.quoted.double.lsl", "\\\"Hello, Avatar!\\\""],
     ["paren.rparen.lsl", ")"],
     ["punctuation.operator.lsl", ";"]
 ],[
@@ -341,7 +339,7 @@
     ["paren.lparen.lsl", "("],
     ["storage.type.lsl", "integer"],
     ["text.lsl", " "],
-    ["text.lsl", "num_detected"],                                               // variable name
+    ["text.lsl", "num_detected"],
     ["paren.rparen.lsl", ")"]
 ],[
     "start",
@@ -350,7 +348,7 @@
 ],[
     "start",
     ["text.lsl", "        "],
-    ["text.lsl", "someIntNormal"],                                              // variable name
+    ["text.lsl", "someIntNormal"],
     ["text.lsl", "       "],
     ["keyword.operator.lsl", "="],
     ["text.lsl", " "],
@@ -359,7 +357,7 @@
 ],[
     "start",
     ["text.lsl", "        "],
-    ["text.lsl", "someIntHex"],                                                 // variable name
+    ["text.lsl", "someIntHex"],
     ["text.lsl", "          "],
     ["keyword.operator.lsl", "="],
     ["text.lsl", " "],
@@ -368,7 +366,7 @@
 ],[
     "start",
     ["text.lsl", "        "],
-    ["text.lsl", "someIntMath"],                                                // variable name
+    ["text.lsl", "someIntMath"],
     ["text.lsl", "          "],
     ["keyword.operator.lsl", "="],
     ["text.lsl", " "],
@@ -394,7 +392,7 @@
 ],[
     "start",
     ["text.lsl", "        "],
-    ["text.lsl", "someKeyTexture"],                                             // variable name
+    ["text.lsl", "someKeyTexture"],
     ["text.lsl", "      "],
     ["keyword.operator.lsl", "="],
     ["text.lsl", " "],
@@ -403,7 +401,7 @@
 ],[
     "start",
     ["text.lsl", "        "],
-    ["text.lsl", "someStringSpecial"],                                          // variable name
+    ["text.lsl", "someStringSpecial"],
     ["text.lsl", "      "],
     ["keyword.operator.lsl", "="],
     ["text.lsl", " "],
@@ -417,7 +415,7 @@
     ["text.lsl", "        "],
     ["invalid.deprecated.lsl", "llCollisionSprite"],
     ["paren.lparen.lsl", "("],
-    ["text.lsl", "someKeyTexture"],                                             // variable name
+    ["text.lsl", "someKeyTexture"],
     ["paren.rparen.lsl", ")"],
     ["punctuation.operator.lsl", ";"],
     ["text.lsl", "                                      "],
@@ -432,13 +430,11 @@
     ["paren.lparen.lsl", "("],
     ["constant.language.integer.lsl", "PUBLIC_CHANNEL"],
     ["punctuation.operator.lsl", ","],
-    ["string.quoted.double.lsl", "\\\""],                                       // string?
-    ["string.quoted.double.lsl", "Leaving "],
+    ["string.quoted.double.lsl", "\\\"Leaving "],
     ["constant.language.escape.lsl", "\\\""],
     ["string.quoted.double.lsl", "default"],
     ["constant.language.escape.lsl", "\\\""],
-    ["string.quoted.double.lsl", " now..."],
-    ["string.quoted.double.lsl", "\\\""],                                       // string?
+    ["string.quoted.double.lsl", " now...\\\""],
     ["paren.rparen.lsl", ")"],
     ["punctuation.operator.lsl", ";"]
 ],[
@@ -479,8 +475,7 @@
     ["paren.lparen.lsl", "("],
     ["constant.language.integer.lsl", "PUBLIC_CHANNEL"],
     ["punctuation.operator.lsl", ","],
-    ["string.quoted.double.lsl", "\\\""],                                       // string?
-    ["string.quoted.double.lsl", "Entered "],
+    ["string.quoted.double.lsl", "\\\"Entered "],
     ["constant.language.escape.lsl", "\\\""],
     ["string.quoted.double.lsl", "state other"],
     ["constant.language.escape.lsl", "\\\""],
@@ -488,8 +483,7 @@
     ["constant.language.escape.lsl", "\\\""],
     ["string.quoted.double.lsl", "default"],
     ["constant.language.escape.lsl", "\\\""],
-    ["string.quoted.double.lsl", " again..."],
-    ["string.quoted.double.lsl", "\\\""],                                       // string?
+    ["string.quoted.double.lsl", " again...\\\""],
     ["paren.rparen.lsl", ")"],
     ["punctuation.operator.lsl", ";"]
 ],[
