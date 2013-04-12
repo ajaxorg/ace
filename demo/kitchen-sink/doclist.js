@@ -139,6 +139,7 @@ var docs = {
     
     "docs/actionscript.as": "ActionScript",
     "docs/autohotkey.ahk": "AutoHotKey",
+    "docs/batch_file.bat": "BatchFile",
     "docs/erlang/erl": "Erlang",
     "docs/forth.frt": "Forth",
     "docs/haskell.hs": "Haskell",
