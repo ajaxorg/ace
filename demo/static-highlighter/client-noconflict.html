@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>Static Code highlighter using Ace</title>
+	<meta name="author" content="Matthew Kastor">
+    <style type="text/css">
+        .code {
+            width: 50%;
+            position: relative;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Client Side Syntax Highlighting</h2>
+
+<p>Syntax highlighting using Ace language modes and themes.</p>
+
+<div class="code" ace-mode="ace/mode/css" ace-theme="ace/theme/chrome">
+.code {
+    width: 50%;
+    position: relative;
+    white-space: pre-wrap;
+}
+
+</div>
+
+<pre class="code" ace-mode="ace/mode/javascript" ace-theme="ace/theme/twilight">
+function wobble (flam) {
+    return flam.wobbled = true;
+}
+
+// the scrollbars are from overflow auto on .ace_editor.
+
+</pre>
+
+<script src="../../build/src-noconflict/ace.js"></script>
+<script src="../../build/src-noconflict/ext-static_highlight.js"></script>
+
+<script>
+var highlighter = ace.require("ace/ext/static_highlight")
+var dom = ace.require("ace/lib/dom")
+function qsa(sel) {
+    return [].slice.call(document.querySelectorAll(sel));
+}
+
+qsa(".code").forEach(function (codeEl) {
+    var cs = getComputedStyle(codeEl);
+    codeEl.style.cssText = codeEl.style.cssText +
+        'width: ' + cs.width + ';' +
+        'height: ' + cs.height + ';';
+    var mode = codeEl.getAttribute('ace-mode');
+    var theme = codeEl.getAttribute('ace-theme');
+    var data = codeEl.textContent.trim();
+    
+    highlighter.render(data, mode, theme, 1, false, function (highlighted) {    
+        dom.importCssString(highlighted.css, "ace_highlight");
+        dom.importCssString('.ace_editor { overflow: auto; ' +
+            'position:absolute; top:0; bottom:0; right:0; left:0; }' +
+            '.ace_gutter { position: relative; }',
+            'atropa_hial');
+        codeEl.innerHTML = highlighted.html;
+    });
+});
+</script>
+
+</body>
+</html>
