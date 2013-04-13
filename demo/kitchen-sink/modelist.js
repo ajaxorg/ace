@@ -82,6 +82,7 @@ var modesByName = {
     pgsql:      ["pgSQL"        , "pgsql"],
     php:        ["PHP"          , "php|phtml"],
     powershell: ["Powershell"   , "ps1"],
+    properties: ["Properties"   , "properties"],
     python:     ["Python"       , "py"],
     r:          ["R"            , "r"],
     rdoc:       ["RDoc"         , "Rd"],
