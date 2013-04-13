@@ -112,6 +112,7 @@ var docs = {
     "docs/php.php": "PHP",
     "docs/plaintext.txt": {name: "Plain Text", prepare: makeHuge, wrapped: true},
     "docs/powershell.ps1": "Powershell",
+    "docs/properties.properties": "Properties",
     "docs/python.py": "Python",
     "docs/r.r": "R",
     "docs/rdoc.Rd": "RDoc",
