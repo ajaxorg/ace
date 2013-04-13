@@ -458,7 +458,7 @@ event.addListener(container, "drop", function(e) {
 
 
 
-var StatusBar = require("./statusbar").StatusBar;
+var StatusBar = require("ace/ext/statusbar").StatusBar;
 new StatusBar(env.editor, cmdLine.container);
 
 
