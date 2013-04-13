@@ -309,6 +309,8 @@ var buildAce = function(options) {
     for(var key in defaults)
         if (!options.hasOwnProperty(key))
             options[key] = defaults[key];
+    
+    generateThemesModule(options.themes);
 
     addSuffix(options);
 
@@ -486,6 +488,15 @@ var detectTextModules = function(input, source) {
 };
 detectTextModules.onRead = true;
 copy.filter.addDefines = detectTextModules;
+
+function generateThemesModule(themes) {
+    var themelist = [
+        'define(function(require, exports, module) {',
+        '\n\nmodule.exports.themes = ' + JSON.stringify(themes, null, '    '),
+        ';\n\n});'
+    ].join('');
+    fs.writeFileSync('./lib/ace/ext/themelist_utils/themes.js', themelist, 'utf8');
+}
 
 function inlineTextModules(text) {
     var lastDep = "";
