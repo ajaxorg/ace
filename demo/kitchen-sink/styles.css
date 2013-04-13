@@ -42,3 +42,9 @@ body {
 #controls td + td {
     text-align: left;
 }
+.ace_status-indicator {
+    color: gray;
+    position: absolute;
+    right: 0;
+    border-left: 1px solid;
+}
