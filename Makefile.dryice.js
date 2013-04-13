@@ -349,6 +349,7 @@ var buildAce = function(options) {
     project.assumeAllFilesLoaded();
     options.modes.forEach(function(mode) {
         console.log("mode " + mode);
+		addSnippetFile(mode, project, targetDir, options);
         copy({
             source: [{
                 project: cloneProject(project),
@@ -459,6 +460,30 @@ var buildAce = function(fn) {
         return ret;
     }
 }(buildAce);
+
+var addSnippetFile = function(modeName, project, targetDir, options) {
+	var snippetFilePath = ACE_HOME + "/lib/ace/snippets/" + modeName;
+	if (!fs.existsSync(snippetFilePath + ".js")) {
+		copy({
+			source: ACE_HOME + "/tool/snippet.tmpl.js",
+			dest:   snippetFilePath + ".js",
+			filter: [
+				function(t) {return t.replace("%modeName%", modeName);}
+			]
+		});		
+	}
+	if (!fs.existsSync(snippetFilePath + ".snippets")) {
+		fs.writeFileSync(snippetFilePath + ".snippets", "")
+	}
+	copy({
+		source: [{
+			project: cloneProject(project),
+			require: [ 'ace/snippets/' + modeName ]
+		}],
+		filter: getWriteFilters(options, "mode"),
+		dest:   targetDir + "/snippets/" + modeName + ".js"
+	});
+}
 
 var textModules = {}
 var detectTextModules = function(input, source) {
