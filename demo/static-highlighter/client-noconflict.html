@@ -32,53 +32,39 @@
 function wobble (flam) {
     return flam.wobbled = true;
 }
-// I'm not exactly sure how to
-// turn on softwrap like effects.
-var longString = 'this will not wrap ******************************************';
-
-
-
 
 // the scrollbars are from overflow auto on .ace_editor.
 
 </pre>
 
-<script src="../../build/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
-<script src="../../build/src-noconflict/ext-static_highlight.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../build/src-noconflict/ace.js"></script>
+<script src="../../build/src-noconflict/ext-static_highlight.js"></script>
 
-<script type="text/javascript" charset="utf-8">
-(function () {
+<script>
+var highlighter = ace.require("ace/ext/static_highlight")
+var dom = ace.require("ace/lib/dom")
+function qsa(sel) {
+    return [].slice.call(document.querySelectorAll(sel));
+}
 
-ace.require([
-    "ace/ext/static_highlight",
-    "ace/lib/dom"
-], function(highlighter, dom) {
-    var codeEls = Array.prototype.slice.call(
-        document.getElementsByClassName('code')
-    );
-    codeEls.forEach(function (codeEl) {
+qsa(".code").forEach(function (codeEl) {
+    var cs = getComputedStyle(codeEl);
+    codeEl.style.cssText = codeEl.style.cssText +
+        'width: ' + cs.width + ';' +
+        'height: ' + cs.height + ';';
+    var mode = codeEl.getAttribute('ace-mode');
+    var theme = codeEl.getAttribute('ace-theme');
+    var data = codeEl.textContent.trim();
     
-        var cs = getComputedStyle(codeEl);
-        codeEl.style.cssText = codeEl.style.cssText +
-            'width: ' + cs.width + ';' +
-            'height: ' + cs.height + ';';
-        var mode = codeEl.getAttribute('ace-mode');
-        var theme = codeEl.getAttribute('ace-theme');
-        var data = codeEl.textContent.trim();
-        
-        highlighter.render(data, mode, theme, 1, false, function (highlighted) {
-        
-            dom.importCssString(highlighted.css, "ace_highlight");
-            dom.importCssString('.ace_editor { overflow: auto; ' +
-                'position:absolute; top:0; bottom:0; right:0; left:0; }' +
-                '.ace_gutter { position: relative; }',
-                'atropa_hial');
-            codeEl.innerHTML = highlighted.html;
-        });
+    highlighter.render(data, mode, theme, 1, false, function (highlighted) {    
+        dom.importCssString(highlighted.css, "ace_highlight");
+        dom.importCssString('.ace_editor { overflow: auto; ' +
+            'position:absolute; top:0; bottom:0; right:0; left:0; }' +
+            '.ace_gutter { position: relative; }',
+            'atropa_hial');
+        codeEl.innerHTML = highlighted.html;
     });
 });
-    
-}());
 </script>
 
 </body>
