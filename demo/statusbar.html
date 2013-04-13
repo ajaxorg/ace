@@ -28,31 +28,30 @@
         background-color: rgb(245, 245, 245);
         color: gray;
     }
-    #statusbar#lineColIndicator {
-        border-left:1px solid;
+    .ace_status-indicator {
+        color: gray;
+        position: absolute;
+        right: 0;
+        border-left: 1px solid;
     }
   </style>
 </head>
 <body>
 
-<pre id="editor">
-    var editor = ace.edit("editor");
-    var StatusBar = ace.require('ace/ext/statusbar').StatusBar;
-    var statusBar = new StatusBar(editor, document.getElementById('statusBar'));
-    editor.setTheme("ace/theme/twilight");
-    editor.getSession().setMode("ace/mode/javascript");
-</pre>
+<pre id="editor"></pre>
 <div id="statusBar">ace rocks!</div>
     
-<script src="../build/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
-<script src="../build/src-noconflict/ext-statusbar.js" type="text/javascript" charset="utf-8"></script>
+<script src="../build/src-noconflict/ace.js"></script>
+<script src="../build/src-noconflict/ext-statusbar.js"></script>
 <script>
     var editor = ace.edit("editor");
     var StatusBar = ace.require('ace/ext/statusbar').StatusBar;
+    // create a simple selection status indicator
     var statusBar = new StatusBar(editor, document.getElementById('statusBar'));
-    editor.setTheme("ace/theme/twilight");
-    editor.getSession().setMode("ace/mode/javascript");
+    editor.setTheme("ace/theme/dawn");
+    editor.session.setMode("ace/mode/html");
 </script>
 
+<script src="./demo_helper.js"></script>
 </body>
 </html>

@@ -42,7 +42,7 @@ body {
 #controls td + td {
     text-align: left;
 }
-#lineColIndicator {
+.ace_status-indicator {
     color: gray;
     position: absolute;
     right: 0;
