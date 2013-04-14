@@ -21,27 +21,24 @@
 </head>
 <body>
 
-<pre id="editor">Editor.prototype.showSettingsMenu = function () {
-    showSettingsMenu(this);
-};
-editor.commands.addCommands([{
-    name: "showSettingsMenu",
-    bindKey: {win: "Ctrl-q", mac: "Command-q"},
-    exec: function(editor, line) {
-        editor.showSettingsMenu();
-    },
-    readOnly: true
-}]);
-</pre>
+<pre id="editor"></pre>
     
-<script src="../build/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
-<script src="../build/src-noconflict/ext-show_settings_menu.js" type="text/javascript" charset="utf-8"></script>
+<script src="../build/src-noconflict/ace.js"></script>
 <script>
     var editor = ace.edit("editor");
     ace.require('ace/ext/show_settings_menu').init(editor);
     editor.setTheme("ace/theme/twilight");
-    editor.getSession().setMode("ace/mode/javascript");
+    editor.session.setMode("ace/mode/html");
+	editor.commands.addCommands([{
+		name: "showSettingsMenu",
+		bindKey: {win: "Ctrl-q", mac: "Command-q"},
+		exec: function(editor) {
+			editor.showSettingsMenu();
+		},
+		readOnly: true
+	}]);
 </script>
 
+<script src="./demo_helper.js"></script>
 </body>
 </html>
