@@ -33,7 +33,8 @@ define(function(require, exports, module) {
 "use strict";
 
 require("ace/lib/fixoldbrowsers");
-require("ace/config").init();
+var config = require("ace/config");
+config.init();
 var env = {};
 
 var dom = require("ace/lib/dom");
@@ -55,7 +56,7 @@ var MultiSelect = require("ace/multi_select").MultiSelect;
 var whitespace = require("ace/ext/whitespace");
 
 var doclist = require("./doclist");
-var modelist = require("./modelist");
+var modelist = require("ace/ext/modelist");
 var layout = require("./layout");
 var TokenTooltip = require("./token_tooltip").TokenTooltip;
 var util = require("./util");
@@ -151,6 +152,15 @@ env.editor.commands.addCommands([{
         editor.cmdLine.setValue(r + "")
     },
     readOnly: true
+}, {
+    name: "showKeyboardShortcuts",
+    bindKey: {win: "Ctrl-Alt-h", mac: "Command-Alt-h"},
+    exec: function(editor) {
+        config.loadModule("ace/ext/keybinding_menu", function(module) {
+            module.init(editor);
+            editor.showKeyboardShortcuts()
+        })
+    }
 }]);
 
 
@@ -458,7 +468,7 @@ event.addListener(container, "drop", function(e) {
 
 
 
-var StatusBar = require("./statusbar").StatusBar;
+var StatusBar = require("ace/ext/statusbar").StatusBar;
 new StatusBar(env.editor, cmdLine.container);
 
 

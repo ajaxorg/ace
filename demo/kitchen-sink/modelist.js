@@ -25,7 +25,7 @@ var Mode = function(name, desc, extensions) {
         }) + "$";
     } else {
         var re = "^.*\\.(" + extensions + ")$";
-    }   
+    }
 
     this.extRe = new RegExp(re, "gi");
 };
@@ -82,6 +82,7 @@ var modesByName = {
     pgsql:      ["pgSQL"        , "pgsql"],
     php:        ["PHP"          , "php|phtml"],
     powershell: ["Powershell"   , "ps1"],
+    properties: ["Properties"   , "properties"],
     python:     ["Python"       , "py"],
     r:          ["R"            , "r"],
     rdoc:       ["RDoc"         , "Rd"],
@@ -103,8 +104,10 @@ var modesByName = {
     toml:       ["toml"         , "toml"],
     typescript: ["Typescript"   , "typescript|ts|str"],
     vbscript:   ["VBScript"     , "vbs"],
+    velocity:   ["Velocity"     , "vm"],
     xml:        ["XML"          , "xml|rdf|rss|wsdl|xslt|atom|mathml|mml|xul|xbl"],
     xquery:     ["XQuery"       , "xq"],
+    jsoniq:     ["JSONiq"       , "jq"],
     yaml:       ["YAML"         , "yaml"]
 };
 

@@ -35,7 +35,7 @@ var EditSession = require("ace/edit_session").EditSession;
 var UndoManager = require("ace/undomanager").UndoManager;
 var net = require("ace/lib/net");
 
-var modelist = require("./modelist");
+var modelist = require("ace/ext/modelist");
 /*********** demo documents ***************************/
 var fileCache = {};
 
@@ -112,6 +112,7 @@ var docs = {
     "docs/php.php": "PHP",
     "docs/plaintext.txt": {name: "Plain Text", prepare: makeHuge, wrapped: true},
     "docs/powershell.ps1": "Powershell",
+    "docs/properties.properties": "Properties",
     "docs/python.py": "Python",
     "docs/r.r": "R",
     "docs/rdoc.Rd": "RDoc",
@@ -132,6 +133,7 @@ var docs = {
     "docs/toml.toml": "TOML",
     "docs/typescript.ts": "Typescript",
     "docs/vbscript.vbs": "VBScript",
+    "docs/velocity.vm": "Velocity",
     "docs/xml.xml": "XML",
     "docs/xquery.xq": "XQuery",
     "docs/yaml.yaml": "YAML",

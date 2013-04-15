@@ -309,6 +309,8 @@ var buildAce = function(options) {
     for(var key in defaults)
         if (!options.hasOwnProperty(key))
             options[key] = defaults[key];
+    
+    generateThemesModule(options.themes);
 
     addSuffix(options);
 
@@ -470,16 +472,31 @@ var detectTextModules = function(input, source) {
         input = input.toString();
 
     var module = source.isLocation ? source.path : source;
-
+    
     input = input.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
-    input = input.replace(/\n\s+/g, "\n");
-    input = '"' + input.replace(/\r?\n/g, '\\\n') + '"';
+    if (/\.css$/.test(module)) {
+        // remove unnecessary whitespace from css
+        input = input.replace(/\n\s+/g, "\n");
+        input = '"' + input.replace(/\r?\n/g, '\\\n') + '"';
+    } else {
+        // but don't break other files!
+        input = '"' + input.replace(/\r?\n/g, '\\n\\\n') + '"';
+    }
     textModules[module] = input;
 
     return "";
 };
 detectTextModules.onRead = true;
 copy.filter.addDefines = detectTextModules;
+
+function generateThemesModule(themes) {
+    var themelist = [
+        'define(function(require, exports, module) {',
+        '\n\nmodule.exports.themes = ' + JSON.stringify(themes, null, '    '),
+        ';\n\n});'
+    ].join('');
+    fs.writeFileSync('./lib/ace/ext/themelist_utils/themes.js', themelist, 'utf8');
+}
 
 function inlineTextModules(text) {
     var lastDep = "";
