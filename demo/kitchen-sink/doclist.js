@@ -102,7 +102,7 @@ var docs = {
     "docs/luapage.lp": "LuaPage",
     "docs/Makefile": "Makefile",
     "docs/markdown.md": {name: "Markdown", wrapped: true},
-    "docs/tinymush.mc": {name: "TinyMUSH"},
+    "docs/tinymush.mc": {name: "TinyMUSH", wrapped: true},
     "docs/objectivec.m": {name: "Objective-C"},
     "docs/ocaml.ml": "OCaml",
     "docs/OpenSCAD.scad": "OpenSCAD",
@@ -137,7 +137,17 @@ var docs = {
     "docs/xml.xml": "XML",
     "docs/xquery.xq": "XQuery",
     "docs/yaml.yaml": "YAML",
-    "docs/c9search.c9search_results": "C9 Search Results"
+    "docs/c9search.c9search_results": "C9 Search Results",
+    
+    "docs/actionscript.as": "ActionScript",
+    "docs/autohotkey.ahk": "AutoHotKey",
+    "docs/batch_file.bat": "BatchFile",
+    "docs/erlang/erl": "Erlang",
+    "docs/forth.frt": "Forth",
+    "docs/haskell.hs": "Haskell",
+    "docs/julia.js": "Julia",
+    "docs/prolog/plg": "Prolog",
+    "docs/rust.rs": "Rust"
 };
 
 var ownSource = {

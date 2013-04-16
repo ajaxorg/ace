@@ -35,7 +35,6 @@ Mode.prototype.supportsFile = function(filename) {
 };
 
 var modesByName = {
-    abap:       ["ABAP"         , "abap"],
     asciidoc:   ["AsciiDoc"     , "asciidoc"],
     c9search:   ["C9Search"     , "c9search_results"],
     coffee:     ["CoffeeScript" , "^Cakefile|coffee|cf|cson"],
@@ -92,7 +91,7 @@ var modesByName = {
     scala:      ["Scala"        , "scala"],
     scss:       ["SCSS"         , "scss"],
     sass:       ["SASS"         , "sass"],
-    sh:         ["SH"           , "sh|bash|bat"],
+    sh:         ["SH"           , "sh|bash"],
     sql:        ["SQL"          , "sql"],
     stylus:     ["Stylus"       , "styl|stylus"],
     svg:        ["SVG"          , "svg"],
@@ -101,14 +100,25 @@ var modesByName = {
     text:       ["Text"         , "txt"],
     textile:    ["Textile"      , "textile"],
     tmsnippet:  ["tmSnippet"    , "tmSnippet"],
-    toml:       ["toml"         , "toml"],
+    toml:       ["Toml"         , "toml"],
     typescript: ["Typescript"   , "typescript|ts|str"],
     vbscript:   ["VBScript"     , "vbs"],
     velocity:   ["Velocity"     , "vm"],
     xml:        ["XML"          , "xml|rdf|rss|wsdl|xslt|atom|mathml|mml|xul|xbl"],
     xquery:     ["XQuery"       , "xq"],
     jsoniq:     ["JSONiq"       , "jq"],
-    yaml:       ["YAML"         , "yaml"]
+    yaml:       ["YAML"         , "yaml"],
+
+    abap:         ["ABAP"          , "abap"],
+    actionscript: ["ActionScript"  ,"as"],
+    autohotkey:   ["AutoHotKey"    , "ahk"],
+    batch_file:   ["BatchFile"    , "bat|cmd"],
+    erlang:       ["Erlang"  ,"erl|hrl"],
+    forth:        ["Forth",  ,"frt|fs|ldr"],
+    haskell: ["Haskell", "hs"],
+    julia:   ["Julia",   "jl"],
+    prolog:  ["Prolog",  "plg|prolog"],
+    rust:    ["Rust",    "rs"]
 };
 
 for (var name in modesByName) {
