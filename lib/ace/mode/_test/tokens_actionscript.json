@@ -45,13 +45,11 @@
 ],[
    "start",
   ["text","\t\t"],
-  ["punctuation.definition.comment.actionscript.2","//"],
-  ["comment.line.double-slash.actionscript.2","*************************"]
+  ["punctuation.definition.comment.actionscript.2","//*************************"]
 ],[
    "start",
   ["text","\t\t"],
-  ["punctuation.definition.comment.actionscript.2","//"],
-  ["comment.line.double-slash.actionscript.2"," Properties:"]
+  ["punctuation.definition.comment.actionscript.2","// Properties:"]
 ],[
    "start",
   ["text","\t\t"]
@@ -71,8 +69,7 @@
 ],[
    "start",
   ["text","\t\t"],
-  ["punctuation.definition.comment.actionscript.2","//"],
-  ["comment.line.double-slash.actionscript.2"," Color offsets"]
+  ["punctuation.definition.comment.actionscript.2","// Color offsets"]
 ],[
    "start",
   ["text","\t\t"],
@@ -87,21 +84,18 @@
   ["text"," "],
   ["constant.numeric.actionscript.2","0"],
   ["text",";\t"],
-  ["punctuation.definition.comment.actionscript.2","//"],
-  ["comment.line.double-slash.actionscript.2"," R"]
+  ["punctuation.definition.comment.actionscript.2","// R"]
 ],[
    "start",
   ["text","\t\t"]
 ],[
    "start",
   ["text","\t\t"],
-  ["punctuation.definition.comment.actionscript.2","//"],
-  ["comment.line.double-slash.actionscript.2","*************************"]
+  ["punctuation.definition.comment.actionscript.2","//*************************"]
 ],[
    "start",
   ["text","\t\t"],
-  ["punctuation.definition.comment.actionscript.2","//"],
-  ["comment.line.double-slash.actionscript.2"," Constructor:"]
+  ["punctuation.definition.comment.actionscript.2","// Constructor:"]
 ],[
    "start",
   ["text","\t\t"]
@@ -121,8 +115,7 @@
 ],[
    "start",
   ["text","\t\t\t"],
-  ["punctuation.definition.comment.actionscript.2","//"],
-  ["comment.line.double-slash.actionscript.2"," Respond to mouse events"]
+  ["punctuation.definition.comment.actionscript.2","// Respond to mouse events"]
 ],[
    "start",
   ["text","\t\t\tswatch1_btn."],
@@ -145,8 +138,7 @@
 ],[
    "start",
   ["text","\t\t\t"],
-  ["punctuation.definition.comment.actionscript.2","//"],
-  ["comment.line.double-slash.actionscript.2"," Respond to drag events"]
+  ["punctuation.definition.comment.actionscript.2","// Respond to drag events"]
 ],[
    "start",
   ["text","\t\t\tred_slider."],
@@ -158,8 +150,7 @@
 ],[
    "start",
   ["text","\t\t\t"],
-  ["punctuation.definition.comment.actionscript.2","//"],
-  ["comment.line.double-slash.actionscript.2"," Draw a frame later"]
+  ["punctuation.definition.comment.actionscript.2","// Draw a frame later"]
 ],[
    "start",
   ["text","\t\t\t"],

@@ -1,13 +1,11 @@
 [[
    "start",
   ["text","  "],
-  ["punctuation.definition.comment.erlang","%"],
-  ["comment.line.percentage.erlang","% A process whose only job is to keep a counter."]
+  ["punctuation.definition.comment.erlang","%% A process whose only job is to keep a counter."]
 ],[
    "start",
   ["text","  "],
-  ["punctuation.definition.comment.erlang","%"],
-  ["comment.line.percentage.erlang","% First version"]
+  ["punctuation.definition.comment.erlang","%% First version"]
 ],[
    "start",
   ["meta.directive.module.erlang","  "],
@@ -141,8 +139,7 @@
 ],[
    ["keyword.control.receive.erlang","text6","text6","meta.function.erlang"],
   ["meta.expression.receive.erlang","          "],
-  ["punctuation.definition.comment.erlang","%"],
-  ["comment.line.percentage.erlang"," Force the use of 'codeswitch/1' from the latest MODULE version"]
+  ["punctuation.definition.comment.erlang","% Force the use of 'codeswitch/1' from the latest MODULE version"]
 ],[
    "start",
   ["meta.expression.receive.erlang","    "],
