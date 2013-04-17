@@ -145,15 +145,20 @@ function run() {
     var src = editor1.getValue();
     var path = "ace/mode/new";
     var deps = getDeps(src, path);
-    src = src.replace("define(", 'define("' + path +'", ["require","exports","module",' + deps +'],');
-    src += ';require(["ace/mode/new"], function(e) {\
-        try{continueRun(e)}catch(e){log(e)}\
-    }, function(e){\
-        log(e);\
-        window.require.undef("ace/mode/new")\
-    });';
+    window.require.undef(path)
+    src = src.replace("define(", 'define("' + path +'", ["require","exports","module",' + deps +'],');    
     try {
         eval(src);
+        require(["ace/mode/new"], function(e) {
+            try{
+                continueRun(e)
+            }catch(e){
+                log(e)
+            }
+        }, function(e) {
+            log(e);
+            window.require.undef(path)
+        });
         hideLog()
     } catch(e) {
         log(e);
