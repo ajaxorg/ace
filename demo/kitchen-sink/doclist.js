@@ -51,7 +51,7 @@ function initDoc(file, path, doc) {
         session.setUseWrapMode(true);
         session.setWrapLimitRange(80, 80);
     }
-    var mode = modelist.getModeFromPath(path);
+    var mode = modelist.getModeForPath(path);
     session.modeName = mode.name;
     session.setMode(mode.mode);
     return session;

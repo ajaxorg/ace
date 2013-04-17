@@ -220,8 +220,8 @@ function elt(tag, attributes, content) {
 function optgroup(values) {
     return values.map(function(item) {
         if (typeof item == "string")
-            item = {name: item, desc: item};
-        return elt("option", {value: item.name}, item.desc);
+            item = {name: item, caption: item};
+        return elt("option", {value: item.name}, item.caption || item.desc);
     });
 }
 
