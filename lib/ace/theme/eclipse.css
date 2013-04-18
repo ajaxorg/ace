@@ -47,7 +47,7 @@
 }
 
 .ace-eclipse .ace_comment {
-  color: rgb(63, 127, 95);
+  color: rgb(113, 150, 130);
 }
 
 .ace-eclipse .ace_comment.ace_doc {
@@ -59,10 +59,11 @@
 }
 
 .ace-eclipse .ace_constant.ace_numeric {
+  color: darkblue;
 }
 
 .ace-eclipse .ace_tag {
-  color: rgb(63, 127, 127);
+  color: rgb(25, 118, 116);
 }
 
 .ace-eclipse .ace_type {
@@ -83,7 +84,11 @@
 }
 
 .ace-eclipse .ace_meta.ace_tag {
-  color:rgb(63, 127, 127);
+  color:rgb(25, 118, 116);
+}
+
+.ace-eclipse .ace_invisible {
+  color: #ddd;
 }
 
 .ace-eclipse .ace_entity.ace_other.ace_attribute-name {
