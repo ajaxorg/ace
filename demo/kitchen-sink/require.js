@@ -1951,12 +1951,13 @@ var requirejs, require, define;
         //This module may not have dependencies
         if (!isArray(deps)) {
             callback = deps;
-            deps = [];
+            deps = null;
         }
 
         //If no name, and callback is a function, then figure out if it a
         //CommonJS thing with dependencies.
-        if (!deps.length && isFunction(callback)) {
+        if (!deps && isFunction(callback)) {
+            deps = [];
             //Remove comments from the callback string,
             //look for require calls, and pull them into the dependencies,
             //but only if there are function args.
