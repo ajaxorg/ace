@@ -20,8 +20,7 @@ var theme = require("../../lib/ace/theme/twilight");
 var port = process.env.PORT || 2222;
 
 http.createServer(function(req, res) {
-    res.writeHead(200, {"Content-Type": "text/html"});
-    
+    res.writeHead(200, {"Content-Type": "text/html; charset=utf-8"});
     fs.readFile(__filename, "utf8", function(err, data) {
         var highlighted = highlighter.render(data, new JavaScriptMode(), theme);
         res.end('<html><body>\n\
