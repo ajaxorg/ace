@@ -1,483 +1,495 @@
 [[
    "comment",
-  ["comment.block","/*"]
+  ["comment.block.lsl","/*"]
 ],[
    "comment",
-  ["comment.block","    Testing syntax highlighting"]
+  ["comment.block.lsl","    Testing syntax highlighting"]
 ],[
    "comment",
-  ["comment.block","    of Ace Editor"]
+  ["comment.block.lsl","    of Ace Editor"]
 ],[
    "comment",
-  ["comment.block","    for the Linden Scripting Language"]
+  ["comment.block.lsl","    for the Linden Scripting Language"]
 ],[
    "start",
-  ["comment.block","*/"]
+  ["comment.block.lsl","*/"]
 ],[
    "start"
 ],[
    "start",
-  ["storage.type","integer"],
-  ["text"," "],
+  ["storage.type.lsl","integer"],
+  ["text.lsl"," "],
   ["identifier","someIntNormal"],
-  ["text","       "],
-  ["keyword.operator","="],
-  ["text"," "],
-  ["constant.numeric","3672"],
-  ["punctuation.operator",";"]
+  ["text.lsl","       "],
+  ["keyword.operator.lsl","="],
+  ["text.lsl"," "],
+  ["constant.numeric.lsl","3672"],
+  ["punctuation.operator.lsl",";"]
 ],[
    "start",
-  ["storage.type","integer"],
-  ["text"," "],
+  ["storage.type.lsl","integer"],
+  ["text.lsl"," "],
   ["identifier","someIntHex"],
-  ["text","          "],
-  ["keyword.operator","="],
-  ["text"," "],
-  ["constant.numeric","0x00000000"],
-  ["punctuation.operator",";"]
+  ["text.lsl","          "],
+  ["keyword.operator.lsl","="],
+  ["text.lsl"," "],
+  ["constant.numeric.lsl","0x00000000"],
+  ["punctuation.operator.lsl",";"]
 ],[
    "start",
-  ["storage.type","integer"],
-  ["text"," "],
+  ["storage.type.lsl","integer"],
+  ["text.lsl"," "],
   ["identifier","someIntMath"],
-  ["text","         "],
-  ["keyword.operator","="],
-  ["text"," "],
-  ["constant.language","PI_BY_TWO"],
-  ["punctuation.operator",";"]
+  ["text.lsl","         "],
+  ["keyword.operator.lsl","="],
+  ["text.lsl"," "],
+  ["constant.language.float.lsl","PI_BY_TWO"],
+  ["punctuation.operator.lsl",";"]
 ],[
    "start"
 ],[
    "start",
-  ["storage.type","integer"],
-  ["text"," "],
-  ["invalid.illegal","event"],
-  ["text","               "],
-  ["keyword.operator","="],
-  ["text"," "],
-  ["constant.numeric","5673"],
-  ["punctuation.operator",";"],
-  ["text","                                             "],
-  ["comment.line","// invalid reserved keyword!"]
+  ["storage.type.lsl","integer"],
+  ["text.lsl"," "],
+  ["invalid.illegal.lsl","event"],
+  ["text.lsl","               "],
+  ["keyword.operator.lsl","="],
+  ["text.lsl"," "],
+  ["constant.numeric.lsl","5673"],
+  ["punctuation.operator.lsl",";"],
+  ["text.lsl","                                             "],
+  ["comment.line.double-slash.lsl","// invalid reserved keyword!"]
 ],[
    "start"
 ],[
    "start",
-  ["storage.type","key"],
-  ["text"," "],
+  ["storage.type.lsl","key"],
+  ["text.lsl"," "],
   ["identifier","someKeyTexture"],
-  ["text","          "],
-  ["keyword.operator","="],
-  ["text"," "],
-  ["constant.language","TEXTURE_DEFAULT"],
-  ["punctuation.operator",";"]
+  ["text.lsl","          "],
+  ["keyword.operator.lsl","="],
+  ["text.lsl"," "],
+  ["constant.language.key.lsl","TEXTURE_DEFAULT"],
+  ["punctuation.operator.lsl",";"]
 ],[
    "start",
-  ["storage.type","string"],
-  ["text"," "],
+  ["storage.type.lsl","string"],
+  ["text.lsl"," "],
   ["identifier","someStringSpecial"],
-  ["text","    "],
-  ["keyword.operator","="],
-  ["text"," "],
-  ["constant.language","EOF"],
-  ["punctuation.operator",";"]
+  ["text.lsl","    "],
+  ["keyword.operator.lsl","="],
+  ["text.lsl"," "],
+  ["constant.language.string.lsl","EOF"],
+  ["punctuation.operator.lsl",";"]
 ],[
    "start"
 ],[
    "start",
   ["identifier","some_user_defined_function_without_return_type"],
-  ["paren.lparen","("],
-  ["storage.type","string"],
-  ["text"," "],
+  ["paren.lparen.lsl","("],
+  ["storage.type.lsl","string"],
+  ["text.lsl"," "],
   ["identifier","inputAsString"],
-  ["paren.rparen",")"]
+  ["paren.rparen.lsl",")"]
 ],[
    "start",
-  ["paren.lparen","{"]
+  ["paren.lparen.lsl","{"]
 ],[
    "start",
-  ["text","    "],
-  ["support.function","llSay"],
-  ["paren.lparen","("],
-  ["constant.language","PUBLIC_CHANNEL"],
-  ["punctuation.operator",","],
-  ["text"," "],
+  ["text.lsl","    "],
+  ["support.function.lsl","llSay"],
+  ["paren.lparen.lsl","("],
+  ["constant.language.integer.lsl","PUBLIC_CHANNEL"],
+  ["punctuation.operator.lsl",","],
+  ["text.lsl"," "],
   ["identifier","inputAsString"],
-  ["paren.rparen",")"],
-  ["punctuation.operator",";"]
+  ["paren.rparen.lsl",")"],
+  ["punctuation.operator.lsl",";"]
 ],[
    "start",
-  ["paren.rparen","}"]
+  ["paren.rparen.lsl","}"]
 ],[
    "start"
 ],[
    "start",
-  ["storage.type","string"],
-  ["text"," "],
+  ["storage.type.lsl","string"],
+  ["text.lsl"," "],
   ["identifier","user_defined_function_returning_a_string"],
-  ["paren.lparen","("],
-  ["storage.type","key"],
-  ["text"," "],
+  ["paren.lparen.lsl","("],
+  ["storage.type.lsl","key"],
+  ["text.lsl"," "],
   ["identifier","inputAsKey"],
-  ["paren.rparen",")"]
+  ["paren.rparen.lsl",")"]
 ],[
    "start",
-  ["paren.lparen","{"]
+  ["paren.lparen.lsl","{"]
 ],[
    "start",
-  ["text","    "],
-  ["keyword.control","return"],
-  ["text"," "],
-  ["paren.lparen","("],
-  ["storage.type","string"],
-  ["paren.rparen",")"],
+  ["text.lsl","    "],
+  ["keyword.control.lsl","return"],
+  ["text.lsl"," "],
+  ["paren.lparen.lsl","("],
+  ["storage.type.lsl","string"],
+  ["paren.rparen.lsl",")"],
   ["identifier","inputAsKey"],
-  ["punctuation.operator",";"]
+  ["punctuation.operator.lsl",";"]
 ],[
    "start",
-  ["paren.rparen","}"]
+  ["paren.rparen.lsl","}"]
 ],[
    "start"
 ],[
    "start",
-  ["keyword.other","default"]
+  ["entity.name.state.lsl","default"]
 ],[
    "start",
-  ["paren.lparen","{"]
+  ["paren.lparen.lsl","{"]
 ],[
    "start",
-  ["text","    "],
-  ["support.function.event","state_entry"],
-  ["paren.lparen","("],
-  ["paren.rparen",")"]
+  ["text.lsl","    "],
+  ["support.function.event.lsl","state_entry"],
+  ["paren.lparen.lsl","("],
+  ["paren.rparen.lsl",")"]
 ],[
    "start",
-  ["text","    "],
-  ["paren.lparen","{"]
+  ["text.lsl","    "],
+  ["paren.lparen.lsl","{"]
 ],[
    "start",
-  ["text","        "],
-  ["storage.type","key"],
-  ["text"," "],
+  ["text.lsl","        "],
+  ["storage.type.lsl","key"],
+  ["text.lsl"," "],
   ["identifier","someKey"],
-  ["text"," "],
-  ["keyword.operator","="],
-  ["text"," "],
-  ["constant.language","NULL_KEY"],
-  ["punctuation.operator",";"]
+  ["text.lsl"," "],
+  ["keyword.operator.lsl","="],
+  ["text.lsl"," "],
+  ["constant.language.key.lsl","NULL_KEY"],
+  ["punctuation.operator.lsl",";"]
 ],[
    "start",
-  ["text","        "],
+  ["text.lsl","        "],
   ["identifier","someKey"],
-  ["text"," "],
-  ["keyword.operator","="],
-  ["text"," "],
-  ["support.function","llGetOwner"],
-  ["paren.lparen","("],
-  ["paren.rparen",")"],
-  ["punctuation.operator",";"]
+  ["text.lsl"," "],
+  ["keyword.operator.lsl","="],
+  ["text.lsl"," "],
+  ["support.function.lsl","llGetOwner"],
+  ["paren.lparen.lsl","("],
+  ["paren.rparen.lsl",")"],
+  ["punctuation.operator.lsl",";"]
 ],[
    "start"
 ],[
    "start",
-  ["text","        "],
-  ["storage.type","string"],
-  ["text"," "],
+  ["text.lsl","        "],
+  ["storage.type.lsl","string"],
+  ["text.lsl"," "],
   ["identifier","someString"],
-  ["text"," "],
-  ["keyword.operator","="],
-  ["text"," "],
+  ["text.lsl"," "],
+  ["keyword.operator.lsl","="],
+  ["text.lsl"," "],
   ["identifier","user_defined_function_returning_a_string"],
-  ["paren.lparen","("],
+  ["paren.lparen.lsl","("],
   ["identifier","someKey"],
-  ["paren.rparen",")"],
-  ["punctuation.operator",";"]
+  ["paren.rparen.lsl",")"],
+  ["punctuation.operator.lsl",";"]
 ],[
    "start"
 ],[
    "start",
-  ["text","        "],
+  ["text.lsl","        "],
   ["identifier","some_user_defined_function_without_return_type"],
-  ["paren.lparen","("],
+  ["paren.lparen.lsl","("],
   ["identifier","someString"],
-  ["paren.rparen",")"],
-  ["punctuation.operator",";"]
+  ["paren.rparen.lsl",")"],
+  ["punctuation.operator.lsl",";"]
 ],[
    "start",
-  ["text","    "],
-  ["paren.rparen","}"]
+  ["text.lsl","    "],
+  ["paren.rparen.lsl","}"]
 ],[
    "start"
 ],[
    "start",
-  ["text","    "],
-  ["support.function.event","touch_start"],
-  ["paren.lparen","("],
-  ["storage.type","integer"],
-  ["text"," "],
+  ["text.lsl","    "],
+  ["support.function.event.lsl","touch_start"],
+  ["paren.lparen.lsl","("],
+  ["storage.type.lsl","integer"],
+  ["text.lsl"," "],
   ["identifier","num_detected"],
-  ["paren.rparen",")"]
+  ["paren.rparen.lsl",")"]
 ],[
    "start",
-  ["text","    "],
-  ["paren.lparen","{"]
+  ["text.lsl","    "],
+  ["paren.lparen.lsl","{"]
 ],[
    "start",
-  ["text","        "],
-  ["storage.type","list"],
-  ["text"," "],
+  ["text.lsl","        "],
+  ["storage.type.lsl","list"],
+  ["text.lsl"," "],
   ["identifier","agentsInRegion"],
-  ["text"," "],
-  ["keyword.operator","="],
-  ["text"," "],
-  ["support.function","llGetAgentList"],
-  ["paren.lparen","("],
-  ["constant.language","AGENT_LIST_REGION"],
-  ["punctuation.operator",","],
-  ["text"," "],
-  ["paren.lparen","["],
-  ["paren.rparen","])"],
-  ["punctuation.operator",";"]
+  ["text.lsl"," "],
+  ["keyword.operator.lsl","="],
+  ["text.lsl"," "],
+  ["support.function.lsl","llGetAgentList"],
+  ["paren.lparen.lsl","("],
+  ["constant.language.integer.lsl","AGENT_LIST_REGION"],
+  ["punctuation.operator.lsl",","],
+  ["text.lsl"," "],
+  ["paren.lparen.lsl","["],
+  ["paren.rparen.lsl","])"],
+  ["punctuation.operator.lsl",";"]
 ],[
    "start",
-  ["text","        "],
-  ["storage.type","integer"],
-  ["text"," "],
+  ["text.lsl","        "],
+  ["storage.type.lsl","integer"],
+  ["text.lsl"," "],
   ["identifier","numOfAgents"],
-  ["text"," "],
-  ["keyword.operator","="],
-  ["text"," "],
-  ["support.function","llGetListLength"],
-  ["paren.lparen","("],
+  ["text.lsl"," "],
+  ["keyword.operator.lsl","="],
+  ["text.lsl"," "],
+  ["support.function.lsl","llGetListLength"],
+  ["paren.lparen.lsl","("],
   ["identifier","agentsInRegion"],
-  ["paren.rparen",")"],
-  ["punctuation.operator",";"]
+  ["paren.rparen.lsl",")"],
+  ["punctuation.operator.lsl",";"]
 ],[
    "start"
 ],[
    "start",
-  ["text","        "],
-  ["storage.type","integer"],
-  ["text"," "],
+  ["text.lsl","        "],
+  ["storage.type.lsl","integer"],
+  ["text.lsl"," "],
   ["identifier","index"],
-  ["punctuation.operator",";"],
-  ["text","                                                          "],
-  ["comment.line","// defaults to 0"]
+  ["punctuation.operator.lsl",";"],
+  ["text.lsl","                                                          "],
+  ["comment.line.double-slash.lsl","// defaults to 0"]
 ],[
    "start",
-  ["text","        "],
-  ["keyword.control","for"],
-  ["text"," "],
-  ["paren.lparen","("],
-  ["punctuation.operator",";"],
-  ["text"," "],
+  ["text.lsl","        "],
+  ["keyword.control.lsl","for"],
+  ["text.lsl"," "],
+  ["paren.lparen.lsl","("],
+  ["punctuation.operator.lsl",";"],
+  ["text.lsl"," "],
   ["identifier","index"],
-  ["text"," "],
-  ["keyword.operator","<="],
-  ["text"," "],
+  ["text.lsl"," "],
+  ["keyword.operator.lsl","<="],
+  ["text.lsl"," "],
   ["identifier","numOfAgents"],
-  ["text"," "],
-  ["keyword.operator","-"],
-  ["text"," "],
-  ["constant.numeric","1"],
-  ["punctuation.operator",";"],
-  ["text"," "],
+  ["text.lsl"," "],
+  ["keyword.operator.lsl","-"],
+  ["text.lsl"," "],
+  ["constant.numeric.lsl","1"],
+  ["punctuation.operator.lsl",";"],
+  ["text.lsl"," "],
   ["identifier","index"],
-  ["keyword.operator","++"],
-  ["paren.rparen",")"],
-  ["text","                               "],
-  ["comment.line","// for each agent in region"]
+  ["keyword.operator.lsl","++"],
+  ["paren.rparen.lsl",")"],
+  ["text.lsl","                               "],
+  ["comment.line.double-slash.lsl","// for each agent in region"]
 ],[
    "start",
-  ["text","        "],
-  ["paren.lparen","{"]
+  ["text.lsl","        "],
+  ["paren.lparen.lsl","{"]
 ],[
    "start",
-  ["text","            "],
-  ["support.function","llRegionSayTo"],
-  ["paren.lparen","("],
-  ["support.function","llList2Key"],
-  ["paren.lparen","("],
+  ["text.lsl","            "],
+  ["support.function.lsl","llRegionSayTo"],
+  ["paren.lparen.lsl","("],
+  ["support.function.lsl","llList2Key"],
+  ["paren.lparen.lsl","("],
   ["identifier","agentsInRegion"],
-  ["punctuation.operator",","],
-  ["text"," "],
+  ["punctuation.operator.lsl",","],
+  ["text.lsl"," "],
   ["identifier","index"],
-  ["paren.rparen",")"],
-  ["punctuation.operator",","],
-  ["text"," "],
-  ["constant.language","PUBLIC_CHANNEL"],
-  ["punctuation.operator",","],
-  ["text"," "],
-  ["string.double","\"Hello, Avatar!\""],
-  ["paren.rparen",")"],
-  ["punctuation.operator",";"]
+  ["paren.rparen.lsl",")"],
+  ["punctuation.operator.lsl",","],
+  ["text.lsl"," "],
+  ["constant.language.integer.lsl","PUBLIC_CHANNEL"],
+  ["punctuation.operator.lsl",","],
+  ["text.lsl"," "],
+  ["string.quoted.double.lsl.start","\""],
+  ["string.quoted.double.lsl","Hello, Avatar!"],
+  ["string.quoted.double.lsl.end","\""],
+  ["paren.rparen.lsl",")"],
+  ["punctuation.operator.lsl",";"]
 ],[
    "start",
-  ["text","        "],
-  ["paren.rparen","}"]
+  ["text.lsl","        "],
+  ["paren.rparen.lsl","}"]
 ],[
    "start",
-  ["text","    "],
-  ["paren.rparen","}"]
+  ["text.lsl","    "],
+  ["paren.rparen.lsl","}"]
 ],[
    "start"
 ],[
    "start",
-  ["text","    "],
-  ["support.function.event","touch_end"],
-  ["paren.lparen","("],
-  ["storage.type","integer"],
-  ["text"," "],
+  ["text.lsl","    "],
+  ["support.function.event.lsl","touch_end"],
+  ["paren.lparen.lsl","("],
+  ["storage.type.lsl","integer"],
+  ["text.lsl"," "],
   ["identifier","num_detected"],
-  ["paren.rparen",")"]
+  ["paren.rparen.lsl",")"]
 ],[
    "start",
-  ["text","    "],
-  ["paren.lparen","{"]
+  ["text.lsl","    "],
+  ["paren.lparen.lsl","{"]
 ],[
    "start",
-  ["text","        "],
+  ["text.lsl","        "],
   ["identifier","someIntNormal"],
-  ["text","       "],
-  ["keyword.operator","="],
-  ["text"," "],
-  ["constant.numeric","3672"],
-  ["punctuation.operator",";"]
+  ["text.lsl","       "],
+  ["keyword.operator.lsl","="],
+  ["text.lsl"," "],
+  ["constant.numeric.lsl","3672"],
+  ["punctuation.operator.lsl",";"]
 ],[
    "start",
-  ["text","        "],
+  ["text.lsl","        "],
   ["identifier","someIntHex"],
-  ["text","          "],
-  ["keyword.operator","="],
-  ["text"," "],
-  ["constant.numeric","0x00000000"],
-  ["punctuation.operator",";"]
+  ["text.lsl","          "],
+  ["keyword.operator.lsl","="],
+  ["text.lsl"," "],
+  ["constant.numeric.lsl","0x00000000"],
+  ["punctuation.operator.lsl",";"]
 ],[
    "start",
-  ["text","        "],
+  ["text.lsl","        "],
   ["identifier","someIntMath"],
-  ["text","         "],
-  ["keyword.operator","="],
-  ["text"," "],
-  ["constant.language","PI_BY_TWO"],
-  ["punctuation.operator",";"]
+  ["text.lsl","         "],
+  ["keyword.operator.lsl","="],
+  ["text.lsl"," "],
+  ["constant.language.float.lsl","PI_BY_TWO"],
+  ["punctuation.operator.lsl",";"]
 ],[
    "start"
 ],[
    "start",
-  ["text","        "],
-  ["invalid.illegal","event"],
-  ["text","               "],
-  ["keyword.operator","="],
-  ["text"," "],
-  ["constant.numeric","5673"],
-  ["punctuation.operator",";"],
-  ["text","                                             "],
-  ["comment.line","// invalid reserved keyword!"]
+  ["text.lsl","        "],
+  ["invalid.illegal.lsl","event"],
+  ["text.lsl","               "],
+  ["keyword.operator.lsl","="],
+  ["text.lsl"," "],
+  ["constant.numeric.lsl","5673"],
+  ["punctuation.operator.lsl",";"],
+  ["text.lsl","                                             "],
+  ["comment.line.double-slash.lsl","// invalid reserved keyword!"]
 ],[
    "start"
 ],[
    "start",
-  ["text","        "],
+  ["text.lsl","        "],
   ["identifier","someKeyTexture"],
-  ["text","      "],
-  ["keyword.operator","="],
-  ["text"," "],
-  ["constant.language","TEXTURE_DEFAULT"],
-  ["punctuation.operator",";"]
+  ["text.lsl","      "],
+  ["keyword.operator.lsl","="],
+  ["text.lsl"," "],
+  ["constant.language.key.lsl","TEXTURE_DEFAULT"],
+  ["punctuation.operator.lsl",";"]
 ],[
    "start",
-  ["text","        "],
+  ["text.lsl","        "],
   ["identifier","someStringSpecial"],
-  ["text","   "],
-  ["keyword.operator","="],
-  ["text"," "],
-  ["constant.language","EOF"],
-  ["punctuation.operator",";"]
+  ["text.lsl","   "],
+  ["keyword.operator.lsl","="],
+  ["text.lsl"," "],
+  ["constant.language.string.lsl","EOF"],
+  ["punctuation.operator.lsl",";"]
 ],[
    "start"
 ],[
    "start",
-  ["text","        "],
-  ["invalid.deprecated","llCollisionSprite"],
-  ["paren.lparen","("],
+  ["text.lsl","        "],
+  ["invalid.deprecated.lsl","llCollisionSprite"],
+  ["paren.lparen.lsl","("],
   ["identifier","someKeyTexture"],
-  ["paren.rparen",")"],
-  ["punctuation.operator",";"],
-  ["text","                                      "],
-  ["comment.line","// invalid deprecated function!"]
+  ["paren.rparen.lsl",")"],
+  ["punctuation.operator.lsl",";"],
+  ["text.lsl","                                      "],
+  ["comment.line.double-slash.lsl","// invalid deprecated function!"]
 ],[
    "start"
 ],[
    "start",
-  ["text","        "],
-  ["support.function","llWhisper"],
-  ["paren.lparen","("],
-  ["constant.language","PUBLIC_CHANNEL"],
-  ["punctuation.operator",","],
-  ["text"," "],
-  ["string.double","\"Leaving \\\"default\\\" now...\""],
-  ["paren.rparen",")"],
-  ["punctuation.operator",";"]
+  ["text.lsl","        "],
+  ["support.function.lsl","llWhisper"],
+  ["paren.lparen.lsl","("],
+  ["constant.language.integer.lsl","PUBLIC_CHANNEL"],
+  ["punctuation.operator.lsl",","],
+  ["text.lsl"," "],
+  ["string.quoted.double.lsl.start","\""],
+  ["string.quoted.double.lsl","Leaving "],
+  ["constant.language.escape.lsl","\\\""],
+  ["string.quoted.double.lsl","default"],
+  ["constant.language.escape.lsl","\\\""],
+  ["string.quoted.double.lsl"," now..."],
+  ["string.quoted.double.lsl.end","\""],
+  ["paren.rparen.lsl",")"],
+  ["punctuation.operator.lsl",";"]
 ],[
    "start",
-  ["text","        "],
-  ["keyword.other","state"],
-  ["text"," "],
-  ["identifier","other"],
-  ["punctuation.operator",";"]
+  ["text.lsl","        "],
+  ["entity.name.state.lsl","state other"],
+  ["punctuation.operator.lsl",";"]
 ],[
    "start",
-  ["text","    "],
-  ["paren.rparen","}"]
+  ["text.lsl","    "],
+  ["paren.rparen.lsl","}"]
 ],[
    "start",
-  ["paren.rparen","}"]
+  ["paren.rparen.lsl","}"]
 ],[
    "start"
 ],[
    "start",
-  ["keyword.other","state"],
-  ["text"," "],
-  ["identifier","other"]
+  ["entity.name.state.lsl","state other"]
 ],[
    "start",
-  ["paren.lparen","{"]
+  ["paren.lparen.lsl","{"]
 ],[
    "start",
-  ["text","    "],
-  ["support.function.event","state_entry"],
-  ["paren.lparen","("],
-  ["paren.rparen",")"]
+  ["text.lsl","    "],
+  ["support.function.event.lsl","state_entry"],
+  ["paren.lparen.lsl","("],
+  ["paren.rparen.lsl",")"]
 ],[
    "start",
-  ["text","    "],
-  ["paren.lparen","{"]
+  ["text.lsl","    "],
+  ["paren.lparen.lsl","{"]
 ],[
    "start",
-  ["text","        "],
-  ["support.function","llWhisper"],
-  ["paren.lparen","("],
-  ["constant.language","PUBLIC_CHANNEL"],
-  ["punctuation.operator",","],
-  ["text"," "],
-  ["string.double","\"Entered \\\"state other\\\", returning to \\\"default\\\" again...\""],
-  ["paren.rparen",")"],
-  ["punctuation.operator",";"]
+  ["text.lsl","        "],
+  ["support.function.lsl","llWhisper"],
+  ["paren.lparen.lsl","("],
+  ["constant.language.integer.lsl","PUBLIC_CHANNEL"],
+  ["punctuation.operator.lsl",","],
+  ["text.lsl"," "],
+  ["string.quoted.double.lsl.start","\""],
+  ["string.quoted.double.lsl","Entered "],
+  ["constant.language.escape.lsl","\\\""],
+  ["string.quoted.double.lsl","state other"],
+  ["constant.language.escape.lsl","\\\""],
+  ["string.quoted.double.lsl",", returning to "],
+  ["constant.language.escape.lsl","\\\""],
+  ["string.quoted.double.lsl","default"],
+  ["constant.language.escape.lsl","\\\""],
+  ["string.quoted.double.lsl"," again..."],
+  ["string.quoted.double.lsl.end","\""],
+  ["paren.rparen.lsl",")"],
+  ["punctuation.operator.lsl",";"]
 ],[
    "start",
-  ["text","        "],
-  ["keyword.other","state"],
-  ["text"," "],
-  ["keyword.other","default"],
-  ["punctuation.operator",";"]
+  ["text.lsl","        "],
+  ["entity.name.state.lsl","state default"],
+  ["punctuation.operator.lsl",";"]
 ],[
    "start",
-  ["text","    "],
-  ["paren.rparen","}"]
+  ["text.lsl","    "],
+  ["paren.rparen.lsl","}"]
 ],[
    "start",
-  ["paren.rparen","}"]
+  ["paren.rparen.lsl","}"]
 ],[
    "start"
 ]]
