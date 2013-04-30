@@ -137,8 +137,18 @@ env.editor.commands.addCommands([{
     readOnly: true
 }, {
     name: "focusCommandLine",
-    bindKey: "shift-esc",
+    bindKey: "shift-esc|ctrl-`",
     exec: function(editor, needle) { editor.cmdLine.focus(); },
+    readOnly: true
+}, {
+    name: "nextFile",
+    bindKey: "Ctrl-tab",
+    exec: function(editor) { doclist.cycleOpen(editor, 1); },
+    readOnly: true
+}, {
+    name: "previousFile",
+    bindKey: "Ctrl-shift-tab",
+    exec: function(editor) { doclist.cycleOpen(editor, -1); },
     readOnly: true
 }, {
     name: "execute",
@@ -244,16 +254,44 @@ bindDropdown("mode", function(value) {
     env.editor.session.modeName = value;
 });
 
+doclist.history = doclist.docs.map(function(doc) {
+    return doc.name;
+});
+doclist.history.index = 0;
+doclist.cycleOpen = function(editor, dir) {
+    var h = this.history
+    h.index += dir;
+    if (h.index >= h.length) 
+        h.index = 0;
+    else if (h.index <= 0)
+        h.index = h.length - 1;
+    var s = h[h.index];
+    docEl.value = s;
+    docEl.onchange();
+    h.index
+}
+doclist.addToHistory = function(name) {
+    var h = this.history
+    var i = h.indexOf(name);
+    if (i != h.index) {
+        if (i != -1)
+            h.splice(i, 1);
+        h.index = h.push(name);
+    }
+}
+
 bindDropdown("doc", function(name) {
     doclist.loadDoc(name, function(session) {
         if (!session)
             return;
+        doclist.addToHistory(session.name);
         session = env.split.setSession(session);
         whitespace.detectIndentation(session);
         updateUIEditorOptions();
         env.editor.focus();
     });
 });
+
 
 function updateUIEditorOptions() {
     var editor = env.editor;
