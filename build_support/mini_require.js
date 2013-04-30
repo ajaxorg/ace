@@ -67,7 +67,7 @@ var _define = function(module, deps, payload) {
     }
     
     _define.payloads[module] = payload;
-    define.modules[module] = null;
+    _define.modules[module] = null;
 };
 
 /**
