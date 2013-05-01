@@ -1,12 +1,12 @@
 [[
-   "punctuation.definition.comment.pascal2",
+   "punctuation.definition.comment.pascal",
   ["punctuation.definition.comment.pascal","(*"],
   ["comment.block.pascal.one","****************************************************************************"]
 ],[
-   "punctuation.definition.comment.pascal2",
+   "punctuation.definition.comment.pascal",
   ["comment.block.pascal.one"," * A simple bubble sort program.  Reads integers, one per line, and prints   *"]
 ],[
-   "punctuation.definition.comment.pascal2",
+   "punctuation.definition.comment.pascal",
   ["comment.block.pascal.one"," * them out in sorted order.  Blows up if there are more than 49.            *"]
 ],[
    "start",
