@@ -417,9 +417,7 @@ var buildAce = function(options) {
             source: [{
                 project: workerProject,
                 require: [
-                    'ace/lib/fixoldbrowsers',
-                    'ace/lib/event_emitter',
-                    'ace/lib/oop',
+                    'ace/worker/worker',
                     'ace/mode/' + mode + '_worker'
                 ]
             }],
@@ -428,7 +426,6 @@ var buildAce = function(options) {
         });
         copy({
             source: [
-                ACE_HOME + "/lib/ace/worker/worker.js",
                 worker
             ],
             filter: options.compress ? [copy.filter.uglifyjs] : [],
