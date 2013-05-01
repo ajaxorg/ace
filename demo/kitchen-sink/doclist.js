@@ -47,6 +47,7 @@ function initDoc(file, path, doc) {
     session.setUndoManager(new UndoManager());
     doc.session = session;
     doc.path = path;
+    session.name = doc.name;
     if (doc.wrapped) {
         session.setUseWrapMode(true);
         session.setWrapLimitRange(80, 80);
