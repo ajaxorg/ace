@@ -1,0 +1,136 @@
+[[
+   "start",
+  ["keyword.source.rust","use"],
+  ["text"," "],
+  ["support.constant","core::rand::"],
+  ["text","RngUtil"],
+  ["keyword.operator",";"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword.source.rust","fn"],
+  ["meta.function.source.rust"," "],
+  ["entity.name.function.source.rust","main"],
+  ["meta.function.source.rust","("],
+  ["text",") {"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword.source.rust","for"],
+  ["text"," ["],
+  ["string.quoted.double.source.rust","\"Alice\""],
+  ["keyword.operator",","],
+  ["text"," "],
+  ["string.quoted.double.source.rust","\"Bob\""],
+  ["keyword.operator",","],
+  ["text"," "],
+  ["string.quoted.double.source.rust","\"Carol\""],
+  ["text","].each |&name| {"]
+],[
+   "start",
+  ["text","        "],
+  ["keyword.source.rust","do"],
+  ["text"," spawn {"]
+],[
+   "start",
+  ["text","            "],
+  ["keyword.source.rust","let"],
+  ["text"," v "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["support.constant","rand::"],
+  ["text","Rng().shuffle(["],
+  ["constant.numeric.integer.source.rust","1"],
+  ["keyword.operator",","],
+  ["text"," "],
+  ["constant.numeric.integer.source.rust","2"],
+  ["keyword.operator",","],
+  ["text"," "],
+  ["constant.numeric.integer.source.rust","3"],
+  ["text","])"],
+  ["keyword.operator",";"]
+],[
+   "start",
+  ["text","            "],
+  ["keyword.source.rust","for"],
+  ["text"," v.each |&num| {"]
+],[
+   "start",
+  ["text","                print(fmt"],
+  ["keyword.operator","!"],
+  ["text","("],
+  ["string.quoted.double.source.rust","\"%s says: '%d'"],
+  ["constant.character.escape.source.rust","\\n"],
+  ["string.quoted.double.source.rust","\""],
+  ["keyword.operator",","],
+  ["text"," name"],
+  ["keyword.operator",","],
+  ["text"," num "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["constant.numeric.integer.source.rust","1"],
+  ["text","))"]
+],[
+   "start",
+  ["text","            }"]
+],[
+   "start",
+  ["text","        }"]
+],[
+   "start",
+  ["text","    }"]
+],[
+   "start",
+  ["text","}"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword.source.rust","fn"],
+  ["meta.function.source.rust"," "],
+  ["entity.name.function.source.rust","map<T, U>"],
+  ["meta.function.source.rust","("],
+  ["text","vector: &[T]"],
+  ["keyword.operator",","],
+  ["text"," function: &fn(v: &T) "],
+  ["keyword.operator","->"],
+  ["text"," U) "],
+  ["keyword.operator","->"],
+  ["text"," ~[U] {"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword.source.rust","let"],
+  ["text"," "],
+  ["keyword.source.rust","mut"],
+  ["text"," accumulator "],
+  ["keyword.operator","="],
+  ["text"," ~[]"],
+  ["keyword.operator",";"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword.source.rust","for"],
+  ["text"," "],
+  ["support.constant","vec::"],
+  ["text","each(vector) |element| {"]
+],[
+   "start",
+  ["text","        accumulator.push(function(element))"],
+  ["keyword.operator",";"]
+],[
+   "start",
+  ["text","    }"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword.source.rust","return"],
+  ["text"," accumulator"],
+  ["keyword.operator",";"]
+],[
+   "start",
+  ["text","}"]
+],[
+   "start"
+]]

@@ -14,8 +14,8 @@ asdad
 77
 .86
 
-#import("http://dartwatch.com/myOtherLibrary.dart");
-#import("myOtherLibrary.dart", prefix:"lib1");
+import("http://dartwatch.com/myOtherLibrary.dart");
+import("myOtherLibrary.dart", prefix:"lib1");
 
 """asdasdads
 asdadsadsasd

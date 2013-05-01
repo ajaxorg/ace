@@ -52,7 +52,7 @@ function initDoc(file, path, doc) {
         session.setUseWrapMode(true);
         session.setWrapLimitRange(80, 80);
     }
-    var mode = modelist.getModeFromPath(path);
+    var mode = modelist.getModeForPath(path);
     session.modeName = mode.name;
     session.setMode(mode.mode);
     return session;
@@ -66,8 +66,8 @@ function makeHuge(txt) {
 }
 
 var docs = {
-    "docs/AsciiDoc.asciidoc": "AsciiDoc",
     "docs/javascript.js": "JavaScript",
+    "docs/AsciiDoc.asciidoc": "AsciiDoc",
     "docs/clojure.clj": "Clojure",
     "docs/coffeescript.coffee": "CoffeeScript",
     "docs/coldfusion.cfm": "ColdFusion",
@@ -103,7 +103,7 @@ var docs = {
     "docs/luapage.lp": "LuaPage",
     "docs/Makefile": "Makefile",
     "docs/markdown.md": {name: "Markdown", wrapped: true},
-    "docs/tinymush.mc": {name: "TinyMUSH"},
+    "docs/mushcode.mc": {name: "MUSHCode", wrapped: true},
     "docs/objectivec.m": {name: "Objective-C"},
     "docs/ocaml.ml": "OCaml",
     "docs/OpenSCAD.scad": "OpenSCAD",
@@ -130,7 +130,7 @@ var docs = {
     "docs/tcl.tcl": "Tcl",
     "docs/tex.tex": "Tex",
     "docs/textile.textile": {name: "Textile", wrapped: true},
-    "docs/tmSnippet.tmSnippet": "tmSnippet",
+    "docs/snippets.snippets": "snippets",
     "docs/toml.toml": "TOML",
     "docs/typescript.ts": "Typescript",
     "docs/vbscript.vbs": "VBScript",
@@ -138,7 +138,17 @@ var docs = {
     "docs/xml.xml": "XML",
     "docs/xquery.xq": "XQuery",
     "docs/yaml.yaml": "YAML",
-    "docs/c9search.c9search_results": "C9 Search Results"
+    "docs/c9search.c9search_results": "C9 Search Results",
+    
+    "docs/actionscript.as": "ActionScript",
+    "docs/autohotkey.ahk": "AutoHotKey",
+    "docs/batchfile.bat": "BatchFile",
+    "docs/erlang/erl": "Erlang",
+    "docs/forth.frt": "Forth",
+    "docs/haskell.hs": "Haskell",
+    "docs/julia.js": "Julia",
+    "docs/prolog/plg": "Prolog",
+    "docs/rust.rs": "Rust"
 };
 
 var ownSource = {
