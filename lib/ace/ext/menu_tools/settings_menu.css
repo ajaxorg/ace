@@ -38,3 +38,11 @@
 .ace_closeButton{
     background: rgba(245, 146, 146, 0.9);
 }
+.ace_optionsMenuKey {
+    color: darkslateblue;
+    font-weight: bold;
+}
+.ace_optionsMenuCommand {
+    color: darkcyan;
+    font-weight: normal;
+}
