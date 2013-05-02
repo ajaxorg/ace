@@ -56,6 +56,7 @@ start   ::= '<![CDATA['
           | ":"
           | "!"
           | "|"
+          | "$$"
           | Annotation
           | ModuleDecl
           | OptionDecl
