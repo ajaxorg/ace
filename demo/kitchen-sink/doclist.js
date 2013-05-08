@@ -85,6 +85,7 @@ var docs = {
     "docs/haml.haml": "Haml",
     "docs/Haxe.hx": "haXe",
     "docs/html.html": "HTML",
+    "docs/html_ruby.erb": "HTML (Ruby)",
     "docs/jade.jade": "Jade",
     "docs/java.java": "Java",
     "docs/jsp.jsp": "JSP",
