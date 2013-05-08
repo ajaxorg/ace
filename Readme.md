@@ -1,3 +1,19 @@
+Codio Ace
+=========
+
+This is a fork of the Ace code editor from https://github.com/ajaxorg/ace. It has very few differences to the original repo, but is maintained to allow us to create custom builds for Codio.
+
+To build Ace for Codio, all you need is Node.js and npm installed. Just run `npm install` in the ace folder to install dependencies, and run the makefile:
+
+```bash
+    npm install
+    node ./Makefile.dryice.js -nc
+```
+
+You will then be left with a `build/src-noconflict` directory, which contains all the files that Codio needs. Just copy these files into the Codio client repo at `source/vendors/ace`.
+
+---
+
 Ace (Ajax.org Cloud9 Editor)
 ============================
 
@@ -97,7 +113,7 @@ If you still need help, feel free to drop a mail on the [ace mailing list](http:
 Running Ace
 -----------
 
-After the checkout Ace works out of the box. No build step is required. To try it out, simply start the bundled mini HTTP server: 
+After the checkout Ace works out of the box. No build step is required. To try it out, simply start the bundled mini HTTP server:
 
 ```bash
     ./static.py
@@ -110,7 +126,7 @@ Or using Node.JS
     node ./static.js
 ```
 
-The editor can then be opened at http://localhost:8888/kitchen-sink.html. 
+The editor can then be opened at http://localhost:8888/kitchen-sink.html.
 
 To open the editor with a file:/// URL see [the wiki](https://github.com/ajaxorg/ace/wiki/Running-Ace-from-a-file:).
 
@@ -129,7 +145,7 @@ However, all you need is Node.js and npm installed to package ACE. Just run `npm
 To package Ace, we use the dryice build tool developed by the Mozilla Skywriter team. Call `node Makefile.dryice.js` on the command-line to start the packing. This build script accepts the following options
 
 ```bash
--m                 minify build files with uglify-js          
+-m                 minify build files with uglify-js
 -nc                namespace require and define calls with "ace"
 -bm                builds the bookmarklet version
 --target ./path    specify relative path for output folder (default value is "./build")
