@@ -1,13 +1,12 @@
 2013.05.01, Version 1.1.0
 
 * API Changes
-  - default position of the editor container is changed to relative. add `.ace_editor {position: absolute}` css rule to restore old behavior
-  - changed default line-height to `normal` to not conflict with bootstrap. Use `line-height: inherit` for old behavior.
-  - changed marker types accepted by session.addMarker. It now accepts "text"|"line"|"fullLine"|"screenLine"
-  - internal classnames used by editor made more consistent
-  - introduced `editor.setOption/getOption/setOptions/getOptions` methods
-  - introduced positionToIndex, indexToPosition methods
-
+  - Default position of the editor container is changed to relative. Add `.ace_editor {position: absolute}` css rule to restore old behavior
+  - Changed default line-height to `normal` to not conflict with bootstrap. Use `line-height: inherit` for old behavior.
+  - Changed marker types accepted by session.addMarker. It now accepts "text"|"line"|"fullLine"|"screenLine"
+  - Internal classnames used by editor were made more consistent
+  - Introduced `editor.setOption/getOption/setOptions/getOptions` methods
+  - Introduced positionToIndex, indexToPosition methods
 
 * New Features
   - Improved emacs mode (chetstone)
@@ -23,20 +22,19 @@
   - Added extension for displaying options panel (Matthew Christopher Kastor-Inare III)
     
   - Improved toggleCommentLines and added ToggleCommentBlock command
-  - new CSS behaviour (danyaPostfactum)
+  - New CSS behaviour (danyaPostfactum)
 
   - Added suppoert for Delete and SelectAll from context menu (danyaPostfactum)
 
   - Make wrapping behavior optional
   - Selective bracket insertion/skipping 
     
-    
   - Added commands for increase/decrease numbers, sort lines (Vlad Zinculescu)    
-  - Folding for markdown, lua, latex    
-  - Selective bracket insertion/skipping
+  - Folding for Markdown, Lua, LaTeX    
+  - Selective bracket insertion/skipping for C-like languages
 
-* many new languages    
-    Scheme, dot, FreeMarker, Tiny Mushcode, Velocity, TOML, LSL, Curly, vbScript, R, abap, lucene, haml, obj-c, makefile, Typescript, Lisp, Stylus, Dart
+* Many new languages    
+    Scheme, Dot, FreeMarker, Tiny Mushcode, Velocity, TOML, LSL, Curly, vbScript, R, ABAP, Lucene, Haml, Objective-C, Makefile, TypeScript, Lisp, Stylus, Dart
 
 * Live syntax checks
   - PHP (danyaPostfactum)
@@ -44,9 +42,8 @@
   - Lua
 
 * New Themes
-    Chaos 
-    Terminal 
-  
+  - Chaos 
+  - Terminal 
    
 2012.09.17, Version 1.0.0
 
