@@ -1,3 +1,50 @@
+2013.05.01, Version 1.1.0
+
+* API Changes
+  - Default position of the editor container is changed to relative. Add `.ace_editor {position: absolute}` css rule to restore old behavior
+  - Changed default line-height to `normal` to not conflict with bootstrap. Use `line-height: inherit` for old behavior.
+  - Changed marker types accepted by session.addMarker. It now accepts "text"|"line"|"fullLine"|"screenLine"
+  - Internal classnames used by editor were made more consistent
+  - Introduced `editor.setOption/getOption/setOptions/getOptions` methods
+  - Introduced positionToIndex, indexToPosition methods
+
+* New Features
+  - Improved emacs mode (chetstone)
+    with Incremental search and Occur modes (Robert Krahn)
+
+  - Improved ime handling
+  - Searchbox (Vlad Zinculescu)
+
+  - Added elastic tabstops lite extension (Garen Torikian)
+  - Added extension for whitespace manipulation
+  - Added extension for enabling spellchecking from contextmenu
+  - Added extension for displaying available keyboard shortcuts (Matthew Christopher Kastor-Inare III)
+  - Added extension for displaying options panel (Matthew Christopher Kastor-Inare III)
+    
+  - Improved toggleCommentLines and added ToggleCommentBlock command
+  - New CSS behaviour (danyaPostfactum)
+
+  - Added suppoert for Delete and SelectAll from context menu (danyaPostfactum)
+
+  - Make wrapping behavior optional
+  - Selective bracket insertion/skipping 
+    
+  - Added commands for increase/decrease numbers, sort lines (Vlad Zinculescu)    
+  - Folding for Markdown, Lua, LaTeX    
+  - Selective bracket insertion/skipping for C-like languages
+
+* Many new languages    
+    Scheme, Dot, FreeMarker, Tiny Mushcode, Velocity, TOML, LSL, Curly, vbScript, R, ABAP, Lucene, Haml, Objective-C, Makefile, TypeScript, Lisp, Stylus, Dart
+
+* Live syntax checks
+  - PHP (danyaPostfactum)
+  - Python
+  - Lua
+
+* New Themes
+  - Chaos 
+  - Terminal 
+   
 2012.09.17, Version 1.0.0
 
 * New Features
