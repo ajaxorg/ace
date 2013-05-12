@@ -91,7 +91,7 @@ require("ace/multi_select").MultiSelect(env.editor);
 var consoleEl = dom.createElement("div");
 container.parentNode.appendChild(consoleEl);
 consoleEl.style.cssText = "position:fixed; bottom:1px; right:0;\
-border:1px solid #baf; zIndex:100";
+border:1px solid #baf; z-index:100";
 
 var cmdLine = new layout.singleLineEditor(consoleEl);
 cmdLine.editor = env.editor;
