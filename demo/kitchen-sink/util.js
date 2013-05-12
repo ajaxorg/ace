@@ -205,7 +205,7 @@ exports.fillDropdown = function(el, values) {
 function elt(tag, attributes, content) {
     var el = dom.createElement(tag);
     if (typeof content == "string") {
-        el.textContent = content;
+        el.appendChild(document.createTextNode(content));
     } else if (content) {
         content.forEach(function(ch) {
             el.appendChild(ch);
