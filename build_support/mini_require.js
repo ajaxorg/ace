@@ -62,8 +62,8 @@ var _define = function(module, deps, payload) {
         payload = deps;
 
     if (!_define.modules) {
-        _define.modules = Object.create(null);
-        _define.payloads = Object.create(null);
+        _define.modules = {};
+        _define.payloads = {};
     }
     
     _define.payloads[module] = payload;
