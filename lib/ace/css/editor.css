@@ -295,11 +295,12 @@
     border-radius: 3px;
     
     border: 1px solid transparent;
+    cursor: pointer;
 }
-    
-    .ace_folding-enabled .ace_fold-widget {
-        display: inline-block;   
-    }
+
+.ace_folding-enabled .ace_fold-widget {
+    display: inline-block;   
+}
 
 .ace_fold-widget.ace_end {
     background-image: url("data:image/png,%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00%05%00%00%00%05%08%06%00%00%00%8Do%26%E5%00%00%004IDATx%DAm%C7%C1%09%000%08C%D1%8C%ECE%C8E(%8E%EC%02)%1EZJ%F1%C1'%04%07I%E1%E5%EE%CAL%F5%A2%99%99%22%E2%D6%1FU%B5%FE0%D9x%A7%26Wz5%0E%D5%00%00%00%00IEND%AEB%60%82");
