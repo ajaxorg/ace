@@ -28,6 +28,16 @@
     cursor: default;
 }
 
+/* prevents text selection on webkit */
+.ace_selecting .ace_text-input{
+    right: -9999px !important;
+    position: fixed;
+}
+
+.ace_selecting, .ace_selecting .ace_gutter{
+    cursor: text;
+}
+
 .ace_gutter {
     position: absolute;
     overflow : hidden;
