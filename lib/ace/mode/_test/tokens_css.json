@@ -18,7 +18,7 @@
   ["support.type","font-size"],
   ["text",": "],
   ["constant.numeric","12"],
-  ["keyword","px"],
+  ["keyword","pX"],
   ["text",";"]
 ],[
    "ruleset",
