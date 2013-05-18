@@ -20,9 +20,10 @@
   - Added extension for enabling spellchecking from contextmenu
   - Added extension for displaying available keyboard shortcuts (Matthew Christopher Kastor-Inare III)
   - Added extension for displaying options panel (Matthew Christopher Kastor-Inare III)
-    
+  - Added modelist extension (Matthew Christopher Kastor-Inare III)
+
   - Improved toggleCommentLines and added ToggleCommentBlock command
-  - New CSS behaviour (danyaPostfactum)
+  - `:;` pairing in CSS mode (danyaPostfactum)
 
   - Added suppoert for Delete and SelectAll from context menu (danyaPostfactum)
 
@@ -33,12 +34,29 @@
   - Folding for Markdown, Lua, LaTeX    
   - Selective bracket insertion/skipping for C-like languages
 
-* Many new languages    
-    Scheme, Dot, FreeMarker, Tiny Mushcode, Velocity, TOML, LSL, Curly, vbScript, R, ABAP, Lucene, Haml, Objective-C, Makefile, TypeScript, Lisp, Stylus, Dart
+* Many new languages
+    Scheme,
+    Dot,
+    FreeMarker,
+    Tiny Mushcode,
+    Velocity,
+    TOML, 
+    LSL, 
+    Curly, 
+    vbScript, 
+    R, 
+    ABAP, 
+    Lucene, 
+    Haml, 
+    Objective-C, 
+    Makefile, 
+    TypeScript, 
+    Lisp, 
+    Stylus, 
+    Dart
 
 * Live syntax checks
   - PHP (danyaPostfactum)
-  - Python
   - Lua
 
 * New Themes
