@@ -141,6 +141,7 @@ var docs = {
     "docs/c9search.c9search_results": "C9 Search Results",
     
     "docs/actionscript.as": "ActionScript",
+    "docs/assembly_x86.asm": "Assembly_x86",
     "docs/autohotkey.ahk": "AutoHotKey",
     "docs/batchfile.bat": "BatchFile",
     "docs/erlang/erl": "Erlang",
