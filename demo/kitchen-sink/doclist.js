@@ -149,7 +149,8 @@ var docs = {
     "docs/haskell.hs": "Haskell",
     "docs/julia.js": "Julia",
     "docs/prolog/plg": "Prolog",
-    "docs/rust.rs": "Rust"
+    "docs/rust.rs": "Rust",
+    "docs/twig.twig": "Twig"
 };
 
 var ownSource = {
