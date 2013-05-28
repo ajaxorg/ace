@@ -8,11 +8,8 @@
   background: #e8e8e8
 }
 
-.ace-solarized-light .ace_scroller {
-  background-color: #FDF6E3
-}
-
-.ace-solarized-light .ace_text-layer {
+.ace-solarized-light {
+  background-color: #FDF6E3;
   color: #586E75
 }
 

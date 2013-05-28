@@ -8,12 +8,12 @@
   background: #272727
 }
 
-.ace-tomorrow-night-eighties .ace_scroller {
-  background-color: #2D2D2D
+.ace-tomorrow-night-eighties {
+  background-color: #2D2D2D;
+  color: #CCCCCC
 }
 
-.ace-tomorrow-night-eighties .ace_constant.ace_other,
-.ace-tomorrow-night-eighties .ace_text-layer {
+.ace-tomorrow-night-eighties .ace_constant.ace_other {
   color: #CCCCCC
 }
 

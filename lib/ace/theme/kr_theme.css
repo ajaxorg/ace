@@ -8,11 +8,8 @@
   background: #1c1917
 }
 
-.ace-kr-theme .ace_scroller {
-  background-color: #0B0A09
-}
-
-.ace-kr-theme .ace_text-layer {
+.ace-kr-theme {
+  background-color: #0B0A09;
   color: #FCFFE0
 }
 

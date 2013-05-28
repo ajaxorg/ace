@@ -8,8 +8,9 @@
   background: #3b3b3b
 }
 
-.ace-idle-fingers .ace_scroller {
-  background-color: #323232
+.ace-idle-fingers {
+  background-color: #323232;
+  color: #FFFFFF
 }
 
 .ace-idle-fingers .ace_text-layer {

@@ -8,11 +8,8 @@
   background: #e8e8e8
 }
 
-.ace-dawn .ace_scroller {
-  background-color: #F9F9F9
-}
-
-.ace-dawn .ace_text-layer {
+.ace-dawn {
+  background-color: #F9F9F9;
   color: #080808
 }
 

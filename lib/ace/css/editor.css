@@ -4,6 +4,7 @@
     font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
     font-size: 12px;
     line-height: normal;
+    color: black;
 }
 
 .ace_scroller {
@@ -11,6 +12,7 @@
     overflow: hidden;
     top: 0;
     bottom: 0;
+    background-color: inherit;
 }
 
 .ace_content {
@@ -135,7 +137,6 @@
 }
 
 .ace_text-layer {
-    color: black;
     font: inherit !important;
 }
 

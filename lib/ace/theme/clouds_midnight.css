@@ -8,11 +8,8 @@
   background: #232323
 }
 
-.ace-clouds-midnight .ace_scroller {
-  background-color: #191919
-}
-
-.ace-clouds-midnight .ace_text-layer {
+.ace-clouds-midnight{
+  background-color: #191919;
   color: #929292
 }
 

@@ -8,12 +8,12 @@
   background: #00204b
 }
 
-.ace-tomorrow-night-blue .ace_scroller {
-  background-color: #002451
+.ace-tomorrow-night-blue {
+  background-color: #002451;
+  color: #FFFFFF
 }
 
-.ace-tomorrow-night-blue .ace_constant.ace_other,
-.ace-tomorrow-night-blue .ace_text-layer {
+.ace-tomorrow-night-blue .ace_constant.ace_other {
   color: #FFFFFF
 }
 

@@ -8,11 +8,8 @@
   background: #1a1a1a
 }
 
-.ace-tomorrow-night-bright .ace_scroller {
-  background-color: #000000
-}
-
-.ace-tomorrow-night-bright .ace_text-layer {
+.ace-tomorrow-night-bright {
+  background-color: #000000;
   color: #DEDEDE
 }
 

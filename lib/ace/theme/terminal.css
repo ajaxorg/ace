@@ -8,11 +8,8 @@
   background: #1a1a1a
 }
 
-.ace-terminal-theme .ace_scroller {
+.ace-terminal-theme {
   background-color: black
-}
-
-.ace-terminal-theme .ace_text-layer {
   color: #DEDEDE
 }
 

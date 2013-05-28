@@ -8,11 +8,8 @@
   background: #011e3a
 }
 
-.ace-cobalt .ace_scroller {
-  background-color: #002240
-}
-
-.ace-cobalt .ace_text-layer {
+.ace-cobalt {
+  background-color: #002240;
   color: #FFFFFF
 }
 

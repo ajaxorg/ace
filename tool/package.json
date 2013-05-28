@@ -3,7 +3,7 @@
     "version": "0.1.0",
     "dependencies": {
         "plist": "",
-        "css-parse": "",
-        "css-stringify": ""
+        "css-parse": "1.0.3",
+        "css-stringify": "1.0.3"
     }
 }

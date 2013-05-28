@@ -8,11 +8,8 @@
   background: #353030
 }
 
-.ace-pastel-on-dark .ace_scroller {
-  background-color: #2C2828
-}
-
-.ace-pastel-on-dark .ace_text-layer {
+.ace-pastel-on-dark {
+  background-color: #2C2828;
   color: #8F938F
 }
 
