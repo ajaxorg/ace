@@ -155,7 +155,7 @@ env.editor.commands.addCommands([{
     bindKey: "ctrl+enter",
     exec: function(editor) {
         try {
-            var r = eval(editor.getCopyText()||editor.getValue());
+            var r = window.eval(editor.getCopyText()||editor.getValue());
         } catch(e) {
             r = e;
         }
@@ -559,7 +559,7 @@ ace.commands.bindKey("Tab", function(editor) {
         editor.execCommand("indent");
 })
 
-var Autocompleter = require("ace/autocomplete").Autocomplete;
-Autocompleter.addTo(env.editor)
+require("ace/ext/language_tools");
+
 
 });
