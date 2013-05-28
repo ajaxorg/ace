@@ -23,7 +23,7 @@
 }
 
 .ace-solarized-light .ace_marker-layer .ace_selection {
-  background: #073642
+  background:  rgba(7, 54, 67, 0.09)
 }
 
 .ace-solarized-light.ace_multiselect .ace_selection.ace_start {
@@ -45,7 +45,7 @@
 }
 
 .ace-solarized-light .ace_gutter-active-line {
-  background-color : #dcdcdc
+  background-color : #EDE5C1
 }
 
 .ace-solarized-light .ace_marker-layer .ace_selected-word {
@@ -111,5 +111,5 @@
 }
 
 .ace-solarized-light .ace_indent-guide {
-  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAE0lEQVQImWP4++3xf4ZVq1b9BwAjxwbT1g3hiwAAAABJRU5ErkJggg==) right repeat-y
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAEklEQVQImWNgYGBgYHjy8NJ/AAjgA5fzQUmBAAAAAElFTkSuQmCC) right repeat-y;
 }
