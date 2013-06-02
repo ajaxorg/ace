@@ -69,7 +69,7 @@
   ["text.lsl","          "],
   ["keyword.operator.lsl","="],
   ["text.lsl"," "],
-  ["constant.language.key.lsl","TEXTURE_DEFAULT"],
+  ["constant.language.string.lsl","TEXTURE_DEFAULT"],
   ["punctuation.operator.lsl",";"]
 ],[
    "start",
@@ -163,7 +163,7 @@
   ["text.lsl"," "],
   ["keyword.operator.lsl","="],
   ["text.lsl"," "],
-  ["constant.language.key.lsl","NULL_KEY"],
+  ["constant.language.string.lsl","NULL_KEY"],
   ["punctuation.operator.lsl",";"]
 ],[
    "start",
@@ -385,7 +385,7 @@
   ["text.lsl","      "],
   ["keyword.operator.lsl","="],
   ["text.lsl"," "],
-  ["constant.language.key.lsl","TEXTURE_DEFAULT"],
+  ["constant.language.string.lsl","TEXTURE_DEFAULT"],
   ["punctuation.operator.lsl",";"]
 ],[
    "start",
