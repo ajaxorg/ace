@@ -1,3 +1,21 @@
+2013.06.04 Version 1.1.01
+
+  - Improved emacs keybindings (Robert Krahn)
+  - Added markClean, isClean methods to UndoManager (Joonsoo Jeon)
+  - Do not allow `Toggle comments` command to remove spaces from indentation
+  - Softer colors for indent guides in dark themes
+
+* new language modes
+  - Ada
+  - Assembly_x86
+  - Cobol
+  - D
+  - ejs
+  - MATLAB
+  - MySQL
+  - Twig
+  - Verilog
+
 2013.05.01, Version 1.1.0
 
 * API Changes
@@ -35,25 +53,25 @@
   - Selective bracket insertion/skipping for C-like languages
 
 * Many new languages
-    Scheme,
-    Dot,
-    FreeMarker,
-    Tiny Mushcode,
-    Velocity,
-    TOML, 
-    LSL, 
-    Curly, 
-    vbScript, 
-    R, 
-    ABAP, 
-    Lucene, 
-    Haml, 
-    Objective-C, 
-    Makefile, 
-    TypeScript, 
-    Lisp, 
-    Stylus, 
-    Dart
+  - Scheme (Mu Lei)
+  - Dot (edwardsp)
+  - FreeMarker (nguillaumin)
+  - Tiny Mushcode (h3rb)
+  - Velocity (Ryan Griffith)
+  - TOML (Garen Torikian) 
+  - LSL (Nemurimasu Neiro, Builders Brewery)
+  - Curly (Libo Cannici)
+  - vbScript (Jan Jongboom) 
+  - R (RStudio) 
+  - ABAP
+  - Lucene (Graham Scott)
+  - Haml (Garen Torikian)
+  - Objective-C (Garen Torikian) 
+  - Makefile (Garen Torikian) 
+  - TypeScript (Garen Torikian) 
+  - Lisp (Garen Torikian) 
+  - Stylus (Garen Torikian) 
+  - Dart (Garen Torikian)
 
 * Live syntax checks
   - PHP (danyaPostfactum)
