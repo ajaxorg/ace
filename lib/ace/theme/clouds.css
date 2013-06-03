@@ -8,11 +8,8 @@
   background: #e8e8e8
 }
 
-.ace-clouds .ace_scroller {
-  background-color: #FFFFFF
-}
-
-.ace-clouds .ace_text-layer {
+.ace-clouds {
+  background-color: #FFFFFF;
   color: #000000
 }
 

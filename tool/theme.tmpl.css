@@ -10,11 +10,8 @@
   background: %printMargin%;
 }
 
-.%cssClass% .ace_scroller {
+.%cssClass% {
   background-color: %background%;
-}
-
-.%cssClass% .ace_text-layer {
   color: %foreground%;
 }
 

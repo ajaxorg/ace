@@ -5,8 +5,9 @@
   color: #AAA;
 }
 
-.ace-github .ace_scroller {
+.ace-github  {
   background: #fff;
+  color: #000;
 }
 
 .ace-github .ace_keyword {
@@ -61,9 +62,6 @@
 
 .ace-github .ace_constant.ace_language {
   font-weight: bold;
-}
-
-.ace-github .ace_text-layer {
 }
 
 .ace-github .ace_cursor {

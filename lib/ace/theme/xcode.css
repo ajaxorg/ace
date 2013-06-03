@@ -10,11 +10,8 @@
   background: #e8e8e8
 }
 
-.ace-xcode .ace_scroller {
-  background-color: #FFFFFF
-}
-
-.ace-xcode .ace_text-layer {
+.ace-xcode {
+  background-color: #FFFFFF;
   color: #000000
 }
 
@@ -107,5 +104,5 @@
 }
 
 .ace-xcode .ace_indent-guide {
-  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAE0lEQVQImWP4////f4bLly//BwAmVgd1/w11/gAAAABJRU5ErkJggg==) right repeat-y;
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAE0lEQVQImWP4////f4bLly//BwAmVgd1/w11/gAAAABJRU5ErkJggg==) right repeat-y
 }

@@ -14,11 +14,8 @@
   background: #e8e8e8;
 }
 
-.ace-crimson-editor .ace_scroller {
+.ace-crimson-editor {
   background-color: #FFFFFF;
-}
-
-.ace-crimson-editor .ace_text-layer {
   color: rgb(64, 64, 64);
 }
 
