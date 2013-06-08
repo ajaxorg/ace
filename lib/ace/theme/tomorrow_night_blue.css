@@ -124,10 +124,6 @@
   color: #7285B7
 }
 
-.ace-tomorrow-night-blue .ace_markup.ace_underline {
-  text-decoration: underline
-}
-
 .ace-tomorrow-night-blue .ace_indent-guide {
   background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAEklEQVQImWNgYGBgYJDzqfwPAANXAeNsiA+ZAAAAAElFTkSuQmCC) right repeat-y;
 }

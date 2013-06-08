@@ -123,10 +123,6 @@
   color: #F2777A
 }
 
-.ace-tomorrow-night-eighties .ace_markup.ace_underline {
-  text-decoration: underline
-}
-
 .ace-tomorrow-night-eighties .ace_indent-guide {
   background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAEklEQVQImWPQ09NrYAgMjP4PAAtGAwchHMyAAAAAAElFTkSuQmCC) right repeat-y
 }
