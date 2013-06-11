@@ -155,7 +155,7 @@ function ace() {
         source: ACE_HOME + "/ChangeLog.txt",
         dest:   BUILD_DIR + "/ChangeLog.txt"
     });
-    
+
     return project;
 }
 
@@ -211,7 +211,7 @@ function demo(project) {
     });
 
     var demo = copy.createDataObject();
-    
+
     project.assumeAllFilesLoaded();
     copy({
         source: [{
@@ -309,7 +309,7 @@ var buildAce = function(options) {
     for(var key in defaults)
         if (!options.hasOwnProperty(key))
             options[key] = defaults[key];
-    
+
     generateThemesModule(options.themes);
 
     addSuffix(options);
@@ -334,7 +334,7 @@ var buildAce = function(options) {
         filter: [ copy.filter.moduleDefines ],
         dest: ace
     });
-    
+
     if (options.coreOnly)
         return project;
 
@@ -349,6 +349,7 @@ var buildAce = function(options) {
     project.assumeAllFilesLoaded();
     options.modes.forEach(function(mode) {
         console.log("mode " + mode);
+        addSnippetFile(mode, project, targetDir, options);
         copy({
             source: [{
                 project: cloneProject(project),
@@ -441,7 +442,7 @@ var buildAce = function(options) {
           dest: BUILD_DIR + '/ace-min.js'
         });
     }
-    
+
     return project;
 };
 
@@ -460,6 +461,30 @@ var buildAce = function(fn) {
     }
 }(buildAce);
 
+var addSnippetFile = function(modeName, project, targetDir, options) {
+    var snippetFilePath = ACE_HOME + "/lib/ace/snippets/" + modeName;
+    if (!fs.existsSync(snippetFilePath + ".js")) {
+        copy({
+            source: ACE_HOME + "/tool/snippets.tmpl.js",
+            dest:   snippetFilePath + ".js",
+            filter: [
+                function(t) {return t.replace(/%modeName%/g, modeName);}
+            ]
+        });
+    }
+    if (!fs.existsSync(snippetFilePath + ".snippets")) {
+        fs.writeFileSync(snippetFilePath + ".snippets", "")
+    }
+    copy({
+        source: [{
+            project: cloneProject(project),
+            require: [ 'ace/snippets/' + modeName ]
+        }],
+        filter: getWriteFilters(options, "mode"),
+        dest:   targetDir + "/snippets/" + modeName + ".js"
+    });
+}
+
 var textModules = {}
 var detectTextModules = function(input, source) {
     if (!source)
@@ -469,7 +494,7 @@ var detectTextModules = function(input, source) {
         input = input.toString();
 
     var module = source.isLocation ? source.path : source;
-    
+
     input = input.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
     if (/\.css$/.test(module)) {
         // remove unnecessary whitespace from css

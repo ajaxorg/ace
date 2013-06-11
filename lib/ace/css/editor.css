@@ -181,7 +181,7 @@
     white-space: nowrap;
 }
 
-.ace_marker-layer .ace_step {
+.ace_marker-layer .ace_step, .ace_marker-layer .ace_stack {
     position: absolute;
     z-index: 3;
 }
@@ -385,4 +385,17 @@
 
 .ace_italic {
     font-style: italic;
+}
+
+
+.ace_error-marker {
+    background-color: rgba(255, 0, 0,0.2);
+    position: absolute;
+    z-index: 9;
+}
+
+.ace_highlight-marker {
+    background-color: rgba(255, 255, 0,0.2);
+    position: absolute;
+    z-index: 8;
 }
