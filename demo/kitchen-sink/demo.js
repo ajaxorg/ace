@@ -155,7 +155,7 @@ env.editor.commands.addCommands([{
     bindKey: "ctrl+enter",
     exec: function(editor) {
         try {
-            var r = eval(editor.getCopyText()||editor.getValue());
+            var r = window.eval(editor.getCopyText()||editor.getValue());
         } catch(e) {
             r = e;
         }
@@ -196,7 +196,7 @@ commands.addCommand({
     exec: function() {alert("Fake Save File");}
 });
 
-var keybindings = {
+var keybindings = {    
     ace: null, // Null = use "default" keymapping
     vim: require("ace/keyboard/vim").handler,
     emacs: "ace/keyboard/emacs",
@@ -431,7 +431,7 @@ bindDropdown("split", function(value) {
         sp.setSplits(1);
     } else {
         var newEditor = (sp.getSplits() == 1);
-        sp.setOrientation(value == "below" ? sp.BELOW : sp.BESIDE);
+        sp.setOrientation(value == "below" ? sp.BELOW : sp.BESIDE);        
         sp.setSplits(2);
 
         if (newEditor) {
@@ -517,17 +517,9 @@ net.loadScript("https://rawgithub.com/nightwing/emmet-core/master/emmet.js", fun
 })
 
 
-require("ace/placeholder").PlaceHolder;
+// require("ace/placeholder").PlaceHolder;
 
-var snippetManager = require("ace/snippets").snippetManager
-var jsSnippets = require("ace/snippets/javascript");
-window.snippetManager = snippetManager
-saveSnippets()
-
-function saveSnippets() {
-    jsSnippets.snippets = snippetManager.parseSnippetFile(jsSnippets.snippetText);
-    snippetManager.register(jsSnippets.snippets, "javascript")
-}
+var snippetManager = require("ace/snippets").snippetManager;
 
 env.editSnippets = function() {
     var sp = env.split;
@@ -538,25 +530,32 @@ env.editSnippets = function() {
     sp.setSplits(1);
     sp.setSplits(2);
     sp.setOrientation(sp.BESIDE);
-    var editor = sp.$editors[1]
-    if (!env.snippetSession) {
-        var file = jsSnippets.snippetText;
-        env.snippetSession = doclist.initDoc(file, "", {});
-        env.snippetSession.setMode("ace/mode/tmsnippet");
-        env.snippetSession.setUseSoftTabs(false);
+    var editor = sp.$editors[1];
+    var id = sp.$editors[0].session.$mode.$id || "";
+    var m = snippetManager.files[id];
+    if (!doclist["snippets/" + id]) {
+        var text = m.snippetText;
+        var s = doclist.initDoc(text, "", {});
+        s.setMode("ace/mode/snippets");
+        doclist["snippets/" + id] = s
     }
     editor.on("blur", function() {
-        jsSnippets.snippetText = editor.getValue();
-        saveSnippets();
+        m.snippetText = editor.getValue();
+        snippetManager.unregister(m.snippets);
+        m.snippets = snippetManager.parseSnippetFile(m.snippetText);
+        snippetManager.register(m.snippets);
     })
-    editor.setSession(env.snippetSession, 1);
+    sp.$editors[0].once("changeMode", function() {
+        sp.setSplits(1);
+    })
+    editor.setSession(doclist["snippets/" + id], 1);
     editor.focus();
 }
 
-ace.commands.bindKey("Tab", function(editor) {
-    var success = snippetManager.expandWithTab(editor);
-    if (!success)
-        editor.execCommand("indent");
+require("ace/ext/language_tools");
+env.editor.setOptions({
+    enableBasicAutocompletion: true,
+    enableSnippets: true
 })
 
 });

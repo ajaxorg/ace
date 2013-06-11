@@ -4,6 +4,7 @@
     font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
     font-size: 12px;
     line-height: normal;
+    color: black;
 }
 
 .ace_scroller {
@@ -11,6 +12,7 @@
     overflow: hidden;
     top: 0;
     bottom: 0;
+    background-color: inherit;
 }
 
 .ace_content {
@@ -135,7 +137,6 @@
 }
 
 .ace_text-layer {
-    color: black;
     font: inherit !important;
 }
 
@@ -180,7 +181,7 @@
     white-space: nowrap;
 }
 
-.ace_marker-layer .ace_step {
+.ace_marker-layer .ace_step, .ace_marker-layer .ace_stack {
     position: absolute;
     z-index: 3;
 }
@@ -384,4 +385,17 @@
 
 .ace_italic {
     font-style: italic;
+}
+
+
+.ace_error-marker {
+    background-color: rgba(255, 0, 0,0.2);
+    position: absolute;
+    z-index: 9;
+}
+
+.ace_highlight-marker {
+    background-color: rgba(255, 255, 0,0.2);
+    position: absolute;
+    z-index: 8;
 }

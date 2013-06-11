@@ -152,7 +152,7 @@ var lookup = function(parentId, moduleName) {
             _define.modules[moduleName] = exports;
             delete _define.payloads[moduleName];
         }
-        module = _define.modules[moduleName] = exports;
+        module = _define.modules[moduleName] = exports || module;
     }
     return module;
 };

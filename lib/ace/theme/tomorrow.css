@@ -8,11 +8,9 @@
   background: #f6f6f6
 }
 
+.ace-tomorrow,
 .ace-tomorrow .ace_scroller {
-  background-color: #FFFFFF
-}
-
-.ace-tomorrow .ace_text-layer {
+  background-color: #FFFFFF;
   color: #4D4D4C
 }
 
