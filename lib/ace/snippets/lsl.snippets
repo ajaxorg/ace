@@ -1,3 +1,5 @@
+snippet @
+    @${1:label}
 snippet CAMERA_ACTIVE
     CAMERA_ACTIVE, ${1:integer isActive},
 snippet CAMERA_BEHINDNESS_ANGLE
@@ -40,6 +42,8 @@ snippet CHARACTER_ORIENTATION
     CHARACTER_ORIENTATION, ${1:integer orientation},
 snippet CHARACTER_RADIUS
     CHARACTER_RADIUS, ${1:float radius},
+snippet CHARACTER_STAY_WITHIN_PARCEL
+    CHARACTER_STAY_WITHIN_PARCEL, ${1:boolean stay},
 snippet CHARACTER_TYPE
     CHARACTER_TYPE, ${1:integer type},
 snippet HTTP_BODY_MAXLENGTH
@@ -109,8 +113,29 @@ snippet dataserver
     {
         $0
     }
+snippet do
+    do
+    {
+        $0
+    }
+    while (${1:condition});
+snippet else
+    else
+    {
+        $0
+    }
+snippet else if
+    else if (${1:condition})
+    {
+        $0
+    }
 snippet email
     email(${1:string time}, ${2:string address}, ${3:string subject}, ${4:string message}, ${5:integer num_left})
+    {
+        $0
+    }
+snippet for
+    for (${1:start}; ${3:condition}; ${3:step})
     {
         $0
     }
@@ -124,6 +149,13 @@ snippet http_response
     {
         $0
     }
+snippet if
+    if (${1:condition})
+    {
+        $0
+    }
+snippet jump
+    jump ${1:label};
 snippet land_collision
     land_collision(${1:vector pos})
     {
@@ -146,61 +178,6 @@ snippet link_message
     }
 snippet listen
     listen(${1:integer channel}, ${2:string name}, ${3:key id}, ${4:string message})
-    {
-        $0
-    }
-snippet money
-    money(${1:key id}, ${2:integer amount})
-    {
-        $0
-    }
-snippet object_rez
-    object_rez(${1:key id})
-    {
-        $0
-    }
-snippet on_rez
-    on_rez(${1:integer start_param})
-    {
-        $0
-    }
-snippet path_update
-    path_update(${1:integer type}, ${2:list reserved})
-    {
-        $0
-    }
-snippet remote_data
-    remote_data(${1:integer event_type}, ${2:key channel}, ${3:key message_id}, ${4:string sender}, ${5:integer idata}, ${6:string sdata})
-    {
-        $0
-    }
-snippet run_time_permissions
-    run_time_permissions(${1:integer perm})
-    {
-        $0
-    }
-snippet sensor
-    sensor(${1:integer index})
-    {
-        $0
-    }
-snippet touch
-    touch(${1:integer index})
-    {
-        $0
-    }
-snippet touch_end
-    touch_end(${1:integer index})
-    {
-        $0
-    }
-snippet touch_start
-    touch_start(${1:integer index})
-    {
-        $0
-    }
-snippet transaction_result
-    transaction_result(${1:key id}, ${2:integer success}, ${3:string data})
     {
         $0
     }
@@ -614,6 +591,10 @@ snippet llResetAnimationOverride
     llResetAnimationOverride(${1:string anim_state})
 snippet llResetOtherScript
     llResetOtherScript(${1:string name})
+snippet llReturnObjectsByID
+    llReturnObjectsByID(${1:list objects})
+snippet llReturnObjectsByOwner
+    llReturnObjectsByOwner(${1:key owner}, ${2:integer scope})
 snippet llRezAtRoot
     llRezAtRoot(${1:string inventory}, ${2:vector position}, ${3:vector velocity}, ${4:rotation rot}, ${5:integer param})
 snippet llRezObject
@@ -842,40 +823,65 @@ snippet llWind
     llWind(${1:vector offset})
 snippet llXorBase64StringsCorrect
     llXorBase64StringsCorrect(${1:string str1}, ${2:string str2}
-snippet do
-    do
+snippet money
+    money(${1:key id}, ${2:integer amount})
     {
         $0
     }
-    while (${1:condition});
-snippet else
-    else
+snippet object_rez
+    object_rez(${1:key id})
     {
         $0
     }
-snippet else if
-    else if (${1:condition})
+snippet on_rez
+    on_rez(${1:integer start_param})
     {
         $0
     }
-snippet for
-    for (${1:start}; ${3:condition}; ${3:step})
+snippet path_update
+    path_update(${1:integer type}, ${2:list reserved})
     {
         $0
     }
-snippet if
-    if (${1:condition})
+snippet remote_data
+    remote_data(${1:integer event_type}, ${2:key channel}, ${3:key message_id}, ${4:string sender}, ${5:integer idata}, ${6:string sdata})
     {
         $0
     }
-snippet jump
-    jump ${1:label};
+snippet run_time_permissions
+    run_time_permissions(${1:integer perm})
+    {
+        $0
+    }
+snippet sensor
+    sensor(${1:integer index})
+    {
+        $0
+    }
 snippet state
     state ${1:name}
+snippet touch
+    touch(${1:integer index})
+    {
+        $0
+    }
+snippet touch_end
+    touch_end(${1:integer index})
+    {
+        $0
+    }
+snippet touch_start
+    touch_start(${1:integer index})
+    {
+        $0
+    }
+snippet transaction_result
+    transaction_result(${1:key id}, ${2:integer success}, ${3:string data})
+    {
+        $0
+    }
 snippet while
     while (${1:condition})
     {
         $0
     }
-snippet @
-    @${1:label}
