@@ -1,7 +1,6 @@
 var editor;
 var embedded_editor;
 $(function() {
-    hljs.initHighlighting();
     ace.config.set("workerPath", "build/src-min");
     editor = ace.edit("ace_editor_demo");
     editor.container.style.opacity = "";
