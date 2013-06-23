@@ -1,0 +1,241 @@
+[[
+   "start",
+  ["meta.tag","<"],
+  ["meta.tag.tag-name","h1"],
+  ["meta.tag.r",">"],
+  ["text","Listing Books"],
+  ["meta.tag","</"],
+  ["meta.tag.tag-name","h1"],
+  ["meta.tag.r",">"]
+],[
+   "start",
+  ["text"," "]
+],[
+   "start",
+  ["meta.tag","<"],
+  ["meta.tag.tag-name.table","table"],
+  ["meta.tag.r",">"]
+],[
+   "start",
+  ["text","  "],
+  ["meta.tag","<"],
+  ["meta.tag.tag-name.table","tr"],
+  ["meta.tag.r",">"]
+],[
+   "start",
+  ["text","    "],
+  ["meta.tag","<"],
+  ["meta.tag.tag-name.table","th"],
+  ["meta.tag.r",">"],
+  ["text","Title"],
+  ["meta.tag","</"],
+  ["meta.tag.tag-name.table","th"],
+  ["meta.tag.r",">"]
+],[
+   "start",
+  ["text","    "],
+  ["meta.tag","<"],
+  ["meta.tag.tag-name.table","th"],
+  ["meta.tag.r",">"],
+  ["text","Summary"],
+  ["meta.tag","</"],
+  ["meta.tag.tag-name.table","th"],
+  ["meta.tag.r",">"]
+],[
+   "start",
+  ["text","    "],
+  ["meta.tag","<"],
+  ["meta.tag.tag-name.table","th"],
+  ["meta.tag.r",">"],
+  ["meta.tag","</"],
+  ["meta.tag.tag-name.table","th"],
+  ["meta.tag.r",">"]
+],[
+   "start",
+  ["text","    "],
+  ["meta.tag","<"],
+  ["meta.tag.tag-name.table","th"],
+  ["meta.tag.r",">"],
+  ["meta.tag","</"],
+  ["meta.tag.tag-name.table","th"],
+  ["meta.tag.r",">"]
+],[
+   "start",
+  ["text","    "],
+  ["meta.tag","<"],
+  ["meta.tag.tag-name.table","th"],
+  ["meta.tag.r",">"],
+  ["meta.tag","</"],
+  ["meta.tag.tag-name.table","th"],
+  ["meta.tag.r",">"]
+],[
+   "start",
+  ["text","  "],
+  ["meta.tag","</"],
+  ["meta.tag.tag-name.table","tr"],
+  ["meta.tag.r",">"]
+],[
+   "start",
+  ["text"," "]
+],[
+   "start",
+  ["support.ruby_tag","<%"],
+  ["text"," "],
+  ["variable.instance","@books"],
+  ["text","."],
+  ["identifier","each"],
+  ["text"," "],
+  ["keyword","do"],
+  ["text"," |"],
+  ["identifier","book"],
+  ["text","| "],
+  ["support.ruby_tag","%>"]
+],[
+   "start",
+  ["text","  "],
+  ["meta.tag","<"],
+  ["meta.tag.tag-name.table","tr"],
+  ["meta.tag.r",">"]
+],[
+   "start",
+  ["text","    "],
+  ["meta.tag","<"],
+  ["meta.tag.tag-name.table","td"],
+  ["meta.tag.r",">"],
+  ["support.ruby_tag","<%="],
+  ["text"," "],
+  ["identifier","book"],
+  ["text","."],
+  ["identifier","title"],
+  ["text"," "],
+  ["support.ruby_tag","%>"],
+  ["meta.tag","</"],
+  ["meta.tag.tag-name.table","td"],
+  ["meta.tag.r",">"]
+],[
+   "start",
+  ["text","    "],
+  ["meta.tag","<"],
+  ["meta.tag.tag-name.table","td"],
+  ["meta.tag.r",">"],
+  ["support.ruby_tag","<%="],
+  ["text"," "],
+  ["identifier","book"],
+  ["text","."],
+  ["identifier","content"],
+  ["text"," "],
+  ["support.ruby_tag","%>"],
+  ["meta.tag","</"],
+  ["meta.tag.tag-name.table","td"],
+  ["meta.tag.r",">"]
+],[
+   "start",
+  ["text","    "],
+  ["meta.tag","<"],
+  ["meta.tag.tag-name.table","td"],
+  ["meta.tag.r",">"],
+  ["support.ruby_tag","<%="],
+  ["text"," "],
+  ["support.function","link_to"],
+  ["text"," "],
+  ["string","'Show'"],
+  ["text",", "],
+  ["identifier","book"],
+  ["text"," "],
+  ["support.ruby_tag","%>"],
+  ["meta.tag","</"],
+  ["meta.tag.tag-name.table","td"],
+  ["meta.tag.r",">"]
+],[
+   "start",
+  ["text","    "],
+  ["meta.tag","<"],
+  ["meta.tag.tag-name.table","td"],
+  ["meta.tag.r",">"],
+  ["support.ruby_tag","<%="],
+  ["text"," "],
+  ["support.function","link_to"],
+  ["text"," "],
+  ["string","'Edit'"],
+  ["text",", "],
+  ["identifier","edit_book_path"],
+  ["paren.lparen","("],
+  ["identifier","book"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["support.ruby_tag","%>"],
+  ["meta.tag","</"],
+  ["meta.tag.tag-name.table","td"],
+  ["meta.tag.r",">"]
+],[
+   "start",
+  ["text","    "],
+  ["meta.tag","<"],
+  ["meta.tag.tag-name.table","td"],
+  ["meta.tag.r",">"],
+  ["support.ruby_tag","<%="],
+  ["text"," "],
+  ["support.function","link_to"],
+  ["text"," "],
+  ["string","'Remove'"],
+  ["text",", "],
+  ["identifier","book"],
+  ["text",", "],
+  ["constant.other.symbol.ruby",":confirm"],
+  ["text"," "],
+  ["punctuation.separator.key-value","=>"],
+  ["text"," "],
+  ["string","'Are you sure?'"],
+  ["text",", "],
+  ["constant.other.symbol.ruby",":method"],
+  ["text"," "],
+  ["punctuation.separator.key-value","=>"],
+  ["text"," "],
+  ["constant.other.symbol.ruby",":delete"],
+  ["text"," "],
+  ["support.ruby_tag","%>"],
+  ["meta.tag","</"],
+  ["meta.tag.tag-name.table","td"],
+  ["meta.tag.r",">"]
+],[
+   "start",
+  ["text","  "],
+  ["meta.tag","</"],
+  ["meta.tag.tag-name.table","tr"],
+  ["meta.tag.r",">"]
+],[
+   "start",
+  ["support.ruby_tag","<%"],
+  ["text"," "],
+  ["keyword","end"],
+  ["text"," "],
+  ["support.ruby_tag","%>"]
+],[
+   "start",
+  ["meta.tag","</"],
+  ["meta.tag.tag-name.table","table"],
+  ["meta.tag.r",">"]
+],[
+   "start",
+  ["text"," "]
+],[
+   "start",
+  ["meta.tag","<"],
+  ["meta.tag.tag-name","br"],
+  ["text"," "],
+  ["meta.tag.r","/>"]
+],[
+   "start",
+  ["text"," "]
+],[
+   "start",
+  ["support.ruby_tag","<%="],
+  ["text"," "],
+  ["support.function","link_to"],
+  ["text"," "],
+  ["string","'New book'"],
+  ["text",", "],
+  ["identifier","new_book_path"],
+  ["text"," "],
+  ["support.ruby_tag","%>"]
+]]

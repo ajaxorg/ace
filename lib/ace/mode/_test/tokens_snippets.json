@@ -2,13 +2,9 @@
    "start",
   ["comment","# Function"]
 ],[
-   "start"
-],[
    "start",
   ["constant.language.escape","snippet"],
   ["text"," fun"]
-],[
-   "start"
 ],[
    "sn-start",
   ["text","\tfunction "],
@@ -24,8 +20,6 @@
   ["markup.list","}"],
   ["text",") {"]
 ],[
-   "start"
-],[
    "sn-start",
   ["text","\t\t"],
   ["markup.list","${"],
@@ -34,17 +28,11 @@
   ["text","// body..."],
   ["markup.list","}"]
 ],[
-   "start"
-],[
    "sn-start",
   ["text","\t}"]
 ],[
-   "start"
-],[
    "start",
   ["comment","# Anonymous Function"]
-],[
-   "start"
 ],[
    "start",
   ["constant.language.escape","regex "],
@@ -56,13 +44,9 @@
   ["text","(\\))?"],
   ["keyword","/"]
 ],[
-   "start"
-],[
    "start",
   ["constant.language.escape","name"],
   ["text"," f"]
-],[
-   "start"
 ],[
    "sn-start",
   ["text","\tfunction"],
@@ -78,8 +62,6 @@
   ["variable","$2"],
   ["text",") {"]
 ],[
-   "start"
-],[
    "sn-start",
   ["text","\t\t"],
   ["markup.list","${"],
@@ -87,8 +69,6 @@
   ["punctuation.operator",":"],
   ["keyword","$TM_SELECTED_TEXT"],
   ["markup.list","}"]
-],[
-   "start"
 ],[
    "sn-start",
   ["text","\t}"],
@@ -103,30 +83,20 @@
   ["text","?)"],
   ["markup.list","}"]
 ],[
-   "start"
-],[
    "start",
   ["comment","# Immediate function"]
-],[
-   "start"
 ],[
    "start",
   ["constant.language.escape","trigger"],
   ["text"," \\(?f\\("]
 ],[
-   "start"
-],[
    "start",
   ["constant.language.escape","endTrigger"],
   ["text"," \\)?"]
 ],[
-   "start"
-],[
    "start",
   ["constant.language.escape","snippet"],
   ["text"," f("]
-],[
-   "start"
 ],[
    "sn-start",
   ["text","\t(function("],
@@ -134,8 +104,6 @@
   ["constant.numeric","1"],
   ["markup.list","}"],
   ["text",") {"]
-],[
-   "start"
 ],[
    "sn-start",
   ["text","\t\t"],
@@ -148,8 +116,6 @@
   ["text","/* code */"],
   ["markup.list","}}"]
 ],[
-   "start"
-],[
    "sn-start",
   ["text","\t}("],
   ["markup.list","${"],
@@ -157,18 +123,12 @@
   ["markup.list","}"],
   ["text","));"]
 ],[
-   "start"
-],[
    "start",
   ["comment","# if"]
-],[
-   "start"
 ],[
    "start",
   ["constant.language.escape","snippet"],
   ["text"," if"]
-],[
-   "start"
 ],[
    "sn-start",
   ["text","\tif ("],
@@ -179,30 +139,20 @@
   ["markup.list","}"],
   ["text",") {"]
 ],[
-   "start"
-],[
    "sn-start",
   ["text","\t\t"],
   ["markup.list","${"],
   ["constant.numeric","0"],
   ["markup.list","}"]
 ],[
-   "start"
-],[
    "sn-start",
   ["text","\t}"]
 ],[
-   "start"
-],[
    "sn-start",
   ["text","\t"]
 ],[
-   "start"
-],[
    "sn-start",
   ["text","\t"]
-],[
-   "start"
 ],[
    "sn-start",
   ["text","\t"]

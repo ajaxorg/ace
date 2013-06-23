@@ -1,0 +1,82 @@
+[[
+   "start",
+  ["meta.tag.twig","{%"],
+  ["text"," "],
+  ["keyword.control.twig","autoescape"],
+  ["text"," "],
+  ["constant.language.boolean","true"],
+  ["text"," "],
+  ["meta.tag.twig","%}"]
+],[
+   "start",
+  ["text","    "],
+  ["variable.other.readwrite.local.twig","{{"],
+  ["text"," "],
+  ["identifier","var"],
+  ["text"," "],
+  ["variable.other.readwrite.local.twig","}}"]
+],[
+   "start",
+  ["text","    "],
+  ["variable.other.readwrite.local.twig","{{"],
+  ["text"," "],
+  ["identifier","var"],
+  ["keyword.operator.other","|"],
+  ["support.function.twig","raw"],
+  ["text"," "],
+  ["variable.other.readwrite.local.twig","}}"],
+  ["text","     "],
+  ["comment.block.twig","{# var won't be escaped #}"]
+],[
+   "start",
+  ["text","    "],
+  ["variable.other.readwrite.local.twig","{{"],
+  ["text"," "],
+  ["identifier","var"],
+  ["keyword.operator.other","|"],
+  ["support.function.twig","escape"],
+  ["text"," "],
+  ["variable.other.readwrite.local.twig","}}"],
+  ["text","  "],
+  ["comment.block.twig","{# var won't be doubled-escaped #}"]
+],[
+   "start",
+  ["meta.tag.twig","{%"],
+  ["text"," "],
+  ["keyword.control.twig","endautoescape"],
+  ["text"," "],
+  ["meta.tag.twig","%}"]
+],[
+   "start"
+],[
+   "start",
+  ["variable.other.readwrite.local.twig","{{"],
+  ["text"," "],
+  ["keyword.control.twig","include"],
+  ["paren.lparen","("],
+  ["string","'twig.html'"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["identifier","sandboxed"],
+  ["text"," "],
+  ["keyword.operator.assignment","="],
+  ["text"," "],
+  ["constant.language.boolean","true"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["variable.other.readwrite.local.twig","}}"]
+],[
+   "start"
+],[
+   "start",
+  ["variable.other.readwrite.local.twig","{{"],
+  ["string","\"string "],
+  ["constant.language.escape","#{with}"],
+  ["string"," "],
+  ["constant.language.escape","\\\""],
+  ["string"," escapes\""],
+  ["text"," "],
+  ["string","'another#one'"],
+  ["text"," "],
+  ["variable.other.readwrite.local.twig","}}"]
+]]
