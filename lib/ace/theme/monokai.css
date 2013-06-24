@@ -63,6 +63,11 @@
   color: #F92672
 }
 
+.ace-monokai .ace_punctuation,
+.ace-monokai .ace_punctuation.ace_tag {
+  color: #fff
+}
+
 .ace-monokai .ace_constant.ace_character,
 .ace-monokai .ace_constant.ace_language,
 .ace-monokai .ace_constant.ace_numeric,
