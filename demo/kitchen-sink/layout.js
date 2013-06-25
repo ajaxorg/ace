@@ -103,11 +103,6 @@ var Split = function(){
 exports.singleLineEditor = function(el) {
     var renderer = new Renderer(el);
     el.style.overflow = "hidden";
-    renderer.scrollBar.element.style.top = "0";
-    renderer.scrollBar.element.style.display = "none";
-    renderer.scrollBar.orginalWidth = renderer.scrollBar.width;
-    renderer.scrollBar.width = 0;
-    renderer.content.style.height = "auto";
 
     renderer.screenToTextCoordinates = function(x, y) {
         var pos = this.pixelToScreenCoordinates(x, y);
@@ -117,61 +112,7 @@ exports.singleLineEditor = function(el) {
         );
     };
 
-    renderer.maxLines = 4;
-    renderer.$computeLayerConfigWithScroll = renderer.$computeLayerConfig;
-    renderer.$computeLayerConfig = function() {
-        var config = this.layerConfig;
-        var height = this.session.getScreenLength() * this.lineHeight;
-        if (config.height != height) {
-            var vScroll = height > this.maxLines * this.lineHeight;
-
-            if (vScroll != this.$vScroll) {
-                if (vScroll) {
-                    this.scrollBar.element.style.display = "";
-                    this.scrollBar.width = this.scrollBar.orginalWidth;
-                    this.container.style.height = config.height + "px";
-                    height = config.height;
-                    this.scrollTop = height - this.maxLines * this.lineHeight;
-                } else {
-                    this.scrollBar.element.style.display = "none";
-                    this.scrollBar.width = 0;
-                }
-
-                this.onResize();
-                this.$vScroll = vScroll;
-            }
-
-            if (this.$vScroll)
-                return renderer.$computeLayerConfigWithScroll();
-
-            this.container.style.height = height + "px";
-            this.scroller.style.height = height + "px";
-            this.content.style.height = height + "px";
-            this._emit("resize");
-        }
-
-        var longestLine = this.$getLongestLine();
-        var firstRow = 0;
-        var lastRow = this.session.getLength();
-
-        this.scrollTop = 0;
-        config.width = longestLine;
-        config.padding = this.$padding;
-        config.firstRow = 0;
-        config.firstRowScreen = 0;
-        config.lastRow = lastRow;
-        config.lineHeight = this.lineHeight;
-        config.characterWidth = this.characterWidth;
-        config.minHeight = height;
-        config.maxHeight = height;
-        config.offset = 0;
-        config.height = height;
-
-        this.$gutterLayer.element.style.marginTop = 0 + "px";
-        this.content.style.marginTop = 0 + "px";
-        this.content.style.width = longestLine + 2 * this.$padding + "px";
-    };
-    renderer.isScrollableBy=function(){return false};
+    renderer.$maxLines = 4;
 
     renderer.setStyle("ace_one-line");
     var editor = new Editor(renderer);
@@ -182,7 +123,6 @@ exports.singleLineEditor = function(el) {
     editor.setShowPrintMargin(false);
     editor.renderer.setShowGutter(false);
     editor.renderer.setHighlightGutterLine(false);
-
     editor.$mouseHandler.$focusWaitTimout = 0;
 
     return editor;
