@@ -21,15 +21,15 @@
   ["meta.tag.tag-name","html"],
   ["meta.tag.r",">"]
 ],[
-   ["lua-bracketedComment",4,"lua-start"],
+   ["lua-bracketedComment",2,"lua-start"],
   ["keyword","<%"],
   ["text"," "],
   ["comment","--[[--"]
 ],[
-   ["lua-bracketedComment",4,"lua-start"],
+   ["lua-bracketedComment",2,"lua-start"],
   ["comment","    index.lp from the Kepler Project's LuaDoc HTML doclet."]
 ],[
-   ["lua-bracketedComment",4,"lua-start"],
+   ["lua-bracketedComment",2,"lua-start"],
   ["comment","    http://keplerproject.github.com/luadoc/"]
 ],[
    "start",
