@@ -63,8 +63,6 @@ $(function() {
      
      tabs.find(tab_a_selector).click(function(e) {         
         e.preventDefault();
-        embedded_editor.resize();
-        editor.resize();
         if ($(this).attr("href") === "/") {
             window.location = "http://ace.ajax.org";
             return;
@@ -101,6 +99,8 @@ $(function() {
         }
 
         $(this).tab("show");
+        embedded_editor.resize();
+        editor.resize();
 
         var state = {};
         state.nav = $(this).attr("href").substr(1);
