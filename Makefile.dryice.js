@@ -363,6 +363,9 @@ var buildAce = function(options) {
     console.log('# ace themes ---------');
 
     project.assumeAllFilesLoaded();
+    delete project.ignoredModules["ace/theme/textmate"];
+    delete project.ignoredModules["ace/requirejs/text!ace/theme/textmate.css"];
+    
     options.themes.forEach(function(theme) {
         console.log("theme " + theme);
         copy({
