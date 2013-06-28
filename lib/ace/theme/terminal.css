@@ -115,7 +115,7 @@
   color: #E7C547
 }
 
-.ace-terminal-theme .ace_markup.ace_heading,
+.ace-terminal-theme .ace_heading,
 .ace-terminal-theme .ace_string {
   color: #B9CA4A
 }
@@ -130,10 +130,6 @@
 
 .ace-terminal-theme .ace_comment {
   color: orangered
-}
-
-.ace-terminal-theme .ace_markup.ace_underline {
-  text-decoration: underline
 }
 
 .ace-terminal-theme .ace_indent-guide {

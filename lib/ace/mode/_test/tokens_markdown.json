@@ -4,28 +4,28 @@
 ],[
    "start",
   ["markup.heading.1","#"],
-  ["markup.heading","f"]
+  ["heading","f"]
 ],[
    "start",
   ["text","test: header 2"]
 ],[
    "start",
   ["markup.heading.2","##"],
-  ["markup.heading"," foo"]
+  ["heading"," foo"]
 ],[
    "start",
   ["text","test: header ends with ' #'"]
 ],[
    "start",
   ["markup.heading.1","#"],
-  ["markup.heading"," # # "]
+  ["heading"," # # "]
 ],[
    "start",
   ["text","test: header ends with '#'"]
 ],[
    "start",
   ["markup.heading.1","#"],
-  ["markup.heading","foo# "]
+  ["heading","foo# "]
 ],[
    "start",
   ["text","test: 6+ #s is not a valid header"]
@@ -49,13 +49,13 @@
 ],[
    "start",
   ["markup.heading.1","#"],
-  ["markup.heading"," test links  "],
+  ["heading"," test links  "],
   ["text","["],
   ["string","Cloud9 IDE"],
   ["text","]("],
   ["markup.underline","http://www.c9.io/"],
   ["text",")"],
-  ["markup.heading"," #"]
+  ["heading"," #"]
 ],[
    "listblock",
   ["markup.list","* "],
@@ -64,17 +64,18 @@
   ["text","]("],
   ["markup.underline","http://ajaxorg.github.com/ace/"],
   ["text",")"],
-  ["markup.list"," "]
+  ["list"," "]
 ],[
    "listblock",
-  ["markup.list","* usually "],
+  ["markup.list","* "],
+  ["list","usually "],
   ["string","*work*"],
-  ["markup.list"," fine ("],
+  ["list"," fine ("],
   ["string","_em_"],
-  ["markup.list",")"]
+  ["list",")"]
 ],[
    "listblock",
-  ["markup.list","in lists"]
+  ["list","in lists"]
 ],[
    "start"
 ],[
