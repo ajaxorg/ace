@@ -2,7 +2,7 @@
  * Simple node.js server, which generates the synax highlighted version of itself 
  * using the Ace modes and themes on the server and serving a static web page.
  */
-
+// $'
 // include ace search path and modules
 require("amd-loader");
 
@@ -23,12 +23,14 @@ http.createServer(function(req, res) {
     res.writeHead(200, {"Content-Type": "text/html; charset=utf-8"});
     fs.readFile(__filename, "utf8", function(err, data) {
         var highlighted = highlighter.render(data, new JavaScriptMode(), theme);
-        res.end('<html><body>\n\
-<style type="text/css" media="screen">\n\
-    :css:\n\
-</style>\n\
-:html:\n\
-</body></html>'.replace(":css:", highlighted.css).replace(":html:", highlighted.html));
+        res.end(
+            '<html><body>\n' +
+                '<style type="text/css" media="screen">\n' +
+                    highlighted.css +
+                '</style>\n' + 
+                highlighted.html +            
+            '</body></html>'
+        );
     });
 }).listen(port);
 
