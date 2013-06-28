@@ -274,6 +274,8 @@ function getWriteFilters(options, projectType) {
 
     if (options.compress)
         filters.push(copy.filter.uglifyjs);
+    
+    copy.filter.uglifyjs.options.ascii = true;
 
     if (options.exportModule && projectType == "main") {
         if (options.noconflict)
