@@ -51,14 +51,14 @@
    "start",
   ["storage.type.lsl","integer"],
   ["text.lsl"," "],
-  ["invalid.illegal.lsl","event"],
+  ["invalid.unimplemented.lsl","event"],
   ["text.lsl","               "],
   ["keyword.operator.lsl","="],
   ["text.lsl"," "],
   ["constant.numeric.lsl","5673"],
   ["punctuation.operator.lsl",";"],
   ["text.lsl","                                             "],
-  ["comment.line.double-slash.lsl","// invalid reserved keyword!"]
+  ["comment.line.double-slash.lsl","// unimplemented reserved keyword!"]
 ],[
    "start"
 ],[
@@ -368,14 +368,14 @@
 ],[
    "start",
   ["text.lsl","        "],
-  ["invalid.illegal.lsl","event"],
+  ["invalid.unimplemented.lsl","event"],
   ["text.lsl","               "],
   ["keyword.operator.lsl","="],
   ["text.lsl"," "],
   ["constant.numeric.lsl","5673"],
   ["punctuation.operator.lsl",";"],
   ["text.lsl","                                             "],
-  ["comment.line.double-slash.lsl","// invalid reserved keyword!"]
+  ["comment.line.double-slash.lsl","// unimplemented reserved keyword!"]
 ],[
    "start"
 ],[
@@ -401,12 +401,12 @@
 ],[
    "start",
   ["text.lsl","        "],
-  ["invalid.deprecated.lsl","llCollisionSprite"],
+  ["invalid.deprecated.lsl","llCloud"],
   ["paren.lparen.lsl","("],
-  ["identifier","someKeyTexture"],
+  ["constant.language.vector.lsl","ZERO_VECTOR"],
   ["paren.rparen.lsl",")"],
   ["punctuation.operator.lsl",";"],
-  ["text.lsl","                                      "],
+  ["text.lsl","                                                   "],
   ["comment.line.double-slash.lsl","// invalid deprecated function!"]
 ],[
    "start"

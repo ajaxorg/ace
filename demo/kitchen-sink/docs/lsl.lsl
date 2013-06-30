@@ -8,7 +8,7 @@ integer someIntNormal       = 3672;
 integer someIntHex          = 0x00000000;
 integer someIntMath         = PI_BY_TWO;
 
-integer event               = 5673;                                             // invalid reserved keyword!
+integer event               = 5673;                                             // unimplemented reserved keyword!
 
 key someKeyTexture          = TEXTURE_DEFAULT;
 string someStringSpecial    = EOF;
@@ -53,12 +53,12 @@ default
         someIntHex          = 0x00000000;
         someIntMath         = PI_BY_TWO;
 
-        event               = 5673;                                             // invalid reserved keyword!
+        event               = 5673;                                             // unimplemented reserved keyword!
 
         someKeyTexture      = TEXTURE_DEFAULT;
         someStringSpecial   = EOF;
 
-        llCollisionSprite(someKeyTexture);                                      // invalid deprecated function!
+        llCloud(ZERO_VECTOR);                                                   // invalid deprecated function!
 
         llWhisper(PUBLIC_CHANNEL, "Leaving \"default\" now...");
         state other;
