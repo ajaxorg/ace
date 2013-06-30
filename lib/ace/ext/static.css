@@ -1,20 +1,21 @@
-.ace_editor {
-   font-family: 'Monaco', 'Menlo', 'Droid Sans Mono', 'Courier New', monospace;
+.ace_static_highlight {
+   font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', 'Droid Sans Mono', monospace;
    font-size: 12px;
 }
 
-.ace_editor .ace_gutter {
+.ace_static_highlight .ace_gutter {
     width: 25px !important;
     display: block;
     float: left;
     text-align: right;
     padding: 0 3px 0 0;
     margin-right: 3px;
+    position: static !important;
 }
 
-.ace_line { clear: both; }
+.ace_static_highlight .ace_line { clear: both; }
 
-*.ace_gutter-cell {
+.ace_static_highlight .ace_gutter-cell {
   -moz-user-select: -moz-none;
   -khtml-user-select: none;
   -webkit-user-select: none;
