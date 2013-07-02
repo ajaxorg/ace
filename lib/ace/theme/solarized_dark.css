@@ -14,8 +14,7 @@
 }
 
 .ace-solarized-dark .ace_entity.ace_other.ace_attribute-name,
-.ace-solarized-dark .ace_storage,
-.ace-solarized-dark .ace_text-layer {
+.ace-solarized-dark .ace_storage {
   color: #93A1A1
 }
 
