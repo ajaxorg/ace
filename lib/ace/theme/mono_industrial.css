@@ -8,11 +8,8 @@
   background: #555651
 }
 
-.ace-mono-industrial .ace_scroller {
-  background-color: #222C28
-}
-
-.ace-mono-industrial .ace_text-layer {
+.ace-mono-industrial {
+  background-color: #222C28;
   color: #FFFFFF
 }
 
@@ -125,14 +122,10 @@
   color: #909993
 }
 
-.ace-mono-industrial .ace_markup.ace_underline {
-  text-decoration: underline
-}
-
 .ace-mono-industrial .ace_entity.ace_name.ace_tag {
   color: #A65EFF
 }
 
 .ace-mono-industrial .ace_indent-guide {
-  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAEklEQVQImWNQ0tH4zzBz5sz/ABAOBECKH+evAAAAAElFTkSuQmCC) right repeat-y
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAEklEQVQImWNQ1NbwZfALD/4PAAlTArlEC4r/AAAAAElFTkSuQmCC) right repeat-y;
 }

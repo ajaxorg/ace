@@ -8,11 +8,8 @@
   background: #1c1917
 }
 
-.ace-kr-theme .ace_scroller {
-  background-color: #0B0A09
-}
-
-.ace-kr-theme .ace_text-layer {
+.ace-kr-theme {
+  background-color: #0B0A09;
   color: #FCFFE0
 }
 
@@ -122,14 +119,10 @@
   color: #BABD9C
 }
 
-.ace-kr-theme .ace_markup.ace_underline {
-  text-decoration: underline
-}
-
-.ace-kr-theme .ace_markup.ace_list {
+.ace-kr-theme .ace_list {
   background-color: #0F0040
 }
 
 .ace-kr-theme .ace_indent-guide {
-  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAEklEQVQImWPg5uL8zzBz5sz/AA1WA+hUYIqjAAAAAElFTkSuQmCC) right repeat-y
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAEklEQVQImWNgYGBgYFBXV/8PAAJoAXX4kT2EAAAAAElFTkSuQmCC) right repeat-y;
 }

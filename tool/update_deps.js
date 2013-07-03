@@ -124,6 +124,8 @@ void function(){
 			fs.writeFile(x.path, data, "utf-8", function(err){
 				if (err) throw err
 				console.log("File " + x.name + " saved.")
+                console.warn("mode/coffee/coffee-script file needs to updated manually")
+                console.warn("mode/coffee/parser.js: parseError function needs to be modified")
 			})
 		})
 	}

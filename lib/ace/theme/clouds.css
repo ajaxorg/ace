@@ -8,11 +8,8 @@
   background: #e8e8e8
 }
 
-.ace-clouds .ace_scroller {
-  background-color: #FFFFFF
-}
-
-.ace-clouds .ace_text-layer {
+.ace-clouds {
+  background-color: #FFFFFF;
   color: #000000
 }
 
@@ -113,10 +110,6 @@
 .ace-clouds .ace_entity.ace_name.ace_tag,
 .ace-clouds .ace_entity.ace_other.ace_attribute-name {
   color: #606060
-}
-
-.ace-clouds .ace_markup.ace_underline {
-  text-decoration: underline
 }
 
 .ace-clouds .ace_indent-guide {

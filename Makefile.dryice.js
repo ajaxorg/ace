@@ -155,7 +155,7 @@ function ace() {
         source: ACE_HOME + "/ChangeLog.txt",
         dest:   BUILD_DIR + "/ChangeLog.txt"
     });
-    
+
     return project;
 }
 
@@ -211,7 +211,7 @@ function demo(project) {
     });
 
     var demo = copy.createDataObject();
-    
+
     project.assumeAllFilesLoaded();
     copy({
         source: [{
@@ -274,6 +274,8 @@ function getWriteFilters(options, projectType) {
 
     if (options.compress)
         filters.push(copy.filter.uglifyjs);
+    
+    copy.filter.uglifyjs.options.ascii = true;
 
     if (options.exportModule && projectType == "main") {
         if (options.noconflict)
@@ -310,6 +312,8 @@ var buildAce = function(options) {
         if (!options.hasOwnProperty(key))
             options[key] = defaults[key];
 
+    generateThemesModule(options.themes);
+
     addSuffix(options);
 
     if (!options.requires)
@@ -332,7 +336,7 @@ var buildAce = function(options) {
         filter: [ copy.filter.moduleDefines ],
         dest: ace
     });
-    
+
     if (options.coreOnly)
         return project;
 
@@ -347,6 +351,7 @@ var buildAce = function(options) {
     project.assumeAllFilesLoaded();
     options.modes.forEach(function(mode) {
         console.log("mode " + mode);
+        addSnippetFile(mode, project, targetDir, options);
         copy({
             source: [{
                 project: cloneProject(project),
@@ -360,6 +365,9 @@ var buildAce = function(options) {
     console.log('# ace themes ---------');
 
     project.assumeAllFilesLoaded();
+    delete project.ignoredModules["ace/theme/textmate"];
+    delete project.ignoredModules["ace/requirejs/text!ace/theme/textmate.css"];
+    
     options.themes.forEach(function(theme) {
         console.log("theme " + theme);
         copy({
@@ -415,9 +423,7 @@ var buildAce = function(options) {
             source: [{
                 project: workerProject,
                 require: [
-                    'ace/lib/fixoldbrowsers',
-                    'ace/lib/event_emitter',
-                    'ace/lib/oop',
+                    'ace/worker/worker',
                     'ace/mode/' + mode + '_worker'
                 ]
             }],
@@ -426,7 +432,6 @@ var buildAce = function(options) {
         });
         copy({
             source: [
-                ACE_HOME + "/lib/ace/worker/worker.js",
                 worker
             ],
             filter: options.compress ? [copy.filter.uglifyjs] : [],
@@ -442,7 +447,7 @@ var buildAce = function(options) {
           dest: BUILD_DIR + '/ace-min.js'
         });
     }
-    
+
     return project;
 };
 
@@ -461,6 +466,30 @@ var buildAce = function(fn) {
     }
 }(buildAce);
 
+var addSnippetFile = function(modeName, project, targetDir, options) {
+    var snippetFilePath = ACE_HOME + "/lib/ace/snippets/" + modeName;
+    if (!fs.existsSync(snippetFilePath + ".js")) {
+        copy({
+            source: ACE_HOME + "/tool/snippets.tmpl.js",
+            dest:   snippetFilePath + ".js",
+            filter: [
+                function(t) {return t.replace(/%modeName%/g, modeName);}
+            ]
+        });
+    }
+    if (!fs.existsSync(snippetFilePath + ".snippets")) {
+        fs.writeFileSync(snippetFilePath + ".snippets", "")
+    }
+    copy({
+        source: [{
+            project: cloneProject(project),
+            require: [ 'ace/snippets/' + modeName ]
+        }],
+        filter: getWriteFilters(options, "mode"),
+        dest:   targetDir + "/snippets/" + modeName + ".js"
+    });
+}
+
 var textModules = {}
 var detectTextModules = function(input, source) {
     if (!source)
@@ -472,14 +501,29 @@ var detectTextModules = function(input, source) {
     var module = source.isLocation ? source.path : source;
 
     input = input.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
-    input = input.replace(/\n\s+/g, "\n");
-    input = '"' + input.replace(/\r?\n/g, '\\\n') + '"';
+    if (/\.css$/.test(module)) {
+        // remove unnecessary whitespace from css
+        input = input.replace(/\n\s+/g, "\n");
+        input = '"' + input.replace(/\r?\n/g, '\\\n') + '"';
+    } else {
+        // but don't break other files!
+        input = '"' + input.replace(/\r?\n/g, '\\n\\\n') + '"';
+    }
     textModules[module] = input;
 
     return "";
 };
 detectTextModules.onRead = true;
 copy.filter.addDefines = detectTextModules;
+
+function generateThemesModule(themes) {
+    var themelist = [
+        'define(function(require, exports, module) {',
+        '\n\nmodule.exports.themes = ' + JSON.stringify(themes, null, '    '),
+        ';\n\n});'
+    ].join('');
+    fs.writeFileSync('./lib/ace/ext/themelist_utils/themes.js', themelist, 'utf8');
+}
 
 function inlineTextModules(text) {
     var lastDep = "";

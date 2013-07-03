@@ -8,11 +8,8 @@
   background: #555651
 }
 
-.ace-merbivore .ace_scroller {
-  background-color: #161616
-}
-
-.ace-merbivore .ace_text-layer {
+.ace-merbivore {
+  background-color: #161616;
   color: #E6E1DC
 }
 
@@ -113,10 +110,6 @@
   color: #FFFF89
 }
 
-.ace-merbivore .ace_markup.ace_underline {
-  text-decoration: underline
-}
-
 .ace-merbivore .ace_indent-guide {
-  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAEklEQVQImWMQExP7zzBz5sz/AA50BAyDznYhAAAAAElFTkSuQmCC) right repeat-y
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAEklEQVQImWMQFxf3ZXB1df0PAAdsAmERTkEHAAAAAElFTkSuQmCC) right repeat-y;
 }

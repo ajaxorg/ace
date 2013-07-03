@@ -33,7 +33,8 @@ define(function(require, exports, module) {
 "use strict";
 
 require("ace/lib/fixoldbrowsers");
-require("ace/config").init();
+var config = require("ace/config");
+config.init();
 var env = {};
 
 var dom = require("ace/lib/dom");
@@ -55,7 +56,7 @@ var MultiSelect = require("ace/multi_select").MultiSelect;
 var whitespace = require("ace/ext/whitespace");
 
 var doclist = require("./doclist");
-var modelist = require("./modelist");
+var modelist = require("ace/ext/modelist");
 var layout = require("./layout");
 var TokenTooltip = require("./token_tooltip").TokenTooltip;
 var util = require("./util");
@@ -90,7 +91,7 @@ require("ace/multi_select").MultiSelect(env.editor);
 var consoleEl = dom.createElement("div");
 container.parentNode.appendChild(consoleEl);
 consoleEl.style.cssText = "position:fixed; bottom:1px; right:0;\
-border:1px solid #baf; zIndex:100";
+border:1px solid #baf; z-index:100";
 
 var cmdLine = new layout.singleLineEditor(consoleEl);
 cmdLine.editor = env.editor;
@@ -129,28 +130,47 @@ env.editor.commands.addCommands([{
             editor.cmdLine.focus();
             return;
         }
-        var s = SnippetManager.getSnippetByName(needle, editor);
+        var s = snippetManager.getSnippetByName(needle, editor);
         if (s)
-            SnippetManager.insertSnippet(editor, s.content);
+            snippetManager.insertSnippet(editor, s.content);
     },
     readOnly: true
 }, {
     name: "focusCommandLine",
-    bindKey: "shift-esc",
+    bindKey: "shift-esc|ctrl-`",
     exec: function(editor, needle) { editor.cmdLine.focus(); },
+    readOnly: true
+}, {
+    name: "nextFile",
+    bindKey: "Ctrl-tab",
+    exec: function(editor) { doclist.cycleOpen(editor, 1); },
+    readOnly: true
+}, {
+    name: "previousFile",
+    bindKey: "Ctrl-shift-tab",
+    exec: function(editor) { doclist.cycleOpen(editor, -1); },
     readOnly: true
 }, {
     name: "execute",
     bindKey: "ctrl+enter",
     exec: function(editor) {
         try {
-            var r = eval(editor.getCopyText()||editor.getValue());
+            var r = window.eval(editor.getCopyText()||editor.getValue());
         } catch(e) {
             r = e;
         }
         editor.cmdLine.setValue(r + "")
     },
     readOnly: true
+}, {
+    name: "showKeyboardShortcuts",
+    bindKey: {win: "Ctrl-Alt-h", mac: "Command-Alt-h"},
+    exec: function(editor) {
+        config.loadModule("ace/ext/keybinding_menu", function(module) {
+            module.init(editor);
+            editor.showKeyboardShortcuts()
+        })
+    }
 }]);
 
 
@@ -176,7 +196,7 @@ commands.addCommand({
     exec: function() {alert("Fake Save File");}
 });
 
-var keybindings = {
+var keybindings = {    
     ace: null, // Null = use "default" keymapping
     vim: require("ace/keyboard/vim").handler,
     emacs: "ace/keyboard/emacs",
@@ -234,16 +254,44 @@ bindDropdown("mode", function(value) {
     env.editor.session.modeName = value;
 });
 
+doclist.history = doclist.docs.map(function(doc) {
+    return doc.name;
+});
+doclist.history.index = 0;
+doclist.cycleOpen = function(editor, dir) {
+    var h = this.history
+    h.index += dir;
+    if (h.index >= h.length) 
+        h.index = 0;
+    else if (h.index <= 0)
+        h.index = h.length - 1;
+    var s = h[h.index];
+    docEl.value = s;
+    docEl.onchange();
+    h.index
+}
+doclist.addToHistory = function(name) {
+    var h = this.history
+    var i = h.indexOf(name);
+    if (i != h.index) {
+        if (i != -1)
+            h.splice(i, 1);
+        h.index = h.push(name);
+    }
+}
+
 bindDropdown("doc", function(name) {
     doclist.loadDoc(name, function(session) {
         if (!session)
             return;
+        doclist.addToHistory(session.name);
         session = env.split.setSession(session);
         whitespace.detectIndentation(session);
         updateUIEditorOptions();
         env.editor.focus();
     });
 });
+
 
 function updateUIEditorOptions() {
     var editor = env.editor;
@@ -383,7 +431,7 @@ bindDropdown("split", function(value) {
         sp.setSplits(1);
     } else {
         var newEditor = (sp.getSplits() == 1);
-        sp.setOrientation(value == "below" ? sp.BELOW : sp.BESIDE);
+        sp.setOrientation(value == "below" ? sp.BELOW : sp.BESIDE);        
         sp.setSplits(2);
 
         if (newEditor) {
@@ -441,7 +489,7 @@ event.addListener(container, "drop", function(e) {
         if (window.FileReader) {
             var reader = new FileReader();
             reader.onload = function() {
-                var mode = modelist.getModeFromPath(file.name);
+                var mode = modelist.getModeForPath(file.name);
 
                 env.editor.session.doc.setValue(reader.result);
                 modeEl.value = mode.name;
@@ -458,7 +506,7 @@ event.addListener(container, "drop", function(e) {
 
 
 
-var StatusBar = require("./statusbar").StatusBar;
+var StatusBar = require("ace/ext/statusbar").StatusBar;
 new StatusBar(env.editor, cmdLine.container);
 
 
@@ -469,18 +517,9 @@ net.loadScript("https://rawgithub.com/nightwing/emmet-core/master/emmet.js", fun
 })
 
 
-require("ace/placeholder").PlaceHolder;
+// require("ace/placeholder").PlaceHolder;
 
-var SnippetManager = require("ace/snippets").SnippetManager
-var jsSnippets = require("ace/snippets/javascript");
-window.SnippetManager = SnippetManager
-saveSnippets()
-
-function saveSnippets() {
-    jsSnippets.snippets = SnippetManager.parseSnippetFile(jsSnippets.snippetText);
-    SnippetManager.snipp
-    SnippetManager.register(jsSnippets.snippets, "javascript")
-}
+var snippetManager = require("ace/snippets").snippetManager;
 
 env.editSnippets = function() {
     var sp = env.split;
@@ -491,25 +530,32 @@ env.editSnippets = function() {
     sp.setSplits(1);
     sp.setSplits(2);
     sp.setOrientation(sp.BESIDE);
-    var editor = sp.$editors[1]
-    if (!env.snippetSession) {
-        var file = jsSnippets.snippetText;
-        env.snippetSession = doclist.initDoc(file, "", {});
-        env.snippetSession.setMode("ace/mode/tmsnippet");
-        env.snippetSession.setUseSoftTabs(false);
+    var editor = sp.$editors[1];
+    var id = sp.$editors[0].session.$mode.$id || "";
+    var m = snippetManager.files[id];
+    if (!doclist["snippets/" + id]) {
+        var text = m.snippetText;
+        var s = doclist.initDoc(text, "", {});
+        s.setMode("ace/mode/snippets");
+        doclist["snippets/" + id] = s
     }
     editor.on("blur", function() {
-        jsSnippets.snippetText = editor.getValue();
-        saveSnippets();
+        m.snippetText = editor.getValue();
+        snippetManager.unregister(m.snippets);
+        m.snippets = snippetManager.parseSnippetFile(m.snippetText);
+        snippetManager.register(m.snippets);
     })
-    editor.setSession(env.snippetSession, 1);
+    sp.$editors[0].once("changeMode", function() {
+        sp.setSplits(1);
+    })
+    editor.setSession(doclist["snippets/" + id], 1);
     editor.focus();
 }
 
-ace.commands.bindKey("Tab", function(editor) {
-    var success = SnippetManager.expandWithTab(editor);
-    if (!success)
-        editor.execCommand("indent");
+require("ace/ext/language_tools");
+env.editor.setOptions({
+    enableBasicAutocompletion: true,
+    enableSnippets: true
 })
 
 });

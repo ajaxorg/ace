@@ -1,3 +1,86 @@
+2013.06.04 Version 1.1.01
+
+  - Improved emacs keybindings (Robert Krahn)
+  - Added markClean, isClean methods to UndoManager (Joonsoo Jeon)
+  - Do not allow `Toggle comments` command to remove spaces from indentation
+  - Softer colors for indent guides in dark themes
+
+* new language modes
+  - Ada
+  - Assembly_x86
+  - Cobol
+  - D
+  - ejs
+  - MATLAB
+  - MySQL
+  - Twig
+  - Verilog
+
+2013.05.01, Version 1.1.0
+
+* API Changes
+  - Default position of the editor container is changed to relative. Add `.ace_editor {position: absolute}` css rule to restore old behavior
+  - Changed default line-height to `normal` to not conflict with bootstrap. Use `line-height: inherit` for old behavior.
+  - Changed marker types accepted by session.addMarker. It now accepts "text"|"line"|"fullLine"|"screenLine"
+  - Internal classnames used by editor were made more consistent
+  - Introduced `editor.setOption/getOption/setOptions/getOptions` methods
+  - Introduced positionToIndex, indexToPosition methods
+
+* New Features
+  - Improved emacs mode (chetstone)
+    with Incremental search and Occur modes (Robert Krahn)
+
+  - Improved ime handling
+  - Searchbox (Vlad Zinculescu)
+
+  - Added elastic tabstops lite extension (Garen Torikian)
+  - Added extension for whitespace manipulation
+  - Added extension for enabling spellchecking from contextmenu
+  - Added extension for displaying available keyboard shortcuts (Matthew Christopher Kastor-Inare III)
+  - Added extension for displaying options panel (Matthew Christopher Kastor-Inare III)
+  - Added modelist extension (Matthew Christopher Kastor-Inare III)
+
+  - Improved toggleCommentLines and added ToggleCommentBlock command
+  - `:;` pairing in CSS mode (danyaPostfactum)
+
+  - Added suppoert for Delete and SelectAll from context menu (danyaPostfactum)
+
+  - Make wrapping behavior optional
+  - Selective bracket insertion/skipping 
+    
+  - Added commands for increase/decrease numbers, sort lines (Vlad Zinculescu)    
+  - Folding for Markdown, Lua, LaTeX    
+  - Selective bracket insertion/skipping for C-like languages
+
+* Many new languages
+  - Scheme (Mu Lei)
+  - Dot (edwardsp)
+  - FreeMarker (nguillaumin)
+  - Tiny Mushcode (h3rb)
+  - Velocity (Ryan Griffith)
+  - TOML (Garen Torikian) 
+  - LSL (Nemurimasu Neiro, Builders Brewery)
+  - Curly (Libo Cannici)
+  - vbScript (Jan Jongboom) 
+  - R (RStudio) 
+  - ABAP
+  - Lucene (Graham Scott)
+  - Haml (Garen Torikian)
+  - Objective-C (Garen Torikian) 
+  - Makefile (Garen Torikian) 
+  - TypeScript (Garen Torikian) 
+  - Lisp (Garen Torikian) 
+  - Stylus (Garen Torikian) 
+  - Dart (Garen Torikian)
+
+* Live syntax checks
+  - PHP (danyaPostfactum)
+  - Lua
+
+* New Themes
+  - Chaos 
+  - Terminal 
+   
 2012.09.17, Version 1.0.0
 
 * New Features

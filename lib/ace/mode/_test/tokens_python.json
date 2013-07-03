@@ -29,7 +29,7 @@
   ["constant.numeric","1"],
   ["text",":"]
 ],[
-   "qstring",
+   "qstring3",
   ["text","    "],
   ["keyword","print"],
   ["text"," "],
@@ -129,7 +129,11 @@
   ["text","        "],
   ["keyword","print"],
   ["text"," "],
-  ["string","'%i\\260F = %i\\260C'"],
+  ["string","'%i"],
+  ["constant.language.escape","\\260"],
+  ["string","F = %i"],
+  ["constant.language.escape","\\260"],
+  ["string","C'"],
   ["text"," "],
   ["keyword.operator","%"],
   ["text"," "],

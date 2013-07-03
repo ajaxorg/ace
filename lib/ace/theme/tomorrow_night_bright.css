@@ -8,11 +8,8 @@
   background: #1a1a1a
 }
 
-.ace-tomorrow-night-bright .ace_scroller {
-  background-color: #000000
-}
-
-.ace-tomorrow-night-bright .ace_text-layer {
+.ace-tomorrow-night-bright {
+  background-color: #000000;
   color: #DEDEDE
 }
 
@@ -110,7 +107,7 @@
   color: #E7C547
 }
 
-.ace-tomorrow-night-bright .ace_markup.ace_heading,
+.ace-tomorrow-night-bright .ace_heading,
 .ace-tomorrow-night-bright .ace_string {
   color: #B9CA4A
 }
@@ -127,10 +124,6 @@
   color: #969896
 }
 
-.ace-tomorrow-night-bright .ace_markup.ace_underline {
-  text-decoration: underline
-}
-
 .ace-tomorrow-night-bright .ace_indent-guide {
-  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAEklEQVQImWNgYGD4z7Bq1ar/AAz9A/2naJQKAAAAAElFTkSuQmCC) right repeat-y
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAEklEQVQImWNgYGBgYFBXV/8PAAJoAXX4kT2EAAAAAElFTkSuQmCC) right repeat-y;
 }

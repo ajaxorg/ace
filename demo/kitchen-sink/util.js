@@ -205,7 +205,7 @@ exports.fillDropdown = function(el, values) {
 function elt(tag, attributes, content) {
     var el = dom.createElement(tag);
     if (typeof content == "string") {
-        el.textContent = content;
+        el.appendChild(document.createTextNode(content));
     } else if (content) {
         content.forEach(function(ch) {
             el.appendChild(ch);
@@ -220,8 +220,8 @@ function elt(tag, attributes, content) {
 function optgroup(values) {
     return values.map(function(item) {
         if (typeof item == "string")
-            item = {name: item, desc: item};
-        return elt("option", {value: item.name}, item.desc);
+            item = {name: item, caption: item};
+        return elt("option", {value: item.name}, item.caption || item.desc);
     });
 }
 

@@ -35,7 +35,7 @@ var EditSession = require("ace/edit_session").EditSession;
 var UndoManager = require("ace/undomanager").UndoManager;
 var net = require("ace/lib/net");
 
-var modelist = require("./modelist");
+var modelist = require("ace/ext/modelist");
 /*********** demo documents ***************************/
 var fileCache = {};
 
@@ -47,11 +47,12 @@ function initDoc(file, path, doc) {
     session.setUndoManager(new UndoManager());
     doc.session = session;
     doc.path = path;
+    session.name = doc.name;
     if (doc.wrapped) {
         session.setUseWrapMode(true);
         session.setWrapLimitRange(80, 80);
     }
-    var mode = modelist.getModeFromPath(path);
+    var mode = modelist.getModeForPath(path);
     session.modeName = mode.name;
     session.setMode(mode.mode);
     return session;
@@ -65,8 +66,8 @@ function makeHuge(txt) {
 }
 
 var docs = {
-    "docs/AsciiDoc.asciidoc": "AsciiDoc",
     "docs/javascript.js": "JavaScript",
+    "docs/AsciiDoc.asciidoc": "AsciiDoc",
     "docs/clojure.clj": "Clojure",
     "docs/coffeescript.coffee": "CoffeeScript",
     "docs/coldfusion.cfm": "ColdFusion",
@@ -84,6 +85,7 @@ var docs = {
     "docs/haml.haml": "Haml",
     "docs/Haxe.hx": "haXe",
     "docs/html.html": "HTML",
+    "docs/html_ruby.erb": "HTML (Ruby)",
     "docs/jade.jade": "Jade",
     "docs/java.java": "Java",
     "docs/jsp.jsp": "JSP",
@@ -102,7 +104,7 @@ var docs = {
     "docs/luapage.lp": "LuaPage",
     "docs/Makefile": "Makefile",
     "docs/markdown.md": {name: "Markdown", wrapped: true},
-    "docs/tinymush.mc": {name: "TinyMUSH"},
+    "docs/mushcode.mc": {name: "MUSHCode", wrapped: true},
     "docs/objectivec.m": {name: "Objective-C"},
     "docs/ocaml.ml": "OCaml",
     "docs/OpenSCAD.scad": "OpenSCAD",
@@ -112,6 +114,7 @@ var docs = {
     "docs/php.php": "PHP",
     "docs/plaintext.txt": {name: "Plain Text", prepare: makeHuge, wrapped: true},
     "docs/powershell.ps1": "Powershell",
+    "docs/properties.properties": "Properties",
     "docs/python.py": "Python",
     "docs/r.r": "R",
     "docs/rdoc.Rd": "RDoc",
@@ -128,14 +131,27 @@ var docs = {
     "docs/tcl.tcl": "Tcl",
     "docs/tex.tex": "Tex",
     "docs/textile.textile": {name: "Textile", wrapped: true},
-    "docs/tmSnippet.tmSnippet": "tmSnippet",
+    "docs/snippets.snippets": "snippets",
     "docs/toml.toml": "TOML",
     "docs/typescript.ts": "Typescript",
     "docs/vbscript.vbs": "VBScript",
+    "docs/velocity.vm": "Velocity",
     "docs/xml.xml": "XML",
     "docs/xquery.xq": "XQuery",
     "docs/yaml.yaml": "YAML",
-    "docs/c9search.c9search_results": "C9 Search Results"
+    "docs/c9search.c9search_results": "C9 Search Results",
+    
+    "docs/actionscript.as": "ActionScript",
+    "docs/assembly_x86.asm": "Assembly_x86",
+    "docs/autohotkey.ahk": "AutoHotKey",
+    "docs/batchfile.bat": "BatchFile",
+    "docs/erlang/erl": "Erlang",
+    "docs/forth.frt": "Forth",
+    "docs/haskell.hs": "Haskell",
+    "docs/julia.js": "Julia",
+    "docs/prolog/plg": "Prolog",
+    "docs/rust.rs": "Rust",
+    "docs/twig.twig": "Twig"
 };
 
 var ownSource = {

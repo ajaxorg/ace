@@ -8,11 +8,8 @@
   background: #3b3b3b
 }
 
-.ace-idle-fingers .ace_scroller {
-  background-color: #323232
-}
-
-.ace-idle-fingers .ace_text-layer {
+.ace-idle-fingers {
+  background-color: #323232;
   color: #FFFFFF
 }
 
@@ -111,15 +108,11 @@
   color: #FFC66D
 }
 
-.ace-idle-fingers .ace_markup.ace_underline {
-  text-decoration: underline
-}
-
 .ace-idle-fingers .ace_collab.ace_user1 {
   color: #323232;
   background-color: #FFF980
 }
 
 .ace-idle-fingers .ace_indent-guide {
-  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAEklEQVQImWMwMjL6zzBz5sz/ABEUBGCqhK6UAAAAAElFTkSuQmCC) right repeat-y
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAEklEQVQImWMwMjLyZYiPj/8PAAreAwAI1+g0AAAAAElFTkSuQmCC) right repeat-y;
 }

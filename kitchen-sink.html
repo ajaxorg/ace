@@ -276,7 +276,7 @@
     </tr>
     <tr>
       <td colspan="2">
-        <input type="button" value="Edit Snippets", onclick="env.editSnippets()">
+        <input type="button" value="Edit Snippets" onclick="env.editSnippets()">
       </td>
     </tr>
   </table>
@@ -294,7 +294,8 @@
           baseUrl: window.location.protocol + "//" + window.location.host + window.location.pathname.split("/").slice(0, -1).join("/"),
           paths: {
               ace: "lib/ace"
-          }
+          },
+          waitSeconds: 30
       };
   </script>
   <script src="demo/kitchen-sink/require.js" data-main="demo/kitchen-sink/demo" type="text/javascript"></script>

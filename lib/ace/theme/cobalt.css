@@ -8,11 +8,8 @@
   background: #011e3a
 }
 
-.ace-cobalt .ace_scroller {
-  background-color: #002240
-}
-
-.ace-cobalt .ace_text-layer {
+.ace-cobalt {
+  background-color: #002240;
   color: #FFFFFF
 }
 
@@ -126,19 +123,15 @@
   color: #9EFFFF
 }
 
-.ace-cobalt .ace_markup.ace_underline {
-  text-decoration: underline
-}
-
-.ace-cobalt .ace_markup.ace_heading {
+.ace-cobalt .ace_heading {
   color: #C8E4FD;
   background-color: #001221
 }
 
-.ace-cobalt .ace_markup.ace_list {
+.ace-cobalt .ace_list {
   background-color: #130D26
 }
 
 .ace-cobalt .ace_indent-guide {
-  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAEklEQVQImWNgUHL4zzBz5sz/AA80BCzv+WXhAAAAAElFTkSuQmCC) right repeat-y
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAEklEQVQImWNgYGBgYHCLSvkPAAP3AgSDTRd4AAAAAElFTkSuQmCC) right repeat-y;
 }

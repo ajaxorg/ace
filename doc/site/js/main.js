@@ -1,7 +1,6 @@
 var editor;
 var embedded_editor;
 $(function() {
-    hljs.initHighlighting();
     ace.config.set("workerPath", "build/src-min");
     editor = ace.edit("ace_editor_demo");
     editor.container.style.opacity = "";
@@ -64,8 +63,6 @@ $(function() {
      
      tabs.find(tab_a_selector).click(function(e) {         
         e.preventDefault();
-        embedded_editor.resize();
-        editor.resize();
         if ($(this).attr("href") === "/") {
             window.location = "http://ace.ajax.org";
             return;
@@ -102,6 +99,8 @@ $(function() {
         }
 
         $(this).tab("show");
+        embedded_editor.resize();
+        editor.resize();
 
         var state = {};
         state.nav = $(this).attr("href").substr(1);

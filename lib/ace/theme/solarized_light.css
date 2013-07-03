@@ -8,11 +8,8 @@
   background: #e8e8e8
 }
 
-.ace-solarized-light .ace_scroller {
-  background-color: #FDF6E3
-}
-
-.ace-solarized-light .ace_text-layer {
+.ace-solarized-light {
+  background-color: #FDF6E3;
   color: #586E75
 }
 
@@ -26,7 +23,7 @@
 }
 
 .ace-solarized-light .ace_marker-layer .ace_selection {
-  background: #073642
+  background:  rgba(7, 54, 67, 0.09)
 }
 
 .ace-solarized-light.ace_multiselect .ace_selection.ace_start {
@@ -48,7 +45,7 @@
 }
 
 .ace-solarized-light .ace_gutter-active-line {
-  background-color : #dcdcdc
+  background-color : #EDE5C1
 }
 
 .ace-solarized-light .ace_marker-layer .ace_selected-word {
@@ -109,10 +106,6 @@
   color: #93A1A1
 }
 
-.ace-solarized-light .ace_markup.ace_underline {
-  text-decoration: underline
-}
-
 .ace-solarized-light .ace_indent-guide {
-  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAE0lEQVQImWP4++3xf4ZVq1b9BwAjxwbT1g3hiwAAAABJRU5ErkJggg==) right repeat-y
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAEklEQVQImWNgYGBgYHjy8NJ/AAjgA5fzQUmBAAAAAElFTkSuQmCC) right repeat-y;
 }

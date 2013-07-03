@@ -8,11 +8,8 @@
   background: #e8e8e8
 }
 
-.ace-dawn .ace_scroller {
-  background-color: #F9F9F9
-}
-
-.ace-dawn .ace_text-layer {
+.ace-dawn {
+  background-color: #F9F9F9;
   color: #080808
 }
 
@@ -97,7 +94,7 @@
   border-color: #080808
 }
 
-.ace-dawn .ace_markup.ace_list,
+.ace-dawn .ace_list,
 .ace-dawn .ace_support.ace_function {
   color: #693A17
 }
@@ -124,14 +121,10 @@
   color: #234A97
 }
 
-.ace-dawn .ace_markup.ace_underline {
-  text-decoration: underline
-}
-
-.ace-dawn .ace_markup.ace_heading {
+.ace-dawn .ace_heading {
   color: #19356D
 }
 
 .ace-dawn .ace_indent-guide {
-  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAE0lEQVQImWP4+fPnf4ZVq1b9BwAkVQboFQv98gAAAABJRU5ErkJggg==) right repeat-y
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAEklEQVQImWNgYGBgYLh/5+x/AAizA4hxNNsZAAAAAElFTkSuQmCC) right repeat-y;
 }
