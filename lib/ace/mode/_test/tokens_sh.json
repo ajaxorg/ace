@@ -314,7 +314,9 @@
   ["text","    "],
   ["support.function.builtin","echo"],
   ["text"," "],
-  ["string","\"http://github.com/$repo/pull/new/${branch##refs/heads/}\""]
+  ["string","\"http://github.com/"],
+  ["constant","$repo"],
+  ["string","/pull/new/${branch##refs/heads/}\""]
 ],[
    "start",
   ["keyword","else"]

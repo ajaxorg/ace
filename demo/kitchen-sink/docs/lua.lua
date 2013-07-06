@@ -34,3 +34,5 @@ print([===[
 table.maxn is deprecated, use # instead.
 --]=]--
 print(table.maxn{1,2,[4]=4,[8]=8) -- outputs 8 instead of 2
+
+print(5 --[[ blah ]])
