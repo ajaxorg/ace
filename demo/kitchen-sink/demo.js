@@ -69,6 +69,12 @@ var ElasticTabstopsLite = require("ace/ext/elastic_tabstops_lite").ElasticTabsto
 
 var IncrementalSearch = require("ace/incremental_search").IncrementalSearch;
 
+
+var workerModule = require("ace/worker/worker_client");
+if (location.href.indexOf("noworker" !== -1)) {
+    workerModule.WorkerClient = workerModule.UIWorkerClient;
+}
+
 /*********** create editor ***************************/
 var container = document.getElementById("editor-container");
 
