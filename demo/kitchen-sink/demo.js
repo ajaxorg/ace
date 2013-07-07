@@ -430,6 +430,9 @@ bindCheckbox("fade_fold_widgets", function(checked) {
 bindCheckbox("read_only", function(checked) {
     env.editor.setReadOnly(checked);
 });
+bindCheckbox("scrollPastEnd", function(checked) {
+    env.editor.setOption("scrollPastEnd", checked);
+});
 
 bindDropdown("split", function(value) {
     var sp = env.split;
