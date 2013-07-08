@@ -182,16 +182,16 @@ run("npm install jshint", function() {
     
     jshintDist = jshintDist.replace(/\brequire\(["']|\(require,|\(require\)/g, function(r){
         return r.replace("require", "req");
-    }).replace(/\brequire.define\(/g, function(d){
+    }).replace(/\brequire.define(\(|\s*=)/g, function(d){
         return d.replace("define", "def");
     });
     
     jshintDist = jshintDist.replace(/var defaultMaxListeners = 10;/, function(a) {return a.replace("10", "200")});
     
-    jshintDist = 'define(function() {\n'
+    jshintDist = 'define(function(require, exports, module) {\n'
         + jshintDist + '\n'
-        + 'function req() {return require.apply(this, arguments)}'
+        + 'function req() {return require.apply(this, arguments)}\n'
         + 'module.exports = req("/src/stable/jshint.js");\n'
-        +'})';
+        +'});';
     fs.writeFileSync(rootDir + "mode/javascript/jshint.js", jshintDist);
 });
