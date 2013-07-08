@@ -16,7 +16,13 @@ var deps = [{
 }, {
 	path: "mode/lua/luaparse.js",
 	url: "https://raw.github.com/oxyc/luaparse/master/luaparse.js",
-	needsFixup: true
+	needsFixup: true,
+	postProcess: function(src) {
+		return src.replace(
+			/\(function\s*\(root,\s*name,\s*factory\)\s*{[\s\S]*?}\(this,\s*'luaparse',/,
+			"(function (root, name, factory) {\n   factory(exports)\n}(this, 'luaparse',"
+		)
+	}
 }];
 
 var download = function(href, callback) {
@@ -39,12 +45,12 @@ var download = function(href, callback) {
 
 var getDep = function(dep) {
 	download(dep.url, function(data) {
+		if (dep.postProcess)
+			data = dep.postProcess(data);
 		if (dep.needsFixup)
 			data = "define(function(require, exports, module) {\n"
 				+ data
 				+ "\n});";
-		if (dep.postProcess)
-			data = dep.postProcess(data);
 			
 		fs.writeFile(rootDir + dep.path, data, "utf-8", function(err){
 			if (err) throw err;
@@ -173,10 +179,19 @@ run("npm install jshint", function() {
         /"Expected a conditional expression and instead saw an assignment."/g,
         '"Assignment in conditional expression"'
     );
+    
+    jshintDist = jshintDist.replace(/\brequire\(["']|\(require,|\(require\)/g, function(r){
+        return r.replace("require", "req");
+    }).replace(/\brequire.define\(/g, function(d){
+        return d.replace("define", "def");
+    });
+    
+    jshintDist = jshintDist.replace(/var defaultMaxListeners = 10;/, function(a) {return a.replace("10", "200")});
+    
     jshintDist = 'define(function() {\n'
         + jshintDist + '\n'
-        + 'var jsHint = require("/src/stable/jshint.js");\n'
-        + 'return function(require, exports, module) {module.exports = jsHint;}\n'
-        +'}())';
+        + 'function req() {return require.apply(this, arguments)}'
+        + 'module.exports = req("/src/stable/jshint.js");\n'
+        +'})';
     fs.writeFileSync(rootDir + "mode/javascript/jshint.js", jshintDist);
 });

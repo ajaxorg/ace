@@ -603,7 +603,9 @@ function namespace(ns) {
         text = text
             .toString()
             .replace('var ACE_NAMESPACE = "";', 'var ACE_NAMESPACE = "' + ns +'";')
-            .replace(/\bdefine\(/g, ns + ".define(");
+            .replace(/(.define)|\bdefine\(/g, function(_, a) {
+                return a || ns + ".define("
+            });
 
         return text;
     };
