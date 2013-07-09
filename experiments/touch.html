@@ -1,0 +1,117 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+
+<html lang="en">
+<head>
+	<!-- <meta name="viewport" content="user-scalable=0" /> -->
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>Touch handler</title>
+	<meta name="author" content="Fabian Jakobs">
+    <style>
+        #main {
+            border: solid blue;
+            margin:50px;
+            height: 300px;
+			overflow:hidden
+        }
+        #input{
+            font-size: 20px
+        }
+        #juhu {
+            background: -webkit-linear-gradient(-87deg, rgba(200,10,100,0.5), rgba(100,10,200,0.5));
+            /*position: absolute*/
+        }
+    </style>
+</head>
+<body>
+<textarea id="ni"></textarea>
+
+<div id="main">
+<textarea id="input"></textarea>
+<div id="juhu">
+  Juhu Kinners<br>
+  Juhu Kinners<br>
+  Juhu Kinners<br>
+  Juhu Kinners<br>
+</div>
+</div>
+
+<script type="text/javascript" charset="utf-8">
+
+var juhu = document.getElementById("juhu");
+var el = document.getElementById("main");
+var input = document.getElementById("input");
+
+document.body.style.webkitTransformOrigin= "0% 0%";
+document.body.style.webkitTransform = "scale(1.1)";
+
+
+var st = null, m = null, inter
+el.addEventListener("touchstart", function(e) {
+  input.focus() 
+  st = m = conv(e.touches[0],e)
+  
+  // if (e.touches.length < 2)
+  // e.preventDefault()  
+  // inter = setInterval(move, 20)
+})
+el.addEventListener("touchend", function(e) {
+  e.preventDefault()
+  inter = clearInterval(inter)
+
+})
+el.addEventListener("touchmove", function(e) {
+  m = conv(e.touches[0], e) 
+  move()
+  e.preventDefault()
+})
+el.addEventListener("click", function(e) {
+  input.focus()  
+  e.preventDefault()
+})
+  
+move = function() {    
+    var dx = m.x-st.x
+    var dy = m.y-st.y
+    
+    setSc(scl + dx, sct + dy)
+    
+    st = m
+}
+
+conv = function(e, e1) {
+    var rect = el.getBoundingClientRect()
+    
+    var x = e.clientX - rect.left
+    var y = e.clientY - rect.right
+    
+    return {x:x,y:y,t: e1.timeStamp}
+}
+  
+
+scl = 0
+sct = 0
+sctm = 1000
+sclm = 1000
+
+juhu.style.width = sclm + "px"
+juhu.style.height = sctm + "px"
+function setSc(x, y) {
+    scl = x//Math.max(0, Math.min(sclm, x))
+    sct = y//Math.max(0, Math.min(sctm, y))    
+    juhu.style.marginLeft = scl + "px"
+    juhu.style.marginTop = sct + "px"
+    
+}
+
+var $el = function(tn, o) {
+    var el = document.createElement(tn)
+    for (var i in o)
+        el.setAttribute(i, o[i])
+    return el
+}
+
+</script>
+
+</body>
+</html>
