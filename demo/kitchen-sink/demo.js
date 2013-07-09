@@ -613,6 +613,7 @@ env.editor.setOptions({
     enableBasicAutocompletion: true,
     enableSnippets: true
 })
+require("ace/ext/mobile");
 
 });
 
