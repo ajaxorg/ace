@@ -182,7 +182,7 @@ run("npm install jshint", function() {
     
     jshintDist = jshintDist.replace(/\brequire\(["']|\(require,|\(require\)/g, function(r){
         return r.replace("require", "req");
-    }).replace(/\brequire.define(\(|\s*=)/g, function(d){
+    }).replace(/\brequire\.define(\(|\s*=)/g, function(d){
         return d.replace("define", "def");
     });
     
