@@ -4,23 +4,31 @@
 ],[
    "start"
 ],[
-   "start",
-  ["meta.tag","<"],
-  ["meta.tag.tag-name","cfset"],
-  ["text"," "],
-  ["entity.other.attribute-name","welcome"],
-  ["keyword.operator","="],
-  ["string","\"Hello World!\""],
-  ["meta.tag.r",">"]
+   "start"
 ],[
    "start"
 ],[
    "start",
-  ["meta.tag","<"],
-  ["meta.tag.tag-name","cfoutput"],
-  ["meta.tag.r",">"],
+  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.name","cfset"],
+  ["text"," "],
+  ["entity.other.attribute-name","welcome"],
+  ["keyword.operator.separator","="],
+  ["string","\"Hello World!\""],
+  ["punctuation.meta.tag.end",">"]
+],[
+   "start"
+],[
+   "start"
+],[
+   "start"
+],[
+   "start",
+  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.name","cfoutput"],
+  ["punctuation.meta.tag.end",">"],
   ["text","#welcome#"],
-  ["meta.tag","</"],
-  ["meta.tag.tag-name","cfoutput"],
-  ["meta.tag.r",">"]
+  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.name","cfoutput"],
+  ["punctuation.meta.tag.end",">"]
 ]]
