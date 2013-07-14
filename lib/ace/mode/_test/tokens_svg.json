@@ -1,9 +1,9 @@
 [[
-   "punctuation.meta.tag.begin",
-  ["punctuation.meta.tag.begin","<"],
+   "meta.tag.punctuation.begin0",
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name","svg"]
 ],[
-   "punctuation.meta.tag.begin",
+   "meta.tag.punctuation.begin0",
   ["text","  "],
   ["entity.other.attribute-name","width"],
   ["keyword.operator.separator","="],
@@ -13,7 +13,7 @@
   ["keyword.operator.separator","="],
   ["string","\"600\""]
 ],[
-   "punctuation.meta.tag.begin",
+   "meta.tag.punctuation.begin0",
   ["text","  "],
   ["entity.other.attribute-name","xmlns"],
   ["keyword.operator.separator","="],
@@ -24,41 +24,41 @@
   ["entity.other.attribute-name","onload"],
   ["keyword.operator.separator","="],
   ["string","\"StartAnimation(evt)\""],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start"
 ],[
    "start",
   ["text","  "],
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name","title"],
-  ["punctuation.meta.tag.end",">"],
+  ["meta.tag.punctuation.end",">"],
   ["text","Test Tube Progress Bar"],
-  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name","title"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","  "],
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name","desc"],
-  ["punctuation.meta.tag.end",">"],
+  ["meta.tag.punctuation.end",">"],
   ["text","Created for the Web Directions SVG competition"],
-  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name","desc"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start"
 ],[
    "js-no_regex",
   ["text","  "],
-  ["punctuation.meta.tag.begin.script","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name.script","script"],
   ["text"," "],
   ["entity.other.attribute-name","type"],
   ["keyword.operator.separator","="],
   ["string","\"text/ecmascript\""],
-  ["punctuation.meta.tag.end.script",">"],
+  ["meta.tag.punctuation.end",">"],
   ["string.begin","<![CDATA["]
 ],[
    "js-start",
@@ -489,54 +489,54 @@
    "start",
   ["text","  "],
   ["string.end","]]>"],
-  ["punctuation.meta.tag.begin.script","</"],
+  ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name.script","script"],
-  ["punctuation.meta.tag.end.script",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start"
 ],[
-   "punctuation.meta.tag.begin",
+   "meta.tag.punctuation.begin0",
   ["text","  "],
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name","rect"]
 ],[
-   "punctuation.meta.tag.begin",
+   "meta.tag.punctuation.begin0",
   ["text","    "],
   ["entity.other.attribute-name","fill"],
   ["keyword.operator.separator","="],
   ["string","\"#2e3436\""]
 ],[
-   "punctuation.meta.tag.begin",
+   "meta.tag.punctuation.begin0",
   ["text","    "],
   ["entity.other.attribute-name","fill-rule"],
   ["keyword.operator.separator","="],
   ["string","\"nonzero\""]
 ],[
-   "punctuation.meta.tag.begin",
+   "meta.tag.punctuation.begin0",
   ["text","    "],
   ["entity.other.attribute-name","stroke-width"],
   ["keyword.operator.separator","="],
   ["string","\"3\""]
 ],[
-   "punctuation.meta.tag.begin",
+   "meta.tag.punctuation.begin0",
   ["text","    "],
   ["entity.other.attribute-name","y"],
   ["keyword.operator.separator","="],
   ["string","\"0\""]
 ],[
-   "punctuation.meta.tag.begin",
+   "meta.tag.punctuation.begin0",
   ["text","    "],
   ["entity.other.attribute-name","x"],
   ["keyword.operator.separator","="],
   ["string","\"0\""]
 ],[
-   "punctuation.meta.tag.begin",
+   "meta.tag.punctuation.begin0",
   ["text","    "],
   ["entity.other.attribute-name","height"],
   ["keyword.operator.separator","="],
   ["string","\"600\""]
 ],[
-   "punctuation.meta.tag.begin",
+   "meta.tag.punctuation.begin0",
   ["text","    "],
   ["entity.other.attribute-name","width"],
   ["keyword.operator.separator","="],
@@ -547,34 +547,34 @@
   ["entity.other.attribute-name","id"],
   ["keyword.operator.separator","="],
   ["string","\"rect3590\""],
-  ["punctuation.meta.tag.end","/>"]
+  ["meta.tag.punctuation.end","/>"]
 ],[
    "start"
 ],[
-   "punctuation.meta.tag.begin",
+   "meta.tag.punctuation.begin0",
   ["text","    "],
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name","text"]
 ],[
-   "punctuation.meta.tag.begin",
+   "meta.tag.punctuation.begin0",
   ["text","       "],
   ["entity.other.attribute-name","style"],
   ["keyword.operator.separator","="],
   ["string","\"font-size:144px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans Bold\""]
 ],[
-   "punctuation.meta.tag.begin",
+   "meta.tag.punctuation.begin0",
   ["text","       "],
   ["entity.other.attribute-name","x"],
   ["keyword.operator.separator","="],
   ["string","\"50\""]
 ],[
-   "punctuation.meta.tag.begin",
+   "meta.tag.punctuation.begin0",
   ["text","       "],
   ["entity.other.attribute-name","y"],
   ["keyword.operator.separator","="],
   ["string","\"350\""]
 ],[
-   "punctuation.meta.tag.begin",
+   "meta.tag.punctuation.begin0",
   ["text","       "],
   ["entity.other.attribute-name","id"],
   ["keyword.operator.separator","="],
@@ -585,38 +585,38 @@
   ["entity.other.attribute-name","display"],
   ["keyword.operator.separator","="],
   ["string","\"none\""],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","        Hickory,"],
-  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name","text"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
-   "punctuation.meta.tag.begin",
+   "meta.tag.punctuation.begin0",
   ["text","    "],
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name","text"]
 ],[
-   "punctuation.meta.tag.begin",
+   "meta.tag.punctuation.begin0",
   ["text","       "],
   ["entity.other.attribute-name","style"],
   ["keyword.operator.separator","="],
   ["string","\"font-size:144px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans Bold\""]
 ],[
-   "punctuation.meta.tag.begin",
+   "meta.tag.punctuation.begin0",
   ["text","       "],
   ["entity.other.attribute-name","x"],
   ["keyword.operator.separator","="],
   ["string","\"50\""]
 ],[
-   "punctuation.meta.tag.begin",
+   "meta.tag.punctuation.begin0",
   ["text","       "],
   ["entity.other.attribute-name","y"],
   ["keyword.operator.separator","="],
   ["string","\"350\""]
 ],[
-   "punctuation.meta.tag.begin",
+   "meta.tag.punctuation.begin0",
   ["text","       "],
   ["entity.other.attribute-name","id"],
   ["keyword.operator.separator","="],
@@ -627,38 +627,38 @@
   ["entity.other.attribute-name","display"],
   ["keyword.operator.separator","="],
   ["string","\"none\""],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","        dickory,"],
-  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name","text"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
-   "punctuation.meta.tag.begin",
+   "meta.tag.punctuation.begin0",
   ["text","    "],
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name","text"]
 ],[
-   "punctuation.meta.tag.begin",
+   "meta.tag.punctuation.begin0",
   ["text","       "],
   ["entity.other.attribute-name","style"],
   ["keyword.operator.separator","="],
   ["string","\"font-size:144px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans Bold\""]
 ],[
-   "punctuation.meta.tag.begin",
+   "meta.tag.punctuation.begin0",
   ["text","       "],
   ["entity.other.attribute-name","x"],
   ["keyword.operator.separator","="],
   ["string","\"50\""]
 ],[
-   "punctuation.meta.tag.begin",
+   "meta.tag.punctuation.begin0",
   ["text","       "],
   ["entity.other.attribute-name","y"],
   ["keyword.operator.separator","="],
   ["string","\"350\""]
 ],[
-   "punctuation.meta.tag.begin",
+   "meta.tag.punctuation.begin0",
   ["text","       "],
   ["entity.other.attribute-name","id"],
   ["keyword.operator.separator","="],
@@ -669,16 +669,16 @@
   ["entity.other.attribute-name","display"],
   ["keyword.operator.separator","="],
   ["string","\"none\""],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","        dock!"],
-  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name","text"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
-  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name","svg"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ]]

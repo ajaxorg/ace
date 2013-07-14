@@ -9,24 +9,24 @@
   ["text","tokenize embedded script"]
 ],[
    "start",
-  ["punctuation.meta.tag.begin.script","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name.script","script"],
   ["text"," "],
   ["entity.other.attribute-name","a"],
   ["keyword.operator.separator","="],
   ["string","'a'"],
-  ["punctuation.meta.tag.end.script",">"],
+  ["meta.tag.punctuation.end",">"],
   ["storage.type","var"],
-  ["punctuation.meta.tag.begin.script","</"],
+  ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name.script","script"],
-  ["punctuation.meta.tag.end.script",">"],
+  ["meta.tag.punctuation.end",">"],
   ["text","'123'"]
 ],[
    "start",
   ["text","tokenize multiline attribute value with double quotes"]
 ],[
    ["qqstring_inner","start_tag_stuff"],
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name.anchor","a"],
   ["text"," "],
   ["entity.other.attribute-name","href"],
@@ -35,13 +35,13 @@
 ],[
    "start",
   ["string","def\""],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","tokenize multiline attribute value with single quotes"]
 ],[
    ["qstring_inner","start_tag_stuff"],
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name.anchor","a"],
   ["text"," "],
   ["entity.other.attribute-name","href"],
@@ -50,7 +50,7 @@
 ],[
    "start",
   ["string","def\\\"'"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start"
 ]]

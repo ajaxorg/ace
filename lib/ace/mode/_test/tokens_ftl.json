@@ -49,97 +49,97 @@
   ["punctuation.doctype.end",">"]
 ],[
    "start",
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name","html"],
   ["text"," "],
   ["entity.other.attribute-name","lang"],
   ["keyword.operator.separator","="],
   ["string","\"en-us\""],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","    "],
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name","head"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","        "],
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name","meta"],
   ["text"," "],
   ["entity.other.attribute-name","charset"],
   ["keyword.operator.separator","="],
   ["string","\"utf-8\""],
   ["text"," "],
-  ["punctuation.meta.tag.end","/>"]
+  ["meta.tag.punctuation.end","/>"]
 ],[
    "start",
   ["text","        "]
 ],[
    "start",
   ["text","        "],
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name","title"],
-  ["punctuation.meta.tag.end",">"],
+  ["meta.tag.punctuation.end",">"],
   ["string.interpolated","${"],
   ["variable","title"],
   ["keyword.operator","!"],
   ["string","\"FreeMarker\""],
   ["string.interpolated","}"],
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name","title"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","    "],
-  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name","head"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","    "]
 ],[
    "start",
   ["text","    "],
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name","body"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","    "]
 ],[
    "start",
   ["text","        "],
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name","h1"],
-  ["punctuation.meta.tag.end",">"],
+  ["meta.tag.punctuation.end",">"],
   ["text","Hello "],
   ["string.interpolated","${"],
   ["variable","name"],
   ["keyword.operator","!"],
   ["string","\"\""],
   ["string.interpolated","}"],
-  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name","h1"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","        "]
 ],[
    "start",
   ["text","        "],
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name","p"],
-  ["punctuation.meta.tag.end",">"],
+  ["meta.tag.punctuation.end",">"],
   ["text","Today is: "],
   ["string.interpolated","${"],
   ["language.variable",".now"],
   ["support.function","?date"],
   ["string.interpolated","}"],
-  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name","p"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","        "]
@@ -185,9 +185,9 @@
 ],[
    "start",
   ["text","        "],
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name","ul"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","            "],
@@ -202,9 +202,9 @@
 ],[
    "start",
   ["text","                "],
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name","li"],
-  ["punctuation.meta.tag.end",">"],
+  ["meta.tag.punctuation.end",">"],
   ["string.interpolated","${"],
   ["variable","item_index"],
   ["string.interpolated","}"],
@@ -222,9 +222,9 @@
   ["constant.numeric","0"],
   ["paren.rparen","]"],
   ["string.interpolated","}"],
-  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name","li"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","            "],
@@ -233,9 +233,9 @@
 ],[
    "start",
   ["text","        "],
-  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name","ul"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","        "]
@@ -309,7 +309,7 @@
 ],[
    "start",
   ["text","        "],
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name.image","img"],
   ["text"," "],
   ["entity.other.attribute-name","src"],
@@ -320,21 +320,21 @@
   ["string.interpolated","}"],
   ["string",".png\""],
   ["text"," "],
-  ["punctuation.meta.tag.end","/>"]
+  ["meta.tag.punctuation.end","/>"]
 ],[
    "start",
   ["text","        "]
 ],[
    "start",
   ["text","    "],
-  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name","body"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
-  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name","html"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start"
 ]]

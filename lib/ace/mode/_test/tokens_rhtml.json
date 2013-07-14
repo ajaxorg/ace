@@ -1,55 +1,55 @@
 [[
    "start",
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name","html"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start"
 ],[
    "start",
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name","head"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name","title"],
-  ["punctuation.meta.tag.end",">"],
+  ["meta.tag.punctuation.end",">"],
   ["text","Title"],
-  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name","title"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
-  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name","head"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start"
 ],[
    "start",
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name","body"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start"
 ],[
    "start",
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name","p"],
-  ["punctuation.meta.tag.end",">"],
+  ["meta.tag.punctuation.end",">"],
   ["text","This is an R HTML document. When you click the "],
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name","b"],
-  ["punctuation.meta.tag.end",">"],
+  ["meta.tag.punctuation.end",">"],
   ["text","Knit HTML"],
-  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name","b"],
-  ["punctuation.meta.tag.end",">"],
+  ["meta.tag.punctuation.end",">"],
   ["text"," button a web page will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:"],
-  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name","p"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start"
 ],[
@@ -68,13 +68,13 @@
    "start"
 ],[
    "start",
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name","p"],
-  ["punctuation.meta.tag.end",">"],
+  ["meta.tag.punctuation.end",">"],
   ["text","You can also embed plots, for example:"],
-  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name","p"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start"
 ],[
@@ -93,14 +93,14 @@
    "start"
 ],[
    "start",
-  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name","body"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
-  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name","html"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start"
 ]]

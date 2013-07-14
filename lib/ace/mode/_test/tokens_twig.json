@@ -6,47 +6,47 @@
   ["punctuation.doctype.end",">"]
 ],[
    "start",
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name","html"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","    "],
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name","head"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","        "],
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name","title"],
-  ["punctuation.meta.tag.end",">"],
+  ["meta.tag.punctuation.end",">"],
   ["text","My Webpage"],
-  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name","title"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","    "],
-  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name","head"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","    "],
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name","body"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","        "],
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name","ul"],
   ["text"," "],
   ["entity.other.attribute-name","id"],
   ["keyword.operator.separator","="],
   ["string","\"navigation\""],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","        "],
@@ -64,10 +64,10 @@
 ],[
    "start",
   ["text","            "],
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name","li"],
-  ["punctuation.meta.tag.end",">"],
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.end",">"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name.anchor","a"],
   ["text"," "],
   ["entity.other.attribute-name","href"],
@@ -83,7 +83,7 @@
   ["text"," "],
   ["variable.other.readwrite.local.twig","}}"],
   ["string","\""],
-  ["punctuation.meta.tag.end",">"],
+  ["meta.tag.punctuation.end",">"],
   ["variable.other.readwrite.local.twig","{{"],
   ["text"," "],
   ["identifier","item"],
@@ -91,12 +91,12 @@
   ["identifier","caption"],
   ["text"," "],
   ["variable.other.readwrite.local.twig","}}"],
-  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name.anchor","a"],
-  ["punctuation.meta.tag.end",">"],
-  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.punctuation.end",">"],
+  ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name","li"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","        "],
@@ -108,9 +108,9 @@
 ],[
    "start",
   ["text","        "],
-  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name","ul"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start"
 ],[
@@ -258,13 +258,13 @@
 ],[
    "start",
   ["text","        "],
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name","h1"],
-  ["punctuation.meta.tag.end",">"],
+  ["meta.tag.punctuation.end",">"],
   ["text","My Webpage"],
-  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name","h1"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","        "],
@@ -276,12 +276,12 @@
 ],[
    "start",
   ["text","    "],
-  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name","body"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
-  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name","html"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ]]

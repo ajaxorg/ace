@@ -12,9 +12,9 @@
   ["punctuation.doctype.end",">"]
 ],[
    "start",
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name","html"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    ["lua-bracketedComment",2,"lua-start"],
   ["keyword","<%"],
@@ -33,23 +33,23 @@
   ["keyword","%>"]
 ],[
    "start",
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name","head"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","    "],
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name","title"],
-  ["punctuation.meta.tag.end",">"],
+  ["meta.tag.punctuation.end",">"],
   ["text","Reference"],
-  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name","title"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","    "],
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name","link"],
   ["text"," "],
   ["entity.other.attribute-name","rel"],
@@ -77,123 +77,123 @@
   ["keyword.operator.separator","="],
   ["string","\"text/css\""],
   ["text"," "],
-  ["punctuation.meta.tag.end","/>"]
+  ["meta.tag.punctuation.end","/>"]
 ],[
    "start",
   ["text","\t"],
   ["comment","<!--meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/-->"]
 ],[
    "start",
-  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name","head"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start"
 ],[
    "start",
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name","body"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name","div"],
   ["text"," "],
   ["entity.other.attribute-name","id"],
   ["keyword.operator.separator","="],
   ["string","\"container\""],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start"
 ],[
    "start",
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name","div"],
   ["text"," "],
   ["entity.other.attribute-name","id"],
   ["keyword.operator.separator","="],
   ["string","\"product\""],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","\t"],
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name","div"],
   ["text"," "],
   ["entity.other.attribute-name","id"],
   ["keyword.operator.separator","="],
   ["string","\"product_logo\""],
-  ["punctuation.meta.tag.end",">"],
-  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.punctuation.end",">"],
+  ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name","div"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","\t"],
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name","div"],
   ["text"," "],
   ["entity.other.attribute-name","id"],
   ["keyword.operator.separator","="],
   ["string","\"product_name\""],
-  ["punctuation.meta.tag.end",">"],
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.end",">"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name","big"],
-  ["punctuation.meta.tag.end",">"],
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.end",">"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name","b"],
-  ["punctuation.meta.tag.end",">"],
-  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.punctuation.end",">"],
+  ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name","b"],
-  ["punctuation.meta.tag.end",">"],
-  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.punctuation.end",">"],
+  ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name","big"],
-  ["punctuation.meta.tag.end",">"],
-  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.punctuation.end",">"],
+  ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name","div"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","\t"],
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name","div"],
   ["text"," "],
   ["entity.other.attribute-name","id"],
   ["keyword.operator.separator","="],
   ["string","\"product_description\""],
-  ["punctuation.meta.tag.end",">"],
-  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.punctuation.end",">"],
+  ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name","div"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
-  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name","div"],
-  ["punctuation.meta.tag.end",">"],
+  ["meta.tag.punctuation.end",">"],
   ["text"," "],
   ["comment","<!-- id=\"product\" -->"]
 ],[
    "start"
 ],[
    "start",
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name","div"],
   ["text"," "],
   ["entity.other.attribute-name","id"],
   ["keyword.operator.separator","="],
   ["string","\"main\""],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start"
 ],[
    "start",
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name","div"],
   ["text"," "],
   ["entity.other.attribute-name","id"],
   ["keyword.operator.separator","="],
   ["string","\"navigation\""],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["keyword","<%="],
@@ -219,22 +219,22 @@
    "start"
 ],[
    "start",
-  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name","div"],
-  ["punctuation.meta.tag.end",">"],
+  ["meta.tag.punctuation.end",">"],
   ["text"," "],
   ["comment","<!-- id=\"navigation\" -->"]
 ],[
    "start"
 ],[
    "start",
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name","div"],
   ["text"," "],
   ["entity.other.attribute-name","id"],
   ["keyword.operator.separator","="],
   ["string","\"content\""],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start"
 ],[
@@ -263,22 +263,22 @@
   ["keyword","then%>"]
 ],[
    "start",
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name","h2"],
-  ["punctuation.meta.tag.end",">"],
+  ["meta.tag.punctuation.end",">"],
   ["text","Modules"],
-  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name","h2"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name.table","table"],
   ["text"," "],
   ["entity.other.attribute-name","class"],
   ["keyword.operator.separator","="],
   ["string","\"module_list\""],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["comment","<!--<tr><td colspan=\"2\">Modules</td></tr>-->"]
@@ -303,20 +303,20 @@
 ],[
    "start",
   ["text","\t"],
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name.table","tr"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","\t\t"],
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name.table","td"],
   ["text"," "],
   ["entity.other.attribute-name","class"],
   ["keyword.operator.separator","="],
   ["string","\"name\""],
-  ["punctuation.meta.tag.end",">"],
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.end",">"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name.anchor","a"],
   ["text"," "],
   ["entity.other.attribute-name","href"],
@@ -337,26 +337,26 @@
   ["paren.rparen",")"],
   ["keyword","%>"],
   ["string","\""],
-  ["punctuation.meta.tag.end",">"],
+  ["meta.tag.punctuation.end",">"],
   ["keyword","<%="],
   ["identifier","modulename"],
   ["keyword","%>"],
-  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name.anchor","a"],
-  ["punctuation.meta.tag.end",">"],
-  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.punctuation.end",">"],
+  ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name.table","td"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","\t\t"],
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name.table","td"],
   ["text"," "],
   ["entity.other.attribute-name","class"],
   ["keyword.operator.separator","="],
   ["string","\"summary\""],
-  ["punctuation.meta.tag.end",">"],
+  ["meta.tag.punctuation.end",">"],
   ["keyword","<%="],
   ["identifier","doc"],
   ["text","."],
@@ -367,23 +367,23 @@
   ["text","."],
   ["identifier","summary"],
   ["keyword","%>"],
-  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name.table","td"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","\t"],
-  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name.table","tr"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["keyword","<%end%>"]
 ],[
    "start",
-  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name.table","table"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["keyword","<%end%>"]
@@ -417,22 +417,22 @@
   ["keyword","then%>"]
 ],[
    "start",
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name","h2"],
-  ["punctuation.meta.tag.end",">"],
+  ["meta.tag.punctuation.end",">"],
   ["text","Files"],
-  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name","h2"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name.table","table"],
   ["text"," "],
   ["entity.other.attribute-name","class"],
   ["keyword.operator.separator","="],
   ["string","\"file_list\""],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["comment","<!--<tr><td colspan=\"2\">Files</td></tr>-->"]
@@ -457,20 +457,20 @@
 ],[
    "start",
   ["text","\t"],
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name.table","tr"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","\t\t"],
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name.table","td"],
   ["text"," "],
   ["entity.other.attribute-name","class"],
   ["keyword.operator.separator","="],
   ["string","\"name\""],
-  ["punctuation.meta.tag.end",">"],
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.end",">"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name.anchor","a"],
   ["text"," "],
   ["entity.other.attribute-name","href"],
@@ -489,43 +489,43 @@
   ["paren.rparen",")"],
   ["keyword","%>"],
   ["string","\""],
-  ["punctuation.meta.tag.end",">"],
+  ["meta.tag.punctuation.end",">"],
   ["keyword","<%="],
   ["identifier","filepath"],
   ["keyword","%>"],
-  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name.anchor","a"],
-  ["punctuation.meta.tag.end",">"],
-  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.punctuation.end",">"],
+  ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name.table","td"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","\t\t"],
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name.table","td"],
   ["text"," "],
   ["entity.other.attribute-name","class"],
   ["keyword.operator.separator","="],
   ["string","\"summary\""],
-  ["punctuation.meta.tag.end",">"],
-  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.punctuation.end",">"],
+  ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name.table","td"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","\t"],
-  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name.table","tr"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["keyword","<%end%>"]
 ],[
    "start",
-  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name.table","table"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["keyword","<%end%>"]
@@ -533,45 +533,45 @@
    "start"
 ],[
    "start",
-  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name","div"],
-  ["punctuation.meta.tag.end",">"],
+  ["meta.tag.punctuation.end",">"],
   ["text"," "],
   ["comment","<!-- id=\"content\" -->"]
 ],[
    "start"
 ],[
    "start",
-  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name","div"],
-  ["punctuation.meta.tag.end",">"],
+  ["meta.tag.punctuation.end",">"],
   ["text"," "],
   ["comment","<!-- id=\"main\" -->"]
 ],[
    "start"
 ],[
    "start",
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name","div"],
   ["text"," "],
   ["entity.other.attribute-name","id"],
   ["keyword.operator.separator","="],
   ["string","\"about\""],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","\t"],
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name","p"],
-  ["punctuation.meta.tag.end",">"],
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.end",">"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name.anchor","a"],
   ["text"," "],
   ["entity.other.attribute-name","href"],
   ["keyword.operator.separator","="],
   ["string","\"http://validator.w3.org/check?uri=referer\""],
-  ["punctuation.meta.tag.end",">"],
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.end",">"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name.image","img"],
   ["text"," "],
   ["entity.other.attribute-name","src"],
@@ -590,40 +590,40 @@
   ["keyword.operator.separator","="],
   ["string","\"88\""],
   ["text"," "],
-  ["punctuation.meta.tag.end","/>"],
-  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.punctuation.end","/>"],
+  ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name.anchor","a"],
-  ["punctuation.meta.tag.end",">"],
-  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.punctuation.end",">"],
+  ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name","p"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
-  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name","div"],
-  ["punctuation.meta.tag.end",">"],
+  ["meta.tag.punctuation.end",">"],
   ["text"," "],
   ["comment","<!-- id=\"about\" -->"]
 ],[
    "start"
 ],[
    "start",
-  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name","div"],
-  ["punctuation.meta.tag.end",">"],
+  ["meta.tag.punctuation.end",">"],
   ["text"," "],
   ["comment","<!-- id=\"container\" -->"],
   ["text","\t"]
 ],[
    "start",
-  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name","body"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
-  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name","html"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start"
 ]]

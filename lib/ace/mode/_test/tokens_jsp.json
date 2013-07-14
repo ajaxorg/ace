@@ -1,19 +1,19 @@
 [[
    "start",
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name","html"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name","body"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "js-start",
   ["text","    "],
-  ["punctuation.meta.tag.begin.script","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name.script","script"],
-  ["punctuation.meta.tag.end.script",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "js-start",
   ["text","        "],
@@ -40,15 +40,15 @@
 ],[
    "start",
   ["text","    "],
-  ["punctuation.meta.tag.begin.script","</"],
+  ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name.script","script"],
-  ["punctuation.meta.tag.end.script",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "css-start",
   ["text","    "],
-  ["punctuation.meta.tag.begin.style","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name.style","style"],
-  ["punctuation.meta.tag.end.style",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    ["css-ruleset","css-start"],
   ["text","        "],
@@ -69,17 +69,17 @@
 ],[
    "start",
   ["text","    "],
-  ["punctuation.meta.tag.begin.style","</"],
+  ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name.style","style"],
-  ["punctuation.meta.tag.end.style",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start"
 ],[
    "start",
   ["text","    "],
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name","p"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","        Today's date: "],
@@ -104,9 +104,9 @@
 ],[
    "start",
   ["text","    "],
-  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name","p"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","    "],
@@ -164,29 +164,29 @@
 ],[
    "start",
   ["text","    "],
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name","h2"],
-  ["punctuation.meta.tag.end",">"],
+  ["meta.tag.punctuation.end",">"],
   ["text","Select Languages:"],
-  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name","h2"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start"
 ],[
    "start",
   ["text","    "],
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name.form","form"],
   ["text"," "],
   ["entity.other.attribute-name","ACTION"],
   ["keyword.operator.separator","="],
   ["string","\"jspCheckBox.jsp\""],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","        "],
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name.form","input"],
   ["text"," "],
   ["entity.other.attribute-name","type"],
@@ -200,15 +200,15 @@
   ["entity.other.attribute-name","value"],
   ["keyword.operator.separator","="],
   ["string","\"Java\""],
-  ["punctuation.meta.tag.end",">"],
+  ["meta.tag.punctuation.end",">"],
   ["text"," Java"],
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name","BR"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","        "],
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name.form","input"],
   ["text"," "],
   ["entity.other.attribute-name","type"],
@@ -222,15 +222,15 @@
   ["entity.other.attribute-name","value"],
   ["keyword.operator.separator","="],
   ["string","\".NET\""],
-  ["punctuation.meta.tag.end",">"],
+  ["meta.tag.punctuation.end",">"],
   ["text"," .NET"],
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name","BR"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","        "],
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name.form","input"],
   ["text"," "],
   ["entity.other.attribute-name","type"],
@@ -244,15 +244,15 @@
   ["entity.other.attribute-name","value"],
   ["keyword.operator.separator","="],
   ["string","\"PHP\""],
-  ["punctuation.meta.tag.end",">"],
+  ["meta.tag.punctuation.end",">"],
   ["text"," PHP"],
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name","BR"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","        "],
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name.form","input"],
   ["text"," "],
   ["entity.other.attribute-name","type"],
@@ -266,15 +266,15 @@
   ["entity.other.attribute-name","value"],
   ["keyword.operator.separator","="],
   ["string","\"C/C++\""],
-  ["punctuation.meta.tag.end",">"],
+  ["meta.tag.punctuation.end",">"],
   ["text"," C/C++"],
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name","BR"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","        "],
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name.form","input"],
   ["text"," "],
   ["entity.other.attribute-name","type"],
@@ -288,15 +288,15 @@
   ["entity.other.attribute-name","value"],
   ["keyword.operator.separator","="],
   ["string","\"PERL\""],
-  ["punctuation.meta.tag.end",">"],
+  ["meta.tag.punctuation.end",">"],
   ["text"," PERL "],
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name","BR"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","        "],
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name.form","input"],
   ["text"," "],
   ["entity.other.attribute-name","type"],
@@ -306,13 +306,13 @@
   ["entity.other.attribute-name","value"],
   ["keyword.operator.separator","="],
   ["string","\"Submit\""],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","    "],
-  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name.form","form"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start"
 ],[
@@ -424,12 +424,12 @@
   ["meta.tag","%>"]
 ],[
    "start",
-  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name","body"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
-  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name","html"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ]]

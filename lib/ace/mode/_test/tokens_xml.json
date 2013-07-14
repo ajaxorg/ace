@@ -1,36 +1,36 @@
 [[
    "start",
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name","Juhu"],
-  ["punctuation.meta.tag.end",">"],
+  ["meta.tag.punctuation.end",">"],
   ["text","//Juhu Kinners"],
-  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name","Kinners"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","test: two tags in the same lines should be in separate tokens\""]
 ],[
    "start",
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name","Juhu"],
-  ["punctuation.meta.tag.end",">"],
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.end",">"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name","Kinners"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","test: multiline attributes\""]
 ],[
-   ["qqstring_inner","punctuation.meta.tag.begin"],
-  ["punctuation.meta.tag.begin","<"],
+   ["qqstring_inner","meta.tag.punctuation.begin"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name","copy"],
   ["text"," "],
   ["entity.other.attribute-name","set"],
   ["keyword.operator.separator","="],
   ["string","\"{"]
 ],[
-   ["qqstring_inner","punctuation.meta.tag.begin"],
+   ["qqstring_inner","meta.tag.punctuation.begin"],
   ["string","}\""],
   ["text"," "],
   ["entity.other.attribute-name","undo"],
@@ -39,5 +39,5 @@
 ],[
    "start",
   ["string","}\""],
-  ["punctuation.meta.tag.end","/>"]
+  ["meta.tag.punctuation.end","/>"]
 ]]

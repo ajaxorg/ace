@@ -26,15 +26,15 @@
 ],[
    "start",
   ["text","  "],
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name","li"],
-  ["punctuation.meta.tag.end",">"],
+  ["meta.tag.punctuation.end",">"],
   ["variable","${"],
   ["identifier","item"],
   ["variable","}"],
-  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name","li"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["keyword","#end"]
@@ -68,9 +68,9 @@
    "start"
 ],[
    "start",
-  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name","ul"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","  "],
@@ -128,16 +128,16 @@
   ["keyword","#end"]
 ],[
    "start",
-  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name","ul"],
-  ["punctuation.meta.tag.end",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start"
 ],[
    "js-start",
-  ["punctuation.meta.tag.begin.script","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name.script","script"],
-  ["punctuation.meta.tag.end.script",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "js-comment_regex_allowed",
   ["text","  "],
@@ -216,16 +216,16 @@
   ["paren.rparen","}"]
 ],[
    "start",
-  ["punctuation.meta.tag.begin.script","</"],
+  ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name.script","script"],
-  ["punctuation.meta.tag.end.script",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start"
 ],[
    "css-start",
-  ["punctuation.meta.tag.begin.style","<"],
+  ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name.style","style"],
-  ["punctuation.meta.tag.end.style",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    ["css-comment","css-start"],
   ["text","  "],
@@ -275,7 +275,7 @@
   ["paren.rparen","}"]
 ],[
    "start",
-  ["punctuation.meta.tag.begin.style","</"],
+  ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name.style","style"],
-  ["punctuation.meta.tag.end.style",">"]
+  ["meta.tag.punctuation.end",">"]
 ]]
