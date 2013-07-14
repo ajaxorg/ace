@@ -1,19 +1,19 @@
 [[
    "start",
-  ["meta.tag","<"],
-  ["meta.tag.tag-name","html"],
-  ["meta.tag.r",">"]
+  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.name","html"],
+  ["punctuation.meta.tag.end",">"]
 ],[
    "start",
-  ["meta.tag","<"],
-  ["meta.tag.tag-name","body"],
-  ["meta.tag.r",">"]
+  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.name","body"],
+  ["punctuation.meta.tag.end",">"]
 ],[
    "js-start",
   ["text","    "],
-  ["meta.tag","<"],
-  ["meta.tag.tag-name.script","script"],
-  ["meta.tag.r",">"]
+  ["punctuation.meta.tag.begin.script","<"],
+  ["meta.tag.name.script","script"],
+  ["punctuation.meta.tag.end.script",">"]
 ],[
    "js-start",
   ["text","        "],
@@ -40,23 +40,23 @@
 ],[
    "start",
   ["text","    "],
-  ["meta.tag","</"],
-  ["meta.tag.tag-name.script","script"],
-  ["meta.tag.r",">"]
+  ["punctuation.meta.tag.begin.script","</"],
+  ["meta.tag.name.script","script"],
+  ["punctuation.meta.tag.end.script",">"]
 ],[
    "css-start",
   ["text","    "],
-  ["meta.tag","<"],
-  ["meta.tag.tag-name.style","style"],
-  ["meta.tag.r",">"]
+  ["punctuation.meta.tag.begin.style","<"],
+  ["meta.tag.name.style","style"],
+  ["punctuation.meta.tag.end.style",">"]
 ],[
-   "css-ruleset",
+   ["css-ruleset","css-start"],
   ["text","        "],
   ["variable",".class"],
   ["text"," "],
   ["paren.lparen","{"]
 ],[
-   "css-ruleset",
+   ["css-ruleset","css-start"],
   ["text","            "],
   ["support.type","background"],
   ["text",": "],
@@ -69,17 +69,17 @@
 ],[
    "start",
   ["text","    "],
-  ["meta.tag","</"],
-  ["meta.tag.tag-name.style","style"],
-  ["meta.tag.r",">"]
+  ["punctuation.meta.tag.begin.style","</"],
+  ["meta.tag.name.style","style"],
+  ["punctuation.meta.tag.end.style",">"]
 ],[
    "start"
 ],[
    "start",
   ["text","    "],
-  ["meta.tag","<"],
-  ["meta.tag.tag-name","p"],
-  ["meta.tag.r",">"]
+  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.name","p"],
+  ["punctuation.meta.tag.end",">"]
 ],[
    "start",
   ["text","        Today's date: "],
@@ -104,9 +104,9 @@
 ],[
    "start",
   ["text","    "],
-  ["meta.tag","</"],
-  ["meta.tag.tag-name","p"],
-  ["meta.tag.r",">"]
+  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.name","p"],
+  ["punctuation.meta.tag.end",">"]
 ],[
    "start",
   ["text","    "],
@@ -164,155 +164,155 @@
 ],[
    "start",
   ["text","    "],
-  ["meta.tag","<"],
-  ["meta.tag.tag-name","h2"],
-  ["meta.tag.r",">"],
+  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.name","h2"],
+  ["punctuation.meta.tag.end",">"],
   ["text","Select Languages:"],
-  ["meta.tag","</"],
-  ["meta.tag.tag-name","h2"],
-  ["meta.tag.r",">"]
+  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.name","h2"],
+  ["punctuation.meta.tag.end",">"]
 ],[
    "start"
 ],[
    "start",
   ["text","    "],
-  ["meta.tag","<"],
-  ["meta.tag.tag-name.form","form"],
+  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.name.form","form"],
   ["text"," "],
   ["entity.other.attribute-name","ACTION"],
-  ["keyword.operator","="],
+  ["keyword.operator.separator","="],
   ["string","\"jspCheckBox.jsp\""],
-  ["meta.tag.r",">"]
+  ["punctuation.meta.tag.end",">"]
 ],[
    "start",
   ["text","        "],
-  ["meta.tag","<"],
-  ["meta.tag.tag-name.form","input"],
+  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.name.form","input"],
   ["text"," "],
   ["entity.other.attribute-name","type"],
-  ["keyword.operator","="],
+  ["keyword.operator.separator","="],
   ["string","\"checkbox\""],
   ["text"," "],
   ["entity.other.attribute-name","name"],
-  ["keyword.operator","="],
+  ["keyword.operator.separator","="],
   ["string","\"id\""],
   ["text"," "],
   ["entity.other.attribute-name","value"],
-  ["keyword.operator","="],
+  ["keyword.operator.separator","="],
   ["string","\"Java\""],
-  ["meta.tag.r",">"],
+  ["punctuation.meta.tag.end",">"],
   ["text"," Java"],
-  ["meta.tag","<"],
-  ["meta.tag.tag-name","BR"],
-  ["meta.tag.r",">"]
+  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.name","BR"],
+  ["punctuation.meta.tag.end",">"]
 ],[
    "start",
   ["text","        "],
-  ["meta.tag","<"],
-  ["meta.tag.tag-name.form","input"],
+  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.name.form","input"],
   ["text"," "],
   ["entity.other.attribute-name","type"],
-  ["keyword.operator","="],
+  ["keyword.operator.separator","="],
   ["string","\"checkbox\""],
   ["text"," "],
   ["entity.other.attribute-name","name"],
-  ["keyword.operator","="],
+  ["keyword.operator.separator","="],
   ["string","\"id\""],
   ["text"," "],
   ["entity.other.attribute-name","value"],
-  ["keyword.operator","="],
+  ["keyword.operator.separator","="],
   ["string","\".NET\""],
-  ["meta.tag.r",">"],
+  ["punctuation.meta.tag.end",">"],
   ["text"," .NET"],
-  ["meta.tag","<"],
-  ["meta.tag.tag-name","BR"],
-  ["meta.tag.r",">"]
+  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.name","BR"],
+  ["punctuation.meta.tag.end",">"]
 ],[
    "start",
   ["text","        "],
-  ["meta.tag","<"],
-  ["meta.tag.tag-name.form","input"],
+  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.name.form","input"],
   ["text"," "],
   ["entity.other.attribute-name","type"],
-  ["keyword.operator","="],
+  ["keyword.operator.separator","="],
   ["string","\"checkbox\""],
   ["text"," "],
   ["entity.other.attribute-name","name"],
-  ["keyword.operator","="],
+  ["keyword.operator.separator","="],
   ["string","\"id\""],
   ["text"," "],
   ["entity.other.attribute-name","value"],
-  ["keyword.operator","="],
+  ["keyword.operator.separator","="],
   ["string","\"PHP\""],
-  ["meta.tag.r",">"],
+  ["punctuation.meta.tag.end",">"],
   ["text"," PHP"],
-  ["meta.tag","<"],
-  ["meta.tag.tag-name","BR"],
-  ["meta.tag.r",">"]
+  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.name","BR"],
+  ["punctuation.meta.tag.end",">"]
 ],[
    "start",
   ["text","        "],
-  ["meta.tag","<"],
-  ["meta.tag.tag-name.form","input"],
+  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.name.form","input"],
   ["text"," "],
   ["entity.other.attribute-name","type"],
-  ["keyword.operator","="],
+  ["keyword.operator.separator","="],
   ["string","\"checkbox\""],
   ["text"," "],
   ["entity.other.attribute-name","name"],
-  ["keyword.operator","="],
+  ["keyword.operator.separator","="],
   ["string","\"id\""],
   ["text"," "],
   ["entity.other.attribute-name","value"],
-  ["keyword.operator","="],
+  ["keyword.operator.separator","="],
   ["string","\"C/C++\""],
-  ["meta.tag.r",">"],
+  ["punctuation.meta.tag.end",">"],
   ["text"," C/C++"],
-  ["meta.tag","<"],
-  ["meta.tag.tag-name","BR"],
-  ["meta.tag.r",">"]
+  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.name","BR"],
+  ["punctuation.meta.tag.end",">"]
 ],[
    "start",
   ["text","        "],
-  ["meta.tag","<"],
-  ["meta.tag.tag-name.form","input"],
+  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.name.form","input"],
   ["text"," "],
   ["entity.other.attribute-name","type"],
-  ["keyword.operator","="],
+  ["keyword.operator.separator","="],
   ["string","\"checkbox\""],
   ["text"," "],
   ["entity.other.attribute-name","name"],
-  ["keyword.operator","="],
+  ["keyword.operator.separator","="],
   ["string","\"id\""],
   ["text"," "],
   ["entity.other.attribute-name","value"],
-  ["keyword.operator","="],
+  ["keyword.operator.separator","="],
   ["string","\"PERL\""],
-  ["meta.tag.r",">"],
+  ["punctuation.meta.tag.end",">"],
   ["text"," PERL "],
-  ["meta.tag","<"],
-  ["meta.tag.tag-name","BR"],
-  ["meta.tag.r",">"]
+  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.name","BR"],
+  ["punctuation.meta.tag.end",">"]
 ],[
    "start",
   ["text","        "],
-  ["meta.tag","<"],
-  ["meta.tag.tag-name.form","input"],
+  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.name.form","input"],
   ["text"," "],
   ["entity.other.attribute-name","type"],
-  ["keyword.operator","="],
+  ["keyword.operator.separator","="],
   ["string","\"submit\""],
   ["text"," "],
   ["entity.other.attribute-name","value"],
-  ["keyword.operator","="],
+  ["keyword.operator.separator","="],
   ["string","\"Submit\""],
-  ["meta.tag.r",">"]
+  ["punctuation.meta.tag.end",">"]
 ],[
    "start",
   ["text","    "],
-  ["meta.tag","</"],
-  ["meta.tag.tag-name.form","form"],
-  ["meta.tag.r",">"]
+  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.name.form","form"],
+  ["punctuation.meta.tag.end",">"]
 ],[
    "start"
 ],[
@@ -424,12 +424,12 @@
   ["meta.tag","%>"]
 ],[
    "start",
-  ["meta.tag","</"],
-  ["meta.tag.tag-name","body"],
-  ["meta.tag.r",">"]
+  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.name","body"],
+  ["punctuation.meta.tag.end",">"]
 ],[
    "start",
-  ["meta.tag","</"],
-  ["meta.tag.tag-name","html"],
-  ["meta.tag.r",">"]
+  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.name","html"],
+  ["punctuation.meta.tag.end",">"]
 ]]

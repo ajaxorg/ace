@@ -1,5 +1,178 @@
 [[
    "start",
+  ["punctuation.doctype.begin","<!"],
+  ["keyword.doctype","DOCTYPE"],
+  ["text"," html"],
+  ["punctuation.doctype.end",">"]
+],[
+   "start",
+  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.name","html"],
+  ["punctuation.meta.tag.end",">"]
+],[
+   "start",
+  ["text","    "],
+  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.name","head"],
+  ["punctuation.meta.tag.end",">"]
+],[
+   "start",
+  ["text","        "],
+  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.name","title"],
+  ["punctuation.meta.tag.end",">"],
+  ["text","My Webpage"],
+  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.name","title"],
+  ["punctuation.meta.tag.end",">"]
+],[
+   "start",
+  ["text","    "],
+  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.name","head"],
+  ["punctuation.meta.tag.end",">"]
+],[
+   "start",
+  ["text","    "],
+  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.name","body"],
+  ["punctuation.meta.tag.end",">"]
+],[
+   "start",
+  ["text","        "],
+  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.name","ul"],
+  ["text"," "],
+  ["entity.other.attribute-name","id"],
+  ["keyword.operator.separator","="],
+  ["string","\"navigation\""],
+  ["punctuation.meta.tag.end",">"]
+],[
+   "start",
+  ["text","        "],
+  ["meta.tag.twig","{%"],
+  ["text"," "],
+  ["keyword.control.twig","for"],
+  ["text"," "],
+  ["identifier","item"],
+  ["text"," "],
+  ["keyword.operator.twig","in"],
+  ["text"," "],
+  ["identifier","navigation"],
+  ["text"," "],
+  ["meta.tag.twig","%}"]
+],[
+   "start",
+  ["text","            "],
+  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.name","li"],
+  ["punctuation.meta.tag.end",">"],
+  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.name.anchor","a"],
+  ["text"," "],
+  ["entity.other.attribute-name","href"],
+  ["keyword.operator.separator","="],
+  ["string","\""],
+  ["variable.other.readwrite.local.twig","{{"],
+  ["text"," "],
+  ["identifier","item"],
+  ["punctuation.operator","."],
+  ["identifier","href"],
+  ["keyword.operator.other","|"],
+  ["support.function.twig","escape"],
+  ["text"," "],
+  ["variable.other.readwrite.local.twig","}}"],
+  ["string","\""],
+  ["punctuation.meta.tag.end",">"],
+  ["variable.other.readwrite.local.twig","{{"],
+  ["text"," "],
+  ["identifier","item"],
+  ["punctuation.operator","."],
+  ["identifier","caption"],
+  ["text"," "],
+  ["variable.other.readwrite.local.twig","}}"],
+  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.name.anchor","a"],
+  ["punctuation.meta.tag.end",">"],
+  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.name","li"],
+  ["punctuation.meta.tag.end",">"]
+],[
+   "start",
+  ["text","        "],
+  ["meta.tag.twig","{%"],
+  ["text"," "],
+  ["keyword.control.twig","endfor"],
+  ["text"," "],
+  ["meta.tag.twig","%}"]
+],[
+   "start",
+  ["text","        "],
+  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.name","ul"],
+  ["punctuation.meta.tag.end",">"]
+],[
+   "start"
+],[
+   "start",
+  ["text","        "],
+  ["meta.tag.twig","{%"],
+  ["text"," "],
+  ["keyword.control.twig","if"],
+  ["text"," "],
+  ["constant.numeric","1"],
+  ["text"," "],
+  ["keyword.operator.twig","not"],
+  ["text"," "],
+  ["keyword.operator.twig","in"],
+  ["text"," "],
+  ["paren.lparen","["],
+  ["constant.numeric","1"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["constant.numeric","2"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["constant.numeric","3"],
+  ["paren.rparen","]"],
+  ["text"," "],
+  ["meta.tag.twig","%}"]
+],[
+   "start"
+],[
+   "start",
+  ["text","        "],
+  ["comment.block.twig","{# is equivalent to #}"]
+],[
+   "start",
+  ["text","        "],
+  ["meta.tag.twig","{%"],
+  ["text"," "],
+  ["keyword.control.twig","if"],
+  ["text"," "],
+  ["keyword.operator.twig","not"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["constant.numeric","1"],
+  ["text"," "],
+  ["keyword.operator.twig","in"],
+  ["text"," "],
+  ["paren.lparen","["],
+  ["constant.numeric","1"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["constant.numeric","2"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["constant.numeric","3"],
+  ["paren.rparen","])"],
+  ["text"," "],
+  ["meta.tag.twig","%}"]
+],[
+   "start"
+],[
+   "start",
+  ["text","        "],
   ["meta.tag.twig","{%"],
   ["text"," "],
   ["keyword.control.twig","autoescape"],
@@ -9,7 +182,7 @@
   ["meta.tag.twig","%}"]
 ],[
    "start",
-  ["text","    "],
+  ["text","            "],
   ["variable.other.readwrite.local.twig","{{"],
   ["text"," "],
   ["identifier","var"],
@@ -17,7 +190,7 @@
   ["variable.other.readwrite.local.twig","}}"]
 ],[
    "start",
-  ["text","    "],
+  ["text","            "],
   ["variable.other.readwrite.local.twig","{{"],
   ["text"," "],
   ["identifier","var"],
@@ -29,7 +202,7 @@
   ["comment.block.twig","{# var won't be escaped #}"]
 ],[
    "start",
-  ["text","    "],
+  ["text","            "],
   ["variable.other.readwrite.local.twig","{{"],
   ["text"," "],
   ["identifier","var"],
@@ -41,6 +214,7 @@
   ["comment.block.twig","{# var won't be doubled-escaped #}"]
 ],[
    "start",
+  ["text","        "],
   ["meta.tag.twig","{%"],
   ["text"," "],
   ["keyword.control.twig","endautoescape"],
@@ -50,6 +224,7 @@
    "start"
 ],[
    "start",
+  ["text","        "],
   ["variable.other.readwrite.local.twig","{{"],
   ["text"," "],
   ["keyword.control.twig","include"],
@@ -69,6 +244,7 @@
    "start"
 ],[
    "start",
+  ["text","        "],
   ["variable.other.readwrite.local.twig","{{"],
   ["string","\"string "],
   ["constant.language.escape","#{with}"],
@@ -79,4 +255,33 @@
   ["string","'another#one'"],
   ["text"," "],
   ["variable.other.readwrite.local.twig","}}"]
+],[
+   "start",
+  ["text","        "],
+  ["punctuation.meta.tag.begin","<"],
+  ["meta.tag.name","h1"],
+  ["punctuation.meta.tag.end",">"],
+  ["text","My Webpage"],
+  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.name","h1"],
+  ["punctuation.meta.tag.end",">"]
+],[
+   "start",
+  ["text","        "],
+  ["variable.other.readwrite.local.twig","{{"],
+  ["text"," "],
+  ["identifier","a_variable"],
+  ["text"," "],
+  ["variable.other.readwrite.local.twig","}}"]
+],[
+   "start",
+  ["text","    "],
+  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.name","body"],
+  ["punctuation.meta.tag.end",">"]
+],[
+   "start",
+  ["punctuation.meta.tag.begin","</"],
+  ["meta.tag.name","html"],
+  ["punctuation.meta.tag.end",">"]
 ]]
