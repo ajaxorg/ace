@@ -83,7 +83,7 @@ console.log(addResult);
                                 </div>
                             <p id="embed_link"><a href="#nav=embedding">Learn how to embed this in your own site</a></p>
                             <p class="highlight_note">Looking for a more full-featured demo? Check out the
-                                <a href="http://ace.ajax.org/build/kitchen-sink.html" target="_blank">kitchen sink</a>.
+                                <a href="build/kitchen-sink.html" target="_blank">kitchen sink</a>.
                             </p>
                             <h2>Features</h2>
                             <ul class="content-list">
@@ -311,7 +311,7 @@ editor.replace('bar');</code></pre>
                             <h1>Creating a Syntax Highlighter for Ace</h1>
                             <p>Creating a new syntax highlighter for Ace is extremly simple. You'll need to define two pieces of code: a new mode, and a new set of highlighting rules.</p>
                             <h2 id="where-to-start"><a class="heading_anchor" href="#where-to-start"><i class="headerLinkIcon"></i></a>Where to Start</h2>
-                            <p>We recommend using the the <a href="http://ace.ajax.org/tool/mode_creator.html">Ace Mode Creator</a> when defining your highlighter. This allows you to inspect your code's tokens, as well as providing a live preview of the syntax highlighter in action.</p>
+                            <p>We recommend using the the <a href="tool/mode_creator.html">Ace Mode Creator</a> when defining your highlighter. This allows you to inspect your code's tokens, as well as providing a live preview of the syntax highlighter in action.</p>
                             <h2 id="defining-a-mode"><a class="heading_anchor" href="#defining-a-mode"><i class="headerLinkIcon"></i></a>Defining a Mode</h2>
                             <p>Every language needs a mode. A mode contains the paths to a language's syntax highlighting rules, indentation rules, and code folding rules. Without defining a mode, Ace won't know anything about the finer aspects of your language.</p>
                             <p>Here is the starter template we'll use to create a new mode:</p>
@@ -615,7 +615,7 @@ oop.inherits(FoldMode, BaseFoldMode);
                             <p>Just like with <code>TextMode</code> for syntax highlighting, <code>BaseFoldMode</code> contains the starting point for code folding logic. <code>foldingStartMarker</code> defines your opening folding point, while <code>foldingStopMarker</code> defines the stopping point. For example, for a C-style folding system, these values might look like this:</p>
                             <pre><code class="language-javascript"><span class="keyword">this</span>.foldingStartMarker = <span class="regexp">/(\{|\[)[^\}\]]*$|^\s*(\/\*)/</span>;
 <span class="keyword">this</span>.foldingStopMarker = <span class="regexp">/^[^\[\{]*(\}|\])|^[\s\*]*(\*\/)/</span>;</code></pre>
-                            <p>These regular expressions identify various symbols--<code>{</code>, <code>[</code>, <code>//</code>--to pay attention to. <code>getFoldWidgetRange</code> matches on these regular expressions, and when found, returns the range of relevant folding points. For more information on the <code>Range</code> object, see <a href="http://ace.ajax.org/#nav=api&amp;api=range">the Ace API documentation</a>.</p>
+                            <p>These regular expressions identify various symbols--<code>{</code>, <code>[</code>, <code>//</code>--to pay attention to. <code>getFoldWidgetRange</code> matches on these regular expressions, and when found, returns the range of relevant folding points. For more information on the <code>Range</code> object, see <a href="#nav=api&amp;api=range">the Ace API documentation</a>.</p>
                             <p>Again, for a C-style folding mechanism, a range to return for the starting fold might look like this:</p>
                             <pre><code class="language-javascript"><span class="keyword">var</span> line = session.getLine(row);
 <span class="keyword">var</span> match = line.match(<span class="keyword">this</span>.foldingStartMarker);
@@ -637,7 +637,7 @@ oop.inherits(FoldMode, BaseFoldMode);
   endColumn: 13
 }</code></pre>
                             <h2>Testing Your Highlighter</h2>
-                            <p>The best way to test your tokenizer is to see it live, right? To do that, you&#39;ll want to modify the <a href="http://ace.ajax.org/build/kitchen-sink.html">live Ace demo</a> to preview your changes. You can find this file in the root Ace directory with the name <em>kitchen-sink.html</em>.</p>
+                            <p>The best way to test your tokenizer is to see it live, right? To do that, you&#39;ll want to modify the <a href="build/kitchen-sink.html">live Ace demo</a> to preview your changes. You can find this file in the root Ace directory with the name <em>kitchen-sink.html</em>.</p>
                             <p>The file that defines the behavior for this live demo is defined in <em>demo/kitchen-sink/demo.js</em>. You&#39;ll want to add lines to two separate objects:</p>
                             <ol>
                                 <li>
