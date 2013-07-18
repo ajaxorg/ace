@@ -44,8 +44,9 @@
 ],[
    "start",
   ["punctuation.doctype.begin","<!"],
-  ["keyword.doctype","DOCTYPE"],
-  ["text"," html"],
+  ["meta.tag.doctype","DOCTYPE"],
+  ["text"," "],
+  ["xml-pe","html"],
   ["punctuation.doctype.end",">"]
 ],[
    "start",

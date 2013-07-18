@@ -2,8 +2,12 @@
    "doctype",
   ["text","﻿"],
   ["punctuation.doctype.begin","<!"],
-  ["keyword.doctype","DOCTYPE"],
-  ["text"," html PUBLIC "],
+  ["meta.tag.doctype","DOCTYPE"],
+  ["text"," "],
+  ["xml-pe","html"],
+  ["text"," "],
+  ["xml-pe","PUBLIC"],
+  ["text"," "],
   ["string","\"-//W3C//DTD XHTML 1.0 Strict//EN\""]
 ],[
    "start",
