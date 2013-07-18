@@ -23,6 +23,32 @@ var deps = [{
 			"(function (root, name, factory) {\n   factory(exports)\n}(this, 'luaparse',"
 		)
 	}
+}, {
+	path: "mode/javascript/jshint.js",
+	url: "http://jshint.com/get/jshint-2.1.4.js",
+	needsFixup: true,
+	postProcess: function(src) {
+		src = src.replace(/(\],|\{)((?:\d+|"\w+"):\[)/g, "$1\n$2")
+            .replace(/^(\},)(\{[^{}\[\]]*?\}\])/gm, "$1\n$2")
+            
+        src = src.replace(
+            /"Expected a conditional expression and instead saw an assignment."/g,
+            '"Assignment in conditional expression"'
+        );
+    
+        src = src.replace(/\brequire\(["']|\(require,|\(require\)/g, function(r){
+            return r.replace("require", "req");
+        })
+    
+        src = src.replace(/var defaultMaxListeners = 10;/, function(a) {return a.replace("10", "200")});
+        
+        src = src.replace(/var JSHINT;\s*\(function[\s()]+\{\s*/, "")
+            .replace(/JSHINT = .*\n\s*\}\(\)\);\s*/, "");
+        src += '\n'
+            + 'function req() {return require.apply(this, arguments)}\n'
+            + 'module.exports = req("jshint");\n';
+        return src;
+	}
 }];
 
 var download = function(href, callback) {
@@ -125,73 +151,8 @@ void function(){
 			});
 		});
 	}
-}();
+}//();
 
 
 
 
-var spawn = require("child_process").spawn;
-
-var run = function(cmd, cb) {
-	var proc = spawn("cmd", ["/c " + cmd]);
-
-	proc.stderr.setEncoding("utf8");
-	proc.stderr.on('data', function (data) {
-        // console.error(data);
-	});
-
-	proc.stdout.setEncoding("utf8");
-	proc.stdout.on('data', function (data) {
-        //console.log(data);
-	});
-
-	proc.on('exit', done);
-    proc.on('close', done);
-    function done(code) {
-        if (code !== 0) {
-            console.error(cmd + '::: process exited with code :::' + code);
-        }
-        cb()
-	}
-}
-
-function unquote(str) {
-    return str.replace(/\\(.)/g, function(x, a) {
-        return a == "n" ? "\n" 
-            : a == "t" ? "\t" 
-            : a == "r" ? "\r"
-            : a
-    });
-}
-
-run("npm install jshint", function() {
-    var jshintDist = fs.readFileSync("node_modules/jshint/dist/jshint.js", "utf8");
-    
-    jshintDist = jshintDist.replace(
-        /(require.define.*)Function\(\[([^\]]*?)\],\s*"(.*)"\s*\)/g, 
-        function(a, def, args, content) {
-            return def + "function("+args.replace(/["']/g, "") + ") {\n"
-                + unquote(content)
-                + "\n}";
-        }
-    );
-    jshintDist = jshintDist.replace(
-        /"Expected a conditional expression and instead saw an assignment."/g,
-        '"Assignment in conditional expression"'
-    );
-    
-    jshintDist = jshintDist.replace(/\brequire\(["']|\(require,|\(require\)/g, function(r){
-        return r.replace("require", "req");
-    }).replace(/\brequire\.define(\(|\s*=)/g, function(d){
-        return d.replace("define", "def");
-    });
-    
-    jshintDist = jshintDist.replace(/var defaultMaxListeners = 10;/, function(a) {return a.replace("10", "200")});
-    
-    jshintDist = 'define(function(require, exports, module) {\n'
-        + jshintDist + '\n'
-        + 'function req() {return require.apply(this, arguments)}\n'
-        + 'module.exports = req("/src/stable/jshint.js");\n'
-        +'});';
-    fs.writeFileSync(rootDir + "mode/javascript/jshint.js", jshintDist);
-});
