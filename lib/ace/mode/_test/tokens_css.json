@@ -76,13 +76,13 @@
    "media",
   ["string","@keyframes blink {"]
 ],[
-   "media_ruleset",
+   ["ruleset","media"],
   ["text","    "],
   ["constant","0"],
   ["text","% "],
   ["paren.lparen","{"]
 ],[
-   "media_ruleset",
+   ["ruleset","media"],
   ["text","        "],
   ["support.type","opacity"],
   ["text",": "],
@@ -93,13 +93,13 @@
   ["text","    "],
   ["paren.rparen","}"]
 ],[
-   "media_ruleset",
+   ["ruleset","media"],
   ["text","    "],
   ["constant","40"],
   ["text","% "],
   ["paren.lparen","{"]
 ],[
-   "media_ruleset",
+   ["ruleset","media"],
   ["text","        "],
   ["support.type","opacity"],
   ["text",": "],
@@ -110,14 +110,14 @@
   ["text","    "],
   ["paren.rparen","}"]
 ],[
-   "media_ruleset",
+   ["ruleset","media"],
   ["text","    "],
   ["constant","40"],
   ["variable",".5"],
   ["text","% "],
   ["paren.lparen","{"]
 ],[
-   "media_ruleset",
+   ["ruleset","media"],
   ["text","        "],
   ["support.type","opacity"],
   ["text",": "],
@@ -127,13 +127,13 @@
   ["text","    "],
   ["paren.rparen","}"]
 ],[
-   "media_ruleset",
+   ["ruleset","media"],
   ["text","    "],
   ["constant","100"],
   ["text","% "],
   ["paren.lparen","{"]
 ],[
-   "media_ruleset",
+   ["ruleset","media"],
   ["text","        "],
   ["support.type","opacity"],
   ["text",": "],

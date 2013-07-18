@@ -1,79 +1,79 @@
 [[
    "start",
-  ["meta.tag","<"],
-  ["meta.tag.tag-name","h1"],
-  ["meta.tag.r",">"],
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name","h1"],
+  ["meta.tag.punctuation.end",">"],
   ["text","Listing Books"],
-  ["meta.tag","</"],
-  ["meta.tag.tag-name","h1"],
-  ["meta.tag.r",">"]
+  ["meta.tag.punctuation.begin","</"],
+  ["meta.tag.name","h1"],
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text"," "]
 ],[
    "start",
-  ["meta.tag","<"],
-  ["meta.tag.tag-name.table","table"],
-  ["meta.tag.r",">"]
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name.table","table"],
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","  "],
-  ["meta.tag","<"],
-  ["meta.tag.tag-name.table","tr"],
-  ["meta.tag.r",">"]
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name.table","tr"],
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","    "],
-  ["meta.tag","<"],
-  ["meta.tag.tag-name.table","th"],
-  ["meta.tag.r",">"],
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name.table","th"],
+  ["meta.tag.punctuation.end",">"],
   ["text","Title"],
-  ["meta.tag","</"],
-  ["meta.tag.tag-name.table","th"],
-  ["meta.tag.r",">"]
+  ["meta.tag.punctuation.begin","</"],
+  ["meta.tag.name.table","th"],
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","    "],
-  ["meta.tag","<"],
-  ["meta.tag.tag-name.table","th"],
-  ["meta.tag.r",">"],
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name.table","th"],
+  ["meta.tag.punctuation.end",">"],
   ["text","Summary"],
-  ["meta.tag","</"],
-  ["meta.tag.tag-name.table","th"],
-  ["meta.tag.r",">"]
+  ["meta.tag.punctuation.begin","</"],
+  ["meta.tag.name.table","th"],
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","    "],
-  ["meta.tag","<"],
-  ["meta.tag.tag-name.table","th"],
-  ["meta.tag.r",">"],
-  ["meta.tag","</"],
-  ["meta.tag.tag-name.table","th"],
-  ["meta.tag.r",">"]
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name.table","th"],
+  ["meta.tag.punctuation.end",">"],
+  ["meta.tag.punctuation.begin","</"],
+  ["meta.tag.name.table","th"],
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","    "],
-  ["meta.tag","<"],
-  ["meta.tag.tag-name.table","th"],
-  ["meta.tag.r",">"],
-  ["meta.tag","</"],
-  ["meta.tag.tag-name.table","th"],
-  ["meta.tag.r",">"]
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name.table","th"],
+  ["meta.tag.punctuation.end",">"],
+  ["meta.tag.punctuation.begin","</"],
+  ["meta.tag.name.table","th"],
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","    "],
-  ["meta.tag","<"],
-  ["meta.tag.tag-name.table","th"],
-  ["meta.tag.r",">"],
-  ["meta.tag","</"],
-  ["meta.tag.tag-name.table","th"],
-  ["meta.tag.r",">"]
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name.table","th"],
+  ["meta.tag.punctuation.end",">"],
+  ["meta.tag.punctuation.begin","</"],
+  ["meta.tag.name.table","th"],
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","  "],
-  ["meta.tag","</"],
-  ["meta.tag.tag-name.table","tr"],
-  ["meta.tag.r",">"]
+  ["meta.tag.punctuation.begin","</"],
+  ["meta.tag.name.table","tr"],
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text"," "]
@@ -93,15 +93,15 @@
 ],[
    "start",
   ["text","  "],
-  ["meta.tag","<"],
-  ["meta.tag.tag-name.table","tr"],
-  ["meta.tag.r",">"]
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name.table","tr"],
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","    "],
-  ["meta.tag","<"],
-  ["meta.tag.tag-name.table","td"],
-  ["meta.tag.r",">"],
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name.table","td"],
+  ["meta.tag.punctuation.end",">"],
   ["support.ruby_tag","<%="],
   ["text"," "],
   ["identifier","book"],
@@ -109,15 +109,15 @@
   ["identifier","title"],
   ["text"," "],
   ["support.ruby_tag","%>"],
-  ["meta.tag","</"],
-  ["meta.tag.tag-name.table","td"],
-  ["meta.tag.r",">"]
+  ["meta.tag.punctuation.begin","</"],
+  ["meta.tag.name.table","td"],
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","    "],
-  ["meta.tag","<"],
-  ["meta.tag.tag-name.table","td"],
-  ["meta.tag.r",">"],
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name.table","td"],
+  ["meta.tag.punctuation.end",">"],
   ["support.ruby_tag","<%="],
   ["text"," "],
   ["identifier","book"],
@@ -125,15 +125,15 @@
   ["identifier","content"],
   ["text"," "],
   ["support.ruby_tag","%>"],
-  ["meta.tag","</"],
-  ["meta.tag.tag-name.table","td"],
-  ["meta.tag.r",">"]
+  ["meta.tag.punctuation.begin","</"],
+  ["meta.tag.name.table","td"],
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","    "],
-  ["meta.tag","<"],
-  ["meta.tag.tag-name.table","td"],
-  ["meta.tag.r",">"],
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name.table","td"],
+  ["meta.tag.punctuation.end",">"],
   ["support.ruby_tag","<%="],
   ["text"," "],
   ["support.function","link_to"],
@@ -143,15 +143,15 @@
   ["identifier","book"],
   ["text"," "],
   ["support.ruby_tag","%>"],
-  ["meta.tag","</"],
-  ["meta.tag.tag-name.table","td"],
-  ["meta.tag.r",">"]
+  ["meta.tag.punctuation.begin","</"],
+  ["meta.tag.name.table","td"],
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","    "],
-  ["meta.tag","<"],
-  ["meta.tag.tag-name.table","td"],
-  ["meta.tag.r",">"],
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name.table","td"],
+  ["meta.tag.punctuation.end",">"],
   ["support.ruby_tag","<%="],
   ["text"," "],
   ["support.function","link_to"],
@@ -164,15 +164,15 @@
   ["paren.rparen",")"],
   ["text"," "],
   ["support.ruby_tag","%>"],
-  ["meta.tag","</"],
-  ["meta.tag.tag-name.table","td"],
-  ["meta.tag.r",">"]
+  ["meta.tag.punctuation.begin","</"],
+  ["meta.tag.name.table","td"],
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","    "],
-  ["meta.tag","<"],
-  ["meta.tag.tag-name.table","td"],
-  ["meta.tag.r",">"],
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name.table","td"],
+  ["meta.tag.punctuation.end",">"],
   ["support.ruby_tag","<%="],
   ["text"," "],
   ["support.function","link_to"],
@@ -194,15 +194,15 @@
   ["constant.other.symbol.ruby",":delete"],
   ["text"," "],
   ["support.ruby_tag","%>"],
-  ["meta.tag","</"],
-  ["meta.tag.tag-name.table","td"],
-  ["meta.tag.r",">"]
+  ["meta.tag.punctuation.begin","</"],
+  ["meta.tag.name.table","td"],
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","  "],
-  ["meta.tag","</"],
-  ["meta.tag.tag-name.table","tr"],
-  ["meta.tag.r",">"]
+  ["meta.tag.punctuation.begin","</"],
+  ["meta.tag.name.table","tr"],
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["support.ruby_tag","<%"],
@@ -212,18 +212,18 @@
   ["support.ruby_tag","%>"]
 ],[
    "start",
-  ["meta.tag","</"],
-  ["meta.tag.tag-name.table","table"],
-  ["meta.tag.r",">"]
+  ["meta.tag.punctuation.begin","</"],
+  ["meta.tag.name.table","table"],
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text"," "]
 ],[
    "start",
-  ["meta.tag","<"],
-  ["meta.tag.tag-name","br"],
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name","br"],
   ["text"," "],
-  ["meta.tag.r","/>"]
+  ["meta.tag.punctuation.end","/>"]
 ],[
    "start",
   ["text"," "]

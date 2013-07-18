@@ -1,43 +1,43 @@
 [[
    "start",
-  ["meta.tag","<"],
-  ["meta.tag.tag-name","Juhu"],
-  ["meta.tag.r",">"],
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name","Juhu"],
+  ["meta.tag.punctuation.end",">"],
   ["text","//Juhu Kinners"],
-  ["meta.tag","</"],
-  ["meta.tag.tag-name","Kinners"],
-  ["meta.tag.r",">"]
+  ["meta.tag.punctuation.begin","</"],
+  ["meta.tag.name","Kinners"],
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","test: two tags in the same lines should be in separate tokens\""]
 ],[
    "start",
-  ["meta.tag","<"],
-  ["meta.tag.tag-name","Juhu"],
-  ["meta.tag.r",">"],
-  ["meta.tag","<"],
-  ["meta.tag.tag-name","Kinners"],
-  ["meta.tag.r",">"]
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name","Juhu"],
+  ["meta.tag.punctuation.end",">"],
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name","Kinners"],
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","test: multiline attributes\""]
 ],[
-   "tag_qqstring",
-  ["meta.tag","<"],
-  ["meta.tag.tag-name","copy"],
+   ["qqstring_inner","meta.tag.punctuation.begin"],
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name","copy"],
   ["text"," "],
   ["entity.other.attribute-name","set"],
-  ["keyword.operator","="],
+  ["keyword.operator.separator","="],
   ["string","\"{"]
 ],[
-   "tag_qqstring",
+   ["qqstring_inner","meta.tag.punctuation.begin"],
   ["string","}\""],
   ["text"," "],
   ["entity.other.attribute-name","undo"],
-  ["keyword.operator","="],
+  ["keyword.operator.separator","="],
   ["string","\"{"]
 ],[
    "start",
   ["string","}\""],
-  ["meta.tag.r","/>"]
+  ["meta.tag.punctuation.end","/>"]
 ]]

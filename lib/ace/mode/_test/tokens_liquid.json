@@ -41,13 +41,13 @@
 ],[
    "start",
   ["text","  "],
-  ["meta.tag","<"],
-  ["meta.tag.tag-name","ul"],
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name","ul"],
   ["text"," "],
   ["entity.other.attribute-name","id"],
-  ["keyword.operator","="],
+  ["keyword.operator.separator","="],
   ["string","\"products\""],
-  ["meta.tag.r",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","    "],
@@ -65,15 +65,15 @@
 ],[
    "start",
   ["text","      "],
-  ["meta.tag","<"],
-  ["meta.tag.tag-name","li"],
-  ["meta.tag.r",">"]
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name","li"],
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","        "],
-  ["meta.tag","<"],
-  ["meta.tag.tag-name","h2"],
-  ["meta.tag.r",">"],
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name","h2"],
+  ["meta.tag.punctuation.end",">"],
   ["variable","{{"],
   ["text"," "],
   ["identifier","product"],
@@ -81,9 +81,9 @@
   ["identifier","title"],
   ["text"," "],
   ["variable","}}"],
-  ["meta.tag","</"],
-  ["meta.tag.tag-name","h2"],
-  ["meta.tag.r",">"]
+  ["meta.tag.punctuation.begin","</"],
+  ["meta.tag.name","h2"],
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","        Only "],
@@ -101,9 +101,9 @@
 ],[
    "start",
   ["text","        "],
-  ["meta.tag","<"],
-  ["meta.tag.tag-name","p"],
-  ["meta.tag.r",">"],
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name","p"],
+  ["meta.tag.punctuation.end",">"],
   ["variable","{{"],
   ["text"," "],
   ["identifier","product"],
@@ -117,17 +117,17 @@
   ["constant.numeric","200"],
   ["text","  "],
   ["variable","}}"],
-  ["meta.tag","</"],
-  ["meta.tag.tag-name","p"],
-  ["meta.tag.r",">"]
+  ["meta.tag.punctuation.begin","</"],
+  ["meta.tag.name","p"],
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start"
 ],[
    "start",
   ["text","      "],
-  ["meta.tag","</"],
-  ["meta.tag.tag-name","li"],
-  ["meta.tag.r",">"]
+  ["meta.tag.punctuation.begin","</"],
+  ["meta.tag.name","li"],
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","    "],
@@ -139,9 +139,9 @@
 ],[
    "start",
   ["text","  "],
-  ["meta.tag","</"],
-  ["meta.tag.tag-name","ul"],
-  ["meta.tag.r",">"]
+  ["meta.tag.punctuation.begin","</"],
+  ["meta.tag.name","ul"],
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start"
 ],[
@@ -153,18 +153,18 @@
    "start"
 ],[
    "start",
-  ["meta.tag","<"],
-  ["meta.tag.tag-name","h2"],
-  ["meta.tag.r",">"],
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name","h2"],
+  ["meta.tag.punctuation.end",">"],
   ["text","Filters"],
-  ["meta.tag","</"],
-  ["meta.tag.tag-name","h2"],
-  ["meta.tag.r",">"]
+  ["meta.tag.punctuation.begin","</"],
+  ["meta.tag.name","h2"],
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
-  ["meta.tag","<"],
-  ["meta.tag.tag-name","p"],
-  ["meta.tag.r",">"],
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name","p"],
+  ["meta.tag.punctuation.end",">"],
   ["text"," The word \"tobi\" in uppercase: "],
   ["variable","{{"],
   ["text"," "],
@@ -174,14 +174,14 @@
   ["text"," "],
   ["variable","}}"],
   ["text"," "],
-  ["meta.tag","</"],
-  ["meta.tag.tag-name","p"],
-  ["meta.tag.r",">"]
+  ["meta.tag.punctuation.begin","</"],
+  ["meta.tag.name","p"],
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
-  ["meta.tag","<"],
-  ["meta.tag.tag-name","p"],
-  ["meta.tag.r",">"],
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name","p"],
+  ["meta.tag.punctuation.end",">"],
   ["text","The word \"tobi\" has "],
   ["variable","{{"],
   ["text"," "],
@@ -191,14 +191,14 @@
   ["text"," "],
   ["variable","}}"],
   ["text"," letters! "],
-  ["meta.tag","</"],
-  ["meta.tag.tag-name","p"],
-  ["meta.tag.r",">"]
+  ["meta.tag.punctuation.begin","</"],
+  ["meta.tag.name","p"],
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
-  ["meta.tag","<"],
-  ["meta.tag.tag-name","p"],
-  ["meta.tag.r",">"],
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name","p"],
+  ["meta.tag.punctuation.end",">"],
   ["text","Change \"Hello world\" to \"Hi world\": "],
   ["variable","{{"],
   ["text"," "],
@@ -212,14 +212,14 @@
   ["text"," "],
   ["variable","}}"],
   ["text"," "],
-  ["meta.tag","</"],
-  ["meta.tag.tag-name","p"],
-  ["meta.tag.r",">"]
+  ["meta.tag.punctuation.begin","</"],
+  ["meta.tag.name","p"],
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
-  ["meta.tag","<"],
-  ["meta.tag.tag-name","p"],
-  ["meta.tag.r",">"],
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name","p"],
+  ["meta.tag.punctuation.end",">"],
   ["text","The date today is "],
   ["variable","{{"],
   ["text"," "],
@@ -231,27 +231,27 @@
   ["text"," "],
   ["variable","}}"],
   ["text"," "],
-  ["meta.tag","</"],
-  ["meta.tag.tag-name","p"],
-  ["meta.tag.r",">"]
+  ["meta.tag.punctuation.begin","</"],
+  ["meta.tag.name","p"],
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start"
 ],[
    "start"
 ],[
    "start",
-  ["meta.tag","<"],
-  ["meta.tag.tag-name","h2"],
-  ["meta.tag.r",">"],
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name","h2"],
+  ["meta.tag.punctuation.end",">"],
   ["text","If"],
-  ["meta.tag","</"],
-  ["meta.tag.tag-name","h2"],
-  ["meta.tag.r",">"]
+  ["meta.tag.punctuation.begin","</"],
+  ["meta.tag.name","h2"],
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
-  ["meta.tag","<"],
-  ["meta.tag.tag-name","p"],
-  ["meta.tag.r",">"]
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name","p"],
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","  "],
@@ -292,27 +292,27 @@
   ["variable","%}"]
 ],[
    "start",
-  ["meta.tag","</"],
-  ["meta.tag.tag-name","p"],
-  ["meta.tag.r",">"]
+  ["meta.tag.punctuation.begin","</"],
+  ["meta.tag.name","p"],
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start"
 ],[
    "start"
 ],[
    "start",
-  ["meta.tag","<"],
-  ["meta.tag.tag-name","h2"],
-  ["meta.tag.r",">"],
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name","h2"],
+  ["meta.tag.punctuation.end",">"],
   ["text","Case"],
-  ["meta.tag","</"],
-  ["meta.tag.tag-name","h2"],
-  ["meta.tag.r",">"]
+  ["meta.tag.punctuation.begin","</"],
+  ["meta.tag.name","h2"],
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
-  ["meta.tag","<"],
-  ["meta.tag.tag-name","p"],
-  ["meta.tag.r",">"]
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name","p"],
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","  "],
@@ -392,27 +392,27 @@
   ["variable","%}"]
 ],[
    "start",
-  ["meta.tag","</"],
-  ["meta.tag.tag-name","p"],
-  ["meta.tag.r",">"]
+  ["meta.tag.punctuation.begin","</"],
+  ["meta.tag.name","p"],
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start"
 ],[
    "start"
 ],[
    "start",
-  ["meta.tag","<"],
-  ["meta.tag.tag-name","h2"],
-  ["meta.tag.r",">"],
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name","h2"],
+  ["meta.tag.punctuation.end",">"],
   ["text","For Loops"],
-  ["meta.tag","</"],
-  ["meta.tag.tag-name","h2"],
-  ["meta.tag.r",">"]
+  ["meta.tag.punctuation.begin","</"],
+  ["meta.tag.name","h2"],
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
-  ["meta.tag","<"],
-  ["meta.tag.tag-name","p"],
-  ["meta.tag.r",">"]
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name","p"],
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","  "],
@@ -446,27 +446,27 @@
   ["variable","%}"]
 ],[
    "start",
-  ["meta.tag","</"],
-  ["meta.tag.tag-name","p"],
-  ["meta.tag.r",">"]
+  ["meta.tag.punctuation.begin","</"],
+  ["meta.tag.name","p"],
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start"
 ],[
    "start"
 ],[
    "start",
-  ["meta.tag","<"],
-  ["meta.tag.tag-name","h2"],
-  ["meta.tag.r",">"],
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name","h2"],
+  ["meta.tag.punctuation.end",">"],
   ["text","Tables"],
-  ["meta.tag","</"],
-  ["meta.tag.tag-name","h2"],
-  ["meta.tag.r",">"]
+  ["meta.tag.punctuation.begin","</"],
+  ["meta.tag.name","h2"],
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
-  ["meta.tag","<"],
-  ["meta.tag.tag-name","p"],
-  ["meta.tag.r",">"]
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name","p"],
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","  "],
@@ -543,9 +543,9 @@
   ["variable","%}"]
 ],[
    "start",
-  ["meta.tag","</"],
-  ["meta.tag.tag-name","p"],
-  ["meta.tag.r",">"]
+  ["meta.tag.punctuation.begin","</"],
+  ["meta.tag.name","p"],
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start"
 ]]

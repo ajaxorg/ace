@@ -1,11 +1,11 @@
 [[
-   "comment",
+   "vm_comment",
   ["comment.block","#*"]
 ],[
-   "comment",
+   "vm_comment",
   ["comment","  This is a sample comment block that"]
 ],[
-   "comment",
+   "vm_comment",
   ["comment","  spans multiple lines."]
 ],[
    "start",
@@ -26,15 +26,15 @@
 ],[
    "start",
   ["text","  "],
-  ["meta.tag","<"],
-  ["meta.tag.tag-name","li"],
-  ["meta.tag.r",">"],
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name","li"],
+  ["meta.tag.punctuation.end",">"],
   ["variable","${"],
   ["identifier","item"],
   ["variable","}"],
-  ["meta.tag","</"],
-  ["meta.tag.tag-name","li"],
-  ["meta.tag.r",">"]
+  ["meta.tag.punctuation.begin","</"],
+  ["meta.tag.name","li"],
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["keyword","#end"]
@@ -68,9 +68,9 @@
    "start"
 ],[
    "start",
-  ["meta.tag","<"],
-  ["meta.tag.tag-name","ul"],
-  ["meta.tag.r",">"]
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name","ul"],
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","  "],
@@ -128,16 +128,16 @@
   ["keyword","#end"]
 ],[
    "start",
-  ["meta.tag","</"],
-  ["meta.tag.tag-name","ul"],
-  ["meta.tag.r",">"]
+  ["meta.tag.punctuation.begin","</"],
+  ["meta.tag.name","ul"],
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start"
 ],[
    "js-start",
-  ["meta.tag","<"],
-  ["meta.tag.tag-name","script"],
-  ["meta.tag.r",">"]
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name.script","script"],
+  ["meta.tag.punctuation.end",">"]
 ],[
    "js-comment_regex_allowed",
   ["text","  "],
@@ -216,37 +216,37 @@
   ["paren.rparen","}"]
 ],[
    "start",
-  ["meta.tag","</"],
-  ["meta.tag.tag-name","script"],
-  ["meta.tag.r",">"]
+  ["meta.tag.punctuation.begin","</"],
+  ["meta.tag.name.script","script"],
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start"
 ],[
    "css-start",
-  ["meta.tag","<"],
-  ["meta.tag.tag-name","style"],
-  ["meta.tag.r",">"]
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name.style","style"],
+  ["meta.tag.punctuation.end",">"]
 ],[
-   "css-comment",
+   ["css-comment","css-start"],
   ["text","  "],
   ["comment","/*"]
 ],[
-   "css-comment",
+   ["css-comment","css-start"],
   ["comment","    A sample style to decomstrate"]
 ],[
-   "css-comment",
+   ["css-comment","css-start"],
   ["comment","    CSS highlighting and folding."]
 ],[
    "css-start",
   ["comment","  */"]
 ],[
-   "css-ruleset",
+   ["css-ruleset","css-start"],
   ["text","  "],
   ["variable",".class"],
   ["text"," "],
   ["paren.lparen","{"]
 ],[
-   "css-ruleset",
+   ["css-ruleset","css-start"],
   ["text","    "],
   ["support.type","font-family"],
   ["text",": Monaco, "],
@@ -255,7 +255,7 @@
   ["support.constant.fonts","monospace"],
   ["text",";"]
 ],[
-   "css-ruleset",
+   ["css-ruleset","css-start"],
   ["text","    "],
   ["support.type","font-size"],
   ["text",": "],
@@ -263,7 +263,7 @@
   ["keyword","px"],
   ["text",";"]
 ],[
-   "css-ruleset",
+   ["css-ruleset","css-start"],
   ["text","    "],
   ["support.type","cursor"],
   ["text",": "],
@@ -275,7 +275,7 @@
   ["paren.rparen","}"]
 ],[
    "start",
-  ["meta.tag","</"],
-  ["meta.tag.tag-name","style"],
-  ["meta.tag.r",">"]
+  ["meta.tag.punctuation.begin","</"],
+  ["meta.tag.name.style","style"],
+  ["meta.tag.punctuation.end",">"]
 ]]

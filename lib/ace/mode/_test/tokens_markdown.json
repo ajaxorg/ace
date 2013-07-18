@@ -81,13 +81,13 @@
 ],[
    "start",
   ["text","in plain text "],
-  ["meta.tag","<"],
-  ["meta.tag.tag-name","b"],
-  ["meta.tag.r",">"],
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name","b"],
+  ["meta.tag.punctuation.end",">"],
   ["text","http://ace.ajaxorg.com"],
-  ["meta.tag","<"],
-  ["meta.tag.tag-name","b"],
-  ["meta.tag.r",">"]
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name","b"],
+  ["meta.tag.punctuation.end",">"]
 ],[
    "allowBlock"
 ],[
