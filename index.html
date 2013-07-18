@@ -3,14 +3,14 @@
     <head profile="http://www.w3.org/2005/10/profile">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <title>Ace - The High Performance Code Editor for the Web</title>
-        <link rel="stylesheet" href="https://yandex.st/highlightjs/7.0/styles/xcode.min.css" />
-        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/css/bootstrap.no-icons.min.css" />
-        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/3.0/css/font-awesome.css" />
+        <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/css/bootstrap.no-icons.min.css" />
+        <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/3.0/css/font-awesome.css" />
         <link href="./api/resources/csses/ace_api.css" rel="stylesheet" type="text/css" />
         <link href="./doc/site/style.css" rel="stylesheet" type="text/css" />
         <link href="./doc/site/images/favicon.ico" rel="icon" type="image/x-icon" />
 
-        <script src="./build/src-min-noconflict/ace.js"></script>
+        <script src="./build/src-noconflict/ace.js"></script>
+        <script src="./build/src-noconflict/ext-static_highlight.js"></script>
     </head>
     <body>
         <a href="http://github.com/ajaxorg/ace">
@@ -240,7 +240,7 @@ editor.getValue(); // or session.getValue</code></pre>
                             <p>Ace only resizes itself on window events. If you resize the editor div in another manner, and need Ace to resize, use the following:</p>
                             <pre><code class="javascript">editor.resize()</code></pre>
                             <h3>Searching</h3>
-                            <pre><code>editor.find('needle',{
+                            <pre><code class="language-javascript">editor.find('needle',{
     backwards: false,
     wrap: false,
     caseSensitive: false,
@@ -280,25 +280,25 @@ editor.findPrevious();</code></pre>
                                 </li>
                             </ul>
                             <p>Here's how you can perform a replace:</p>
-                            <pre><code>editor.find('foo');
+                            <pre><code class="javascript">editor.find('foo');
 editor.replace('bar');</code></pre>
                             <p>And here's a replace all: </p>
-                            <pre><code>editor.replaceAll('bar');</code></pre>
+                            <pre><code class="javascript">editor.replaceAll('bar');</code></pre>
                             <p>(<code>editor.replaceAll</code> uses the needle set earlier by <code>editor.find('needle', ...</code>)</p>
                             <h3>Listening to Events</h3>
                             <p>To listen for an <code>onchange</code>:</p>
-                            <pre><code>editor.getSession().on('change', function(e) {
+                            <pre><code class="javascript">editor.getSession().on('change', function(e) {
     // e.type, etc
 });</code></pre>
                             <p>To listen for an <code>selection</code> change:</p>
-                            <pre><code>editor.getSession().selection.on('changeSelection', function(e) {
+                            <pre><code class="javascript">editor.getSession().selection.on('changeSelection', function(e) {
 });</code></pre>
                             <p>To listen for a <code>cursor</code> change:</p>
-                            <pre><code>editor.getSession().selection.on('changeCursor', function(e) {
+                            <pre><code class="javascript">editor.getSession().selection.on('changeCursor', function(e) {
 });</code></pre>
                             <h3>Adding New Commands and Keybindings</h3>
                             <p>To assign key bindings to a custom function:</p>
-                            <pre><code>editor.commands.addCommand({
+                            <pre><code class="javascript">editor.commands.addCommand({
     name: 'myCommand',
     bindKey: {win: 'Ctrl-M',  mac: 'Command-M'},
     exec: function(editor) {
@@ -315,33 +315,37 @@ editor.replace('bar');</code></pre>
                             <h2 id="defining-a-mode"><a class="heading_anchor" href="#defining-a-mode"><i class="headerLinkIcon"></i></a>Defining a Mode</h2>
                             <p>Every language needs a mode. A mode contains the paths to a language's syntax highlighting rules, indentation rules, and code folding rules. Without defining a mode, Ace won't know anything about the finer aspects of your language.</p>
                             <p>Here is the starter template we'll use to create a new mode:</p>
-                            <pre><code class="language-javascript">define(<span class="keyword">function</span>(require, exports, module) {
-<span class="string">"use strict"</span>;
+                            <pre><code class="language-javascript">define(function(require, exports, module) {
+"use strict";
 
-<span class="keyword">var</span> oop = require(<span class="string">"../lib/oop"</span>);
-<span class="comment">// defines the parent mode</span>
-<span class="keyword">var</span> TextMode = require(<span class="string">"./text"</span>).Mode;
-<span class="keyword">var</span> Tokenizer = require(<span class="string">"../tokenizer"</span>).Tokenizer;
-<span class="keyword">var</span> MatchingBraceOutdent = require(<span class="string">"./matching_brace_outdent"</span>).MatchingBraceOutdent;
+var oop = require("../lib/oop");
+// defines the parent mode
+var TextMode = require("./text").Mode;
+var Tokenizer = require("../tokenizer").Tokenizer;
+var MatchingBraceOutdent = require("./matching_brace_outdent").MatchingBraceOutdent;
 
-<span class="comment">// defines the language specific highlighters and folding rules</span>
-<span class="keyword">var</span> MyNewHighlightRules = require(<span class="string">"./mynew_highlight_rules"</span>).MyNewHighlightRules;
-<span class="keyword">var</span> MyNewFoldMode = require(<span class="string">"./folding/mynew"</span>).MyNewFoldMode;
+// defines the language specific highlighters and folding rules
+var MyNewHighlightRules = require("./mynew_highlight_rules").MyNewHighlightRules;
+var MyNewFoldMode = require("./folding/mynew").MyNewFoldMode;
 
-<span class="keyword">var</span> Mode = <span class="keyword">function</span>() {
-    <span class="comment">// set everything up</span>
-    <span class="keyword">var</span> highlighter = <span class="keyword">new</span> MyNewHighlightRules();
-    <span class="keyword">this</span>.$outdent = <span class="keyword">new</span> MatchingBraceOutdent();
-    <span class="keyword">this</span>.foldingRules = <span class="keyword">new</span> MyNewFoldMode();
+var Mode = function() {
+    // set everything up
+    var highlighter = new MyNewHighlightRules();
+    this.$outdent = new MatchingBraceOutdent();
+    this.foldingRules = new MyNewFoldMode();
 
-    <span class="keyword">this</span>.$tokenizer = <span class="keyword">new</span> Tokenizer(highlighter.getRules());
+    this.$tokenizer = new Tokenizer(highlighter.getRules());
 };
 oop.inherits(Mode, TextMode);
 
-(<span class="keyword">function</span>() {
-    <span class="comment">// Extra logic goes here--we won't be covering all of this</span>
+(function() {
+    // configure comment start/end characters
+    this.lineCommentStart = "//";
+    this.blockComment = {start: "/*", end: "*/"};
+    
+    // Extra logic goes here--we won't be covering all of this
 
-    <span class="comment">/* These are all optional pieces of code!
+    /* These are all optional pieces of code!
     this.getNextLineIndent = function(state, line, tab) {
         var indent = this.$getIndent(line);
         return indent;
@@ -361,7 +365,7 @@ oop.inherits(Mode, TextMode);
 
         return worker;
     };
-    */</span>
+    */
 }).call(Mode.prototype);
 
 exports.Mode = Mode;
@@ -372,22 +376,22 @@ exports.Mode = Mode;
                             <h2 id="defining-syntax-highlighting-rules"><a class="heading_anchor" href="#defining-syntax-highlighting-rules"><i class="headerLinkIcon"></i></a>Defining Syntax Highlighting Rules</h2>
                             <p>The Ace highlighter can be considered to be a state machine. Regular expressions define the tokens for the current state, as well as the transitions into another state. Let's define <em>mynew_highlight_rules.js</em>, which our mode above uses.</p>
                             <p>All syntax highlighters start off looking something like this:</p>
-                            <pre><code class="language-javascript">define(<span class="keyword">function</span>(require, exports, module) {
-<span class="string">"use strict"</span>;
+                            <pre><code class="language-javascript">define(function(require, exports, module) {
+"use strict";
 
-<span class="keyword">var</span> oop = require(<span class="string">"../lib/oop"</span>);
-<span class="keyword">var</span> TextHighlightRules = require(<span class="string">"./text_highlight_rules"</span>).TextHighlightRules;
+var oop = require("../lib/oop");
+var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;
 
-<span class="keyword">var</span> MyNewHighlightRules = <span class="keyword">function</span>() {
+var MyNewHighlightRules = function() {
 
-    <span class="comment">// regexp must not have capturing parentheses. Use (?:) instead.</span>
-    <span class="comment">// regexps are ordered -&gt; the first match is used</span>
-   <span class="keyword">this</span>.$rules = {
-        <span class="string">"start"</span> : [
+    // regexp must not have capturing parentheses. Use (?:) instead.
+    // regexps are ordered -&gt; the first match is used
+   this.$rules = {
+        "start" : [
             {
-                token: <span class="xml"><span class="tag">&lt;<span class="title">token</span>&gt;</span>, // String, Array, or Function: the CSS token to apply
-                regex: <span class="tag">&lt;<span class="title">regex</span>&gt;</span>, // String or RegExp: the regexp to match
-                next:  <span class="tag">&lt;<span class="title">next</span>&gt;</span>   // [Optional] String: next state to enter
+                token: &lt;token&gt;, // String, Array, or Function: the CSS token to apply
+                regex: &lt;regex&gt;, // String or RegExp: the regexp to match
+                next:  &lt;next&gt;   // [Optional] String: next state to enter
             }
         ]
     };
@@ -397,7 +401,7 @@ oop.inherits(MyNewHighlightRules, TextHighlightRules);
 
 exports.MyNewHighlightRules = MyNewHighlightRules;
 
-});</span></code></pre>
+});</code></pre>
                             <p>The token state machine operates on whatever is defined in <code>this.$rules</code>. The highlighter always begins at the <code>start</code> state, and progresses down the list, looking for a matching <code>regex</code>. When one is found, the resulting text is wrapped within a <code>&lt;span class=&quot;ace_&lt;token&gt;&quot;&gt;</code> tag, where <code>&lt;token&gt;</code> is defined as the <code>token</code> property. Note that all tokens are preceded by the <code>ace_</code> prefix when they're rendered on the page.</p>
                             <p>Once again, we're inheriting from <code>TextHighlightRules</code> here. We could choose to make this any other language set we want, if our new language requires previously defined syntaxes. For more information on extending languages, see &quot;<a href="#extending-highlighters">extending Highlighters</a>&quot; below.</p>
                             <h3 id="defining-tokens"><a class="heading_anchor" href="#defining-tokens"><i class="headerLinkIcon"></i></a>Defining Tokens</h3>
@@ -408,81 +412,81 @@ exports.MyNewHighlightRules = MyNewHighlightRules;
                             <p>Regular expressions can either be a RegExp or String definition</p>
                             <p>If you're using a regular expression, remember to start and end the line with the <code>/</code> character, like this:</p>
                             <pre><code class="language-javascript">{
-    token : <span class="string">"constant.language.escape"</span>,
-    regex : <span class="regexp">/\$[\w\d]+/</span>
+    token : "constant.language.escape",
+    regex : /\$[\w\d]+/
 }</code></pre>
                             <p>A caveat of using stringed regular expressions is that any <code>\</code> character must be escaped. That means that even an innocuous regular expression like this:</p>
-                            <pre><code class="language-javascript">regex: <span class="string">"function\s*\(\w+\)"</span></code></pre>
+                            <pre><code class="language-javascript">regex: "function\s*\(\w+\)"</code></pre>
                             <p>Must actually be written like this:</p>
-                            <pre><code class="language-javascript">regex: <span class="string">"function\\s*\(\\w+\)"</span></code></pre>
+                            <pre><code class="language-javascript">regex: "function\\s*\(\\w+\)"</code></pre>
                             <h4 id="groupings"><a class="heading_anchor" href="#groupings"><i class="headerLinkIcon"></i></a>Groupings</h4>
                             <p>You can also include flat regexps--<code>(var)</code>--or have matching groups--<code>((a+)(b+))</code>. There is a strict requirement whereby matching groups <strong>must</strong> cover the entire matched string; thus, <code>(hel)lo</code> is invalid. If you want to create a non-matching group, simply start the group with the <code>?:</code> predicate; thus, <code>(hel)(?:lo)</code> is okay. You can, of course, create longer non-matching groups. For example:</p>
                             <pre><code class="language-javascript">{
-    token : <span class="string">"constant.language.boolean"</span>,
-    regex : <span class="regexp">/(?:true|false)\b/</span>
+    token : "constant.language.boolean",
+    regex : /(?:true|false)\b/
 },</code></pre>
                             <p>For flat regular expression matches, <code>token</code> can be a String, or a Function that takes a single argument (the match) and returns a string token. For example, using a function might look like this:</p>
-                            <pre><code class="language-javascript"><span class="keyword">var</span> colors = lang.arrayToMap(
-    (<span class="string">"aqua|black|blue|fuchsia|gray|green|lime|maroon|navy|olive|orange|"</span> +
-    <span class="string">"purple|red|silver|teal|white|yellow"</span>).split(<span class="string">"|"</span>)
+                            <pre><code class="language-javascript">var colors = lang.arrayToMap(
+    ("aqua|black|blue|fuchsia|gray|green|lime|maroon|navy|olive|orange|" +
+    "purple|red|silver|teal|white|yellow").split("|")
 );
 
-<span class="keyword">var</span> fonts = lang.arrayToMap(
-    (<span class="string">"arial|century|comic|courier|garamond|georgia|helvetica|impact|lucida|"</span> +
-    <span class="string">"symbol|system|tahoma|times|trebuchet|utopia|verdana|webdings|sans-serif|"</span> +
-    <span class="string">"serif|monospace"</span>).split(<span class="string">"|"</span>)
+var fonts = lang.arrayToMap(
+    ("arial|century|comic|courier|garamond|georgia|helvetica|impact|lucida|" +
+    "symbol|system|tahoma|times|trebuchet|utopia|verdana|webdings|sans-serif|" +
+    "serif|monospace").split("|")
 );
 
 ...
 
 {
-    token: <span class="keyword">function</span>(value) {
-        <span class="keyword">if</span> (colors.hasOwnProperty(value.toLowerCase())) {
-            <span class="keyword">return</span> <span class="string">"support.constant.color"</span>;
+    token: function(value) {
+        if (colors.hasOwnProperty(value.toLowerCase())) {
+            return "support.constant.color";
         }
-        <span class="keyword">else</span> <span class="keyword">if</span> (fonts.hasOwnProperty(value.toLowerCase())) {
-            <span class="keyword">return</span> <span class="string">"support.constant.fonts"</span>;
+        else if (fonts.hasOwnProperty(value.toLowerCase())) {
+            return "support.constant.fonts";
         }
-        <span class="keyword">else</span> {
-            <span class="keyword">return</span> <span class="string">"text"</span>;
+        else {
+            return "text";
         }
     },
-    regex: <span class="string">"\\-?[a-zA-Z_][a-zA-Z0-9_\\-]*"</span>
+    regex: "\\-?[a-zA-Z_][a-zA-Z0-9_\\-]*"
 }</code></pre>
                             <p>If <code>token</code> is a function,it should take the same number of arguments as there are groups, and return an array of tokens.</p>
                             <p>For grouped regular expressions, <code>token</code> can be a String, in which case all matched groups are given that same token, like this:</p>
                             <pre><code class="language-javascript">{
-    token: <span class="string">"identifier"</span>,
-    regex: <span class="string">"(\\w+\\s*:)(\\w*)"</span>
+    token: "identifier",
+    regex: "(\\w+\\s*:)(\\w*)"
 }</code></pre>
                             <p>More commonly, though, <code>token</code> is an Array (of the same length as the number of groups), whereby matches are given the token of the same alignment as in the match. For a complicated regular expression, like defining a function, that might look something like this:</p>
                             <pre><code class="language-javascript">{
-    token : [<span class="string">"storage.type"</span>, <span class="string">"text"</span>, <span class="string">"entity.name.function"</span>],
-    regex : <span class="string">"(function)(\\s+)([a-zA-Z_][a-zA-Z0-9_]*\\b)"</span>
+    token : ["storage.type", "text", "entity.name.function"],
+    regex : "(function)(\\s+)([a-zA-Z_][a-zA-Z0-9_]*\\b)"
 }</code></pre>
                             <h2 id="defining-states"><a class="heading_anchor" href="#defining-states"><i class="headerLinkIcon"></i></a>Defining States</h2>
                             <p>The syntax highlighting state machine stays in the <code>start</code> state, until you define a <code>next</code> state for it to advance to. At that point, the tokenizer stays in that new <code>state</code>, until it advances to another state. Afterwards, you should return to the original <code>start</code> state.</p>
                             <p>Here's an example:</p>
-                            <pre><code class="language-javascript"><span class="keyword">this</span>.$rules = {
-    <span class="string">"start"</span> : [ {
-        token : <span class="string">"text"</span>,
-        merge : <span class="literal">true</span>,
-        regex : <span class="string">"&lt;\\!\\[CDATA\\["</span>,
-        next : <span class="string">"cdata"</span>
+                            <pre><code class="language-javascript">this.$rules = {
+    "start" : [ {
+        token : "text",
+        merge : true,
+        regex : "&lt;\\!\\[CDATA\\[",
+        next : "cdata"
     },
 
-    <span class="string">"cdata"</span> : [ {
-        token : <span class="string">"text"</span>,
-        regex : <span class="string">"\\]\\]&gt;"</span>,
-        next : <span class="string">"start"</span>
+    "cdata" : [ {
+        token : "text",
+        regex : "\\]\\]&gt;",
+        next : "start"
     }, {
-        token : <span class="string">"text"</span>,
-        merge : <span class="literal">true</span>,
-        regex : <span class="string">"\\s+"</span>
+        token : "text",
+        merge : true,
+        regex : "\\s+"
     }, {
-        token : <span class="string">"text"</span>,
-        merge : <span class="literal">true</span>,
-        regex : <span class="string">".+"</span>
+        token : "text",
+        merge : true,
+        regex : ".+"
     } ]
 };</code></pre>
                             <p>In this extremly short sample, we're defining some highlighting rules for when Ace detectes a <code>&lt;![CDATA</code> tag. When one is encountered, the tokenizer moves from <code>start</code> into the <code>cdata</code> state. It remains there, applying the <code>text</code> token to any string it encounters. Finally, when it hits a closing <code>]&gt;</code> symbol, it returns to the <code>start</code> state and continues to tokenize anything else.</p>
@@ -510,31 +514,31 @@ exports.MyNewHighlightRules = MyNewHighlightRules;
                             <p>Suppose you&#39;re working on a LuaPage, PHP embedded in HTML, or a Django template. You&#39;ll need to create a syntax highlighter that takes all the rules from the original language (Lua, PHP, or Python) and extends it with some additional identifiers (<code>&lt;?lua</code>, <code>&lt;?php</code>, <code>{%</code>, for example). Ace allows you to easily extend a highlighter using a few helper functions.</p>
                             <h3 id="getting-existing-rules"><a class="heading_anchor" href="#getting-existing-rules"><i class="headerLinkIcon"></i></a>Getting Existing Rules</h3>
                             <p>To get the existing syntax highlighting rules for a particular language, use the <code>getRules()</code> function. For example:</p>
-                            <pre><code class="language-javascript"><span class="keyword">var</span> HtmlHighlightRules = require(<span class="string">"./html_highlight_rules"</span>).HtmlHighlightRules;
+                            <pre><code class="language-javascript">var HtmlHighlightRules = require("./html_highlight_rules").HtmlHighlightRules;
 
-<span class="keyword">this</span>.$rules = <span class="keyword">new</span> HtmlHighlightRules().getRules();
+this.$rules = new HtmlHighlightRules().getRules();
 
-<span class="comment">/*
+/*
     this.$rules == Same this.$rules as HTML highlighting
-*/</span></code></pre>
+*/</code></pre>
                             <h3 id="extending-a-highlighter"><a class="heading_anchor" href="#extending-a-highlighter"><i class="headerLinkIcon"></i></a>Extending a Highlighter</h3>
                             <p>The <code>addRules</code> method does one thing, and it does one thing well: it adds new rules to an existing rule set, and prefixes any state with a given tag. For example, let&#39;s say you&#39;ve got two sets of rules, defined like this:</p>
-                            <pre><code class="language-javascript"><span class="keyword">this</span>.$rules = {
-    <span class="string">"start"</span>: [ <span class="comment">/* ... */</span> ]
+                            <pre><code class="language-javascript">this.$rules = {
+    "start": [ /* ... */ ]
 };
 
-<span class="keyword">var</span> newRules = {
-    <span class="string">"start"</span>: [ <span class="comment">/* ... */</span> ]
+var newRules = {
+    "start": [ /* ... */ ]
 }</code></pre>
                             <p>If you want to incorporate <code>newRules</code> into <code>this.$rules</code>, you&#39;d do something like this:</p>
-                            <pre><code class="language-javascript"><span class="keyword">this</span>.addRules(newRules, <span class="string">"new-"</span>);
+                            <pre><code class="language-javascript">this.addRules(newRules, "new-");
 
-<span class="comment">/*
+/*
     this.$rules = {
         "start": [ ... ],
         "new-start": [ ... ]
     };
-*/</span></code></pre>
+*/</code></pre>
                             <h3 id="extending-two-highlighters"><a class="heading_anchor" href="#extending-two-highlighters"><i class="headerLinkIcon"></i></a>Extending Two Highlighters</h3>
                             <p>The last function available to you combines both of these concepts, and it&#39;s called <code>embedRules</code>. It takes three parameters:</p>
                             <ol>
@@ -544,90 +548,90 @@ exports.MyNewHighlightRules = MyNewHighlightRules;
                             </ol>
                             <p>Like <code>addRules</code>, <code>embedRules</code> adds on to the existing <code>this.$rules</code> object. </p>
                             <p>To explain this visually, let&#39;s take a look at the syntax highlighter for Lua pages, which combines all of these concepts:</p>
-                            <pre><code class="language-javascript"><span class="keyword">var</span> HtmlHighlightRules = require(<span class="string">"./html_highlight_rules"</span>).HtmlHighlightRules;
-<span class="keyword">var</span> LuaHighlightRules = require(<span class="string">"./lua_highlight_rules"</span>).LuaHighlightRules;
+                            <pre><code class="language-javascript">var HtmlHighlightRules = require("./html_highlight_rules").HtmlHighlightRules;
+var LuaHighlightRules = require("./lua_highlight_rules").LuaHighlightRules;
 
-<span class="keyword">var</span> LuaPageHighlightRules = <span class="keyword">function</span>() {
-    <span class="keyword">this</span>.$rules = <span class="keyword">new</span> HtmlHighlightRules().getRules();
+var LuaPageHighlightRules = function() {
+    this.$rules = new HtmlHighlightRules().getRules();
 
-    <span class="keyword">for</span> (<span class="keyword">var</span> i <span class="keyword">in</span> <span class="keyword">this</span>.$rules) {
-        <span class="keyword">this</span>.$rules[i].unshift({
-            token: <span class="string">"keyword"</span>,
-            regex: <span class="string">"&lt;\\%\\=?"</span>,
-            next: <span class="string">"lua-start"</span>
+    for (var i in this.$rules) {
+        this.$rules[i].unshift({
+            token: "keyword",
+            regex: "&lt;\\%\\=?",
+            next: "lua-start"
         }, {
-            token: <span class="string">"keyword"</span>,
-            regex: <span class="string">"&lt;\\?lua\\=?"</span>,
-            next: <span class="string">"lua-start"</span>
+            token: "keyword",
+            regex: "&lt;\\?lua\\=?",
+            next: "lua-start"
         });
     }
-    <span class="keyword">this</span>.embedRules(LuaHighlightRules, <span class="string">"lua-"</span>, [
+    this.embedRules(LuaHighlightRules, "lua-", [
         {
-            token: <span class="string">"keyword"</span>,
-            regex: <span class="string">"\\%&gt;"</span>,
-            next: <span class="string">"start"</span>
+            token: "keyword",
+            regex: "\\%&gt;",
+            next: "start"
         },
         {
-            token: <span class="string">"keyword"</span>,
-            regex: <span class="string">"\\?&gt;"</span>,
-            next: <span class="string">"start"</span>
+            token: "keyword",
+            regex: "\\?&gt;",
+            next: "start"
         }
     ]);
 };</code></pre>
                             <p>Here, <code>this.$rules</code> starts off as a set of HTML highlighting rules. To this set, we add two new checks for <code>&lt;%=</code> and <code>&lt;?lua=</code>. We also delegate that if one of these rules are matched, we should move onto the <code>lua-start</code> state. Next, <code>embedRules</code> takes the already existing set of <code>LuaHighlightRules</code> and applies the <code>lua-</code> prefix to each state there. Finally, it adds two new checks for <code>%&gt;</code> and <code>?&gt;</code>, allowing the state machine to return to <code>start</code>.</p>
                             <h3>Code Folding</h3>
                             <p>Adding new folding rules to your mode can be a little tricky. First, insert the following lines of code into your mode definition:</p>
-                            <pre><code class="language-javascript"><span class="keyword">var</span> MyFoldMode = require(<span class="string">"./folding/newrules"</span>).FoldMode;
+                            <pre><code class="language-javascript">var MyFoldMode = require("./folding/newrules").FoldMode;
 
 ...
-<span class="keyword">var</span> MyMode = <span class="keyword">function</span>() {
+var MyMode = function() {
 
     ...
 
-    <span class="keyword">this</span>.foldingRules = <span class="keyword">new</span> MyFoldMode();
+    this.foldingRules = new MyFoldMode();
 };</code></pre>
                             <p>You&#39;ll be defining your code folding rules into the <em>lib/ace/mode/folding</em> folder. Here&#39;s a template that you can use to get started:</p>
-                            <pre><code class="language-javascript">define(<span class="keyword">function</span>(require, exports, module) {
-<span class="string">"use strict"</span>;
+                            <pre><code class="language-javascript">define(function(require, exports, module) {
+"use strict";
 
-<span class="keyword">var</span> oop = require(<span class="string">"../../lib/oop"</span>);
-<span class="keyword">var</span> Range = require(<span class="string">"../../range"</span>).Range;
-<span class="keyword">var</span> BaseFoldMode = require(<span class="string">"./fold_mode"</span>).FoldMode;
+var oop = require("../../lib/oop");
+var Range = require("../../range").Range;
+var BaseFoldMode = require("./fold_mode").FoldMode;
 
-<span class="keyword">var</span> FoldMode = exports.FoldMode = <span class="keyword">function</span>() {};
+var FoldMode = exports.FoldMode = function() {};
 oop.inherits(FoldMode, BaseFoldMode);
 
-(<span class="keyword">function</span>() {
+(function() {
 
-    <span class="comment">// regular expressions that identify starting and stopping points</span>
-    <span class="keyword">this</span>.foldingStartMarker; 
-    <span class="keyword">this</span>.foldingStopMarker;
+    // regular expressions that identify starting and stopping points
+    this.foldingStartMarker; 
+    this.foldingStopMarker;
 
-    <span class="keyword">this</span>.getFoldWidgetRange = <span class="keyword">function</span>(session, foldStyle, row) {
-        <span class="keyword">var</span> line = session.getLine(row);
+    this.getFoldWidgetRange = function(session, foldStyle, row) {
+        var line = session.getLine(row);
 
-        <span class="comment">// test each line, and return a range of segments to collapse</span>
+        // test each line, and return a range of segments to collapse
     };
 
 }).call(FoldMode.prototype);
 
 });</code></pre>
                             <p>Just like with <code>TextMode</code> for syntax highlighting, <code>BaseFoldMode</code> contains the starting point for code folding logic. <code>foldingStartMarker</code> defines your opening folding point, while <code>foldingStopMarker</code> defines the stopping point. For example, for a C-style folding system, these values might look like this:</p>
-                            <pre><code class="language-javascript"><span class="keyword">this</span>.foldingStartMarker = <span class="regexp">/(\{|\[)[^\}\]]*$|^\s*(\/\*)/</span>;
-<span class="keyword">this</span>.foldingStopMarker = <span class="regexp">/^[^\[\{]*(\}|\])|^[\s\*]*(\*\/)/</span>;</code></pre>
+                            <pre><code class="language-javascript">this.foldingStartMarker = /(\{|\[)[^\}\]]*$|^\s*(\/\*)/;
+this.foldingStopMarker = /^[^\[\{]*(\}|\])|^[\s\*]*(\*\/)/;</code></pre>
                             <p>These regular expressions identify various symbols--<code>{</code>, <code>[</code>, <code>//</code>--to pay attention to. <code>getFoldWidgetRange</code> matches on these regular expressions, and when found, returns the range of relevant folding points. For more information on the <code>Range</code> object, see <a href="#nav=api&amp;api=range">the Ace API documentation</a>.</p>
                             <p>Again, for a C-style folding mechanism, a range to return for the starting fold might look like this:</p>
-                            <pre><code class="language-javascript"><span class="keyword">var</span> line = session.getLine(row);
-<span class="keyword">var</span> match = line.match(<span class="keyword">this</span>.foldingStartMarker);
-<span class="keyword">if</span> (match) {
-    <span class="keyword">var</span> i = match.index;
+                            <pre><code class="language-javascript">var line = session.getLine(row);
+var match = line.match(this.foldingStartMarker);
+if (match) {
+    var i = match.index;
 
-    <span class="keyword">if</span> (match[<span class="number">1</span>])
-        <span class="keyword">return</span> <span class="keyword">this</span>.openingBracketBlock(session, match[<span class="number">1</span>], row, i);
+    if (match[1])
+        return this.openingBracketBlock(session, match[1], row, i);
 
-    <span class="keyword">var</span> range = session.getCommentFoldRange(row, i + match[<span class="number">0</span>].length);
-    range.end.column -= <span class="number">2</span>;
-    <span class="keyword">return</span> range;
+    var range = session.getCommentFoldRange(row, i + match[0].length);
+    range.end.column -= 2;
+    return range;
 }</code></pre>
                             <p>Let&#39;s say we stumble across the code block <code>hello_world() {</code>. Our range object here becomes:</p>
                             <pre><code class="language-json">{
@@ -663,7 +667,7 @@ oop.inherits(FoldMode, BaseFoldMode);
                             </p>
                             <p> Run <code><span style="color:#AA0D91">node</span> <span style="color:#008800">highlight_rules_test.js</span> <span style="color:#000088">-gen</span></code> to preserve current output of your tokenizer in <code>tokens_<span style="color:#AA0D91">&lt;modeName&gt;</span>.json</code>
                             </p>
-                            <p>After this running <code><span style="color:#008800">highlight_rules_test.js</span> <span cstyle="color:#000088">optionalLanguageName</span></code> will compare output of your tokenizer with the correct output you've created.
+                            <p>After this running <code><span style="color:#008800">highlight_rules_test.js</span> <span style="color:#000088">optionalLanguageName</span></code> will compare output of your tokenizer with the correct output you've created.
                             </p>
                             <p>Any files ending with the <em>_test.js</em> suffix are automatically run by Ace&#39;s <a href="http://travis-ci.org/#!/ajaxorg/ace">Travis CI</a> server.</p>
                         </div>
@@ -940,8 +944,11 @@ oop.inherits(FoldMode, BaseFoldMode);
                                     <a href="http://www.debuggex.com">Debuggex</a>
                                 </li>
                                 <li>
-                                    <img src="https://f.cloud.github.com/assets/341801/482936/73044648-b8ad-11e2-8e84-01d12d3a4c9e.png"
-                                        style="position: relative; left: 3px; width: 96px;top: -12px;">
+                                    <div style="position: relative; width: 90px; left: 5px; top: -17px;background:rgb(23,23,23);color:rgb(181,232,83);
+                                        font-family: Monaco, 'Bitstream Vera Sans Mono', 'Lucida Console', Terminal, monospace;
+                                        text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1), 0 0 5px rgba(181, 232, 83, 0.1), 0 0 10px rgba(181, 232, 83, 0.1);
+                                        -webkit-font-smoothing: antialiased;
+                                        font-size: 90px;text-align: center;line-height: 90px;">S</div>
                                     <a href="http://slimtext.org/">Slim Text</a>
                                 </li>
                                 <li>
@@ -1040,6 +1047,16 @@ oop.inherits(FoldMode, BaseFoldMode);
                                     <a href="http://www.andromeda-project.org/index.php">Andromeda</a>
                                 </li>
                                 <li>
+                                    <img src="https://raw.github.com/Gisto/Gisto/master/app/icon.png"
+                                        style="position: relative; width: 96px; left: 2px; top: -21px;">
+                                    <a href="http://www.gistoapp.com/">Gisto</a>
+                                </li>
+                                <li>
+                                    <img src="http://jdoodle.com/static/images/jdoodle.png"
+                                        style="position: relative; width: 122px; left: -3px; top: -12px;">
+                                    <a href="http://jdoodle.com/">JDoodle</a>
+                                </li>
+                                <li>
                                     <a href="https://github.com/Gozala/sky-edit">Sky Edit</a>
                                 </li>
                                 <li>
@@ -1105,9 +1122,8 @@ oop.inherits(FoldMode, BaseFoldMode);
                 </div>
             </div>
         </div>
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-        <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/js/bootstrap.min.js"></script>
-        <script defer src="//yandex.st/highlightjs/7.2/highlight.min.js" onload="hljs.initHighlighting();"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+        <script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/js/bootstrap.min.js"></script>
         <script src="./doc/template/resources/javascripts/bbq.js"></script>
         <script src="./api/resources/javascripts/ux.js"></script>
         <script src="./doc/site/js/main.js"></script>
