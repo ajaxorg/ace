@@ -9,6 +9,29 @@ $(function() {
     editor.session.setMode("ace/mode/javascript");
     editor.session.setMode("ace/mode/javascript");
     embedded_editor.session.setMode("ace/mode/html");
+    
+    ace.config.loadModule("ace/ext/emmet", function() {
+        ace.require("ace/lib/net").loadScript("http://nightwing.github.io/emmet-core/emmet.js", function() {
+            embedded_editor.setOption("enableEmmet", true);
+            editor.setOption("enableEmmet", true);
+        });
+
+        embedded_editor.setOptions({
+            enableSnippets: true,
+            enableBasicAutocompletion: true
+        });
+    });
+    
+    ace.config.loadModule("ace/ext/language_tools", function() {
+        embedded_editor.setOptions({
+            enableSnippets: true,
+            enableBasicAutocompletion: true
+        });
+        editor.setOptions({
+            enableSnippets: true,
+            enableBasicAutocompletion: true
+        });
+    });
 
     embedded_editor.setAutoScrollEditorIntoView(true);
     editor.setAutoScrollEditorIntoView(true);
