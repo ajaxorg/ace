@@ -112,7 +112,7 @@ Or using Node.JS
 
 The editor can then be opened at http://localhost:8888/kitchen-sink.html. 
 
-To open the editor with a file:/// URL see [the wiki](https://github.com/ajaxorg/ace/wiki/Running-Ace-from-a-file:).
+To open the editor with a file:/// URL see [the wiki](https://github.com/ajaxorg/ace/wiki/Running-Ace-from-file).
 
 Building Ace
 -----------
