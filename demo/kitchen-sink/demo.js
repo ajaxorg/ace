@@ -520,10 +520,10 @@ new StatusBar(env.editor, cmdLine.container);
 
 
 var Emmet = require("ace/ext/emmet");
-net.loadScript("https://rawgithub.com/nightwing/emmet-core/master/emmet.js", function() {
+net.loadScript("http://nightwing.github.io/emmet-core/emmet.js", function() {
     Emmet.setCore(window.emmet);
     env.editor.setOption("enableEmmet", true);
-})
+});
 
 
 // require("ace/placeholder").PlaceHolder;
