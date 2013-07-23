@@ -145,11 +145,11 @@ var docs = {
     "docs/assembly_x86.asm": "Assembly_x86",
     "docs/autohotkey.ahk": "AutoHotKey",
     "docs/batchfile.bat": "BatchFile",
-    "docs/erlang/erl": "Erlang",
+    "docs/erlang.erl": "Erlang",
     "docs/forth.frt": "Forth",
     "docs/haskell.hs": "Haskell",
     "docs/julia.js": "Julia",
-    "docs/prolog/plg": "Prolog",
+    "docs/prolog.plg": "Prolog",
     "docs/rust.rs": "Rust",
     "docs/twig.twig": "Twig"
 };
