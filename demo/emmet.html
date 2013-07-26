@@ -2,8 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>Editor</title>
+  <title>ACE Emmet demo</title>
   <style type="text/css" media="screen">
     body {
         overflow: hidden;
@@ -22,22 +21,21 @@
 <body>
 
 <pre id="editor"></pre>
-    
+
+<!-- load ace -->
 <script src="../build/src-noconflict/ace.js"></script>
-<script src="../build/src-noconflict/ext-settings_menu.js"></script>
+<!-- load ace emmet extension -->
+<script src="../build/src-noconflict/ext-emmet.js"></script>
+<!-- load core emmet files -->
+<script src="http://nightwing.github.io/emmet-core/emmet.js"></script>
 <script>
+    // trigger extension
+    ace.require("ace/ext/emmet");
     var editor = ace.edit("editor");
-    ace.require('ace/ext/settings_menu').init(editor);
-    editor.setTheme("ace/theme/twilight");
+    editor.setTheme("ace/theme/tomorrow");
     editor.session.setMode("ace/mode/html");
-	editor.commands.addCommands([{
-		name: "showSettingsMenu",
-		bindKey: {win: "Ctrl-q", mac: "Command-q"},
-		exec: function(editor) {
-			editor.showSettingsMenu();
-		},
-		readOnly: true
-	}]);
+    // enable emmet on the current editor
+    editor.setOption("enableEmmet", true);    
 </script>
 
 <script src="./show_own_source.js"></script>
