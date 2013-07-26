@@ -346,6 +346,21 @@ var buildAce = function(options) {
         dest:   targetDir + '/' + name + ".js"
     });
 
+    console.log('# ace extensions ---------');
+
+    project.assumeAllFilesLoaded();
+    options.extensions.forEach(function(ext) {
+        console.log("extensions " + ext);
+        copy({
+            source: [{
+                project: cloneProject(project),
+                require: [ 'ace/ext/' + ext ]
+            }],
+            filter: getWriteFilters(options, "ext"),
+            dest:   targetDir + "/ext-" + ext + ".js"
+        });
+    });
+
     console.log('# ace modes ---------');
 
     project.assumeAllFilesLoaded();
@@ -377,21 +392,6 @@ var buildAce = function(options) {
             }],
             filter: getWriteFilters(options, "theme"),
             dest:   targetDir + "/theme-" + theme.replace("_theme", "") + ".js"
-        });
-    });
-
-    console.log('# ace extensions ---------');
-
-    project.assumeAllFilesLoaded();
-    options.extensions.forEach(function(ext) {
-        console.log("extensions " + ext);
-        copy({
-            source: [{
-                project: cloneProject(project),
-                require: [ 'ace/ext/' + ext ]
-            }],
-            filter: getWriteFilters(options, "ext"),
-            dest:   targetDir + "/ext-" + ext + ".js"
         });
     });
 
