@@ -75,16 +75,16 @@ $(function() {
     $('.menu-item a').click(magicClickInterceptor);
     $('a.argument').click(magicClickInterceptor);
     
-    $('a.external').click(function(e) {         
+    $('a.external').click(function(e) {
         e.preventDefault();
     });
 
-     var tabs = $("#tabnav"),
-         tab_a_selector = "a";
+    var tabs = $("#tabnav"),
+        tab_a_selector = "a";
 
-     var firstLoad = true;
+    var firstLoad = true;
      
-     tabs.find(tab_a_selector).click(function(e) {         
+    tabs.find(tab_a_selector).click(function(e) {
         e.preventDefault();
         if ($(this).attr("href") === "/") {
             window.location = "http://ace.ajax.org";
@@ -122,13 +122,17 @@ $(function() {
         }
 
         $(this).tab("show");
-        embedded_editor.resize();
-        editor.resize();
 
         var state = {};
         state.nav = $(this).attr("href").substr(1);
         $.bbq.pushState(state);
      });
+
+    $('#tabnav a[data-toggle="tab"]').on('shown', function (e) {
+        $(".tab-content .tab-pane.active .ace_editor").each(function(i, el){
+            el.env.onResize();
+        });
+    });
 
      $(window).on("hashchange", function(e) {
          _gaq.push(['_trackPageview',location.pathname + location.search  + location.hash]);
