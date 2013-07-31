@@ -2,8 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>Editor</title>
+  <title>ACE Autocompletion demo</title>
   <style type="text/css" media="screen">
     body {
         overflow: hidden;
@@ -22,22 +21,22 @@
 <body>
 
 <pre id="editor"></pre>
-    
+
+<!-- load ace -->
 <script src="../build/src-noconflict/ace.js"></script>
-<script src="../build/src-noconflict/ext-settings_menu.js"></script>
+<!-- load ace language tools -->
+<script src="../build/src-noconflict/ext-language_tools.js"></script>
 <script>
+    // trigger extension
+    ace.require("ace/ext/language_tools");
     var editor = ace.edit("editor");
-    ace.require('ace/ext/settings_menu').init(editor);
-    editor.setTheme("ace/theme/twilight");
     editor.session.setMode("ace/mode/html");
-	editor.commands.addCommands([{
-		name: "showSettingsMenu",
-		bindKey: {win: "Ctrl-q", mac: "Command-q"},
-		exec: function(editor) {
-			editor.showSettingsMenu();
-		},
-		readOnly: true
-	}]);
+    editor.setTheme("ace/theme/tomorrow");
+    // enable autocompletion and snippets
+    editor.setOptions({
+        enableBasicAutocompletion: true,
+        enableSnippets: true
+    });
 </script>
 
 <script src="./show_own_source.js"></script>
