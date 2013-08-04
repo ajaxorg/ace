@@ -199,7 +199,31 @@ var commands = env.editor.commands;
 commands.addCommand({
     name: "save",
     bindKey: {win: "Ctrl-S", mac: "Command-S"},
-    exec: function() {alert("Fake Save File");}
+    exec: function(arg) {
+        var session = env.editor.session;
+        name = session.name.match(/[^\/]+$/)
+        localStorage.setItem(
+            "saved_file:" + name,
+            session.getValue()
+        );
+        env.editor.cmdLine.setValue("saved "+ name);
+    }
+});
+
+commands.addCommand({
+    name: "load",
+    bindKey: {win: "Ctrl-O", mac: "Command-O"},
+    exec: function(arg) {
+        var session = env.editor.session;
+        name = session.name.match(/[^\/]+$/)
+        var value = localStorage.getItem("saved_file:" + name);
+        if (typeof value == "string") {
+            session.setValue(value);
+            env.editor.cmdLine.setValue("loaded "+ name);
+        } else {
+            env.editor.cmdLine.setValue("no previuos value saved for "+ name);
+        }
+    }
 });
 
 var keybindings = {    
