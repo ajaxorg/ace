@@ -596,4 +596,7 @@ env.editor.setOptions({
     enableSnippets: true
 });
 
+var beautify = require("ace/ext/beautify");
+env.editor.commands.addCommands(beautify.commands);
+
 });
