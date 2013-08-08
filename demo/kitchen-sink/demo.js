@@ -291,6 +291,7 @@ var showGutterEl = document.getElementById("show_gutter");
 var showPrintMarginEl = document.getElementById("show_print_margin");
 var highlightSelectedWordE = document.getElementById("highlight_selected_word");
 var showHScrollEl = document.getElementById("show_hscroll");
+var showVScrollEl = document.getElementById("show_vscroll");
 var animateScrollEl = document.getElementById("animate_scroll");
 var softTabEl = document.getElementById("soft_tab");
 var behavioursEl = document.getElementById("enable_behaviours");
@@ -453,7 +454,11 @@ bindCheckbox("highlight_selected_word", function(checked) {
 });
 
 bindCheckbox("show_hscroll", function(checked) {
-    env.editor.renderer.setHScrollBarAlwaysVisible(checked);
+    env.editor.setOption("hScrollBarAlwaysVisible", checked);
+});
+
+bindCheckbox("show_vscroll", function(checked) {
+    env.editor.setOption("vScrollBarAlwaysVisible", checked);
 });
 
 bindCheckbox("animate_scroll", function(checked) {
