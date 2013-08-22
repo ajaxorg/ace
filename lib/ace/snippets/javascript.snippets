@@ -10,7 +10,7 @@ snippet fun
 	}
 # Anonymous Function
 regex /((=)\s*|(:)\s*|(\()|\b)/f/(\))?/
-name f
+snippet f
 	function${M1?: ${1:functionName}}($2) {
 		${0:$TM_SELECTED_TEXT}
 	}${M2?;}${M3?,}${M4?)}
@@ -149,7 +149,7 @@ snippet sing
 		return instance;
 	}
 # class
-name class
+snippet class
 regex /^\s*/clas{0,2}/
 	var ${1:class} = function(${20}) {
 		$40$0
