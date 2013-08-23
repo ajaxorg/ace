@@ -490,3 +490,7 @@ img {
     text-align: center;
     text-shadow: 1px 17px 2px gray, 1px 1px 2px gray;
 }
+
+.menu-list>li>img {
+    position: relative;
+}
