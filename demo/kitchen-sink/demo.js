@@ -563,10 +563,79 @@ event.addListener(container, "drop", function(e) {
 });
 
 
+var LineWidgets = require("ace/line_widgets").LineWidgets;
 
+env.editor.commands.addCommand({
+    name: "foo",
+    bindKey: "F2|F3",
+    exec: function(editor) {
+        var Editor = require("ace/editor").Editor
+        var Renderer = require("ace/virtual_renderer").VirtualRenderer
+        var split = env.split
+        var s = editor.session
+        var inlineEditor = new Editor(new Renderer())
+        var splitSession = split.$cloneSession(s)
 
+        var row = editor.getCursorPosition().row
+        if (editor.session.lineWidgets && editor.session.lineWidgets[row]) {
+            editor.session.lineWidgets[row].destroy();
+            return;
+        }
+        
+        
+        var rowCount = 10;
+        
+        var w = {
+            row: row, 
+            rowCount: rowCount, 
+            fixedWidth: true,
+            el: inlineEditor.container,
+            editor: editor
+        };
+        var el = w.el
 
+        if (!editor.session.widgetManager) {
+            editor.session.widgetManager = new LineWidgets(editor.session);
+            editor.session.widgetManager.attach(editor);
+        }
+        
+        var h = rowCount*editor.renderer.layerConfig.lineHeight - 6;
+        el.style.height = h - 4 + "px"
 
+        el.style.position = "absolute"
+        el.style.zIndex = "4"
+        el.style.borderTop = "solid blue 2px"
+        el.style.borderBottom = "solid blue 2px"
+        
+        inlineEditor.setSession(splitSession)
+        editor.session.widgetManager.addLineWidget(w);
+        
+        var kb = {
+            handleKeyboard:function(_,hashId, keyString) {
+                if (hashId == 0 && keyString == "esc") {
+                    w.destroy();
+                    return true;
+                }
+            }
+        }
+        
+        w.destroy = function() {
+            editor.keyBinding.removeKeyboardHandler(kb);
+            s.widgetManager.removeLineWidget(w);
+        }
+        
+        editor.keyBinding.addKeyboardHandler(kb)
+        inlineEditor.keyBinding.addKeyboardHandler(kb)
+        editor.on("changeSession", function(e) {
+            w.el.parentNode && w.el.parentNode.removeChild(w.el)
+        });
+        inlineEditor.setTheme("ace/theme/solarized_light")
+    }
+})
+
+env.editor.commands.addCommand({
+
+})
 
 
 
