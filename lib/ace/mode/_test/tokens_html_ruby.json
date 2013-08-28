@@ -99,6 +99,12 @@
 ],[
    "start",
   ["text","    "],
+  ["comment.start.erb","<%#"],
+  ["comment"," comment "],
+  ["comment.end.erb","%>"]
+],[
+   "start",
+  ["text","    "],
   ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name.table","td"],
   ["meta.tag.punctuation.end",">"],
