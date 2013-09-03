@@ -151,7 +151,8 @@ var docs = {
     "docs/julia.js": "Julia",
     "docs/prolog.plg": "Prolog",
     "docs/rust.rs": "Rust",
-    "docs/twig.twig": "Twig"
+    "docs/twig.twig": "Twig",
+    "docs/Nix.nix": "Nix"
 };
 
 var ownSource = {
