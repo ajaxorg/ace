@@ -278,7 +278,7 @@
     max-width: 500px;
     padding: 4px;
     position: fixed;
-    z-index: 300;
+    z-index: 999999;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
