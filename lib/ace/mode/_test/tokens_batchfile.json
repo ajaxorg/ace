@@ -14,16 +14,12 @@
   ["text"," "],
   ["keyword.command.dosbatch","set"],
   ["text"," var1="],
-  ["markup.list","%"],
-  ["constant.other","cd"],
-  ["markup.list","%"]
+  ["constant.numeric","%cd%"]
 ],[
    "start",
   ["keyword.command.dosbatch","echo"],
   ["text"," unhide everything in "],
-  ["markup.list","%"],
-  ["constant.other","var1"],
-  ["markup.list","%"],
+  ["constant.numeric","%var1%"],
   ["text","!"]
 ],[
    "start"
@@ -46,19 +42,13 @@
    "start",
   ["keyword.command.dosbatch","echo"],
   ["text"," "],
-  ["markup.list","%"],
-  ["constant.other","var1"],
-  ["markup.list","%"],
-  ["constant.numeric","%%G"]
+  ["constant.numeric","%var1%%%G"]
 ],[
    "start",
   ["keyword.command.dosbatch","attrib"],
   ["text"," -r -a -h -s "],
   ["punctuation.definition.string.begin.shell","\""],
-  ["markup.list","%"],
-  ["constant.other","var1"],
-  ["markup.list","%"],
-  ["constant.numeric","%%G"],
+  ["constant.numeric","%var1%%%G"],
   ["punctuation.definition.string.end.shell","\""],
   ["text"," /D /S"]
 ],[
