@@ -600,7 +600,7 @@ env.editSnippets = function() {
     editor.on("blur", function() {
         m.snippetText = editor.getValue();
         snippetManager.unregister(m.snippets);
-        m.snippets = snippetManager.parseSnippetFile(m.snippetText);
+        m.snippets = snippetManager.parseSnippetFile(m.snippetText, m.scope);
         snippetManager.register(m.snippets);
     })
     sp.$editors[0].once("changeMode", function() {
