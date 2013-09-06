@@ -80,10 +80,10 @@
   ["paren.lparen","("],
   ["identifier","n"],
   ["text"," "],
-  ["identifier","int"],
+  ["support.type","int"],
   ["paren.rparen",")"],
   ["text"," "],
-  ["identifier","float64"],
+  ["support.type","float64"],
   ["text"," "],
   ["paren.lparen","{"]
 ],[
@@ -94,11 +94,11 @@
   ["punctuation.operator",":"],
   ["keyword.operator","="],
   ["text"," "],
-  ["identifier","make"],
+  ["support.function","make"],
   ["paren.lparen","("],
   ["keyword","chan"],
   ["text"," "],
-  ["identifier","float64"],
+  ["support.type","float64"],
   ["paren.rparen",")"]
 ],[
    "start",
@@ -134,7 +134,7 @@
   ["identifier","ch"],
   ["punctuation.operator",","],
   ["text"," "],
-  ["identifier","float64"],
+  ["support.type","float64"],
   ["paren.lparen","("],
   ["identifier","k"],
   ["paren.rparen","))"]
@@ -209,12 +209,12 @@
   ["text"," "],
   ["keyword","chan"],
   ["text"," "],
-  ["identifier","float64"],
+  ["support.type","float64"],
   ["punctuation.operator",","],
   ["text"," "],
   ["identifier","k"],
   ["text"," "],
-  ["identifier","float64"],
+  ["support.type","float64"],
   ["paren.rparen",")"],
   ["text"," "],
   ["paren.lparen","{"]
