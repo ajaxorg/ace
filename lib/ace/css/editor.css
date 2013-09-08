@@ -167,6 +167,16 @@
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
+    border-left: 2px solid
+}
+
+.ace_slim-cursors .ace_cursor {
+    border-left-width: 1px;
+}
+
+.ace_overwrite-cursors .ace_cursor {
+    border-left-width: 0px;
+    border-bottom: 1px solid;
 }
 
 .ace_hidden-cursors .ace_cursor {
