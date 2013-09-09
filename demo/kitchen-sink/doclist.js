@@ -125,6 +125,7 @@ var docs = {
     "docs/scss.scss": "SCSS",
     "docs/sass.sass": "SASS",
     "docs/sh.sh": "SH",
+    "docs/space.space": "Space",
     "docs/stylus.styl": "Stylus",
     "docs/sql.sql": {name: "SQL", wrapped: true},
     "docs/svg.svg": "SVG",
