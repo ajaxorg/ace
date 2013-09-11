@@ -140,7 +140,7 @@ var docs = {
     "docs/xquery.xq": "XQuery",
     "docs/yaml.yaml": "YAML",
     "docs/c9search.c9search_results": "C9 Search Results",
-    
+
     "docs/actionscript.as": "ActionScript",
     "docs/assembly_x86.asm": "Assembly_x86",
     "docs/autohotkey.ahk": "AutoHotKey",
@@ -152,7 +152,8 @@ var docs = {
     "docs/prolog.plg": "Prolog",
     "docs/rust.rs": "Rust",
     "docs/twig.twig": "Twig",
-    "docs/Nix.nix": "Nix"
+    "docs/Nix.nix": "Nix",
+    "docs/protobuf.proto": "Protobuf"
 };
 
 var ownSource = {
