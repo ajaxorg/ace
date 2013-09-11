@@ -16,6 +16,7 @@
     top: 0;
     bottom: 0;
     background-color: inherit;
+    z-index: 8;
 }
 
 .ace_content {
