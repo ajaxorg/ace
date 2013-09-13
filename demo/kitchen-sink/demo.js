@@ -88,8 +88,6 @@ split.on("focus", function(editor) {
 });
 env.split = split;
 window.env = env;
-window.ace = env.editor;
-env.editor.setAnimatedScroll(true);
 
 // add multiple cursor support to editor
 require("ace/multi_select").MultiSelect(env.editor);
@@ -617,3 +615,13 @@ env.editor.setOptions({
 })
 
 });
+
+// allow easy access to ace in console, but not in ace code which uses strict
+function isNonStrict() {
+    try { return !!arguments.callee.caller.caller }
+    catch(e){ return false }
+}
+window.__defineGetter__("ace", function(){ return isNonStrict() && env.editor });
+window.__defineGetter__("editor", function(){ return isNonStrict() && env.editor });
+window.__defineGetter__("session", function(){ return isNonStrict() && env.editor.session });
+window.__defineGetter__("split", function(){ return isNonStrict() && env.split });
