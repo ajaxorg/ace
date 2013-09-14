@@ -16,7 +16,6 @@
     top: 0;
     bottom: 0;
     background-color: inherit;
-    z-index: 8;
 }
 
 .ace_content {
@@ -27,12 +26,12 @@
     cursor: text;
 }
 
-.ace_content[draggable="true"] {
-    cursor: default;
+.ace_dragging, .ace_dragging * {
+    cursor: default !important;
 }
 
-.ace_selecting, .ace_selecting .ace_gutter{
-    cursor: text;
+.ace_selecting, .ace_selecting * {
+    cursor: text !important;
 }
 
 .ace_gutter {
