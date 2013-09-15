@@ -5,6 +5,7 @@
     font-size: 12px;
     line-height: normal;
     color: black;
+    -ms-user-select: none;
     -moz-user-select: none;
     -webkit-user-select: none;
     user-select: none;
