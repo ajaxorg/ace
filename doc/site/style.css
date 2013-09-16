@@ -494,3 +494,14 @@ img {
 .menu-list>li>img {
     position: relative;
 }
+
+.rotating-logo {    
+    -webkit-transform: rotate(0deg);
+    -webkit-transition: all 0.5s ease-out;
+    transition: all 0.5s ease-out;
+}
+.rotating-logo:hover {
+    -webkit-transform: rotate(360deg);
+    -webkit-transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out;
+}
