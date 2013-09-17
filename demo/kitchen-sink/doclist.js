@@ -78,6 +78,7 @@ var docs = {
     "docs/dart.dart": "Dart",
     "docs/diff.diff": "Diff",
     "docs/dot.dot": "Dot",
+	"docs/ezhil.n": "Ezhil",
     "docs/freemarker.ftl" : "FreeMarker",
     "docs/glsl.glsl": "Glsl",
     "docs/golang.go": "Go",
