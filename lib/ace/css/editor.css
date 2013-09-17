@@ -31,6 +31,17 @@
     cursor: default !important;
 }
 
+.ace_dragging .ace_scroller:before{
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    content: '';
+    background: rgba(0, 0, 0, 0.01);
+    z-index: 1000;
+}
+
 .ace_selecting, .ace_selecting * {
     cursor: text !important;
 }
