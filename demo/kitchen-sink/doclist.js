@@ -86,6 +86,7 @@ var docs = {
     "docs/Haxe.hx": "haXe",
     "docs/html.html": "HTML",
     "docs/html_ruby.erb": "HTML (Ruby)",
+    "docs/international.md": "International Text",
     "docs/jade.jade": "Jade",
     "docs/java.java": "Java",
     "docs/jsp.jsp": "JSP",
