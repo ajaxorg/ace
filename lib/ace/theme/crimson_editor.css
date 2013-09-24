@@ -20,12 +20,7 @@
 }
 
 .ace-crimson-editor .ace_cursor {
-  border-left: 2px solid black;
-}
-
-.ace-crimson-editor .ace_overwrite-cursors .ace_cursor {
-  border-left: 0px;
-  border-bottom: 1px solid black;
+  color: black;
 }
 
 .ace-crimson-editor .ace_invisible {

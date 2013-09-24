@@ -6,9 +6,12 @@ $(function() {
     editor.container.style.opacity = "";
     embedded_editor = ace.edit("embedded_ace_code");
     embedded_editor.container.style.opacity = "";
-    editor.session.setMode("ace/mode/javascript");
-    editor.session.setMode("ace/mode/javascript");
+    editor.session.setMode("ace/mode/javascript");    
     embedded_editor.session.setMode("ace/mode/html");
+    
+    editor.setOptions({
+        maxLines: 30
+    })
     
     ace.config.loadModule("ace/ext/emmet", function() {
         ace.require("ace/lib/net").loadScript("http://nightwing.github.io/emmet-core/emmet.js", function() {
