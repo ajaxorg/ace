@@ -17,9 +17,10 @@ body {
 }
 
 #logo {
-    padding: 15px;
-    margin-left: 70px;
+    padding: 0;
+    margin: -10px 0 0 37px;
     border: none;
+    height: 145px;
 }
 
 #editor-container {
