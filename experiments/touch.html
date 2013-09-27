@@ -11,8 +11,12 @@
         #main {
             border: solid blue;
             margin:50px;
-            height: 300px;
-			overflow:hidden
+            height: 400px;
+			overflow:hidden;
+            top:0;
+            bottom:0;
+            right:0;
+            left:0;
         }
         #input{
             font-size: 20px
@@ -20,6 +24,13 @@
         #juhu {
             background: -webkit-linear-gradient(-87deg, rgba(200,10,100,0.5), rgba(100,10,200,0.5));
             /*position: absolute*/
+        }
+        #output {
+            border: solid blue;
+            position: absolute;
+            top:0;
+            bottom:0;
+            right:0
         }
     </style>
 </head>
@@ -30,10 +41,10 @@
 <textarea id="input"></textarea>
 <div id="juhu">
   Juhu Kinners<br>
-  Juhu Kinners<br>
-  Juhu Kinners<br>
-  Juhu Kinners<br>
 </div>
+</div>
+<div id="output">
+  Juhu Kinners<br>
 </div>
 
 <script type="text/javascript" charset="utf-8">
@@ -41,41 +52,137 @@
 var juhu = document.getElementById("juhu");
 var el = document.getElementById("main");
 var input = document.getElementById("input");
+var output = document.getElementById("output");
 
-document.body.style.webkitTransformOrigin= "0% 0%";
-document.body.style.webkitTransform = "scale(1.1)";
+input.style.fontSize = "30px"
+
+a = []; for (var i = 500; i--;) a[i] = i;
+juhu.innerHTML = a.join("<br>")//---------1----------2-----------3---------4---------5--------6-------7-------8-------9-------")
+
+//document.body.style.webkitTransformOrigin= "0% 0%";
+//document.body.style.webkitTransform = "scale(1.1)";
+
+var testEditor = !false
+var st = null, m = null, inter, t = 0, vintX = 0, vintY = 0
 
 
-var st = null, m = null, inter
 el.addEventListener("touchstart", function(e) {
-  input.focus() 
-  st = m = conv(e.touches[0],e)
-  
+  testEditor && input.focus() 
+  st0 = st = m = conv(e.touches[0],e)
+  if (ticker) {
+    ticker = clearInterval(ticker)
+    vintX = vmidX
+    vintY = vmidY
+  } else {
+    vintX = 0
+    vintY = 0
+    
+ }
+    vmidX = vmidY = 0
+  vprevX = vX = vprevY = vY = null
+  t = e.timeStamp
   // if (e.touches.length < 2)
-  // e.preventDefault()  
+   e.preventDefault()  
   // inter = setInterval(move, 20)
 })
 el.addEventListener("touchend", function(e) {
-  e.preventDefault()
-  inter = clearInterval(inter)
-
+    e.preventDefault()
+    inter = clearInterval(inter)
+    
+    m = conv(e.changedTouches[0],e)
+    move(m)
+    //if (Math.abs(vmidY) > 0.001 || Math.abs(vmidX) > 0.001) {
+        if (vmidX * vintX > 0 || vmidY * vintY > 0) {
+            k = 0.1 * k
+        } else 
+            k = k0
+        console.log(vmidX, vmidY)
+        //if (Math.abs(vmidX) < 10 * Math.abs(vmidY)) vmidX = 0;
+        //else if (Math.abs(vmidY) < 10 * Math.abs(vmidX)) vmidY = 0;
+        animate()
+    //}
 })
+
+var k0 = 0.1, k = k0
+var ticker
+animate = function() {
+var scts = sct
+    clearInterval(ticker)
+    console.log(vmidY, vY, (st0.y - m.y)/(st0.t - m.t))
+    
+    // output.innerHTML = "----"+vmidX+"|" +vmidY
+    ticker = function() {
+    // output.innerHTML+="<br>1"
+        if (Math.abs(vmidX) < 0.001 && Math.abs(vmidY) < 0.001) {
+            console.log("traveled", sct-scts)
+             // output.innerHTML+="<br>traveled"+( sct-scts)
+            return ticker = clearInterval(ticker)
+        }
+        t1 = t
+        t = Date.now()
+        dt = t - t1
+        
+        dy = vmidY * dt
+        dx = vmidX * dt
+        vmidX -= k * vmidX
+        vmidY -= k * vmidY
+        
+        if (k < k0)
+            k += k0 * (k0 - k)
+       // console.log(k)
+       
+        setSc(scl + dx, sct + dy)
+        // output.innerHTML = sct
+        if (ticker)
+            setTimeout(ticker, 30)
+    }
+    ticker()
+}
+
 el.addEventListener("touchmove", function(e) {
-  m = conv(e.touches[0], e) 
-  move()
+  m = conv(e.touches[0], e)
+  
+  move(m)
   e.preventDefault()
 })
 el.addEventListener("click", function(e) {
-  input.focus()  
+  testEditor && input.focus()  
+  
+  if (testEditor) {
+    input.value="2222"
+    input.select()  
+  }
   e.preventDefault()
 })
-  
-move = function() {    
+
+var vmidX, vmidY, vprevX, vprevY, dtPrev
+move = function(m) {    
     var dx = m.x-st.x
     var dy = m.y-st.y
+    var t1 = m.t
+    dt = (t1 - t )|| 1
+    t = t1
+    if (t1==t)debugger
+    
+    vX = dx / dt
+    vY = dy / dt
+    if (vprevX) {
+        d = 0.4 * dtPrev / dt
+        vmidX = d * vprevX + (1-d) * vX
+    }
+    if (vprevY) {
+        d = 0.4 * dtPrev / dt
+        vmidY = d * vprevY + (1-d) * vY
+    }
+    
+    if (isNaN(vmidY))debugger
+    
+    dtPrev = dt
+    vprevX = vX
+    vprevY = vY
     
     setSc(scl + dx, sct + dy)
-    
+    // output.innerHTML = vX+"|"+vY
     st = m
 }
 
@@ -85,13 +192,13 @@ conv = function(e, e1) {
     var x = e.clientX - rect.left
     var y = e.clientY - rect.right
     
-    return {x:x,y:y,t: e1.timeStamp}
+    return {x:x, y:y, t: e1.timeStamp}
 }
   
 
 scl = 0
 sct = 0
-sctm = 1000
+sctm = juhu.style.offsetHeight
 sclm = 1000
 
 juhu.style.width = sclm + "px"
@@ -104,14 +211,8 @@ function setSc(x, y) {
     
 }
 
-var $el = function(tn, o) {
-    var el = document.createElement(tn)
-    for (var i in o)
-        el.setAttribute(i, o[i])
-    return el
-}
 
 </script>
-
+<div style="height:500px">
 </body>
 </html>
