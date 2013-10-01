@@ -1,58 +1,19 @@
-main() {
-  print('Hello World!');
+// Go ahead and modify this example.
+
+import "dart:html";
+
+// Computes the nth Fibonacci number.
+int fibonacci(int n) {
+  if (n < 2) return n;
+  return fibonacci(n - 1) + fibonacci(n - 2);
 }
 
+// Displays a Fibonacci number.
+void main() {
+  int i = 20;
+  String message = "fibonacci($i) = ${fibonacci(i)}";
 
-int fib(int n) => (n > 1) ? (fib(n - 1) + fib(n - 2)) : n;
-main() {
-  print('fib(20) = ${fib(20)}');
+  // This example uses HTML to display the result and it will appear
+  // in a nested HTML frame (an iframe).
+  document.body.append(new HeadingElement.h1()..appendText(message));
 }
-/*asd
-asdad
-*/
-0.67
-77
-.86
-
-import("http://dartwatch.com/myOtherLibrary.dart");
-import("myOtherLibrary.dart", prefix:"lib1");
-
-"""asdasdads
-asdadsadsasd
-asdasdasdad"""
- 
-'23424'
-
-0x234
-
-foo is bar
-
-int x = 4 << 10 
-// Create a class for Point.
-class Point {
- 
-  // Final variables cannot be changed once they are assigned.
-  // Create two instance variables.
-  final num x, y;
- 
-  // A constructor, with syntactic sugar for setting instance variables.
-  Point(this.x, this.y);
- 
-  // A named constructor with an initializer list.
-  Point.origin() : x = 0, y = 0;
- 
-  // A method.
-  num distanceTo(Point other) {
-    var dx = x - other.x;
-    var dy = y - other.y;
-    return sqrt(dx * dx + dy * dy);
-  }
-}
- 
- // Check for null.
-var unicorn;
-assert(unicorn == null);
-
-// Check for NaN.
-var iMeantToDoThis = 0/0;
-assert(iMeantToDoThis.isNaN());
