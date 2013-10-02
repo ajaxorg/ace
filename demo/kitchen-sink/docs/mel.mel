@@ -1,0 +1,49 @@
+proc float edgeCalc(string $edge)
+{
+
+	float $distance;
+	select -r `polyListComponentConversion -tv`; 
+	string $connectedVerts[] = `filterExpand -ex 1 -sm 31`;
+	vector $PT1 = `pointPosition -w $connectedVerts[0]`;
+	vector $PT2 = `pointPosition -w $connectedVerts[1]`;
+	float $distance = mag(($PT1-$PT2));
+	
+	return $distance;
+		
+}
+
+global proc  edgeLength()
+  {
+		source roundoff.mel;
+		string $edges[]= `filterExpand -ex 1 -sm 32`;
+		string $unit = `currentUnit -q -l`;
+		float $edgeLength[];
+	  	int $conversion = 10;
+	
+      float $totalLength=0; // <=  Init your sum variable
+      //save edgelength to var for later
+      for($i=0;$i<`size $edges`;$i++)
+      {
+		select -r $edges[$i]; // Select only one edge
+		$edgeLength[$i] = edgeCalc($edges[$i]);
+		$totalLength += $edgeLength[$i] * $conversion; 
+		
+      }
+	  
+	 float $rounded_mm = `roundoff $totalLength 0`;
+	 float $rounded_m = `roundoff (($totalLength)/1000) 2`;
+	 string $edgeno = (size($edgeLength));
+	 string $edgenoprint;
+	 
+	if(size($edgeLength)>1) {
+		$edgenoprint = " edges";
+	 }
+	 else {
+	 	 $edgenoprint = " edge";
+	 }
+
+	print ($rounded_mm + " mm / " +$rounded_m+ " m - Total length of " + $edgeno + $edgenoprint +"\n");
+	select -r $edges; // restore previous selection
+	  
+  }
+ 

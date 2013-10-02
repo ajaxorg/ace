@@ -78,6 +78,7 @@ var docs = {
     "docs/textile.textile": {name: "Textile", wrapped: true},
 
     "docs/c9search.c9search_results": "C9 Search Results",
+    "docs/mel.mel": "MEL",
     "docs/Nix.nix": "Nix"
 };
 
