@@ -16,11 +16,9 @@ body {
     color: white;
 }
 
-#logo {
+#c9-logo, #ace-logo {
     padding: 0;
-    margin: -10px 0 0 37px;
     border: none;
-    height: 145px;
 }
 
 #editor-container {
