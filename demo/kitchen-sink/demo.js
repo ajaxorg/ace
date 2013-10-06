@@ -617,11 +617,29 @@ env.editor.setOptions({
 });
 
 // allow easy access to ace in console, but not in ace code which uses strict
-function isNonStrict() {
-    try { return !!arguments.callee.caller.caller }
-    catch(e){ return false }
+void function() {
+function isStrict() {
+    try { return !arguments.callee.caller.caller.caller}
+    catch(e){ return true }
 }
-window.__defineGetter__("ace", function(){ return isNonStrict() && env.editor });
-window.__defineGetter__("editor", function(){ return isNonStrict() && env.editor });
-window.__defineGetter__("session", function(){ return isNonStrict() && env.editor.session });
-window.__defineGetter__("split", function(){ return isNonStrict() && env.split });
+function warn() {
+    if (isStrict()) {
+        console.error("trying to access to global variable");
+    }
+}
+function def(o, key, get) {
+    Object.defineProperty(o, key, {
+        configurable: true, 
+        get: get,
+        set: function(val) {
+            delete o[key];
+            o[key] = val;
+        }
+    });
+}
+def(window, "ace", function(){ warn(); return env.editor });
+def(window, "editor", function(){ warn(); return env.editor });
+def(window, "session", function(){ warn(); return env.editor.session });
+def(window, "split", function(){ warn(); return env.split });
+
+}();
