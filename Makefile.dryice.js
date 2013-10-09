@@ -301,7 +301,7 @@ var buildAce = function(options) {
         noconflict: false,
         suffix: null,
         name: "ace",
-        modes: jsFileList("lib/ace/mode", /_highlight_rules|_test|_worker|xml_util|_outdent|behaviour/),
+        modes: jsFileList("lib/ace/mode", /_highlight_rules|_test|_worker|xml_util|_outdent|behaviour|completions/),
         themes: jsFileList("lib/ace/theme"),
         extensions: jsFileList("lib/ace/ext"),
         workers: workers("lib/ace/mode"),
@@ -346,6 +346,21 @@ var buildAce = function(options) {
         dest:   targetDir + '/' + name + ".js"
     });
 
+    console.log('# ace extensions ---------');
+
+    project.assumeAllFilesLoaded();
+    options.extensions.forEach(function(ext) {
+        console.log("extensions " + ext);
+        copy({
+            source: [{
+                project: cloneProject(project),
+                require: [ 'ace/ext/' + ext ]
+            }],
+            filter: getWriteFilters(options, "ext"),
+            dest:   targetDir + "/ext-" + ext + ".js"
+        });
+    });
+
     console.log('# ace modes ---------');
 
     project.assumeAllFilesLoaded();
@@ -377,21 +392,6 @@ var buildAce = function(options) {
             }],
             filter: getWriteFilters(options, "theme"),
             dest:   targetDir + "/theme-" + theme.replace("_theme", "") + ".js"
-        });
-    });
-
-    console.log('# ace extensions ---------');
-
-    project.assumeAllFilesLoaded();
-    options.extensions.forEach(function(ext) {
-        console.log("extensions " + ext);
-        copy({
-            source: [{
-                project: cloneProject(project),
-                require: [ 'ace/ext/' + ext ]
-            }],
-            filter: getWriteFilters(options, "ext"),
-            dest:   targetDir + "/ext-" + ext + ".js"
         });
     });
 
@@ -522,7 +522,7 @@ function generateThemesModule(themes) {
         '\n\nmodule.exports.themes = ' + JSON.stringify(themes, null, '    '),
         ';\n\n});'
     ].join('');
-    fs.writeFileSync('./lib/ace/ext/themelist_utils/themes.js', themelist, 'utf8');
+    fs.writeFileSync(__dirname + '/lib/ace/ext/themelist_utils/themes.js', themelist, 'utf8');
 }
 
 function inlineTextModules(text) {
@@ -603,7 +603,9 @@ function namespace(ns) {
         text = text
             .toString()
             .replace('var ACE_NAMESPACE = "";', 'var ACE_NAMESPACE = "' + ns +'";')
-            .replace(/\bdefine\(/g, ns + ".define(");
+            .replace(/(\.define)|\bdefine\(/g, function(_, a) {
+                return a || ns + ".define("
+            });
 
         return text;
     };

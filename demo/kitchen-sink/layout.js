@@ -119,7 +119,6 @@ exports.singleLineEditor = function(el) {
     new MultiSelect(editor);
     editor.session.setUndoManager(new UndoManager());
 
-    editor.setHighlightActiveLine(false);
     editor.setShowPrintMargin(false);
     editor.renderer.setShowGutter(false);
     editor.renderer.setHighlightGutterLine(false);

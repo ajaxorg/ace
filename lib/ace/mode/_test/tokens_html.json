@@ -1,51 +1,51 @@
 [[
    "start",
-  ["meta.tag","<"],
-  ["meta.tag.tag-name","html"],
-  ["meta.tag.r",">"]
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name","html"],
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
-  ["meta.tag","<"],
-  ["meta.tag.tag-name.script","script"],
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name.script","script"],
   ["text"," "],
   ["entity.other.attribute-name","a"],
-  ["keyword.operator","="],
+  ["keyword.operator.separator","="],
   ["string","'a'"],
-  ["meta.tag.r",">"],
+  ["meta.tag.punctuation.end",">"],
   ["storage.type","var"],
-  ["meta.tag","</"],
-  ["meta.tag.tag-name.script","script"],
-  ["meta.tag.r",">"],
+  ["meta.tag.punctuation.begin","</"],
+  ["meta.tag.name.script","script"],
+  ["meta.tag.punctuation.end",">"],
   ["text","'123'"]
 ],[
-   "tag_qqstring",
-  ["meta.tag","<"],
-  ["meta.tag.tag-name.anchor","a"],
+   ["qqstring_inner","start_tag_stuff"],
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name.anchor","a"],
   ["text"," "],
   ["entity.other.attribute-name","href"],
-  ["keyword.operator","="],
+  ["keyword.operator.separator","="],
   ["string","\"abc"]
 ],[
    "start",
   ["string","  def\""],
-  ["meta.tag.r",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
-   "tag_qstring",
-  ["meta.tag","<"],
-  ["meta.tag.tag-name.anchor","a"],
+   ["qstring_inner","start_tag_stuff"],
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name.anchor","a"],
   ["text"," "],
   ["entity.other.attribute-name","href"],
-  ["keyword.operator","="],
+  ["keyword.operator.separator","="],
   ["string","'abc"]
 ],[
    "start",
   ["string","def\\'"],
-  ["meta.tag.r",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start"
 ],[
    "start",
-  ["meta.tag","</"],
-  ["meta.tag.tag-name","html"],
-  ["meta.tag.r",">"]
+  ["meta.tag.punctuation.begin","</"],
+  ["meta.tag.name","html"],
+  ["meta.tag.punctuation.end",">"]
 ]]

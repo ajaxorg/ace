@@ -3,14 +3,14 @@
     <head profile="http://www.w3.org/2005/10/profile">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <title>Ace - The High Performance Code Editor for the Web</title>
-        <link rel="stylesheet" href="https://yandex.st/highlightjs/7.0/styles/xcode.min.css" />
-        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/css/bootstrap.no-icons.min.css" />
-        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/3.0/css/font-awesome.css" />
+        <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/css/bootstrap.no-icons.min.css" />
+        <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/3.0/css/font-awesome.css" />
         <link href="./api/resources/csses/ace_api.css" rel="stylesheet" type="text/css" />
         <link href="./doc/site/style.css" rel="stylesheet" type="text/css" />
         <link href="./doc/site/images/favicon.ico" rel="icon" type="image/x-icon" />
 
         <script src="./build/src-min-noconflict/ace.js"></script>
+        <script src="./build/src-min-noconflict/ext-static_highlight.js"></script>
     </head>
     <body>
         <a href="http://github.com/ajaxorg/ace">
@@ -80,10 +80,10 @@ function add(x, y) {
 
 var addResult = add(3, 2);
 console.log(addResult);
-                                </div>
+</div>
                             <p id="embed_link"><a href="#nav=embedding">Learn how to embed this in your own site</a></p>
                             <p class="highlight_note">Looking for a more full-featured demo? Check out the
-                                <a href="http://ace.ajax.org/build/kitchen-sink.html" target="_blank">kitchen sink</a>.
+                                <a href="build/kitchen-sink.html" target="_blank">kitchen sink</a>.
                             </p>
                             <h2>Features</h2>
                             <ul class="content-list">
@@ -240,7 +240,7 @@ editor.getValue(); // or session.getValue</code></pre>
                             <p>Ace only resizes itself on window events. If you resize the editor div in another manner, and need Ace to resize, use the following:</p>
                             <pre><code class="javascript">editor.resize()</code></pre>
                             <h3>Searching</h3>
-                            <pre><code>editor.find('needle',{
+                            <pre><code class="language-javascript">editor.find('needle',{
     backwards: false,
     wrap: false,
     caseSensitive: false,
@@ -280,25 +280,25 @@ editor.findPrevious();</code></pre>
                                 </li>
                             </ul>
                             <p>Here's how you can perform a replace:</p>
-                            <pre><code>editor.find('foo');
+                            <pre><code class="javascript">editor.find('foo');
 editor.replace('bar');</code></pre>
                             <p>And here's a replace all: </p>
-                            <pre><code>editor.replaceAll('bar');</code></pre>
+                            <pre><code class="javascript">editor.replaceAll('bar');</code></pre>
                             <p>(<code>editor.replaceAll</code> uses the needle set earlier by <code>editor.find('needle', ...</code>)</p>
                             <h3>Listening to Events</h3>
                             <p>To listen for an <code>onchange</code>:</p>
-                            <pre><code>editor.getSession().on('change', function(e) {
+                            <pre><code class="javascript">editor.getSession().on('change', function(e) {
     // e.type, etc
 });</code></pre>
                             <p>To listen for an <code>selection</code> change:</p>
-                            <pre><code>editor.getSession().selection.on('changeSelection', function(e) {
+                            <pre><code class="javascript">editor.getSession().selection.on('changeSelection', function(e) {
 });</code></pre>
                             <p>To listen for a <code>cursor</code> change:</p>
-                            <pre><code>editor.getSession().selection.on('changeCursor', function(e) {
+                            <pre><code class="javascript">editor.getSession().selection.on('changeCursor', function(e) {
 });</code></pre>
                             <h3>Adding New Commands and Keybindings</h3>
                             <p>To assign key bindings to a custom function:</p>
-                            <pre><code>editor.commands.addCommand({
+                            <pre><code class="javascript">editor.commands.addCommand({
     name: 'myCommand',
     bindKey: {win: 'Ctrl-M',  mac: 'Command-M'},
     exec: function(editor) {
@@ -311,37 +311,38 @@ editor.replace('bar');</code></pre>
                             <h1>Creating a Syntax Highlighter for Ace</h1>
                             <p>Creating a new syntax highlighter for Ace is extremly simple. You'll need to define two pieces of code: a new mode, and a new set of highlighting rules.</p>
                             <h2 id="where-to-start"><a class="heading_anchor" href="#where-to-start"><i class="headerLinkIcon"></i></a>Where to Start</h2>
-                            <p>We recommend using the the <a href="http://ace.ajax.org/tool/mode_creator.html">Ace Mode Creator</a> when defining your highlighter. This allows you to inspect your code's tokens, as well as providing a live preview of the syntax highlighter in action.</p>
+                            <p>We recommend using the the <a href="tool/mode_creator.html">Ace Mode Creator</a> when defining your highlighter. This allows you to inspect your code's tokens, as well as providing a live preview of the syntax highlighter in action.</p>
                             <h2 id="defining-a-mode"><a class="heading_anchor" href="#defining-a-mode"><i class="headerLinkIcon"></i></a>Defining a Mode</h2>
                             <p>Every language needs a mode. A mode contains the paths to a language's syntax highlighting rules, indentation rules, and code folding rules. Without defining a mode, Ace won't know anything about the finer aspects of your language.</p>
                             <p>Here is the starter template we'll use to create a new mode:</p>
-                            <pre><code class="language-javascript">define(<span class="keyword">function</span>(require, exports, module) {
-<span class="string">"use strict"</span>;
+                            <pre><code class="language-javascript">define(function(require, exports, module) {
+"use strict";
 
-<span class="keyword">var</span> oop = require(<span class="string">"../lib/oop"</span>);
-<span class="comment">// defines the parent mode</span>
-<span class="keyword">var</span> TextMode = require(<span class="string">"./text"</span>).Mode;
-<span class="keyword">var</span> Tokenizer = require(<span class="string">"../tokenizer"</span>).Tokenizer;
-<span class="keyword">var</span> MatchingBraceOutdent = require(<span class="string">"./matching_brace_outdent"</span>).MatchingBraceOutdent;
+var oop = require("../lib/oop");
+// defines the parent mode
+var TextMode = require("./text").Mode;
+var Tokenizer = require("../tokenizer").Tokenizer;
+var MatchingBraceOutdent = require("./matching_brace_outdent").MatchingBraceOutdent;
 
-<span class="comment">// defines the language specific highlighters and folding rules</span>
-<span class="keyword">var</span> MyNewHighlightRules = require(<span class="string">"./mynew_highlight_rules"</span>).MyNewHighlightRules;
-<span class="keyword">var</span> MyNewFoldMode = require(<span class="string">"./folding/mynew"</span>).MyNewFoldMode;
+// defines the language specific highlighters and folding rules
+var MyNewHighlightRules = require("./mynew_highlight_rules").MyNewHighlightRules;
+var MyNewFoldMode = require("./folding/mynew").MyNewFoldMode;
 
-<span class="keyword">var</span> Mode = <span class="keyword">function</span>() {
-    <span class="comment">// set everything up</span>
-    <span class="keyword">var</span> highlighter = <span class="keyword">new</span> MyNewHighlightRules();
-    <span class="keyword">this</span>.$outdent = <span class="keyword">new</span> MatchingBraceOutdent();
-    <span class="keyword">this</span>.foldingRules = <span class="keyword">new</span> MyNewFoldMode();
-
-    <span class="keyword">this</span>.$tokenizer = <span class="keyword">new</span> Tokenizer(highlighter.getRules());
+var Mode = function() {
+    // set everything up
+    this.HighlightRules = MyNewHighlightRules;
+    this.$outdent = new MatchingBraceOutdent();
+    this.foldingRules = new MyNewFoldMode();
 };
 oop.inherits(Mode, TextMode);
 
-(<span class="keyword">function</span>() {
-    <span class="comment">// Extra logic goes here--we won't be covering all of this</span>
-
-    <span class="comment">/* These are all optional pieces of code!
+(function() {
+    // configure comment start/end characters
+    this.lineCommentStart = "//";
+    this.blockComment = {start: "/*", end: "*/"};
+    
+    // special logic for indent/outdent. 
+    // By default ace keeps indentation of previous line
     this.getNextLineIndent = function(state, line, tab) {
         var indent = this.$getIndent(line);
         return indent;
@@ -354,14 +355,17 @@ oop.inherits(Mode, TextMode);
     this.autoOutdent = function(state, doc, row) {
         this.$outdent.autoOutdent(doc, row);
     };
-
+    
+    // create worker for live syntax checking
     this.createWorker = function(session) {
         var worker = new WorkerClient(["ace"], "ace/mode/mynew_worker", "NewWorker");
         worker.attachToDocument(session.getDocument());
-
+        worker.on("errors", function(e) {
+            session.setAnnotations(e.data);
+        });
         return worker;
     };
-    */</span>
+    
 }).call(Mode.prototype);
 
 exports.Mode = Mode;
@@ -372,22 +376,22 @@ exports.Mode = Mode;
                             <h2 id="defining-syntax-highlighting-rules"><a class="heading_anchor" href="#defining-syntax-highlighting-rules"><i class="headerLinkIcon"></i></a>Defining Syntax Highlighting Rules</h2>
                             <p>The Ace highlighter can be considered to be a state machine. Regular expressions define the tokens for the current state, as well as the transitions into another state. Let's define <em>mynew_highlight_rules.js</em>, which our mode above uses.</p>
                             <p>All syntax highlighters start off looking something like this:</p>
-                            <pre><code class="language-javascript">define(<span class="keyword">function</span>(require, exports, module) {
-<span class="string">"use strict"</span>;
+                            <pre><code class="language-javascript">define(function(require, exports, module) {
+"use strict";
 
-<span class="keyword">var</span> oop = require(<span class="string">"../lib/oop"</span>);
-<span class="keyword">var</span> TextHighlightRules = require(<span class="string">"./text_highlight_rules"</span>).TextHighlightRules;
+var oop = require("../lib/oop");
+var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;
 
-<span class="keyword">var</span> MyNewHighlightRules = <span class="keyword">function</span>() {
+var MyNewHighlightRules = function() {
 
-    <span class="comment">// regexp must not have capturing parentheses. Use (?:) instead.</span>
-    <span class="comment">// regexps are ordered -&gt; the first match is used</span>
-   <span class="keyword">this</span>.$rules = {
-        <span class="string">"start"</span> : [
+    // regexp must not have capturing parentheses. Use (?:) instead.
+    // regexps are ordered -&gt; the first match is used
+   this.$rules = {
+        "start" : [
             {
-                token: <span class="xml"><span class="tag">&lt;<span class="title">token</span>&gt;</span>, // String, Array, or Function: the CSS token to apply
-                regex: <span class="tag">&lt;<span class="title">regex</span>&gt;</span>, // String or RegExp: the regexp to match
-                next:  <span class="tag">&lt;<span class="title">next</span>&gt;</span>   // [Optional] String: next state to enter
+                token: &lt;token&gt;, // String, Array, or Function: the CSS token to apply
+                regex: &lt;regex&gt;, // String or RegExp: the regexp to match
+                next:  &lt;next&gt;   // [Optional] String: next state to enter
             }
         ]
     };
@@ -397,7 +401,7 @@ oop.inherits(MyNewHighlightRules, TextHighlightRules);
 
 exports.MyNewHighlightRules = MyNewHighlightRules;
 
-});</span></code></pre>
+});</code></pre>
                             <p>The token state machine operates on whatever is defined in <code>this.$rules</code>. The highlighter always begins at the <code>start</code> state, and progresses down the list, looking for a matching <code>regex</code>. When one is found, the resulting text is wrapped within a <code>&lt;span class=&quot;ace_&lt;token&gt;&quot;&gt;</code> tag, where <code>&lt;token&gt;</code> is defined as the <code>token</code> property. Note that all tokens are preceded by the <code>ace_</code> prefix when they're rendered on the page.</p>
                             <p>Once again, we're inheriting from <code>TextHighlightRules</code> here. We could choose to make this any other language set we want, if our new language requires previously defined syntaxes. For more information on extending languages, see &quot;<a href="#extending-highlighters">extending Highlighters</a>&quot; below.</p>
                             <h3 id="defining-tokens"><a class="heading_anchor" href="#defining-tokens"><i class="headerLinkIcon"></i></a>Defining Tokens</h3>
@@ -408,81 +412,81 @@ exports.MyNewHighlightRules = MyNewHighlightRules;
                             <p>Regular expressions can either be a RegExp or String definition</p>
                             <p>If you're using a regular expression, remember to start and end the line with the <code>/</code> character, like this:</p>
                             <pre><code class="language-javascript">{
-    token : <span class="string">"constant.language.escape"</span>,
-    regex : <span class="regexp">/\$[\w\d]+/</span>
+    token : "constant.language.escape",
+    regex : /\$[\w\d]+/
 }</code></pre>
                             <p>A caveat of using stringed regular expressions is that any <code>\</code> character must be escaped. That means that even an innocuous regular expression like this:</p>
-                            <pre><code class="language-javascript">regex: <span class="string">"function\s*\(\w+\)"</span></code></pre>
+                            <pre><code class="language-javascript">regex: "function\s*\(\w+\)"</code></pre>
                             <p>Must actually be written like this:</p>
-                            <pre><code class="language-javascript">regex: <span class="string">"function\\s*\(\\w+\)"</span></code></pre>
+                            <pre><code class="language-javascript">regex: "function\\s*\(\\w+\)"</code></pre>
                             <h4 id="groupings"><a class="heading_anchor" href="#groupings"><i class="headerLinkIcon"></i></a>Groupings</h4>
                             <p>You can also include flat regexps--<code>(var)</code>--or have matching groups--<code>((a+)(b+))</code>. There is a strict requirement whereby matching groups <strong>must</strong> cover the entire matched string; thus, <code>(hel)lo</code> is invalid. If you want to create a non-matching group, simply start the group with the <code>?:</code> predicate; thus, <code>(hel)(?:lo)</code> is okay. You can, of course, create longer non-matching groups. For example:</p>
                             <pre><code class="language-javascript">{
-    token : <span class="string">"constant.language.boolean"</span>,
-    regex : <span class="regexp">/(?:true|false)\b/</span>
+    token : "constant.language.boolean",
+    regex : /(?:true|false)\b/
 },</code></pre>
                             <p>For flat regular expression matches, <code>token</code> can be a String, or a Function that takes a single argument (the match) and returns a string token. For example, using a function might look like this:</p>
-                            <pre><code class="language-javascript"><span class="keyword">var</span> colors = lang.arrayToMap(
-    (<span class="string">"aqua|black|blue|fuchsia|gray|green|lime|maroon|navy|olive|orange|"</span> +
-    <span class="string">"purple|red|silver|teal|white|yellow"</span>).split(<span class="string">"|"</span>)
+                            <pre><code class="language-javascript">var colors = lang.arrayToMap(
+    ("aqua|black|blue|fuchsia|gray|green|lime|maroon|navy|olive|orange|" +
+    "purple|red|silver|teal|white|yellow").split("|")
 );
 
-<span class="keyword">var</span> fonts = lang.arrayToMap(
-    (<span class="string">"arial|century|comic|courier|garamond|georgia|helvetica|impact|lucida|"</span> +
-    <span class="string">"symbol|system|tahoma|times|trebuchet|utopia|verdana|webdings|sans-serif|"</span> +
-    <span class="string">"serif|monospace"</span>).split(<span class="string">"|"</span>)
+var fonts = lang.arrayToMap(
+    ("arial|century|comic|courier|garamond|georgia|helvetica|impact|lucida|" +
+    "symbol|system|tahoma|times|trebuchet|utopia|verdana|webdings|sans-serif|" +
+    "serif|monospace").split("|")
 );
 
 ...
 
 {
-    token: <span class="keyword">function</span>(value) {
-        <span class="keyword">if</span> (colors.hasOwnProperty(value.toLowerCase())) {
-            <span class="keyword">return</span> <span class="string">"support.constant.color"</span>;
+    token: function(value) {
+        if (colors.hasOwnProperty(value.toLowerCase())) {
+            return "support.constant.color";
         }
-        <span class="keyword">else</span> <span class="keyword">if</span> (fonts.hasOwnProperty(value.toLowerCase())) {
-            <span class="keyword">return</span> <span class="string">"support.constant.fonts"</span>;
+        else if (fonts.hasOwnProperty(value.toLowerCase())) {
+            return "support.constant.fonts";
         }
-        <span class="keyword">else</span> {
-            <span class="keyword">return</span> <span class="string">"text"</span>;
+        else {
+            return "text";
         }
     },
-    regex: <span class="string">"\\-?[a-zA-Z_][a-zA-Z0-9_\\-]*"</span>
+    regex: "\\-?[a-zA-Z_][a-zA-Z0-9_\\-]*"
 }</code></pre>
                             <p>If <code>token</code> is a function,it should take the same number of arguments as there are groups, and return an array of tokens.</p>
                             <p>For grouped regular expressions, <code>token</code> can be a String, in which case all matched groups are given that same token, like this:</p>
                             <pre><code class="language-javascript">{
-    token: <span class="string">"identifier"</span>,
-    regex: <span class="string">"(\\w+\\s*:)(\\w*)"</span>
+    token: "identifier",
+    regex: "(\\w+\\s*:)(\\w*)"
 }</code></pre>
                             <p>More commonly, though, <code>token</code> is an Array (of the same length as the number of groups), whereby matches are given the token of the same alignment as in the match. For a complicated regular expression, like defining a function, that might look something like this:</p>
                             <pre><code class="language-javascript">{
-    token : [<span class="string">"storage.type"</span>, <span class="string">"text"</span>, <span class="string">"entity.name.function"</span>],
-    regex : <span class="string">"(function)(\\s+)([a-zA-Z_][a-zA-Z0-9_]*\\b)"</span>
+    token : ["storage.type", "text", "entity.name.function"],
+    regex : "(function)(\\s+)([a-zA-Z_][a-zA-Z0-9_]*\\b)"
 }</code></pre>
                             <h2 id="defining-states"><a class="heading_anchor" href="#defining-states"><i class="headerLinkIcon"></i></a>Defining States</h2>
                             <p>The syntax highlighting state machine stays in the <code>start</code> state, until you define a <code>next</code> state for it to advance to. At that point, the tokenizer stays in that new <code>state</code>, until it advances to another state. Afterwards, you should return to the original <code>start</code> state.</p>
                             <p>Here's an example:</p>
-                            <pre><code class="language-javascript"><span class="keyword">this</span>.$rules = {
-    <span class="string">"start"</span> : [ {
-        token : <span class="string">"text"</span>,
-        merge : <span class="literal">true</span>,
-        regex : <span class="string">"&lt;\\!\\[CDATA\\["</span>,
-        next : <span class="string">"cdata"</span>
+                            <pre><code class="language-javascript">this.$rules = {
+    "start" : [ {
+        token : "text",
+        merge : true,
+        regex : "&lt;\\!\\[CDATA\\[",
+        next : "cdata"
     },
 
-    <span class="string">"cdata"</span> : [ {
-        token : <span class="string">"text"</span>,
-        regex : <span class="string">"\\]\\]&gt;"</span>,
-        next : <span class="string">"start"</span>
+    "cdata" : [ {
+        token : "text",
+        regex : "\\]\\]&gt;",
+        next : "start"
     }, {
-        token : <span class="string">"text"</span>,
-        merge : <span class="literal">true</span>,
-        regex : <span class="string">"\\s+"</span>
+        token : "text",
+        merge : true,
+        regex : "\\s+"
     }, {
-        token : <span class="string">"text"</span>,
-        merge : <span class="literal">true</span>,
-        regex : <span class="string">".+"</span>
+        token : "text",
+        merge : true,
+        regex : ".+"
     } ]
 };</code></pre>
                             <p>In this extremly short sample, we're defining some highlighting rules for when Ace detectes a <code>&lt;![CDATA</code> tag. When one is encountered, the tokenizer moves from <code>start</code> into the <code>cdata</code> state. It remains there, applying the <code>text</code> token to any string it encounters. Finally, when it hits a closing <code>]&gt;</code> symbol, it returns to the <code>start</code> state and continues to tokenize anything else.</p>
@@ -495,7 +499,7 @@ exports.MyNewHighlightRules = MyNewHighlightRules;
                                 <li>Run <code>npm install</code>  to install required dependencies.</li>
                                 <li>Run <code>node tmlanguage.js &lt;path_to_tmlanguage_file&gt;</code>; for example, <code>node &lt;path_to_tmlanguage_file&gt; /Users/Elrond/elven.tmLanguage</code></li>
                             </ol>
-                            <p>Two files are created and placed in <em>lib/ace/mode</em>: one for the language mode, and one for the set of highlight rules. You will still need to add the code into <em>kitchen_sink.html</em> and <em>demo.js</em>, as well as write any tests for the highlighting.</p>
+                            <p>Two files are created and placed in <em>lib/ace/mode</em>: one for the language mode, and one for the set of highlight rules. You will still need to add the code into <em>ace/ext/modelist.js</em>, and add a sample file for testing.</p>
                             <h3 id="a-note-on-accuracy"><a class="heading_anchor" href="#a-note-on-accuracy"><i class="headerLinkIcon"></i></a>A Note on Accuracy</h3>
                             <p>Your <em>.tmlanguage</em> file will then be converted to the best of the converter’s ability. It is an understatement to say that the tool is imperfect. Probably, language mode creation will never be able to be fully autogenerated. There's a list of non-determinable items; for example:</p>
                             <ul>
@@ -510,31 +514,31 @@ exports.MyNewHighlightRules = MyNewHighlightRules;
                             <p>Suppose you&#39;re working on a LuaPage, PHP embedded in HTML, or a Django template. You&#39;ll need to create a syntax highlighter that takes all the rules from the original language (Lua, PHP, or Python) and extends it with some additional identifiers (<code>&lt;?lua</code>, <code>&lt;?php</code>, <code>{%</code>, for example). Ace allows you to easily extend a highlighter using a few helper functions.</p>
                             <h3 id="getting-existing-rules"><a class="heading_anchor" href="#getting-existing-rules"><i class="headerLinkIcon"></i></a>Getting Existing Rules</h3>
                             <p>To get the existing syntax highlighting rules for a particular language, use the <code>getRules()</code> function. For example:</p>
-                            <pre><code class="language-javascript"><span class="keyword">var</span> HtmlHighlightRules = require(<span class="string">"./html_highlight_rules"</span>).HtmlHighlightRules;
+                            <pre><code class="language-javascript">var HtmlHighlightRules = require("./html_highlight_rules").HtmlHighlightRules;
 
-<span class="keyword">this</span>.$rules = <span class="keyword">new</span> HtmlHighlightRules().getRules();
+this.$rules = new HtmlHighlightRules().getRules();
 
-<span class="comment">/*
+/*
     this.$rules == Same this.$rules as HTML highlighting
-*/</span></code></pre>
+*/</code></pre>
                             <h3 id="extending-a-highlighter"><a class="heading_anchor" href="#extending-a-highlighter"><i class="headerLinkIcon"></i></a>Extending a Highlighter</h3>
                             <p>The <code>addRules</code> method does one thing, and it does one thing well: it adds new rules to an existing rule set, and prefixes any state with a given tag. For example, let&#39;s say you&#39;ve got two sets of rules, defined like this:</p>
-                            <pre><code class="language-javascript"><span class="keyword">this</span>.$rules = {
-    <span class="string">"start"</span>: [ <span class="comment">/* ... */</span> ]
+                            <pre><code class="language-javascript">this.$rules = {
+    "start": [ /* ... */ ]
 };
 
-<span class="keyword">var</span> newRules = {
-    <span class="string">"start"</span>: [ <span class="comment">/* ... */</span> ]
+var newRules = {
+    "start": [ /* ... */ ]
 }</code></pre>
                             <p>If you want to incorporate <code>newRules</code> into <code>this.$rules</code>, you&#39;d do something like this:</p>
-                            <pre><code class="language-javascript"><span class="keyword">this</span>.addRules(newRules, <span class="string">"new-"</span>);
+                            <pre><code class="language-javascript">this.addRules(newRules, "new-");
 
-<span class="comment">/*
+/*
     this.$rules = {
         "start": [ ... ],
         "new-start": [ ... ]
     };
-*/</span></code></pre>
+*/</code></pre>
                             <h3 id="extending-two-highlighters"><a class="heading_anchor" href="#extending-two-highlighters"><i class="headerLinkIcon"></i></a>Extending Two Highlighters</h3>
                             <p>The last function available to you combines both of these concepts, and it&#39;s called <code>embedRules</code>. It takes three parameters:</p>
                             <ol>
@@ -544,90 +548,90 @@ exports.MyNewHighlightRules = MyNewHighlightRules;
                             </ol>
                             <p>Like <code>addRules</code>, <code>embedRules</code> adds on to the existing <code>this.$rules</code> object. </p>
                             <p>To explain this visually, let&#39;s take a look at the syntax highlighter for Lua pages, which combines all of these concepts:</p>
-                            <pre><code class="language-javascript"><span class="keyword">var</span> HtmlHighlightRules = require(<span class="string">"./html_highlight_rules"</span>).HtmlHighlightRules;
-<span class="keyword">var</span> LuaHighlightRules = require(<span class="string">"./lua_highlight_rules"</span>).LuaHighlightRules;
+                            <pre><code class="language-javascript">var HtmlHighlightRules = require("./html_highlight_rules").HtmlHighlightRules;
+var LuaHighlightRules = require("./lua_highlight_rules").LuaHighlightRules;
 
-<span class="keyword">var</span> LuaPageHighlightRules = <span class="keyword">function</span>() {
-    <span class="keyword">this</span>.$rules = <span class="keyword">new</span> HtmlHighlightRules().getRules();
+var LuaPageHighlightRules = function() {
+    this.$rules = new HtmlHighlightRules().getRules();
 
-    <span class="keyword">for</span> (<span class="keyword">var</span> i <span class="keyword">in</span> <span class="keyword">this</span>.$rules) {
-        <span class="keyword">this</span>.$rules[i].unshift({
-            token: <span class="string">"keyword"</span>,
-            regex: <span class="string">"&lt;\\%\\=?"</span>,
-            next: <span class="string">"lua-start"</span>
+    for (var i in this.$rules) {
+        this.$rules[i].unshift({
+            token: "keyword",
+            regex: "&lt;\\%\\=?",
+            next: "lua-start"
         }, {
-            token: <span class="string">"keyword"</span>,
-            regex: <span class="string">"&lt;\\?lua\\=?"</span>,
-            next: <span class="string">"lua-start"</span>
+            token: "keyword",
+            regex: "&lt;\\?lua\\=?",
+            next: "lua-start"
         });
     }
-    <span class="keyword">this</span>.embedRules(LuaHighlightRules, <span class="string">"lua-"</span>, [
+    this.embedRules(LuaHighlightRules, "lua-", [
         {
-            token: <span class="string">"keyword"</span>,
-            regex: <span class="string">"\\%&gt;"</span>,
-            next: <span class="string">"start"</span>
+            token: "keyword",
+            regex: "\\%&gt;",
+            next: "start"
         },
         {
-            token: <span class="string">"keyword"</span>,
-            regex: <span class="string">"\\?&gt;"</span>,
-            next: <span class="string">"start"</span>
+            token: "keyword",
+            regex: "\\?&gt;",
+            next: "start"
         }
     ]);
 };</code></pre>
                             <p>Here, <code>this.$rules</code> starts off as a set of HTML highlighting rules. To this set, we add two new checks for <code>&lt;%=</code> and <code>&lt;?lua=</code>. We also delegate that if one of these rules are matched, we should move onto the <code>lua-start</code> state. Next, <code>embedRules</code> takes the already existing set of <code>LuaHighlightRules</code> and applies the <code>lua-</code> prefix to each state there. Finally, it adds two new checks for <code>%&gt;</code> and <code>?&gt;</code>, allowing the state machine to return to <code>start</code>.</p>
                             <h3>Code Folding</h3>
                             <p>Adding new folding rules to your mode can be a little tricky. First, insert the following lines of code into your mode definition:</p>
-                            <pre><code class="language-javascript"><span class="keyword">var</span> MyFoldMode = require(<span class="string">"./folding/newrules"</span>).FoldMode;
+                            <pre><code class="language-javascript">var MyFoldMode = require("./folding/newrules").FoldMode;
 
 ...
-<span class="keyword">var</span> MyMode = <span class="keyword">function</span>() {
+var MyMode = function() {
 
     ...
 
-    <span class="keyword">this</span>.foldingRules = <span class="keyword">new</span> MyFoldMode();
+    this.foldingRules = new MyFoldMode();
 };</code></pre>
                             <p>You&#39;ll be defining your code folding rules into the <em>lib/ace/mode/folding</em> folder. Here&#39;s a template that you can use to get started:</p>
-                            <pre><code class="language-javascript">define(<span class="keyword">function</span>(require, exports, module) {
-<span class="string">"use strict"</span>;
+                            <pre><code class="language-javascript">define(function(require, exports, module) {
+"use strict";
 
-<span class="keyword">var</span> oop = require(<span class="string">"../../lib/oop"</span>);
-<span class="keyword">var</span> Range = require(<span class="string">"../../range"</span>).Range;
-<span class="keyword">var</span> BaseFoldMode = require(<span class="string">"./fold_mode"</span>).FoldMode;
+var oop = require("../../lib/oop");
+var Range = require("../../range").Range;
+var BaseFoldMode = require("./fold_mode").FoldMode;
 
-<span class="keyword">var</span> FoldMode = exports.FoldMode = <span class="keyword">function</span>() {};
+var FoldMode = exports.FoldMode = function() {};
 oop.inherits(FoldMode, BaseFoldMode);
 
-(<span class="keyword">function</span>() {
+(function() {
 
-    <span class="comment">// regular expressions that identify starting and stopping points</span>
-    <span class="keyword">this</span>.foldingStartMarker; 
-    <span class="keyword">this</span>.foldingStopMarker;
+    // regular expressions that identify starting and stopping points
+    this.foldingStartMarker; 
+    this.foldingStopMarker;
 
-    <span class="keyword">this</span>.getFoldWidgetRange = <span class="keyword">function</span>(session, foldStyle, row) {
-        <span class="keyword">var</span> line = session.getLine(row);
+    this.getFoldWidgetRange = function(session, foldStyle, row) {
+        var line = session.getLine(row);
 
-        <span class="comment">// test each line, and return a range of segments to collapse</span>
+        // test each line, and return a range of segments to collapse
     };
 
 }).call(FoldMode.prototype);
 
 });</code></pre>
                             <p>Just like with <code>TextMode</code> for syntax highlighting, <code>BaseFoldMode</code> contains the starting point for code folding logic. <code>foldingStartMarker</code> defines your opening folding point, while <code>foldingStopMarker</code> defines the stopping point. For example, for a C-style folding system, these values might look like this:</p>
-                            <pre><code class="language-javascript"><span class="keyword">this</span>.foldingStartMarker = <span class="regexp">/(\{|\[)[^\}\]]*$|^\s*(\/\*)/</span>;
-<span class="keyword">this</span>.foldingStopMarker = <span class="regexp">/^[^\[\{]*(\}|\])|^[\s\*]*(\*\/)/</span>;</code></pre>
-                            <p>These regular expressions identify various symbols--<code>{</code>, <code>[</code>, <code>//</code>--to pay attention to. <code>getFoldWidgetRange</code> matches on these regular expressions, and when found, returns the range of relevant folding points. For more information on the <code>Range</code> object, see <a href="http://ace.ajax.org/#nav=api&amp;api=range">the Ace API documentation</a>.</p>
+                            <pre><code class="language-javascript">this.foldingStartMarker = /(\{|\[)[^\}\]]*$|^\s*(\/\*)/;
+this.foldingStopMarker = /^[^\[\{]*(\}|\])|^[\s\*]*(\*\/)/;</code></pre>
+                            <p>These regular expressions identify various symbols--<code>{</code>, <code>[</code>, <code>//</code>--to pay attention to. <code>getFoldWidgetRange</code> matches on these regular expressions, and when found, returns the range of relevant folding points. For more information on the <code>Range</code> object, see <a href="#nav=api&amp;api=range">the Ace API documentation</a>.</p>
                             <p>Again, for a C-style folding mechanism, a range to return for the starting fold might look like this:</p>
-                            <pre><code class="language-javascript"><span class="keyword">var</span> line = session.getLine(row);
-<span class="keyword">var</span> match = line.match(<span class="keyword">this</span>.foldingStartMarker);
-<span class="keyword">if</span> (match) {
-    <span class="keyword">var</span> i = match.index;
+                            <pre><code class="language-javascript">var line = session.getLine(row);
+var match = line.match(this.foldingStartMarker);
+if (match) {
+    var i = match.index;
 
-    <span class="keyword">if</span> (match[<span class="number">1</span>])
-        <span class="keyword">return</span> <span class="keyword">this</span>.openingBracketBlock(session, match[<span class="number">1</span>], row, i);
+    if (match[1])
+        return this.openingBracketBlock(session, match[1], row, i);
 
-    <span class="keyword">var</span> range = session.getCommentFoldRange(row, i + match[<span class="number">0</span>].length);
-    range.end.column -= <span class="number">2</span>;
-    <span class="keyword">return</span> range;
+    var range = session.getCommentFoldRange(row, i + match[0].length);
+    range.end.column -= 2;
+    return range;
 }</code></pre>
                             <p>Let&#39;s say we stumble across the code block <code>hello_world() {</code>. Our range object here becomes:</p>
                             <pre><code class="language-json">{
@@ -637,33 +641,23 @@ oop.inherits(FoldMode, BaseFoldMode);
   endColumn: 13
 }</code></pre>
                             <h2>Testing Your Highlighter</h2>
-                            <p>The best way to test your tokenizer is to see it live, right? To do that, you&#39;ll want to modify the <a href="http://ace.ajax.org/build/kitchen-sink.html">live Ace demo</a> to preview your changes. You can find this file in the root Ace directory with the name <em>kitchen-sink.html</em>.</p>
-                            <p>The file that defines the behavior for this live demo is defined in <em>demo/kitchen-sink/demo.js</em>. You&#39;ll want to add lines to two separate objects:</p>
+                            <p>The best way to test your tokenizer is to see it live, right? To do that, you&#39;ll want to modify the <a href="build/kitchen-sink.html">live Ace demo</a> to preview your changes. You can find this file in the root Ace directory with the name <em>kitchen-sink.html</em>.</p>
                             <ol>
                                 <li>
-                                    <p><code>modesByName</code> needs a new entry that defines all the rules regarding your new mode. Entries looks like <code>propertyName: [dropdownName, arrayOfExtensions]</code>, where:</p>
-                                    <ul>
-                                        <li><code>propertyName</code> is the name of the new language you&#39;re highlighting</li>
-                                        <li><code>dropdownName</code> is an arbitrary string that lists your language in the live demo&#39;s <strong>Mode</strong> dropdown menu</li>
-                                        <li><code>arrayOfExtensions</code> is an array of strings (seperated by <code>|</code>) that defines valid extensions to use for the new language.  </li>
-                                    </ul>
+                                    add an entry to <code>supportedModes</code> in <a href="https://github.com/ajaxorg/ace/blob/master/lib/ace/ext/modelist.js#L53"><code>ace/ext/modelist.js</code></a>
                                 </li>
                                 <li>
-                                    <p><code>docs</code> also needs a new entry, which defines the location of your sample document showing all the power of your new language. Entries look like <code>filenamePath: modeToUse</code>, where:</p>
-                                    <ul>
-                                        <li><code>filenamePath</code> is the path to your example document. This should just be in <em>docs/</em>.</li>
-                                        <li><code>modeToUse</code> is the same arbitrary string as <code>dropdownName</code></li>
-                                    </ul>
+                                    <p>add a sample file to <code>demo/kitchen-sink/docs/</code> with same name as the mode file
                                 </li>
                             </ol>
-                            <p>Once you set this up, you should see be able to witness a live demonstration of your new highlighter.</p>
+                            <p>Once you set this up, you should be able to witness a live demonstration of your new highlighter.</p>
                             <h3 id="adding-automated-tests"><a class="heading_anchor" href="#adding-automated-tests"><i class="headerLinkIcon"></i></a>Adding Automated Tests</h3>
                             <p>Adding automated tests for a highlighter is trivial so you are not required to do it, but it can help during development.</p>
                             <p>In <code>lib/ace/mode/_test</code> create a file named <code><pre>text_<span style="color:#AA0D91">&lt;modeName&gt;</span>.txt</pre></code> with some example code. (You can skip this if the document you have added in <code>demo/docs</code> both looks good and covers various edge cases in your language syntax).
                             </p>
                             <p> Run <code><span style="color:#AA0D91">node</span> <span style="color:#008800">highlight_rules_test.js</span> <span style="color:#000088">-gen</span></code> to preserve current output of your tokenizer in <code>tokens_<span style="color:#AA0D91">&lt;modeName&gt;</span>.json</code>
                             </p>
-                            <p>After this running <code><span style="color:#008800">highlight_rules_test.js</span> <span cstyle="color:#000088">optionalLanguageName</span></code> will compare output of your tokenizer with the correct output you've created.
+                            <p>After this running <code><span style="color:#008800">highlight_rules_test.js</span> <span style="color:#000088">optionalLanguageName</span></code> will compare output of your tokenizer with the correct output you've created.
                             </p>
                             <p>Any files ending with the <em>_test.js</em> suffix are automatically run by Ace&#39;s <a href="http://travis-ci.org/#!/ajaxorg/ace">Travis CI</a> server.</p>
                         </div>
@@ -741,144 +735,148 @@ oop.inherits(FoldMode, BaseFoldMode);
                             <ul class="menu-list">
                                 <li>
                                     <img src="doc/site/images/github-logo.png"
-                                        style="position: relative; left: -15px; top: -9px;" />
+                                        style="left: -15px; top: -9px;" />
                                     <a href="https://github.com/blog/905-edit-like-an-ace">GitHub</a>
                                 </li>
                                 <li>
                                     <img src="doc/site/images/khan-logo.png"
-                                        style="position: relative; left: -10px; top: -27px; width: 120px" />
+                                        style="left: -10px; top: -27px; width: 120px" />
                                     <a href="http://ejohn.org/blog/introducing-khan-cs/">Khan Academy</a>
                                 </li>
                                 <li>
                                     <img src="doc/site/images/cloud9-logo.png"
-                                        style="position: relative;left: -11px;top:-12px; width:122px" />
+                                        style="left: -11px;top:-12px; width:122px" />
                                     <a href="https://github.com/ajaxorg/cloud9">Cloud9 IDE</a>
                                 </li>
                                 
                                 <li>
                                     <img src="doc/site/images/firefox-logo.png"
-                                        style="position: relative;left:10px;top:-5px;width:80px" />
+                                        style="left:10px;top:-5px;width:80px" />
                                     <a href="https://builder.addons.mozilla.org/">Firefox Add-on Builder</a>
                                 </li>
                                 <li>
                                     <img src="doc/site/images/codecademy-logo.png"
-                                        style="position: relative; left: -5px; top: 10px;" />
+                                        style="left: -5px; top: 10px;" />
                                     <a href="http://www.codecademy.com/">Codecademy</a>
                                 </li>
                                 <li>
                                     <img src="doc/site/images/rstudio_logo_64.png"
-                                        style="position: relative; left: 19px; top: 2px;" />
+                                        style="left: 19px; top: 2px;" />
                                     <a href="http://rstudio.org/">RStudio</a>
                                 </li>
                                 <li>
                                     <img src="doc/site/images/ac-logo.png"
-                                        style="position: relative; left: 4px; top: 25px;" />
+                                        style="left: 4px; top: 25px;" />
                                     <a href="http://www.applicationcraft.com/">Application Craft</a>
                                 </li>
                                 <li>
-                                    <img src="doc/site/images/wolf_3d_logo_trans.png"
-                                        style="position: relative; left: 10px; top: -4px; width:80px" />
-                                    <a href="http://www.wolfcms.org/repository/133">Wolf CMS</a>
+                                    <img src="http://benweet.github.io/stackedit/img/stackedit-128.png"
+                                        style="width: 74px; left: 13px; top: 1px;">
+                                    <a href="http://benweet.github.io/stackedit/">StackEdit</a>
+                                </li>
+                                <li>
+                                    <img src="http://upload.wikimedia.org/wikipedia/commons/6/63/Wikipedia-logo.png" style="left: -5px; top: -35px; width: 110px;">
+                                    <a href="https://en.wikipedia.org/wiki/Special:Version" style="font-family: 'Linux Libertine','Hoefler Text',Georgia,'Times New Roman',Times,serif;">W<span style="font-variant: small-caps;">ikipedi</span>A</a>
                                 </li>
                                 <li>
                                     <img src="doc/site/images/codiad.png"
-                                        style="position: relative; left: 10px; top: -4px; width:80px" />
+                                        style="left: 10px; top: -4px; width:80px" />
                                     <a href="http://codiad.com/">Codiad</a>
                                 </li>
                                 <li>
-                                    <img src="doc/site/images/FineCut_small_logo.png"
-                                        style="position: relative; left: 12px; top: -4px" />
-                                    <a href="http://finecut.info/">Fine Cut Engine</a>
-                                </li>
-                                <li>
                                     <img src="doc/site/images/zorba-logo.png"
-                                        style="position: relative; left: -5px; top: 16px;
+                                        style="left: -5px; top: 16px;
                                                 padding: 6px 4px 6px 6px; width: 100px" />
                                     <a href="http://www.zorba-xquery.com/html/demo">Zorba XQuery</a>
                                 </li>
                                 <li>
                                     <img src="doc/site/images/plunker.png"
-                                        style="position: relative; left: 13px; top: -4px; width: 75px" />
+                                        style="left: 13px; top: -4px; width: 75px" />
                                     <a href="http://plnkr.co/edit/">Plunker</a>
                                 </li>
                                 <li>
                                     <img src="doc/site/images/KERA-med-web.png"
-                                        style="position: relative; left: 3px;top: 23px;width: 97px;" />
+                                        style="left: 3px;top: 23px;width: 97px;" />
                                     <a href="http://kera.io/">Kera.io</a>
                                 </li>
                                 <li>
                                     <img src="doc/site/images/sassmeister-logo.png"
-                                        style="position: relative; left: 10px;top: -5px;width: 80px;" />
+                                        style="left: 10px;top: -5px;width: 80px;" />
                                     <a href="http://sassmeister.com/">SassMeister</a>
-                                </li>
+                                </li> 
                                 <li>
-                                    <img src="doc/site/images/spandexio-logo.png"
-                                        style="position: relative; left: 10px;top: -5px;width: 80px;" />
-                                    <a href="http://SpanDeX.io/">SpanDeX.io</a>
+                                    <img src="doc/site/images/sx-logo.png"
+                                        style="left: -11px; top: -12px;">
+                                    <a href="http://www.scroipe.com">Scroipe</a>
                                 </li>
                                 <li>
                                     <img src="doc/site/images/ideone-logo.png"
-                                        style="position: relative; left: -5px; top: 20px;">
+                                        style="left: -5px; top: 20px;">
                                     <a href="http://ideone.com">Ideone.com</a>
                                 </li>
                                 <li>
                                     <img src="doc/site/images/pixie-logo.png"
-                                        style="position: relative; left: 0px; top: 10px;">
+                                        style="left: 0px; top: 10px;">
                                     <a href="http://pixieengine.com/projects/demo/ide">Pixie</a>
                                 </li>
                                 <li>
                                     <img src="doc/site/images/modx-logo-4.png"
-                                        style="position: relative; left: 18px; top: 6px;">
+                                        style="left: 18px; top: 6px;">
                                     <a href="http://modx.com/extras/package/ace">MODX</a>
                                 </li>
                                 <li>
                                     <img src="doc/site/images/shiftedit-logo.png"
-                                        style="position: relative; left: -10px; top: -20px; width: 120px" />
+                                        style="left: -10px; top: -20px; width: 120px" />
                                     <a href="http://shiftedit.net/">ShiftEdit</a>
-                                </li> 
+                                </li>
                                 <li>
-                                    <img src="doc/site/images/sx-logo.png"
-                                        style="position: relative; left: -11px; top: -12px;">
-                                    <a href="http://www.scroipe.com">Scroipe</a>
+                                    <div class="rotating-logo" style="background:url(doc/site/images/habitat-logo.svg) center no-repeat;
+                                        left: 19px; top: 6px;width: 60px;height: 60px;background-size: 60px;position: relative;"></div>
+                                    <a href="http://habitat.inkling.com">Inkling Habitat</a>
                                 </li>
                                 <li>
                                     <img src="doc/site/images/weecod-logo.png"
-                                        style="position: relative; left: 0px; top: 0px; width: 100px" />
+                                        style="left: 0px; top: 0px; width: 100px" />
                                     <a href="http://www.weecod.com">Weecod</a>
                                 </li>
                                 <li>
                                     <img src="doc/site/images/lws-logo.png"
-                                        style="position: relative; left: 0px; top: 0px; width: 100px" />
+                                        style="left: 0px; top: 0px; width: 100px" />
                                     <a href="http://liveworkspace.org">Live Workspace</a>
                                 </li>
                                 <li>
                                     <img src="doc/site/images/processwire-logo.svg"
-                                        style="position: relative; left: 0px; top: 25px; width: 102px" />
+                                        style="left: 0px; top: 25px; width: 102px" />
                                     <a href=" http://modules.processwire.com/modules/inputfield-ace-editor/">Process<i>Wire</i></a>
                                 </li>
                                 <li>
                                     <img src="doc/site/images/stypi-logo.png"
-                                        style="position: relative; left: 9px; top: -5px; width: 84px" />
+                                        style="left: 9px; top: -5px; width: 84px" />
                                     <a href="https://code.stypi.com/">Stypi</a>
                                 </li>
                                 <li>
                                     <img src="doc/site/images/repl.it-logo.png"
-                                        style="position: relative; left: 0px; top: 17px; width: 100px" />
+                                        style="left: 0px; top: 17px; width: 100px" />
                                     <a href="http://repl.it/">Repl.it</a>
                                 </li>
                                 <li>
                                     <img src="doc/site/images/crunchapp-logo.png"
-                                        style="position: relative; left: 9px; top: -5px; width: 84px" />
+                                        style="left: 9px; top: -5px; width: 84px" />
                                     <a href="http://crunchapp.net/">Crunch</a>
                                 </li>
                                 <li>
                                     <img src="https://googledrive.com/host/0B3cR-oSmQsB5aUhWQ2N4RDNmYzA/h/img/icon-128.png" 
-                                        style="position: relative; left: 9px; top: -5px; width: 84px">
+                                        style="left: 9px; top: -5px; width: 84px">
                                     <a href="https://drivenotepad.appspot.com/support">Drive Notepad</a>
                                 </li>
                                 <li>
+                                    <img src="doc/site/images/FineCut_small_logo.png"
+                                        style="left: 12px; top: -4px" />
+                                    <a href="http://finecut.info/">Fine Cut Engine</a>
+                                </li>
+                                <li>
                                     <img src="http://phpassist.com/images/logo-large.png" 
-                                        style="position: relative; left: 3px; top: -10px; width: 95px">
+                                        style="left: 3px; top: -10px; width: 95px">
                                     <a href="http://phpassist.com/">PHP Assist</a>
                                 </li>
                                 <li>
@@ -890,7 +888,7 @@ oop.inherits(FoldMode, BaseFoldMode);
                                     <a href="http://www.evaluzio.net/editor">Evaluzio</a>
                                 </li>
                                 <li>
-                                    <img style="position: relative; left: -10px; width: 124px; top: -8px;" 
+                                    <img style="left: -10px; width: 124px; top: -8px;" 
                                         src="http://www.gamedevhelper.com/wp-content/uploads/2012/11/cc_shadow.png">
                                     <a href="http://www.gamedevhelper.com/">CodeHelper</a>
                                 </li>
@@ -900,7 +898,7 @@ oop.inherits(FoldMode, BaseFoldMode);
                                 </li>
                                 <li>
                                     <img src="http://www.pixeljet.net/images/logo.png"
-                                        style="position: relative; width: 108px; top: 20px; left: -3px;">
+                                        style="width: 108px; top: 20px; left: -3px;">
                                     <a href="http://www.pixeljet.net/index.html">pixelJET</a>
                                 </li>
                                 <li>
@@ -909,7 +907,7 @@ oop.inherits(FoldMode, BaseFoldMode);
                                 </li>
                                 <li>
                                     <img src="doc/site/images/acebug-logo.png"
-                                        style="position: relative; left: 20px; top: 5px;">
+                                        style="left: 20px; top: 5px;">
                                     <a href="https://addons.mozilla.org/en-US/firefox/addon/acebug/">Acebug</a>
                                 </li>
                                 <li>
@@ -918,12 +916,12 @@ oop.inherits(FoldMode, BaseFoldMode);
                                 </li>
                                 <li>
                                     <img src="http://pagesofinterest.net/images/products/code-complete-140.png"
-                                        style="position: relative; left: -6px; width: 113px;top: -37px;">
+                                        style="left: -6px; width: 113px;top: -37px;">
                                     <a href="http://pagesofinterest.net/shop/code-complete">Code Complete</a>
                                 </li>
                                 <li>
                                     <img src="http://pagesofinterest.net/images/projects/aceview.png"
-                                        style="position: relative; left: 2px; width: 96px;top: -8px;">
+                                        style="left: 2px; width: 96px;top: -8px;">
                                     <a href="https://github.com/faceleg/ACEView">ACEView</a>
                                 </li>
                                 <li>
@@ -932,7 +930,7 @@ oop.inherits(FoldMode, BaseFoldMode);
                                 </li>
                                 <li>
                                     <img src="http://codebender.cc/images/codebender-transparent.png"
-                                        style="position: relative; left: -9px; width: 117px;top: -22px;">
+                                        style="left: -9px; width: 117px;top: -22px;">
                                     <a href="http://codebender.cc/">Codebender</a>
                                 </li>
                                 <li>
@@ -940,25 +938,23 @@ oop.inherits(FoldMode, BaseFoldMode);
                                     <a href="http://www.debuggex.com">Debuggex</a>
                                 </li>
                                 <li>
-                                    <img src="https://f.cloud.github.com/assets/341801/482936/73044648-b8ad-11e2-8e84-01d12d3a4c9e.png"
-                                        style="position: relative; left: 3px; width: 96px;top: -12px;">
+                                    <div style="width: 90px; left: 5px; top: -17px;background:rgb(23,23,23);color:rgb(181,232,83);
+                                        font-family: Monaco, 'Bitstream Vera Sans Mono', 'Lucida Console', Terminal, monospace;
+                                        text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1), 0 0 5px rgba(181, 232, 83, 0.1), 0 0 10px rgba(181, 232, 83, 0.1);
+                                        -webkit-font-smoothing: antialiased;
+                                        font-size: 90px;text-align: center;line-height: 90px;">S</div>
                                     <a href="http://slimtext.org/">Slim Text</a>
                                 </li>
                                 <li>
 
                                     <img src="https://www.decor-tab-creator.com/_files/decor_logo_white_new.png"
-                                        style="position: relative; left: -5px; width: 111px;top: 20px;">
+                                        style="left: -5px; width: 111px;top: 20px;">
                                     <a href="https://www.decor-tab-creator.com">Decor</a>
                                 </li>
                                 <li>
                                     <img src="https://app.divshot.com/images/logo-glyph.svg"
-                                        style="position: relative; left: 12px; width: 79px;top: -18px;">
+                                        style="left: 12px; width: 79px;top: -18px;">
                                     <a href="http://www.divshot.com/">Divshot</a>
-                                </li>
-                                <li>
-                                    <img src="https://codio.com/s/img/logo-beta-e0ba4559.png"
-                                        style="position: relative; left: -4px; width: 110px;top: 16px;">
-                                    <a href="https://codio.com/">Codio</a>
                                 </li>
                                 <li>
                                     <script>
@@ -969,7 +965,7 @@ oop.inherits(FoldMode, BaseFoldMode);
                                 </li>
                                 <li>
                                     <img src="http://multiplay.io/images/logo.png"
-                                        style="position: relative; left: 4px; width: 96px;top: -17px;">
+                                        style="left: 4px; width: 96px;top: -17px;">
                                     <a href="http://multiPlay.io/">MultiPlay.io</a>
                                 </li>
                                 <li>
@@ -986,12 +982,12 @@ oop.inherits(FoldMode, BaseFoldMode);
                                 </li>
                                 <li>
                                     <img src="http://joshnuss.github.io/mruby-web-irb/images/favicon.png"
-                                        style="position: relative; left: 4px; width: 90px;top: -17px;">
+                                        style="left: 4px; width: 90px;top: -17px;">
                                     <a href="http://joshnuss.github.io/mruby-web-irb/">Mruby-web-irb</a>
                                 </li>
                                 <li>
                                     <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAG4AAAA8CAYAAACHHY8HAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAACxIAAAsSAdLdfvwAAAAHdElNRQfdBQETIiXg/sIKAAAAGnRFWHRTb2Z0d2FyZQBQYWludC5ORVQgdjMuNS4xMDD0cqEAAAFpSURBVHhe7dstTgRBEAbQTVgCKDTBInCgUJwAQwgEAQK1hjtwCAR3IASB2ENwCg6AJAFBws83jmCnMy3qbfLJ7qp+NVkxnZnN/AgQIECAAAECBAgQINBWYLFYrCXHyUWxnOS86201J9wtzd8nP0XzNCF121IZ2HvRoQ0P61dbzQl3S/OPhQe3nJC6banhfz45S66K5Tzn3WiraTcCBAgQIECAAAECBAgQIECAAAECBAgQINBLIG+995KHZFksR73Mm9TNsF6K3rF95txbTRB7bJLm34oObrjV3u1h3qRmmr9OPgoO764JYM9NMrR5slosPcnVJkCAAAECBAgQIECAAAECBAgQIEBgpEDeZ24nhwUzH0nXb3mGdVD448bnnH2ln/6Iymn8tuD1z99Pp/dH8PVbmqFdJt9Fh/eac2/20x9ZOc2fJjcFszOSznICBAgQIECAAAECBAgQIECAAAECBAgQIECAwD+BX9K9KZrlGQTqAAAAAElFTkSuQmCC"
-                                        style="position: relative; left: 0px; width: 110px;top: 9px;">
+                                        style="left: 0px; width: 110px;top: 9px;">
                                     <a href="http://www.radide.com/">RAD Ide</a>
                                 </li>
                                 <li>
@@ -1008,7 +1004,7 @@ oop.inherits(FoldMode, BaseFoldMode);
                                 </li>
                                 <li>
                                     <img src="data:image/png;base64,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"
-                                        style="position: relative; left: 6px; width: 86px;top: -6px;">
+                                        style="left: 6px; width: 86px;top: -6px;">
                                     <a href="http://www.realoj.com">RealOJ</a>
                                 </li>
                                 <li title="WebRTC based video chat + code editor">
@@ -1017,27 +1013,94 @@ oop.inherits(FoldMode, BaseFoldMode);
                                 </li>
                                 <li>
                                     <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIUAAABoCAYAAADfADNgAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAEnQAABJ0Ad5mH3gAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjEwMPRyoQAACPlJREFUeF7tnWmKJkUQhtt9dxxcUBHEEXXABVf84QLKoCCCgij+lQHxBl7BK3gFryDMCbyCV/AKbb7dlR9pWZkRGRmRGVWdP5Kv+6vqWjKfWN6MrOqz8/Pzs9lmH6QMTCCmUfyPgQnFhGJCMUMlHSqnp5ieYnqK6Smmp5ieUOAJZ6cJOu3o3mZCMaGYOcXRrVzj/qanmJ5C5imu/XLz7Aq1X8O9nhPt1l77g+NJWJ5irx0gvO7fGVBcFx57uHFNKGQe7k8Cin/2CgSue0IhgwKDXgoff00oQiK2506ovHaEBSqf+KPymK76b3qKek/xHgMKJKKuBrrmeiYU9YP3PQOKn2sGwdu+E4p6KA4tR69iookBbZ0/4MjRGxvWj3PDy7gPK1fFU2CQooxshUIqR6OHAVSuwbgKUKxzgFYo/hbK0TTs4BhIWF3CcWQoIB0hDdfysQWKFjm6lYu4VClHhQIDn7PoFig4cvS3jAfIJagIR1s5yDAvckQoMCilyaUWKFrkKKVa3CShR4ICVozpZWq2sQUKamBx7tzxOX+LcDe8kHYUKDBZRMEQt7dAQXkhnCMXCjhQ4O9RV2m5xuaws3coYFWURNRMNKlzlaqjXCji9Q6TrnuGAjGYqlZueY8WK5TKUVhvLRS4doTD7tJ1r1BwZhVz4aQFCipElaqjEiji+bpK171BAauhrJUaOCkUyBWoY+fkqNRTpOfrJl33BEWLpaWdK4WCI0dLFq1x/QiX5tJ1D1CkdQvKUjnbpVBwBrV0bM7fc64f+5gu4vEOBcc6uR3ZKklb5KhG+FjfJ8KoFPCibPUKRa5uUQuApvrYqqOsj1/qbE1PkZ5XPQn1CEWpbjESCmq2lFqsawVFlK5q9RNvULRITQqYVndLHZ8T52tmXqnzbW1XWQboBQpu3ULSUfib1tnBVjmahhXtxHndJ831Ew9QWLrVVu8QBxMhjQKyNrZbeo2m+slIKNxbTLIuggOuZP4AfUDlKhSMpe0iDzkKCmndgtNBFhM8rXKUqlxyoOPc+9Y+1fWTEVBwpJ20A5rjaWbVFOeaqYGntlvnVezw1hMKa6kpcd/UQMXtlItH7sI9FrUfxytJjYZVP+kFhaV7ZN1o46BRJXqOHKVgSLdbGhAZXq2hsE6kVHQ5AYymHK0BA/tazttkQbaEwlJywZ2rzeARUFjI0Ro4LL3GpmS3gMKyboFYyk6YGkNGHDgO3Jb5DK6ja59qQwGqqfgrTZKqpZUSFJx8qJfXspTyJ++rCQXHoqRA9PYOqXvvIUdrwom117ihCQXHomqh0Jqmrun09b495WjNdVoZ4S3PUIimaJVCRjo4VDiEJK4ZTM19LUoFLqHw4B3iwHEeKC4t1tUEoHQsTa/hDgqraWrp4HAeKB6Z76T3pTVN7gYKcpZtkIvmWKC1HK0FujW3cwGFN++QDgKng7s/wcUwkBavMRwK7ZpBrVVR+3OmmaljjNxOJcmbC5s9qI8eBS3pwHiVo9T9tEyND/cUKaneYjM6nrK0kXI0B0Zr6d0VFPHJp+Ev7VhiNkeOeplLASAteURqnO6gwMV5USJ7kqOchJg7m+wSinjxo5NQziOLo0OexXoV11AAjpGzmxzrGylHOXMoXO9gFj44liW5SI2HeahsfWs7R46OyH8s6h1xXBC6Vauk6NgWKUQB0/sttdT7rTQX63KhtTS809SA5jxF7RoECoLc9l61BuqNOT3lqPUaiv/0qRUUAMR6lZBlPPckR7v3oyUUAMMy/lmu1/QiRzmrvqQeNzvHYg1FDCmcTF56cxbT5JzYbSlHLXMz8uHjXlBozrjl4NF8BoQDsVX44qgeqQGxKtI9oYhew/Km4TU0ZCLnGjXOY7FIptloRkARpStVbJJag8Y0OSVHtf8ZLcczSfuj+sGpUVAADGuZxXKVmQUrveSoVhErB4xo/ehIKKLrtJqujcU1yWsFKavUqI5a3ndTecADFFG6UgtaqIEqba8ZRGs5ai3TWzzkhaF6gaKHdOVaj6UctfQOMAoVmewNCuv6CTqOCiecpE8iRznHlXpD1bkaj1BEr2E1m0dBwVnOJpGjVlCo14I8Q2FVP6GgoGCUylFtKMyqxt6hsKifUFBQcpR63XKuDK4JRU3izC3Ln/bbAxTaSSgFBRXXpQOiAYXGxBwJyZ6g0KqflKDgvN9KGsNbodCawj8cFBr1kxIUnPdbSQtvLVBIz0kCsDWjuzdPkd6kdPFJ63/vkchRXLcEiiGvdNozFLF+QhWv1jlCCQorOSqBQlS3YDx8THqPvUMhqZ+UoLCSozVQcGdeycGVAnIUKGqS0BIUVP1FKke5UDTXLaQgpH93JCii5VAhoAQFJUdbnlqjcgqVusWEIv8CstIaxxwUlnK05ClU6xYTivJb6XKLeHJQWMrRHBTSOQ+zfMJj6dziZtel8BwUnLI2NRtauv40fJjVLaan4L+/Ml3YkhtYKhdBviGpjq6n6aXT5BYGs3nMIyaalLXmoLCUozF8uEkmSx7lqkFRAsZSjnaz8hk++OGDMyjUIwctcpRzfjf7TE9xCRbngWKXSkHDM6yPMaG4hMJajrrxAhyIJhSXUFjL0QkFh0Zn+1BT0JCjvf77z3CApqe49BTUA8XSxbrDB1hifBOKSyimHE2UHBOKO+FRsl21u8L13hPavaHdH9oDS8PP+O7u0LDPxX0FKEg5urP7rx2vqv5CX9SeYPT+uMH7Qns4tCdCeya055aGn/HdY8t27PPo8ju+i98DIsADsE7w7AyMONDoiwdDe2R1n/gd3+Ne8Yl+uL7qr6fD79dCe2jpj1NfjB7kmvNHIDC4z4b2SmjvhPbh0t4On6+F9mJoLyyfLy/f3Vz2xzbA8/jSWYBjb2DgenHd0TBgFC+F9mpouE984vfnl3vF/aI/0Ddpf7217PfUciwc82I8agZl9L6wbHQEgHgjtPBK4Ts/hnY7tJ9C+yG0L0P7KDSA8mloX4T2TWjfhvZVaJ+E9ubSSfAqsKS9QYF+gHU/uQzqu+Hzs9C+Xu4Tn5+H9n5ory/tg6Uv0v76Lnz3cWgwLhzr1Bf/AlqiCJDs9BQDAAAAAElFTkSuQmCC"
-                                        style="position: relative; left: 3px; width: 96px;top: -2px;">
+                                        style="left: 3px; width: 96px;top: -2px;">
                                     <a href="http://compileonline.com">compileonline</a>
                                 </li>
                                 <li>
                                     <img src="http://www.stickygit.com/img/logo1.png"
-                                        style="position: relative; width: 64px; left: 18px; top: 5px;">
+                                        style="width: 64px; left: 18px; top: 5px;">
                                     <a href="http://www.stickygit.com/">StickyGit</a>
                                 </li>
                                 <li>
                                     <img src="http://iknode.com/iknode_symbol.png"
-                                        style="position: relative; width: 96px; left: 2px; top: -21px;">
+                                        style="width: 96px; left: 2px; top: -21px;">
                                     <a href="http://iknode.com/">iKnode</a>
                                 </li>
                                 <li title="Online conference and code review tool">
-                                    <div style="position: relative; width: 90px; left: 5px; top: 0px;background:rgb(24,73,92);color: white;
+                                    <div style="width: 90px; left: 5px; top: 0px;background:rgb(24,73,92);color: white;position: absolute;
                                         font-size: 68px;text-align: center;font-weight: bold;font-family: inherit;line-height: normal;">sT</div>
                                     <a href="http://sourcetalk.net/">SourceTalk</a>
                                 </li>
                                 <li title="Php framework">
                                     <div class="text-logo" style="margin-left:-12px;">Andromeda</div>
                                     <a href="http://www.andromeda-project.org/index.php">Andromeda</a>
+                                </li>
+                                <li>
+                                    <img src="https://raw.github.com/Gisto/Gisto/master/app/icon.png"
+                                        style="width: 96px; left: 2px; top: -21px;">
+                                    <a href="http://www.gistoapp.com/">Gisto</a>
+                                </li>
+                                <li>
+                                    <img src="http://jdoodle.com/static/images/jdoodle.png"
+                                        style="width: 122px; left: -3px; top: -12px;">
+                                    <a href="http://jdoodle.com/">JDoodle</a>
+                                </li>
+                                <li>
+                                    <div class="text-logo" style="margin-top:4px">Run PHP Code</div>
+                                    <a href="https://github.com/websiteduck/Run-PHP-Code">RunPHPCode</a>
+                                </li>
+                                <li>
+                                    <img src="http://instaedu.com/publish/static/img/20ac02f.png"
+                                        style="width: 111px; left: -3px; top: 30px;">
+                                    <a href="http://instaedu.com/lesson-demo/">InstaEDU</a>
+                                </li>
+                                <li>
+                                    <img src="http://s7.postimg.org/tbw9lfcvb/cloudcmd.png"
+                                        style="width: 74px; left: 13px; top: -2px;">
+                                    <a href="http://coderaiser.github.io/cloudcmd">CloudCmd</a>
+                                </li>
+                                <li>
+                                    <img src="http://www.ogeditor.com/images/logo.png"
+                                        style="width: 105px; left: -2px; top: 27px;">
+                                    <a href="http://www.ogeditor.com/index.aspx">ogEditor</a>
+                                </li>
+                                <li>
+                                    <div class="text-logo">allong.es</div>
+                                    <a href="http://allong.es/try/">Try allong.es</a>
+                                </li>
+                                <li>
+                                    <div class="text-logo">NapCat</div>
+                                    <a href="http://napcatapp.tumblr.com/post/60598006734/version-1-3-is-released">NapCat</a>
+                                </li>
+                                <li>
+                                    <div class="text-logo">CorsLit</div>
+                                    <a href="http://www.corslit.com/new/melloWorld">CorsLit</a>
+                                </li>
+                                <li>
+                                    <img src="http://ojjs.org/media/oj_logo_big.png"
+                                        style="width: 74px; left: 13px; top: 8px;background: white;box-shadow: 0 0 2px 6px white;">
+                                    <a href="http://ojjs.org/index.html">OJjs</a>
+                                </li>
+                                <li>
+                                    <div class="text-logo">Codechat</div>
+                                    <a href="http://codechat.net/">Codechat</a>
+                                </li>
+                                <li>
+                                    <img src="doc/site/images/wolf_3d_logo_trans.png"
+                                        style="left: 10px; top: -4px; width:80px" />
+                                    <a href="http://www.wolfcms.org/repository/133">Wolf CMS</a>
+                                </li>
+                                <li>
+                                    <img src="http://thlorenz.github.io/scriptie-talkie/images/code.png" style="left: 20px; top: 20px; width: 60px;">
+                                    <a href="http://thlorenz.github.io/scriptie-talkie/">Scriptie-Talkie</a>
+                                </li>
+                                <li>
+                                    <div class="text-logo">md</div>
+                                    <a href="http://thlorenz.github.io/browserify-markdown-editor/">browserify-markdown-editor</a>
+                                </li>
+                                <li>
+                                    <div class="text-logo"></div>
+                                    <a href="http://bakemycss.mypathforpython.appspot.com/">BakeMyCss</a>
                                 </li>
                                 <li>
                                     <a href="https://github.com/Gozala/sky-edit">Sky Edit</a>
@@ -1071,6 +1134,8 @@ oop.inherits(FoldMode, BaseFoldMode);
                                     <a href="http://beanstalkapp.com/">beanstalk</a>
                                 </li>
                                 <li>
+                                    <img src="https://neutron-drive.appspot.com/static/img/neutron_face_high.png"
+                                        style="width: 76px; left: 7px; top: -11px;">
                                     <a href="http://neutronide.com/">Neutron IDE</a>
                                 </li>
                                 <li>
@@ -1105,9 +1170,8 @@ oop.inherits(FoldMode, BaseFoldMode);
                 </div>
             </div>
         </div>
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-        <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/js/bootstrap.min.js"></script>
-        <script defer src="//yandex.st/highlightjs/7.2/highlight.min.js" onload="hljs.initHighlighting();"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+        <script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/js/bootstrap.min.js"></script>
         <script src="./doc/template/resources/javascripts/bbq.js"></script>
         <script src="./api/resources/javascripts/ux.js"></script>
         <script src="./doc/site/js/main.js"></script>

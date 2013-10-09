@@ -69,6 +69,12 @@ var ElasticTabstopsLite = require("ace/ext/elastic_tabstops_lite").ElasticTabsto
 
 var IncrementalSearch = require("ace/incremental_search").IncrementalSearch;
 
+
+var workerModule = require("ace/worker/worker_client");
+if (location.href.indexOf("noworker") !== -1) {
+    workerModule.WorkerClient = workerModule.UIWorkerClient;
+}
+
 /*********** create editor ***************************/
 var container = document.getElementById("editor-container");
 
@@ -82,8 +88,6 @@ split.on("focus", function(editor) {
 });
 env.split = split;
 window.env = env;
-window.ace = env.editor;
-env.editor.setAnimatedScroll(true);
 
 // add multiple cursor support to editor
 require("ace/multi_select").MultiSelect(env.editor);
@@ -171,6 +175,26 @@ env.editor.commands.addCommands([{
             editor.showKeyboardShortcuts()
         })
     }
+}, {
+    name: "increaseFontSize",
+    bindKey: "Ctrl-+",
+    exec: function(editor) {
+        var size = parseInt(editor.getFontSize(), 10) || 12;
+        editor.setFontSize(size + 1);
+    }
+}, {
+    name: "decreaseFontSize",
+    bindKey: "Ctrl+-",
+    exec: function(editor) {
+        var size = parseInt(editor.getFontSize(), 10) || 12;
+        editor.setFontSize(Math.max(size - 1 || 1));
+    }
+}, {
+    name: "resetFontSize",
+    bindKey: "Ctrl+0",
+    exec: function(editor) {
+        editor.setFontSize(12);
+    }
 }]);
 
 
@@ -193,7 +217,31 @@ var commands = env.editor.commands;
 commands.addCommand({
     name: "save",
     bindKey: {win: "Ctrl-S", mac: "Command-S"},
-    exec: function() {alert("Fake Save File");}
+    exec: function(arg) {
+        var session = env.editor.session;
+        name = session.name.match(/[^\/]+$/)
+        localStorage.setItem(
+            "saved_file:" + name,
+            session.getValue()
+        );
+        env.editor.cmdLine.setValue("saved "+ name);
+    }
+});
+
+commands.addCommand({
+    name: "load",
+    bindKey: {win: "Ctrl-O", mac: "Command-O"},
+    exec: function(arg) {
+        var session = env.editor.session;
+        name = session.name.match(/[^\/]+$/)
+        var value = localStorage.getItem("saved_file:" + name);
+        if (typeof value == "string") {
+            session.setValue(value);
+            env.editor.cmdLine.setValue("loaded "+ name);
+        } else {
+            env.editor.cmdLine.setValue("no previuos value saved for "+ name);
+        }
+    }
 });
 
 var keybindings = {    
@@ -241,6 +289,7 @@ var showGutterEl = document.getElementById("show_gutter");
 var showPrintMarginEl = document.getElementById("show_print_margin");
 var highlightSelectedWordE = document.getElementById("highlight_selected_word");
 var showHScrollEl = document.getElementById("show_hscroll");
+var showVScrollEl = document.getElementById("show_vscroll");
 var animateScrollEl = document.getElementById("animate_scroll");
 var softTabEl = document.getElementById("soft_tab");
 var behavioursEl = document.getElementById("enable_behaviours");
@@ -403,7 +452,11 @@ bindCheckbox("highlight_selected_word", function(checked) {
 });
 
 bindCheckbox("show_hscroll", function(checked) {
-    env.editor.renderer.setHScrollBarAlwaysVisible(checked);
+    env.editor.setOption("hScrollBarAlwaysVisible", checked);
+});
+
+bindCheckbox("show_vscroll", function(checked) {
+    env.editor.setOption("vScrollBarAlwaysVisible", checked);
 });
 
 bindCheckbox("animate_scroll", function(checked) {
@@ -423,6 +476,9 @@ bindCheckbox("fade_fold_widgets", function(checked) {
 });
 bindCheckbox("read_only", function(checked) {
     env.editor.setReadOnly(checked);
+});
+bindCheckbox("scrollPastEnd", function(checked) {
+    env.editor.setOption("scrollPastEnd", checked);
 });
 
 bindDropdown("split", function(value) {
@@ -511,10 +567,10 @@ new StatusBar(env.editor, cmdLine.container);
 
 
 var Emmet = require("ace/ext/emmet");
-net.loadScript("https://rawgithub.com/nightwing/emmet-core/master/emmet.js", function() {
+net.loadScript("http://nightwing.github.io/emmet-core/emmet.js", function() {
     Emmet.setCore(window.emmet);
     env.editor.setOption("enableEmmet", true);
-})
+});
 
 
 // require("ace/placeholder").PlaceHolder;
@@ -542,7 +598,7 @@ env.editSnippets = function() {
     editor.on("blur", function() {
         m.snippetText = editor.getValue();
         snippetManager.unregister(m.snippets);
-        m.snippets = snippetManager.parseSnippetFile(m.snippetText);
+        m.snippets = snippetManager.parseSnippetFile(m.snippetText, m.scope);
         snippetManager.register(m.snippets);
     })
     sp.$editors[0].once("changeMode", function() {
@@ -559,3 +615,31 @@ env.editor.setOptions({
 })
 
 });
+
+// allow easy access to ace in console, but not in ace code which uses strict
+void function() {
+function isStrict() {
+    try { return !arguments.callee.caller.caller.caller}
+    catch(e){ return true }
+}
+function warn() {
+    if (isStrict()) {
+        console.error("trying to access to global variable");
+    }
+}
+function def(o, key, get) {
+    Object.defineProperty(o, key, {
+        configurable: true, 
+        get: get,
+        set: function(val) {
+            delete o[key];
+            o[key] = val;
+        }
+    });
+}
+def(window, "ace", function(){ warn(); return env.editor });
+def(window, "editor", function(){ warn(); return env.editor });
+def(window, "session", function(){ warn(); return env.editor.session });
+def(window, "split", function(){ warn(); return env.split });
+
+}();

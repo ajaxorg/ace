@@ -33,7 +33,7 @@
         name: "showKeyboardShortcuts",
         bindKey: {win: "Ctrl-Alt-h", mac: "Command-Alt-h"},
         exec: function(editor) {
-            config.loadModule("ace/ext/keybinding_menu", function(module) {
+            ace.config.loadModule("ace/ext/keybinding_menu", function(module) {
                 module.init(editor);
                 editor.showKeyboardShortcuts()
             })
@@ -41,6 +41,6 @@
     })
 </script>
 
-<script src="./demo_helper.js"></script>
+<script src="./show_own_source.js"></script>
 </body>
 </html>

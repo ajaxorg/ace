@@ -5,22 +5,22 @@
    "start"
 ],[
    "start",
-  ["meta.tag","<"],
-  ["meta.tag.tag-name","cfset"],
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name","cfset"],
   ["text"," "],
   ["entity.other.attribute-name","welcome"],
-  ["keyword.operator","="],
+  ["keyword.operator.separator","="],
   ["string","\"Hello World!\""],
-  ["meta.tag.r",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start"
 ],[
    "start",
-  ["meta.tag","<"],
-  ["meta.tag.tag-name","cfoutput"],
-  ["meta.tag.r",">"],
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name","cfoutput"],
+  ["meta.tag.punctuation.end",">"],
   ["text","#welcome#"],
-  ["meta.tag","</"],
-  ["meta.tag.tag-name","cfoutput"],
-  ["meta.tag.r",">"]
+  ["meta.tag.punctuation.begin","</"],
+  ["meta.tag.name","cfoutput"],
+  ["meta.tag.punctuation.end",">"]
 ]]

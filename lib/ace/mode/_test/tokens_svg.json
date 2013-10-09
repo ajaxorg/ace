@@ -1,68 +1,65 @@
 [[
-   "tag_embed_attribute_list",
-  ["meta.tag","<"],
-  ["meta.tag.tag-name","svg"]
+   "meta.tag.punctuation.begin0",
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name","svg"]
 ],[
-   "tag_embed_attribute_list",
+   "meta.tag.punctuation.begin0",
   ["text","  "],
   ["entity.other.attribute-name","width"],
-  ["keyword.operator","="],
+  ["keyword.operator.separator","="],
   ["string","\"800\""],
   ["text"," "],
   ["entity.other.attribute-name","height"],
-  ["keyword.operator","="],
+  ["keyword.operator.separator","="],
   ["string","\"600\""]
 ],[
-   "tag_embed_attribute_list",
+   "meta.tag.punctuation.begin0",
   ["text","  "],
   ["entity.other.attribute-name","xmlns"],
-  ["keyword.operator","="],
+  ["keyword.operator.separator","="],
   ["string","\"http://www.w3.org/2000/svg\""]
 ],[
    "start",
   ["text","  "],
   ["entity.other.attribute-name","onload"],
-  ["keyword.operator","="],
+  ["keyword.operator.separator","="],
   ["string","\"StartAnimation(evt)\""],
-  ["meta.tag.r",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start"
 ],[
    "start",
   ["text","  "],
-  ["meta.tag","<"],
-  ["meta.tag.tag-name","title"],
-  ["meta.tag.r",">"],
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name","title"],
+  ["meta.tag.punctuation.end",">"],
   ["text","Test Tube Progress Bar"],
-  ["meta.tag","</"],
-  ["meta.tag.tag-name","title"],
-  ["meta.tag.r",">"]
+  ["meta.tag.punctuation.begin","</"],
+  ["meta.tag.name","title"],
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","  "],
-  ["meta.tag","<"],
-  ["meta.tag.tag-name","desc"],
-  ["meta.tag.r",">"],
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name","desc"],
+  ["meta.tag.punctuation.end",">"],
   ["text","Created for the Web Directions SVG competition"],
-  ["meta.tag","</"],
-  ["meta.tag.tag-name","desc"],
-  ["meta.tag.r",">"]
+  ["meta.tag.punctuation.begin","</"],
+  ["meta.tag.name","desc"],
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start"
 ],[
-   "js-start",
+   "js-no_regex",
   ["text","  "],
-  ["meta.tag","<"],
-  ["meta.tag.tag-name","script"],
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name.script","script"],
   ["text"," "],
   ["entity.other.attribute-name","type"],
-  ["keyword.operator","="],
+  ["keyword.operator.separator","="],
   ["string","\"text/ecmascript\""],
-  ["meta.tag.r",">"],
-  ["keyword.operator","<!"],
-  ["paren.lparen","["],
-  ["identifier","CDATA"],
-  ["paren.lparen","["]
+  ["meta.tag.punctuation.end",">"],
+  ["string.begin","<![CDATA["]
 ],[
    "js-start",
   ["text","    "],
@@ -491,198 +488,197 @@
 ],[
    "start",
   ["text","  "],
-  ["paren.rparen","]]"],
-  ["keyword.operator",">"],
-  ["meta.tag","</"],
-  ["meta.tag.tag-name","script"],
-  ["meta.tag.r",">"]
+  ["string.end","]]>"],
+  ["meta.tag.punctuation.begin","</"],
+  ["meta.tag.name.script","script"],
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start"
 ],[
-   "tag_embed_attribute_list",
+   "meta.tag.punctuation.begin0",
   ["text","  "],
-  ["meta.tag","<"],
-  ["meta.tag.tag-name","rect"]
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name","rect"]
 ],[
-   "tag_embed_attribute_list",
+   "meta.tag.punctuation.begin0",
   ["text","    "],
   ["entity.other.attribute-name","fill"],
-  ["keyword.operator","="],
+  ["keyword.operator.separator","="],
   ["string","\"#2e3436\""]
 ],[
-   "tag_embed_attribute_list",
+   "meta.tag.punctuation.begin0",
   ["text","    "],
   ["entity.other.attribute-name","fill-rule"],
-  ["keyword.operator","="],
+  ["keyword.operator.separator","="],
   ["string","\"nonzero\""]
 ],[
-   "tag_embed_attribute_list",
+   "meta.tag.punctuation.begin0",
   ["text","    "],
   ["entity.other.attribute-name","stroke-width"],
-  ["keyword.operator","="],
+  ["keyword.operator.separator","="],
   ["string","\"3\""]
 ],[
-   "tag_embed_attribute_list",
+   "meta.tag.punctuation.begin0",
   ["text","    "],
   ["entity.other.attribute-name","y"],
-  ["keyword.operator","="],
+  ["keyword.operator.separator","="],
   ["string","\"0\""]
 ],[
-   "tag_embed_attribute_list",
+   "meta.tag.punctuation.begin0",
   ["text","    "],
   ["entity.other.attribute-name","x"],
-  ["keyword.operator","="],
+  ["keyword.operator.separator","="],
   ["string","\"0\""]
 ],[
-   "tag_embed_attribute_list",
+   "meta.tag.punctuation.begin0",
   ["text","    "],
   ["entity.other.attribute-name","height"],
-  ["keyword.operator","="],
+  ["keyword.operator.separator","="],
   ["string","\"600\""]
 ],[
-   "tag_embed_attribute_list",
+   "meta.tag.punctuation.begin0",
   ["text","    "],
   ["entity.other.attribute-name","width"],
-  ["keyword.operator","="],
+  ["keyword.operator.separator","="],
   ["string","\"800\""]
 ],[
    "start",
   ["text","    "],
   ["entity.other.attribute-name","id"],
-  ["keyword.operator","="],
+  ["keyword.operator.separator","="],
   ["string","\"rect3590\""],
-  ["meta.tag.r","/>"]
+  ["meta.tag.punctuation.end","/>"]
 ],[
    "start"
 ],[
-   "tag_embed_attribute_list",
+   "meta.tag.punctuation.begin0",
   ["text","    "],
-  ["meta.tag","<"],
-  ["meta.tag.tag-name","text"]
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name","text"]
 ],[
-   "tag_embed_attribute_list",
+   "meta.tag.punctuation.begin0",
   ["text","       "],
   ["entity.other.attribute-name","style"],
-  ["keyword.operator","="],
+  ["keyword.operator.separator","="],
   ["string","\"font-size:144px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans Bold\""]
 ],[
-   "tag_embed_attribute_list",
+   "meta.tag.punctuation.begin0",
   ["text","       "],
   ["entity.other.attribute-name","x"],
-  ["keyword.operator","="],
+  ["keyword.operator.separator","="],
   ["string","\"50\""]
 ],[
-   "tag_embed_attribute_list",
+   "meta.tag.punctuation.begin0",
   ["text","       "],
   ["entity.other.attribute-name","y"],
-  ["keyword.operator","="],
+  ["keyword.operator.separator","="],
   ["string","\"350\""]
 ],[
-   "tag_embed_attribute_list",
+   "meta.tag.punctuation.begin0",
   ["text","       "],
   ["entity.other.attribute-name","id"],
-  ["keyword.operator","="],
+  ["keyword.operator.separator","="],
   ["string","\"hickory\""]
 ],[
    "start",
   ["text","       "],
   ["entity.other.attribute-name","display"],
-  ["keyword.operator","="],
+  ["keyword.operator.separator","="],
   ["string","\"none\""],
-  ["meta.tag.r",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","        Hickory,"],
-  ["meta.tag","</"],
-  ["meta.tag.tag-name","text"],
-  ["meta.tag.r",">"]
+  ["meta.tag.punctuation.begin","</"],
+  ["meta.tag.name","text"],
+  ["meta.tag.punctuation.end",">"]
 ],[
-   "tag_embed_attribute_list",
+   "meta.tag.punctuation.begin0",
   ["text","    "],
-  ["meta.tag","<"],
-  ["meta.tag.tag-name","text"]
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name","text"]
 ],[
-   "tag_embed_attribute_list",
+   "meta.tag.punctuation.begin0",
   ["text","       "],
   ["entity.other.attribute-name","style"],
-  ["keyword.operator","="],
+  ["keyword.operator.separator","="],
   ["string","\"font-size:144px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans Bold\""]
 ],[
-   "tag_embed_attribute_list",
+   "meta.tag.punctuation.begin0",
   ["text","       "],
   ["entity.other.attribute-name","x"],
-  ["keyword.operator","="],
+  ["keyword.operator.separator","="],
   ["string","\"50\""]
 ],[
-   "tag_embed_attribute_list",
+   "meta.tag.punctuation.begin0",
   ["text","       "],
   ["entity.other.attribute-name","y"],
-  ["keyword.operator","="],
+  ["keyword.operator.separator","="],
   ["string","\"350\""]
 ],[
-   "tag_embed_attribute_list",
+   "meta.tag.punctuation.begin0",
   ["text","       "],
   ["entity.other.attribute-name","id"],
-  ["keyword.operator","="],
+  ["keyword.operator.separator","="],
   ["string","\"dickory\""]
 ],[
    "start",
   ["text","       "],
   ["entity.other.attribute-name","display"],
-  ["keyword.operator","="],
+  ["keyword.operator.separator","="],
   ["string","\"none\""],
-  ["meta.tag.r",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","        dickory,"],
-  ["meta.tag","</"],
-  ["meta.tag.tag-name","text"],
-  ["meta.tag.r",">"]
+  ["meta.tag.punctuation.begin","</"],
+  ["meta.tag.name","text"],
+  ["meta.tag.punctuation.end",">"]
 ],[
-   "tag_embed_attribute_list",
+   "meta.tag.punctuation.begin0",
   ["text","    "],
-  ["meta.tag","<"],
-  ["meta.tag.tag-name","text"]
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name","text"]
 ],[
-   "tag_embed_attribute_list",
+   "meta.tag.punctuation.begin0",
   ["text","       "],
   ["entity.other.attribute-name","style"],
-  ["keyword.operator","="],
+  ["keyword.operator.separator","="],
   ["string","\"font-size:144px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans Bold\""]
 ],[
-   "tag_embed_attribute_list",
+   "meta.tag.punctuation.begin0",
   ["text","       "],
   ["entity.other.attribute-name","x"],
-  ["keyword.operator","="],
+  ["keyword.operator.separator","="],
   ["string","\"50\""]
 ],[
-   "tag_embed_attribute_list",
+   "meta.tag.punctuation.begin0",
   ["text","       "],
   ["entity.other.attribute-name","y"],
-  ["keyword.operator","="],
+  ["keyword.operator.separator","="],
   ["string","\"350\""]
 ],[
-   "tag_embed_attribute_list",
+   "meta.tag.punctuation.begin0",
   ["text","       "],
   ["entity.other.attribute-name","id"],
-  ["keyword.operator","="],
+  ["keyword.operator.separator","="],
   ["string","\"dock\""]
 ],[
    "start",
   ["text","       "],
   ["entity.other.attribute-name","display"],
-  ["keyword.operator","="],
+  ["keyword.operator.separator","="],
   ["string","\"none\""],
-  ["meta.tag.r",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","        dock!"],
-  ["meta.tag","</"],
-  ["meta.tag.tag-name","text"],
-  ["meta.tag.r",">"]
+  ["meta.tag.punctuation.begin","</"],
+  ["meta.tag.name","text"],
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
-  ["meta.tag","</"],
-  ["meta.tag.tag-name","svg"],
-  ["meta.tag.r",">"]
+  ["meta.tag.punctuation.begin","</"],
+  ["meta.tag.name","svg"],
+  ["meta.tag.punctuation.end",">"]
 ]]

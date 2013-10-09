@@ -66,92 +66,19 @@ function makeHuge(txt) {
 }
 
 var docs = {
-    "docs/javascript.js": "JavaScript",
-    "docs/AsciiDoc.asciidoc": "AsciiDoc",
-    "docs/clojure.clj": "Clojure",
-    "docs/coffeescript.coffee": "CoffeeScript",
-    "docs/coldfusion.cfm": "ColdFusion",
-    "docs/cpp.cpp": "C/C++",
-    "docs/csharp.cs": "C#",
-    "docs/css.css": "CSS",
-    "docs/curly.curly": "Curly",
-    "docs/dart.dart": "Dart",
-    "docs/diff.diff": "Diff",
-    "docs/dot.dot": "Dot",
-    "docs/freemarker.ftl" : "FreeMarker",
-    "docs/glsl.glsl": "Glsl",
-    "docs/golang.go": "Go",
-    "docs/groovy.groovy": "Groovy",
-    "docs/haml.haml": "Haml",
-    "docs/Haxe.hx": "haXe",
-    "docs/html.html": "HTML",
-    "docs/html_ruby.erb": "HTML (Ruby)",
-    "docs/jade.jade": "Jade",
-    "docs/java.java": "Java",
-    "docs/jsp.jsp": "JSP",
-    "docs/json.json": "JSON",
-    "docs/jsx.jsx": "JSX",
+    "docs/javascript.js": {order: 1, name: "JavaScript"},
+
     "docs/latex.tex": {name: "LaTeX", wrapped: true},
-    "docs/less.less": "LESS",
-    "docs/lisp.lisp": "Lisp",
-    "docs/lsl.lsl": "LSL",
-    "docs/scheme.scm": "Scheme",
-    "docs/livescript.ls": "LiveScript",
-    "docs/liquid.liquid": "Liquid",
-    "docs/logiql.logic": "LogiQL",
-    "docs/lua.lua": "Lua",
-    "docs/lucene.lucene": "Lucene",
-    "docs/luapage.lp": "LuaPage",
-    "docs/Makefile": "Makefile",
     "docs/markdown.md": {name: "Markdown", wrapped: true},
     "docs/mushcode.mc": {name: "MUSHCode", wrapped: true},
-    "docs/objectivec.m": {name: "Objective-C"},
-    "docs/ocaml.ml": "OCaml",
-    "docs/OpenSCAD.scad": "OpenSCAD",
-    "docs/pascal.pas": "Pascal",
-    "docs/perl.pl": "Perl",
     "docs/pgsql.pgsql": {name: "pgSQL", wrapped: true},
-    "docs/php.php": "PHP",
     "docs/plaintext.txt": {name: "Plain Text", prepare: makeHuge, wrapped: true},
-    "docs/powershell.ps1": "Powershell",
-    "docs/properties.properties": "Properties",
-    "docs/python.py": "Python",
-    "docs/r.r": "R",
-    "docs/rdoc.Rd": "RDoc",
-    "docs/rhtml.rhtml": "RHTML",
-    "docs/ruby.rb": "Ruby",
-    "docs/abap.abap": "SAP - ABAP",
-    "docs/scala.scala": "Scala",
-    "docs/scss.scss": "SCSS",
-    "docs/sass.sass": "SASS",
-    "docs/sh.sh": "SH",
-    "docs/stylus.styl": "Stylus",
     "docs/sql.sql": {name: "SQL", wrapped: true},
-    "docs/svg.svg": "SVG",
-    "docs/tcl.tcl": "Tcl",
-    "docs/tex.tex": "Tex",
+
     "docs/textile.textile": {name: "Textile", wrapped: true},
-    "docs/snippets.snippets": "snippets",
-    "docs/toml.toml": "TOML",
-    "docs/typescript.ts": "Typescript",
-    "docs/vbscript.vbs": "VBScript",
-    "docs/velocity.vm": "Velocity",
-    "docs/xml.xml": "XML",
-    "docs/xquery.xq": "XQuery",
-    "docs/yaml.yaml": "YAML",
+
     "docs/c9search.c9search_results": "C9 Search Results",
-    
-    "docs/actionscript.as": "ActionScript",
-    "docs/assembly_x86.asm": "Assembly_x86",
-    "docs/autohotkey.ahk": "AutoHotKey",
-    "docs/batchfile.bat": "BatchFile",
-    "docs/erlang/erl": "Erlang",
-    "docs/forth.frt": "Forth",
-    "docs/haskell.hs": "Haskell",
-    "docs/julia.js": "Julia",
-    "docs/prolog/plg": "Prolog",
-    "docs/rust.rs": "Rust",
-    "docs/twig.twig": "Twig"
+    "docs/Nix.nix": "Nix"
 };
 
 var ownSource = {
@@ -163,6 +90,23 @@ var hugeDocs = {
     "build/src-min/ace.js": ""
 };
 
+modelist.modes.forEach(function(m) {
+    var ext = m.extensions.split("|")[0];
+    if (ext[0] === "^") {
+        path = ext.substr(1);
+    } else {
+        var path = m.name + "." + ext 
+    }
+    path = "docs/" + path;
+    if (!docs[path]) {
+        docs[path] = {name: m.caption};
+    } else if (typeof docs[path] == "object" && !docs[path].name) {
+        docs[path].name = m.caption;
+    }
+})
+
+
+
 if (window.require && window.require.s) try {
     for (var path in window.require.s.contexts._.defined) {
         if (path.indexOf("!") != -1)
@@ -172,6 +116,13 @@ if (window.require && window.require.s) try {
         ownSource[path] = "";
     }
 } catch(e) {}
+
+function sort(list) {
+    return list.sort(function(a, b) {
+        var cmp = (b.order || 0) - (a.order || 0);
+        return cmp || a.name && a.name.localeCompare(b.name);
+    })
+}
 
 function prepareDocList(docs) {
     var list = [];
@@ -216,7 +167,7 @@ function loadDoc(name, callback) {
 
 module.exports = {
     fileCache: fileCache,
-    docs: prepareDocList(docs),
+    docs: sort(prepareDocList(docs)),
     ownSource: prepareDocList(ownSource),
     hugeDocs: prepareDocList(hugeDocs),
     initDoc: initDoc,

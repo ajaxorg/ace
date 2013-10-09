@@ -16,9 +16,8 @@ body {
     color: white;
 }
 
-#logo {
-    padding: 15px;
-    margin-left: 70px;
+#c9-logo, #ace-logo {
+    padding: 0;
     border: none;
 }
 
