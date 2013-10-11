@@ -71,17 +71,33 @@ function main(args) {
         } else if (type == "full") {
             demo(ace());
             bookmarklet();
+        } else if (type == "highlighter") {
+            var project = buildAce({
+                coreOnly: true,
+                exportModule: "ace/ext/static_highlight",
+                requires: ["ace/ext/static_highlight", "ace/theme/textmate"],
+                readFilters: [copy.filter.moduleDefines, function(a) {
+                    console.log(a.substring(0, 2500))
+                    return a
+                }]
+            })
+            copy({
+                source: project.result,
+                filter: getWriteFilters(project.options, "main"),
+                dest:   BUILD_DIR + "/static_highlight.js"
+            });
         }
     }
 
     console.log("--- Ace Dryice Build Tool ---");
     console.log("");
     console.log("Options:");
-    console.log("  minimal     Places necessary Ace files out in build dir; uses configuration flags below [default]");
-    console.log("  normal      Runs four Ace builds--minimal, minimal-noconflict, minimal-min, and minimal-noconflict-min");
-    console.log("  demo        Runs demo build of Ace");
-    console.log("  bm          Runs bookmarklet build of Ace");
-    console.log("  full        all of above");
+    console.log("  minimal      Places necessary Ace files out in build dir; uses configuration flags below [default]");
+    console.log("  normal       Runs four Ace builds--minimal, minimal-noconflict, minimal-min, and minimal-noconflict-min");
+    console.log("  demo         Runs demo build of Ace");
+    console.log("  bm           Runs bookmarklet build of Ace");
+    console.log("  full         all of above");
+    console.log("  highlighter  ");
     console.log("args:");
     console.log("  --target ./path   path to build folder");
     console.log("flags:");
@@ -305,14 +321,13 @@ var buildAce = function(options) {
         themes: jsFileList("lib/ace/theme"),
         extensions: jsFileList("lib/ace/ext"),
         workers: workers("lib/ace/mode"),
-        keybindings: ["vim", "emacs"]
+        keybindings: ["vim", "emacs"],
+        readFilters: [copy.filter.moduleDefines]
     };
 
     for(var key in defaults)
         if (!options.hasOwnProperty(key))
             options[key] = defaults[key];
-
-    generateThemesModule(options.themes);
 
     addSuffix(options);
 
@@ -323,6 +338,7 @@ var buildAce = function(options) {
     var name = options.name;
 
     var project = copy.createCommonJsProject(aceProject);
+    project.options = options;
     var ace = copy.createDataObject();
     copy({
         source: [ACE_HOME + "/build_support/mini_require.js"],
@@ -333,13 +349,14 @@ var buildAce = function(options) {
             project: project,
             require: options.requires
         }],
-        filter: [ copy.filter.moduleDefines ],
+        filter: options.readFilters,
         dest: ace
     });
 
-    if (options.coreOnly)
+    if (options.coreOnly) {
+        project.result = ace;
         return project;
-
+    }
     copy({
         source: ace,
         filter: getWriteFilters(options, "main"),
@@ -394,6 +411,8 @@ var buildAce = function(options) {
             dest:   targetDir + "/theme-" + theme.replace("_theme", "") + ".js"
         });
     });
+    
+    // generateThemesModule(options.themes);
 
     console.log('# ace key bindings ---------');
 
