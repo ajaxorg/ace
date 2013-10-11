@@ -168,14 +168,6 @@ function highlight() {
         var m = el.className.match(/language-(\w+)|(javascript)/);
         if (!m) return
         var mode = "ace/mode/" + (m[1] || m[2]);
-        var theme = "ace/theme/xcode";
-        var data = dom.getInnerText(el).trim();
-        
-        highlighter.render(data, mode, theme, 1, true, function (highlighted) {    
-            dom.importCssString(highlighted.css, "ace_highlight");
-            el.innerHTML = highlighted.html;
-        });
+        highlighter.highlight(el, {mode: mode, theme: "ace/theme/xcode"})
     });
-
-    
 }
