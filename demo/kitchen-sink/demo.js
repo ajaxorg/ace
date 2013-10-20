@@ -33,6 +33,10 @@ define(function(require, exports, module) {
 "use strict";
 
 require("ace/lib/fixoldbrowsers");
+
+require("ace/multi_select")
+require("ace/ext/spellcheck");
+
 var config = require("ace/config");
 config.init();
 var env = {};
@@ -51,7 +55,6 @@ var HashHandler = require("ace/keyboard/hash_handler").HashHandler;
 
 var Renderer = require("ace/virtual_renderer").VirtualRenderer;
 var Editor = require("ace/editor").Editor;
-var MultiSelect = require("ace/multi_select").MultiSelect;
 
 var whitespace = require("ace/ext/whitespace");
 
@@ -89,8 +92,6 @@ split.on("focus", function(editor) {
 env.split = split;
 window.env = env;
 
-// add multiple cursor support to editor
-require("ace/multi_select").MultiSelect(env.editor);
 
 var consoleEl = dom.createElement("div");
 container.parentNode.appendChild(consoleEl);
@@ -531,6 +532,7 @@ bindCheckbox("highlight_token", function(checked) {
     }
 });
 
+
 /************** dragover ***************************/
 event.addListener(container, "dragover", function(e) {
     var types = e.dataTransfer.types;
@@ -559,6 +561,12 @@ event.addListener(container, "drop", function(e) {
         return event.stopEvent(e);
     }
 });
+
+
+
+
+
+
 
 
 
@@ -613,7 +621,22 @@ env.editor.setOptions({
     enableBasicAutocompletion: true,
     enableSnippets: true
 })
-
+/* for textinput debuggging
+dom.importCssString("\
+  .ace_text-input {\
+    position: absolute;\
+    z-index: 10!important;\
+    width: 6em!important;\
+    height: 1em;\
+    opacity: 1!important;\
+    background: rgba(0, 92, 255, 0.11);\
+    border: none;\
+    font: inherit;\
+    padding: 0 1px;\
+    margin: 0 -1px;\
+    text-indent: 0em;\
+}\
+")*/
 });
 
 // allow easy access to ace in console, but not in ace code which uses strict
