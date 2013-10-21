@@ -143,6 +143,7 @@
     font: inherit;
     padding: 0 1px;
     margin: 0 -1px;
+    text-indent: -1em;
 }
 
 .ace_text-input.ace_composition {
@@ -150,6 +151,7 @@
     color: #111;
     z-index: 1000;
     opacity: 1;
+    text-indent: 0;
 }
 
 .ace_layer {
