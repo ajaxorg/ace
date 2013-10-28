@@ -210,11 +210,16 @@ Figueredo, A.~J. and Wolf, P. S.~A. (2009).
 
 \end{document}</pre>
     
-<script src="../build/src/ace.js" type="text/javascript" charset="utf-8"></script>
+<script src="../build/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
 <script>
     var editor = ace.edit("editor");
     editor.getSession().setMode("ace/mode/latex");
     editor.getSession().setUseWorker(true);
+
+    window.projectLanguage = "en_US";
+    window.onload = function(){
+      window.document.dispatchEvent(new Event("changeLanguage"));
+    };
 </script>
 
 </body>
