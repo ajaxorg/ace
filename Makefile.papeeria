@@ -1,0 +1,22 @@
+# Build ACE and copy some files to papeeria ace-src-noconflict directory
+#
+# Usage:
+# 	make -f Makefile.papeeria build PAPEERIA_ACE=/home/user/workspace/bardsofware/papeeria/papeeria/public/javascripts/ace-src-noconflict
+
+build_ace:
+	./Makefile.dryice.js --nc
+
+clean_papeeria:
+	rm -f $(PAPEERIA_ACE)/mode-latex.js
+	rm -f $(PAPEERIA_ACE)/mode-latex_parser.js
+	rm -f $(PAPEERIA_ACE)/worker-latex.js
+
+copy_files:
+	cp ./build/src-noconflict/mode-latex.js $(PAPEERIA_ACE)
+	cp ./build/src-noconflict/mode-latex_parser.js $(PAPEERIA_ACE)
+	cp ./build/src-noconflict/worker-latex.js $(PAPEERIA_ACE)
+
+build: build_ace clean_papeeria copy_files
+
+clean:
+	rm -rf build
