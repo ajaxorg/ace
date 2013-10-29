@@ -213,12 +213,14 @@ Figueredo, A.~J. and Wolf, P. S.~A. (2009).
 <script src="../build/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
 <script>
     var editor = ace.edit("editor");
-    editor.getSession().setMode("ace/mode/latex");
-    editor.getSession().setUseWorker(true);
+    var session = editor.getSession();
+    session.setMode("ace/mode/latex");
+    session.setUseWorker(true);
 
-    window.projectLanguage = "en_US";
     window.onload = function(){
-      window.document.dispatchEvent(new Event("changeLanguage"));
+      session._emit("changeSpellingCheckLanguage", {
+        language: "en_US"
+      });
     };
 </script>
 
