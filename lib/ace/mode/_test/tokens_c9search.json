@@ -4,7 +4,8 @@
   ["text","var"],
   ["text","' in"],
   ["text"," /.c9/metadata/workspace/plugins "],
-  ["text","(regexp, case sensitive, whole word)"]
+  ["text","(regexp, case sensitive, whole word)"],
+  "Searching for \u0001var\u0001 in\u0001/.c9/metadata/workspace/plugins\u0001\u0001regexp, case sensitive, whole word\u0001"
 ],[
    ["start",{}]
 ],[
