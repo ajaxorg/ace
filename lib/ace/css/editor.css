@@ -144,6 +144,10 @@
     padding: 0 1px;
     margin: 0 -1px;
     text-indent: -1em;
+    -ms-user-select: text;
+    -moz-user-select: text;
+    -webkit-user-select: text;
+    user-select: text;
 }
 
 .ace_text-input.ace_composition {
