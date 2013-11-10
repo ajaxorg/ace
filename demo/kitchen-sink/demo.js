@@ -36,6 +36,9 @@ require("ace/lib/fixoldbrowsers");
 
 require("ace/multi_select")
 require("ace/ext/spellcheck");
+require("./inline_editor");
+require("./dev_util");
+require("./file_drop");
 
 var config = require("ace/config");
 config.init();
@@ -57,6 +60,8 @@ var Renderer = require("ace/virtual_renderer").VirtualRenderer;
 var Editor = require("ace/editor").Editor;
 
 var whitespace = require("ace/ext/whitespace");
+
+
 
 var doclist = require("./doclist");
 var modelist = require("ace/ext/modelist");
@@ -532,112 +537,6 @@ bindCheckbox("highlight_token", function(checked) {
     }
 });
 
-
-/************** dragover ***************************/
-event.addListener(container, "dragover", function(e) {
-    var types = e.dataTransfer.types;
-    if (types && Array.prototype.indexOf.call(types, 'Files') !== -1)
-        return event.preventDefault(e);
-});
-
-event.addListener(container, "drop", function(e) {
-    var file;
-    try {
-        file = e.dataTransfer.files[0];
-        if (window.FileReader) {
-            var reader = new FileReader();
-            reader.onload = function() {
-                var mode = modelist.getModeForPath(file.name);
-
-                env.editor.session.doc.setValue(reader.result);
-                modeEl.value = mode.name;
-                env.editor.session.setMode(mode.mode);
-                env.editor.session.modeName = mode.name;
-            };
-            reader.readAsText(file);
-        }
-        return event.preventDefault(e);
-    } catch(err) {
-        return event.stopEvent(e);
-    }
-});
-
-
-var LineWidgets = require("ace/line_widgets").LineWidgets;
-
-env.editor.commands.addCommand({
-    name: "foo",
-    bindKey: "F2|F3",
-    exec: function(editor) {
-        var Editor = require("ace/editor").Editor
-        var Renderer = require("ace/virtual_renderer").VirtualRenderer
-        var split = env.split
-        var s = editor.session
-        var inlineEditor = new Editor(new Renderer())
-        var splitSession = split.$cloneSession(s)
-
-        var row = editor.getCursorPosition().row
-        if (editor.session.lineWidgets && editor.session.lineWidgets[row]) {
-            editor.session.lineWidgets[row].destroy();
-            return;
-        }
-        
-        var rowCount = 10;
-        var w = {
-            row: row, 
-           // rowCount: rowCount, 
-            fixedWidth: true,
-            el: dom.createElement("div"),
-            editor: editor
-        };
-        var el = w.el;
-        el.appendChild(inlineEditor.container);      
-
-        if (!editor.session.widgetManager) {
-            editor.session.widgetManager = new LineWidgets(editor.session);
-            editor.session.widgetManager.attach(editor);
-        }
-        
-        var h = rowCount*editor.renderer.layerConfig.lineHeight;
-        inlineEditor.container.style.height = h + "px"
-
-        el.style.position = "absolute"
-        el.style.zIndex = "4"
-        el.style.borderTop = "solid blue 2px"
-        el.style.borderBottom = "solid blue 2px"
-        
-        inlineEditor.setSession(splitSession)
-        editor.session.widgetManager.addLineWidget(w);
-        
-        var kb = {
-            handleKeyboard:function(_,hashId, keyString) {
-                if (hashId == 0 && keyString == "esc") {
-                    w.destroy();
-                    return true;
-                }
-            }
-        }
-        
-        w.destroy = function() {
-            editor.keyBinding.removeKeyboardHandler(kb);
-            s.widgetManager.removeLineWidget(w);
-        }
-        
-        editor.keyBinding.addKeyboardHandler(kb)
-        inlineEditor.keyBinding.addKeyboardHandler(kb)
-        editor.on("changeSession", function(e) {
-            w.el.parentNode && w.el.parentNode.removeChild(w.el)
-        });
-        inlineEditor.setTheme("ace/theme/solarized_light")
-    }
-})
-
-env.editor.commands.addCommand({
-
-})
-
-
-
 var StatusBar = require("ace/ext/statusbar").StatusBar;
 new StatusBar(env.editor, cmdLine.container);
 
@@ -689,48 +588,4 @@ env.editor.setOptions({
     enableBasicAutocompletion: true,
     enableSnippets: true
 })
-/* for textinput debuggging
-dom.importCssString("\
-  .ace_text-input {\
-    position: absolute;\
-    z-index: 10!important;\
-    width: 6em!important;\
-    height: 1em;\
-    opacity: 1!important;\
-    background: rgba(0, 92, 255, 0.11);\
-    border: none;\
-    font: inherit;\
-    padding: 0 1px;\
-    margin: 0 -1px;\
-    text-indent: 0em;\
-}\
-")*/
 });
-
-// allow easy access to ace in console, but not in ace code which uses strict
-void function() {
-function isStrict() {
-    try { return !arguments.callee.caller.caller.caller}
-    catch(e){ return true }
-}
-function warn() {
-    if (isStrict()) {
-        console.error("trying to access to global variable");
-    }
-}
-function def(o, key, get) {
-    Object.defineProperty(o, key, {
-        configurable: true, 
-        get: get,
-        set: function(val) {
-            delete o[key];
-            o[key] = val;
-        }
-    });
-}
-def(window, "ace", function(){ warn(); return env.editor });
-def(window, "editor", function(){ warn(); return env.editor });
-def(window, "session", function(){ warn(); return env.editor.session });
-def(window, "split", function(){ warn(); return env.split });
-
-}();
