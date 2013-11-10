@@ -158,7 +158,7 @@
     z-index: 1;
     position: absolute;
     overflow: hidden;
-    white-space: nowrap;
+    white-space: pre;
     height: 100%;
     width: 100%;
     -moz-box-sizing: border-box;
