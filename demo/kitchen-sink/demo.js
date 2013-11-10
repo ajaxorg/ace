@@ -582,25 +582,24 @@ env.editor.commands.addCommand({
             return;
         }
         
-        
         var rowCount = 10;
-        
         var w = {
             row: row, 
-            rowCount: rowCount, 
+           // rowCount: rowCount, 
             fixedWidth: true,
-            el: inlineEditor.container,
+            el: dom.createElement("div"),
             editor: editor
         };
-        var el = w.el
+        var el = w.el;
+        el.appendChild(inlineEditor.container);      
 
         if (!editor.session.widgetManager) {
             editor.session.widgetManager = new LineWidgets(editor.session);
             editor.session.widgetManager.attach(editor);
         }
         
-        var h = rowCount*editor.renderer.layerConfig.lineHeight - 6;
-        el.style.height = h - 4 + "px"
+        var h = rowCount*editor.renderer.layerConfig.lineHeight;
+        inlineEditor.container.style.height = h + "px"
 
         el.style.position = "absolute"
         el.style.zIndex = "4"
