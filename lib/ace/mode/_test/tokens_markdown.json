@@ -88,9 +88,9 @@
    "listblock",
   ["markup.list","* "],
   ["list","usually "],
-  ["string","*work*"],
+  ["string.emphasis","*work*"],
   ["list"," fine ("],
-  ["string","_em_"],
+  ["string.emphasis","_em_"],
   ["list",")"]
 ],[
    "listblock",
