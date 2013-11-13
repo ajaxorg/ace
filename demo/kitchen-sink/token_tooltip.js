@@ -63,8 +63,8 @@ var TokenTooltip = function(editor) {
         if (this.lastT - (r.timeStamp || 0) > 1000) {
             r.rect = null;
             r.timeStamp = this.lastT;
-            this.maxHeight = innerHeight;
-            this.maxWidth = innerWidth;
+            this.maxHeight = window.innerHeight;
+            this.maxWidth = window.innerWidth;
         }
 
         var canvasPos = r.rect || (r.rect = r.scroller.getBoundingClientRect());
@@ -145,8 +145,8 @@ var TokenTooltip = function(editor) {
     this.updateTooltipPosition = function(x, y) {
         var st = tooltipNode.style;
         if (x + 10 + this.tooltipWidth > this.maxWidth)
-            x = innerWidth - this.tooltipWidth - 10;
-        if (y > innerHeight * 0.75 || y + 20 + this.tooltipHeight > this.maxHeight)
+            x = window.innerWidth - this.tooltipWidth - 10;
+        if (y > window.innerHeight * 0.75 || y + 20 + this.tooltipHeight > this.maxHeight)
             y = y - this.tooltipHeight - 30;
         
         st.left = x + 10 + "px";
