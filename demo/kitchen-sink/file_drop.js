@@ -60,7 +60,7 @@ module.exports = function(editor) {
             return event.stopEvent(e);
         }
     });
-}
+};
 
 var Editor = require("ace/editor").Editor;
 config.defineOptions(Editor.prototype, "editor", {

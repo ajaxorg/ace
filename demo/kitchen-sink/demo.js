@@ -34,7 +34,7 @@ define(function(require, exports, module) {
 
 require("ace/lib/fixoldbrowsers");
 
-require("ace/multi_select")
+require("ace/multi_select");
 require("ace/ext/spellcheck");
 require("./inline_editor");
 require("./dev_util");
@@ -165,11 +165,11 @@ env.editor.commands.addCommands([{
     bindKey: "ctrl+enter",
     exec: function(editor) {
         try {
-            var r = window.eval(editor.getCopyText()||editor.getValue());
+            var r = window.eval(editor.getCopyText() || editor.getValue());
         } catch(e) {
             r = e;
         }
-        editor.cmdLine.setValue(r + "")
+        editor.cmdLine.setValue(r + "");
     },
     readOnly: true
 }, {
@@ -178,8 +178,8 @@ env.editor.commands.addCommands([{
     exec: function(editor) {
         config.loadModule("ace/ext/keybinding_menu", function(module) {
             module.init(editor);
-            editor.showKeyboardShortcuts()
-        })
+            editor.showKeyboardShortcuts();
+        });
     }
 }, {
     name: "increaseFontSize",
@@ -225,7 +225,7 @@ commands.addCommand({
     bindKey: {win: "Ctrl-S", mac: "Command-S"},
     exec: function(arg) {
         var session = env.editor.session;
-        name = session.name.match(/[^\/]+$/)
+        var name = session.name.match(/[^\/]+$/);
         localStorage.setItem(
             "saved_file:" + name,
             session.getValue()
@@ -239,7 +239,7 @@ commands.addCommand({
     bindKey: {win: "Ctrl-O", mac: "Command-O"},
     exec: function(arg) {
         var session = env.editor.session;
-        name = session.name.match(/[^\/]+$/)
+        var name = session.name.match(/[^\/]+$/);
         var value = localStorage.getItem("saved_file:" + name);
         if (typeof value == "string") {
             session.setValue(value);
@@ -314,7 +314,7 @@ doclist.history = doclist.docs.map(function(doc) {
 });
 doclist.history.index = 0;
 doclist.cycleOpen = function(editor, dir) {
-    var h = this.history
+    var h = this.history;
     h.index += dir;
     if (h.index >= h.length) 
         h.index = 0;
@@ -323,17 +323,16 @@ doclist.cycleOpen = function(editor, dir) {
     var s = h[h.index];
     docEl.value = s;
     docEl.onchange();
-    h.index
-}
+};
 doclist.addToHistory = function(name) {
-    var h = this.history
+    var h = this.history;
     var i = h.indexOf(name);
     if (i != h.index) {
         if (i != -1)
             h.splice(i, 1);
         h.index = h.push(name);
     }
-}
+};
 
 bindDropdown("doc", function(name) {
     doclist.loadDoc(name, function(session) {
@@ -372,15 +371,15 @@ function updateUIEditorOptions() {
 }
 
 event.addListener(themeEl, "mouseover", function(e){
-    this.desiredValue = e.target.value;
-    if (!this.$timer)
-        this.$timer = setTimeout(this.updateTheme);
+    themeEl.desiredValue = e.target.value;
+    if (!themeEl.$timer)
+        themeEl.$timer = setTimeout(themeEl.updateTheme);
 });
 
 event.addListener(themeEl, "mouseout", function(e){
-    this.desiredValue = null;
-    if (!this.$timer)
-        this.$timer = setTimeout(this.updateTheme, 20);
+    themeEl.desiredValue = null;
+    if (!themeEl.$timer)
+        themeEl.$timer = setTimeout(themeEl.updateTheme, 20);
 });
 
 themeEl.updateTheme = function(){
@@ -568,24 +567,25 @@ env.editSnippets = function() {
         var text = m.snippetText;
         var s = doclist.initDoc(text, "", {});
         s.setMode("ace/mode/snippets");
-        doclist["snippets/" + id] = s
+        doclist["snippets/" + id] = s;
     }
     editor.on("blur", function() {
         m.snippetText = editor.getValue();
         snippetManager.unregister(m.snippets);
         m.snippets = snippetManager.parseSnippetFile(m.snippetText, m.scope);
         snippetManager.register(m.snippets);
-    })
+    });
     sp.$editors[0].once("changeMode", function() {
         sp.setSplits(1);
-    })
+    });
     editor.setSession(doclist["snippets/" + id], 1);
     editor.focus();
-}
+};
 
 require("ace/ext/language_tools");
 env.editor.setOptions({
     enableBasicAutocompletion: true,
     enableSnippets: true
-})
+});
+
 });

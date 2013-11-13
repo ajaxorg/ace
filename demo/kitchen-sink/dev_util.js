@@ -49,10 +49,10 @@ function def(o, key, get) {
         }
     });
 }
-def(window, "ace", function(){ warn(); return env.editor });
-def(window, "editor", function(){ warn(); return env.editor });
-def(window, "session", function(){ warn(); return env.editor.session });
-def(window, "split", function(){ warn(); return env.split });
+def(window, "ace", function(){ warn(); return window.env.editor });
+def(window, "editor", function(){ warn(); return window.env.editor });
+def(window, "session", function(){ warn(); return window.env.editor.session });
+def(window, "split", function(){ warn(); return window.env.split });
 
 
 /* for textinput debuggging
