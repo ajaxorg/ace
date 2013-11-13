@@ -231,10 +231,6 @@
     border-left-width: 1px;
 }
 
-.ace_line {
-    white-space: nowrap;
-}
-
 .ace_marker-layer .ace_step, .ace_marker-layer .ace_stack {
     position: absolute;
     z-index: 3;

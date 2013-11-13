@@ -19,9 +19,10 @@
 
 <p>Syntax highlighting using Ace language modes and themes.</p>
 
-<div class="code" ace-mode="ace/mode/css" ace-theme="ace/theme/chrome">
+<div class="code" ace-mode="ace/mode/css" ace-theme="ace/theme/chrome" ace-gutter="true">
 .code {
     width: 50%;
+    
     position: relative;
     white-space: pre-wrap;
 }
@@ -41,28 +42,20 @@ function wobble (flam) {
 <script src="../../build/src-noconflict/ext-static_highlight.js"></script>
 
 <script>
-var highlighter = ace.require("ace/ext/static_highlight")
+var highlight = ace.require("ace/ext/static_highlight")
 var dom = ace.require("ace/lib/dom")
 function qsa(sel) {
     return [].slice.call(document.querySelectorAll(sel));
 }
 
 qsa(".code").forEach(function (codeEl) {
-    var cs = getComputedStyle(codeEl);
-    codeEl.style.cssText = codeEl.style.cssText +
-        'width: ' + cs.width + ';' +
-        'height: ' + cs.height + ';';
-    var mode = codeEl.getAttribute('ace-mode');
-    var theme = codeEl.getAttribute('ace-theme');
-    var data = codeEl.textContent.trim();
-    
-    highlighter.render(data, mode, theme, 1, false, function (highlighted) {    
-        dom.importCssString(highlighted.css, "ace_highlight");
-        dom.importCssString('.ace_editor { overflow: auto; ' +
-            'position:absolute; top:0; bottom:0; right:0; left:0; }' +
-            '.ace_gutter { position: relative; }',
-            'atropa_hial');
-        codeEl.innerHTML = highlighted.html;
+    highlight(codeEl, {
+        mode: codeEl.getAttribute('ace-mode'),
+        theme: codeEl.getAttribute('ace-theme'),
+        startLineNumber: 1,
+        showGutter: codeEl.getAttribute("ace-gutter"),
+        trim: true
+    }, function (highlighted) {
     });
 });
 </script>
