@@ -19,6 +19,7 @@ clean_papeeria_ace:
 
 clean_papeeria_spellchecker:
 	rm -f $(PAPEERIA_ACE)/mode-latex.js
+	rm -f $(PAPEERIA_ACE)/mode-papeeria_latex.js
 	rm -f $(PAPEERIA_ACE)/mode-latex_parser.js
 	rm -f $(PAPEERIA_ACE)/worker-latex.js
 
@@ -31,6 +32,7 @@ copy_ace_files:
 
 copy_spellchecker_files:
 	cp ./build/src-noconflict/mode-latex.js $(PAPEERIA_ACE)
+	cp ./build/src-noconflict/mode-papeeria_latex.js $(PAPEERIA_ACE)
 	cp ./build/src-noconflict/mode-latex_parser.js $(PAPEERIA_ACE)
 	cp ./build/src-noconflict/worker-latex.js $(PAPEERIA_ACE)
 
