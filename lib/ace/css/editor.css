@@ -97,10 +97,7 @@
 
 .ace_scrollbar {
     position: absolute;
-    overflow-x: hidden;
-    overflow-y: auto;
     right: 0;
-    top: 0;
     bottom: 0;
     z-index: 6;
 }
@@ -112,14 +109,16 @@
     top: 0;
 }
 
+.ace_scrollbar-v{
+    overflow-x: hidden;
+    overflow-y: auto;
+    top: 0;
+}
+
 .ace_scrollbar-h {
-    position: absolute;
     overflow-x: auto;
     overflow-y: hidden;
-    right: 0;
     left: 0;
-    bottom: 0;
-    z-index: 6;
 }
 
 .ace_print-margin {
