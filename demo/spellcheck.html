@@ -217,11 +217,14 @@ Figueredo, A.~J. and Wolf, P. S.~A. (2009).
     session.setMode("ace/mode/papeeria_latex");
     session.setUseWorker(true);
 
-    window.onload = function(){
-      session._emit("changeSpellingCheckLanguage", {
+    window.onload = function() {
+      session._emit("changeSpellingCheckSettings", {
         language: "en_US",
         dicPath: "/demo/typojs/dictionaries/en_US/en_US.dic",
-        affPath: "/demo/typojs/dictionaries/en_US/en_US.aff"
+        affPath: "/demo/typojs/dictionaries/en_US/en_US.aff",
+        onNewDictionary: function() {
+          console.log("New dictionary has just been set");
+        }
       });
     };
 </script>
