@@ -1,0 +1,294 @@
+[[
+   "start",
+  ["punctuation.doctype.begin","<!"],
+  ["meta.tag.doctype","DOCTYPE"],
+  ["text"," "],
+  ["xml-pe","html"],
+  ["punctuation.doctype.end",">"]
+],[
+   "start",
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name","html"],
+  ["meta.tag.punctuation.end",">"]
+],[
+   "start",
+  ["text","    "],
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name","head"],
+  ["meta.tag.punctuation.end",">"]
+],[
+   "start",
+  ["text","        "],
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name","title"],
+  ["meta.tag.punctuation.end",">"],
+  ["text","Cloud9 Rocks!"],
+  ["meta.tag.punctuation.begin","</"],
+  ["meta.tag.name","title"],
+  ["meta.tag.punctuation.end",">"]
+],[
+   "start",
+  ["text","    "],
+  ["meta.tag.punctuation.begin","</"],
+  ["meta.tag.name","head"],
+  ["meta.tag.punctuation.end",">"]
+],[
+   "start",
+  ["text","    "],
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name","body"],
+  ["meta.tag.punctuation.end",">"]
+],[
+   "start"
+],[
+   "start",
+  ["text","    "],
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name.table","table"],
+  ["text"," "],
+  ["entity.other.attribute-name","class"],
+  ["keyword.operator.separator","="],
+  ["string","\"table\""],
+  ["meta.tag.punctuation.end",">"]
+],[
+   "start",
+  ["text","        "],
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name.table","tr"],
+  ["meta.tag.punctuation.end",">"]
+],[
+   "start",
+  ["text","            "],
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name.table","th"],
+  ["meta.tag.punctuation.end",">"],
+  ["text","Name"],
+  ["meta.tag.punctuation.begin","</"],
+  ["meta.tag.name.table","th"],
+  ["meta.tag.punctuation.end",">"]
+],[
+   "start",
+  ["text","            "],
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name.table","th"],
+  ["meta.tag.punctuation.end",">"],
+  ["text","Size"],
+  ["meta.tag.punctuation.begin","</"],
+  ["meta.tag.name.table","th"],
+  ["meta.tag.punctuation.end",">"]
+],[
+   "start",
+  ["text","        "],
+  ["meta.tag.punctuation.begin","</"],
+  ["meta.tag.name.table","tr"],
+  ["meta.tag.punctuation.end",">"]
+],[
+   "start",
+  ["text","        "],
+  ["markup.list.meta.tag","<%"],
+  ["text"," "],
+  ["keyword","if"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["keyword.operator","!"],
+  ["identifier","isRoot"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","{"],
+  ["text"," "],
+  ["markup.list.meta.tag","%>"]
+],[
+   "start",
+  ["text","            "],
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name.table","tr"],
+  ["meta.tag.punctuation.end",">"]
+],[
+   "start",
+  ["text","                "],
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name.table","td"],
+  ["meta.tag.punctuation.end",">"],
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name.anchor","a"],
+  ["text"," "],
+  ["entity.other.attribute-name","href"],
+  ["keyword.operator.separator","="],
+  ["string","\"..\""],
+  ["meta.tag.punctuation.end",">"],
+  ["text",".."],
+  ["meta.tag.punctuation.begin","</"],
+  ["meta.tag.name.anchor","a"],
+  ["meta.tag.punctuation.end",">"],
+  ["meta.tag.punctuation.begin","</"],
+  ["meta.tag.name.table","td"],
+  ["meta.tag.punctuation.end",">"]
+],[
+   "start",
+  ["text","                "],
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name.table","td"],
+  ["meta.tag.punctuation.end",">"],
+  ["meta.tag.punctuation.begin","</"],
+  ["meta.tag.name.table","td"],
+  ["meta.tag.punctuation.end",">"],
+  ["meta.tag.punctuation.begin","</"],
+  ["meta.tag.name.table","td"],
+  ["meta.tag.punctuation.end",">"]
+],[
+   "start",
+  ["text","            "],
+  ["meta.tag.punctuation.begin","</"],
+  ["meta.tag.name.table","tr"],
+  ["meta.tag.punctuation.end",">"]
+],[
+   "start",
+  ["text","        "],
+  ["markup.list.meta.tag","<%"],
+  ["text"," "],
+  ["paren.rparen","}"],
+  ["text"," "],
+  ["markup.list.meta.tag","%>"]
+],[
+   "start",
+  ["text","        "],
+  ["markup.list.meta.tag","<%"],
+  ["text"," "],
+  ["identifier","entries"],
+  ["punctuation.operator","."],
+  ["identifier","forEach"],
+  ["paren.lparen","("],
+  ["storage.type","function"],
+  ["paren.lparen","("],
+  ["identifier","entry"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","{"],
+  ["text"," "],
+  ["markup.list.meta.tag","%>"]
+],[
+   "start",
+  ["text","            "],
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name.table","tr"],
+  ["meta.tag.punctuation.end",">"]
+],[
+   "start",
+  ["text","                "],
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name.table","td"],
+  ["meta.tag.punctuation.end",">"]
+],[
+   ["start","ejs-start","qqstring_inner","qqstring_inner","start_tag_stuff"],
+  ["text","                    "],
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name","span"],
+  ["text"," "],
+  ["entity.other.attribute-name","class"],
+  ["keyword.operator.separator","="],
+  ["string","\"glyphicon "],
+  ["markup.list.meta.tag","<%="],
+  ["text"," "],
+  ["identifier","entry"],
+  ["punctuation.operator","."],
+  ["identifier","mime"],
+  ["text"," "],
+  ["keyword.operator","=="],
+  ["text"," "],
+  ["string","'directory'"],
+  ["text"," "],
+  ["punctuation.operator","?"],
+  ["text"," "],
+  ["string","'folder'"],
+  ["punctuation.operator",":"],
+  ["text"," "],
+  ["string","'file'"],
+  ["markup.list.meta.tag","%>"],
+  ["text","\">"],
+  ["meta.tag.punctuation.begin","</"],
+  ["meta.tag.name","span"],
+  ["meta.tag.punctuation.end",">"]
+],[
+   ["start","ejs-start","qqstring_inner","qqstring_inner","start_tag_stuff","start","ejs-start","qqstring_inner","qqstring_inner","start_tag_stuff"],
+  ["text","                    "],
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name.anchor","a"],
+  ["text"," "],
+  ["entity.other.attribute-name","href"],
+  ["keyword.operator.separator","="],
+  ["string","\""],
+  ["markup.list.meta.tag","<%="],
+  ["text"," "],
+  ["identifier","entry"],
+  ["punctuation.operator","."],
+  ["identifier","name"],
+  ["text"," "],
+  ["markup.list.meta.tag","%>"],
+  ["text","\">"],
+  ["markup.list.meta.tag","<%="],
+  ["text"," "],
+  ["identifier","entry"],
+  ["punctuation.operator","."],
+  ["identifier","name"],
+  ["text"," "],
+  ["markup.list.meta.tag","%>"],
+  ["meta.tag.punctuation.begin","</"],
+  ["meta.tag.name.anchor","a"],
+  ["meta.tag.punctuation.end",">"]
+],[
+   ["start","ejs-start","qqstring_inner","qqstring_inner","start_tag_stuff","start","ejs-start","qqstring_inner","qqstring_inner","start_tag_stuff"],
+  ["text","                "],
+  ["meta.tag.punctuation.begin","</"],
+  ["meta.tag.name.table","td"],
+  ["meta.tag.punctuation.end",">"]
+],[
+   ["start","ejs-start","qqstring_inner","qqstring_inner","start_tag_stuff","start","ejs-start","qqstring_inner","qqstring_inner","start_tag_stuff"],
+  ["text","                "],
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name.table","td"],
+  ["meta.tag.punctuation.end",">"],
+  ["markup.list.meta.tag","<%="],
+  ["text"," "],
+  ["identifier","entry"],
+  ["punctuation.operator","."],
+  ["identifier","size"],
+  ["text"," "],
+  ["markup.list.meta.tag","%>"],
+  ["meta.tag.punctuation.begin","</"],
+  ["meta.tag.name.table","td"],
+  ["meta.tag.punctuation.end",">"]
+],[
+   ["start","ejs-start","qqstring_inner","qqstring_inner","start_tag_stuff","start","ejs-start","qqstring_inner","qqstring_inner","start_tag_stuff"],
+  ["text","            "],
+  ["meta.tag.punctuation.begin","</"],
+  ["meta.tag.name.table","tr"],
+  ["meta.tag.punctuation.end",">"]
+],[
+   ["start","ejs-start","qqstring_inner","qqstring_inner","start_tag_stuff","start","ejs-start","qqstring_inner","qqstring_inner","start_tag_stuff"],
+  ["text","        "],
+  ["markup.list.meta.tag","<%"],
+  ["text"," "],
+  ["paren.rparen","})"],
+  ["text"," "],
+  ["markup.list.meta.tag","%>"]
+],[
+   ["start","ejs-start","qqstring_inner","qqstring_inner","start_tag_stuff","start","ejs-start","qqstring_inner","qqstring_inner","start_tag_stuff"],
+  ["text","    "],
+  ["meta.tag.punctuation.begin","</"],
+  ["meta.tag.name.table","table"],
+  ["meta.tag.punctuation.end",">"]
+],[
+   ["start","ejs-start","qqstring_inner","qqstring_inner","start_tag_stuff","start","ejs-start","qqstring_inner","qqstring_inner","start_tag_stuff"],
+  ["text","    "]
+],[
+   ["start","ejs-start","qqstring_inner","qqstring_inner","start_tag_stuff","start","ejs-start","qqstring_inner","qqstring_inner","start_tag_stuff"],
+  ["text","    "],
+  ["meta.tag.punctuation.begin","</"],
+  ["meta.tag.name","body"],
+  ["meta.tag.punctuation.end",">"]
+],[
+   ["start","ejs-start","qqstring_inner","qqstring_inner","start_tag_stuff","start","ejs-start","qqstring_inner","qqstring_inner","start_tag_stuff"],
+  ["meta.tag.punctuation.begin","</"],
+  ["meta.tag.name","html"],
+  ["meta.tag.punctuation.end",">"]
+]]
