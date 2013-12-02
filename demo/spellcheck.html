@@ -222,8 +222,11 @@ Figueredo, A.~J. and Wolf, P. S.~A. (2009).
         language: "en_US",
         dicPath: "/demo/typojs/dictionaries/en_US/en_US.dic",
         affPath: "/demo/typojs/dictionaries/en_US/en_US.aff",
-        onNewDictionary: function() {
-          console.log("New dictionary has just been set");
+        onSettingsUpdateSuccess: function() {
+          console.log("New settings has just been set");
+        },
+        onSettingsUpdateError: function(data) {
+          console.log("Error: " + data.content);
         }
       });
     };
