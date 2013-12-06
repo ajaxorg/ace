@@ -5,10 +5,6 @@
     font-size: 12px;
     line-height: normal;
     color: black;
-    -ms-user-select: none;
-    -moz-user-select: none;
-    -webkit-user-select: none;
-    user-select: none;
 }
 
 .ace_scroller {
@@ -17,6 +13,10 @@
     top: 0;
     bottom: 0;
     background-color: inherit;
+    -ms-user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
 }
 
 .ace_content {
@@ -144,6 +144,10 @@
     padding: 0 1px;
     margin: 0 -1px;
     text-indent: -1em;
+    -ms-user-select: text;
+    -moz-user-select: text;
+    -webkit-user-select: text;
+    user-select: text;
 }
 
 .ace_text-input.ace_composition {
@@ -158,7 +162,7 @@
     z-index: 1;
     position: absolute;
     overflow: hidden;
-    white-space: nowrap;
+    white-space: pre;
     height: 100%;
     width: 100%;
     -moz-box-sizing: border-box;
@@ -225,10 +229,6 @@
 
 .ace_editor.ace_multiselect .ace_cursor {
     border-left-width: 1px;
-}
-
-.ace_line {
-    white-space: nowrap;
 }
 
 .ace_marker-layer .ace_step, .ace_marker-layer .ace_stack {
