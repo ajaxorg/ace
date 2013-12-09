@@ -320,6 +320,7 @@ var buildAce = function(options) {
         modes: jsFileList("lib/ace/mode", /_highlight_rules|_test|_worker|xml_util|_outdent|behaviour|completions/),
         themes: jsFileList("lib/ace/theme"),
         extensions: jsFileList("lib/ace/ext"),
+        snippets: jsFileList("lib/ace/snippets"),
         workers: workers("lib/ace/mode"),
         keybindings: ["vim", "emacs"],
         readFilters: [copy.filter.moduleDefines]
@@ -383,7 +384,12 @@ var buildAce = function(options) {
     project.assumeAllFilesLoaded();
     options.modes.forEach(function(mode) {
         console.log("mode " + mode);
-        addSnippetFile(mode, project, targetDir, options);
+
+        // create a snippet file for this mode if one doesn't exist
+        if (options.snippets.indexOf(mode) === -1) {
+            addSnippetFile(mode, project, targetDir, options);
+        }
+
         copy({
             source: [{
                 project: cloneProject(project),
@@ -394,12 +400,20 @@ var buildAce = function(options) {
         });
     });
 
+    console.log('# ace snippets ---------');
+
+    project.assumeAllFilesLoaded();
+    options.snippets.forEach(function(snippet) {
+        console.log("snippet " + snippet);
+        addSnippetFile(snippet, project, targetDir, options);
+    });
+
     console.log('# ace themes ---------');
 
     project.assumeAllFilesLoaded();
     delete project.ignoredModules["ace/theme/textmate"];
     delete project.ignoredModules["ace/requirejs/text!ace/theme/textmate.css"];
-    
+
     options.themes.forEach(function(theme) {
         console.log("theme " + theme);
         copy({
@@ -411,7 +425,7 @@ var buildAce = function(options) {
             dest:   targetDir + "/theme-" + theme.replace("_theme", "") + ".js"
         });
     });
-    
+
     // generateThemesModule(options.themes);
 
     console.log('# ace key bindings ---------');
@@ -485,29 +499,29 @@ var buildAce = function(fn) {
     }
 }(buildAce);
 
-var addSnippetFile = function(modeName, project, targetDir, options) {
-    var snippetFilePath = ACE_HOME + "/lib/ace/snippets/" + modeName;
+var addSnippetFile = function(name, project, targetDir, options) {
+    var snippetFilePath = ACE_HOME + "/lib/ace/snippets/" + name;
     if (!fs.existsSync(snippetFilePath + ".js")) {
         copy({
             source: ACE_HOME + "/tool/snippets.tmpl.js",
             dest:   snippetFilePath + ".js",
             filter: [
-                function(t) {return t.replace(/%modeName%/g, modeName);}
+                function(t) {return t.replace(/%name%/g, name);}
             ]
         });
     }
     if (!fs.existsSync(snippetFilePath + ".snippets")) {
-        fs.writeFileSync(snippetFilePath + ".snippets", "")
+        fs.writeFileSync(snippetFilePath + ".snippets", "");
     }
     copy({
         source: [{
             project: cloneProject(project),
-            require: [ 'ace/snippets/' + modeName ]
+            require: [ 'ace/snippets/' + name ]
         }],
         filter: getWriteFilters(options, "mode"),
-        dest:   targetDir + "/snippets/" + modeName + ".js"
+        dest:   targetDir + "/snippets/" + name + ".js"
     });
-}
+};
 
 var textModules = {}
 var detectTextModules = function(input, source) {
