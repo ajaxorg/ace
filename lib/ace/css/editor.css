@@ -7,6 +7,11 @@
     color: black;
 }
 
+.ace_editor .ace_line {
+    direction: ltr;
+    unicode-bidi: bidi-override;
+}
+
 .ace_scroller {
     position: absolute;
     overflow: hidden;
