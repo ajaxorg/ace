@@ -551,22 +551,25 @@ function generateThemesModule(themes) {
 }
 
 function inlineTextModules(text) {
-    var lastDep = "";
-    return text.replace(/, *['"]ace\/requirejs\/text!(.*?)['"]|= *require\(['"](?:ace|[.\/]+)\/requirejs\/text!(.*?)['"]\)/g, function(_, dep, call) {
+    var deps = [];
+    return text.replace(/, *['"]ace\/requirejs\/text!(.*?)['"]| require\(['"](?:ace|[.\/]+)\/requirejs\/text!(.*?)['"]\)/g, function(_, dep, call) {
         if (dep) {
-            if (!lastDep) {
-                lastDep = dep;
-                return "";
-            }
+            deps.push(dep);
+            return "";
         } else if (call) {
-            call = textModules[lastDep];
-            delete textModules[lastDep];
-            lastDep = "";
+            deps.some(function(d) {
+                if (d.split("/").pop() == call.split("/").pop()) {
+                    dep = d;
+                    return true;
+                }
+            });
+
+            call = textModules[dep];
+            // if (deps.length > 1)
+            //     console.log(call.length)
             if (call)
-                return "= " + call;
+                return " " + call;
         }
-        console.log(dep, lastDep, call);
-        throw "inlining of multiple text modules is not supported";
     });
 }
 
