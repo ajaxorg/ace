@@ -111,12 +111,12 @@
 
 .ace_scrollbar-v{
     overflow-x: hidden;
-    overflow-y: auto;
+    overflow-y: scroll;
     top: 0;
 }
 
 .ace_scrollbar-h {
-    overflow-x: auto;
+    overflow-x: scroll;
     overflow-y: hidden;
     left: 0;
 }
