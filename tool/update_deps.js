@@ -11,7 +11,7 @@ var rootDir = __dirname + "/../lib/ace/";
 var deps = {
     csslint: {
         path: "mode/css/csslint.js",
-        url: "https://raw.github.com/stubbornella/csslint/master/release/csslint-node.js",
+        url: "https://raw.github.com/stubbornella/csslint/master/release/csslint.js",
         needsFixup: true
     }, 
     requirejs: {
