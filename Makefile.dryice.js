@@ -31,6 +31,7 @@
 
 var fs = require("fs");
 var path = require("path");
+var mime = require("mime");
 if (!fs.existsSync)
     fs.existsSync = path.existsSync;
 else
@@ -524,6 +525,7 @@ var detectTextModules = function(input, source) {
         // remove unnecessary whitespace from css
         input = input.replace(/\n\s+/g, "\n");
         input = '"' + input.replace(/\r?\n/g, '\\\n') + '"';
+        input = embedUrls(input, source);
     } else {
         // but don't break other files!
         input = '"' + input.replace(/\r?\n/g, '\\n\\\n') + '"';
@@ -534,6 +536,21 @@ var detectTextModules = function(input, source) {
 };
 detectTextModules.onRead = true;
 copy.filter.addDefines = detectTextModules;
+
+function embedUrls(input) {
+    var URL_REGEX = /(?:url\(["']?)(.*?)(?:["']?\))/;
+    var allUrls = input.match(new RegExp(URL_REGEX.source, 'g')) || [];
+    var targetUrls = allUrls.filter(function(url) { return !url.match('(data:|http[s]*:)'); });
+    var extractedUrls = targetUrls.map(function(url) { return url.match(URL_REGEX)[1]; });
+    extractedUrls.forEach(function(url) {
+        var urlFullPath = path.resolve(url);
+        var base64Content = fs.readFileSync(urlFullPath, 'base64');
+        var mimeType = mime.lookup(urlFullPath);
+        var dataUri = 'data:' + mimeType + ';base64,' + base64Content;
+        input = input.replace(new RegExp(url, 'g'), dataUri);
+    });
+    return input;
+}
 
 function generateThemesModule(themes) {
     var themelist = [
