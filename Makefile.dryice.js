@@ -41,6 +41,9 @@ var ACE_HOME = __dirname;
 var BUILD_DIR = ACE_HOME + "/build";
 
 function main(args) {
+    if (args.indexOf("updateModes") !== -1) {
+        return updateModes();
+    }
     var type = "minimal";
     args = args.map(function(x) {
         if (x[0] == "-" && x[1] != "-")
@@ -258,10 +261,13 @@ function jsFileList(path, filter) {
 }
 
 function workers(path) {
-  return jsFileList(path).map(function(x) {
-    if (x.slice(-7) == "_worker")
-      return x.slice(0, -7);
-  }).filter(function(x) { return !!x; });
+    return jsFileList(path).map(function(x) {
+        if (x.slice(-7) == "_worker")
+            return x.slice(0, -7);
+    }).filter(function(x) { return !!x; });
+}
+function modeList() {
+    return jsFileList("lib/ace/mode", /_highlight_rules|_test|_worker|xml_util|_outdent|behaviour|completions/)
 }
 
 function addSuffix(options) {
@@ -317,7 +323,7 @@ var buildAce = function(options) {
         noconflict: false,
         suffix: null,
         name: "ace",
-        modes: jsFileList("lib/ace/mode", /_highlight_rules|_test|_worker|xml_util|_outdent|behaviour|completions/),
+        modes: modeList(),
         themes: jsFileList("lib/ace/theme"),
         extensions: jsFileList("lib/ace/ext"),
         workers: workers("lib/ace/mode"),
@@ -545,22 +551,25 @@ function generateThemesModule(themes) {
 }
 
 function inlineTextModules(text) {
-    var lastDep = "";
-    return text.replace(/, *['"]ace\/requirejs\/text!(.*?)['"]|= *require\(['"](?:ace|[.\/]+)\/requirejs\/text!(.*?)['"]\)/g, function(_, dep, call) {
+    var deps = [];
+    return text.replace(/, *['"]ace\/requirejs\/text!(.*?)['"]| require\(['"](?:ace|[.\/]+)\/requirejs\/text!(.*?)['"]\)/g, function(_, dep, call) {
         if (dep) {
-            if (!lastDep) {
-                lastDep = dep;
-                return "";
-            }
+            deps.push(dep);
+            return "";
         } else if (call) {
-            call = textModules[lastDep];
-            delete textModules[lastDep];
-            lastDep = "";
+            deps.some(function(d) {
+                if (d.split("/").pop() == call.split("/").pop()) {
+                    dep = d;
+                    return true;
+                }
+            });
+
+            call = textModules[dep];
+            // if (deps.length > 1)
+            //     console.log(call.length)
             if (call)
-                return "= " + call;
+                return " " + call;
         }
-        console.log(dep, lastDep, call);
-        throw "inlining of multiple text modules is not supported";
     });
 }
 
@@ -655,6 +664,18 @@ function exportAce(ns, module, requireBase) {
             .slice(13, -1)
         );
     };
+}
+
+function updateModes() {
+    modeList().forEach(function(m) {
+        var filepath = __dirname + "/lib/ace/mode/" + m + ".js"
+        var source = fs.readFileSync(filepath, "utf8");
+        if (!/this.\$id\s*=\s*"/.test(source))
+            source = source.replace(/\n([ \t]*)(\}\).call\(\w*Mode.prototype\))/, '\n$1    this.$id = "";\n$1$2');
+        
+        source = source.replace(/(this.\$id\s*=\s*)"[^"]*"/,  '$1"ace/mode/' + m + '"');
+        fs.writeFileSync(filepath, source, "utf8")
+    })
 }
 
 if (!module.parent)
