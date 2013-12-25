@@ -1,0 +1,81 @@
+[[
+   "start",
+  ["comment.start","{{!--"],
+  ["comment"," Ace + :-}} "],
+  ["comment.end","--}}"]
+],[
+   "start"
+],[
+   "start",
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name","div"],
+  ["text"," "],
+  ["entity.other.attribute-name","id"],
+  ["keyword.operator.separator","="],
+  ["string","\"comments\""],
+  ["meta.tag.punctuation.end",">"]
+],[
+   "start",
+  ["text","  "],
+  ["storage.type.start","{{#"],
+  ["variable.parameter","each"],
+  ["text"," "],
+  ["variable.parameter","comments"],
+  ["storage.type.end","}}"]
+],[
+   "start",
+  ["text","  "],
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name","h2"],
+  ["meta.tag.punctuation.end",">"],
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name.anchor","a"],
+  ["text"," "],
+  ["entity.other.attribute-name","href"],
+  ["keyword.operator.separator","="],
+  ["string","\"/posts/"],
+  ["storage.type.start","{{"],
+  ["text","../"],
+  ["variable.parameter","permalink"],
+  ["storage.type.end","}}"],
+  ["string","#"],
+  ["storage.type.start","{{"],
+  ["variable.parameter","id"],
+  ["storage.type.end","}}"],
+  ["string","\""],
+  ["meta.tag.punctuation.end",">"],
+  ["storage.type.start","{{"],
+  ["variable.parameter","title"],
+  ["storage.type.end","}}"],
+  ["meta.tag.punctuation.begin","</"],
+  ["meta.tag.name.anchor","a"],
+  ["meta.tag.punctuation.end",">"],
+  ["meta.tag.punctuation.begin","</"],
+  ["meta.tag.name","h2"],
+  ["meta.tag.punctuation.end",">"]
+],[
+   "start",
+  ["text","  "],
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name","div"],
+  ["meta.tag.punctuation.end",">"],
+  ["storage.type.start","{{"],
+  ["variable.parameter","body"],
+  ["storage.type.end","}}"],
+  ["meta.tag.punctuation.begin","</"],
+  ["meta.tag.name","div"],
+  ["meta.tag.punctuation.end",">"]
+],[
+   "start",
+  ["text","  "],
+  ["storage.type.start","{{/"],
+  ["variable.parameter","each"],
+  ["storage.type.end","}}"]
+],[
+   "start",
+  ["meta.tag.punctuation.begin","</"],
+  ["meta.tag.name","div"],
+  ["meta.tag.punctuation.end",">"]
+],[
+   "start"
+]]
