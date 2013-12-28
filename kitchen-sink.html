@@ -24,10 +24,10 @@
 </head>
 <body>
 <div id="optionsPanel" style="position:absolute;height:100%;width:260px">
-  <a href="http://ajaxorg.github.com/ace/" >
-    <img id="logo" src="demo/kitchen-sink/logo.png">
+  <a href="http://c9.io" title="Cloud9 IDE | Your code anywhere, anytime">
+    <img id="c9-logo" src="demo/kitchen-sink/logo.png" style="width: 172px;margin: -9px 30px -12px 51px;">
   </a>
-  <div style="position: absolute; overflow: hidden; top:80px; bottom:0">
+  <div style="position: absolute; overflow: hidden; top:100px; bottom:0">
   <div style="width: 120%; height:100%; overflow-y: scroll">
 
   <table id="controls">
@@ -188,6 +188,8 @@
         <label for="show_hscroll">Persistent HScroll</label>
       </td><td>
         <input type="checkbox" name="show_hscroll" id="show_hscroll">
+		<label for="show_hscroll">VScroll</label>
+        <input type="checkbox" name="show_vscroll" id="show_vscroll">
       </td>
     </tr>
     <tr>
@@ -275,6 +277,14 @@
       </td>
     </tr>
     <tr>
+      <td >
+        <label for="scrollPastEnd">Scroll Past End</label>
+      </td>
+      <td>
+        <input type="checkbox" id="scrollPastEnd" checked>
+      </td>
+    </tr>
+    <tr>
       <td colspan="2">
         <input type="button" value="Edit Snippets" onclick="env.editSnippets()">
       </td>
@@ -282,6 +292,10 @@
   </table>
   </td></tr>
   </table>
+  
+  <a href="http://ace.c9.io">
+    <img id="ace-logo" src="doc/site/images/ace-logo.png" style="width: 134px;margin: 46px 0px 4px 66px;">
+  </a>
 
   </div>
   </div>

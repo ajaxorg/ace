@@ -1,9 +1,9 @@
 Ace (Ajax.org Cloud9 Editor)
 ============================
 
-_Note_: The new site at http://ace.ajax.org contains all the info below along with an embedding guide and all the other resources you need to get started with Ace.
+_Note_: The new site at http://ace.c9.io contains all the info below along with an embedding guide and all the other resources you need to get started with Ace.
 
-Ace is a standalone code editor written in JavaScript. Our goal is to create a browser based editor that matches and extends the features, usability and performance of existing native editors such as TextMate, Vim or Eclipse. It can be easily embedded in any web page or JavaScript application. Ace is developed as the primary editor for [Cloud9 IDE](http://www.cloud9ide.com/) and the successor of the Mozilla Skywriter (Bespin) Project.
+Ace is a standalone code editor written in JavaScript. Our goal is to create a browser based editor that matches and extends the features, usability and performance of existing native editors such as TextMate, Vim or Eclipse. It can be easily embedded in any web page or JavaScript application. Ace is developed as the primary editor for [Cloud9 IDE](https://c9.io/) and the successor of the Mozilla Skywriter (Bespin) Project.
 
 Features
 --------
@@ -28,9 +28,9 @@ Features
 Take Ace for a spin!
 --------------------
 
-Check out the Ace live [demo](http://ajaxorg.github.com/ace/build/kitchen-sink.html) or get a [Cloud9 IDE account](http://c9.io) to experience Ace while editing one of your own GitHub projects.
+Check out the Ace live [demo](http://ace.c9.io/build/kitchen-sink.html) or get a [Cloud9 IDE account](https://c9.io/) to experience Ace while editing one of your own GitHub projects.
 
-If you want, you can use Ace as a textarea replacement thanks to the [Ace Bookmarklet](http://ajaxorg.github.com/ace/build/textarea/editor.html).
+If you want, you can use Ace as a textarea replacement thanks to the [Ace Bookmarklet](http://ajaxorg.github.io/ace/build/textarea/editor.html).
 
 Embedding Ace
 -------------
@@ -86,9 +86,9 @@ The mode can then be used like this:
 Documentation
 -------------
 
-Additional usage information, including events to listen to and extending syntax highlighters, can be found [on the main Ace website](http://ace.ajax.org).
+Additional usage information, including events to listen to and extending syntax highlighters, can be found [on the main Ace website](http://ace.c9.io).
 
-You can also find API documentation at [http://ajaxorg.github.com/ace/api/index.html](http://ajaxorg.github.com/ace/api/index.html).
+You can also find API documentation at [http://ace.c9.io/#nav=api](http://ace.c9.io/#nav=api).
 
 Also check out the sample code for the kitchen sink [demo app](https://github.com/ajaxorg/ace/blob/master/demo/kitchen-sink/demo.js).
 
@@ -112,7 +112,7 @@ Or using Node.JS
 
 The editor can then be opened at http://localhost:8888/kitchen-sink.html. 
 
-To open the editor with a file:/// URL see [the wiki](https://github.com/ajaxorg/ace/wiki/Running-Ace-from-a-file:).
+To open the editor with a file:/// URL see [the wiki](https://github.com/ajaxorg/ace/wiki/Running-Ace-from-file).
 
 Building Ace
 -----------

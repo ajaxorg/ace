@@ -1,11 +1,11 @@
 [[
-   ["bracketedComment",4,"start"],
+   ["bracketedComment",2,"start"],
   ["comment","--[[--"]
 ],[
-   ["bracketedComment",4,"start"],
+   ["bracketedComment",2,"start"],
   ["comment","num_args takes in 5.1 byte code and extracts the number of arguments"]
 ],[
-   ["bracketedComment",4,"start"],
+   ["bracketedComment",2,"start"],
   ["comment","from its function header."]
 ],[
    "start",
@@ -301,10 +301,10 @@
 ],[
    "start"
 ],[
-   ["bracketedComment",5,"start"],
+   ["bracketedComment",3,"start"],
   ["comment","--[=[--"]
 ],[
-   ["bracketedComment",5,"start"],
+   ["bracketedComment",3,"start"],
   ["comment","table.maxn is deprecated, use # instead."]
 ],[
    "start",
@@ -337,4 +337,12 @@
   ["comment","-- outputs 8 instead of 2"]
 ],[
    "start"
+],[
+   "start",
+  ["support.function","print"],
+  ["paren.lparen","("],
+  ["constant.numeric","5"],
+  ["text"," "],
+  ["comment","--[[ blah ]]"],
+  ["paren.rparen",")"]
 ]]

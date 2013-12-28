@@ -14,7 +14,7 @@ test: only space between #s is not a valid header
 #  #
 
 # test links  [Cloud9 IDE](http://www.c9.io/) #
-* [demo](http://ajaxorg.github.com/ace/) 
+* [demo](http://ajaxorg.github.com/ace/) [+](escape(\) ) [+](a "title") [+](a "space" )
 * usually *work* fine (_em_)
 in lists
 

@@ -64,14 +64,33 @@
   ["text","]("],
   ["markup.underline","http://ajaxorg.github.com/ace/"],
   ["text",")"],
-  ["list"," "]
+  ["list"," "],
+  ["text","["],
+  ["string","+"],
+  ["text","]("],
+  ["markup.underline","escape(\\) "],
+  ["text",")"],
+  ["list"," "],
+  ["text","["],
+  ["string","+"],
+  ["text","]("],
+  ["markup.underline","a"],
+  ["string"," \"title\""],
+  ["text",")"],
+  ["list"," "],
+  ["text","["],
+  ["string","+"],
+  ["text","]("],
+  ["markup.underline","a"],
+  ["string"," \"space\" "],
+  ["text",")"]
 ],[
    "listblock",
   ["markup.list","* "],
   ["list","usually "],
-  ["string","*work*"],
+  ["string.emphasis","*work*"],
   ["list"," fine ("],
-  ["string","_em_"],
+  ["string.emphasis","_em_"],
   ["list",")"]
 ],[
    "listblock",
@@ -81,13 +100,13 @@
 ],[
    "start",
   ["text","in plain text "],
-  ["meta.tag","<"],
-  ["meta.tag.tag-name","b"],
-  ["meta.tag.r",">"],
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name","b"],
+  ["meta.tag.punctuation.end",">"],
   ["text","http://ace.ajaxorg.com"],
-  ["meta.tag","<"],
-  ["meta.tag.tag-name","b"],
-  ["meta.tag.r",">"]
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name","b"],
+  ["meta.tag.punctuation.end",">"]
 ],[
    "allowBlock"
 ],[

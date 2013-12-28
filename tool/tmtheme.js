@@ -94,7 +94,6 @@ function extractStyles(theme) {
         "printMargin": "#e8e8e8",
         "background": parseColor(globalSettings.background),
         "foreground": parseColor(globalSettings.foreground),
-        "overwrite": parseColor(globalSettings.caret),
         "gutter": "#e8e8e8",
         "selection": parseColor(globalSettings.selection),
         "step": "rgb(198, 219, 174)",

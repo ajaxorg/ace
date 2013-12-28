@@ -9,48 +9,48 @@
   ["text","tokenize embedded script"]
 ],[
    "start",
-  ["meta.tag","<"],
-  ["meta.tag.tag-name.script","script"],
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name.script","script"],
   ["text"," "],
   ["entity.other.attribute-name","a"],
-  ["keyword.operator","="],
+  ["keyword.operator.separator","="],
   ["string","'a'"],
-  ["meta.tag.r",">"],
+  ["meta.tag.punctuation.end",">"],
   ["storage.type","var"],
-  ["meta.tag","</"],
-  ["meta.tag.tag-name.script","script"],
-  ["meta.tag.r",">"],
+  ["meta.tag.punctuation.begin","</"],
+  ["meta.tag.name.script","script"],
+  ["meta.tag.punctuation.end",">"],
   ["text","'123'"]
 ],[
    "start",
   ["text","tokenize multiline attribute value with double quotes"]
 ],[
-   "tag_qqstring",
-  ["meta.tag","<"],
-  ["meta.tag.tag-name.anchor","a"],
+   ["qqstring_inner","start_tag_stuff"],
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name.anchor","a"],
   ["text"," "],
   ["entity.other.attribute-name","href"],
-  ["keyword.operator","="],
+  ["keyword.operator.separator","="],
   ["string","\"abc{{xyz}}"]
 ],[
    "start",
   ["string","def\""],
-  ["meta.tag.r",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start",
   ["text","tokenize multiline attribute value with single quotes"]
 ],[
-   "tag_qstring",
-  ["meta.tag","<"],
-  ["meta.tag.tag-name.anchor","a"],
+   ["qstring_inner","start_tag_stuff"],
+  ["meta.tag.punctuation.begin","<"],
+  ["meta.tag.name.anchor","a"],
   ["text"," "],
   ["entity.other.attribute-name","href"],
-  ["keyword.operator","="],
+  ["keyword.operator.separator","="],
   ["string","'abc"]
 ],[
    "start",
   ["string","def\\\"'"],
-  ["meta.tag.r",">"]
+  ["meta.tag.punctuation.end",">"]
 ],[
    "start"
 ]]

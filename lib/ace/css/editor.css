@@ -13,6 +13,10 @@
     top: 0;
     bottom: 0;
     background-color: inherit;
+    -ms-user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
 }
 
 .ace_content {
@@ -21,6 +25,28 @@
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
     cursor: text;
+}
+
+.ace_dragging, .ace_dragging * {
+    cursor: move !important;
+}
+
+.ace_dragging .ace_scroller:before{
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    content: '';
+    background: rgba(250, 250, 250, 0.01);
+    z-index: 1000;
+}
+.ace_dragging.ace_dark .ace_scroller:before{
+    background: rgba(0, 0, 0, 0.01);
+}
+
+.ace_selecting, .ace_selecting * {
+    cursor: text !important;
 }
 
 .ace_gutter {
@@ -71,17 +97,19 @@
 
 .ace_scrollbar {
     position: absolute;
-    overflow: hidden;
+    overflow-x: hidden;
     overflow-y: auto;
     right: 0;
     top: 0;
     bottom: 0;
+    z-index: 6;
 }
 
 .ace_scrollbar-inner {
     position: absolute;
-    width: 1px;
+    cursor: text;
     left: 0;
+    top: 0;
 }
 
 .ace_scrollbar-h {
@@ -91,14 +119,8 @@
     right: 0;
     left: 0;
     bottom: 0;
+    z-index: 6;
 }
-
-.ace_scrollbar-inner {
-    position: absolute;
-    height: 1px;
-    left: 0;
-}
-
 
 .ace_print-margin {
     position: absolute;
@@ -121,6 +143,11 @@
     font: inherit;
     padding: 0 1px;
     margin: 0 -1px;
+    text-indent: -1em;
+    -ms-user-select: text;
+    -moz-user-select: text;
+    -webkit-user-select: text;
+    user-select: text;
 }
 
 .ace_text-input.ace_composition {
@@ -128,13 +155,14 @@
     color: #111;
     z-index: 1000;
     opacity: 1;
+    text-indent: 0;
 }
 
 .ace_layer {
     z-index: 1;
     position: absolute;
     overflow: hidden;
-    white-space: nowrap;
+    white-space: pre;
     height: 100%;
     width: 100%;
     -moz-box-sizing: border-box;
@@ -171,6 +199,16 @@
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
+    border-left: 2px solid
+}
+
+.ace_slim-cursors .ace_cursor {
+    border-left-width: 1px;
+}
+
+.ace_overwrite-cursors .ace_cursor {
+    border-left-width: 0px;
+    border-bottom: 1px solid;
 }
 
 .ace_hidden-cursors .ace_cursor {
@@ -191,10 +229,6 @@
 
 .ace_editor.ace_multiselect .ace_cursor {
     border-left-width: 1px;
-}
-
-.ace_line {
-    white-space: nowrap;
 }
 
 .ace_marker-layer .ace_step, .ace_marker-layer .ace_stack {
@@ -262,10 +296,6 @@
     background-position: center center, top left;
 }
 
-.ace_editor.ace_dragging .ace_content {
-    cursor: move;
-}
-
 .ace_gutter-tooltip {
     background-color: #FFF;
     background-image: -webkit-linear-gradient(top, transparent, rgba(0, 0, 0, 0.1));
@@ -278,7 +308,7 @@
     max-width: 500px;
     padding: 4px;
     position: fixed;
-    z-index: 300;
+    z-index: 999999;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;

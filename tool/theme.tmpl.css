@@ -16,12 +16,7 @@
 }
 
 .%cssClass% .ace_cursor {
-  border-left: 2px solid %cursor%;
-}
-
-.%cssClass% .ace_overwrite-cursors .ace_cursor {
-  border-left: 0px;
-  border-bottom: 1px solid %overwrite%;
+  color: %cursor%;
 }
 
 .%cssClass% .ace_marker-layer .ace_selection {
