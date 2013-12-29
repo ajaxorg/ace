@@ -41,8 +41,8 @@ SELECT city, temp_lo, temp_hi, prcp, "date", location
 
 /**
 * Dollar quotes starting at the end of the line are colored as SQL unless
-* a special language tag is used. Pearl and Python are currently implemented
-* but lots of others are possible.
+* a special language tag is used. Dollar quote syntax coloring is implemented
+* for Perl, Python, JavaScript, and Json.
 */
 create or replace function blob_content_chunked(
     in p_data bytea, 
@@ -81,6 +81,24 @@ CREATE FUNCTION usesavedplan() RETURNS trigger AS $python$
         plan = plpy.prepare("SELECT 1")
         SD["plan"] = plan
 $python$ LANGUAGE plpythonu;
+
+-- pl/v8 (javascript)
+CREATE FUNCTION plv8_test(keys text[], vals text[]) RETURNS text AS $javascript$
+var o = {};
+for(var i=0; i<keys.length; i++){
+ o[keys[i]] = vals[i];
+}
+return JSON.stringify(o);
+$javascript$ LANGUAGE plv8 IMMUTABLE STRICT;
+
+-- json
+select * from json_object_keys($json$
+{
+  "f1": 5,
+  "f2": "test",
+  "f3": {}
+}
+$json$);
 
 
 -- psql commands
