@@ -301,7 +301,7 @@
     background-position: center center, top left;
 }
 
-.ace_gutter-tooltip {
+.ace_tooltip {
     background-color: #FFF;
     background-image: -webkit-linear-gradient(top, transparent, rgba(0, 0, 0, 0.1));
     background-image: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.1));
@@ -309,21 +309,22 @@
     border-radius: 1px;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
     color: black;
-    display: inline-block;
-    max-width: 500px;
-    padding: 4px;
+    display: block;
+    max-width: 100%;
+    padding: 3px 4px;
     position: fixed;
     z-index: 999999;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
     cursor: default;
-    white-space: pre-line;
+    white-space: pre;
     word-wrap: break-word;
     line-height: normal;
     font-style: normal;
     font-weight: normal;
     letter-spacing: normal;
+    pointer-events: none;
 }
 
 .ace_folding-enabled > .ace_gutter-cell {
