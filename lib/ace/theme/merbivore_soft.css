@@ -14,12 +14,7 @@
 }
 
 .ace-merbivore-soft .ace_cursor {
-  border-left: 2px solid #FFFFFF
-}
-
-.ace-merbivore-soft .ace_overwrite-cursors .ace_cursor {
-  border-left: 0px;
-  border-bottom: 1px solid #FFFFFF
+  color: #FFFFFF
 }
 
 .ace-merbivore-soft .ace_marker-layer .ace_selection {
@@ -112,5 +107,5 @@
 }
 
 .ace-merbivore-soft .ace_indent-guide {
-  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAEklEQVQImWOQkpLyZfD09PwPAAfYAnaStpHRAAAAAElFTkSuQmCC) right repeat-y;
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAEklEQVQImWOQkpLyZfD09PwPAAfYAnaStpHRAAAAAElFTkSuQmCC) right repeat-y
 }

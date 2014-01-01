@@ -14,12 +14,7 @@
 }
 
 .ace-cobalt .ace_cursor {
-  border-left: 2px solid #FFFFFF
-}
-
-.ace-cobalt .ace_overwrite-cursors .ace_cursor {
-  border-left: 0px;
-  border-bottom: 1px solid #FFFFFF
+  color: #FFFFFF
 }
 
 .ace-cobalt .ace_marker-layer .ace_selection {
@@ -111,6 +106,17 @@
   color: #0088FF
 }
 
+.ace-cobalt .ace_heading,
+.ace-cobalt .ace_markup.ace_heading {
+  color: #C8E4FD;
+  background-color: #001221
+}
+
+.ace-cobalt .ace_list,
+.ace-cobalt .ace_markup.ace_list {
+  background-color: #130D26
+}
+
 .ace-cobalt .ace_variable {
   color: #CCCCCC
 }
@@ -123,15 +129,6 @@
   color: #9EFFFF
 }
 
-.ace-cobalt .ace_heading {
-  color: #C8E4FD;
-  background-color: #001221
-}
-
-.ace-cobalt .ace_list {
-  background-color: #130D26
-}
-
 .ace-cobalt .ace_indent-guide {
-  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAEklEQVQImWNgYGBgYHCLSvkPAAP3AgSDTRd4AAAAAElFTkSuQmCC) right repeat-y;
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAEklEQVQImWNgYGBgYHCLSvkPAAP3AgSDTRd4AAAAAElFTkSuQmCC) right repeat-y
 }

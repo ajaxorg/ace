@@ -1,3 +1,28 @@
+  
+* New Features
+  - Accessibility Theme for Ace (Peter Xiao)
+  - use snipetManager for expanding emmet snippets
+  - update jshint to 2.1.4
+  - improve php syntax checker (jdalegonzalez)
+  - add option for autoresizing
+  - add option for autohiding vertical scrollbar
+  - improvements to highlighting of xml like languages (danyaPostfactum)
+  - add support for autocompletion and snippets (gjtorikyan danyaPostfactum and others)
+  - add option to merge similar changes in undo history
+  - add scrollPastEnd option
+  - 6a87d97 Merge pull request #1494 from danyaPostfactum/snippetcompleter
+  - use html5 dragndrop for text dragging (danyaPostfactum)
+  
+* API Changes
+  - fixed typo in HashHandler commmandManager
+
+* new language modes
+  - Nix (Zef Hemel)
+  - Protobuf (Zef Hemel)
+  - Soy
+  - Handlebars
+  - 
+
 2013.06.04 Version 1.1.01
 
   - Improved emacs keybindings (Robert Krahn)

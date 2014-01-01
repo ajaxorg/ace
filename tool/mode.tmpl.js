@@ -26,11 +26,6 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- *
- * Contributor(s):
- *
- *
- *
  * ***** END LICENSE BLOCK ***** */
 
 /*
@@ -48,10 +43,8 @@ var %language%HighlightRules = require("./%languageHighlightFilename%_highlight_
 var FoldMode = require("./folding/cstyle").FoldMode;
 
 var Mode = function() {
-    var highlighter = new %language%HighlightRules();
+    this.HighlightRules = %language%HighlightRules;
     this.foldingRules = new FoldMode();
-    this.$tokenizer = new Tokenizer(highlighter.getRules());
-    this.$keywordList = highlighter.$keywordList;
 };
 oop.inherits(Mode, TextMode);
 

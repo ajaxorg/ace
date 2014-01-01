@@ -8,18 +8,13 @@
   background: #232323
 }
 
-.ace-clouds-midnight{
+.ace-clouds-midnight {
   background-color: #191919;
   color: #929292
 }
 
 .ace-clouds-midnight .ace_cursor {
-  border-left: 2px solid #7DA5DC
-}
-
-.ace-clouds-midnight .ace_overwrite-cursors .ace_cursor {
-  border-left: 0px;
-  border-bottom: 1px solid #7DA5DC
+  color: #7DA5DC
 }
 
 .ace-clouds-midnight .ace_marker-layer .ace_selection {
@@ -114,5 +109,5 @@
 }
 
 .ace-clouds-midnight .ace_indent-guide {
-  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAEklEQVQImWNgYGBgYHB3d/8PAAOIAdULw8qMAAAAAElFTkSuQmCC) right repeat-y;
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAEklEQVQImWNgYGBgYHB3d/8PAAOIAdULw8qMAAAAAElFTkSuQmCC) right repeat-y
 }

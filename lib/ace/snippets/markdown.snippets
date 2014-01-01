@@ -23,14 +23,15 @@ snippet ![:*
 	![${1:id}]: ${2:`@*`} "${3:title}"
 
 snippet ===
-	`repeat('=', strlen(getline(line(".") - 1)))`
+regex /^/=+/=*//
+	${PREV_LINE/./=/g}
 	
-	${1}
+	${0}
 snippet ---
-	`repeat('-', strlen(getline(line(".") - 1)))`
+regex /^/-+/-*//
+	${PREV_LINE/./-/g}
 	
-	${1}
-
+	${0}
 snippet blockquote
 	{% blockquote %}
 	${1:quote}

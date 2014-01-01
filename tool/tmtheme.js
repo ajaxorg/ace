@@ -94,7 +94,6 @@ function extractStyles(theme) {
         "printMargin": "#e8e8e8",
         "background": parseColor(globalSettings.background),
         "foreground": parseColor(globalSettings.foreground),
-        "overwrite": parseColor(globalSettings.caret),
         "gutter": "#e8e8e8",
         "selection": parseColor(globalSettings.selection),
         "step": "rgb(198, 219, 174)",
@@ -158,9 +157,13 @@ function luma(color) {
 }
 
 function parseColor(color) {
+    if (color.length == 4)
+        color = color.replace(/[a-fA-F\d]/g, "$&$&");
     if (color.length == 7)
         return color;
     else {
+        if (!color.match(/^#(..)(..)(..)(..)$/))
+            console.error("can't parse color", color);
         var rgba = color.match(/^#(..)(..)(..)(..)$/).slice(1).map(function(c) {
             return parseInt(c, 16);
         });
@@ -248,6 +251,7 @@ var themes = {
     "solarized_dark": "Solarized-dark",
     "solarized_light": "Solarized-light",
     "katzenmilch": "Katzenmilch",
+    "kuroir": "Kuroir Theme",
     //"textmate": "Textmate (Mac Classic)",
     "tomorrow": "Tomorrow",
     "tomorrow_night": "Tomorrow-Night",

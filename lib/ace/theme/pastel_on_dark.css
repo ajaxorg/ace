@@ -14,12 +14,7 @@
 }
 
 .ace-pastel-on-dark .ace_cursor {
-  border-left: 2px solid #A7A7A7
-}
-
-.ace-pastel-on-dark .ace_overwrite-cursors .ace_cursor {
-  border-left: 0px;
-  border-bottom: 1px solid #A7A7A7
+  color: #A7A7A7
 }
 
 .ace-pastel-on-dark .ace_marker-layer .ace_selection {
@@ -130,5 +125,5 @@
 }
 
 .ace-pastel-on-dark .ace_indent-guide {
-  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAEklEQVQImWNgYGBgYIiPj/8PAARgAh2NTMh8AAAAAElFTkSuQmCC) right repeat-y;
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAEklEQVQImWNgYGBgYIiPj/8PAARgAh2NTMh8AAAAAElFTkSuQmCC) right repeat-y
 }

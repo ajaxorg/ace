@@ -1,14 +1,17 @@
 snippet lib
-	#library('${1}');
+	library ${1};
 	${2}
 snippet im
-	#import('${1}');
+	import '${1}';
 	${2}
-snippet so
-	#source('${1}');
+snippet pa
+	part '${1}';
+	${2}
+snippet pao
+	part of ${1};
 	${2}
 snippet main
-	static void main() {
+	void main() {
 	  ${1:/* code */}
 	}
 snippet st
@@ -23,8 +26,6 @@ snippet th
 	throw ${1}
 snippet cl
 	class ${1:`Filename("", "untitled")`} ${2}
-snippet in
-	interface ${1:`Filename("", "untitled")`} ${2}
 snippet imp
 	implements ${1}
 snippet ext
