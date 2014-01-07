@@ -297,8 +297,19 @@ function getWriteFilters(options, projectType) {
     if (options.compress)
         filters.push(copy.filter.uglifyjs);
     
-    copy.filter.uglifyjs.options.ascii = true;
-
+    // copy.filter.uglifyjs.options.ascii = true; doesn't work with some uglify.js versions
+    filters.push(function(text) {
+         var t1 = text.replace(/[\x80-\uffff]/g, function(c) {
+            c = c.charCodeAt(0).toString(16);
+            if (c.length == 2)
+                return "\\x" + c;
+            if (c.length == 3)
+                c = "0" + c;
+            return "\\u" + c;
+        });
+        return text; 
+    });
+    
     if (options.exportModule && projectType == "main") {
         if (options.noconflict)
             filters.push(exportAce(options.ns, options.exportModule, options.ns));
