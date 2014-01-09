@@ -34,14 +34,19 @@ $(function() {
         });
     });    
     
-    $("ul.menu-list li").click(function(e) {
-        if (e.target.tagName === "LI") {
-            console.log($(this).find("a"));
-            window.location = $(this).find("a").attr("href");
+    $("ul.menu-list").mousedown(function(e) {
+        if (e.button === 1) {
+            e.preventDefault();
         }
-        else if (e.target.tagName === "P" || e.target.tagName === "IMG") {
-            var anchor = $(e.target).siblings();
-            window.location = anchor.attr("href");
+    });
+    
+    $("ul.menu-list li").click(function(e) {
+        if (e.target.tagName !== "A") {
+            var href = $(this).find("a").attr("href");
+            if (e.button == 1)
+                window.open(href, "_blank");
+            else
+                window.location = href;
         }
     });
     
