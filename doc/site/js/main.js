@@ -6,22 +6,20 @@ $(function() {
     editor.container.style.opacity = "";
     embedded_editor = ace.edit("embedded_ace_code");
     embedded_editor.container.style.opacity = "";
-    editor.session.setMode("ace/mode/javascript");    
     embedded_editor.session.setMode("ace/mode/html");
+    embedded_editor.setAutoScrollEditorIntoView(true);
+    embedded_editor.setOption("maxLines", 40);
     
     editor.setOptions({
-        maxLines: 30
-    })
+        maxLines: 30,
+        mode: "ace/mode/javascript",
+        autoScrollEditorIntoView: true
+    });
     
     ace.config.loadModule("ace/ext/emmet", function() {
         ace.require("ace/lib/net").loadScript("http://nightwing.github.io/emmet-core/emmet.js", function() {
             embedded_editor.setOption("enableEmmet", true);
             editor.setOption("enableEmmet", true);
-        });
-
-        embedded_editor.setOptions({
-            enableSnippets: true,
-            enableBasicAutocompletion: true
         });
     });
     
@@ -34,19 +32,21 @@ $(function() {
             enableSnippets: true,
             enableBasicAutocompletion: true
         });
+    });    
+    
+    $("ul.menu-list").mousedown(function(e) {
+        if (e.button === 1) {
+            e.preventDefault();
+        }
     });
-
-    embedded_editor.setAutoScrollEditorIntoView(true);
-    editor.setAutoScrollEditorIntoView(true);
     
     $("ul.menu-list li").click(function(e) {
-        if (e.target.tagName === "LI") {
-            console.log($(this).find("a"));
-            window.location = $(this).find("a").attr("href");
-        }
-        else if (e.target.tagName === "P" || e.target.tagName === "IMG") {
-            var anchor = $(e.target).siblings();
-            window.location = anchor.attr("href");
+        if (e.target.tagName !== "A") {
+            var href = $(this).find("a").attr("href");
+            if (e.button == 1)
+                window.open(href, "_blank");
+            else
+                window.location = href;
         }
     });
     
