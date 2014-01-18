@@ -30,6 +30,28 @@ function foo(items) {
     }
 }
 ```
+
+```xml
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!-- Edited by XMLSpy® --&gt;
+&lt;note&gt;
+  &lt;to&gt;Tove&lt;/to&gt;
+  &lt;from&gt;Jani&lt;/from&gt;
+  &lt;heading&gt;Reminder&lt;/heading&gt;
+  &lt;body&gt;Don't forget me this weekend!&lt;/body&gt;
+&lt;/note&gt;
+```
+
+```nolang
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!-- Edited by XMLSpy® --&gt;
+&lt;note&gt;
+  &lt;to&gt;Tove&lt;/to&gt;
+  &lt;from&gt;Jani&lt;/from&gt;
+  &lt;heading&gt;Reminder&lt;/heading&gt;
+  &lt;body&gt;Don't forget me this weekend!&lt;/body&gt;
+&lt;/note&gt;
+```
 </pre>
     
 <!--
@@ -46,7 +68,7 @@ function foo(items) {
 <script>
     var editor = ace.edit("editor");
     editor.setTheme("ace/theme/twilight");
-    editor.getSession().setMode( "ace/mode/markdown" );
+    editor.getSession().setMode( { "path" : "ace/mode/markdown", "embeds" : [ "xml" ] } );
 </script>
 
 </body>
