@@ -21,18 +21,28 @@
 </head>
 <body>
 
-<pre id="editor">function foo(items) {
+<pre id="editor">
+```js
+function foo(items) {
     var i;
     for (i = 0; i &lt; items.length; i++) {
         alert("Ace Rocks " + items[i]);
     }
-}</pre>
+}
+```
+</pre>
     
-<script src="src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+<script src="src/ace.js" type="text/javascript" charset="utf-8"></script>
 <script>
     var editor = ace.edit("editor");
     editor.setTheme("ace/theme/twilight");
-    editor.getSession().setMode("ace/mode/javascript");
+    editor.getSession().setMode( {
+      "path" : "ace/mode/markdown",
+      "embeds" : [
+          { "javascript" : [ "js", "javascript" ] },
+          "php"
+       ]
+    });
 </script>
 
 </body>
