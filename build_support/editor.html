@@ -32,10 +32,7 @@ function foo(items) {
 ```
 </pre>
     
-<script src="src/ace.js" type="text/javascript" charset="utf-8"></script>
-<script>
-    var editor = ace.edit("editor");
-    editor.setTheme("ace/theme/twilight");
+<!--
     editor.getSession().setMode( {
       "path" : "ace/mode/markdown",
       "embeds" : [
@@ -43,6 +40,13 @@ function foo(items) {
           "php"
        ]
     });
+-->
+
+<script src="src/ace.js" type="text/javascript" charset="utf-8"></script>
+<script>
+    var editor = ace.edit("editor");
+    editor.setTheme("ace/theme/twilight");
+    editor.getSession().setMode( "ace/mode/markdown" );
 </script>
 
 </body>
