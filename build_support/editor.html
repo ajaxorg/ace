@@ -21,54 +21,18 @@
 </head>
 <body>
 
-<pre id="editor">
-```js
-function foo(items) {
+<pre id="editor">function foo(items) {
     var i;
     for (i = 0; i &lt; items.length; i++) {
         alert("Ace Rocks " + items[i]);
     }
-}
-```
-
-```xml
-&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;!-- Edited by XMLSpy® --&gt;
-&lt;note&gt;
-  &lt;to&gt;Tove&lt;/to&gt;
-  &lt;from&gt;Jani&lt;/from&gt;
-  &lt;heading&gt;Reminder&lt;/heading&gt;
-  &lt;body&gt;Don't forget me this weekend!&lt;/body&gt;
-&lt;/note&gt;
-```
-
-```nolang
-&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;!-- Edited by XMLSpy® --&gt;
-&lt;note&gt;
-  &lt;to&gt;Tove&lt;/to&gt;
-  &lt;from&gt;Jani&lt;/from&gt;
-  &lt;heading&gt;Reminder&lt;/heading&gt;
-  &lt;body&gt;Don't forget me this weekend!&lt;/body&gt;
-&lt;/note&gt;
-```
-</pre>
+}</pre>
     
-<!--
-    editor.getSession().setMode( {
-      "path" : "ace/mode/markdown",
-      "embeds" : [
-          { "javascript" : [ "js", "javascript" ] },
-          "php"
-       ]
-    });
--->
-
-<script src="src/ace.js" type="text/javascript" charset="utf-8"></script>
+<script src="src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
 <script>
     var editor = ace.edit("editor");
     editor.setTheme("ace/theme/twilight");
-    editor.getSession().setMode( { "path" : "ace/mode/markdown", "embeds" : [ "xml" ] } );
+    editor.getSession().setMode("ace/mode/javascript");
 </script>
 
 </body>

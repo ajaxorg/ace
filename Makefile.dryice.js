@@ -167,6 +167,10 @@ function ace() {
         dest:   BUILD_DIR + "/editor.html"
     });
     copy({
+        source: ACE_HOME + "/build_support/editor-markdown.html",
+        dest:   BUILD_DIR + "/editor-markdown.html"
+    });
+    copy({
         source: ACE_HOME + "/LICENSE",
         dest:   BUILD_DIR + "/LICENSE"
     });
