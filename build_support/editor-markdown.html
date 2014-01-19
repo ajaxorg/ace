@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Editor</title>
+  <style type="text/css" media="screen">
+    body {
+        overflow: hidden;
+    }
+    
+    #editor { 
+        margin: 0;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+    }
+  </style>
+</head>
+<body>
+
+<pre id="editor">
+```js
+function foo(items) {
+    var i;
+    for (i = 0; i &lt; items.length; i++) {
+        alert("Ace Rocks " + items[i]);
+    }
+}
+```
+
+```javascript
+function foo(items) {
+    var i;
+    for (i = 0; i &lt; items.length; i++) {
+        alert("Ace Rocks " + items[i]);
+    }
+}
+```
+
+```xml
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!-- Edited by XMLSpy® --&gt;
+&lt;note&gt;
+  &lt;to&gt;Tove&lt;/to&gt;
+  &lt;from&gt;Jani&lt;/from&gt;
+  &lt;heading&gt;Reminder&lt;/heading&gt;
+  &lt;body&gt;Don't forget me this weekend!&lt;/body&gt;
+&lt;/note&gt;
+```
+
+```java
+public class MyClass {
+    public MyClass() {
+        // The constructor
+    }
+
+    public static void main(String[] args) {
+        MyClass c = new MyClass();
+    }
+}
+```
+
+```nolang
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!-- Edited by XMLSpy® --&gt;
+&lt;note&gt;
+  &lt;to&gt;Tove&lt;/to&gt;
+  &lt;from&gt;Jani&lt;/from&gt;
+  &lt;heading&gt;Reminder&lt;/heading&gt;
+  &lt;body&gt;Don't forget me this weekend!&lt;/body&gt;
+&lt;/note&gt;
+```
+
+```php
+&lt;?php
+/**
+ * WordPress Post Template Functions.
+ *
+ * Gets content for the current post in the loop.
+ *
+ * @package WordPress
+ * @subpackage Template
+ */
+
+/**
+ * Display the ID of the current item in the WordPress Loop.
+ *
+ * @since 0.71
+ */
+function the_ID() {
+	echo get_the_ID();
+}
+
+/**
+ * Retrieve the ID of the current item in the WordPress Loop.
+ *
+ * @since 2.1.0
+ * @uses $post
+ *
+ * @return int
+ */
+function get_the_ID() {
+	return get_post()-&gt;ID;
+}
+```
+</pre>
+    
+<!--
+    editor.getSession().setMode( {
+      "path" : "ace/mode/markdown",
+      "embeds" : [
+          { "javascript" : [ "js", "javascript" ] },
+          "php"
+       ]
+    });
+-->
+
+<script src="src/ace.js" type="text/javascript" charset="utf-8"></script>
+<script>
+    var editor = ace.edit("editor");
+    editor.setTheme("ace/theme/twilight");
+    editor.getSession().setMode( { "path" : "ace/mode/markdown",
+                                   "embeds" : [ "xml",
+                                                { "path" : "ace/mode/javascript", "suffixes" : [ "js", "javascript" ] },
+                                                "ace/mode/php",
+                                                { "path" : "ace/mode/java" } ] });
+</script>
+
+</body>
+</html>
