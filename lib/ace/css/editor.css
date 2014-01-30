@@ -63,6 +63,10 @@
     left: 0;
     cursor: default;
     z-index: 4;
+    -ms-user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
 }
 
 .ace_gutter-active-line {
@@ -225,10 +229,6 @@
          -o-transition: opacity 0.18s;
         -ms-transition: opacity 0.18s;
             transition: opacity 0.18s;
-}
-
-.ace_cursor[style*="opacity: 0"]{
-    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
 }
 
 .ace_editor.ace_multiselect .ace_cursor {
