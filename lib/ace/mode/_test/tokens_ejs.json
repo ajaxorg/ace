@@ -179,7 +179,7 @@
   ["meta.tag.name.table","td"],
   ["meta.tag.punctuation.end",">"]
 ],[
-   ["start","ejs-start","qqstring_inner","qqstring_inner","start_tag_stuff"],
+   "start",
   ["text","                    "],
   ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name","span"],
@@ -204,12 +204,13 @@
   ["text"," "],
   ["string","'file'"],
   ["markup.list.meta.tag","%>"],
-  ["text","\">"],
+  ["string","\""],
+  ["meta.tag.punctuation.end",">"],
   ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name","span"],
   ["meta.tag.punctuation.end",">"]
 ],[
-   ["start","ejs-start","qqstring_inner","qqstring_inner","start_tag_stuff","start","ejs-start","qqstring_inner","qqstring_inner","start_tag_stuff"],
+   "start",
   ["text","                    "],
   ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name.anchor","a"],
@@ -224,7 +225,8 @@
   ["identifier","name"],
   ["text"," "],
   ["markup.list.meta.tag","%>"],
-  ["text","\">"],
+  ["string","\""],
+  ["meta.tag.punctuation.end",">"],
   ["markup.list.meta.tag","<%="],
   ["text"," "],
   ["identifier","entry"],
@@ -236,13 +238,13 @@
   ["meta.tag.name.anchor","a"],
   ["meta.tag.punctuation.end",">"]
 ],[
-   ["start","ejs-start","qqstring_inner","qqstring_inner","start_tag_stuff","start","ejs-start","qqstring_inner","qqstring_inner","start_tag_stuff"],
+   "start",
   ["text","                "],
   ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name.table","td"],
   ["meta.tag.punctuation.end",">"]
 ],[
-   ["start","ejs-start","qqstring_inner","qqstring_inner","start_tag_stuff","start","ejs-start","qqstring_inner","qqstring_inner","start_tag_stuff"],
+   "start",
   ["text","                "],
   ["meta.tag.punctuation.begin","<"],
   ["meta.tag.name.table","td"],
@@ -258,13 +260,13 @@
   ["meta.tag.name.table","td"],
   ["meta.tag.punctuation.end",">"]
 ],[
-   ["start","ejs-start","qqstring_inner","qqstring_inner","start_tag_stuff","start","ejs-start","qqstring_inner","qqstring_inner","start_tag_stuff"],
+   "start",
   ["text","            "],
   ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name.table","tr"],
   ["meta.tag.punctuation.end",">"]
 ],[
-   ["start","ejs-start","qqstring_inner","qqstring_inner","start_tag_stuff","start","ejs-start","qqstring_inner","qqstring_inner","start_tag_stuff"],
+   "start",
   ["text","        "],
   ["markup.list.meta.tag","<%"],
   ["text"," "],
@@ -272,22 +274,22 @@
   ["text"," "],
   ["markup.list.meta.tag","%>"]
 ],[
-   ["start","ejs-start","qqstring_inner","qqstring_inner","start_tag_stuff","start","ejs-start","qqstring_inner","qqstring_inner","start_tag_stuff"],
+   "start",
   ["text","    "],
   ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name.table","table"],
   ["meta.tag.punctuation.end",">"]
 ],[
-   ["start","ejs-start","qqstring_inner","qqstring_inner","start_tag_stuff","start","ejs-start","qqstring_inner","qqstring_inner","start_tag_stuff"],
+   "start",
   ["text","    "]
 ],[
-   ["start","ejs-start","qqstring_inner","qqstring_inner","start_tag_stuff","start","ejs-start","qqstring_inner","qqstring_inner","start_tag_stuff"],
+   "start",
   ["text","    "],
   ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name","body"],
   ["meta.tag.punctuation.end",">"]
 ],[
-   ["start","ejs-start","qqstring_inner","qqstring_inner","start_tag_stuff","start","ejs-start","qqstring_inner","qqstring_inner","start_tag_stuff"],
+   "start",
   ["meta.tag.punctuation.begin","</"],
   ["meta.tag.name","html"],
   ["meta.tag.punctuation.end",">"]
