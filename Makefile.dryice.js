@@ -267,7 +267,7 @@ function workers(path) {
     }).filter(function(x) { return !!x; });
 }
 function modeList() {
-    return jsFileList("lib/ace/mode", /_highlight_rules|_test|_worker|xml_util|_outdent|behaviour|completions/)
+    return jsFileList("lib/ace/mode", /_highlight_rules|_test|_worker|_outdent|behaviour|completions/)
 }
 
 function addSuffix(options) {
@@ -296,7 +296,7 @@ function getWriteFilters(options, projectType) {
 
     if (options.compress)
         filters.push(copy.filter.uglifyjs);
-    
+
     // copy.filter.uglifyjs.options.ascii = true; doesn't work with some uglify.js versions
     filters.push(function(text) {
          var t1 = text.replace(/[\x80-\uffff]/g, function(c) {
@@ -307,9 +307,9 @@ function getWriteFilters(options, projectType) {
                 c = "0" + c;
             return "\\u" + c;
         });
-        return text; 
+        return text;
     });
-    
+
     if (options.exportModule && projectType == "main") {
         if (options.noconflict)
             filters.push(exportAce(options.ns, options.exportModule, options.ns));
@@ -416,7 +416,7 @@ var buildAce = function(options) {
     project.assumeAllFilesLoaded();
     delete project.ignoredModules["ace/theme/textmate"];
     delete project.ignoredModules["ace/requirejs/text!ace/theme/textmate.css"];
-    
+
     options.themes.forEach(function(theme) {
         console.log("theme " + theme);
         copy({
@@ -428,7 +428,7 @@ var buildAce = function(options) {
             dest:   targetDir + "/theme-" + theme.replace("_theme", "") + ".js"
         });
     });
-    
+
     // generateThemesModule(options.themes);
 
     console.log('# ace key bindings ---------');
@@ -683,7 +683,7 @@ function updateModes() {
         var source = fs.readFileSync(filepath, "utf8");
         if (!/this.\$id\s*=\s*"/.test(source))
             source = source.replace(/\n([ \t]*)(\}\).call\(\w*Mode.prototype\))/, '\n$1    this.$id = "";\n$1$2');
-        
+
         source = source.replace(/(this.\$id\s*=\s*)"[^"]*"/,  '$1"ace/mode/' + m + '"');
         fs.writeFileSync(filepath, source, "utf8")
     })
