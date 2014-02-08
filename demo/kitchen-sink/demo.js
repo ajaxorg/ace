@@ -251,7 +251,7 @@ commands.addCommand({
     }
 });
 
-var keybindings = {    
+var keybindings = {
     ace: null, // Null = use "default" keymapping
     vim: require("ace/keyboard/vim").handler,
     emacs: "ace/keyboard/emacs",
@@ -317,7 +317,7 @@ doclist.history.index = 0;
 doclist.cycleOpen = function(editor, dir) {
     var h = this.history;
     h.index += dir;
-    if (h.index >= h.length) 
+    if (h.index >= h.length)
         h.index = 0;
     else if (h.index <= 0)
         h.index = h.length - 1;
@@ -499,7 +499,7 @@ bindDropdown("split", function(value) {
         sp.setSplits(1);
     } else {
         var newEditor = (sp.getSplits() == 1);
-        sp.setOrientation(value == "below" ? sp.BELOW : sp.BESIDE);        
+        sp.setOrientation(value == "below" ? sp.BELOW : sp.BESIDE);
         sp.setSplits(2);
 
         if (newEditor) {
@@ -592,6 +592,7 @@ env.editSnippets = function() {
 require("ace/ext/language_tools");
 env.editor.setOptions({
     enableBasicAutocompletion: true,
+    enableLiveAutocomplete: true,
     enableSnippets: true
 });
 
