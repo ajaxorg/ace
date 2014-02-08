@@ -26,8 +26,7 @@
 
 .ace-ambiance .ace_fold-widget.ace_start,
 .ace-ambiance .ace_fold-widget.ace_end,
-.ace-ambiance .ace_fold-widget.ace_closed,
-.ace-ambiance.ace_autocomplete .ace_scroller {
+.ace-ambiance .ace_fold-widget.ace_closed{
   background: none;
   border: none;
   box-shadow: none;
@@ -75,7 +74,7 @@
 .ace-ambiance.normal-mode .ace_cursor-layer {
   z-index: 0;
 }
-
+ 
 .ace-ambiance .ace_marker-layer .ace_selection {
   background: rgba(221, 240, 255, 0.20);
 }
@@ -135,7 +134,7 @@
 }
 
 .ace-ambiance .ace_constant.ace_library {
-
+  
 }
 
 .ace-ambiance .ace_constant.ace_numeric {
