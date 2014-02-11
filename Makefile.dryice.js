@@ -280,7 +280,7 @@ function addSuffix(options) {
     }
 }
 
-function getWriteFilters(options, projectType) {
+function getWriteFilters(options, projectType, main) {
     var filters = [
         copy.filter.moduleDefines,
         removeUseStrict,
@@ -310,11 +310,9 @@ function getWriteFilters(options, projectType) {
         return text; 
     });
     
-    if (options.exportModule && projectType == "main") {
-        if (options.noconflict)
-            filters.push(exportAce(options.ns, options.exportModule, options.ns));
-        else
-            filters.push(exportAce(options.ns, options.exportModule));
+    if (options.exportModule && projectType == "main" || projectType == "ext") {
+        filters.push(exportAce(options.ns, options.exportModule,
+            options.noconflict ? options.ns : "", projectType == "ext" && main));
     }
     return filters;
 }
@@ -390,7 +388,7 @@ var buildAce = function(options) {
                 project: cloneProject(project),
                 require: [ 'ace/ext/' + ext ]
             }],
-            filter: getWriteFilters(options, "ext"),
+            filter: getWriteFilters(options, "ext", 'ace/ext/' + ext),
             dest:   targetDir + "/ext-" + ext + ".js"
         });
     });
@@ -650,7 +648,7 @@ function namespace(ns) {
     };
 }
 
-function exportAce(ns, module, requireBase) {
+function exportAce(ns, module, requireBase, extModule) {
     requireBase = requireBase || "window";
     module = module || "ace/ace";
     return function(text) {
@@ -666,7 +664,16 @@ function exportAce(ns, module, requireBase) {
                 });
             })();
         };
-
+        
+        if (extModule) {
+            module = extModule;
+            template = function() {
+                (function() {
+                    REQUIRE_NS.require(["MODULE"], function() {});
+                })();
+            };
+        }
+        
         return (text + ";" + template
             .toString()
             .replace(/MODULE/g, module)
