@@ -1,0 +1,1544 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.6.8" />
+<title></title>
+<style type="text/css">
+/* Shared CSS for AsciiDoc xhtml11 and html5 backends */
+
+/* Default font. */
+body {
+  font-family: Georgia,serif;
+}
+
+/* Title font. */
+h1, h2, h3, h4, h5, h6,
+div.title, caption.title,
+thead, p.table.header,
+#toctitle,
+#author, #revnumber, #revdate, #revremark,
+#footer {
+  font-family: Arial,Helvetica,sans-serif;
+}
+
+body {
+  margin: 1em 5% 1em 5%;
+}
+
+a {
+  color: blue;
+  text-decoration: underline;
+}
+a:visited {
+  color: fuchsia;
+}
+
+em {
+  font-style: italic;
+  color: navy;
+}
+
+strong {
+  font-weight: bold;
+  color: #083194;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #527bbd;
+  margin-top: 1.2em;
+  margin-bottom: 0.5em;
+  line-height: 1.3;
+}
+
+h1, h2, h3 {
+  border-bottom: 2px solid silver;
+}
+h2 {
+  padding-top: 0.5em;
+}
+h3 {
+  float: left;
+}
+h3 + * {
+  clear: left;
+}
+h5 {
+  font-size: 1.0em;
+}
+
+div.sectionbody {
+  margin-left: 0;
+}
+
+hr {
+  border: 1px solid silver;
+}
+
+p {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+ul, ol, li > p {
+  margin-top: 0;
+}
+ul > li     { color: #aaa; }
+ul > li > * { color: black; }
+
+.monospaced, code, pre {
+  font-family: "Courier New", Courier, monospace;
+  font-size: inherit;
+  color: navy;
+  padding: 0;
+  margin: 0;
+}
+
+
+#author {
+  color: #527bbd;
+  font-weight: bold;
+  font-size: 1.1em;
+}
+#email {
+}
+#revnumber, #revdate, #revremark {
+}
+
+#footer {
+  font-size: small;
+  border-top: 2px solid silver;
+  padding-top: 0.5em;
+  margin-top: 4.0em;
+}
+#footer-text {
+  float: left;
+  padding-bottom: 0.5em;
+}
+#footer-badges {
+  float: right;
+  padding-bottom: 0.5em;
+}
+
+#preamble {
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+}
+div.imageblock, div.exampleblock, div.verseblock,
+div.quoteblock, div.literalblock, div.listingblock, div.sidebarblock,
+div.admonitionblock {
+  margin-top: 1.0em;
+  margin-bottom: 1.5em;
+}
+div.admonitionblock {
+  margin-top: 2.0em;
+  margin-bottom: 2.0em;
+  margin-right: 10%;
+  color: #606060;
+}
+
+div.content { /* Block element content. */
+  padding: 0;
+}
+
+/* Block element titles. */
+div.title, caption.title {
+  color: #527bbd;
+  font-weight: bold;
+  text-align: left;
+  margin-top: 1.0em;
+  margin-bottom: 0.5em;
+}
+div.title + * {
+  margin-top: 0;
+}
+
+td div.title:first-child {
+  margin-top: 0.0em;
+}
+div.content div.title:first-child {
+  margin-top: 0.0em;
+}
+div.content + div.title {
+  margin-top: 0.0em;
+}
+
+div.sidebarblock > div.content {
+  background: #ffffee;
+  border: 1px solid #dddddd;
+  border-left: 4px solid #f0f0f0;
+  padding: 0.5em;
+}
+
+div.listingblock > div.content {
+  border: 1px solid #dddddd;
+  border-left: 5px solid #f0f0f0;
+  background: #f8f8f8;
+  padding: 0.5em;
+}
+
+div.quoteblock, div.verseblock {
+  padding-left: 1.0em;
+  margin-left: 1.0em;
+  margin-right: 10%;
+  border-left: 5px solid #f0f0f0;
+  color: #888;
+}
+
+div.quoteblock > div.attribution {
+  padding-top: 0.5em;
+  text-align: right;
+}
+
+div.verseblock > pre.content {
+  font-family: inherit;
+  font-size: inherit;
+}
+div.verseblock > div.attribution {
+  padding-top: 0.75em;
+  text-align: left;
+}
+/* DEPRECATED: Pre version 8.2.7 verse style literal block. */
+div.verseblock + div.attribution {
+  text-align: left;
+}
+
+div.admonitionblock .icon {
+  vertical-align: top;
+  font-size: 1.1em;
+  font-weight: bold;
+  text-decoration: underline;
+  color: #527bbd;
+  padding-right: 0.5em;
+}
+div.admonitionblock td.content {
+  padding-left: 0.5em;
+  border-left: 3px solid #dddddd;
+}
+
+div.exampleblock > div.content {
+  border-left: 3px solid #dddddd;
+  padding-left: 0.5em;
+}
+
+div.imageblock div.content { padding-left: 0; }
+span.image img { border-style: none; }
+a.image:visited { color: white; }
+
+dl {
+  margin-top: 0.8em;
+  margin-bottom: 0.8em;
+}
+dt {
+  margin-top: 0.5em;
+  margin-bottom: 0;
+  font-style: normal;
+  color: navy;
+}
+dd > *:first-child {
+  margin-top: 0.1em;
+}
+
+ul, ol {
+    list-style-position: outside;
+}
+ol.arabic {
+  list-style-type: decimal;
+}
+ol.loweralpha {
+  list-style-type: lower-alpha;
+}
+ol.upperalpha {
+  list-style-type: upper-alpha;
+}
+ol.lowerroman {
+  list-style-type: lower-roman;
+}
+ol.upperroman {
+  list-style-type: upper-roman;
+}
+
+div.compact ul, div.compact ol,
+div.compact p, div.compact p,
+div.compact div, div.compact div {
+  margin-top: 0.1em;
+  margin-bottom: 0.1em;
+}
+
+tfoot {
+  font-weight: bold;
+}
+td > div.verse {
+  white-space: pre;
+}
+
+div.hdlist {
+  margin-top: 0.8em;
+  margin-bottom: 0.8em;
+}
+div.hdlist tr {
+  padding-bottom: 15px;
+}
+dt.hdlist1.strong, td.hdlist1.strong {
+  font-weight: bold;
+}
+td.hdlist1 {
+  vertical-align: top;
+  font-style: normal;
+  padding-right: 0.8em;
+  color: navy;
+}
+td.hdlist2 {
+  vertical-align: top;
+}
+div.hdlist.compact tr {
+  margin: 0;
+  padding-bottom: 0;
+}
+
+.comment {
+  background: yellow;
+}
+
+.footnote, .footnoteref {
+  font-size: 0.8em;
+}
+
+span.footnote, span.footnoteref {
+  vertical-align: super;
+}
+
+#footnotes {
+  margin: 20px 0 20px 0;
+  padding: 7px 0 0 0;
+}
+
+#footnotes div.footnote {
+  margin: 0 0 5px 0;
+}
+
+#footnotes hr {
+  border: none;
+  border-top: 1px solid silver;
+  height: 1px;
+  text-align: left;
+  margin-left: 0;
+  width: 20%;
+  min-width: 100px;
+}
+
+div.colist td {
+  padding-right: 0.5em;
+  padding-bottom: 0.3em;
+  vertical-align: top;
+}
+div.colist td img {
+  margin-top: 0.3em;
+}
+
+@media print {
+  #footer-badges { display: none; }
+}
+
+#toc {
+  margin-bottom: 2.5em;
+}
+
+#toctitle {
+  color: #527bbd;
+  font-size: 1.1em;
+  font-weight: bold;
+  margin-top: 1.0em;
+  margin-bottom: 0.1em;
+}
+
+div.toclevel0, div.toclevel1, div.toclevel2, div.toclevel3, div.toclevel4 {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+div.toclevel2 {
+  margin-left: 2em;
+  font-size: 0.9em;
+}
+div.toclevel3 {
+  margin-left: 4em;
+  font-size: 0.9em;
+}
+div.toclevel4 {
+  margin-left: 6em;
+  font-size: 0.9em;
+}
+
+span.aqua { color: aqua; }
+span.black { color: black; }
+span.blue { color: blue; }
+span.fuchsia { color: fuchsia; }
+span.gray { color: gray; }
+span.green { color: green; }
+span.lime { color: lime; }
+span.maroon { color: maroon; }
+span.navy { color: navy; }
+span.olive { color: olive; }
+span.purple { color: purple; }
+span.red { color: red; }
+span.silver { color: silver; }
+span.teal { color: teal; }
+span.white { color: white; }
+span.yellow { color: yellow; }
+
+span.aqua-background { background: aqua; }
+span.black-background { background: black; }
+span.blue-background { background: blue; }
+span.fuchsia-background { background: fuchsia; }
+span.gray-background { background: gray; }
+span.green-background { background: green; }
+span.lime-background { background: lime; }
+span.maroon-background { background: maroon; }
+span.navy-background { background: navy; }
+span.olive-background { background: olive; }
+span.purple-background { background: purple; }
+span.red-background { background: red; }
+span.silver-background { background: silver; }
+span.teal-background { background: teal; }
+span.white-background { background: white; }
+span.yellow-background { background: yellow; }
+
+span.big { font-size: 2em; }
+span.small { font-size: 0.6em; }
+
+span.underline { text-decoration: underline; }
+span.overline { text-decoration: overline; }
+span.line-through { text-decoration: line-through; }
+
+div.unbreakable { page-break-inside: avoid; }
+
+
+/*
+ * xhtml11 specific
+ *
+ * */
+
+div.tableblock {
+  margin-top: 1.0em;
+  margin-bottom: 1.5em;
+}
+div.tableblock > table {
+  border: 3px solid #527bbd;
+}
+thead, p.table.header {
+  font-weight: bold;
+  color: #527bbd;
+}
+p.table {
+  margin-top: 0;
+}
+/* Because the table frame attribute is overriden by CSS in most browsers. */
+div.tableblock > table[frame="void"] {
+  border-style: none;
+}
+div.tableblock > table[frame="hsides"] {
+  border-left-style: none;
+  border-right-style: none;
+}
+div.tableblock > table[frame="vsides"] {
+  border-top-style: none;
+  border-bottom-style: none;
+}
+
+
+/*
+ * html5 specific
+ *
+ * */
+
+table.tableblock {
+  margin-top: 1.0em;
+  margin-bottom: 1.5em;
+}
+thead, p.tableblock.header {
+  font-weight: bold;
+  color: #527bbd;
+}
+p.tableblock {
+  margin-top: 0;
+}
+table.tableblock {
+  border-width: 3px;
+  border-spacing: 0px;
+  border-style: solid;
+  border-color: #527bbd;
+  border-collapse: collapse;
+}
+th.tableblock, td.tableblock {
+  border-width: 1px;
+  padding: 4px;
+  border-style: solid;
+  border-color: #527bbd;
+}
+
+table.tableblock.frame-topbot {
+  border-left-style: hidden;
+  border-right-style: hidden;
+}
+table.tableblock.frame-sides {
+  border-top-style: hidden;
+  border-bottom-style: hidden;
+}
+table.tableblock.frame-none {
+  border-style: hidden;
+}
+
+th.tableblock.halign-left, td.tableblock.halign-left {
+  text-align: left;
+}
+th.tableblock.halign-center, td.tableblock.halign-center {
+  text-align: center;
+}
+th.tableblock.halign-right, td.tableblock.halign-right {
+  text-align: right;
+}
+
+th.tableblock.valign-top, td.tableblock.valign-top {
+  vertical-align: top;
+}
+th.tableblock.valign-middle, td.tableblock.valign-middle {
+  vertical-align: middle;
+}
+th.tableblock.valign-bottom, td.tableblock.valign-bottom {
+  vertical-align: bottom;
+}
+
+
+/*
+ * manpage specific
+ *
+ * */
+
+body.manpage h1 {
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  border-top: 2px solid silver;
+  border-bottom: 2px solid silver;
+}
+body.manpage h2 {
+  border-style: none;
+}
+body.manpage div.sectionbody {
+  margin-left: 3em;
+}
+
+@media print {
+  body.manpage div#toc { display: none; }
+}
+
+
+</style>
+<script type="text/javascript">
+/*<![CDATA[*/
+var asciidoc = {  // Namespace.
+
+/////////////////////////////////////////////////////////////////////
+// Table Of Contents generator
+/////////////////////////////////////////////////////////////////////
+
+/* Author: Mihai Bazon, September 2002
+ * http://students.infoiasi.ro/~mishoo
+ *
+ * Table Of Content generator
+ * Version: 0.4
+ *
+ * Feel free to use this script under the terms of the GNU General Public
+ * License, as long as you do not remove or alter this notice.
+ */
+
+ /* modified by Troy D. Hanson, September 2006. License: GPL */
+ /* modified by Stuart Rackham, 2006, 2009. License: GPL */
+
+// toclevels = 1..4.
+toc: function (toclevels) {
+
+  function getText(el) {
+    var text = "";
+    for (var i = el.firstChild; i != null; i = i.nextSibling) {
+      if (i.nodeType == 3 /* Node.TEXT_NODE */) // IE doesn't speak constants.
+        text += i.data;
+      else if (i.firstChild != null)
+        text += getText(i);
+    }
+    return text;
+  }
+
+  function TocEntry(el, text, toclevel) {
+    this.element = el;
+    this.text = text;
+    this.toclevel = toclevel;
+  }
+
+  function tocEntries(el, toclevels) {
+    var result = new Array;
+    var re = new RegExp('[hH]([1-'+(toclevels+1)+'])');
+    // Function that scans the DOM tree for header elements (the DOM2
+    // nodeIterator API would be a better technique but not supported by all
+    // browsers).
+    var iterate = function (el) {
+      for (var i = el.firstChild; i != null; i = i.nextSibling) {
+        if (i.nodeType == 1 /* Node.ELEMENT_NODE */) {
+          var mo = re.exec(i.tagName);
+          if (mo && (i.getAttribute("class") || i.getAttribute("className")) != "float") {
+            result[result.length] = new TocEntry(i, getText(i), mo[1]-1);
+          }
+          iterate(i);
+        }
+      }
+    }
+    iterate(el);
+    return result;
+  }
+
+  var toc = document.getElementById("toc");
+  if (!toc) {
+    return;
+  }
+
+  // Delete existing TOC entries in case we're reloading the TOC.
+  var tocEntriesToRemove = [];
+  var i;
+  for (i = 0; i < toc.childNodes.length; i++) {
+    var entry = toc.childNodes[i];
+    if (entry.nodeName.toLowerCase() == 'div'
+     && entry.getAttribute("class")
+     && entry.getAttribute("class").match(/^toclevel/))
+      tocEntriesToRemove.push(entry);
+  }
+  for (i = 0; i < tocEntriesToRemove.length; i++) {
+    toc.removeChild(tocEntriesToRemove[i]);
+  }
+
+  // Rebuild TOC entries.
+  var entries = tocEntries(document.getElementById("content"), toclevels);
+  for (var i = 0; i < entries.length; ++i) {
+    var entry = entries[i];
+    if (entry.element.id == "")
+      entry.element.id = "_toc_" + i;
+    var a = document.createElement("a");
+    a.href = "#" + entry.element.id;
+    a.appendChild(document.createTextNode(entry.text));
+    var div = document.createElement("div");
+    div.appendChild(a);
+    div.className = "toclevel" + entry.toclevel;
+    toc.appendChild(div);
+  }
+  if (entries.length == 0)
+    toc.parentNode.removeChild(toc);
+},
+
+
+/////////////////////////////////////////////////////////////////////
+// Footnotes generator
+/////////////////////////////////////////////////////////////////////
+
+/* Based on footnote generation code from:
+ * http://www.brandspankingnew.net/archive/2005/07/format_footnote.html
+ */
+
+footnotes: function () {
+  // Delete existing footnote entries in case we're reloading the footnodes.
+  var i;
+  var noteholder = document.getElementById("footnotes");
+  if (!noteholder) {
+    return;
+  }
+  var entriesToRemove = [];
+  for (i = 0; i < noteholder.childNodes.length; i++) {
+    var entry = noteholder.childNodes[i];
+    if (entry.nodeName.toLowerCase() == 'div' && entry.getAttribute("class") == "footnote")
+      entriesToRemove.push(entry);
+  }
+  for (i = 0; i < entriesToRemove.length; i++) {
+    noteholder.removeChild(entriesToRemove[i]);
+  }
+
+  // Rebuild footnote entries.
+  var cont = document.getElementById("content");
+  var spans = cont.getElementsByTagName("span");
+  var refs = {};
+  var n = 0;
+  for (i=0; i<spans.length; i++) {
+    if (spans[i].className == "footnote") {
+      n++;
+      var note = spans[i].getAttribute("data-note");
+      if (!note) {
+        // Use [\s\S] in place of . so multi-line matches work.
+        // Because JavaScript has no s (dotall) regex flag.
+        note = spans[i].innerHTML.match(/\s*\[([\s\S]*)]\s*/)[1];
+        spans[i].innerHTML =
+          "[<a id='_footnoteref_" + n + "' href='#_footnote_" + n +
+          "' title='View footnote' class='footnote'>" + n + "</a>]";
+        spans[i].setAttribute("data-note", note);
+      }
+      noteholder.innerHTML +=
+        "<div class='footnote' id='_footnote_" + n + "'>" +
+        "<a href='#_footnoteref_" + n + "' title='Return to text'>" +
+        n + "</a>. " + note + "</div>";
+      var id =spans[i].getAttribute("id");
+      if (id != null) refs["#"+id] = n;
+    }
+  }
+  if (n == 0)
+    noteholder.parentNode.removeChild(noteholder);
+  else {
+    // Process footnoterefs.
+    for (i=0; i<spans.length; i++) {
+      if (spans[i].className == "footnoteref") {
+        var href = spans[i].getElementsByTagName("a")[0].getAttribute("href");
+        href = href.match(/#.*/)[0];  // Because IE return full URL.
+        n = refs[href];
+        spans[i].innerHTML =
+          "[<a href='#_footnote_" + n +
+          "' title='View footnote' class='footnote'>" + n + "</a>]";
+      }
+    }
+  }
+},
+
+install: function(toclevels) {
+  var timerId;
+
+  function reinstall() {
+    asciidoc.footnotes();
+    if (toclevels) {
+      asciidoc.toc(toclevels);
+    }
+  }
+
+  function reinstallAndRemoveTimer() {
+    clearInterval(timerId);
+    reinstall();
+  }
+
+  timerId = setInterval(reinstall, 500);
+  if (document.addEventListener)
+    document.addEventListener("DOMContentLoaded", reinstallAndRemoveTimer, false);
+  else
+    window.onload = reinstallAndRemoveTimer;
+}
+
+}
+asciidoc.install();
+/*]]>*/
+</script>
+</head>
+<body class="article">
+<div id="header">
+</div>
+<div id="content">
+<div class="dlist"><dl>
+<dt class="hdlist1">
+ddd dd <strong>bold</strong> yy
+</dt>
+<dd>
+<p>
+77777
+</p>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+arabic (decimal) numbering
+</p>
+</li>
+<li>
+<p>
+loweralpha <strong>numbering</strong> <a href="#ddd">ss</a>
+</p>
+</li>
+<li>
+<p>
+lowerroman numbering
+</p>
+</li>
+<li>
+<p>
+upperalpha numbering
+</p>
+</li>
+<li>
+<p>
+upperroman numbering
+</p>
+</li>
+</ol></div>
+</dd>
+</dl></div>
+<div class="sect1">
+<h2 id="_text_formatting">Text formatting</h2>
+<div class="sectionbody">
+<div class="literalblock">
+<div class="content">
+<pre><code>*bold text*                 (boldface font)
+_emphasized text_           (normally italics)
+'emphasized text'
++monospaced text+           (proportional font)
+`monospaced text`           (inline literal passthrough)</code></pre>
+</div></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_document_links">Document links</h2>
+<div class="sectionbody">
+<div class="literalblock">
+<div class="content">
+<pre><code>[[id]]                      (define link target)
+&lt;&lt;id,caption&gt;&gt;              (link to target id)
+link:filename#id[caption]   (link to external HTML file)</code></pre>
+</div></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_urls">URLs</h2>
+<div class="sectionbody">
+<div class="literalblock">
+<div class="content">
+<pre><code>Use normal URL and email addess syntax or:</code></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><code>http:address[caption]       (link to web page)
+mailto:address[caption]     (link to mail recipient)</code></pre>
+</div></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_images">Images</h2>
+<div class="sectionbody">
+<div class="literalblock">
+<div class="content">
+<pre><code>image:filename[caption]     (inline image)
+image::filename[caption]    (block image)</code></pre>
+</div></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_document_header">Document header</h2>
+<div class="sectionbody">
+<div class="literalblock">
+<div class="content">
+<pre><code>The Document Title
+==================
+author &lt;email&gt;
+revision, date</code></pre>
+</div></div>
+<div class="paragraph"><p>author, email, revision and date are optional.</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_section_title_underlines">Section title underlines</h2>
+<div class="sectionbody">
+<div class="literalblock">
+<div class="content">
+<pre><code>Underlined:</code></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><code>Level 0                     (document title)
+=======
+Level 1
+-------
+Level 2
+~~~~~~~
+Level 3
+^^^^^^^
+Level 4                     (bottom level)
++++++++</code></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><code>Single line:</code></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><code>= Level 0 =                 (document title)
+== Level 1 ==
+=== Level 2 ===
+==== Level 3 ====
+===== Level 4 =====         (bottom level)</code></pre>
+</div></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_paragraphs">Paragraphs</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>A normal paragraph.           (styles: literal,verse,quote,listing,
+                                       NOTE,TIP,WARNING,IMPORTANT,CAUTION)
+  An indented literal
+  paragraph.</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_delimited_blocks">Delimited blocks</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Delimiters must begin at left margin.</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><code>-------------------         (styles: source,music,graphviz)
+listing block
+-------------------</code></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><code>...................         (styles: listing,verse)
+literal block
+...................</code></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><code>*******************
+sidebar block
+*******************</code></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><code>[style, author, cite]
+___________________         (styles: quote,verse)
+quote block
+___________________</code></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><code>===================         (styles: NOTE,TIP,WARNING,
+example block                        IMPORTANT,CAUTION)
+===================</code></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><code>///////////////////
+comment block
+///////////////////</code></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><code>+++++++++++++++++++         (styles: pass,asciimath,latexmath)
+passthrough block
++++++++++++++++++++</code></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><code>[style]                     (styles: abstract,partintro)
+--
+open block
+--</code></pre>
+</div></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_more_block_elements">More block elements</h2>
+<div class="sectionbody">
+<div class="literalblock">
+<div class="content">
+<pre><code>[attributes list]
+.Block title
+// Comment line
+include::filename[]</code></pre>
+</div></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_tables">Tables</h2>
+<div class="sectionbody">
+<div class="literalblock">
+<div class="content">
+<pre><code>.An example table
+[width="40%",cols="^,2m",frame="topbot",options="header,footer"]
+|======================
+|Column 1 |Column 2
+|1        |Item 1
+|2        |Item 2
+|3        |Item 3
+|6        |Three items
+|======================</code></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><code>Common attributes:</code></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><code>grid:    none,cols,rows,all
+frame:   topbot,none,sides,all
+options: header,footer
+format:  psv,csv,dsv
+valign:  top,bottom,middle
+width:   1%..100%
+cols:    colspec[,colspec,...]</code></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><code>colspec:    [multiplier*][align][width][style]
+multiplier: 1...
+width:      1... or 1%...100%
+align:      [horiz][.vert]
+             horiz: &lt; (left), ^ (center), &gt; (right)
+             vert:  &lt; (top),  ^ (middle), &gt; (bottom)
+style:      d[efault], e[mphasis], m[onospaced], a[sciidoc],
+            s[trong], l[iteral], v[erse], h[eader]
+cell:       [cellspec]|data
+cellspec:   [span*|+][align][style]
+span:       [colspan][.rowspan]
+             colspan: 1...
+             rowspan: 1...</code></pre>
+</div></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_bulleted_lists">Bulleted lists</h2>
+<div class="sectionbody">
+<div class="ulist"><ul>
+<li>
+<p>
+item text
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+item text
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+item text
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+item text
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+item text
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+item text
+</p>
+<div class="literalblock">
+<div class="content">
+<pre><code>(styles: callout,bibliography)</code></pre>
+</div></div>
+</li>
+</ul></div>
+</li>
+</ul></div>
+</li>
+</ul></div>
+</li>
+</ul></div>
+</li>
+</ul></div>
+</li>
+</ul></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_numbered_lists">Numbered lists</h2>
+<div class="sectionbody">
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+arabic (decimal) numbering
+</p>
+<div class="olist loweralpha"><ol class="loweralpha">
+<li>
+<p>
+loweralpha numbering
+</p>
+<div class="olist upperalpha"><ol class="upperalpha">
+<li>
+<p>
+upperalpha numbering
+</p>
+<div class="olist lowerroman"><ol class="lowerroman">
+<li>
+<p>
+lowerroman numbering
+</p>
+<div class="olist upperroman"><ol class="upperroman">
+<li>
+<p>
+upperroman numbering
+</p>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+arabic (decimal) numbering
+</p>
+<div class="olist loweralpha"><ol class="loweralpha">
+<li>
+<p>
+loweralpha numbering
+</p>
+<div class="olist lowerroman"><ol class="lowerroman">
+<li>
+<p>
+lowerroman numbering
+</p>
+<div class="olist upperalpha"><ol class="upperalpha">
+<li>
+<p>
+upperalpha numbering
+</p>
+<div class="olist upperroman"><ol class="upperroman">
+<li>
+<p>
+upperroman numbering
+</p>
+<div class="literalblock">
+<div class="content">
+<pre><code>(styles: arabic,loweralpha,upperalpha,lowerroman,upperroman)</code></pre>
+</div></div>
+</li>
+</ol></div>
+</li>
+</ol></div>
+</li>
+</ol></div>
+</li>
+</ol></div>
+</li>
+</ol></div>
+</li>
+</ol></div>
+</li>
+</ol></div>
+</li>
+</ol></div>
+</li>
+</ol></div>
+</li>
+</ol></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_labeled_lists">Labeled lists</h2>
+<div class="sectionbody">
+<div class="dlist"><dl>
+<dt class="hdlist1">
+label
+</dt>
+<dd>
+<p>
+item text
+</p>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+label
+</dt>
+<dd>
+<p>
+item text
+</p>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+label
+</dt>
+<dd>
+<p>
+item text
+</p>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+label
+</dt>
+<dd>
+<p>
+item text
+</p>
+<div class="literalblock">
+<div class="content">
+<pre><code>(styles: horizontal,vertical,glossary,qanda,bibliograpy)</code></pre>
+</div></div>
+</dd>
+</dl></div>
+</dd>
+</dl></div>
+</dd>
+</dl></div>
+</dd>
+</dl></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_more_inline_elements">More inline elements</h2>
+<div class="sectionbody">
+<div class="literalblock">
+<div class="content">
+<pre><code>footnote:[footnote text]    (document footnote)</code></pre>
+</div></div>
+<div class="paragraph"><p>F:\Python27\asciidoc-8.6.8&gt;</p></div>
+<div class="listingblock">
+<div class="title">MS-DOS directory listing</div>
+<div class="content">
+<pre><code> 10/17/97   9:04         &lt;DIR&gt;    bin
+ 10/16/97  14:11         &lt;DIR&gt;    DOS            <b>&lt;1&gt;</b>
+ 10/16/97  14:40         &lt;DIR&gt;    Program Files
+ 10/16/97  14:46         &lt;DIR&gt;    TEMP
+ 10/17/97   9:04         &lt;DIR&gt;    tmp
+ 10/16/97  14:37         &lt;DIR&gt;    WINNT
+ 10/16/97  14:25             119  AUTOEXEC.BAT   <b>&lt;2&gt;</b>
+  2/13/94   6:21          54,619  COMMAND.COM    <b>&lt;2&gt;</b>
+ 10/16/97  14:25             115  CONFIG.SYS     <b>&lt;2&gt;</b>
+ 11/16/97  17:17      61,865,984  pagefile.sys
+  2/13/94   6:21           9,349  WINA20.386     <b>&lt;3&gt;</b></code></pre>
+</div></div>
+<div class="colist arabic"><ol>
+<li>
+<p>
+This directory holds MS-DOS.
+</p>
+</li>
+<li>
+<p>
+System startup code for DOS.
+</p>
+</li>
+<li>
+<p>
+Some sort of Windows 3.1 hack.
+</p>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+List item one.
+</p>
+<div class="paragraph"><p>List item one continued with a second paragraph followed by an
+Indented block.</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><code>$ ls *.sh
+$ mv *.sh ~/tmp</code></pre>
+</div></div>
+<div class="paragraph"><p>List item continued with a third paragraph.</p></div>
+</li>
+<li>
+<p>
+List item two continued with an open block.
+</p>
+<div class="openblock">
+<div class="content">
+<div class="paragraph"><p>This paragraph is part of the preceding list item.</p></div>
+<div class="olist loweralpha"><ol class="loweralpha">
+<li>
+<p>
+This list is nested and does not require explicit item continuation.
+</p>
+<div class="paragraph"><p>This paragraph is part of the preceding list item.</p></div>
+</li>
+<li>
+<p>
+List item b.
+</p>
+</li>
+</ol></div>
+<div class="paragraph"><p>This paragraph belongs to item two of the outer list.</p></div>
+</div></div>
+</li>
+</ol></div>
+</li>
+</ol></div>
+</div>
+</div>
+<h1 id="_asciidoc_syntax_test_document">Asciidoc syntax test document</h1>
+<div class="ulist"><ul>
+<li>
+<p>
+Praesent eget purus quis magna eleifend eleifend.
+</p>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+Fusce euismod commodo velit.
+</p>
+<div class="olist loweralpha"><ol class="loweralpha">
+<li>
+<p>
+Fusce euismod commodo velit.
+</p>
+</li>
+<li>
+<p>
+Vivamus fringilla mi eu lacus.
+</p>
+</li>
+<li>
+<p>
+Donec eget arcu bibendum nunc consequat lobortis.
+</p>
+</li>
+</ol></div>
+</li>
+<li>
+<p>
+Vivamus fringilla mi eu lacus.
+</p>
+<div class="olist lowerroman"><ol class="lowerroman">
+<li>
+<p>
+Fusce euismod commodo velit.
+</p>
+</li>
+<li>
+<p>
+Vivamus fringilla mi eu lacus.
+</p>
+</li>
+</ol></div>
+</li>
+<li>
+<p>
+Donec eget arcu bibendum nunc consequat lobortis.
+</p>
+</li>
+<li>
+<p>
+Nam fermentum mattis ante.
+</p>
+</li>
+</ol></div>
+</li>
+<li>
+<p>
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+Fusce euismod commodo velit.
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+Qui in magna commodo, est labitur dolorum an. Est ne magna primis
+     adolescens. Sit munere ponderum dignissim et. Minim luptatum et
+     vel.
+</p>
+</li>
+<li>
+<p>
+Vivamus fringilla mi eu lacus.
+</p>
+</li>
+</ul></div>
+</li>
+<li>
+<p>
+Donec eget arcu bibendum nunc consequat lobortis.
+</p>
+</li>
+</ul></div>
+</li>
+<li>
+<p>
+Nulla porttitor vulputate libero.
+</p>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+Fusce euismod commodo velit.
+</p>
+</li>
+<li>
+<p>
+Vivamus fringilla mi eu lacus.
+</p>
+<div class="olist upperroman"><ol class="upperroman">
+<li>
+<p>
+Fusce euismod commodo velit.
+    &#8230;&#8230; Vivamus fringilla mi eu lacus.
+</p>
+</li>
+</ol></div>
+</li>
+<li>
+<p>
+Donec eget arcu bibendum nunc consequat loborti
+</p>
+</li>
+</ol></div>
+</li>
+</ul></div>
+<div class="sect1">
+<h2 id="_emphasizing_and_quoting">Emphasizing and quoting</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Emphasized, bold etc. text preceded or followed by dashes is handled
+correctly</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+bold- , --bold, bold&#8212;blanonbold.
+</p>
+</li>
+<li>
+<p>
+<em>emph</em>, --<em>emph</em>, <em>emph</em>--bla_nonemph_.
+</p>
+</li>
+<li>
+<p>
+<em>emph</em>, --<em>emph</em>, <em>emph</em>--bla_nonemph_.
+</p>
+</li>
+<li>
+<p>
+<code>mono</code>, --<code>mono</code>, <code>mono</code>--bla+nonmono+.
+</p>
+</li>
+<li>
+<p>
+<code>mono</code>, --<code>mono</code>, <code>mono</code>--bla`nonmono`.
+</p>
+</li>
+<li>
+<p>
+&#8220;quot&#8221;, --&#8220;quot&#8221;, &#8220;quot&#8221;--bla`&#8216;nonquot&#8217;'.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Emphasizing a complete multi-line paragraph should be possible too ! And
+So it will be&#8230;</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_lists">Lists</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Correct indentation simple numbers at the start of lines should not be
+confused with list items. These are numbered lists, so lines following a
+list item should be indented</p></div>
+<div class="olist loweralpha"><ol class="loweralpha">
+<li>
+<p>
+Integer numbered list item. Lorem ipsum dolor sit amet, consectetuer
+  adipiscing elit.
+</p>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+Integer numbered list item with optional numbering. Lorem ipsum dolor
+   sit amet, consectetuer adipiscing elit.
+</p>
+</li>
+<li>
+<p>
+Integer numbered list item with optional numbering. Lorem ipsum dolor
+    sit amet, consectetuer adipiscing elit.
+</p>
+<div class="olist lowerroman"><ol class="lowerroman">
+<li>
+<p>
+lower roman numbering
+</p>
+<div class="olist upperroman"><ol class="upperroman">
+<li>
+<p>
+upperroman numbering
+</p>
+</li>
+</ol></div>
+</li>
+</ol></div>
+</li>
+</ol></div>
+</li>
+<li>
+<p>
+loweralpha numbering
+</p>
+<div class="olist upperalpha"><ol class="upperalpha">
+<li>
+<p>
+upperalpha numbering
+</p>
+</li>
+</ol></div>
+</li>
+</ol></div>
+<div class="paragraph"><p>But these are just numbers that happen to occur at the start of a line and
+should not trigger indentation</p></div>
+<div class="paragraph"><p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Fusce euismod od
+1 commodo velit. Qui in magna commodo, est labitur dolorum an. Est ne magna
+primis. Sit munere ponderum dignissim et. Minim luptatum et vel. Vivamus
+12.5. mi eu lacus. Donec eget arcu bibendum nunc consequat lobortis. Lorem
+ipsum dolor sit amet, consectetuer adipiscing elit. Fusce euismod commodo</p></div>
+<div class="paragraph"><p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Fusce euismod od
+c. commodo velit. Qui in magna commodo, est labitur dolorum an. Est ne magna
+primis. Sit munere ponderum dignissim et. Minim luptatum et vel. (Vivamus
+xi) mi eu lacus. Donec eget arcu bibendum nunc consequat lobortis. Lorem
+ipsum dolor sit amet, consectetuer adipiscing elit. Fusce euismod commodo</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><code> Comments are taken care off as well
+== Blocks
+Many ways to make $$blocks$$</code></pre>
+</div></div>
+<div class="paragraph"><p>And even comment blocks do well</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_admonitions">Admonitions</h2>
+<div class="sectionbody">
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Warning</div>
+</td>
+<td class="content">Admonitions have a special meaning too.</td>
+</tr></table>
+</div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">Also when used in block mode.</td>
+</tr></table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_definitions">Definitions</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Definition 1
+    This is it
+Definition 2
+    This is it too</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_inserting_quotes">Inserting quotes</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Typing  inserts a pair of quotes (&#8216;`&#8217;') and places the cursor between
+them. Works in both insert and command mode (switching to insert mode).
+Typing a single  works as usual (though with a slight delay).</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_urls_and_email_addresses">URLs and email addresses</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>So when using a URL like httpdag.wieers.com[Test] it needs to stand out,
+same is true for email addresses like <a href="mailto:dag@wieers.com">dag@wieers.com</a></p></div>
+<div class="literalblock">
+<div class="content">
+<pre><code>vim set syntax=asciidoc</code></pre>
+</div></div>
+</div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2012-09-06 00:11:48 Caucasus Standard Time
+</div>
+</div>
+</body>
+</html>
