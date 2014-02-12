@@ -658,9 +658,7 @@ function exportAce(ns, module, requireBase, extModule) {
                 REQUIRE_NS.require(["MODULE"], function(a) {
                     a && a.config.init();
                     if (!window.NS)
-                        window.NS = {};
-                    for (var key in a) if (a.hasOwnProperty(key))
-                        NS[key] = a[key];
+                        window.NS = a;
                 });
             })();
         };
