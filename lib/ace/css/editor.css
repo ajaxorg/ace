@@ -4,11 +4,7 @@
     font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
     font-size: 12px;
     line-height: normal;
-}
-
-.ace_editor .ace_line {
     direction: ltr;
-    unicode-bidi: bidi-override;
 }
 
 .ace_scroller {
