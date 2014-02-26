@@ -304,7 +304,7 @@ function getWriteFilters(options, projectType, main) {
     
     // copy.filter.uglifyjs.options.ascii_only = true; doesn't work with some uglify.js versions
     filters.push(function(text) {
-        var text = text.replace(/[\x00-\x09\x0b\x0c\x0e\x19\x80-\uffff]/g, function(c) {
+        var text = text.replace(/[\x00-\x08\x0b\x0c\x0e\x19\x80-\uffff]/g, function(c) {
             c = c.charCodeAt(0).toString(16);
             if (c.length == 1)
                 return "\\x0" + c;
@@ -587,14 +587,15 @@ CommonJsProject.prototype.getCurrentModules = function() {
     }
     var depMap = {}, modules = this.currentModules;
     return Object.keys(this.currentModules).map(function(moduleName) {
-        module = modules[moduleName]
+        module = modules[moduleName];
         module.id = moduleName;
+        module.isSpecial = !/define\(\'[^']*',/.test(module.source);
         return module;
     }).sort(function(a, b) {
-        if (isDep(a.id, b.id))
-            return -1;
-        if (isDep(b.id, a.id))
-            return 1;
+        if (a.isSpecial) return -1;
+        if (b.isSpecial) return 1;
+        if (isDep(a.id, b.id)) return -1;
+        if (isDep(b.id, a.id)) return 1;
         return Object.keys(a.deps).length - Object.keys(b.deps).length || a.id.localeCompare(b.id)
     });
 };
