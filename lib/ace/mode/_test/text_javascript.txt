@@ -10,7 +10,7 @@ a/=b/c
 //test tokenize reg exps
 a=/b/g
 a+/b/g
-a = 1 + /2 + 1/b
+a = 1 + /2 + 1/gimyxk
 a=/a/ / /a/
 case /a/.test(c)
 //test tokenize multi-line comment containing a single line comment

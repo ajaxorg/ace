@@ -41,6 +41,9 @@ var ACE_HOME = __dirname;
 var BUILD_DIR = ACE_HOME + "/build";
 
 function main(args) {
+    if (args.indexOf("updateModes") !== -1) {
+        return updateModes();
+    }
     var type = "minimal";
     args = args.map(function(x) {
         if (x[0] == "-" && x[1] != "-")
@@ -258,10 +261,13 @@ function jsFileList(path, filter) {
 }
 
 function workers(path) {
-  return jsFileList(path).map(function(x) {
-    if (x.slice(-7) == "_worker")
-      return x.slice(0, -7);
-  }).filter(function(x) { return !!x; });
+    return jsFileList(path).map(function(x) {
+        if (x.slice(-7) == "_worker")
+            return x.slice(0, -7);
+    }).filter(function(x) { return !!x; });
+}
+function modeList() {
+    return jsFileList("lib/ace/mode", /_highlight_rules|_test|_worker|xml_util|_outdent|behaviour|completions/)
 }
 
 function addSuffix(options) {
@@ -274,7 +280,7 @@ function addSuffix(options) {
     }
 }
 
-function getWriteFilters(options, projectType) {
+function getWriteFilters(options, projectType, main) {
     var filters = [
         copy.filter.moduleDefines,
         removeUseStrict,
@@ -291,13 +297,22 @@ function getWriteFilters(options, projectType) {
     if (options.compress)
         filters.push(copy.filter.uglifyjs);
     
-    copy.filter.uglifyjs.options.ascii = true;
-
-    if (options.exportModule && projectType == "main") {
-        if (options.noconflict)
-            filters.push(exportAce(options.ns, options.exportModule, options.ns));
-        else
-            filters.push(exportAce(options.ns, options.exportModule));
+    // copy.filter.uglifyjs.options.ascii = true; doesn't work with some uglify.js versions
+    filters.push(function(text) {
+         var t1 = text.replace(/[\x80-\uffff]/g, function(c) {
+            c = c.charCodeAt(0).toString(16);
+            if (c.length == 2)
+                return "\\x" + c;
+            if (c.length == 3)
+                c = "0" + c;
+            return "\\u" + c;
+        });
+        return text; 
+    });
+    
+    if (options.exportModule && projectType == "main" || projectType == "ext") {
+        filters.push(exportAce(options.ns, options.exportModule,
+            options.noconflict ? options.ns : "", projectType == "ext" && main));
     }
     return filters;
 }
@@ -317,7 +332,7 @@ var buildAce = function(options) {
         noconflict: false,
         suffix: null,
         name: "ace",
-        modes: jsFileList("lib/ace/mode", /_highlight_rules|_test|_worker|xml_util|_outdent|behaviour|completions/),
+        modes: modeList(),
         themes: jsFileList("lib/ace/theme"),
         extensions: jsFileList("lib/ace/ext"),
         workers: workers("lib/ace/mode"),
@@ -373,7 +388,7 @@ var buildAce = function(options) {
                 project: cloneProject(project),
                 require: [ 'ace/ext/' + ext ]
             }],
-            filter: getWriteFilters(options, "ext"),
+            filter: getWriteFilters(options, "ext", 'ace/ext/' + ext),
             dest:   targetDir + "/ext-" + ext + ".js"
         });
     });
@@ -545,22 +560,25 @@ function generateThemesModule(themes) {
 }
 
 function inlineTextModules(text) {
-    var lastDep = "";
-    return text.replace(/, *['"]ace\/requirejs\/text!(.*?)['"]|= *require\(['"](?:ace|[.\/]+)\/requirejs\/text!(.*?)['"]\)/g, function(_, dep, call) {
+    var deps = [];
+    return text.replace(/, *['"]ace\/requirejs\/text!(.*?)['"]| require\(['"](?:ace|[.\/]+)\/requirejs\/text!(.*?)['"]\)/g, function(_, dep, call) {
         if (dep) {
-            if (!lastDep) {
-                lastDep = dep;
-                return "";
-            }
+            deps.push(dep);
+            return "";
         } else if (call) {
-            call = textModules[lastDep];
-            delete textModules[lastDep];
-            lastDep = "";
+            deps.some(function(d) {
+                if (d.split("/").pop() == call.split("/").pop()) {
+                    dep = d;
+                    return true;
+                }
+            });
+
+            call = textModules[dep];
+            // if (deps.length > 1)
+            //     console.log(call.length)
             if (call)
-                return "= " + call;
+                return " " + call;
         }
-        console.log(dep, lastDep, call);
-        throw "inlining of multiple text modules is not supported";
     });
 }
 
@@ -630,7 +648,7 @@ function namespace(ns) {
     };
 }
 
-function exportAce(ns, module, requireBase) {
+function exportAce(ns, module, requireBase, extModule) {
     requireBase = requireBase || "window";
     module = module || "ace/ace";
     return function(text) {
@@ -646,7 +664,16 @@ function exportAce(ns, module, requireBase) {
                 });
             })();
         };
-
+        
+        if (extModule) {
+            module = extModule;
+            template = function() {
+                (function() {
+                    REQUIRE_NS.require(["MODULE"], function() {});
+                })();
+            };
+        }
+        
         return (text + ";" + template
             .toString()
             .replace(/MODULE/g, module)
@@ -655,6 +682,18 @@ function exportAce(ns, module, requireBase) {
             .slice(13, -1)
         );
     };
+}
+
+function updateModes() {
+    modeList().forEach(function(m) {
+        var filepath = __dirname + "/lib/ace/mode/" + m + ".js"
+        var source = fs.readFileSync(filepath, "utf8");
+        if (!/this.\$id\s*=\s*"/.test(source))
+            source = source.replace(/\n([ \t]*)(\}\).call\(\w*Mode.prototype\))/, '\n$1    this.$id = "";\n$1$2');
+        
+        source = source.replace(/(this.\$id\s*=\s*)"[^"]*"/,  '$1"ace/mode/' + m + '"');
+        fs.writeFileSync(filepath, source, "utf8")
+    })
 }
 
 if (!module.parent)

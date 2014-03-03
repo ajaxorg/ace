@@ -1,4 +1,5 @@
-  
+2013.12.02 Version 1.1.2
+
 * New Features
   - Accessibility Theme for Ace (Peter Xiao)
   - use snipetManager for expanding emmet snippets
@@ -21,9 +22,8 @@
   - Protobuf (Zef Hemel)
   - Soy
   - Handlebars
-  - 
 
-2013.06.04 Version 1.1.01
+2013.06.04 Version 1.1.1
 
   - Improved emacs keybindings (Robert Krahn)
   - Added markClean, isClean methods to UndoManager (Joonsoo Jeon)

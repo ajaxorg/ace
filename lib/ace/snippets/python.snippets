@@ -7,8 +7,8 @@ snippet from
 # Module Docstring
 snippet docs
 	'''
-	File: ${1:`Filename('$1.py', 'foo.py')`}
-	Author: ${2:`g:snips_author`}
+	File: ${1:FILENAME:file_name}
+	Author: ${2:author}
 	Description: ${3}
 	'''
 snippet wh
@@ -129,7 +129,7 @@ snippet "
 	"""
 # test function/method
 snippet test
-	def test_${1:description}(${2:`indent('.') ? 'self' : ''`}):
+	def test_${1:description}(${2:self}):
 		${3:# TODO: write code...}
 # test case
 snippet testcase

@@ -8,7 +8,7 @@
   background: #232323
 }
 
-.ace-clouds-midnight{
+.ace-clouds-midnight {
   background-color: #191919;
   color: #929292
 }
@@ -109,5 +109,5 @@
 }
 
 .ace-clouds-midnight .ace_indent-guide {
-  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAEklEQVQImWNgYGBgYHB3d/8PAAOIAdULw8qMAAAAAElFTkSuQmCC) right repeat-y;
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAEklEQVQImWNgYGBgYHB3d/8PAAOIAdULw8qMAAAAAElFTkSuQmCC) right repeat-y
 }
