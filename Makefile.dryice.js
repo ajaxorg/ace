@@ -307,7 +307,7 @@ function getWriteFilters(options, projectType, main) {
                 c = "0" + c;
             return "\\u" + c;
         });
-        return text; 
+        return t1;
     });
     
     if (options.exportModule && projectType == "main" || projectType == "ext") {
