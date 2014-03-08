@@ -314,7 +314,7 @@ function getWriteFilters(options, projectType, main) {
                 return "\\u0" + c;
             return "\\u" + c;
         });
-        return text; 
+        return t1;
     });
     
     return filters;
