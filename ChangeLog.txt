@@ -1,3 +1,15 @@
+2014.03.08 Version 1.1.3
+
+* New Features
+  - Allow syntax checkers to be loaded from CDN (Derk-Jan Hartman)
+  - Add ColdFusion behavior (Abram Adams)
+  - add showLineNumbers option
+  - Add html syntax checker (danyaPostfactum)
+ 
+* new language modes
+  - Gherkin (Patrick Nevels)
+  - Smarty
+
 2013.12.02 Version 1.1.2
 
 * New Features
@@ -11,7 +23,6 @@
   - add support for autocompletion and snippets (gjtorikyan danyaPostfactum and others)
   - add option to merge similar changes in undo history
   - add scrollPastEnd option
-  - 6a87d97 Merge pull request #1494 from danyaPostfactum/snippetcompleter
   - use html5 dragndrop for text dragging (danyaPostfactum)
   
 * API Changes
