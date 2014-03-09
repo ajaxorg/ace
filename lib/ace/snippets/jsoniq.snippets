@@ -1,0 +1,46 @@
+snippet for
+	for $${1:item} in ${2:expr}
+snippet import
+	import module namespace ${1:ns} = "${2:http://www.example.com/}";
+snippet some
+	some $${1:var} in ${2:expr} satisfies ${3:expr}
+snippet every
+	every $${1:var} in ${2:expr} satisfies ${3:expr}
+snippet if
+	if(${1:true}) then ${2:expr} else ${3:true}
+snippet switch
+	switch(${1:"foo"})\n  case ${2:"foo"}\n  return ${3:true}\ndefault return ${4:false}
+snippet try
+	try { ${1:expr} } catch ${2:*} { ${3:expr} }
+snippet tumbling
+	for tumbling window $${1:var} in ${2:expr}\nstart at $${3:start} when ${4:expr}\nend at $${5:end} when ${6:expr}\nreturn ${7:expr}
+snippet sliding
+	for sliding window $${1:var} in ${2:expr}\nstart at $${3:start} when ${4:expr}\nend at $${5:end} when ${6:expr}\nreturn ${7:expr}
+snippet let
+	let $${1:var} := ${2:expr}
+snippet group
+	group by $${1:var} := ${2:expr}
+snippet order
+	order by ${1:expr} ${2:descending}
+snippet stable
+	stable order by ${1:expr}
+snippet count
+	count $${1:var}
+snippet ordered
+	ordered { ${1:expr} }
+snippet unordered
+	unordered { ${1:expr} }
+snippet treat 
+	treat as ${1:expr}
+snippet castable
+	castable as ${1:atomicType}
+snippet cast
+	cast as ${1:atomicType}
+snippet typeswitch
+	typeswitch(${1:expr})\ncase ${2:type}\n  return ${3:expr}\ndefault return ${4:expr}
+snippet var
+	declare variable $${1:varname} := ${2:expr};
+snippet fn
+	declare function ${1:ns}:${2:name}(){\n  ${3:expr}\n};
+snippet module
+	module namespace ${1:ns} = "${2:http://www.example.com}";
