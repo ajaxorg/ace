@@ -161,12 +161,7 @@ function highlight() {
     var highlighter = ace.require("ace/ext/static_highlight")
     var dom = ace.require("ace/lib/dom")
     function qsa(sel) {
-        var items = document.querySelectorAll(sel);
-        var result = [];
-        for (var i = 0; i < items.length; i++) {
-            result.push(items[i]);
-        }
-        return result;
+        return Array.apply(null, document.querySelectorAll(sel));
     }
 
     qsa("code[class]").forEach(function(el) {
