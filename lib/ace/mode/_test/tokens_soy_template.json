@@ -32,7 +32,7 @@
   ["punctuation.definition.tag.end.soy","}"]
 ],[
    "start",
-  ["text","  "],
+  ["text.xml","  "],
   ["punctuation.definition.tag.begin.soy","{"],
   ["entity.name.tag.soy","if"],
   ["meta.tag.if.soy"," "],
@@ -42,31 +42,31 @@
   ["punctuation.definition.tag.end.soy","}"]
 ],[
    "start",
-  ["text","    Hello "],
+  ["text.xml","    Hello "],
   ["punctuation.definition.tag.begin.soy","{"],
   ["variable.other.soy","$name"],
   ["punctuation.definition.tag.end.soy","}"],
-  ["text","!"]
+  ["text.xml","!"]
 ],[
    "start",
-  ["text","  "],
+  ["text.xml","  "],
   ["punctuation.definition.tag.begin.soy","{"],
   ["text","else"],
   ["punctuation.definition.tag.end.soy","}"]
 ],[
    "start",
-  ["text","    "],
+  ["text.xml","    "],
   ["punctuation.definition.tag.begin.soy","{"],
   ["variable.other.soy","$greetingWord"],
   ["punctuation.definition.tag.end.soy","}"],
-  ["text"," "],
+  ["text.xml"," "],
   ["punctuation.definition.tag.begin.soy","{"],
   ["variable.other.soy","$name"],
   ["punctuation.definition.tag.end.soy","}"],
-  ["text","!"]
+  ["text.xml","!"]
 ],[
    "start",
-  ["text","  "],
+  ["text.xml","  "],
   ["punctuation.definition.tag.begin.soy","{/"],
   ["entity.name.tag.soy","if"],
   ["punctuation.definition.tag.end.soy","}"]
@@ -115,7 +115,7 @@
   ["comment.line.double-slash.soy"," Greet the person."]
 ],[
    "start",
-  ["text","  "],
+  ["text.xml","  "],
   ["punctuation.definition.tag.begin.soy","{"],
   ["entity.name.tag.soy","call"],
   ["variable.parameter.soy"," .helloName"],
@@ -125,9 +125,9 @@
   ["string.quoted.double","\"all\""],
   ["meta.tag.call.soy"," /"],
   ["punctuation.definition.tag.end.soy","}"],
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name","br"],
-  ["meta.tag.punctuation.end",">"]
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","br"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
   ["comment.line.double-slash.soy","  "],
@@ -135,7 +135,7 @@
   ["comment.line.double-slash.soy"," Greet the additional people."]
 ],[
    "start",
-  ["text","  "],
+  ["text.xml","  "],
   ["punctuation.definition.tag.begin.soy","{"],
   ["entity.name.tag.soy","foreach"],
   ["meta.tag.foreach.soy"," "],
@@ -147,14 +147,14 @@
   ["punctuation.definition.tag.end.soy","}"]
 ],[
    "start",
-  ["text","    "],
+  ["text.xml","    "],
   ["punctuation.definition.tag.begin.soy","{"],
   ["entity.name.tag.soy","call"],
   ["variable.parameter.soy"," .helloName"],
   ["punctuation.definition.tag.end.soy","}"]
 ],[
    "start",
-  ["text","      "],
+  ["text.xml","      "],
   ["punctuation.definition.tag.begin.soy","{"],
   ["entity.name.tag.soy","param"],
   ["text"," "],
@@ -167,13 +167,13 @@
   ["punctuation.definition.tag.end.soy","}"]
 ],[
    "start",
-  ["text","    "],
+  ["text.xml","    "],
   ["punctuation.definition.tag.begin.soy","{/"],
   ["meta.tag.call.soy","call"],
   ["punctuation.definition.tag.end.soy","}"]
 ],[
    "start",
-  ["text","    "],
+  ["text.xml","    "],
   ["punctuation.definition.tag.begin.soy","{"],
   ["entity.name.tag.soy","if"],
   ["meta.tag.if.soy"," "],
@@ -186,31 +186,31 @@
   ["punctuation.definition.tag.end.soy","}"]
 ],[
    "start",
-  ["text","      "],
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name","br"],
-  ["meta.tag.punctuation.end",">"],
+  ["text.xml","      "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","br"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
   ["comment.line.double-slash.soy","  "],
   ["punctuation.definition.comment.soy","//"],
   ["comment.line.double-slash.soy"," break after every line except the last"]
 ],[
    "start",
-  ["text","    "],
+  ["text.xml","    "],
   ["punctuation.definition.tag.begin.soy","{/"],
   ["entity.name.tag.soy","if"],
   ["punctuation.definition.tag.end.soy","}"]
 ],[
    "start",
-  ["text","  "],
+  ["text.xml","  "],
   ["punctuation.definition.tag.begin.soy","{"],
   ["text","ifempty"],
   ["punctuation.definition.tag.end.soy","}"]
 ],[
    "start",
-  ["text","    No additional people to greet."]
+  ["text.xml","    No additional people to greet."]
 ],[
    "start",
-  ["text","  "],
+  ["text.xml","  "],
   ["punctuation.definition.tag.begin.soy","{/"],
   ["entity.name.tag.soy","foreach"],
   ["punctuation.definition.tag.end.soy","}"]
@@ -275,7 +275,7 @@
   ["punctuation.definition.tag.end.soy","}"]
 ],[
    "start",
-  ["text","  foo is "],
+  ["text.xml","  foo is "],
   ["punctuation.definition.tag.begin.soy","{"],
   ["variable.other.soy","$ij.foo"],
   ["punctuation.definition.tag.end.soy","}"]
