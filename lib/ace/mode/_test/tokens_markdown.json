@@ -1,49 +1,49 @@
 [[
    "start",
-  ["text","test: header 1 "]
+  ["text.xml","test: header 1 "]
 ],[
    "start",
   ["markup.heading.1","#"],
   ["heading","f"]
 ],[
    "start",
-  ["text","test: header 2"]
+  ["text.xml","test: header 2"]
 ],[
    "start",
   ["markup.heading.2","##"],
   ["heading"," foo"]
 ],[
    "start",
-  ["text","test: header ends with ' #'"]
+  ["text.xml","test: header ends with ' #'"]
 ],[
    "start",
   ["markup.heading.1","#"],
   ["heading"," # # "]
 ],[
    "start",
-  ["text","test: header ends with '#'"]
+  ["text.xml","test: header ends with '#'"]
 ],[
    "start",
   ["markup.heading.1","#"],
   ["heading","foo# "]
 ],[
    "start",
-  ["text","test: 6+ #s is not a valid header"]
+  ["text.xml","test: 6+ #s is not a valid header"]
 ],[
    "start",
-  ["text","####### foo"]
+  ["text.xml","####### foo"]
 ],[
    "start",
-  ["text","test: # followed be only space is not a valid header"]
+  ["text.xml","test: # followed be only space is not a valid header"]
 ],[
    "start",
-  ["text","# "]
+  ["text.xml","# "]
 ],[
    "start",
-  ["text","test: only space between #s is not a valid header"]
+  ["text.xml","test: only space between #s is not a valid header"]
 ],[
    "start",
-  ["text","#  #"]
+  ["text.xml","#  #"]
 ],[
    "allowBlock"
 ],[
@@ -99,14 +99,14 @@
    "start"
 ],[
    "start",
-  ["text","in plain text "],
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name","b"],
-  ["meta.tag.punctuation.end",">"],
-  ["text","http://ace.ajaxorg.com"],
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name","b"],
-  ["meta.tag.punctuation.end",">"]
+  ["text.xml","in plain text "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","b"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["text.xml","http://ace.ajaxorg.com"],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","b"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "allowBlock"
 ],[
