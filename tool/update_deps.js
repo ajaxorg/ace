@@ -12,7 +12,12 @@ var deps = {
     csslint: {
         path: "mode/css/csslint.js",
         url: "https://raw.github.com/stubbornella/csslint/master/release/csslint.js",
-        needsFixup: true
+        needsFixup: true,
+        browserify: {
+            npmModule: "csslint@latest",
+            path: "jshint/src/jshint.js",
+            exports: "jshint"
+        },
     }, 
     requirejs: {
         path: "../../demo/kitchen-sink/require.js",
@@ -30,49 +35,34 @@ var deps = {
             )
         }
     },
-    jshint: {
-        path: "mode/javascript/jshint.js",
-        url: "http://jshint.com/get/jshint-2.1.9.js",
-        fetch: function(_, cb) {
-            //run("npm install jshint@latest", function() {
-                var base = Path.join(__dirname, "/node_modules/jshint/")
-                var path = Path.join(base, "/src/stable/jshint")
-                run('browserify ' + path + ' -i console-browserify -r jshint', function(err, src) {
-                    src = replaceConsoleBrowserify(src);
-                    var version = JSON.parse(fs.readFileSync(base + "package.json")).version
-                    src = [ "// " + version,
-                        "var JSHINT;",
-                        "(function () {",
-                        "require = null;",
-                        src,
-                        "JSHINT = require('jshint').JSHINT;",
-                        "}());"
-                    ].join("\n")
-                    cb(err, src);
-                })
-            //});
+    html5: {
+        path: "mode/html/saxparser.js",
+        browserify: {
+            npmModule: "git+https://github.com/aredridel/html5.git#master",
+            path: "html5/lib/sax/SAXParser.js",  
+            exports: "SAXParser"
         },
+        fetch: browserify,
         needsFixup: true,
         postProcess: function(src) {
-            src = src.replace(/(\],|\{)((?:\d+|"\w+"):\[)/g, "$1\n$2")
-                .replace(/^(\},)(\{[^{}\[\]]*?\}\])/gm, "$1\n$2")
-
+            return src;
+        }
+    },
+    jshint: {
+        path: "mode/javascript/jshint.js",
+        browserify: {
+            npmModule: "git+https://github.com/nightwing/jshint.git#master",
+            path: "jshint/src/jshint.js",
+            exports: "jshint"
+        },
+        fetch: browserify,
+        needsFixup: true,
+        postProcess: function(src) {
             src = src.replace(
                 /"Expected a conditional expression and instead saw an assignment."/g,
                 '"Assignment in conditional expression"'
             );
-
-            src = src.replace(/\brequire\(["']|\(require,|\(require\)/g, function(r){
-                return r.replace("require", "req");
-            })
-
             src = src.replace(/var defaultMaxListeners = 10;/, function(a) {return a.replace("10", "200")});
-
-            src = src.replace(/var JSHINT;\s*\(function[\s()]+\{\s*/, "")
-                .replace(/JSHINT = .*\n\s*\}\(\)\);\s*/, "");
-            src += '\n'
-                + 'function req() {return require.apply(this, arguments)}\n'
-                + 'module.exports = req("jshint");\n';
             return src;
         }
     }, 
@@ -238,23 +228,19 @@ function unquote(str) {
     });
 }
 
-function replaceConsoleBrowserify(str) {
-    var simpleConsole = function(req,module,exports){
-        ["log", "info", "warn", "error", 
-        "time","timeEnd", "trace", "dir", "assert"
-        ].forEach(function(x) {exports[x] = nop;});
-        function nop() {}
-    }
-    var m = /"console-browserify":(\d+)/.exec(str);
-    name = m && m[1];
-    if (name) {
-        str = str.replace(
-            "{1:[",
-            "{" + name + ":[" + simpleConsole + ",{}],\n1:["
-        )
-    }
-    return str;
+function browserify(_, cb) {
+    var br = this.browserify;
+    var path = Path.join("node_modules", br.path)
+    run("npm install " + this.browserify.npmModule, function() {
+        run("browserify " + path + " -s " + br.exports, function(err, src) {
+            src = src.replace(/^.*return\s*\(function/, "module.exports = (function")
+                .replace(/\}\);\s*$/, "");
+            src = src.replace(/(\],|\{)((?:\d+|"\w+"):\[)/g, "$1\n$2")
+                .replace(/^(\},)(\{[^{}\[\]]*?\}\])/gm, "$1\n$2")
+            cb(err, src);
+        })
+    })
 }
 
-
+getDep(deps.html5)
 getDep(deps.jshint)
