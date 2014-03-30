@@ -1,90 +1,90 @@
 [[
    "start",
-  ["punctuation.doctype.begin","<!"],
-  ["meta.tag.doctype","DOCTYPE"],
-  ["text"," "],
-  ["xml-pe","html"],
-  ["punctuation.doctype.end",">"]
+  ["xml-pe.doctype.xml","<!"],
+  ["xml-pe.doctype.xml","DOCTYPE"],
+  ["text.whitespace.xml"," "],
+  ["xml-pe.xml","html"],
+  ["xml-pe.doctype.xml",">"]
 ],[
    "start",
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name","html"],
-  ["meta.tag.punctuation.end",">"]
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","html"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
-  ["text","    "],
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name","head"],
-  ["meta.tag.punctuation.end",">"]
+  ["text.xml","    "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","head"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
-  ["text","        "],
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name","title"],
-  ["meta.tag.punctuation.end",">"],
-  ["text","Cloud9 Rocks!"],
-  ["meta.tag.punctuation.begin","</"],
-  ["meta.tag.name","title"],
-  ["meta.tag.punctuation.end",">"]
+  ["text.xml","        "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","title"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["text.xml","Cloud9 Rocks!"],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","title"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
-  ["text","    "],
-  ["meta.tag.punctuation.begin","</"],
-  ["meta.tag.name","head"],
-  ["meta.tag.punctuation.end",">"]
+  ["text.xml","    "],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","head"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
-  ["text","    "],
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name","body"],
-  ["meta.tag.punctuation.end",">"]
+  ["text.xml","    "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","body"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start"
 ],[
    "start",
-  ["text","    "],
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name.table","table"],
-  ["text"," "],
-  ["entity.other.attribute-name","class"],
-  ["keyword.operator.separator","="],
-  ["string","\"table\""],
-  ["meta.tag.punctuation.end",">"]
+  ["text.xml","    "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.table.tag-name.xml","table"],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","class"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"table\""],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
-  ["text","        "],
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name.table","tr"],
-  ["meta.tag.punctuation.end",">"]
+  ["text.xml","        "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.table.tag-name.xml","tr"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
-  ["text","            "],
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name.table","th"],
-  ["meta.tag.punctuation.end",">"],
-  ["text","Name"],
-  ["meta.tag.punctuation.begin","</"],
-  ["meta.tag.name.table","th"],
-  ["meta.tag.punctuation.end",">"]
+  ["text.xml","            "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.table.tag-name.xml","th"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["text.xml","Name"],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.table.tag-name.xml","th"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
-  ["text","            "],
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name.table","th"],
-  ["meta.tag.punctuation.end",">"],
-  ["text","Size"],
-  ["meta.tag.punctuation.begin","</"],
-  ["meta.tag.name.table","th"],
-  ["meta.tag.punctuation.end",">"]
+  ["text.xml","            "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.table.tag-name.xml","th"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["text.xml","Size"],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.table.tag-name.xml","th"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
-  ["text","        "],
-  ["meta.tag.punctuation.begin","</"],
-  ["meta.tag.name.table","tr"],
-  ["meta.tag.punctuation.end",">"]
+  ["text.xml","        "],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.table.tag-name.xml","tr"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
-  ["text","        "],
+  ["text.xml","        "],
   ["markup.list.meta.tag","<%"],
   ["text"," "],
   ["keyword","if"],
@@ -99,51 +99,51 @@
   ["markup.list.meta.tag","%>"]
 ],[
    "start",
-  ["text","            "],
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name.table","tr"],
-  ["meta.tag.punctuation.end",">"]
+  ["text.xml","            "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.table.tag-name.xml","tr"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
-  ["text","                "],
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name.table","td"],
-  ["meta.tag.punctuation.end",">"],
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name.anchor","a"],
-  ["text"," "],
-  ["entity.other.attribute-name","href"],
-  ["keyword.operator.separator","="],
-  ["string","\"..\""],
-  ["meta.tag.punctuation.end",">"],
-  ["text",".."],
-  ["meta.tag.punctuation.begin","</"],
-  ["meta.tag.name.anchor","a"],
-  ["meta.tag.punctuation.end",">"],
-  ["meta.tag.punctuation.begin","</"],
-  ["meta.tag.name.table","td"],
-  ["meta.tag.punctuation.end",">"]
+  ["text.xml","                "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.table.tag-name.xml","td"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.anchor.tag-name.xml","a"],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","href"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"..\""],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["text.xml",".."],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.anchor.tag-name.xml","a"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.table.tag-name.xml","td"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
-  ["text","                "],
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name.table","td"],
-  ["meta.tag.punctuation.end",">"],
-  ["meta.tag.punctuation.begin","</"],
-  ["meta.tag.name.table","td"],
-  ["meta.tag.punctuation.end",">"],
-  ["meta.tag.punctuation.begin","</"],
-  ["meta.tag.name.table","td"],
-  ["meta.tag.punctuation.end",">"]
+  ["text.xml","                "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.table.tag-name.xml","td"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.table.tag-name.xml","td"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.table.tag-name.xml","td"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
-  ["text","            "],
-  ["meta.tag.punctuation.begin","</"],
-  ["meta.tag.name.table","tr"],
-  ["meta.tag.punctuation.end",">"]
+  ["text.xml","            "],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.table.tag-name.xml","tr"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
-  ["text","        "],
+  ["text.xml","        "],
   ["markup.list.meta.tag","<%"],
   ["text"," "],
   ["paren.rparen","}"],
@@ -151,7 +151,7 @@
   ["markup.list.meta.tag","%>"]
 ],[
    "start",
-  ["text","        "],
+  ["text.xml","        "],
   ["markup.list.meta.tag","<%"],
   ["text"," "],
   ["identifier","entries"],
@@ -168,25 +168,25 @@
   ["markup.list.meta.tag","%>"]
 ],[
    "start",
-  ["text","            "],
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name.table","tr"],
-  ["meta.tag.punctuation.end",">"]
+  ["text.xml","            "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.table.tag-name.xml","tr"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
-  ["text","                "],
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name.table","td"],
-  ["meta.tag.punctuation.end",">"]
+  ["text.xml","                "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.table.tag-name.xml","td"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
-  ["text","                    "],
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name","span"],
-  ["text"," "],
-  ["entity.other.attribute-name","class"],
-  ["keyword.operator.separator","="],
-  ["string","\"glyphicon "],
+  ["text.xml","                    "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","span"],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","class"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"glyphicon "],
   ["markup.list.meta.tag","<%="],
   ["text"," "],
   ["identifier","entry"],
@@ -204,20 +204,20 @@
   ["text"," "],
   ["string","'file'"],
   ["markup.list.meta.tag","%>"],
-  ["string","\""],
-  ["meta.tag.punctuation.end",">"],
-  ["meta.tag.punctuation.begin","</"],
-  ["meta.tag.name","span"],
-  ["meta.tag.punctuation.end",">"]
+  ["string.attribute-value.xml","\""],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","span"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
-  ["text","                    "],
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name.anchor","a"],
-  ["text"," "],
-  ["entity.other.attribute-name","href"],
-  ["keyword.operator.separator","="],
-  ["string","\""],
+  ["text.xml","                    "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.anchor.tag-name.xml","a"],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","href"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\""],
   ["markup.list.meta.tag","<%="],
   ["text"," "],
   ["identifier","entry"],
@@ -225,8 +225,8 @@
   ["identifier","name"],
   ["text"," "],
   ["markup.list.meta.tag","%>"],
-  ["string","\""],
-  ["meta.tag.punctuation.end",">"],
+  ["string.attribute-value.xml","\""],
+  ["meta.tag.punctuation.tag-close.xml",">"],
   ["markup.list.meta.tag","<%="],
   ["text"," "],
   ["identifier","entry"],
@@ -234,21 +234,21 @@
   ["identifier","name"],
   ["text"," "],
   ["markup.list.meta.tag","%>"],
-  ["meta.tag.punctuation.begin","</"],
-  ["meta.tag.name.anchor","a"],
-  ["meta.tag.punctuation.end",">"]
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.anchor.tag-name.xml","a"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
-  ["text","                "],
-  ["meta.tag.punctuation.begin","</"],
-  ["meta.tag.name.table","td"],
-  ["meta.tag.punctuation.end",">"]
+  ["text.xml","                "],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.table.tag-name.xml","td"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
-  ["text","                "],
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name.table","td"],
-  ["meta.tag.punctuation.end",">"],
+  ["text.xml","                "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.table.tag-name.xml","td"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
   ["markup.list.meta.tag","<%="],
   ["text"," "],
   ["identifier","entry"],
@@ -256,18 +256,18 @@
   ["identifier","size"],
   ["text"," "],
   ["markup.list.meta.tag","%>"],
-  ["meta.tag.punctuation.begin","</"],
-  ["meta.tag.name.table","td"],
-  ["meta.tag.punctuation.end",">"]
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.table.tag-name.xml","td"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
-  ["text","            "],
-  ["meta.tag.punctuation.begin","</"],
-  ["meta.tag.name.table","tr"],
-  ["meta.tag.punctuation.end",">"]
+  ["text.xml","            "],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.table.tag-name.xml","tr"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
-  ["text","        "],
+  ["text.xml","        "],
   ["markup.list.meta.tag","<%"],
   ["text"," "],
   ["paren.rparen","})"],
@@ -275,22 +275,22 @@
   ["markup.list.meta.tag","%>"]
 ],[
    "start",
-  ["text","    "],
-  ["meta.tag.punctuation.begin","</"],
-  ["meta.tag.name.table","table"],
-  ["meta.tag.punctuation.end",">"]
+  ["text.xml","    "],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.table.tag-name.xml","table"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
-  ["text","    "]
+  ["text.xml","    "]
 ],[
    "start",
-  ["text","    "],
-  ["meta.tag.punctuation.begin","</"],
-  ["meta.tag.name","body"],
-  ["meta.tag.punctuation.end",">"]
+  ["text.xml","    "],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","body"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
-  ["meta.tag.punctuation.begin","</"],
-  ["meta.tag.name","html"],
-  ["meta.tag.punctuation.end",">"]
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","html"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ]]

@@ -1,82 +1,82 @@
 [[
    "start",
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name","h1"],
-  ["meta.tag.punctuation.end",">"],
-  ["text","Listing Books"],
-  ["meta.tag.punctuation.begin","</"],
-  ["meta.tag.name","h1"],
-  ["meta.tag.punctuation.end",">"]
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","h1"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["text.xml","Listing Books"],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","h1"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
-  ["text"," "]
+  ["text.xml"," "]
 ],[
    "start",
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name.table","table"],
-  ["meta.tag.punctuation.end",">"]
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.table.tag-name.xml","table"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
-  ["text","  "],
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name.table","tr"],
-  ["meta.tag.punctuation.end",">"]
+  ["text.xml","  "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.table.tag-name.xml","tr"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
-  ["text","    "],
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name.table","th"],
-  ["meta.tag.punctuation.end",">"],
-  ["text","Title"],
-  ["meta.tag.punctuation.begin","</"],
-  ["meta.tag.name.table","th"],
-  ["meta.tag.punctuation.end",">"]
+  ["text.xml","    "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.table.tag-name.xml","th"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["text.xml","Title"],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.table.tag-name.xml","th"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
-  ["text","    "],
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name.table","th"],
-  ["meta.tag.punctuation.end",">"],
-  ["text","Summary"],
-  ["meta.tag.punctuation.begin","</"],
-  ["meta.tag.name.table","th"],
-  ["meta.tag.punctuation.end",">"]
+  ["text.xml","    "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.table.tag-name.xml","th"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["text.xml","Summary"],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.table.tag-name.xml","th"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
-  ["text","    "],
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name.table","th"],
-  ["meta.tag.punctuation.end",">"],
-  ["meta.tag.punctuation.begin","</"],
-  ["meta.tag.name.table","th"],
-  ["meta.tag.punctuation.end",">"]
+  ["text.xml","    "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.table.tag-name.xml","th"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.table.tag-name.xml","th"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
-  ["text","    "],
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name.table","th"],
-  ["meta.tag.punctuation.end",">"],
-  ["meta.tag.punctuation.begin","</"],
-  ["meta.tag.name.table","th"],
-  ["meta.tag.punctuation.end",">"]
+  ["text.xml","    "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.table.tag-name.xml","th"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.table.tag-name.xml","th"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
-  ["text","    "],
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name.table","th"],
-  ["meta.tag.punctuation.end",">"],
-  ["meta.tag.punctuation.begin","</"],
-  ["meta.tag.name.table","th"],
-  ["meta.tag.punctuation.end",">"]
+  ["text.xml","    "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.table.tag-name.xml","th"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.table.tag-name.xml","th"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
-  ["text","  "],
-  ["meta.tag.punctuation.begin","</"],
-  ["meta.tag.name.table","tr"],
-  ["meta.tag.punctuation.end",">"]
+  ["text.xml","  "],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.table.tag-name.xml","tr"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
-  ["text"," "]
+  ["text.xml"," "]
 ],[
    "start",
   ["support.ruby_tag","<%"],
@@ -92,22 +92,22 @@
   ["support.ruby_tag","%>"]
 ],[
    "start",
-  ["text","  "],
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name.table","tr"],
-  ["meta.tag.punctuation.end",">"]
+  ["text.xml","  "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.table.tag-name.xml","tr"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
-  ["text","    "],
+  ["text.xml","    "],
   ["comment.start.erb","<%#"],
   ["comment"," comment "],
   ["comment.end.erb","%>"]
 ],[
    "start",
-  ["text","    "],
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name.table","td"],
-  ["meta.tag.punctuation.end",">"],
+  ["text.xml","    "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.table.tag-name.xml","td"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
   ["support.ruby_tag","<%="],
   ["text"," "],
   ["identifier","book"],
@@ -115,15 +115,15 @@
   ["identifier","title"],
   ["text"," "],
   ["support.ruby_tag","%>"],
-  ["meta.tag.punctuation.begin","</"],
-  ["meta.tag.name.table","td"],
-  ["meta.tag.punctuation.end",">"]
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.table.tag-name.xml","td"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
-  ["text","    "],
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name.table","td"],
-  ["meta.tag.punctuation.end",">"],
+  ["text.xml","    "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.table.tag-name.xml","td"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
   ["support.ruby_tag","<%="],
   ["text"," "],
   ["identifier","book"],
@@ -131,15 +131,15 @@
   ["identifier","content"],
   ["text"," "],
   ["support.ruby_tag","%>"],
-  ["meta.tag.punctuation.begin","</"],
-  ["meta.tag.name.table","td"],
-  ["meta.tag.punctuation.end",">"]
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.table.tag-name.xml","td"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
-  ["text","    "],
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name.table","td"],
-  ["meta.tag.punctuation.end",">"],
+  ["text.xml","    "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.table.tag-name.xml","td"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
   ["support.ruby_tag","<%="],
   ["text"," "],
   ["support.function","link_to"],
@@ -149,15 +149,15 @@
   ["identifier","book"],
   ["text"," "],
   ["support.ruby_tag","%>"],
-  ["meta.tag.punctuation.begin","</"],
-  ["meta.tag.name.table","td"],
-  ["meta.tag.punctuation.end",">"]
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.table.tag-name.xml","td"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
-  ["text","    "],
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name.table","td"],
-  ["meta.tag.punctuation.end",">"],
+  ["text.xml","    "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.table.tag-name.xml","td"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
   ["support.ruby_tag","<%="],
   ["text"," "],
   ["support.function","link_to"],
@@ -170,15 +170,15 @@
   ["paren.rparen",")"],
   ["text"," "],
   ["support.ruby_tag","%>"],
-  ["meta.tag.punctuation.begin","</"],
-  ["meta.tag.name.table","td"],
-  ["meta.tag.punctuation.end",">"]
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.table.tag-name.xml","td"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
-  ["text","    "],
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name.table","td"],
-  ["meta.tag.punctuation.end",">"],
+  ["text.xml","    "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.table.tag-name.xml","td"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
   ["support.ruby_tag","<%="],
   ["text"," "],
   ["support.function","link_to"],
@@ -200,15 +200,15 @@
   ["constant.other.symbol.ruby",":delete"],
   ["text"," "],
   ["support.ruby_tag","%>"],
-  ["meta.tag.punctuation.begin","</"],
-  ["meta.tag.name.table","td"],
-  ["meta.tag.punctuation.end",">"]
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.table.tag-name.xml","td"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
-  ["text","  "],
-  ["meta.tag.punctuation.begin","</"],
-  ["meta.tag.name.table","tr"],
-  ["meta.tag.punctuation.end",">"]
+  ["text.xml","  "],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.table.tag-name.xml","tr"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
   ["support.ruby_tag","<%"],
@@ -218,21 +218,21 @@
   ["support.ruby_tag","%>"]
 ],[
    "start",
-  ["meta.tag.punctuation.begin","</"],
-  ["meta.tag.name.table","table"],
-  ["meta.tag.punctuation.end",">"]
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.table.tag-name.xml","table"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
-  ["text"," "]
+  ["text.xml"," "]
 ],[
    "start",
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name","br"],
-  ["text"," "],
-  ["meta.tag.punctuation.end","/>"]
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","br"],
+  ["text.tag-whitespace.xml"," "],
+  ["meta.tag.punctuation.tag-close.xml","/>"]
 ],[
    "start",
-  ["text"," "]
+  ["text.xml"," "]
 ],[
    "start",
   ["support.ruby_tag","<%="],
