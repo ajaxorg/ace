@@ -14,10 +14,11 @@ var deps = {
         url: "https://raw.github.com/stubbornella/csslint/master/release/csslint.js",
         needsFixup: true,
         browserify: {
-            npmModule: "csslint@latest",
+            npmModule: "git+https://github.com/stubbornella/csslint.git#master",
             path: "jshint/src/jshint.js",
             exports: "jshint"
         },
+        fetch: browserify,
     }, 
     requirejs: {
         path: "../../demo/kitchen-sink/require.js",
@@ -242,5 +243,12 @@ function browserify(_, cb) {
     })
 }
 
-getDep(deps.html5)
-getDep(deps.jshint)
+var args = process.argv.slice(2);
+args = args.filter(function(x) {return x[0] != "-" });
+if (!args.length)
+    args = Object.keys(deps);
+    
+args.forEach(function(key) {
+    getDep(deps[key])
+});
+
