@@ -46,7 +46,7 @@ var deps = {
     xquery: {
        path: "mode/xquery/xquery_lexer.js",
        browserify: {
-           npmModule: "git+https://github.com/wcandillon/xqlint.git#completion",
+           npmModule: "git+https://github.com/wcandillon/xqlint.git#master",
            path: "xqlint/lib/lexers/xquery_lexer.js",
            exports: "XQueryLexer"
        },
@@ -59,7 +59,7 @@ var deps = {
     jsoniq: {
        path: "mode/xquery/jsoniq_lexer.js",
        browserify: {
-           npmModule: "git+https://github.com/wcandillon/xqlint.git#completion",
+           npmModule: "git+https://github.com/wcandillon/xqlint.git#master",
            path: "xqlint/lib/lexers/jsoniq_lexer.js",
            exports: "JSONiqLexer"
        },
@@ -72,7 +72,7 @@ var deps = {
     xqlint: {
        path: "mode/xquery/xqlint.js",
        browserify: {
-           npmModule: "git+https://github.com/wcandillon/xqlint.git#completion",
+           npmModule: "git+https://github.com/wcandillon/xqlint.git#master",
            path: "xqlint/lib/xqlint.js",
            exports: "XQLint"
        },
