@@ -12,13 +12,7 @@ var deps = {
     csslint: {
         path: "mode/css/csslint.js",
         url: "https://raw.github.com/stubbornella/csslint/master/release/csslint.js",
-        needsFixup: true,
-        browserify: {
-            npmModule: "git+https://github.com/stubbornella/csslint.git#master",
-            path: "jshint/src/jshint.js",
-            exports: "jshint"
-        },
-        fetch: browserify,
+        needsFixup: true
     }, 
     requirejs: {
         path: "../../demo/kitchen-sink/require.js",
