@@ -9,8 +9,11 @@
         <link href="./doc/site/style.css" rel="stylesheet" type="text/css" />
         <link href="./doc/site/images/favicon.ico" rel="icon" type="image/x-icon" />
 
-        <script src="./build/src-min/ace.js"></script>
-        <script src="./build/src-min/ext-static_highlight.js"></script>
+        <script src="./build/src/ace.js"></script>
+        <script src="./build/src/ext-static_highlight.js"></script>
+        <!--[if lt IE 9]>
+            <script src="./build/src/ext-old_ie.js"></script>
+        <![endif]-->
     </head>
     <body>
         <a href="http://github.com/ajaxorg/ace">
@@ -65,7 +68,7 @@
                                 and is the successor of the Mozilla Skywriter (Bespin) project.
                             </p>
                             
-                                <div id="ace_editor_demo" style="opacity:0">/**
+                                <pre id="ace_editor_demo" style="opacity:0">/**
  * In fact, you're looking at ACE right now. Go ahead and play with it!
  *
  * We are currently showing off the JavaScript mode. ACE has support for 45
@@ -80,7 +83,7 @@ function add(x, y) {
 
 var addResult = add(3, 2);
 console.log(addResult);
-</div>
+</pre>
                             <p id="embed_link"><a href="#nav=embedding">Learn how to embed this in your own site</a></p>
                             <p class="highlight_note">Looking for a more full-featured demo? Check out the
                                 <a href="build/kitchen-sink.html" target="_blank">kitchen sink</a>.
@@ -140,7 +143,7 @@ console.log(addResult);
                             <h1>Embedding Ace in Your Site</h1>
                             <p>Ace can be easily embedded into a web page. Get prebuilt version of ace from 
                             <a href="https://github.com/ajaxorg/ace-builds/">ace-builds</a> repository and use the code below:</p>
-                                <div id="embedded_ace_code" style="opacity:0">&lt;!DOCTYPE html>
+                                <pre id="embedded_ace_code" style="opacity:0">&lt;!DOCTYPE html>
 &lt;html lang="en">
 &lt;head>
 &lt;title>ACE in Action&lt;/title>
@@ -168,7 +171,7 @@ console.log(addResult);
     editor.getSession().setMode("ace/mode/javascript");
 &lt;/script>
 &lt;/body>
-&lt;/html></div>
+&lt;/html></pre>
                             <p>Now check out the <a href="#nav=howto">How-To Guide</a> for instructions on
                                 common operations, such as setting a different language mode or
                                 getting the contents from the editor.
