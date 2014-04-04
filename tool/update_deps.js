@@ -72,7 +72,7 @@ var deps = {
     xqlint: {
        path: "mode/xquery/xqlint.js",
        browserify: {
-           npmModule: "git+https://github.com/wcandillon/xqlint.git#master",
+           npmModule: "git+https://github.com/wcandillon/xqlint.git#0.0.8",
            path: "xqlint/lib/xqlint.js",
            exports: "XQLint"
        },
