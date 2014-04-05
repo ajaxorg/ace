@@ -43,6 +43,45 @@ var deps = {
             return src;
         }
     },
+    xquery: {
+       path: "mode/xquery/xquery_lexer.js",
+       browserify: {
+           npmModule: "git+https://github.com/wcandillon/xqlint.git#master",
+           path: "xqlint/lib/lexers/xquery_lexer.js",
+           exports: "XQueryLexer"
+       },
+       fetch: browserify,
+       needsFixup: true,
+       postProcess: function(src){
+           return src;
+       }
+    },
+    jsoniq: {
+       path: "mode/xquery/jsoniq_lexer.js",
+       browserify: {
+           npmModule: "git+https://github.com/wcandillon/xqlint.git#master",
+           path: "xqlint/lib/lexers/jsoniq_lexer.js",
+           exports: "JSONiqLexer"
+       },
+       fetch: browserify,
+       needsFixup: true,
+       postProcess: function(src){
+           return src;
+       }
+    },
+    xqlint: {
+       path: "mode/xquery/xqlint.js",
+       browserify: {
+           npmModule: "git+https://github.com/wcandillon/xqlint.git#0.0.8",
+           path: "xqlint/lib/xqlint.js",
+           exports: "XQLint"
+       },
+       fetch: browserify,
+       needsFixup: true,
+       postProcess: function(src){
+           return src;
+       }
+    },
     jshint: {
         path: "mode/javascript/jshint.js",
         browserify: {
