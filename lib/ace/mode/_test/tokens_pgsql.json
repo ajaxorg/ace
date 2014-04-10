@@ -297,10 +297,10 @@
   ["comment.doc","* Dollar quotes starting at the end of the line are colored as SQL unless"]
 ],[
    "doc-start",
-  ["comment.doc","* a special language tag is used. Pearl and Python are currently implemented"]
+  ["comment.doc","* a special language tag is used. Dollar quote syntax coloring is implemented"]
 ],[
    "doc-start",
-  ["comment.doc","* but lots of others are possible."]
+  ["comment.doc","* for Perl, Python, JavaScript, and Json."]
 ],[
    "start",
   ["comment.doc","*/"]
@@ -659,6 +659,160 @@
   ["keyword","LANGUAGE"],
   ["text"," "],
   ["identifier","plpythonu"],
+  ["statementEnd",";"]
+],[
+   "start"
+],[
+   "start",
+  ["comment","-- pl/v8 (javascript)"]
+],[
+   "javascript-start",
+  ["keyword.statementBegin","CREATE"],
+  ["text"," "],
+  ["keyword","FUNCTION"],
+  ["text"," "],
+  ["identifier","plv8_test"],
+  ["paren.lparen","("],
+  ["identifier","keys"],
+  ["text"," "],
+  ["keyword","text"],
+  ["text","[], "],
+  ["identifier","vals"],
+  ["text"," "],
+  ["keyword","text"],
+  ["text","[]"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["keyword","RETURNS"],
+  ["text"," "],
+  ["keyword","text"],
+  ["text"," "],
+  ["keyword","AS"],
+  ["text"," "],
+  ["string","$javascript$"]
+],[
+   "javascript-start",
+  ["storage.type","var"],
+  ["text"," "],
+  ["identifier","o"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["paren.lparen","{"],
+  ["paren.rparen","}"],
+  ["punctuation.operator",";"]
+],[
+   "javascript-start",
+  ["keyword","for"],
+  ["paren.lparen","("],
+  ["storage.type","var"],
+  ["text"," "],
+  ["identifier","i"],
+  ["keyword.operator","="],
+  ["constant.numeric","0"],
+  ["punctuation.operator",";"],
+  ["text"," "],
+  ["identifier","i"],
+  ["keyword.operator","<"],
+  ["identifier","keys"],
+  ["punctuation.operator","."],
+  ["support.constant","length"],
+  ["punctuation.operator",";"],
+  ["text"," "],
+  ["identifier","i"],
+  ["keyword.operator","++"],
+  ["paren.rparen",")"],
+  ["paren.lparen","{"]
+],[
+   "javascript-start",
+  ["text"," "],
+  ["identifier","o"],
+  ["paren.lparen","["],
+  ["identifier","keys"],
+  ["paren.lparen","["],
+  ["identifier","i"],
+  ["paren.rparen","]]"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["identifier","vals"],
+  ["paren.lparen","["],
+  ["identifier","i"],
+  ["paren.rparen","]"],
+  ["punctuation.operator",";"]
+],[
+   "javascript-no_regex",
+  ["paren.rparen","}"]
+],[
+   "javascript-start",
+  ["keyword","return"],
+  ["text"," "],
+  ["variable.language","JSON"],
+  ["punctuation.operator","."],
+  ["identifier","stringify"],
+  ["paren.lparen","("],
+  ["identifier","o"],
+  ["paren.rparen",")"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["string","$javascript$"],
+  ["text"," "],
+  ["keyword","LANGUAGE"],
+  ["text"," "],
+  ["identifier","plv8"],
+  ["text"," "],
+  ["keyword","IMMUTABLE"],
+  ["text"," "],
+  ["keyword","STRICT"],
+  ["statementEnd",";"]
+],[
+   "start"
+],[
+   "start",
+  ["comment","-- json"]
+],[
+   "json-start",
+  ["keyword.statementBegin","select"],
+  ["text"," "],
+  ["keyword.operator","*"],
+  ["text"," "],
+  ["keyword","from"],
+  ["text"," "],
+  ["support.function","json_object_keys"],
+  ["paren.lparen","("],
+  ["string","$json$"]
+],[
+   "json-start",
+  ["paren.lparen","{"]
+],[
+   "json-start",
+  ["text","  "],
+  ["variable","\"f1\""],
+  ["text",": "],
+  ["constant.numeric","5"],
+  ["text",","]
+],[
+   "json-start",
+  ["text","  "],
+  ["variable","\"f2\""],
+  ["text",": "],
+  ["string","\"test\""],
+  ["text",","]
+],[
+   "json-start",
+  ["text","  "],
+  ["variable","\"f3\""],
+  ["text",": "],
+  ["paren.lparen","{"],
+  ["paren.rparen","}"]
+],[
+   "json-start",
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["string","$json$"],
+  ["paren.rparen",")"],
   ["statementEnd",";"]
 ],[
    "start"
