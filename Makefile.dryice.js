@@ -247,6 +247,46 @@ function demo(project) {
     });
 
     copyFileSync(ACE_HOME + "/demo/kitchen-sink/logo.png", BUILD_DIR + "/kitchen-sink/logo.png");
+    
+    fs.readdirSync(ACE_HOME + "/demo/").forEach(function(x) {        
+        if (/\s|requirejs/.test(x) || !/\.(js|html)$/.test(x))
+            return;        
+        copy({
+            source: ACE_HOME +"/demo/" + x,
+            dest:   BUILD_DIR + "/demo/" + x,
+            filter: [function(source) {
+                if (/\.(js)$/.test(x)) 
+                    return source;
+                var removeRequireJS
+                source = source.replace(/<script src="kitchen-sink\/require.js"[\s\S]+?require\(\[([^\]]+).*/, function(e, m){
+                    removeRequireJS = true;
+                    var scripts = m.split(/,\s*/);
+                    var result = [];
+                    function comment(str) {result.push("<!-- " + str + " -->")};
+                    function script(str) {result.push('<script src="../src/' + str + '.js"></script>')}
+                    scripts.forEach(function(s) {
+                        s = s.replace(/"/g, "");
+                        if (s == "ace/ace") {
+                            comment("load ace")
+                            script("ace")
+                        } else {
+                            var extName = s.match(/[^/]*$/)[0];
+                            comment("load ace " + extName + " extension");
+                            script("ext-" + extName);
+                        }
+                    });
+                    result.push("<script>")
+                    return result.join("\n");
+                });
+                if (removeRequireJS)
+                    source = source.replace(/\s*\}\);?\s*(<\/script>)/, "\n$1");
+                source = source.replace(/"\.\.\/build\//g, function(e) {
+                    console.log(e); return '"../';
+                });
+                return source;
+            }]
+        });
+    });
 }
 
 function jsFileList(path, filter) {
