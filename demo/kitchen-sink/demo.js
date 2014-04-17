@@ -184,7 +184,7 @@ env.editor.commands.addCommands([{
     }
 }, {
     name: "increaseFontSize",
-    bindKey: "Ctrl-+",
+    bindKey: "Ctrl-=",
     exec: function(editor) {
         var size = parseInt(editor.getFontSize(), 10) || 12;
         editor.setFontSize(size + 1);
