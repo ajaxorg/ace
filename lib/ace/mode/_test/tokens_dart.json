@@ -330,7 +330,7 @@
   ["text",";"]
 ],[
    "start",
-  ["identifier","assert"],
+  ["keyword.control.dart","assert"],
   ["text","("],
   ["identifier","unicorn"],
   ["text"," "],
@@ -357,7 +357,7 @@
   ["text",";"]
 ],[
    "start",
-  ["identifier","assert"],
+  ["keyword.control.dart","assert"],
   ["text","("],
   ["identifier","iMeantToDoThis"],
   ["text","."],
