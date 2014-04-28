@@ -43,110 +43,110 @@
    "start"
 ],[
    "start",
-  ["punctuation.doctype.begin","<!"],
-  ["meta.tag.doctype","DOCTYPE"],
-  ["text"," "],
-  ["xml-pe","html"],
-  ["punctuation.doctype.end",">"]
+  ["xml-pe.doctype.xml","<!"],
+  ["xml-pe.doctype.xml","DOCTYPE"],
+  ["text.whitespace.xml"," "],
+  ["xml-pe.xml","html"],
+  ["xml-pe.doctype.xml",">"]
 ],[
    "start",
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name","html"],
-  ["text"," "],
-  ["entity.other.attribute-name","lang"],
-  ["keyword.operator.separator","="],
-  ["string","\"en-us\""],
-  ["meta.tag.punctuation.end",">"]
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","html"],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","lang"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"en-us\""],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
-  ["text","    "],
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name","head"],
-  ["meta.tag.punctuation.end",">"]
+  ["text.xml","    "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","head"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
-  ["text","        "],
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name","meta"],
-  ["text"," "],
-  ["entity.other.attribute-name","charset"],
-  ["keyword.operator.separator","="],
-  ["string","\"utf-8\""],
-  ["text"," "],
-  ["meta.tag.punctuation.end","/>"]
+  ["text.xml","        "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","meta"],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","charset"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"utf-8\""],
+  ["text.tag-whitespace.xml"," "],
+  ["meta.tag.punctuation.tag-close.xml","/>"]
 ],[
    "start",
-  ["text","        "]
+  ["text.xml","        "]
 ],[
    "start",
-  ["text","        "],
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name","title"],
-  ["meta.tag.punctuation.end",">"],
+  ["text.xml","        "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","title"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
   ["string.interpolated","${"],
   ["variable","title"],
   ["keyword.operator","!"],
   ["string","\"FreeMarker\""],
   ["string.interpolated","}"],
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name","title"],
-  ["meta.tag.punctuation.end",">"]
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","title"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
-  ["text","    "],
-  ["meta.tag.punctuation.begin","</"],
-  ["meta.tag.name","head"],
-  ["meta.tag.punctuation.end",">"]
+  ["text.xml","    "],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","head"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
-  ["text","    "]
+  ["text.xml","    "]
 ],[
    "start",
-  ["text","    "],
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name","body"],
-  ["meta.tag.punctuation.end",">"]
+  ["text.xml","    "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","body"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
-  ["text","    "]
+  ["text.xml","    "]
 ],[
    "start",
-  ["text","        "],
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name","h1"],
-  ["meta.tag.punctuation.end",">"],
-  ["text","Hello "],
+  ["text.xml","        "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","h1"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["text.xml","Hello "],
   ["string.interpolated","${"],
   ["variable","name"],
   ["keyword.operator","!"],
   ["string","\"\""],
   ["string.interpolated","}"],
-  ["meta.tag.punctuation.begin","</"],
-  ["meta.tag.name","h1"],
-  ["meta.tag.punctuation.end",">"]
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","h1"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
-  ["text","        "]
+  ["text.xml","        "]
 ],[
    "start",
-  ["text","        "],
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name","p"],
-  ["meta.tag.punctuation.end",">"],
-  ["text","Today is: "],
+  ["text.xml","        "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","p"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["text.xml","Today is: "],
   ["string.interpolated","${"],
   ["language.variable",".now"],
   ["support.function","?date"],
   ["string.interpolated","}"],
-  ["meta.tag.punctuation.begin","</"],
-  ["meta.tag.name","p"],
-  ["meta.tag.punctuation.end",">"]
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","p"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
-  ["text","        "]
+  ["text.xml","        "]
 ],[
    "start",
-  ["text","        "],
+  ["text.xml","        "],
   ["keyword.function","<#assign"],
   ["text"," "],
   ["variable","x"],
@@ -157,7 +157,7 @@
   ["keyword",">"]
 ],[
    "start",
-  ["text","        "],
+  ["text.xml","        "],
   ["keyword.function","<#if"],
   ["text"," "],
   ["variable","x"],
@@ -174,7 +174,7 @@
   ["text"," "],
   ["constant.numeric","14"],
   ["keyword",">"],
-  ["text","x equals 13: "],
+  ["text.xml","x equals 13: "],
   ["string.interpolated","${"],
   ["variable","x"],
   ["string.interpolated","}"],
@@ -182,16 +182,16 @@
   ["keyword",">"]
 ],[
    "start",
-  ["text","        "]
+  ["text.xml","        "]
 ],[
    "start",
-  ["text","        "],
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name","ul"],
-  ["meta.tag.punctuation.end",">"]
+  ["text.xml","        "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","ul"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
-  ["text","            "],
+  ["text.xml","            "],
   ["keyword.function","<#list"],
   ["text"," "],
   ["variable","items"],
@@ -202,14 +202,14 @@
   ["keyword",">"]
 ],[
    "start",
-  ["text","                "],
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name","li"],
-  ["meta.tag.punctuation.end",">"],
+  ["text.xml","                "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","li"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
   ["string.interpolated","${"],
   ["variable","item_index"],
   ["string.interpolated","}"],
-  ["text",": "],
+  ["text.xml",": "],
   ["string.interpolated","${"],
   ["variable","item.name"],
   ["keyword.operator","!"],
@@ -223,26 +223,26 @@
   ["constant.numeric","0"],
   ["paren.rparen","]"],
   ["string.interpolated","}"],
-  ["meta.tag.punctuation.begin","</"],
-  ["meta.tag.name","li"],
-  ["meta.tag.punctuation.end",">"]
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","li"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
-  ["text","            "],
+  ["text.xml","            "],
   ["keyword.function","</#list"],
   ["keyword",">"]
 ],[
    "start",
-  ["text","        "],
-  ["meta.tag.punctuation.begin","</"],
-  ["meta.tag.name","ul"],
-  ["meta.tag.punctuation.end",">"]
+  ["text.xml","        "],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","ul"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
-  ["text","        "]
+  ["text.xml","        "]
 ],[
    "start",
-  ["text","        User directive: "],
+  ["text.xml","        User directive: "],
   ["keyword.other","<@lib.function"],
   ["text"," "],
   ["variable","attr1"],
@@ -257,21 +257,21 @@
   ["keyword.operator","="],
   ["constant.numeric","-42.12"],
   ["keyword",">"],
-  ["text","Test"],
+  ["text.xml","Test"],
   ["keyword.other","</@lib.function"],
   ["keyword",">"]
 ],[
    "start",
-  ["text","        "],
+  ["text.xml","        "],
   ["keyword.other","<@anotherOne"],
   ["text"," "],
   ["keyword","/>"]
 ],[
    "start",
-  ["text","        "]
+  ["text.xml","        "]
 ],[
    "start",
-  ["text","        "],
+  ["text.xml","        "],
   ["keyword.function","<#if"],
   ["text"," "],
   ["variable","variable"],
@@ -279,10 +279,10 @@
   ["keyword",">"]
 ],[
    "start",
-  ["text","            Deprecated"]
+  ["text.xml","            Deprecated"]
 ],[
    "start",
-  ["text","        "],
+  ["text.xml","        "],
   ["keyword.function","<#elseif"],
   ["text"," "],
   ["variable","variable"],
@@ -290,52 +290,52 @@
   ["keyword",">"]
 ],[
    "start",
-  ["text","            Better"]
+  ["text.xml","            Better"]
 ],[
    "start",
-  ["text","        "],
+  ["text.xml","        "],
   ["keyword.function","<#else"],
   ["keyword",">"]
 ],[
    "start",
-  ["text","            Default"]
+  ["text.xml","            Default"]
 ],[
    "start",
-  ["text","        "],
+  ["text.xml","        "],
   ["keyword.function","</#if"],
   ["keyword",">"]
 ],[
    "start",
-  ["text","        "]
+  ["text.xml","        "]
 ],[
    "start",
-  ["text","        "],
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name.image","img"],
-  ["text"," "],
-  ["entity.other.attribute-name","src"],
-  ["keyword.operator.separator","="],
-  ["string","\"images/"],
+  ["text.xml","        "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.image.tag-name.xml","img"],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","src"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"images/"],
   ["string.interpolated","${"],
   ["variable","user.id"],
   ["string.interpolated","}"],
-  ["string",".png\""],
-  ["text"," "],
-  ["meta.tag.punctuation.end","/>"]
+  ["string.attribute-value.xml",".png\""],
+  ["text.tag-whitespace.xml"," "],
+  ["meta.tag.punctuation.tag-close.xml","/>"]
 ],[
    "start",
-  ["text","        "]
+  ["text.xml","        "]
 ],[
    "start",
-  ["text","    "],
-  ["meta.tag.punctuation.begin","</"],
-  ["meta.tag.name","body"],
-  ["meta.tag.punctuation.end",">"]
+  ["text.xml","    "],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","body"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
-  ["meta.tag.punctuation.begin","</"],
-  ["meta.tag.name","html"],
-  ["meta.tag.punctuation.end",">"]
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","html"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start"
 ]]

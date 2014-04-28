@@ -1,4 +1,4 @@
-Searching for 'var' in /workspace/configs
+Searching for var in/.c9/metadata/workspace/pluginsregexp, case sensitive, whole word
 
 configs/default.js:
     1: var fs = require("fs");

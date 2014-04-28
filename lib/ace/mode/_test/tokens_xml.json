@@ -1,43 +1,43 @@
 [[
    "start",
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name","Juhu"],
-  ["meta.tag.punctuation.end",">"],
-  ["text","//Juhu Kinners"],
-  ["meta.tag.punctuation.begin","</"],
-  ["meta.tag.name","Kinners"],
-  ["meta.tag.punctuation.end",">"]
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","Juhu"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["text.xml","//Juhu Kinners"],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","Kinners"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
-  ["text","test: two tags in the same lines should be in separate tokens\""]
+  ["text.xml","test: two tags in the same lines should be in separate tokens\""]
 ],[
    "start",
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name","Juhu"],
-  ["meta.tag.punctuation.end",">"],
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name","Kinners"],
-  ["meta.tag.punctuation.end",">"]
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","Juhu"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","Kinners"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
-  ["text","test: multiline attributes\""]
+  ["text.xml","test: multiline attributes\""]
 ],[
-   ["qqstring_inner","meta.tag.punctuation.begin"],
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name","copy"],
-  ["text"," "],
-  ["entity.other.attribute-name","set"],
-  ["keyword.operator.separator","="],
-  ["string","\"{"]
+   ["string.attribute-value.xml0","meta.tag.punctuation.tag-open.xml"],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","copy"],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","set"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"{"]
 ],[
-   ["qqstring_inner","meta.tag.punctuation.begin"],
-  ["string","}\""],
-  ["text"," "],
-  ["entity.other.attribute-name","undo"],
-  ["keyword.operator.separator","="],
-  ["string","\"{"]
+   ["string.attribute-value.xml0","meta.tag.punctuation.tag-open.xml"],
+  ["string.attribute-value.xml","}\""],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","undo"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"{"]
 ],[
    "start",
-  ["string","}\""],
-  ["meta.tag.punctuation.end","/>"]
+  ["string.attribute-value.xml","}\""],
+  ["meta.tag.punctuation.tag-close.xml","/>"]
 ]]

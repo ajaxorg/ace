@@ -32,25 +32,26 @@ define(function(require, exports, module) {
 "use strict";
 
 var dom = require("ace/lib/dom");
+var oop = require("ace/lib/oop");
 var event = require("ace/lib/event");
 var Range = require("ace/range").Range;
+var Tooltip = require("ace/tooltip").Tooltip;
 
-var tooltipNode;
-
-var TokenTooltip = function(editor) {
+function TokenTooltip (editor) {
     if (editor.tokenTooltip)
         return;
-    editor.tokenTooltip = this;    
+    Tooltip.call(this, editor.container);
+    editor.tokenTooltip = this;
     this.editor = editor;
-    
-    editor.tooltip = tooltipNode || this.$init();
 
     this.update = this.update.bind(this);
     this.onMouseMove = this.onMouseMove.bind(this);
     this.onMouseOut = this.onMouseOut.bind(this);
     event.addListener(editor.renderer.scroller, "mousemove", this.onMouseMove);
     event.addListener(editor.renderer.content, "mouseout", this.onMouseOut);
-};
+}
+
+oop.inherits(TokenTooltip, Tooltip);
 
 (function(){
     this.token = {};
@@ -63,8 +64,8 @@ var TokenTooltip = function(editor) {
         if (this.lastT - (r.timeStamp || 0) > 1000) {
             r.rect = null;
             r.timeStamp = this.lastT;
-            this.maxHeight = innerHeight;
-            this.maxWidth = innerWidth;
+            this.maxHeight = window.innerHeight;
+            this.maxWidth = window.innerWidth;
         }
 
         var canvasPos = r.rect || (r.rect = r.scroller.getBoundingClientRect());
@@ -86,15 +87,10 @@ var TokenTooltip = function(editor) {
         }
         if (!token) {
             session.removeMarker(this.marker);
-            tooltipNode.style.display = "none";
-            this.isOpen = false;
+            this.hide();
             return;
         }
-        if (!this.isOpen) {
-            tooltipNode.style.display = "";
-            this.isOpen = true;
-        }
-        
+
         var tokenText = token.type;
         if (token.state)
             tokenText += "|" + token.state;
@@ -102,15 +98,15 @@ var TokenTooltip = function(editor) {
             tokenText += "\n  merge";
         if (token.stateTransitions)
             tokenText += "\n  " + token.stateTransitions.join("\n  ");
-        
+
         if (this.tokenText != tokenText) {
-            tooltipNode.textContent = tokenText;
-            this.tooltipWidth = tooltipNode.offsetWidth;
-            this.tooltipHeight = tooltipNode.offsetHeight;
+            this.setText(tokenText);
+            this.width = this.getWidth();
+            this.height = this.getHeight();
             this.tokenText = tokenText;
         }
-        
-        this.updateTooltipPosition(this.x, this.y);
+
+        this.show(null, this.x, this.y);
 
         this.token = token;
         session.removeMarker(this.marker);
@@ -123,56 +119,34 @@ var TokenTooltip = function(editor) {
         this.y = e.clientY;
         if (this.isOpen) {
             this.lastT = e.timeStamp;
-            this.updateTooltipPosition(this.x, this.y);
+            this.setPosition(this.x, this.y);
         }
         if (!this.$timer)
             this.$timer = setTimeout(this.update, 100);
     };
-    
+
     this.onMouseOut = function(e) {
-        var t = e && e.relatedTarget;
-        var ct = e &&  e.currentTarget;
-        while(t && (t = t.parentNode)) {
-            if (t == ct)
-                return;
-        }
-        tooltipNode.style.display = "none";
+        if (e && e.currentTarget.contains(e.relatedTarget))
+            return;
+        this.hide();
         this.editor.session.removeMarker(this.marker);
         this.$timer = clearTimeout(this.$timer);
-        this.isOpen = false;
-    };
-    
-    this.updateTooltipPosition = function(x, y) {
-        var st = tooltipNode.style;
-        if (x + 10 + this.tooltipWidth > this.maxWidth)
-            x = innerWidth - this.tooltipWidth - 10;
-        if (y > innerHeight * 0.75 || y + 20 + this.tooltipHeight > this.maxHeight)
-            y = y - this.tooltipHeight - 30;
-        
-        st.left = x + 10 + "px";
-        st.top = y + 20 + "px";
     };
 
-    this.$init = function() {
-        tooltipNode = document.documentElement.appendChild(dom.createElement("div"));
-        var st = tooltipNode.style;
-        st.position = "fixed";
-        st.display = "none";
-        st.background = "lightyellow";
-        st.borderRadius = "";
-        st.border = "1px solid gray";
-        st.padding = "1px";
-        st.zIndex = 1000;
-        st.fontFamily = "monospace";
-        st.whiteSpace = "pre-line";
-        return tooltipNode;
+    this.setPosition = function(x, y) {
+        if (x + 10 + this.width > this.maxWidth)
+            x = window.innerWidth - this.width - 10;
+        if (y > window.innerHeight * 0.75 || y + 20 + this.height > this.maxHeight)
+            y = y - this.height - 30;
+
+        Tooltip.prototype.setPosition.call(this, x + 10, y + 20);
     };
 
     this.destroy = function() {
         this.onMouseOut();
         event.removeListener(this.editor.renderer.scroller, "mousemove", this.onMouseMove);
         event.removeListener(this.editor.renderer.content, "mouseout", this.onMouseOut);
-        delete this.editor.tokenTooltip;    
+        delete this.editor.tokenTooltip;
     };
 
 }).call(TokenTooltip.prototype);
@@ -180,4 +154,3 @@ var TokenTooltip = function(editor) {
 exports.TokenTooltip = TokenTooltip;
 
 });
-
