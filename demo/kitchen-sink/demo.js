@@ -33,6 +33,13 @@ define(function(require, exports, module) {
 "use strict";
 
 require("ace/lib/fixoldbrowsers");
+
+require("ace/multi_select");
+require("ace/ext/spellcheck");
+require("./inline_editor");
+require("./dev_util");
+require("./file_drop");
+
 var config = require("ace/config");
 config.init();
 var env = {};
@@ -51,12 +58,14 @@ var HashHandler = require("ace/keyboard/hash_handler").HashHandler;
 
 var Renderer = require("ace/virtual_renderer").VirtualRenderer;
 var Editor = require("ace/editor").Editor;
-var MultiSelect = require("ace/multi_select").MultiSelect;
 
 var whitespace = require("ace/ext/whitespace");
 
+
+
 var doclist = require("./doclist");
 var modelist = require("ace/ext/modelist");
+var themelist = require("ace/ext/themelist");
 var layout = require("./layout");
 var TokenTooltip = require("./token_tooltip").TokenTooltip;
 var util = require("./util");
@@ -89,8 +98,6 @@ split.on("focus", function(editor) {
 env.split = split;
 window.env = env;
 
-// add multiple cursor support to editor
-require("ace/multi_select").MultiSelect(env.editor);
 
 var consoleEl = dom.createElement("div");
 container.parentNode.appendChild(consoleEl);
@@ -159,11 +166,11 @@ env.editor.commands.addCommands([{
     bindKey: "ctrl+enter",
     exec: function(editor) {
         try {
-            var r = window.eval(editor.getCopyText()||editor.getValue());
+            var r = window.eval(editor.getCopyText() || editor.getValue());
         } catch(e) {
             r = e;
         }
-        editor.cmdLine.setValue(r + "")
+        editor.cmdLine.setValue(r + "");
     },
     readOnly: true
 }, {
@@ -172,26 +179,26 @@ env.editor.commands.addCommands([{
     exec: function(editor) {
         config.loadModule("ace/ext/keybinding_menu", function(module) {
             module.init(editor);
-            editor.showKeyboardShortcuts()
-        })
+            editor.showKeyboardShortcuts();
+        });
     }
 }, {
     name: "increaseFontSize",
-    bindKey: "Ctrl-+",
+    bindKey: "Ctrl-=|Ctrl-+",
     exec: function(editor) {
         var size = parseInt(editor.getFontSize(), 10) || 12;
         editor.setFontSize(size + 1);
     }
 }, {
     name: "decreaseFontSize",
-    bindKey: "Ctrl+-",
+    bindKey: "Ctrl+-|Ctrl-_",
     exec: function(editor) {
         var size = parseInt(editor.getFontSize(), 10) || 12;
         editor.setFontSize(Math.max(size - 1 || 1));
     }
 }, {
     name: "resetFontSize",
-    bindKey: "Ctrl+0",
+    bindKey: "Ctrl+0|Ctrl-Numpad0",
     exec: function(editor) {
         editor.setFontSize(12);
     }
@@ -219,7 +226,7 @@ commands.addCommand({
     bindKey: {win: "Ctrl-S", mac: "Command-S"},
     exec: function(arg) {
         var session = env.editor.session;
-        name = session.name.match(/[^\/]+$/)
+        var name = session.name.match(/[^\/]+$/);
         localStorage.setItem(
             "saved_file:" + name,
             session.getValue()
@@ -233,7 +240,7 @@ commands.addCommand({
     bindKey: {win: "Ctrl-O", mac: "Command-O"},
     exec: function(arg) {
         var session = env.editor.session;
-        name = session.name.match(/[^\/]+$/)
+        var name = session.name.match(/[^\/]+$/);
         var value = localStorage.getItem("saved_file:" + name);
         if (typeof value == "string") {
             session.setValue(value);
@@ -244,7 +251,7 @@ commands.addCommand({
     }
 });
 
-var keybindings = {    
+var keybindings = {
     ace: null, // Null = use "default" keymapping
     vim: require("ace/keyboard/vim").handler,
     emacs: "ace/keyboard/emacs",
@@ -308,26 +315,25 @@ doclist.history = doclist.docs.map(function(doc) {
 });
 doclist.history.index = 0;
 doclist.cycleOpen = function(editor, dir) {
-    var h = this.history
+    var h = this.history;
     h.index += dir;
-    if (h.index >= h.length) 
+    if (h.index >= h.length)
         h.index = 0;
     else if (h.index <= 0)
         h.index = h.length - 1;
     var s = h[h.index];
     docEl.value = s;
     docEl.onchange();
-    h.index
-}
+};
 doclist.addToHistory = function(name) {
-    var h = this.history
+    var h = this.history;
     var i = h.indexOf(name);
     if (i != h.index) {
         if (i != -1)
             h.splice(i, 1);
         h.index = h.push(name);
     }
-}
+};
 
 bindDropdown("doc", function(name) {
     doclist.loadDoc(name, function(session) {
@@ -365,20 +371,26 @@ function updateUIEditorOptions() {
     saveOption(behavioursEl, editor.getBehavioursEnabled());
 }
 
+themelist.themes.forEach(function(x){ x.value = x.theme });
+fillDropdown(themeEl, {
+    Bright: themelist.themes.filter(function(x){return !x.isDark}),
+    Dark: themelist.themes.filter(function(x){return x.isDark}),
+});
+
 event.addListener(themeEl, "mouseover", function(e){
-    this.desiredValue = e.target.value;
-    if (!this.$timer)
-        this.$timer = setTimeout(this.updateTheme);
+    themeEl.desiredValue = e.target.value;
+    if (!themeEl.$timer)
+        themeEl.$timer = setTimeout(themeEl.updateTheme);
 });
 
 event.addListener(themeEl, "mouseout", function(e){
-    this.desiredValue = null;
-    if (!this.$timer)
-        this.$timer = setTimeout(this.updateTheme, 20);
+    themeEl.desiredValue = null;
+    if (!themeEl.$timer)
+        themeEl.$timer = setTimeout(themeEl.updateTheme, 20);
 });
 
 themeEl.updateTheme = function(){
-    env.split.setTheme(themeEl.desiredValue || themeEl.selectedValue);
+    env.split.setTheme((themeEl.desiredValue || themeEl.selectedValue));
     themeEl.$timer = null;
 };
 
@@ -487,7 +499,7 @@ bindDropdown("split", function(value) {
         sp.setSplits(1);
     } else {
         var newEditor = (sp.getSplits() == 1);
-        sp.setOrientation(value == "below" ? sp.BELOW : sp.BESIDE);        
+        sp.setOrientation(value == "below" ? sp.BELOW : sp.BESIDE);
         sp.setSplits(2);
 
         if (newEditor) {
@@ -531,43 +543,12 @@ bindCheckbox("highlight_token", function(checked) {
     }
 });
 
-/************** dragover ***************************/
-event.addListener(container, "dragover", function(e) {
-    var types = e.dataTransfer.types;
-    if (types && Array.prototype.indexOf.call(types, 'Files') !== -1)
-        return event.preventDefault(e);
-});
-
-event.addListener(container, "drop", function(e) {
-    var file;
-    try {
-        file = e.dataTransfer.files[0];
-        if (window.FileReader) {
-            var reader = new FileReader();
-            reader.onload = function() {
-                var mode = modelist.getModeForPath(file.name);
-
-                env.editor.session.doc.setValue(reader.result);
-                modeEl.value = mode.name;
-                env.editor.session.setMode(mode.mode);
-                env.editor.session.modeName = mode.name;
-            };
-            reader.readAsText(file);
-        }
-        return event.preventDefault(e);
-    } catch(err) {
-        return event.stopEvent(e);
-    }
-});
-
-
-
 var StatusBar = require("ace/ext/statusbar").StatusBar;
 new StatusBar(env.editor, cmdLine.container);
 
 
 var Emmet = require("ace/ext/emmet");
-net.loadScript("http://nightwing.github.io/emmet-core/emmet.js", function() {
+net.loadScript("https://nightwing.github.io/emmet-core/emmet.js", function() {
     Emmet.setCore(window.emmet);
     env.editor.setOption("enableEmmet", true);
 });
@@ -593,53 +574,29 @@ env.editSnippets = function() {
         var text = m.snippetText;
         var s = doclist.initDoc(text, "", {});
         s.setMode("ace/mode/snippets");
-        doclist["snippets/" + id] = s
+        doclist["snippets/" + id] = s;
     }
     editor.on("blur", function() {
         m.snippetText = editor.getValue();
         snippetManager.unregister(m.snippets);
         m.snippets = snippetManager.parseSnippetFile(m.snippetText, m.scope);
         snippetManager.register(m.snippets);
-    })
+    });
     sp.$editors[0].once("changeMode", function() {
         sp.setSplits(1);
-    })
+    });
     editor.setSession(doclist["snippets/" + id], 1);
     editor.focus();
-}
+};
 
 require("ace/ext/language_tools");
 env.editor.setOptions({
     enableBasicAutocompletion: true,
+    enableLiveAutocomplete: true,
     enableSnippets: true
-})
-
 });
 
-// allow easy access to ace in console, but not in ace code which uses strict
-void function() {
-function isStrict() {
-    try { return !arguments.callee.caller.caller.caller}
-    catch(e){ return true }
-}
-function warn() {
-    if (isStrict()) {
-        console.error("trying to access to global variable");
-    }
-}
-function def(o, key, get) {
-    Object.defineProperty(o, key, {
-        configurable: true, 
-        get: get,
-        set: function(val) {
-            delete o[key];
-            o[key] = val;
-        }
-    });
-}
-def(window, "ace", function(){ warn(); return env.editor });
-def(window, "editor", function(){ warn(); return env.editor });
-def(window, "session", function(){ warn(); return env.editor.session });
-def(window, "split", function(){ warn(); return env.split });
+var beautify = require("ace/ext/beautify");
+env.editor.commands.addCommands(beautify.commands);
 
-}();
+});

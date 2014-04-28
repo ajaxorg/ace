@@ -96,7 +96,8 @@
   ["text"," "],
   ["string.regexp","/2 "],
   ["constant.language.escape","+"],
-  ["string.regexp"," 1/b"]
+  ["string.regexp"," 1/gimyx"],
+  ["identifier","k"]
 ],[
    "no_regex",
   ["identifier","a"],

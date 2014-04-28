@@ -1,5 +1,7 @@
 <html>
-<script a='a'>var</script>'123'
+<scripts>
+<script a='a'>var "</scripts></script>'123'
+</scripts>
 <a href="abc
   def">
 <a href='abc

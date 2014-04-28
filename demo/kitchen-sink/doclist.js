@@ -78,6 +78,7 @@ var docs = {
     "docs/textile.textile": {name: "Textile", wrapped: true},
 
     "docs/c9search.c9search_results": "C9 Search Results",
+    "docs/mel.mel": "MEL",
     "docs/Nix.nix": "Nix"
 };
 
@@ -95,7 +96,7 @@ modelist.modes.forEach(function(m) {
     if (ext[0] === "^") {
         path = ext.substr(1);
     } else {
-        var path = m.name + "." + ext 
+        var path = m.name + "." + ext;
     }
     path = "docs/" + path;
     if (!docs[path]) {
@@ -103,7 +104,7 @@ modelist.modes.forEach(function(m) {
     } else if (typeof docs[path] == "object" && !docs[path].name) {
         docs[path].name = m.caption;
     }
-})
+});
 
 
 
@@ -121,7 +122,7 @@ function sort(list) {
     return list.sort(function(a, b) {
         var cmp = (b.order || 0) - (a.order || 0);
         return cmp || a.name && a.name.localeCompare(b.name);
-    })
+    });
 }
 
 function prepareDocList(docs) {
