@@ -592,7 +592,7 @@ env.editSnippets = function() {
 require("ace/ext/language_tools");
 env.editor.setOptions({
     enableBasicAutocompletion: true,
-    enableLiveAutocomplete: true,
+    enableLiveAutocompletion: true,
     enableSnippets: true
 });
 
