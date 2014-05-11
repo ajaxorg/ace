@@ -23,24 +23,27 @@
 
 <pre id="editor"></pre>
     
-<script src="../build/src-noconflict/ace.js"></script>
-<script src="../build/src-noconflict/ext-modelist.js"></script>
+<script src="kitchen-sink/require.js"></script>
 <script>
+// setup paths
+require.config({paths: { "ace" : "../lib/ace"}});
+// load ace and extensions
+require(["ace/ace", "ace/ext/modelist"], function(ace) {
     var editor = ace.edit("editor");
     editor.setTheme("ace/theme/twilight");
     (function () {
-        var modelist = ace.require('ace/ext/modelist');
+        var modelist = ace.require("ace/ext/modelist");
         // the file path could come from an xmlhttp request, a drop event,
         // or any other scriptable file loading process.
         // Extensions could consume the modelist and use it to dynamically
         // set the editor mode. Webmasters could use it in their scripts
         // for site specific purposes as well.
-        var filePath = 'blahblah/weee/some.js';
+        var filePath = "blahblah/weee/some.js";
         var mode = modelist.getModeForPath(filePath).mode;
         console.log(mode);
         editor.session.setMode(mode);
     }());
-    
+})
 </script>
 
 <script src="./show_own_source.js"></script>

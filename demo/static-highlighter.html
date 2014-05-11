@@ -1,5 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
-   "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -34,30 +33,31 @@ function wobble (flam) {
     return flam.wobbled = true;
 }
 
-// the scrollbars are from overflow auto on .ace_editor.
-
 </pre>
 
-<script src="../../build/src-noconflict/ace.js"></script>
-<script src="../../build/src-noconflict/ext-static_highlight.js"></script>
-
+<script src="kitchen-sink/require.js"></script>
 <script>
-var highlight = ace.require("ace/ext/static_highlight")
-var dom = ace.require("ace/lib/dom")
-function qsa(sel) {
-    return [].slice.call(document.querySelectorAll(sel));
-}
+require.config({paths: { "ace" : "../lib/ace"}});
 
-qsa(".code").forEach(function (codeEl) {
-    highlight(codeEl, {
-        mode: codeEl.getAttribute('ace-mode'),
-        theme: codeEl.getAttribute('ace-theme'),
-        startLineNumber: 1,
-        showGutter: codeEl.getAttribute("ace-gutter"),
-        trim: true
-    }, function (highlighted) {
+require(["ace/ace", "ace/ext/static_highlight"], function(ace) {
+    var highlight = ace.require("ace/ext/static_highlight")
+    var dom = ace.require("ace/lib/dom")
+    function qsa(sel) {
+        return Array.apply(null, document.querySelectorAll(sel));
+    }
+
+    qsa(".code").forEach(function (codeEl) {
+        highlight(codeEl, {
+            mode: codeEl.getAttribute("ace-mode"),
+            theme: codeEl.getAttribute("ace-theme"),
+            startLineNumber: 1,
+            showGutter: codeEl.getAttribute("ace-gutter"),
+            trim: true
+        }, function (highlighted) {
+            
+        });
     });
-});
+})
 </script>
 
 </body>
