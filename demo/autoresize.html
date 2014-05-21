@@ -20,29 +20,37 @@
     </style>
 </head>
 <body>
-<pre id="editor">autoresizing editor</pre>
+<pre id="editor1">autoresizing editor</pre>
 <div class="scrollmargin"></div>
 <pre id="editor2">minHeight = 2 lines</pre>
+<div class="scrollmargin"></div>
+<pre id="editor"></pre>
 
 <script src="../build/src/ace.js"></script>
 <script>
 
-// create first editor
-var editor = ace.edit("editor");
-editor.setTheme("ace/theme/tomorrow");
-editor.session.setMode("ace/mode/html");
-editor.setAutoScrollEditorIntoView();
-editor.setOption("maxLines", 100);
+var editor1 = ace.edit("editor1");
+editor1.setTheme("ace/theme/tomorrow_night_eighties");
+editor1.session.setMode("ace/mode/html");
+editor1.setAutoScrollEditorIntoView(true);
+editor1.setOption("maxLines", 30);
 
 var editor2 = ace.edit("editor2");
 editor2.setTheme("ace/theme/tomorrow_night_blue");
 editor2.session.setMode("ace/mode/html");
-editor2.setAutoScrollEditorIntoView();
+editor2.setAutoScrollEditorIntoView(true);
 editor2.setOption("maxLines", 30);
 editor2.setOption("minLines", 2);
 
+var editor = ace.edit("editor");
+editor.setTheme("ace/theme/tomorrow");
+editor.session.setMode("ace/mode/html");
+editor.setAutoScrollEditorIntoView(true);
+editor.setOption("maxLines", 100);
 
 </script>
+
+<script src="./show_own_source.js"></script>
 
 </body>
 </html>

@@ -247,6 +247,46 @@ function demo(project) {
     });
 
     copyFileSync(ACE_HOME + "/demo/kitchen-sink/logo.png", BUILD_DIR + "/kitchen-sink/logo.png");
+    
+    fs.readdirSync(ACE_HOME + "/demo/").forEach(function(x) {        
+        if (/\s|requirejs/.test(x) || !/\.(js|html)$/.test(x))
+            return;        
+        copy({
+            source: ACE_HOME +"/demo/" + x,
+            dest:   BUILD_DIR + "/demo/" + x,
+            filter: [function(source) {
+                if (/\.(js)$/.test(x)) 
+                    return source;
+                var removeRequireJS
+                source = source.replace(/<script src="kitchen-sink\/require.js"[\s\S]+?require\(\[([^\]]+).*/, function(e, m){
+                    removeRequireJS = true;
+                    var scripts = m.split(/,\s*/);
+                    var result = [];
+                    function comment(str) {result.push("<!-- " + str + " -->")};
+                    function script(str) {result.push('<script src="../src/' + str + '.js"></script>')}
+                    scripts.forEach(function(s) {
+                        s = s.replace(/"/g, "");
+                        if (s == "ace/ace") {
+                            comment("load ace")
+                            script("ace")
+                        } else {
+                            var extName = s.match(/[^/]*$/)[0];
+                            comment("load ace " + extName + " extension");
+                            script("ext-" + extName);
+                        }
+                    });
+                    result.push("<script>")
+                    return result.join("\n");
+                });
+                if (removeRequireJS)
+                    source = source.replace(/\s*\}\);?\s*(<\/script>)/, "\n$1");
+                source = source.replace(/"\.\.\/build\//g, function(e) {
+                    console.log(e); return '"../';
+                });
+                return source;
+            }]
+        });
+    });
 }
 
 function jsFileList(path, filter) {
@@ -267,7 +307,7 @@ function workers(path) {
     }).filter(function(x) { return !!x; });
 }
 function modeList() {
-    return jsFileList("lib/ace/mode", /_highlight_rules|_test|_worker|_outdent|behaviour|completions/)
+    return jsFileList("lib/ace/mode", /_highlight_rules|_test|_worker|xml_util|_outdent|behaviour|completions/)
 }
 
 function addSuffix(options) {
@@ -280,7 +320,7 @@ function addSuffix(options) {
     }
 }
 
-function getWriteFilters(options, projectType) {
+function getWriteFilters(options, projectType, main) {
     var filters = [
         copy.filter.moduleDefines,
         removeUseStrict,
@@ -293,29 +333,30 @@ function getWriteFilters(options, projectType) {
 
     if (options.noconflict)
         filters.push(namespace(options.ns));
-
+       
+    if (options.exportModule && projectType == "main" || projectType == "ext") {
+        filters.push(exportAce(options.ns, options.exportModule,
+            options.noconflict ? options.ns : "", projectType == "ext" && main));
+    }
+    
     if (options.compress)
         filters.push(copy.filter.uglifyjs);
-
-    // copy.filter.uglifyjs.options.ascii = true; doesn't work with some uglify.js versions
+    
+    // copy.filter.uglifyjs.options.ascii_only = true; doesn't work with some uglify.js versions
     filters.push(function(text) {
-         var t1 = text.replace(/[\x80-\uffff]/g, function(c) {
+        var text = text.replace(/[\x00-\x08\x0b\x0c\x0e\x19\x80-\uffff]/g, function(c) {
             c = c.charCodeAt(0).toString(16);
+            if (c.length == 1)
+                return "\\x0" + c;
             if (c.length == 2)
                 return "\\x" + c;
             if (c.length == 3)
-                c = "0" + c;
+                return "\\u0" + c;
             return "\\u" + c;
         });
-        return text;
+        return text; 
     });
-
-    if (options.exportModule && projectType == "main") {
-        if (options.noconflict)
-            filters.push(exportAce(options.ns, options.exportModule, options.ns));
-        else
-            filters.push(exportAce(options.ns, options.exportModule));
-    }
+    
     return filters;
 }
 
@@ -390,7 +431,7 @@ var buildAce = function(options) {
                 project: cloneProject(project),
                 require: [ 'ace/ext/' + ext ]
             }],
-            filter: getWriteFilters(options, "ext"),
+            filter: getWriteFilters(options, "ext", 'ace/ext/' + ext),
             dest:   targetDir + "/ext-" + ext + ".js"
         });
     });
@@ -416,7 +457,7 @@ var buildAce = function(options) {
     project.assumeAllFilesLoaded();
     delete project.ignoredModules["ace/theme/textmate"];
     delete project.ignoredModules["ace/requirejs/text!ace/theme/textmate.css"];
-
+    
     options.themes.forEach(function(theme) {
         console.log("theme " + theme);
         copy({
@@ -428,7 +469,7 @@ var buildAce = function(options) {
             dest:   targetDir + "/theme-" + theme.replace("_theme", "") + ".js"
         });
     });
-
+    
     // generateThemesModule(options.themes);
 
     console.log('# ace key bindings ---------');
@@ -552,15 +593,6 @@ var detectTextModules = function(input, source) {
 detectTextModules.onRead = true;
 copy.filter.addDefines = detectTextModules;
 
-function generateThemesModule(themes) {
-    var themelist = [
-        'define(function(require, exports, module) {',
-        '\n\nmodule.exports.themes = ' + JSON.stringify(themes, null, '    '),
-        ';\n\n});'
-    ].join('');
-    fs.writeFileSync(__dirname + '/lib/ace/ext/themelist_utils/themes.js', themelist, 'utf8');
-}
-
 function inlineTextModules(text) {
     var deps = [];
     return text.replace(/, *['"]ace\/requirejs\/text!(.*?)['"]| require\(['"](?:ace|[.\/]+)\/requirejs\/text!(.*?)['"]\)/g, function(_, dep, call) {
@@ -576,13 +608,37 @@ function inlineTextModules(text) {
             });
 
             call = textModules[dep];
-            // if (deps.length > 1)
-            //     console.log(call.length)
             if (call)
                 return " " + call;
         }
     });
 }
+
+var CommonJsProject = copy.createCommonJsProject({roots:[]}).constructor;
+CommonJsProject.prototype.getCurrentModules = function() {
+    function isDep(child, parent) {
+        if (!modules[parent])
+            return false;
+        var deps = modules[parent].deps;
+        if (deps[child]) return true;
+        return Object.keys(deps).some(function(x) {
+            return isDep(child, x)
+        });
+    }
+    var depMap = {}, modules = this.currentModules;
+    return Object.keys(this.currentModules).map(function(moduleName) {
+        module = modules[moduleName];
+        module.id = moduleName;
+        module.isSpecial = !/define\(\'[^']*',/.test(module.source);
+        return module;
+    }).sort(function(a, b) {
+        if (a.isSpecial) return -1;
+        if (b.isSpecial) return 1;
+        if (isDep(a.id, b.id)) return -1;
+        if (isDep(b.id, a.id)) return 1;
+        return Object.keys(a.deps).length - Object.keys(b.deps).length || a.id.localeCompare(b.id)
+    });
+};
 
 // TODO: replace with project.clone once it is fixed in dryice
 function cloneProject(project) {
@@ -604,16 +660,12 @@ function cloneProject(project) {
 }
 
 function copyFileSync(srcFile, destFile) {
-    var BUF_LENGTH = 64*1024,
-        buf = new Buffer(BUF_LENGTH),
-        bytesRead = BUF_LENGTH,
-        pos = 0,
-        fdr = null,
-        fdw = null;
-
-
-    fdr = fs.openSync(srcFile, 'r');
-    fdw = fs.openSync(destFile, 'w');
+    var BUF_LENGTH = 64*1024;
+    var buf = new Buffer(BUF_LENGTH);
+    var bytesRead = BUF_LENGTH;
+    var pos = 0;
+    var fdr = fs.openSync(srcFile, 'r');
+    var fdw = fs.openSync(destFile, 'w');
 
     while (bytesRead === BUF_LENGTH) {
         bytesRead = fs.readSync(fdr, buf, 0, BUF_LENGTH, pos);
@@ -650,23 +702,33 @@ function namespace(ns) {
     };
 }
 
-function exportAce(ns, module, requireBase) {
+function exportAce(ns, module, requireBase, extModule) {
     requireBase = requireBase || "window";
     module = module || "ace/ace";
     return function(text) {
-
         var template = function() {
             (function() {
                 REQUIRE_NS.require(["MODULE"], function(a) {
-                    a && a.config.init();
+                    a && a.config.init(true);
                     if (!window.NS)
-                        window.NS = {};
+                        window.NS = a;
                     for (var key in a) if (a.hasOwnProperty(key))
                         NS[key] = a[key];
                 });
             })();
         };
-
+        
+        if (extModule) {
+            module = extModule;
+            template = function() {
+                (function() {
+                    REQUIRE_NS.require(["MODULE"], function() {});
+                })();
+            };
+        }
+        
+        text = text.replace(/function init\(packaged\) {/, "init(true);$&\n");
+        
         return (text + ";" + template
             .toString()
             .replace(/MODULE/g, module)
@@ -683,10 +745,19 @@ function updateModes() {
         var source = fs.readFileSync(filepath, "utf8");
         if (!/this.\$id\s*=\s*"/.test(source))
             source = source.replace(/\n([ \t]*)(\}\).call\(\w*Mode.prototype\))/, '\n$1    this.$id = "";\n$1$2');
-
+        
         source = source.replace(/(this.\$id\s*=\s*)"[^"]*"/,  '$1"ace/mode/' + m + '"');
         fs.writeFileSync(filepath, source, "utf8")
     })
+}
+
+function generateThemesModule(themes) {
+    var themelist = [
+        'define(function(require, exports, module) {',
+        '\n\nmodule.exports.themes = ' + JSON.stringify(themes, null, '    '),
+        ';\n\n});'
+    ].join('');
+    fs.writeFileSync(__dirname + '/lib/ace/ext/themelist_utils/themes.js', themelist, 'utf8');
 }
 
 if (!module.parent)
