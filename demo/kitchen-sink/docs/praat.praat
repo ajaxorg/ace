@@ -63,8 +63,8 @@ for i from 1 to n
   pitch = noprogress To Pitch (ac): 0, 75, 15, "no",
     ...0.03, 0.45, 0.01, 0.35, 0.14, 600
     
-  # Old-style command with assignment
-  minimum = Get minimum... 0 0 "Hertz" Parabolic
+  # do-style command with assignment
+  minimum = do("Get minimum...", 0, 0, "Hertz", "Parabolic")
 
   # New-style multi-line command call with broken strings
   table = Create Table with column names: "table", 0,
@@ -76,7 +76,8 @@ for i from 1 to n
     
   # Picture window commands
   selectObject: sound
-  Select inner viewport: 1, 6, 0.5, 1.5
+  # do-style command
+  do("Select inner viewport...", 1, 6, 0.5, 1.5)
   Black
   Draw... 0 0 0 0 "no" Curve
   Draw inner box
