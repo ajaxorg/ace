@@ -50,10 +50,6 @@
     cursor: text !important;
 }
 
-.ace_selection .ace_content {
-    cursor: default;
-}
-
 .ace_gutter {
     position: absolute;
     overflow : hidden;
