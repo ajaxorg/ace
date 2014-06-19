@@ -69,8 +69,6 @@ function main(args) {
             ace();
         } else if (type == "demo") {
             demo();
-        } else if (type == "bm") {
-            bookmarklet();
         } else if (type == "full") {
             demo(ace());
             bookmarklet();
@@ -98,7 +96,6 @@ function main(args) {
     console.log("  minimal      Places necessary Ace files out in build dir; uses configuration flags below [default]");
     console.log("  normal       Runs four Ace builds--minimal, minimal-noconflict, minimal-min, and minimal-noconflict-min");
     console.log("  demo         Runs demo build of Ace");
-    console.log("  bm           Runs bookmarklet build of Ace");
     console.log("  full         all of above");
     console.log("  highlighter  ");
     console.log("args:");
@@ -111,30 +108,6 @@ function main(args) {
     console.log("");
     if (BUILD_DIR)
         console.log(" output generated in " + type + __dirname + "/" + BUILD_DIR)
-}
-
-function bookmarklet() {
-    var targetDir = BUILD_DIR + "/textarea";
-    copy({
-        source: "build_support/editor_textarea.html",
-        dest:   targetDir + '/editor.html'
-    });
-    copy({
-        source: "build_support/style.css",
-        dest:   targetDir + '/style.css'
-    });
-
-    buildAce({
-        targetDir: targetDir + "/src",
-        ns: "__ace_shadowed__",
-        exportModule: "ace/ext/textarea",
-        compress: false,
-        noconflict: true,
-        suffix: "",
-        name: "ace-bookmarklet",
-        workers: [],
-        keybindings: []
-    });
 }
 
 function ace() {
