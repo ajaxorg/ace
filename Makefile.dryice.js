@@ -33,7 +33,6 @@ var fs = require("fs");
 var path = require("path");
 var copy = require('architect-build/copy');
 var build = require('architect-build/build');
-var async = require("asyncjs");
 
 var ACE_HOME = __dirname;
 var BUILD_DIR = ACE_HOME + "/build";
@@ -346,58 +345,57 @@ function buildSubmodule(options, extra, file, callback) {
 function buildAce(options) {
     var snippetFiles = jsFileList("lib/ace/snippets");
     var modeNames = modeList();
-    async.forEach([
-        buildCore.bind(null, options, {outputFile: "ace.js"}),
-        // modes
-        async.forEach.bind(null, modeNames, function(name, next) {
-            buildSubmodule(options, {
-                projectType: "mode",
-                require: ["ace/mode/" + name]
-            }, "mode-" + name, next);
-        }),
-        // snippets
-        async.forEach.bind(null, modeNames, function(name, next) {
-            if (snippetFiles.indexOf(name + ".js") == -1)
-                addSnippetFile(name);
-            
-            buildSubmodule(options, {
-                require: ["ace/snippets/" + name],
-            }, "snippets/" + name, next);
-        }),
-        // themes
-        async.forEach.bind(null, jsFileList("lib/ace/theme"), function(name, next) {
-            buildSubmodule(options, {
-                projectType: "theme",
-                require: ["ace/theme/" + name]
-            }, "theme-" +  name.replace("_theme", ""), next);
-        }),
-        // keybindings
-        async.forEach.bind(null, ["vim", "emacs"], function(name, next) {
-            buildSubmodule(options, {
-                projectType: "keybinding",
-                require: ["ace/keyboard/" + name ]
-            }, "keybinding-" + name, next);
-        }),
-        // extensions
-        async.forEach.bind(null, jsFileList("lib/ace/ext"), function(name, next) {
-            buildSubmodule(options, {
-                projectType: "ext",
-                require: ["ace/ext/" + name]
-            }, "ext-" + name, next);
-        }),
-        // workers
-        async.forEach.bind(null, workers("lib/ace/mode"), function(name, next) {
-            buildSubmodule(options, {
-                projectType: "worker",
-                require: ["ace/mode/" + name + "_worker"],
-                additional: [{
-                    id: "ace/worker/worker",
-                    loaderModule: true,
-                    order: -1000
-                }],
-            }, "worker-" + name, next);
-        }),
-    ], function(f, next) { f(next); });
+
+    buildCore(options, {outputFile: "ace.js"}),
+    // modes
+    modeNames.forEach(function(name) {
+        buildSubmodule(options, {
+            projectType: "mode",
+            require: ["ace/mode/" + name]
+        }, "mode-" + name);
+    });
+    // snippets
+    modeNames.forEach(function(name) {
+        if (snippetFiles.indexOf(name + ".js") == -1)
+            addSnippetFile(name);
+        
+        buildSubmodule(options, {
+            require: ["ace/snippets/" + name],
+        }, "snippets/" + name);
+    });
+    // themes
+    jsFileList("lib/ace/theme").forEach(function(name) {
+        buildSubmodule(options, {
+            projectType: "theme",
+            require: ["ace/theme/" + name]
+        }, "theme-" +  name.replace("_theme", ""));
+    });
+    // keybindings
+    ["vim", "emacs"].forEach(function(name) {
+        buildSubmodule(options, {
+            projectType: "keybinding",
+            require: ["ace/keyboard/" + name ]
+        }, "keybinding-" + name);
+    });
+    // extensions
+    jsFileList("lib/ace/ext").forEach(function(name) {
+        buildSubmodule(options, {
+            projectType: "ext",
+            require: ["ace/ext/" + name]
+        }, "ext-" + name);
+    });
+    // workers
+    workers("lib/ace/mode").forEach(function(name) {
+        buildSubmodule(options, {
+            projectType: "worker",
+            require: ["ace/mode/" + name + "_worker"],
+            additional: [{
+                id: "ace/worker/worker",
+                loaderModule: true,
+                order: -1000
+            }],
+        }, "worker-" + name);
+    });
 }
 
 function getLoadedFileList(options, callback, result) {
