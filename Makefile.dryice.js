@@ -112,14 +112,11 @@ function ace() {
 function demo() {
     console.log('# kitchen sink ---------');
 
-    var version, ref;
+    var version = "", ref = "";
     try {
         version = JSON.parse(fs.readFileSync(ACE_HOME + "/package.json")).version;
         ref = fs.readFileSync(ACE_HOME + "/.git-ref").toString();
-    } catch(e) {
-        ref = "";
-        version = "";
-    }
+    } catch(e) {}
 
     function changeComments(data) {
         return (data
@@ -131,16 +128,12 @@ function demo() {
             .replace("%commit%", ref)
         );
     }
-
-    copy(ACE_HOME + "/demo/kitchen-sink", BUILD_DIR + "/demo/kitchen-sink", {
-        shallow: true,
-        replace: [changeComments],
-        include: /\.(css|html)$/
-    });
     
     copy(ACE_HOME +"/demo/kitchen-sink/docs/", BUILD_DIR + "/demo/kitchen-sink/docs/");
     
     copy.file(ACE_HOME + "/demo/kitchen-sink/logo.png", BUILD_DIR + "/demo/kitchen-sink/logo.png");
+    copy.file(ACE_HOME + "/demo/kitchen-sink/styles.css", BUILD_DIR + "/demo/kitchen-sink/styles.css");
+    copy.file(ACE_HOME + "/kitchen-sink.html", BUILD_DIR + "/kitchen-sink.html", changeComments);
 
     buildSubmodule({}, {
         require: ["kitchen-sink/demo"],
@@ -214,9 +207,9 @@ function buildAceModule(opts, callback) {
         buildAceModule.dequeue = function() {
             if (buildAceModule.running) return;
             var call = buildAceModule.queue.shift();
+            buildAceModule.running = call;
             if (call)
                 buildAceModuleInternal.apply(null, call);
-            buildAceModule.running = call;
         };
     }
     
@@ -235,7 +228,7 @@ function buildAceModule(opts, callback) {
 
 function buildAceModuleInternal(opts, callback) {
     var cache = opts.cache == undefined ? CACHE : opts.cache;
-    var key = opts.require + "|" + opts.compress + "|" + opts.projectType;
+    var key = opts.require + "|" + opts.projectType;
     if (cache && cache.configs && cache.configs[key])
         return write(null, cache.configs[key]);
         
@@ -249,19 +242,23 @@ function buildAceModuleInternal(opts, callback) {
     };
         
     function write(err, result) {
-        if (opts.compress)
-            result.code = compress(result.code);
-        
-        if (cache && key) {
+        if (cache && key && !(cache.configs && cache.configs[key])) {
             cache.configs = cache.configs || Object.create(null);
             cache.configs[key] = result;
             result.sources = result.sources.map(function(pkg) {
                 return {deps: pkg.deps};
             });
-        }
+        } 
         
         if (!opts.outputFile)
             return callback(err, result);
+        
+        var code = result.code;
+        if (opts.compress) {
+            if (!result.codeMin)
+                result.codeMin = compress(result.code);
+            code = result.codeMin;
+        }
             
         var targetDir =  BUILD_DIR + "/src";
         if (opts.compress)
@@ -287,7 +284,6 @@ function buildAceModuleInternal(opts, callback) {
                 opts.noconflict ? ns : "", projectType == "ext"));
         }
 
-        var code = result.code;
         filters.forEach(function(f) { code = f(code); });
         
         build.writeToFile({code: code}, {
@@ -331,7 +327,7 @@ function buildSubmodule(options, extra, file, callback) {
     options = extend(extra, options);
     getLoadedFileList(options, function(coreFiles) {
         options.outputFile = file + ".js";
-        options.ignore = coreFiles;
+        options.ignore = options.ignore || coreFiles;
         options.quiet = true;
         buildAceModule(options, callback);
     });
@@ -384,9 +380,10 @@ function buildAce(options) {
         buildSubmodule(options, {
             projectType: "worker",
             require: ["ace/mode/" + name + "_worker"],
+            ignore: [],
             additional: [{
                 id: "ace/worker/worker",
-                loaderModule: true,
+                transforms: [],
                 order: -1000
             }],
         }, "worker-" + name);
@@ -467,9 +464,7 @@ function namespace(ns) {
     return function(text) {
         text = text
             .toString()
-            .replace('var ACE_NAMESPACE = "";', 'var ACE_NAMESPACE = "' + ns +'";')
-            // .replace(/(\.define)|([,;\n]|^\s*?)define\(/g, function(_, a, b) {
-            //     return a || b + ns + ".define(";
+            .replace(/ACE_NAMESPACE\s*=\s*""/, 'ACE_NAMESPACE = "' + ns +'"')
             .replace(/(\.define)|\bdefine\(/g, function(_, a) {
                 return a || ns + ".define(";
             });
@@ -551,20 +546,10 @@ function addSnippetFile(modeName) {
 }
 
 function compress(text) {
-    return asciify(require("dryice").copy.filter.uglifyjs(text));
-    // copy.filter.uglifyjs.options.ascii_only = true; doesn't work with some uglify.js versions
-    function asciify(text) {
-        return text.replace(/[\x00-\x08\x0b\x0c\x0e\x19\x80-\uffff]/g, function(c) {
-            c = c.charCodeAt(0).toString(16);
-            if (c.length == 1)
-                return "\\x0" + c;
-            if (c.length == 2)
-                return "\\x" + c;
-            if (c.length == 3)
-                return "\\u0" + c;
-            return "\\u" + c;
-        });
-    }
+    var ujs = require("dryice").copy.filter.uglifyjs;
+    ujs.options.mangle_toplevel = {except: ["ACE_NAMESPACE", "requirejs"]};
+    ujs.options.beautify = {ascii_only: true, inline_script: true}
+    return ujs(text);
 }
 
 function extend(base, extra) {
