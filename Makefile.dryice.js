@@ -132,25 +132,20 @@ function demo() {
         );
     }
 
-    function fixDocPaths(data) {
-        return data.replace(/"(demo|build)\//g, "\"");
-    }
-
-    copy(ACE_HOME + "/demo/kitchen-sink", BUILD_DIR + "/kitchen-sink", {
+    copy(ACE_HOME + "/demo/kitchen-sink", BUILD_DIR + "/demo/kitchen-sink", {
         shallow: true,
-        replace: [changeComments, fixDocPaths],
+        replace: [changeComments],
         include: /\.(css|html)$/
     });
     
-    copy(ACE_HOME +"/demo/kitchen-sink/docs/", BUILD_DIR + "/kitchen-sink/docs/");
+    copy(ACE_HOME +"/demo/kitchen-sink/docs/", BUILD_DIR + "/demo/kitchen-sink/docs/");
     
-    copy.file(ACE_HOME + "/demo/kitchen-sink/logo.png", BUILD_DIR + "/kitchen-sink/logo.png");
+    copy.file(ACE_HOME + "/demo/kitchen-sink/logo.png", BUILD_DIR + "/demo/kitchen-sink/logo.png");
 
     buildSubmodule({}, {
         require: ["kitchen-sink/demo"],
-        filters: [fixDocPaths],
         projectType: "demo"
-    }, BUILD_DIR + "/kitchen-sink/demo");
+    }, BUILD_DIR + "/demo/kitchen-sink/demo");
 
     copy(ACE_HOME + "/demo/", BUILD_DIR + "/demo/", {
         shallow: true,
