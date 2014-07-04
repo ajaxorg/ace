@@ -1,0 +1,8 @@
+# A sample .gitiignore file.
+
+.buildlog
+.DS_Store
+.svn
+
+# Also ignore user settings...
+/.settings
