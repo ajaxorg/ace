@@ -1,4 +1,4 @@
-# A sample .gitiignore file.
+# A sample .gitignore file.
 
 .buildlog
 .DS_Store
