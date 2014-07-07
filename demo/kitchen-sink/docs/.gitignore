@@ -4,5 +4,8 @@
 .DS_Store
 .svn
 
+# Negated patterns:
+!foo.bar
+
 # Also ignore user settings...
 /.settings
