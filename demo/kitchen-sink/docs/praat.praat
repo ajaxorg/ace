@@ -59,6 +59,22 @@ for i from 1 to n
   selectObject(sound[i])
   selectObject: sound
   
+  # Pause commands
+  beginPause("Viewing " + sound$)
+  if i > 1
+    button = endPause("Stop", "Previous",
+      ...if i = total_sounds then "Finish" else "Next" fi,
+      ...3, 1)
+  else
+    button = endPause("Stop",
+      ...if i = total_sounds then "Finish" else "Next" fi,
+      ...2, 1)  
+  endif
+  editor_name$ = if total_textgrids then "TextGrid " else "Sound " fi + name$
+  nocheck editor 'editor_name$'
+    nocheck Close
+  nocheck endeditor
+  
   # New-style standalone command call
   Rename: "SomeName"
 
