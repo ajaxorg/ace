@@ -1,3 +1,13 @@
+2014.07.01 Version 1.1.4
+
+* New Features
+  - Highlight matching tags (Adam Jimenez)
+  - Improved jump to matching command (Adam Jimenez)
+
+* new language modes
+ - AppleScript (Yaogang Lian)
+ - Vala
+
 2014.03.08 Version 1.1.3
 
 * New Features
