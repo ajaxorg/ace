@@ -1,3 +1,11 @@
+2014.07.09 Version 1.1.5
+
+* Bugfixes
+  - fix regression in autocomplete popup
+
+* new language modes
+ - gitignore (Devon Carew)
+ 
 2014.07.01 Version 1.1.4
 
 * New Features
