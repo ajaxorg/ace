@@ -1,0 +1,27 @@
+package highlight.rules.sample
+
+declare Payment
+	@author ( Bob )
+	paymentID : String
+end
+
+declare PaymentContainer
+	payments : java.util.HashSet
+end
+
+// First rule
+rule 'Add Payment paymentID to PaymentContainer'
+dialect 'mvel'
+salience -50
+ruleflow-group "validate_payment"
+
+when	
+	$pc : PaymentContainer( payments != null )
+	$payment : Payment( $pid : paymentID != null )
+then
+	modify ($pc){
+	payments.add($pid)
+	};
+	retract( $payment );
+	System.out.println("Updated PaymentContainer and retracted Payment");
+end
