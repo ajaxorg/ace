@@ -415,28 +415,11 @@ bindDropdown("folding", function(value) {
 });
 
 bindDropdown("soft_wrap", function(value) {
-    var session = env.editor.session;
-    var renderer = env.editor.renderer;
-    switch (value) {
-        case "off":
-            session.setUseWrapMode(false);
-            renderer.setPrintMarginColumn(80);
-            break;
-        case "free":
-            session.setUseWrapMode(true);
-            session.setWrapLimitRange(null, null);
-            renderer.setPrintMarginColumn(80);
-            break;
-        default:
-            session.setUseWrapMode(true);
-            var col = parseInt(value, 10);
-            session.setWrapLimitRange(col, col);
-            renderer.setPrintMarginColumn(col);
-    }
+    env.editor.setOption("wrap", value);
 });
 
 bindCheckbox("select_style", function(checked) {
-    env.editor.setSelectionStyle(checked ? "line" : "text");
+    env.editor.setOption("selectionStyle", checked ? "line" : "text");
 });
 
 bindCheckbox("highlight_active", function(checked) {
