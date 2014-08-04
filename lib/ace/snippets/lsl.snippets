@@ -129,6 +129,16 @@ snippet email
 	{
 		$0
 	}
+snippet experience_permissions
+	experience_permissions(${1:key agent_id})
+	{
+		$0
+	}
+snippet experience_permissions_denied
+	experience_permissions_denied(${1:key agent_id}, ${2:integer reason})
+	{
+		$0
+	}
 snippet for
 	for (${1:start}; ${3:condition}; ${3:step})
 	{
@@ -186,6 +196,8 @@ snippet llAddToLandPassList
 	llAddToLandPassList(${1:key agent}, ${2:float hours});
 snippet llAdjustSoundVolume
 	llAdjustSoundVolume(${1:float volume});
+snippet llAgentInExperience
+	llAgentInExperience(${1:key agent})
 snippet llAllowInventoryDrop
 	llAllowInventoryDrop(${1:integer add});
 snippet llAngleBetween
@@ -238,12 +250,18 @@ snippet llCos
 	llCos(${1:float theta})
 snippet llCreateCharacter
 	llCreateCharacter(${1:list options});
+snippet llCreateKeyValue
+	llCreateKeyValue(${1:string k})
 snippet llCreateLink
 	llCreateLink(${1:key target}, ${2:integer parent});
 snippet llCSV2List
 	llCSV2List(${1:string src})
+snippet llDataSizeKeyValue
+	llDataSizeKeyValue()
 snippet llDeleteCharacter
 	llDeleteCharacter();
+snippet llDeleteKeyValue
+	llDeleteKeyValue(${1:string k})
 snippet llDeleteSubList
 	llDeleteSubList(${1:list src}, ${2:integer start}, ${3:integer end})
 snippet llDeleteSubString
@@ -358,6 +376,10 @@ snippet llGetEnergy
 	llGetEnergy()
 snippet llGetEnv
 	llGetEnv(${1:string name})
+snippet llGetExperienceDetails
+	llGetExperienceDetails(${1:key experience_id})
+snippet llGetExperienceErrorMessage
+	llGetExperienceErrorMessage(${1:integer error})
 snippet llGetForce
 	llGetForce()
 snippet llGetFreeMemory
@@ -570,6 +592,10 @@ snippet llJsonValueType
 	llJsonValueType(${1:string json}, ${2:list specifiers})
 snippet llKey2Name
 	llKey2Name(${1:key id})
+snippet llKeyCountKeyValue
+	llKeyCountKeyValue()
+snippet llKeysKeyValue
+	llKeysKeyValue(${1:integer first}, ${2:integer count})
 snippet llLinkParticleSystem
 	llLinkParticleSystem(${1:integer link}, ${2:list rules});
 snippet llLinkSitTarget
@@ -680,6 +706,8 @@ snippet llPursue
 	llPursue(${1:key target}, ${2:list options});
 snippet llPushObject
 	llPushObject(${1:key target}, ${2:vector impulse}, ${3:vector ang_impulse}, ${4:integer local});
+snippet llReadKeyValue
+	llReadKeyValue(${1:string k})
 snippet llRegionSay
 	llRegionSay(${1:integer channel}, ${2:string msg});
 snippet llRegionSayTo
@@ -704,6 +732,8 @@ snippet llRequestAgentData
 	llRequestAgentData(${1:key id}, ${2:integer data})
 snippet llRequestDisplayName
 	llRequestDisplayName(${1:key id})
+snippet llRequestExperiencePermissions
+	llRequestExperiencePermissions(${1:key agent}, ${2:string name})
 snippet llRequestInventoryData
 	llRequestInventoryData(${1:string name})
 snippet llRequestPermissions
@@ -952,6 +982,8 @@ snippet llUnSit
 	llUnSit(${1:key id});
 snippet llUpdateCharacter
 	llUpdateCharacter(${1:list options})
+snippet llUpdateKeyValue
+	llUpdateKeyValue(${1:string k}, ${2:string v}, ${3:integer checked}, ${4:string ov})
 snippet llVecDist
 	llVecDist(${1:vector vec_a}, ${2:vector vec_b})
 snippet llVecMag
