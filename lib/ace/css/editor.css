@@ -155,8 +155,8 @@
 }
 
 .ace_text-input.ace_composition {
-    background: #f8f8f8;
-    color: #111;
+    background: inherit;
+    color: inherit;
     z-index: 1000;
     opacity: 1;
     text-indent: 0;
