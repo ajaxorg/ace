@@ -18,9 +18,7 @@
 ],[
    "start",
   ["storage.type","\\begin"],
-  ["lparen","{"]
-],[
-    "block",
+  ["lparen","{"],
   ["variable.parameter","document"],
   ["rparen","}"]
 ],[
@@ -88,48 +86,40 @@
    "start",
   ["text","  "],
   ["storage.type","\\begin"],
-  ["lparen","{"]
-],[
-    "block",
+  ["lparen","{"],
   ["variable.parameter","align"],
   ["rparen","}"]
 ],[
    "start",
   ["text","    E &= mc^2                              "],
-  ["constant.character.escape","\\\\"]
-],[
-   "equation",
-  ["string","    m &= "],
-  ["constant.character.escape","\\frac"],
+  ["constant.character.escape","\\\\"],
+  ["text","    m &= "],
+  ["storage.type","\\frac"],
   ["lparen","{"],
-  ["string","m_0"],
+  ["text","m_0"],
   ["rparen","}"],
   ["lparen","{"],
-  ["constant.character.escape","\\sqrt"],
+  ["storage.type","\\sqrt"],
   ["lparen","{"],
-  ["string","1-"],
-  ["constant.character.escape","\\frac"],
+  ["text","1-"],
+  ["storage.type","\\frac"],
   ["lparen","{"],
-  ["string","v^2"],
+  ["text","v^2"],
   ["rparen","}"],
   ["lparen","{"],
-  ["string","c^2"],
+  ["text","c^2"],
   ["rparen","}}}"]
 ],[
    "start",
   ["text","  "],
   ["storage.type","\\end"],
-  ["lparen","{"]
-],[
-    "block",
+  ["lparen","{"],
   ["variable.parameter","align"],
   ["rparen","}"]
 ],[
    "start",
   ["storage.type","\\end"],
-  ["lparen","{"]
-],[
-    "block",
+  ["lparen","{"],
   ["variable.parameter","document"],
   ["rparen","}"]
 ]]
