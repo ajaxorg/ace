@@ -359,7 +359,7 @@ function buildAce(options) {
         buildSubmodule(options, {
             projectType: "theme",
             require: ["ace/theme/" + name]
-        }, "theme-" +  name.replace("_theme", ""));
+        }, "theme-" +  name);
     });
     // keybindings
     ["vim", "emacs"].forEach(function(name) {
