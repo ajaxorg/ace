@@ -1,3 +1,17 @@
+2014.08.17 Version 1.1.6
+
+* Bugfixes
+  - fix regression in double tap to highlight 
+  - Improved Latex Mode (Daniel Felder)
+  
+* API Changes
+  - editor.destroy destroys editor.session too (call editor.setSession(null) to prevent that)
+
+* new language modes
+ - Praat (José Joaquín Atria)
+ - Eiffel (Victorien Elvinger)
+ - G-code (Adam Joseph Cook)
+ 
 2014.07.09 Version 1.1.5
 
 * Bugfixes
