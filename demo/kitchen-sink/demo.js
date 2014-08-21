@@ -65,6 +65,7 @@ var whitespace = require("ace/ext/whitespace");
 
 var doclist = require("./doclist");
 var modelist = require("ace/ext/modelist");
+var themelist = require("ace/ext/themelist");
 var layout = require("./layout");
 var TokenTooltip = require("./token_tooltip").TokenTooltip;
 var util = require("./util");
@@ -183,21 +184,21 @@ env.editor.commands.addCommands([{
     }
 }, {
     name: "increaseFontSize",
-    bindKey: "Ctrl-+",
+    bindKey: "Ctrl-=|Ctrl-+",
     exec: function(editor) {
         var size = parseInt(editor.getFontSize(), 10) || 12;
         editor.setFontSize(size + 1);
     }
 }, {
     name: "decreaseFontSize",
-    bindKey: "Ctrl+-",
+    bindKey: "Ctrl+-|Ctrl-_",
     exec: function(editor) {
         var size = parseInt(editor.getFontSize(), 10) || 12;
         editor.setFontSize(Math.max(size - 1 || 1));
     }
 }, {
     name: "resetFontSize",
-    bindKey: "Ctrl+0",
+    bindKey: "Ctrl+0|Ctrl-Numpad0",
     exec: function(editor) {
         editor.setFontSize(12);
     }
@@ -250,7 +251,7 @@ commands.addCommand({
     }
 });
 
-var keybindings = {    
+var keybindings = {
     ace: null, // Null = use "default" keymapping
     vim: require("ace/keyboard/vim").handler,
     emacs: "ace/keyboard/emacs",
@@ -316,7 +317,7 @@ doclist.history.index = 0;
 doclist.cycleOpen = function(editor, dir) {
     var h = this.history;
     h.index += dir;
-    if (h.index >= h.length) 
+    if (h.index >= h.length)
         h.index = 0;
     else if (h.index <= 0)
         h.index = h.length - 1;
@@ -370,6 +371,12 @@ function updateUIEditorOptions() {
     saveOption(behavioursEl, editor.getBehavioursEnabled());
 }
 
+themelist.themes.forEach(function(x){ x.value = x.theme });
+fillDropdown(themeEl, {
+    Bright: themelist.themes.filter(function(x){return !x.isDark}),
+    Dark: themelist.themes.filter(function(x){return x.isDark}),
+});
+
 event.addListener(themeEl, "mouseover", function(e){
     themeEl.desiredValue = e.target.value;
     if (!themeEl.$timer)
@@ -383,7 +390,7 @@ event.addListener(themeEl, "mouseout", function(e){
 });
 
 themeEl.updateTheme = function(){
-    env.split.setTheme(themeEl.desiredValue || themeEl.selectedValue);
+    env.split.setTheme((themeEl.desiredValue || themeEl.selectedValue));
     themeEl.$timer = null;
 };
 
@@ -408,28 +415,11 @@ bindDropdown("folding", function(value) {
 });
 
 bindDropdown("soft_wrap", function(value) {
-    var session = env.editor.session;
-    var renderer = env.editor.renderer;
-    switch (value) {
-        case "off":
-            session.setUseWrapMode(false);
-            renderer.setPrintMarginColumn(80);
-            break;
-        case "free":
-            session.setUseWrapMode(true);
-            session.setWrapLimitRange(null, null);
-            renderer.setPrintMarginColumn(80);
-            break;
-        default:
-            session.setUseWrapMode(true);
-            var col = parseInt(value, 10);
-            session.setWrapLimitRange(col, col);
-            renderer.setPrintMarginColumn(col);
-    }
+    env.editor.setOption("wrap", value);
 });
 
 bindCheckbox("select_style", function(checked) {
-    env.editor.setSelectionStyle(checked ? "line" : "text");
+    env.editor.setOption("selectionStyle", checked ? "line" : "text");
 });
 
 bindCheckbox("highlight_active", function(checked) {
@@ -492,7 +482,7 @@ bindDropdown("split", function(value) {
         sp.setSplits(1);
     } else {
         var newEditor = (sp.getSplits() == 1);
-        sp.setOrientation(value == "below" ? sp.BELOW : sp.BESIDE);        
+        sp.setOrientation(value == "below" ? sp.BELOW : sp.BESIDE);
         sp.setSplits(2);
 
         if (newEditor) {
@@ -541,7 +531,7 @@ new StatusBar(env.editor, cmdLine.container);
 
 
 var Emmet = require("ace/ext/emmet");
-net.loadScript("http://nightwing.github.io/emmet-core/emmet.js", function() {
+net.loadScript("https://nightwing.github.io/emmet-core/emmet.js", function() {
     Emmet.setCore(window.emmet);
     env.editor.setOption("enableEmmet", true);
 });
@@ -585,7 +575,11 @@ env.editSnippets = function() {
 require("ace/ext/language_tools");
 env.editor.setOptions({
     enableBasicAutocompletion: true,
+    enableLiveAutocompletion: false,
     enableSnippets: true
 });
+
+var beautify = require("ace/ext/beautify");
+env.editor.commands.addCommands(beautify.commands);
 
 });

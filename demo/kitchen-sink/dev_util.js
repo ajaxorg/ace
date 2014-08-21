@@ -40,14 +40,18 @@ function warn() {
     }
 }
 function def(o, key, get) {
-    Object.defineProperty(o, key, {
-        configurable: true, 
-        get: get,
-        set: function(val) {
-            delete o[key];
-            o[key] = val;
-        }
-    });
+    try {
+        Object.defineProperty(o, key, {
+            configurable: true, 
+            get: get,
+            set: function(val) {
+                delete o[key];
+                o[key] = val;
+            }
+        });
+    } catch(e) {
+        console.error(e);
+    }
 }
 def(window, "ace", function(){ warn(); return window.env.editor });
 def(window, "editor", function(){ warn(); return window.env.editor });

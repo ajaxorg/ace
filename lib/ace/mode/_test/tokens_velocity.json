@@ -26,15 +26,15 @@
 ],[
    "start",
   ["text","  "],
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name","li"],
-  ["meta.tag.punctuation.end",">"],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","li"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
   ["variable","${"],
   ["identifier","item"],
   ["variable","}"],
-  ["meta.tag.punctuation.begin","</"],
-  ["meta.tag.name","li"],
-  ["meta.tag.punctuation.end",">"]
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","li"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
   ["keyword","#end"]
@@ -55,11 +55,14 @@
   ["text"," "],
   ["lparen","["],
   ["constant.numeric","1"],
-  ["text",", "],
+  ["text.xml",","],
+  ["text"," "],
   ["constant.numeric","2"],
-  ["text",", "],
+  ["text.xml",","],
+  ["text"," "],
   ["constant.numeric","3"],
-  ["text",", "],
+  ["text.xml",","],
+  ["text"," "],
   ["constant.numeric","4"],
   ["rparen","]"],
   ["text"," "],
@@ -68,9 +71,9 @@
    "start"
 ],[
    "start",
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name","ul"],
-  ["meta.tag.punctuation.end",">"]
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","ul"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
   ["text","  "],
@@ -97,11 +100,12 @@
   ["lparen","("],
   ["text"," "],
   ["support.function","$_MathTool"],
-  ["text","."],
+  ["text.xml","."],
   ["identifier","mod"],
   ["lparen","("],
   ["variable","$item"],
-  ["text",", "],
+  ["text.xml",","],
+  ["text"," "],
   ["constant.numeric","2"],
   ["rparen",")"],
   ["text"," "],
@@ -128,16 +132,16 @@
   ["keyword","#end"]
 ],[
    "start",
-  ["meta.tag.punctuation.begin","</"],
-  ["meta.tag.name","ul"],
-  ["meta.tag.punctuation.end",">"]
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","ul"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start"
 ],[
    "js-start",
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name.script","script"],
-  ["meta.tag.punctuation.end",">"]
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.script.tag-name.xml","script"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "js-comment_regex_allowed",
   ["text","  "],
@@ -216,16 +220,16 @@
   ["paren.rparen","}"]
 ],[
    "start",
-  ["meta.tag.punctuation.begin","</"],
-  ["meta.tag.name.script","script"],
-  ["meta.tag.punctuation.end",">"]
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.script.tag-name.xml","script"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start"
 ],[
    "css-start",
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name.style","style"],
-  ["meta.tag.punctuation.end",">"]
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.style.tag-name.xml","style"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    ["css-comment","css-start"],
   ["text","  "],
@@ -275,7 +279,7 @@
   ["paren.rparen","}"]
 ],[
    "start",
-  ["meta.tag.punctuation.begin","</"],
-  ["meta.tag.name.style","style"],
-  ["meta.tag.punctuation.end",">"]
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.style.tag-name.xml","style"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ]]

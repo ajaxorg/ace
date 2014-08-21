@@ -1,6 +1,1 @@
-WARNING!
-============================
-
-Files in this folder are generated automatically from the xquery.js project (https://github.com/wcandillon/xquery.js).
-Instructions on how to generate the XQuery parser are available at https://github.com/wcandillon/xquery.js
-
+This files are build from [xqlint](https://github.com/wcandillon/xqlint) (using the `grunt ace_build`)

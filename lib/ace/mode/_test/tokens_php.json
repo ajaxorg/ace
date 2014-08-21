@@ -129,6 +129,43 @@
 ],[
    "php-start"
 ],[
-   "start",
+   ["php-start","js-start"],
+  ["support.php_tag","?>"],
+  ["text.xml"," "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.script.tag-name.xml","script"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["text","  "],
+  ["support.php_tag","<?php"]
+],[
+   ["php-qstring","php-start","js-start"],
+  ["support.function","echo"],
+  ["text"," "],
+  ["string","'"]
+],[
+   ["php-start","js-start"],
+  ["string","'"],
+  ["text",";"]
+],[
+   "js-start",
   ["support.php_tag","?>"]
+],[
+   "js-comment_regex_allowed",
+  ["comment","/*this is js "],
+  ["support.php_tag","<?php"],
+  ["text"," "],
+  ["support.function","echo"],
+  ["text"," "],
+  ["string","':)'"],
+  ["text","; "],
+  ["support.php_tag","?>"]
+],[
+   "start",
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.script.tag-name.xml","script"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["text.xml"," not "],
+  ["constant.language.escape.reference.xml","&js;"]
+],[
+   "start"
 ]]

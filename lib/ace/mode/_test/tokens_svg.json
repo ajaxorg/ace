@@ -1,65 +1,65 @@
 [[
-   "meta.tag.punctuation.begin0",
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name","svg"]
+   "meta.tag.punctuation.tag-open.xml1",
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","svg"]
 ],[
-   "meta.tag.punctuation.begin0",
-  ["text","  "],
-  ["entity.other.attribute-name","width"],
-  ["keyword.operator.separator","="],
-  ["string","\"800\""],
-  ["text"," "],
-  ["entity.other.attribute-name","height"],
-  ["keyword.operator.separator","="],
-  ["string","\"600\""]
+   "meta.tag.punctuation.tag-open.xml1",
+  ["text.tag-whitespace.xml","  "],
+  ["entity.other.attribute-name.xml","width"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"800\""],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","height"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"600\""]
 ],[
-   "meta.tag.punctuation.begin0",
-  ["text","  "],
-  ["entity.other.attribute-name","xmlns"],
-  ["keyword.operator.separator","="],
-  ["string","\"http://www.w3.org/2000/svg\""]
+   "meta.tag.punctuation.tag-open.xml1",
+  ["text.tag-whitespace.xml","  "],
+  ["entity.other.attribute-name.xml","xmlns"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"http://www.w3.org/2000/svg\""]
 ],[
    "start",
-  ["text","  "],
-  ["entity.other.attribute-name","onload"],
-  ["keyword.operator.separator","="],
-  ["string","\"StartAnimation(evt)\""],
-  ["meta.tag.punctuation.end",">"]
+  ["text.tag-whitespace.xml","  "],
+  ["entity.other.attribute-name.xml","onload"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"StartAnimation(evt)\""],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start"
 ],[
    "start",
-  ["text","  "],
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name","title"],
-  ["meta.tag.punctuation.end",">"],
-  ["text","Test Tube Progress Bar"],
-  ["meta.tag.punctuation.begin","</"],
-  ["meta.tag.name","title"],
-  ["meta.tag.punctuation.end",">"]
+  ["text.xml","  "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","title"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["text.xml","Test Tube Progress Bar"],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","title"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
-  ["text","  "],
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name","desc"],
-  ["meta.tag.punctuation.end",">"],
-  ["text","Created for the Web Directions SVG competition"],
-  ["meta.tag.punctuation.begin","</"],
-  ["meta.tag.name","desc"],
-  ["meta.tag.punctuation.end",">"]
+  ["text.xml","  "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","desc"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["text.xml","Created for the Web Directions SVG competition"],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","desc"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start"
 ],[
    "js-no_regex",
-  ["text","  "],
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name.script","script"],
-  ["text"," "],
-  ["entity.other.attribute-name","type"],
-  ["keyword.operator.separator","="],
-  ["string","\"text/ecmascript\""],
-  ["meta.tag.punctuation.end",">"],
-  ["string.begin","<![CDATA["]
+  ["text.xml","  "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.script.tag-name.xml","script"],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","type"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"text/ecmascript\""],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["string.cdata.xml","<![CDATA["]
 ],[
    "js-start",
   ["text","    "],
@@ -488,197 +488,197 @@
 ],[
    "start",
   ["text","  "],
-  ["string.end","]]>"],
-  ["meta.tag.punctuation.begin","</"],
-  ["meta.tag.name.script","script"],
-  ["meta.tag.punctuation.end",">"]
+  ["string.cdata.xml","]]>"],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.script.tag-name.xml","script"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start"
 ],[
-   "meta.tag.punctuation.begin0",
-  ["text","  "],
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name","rect"]
+   "meta.tag.punctuation.tag-open.xml1",
+  ["text.xml","  "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","rect"]
 ],[
-   "meta.tag.punctuation.begin0",
-  ["text","    "],
-  ["entity.other.attribute-name","fill"],
-  ["keyword.operator.separator","="],
-  ["string","\"#2e3436\""]
+   "meta.tag.punctuation.tag-open.xml1",
+  ["text.tag-whitespace.xml","    "],
+  ["entity.other.attribute-name.xml","fill"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"#2e3436\""]
 ],[
-   "meta.tag.punctuation.begin0",
-  ["text","    "],
-  ["entity.other.attribute-name","fill-rule"],
-  ["keyword.operator.separator","="],
-  ["string","\"nonzero\""]
+   "meta.tag.punctuation.tag-open.xml1",
+  ["text.tag-whitespace.xml","    "],
+  ["entity.other.attribute-name.xml","fill-rule"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"nonzero\""]
 ],[
-   "meta.tag.punctuation.begin0",
-  ["text","    "],
-  ["entity.other.attribute-name","stroke-width"],
-  ["keyword.operator.separator","="],
-  ["string","\"3\""]
+   "meta.tag.punctuation.tag-open.xml1",
+  ["text.tag-whitespace.xml","    "],
+  ["entity.other.attribute-name.xml","stroke-width"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"3\""]
 ],[
-   "meta.tag.punctuation.begin0",
-  ["text","    "],
-  ["entity.other.attribute-name","y"],
-  ["keyword.operator.separator","="],
-  ["string","\"0\""]
+   "meta.tag.punctuation.tag-open.xml1",
+  ["text.tag-whitespace.xml","    "],
+  ["entity.other.attribute-name.xml","y"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"0\""]
 ],[
-   "meta.tag.punctuation.begin0",
-  ["text","    "],
-  ["entity.other.attribute-name","x"],
-  ["keyword.operator.separator","="],
-  ["string","\"0\""]
+   "meta.tag.punctuation.tag-open.xml1",
+  ["text.tag-whitespace.xml","    "],
+  ["entity.other.attribute-name.xml","x"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"0\""]
 ],[
-   "meta.tag.punctuation.begin0",
-  ["text","    "],
-  ["entity.other.attribute-name","height"],
-  ["keyword.operator.separator","="],
-  ["string","\"600\""]
+   "meta.tag.punctuation.tag-open.xml1",
+  ["text.tag-whitespace.xml","    "],
+  ["entity.other.attribute-name.xml","height"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"600\""]
 ],[
-   "meta.tag.punctuation.begin0",
-  ["text","    "],
-  ["entity.other.attribute-name","width"],
-  ["keyword.operator.separator","="],
-  ["string","\"800\""]
+   "meta.tag.punctuation.tag-open.xml1",
+  ["text.tag-whitespace.xml","    "],
+  ["entity.other.attribute-name.xml","width"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"800\""]
 ],[
    "start",
-  ["text","    "],
-  ["entity.other.attribute-name","id"],
-  ["keyword.operator.separator","="],
-  ["string","\"rect3590\""],
-  ["meta.tag.punctuation.end","/>"]
+  ["text.tag-whitespace.xml","    "],
+  ["entity.other.attribute-name.xml","id"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"rect3590\""],
+  ["meta.tag.punctuation.tag-close.xml","/>"]
 ],[
    "start"
 ],[
-   "meta.tag.punctuation.begin0",
-  ["text","    "],
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name","text"]
+   "meta.tag.punctuation.tag-open.xml1",
+  ["text.xml","    "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","text"]
 ],[
-   "meta.tag.punctuation.begin0",
-  ["text","       "],
-  ["entity.other.attribute-name","style"],
-  ["keyword.operator.separator","="],
-  ["string","\"font-size:144px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans Bold\""]
+   "meta.tag.punctuation.tag-open.xml1",
+  ["text.tag-whitespace.xml","       "],
+  ["entity.other.attribute-name.xml","style"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"font-size:144px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans Bold\""]
 ],[
-   "meta.tag.punctuation.begin0",
-  ["text","       "],
-  ["entity.other.attribute-name","x"],
-  ["keyword.operator.separator","="],
-  ["string","\"50\""]
+   "meta.tag.punctuation.tag-open.xml1",
+  ["text.tag-whitespace.xml","       "],
+  ["entity.other.attribute-name.xml","x"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"50\""]
 ],[
-   "meta.tag.punctuation.begin0",
-  ["text","       "],
-  ["entity.other.attribute-name","y"],
-  ["keyword.operator.separator","="],
-  ["string","\"350\""]
+   "meta.tag.punctuation.tag-open.xml1",
+  ["text.tag-whitespace.xml","       "],
+  ["entity.other.attribute-name.xml","y"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"350\""]
 ],[
-   "meta.tag.punctuation.begin0",
-  ["text","       "],
-  ["entity.other.attribute-name","id"],
-  ["keyword.operator.separator","="],
-  ["string","\"hickory\""]
-],[
-   "start",
-  ["text","       "],
-  ["entity.other.attribute-name","display"],
-  ["keyword.operator.separator","="],
-  ["string","\"none\""],
-  ["meta.tag.punctuation.end",">"]
+   "meta.tag.punctuation.tag-open.xml1",
+  ["text.tag-whitespace.xml","       "],
+  ["entity.other.attribute-name.xml","id"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"hickory\""]
 ],[
    "start",
-  ["text","        Hickory,"],
-  ["meta.tag.punctuation.begin","</"],
-  ["meta.tag.name","text"],
-  ["meta.tag.punctuation.end",">"]
-],[
-   "meta.tag.punctuation.begin0",
-  ["text","    "],
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name","text"]
-],[
-   "meta.tag.punctuation.begin0",
-  ["text","       "],
-  ["entity.other.attribute-name","style"],
-  ["keyword.operator.separator","="],
-  ["string","\"font-size:144px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans Bold\""]
-],[
-   "meta.tag.punctuation.begin0",
-  ["text","       "],
-  ["entity.other.attribute-name","x"],
-  ["keyword.operator.separator","="],
-  ["string","\"50\""]
-],[
-   "meta.tag.punctuation.begin0",
-  ["text","       "],
-  ["entity.other.attribute-name","y"],
-  ["keyword.operator.separator","="],
-  ["string","\"350\""]
-],[
-   "meta.tag.punctuation.begin0",
-  ["text","       "],
-  ["entity.other.attribute-name","id"],
-  ["keyword.operator.separator","="],
-  ["string","\"dickory\""]
+  ["text.tag-whitespace.xml","       "],
+  ["entity.other.attribute-name.xml","display"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"none\""],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
-  ["text","       "],
-  ["entity.other.attribute-name","display"],
-  ["keyword.operator.separator","="],
-  ["string","\"none\""],
-  ["meta.tag.punctuation.end",">"]
+  ["text.xml","        Hickory,"],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","text"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "meta.tag.punctuation.tag-open.xml1",
+  ["text.xml","    "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","text"]
+],[
+   "meta.tag.punctuation.tag-open.xml1",
+  ["text.tag-whitespace.xml","       "],
+  ["entity.other.attribute-name.xml","style"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"font-size:144px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans Bold\""]
+],[
+   "meta.tag.punctuation.tag-open.xml1",
+  ["text.tag-whitespace.xml","       "],
+  ["entity.other.attribute-name.xml","x"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"50\""]
+],[
+   "meta.tag.punctuation.tag-open.xml1",
+  ["text.tag-whitespace.xml","       "],
+  ["entity.other.attribute-name.xml","y"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"350\""]
+],[
+   "meta.tag.punctuation.tag-open.xml1",
+  ["text.tag-whitespace.xml","       "],
+  ["entity.other.attribute-name.xml","id"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"dickory\""]
 ],[
    "start",
-  ["text","        dickory,"],
-  ["meta.tag.punctuation.begin","</"],
-  ["meta.tag.name","text"],
-  ["meta.tag.punctuation.end",">"]
-],[
-   "meta.tag.punctuation.begin0",
-  ["text","    "],
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name","text"]
-],[
-   "meta.tag.punctuation.begin0",
-  ["text","       "],
-  ["entity.other.attribute-name","style"],
-  ["keyword.operator.separator","="],
-  ["string","\"font-size:144px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans Bold\""]
-],[
-   "meta.tag.punctuation.begin0",
-  ["text","       "],
-  ["entity.other.attribute-name","x"],
-  ["keyword.operator.separator","="],
-  ["string","\"50\""]
-],[
-   "meta.tag.punctuation.begin0",
-  ["text","       "],
-  ["entity.other.attribute-name","y"],
-  ["keyword.operator.separator","="],
-  ["string","\"350\""]
-],[
-   "meta.tag.punctuation.begin0",
-  ["text","       "],
-  ["entity.other.attribute-name","id"],
-  ["keyword.operator.separator","="],
-  ["string","\"dock\""]
+  ["text.tag-whitespace.xml","       "],
+  ["entity.other.attribute-name.xml","display"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"none\""],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
-  ["text","       "],
-  ["entity.other.attribute-name","display"],
-  ["keyword.operator.separator","="],
-  ["string","\"none\""],
-  ["meta.tag.punctuation.end",">"]
+  ["text.xml","        dickory,"],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","text"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "meta.tag.punctuation.tag-open.xml1",
+  ["text.xml","    "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","text"]
+],[
+   "meta.tag.punctuation.tag-open.xml1",
+  ["text.tag-whitespace.xml","       "],
+  ["entity.other.attribute-name.xml","style"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"font-size:144px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans Bold\""]
+],[
+   "meta.tag.punctuation.tag-open.xml1",
+  ["text.tag-whitespace.xml","       "],
+  ["entity.other.attribute-name.xml","x"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"50\""]
+],[
+   "meta.tag.punctuation.tag-open.xml1",
+  ["text.tag-whitespace.xml","       "],
+  ["entity.other.attribute-name.xml","y"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"350\""]
+],[
+   "meta.tag.punctuation.tag-open.xml1",
+  ["text.tag-whitespace.xml","       "],
+  ["entity.other.attribute-name.xml","id"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"dock\""]
 ],[
    "start",
-  ["text","        dock!"],
-  ["meta.tag.punctuation.begin","</"],
-  ["meta.tag.name","text"],
-  ["meta.tag.punctuation.end",">"]
+  ["text.tag-whitespace.xml","       "],
+  ["entity.other.attribute-name.xml","display"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"none\""],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
-  ["meta.tag.punctuation.begin","</"],
-  ["meta.tag.name","svg"],
-  ["meta.tag.punctuation.end",">"]
+  ["text.xml","        dock!"],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","text"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","svg"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ]]

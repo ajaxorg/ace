@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>Static Code highlighter using Ace</title>
+	<meta name="author" content="Matthew Kastor">
+    <style type="text/css">
+        .code {
+            width: 50%;
+            position: relative;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Client Side Syntax Highlighting</h2>
+
+<p>Syntax highlighting using Ace language modes and themes.</p>
+
+<div class="code" ace-mode="ace/mode/css" ace-theme="ace/theme/chrome" ace-gutter="true">
+.code {
+    width: 50%;
+    
+    position: relative;
+    white-space: pre-wrap;
+}
+
+</div>
+
+<pre class="code" ace-mode="ace/mode/javascript" ace-theme="ace/theme/twilight">
+function wobble (flam) {
+    return flam.wobbled = true;
+}
+
+</pre>
+
+<script src="kitchen-sink/require.js"></script>
+<script>
+require.config({paths: { "ace" : "../lib/ace"}});
+
+require(["ace/ace", "ace/ext/static_highlight"], function(ace) {
+    var highlight = ace.require("ace/ext/static_highlight")
+    var dom = ace.require("ace/lib/dom")
+    function qsa(sel) {
+        return Array.apply(null, document.querySelectorAll(sel));
+    }
+
+    qsa(".code").forEach(function (codeEl) {
+        highlight(codeEl, {
+            mode: codeEl.getAttribute("ace-mode"),
+            theme: codeEl.getAttribute("ace-theme"),
+            startLineNumber: 1,
+            showGutter: codeEl.getAttribute("ace-gutter"),
+            trim: true
+        }, function (highlighted) {
+            
+        });
+    });
+})
+</script>
+
+</body>
+</html>

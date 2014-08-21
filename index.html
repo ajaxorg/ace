@@ -9,12 +9,15 @@
         <link href="./doc/site/style.css" rel="stylesheet" type="text/css" />
         <link href="./doc/site/images/favicon.ico" rel="icon" type="image/x-icon" />
 
-        <script src="./build/src-min/ace.js"></script>
-        <script src="./build/src-min/ext-static_highlight.js"></script>
+        <script src="./build/src/ace.js"></script>
+        <script src="./build/src/ext-static_highlight.js"></script>
+        <!--[if lt IE 9]>
+            <script src="./build/src/ext-old_ie.js"></script>
+        <![endif]-->
     </head>
     <body>
         <a href="http://github.com/ajaxorg/ace">
-        <img style="z-index: 50000; position: absolute; top: 0; right: 0; border: 0; width: 125px; height: 125px" src="https://a248.e.akamai.net/camo.github.com/e6bef7a091f5f3138b8cd40bc3e114258dd68ddf/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67" alt="Fork me on GitHub" />
+        <img style="z-index: 50000; position: absolute; top: 0; right: 0; border: 0; width: 125px; height: 125px" src="https://camo.githubusercontent.com/e6bef7a091f5f3138b8cd40bc3e114258dd68ddf/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67" alt="Fork me on GitHub" />
         </a>
         <div id="wrapper">
             <div class="content">
@@ -65,7 +68,7 @@
                                 and is the successor of the Mozilla Skywriter (Bespin) project.
                             </p>
                             
-                                <div id="ace_editor_demo" style="opacity:0">/**
+                                <pre id="ace_editor_demo" style="opacity:0">/**
  * In fact, you're looking at ACE right now. Go ahead and play with it!
  *
  * We are currently showing off the JavaScript mode. ACE has support for 45
@@ -80,14 +83,14 @@ function add(x, y) {
 
 var addResult = add(3, 2);
 console.log(addResult);
-</div>
+</pre>
                             <p id="embed_link"><a href="#nav=embedding">Learn how to embed this in your own site</a></p>
                             <p class="highlight_note">Looking for a more full-featured demo? Check out the
                                 <a href="build/kitchen-sink.html" target="_blank">kitchen sink</a>.
                             </p>
                             <h2>Features</h2>
                             <ul class="content-list">
-                                <li><a href="http://pcwalton.blogspot.com/2010/11/syntax-highlighting-specification.html">Syntax highlighting</a> for over 60 languages (TextMate/Sublime Text<em>.tmlanguage</em> files can be imported)</li>
+                                <li><a href="http://pcwalton.blogspot.com/2010/11/syntax-highlighting-specification.html">Syntax highlighting</a> for over 110 languages (TextMate/Sublime Text<em>.tmlanguage</em> files can be imported)</li>
                                 <li>Over 20 themes (TextMate/Sublime Text <em>.tmtheme</em> files can be imported)</li>
                                 <li>Automatic indent and outdent</li>
                                 <li>An optional command line</li>
@@ -140,7 +143,7 @@ console.log(addResult);
                             <h1>Embedding Ace in Your Site</h1>
                             <p>Ace can be easily embedded into a web page. Get prebuilt version of ace from 
                             <a href="https://github.com/ajaxorg/ace-builds/">ace-builds</a> repository and use the code below:</p>
-                                <div id="embedded_ace_code" style="opacity:0">&lt;!DOCTYPE html>
+                                <pre id="embedded_ace_code" style="opacity:0">&lt;!DOCTYPE html>
 &lt;html lang="en">
 &lt;head>
 &lt;title>ACE in Action&lt;/title>
@@ -168,21 +171,19 @@ console.log(addResult);
     editor.getSession().setMode("ace/mode/javascript");
 &lt;/script>
 &lt;/body>
-&lt;/html></div>
+&lt;/html></pre>
                             <p>Now check out the <a href="#nav=howto">How-To Guide</a> for instructions on
                                 common operations, such as setting a different language mode or
                                 getting the contents from the editor.
                             </p>
-                            <h2>Loading Ace from a Local URL</h2>
-                            <p>The above code is all you need to embed Ace in your site (including setting language modes
-                                and themes). Plus it's super fast because it's on Amazon's distributed content network.
-                            </p>
-                            <p>But, if you want to clone host Ace locally you can
+                            <h2>Loading Ace from a Local URL</h2>                            
+                            <p>If you want to clone and host Ace locally you can
                                 use one of the <a href="https://github.com/ajaxorg/ace-builds/">pre-packaged versions</a>. Just copy
                                 one of <code>src*</code> subdirectories somewhere into your project, or use RequireJS to load the
-                                contents of <a href="https://github.com/ajaxorg/ace/tree/master/lib/ace">lib/ace</a> as <code>ace</code>:
+                                contents of <a href="https://github.com/ajaxorg/ace/tree/master/lib/ace">lib/ace</a> folder as <code>ace</code>:
                             </p>
-                            <pre><code class="javascript">var ace = require("lib/ace");</code></pre>
+                            <p>The packaged version can also be loaded from CDN's such as <a href="http://www.jsdelivr.com/#!ace">jsDelivr</a> or <a href="http://cdnjs.com/libraries/ace/">cdnjs</a>.
+                            </p>
                         </div>
                         <div class="tab-pane fade" id="howto">
                             <h1>Working with Ace</h1>
@@ -787,7 +788,7 @@ if (match) {
                                     <img src="doc/site/images/zorba-logo.png"
                                         style="left: -5px; top: 16px;
                                                 padding: 6px 4px 6px 6px; width: 100px" />
-                                    <a href="http://www.zorba-xquery.com/html/demo">Zorba XQuery</a>
+                                    <a href="http://try.zorba.io/queries/xquery">Zorba XQuery</a>
                                 </li>
                                 <li>
                                     <img src="doc/site/images/plunker.png"
@@ -795,9 +796,8 @@ if (match) {
                                     <a href="http://plnkr.co/edit/">Plunker</a>
                                 </li>
                                 <li>
-                                    <img src="doc/site/images/KERA-med-web.png"
-                                        style="left: 3px;top: 23px;width: 97px;" />
-                                    <a href="http://kera.io/">Kera.io</a>
+                                    <img src="http://zedapp.s3.amazonaws.com/uploads/2014/02/zed-small.png" style="left: -1px;top: -20px;width: 103px;">
+                                    <a href="http://zedapp.org">Zed</a>
                                 </li>
                                 <li>
                                     <img src="doc/site/images/sassmeister-logo.png"
@@ -834,20 +834,19 @@ if (match) {
                                         left: 19px; top: 6px;width: 60px;height: 60px;background-size: 60px;position: relative;"></div>
                                     <a href="http://habitat.inkling.com">Inkling Habitat</a>
                                 </li>
-                                <li>
-                                    <img src="doc/site/images/weecod-logo.png"
-                                        style="left: 0px; top: 0px; width: 100px" />
-                                    <a href="http://www.weecod.com">Weecod</a>
+                                <li style="width: 248px;">
+                                    <img src="http://codecombat.com/images/pages/base/logo.png" style="left: 48px; top: 10px;">
+                                    <a href="http://codecombat.com">Code Combat</a>
                                 </li>
-                                <li>
+                                <!--seems to be down <li>
                                     <img src="doc/site/images/lws-logo.png"
                                         style="left: 0px; top: 0px; width: 100px" />
                                     <a href="http://liveworkspace.org">Live Workspace</a>
-                                </li>
+                                </li>-->
                                 <li>
-                                    <img src="doc/site/images/processwire-logo.svg"
-                                        style="left: 0px; top: 25px; width: 102px" />
-                                    <a href=" http://modules.processwire.com/modules/inputfield-ace-editor/">Process<i>Wire</i></a>
+                                    <img src="doc/site/images/repl.it-logo.png"
+                                        style="left: 0px; top: 17px; width: 100px" />
+                                    <a href="http://repl.it/">Repl.it</a>
                                 </li>
                                 <li>
                                     <img src="doc/site/images/stypi-logo.png"
@@ -855,9 +854,14 @@ if (match) {
                                     <a href="https://code.stypi.com/">Stypi</a>
                                 </li>
                                 <li>
-                                    <img src="doc/site/images/repl.it-logo.png"
-                                        style="left: 0px; top: 17px; width: 100px" />
-                                    <a href="http://repl.it/">Repl.it</a>
+                                    <img src="doc/site/images/weecod-logo.png"
+                                        style="left: 0px; top: 0px; width: 100px" />
+                                    <a href="http://www.weecod.com">Weecod</a>
+                                </li>
+                                <li>
+                                    <img src="doc/site/images/processwire-logo.svg"
+                                        style="left: 0px; top: 25px; width: 102px" />
+                                    <a href=" http://modules.processwire.com/modules/inputfield-ace-editor/">Process<i>Wire</i></a>
                                 </li>
                                 <li>
                                     <img src="doc/site/images/crunchapp-logo.png"
@@ -870,14 +874,14 @@ if (match) {
                                     <a href="https://drivenotepad.appspot.com/support">Drive Notepad</a>
                                 </li>
                                 <li>
-                                    <img src="doc/site/images/FineCut_small_logo.png"
-                                        style="left: 12px; top: -4px" />
-                                    <a href="http://finecut.info/">Fine Cut Engine</a>
+                                    <img src="http://textor.houfeng.net/images/textor.png"
+                                        style="position: relative; left: 13px; top: -3px; width: 75px" />
+                                    <a href="http://textor.houfeng.net/">Textor</a>
                                 </li>
                                 <li>
                                     <img src="http://phpassist.com/images/logo-large.png" 
                                         style="left: 3px; top: -10px; width: 95px">
-                                    <a href="http://phpassist.com/">PHP Assist</a>
+                                    <a href="http://phpassist.com/f8456">PHP Assist</a>
                                 </li>
                                 <li>
                                     <div class="text-logo">Dillinger</div>
@@ -906,9 +910,9 @@ if (match) {
                                     <a href="http://orbit.bonsaijs.org/">BonsaiJS playground</a>
                                 </li>
                                 <li>
-                                    <img src="doc/site/images/acebug-logo.png"
-                                        style="left: 20px; top: 5px;">
-                                    <a href="https://addons.mozilla.org/en-US/firefox/addon/acebug/">Acebug</a>
+                                    <img src="http://approximatrix.com/products/simplytext/logo-320x320.png"
+                                        style="width: 106px; left: -4px; top: -22px;">
+                                    <a href="http://approximatrix.com/products/simplytext">Simply Text</a>
                                 </li>
                                 <li>
                                     <div class="text-logo" style="font-size: 18px;">ShareLaTeX</div>
@@ -938,11 +942,10 @@ if (match) {
                                     <a href="http://www.debuggex.com">Debuggex</a>
                                 </li>
                                 <li>
-                                    <div style="width: 90px; left: 5px; top: -17px;background:rgb(23,23,23);color:rgb(181,232,83);
-                                        font-family: Monaco, 'Bitstream Vera Sans Mono', 'Lucida Console', Terminal, monospace;
+                                    <div style="width:90px; left:9px; top:-6px;background:rgb(23,23,23);color:rgb(181,232,83);
+                                        font: 90px/90px Monaco, 'Bitstream Vera Sans Mono', 'Lucida Console', Terminal, monospace;
                                         text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1), 0 0 5px rgba(181, 232, 83, 0.1), 0 0 10px rgba(181, 232, 83, 0.1);
-                                        -webkit-font-smoothing: antialiased;
-                                        font-size: 90px;text-align: center;line-height: 90px;">S</div>
+                                        -webkit-font-smoothing: antialiased; text-align: center; position: absolute;">S</div>
                                     <a href="http://slimtext.org/">Slim Text</a>
                                 </li>
                                 <li>
@@ -952,7 +955,7 @@ if (match) {
                                     <a href="https://www.decor-tab-creator.com">Decor</a>
                                 </li>
                                 <li>
-                                    <img src="https://app.divshot.com/images/logo-glyph.svg"
+                                    <img src='data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIj8+DQo8c3ZnIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iOTVweCIgaGVpZ2h0PSIxMTZweCIgdmlld0JveD0iLTAuMTc0IC0wLjMwNCA5NSAxMTYiPg0KPHBvbHlnb24gZmlsbD0iIzMzMzMzMyIgcG9pbnRzPSIzNy45MzMsMTE1LjM5MyAyMi42NTcsMTAwLjExNiA2My44OSw1OC44ODIgMjAuMjg5LDE1LjI3NiAzNS41NjcsMCA5NC40NDMsNTguODgyIj48L3BvbHlnb24+DQo8cG9seWdvbiBmaWxsPSIjM0ZBOUY1IiBwb2ludHM9IjI3LjQ1Nyw4NC42MzMgMCw1Ny4xNTQgMjYuMzk3LDMwLjc2IDM1LjY5Miw0MC4wNTggMTguNTksNTcuMTYgMzYuNzU3LDc1LjMzOSI+PC9wb2x5Z29uPg0KPC9zdmc+DQo='
                                         style="left: 12px; width: 79px;top: -18px;">
                                     <a href="http://www.divshot.com/">Divshot</a>
                                 </li>
@@ -969,10 +972,6 @@ if (match) {
                                     <a href="http://multiPlay.io/">MultiPlay.io</a>
                                 </li>
                                 <li>
-                                    <div class="text-logo" style="font-size: 18px;margin-left: -3px;">Codeshare.io</div>
-                                    <a href="http://codeshare.io">Codeshare.io</a>
-                                </li>
-                                <li>
                                     <div class="text-logo" style="font-size: 23px;">Runnable</div>
                                     <a href="http://runnable.com">Runnable</a>
                                 </li>
@@ -984,11 +983,6 @@ if (match) {
                                     <img src="http://joshnuss.github.io/mruby-web-irb/images/favicon.png"
                                         style="left: 4px; width: 90px;top: -17px;">
                                     <a href="http://joshnuss.github.io/mruby-web-irb/">Mruby-web-irb</a>
-                                </li>
-                                <li>
-                                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAG4AAAA8CAYAAACHHY8HAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAACxIAAAsSAdLdfvwAAAAHdElNRQfdBQETIiXg/sIKAAAAGnRFWHRTb2Z0d2FyZQBQYWludC5ORVQgdjMuNS4xMDD0cqEAAAFpSURBVHhe7dstTgRBEAbQTVgCKDTBInCgUJwAQwgEAQK1hjtwCAR3IASB2ENwCg6AJAFBws83jmCnMy3qbfLJ7qp+NVkxnZnN/AgQIECAAAECBAgQINBWYLFYrCXHyUWxnOS86201J9wtzd8nP0XzNCF121IZ2HvRoQ0P61dbzQl3S/OPhQe3nJC6banhfz45S66K5Tzn3WiraTcCBAgQIECAAAECBAgQIECAAAECBAgQINBLIG+995KHZFksR73Mm9TNsF6K3rF95txbTRB7bJLm34oObrjV3u1h3qRmmr9OPgoO764JYM9NMrR5slosPcnVJkCAAAECBAgQIECAAAECBAgQIEBgpEDeZ24nhwUzH0nXb3mGdVD448bnnH2ln/6Iymn8tuD1z99Pp/dH8PVbmqFdJt9Fh/eac2/20x9ZOc2fJjcFszOSznICBAgQIECAAAECBAgQIECAAAECBAgQIECAwD+BX9K9KZrlGQTqAAAAAElFTkSuQmCC"
-                                        style="left: 0px; width: 110px;top: 9px;">
-                                    <a href="http://www.radide.com/">RAD Ide</a>
                                 </li>
                                 <li>
                                     <div class="text-logo" style="margin-left:0px;">Codiqa</div>
@@ -1050,14 +1044,13 @@ if (match) {
                                     <a href="https://github.com/websiteduck/Run-PHP-Code">RunPHPCode</a>
                                 </li>
                                 <li>
-                                    <img src="http://instaedu.com/publish/static/img/20ac02f.png"
-                                        style="width: 111px; left: -3px; top: 30px;">
+                                    <div class="text-logo">InstaEDU</div>
                                     <a href="http://instaedu.com/lesson-demo/">InstaEDU</a>
                                 </li>
                                 <li>
                                     <img src="http://s7.postimg.org/tbw9lfcvb/cloudcmd.png"
                                         style="width: 74px; left: 13px; top: -2px;">
-                                    <a href="http://coderaiser.github.io/cloudcmd">CloudCmd</a>
+                                    <a href="http://cloudcmd.io">Cloud Commander</a>
                                 </li>
                                 <li>
                                     <img src="http://www.ogeditor.com/images/logo.png"
@@ -1099,11 +1092,95 @@ if (match) {
                                     <a href="http://thlorenz.github.io/browserify-markdown-editor/">browserify-markdown-editor</a>
                                 </li>
                                 <li>
+                                    <img src="http://www.siteleaf.com/images/logo.svg" style="left: 20px; top: -15px; width: 60px;">
+                                    <a href="http://www.siteleaf.com/">Siteleaf</a>
+                                </li>
+                                <li>
+                                    <div class="" style="
+                                        background: url(http://colorsublime.com/img/ColorSublime_logo.png);
+                                        position: absolute;height: 65px;width: 99px;
+                                        background-size: 310px 128px;background-position: 210px top;
+                                    "></div>
+                                    <a href="http://colorsublime.com/">ColorSublime</a>
+                                </li>
+                                <li>
+                                    <div class="text-logo">iMDone</div>
+                                    <a href="http://piascikj.github.io/imdone/">iMDone</a>
+                                </li>
+                                <li>
                                     <div class="text-logo"></div>
                                     <a href="http://bakemycss.mypathforpython.appspot.com/">BakeMyCss</a>
                                 </li>
                                 <li>
-                                    <a href="https://github.com/Gozala/sky-edit">Sky Edit</a>
+                                    <div style="
+                                        background: url(https://s3.amazonaws.com/spark-website/spark.png) no-repeat;
+                                        position: absolute; height: 65px; width: 83px; background-size: 200px 65px;
+                                        background-position: 19px;"></div>
+                                    <a href="http://spark.io/build">Spark Core</a>
+                                </li>
+                                <li>
+                                    <img src="https://2.gravatar.com/avatar/021e207e86fe81a7d81c67ef1ff38a0c" style="left: 11px; top: -5px;">
+                                    <a href="http://owncloud.org">ownCloud</a>
+                                </li>
+                                <li>
+                                    <img src="http://www.ezoui.com/prod/images/EZo_logo.png" style="left: 11px; top: -5px;">
+                                    <a href="http://jqmdesigner.appspot.com">JQM Designer</a>
+                                </li>
+                                <li>
+                                    <img src="http://www.praczone.info/images/praczone.png" style="top: 20px;width: 100px;">
+                                    <a href=" http://www.praczone.com/editor">pracZone</a>
+                                </li>
+                                <li>
+                                    <img src="http://resources.qooxdoo.org/images/logo.gif"
+                                        style="width: 125px; left: -13px; top: 18px;">
+                                    <a href="http://demo.qooxdoo.org/devel/playground/#">Qooxdoo playground</a>
+                                </li>
+                                <li>
+                                    <div class="text-logo">ShareJS</div>
+                                    <a href="http://sharejs.org/hello-ace.html">ShareJS</a>
+                                </li>
+                                <li>
+                                    <img src="https://neutron-drive.appspot.com/static/img/neutron_face_high.png"
+                                        style="width: 86px; left: 7px; top: -11px;">
+                                    <a href="http://neutronide.com/">Neutron IDE</a>
+                                </li>
+                                <li>
+                                    <div style="
+                                        background: url(https://www.pythonanywhere.com/static/anywhere/images/logo-234x35.png) no-repeat;
+                                        position: absolute; height: 65px; width: 94px; background-size: 234px 35px;
+                                        background-position: 19px;"></div>
+                                    <a href="http://www.pythonanywhere.com/">PythonAnywhere</a>
+                                </li>
+                                <li>
+                                    <img src="http://subtexteditor.com/images/subtext-icon-4.png"
+                                        style="width: 86px; left: 7px; top: -11px;">
+                                    <a href="http://subtexteditor.com/">Subtext Editor</a>
+                                </li>
+                                <li>
+                                    <img src="http://climbi.com/static/img/logo.png"
+                                        style="width: 86px; left: 7px; top: -11px;">
+                                    <a href="http://climbi.com/">Climbi</a>
+                                </li>                                
+                                <li>
+                                    <div style="
+                                        background: url(http://gpupowered.org/sites/default/files/favicon.png) rgba(0, 0, 0, 0.66) no-repeat;
+                                        position: absolute; 
+                                        height: 75px; 
+                                        width: 99px; background-size: 27px 32px;
+                                        background-position: 37px;"></div>
+                                    <a href="http://www.gpupowered.org/sand2/launch2/#">GPUPowered</a>
+                                </li>
+                                <li style="width: 248px;">
+                                    <img src="http://www.codeavengers.com/image/RedLogoSmall.png" style="width: 248px; top: 30px;">
+                                    <a href="http://www.codeavengers.com/image/RedLogoSmall.png">Code Avengers</a>
+                                </li>
+                                <li style="width: 248px;">
+                                    <img src="http://www.codemonkey.co.il/images/logoSmallFaceTop.png" style="width: 248px; top: -3px;">
+                                    <a href="http://www.codemonkey.co.il/">CodeMonkey</a>
+                                </li>
+                                <li style="width: 248px;">
+                                    <img src="http://learn-angular.org/Content/Images/LearnAngular-small.png" style="width: 275px; left: -12px; top: 7px;">
+                                    <a href="http://learn-angular.org">Learn Angular</a>
                                 </li>
                                 <li>
                                     <a href="http://www.wavemaker.com/">WaveMaker</a>
@@ -1112,32 +1189,15 @@ if (match) {
                                     <a href="http://www.playmycode.com/">Play My Code</a>
                                 </li>
                                 <li>
-                                    <a href="http://demo.qooxdoo.org/devel/playground/#">Qooxdoo playground</a>
-                                </li>
-                                <li>
                                     <a href="http://ext.radiantcms.org/extensions/264-ace">Radiant CMS</a>
                                 </li>
                                 <li>
                                     <a href="http://developercompanion.com/">Developer Companion</a>
                                 </li>
                                 <li>
-                                    <a href="http://www.pythonanywhere.com/">PythonAnywhere</a>
-                                </li>
-                                <li>
-                                    <div class="text-logo">ShareJS</div>
-                                    <a href="http://sharejs.org/hello-ace.html">ShareJS</a>
-                                </li>
-                                <li>
                                     <a href="http://www.akshell.com/">Akshell</a>
                                 </li>
-                                <li>
-                                    <a href="http://beanstalkapp.com/">beanstalk</a>
-                                </li>
-                                <li>
-                                    <img src="https://neutron-drive.appspot.com/static/img/neutron_face_high.png"
-                                        style="width: 76px; left: 7px; top: -11px;">
-                                    <a href="http://neutronide.com/">Neutron IDE</a>
-                                </li>
+                                
                                 <li>
                                     <div class="text-logo">tmpltr</div>
                                     <a href="http://rocktronica.github.com/tmpltr/">tmpltr</a>
@@ -1153,7 +1213,7 @@ if (match) {
                                 </li>
                                 <li id="add_your_site">
                                     <p>+</p>
-                                    <a href="mailto:ace@c9.io?subject=Put%20me%20on%20the%20Ace%20site!">Your Site Here</a>
+                                    <a href="mailto:ace@c9.io?subject=Put%20me%20on%20the%20Ace%20site!&body=Please include a link to a logo hosted on your site!">Your Site Here</a>
                                 </li>
                             </ul>
                         </div>

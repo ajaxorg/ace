@@ -201,7 +201,7 @@
   ["keyword.operator","="],
   ["keyword","function"],
   ["paren.lparen","("],
-  ["identifier","self"],
+  ["variable.language","self"],
   ["text",", "],
   ["identifier","other"],
   ["paren.rparen",")"]
@@ -266,7 +266,7 @@
   ["text","    "],
   ["keyword","return"],
   ["text"," "],
-  ["identifier","self"],
+  ["variable.language","self"],
   ["keyword.operator",":"],
   ["support.function","format"],
   ["paren.lparen","("],
