@@ -42,6 +42,7 @@ class Foo extends Bar
 foo.static.function
 #!test tokenize string with interpolation
 a = "#{ 22 / 7 + {x: "#{a + b}"} + 2}"
+" #{ "" + {} } )"  
 """heredoc
    """
 do ->

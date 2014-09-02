@@ -138,7 +138,7 @@
   ["text","  "],
   ["support.php_tag","<?php"]
 ],[
-   ["php-qstring","php-start","js-start"],
+   ["#tmp","php-qstring","php-start","js-start"],
   ["support.function","echo"],
   ["text"," "],
   ["string","'"]

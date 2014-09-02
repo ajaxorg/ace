@@ -379,7 +379,7 @@
   ["constant.numeric","1."],
   ["text","00"],
   ["identifier","E"],
-  ["text","^"],
+  ["keyword.operator","^"],
   ["constant.numeric","1"],
   ["punctuation.operator",","],
   ["text"," "],

@@ -92,7 +92,9 @@
 ],[
    "start",
   ["text","    E &= mc^2                              "],
-  ["constant.character.escape","\\\\"],
+  ["constant.character.escape","\\\\"]
+],[
+   "start",
   ["text","    m &= "],
   ["storage.type","\\frac"],
   ["lparen","{"],
