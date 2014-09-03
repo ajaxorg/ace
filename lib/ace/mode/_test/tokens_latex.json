@@ -2,37 +2,37 @@
    "start",
   ["keyword","\\usepackage"],
   ["lparen","{"],
-  ["text","amsmath"],
+  ["storage.type","amsmath"],
   ["rparen","}"]
 ],[
    "start",
-  ["keyword","\\title"],
+  ["storage.type","\\title"],
   ["lparen","{"],
-  ["keyword","\\LaTeX"],
+  ["storage.type","\\LaTeX"],
   ["rparen","}"]
 ],[
    "start",
-  ["keyword","\\date"],
+  ["storage.type","\\date"],
   ["lparen","{"],
   ["rparen","}"]
 ],[
    "start",
-  ["keyword","\\begin"],
+  ["storage.type","\\begin"],
   ["lparen","{"],
-  ["text","document"],
+  ["variable.parameter","document"],
   ["rparen","}"]
 ],[
    "start",
   ["text","  "],
-  ["keyword","\\maketitle"]
+  ["storage.type","\\maketitle"]
 ],[
    "start",
   ["text","  "],
-  ["keyword","\\LaTeX"],
+  ["storage.type","\\LaTeX"],
   ["lparen","{"],
   ["rparen","}"],
   ["text"," is a document preparation system for the "],
-  ["keyword","\\TeX"],
+  ["storage.type","\\TeX"],
   ["lparen","{"],
   ["rparen","}"]
 ],[
@@ -50,26 +50,26 @@
 ],[
    "start",
   ["text","  and much more. "],
-  ["keyword","\\LaTeX"],
+  ["storage.type","\\LaTeX"],
   ["lparen","{"],
   ["rparen","}"],
   ["text"," was originally written in 1984 by Leslie"]
 ],[
    "start",
   ["text","  Lamport and has become the dominant method for using "],
-  ["keyword","\\TeX"],
+  ["storage.type","\\TeX"],
   ["text","; few"]
 ],[
    "start",
   ["text","  people write in plain "],
-  ["keyword","\\TeX"],
+  ["storage.type","\\TeX"],
   ["lparen","{"],
   ["rparen","}"],
   ["text"," anymore. The current version  is"]
 ],[
    "start",
   ["text","  "],
-  ["keyword","\\LaTeXe"],
+  ["storage.type","\\LaTeXe"],
   ["text","."]
 ],[
    "start",
@@ -85,26 +85,26 @@
 ],[
    "start",
   ["text","  "],
-  ["keyword","\\begin"],
+  ["storage.type","\\begin"],
   ["lparen","{"],
-  ["text","align"],
+  ["variable.parameter","align"],
   ["rparen","}"]
 ],[
    "start",
   ["text","    E &= mc^2                              "],
-  ["keyword","\\\\"]
+  ["constant.character.escape","\\\\"]
 ],[
    "start",
   ["text","    m &= "],
-  ["keyword","\\frac"],
+  ["storage.type","\\frac"],
   ["lparen","{"],
   ["text","m_0"],
   ["rparen","}"],
   ["lparen","{"],
-  ["keyword","\\sqrt"],
+  ["storage.type","\\sqrt"],
   ["lparen","{"],
   ["text","1-"],
-  ["keyword","\\frac"],
+  ["storage.type","\\frac"],
   ["lparen","{"],
   ["text","v^2"],
   ["rparen","}"],
@@ -114,14 +114,14 @@
 ],[
    "start",
   ["text","  "],
-  ["keyword","\\end"],
+  ["storage.type","\\end"],
   ["lparen","{"],
-  ["text","align"],
+  ["variable.parameter","align"],
   ["rparen","}"]
 ],[
    "start",
-  ["keyword","\\end"],
+  ["storage.type","\\end"],
   ["lparen","{"],
-  ["text","document"],
+  ["variable.parameter","document"],
   ["rparen","}"]
 ]]

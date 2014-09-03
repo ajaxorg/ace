@@ -467,6 +467,23 @@
   ["paren.string","}"],
   ["string.end","\""]
 ],[
+   "start",
+  ["string.start","\""],
+  ["string"," "],
+  ["paren.string","#{"],
+  ["text"," "],
+  ["string.start","\""],
+  ["string.end","\""],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["paren","{}"],
+  ["text"," "],
+  ["paren.string","}"],
+  ["string"," )"],
+  ["string.end","\""],
+  ["text","  "]
+],[
    "qqdoc",
   ["string","\"\"\"heredoc"]
 ],[

@@ -38,7 +38,13 @@
 ],[
    "start"
 ],[
-   "start"
+   "start",
+  ["text","v "],
+  ["keyword.operator.update.julia","="],
+  ["text"," "],
+  ["variable","α"],
+  ["keyword.operator.transposed-variable.julia","'"],
+  ["text",";"]
 ],[
    "start",
   ["keyword.other.julia","function"],
