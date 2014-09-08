@@ -37,7 +37,6 @@ define(function(require, exports, module) {
 
 var oop = require("../lib/oop");
 var TextMode = require("./text").Mode;
-var Tokenizer = require("../tokenizer").Tokenizer;
 var %language%HighlightRules = require("./%languageHighlightFilename%_highlight_rules").%language%HighlightRules;
 // TODO: pick appropriate fold mode
 var FoldMode = require("./folding/cstyle").FoldMode;
@@ -49,9 +48,10 @@ var Mode = function() {
 oop.inherits(Mode, TextMode);
 
 (function() {
-    this.lineCommentStart = "//";
-    this.blockComment = {start: "/*", end: "*/"};
+    this.lineCommentStart = "%lineCommentStart%";
+    this.blockComment = {start: "%blockCommentStart%", end: "%blockCommentEnd%"};
     // Extra logic goes here.
+    this.$id = "ace/mode/%languageHighlightFilename%"
 }).call(Mode.prototype);
 
 exports.Mode = Mode;
