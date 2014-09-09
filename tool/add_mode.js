@@ -22,7 +22,7 @@ fs.writeFileSync(demoFilePath, "TODO add a nice demo!", "utf8");
 console.log("Created demo file at: " + path.normalize(demoFilePath));
 
 /** mode **/
-var template = fs.readFileSync(__dirname + "/mode.tmpl.js", "utf8");
+var template = fs.readFileSync(__dirname + "/templates/mode.js", "utf8");
 var modePath = lib.AceLib + "ace/mode/" + name + ".js";
 var text = lib.fillTemplate(template, {
     languageHighlightFilename: name,
@@ -35,7 +35,7 @@ fs.writeFileSync(modePath, text);
 console.log("Created mode file at: " + path.normalize(modePath));
 
 /** highlight rules **/
-template = fs.readFileSync(__dirname + "/mode_highlight_rules.tmpl.js", "utf8");
+template = fs.readFileSync(__dirname + "/templates/highlight_rules.js", "utf8");
 var hlPath = lib.AceLib + "ace/mode/" + name + "_highlight_rules.js";
 template = template.replace(/\/\* THIS[\s\S]*?\*{3}\/\s*/, "");
 text = lib.fillTemplate(template, {
@@ -60,7 +60,7 @@ fs.writeFileSync(hlPath, text);
 console.log("Created mode file at: " + path.normalize(hlPath));
 
 /** snippets **/
-template = fs.readFileSync(__dirname + "/tmsnippets.tmpl.js", "utf8");
+template = fs.readFileSync(__dirname + "/templates/snippets.js", "utf8");
 var snipetsPath = lib.AceLib + "ace/snippets/" + name + ".js";
 text = lib.fillTemplate(template, {
     languagename: name,
