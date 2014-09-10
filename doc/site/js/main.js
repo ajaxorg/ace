@@ -1,39 +1,49 @@
 var editor;
 var embedded_editor;
 $(function() {
-    ace.config.set("workerPath", "build/src-min");
-    editor = ace.edit("ace_editor_demo");
-    editor.container.style.opacity = "";
-    embedded_editor = ace.edit("embedded_ace_code");
-    embedded_editor.container.style.opacity = "";
-    embedded_editor.session.setMode("ace/mode/html");
-    embedded_editor.setAutoScrollEditorIntoView(true);
-    embedded_editor.setOption("maxLines", 40);
-    
-    editor.setOptions({
-        maxLines: 30,
-        mode: "ace/mode/javascript",
-        autoScrollEditorIntoView: true
-    });
-    
-    ace.config.loadModule("ace/ext/emmet", function() {
-        ace.require("ace/lib/net").loadScript("http://nightwing.github.io/emmet-core/emmet.js", function() {
-            embedded_editor.setOption("enableEmmet", true);
-            editor.setOption("enableEmmet", true);
-        });
-    });
-    
-    ace.config.loadModule("ace/ext/language_tools", function() {
-        embedded_editor.setOptions({
-            enableSnippets: true,
-            enableBasicAutocompletion: true
-        });
+    if (typeof ace !== "undefined") {
+        ace.config.set("workerPath", "build/src-min");
+        editor = ace.edit("ace_editor_demo");
+        editor.container.style.opacity = "";
+        embedded_editor = ace.edit("embedded_ace_code");
+        embedded_editor.container.style.opacity = "";
+        embedded_editor.session.setMode("ace/mode/html");
+        embedded_editor.setAutoScrollEditorIntoView(true);
+        embedded_editor.setOption("maxLines", 40);
+        
         editor.setOptions({
-            enableSnippets: true,
-            enableBasicAutocompletion: true
+            maxLines: 30,
+            mode: "ace/mode/javascript",
+            autoScrollEditorIntoView: true
         });
-    });    
-    
+        
+        ace.config.loadModule("ace/ext/emmet", function() {
+            ace.require("ace/lib/net").loadScript("http://nightwing.github.io/emmet-core/emmet.js", function() {
+                embedded_editor.setOption("enableEmmet", true);
+                editor.setOption("enableEmmet", true);
+            });
+        });
+        
+        ace.config.loadModule("ace/ext/language_tools", function() {
+            embedded_editor.setOptions({
+                enableSnippets: true,
+                enableBasicAutocompletion: true
+            });
+            editor.setOptions({
+                enableSnippets: true,
+                enableBasicAutocompletion: true
+            });
+        });
+    } else {
+        document.body.insertAdjacentHTML("afterbegin", '<div class="bs-docs-example">\
+            <div class="alert alert-error">\
+              <button type="button" class="close" data-dismiss="alert">\xd7</button>\
+              <strong>Oh No!</strong> Couldn\'t load <code>build/src/ace.js</code>.<br>\
+                You can build it by running <code>node Makefile.dryice.js</code><br>\
+                Or download older version by running <code>git submodule update --init --recursive</code><br>\
+            </div>\
+          </div>');
+    }
     $("ul.menu-list").mousedown(function(e) {
         if (e.button === 1) {
             e.preventDefault();
@@ -137,22 +147,22 @@ $(function() {
         });
     });
 
-     $(window).on("hashchange", function(e) {
-         _gaq.push(['_trackPageview',location.pathname + location.search  + location.hash]);
-         tabs.each(function() {
+    $(window).on("hashchange", function(e) {
+        _gaq.push(['_trackPageview',location.pathname + location.search  + location.hash]);
+        tabs.each(function() {
             var idx = $.bbq.getState("nav") || "about";
             var section = e.fragment.split("&")[1] || "";
             $(this).find(tab_a_selector + "[href='#" + idx + "']").triggerHandler('click');
-            
+           
             // handles dropping in from new link
             var api = $.bbq.getState("api");
             if (api) {
                 $(tab_a_selector + "[href='./api/" + api + ".html']").triggerHandler('click');
             }
-         });
-     }).trigger("hashchange");
+        });
+    }).trigger("hashchange");
      
-     highlight();
+    highlight();
 });
 
 
