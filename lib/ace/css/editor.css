@@ -354,16 +354,12 @@
 .ace_fold-widget:hover {
     border: 1px solid rgba(0, 0, 0, 0.3);
     background-color: rgba(255, 255, 255, 0.2);
-    -moz-box-shadow: 0 1px 1px rgba(255, 255, 255, 0.7);
-    -webkit-box-shadow: 0 1px 1px rgba(255, 255, 255, 0.7);
     box-shadow: 0 1px 1px rgba(255, 255, 255, 0.7);
 }
 
 .ace_fold-widget:active {
     border: 1px solid rgba(0, 0, 0, 0.4);
     background-color: rgba(0, 0, 0, 0.05);
-    -moz-box-shadow: 0 1px 1px rgba(255, 255, 255, 0.8);
-    -webkit-box-shadow: 0 1px 1px rgba(255, 255, 255, 0.8);
     box-shadow: 0 1px 1px rgba(255, 255, 255, 0.8);
 }
 /**
@@ -383,8 +379,6 @@
     background-color: rgba(255, 255, 255, 0.1);
 }
 .ace_dark .ace_fold-widget:active {
-    -moz-box-shadow: 0 1px 1px rgba(255, 255, 255, 0.2);
-    -webkit-box-shadow: 0 1px 1px rgba(255, 255, 255, 0.2);
     box-shadow: 0 1px 1px rgba(255, 255, 255, 0.2);
 }
 
