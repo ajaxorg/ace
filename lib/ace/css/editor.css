@@ -218,10 +218,7 @@
 }
 
 .ace_smooth-blinking .ace_cursor {
-       -moz-transition: opacity 0.18s;
     -webkit-transition: opacity 0.18s;
-         -o-transition: opacity 0.18s;
-        -ms-transition: opacity 0.18s;
             transition: opacity 0.18s;
 }
 
@@ -397,19 +394,13 @@
 }
 
 .ace_fade-fold-widgets .ace_fold-widget {
-       -moz-transition: opacity 0.4s ease 0.05s;
     -webkit-transition: opacity 0.4s ease 0.05s;
-         -o-transition: opacity 0.4s ease 0.05s;
-        -ms-transition: opacity 0.4s ease 0.05s;
             transition: opacity 0.4s ease 0.05s;
     opacity: 0;
 }
 
 .ace_fade-fold-widgets:hover .ace_fold-widget {
-       -moz-transition: opacity 0.05s ease 0.05s;
     -webkit-transition: opacity 0.05s ease 0.05s;
-         -o-transition: opacity 0.05s ease 0.05s;
-        -ms-transition: opacity 0.05s ease 0.05s;
             transition: opacity 0.05s ease 0.05s;
     opacity:1;
 }
