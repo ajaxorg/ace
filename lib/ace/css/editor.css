@@ -272,8 +272,6 @@
     color: transparent;
 
     border: 1px solid black;
-    -moz-border-radius: 2px;
-    -webkit-border-radius: 2px;
     border-radius: 2px;
 
     cursor: pointer;
