@@ -72,7 +72,7 @@
 }
 
 .ace_scroller.ace_scroll-left {
-    box-shadow: 17px 0 16px -16px rgba(0, 0, 0, 0.4) inset;
+    box-shadow: 2px 0 1px -1px rgba(0, 0, 0, 0.2) inset;
 }
 
 .ace_gutter-cell {
