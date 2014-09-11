@@ -93,10 +93,8 @@
     color: #656565;
     cursor: pointer;
     float: right;
-    font-family: Arial;
-    font-size: 16px;
+    font: 16px/16px Arial;
     height: 14px;
-    line-height: 16px;
     margin: 5px 1px 9px 5px;
     padding: 0;
     text-align: center;
