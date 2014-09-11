@@ -209,7 +209,7 @@
 }
 
 .ace_overwrite-cursors .ace_cursor {
-    border-left-width: 0px;
+    border-left-width: 0;
     border-bottom: 1px solid;
 }
 
