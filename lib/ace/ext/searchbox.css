@@ -47,7 +47,6 @@
     -webkit-box-sizing: border-box;
        -moz-box-sizing: border-box;
             box-sizing: border-box;
-    display: block;
     float: left;
     height: 22px;
     outline: 0;
@@ -61,7 +60,6 @@
     border: 0 none;
     border-left: 1px solid #dcdcdc;
     cursor: pointer;
-    display: block;
     float: left;
     height: 22px;
     margin: 0;
@@ -94,7 +92,6 @@
     border: 0 none;
     color: #656565;
     cursor: pointer;
-    display: block;
     float: right;
     font-family: Arial;
     font-size: 16px;
