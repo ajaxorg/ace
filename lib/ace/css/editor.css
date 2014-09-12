@@ -1,9 +1,7 @@
 .ace_editor {
     position: relative;
     overflow: hidden;
-    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
-    font-size: 12px;
-    line-height: normal;
+    font: 12px/normal 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
     direction: ltr;
 }
 
@@ -211,7 +209,7 @@
 }
 
 .ace_overwrite-cursors .ace_cursor {
-    border-left-width: 0px;
+    border-left-width: 0;
     border-bottom: 1px solid;
 }
 
@@ -220,10 +218,7 @@
 }
 
 .ace_smooth-blinking .ace_cursor {
-       -moz-transition: opacity 0.18s;
     -webkit-transition: opacity 0.18s;
-         -o-transition: opacity 0.18s;
-        -ms-transition: opacity 0.18s;
             transition: opacity 0.18s;
 }
 
@@ -277,8 +272,6 @@
     color: transparent;
 
     border: 1px solid black;
-    -moz-border-radius: 2px;
-    -webkit-border-radius: 2px;
     border-radius: 2px;
 
     cursor: pointer;
@@ -302,7 +295,6 @@
     border-radius: 1px;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
     color: black;
-    display: block;
     max-width: 100%;
     padding: 3px 4px;
     position: fixed;
@@ -359,16 +351,12 @@
 .ace_fold-widget:hover {
     border: 1px solid rgba(0, 0, 0, 0.3);
     background-color: rgba(255, 255, 255, 0.2);
-    -moz-box-shadow: 0 1px 1px rgba(255, 255, 255, 0.7);
-    -webkit-box-shadow: 0 1px 1px rgba(255, 255, 255, 0.7);
     box-shadow: 0 1px 1px rgba(255, 255, 255, 0.7);
 }
 
 .ace_fold-widget:active {
     border: 1px solid rgba(0, 0, 0, 0.4);
     background-color: rgba(0, 0, 0, 0.05);
-    -moz-box-shadow: 0 1px 1px rgba(255, 255, 255, 0.8);
-    -webkit-box-shadow: 0 1px 1px rgba(255, 255, 255, 0.8);
     box-shadow: 0 1px 1px rgba(255, 255, 255, 0.8);
 }
 /**
@@ -388,8 +376,6 @@
     background-color: rgba(255, 255, 255, 0.1);
 }
 .ace_dark .ace_fold-widget:active {
-    -moz-box-shadow: 0 1px 1px rgba(255, 255, 255, 0.2);
-    -webkit-box-shadow: 0 1px 1px rgba(255, 255, 255, 0.2);
     box-shadow: 0 1px 1px rgba(255, 255, 255, 0.2);
 }
 
@@ -399,19 +385,13 @@
 }
 
 .ace_fade-fold-widgets .ace_fold-widget {
-       -moz-transition: opacity 0.4s ease 0.05s;
     -webkit-transition: opacity 0.4s ease 0.05s;
-         -o-transition: opacity 0.4s ease 0.05s;
-        -ms-transition: opacity 0.4s ease 0.05s;
             transition: opacity 0.4s ease 0.05s;
     opacity: 0;
 }
 
 .ace_fade-fold-widgets:hover .ace_fold-widget {
-       -moz-transition: opacity 0.05s ease 0.05s;
     -webkit-transition: opacity 0.05s ease 0.05s;
-         -o-transition: opacity 0.05s ease 0.05s;
-        -ms-transition: opacity 0.05s ease 0.05s;
             transition: opacity 0.05s ease 0.05s;
     opacity:1;
 }
