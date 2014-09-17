@@ -15,6 +15,7 @@
     -moz-user-select: none;
     -webkit-user-select: none;
     user-select: none;
+    cursor: text;
 }
 
 .ace_content {
@@ -22,12 +23,7 @@
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
-    cursor: text;
     min-width: 100%;
-}
-
-.ace_dragging, .ace_dragging * {
-    cursor: move !important;
 }
 
 .ace_dragging .ace_scroller:before{
