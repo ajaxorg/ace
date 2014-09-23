@@ -1,3 +1,9 @@
+2014.09.21 Version 1.1.7
+
+* Bugfixes
+  - fix several bugs in autocompletion
+  - workaround for inaccurate getBoundingClientRect on chrome 37
+
 2014.08.17 Version 1.1.6
 
 * Bugfixes
