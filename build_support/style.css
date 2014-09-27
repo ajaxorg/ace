@@ -4,7 +4,7 @@ body {
     margin:0;
     padding:0;
     background-color:#e6f5fc;
-    
+
 }
 
 H2, H3, H4 {
@@ -58,7 +58,7 @@ PRE{
     position:relative;
     overflow:hidden;
     background: url(images/background.png) repeat-x 0 0;
-    border-bottom:1px solid #c9e8fa;   
+    border-bottom:1px solid #c9e8fa;
 }
 
 #header .content .signature {
@@ -224,7 +224,3 @@ UL.menu-footer LI A {
 UL.menu-footer LI A:hover {
     text-decoration:underline;
 }
-
-
-
-
