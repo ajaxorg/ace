@@ -1,3 +1,31 @@
+2014.09.21 Version 1.1.7
+
+* Bugfixes
+  - fix several bugs in autocompletion
+  - workaround for inaccurate getBoundingClientRect on chrome 37
+
+2014.08.17 Version 1.1.6
+
+* Bugfixes
+  - fix regression in double tap to highlight 
+  - Improved Latex Mode (Daniel Felder)
+  
+* API Changes
+  - editor.destroy destroys editor.session too (call editor.setSession(null) to prevent that)
+
+* new language modes
+ - Praat (José Joaquín Atria)
+ - Eiffel (Victorien Elvinger)
+ - G-code (Adam Joseph Cook)
+ 
+2014.07.09 Version 1.1.5
+
+* Bugfixes
+  - fix regression in autocomplete popup
+
+* new language modes
+ - gitignore (Devon Carew)
+ 
 2014.07.01 Version 1.1.4
 
 * New Features

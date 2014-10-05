@@ -51,7 +51,7 @@ function foo() {
 
 function inject(options, callback) {
     var baseUrl = options.baseUrl || "../../src-noconflict";
-    
+
     var load = function(path, callback) {
         var head = document.getElementsByTagName('head')[0];
         var s = document.createElement('script');
@@ -87,7 +87,7 @@ function inject(options, callback) {
 // Call the inject function to load the ace files.
 var textAce;
 inject({}, function () {
-    // Transform the textarea on the page into an ace editor.    
+    // Transform the textarea on the page into an ace editor.
     var t = document.querySelector("textarea");
     textAce = ace.require("ace/ext/textarea").transformTextarea(t);
     setTimeout(function(){textAce.setDisplaySettings(true)});

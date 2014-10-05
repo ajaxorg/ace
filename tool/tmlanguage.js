@@ -141,8 +141,8 @@ function extractPatterns(tmRules) {
 
 
 // cli stuff
-var modeTemplate = fs.readFileSync(__dirname + "/mode.tmpl.js", "utf8");
-var modeHighlightTemplate = fs.readFileSync(__dirname + "/mode_highlight_rules.tmpl.js", "utf8");
+var modeTemplate = fs.readFileSync(__dirname + "/templates/mode.js", "utf8");
+var modeHighlightTemplate = fs.readFileSync(__dirname + "/templates/highlight_rules.js", "utf8");
 
 function convertLanguageFile(name) {
     var path = /^(\/|\w:)/.test(name) ? name : process.cwd() + "/" + name
