@@ -96,9 +96,6 @@ require("ace/commands/default_commands").commands.push({
         
         editor.keyBinding.addKeyboardHandler(kb);
         inlineEditor.keyBinding.addKeyboardHandler(kb);
-        editor.on("changeSession", function(e) {
-            w.el.parentNode && w.el.parentNode.removeChild(w.el);
-        });
         inlineEditor.setTheme("ace/theme/solarized_light");
     }
 });
