@@ -11,13 +11,13 @@
   ["comment","# Repo formats:"]
 ],[
    "start",
-  ["comment","# ssh   git@github.com:richoH/gh_pr.git"]
+  ["comment","# ssh   git@github.com:richo/gh_pr.git"]
 ],[
    "start",
-  ["comment","# http  https://richoH@github.com/richoH/gh_pr.git"]
+  ["comment","# http  https://richoH@github.com/richo/gh_pr.git"]
 ],[
    "start",
-  ["comment","# git   git://github.com/richoH/gh_pr.git"]
+  ["comment","# git   git://github.com/richo/gh_pr.git"]
 ],[
    "start"
 ],[
