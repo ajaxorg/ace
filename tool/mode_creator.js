@@ -2,6 +2,11 @@ define(function(require, exports, module) {
 
 /** creates globals intentionally to make things easily accessible from console **/
 
+require("ace/ext/language_tools");
+require("ace/config").setDefaultValues("editor", {
+    enableBasicAutocompletion: true,
+    enableSnippets: true
+});
 var net = require("ace/lib/net");
 var Range = require("ace/range").Range;
 var util = require("demo/kitchen-sink/util");
@@ -79,28 +84,28 @@ document.getElementById("syncToMode").onclick = function() {
     docEl.value = modelist.modesByName[modeEl.value].desc;
     docEl.onchange();
     run();
-}
+};
 document.getElementById("perfTest").onclick = function() {
-    var lines = editor2.session.doc.getAllLines()
+    var lines = editor2.session.doc.getAllLines();
     if (!lines.length)
-        return
+        return;
     while (lines.length < 1000) {
-        lines = lines.concat(lines)
+        lines = lines.concat(lines);
     }
 
     var tk = new Tokenizer(currentRules);
     var testPerf = function(lines, tk){
-        var state = "start"
+        var state = "start";
         for (var i=0, l = lines.length; i <l; i++) {
-            state = tk.getLineTokens(lines[i], state).state
+            state = tk.getLineTokens(lines[i], state).state;
         }
-    }
+    };
 
     var t = performance.now();
     testPerf(lines, tk);
     t = t - performance.now(t);
     log("tokenized " + lines.length + " lines in " + t + " ms");
-}
+};
 
 util.fillDropdown("themeEl", {
     bright: [
@@ -145,29 +150,34 @@ function run() {
     var src = editor1.getValue();
     var path = "ace/mode/new";
     var deps = getDeps(src, path);
-    window.require.undef(path)
+    window.require.undef(path);
     src = src.replace("define(", 'define("' + path +'", ["require","exports","module",' + deps +'],');    
     try {
         eval(src);
         require(["ace/mode/new"], function(e) {
-            try{
-                continueRun(e)
-            }catch(e){
-                log(e)
+            try {
+                continueRun(e);
+            } catch(e) {
+                log(e);
             }
         }, function(e) {
             log(e);
-            window.require.undef(path)
+            window.require.undef(path);
         });
-        hideLog()
+        hideLog();
     } catch(e) {
         log(e);
     }
 }
-var currentRules
+var currentRules;
 var continueRun = function(rules) {
-    rules = rules[Object.keys(rules)[0]];
-    currentRules = new rules().getRules()
+    for (var i in rules) {
+        if (typeof rules[i] == "function" && /rules/i.test(i)) {
+            rules = rules[i];
+            break;
+        }
+    }
+    currentRules = new rules().getRules();
     var Tokenizer = DebugTokenizer;
 
     var tk = new Tokenizer(currentRules);
@@ -178,16 +188,16 @@ var continueRun = function(rules) {
 
 editor1.commands.bindKey("ctrl-Return", run);
 
-var logEditor
+var logEditor;
 function log(e) {
-    console.log(e)
+    console.log(e);
     if (!logEditor) {
         logEditor = util.createEditor(document.getElementById("consoleEditor"));
-        logEditor.session.setMode("ace/mode/javascript")
-        logEditor.session.setUseWorker(false)
+        logEditor.session.setMode("ace/mode/javascript");
+        logEditor.session.setUseWorker(false);
     }
     logEditor.container.parentNode.style.display = '';
-    logEditor.resize()
+    logEditor.resize();
     logEditor.navigateFileEnd(e);
     logEditor.insert(e + "\n");
 }

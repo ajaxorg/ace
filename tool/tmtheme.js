@@ -115,7 +115,7 @@ function extractStyles(theme) {
         
             var aceScope = supportedScopes[scope];
             if (aceScope) {
-                colors[aceScope] = style;                
+                colors[aceScope] = style;
             }
             else if (style) {
                 unsupportedScopes[scope] = (unsupportedScopes[scope] || 0) + 1;
@@ -134,25 +134,44 @@ function extractStyles(theme) {
             colors.fold = foldSource.match(/\:([^;]+)/)[1];
         }
     }
+    
+    colors.gutterBg = colors.background
+    colors.gutterFg = mix(colors.foreground, colors.background, 0.5)
 
     if (!colors.selected_word_highlight)
         colors.selected_word_highlight =  "border: 1px solid " + colors.selection + ";";
 
     colors.isDark = (luma(colors.background) < 0.5) + "";
-
+    
     return colors;
 };
 
-function luma(color) {
+function mix(c1, c2, a1, a2) {
+    c1 = rgbColor(c1);
+    c2 = rgbColor(c2);
+    if (a2 === undefined)
+        a2 = 1 - a1
+    return "rgb(" + [
+        Math.round(a1*c1[0] + a2*c2[0]),
+        Math.round(a1*c1[1] + a2*c2[1]),
+        Math.round(a1*c1[2] + a2*c2[2])
+    ].join(",") + ")";
+}
+
+function rgbColor(color) {
+    if (typeof color == "object")
+        return color;
     if (color[0]=="#")
-        var rgb = color.match(/^#(..)(..)(..)/).slice(1).map(function(c) {
+        return color.match(/^#(..)(..)(..)/).slice(1).map(function(c) {
             return parseInt(c, 16);
         });
     else
-        var rgb = color.match(/\(([^,]+),([^,]+),([^,]+)/).slice(1).map(function(c) {
+        return color.match(/\(([^,]+),([^,]+),([^,]+)/).slice(1).map(function(c) {
             return parseInt(c, 10);
         });
-
+}
+function luma(color) {
+    var rgb = rgbColor(color);
     return (0.21 * rgb[0] + 0.72 * rgb[1] + 0.07 * rgb[2]) / 255;
 }
 
