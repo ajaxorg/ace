@@ -94,7 +94,7 @@ document.getElementById("perfTest").onclick = function() {
     }
 
     var tk = new Tokenizer(currentRules);
-    var testPerf = function(lines, tk){
+    var testPerf = function(lines, tk) {
         var state = "start";
         for (var i=0, l = lines.length; i <l; i++) {
             state = tk.getLineTokens(lines[i], state).state;
@@ -126,7 +126,7 @@ util.bindDropdown("themeEl", function(value) {
 
 function getDeps(src, path) {
     var deps = [];
-    src.replace(/require\((['"])(.*?)\1/g, function(a,b,c){
+    src.replace(/require\((['"])(.*?)\1/g, function(a,b,c) {
         if (c[0] == ".") {
             var base = path.split("/");
             c.split("/").forEach(function(part) {
@@ -151,7 +151,7 @@ function run() {
     var path = "ace/mode/new";
     var deps = getDeps(src, path);
     window.require.undef(path);
-    src = src.replace("define(", 'define("' + path +'", ["require","exports","module",' + deps +'],');    
+    src = src.replace("define(", 'define("' + path +'", ["require","exports","module",' + deps +'],');
     try {
         eval(src);
         require(["ace/mode/new"], function(e) {
