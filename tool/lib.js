@@ -5,13 +5,18 @@ var url = require("url");
 var https = require("https");
 var http = require("http");
 
-exports.parsePlist = function(themeXml, callback) {    
-    var result = "";
-    plist.parseString(themeXml, function(_, theme) {
-        result = theme[0];
-        callback && callback(theme[0]);
-    });
-    return result;
+exports.parsePlist = function(xmlOrJSON, callback) {
+    var json;
+    if (xmlOrJSON[0] == "<") {
+        plist.parseString(xmlOrJSON, function(_, result) {
+            json = result[0];
+        });
+    } else {
+        xmlOrJSON = xmlOrJSON.replace(/^\s*\/\/.*/gm, "");
+        json = JSON.parse(xmlOrJSON)
+    }
+    callback && callback(json);
+    return json;
 };
 
 exports.formatJSON = function(object, initialIndent) {
