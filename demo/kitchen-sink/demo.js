@@ -254,6 +254,7 @@ commands.addCommand({
 var keybindings = {
     ace: null, // Null = use "default" keymapping
     vim: require("ace/keyboard/vim").handler,
+    vim2: require("ace/keyboard/vim2").handler,
     emacs: "ace/keyboard/emacs",
     // This is a way to define simple keyboard remappings
     custom: new HashHandler({
