@@ -1,3 +1,8 @@
+  
+* API Changes
+  - `editor.commands.commandKeyBinding` now contains direct map from keys to commands instead of grouping them by hashid
+  - 
+  
 2014.09.21 Version 1.1.7
 
 * Bugfixes

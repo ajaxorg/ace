@@ -48,8 +48,8 @@ var Mode = function() {
 oop.inherits(Mode, TextMode);
 
 (function() {
-    this.lineCommentStart = "%lineCommentStart%";
-    this.blockComment = {start: "%blockCommentStart%", end: "%blockCommentEnd%"};
+    // this.lineCommentStart = "%lineCommentStart%";
+    // this.blockComment = {start: "%blockCommentStart%", end: "%blockCommentEnd%"};
     // Extra logic goes here.
     this.$id = "ace/mode/%languageHighlightFilename%"
 }).call(Mode.prototype);

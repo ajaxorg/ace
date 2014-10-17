@@ -184,7 +184,7 @@ function jsFileList(path, filter) {
         filter = /_test/;
 
     return fs.readdirSync(path).map(function(x) {
-        if (x.slice(-3) == ".js" && !filter.test(x) && !/\s/.test(x))
+        if (x.slice(-3) == ".js" && !filter.test(x) && !/\s|BASE|(\b|_)dummy(\b|_)/.test(x))
             return x.slice(0, -3);
     }).filter(Boolean);
 }
