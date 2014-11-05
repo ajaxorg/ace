@@ -157,13 +157,12 @@
   ["text.xml","      "],
   ["punctuation.definition.tag.begin.soy","{"],
   ["entity.name.tag.soy","param"],
-  ["text"," "],
+  ["meta.tag.param.soy"," "],
   ["entity.other.attribute-name.soy","name"],
   ["keyword.operator.soy",":"],
   ["meta.tag.param.soy"," "],
   ["variable.other.soy","$additionalName"],
-  ["text"," "],
-  ["meta.tag.param.soy","/"],
+  ["meta.tag.param.soy"," /"],
   ["punctuation.definition.tag.end.soy","}"]
 ],[
    "start",
