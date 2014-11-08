@@ -59,9 +59,9 @@
   ["meta.tag.punctuation.tag-open.xml","<"],
   ["meta.tag.tag-name.xml","div"],
   ["meta.tag.punctuation.tag-close.xml",">"],
-  ["storage.type.start","{{"],
+  ["support.function","{{{"],
   ["variable.parameter","body"],
-  ["storage.type.end","}}"],
+  ["support.function","}}}"],
   ["meta.tag.punctuation.end-tag-open.xml","</"],
   ["meta.tag.tag-name.xml","div"],
   ["meta.tag.punctuation.tag-close.xml",">"]
