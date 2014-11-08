@@ -18,7 +18,7 @@ node -e "
     var fs = require('fs');
     var version = '$VERSION_NUM';
     function replaceVersion(str) {
-        return str.replace(/(['\"]?version['\"]?\s*[:=]\s*['\"])[\\d.\\w\\-](['\"])/, function(_, m1, m2) {
+        return str.replace(/(['\"]?version['\"]?\s*[:=]\s*['\"])[\\d.\\w\\-]+(['\"])/, function(_, m1, m2) {
             return m1 + version + m2;
         });
     }
@@ -36,7 +36,7 @@ node -e "
     });
 "
 
-
+pause "versions updated. do you want to start build script? [y/n]"
 
 node Makefile.dryice.js full
 cd build
@@ -68,7 +68,7 @@ fi
 
 pause "continue pushing to github? [y/n]"
 
-echo git push --progress --tags "origin" HEAD:gh-pages HEAD:master
+git push --progress --tags "origin" HEAD:gh-pages HEAD:master
 echo "All done!"
 pause "May I go now? [y/n]"
 
