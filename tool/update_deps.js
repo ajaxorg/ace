@@ -122,7 +122,7 @@ var deps = {
     vim: {
         fetch: function(){
             var rootHref = "https://raw.githubusercontent.com/codemirror/CodeMirror/master/"
-            var fileMap = {"keymap/vim.js": "keyboard/vim2.js", "test/vim_test.js": "keyboard/vim2_test.js"};
+            var fileMap = {"keymap/vim.js": "keyboard/vim.js", "test/vim_test.js": "keyboard/vim_test.js"};
             async.forEach(Object.keys(fileMap), function(x, next) {
                 download(rootHref + x, function(e, d) {
                     d = d.replace(/^\(function.*{[^{}]+^}[^{}]+{/m, "define(function(require, exports, module) {");
