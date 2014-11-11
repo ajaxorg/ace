@@ -107,7 +107,7 @@ function convertToNonCapturingGroups(str) {
 
 function simplifyNonCapturingGroups(str) {
     var tokens = tokenize(str);
-    var t = tokens[0];
+    var t = tokens[0] || {};
     if (t.type == "group.start" && t.value == "(?:"
         && t.end == last(tokens)) {
         t.value = t.end.value = "";

@@ -502,7 +502,7 @@ function exportAce(ns, modules, requireBase, extModules) {
         if (typeof modules == "string")
             modules = [modules];
             
-        return (text + ";" + template
+        return (text.replace(/;\s*$/, "") + ";" + template
             .toString()
             .replace(/MODULES/g, JSON.stringify(modules))
             .replace(/REQUIRE_NS/g, requireBase)

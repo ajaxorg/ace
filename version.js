@@ -1,4 +1,4 @@
 #!/usr/bin/env node
 var x;
-eval("x= " + require("fs").readFileSync(__dirname + "/package.json"))
+x = require('./package');
 console.log(x.version)
