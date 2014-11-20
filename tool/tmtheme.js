@@ -106,7 +106,7 @@ function extractStyles(theme) {
 
     for (var i=1; i<theme.settings.length; i++) {
         var element = theme.settings[i];
-        if (!element.scope)
+        if (!element.scope || !element.settings)
             continue;
         var scopes = element.scope.split(/\s*[|,]\s*/g);
         for (var j = 0; j < scopes.length; j++) {
