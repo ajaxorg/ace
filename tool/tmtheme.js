@@ -337,6 +337,7 @@ function convertTheme(name, tmThemePath, outputDirectory) {
             css = cssStringify({stylesheet: {rules: oldRules}}, { compress: false });
         } catch(e) {
             console.log("Creating new file: " +  name + ".css")
+            css = cssStringify(cssParse(css), { compress: false });
         }
         
         var js = fillTemplate(jsTemplate, {
