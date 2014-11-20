@@ -91,53 +91,58 @@ exports.addGlobals = function() {
     window.EditSession = require("ace/edit_session").EditSession;
     window.MockRenderer = require("ace/test/mockrenderer").MockRenderer;
     window.EventEmitter = require("ace/lib/event_emitter").EventEmitter;
+    
+    window.getSelection = getSelection;
+    window.setSelection = setSelection;
+    window.testSelection = testSelection;
 };
+
+function getSelection(editor) {
+    var data = editor.multiSelect.toJSON();
+    if (!data.length) data = [data];
+    data = data.map(function(x) {
+        var a, c;
+        if (x.isBackwards) {
+            a = x.end;
+            c = x.start;
+        } else {
+            c = x.end;
+            a = x.start;
+        }
+        return Range.comparePoints(a, c) 
+            ? [a.row, a.column, c.row, c.column]
+            : [a.row, a.column];
+    });
+    return data.length > 1 ? data : data[0];
+}
+function setSelection(editor, data) {
+    if (typeof data[0] == "number")
+        data = [data];
+    editor.selection.fromJSON(data.map(function(x) {
+        var start = {row: x[0], column: x[1]};
+        var end = x.length == 2 ? start : {row: x[2], column: x[3]};
+        var isBackwards = Range.comparePoints(start, end) > 0;
+        return isBackwards ? {
+            start: end,
+            end: start,
+            isBackwards: true
+        } : {
+            start: start,
+            end: end,
+            isBackwards: true
+        };
+    }));
+}
+function testSelection(editor, data) {
+    assert.equal(getSelection(editor) + "", data + "");
+}
 
 exports.recordTestCase = function() {
     exports.addGlobals();
     var editor = window.editor;
     var testcase = window.testcase = [];
     var assert;
-    function getSelection(editor) {
-        var data = editor.multiSelect.toJSON();
-        if (!data.length) data = [data];
-        data = data.map(function(x) {
-            var a, c;
-            if (x.isBackwards) {
-                a = x.end;
-                c = x.start;
-            } else {
-                c = x.end;
-                a = x.start;
-            }
-            return Range.comparePoints(a, c) 
-                ? [a.row, a.column, c.row, c.column]
-                : [a.row, a.column];
-        });
-        return data.length > 1 ? data : data[0];
-    }
-    function setSelection(editor, data) {
-        if (typeof data[0] == "number")
-            data = [data];
-        editor.selection.fromJSON(data.map(function(x) {
-            var start = {row: x[0], column: x[1]};
-            var end = x.length == 2 ? start : {row: x[2], column: x[3]};
-            var isBackwards = Range.comparePoints(start, end) > 0;
-            return isBackwards ? {
-                start: end,
-                end: start,
-                isBackwards: true
-            } : {
-                start: start,
-                end: end,
-                isBackwards: true
-            };
-        }));
-    }
-    function testSelection(editor, data) {
-        assert.equal(getSelection(editor) + "", data + "");
-    }
-    
+
     testcase.push({
         type: "setValue",
         data: editor.getValue()
