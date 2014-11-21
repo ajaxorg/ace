@@ -106,7 +106,7 @@ function extractStyles(theme) {
 
     for (var i=1; i<theme.settings.length; i++) {
         var element = theme.settings[i];
-        if (!element.scope)
+        if (!element.scope || !element.settings)
             continue;
         var scopes = element.scope.split(/\s*[|,]\s*/g);
         for (var j = 0; j < scopes.length; j++) {
@@ -282,9 +282,13 @@ var themes = {
     "xcode": "Xcode_default"
 };
 
-function convertTheme(name) {
+function convertBuiltinTheme(name) {
+    return convertTheme(name, __dirname + "/tmthemes/" + themes[name] + ".tmTheme", __dirname + "/../lib/ace/theme");
+}
+
+function convertTheme(name, tmThemePath, outputDirectory) {
     console.log("Converting " + name);
-    var tmTheme = fs.readFileSync(__dirname + "/tmthemes/" + themes[name] + ".tmTheme", "utf8");
+    var tmTheme = fs.readFileSync(tmThemePath, "utf8");
     parseTheme(tmTheme, function(theme) {
         var styles = extractStyles(theme);
 
@@ -305,7 +309,7 @@ function convertTheme(name) {
         // this way, we preserve all hand-modified rules in the <theme>.css rules,
         // (because some exist, for collab1 and ace_indentation_guide
         try {
-            var outThemeCss = fs.readFileSync(__dirname + "/../lib/ace/theme/" + name + ".css");
+            var outThemeCss = fs.readFileSync(outputDirectory + "/" + name + ".css");
             var oldRules = cssParse(outThemeCss).stylesheet.rules;
             var newRules = cssParse(css).stylesheet.rules;
 
@@ -333,6 +337,7 @@ function convertTheme(name) {
             css = cssStringify({stylesheet: {rules: oldRules}}, { compress: false });
         } catch(e) {
             console.log("Creating new file: " +  name + ".css")
+            css = cssStringify(cssParse(css), { compress: false });
         }
         
         var js = fillTemplate(jsTemplate, {
@@ -342,13 +347,25 @@ function convertTheme(name) {
             isDark: styles.isDark
         });
 
-        fs.writeFileSync(__dirname + "/../lib/ace/theme/" + name + ".js", js);
-        fs.writeFileSync(__dirname + "/../lib/ace/theme/" + name + ".css", css);
+        fs.writeFileSync(outputDirectory + "/" + name + ".js", js);
+        fs.writeFileSync(outputDirectory + "/" + name + ".css", css);
     })
 }
 
-for (var name in themes) {
-    convertTheme(name);
+if (process.argv.length > 1) {
+    var args = process.argv.splice(2);
+    if (args.length < 3) {
+        console.error("Usage: node tmtheme.js [theme_name, path/to/theme.tmTheme path/to/output/directory]");
+        process.exit(1);
+    }
+    var name = args[0];
+    var themePath = args[1];
+    var outputDirectory = args[2];
+    convertTheme(name, themePath, outputDirectory);
+} else {
+    for (var name in themes) {
+        convertBuiltinTheme(name);
+    }
 }
 
 var sortedUnsupportedScopes = {};
