@@ -86,9 +86,12 @@ var ownSource = {
     /* filled from require*/
 };
 
-var hugeDocs = {
+var hugeDocs = require.toUrl ? {
     "build/src/ace.js": "",
     "build/src-min/ace.js": ""
+} : {
+    "src/ace.js": "",
+    "src-min/ace.js": ""
 };
 
 modelist.modes.forEach(function(m) {

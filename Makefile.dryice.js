@@ -120,6 +120,7 @@ function demo() {
 
     function changeComments(data) {
         return (data
+            .replace("doc/site/images/ace-logo.png", "demo/kitchen-sink/ace-logo.png")
             .replace(/<!\-\-DEVEL[\d\D]*?DEVEL\-\->/g, "")
             .replace(/PACKAGE\-\->|<!\-\-PACKAGE/g, "")
             .replace(/\/\*DEVEL[\d\D]*?DEVEL\*\//g, "")
