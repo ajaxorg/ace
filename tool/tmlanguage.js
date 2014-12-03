@@ -684,13 +684,14 @@ function convertTmLanguage(name, langStr) {
 
 if (!module.parent) {
     var args = process.argv.splice(2);
-    var tmLanguageFile  = args[0];
-    var devMode = args[1];
-    if (tmLanguageFile === undefined) {
-        console.error("Usage: node tmlanguage.js path/or/url/to/syntax.file");
+    var devMode = args[0] == "--dev";
+    if (devMode)
+        args.shift();
+    if (args.length < 1) {
+        console.error("Usage: node tmlanguage.js [--dev] path/or/url/to/syntax.file ...");
         process.exit(1);
     }
-    fetchAndConvert(tmLanguageFile);
+    args.forEach(fetchAndConvert);
 } else {
     exports.fetchAndConvert = fetchAndConvert;
 }
