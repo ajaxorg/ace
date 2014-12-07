@@ -33,6 +33,7 @@ import string
 import sys
 from os import path, stat, getcwd
 from wsgiref import util
+from wsgiref.validate import validator
 from wsgiref.headers import Headers
 from wsgiref.simple_server import make_server
 from optparse import OptionParser
@@ -84,6 +85,7 @@ class Cling(object):
     not_modified = StatusApp('304 Not Modified', "")
     moved_permanently = StatusApp('301 Moved Permanently')
     method_not_allowed = StatusApp('405 Method Not Allowed')
+    success_no_content = StatusApp('204 No Content', "")
 
     def __init__(self, root, **kw):
         """Just set the root and any other attribs passes via **kw."""
@@ -93,9 +95,6 @@ class Cling(object):
 
     def __call__(self, environ, start_response):
         """Respond to a request when called in the usual WSGI way."""
-        if environ['REQUEST_METHOD'] not in ('GET', 'HEAD'):
-            headers = [('Allow', 'GET, HEAD')]
-            return self.method_not_allowed(environ, start_response, headers)
         path_info = environ.get('PATH_INFO', '')
         full_path = self._full_path(path_info)
         if not self._is_under_root(full_path):
@@ -109,6 +108,17 @@ class Cling(object):
                 return self.moved_permanently(environ, start_response, headers)
             else:
                 full_path = self._full_path(path_info + self.index_file)
+        try:
+            sz = int(environ['CONTENT_LENGTH'])
+        except:
+            sz = 0
+        if environ['REQUEST_METHOD'] == 'PUT' and path_info in self.puttable and sz > 0:
+            data = environ['wsgi.input'].read(sz)
+            with open(full_path, "wb") as f: f.write(data)
+            return self.success_no_content(environ, start_response)
+        if environ['REQUEST_METHOD'] not in ('GET', 'HEAD'):
+            headers = [('Allow', 'GET, HEAD')]
+            return self.method_not_allowed(environ, start_response, headers)
         content_type = self._guess_type(full_path)
         try:
             etag, last_modified = self._conditions(full_path, environ)
@@ -191,52 +201,74 @@ def cling_wrap(package_name, dir_name, **kw):
 
 
 def command():
-    parser = OptionParser(usage="%prog DIR [HOST][:][PORT]",
-                          version="static 0.3.6")
+    usage = "%prog [--help] [-d DIR] [-l [HOST][:PORT]] [-p RELPATH[,RELPATH...]]"
+    parser = OptionParser(usage=usage, version="static 0.3.6")
+    parser.add_option("-d", "--dir", dest="rootdir", default=".", help="Root directory to serve. Defaults to '.' .", metavar="DIR")
+    parser.add_option("-l", "--listen", dest="listen", default="127.0.0.1:8888", help="Listen on this interface (given by its hostname or IP) and port. HOST defaults to 127.0.0.1. PORT defaults to 8888. Leave HOST empty to listen on all interfaces (SECURITY WARNING!).", metavar="[HOST][:PORT]")
+    parser.add_option("-p", "--puttable", dest="puttable", default="", help="Comma or space-separated list of request paths for which to permit PUT requests.", metavar="RELPATH[,RELPATH...]")
+    parser.add_option("--validate", dest="validate", action="store_true", default=False, help="Enable HTTP validation. You don't need this unless you're working on static.py itself.")
+
     options, args = parser.parse_args()
-    if len(args) in (1, 2):
-        if len(args) == 2:
-            parts = args[1].split(":")
-            if len(parts) == 1:
-                host = parts[0]
-                port = None
-            elif len(parts) == 2:
-                host, port = parts
-            else:
-                sys.exit("Invalid host:port specification.")
-        elif len(args) == 1:
-            host, port = None, None
-        if not host:
-            host = '0.0.0.0'
-        if not port:
-            port = 8888
-        try:
-            port = int(port)
-        except:
-            sys.exit("Invalid host:port specification.")
-        app = Cling(args[0])
-        try:
-            make_server(host, port, app).serve_forever()
-        except KeyboardInterrupt, ki:
-            print "Cio, baby!"
-        except:
-            sys.exit("Problem initializing server.")
-    else:
+    if len(args) > 0:
         parser.print_help(sys.stderr)
         sys.exit(1)
 
+    parts = options.listen.split(":")
+    if len(parts) == 1:
+        try: # if the the listen argument consists only of a port number
+            port = int(parts[0])
+            host = None
+        except: # could not parse as port number => must be a host IP or name
+            host = parts[0]
+            port = None
+    elif len(parts) == 2:
+        host, port = parts
+    else:
+        sys.exit("Invalid host:port specification.")
 
-def test():
-    from wsgiref.validate import validator
-    app = Cling(getcwd())
+    if not host:
+        host = '0.0.0.0'
+    if not port:
+        port = 8888
     try:
-        print "Serving " + getcwd() + " to http://localhost:8888"
-        make_server('0.0.0.0', 8888, validator(app)).serve_forever()
+        port = int(port)
+        if port <= 0 or port > 65535: raise ValueError
+    except:
+        sys.exit("Invalid host:port specification.")
+
+    puttable = set(path.abspath(p) for p in options.puttable.replace(","," ").split())
+    if puttable and host not in ('127.0.0.1', 'localhost'):
+        sys.exit("Permitting PUT access for non-localhost connections is unwise.")
+
+    options.rootdir = path.abspath(options.rootdir)
+
+    for p in puttable:
+        if not p.startswith(options.rootdir):
+            sys.exit("puttable path '%s' not under root '%s'" % (p, options.rootdir))
+        if path.exists(p) and not path.isfile(p):
+            sys.exit("puttable path '%s' exists but is not a file" % p)
+
+    # cut off root prefix from puttable paths
+    puttable = set(p[len(options.rootdir):] for p in puttable)
+
+    app = Cling(options.rootdir, puttable=puttable)
+
+    if options.validate:
+        app = validator(app)
+
+    try:
+        print "Serving %s to http://%s:%d" % (options.rootdir, host, port)
+        if puttable:
+            print "The following paths (relative to server root) may be OVERWRITTEN via HTTP PUT.\nI HOPE EVERY USER ON THIS SYSTEM IS TRUSTED!"
+            for p in puttable:
+                print p
+        make_server(host, port, app).serve_forever()
     except KeyboardInterrupt, ki:
-        print ""
-        print "Ciao, baby!"
+        print "Cio, baby!"
+    except:
+        sys.exit("Problem initializing server: %s" % sys.exc_info()[1])
 
 
 if __name__ == '__main__':
-    test()
+    command()
 
