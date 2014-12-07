@@ -53,6 +53,7 @@ util.bindDropdown("doc", function(value) {
     doclist.loadDoc(value, function(session) {
         if (session) {
             editor2.setSession(session);
+            uploadEl2.disabled = session.getUndoManager().isClean();
         }
     });
 });
@@ -60,6 +61,7 @@ util.bindDropdown("doc", function(value) {
 var modeEl = document.getElementById("modeEl");
 util.fillDropdown(modeEl, modelist.modes);
 var modeSessions = {};
+var savedLeadingComments = "";
 util.bindDropdown(modeEl, function(value) {
     if (modeSessions[value]) {
         editor1.setSession(modeSessions[value]);
@@ -68,7 +70,10 @@ util.bindDropdown(modeEl, function(value) {
     }
     var hp = "./lib/ace/mode/" + value + "_highlight_rules.js";
     net.get(hp, function(text) {
+        uploadEl1.disabled = true;
+        savedLeadingComments = text;
         text = util.stripLeadingComments(text);
+        savedLeadingComments = savedLeadingComments.substr(0, savedLeadingComments.length - text.length);
 
         var session = new EditSession(text);
         session.setUndoManager(new UndoManager());
@@ -85,6 +90,40 @@ document.getElementById("syncToMode").onclick = function() {
     docEl.onchange();
     run();
 };
+
+var uploadEl1 = document.getElementById("uploadToServer1");
+var uploadEl2 = document.getElementById("uploadToServer2");
+uploadEl1.onclick = function() {
+    var text = savedLeadingComments + editor1.getValue();
+    var url = "./lib/ace/mode/" + modeEl.value + "_highlight_rules.js";
+    net.put(url, text, function(text) {
+        if (text.trim().length > 0)
+            log(text);
+        else {
+            uploadEl1.disabled = true;
+            editor1.getSession().getUndoManager().markClean();
+        }
+    });
+};
+editor1.commands.bindKey("Ctrl-S", uploadEl1.onclick);
+uploadEl2.onclick = function() {
+    doclist.saveDoc(docEl.value, function(text) {
+        if (text.trim().length > 0)
+            log(text);
+        else {
+            uploadEl2.disabled = true;
+            editor2.getSession().getUndoManager().markClean();
+        }
+    });
+};
+editor2.commands.bindKey("Ctrl-S", uploadEl2.onclick);
+editor1.on('change', function() {
+    uploadEl1.disabled = false;
+});
+editor2.on('change', function() {
+    uploadEl2.disabled = false;
+});
+
 document.getElementById("perfTest").onclick = function() {
     var lines = editor2.session.doc.getAllLines();
     if (!lines.length)

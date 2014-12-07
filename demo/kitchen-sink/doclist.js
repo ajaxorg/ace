@@ -169,13 +169,30 @@ function loadDoc(name, callback) {
     });
 }
 
+// callback is called with the error message from PUT (if any)
+function saveDoc(name, callback) {
+    var doc = fileCache[name];
+    if (!doc || !doc.session)
+        return callback("Unknown document: " + name);
+
+    var path = doc.path;
+    var parts = path.split("/");
+    if (parts[0] == "docs")
+        path = "demo/kitchen-sink/" + path;
+    else if (parts[0] == "ace")
+        path = "lib/" + path;
+
+    net.put(path, doc.session.getValue(), callback);
+}
+
 module.exports = {
     fileCache: fileCache,
     docs: sort(prepareDocList(docs)),
     ownSource: prepareDocList(ownSource),
     hugeDocs: prepareDocList(hugeDocs),
     initDoc: initDoc,
-    loadDoc: loadDoc
+    loadDoc: loadDoc,
+    saveDoc: saveDoc,
 };
 module.exports.all = {
     "Mode Examples": module.exports.docs,
