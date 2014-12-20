@@ -2,6 +2,7 @@
 .DS_Store
 *.swp
 *.tmp
+*~
 
 # Project files that should not be in the repo
 .*

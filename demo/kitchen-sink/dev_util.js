@@ -29,6 +29,8 @@
  * ***** END LICENSE BLOCK ***** */
 
 define(function(require, exports, module) {
+var dom = require("ace/lib/dom");
+var Range = require("ace/range").Range;
 // allow easy access to ace in console, but not in ace code which uses strict
 function isStrict() {
     try { return !arguments.callee.caller.caller.caller}
@@ -59,21 +61,155 @@ def(window, "session", function(){ warn(); return window.env.editor.session });
 def(window, "split", function(){ warn(); return window.env.split });
 
 
-/* for textinput debuggging
-dom.importCssString("\
-  .ace_text-input {\
-    position: absolute;\
-    z-index: 10!important;\
-    width: 6em!important;\
-    height: 1em;\
-    opacity: 1!important;\
-    background: rgba(0, 92, 255, 0.11);\
-    border: none;\
-    font: inherit;\
-    padding: 0 1px;\
-    margin: 0 -1px;\
-    text-indent: 0em;\
-}\
-")*/
+def(window, "devUtil", function(){ warn(); return exports });
+exports.showTextArea = function(argument) {
+    dom.importCssString("\
+      .ace_text-input {\
+        position: absolute;\
+        z-index: 10!important;\
+        width: 6em!important;\
+        height: 1em;\
+        opacity: 1!important;\
+        background: rgba(0, 92, 255, 0.11);\
+        border: none;\
+        font: inherit;\
+        padding: 0 1px;\
+        margin: 0 -1px;\
+        text-indent: 0em;\
+    }\
+    ");
+};
+
+exports.addGlobals = function() {
+    window.oop = require("ace/lib/oop");
+    window.dom = require("ace/lib/dom");
+    window.Range = require("ace/range").Range;
+    window.Editor = require("ace/editor").Editor;
+    window.assert = require("ace/test/asyncjs/assert");
+    window.asyncjs = require("ace/test/asyncjs/async");
+    window.UndoManager = require("ace/undomanager").UndoManager;
+    window.EditSession = require("ace/edit_session").EditSession;
+    window.MockRenderer = require("ace/test/mockrenderer").MockRenderer;
+    window.EventEmitter = require("ace/lib/event_emitter").EventEmitter;
+    
+    window.getSelection = getSelection;
+    window.setSelection = setSelection;
+    window.testSelection = testSelection;
+};
+
+function getSelection(editor) {
+    var data = editor.multiSelect.toJSON();
+    if (!data.length) data = [data];
+    data = data.map(function(x) {
+        var a, c;
+        if (x.isBackwards) {
+            a = x.end;
+            c = x.start;
+        } else {
+            c = x.end;
+            a = x.start;
+        }
+        return Range.comparePoints(a, c) 
+            ? [a.row, a.column, c.row, c.column]
+            : [a.row, a.column];
+    });
+    return data.length > 1 ? data : data[0];
+}
+function setSelection(editor, data) {
+    if (typeof data[0] == "number")
+        data = [data];
+    editor.selection.fromJSON(data.map(function(x) {
+        var start = {row: x[0], column: x[1]};
+        var end = x.length == 2 ? start : {row: x[2], column: x[3]};
+        var isBackwards = Range.comparePoints(start, end) > 0;
+        return isBackwards ? {
+            start: end,
+            end: start,
+            isBackwards: true
+        } : {
+            start: start,
+            end: end,
+            isBackwards: true
+        };
+    }));
+}
+function testSelection(editor, data) {
+    assert.equal(getSelection(editor) + "", data + "");
+}
+
+exports.recordTestCase = function() {
+    exports.addGlobals();
+    var editor = window.editor;
+    var testcase = window.testcase = [];
+    var assert;
+
+    testcase.push({
+        type: "setValue",
+        data: editor.getValue()
+    }, {
+        type: "setSelection",
+        data: getSelection(editor)
+    });
+    editor.commands.on("afterExec", function(e) {
+        testcase.push({
+            type: "exec",
+            data: e
+        });
+        testcase.push({
+            type: "value",
+            data: editor.getValue()
+        });
+        testcase.push({
+            type: "selection",
+            data: getSelection(editor)
+        });
+    });
+    editor.on("mouseup", function() {
+        testcase.push({
+            type: "setSelection",
+            data: getSelection(editor)
+        });
+    });
+    
+    testcase.toString = function() {
+        var lastValue = "";
+        // var lastSelection = ""
+        var str = this.map(function(x) {
+            var data = x.data;
+            switch (x.type) {
+                case "exec": 
+                    return 'editor.execCommand("' 
+                        + data.command.name
+                        + (data.args ? '", ' + JSON.stringify(data.args) : '"')
+                    + ')';
+                case "setSelection":
+                    return 'setSelection(editor, ' + JSON.stringify(data)  + ')';
+                case "setValue":
+                    if (lastValue != data) {
+                        lastValue = data;
+                        return 'editor.setValue(' + JSON.stringify(data) + ', -1)';
+                    }
+                    return;
+                case "selection":
+                    return 'testSelection(editor, ' + JSON.stringify(data) + ')';
+                case "value":
+                    if (lastValue != data) {
+                        lastValue = data;
+                        return 'assert.equal('
+                            + 'editor.getValue(),'
+                            + JSON.stringify(data)
+                        + ')';
+                    }
+                    return;
+            }
+        }).filter(Boolean).join("\n");
+        
+        return getSelection + "\n"
+            + testSelection + "\n"
+            + setSelection + "\n"
+            + "\n" + str + "\n";
+    };
+};
+
 
 });
