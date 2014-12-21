@@ -31,13 +31,15 @@
 define(function(require, exports, module) {
 var dom = require("ace/lib/dom");
 var Range = require("ace/range").Range;
-// allow easy access to ace in console, but not in ace code which uses strict
-function isStrict() {
-    try { return !arguments.callee.caller.caller.caller}
-    catch(e){ return true }
-}
 function warn() {
-    if (isStrict()) {
+    var s = (new Error()).stack || "";
+    s = s.split("\n");
+    if (s[1] == "Error") s.shift(); // remove error description on chrome
+    s.shift(); // remove warn
+    s.shift(); // remove the getter
+    s = s.join("\n");
+    // allow easy access to ace in console, but not in ace code
+    if (!/at Object.InjectedScript.|@debugger eval|snippets:\/{3}/.test(s)) {
         console.error("trying to access to global variable");
     }
 }
