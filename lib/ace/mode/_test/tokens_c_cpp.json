@@ -137,7 +137,12 @@
    "start",
   ["text","    "],
   ["keyword","#if"],
-  ["constant.other"," VERBOSE >= 2"]
+  ["text"," "],
+  ["identifier","VERBOSE"],
+  ["text"," "],
+  ["keyword.operator",">="],
+  ["text"," "],
+  ["constant.numeric","2"]
 ],[
    "start",
   ["text","        "],
