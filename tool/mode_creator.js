@@ -96,24 +96,14 @@ var uploadEl2 = document.getElementById("uploadToServer2");
 uploadEl1.onclick = function() {
     var text = savedLeadingComments + editor1.getValue();
     var url = "./lib/ace/mode/" + modeEl.value + "_highlight_rules.js";
-    net.put(url, text, function(text) {
-        if (text.trim().length > 0)
-            log(text);
-        else {
-            uploadEl1.disabled = true;
-            editor1.getSession().getUndoManager().markClean();
-        }
+    net.request('PUT', url, text, function(text) {
+        handle_put_result(text, editor1, uploadEl1);
     });
 };
 editor1.commands.bindKey("Ctrl-S", uploadEl1.onclick);
 uploadEl2.onclick = function() {
     doclist.saveDoc(docEl.value, function(text) {
-        if (text.trim().length > 0)
-            log(text);
-        else {
-            uploadEl2.disabled = true;
-            editor2.getSession().getUndoManager().markClean();
-        }
+        handle_put_result(text, editor2, uploadEl2);
     });
 };
 editor2.commands.bindKey("Ctrl-S", uploadEl2.onclick);
@@ -123,6 +113,22 @@ editor1.on('change', function() {
 editor2.on('change', function() {
     uploadEl2.disabled = false;
 });
+
+function handle_put_result(text, editor, buttonEl) {
+    text = text.trim();
+    if (text.length == 0) {
+        buttonEl.disabled = true;
+        editor.getSession().getUndoManager().markClean();
+    } else {
+        if (text.indexOf("405") == 0) {
+            log("Write access to this file is disabled.\n"+
+            "To enable saving your changes to disk, clone the Ace repository"+
+            "\nand run the included static.py web server with the option\n"+
+            "--puttable='lib/ace/mode/*_highlight_rules.js,demo/kitchen-sink/docs/*'");
+        } else
+            log(text);
+    }
+}
 
 document.getElementById("perfTest").onclick = function() {
     var lines = editor2.session.doc.getAllLines();

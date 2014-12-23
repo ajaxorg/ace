@@ -182,7 +182,7 @@ function saveDoc(name, callback) {
     else if (parts[0] == "ace")
         path = "lib/" + path;
 
-    net.put(path, doc.session.getValue(), callback);
+    net.request('PUT', path, doc.session.getValue(), callback);
 }
 
 module.exports = {
