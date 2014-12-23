@@ -9,7 +9,7 @@ function main(displayName, extRe) {
     var demoFileExt = extRe.split("|")[0] || name;
     var demoFileName = demoFileExt[0] == "^" ? demoFileExt.substr(1) : name + "." + demoFileExt;
     var demoFilePath = lib.AceRoot + "demo/kitchen-sink/docs/" + demoFileName;
-    fs.writeFileSync(demoFilePath, "TODO add a nice demo!", "utf8");
+    fs.writeFileSync(demoFilePath, "TODO add a nice demo!\nTry to keep it short!", "utf8");
     console.log("Created demo file at: " + path.normalize(demoFilePath));
 
     /** mode **/
