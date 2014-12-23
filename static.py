@@ -32,6 +32,7 @@ import time
 import string
 import sys
 from os import path, stat, getcwd
+from fnmatch import fnmatch
 from wsgiref import util
 from wsgiref.validate import validator
 from wsgiref.headers import Headers
@@ -86,6 +87,7 @@ class Cling(object):
     moved_permanently = StatusApp('301 Moved Permanently')
     method_not_allowed = StatusApp('405 Method Not Allowed')
     success_no_content = StatusApp('204 No Content', "")
+    server_error = StatusApp('500 Internal Server Error')
 
     def __init__(self, root, **kw):
         """Just set the root and any other attribs passes via **kw."""
@@ -112,10 +114,16 @@ class Cling(object):
             sz = int(environ['CONTENT_LENGTH'])
         except:
             sz = 0
-        if environ['REQUEST_METHOD'] == 'PUT' and path_info in self.puttable and sz > 0:
-            data = environ['wsgi.input'].read(sz)
-            with open(full_path, "wb") as f: f.write(data)
-            return self.success_no_content(environ, start_response)
+        if environ['REQUEST_METHOD'] == 'PUT' and sz > 0:
+            for putglob in self.puttable:
+                if fnmatch(path_info, putglob):
+                    data = environ['wsgi.input'].read(sz)
+                    try:
+                        with open(full_path, "wb") as f: f.write(data)
+                        return self.success_no_content(environ, start_response)
+                    except:
+                        print sys.exc_info()[1]
+                        return self.server_error(environ, start_response)
         if environ['REQUEST_METHOD'] not in ('GET', 'HEAD'):
             headers = [('Allow', 'GET, HEAD')]
             return self.method_not_allowed(environ, start_response, headers)
@@ -201,12 +209,28 @@ def cling_wrap(package_name, dir_name, **kw):
 
 
 def command():
-    usage = "%prog [--help] [-d DIR] [-l [HOST][:PORT]] [-p RELPATH[,RELPATH...]]"
+    usage = "%prog [--help] [-d DIR] [-l [HOST][:PORT]] [-p GLOB[,GLOB...]]"
     parser = OptionParser(usage=usage, version="static 0.3.6")
-    parser.add_option("-d", "--dir", dest="rootdir", default=".", help="Root directory to serve. Defaults to '.' .", metavar="DIR")
-    parser.add_option("-l", "--listen", dest="listen", default="127.0.0.1:8888", help="Listen on this interface (given by its hostname or IP) and port. HOST defaults to 127.0.0.1. PORT defaults to 8888. Leave HOST empty to listen on all interfaces (SECURITY WARNING!).", metavar="[HOST][:PORT]")
-    parser.add_option("-p", "--puttable", dest="puttable", default="", help="Comma or space-separated list of request paths for which to permit PUT requests.", metavar="RELPATH[,RELPATH...]")
-    parser.add_option("--validate", dest="validate", action="store_true", default=False, help="Enable HTTP validation. You don't need this unless you're working on static.py itself.")
+    parser.add_option("-d", "--dir", dest="rootdir", default=".",
+        help="Root directory to serve. Defaults to '.' .", metavar="DIR")
+    parser.add_option("-l", "--listen", dest="listen", default="127.0.0.1:8888",
+        help="Listen on this interface (given by its hostname or IP) and port."+
+             " HOST defaults to 127.0.0.1. PORT defaults to 8888. "+
+             "Leave HOST empty to listen on all interfaces (INSECURE!).",
+             metavar="[HOST][:PORT]")
+    parser.add_option("-p", "--puttable", dest="puttable", default="",
+             help="Comma or space-separated list of request paths for which to"+
+                  " permit PUT requests. Each path is a glob pattern that may "+
+                  "contain wildcard characters '*' and/or '?'. "+
+                  "'*' matches any sequence of characters, including the empty"+
+                  " string. '?' matches exactly 1 arbitrary character. "+
+                  "NOTE: Both '*' and '?' match slashes and dots. "+
+                  "I.e. --puttable=* makes every file under DIR writable!",
+                  metavar="GLOB[,GLOB...]")
+    parser.add_option("--validate", dest="validate", action="store_true",
+                  default=False,
+                  help="Enable HTTP validation. You don't need this unless "+
+                       "you're developing static.py itself.")
 
     options, args = parser.parse_args()
     if len(args) > 0:
@@ -236,17 +260,16 @@ def command():
     except:
         sys.exit("Invalid host:port specification.")
 
-    puttable = set(path.abspath(p) for p in options.puttable.replace(","," ").split())
+    puttable = set(path.abspath(p) for p in
+                                     options.puttable.replace(","," ").split())
     if puttable and host not in ('127.0.0.1', 'localhost'):
-        sys.exit("Permitting PUT access for non-localhost connections is unwise.")
+      sys.exit("Permitting PUT access for non-localhost connections is unwise.")
 
     options.rootdir = path.abspath(options.rootdir)
 
     for p in puttable:
-        if not p.startswith(options.rootdir):
-            sys.exit("puttable path '%s' not under root '%s'" % (p, options.rootdir))
-        if path.exists(p) and not path.isfile(p):
-            sys.exit("puttable path '%s' exists but is not a file" % p)
+     if not p.startswith(options.rootdir):
+       sys.exit("puttable path '%s' not under root '%s'" % (p, options.rootdir))
 
     # cut off root prefix from puttable paths
     puttable = set(p[len(options.rootdir):] for p in puttable)
@@ -259,7 +282,9 @@ def command():
     try:
         print "Serving %s to http://%s:%d" % (options.rootdir, host, port)
         if puttable:
-            print "The following paths (relative to server root) may be OVERWRITTEN via HTTP PUT.\nI HOPE EVERY USER ON THIS SYSTEM IS TRUSTED!"
+            print("The following paths (relative to server root) may be "+
+                  "OVERWRITTEN via HTTP PUT.\n"+
+                  "I HOPE EVERY USER ON THIS SYSTEM IS TRUSTED!")
             for p in puttable:
                 print p
         make_server(host, port, app).serve_forever()
