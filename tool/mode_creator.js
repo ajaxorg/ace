@@ -53,7 +53,8 @@ util.bindDropdown("doc", function(value) {
     doclist.loadDoc(value, function(session) {
         if (session) {
             editor2.setSession(session);
-            uploadEl2.disabled = session.getUndoManager().isClean();
+            session.getUndoManager().markClean();
+            updateSaveButtonState(null, editor2);
         }
     });
 });
@@ -61,7 +62,7 @@ util.bindDropdown("doc", function(value) {
 var modeEl = document.getElementById("modeEl");
 util.fillDropdown(modeEl, modelist.modes);
 var modeSessions = {};
-var savedLeadingComments = "";
+
 util.bindDropdown(modeEl, function(value) {
     if (modeSessions[value]) {
         editor1.setSession(modeSessions[value]);
@@ -70,17 +71,18 @@ util.bindDropdown(modeEl, function(value) {
     }
     var hp = "./lib/ace/mode/" + value + "_highlight_rules.js";
     net.get(hp, function(text) {
-        uploadEl1.disabled = true;
-        savedLeadingComments = text;
-        text = util.stripLeadingComments(text);
-        savedLeadingComments = savedLeadingComments.substr(0, savedLeadingComments.length - text.length);
-
         var session = new EditSession(text);
         session.setUndoManager(new UndoManager());
+
         modeSessions[value] = session;
-        session.setMode("ace/mode/javascript");
+        session.setMode("ace/mode/javascript", function() {
+            if (session.getLine(0).match(/^\s*\//))
+                session.toggleFoldWidget(0); // fold licence comment
+        });
 
         editor1.setSession(modeSessions[value]);
+        session.getUndoManager().markClean();
+        updateSaveButtonState(null, editor1);
         schedule();
     });
 });
@@ -91,43 +93,47 @@ document.getElementById("syncToMode").onclick = function() {
     run();
 };
 
-var uploadEl1 = document.getElementById("uploadToServer1");
-var uploadEl2 = document.getElementById("uploadToServer2");
-uploadEl1.onclick = function() {
-    var text = savedLeadingComments + editor1.getValue();
-    var url = "./lib/ace/mode/" + modeEl.value + "_highlight_rules.js";
-    net.request('PUT', url, text, function(text) {
-        handle_put_result(text, editor1, uploadEl1);
-    });
-};
-editor1.commands.bindKey("Ctrl-S", uploadEl1.onclick);
-uploadEl2.onclick = function() {
-    doclist.saveDoc(docEl.value, function(text) {
-        handle_put_result(text, editor2, uploadEl2);
-    });
-};
-editor2.commands.bindKey("Ctrl-S", uploadEl2.onclick);
-editor1.on('change', function() {
-    uploadEl1.disabled = false;
-});
-editor2.on('change', function() {
-    uploadEl2.disabled = false;
-});
+editor1.saveButton = document.getElementById("saveButton1");
+editor2.saveButton = document.getElementById("saveButton2");
+editor1.saveButton.editor = editor1;
+editor2.saveButton.editor = editor2;
 
-function handle_put_result(text, editor, buttonEl) {
-    text = text.trim();
-    if (text.length == 0) {
-        buttonEl.disabled = true;
-        editor.getSession().getUndoManager().markClean();
-    } else {
-        if (text.indexOf("405") == 0) {
-            log("Write access to this file is disabled.\n"+
-            "To enable saving your changes to disk, clone the Ace repository"+
-            "\nand run the included static.py web server with the option\n"+
-            "--puttable='lib/ace/mode/*_highlight_rules.js,demo/kitchen-sink/docs/*'");
-        } else
-            log(text);
+editor1.saveButton.onclick = function() {
+    doclist.saveDoc({
+        path: "./lib/ace/mode/" + modeEl.value + "_highlight_rules.js",
+        session: editor1.session
+    }, function(err) {
+        handleSaveResult(err, editor1);
+    });
+};
+editor1.commands.bindKey({
+    win: "Ctrl-S", mac: "Cmd-s"
+}, editor1.saveButton.onclick);
+editor2.saveButton.onclick = function() {
+    doclist.saveDoc(docEl.value, function(err) {
+        handleSaveResult(err, editor2);
+    });
+};
+editor2.commands.bindKey({
+    win: "Ctrl-S", mac: "Cmd-s"
+}, editor2.saveButton.onclick);
+function updateSaveButtonState(e, editor){
+    editor.saveButton.disabled = editor.session.getUndoManager().isClean();
+}
+editor1.on("input", updateSaveButtonState);
+editor2.on("input", updateSaveButtonState);
+
+function handleSaveResult(err, editor) {
+    if (err) {
+        return log(
+            "Write access to this file is disabled.\n"+
+            "To enable saving your changes to disk, clone the Ace repository\n"+
+            "and run the included web server with the --allow-write option\n"+
+            "`node static.js --allow-write` or `static.py --puttable=*`"
+        );
     }
+    editor.session.getUndoManager().markClean();
+    updateSaveButtonState(null, editor);
 }
 
 document.getElementById("perfTest").onclick = function() {

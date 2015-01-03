@@ -10,37 +10,100 @@ var http = require("http")
 
 // compatibility with node 0.6
 if (!fs.exists)
-  fs.exists = path.exists;
+    fs.exists = path.exists;
 
-http.createServer(function(request, response) {
+var allowSave = process.argv.indexOf("--allow-save") != -1;
 
-  var uri = url.parse(request.url).pathname
-    , filename = path.join(process.cwd(), uri);
-  
-  fs.exists(filename, function(exists) {
-    if(!exists) {
-      response.writeHead(404, {"Content-Type": "text/plain"});
-      response.write("404 Not Found\n");
-      response.end();
-      return;
+http.createServer(function(req, res) {
+    var uri = url.parse(req.url).pathname
+      , filename = path.join(process.cwd(), uri);
+
+    if (req.method == "PUT") {
+        if (!allowSave)
+            return error(res, 404, "Saving not allowed pass --allow-save to enable");
+        save(req, res, filename);
     }
 
-    if (fs.statSync(filename).isDirectory()) filename += '/index.html';
+    fs.exists(filename, function(exists) {
+        if (!exists)
+            return error(res, 404, "404 Not Found\n");
 
-    fs.readFile(filename, "binary", function(err, file) {
-      if(err) {        
-        response.writeHead(500, {"Content-Type": "text/plain"});
-        response.write(err + "\n");
-        response.end();
-        return;
-      }
+        if (fs.statSync(filename).isDirectory()) {
+            var files = fs.readdirSync(filename);
+            res.writeHead(200, {"Content-Type": "text/html"});
+            
+            files.push(".", "..");
+            var html = files.map(function(name) {
+                var href = uri + "/" + name;
+                href = href.replace(/[\/\\]+/g, "/").replace(/\/$/g, "");
+                if (fs.statSync(filename + "/" + name + "/").isDirectory())
+                    href += "/";
+                return "<a href='" + href + "'>" + name + "</a><br>";
+            });
 
-      var contentType = mime.lookup(filename) || "text/plain";
-      response.writeHead(200, {"Content-Type": contentType});
-      response.write(file, "binary");
-      response.end();
+            res._hasBody && res.write(html.join(""));
+            res.end();
+            return;
+        }
+
+        fs.readFile(filename, "binary", function(err, file) {
+            if (err) {
+                res.writeHead(500, { "Content-Type": "text/plain" });
+                res.write(err + "\n");
+                res.end();
+                return;
+            }
+
+            var contentType = mime.lookup(filename) || "text/plain";
+            res.writeHead(200, { "Content-Type": contentType });
+            res.write(file, "binary");
+            res.end();
+        });
     });
-  });
 }).listen(port, ip);
 
-console.log("http://localhost:" + port);
+function error(res, status, message, error) {
+    console.error(error || message);
+    res.writeHead(status, { "Content-Type": "text/plain" });
+    res.write(message);
+    res.end();
+}
+
+function save(req, res, filePath) {
+    var data = "";
+    req.on("data", function(chunk) {
+        data += chunk;
+    });
+    req.on("error", function() {
+        error(res, 404, "Could't save file");
+    });
+    req.on("end", function() {
+        try {
+            fs.writeFileSync(filePath, data);
+        }
+        catch (e) {
+            return error(res, 404, "Could't save file", e);
+        }
+        res.statusCode = 200;
+        res.end("OK");
+    });
+}
+
+function getLocalIps() {
+    var os = require("os");
+
+    var interfaces = os.networkInterfaces ? os.networkInterfaces() : {};
+    var addresses = [];
+    for (var k in interfaces) {
+        for (var k2 in interfaces[k]) {
+            var address = interfaces[k][k2];
+            if (address.family === "IPv4" && !address.internal) {
+                addresses.push(address.address);
+            }
+        }
+    }
+    return addresses;
+}
+
+console.log("http://" + (ip == "0.0.0.0" ? getLocalIps()[0] : ip) + ":" + port);
+

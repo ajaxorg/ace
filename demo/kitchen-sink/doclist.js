@@ -169,9 +169,8 @@ function loadDoc(name, callback) {
     });
 }
 
-// callback is called with the error message from PUT (if any)
 function saveDoc(name, callback) {
-    var doc = fileCache[name];
+    var doc = fileCache[name] || name;
     if (!doc || !doc.session)
         return callback("Unknown document: " + name);
 
@@ -182,8 +181,23 @@ function saveDoc(name, callback) {
     else if (parts[0] == "ace")
         path = "lib/" + path;
 
-    net.request('PUT', path, doc.session.getValue(), callback);
+    upload(path, doc.session.getValue(), callback);
 }
+
+function upload(url, data, callback) {
+    url = net.qualifyURL(url);
+    if (!/https?:/.test(url))
+        return callback(new Error("Unsupported url scheme"));
+    var xhr = new XMLHttpRequest();
+    xhr.open("PUT", url, true);
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) {
+            callback(!/^2../.test(xhr.status));
+        }
+    };
+    xhr.send(data);
+};
+
 
 module.exports = {
     fileCache: fileCache,

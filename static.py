@@ -263,13 +263,13 @@ def command():
     puttable = set(path.abspath(p) for p in
                                      options.puttable.replace(","," ").split())
     if puttable and host not in ('127.0.0.1', 'localhost'):
-      sys.exit("Permitting PUT access for non-localhost connections is unwise.")
+        print("Permitting PUT access for non-localhost connections may be unwise.")
 
     options.rootdir = path.abspath(options.rootdir)
 
     for p in puttable:
-     if not p.startswith(options.rootdir):
-       sys.exit("puttable path '%s' not under root '%s'" % (p, options.rootdir))
+        if not p.startswith(options.rootdir):
+            sys.exit("puttable path '%s' not under root '%s'" % (p, options.rootdir))
 
     # cut off root prefix from puttable paths
     puttable = set(p[len(options.rootdir):] for p in puttable)
@@ -283,13 +283,12 @@ def command():
         print "Serving %s to http://%s:%d" % (options.rootdir, host, port)
         if puttable:
             print("The following paths (relative to server root) may be "+
-                  "OVERWRITTEN via HTTP PUT.\n"+
-                  "I HOPE EVERY USER ON THIS SYSTEM IS TRUSTED!")
+                  "OVERWRITTEN via HTTP PUT.")
             for p in puttable:
                 print p
         make_server(host, port, app).serve_forever()
     except KeyboardInterrupt, ki:
-        print "Cio, baby!"
+        print "Ciao, baby!"
     except:
         sys.exit("Problem initializing server: %s" % sys.exc_info()[1])
 
