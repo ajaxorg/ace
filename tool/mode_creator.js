@@ -53,7 +53,6 @@ util.bindDropdown("doc", function(value) {
     doclist.loadDoc(value, function(session) {
         if (session) {
             editor2.setSession(session);
-            session.getUndoManager().markClean();
             updateSaveButtonState(null, editor2);
         }
     });
@@ -81,7 +80,6 @@ util.bindDropdown(modeEl, function(value) {
         });
 
         editor1.setSession(modeSessions[value]);
-        session.getUndoManager().markClean();
         updateSaveButtonState(null, editor1);
         schedule();
     });
