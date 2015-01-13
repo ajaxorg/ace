@@ -135,6 +135,10 @@ var deps = {
             });
         }
     },
+    liveScript: {
+        path: "mode/livescript.js",
+        url: "https://raw.githubusercontent.com/gkz/LiveScript/master/lib/mode-ls.js"        
+    },
     coffee: {
         fetch: function(){
             var rootHref = "https://raw.github.com/jashkenas/coffee-script/master/";
