@@ -139,7 +139,7 @@
   ["text"," "],
   ["punctuation.separator.key-value","=>"],
   ["text"," "],
-  ["constant.numeric","34"],
+  ["string.character","?\""],
   ["text",", "],
   ["constant.other.symbol.ruby",":key"],
   ["text"," "],
@@ -148,7 +148,15 @@
   ["string.start","\""],
   ["string","value"],
   ["string.end","\""],
-  ["paren.rparen","}"]
+  ["text",", "],
+  ["identifier","anotherKey"],
+  ["text",": "],
+  ["paren.lparen","["],
+  ["identifier","x"],
+  ["text",", "],
+  ["identifier","y"],
+  ["text","?"],
+  ["paren.rparen","]}"]
 ],[
    "start"
 ],[
