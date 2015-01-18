@@ -169,13 +169,44 @@ function loadDoc(name, callback) {
     });
 }
 
+function saveDoc(name, callback) {
+    var doc = fileCache[name] || name;
+    if (!doc || !doc.session)
+        return callback("Unknown document: " + name);
+
+    var path = doc.path;
+    var parts = path.split("/");
+    if (parts[0] == "docs")
+        path = "demo/kitchen-sink/" + path;
+    else if (parts[0] == "ace")
+        path = "lib/" + path;
+
+    upload(path, doc.session.getValue(), callback);
+}
+
+function upload(url, data, callback) {
+    url = net.qualifyURL(url);
+    if (!/https?:/.test(url))
+        return callback(new Error("Unsupported url scheme"));
+    var xhr = new XMLHttpRequest();
+    xhr.open("PUT", url, true);
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) {
+            callback(!/^2../.test(xhr.status));
+        }
+    };
+    xhr.send(data);
+};
+
+
 module.exports = {
     fileCache: fileCache,
     docs: sort(prepareDocList(docs)),
     ownSource: prepareDocList(ownSource),
     hugeDocs: prepareDocList(hugeDocs),
     initDoc: initDoc,
-    loadDoc: loadDoc
+    loadDoc: loadDoc,
+    saveDoc: saveDoc,
 };
 module.exports.all = {
     "Mode Examples": module.exports.docs,

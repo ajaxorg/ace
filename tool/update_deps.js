@@ -135,6 +135,10 @@ var deps = {
             });
         }
     },
+    liveScript: {
+        path: "mode/livescript.js",
+        url: "https://raw.githubusercontent.com/gkz/LiveScript/master/lib/mode-ls.js"        
+    },
     coffee: {
         fetch: function(){
             var rootHref = "https://raw.github.com/jashkenas/coffee-script/master/";
@@ -200,7 +204,24 @@ var deps = {
                 });
             }
         }
-    }
+    },
+    xmldom: {
+        fetch: function() {
+            var rootHref = "https://raw.githubusercontent.com/iDeBugger/xmldom/master/"
+            var fileMap = {
+               "sax.js": "mode/xml/sax.js",
+               "dom-parser.js": "mode/xml/dom-parser.js",
+               "dom.js": "mode/xml/dom.js"
+            };
+            async.forEach(Object.keys(fileMap), function(x, next) {
+                download(rootHref + x, function(e, d) {
+                    fs.writeFile(rootDir + fileMap[x], d, next)
+                })
+            }, function() {
+                console.log("XmlDOM updating done")
+            });
+        }
+    },
 };
 
 var download = function(href, callback) {
