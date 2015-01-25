@@ -582,4 +582,7 @@ env.editor.setOptions({
 var beautify = require("ace/ext/beautify");
 env.editor.commands.addCommands(beautify.commands);
 
+var easymotion = require("ace/ext/easymotion");
+env.editor.commands.addCommands(easymotion.commands);
+
 });

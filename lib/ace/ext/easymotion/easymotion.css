@@ -1,0 +1,12 @@
+#ace_easymotion_menu {
+    background-color: #F7F7F7;
+    color: black;
+    box-shadow: -5px 4px 5px rgba(126, 126, 126, 0.55);
+    padding: 1em 0.5em 2em 1em;
+    overflow: auto;
+    margin: 0 auto;
+    width: 200px;
+    top: 0;
+    z-index: 9991;
+    cursor: default;
+}
