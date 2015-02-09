@@ -257,7 +257,7 @@
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
     background-color: black;
-    color: white;
+    color: red;
 }
 
 .ace_line .ace_fold {
