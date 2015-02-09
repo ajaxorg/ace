@@ -258,6 +258,7 @@
     box-sizing: border-box;
     background-color: black;
     color: red;
+    width: auto !important;
 }
 
 .ace_line .ace_fold {
