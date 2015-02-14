@@ -1,0 +1,293 @@
+# This is a test SPARQL file - if it looks pretty, everything is a-ok.
+# If everything's not a-ok, I missed an example of something that should
+# look pretty, but doesn't.
+#
+# Oh, and this example file is a bit all over the shop as I kept discovering
+# things it should highlight, but doesn't. Don't expect to find things in a
+# nice well-organised order.
+
+BASE          <http://example.org/book/>
+PREFIX :      <http://example.com/>
+PREFIX foaf:  <http://xmlns.com/foaf/0.1/>
+
+SELECT ?title
+WHERE {
+  <http://example.org/book/book1> <http://purl.org/dc/elements/1.1/title> ?title .
+}
+
+SELECT ?name ?mbox
+WHERE {
+  ?x foaf:name ?name .
+  ?x foaf:mbox ?mbox
+}
+
+# This is a test comment
+
+SELECT ?v WHERE { ?v ?p "cat" }
+
+SELECT ?v WHERE { ?v ?p "cat"@en }
+SELECT ?v WHERE { ?v ?p "cat"@en-GB } # I forgot to check the format of the languages
+
+<http://example.com/uri-with-hash#foo> # Hopefully doesn't look like a comment...
+"string with # hash" # ... or this
+
+SELECT ?v WHERE { ?v ?p 42 }
+SELECT ?v WHERE { ?v ?p +42 }
+SELECT ?v WHERE { ?v ?p -42 }
+SELECT ?v WHERE { ?v ?p 4.2 }
+SELECT ?v WHERE { ?v ?p .42 }
+SELECT ?v WHERE { ?v ?p 4.2e12 }
+SELECT ?v WHERE { ?v ?p 4.2e+23 }
+SELECT ?v WHERE { ?v ?p 4.2E-34 }
+SELECT ?v WHERE { ?v ?p 4.2E-34 }
+SELECT ?v WHERE { ?v ?p . }
+
+SELECT ?v WHERE { ?v ?p "abc"^^<http://example.org/datatype#specialDatatype> }
+
+SELECT ?name
+WHERE {
+  ?P foaf:givenName ?G ;
+     foaf:surname ?S
+  BIND(CONCAT(?G, " ", ?S) AS ?name)
+}
+
+CONSTRUCT { ?x foaf:name ?name }
+WHERE  { ?x org:employeeName ?name }
+
+SELECT ?title
+WHERE {
+  ?x dc:title ?title
+  FILTER regex(?title, "^SPARQL")
+}
+
+FILTER (!?a)
+# This checks we don't highlight the first bracket of a prefixed:call…
+FILTER (fn:not(?a))
+FILTER (?a = ?b)
+FILTER (BOUND(?a))
+
+
+"chat"
+"chat\"more"
+'chat'@fr
+'chat\'more'@fr
+"xyz"^^<http://example.org/ns/userDatatype>
+"abc"^^appNS:appDataType
+'''The librarian said, "Perhaps you would enjoy 'War and Peace'."'''
+"""The librarian said, 'Perhaps you would enjoy "War and Peace".'""
+1
+1.3
+1.300
+1.0e6
+true
+false
+
+[ :p "v" ] .
+
+_:b57 :p "v" .
+
+SELECT  $title
+WHERE   { :book1  dc:title  $title }
+
+SELECT ?name ?mbox
+WHERE { ?x foaf:name  ?name .
+  OPTIONAL { ?x  foaf:mbox  ?mbox }
+}
+
+SELECT ?title
+WHERE  { { ?book dc10:title  ?title } UNION { ?book dc11:title  ?title } }
+
+SELECT ?who ?g ?mbox
+FROM <http://example.org/dft.ttl>
+FROM NAMED <http://example.org/alice>
+FROM NAMED <http://example.org/bob>
+WHERE
+{
+   ?g dc:publisher ?who .
+   GRAPH ?g { ?x foaf:mbox ?mbox }
+}
+
+SELECT ?name
+WHERE { ?x foaf:name ?name ; :empId ?emp }
+ORDER BY ASC(?emp)
+
+SELECT ?name
+WHERE { ?x foaf:name ?name ; :empId ?emp }
+ORDER BY DESC(?emp)
+
+SELECT DISTINCT ?name WHERE { ?x foaf:name ?name }
+SELECT REDUCED ?name WHERE { ?x foaf:name ?name }
+
+SELECT DISTINCT ?s
+WHERE {
+   ?s ?p ?o .
+   MINUS {
+      ?s foaf:givenName "Bob" .
+   }
+}
+
+SELECT ?name
+WHERE { ?x foaf:name ?name }
+ORDER BY ?name
+LIMIT 5
+OFFSET 10
+
+ASK { ?x foaf:name  "Alice" }
+# Property paths
+ASK { ?s foo:bar|baz:quux  ?p }
+ASK { ?s foo:bar/baz:quux  ?p }
+ASK { ?s foo:bar^baz:quux  ?p }
+ASK { ?s foo:bar*baz:quux  ?p }
+ASK { ?s foo:bar?baz:quux  ?p }
+ASK { ?s foo:bar+baz:quux  ?p }
+ASK { ?s foo:bar{1}/baz:quux  ?p }
+ASK { ?s foo:bar{1,}/baz:quux  ?p }
+ASK { ?s foo:bar{1,2}/baz:quux  ?p }
+ASK { ?s foo:bar{ 1 , 2 }/baz:quux  ?p }
+ASK { ?s foo:bar{ , 2 }/baz:quux  ?p }
+ASK { ?s foo:bar/baz:quux/cow:moo  ?p }
+ASK { ?s (foo:bar|baz:quux)/cow:moo  ?p }
+
+ASK { ?x a foo:bar }
+
+DESCRIBE <http://example.org/>
+
+BOUND(A)
+isIRI(A)
+isURI(A)
+isBLANK(A)
+isLITERAL(A)
+STR(A)
+LANG(A)
+DATATYPE(A)
+
+true || false
+true && false
+TRUE || false
+1 = 2
+1 != 2
+1 < 2
+1 > 2
+1 <= 2
+1 >= 1
+1 * 2
+1 / 2
+1 + 2
+1 - 2
+sameTerm(foo:a, bar:b)
+langMatches(lang(?title), "FR")
+REGEX("string", "pattern")
+
+# SPARQL 1.1 Query Functions
+# http://www.w3.org/TR/sparql11-query/#func-rdfTerms
+
+# Some of these contain a bit of a hack to not include the trailing
+# closing ) in a type URI
+
+COALESCE(?a, ?b)
+IF(bound(?y), "yes", "no")
+FILTER (NOT EXISTS { ?a ?b ?c })
+2 IN (1, 2, 3)
+2 NOT IN (1, 2, 3)
+IRI("http://example/")
+BNODE("nothing to see here")
+STRDT("123", xsd:integer)
+UUID()
+STRUUID()
+strlen("chat")
+strlen("chat"@en)
+strlen("chat"^^xsd:string)
+substr("foobar"^^xsd:string, 4, 1)
+ucase("foo"@en)
+lcase("BAR"^^xsd:string)
+strStarts("foobar"@en, "foo"^^xsd:string)
+strEnds("foobar"^^xsd:string, "bar")
+contains("foobar", "bar")
+strbefore("abc"^^xsd:string,"")
+strafter("abc"@en, ""@en)
+encode_for_uri("Los Angeles"^^xsd:string)
+replace("abab", "B.", "Z","i")
+abs(-1.5)
+round(-2.5)
+ceil(10.5)
+floor(-10.5)
+rand()
+now()
+year("2011-01-10T14:45:13.815-05:00"^^xsd:dateTime)
+month("2011-01-10T14:45:13.815-05:00"^^xsd:dateTime)
+day("2011-01-10T14:45:13.815-05:00"^^xsd:dateTime)
+hours("2011-01-10T14:45:13.815-05:00"^^xsd:dateTime)
+minutes("2011-01-10T14:45:13.815-05:00"^^xsd:dateTime)
+seconds("2011-01-10T14:45:13.815-05:00"^^xsd:dateTime)
+timezone("2011-01-10T14:45:13.815-05:00"^^xsd:dateTime)
+tz("2011-01-10T14:45:13.815Z"^^xsd:dateTime)
+MD5("abc")
+SHA1("abc"^^xsd:string)
+SHA256("abc")
+SHA384("abc"^^xsd:string)
+SHA512("abc")
+
+# To prove an unknown function doesn't get numbers highlighted as integers
+foo123()
+foo123abc()
+
+# SPARQL 1.1 Aggregates
+# http://www.dajobe.org/talks/201105-sparql-11/
+
+AVG(?expr)
+COUNT(*) and COUNT(?expr)
+GROUP_CONCAT(?expr)
+GROUP_CONCAT(?expr; separator = ", ")
+MAX(?expr)
+MIN(?expr)
+SAMPLE(?expr)
+SUM(?expr)
+
+# SPARQL 1.1 Update
+# http://www.w3.org/TR/sparql11-update/#updateLanguage
+
+INSERT DATA {
+  <http://example/book1> dc:title "A new book" ;
+                         dc:creator "A.N.Other" .
+}
+
+DELETE DATA {
+  <http://example/book2> dc:title "David Copperfield" ;
+                         dc:creator "Edmund Wells" .
+}
+
+WITH <http://example/addresses>
+DELETE { ?person foaf:givenName 'Bill' }
+INSERT { ?person foaf:givenName 'William' }
+WHERE  { ?person foaf:givenName 'Bill' }
+
+WITH  <http://example/addresses>
+INSERT  { ?a ?b ?c }
+USING NAMED <http://example/foo>
+WHERE { ?a ?b ?c }
+
+CLEAR GRAPH <http://example/addresses>
+CLEAR SILENT <http://example/addresses>
+CLEAR DEFAULT
+CLEAR NAMED
+CLEAR ALL
+
+CREATE GRAPH <http://example/addresses>
+DROP GRAPH <http://example/addresses>
+COPY DEFAULT TO <http://example.org/named>
+MOVE DEFAULT TO <http://example.org/named>
+ADD DEFAULT TO <http://example.org/named>
+
+# SPARQL 1.1 Federated Query
+
+SELECT ?person ?interest ?known
+WHERE
+{
+  SERVICE <http://people.example.org/sparql> {
+    ?person foaf:name ?name .
+    OPTIONAL {
+      ?person foaf:interest ?interest .
+      SERVICE <http://people2.example.org/sparql> {
+        ?person foaf:knows ?known . } }
+  }
+}
