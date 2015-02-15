@@ -74,7 +74,7 @@ FILTER (BOUND(?a))
 "xyz"^^<http://example.org/ns/userDatatype>
 "abc"^^appNS:appDataType
 '''The librarian said, "Perhaps you would enjoy 'War and Peace'."'''
-"""The librarian said, 'Perhaps you would enjoy "War and Peace".'""
+"""The librarian said, 'Perhaps you would enjoy "War and Peace".'"""
 1
 1.3
 1.300
