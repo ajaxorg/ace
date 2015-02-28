@@ -1,6 +1,7 @@
 .ace_static_highlight {
-   font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', 'Droid Sans Mono', monospace;
-   font-size: 12px;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', 'Droid Sans Mono', monospace;
+    font-size: 12px;
+    white-space: pre-wrap
 }
 
 .ace_static_highlight .ace_gutter {
@@ -17,10 +18,14 @@
 .ace_static_highlight .ace_line { position: relative; }
 
 .ace_static_highlight .ace_gutter-cell {
-  -moz-user-select: -moz-none;
-  -khtml-user-select: none;
-  -webkit-user-select: none;
-  user-select: none;
+    -moz-user-select: -moz-none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    position: absolute;
 }
 
 
