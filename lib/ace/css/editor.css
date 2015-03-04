@@ -259,6 +259,7 @@
     background-color: black;
     color: red;
     width: auto !important;
+    font-weight: bold;
 }
 
 .ace_line .ace_fold {
