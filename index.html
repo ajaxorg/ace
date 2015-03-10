@@ -470,7 +470,6 @@ var fonts = lang.arrayToMap(
                             <pre><code class="language-javascript">this.$rules = {
     "start" : [ {
         token : "text",
-        merge : true,
         regex : "&lt;\\!\\[CDATA\\[",
         next : "cdata"
     },
@@ -480,13 +479,7 @@ var fonts = lang.arrayToMap(
         regex : "\\]\\]&gt;",
         next : "start"
     }, {
-        token : "text",
-        merge : true,
-        regex : "\\s+"
-    }, {
-        token : "text",
-        merge : true,
-        regex : ".+"
+        defaultToken : "text"
     } ]
 };</code></pre>
                             <p>In this extremly short sample, we're defining some highlighting rules for when Ace detectes a <code>&lt;![CDATA</code> tag. When one is encountered, the tokenizer moves from <code>start</code> into the <code>cdata</code> state. It remains there, applying the <code>text</code> token to any string it encounters. Finally, when it hits a closing <code>]&gt;</code> symbol, it returns to the <code>start</code> state and continues to tokenize anything else.</p>
