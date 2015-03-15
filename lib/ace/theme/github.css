@@ -68,8 +68,11 @@
   color: black;
 }
 
-.ace-github .ace_marker-layer .ace_active-line {
+.ace-github.ace_focus .ace_marker-layer .ace_active-line {
   background: rgb(255, 255, 204);
+}
+.ace-github .ace_marker-layer .ace_active-line {
+  background: rgb(245, 245, 245);
 }
 
 .ace-github .ace_marker-layer .ace_selection {
