@@ -18,7 +18,7 @@ $(function() {
         });
         
         ace.config.loadModule("ace/ext/emmet", function() {
-            ace.require("ace/lib/net").loadScript("http://nightwing.github.io/emmet-core/emmet.js", function() {
+            ace.require("ace/lib/net").loadScript("http://cloud9ide.github.io/emmet-core/emmet.js", function() {
                 embedded_editor.setOption("enableEmmet", true);
                 editor.setOption("enableEmmet", true);
             });
