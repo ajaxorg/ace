@@ -1,6 +1,7 @@
 var plist = require("plist");
 var util = require("util");
 var url = require("url");
+var cson = require("cson");
 
 var https = require("https");
 var http = require("http");
@@ -11,9 +12,11 @@ exports.parsePlist = function(xmlOrJSON, callback) {
         plist.parseString(xmlOrJSON, function(_, result) {
             json = result[0];
         });
-    } else {
+    } else try {
         xmlOrJSON = xmlOrJSON.replace(/^\s*\/\/.*/gm, "");
         json = JSON.parse(xmlOrJSON)
+    } catch(e) {
+        json = cson.parse(xmlOrJSON);
     }
     callback && callback(json);
     return json;

@@ -1,9 +1,10 @@
 {
-    "name": "ace-tools",
-    "version": "0.1.0",
-    "dependencies": {
-        "plist": "",
-        "css-parse": "1.0.3",
-        "css-stringify": "1.0.3"
-    }
+  "name": "ace-tools",
+  "version": "0.1.0",
+  "dependencies": {
+    "cson": "^3.0.1",
+    "css-parse": "1.0.3",
+    "css-stringify": "1.0.3",
+    "plist": ""
+  }
 }
