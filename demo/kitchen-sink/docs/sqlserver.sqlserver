@@ -2,15 +2,13 @@
 -- Author:		Morgan Yarbrough
 -- Create date: 4/27/2015
 -- Description:	Test Procedure that shows off language features.
--- 				Includes non-standard folding using region comments using either 
+-- 				Includes non-standard folding using region comments using either
 -- 				line comments or block comments (both are demonstrated below)
 -- =============================================
 CREATE PROCEDURE dbo.TestProcedure
 	
 --#region parameters
-	@Vint INT = 1
-	,@vdate DATE = NULL
-	,@vdatetime DATETIME = DATEADD(dd,1,GETDATE())
+	@vint INT = 1, @vdate DATE = NULL, @vdatetime DATETIME = DATEADD (dd, 1, GETDATE())
 --#endregion
 
 AS
@@ -22,15 +20,17 @@ BEGIN
 	SET QUOTED_IDENTIFIER ON;
 	/*#endregion*/
 	
-	
-	SELECT Orders.OrderID
-		,Customers.CompanyName
-		,DATEFROMPARTS(YEAR(GETDATE()), 1, 1) AS FirstDayOfYear
+	SET @vint = CASE
+			WHEN @vdate IS NULL
+				THEN 1
+			ELSE 2
+			END
+
+	SELECT Orders.OrderID, Customers.CompanyName, DATEFROMPARTS(YEAR(GETDATE()), 1, 1) AS FirstDayOfYear
 	FROM Orders
 	INNER JOIN Customers
 		ON Orders.CustomerID = Customers.CustomerID
 	WHERE CompanyName NOT LIKE '%something'
 		OR CompanyName IS NULL
-		OR CompanyName IN ('bla','nothing')
-
+		OR CompanyName IN ('bla', 'nothing')
 END
