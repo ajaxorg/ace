@@ -1,3 +1,27 @@
+# ISNULL
+snippet isnull
+	ISNULL(${1:check_expression}, ${2:replacement_value})
+# FORMAT
+snippet format
+	FORMAT(${1:value}, ${2:format})
+# CAST
+snippet cast
+	CAST(${1:expression} AS ${2:data_type})
+# CONVERT
+snippet convert
+	CONVERT(${1:data_type}, ${2:expression})
+# DATEPART
+snippet datepart
+	DATEPART(${1:datepart}, ${2:date})
+# DATEDIFF
+snippet datediff
+	DATEDIFFT(${1:datepart}, ${2:startdate}, ${3:enddate})
+# DATEADD
+snippet dateadd
+	DATEADD(${1:datepart}, ${2:number}, ${3:date})
+# DATEFROMPARTS 
+snippet datefromparts
+	DATEFROMPARTS(${1:year}, ${2:month}, ${3:day})
 # Create Procedure
 snippet createproc
 	-- =============================================

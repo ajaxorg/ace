@@ -21,7 +21,7 @@
 
 .ace-sqlserver .ace_keyword{
     color: #0000FF;
-    text-transform: uppercase;
+    /*text-transform: uppercase;*/
 }
 
 .ace-sqlserver .ace_comment{
@@ -35,7 +35,7 @@
 .ace-sqlserver .ace_storage{
     color: #979797;
     font-style: italic;
-    text-transform: uppercase;
+    /*text-transform: uppercase;*/
 }
 
 .ace-sqlserver .ace_bracket {
@@ -60,7 +60,8 @@
 }
 
 .ace-sqlserver .ace_constant.ace_language {
-  color: rgb(88, 92, 246);
+    color: #979797;
+    /*font-style: italic;*/
 }
 
 .ace-sqlserver .ace_constant.ace_library {
@@ -77,7 +78,7 @@
 
 .ace-sqlserver .ace_support.ace_function {
     color: #FF00FF;
-    text-transform: uppercase;
+    /*text-transform: uppercase;*/
 }
 
 .ace-sqlserver .ace_support.ace_constant {

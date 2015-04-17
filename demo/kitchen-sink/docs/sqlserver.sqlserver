@@ -8,17 +8,29 @@
 CREATE PROCEDURE dbo.TestProcedure
 	
 --#region parameters
-	@vint INT = 1;
+	@Vint INT = 1
+	,@vdate DATE = NULL
+	,@vdatetime DATETIME = DATEADD(dd,1,GETDATE())
 --#endregion
 
 AS
 BEGIN
-	-- SET NOCOUNT ON added to prevent extra result sets from
-	-- interfering with SELECT statements.
-	SET NOCOUNT ON;
 
-	SELECT Orders.OrderID, Customers.CompanyName, DATEFROMPARTS(YEAR(GETDATE()), 1, 1) AS FirstDayOfYear
+	/*#region set statements */
+	SET NOCOUNT ON;
+	SET XACT_ABORT ON;
+	SET QUOTED_IDENTIFIER ON;
+	/*#endregion*/
+	
+	
+	SELECT Orders.OrderID
+		,Customers.CompanyName
+		,DATEFROMPARTS(YEAR(GETDATE()), 1, 1) AS FirstDayOfYear
 	FROM Orders
 	INNER JOIN Customers
 		ON Orders.CustomerID = Customers.CustomerID
+	WHERE CompanyName NOT LIKE '%something'
+		OR CompanyName IS NULL
+		OR CompanyName IN ('bla','nothing')
+
 END
