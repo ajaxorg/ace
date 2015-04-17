@@ -1,0 +1,19 @@
+CREATE VIEW V_Orders
+AS
+SELECT
+	
+--#region Orders
+	Orders.OrderID
+	,Orders.CustomerID
+	,Orders.OrderDate
+--#endregion
+
+	
+/*#region Customers*/
+	,Customers.CompanyName
+	,Customers.ContactName
+/*#endregion*/
+
+FROM Orders
+INNER JOIN Customers
+	ON Orders.CustomerID = Customers.CustomerID
