@@ -42,9 +42,12 @@
     border: 1px solid magenta;
 }
 
-
-
-
+.ace-sqlserver .ace_set.ace_statement{
+    /*color: #11B7BE;*/
+    color: #0000FF;
+    /*font-style:italic;*/
+    text-decoration:underline;
+}
 
 
 .ace-sqlserver .ace_cursor {
