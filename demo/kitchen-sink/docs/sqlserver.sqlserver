@@ -8,11 +8,14 @@ SELECT
 	,Orders.OrderDate
 --#endregion
 
-	
-/*#region Customers*/
+	/*#region Customers*/
 	,Customers.CompanyName
 	,Customers.ContactName
-/*#endregion*/
+	/*#endregion*/
+	
+--#region Other
+	,DATEFROMPARTS(YEAR(GETDATE()), 1, 1) AS FirstDayOfYear
+--#endregion
 
 FROM Orders
 INNER JOIN Customers
