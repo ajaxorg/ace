@@ -1,3 +1,7 @@
+
+.ace_line{
+    font-family:Consolas
+}
 .ace-sqlserver .ace_gutter {
   background: #ebebeb;
   color: #333;
@@ -15,7 +19,8 @@
 }
 
 .ace-sqlserver .ace_identifier{
-    color: #008080;
+    /*color: #008080;*/
+    color:black;
 }
 
 
@@ -24,23 +29,26 @@
     /*text-transform: uppercase;*/
 }
 
-.ace-sqlserver .ace_comment{
-    color: #FD971F;
-}
 
 .ace-sqlserver .ace_numeric{
     color: black;
 }
 
 .ace-sqlserver .ace_storage{
-    color: #979797;
-    font-style: italic;
+    /*color: #979797;*/
+    color: #11B7BE;
+    /*color: #00A2FF;*/
+    /*font-style: italic;*/
     /*text-transform: uppercase;*/
 }
 
-.ace-sqlserver .ace_bracket {
-    border: 1px solid magenta;
+.ace-sqlserver .ace_keyword.ace_operator,
+.ace-sqlserver .ace_lparen,
+.ace-sqlserver .ace_rparen,
+.ace-sqlserver .ace_punctuation{
+    color: #808080;
 }
+
 
 .ace-sqlserver .ace_set.ace_statement{
     /*color: #11B7BE;*/
@@ -76,9 +84,6 @@
   color: white;
 }
 
-.ace-sqlserver .ace_fold {
-}
-
 .ace-sqlserver .ace_support.ace_function {
     color: #FF00FF;
     /*text-transform: uppercase;*/
@@ -103,20 +108,9 @@
   font-style:italic;
   color:#FD971F;
 }
-.ace-sqlserver .ace_keyword.ace_operator {
-  color: rgb(104, 118, 135);
-}
 
 .ace-sqlserver .ace_comment {
-  color: #FD971F;
-}
-
-.ace-sqlserver .ace_comment.ace_doc {
-  color: #FD971F;
-}
-
-.ace-sqlserver .ace_comment.ace_doc.ace_tag {
-  color: #FD971F;
+  color:#008000;
 }
 
 .ace-sqlserver .ace_constant.ace_numeric {
@@ -131,8 +125,8 @@
   color: rgb(104, 104, 91);
 }
 
-.ace-sqlserver .ace_entity.ace_name.ace_function {
-  color: #0000A2;
+.ace-sqlserver .ace_support.ace_storedprocedure {
+  color: #800000;
 }
 
 
