@@ -307,6 +307,7 @@ function buildAceModuleInternal(opts, callback) {
         ignore: opts.ignore || [],
         withRequire: false,
         basepath: ACE_HOME,
+        transforms: [normalizeLineEndings],
         afterRead: [optimizeTextModules]
     }, write);
 }
@@ -407,6 +408,10 @@ function getLoadedFileList(options, callback, result) {
     callback(Object.keys(deps));
 }
 
+function normalizeLineEndings(module) {
+    module.source = module.source.replace(/\r\n/g, "\n");
+}
+
 function optimizeTextModules(sources) {
     var textModules = {};
     return sources.filter(function(pkg) {
@@ -452,10 +457,10 @@ function optimizeTextModules(sources) {
         if (/\.css$/.test(pkg.id)) {
             // remove unnecessary whitespace from css
             input = input.replace(/\n\s+/g, "\n");
-            input = '"' + input.replace(/\r?\n/g, '\\\n') + '"';
+            input = '"' + input.replace(/\n/g, '\\\n') + '"';
         } else {
             // but don't break other files!
-            input = '"' + input.replace(/\r?\n/g, '\\n\\\n') + '"';
+            input = '"' + input.replace(/\n/g, '\\n\\\n') + '"';
         }
         textModules[pkg.id] = input;
     }

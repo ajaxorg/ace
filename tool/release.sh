@@ -9,10 +9,15 @@ pause() {
     done
 }
 
-read -p "enter version number for the build " VERSION_NUM
+
 
 cd `dirname $0`/..
 SOURCE=`pwd`
+
+CUR_VERSION=`node -e 'console.log(require("./package.json").version)'`
+git --no-pager log --first-parent --oneline v$CUR_VERSION..master
+echo "current version is $CUR_VERSION"
+read -p "enter version number for the build " VERSION_NUM
 
 node -e "
     var fs = require('fs');

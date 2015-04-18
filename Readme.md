@@ -79,7 +79,7 @@ By default the editor only supports plain text mode; many other languages are av
 The mode can then be used like this:
 
 ```javascript
-    var JavaScriptMode = require("ace/mode/javascript").Mode;
+    var JavaScriptMode = ace.require("ace/mode/javascript").Mode;
     editor.getSession().setMode(new JavaScriptMode());
 ```
 

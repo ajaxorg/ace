@@ -160,6 +160,8 @@
     z-index: 1;
     position: absolute;
     overflow: hidden;
+    /* workaround for chrome bug https://github.com/ajaxorg/ace/issues/2312*/
+    word-wrap: normal;
     white-space: pre;
     height: 100%;
     width: 100%;
