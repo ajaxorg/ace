@@ -8,21 +8,21 @@
 -- =============================================
 CREATE PROCEDURE dbo.TestProcedure
 	
---region parameters
+--#region parameters
 	@vint INT = 1
 	,@vdate DATE = NULL
 	,@vdatetime DATETIME = DATEADD (dd, 1, GETDATE())
 	,@vvarchar VARCHAR(MAX) = ''
---endregion
+--#endregion
 
 AS
 BEGIN
 
-	/*region set statements */
+	/*#region set statements */
 	SET NOCOUNT ON;
 	SET XACT_ABORT ON;
 	SET QUOTED_IDENTIFIER ON;
-	/*endregion*/
+	/*#endregion*/
 	
 	/**
 	 * These comments will produce a fold widget
