@@ -43,7 +43,7 @@ BEGIN
 	END
 	
 	-- this mode handles strings properly
-	DECLARE @sql nvarchar(4000) = N'SELECT TOP(1) OrderID 
+	DECLARE @sql NVARCHAR(4000) = N'SELECT TOP(1) OrderID 
 									FROM Orders
 									WHERE @OrderDate > GETDATE()'
 								
