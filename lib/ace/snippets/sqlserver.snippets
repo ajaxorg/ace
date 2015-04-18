@@ -15,7 +15,7 @@ snippet datepart
 	DATEPART(${1:datepart}, ${2:date})
 # DATEDIFF
 snippet datediff
-	DATEDIFFT(${1:datepart}, ${2:startdate}, ${3:enddate})
+	DATEDIFF(${1:datepart}, ${2:startdate}, ${3:enddate})
 # DATEADD
 snippet dateadd
 	DATEADD(${1:datepart}, ${2:number}, ${3:date})
@@ -33,10 +33,24 @@ snippet createproc
 		-- Add the parameters for the stored procedure here
 	AS
 	BEGIN
-		-- SET NOCOUNT ON added to prevent extra result sets from
-		-- interfering with SELECT statements.
+		-- SET NOCOUNT ON added to prevent extra result sets from interfering with SELECT statements.
 		SET NOCOUNT ON;
-	
-		-- Insert statements for procedure here
+		
+	END
+	GO
+# Create Scalar Function
+snippet createfn
+	-- =============================================
+	-- Author:		${1:Author}
+	-- Create date: ${2:Date}
+	-- Description:	${3:Description}
+	-- =============================================
+	CREATE FUNCTION ${4:Scalar_Function_Name}
+		-- Add the parameters for the function here
+	RETURNS ${5:Function_Data_Type}
+	AS
+	BEGIN
+		DECLARE @Result ${5:Function_Data_Type}
+		
 	END
 	GO

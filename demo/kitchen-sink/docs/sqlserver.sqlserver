@@ -4,6 +4,7 @@
 -- Description:	Test Procedure that shows off language features.
 -- 				Includes non-standard folding using region comments using either
 -- 				line comments or block comments (both are demonstrated below)
+--				This mode imitates SSMS and it designed to be used with SQL Server theme.
 -- =============================================
 CREATE PROCEDURE dbo.TestProcedure
 	
@@ -27,20 +28,29 @@ BEGIN
 	 * These comments will produce a fold widget
 	 */
 	
+	-- folding demonstration
 	SET @vint = CASE
 					WHEN @vdate IS NULL
 						THEN 1
 					ELSE 2
 				END
-			
-			
+	
+	-- another folding demonstration
 	IF @vint = 1 
 	BEGIN
 		SET @vvarchar='one'
 		SET @vint = DATEDIFFT(dd, @vdate, @vdatetime)
 	END
 	
-
+	-- this mode handles strings properly
+	DECLARE @sql nvarchar(4000) = N'SELECT TOP(1) OrderID 
+									FROM Orders
+									WHERE @OrderDate > GETDATE()'
+								
+	-- this mode is aware of build in stored procedures 
+	sp_executesql @sql
+	
+	-- demonstrating some syntax highlighting
 	SELECT Orders.OrderID
 		,Customers.CompanyName
 		,DATEFROMPARTS(YEAR(GETDATE()), 1, 1) AS FirstDayOfYear
