@@ -48,7 +48,7 @@ BEGIN
 									WHERE @OrderDate > GETDATE()'
 								
 	-- this mode is aware of build in stored procedures 
-	sp_executesql @sql
+	EXECUTE sp_executesql @sql
 	
 	-- demonstrating some syntax highlighting
 	SELECT Orders.OrderID
