@@ -1,9 +1,9 @@
 -- =============================================
 -- Author:		Morgan Yarbrough
 -- Create date: 4/27/2015
--- Description:	Test Procedure that shows off language features.
--- 				Includes non-standard folding using region comments using either
--- 				line comments or block comments (both are demonstrated below)
+-- Description:	Test procedure that shows off language features.
+-- 				Includes non-standard folding with region comments using either
+-- 				line comments or block comments (both are demonstrated below).
 --				This mode imitates SSMS and it designed to be used with SQL Server theme.
 -- =============================================
 CREATE PROCEDURE dbo.TestProcedure
@@ -11,7 +11,7 @@ CREATE PROCEDURE dbo.TestProcedure
 --#region parameters
 	@vint INT = 1
 	,@vdate DATE = NULL
-	,@vdatetime DATETIME = DATEADD (dd, 1, GETDATE())
+	,@vdatetime DATETIME = DATEADD(dd, 1, GETDATE())
 	,@vvarchar VARCHAR(MAX) = ''
 --#endregion
 
@@ -38,8 +38,8 @@ BEGIN
 	-- another folding demonstration
 	IF @vint = 1 
 	BEGIN
-		SET @vvarchar='one'
-		SET @vint = DATEDIFFT(dd, @vdate, @vdatetime)
+		SET @vvarchar = 'one'
+		SET @vint = DATEDIFF(dd, @vdate, @vdatetime)
 	END
 	
 	-- this mode handles strings properly
@@ -47,7 +47,7 @@ BEGIN
 									FROM Orders
 									WHERE @OrderDate > GETDATE()'
 								
-	-- this mode is aware of build in stored procedures 
+	-- this mode is aware of built in stored procedures 
 	EXECUTE sp_executesql @sql
 	
 	-- demonstrating some syntax highlighting
@@ -60,4 +60,9 @@ BEGIN
 	WHERE CompanyName NOT LIKE '%something'
 		OR CompanyName IS NULL
 		OR CompanyName IN ('bla', 'nothing')
+		
+	-- this mode includes snippets
+	-- place your cusor at the end of the line below and trigger auto complete (Ctrl+Space)
+	createpr
+	
 END
