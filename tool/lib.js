@@ -12,11 +12,13 @@ exports.parsePlist = function(xmlOrJSON, callback) {
         plist.parseString(xmlOrJSON, function(_, result) {
             json = result[0];
         });
-    } else try {
-        xmlOrJSON = xmlOrJSON.replace(/^\s*\/\/.*/gm, "");
-        json = JSON.parse(xmlOrJSON)
-    } catch(e) {
-        json = cson.parse(xmlOrJSON);
+    } else {
+        try {
+            xmlOrJSON = xmlOrJSON.replace(/^\s*\/\/.*/gm, "");
+            json = JSON.parse(xmlOrJSON)
+        } catch(e) {
+            json = cson.parse(xmlOrJSON);
+        }
     }
     callback && callback(json);
     return json;
