@@ -65,4 +65,8 @@ BEGIN
 	-- place your cusor at the end of the line below and trigger auto complete (Ctrl+Space)
 	createpr
 	
+	-- SQL Server allows using keywords as object names (not recommended) as long as they are wrapped in brackets
+	DATABASE -- keyword
+	[DATABASE] -- not a keyword
+	
 END
