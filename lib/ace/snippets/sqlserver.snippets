@@ -22,6 +22,16 @@ snippet dateadd
 # DATEFROMPARTS 
 snippet datefromparts
 	DATEFROMPARTS(${1:year}, ${2:month}, ${3:day})
+# OBJECT_DEFINITION
+snippet objectdef
+	SELECT OBJECT_DEFINITION(OBJECT_ID('${1:sys.server_permissions /*object name*/}'))
+# STUFF XML
+snippet stuffxml
+	STUFF((SELECT ', ' + ${1:ColumnName}
+		FROM ${2:TableName}
+		WHERE ${3:WhereClause}
+		FOR XML PATH('')), 1, 1, '') AS ${4:Alias}
+	${5:/*https://msdn.microsoft.com/en-us/library/ms188043.aspx*/}
 # Create Procedure
 snippet createproc
 	-- =============================================
@@ -30,11 +40,13 @@ snippet createproc
 	-- Description:	${3:Description}
 	-- =============================================
 	CREATE PROCEDURE ${4:Procedure_Name}
-		-- Add the parameters for the stored procedure here
+		${5:/*Add the parameters for the stored procedure here*/}
 	AS
 	BEGIN
 		-- SET NOCOUNT ON added to prevent extra result sets from interfering with SELECT statements.
 		SET NOCOUNT ON;
+		
+		${6:/*Add the T-SQL statements to compute the return value here*/}
 		
 	END
 	GO
@@ -51,6 +63,8 @@ snippet createfn
 	AS
 	BEGIN
 		DECLARE @Result ${5:Function_Data_Type}
+		
+		${6:/*Add the T-SQL statements to compute the return value here*/}
 		
 	END
 	GO
