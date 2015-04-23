@@ -10,10 +10,9 @@
 ],[
    "start",
   ["keyword.source.rust","fn"],
-  ["meta.function.source.rust"," "],
+  ["text"," "],
   ["entity.name.function.source.rust","main"],
-  ["meta.function.source.rust","("],
-  ["text",") {"]
+  ["text","() {"]
 ],[
    "start",
   ["text","    "],
@@ -88,10 +87,14 @@
 ],[
    "start",
   ["keyword.source.rust","fn"],
-  ["meta.function.source.rust"," "],
-  ["entity.name.function.source.rust","map<T, U>"],
-  ["meta.function.source.rust","("],
-  ["text","vector: &[T]"],
+  ["text"," "],
+  ["entity.name.function.source.rust","map"],
+  ["keyword.operator","<"],
+  ["text","T"],
+  ["keyword.operator",","],
+  ["text"," U"],
+  ["keyword.operator",">"],
+  ["text","(vector: &[T]"],
   ["keyword.operator",","],
   ["text"," function: &fn(v: &T) "],
   ["keyword.operator","->"],
