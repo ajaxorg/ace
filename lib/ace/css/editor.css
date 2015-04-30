@@ -193,6 +193,10 @@
     z-index: 4;
 }
 
+.ace_cursor-layer.force_highlight .ace_cursor{
+  opacity: 1;
+}
+
 .ace_cursor {
     z-index: 4;
     position: absolute;
