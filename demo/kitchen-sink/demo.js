@@ -98,6 +98,14 @@ split.on("focus", function(editor) {
 env.split = split;
 window.env = env;
 
+var util = require('ace/touch/util');
+var el = require('ace/touch/element');
+
+if(util.env.touch){
+  el.$(document.documentElement).on('touchmove', function(evt){
+    evt.returnValue = false;
+  });
+}
 
 var consoleEl = dom.createElement("div");
 container.parentNode.appendChild(consoleEl);
@@ -269,11 +277,13 @@ var keybindings = {
 
 /*********** manage layout ***************************/
 var consoleHeight = 20;
+var subtract_height = 0;
 function onResize() {
     var left = env.split.$container.offsetLeft;
     var width = document.documentElement.clientWidth - left;
     container.style.width = width + "px";
-    container.style.height = document.documentElement.clientHeight - consoleHeight + "px";
+    container.style.height = 
+      document.documentElement.clientHeight - consoleHeight - (subtract_height || 0) + "px";
     env.split.resize();
 
     consoleEl.style.width = width + "px";
@@ -413,6 +423,10 @@ bindDropdown("folding", function(value) {
     env.editor.session.setFoldStyle(value);
     env.editor.setShowFoldWidgets(value !== "manual");
 });
+
+if(util.env.touch){
+  foldingEl.value = 'manual';
+}
 
 bindDropdown("soft_wrap", function(value) {
     env.editor.setOption("wrap", value);
@@ -578,6 +592,10 @@ env.editor.setOptions({
     enableLiveAutocompletion: false,
     enableSnippets: true
 });
+
+if(util.env.touch){
+  
+}
 
 var beautify = require("ace/ext/beautify");
 env.editor.commands.addCommands(beautify.commands);
