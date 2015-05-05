@@ -1,7 +1,7 @@
 .PHONY : doc build clean dist
 
 pre_build:
-	# git rev-parse HEAD > .git-ref
+	git rev-parse HEAD > .git-ref
 	mkdir -p build/src
 	mkdir -p build/demo/kitchen-sink
 	mkdir -p build/textarea/src
