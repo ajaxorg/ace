@@ -281,8 +281,7 @@ function onResize() {
     var left = env.split.$container.offsetLeft;
     var width = document.documentElement.clientWidth - left;
     container.style.width = width + "px";
-    container.style.height = 
-      document.documentElement.clientHeight - consoleHeight + "px";
+    container.style.height = document.documentElement.clientHeight - consoleHeight + "px";
     env.split.resize();
 
     consoleEl.style.width = width + "px";
