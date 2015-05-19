@@ -1,0 +1,11 @@
+rule "a rule"
+lock-on-active true
+when
+$a : Applicant()
+then
+modify($a) {
+    setName("Fred")
+}
+System.out.println("Updated");
+end
+
