@@ -5,8 +5,9 @@
   color: #AAA;
 }
 
-.ace-github .ace_scroller {
+.ace-github  {
   background: #fff;
+  color: #000;
 }
 
 .ace-github .ace_keyword {
@@ -63,20 +64,15 @@
   font-weight: bold;
 }
 
-.ace-github .ace_text-layer {
-}
-
 .ace-github .ace_cursor {
-  border-left: 2px solid black;
+  color: black;
 }
 
-.ace-github .ace_cursor.ace_overwrite {
-  border-left: 0px;
-  border-bottom: 1px solid black;
-}
-
-.ace-github .ace_marker-layer .ace_active-line {
+.ace-github.ace_focus .ace_marker-layer .ace_active-line {
   background: rgb(255, 255, 204);
+}
+.ace-github .ace_marker-layer .ace_active-line {
+  background: rgb(245, 245, 245);
 }
 
 .ace-github .ace_marker-layer .ace_selection {
@@ -113,7 +109,10 @@
 .ace-github .ace_marker-layer .ace_selected-word {
   background: rgb(250, 250, 255);
   border: 1px solid rgb(200, 200, 250);
+}
 
+.ace-github .ace_invisible {
+  color: #BFBFBF
 }
 
 .ace-github .ace_print-margin {

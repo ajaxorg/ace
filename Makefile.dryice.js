@@ -4,7 +4,7 @@
  *
  * Copyright (c) 2010, Ajax.org B.V.
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *     * Redistributions of source code must retain the above copyright
@@ -15,7 +15,7 @@
  *     * Neither the name of Ajax.org B.V. nor the
  *       names of its contributors may be used to endorse or promote products
  *       derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -30,21 +30,25 @@
  * ***** END LICENSE BLOCK ***** */
 
 var fs = require("fs");
-if (!fs.existsSync)
-    fs.existsSync = require("path").existsSync;
-var copy = require('dryice').copy;
+var path = require("path");
+var copy = require('architect-build/copy');
+var build = require('architect-build/build');
 
 var ACE_HOME = __dirname;
 var BUILD_DIR = ACE_HOME + "/build";
+var CACHE = {};
 
 function main(args) {
+    if (args.indexOf("updateModes") !== -1) {
+        return updateModes();
+    }
     var type = "minimal";
     args = args.map(function(x) {
         if (x[0] == "-" && x[1] != "-")
             return "-" + x;
         return x;
-    });
-    
+    }).filter(Boolean);
+
     if (args[2] && (args[2][0] != "-" || args[2].indexOf("h") != -1))
         type = args[2];
 
@@ -63,23 +67,24 @@ function main(args) {
             ace();
         } else if (type == "demo") {
             demo();
-        } else if (type == "bm") {
-            bookmarklet();
         } else if (type == "full") {
             ace();
             demo();
-            bookmarklet();
+        } else if (type == "highlighter") {
+            // TODO
         }
     }
+}
 
+function showHelp(type) {
     console.log("--- Ace Dryice Build Tool ---");
     console.log("");
     console.log("Options:");
-    console.log("  minimal     Places necessary Ace files out in build dir; uses configuration flags below [default]");
-    console.log("  normal      Runs four Ace builds--minimal, minimal-noconflict, minimal-min, and minimal-noconflict-min");
-    console.log("  demo        Runs demo build of Ace");
-    console.log("  bm          Runs bookmarklet build of Ace");
-    console.log("  full        all of above");
+    console.log("  minimal      Places necessary Ace files out in build dir; uses configuration flags below [default]");
+    console.log("  normal       Runs four Ace builds--minimal, minimal-noconflict, minimal-min, and minimal-noconflict-min");
+    console.log("  demo         Runs demo build of Ace");
+    console.log("  full         all of above");
+    console.log("  highlighter  ");
     console.log("args:");
     console.log("  --target ./path   path to build folder");
     console.log("flags:");
@@ -88,424 +93,476 @@ function main(args) {
     console.log("  --nc               namespace require");
     console.log("  --s                shrinkwrap (combines all output files into one)");
     console.log("");
-    if (BUILD_DIR)
-        console.log(" output generated in " + type + __dirname + "/" + BUILD_DIR)
-}
-
-function bookmarklet() {
-    var targetDir = BUILD_DIR + "/textarea";
-    copy({
-        source: "build_support/editor_textarea.html",
-        dest:   targetDir + '/editor.html'
-    });
-    copy({
-        source: "build_support/style.css",
-        dest:   targetDir + '/style.css'
-    });
-
-    buildAce({
-        targetDir: targetDir + "/src",
-        ns: "__ace_shadowed__",
-        exportModule: "ace/ext/textarea",
-        compress: false,
-        noconflict: true,
-        suffix: "",
-        name: "ace-bookmarklet",
-        workers: [],
-        keybindings: []
-    });
+    if (type)
+        console.log("  output for " + type + " generated in " + BUILD_DIR);
 }
 
 function ace() {
-    console.log('# ace ---------');
-
-    // uncompressed
-    buildAce({
-        compress: false,
-        noconflict: false
-    });
-    buildAce({
-        compress: false,
-        noconflict: true
-    });
-
-    // compressed
-    buildAce({
-        compress: true,
-        noconflict: false
-    });
-    buildAce({
-        compress: true,
-        noconflict: true
-    });
-
     console.log('# ace License | Readme | Changelog ---------');
 
-    copy({
-        source: ACE_HOME + "/build_support/editor.html",
-        dest:   BUILD_DIR + "/editor.html"
-    });
-    copy({
-        source: ACE_HOME + "/LICENSE",
-        dest:   BUILD_DIR + "/LICENSE"
-    });
-    copy({
-        source: ACE_HOME + "/ChangeLog.txt",
-        dest:   BUILD_DIR + "/ChangeLog.txt"
-    });
+    copy.file(ACE_HOME + "/build_support/editor.html",  BUILD_DIR + "/editor.html");
+    copy.file(ACE_HOME + "/LICENSE", BUILD_DIR + "/LICENSE");
+    copy.file(ACE_HOME + "/ChangeLog.txt", BUILD_DIR + "/ChangeLog.txt");
+    
+    console.log('# ace ---------');
+    for (var i = 0; i < 4; i++)
+        buildAce({compress: i & 2, noconflict: i & 1});
 }
 
 function demo() {
     console.log('# kitchen sink ---------');
 
-    var version, ref;
+    var version = "", ref = "";
     try {
         version = JSON.parse(fs.readFileSync(ACE_HOME + "/package.json")).version;
         ref = fs.readFileSync(ACE_HOME + "/.git-ref").toString();
-    } catch(e) {
-        ref = "";
-        version = "";
+    } catch(e) {}
+
+    function changeComments(data) {
+        return (data
+            .replace("doc/site/images/ace-logo.png", "demo/kitchen-sink/ace-logo.png")
+            .replace(/<!\-\-DEVEL[\d\D]*?DEVEL\-\->/g, "")
+            .replace(/PACKAGE\-\->|<!\-\-PACKAGE/g, "")
+            .replace(/\/\*DEVEL[\d\D]*?DEVEL\*\//g, "")
+            .replace(/PACKAGE\*\/|\/\*PACKAGE/g, "")
+            .replace("%version%", version)
+            .replace("%commit%", ref)
+        );
     }
-    var changeComments = function(data) {
-            return (data
-                .replace(/<!\-\-DEVEL[\d\D]*?DEVEL\-\->/g, "")
-                .replace(/PACKAGE\-\->|<!\-\-PACKAGE/g, "")
-                .replace(/\/\*DEVEL[\d\D]*?DEVEL\*\//g, "")
-                .replace(/PACKAGE\*\/|\/\*PACKAGE/g, "")
-                .replace("%version%", version)
-                .replace("%commit%", ref)
-            );
+    
+    copy(ACE_HOME +"/demo/kitchen-sink/docs/", BUILD_DIR + "/demo/kitchen-sink/docs/");
+    
+    copy.file(ACE_HOME + "/demo/kitchen-sink/logo.png", BUILD_DIR + "/demo/kitchen-sink/logo.png");
+    copy.file(ACE_HOME + "/demo/kitchen-sink/styles.css", BUILD_DIR + "/demo/kitchen-sink/styles.css");
+    copy.file(ACE_HOME + "/kitchen-sink.html", BUILD_DIR + "/kitchen-sink.html", changeComments);
+
+    buildSubmodule({}, {
+        require: ["kitchen-sink/demo"],
+        projectType: "demo"
+    }, BUILD_DIR + "/demo/kitchen-sink/demo");
+
+    copy(ACE_HOME + "/demo/", BUILD_DIR + "/demo/", {
+        shallow: true,
+        exclude: /\s|requirejs/,
+        include: /\.(js|html)$/,
+        replace: function(source) {
+            if (!/^\s*</.test(source))
+                return source;
+            var removeRequireJS;
+            source = source.replace(/<script src="kitchen-sink\/require.js"[\s\S]+?require\(\[([^\]]+).*/, function(e, m) {
+                removeRequireJS = true;
+                var scripts = m.split(/,\s*/);
+                var result = [];
+                function comment(str) {result.push("<!-- " + str + " -->")}
+                function script(str) {result.push('<script src="../src/' + str + '.js"></script>')}
+                scripts.forEach(function(s) {
+                    s = s.replace(/"/g, "");
+                    if (s == "ace/ace") {
+                        comment("load ace");
+                        script("ace");
+                    } else {
+                        var extName = s.match(/[^/]*$/)[0];
+                        comment("load ace " + extName + " extension");
+                        script("ext-" + extName);
+                    }
+                });
+                result.push("<script>");
+                return result.join("\n");
+            });
+            if (removeRequireJS)
+                source = source.replace(/\s*\}\);?\s*(<\/script>)/, "\n$1");
+            source = source.replace(/"\.\.\/build\//g, function(e) {
+                console.log(e); return '"../';
+            });
+            return source;
+        }
+    });
+}
+
+function jsFileList(path, filter) {
+    path = ACE_HOME + "/" + path;
+    if (!filter)
+        filter = /_test/;
+
+    return fs.readdirSync(path).map(function(x) {
+        if (x.slice(-3) == ".js" && !filter.test(x) && !/\s|BASE|(\b|_)dummy(\b|_)/.test(x))
+            return x.slice(0, -3);
+    }).filter(Boolean);
+}
+
+function workers(path) {
+    return jsFileList(path).map(function(x) {
+        if (x.slice(-7) == "_worker")
+            return x.slice(0, -7);
+    }).filter(function(x) { return !!x; });
+}
+
+function modeList() {
+    return jsFileList("lib/ace/mode", /_highlight_rules|_test|_worker|xml_util|_outdent|behaviour|completions/);
+}
+
+function buildAceModule(opts, callback) {
+    // calling buildAceModuleInternal many times in parallel is slow, so we use queue
+    if (!buildAceModule.queue) {
+        buildAceModule.queue = [];
+        buildAceModule.dequeue = function() {
+            if (buildAceModule.running) return;
+            var call = buildAceModule.queue.shift();
+            buildAceModule.running = call;
+            if (call)
+                buildAceModuleInternal.apply(null, call);
+        };
+    }
+    
+    buildAceModule.queue.push([opts, function(err, result) {
+        callback && callback(err, result);
+        buildAceModule.running = null;
+        buildAceModule.dequeue();
+    }]);
+
+    if (!buildAceModule.running) {
+        buildAceModule.dequeue();
+    } else {
+        process.nextTick(buildAceModule.dequeue);
+    }
+}
+
+function buildAceModuleInternal(opts, callback) {
+    var cache = opts.cache == undefined ? CACHE : opts.cache;
+    var key = opts.require + "|" + opts.projectType;
+    if (cache && cache.configs && cache.configs[key])
+        return write(null, cache.configs[key]);
+        
+    var pathConfig = {
+        paths: {
+            ace: ACE_HOME + "/lib/ace",
+            "kitchen-sink": ACE_HOME + "/demo/kitchen-sink",
+            build_support:  ACE_HOME + "/build_support",
+        },
+        root: ACE_HOME
+    };
+        
+    function write(err, result) {
+        if (cache && key && !(cache.configs && cache.configs[key])) {
+            cache.configs = cache.configs || Object.create(null);
+            cache.configs[key] = result;
+            result.sources = result.sources.map(function(pkg) {
+                return {deps: pkg.deps};
+            });
+        } 
+        
+        if (!opts.outputFile)
+            return callback(err, result);
+        
+        var code = result.code;
+        if (opts.compress) {
+            if (!result.codeMin)
+                result.codeMin = compress(result.code);
+            code = result.codeMin;
+        }
+            
+        var targetDir =  BUILD_DIR + "/src";
+        if (opts.compress)
+            targetDir += "-min";
+        if (opts.noconflict)
+            targetDir += "-noconflict";
+        
+        var to = /^([\\/]|\w:)/.test(opts.outputFile)
+            ? opts.outputFile
+            : path.join(opts.outputFolder || targetDir, opts.outputFile);
+    
+        var filters = [];
+
+        var ns = opts.ns || "ace";
+        if (opts.filters)
+            filters = filters.concat(opts.filters);
+    
+        if (opts.noconflict)
+            filters.push(namespace(ns));
+        var projectType = opts.projectType;
+        if (projectType == "main" || projectType == "ext") {
+            filters.push(exportAce(ns, opts.require[0],
+                opts.noconflict ? ns : "", projectType == "ext"));
         }
 
-    copy({
-        source: ACE_HOME + "/kitchen-sink.html",
-        dest:   BUILD_DIR + "/kitchen-sink.html",
-        filter: [changeComments,  function(data) {
-            return data.replace(/"(demo|build)\//g, "\"");
-        }]
-    });
+        filters.forEach(function(f) { code = f(code); });
+        
+        build.writeToFile({code: code}, {
+            outputFolder: path.dirname(to),
+            outputFile: path.basename(to),
+        }, function() {});
+        
+        callback && callback(err, result);
+    }
+    
+    build(opts.require, {
+        cache: cache,
+        quiet: opts.quiet,
+        pathConfig: pathConfig,
+        additional: opts.additional,
+        enableBrowser: true,
+        keepDepArrays: "all",
+        noArchitect: true,
+        compress: false,
+        ignore: opts.ignore || [],
+        withRequire: false,
+        basepath: ACE_HOME,
+        transforms: [normalizeLineEndings],
+        afterRead: [optimizeTextModules]
+    }, write);
+}
 
-    copy({
-        source: ACE_HOME + "/demo/kitchen-sink/styles.css",
-        dest:   BUILD_DIR + "/kitchen-sink/styles.css",
-        filter: [ changeComments ]
-    });
+function buildCore(options, extra, callback) {
+    options = extend(extra, options);
+    options.additional = [{
+        id: "build_support/mini_require", 
+        order: -1000,
+        literal: true
+    }];
+    options.require =["ace/ace"];
+    options.projectType = "main";
+    options.ns = "ace";
+    buildAceModule(options, callback);
+}
 
-    fs.readdirSync(ACE_HOME +"/demo/kitchen-sink/docs/").forEach(function(x) {
-        copy({
-            source: ACE_HOME +"/demo/kitchen-sink/docs/" + x,
-            dest:   BUILD_DIR + "/kitchen-sink/docs/" + x
-        });
+function buildSubmodule(options, extra, file, callback) {
+    options = extend(extra, options);
+    getLoadedFileList(options, function(coreFiles) {
+        options.outputFile = file + ".js";
+        options.ignore = options.ignore || coreFiles;
+        options.quiet = true;
+        buildAceModule(options, callback);
     });
-
-    var demo = copy.createDataObject();
-    copy({
-        source: ACE_HOME + "/demo/kitchen-sink/demo.js",
-        dest: demo,
-        filter: [changeComments, function(data) {
-            return data.replace(/"(demo|build)\//g, "\"");
-        }, function(data) {
-            return data.replace("define(", "define('kitchen-sink/demo',");
-        }]
-    });
-    copy({
-        source: ACE_HOME + "/lib/ace/split.js",
-        dest: demo,
-        filter: [changeComments, function(data) {
-            return data.replace("define(", "define('ace/split',");
-        }]
-    });
-    copy({
-        source: demo,
-        dest:   BUILD_DIR + "/kitchen-sink/demo.js",
-    });
-
-    copyFileSync(ACE_HOME + "/demo/kitchen-sink/logo.png", BUILD_DIR + "/kitchen-sink/logo.png");
 }
 
 function buildAce(options) {
-    var aceProject = {
-        roots: [ACE_HOME + '/lib', ACE_HOME + '/demo'],
-        textPluginPattern: /^ace\/requirejs\/text!/
-    };
+    var snippetFiles = jsFileList("lib/ace/snippets");
+    var modeNames = modeList();
 
-    var defaults = {
-        targetDir: BUILD_DIR + "/src",
-        ns: "ace",
-        exportModule: "ace/ace",
-        requires: null,
-        compress: false,
-        noconflict: false,
-        suffix: null,
-        name: "ace",
-        modes: fs.readdirSync(ACE_HOME + "/lib/ace/mode").map(function(x) {
-                if (x.slice(-3) == ".js" && !/_highlight_rules|_test|_worker|xml_util|_outdent|behaviour/.test(x))
-                    return x.slice(0, -3);
-            }).filter(function(x) { return !!x; }),
-        themes: fs.readdirSync(ACE_HOME + "/lib/ace/theme").map(function(x){
-                return x.slice(-3) == ".js" && x.slice(0, -3);
-            }).filter(function(x){ return !!x; }),
-        workers: ["javascript", "coffee", "css", "json", "xquery"],
-        keybindings: ["vim", "emacs"]
-    };
-    
-
-    for(var key in defaults)
-        if (!options.hasOwnProperty(key))
-            options[key] = defaults[key];
-
-    if (options.suffix == null) {
-        options.suffix = "";
-        if (options.compress)
-            options.suffix += "-min";
-        if (options.noconflict)
-            options.suffix += "-noconflict";
-    }
-
-    if (!options.requires)
-        options.requires = [options.exportModule];
-
-    var filters = [
-        copy.filter.moduleDefines,
-        filterTextPlugin,
-        removeUseStrict,
-        removeLicenceCmments
-    ];
-
-    if (options.noconflict) {
-        filters.push(namespace(options.ns));
-        if (options.exportModule)
-            var exportFilter = exportAce(options.ns, options.exportModule, options.ns);
-    } else if (options.exportModule) {
-        var exportFilter = exportAce(options.ns, options.exportModule);
-    }
-
-    if (options.compress)
-        filters.push(copy.filter.uglifyjs);
-
-    var targetDir = options.targetDir + options.suffix;
-    var name = options.name;
-
-    var project = copy.createCommonJsProject(aceProject);
-    var ace = copy.createDataObject();
-    copy({
-        source: [ACE_HOME + "/build_support/mini_require.js"],
-        dest: ace
+    buildCore(options, {outputFile: "ace.js"}),
+    // modes
+    modeNames.forEach(function(name) {
+        buildSubmodule(options, {
+            projectType: "mode",
+            require: ["ace/mode/" + name]
+        }, "mode-" + name);
     });
-    copy({
-        source: [{
-            project: project,
-            require: options.requires
-        }],
-        filter: [ copy.filter.moduleDefines ],
-        dest: ace
+    // snippets
+    modeNames.forEach(function(name) {
+        if (snippetFiles.indexOf(name + ".js") == -1)
+            addSnippetFile(name);
+        
+        buildSubmodule(options, {
+            require: ["ace/snippets/" + name],
+        }, "snippets/" + name);
     });
-
-    copy({
-        source: ace,
-        filter: exportFilter ? filters.concat(exportFilter) : filters,
-        dest:   targetDir + '/' + name + ".js"
+    // themes
+    jsFileList("lib/ace/theme").forEach(function(name) {
+        buildSubmodule(options, {
+            projectType: "theme",
+            require: ["ace/theme/" + name]
+        }, "theme-" +  name);
     });
-
-    console.log('# ace modes ---------');
-
-    project.assumeAllFilesLoaded();
-    options.modes.forEach(function(mode) {
-        console.log("mode " + mode);
-        copy({
-            source: [{
-                project: cloneProject(project),
-                require: [ 'ace/mode/' + mode ]
+    // keybindings
+    ["vim", "emacs"].forEach(function(name) {
+        buildSubmodule(options, {
+            projectType: "keybinding",
+            require: ["ace/keyboard/" + name ]
+        }, "keybinding-" + name);
+    });
+    // extensions
+    jsFileList("lib/ace/ext").forEach(function(name) {
+        buildSubmodule(options, {
+            projectType: "ext",
+            require: ["ace/ext/" + name]
+        }, "ext-" + name);
+    });
+    // workers
+    workers("lib/ace/mode").forEach(function(name) {
+        buildSubmodule(options, {
+            projectType: "worker",
+            require: ["ace/mode/" + name + "_worker"],
+            ignore: [],
+            additional: [{
+                id: "ace/worker/worker",
+                transforms: [],
+                order: -1000
             }],
-            filter: filters,
-            dest:   targetDir + "/mode-" + mode + ".js"
+        }, "worker-" + name);
+    });
+}
+
+function getLoadedFileList(options, callback, result) {
+    if (!result) {
+        return buildCore({}, {}, function(e, result) {
+            getLoadedFileList(options, callback, result);
+        });
+    }
+    var deps = Object.create(null);
+    result.sources.forEach(function(pkg) {
+        pkg.deps && pkg.deps.forEach(function(p) {
+            if (!deps[p]) deps[p] = 1;
         });
     });
+    delete deps["ace/theme/textmate"];
+    callback(Object.keys(deps));
+}
 
-    console.log('# ace themes ---------');
+function normalizeLineEndings(module) {
+    module.source = module.source.replace(/\r\n/g, "\n");
+}
 
-    project.assumeAllFilesLoaded();
-    options.themes.forEach(function(theme) {
-        console.log("theme " + theme);
-        /*copy({
-            source: [{
-                project: cloneProject(project),
-                require: ["ace/theme/" + theme]
-            }],
-            filter: filters,
-            dest:   targetDir + "/theme-" + theme + ".js"
-        });*/
-        // use this instead, to not create separate modules for js and css
-        var themePath = ACE_HOME + "/lib/ace/theme/" + theme
-        var js = fs.readFileSync(themePath + ".js", "utf8");
-        js = js.replace("define(", "define('ace/theme/" + theme + "', ['require', 'exports', 'module', 'ace/lib/dom'], ");
-        
-        if (fs.existsSync(themePath + ".css", "utf8")) {
-            var css = fs.readFileSync(themePath + ".css", "utf8")
-            js = js.replace(/require\(.ace\/requirejs\/text!.*?\)/, quoteString(css))
+function optimizeTextModules(sources) {
+    var textModules = {};
+    return sources.filter(function(pkg) {
+        if (!pkg.id) {
+            return true;
         }
-        filters.forEach(function(f) {js = f(js); });
-        
-        fs.writeFileSync(targetDir + "/theme-" + theme + ".js", js); 
+        else if (pkg.id.indexOf("text!") > -1) {
+            detectTextModules(pkg);
+            return false;
+        }
+        else {
+            pkg.source = rewriteTextImports(pkg.source, pkg.deps);
+            return true;
+        }
+    }).map(function(pkg) {
+        if (pkg && pkg.deps) {
+            pkg.deps = pkg.deps && pkg.deps.filter(function(p) {
+                return p.indexOf("text!") == -1;
+            });
+        }
+        return pkg;
     });
-
-    console.log('# ace key bindings ---------');
-
-    // copy key bindings
-    project.assumeAllFilesLoaded();
-    options.keybindings.forEach(function(keybinding) {
-        copy({
-            source: [{
-                project: cloneProject(project),
-                require: [ 'ace/keyboard/' + keybinding ]
-            }],
-            filter: filters,
-            dest: targetDir + "/keybinding-" + keybinding + ".js"
-        });
-    });
-
-    console.log('# ace worker ---------');
     
-    filters = [
-        copy.filter.moduleDefines,
-        filterTextPlugin,
-        removeUseStrict,
-        removeLicenceCmments
-    ];
-
-    options.workers.forEach(function(mode) {
-        console.log("worker for " + mode + " mode");
-        var worker = copy.createDataObject();
-        var workerProject = copy.createCommonJsProject({
-            roots: [ ACE_HOME + '/lib' ],
-            textPluginPattern: /^ace\/requirejs\/text!/
-        });
-        copy({
-            source: [{
-                project: workerProject,
-                require: [
-                    'ace/lib/fixoldbrowsers',
-                    'ace/lib/event_emitter',
-                    'ace/lib/oop',
-                    'ace/mode/' + mode + '_worker'
-                ]
-            }],
-            filter: filters,
-            dest: worker
-        });
-        copy({
-            source: [
-                ACE_HOME + "/lib/ace/worker/worker.js",
-                worker
-            ],
-            filter: options.compress ? [copy.filter.uglifyjs] : [],
-            dest: targetDir + "/worker-" + mode + ".js"
-        });
-    });
-
-
-    console.log('# combining files into one ---------');
-
-    if (options.shrinkwrap) {
-        copy({
-          source: { root:targetDir, exclude:/^worker\-/ },
-          dest: BUILD_DIR + '/ace-min.js'
+    function rewriteTextImports(text, deps) {
+        return text.replace(/ require\(['"](?:ace|[.\/]+)\/requirejs\/text!(.*?)['"]\)/g, function(_, call) {
+            if (call) {
+                var dep;
+                deps.some(function(d) {
+                    if (d.split("/").pop() == call.split("/").pop()) {
+                        dep = d;
+                        return true;
+                    }
+                });
+    
+                call = textModules[dep];
+                if (call)
+                    return " " + call;
+            }
         });
     }
-}
-
-// TODO: replace with project.clone once it is fixed in dryice
-function cloneProject(project) {
-    var clone = copy.createCommonJsProject({
-        roots: project.roots,
-        ignores: project.ignoreRequires,
-        textPluginPattern: project.textPluginPattern
-    });
-
-    Object.keys(project.currentModules).forEach(function(module) {
-        clone.currentModules[module] = project.currentModules[module];
-    });
-
-    Object.keys(project.ignoredModules).forEach(function(module) {
-        clone.ignoredModules[module] = project.ignoredModules[module];
-    });
-
-    return clone;
-}
-function copyFileSync(srcFile, destFile) {
-    var BUF_LENGTH = 64*1024,
-        buf = new Buffer(BUF_LENGTH),
-        bytesRead = BUF_LENGTH,
-        pos = 0,
-        fdr = null,
-        fdw = null;
-
-
-    fdr = fs.openSync(srcFile, 'r');
-    fdw = fs.openSync(destFile, 'w');
-
-    while (bytesRead === BUF_LENGTH) {
-        bytesRead = fs.readSync(fdr, buf, 0, BUF_LENGTH, pos);
-        fs.writeSync(fdw, buf, 0, bytesRead);
-        pos += bytesRead;
+    function detectTextModules(pkg) {
+        var input = pkg.source.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+        if (/\.css$/.test(pkg.id)) {
+            // remove unnecessary whitespace from css
+            input = input.replace(/\n\s+/g, "\n");
+            input = '"' + input.replace(/\n/g, '\\\n') + '"';
+        } else {
+            // but don't break other files!
+            input = '"' + input.replace(/\n/g, '\\n\\\n') + '"';
+        }
+        textModules[pkg.id] = input;
     }
-
-    fs.closeSync(fdr);
-    fs.closeSync(fdw);
-}
-
-function quoteString(str) {
-    return '"' + str.replace(/\\/, "\\\\").replace(/"/g, '\\"').replace(/\n/g, "\\\n") + '"';
-}
-
-function filterTextPlugin(text) {
-    return text.replace(/(['"])ace\/requirejs\/text\!/g, "$1text!");
-}
-
-function removeUseStrict(text) {
-    return text.replace(/['"]use strict['"];/g, "");
-}
-
-function removeLicenceCmments(text) {
-    return text.replace(/(;)\s*\/\*[\d\D]*?\*\//g, "$1");
 }
 
 function namespace(ns) {
     return function(text) {
         text = text
             .toString()
-            .replace('var ACE_NAMESPACE = "";', 'var ACE_NAMESPACE = "' + ns +'";')
-            .replace(/\bdefine\(/g, ns + ".define(");
+            .replace(/ACE_NAMESPACE\s*=\s*""/, 'ACE_NAMESPACE = "' + ns +'"')
+            .replace(/(\.define)|\bdefine\(/g, function(_, a) {
+                return a || ns + ".define(";
+            });
 
         return text;
     };
 }
 
-function exportAce(ns, module, requireBase) {
+function exportAce(ns, modules, requireBase, extModules) {
     requireBase = requireBase || "window";
-    module = module || "ace/ace";
     return function(text) {
-
+        /*globals REQUIRE_NS, MODULES, NS*/
         var template = function() {
             (function() {
-                REQUIRE_NS.require(["MODULE"], function(a) {
-                    a && a.config.init();
+                REQUIRE_NS.require(MODULES, function(a) {
+                    a && a.config.init(true);
                     if (!window.NS)
-                        window.NS = {};
+                        window.NS = a;
                     for (var key in a) if (a.hasOwnProperty(key))
-                        NS[key] = a[key];
+                        window.NS[key] = a[key];
                 });
             })();
         };
-
-        return (text + ";" + template
+        
+        if (extModules) {
+            template = function() {
+                (function() {
+                    REQUIRE_NS.require(MODULES, function() {});
+                })();
+            };
+        }
+        
+        text = text.replace(/function init\(packaged\) {/, "init(true);$&\n");
+        
+        if (typeof modules == "string")
+            modules = [modules];
+            
+        return (text.replace(/;\s*$/, "") + ";" + template
             .toString()
-            .replace(/MODULE/g, module)
+            .replace(/MODULES/g, JSON.stringify(modules))
             .replace(/REQUIRE_NS/g, requireBase)
             .replace(/NS/g, ns)
             .slice(13, -1)
         );
     };
+}
+
+function updateModes() {
+    modeList().forEach(function(m) {
+        var filepath = __dirname + "/lib/ace/mode/" + m + ".js";
+        var source = fs.readFileSync(filepath, "utf8");
+        if (!/this.\$id\s*=\s*"/.test(source))
+            source = source.replace(/\n([ \t]*)(\}\).call\(\w*Mode.prototype\))/, '\n$1    this.$id = "";\n$1$2');
+        
+        source = source.replace(/(this.\$id\s*=\s*)"[^"]*"/,  '$1"ace/mode/' + m + '"');
+        fs.writeFileSync(filepath, source, "utf8");
+    });
+}
+
+function generateThemesModule(themes) {
+    var themelist = [
+        'define(function(require, exports, module) {',
+        '\n\nmodule.exports.themes = ' + JSON.stringify(themes, null, '    '),
+        ';\n\n});'
+    ].join('');
+    fs.writeFileSync(__dirname + '/lib/ace/ext/themelist_utils/themes.js', themelist, 'utf8');
+}
+
+function addSnippetFile(modeName) {
+    var snippetFilePath = ACE_HOME + "/lib/ace/snippets/" + modeName;
+    if (!fs.existsSync(snippetFilePath + ".js")) {
+        copy.file(ACE_HOME + "/tool/templates/snippets.js", snippetFilePath + ".js", function(t) {
+            return t.replace(/%modeName%/g, modeName);
+        });
+    }
+    if (!fs.existsSync(snippetFilePath + ".snippets")) {
+        fs.writeFileSync(snippetFilePath + ".snippets", "");
+    }
+}
+
+function compress(text) {
+    var ujs = require("dryice").copy.filter.uglifyjs;
+    ujs.options.mangle_toplevel = {except: ["ACE_NAMESPACE", "requirejs"]};
+    ujs.options.beautify = {ascii_only: true, inline_script: true}
+    return ujs(text);
+}
+
+function extend(base, extra) {
+    Object.keys(extra).forEach(function(k) {
+        base[k] = extra[k];
+    });
+    return base;
 }
 
 if (!module.parent)

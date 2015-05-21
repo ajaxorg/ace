@@ -12,17 +12,13 @@
     background-color: #6B72E6;
 }
 
-.ace-tm .ace_scroller {
+.ace-tm {
   background-color: #FFFFFF;
+  color: black;
 }
 
 .ace-tm .ace_cursor {
-  border-left: 2px solid black;
-}
-
-.ace-tm .ace_cursor.ace_overwrite {
-  border-left: 0px;
-  border-bottom: 1px solid black;
+  color: black;
 }
         
 .ace-tm .ace_invisible {
@@ -105,11 +101,11 @@
 }
 
 
-.ace-tm .ace_markup.ace_heading {
+.ace-tm .ace_heading {
   color: rgb(12, 7, 255);
 }
 
-.ace-tm .ace_markup.ace_list {
+.ace-tm .ace_list {
   color:rgb(185, 6, 144);
 }
 
@@ -126,7 +122,6 @@
 }
 .ace-tm.ace_multiselect .ace_selection.ace_start {
   box-shadow: 0 0 3px 0px white;
-  border-radius: 2px;
 }
 .ace-tm .ace_marker-layer .ace_step {
   background: rgb(252, 255, 0);

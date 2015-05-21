@@ -13,7 +13,17 @@ pre_build:
 build: pre_build
 	./Makefile.dryice.js normal
 	./Makefile.dryice.js demo
-	./Makefile.dryice.js bm
+
+# Minimal build: call Makefile.dryice.js only if our sources changed
+basic: build/src/ace.js
+
+build/src/ace.js : ${wildcard lib/*} \
+                   ${wildcard lib/*/*} \
+                   ${wildcard lib/*/*/*} \
+                   ${wildcard lib/*/*/*/*} \
+                   ${wildcard lib/*/*/*/*/*} \
+                   ${wildcard lib/*/*/*/*/*/*}
+	./Makefile.dryice.js
 
 doc:
 	cd doc;\

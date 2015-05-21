@@ -8,21 +8,13 @@
   background: #555651
 }
 
-.ace-merbivore .ace_scroller {
-  background-color: #161616
-}
-
-.ace-merbivore .ace_text-layer {
+.ace-merbivore {
+  background-color: #161616;
   color: #E6E1DC
 }
 
 .ace-merbivore .ace_cursor {
-  border-left: 2px solid #FFFFFF
-}
-
-.ace-merbivore .ace_cursor.ace_overwrite {
-  border-left: 0px;
-  border-bottom: 1px solid #FFFFFF
+  color: #FFFFFF
 }
 
 .ace-merbivore .ace_marker-layer .ace_selection {
@@ -31,7 +23,6 @@
 
 .ace-merbivore.ace_multiselect .ace_selection.ace_start {
   box-shadow: 0 0 3px 0px #161616;
-  border-radius: 2px
 }
 
 .ace-merbivore .ace_marker-layer .ace_step {
@@ -113,10 +104,6 @@
   color: #FFFF89
 }
 
-.ace-merbivore .ace_markup.ace_underline {
-  text-decoration: underline
-}
-
 .ace-merbivore .ace_indent-guide {
-  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAEklEQVQImWMQExP7zzBz5sz/AA50BAyDznYhAAAAAElFTkSuQmCC) right repeat-y
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAEklEQVQImWMQFxf3ZXB1df0PAAdsAmERTkEHAAAAAElFTkSuQmCC) right repeat-y
 }

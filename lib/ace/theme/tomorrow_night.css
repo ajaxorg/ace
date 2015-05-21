@@ -8,21 +8,13 @@
   background: #25282c
 }
 
-.ace-tomorrow-night .ace_scroller {
-  background-color: #1D1F21
-}
-
-.ace-tomorrow-night .ace_text-layer {
+.ace-tomorrow-night {
+  background-color: #1D1F21;
   color: #C5C8C6
 }
 
 .ace-tomorrow-night .ace_cursor {
-  border-left: 2px solid #AEAFAD
-}
-
-.ace-tomorrow-night .ace_cursor.ace_overwrite {
-  border-left: 0px;
-  border-bottom: 1px solid #AEAFAD
+  color: #AEAFAD
 }
 
 .ace-tomorrow-night .ace_marker-layer .ace_selection {
@@ -31,7 +23,6 @@
 
 .ace-tomorrow-night.ace_multiselect .ace_selection.ace_start {
   box-shadow: 0 0 3px 0px #1D1F21;
-  border-radius: 2px
 }
 
 .ace-tomorrow-night .ace_marker-layer .ace_step {
@@ -110,6 +101,7 @@
   color: #F0C674
 }
 
+.ace-tomorrow-night .ace_heading,
 .ace-tomorrow-night .ace_markup.ace_heading,
 .ace-tomorrow-night .ace_string {
   color: #B5BD68
@@ -127,10 +119,6 @@
   color: #969896
 }
 
-.ace-tomorrow-night .ace_markup.ace_underline {
-  text-decoration: underline
-}
-
 .ace-tomorrow-night .ace_indent-guide {
-  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAEklEQVQImWOQlVf8z7Bq1ar/AA/hBFp7egmpAAAAAElFTkSuQmCC) right repeat-y
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAEklEQVQImWNgYGBgYHB3d/8PAAOIAdULw8qMAAAAAElFTkSuQmCC) right repeat-y
 }

@@ -1,6 +1,6 @@
 [submodule "doc/wiki"]
 	path = doc/wiki
-	url = git://github.com/ajaxorg/ace.wiki.git
+	url = https://github.com/ajaxorg/ace.wiki.git
 [submodule "build"]
 	path = build
-	url = git://github.com/ajaxorg/ace-builds.git
+	url = https://github.com/ajaxorg/ace-builds.git

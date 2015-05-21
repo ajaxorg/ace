@@ -8,21 +8,13 @@
   background: #232323
 }
 
-.ace-clouds-midnight .ace_scroller {
-  background-color: #191919
-}
-
-.ace-clouds-midnight .ace_text-layer {
+.ace-clouds-midnight {
+  background-color: #191919;
   color: #929292
 }
 
 .ace-clouds-midnight .ace_cursor {
-  border-left: 2px solid #7DA5DC
-}
-
-.ace-clouds-midnight .ace_cursor.ace_overwrite {
-  border-left: 0px;
-  border-bottom: 1px solid #7DA5DC
+  color: #7DA5DC
 }
 
 .ace-clouds-midnight .ace_marker-layer .ace_selection {
@@ -31,7 +23,6 @@
 
 .ace-clouds-midnight.ace_multiselect .ace_selection.ace_start {
   box-shadow: 0 0 3px 0px #191919;
-  border-radius: 2px
 }
 
 .ace-clouds-midnight .ace_marker-layer .ace_step {
@@ -56,7 +47,7 @@
 }
 
 .ace-clouds-midnight .ace_invisible {
-  color: #BFBFBF
+  color: #666
 }
 
 .ace-clouds-midnight .ace_keyword,
@@ -116,10 +107,6 @@
   color: #606060
 }
 
-.ace-clouds-midnight .ace_markup.ace_underline {
-  text-decoration: underline
-}
-
 .ace-clouds-midnight .ace_indent-guide {
-  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAEklEQVQImWOQlJT8z1BeXv4fAA2KA6+h9Z+2AAAAAElFTkSuQmCC) right repeat-y
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAEklEQVQImWNgYGBgYHB3d/8PAAOIAdULw8qMAAAAAElFTkSuQmCC) right repeat-y
 }

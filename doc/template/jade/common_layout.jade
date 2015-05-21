@@ -1,0 +1,55 @@
+-var dirPrefix = "./";
+-var sitePrefix = "../doc/site/";
+-var landingPage = 'false'
+-var versions = []
+
+mixin doctype
+    !!! 5
+
+    <!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
+    <!--[if IE 7]> <html class="no-js ie7 oldie" lang="en"> <![endif]-->
+    <!--[if IE 8]> <html class="no-js ie8 oldie" lang="en"> <![endif]-->
+    <!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+
+mixin head
+    meta(http-equiv='Content-Type', content='text/html; charset=UTF-8')
+
+    -if (isIndex)
+        title #{title}
+    -else
+        title #{classId} - #{title}
+
+    meta(name="generator", content="panino-doc-build")
+    meta(name="description", content="Ace API documentation for the online code editor")
+    meta(name="author", content="Garen J. Torikian")
+
+    script(src='#{sitePrefix}/js/main.js')
+    link(rel='stylesheet', media='all and (max-device-width: 480px)', href='doc/site/iphone.css')
+    link(rel='stylesheet', media='all and (min-device-width: 481px) and (max-device-width: 1024px)', href='doc/site/iphone.css')
+    link(href='#{dirPrefix}resources/ace/skeleton/images/favicon.ico', rel='icon', type='image/x-icon')
+
+    link(href='#{sitePrefix}/style.css', rel='stylesheet', type='text/css')
+    link(rel="stylesheet", href="#{dirPrefix}resources/csses/ace_api.css")
+    link(rel="stylesheet", href="#{dirPrefix}resources/csses/font-awesome.css")
+
+    link(href="#{dirPrefix}resources/images/favicon.ico", rel="icon", type="image/x-icon")
+
+    script(src='#{dirPrefix}resources/javascripts/bbq.js')
+    script(src="#{dirPrefix}resources/javascripts/jquery.collapse.js")
+    script(src="#{dirPrefix}resources/javascripts/jquery.cookie.js")
+    script(src="#{dirPrefix}resources/javascripts/bootstrap.js")
+
+
+mixin endingScripts
+    script(defer, src="#{dirPrefix}resources/javascripts/ux.js")
+    script(src="#{dirPrefix}resources/javascripts/clicker.js")
+    script(src="#{dirPrefix}resources/javascripts/jquery-scrollspy.js")
+    script(defer, src="#{dirPrefix}resources/javascripts/disqus-ext.js")
+    script(defer, src="#{dirPrefix}resources/javascripts/ga.js")
+
+mixin identifyBuild(tree, type)
+        landingPage = 'true'
+        -dirPrefix = './'
+
+mixin markdown(text, inline)
+    != markdown(text, inline)

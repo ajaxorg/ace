@@ -10,21 +10,13 @@
   background: #e8e8e8
 }
 
-.ace-xcode .ace_scroller {
-  background-color: #FFFFFF
-}
-
-.ace-xcode .ace_text-layer {
+.ace-xcode {
+  background-color: #FFFFFF;
   color: #000000
 }
 
 .ace-xcode .ace_cursor {
-  border-left: 2px solid #000000
-}
-
-.ace-xcode .ace_cursor.ace_overwrite {
-  border-left: 0px;
-  border-bottom: 1px solid #000000
+  color: #000000
 }
 
 .ace-xcode .ace_marker-layer .ace_selection {
@@ -33,7 +25,6 @@
 
 .ace-xcode.ace_multiselect .ace_selection.ace_start {
   box-shadow: 0 0 3px 0px #FFFFFF;
-  border-radius: 2px
 }
 
 .ace-xcode .ace_marker-layer .ace_step {
@@ -107,5 +98,5 @@
 }
 
 .ace-xcode .ace_indent-guide {
-  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAE0lEQVQImWP4////f4bLly//BwAmVgd1/w11/gAAAABJRU5ErkJggg==) right repeat-y;
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAE0lEQVQImWP4////f4bLly//BwAmVgd1/w11/gAAAABJRU5ErkJggg==) right repeat-y
 }

@@ -1,6 +1,6 @@
 .ace-monokai .ace_gutter {
-  background: #2f3129;
-  color: #f1f1f1
+  background: #2F3129;
+  color: #8F908A
 }
 
 .ace-monokai .ace_print-margin {
@@ -8,21 +8,13 @@
   background: #555651
 }
 
-.ace-monokai .ace_scroller {
-  background-color: #272822
-}
-
-.ace-monokai .ace_text-layer {
+.ace-monokai {
+  background-color: #272822;
   color: #F8F8F2
 }
 
 .ace-monokai .ace_cursor {
-  border-left: 2px solid #F8F8F0
-}
-
-.ace-monokai .ace_cursor.ace_overwrite {
-  border-left: 0px;
-  border-bottom: 1px solid #F8F8F0
+  color: #F8F8F0
 }
 
 .ace-monokai .ace_marker-layer .ace_selection {
@@ -31,7 +23,6 @@
 
 .ace-monokai.ace_multiselect .ace_selection.ace_start {
   box-shadow: 0 0 3px 0px #272822;
-  border-radius: 2px
 }
 
 .ace-monokai .ace_marker-layer .ace_step {
@@ -56,14 +47,19 @@
 }
 
 .ace-monokai .ace_invisible {
-  color: #49483E
+  color: #52524d
 }
 
 .ace-monokai .ace_entity.ace_name.ace_tag,
 .ace-monokai .ace_keyword,
-.ace-monokai .ace_meta,
+.ace-monokai .ace_meta.ace_tag,
 .ace-monokai .ace_storage {
   color: #F92672
+}
+
+.ace-monokai .ace_punctuation,
+.ace-monokai .ace_punctuation.ace_tag {
+  color: #fff
 }
 
 .ace-monokai .ace_constant.ace_character,
@@ -101,6 +97,7 @@
 }
 
 .ace-monokai .ace_entity.ace_name.ace_function,
+.ace-monokai .ace_entity.ace_other,
 .ace-monokai .ace_entity.ace_other.ace_attribute-name,
 .ace-monokai .ace_variable {
   color: #A6E22E
@@ -119,10 +116,6 @@
   color: #75715E
 }
 
-.ace-monokai .ace_markup.ace_underline {
-  text-decoration: underline
-}
-
 .ace-monokai .ace_indent-guide {
-  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAEklEQVQImWNQ11D6z7Bq1ar/ABCKBG6g04U2AAAAAElFTkSuQmCC) right repeat-y
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAEklEQVQImWPQ0FD0ZXBzd/wPAAjVAoxeSgNeAAAAAElFTkSuQmCC) right repeat-y
 }

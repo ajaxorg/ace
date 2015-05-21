@@ -2,9 +2,11 @@ var fs = require("fs");
 var path = require("path");
 var panino = require("panino");
 var srcPath = __dirname + "/../lib/ace";
+var buildType = process.argv.splice(2)[0];
 
 var options = {
   title       : "Ace API",
+  parseType   : "jsd",
   linkFormat  : function(linkHtml) {
       var href = linkHtml.href;
       var o = href.match(/(.+)\.html(#.+)/);
@@ -13,28 +15,18 @@ var options = {
       if ( o !== null ) {
           href = href.replace(href, '#nav=api&api=' + o[1]);// + '&section=' + o[2]);
       }
-      /*else if (c != null) {
-          var fileLoc =  path.basename(linkHtml.originalFile, path.extname(linkHtml.originalFile));
-          var sectionLoc = c[1];
-          if (fileLoc.toUpperCase() !== sectionLoc.toUpperCase()) {
-              href = href.replace(href, '#nav=api&api=' + fileLoc + '&section=' + sectionLoc);
-          }
-          else {
-              //href = href.replace(href, '#nav=api&api=' + fileLoc);
-          }
-      }*/
+      
       linkHtml.href = href;
       
       return linkHtml;
   },
   output      : "../api/",
   outputAssets : "../api/resources",
-  skin        : "./resources/ace/templates/layout.jade",
-  assets      : "./resources/ace/skeleton",
+  skin        : "./template/jade/layout.jade",
+  assets      : "./template/resources",
   additionalObjs : "./additionalObjs.json",
-  exclude     : ["**/*_test.js", "**/mode/**", "**/test/**", "**/theme/**", "**/worker/**"],
-  index       : "./index.md",
-  disableTests: true
+  exclude     : ["**/*_test.js", "**/mode/**", "default_commands.js", "multi_select_commands.js", "**/test/**", "**/theme/**", "**/worker/**"],
+  index       : "./index.md"
 };
 
 files = [srcPath];
@@ -45,7 +37,7 @@ panino.parse(files, options, function (err, ast) {
     process.exit(1);
   }
   
-  panino.render('html', ast, options, function (err) {
+  panino.render(buildType || 'html', ast, options, function (err) {
     if (err) {
       console.error(err);
       process.exit(1);

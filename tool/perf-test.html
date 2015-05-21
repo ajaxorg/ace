@@ -7,11 +7,16 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Ace Profile  util</title>
     <link rel="stylesheet" href="demo/kitchen-sink/styles.css" type="text/css" media="screen" charset="utf-8">
+    <link href="../doc/site/images/favicon.ico" rel="icon" type="image/x-icon">
 </head>
 <body>
+<div id="optionsPanel" style="position:absolute;height:100%;width:260px">
   <a href="http://ajaxorg.github.com/ace/" >
     <img id="logo" src="demo/kitchen-sink/logo.png">
   </a>
+  <div style="position: absolute; overflow: hidden; top:80px; bottom:0">
+  <div style="width: 120%; height:100%; overflow-y: scroll">
+
   <table id="controls">
     <tr>
       <td colspan="2">
@@ -77,8 +82,11 @@
             <option value="ace/theme/solarized_light">Solarized Light</option>
             <option value="ace/theme/textmate" selected="selected">TextMate</option>
             <option value="ace/theme/tomorrow">Tomorrow</option>
+            <option value="ace/theme/xcode">XCode</option>
           </optgroup>
           <optgroup label="Dark">
+            <option value="ace/theme/ambiance">Ambiance</option>
+            <option value="ace/theme/chaos">Chaos</option>
             <option value="ace/theme/clouds_midnight">Clouds Midnight</option>
             <option value="ace/theme/cobalt">Cobalt</option>
             <option value="ace/theme/idle_fingers">idleFingers</option>
@@ -89,11 +97,12 @@
             <option value="ace/theme/monokai">Monokai</option>
             <option value="ace/theme/pastel_on_dark">Pastel on dark</option>
             <option value="ace/theme/solarized_dark">Solarized Dark</option>
-            <option value="ace/theme/twilight">Twilight</option>
+            <option value="ace/theme/terminal">Terminal</option>
             <option value="ace/theme/tomorrow_night">Tomorrow Night</option>
             <option value="ace/theme/tomorrow_night_blue">Tomorrow Night Blue</option>
             <option value="ace/theme/tomorrow_night_bright">Tomorrow Night Bright</option>
             <option value="ace/theme/tomorrow_night_eighties">Tomorrow Night 80s</option>
+            <option value="ace/theme/twilight">Twilight</option>    
             <option value="ace/theme/vibrant_ink">Vibrant Ink</option>
           </optgroup>
         </select>
@@ -107,8 +116,10 @@
           <option value="10px">10px</option>
           <option value="11px">11px</option>
           <option value="12px" selected="selected">12px</option>
+          <option value="13px">13px</option>
           <option value="14px">14px</option>
           <option value="16px">16px</option>
+          <option value="18px">18px</option>
           <option value="20px">20px</option>
           <option value="24px">24px</option>
         </select>
@@ -236,14 +247,54 @@
         <label for="fade_fold_widgets">Fade Fold Widgets</label>
       </td>
       <td>
-        <input type="checkbox" id="fade_fold_widgets" checked>
+        <input type="checkbox" id="fade_fold_widgets">
+      </td>
+    </tr>
+    <tr>
+      <td >
+        <label for="elastic_tabstops">Enable Elastic Tabstops</label>
+      </td>
+      <td>
+        <input type="checkbox" id="elastic_tabstops">
+      </td>
+    </tr>
+    <tr>
+      <td >
+        <label for="isearch">Incremental Search</label>
+      </td>
+      <td>
+        <input type="checkbox" id="isearch">
+      </td>
+    </tr>
+    <tr>
+      <td >
+        <label for="highlight_token">Show token info</label>
+      </td>
+      <td>
+        <input type="checkbox" id="highlight_token">
+      </td>
+    </tr>
+    <tr>
+      <td >
+        <label for="read_only">Read-only</label>
+      </td>
+      <td>
+        <input type="checkbox" id="read_only">
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2">
+        <input type="button" value="Edit Snippets", onclick="env.editSnippets()">
       </td>
     </tr>
   </table>
   </td></tr>
   </table>
+
+  </div>
+  </div>
 </div>
-  <div id="editor"></div>
+  <div id="editor-container"></div>
 
 <!--DEVEL-->
   <script type="text/javascript">
@@ -282,7 +333,9 @@
     }
     function end(){
         shouldProfile && console.profileEnd()
-        console.log(startTime - Date.now())
+        var dt = startTime - Date.now()
+        console.log(dt)
+        ace.cmdLine.setValue(dt+"", 1)
     }
 
     /*editor.renderer.scrollToY(0);

@@ -1,41 +1,26 @@
-[
- {
-  "state": "start",
-  "data": [
-   [ "comment", "<!--" ],
-   [ "comment", "- hello world --->" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "meta.tag", "<" ],
-   [ "meta.tag.tag-name", "cfset" ],
-   [ "text", " " ],
-   [ "entity.other.attribute-name", "welcome" ],
-   [ "keyword.operator", "=" ],
-   [ "string", "\"Hello World!\"" ],
-   [ "meta.tag", ">" ]
-  ]
- },
- {
-  "state": "start",
-  "data": []
- },
- {
-  "state": "start",
-  "data": [
-   [ "meta.tag", "<" ],
-   [ "meta.tag.tag-name", "cfoutput" ],
-   [ "meta.tag", ">" ],
-   [ "text", "#welcome#" ],
-   [ "meta.tag", "</" ],
-   [ "meta.tag.tag-name", "cfoutput" ],
-   [ "meta.tag", ">" ]
-  ]
- }
-]
+[[
+   "start",
+  ["comment.xml","<!--- hello world --->"]
+],[
+   "start"
+],[
+   "start",
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","cfset"],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","welcome"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"Hello World!\""],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start"
+],[
+   "start",
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","cfoutput"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["text.xml","#welcome#"],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","cfoutput"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+]]

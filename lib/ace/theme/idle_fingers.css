@@ -1,6 +1,6 @@
 .ace-idle-fingers .ace_gutter {
   background: #3b3b3b;
-  color: #fff
+  color: rgb(153,153,153)
 }
 
 .ace-idle-fingers .ace_print-margin {
@@ -8,21 +8,13 @@
   background: #3b3b3b
 }
 
-.ace-idle-fingers .ace_scroller {
-  background-color: #323232
-}
-
-.ace-idle-fingers .ace_text-layer {
+.ace-idle-fingers {
+  background-color: #323232;
   color: #FFFFFF
 }
 
 .ace-idle-fingers .ace_cursor {
-  border-left: 2px solid #91FF00
-}
-
-.ace-idle-fingers .ace_cursor.ace_overwrite {
-  border-left: 0px;
-  border-bottom: 1px solid #91FF00
+  color: #91FF00
 }
 
 .ace-idle-fingers .ace_marker-layer .ace_selection {
@@ -31,7 +23,6 @@
 
 .ace-idle-fingers.ace_multiselect .ace_selection.ace_start {
   box-shadow: 0 0 3px 0px #323232;
-  border-radius: 2px
 }
 
 .ace-idle-fingers .ace_marker-layer .ace_step {
@@ -111,15 +102,11 @@
   color: #FFC66D
 }
 
-.ace-idle-fingers .ace_markup.ace_underline {
-  text-decoration: underline
-}
-
 .ace-idle-fingers .ace_collab.ace_user1 {
   color: #323232;
   background-color: #FFF980
 }
 
 .ace-idle-fingers .ace_indent-guide {
-  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAEklEQVQImWMwMjL6zzBz5sz/ABEUBGCqhK6UAAAAAElFTkSuQmCC) right repeat-y
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAEklEQVQImWMwMjLyZYiPj/8PAAreAwAI1+g0AAAAAElFTkSuQmCC) right repeat-y
 }

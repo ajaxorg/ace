@@ -8,21 +8,13 @@
   background: #353030
 }
 
-.ace-pastel-on-dark .ace_scroller {
-  background-color: #2C2828
-}
-
-.ace-pastel-on-dark .ace_text-layer {
+.ace-pastel-on-dark {
+  background-color: #2C2828;
   color: #8F938F
 }
 
 .ace-pastel-on-dark .ace_cursor {
-  border-left: 2px solid #A7A7A7
-}
-
-.ace-pastel-on-dark .ace_cursor.ace_overwrite {
-  border-left: 0px;
-  border-bottom: 1px solid #A7A7A7
+  color: #A7A7A7
 }
 
 .ace-pastel-on-dark .ace_marker-layer .ace_selection {
@@ -31,7 +23,6 @@
 
 .ace-pastel-on-dark.ace_multiselect .ace_selection.ace_start {
   box-shadow: 0 0 3px 0px #2C2828;
-  border-radius: 2px
 }
 
 .ace-pastel-on-dark .ace_marker-layer .ace_step {
@@ -132,10 +123,6 @@
   color: #494949
 }
 
-.ace-pastel-on-dark .ace_markup.ace_underline {
-  text-decoration: underline
-}
-
 .ace-pastel-on-dark .ace_indent-guide {
-  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAEklEQVQImWPQ0dD4z9DR0fEfAA+vBBPqhbn1AAAAAElFTkSuQmCC) right repeat-y
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAEklEQVQImWNgYGBgYIiPj/8PAARgAh2NTMh8AAAAAElFTkSuQmCC) right repeat-y
 }

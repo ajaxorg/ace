@@ -94,7 +94,6 @@ function extractStyles(theme) {
         "printMargin": "#e8e8e8",
         "background": parseColor(globalSettings.background),
         "foreground": parseColor(globalSettings.foreground),
-        "overwrite": parseColor(globalSettings.caret),
         "gutter": "#e8e8e8",
         "selection": parseColor(globalSettings.selection),
         "step": "rgb(198, 219, 174)",
@@ -107,7 +106,7 @@ function extractStyles(theme) {
 
     for (var i=1; i<theme.settings.length; i++) {
         var element = theme.settings[i];
-        if (!element.scope)
+        if (!element.scope || !element.settings)
             continue;
         var scopes = element.scope.split(/\s*[|,]\s*/g);
         for (var j = 0; j < scopes.length; j++) {
@@ -116,7 +115,7 @@ function extractStyles(theme) {
         
             var aceScope = supportedScopes[scope];
             if (aceScope) {
-                colors[aceScope] = style;                
+                colors[aceScope] = style;
             }
             else if (style) {
                 unsupportedScopes[scope] = (unsupportedScopes[scope] || 0) + 1;
@@ -135,32 +134,55 @@ function extractStyles(theme) {
             colors.fold = foldSource.match(/\:([^;]+)/)[1];
         }
     }
+    
+    colors.gutterBg = colors.background
+    colors.gutterFg = mix(colors.foreground, colors.background, 0.5)
 
     if (!colors.selected_word_highlight)
         colors.selected_word_highlight =  "border: 1px solid " + colors.selection + ";";
 
     colors.isDark = (luma(colors.background) < 0.5) + "";
-
+    
     return colors;
 };
 
-function luma(color) {
+function mix(c1, c2, a1, a2) {
+    c1 = rgbColor(c1);
+    c2 = rgbColor(c2);
+    if (a2 === undefined)
+        a2 = 1 - a1
+    return "rgb(" + [
+        Math.round(a1*c1[0] + a2*c2[0]),
+        Math.round(a1*c1[1] + a2*c2[1]),
+        Math.round(a1*c1[2] + a2*c2[2])
+    ].join(",") + ")";
+}
+
+function rgbColor(color) {
+    if (typeof color == "object")
+        return color;
     if (color[0]=="#")
-        var rgb = color.match(/^#(..)(..)(..)/).slice(1).map(function(c) {
+        return color.match(/^#(..)(..)(..)/).slice(1).map(function(c) {
             return parseInt(c, 16);
         });
     else
-        var rgb = color.match(/\(([^,]+),([^,]+),([^,]+)/).slice(1).map(function(c) {
+        return color.match(/\(([^,]+),([^,]+),([^,]+)/).slice(1).map(function(c) {
             return parseInt(c, 10);
         });
-
+}
+function luma(color) {
+    var rgb = rgbColor(color);
     return (0.21 * rgb[0] + 0.72 * rgb[1] + 0.07 * rgb[2]) / 255;
 }
 
 function parseColor(color) {
+    if (color.length == 4)
+        color = color.replace(/[a-fA-F\d]/g, "$&$&");
     if (color.length == 7)
         return color;
     else {
+        if (!color.match(/^#(..)(..)(..)(..)$/))
+            console.error("can't parse color", color);
         var rgba = color.match(/^#(..)(..)(..)(..)$/).slice(1).map(function(c) {
             return parseInt(c, 16);
         });
@@ -203,8 +225,8 @@ function quoteString(str) {
     return '"' + str.replace(/\\/, "\\\\").replace(/"/g, '\\"').replace(/\n/g, "\\\n") + '"';
 }
 
-var cssTemplate = fs.readFileSync(__dirname + "/Theme.tmpl.css", "utf8");
-var jsTemplate = fs.readFileSync(__dirname + "/Theme.tmpl.js", "utf8");
+var cssTemplate = fs.readFileSync(__dirname + "/templates/theme.css", "utf8");
+var jsTemplate = fs.readFileSync(__dirname + "/templates/theme.js", "utf8");
 
 function normalizeStylesheet(rules) {
     for (var i = rules.length; i--; ) {
@@ -247,6 +269,8 @@ var themes = {
     "pastel_on_dark": "Pastels on Dark",
     "solarized_dark": "Solarized-dark",
     "solarized_light": "Solarized-light",
+    "katzenmilch": "Katzenmilch",
+    "kuroir": "Kuroir Theme",
     //"textmate": "Textmate (Mac Classic)",
     "tomorrow": "Tomorrow",
     "tomorrow_night": "Tomorrow-Night",
@@ -255,12 +279,16 @@ var themes = {
     "tomorrow_night_eighties": "Tomorrow-Night-Eighties",
     "twilight": "Twilight",
     "vibrant_ink": "Vibrant Ink",
-    //"xcode": "Xcode_default"
+    "xcode": "Xcode_default"
 };
 
-function convertTheme(name) {
+function convertBuiltinTheme(name) {
+    return convertTheme(name, __dirname + "/tmthemes/" + themes[name] + ".tmTheme", __dirname + "/../lib/ace/theme");
+}
+
+function convertTheme(name, tmThemePath, outputDirectory) {
     console.log("Converting " + name);
-    var tmTheme = fs.readFileSync(__dirname + "/tmthemes/" + themes[name] + ".tmTheme", "utf8");
+    var tmTheme = fs.readFileSync(tmThemePath, "utf8");
     parseTheme(tmTheme, function(theme) {
         var styles = extractStyles(theme);
 
@@ -276,19 +304,12 @@ function convertTheme(name) {
                 i.replace(/^|\./g, ".ace_") + "{" + styles[i] + "}";
         }
 
-        var js = fillTemplate(jsTemplate, {
-            name: name,
-            css: "require('ace/requirejs/text!./" + name + ".css')", // quoteString(css), //
-            cssClass: "ace-" + hyphenate(name),
-            isDark: styles.isDark
-        });
-
         // we're going to look for NEW rules in the parsed content only
         // if such a rule exists, add it to the destination file
         // this way, we preserve all hand-modified rules in the <theme>.css rules,
         // (because some exist, for collab1 and ace_indentation_guide
         try {
-            var outThemeCss = fs.readFileSync(__dirname + "/../lib/ace/theme/" + name + ".css");
+            var outThemeCss = fs.readFileSync(outputDirectory + "/" + name + ".css");
             var oldRules = cssParse(outThemeCss).stylesheet.rules;
             var newRules = cssParse(css).stylesheet.rules;
 
@@ -316,15 +337,35 @@ function convertTheme(name) {
             css = cssStringify({stylesheet: {rules: oldRules}}, { compress: false });
         } catch(e) {
             console.log("Creating new file: " +  name + ".css")
+            css = cssStringify(cssParse(css), { compress: false });
         }
         
-        fs.writeFileSync(__dirname + "/../lib/ace/theme/" + name + ".js", js);
-        fs.writeFileSync(__dirname + "/../lib/ace/theme/" + name + ".css", css);
+        var js = fillTemplate(jsTemplate, {
+            name: name,
+            css: 'require("../requirejs/text!./' + name + '.css")', // quoteString(css), //
+            cssClass: "ace-" + hyphenate(name),
+            isDark: styles.isDark
+        });
+
+        fs.writeFileSync(outputDirectory + "/" + name + ".js", js);
+        fs.writeFileSync(outputDirectory + "/" + name + ".css", css);
     })
 }
 
-for (var name in themes) {
-    convertTheme(name);
+if (process.argv.length > 1) {
+    var args = process.argv.splice(2);
+    if (args.length < 3) {
+        console.error("Usage: node tmtheme.js [theme_name, path/to/theme.tmTheme path/to/output/directory]");
+        process.exit(1);
+    }
+    var name = args[0];
+    var themePath = args[1];
+    var outputDirectory = args[2];
+    convertTheme(name, themePath, outputDirectory);
+} else {
+    for (var name in themes) {
+        convertBuiltinTheme(name);
+    }
 }
 
 var sortedUnsupportedScopes = {};

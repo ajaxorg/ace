@@ -1,21 +1,24 @@
 {
     "name": "ace",
     "description": "Ajax.org Code Editor is a full featured source code highlighting editor that powers the Cloud9 IDE",
-    "version": "1.0.0",
-    "homepage" : "http://github.com/ajaxorg/ace",
+    "version": "1.1.9",
+    "homepage": "http://github.com/ajaxorg/ace",
     "engines": {"node": ">= 0.6.0"},
-    "author": "Fabian Jakobs <fabian@ajax.org>",
+    "author": "Fabian Jakobs <fabian@c9.io>",
     "main": "lib/ace",
-    "repository" : {
-        "type" : "git",
-         "url" : "http://github.com/ajaxorg/ace.git"
+    "repository": {
+        "type": "git",
+         "url": "http://github.com/ajaxorg/ace.git"
     },
     "dependencies": {
-        "mime": "1.2.x",
+        "mime": "1.2.x"
+    },
+    "devDependencies": {
         "asyncjs": "0.0.x",
         "jsdom": "0.2.x",
         "amd-loader": "~0.0.4",
-        "dryice": ""
+        "dryice": "0.4.11",
+        "architect-build": "https://github.com/c9/architect-build/tarball/a3bad51808"
     },
     "mappings": {
         "ace": "."
@@ -28,30 +31,7 @@
         "lib": "lib/ace"
     },
     "scripts": {
-        "test": "node lib/ace/test/all.js",
-        "postinstall": "node ./install.js"
-    },
-    "config": {
-        "github.com/sourcemint/bundler-js/0/-meta/config/0": {
-            "adapter": "github.com/sourcemint/sdk-requirejs/0",
-            "modules": {
-                "/lib/ace/virtual_renderer.js": {
-                    "dynamicLinks": [
-                        "/lib/ace/theme/*.js"
-                    ]
-                },
-                "/lib/ace/worker/worker_client.js": {
-                    "dynamicLinks": [
-                        "/lib/ace/worker/worker_sourcemint.js"
-                    ]
-                },
-                "/lib/ace/worker/worker_sourcemint.js": {
-                    "bundleLoader": true,
-                    "dynamicLinks": [
-                        "/lib/ace/mode/*_worker.js"
-                    ]
-                }
-            }
-        }
+        "start": "node static.js",
+        "test": "node lib/ace/test/all.js"
     }
 }

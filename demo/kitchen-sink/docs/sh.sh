@@ -2,9 +2,9 @@
 
 # Script to open a browser to current branch
 # Repo formats:
-# ssh   git@github.com:richoH/gh_pr.git
-# http  https://richoH@github.com/richoH/gh_pr.git
-# git   git://github.com/richoH/gh_pr.git
+# ssh   git@github.com:richo/gh_pr.git
+# http  https://richoH@github.com/richo/gh_pr.git
+# git   git://github.com/richo/gh_pr.git
 
 username=`git config --get github.user`
 
@@ -29,6 +29,8 @@ get_repo() {
         exit 1
     fi
 }
+
+echo ${#x[@]}
 
 if repo=`get_repo $@`; then
     branch=`git symbolic-ref HEAD 2>/dev/null`

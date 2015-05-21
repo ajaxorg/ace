@@ -40,6 +40,10 @@ var Renderer = require("ace/virtual_renderer").VirtualRenderer;
 var Editor = require("ace/editor").Editor;
 var MultiSelect = require("ace/multi_select").MultiSelect;
 
+exports.createEditor = function(el) {
+    return new Editor(new Renderer(el));
+};
+
 exports.createSplitEditor = function(el) {
     if (typeof(el) == "string")
         el = document.getElementById(el);
@@ -54,12 +58,9 @@ exports.createSplitEditor = function(el) {
     el.style.position = "relative";
     var split = {$container: el};
 
-    split.editor0 = split[0] = new Editor(new Renderer(e0, require("ace/theme/textmate")));
-    split.editor1 = split[1] = new Editor(new Renderer(e1, require("ace/theme/textmate")));
+    split.editor0 = split[0] = new Editor(new Renderer(e0));
+    split.editor1 = split[1] = new Editor(new Renderer(e1));
     split.splitter = s;
-
-    MultiSelect(split.editor0);
-    MultiSelect(split.editor1);
 
     s.ratio = 0.5;
 
@@ -104,8 +105,8 @@ exports.createSplitEditor = function(el) {
         };
 
         var onResizeInterval = function() {
-            s.ratio = (x - rect.left) / rect.width
-            split.resize()
+            s.ratio = (x - rect.left) / rect.width;
+            split.resize();
         };
 
         event.capture(s, onMouseMove, onResizeEnd);
@@ -167,6 +168,7 @@ exports.bindCheckbox = function(id, callback, noInit) {
     };
     el.onclick = onCheck;
     noInit || onCheck();
+    return el;
 };
 
 exports.bindDropdown = function(id, callback, noInit) {
@@ -200,7 +202,7 @@ exports.fillDropdown = function(el, values) {
 function elt(tag, attributes, content) {
     var el = dom.createElement(tag);
     if (typeof content == "string") {
-        el.textContent = content;
+        el.appendChild(document.createTextNode(content));
     } else if (content) {
         content.forEach(function(ch) {
             el.appendChild(ch);
@@ -215,8 +217,8 @@ function elt(tag, attributes, content) {
 function optgroup(values) {
     return values.map(function(item) {
         if (typeof item == "string")
-            item = {name: item, desc: item};
-        return elt("option", {value: item.name}, item.desc);
+            item = {name: item, caption: item};
+        return elt("option", {value: item.value || item.name}, item.caption || item.desc);
     });
 }
 
@@ -231,4 +233,3 @@ function dropdown(values) {
 
 
 });
-
