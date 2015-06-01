@@ -21,7 +21,7 @@ http.createServer(function(req, res) {
     if (req.method == "PUT") {
         if (!allowSave)
             return error(res, 404, "Saving not allowed pass --allow-save to enable");
-        save(req, res, filename);
+        return save(req, res, filename);
     }
 
     fs.exists(filename, function(exists) {
@@ -86,6 +86,7 @@ function save(req, res, filePath) {
         }
         res.statusCode = 200;
         res.end("OK");
+        console.log("saved ", filePath);
     });
 }
 

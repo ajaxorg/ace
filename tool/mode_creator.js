@@ -126,8 +126,8 @@ function handleSaveResult(err, editor) {
         return log(
             "Write access to this file is disabled.\n"+
             "To enable saving your changes to disk, clone the Ace repository\n"+
-            "and run the included web server with the --allow-write option\n"+
-            "`node static.js --allow-write` or `static.py --puttable=*`"
+            "and run the included web server with the --allow-save option\n"+
+            "`node static.js --allow-save` or `static.py --puttable=*`"
         );
     }
     editor.session.getUndoManager().markClean();
