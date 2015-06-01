@@ -1,5 +1,4 @@
 var plist = require("plist");
-var util = require("util");
 var url = require("url");
 var cson = require("cson");
 
@@ -53,15 +52,15 @@ function formatJS(object, indent, initialIndent) {
                 buffer.push("" + o);
         }
         else if (Array.isArray(o)) {
-            buffer.push("[")
+            buffer.push("[");
             
-            var len = totalIndent.length
+            var len = totalIndent.length;
             var oneLine = true;
             for (var i = 0; i < o.length; i++) {
                 if (typeof o[i] == "string") {
-                    len += o[i].length + 2
+                    len += o[i].length + 2;
                 } else if (!o[i]) {
-                    len += (o[i] + "").length
+                    len += (o[i] + "").length;
                 } else {
                     oneLine = false;
                     break;
@@ -82,7 +81,7 @@ function formatJS(object, indent, initialIndent) {
                     if (oneLine)
                         i && buffer.push(" ");
                     else
-                        buffer.push("\n", totalIndent + indent)
+                        buffer.push("\n", totalIndent + indent);
                     $format(buffer, totalIndent + indent, state, o[i]);
                     if (i < o.length - 1)
                         buffer.push(",");
@@ -90,8 +89,8 @@ function formatJS(object, indent, initialIndent) {
                 
             }
             if (!oneLine && buffer[buffer.length - 1] != "}")
-                buffer.push("\n" + totalIndent)
-            buffer.push("]")
+                buffer.push("\n" + totalIndent);
+            buffer.push("]");
         }
         else {
             var keys = Object.keys(o);
@@ -102,7 +101,7 @@ function formatJS(object, indent, initialIndent) {
                     buffer.push(keys[i]);
                 else
                     buffer.push(JSON.stringify(keys[i]));
-                buffer.push(": ")
+                buffer.push(": ");
 
                 if (keys[i] == "regex" && typeof o[keys[i]] == "string") {
                     try {
@@ -162,7 +161,7 @@ exports.download = function(href, callback) {
 	var options = url.parse(href);   
 	var protocol = options.protocol === "https:" ? https : http;
 	console.log("connecting to " + options.host + " " + options.path);
-	var request = protocol.get(options, function(res) {
+	protocol.get(options, function(res) {
 		var data = "";
 		res.setEncoding("utf-8");
 
