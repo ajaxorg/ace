@@ -21,4 +21,3 @@ IZ-> IF <= 0 THEN %D ELSE %U
 
 C1-> IF *3 THEN %D ELSE %R
 C2-> IF *3 THEN %U ELSE %D
-
