@@ -65,6 +65,14 @@ function main(displayName, extRe) {
     var modelist = fs.readFileSync(modelistPath, "utf8").replace(/\r\n?/g, "\n");
     modelist = modelist.replace(/(supportedModes = {\n)([\s\S]*?)(\n^};)/m, function(_, m1, m2, m3) {
         var langs = m2.split(/,\n/);
+        var unsorted = [];
+        for (var i = langs.length; i--;) {
+            if (/\s*\/\//.test(langs[i])) {
+                unsorted = langs.splice(i, langs.length);
+                break;
+            }
+        }
+        console.log(unsorted)
         var offset = langs[0].trim().indexOf("[");
         var padding = Array(Math.max(offset - displayName.length - 1, 0) + 1).join(" ");
         var newLang = "    " + displayName + ":" + padding + "[\"" + extRe + "\"]";
@@ -86,7 +94,7 @@ function main(displayName, extRe) {
             return x.value;
         });
         
-        return m1 + langs.join(",\n") + m3;
+        return m1 + langs.concat(unsorted).join(",\n") + m3;
     });
     fs.writeFileSync(modelistPath, modelist, "utf8");
     console.log("Updated modelist at: " + path.normalize(modelistPath));
@@ -99,7 +107,8 @@ if (!module.parent) {
     if (!displayName || ! extRe) {
         console.log("Usage: ModeName ext1|ext2");
         process.exit(1);
-    }    
+    }
+    main(displayName, extRe);
 } else {
     module.exports = main;
 }
