@@ -39,7 +39,7 @@
 
 .ace-katzenmilch .ace_marker-layer .ace_bracket {
   margin: -1px 0 0 -1px;
-  border: 1px solid #000000
+  border: 1px solid rgba(0, 0, 0, 0.33);
 }
 
 .ace-katzenmilch .ace_marker-layer .ace_active-line {
