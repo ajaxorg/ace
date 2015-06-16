@@ -15,7 +15,7 @@ if (!fs.exists)
 var allowSave = process.argv.indexOf("--allow-save") != -1;
 
 http.createServer(function(req, res) {
-    var uri = url.parse(req.url).pathname
+    var uri = unescape(url.parse(req.url).pathname)
       , filename = path.join(process.cwd(), uri);
 
     if (req.method == "PUT") {
@@ -26,7 +26,7 @@ http.createServer(function(req, res) {
 
     fs.exists(filename, function(exists) {
         if (!exists)
-            return error(res, 404, "404 Not Found\n");
+            return error(res, 404, "404 Not Found\n" + filename);
 
         if (fs.statSync(filename).isDirectory()) {
             var files = fs.readdirSync(filename);
@@ -36,10 +36,13 @@ http.createServer(function(req, res) {
             var html = files.map(function(name) {
                 var href = uri + "/" + name;
                 href = href.replace(/[\/\\]+/g, "/").replace(/\/$/g, "");
-                if (fs.statSync(filename + "/" + name + "/").isDirectory())
-                    href += "/";
-                return "<a href='" + href + "'>" + name + "</a><br>";
-            });
+                try {
+                    var stat = fs.statSync(filename + "/" + name);
+                    if (stat.isDirectory())
+                        href += "/";
+                    return "<a href='" + href + "'>" + name + "</a><br>";
+                } catch(e) {}
+            }).filter(Boolean);
 
             res._hasBody && res.write(html.join(""));
             res.end();
