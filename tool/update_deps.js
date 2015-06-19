@@ -8,6 +8,8 @@ var spawn = require("child_process").spawn;
 var async = require("asyncjs");
 var rootDir = __dirname + "/../lib/ace/";
 
+var SKIP_NPM = false;
+
 var deps = {
     csslint: {
         path: "mode/css/csslint.js",
@@ -279,7 +281,6 @@ function run(cmd, cb) {
         result += data;
 	});
 
-    proc.on('exit', done);
     proc.on('close', done);
     function done(code) {
         if (code !== 0) {
@@ -302,18 +303,48 @@ function unquote(str) {
 function browserify(_, cb) {
     var br = this.browserify;
     var path = Path.join("node_modules", br.path)
-    run("npm install " + this.browserify.npmModule, function() {
-        run("browserify " + path + " -s " + br.exports, function(err, src) {
-            src = src.replace(/^.*return\s*\(function/, "module.exports = (function")
-                .replace(/\}\);\s*$/, "");
-            src = src.replace(/(\],|\{)((?:\d+|"\w+"):\[)/g, "$1\n$2")
-                .replace(/^(\},)(\{[^{}\[\]]*?\}\])/gm, "$1\n$2")
-            cb(err, src);
-        })
-    })
+    process.chdir(__dirname);
+    if (Path.sep == "\\" && !Path._relative) {
+        Path._relative = Path.relative;
+        Path.relative = function() {
+            var v = Path._relative.apply(this, arguments);
+            return v.replace(/\\/g, "/");
+        }
+    }
+    function done() {
+        var browserify = require('browserify');
+        var absPath = require.resolve(__dirname + "/" + path);
+        var defaultPreludePath = require.resolve("browser-pack") + "/../prelude.js";
+        var defaultPrelude = "module.exports = " + fs.readFileSync(defaultPreludePath, 'utf8')
+            .replace(/^[ \t]*\/\/.*/gm, "")
+            .replace(/^\s*\n\r?/gm, "")
+            .replace(/return newRequire;/, "return newRequire(entry[0]);")
+        var opts = {
+            expose: br.exports,
+            prelude: defaultPrelude,
+            exposeAll: true
+        }
+        var b = browserify(opts);
+        b.plugin(require("deps-sort"), opts);
+        b.add(absPath);
+        var p = b.bundle();
+        var buffer = "";
+        p.on("data", function(e) { buffer += e; });
+        p.on("end", function() {
+            var src = buffer;
+            src = require("derequire")(src, [
+                {from: 'require', to: '_dereq_'},
+                {from: 'define', to: '_defi_'}
+            ]);
+            cb(null, src);
+        });
+    }
+    if (SKIP_NPM) return done();
+    run("npm install " + br.npmModule,  done);
 }
 
 var args = process.argv.slice(2);
+SKIP_NPM = args.indexOf("--skip-npm") != -1;
 args = args.filter(function(x) {return x[0] != "-" });
 if (!args.length)
     args = Object.keys(deps);
