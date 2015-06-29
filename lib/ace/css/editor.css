@@ -146,6 +146,8 @@
     -moz-user-select: text;
     -webkit-user-select: text;
     user-select: text;
+    /*with `pre-line` chrome inserts &nbsp; instead of space*/
+    white-space: pre!important;
 }
 
 .ace_text-input.ace_composition {
