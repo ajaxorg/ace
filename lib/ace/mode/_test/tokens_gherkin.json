@@ -1,10 +1,10 @@
 [[
    "start",
-  ["comment","@these"],
+  ["variable.parameter","@these"],
   ["text"," "],
-  ["comment","@are"],
+  ["variable.parameter","@_are_"],
   ["text"," "],
-  ["comment","@tags"]
+  ["variable.parameter","@tags"]
 ],[
    "start",
   ["keyword","Feature:"],
@@ -77,7 +77,7 @@
    "start",
   ["text","      "],
   ["comment","|"],
-  ["string","  20   "],
+  ["string","  @20  "],
   ["comment","|"],
   ["string","  5  "],
   ["comment","|"],
