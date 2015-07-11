@@ -1,3 +1,5 @@
+#!/bin/bash
+
 pause() {
     while true; do
         read -p "$1 " yn

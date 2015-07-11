@@ -1,12 +1,16 @@
-Version 1.2.0-pre
+2015.07.11 Version 1.2.0
 
 * New Features
   - Indented soft wrap (danyaPostfactum)
+  - Rounded borders on selections
 
 * API Changes
   - unified delta types `{start, end, action, lines}`  (Alden Daniels https://github.com/ajaxorg/ace/pull/1745)
   - "change" event listeners on session and editor get delta objects directly
 
+* new language modes
+  - SQLServer (Morgan Yarbrough)
+  
 2015.04.03 Version 1.1.9
 
   - Small Enhancements and Bugfixes
