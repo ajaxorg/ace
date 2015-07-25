@@ -83,7 +83,7 @@
    "start"
 ],[
    "start",
-   ["comment","//"]
+  ["comment","//"]
 ],[
    "start",
   ["storage.type","int"],
@@ -110,7 +110,7 @@
   ["text"," "],
   ["comment","/* foobar */"]
 ],[
-   "start",
+   "singleLineComment",
   ["text","    "],
   ["identifier","a"],
   ["text"," "],
@@ -119,7 +119,10 @@
   ["identifier","b"],
   ["punctuation.operator",";"],
   ["text"," "],
-  ["comment","// single line comment\\        continued"]
+  ["comment","// single line comment\\"]
+],[
+   "start",
+  ["comment","        continued"]
 ],[
    "start",
   ["text","    "],
