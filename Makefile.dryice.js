@@ -33,6 +33,7 @@ var fs = require("fs");
 var path = require("path");
 var copy = require('architect-build/copy');
 var build = require('architect-build/build');
+var glob = require("glob");
 
 var ACE_HOME = __dirname;
 var BUILD_DIR = ACE_HOME + "/build";
@@ -227,6 +228,15 @@ function buildAceModule(opts, callback) {
     }
 }
 
+function getTargetDir(opts) {
+  var targetDir =  BUILD_DIR + "/src";
+  if (opts.compress)
+    targetDir += "-min";
+  if (opts.noconflict)
+    targetDir += "-noconflict";
+  return targetDir;
+}
+
 function buildAceModuleInternal(opts, callback) {
     var cache = opts.cache == undefined ? CACHE : opts.cache;
     var key = opts.require + "|" + opts.projectType;
@@ -260,16 +270,10 @@ function buildAceModuleInternal(opts, callback) {
                 result.codeMin = compress(result.code);
             code = result.codeMin;
         }
-            
-        var targetDir =  BUILD_DIR + "/src";
-        if (opts.compress)
-            targetDir += "-min";
-        if (opts.noconflict)
-            targetDir += "-noconflict";
         
         var to = /^([\\/]|\w:)/.test(opts.outputFile)
             ? opts.outputFile
-            : path.join(opts.outputFolder || targetDir, opts.outputFile);
+            : path.join(opts.outputFolder || getTargetDir(opts), opts.outputFile);
     
         var filters = [];
 
@@ -335,6 +339,21 @@ function buildSubmodule(options, extra, file, callback) {
     });
 }
 
+function copyLicenses(options, name) {
+  // specifically for copying over licenses so they follow the code
+  glob(path.join(__dirname, "lib/ace/mode", name, "LICENSE") + "*", function (er, files) {
+    if (er) throw er;
+    if (files.length > 0) {
+      var targetDir = getTargetDir(options);
+      files.forEach(function(file) { // usually only 1
+        var fileName = path.basename(file);
+        console.log('Copy file', fileName, 'to', targetDir);
+        copy.file(file, path.join(targetDir, fileName));
+      })
+    }
+  });
+}
+
 function buildAce(options) {
     var snippetFiles = jsFileList("lib/ace/snippets");
     var modeNames = modeList();
@@ -389,6 +408,7 @@ function buildAce(options) {
                 order: -1000
             }],
         }, "worker-" + name);
+        copyLicenses(options, name);
     });
 }
 
