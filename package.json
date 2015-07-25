@@ -18,7 +18,7 @@
         "node-jsdom": "3.1.5",
         "amd-loader": "~0.0.4",
         "dryice": "0.4.11",
-        "architect-build": "https://github.com/c9/architect-build/tarball/a3bad51808"
+        "architect-build": "https://github.com/c9/architect-build/tarball/17268dce65"
     },
     "mappings": {
         "ace": "."
