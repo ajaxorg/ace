@@ -115,7 +115,7 @@
   ["text"," "],
   ["keyword","extends"],
   ["text"," "],
-  ["identifier","Application"],
+  ["support.function","Application"],
   ["text"," "],
   ["paren.lparen","{"]
 ],[
@@ -205,7 +205,7 @@
 ],[
    "start",
   ["text","    "],
-  ["identifier","println"],
+  ["keyword","println"],
   ["paren.lparen","("],
   ["string","\"Ping: Initializing with count \""],
   ["keyword.operator","+"],
@@ -248,7 +248,7 @@
 ],[
    "start",
   ["text","          "],
-  ["identifier","println"],
+  ["keyword","println"],
   ["paren.lparen","("],
   ["string","\"Ping: starting.\""],
   ["paren.rparen",")"]
@@ -327,7 +327,7 @@
 ],[
    "start",
   ["text","            "],
-  ["identifier","println"],
+  ["keyword","println"],
   ["paren.lparen","("],
   ["string","\"Ping: pong from: \""],
   ["keyword.operator","+"],
@@ -362,7 +362,7 @@
 ],[
    "start",
   ["text","            "],
-  ["identifier","println"],
+  ["keyword","println"],
   ["paren.lparen","("],
   ["string","\"Ping: Stop.\""],
   ["paren.rparen",")"]
@@ -472,7 +472,7 @@
 ],[
    "start",
   ["text","            "],
-  ["identifier","println"],
+  ["keyword","println"],
   ["paren.lparen","("],
   ["string","\"Pong: ping \""],
   ["keyword.operator","+"],
@@ -513,7 +513,7 @@
 ],[
    "start",
   ["text","          "],
-  ["identifier","println"],
+  ["keyword","println"],
   ["paren.lparen","("],
   ["string","\"Pong: Stop.\""],
   ["paren.rparen",")"]
