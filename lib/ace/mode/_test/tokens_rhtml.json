@@ -57,7 +57,7 @@
   ["support.function.codebegin","<!--begin.rcode"]
 ],[
    "r-start",
-  ["identifier","summary"],
+  ["keyword","summary"],
   ["paren.keyword.operator","("],
   ["identifier","cars"],
   ["paren.keyword.operator",")"]
@@ -82,7 +82,7 @@
   ["support.function.codebegin","<!--begin.rcode fig.width=7, fig.height=6"]
 ],[
    "r-start",
-  ["identifier","plot"],
+  ["support.function","plot"],
   ["paren.keyword.operator","("],
   ["identifier","cars"],
   ["paren.keyword.operator",")"]
