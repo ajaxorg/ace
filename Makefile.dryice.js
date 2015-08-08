@@ -227,6 +227,15 @@ function buildAceModule(opts, callback) {
     }
 }
 
+function getTargetDir(opts) {
+    var targetDir = BUILD_DIR + "/src";
+    if (opts.compress)
+        targetDir += "-min";
+    if (opts.noconflict)
+        targetDir += "-noconflict";
+    return targetDir;
+}
+
 function buildAceModuleInternal(opts, callback) {
     var cache = opts.cache == undefined ? CACHE : opts.cache;
     var key = opts.require + "|" + opts.projectType;
@@ -249,7 +258,7 @@ function buildAceModuleInternal(opts, callback) {
             result.sources = result.sources.map(function(pkg) {
                 return {deps: pkg.deps};
             });
-        } 
+        }
         
         if (!opts.outputFile)
             return callback(err, result);
@@ -261,11 +270,7 @@ function buildAceModuleInternal(opts, callback) {
             code = result.codeMin;
         }
             
-        var targetDir =  BUILD_DIR + "/src";
-        if (opts.compress)
-            targetDir += "-min";
-        if (opts.noconflict)
-            targetDir += "-noconflict";
+        var targetDir = getTargetDir(opts);
         
         var to = /^([\\/]|\w:)/.test(opts.outputFile)
             ? opts.outputFile
@@ -315,7 +320,7 @@ function buildAceModuleInternal(opts, callback) {
 function buildCore(options, extra, callback) {
     options = extend(extra, options);
     options.additional = [{
-        id: "build_support/mini_require", 
+        id: "build_support/mini_require",
         order: -1000,
         literal: true
     }];
@@ -389,6 +394,19 @@ function buildAce(options) {
                 order: -1000
             }],
         }, "worker-" + name);
+    });
+    // tern
+    jsFileList("lib/ace/tern").forEach(function (name) {
+        if (name.indexOf('worker') !== -1) {
+            //copy worker-tern, nothing else (for now; TODO: make this less hacked - worker-tern should use AMD)
+                
+            copy.file(ACE_HOME + "/lib/ace/tern/worker-tern.js", getTargetDir(options) + "/worker-tern.js");
+            return;
+        }
+        buildSubmodule(options, {
+            projectType: "ext",
+            require: ["ace/tern/" + name]
+        }, "ext-" + name);
     });
 }
 

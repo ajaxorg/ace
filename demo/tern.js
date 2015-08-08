@@ -3,12 +3,10 @@ define(function (require, exports, module) {
     
     var mode = 'javascript'; // TODO: add html
     
-    console.warn('TODO: fix the way this is loaded....');
+    console.warn('TODO: fix the way this is loaded....\n Currently this works when using a web worker and manual path to define locaiton of the tern deps. However, it doesnt work without web worker as the tern-worker file w/ deps has UMD loader that detects requireJS and therefore doesnt define tern globally. The proper fix is to make tern file load via AMD.');
     var ternWorkerPath = '../lib/ace/tern/worker-tern.js';
     
-    // console.warn('ENTERED');
-    //LEFT OFF: need to get this thing to load worker properly
-    //in the mean time, tern.html has reference to
+    
     //var config = require("ace/config");
     //console.log('config',config);
 
@@ -20,7 +18,6 @@ define(function (require, exports, module) {
     //create editor
     var ace = require("ace/ace");
     var useWebWorker = location.href.indexOf("noworker") === -1;
-    // useWebWorker = false;//REMOVE WHEN DONE FIXING WORKER
     
     var editor = ace.edit("editor");
     document.getElementById('editor').style.display = '';
