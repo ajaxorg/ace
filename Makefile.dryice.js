@@ -399,10 +399,15 @@ function buildAce(options) {
     jsFileList("lib/ace/tern").forEach(function (name) {
         if (name.indexOf('worker') !== -1) {
             //copy worker-tern, nothing else (for now; TODO: make this less hacked - worker-tern should use AMD)
-                
+    
             copy.file(ACE_HOME + "/lib/ace/tern/worker-tern.js", getTargetDir(options) + "/worker-tern.js");
             return;
         }
+    
+        //dont built the tern server file - its included with the tern extension file
+        if (name.indexOf('tern_server') !== -1) return;
+    
+        //still going: has to be tern.js
         buildSubmodule(options, {
             projectType: "ext",
             require: ["ace/tern/" + name]
