@@ -22,8 +22,7 @@ define(function (require, exports, module) {
     var editor = ace.edit("editor");
     document.getElementById('editor').style.display = '';
     
-    window.editor = editor;
-    console.info('globals: \n \teditor');
+    
     
     editor.session.setMode("ace/mode/" + mode);
     editor.getSession().setUseWorker(useWebWorker);
@@ -34,8 +33,10 @@ define(function (require, exports, module) {
     editor.getSession().setWrapLimitRange(null, null);
     editor.setShowPrintMargin(false);
 
-    var ternManager = require("ace/tern/tern_manager");
-    console.log('ternManager', ternManager);
+    var tern = require("ace/tern/tern");
+    window.editor = editor;
+    window.tern = tern;
+    console.info('globals: \n \teditor \n \ttern');
 
     editor.setOptions({
         /**
