@@ -270,7 +270,7 @@ function browserify(_, cb) {
     function done() {
         var browserify = require('browserify');
         var absPath = require.resolve(__dirname + "/" + path);
-        var defaultPreludePath = require.resolve("browser-pack") + "/../prelude.js";
+        var defaultPreludePath = Path.join(require.resolve("browser-pack"), "../prelude.js");
         var defaultPrelude = "module.exports = " + fs.readFileSync(defaultPreludePath, 'utf8')
             .replace(/^[ \t]*\/\/.*/gm, "")
             .replace(/^\s*\n\r?/gm, "")
