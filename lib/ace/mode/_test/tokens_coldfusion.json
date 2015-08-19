@@ -8,7 +8,7 @@
 ],[
    "start",
   ["meta.tag.punctuation.tag-open.xml","<"],
-  ["meta.tag.tag-name.xml","cfset"],
+  ["keyword.tag-name.xml","cfset"],
   ["text.tag-whitespace.xml"," "],
   ["comment.start","<!---"],
   ["comment"," x "],
@@ -32,11 +32,11 @@
 ],[
    "start",
   ["meta.tag.punctuation.tag-open.xml","<"],
-  ["meta.tag.tag-name.xml","cfoutput"],
+  ["keyword.tag-name.xml","cfoutput"],
   ["meta.tag.punctuation.tag-close.xml",">"],
   ["text.xml","#welcome#"],
   ["meta.tag.punctuation.end-tag-open.xml","</"],
-  ["meta.tag.tag-name.xml","cfoutput"],
+  ["keyword.tag-name.xml","cfoutput"],
   ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "cfjs-start",
