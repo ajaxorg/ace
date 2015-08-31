@@ -24,10 +24,12 @@
    
 using namespace std;
 
+//
 int main ()
 {
     int a, b=3; /* foobar */
-    a = b;
+    a = b; // single line comment\
+        continued
     a+=2; // equivalent to a=a+2
     cout << a;
     #if VERBOSE >= 2

@@ -727,7 +727,8 @@
 ],[
    "start",
   ["keyword","#ifndef"],
-  ["constant.other"," Nil"]
+  ["text"," "],
+  ["constant.language.objc","Nil"]
 ],[
    "start",
   ["keyword","#define"],

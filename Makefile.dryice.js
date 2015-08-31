@@ -120,6 +120,7 @@ function demo() {
 
     function changeComments(data) {
         return (data
+            .replace("doc/site/images/ace-logo.png", "demo/kitchen-sink/ace-logo.png")
             .replace(/<!\-\-DEVEL[\d\D]*?DEVEL\-\->/g, "")
             .replace(/PACKAGE\-\->|<!\-\-PACKAGE/g, "")
             .replace(/\/\*DEVEL[\d\D]*?DEVEL\*\//g, "")
@@ -184,7 +185,7 @@ function jsFileList(path, filter) {
         filter = /_test/;
 
     return fs.readdirSync(path).map(function(x) {
-        if (x.slice(-3) == ".js" && !filter.test(x) && !/\s/.test(x))
+        if (x.slice(-3) == ".js" && !filter.test(x) && !/\s|BASE|(\b|_)dummy(\b|_)/.test(x))
             return x.slice(0, -3);
     }).filter(Boolean);
 }
@@ -306,6 +307,7 @@ function buildAceModuleInternal(opts, callback) {
         ignore: opts.ignore || [],
         withRequire: false,
         basepath: ACE_HOME,
+        transforms: [normalizeLineEndings],
         afterRead: [optimizeTextModules]
     }, write);
 }
@@ -406,6 +408,10 @@ function getLoadedFileList(options, callback, result) {
     callback(Object.keys(deps));
 }
 
+function normalizeLineEndings(module) {
+    module.source = module.source.replace(/\r\n/g, "\n");
+}
+
 function optimizeTextModules(sources) {
     var textModules = {};
     return sources.filter(function(pkg) {
@@ -451,10 +457,10 @@ function optimizeTextModules(sources) {
         if (/\.css$/.test(pkg.id)) {
             // remove unnecessary whitespace from css
             input = input.replace(/\n\s+/g, "\n");
-            input = '"' + input.replace(/\r?\n/g, '\\\n') + '"';
+            input = '"' + input.replace(/\n/g, '\\\n') + '"';
         } else {
             // but don't break other files!
-            input = '"' + input.replace(/\r?\n/g, '\\n\\\n') + '"';
+            input = '"' + input.replace(/\n/g, '\\n\\\n') + '"';
         }
         textModules[pkg.id] = input;
     }
@@ -502,7 +508,7 @@ function exportAce(ns, modules, requireBase, extModules) {
         if (typeof modules == "string")
             modules = [modules];
             
-        return (text + ";" + template
+        return (text.replace(/;\s*$/, "") + ";" + template
             .toString()
             .replace(/MODULES/g, JSON.stringify(modules))
             .replace(/REQUIRE_NS/g, requireBase)

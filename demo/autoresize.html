@@ -7,14 +7,13 @@
   <style type="text/css" media="screen">
 
 	.ace_editor {
-		position: relative !important;
 		border: 1px solid lightgray;
 		margin: auto;
 		height: 200px;
 		width: 80%;
 	}
 	.scrollmargin {
-		height: 100px;
+		height: 80px;
         text-align: center;
 	}
     </style>
@@ -23,6 +22,8 @@
 <pre id="editor1">autoresizing editor</pre>
 <div class="scrollmargin"></div>
 <pre id="editor2">minHeight = 2 lines</pre>
+<div class="scrollmargin"></div>
+<pre id="editor3" style="width: 40%;"></pre>
 <div class="scrollmargin"></div>
 <pre id="editor"></pre>
 
@@ -46,6 +47,13 @@ require(["ace/ace"], function(ace) {
     editor2.setOption("maxLines", 30);
     editor2.setOption("minLines", 2);
 
+    var editor = ace.edit("editor3");
+    editor.setOptions({
+        autoScrollEditorIntoView: true,
+        maxLines: 8
+    });
+    editor.renderer.setScrollMargin(10, 10, 10, 10);
+    
     var editor = ace.edit("editor");
     editor.setTheme("ace/theme/tomorrow");
     editor.session.setMode("ace/mode/html");

@@ -49,6 +49,10 @@
   border: 1px solid rgba(245, 170, 0, 0.57);
 }
 
+.ace-kuroir .ace_invisible {
+  color: #BFBFBF
+}
+
 .ace-kuroir .ace_fold {
   border-color: #363636;
 }

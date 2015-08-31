@@ -199,7 +199,5 @@
   ["string.quoted.double.asp"," ... updated.\""]
 ],[
    "start",
-  ["support.function.asp","End"],
-  ["text"," "],
-  ["storage.type.asp","Sub"]
+  ["storage.type.asp","End Sub"]
 ]]
