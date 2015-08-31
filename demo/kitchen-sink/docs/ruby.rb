@@ -20,7 +20,7 @@ class Range
   end
 end
 
-{:id => 34, :key => "value"}
+{:id => ?", :key => "value"}
 
 
     herDocs = [<<'FOO', <<BAR, <<-BAZ, <<-`EXEC`] #comment

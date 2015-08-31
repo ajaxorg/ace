@@ -531,7 +531,7 @@ new StatusBar(env.editor, cmdLine.container);
 
 
 var Emmet = require("ace/ext/emmet");
-net.loadScript("https://nightwing.github.io/emmet-core/emmet.js", function() {
+net.loadScript("https://cloud9ide.github.io/emmet-core/emmet.js", function() {
     Emmet.setCore(window.emmet);
     env.editor.setOption("enableEmmet", true);
 });

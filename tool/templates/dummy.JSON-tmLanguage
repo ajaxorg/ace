@@ -1,0 +1,45 @@
+// [PackageDev] target_format: plist, ext: tmLanguage
+{ 
+	"name": "Dummy",
+  	"scopeName": "source.dummy",
+  	"fileTypes": ["dummy"],
+  	"patterns": [
+	    {
+            "include": "#string"
+        }, {
+            "include": "#escapes"
+        }
+  	],
+  	"repository": {
+  		"escapes": {
+            "patterns": [
+  				{
+                    "match": "\\\\[nrt\\\\\\$\\\"']", 
+                    "name": "keyword.dummy"
+                }
+            ]
+        },
+        "string": {
+        	"beginCaptures": {
+                "0": {
+                    "name": "punctuation.definition.string.begin.dummy"
+                }
+            }, 
+            "endCaptures": {
+                "0": {
+                    "name": "punctuation.definition.string.end.dummy"
+                }
+            }, 
+            "contentName": "meta.string-contents.quoted.double.dummy", 
+            "name": "string.quoted.double.dummy", 
+            "end": "'''", 
+            "begin": "'''", 
+            "patterns": [
+                {
+                    "include": "#escapes"
+                }
+            ], 
+            "comment": "This is a comment"
+        }
+  	}
+}
