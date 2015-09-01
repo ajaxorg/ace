@@ -284,7 +284,9 @@ function buildAceModuleInternal(opts, callback) {
             filters.push(exportAce(ns, opts.require[0],
                 opts.noconflict ? ns : "", projectType == "ext"));
         }
-
+        
+        filters.push(normalizeLineEndings);
+        
         filters.forEach(function(f) { code = f(code); });
         
         build.writeToFile({code: code}, {
@@ -409,7 +411,9 @@ function getLoadedFileList(options, callback, result) {
 }
 
 function normalizeLineEndings(module) {
-    module.source = module.source.replace(/\r\n/g, "\n");
+    if (typeof module == "string") 
+        module = {source: module};
+    return module.source = module.source.replace(/\r\n/g, "\n");
 }
 
 function optimizeTextModules(sources) {
@@ -471,8 +475,10 @@ function namespace(ns) {
         text = text
             .toString()
             .replace(/ACE_NAMESPACE\s*=\s*""/, 'ACE_NAMESPACE = "' + ns +'"')
-            .replace(/(\.define)|\bdefine\(/g, function(_, a) {
-                return a || ns + ".define(";
+            .replace(/\bdefine\(/g, function(def, index, source) {
+                if (/(^|[;})])\s*$/.test(source.slice(0, index)))
+                    return ns + "." + def;
+                return def;
             });
 
         return text;
