@@ -1,0 +1,64 @@
+@base <http://example.org/base/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix ex: <http://example.org/stuff/1.0/> .
+
+<http://www.w3.org/TR/rdf-syntax-grammar>
+  dc:title "RDF/XML Syntax Specification (Revised)" ;
+  ex:editor [
+    ex:fullname "Dave Beckett";
+    ex:homePage <http://purl.org/net/dajobe/>
+  ] .
+
+<http://www.w3.org/TR/rdf-syntax-grammar> <http://purl.org/dc/elements/1.1/title> "RDF/XML Syntax Specification (Revised)" .
+<http://www.w3.org/TR/rdf-syntax-grammar> <http://example.org/stuff/1.0/editor> _:bnode .
+_:bnode <http://example.org/stuff/1.0/fullname> "Dave Beckett" .
+_:bnode <http://example.org/stuff/1.0/homePage> <http://purl.org/net/dajobe/> .
+
+<http://books.example.com/works/45U8QJGZSQKDH8N> a frbr:Work ;
+     dc:creator "Wil Wheaton"@en ;
+     dc:title "Just a Geek"@en ;
+     frbr:realization <http://books.example.com/products/9780596007683.BOOK>,
+         <http://books.example.com/products/9780596802189.EBOOK> .
+
+ <#green-goblin>
+     rel:enemyOf <#spiderman> ;
+     a foaf:Person ;    # in the context of the Marvel universe
+     foaf:name "Green Goblin" .
+
+ <#spiderman>
+     rel:enemyOf <#green-goblin> ;
+     a foaf:Person ;
+     foaf:name "Spiderman", "Человек-паук"@ru .
+
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix show: <http://example.org/vocab/show/> .
+
+show:218 rdfs:label "That Seventies Show"^^xsd:string .            # literal with XML Schema string datatype
+show:218 rdfs:label "That Seventies Show"^^<http://www.w3.org/2001/XMLSchema#string> . # same as above
+show:218 rdfs:label "That Seventies Show" .                                            # same again
+show:218 show:localName "That Seventies Show"@en .                 # literal with a language tag
+show:218 show:localName 'Cette Série des Années Soixante-dix'@fr . # literal delimited by single quote
+show:218 show:localName "Cette Série des Années Septante"@fr-be .  # literal with a region subtag
+
+# I didn't bother with multi-line strings - I think you have to use multi-line
+# begin...end captures to do this in Sublime, which is quite a big change from
+# the regex I wrote for the SPARQL syntax.
+# show:218 show:blurb '''This is a multi-line                        # literal with embedded new lines and quotes
+# literal with many quotes (""""")
+# and up to two sequential apostrophes ('').''' .
+
+@prefix : <http://example.org/stats> .
+<http://somecountry.example/census2007>
+    :censusYear 2007 ;              # xsd:integer
+    :birthsPerPerson .0135 ;        # xsd:decimal
+    :gdpDollars 14074.2E9 ;         # xsd:double
+
+@prefix : <http://example.org/stats> .
+<http://somecountry.example/census2007>
+    :isLandlocked false .           # xsd:boolean
+
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+_:alice foaf:knows _:bob .
+_:bob foaf:knows _:alice .
