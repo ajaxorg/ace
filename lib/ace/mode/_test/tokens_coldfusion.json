@@ -1,26 +1,59 @@
 [[
    "start",
-  ["comment.xml","<!--- hello world --->"]
+  ["comment.start","<!---"],
+  ["comment"," hello world "],
+  ["comment.end","--->"]
 ],[
    "start"
 ],[
    "start",
   ["meta.tag.punctuation.tag-open.xml","<"],
-  ["meta.tag.tag-name.xml","cfset"],
+  ["keyword.tag-name.xml","cfset"],
+  ["text.tag-whitespace.xml"," "],
+  ["comment.start","<!---"],
+  ["comment"," x "],
+  ["comment.start","<!---"],
+  ["comment"," y "],
+  ["comment.end","--->"],
+  ["comment","  z "],
+  ["comment.end","--->"],
   ["text.tag-whitespace.xml"," "],
   ["entity.other.attribute-name.xml","welcome"],
   ["keyword.operator.attribute-equals.xml","="],
   ["string.attribute-value.xml","\"Hello World!\""],
   ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
-   "start"
+   "start",
+  ["comment.xml","<!-- x "],
+  ["comment.start","<!---"],
+  ["comment"," y "],
+  ["comment.end","--->"],
+  ["comment.xml","  z -->"]
 ],[
    "start",
   ["meta.tag.punctuation.tag-open.xml","<"],
-  ["meta.tag.tag-name.xml","cfoutput"],
+  ["keyword.tag-name.xml","cfoutput"],
   ["meta.tag.punctuation.tag-close.xml",">"],
   ["text.xml","#welcome#"],
   ["meta.tag.punctuation.end-tag-open.xml","</"],
-  ["meta.tag.tag-name.xml","cfoutput"],
+  ["keyword.tag-name.xml","cfoutput"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "cfjs-start",
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.cfscript.tag-name.xml","cfscript"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "cfjs-no_regex",
+  ["text","    "],
+  ["identifier","Dateformat"],
+  ["paren.lparen","("],
+  ["identifier","now"],
+  ["paren.lparen","("],
+  ["paren.rparen","))"]
+],[
+   "start",
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.cfscript.tag-name.xml","cfscript"],
   ["meta.tag.punctuation.tag-close.xml",">"]
 ]]
