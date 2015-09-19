@@ -35,7 +35,7 @@ end
 declare FactType2 extends AnotherType
 end
 
-declare trait TraitType extends AnotherType
+declare trait TraitType extends com.package.AnotherType
 end
 
 

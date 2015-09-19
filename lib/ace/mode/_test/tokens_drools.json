@@ -90,28 +90,32 @@
    "start",
   ["text","  "],
   ["entity.name.type","@author"],
-  ["lparen","("],
+  ["paren.lparen","("],
   ["text"," "],
   ["identifier","Bob"],
   ["text"," "],
-  ["rparen",")"]
+  ["paren.rparen",")"]
 ],[
    "start",
   ["text","  "],
-  ["identifier","id"],
-  ["text"," : "],
+  ["variable.other","id"],
+  ["text"," "],
+  ["text",":"],
+  ["text"," "],
   ["support.class","String"]
 ],[
    "start",
   ["text","  "],
-  ["identifier","name"],
-  ["text"," : "],
+  ["variable.other","name"],
+  ["text"," "],
+  ["text",":"],
+  ["text"," "],
   ["support.class","String"],
   ["text"," "],
   ["entity.name.type","@maxLength"],
-  ["lparen","("],
+  ["paren.lparen","("],
   ["constant.numeric","100"],
-  ["rparen",")"],
+  ["paren.rparen",")"],
   ["text"," "],
   ["entity.name.type","@notnull"]
 ],[
@@ -119,8 +123,10 @@
 ],[
    "start",
   ["text","  "],
-  ["identifier","value"],
-  ["text"," : "],
+  ["variable.other","value"],
+  ["text"," "],
+  ["text",":"],
+  ["text"," "],
   ["identifier","BigDecimal"]
 ],[
    "start",
@@ -151,7 +157,7 @@
   ["text"," "],
   ["keyword","extends"],
   ["text"," "],
-  ["entity.name.type","AnotherType"]
+  ["entity.name.type","com.package.AnotherType"]
 ],[
    "start",
   ["keyword","end"]
@@ -169,16 +175,18 @@
 ],[
    "start",
   ["text","    "],
-  ["identifier","balance"],
-  ["text"," : "],
+  ["variable.other","balance"],
+  ["text"," "],
+  ["text",":"],
+  ["text"," "],
   ["keyword","long"],
   ["text"," "],
   ["entity.name.type","@Alias"],
-  ["lparen","("],
+  ["paren.lparen","("],
   ["text"," "],
   ["string","\"org.acme.foo.accountBalance\""],
   ["text"," "],
-  ["rparen",")"]
+  ["paren.rparen",")"]
 ],[
    "start",
   ["keyword","end"]
@@ -211,13 +219,13 @@
   ["support.class","String"],
   ["text"," "],
   ["identifier","hello"],
-  ["lparen","("],
+  ["paren.lparen","("],
   ["support.class","String"],
   ["text"," "],
   ["identifier","name"],
-  ["rparen",")"],
+  ["paren.rparen",")"],
   ["text"," "],
-  ["lparen","{"]
+  ["paren.lparen","{"]
 ],[
    "start",
   ["text","    "],
@@ -231,7 +239,7 @@
   ["text",";"]
 ],[
    "start",
-  ["rparen","}"]
+  ["paren.rparen","}"]
 ],[
    "start"
 ],[
@@ -259,10 +267,12 @@
 ],[
    "start",
   ["text","  "],
-  ["identifier","$s"],
-  ["text"," : "],
+  ["variable.other","$s"],
+  ["text"," "],
+  ["text",":"],
+  ["text"," "],
   ["support.class","String"],
-  ["lparen","("],
+  ["paren.lparen","("],
   ["identifier","a"],
   ["text"," "],
   ["keyword.operator","=="],
@@ -275,15 +285,17 @@
   ["text"," "],
   ["string","\"empty\""],
   ["text",", "],
-  ["identifier","$g"],
-  ["text"," : "],
+  ["variable.other","$g"],
+  ["text"," "],
+  ["text",":"],
+  ["text"," "],
   ["identifier","size"],
-  ["rparen",")"]
+  ["paren.rparen",")"]
 ],[
    "start",
   ["text","  "],
   ["identifier","Cheese"],
-  ["lparen","("],
+  ["paren.lparen","("],
   ["text"," "],
   ["identifier","name"],
   ["text"," "],
@@ -291,12 +303,12 @@
   ["text"," "],
   ["string","\"(Buffalo)?\\\\S*Mozarella\""],
   ["text"," "],
-  ["rparen",")"]
+  ["paren.rparen",")"]
 ],[
    "start",
   ["text","    "],
   ["identifier","CheeseCounter"],
-  ["lparen","("],
+  ["paren.lparen","("],
   ["text"," "],
   ["identifier","cheeses"],
   ["text"," "],
@@ -304,14 +316,14 @@
   ["text"," "],
   ["identifier","$var"],
   ["text"," "],
-  ["rparen",")"],
+  ["paren.rparen",")"],
   ["text"," "],
   ["comment","// contains with a variable"]
 ],[
    "start",
   ["text","    "],
   ["identifier","CheeseCounter"],
-  ["lparen","("],
+  ["paren.lparen","("],
   ["text"," "],
   ["identifier","cheese"],
   ["text"," "],
@@ -319,12 +331,12 @@
   ["text"," "],
   ["identifier","$matureCheeses"],
   ["text"," "],
-  ["rparen",")"]
+  ["paren.rparen",")"]
 ],[
    "start",
   ["text","    "],
   ["identifier","Cheese"],
-  ["lparen","("],
+  ["paren.lparen","("],
   ["text"," "],
   ["identifier","name"],
   ["text"," "],
@@ -332,34 +344,34 @@
   ["text"," "],
   ["string","'foobar'"],
   ["text"," "],
-  ["rparen",")"]
+  ["paren.rparen",")"]
 ],[
    "start",
   ["text","    "],
   ["identifier","Message"],
-  ["lparen","("],
+  ["paren.lparen","("],
   ["text"," "],
   ["identifier","routingValue"],
   ["text"," "],
-  ["identifier","str"],
-  ["lparen","["],
+  ["keyword","str"],
+  ["paren.lparen","["],
   ["identifier","startsWith"],
-  ["rparen","]"],
+  ["paren.rparen","]"],
   ["text"," "],
   ["string","\"R1\""],
   ["text"," "],
-  ["rparen",")"]
+  ["paren.rparen",")"]
 ],[
    "start",
   ["text","    "],
   ["identifier","Cheese"],
-  ["lparen","("],
+  ["paren.lparen","("],
   ["text"," "],
   ["identifier","name"],
   ["text"," "],
   ["keyword","in"],
   ["text"," "],
-  ["lparen","("],
+  ["paren.lparen","("],
   ["text"," "],
   ["string","\"stilton\""],
   ["text",", "],
@@ -367,17 +379,17 @@
   ["text",", "],
   ["identifier","$cheese"],
   ["text"," "],
-  ["rparen",")"],
+  ["paren.rparen",")"],
   ["text"," "],
-  ["rparen",")"]
+  ["paren.rparen",")"]
 ],[
    "start",
   ["text","    "],
   ["identifier","Person"],
-  ["lparen","("],
+  ["paren.lparen","("],
   ["text"," "],
   ["keyword","eval"],
-  ["lparen","("],
+  ["paren.lparen","("],
   ["text"," "],
   ["identifier","age"],
   ["text"," "],
@@ -389,7 +401,7 @@
   ["text"," "],
   ["constant.numeric","2"],
   ["text"," "],
-  ["rparen",")"],
+  ["paren.rparen",")"],
   ["text",", "],
   ["identifier","sex"],
   ["text"," "],
@@ -397,7 +409,7 @@
   ["text"," "],
   ["string","'M'"],
   ["text"," "],
-  ["rparen",")"]
+  ["paren.rparen",")"]
 ],[
    "java-start",
   ["keyword","then"]
@@ -464,7 +476,7 @@
   ["keyword","query"],
   ["text"," "],
   ["entity.name","isContainedIn"],
-  ["lparen","("],
+  ["paren.lparen","("],
   ["text"," "],
   ["support.class","String"],
   ["text"," "],
@@ -474,18 +486,18 @@
   ["text"," "],
   ["identifier","y"],
   ["text"," "],
-  ["rparen",")"]
+  ["paren.rparen",")"]
 ],[
    "start",
   ["text","  "],
   ["identifier","Location"],
-  ["lparen","("],
+  ["paren.lparen","("],
   ["text"," "],
   ["identifier","x"],
   ["text",", "],
   ["identifier","y"],
   ["text","; "],
-  ["rparen",")"]
+  ["paren.rparen",")"]
 ],[
    "start",
   ["text","  "],
@@ -493,29 +505,29 @@
 ],[
    "start",
   ["text","  "],
-  ["lparen","("],
+  ["paren.lparen","("],
   ["text"," "],
   ["identifier","Location"],
-  ["lparen","("],
+  ["paren.lparen","("],
   ["text"," "],
   ["identifier","z"],
   ["text",", "],
   ["identifier","y"],
   ["text","; "],
-  ["rparen",")"],
+  ["paren.rparen",")"],
   ["text"," "],
   ["keyword","and"],
   ["text"," "],
   ["identifier","isContainedIn"],
-  ["lparen","("],
+  ["paren.lparen","("],
   ["text"," "],
   ["identifier","x"],
   ["text",", "],
   ["identifier","z"],
   ["text","; "],
-  ["rparen",")"],
+  ["paren.rparen",")"],
   ["text"," "],
-  ["rparen",")"]
+  ["paren.rparen",")"]
 ],[
    "start",
   ["keyword","end"]
@@ -536,12 +548,14 @@
 ],[
    "start",
   ["text","    "],
-  ["identifier","$s"],
-  ["text"," : "],
+  ["variable.other","$s"],
+  ["text"," "],
+  ["text",":"],
+  ["text"," "],
   ["support.class","String"],
-  ["lparen","("],
+  ["paren.lparen","("],
   ["text","  "],
-  ["rparen",")"]
+  ["paren.rparen",")"]
 ],[
    "java-start",
   ["keyword","then"]
@@ -576,26 +590,28 @@
    "start",
   ["text","    "],
   ["keyword","not"],
-  ["lparen","("],
+  ["paren.lparen","("],
   ["keyword","forall"],
-  ["lparen","("],
+  ["paren.lparen","("],
   ["text"," "],
-  ["identifier","$bus"],
-  ["text"," : "],
+  ["variable.other","$bus"],
+  ["text"," "],
+  ["text",":"],
+  ["text"," "],
   ["identifier","Bus"],
-  ["lparen","("],
+  ["paren.lparen","("],
   ["text"," "],
   ["identifier","nationality"],
   ["text"," "],
   ["keyword.operator","=="],
   ["text"," "],
   ["string","'english'"],
-  ["rparen",")"]
+  ["paren.rparen",")"]
 ],[
    "start",
   ["text","                "],
   ["identifier","Bus"],
-  ["lparen","("],
+  ["paren.lparen","("],
   ["text"," "],
   ["keyword","this"],
   ["text"," "],
@@ -609,9 +625,9 @@
   ["text"," "],
   ["string","'red'"],
   ["text"," "],
-  ["rparen",")"],
+  ["paren.rparen",")"],
   ["text"," "],
-  ["rparen","))"]
+  ["paren.rparen","))"]
 ],[
    "java-start",
   ["keyword","then"]
@@ -636,7 +652,7 @@
    "start",
   ["text","    "],
   ["support.class","String"],
-  ["lparen","("],
+  ["paren.lparen","("],
   ["text"," "],
   ["keyword","this"],
   ["text"," "],
@@ -644,17 +660,17 @@
   ["text"," "],
   ["string","\"go1\""],
   ["text"," "],
-  ["rparen",")"]
+  ["paren.rparen",")"]
 ],[
    "start",
   ["text","    "],
   ["identifier","isContainedIn"],
-  ["lparen","("],
+  ["paren.lparen","("],
   ["string","\"Office\""],
   ["text",", "],
   ["string","\"House\""],
   ["text","; "],
-  ["rparen",")"]
+  ["paren.rparen",")"]
 ],[
    "java-start",
   ["keyword","then"]
@@ -689,7 +705,7 @@
    "start",
   ["text","    "],
   ["support.class","String"],
-  ["lparen","("],
+  ["paren.lparen","("],
   ["text"," "],
   ["keyword","this"],
   ["text"," "],
@@ -697,17 +713,17 @@
   ["text"," "],
   ["string","\"go2\""],
   ["text"," "],
-  ["rparen",")"]
+  ["paren.rparen",")"]
 ],[
    "start",
   ["text","    "],
   ["identifier","isContainedIn"],
-  ["lparen","("],
+  ["paren.lparen","("],
   ["string","\"Draw\""],
   ["text",", "],
   ["string","\"House\""],
   ["text","; "],
-  ["rparen",")"]
+  ["paren.rparen",")"]
 ],[
    "java-start",
   ["keyword","then"]
@@ -751,40 +767,44 @@
   ["text","  "],
   ["keyword","salience"],
   ["text"," "],
-  ["lparen","("],
+  ["paren.lparen","("],
   ["support.class","Math"],
   ["text","."],
   ["identifier","abs"],
-  ["lparen","("],
+  ["paren.lparen","("],
   ["text"," "],
   ["identifier","$df"],
   ["text","."],
   ["identifier","colDiff"],
   ["text"," "],
-  ["rparen","))"],
+  ["paren.rparen","))"],
   ["text","  "],
   ["keyword","when"]
 ],[
    "start",
   ["text","    "],
-  ["identifier","$df"],
-  ["text","   : "],
+  ["variable.other","$df"],
+  ["text","   "],
+  ["text",":"],
+  ["text"," "],
   ["identifier","DirectionDiff"],
-  ["lparen","("],
+  ["paren.lparen","("],
   ["identifier","colDiff"],
   ["text"," "],
   ["keyword.operator",">"],
   ["text"," "],
   ["constant.numeric","0"],
   ["text"," "],
-  ["rparen",")"]
+  ["paren.rparen",")"]
 ],[
    "start",
   ["text","    "],
-  ["identifier","$target"],
-  ["text"," : "],
+  ["variable.other","$target"],
+  ["text"," "],
+  ["text",":"],
+  ["text"," "],
   ["identifier","Cell"],
-  ["lparen","("],
+  ["paren.lparen","("],
   ["text","  "],
   ["identifier","row"],
   ["text"," "],
@@ -798,7 +818,7 @@
   ["text"," "],
   ["keyword.operator","=="],
   ["text"," "],
-  ["lparen","("],
+  ["paren.lparen","("],
   ["identifier","$df"],
   ["text","."],
   ["identifier","col"],
@@ -806,14 +826,14 @@
   ["keyword.operator","+"],
   ["text"," "],
   ["constant.numeric","1"],
-  ["rparen",")"],
+  ["paren.rparen",")"],
   ["text"," "],
-  ["rparen",")"]
+  ["paren.rparen",")"]
 ],[
    "start",
   ["text","    "],
   ["identifier","CellContents"],
-  ["lparen","("],
+  ["paren.lparen","("],
   ["text"," "],
   ["identifier","cell"],
   ["text"," "],
@@ -829,14 +849,14 @@
   ["text","."],
   ["identifier","WALL"],
   ["text"," "],
-  ["rparen",")"]
+  ["paren.rparen",")"]
 ],[
    "start",
   ["text","    "],
   ["keyword","not"],
   ["text"," "],
   ["identifier","Direction"],
-  ["lparen","("],
+  ["paren.lparen","("],
   ["identifier","character"],
   ["text"," "],
   ["keyword.operator","=="],
@@ -853,7 +873,7 @@
   ["text","."],
   ["identifier","RIGHT"],
   ["text"," "],
-  ["rparen",")"]
+  ["paren.rparen",")"]
 ],[
    "java-start",
   ["keyword","then"]
