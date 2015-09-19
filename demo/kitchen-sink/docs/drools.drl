@@ -45,6 +45,9 @@ end
 
 global org.slf4j.Logger logger
 
+/**
+ * @param name who we'll salute?
+ */
 function String hello(String name) {
     return "Hello "+name+"!";
 }
@@ -62,6 +65,9 @@ when // fdsfds
     Cheese( name in ( "stilton", "cheddar", $cheese ) )
     Person( eval( age == girlAge + 2 ), sex = 'M' )
 then
+  /**
+   * TODO There mus be better way
+   */
   retract($s);
   String a = "fd";
   a.toString();

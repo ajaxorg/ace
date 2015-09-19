@@ -1,6 +1,6 @@
 [[
    "block.comment",
-  ["comment.block","/*"]
+  ["comment","/*"]
 ],[
    "block.comment",
   ["comment.block"," * Copyright 2010 JBoss Inc"]
@@ -47,7 +47,7 @@
    "start"
 ],[
    "block.comment",
-  ["comment.block","/*"]
+  ["comment","/*"]
 ],[
    "block.comment",
   ["comment.block"," Original source"]
@@ -194,6 +194,17 @@
 ],[
    "start"
 ],[
+   "doc-start",
+  ["comment.doc","/**"]
+],[
+   "doc-start",
+  ["comment.doc"," * "],
+  ["comment.doc.tag","@param"],
+  ["comment.doc"," name who we'll salute?"]
+],[
+   "start",
+  ["comment.doc"," */"]
+],[
    "start",
   ["keyword","function"],
   ["text"," "],
@@ -244,7 +255,7 @@
    "start",
   ["keyword","when"],
   ["text"," "],
-  ["comment.line.double-slash","// fdsfds"]
+  ["comment","// fdsfds"]
 ],[
    "start",
   ["text","  "],
@@ -295,7 +306,7 @@
   ["text"," "],
   ["rparen",")"],
   ["text"," "],
-  ["comment.line.double-slash","// contains with a variable"]
+  ["comment","// contains with a variable"]
 ],[
    "start",
   ["text","    "],
@@ -388,10 +399,22 @@
   ["text"," "],
   ["rparen",")"]
 ],[
-   "start",
+   "java-start",
   ["keyword","then"]
 ],[
-   "start",
+   "java-doc-start",
+  ["text","  "],
+  ["comment.doc","/**"]
+],[
+   "java-doc-start",
+  ["comment.doc","   * "],
+  ["comment.doc.tag.storage.type","TODO"],
+  ["comment.doc"," There mus be better way"]
+],[
+   "java-start",
+  ["comment.doc","   */"]
+],[
+   "java-start",
   ["text","  "],
   ["support.function","retract"],
   ["lparen","("],
@@ -399,9 +422,9 @@
   ["rparen",")"],
   ["text",";"]
 ],[
-   "start",
+   "java-start",
   ["text","  "],
-  ["support.class","String"],
+  ["support.function","String"],
   ["text"," "],
   ["identifier","a"],
   ["text"," "],
@@ -410,7 +433,7 @@
   ["string","\"fd\""],
   ["text",";"]
 ],[
-   "start",
+   "java-start",
   ["text","  "],
   ["identifier","a"],
   ["text","."],
@@ -419,9 +442,9 @@
   ["rparen",")"],
   ["text",";"]
 ],[
-   "start"
+   "java-start"
 ],[
-   "start",
+   "java-start",
   ["text","  "],
   ["support.function","insert"],
   ["lparen","("],
@@ -520,12 +543,12 @@
   ["text","  "],
   ["rparen",")"]
 ],[
-   "start",
+   "java-start",
   ["keyword","then"]
 ],[
-   "start",
+   "java-start",
   ["text","    "],
-  ["support.class","System"],
+  ["support.function","System"],
   ["text","."],
   ["identifier","out"],
   ["text","."],
@@ -590,12 +613,12 @@
   ["text"," "],
   ["rparen","))"]
 ],[
-   "start",
+   "java-start",
   ["keyword","then"]
 ],[
-   "start",
+   "java-start",
   ["text","    "],
-  ["comment.line.double-slash","// What if all english buses are not red?"]
+  ["comment","// What if all english buses are not red?"]
 ],[
    "start",
   ["keyword","end"]
@@ -633,12 +656,12 @@
   ["text","; "],
   ["rparen",")"]
 ],[
-   "start",
+   "java-start",
   ["keyword","then"]
 ],[
-   "start",
+   "java-start",
   ["text","    "],
-  ["support.class","System"],
+  ["support.function","System"],
   ["text","."],
   ["identifier","out"],
   ["text","."],
@@ -686,12 +709,12 @@
   ["text","; "],
   ["rparen",")"]
 ],[
-   "start",
+   "java-start",
   ["keyword","then"]
 ],[
-   "start",
+   "java-start",
   ["text","    "],
-  ["support.class","System"],
+  ["support.function","System"],
   ["text","."],
   ["identifier","out"],
   ["text","."],
@@ -708,14 +731,14 @@
 ],[
    "start"
 ],[
-   "block.comment",
-  ["comment.block","/**"]
+   "doc-start",
+  ["comment.doc","/**"]
 ],[
-   "block.comment",
-  ["comment.block"," * Go Right"]
+   "doc-start",
+  ["comment.doc"," * Go Right"]
 ],[
    "start",
-  ["comment.block"," */"]
+  ["comment.doc"," */"]
 ],[
    "start",
   ["keyword","rule"],
@@ -832,12 +855,12 @@
   ["text"," "],
   ["rparen",")"]
 ],[
-   "start",
+   "java-start",
   ["keyword","then"]
 ],[
-   "start",
+   "java-start",
   ["text","    "],
-  ["support.class","System"],
+  ["support.function","System"],
   ["text","."],
   ["identifier","out"],
   ["text","."],
@@ -849,7 +872,7 @@
   ["rparen",")"],
   ["text",";"]
 ],[
-   "start",
+   "java-start",
   ["text","    "],
   ["support.function","retract"],
   ["lparen","("],
@@ -859,7 +882,7 @@
   ["rparen",")"],
   ["text",";"]
 ],[
-   "start",
+   "java-start",
   ["text","    "],
   ["support.function","insert"],
   ["lparen","("],
