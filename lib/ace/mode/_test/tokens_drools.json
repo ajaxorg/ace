@@ -131,6 +131,38 @@
    "start",
   ["keyword","declare"],
   ["text"," "],
+  ["entity.name.type","FactType2"],
+  ["text"," "],
+  ["keyword","extends"],
+  ["text"," "],
+  ["entity.name.type","AnotherType"]
+],[
+   "start",
+  ["keyword","end"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","declare"],
+  ["text"," "],
+  ["keyword","trait"],
+  ["text"," "],
+  ["entity.name.type","TraitType"],
+  ["text"," "],
+  ["keyword","extends"],
+  ["text"," "],
+  ["entity.name.type","AnotherType"]
+],[
+   "start",
+  ["keyword","end"]
+],[
+   "start"
+],[
+   "start"
+],[
+   "start",
+  ["keyword","declare"],
+  ["text"," "],
   ["keyword","trait"],
   ["text"," "],
   ["entity.name.type","GoldenCustomer"]

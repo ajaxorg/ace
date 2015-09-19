@@ -32,6 +32,13 @@ declare FactType
   value : BigDecimal
 end
 
+declare FactType2 extends AnotherType
+end
+
+declare trait TraitType extends AnotherType
+end
+
+
 declare trait GoldenCustomer
     balance : long @Alias( "org.acme.foo.accountBalance" )
 end
