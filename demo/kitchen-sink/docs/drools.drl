@@ -15,9 +15,32 @@
  */
 
 /*
- Original source 
+ Original source
  https://github.com/droolsjbpm/drools/blob/master/drools-examples/
+ http://docs.jboss.org/drools/
 */
+package com.example.ace
+
+import java.math.BigDecimal
+import function my.package.Foo.hello
+
+declare FactType
+  @author( Bob )
+  id : String
+  name : String @maxLength(100) @notnull
+
+  value : BigDecimal
+end
+
+declare trait GoldenCustomer
+    balance : long @Alias( "org.acme.foo.accountBalance" )
+end
+
+global org.slf4j.Logger logger
+
+function String hello(String name) {
+    return "Hello "+name+"!";
+}
 
 rule "Trim all strings"
   dialect "java"

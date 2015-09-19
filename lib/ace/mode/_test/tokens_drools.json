@@ -1,0 +1,860 @@
+[[
+   "block.comment",
+  ["comment.block","/*"]
+],[
+   "block.comment",
+  ["comment.block"," * Copyright 2010 JBoss Inc"]
+],[
+   "block.comment",
+  ["comment.block"," *"]
+],[
+   "block.comment",
+  ["comment.block"," * Licensed under the Apache License, Version 2.0 (the \"License\");"]
+],[
+   "block.comment",
+  ["comment.block"," * you may not use this file except in compliance with the License."]
+],[
+   "block.comment",
+  ["comment.block"," * You may obtain a copy of the License at"]
+],[
+   "block.comment",
+  ["comment.block"," *"]
+],[
+   "block.comment",
+  ["comment.block"," *      http://www.apache.org/licenses/LICENSE-2.0"]
+],[
+   "block.comment",
+  ["comment.block"," *"]
+],[
+   "block.comment",
+  ["comment.block"," * Unless required by applicable law or agreed to in writing, software"]
+],[
+   "block.comment",
+  ["comment.block"," * distributed under the License is distributed on an \"AS IS\" BASIS,"]
+],[
+   "block.comment",
+  ["comment.block"," * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."]
+],[
+   "block.comment",
+  ["comment.block"," * See the License for the specific language governing permissions and"]
+],[
+   "block.comment",
+  ["comment.block"," * limitations under the License."]
+],[
+   "start",
+  ["comment.block"," */"]
+],[
+   "start"
+],[
+   "block.comment",
+  ["comment.block","/*"]
+],[
+   "block.comment",
+  ["comment.block"," Original source"]
+],[
+   "block.comment",
+  ["comment.block"," https://github.com/droolsjbpm/drools/blob/master/drools-examples/"]
+],[
+   "block.comment",
+  ["comment.block"," http://docs.jboss.org/drools/"]
+],[
+   "start",
+  ["comment.block","*/"]
+],[
+   "start",
+  ["keyword","package"],
+  ["text"," "],
+  ["entity.name.type","com.example.ace"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","import"],
+  ["text"," "],
+  ["entity.name.type","java.math.BigDecimal"]
+],[
+   "start",
+  ["keyword","import"],
+  ["text"," "],
+  ["keyword","function"],
+  ["text"," "],
+  ["entity.name.type","my.package.Foo.hello"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","declare"],
+  ["text"," "],
+  ["entity.name.type","FactType"]
+],[
+   "start",
+  ["text","  "],
+  ["entity.name.type","@author"],
+  ["lparen","("],
+  ["text"," "],
+  ["identifier","Bob"],
+  ["text"," "],
+  ["rparen",")"]
+],[
+   "start",
+  ["text","  "],
+  ["identifier","id"],
+  ["text"," : "],
+  ["support.class","String"]
+],[
+   "start",
+  ["text","  "],
+  ["identifier","name"],
+  ["text"," : "],
+  ["support.class","String"],
+  ["text"," "],
+  ["entity.name.type","@maxLength"],
+  ["lparen","("],
+  ["constant.numeric","100"],
+  ["rparen",")"],
+  ["text"," "],
+  ["entity.name.type","@notnull"]
+],[
+   "start"
+],[
+   "start",
+  ["text","  "],
+  ["identifier","value"],
+  ["text"," : "],
+  ["identifier","BigDecimal"]
+],[
+   "start",
+  ["keyword","end"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","declare"],
+  ["text"," "],
+  ["keyword","trait"],
+  ["text"," "],
+  ["entity.name.type","GoldenCustomer"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","balance"],
+  ["text"," : "],
+  ["keyword","long"],
+  ["text"," "],
+  ["entity.name.type","@Alias"],
+  ["lparen","("],
+  ["text"," "],
+  ["string","\"org.acme.foo.accountBalance\""],
+  ["text"," "],
+  ["rparen",")"]
+],[
+   "start",
+  ["keyword","end"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","global"],
+  ["text"," "],
+  ["entity.name.type","org.slf4j.Logger"],
+  ["text"," "],
+  ["variable","logger"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","function"],
+  ["text"," "],
+  ["support.class","String"],
+  ["text"," "],
+  ["identifier","hello"],
+  ["lparen","("],
+  ["support.class","String"],
+  ["text"," "],
+  ["identifier","name"],
+  ["rparen",")"],
+  ["text"," "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","return"],
+  ["text"," "],
+  ["string","\"Hello \""],
+  ["keyword.operator","+"],
+  ["identifier","name"],
+  ["keyword.operator","+"],
+  ["string","\"!\""],
+  ["text",";"]
+],[
+   "start",
+  ["rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","rule"],
+  ["text"," "],
+  ["entity.name","\"Trim all strings\""]
+],[
+   "start",
+  ["text","  "],
+  ["keyword","dialect"],
+  ["text"," "],
+  ["string","\"java\""]
+],[
+   "start",
+  ["text","  "],
+  ["keyword","no"],
+  ["keyword.operator","-"],
+  ["keyword","loop"]
+],[
+   "start",
+  ["keyword","when"],
+  ["text"," "],
+  ["comment.line.double-slash","// fdsfds"]
+],[
+   "start",
+  ["text","  "],
+  ["identifier","$s"],
+  ["text"," : "],
+  ["support.class","String"],
+  ["lparen","("],
+  ["identifier","a"],
+  ["text"," "],
+  ["keyword.operator","=="],
+  ["text"," "],
+  ["constant.language","null"],
+  ["text"," "],
+  ["keyword.operator","||"],
+  ["text"," "],
+  ["keyword.operator","=="],
+  ["text"," "],
+  ["string","\"empty\""],
+  ["text",", "],
+  ["identifier","$g"],
+  ["text"," : "],
+  ["identifier","size"],
+  ["rparen",")"]
+],[
+   "start",
+  ["text","  "],
+  ["identifier","Cheese"],
+  ["lparen","("],
+  ["text"," "],
+  ["identifier","name"],
+  ["text"," "],
+  ["keyword","matches"],
+  ["text"," "],
+  ["string","\"(Buffalo)?\\\\S*Mozarella\""],
+  ["text"," "],
+  ["rparen",")"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","CheeseCounter"],
+  ["lparen","("],
+  ["text"," "],
+  ["identifier","cheeses"],
+  ["text"," "],
+  ["keyword","contains"],
+  ["text"," "],
+  ["identifier","$var"],
+  ["text"," "],
+  ["rparen",")"],
+  ["text"," "],
+  ["comment.line.double-slash","// contains with a variable"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","CheeseCounter"],
+  ["lparen","("],
+  ["text"," "],
+  ["identifier","cheese"],
+  ["text"," "],
+  ["keyword","memberof"],
+  ["text"," "],
+  ["identifier","$matureCheeses"],
+  ["text"," "],
+  ["rparen",")"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","Cheese"],
+  ["lparen","("],
+  ["text"," "],
+  ["identifier","name"],
+  ["text"," "],
+  ["keyword","soundslike"],
+  ["text"," "],
+  ["string","'foobar'"],
+  ["text"," "],
+  ["rparen",")"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","Message"],
+  ["lparen","("],
+  ["text"," "],
+  ["identifier","routingValue"],
+  ["text"," "],
+  ["identifier","str"],
+  ["lparen","["],
+  ["identifier","startsWith"],
+  ["rparen","]"],
+  ["text"," "],
+  ["string","\"R1\""],
+  ["text"," "],
+  ["rparen",")"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","Cheese"],
+  ["lparen","("],
+  ["text"," "],
+  ["identifier","name"],
+  ["text"," "],
+  ["keyword","in"],
+  ["text"," "],
+  ["lparen","("],
+  ["text"," "],
+  ["string","\"stilton\""],
+  ["text",", "],
+  ["string","\"cheddar\""],
+  ["text",", "],
+  ["identifier","$cheese"],
+  ["text"," "],
+  ["rparen",")"],
+  ["text"," "],
+  ["rparen",")"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","Person"],
+  ["lparen","("],
+  ["text"," "],
+  ["keyword","eval"],
+  ["lparen","("],
+  ["text"," "],
+  ["identifier","age"],
+  ["text"," "],
+  ["keyword.operator","=="],
+  ["text"," "],
+  ["identifier","girlAge"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["constant.numeric","2"],
+  ["text"," "],
+  ["rparen",")"],
+  ["text",", "],
+  ["identifier","sex"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["string","'M'"],
+  ["text"," "],
+  ["rparen",")"]
+],[
+   "start",
+  ["keyword","then"]
+],[
+   "start",
+  ["text","  "],
+  ["support.function","retract"],
+  ["lparen","("],
+  ["identifier","$s"],
+  ["rparen",")"],
+  ["text",";"]
+],[
+   "start",
+  ["text","  "],
+  ["support.class","String"],
+  ["text"," "],
+  ["identifier","a"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["string","\"fd\""],
+  ["text",";"]
+],[
+   "start",
+  ["text","  "],
+  ["identifier","a"],
+  ["text","."],
+  ["identifier","toString"],
+  ["lparen","("],
+  ["rparen",")"],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start",
+  ["text","  "],
+  ["support.function","insert"],
+  ["lparen","("],
+  ["identifier","$s"],
+  ["text","."],
+  ["identifier","trim"],
+  ["lparen","("],
+  ["rparen","))"],
+  ["text",";"]
+],[
+   "start",
+  ["keyword","end"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","query"],
+  ["text"," "],
+  ["entity.name","isContainedIn"],
+  ["lparen","("],
+  ["text"," "],
+  ["support.class","String"],
+  ["text"," "],
+  ["identifier","x"],
+  ["text",", "],
+  ["support.class","String"],
+  ["text"," "],
+  ["identifier","y"],
+  ["text"," "],
+  ["rparen",")"]
+],[
+   "start",
+  ["text","  "],
+  ["identifier","Location"],
+  ["lparen","("],
+  ["text"," "],
+  ["identifier","x"],
+  ["text",", "],
+  ["identifier","y"],
+  ["text","; "],
+  ["rparen",")"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword","or"]
+],[
+   "start",
+  ["text","  "],
+  ["lparen","("],
+  ["text"," "],
+  ["identifier","Location"],
+  ["lparen","("],
+  ["text"," "],
+  ["identifier","z"],
+  ["text",", "],
+  ["identifier","y"],
+  ["text","; "],
+  ["rparen",")"],
+  ["text"," "],
+  ["keyword","and"],
+  ["text"," "],
+  ["identifier","isContainedIn"],
+  ["lparen","("],
+  ["text"," "],
+  ["identifier","x"],
+  ["text",", "],
+  ["identifier","z"],
+  ["text","; "],
+  ["rparen",")"],
+  ["text"," "],
+  ["rparen",")"]
+],[
+   "start",
+  ["keyword","end"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","rule"],
+  ["text"," "],
+  ["entity.name","\"go\""],
+  ["text"," "],
+  ["keyword","salience"],
+  ["text"," "],
+  ["constant.numeric","10"]
+],[
+   "start",
+  ["keyword","when"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","$s"],
+  ["text"," : "],
+  ["support.class","String"],
+  ["lparen","("],
+  ["text","  "],
+  ["rparen",")"]
+],[
+   "start",
+  ["keyword","then"]
+],[
+   "start",
+  ["text","    "],
+  ["support.class","System"],
+  ["text","."],
+  ["identifier","out"],
+  ["text","."],
+  ["identifier","println"],
+  ["lparen","("],
+  ["text"," "],
+  ["identifier","$s"],
+  ["text"," "],
+  ["rparen",")"],
+  ["text",";"]
+],[
+   "start",
+  ["keyword","end"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","rule"],
+  ["text"," "],
+  ["entity.name","\"When all English buses are not red\""]
+],[
+   "start",
+  ["keyword","when"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","not"],
+  ["lparen","("],
+  ["keyword","forall"],
+  ["lparen","("],
+  ["text"," "],
+  ["identifier","$bus"],
+  ["text"," : "],
+  ["identifier","Bus"],
+  ["lparen","("],
+  ["text"," "],
+  ["identifier","nationality"],
+  ["text"," "],
+  ["keyword.operator","=="],
+  ["text"," "],
+  ["string","'english'"],
+  ["rparen",")"]
+],[
+   "start",
+  ["text","                "],
+  ["identifier","Bus"],
+  ["lparen","("],
+  ["text"," "],
+  ["keyword","this"],
+  ["text"," "],
+  ["keyword.operator","=="],
+  ["text"," "],
+  ["identifier","$bus"],
+  ["text",", "],
+  ["identifier","color"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["string","'red'"],
+  ["text"," "],
+  ["rparen",")"],
+  ["text"," "],
+  ["rparen","))"]
+],[
+   "start",
+  ["keyword","then"]
+],[
+   "start",
+  ["text","    "],
+  ["comment.line.double-slash","// What if all english buses are not red?"]
+],[
+   "start",
+  ["keyword","end"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","rule"],
+  ["text"," "],
+  ["entity.name","\"go1\""]
+],[
+   "start",
+  ["keyword","when"]
+],[
+   "start",
+  ["text","    "],
+  ["support.class","String"],
+  ["lparen","("],
+  ["text"," "],
+  ["keyword","this"],
+  ["text"," "],
+  ["keyword.operator","=="],
+  ["text"," "],
+  ["string","\"go1\""],
+  ["text"," "],
+  ["rparen",")"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","isContainedIn"],
+  ["lparen","("],
+  ["string","\"Office\""],
+  ["text",", "],
+  ["string","\"House\""],
+  ["text","; "],
+  ["rparen",")"]
+],[
+   "start",
+  ["keyword","then"]
+],[
+   "start",
+  ["text","    "],
+  ["support.class","System"],
+  ["text","."],
+  ["identifier","out"],
+  ["text","."],
+  ["identifier","println"],
+  ["lparen","("],
+  ["text"," "],
+  ["string","\"office is in the house\""],
+  ["text"," "],
+  ["rparen",")"],
+  ["text",";"]
+],[
+   "start",
+  ["keyword","end"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","rule"],
+  ["text"," "],
+  ["entity.name","\"go2\""]
+],[
+   "start",
+  ["keyword","when"]
+],[
+   "start",
+  ["text","    "],
+  ["support.class","String"],
+  ["lparen","("],
+  ["text"," "],
+  ["keyword","this"],
+  ["text"," "],
+  ["keyword.operator","=="],
+  ["text"," "],
+  ["string","\"go2\""],
+  ["text"," "],
+  ["rparen",")"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","isContainedIn"],
+  ["lparen","("],
+  ["string","\"Draw\""],
+  ["text",", "],
+  ["string","\"House\""],
+  ["text","; "],
+  ["rparen",")"]
+],[
+   "start",
+  ["keyword","then"]
+],[
+   "start",
+  ["text","    "],
+  ["support.class","System"],
+  ["text","."],
+  ["identifier","out"],
+  ["text","."],
+  ["identifier","println"],
+  ["lparen","("],
+  ["text"," "],
+  ["string","\"Draw in the House\""],
+  ["text"," "],
+  ["rparen",")"],
+  ["text",";"]
+],[
+   "start",
+  ["keyword","end"]
+],[
+   "start"
+],[
+   "block.comment",
+  ["comment.block","/**"]
+],[
+   "block.comment",
+  ["comment.block"," * Go Right"]
+],[
+   "start",
+  ["comment.block"," */"]
+],[
+   "start",
+  ["keyword","rule"],
+  ["text"," "],
+  ["entity.name","GoRight"],
+  ["text"," "],
+  ["keyword","dialect"],
+  ["text"," "],
+  ["string","\"mvel\""],
+  ["text","  "],
+  ["keyword","salience"],
+  ["text"," "],
+  ["lparen","("],
+  ["support.class","Math"],
+  ["text","."],
+  ["identifier","abs"],
+  ["lparen","("],
+  ["text"," "],
+  ["identifier","$df"],
+  ["text","."],
+  ["identifier","colDiff"],
+  ["text"," "],
+  ["rparen","))"],
+  ["text","  "],
+  ["keyword","when"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","$df"],
+  ["text","   : "],
+  ["identifier","DirectionDiff"],
+  ["lparen","("],
+  ["identifier","colDiff"],
+  ["text"," "],
+  ["keyword.operator",">"],
+  ["text"," "],
+  ["constant.numeric","0"],
+  ["text"," "],
+  ["rparen",")"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","$target"],
+  ["text"," : "],
+  ["identifier","Cell"],
+  ["lparen","("],
+  ["text","  "],
+  ["identifier","row"],
+  ["text"," "],
+  ["keyword.operator","=="],
+  ["text"," "],
+  ["identifier","$df"],
+  ["text","."],
+  ["identifier","row"],
+  ["text",", "],
+  ["identifier","col"],
+  ["text"," "],
+  ["keyword.operator","=="],
+  ["text"," "],
+  ["lparen","("],
+  ["identifier","$df"],
+  ["text","."],
+  ["identifier","col"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["constant.numeric","1"],
+  ["rparen",")"],
+  ["text"," "],
+  ["rparen",")"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","CellContents"],
+  ["lparen","("],
+  ["text"," "],
+  ["identifier","cell"],
+  ["text"," "],
+  ["keyword.operator","=="],
+  ["text"," "],
+  ["identifier","$target"],
+  ["text",", "],
+  ["identifier","cellType"],
+  ["text"," "],
+  ["keyword.operator","!="],
+  ["text"," "],
+  ["identifier","CellType"],
+  ["text","."],
+  ["identifier","WALL"],
+  ["text"," "],
+  ["rparen",")"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","not"],
+  ["text"," "],
+  ["identifier","Direction"],
+  ["lparen","("],
+  ["identifier","character"],
+  ["text"," "],
+  ["keyword.operator","=="],
+  ["text"," "],
+  ["identifier","$df"],
+  ["text","."],
+  ["identifier","fromChar"],
+  ["text",", "],
+  ["identifier","horizontal"],
+  ["text"," "],
+  ["keyword.operator","=="],
+  ["text"," "],
+  ["identifier","Direction"],
+  ["text","."],
+  ["identifier","RIGHT"],
+  ["text"," "],
+  ["rparen",")"]
+],[
+   "start",
+  ["keyword","then"]
+],[
+   "start",
+  ["text","    "],
+  ["support.class","System"],
+  ["text","."],
+  ["identifier","out"],
+  ["text","."],
+  ["identifier","println"],
+  ["lparen","("],
+  ["text"," "],
+  ["string","\"monster right\""],
+  ["text"," "],
+  ["rparen",")"],
+  ["text",";"]
+],[
+   "start",
+  ["text","    "],
+  ["support.function","retract"],
+  ["lparen","("],
+  ["text"," "],
+  ["identifier","$df"],
+  ["text"," "],
+  ["rparen",")"],
+  ["text",";"]
+],[
+   "start",
+  ["text","    "],
+  ["support.function","insert"],
+  ["lparen","("],
+  ["text"," "],
+  ["keyword","new"],
+  ["text"," "],
+  ["identifier","Direction"],
+  ["lparen","("],
+  ["identifier","$df"],
+  ["text","."],
+  ["identifier","fromChar"],
+  ["text",", "],
+  ["identifier","Direction"],
+  ["text","."],
+  ["identifier","RIGHT"],
+  ["text",", "],
+  ["identifier","Direction"],
+  ["text","."],
+  ["identifier","NONE"],
+  ["text"," "],
+  ["rparen",")"],
+  ["text"," "],
+  ["rparen",")"],
+  ["text",";"]
+],[
+   "start",
+  ["keyword","end"]
+],[
+   "start"
+]]
