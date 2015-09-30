@@ -8,7 +8,7 @@ Ace is a standalone code editor written in JavaScript. Our goal is to create a b
 Features
 --------
 
-* Syntax highlighting for over 110 languages (TextMate/Sublime/_.tmlanguage_ files can be imported)
+* Syntax highlighting for over 120 languages (TextMate/Sublime/_.tmlanguage_ files can be imported)
 * Over 20 themes (TextMate/Sublime/_.tmtheme_ files can be imported)
 * Automatic indent and outdent
 * An optional command line
@@ -80,8 +80,16 @@ The mode can then be used like this:
 
 ```javascript
     var JavaScriptMode = ace.require("ace/mode/javascript").Mode;
-    editor.getSession().setMode(new JavaScriptMode());
+    editor.session.setMode(new JavaScriptMode());
 ```
+
+to destroy editor use
+
+```javascript
+    editor.destroy();
+    editor.container.remove();
+```
+
 
 Documentation
 -------------
