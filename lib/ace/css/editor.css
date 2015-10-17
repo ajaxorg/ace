@@ -108,6 +108,34 @@
     top: 0;
 }
 
+.ace_scrollbar-highlight {
+    position: absolute;
+    right: 0px;
+    top: 0;
+    bottom: 0;
+    width:3px;
+    z-index: 10;
+}
+
+.ace_scrollbar-highlight-info, .ace_scrollbar-highlight-warning, .ace_scrollbar-highlight-error {
+    width:100%;
+    height: 3px;
+    position:absolute;
+    opacity: 0.5;
+}
+
+.ace_scrollbar-highlight-info {
+    background-color: #525252;
+}
+
+.ace_scrollbar-highlight-warning {
+    background-color: #FDAF53;
+}
+
+.ace_scrollbar-highlight-error {
+    background-color: #DE5337;
+}
+
 .ace_scrollbar-v{
     overflow-x: hidden;
     overflow-y: scroll;
