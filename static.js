@@ -13,6 +13,8 @@ if (!fs.exists)
     fs.exists = path.exists;
 
 var allowSave = process.argv.indexOf("--allow-save") != -1;
+if (allowSave)
+    console.warn("writing files from browser is enabled");
 
 http.createServer(function(req, res) {
     var uri = unescape(url.parse(req.url).pathname)
