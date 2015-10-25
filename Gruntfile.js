@@ -22,6 +22,6 @@ module.exports = function ( grunt ) {
 		}
 	} );
 
-	grunt.registerTask( 'test', [ 'jshint', 'jscs', 'jsonlint' ] );
+	grunt.registerTask( 'test', [ 'jshint', 'jsonlint' ] );
 	grunt.registerTask( 'default', 'test' );
 };
