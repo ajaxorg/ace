@@ -18,7 +18,12 @@
         "node-jsdom": "3.1.5",
         "amd-loader": "~0.0.4",
         "dryice": "0.4.11",
-        "architect-build": "https://github.com/c9/architect-build/tarball/17268dce65"
+        "architect-build": "https://github.com/c9/architect-build/tarball/17268dce65".
+        "grunt": "0.4.5",
+        "grunt-cli": "0.1.13",
+        "grunt-contrib-jshint": "0.11.3",
+        "grunt-jscs": "2.1.0",
+        "grunt-jsonlint": "1.0.5"
     },
     "mappings": {
         "ace": "."
