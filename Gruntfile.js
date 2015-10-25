@@ -2,7 +2,6 @@
 module.exports = function ( grunt ) {
 	grunt.loadNpmTasks( 'grunt-contrib-jshint' );
 	grunt.loadNpmTasks( 'grunt-jsonlint' );
-	grunt.loadNpmTasks( 'grunt-jscs' );
 
 	grunt.initConfig( {
 		jshint: {
@@ -14,9 +13,6 @@ module.exports = function ( grunt ) {
 				'**/*.js',
 				'!node_modules/**'
 			]
-		},
-		jscs: {
-			src: '<%= jshint.all %>'
 		},
 		jsonlint: {
 			all: [
