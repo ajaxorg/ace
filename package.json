@@ -14,7 +14,7 @@
         "mime": "1.2.x"
     },
     "devDependencies": {
-        "asyncjs": "0.0.x",
+        "asyncjs": "fjakobs/async.js",
         "node-jsdom": "3.1.5",
         "amd-loader": "~0.0.4",
         "dryice": "0.4.11",
