@@ -1,3 +1,9 @@
+2015.10.28 Version 1.2.1
+
+* new language modes
+  - Swift
+  - JSX
+
 2015.07.11 Version 1.2.0
 
 * New Features
