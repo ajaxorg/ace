@@ -415,6 +415,7 @@ function getLoadedFileList(options, callback, result) {
         });
     });
     delete deps["ace/theme/textmate"];
+    deps["ace/ace"] = 1;
     callback(Object.keys(deps));
 }
 
