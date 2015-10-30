@@ -535,6 +535,19 @@
 ],[
    "no_regex"
 ],[
+   "no_regex",
+  ["identifier","z"],
+  ["keyword.operator",">>="],
+  ["identifier","t"],
+  ["keyword.operator","<<"],
+  ["identifier","f"],
+  ["keyword.operator",">>"],
+  ["identifier","r"],
+  ["keyword.operator",">>>"],
+  ["identifier","s"],
+  ["keyword.operator",">="],
+  ["constant.numeric","0b1"]
+],[
    "no_regex"
 ],[
    "function_arguments",
@@ -654,6 +667,8 @@
   ["meta.tag.punctuation.end-tag-open.xml","</"],
   ["meta.tag.tag-name.xml","div"],
   ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start"
 ],[
    "start"
 ]]
