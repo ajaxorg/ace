@@ -57,13 +57,13 @@
   ["punctuation.operator","."],
   ["text","shuffle"],
   ["paren.lparen","(["],
-  ["constant.numeric.integer.source.rust","1"],
+  ["constant.numeric.source.rust","1"],
   ["punctuation.operator",","],
   ["text"," "],
-  ["constant.numeric.integer.source.rust","2"],
+  ["constant.numeric.source.rust","2"],
   ["punctuation.operator",","],
   ["text"," "],
-  ["constant.numeric.integer.source.rust","3"],
+  ["constant.numeric.source.rust","3"],
   ["paren.rparen","])"],
   ["punctuation.operator",";"]
 ],[
@@ -94,7 +94,7 @@
   ["text"," num "],
   ["keyword.operator","+"],
   ["text"," "],
-  ["constant.numeric.integer.source.rust","1"],
+  ["constant.numeric.source.rust","1"],
   ["paren.rparen","))"]
 ],[
    "start",
