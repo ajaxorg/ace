@@ -114,6 +114,20 @@
 ],[
    "start"
 ],[
+   ["comment","comment"],
+  ["comment.start.block.source.rust","/*"],
+  ["comment.block.source.rust"," nested "],
+  ["comment.start.block.source.rust","/*"],
+  ["comment.block.source.rust"," "]
+],[
+   "start",
+  ["comment.block.source.rust","    comments "],
+  ["comment.end.block.source.rust","*/"],
+  ["comment.block.source.rust"," "],
+  ["comment.end.block.source.rust","*/"]
+],[
+   "start"
+],[
    "start",
   ["keyword.source.rust","fn"],
   ["text"," "],
@@ -210,4 +224,43 @@
   ["paren.rparen","}"]
 ],[
    "start"
+],[
+   "start"
+],[
+   "start",
+  ["comment.line.double-dash.source.rust","// numbers"]
+],[
+   "start",
+  ["constant.numeric.source.rust","14E-111_f64"],
+  ["punctuation.operator",";"],
+  ["text"," "],
+  ["constant.numeric.source.rust","45isize"],
+  ["text"," "],
+  ["constant.numeric.source.rust","0x1i32"],
+  ["text"," "],
+  ["constant.numeric.source.rust","0o777u32"],
+  ["text"," "],
+  ["constant.numeric.source.rust","0b01"],
+  ["text"," "],
+  ["constant.numeric.source.rust","14f32"],
+  ["text"," "],
+  ["constant.numeric.source.rust","1_2.78f32"],
+  ["text"," "],
+  ["constant.numeric.source.rust","1_2.3E+7f32"]
+],[
+   "start"
+],[
+   "start",
+  ["comment.line.double-dash.source.rust","// not numbers"]
+],[
+   "start",
+  ["constant.numeric.source.rust","14"],
+  ["punctuation.operator","."],
+  ["text","_E"],
+  ["keyword.operator","-"],
+  ["constant.numeric.source.rust","111_f64"],
+  ["punctuation.operator",";"],
+  ["text"," 0xi"],
+  ["constant.numeric.source.rust","32"],
+  ["text"," 0b777u"]
 ]]
