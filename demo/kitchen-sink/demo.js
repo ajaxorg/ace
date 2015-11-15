@@ -374,7 +374,7 @@ function updateUIEditorOptions() {
 themelist.themes.forEach(function(x){ x.value = x.theme });
 fillDropdown(themeEl, {
     Bright: themelist.themes.filter(function(x){return !x.isDark}),
-    Dark: themelist.themes.filter(function(x){return x.isDark}),
+    Dark: themelist.themes.filter(function(x){return x.isDark})
 });
 
 event.addListener(themeEl, "mouseover", function(e){

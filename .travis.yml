@@ -10,6 +10,6 @@ script:
     - npm test
 
 matrix:
-    fast_finish: true
+    fast_finish: false
 
 sudo: false
