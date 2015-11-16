@@ -1,9 +1,15 @@
 language: node_js
 
 node_js:
-  - "0.10"
+    - "0.10"
+
+script:
+    - npm i
+    - npm i -g eslint
+    - eslint "lib/ace/**/*.js"
+    - npm test
 
 matrix:
-  fast_finish: true
+    fast_finish: true
 
 sudo: false
