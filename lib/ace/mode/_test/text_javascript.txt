@@ -79,6 +79,7 @@ a = {
 	gta:function(a,b)
 }
 
+z>>=t<<f>>r>>>s>=0b1
 
 foo.protoype.d = function(a, b,
                           c, d)
