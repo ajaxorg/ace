@@ -206,7 +206,7 @@ module.exports = {
     hugeDocs: prepareDocList(hugeDocs),
     initDoc: initDoc,
     loadDoc: loadDoc,
-    saveDoc: saveDoc,
+    saveDoc: saveDoc
 };
 module.exports.all = {
     "Mode Examples": module.exports.docs,
