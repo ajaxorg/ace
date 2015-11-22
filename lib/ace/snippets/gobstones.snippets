@@ -1,0 +1,34 @@
+# Procedure
+snippet proc
+	procedure ${1?:name}(${2:argument}) {
+		${3:// body...}
+	}
+
+# Function
+snippet fun
+	function ${1?:name}(${2:argument}) {
+		return ${3:// body...}
+	}
+
+# Repeat
+snippet rep
+	repeat ${1?:times} {
+		${2:// body...}
+	}
+
+# For
+snippet for
+	foreach ${1?:e} in ${2?:list} {
+		${3:// body...}	
+	}
+
+# If
+snippet if
+	if (${1?:condition}) {
+		${3:// body...}	
+	}
+
+# While
+  while (${1?:condition}) {
+    ${2:// body...}	
+  }
