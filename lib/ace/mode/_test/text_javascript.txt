@@ -87,9 +87,9 @@ foo.d =function(a,     b)
 foo.d =function(a,  /*****/ d"string"   
 
 <div
-z=<div {...this.props} x={1 + 2} y="z{
-        1
-    }e">
+z=<div {...this.props} x={1 + 2} y="z{a}b&amp;" t={
+        1 + <a>{2}</a>
+    }>
 1 <a> { ++x  } </a>
 </div>
 
