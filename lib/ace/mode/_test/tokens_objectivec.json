@@ -412,7 +412,9 @@
   ["text"," "],
   ["identifier","ProtocolFromString"],
   ["punctuation.operator",":"],
-  ["string","\"NSTableViewDelegate\""],
+  ["string.start","\""],
+  ["string","NSTableViewDelegate"],
+  ["string.end","\""],
   ["paren.rparen","))"]
 ],[
    "start"
@@ -469,7 +471,10 @@
   ["support.function.C99.c","printf"],
   ["paren.lparen","("],
   ["text"," "],
-  ["string","\"hello world\\n\""],
+  ["string.start","\""],
+  ["string","hello world"],
+  ["constant.language.escape","\\n"],
+  ["string.end","\""],
   ["text"," "],
   ["paren.rparen",")"],
   ["punctuation.operator",";"]

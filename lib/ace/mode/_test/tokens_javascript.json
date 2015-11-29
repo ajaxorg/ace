@@ -608,7 +608,7 @@
   ["keyword.operator","<"],
   ["identifier","div"]
 ],[
-   ["start","jsx_attr_qq","jsx_attr_qq","jsxAttributes","jsxAttributes","jsx",1],
+   ["start","jsxAttributes","jsxAttributes","jsx",1],
   ["identifier","z"],
   ["keyword.operator","="],
   ["meta.tag.punctuation.tag-open.xml","<"],
@@ -633,17 +633,33 @@
   ["text.tag-whitespace.xml"," "],
   ["entity.other.attribute-name.xml","y"],
   ["keyword.operator.attribute-equals.xml","="],
-  ["string.attribute-value.xml","\"z"],
+  ["string.attribute-value.xml","\"z{a}b"],
+  ["constant.language.escape.reference.xml","&amp;"],
+  ["string.attribute-value.xml","\""],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","t"],
+  ["keyword.operator.attribute-equals.xml","="],
   ["paren.quasi.start","{"]
 ],[
-   ["#tmp","no_regex","start","jsx_attr_qq","jsx_attr_qq","jsxAttributes","jsxAttributes","jsx",1],
+   ["start","jsxAttributes","jsxAttributes","jsx",1],
   ["text","        "],
-  ["constant.numeric","1"]
+  ["constant.numeric","1"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","a"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["paren.quasi.start","{"],
+  ["constant.numeric","2"],
+  ["paren.quasi.end","}"],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","a"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    ["jsx",1],
   ["text","    "],
   ["paren.quasi.end","}"],
-  ["string.attribute-value.xml","e\""],
   ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    ["jsx",1],
