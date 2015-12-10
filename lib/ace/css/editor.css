@@ -453,3 +453,19 @@ styles.join("\n")
 .ace_br13{border-top-left-radius    : 3px; border-bottom-right-radius: 3px; border-bottom-left-radius:  3px;}
 .ace_br14{border-top-right-radius   : 3px; border-bottom-right-radius: 3px; border-bottom-left-radius:  3px;}
 .ace_br15{border-top-left-radius    : 3px; border-top-right-radius:    3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px;}
+
+
+.unidiff.marker.diff\.remove {
+    background-color: rgba(230, 166, 145, 0.35);
+    position: absolute;
+}
+.unidiff.marker.diff\.insert {
+    background-color: rgba(145, 230, 166, 0.35);
+    position: absolute;
+}
+
+.unidiff.marker.diff\.header {
+    background-color: rgba(212, 212, 212, 0.23);
+    position: absolute;
+}
+
