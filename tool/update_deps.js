@@ -1,28 +1,36 @@
-var https = require("https")
-  , http = require("http")
-  , url = require("url")
-  , fs = require("fs");
+var https = require("https");
+var http = require("http");
+var url = require("url");
+var fs = require("fs");
 
 var Path = require("path");
 var spawn = require("child_process").spawn;
 var async = require("asyncjs");
 var rootDir = __dirname + "/../lib/ace/";
 
+var SKIP_NPM = false;
+
 var deps = {
     csslint: {
         path: "mode/css/csslint.js",
-        url: "https://raw.github.com/stubbornella/csslint/master/release/csslint.js",
-        needsFixup: true
+        // url: "https://raw.github.com/stubbornella/csslint/master/release/csslint.js",
+        browserify: {
+            npmModule: "git+https://github.com/CSSLint/csslint.git#master",
+            path: "jshint/src/jshint.js",
+            exports: "jshint"
+        },
+        fetch: browserify,
+        wrapAmd: true
     }, 
     requirejs: {
         path: "../../demo/kitchen-sink/require.js",
         url: "https://raw.github.com/jrburke/requirejs/master/require.js",
-        needsFixup: false
+        wrapAmd: false
     },
     luaparse: {
         path: "mode/lua/luaparse.js",
         url: "https://raw.github.com/oxyc/luaparse/master/luaparse.js",
-        needsFixup: true,
+        wrapAmd: true,
         postProcess: function(src) {
             return src.replace(
                 /\(function\s*\(root,\s*name,\s*factory\)\s*{[\s\S]*?}\(this,\s*'luaparse',/,
@@ -30,49 +38,73 @@ var deps = {
             )
         }
     },
+    html5: {
+        path: "mode/html/saxparser.js",
+        browserify: {
+            npmModule: "git+https://github.com/aredridel/html5.git#master",
+            path: "html5/lib/sax/SAXParser.js",  
+            exports: "SAXParser"
+        },
+        fetch: browserify,
+        wrapAmd: true,
+        postProcess: function(src) {
+            return src;
+        }
+    },
+    xquery: {
+       path: "mode/xquery/xquery_lexer.js",
+       browserify: {
+           npmModule: "git+https://github.com/wcandillon/xqlint.git#master",
+           path: "xqlint/lib/lexers/xquery_lexer.js",
+           exports: "XQueryLexer"
+       },
+       fetch: browserify,
+       wrapAmd: true,
+       postProcess: function(src){
+           return src;
+       }
+    },
+    jsoniq: {
+       path: "mode/xquery/jsoniq_lexer.js",
+       browserify: {
+           npmModule: "git+https://github.com/wcandillon/xqlint.git#master",
+           path: "xqlint/lib/lexers/jsoniq_lexer.js",
+           exports: "JSONiqLexer"
+       },
+       fetch: browserify,
+       wrapAmd: true,
+       postProcess: function(src){
+           return src;
+       }
+    },
+    xqlint: {
+       path: "mode/xquery/xqlint.js",
+       browserify: {
+           npmModule: "git+https://github.com/wcandillon/xqlint.git#master",
+           path: "xqlint/lib/xqlint.js",
+           exports: "XQLint"
+       },
+       fetch: browserify,
+       wrapAmd: true,
+       postProcess: function(src){
+           return src;
+       }
+    },
     jshint: {
         path: "mode/javascript/jshint.js",
-        url: "http://jshint.com/get/jshint-2.1.9.js",
-        fetch: function(_, cb) {
-            //run("npm install jshint@latest", function() {
-                var base = Path.join(__dirname, "/node_modules/jshint/")
-                var path = Path.join(base, "/src/stable/jshint")
-                run('browserify ' + path + ' -i console-browserify -r jshint', function(err, src) {
-                    src = replaceConsoleBrowserify(src);
-                    var version = JSON.parse(fs.readFileSync(base + "package.json")).version
-                    src = [ "// " + version,
-                        "var JSHINT;",
-                        "(function () {",
-                        "require = null;",
-                        src,
-                        "JSHINT = require('jshint').JSHINT;",
-                        "}());"
-                    ].join("\n")
-                    cb(err, src);
-                })
-            //});
+        browserify: {
+            npmModule: "git+https://github.com/ajaxorg/jshint.git#master",
+            path: "jshint/src/jshint.js",
+            exports: "jshint"
         },
-        needsFixup: true,
+        fetch: browserify,
+        wrapAmd: true,
         postProcess: function(src) {
-            src = src.replace(/(\],|\{)((?:\d+|"\w+"):\[)/g, "$1\n$2")
-                .replace(/^(\},)(\{[^{}\[\]]*?\}\])/gm, "$1\n$2")
-
             src = src.replace(
                 /"Expected a conditional expression and instead saw an assignment."/g,
                 '"Assignment in conditional expression"'
             );
-
-            src = src.replace(/\brequire\(["']|\(require,|\(require\)/g, function(r){
-                return r.replace("require", "req");
-            })
-
             src = src.replace(/var defaultMaxListeners = 10;/, function(a) {return a.replace("10", "200")});
-
-            src = src.replace(/var JSHINT;\s*\(function[\s()]+\{\s*/, "")
-                .replace(/JSHINT = .*\n\s*\}\(\)\);\s*/, "");
-            src += '\n'
-                + 'function req() {return require.apply(this, arguments)}\n'
-                + 'module.exports = req("jshint");\n';
             return src;
         }
     }, 
@@ -95,72 +127,52 @@ var deps = {
             });
         }
     },
-    coffee: {
+    vim: {
         fetch: function(){
-            var rootHref = "https://raw.github.com/jashkenas/coffee-script/master/";
-            var path = "mode/coffee/";
-
-            var subDir = "lib/coffee-script/";
-            var deps = [
-                "helpers.js",
-                "lexer.js",
-                "nodes.js",
-                "parser.js",
-                "rewriter.js",
-                "scope.js"
-            ].map(function(x) {
-                return {
-                    name: x,
-                    href: rootHref + subDir + x,
-                    path: rootDir + path + x
-                };
+            var rootHref = "https://raw.githubusercontent.com/codemirror/CodeMirror/master/"
+            var fileMap = {"keymap/vim.js": "keyboard/vim.js", "test/vim_test.js": "keyboard/vim_test.js"};
+            async.forEach(Object.keys(fileMap), function(x, next) {
+                download(rootHref + x, function(e, d) {
+                    d = d.replace(/^\(function.*{[^{}]+^}[^{}]+{/m, "define(function(require, exports, module) {");
+                    d = d.replace(/^\s*return vimApi;\s*};/gm, "  //};")
+                        .replace("var Vim = function() {", "$& return vimApi; } //{")
+                    fs.writeFile(rootDir + fileMap[x], d, next)
+                })
+            }, function() {
+                console.log("done")
             });
-            deps.push({name:"LICENSE", href: rootHref + "LICENSE"});
-
-            var downloads = {}, counter = 0;
-
-            deps.forEach(function(x) {
-                download(x.href, function(err, data) {
-                    counter++;
-                    downloads[x.name] = data;
-                    if (counter == deps.length)
-                        allDone();
-                });
-            });
-            function allDone() {
-                deps.pop();
-                var license = downloads.LICENSE.split('\n');
-                license = "/**\n * " + license.join("\n * ") + "\n */";
-
-                deps.forEach(function(x) {
-                    var data = downloads[x.name];
-                    console.log(x.name);
-                    console.log(!data);
-                    if (!data)
-                        return;
-                    if (x.name == "parser.js") {
-                        data = data.replace("var parser = (function(){", "")
-                            .replace(/\nreturn (new Parser)[\s\S]*$/, "\n\nmodule.exports = $1;\n\n");
-                    } else {
-                        data = data.replace("(function() {", "")
-                            .replace(/\}\).call\(this\);\s*$/, "");
-                    }
-                    data = license
-                        + "\n\n"
-                        + "define(function(require, exports, module) {\n"
-                        + data
-                        + "\n});";
-
-                    fs.writeFile(x.path, data, "utf-8", function(err){
-                        if (err) throw err;
-                        console.log("File " + x.name + " saved.");
-                        console.warn("mode/coffee/coffee-script file needs to updated manually");
-                        console.warn("mode/coffee/parser.js: parseError function needs to be modified");
-                    });
-                });
-            }
         }
-    }
+    },
+    liveScript: {
+        path: "mode/livescript.js",
+        url: "https://raw.githubusercontent.com/gkz/LiveScript/master/lib/mode-ls.js"        
+    },
+    coffee: {
+        path: "mode/coffee/coffee.js",
+        url: "https://raw.githubusercontent.com/jashkenas/coffeescript/master/extras/coffee-script.js",    
+        wrapAmd: true,
+        postProcess: function(src){
+            return "function define(f) { module.exports = f() }; define.amd = {};\n"
+                + dereqire(src);
+        }
+    },
+    xmldom: {
+        fetch: function() {
+            var rootHref = "https://raw.githubusercontent.com/iDeBugger/xmldom/master/"
+            var fileMap = {
+               "sax.js": "mode/xml/sax.js",
+               "dom-parser.js": "mode/xml/dom-parser.js",
+               "dom.js": "mode/xml/dom.js"
+            };
+            async.forEach(Object.keys(fileMap), function(x, next) {
+                download(rootHref + x, function(e, d) {
+                    fs.writeFile(rootDir + fileMap[x], d, next)
+                })
+            }, function() {
+                console.log("XmlDOM updating done")
+            });
+        }
+    },
 };
 
 var download = function(href, callback) {
@@ -190,7 +202,7 @@ var getDep = function(dep) {
     dep.fetch(dep.url, function(err, data) {
         if (dep.postProcess)
             data = dep.postProcess(data);
-        if (dep.needsFixup)
+        if (dep.wrapAmd)
             data = "define(function(require, exports, module) {\n"
                 + data
                 + "\n});";
@@ -218,7 +230,6 @@ function run(cmd, cb) {
         result += data;
 	});
 
-    proc.on('exit', done);
     proc.on('close', done);
     function done(code) {
         if (code !== 0) {
@@ -238,23 +249,59 @@ function unquote(str) {
     });
 }
 
-function replaceConsoleBrowserify(str) {
-    var simpleConsole = function(req,module,exports){
-        ["log", "info", "warn", "error", 
-        "time","timeEnd", "trace", "dir", "assert"
-        ].forEach(function(x) {exports[x] = nop;});
-        function nop() {}
-    }
-    var m = /"console-browserify":(\d+)/.exec(str);
-    name = m && m[1];
-    if (name) {
-        str = str.replace(
-            "{1:[",
-            "{" + name + ":[" + simpleConsole + ",{}],\n1:["
-        )
-    }
-    return str;
+function dereqire(src) {
+    return require("derequire")(src, [
+        {from: 'require', to: '_dereq_'},
+        {from: 'define', to: '_defi_'}
+    ]);
 }
 
+function browserify(_, cb) {
+    var br = this.browserify;
+    var path = Path.join("node_modules", br.path)
+    process.chdir(__dirname);
+    if (Path.sep == "\\" && !Path._relative) {
+        Path._relative = Path.relative;
+        Path.relative = function() {
+            var v = Path._relative.apply(this, arguments);
+            return v.replace(/\\/g, "/");
+        }
+    }
+    function done() {
+        var browserify = require('browserify');
+        var absPath = require.resolve(__dirname + "/" + path);
+        var defaultPreludePath = Path.join(require.resolve("browser-pack"), "../prelude.js");
+        var defaultPrelude = "module.exports = " + fs.readFileSync(defaultPreludePath, 'utf8')
+            .replace(/^[ \t]*\/\/.*/gm, "")
+            .replace(/^\s*\n\r?/gm, "")
+            .replace(/return newRequire;/, "return newRequire(entry[0]);")
+        var opts = {
+            expose: br.exports,
+            prelude: defaultPrelude,
+            exposeAll: true
+        }
+        var b = browserify(opts);
+        b.plugin(require("deps-sort"), opts);
+        b.add(absPath);
+        var p = b.bundle();
+        var buffer = "";
+        p.on("data", function(e) { buffer += e; });
+        p.on("end", function() {
+            var src = dereqire(buffer);
+            cb(null, src);
+        });
+    }
+    if (SKIP_NPM) return done();
+    run("npm install " + br.npmModule,  done);
+}
 
-getDep(deps.jshint)
+var args = process.argv.slice(2);
+SKIP_NPM = args.indexOf("--skip-npm") != -1;
+args = args.filter(function(x) {return x[0] != "-" });
+if (!args.length)
+    args = Object.keys(deps);
+    
+args.forEach(function(key) {
+    getDep(deps[key])
+});
+

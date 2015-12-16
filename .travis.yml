@@ -1,1 +1,19 @@
 language: node_js
+
+# use default node version
+# node_js:
+#    - "0.10"
+
+script:
+    - npm i eslint
+    - node node_modules/eslint/bin/eslint "lib/ace/**/*.js"
+    - npm test
+
+matrix:
+    fast_finish: false
+
+cache:
+    directories:
+        - node_modules
+
+sudo: false

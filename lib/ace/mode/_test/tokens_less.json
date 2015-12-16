@@ -12,7 +12,7 @@
 ],[
    "start"
 ],[
-   "start",
+   "ruleset",
   ["variable.language",".box-shadow"],
   ["paren.lparen","("],
   ["variable","@style"],
@@ -27,25 +27,33 @@
   ["paren.lparen","("],
   ["variable","@c"],
   ["paren.rparen","))"],
-  ["text"," "],
-  ["paren.lparen","{"]
+  ["paren.lparen"," {"]
 ],[
-   "start",
-  ["text","    box-shadow:         "],
+   "ruleset",
+  ["text","    "],
+  ["support.type.property","box-shadow"],
+  ["text",":"],
+  ["text","         "],
   ["variable","@style"],
   ["text"," "],
   ["variable","@c"],
   ["text",";"]
 ],[
-   "start",
-  ["text","    -webkit-box-shadow: "],
+   "ruleset",
+  ["text","    "],
+  ["support.type.unknownProperty","-webkit-box-shadow"],
+  ["text",":"],
+  ["text"," "],
   ["variable","@style"],
   ["text"," "],
   ["variable","@c"],
   ["text",";"]
 ],[
-   "start",
-  ["text","    -moz-box-shadow:    "],
+   "ruleset",
+  ["text","    "],
+  ["support.type.unknownProperty","-moz-box-shadow"],
+  ["text",":"],
+  ["text","    "],
   ["variable","@style"],
   ["text"," "],
   ["variable","@c"],
@@ -54,14 +62,15 @@
    "start",
   ["paren.rparen","}"]
 ],[
-   "start",
+   "ruleset",
   ["variable.language",".box-shadow"],
   ["paren.lparen","("],
   ["variable","@style"],
   ["text",", "],
   ["variable","@alpha"],
   ["text",": "],
-  ["constant.numeric","50%"],
+  ["constant.numeric","50"],
+  ["keyword","%"],
   ["paren.rparen",")"],
   ["text"," "],
   ["keyword","when"],
@@ -71,10 +80,9 @@
   ["paren.lparen","("],
   ["variable","@alpha"],
   ["paren.rparen","))"],
-  ["text"," "],
-  ["paren.lparen","{"]
+  ["paren.lparen"," {"]
 ],[
-   "start",
+   "ruleset",
   ["text","    "],
   ["variable.language",".box-shadow"],
   ["paren.lparen","("],
@@ -100,44 +108,46 @@
    "start",
   ["comment","// Box styles"]
 ],[
-   "start",
+   "ruleset",
   ["variable.language",".box"],
-  ["text"," "],
-  ["paren.lparen","{"],
+  ["paren.lparen"," {"],
   ["text"," "]
 ],[
-   "start",
+   "ruleset",
   ["text","    "],
-  ["support.type","color"],
-  ["text",": "],
+  ["support.type.property","color"],
+  ["text",":"],
+  ["text"," "],
   ["support.function","saturate"],
   ["paren.lparen","("],
   ["variable","@base"],
   ["text",", "],
-  ["constant.numeric","5%"],
+  ["constant.numeric","5"],
+  ["keyword","%"],
   ["paren.rparen",")"],
   ["text",";"]
 ],[
-   "start",
+   "ruleset",
   ["text","    "],
-  ["support.type","border-color"],
-  ["text",": "],
+  ["support.type.property","border-color"],
+  ["text",":"],
+  ["text"," "],
   ["support.function","lighten"],
   ["paren.lparen","("],
   ["variable","@base"],
   ["text",", "],
-  ["constant.numeric","30%"],
+  ["constant.numeric","30"],
+  ["keyword","%"],
   ["paren.rparen",")"],
   ["text",";"]
 ],[
-   "start",
+   "ruleset",
   ["text","    "]
 ],[
-   "start",
+   "ruleset",
   ["text","    "],
-  ["variable.language","div"],
-  ["text"," "],
-  ["paren.lparen","{"],
+  ["identifier","div"],
+  ["paren.lparen"," {"],
   ["text"," "],
   ["variable.language",".box-shadow"],
   ["paren.lparen","("],
@@ -145,55 +155,59 @@
   ["text"," "],
   ["constant.numeric","0"],
   ["text"," "],
-  ["constant.numeric","5px"],
+  ["constant.numeric","5"],
+  ["keyword","px"],
   ["text",", "],
-  ["constant.numeric","30%"],
+  ["constant.numeric","30"],
+  ["keyword","%"],
   ["paren.rparen",")"],
   ["text"," "],
   ["paren.rparen","}"]
 ],[
-   "start",
+   "ruleset",
   ["text","  "]
 ],[
-   "start",
+   ["ruleset","ruleset"],
   ["text","    "],
-  ["variable.language","a"],
-  ["text"," "],
-  ["paren.lparen","{"]
+  ["identifier","a"],
+  ["paren.lparen"," {"]
 ],[
-   "start",
+   ["ruleset","ruleset"],
   ["text","        "],
-  ["support.type","color"],
-  ["text",": "],
+  ["support.type.property","color"],
+  ["text",":"],
+  ["text"," "],
   ["variable","@base"],
   ["text",";"]
 ],[
-   "start",
+   ["ruleset","ruleset"],
   ["text","        "]
 ],[
-   "start",
-  ["text","        &"],
+   ["ruleset","ruleset","ruleset","ruleset"],
+  ["text","        "],
+  ["keyword","&"],
   ["variable.language",":hover"],
-  ["text"," "],
-  ["paren.lparen","{"]
+  ["paren.lparen"," {"]
 ],[
-   "start",
+   ["ruleset","ruleset","ruleset","ruleset"],
   ["text","            "],
-  ["support.type","color"],
-  ["text",": "],
+  ["support.type.property","color"],
+  ["text",":"],
+  ["text"," "],
   ["support.function","lighten"],
   ["paren.lparen","("],
   ["variable","@base"],
   ["text",", "],
-  ["constant.numeric","50%"],
+  ["constant.numeric","50"],
+  ["keyword","%"],
   ["paren.rparen",")"],
   ["text",";"]
 ],[
-   "start",
+   ["ruleset","ruleset"],
   ["text","        "],
   ["paren.rparen","}"]
 ],[
-   "start",
+   "ruleset",
   ["text","    "],
   ["paren.rparen","}"]
 ],[

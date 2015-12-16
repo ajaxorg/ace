@@ -8,7 +8,7 @@ Ace is a standalone code editor written in JavaScript. Our goal is to create a b
 Features
 --------
 
-* Syntax highlighting for over 40 languages (TextMate/Sublime/_.tmlanguage_ files can be imported)
+* Syntax highlighting for over 120 languages (TextMate/Sublime/_.tmlanguage_ files can be imported)
 * Over 20 themes (TextMate/Sublime/_.tmtheme_ files can be imported)
 * Automatic indent and outdent
 * An optional command line
@@ -30,7 +30,7 @@ Take Ace for a spin!
 
 Check out the Ace live [demo](http://ace.c9.io/build/kitchen-sink.html) or get a [Cloud9 IDE account](https://c9.io/) to experience Ace while editing one of your own GitHub projects.
 
-If you want, you can use Ace as a textarea replacement thanks to the [Ace Bookmarklet](http://ajaxorg.github.io/ace/build/textarea/editor.html).
+If you want, you can use Ace as a textarea replacement thanks to the [Ace Bookmarklet](http://ajaxorg.github.io/ace/build/demo/bookmarklet/index.html).
 
 Embedding Ace
 -------------
@@ -79,9 +79,17 @@ By default the editor only supports plain text mode; many other languages are av
 The mode can then be used like this:
 
 ```javascript
-    var JavaScriptMode = require("ace/mode/javascript").Mode;
-    editor.getSession().setMode(new JavaScriptMode());
+    var JavaScriptMode = ace.require("ace/mode/javascript").Mode;
+    editor.session.setMode(new JavaScriptMode());
 ```
+
+to destroy editor use
+
+```javascript
+    editor.destroy();
+    editor.container.remove();
+```
+
 
 Documentation
 -------------

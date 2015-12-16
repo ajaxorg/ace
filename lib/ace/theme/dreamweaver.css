@@ -10,6 +10,7 @@
 
 .ace-dreamweaver {
   background-color: #FFFFFF;
+  color: black;
 }
 
 .ace-dreamweaver .ace_fold {
@@ -127,6 +128,10 @@
 
 .ace-dreamweaver .ace_marker-layer .ace_active-line {
   background: rgba(0, 0, 0, 0.07);
+}
+
+.ace-dreamweaver .ace_gutter-active-line {
+  background-color : #DCDCDC;
 }
 
 .ace-dreamweaver .ace_marker-layer .ace_selected-word {

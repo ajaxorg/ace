@@ -1,19 +1,19 @@
 [[
    "start",
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name","html"],
-  ["meta.tag.punctuation.end",">"]
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","html"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name","body"],
-  ["meta.tag.punctuation.end",">"]
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","body"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "js-start",
-  ["text","    "],
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name.script","script"],
-  ["meta.tag.punctuation.end",">"]
+  ["text.xml","    "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.script.tag-name.xml","script"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "js-start",
   ["text","        "],
@@ -40,15 +40,15 @@
 ],[
    "start",
   ["text","    "],
-  ["meta.tag.punctuation.begin","</"],
-  ["meta.tag.name.script","script"],
-  ["meta.tag.punctuation.end",">"]
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.script.tag-name.xml","script"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "css-start",
-  ["text","    "],
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name.style","style"],
-  ["meta.tag.punctuation.end",">"]
+  ["text.xml","    "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.style.tag-name.xml","style"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    ["css-ruleset","css-start"],
   ["text","        "],
@@ -69,20 +69,20 @@
 ],[
    "start",
   ["text","    "],
-  ["meta.tag.punctuation.begin","</"],
-  ["meta.tag.name.style","style"],
-  ["meta.tag.punctuation.end",">"]
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.style.tag-name.xml","style"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start"
 ],[
    "start",
-  ["text","    "],
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name","p"],
-  ["meta.tag.punctuation.end",">"]
+  ["text.xml","    "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","p"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
-  ["text","        Today's date: "],
+  ["text.xml","        Today's date: "],
   ["meta.tag","<%"],
   ["keyword.operator","="],
   ["text"," "],
@@ -103,13 +103,13 @@
   ["meta.tag","%>"]
 ],[
    "start",
-  ["text","    "],
-  ["meta.tag.punctuation.begin","</"],
-  ["meta.tag.name","p"],
-  ["meta.tag.punctuation.end",">"]
+  ["text.xml","    "],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","p"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
-  ["text","    "],
+  ["text.xml","    "],
   ["meta.tag","<%"],
   ["keyword.operator","!"],
   ["text"," "],
@@ -124,7 +124,7 @@
   ["meta.tag","%>"]
 ],[
    "jsp-start",
-  ["text","    "],
+  ["text.xml","    "],
   ["meta.tag","<jsp:declaration>"]
 ],[
    "jsp-start",
@@ -145,11 +145,11 @@
    "start"
 ],[
    "start",
-  ["text","    "],
+  ["text.xml","    "],
   ["comment","<%-- This is JSP comment --%>"]
 ],[
    "start",
-  ["text","    "],
+  ["text.xml","    "],
   ["meta.tag","<%@"],
   ["text"," "],
   ["identifier","directive"],
@@ -163,161 +163,161 @@
    "start"
 ],[
    "start",
-  ["text","    "],
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name","h2"],
-  ["meta.tag.punctuation.end",">"],
-  ["text","Select Languages:"],
-  ["meta.tag.punctuation.begin","</"],
-  ["meta.tag.name","h2"],
-  ["meta.tag.punctuation.end",">"]
+  ["text.xml","    "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","h2"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["text.xml","Select Languages:"],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","h2"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start"
 ],[
    "start",
-  ["text","    "],
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name.form","form"],
-  ["text"," "],
-  ["entity.other.attribute-name","ACTION"],
-  ["keyword.operator.separator","="],
-  ["string","\"jspCheckBox.jsp\""],
-  ["meta.tag.punctuation.end",">"]
+  ["text.xml","    "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.form.tag-name.xml","form"],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","ACTION"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"jspCheckBox.jsp\""],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
-  ["text","        "],
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name.form","input"],
-  ["text"," "],
-  ["entity.other.attribute-name","type"],
-  ["keyword.operator.separator","="],
-  ["string","\"checkbox\""],
-  ["text"," "],
-  ["entity.other.attribute-name","name"],
-  ["keyword.operator.separator","="],
-  ["string","\"id\""],
-  ["text"," "],
-  ["entity.other.attribute-name","value"],
-  ["keyword.operator.separator","="],
-  ["string","\"Java\""],
-  ["meta.tag.punctuation.end",">"],
-  ["text"," Java"],
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name","BR"],
-  ["meta.tag.punctuation.end",">"]
+  ["text.xml","        "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.form.tag-name.xml","input"],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","type"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"checkbox\""],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","name"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"id\""],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","value"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"Java\""],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["text.xml"," Java"],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","BR"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
-  ["text","        "],
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name.form","input"],
-  ["text"," "],
-  ["entity.other.attribute-name","type"],
-  ["keyword.operator.separator","="],
-  ["string","\"checkbox\""],
-  ["text"," "],
-  ["entity.other.attribute-name","name"],
-  ["keyword.operator.separator","="],
-  ["string","\"id\""],
-  ["text"," "],
-  ["entity.other.attribute-name","value"],
-  ["keyword.operator.separator","="],
-  ["string","\".NET\""],
-  ["meta.tag.punctuation.end",">"],
-  ["text"," .NET"],
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name","BR"],
-  ["meta.tag.punctuation.end",">"]
+  ["text.xml","        "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.form.tag-name.xml","input"],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","type"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"checkbox\""],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","name"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"id\""],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","value"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\".NET\""],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["text.xml"," .NET"],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","BR"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
-  ["text","        "],
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name.form","input"],
-  ["text"," "],
-  ["entity.other.attribute-name","type"],
-  ["keyword.operator.separator","="],
-  ["string","\"checkbox\""],
-  ["text"," "],
-  ["entity.other.attribute-name","name"],
-  ["keyword.operator.separator","="],
-  ["string","\"id\""],
-  ["text"," "],
-  ["entity.other.attribute-name","value"],
-  ["keyword.operator.separator","="],
-  ["string","\"PHP\""],
-  ["meta.tag.punctuation.end",">"],
-  ["text"," PHP"],
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name","BR"],
-  ["meta.tag.punctuation.end",">"]
+  ["text.xml","        "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.form.tag-name.xml","input"],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","type"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"checkbox\""],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","name"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"id\""],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","value"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"PHP\""],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["text.xml"," PHP"],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","BR"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
-  ["text","        "],
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name.form","input"],
-  ["text"," "],
-  ["entity.other.attribute-name","type"],
-  ["keyword.operator.separator","="],
-  ["string","\"checkbox\""],
-  ["text"," "],
-  ["entity.other.attribute-name","name"],
-  ["keyword.operator.separator","="],
-  ["string","\"id\""],
-  ["text"," "],
-  ["entity.other.attribute-name","value"],
-  ["keyword.operator.separator","="],
-  ["string","\"C/C++\""],
-  ["meta.tag.punctuation.end",">"],
-  ["text"," C/C++"],
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name","BR"],
-  ["meta.tag.punctuation.end",">"]
+  ["text.xml","        "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.form.tag-name.xml","input"],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","type"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"checkbox\""],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","name"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"id\""],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","value"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"C/C++\""],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["text.xml"," C/C++"],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","BR"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
-  ["text","        "],
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name.form","input"],
-  ["text"," "],
-  ["entity.other.attribute-name","type"],
-  ["keyword.operator.separator","="],
-  ["string","\"checkbox\""],
-  ["text"," "],
-  ["entity.other.attribute-name","name"],
-  ["keyword.operator.separator","="],
-  ["string","\"id\""],
-  ["text"," "],
-  ["entity.other.attribute-name","value"],
-  ["keyword.operator.separator","="],
-  ["string","\"PERL\""],
-  ["meta.tag.punctuation.end",">"],
-  ["text"," PERL "],
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name","BR"],
-  ["meta.tag.punctuation.end",">"]
+  ["text.xml","        "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.form.tag-name.xml","input"],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","type"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"checkbox\""],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","name"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"id\""],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","value"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"PERL\""],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["text.xml"," PERL "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","BR"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
-  ["text","        "],
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name.form","input"],
-  ["text"," "],
-  ["entity.other.attribute-name","type"],
-  ["keyword.operator.separator","="],
-  ["string","\"submit\""],
-  ["text"," "],
-  ["entity.other.attribute-name","value"],
-  ["keyword.operator.separator","="],
-  ["string","\"Submit\""],
-  ["meta.tag.punctuation.end",">"]
+  ["text.xml","        "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.form.tag-name.xml","input"],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","type"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"submit\""],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","value"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"Submit\""],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
-  ["text","    "],
-  ["meta.tag.punctuation.begin","</"],
-  ["meta.tag.name.form","form"],
-  ["meta.tag.punctuation.end",">"]
+  ["text.xml","    "],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.form.tag-name.xml","form"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start"
 ],[
    "jsp-start",
-  ["text","    "],
+  ["text.xml","    "],
   ["meta.tag","<%"]
 ],[
    "jsp-start",
@@ -424,12 +424,12 @@
   ["meta.tag","%>"]
 ],[
    "start",
-  ["meta.tag.punctuation.begin","</"],
-  ["meta.tag.name","body"],
-  ["meta.tag.punctuation.end",">"]
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","body"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
-  ["meta.tag.punctuation.begin","</"],
-  ["meta.tag.name","html"],
-  ["meta.tag.punctuation.end",">"]
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","html"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ]]

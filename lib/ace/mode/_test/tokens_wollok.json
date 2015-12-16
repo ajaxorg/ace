@@ -1,0 +1,209 @@
+[[
+   "start",
+  ["keyword","class"],
+  ["text"," "],
+  ["identifier","Actividad"],
+  ["text"," "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","\t"],
+  ["keyword","method"],
+  ["text"," "],
+  ["identifier","calcularMejora"],
+  ["lparen","("],
+  ["rparen",")"]
+],[
+   "start",
+  ["rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","class"],
+  ["text"," "],
+  ["identifier","EstudiarMateria"],
+  ["text"," "],
+  ["keyword","inherits"],
+  ["text"," "],
+  ["identifier","Actividad"],
+  ["text"," "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","\t"],
+  ["keyword","var"],
+  ["text"," "],
+  ["identifier","materia"]
+],[
+   "start",
+  ["text","\t"],
+  ["keyword","var"],
+  ["text"," "],
+  ["identifier","puntos"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","0"]
+],[
+   "start",
+  ["text","\t"]
+],[
+   "start",
+  ["text","\t"],
+  ["keyword","new"],
+  ["lparen","("],
+  ["identifier","m"],
+  ["keyword.operator",","],
+  ["text"," "],
+  ["identifier","p"],
+  ["rparen",")"],
+  ["text"," "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","\t\t"],
+  ["identifier","materia"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["identifier","m"]
+],[
+   "start",
+  ["text","\t\t"],
+  ["identifier","puntos"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["identifier","p"]
+],[
+   "start",
+  ["text","\t"],
+  ["rparen","}"]
+],[
+   "start",
+  ["text","\t"]
+],[
+   "start",
+  ["text","\t"],
+  ["keyword","override"],
+  ["text"," "],
+  ["keyword","method"],
+  ["text"," "],
+  ["identifier","calcularMejora"],
+  ["lparen","("],
+  ["rparen",")"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["identifier","puntos"]
+],[
+   "start",
+  ["rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","class"],
+  ["text"," "],
+  ["identifier","EjercitarEnSimulador"],
+  ["text"," "],
+  ["keyword","inherits"],
+  ["text"," "],
+  ["identifier","Actividad"],
+  ["text"," "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","\t"],
+  ["keyword","var"],
+  ["text"," "],
+  ["identifier","horas"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","0"]
+],[
+   "start",
+  ["text","\t"],
+  ["keyword","new"],
+  ["lparen","("],
+  ["identifier","h"],
+  ["rparen",")"],
+  ["text"," "],
+  ["lparen","{"],
+  ["text"," "],
+  ["identifier","horas"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["identifier","h"],
+  ["text"," "],
+  ["rparen","}"]
+],[
+   "start",
+  ["text","\t"],
+  ["keyword","override"],
+  ["text"," "],
+  ["keyword","method"],
+  ["text"," "],
+  ["identifier","calcularMejora"],
+  ["lparen","("],
+  ["rparen",")"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","10"],
+  ["text"," "],
+  ["keyword.operator","*"],
+  ["text"," "],
+  ["identifier","horas"]
+],[
+   "start",
+  ["rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","object"],
+  ["text"," "],
+  ["identifier","pepita"],
+  ["text"," "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","\t"],
+  ["keyword","var"],
+  ["text"," "],
+  ["identifier","energia"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","100"]
+],[
+   "start",
+  ["text","\t"],
+  ["keyword","method"],
+  ["text"," "],
+  ["identifier","volar"],
+  ["lparen","("],
+  ["identifier","m"],
+  ["rparen",")"],
+  ["text"," "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","\t\t"],
+  ["identifier","energia"],
+  ["text"," "],
+  ["keyword.operator","-="],
+  ["text"," "],
+  ["identifier","m"]
+],[
+   "start",
+  ["text","\t"],
+  ["rparen","}"]
+],[
+   "start",
+  ["rparen","}"]
+]]

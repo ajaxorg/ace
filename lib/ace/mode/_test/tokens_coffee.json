@@ -10,8 +10,8 @@
   ["identifier","i"],
   ["text"," "],
   ["constant.numeric","1"],
-  ["punctuation.operator","."],
-  ["constant.numeric",".2"],
+  ["punctuation.operator",".."],
+  ["constant.numeric","2"],
   ["paren.rparen",")"]
 ],[
    "start",
@@ -466,6 +466,23 @@
   ["constant.numeric","2"],
   ["paren.string","}"],
   ["string.end","\""]
+],[
+   "start",
+  ["string.start","\""],
+  ["string"," "],
+  ["paren.string","#{"],
+  ["text"," "],
+  ["string.start","\""],
+  ["string.end","\""],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["paren","{}"],
+  ["text"," "],
+  ["paren.string","}"],
+  ["string"," )"],
+  ["string.end","\""],
+  ["text","  "]
 ],[
    "qqdoc",
   ["string","\"\"\"heredoc"]

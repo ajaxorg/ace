@@ -1,51 +1,63 @@
 [[
    "start",
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name","html"],
-  ["meta.tag.punctuation.end",">"]
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","html"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name.script","script"],
-  ["text"," "],
-  ["entity.other.attribute-name","a"],
-  ["keyword.operator.separator","="],
-  ["string","'a'"],
-  ["meta.tag.punctuation.end",">"],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","scripts"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.script.tag-name.xml","script"],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","a"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","'a'"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
   ["storage.type","var"],
-  ["meta.tag.punctuation.begin","</"],
-  ["meta.tag.name.script","script"],
-  ["meta.tag.punctuation.end",">"],
-  ["text","'123'"]
-],[
-   ["qqstring_inner","start_tag_stuff"],
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name.anchor","a"],
   ["text"," "],
-  ["entity.other.attribute-name","href"],
-  ["keyword.operator.separator","="],
-  ["string","\"abc"]
+  ["string","\"</scripts>"],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.script.tag-name.xml","script"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["text.xml","'123'"]
 ],[
    "start",
-  ["string","  def\""],
-  ["meta.tag.punctuation.end",">"]
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","scripts"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
-   ["qstring_inner","start_tag_stuff"],
-  ["meta.tag.punctuation.begin","<"],
-  ["meta.tag.name.anchor","a"],
-  ["text"," "],
-  ["entity.other.attribute-name","href"],
-  ["keyword.operator.separator","="],
-  ["string","'abc"]
+   ["string.attribute-value.xml0","tag_stuff"],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.anchor.tag-name.xml","a"],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","href"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"abc"]
 ],[
    "start",
-  ["string","def\\'"],
-  ["meta.tag.punctuation.end",">"]
+  ["string.attribute-value.xml","  def\""],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   ["string.attribute-value.xml","tag_stuff"],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.anchor.tag-name.xml","a"],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","href"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","'abc"]
+],[
+   "start",
+  ["string.attribute-value.xml","def\\'"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start"
 ],[
    "start",
-  ["meta.tag.punctuation.begin","</"],
-  ["meta.tag.name","html"],
-  ["meta.tag.punctuation.end",">"]
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","html"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ]]

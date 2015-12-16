@@ -95,7 +95,7 @@
   ["meta.tag.any.jade","    test"],
   ["punctuation","("],
   ["entity.other.attribute-name.jade","id"],
-  ["text","="],
+  ["punctuation","="],
   ["string","\"tag\""],
   ["punctuation",")"]
 ],[
@@ -103,15 +103,15 @@
   ["meta.tag.any.jade","    header"],
   ["punctuation","("],
   ["entity.other.attribute-name.jade","id"],
-  ["text","="],
+  ["punctuation","="],
   ["string","\"tag\""],
   ["text",", "],
   ["entity.other.attribute-name.jade","blah"],
-  ["text","="],
+  ["punctuation","="],
   ["string","\"foo\""],
   ["text",", "],
   ["entity.other.attribute-name.jade","meh"],
-  ["text","="],
+  ["punctuation","="],
   ["string","\"aads\""],
   ["punctuation",")"]
 ],[

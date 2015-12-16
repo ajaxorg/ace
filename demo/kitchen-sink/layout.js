@@ -116,7 +116,6 @@ exports.singleLineEditor = function(el) {
 
     renderer.setStyle("ace_one-line");
     var editor = new Editor(renderer);
-    new MultiSelect(editor);
     editor.session.setUndoManager(new UndoManager());
 
     editor.setShowPrintMargin(false);

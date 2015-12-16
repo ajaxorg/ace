@@ -4,34 +4,45 @@
   ["text"," "],
   ["support.constant","core::rand::"],
   ["text","RngUtil"],
-  ["keyword.operator",";"]
+  ["punctuation.operator",";"]
 ],[
    "start"
 ],[
    "start",
   ["keyword.source.rust","fn"],
-  ["meta.function.source.rust"," "],
+  ["text"," "],
   ["entity.name.function.source.rust","main"],
-  ["meta.function.source.rust","("],
-  ["text",") {"]
+  ["paren.lparen","("],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","{"]
 ],[
    "start",
   ["text","    "],
   ["keyword.source.rust","for"],
-  ["text"," ["],
+  ["text"," "],
+  ["paren.lparen","["],
   ["string.quoted.double.source.rust","\"Alice\""],
-  ["keyword.operator",","],
+  ["punctuation.operator",","],
   ["text"," "],
   ["string.quoted.double.source.rust","\"Bob\""],
-  ["keyword.operator",","],
+  ["punctuation.operator",","],
   ["text"," "],
   ["string.quoted.double.source.rust","\"Carol\""],
-  ["text","].each |&name| {"]
+  ["paren.rparen","]"],
+  ["punctuation.operator","."],
+  ["text","each "],
+  ["keyword.operator","|&"],
+  ["text","name"],
+  ["keyword.operator","|"],
+  ["text"," "],
+  ["paren.lparen","{"]
 ],[
    "start",
   ["text","        "],
   ["keyword.source.rust","do"],
-  ["text"," spawn {"]
+  ["text"," spawn "],
+  ["paren.lparen","{"]
 ],[
    "start",
   ["text","            "],
@@ -40,64 +51,125 @@
   ["keyword.operator","="],
   ["text"," "],
   ["support.constant","rand::"],
-  ["text","Rng().shuffle(["],
-  ["constant.numeric.integer.source.rust","1"],
-  ["keyword.operator",","],
+  ["text","Rng"],
+  ["paren.lparen","("],
+  ["paren.rparen",")"],
+  ["punctuation.operator","."],
+  ["text","shuffle"],
+  ["paren.lparen","(["],
+  ["constant.numeric.source.rust","1"],
+  ["punctuation.operator",","],
   ["text"," "],
-  ["constant.numeric.integer.source.rust","2"],
-  ["keyword.operator",","],
+  ["constant.numeric.source.rust","2"],
+  ["punctuation.operator",","],
   ["text"," "],
-  ["constant.numeric.integer.source.rust","3"],
-  ["text","])"],
-  ["keyword.operator",";"]
+  ["constant.numeric.source.rust","3"],
+  ["paren.rparen","])"],
+  ["punctuation.operator",";"]
 ],[
    "start",
   ["text","            "],
   ["keyword.source.rust","for"],
-  ["text"," v.each |&num| {"]
+  ["text"," v"],
+  ["punctuation.operator","."],
+  ["text","each "],
+  ["keyword.operator","|&"],
+  ["text","num"],
+  ["keyword.operator","|"],
+  ["text"," "],
+  ["paren.lparen","{"]
 ],[
    "start",
-  ["text","                print(fmt"],
+  ["text","                print"],
+  ["paren.lparen","("],
+  ["text","fmt"],
   ["keyword.operator","!"],
-  ["text","("],
+  ["paren.lparen","("],
   ["string.quoted.double.source.rust","\"%s says: '%d'"],
   ["constant.character.escape.source.rust","\\n"],
   ["string.quoted.double.source.rust","\""],
-  ["keyword.operator",","],
+  ["punctuation.operator",","],
   ["text"," name"],
-  ["keyword.operator",","],
+  ["punctuation.operator",","],
   ["text"," num "],
   ["keyword.operator","+"],
   ["text"," "],
-  ["constant.numeric.integer.source.rust","1"],
-  ["text","))"]
+  ["constant.numeric.source.rust","1"],
+  ["paren.rparen","))"]
 ],[
    "start",
-  ["text","            }"]
+  ["text","            "],
+  ["paren.rparen","}"]
 ],[
    "start",
-  ["text","        }"]
+  ["text","        "],
+  ["paren.rparen","}"]
 ],[
    "start",
-  ["text","    }"]
+  ["text","    "],
+  ["paren.rparen","}"]
 ],[
    "start",
-  ["text","}"]
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   ["comment","comment"],
+  ["comment.start.block.source.rust","/*"],
+  ["comment.block.source.rust"," nested "],
+  ["comment.start.block.source.rust","/*"],
+  ["comment.block.source.rust"," "]
+],[
+   "start",
+  ["comment.block.source.rust","    comments "],
+  ["comment.end.block.source.rust","*/"],
+  ["comment.block.source.rust"," "],
+  ["comment.end.block.source.rust","*/"]
 ],[
    "start"
 ],[
    "start",
   ["keyword.source.rust","fn"],
-  ["meta.function.source.rust"," "],
-  ["entity.name.function.source.rust","map<T, U>"],
-  ["meta.function.source.rust","("],
-  ["text","vector: &[T]"],
-  ["keyword.operator",","],
-  ["text"," function: &fn(v: &T) "],
+  ["text"," "],
+  ["entity.name.function.source.rust","map"],
+  ["keyword.operator","<"],
+  ["text","T"],
+  ["punctuation.operator",","],
+  ["text"," U"],
+  ["keyword.operator",">"],
+  ["paren.lparen","("],
+  ["text","vector"],
+  ["punctuation.operator",":"],
+  ["text"," "],
+  ["keyword.operator","&"],
+  ["paren.lparen","["],
+  ["text","T"],
+  ["paren.rparen","]"],
+  ["punctuation.operator",","],
+  ["text"," function"],
+  ["punctuation.operator",":"],
+  ["text"," "],
+  ["keyword.operator","&"],
+  ["text","fn"],
+  ["paren.lparen","("],
+  ["text","v"],
+  ["punctuation.operator",":"],
+  ["text"," "],
+  ["keyword.operator","&"],
+  ["text","T"],
+  ["paren.rparen",")"],
+  ["text"," "],
   ["keyword.operator","->"],
-  ["text"," U) "],
+  ["text"," U"],
+  ["paren.rparen",")"],
+  ["text"," "],
   ["keyword.operator","->"],
-  ["text"," ~[U] {"]
+  ["text"," ~"],
+  ["paren.lparen","["],
+  ["text","U"],
+  ["paren.rparen","]"],
+  ["text"," "],
+  ["paren.lparen","{"]
 ],[
    "start",
   ["text","    "],
@@ -106,31 +178,89 @@
   ["keyword.source.rust","mut"],
   ["text"," accumulator "],
   ["keyword.operator","="],
-  ["text"," ~[]"],
-  ["keyword.operator",";"]
+  ["text"," ~"],
+  ["paren.lparen","["],
+  ["paren.rparen","]"],
+  ["punctuation.operator",";"]
 ],[
    "start",
   ["text","    "],
   ["keyword.source.rust","for"],
   ["text"," "],
   ["support.constant","vec::"],
-  ["text","each(vector) |element| {"]
+  ["text","each"],
+  ["paren.lparen","("],
+  ["text","vector"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["keyword.operator","|"],
+  ["text","element"],
+  ["keyword.operator","|"],
+  ["text"," "],
+  ["paren.lparen","{"]
 ],[
    "start",
-  ["text","        accumulator.push(function(element))"],
-  ["keyword.operator",";"]
+  ["text","        accumulator"],
+  ["punctuation.operator","."],
+  ["text","push"],
+  ["paren.lparen","("],
+  ["text","function"],
+  ["paren.lparen","("],
+  ["text","element"],
+  ["paren.rparen","))"],
+  ["punctuation.operator",";"]
 ],[
    "start",
-  ["text","    }"]
+  ["text","    "],
+  ["paren.rparen","}"]
 ],[
    "start",
   ["text","    "],
   ["keyword.source.rust","return"],
   ["text"," accumulator"],
-  ["keyword.operator",";"]
+  ["punctuation.operator",";"]
 ],[
    "start",
-  ["text","}"]
+  ["paren.rparen","}"]
 ],[
    "start"
+],[
+   "start"
+],[
+   "start",
+  ["comment.line.double-dash.source.rust","// numbers"]
+],[
+   "start",
+  ["constant.numeric.source.rust","14E-111_f64"],
+  ["punctuation.operator",";"],
+  ["text"," "],
+  ["constant.numeric.source.rust","45isize"],
+  ["text"," "],
+  ["constant.numeric.source.rust","0x1i32"],
+  ["text"," "],
+  ["constant.numeric.source.rust","0o777u32"],
+  ["text"," "],
+  ["constant.numeric.source.rust","0b01"],
+  ["text"," "],
+  ["constant.numeric.source.rust","14f32"],
+  ["text"," "],
+  ["constant.numeric.source.rust","1_2.78f32"],
+  ["text"," "],
+  ["constant.numeric.source.rust","1_2.3E+7f32"]
+],[
+   "start"
+],[
+   "start",
+  ["comment.line.double-dash.source.rust","// not numbers"]
+],[
+   "start",
+  ["constant.numeric.source.rust","14"],
+  ["punctuation.operator","."],
+  ["text","_E"],
+  ["keyword.operator","-"],
+  ["constant.numeric.source.rust","111_f64"],
+  ["punctuation.operator",";"],
+  ["text"," 0xi"],
+  ["constant.numeric.source.rust","32"],
+  ["text"," 0b777u"]
 ]]

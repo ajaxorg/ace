@@ -1,6 +1,6 @@
 [[
    "comment",
-  ["comment.block.lsl","/*"]
+  ["comment.block.begin.lsl","/*"]
 ],[
    "comment",
   ["comment.block.lsl","    Testing syntax highlighting"]
@@ -12,7 +12,7 @@
   ["comment.block.lsl","    for the Linden Scripting Language"]
 ],[
    "start",
-  ["comment.block.lsl","*/"]
+  ["comment.block.end.lsl","*/"]
 ],[
    "start"
 ],[
@@ -51,14 +51,14 @@
    "start",
   ["storage.type.lsl","integer"],
   ["text.lsl"," "],
-  ["invalid.unimplemented.lsl","event"],
+  ["invalid.illegal.lsl","event"],
   ["text.lsl","               "],
   ["keyword.operator.lsl","="],
   ["text.lsl"," "],
   ["constant.numeric.lsl","5673"],
   ["punctuation.operator.lsl",";"],
   ["text.lsl","                                             "],
-  ["comment.line.double-slash.lsl","// unimplemented reserved keyword!"]
+  ["comment.line.double-slash.lsl","// invalid.illegal"]
 ],[
    "start"
 ],[
@@ -368,14 +368,14 @@
 ],[
    "start",
   ["text.lsl","        "],
-  ["invalid.unimplemented.lsl","event"],
+  ["invalid.illegal.lsl","event"],
   ["text.lsl","               "],
   ["keyword.operator.lsl","="],
   ["text.lsl"," "],
   ["constant.numeric.lsl","5673"],
   ["punctuation.operator.lsl",";"],
   ["text.lsl","                                             "],
-  ["comment.line.double-slash.lsl","// unimplemented reserved keyword!"]
+  ["comment.line.double-slash.lsl","// invalid.illegal"]
 ],[
    "start"
 ],[
@@ -401,13 +401,21 @@
 ],[
    "start",
   ["text.lsl","        "],
-  ["invalid.deprecated.lsl","llCloud"],
+  ["reserved.godmode.lsl","llSetInventoryPermMask"],
   ["paren.lparen.lsl","("],
-  ["constant.language.vector.lsl","ZERO_VECTOR"],
+  ["string.quoted.double.lsl.start","\""],
+  ["string.quoted.double.lsl","some item"],
+  ["string.quoted.double.lsl.end","\""],
+  ["punctuation.operator.lsl",","],
+  ["text.lsl"," "],
+  ["constant.language.integer.lsl","MASK_NEXT"],
+  ["punctuation.operator.lsl",","],
+  ["text.lsl"," "],
+  ["constant.language.integer.lsl","PERM_ALL"],
   ["paren.rparen.lsl",")"],
   ["punctuation.operator.lsl",";"],
-  ["text.lsl","                                                   "],
-  ["comment.line.double-slash.lsl","// invalid deprecated function!"]
+  ["text.lsl","               "],
+  ["comment.line.double-slash.lsl","// reserved.godmode"]
 ],[
    "start"
 ],[
@@ -420,9 +428,9 @@
   ["text.lsl"," "],
   ["string.quoted.double.lsl.start","\""],
   ["string.quoted.double.lsl","Leaving "],
-  ["constant.language.escape.lsl","\\\""],
+  ["constant.character.escape.lsl","\\\""],
   ["string.quoted.double.lsl","default"],
-  ["constant.language.escape.lsl","\\\""],
+  ["constant.character.escape.lsl","\\\""],
   ["string.quoted.double.lsl"," now..."],
   ["string.quoted.double.lsl.end","\""],
   ["paren.rparen.lsl",")"],
@@ -467,13 +475,13 @@
   ["text.lsl"," "],
   ["string.quoted.double.lsl.start","\""],
   ["string.quoted.double.lsl","Entered "],
-  ["constant.language.escape.lsl","\\\""],
+  ["constant.character.escape.lsl","\\\""],
   ["string.quoted.double.lsl","state other"],
-  ["constant.language.escape.lsl","\\\""],
+  ["constant.character.escape.lsl","\\\""],
   ["string.quoted.double.lsl",", returning to "],
-  ["constant.language.escape.lsl","\\\""],
+  ["constant.character.escape.lsl","\\\""],
   ["string.quoted.double.lsl","default"],
-  ["constant.language.escape.lsl","\\\""],
+  ["constant.character.escape.lsl","\\\""],
   ["string.quoted.double.lsl"," again..."],
   ["string.quoted.double.lsl.end","\""],
   ["paren.rparen.lsl",")"],
