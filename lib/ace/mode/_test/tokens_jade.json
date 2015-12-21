@@ -22,8 +22,8 @@
 ],[
    "start"
 ],[
-   "start",
-  ["punctuation.section.comment","  // let's talk about it"]
+   ["comment_block",2,"start"],
+  ["comment","  // let's talk about it"]
 ],[
    "start"
 ],[
@@ -53,12 +53,11 @@
 ],[
    "start"
 ],[
-   "start",
-  ["punctuation.section.comment","   // also not a comment"]
+   ["comment_block",3,"start"],
+  ["comment","   // also not a comment"]
 ],[
-   "start",
-  ["meta.tag.any.jade","     div"],
-  ["entity.other.attribute-name.class.jade",".attemptAtBlock"]
+   ["comment_block",3,"start"],
+  ["comment","     div.attemptAtBlock"]
 ],[
    "start",
   ["text","  "]
