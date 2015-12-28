@@ -1,3 +1,4 @@
+==========================================
 *reStructuredText* Highlighter for **Ace**
 ==========================================
 
@@ -118,35 +119,11 @@ Lists must always start a new paragraph -- that is, they must appear
 after a blank line.
 
 **enumerated** lists (numbers, letters or roman numerals; quickref__)
-  __ quickref.html#enumerated-lists
+__ quickref.html#enumerated-lists
 
-  Start a line off with a number or letter followed by a period ".",
-  right bracket ")" or surrounded by brackets "( )" -- whatever you're
-  comfortable with.  All of the following forms are recognised::
-
-    1. numbers
-
-    A. upper-case letters
-       and it goes over many lines
-
-       with two paragraphs and all!
-
-    a. lower-case letters
-
-       3. with a sub-list starting at a different number
-       4. make sure the numbers are in the correct sequence though!
-
-    I. upper-case roman numerals
-
-    i. lower-case roman numerals
-
-    (1) numbers again
-
-    1) and again
-
-  Results in (note: the different enumerated list styles are not
-  always supported by every web browser, so you may not get the full
-  effect here):
+Start a line off with a number or letter followed by a period ".",
+right bracket ")" or surrounded by brackets "( )" -- whatever you're
+comfortable with.  All of the following forms are recognised::
 
   1. numbers
 
@@ -168,23 +145,37 @@ after a blank line.
 
   1) and again
 
+Results in (note: the different enumerated list styles are not
+always supported by every web browser, so you may not get the full
+effect here):
+
+1. numbers
+
+A. upper-case letters
+   and it goes over many lines
+
+   with two paragraphs and all!
+
+a. lower-case letters
+
+   3. with a sub-list starting at a different number
+   4. make sure the numbers are in the correct sequence though!
+
+I. upper-case roman numerals
+
+i. lower-case roman numerals
+
+(1) numbers again
+
+1) and again
+
 **bulleted** lists (quickref__)
-  __ quickref.html#bullet-lists
+__ quickref.html#bullet-lists
 
-  Just like enumerated lists, start the line off with a bullet point
-  character - either "-", "+" or "*"::
+Just like enumerated lists, start the line off with a bullet point
+character - either "-", "+" or "\*"::
 
-    * a bullet point using "*"
-
-      - a sub-list using "-"
-
-        + yet another sub-list
-
-      - another item
-
-  Results in:
-
-  * a bullet point using "*"
+  * a bullet point using "\*"
 
     - a sub-list using "-"
 
@@ -192,21 +183,21 @@ after a blank line.
 
     - another item
 
+Results in:
+
+* a bullet point using "\*"
+
+  - a sub-list using "-"
+
+    + yet another sub-list
+
+  - another item
+
 **definition** lists (quickref__)
-  __ quickref.html#definition-lists
+__ quickref.html#definition-lists
 
-  Unlike the other two, the definition lists consist of a term, and
-  the definition of that term.  The format of a definition list is::
-
-    what
-      Definition lists associate a term with a definition.
-
-    *how*
-      The term is a one-line phrase, and the definition is one or more
-      paragraphs or body elements, indented relative to the term.
-      Blank lines are not allowed between term and definition.
-
-  Results in:
+Unlike the other two, the definition lists consist of a term, and
+the definition of that term.  The format of a definition list is::
 
   what
     Definition lists associate a term with a definition.
@@ -215,6 +206,16 @@ after a blank line.
     The term is a one-line phrase, and the definition is one or more
     paragraphs or body elements, indented relative to the term.
     Blank lines are not allowed between term and definition.
+
+Results in:
+
+what
+  Definition lists associate a term with a definition.
+
+*how*
+  The term is a one-line phrase, and the definition is one or more
+  paragraphs or body elements, indented relative to the term.
+  Blank lines are not allowed between term and definition.
 
 
 Preformatting (code samples)
@@ -239,14 +240,14 @@ level as a paragraph prior to the preformatted block.  For example::
 
 Results in:
 
-  An example::
+An example::
 
-      Whitespace, newlines, blank lines, and all kinds of markup
-        (like *this* or \this) is preserved by literal blocks.
-    Lookie here, I've dropped an indentation level
-    (but not far enough)
+    Whitespace, newlines, blank lines, and all kinds of markup
+      (like *this* or \this) is preserved by literal blocks.
+  Lookie here, I've dropped an indentation level
+  (but not far enough)
 
-  no more example
+no more example
 
 Note that if a paragraph consists only of "``::``", then it's removed
 from the output::
