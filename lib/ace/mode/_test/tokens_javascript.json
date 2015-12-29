@@ -686,5 +686,45 @@
 ],[
    "start"
 ],[
-   "start"
+   "start",
+  ["storage.type","var"],
+  ["text"," "],
+  ["identifier","o"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   ["start","no_regex","start","string.quasi.start","string.quasi.start","no_regex"],
+  ["text","    "],
+  ["identifier","t"],
+  ["punctuation.operator",":"],
+  ["string.quasi.start","`"],
+  ["paren.quasi.start","${"],
+  ["paren.lparen","["],
+  ["paren.rparen","]"],
+  ["punctuation.operator","."],
+  ["identifier","map"],
+  ["paren.lparen","("],
+  ["identifier","x"],
+  ["text"," "],
+  ["keyword.operator","=>"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   ["#tmp","no_regex","start","no_regex","start","string.quasi.start","string.quasi.start","no_regex"],
+  ["text","        "],
+  ["keyword","return"],
+  ["text"," "],
+  ["identifier","x"]
+],[
+   "no_regex",
+  ["text","    "],
+  ["paren.rparen","})"],
+  ["paren.quasi.end","}"],
+  ["string.quasi.end","`"]
+],[
+   "start",
+  ["paren.rparen","}"],
+  ["punctuation.operator",";"]
 ]]

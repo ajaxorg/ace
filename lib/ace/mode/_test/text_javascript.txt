@@ -93,3 +93,8 @@ z=<div {...this.props} x={1 + 2} y="z{a}b&amp;" t={
 1 <a> { ++x  } </a>
 </div>
 
+var o = {
+    t:`${[].map(x => {
+        return x
+    })}`
+};
