@@ -12,7 +12,7 @@
 ],[
    "start"
 ],[
-   "ruleset",
+   "start",
   ["variable.language",".box-shadow"],
   ["paren.lparen","("],
   ["variable","@style"],
@@ -27,9 +27,10 @@
   ["paren.lparen","("],
   ["variable","@c"],
   ["paren.rparen","))"],
-  ["paren.lparen"," {"]
+  ["text"," "],
+  ["paren.lparen","{"]
 ],[
-   "ruleset",
+   "start",
   ["text","    "],
   ["support.type.property","box-shadow"],
   ["text",":"],
@@ -39,7 +40,7 @@
   ["variable","@c"],
   ["text",";"]
 ],[
-   "ruleset",
+   "start",
   ["text","    "],
   ["support.type.unknownProperty","-webkit-box-shadow"],
   ["text",":"],
@@ -49,7 +50,7 @@
   ["variable","@c"],
   ["text",";"]
 ],[
-   "ruleset",
+   "start",
   ["text","    "],
   ["support.type.unknownProperty","-moz-box-shadow"],
   ["text",":"],
@@ -62,7 +63,7 @@
    "start",
   ["paren.rparen","}"]
 ],[
-   "ruleset",
+   "start",
   ["variable.language",".box-shadow"],
   ["paren.lparen","("],
   ["variable","@style"],
@@ -80,9 +81,10 @@
   ["paren.lparen","("],
   ["variable","@alpha"],
   ["paren.rparen","))"],
-  ["paren.lparen"," {"]
+  ["text"," "],
+  ["paren.lparen","{"]
 ],[
-   "ruleset",
+   "start",
   ["text","    "],
   ["variable.language",".box-shadow"],
   ["paren.lparen","("],
@@ -108,12 +110,13 @@
    "start",
   ["comment","// Box styles"]
 ],[
-   "ruleset",
+   "start",
   ["variable.language",".box"],
-  ["paren.lparen"," {"],
+  ["text"," "],
+  ["paren.lparen","{"],
   ["text"," "]
 ],[
-   "ruleset",
+   "start",
   ["text","    "],
   ["support.type.property","color"],
   ["text",":"],
@@ -127,7 +130,7 @@
   ["paren.rparen",")"],
   ["text",";"]
 ],[
-   "ruleset",
+   "start",
   ["text","    "],
   ["support.type.property","border-color"],
   ["text",":"],
@@ -141,13 +144,14 @@
   ["paren.rparen",")"],
   ["text",";"]
 ],[
-   "ruleset",
+   "start",
   ["text","    "]
 ],[
-   "ruleset",
+   "start",
   ["text","    "],
   ["identifier","div"],
-  ["paren.lparen"," {"],
+  ["text"," "],
+  ["paren.lparen","{"],
   ["text"," "],
   ["variable.language",".box-shadow"],
   ["paren.lparen","("],
@@ -164,15 +168,16 @@
   ["text"," "],
   ["paren.rparen","}"]
 ],[
-   "ruleset",
+   "start",
   ["text","  "]
 ],[
-   ["ruleset","ruleset"],
+   "start",
   ["text","    "],
   ["identifier","a"],
-  ["paren.lparen"," {"]
+  ["text"," "],
+  ["paren.lparen","{"]
 ],[
-   ["ruleset","ruleset"],
+   "start",
   ["text","        "],
   ["support.type.property","color"],
   ["text",":"],
@@ -180,16 +185,17 @@
   ["variable","@base"],
   ["text",";"]
 ],[
-   ["ruleset","ruleset"],
+   "start",
   ["text","        "]
 ],[
-   ["ruleset","ruleset","ruleset","ruleset"],
+   "start",
   ["text","        "],
   ["keyword","&"],
   ["variable.language",":hover"],
-  ["paren.lparen"," {"]
+  ["text"," "],
+  ["paren.lparen","{"]
 ],[
-   ["ruleset","ruleset","ruleset","ruleset"],
+   "start",
   ["text","            "],
   ["support.type.property","color"],
   ["text",":"],
@@ -203,11 +209,11 @@
   ["paren.rparen",")"],
   ["text",";"]
 ],[
-   ["ruleset","ruleset"],
+   "start",
   ["text","        "],
   ["paren.rparen","}"]
 ],[
-   "ruleset",
+   "start",
   ["text","    "],
   ["paren.rparen","}"]
 ],[
