@@ -1,0 +1,219 @@
+[[
+   "start",
+  ["keyword","#include"],
+  ["text"," "],
+  ["string","\"globalDefines.h\""]
+],[
+   "start"
+],[
+   "start",
+  ["comment","!========================================================="]
+],[
+   "start",
+  ["keyword","program"],
+  ["text"," "],
+  ["identifier","main"]
+],[
+   "start",
+  ["comment","!========================================================= "]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","use"],
+  ["text"," "],
+  ["identifier","params_module"],
+  ["text",", "],
+  ["keyword","only"],
+  ["text"," : "],
+  ["identifier","nx"],
+  ["text",", "],
+  ["identifier","ny"],
+  ["text",", "],
+  ["identifier","nz"]
+],[
+   "start"
+],[
+   "start",
+  ["text","    "],
+  ["keyword","implicit"],
+  ["text"," "],
+  ["keyword","none"]
+],[
+   "start"
+],[
+   "start",
+  ["text","    "],
+  ["storage.type","integer"],
+  ["text",", "],
+  ["storage.modifier","parameter"],
+  ["text"," :: "],
+  ["identifier","g"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","9.81"]
+],[
+   "start",
+  ["text","    "],
+  ["storage.type","real"],
+  ["text",", "],
+  ["storage.modifier","allocatable"],
+  ["text",", "],
+  ["storage.modifier","dimension"],
+  ["paren.lparen","("],
+  ["text",":,:,:"],
+  ["paren.rparen",")"],
+  ["text"," :: "],
+  ["identifier","array"]
+],[
+   "start",
+  ["text","    "],
+  ["storage.type","integer"],
+  ["text"," :: "],
+  ["identifier","a"],
+  ["text",", "],
+  ["identifier","b"],
+  ["text",", "],
+  ["identifier","c"]
+],[
+   "start",
+  ["text","    "],
+  ["storage.type","real"],
+  ["keyword.operator","*"],
+  ["constant.numeric","8"],
+  ["text"," :: "],
+  ["identifier","x"],
+  ["text",", "],
+  ["identifier","y"],
+  ["text",", "],
+  ["identifier","z"]
+],[
+   "start",
+  ["text","      "]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","b"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","5"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","c"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","7"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","#ifdef"],
+  ["text"," "],
+  ["identifier","ARRAY_COMP"]
+],[
+   "start",
+  ["text","    "],
+  ["support.function","allocate"],
+  ["paren.lparen","("],
+  ["identifier","array"],
+  ["paren.lparen","("],
+  ["constant.numeric","10"],
+  ["text",","],
+  ["constant.numeric","10"],
+  ["text",","],
+  ["constant.numeric","10"],
+  ["paren.rparen",")"],
+  ["text",", "],
+  ["keyword","status"],
+  ["keyword.operator","="],
+  ["identifier","a"],
+  ["paren.rparen",")"]
+],[
+   "start"
+],[
+   "start",
+  ["text","    "],
+  ["keyword","write"],
+  ["paren.lparen","("],
+  ["identifier","c"],
+  ["text",","],
+  ["string","'(i5.5)'"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["identifier","b"]
+],[
+   "start",
+  ["keyword","#endif"]
+],[
+   "start"
+],[
+   "start",
+  ["text","    "],
+  ["keyword","if"],
+  ["paren.lparen","("],
+  ["identifier","x"],
+  ["text","."],
+  ["keyword.operator","lt"],
+  ["constant.numeric",".5.0"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["keyword","then"]
+],[
+   "start",
+  ["text","        "],
+  ["identifier","array"],
+  ["paren.lparen","("],
+  ["text",":,:,:"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["identifier","g"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","else"]
+],[
+   "start",
+  ["text","        "],
+  ["identifier","array"],
+  ["paren.lparen","("],
+  ["text",":,:,:"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["identifier","x"],
+  ["text"," "],
+  ["keyword.operator","-"],
+  ["text"," "],
+  ["identifier","y"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","endif"]
+],[
+   "start"
+],[
+   "start",
+  ["text","    "],
+  ["keyword","return"]
+],[
+   "start",
+  ["comment","!========================================================    "]
+],[
+   "start",
+  ["keyword","end"],
+  ["text"," "],
+  ["keyword","program"],
+  ["text"," "],
+  ["identifier","main"]
+],[
+   "start",
+  ["comment","!========================================================"]
+],[
+   "start"
+]]

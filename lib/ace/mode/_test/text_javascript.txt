@@ -3,7 +3,7 @@ string.charCodeAt(23); document.getElementById('test'); console.log('Here it is'
 test: /**tokenize doc*/ comment
 /**tokenize doc comment with @tag {}*/
 //test: tokenize parens
-    var line = "[{( )}]";
+    var $line$ = "[{( )}]";
 //test tokenize arithmetic expression which looks like a regexp
 a/b/c
 a/=b/c
