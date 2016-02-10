@@ -1,0 +1,17 @@
+[[
+   ["razor-block-start","@{"],
+  ["punctuation.block.razor","@{"]
+],[
+   ["razor-block-start","@{"],
+  ["text","\t"],
+  ["identifier","Layout"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["string.start","\""],
+  ["string","~/layout"],
+  ["string.end","\""]
+],[
+   "start",
+  ["punctuation.block.razor","}"]
+]]

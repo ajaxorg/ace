@@ -1,0 +1,133 @@
+[[
+   "punctuation.definition.comment.nsis",
+  ["punctuation.definition.comment.nsis","/*"]
+],[
+   "punctuation.definition.comment.nsis",
+  ["comment.block.nsis","  NSIS Mode"]
+],[
+   "punctuation.definition.comment.nsis",
+  ["comment.block.nsis","  for Ace"]
+],[
+   "start",
+  ["punctuation.definition.comment.nsis","*/"]
+],[
+   "start"
+],[
+   "start",
+  ["punctuation.definition.comment.nsis",";"],
+  ["comment.line.nsis"," Includes"]
+],[
+   "start",
+  ["keyword.compiler.nsis","!include"],
+  ["text"," MUI2.nsh"]
+],[
+   "start"
+],[
+   "start",
+  ["punctuation.definition.comment.nsis",";"],
+  ["comment.line.nsis"," Settings"]
+],[
+   "start",
+  ["keyword.command.nsis","Name"],
+  ["text"," "],
+  ["punctuation.definition.string.begin.nsis","\""],
+  ["string.quoted.double.nsis","installer_name"],
+  ["punctuation.definition.string.end.nsis","\""]
+],[
+   "start",
+  ["keyword.command.nsis","OutFile"],
+  ["text"," "],
+  ["punctuation.definition.string.begin.nsis","\""],
+  ["string.quoted.double.nsis","installer_name.exe"],
+  ["punctuation.definition.string.end.nsis","\""]
+],[
+   "start",
+  ["keyword.command.nsis","RequestExecutionLevel"],
+  ["text"," "],
+  ["constant.language.option.nsis","user"]
+],[
+   "start",
+  ["keyword.command.nsis","CRCCheck"],
+  ["text"," "],
+  ["constant.language.boolean.true.nsis","on"]
+],[
+   "start",
+  ["keyword.control.nsis","!ifdef"],
+  ["text"," x64"]
+],[
+   "start",
+  ["keyword.command.nsis","  InstallDir"],
+  ["text"," "],
+  ["punctuation.definition.string.begin.nsis","\""],
+  ["string.quoted.double.nsis","$PROGRAMFILES64\\installer_name"],
+  ["punctuation.definition.string.end.nsis","\""]
+],[
+   "start",
+  ["keyword.control.nsis","!else"]
+],[
+   "start",
+  ["keyword.command.nsis","  InstallDir"],
+  ["text"," "],
+  ["punctuation.definition.string.begin.nsis","\""],
+  ["string.quoted.double.nsis","$PROGRAMFILES\\installer_name"],
+  ["punctuation.definition.string.end.nsis","\""]
+],[
+   "start",
+  ["keyword.control.nsis","!endif"]
+],[
+   "start"
+],[
+   "start",
+  ["punctuation.definition.comment.nsis",";"],
+  ["comment.line.nsis"," Pages"]
+],[
+   "start",
+  ["keyword.compiler.nsis","!insertmacro"],
+  ["text"," MUI_PAGE_INSTFILES"]
+],[
+   "start"
+],[
+   "start",
+  ["punctuation.definition.comment.nsis",";"],
+  ["comment.line.nsis"," Sections"]
+],[
+   "start",
+  ["support.function.nsis","Section"],
+  ["text"," "],
+  ["punctuation.definition.string.begin.nsis","\""],
+  ["string.quoted.double.nsis","section_name"],
+  ["punctuation.definition.string.end.nsis","\""],
+  ["text"," section_index"]
+],[
+   "start",
+  ["text","  "],
+  ["punctuation.definition.comment.nsis","#"],
+  ["comment.line.nsis"," your code here"]
+],[
+   "start",
+  ["support.function.nsis","SectionEnd"]
+],[
+   "start"
+],[
+   "start",
+  ["punctuation.definition.comment.nsis",";"],
+  ["comment.line.nsis"," Functions"]
+],[
+   "start",
+  ["support.function.nsis","Function"],
+  ["text"," .onInit"]
+],[
+   "start",
+  ["keyword.command.nsis","  MessageBox"],
+  ["text"," "],
+  ["constant.nsis","MB_OK"],
+  ["text"," "],
+  ["punctuation.definition.string.begin.nsis","\""],
+  ["string.quoted.double.nsis","Here comes a"],
+  ["constant.character.escape.nsis","$\\n$\\r"],
+  ["string.quoted.double.nsis","line-break!"],
+  ["punctuation.definition.string.end.nsis","\""]
+],[
+   "start",
+  ["support.function.nsis","FunctionEnd"]
+]]
