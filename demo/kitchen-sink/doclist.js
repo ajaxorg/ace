@@ -185,8 +185,11 @@ function saveDoc(name, callback) {
 }
 
 function upload(url, data, callback) {
-    url = net.qualifyURL(url);
-    if (!/https?:/.test(url))
+    var absUrl = net.qualifyURL(url);
+    if (/^file:/.test(absUrl))
+        absUrl = "http://localhost:8888/" + url;
+    url = absUrl
+    if (!/^https?:/.test(url))
         return callback(new Error("Unsupported url scheme"));
     var xhr = new XMLHttpRequest();
     xhr.open("PUT", url, true);
