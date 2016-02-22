@@ -3,6 +3,7 @@
     overflow: hidden;
     font: 12px/normal 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
     direction: ltr;
+    text-align: left;
 }
 
 .ace_scroller {
