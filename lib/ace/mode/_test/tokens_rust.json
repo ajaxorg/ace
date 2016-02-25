@@ -86,7 +86,7 @@
   ["keyword.operator","!"],
   ["paren.lparen","("],
   ["string.quoted.double.source.rust","\"%s says: '%d'"],
-  ["constant.character.escape.source.rust","\\n"],
+  ["constant.character.escape.source.rust","\\n\\\\"],
   ["string.quoted.double.source.rust","\""],
   ["punctuation.operator",","],
   ["text"," name"],
