@@ -501,7 +501,11 @@ function exportAce(ns, modules, requireBase, extModules) {
         var template = function() {
             (function() {
                 REQUIRE_NS.require(MODULES, function(a) {
-                    a && a.config.init(true);
+                    if (a) {
+                        a.config.init(true);
+                        if (!a.define)
+                            a.define = REQUIRE_NS.define;
+                    }
                     if (!window.NS)
                         window.NS = a;
                     for (var key in a) if (a.hasOwnProperty(key))
