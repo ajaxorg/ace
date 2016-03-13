@@ -17,6 +17,5 @@ doc/
 build/
 demo/
 api/
-**/* *
-**/node_modules
+/node_modules/**
 0*
