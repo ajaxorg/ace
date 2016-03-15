@@ -1,7 +1,7 @@
 # Build ACE and copy some files to papeeria ace-src-noconflict directory
 #
 # Usage:
-# 	make -f Makefile.papeeria build PAPEERIA_ACE=/home/user/workspace/bardsofware/papeeria/papeeria/public/javascripts/ace-src-noconflict
+# 	make -f Makefile.papeeria build PAPEERIA_ACE=$HOME/bardsoftware/papeeria/public/javascripts/ace-src-noconflict
 
 all: build_ace clean_papeeria copy_files
 
@@ -18,6 +18,7 @@ clean_papeeria_ace:
 	rm -f $(PAPEERIA_ACE)/ext-searchbox.js
 
 clean_papeeria_spellchecker:
+	rm -f $(PAPEERIA_ACE)/mode-markdown.js
 	rm -f $(PAPEERIA_ACE)/mode-latex.js
 	rm -f $(PAPEERIA_ACE)/mode-papeeria_latex.js
 	rm -f $(PAPEERIA_ACE)/mode-latex_parser.js
@@ -31,6 +32,7 @@ copy_ace_files:
 	cp ./build/src-noconflict/ext-searchbox.js $(PAPEERIA_ACE)
 
 copy_spellchecker_files:
+	cp ./build/src-noconflict/mode-markdown.js $(PAPEERIA_ACE)
 	cp ./build/src-noconflict/mode-latex.js $(PAPEERIA_ACE)
 	cp ./build/src-noconflict/mode-papeeria_latex.js $(PAPEERIA_ACE)
 	cp ./build/src-noconflict/mode-latex_parser.js $(PAPEERIA_ACE)
