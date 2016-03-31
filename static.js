@@ -17,9 +17,14 @@ if (allowSave)
     console.warn("writing files from browser is enabled");
 
 http.createServer(function(req, res) {
-    var uri = unescape(url.parse(req.url).pathname)
-      , filename = path.join(process.cwd(), uri);
+    var uri = unescape(url.parse(req.url).pathname);
+    var filename = path.join(process.cwd(), uri);
 
+    if (req.method == "OPTIONS") {
+        writeHead(res, 200);
+        return res.end();
+    }
+    
     if (req.method == "PUT") {
         if (!allowSave)
             return error(res, 404, "Saving not allowed pass --allow-save to enable");
@@ -30,46 +35,57 @@ http.createServer(function(req, res) {
         if (!exists)
             return error(res, 404, "404 Not Found\n" + filename);
 
-        if (fs.statSync(filename).isDirectory()) {
-            var files = fs.readdirSync(filename);
-            res.writeHead(200, {"Content-Type": "text/html"});
-            
-            files.push(".", "..");
-            var html = files.map(function(name) {
-                var href = uri + "/" + name;
-                href = href.replace(/[\/\\]+/g, "/").replace(/\/$/g, "");
-                try {
-                    var stat = fs.statSync(filename + "/" + name);
-                    if (stat.isDirectory())
-                        href += "/";
-                    return "<a href='" + href + "'>" + name + "</a><br>";
-                } catch(e) {}
-            }).filter(Boolean);
-
-            res._hasBody && res.write(html.join(""));
-            res.end();
-            return;
-        }
+        if (fs.statSync(filename).isDirectory())
+            return serveDirectory(filename, uri, req, res);
 
         fs.readFile(filename, "binary", function(err, file) {
             if (err) {
-                res.writeHead(500, { "Content-Type": "text/plain" });
+                writeHead(res, 500, "text/plain");
                 res.write(err + "\n");
                 res.end();
                 return;
             }
 
             var contentType = mime.lookup(filename) || "text/plain";
-            res.writeHead(200, { "Content-Type": contentType });
+            writeHead(res, 200, contentType);
             res.write(file, "binary");
             res.end();
         });
     });
 }).listen(port, ip);
 
+function writeHead(res, code, contentType) {
+    var headers = {
+        "Access-Control-Allow-Origin": "file://",
+        "Access-Control-Allow-Methods": "PUT, GET, OPTIONS, HEAD"
+    };
+    headers["Content-Type"] = contentType;
+    res.writeHead(code, headers);
+}
+
+function serveDirectory(filename, uri, req, res) {
+    var files = fs.readdirSync(filename);
+    writeHead(res, 200, "text/html");
+    
+    files.push(".", "..");
+    var html = files.map(function(name) {
+        var href = uri + "/" + name;
+        href = href.replace(/[\/\\]+/g, "/").replace(/\/$/g, "");
+        try {
+            var stat = fs.statSync(filename + "/" + name);
+            if (stat.isDirectory())
+                href += "/";
+            return "<a href='" + href + "'>" + name + "</a><br>";
+        } catch(e) {}
+    }).filter(Boolean);
+
+    res._hasBody && res.write(html.join(""));
+    res.end();
+}
+
 function error(res, status, message, error) {
     console.error(error || message);
-    res.writeHead(status, { "Content-Type": "text/plain" });
+    writeHead(res, status, "text/plain");
     res.write(message);
     res.end();
 }
@@ -89,7 +105,7 @@ function save(req, res, filePath) {
         catch (e) {
             return error(res, 404, "Could't save file", e);
         }
-        res.statusCode = 200;
+        writeHead(res, 200);
         res.end("OK");
         console.log("saved ", filePath);
     });
