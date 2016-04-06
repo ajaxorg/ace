@@ -582,4 +582,53 @@ env.editor.setOptions({
 var beautify = require("ace/ext/beautify");
 env.editor.commands.addCommands(beautify.commands);
 
+
+// global keybindings
+
+var KeyBinding = require("ace/keyboard/keybinding").KeyBinding;
+var CommandManager = require("ace/commands/command_manager").CommandManager;
+var commandManager = new CommandManager();
+var kb = new KeyBinding({
+    commands: commandManager,
+    fake: true
+});
+event.addCommandKeyListener(document.documentElement, kb.onCommandKey.bind(kb));
+event.addListener(document.documentElement, "keyup", function(e) {
+    if (e.keyCode === 18) // do not trigger browser menu on windows
+        e.preventDefault();
+});
+commandManager.addCommands([{
+    name: "window-left",
+    bindKey: {win: "cmd-alt-left", mac: "ctrl-cmd-left"},
+    exec: function() {
+        moveFocus("left");
+    }
+}, {
+    name: "window-right",
+    bindKey: {win: "cmd-alt-right", mac: "ctrl-cmd-right"},
+    exec: function() {
+        moveFocus("right");
+    }
+}, {
+    name: "window-up",
+    bindKey: {win: "cmd-alt-up", mac: "ctrl-cmd-up"},
+    exec: function() {
+        moveFocus("up");
+    }
+}, {
+    name: "window-down",
+    bindKey: {win: "cmd-alt-down", mac: "ctrl-cmd-down"},
+    exec: function() {
+        moveFocus("down");
+    }
+}]);
+
+function moveFocus() {
+    var el = document.activeElement;
+    if (el == env.editor.textInput.getElement())
+        env.editor.cmdLine.focus();    
+    else
+        env.editor.focus();
+}
+
 });
