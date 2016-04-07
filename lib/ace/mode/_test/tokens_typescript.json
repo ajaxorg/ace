@@ -100,14 +100,18 @@
   ["string","'button'"],
   ["paren.rparen",")"]
 ],[
-   "no_regex",
+   "start",
   ["identifier","button"],
   ["punctuation.operator","."],
   ["identifier","innerText"],
   ["text"," "],
   ["keyword.operator","="],
   ["text"," "],
-  ["string","\"Say Hello\""]
+  ["keyword.operator","<"],
+  ["storage.type.variable.ts","string"],
+  ["keyword.operator",">"],
+  ["string","\"Say Hello\""],
+  ["punctuation.operator",";"]
 ],[
    "start",
   ["storage.type","button"],
