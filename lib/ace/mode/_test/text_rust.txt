@@ -1,0 +1,30 @@
+use core::rand::RngUtil;
+
+fn main() {
+    for ["Alice", "Bob", "Carol"].each |&name| {
+        do spawn {
+            let v = rand::Rng().shuffle([1, 2, 3]);
+            for v.each |&num| {
+                print(fmt!("%s says: '%d'\n", name, num + 1))
+            }
+        }
+    }
+}
+
+/* nested /* 
+    comments */ */
+
+fn map<T, U>(vector: &[T], function: &fn(v: &T) -> U) -> ~[U] {
+    let mut accumulator = ~[];
+    for vec::each(vector) |element| {
+        accumulator.push(function(element));
+    }
+    return accumulator;
+}
+
+
+// numbers
+14E-111_f64; 45isize 0x1i32 0o777u32 0b01 14f32 1_2.78f32 1_2.3E+7f32
+
+// not numbers
+14._E-111_f64; 0xi32 0b777u
