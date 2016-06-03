@@ -105,16 +105,9 @@ If you still need help, feel free to drop a mail on the [ace mailing list](http:
 Running Ace
 -----------
 
-After the checkout Ace works out of the box. No build step is required. To try it out, simply start the bundled mini HTTP server: 
+After the checkout Ace works out of the box. No build step is required. To try it out, simply start the bundled mini HTTP server using Node.JS
 
 ```bash
-    ./static.py
-```
-
-Or using Node.JS
-
-```bash
-    npm install mime
     node ./static.js
 ```
 

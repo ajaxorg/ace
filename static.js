@@ -2,12 +2,25 @@
 
 var http = require("http")
   , path = require("path")
-  , mime = require("mime")
   , url = require("url")
   , fs = require("fs")
   , port = process.env.PORT || 8888
   , ip = process.env.IP || "0.0.0.0";
 
+function lookupMime(filename) {
+    var ext = /[^\/\\.]*$/.exec(filename)[0];
+    return {
+        js: "application/javascript",
+        ico: "image/x-icon",
+        css: "text/css",
+        svg: "image/svg+xml",
+        png: "image/png",
+        jpg: "image/jpg",
+        html: "text/html",
+        jpeg: "image/jpeg"
+    }[ext];
+}
+  
 // compatibility with node 0.6
 if (!fs.exists)
     fs.exists = path.exists;
@@ -46,7 +59,7 @@ http.createServer(function(req, res) {
                 return;
             }
 
-            var contentType = mime.lookup(filename) || "text/plain";
+            var contentType = lookupMime(filename) || "text/plain";
             writeHead(res, 200, contentType);
             res.write(file, "binary");
             res.end();
