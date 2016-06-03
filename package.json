@@ -10,9 +10,6 @@
         "type": "git",
          "url": "http://github.com/ajaxorg/ace.git"
     },
-    "dependencies": {
-        "mime": "1.2.x"
-    },
     "devDependencies": {
         "asyncjs": "0.0.x",
         "node-jsdom": "3.1.5",
