@@ -303,6 +303,7 @@ function buildAceModuleInternal(opts, callback) {
         noArchitect: true,
         compress: false,
         ignore: opts.ignore || [],
+        filter: opts.filter || [],
         withRequire: false,
         basepath: ACE_HOME,
         transforms: [normalizeLineEndings],
@@ -337,56 +338,78 @@ function buildAce(options, callback) {
     var snippetFiles = jsFileList("lib/ace/snippets");
     var modeNames = modeList();
 
-    buildCore(options, {outputFile: "ace.js"}, addCb());
-    // modes
-    modeNames.forEach(function(name) {
-        buildSubmodule(options, {
-            projectType: "mode",
-            require: ["ace/mode/" + name]
-        }, "mode-" + name, addCb());
-    });
-    // snippets
-    modeNames.forEach(function(name) {
-        if (snippetFiles.indexOf(name + ".js") == -1)
-            addSnippetFile(name);
-        
-        buildSubmodule(options, {
-            require: ["ace/snippets/" + name]
-        }, "snippets/" + name, addCb());
-    });
-    // themes
-    jsFileList("lib/ace/theme").forEach(function(name) {
-        buildSubmodule(options, {
-            projectType: "theme",
-            require: ["ace/theme/" + name]
-        }, "theme-" +  name, addCb());
-    });
-    // keybindings
-    ["vim", "emacs"].forEach(function(name) {
-        buildSubmodule(options, {
-            projectType: "keybinding",
-            require: ["ace/keyboard/" + name ]
-        }, "keybinding-" + name, addCb());
-    });
-    // extensions
-    jsFileList("lib/ace/ext").forEach(function(name) {
-        buildSubmodule(options, {
-            projectType: "ext",
-            require: ["ace/ext/" + name]
-        }, "ext-" + name, addCb());
-    });
-    // workers
-    workers("lib/ace/mode").forEach(function(name) {
-        buildSubmodule(options, {
-            projectType: "worker",
-            require: ["ace/mode/" + name + "_worker"],
-            ignore: [],
-            additional: [{
-                id: "ace/worker/worker",
-                transforms: [],
-                order: -1000
-            }]
-        }, "worker-" + name, addCb());
+    buildCore(options, {outputFile: "ace.js"}, function(err, result) {
+        if (err || !result) {
+            console.log(JSON.stringify(err));
+            return;
+        }
+        var toFilter = [];
+        result.sources.forEach(function (src) {
+            if (src.deps) src.deps.forEach(function(dep){
+                var isDir = false;
+                try {
+                    isDir = fs.statSync("lib/"+dep).isDirectory();
+                } catch(e) {}
+                if (toFilter.indexOf(dep) == -1 && !isDir) toFilter.push(dep);
+            });
+        });
+
+        // modes
+        modeNames.forEach(function (name) {
+            buildSubmodule(options, {
+                projectType: "mode",
+                filter: toFilter,
+                require: ["ace/mode/" + name]
+            }, "mode-" + name, addCb());
+        });
+        // snippets
+        modeNames.forEach(function (name) {
+            if (snippetFiles.indexOf(name + ".js") == -1)
+                addSnippetFile(name);
+
+            buildSubmodule(options, {
+                filter: toFilter,
+                require: ["ace/snippets/" + name]
+            }, "snippets/" + name, addCb());
+        });
+        // themes
+        jsFileList("lib/ace/theme").forEach(function (name) {
+            buildSubmodule(options, {
+                projectType: "theme",
+                filter: toFilter,
+                require: ["ace/theme/" + name]
+            }, "theme-" + name, addCb());
+        });
+        // keybindings
+        ["vim", "emacs"].forEach(function (name) {
+            buildSubmodule(options, {
+                projectType: "keybinding",
+                filter: toFilter,
+                require: ["ace/keyboard/" + name]
+            }, "keybinding-" + name, addCb());
+        });
+        // extensions
+        jsFileList("lib/ace/ext").forEach(function (name) {
+            buildSubmodule(options, {
+                projectType: "ext",
+                filter: toFilter,
+                require: ["ace/ext/" + name]
+            }, "ext-" + name, addCb());
+        });
+        /// workers
+        workers("lib/ace/mode").forEach(function (name) {
+            buildSubmodule(options, {
+                projectType: "worker",
+                require: ["ace/mode/" + name + "_worker"],
+                filter: toFilter,
+                ignore: [],
+                additional: [{
+                    id: "ace/worker/worker",
+                    transforms: [],
+                    order: -1000
+                }]
+            }, "worker-" + name, addCb());
+        });
     });
     // 
     function addCb() {
