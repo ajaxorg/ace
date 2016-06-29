@@ -81,7 +81,6 @@
 
 .ace-github.ace_multiselect .ace_selection.ace_start {
   box-shadow: 0 0 3px 0px white;
-  border-radius: 2px;
 }
 /* bold keywords cause cursor issues for some fonts */
 /* this disables bold style for editor and keeps for static highlighter */

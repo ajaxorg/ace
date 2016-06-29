@@ -1,0 +1,241 @@
+[[
+   "start",
+  ["keyword.control","##"],
+  ["text"," "],
+  ["keyword.control","##"],
+  ["text"," "],
+  ["keyword.control","()"],
+  ["text"," "],
+  ["keyword.control","##"],
+  ["text"," "],
+  ["keyword.control","^^"],
+  ["text"," "],
+  ["keyword.control","##"],
+  ["text"," "],
+  ["keyword.control","##"],
+  ["text"," "],
+  ["keyword.control","##"],
+  ["text"," "],
+  ["keyword.control","##"]
+],[
+   "start",
+  ["keyword.control","##"],
+  ["text"," "],
+  ["entity.name.function","H1"],
+  ["text"," "],
+  ["entity.name.function","C2"],
+  ["text"," "],
+  ["entity.name.function","S1"],
+  ["text"," "],
+  ["keyword.control","<>"],
+  ["text"," "],
+  ["entity.name.function","S2"],
+  ["text"," "],
+  ["entity.name.function","H2"],
+  ["text"," "],
+  ["entity.name.function","DN"],
+  ["text"," "],
+  ["keyword.control","##"]
+],[
+   "start",
+  ["keyword.control","##"],
+  ["text"," "],
+  ["constant.language","%U"],
+  ["text"," "],
+  ["keyword.control","<>"],
+  ["text"," "],
+  ["constant.language","%D"],
+  ["text"," "],
+  ["entity.name.tag","*2"],
+  ["text"," "],
+  ["constant.language","%L"],
+  ["text"," "],
+  ["entity.name.function","IZ"],
+  ["text"," "],
+  ["entity.name.tag",".."],
+  ["text"," "],
+  ["keyword.control","##"]
+],[
+   "start",
+  ["keyword.control","##"],
+  ["text"," "],
+  ["keyword.control","##"],
+  ["text"," "],
+  ["keyword.control","##"],
+  ["text"," "],
+  ["entity.name.tag",".."],
+  ["text"," "],
+  ["keyword.control","##"],
+  ["text"," "],
+  ["entity.name.function","DN"],
+  ["text"," "],
+  ["entity.name.tag","*3"],
+  ["text"," "],
+  ["keyword.control","##"],
+  ["text"," "],
+  ["keyword.control","##"]
+],[
+   "start",
+  ["keyword.control","##"],
+  ["text"," "],
+  ["keyword.control","##"],
+  ["text"," "],
+  ["keyword.control","##"],
+  ["text"," "],
+  ["constant.language","%R"],
+  ["text"," "],
+  ["entity.name.function","C1"],
+  ["text"," "],
+  ["entity.name.function","IZ"],
+  ["text"," "],
+  ["keyword.control","()"],
+  ["text"," "],
+  ["keyword.control","##"],
+  ["text"," "],
+  ["keyword.control","##"]
+],[
+   "start",
+  ["keyword.control","##"],
+  ["text"," "],
+  ["keyword.control","##"],
+  ["text"," "],
+  ["keyword.control","##"],
+  ["text"," "],
+  ["keyword.control","##"],
+  ["text"," "],
+  ["support.function",">/"],
+  ["text"," "],
+  ["entity.name.tag","*1"]
+],[
+   "start",
+  ["keyword.control","##"],
+  ["text"," "],
+  ["keyword.control","()"],
+  ["text"," "],
+  ["entity.name.tag","*3"],
+  ["text"," "],
+  ["entity.name.tag","*1"],
+  ["text"," "],
+  ["constant.language","%L"],
+  ["text"," "],
+  ["keyword.control","()"]
+],[
+   "start"
+],[
+   "start"
+],[
+   "start",
+  ["comment.line.double-slash","// Set divisor and dividend"]
+],[
+   "start",
+  ["entity.name.function","S1"],
+  ["keyword.other","-> "],
+  ["keyword.operator","="],
+  ["keyword.other"," "],
+  ["constant.numeric","9"]
+],[
+   "start",
+  ["entity.name.function","S2"],
+  ["keyword.other","-> "],
+  ["keyword.operator","="],
+  ["keyword.other"," "],
+  ["constant.numeric","24"]
+],[
+   "start"
+],[
+   "start",
+  ["comment.line.double-slash","// Holding cells"]
+],[
+   "start",
+  ["entity.name.function","H1"],
+  ["keyword.other","-> "],
+  ["keyword.control","IF"],
+  ["keyword.other"," "],
+  ["entity.name.tag","*1"],
+  ["keyword.other"," "],
+  ["keyword.control","THEN"],
+  ["keyword.other"," "],
+  ["constant.language","%R"],
+  ["keyword.other"," "],
+  ["keyword.control","ELSE"],
+  ["keyword.other"," "],
+  ["constant.language","%N"]
+],[
+   "start",
+  ["entity.name.function","H2"],
+  ["keyword.other","-> "],
+  ["keyword.control","IF"],
+  ["keyword.other"," "],
+  ["entity.name.tag","*2"],
+  ["keyword.other"," "],
+  ["keyword.control","THEN"],
+  ["keyword.other"," "],
+  ["constant.language","%R"],
+  ["keyword.other"," "],
+  ["keyword.control","ELSE"],
+  ["keyword.other"," "],
+  ["constant.language","%N"]
+],[
+   "start"
+],[
+   "start",
+  ["comment.line.double-slash","// Arithmetic"]
+],[
+   "start",
+  ["entity.name.function","DN"],
+  ["keyword.other","-> "],
+  ["keyword.operator","-="],
+  ["keyword.other"," "],
+  ["constant.numeric","1"]
+],[
+   "start",
+  ["entity.name.function","IZ"],
+  ["keyword.other","-> "],
+  ["keyword.control","IF"],
+  ["keyword.other"," "],
+  ["keyword.operator","<="],
+  ["keyword.other"," "],
+  ["constant.numeric","0"],
+  ["keyword.other"," "],
+  ["keyword.control","THEN"],
+  ["keyword.other"," "],
+  ["constant.language","%D"],
+  ["keyword.other"," "],
+  ["keyword.control","ELSE"],
+  ["keyword.other"," "],
+  ["constant.language","%U"]
+],[
+   "start"
+],[
+   "start",
+  ["entity.name.function","C1"],
+  ["keyword.other","-> "],
+  ["keyword.control","IF"],
+  ["keyword.other"," "],
+  ["entity.name.tag","*3"],
+  ["keyword.other"," "],
+  ["keyword.control","THEN"],
+  ["keyword.other"," "],
+  ["constant.language","%D"],
+  ["keyword.other"," "],
+  ["keyword.control","ELSE"],
+  ["keyword.other"," "],
+  ["constant.language","%R"]
+],[
+   "start",
+  ["entity.name.function","C2"],
+  ["keyword.other","-> "],
+  ["keyword.control","IF"],
+  ["keyword.other"," "],
+  ["entity.name.tag","*3"],
+  ["keyword.other"," "],
+  ["keyword.control","THEN"],
+  ["keyword.other"," "],
+  ["constant.language","%U"],
+  ["keyword.other"," "],
+  ["keyword.control","ELSE"],
+  ["keyword.other"," "],
+  ["constant.language","%D"]
+],[
+   "start"
+]]

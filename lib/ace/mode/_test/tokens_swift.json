@@ -1,0 +1,171 @@
+[[
+   "start",
+  ["keyword","import"],
+  ["text"," "],
+  ["identifier","UIKit"]
+],[
+   "start",
+  ["text"," "]
+],[
+   "start",
+  ["keyword","class"],
+  ["text"," "],
+  ["identifier","DetailsViewController"],
+  ["punctuation.operator",":"],
+  ["text"," "],
+  ["identifier","UIViewController"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","var"],
+  ["text"," "],
+  ["identifier","album"],
+  ["punctuation.operator",":"],
+  ["text"," "],
+  ["identifier","Album"],
+  ["punctuation.operator","?"]
+],[
+   "start",
+  ["text","    "],
+  ["variable.parameter","@IBOutlet"],
+  ["text"," "],
+  ["keyword","weak"],
+  ["text"," "],
+  ["keyword","var"],
+  ["text"," "],
+  ["identifier","albumCover"],
+  ["punctuation.operator",":"],
+  ["text"," "],
+  ["identifier","UIImageView"],
+  ["keyword.operator","!"]
+],[
+   "start",
+  ["text","     "]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","required"],
+  ["text"," "],
+  ["keyword","init"],
+  ["paren.lparen","("],
+  ["identifier","coder"],
+  ["text"," "],
+  ["identifier","aDecoder"],
+  ["punctuation.operator",":"],
+  ["text"," "],
+  ["identifier","NSCoder"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","        "],
+  ["constant.language","super"],
+  ["punctuation.operator","."],
+  ["keyword","init"],
+  ["paren.lparen","("],
+  ["identifier","coder"],
+  ["punctuation.operator",":"],
+  ["text"," "],
+  ["identifier","aDecoder"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","    "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["text","     "]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","override"],
+  ["text"," "],
+  ["keyword","func"],
+  ["text"," "],
+  ["identifier","viewDidLoad"],
+  ["paren.lparen","("],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","        "],
+  ["constant.language","super"],
+  ["punctuation.operator","."],
+  ["identifier","viewDidLoad"],
+  ["paren.lparen","("],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","        "],
+  ["identifier","mLabel"],
+  ["punctuation.operator","."],
+  ["identifier","text"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["keyword","self"],
+  ["punctuation.operator","."],
+  ["identifier","album"],
+  ["punctuation.operator","?."],
+  ["identifier","title"],
+  ["text"," "],
+  ["keyword.operator","&&"],
+  ["text"," "],
+  ["string.start","\""],
+  ["string","Juhu "],
+  ["paren.quasi.start","\\("],
+  ["text"," "],
+  ["string.start","\""],
+  ["string","kinners"],
+  ["string.end","\""],
+  ["text"," "],
+  ["paren.quasi.end",")"],
+  ["string","! "],
+  ["string.end","\""]
+],[
+   "start",
+  ["text","        "],
+  ["identifier","albumCover"],
+  ["punctuation.operator","."],
+  ["identifier","image"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["identifier","UIImage"],
+  ["paren.lparen","("],
+  ["identifier","data"],
+  ["punctuation.operator",":"],
+  ["text"," "],
+  ["identifier","NSData"],
+  ["paren.lparen","("],
+  ["identifier","contentsOfURL"],
+  ["punctuation.operator",":"],
+  ["text"," "],
+  ["identifier","NSURL"],
+  ["paren.lparen","("],
+  ["storage.type","string"],
+  ["punctuation.operator",":"],
+  ["text"," "],
+  ["keyword","self"],
+  ["punctuation.operator","."],
+  ["identifier","album"],
+  ["keyword.operator","!"],
+  ["punctuation.operator","."],
+  ["identifier","largeImageURL"],
+  ["paren.rparen",")"],
+  ["keyword.operator","!"],
+  ["paren.rparen",")"],
+  ["keyword.operator","!"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","    "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["paren.rparen","}"]
+]]

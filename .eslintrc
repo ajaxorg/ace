@@ -1,0 +1,148 @@
+{
+    "globals": {
+        define: true,
+        require: true,
+        exports: true,
+        module: true,
+        __dirname: true,
+        __filename: true,
+        process: true,
+        global: true,
+        importScripts: true,
+        document: true,
+        window: true,
+        location: true,
+        navigator: true,
+        console: true,
+        Worker: true,
+        postMessage: true,
+        setTimeout: true,
+        clearTimeout: true,
+        setInterval: true,
+        clearInterval: true,
+        Blob: true,
+        cvox: true,
+        alert: true,
+        prompt: true,
+        XMLHttpRequest: true,
+        localStorage: true,
+    },
+    "rules": {
+        curly: 0,
+        eqeqeq: 0,
+        comma-dangle: 2,
+        no-dupe-args: 2,
+        no-dupe-keys: 2,
+        no-duplicate-case: 2,
+        no-empty-character-class: 2,
+        no-empty: 0,
+        no-ex-assign: 2,
+        no-extra-parens: 0,
+        no-func-assign: 2,
+        no-inner-declarations: 2,
+        no-invalid-regexp: 2,
+        no-irregular-whitespace: 2,
+        no-negated-in-lhs: 2,
+        no-obj-calls: 2,
+        no-sparse-arrays: 2,
+        no-unexpected-multiline: 2,
+        use-isnan: 2,
+        valid-typeof: 2,
+        
+        accessor-pairs: 2,
+        complexity: 0,
+        dot-location: [2, "property"],
+        no-caller: 2,
+        no-case-declarations: 2,
+        no-div-regex: 2,
+        no-empty-pattern: 2,
+        no-extra-bind: 2,
+
+        no-implied-eval: 2,
+        no-lone-blocks: 2,
+        no-native-reassign: 2,
+        no-new-func: 2,
+        no-new-wrappers: 2,
+        no-octal-escape: 2,
+        no-octal: 2,
+
+        no-return-assign: 0,
+        no-script-url: 2,
+        no-self-compare: 2,
+        no-sequences: 2,
+        no-useless-call: 2,
+        yoda: 2,
+                
+        no-undef: 2,
+        no-redeclare: 0,
+        // no-unused-vars: 1,
+
+        //////////////////////////////////////////////////////////////////
+        //
+        // no-unreachable: 2,
+        // no-debugger: 2,
+        // no-proto: 2,
+        // no-regex-spaces: 2,
+        // no-extend-native: 2,
+        // no-useless-concat: 2,
+        // no-eval: 2,
+        // dot-notation: 2,
+        // no-alert: 2,
+        // no-extra-semi: 2, // doesn't handle ;(function() {})() pattern
+        // radix: 2,
+        // no-invalid-this: 2,
+        // no-param-reassign: 2,
+        // wrap-iife: 2,
+        // no-throw-literal: 2,
+        // no-multi-spaces: 2,
+        // no-new: 2,
+        // no-else-return: 2,
+        // no-unused-expressions: 2,
+        // no-use-before-define : [2, "nofunc"],
+        
+        
+        // array-bracket-spacing: 2, // enforce spacing inside array brackets (fixable)
+        // block-spacing: 2, // disallow or enforce spaces inside of single line blocks (fixable)
+        // brace-style: 2, // enforce one true brace style        
+        // camelcase: 2, // require camel case names
+        // comma-spacing: 2, // enforce spacing before and after comma (fixable)
+        // comma-style: 2, // enforce one true comma style
+        computed-property-spacing: 2, // require or disallow padding inside computed properties (fixable)
+        // consistent-this: 2, // enforce consistent naming when capturing the current execution context        
+        linebreak-style: 2, // disallow mixed 'LF' and 'CRLF' as linebreaks
+        // indent: 2, // specify tab or space width for your code (fixable)
+        // key-spacing: 2, // enforce spacing between keys and values in object literal properties
+        // new-cap: 2, // require a capital letter for constructors
+        // new-parens: 2, // disallow the omission of parentheses when invoking a constructor with no arguments
+        // newline-after-var: 2, // require or disallow an empty newline after variable declarations
+        no-array-constructor: 2, // disallow use of the Array constructor
+        // no-lonely-if: 2, // disallow if as the only statement in an else block
+        no-mixed-spaces-and-tabs: 2, // disallow mixed spaces and tabs for indentation (recommended)
+        // no-multiple-empty-lines: 2, // disallow multiple empty lines
+        // no-negated-condition: 2, // disallow negated conditions
+        // no-nested-ternary: 2, // disallow nested ternary expressions
+        no-new-object: 2, // disallow the use of the Object constructor
+        no-restricted-syntax: 2, // disallow use of certain syntax in code
+        no-spaced-func: 2, // disallow space between function identifier and application (fixable)
+        // no-trailing-spaces: 2, // disallow trailing whitespace at the end of lines (fixable)
+        // no-underscore-dangle: 2, // disallow dangling underscores in identifiers
+        // no-unneeded-ternary: 2, // disallow the use of ternary operators when a simpler alternative exists
+        // object-curly-spacing: 2, // require or disallow padding inside curly braces (fixable)
+        // one-var: 2, // require or disallow one variable declaration per function
+        // operator-assignment: 2, // require assignment operator shorthand where possible or prohibit it entirely
+        // operator-linebreak: 2, // enforce operators to be placed before or after line breaks
+        // quotes: [2, "double", "avoid-escape"], // specify whether backticks, double or single quotes should be used (fixable)
+        // require-jsdoc: 2, // Require JSDoc comment
+        // semi-spacing: 2, // enforce spacing before and after semicolons
+        // semi: 2, // require or disallow use of semicolons instead of ASI (fixable)
+        // keyword-spacing: 2, // require a space after certain keywords (fixable)
+        // space-before-blocks: 2, // require or disallow a space before blocks (fixable)
+        // space-before-function-paren: 2, // require or disallow a space before function opening parenthesis (fixable)
+        // space-before-keywords: 2, // require a space before certain keywords (fixable)
+        // space-in-parens: [2, "never"], // require or disallow spaces inside parentheses
+        // space-infix-ops: 2, // require spaces around operators (fixable)
+        // space-unary-ops: 2, // require or disallow spaces before/after unary operators (fixable)
+        // spaced-comment: [2, "always", { markers: ["-", "*", "/", "{", "}", "#"], exceptions: ["}"] }]
+        
+    }
+}

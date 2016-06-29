@@ -262,7 +262,7 @@
   ["text"," "],
   ["keyword.operator","="],
   ["text"," "],
-  ["paren","{"]
+  ["paren.lparen","{"]
 ],[
    ["#tmp","js-statement-no_regex","start","js-statement-no_regex","constant.language53","start","paren.lparen13","constant.language","constant.language","start","paren.lparen39","constant.language27","constant.language27","start","paren.lparen52","constant.language40"],
   ["text","    "],

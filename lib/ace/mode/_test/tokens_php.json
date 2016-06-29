@@ -150,7 +150,7 @@
    "js-start",
   ["support.php_tag","?>"]
 ],[
-   "js-comment_regex_allowed",
+   "js-comment1",
   ["comment","/*this is js "],
   ["support.php_tag","<?php"],
   ["text"," "],

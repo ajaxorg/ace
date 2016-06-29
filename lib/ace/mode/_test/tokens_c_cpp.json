@@ -156,7 +156,10 @@
   ["text","        "],
   ["identifier","prints"],
   ["paren.lparen","("],
-  ["string","\"trace message\""],
+  ["string.start","\""],
+  ["string","trace message"],
+  ["constant.language.escape","\\n"],
+  ["string.end","\""],
   ["paren.rparen",")"],
   ["punctuation.operator",";"]
 ],[

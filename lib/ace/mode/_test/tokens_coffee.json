@@ -10,8 +10,8 @@
   ["identifier","i"],
   ["text"," "],
   ["constant.numeric","1"],
-  ["punctuation.operator","."],
-  ["constant.numeric",".2"],
+  ["punctuation.operator",".."],
+  ["constant.numeric","2"],
   ["paren.rparen",")"]
 ],[
    "start",
