@@ -214,6 +214,7 @@ Figueredo, A.~J. and Wolf, P. S.~A. (2009).
 <script src="../build/src-noconflict/ext-language_tools.js"></script>
 <script>
     ace.require("ace/ext/language_tools");
+
     var editor = ace.edit("editor");
     var session = editor.getSession();
     session.setMode("ace/mode/papeeria_latex");
@@ -234,11 +235,29 @@ Figueredo, A.~J. and Wolf, P. S.~A. (2009).
         }
       });
     };
+
     editor.setOptions({
         enableBasicAutocompletion: true,
         enableSnippets: true,
-        enableLiveAutocompletion: false
+        enableLiveAutocompletion: true
     });
+   
+    var warmUpCompleter = {
+        getCompletions: function(editor, session, pos, prefix, callback) {
+            var wordList = ["\\begin{itemize} \n \n\\end{itemize}", "\\item"];
+            callback(null, wordList.map(function(word) {
+            return {
+                caption: word,
+                value: word,
+                meta: "TEX"
+            };
+        }));
+        }
+    }
+
+ 
+    editor.completers = [warmUpCompleter];
+
 </script>
 
 </body>
