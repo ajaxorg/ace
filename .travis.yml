@@ -1,8 +1,7 @@
 language: node_js
 
-# use default node version
-# node_js:
-#    - "0.10"
+node_js:
+    - "4"
 
 script:
     - npm i eslint
