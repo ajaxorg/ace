@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 pause() {
     while true; do
@@ -15,6 +16,8 @@ pause() {
 
 cd `dirname $0`/..
 SOURCE=`pwd`
+
+git checkout refs/remotes/origin/master -- package.json
 
 CUR_VERSION=`node -e 'console.log(require("./package.json").version)'`
 git --no-pager log --first-parent --oneline v$CUR_VERSION..master
