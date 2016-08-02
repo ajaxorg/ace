@@ -54,9 +54,9 @@
         dot-location: [2, "property"],
         no-caller: 2,
         no-case-declarations: 2,
-        no-div-regex: 2,
         no-empty-pattern: 2,
         no-extra-bind: 2,
+		no-useless-escape: 2,
 
         no-implied-eval: 2,
         no-lone-blocks: 2,

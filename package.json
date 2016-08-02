@@ -1,7 +1,7 @@
 {
     "name": "ace",
     "description": "Ajax.org Code Editor is a full featured source code highlighting editor that powers the Cloud9 IDE",
-    "version": "1.2.3",
+    "version": "1.2.4",
     "homepage": "http://github.com/ajaxorg/ace",
     "engines": {"node": ">= 0.6.0"},
     "author": "Fabian Jakobs <fabian@c9.io>",
@@ -12,7 +12,7 @@
     },
     "devDependencies": {
         "asyncjs": "0.0.x",
-        "node-jsdom": "3.1.5",
+        "jsdom": "9.3.0",
         "amd-loader": "~0.0.4",
         "dryice": "0.4.11",
         "architect-build": "https://github.com/c9/architect-build/tarball/17268dce65"

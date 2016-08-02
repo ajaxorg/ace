@@ -333,7 +333,7 @@ function buildSubmodule(options, extra, file, callback) {
     });
 }
 
-function buildAce(options) {
+function buildAce(options, callback) {
     var snippetFiles = jsFileList("lib/ace/snippets");
     var modeNames = modeList();
 
@@ -397,7 +397,9 @@ function buildAce(options) {
         if (--addCb.count > 0)
             return;
         if (options.check)
-            sanityCheck(options)
+            sanityCheck(options, callback);
+        if (callback) 
+            return callback();
         console.log("Finished building " + getTargetDir(options))
     }
 }
@@ -593,7 +595,7 @@ function getTargetDir(opts) {
     return targetDir;
 }
 
-function sanityCheck(opts) {
+function sanityCheck(opts, callback) {
     var targetDir = getTargetDir(opts);
     require("child_process").execFile(process.execPath, ["-e", "(" + function() {
         window = global;
@@ -608,6 +610,7 @@ function sanityCheck(opts) {
     } + ")()"], {
         cwd: targetDir
     }, function(err, stdout) {
+        if (callback) return callback(err, stdout);
         if (err)
             throw err;
     });
