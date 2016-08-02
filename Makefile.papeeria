@@ -5,7 +5,7 @@
 
 all: build_ace clean_papeeria copy_files
 
-build: build_ace clean_papeeria_spellchecker copy_spellchecker_files
+build: build_ace clean_papeeria copy_files
 
 build_ace:
 	./Makefile.dryice.js --nc
