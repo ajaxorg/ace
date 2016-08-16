@@ -72,6 +72,7 @@ echo "build repository updated"
 pause "continue update ace repo? [y/n]"
 cd ..
 
+git commit -a -m "release v$VERSION_NUM"
 
 echo "new commit added"
 pause "continue creating the tag for v$VERSION_NUM [y/n]"

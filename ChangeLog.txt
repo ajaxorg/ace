@@ -1,3 +1,7 @@
+2016.08.16 Version 1.2.5
+
+* Fixed regression in noconflict mode
+
 2016.07.27 Version 1.2.4
 
 * Maintenance release with several new modes and small bugfixes
