@@ -3,7 +3,7 @@
 /* ------------------------------------------------------------------------------------------
  * Editor Search Form
  * --------------------------------------------------------------------------------------- */
- .ace_search {
+.ace_search {
     background-color: #ddd;
     border: 1px solid #cbcbcb;
     border-top: 0 none;
@@ -42,6 +42,7 @@
 
 .ace_search_field {
     background-color: white;
+    color: black;
     border-right: 1px solid #cbcbcb;
     border: 0 none;
     -webkit-box-sizing: border-box;
