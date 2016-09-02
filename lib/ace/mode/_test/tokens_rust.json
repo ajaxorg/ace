@@ -260,7 +260,20 @@
   ["keyword.operator","-"],
   ["constant.numeric.source.rust","111_f64"],
   ["punctuation.operator",";"],
-  ["text"," 0xi"],
-  ["constant.numeric.source.rust","32"],
-  ["text"," 0b777u"]
+  ["text","0xi32"],
+  ["punctuation.operator",";"],
+  ["text","0b777u"]
+],[
+   "start",
+  ["text","foo1"],
+  ["punctuation.operator",";"],
+  ["text","foo1u32"],
+  ["punctuation.operator",";"],
+  ["text","foo1f32"],
+  ["punctuation.operator",";"],
+  ["text","foo0xF"],
+  ["punctuation.operator",";"],
+  ["text","foo1"],
+  ["punctuation.operator","."],
+  ["constant.numeric.source.rust","0"]
 ]]
