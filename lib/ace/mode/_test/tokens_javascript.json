@@ -714,7 +714,7 @@
   ["paren.lparen","("],
   ["identifier","x"],
   ["text"," "],
-  ["keyword.operator","=>"],
+  ["storage.type","=>"],
   ["text"," "],
   ["paren.lparen","{"]
 ],[
