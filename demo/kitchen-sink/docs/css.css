@@ -1,5 +1,6 @@
 .text-layer {
     font: 12px Monaco, "Courier New", monospace;
+    font-size: 3vmin;
     cursor: text;
 }
 
@@ -35,3 +36,8 @@
     }
 }
 
+@viewport {
+    min-zoom: 1;
+    max-zoom: 200%;
+    user-zoom: fixed;
+}
