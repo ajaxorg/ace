@@ -4,9 +4,10 @@ var path = require('path');
 
 function main(displayName, extRe) {
     var name = lib.snakeCase(displayName).replace(/[^\w]/g, "");
+    var extensions = extRe.split("|");
 
     /** demo **/
-    var demoFileExt = extRe.split("|")[0] || name;
+    var demoFileExt = extensions[0] || name;
     var demoFileName = demoFileExt[0] == "^" ? demoFileExt.substr(1) : name + "." + demoFileExt;
     var demoFilePath = lib.AceRoot + "demo/kitchen-sink/docs/" + demoFileName;
     fs.writeFileSync(demoFilePath, "TODO add a nice demo!\nTry to keep it short!", "utf8");
@@ -75,7 +76,12 @@ function main(displayName, extRe) {
         console.log(unsorted)
         var offset = langs[0].trim().indexOf("[");
         var padding = Array(Math.max(offset - displayName.length - 1, 0) + 1).join(" ");
-        var newLang = "    " + displayName + ":" + padding + "[\"" + extRe + "\"]";
+        var extensionsString = extensions
+            .map(function (extension) {
+                return "\"" + extension + "\"";
+            })
+            .join(", ");
+        var newLang = "    " + displayName + ":" + padding + "[" + extensionsString + "]";
         langs = langs.concat(newLang).map(function(x) {
             return {
                 value: x,
