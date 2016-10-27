@@ -62,47 +62,10 @@ function main(displayName, extRe) {
     console.log("Created snippets file at: " + path.normalize(snipetsPath));
 
     /** modelist **/
-    var modelistPath = lib.AceLib + "ace/ext/modelist.js";
-    var modelist = fs.readFileSync(modelistPath, "utf8").replace(/\r\n?/g, "\n");
-    modelist = modelist.replace(/(supportedModes = {\n)([\s\S]*?)(\n^};)/m, function(_, m1, m2, m3) {
-        var langs = m2.split(/,\n/);
-        var unsorted = [];
-        for (var i = langs.length; i--;) {
-            if (/\s*\/\//.test(langs[i])) {
-                unsorted = langs.splice(i, langs.length);
-                break;
-            }
-        }
-        console.log(unsorted)
-        var offset = langs[0].trim().indexOf("[");
-        var padding = Array(Math.max(offset - displayName.length - 1, 0) + 1).join(" ");
-        var extensionsString = extensions
-            .map(function (extension) {
-                return "\"" + extension + "\"";
-            })
-            .join(", ");
-        var newLang = "    " + displayName + ":" + padding + "[" + extensionsString + "]";
-        langs = langs.concat(newLang).map(function(x) {
-            return {
-                value: x,
-                id: x.match(/[^"':\s]+/)[0].toLowerCase()
-            };
-        });
-        langs[langs.length - 1].isNew = true;
-        
-        langs = langs.filter(function(x) {
-            console.log(x.id, displayName)
-            return x.id != displayName.toLowerCase() || x.isNew;
-        });
-        langs = langs.sort(function(a, b) {
-            return a.id.localeCompare(b.id);
-        }).map(function(x) {
-            return x.value;
-        });
-        
-        return m1 + langs.concat(unsorted).join(",\n") + m3;
-    });
-    fs.writeFileSync(modelistPath, modelist, "utf8");
+    var modelistPath = lib.AceLib + "ace/ext/supported_modes.json";
+    var modelist = JSON.parse(fs.readFileSync(modelistPath, "utf8").replace(/\r\n?/g, "\n"));
+    modelist[displayName] = extensions;
+    fs.writeFileSync(modelistPath, JSON.stringify(modelist, null, 4), "utf8");
     console.log("Updated modelist at: " + path.normalize(modelistPath));
 }
 
