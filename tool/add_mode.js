@@ -64,7 +64,12 @@ function main(displayName, extRe) {
     /** modelist **/
     var modelistPath = lib.AceLib + "ace/ext/supported_modes.json";
     var modelist = JSON.parse(fs.readFileSync(modelistPath, "utf8").replace(/\r\n?/g, "\n"));
-    modelist[displayName] = extensions;
+    modelist = modelist.concat({
+        name: name,
+        mode: "ace/mode/" + name,
+        caption: displayName,
+        extensions: extensions
+    });
     fs.writeFileSync(modelistPath, JSON.stringify(modelist, null, 4), "utf8");
     console.log("Updated modelist at: " + path.normalize(modelistPath));
 }
