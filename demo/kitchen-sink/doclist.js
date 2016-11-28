@@ -95,7 +95,7 @@ var hugeDocs = require.toUrl ? {
 };
 
 modelist.modes.forEach(function(m) {
-    var ext = m.extensions.split("|")[0];
+    var ext = m.extensions[0];
     if (ext[0] === "^") {
         path = ext.substr(1);
     } else {
