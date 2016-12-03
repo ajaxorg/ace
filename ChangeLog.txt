@@ -1,3 +1,8 @@
+2016.12.03 Version 1.2.6
+
+* Fixed IME handling on new Chrome
+* Support for php 7 in the syntax checker
+
 2016.08.16 Version 1.2.5
 
 * Fixed regression in noconflict mode

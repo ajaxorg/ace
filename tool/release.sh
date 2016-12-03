@@ -17,16 +17,47 @@ pause() {
 cd `dirname $0`/..
 SOURCE=`pwd`
 
-git checkout refs/remotes/origin/master -- package.json
+# check if build dir is clean
+if ! [ -f build/.git/HEAD ]; then
+    git clone git@github.com:ajaxorg/ace-builds.git build
+fi
+pushd build
+git fetch
+if [ "$(git rev-parse --revs-only HEAD)" != "$(git rev-parse --revs-only refs/remotes/origin/master)" ]; then 
+    echo build directory not clean; 
+    exit 1
+fi
+if [  "$(git ls-files --others --exclude-standard)" ]; 
+    then echo untracked files;
+    git ls-files --others --exclude-standard
+    exit 1
+fi
+popd
 
+# clean untracked files from modes and themes
+while read line; do
+    if [ -f "$line" ]; then
+        mkdir -p "_$(dirname "$line")"; 
+        echo "$line"; 
+        mv "$line" "_$line";
+    fi
+done <<< "$(git ls-files --others --exclude-standard lib/ace)"
+
+
+# show history
+git checkout refs/remotes/origin/master -- package.json
 CUR_VERSION=`node -e 'console.log(require("./package.json").version)'`
-git --no-pager log --first-parent --oneline v$CUR_VERSION..master
+git --no-pager log --color --first-parent --oneline v$CUR_VERSION..master | 
+    sed -e s"/^/https:\/\/github.com\/ajaxorg\/ace\/commit\//"
 echo "current version is $CUR_VERSION"
+
+# get new version number
 VERSION_NUM=;
 until [[ "$VERSION_NUM" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] ; do
     read -p "enter version number for the build " VERSION_NUM
 done
 
+# update version number everywhere
 node -e "
     var fs = require('fs');
     var version = '$VERSION_NUM';
