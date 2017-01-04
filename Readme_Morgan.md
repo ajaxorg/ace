@@ -8,7 +8,7 @@
 
    * demo/kitchen-sink/docs/html.html: updated documentation (minor) https://github.com/sevin7676/ace/commit/447a22348ff3f22bd1817e3a558e384284ea3b64#diff-907e7ab8b42a588fcc66d6da9d37cb06
 
-   * Makefile.dryice.js: added line to prevent building tern_server file https://github.com/sevin7676/ace/commit/753c36a8d4be239401e3f8f0dee4cbf54872b095
+   * Makefile.dryice.js: added function to build tern files https://github.com/sevin7676/ace/commit/753c36a8d4be239401e3f8f0dee4cbf54872b095
 
    * lib/ace/autocomplete/popup.js: add showing of icon in popup
 
@@ -21,4 +21,5 @@
 * lib/ace/tern/tern.js
 * lib/ace/tern/tern_server.js
 * lib/ace/tern/worker-tern.js
+* Readme_Morgan.md
 
