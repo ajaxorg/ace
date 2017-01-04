@@ -626,6 +626,7 @@ commandManager.addCommands([{
 function moveFocus() {
     var el = document.activeElement;
     if (el == env.editor.textInput.getElement())
+        env.editor.cmdLine.focus();
     else
         env.editor.focus();
 }
