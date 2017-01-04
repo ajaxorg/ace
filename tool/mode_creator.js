@@ -126,8 +126,8 @@ function handleSaveResult(err, editor) {
         return log(
             "Write access to this file is disabled.\n"+
             "To enable saving your changes to disk, clone the Ace repository\n"+
-            "and run the included web server with the --allow-write option\n"+
-            "`node static.js --allow-write` or `static.py --puttable=*`"
+            "and run the included web server with the --allow-save option\n"+
+            "`node static.js --allow-save` or `static.py --puttable=*`"
         );
     }
     editor.session.getUndoManager().markClean();
@@ -203,7 +203,7 @@ function run() {
     src = src.replace("define(", 'define("' + path +'", ["require","exports","module",' + deps +'],');
     try {
         eval(src);
-        require(["ace/mode/new"], function(e) {
+        require([path], function(e) {
             try {
                 continueRun(e);
             } catch(e) {
@@ -228,7 +228,8 @@ var continueRun = function(rules) {
     }
     currentRules = new rules().getRules();
     var Tokenizer = DebugTokenizer;
-
+    var Mode = require(editor2.session.$mode.$id).Mode;
+    editor2.session.$mode = new Mode();
     var tk = new Tokenizer(currentRules);
     editor2.session.$mode.$tokenizer = tk;
     editor2.session.bgTokenizer.setTokenizer(tk);

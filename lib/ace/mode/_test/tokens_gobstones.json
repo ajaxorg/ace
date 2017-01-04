@@ -1,0 +1,113 @@
+[[
+   "start",
+  ["keyword","program"],
+  ["text"," "],
+  ["lparen","{"]
+],[
+   "comment",
+  ["text","    "],
+  ["comment","/*"]
+],[
+   "comment",
+  ["comment","     * A gobstons multiline comment"]
+],[
+   "comment",
+  ["comment","     * Taken from:"]
+],[
+   "comment",
+  ["comment","     * http://www.exploringbinary.com/java-hangs-when-converting-2-2250738585072012e-308/\""]
+],[
+   "start",
+  ["comment","     */"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","sumar"],
+  ["lparen","("],
+  ["constant.numeric","2"],
+  ["keyword.operator",","],
+  ["text"," "],
+  ["constant.numeric","3"],
+  ["rparen",")"]
+],[
+   "start",
+  ["text","    "],
+  ["rparen","}"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","function"],
+  ["text"," "],
+  ["identifier","sumar"],
+  ["lparen","("],
+  ["identifier","a"],
+  ["keyword.operator",","],
+  ["text"," "],
+  ["identifier","b"],
+  ["rparen",")"],
+  ["text"," "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","        "],
+  ["identifier","r"],
+  ["text"," "],
+  ["keyword.operator",":="],
+  ["text"," "],
+  ["identifier","a"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["identifier","b"]
+],[
+   "start",
+  ["text","    "],
+  ["rparen","}"]
+],[
+   "start",
+  ["text","        "],
+  ["comment","// unreachable code"]
+],[
+   "start",
+  ["text","        "],
+  ["comment","-- unreachable code"]
+],[
+   "start",
+  ["text","        "],
+  ["comment","# unreachable code"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","procedure"],
+  ["text"," "],
+  ["identifier","hacerAlgo"],
+  ["lparen","("],
+  ["rparen",")"],
+  ["text"," "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","        "],
+  ["support.function","Mover"],
+  ["lparen","("],
+  ["support.type","Este"],
+  ["rparen",")"]
+],[
+   "start",
+  ["text","        "],
+  ["support.function","Poner"],
+  ["lparen","("],
+  ["support.type","Rojo"],
+  ["rparen",")"]
+],[
+   "start",
+  ["text","        "],
+  ["support.function","Sacar"],
+  ["lparen","("],
+  ["support.type","Azul"],
+  ["rparen",")"]
+],[
+   "start",
+  ["text","    "],
+  ["rparen","}"]
+]]

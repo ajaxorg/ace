@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <script src="../demo/kitchen-sink/require.js"></script>
+        <script type="text/javascript">
+            require.config({
+                paths: { ace: "../lib/ace" },
+                waitSeconds: 0
+            });
+        </script>
+    </head>
+    <body>
+        <p><button onclick="toggleEditor()">Toggle editor</button></p>
+
+        <div id="container"></div>
+        <script>
+            var editor;
+            var counter = 0
+
+            function toggleEditor() {
+                if (!editor) {
+                    var root = document.createElement("div");
+                    root.style.height = "100px";
+                    root.setAttribute("id", "editor");
+                    root.textContent = "function foo(items) {\nvar x = 'All this is syntax highlighted';\nreturn x;\n}";
+
+                    document.getElementById("container").appendChild(root);
+
+                    editor = ace.edit(root);
+
+                    if (counter++ % 2)
+                        editor.setTheme("ace/theme/monokai");
+                    else
+                        editor.setTheme("ace/theme/clouds");
+
+                    editor.session.setMode("ace/mode/javascript");
+                } else {
+                    editor.destroy();
+                    var el = editor.container;
+                    el.parentNode.removeChild(el);
+
+                    editor.container = null
+                    editor.renderer = null
+
+                    editor = null;
+
+                    var root = document.getElementById("editor")
+                    if (root)
+                        root.parentNode.removeChild(root);
+                }
+            }
+            require(["ace/ace"], function(ace) {
+                window.ace = ace;
+                toggleEditor();            
+            })
+        </script>
+    </body>
+</html>

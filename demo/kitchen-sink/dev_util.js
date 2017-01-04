@@ -39,7 +39,7 @@ function warn() {
     s.shift(); // remove the getter
     s = s.join("\n");
     // allow easy access to ace in console, but not in ace code
-    if (!/at Object.InjectedScript.|@debugger eval|snippets:\/{3}/.test(s)) {
+    if (!/at Object.InjectedScript.|@debugger eval|snippets:\/{3}|<anonymous>:\d+:\d+/.test(s)) {
         console.error("trying to access to global variable");
     }
 }

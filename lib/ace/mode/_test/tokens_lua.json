@@ -315,7 +315,7 @@
   ["paren.lparen","("],
   ["constant.library","table"],
   ["text","."],
-  ["invalid.deprecated","maxn"],
+  ["keyword.deprecated","maxn"],
   ["paren.lparen","{"],
   ["constant.numeric","1"],
   ["text",","],

@@ -40,6 +40,15 @@ var Renderer = require("ace/virtual_renderer").VirtualRenderer;
 var Editor = require("ace/editor").Editor;
 var MultiSelect = require("ace/multi_select").MultiSelect;
 
+var urlOptions = {}
+try {
+    window.location.search.slice(1).split(/[&]/).forEach(function(e) {
+        var parts = e.split("=");
+        urlOptions[decodeURIComponent(parts[0])] = decodeURIComponent(parts[1]);
+    });
+} catch(e) {
+    console.error(e);
+}
 exports.createEditor = function(el) {
     return new Editor(new Renderer(el));
 };
@@ -159,7 +168,10 @@ exports.bindCheckbox = function(id, callback, noInit) {
         id = el.id;
     }
     var el = document.getElementById(id);
-    if (localStorage && localStorage.getItem(id))
+    
+    if (urlOptions[id])
+        el.checked = urlOptions[id] == "1";
+    else if (localStorage && localStorage.getItem(id))
         el.checked = localStorage.getItem(id) == "1";
 
     var onCheck = function() {
@@ -178,7 +190,10 @@ exports.bindDropdown = function(id, callback, noInit) {
         var el = id;
         id = el.id;
     }
-    if (localStorage && localStorage.getItem(id))
+    
+    if (urlOptions[id])
+        el.value = urlOptions[id];
+    else if (localStorage && localStorage.getItem(id))
         el.value = localStorage.getItem(id);
 
     var onChange = function() {

@@ -186,4 +186,28 @@
   ["keyword","END OF"],
   ["text"," I_VBRK"],
   ["keyword.operator","."]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","SORT"],
+  ["text"," i_vbrk "],
+  ["keyword","BY"],
+  ["text"," vbeln "],
+  ["keyword","ASCENDING"],
+  ["keyword.operator","."]
+],[
+   "start",
+  ["keyword","SORT"],
+  ["text"," i_vbrk "],
+  ["keyword","BY"],
+  ["text"," vbeln "],
+  ["keyword","DESCENDING"],
+  ["keyword.operator","."]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","RETURN"],
+  ["keyword.operator","."]
 ]]

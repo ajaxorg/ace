@@ -1,0 +1,457 @@
+[[
+   "start",
+  ["comment","-- ============================================="]
+],[
+   "start",
+  ["comment","-- Author:\t\tMorgan Yarbrough"]
+],[
+   "start",
+  ["comment","-- Create date: 4/27/2015"]
+],[
+   "start",
+  ["comment","-- Description:\tTest procedure that shows off language features."]
+],[
+   "start",
+  ["comment","-- \t\t\t\tIncludes non-standard folding with region comments using either"]
+],[
+   "start",
+  ["comment","-- \t\t\t\tline comments or block comments (both are demonstrated below)."]
+],[
+   "start",
+  ["comment","--\t\t\t\tThis mode imitates SSMS and it designed to be used with SQL Server theme."]
+],[
+   "start",
+  ["comment","-- ============================================="]
+],[
+   "start",
+  ["keyword","CREATE"],
+  ["text"," "],
+  ["keyword","PROCEDURE"],
+  ["text"," "],
+  ["identifier","dbo"],
+  ["text","."],
+  ["identifier","TestProcedure"]
+],[
+   "start",
+  ["text","\t"]
+],[
+   "start",
+  ["comment","--#region parameters"]
+],[
+   "start",
+  ["text","\t"],
+  ["identifier","@vint"],
+  ["text"," "],
+  ["storage.type","INT"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","1"]
+],[
+   "start",
+  ["text","\t"],
+  ["punctuation",","],
+  ["identifier","@vdate"],
+  ["text"," "],
+  ["storage.type","DATE"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.language","NULL"]
+],[
+   "start",
+  ["text","\t"],
+  ["punctuation",","],
+  ["identifier","@vdatetime"],
+  ["text"," "],
+  ["storage.type","DATETIME"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["support.function","DATEADD"],
+  ["paren.lparen","("],
+  ["identifier","dd"],
+  ["punctuation",","],
+  ["text"," "],
+  ["constant.numeric","1"],
+  ["punctuation",","],
+  ["text"," "],
+  ["support.function","GETDATE"],
+  ["paren.lparen","("],
+  ["paren.rparen","))"]
+],[
+   "start",
+  ["text","\t"],
+  ["punctuation",","],
+  ["identifier","@vvarchar"],
+  ["text"," "],
+  ["storage.type","VARCHAR"],
+  ["paren.lparen","("],
+  ["support.function","MAX"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["string.start","'"],
+  ["string.end","'"]
+],[
+   "start",
+  ["comment","--#endregion"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","AS"]
+],[
+   "start",
+  ["keyword","BEGIN"]
+],[
+   "start"
+],[
+   "start",
+  ["text","\t"],
+  ["comment.start","/*"],
+  ["comment","#region set statements "],
+  ["comment.end","*/"]
+],[
+   "start",
+  ["text","\t"],
+  ["set.statement","SET NOCOUNT"],
+  ["text"," "],
+  ["keyword","ON"],
+  ["punctuation",";"]
+],[
+   "start",
+  ["text","\t"],
+  ["set.statement","SET XACT_ABORT"],
+  ["text"," "],
+  ["keyword","ON"],
+  ["punctuation",";"]
+],[
+   "start",
+  ["text","\t"],
+  ["set.statement","SET QUOTED_IDENTIFIER"],
+  ["text"," "],
+  ["keyword","ON"],
+  ["punctuation",";"]
+],[
+   "start",
+  ["text","\t"],
+  ["comment.start","/*"],
+  ["comment","#endregion"],
+  ["comment.end","*/"]
+],[
+   "start",
+  ["text","\t"]
+],[
+   "doc-start",
+  ["text","\t"],
+  ["comment.doc","/**"]
+],[
+   "doc-start",
+  ["comment.doc","\t * These comments will produce a fold widget"]
+],[
+   "start",
+  ["comment.doc","\t */"]
+],[
+   "start",
+  ["text","\t"]
+],[
+   "start",
+  ["text","\t"],
+  ["comment","-- folding demonstration"]
+],[
+   "start",
+  ["text","\t"],
+  ["keyword","SET"],
+  ["text"," "],
+  ["identifier","@vint"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["keyword","CASE"]
+],[
+   "start",
+  ["text","\t\t\t\t\t"],
+  ["keyword","WHEN"],
+  ["text"," "],
+  ["identifier","@vdate"],
+  ["text"," "],
+  ["constant.language","IS"],
+  ["text"," "],
+  ["constant.language","NULL"]
+],[
+   "start",
+  ["text","\t\t\t\t\t\t"],
+  ["keyword","THEN"],
+  ["text"," "],
+  ["constant.numeric","1"]
+],[
+   "start",
+  ["text","\t\t\t\t\t"],
+  ["keyword","ELSE"],
+  ["text"," "],
+  ["constant.numeric","2"]
+],[
+   "start",
+  ["text","\t\t\t\t"],
+  ["keyword","END"]
+],[
+   "start",
+  ["text","\t"]
+],[
+   "start",
+  ["text","\t"],
+  ["comment","-- another folding demonstration"]
+],[
+   "start",
+  ["text","\t"],
+  ["keyword","IF"],
+  ["text"," "],
+  ["identifier","@vint"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","1"],
+  ["text"," "]
+],[
+   "start",
+  ["text","\t"],
+  ["keyword","BEGIN"]
+],[
+   "start",
+  ["text","\t\t"],
+  ["keyword","SET"],
+  ["text"," "],
+  ["identifier","@vvarchar"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["string.start","'"],
+  ["string","one"],
+  ["string.end","'"]
+],[
+   "start",
+  ["text","\t\t"],
+  ["keyword","SET"],
+  ["text"," "],
+  ["identifier","@vint"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["support.function","DATEDIFF"],
+  ["paren.lparen","("],
+  ["identifier","dd"],
+  ["punctuation",","],
+  ["text"," "],
+  ["identifier","@vdate"],
+  ["punctuation",","],
+  ["text"," "],
+  ["identifier","@vdatetime"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","\t"],
+  ["keyword","END"]
+],[
+   "start",
+  ["text","\t"]
+],[
+   "start",
+  ["text","\t"],
+  ["comment","-- this mode handles strings properly"]
+],[
+   "string.start",
+  ["text","\t"],
+  ["keyword","DECLARE"],
+  ["text"," "],
+  ["identifier","@sql"],
+  ["text"," "],
+  ["storage.type","NVARCHAR"],
+  ["paren.lparen","("],
+  ["constant.numeric","4000"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["identifier","N"],
+  ["string.start","'"],
+  ["string","SELECT TOP(1) OrderID "]
+],[
+   "string.start",
+  ["string","\t\t\t\t\t\t\t\t\tFROM Orders"]
+],[
+   "start",
+  ["string","\t\t\t\t\t\t\t\t\tWHERE @OrderDate > GETDATE()"],
+  ["string.end","'"]
+],[
+   "start",
+  ["text","\t\t\t\t\t\t\t\t"]
+],[
+   "start",
+  ["text","\t"],
+  ["comment","-- this mode is aware of built in stored procedures "]
+],[
+   "start",
+  ["text","\t"],
+  ["keyword","EXECUTE"],
+  ["text"," "],
+  ["support.storedprocedure","sp_executesql"],
+  ["text"," "],
+  ["identifier","@sql"]
+],[
+   "start",
+  ["text","\t"]
+],[
+   "start",
+  ["text","\t"],
+  ["comment","-- demonstrating some syntax highlighting"]
+],[
+   "start",
+  ["text","\t"],
+  ["keyword","SELECT"],
+  ["text"," "],
+  ["identifier","Orders"],
+  ["text","."],
+  ["identifier","OrderID"]
+],[
+   "start",
+  ["text","\t\t"],
+  ["punctuation",","],
+  ["identifier","Customers"],
+  ["text","."],
+  ["identifier","CompanyName"]
+],[
+   "start",
+  ["text","\t\t"],
+  ["punctuation",","],
+  ["support.function","DATEFROMPARTS"],
+  ["paren.lparen","("],
+  ["support.function","YEAR"],
+  ["paren.lparen","("],
+  ["support.function","GETDATE"],
+  ["paren.lparen","("],
+  ["paren.rparen","))"],
+  ["punctuation",","],
+  ["text"," "],
+  ["constant.numeric","1"],
+  ["punctuation",","],
+  ["text"," "],
+  ["constant.numeric","1"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["keyword","AS"],
+  ["text"," "],
+  ["identifier","FirstDayOfYear"]
+],[
+   "start",
+  ["text","\t"],
+  ["keyword","FROM"],
+  ["text"," "],
+  ["identifier","Orders"]
+],[
+   "start",
+  ["text","\t"],
+  ["constant.language","INNER"],
+  ["text"," "],
+  ["constant.language","JOIN"],
+  ["text"," "],
+  ["identifier","Customers"]
+],[
+   "start",
+  ["text","\t\t"],
+  ["keyword","ON"],
+  ["text"," "],
+  ["identifier","Orders"],
+  ["text","."],
+  ["identifier","CustomerID"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["identifier","Customers"],
+  ["text","."],
+  ["identifier","CustomerID"]
+],[
+   "start",
+  ["text","\t"],
+  ["keyword","WHERE"],
+  ["text"," "],
+  ["identifier","CompanyName"],
+  ["text"," "],
+  ["constant.language","NOT"],
+  ["text"," "],
+  ["constant.language","LIKE"],
+  ["text"," "],
+  ["string.start","'"],
+  ["string","%something"],
+  ["string.end","'"]
+],[
+   "start",
+  ["text","\t\t"],
+  ["constant.language","OR"],
+  ["text"," "],
+  ["identifier","CompanyName"],
+  ["text"," "],
+  ["constant.language","IS"],
+  ["text"," "],
+  ["constant.language","NULL"]
+],[
+   "start",
+  ["text","\t\t"],
+  ["constant.language","OR"],
+  ["text"," "],
+  ["identifier","CompanyName"],
+  ["text"," "],
+  ["constant.language","IN"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["string.start","'"],
+  ["string","bla"],
+  ["string.end","'"],
+  ["punctuation",","],
+  ["text"," "],
+  ["string.start","'"],
+  ["string","nothing"],
+  ["string.end","'"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","\t\t"]
+],[
+   "start",
+  ["text","\t"],
+  ["comment","-- this mode includes snippets"]
+],[
+   "start",
+  ["text","\t"],
+  ["comment","-- place your cusor at the end of the line below and trigger auto complete (Ctrl+Space)"]
+],[
+   "start",
+  ["text","\t"],
+  ["identifier","createpr"]
+],[
+   "start",
+  ["text","\t"]
+],[
+   "start",
+  ["text","\t"],
+  ["comment","-- SQL Server allows using keywords as object names (not recommended) as long as they are wrapped in brackets"]
+],[
+   "start",
+  ["text","\t"],
+  ["keyword","DATABASE"],
+  ["text"," "],
+  ["comment","-- keyword"]
+],[
+   "start",
+  ["text","\t[DATABASE] "],
+  ["comment","-- not a keyword"]
+],[
+   "start",
+  ["text","\t"]
+],[
+   "start",
+  ["keyword","END"]
+],[
+   "start"
+]]

@@ -1,13 +1,16 @@
 [[
    "start",
-  ["text","myfilename "],
+  ["identifier","myfilename"],
+  ["text"," "],
   ["keyword.operator.asp","="],
   ["text"," "],
   ["punctuation.definition.string.begin.asp","\""],
   ["string.quoted.double.asp","C:\\Wikipedia - VBScript - Example - Hello World.txt\""]
 ],[
    "start",
-  ["text","MakeHelloWorldFile myfilename"]
+  ["identifier","MakeHelloWorldFile"],
+  ["text"," "],
+  ["identifier","myfilename"]
 ],[
    "state_4",
   ["meta.leading-space"," "]
@@ -29,10 +32,12 @@
   ["meta.odd-tab.spaces","  "],
   ["meta.leading-space"," "],
   ["storage.type.asp","Set"],
-  ["text"," FSO "],
+  ["text"," "],
+  ["identifier","FSO"],
+  ["text"," "],
   ["keyword.operator.asp","="],
   ["text"," "],
-  ["support.function.asp","CreateObject"],
+  ["support.function.vb.asp","CreateObject"],
   ["text","("],
   ["punctuation.definition.string.begin.asp","\""],
   ["string.quoted.double.asp","Scripting.FileSystemObject\""],
@@ -42,9 +47,13 @@
   ["meta.odd-tab.spaces","  "],
   ["meta.leading-space"," "],
   ["keyword.control.asp","If"],
-  ["text"," FSO."],
-  ["entity.name.function.asp","FileExists"],
-  ["text","(FileName) "],
+  ["text"," "],
+  ["identifier","FSO"],
+  ["text","."],
+  ["identifier","FileExists"],
+  ["text","("],
+  ["identifier","FileName"],
+  ["text",") "],
   ["keyword.control.asp","Then"],
   ["text"," "]
 ],[
@@ -52,7 +61,8 @@
   ["meta.odd-tab.spaces","  "],
   ["meta.even-tab.spaces","  "],
   ["meta.odd-tab.spaces","  "],
-  ["text","Answer "],
+  ["identifier","Answer"],
+  ["text"," "],
   ["keyword.operator.asp","="],
   ["text"," "],
   ["support.function.vb.asp","MsgBox"],
@@ -61,12 +71,16 @@
   ["string.quoted.double.asp","File \""],
   ["text"," "],
   ["keyword.operator.asp","&"],
-  ["text"," FileName "],
+  ["text"," "],
+  ["identifier","FileName"],
+  ["text"," "],
   ["keyword.operator.asp","&"],
   ["text"," "],
   ["punctuation.definition.string.begin.asp","\""],
   ["string.quoted.double.asp"," exists ... OK to overwrite?\""],
-  ["text",", vbOKCancel)"]
+  ["text",", "],
+  ["identifier","vbOKCancel"],
+  ["text",")"]
 ],[
    "start",
   ["meta.odd-tab.spaces","  "],
@@ -87,12 +101,18 @@
   ["meta.even-tab.spaces","  "],
   ["meta.odd-tab.spaces","  "],
   ["keyword.control.asp","If"],
-  ["text"," Answer "],
+  ["text"," "],
+  ["identifier","Answer"],
+  ["text"," "],
   ["keyword.operator.asp","<>"],
-  ["text"," vbOK "],
+  ["text"," "],
+  ["identifier","vbOK"],
+  ["text"," "],
   ["keyword.control.asp","Then"],
   ["text"," "],
-  ["keyword.control.asp","Exit Sub"]
+  ["keyword.control.asp","Exit"],
+  ["text"," "],
+  ["keyword.control.asp","Sub"]
 ],[
    "start",
   ["meta.odd-tab.spaces","  "],
@@ -110,7 +130,8 @@
   ["meta.odd-tab.spaces","  "],
   ["meta.even-tab.spaces","  "],
   ["meta.odd-tab.spaces","  "],
-  ["text","Answer "],
+  ["identifier","Answer"],
+  ["text"," "],
   ["keyword.operator.asp","="],
   ["text"," "],
   ["support.function.vb.asp","MsgBox"],
@@ -119,29 +140,41 @@
   ["string.quoted.double.asp","File \""],
   ["text"," "],
   ["keyword.operator.asp","&"],
-  ["text"," FileName "],
+  ["text"," "],
+  ["identifier","FileName"],
+  ["text"," "],
   ["keyword.operator.asp","&"],
   ["text"," "],
   ["punctuation.definition.string.begin.asp","\""],
   ["string.quoted.double.asp"," ... OK to create?\""],
-  ["text",", vbOKCancel)"]
+  ["text",", "],
+  ["identifier","vbOKCancel"],
+  ["text",")"]
 ],[
    "start",
   ["meta.odd-tab.spaces","  "],
   ["meta.even-tab.spaces","  "],
   ["meta.odd-tab.spaces","  "],
   ["keyword.control.asp","If"],
-  ["text"," Answer "],
+  ["text"," "],
+  ["identifier","Answer"],
+  ["text"," "],
   ["keyword.operator.asp","<>"],
-  ["text"," vbOK "],
+  ["text"," "],
+  ["identifier","vbOK"],
+  ["text"," "],
   ["keyword.control.asp","Then"],
   ["text"," "],
-  ["keyword.control.asp","Exit Sub"]
+  ["keyword.control.asp","Exit"],
+  ["text"," "],
+  ["keyword.control.asp","Sub"]
 ],[
    "start",
   ["meta.odd-tab.spaces","  "],
   ["meta.leading-space"," "],
-  ["keyword.control.asp","End If"]
+  ["keyword.control.asp","End"],
+  ["text"," "],
+  ["keyword.control.asp","If"]
 ],[
    "start",
   ["meta.odd-tab.spaces","  "],
@@ -153,14 +186,25 @@
   ["meta.odd-tab.spaces","  "],
   ["meta.leading-space"," "],
   ["storage.type.asp","Set"],
-  ["text"," FileObject "],
+  ["text"," "],
+  ["identifier","FileObject"],
+  ["text"," "],
   ["keyword.operator.asp","="],
-  ["text"," FSO.CreateTextFile (FileName)"]
+  ["text"," "],
+  ["identifier","FSO"],
+  ["text","."],
+  ["identifier","CreateTextFile"],
+  ["text"," ("],
+  ["identifier","FileName"],
+  ["text",")"]
 ],[
    "start",
   ["meta.odd-tab.spaces","  "],
   ["meta.leading-space"," "],
-  ["text","FileObject.WriteLine "],
+  ["identifier","FileObject"],
+  ["text","."],
+  ["identifier","WriteLine"],
+  ["text"," "],
   ["punctuation.definition.string.begin.asp","\""],
   ["string.quoted.double.asp","Time ... \""],
   ["text"," "],
@@ -172,15 +216,19 @@
    "start",
   ["meta.odd-tab.spaces","  "],
   ["meta.leading-space"," "],
-  ["text","FileObject.WriteLine "],
+  ["identifier","FileObject"],
+  ["text","."],
+  ["identifier","WriteLine"],
+  ["text"," "],
   ["punctuation.definition.string.begin.asp","\""],
   ["string.quoted.double.asp","Hello World\""]
 ],[
    "start",
   ["meta.odd-tab.spaces","  "],
   ["meta.leading-space"," "],
-  ["text","FileObject."],
-  ["entity.name.function.asp","Close"],
+  ["identifier","FileObject"],
+  ["text","."],
+  ["identifier","Close"],
   ["text","()"]
 ],[
    "start",
@@ -192,12 +240,16 @@
   ["string.quoted.double.asp","File \""],
   ["text"," "],
   ["keyword.operator.asp","&"],
-  ["text"," FileName "],
+  ["text"," "],
+  ["identifier","FileName"],
+  ["text"," "],
   ["keyword.operator.asp","&"],
   ["text"," "],
   ["punctuation.definition.string.begin.asp","\""],
   ["string.quoted.double.asp"," ... updated.\""]
 ],[
    "start",
-  ["storage.type.asp","End Sub"]
+  ["keyword.control.asp","End"],
+  ["text"," "],
+  ["keyword.control.asp","Sub"]
 ]]
