@@ -250,6 +250,13 @@
         <input type="button" value="Edit Snippets" onclick="env.editSnippets()">
       </td>
     </tr>
+    <tr>
+      <td colspan="2">
+        <input type="button" value="Add Textarea" onclick="this.parentNode.replaceChild(
+          document.createElement('textarea'), this
+        )">
+      </td>
+    </tr>
   </table>
   </td></tr>
   </table>
