@@ -4,6 +4,7 @@
     font: 12px/normal 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
     direction: ltr;
     text-align: left;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
 .ace_scroller {
