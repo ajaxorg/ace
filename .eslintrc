@@ -99,8 +99,7 @@
         // no-new: 2,
         // no-else-return: 2,
         // no-unused-expressions: 2,
-        // no-use-before-define : [2, "nofunc"],
-        
+        // no-use-before-define: [2, { "functions": false, "classes": false, "variables": false }],
         
         // array-bracket-spacing: 2, // enforce spacing inside array brackets (fixable)
         // block-spacing: 2, // disallow or enforce spaces inside of single line blocks (fixable)
@@ -111,7 +110,7 @@
         computed-property-spacing: 2, // require or disallow padding inside computed properties (fixable)
         // consistent-this: 2, // enforce consistent naming when capturing the current execution context        
         linebreak-style: 2, // disallow mixed 'LF' and 'CRLF' as linebreaks
-        // indent: 2, // specify tab or space width for your code (fixable)
+        // indent: ["error", 4, { "outerIIFEBody": 0 }], // specify tab or space width for your code (fixable)        
         // key-spacing: 2, // enforce spacing between keys and values in object literal properties
         // new-cap: 2, // require a capital letter for constructors
         // new-parens: 2, // disallow the omission of parentheses when invoking a constructor with no arguments
