@@ -6,19 +6,27 @@
 ],[
    "start",
   ["text","# "],
-  ["comment.xml","<!--[if lt IE 7]> <html class=\"no-js lt-ie9 lt-ie8 lt-ie7\" lang=\"en\"> <![endif]-->"]
+  ["comment.start.xml","<!--"],
+  ["comment.xml","[if lt IE 7]> <html class=\"no-js lt-ie9 lt-ie8 lt-ie7\" lang=\"en\"> <![endif]"],
+  ["comment.end.xml","-->"]
 ],[
    "start",
   ["text","# "],
-  ["comment.xml","<!--[if IE 7]>    <html class=\"no-js lt-ie9 lt-ie8\" lang=\"en\"> <![endif]-->"]
+  ["comment.start.xml","<!--"],
+  ["comment.xml","[if IE 7]>    <html class=\"no-js lt-ie9 lt-ie8\" lang=\"en\"> <![endif]"],
+  ["comment.end.xml","-->"]
 ],[
    "start",
   ["text","# "],
-  ["comment.xml","<!--[if IE 8]>    <html class=\"no-js lt-ie9\" lang=\"en\"> <![endif]-->"]
+  ["comment.start.xml","<!--"],
+  ["comment.xml","[if IE 8]>    <html class=\"no-js lt-ie9\" lang=\"en\"> <![endif]"],
+  ["comment.end.xml","-->"]
 ],[
    "start",
   ["text","# "],
-  ["comment.xml","<!--[if gt IE 8]><!-->"],
+  ["comment.start.xml","<!--"],
+  ["comment.xml","[if gt IE 8]><!"],
+  ["comment.end.xml","-->"],
   ["text.xml"," "],
   ["meta.tag.punctuation.tag-open.xml","<"],
   ["meta.tag.tag-name.xml","html"],
@@ -32,7 +40,9 @@
   ["string.attribute-value.xml","\"en\""],
   ["meta.tag.punctuation.tag-close.xml",">"],
   ["text.xml"," "],
-  ["comment.xml","<!--<![endif]-->"]
+  ["comment.start.xml","<!--"],
+  ["comment.xml","<![endif]"],
+  ["comment.end.xml","-->"]
 ],[
    "tag_single"
 ],[
