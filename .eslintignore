@@ -4,6 +4,7 @@ lib/ace/mode/html/*
 lib/ace/mode/javascript/*
 lib/ace/mode/json/*
 lib/ace/mode/lua/*
+lib/ace/mode/glua/*
 lib/ace/mode/php/*
 lib/ace/mode/xml/*
 lib/ace/mode/xquery/*

@@ -1,0 +1,32 @@
+type Person = {
+    name: string
+    , age: int,
+    hi: (string) => string
+}
+
+let a1 = (a: number, b: number) => do 
+    print 'abc'
+end
+
+let f1 = (a: int, b: int) => a + b
+
+let a2: string = '123'
+
+type T3 = string | bool | 'hello'
+
+var M = Contract<Storage>()
+
+let cc = type(123)
+
+function M:init(a: int)
+    print("hello")
+    print(a + 100)
+    emit hello('abc')
+end
+
+type Person<T> = {
+    name: string,
+    country: T
+}
+
+type T1 = Person<string>
