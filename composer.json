@@ -1,0 +1,13 @@
+{
+    "name": "ajaxorg/ace",
+    "description": "Ace is a standalone code editor written in JavaScript.",
+    "homepage": "https://ace.c9.io/",
+    "license": "MIT",
+    "support": {
+        "irc": "irc://irc.freenode.net/%23ace",
+        "issues": "https://github.com/ajaxorg/ace/issues",
+        "forum": "http://groups.google.com/group/ace-discuss",
+        "wiki": "https://github.com/ajaxorg/ace/wiki",
+        "source": "https://github.com/ajaxorg/ace"
+    }
+}
