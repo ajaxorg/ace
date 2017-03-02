@@ -99,16 +99,16 @@
   ["keyword",":  "],
   ["constant.language","&id001"]
 ],[
-   ["qqstring",4],
+   ["mlString",4],
   ["meta.tag","    street"],
   ["keyword",": "],
   ["string","|"]
 ],[
-   ["qqstring",4],
+   ["mlString",4],
   ["indent","            "],
   ["string","123 Tornado Alley"]
 ],[
-   ["qqstring",4],
+   ["mlString",4],
   ["indent","            "],
   ["string","Suite 16"]
 ],[
@@ -132,26 +132,26 @@
 ],[
    "start"
 ],[
-   ["qqstring",0],
+   ["mlString",0],
   ["meta.tag","specialDelivery"],
   ["keyword",":  "],
   ["string",">"]
 ],[
-   ["qqstring",0],
+   ["mlString",0],
   ["indent","    "],
   ["string","Follow the Yellow Brick"]
 ],[
-   ["qqstring",0],
+   ["mlString",0],
   ["indent","    "],
   ["string","Road to the Emerald City."]
 ],[
-   ["qqstring",0],
+   ["mlString",0],
   ["indent","    "],
   ["string","Pay no attention to the"]
 ],[
-   ["qqstring",0],
+   ["mlString",0],
   ["indent","    "],
   ["string","man behind the curtain."]
 ],[
-   ["qqstring",0]
+   ["mlString",0]
 ]]
