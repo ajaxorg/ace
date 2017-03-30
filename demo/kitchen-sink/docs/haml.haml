@@ -13,7 +13,7 @@
 %ads:{:bleh => 33}
 %p==ddd==
   Date/Time:
-  - now = DateTime.now 
+  - now = DateTime.now
   %strong= now
    = if now  DateTime.parse("December 31, 2006")
     = "Happy new " + "year!"
@@ -29,8 +29,24 @@
     %div.article.title Blah
     %div.article.date 2006-11-05
     %div.article.entry
-      Neil Patrick Harris 
+      Neil Patrick Harris
 
 %div[@user, :greeting]
   %bar[290]/
   ==Hello!==
+
+/ This is a comment
+
+/ This is another comment with line break above
+
+.row
+  .col-md-6
+  .col-md-6
+
+  .col-md-6
+
+.row
+  .col-md-6
+
+
+  .col-md-6
