@@ -99,19 +99,22 @@
   ["keyword",":  "],
   ["constant.language","&id001"]
 ],[
-   "qqstring",
+   ["mlString",4],
   ["meta.tag","    street"],
   ["keyword",": "],
   ["string","|"]
 ],[
-   "qqstring",
-  ["string","            123 Tornado Alley"]
+   ["mlString",4],
+  ["indent","            "],
+  ["string","123 Tornado Alley"]
 ],[
-   "qqstring",
-  ["string","            Suite 16"]
+   ["mlString",4],
+  ["indent","            "],
+  ["string","Suite 16"]
 ],[
    "start",
-  ["meta.tag","    city"],
+  ["indent","    "],
+  ["meta.tag","city"],
   ["keyword",":   "],
   ["text","East Centerville"]
 ],[
@@ -129,22 +132,26 @@
 ],[
    "start"
 ],[
-   "qqstring",
+   ["mlString",0],
   ["meta.tag","specialDelivery"],
   ["keyword",":  "],
   ["string",">"]
 ],[
-   "qqstring",
-  ["string","    Follow the Yellow Brick"]
+   ["mlString",0],
+  ["indent","    "],
+  ["string","Follow the Yellow Brick"]
 ],[
-   "qqstring",
-  ["string","    Road to the Emerald City."]
+   ["mlString",0],
+  ["indent","    "],
+  ["string","Road to the Emerald City."]
 ],[
-   "qqstring",
-  ["string","    Pay no attention to the"]
+   ["mlString",0],
+  ["indent","    "],
+  ["string","Pay no attention to the"]
 ],[
-   "qqstring",
-  ["string","    man behind the curtain."]
+   ["mlString",0],
+  ["indent","    "],
+  ["string","man behind the curtain."]
 ],[
-   "qqstring"
+   ["mlString",0]
 ]]

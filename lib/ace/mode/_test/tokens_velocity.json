@@ -143,14 +143,14 @@
   ["meta.tag.script.tag-name.xml","script"],
   ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
-   "js-comment_regex_allowed",
+   "js-comment1",
   ["text","  "],
   ["comment","/*"]
 ],[
-   "js-comment_regex_allowed",
+   "js-comment1",
   ["comment","    A sample function to decomstrate"]
 ],[
-   "js-comment_regex_allowed",
+   "js-comment1",
   ["comment","    JavaScript highlighting and folding."]
 ],[
    "js-start",

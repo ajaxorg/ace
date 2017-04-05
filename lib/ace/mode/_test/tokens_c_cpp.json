@@ -83,6 +83,9 @@
    "start"
 ],[
    "start",
+  ["comment","//"]
+],[
+   "start",
   ["storage.type","int"],
   ["text"," "],
   ["identifier","main"],
@@ -107,14 +110,19 @@
   ["text"," "],
   ["comment","/* foobar */"]
 ],[
-   "start",
+   "singleLineComment",
   ["text","    "],
   ["identifier","a"],
   ["text"," "],
   ["keyword.operator","="],
   ["text"," "],
   ["identifier","b"],
-  ["punctuation.operator",";"]
+  ["punctuation.operator",";"],
+  ["text"," "],
+  ["comment","// single line comment\\"]
+],[
+   "start",
+  ["comment","        continued"]
 ],[
    "start",
   ["text","    "],
@@ -148,7 +156,10 @@
   ["text","        "],
   ["identifier","prints"],
   ["paren.lparen","("],
-  ["string","\"trace message\""],
+  ["string.start","\""],
+  ["string","trace message"],
+  ["constant.language.escape","\\n"],
+  ["string.end","\""],
   ["paren.rparen",")"],
   ["punctuation.operator",";"]
 ],[

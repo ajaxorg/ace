@@ -662,10 +662,10 @@ function convertTmLanguage(name, langStr) {
 
         var languageHighlightRules = lib.fillTemplate(modeHighlightTemplate, {
             language: languageNameSanitized,
-            languageTokens: lib.formatJSON(patterns, "    ").trim(),
+            languageTokens: lib.formatJS(patterns, "    ").trim(),
             uuid: language.uuid,
             name: name,
-            metaData: lib.formatJSON(language, "    ").trim()
+            metaData: lib.formatJS(language, "").trim()
         });
 
         if (devMode) {

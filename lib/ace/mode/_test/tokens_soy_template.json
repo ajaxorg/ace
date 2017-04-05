@@ -110,8 +110,8 @@
   ["punctuation.definition.tag.end.soy","}"]
 ],[
    "start",
-  ["comment.line.double-slash.soy","  "],
-  ["punctuation.definition.comment.soy","//"],
+  ["text.xml","  "],
+  ["comment.line.double-slash.soy","//"],
   ["comment.line.double-slash.soy"," Greet the person."]
 ],[
    "start",
@@ -130,8 +130,8 @@
   ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
-  ["comment.line.double-slash.soy","  "],
-  ["punctuation.definition.comment.soy","//"],
+  ["text.xml","  "],
+  ["comment.line.double-slash.soy","//"],
   ["comment.line.double-slash.soy"," Greet the additional people."]
 ],[
    "start",
@@ -189,8 +189,8 @@
   ["meta.tag.punctuation.tag-open.xml","<"],
   ["meta.tag.tag-name.xml","br"],
   ["meta.tag.punctuation.tag-close.xml",">"],
-  ["comment.line.double-slash.soy","  "],
-  ["punctuation.definition.comment.soy","//"],
+  ["text.xml","  "],
+  ["comment.line.double-slash.soy","//"],
   ["comment.line.double-slash.soy"," break after every line except the last"]
 ],[
    "start",

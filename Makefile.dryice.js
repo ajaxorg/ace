@@ -106,7 +106,7 @@ function ace() {
     
     console.log('# ace ---------');
     for (var i = 0; i < 4; i++)
-        buildAce({compress: i & 2, noconflict: i & 1});
+        buildAce({compress: i & 2, noconflict: i & 1, check: true});
 }
 
 function demo() {
@@ -237,7 +237,7 @@ function buildAceModuleInternal(opts, callback) {
         paths: {
             ace: ACE_HOME + "/lib/ace",
             "kitchen-sink": ACE_HOME + "/demo/kitchen-sink",
-            build_support:  ACE_HOME + "/build_support",
+            build_support:  ACE_HOME + "/build_support"
         },
         root: ACE_HOME
     };
@@ -261,11 +261,7 @@ function buildAceModuleInternal(opts, callback) {
             code = result.codeMin;
         }
             
-        var targetDir =  BUILD_DIR + "/src";
-        if (opts.compress)
-            targetDir += "-min";
-        if (opts.noconflict)
-            targetDir += "-noconflict";
+        var targetDir = getTargetDir(opts);
         
         var to = /^([\\/]|\w:)/.test(opts.outputFile)
             ? opts.outputFile
@@ -284,12 +280,14 @@ function buildAceModuleInternal(opts, callback) {
             filters.push(exportAce(ns, opts.require[0],
                 opts.noconflict ? ns : "", projectType == "ext"));
         }
-
+        
+        filters.push(normalizeLineEndings);
+        
         filters.forEach(function(f) { code = f(code); });
         
         build.writeToFile({code: code}, {
             outputFolder: path.dirname(to),
-            outputFile: path.basename(to),
+            outputFile: path.basename(to)
         }, function() {});
         
         callback && callback(err, result);
@@ -335,17 +333,17 @@ function buildSubmodule(options, extra, file, callback) {
     });
 }
 
-function buildAce(options) {
+function buildAce(options, callback) {
     var snippetFiles = jsFileList("lib/ace/snippets");
     var modeNames = modeList();
 
-    buildCore(options, {outputFile: "ace.js"}),
+    buildCore(options, {outputFile: "ace.js"}, addCb());
     // modes
     modeNames.forEach(function(name) {
         buildSubmodule(options, {
             projectType: "mode",
             require: ["ace/mode/" + name]
-        }, "mode-" + name);
+        }, "mode-" + name, addCb());
     });
     // snippets
     modeNames.forEach(function(name) {
@@ -353,29 +351,29 @@ function buildAce(options) {
             addSnippetFile(name);
         
         buildSubmodule(options, {
-            require: ["ace/snippets/" + name],
-        }, "snippets/" + name);
+            require: ["ace/snippets/" + name]
+        }, "snippets/" + name, addCb());
     });
     // themes
     jsFileList("lib/ace/theme").forEach(function(name) {
         buildSubmodule(options, {
             projectType: "theme",
             require: ["ace/theme/" + name]
-        }, "theme-" +  name);
+        }, "theme-" +  name, addCb());
     });
     // keybindings
     ["vim", "emacs"].forEach(function(name) {
         buildSubmodule(options, {
             projectType: "keybinding",
             require: ["ace/keyboard/" + name ]
-        }, "keybinding-" + name);
+        }, "keybinding-" + name, addCb());
     });
     // extensions
     jsFileList("lib/ace/ext").forEach(function(name) {
         buildSubmodule(options, {
             projectType: "ext",
             require: ["ace/ext/" + name]
-        }, "ext-" + name);
+        }, "ext-" + name, addCb());
     });
     // workers
     workers("lib/ace/mode").forEach(function(name) {
@@ -387,9 +385,23 @@ function buildAce(options) {
                 id: "ace/worker/worker",
                 transforms: [],
                 order: -1000
-            }],
-        }, "worker-" + name);
+            }]
+        }, "worker-" + name, addCb());
     });
+    // 
+    function addCb() {
+        addCb.count = (addCb.count || 0) + 1; 
+        return done
+    }
+    function done() {
+        if (--addCb.count > 0)
+            return;
+        if (options.check)
+            sanityCheck(options, callback);
+        if (callback) 
+            return callback();
+        console.log("Finished building " + getTargetDir(options))
+    }
 }
 
 function getLoadedFileList(options, callback, result) {
@@ -405,11 +417,14 @@ function getLoadedFileList(options, callback, result) {
         });
     });
     delete deps["ace/theme/textmate"];
+    deps["ace/ace"] = 1;
     callback(Object.keys(deps));
 }
 
 function normalizeLineEndings(module) {
-    module.source = module.source.replace(/\r\n/g, "\n");
+    if (typeof module == "string") 
+        module = {source: module};
+    return module.source = module.source.replace(/\r\n/g, "\n");
 }
 
 function optimizeTextModules(sources) {
@@ -471,8 +486,10 @@ function namespace(ns) {
         text = text
             .toString()
             .replace(/ACE_NAMESPACE\s*=\s*""/, 'ACE_NAMESPACE = "' + ns +'"')
-            .replace(/(\.define)|\bdefine\(/g, function(_, a) {
-                return a || ns + ".define(";
+            .replace(/\bdefine\(/g, function(def, index, source) {
+                if (/(^|[;}),])\s*$/.test(source.slice(0, index)))
+                    return ns + "." + def;
+                return def;
             });
 
         return text;
@@ -486,7 +503,10 @@ function exportAce(ns, modules, requireBase, extModules) {
         var template = function() {
             (function() {
                 REQUIRE_NS.require(MODULES, function(a) {
-                    a && a.config.init(true);
+                    if (a) {
+                        a.config.init(true);
+                        a.define = REQUIRE_NS.define;
+                    }
                     if (!window.NS)
                         window.NS = a;
                     for (var key in a) if (a.hasOwnProperty(key))
@@ -563,6 +583,36 @@ function extend(base, extra) {
         base[k] = extra[k];
     });
     return base;
+}
+
+function getTargetDir(opts) {
+    var targetDir = BUILD_DIR + "/src";
+    if (opts.compress)
+        targetDir += "-min";
+    if (opts.noconflict)
+        targetDir += "-noconflict";
+    return targetDir;
+}
+
+function sanityCheck(opts, callback) {
+    var targetDir = getTargetDir(opts);
+    require("child_process").execFile(process.execPath, ["-e", "(" + function() {
+        window = global;
+        require("./ace");
+        if (typeof ace.edit != "function")
+            process.exit(1);
+        require("fs").readdirSync(".").forEach(function(p) {
+            if (!/ace\.js$/.test(p) && /\.js$/.test(p))
+                require("./" + p);
+        });
+        process.exit(0);
+    } + ")()"], {
+        cwd: targetDir
+    }, function(err, stdout) {
+        if (callback) return callback(err, stdout);
+        if (err)
+            throw err;
+    });
 }
 
 if (!module.parent)
