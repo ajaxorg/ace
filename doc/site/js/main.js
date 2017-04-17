@@ -10,7 +10,6 @@ $(function() {
         embedded_editor.session.setMode("ace/mode/html");
         embedded_editor.setAutoScrollEditorIntoView(true);
         embedded_editor.setOption("maxLines", 40);
-        
         editor.setOptions({
             maxLines: 30,
             mode: "ace/mode/javascript",
@@ -166,8 +165,6 @@ $(function() {
      
     highlight();
 });
-
-
 
 function highlight() {
     var highlighter = ace.require("ace/ext/static_highlight")
