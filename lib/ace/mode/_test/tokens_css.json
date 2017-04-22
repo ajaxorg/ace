@@ -73,76 +73,80 @@
 ],[
    "start"
 ],[
-   "media",
-  ["string","@keyframes blink {"]
-],[
-   ["ruleset","media"],
-  ["text","    "],
-  ["constant","0"],
-  ["text","% "],
+   "ruleset",
+  ["string","@"],
+  ["keyword","keyframes"],
+  ["text"," "],
+  ["constant","blink"],
+  ["text"," "],
   ["paren.lparen","{"]
 ],[
-   ["ruleset","media"],
+   "ruleset",
+  ["text","    "],
+  ["constant.numeric","0"],
+  ["keyword","%"],
+  ["text"," {"]
+],[
+   "ruleset",
   ["text","        "],
   ["support.type","opacity"],
   ["text",": "],
   ["constant.numeric","0"],
   ["text",";"]
 ],[
-   "media",
+   "start",
   ["text","    "],
   ["paren.rparen","}"]
 ],[
-   ["ruleset","media"],
+   "ruleset",
   ["text","    "],
-  ["constant","40"],
+  ["constant.numeric","40"],
   ["text","% "],
   ["paren.lparen","{"]
 ],[
-   ["ruleset","media"],
+   "ruleset",
   ["text","        "],
   ["support.type","opacity"],
   ["text",": "],
   ["constant.numeric","0"],
   ["text",";"]
 ],[
-   "media",
+   "start",
   ["text","    "],
   ["paren.rparen","}"]
 ],[
-   ["ruleset","media"],
+   "ruleset",
   ["text","    "],
-  ["constant","40"],
-  ["variable",".5"],
+  ["constant.numeric","40.5"],
   ["text","% "],
   ["paren.lparen","{"]
 ],[
-   ["ruleset","media"],
+   "ruleset",
   ["text","        "],
   ["support.type","opacity"],
   ["text",": "],
   ["constant.numeric","1"]
 ],[
-   "media",
+   "start",
   ["text","    "],
   ["paren.rparen","}"]
 ],[
-   ["ruleset","media"],
+   "ruleset",
   ["text","    "],
-  ["constant","100"],
+  ["constant.numeric","100"],
   ["text","% "],
   ["paren.lparen","{"]
 ],[
-   ["ruleset","media"],
+   "ruleset",
   ["text","        "],
   ["support.type","opacity"],
   ["text",": "],
   ["constant.numeric","1"]
 ],[
-   "media",
+   "start",
   ["text","    "],
   ["paren.rparen","}"]
 ],[
    "start",
-  ["string","}"]
+  ["paren.lparen","}"]
 ]]
