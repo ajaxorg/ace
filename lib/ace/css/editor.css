@@ -207,6 +207,10 @@
     transform: translatez(0);
 }
 
+.ace_multiselect .ace_cursor {
+    border-left-width: 1px;
+}
+
 .ace_slim-cursors .ace_cursor {
     border-left-width: 1px;
 }
@@ -223,10 +227,6 @@
 .ace_smooth-blinking .ace_cursor {
     -webkit-transition: opacity 0.18s;
             transition: opacity 0.18s;
-}
-
-.ace_editor.ace_multiselect .ace_cursor {
-    border-left-width: 1px;
 }
 
 .ace_marker-layer .ace_step, .ace_marker-layer .ace_stack {
