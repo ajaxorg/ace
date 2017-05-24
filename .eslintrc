@@ -89,7 +89,7 @@
         // no-eval: 2,
         // dot-notation: 2,
         // no-alert: 2,
-        // no-extra-semi: 2, // doesn't handle ;(function() {})() pattern
+        no-extra-semi: 2, // doesn't handle ;(function() {})() pattern
         // radix: 2,
         // no-invalid-this: 2,
         // no-param-reassign: 2,
@@ -134,7 +134,7 @@
         // quotes: [2, "double", "avoid-escape"], // specify whether backticks, double or single quotes should be used (fixable)
         // require-jsdoc: 2, // Require JSDoc comment
         // semi-spacing: 2, // enforce spacing before and after semicolons
-        // semi: 2, // require or disallow use of semicolons instead of ASI (fixable)
+        semi: [ 2, "always", { "omitLastInOneLineBlock": false } ]// require or disallow use of semicolons instead of ASI (fixable)
         // keyword-spacing: 2, // require a space after certain keywords (fixable)
         // space-before-blocks: 2, // require or disallow a space before blocks (fixable)
         // space-before-function-paren: 2, // require or disallow a space before function opening parenthesis (fixable)
