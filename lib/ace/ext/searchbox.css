@@ -45,10 +45,7 @@
     color: black;
     border-right: 1px solid #cbcbcb;
     border: 0 none;
-    -webkit-box-sizing: border-box;
-       -moz-box-sizing: border-box;
-            box-sizing: border-box;
-    float: left;
+    box-sizing: border-box;
     height: 22px;
     outline: 0;
     padding: 0 7px;
@@ -61,7 +58,6 @@
     border: 0 none;
     border-left: 1px solid #dcdcdc;
     cursor: pointer;
-    float: left;
     height: 22px;
     margin: 0;
     position: relative;
@@ -150,4 +146,5 @@
     -o-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    clear: both;
 }
