@@ -6,19 +6,16 @@
 ],[
    "ruleset",
   ["text","    "],
-  ["support.type","font-family"],
-  ["text",": Monaco, "],
-  ["string","\"Courier New\""],
-  ["text",", "],
-  ["support.constant.fonts","monospace"],
-  ["text",";"]
-],[
-   "ruleset",
-  ["text","    "],
-  ["support.type","font-size"],
+  ["support.type","font"],
   ["text",": "],
   ["constant.numeric","12"],
-  ["keyword","pX"],
+  ["keyword","px"],
+  ["text"," Monaco, "],
+  ["string.start","\""],
+  ["string","Courier New"],
+  ["string.end","\""],
+  ["text",", "],
+  ["support.constant.fonts","monospace"],
   ["text",";"]
 ],[
    "ruleset",
@@ -40,68 +37,33 @@
 ],[
    "ruleset",
   ["text","    "],
-  ["support.type","animation-duration"],
-  ["text",": "],
+  ["support.type","animation"],
+  ["text",": blink "],
   ["constant.numeric","1"],
   ["keyword","s"],
-  ["text",";"]
-],[
-   "ruleset",
-  ["text","    "],
-  ["support.type","animation-name"],
-  ["text",": blink;"]
-],[
-   "ruleset",
-  ["text","    "],
-  ["support.type","animation-iteration-count"],
-  ["text",": infinite;"]
-],[
-   "ruleset",
-  ["text","    "],
-  ["support.type","animation-direction"],
-  ["text",": alternate;"]
-],[
-   "ruleset",
-  ["text","    "],
-  ["support.type","animation-timing-function"],
-  ["text",": "],
+  ["text"," "],
   ["support.constant","linear"],
-  ["text",";"]
+  ["text"," infinite alternate;"]
 ],[
    "start",
   ["paren.rparen","}"]
 ],[
    "start"
 ],[
-   "ruleset",
+   "start",
   ["string","@"],
   ["keyword","keyframes"],
-  ["text"," "],
-  ["constant","blink"],
-  ["text"," "],
+  ["text"," blink "],
   ["paren.lparen","{"]
 ],[
    "ruleset",
   ["text","    "],
   ["constant.numeric","0"],
   ["keyword","%"],
-  ["text"," {"]
-],[
-   "ruleset",
-  ["text","        "],
-  ["support.type","opacity"],
-  ["text",": "],
-  ["constant.numeric","0"],
-  ["text",";"]
-],[
-   "start",
-  ["text","    "],
-  ["paren.rparen","}"]
-],[
-   "ruleset",
-  ["text","    "],
+  ["text",", "],
   ["constant.numeric","40"],
-  ["text","% "],
+  ["keyword","%"],
+  ["text"," "],
   ["paren.lparen","{"]
 ],[
    "ruleset",
@@ -114,27 +76,17 @@
    "start",
   ["text","    "],
   ["paren.rparen","}"]
+],[
+   "start"
 ],[
    "ruleset",
   ["text","    "],
   ["constant.numeric","40.5"],
-  ["text","% "],
-  ["paren.lparen","{"]
-],[
-   "ruleset",
-  ["text","        "],
-  ["support.type","opacity"],
-  ["text",": "],
-  ["constant.numeric","1"]
-],[
-   "start",
-  ["text","    "],
-  ["paren.rparen","}"]
-],[
-   "ruleset",
-  ["text","    "],
+  ["keyword","%"],
+  ["text",", "],
   ["constant.numeric","100"],
-  ["text","% "],
+  ["keyword","%"],
+  ["text"," "],
   ["paren.lparen","{"]
 ],[
    "ruleset",
@@ -148,5 +100,103 @@
   ["paren.rparen","}"]
 ],[
    "start",
-  ["paren.lparen","}"]
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "media",
+  ["string","@"],
+  ["keyword","document"],
+  ["text"," "],
+  ["support.function","url("],
+  ["string","http://c9.io/"],
+  ["support.function",")"],
+  ["text",", "],
+  ["support.function","url-prefix("],
+  ["string","http://ace.c9.io/build/"],
+  ["support.function",")"],
+  ["text",","]
+],[
+   "media",
+  ["text","   "],
+  ["support.function","domain("],
+  ["string","c9.io"],
+  ["support.function",")"],
+  ["text",", "],
+  ["support.function","regexp("],
+  ["string","\"https:.*\""],
+  ["support.function",")"],
+  ["text"," "]
+],[
+   "start",
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["constant","img"],
+  ["text","["],
+  ["constant","title"],
+  ["text","]"],
+  ["string",":before"],
+  ["text"," "]
+],[
+   "ruleset",
+  ["text","    "],
+  ["paren.lparen","{"]
+],[
+   ["string.start0","ruleset"],
+  ["text","        "],
+  ["support.type","content"],
+  ["text",": "],
+  ["support.function","attr"],
+  ["text","(title) "],
+  ["string.start","\""],
+  ["constant.language.escape","\\A"],
+  ["string","Image "],
+  ["constant.language.escape","\\"]
+],[
+   "ruleset",
+  ["string","            retrieved from"],
+  ["string.end","\""]
+],[
+   "ruleset",
+  ["text","            "],
+  ["support.function","attr"],
+  ["text","(src);"]
+],[
+   "ruleset",
+  ["text","        "],
+  ["support.type","white-space"],
+  ["text",": "],
+  ["support.constant","pre"],
+  ["text",";"]
+],[
+   "ruleset",
+  ["text","        "],
+  ["support.type","display"],
+  ["text",": "],
+  ["support.constant","block"],
+  ["text",";"]
+],[
+   "ruleset",
+  ["text","        "],
+  ["support.type","background"],
+  ["text",": "],
+  ["support.function","url("],
+  ["string","asdasd"],
+  ["support.function",")"],
+  ["text","; "],
+  ["string.start","\""],
+  ["string","err"]
+],[
+   "start",
+  ["text","    "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start"
 ]]

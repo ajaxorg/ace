@@ -16,3 +16,18 @@
         opacity: 1
     }
 }
+
+@document url(http://c9.io/), url-prefix(http://ace.c9.io/build/),
+   domain(c9.io), regexp("https:.*") 
+{
+    img[title]:before 
+    {
+        content: attr(title) "\AImage \
+            retrieved from"
+            attr(src);
+        white-space: pre;
+        display: block;
+        background: url(asdasd); "err
+    }
+}
+
