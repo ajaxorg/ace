@@ -231,64 +231,54 @@
   ["meta.tag.style.tag-name.xml","style"],
   ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
-   "css-comment",
+   ["css-comment","css-start"],
   ["text","  "],
   ["comment","/*"]
 ],[
-   "css-comment",
+   ["css-comment","css-start"],
   ["comment","    A sample style to decomstrate"]
 ],[
-   "css-comment",
+   ["css-comment","css-start"],
   ["comment","    CSS highlighting and folding."]
 ],[
-   "start",
+   "css-start",
   ["comment","  */"]
 ],[
-   "start",
+   "css-ruleset",
   ["text","  "],
-  ["text.xml","."],
-  ["identifier","class"],
+  ["variable",".class"],
   ["text"," "],
-  ["lparen","{"]
+  ["paren.lparen","{"]
 ],[
-   "start",
+   "css-ruleset",
   ["text","    "],
-  ["identifier","font"],
-  ["keyword.operator","-"],
-  ["identifier","family"],
-  ["text.xml",":"],
-  ["text"," "],
-  ["identifier","Monaco"],
-  ["text.xml",","],
-  ["text"," "],
-  ["string","\"Courier New\""],
-  ["text.xml",","],
-  ["text"," "],
-  ["identifier","monospace"],
-  ["text.xml",";"]
+  ["support.type","font-family"],
+  ["text",": Monaco, "],
+  ["string.start","\""],
+  ["string","Courier New"],
+  ["string.end","\""],
+  ["text",", "],
+  ["support.constant.fonts","monospace"],
+  ["text",";"]
 ],[
-   "start",
+   "css-ruleset",
   ["text","    "],
-  ["identifier","font"],
-  ["keyword.operator","-"],
-  ["identifier","size"],
-  ["text.xml",":"],
-  ["text"," "],
-  ["text.xml","12"],
-  ["identifier","px"],
-  ["text.xml",";"]
+  ["support.type","font-size"],
+  ["text",": "],
+  ["constant.numeric","12"],
+  ["keyword","px"],
+  ["text",";"]
 ],[
-   "start",
+   "css-ruleset",
   ["text","    "],
-  ["identifier","cursor"],
-  ["text.xml",":"],
-  ["text"," "],
-  ["identifier","text"],
-  ["text.xml",";"]
+  ["support.type","cursor"],
+  ["text",": "],
+  ["support.constant","text"],
+  ["text",";"]
 ],[
    "start",
   ["text","  "],
-  ["rparen","}"]
+  ["paren.rparen","}"]
 ],[
    "start",
   ["meta.tag.punctuation.end-tag-open.xml","</"],

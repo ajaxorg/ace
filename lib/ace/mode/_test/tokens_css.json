@@ -66,12 +66,22 @@
   ["text"," "],
   ["paren.lparen","{"]
 ],[
-   "ruleset",
+   ["comment","ruleset"],
   ["text","        "],
   ["support.type","opacity"],
   ["text",": "],
   ["constant.numeric","0"],
-  ["text",";"]
+  ["text","; "],
+  ["comment","/*"]
+],[
+   "ruleset",
+  ["comment","        */"]
+],[
+   "ruleset",
+  ["text","        "],
+  ["support.type","opacity"],
+  ["text",": "],
+  ["constant.numeric","1"]
 ],[
    "start",
   ["text","    "],
@@ -126,10 +136,15 @@
   ["support.function","regexp("],
   ["string","\"https:.*\""],
   ["support.function",")"],
-  ["text"," "]
+  ["text"," "],
+  ["comment","/**/"]
 ],[
    "start",
   ["paren.lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["comment","/**/"]
 ],[
    "start",
   ["text","    "],
@@ -159,10 +174,14 @@
   ["string","            retrieved from"],
   ["string.end","\""]
 ],[
-   "ruleset",
+   ["comment","ruleset"],
   ["text","            "],
   ["support.function","attr"],
-  ["text","(src);"]
+  ["text","(src); "],
+  ["comment","/*"]
+],[
+   "ruleset",
+  ["comment","            */"]
 ],[
    "ruleset",
   ["text","        "],

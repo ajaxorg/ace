@@ -9,7 +9,9 @@
 
 @keyframes blink {
     0%, 40% {
-        opacity: 0;
+        opacity: 0; /*
+        */
+        opacity: 1
     }
 
     40.5%, 100% {
@@ -18,13 +20,15 @@
 }
 
 @document url(http://c9.io/), url-prefix(http://ace.c9.io/build/),
-   domain(c9.io), regexp("https:.*") 
+   domain(c9.io), regexp("https:.*") /**/
 {
+    /**/
     img[title]:before 
     {
         content: attr(title) "\AImage \
             retrieved from"
-            attr(src);
+            attr(src); /*
+            */
         white-space: pre;
         display: block;
         background: url(asdasd); "err
