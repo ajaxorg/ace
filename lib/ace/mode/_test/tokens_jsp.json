@@ -63,12 +63,12 @@
   ["constant.numeric","#124356"],
   ["text",";"]
 ],[
-   "start",
+   "css-start",
   ["text","        "],
   ["paren.rparen","}"]
 ],[
    "start",
-  ["text.xml","    "],
+  ["text","    "],
   ["meta.tag.punctuation.end-tag-open.xml","</"],
   ["meta.tag.style.tag-name.xml","style"],
   ["meta.tag.punctuation.tag-close.xml",">"]

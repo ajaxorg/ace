@@ -276,7 +276,7 @@
   ["support.constant","text"],
   ["text",";"]
 ],[
-   "start",
+   "css-start",
   ["text","  "],
   ["paren.rparen","}"]
 ],[
