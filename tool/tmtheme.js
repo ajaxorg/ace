@@ -352,7 +352,7 @@ function convertTheme(name, tmThemePath, outputDirectory) {
     })
 }
 
-if (process.argv.length > 1) {
+if (process.argv.length > 2) {
     var args = process.argv.splice(2);
     if (args.length < 3) {
         console.error("Usage: node tmtheme.js [theme_name, path/to/theme.tmTheme path/to/output/directory]");
