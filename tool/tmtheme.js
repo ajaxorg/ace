@@ -368,19 +368,20 @@ if (process.argv.length > 2) {
     }
 }
 
-var sortedUnsupportedScopes = {};
-for (var u in unsupportedScopes) {
-    var value = unsupportedScopes[u];
-    if (sortedUnsupportedScopes[value] === undefined) {
-        sortedUnsupportedScopes[value] = [];
+if (Object.keys(unsupportedScopes).length > 0) {
+    var sortedUnsupportedScopes = {};
+    for (var u in unsupportedScopes) {
+        var value = unsupportedScopes[u];
+        if (sortedUnsupportedScopes[value] === undefined) {
+            sortedUnsupportedScopes[value] = [];
+        }
+        sortedUnsupportedScopes[value].push(u);
     }
-    sortedUnsupportedScopes[value].push(u);
+    console.log("I found these unsupported scopes:");
+    console.log(sortedUnsupportedScopes);
+    console.log("It's safe to ignore these, but they may affect your syntax highlighting if your mode depends on any of these rules.");
+    console.log("Refer to the docs on ace.ajax.org for information on how to add a scope to the CSS generator.");
 }
-
-console.log("I found these unsupported scopes:");
-console.log(sortedUnsupportedScopes);
-console.log("It's safe to ignore these, but they may affect your syntax highlighting if your mode depends on any of these rules.");
-console.log("Refer to the docs on ace.ajax.org for information on how to add a scope to the CSS generator.");
 
 
 /*** TODO: generate images for indent guides in node
