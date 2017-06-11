@@ -98,8 +98,9 @@ var defaultGlobals = {
     "bracket": "rgb(192, 192, 192)",
     "active_line": "rgba(0, 0, 0, 0.07)",
     "cursor": "#000000",
-    "invisible": "rgb(191, 191, 191)"
-}
+    "invisible": "rgb(191, 191, 191)",
+    "fold": "#6b72e6"
+};
 
 function extractStyles(theme) {
     var globalSettings = theme.settings[0].settings;
@@ -145,6 +146,8 @@ function extractStyles(theme) {
         var foldSource = colors["entity.name.function"] || colors.keyword;
         if (foldSource) {
             colors.fold = foldSource.match(/\:([^;]+)/)[1];
+        } else {
+            colors.fold = defaultGlobals.fold;
         }
     }
     
