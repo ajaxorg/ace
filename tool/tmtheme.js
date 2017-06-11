@@ -176,6 +176,7 @@ function luma(color) {
 }
 
 function parseColor(color) {
+    if (!color.length) return null;
     if (color.length == 4)
         color = color.replace(/[a-fA-F\d]/g, "$&$&");
     if (color.length == 7)
