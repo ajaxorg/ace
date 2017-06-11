@@ -362,7 +362,7 @@ function updateUIEditorOptions() {
     saveOption(selectStyleEl, editor.getSelectionStyle() == "line");
     saveOption(themeEl, editor.getTheme());
     saveOption(highlightActiveEl, editor.getHighlightActiveLine());
-    saveOption(showHiddenEl, editor.getShowInvisibles());
+    saveOption(showHiddenEl, editor.getShowInvisibles());	
     saveOption(showGutterEl, editor.renderer.getShowGutter());
     saveOption(showPrintMarginEl, editor.renderer.getShowPrintMargin());
     saveOption(highlightSelectedWordE, editor.getHighlightSelectedWord());
@@ -409,6 +409,10 @@ bindDropdown("keybinding", function(value) {
 
 bindDropdown("fontsize", function(value) {
     env.split.setFontSize(value);
+});
+
+bindDropdown("textDirection", function(value) {
+    env.editor.setTextDirection(value);
 });
 
 bindDropdown("folding", function(value) {
