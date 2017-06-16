@@ -4,6 +4,7 @@
     font: 12px/normal 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
     direction: ltr;
     text-align: left;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
 .ace_scroller {
@@ -454,3 +455,9 @@ styles.join("\n")
 .ace_br13{border-top-left-radius    : 3px; border-bottom-right-radius: 3px; border-bottom-left-radius:  3px;}
 .ace_br14{border-top-right-radius   : 3px; border-bottom-right-radius: 3px; border-bottom-left-radius:  3px;}
 .ace_br15{border-top-left-radius    : 3px; border-top-right-radius:    3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px;}
+
+.ace_text-input-ios {
+  position: absolute !important;
+  top: -100000px !important;
+  left: -100000px !important;
+}
