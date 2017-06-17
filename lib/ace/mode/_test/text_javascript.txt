@@ -50,7 +50,7 @@ function () {
 	 * docComment
 	 **/
 	r = /u\t*/
-	g = 1.00E^1, y = 1.2 + .2 + 052 + 0x25
+	g = 1.00E^1, y = 1.2 + 1. + .2 + 052 + 0O7 + 0x25
 	t = ['d', '']
 }
 function () {
