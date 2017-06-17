@@ -87,21 +87,35 @@ var fallbackScopes = {
     "variable": "entity.name.function"
 };
 
+// Taken from .ace-tm
+var defaultGlobals = {
+    "printMargin": "#e8e8e8",
+    "background": "#ffffff",
+    "foreground": "#000000",
+    "gutter": "#f0f0f0",
+    "selection": "rgb(181, 213, 255)",
+    "step": "rgb(198, 219, 174)",
+    "bracket": "rgb(192, 192, 192)",
+    "active_line": "rgba(0, 0, 0, 0.07)",
+    "cursor": "#000000",
+    "invisible": "rgb(191, 191, 191)",
+    "fold": "#6b72e6"
+};
+
 function extractStyles(theme) {
     var globalSettings = theme.settings[0].settings;
 
     var colors = {
-        "printMargin": "#e8e8e8",
-        "background": parseColor(globalSettings.background),
-        "foreground": parseColor(globalSettings.foreground),
-        "gutter": "#e8e8e8",
-        "selection": parseColor(globalSettings.selection),
-        "step": "rgb(198, 219, 174)",
-        "bracket": parseColor(globalSettings.invisibles),
-        "active_line": parseColor(globalSettings.lineHighlight),
-        "cursor": parseColor(globalSettings.caret),
-
-        "invisible": "color: " + parseColor(globalSettings.invisibles) + ";"
+        "printMargin": defaultGlobals.printMargin,
+        "background": parseColor(globalSettings.background) || defaultGlobals.background,
+        "foreground": parseColor(globalSettings.foreground) || defaultGlobals.foreground,
+        "gutter": defaultGlobals.gutter,
+        "selection": parseColor(globalSettings.selection) || defaultGlobals.selection,
+        "step": defaultGlobals.step,
+        "bracket": parseColor(globalSettings.invisibles) || defaultGlobals.bracket,
+        "active_line": parseColor(globalSettings.lineHighlight) || defaultGlobals.active_line,
+        "cursor": parseColor(globalSettings.caret) || defaultGlobals.cursor,
+        "invisible": "color: " + (parseColor(globalSettings.invisibles) || defaultGlobals.invisible) + ";"
     };
 
     for (var i=1; i<theme.settings.length; i++) {
@@ -132,6 +146,8 @@ function extractStyles(theme) {
         var foldSource = colors["entity.name.function"] || colors.keyword;
         if (foldSource) {
             colors.fold = foldSource.match(/\:([^;]+)/)[1];
+        } else {
+            colors.fold = defaultGlobals.fold;
         }
     }
     
@@ -176,6 +192,7 @@ function luma(color) {
 }
 
 function parseColor(color) {
+    if (!color.length) return null;
     if (color.length == 4)
         color = color.replace(/[a-fA-F\d]/g, "$&$&");
     if (color.length == 7)
@@ -352,7 +369,7 @@ function convertTheme(name, tmThemePath, outputDirectory) {
     })
 }
 
-if (process.argv.length > 1) {
+if (process.argv.length > 2) {
     var args = process.argv.splice(2);
     if (args.length < 3) {
         console.error("Usage: node tmtheme.js [theme_name, path/to/theme.tmTheme path/to/output/directory]");
@@ -368,19 +385,20 @@ if (process.argv.length > 1) {
     }
 }
 
-var sortedUnsupportedScopes = {};
-for (var u in unsupportedScopes) {
-    var value = unsupportedScopes[u];
-    if (sortedUnsupportedScopes[value] === undefined) {
-        sortedUnsupportedScopes[value] = [];
+if (Object.keys(unsupportedScopes).length > 0) {
+    var sortedUnsupportedScopes = {};
+    for (var u in unsupportedScopes) {
+        var value = unsupportedScopes[u];
+        if (sortedUnsupportedScopes[value] === undefined) {
+            sortedUnsupportedScopes[value] = [];
+        }
+        sortedUnsupportedScopes[value].push(u);
     }
-    sortedUnsupportedScopes[value].push(u);
+    console.log("I found these unsupported scopes:");
+    console.log(sortedUnsupportedScopes);
+    console.log("It's safe to ignore these, but they may affect your syntax highlighting if your mode depends on any of these rules.");
+    console.log("Refer to the docs on ace.ajax.org for information on how to add a scope to the CSS generator.");
 }
-
-console.log("I found these unsupported scopes:");
-console.log(sortedUnsupportedScopes);
-console.log("It's safe to ignore these, but they may affect your syntax highlighting if your mode depends on any of these rules.");
-console.log("Refer to the docs on ace.ajax.org for information on how to add a scope to the CSS generator.");
 
 
 /*** TODO: generate images for indent guides in node
