@@ -5,6 +5,7 @@
  * --------------------------------------------------------------------------------------- */
 .ace_search {
     background-color: #ddd;
+    color: #666;
     border: 1px solid #cbcbcb;
     border-top: 0 none;
     overflow: hidden;
@@ -27,7 +28,6 @@
 }
 
 .ace_search_form, .ace_replace_form {
-
     margin: 0 20px 4px 0;
     overflow: hidden;
     line-height: 1.9;
@@ -153,4 +153,10 @@
     -ms-user-select: none;
     user-select: none;
     clear: both;
+}
+
+.ace_search_counter {
+    float: left;
+    font-family: arial;
+    padding: 0 8px;
 }
