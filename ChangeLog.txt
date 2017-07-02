@@ -1,3 +1,6 @@
+2017.07.02 Version 1.2.8
+* Fixed small bugs in searchbox and autocompleter
+
 2017.06.18 Version 1.2.7
 
 * Added Support for arrow keys on external IPad keyboard (Emanuele Tamponi)
