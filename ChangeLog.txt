@@ -1,3 +1,33 @@
+2016.12.03 Version 1.2.6
+
+* Fixed IME handling on new Chrome
+* Support for php 7 in the syntax checker
+
+2016.08.16 Version 1.2.5
+
+* Fixed regression in noconflict mode
+
+2016.07.27 Version 1.2.4
+
+* Maintenance release with several new modes and small bugfixes
+
+2016.01.17 Version 1.2.3
+
+* Bugfixes
+  - fix memory leak in setSession (Tyler Stalder)
+  - double click not working on linux/mac
+  
+* new language modes
+  - reStructuredText (Robin Jarry)
+  - NSIS (Jan T. Sott)
+
+
+2015.10.28 Version 1.2.1
+
+* new language modes
+  - Swift
+  - JSX
+
 2015.07.11 Version 1.2.0
 
 * New Features

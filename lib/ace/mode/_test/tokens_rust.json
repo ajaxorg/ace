@@ -57,13 +57,13 @@
   ["punctuation.operator","."],
   ["text","shuffle"],
   ["paren.lparen","(["],
-  ["constant.numeric.integer.source.rust","1"],
+  ["constant.numeric.source.rust","1"],
   ["punctuation.operator",","],
   ["text"," "],
-  ["constant.numeric.integer.source.rust","2"],
+  ["constant.numeric.source.rust","2"],
   ["punctuation.operator",","],
   ["text"," "],
-  ["constant.numeric.integer.source.rust","3"],
+  ["constant.numeric.source.rust","3"],
   ["paren.rparen","])"],
   ["punctuation.operator",";"]
 ],[
@@ -86,7 +86,7 @@
   ["keyword.operator","!"],
   ["paren.lparen","("],
   ["string.quoted.double.source.rust","\"%s says: '%d'"],
-  ["constant.character.escape.source.rust","\\n"],
+  ["constant.character.escape.source.rust","\\n\\\\"],
   ["string.quoted.double.source.rust","\""],
   ["punctuation.operator",","],
   ["text"," name"],
@@ -94,7 +94,7 @@
   ["text"," num "],
   ["keyword.operator","+"],
   ["text"," "],
-  ["constant.numeric.integer.source.rust","1"],
+  ["constant.numeric.source.rust","1"],
   ["paren.rparen","))"]
 ],[
    "start",
@@ -109,8 +109,42 @@
   ["text","    "],
   ["paren.rparen","}"]
 ],[
+   "start"
+],[
+   "start",
+  ["keyword.source.rust","let"],
+  ["text"," _ "],
+  ["punctuation.operator",":"],
+  ["storage.type.source.rust","i128"],
+  ["keyword.operator","=-"],
+  ["constant.numeric.source.rust","42i128"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["keyword.source.rust","let"],
+  ["text"," _ "],
+  ["punctuation.operator",":"],
+  ["storage.type.source.rust","u128"],
+  ["keyword.operator","="],
+  ["constant.numeric.source.rust","42u128"],
+  ["punctuation.operator",";"]
+],[
    "start",
   ["paren.rparen","}"]
+],[
+   "start"
+],[
+   ["comment","comment"],
+  ["comment.start.block.source.rust","/*"],
+  ["comment.block.source.rust"," nested "],
+  ["comment.start.block.source.rust","/*"],
+  ["comment.block.source.rust"," "]
+],[
+   "start",
+  ["comment.block.source.rust","    comments "],
+  ["comment.end.block.source.rust","*/"],
+  ["comment.block.source.rust"," "],
+  ["comment.end.block.source.rust","*/"]
 ],[
    "start"
 ],[
@@ -210,4 +244,56 @@
   ["paren.rparen","}"]
 ],[
    "start"
+],[
+   "start"
+],[
+   "start",
+  ["comment.line.double-dash.source.rust","// numbers"]
+],[
+   "start",
+  ["constant.numeric.source.rust","14E-111_f64"],
+  ["punctuation.operator",";"],
+  ["text"," "],
+  ["constant.numeric.source.rust","45isize"],
+  ["text"," "],
+  ["constant.numeric.source.rust","0x1i32"],
+  ["text"," "],
+  ["constant.numeric.source.rust","0o777u32"],
+  ["text"," "],
+  ["constant.numeric.source.rust","0b01"],
+  ["text"," "],
+  ["constant.numeric.source.rust","14f32"],
+  ["text"," "],
+  ["constant.numeric.source.rust","1_2.78f32"],
+  ["text"," "],
+  ["constant.numeric.source.rust","1_2.3E+7f32"]
+],[
+   "start"
+],[
+   "start",
+  ["comment.line.double-dash.source.rust","// not numbers"]
+],[
+   "start",
+  ["constant.numeric.source.rust","14"],
+  ["punctuation.operator","."],
+  ["text","_E"],
+  ["keyword.operator","-"],
+  ["constant.numeric.source.rust","111_f64"],
+  ["punctuation.operator",";"],
+  ["text","0xi32"],
+  ["punctuation.operator",";"],
+  ["text","0b777u"]
+],[
+   "start",
+  ["text","foo1"],
+  ["punctuation.operator",";"],
+  ["text","foo1u32"],
+  ["punctuation.operator",";"],
+  ["text","foo1f32"],
+  ["punctuation.operator",";"],
+  ["text","foo0xF"],
+  ["punctuation.operator",";"],
+  ["text","foo1"],
+  ["punctuation.operator","."],
+  ["constant.numeric.source.rust","0"]
 ]]

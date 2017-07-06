@@ -33,7 +33,7 @@ int main ()
     a+=2; // equivalent to a=a+2
     cout << a;
     #if VERBOSE >= 2
-        prints("trace message");
+        prints("trace message\n");
     #endif
     return 0;
 }

@@ -39,7 +39,7 @@ $(function() {
             <div class="alert alert-error">\
               <button type="button" class="close" data-dismiss="alert">\xd7</button>\
               <strong>Oh No!</strong> Couldn\'t load <code>build/src/ace.js</code>.<br>\
-                You can build it by running <code>node Makefile.dryice.js</code><br>\
+                You can build it by running <code>npm install ; node Makefile.dryice.js</code><br>\
                 Or download older version by running <code>git submodule update --init --recursive</code><br>\
             </div>\
           </div>');

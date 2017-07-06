@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Css</title>
+
+	<style>
+	#editor {
+		width: 100vw;
+		height: 100vh;
+	}
+	</style>
+</head>
+<body>
+	
+	<section id="editor"></section>
+
+	<script src="../build/src/ace.js"></script>
+	<script>
+		let editor = ace.edit('editor');
+	    editor.session.setMode("ace/mode/css" );
+
+	</script>
+</body>
+</html>
