@@ -85,7 +85,9 @@
 ],[
    "start",
   ["text.xml","\t"],
-  ["comment.xml","<!--meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/-->"]
+  ["comment.start.xml","<!--"],
+  ["comment.xml","meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/"],
+  ["comment.end.xml","-->"]
 ],[
    "start",
   ["meta.tag.punctuation.end-tag-open.xml","</"],
@@ -175,7 +177,9 @@
   ["meta.tag.tag-name.xml","div"],
   ["meta.tag.punctuation.tag-close.xml",">"],
   ["text.xml"," "],
-  ["comment.xml","<!-- id=\"product\" -->"]
+  ["comment.start.xml","<!--"],
+  ["comment.xml"," id=\"product\" "],
+  ["comment.end.xml","-->"]
 ],[
    "start"
 ],[
@@ -227,7 +231,9 @@
   ["meta.tag.tag-name.xml","div"],
   ["meta.tag.punctuation.tag-close.xml",">"],
   ["text.xml"," "],
-  ["comment.xml","<!-- id=\"navigation\" -->"]
+  ["comment.start.xml","<!--"],
+  ["comment.xml"," id=\"navigation\" "],
+  ["comment.end.xml","-->"]
 ],[
    "start"
 ],[
@@ -285,7 +291,9 @@
   ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
-  ["comment.xml","<!--<tr><td colspan=\"2\">Modules</td></tr>-->"]
+  ["comment.start.xml","<!--"],
+  ["comment.xml","<tr><td colspan=\"2\">Modules</td></tr>"],
+  ["comment.end.xml","-->"]
 ],[
    "start",
   ["keyword","<%for"],
@@ -439,7 +447,9 @@
   ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
-  ["comment.xml","<!--<tr><td colspan=\"2\">Files</td></tr>-->"]
+  ["comment.start.xml","<!--"],
+  ["comment.xml","<tr><td colspan=\"2\">Files</td></tr>"],
+  ["comment.end.xml","-->"]
 ],[
    "start",
   ["keyword","<%for"],
@@ -541,7 +551,9 @@
   ["meta.tag.tag-name.xml","div"],
   ["meta.tag.punctuation.tag-close.xml",">"],
   ["text.xml"," "],
-  ["comment.xml","<!-- id=\"content\" -->"]
+  ["comment.start.xml","<!--"],
+  ["comment.xml"," id=\"content\" "],
+  ["comment.end.xml","-->"]
 ],[
    "start"
 ],[
@@ -550,7 +562,9 @@
   ["meta.tag.tag-name.xml","div"],
   ["meta.tag.punctuation.tag-close.xml",">"],
   ["text.xml"," "],
-  ["comment.xml","<!-- id=\"main\" -->"]
+  ["comment.start.xml","<!--"],
+  ["comment.xml"," id=\"main\" "],
+  ["comment.end.xml","-->"]
 ],[
    "start"
 ],[
@@ -607,7 +621,9 @@
   ["meta.tag.tag-name.xml","div"],
   ["meta.tag.punctuation.tag-close.xml",">"],
   ["text.xml"," "],
-  ["comment.xml","<!-- id=\"about\" -->"]
+  ["comment.start.xml","<!--"],
+  ["comment.xml"," id=\"about\" "],
+  ["comment.end.xml","-->"]
 ],[
    "start"
 ],[
@@ -616,7 +632,9 @@
   ["meta.tag.tag-name.xml","div"],
   ["meta.tag.punctuation.tag-close.xml",">"],
   ["text.xml"," "],
-  ["comment.xml","<!-- id=\"container\" -->"],
+  ["comment.start.xml","<!--"],
+  ["comment.xml"," id=\"container\" "],
+  ["comment.end.xml","-->"],
   ["text.xml","\t"]
 ],[
    "start",

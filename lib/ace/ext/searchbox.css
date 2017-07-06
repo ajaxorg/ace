@@ -5,16 +5,14 @@
  * --------------------------------------------------------------------------------------- */
 .ace_search {
     background-color: #ddd;
+    color: #666;
     border: 1px solid #cbcbcb;
     border-top: 0 none;
-    max-width: 325px;
     overflow: hidden;
     margin: 0;
-    padding: 4px;
-    padding-right: 6px;
-    padding-bottom: 0;
+    padding: 4px 6px 0 4px;
     position: absolute;
-    top: 0px;
+    top: 0;
     z-index: 99;
     white-space: normal;
 }
@@ -30,61 +28,72 @@
 }
 
 .ace_search_form, .ace_replace_form {
-    border-radius: 3px;
-    border: 1px solid #cbcbcb;
-    float: left;
-    margin-bottom: 4px;
+    margin: 0 20px 4px 0;
     overflow: hidden;
+    line-height: 1.9;
+}
+.ace_replace_form {
+    margin-right: 0;
 }
 .ace_search_form.ace_nomatch {
     outline: 1px solid red;
 }
 
 .ace_search_field {
+    border-radius: 3px 0 0 3px;
     background-color: white;
     color: black;
-    border-right: 1px solid #cbcbcb;
-    border: 0 none;
-    -webkit-box-sizing: border-box;
-       -moz-box-sizing: border-box;
-            box-sizing: border-box;
-    float: left;
-    height: 22px;
+    border: 1px solid #cbcbcb;
+    border-right: 0 none;
+    box-sizing: border-box!important;
     outline: 0;
-    padding: 0 7px;
-    width: 214px;
+    padding: 0;
+    font-size: inherit;
     margin: 0;
+    line-height: inherit;
+    padding: 0 6px;
+    min-width: 17em;
+    vertical-align: top;
 }
-.ace_searchbtn,
-.ace_replacebtn {
+.ace_searchbtn {
+    border: 1px solid #cbcbcb;
+    line-height: inherit;
+    display: inline-block;
+    padding: 0 6px;
     background: #fff;
-    border: 0 none;
+    border-right: 0 none;
     border-left: 1px solid #dcdcdc;
     cursor: pointer;
-    float: left;
-    height: 22px;
     margin: 0;
     position: relative;
+    box-sizing: content-box!important;
+    color: #666;
 }
-.ace_searchbtn:last-child,
-.ace_replacebtn:last-child {
-    border-top-right-radius: 3px;
-    border-bottom-right-radius: 3px;
+.ace_searchbtn:last-child {
+    border-radius: 0 3px 3px 0;
+    border-right: 1px solid #cbcbcb;
 }
 .ace_searchbtn:disabled {
     background: none;
     cursor: default;
 }
-.ace_searchbtn {
-    background-position: 50% 50%;
-    background-repeat: no-repeat;
-    width: 27px;
+.ace_searchbtn:hover {
+    background-color: #eef1f6;
 }
-.ace_searchbtn.prev {
-    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAFCAYAAAB4ka1VAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAADFJREFUeNpiSU1NZUAC/6E0I0yACYskCpsJiySKIiY0SUZk40FyTEgCjGgKwTRAgAEAQJUIPCE+qfkAAAAASUVORK5CYII=);    
+.ace_searchbtn.prev, .ace_searchbtn.next {
+     padding: 0px 0.7em
 }
-.ace_searchbtn.next {
-    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAFCAYAAAB4ka1VAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAADRJREFUeNpiTE1NZQCC/0DMyIAKwGJMUAYDEo3M/s+EpvM/mkKwCQxYjIeLMaELoLMBAgwAU7UJObTKsvAAAAAASUVORK5CYII=);    
+.ace_searchbtn.prev:after, .ace_searchbtn.next:after {
+     content: "";
+     border: solid 2px #888;
+     width: 0.5em;
+     height: 0.5em;
+     border-width:  2px 0 0 2px;
+     display:inline-block;
+     transform: rotate(-45deg);
+}
+.ace_searchbtn.next:after {
+     border-width: 0 2px 2px 0 ;
 }
 .ace_searchbtn_close {
     background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAcCAYAAABRVo5BAAAAZ0lEQVR42u2SUQrAMAhDvazn8OjZBilCkYVVxiis8H4CT0VrAJb4WHT3C5xU2a2IQZXJjiQIRMdkEoJ5Q2yMqpfDIo+XY4k6h+YXOyKqTIj5REaxloNAd0xiKmAtsTHqW8sR2W5f7gCu5nWFUpVjZwAAAABJRU5ErkJggg==) no-repeat 50% 0;
@@ -92,24 +101,18 @@
     border: 0 none;
     color: #656565;
     cursor: pointer;
-    float: right;
     font: 16px/16px Arial;
-    height: 14px;
-    margin: 5px 1px 9px 5px;
     padding: 0;
-    text-align: center;
+    height: 14px;
     width: 14px;
+    top: 9px;
+    right: 7px;
+    position: absolute;
 }
 .ace_searchbtn_close:hover {
     background-color: #656565;
     background-position: 50% 100%;
     color: white;
-}
-.ace_replacebtn.prev {
-    width: 54px
-}
-.ace_replacebtn.next {
-    width: 27px
 }
 
 .ace_button {
@@ -124,8 +127,7 @@
     opacity: 0.7;
     border: 1px solid rgba(100,100,100,0.23);
     padding: 1px;
-    -moz-box-sizing: border-box;
-    box-sizing:    border-box;
+    box-sizing:    border-box!important;
     color: black;
 }
 
@@ -150,4 +152,11 @@
     -o-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    clear: both;
+}
+
+.ace_search_counter {
+    float: left;
+    font-family: arial;
+    padding: 0 8px;
 }

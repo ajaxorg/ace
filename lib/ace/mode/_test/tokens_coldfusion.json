@@ -24,11 +24,13 @@
   ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
-  ["comment.xml","<!-- x "],
+  ["comment.start.xml","<!--"],
+  ["comment.xml"," x "],
   ["comment.start","<!---"],
   ["comment"," y "],
   ["comment.end","--->"],
-  ["comment.xml","  z -->"]
+  ["comment.xml","  z "],
+  ["comment.end.xml","-->"]
 ],[
    "start",
   ["meta.tag.punctuation.tag-open.xml","<"],

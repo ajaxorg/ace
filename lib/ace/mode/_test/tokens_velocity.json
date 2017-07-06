@@ -244,22 +244,24 @@
    "css-start",
   ["comment","  */"]
 ],[
-   ["css-ruleset","css-start"],
+   "css-ruleset",
   ["text","  "],
   ["variable",".class"],
   ["text"," "],
   ["paren.lparen","{"]
 ],[
-   ["css-ruleset","css-start"],
+   "css-ruleset",
   ["text","    "],
   ["support.type","font-family"],
   ["text",": Monaco, "],
-  ["string","\"Courier New\""],
+  ["string.start","\""],
+  ["string","Courier New"],
+  ["string.end","\""],
   ["text",", "],
   ["support.constant.fonts","monospace"],
   ["text",";"]
 ],[
-   ["css-ruleset","css-start"],
+   "css-ruleset",
   ["text","    "],
   ["support.type","font-size"],
   ["text",": "],
@@ -267,7 +269,7 @@
   ["keyword","px"],
   ["text",";"]
 ],[
-   ["css-ruleset","css-start"],
+   "css-ruleset",
   ["text","    "],
   ["support.type","cursor"],
   ["text",": "],
