@@ -41,53 +41,53 @@ Ace can be easily embedded into any existing web page. You can either use one of
 The easiest version is simply:
 
 ```html
-    <div id="editor">some text</div>
-    <script src="src/ace.js" type="text/javascript" charset="utf-8"></script>
-    <script>
-        var editor = ace.edit("editor");
-    </script>
+<div id="editor">some text</div>
+<script src="src/ace.js" type="text/javascript" charset="utf-8"></script>
+<script>
+    var editor = ace.edit("editor");
+</script>
 ```
 
 With "editor" being the id of the DOM element, which should be converted to an editor. Note that this element must be explicitly sized and positioned `absolute` or `relative` for Ace to work. e.g.
 
 ```css
-    #editor {
-        position: absolute;
-        width: 500px;
-        height: 400px;
-    }
+#editor {
+    position: absolute;
+    width: 500px;
+    height: 400px;
+}
 ```
 
 To change the theme simply include the Theme's JavaScript file
 
 ```html
-    <script src="src/theme-twilight.js" type="text/javascript" charset="utf-8"></script>
+<script src="src/theme-twilight.js" type="text/javascript" charset="utf-8"></script>
 ```
 
 and configure the editor to use the theme:
 
 ```javascript
-    editor.setTheme("ace/theme/twilight");
+editor.setTheme("ace/theme/twilight");
 ```
 
 By default the editor only supports plain text mode; many other languages are available as separate modules. After including the mode's JavaScript file:
 
 ```html
-    <script src="src/mode-javascript.js" type="text/javascript" charset="utf-8"></script>
+<script src="src/mode-javascript.js" type="text/javascript" charset="utf-8"></script>
 ```
 
 The mode can then be used like this:
 
 ```javascript
-    var JavaScriptMode = ace.require("ace/mode/javascript").Mode;
-    editor.session.setMode(new JavaScriptMode());
+var JavaScriptMode = ace.require("ace/mode/javascript").Mode;
+editor.session.setMode(new JavaScriptMode());
 ```
 
 to destroy editor use
 
 ```javascript
-    editor.destroy();
-    editor.container.remove();
+editor.destroy();
+editor.container.remove();
 ```
 
 
@@ -108,7 +108,7 @@ Running Ace
 After the checkout Ace works out of the box. No build step is required. To try it out, simply start the bundled mini HTTP server using Node.JS
 
 ```bash
-    node ./static.js
+node ./static.js
 ```
 
 The editor can then be opened at http://localhost:8888/kitchen-sink.html. 
@@ -123,8 +123,8 @@ You do not generally need to build ACE. The [ace-builds repository](https://gith
 However, all you need is Node.js and npm installed to package ACE. Just run `npm install` in the ace folder to install dependencies:
 
 ```bash
-    npm install
-    node ./Makefile.dryice.js
+npm install
+node ./Makefile.dryice.js
 ```
 
 To package Ace, we use the dryice build tool developed by the Mozilla Skywriter team. Call `node Makefile.dryice.js` on the command-line to start the packing. This build script accepts the following options
@@ -144,7 +144,7 @@ Running the Unit Tests
 The Ace unit tests can run on node.js. Assuming you have already done `npm install`, just call:
 
 ```bash
-    node lib/ace/test/all.js
+node lib/ace/test/all.js
 ```
 
 You can also run the tests in your browser by serving:
