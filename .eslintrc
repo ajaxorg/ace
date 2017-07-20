@@ -76,11 +76,12 @@
         no-undef: 2,
         no-redeclare: 0,
         // no-unused-vars: 1,
+        
+        no-debugger: 2,
 
         //////////////////////////////////////////////////////////////////
         //
         // no-unreachable: 2,
-        // no-debugger: 2,
         // no-proto: 2,
         // no-regex-spaces: 2,
         // no-extend-native: 2,
