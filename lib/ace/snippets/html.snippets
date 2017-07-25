@@ -78,7 +78,7 @@ snippet doct
 	"http://www.w3.org/TR/html4/loose.dtd">
 # HTML Doctype 5
 snippet doct5
-	<!DOCTYPE HTML>
+	<!DOCTYPE html>
 # XHTML Doctype 1.0 Frameset
 snippet docxf
 	<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN"
@@ -95,6 +95,15 @@ snippet docxt
 snippet docx
 	<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
 	"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+# html5shiv
+snippet html5shiv
+	<!--[if lte IE 8]>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+	<![endif]-->
+snippet html5printshiv
+	<!--[if lte IE 8]>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+	<![endif]-->
 # Attributes
 snippet attr
 	${1:attribute}="${2:property}"
@@ -457,6 +466,18 @@ snippet html5
 			${3:body}
 		</body>
 	</html>
+snippet xhtml5
+	<!DOCTYPE html>
+	<html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+			<meta http-equiv="content-type" content="application/xhtml+xml; charset=utf-8" />
+			<title>${1:`substitute(Filename('', 'Page Title'), '^.', '\u&', '')`}</title>
+			${2:meta}
+		</head>
+		<body>
+			${3:body}
+		</body>
+	</html>
 snippet i
 	<i>${1}</i>
 snippet iframe
@@ -699,6 +720,12 @@ snippet script
 	</script>
 snippet scriptsrc
 	<script src="${1}.js" type="text/javascript" charset="utf-8"></script>
+snippet newscript
+	<script type="application/javascript" charset="utf-8">
+		${1}
+	</script>
+snippet newscriptsrc
+	<script src="${1}.js" type="application/javascript" charset="utf-8"></script>
 snippet section
 	<section>
 		${1}
