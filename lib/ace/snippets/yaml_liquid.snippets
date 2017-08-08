@@ -1,0 +1,58 @@
+# Liquid
+# Comment - https://shopify.github.io/liquid/tags/comment/
+snippet l-comment
+	{% comment %}
+		${1}
+	{% endcomment %}
+	${2}
+# Control flow - https://shopify.github.io/liquid/tags/control-flow/
+snippet l-if
+	{% if ${1:condition} %}
+		${2}
+	{% endif %}
+	${3}
+snippet l-unless
+	{% unless ${1:condition} %}
+		${2}
+	{% endunless %}
+	${3}
+snippet l-else
+	{% if ${1:condition} %}
+		${2}
+	{% else %}
+		${3}
+	{% endif %}
+	${4}
+snippet l-elsif
+	{% if ${1:condition 1} %}
+		${4}
+	{% elsif ${2:condition 2} %}
+		${5}${3:
+	{% else %\}
+		${6}}
+	{% endif %}
+	${7}
+snippet l-case
+	{% case ${1:value} %}
+		{% when ${2:value 1} %}
+			${5}
+		{% when ${3:value 2} %}
+			${6}${4:
+		{% else %\}
+			${7}}
+	{% endcase %}
+	${8}
+# Iteration - https://shopify.github.io/liquid/tags/iteration/
+snippet l-for
+	{% for ${1:item} in ${2:${1:item}s}${3} %}
+		${4}
+	{% endfor %}
+	${5}
+# Raw - https://shopify.github.io/liquid/tags/raw/
+snippet l-raw
+	{% raw %}
+		${1}
+	{% endraw %}
+	${2}
+
+# YAML
