@@ -2,6 +2,7 @@
   "name": "ace-tools",
   "version": "0.1.0",
   "dependencies": {
+    "amd-loader": "~0.0.4",
     "browser-pack": "5.0.1",
     "browserify": "10.2.4",
     "cson": "3.0.1",
