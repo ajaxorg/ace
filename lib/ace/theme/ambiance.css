@@ -9,7 +9,7 @@
   background-repeat: repeat-x;
   border-right: 1px solid #4d4d4d;
   text-shadow: 0px 1px 1px #4d4d4d;
-  color: #222;
+  color: #E6E1DC;
 }
 
 .ace-ambiance .ace_gutter-layer {
@@ -78,7 +78,7 @@
 .ace-ambiance.normal-mode .ace_cursor-layer {
   z-index: 0;
 }
- 
+
 .ace-ambiance .ace_marker-layer .ace_selection {
   background: rgba(221, 240, 255, 0.20);
 }
@@ -138,7 +138,7 @@
 }
 
 .ace-ambiance .ace_constant.ace_library {
-  
+
 }
 
 .ace-ambiance .ace_constant.ace_numeric {
