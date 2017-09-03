@@ -1,0 +1,92 @@
+[[
+   "start",
+  ["text.csound-document","/*"]
+],[
+   "start",
+  ["text.csound-document"," * comment"]
+],[
+   "start",
+  ["text.csound-document"," */"]
+],[
+   "start",
+  ["text.csound-document","; comment"]
+],[
+   "start",
+  ["text.csound-document","// comment"]
+],[
+   "start",
+  ["text.csound-document","/"]
+],[
+   "synthesizer",
+  ["meta.tag.punctuation.tag-open.csound-document","<"],
+  ["entity.name.tag.begin.csound-document","CsoundSynthesizer"],
+  ["meta.tag.punctuation.tag-close.csound-document",">"]
+],[
+   "csound-start",
+  ["meta.tag.punctuation.tag-open.csound-document","<"],
+  ["entity.name.tag.begin.csound-document","CsInstruments"],
+  ["meta.tag.punctuation.tag-close.csound-document",">"]
+],[
+   "csound-start",
+  ["variable.language.csound","0dbfs"],
+  ["text"," "],
+  ["keyword.operator.csound","="],
+  ["text"," "],
+  ["constant.numeric.integer.decimal.csound","1"]
+],[
+   "csound-start",
+  ["support.function.csound","prints"],
+  ["text"," "],
+  ["punctuation.definition.string.begin.csound","\""],
+  ["string.quoted.csound","hello, world"],
+  ["constant.character.escape.csound","\\n"],
+  ["punctuation.definition.string.end.csound","\""]
+],[
+   "synthesizer",
+  ["meta.tag.punctuation.end-tag-open.csound-document","</"],
+  ["entity.name.tag.begin.csound-document","CsInstruments"],
+  ["meta.tag.punctuation.tag-close.csound-document",">"]
+],[
+   "csound-score-start",
+  ["meta.tag.punctuation.tag-open.csound-document","<"],
+  ["entity.name.tag.begin.csound-document","CsScore"],
+  ["meta.tag.punctuation.tag-close.csound-document",">"]
+],[
+   "csound-score-start",
+  ["keyword.control.csound-score","i"],
+  ["text"," "],
+  ["constant.numeric.integer.decimal.csound","1"],
+  ["text"," "],
+  ["constant.numeric.integer.decimal.csound","0"],
+  ["text"," "],
+  ["constant.numeric.integer.decimal.csound","0"]
+],[
+   "synthesizer",
+  ["meta.tag.punctuation.end-tag-open.csound-document","</"],
+  ["entity.name.tag.begin.csound-document","CsScore"],
+  ["meta.tag.punctuation.tag-close.csound-document",">"]
+],[
+   "html-start",
+  ["meta.tag.punctuation.tag-open.csound-document","<"],
+  ["entity.name.tag.begin.csound-document","html"],
+  ["meta.tag.punctuation.tag-close.csound-document",">"]
+],[
+   "html-start",
+  ["xml-pe.doctype.xml","<!"],
+  ["xml-pe.doctype.xml","DOCTYPE"],
+  ["text.whitespace.xml"," "],
+  ["xml-pe.xml","html"],
+  ["xml-pe.doctype.xml",">"]
+],[
+   "synthesizer",
+  ["meta.tag.punctuation.end-tag-open.csound-document","</"],
+  ["entity.name.tag.begin.csound-document","html"],
+  ["meta.tag.punctuation.tag-close.csound-document",">"]
+],[
+   "start",
+  ["meta.tag.punctuation.end-tag-open.csound-document","</"],
+  ["entity.name.tag.begin.csound-document","CsoundSynthesizer"],
+  ["meta.tag.punctuation.tag-close.csound-document",">"]
+],[
+   "start"
+]]
