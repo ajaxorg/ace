@@ -52,6 +52,7 @@
         background: #a9bfc7;
         mix-blend-mode: multiply;
     }
+    .scrollmargin input > {margin: 10px}
     </style>
 </head>
 <body>
@@ -59,8 +60,7 @@
     <div class="wrapper">
         <pre id="editor1">editor1</pre>
         <pre id="editor2">editor2</pre>
-        <pre id="editor3">editor3</pre>
-        <textarea></textarea>
+        <pre id="editor3">editor3</pre> 
     </div>
     <div class="scrollmargin"></div>
     <pre id="editor4">editor4</pre>
@@ -68,12 +68,15 @@
         <textarea></textarea>
     </div>
     <pre id="editor">editor</pre>
-    <div class="scrollmargin">
+    <div class="scrollmargin" style="transform: scale(2) translateY(3em);">
+        <input type="checkbox" id="option">Auto scroll into view</input>
+
+        <input type="range" onchange="document.body.style.zoom = 1 + value/250">css Zoom</input>
+        <input type="range" onchange="document.body.style.transform = 'rotateZ(' + (this.value * 18) +'deg)'">css Transform</input>
     </div>
 </div>
 
 <div class="scrollmargin">
-    <input type="checkbox" id="option">Auto scroll into view</input>
 </div>
 
 <script src="kitchen-sink/require.js"></script>
@@ -85,18 +88,21 @@ require(["ace/ace"], function(ace) {
 
     var editor1 = ace.edit("editor1");
     editor1.setOptions({
+        hasCssTransforms: true,
         theme: "ace/theme/tomorrow_night_blue",
         mode: "ace/mode/html"
     });
     
     var editor2 = ace.edit("editor2");
     editor2.setOptions({
+        hasCssTransforms: true,
         theme: "ace/theme/kuroir",
         mode: "ace/mode/html"
     });
     
     var editor3 = ace.edit("editor3");
     editor3.setOptions({
+        hasCssTransforms: true,
         theme: "ace/theme/tomorrow_night_eighties",
         mode: "ace/mode/html"
     });
@@ -104,6 +110,7 @@ require(["ace/ace"], function(ace) {
     
     var editor4 = ace.edit("editor4");
     editor4.setOptions({
+        hasCssTransforms: true,
         theme: "ace/theme/solarized_light",
         mode: "ace/mode/html"
     });
@@ -112,6 +119,7 @@ require(["ace/ace"], function(ace) {
 
     var editor = ace.edit("editor");
     editor.setOptions({
+        hasCssTransforms: true,
         mode: "ace/mode/html",
         value: "editor 4\n from a mirror",
     });
