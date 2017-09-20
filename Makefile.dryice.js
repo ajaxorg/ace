@@ -505,8 +505,7 @@ function exportAce(ns, modules, requireBase, extModules) {
                 REQUIRE_NS.require(MODULES, function(a) {
                     if (a) {
                         a.config.init(true);
-                        if (!a.define)
-                            a.define = REQUIRE_NS.define;
+                        a.define = REQUIRE_NS.define;
                     }
                     if (!window.NS)
                         window.NS = a;

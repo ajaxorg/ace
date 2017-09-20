@@ -90,7 +90,7 @@
   ["text"," "],
   ["paren.lparen","{"]
 ],[
-   ["css-block-ruleset","paren.lparen52","paren.lparen52","constant.language40"],
+   ["#tmp","css-block-ruleset","paren.lparen52","constant.language40"],
   ["text","    "],
   ["constant","html"],
   ["text",", "],
@@ -98,7 +98,7 @@
   ["text"," "],
   ["paren.lparen","{"]
 ],[
-   ["css-block-ruleset","paren.lparen52","paren.lparen52","constant.language40"],
+   ["#tmp","css-block-ruleset","paren.lparen52","constant.language40"],
   ["text","        "],
   ["support.type","background"],
   ["text",": "],
@@ -113,7 +113,7 @@
   ["support.constant","no-repeat"],
   ["text",";"]
 ],[
-   ["paren.lparen52","constant.language40"],
+   ["#tmp","css-block-start","paren.lparen52","constant.language40"],
   ["text","    "],
   ["paren.rparen","}"]
 ],[
