@@ -1,0 +1,25 @@
+
+machine_name    : "Three-state traffic light, plus off and flash-red";
+machine_version : 1.2.1;
+
+jssm_version    : >= 5.0.0;
+graph_layout    : dot;
+
+on_init         : ${setup};
+on_halt         : ${finalize};
+
+
+
+/* turn on */
+Off 'Enable' { follow: ${turned_on}; } -> Red;
+
+// main sequence
+Red 'Proceed' => Green 'Proceed' => Yellow 'Proceed' => Red;
+
+// emergency flash red
+[Red Yellow Green] 'Flash' -> Flash;
+Flash 'Proceed' { label: 'no change'; } -> Flash 'Exit' -> Red;
+
+// turn off
+[Red Yellow Green Flash] 'Disable' { follow: ${turned_off}; } ~> Off;
+
