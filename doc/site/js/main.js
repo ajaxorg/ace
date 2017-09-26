@@ -50,12 +50,12 @@ $(function() {
         }
     });
     
-    $("ul.menu-list li").click(function(e) {
+    $("ul.menu-list li").click("click auxclick", function(e) {
         if (e.target.tagName !== "A") {
             var href = $(this).find("a").attr("href");
-            if (e.button == 1)
+            if (e.originalEvent.button == 1)
                 window.open(href, "_blank");
-            else
+            else if (e.originalEvent.button == 0)
                 window.location = href;
         }
     });
@@ -138,7 +138,9 @@ $(function() {
 
         var state = {};
         state.nav = $(this).attr("href").substr(1);
-        $.bbq.pushState(state);
+        var oldState = $.bbq.getState("nav") || "about";
+        if (state.nav != oldState)
+            $.bbq.pushState(state);
      });
 
     $('#tabnav a[data-toggle="tab"]').on('shown', function (e) {

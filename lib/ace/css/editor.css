@@ -4,6 +4,7 @@
     font: 12px/normal 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
     direction: ltr;
     text-align: left;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
 .ace_scroller {
@@ -207,6 +208,10 @@
     transform: translatez(0);
 }
 
+.ace_multiselect .ace_cursor {
+    border-left-width: 1px;
+}
+
 .ace_slim-cursors .ace_cursor {
     border-left-width: 1px;
 }
@@ -223,10 +228,6 @@
 .ace_smooth-blinking .ace_cursor {
     -webkit-transition: opacity 0.18s;
             transition: opacity 0.18s;
-}
-
-.ace_editor.ace_multiselect .ace_cursor {
-    border-left-width: 1px;
 }
 
 .ace_marker-layer .ace_step, .ace_marker-layer .ace_stack {
@@ -454,3 +455,9 @@ styles.join("\n")
 .ace_br13{border-top-left-radius    : 3px; border-bottom-right-radius: 3px; border-bottom-left-radius:  3px;}
 .ace_br14{border-top-right-radius   : 3px; border-bottom-right-radius: 3px; border-bottom-left-radius:  3px;}
 .ace_br15{border-top-left-radius    : 3px; border-top-right-radius:    3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px;}
+
+.ace_text-input-ios {
+  position: absolute !important;
+  top: -100000px !important;
+  left: -100000px !important;
+}

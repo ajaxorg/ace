@@ -1,0 +1,158 @@
+[[
+   "punctuation.definition.comment.begin.csound",
+  ["punctuation.definition.comment.begin.csound","/*"]
+],[
+   "punctuation.definition.comment.begin.csound",
+  ["comment.block.csound"," * comment"]
+],[
+   "start",
+  ["comment.block.csound"," "],
+  ["punctuation.definition.comment.end.csound","*/"]
+],[
+   "start",
+  ["comment.line.semicolon.csound","; comment"]
+],[
+   "start",
+  ["comment.line.double-slash.csound","// comment"]
+],[
+   "start",
+  ["keyword.control.csound-score","a"],
+  ["text"," "],
+  ["keyword.control.csound-score","b"],
+  ["text"," "],
+  ["keyword.control.csound-score","C"],
+  ["text"," "],
+  ["keyword.control.csound-score","d"],
+  ["text"," "],
+  ["keyword.control.csound-score","e"],
+  ["text"," "],
+  ["keyword.control.csound-score","f"],
+  ["text"," "],
+  ["keyword.control.csound-score","i"],
+  ["text"," "],
+  ["keyword.control.csound-score","q"],
+  ["text"," "],
+  ["keyword.control.csound-score","s"],
+  ["text"," "],
+  ["keyword.control.csound-score","t"],
+  ["text"," "],
+  ["keyword.control.csound-score","v"],
+  ["text"," "],
+  ["keyword.control.csound-score","x"],
+  ["text"," "],
+  ["keyword.control.csound-score","y"]
+],[
+   "start",
+  ["constant.numeric.language.csound-score","z"]
+],[
+   "start",
+  ["keyword.control.csound-score","np"],
+  ["constant.numeric.integer.decimal.csound-score","0"],
+  ["text"," "],
+  ["keyword.control.csound-score","nP"],
+  ["constant.numeric.integer.decimal.csound-score","1"],
+  ["text"," "],
+  ["keyword.control.csound-score","Np"],
+  ["constant.numeric.integer.decimal.csound-score","2"],
+  ["text"," "],
+  ["keyword.control.csound-score","NP"],
+  ["constant.numeric.integer.decimal.csound-score","3"]
+],[
+   "start",
+  ["keyword.other.csound-score","m"],
+  ["punctuation.definition.comment.begin.csound","/*"],
+  ["punctuation.definition.comment.end.csound","*/"],
+  ["entity.name.label.csound-score","label"],
+  ["comment.line.semicolon.csound",";"]
+],[
+   "start",
+  ["keyword.other.csound-score","n"],
+  ["text"," "],
+  ["entity.name.label.csound-score","label"]
+],[
+   "start",
+  ["constant.numeric.integer.decimal.csound","123"],
+  ["text"," "],
+  ["constant.numeric.integer.decimal.csound","0123456789"]
+],[
+   "start",
+  ["storage.type.number.csound","0x"],
+  ["constant.numeric.integer.hexadecimal.csound","abcdef0123456789"],
+  ["text"," "],
+  ["storage.type.number.csound","0X"],
+  ["constant.numeric.integer.hexadecimal.csound","ABCDEF"]
+],[
+   "start",
+  ["constant.numeric.float.csound","1e2"],
+  ["text"," "],
+  ["constant.numeric.float.csound","3e+4"],
+  ["text"," "],
+  ["constant.numeric.float.csound","5e-6"],
+  ["text"," "],
+  ["constant.numeric.float.csound","7E8"],
+  ["text"," "],
+  ["constant.numeric.float.csound","9E+0"],
+  ["text"," "],
+  ["constant.numeric.float.csound","1E-2"],
+  ["text"," "],
+  ["constant.numeric.float.csound","3."],
+  ["text"," "],
+  ["constant.numeric.float.csound","4.56"],
+  ["text"," "],
+  ["constant.numeric.float.csound",".789"]
+],[
+   "start",
+  ["punctuation.definition.string.begin.csound-score","\""],
+  ["string.quoted.csound-score","characters"],
+  ["entity.name.function.preprocessor.csound","$MACRO."],
+  ["punctuation.definition.string.end.csound-score","\""]
+],[
+   ["#tmp","loop after macro name","start","loop after macro name"],
+  ["punctuation.braced-loop.begin.csound-score","{"],
+  ["text"," "],
+  ["constant.numeric.integer.decimal.csound-score","1"],
+  ["text"," "],
+  ["entity.name.function.preprocessor.csound-score","I"]
+],[
+   ["#tmp","loop after macro name","start","loop after macro name","loop after macro name"],
+  ["text","  "],
+  ["punctuation.braced-loop.begin.csound-score","{"],
+  ["text"," "],
+  ["constant.numeric.integer.decimal.csound-score","2"],
+  ["text"," "],
+  ["entity.name.function.preprocessor.csound-score","J"]
+],[
+   ["#tmp","loop after macro name","start","loop after macro name","loop after macro name","loop after macro name"],
+  ["text","    "],
+  ["punctuation.braced-loop.begin.csound-score","{"],
+  ["text"," "],
+  ["constant.numeric.integer.decimal.csound-score","3"],
+  ["text"," "],
+  ["entity.name.function.preprocessor.csound-score","K"]
+],[
+   ["#tmp","loop after macro name","start","loop after macro name","loop after macro name","loop after macro name"],
+  ["text","      "],
+  ["entity.name.function.preprocessor.csound","$I"],
+  ["text"," "],
+  ["entity.name.function.preprocessor.csound","$J"],
+  ["text"," "],
+  ["entity.name.function.preprocessor.csound","$K"]
+],[
+   ["#tmp","loop after macro name","start","loop after macro name","loop after macro name"],
+  ["text","    "],
+  ["punctuation.braced-loop.end.csound-score","}"]
+],[
+   ["#tmp","loop after macro name","start","loop after macro name"],
+  ["text","  "],
+  ["punctuation.braced-loop.end.csound-score","}"]
+],[
+   "start",
+  ["punctuation.braced-loop.end.csound-score","}"]
+],[
+   "start",
+  ["keyword.preprocessor.csound","#include"],
+  ["text"," "],
+  ["string.csound","\"score.sco\""]
+],[
+   "start"
+]]
