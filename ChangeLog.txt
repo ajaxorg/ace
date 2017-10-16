@@ -1,3 +1,16 @@
+2017.10.17 Version 1.2.9
+
+* added support for bidirectional text, with monospace font (Alex Shensis)
+* added support for emoji 😊
+
+* new language modes
+  - Red (Toomas Vooglaid)
+  - CSound (Nathan Whetsell)
+  - JSSM (John Haugeland)
+
+* New Themes
+  - Dracula (Austin Schwartz)
+
 2017.07.02 Version 1.2.8
 * Fixed small bugs in searchbox and autocompleter
 
