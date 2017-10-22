@@ -59,7 +59,7 @@ http.createServer(function(req, res) {
                 return;
             }
 
-            var contentType = lookupMime(filename) || "text/plain";
+            var contentType = lookupMime(filename);
             writeHead(res, 200, contentType);
             res.write(file, "binary");
             res.end();
@@ -72,7 +72,7 @@ function writeHead(res, code, contentType) {
         "Access-Control-Allow-Origin": "file://",
         "Access-Control-Allow-Methods": "PUT, GET, OPTIONS, HEAD"
     };
-    headers["Content-Type"] = contentType;
+    headers["Content-Type"] = contentType || "text/plain";
     res.writeHead(code, headers);
 }
 
