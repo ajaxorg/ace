@@ -311,7 +311,7 @@ editor.replace('bar');</code></pre>
                             <h1>Creating a Syntax Highlighter for Ace</h1>
                             <p>Creating a new syntax highlighter for Ace is extremely simple. You'll need to define two pieces of code: a new mode, and a new set of highlighting rules.</p>
                             <h2 id="where-to-start"><a class="heading_anchor" href="#where-to-start"><i class="headerLinkIcon"></i></a>Where to Start</h2>
-                            <p>We recommend using the the <a href="tool/mode_creator.html">Ace Mode Creator</a> when defining your highlighter. This allows you to inspect your code's tokens, as well as providing a live preview of the syntax highlighter in action.</p>
+                            <p>We recommend using the <a href="tool/mode_creator.html">Ace Mode Creator</a> when defining your highlighter. This allows you to inspect your code's tokens, as well as providing a live preview of the syntax highlighter in action.</p>
                             <h2 id="defining-a-mode"><a class="heading_anchor" href="#defining-a-mode"><i class="headerLinkIcon"></i></a>Defining a Mode</h2>
                             <p>Every language needs a mode. A mode contains the paths to a language's syntax highlighting rules, indentation rules, and code folding rules. Without defining a mode, Ace won't know anything about the finer aspects of your language.</p>
                             <p>Here is the starter template we'll use to create a new mode:</p>
@@ -482,7 +482,7 @@ var fonts = lang.arrayToMap(
         defaultToken : "text"
     } ]
 };</code></pre>
-                            <p>In this extremly short sample, we're defining some highlighting rules for when Ace detectes a <code>&lt;![CDATA</code> tag. When one is encountered, the tokenizer moves from <code>start</code> into the <code>cdata</code> state. It remains there, applying the <code>text</code> token to any string it encounters. Finally, when it hits a closing <code>]&gt;</code> symbol, it returns to the <code>start</code> state and continues to tokenize anything else.</p>
+                            <p>In this extremely short sample, we're defining some highlighting rules for when Ace detects a <code>&lt;![CDATA</code> tag. When one is encountered, the tokenizer moves from <code>start</code> into the <code>cdata</code> state. It remains there, applying the <code>text</code> token to any string it encounters. Finally, when it hits a closing <code>]&gt;</code> symbol, it returns to the <code>start</code> state and continues to tokenize anything else.</p>
                             <h2>Using the TMLanguage Tool</h2>
                             <p>There is a tool that 
                                 will take an existing <em>tmlanguage</em> file and do its best to convert it into Javascript for Ace to consume. Here's what you need to get started:
@@ -768,7 +768,7 @@ if (match) {
                                 </li>
                                 <li>
                                     <img src="https://upload.wikimedia.org/wikipedia/commons/6/63/Wikipedia-logo.png" style="left: -5px; top: -35px; width: 110px;">
-                                    <a href="https://en.wikipedia.org/wiki/Special:Version" style="font-family: 'Linux Libertine','Hoefler Text',Georgia,'Times New Roman',Times,serif;">W<span style="font-variant: small-caps;">ikipedi</span>A</a>
+                                    <a href="https://en.wikipedia.org/wiki/Special:Version" style="font-family: 'Linux Libertine','Hoefler Text',Georgia,'Times New Roman',Times,serif;">W<span style="font-variant: small-caps;">Wikipedia</span>A</a>
                                 </li>
                                 <li>
                                     <img src="doc/site/images/codiad.png"
