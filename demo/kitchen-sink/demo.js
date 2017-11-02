@@ -607,25 +607,25 @@ commandManager.addCommands([{
     name: "window-left",
     bindKey: {win: "cmd-alt-left", mac: "ctrl-cmd-left"},
     exec: function() {
-        moveFocus("left");
+        moveFocus();
     }
 }, {
     name: "window-right",
     bindKey: {win: "cmd-alt-right", mac: "ctrl-cmd-right"},
     exec: function() {
-        moveFocus("right");
+        moveFocus();
     }
 }, {
     name: "window-up",
     bindKey: {win: "cmd-alt-up", mac: "ctrl-cmd-up"},
     exec: function() {
-        moveFocus("up");
+        moveFocus();
     }
 }, {
     name: "window-down",
     bindKey: {win: "cmd-alt-down", mac: "ctrl-cmd-down"},
     exec: function() {
-        moveFocus("down");
+        moveFocus();
     }
 }]);
 
