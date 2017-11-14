@@ -127,6 +127,7 @@ function test() {
 
     var re1 = toRegex(wordChars)
     var re2 = toRegex(wordCharsMerged)
+    var re3 = RegExp("^[" + unicode.wordChars + "]");
 
 
     for (var i = 0; i < 0xffff; i++) {
@@ -134,7 +135,27 @@ function test() {
         if (re1.test(ch) != re2.test(ch)) {
             throw new Error("char: " + ch + ", code: " + i);
         }
+        if (re3.test(ch) != re2.test(ch)) {
+            throw new Error("char: " + ch + ", code: " + i);
+        }
     }
+}
+
+function toRollingSum(str) {
+    var charCodes = [];
+    str.replace(/(\w{4})(?:-(\w{4}))?/g, function(_, a, b) {
+        charCodes.push(parseInt(a, 16)); 
+        charCodes.push(parseInt(b, 16) || 0) 
+    });
+    var sum = 0; 
+    return charCodes.map(function(c) { 
+        if (c) { 
+            var c1 = c;
+            c = c - sum;
+            sum = c1;  
+        }
+        return c;
+    });
 }
  
 var wordChars = packages.L
@@ -143,16 +164,20 @@ var wordChars = packages.L
     + packages.Pc;
 
 var wordCharsMerged = mergeRanges(wordChars);
-test();
+var wordCharCodes = toRollingSum(wordCharsMerged);
 
 var fs = require("fs");
 var path = __dirname + "/../lib/ace/unicode.js"
 var value = fs.readFileSync(path, "utf8");
-value = value.replace(/(var wordChars = ").*(";)/, function(_, $1, $2) {
-    return $1 + wordCharsMerged + $2;
+value = value.replace(/(var wordChars = )[\["].*["\]](;)/, function(_, $1, $2) {
+    return $1 + JSON.stringify(wordCharCodes) + $2;
 });
 
 fs.writeFileSync(path, value, "utf8");
+
+require("amd-loader")
+var unicode = require(path);
+test();
 
 
 
