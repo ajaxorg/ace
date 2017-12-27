@@ -22,8 +22,6 @@
 
 .ace_content {
     position: absolute;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
     box-sizing: border-box;
     min-width: 100%;
 }
@@ -169,8 +167,6 @@
     white-space: pre;
     height: 100%;
     width: 100%;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
     box-sizing: border-box;
     /* setting pointer-events: auto; on node under the mouse, which changes
         during scroll, will break mouse wheel scrolling in Safari */
@@ -200,8 +196,6 @@
 .ace_cursor {
     z-index: 4;
     position: absolute;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
     box-sizing: border-box;
     border-left: 2px solid;
     /* workaround for smooth cursor repaintng whole screen in chrome */
@@ -226,8 +220,7 @@
 }
 
 .ace_smooth-blinking .ace_cursor {
-    -webkit-transition: opacity 0.18s;
-            transition: opacity 0.18s;
+    transition: opacity 0.18s;
 }
 
 .ace_marker-layer .ace_step, .ace_marker-layer .ace_stack {
@@ -253,14 +246,10 @@
 .ace_marker-layer .ace_selected-word {
     position: absolute;
     z-index: 4;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
     box-sizing: border-box;
 }
 
 .ace_line .ace_fold {
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
     box-sizing: border-box;
 
     display: inline-block;
@@ -293,7 +282,6 @@
 
 .ace_tooltip {
     background-color: #FFF;
-    background-image: -webkit-linear-gradient(top, transparent, rgba(0, 0, 0, 0.1));
     background-image: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.1));
     border: 1px solid gray;
     border-radius: 1px;
@@ -303,8 +291,6 @@
     padding: 3px 4px;
     position: fixed;
     z-index: 999999;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
     box-sizing: border-box;
     cursor: default;
     white-space: pre;
@@ -321,8 +307,6 @@
 }
 
 .ace_fold-widget {
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
     box-sizing: border-box;
 
     margin: 0 -12px 0 1px;
@@ -389,14 +373,12 @@
 }
 
 .ace_fade-fold-widgets .ace_fold-widget {
-    -webkit-transition: opacity 0.4s ease 0.05s;
-            transition: opacity 0.4s ease 0.05s;
+    transition: opacity 0.4s ease 0.05s;
     opacity: 0;
 }
 
 .ace_fade-fold-widgets:hover .ace_fold-widget {
-    -webkit-transition: opacity 0.05s ease 0.05s;
-            transition: opacity 0.05s ease 0.05s;
+    transition: opacity 0.05s ease 0.05s;
     opacity:1;
 }
 
