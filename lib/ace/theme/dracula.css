@@ -8,14 +8,14 @@
  * THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-ace-dracula .ace_gutter {
+.ace-dracula .ace_gutter {
   background: #282a36;
   color: rgb(144,145,148)
 }
 
 .ace-dracula .ace_print-margin {
   width: 1px;
-  background: #e8e8e8
+  background: #44475a
 }
 
 .ace-dracula {
@@ -42,7 +42,7 @@ ace-dracula .ace_gutter {
 
 .ace-dracula .ace_marker-layer .ace_bracket {
   margin: -1px 0 0 -1px;
-  border: 1px solid #3B3A32
+  border: 1px solid #a29709
 }
 
 .ace-dracula .ace_marker-layer .ace_active-line {
@@ -54,7 +54,8 @@ ace-dracula .ace_gutter {
 }
 
 .ace-dracula .ace_marker-layer .ace_selected-word {
-  border: 1px solid #44475a
+  box-shadow: 0px 0px 0px 1px #a29709;
+  border-radius: 3px;
 }
 
 .ace-dracula .ace_fold {
@@ -150,4 +151,11 @@ ace-dracula .ace_gutter {
 
 .ace-dracula .ace_entity.ace_name.ace_tag {
   color: #ff79c6
+}
+.ace-dracula .ace_invisible {
+  color: #626680;
+}
+
+.ace-dracula .ace_indent-guide {
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAEklEQVQImWNgYGBgYHB3d/8PAAOIAdULw8qMAAAAAElFTkSuQmCC) right repeat-y
 }
