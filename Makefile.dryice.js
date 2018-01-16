@@ -572,10 +572,23 @@ function addSnippetFile(modeName) {
 }
 
 function compress(text) {
-    var ujs = require("dryice").copy.filter.uglifyjs;
-    ujs.options.mangle_toplevel = {except: ["ACE_NAMESPACE", "requirejs"]};
-    ujs.options.beautify = {ascii_only: true, inline_script: true}
-    return ujs(text);
+    var uglify = require("dryice").copy.filter.uglifyjs;
+    uglify.options.mangle_toplevel = {except: ["ACE_NAMESPACE", "requirejs"]};
+    uglify.options.beautify = {ascii_only: true, inline_script: true}
+    return asciify(uglify(text));
+    // copy.filter.uglifyjs.options.ascii_only = true; doesn't work with some uglify.js versions
+    function asciify(text) {
+        return text.replace(/[\x00-\x08\x0b\x0c\x0e\x19\x80-\uffff]/g, function(c) {
+            c = c.charCodeAt(0).toString(16);
+            if (c.length == 1)
+                return "\\x0" + c;
+            if (c.length == 2)
+                return "\\x" + c;
+            if (c.length == 3)
+                return "\\u0" + c;
+            return "\\u" + c;
+        });
+    }
 }
 
 function extend(base, extra) {
