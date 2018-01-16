@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Editor</title>
+  <style type="text/css" media="screen">
+
+    .ace_editor, .toolbar {
+        border: 1px solid lightgray;
+        margin: auto;
+        width: 80%;
+    } 
+    .ace_editor {
+        height: 200px;
+    }
+    </style>
+</head>
+<body>
+
+<script src="kitchen-sink/require.js"></script>
+<script>
+// setup paths
+require.config({paths: { "ace" : "../lib/ace"}});
+// load ace and extensions
+require(["ace/ace", "ace/ext/language_tools"], function(ace) {
+    var editor = ace.edit();
+    editor.setOptions({
+        theme: "ace/theme/tomorrow_night_eighties",
+        mode: "ace/mode/markdown",
+        maxLines: 30,
+        minLines: 30,
+        autoScrollEditorIntoView: true,
+    });
+    var refs = {};
+    function updateToolbar() {
+        refs.saveButton.disabled = editor.session.getUndoManager().isClean();
+        refs.undoButton.disabled = !editor.session.getUndoManager().hasUndo();
+        refs.redoButton.disabled = !editor.session.getUndoManager().hasRedo();
+    }
+    editor.on("input", updateToolbar);
+    editor.session.setValue(localStorage.savedValue || "Welcome to ace Toolbar demo!")
+    function save() {
+        localStorage.savedValue = editor.getValue(); 
+        editor.session.getUndoManager().markClean();
+        updateToolbar();
+    }
+    editor.commands.addCommand({
+        name: "save",
+        exec: save,
+        bindKey: { win: "ctrl-s", mac: "cmd-s" }
+    });
+    
+    buildDom(["div", { class: "toolbar" },
+        ["button", {
+            ref: "saveButton",
+            onclick: save
+        }, "save"],
+        ["button", {
+            ref: "undoButton",
+            onclick: function() {
+                editor.undo();
+            }
+        }, "undo"],
+        ["button", {
+            ref: "redoButton",
+            onclick: function() {
+                editor.redo();
+            }
+        }, "redo"],
+        ["button", {
+            style: "font-weight: bold",
+            onclick: function() {
+                editor.insertSnippet("**${1:$SELECTION}**");
+                editor.renderer.scrollCursorIntoView()
+            }
+        }, "bold"],
+        ["button", {
+            style: "font-style: italic",
+            onclick: function() {
+                editor.insertSnippet("*${1:$SELECTION}*");
+                editor.renderer.scrollCursorIntoView()
+            }
+        }, "Italic"],
+    ], document.body, refs);
+    document.body.appendChild(editor.container)
+    
+    window.editor = editor;
+});
+
+function buildDom(arr, parent, refs) {
+    if (typeof arr == "string" && arr) {
+        var txt = document.createTextNode(arr);
+        if (parent)
+            parent.appendChild(txt);
+        return txt;
+    }
+    
+    if (!Array.isArray(arr))
+        return arr;
+    if (typeof arr[0] != "string" || !arr[0]) {
+        var els = [];
+        for (var i = 0; i < arr.length; i++) {
+            var ch = buildDom(arr[i], parent, refs);
+            ch && els.push(ch);
+        }
+        return els;
+    }
+    
+    var el = document.createElement(arr[0]);
+    var options = arr[1];
+    var childIndex = 1;
+    if (options && typeof options == "object" && !Array.isArray(options)) {
+        childIndex = 2;
+        Object.keys(options).forEach(function(n) {
+            var val = options[n];
+            if (n === "class") {
+                el.className = Array.isArray(val) ? val.join(" ") : val;
+            } else if (typeof val == "function") {
+                el[n] = val;
+            } else if (n === "ref") {
+                if (refs) refs[val] = el;
+            } else {
+                el.setAttribute(n, val);
+            }
+        });
+    }
+    for (var i = childIndex; i < arr.length; i++)
+        buildDom(arr[i], el, refs);
+    if (parent)
+        parent.appendChild(el);
+    return el;
+};
+
+
+</script>
+
+</body>
+</html>
