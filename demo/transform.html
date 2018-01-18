@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Editor</title>
+  <style type="text/css" media="screen">
+
+    .ace_editor {
+        border: 1px solid lightgray;
+        margin: auto;
+        height: 800px;
+        width: 400px;
+        font-size: 26px!important;
+        max-width: 30%;
+    }
+    .scrollmargin {
+        height: 80px;
+        text-align: center;
+        
+    }
+    #editor1, #editor2, #editor3 {
+        display:inline-block
+    }
+    .wrapper {
+        text-align: center;
+        perspective: 500px;
+        margin-top: 50px;
+    }
+
+    #editor1 {
+        transform: rotateY(10deg) rotateX(-1deg);
+    }
+    #editor2 {
+        transform: translateZ(-36px) rotateX(-1deg);
+    }
+    #editor3 {
+        transform: rotateY(-10deg) rotateX(-1deg);
+    }
+    #editor4 {
+        transform: scale(-1,1) rotateX(-1deg);
+    }
+    .transformed {
+        transform: scale(0.5);
+        transform-origin: center 12%
+    }
+    #editor {
+        width: 100%;
+        min-width: 100%
+    }
+    body {
+        background: #a9bfc7;
+        mix-blend-mode: multiply;
+    }
+    </style>
+</head>
+<body>
+<div class="transformed">
+    <div class="wrapper">
+        <pre id="editor1">editor1</pre>
+        <pre id="editor2">editor2</pre>
+        <pre id="editor3">editor3</pre>
+        <textarea></textarea>
+    </div>
+    <div class="scrollmargin"></div>
+    <pre id="editor4">editor4</pre>
+    <div class="scrollmargin">
+        <textarea></textarea>
+    </div>
+    <pre id="editor">editor</pre>
+    <div class="scrollmargin">
+    </div>
+</div>
+
+<div class="scrollmargin">
+    <input type="checkbox" id="option">Auto scroll into view</input>
+</div>
+
+<script src="kitchen-sink/require.js"></script>
+<script>
+// setup paths
+require.config({paths: { "ace" : "../lib/ace"}});
+// load ace and extensions
+require(["ace/ace"], function(ace) {
+
+    var editor1 = ace.edit("editor1");
+    editor1.setOptions({
+        theme: "ace/theme/tomorrow_night_blue",
+        mode: "ace/mode/html"
+    });
+    
+    var editor2 = ace.edit("editor2");
+    editor2.setOptions({
+        theme: "ace/theme/kuroir",
+        mode: "ace/mode/html"
+    });
+    
+    var editor3 = ace.edit("editor3");
+    editor3.setOptions({
+        theme: "ace/theme/tomorrow_night_eighties",
+        mode: "ace/mode/html"
+    });
+    
+    
+    var editor4 = ace.edit("editor4");
+    editor4.setOptions({
+        theme: "ace/theme/solarized_light",
+        mode: "ace/mode/html"
+    });
+    
+    
+
+    var editor = ace.edit("editor");
+    editor.setOptions({
+        mode: "ace/mode/html",
+        value: "editor 4\n from a mirror",
+    });
+    editor.renderer.setScrollMargin(10, 10, 10, 10);
+    
+    
+    var checkbox = document.getElementById("option");
+    checkbox.onchange = function() {
+        editor1.setOption("autoScrollEditorIntoView", checkbox.checked);
+        editor2.setOption("autoScrollEditorIntoView", checkbox.checked);
+        editor3.setOption("autoScrollEditorIntoView", checkbox.checked);
+        editor4.setOption("autoScrollEditorIntoView", checkbox.checked);
+        editor.setOption("autoScrollEditorIntoView", checkbox.checked);
+    };
+    checkbox.onchange();
+});
+</script>
+
+<script src="./show_own_source.js"></script>
+
+</body>
+</html>

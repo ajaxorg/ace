@@ -149,13 +149,23 @@
     /*with `pre-line` chrome inserts &nbsp; instead of space*/
     white-space: pre!important;
 }
-
 .ace_text-input.ace_composition {
     background: inherit;
     color: inherit;
     z-index: 1000;
     opacity: 1;
     text-indent: 0;
+}
+[ace_nocontext=true] {
+    transform: none!important;
+    filter: none!important;
+    perspective: none!important;
+    clip-path: none!important;
+    mask : none!important;
+    contain: none!important;
+    perspective: none!important;
+    mix-blend-mode: initial!important;
+    z-index: auto;
 }
 
 .ace_layer {
