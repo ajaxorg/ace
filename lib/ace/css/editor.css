@@ -377,6 +377,21 @@
     box-shadow: 0 1px 1px rgba(255, 255, 255, 0.2);
 }
 
+.ace_inline_button {
+    border: 1px solid lightgray;
+    display: inline-block;
+    margin: -1px 8px;
+    padding: 0 5px;
+    pointer-events: auto;
+    cursor: pointer;
+}
+.ace_inline_button:hover {
+    border-color: gray;
+    background: rgba(200,200,200,0.2);
+    display: inline-block;
+    pointer-events: auto;
+}
+
 .ace_fold-widget.ace_invalid {
     background-color: #FFB4B4;
     border-color: #DE5555;
