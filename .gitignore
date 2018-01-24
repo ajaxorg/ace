@@ -10,6 +10,7 @@
 !/.gitignore
 .*.gz
 *.tmTheme.js
+package-lock.json
 
 # A handy place to put stuff that git should ignore:
 /ignore/
