@@ -1,0 +1,94 @@
+[[
+   "start",
+  ["text","\"child-src\""]
+],[
+   "start",
+  ["text","\"connect-src\""]
+],[
+   "start",
+  ["text","\"default-src\""]
+],[
+   "start",
+  ["text","\"font-src\""]
+],[
+   "start",
+  ["text","\"frame-src\""]
+],[
+   "start",
+  ["text","\"img-src\""]
+],[
+   "start",
+  ["text","\"manifest-src\""]
+],[
+   "start",
+  ["text","\"media-src\""]
+],[
+   "start",
+  ["text","\"object-src\""]
+],[
+   "start",
+  ["text","\"script-src\""]
+],[
+   "start",
+  ["text","\"style-src\""]
+],[
+   "start",
+  ["text","\"worker-src\""]
+],[
+   "start",
+  ["text","\"base-uri\""]
+],[
+   "start",
+  ["text","\"plugin-types\""]
+],[
+   "start",
+  ["text","\"sandbox\""]
+],[
+   "start",
+  ["text","\"disown-opener\""]
+],[
+   "start",
+  ["text","\"form-action\""]
+],[
+   "start",
+  ["text","\"frame-ancestors\""]
+],[
+   "start",
+  ["text","\"report-uri\""]
+],[
+   "start",
+  ["text","\"report-to\""]
+],[
+   "start",
+  ["text","\"upgrade-insecure-requests\""]
+],[
+   "start",
+  ["text","\"block-all-mixed-content\""]
+],[
+   "start",
+  ["text","\"require-sri-for\""]
+],[
+   "start",
+  ["text","\"reflected-xss\""]
+],[
+   "start",
+  ["text","\"referrer\""]
+],[
+   "start",
+  ["text","\"policy-uri\""]
+],[
+   "start",
+  ["text","\"'self'\""]
+],[
+   "start",
+  ["text","\"'unsafe-inline'\""]
+],[
+   "start",
+  ["text","\"'unsafe-eval'\""]
+],[
+   "start",
+  ["text","\"'strict-dynamic'\""]
+],[
+   "start",
+  ["text","\"'unsafe-hashed-attributes'\""]
+]]
