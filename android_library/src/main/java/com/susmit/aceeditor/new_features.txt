@@ -1,0 +1,4 @@
+OnSelectionActionListener
+Find and replace
+Internal: added JSON parser for multiline results
+Modified ResultReceivedListener to support multiple lines
