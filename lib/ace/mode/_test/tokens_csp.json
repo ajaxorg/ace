@@ -1,94 +1,156 @@
 [[
    "start",
-  ["text","\"child-src\""]
+  ["text","\""],
+  ["constant.language.character","child-src"],
+  ["text","\""]
 ],[
    "start",
-  ["text","\"connect-src\""]
+  ["text","\""],
+  ["constant.language.character","connect-src"],
+  ["text","\""]
 ],[
    "start",
-  ["text","\"default-src\""]
+  ["text","\""],
+  ["constant.language.character","default-src"],
+  ["text","\""]
 ],[
    "start",
-  ["text","\"font-src\""]
+  ["text","\""],
+  ["constant.language.character","font-src"],
+  ["text","\""]
 ],[
    "start",
-  ["text","\"frame-src\""]
+  ["text","\""],
+  ["constant.language.character","frame-src"],
+  ["text","\""]
 ],[
    "start",
-  ["text","\"img-src\""]
+  ["text","\""],
+  ["constant.language.character","img-src"],
+  ["text","\""]
 ],[
    "start",
-  ["text","\"manifest-src\""]
+  ["text","\""],
+  ["constant.language.character","manifest-src"],
+  ["text","\""]
 ],[
    "start",
-  ["text","\"media-src\""]
+  ["text","\""],
+  ["constant.language.character","media-src"],
+  ["text","\""]
 ],[
    "start",
-  ["text","\"object-src\""]
+  ["text","\""],
+  ["constant.language.character","object-src"],
+  ["text","\""]
 ],[
    "start",
-  ["text","\"script-src\""]
+  ["text","\""],
+  ["constant.language.character","script-src"],
+  ["text","\""]
 ],[
    "start",
-  ["text","\"style-src\""]
+  ["text","\""],
+  ["constant.language.character","style-src"],
+  ["text","\""]
 ],[
    "start",
-  ["text","\"worker-src\""]
+  ["text","\""],
+  ["constant.language.character","worker-src"],
+  ["text","\""]
 ],[
    "start",
-  ["text","\"base-uri\""]
+  ["text","\""],
+  ["constant.language.character","base-uri"],
+  ["text","\""]
 ],[
    "start",
-  ["text","\"plugin-types\""]
+  ["text","\""],
+  ["constant.language.character","plugin-types"],
+  ["text","\""]
 ],[
    "start",
-  ["text","\"sandbox\""]
+  ["text","\""],
+  ["constant.language.character","sandbox"],
+  ["text","\""]
 ],[
    "start",
-  ["text","\"disown-opener\""]
+  ["text","\""],
+  ["constant.language.character","disown-opener"],
+  ["text","\""]
 ],[
    "start",
-  ["text","\"form-action\""]
+  ["text","\""],
+  ["constant.language.character","form-action"],
+  ["text","\""]
 ],[
    "start",
-  ["text","\"frame-ancestors\""]
+  ["text","\""],
+  ["constant.language.character","frame-ancestors"],
+  ["text","\""]
 ],[
    "start",
-  ["text","\"report-uri\""]
+  ["text","\""],
+  ["constant.language.character","report-uri"],
+  ["text","\""]
 ],[
    "start",
-  ["text","\"report-to\""]
+  ["text","\""],
+  ["constant.language.character","report-to"],
+  ["text","\""]
 ],[
    "start",
-  ["text","\"upgrade-insecure-requests\""]
+  ["text","\""],
+  ["constant.language.character","upgrade-insecure-requests"],
+  ["text","\""]
 ],[
    "start",
-  ["text","\"block-all-mixed-content\""]
+  ["text","\""],
+  ["constant.language.character","block-all-mixed-content"],
+  ["text","\""]
 ],[
    "start",
-  ["text","\"require-sri-for\""]
+  ["text","\""],
+  ["constant.language.character","require-sri-for"],
+  ["text","\""]
 ],[
    "start",
-  ["text","\"reflected-xss\""]
+  ["text","\""],
+  ["constant.language.character","reflected-xss"],
+  ["text","\""]
 ],[
    "start",
-  ["text","\"referrer\""]
+  ["text","\""],
+  ["constant.language.character","referrer"],
+  ["text","\""]
 ],[
    "start",
-  ["text","\"policy-uri\""]
+  ["text","\""],
+  ["constant.language.character","policy-uri"],
+  ["text","\""]
 ],[
    "start",
-  ["text","\"'self'\""]
+  ["text","\""],
+  ["constant.language.character","'self'"],
+  ["text","\""]
 ],[
    "start",
-  ["text","\"'unsafe-inline'\""]
+  ["text","\""],
+  ["constant.language.character","'unsafe-inline'"],
+  ["text","\""]
 ],[
    "start",
-  ["text","\"'unsafe-eval'\""]
+  ["text","\""],
+  ["constant.language.character","'unsafe-eval'"],
+  ["text","\""]
 ],[
    "start",
-  ["text","\"'strict-dynamic'\""]
+  ["text","\""],
+  ["constant.language.character","'strict-dynamic'"],
+  ["text","\""]
 ],[
    "start",
-  ["text","\"'unsafe-hashed-attributes'\""]
+  ["text","\""],
+  ["constant.language.character","'unsafe-hashed-attributes'"],
+  ["text","\""]
 ]]
