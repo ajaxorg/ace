@@ -1,156 +1,94 @@
 [[
    "start",
-  ["text","\""],
-  ["constant.language.character","child-src"],
-  ["text","\""]
+  ["constant.language","child-src"]
 ],[
    "start",
-  ["text","\""],
-  ["constant.language.character","connect-src"],
-  ["text","\""]
+  ["constant.language","connect-src"]
 ],[
    "start",
-  ["text","\""],
-  ["constant.language.character","default-src"],
-  ["text","\""]
+  ["constant.language","default-src"]
 ],[
    "start",
-  ["text","\""],
-  ["constant.language.character","font-src"],
-  ["text","\""]
+  ["constant.language","font-src"]
 ],[
    "start",
-  ["text","\""],
-  ["constant.language.character","frame-src"],
-  ["text","\""]
+  ["constant.language","frame-src"]
 ],[
    "start",
-  ["text","\""],
-  ["constant.language.character","img-src"],
-  ["text","\""]
+  ["constant.language","img-src"]
 ],[
    "start",
-  ["text","\""],
-  ["constant.language.character","manifest-src"],
-  ["text","\""]
+  ["constant.language","manifest-src"]
 ],[
    "start",
-  ["text","\""],
-  ["constant.language.character","media-src"],
-  ["text","\""]
+  ["constant.language","media-src"]
 ],[
    "start",
-  ["text","\""],
-  ["constant.language.character","object-src"],
-  ["text","\""]
+  ["constant.language","object-src"]
 ],[
    "start",
-  ["text","\""],
-  ["constant.language.character","script-src"],
-  ["text","\""]
+  ["constant.language","script-src"]
 ],[
    "start",
-  ["text","\""],
-  ["constant.language.character","style-src"],
-  ["text","\""]
+  ["constant.language","style-src"]
 ],[
    "start",
-  ["text","\""],
-  ["constant.language.character","worker-src"],
-  ["text","\""]
+  ["constant.language","worker-src"]
 ],[
    "start",
-  ["text","\""],
-  ["constant.language.character","base-uri"],
-  ["text","\""]
+  ["constant.language","base-uri"]
 ],[
    "start",
-  ["text","\""],
-  ["constant.language.character","plugin-types"],
-  ["text","\""]
+  ["constant.language","plugin-types"]
 ],[
    "start",
-  ["text","\""],
-  ["constant.language.character","sandbox"],
-  ["text","\""]
+  ["constant.language","sandbox"]
 ],[
    "start",
-  ["text","\""],
-  ["constant.language.character","disown-opener"],
-  ["text","\""]
+  ["constant.language","disown-opener"]
 ],[
    "start",
-  ["text","\""],
-  ["constant.language.character","form-action"],
-  ["text","\""]
+  ["constant.language","form-action"]
 ],[
    "start",
-  ["text","\""],
-  ["constant.language.character","frame-ancestors"],
-  ["text","\""]
+  ["constant.language","frame-ancestors"]
 ],[
    "start",
-  ["text","\""],
-  ["constant.language.character","report-uri"],
-  ["text","\""]
+  ["constant.language","report-uri"]
 ],[
    "start",
-  ["text","\""],
-  ["constant.language.character","report-to"],
-  ["text","\""]
+  ["constant.language","report-to"]
 ],[
    "start",
-  ["text","\""],
-  ["constant.language.character","upgrade-insecure-requests"],
-  ["text","\""]
+  ["constant.language","upgrade-insecure-requests"]
 ],[
    "start",
-  ["text","\""],
-  ["constant.language.character","block-all-mixed-content"],
-  ["text","\""]
+  ["constant.language","block-all-mixed-content"]
 ],[
    "start",
-  ["text","\""],
-  ["constant.language.character","require-sri-for"],
-  ["text","\""]
+  ["constant.language","require-sri-for"]
 ],[
    "start",
-  ["text","\""],
-  ["constant.language.character","reflected-xss"],
-  ["text","\""]
+  ["constant.language","reflected-xss"]
 ],[
    "start",
-  ["text","\""],
-  ["constant.language.character","referrer"],
-  ["text","\""]
+  ["constant.language","referrer"]
 ],[
    "start",
-  ["text","\""],
-  ["constant.language.character","policy-uri"],
-  ["text","\""]
+  ["constant.language","policy-uri"]
 ],[
    "start",
-  ["text","\""],
-  ["constant.language.character","'self'"],
-  ["text","\""]
+  ["variable","'self'"]
 ],[
    "start",
-  ["text","\""],
-  ["constant.language.character","'unsafe-inline'"],
-  ["text","\""]
+  ["variable","'unsafe-inline'"]
 ],[
    "start",
-  ["text","\""],
-  ["constant.language.character","'unsafe-eval'"],
-  ["text","\""]
+  ["variable","'unsafe-eval'"]
 ],[
    "start",
-  ["text","\""],
-  ["constant.language.character","'strict-dynamic'"],
-  ["text","\""]
+  ["variable","'strict-dynamic'"]
 ],[
    "start",
-  ["text","\""],
-  ["constant.language.character","'unsafe-hashed-attributes'"],
-  ["text","\""]
+  ["variable","'unsafe-hashed-attributes'"]
 ]]
