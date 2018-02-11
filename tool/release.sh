@@ -96,7 +96,7 @@ fi
 
 pause "continue pushing to github? [y/n]"
 
-git push --progress --tags "origin" HEAD:gh-pages HEAD:master
+git push --progress "origin" HEAD:gh-pages HEAD:master refs/tags/"v"$VERSION_NUM:refs/tags/"v"$VERSION_NUM
 
 echo "build repository updated"
 
@@ -113,7 +113,7 @@ fi
 
 pause "continue pushing to github? [y/n]"
 
-git push --progress --tags "origin" HEAD:gh-pages HEAD:master
+git push --progress "origin" HEAD:gh-pages HEAD:master refs/tags/"v"$VERSION_NUM:refs/tags/"v"$VERSION_NUM
 echo "All done!"
 pause "May I go now? [y/n]"
 
