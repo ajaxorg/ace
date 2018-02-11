@@ -190,32 +190,63 @@ console.log(addResult);
                             <p><em>In all of these examples Ace has been invoked 
                                 as shown in the <a href="#nav=embedding">embedding guide</a>.</em>
                             </p>
+                            <h2>Configuring the editor</h2>
+                            <p>there are several ways to pass pass configuration to Ace</p>
+                            <pre><code class="javascript">// pass options to ace.edit
+ace.edit(element, {
+    mode: "ace/mode/javascript",
+    selectionStyle: "text"
+})
+// use setOptions method to set several options at once
+editor.setOptions({
+    autoScrollEditorIntoView: true,
+    copyWithEmptySelection: true,
+});
+// use setOptions method
+editor.setOption("mergeUndoDeltas", "always");
+
+// some options are also available as methods e.g. 
+editor.setTheme(...)
+
+// to get the value of the option use
+editor.getOption("optionName");
+</code>
+</pre>
+                            <p>See <a href="https://github.com/ajaxorg/ace/wiki/Configuring-Ace">Configuring-Ace wiki page</a> for a more detailed list of options.</p>
+                            <h3>Changing the size of the editor</h3>
+                            <p>Ace only checks for changes of the size of it's container when window is resized. If you resize the editor div in another manner, and need Ace to resize, use the following:</p>
+                            <pre><code class="javascript">editor.resize()</code></pre>
+                            <p>if you want editor to change it's size based on contents, use maxLines option as shown in <a target="_blank" rel="noreferer noopener" href="https://ace.c9.io/demo/autoresize.html">https://ace.c9.io/demo/autoresize.html</a></p>
                             <h2>Setting Themes</h2>
                             <p>Themes are loaded on demand; all you have to do is pass the string name:</p>
                             <pre><code class="javascript">editor.setTheme("ace/theme/twilight");</code></pre>
-                            <p><span class="expand_arrow">&gt;</span> <a href="https://github.com/ajaxorg/ace/tree/master/lib/ace/theme" target="_blank" rel="noreferer">See all themes</a></p>
+                            <p><span class="expand_arrow">&gt;</span> <a href="https://github.com/ajaxorg/ace/tree/master/lib/ace/theme" target="_blank" rel="noreferer noopener">See all themes</a></p>
                             <h2>Setting the Programming Language Mode</h2>
                             <p>By default, the editor supports plain text mode. All other language modes are available as separate modules, loaded on demand like this:</p>
                             <pre><code class="javascript">editor.session.setMode("ace/mode/javascript");</code></pre>
-                            <!--h2>One Editor, Multiple Sessions</h2>
+                            <h2>One Editor, Multiple Sessions</h2>
                                 <p>Ace keeps everything about the state of the editor (selection, scroll position, etc.)
                                     in <code class="javascript">editor.session</code>. This means you can grab the
                                     session, store it in a var, and set the editor to another session (e.g. a tabbed editor).</p>
                                 <p>You might accomplish this like so:</p>
                                 
                                 <pre><code class="javascript">var EditSession = require("ace/edit_session").EditSession;
-                                var js = new EditSession("some js code");
-                                var css = new EditSession(["some", "css", "code here"]);
-                                // and then to load document into editor, just call
-                                editor.setSession(js);</code></pre-->
+var js = new EditSession("some js code");
+var css = new EditSession(["some", "css", "code here"]);
+// and then to load document into editor, just call
+editor.setSession(js);</code></pre>
                             <h2>Common Operations</h2>
                             <p>Set and get content:</p>
-                            <pre><code class="javascript">editor.setValue("the new text here"); // or session.setValue
+                            <pre><code class="javascript">editor.setValue("the new text here");
+editor.session.setValue("the new text here"); // set value and reset undo history
 editor.getValue(); // or session.getValue</code></pre>
                             <p>Get selected text:</p>
-                            <pre><code class="javascript">editor.session.getTextRange(editor.getSelectionRange());</code></pre>
-                            <p>Insert at cursor:</p>
+                            <pre><code class="javascript">editor.getSelectedText(); // or for a specific range
+editor.session.getTextRange(editor.getSelectionRange()); </code></pre>
+                            <p>Insert at cursor, emulating user input:</p>
                             <pre><code class="javascript">editor.insert("Something cool");</code></pre>
+                            <p>Replace text in range:</p>
+                            <pre><code class="javascript">editor.session.replace(new ace.Range(0, 0, 1, 1), "new text");</code></pre>
                             <p>Get the current cursor line and column:</p>
                             <pre><code class="javascript">editor.selection.getCursor();</code></pre>
                             <p>Go to a line:</p>
@@ -223,22 +254,30 @@ editor.getValue(); // or session.getValue</code></pre>
                             <p>Get total number of lines:</p>
                             <pre><code class="javascript">editor.session.getLength();</code></pre>
                             <p>Set the default tab size:</p>
-                            <pre><code class="javascript">editor.getSession().setTabSize(4);</code></pre>
+                            <pre><code class="javascript">editor.session.setTabSize(4);</code></pre>
                             <p>Use soft tabs:</p>
-                            <pre><code class="javascript">editor.getSession().setUseSoftTabs(true);</code></pre>
+                            <pre><code class="javascript">editor.session.setUseSoftTabs(true);</code></pre>
                             <p>Set the font size:</p>
                             <pre><code class="javascript">document.getElementById('editor').style.fontSize='12px';</code></pre>
                             <p>Toggle word wrapping:</p>
-                            <pre><code class="javascript">editor.getSession().setUseWrapMode(true);</code></pre>
+                            <pre><code class="javascript">editor.session.setUseWrapMode(true);</code></pre>
                             <p>Set line highlighting:</p>
                             <pre><code class="javascript">editor.setHighlightActiveLine(false);</code></pre>
                             <p>Set the print margin visibility:</p>
                             <pre><code class="javascript">editor.setShowPrintMargin(false);</code></pre>
                             <p>Set the editor to read-only:</p>
                             <pre><code class="javascript">editor.setReadOnly(true);  // false to make it editable</code></pre>
-                            <h3>Triggering Resizes</h3>
-                            <p>Ace only resizes itself on window events. If you resize the editor div in another manner, and need Ace to resize, use the following:</p>
-                            <pre><code class="javascript">editor.resize()</code></pre>
+                            <h3>Using undo manager</h3>
+                            <p>To group undo delta of the next edit with the previous one set `mergeUndoDeltas` to true</p>
+                            <pre><code class="language-javascript">editor.session.mergeUndoDeltas = true; 
+editor.session.insert({row: 0, column:0}, Date()+"");</code></pre>
+
+                            <p>To start new undo group use `markUndoGroup` method</p>
+                            <pre><code class="language-javascript">editor.insertSnippet("a$0b"); 
+editor.session.markUndoGroup(); 
+editor.insertSnippet("x$0y");</code></pre>
+                            <p>To implement undo/redo buttons see <a target="_blank" rel="noreferer noopener" href="https://ace.c9.io/demo/toolbar.html">https://ace.c9.io/demo/toolbar.html</a></p>
+
                             <h3>Searching</h3>
                             <pre><code class="language-javascript">editor.find('needle',{
     backwards: false,
@@ -290,14 +329,14 @@ editor.replace('bar');</code></pre>
                             <p>(<code>editor.replaceAll</code> uses the needle set earlier by <code>editor.find('needle', ...</code>)</p>
                             <h3>Listening to Events</h3>
                             <p>To listen for an <code>onchange</code>:</p>
-                            <pre><code class="javascript">editor.getSession().on('change', function(e) {
-    // e.type, etc
+                            <pre><code class="javascript">editor.session.on('change', function(delta) {
+    // delta.start, delta.end, delta.lines, delta.action
 });</code></pre>
                             <p>To listen for an <code>selection</code> change:</p>
-                            <pre><code class="javascript">editor.getSession().selection.on('changeSelection', function(e) {
+                            <pre><code class="javascript">editor.session.selection.on('changeSelection', function(e) {
 });</code></pre>
                             <p>To listen for a <code>cursor</code> change:</p>
-                            <pre><code class="javascript">editor.getSession().selection.on('changeCursor', function(e) {
+                            <pre><code class="javascript">editor.session.selection.on('changeCursor', function(e) {
 });</code></pre>
                             <h3>Adding New Commands and Keybindings</h3>
                             <p>To assign key bindings to a custom function:</p>
