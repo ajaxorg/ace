@@ -4,9 +4,10 @@ node_js:
     - "4"
 
 script:
-    - npm i eslint
+    - npm i eslint codecov istanbul
     - node node_modules/eslint/bin/eslint "lib/ace/**/*.js"
-    - npm test
+    - node_modules/.bin/istanbul cover lib/ace/test/all.js
+    - node_modules/.bin/codecov
 
 matrix:
     fast_finish: false
