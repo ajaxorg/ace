@@ -18,7 +18,7 @@ $(function() {
         });
         
         ace.config.loadModule("ace/ext/emmet", function() {
-            ace.require("ace/lib/net").loadScript("http://cloud9ide.github.io/emmet-core/emmet.js", function() {
+            ace.require("ace/lib/net").loadScript("https://cloud9ide.github.io/emmet-core/emmet.js", function() {
                 embedded_editor.setOption("enableEmmet", true);
                 editor.setOption("enableEmmet", true);
             });
@@ -50,7 +50,7 @@ $(function() {
         }
     });
     
-    $("ul.menu-list li").click("click auxclick", function(e) {
+    $("ul.menu-list li").on("click auxclick", function(e) {
         if (e.target.tagName !== "A") {
             var href = $(this).find("a").attr("href");
             if (e.originalEvent.button == 1)
