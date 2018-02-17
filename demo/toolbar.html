@@ -83,10 +83,9 @@ require(["ace/ace", "ace/ext/language_tools"], function(ace) {
             }
         }, "Italic"],
     ], document.body, refs);
-    document.body.appendChild(editor.container)
+document.body.appendChild(editor.container)
     
-    window.editor = editor;
-});
+window.editor = editor;
 
 function buildDom(arr, parent, refs) {
     if (typeof arr == "string" && arr) {
