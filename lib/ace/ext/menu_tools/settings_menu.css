@@ -24,19 +24,6 @@
     transition: all 0.3s
 }
 
-.ace_closeButton {
-    background: rgba(245, 146, 146, 0.5);
-    border: 1px solid #F48A8A;
-    border-radius: 50%;
-    padding: 7px;
-    position: absolute;
-    right: -8px;
-    top: -8px;
-    z-index: 100000;
-}
-.ace_closeButton{
-    background: rgba(245, 146, 146, 0.9);
-}
 .ace_optionsMenuKey {
     color: darkslateblue;
     font-weight: bold;
@@ -62,3 +49,9 @@
 .ace_optionsMenuEntry button:hover{
     background: #f0f0f0;
 }
+
+.ace_prompt_cover {
+    opacity: 0;
+    transition: 0.1s all;
+}
+
