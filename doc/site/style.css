@@ -3,6 +3,10 @@ body {
     padding:0;
     background-color:#e6f5fc;
     font-family: Helvetica, Arial;
+    padding-left: calc(100vw - 100%);
+    background: url(images/body_background.png) repeat-x 0 -15px;
+    padding-left: calc(100vw - 100%);
+    background-color:#e6f5fc;
 }
 
 
@@ -13,6 +17,10 @@ body {
     border-radius: 4px;
     border-bottom-right-radius: 0px;
     margin-top: 5px;
+}
+
+#ace_editor_demo {
+    margin-bottom: 0px;
 }
 
 #embedded_ace_code {
@@ -63,7 +71,7 @@ UL{
 #header {
 	height: 93px;
 	position: relative;
-	background: url(images/background.png) repeat-x 0 0;
+	background: linear-gradient(to bottom, #c0deef, #cde9fa 17px, #daf0fb 100px, #e4f4fc 150px, #e6f5fc 250px, #e6f5fc 100%);
 	border-bottom: 1px solid #C9E8FA;
 	margin-top: 40px;
 }
@@ -107,11 +115,6 @@ UL{
 	left: 329px;
 }
 
-#wrapper {
-    background:url(images/body_background.png) repeat-x 0 -15px;
-    min-height:250px;
-}
-
 #wrapper .content {
     font-family:Arial;
     font-size:14px;
@@ -146,12 +149,11 @@ UL{
 }
 
 #top_container {
-    background: url(images/header-bg.png) 0 0;
+    background: linear-gradient(to bottom, #fff 0, #fff 2px, #f7f7f7 2px, #f2f2f2 298px);
     overflow: hidden;
     padding: 11px 36px 19px 40px;
     height: 267px;
-    -webkit-transition: height 0.4s ease-out, opacity 0.4s ease-out, padding 0.4s ease-out, margin 0.4s ease-out;
-    -moz-transition: height 0.4s ease-out, opacity 0.4s ease-out, padding 0.4s ease-out, margin 0.4s ease-out;
+    transition: height 0.4s ease-out, opacity 0.4s ease-out, padding 0.4s ease-out, margin 0.4s ease-out;
     opacity: 1;
     margin-top: 25px;
 }
@@ -231,9 +233,7 @@ ul.menu-list li {
     margin-left: 22px;
     margin-top: 20px;
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
-    -moz-box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
-    -webkit-transition: box-shadow 0.4s;
-    -moz-transition: box-shadow 0.4s;
+    transition: box-shadow 0.4s;
     border: 1px solid #999;
     background-image:   -webkit-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0)   6%, hsla(0,0%,100%, .1) 7.5%),					
 						-webkit-repeating-linear-gradient(left, hsla(0,0%,  0%,0) 0%, hsla(0,0%,  0%,0)   4%, hsla(0,0%,  0%,.03) 4.5%),					
@@ -297,21 +297,21 @@ ul.menu-list li#add_your_site a {
 }
 
 /* This is the animation code. */
-@-webkit-keyframes example {
-    0% { -webkit-transform: rotate(0deg); }
-    25% { -webkit-transform: rotate(3deg); }
-    50%   { -webkit-transform: rotate(0deg); }
-    75%   { -webkit-transform: rotate(-3deg); }
+@keyframes example {
+    0% { transform: rotate(0deg); }
+    25% { transform: rotate(3deg); }
+    50%   { transform: rotate(0deg); }
+    75%   { transform: rotate(-3deg); }
 }
 
 /* This is the element that we apply the animation to. */
 li#add_your_site {
-   -webkit-animation-name: example;
-   -webkit-animation-duration: 0.4s;
-   -webkit-animation-timing-function: ease; /* ease is the default */
-   -webkit-animation-delay: 0s;             /* 0 is the default */
-   -webkit-animation-iteration-count: infinite;    /* 1 is the default */
-   -webkit-animation-direction: alternate;  /* normal is the default */
+   animation-name: example;
+   animation-duration: 0.4s;
+   animation-timing-function: ease; /* ease is the default */
+   animation-delay: 0s;             /* 0 is the default */
+   animation-iteration-count: infinite;    /* 1 is the default */
+   animation-direction: alternate;  /* normal is the default */
 }
 
 A {
@@ -362,13 +362,7 @@ UL.menu-footer LI A:hover {
     border-radius: 5px;
     border: 1px solid #d7d7d7;
     background: #eeeeee;
-    background: -moz-linear-gradient(top,  #eeeeee 0%, #cccccc 100%);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#eeeeee), color-stop(100%,#cccccc));
-    background: -webkit-linear-gradient(top,  #eeeeee 0%,#cccccc 100%);
-    background: -o-linear-gradient(top,  #eeeeee 0%,#cccccc 100%);
-    background: -ms-linear-gradient(top,  #eeeeee 0%,#cccccc 100%);
     background: linear-gradient(to bottom,  #eeeeee 0%,#cccccc 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eeeeee', endColorstr='#cccccc',GradientType=0 );
     overflow: hidden;
 }
 
@@ -390,9 +384,7 @@ UL.menu-footer LI A:hover {
     color: #333;
     text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.3);
     box-shadow: 0 0 1px rgba(255, 255, 255, 1);
-    -moz-box-shadow: 0 0 1px rgba(255, 255, 255, 1);
-    -webkit-transition: background 0.2s;
-    -moz-transition: background 0.2s;
+    transition: background 0.2s;
 }
 
 .nav.nav-pills li:first-child > a {
@@ -459,8 +451,6 @@ p.highlight_note {
     text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
     background-color: #FCF8E3;
     border: 1px solid #CA9C44;
-    -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
     border-radius: 4px;
 }
 
@@ -495,15 +485,11 @@ img {
     position: relative;
 }
 
-.rotating-logo {    
-    -webkit-transform: rotate(0deg);
+.rotating-logo {
     transform: rotate(0deg);
-    -webkit-transition: all 0.5s ease-out;
     transition: all 0.5s ease-out;
 }
 .rotating-logo:hover {
-    -webkit-transform: rotate(360deg);
     transform: rotate(360deg);
-    -webkit-transition: all 0.5s ease-in-out;
     transition: all 0.5s ease-in-out;
 }

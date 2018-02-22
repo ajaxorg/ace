@@ -133,7 +133,13 @@ $(function() {
                 }, 400);
             }
         }
-
+        
+        $($(this).attr("href") + " img[lazy-src]").each(function() {
+              var val = $.attr(this, "lazy-src");
+              $.attr(this, "src", val);
+              $.removeAttr(this, "lazy-src");
+        });
+        
         $(this).tab("show");
 
         var state = {};

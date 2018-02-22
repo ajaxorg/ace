@@ -22,7 +22,7 @@
         <div id="wrapper">
             <div class="content">
                 <div class="column2">
-                    <div id="top_container" class="collapse">
+                    <div id="top_container">
                         <h1><img src="./doc/site/images/textimage.png" alt="The high performance code editor for the web." /></h1>
                         <div id="page_logo">
                             <img src="./doc/site/images/ace-logo.png" />
@@ -758,7 +758,7 @@ if (match) {
                                         information on how to work with Ace, check out the <a href="#nav=embedding">embedding guide</a>.
                                     </p>
                                     <p>Below is an ERD diagram describing some fundamentals about how the internals of Ace works:</p>
-                                    <img src="doc/template/resources/images/Ace_ERD.png" style="max-width:100%; max-height:100%" />
+                                    <img lazy-src="doc/template/resources/images/Ace_ERD.png" style="max-width:100%; max-height:100%" />
                                 </div>
                                 </div>
                             </div>
@@ -767,84 +767,78 @@ if (match) {
                             <h1>Projects Using Ace</h1>
                             <p>Ace is used all over the web in all kinds of production applications. Here is
                                 just a small sampling:</p>
-                            <ul class="menu-list">
+                            <ul class="menu-list" style="overflow: hidden;">
                                 <li>
-                                    <img src="doc/site/images/github-logo.png"
+                                    <img lazy-src="doc/site/images/github-logo.png"
                                         style="left: -15px; top: -9px;" />
                                     <a href="https://github.com/blog/905-edit-like-an-ace">GitHub</a>
                                 </li>
                                 <li>
-                                    <img src="doc/site/images/khan-logo.png"
+                                    <img lazy-src="doc/site/images/khan-logo.png"
                                         style="left: -10px; top: -27px; width: 120px" />
                                     <a href="http://ejohn.org/blog/introducing-khan-cs/">Khan Academy</a>
                                 </li>
                                 <li>
-                                    <img src="doc/site/images/cloud9-logo.png"
+                                    <img lazy-src="doc/site/images/cloud9-logo.png"
                                         style="left: -11px;top:-12px; width:122px" />
                                     <a href="https://github.com/ajaxorg/cloud9">Cloud9 IDE</a>
                                 </li>
                                 
                                 <li>
-                                    <img src="doc/site/images/firefox-logo.png"
+                                    <img lazy-src="doc/site/images/firefox-logo.png"
                                         style="left:10px;top:-5px;width:80px" />
                                     <a href="https://builder.addons.mozilla.org/">Firefox Add-on Builder</a>
                                 </li>
                                 <li>
-                                    <img src="doc/site/images/codecademy-logo.png"
+                                    <img lazy-src="doc/site/images/codecademy-logo.png"
                                         style="left: -5px; top: 10px;" />
                                     <a href="http://www.codecademy.com/">Codecademy</a>
                                 </li>
                                 <li>
-                                    <img src="doc/site/images/rstudio_logo_64.png"
+                                    <img lazy-src="doc/site/images/rstudio_logo_64.png"
                                         style="left: 19px; top: 2px;" />
                                     <a href="http://rstudio.org/">RStudio</a>
                                 </li>
                                 <li>
-                                    <img src="https://zedapp.s3.amazonaws.com/uploads/2014/02/zed-small.png" style="left: -1px;top: -20px;width: 103px;">
+                                    <img lazy-src="https://zedapp.s3.amazonaws.com/uploads/2014/02/zed-small.png" style="left: -1px;top: -20px;width: 103px;">
                                     <a href="http://zedapp.org">Zed</a>
                                 </li>
                                 <li>
-                                    <img src="https://raw.githubusercontent.com/creationix/tedit/gh-pages/icons/icon-128.png"
+                                    <img lazy-src="https://raw.githubusercontent.com/creationix/tedit/gh-pages/icons/icon-128.png"
                                         style="width: 104px; left: -1px; top: -17px;">
                                     <a href="https://github.com/creationix/tedit">Tedit</a>
                                 </li>
                                 <li>
-                                    <img src="https://upload.wikimedia.org/wikipedia/commons/6/63/Wikipedia-logo.png" style="left: -5px; top: -35px; width: 110px;">
-                                    <a href="https://en.wikipedia.org/wiki/Special:Version" style="font-family: 'Linux Libertine','Hoefler Text',Georgia,'Times New Roman',Times,serif;">W<span style="font-variant: small-caps;">Wikipedia</span>A</a>
+                                    <img lazy-src="https://upload.wikimedia.org/wikipedia/commons/6/63/Wikipedia-logo.png" style="left: -5px; top: -35px; width: 110px;">
+                                    <a href="https://en.wikipedia.org/wiki/Special:Version" style="font-family: 'Linux Libertine','Hoefler Text',Georgia,'Times New Roman',Times,serif;">W<span style="font-variant: small-caps;">ikipedi</span>A</a>
                                 </li>
                                 <li>
-                                    <img src="doc/site/images/codiad.png"
+                                    <img lazy-src="doc/site/images/codiad.png"
                                         style="left: 10px; top: -4px; width:80px" />
                                     <a href="http://codiad.com/">Codiad</a>
                                 </li>
                                 <li>
-                                    <img src="doc/site/images/zorba-logo.png"
-                                        style="left: -5px; top: 16px;
-                                                padding: 6px 4px 6px 6px; width: 100px" />
-                                    <a href="http://try.zorba.io/queries/xquery">Zorba XQuery</a>
-                                </li>
-                                <li>
-                                    <img src="doc/site/images/plunker.png"
+                                    <img lazy-src="doc/site/images/plunker.png"
                                         style="left: 13px; top: -4px; width: 75px" />
                                     <a href="http://plnkr.co/edit/">Plunker</a>
                                 </li>
                                 <li>
-                                    <img src="doc/site/images/shiftedit-logo.png"
+                                    <img lazy-src="doc/site/images/shiftedit-logo.png"
                                         style="left: -10px; top: -20px; width: 120px" />
                                     <a href="http://shiftedit.net/">ShiftEdit</a>
                                 </li>
                                 <li>
-                                    <img src="doc/site/images/sassmeister-logo.png"
+                                    <img lazy-src="doc/site/images/sassmeister-logo.png"
                                         style="left: 10px;top: -5px;width: 80px;" />
                                     <a href="http://sassmeister.com/">SassMeister</a>
                                 </li> 
                                 <li>
-                                    <img src="doc/site/images/sx-logo.png"
+                                    <img lazy-src="doc/site/images/sx-logo.png"
                                         style="left: -11px; top: -12px;">
                                     <a href="http://www.scroipe.com">Scroipe</a>
                                 </li>
                                 <li>
-                                    <img src="doc/site/images/ideone-logo.png"
+                                    <img lazy-src="doc/site/images/ideone-logo.png"
                                         style="left: -5px; top: 20px;">
                                     <a href="http://ideone.com">Ideone.com</a>
                                 </li>
@@ -857,12 +851,12 @@ if (match) {
                                     <a href="http://lively-web.org">Lively Web</a>
                                 </li>
                                 <li>
-                                    <img src="doc/site/images/modx-logo-4.png"
+                                    <img lazy-src="doc/site/images/modx-logo-4.png"
                                         style="left: 18px; top: 6px;">
                                     <a href="http://modx.com/extras/package/ace">MODX</a>
                                 </li>
                                 <li>
-                                    <img src="https://raw.githubusercontent.com/dart-lang/chromedeveditor/master/ide/web/images/icon_128.png"
+                                    <img lazy-src="https://raw.githubusercontent.com/dart-lang/chromedeveditor/master/ide/web/images/icon_128.png"
                                         style="left: 0px;top: -15px;width: 100px;" />
                                     <a href="https://github.com/dart-lang/chromedeveditor">Chrome Dev Editor</a>
                                 </li> 
@@ -872,41 +866,36 @@ if (match) {
                                     <a href="http://habitat.inkling.com">Inkling Habitat</a>
                                 </li>
                                 <li style="width: 248px;">
-                                    <img src="https://codecombat.com/images/pages/base/logo.png" style="left: 0px; top: 1px; width: 248px">
+                                    <img lazy-src="https://codecombat.com/images/pages/base/logo.png" style="left: 0px; top: 1px; width: 248px">
                                     <a href="http://codecombat.com">Code Combat</a>
                                 </li>
                                 <!--seems to be down <li>
-                                    <img src="doc/site/images/lws-logo.png"
+                                    <img lazy-src="doc/site/images/lws-logo.png"
                                         style="left: 0px; top: 0px; width: 100px" />
                                     <a href="http://liveworkspace.org">Live Workspace</a>
                                 </li>-->
                                 <li>
-                                    <img src="doc/site/images/repl.it-logo.png"
+                                    <img lazy-src="doc/site/images/repl.it-logo.png"
                                         style="left: 0px; top: 17px; width: 100px" />
                                     <a href="http://repl.it/">Repl.it</a>
                                 </li>
                                 <li>
-                                    <img src="doc/site/images/stypi-logo.png"
-                                        style="left: 9px; top: -5px; width: 84px" />
-                                    <a href="https://code.stypi.com/">Stypi</a>
-                                </li>
-                                <li>
-                                    <img src="https://www.codingame.com/blog/wp-content/uploads/2016/11/logo_codingame_hud.png"
+                                    <img lazy-src="https://www.codingame.com/blog/wp-content/uploads/2016/11/logo_codingame_hud.png"
                                         style="left: -15px;top: 27px;width: 127px;background: black;" />
-                                    <a href="https://www.codingame.com">Weecod</a>
+                                    <a href="https://www.codingame.com">CodinGame</a>
                                 </li>
                                 <li>
-                                    <img src="doc/site/images/processwire-logo.svg"
+                                    <img lazy-src="doc/site/images/processwire-logo.svg"
                                         style="left: 0px; top: 25px; width: 102px" />
                                     <a href=" http://modules.processwire.com/modules/inputfield-ace-editor/">Process<i>Wire</i></a>
                                 </li>
                                 <li>
-                                    <img src="doc/site/images/crunchapp-logo.png"
+                                    <img lazy-src="https://getcrunch.co/wp-content/uploads/2015/07/crunch-icon_32.png"
                                         style="left: 9px; top: -5px; width: 84px" />
-                                    <a href="http://crunchapp.net/">Crunch</a>
+                                    <a href="http://getcrunch.co/">Crunch</a>
                                 </li>
                                 <li>
-                                    <img src="https://drivenotepad.github.io/images/icon-128.png" 
+                                    <img lazy-src="https://drivenotepad.github.io/images/icon-128.png" 
                                         style="left: 9px; top: -5px; width: 84px">
                                     <a href="https://drivenotepad.appspot.com/support">Drive Notepad</a>
                                 </li>
@@ -939,7 +928,7 @@ if (match) {
                                     <a href="http://orbit.bonsaijs.org/">BonsaiJS playground</a>
                                 </li>
                                 <li>
-                                    <img src="https://approximatrix.com/static/images/simplytext/logo-long-white.png"
+                                    <img lazy-src="https://approximatrix.com/static/images/simplytext/logo-long-white.png"
                                         style="width: 106px; left: -4px; top: 26px;">
                                     <a href="http://approximatrix.com/products/simplytext">Simply Text</a>
                                 </li>
@@ -956,7 +945,7 @@ if (match) {
                                     <a href="http://www.boottheme.com/">BootTheme</a>
                                 </li>
                                 <li>
-                                    <img src="https://codebender.cc/images/codebender-transparent.png"
+                                    <img lazy-src="https://codebender.cc/images/codebender-transparent.png"
                                         style="left: -9px; width: 117px;top: -22px;">
                                     <a href="http://codebender.cc/">Codebender</a>
                                 </li>
@@ -972,12 +961,12 @@ if (match) {
                                     <a href="http://slimtext.org/">Slim Text</a>
                                 </li>
                                 <li>
-                                    <img src="https://www.decor-tab-creator.com/_files/decor_logo_white_new.png"
+                                    <img lazy-src="https://www.decor-tab-creator.com/_files/decor_logo_white_new.png"
                                         style="left: -5px; width: 111px;top: 20px;">
                                     <a href="https://www.decor-tab-creator.com">Decor</a>
                                 </li>
                                 <li>
-                                    <img src="https://papeeria.com/assets/all/images/papeeria_small.png" style="width: 95px; left: 2px; top: 8px;">
+                                    <img lazy-src="https://papeeria.com/assets/all/images/papeeria_small.png" style="width: 95px; left: 2px; top: 8px;">
                                     <a href="http://papeeria.com">Papeeria</a>
                                 </li>
                                 <li>
@@ -988,12 +977,12 @@ if (match) {
                                     <a href="https://chocolatejs.org">Chocolatejs</a>
                                 </li>
                                 <li>
-                                    <img src="doc/site/images/ac-logo.png"
+                                    <img lazy-src="doc/site/images/ac-logo.png"
                                         style="left: 4px; top: 25px;" />
                                     <a href="http://www.applicationcraft.com/">Application Craft</a>
                                 </li>
                                 <li>
-                                    <img src="https://playir.com/common/icon_playir.png"
+                                    <img lazy-src="https://playir.com/common/icon_playir.png"
                                         style="left: 11px; width: 96px;top: -17px;">
                                     <a href="http://playir.com">Playir</a>
                                 </li>
@@ -1002,7 +991,7 @@ if (match) {
                                     <a href="http://runnable.com">Runnable</a>
                                 </li>
                                 <li>
-                                    <img src="https://joshnuss.github.io/mruby-web-irb/images/favicon.png"
+                                    <img lazy-src="https://joshnuss.github.io/mruby-web-irb/images/favicon.png"
                                         style="left: 4px; width: 90px;top: -17px;">
                                     <a href="http://joshnuss.github.io/mruby-web-irb/">Mruby-web-irb</a>
                                 </li>
@@ -1028,12 +1017,12 @@ if (match) {
                                     <a href="http://sourcetalk.net/">SourceTalk</a>
                                 </li>
                                 <li>
-                                    <img src="https://raw.github.com/Gisto/Gisto/master/app/icon.png"
+                                    <img lazy-src="https://raw.github.com/Gisto/Gisto/master/app/icon.png"
                                         style="width: 96px; left: 2px; top: -21px;">
                                     <a href="http://www.gistoapp.com/">Gisto</a>
                                 </li>
                                 <li>
-                                    <img src="https://jdoodle.com/static/images/jdoodle.png"
+                                    <img lazy-src="https://jdoodle.com/static/images/jdoodle.png"
                                         style="width: 122px; left: -3px; top: -12px;">
                                     <a href="http://jdoodle.com/">JDoodle</a>
                                 </li>
@@ -1042,7 +1031,7 @@ if (match) {
                                     <a href="https://github.com/websiteduck/Run-PHP-Code">RunPHPCode</a>
                                 </li>
                                 <li>
-                                    <img src="https://s7.postimg.org/tbw9lfcvb/cloudcmd.png"
+                                    <img lazy-src="https://s7.postimg.org/tbw9lfcvb/cloudcmd.png"
                                         style="width: 74px; left: 13px; top: -2px;">
                                     <a href="http://cloudcmd.io">Cloud Commander</a>
                                 </li>
@@ -1059,7 +1048,7 @@ if (match) {
                                     <a href="http://codechat.net/">Codechat</a>
                                 </li>
                                 <li>
-                                    <img src="doc/site/images/wolf_3d_logo_trans.png"
+                                    <img lazy-src="doc/site/images/wolf_3d_logo_trans.png"
                                         style="left: 10px; top: -4px; width:80px" />
                                     <a href="http://www.wolfcms.org/repository/133">Wolf CMS</a>
                                 </li>
@@ -1095,7 +1084,7 @@ if (match) {
                                     <a href="http://spark.io/build">Spark Core</a>
                                 </li>
                                 <li>
-                                    <img src="https://2.gravatar.com/avatar/021e207e86fe81a7d81c67ef1ff38a0c" style="left: 11px; top: -5px;">
+                                    <img lazy-src="https://2.gravatar.com/avatar/021e207e86fe81a7d81c67ef1ff38a0c" style="left: 11px; top: -5px;">
                                     <a href="http://owncloud.org">ownCloud</a>
                                 </li>
                                 <li>
@@ -1111,7 +1100,7 @@ if (match) {
                                     <a href="http://sharejs.org/hello-ace.html">ShareJS</a>
                                 </li>
                                 <li>
-                                    <img src="https://neutron-drive.appspot.com/static/img/neutron_face_high.png"
+                                    <img lazy-src="https://neutron-drive.appspot.com/static/img/neutron_face_high.png"
                                         style="width: 86px; left: 7px; top: -11px;">
                                     <a href="https://super.neutrondrive.com/">Neutron IDE</a>
                                 </li>
@@ -1127,36 +1116,36 @@ if (match) {
                                     <a href="http://asciidocfx.com/">Asciidoc FX</a>
                                 </li>
                                 <li>
-                                    <img src="https://octobercms.com/themes/website/assets/images/october.png" style="width: 95px; left: 2px; top: -17px;">
+                                    <img lazy-src="https://octobercms.com/themes/website/assets/images/october.png" style="width: 95px; left: 2px; top: -17px;">
                                     <a href="http://octobercms.com">October CMS</a>
                                 </li>
                                 <li style="width: 248px;">
-                                    <img src="https://www.codeavengers.com/image/RedLogoSmall.png" style="width: 248px; top: 30px;">
+                                    <img lazy-src="https://www.codeavengers.com/image/RedLogoSmall.png" style="width: 248px; top: 30px;">
                                     <a href="http://www.codeavengers.com/image/RedLogoSmall.png">Code Avengers</a>
-                                </li>
-                                <li style="width: 248px;">
-                                    <img src="https://d2j5eocv5gptnv.cloudfront.net/assets/non_game_misc/site_header_logo.png?v=2" style="width: 238px; top: 15px; left: 5px">
-                                    <a href="http://www.codemonkey.co.il/">CodeMonkey</a>
-                                </li>
-                                <li>
-                                    <img src="https://funprogramming.org/i/fun_programming_logo_for_ace.png" style="width: 75px; left: 12px; top: -5px;">
-                                    <a href="http://funprogramming.org">Fun Programming</a>
-                                </li>
                                 </li>
                                 <li>
                                     <div style="font-size:23px" class="text-logo">{dev<span style="color:#ef4423">un</span>ity}</div>
                                     <a href="http://devunity.com/">Devunity</a>
+                                </li>
+                                <li style="width: 248px;">
+                                    <img lazy-src="https://d2j5eocv5gptnv.cloudfront.net/assets/non_game_misc/site_header_logo.png?v=2" style="width: 238px; top: 15px; left: 5px">
+                                    <a href="http://www.codemonkey.co.il/">CodeMonkey</a>
+                                </li>
+                                <li>
+                                    <img lazy-src="https://funprogramming.org/i/fun_programming_logo_for_ace.png" style="width: 75px; left: 12px; top: -5px;">
+                                    <a href="http://funprogramming.org">Fun Programming</a>
+                                </li>
                                 </li>
                                 <li>
                                     <!-- <img src="https://learn-angular.org/Content/Images/LearnAngular-small.png" style="width: 275px; left: -12px; top: 7px;"> -->
                                     <a href="http://learn-angular.org">Learn Angular</a>
                                 </li>
                                 <li>
-                                    <img src="https://lh4.ggpht.com/hG5bDu1GBXwxpPnrgPcAmTNQyZK4ICBDC9aeLNmMZahEYQOz_2vYT6sBqLNGLIGPopWjdveEvPuM9NBuErUSLQ=s60" style="width: 75px; left: 12px; top: -5px;">
+                                    <img lazy-src="https://lh4.ggpht.com/hG5bDu1GBXwxpPnrgPcAmTNQyZK4ICBDC9aeLNmMZahEYQOz_2vYT6sBqLNGLIGPopWjdveEvPuM9NBuErUSLQ=s60" style="width: 75px; left: 12px; top: -5px;">
                                     <a href="http://bootzee.com">Bootzee</a>
                                 </li>
                                 <li>
-                                    <img src="https://www.branchcms.com/layout/images/branch-brand-logo-2.png" style="width: 125px; left: -12px; top: 15px;">
+                                    <img lazy-src="https://www.branchcms.com/layout/images/branch-brand-logo-2.png" style="width: 125px; left: -12px; top: 15px;">
                                     <a href="http://www.branchcms.com/blog/post/new-code-editor-ace">Branch CMS</a>
                                 </li>
                                 <li>
@@ -1181,7 +1170,7 @@ if (match) {
                                     <a href="http://sbp.selfbuild.fr/">SBP</a>
                                 </li>
                                 <li>
-                                    <img src="https://mycodestock.com/assets/img/mycodestock.png?v=2.1.0" style="width: 126px; left: -18px; top: -30px;">
+                                    <img lazy-src="https://mycodestock.com/assets/img/mycodestock.png?v=2.1.0" style="width: 126px; left: -18px; top: -30px;">
                                     <a href="https://mycodestock.com/">my code stock</a>
                                 </li>
                                 <li>
@@ -1189,7 +1178,7 @@ if (match) {
                                     <a href="http://eseecode.com/">eSeeCode</a>
                                 </li>
                                 <li>
-                                    <img src="https://codinghire.com/static/img/twitter.png" style="width: 80px; left: 10px; top: -3px;">
+                                    <img lazy-src="https://codinghire.com/static/img/twitter.png" style="width: 80px; left: 10px; top: -3px;">
                                     <a href="https://codinghire.com/">Coding Hire</a>
                                 </li>
                                 <li>
@@ -1201,7 +1190,7 @@ if (match) {
                                     <a href="http://exist-db.org">ExistDB</a>
                                 </li>
                                 <li>
-                                    <img src="https://jscalc.io/img/icons/jscalc_full_bleed_24.svg" style="width: 90px; left: 5px; top: -10px;">
+                                    <img lazy-src="https://jscalc.io/img/icons/jscalc_full_bleed_24.svg" style="width: 90px; left: 5px; top: -10px;">
                                     <a href="https://jscalc.io/">JSCalc</a>
                                 </li>
                                 <li>
@@ -1209,7 +1198,7 @@ if (match) {
                                     <a href="http://tworld-ai.com/imgs/web-app/rob_face.png">T-World</a>
                                 </li>
                                 <li>
-                                    <img src="https://www.gestixi.com/assets/img/icons/gestixi-64.png" style="width: 90px; left: 5px; top: 20px;">
+                                    <img lazy-src="https://www.gestixi.com/assets/img/icons/gestixi-64.png" style="width: 90px; left: 5px; top: 20px;">
                                     <a href="https://www.gestixi.com/">GestiXi</a>
                                 </li>
                                 <li>
