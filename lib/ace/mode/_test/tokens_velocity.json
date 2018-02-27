@@ -259,7 +259,7 @@
   ["string.end","\""],
   ["text",", "],
   ["support.constant.fonts","monospace"],
-  ["text",";"]
+  ["punctuation.operator",";"]
 ],[
    "css-ruleset",
   ["text","    "],
@@ -267,14 +267,14 @@
   ["text",": "],
   ["constant.numeric","12"],
   ["keyword","px"],
-  ["text",";"]
+  ["punctuation.operator",";"]
 ],[
    "css-ruleset",
   ["text","    "],
   ["support.type","cursor"],
   ["text",": "],
   ["support.constant","text"],
-  ["text",";"]
+  ["punctuation.operator",";"]
 ],[
    "css-start",
   ["text","  "],

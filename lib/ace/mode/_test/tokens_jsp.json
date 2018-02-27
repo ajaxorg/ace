@@ -61,7 +61,7 @@
   ["support.type","background"],
   ["text",": "],
   ["constant.numeric","#124356"],
-  ["text",";"]
+  ["punctuation.operator",";"]
 ],[
    "css-start",
   ["text","        "],

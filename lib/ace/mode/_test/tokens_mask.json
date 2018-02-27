@@ -111,7 +111,7 @@
   ["constant.numeric","0"],
   ["text"," "],
   ["support.constant","no-repeat"],
-  ["text",";"]
+  ["punctuation.operator",";"]
 ],[
    ["#tmp","css-block-start","paren.lparen52","constant.language40"],
   ["text","    "],
