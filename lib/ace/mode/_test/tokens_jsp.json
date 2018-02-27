@@ -59,7 +59,8 @@
    "css-ruleset",
   ["text","            "],
   ["support.type","background"],
-  ["text",": "],
+  ["punctuation.operator",":"],
+  ["text"," "],
   ["constant.numeric","#124356"],
   ["punctuation.operator",";"]
 ],[
