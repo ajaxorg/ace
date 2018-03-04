@@ -1,0 +1,17 @@
+{
+    "name": "ace-webpack-demo",
+    "version": "1.0.0",
+    "description": "",
+    "scripts": {
+        "start": "webpack-dev-server"
+    },
+    "keywords": [],
+    "author": "",
+    "dependencies": {
+        "webpack": "^4.0.1",
+        "webpack-cli": "^2.0.10"
+    },
+    "devDependencies": {
+        "webpack-dev-server": "^3.1.0"
+    }
+}

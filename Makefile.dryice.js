@@ -511,6 +511,9 @@ function exportAce(ns, modules, requireBase, extModules) {
                         window.NS = a;
                     for (var key in a) if (a.hasOwnProperty(key))
                         window.NS[key] = a[key];
+                    window.NS[default] = window.NS;
+                    if (typeof module == "object")
+                        module.exports = window.NS;
                 });
             })();
         };
