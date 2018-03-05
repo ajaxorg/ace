@@ -1,0 +1,148 @@
+// A token contract that implements the ERC20 standard.
+// This contract demonstrates the creation of a token,
+// the transferring of tokens, the querying of a balance,
+// and the printing of the balance query result.
+
+new token in {
+    contract token (message_sender, total_supply, return_channel) = {
+
+        new allowed_channel, balances_channel, owner_channel in {
+
+            allowed_channel!(Map()) |
+            owner_channel!(message_sender) |
+            balances_channel!(Map()) |
+            for (balances <- balances_channel) {
+                balances_channel!( balances.insert(message_sender, total_supply) )
+            } |
+
+            new transfer, transfer_from, approve, balance_of, allowance, contract_owner in {
+
+                contract transfer(message_sender, to, amount, rtn) = {
+                    for (balances <- balances_channel) {
+                        new x, y in {
+                            x!(balances.getOrElse(message_sender, 0)) |
+                            y!(balances.getOrElse(to, 0)) |
+                            for (balance_of_sender <- x
+                               ; balance_of_receiver <- y) {
+                                // Preconditions to check before the transfer goes through
+                                match [
+                                    balance_of_sender >= amount,
+                                    amount > 0,
+                                    balance_of_receiver + amount > balance_of_receiver] with
+                                    <true, true, true> => {
+                                        balances_channel!(
+                                            (balances
+                                                .insert(message_sender, balance_of_sender - amount))
+                                                .insert(to, balance_of_receiver+amount)
+                                        ) |
+                                        rtn!(true)
+                                    }
+                                    _ => {
+                                        balances_channel!(balances) |
+                                        rtn!(false)
+                                    }
+                            }
+                        }
+                    }
+                } |
+
+                // Same as the transfer contract but allows for the sender to be different from
+                // the person calling the transfer_from contract
+                contract transfer_from(message_sender, from, to, amount, rtn) = {
+                    for (balances <- balances_channel
+                       ; allowed <- allowed_channel) {
+                        new x, y, z in {
+                            x!(balances.getOrElse(from, 0)) |
+                            y!(allowed.getOrElse(from, message_sender, 0)) |
+                            z!(balances.getOrElse(to, 0)) |
+                            for ( balance_of_sender <- x
+                                ; sender_allowed <- y
+                                ; balance_of_receiver <- z ) {
+                                match [
+                                    balance_of_sender >= amount,
+                                    sender_allowed >= amount,
+                                    amount > 0,
+                                    balance_of_receiver + amount > balance_of_receiver] with
+                                    <true, true, true, true> => {
+                                        balances_channel!(
+                                            (balances
+                                                .insert(from, balance_of_sender - amount))
+                                                .insert(to, balance_of_receiver + amount)
+                                        ) |
+                                        allowed_channel!(
+                                            allowed.insert(from, message_sender, sender_allowed - amount)
+                                        ) |
+                                        rtn!(true)
+                                    }
+                                    _ => {
+                                        balances_channel!(balances) |
+                                        allowed_channel!(allowed) |
+                                        rtn!(false)
+                                    }
+
+                            }
+                        }
+                    }
+                } |
+
+                // This is the way an address can pre-approve (delegate) the transfer of
+                // a certain amount of tokens to some other address. This allows for
+                // that other address, through the use of the transfer_from function,
+                // to send up to that amount of tokens.
+                contract approve(message_sender, spender, amount, rtn) = {
+                    for (allowed <- allowed_channel) {
+                        allowed_channel!(allowed.insert(message_sender,spender,amount)) |
+                        rtn!(true)
+                    }
+                } |
+
+                contract balance_of(owner, rtn) = {
+                    for (balances <- balances_channel) {
+                        rtn!(balances.getOrElse(owner, 0)) | balances_channel!(balances)
+                    }
+                } |
+
+                contract allowance(owner, spender, rtn) = {
+                    for (allowed <- allowed_channel) {
+                        allowed_channel!(allowed) |
+                        rtn!(allowed.getOrElse(owner,spender,0))
+                    }
+                } |
+
+                contract contract_owner(rtn) = {
+                    for (owner <- owner_channel) {
+                        owner_channel!(owner) |
+                        rtn!(owner)
+                    }
+                } |
+
+                return_channel!(
+                    Map().insertMany("transfer", transfer, "transfer_from", transfer_from,
+                        "approve", approve, "balance_of", balance_of, "allowance", allowance,
+                        "contract_owner", contract_owner))
+                        // TODO: Eventually just insert with compiler
+            }
+        }
+    } |
+    new rtn, me, they in {
+        token!([me, 100, rtn]) |
+        for (token_contract <- rtn) {
+            new unused_rtn, balance_of_rtn in {
+                @token_contract.get("transfer")!([me, they, 50, unused_rtn]) |
+                @token_contract.get("balance_of")!([they, balance_of_rtn]) |
+                for (they_balance <- balance_of_rtn) { print(they_balance) }
+            }
+        }
+    } |
+    new rtn2, me2, they2 in {
+        token!([me2, 1000, rtn2]) |
+        for (token_contract2 <- rtn2) {
+            new unused_rtn2, balance_of_rtn2 in {
+                @token_contract2.get("transfer")!([me2, they2, 500, unused_rtn2]) |
+                @token_contract2.get("balance_of")!([they2, balance_of_rtn2]) |
+                for (they_balance2 <- balance_of_rtn2) { print(they_balance2) }
+            }
+        }
+    }
+    // Once we have a registry, we can do registry_channel!(token) to save the contract there
+}
