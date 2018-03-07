@@ -366,7 +366,7 @@ declare namespace Ace {
     getSelection(): Selection;
     getState(row: number): string;
     getTokens(row: number): Token[];
-    getTokenAt(row: number, column: number): Token;
+    getTokenAt(row: number, column: number): Token | null;
     setUndoManager(undoManager: UndoManager): void;
     markUndoGroup(): void;
     getUndoManager(): UndoManager;
