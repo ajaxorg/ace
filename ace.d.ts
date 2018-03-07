@@ -1,6 +1,41 @@
 declare namespace Ace {
   export type NewLineMode = 'auto' | 'unix' | 'windows';
 
+  export class Range {
+    static fromPoints(start: Point, end: Point): Range;
+    static comparePoints(p1: Point, p2: Point): number;
+
+    start: Point;
+    end: Point;
+
+    isEqual(range: Range): boolean;
+    toString(): string;
+    contains(row: number, column: number): boolean;
+    compareRange(range: Range): number;
+    comparePoint(p: Point): number;
+    containsRange(range: Range): boolean;
+    intersects(range: Range): boolean;
+    isEnd(row: number, column: number): boolean;
+    isStart(row: number, column: number): boolean;
+    setStart(row: number, column: number): void;
+    setEnd(row: number, column: number): void;
+    inside(row: number, column: number): boolean;
+    insideStart(row: number, column: number): boolean;
+    insideEnd(row: number, column: number): boolean;
+    compare(row: number, column: number): number;
+    compareStart(row: number, column: number): number;
+    compareEnd(row: number, column: number): number;
+    compareInside(row: number, column: number): number;
+    clipRows(firstRow: number, lastRow: number): Range;
+    extend(row: number, column: number): Range;
+    isEmpty(): boolean;
+    isMultiLine(): boolean;
+    clone(): Range;
+    collapseRows(): Range;
+    toScreenRange(session: EditSession): Range;
+    moveBy(row: number, column: number): void;
+  }
+
   export interface IEditorOptions {
     selectionStyle: string;
     highlightActiveLine: boolean;
@@ -58,6 +93,20 @@ declare namespace Ace {
     indentedSoftWrap: boolean;
     foldStyle: 'markbegin' | 'markbeginend' | 'manual';
     mode: string;
+  }
+
+  export interface SearchOptions {
+    needle: string | RegExp;
+    preventScroll: boolean;
+    backwards: boolean;
+    start: Range;
+    skipCurrent: boolean;
+    range: Range;
+    preserveCase: boolean;
+    regExp: RegExp;
+    wholeWord: string;
+    caseSensitive: boolean;
+    wrap: boolean;
   }
 
   export abstract class EventEmitter {
@@ -121,6 +170,89 @@ declare namespace Ace {
                                 left: number,
                                 top: number,
                                 config: any) => void;
+
+  export interface Token {
+    type: string;
+    value: string;
+    index?: number;
+    start?: number;
+  }
+
+  export interface Completion {
+    name: string;
+    value: string;
+    score: number;
+    meta?: string;
+  }
+
+  export interface Tokenizer {
+    removeCapturingGroups(src: string): string;
+    createSplitterRegexp(src: string, flag?: string): RegExp;
+    getLineTokens(line: string, startState: string | string[]): Token[];
+  }
+
+  export interface TextMode {
+    getTokenizer(): Tokenizer;
+    toggleCommentLines(state: any,
+                       session: EditSession,
+                       startRow: number,
+                       endRow: number): void;
+    toggleBlockComment(state: any,
+                       session: EditSession,
+                       range: Range,
+                       cursor: Position): void;
+    getNextLineIndent(state: any, line: string, tab: string): string;
+    checkOutdent(state: any, line: string, input: string): boolean;
+    autoOutdent(state: any, doc: Document, row: number): void;
+    // TODO implement WorkerClient types
+    createWorker(session: EditSession): any;
+    createModeDelegates(mapping: {[key: string]: string}): void;
+    transformAction(state: string,
+                    action: string,
+                    editor: Editor,
+                    session: EditSession,
+                    text: string): any;
+    getKeywords(append?: boolean): Array<string | RegExp>;
+    getCompletions(state: string,
+                   session: EditSession,
+                   pos: Position,
+                   prefix: string): Completion[];
+  }
+
+  export interface Config {
+    get(key: string): any;
+    set(key: string, value: any): void;
+    all(): {[key: string]: any};
+    moduleUrl(name: string, component?: string): string;
+    setModuleUrl(name: string, subst: string): string;
+    loadModule(moduleName: string | [string, string],
+               onLoad: (module: any) => void): void;
+    init(packaged: any): any;
+    defineOptions(obj: any, path: string, options: {[key: string]: any}): Config;
+    resetOptions(obj: any): void;
+    setDefaultValue(path: string, name: string, value: any): void;
+    setDefaultValues(path: string, optionHash: {[key: string]: any}): void;
+  }
+
+  export class UndoManager {
+    constructor();
+
+    addSession(session: EditSession): void;
+    add(delta: Delta, allowMerge: boolean, session: EditSession): void;
+    addSelection(selection: string, rev?: number): void;
+    startNewGroup(): void;
+    markIgnored(from: number, to?: number): void;
+    getSelection(rev: number, after?: boolean): { value: string, rev: number };
+    getRevision(): number;
+    getDeltas(from: number, to?: number): Delta[];
+    undo(session: EditSession, dontSelect?: boolean): void;
+    redo(session: EditSession, dontSelect?: boolean): void;
+    reset(): void;
+    canUndo(): boolean;
+    canRedo(): boolean;
+    bookmark(rev?: number): void;
+    isAtBookmark(): boolean;
+  }
 
   export class EditSession extends EventEmitter {
     public selection: Selection;
@@ -479,12 +611,12 @@ declare namespace Ace {
     public navigateFileStart(): void;
     public navigateWordRight(): void;
     public navigateWordLeft(): void;
-    public replace(replacement: string, options?: Partial<ISearchOptions>): number;
-    public replaceAll(replacement: string, options?: Partial<ISearchOptions>): number;
-    public getLastSearchOptions(): Partial<ISearchOptions>;
-    public find(needle: string, options?: Partial<ISearchOptions>, animate?: boolean): void;
-    public findNext(options?: Partial<ISearchOptions>, animate?: boolean): void;
-    public findPrevious(options?: Partial<ISearchOptions>, animate?: boolean): void;
+    public replace(replacement: string, options?: Partial<SearchOptions>): number;
+    public replaceAll(replacement: string, options?: Partial<SearchOptions>): number;
+    public getLastSearchOptions(): Partial<SearchOptions>;
+    public find(needle: string, options?: Partial<SearchOptions>, animate?: boolean): void;
+    public findNext(options?: Partial<SearchOptions>, animate?: boolean): void;
+    public findPrevious(options?: Partial<SearchOptions>, animate?: boolean): void;
     public undo(): void;
     public redo(): void;
     public destroy(): void;
