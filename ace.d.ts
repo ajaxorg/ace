@@ -1,6 +1,37 @@
 declare namespace Ace {
   export type NewLineMode = 'auto' | 'unix' | 'windows';
 
+  export interface FoldLine {
+    folds: Fold[];
+    range: Range;
+    start: Point;
+    end: Point;
+
+    shiftRow(shift: number): void;
+    addFold(fold: Fold): void;
+    containsRow(row: number): boolean;
+    walk(callback: Function, endRow?: number, endColumn?: number): void;
+    getNextFoldTo(row: number, column: number): null | { fold: Fold, kind: string };
+    addRemoveChars(row: number, column: number, len: number): void;
+    split(row: number, column: number): FoldLine;
+    merge(foldLineNext: FoldLine): void;
+    idxToPosition(idx: number): Point;
+  }
+
+  export interface Fold {
+    range: Range;
+    start: Point;
+    end: Point;
+    foldLine?: FoldLine;
+    sameRow: boolean;
+    subFolds: Fold[];
+
+    setFoldLine(foldLine: FoldLine): void;
+    clone(): Fold;
+    addSubFold(fold: Fold): Fold;
+    restoreRange(range: Range): void;
+  }
+
   export class Range {
     static fromPoints(start: Point, end: Point): Range;
     static comparePoints(p1: Point, p2: Point): number;
@@ -296,6 +327,14 @@ declare namespace Ace {
 
     constructor(text: string | Document, mode?: TextMode);
 
+    on(name: 'changeFold',
+       callback: (obj: { data: Fold, action: string }) => void): void;
+    on(name: 'changeScrollLeft', callback: (scrollLeft: number) => void): void;
+    on(name: 'changeScrollTop', callback: (scrollTop: number) => void): void;
+    on(name: 'tokenizerUpdate',
+       callback: (obj: { data: { first: number, last: number } }) => void): void;
+
+
     setOption<T extends keyof EditSessionOptions>(name: T, value: EditSessionOptions[T]): void;
     getOption<T extends keyof EditSessionOptions>(name: T): EditSessionOptions[T];
 
@@ -413,7 +452,6 @@ declare namespace Ace {
   export class CommandManager extends EventEmitter {
     constructor(platform: 'mac' | 'win', commands: Array<string | CommandLike>);
 
-    on(name: 'changeStatus', callback: () => void): void;
     on(name: 'exec', callback: (obj: {
                                   editor: Editor,
                                   command: Command,
