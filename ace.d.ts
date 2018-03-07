@@ -1,7 +1,7 @@
 declare namespace Ace {
   export type NewLineMode = 'auto' | 'unix' | 'windows';
 
-  export interface Anchor {
+  export interface Anchor extends EventEmitter {
     getPosition(): Position;
     getDocument(): Document;
     setPosition(row: number, column: number, noClip?: boolean): void;
@@ -9,7 +9,7 @@ declare namespace Ace {
     attach(doc: Document): void;
   }
 
-  export interface Document {
+  export interface Document extends EventEmitter {
     setValue(text: string): void;
     getValue(): string;
     createAnchor(row: number, column: number): Anchor;
@@ -73,10 +73,7 @@ declare namespace Ace {
     restoreRange(range: Range): void;
   }
 
-  export class Range {
-    static fromPoints(start: Point, end: Point): Range;
-    static comparePoints(p1: Point, p2: Point): number;
-
+  export interface Range {
     start: Point;
     end: Point;
 
@@ -107,6 +104,11 @@ declare namespace Ace {
     toScreenRange(session: EditSession): Range;
     moveBy(row: number, column: number): void;
   }
+
+  export const Range: {
+    fromPoints(start: Point, end: Point): Range;
+    comparePoints(p1: Point, p2: Point): number;
+  };
 
   export interface EditorOptions {
     selectionStyle: string;
@@ -196,7 +198,7 @@ declare namespace Ace {
     wrap: boolean;
   }
 
-  export abstract class EventEmitter {
+  export interface EventEmitter {
     once(name: string, callback: Function): void;
     setDefaultHandler(name: string, callback: Function): void;
     removeDefaultHandler(name: string, callback: Function): void;
@@ -322,30 +324,14 @@ declare namespace Ace {
     setDefaultValues(path: string, optionHash: {[key: string]: any}): void;
   }
 
-  interface OptionsProvider {
+  export interface OptionsProvider {
     setOptions(optList: {[key: string]: any}): void;
     getOptions(optionNames?: string[] | {[key: string]: any}): {[key: string]: any};
     setOption(name: string, value: any): void;
     getOption(name: string): any;
   }
 
-  class ConfigurableEventEmitter extends EventEmitter implements OptionsProvider {
-    setOptions(optList: {[key: string]: any}): void;
-    getOptions(optionNames?: string[] | {[key: string]: any}): {[key: string]: any};
-    setOption(name: string, value: any): void;
-    getOption(name: string): any;
-  }
-
-  class Configurable implements OptionsProvider {
-    setOptions(optList: {[key: string]: any}): void;
-    getOptions(optionNames?: string[] | {[key: string]: any}): {[key: string]: any};
-    setOption(name: string, value: any): void;
-    getOption(name: string): any;
-  }
-
-  export class UndoManager {
-    constructor();
-
+  export interface UndoManager {
     addSession(session: EditSession): void;
     add(delta: Delta, allowMerge: boolean, session: EditSession): void;
     addSelection(selection: string, rev?: number): void;
@@ -363,10 +349,12 @@ declare namespace Ace {
     isAtBookmark(): boolean;
   }
 
-  export class EditSession extends ConfigurableEventEmitter {
-    selection: Selection;
+  export const UndoManager: {
+    new(): UndoManager;
+  };
 
-    constructor(text: string | Document, mode?: TextMode);
+  export interface EditSession extends EventEmitter, OptionsProvider {
+    selection: Selection;
 
     on(name: 'changeFold',
        callback: (obj: { data: Fold, action: string }) => void): void;
@@ -481,7 +469,11 @@ declare namespace Ace {
     destroy(): void;
   }
 
-  export class KeyBinding {
+  export const EditSession: {
+    new(text: string | Document, mode?: TextMode): EditSession;
+  };
+
+  export interface KeyBinding {
     setDefaultHandler(handler: KeyboardHandler): void;
     setKeyboardHandler(handler: KeyboardHandler): void;
     addKeyboardHandler(handler: KeyboardHandler, pos: number): void;
@@ -490,14 +482,20 @@ declare namespace Ace {
     getStatusText(): string;
   }
 
-  export class CommandManager extends EventEmitter {
-    constructor(platform: 'mac' | 'win', commands: Array<string | CommandLike>);
-
+  export interface CommandManager extends EventEmitter {
     on(name: 'exec', callback: (obj: {
                                   editor: Editor,
                                   command: Command,
                                   args: any[]
                                }) => void): void;
+    once(name: string, callback: Function): void;
+    setDefaultHandler(name: string, callback: Function): void;
+    removeDefaultHandler(name: string, callback: Function): void;
+    on(name: string, callback: Function, capturing?: boolean): void;
+    addEventListener(name: string, callback: Function, capturing?: boolean): void;
+    off(name: string, callback: Function): void;
+    removeListener(name: string, callback: Function): void;
+    removeEventListener(name: string, callback: Function): void;
 
     exec(command: string, editor: Editor, args: any): boolean;
     toggleRecording(editor: Editor): void;
@@ -509,10 +507,12 @@ declare namespace Ace {
             position?: number): void;
   }
 
-  export class VirtualRenderer extends ConfigurableEventEmitter {
-    container: HTMLElement;
+  export const CommandManager: {
+    new(platform: 'mac' | 'win', commands: Array<string | CommandLike>): CommandManager;
+  };
 
-    constructor(container: HTMLElement, theme?: string);
+  export interface VirtualRenderer extends OptionsProvider, EventEmitter {
+    container: HTMLElement;
 
     setSession(session: EditSession): void;
     updateLines(firstRow: number, lastRow: number, force?: boolean): void;
@@ -597,17 +597,17 @@ declare namespace Ace {
     destroy(): void;
   }
 
-  export class Editor extends ConfigurableEventEmitter {
+  export const VirtualRenderer: {
+    new(container: HTMLElement, theme?: string): VirtualRenderer;
+  };
+
+  export interface Editor extends OptionsProvider, EventEmitter {
     container: HTMLElement;
     renderer: VirtualRenderer;
     id: string;
     commands: CommandManager;
     keyBinding: KeyBinding;
     session: EditSession;
-
-    constructor(renderer: VirtualRenderer,
-                session: EditSession,
-                options?: Partial<EditorOptions>);
 
     on(name: 'blur', callback: (e: Event) => void): void;
     on(name: 'change', callback: (delta: Delta) => void): void;
@@ -743,6 +743,12 @@ declare namespace Ace {
     destroy(): void;
     setAutoScrollEditorIntoView(enable: boolean): void;
   }
+
+  export const Editor: {
+    new(renderer: VirtualRenderer,
+        session: EditSession,
+        options?: Partial<EditorOptions>): Editor;
+  };
 
   export interface AceStatic {
     version: string;
