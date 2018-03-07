@@ -36,7 +36,7 @@ declare namespace Ace {
     moveBy(row: number, column: number): void;
   }
 
-  export interface IEditorOptions {
+  export interface EditorOptions {
     selectionStyle: string;
     highlightActiveLine: boolean;
     highlightSelectedWord: boolean;
@@ -92,6 +92,21 @@ declare namespace Ace {
     wrap: boolean | number;
     indentedSoftWrap: boolean;
     foldStyle: 'markbegin' | 'markbeginend' | 'manual';
+    mode: string;
+  }
+
+  export interface EditSessionOptions {
+    wrap: string | number;
+    wrapMethod: 'code' | 'text' | 'auto';
+    indentedSoftWrap: boolean;
+    firstLineNumber: number;
+    useWorker: boolean;
+    useSoftTabs: boolean;
+    tabSize: number;
+    navigateWithinSoftTabs: boolean;
+    foldStyle: 'markbegin' | 'markbeginend' | 'manual';
+    overwrite: boolean;
+    newLineMode: NewLineMode;
     mode: string;
   }
 
@@ -277,379 +292,383 @@ declare namespace Ace {
   }
 
   export class EditSession extends ConfigurableEventEmitter {
-    public selection: Selection;
+    selection: Selection;
 
-    public constructor(text: string | Document, mode?: TextMode);
+    constructor(text: string | Document, mode?: TextMode);
 
-    public setDocument(doc: Document): void;
-    public getDocument(): Document;
-    public resetCaches(): void;
-    public setValue(text: string): void;
-    public getValue(): string;
-    public getSelection(): Selection;
-    public getState(row: number): string;
-    public getTokens(row: number): Token[];
-    public getTokenAt(row: number, column: number): Token;
-    public setUndoManager(undoManager: UndoManager): void;
-    public markUndoGroup(): void;
-    public getUndoManager(): UndoManager;
-    public getTabString(): string;
-    public setUseSoftTabs(val: boolean): void;
-    public getUseSoftTabs(): boolean;
-    public setTabSize(tabSize: number): void;
-    public getTabSize(): number;
-    public isTabStop(position: Position): boolean;
-    public setNavigateWithinSoftTabs(navigateWithinSoftTabs: boolean): void;
-    public getNavigateWithinSoftTabs(): boolean;
-    public setOverwrite(overwrite: boolean): void;
-    public getOverwrite(): boolean;
-    public toggleOverwrite(): void;
-    public addGutterDecoration(row: number, className: string): void;
-    public removeGutterDecoration(row: number, className: string): void;
-    public getBreakpoints(): string[];
-    public setBreakpoints(rows: number[]): void;
-    public clearBreakpoints(): void;
-    public setBreakpoint(row: number, className: string): void;
-    public clearBreakpoint(row: number): void;
-    public addMarker(range: Range,
-                     clazz: string,
-                     type: MarkerRenderer,
-                     inFront: boolean): number;
-    public addDynamicMarker(marker: MarkerLike, inFront: boolean): MarkerLike;
-    public removeMarker(markerId: number): void;
-    public getMarkers(inFront?: boolean): MarkerLike[];
-    public highlight(re: RegExp): void;
-    public highlightLines(startRow: number,
-                          endRow: number,
-                          clazz: string,
-                          inFront?: boolean): Range;
-    public setAnnotations(annotations: Annotation[]): void;
-    public getAnnotations(): Annotation[];
-    public clearAnnotations(): void;
-    public getWordRange(row: number, column: number): Range;
-    public getAWordRange(row: number, column: number): Range;
-    public setNewLineMode(newLineMode: NewLineMode): void;
-    public getNewLineMode(): NewLineMode;
-    public setUseWorker(useWorker: boolean): void;
-    public getUseWorker(): boolean;
-    public setMode(mode: TextMode | string, callback?: () => void): void;
-    public getMode(): TextMode;
-    public setScrollTop(scrollTop: number): void;
-    public getScrollTop(): number;
-    public setScrollLeft(scrollLeft: number): void;
-    public getScrollLeft(): number;
-    public getScreenWidth(): number;
-    public getLineWidgetMaxWidth(): number;
-    public getLine(row: number): string;
-    public getLines(firstRow: number, lastRow: number): string[];
-    public getLength(): number;
-    public getTextRange(range: Range): string;
-    public insert(position: Position, text: string): void;
-    public remove(range: Range): void;
-    public removeFullLines(firstRow: number, lastRow: number): void;
-    public undoChanges(deltas: Delta[], dontSelect?: boolean): void;
-    public redoChanges(deltas: Delta[], dontSelect?: boolean): void;
-    public setUndoSelect(enable: boolean): void;
-    public replace(range: Range, text: string): void;
-    public moveText(fromRange: Range, toPosition: Position, copy?: boolean): void;
-    public indentRows(startRow: number, endRow: number, indentString: string): void;
-    public outdentRows(range: Range): void;
-    public moveLinesUp(firstRow: number, lastRow, number): void;
-    public moveLinesDown(firstRow: number, lastRow: number): void;
-    public duplicateLines(firstRow: number, lastRow: number): void;
-    public setUseWrapMode(useWrapMode: boolean): void;
-    public getUseWrapMode(): boolean;
-    public setWrapLimitRange(min: number, max: number): void;
-    public adjustWrapLimit(desiredLimit: number): boolean;
-    public getWrapLimit(): number;
-    public setWrapLimit(limit: number): void;
-    public getWrapLimitRange(): { min: number, max: number };
-    public getRowLineCount(row: number): number;
-    public getRowWrapIndent(screenRow: number): number;
-    public getScreenLastRowColumn(screenRow: number): number;
-    public getDocumentLastRowColumn(docRow: number, docColumn: number): number;
-    public getdocumentLastRowColumnPosition(docRow: number, docColumn: number): Position;
-    public getRowSplitData(row: number): string | undefined;
-    public getScreenTabSize(screenColumn: number): number;
-    public screenToDocumentRow(screenRow: number, screenColumn: number): number;
-    public screenToDocumentColumn(screenRow: number, screenColumn: number): number;
-    public screenToDocumentPosition(screenRow: number,
-                                    screenColumn: number,
-                                    offsetX?: number): Position;
-    public documentToScreenPosition(docRow, docColumn): Position;
-    public documentToScreenColumn(row: number, docColumn: number): number;
-    public documentToScreenRow(docRow: number, docColumn: number): number;
-    public getScreenLength(): number;
-    public destroy(): void;
+    setOption<T extends keyof EditSessionOptions>(name: T, value: EditSessionOptions[T]): void;
+    getOption<T extends keyof EditSessionOptions>(name: T): EditSessionOptions[T];
+
+    setDocument(doc: Document): void;
+    getDocument(): Document;
+    resetCaches(): void;
+    setValue(text: string): void;
+    getValue(): string;
+    getSelection(): Selection;
+    getState(row: number): string;
+    getTokens(row: number): Token[];
+    getTokenAt(row: number, column: number): Token;
+    setUndoManager(undoManager: UndoManager): void;
+    markUndoGroup(): void;
+    getUndoManager(): UndoManager;
+    getTabString(): string;
+    setUseSoftTabs(val: boolean): void;
+    getUseSoftTabs(): boolean;
+    setTabSize(tabSize: number): void;
+    getTabSize(): number;
+    isTabStop(position: Position): boolean;
+    setNavigateWithinSoftTabs(navigateWithinSoftTabs: boolean): void;
+    getNavigateWithinSoftTabs(): boolean;
+    setOverwrite(overwrite: boolean): void;
+    getOverwrite(): boolean;
+    toggleOverwrite(): void;
+    addGutterDecoration(row: number, className: string): void;
+    removeGutterDecoration(row: number, className: string): void;
+    getBreakpoints(): string[];
+    setBreakpoints(rows: number[]): void;
+    clearBreakpoints(): void;
+    setBreakpoint(row: number, className: string): void;
+    clearBreakpoint(row: number): void;
+    addMarker(range: Range,
+              clazz: string,
+              type: MarkerRenderer,
+              inFront: boolean): number;
+    addDynamicMarker(marker: MarkerLike, inFront: boolean): MarkerLike;
+    removeMarker(markerId: number): void;
+    getMarkers(inFront?: boolean): MarkerLike[];
+    highlight(re: RegExp): void;
+    highlightLines(startRow: number,
+                   endRow: number,
+                   clazz: string,
+                   inFront?: boolean): Range;
+    setAnnotations(annotations: Annotation[]): void;
+    getAnnotations(): Annotation[];
+    clearAnnotations(): void;
+    getWordRange(row: number, column: number): Range;
+    getAWordRange(row: number, column: number): Range;
+    setNewLineMode(newLineMode: NewLineMode): void;
+    getNewLineMode(): NewLineMode;
+    setUseWorker(useWorker: boolean): void;
+    getUseWorker(): boolean;
+    setMode(mode: TextMode | string, callback?: () => void): void;
+    getMode(): TextMode;
+    setScrollTop(scrollTop: number): void;
+    getScrollTop(): number;
+    setScrollLeft(scrollLeft: number): void;
+    getScrollLeft(): number;
+    getScreenWidth(): number;
+    getLineWidgetMaxWidth(): number;
+    getLine(row: number): string;
+    getLines(firstRow: number, lastRow: number): string[];
+    getLength(): number;
+    getTextRange(range: Range): string;
+    insert(position: Position, text: string): void;
+    remove(range: Range): void;
+    removeFullLines(firstRow: number, lastRow: number): void;
+    undoChanges(deltas: Delta[], dontSelect?: boolean): void;
+    redoChanges(deltas: Delta[], dontSelect?: boolean): void;
+    setUndoSelect(enable: boolean): void;
+    replace(range: Range, text: string): void;
+    moveText(fromRange: Range, toPosition: Position, copy?: boolean): void;
+    indentRows(startRow: number, endRow: number, indentString: string): void;
+    outdentRows(range: Range): void;
+    moveLinesUp(firstRow: number, lastRow, number): void;
+    moveLinesDown(firstRow: number, lastRow: number): void;
+    duplicateLines(firstRow: number, lastRow: number): void;
+    setUseWrapMode(useWrapMode: boolean): void;
+    getUseWrapMode(): boolean;
+    setWrapLimitRange(min: number, max: number): void;
+    adjustWrapLimit(desiredLimit: number): boolean;
+    getWrapLimit(): number;
+    setWrapLimit(limit: number): void;
+    getWrapLimitRange(): { min: number, max: number };
+    getRowLineCount(row: number): number;
+    getRowWrapIndent(screenRow: number): number;
+    getScreenLastRowColumn(screenRow: number): number;
+    getDocumentLastRowColumn(docRow: number, docColumn: number): number;
+    getdocumentLastRowColumnPosition(docRow: number, docColumn: number): Position;
+    getRowSplitData(row: number): string | undefined;
+    getScreenTabSize(screenColumn: number): number;
+    screenToDocumentRow(screenRow: number, screenColumn: number): number;
+    screenToDocumentColumn(screenRow: number, screenColumn: number): number;
+    screenToDocumentPosition(screenRow: number,
+                             screenColumn: number,
+                             offsetX?: number): Position;
+    documentToScreenPosition(docRow, docColumn): Position;
+    documentToScreenColumn(row: number, docColumn: number): number;
+    documentToScreenRow(docRow: number, docColumn: number): number;
+    getScreenLength(): number;
+    destroy(): void;
   }
 
   export class KeyBinding {
-    public setDefaultHandler(handler: KeyboardHandler): void;
-    public setKeyboardHandler(handler: KeyboardHandler): void;
-    public addKeyboardHandler(handler: KeyboardHandler, pos: number): void;
-    public removeKeyboardHandler(handler: KeyboardHandler): boolean;
-    public getKeyboardHandler(): KeyboardHandler;
-    public getStatusText(): string;
+    setDefaultHandler(handler: KeyboardHandler): void;
+    setKeyboardHandler(handler: KeyboardHandler): void;
+    addKeyboardHandler(handler: KeyboardHandler, pos: number): void;
+    removeKeyboardHandler(handler: KeyboardHandler): boolean;
+    getKeyboardHandler(): KeyboardHandler;
+    getStatusText(): string;
   }
 
   export class CommandManager extends EventEmitter {
-    public constructor(platform: 'mac' | 'win', commands: Array<string | CommandLike>);
+    constructor(platform: 'mac' | 'win', commands: Array<string | CommandLike>);
 
-    public on(name: 'changeStatus', callback: () => void): void;
-    public on(name: 'exec',
-              callback: (obj: {
-                editor: Editor,
-                command: Command,
-                args: any[] }) => void): void;
+    on(name: 'changeStatus', callback: () => void): void;
+    on(name: 'exec', callback: (obj: {
+                                  editor: Editor,
+                                  command: Command,
+                                  args: any[]
+                               }) => void): void;
 
-    public exec(command: string, editor: Editor, args: any): boolean;
-    public toggleRecording(editor: Editor): void;
-    public replay(editor: Editor): void;
-    public addCommand(command: Command): void;
-    public removeCommand(command: Command, keepCommand?: boolean): void;
-    public bindKey(key: string | { mac?: string, win?: string},
-                   command: CommandLike,
-                   position?: number): void;
+    exec(command: string, editor: Editor, args: any): boolean;
+    toggleRecording(editor: Editor): void;
+    replay(editor: Editor): void;
+    addCommand(command: Command): void;
+    removeCommand(command: Command, keepCommand?: boolean): void;
+    bindKey(key: string | { mac?: string, win?: string},
+            command: CommandLike,
+            position?: number): void;
   }
 
   export class VirtualRenderer extends ConfigurableEventEmitter {
-    public container: HTMLElement;
+    container: HTMLElement;
 
-    public constructor(container: HTMLElement, theme?: string);
+    constructor(container: HTMLElement, theme?: string);
 
-    public setSession(session: EditSession): void;
-    public updateLines(firstRow: number, lastRow: number, force?: boolean): void;
-    public updateText(): void;
-    public updateFull(force?: boolean): void;
-    public updateFontSize(): void;
-    public adjustWrapLimit(): boolean;
-    public setAnimatedScroll(shouldAnimate: boolean): void;
-    public getAnimatedScroll(): boolean;
-    public setShowInvisibles(showInvisibles: boolean): void;
-    public getShowInvisibles(): boolean;
-    public setDisplayIndentGuides(display: boolean): void;
-    public getDisplayIndentGuides(): boolean;
-    public setShowPrintMargin(showPrintMargin: boolean): void;
-    public getShowPrintMargin(): boolean;
-    public setPrintMarginColumn(showPrintMargin: boolean): void;
-    public getPrintMarginColumn(): boolean;
-    public setShowGutter(show: boolean): void;
-    public getShowGutter(): boolean;
-    public setFadeFoldWidgets(show: boolean): void;
-    public getFadeFoldWidgets(): boolean;
-    public setHighlightGutterLine(shouldHighlight: boolean): void;
-    public getHighlightGutterLine(): boolean;
-    public getContainerElement(): HTMLElement;
-    public getMouseEventTarget(): HTMLElement;
-    public getTextAreaContainer(): HTMLElement;
-    public getFirstVisibleRow(): number;
-    public getFirstFullyVisibleRow(): number;
-    public getLastFullyVisibleRow(): number;
-    public getLastVisibleRow(): number;
-    public setPadding(padding: number): void;
-    public setScrollMargin(top: number,
-                           bottom: number,
-                           left: number,
-                           right: number): void;
-    public setHScrollBarAlwaysVisible(alwaysVisible: boolean): void;
-    public getHScrollBarAlwaysVisible(): boolean;
-    public setVScrollBarAlwaysVisible(alwaysVisible: boolean): void;
-    public getVScrollBarAlwaysVisible(): boolean;
-    public freeze(): void;
-    public unfreeze(): void;
-    public updateFrontMarkers(): void;
-    public updateBackMarkers(): void;
-    public updateBreakpoints(): void;
-    public setAnnotations(annotations: Annotation[]): void;
-    public updateCursor(): void;
-    public hideCursor(): void;
-    public showCursor(): void;
-    public scrollSelectionIntoView(anchor: Position,
-                                   lead: Position,
-                                   offset?: number): void;
-    public scrollCursorIntoView(cursor: Position, offset?: number): void;
-    public getScrollTop(): number;
-    public getScrollLeft(): number;
-    public getScrollTopRow(): number;
-    public getScrollBottomRow(): number;
-    public scrollToRow(row: number): void;
-    public alignCursor(cursor: Position | number, alignment: number): number;
-    public scrollToLine(line: number,
-                        center: boolean,
-                        animate: boolean,
-                        callback: () => void): void;
-    public animateScrolling(fromValue: number, callback: () => void): void;
-    public scrollToY(scrollTop: number): void;
-    public scrollToX(scrollLeft: number): void;
-    public scrollTo(x: number, y: number): void;
-    public scrollBy(deltaX: number, deltaY: number): void;
-    public isScrollableBy(deltaX: number, deltaY: number): boolean;
-    public textToScreenCoordinates(row: number, column: number):
-      { pageX: number, pageY: number};
-    public visualizeFocus(): void;
-    public visualizeBlur(): void;
-    public showComposition(position: number): void;
-    public setCompositionText(text: string): void;
-    public hideComposition(): void;
-    public setTheme(theme: string, callback?: () => void): void;
-    public getTheme(): string;
-    public setStyle(style: string, include?: boolean): void;
-    public unsetStyle(style: string): void;
-    public setCursorStyle(style: string): void;
-    public setMouseCursor(cursorStyle: string): void;
-    public attachToShadowRoot(): void;
-    public destroy(): void;
+    setSession(session: EditSession): void;
+    updateLines(firstRow: number, lastRow: number, force?: boolean): void;
+    updateText(): void;
+    updateFull(force?: boolean): void;
+    updateFontSize(): void;
+    adjustWrapLimit(): boolean;
+    setAnimatedScroll(shouldAnimate: boolean): void;
+    getAnimatedScroll(): boolean;
+    setShowInvisibles(showInvisibles: boolean): void;
+    getShowInvisibles(): boolean;
+    setDisplayIndentGuides(display: boolean): void;
+    getDisplayIndentGuides(): boolean;
+    setShowPrintMargin(showPrintMargin: boolean): void;
+    getShowPrintMargin(): boolean;
+    setPrintMarginColumn(showPrintMargin: boolean): void;
+    getPrintMarginColumn(): boolean;
+    setShowGutter(show: boolean): void;
+    getShowGutter(): boolean;
+    setFadeFoldWidgets(show: boolean): void;
+    getFadeFoldWidgets(): boolean;
+    setHighlightGutterLine(shouldHighlight: boolean): void;
+    getHighlightGutterLine(): boolean;
+    getContainerElement(): HTMLElement;
+    getMouseEventTarget(): HTMLElement;
+    getTextAreaContainer(): HTMLElement;
+    getFirstVisibleRow(): number;
+    getFirstFullyVisibleRow(): number;
+    getLastFullyVisibleRow(): number;
+    getLastVisibleRow(): number;
+    setPadding(padding: number): void;
+    setScrollMargin(top: number,
+                    bottom: number,
+                    left: number,
+                    right: number): void;
+    setHScrollBarAlwaysVisible(alwaysVisible: boolean): void;
+    getHScrollBarAlwaysVisible(): boolean;
+    setVScrollBarAlwaysVisible(alwaysVisible: boolean): void;
+    getVScrollBarAlwaysVisible(): boolean;
+    freeze(): void;
+    unfreeze(): void;
+    updateFrontMarkers(): void;
+    updateBackMarkers(): void;
+    updateBreakpoints(): void;
+    setAnnotations(annotations: Annotation[]): void;
+    updateCursor(): void;
+    hideCursor(): void;
+    showCursor(): void;
+    scrollSelectionIntoView(anchor: Position,
+                            lead: Position,
+                            offset?: number): void;
+    scrollCursorIntoView(cursor: Position, offset?: number): void;
+    getScrollTop(): number;
+    getScrollLeft(): number;
+    getScrollTopRow(): number;
+    getScrollBottomRow(): number;
+    scrollToRow(row: number): void;
+    alignCursor(cursor: Position | number, alignment: number): number;
+    scrollToLine(line: number,
+                 center: boolean,
+                 animate: boolean,
+                 callback: () => void): void;
+    animateScrolling(fromValue: number, callback: () => void): void;
+    scrollToY(scrollTop: number): void;
+    scrollToX(scrollLeft: number): void;
+    scrollTo(x: number, y: number): void;
+    scrollBy(deltaX: number, deltaY: number): void;
+    isScrollableBy(deltaX: number, deltaY: number): boolean;
+    textToScreenCoordinates(row: number, column: number): { pageX: number, pageY: number};
+    visualizeFocus(): void;
+    visualizeBlur(): void;
+    showComposition(position: number): void;
+    setCompositionText(text: string): void;
+    hideComposition(): void;
+    setTheme(theme: string, callback?: () => void): void;
+    getTheme(): string;
+    setStyle(style: string, include?: boolean): void;
+    unsetStyle(style: string): void;
+    setCursorStyle(style: string): void;
+    setMouseCursor(cursorStyle: string): void;
+    attachToShadowRoot(): void;
+    destroy(): void;
   }
 
   export class Editor extends ConfigurableEventEmitter {
-    public container: HTMLElement;
-    public renderer: VirtualRenderer;
-    public id: string;
-    public commands: CommandManager;
-    public keyBinding: KeyBinding;
-    public session: EditSession;
+    container: HTMLElement;
+    renderer: VirtualRenderer;
+    id: string;
+    commands: CommandManager;
+    keyBinding: KeyBinding;
+    session: EditSession;
 
-    public constructor(renderer: VirtualRenderer,
-                       session: EditSession,
-                       options?: Partial<IEditorOptions>);
+    constructor(renderer: VirtualRenderer,
+                session: EditSession,
+                options?: Partial<EditorOptions>);
 
-    public on(name: 'blur', callback: (e: Event) => void): void;
-    public on(name: 'change', callback: (delta: Delta) => void): void;
-    public on(name: 'changeSelectionStyle',
-              callback: (obj: { data: string }) => void): void;
-    public on(name: 'changeSession',
-              callback: (obj: { session: EditSession, oldSession: EditSession }) => void): void;
-    public on(name: 'copy', callback: (obj: { text: string }) => void): void;
-    public on(name: 'focus', callback: (e: Event) => void): void;
-    public on(name: 'paste', callback: (obj: { text: string }) => void): void;
+    on(name: 'blur', callback: (e: Event) => void): void;
+    on(name: 'change', callback: (delta: Delta) => void): void;
+    on(name: 'changeSelectionStyle', callback: (obj: { data: string }) => void): void;
+    on(name: 'changeSession',
+       callback: (obj: { session: EditSession, oldSession: EditSession }) => void): void;
+    on(name: 'copy', callback: (obj: { text: string }) => void): void;
+    on(name: 'focus', callback: (e: Event) => void): void;
+    on(name: 'paste', callback: (obj: { text: string }) => void): void;
 
-    public setKeyboardHandler(keyboardHandler: string, callback?: () => void);
-    public getKeyboardHandler(): string;
-    public setSession(session: EditSession): void;
-    public getSession(): EditSession;
-    public setValue(val: string, cursorPos?: number): string;
-    public getValue(): string;
-    public getSelection(): Selection;
-    public resize(force?: boolean): void;
-    public setTheme(theme: string, callback?: () => void);
-    public getTheme(): string;
-    public setStyle(style: string): void;
-    public unsetStyle(style: string): void;
-    public getFontSize(): string;
-    public setFontSize(size: string): void;
-    public focus(): void;
-    public isFocused(): boolean;
-    public flur(): void;
-    public getSelectedText(): string;
-    public getCopyText(): string;
-    public execCommand(command: string | string[], args: any): boolean;
-    public insert(text: string, pasted?: boolean): void;
-    public setOverwrite(overwrite: boolean): void;
-    public getOverwrite(): boolean;
-    public toggleOverwrite(): void;
-    public setScrollSpeed(speed: number): void;
-    public getScrollSpeed(): number;
-    public setDragDelay(dragDelay: number): void;
-    public getDragDelay(): number;
-    public setSelectionStyle(val: string): void;
-    public getSelectionStyle(): string;
-    public setHighlightActiveLine(shouldHighlight: boolean): void;
-    public getHighlightActiveLine(): boolean;
-    public setHighlightGutterLine(shouldHighlight: boolean): void;
-    public getHighlightGutterLine(): boolean;
-    public setHighlightSelectedWord(shouldHighlight: boolean): void;
-    public getHighlightSelectedWord(): boolean;
-    public setAnimatedScroll(shouldAnimate: boolean): void;
-    public getAnimatedScroll(): boolean;
-    public setShowInvisibles(showInvisibles: boolean): void;
-    public getShowInvisibles(): boolean;
-    public setDisplayIndentGuides(display: boolean): void;
-    public getDisplayIndentGuides(): boolean;
-    public setShowPrintMargin(showPrintMargin: boolean): void;
-    public getShowPrintMargin(): boolean;
-    public setPrintMarginColumn(showPrintMargin: number): void;
-    public getPrintMarginColumn(): number;
-    public setReadOnly(readOnly: boolean): void;
-    public getReadOnly(): boolean;
-    public setBehavioursEnabled(enabled: boolean): void;
-    public getBehavioursEnabled(): boolean;
-    public setWrapBehavioursEnabled(enabled: boolean): void;
-    public getWrapBehavioursEnabled(): boolean;
-    public setShowFoldWidgets(show: boolean): void;
-    public getShowFoldWidgets(): boolean;
-    public setFadeFoldWidgets(fade: boolean): void;
-    public getFadeFoldWidgets(): boolean;
-    public remove(dir?: 'left' | 'right'): void;
-    public removeWordRight(): void;
-    public removeWordLeft(): void;
-    public removeLineToEnd(): void;
-    public splitLine(): void;
-    public transposeLetters(): void;
-    public toLowerCase(): void;
-    public toUpperCase(): void;
-    public indent(): void;
-    public blockIndent(): void;
-    public blockOutdent(): void;
-    public sortLines(): void;
-    public toggleCommentLines(): void;
-    public toggleBlockComment(): void;
-    public modifyNumber(amount: number): void;
-    public removeLines(): void;
-    public duplicateSelection(): void;
-    public moveLinesDown(): void;
-    public moveLinesUp(): void;
-    public moveText(range: Range, toPosition: Point, copy?: boolean): Range;
-    public copyLinesUp(): void;
-    public copyLinesDown(): void;
-    public getFirstVisibleRow(): number;
-    public getLastVisibleRow(): number;
-    public isRowVisible(row: number): boolean;
-    public isRowFullyVisible(row: number): boolean;
-    public selectPageDown(): void;
-    public selectPageUp(): void;
-    public gotoPageDown(): void;
-    public gotoPageUp(): void;
-    public scrollPageDown(): void;
-    public scrollPageUp(): void;
-    public scrollToRow(row: number): void;
-    public scrollToLine(line: number, center: boolean, animate: boolean, callback: () => void): void;
-    public centerSelection(): void;
-    public getCursorPosition(): Point;
-    public getCursorPositionScreen(): Point;
-    public getSelectionRange(): Range;
-    public selectAll(): void;
-    public clearSelection(): void;
-    public moveCursorTo(row: number, column: number): void;
-    public moveCursorToPosition(pos: Point): void;
-    public jumpToMatching(select: boolean, expand: boolean): void;
-    public gotoLine(lineNumber: number, column: number, animate: boolean): void;
-    public navigateTo(row: number, column: number): void;
-    public navigateUp(): void;
-    public navigateDown(): void;
-    public navigateLeft(): void;
-    public navigateRight(): void;
-    public navigateLineStart(): void;
-    public navigateLineEnd(): void;
-    public navigateFileEnd(): void;
-    public navigateFileStart(): void;
-    public navigateWordRight(): void;
-    public navigateWordLeft(): void;
-    public replace(replacement: string, options?: Partial<SearchOptions>): number;
-    public replaceAll(replacement: string, options?: Partial<SearchOptions>): number;
-    public getLastSearchOptions(): Partial<SearchOptions>;
-    public find(needle: string, options?: Partial<SearchOptions>, animate?: boolean): void;
-    public findNext(options?: Partial<SearchOptions>, animate?: boolean): void;
-    public findPrevious(options?: Partial<SearchOptions>, animate?: boolean): void;
-    public undo(): void;
-    public redo(): void;
-    public destroy(): void;
-    public setAutoScrollEditorIntoView(enable: boolean): void;
+    setOption<T extends keyof EditorOptions>(name: T, value: EditorOptions[T]): void;
+    getOption<T extends keyof EditorOptions>(name: T): EditorOptions[T];
+
+    setKeyboardHandler(keyboardHandler: string, callback?: () => void);
+    getKeyboardHandler(): string;
+    setSession(session: EditSession): void;
+    getSession(): EditSession;
+    setValue(val: string, cursorPos?: number): string;
+    getValue(): string;
+    getSelection(): Selection;
+    resize(force?: boolean): void;
+    setTheme(theme: string, callback?: () => void);
+    getTheme(): string;
+    setStyle(style: string): void;
+    unsetStyle(style: string): void;
+    getFontSize(): string;
+    setFontSize(size: string): void;
+    focus(): void;
+    isFocused(): boolean;
+    flur(): void;
+    getSelectedText(): string;
+    getCopyText(): string;
+    execCommand(command: string | string[], args: any): boolean;
+    insert(text: string, pasted?: boolean): void;
+    setOverwrite(overwrite: boolean): void;
+    getOverwrite(): boolean;
+    toggleOverwrite(): void;
+    setScrollSpeed(speed: number): void;
+    getScrollSpeed(): number;
+    setDragDelay(dragDelay: number): void;
+    getDragDelay(): number;
+    setSelectionStyle(val: string): void;
+    getSelectionStyle(): string;
+    setHighlightActiveLine(shouldHighlight: boolean): void;
+    getHighlightActiveLine(): boolean;
+    setHighlightGutterLine(shouldHighlight: boolean): void;
+    getHighlightGutterLine(): boolean;
+    setHighlightSelectedWord(shouldHighlight: boolean): void;
+    getHighlightSelectedWord(): boolean;
+    setAnimatedScroll(shouldAnimate: boolean): void;
+    getAnimatedScroll(): boolean;
+    setShowInvisibles(showInvisibles: boolean): void;
+    getShowInvisibles(): boolean;
+    setDisplayIndentGuides(display: boolean): void;
+    getDisplayIndentGuides(): boolean;
+    setShowPrintMargin(showPrintMargin: boolean): void;
+    getShowPrintMargin(): boolean;
+    setPrintMarginColumn(showPrintMargin: number): void;
+    getPrintMarginColumn(): number;
+    setReadOnly(readOnly: boolean): void;
+    getReadOnly(): boolean;
+    setBehavioursEnabled(enabled: boolean): void;
+    getBehavioursEnabled(): boolean;
+    setWrapBehavioursEnabled(enabled: boolean): void;
+    getWrapBehavioursEnabled(): boolean;
+    setShowFoldWidgets(show: boolean): void;
+    getShowFoldWidgets(): boolean;
+    setFadeFoldWidgets(fade: boolean): void;
+    getFadeFoldWidgets(): boolean;
+    remove(dir?: 'left' | 'right'): void;
+    removeWordRight(): void;
+    removeWordLeft(): void;
+    removeLineToEnd(): void;
+    splitLine(): void;
+    transposeLetters(): void;
+    toLowerCase(): void;
+    toUpperCase(): void;
+    indent(): void;
+    blockIndent(): void;
+    blockOutdent(): void;
+    sortLines(): void;
+    toggleCommentLines(): void;
+    toggleBlockComment(): void;
+    modifyNumber(amount: number): void;
+    removeLines(): void;
+    duplicateSelection(): void;
+    moveLinesDown(): void;
+    moveLinesUp(): void;
+    moveText(range: Range, toPosition: Point, copy?: boolean): Range;
+    copyLinesUp(): void;
+    copyLinesDown(): void;
+    getFirstVisibleRow(): number;
+    getLastVisibleRow(): number;
+    isRowVisible(row: number): boolean;
+    isRowFullyVisible(row: number): boolean;
+    selectPageDown(): void;
+    selectPageUp(): void;
+    gotoPageDown(): void;
+    gotoPageUp(): void;
+    scrollPageDown(): void;
+    scrollPageUp(): void;
+    scrollToRow(row: number): void;
+    scrollToLine(line: number, center: boolean, animate: boolean, callback: () => void): void;
+    centerSelection(): void;
+    getCursorPosition(): Point;
+    getCursorPositionScreen(): Point;
+    getSelectionRange(): Range;
+    selectAll(): void;
+    clearSelection(): void;
+    moveCursorTo(row: number, column: number): void;
+    moveCursorToPosition(pos: Point): void;
+    jumpToMatching(select: boolean, expand: boolean): void;
+    gotoLine(lineNumber: number, column: number, animate: boolean): void;
+    navigateTo(row: number, column: number): void;
+    navigateUp(): void;
+    navigateDown(): void;
+    navigateLeft(): void;
+    navigateRight(): void;
+    navigateLineStart(): void;
+    navigateLineEnd(): void;
+    navigateFileEnd(): void;
+    navigateFileStart(): void;
+    navigateWordRight(): void;
+    navigateWordLeft(): void;
+    replace(replacement: string, options?: Partial<SearchOptions>): number;
+    replaceAll(replacement: string, options?: Partial<SearchOptions>): number;
+    getLastSearchOptions(): Partial<SearchOptions>;
+    find(needle: string, options?: Partial<SearchOptions>, animate?: boolean): void;
+    findNext(options?: Partial<SearchOptions>, animate?: boolean): void;
+    findPrevious(options?: Partial<SearchOptions>, animate?: boolean): void;
+    undo(): void;
+    redo(): void;
+    destroy(): void;
+    setAutoScrollEditorIntoView(enable: boolean): void;
   }
 
   export interface AceStatic {
     version: string;
     require(name: string): any;
-    edit(el: Element | string, options?: Partial<IEditorOptions>): Editor;
+    edit(el: Element | string, options?: Partial<EditorOptions>): Editor;
     createEditSession(text: Document | string, mode: TextMode): EditSession;
     config: Config;
 
