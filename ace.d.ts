@@ -1,6 +1,47 @@
 declare namespace Ace {
   export type NewLineMode = 'auto' | 'unix' | 'windows';
 
+  export interface Anchor {
+    getPosition(): Position;
+    getDocument(): Document;
+    setPosition(row: number, column: number, noClip?: boolean): void;
+    detach(): void;
+    attach(doc: Document): void;
+  }
+
+  export interface Document {
+    setValue(text: string): void;
+    getValue(): string;
+    createAnchor(row: number, column: number): Anchor;
+    getNewLineCharacter(): string;
+    setNewLineMode(newLineMode: NewLineMode): void;
+    getNewLineMode(): NewLineMode;
+    isNewLine(text: string): boolean;
+    getLine(row: number): string;
+    getLines(firstRow: number, lastRow: number): string[];
+    getAllLines(): string[];
+    getTextRange(range: Range): string;
+    getLinesForRange(range: Range): string[];
+    insert(position: Position, text: string): Position;
+    insertInLine(position: Position, text: string): Position;
+    clippedPos(row: number, column: number): Point;
+    clonePos(pos: Point): Point;
+    pos(row: number, column: number): Point;
+    insertFullLines(row: number, lines: string[]): void;
+    insertMergedLines(position: Position, lines: string[]): Point;
+    remove(range: Range): Position;
+    removeInLine(row: number, startColumn: number, endColumn: number): Position;
+    removeFullLines(firstRow: number, lastRow: number): string[];
+    removeNewLine(row: number): void;
+    replace(range: Range, text: string): Position;
+    applyDeltas(deltas: Delta[]): void;
+    revertDeltas(deltas: Delta[]): void;
+    applyDelta(delta: Delta, doNotValidate?: boolean): void;
+    revertDelta(delta: Delta): void;
+    indexToPosition(index: number, startRow: number): Position;
+    positionToIndex(pos: Position, startRow?: number): number;
+  }
+
   export interface FoldLine {
     folds: Fold[];
     range: Range;
