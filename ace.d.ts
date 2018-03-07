@@ -105,11 +105,6 @@ declare namespace Ace {
     moveBy(row: number, column: number): void;
   }
 
-  export const Range: {
-    fromPoints(start: Point, end: Point): Range;
-    comparePoints(p1: Point, p2: Point): number;
-  };
-
   export interface EditorOptions {
     selectionStyle: string;
     highlightActiveLine: boolean;
@@ -349,10 +344,6 @@ declare namespace Ace {
     isAtBookmark(): boolean;
   }
 
-  export const UndoManager: {
-    new(): UndoManager;
-  };
-
   export interface EditSession extends EventEmitter, OptionsProvider {
     selection: Selection;
 
@@ -468,10 +459,6 @@ declare namespace Ace {
     getScreenLength(): number;
     destroy(): void;
   }
-
-  export const EditSession: {
-    new(text: string | Document, mode?: TextMode): EditSession;
-  };
 
   export interface KeyBinding {
     setDefaultHandler(handler: KeyboardHandler): void;
@@ -596,10 +583,6 @@ declare namespace Ace {
     attachToShadowRoot(): void;
     destroy(): void;
   }
-
-  export const VirtualRenderer: {
-    new(container: HTMLElement, theme?: string): VirtualRenderer;
-  };
 
   export interface Editor extends OptionsProvider, EventEmitter {
     container: HTMLElement;
@@ -744,12 +727,6 @@ declare namespace Ace {
     setAutoScrollEditorIntoView(enable: boolean): void;
   }
 
-  export const Editor: {
-    new(renderer: VirtualRenderer,
-        session: EditSession,
-        options?: Partial<EditorOptions>): Editor;
-  };
-
   export interface AceStatic {
     version: string;
     require(name: string): any;
@@ -757,10 +734,20 @@ declare namespace Ace {
     createEditSession(text: Document | string, mode: TextMode): EditSession;
     config: Config;
 
-    Range: typeof Range;
-    EditSession: typeof EditSession;
-    UndoManager: typeof UndoManager;
-    VirtualRenderer: typeof VirtualRenderer;
+    Range: {
+      new(startRow: number, startColumn: number, endRow: number, endColumn: number): Range;
+      fromPoints(start: Point, end: Point): Range;
+      comparePoints(p1: Point, p2: Point): number;
+    };
+    EditSession: {
+      new(text: string | Document, mode?: TextMode): EditSession;
+    };
+    UndoManager: {
+      new(): UndoManager;
+    };
+    VirtualRenderer: {
+      new(container: HTMLElement, theme?: string): VirtualRenderer;
+    };
   }
 }
 
