@@ -142,7 +142,8 @@ declare namespace Ace {
   export interface Command {
     name?: string;
     bindKey?: string | { mac?: string, win?: string };
-    exec: (editor: Editor) => void;
+    readOnly?: boolean;
+    exec: (editor: Editor, args?: any) => void;
   }
 
   export type CommandLike = Command | ((editor: Editor) => void);
@@ -234,6 +235,27 @@ declare namespace Ace {
     setDefaultValues(path: string, optionHash: {[key: string]: any}): void;
   }
 
+  interface OptionsProvider {
+    setOptions(optList: {[key: string]: any}): void;
+    getOptions(optionNames?: string[] | {[key: string]: any}): {[key: string]: any};
+    setOption(name: string, value: any): void;
+    getOption(name: string): any;
+  }
+
+  class ConfigurableEventEmitter extends EventEmitter implements OptionsProvider {
+    setOptions(optList: {[key: string]: any}): void;
+    getOptions(optionNames?: string[] | {[key: string]: any}): {[key: string]: any};
+    setOption(name: string, value: any): void;
+    getOption(name: string): any;
+  }
+
+  class Configurable implements OptionsProvider {
+    setOptions(optList: {[key: string]: any}): void;
+    getOptions(optionNames?: string[] | {[key: string]: any}): {[key: string]: any};
+    setOption(name: string, value: any): void;
+    getOption(name: string): any;
+  }
+
   export class UndoManager {
     constructor();
 
@@ -254,7 +276,7 @@ declare namespace Ace {
     isAtBookmark(): boolean;
   }
 
-  export class EditSession extends EventEmitter {
+  export class EditSession extends ConfigurableEventEmitter {
     public selection: Selection;
 
     public constructor(text: string | Document, mode?: TextMode);
@@ -380,7 +402,7 @@ declare namespace Ace {
                 command: Command,
                 args: any[] }) => void): void;
 
-    public exec(command: string, editor: Editor, args: any[]): boolean;
+    public exec(command: string, editor: Editor, args: any): boolean;
     public toggleRecording(editor: Editor): void;
     public replay(editor: Editor): void;
     public addCommand(command: Command): void;
@@ -390,7 +412,7 @@ declare namespace Ace {
                    position?: number): void;
   }
 
-  export class VirtualRenderer extends EventEmitter {
+  export class VirtualRenderer extends ConfigurableEventEmitter {
     public container: HTMLElement;
 
     public constructor(container: HTMLElement, theme?: string);
@@ -479,12 +501,13 @@ declare namespace Ace {
     public destroy(): void;
   }
 
-  export class Editor extends EventEmitter {
+  export class Editor extends ConfigurableEventEmitter {
     public container: HTMLElement;
     public renderer: VirtualRenderer;
     public id: string;
     public commands: CommandManager;
     public keyBinding: KeyBinding;
+    public session: EditSession;
 
     public constructor(renderer: VirtualRenderer,
                        session: EditSession,
