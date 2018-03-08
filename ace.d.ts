@@ -487,10 +487,6 @@ declare namespace Ace {
             position?: number): void;
   }
 
-  export const CommandManager: {
-    new(platform: 'mac' | 'win', commands: Array<string | CommandLike>): CommandManager;
-  };
-
   export interface VirtualRenderer extends OptionsProvider, EventEmitter {
     container: HTMLElement;
 
