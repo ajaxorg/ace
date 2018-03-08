@@ -753,3 +753,14 @@ declare namespace Ace {
 }
 
 declare const ace: Ace.AceStatic;
+export default ace;
+export declare var Range: {
+  new(startRow: number, startColumn: number, endRow: number, endColumn: number): Range;
+  fromPoints(start: Ace.Point, end: Ace.Point): Range;
+  comparePoints(p1: Ace.Point, p2: Ace.Point): number;
+}
+export declare var EditSession: Ace.EditSession
+export declare var UndoManager: Ace.UndoManager
+export declare var VirtualRenderer: Ace.VirtualRenderer
+
+

@@ -103,6 +103,7 @@ function ace() {
     copy.file(ACE_HOME + "/build_support/editor.html",  BUILD_DIR + "/editor.html");
     copy.file(ACE_HOME + "/LICENSE", BUILD_DIR + "/LICENSE");
     copy.file(ACE_HOME + "/ChangeLog.txt", BUILD_DIR + "/ChangeLog.txt");
+    copy.file(ACE_HOME + "/ace.d.ts", BUILD_DIR + "/ace.d.ts");
     
     console.log('# ace ---------');
     for (var i = 0; i < 4; i++)
@@ -299,7 +300,7 @@ function buildAceModuleInternal(opts, callback) {
         pathConfig: pathConfig,
         additional: opts.additional,
         enableBrowser: true,
-        keepDepArrays: "all",
+        keepDepArrays: opts.noconflict ? "" : "all",
         noArchitect: true,
         compress: false,
         ignore: opts.ignore || [],
@@ -511,6 +512,10 @@ function exportAce(ns, modules, requireBase, extModules) {
                         window.NS = a;
                     for (var key in a) if (a.hasOwnProperty(key))
                         window.NS[key] = a[key];
+                    window.NS["default"] = window.NS;
+                    if (typeof module == "object") {
+                        module.exports = window.NS;
+                    }
                 });
             })();
         };
