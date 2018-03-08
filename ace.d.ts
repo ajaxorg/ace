@@ -264,10 +264,11 @@ declare namespace Ace {
   }
 
   export interface Completion {
-    name: string;
     value: string;
     score: number;
     meta?: string;
+    name?: string;
+    caption?: string;
   }
 
   export interface Tokenizer {
