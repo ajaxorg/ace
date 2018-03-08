@@ -105,65 +105,6 @@ declare namespace Ace {
     moveBy(row: number, column: number): void;
   }
 
-  export interface EditorOptions {
-    selectionStyle: string;
-    highlightActiveLine: boolean;
-    highlightSelectedWord: boolean;
-    readOnly: boolean;
-    copyWithEmptySelection: boolean;
-    cursorStyle: 'ace' | 'slim' | 'smooth' | 'wide';
-    mergeUndoDeltas: true | false | 'always';
-    behavioursEnabled: boolean;
-    wrapBehavioursEnabled: boolean;
-    autoScrollEditorIntoView: boolean;
-    keyboardHandler: string;
-    value: string;
-    session: EditSession;
-
-    // Pass-through to VirtualRenderer
-    hScrollBarAlwaysVisible: boolean;
-    vScrollBarAlwaysVisible: boolean;
-    highlightGutterLine: boolean;
-    animatedScroll: boolean;
-    showInvisibles: boolean;
-    showPrintMargin: boolean;
-    printMarginColumn: number;
-    printMargin: boolean | number;
-    fadeFoldWidgets: boolean;
-    showFoldWidgets: boolean;
-    showLineNumbers: boolean;
-    showGutter: boolean;
-    displayIndentGuides: boolean;
-    fontSize: number;
-    fontFamily: string;
-    maxLines: number;
-    minLines: number;
-    scrollPastEnd: boolean;
-    fixedWidthGutter: boolean;
-    theme: string;
-    hasCssTransforms: boolean;
-
-    // Pass-through to MouseHandler
-    scrollSpeed: number;
-    dragDelay: number;
-    dragEnabled: boolean;
-    focusTimeout: number;
-    tooltipFollowsMouse: boolean;
-
-    // Pass-through to EditSession
-    firstLineNumber: number;
-    overwrite: boolean;
-    newLineMode: NewLineMode;
-    useWorker: boolean;
-    useSoftTabs: boolean;
-    navigateWithinSoftTabs: boolean;
-    tabSize: number;
-    wrap: boolean | number;
-    indentedSoftWrap: boolean;
-    foldStyle: 'markbegin' | 'markbeginend' | 'manual';
-    mode: string;
-  }
-
   export interface EditSessionOptions {
     wrap: string | number;
     wrapMethod: 'code' | 'text' | 'auto';
@@ -177,6 +118,57 @@ declare namespace Ace {
     overwrite: boolean;
     newLineMode: NewLineMode;
     mode: string;
+  }
+
+  export interface VirtualRendererOptions {
+    animatedScroll: boolean;
+    showInvisibles: boolean;
+    showPrintMargin: boolean;
+    printMarginColumn: number;
+    printMargin: boolean | number;
+    showGutter: boolean;
+    fadeFoldWidgets: boolean;
+    showFoldWidgets: boolean;
+    showLineNumbers: boolean;
+    displayIndentGuides: boolean;
+    highlightGutterLine: boolean;
+    hScrollBarAlwaysVisible: boolean;
+    vScrollBarAlwaysVisible: boolean;
+    fontSize: number;
+    fontFamily: string;
+    maxLines: number;
+    minLines: number;
+    scrollPastEnd: boolean;
+    fixedWidthGutter: boolean;
+    theme: string;
+    hasCssTransforms: boolean;
+    maxPixelHeight: number;
+  }
+
+  export interface MouseHandlerOptions {
+    scrollSpeed: number;
+    dragDelay: number;
+    dragEnabled: boolean;
+    focusTimeout: number;
+    tooltipFollowsMouse: boolean;
+  }
+
+  export interface EditorOptions extends EditSessionOptions,
+                                         MouseHandlerOptions,
+                                         VirtualRendererOptions {
+    selectionStyle: string;
+    highlightActiveLine: boolean;
+    highlightSelectedWord: boolean;
+    readOnly: boolean;
+    copyWithEmptySelection: boolean;
+    cursorStyle: 'ace' | 'slim' | 'smooth' | 'wide';
+    mergeUndoDeltas: true | false | 'always';
+    behavioursEnabled: boolean;
+    wrapBehavioursEnabled: boolean;
+    autoScrollEditorIntoView: boolean;
+    keyboardHandler: string;
+    value: string;
+    session: EditSession;
   }
 
   export interface SearchOptions {
@@ -501,6 +493,9 @@ declare namespace Ace {
 
   export interface VirtualRenderer extends OptionsProvider, EventEmitter {
     container: HTMLElement;
+
+    setOption<T extends keyof VirtualRendererOptions>(name: T, value: VirtualRendererOptions[T]): void;
+    getOption<T extends keyof VirtualRendererOptions>(name: T): VirtualRendererOptions[T];
 
     setSession(session: EditSession): void;
     updateLines(firstRow: number, lastRow: number, force?: boolean): void;
