@@ -7,7 +7,8 @@
    "ruleset",
   ["text","    "],
   ["support.type","font"],
-  ["text",": "],
+  ["punctuation.operator",":"],
+  ["text"," "],
   ["constant.numeric","12"],
   ["keyword","px"],
   ["text"," Monaco, "],
@@ -16,14 +17,15 @@
   ["string.end","\""],
   ["text",", "],
   ["support.constant.fonts","monospace"],
-  ["text",";"]
+  ["punctuation.operator",";"]
 ],[
    "ruleset",
   ["text","    "],
   ["support.type","cursor"],
-  ["text",": "],
+  ["punctuation.operator",":"],
+  ["text"," "],
   ["support.constant","text"],
-  ["text",";"]
+  ["punctuation.operator",";"]
 ],[
    "start",
   ["paren.rparen","}"]
@@ -38,12 +40,14 @@
    "ruleset",
   ["text","    "],
   ["support.type","animation"],
-  ["text",": blink "],
+  ["punctuation.operator",":"],
+  ["text"," blink "],
   ["constant.numeric","1"],
   ["keyword","s"],
   ["text"," "],
   ["support.constant","linear"],
-  ["text"," infinite alternate;"]
+  ["text"," infinite alternate"],
+  ["punctuation.operator",";"]
 ],[
    "start",
   ["paren.rparen","}"]
@@ -69,9 +73,11 @@
    ["comment","ruleset"],
   ["text","        "],
   ["support.type","opacity"],
-  ["text",": "],
+  ["punctuation.operator",":"],
+  ["text"," "],
   ["constant.numeric","0"],
-  ["text","; "],
+  ["punctuation.operator",";"],
+  ["text"," "],
   ["comment","/*"]
 ],[
    "ruleset",
@@ -80,7 +86,8 @@
    "ruleset",
   ["text","        "],
   ["support.type","opacity"],
-  ["text",": "],
+  ["punctuation.operator",":"],
+  ["text"," "],
   ["constant.numeric","1"]
 ],[
    "start",
@@ -102,7 +109,8 @@
    "ruleset",
   ["text","        "],
   ["support.type","opacity"],
-  ["text",": "],
+  ["punctuation.operator",":"],
+  ["text"," "],
   ["constant.numeric","1"]
 ],[
    "start",
@@ -162,7 +170,8 @@
    ["string.start0","ruleset"],
   ["text","        "],
   ["support.type","content"],
-  ["text",": "],
+  ["punctuation.operator",":"],
+  ["text"," "],
   ["support.function","attr"],
   ["text","(title) "],
   ["string.start","\""],
@@ -177,7 +186,9 @@
    ["comment","ruleset"],
   ["text","            "],
   ["support.function","attr"],
-  ["text","(src); "],
+  ["text","(src)"],
+  ["punctuation.operator",";"],
+  ["text"," "],
   ["comment","/*"]
 ],[
    "ruleset",
@@ -186,25 +197,29 @@
    "ruleset",
   ["text","        "],
   ["support.type","white-space"],
-  ["text",": "],
+  ["punctuation.operator",":"],
+  ["text"," "],
   ["support.constant","pre"],
-  ["text",";"]
+  ["punctuation.operator",";"]
 ],[
    "ruleset",
   ["text","        "],
   ["support.type","display"],
-  ["text",": "],
+  ["punctuation.operator",":"],
+  ["text"," "],
   ["support.constant","block"],
-  ["text",";"]
+  ["punctuation.operator",";"]
 ],[
    "ruleset",
   ["text","        "],
   ["support.type","background"],
-  ["text",": "],
+  ["punctuation.operator",":"],
+  ["text"," "],
   ["support.function","url("],
   ["string","asdasd"],
   ["support.function",")"],
-  ["text","; "],
+  ["punctuation.operator",";"],
+  ["text"," "],
   ["string.start","\""],
   ["string","err"]
 ],[
