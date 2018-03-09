@@ -1,4 +1,4 @@
-declare namespace Ace {
+export namespace Ace {
   export type NewLineMode = 'auto' | 'unix' | 'windows';
 
   export interface Anchor extends EventEmitter {
@@ -718,40 +718,27 @@ declare namespace Ace {
     destroy(): void;
     setAutoScrollEditorIntoView(enable: boolean): void;
   }
-
-  export interface AceStatic {
-    version: string;
-    require(name: string): any;
-    edit(el: Element | string, options?: Partial<EditorOptions>): Editor;
-    createEditSession(text: Document | string, mode: TextMode): EditSession;
-    config: Config;
-
-    Range: {
-      new(startRow: number, startColumn: number, endRow: number, endColumn: number): Range;
-      fromPoints(start: Point, end: Point): Range;
-      comparePoints(p1: Point, p2: Point): number;
-    };
-    EditSession: {
-      new(text: string | Document, mode?: TextMode): EditSession;
-    };
-    UndoManager: {
-      new(): UndoManager;
-    };
-    VirtualRenderer: {
-      new(container: HTMLElement, theme?: string): VirtualRenderer;
-    };
-  }
 }
 
-declare const ace: Ace.AceStatic;
-export default ace;
-export declare var Range: {
-  new(startRow: number, startColumn: number, endRow: number, endColumn: number): Range;
-  fromPoints(start: Ace.Point, end: Ace.Point): Range;
+declare module 'ace-builds/src-noconflict/mode-lucene';
+declare module 'ace-builds/src-noconflict/ext-language_tools';
+
+export const version: string;
+export const config: Ace.Config;
+export function require(name: string): any;
+export function edit(el: Element | string, options?: Partial<Ace.EditorOptions>): Ace.Editor;
+export function createEditSession(text: Ace.Document | string, mode: Ace.TextMode): Ace.EditSession;
+export const VirtualRenderer: {
+  new(container: HTMLElement, theme?: string): Ace.VirtualRenderer;
+};
+export const EditSession: {
+  new(text: string | Document, mode?: Ace.TextMode): Ace.EditSession;
+};
+export const UndoManager: {
+  new(): Ace.UndoManager;
+};
+export const Range: {
+  new(startRow: number, startColumn: number, endRow: number, endColumn: number): Ace.Range;
+  fromPoints(start: Ace.Point, end: Ace.Point): Ace.Range;
   comparePoints(p1: Ace.Point, p2: Ace.Point): number;
-}
-export declare var EditSession: Ace.EditSession
-export declare var UndoManager: Ace.UndoManager
-export declare var VirtualRenderer: Ace.VirtualRenderer
-
-
+};
