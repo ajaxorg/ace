@@ -24,6 +24,11 @@
     position: absolute;
     box-sizing: border-box;
     min-width: 100%;
+    will-change: transform;
+    backface-visibility: hidden;
+    contain: strict;
+    -moz-osx-font-smoothing: auto;
+    -webkit-font-smoothing: subpixel-antialiased;
 }
 
 .ace_dragging .ace_scroller:before{
@@ -49,7 +54,6 @@
     overflow : hidden;
     width: auto;
     top: 0;
-    bottom: 0;
     left: 0;
     cursor: default;
     z-index: 4;
@@ -57,6 +61,8 @@
     -moz-user-select: none;
     -webkit-user-select: none;
     user-select: none;
+    will-change: transform;
+    backface-visibility: hidden;
 }
 
 .ace_gutter-active-line {
@@ -70,6 +76,10 @@
 }
 
 .ace_gutter-cell {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
     padding-left: 19px;
     padding-right: 6px;
     background-repeat: no-repeat;
@@ -95,6 +105,7 @@
 }
 
 .ace_scrollbar {
+    contain: strict;
     position: absolute;
     right: 0;
     bottom: 0;
@@ -188,10 +199,32 @@
     width: auto;
     text-align: right;
     pointer-events: auto;
+    height: 1000000px;
+    will-change: transform;
+    backface-visibility: hidden;
+    contain: strict;
 }
 
 .ace_text-layer {
     font: inherit !important;
+    position: absolute;
+    height: 1000000px;
+    width: 1000000px;
+    will-change: transform;
+    backface-visibility: hidden;
+    contain: strict;
+}
+
+.ace_text-layer div {
+    contain: strict;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+.ace_text-layer .ace_line_group .ace_line {
+    position: relative;
 }
 
 .ace_cjk {
