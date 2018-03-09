@@ -277,10 +277,8 @@ function buildAceModuleInternal(opts, callback) {
         if (opts.noconflict)
             filters.push(namespace(ns));
         var projectType = opts.projectType;
-        if (projectType == "main" || projectType == "ext") {
-            filters.push(exportAce(ns, opts.require[0],
-                opts.noconflict ? ns : "", projectType == "ext"));
-        }
+        filters.push(exportAce(ns, opts.require[0],
+            opts.noconflict ? ns : "", projectType !== "main"));
         
         filters.push(normalizeLineEndings);
         
@@ -523,7 +521,11 @@ function exportAce(ns, modules, requireBase, extModules) {
         if (extModules) {
             template = function() {
                 (function() {
-                    REQUIRE_NS.require(MODULES, function() {});
+                    REQUIRE_NS.require(MODULES, function(m) {
+                        if (typeof module == "object") {
+                            module.exports = m;
+                        }
+                    });
                 })();
             };
         }
