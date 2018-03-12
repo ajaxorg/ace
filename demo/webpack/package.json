@@ -8,6 +8,7 @@
     "keywords": [],
     "author": "",
     "dependencies": {
+        "file-loader": "^1.1.11",
         "webpack": "^4.0.1",
         "webpack-cli": "^2.0.10"
     },

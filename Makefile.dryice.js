@@ -297,8 +297,10 @@ function buildAceModuleInternal(opts, callback) {
         if (opts.noconflict)
             filters.push(namespace(ns));
         var projectType = opts.projectType;
-        filters.push(exportAce(ns, opts.require[0],
-            opts.noconflict ? ns : "", projectType !== "main"));
+        if (projectType !== "worker") {
+            filters.push(exportAce(ns, opts.require[0],
+                opts.noconflict ? ns : "", projectType !== "main"));
+        }
         
         filters.push(normalizeLineEndings);
         
