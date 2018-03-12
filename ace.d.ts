@@ -720,9 +720,6 @@ export namespace Ace {
   }
 }
 
-declare module 'ace-builds/src-noconflict/mode-lucene';
-declare module 'ace-builds/src-noconflict/ext-language_tools';
-
 export const version: string;
 export const config: Ace.Config;
 export function require(name: string): any;

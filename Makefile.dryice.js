@@ -103,11 +103,31 @@ function ace() {
     copy.file(ACE_HOME + "/build_support/editor.html",  BUILD_DIR + "/editor.html");
     copy.file(ACE_HOME + "/LICENSE", BUILD_DIR + "/LICENSE");
     copy.file(ACE_HOME + "/ChangeLog.txt", BUILD_DIR + "/ChangeLog.txt");
-    copy.file(ACE_HOME + "/ace.d.ts", BUILD_DIR + "/ace.d.ts");
     
     console.log('# ace ---------');
     for (var i = 0; i < 4; i++)
         buildAce({compress: i & 2, noconflict: i & 1, check: true});
+
+    buildTypes();
+}
+
+function buildTypes() {
+    copy.file(ACE_HOME + "/ace.d.ts", BUILD_DIR + "/ace.d.ts");
+
+    var paths = fs
+        .readdirSync(BUILD_DIR + '/src-noconflict')
+        .filter(function(path) {
+            return /^(mode|theme|ext)-/.test(path);
+        })
+        .map(function(path) {
+            return 'ace-builds/src-noconflict/' + path.split('.')[0];
+        });
+
+    var pathModules = paths.map(function(path) {
+        return "declare module '" + path + "';";
+    }).join('\n');
+
+    fs.appendFileSync(BUILD_DIR + '/ace.d.ts', '\n' + pathModules);
 }
 
 function demo() {
