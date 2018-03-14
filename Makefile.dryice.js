@@ -107,6 +107,27 @@ function ace() {
     console.log('# ace ---------');
     for (var i = 0; i < 4; i++)
         buildAce({compress: i & 2, noconflict: i & 1, check: true});
+
+    buildTypes();
+}
+
+function buildTypes() {
+    copy.file(ACE_HOME + "/ace.d.ts", BUILD_DIR + "/ace.d.ts");
+
+    var paths = fs
+        .readdirSync(BUILD_DIR + '/src-noconflict')
+        .filter(function(path) {
+            return /^(mode|theme|ext)-/.test(path);
+        })
+        .map(function(path) {
+            return 'ace-builds/src-noconflict/' + path.split('.')[0];
+        });
+
+    var pathModules = paths.map(function(path) {
+        return "declare module '" + path + "';";
+    }).join('\n');
+
+    fs.appendFileSync(BUILD_DIR + '/ace.d.ts', '\n' + pathModules);
 }
 
 function demo() {
@@ -276,9 +297,9 @@ function buildAceModuleInternal(opts, callback) {
         if (opts.noconflict)
             filters.push(namespace(ns));
         var projectType = opts.projectType;
-        if (projectType == "main" || projectType == "ext") {
+        if (projectType !== "worker") {
             filters.push(exportAce(ns, opts.require[0],
-                opts.noconflict ? ns : "", projectType == "ext"));
+                opts.noconflict ? ns : "", projectType !== "main"));
         }
         
         filters.push(normalizeLineEndings);
@@ -299,7 +320,7 @@ function buildAceModuleInternal(opts, callback) {
         pathConfig: pathConfig,
         additional: opts.additional,
         enableBrowser: true,
-        keepDepArrays: "all",
+        keepDepArrays: opts.noconflict ? "" : "all",
         noArchitect: true,
         compress: false,
         ignore: opts.ignore || [],
@@ -511,6 +532,10 @@ function exportAce(ns, modules, requireBase, extModules) {
                         window.NS = a;
                     for (var key in a) if (a.hasOwnProperty(key))
                         window.NS[key] = a[key];
+                    window.NS["default"] = window.NS;
+                    if (typeof module == "object") {
+                        module.exports = window.NS;
+                    }
                 });
             })();
         };
@@ -518,7 +543,11 @@ function exportAce(ns, modules, requireBase, extModules) {
         if (extModules) {
             template = function() {
                 (function() {
-                    REQUIRE_NS.require(MODULES, function() {});
+                    REQUIRE_NS.require(MODULES, function(m) {
+                        if (typeof module == "object") {
+                            module.exports = m;
+                        }
+                    });
                 })();
             };
         }
