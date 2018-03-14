@@ -103,10 +103,31 @@ function ace() {
     copy.file(ACE_HOME + "/build_support/editor.html",  BUILD_DIR + "/editor.html");
     copy.file(ACE_HOME + "/LICENSE", BUILD_DIR + "/LICENSE");
     copy.file(ACE_HOME + "/ChangeLog.txt", BUILD_DIR + "/ChangeLog.txt");
-    
+
     console.log('# ace ---------');
     for (var i = 0; i < 4; i++)
         buildAce({compress: i & 2, noconflict: i & 1, check: true});
+
+    buildTypes();
+}
+
+function buildTypes() {
+    copy.file(ACE_HOME + "/ace.d.ts", BUILD_DIR + "/ace.d.ts");
+
+    var paths = fs
+        .readdirSync(BUILD_DIR + '/src-noconflict')
+        .filter(function(path) {
+            return /^(mode|theme|ext)-/.test(path);
+        })
+        .map(function(path) {
+            return 'ace-builds/src-noconflict/' + path.split('.')[0];
+        });
+
+    var pathModules = paths.map(function(path) {
+        return "declare module '" + path + "';";
+    }).join('\n');
+
+    fs.appendFileSync(BUILD_DIR + '/ace.d.ts', '\n' + pathModules);
 }
 
 function demo() {
@@ -129,9 +150,9 @@ function demo() {
             .replace("%commit%", ref)
         );
     }
-    
+
     copy(ACE_HOME +"/demo/kitchen-sink/docs/", BUILD_DIR + "/demo/kitchen-sink/docs/");
-    
+
     copy.file(ACE_HOME + "/demo/kitchen-sink/logo.png", BUILD_DIR + "/demo/kitchen-sink/logo.png");
     copy.file(ACE_HOME + "/demo/kitchen-sink/styles.css", BUILD_DIR + "/demo/kitchen-sink/styles.css");
     copy.file(ACE_HOME + "/kitchen-sink.html", BUILD_DIR + "/kitchen-sink.html", changeComments);
@@ -213,7 +234,7 @@ function buildAceModule(opts, callback) {
                 buildAceModuleInternal.apply(null, call);
         };
     }
-    
+
     buildAceModule.queue.push([opts, function(err, result) {
         callback && callback(err, result);
         buildAceModule.running = null;
@@ -232,7 +253,7 @@ function buildAceModuleInternal(opts, callback) {
     var key = opts.require + "|" + opts.projectType;
     if (cache && cache.configs && cache.configs[key])
         return write(null, cache.configs[key]);
-        
+
     var pathConfig = {
         paths: {
             ace: ACE_HOME + "/lib/ace",
@@ -241,7 +262,7 @@ function buildAceModuleInternal(opts, callback) {
         },
         root: ACE_HOME
     };
-        
+
     function write(err, result) {
         if (cache && key && !(cache.configs && cache.configs[key])) {
             cache.configs = cache.configs || Object.create(null);
@@ -249,57 +270,57 @@ function buildAceModuleInternal(opts, callback) {
             result.sources = result.sources.map(function(pkg) {
                 return {deps: pkg.deps};
             });
-        } 
-        
+        }
+
         if (!opts.outputFile)
             return callback(err, result);
-        
+
         var code = result.code;
         if (opts.compress) {
             if (!result.codeMin)
                 result.codeMin = compress(result.code);
             code = result.codeMin;
         }
-            
+
         var targetDir = getTargetDir(opts);
-        
+
         var to = /^([\\/]|\w:)/.test(opts.outputFile)
             ? opts.outputFile
             : path.join(opts.outputFolder || targetDir, opts.outputFile);
-    
+
         var filters = [];
 
         var ns = opts.ns || "ace";
         if (opts.filters)
             filters = filters.concat(opts.filters);
-    
+
         if (opts.noconflict)
             filters.push(namespace(ns));
         var projectType = opts.projectType;
-        if (projectType == "main" || projectType == "ext") {
+        if (projectType !== "worker") {
             filters.push(exportAce(ns, opts.require[0],
-                opts.noconflict ? ns : "", projectType == "ext"));
+                opts.noconflict ? ns : "", projectType !== "main"));
         }
-        
+
         filters.push(normalizeLineEndings);
-        
+
         filters.forEach(function(f) { code = f(code); });
-        
+
         build.writeToFile({code: code}, {
             outputFolder: path.dirname(to),
             outputFile: path.basename(to)
         }, function() {});
-        
+
         callback && callback(err, result);
     }
-    
+
     build(opts.require, {
         cache: cache,
         quiet: opts.quiet,
         pathConfig: pathConfig,
         additional: opts.additional,
         enableBrowser: true,
-        keepDepArrays: "all",
+        keepDepArrays: opts.noconflict ? "" : "all",
         noArchitect: true,
         compress: false,
         ignore: opts.ignore || [],
@@ -313,7 +334,7 @@ function buildAceModuleInternal(opts, callback) {
 function buildCore(options, extra, callback) {
     options = extend(extra, options);
     options.additional = [{
-        id: "build_support/mini_require", 
+        id: "build_support/mini_require",
         order: -1000,
         literal: true
     }];
@@ -349,7 +370,7 @@ function buildAce(options, callback) {
     modeNames.forEach(function(name) {
         if (snippetFiles.indexOf(name + ".js") == -1)
             addSnippetFile(name);
-        
+
         buildSubmodule(options, {
             require: ["ace/snippets/" + name]
         }, "snippets/" + name, addCb());
@@ -388,9 +409,9 @@ function buildAce(options, callback) {
             }]
         }, "worker-" + name, addCb());
     });
-    // 
+    //
     function addCb() {
-        addCb.count = (addCb.count || 0) + 1; 
+        addCb.count = (addCb.count || 0) + 1;
         return done
     }
     function done() {
@@ -398,7 +419,7 @@ function buildAce(options, callback) {
             return;
         if (options.check)
             sanityCheck(options, callback);
-        if (callback) 
+        if (callback)
             return callback();
         console.log("Finished building " + getTargetDir(options))
     }
@@ -422,7 +443,7 @@ function getLoadedFileList(options, callback, result) {
 }
 
 function normalizeLineEndings(module) {
-    if (typeof module == "string") 
+    if (typeof module == "string")
         module = {source: module};
     return module.source = module.source.replace(/\r\n/g, "\n");
 }
@@ -449,7 +470,7 @@ function optimizeTextModules(sources) {
         }
         return pkg;
     });
-    
+
     function rewriteTextImports(text, deps) {
         return text.replace(/ require\(['"](?:ace|[.\/]+)\/requirejs\/text!(.*?)['"]\)/g, function(_, call) {
             if (call) {
@@ -460,7 +481,7 @@ function optimizeTextModules(sources) {
                         return true;
                     }
                 });
-    
+
                 call = textModules[dep];
                 if (call)
                     return " " + call;
@@ -511,23 +532,31 @@ function exportAce(ns, modules, requireBase, extModules) {
                         window.NS = a;
                     for (var key in a) if (a.hasOwnProperty(key))
                         window.NS[key] = a[key];
+                    window.NS["default"] = window.NS;
+                    if (typeof module == "object") {
+                        module.exports = window.NS;
+                    }
                 });
             })();
         };
-        
+
         if (extModules) {
             template = function() {
                 (function() {
-                    REQUIRE_NS.require(MODULES, function() {});
+                    REQUIRE_NS.require(MODULES, function(m) {
+                        if (typeof module == "object") {
+                            module.exports = m;
+                        }
+                    });
                 })();
             };
         }
-        
+
         text = text.replace(/function init\(packaged\) {/, "init(true);$&\n");
-        
+
         if (typeof modules == "string")
             modules = [modules];
-            
+
         return (text.replace(/;\s*$/, "") + ";" + template
             .toString()
             .replace(/MODULES/g, JSON.stringify(modules))
@@ -544,7 +573,7 @@ function updateModes() {
         var source = fs.readFileSync(filepath, "utf8");
         if (!/this.\$id\s*=\s*"/.test(source))
             source = source.replace(/\n([ \t]*)(\}\).call\(\w*Mode.prototype\))/, '\n$1    this.$id = "";\n$1$2');
-        
+
         source = source.replace(/(this.\$id\s*=\s*)"[^"]*"/,  '$1"ace/mode/' + m + '"');
         fs.writeFileSync(filepath, source, "utf8");
     });

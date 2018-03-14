@@ -8,6 +8,7 @@
     },
     "author": "Fabian Jakobs <fabian@c9.io>",
     "main": "lib/ace",
+    "typings": "ace.d.ts",
     "repository": {
         "type": "git",
         "url": "http://github.com/ajaxorg/ace.git"
