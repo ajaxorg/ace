@@ -28,12 +28,9 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-define(function(require, exports, module) {
-"use strict";
-
-var lang = require("./lib/lang");
-var oop = require("./lib/oop");
-var Range = require("./range").Range;
+import lang = require("./lib/lang");
+import oop = require("./lib/oop");
+import { Range } from "./range";
 
 /**
  * @class Search
@@ -60,11 +57,14 @@ var Range = require("./range").Range;
  * @constructor
  **/
 
-var Search = function() {
-    this.$options = {};
-};
+export class Search {
+    
+    $options: any;
+    
+    constructor() {
+        this.$options = {};
+    }
 
-(function() {
     /**
      * Sets the search options via the `options` parameter.
      * @param {Object} options An object containing all the new search properties
@@ -73,7 +73,7 @@ var Search = function() {
      * @returns {Search}
      * @chainable
     **/
-    this.set = function(options) {
+    set(options) {
         oop.mixin(this.$options, options);
         return this;
     };
@@ -82,7 +82,7 @@ var Search = function() {
      * [Returns an object containing all the search options.]{: #Search.getOptions}
      * @returns {Object}
     **/
-    this.getOptions = function() {
+    getOptions() {
         return lang.copyObject(this.$options);
     };
     
@@ -91,7 +91,7 @@ var Search = function() {
      * @param {Object} An object containing all the search propertie
      * @related Search.set
     **/
-    this.setOptions = function(options) {
+    setOptions(options) {
         this.$options = options;
     };
     /**
@@ -101,7 +101,7 @@ var Search = function() {
      * 
      * @returns {Range}
     **/
-    this.find = function(session) {
+    find(session) {
         var options = this.$options;
         var iterator = this.$matchIterator(session, options);
         if (!iterator)
@@ -130,7 +130,7 @@ var Search = function() {
      * 
      * @returns {[Range]}
     **/
-    this.findAll = function(session) {
+    findAll(session) {
         var options = this.$options;
         if (!options.needle)
             return [];
@@ -208,7 +208,7 @@ var Search = function() {
      * 
      * @returns {String}
     **/
-    this.replace = function(input, replacement) {
+    replace(input, replacement) {
         var options = this.$options;
 
         var re = this.$assembleRegExp(options);
@@ -238,7 +238,7 @@ var Search = function() {
         return replacement;
     };
 
-    this.$assembleRegExp = function(options, $disableFakeMultiline) {
+    $assembleRegExp(options, $disableFakeMultiline=false) {
         if (options.needle instanceof RegExp)
             return options.re = options.needle;
 
@@ -262,12 +262,12 @@ var Search = function() {
         try {
             var re = new RegExp(needle, modifier);
         } catch(e) {
-            re = false;
+            re = null;
         }
         return options.re = re;
     };
 
-    this.$assembleMultilineRegExp = function(needle, modifier) {
+    $assembleMultilineRegExp(needle, modifier) {
         var parts = needle.replace(/\r\n|\r|\n/g, "$\n^").split("\n");
         var re = [];
         for (var i = 0; i < parts.length; i++) try {
@@ -278,7 +278,7 @@ var Search = function() {
         return re;
     };
 
-    this.$matchIterator = function(session, options) {
+    $matchIterator(session, options) {
         var re = this.$assembleRegExp(options);
         if (!re)
             return false;
@@ -391,8 +391,7 @@ var Search = function() {
         }
         return {forEach: forEach};
     };
-
-}).call(Search.prototype);
+};
 
 function addWordBoundary(needle, options) {
     function wordBoundary(c) {
@@ -402,6 +401,3 @@ function addWordBoundary(needle, options) {
     return wordBoundary(needle[0]) + needle
         + wordBoundary(needle[needle.length - 1]);
 }
-
-exports.Search = Search;
-});

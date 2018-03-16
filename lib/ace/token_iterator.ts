@@ -28,10 +28,8 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-define(function(require, exports, module) {
-"use strict";
-
-var Range = require("./range").Range;
+import { Range } from "./range";
+import { EditSession } from "./edit_session";
 
 /**
  * 
@@ -48,22 +46,27 @@ var Range = require("./range").Range;
  *
  * @constructor
  **/
-var TokenIterator = function(session, initialRow, initialColumn) {
-    this.$session = session;
-    this.$row = initialRow;
-    this.$rowTokens = session.getTokens(initialRow);
+export class TokenIterator {
+    
+    $session: EditSession;
+    $row: number;
+    $tokenIndex: number;
+    $rowTokens: any[];
+    
+    constructor(session, initialRow, initialColumn) {
+        this.$session = session;
+        this.$row = initialRow;
+        this.$rowTokens = session.getTokens(initialRow);
+    
+        var token = session.getTokenAt(initialRow, initialColumn);
+        this.$tokenIndex = token ? token.index : -1;
+    }
 
-    var token = session.getTokenAt(initialRow, initialColumn);
-    this.$tokenIndex = token ? token.index : -1;
-};
-
-(function() {
-   
     /**
      * Tokenizes all the items from the current point to the row prior in the document. 
      * @returns {[String]} If the current point is not at the top of the file, this function returns `null`. Otherwise, it returns an array of the tokenized strings.
      **/ 
-    this.stepBackward = function() {
+    stepBackward() {
         this.$tokenIndex -= 1;
         
         while (this.$tokenIndex < 0) {
@@ -84,7 +87,7 @@ var TokenIterator = function(session, initialRow, initialColumn) {
      * Tokenizes all the items from the current point until the next row in the document. If the current point is at the end of the file, this function returns `null`. Otherwise, it returns the tokenized string.
      * @returns {String}
      **/   
-    this.stepForward = function() {
+    stepForward() {
         this.$tokenIndex += 1;
         var rowCount;
         while (this.$tokenIndex >= this.$rowTokens.length) {
@@ -108,7 +111,7 @@ var TokenIterator = function(session, initialRow, initialColumn) {
      * Returns the current tokenized string.
      * @returns {String}
      **/      
-    this.getCurrentToken = function () {
+    getCurrentToken () {
         return this.$rowTokens[this.$tokenIndex];
     };
 
@@ -117,7 +120,7 @@ var TokenIterator = function(session, initialRow, initialColumn) {
      * Returns the current row.
      * @returns {Number}
      **/      
-    this.getCurrentTokenRow = function () {
+    getCurrentTokenRow () {
         return this.$row;
     };
 
@@ -126,7 +129,7 @@ var TokenIterator = function(session, initialRow, initialColumn) {
      * Returns the current column.
      * @returns {Number}
      **/     
-    this.getCurrentTokenColumn = function() {
+    getCurrentTokenColumn() {
         var rowTokens = this.$rowTokens;
         var tokenIndex = this.$tokenIndex;
         
@@ -148,7 +151,7 @@ var TokenIterator = function(session, initialRow, initialColumn) {
      * Return the current token position.
      * @returns {Position}
      */
-    this.getCurrentTokenPosition = function() {
+    getCurrentTokenPosition() {
         return {row: this.$row, column: this.getCurrentTokenColumn()};
     };
     
@@ -156,13 +159,9 @@ var TokenIterator = function(session, initialRow, initialColumn) {
      * Return the current token range.
      * @returns {Range}
      */
-    this.getCurrentTokenRange = function() {
+    getCurrentTokenRange() {
         var token = this.$rowTokens[this.$tokenIndex];
         var column = this.getCurrentTokenColumn();
         return new Range(this.$row, column, this.$row, column + token.value.length);
     };
-    
-}).call(TokenIterator.prototype);
-
-exports.TokenIterator = TokenIterator;
-});
+};

@@ -28,8 +28,6 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-define(function(require, exports, module) {
-"use strict";
 var comparePoints = function(p1, p2) {
     return p1.row - p2.row || p1.column - p2.column;
 };
@@ -47,26 +45,31 @@ var comparePoints = function(p1, p2) {
  *
  * @constructor
  **/
-var Range = function(startRow, startColumn, endRow, endColumn) {
-    this.start = {
-        row: startRow,
-        column: startColumn
+export class Range {
+    
+    start: { row: number, column: number };
+    end: { row: number, column: number };
+    id: number;
+    
+    constructor(startRow, startColumn, endRow, endColumn) {
+        this.start = {
+            row: startRow,
+            column: startColumn
+        };
+    
+        this.end = {
+            row: endRow,
+            column: endColumn
+        };
     };
 
-    this.end = {
-        row: endRow,
-        column: endColumn
-    };
-};
-
-(function() {
     /**
      * Returns `true` if and only if the starting row and column, and ending row and column, are equivalent to those given by `range`.
      * @param {Range} range A range to check against
      *
      * @return {Boolean}
      **/
-    this.isEqual = function(range) {
+    isEqual(range) {
         return this.start.row === range.start.row &&
             this.end.row === range.end.row &&
             this.start.column === range.start.column &&
@@ -81,7 +84,7 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
      * ```
      * @return {String}
      **/
-    this.toString = function() {
+    toString() {
         return ("Range: [" + this.start.row + "/" + this.start.column +
             "] -> [" + this.end.row + "/" + this.end.column + "]");
     };
@@ -99,7 +102,7 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
      * @related Range.compare
      **/
 
-    this.contains = function(row, column) {
+    contains(row, column) {
         return this.compare(row, column) == 0;
     };
 
@@ -117,7 +120,7 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
      * * `+2`: (B) is after (A) and doesn't intersect with (A)<br/>
      * * `42`: FTW state: (B) ends in (A) but starts outside of (A)
      **/
-    this.compareRange = function(range) {
+    compareRange(range) {
         var cmp,
             end = range.end,
             start = range.start;
@@ -165,7 +168,7 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
      * * `p.column` is less than or equal to the calling range's ending column, this returns `0`<br/>
      * * Otherwise, it returns 1<br/>
      **/
-    this.comparePoint = function(p) {
+    comparePoint(p) {
         return this.compare(p.row, p.column);
     };
 
@@ -176,7 +179,7 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
      * @returns {Boolean}
      * @related Range.comparePoint
      **/
-    this.containsRange = function(range) {
+    containsRange(range) {
         return this.comparePoint(range.start) == 0 && this.comparePoint(range.end) == 0;
     };
 
@@ -186,7 +189,7 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
      *
      * @returns {Boolean}
      **/
-    this.intersects = function(range) {
+    intersects(range) {
         var cmp = this.compareRange(range);
         return (cmp == -1 || cmp == 0 || cmp == 1);
     };
@@ -198,7 +201,7 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
      *
      * @returns {Boolean}
      **/
-    this.isEnd = function(row, column) {
+    isEnd(row, column) {
         return this.end.row == row && this.end.column == column;
     };
 
@@ -209,7 +212,7 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
      *
      * @returns {Boolean}
      **/
-    this.isStart = function(row, column) {
+    isStart(row, column) {
         return this.start.row == row && this.start.column == column;
     };
 
@@ -219,7 +222,7 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
      * @param {Number} column A column point to set
      *
      **/
-    this.setStart = function(row, column) {
+    setStart(row, column) {
         if (typeof row == "object") {
             this.start.column = row.column;
             this.start.row = row.row;
@@ -235,7 +238,7 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
      * @param {Number} column A column point to set
      *
      **/
-    this.setEnd = function(row, column) {
+    setEnd(row, column) {
         if (typeof row == "object") {
             this.end.column = row.column;
             this.end.row = row.row;
@@ -254,7 +257,7 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
      * @returns {Boolean}
      * @related Range.compare
      **/
-    this.inside = function(row, column) {
+    inside(row, column) {
         if (this.compare(row, column) == 0) {
             if (this.isEnd(row, column) || this.isStart(row, column)) {
                 return false;
@@ -273,7 +276,7 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
      * @returns {Boolean}
      * @related Range.compare
      **/
-    this.insideStart = function(row, column) {
+    insideStart(row, column) {
         if (this.compare(row, column) == 0) {
             if (this.isEnd(row, column)) {
                 return false;
@@ -293,7 +296,7 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
      * @related Range.compare
      *
      **/
-    this.insideEnd = function(row, column) {
+    insideEnd(row, column) {
         if (this.compare(row, column) == 0) {
             if (this.isStart(row, column)) {
                 return false;
@@ -323,7 +326,7 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
      * `p.column` is less than or equal to the calling range's ending column, this returns `0` <br/>
      * Otherwise, it returns 1
      **/
-    this.compare = function(row, column) {
+    compare(row, column) {
         if (!this.isMultiLine()) {
             if (row === this.start.row) {
                 return column < this.start.column ? -1 : (column > this.end.column ? 1 : 0);
@@ -365,7 +368,7 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
      * Otherwise, it returns 1
      *
      **/
-    this.compareStart = function(row, column) {
+    compareStart(row, column) {
         if (this.start.row == row && this.start.column == column) {
             return -1;
         } else {
@@ -392,7 +395,7 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
      * `p.column` is less than or equal to the calling range's ending column, this returns `0`<br/>
      * Otherwise, it returns 1
      */
-    this.compareEnd = function(row, column) {
+    compareEnd(row, column) {
         if (this.end.row == row && this.end.column == column) {
             return 1;
         } else {
@@ -413,7 +416,7 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
      * Otherwise, it returns the value after calling [[Range.compare `compare()`]].
      *
      **/
-    this.compareInside = function(row, column) {
+    compareInside(row, column) {
         if (this.end.row == row && this.end.column == column) {
             return 1;
         } else if (this.start.row == row && this.start.column == column) {
@@ -431,7 +434,7 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
      *
      * @returns {Range}
     **/
-    this.clipRows = function(firstRow, lastRow) {
+    clipRows(firstRow, lastRow) {
         if (this.end.row > lastRow)
             var end = {row: lastRow + 1, column: 0};
         else if (this.end.row < firstRow)
@@ -453,7 +456,7 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
      *
      * @returns {Range} The original range with the new row
     **/
-    this.extend = function(row, column) {
+    extend(row, column) {
         var cmp = this.compare(row, column);
 
         if (cmp == 0)
@@ -466,7 +469,7 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
         return Range.fromPoints(start || this.start, end || this.end);
     };
 
-    this.isEmpty = function() {
+    isEmpty() {
         return (this.start.row === this.end.row && this.start.column === this.end.column);
     };
 
@@ -475,7 +478,7 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
      * Returns `true` if the range spans across multiple lines.
      * @returns {Boolean}
     **/
-    this.isMultiLine = function() {
+    isMultiLine() {
         return (this.start.row !== this.end.row);
     };
 
@@ -484,7 +487,7 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
      * Returns a duplicate of the calling range.
      * @returns {Range}
     **/
-    this.clone = function() {
+    clone() {
         return Range.fromPoints(this.start, this.end);
     };
 
@@ -493,7 +496,7 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
      * Returns a range containing the starting and ending rows of the original range, but with a column value of `0`.
      * @returns {Range}
     **/
-    this.collapseRows = function() {
+    collapseRows() {
         if (this.end.column == 0)
             return new Range(this.start.row, 0, Math.max(this.start.row, this.end.row-1), 0);
         else
@@ -507,7 +510,7 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
      *
      * @returns {Range}
     **/
-    this.toScreenRange = function(session) {
+    toScreenRange(session) {
         var screenPosStart = session.documentToScreenPosition(this.start);
         var screenPosEnd = session.documentToScreenPosition(this.end);
 
@@ -519,31 +522,26 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
     
     
     /* experimental */
-    this.moveBy = function(row, column) {
+    moveBy(row, column) {
         this.start.row += row;
         this.start.column += column;
         this.end.row += row;
         this.end.column += column;
     };
-
-}).call(Range.prototype);
-
-/**
- * Creates and returns a new `Range` based on the row and column of the given parameters.
- * @param {Range} start A starting point to use
- * @param {Range} end An ending point to use
- *
- * @returns {Range}
-**/
-Range.fromPoints = function(start, end) {
-    return new Range(start.row, start.column, end.row, end.column);
-};
-Range.comparePoints = comparePoints;
-
-Range.comparePoints = function(p1, p2) {
-    return p1.row - p2.row || p1.column - p2.column;
+    
+    /**
+     * Creates and returns a new `Range` based on the row and column of the given parameters.
+     * @param {Range} start A starting point to use
+     * @param {Range} end An ending point to use
+     *
+     * @returns {Range}
+    **/
+    static fromPoints(start, end) {
+        return new Range(start.row, start.column, end.row, end.column);
+    };
+    
+    static comparePoints(p1, p2) {
+        return p1.row - p2.row || p1.column - p2.column;
+    };
 };
 
-
-exports.Range = Range;
-});

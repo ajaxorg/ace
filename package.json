@@ -1,40 +1,47 @@
 {
-    "name": "ace",
-    "description": "Ajax.org Code Editor is a full featured source code highlighting editor that powers the Cloud9 IDE",
-    "version": "1.3.1",
-    "homepage": "http://github.com/ajaxorg/ace",
-    "engines": {
-        "node": ">= 0.6.0"
-    },
-    "author": "Fabian Jakobs <fabian@c9.io>",
-    "main": "lib/ace",
-    "typings": "ace.d.ts",
-    "repository": {
-        "type": "git",
-        "url": "http://github.com/ajaxorg/ace.git"
-    },
-    "devDependencies": {
-        "asyncjs": "0.0.x",
-        "jsdom": "9.3.0",
-        "amd-loader": "~0.0.4",
-        "dryice": "0.4.11",
-        "architect-build": "https://github.com/c9/architect-build/tarball/17268dce65"
-    },
-    "mappings": {
-        "ace": "."
-    },
-    "licenses": [
-        {
-            "type": "BSD New",
-            "url": "http://opensource.org/licenses/BSD-3-Clause"
-        }
-    ],
-    "directories": {
-        "lib": "lib/ace"
-    },
-    "scripts": {
-        "start": "node static.js",
-        "test": "node lib/ace/test/all.js",
-        "lint": "eslint 'lib/ace/**/*.js'"
+  "name": "ace",
+  "description": "Ajax.org Code Editor is a full featured source code highlighting editor that powers the Cloud9 IDE",
+  "version": "1.3.1",
+  "homepage": "http://github.com/ajaxorg/ace",
+  "engines": {
+    "node": ">= 0.6.0"
+  },
+  "author": "Fabian Jakobs <fabian@c9.io>",
+  "main": "lib/ace",
+  "typings": "ace.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/ajaxorg/ace.git"
+  },
+  "devDependencies": {
+    "@types/node": "^9.4.7",
+    "amd-loader": "~0.0.4",
+    "architect-build": "https://github.com/c9/architect-build/tarball/17268dce65",
+    "asyncjs": "0.0.x",
+    "copyfiles": "^2.0.0",
+    "dryice": "0.4.11",
+    "jsdom": "9.3.0",
+    "typescript": "^2.7.2"
+  },
+  "mappings": {
+    "ace": "."
+  },
+  "licenses": [
+    {
+      "type": "BSD New",
+      "url": "http://opensource.org/licenses/BSD-3-Clause"
     }
+  ],
+  "directories": {
+    "lib": "lib/ace"
+  },
+  "scripts": {
+    "start": "node static.js",
+    "test": "node lib/ace/test/all.js",
+    "lint": "eslint 'lib/ace/**/*.js'",
+    "copyfiles": "copyfiles -u 2 lib/ace/**/*.css lib/ace/**/**/*.css lib/ace/**/**/*.snippets built/",
+    "tsc": "tsc",
+    "watch": "tsc --watch",
+    "build": "npm run tsc && npm run copyfiles"
+  }
 }

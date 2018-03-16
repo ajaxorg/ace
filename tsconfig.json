@@ -1,0 +1,23 @@
+{
+    "compilerOptions": {
+        "outDir": "./built",
+        "allowJs": true,
+        "target": "es5",
+        "module": "amd",
+        "alwaysStrict": true
+    },
+    "types": [
+        "node"
+    ],
+    "typeRoots": [
+        "node_modules/@types"
+    ],
+    "include": [
+        "./lib/ace/**/*.js",
+        "./lib/ace/**/*.ts",
+        "./lib/ace/**/*.css"
+    ],
+    "exclude": [
+        "./lib/ace/ext/w*"
+    ]
+}
