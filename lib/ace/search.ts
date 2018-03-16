@@ -31,6 +31,7 @@
 import lang = require("./lib/lang");
 import oop = require("./lib/oop");
 import { Range } from "./range";
+import { EditSession } from "./edit_session";
 
 /**
  * @class Search
@@ -57,6 +58,8 @@ import { Range } from "./range";
  * @constructor
  **/
 
+type IteratorCallback = (sr: number, sc: number, er: number, ec: number) => void;
+
 export class Search {
     
     $options: any;
@@ -73,7 +76,7 @@ export class Search {
      * @returns {Search}
      * @chainable
     **/
-    set(options) {
+    set(options: any) {
         oop.mixin(this.$options, options);
         return this;
     };
@@ -91,7 +94,7 @@ export class Search {
      * @param {Object} An object containing all the search propertie
      * @related Search.set
     **/
-    setOptions(options) {
+    setOptions(options: any) {
         this.$options = options;
     };
     /**
@@ -101,11 +104,11 @@ export class Search {
      * 
      * @returns {Range}
     **/
-    find(session) {
+    find(session: EditSession): Range | null {
         var options = this.$options;
         var iterator = this.$matchIterator(session, options);
         if (!iterator)
-            return false;
+            return null;
 
         var firstRange = null;
         iterator.forEach(function(sr, sc, er, ec) {
@@ -130,7 +133,7 @@ export class Search {
      * 
      * @returns {[Range]}
     **/
-    findAll(session) {
+    findAll(session: EditSession): Range[] {
         var options = this.$options;
         if (!options.needle)
             return [];
@@ -208,7 +211,7 @@ export class Search {
      * 
      * @returns {String}
     **/
-    replace(input, replacement) {
+    replace(input: string, replacement: string): string | null {
         var options = this.$options;
 
         var re = this.$assembleRegExp(options);
@@ -216,7 +219,7 @@ export class Search {
             return replacement;
 
         if (!re)
-            return;
+            return null;
 
         var match = re.exec(input);
         if (!match || match[0].length != input.length)
@@ -224,21 +227,21 @@ export class Search {
         
         replacement = input.replace(re, replacement);
         if (options.preserveCase) {
-            replacement = replacement.split("");
+            var replacements = replacement.split("");
             for (var i = Math.min(input.length, input.length); i--; ) {
                 var ch = input[i];
                 if (ch && ch.toLowerCase() != ch)
-                    replacement[i] = replacement[i].toUpperCase();
+                    replacements[i] = replacements[i].toUpperCase();
                 else
-                    replacement[i] = replacement[i].toLowerCase();
+                    replacements[i] = replacements[i].toLowerCase();
             }
-            replacement = replacement.join("");
+            replacement = replacements.join("");
         }
         
         return replacement;
     };
 
-    $assembleRegExp(options, $disableFakeMultiline=false) {
+    $assembleRegExp(options: any, $disableFakeMultiline=false) {
         if (options.needle instanceof RegExp)
             return options.re = options.needle;
 
@@ -260,14 +263,14 @@ export class Search {
             return options.re = this.$assembleMultilineRegExp(needle, modifier);
 
         try {
-            var re = new RegExp(needle, modifier);
+            options.re = new RegExp(needle, modifier);
         } catch(e) {
-            re = null;
+            options.re = null;
         }
-        return options.re = re;
+        return options.re;
     };
 
-    $assembleMultilineRegExp(needle, modifier) {
+    $assembleMultilineRegExp(needle: string, modifier: string) {
         var parts = needle.replace(/\r\n|\r|\n/g, "$\n^").split("\n");
         var re = [];
         for (var i = 0; i < parts.length; i++) try {
@@ -278,7 +281,7 @@ export class Search {
         return re;
     };
 
-    $matchIterator(session, options) {
+    $matchIterator(session: EditSession, options: any) {
         var re = this.$assembleRegExp(options);
         if (!re)
             return false;
@@ -297,7 +300,7 @@ export class Search {
         var lastRow = range ? range.end.row : session.getLength() - 1;
         
         if (backwards) {
-            var forEach = function(callback) {
+            var forEach = function(callback: IteratorCallback) {
                 var row = start.row;
                 if (forEachInLine(row, start.column, callback))
                     return;
@@ -312,7 +315,7 @@ export class Search {
             };
         }
         else {
-            var forEach = function(callback) {
+            var forEach = function(callback: IteratorCallback) {
                 var row = start.row;
                 if (forEachInLine(row, start.column, callback))
                     return;
@@ -329,25 +332,27 @@ export class Search {
         
         if (options.$isMultiLine) {
             var len = re.length;
-            var forEachInLine = function(row, offset, callback) {
+            var forEachInLine = function(row: number, offset: number, callback: IteratorCallback): boolean {
                 var startRow = backwards ? row - len + 1 : row;
-                if (startRow < 0) return;
+                if (startRow < 0) return false;
                 var line = session.getLine(startRow);
                 var startIndex = line.search(re[0]);
-                if (!backwards && startIndex < offset || startIndex === -1) return;
+                if (!backwards && startIndex < offset || startIndex === -1) return false;
                 for (var i = 1; i < len; i++) {
                     line = session.getLine(startRow + i);
                     if (line.search(re[i]) == -1)
-                        return;
+                        return false;
                 }
                 var endIndex = line.match(re[len - 1])[0].length;
-                if (backwards && endIndex > offset) return;
+                if (backwards && endIndex > offset) return false;
                 if (callback(startRow, startIndex, startRow + len - 1, endIndex))
                     return true;
+                    
+                return false;
             };
         }
         else if (backwards) {
-            var forEachInLine = function(row, endIndex, callback) {
+            var forEachInLine = function(row: number, endIndex: number, callback: IteratorCallback): boolean {
                 var line = session.getLine(row);
                 var matches = [];
                 var m, last = 0;
@@ -369,10 +374,11 @@ export class Search {
                     if (callback(row, column, row, column + length))
                         return true;
                 }
+                return false;
             };
         }
         else {
-            var forEachInLine = function(row, startIndex, callback) {
+            var forEachInLine = function(row: number, startIndex: number, callback: IteratorCallback): boolean {
                 var line = session.getLine(row);
                 var last;
                 var m;
@@ -387,14 +393,15 @@ export class Search {
                         if (last >= line.length) return false;
                     }
                 }
+                return false;
             };
         }
         return {forEach: forEach};
     };
 };
 
-function addWordBoundary(needle, options) {
-    function wordBoundary(c) {
+function addWordBoundary(needle: string, options: any) {
+    function wordBoundary(c: string) {
         if (/\w/.test(c) || options.regExp) return "\\b";
         return "";
     }

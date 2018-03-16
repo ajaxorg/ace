@@ -103,7 +103,7 @@ export class Editor extends EventEmitter {
     $onChangeMode: (...any) => any;
     $onDocumentChange: (...any) => any;
     
-    _$emitInputEvent: (...any) => any;
+    _$emitInputEvent: any;
     
     session: EditSession;
     renderer: any;
@@ -121,6 +121,9 @@ export class Editor extends EventEmitter {
     getOption: (...any) => any;
     setOption: (...any) => any;
     setOptions: (...any) => any;
+    
+    showSettingsMenu: (...any) => any;
+    transposeSelections: (...any) => any;
     
     container: HTMLElement;
     $scrollAnchor: HTMLElement;
@@ -142,7 +145,7 @@ export class Editor extends EventEmitter {
         this.renderer = renderer;
         this.id = "editor" + (++Editor.$uid);
     
-        this.commands = new CommandManager(useragent.isMac ? "mac" : "win", defaultCommands); // TODO TS
+        this.commands = new CommandManager(useragent.isMac ? "mac" : "win", defaultCommands);
         if (typeof document == "object") {
             this.textInput = new TextInput(renderer.getTextAreaContainer(), this);
             this.renderer.textarea = this.textInput.getElement();
@@ -711,7 +714,7 @@ export class Editor extends EventEmitter {
      * Returns `true` if the current `textInput` is in focus.
      * @return {Boolean}
      **/
-    isFocused() {
+    isFocused(): boolean {
         return this.textInput.isFocused();
     };
 
@@ -2105,7 +2108,7 @@ export class Editor extends EventEmitter {
      * Moves the cursor's row and column to the next matching bracket or HTML tag.
      *
      **/
-    jumpToMatching(select, expand) {
+    jumpToMatching(select=false, expand=false) {
         var cursor = this.getCursorPosition();
         var iterator = new TokenIterator(this.session, cursor.row, cursor.column);
         var prevToken = iterator.getCurrentToken();
@@ -2275,13 +2278,13 @@ export class Editor extends EventEmitter {
      * @param {Boolean} animate If `true` animates scolling
      *
      **/
-    gotoLine(lineNumber, column, animate) {
+    gotoLine(lineNumber: number, column=0, animate=false) {
         this.selection.clearSelection();
-        this.session.unfold({row: lineNumber - 1, column: column || 0});
+        this.session.unfold({row: lineNumber - 1, column: column});
 
         // todo: find a way to automatically exit multiselect mode
         this.exitMultiSelectMode && this.exitMultiSelectMode();
-        this.moveCursorTo(lineNumber - 1, column || 0);
+        this.moveCursorTo(lineNumber - 1, column);
 
         if (!this.isRowFullyVisible(lineNumber - 1))
             this.scrollToLine(lineNumber - 1, true, animate);
@@ -2556,7 +2559,7 @@ export class Editor extends EventEmitter {
      *
      * @related Editor.find
      **/
-    findNext(options, animate) {
+    findNext(options?: any, animate=false) {
         this.find({skipCurrent: true, backwards: false}, options, animate);
     };
 
@@ -2568,7 +2571,7 @@ export class Editor extends EventEmitter {
      *
      * @related Editor.find
      **/
-    findPrevious(options, animate) {
+    findPrevious(options?: any, animate=false) {
         this.find(options, {skipCurrent: true, backwards: true}, animate);
     };
 
@@ -2616,7 +2619,7 @@ export class Editor extends EventEmitter {
      * Enables automatic scrolling of the cursor into view when editor itself is inside scrollable element
      * @param {Boolean} enable default true
      **/
-    setAutoScrollEditorIntoView(enable) {
+    setAutoScrollEditorIntoView(enable: boolean) {
         if (!enable)
             return;
         var rect;
@@ -2660,7 +2663,7 @@ export class Editor extends EventEmitter {
                 shouldScroll = rect = null;
             }
         });
-        this.setAutoScrollEditorIntoView = function(enable) {
+        this.setAutoScrollEditorIntoView = function(enable: boolean) {
             if (enable)
                 return;
             delete this.setAutoScrollEditorIntoView;
@@ -2723,22 +2726,22 @@ config.defineOptions(Editor.prototype, "editor", {
     behavioursEnabled: {initialValue: true},
     wrapBehavioursEnabled: {initialValue: true},
     autoScrollEditorIntoView: {
-        set: function(val) {this.setAutoScrollEditorIntoView(val);}
+        set: function(this: Editor, val: boolen) {this.setAutoScrollEditorIntoView(val);}
     },
     keyboardHandler: {
-        set: function(val) { this.setKeyboardHandler(val); },
-        get: function() { return this.$keybindingId; },
+        set: function(this: Editor, val) { this.setKeyboardHandler(val); },
+        get: function(this: Editor) { return this.$keybindingId; },
         handlesSet: true
     },
     value: {
-        set: function(val) { this.session.setValue(val); },
-        get: function() { return this.getValue(); },
+        set: function(this: Editor, val) { this.session.setValue(val); },
+        get: function(this: Editor) { return this.getValue(); },
         handlesSet: true,
         hidden: true
     },
     session: {
-        set: function(val) { this.setSession(val); },
-        get: function() { return this.session; },
+        set: function(this: Editor, val: EditSession) { this.setSession(val); },
+        get: function(this: Editor) { return this.session; },
         handlesSet: true,
         hidden: true
     },

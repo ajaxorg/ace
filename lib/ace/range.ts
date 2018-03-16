@@ -28,9 +28,13 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-var comparePoints = function(p1, p2) {
-    return p1.row - p2.row || p1.column - p2.column;
-};
+import { EditSession } from "./edit_session";
+
+type Point = {
+    row: number,
+    column: number
+}
+
 /**
  * This object is used in various places to indicate a region within the editor. To better visualize how this works, imagine a rectangle. Each quadrant of the rectangle is analogous to a range, as ranges contain a starting row and starting column, and an ending row, and ending column.
  * @class Range
@@ -47,11 +51,11 @@ var comparePoints = function(p1, p2) {
  **/
 export class Range {
     
-    start: { row: number, column: number };
-    end: { row: number, column: number };
+    start: Point;
+    end: Point;
     id: number;
     
-    constructor(startRow, startColumn, endRow, endColumn) {
+    constructor(startRow: number, startColumn: number, endRow: number, endColumn: number) {
         this.start = {
             row: startRow,
             column: startColumn
@@ -61,6 +65,8 @@ export class Range {
             row: endRow,
             column: endColumn
         };
+        
+        this.id = 0;
     };
 
     /**
@@ -69,7 +75,7 @@ export class Range {
      *
      * @return {Boolean}
      **/
-    isEqual(range) {
+    isEqual(range: Range): boolean {
         return this.start.row === range.start.row &&
             this.end.row === range.end.row &&
             this.start.column === range.start.column &&
@@ -102,7 +108,7 @@ export class Range {
      * @related Range.compare
      **/
 
-    contains(row, column) {
+    contains(row: number, column: number): boolean {
         return this.compare(row, column) == 0;
     };
 
@@ -120,10 +126,10 @@ export class Range {
      * * `+2`: (B) is after (A) and doesn't intersect with (A)<br/>
      * * `42`: FTW state: (B) ends in (A) but starts outside of (A)
      **/
-    compareRange(range) {
-        var cmp,
-            end = range.end,
-            start = range.start;
+    compareRange(range: Range): number {
+        let cmp;
+        let end = range.end;
+        let start = range.start;
 
         cmp = this.compare(end.row, end.column);
         if (cmp == 1) {
@@ -168,7 +174,7 @@ export class Range {
      * * `p.column` is less than or equal to the calling range's ending column, this returns `0`<br/>
      * * Otherwise, it returns 1<br/>
      **/
-    comparePoint(p) {
+    comparePoint(p: Point): number {
         return this.compare(p.row, p.column);
     };
 
@@ -179,7 +185,7 @@ export class Range {
      * @returns {Boolean}
      * @related Range.comparePoint
      **/
-    containsRange(range) {
+    containsRange(range: Range): boolean {
         return this.comparePoint(range.start) == 0 && this.comparePoint(range.end) == 0;
     };
 
@@ -189,8 +195,8 @@ export class Range {
      *
      * @returns {Boolean}
      **/
-    intersects(range) {
-        var cmp = this.compareRange(range);
+    intersects(range: Range): boolean {
+        const cmp = this.compareRange(range);
         return (cmp == -1 || cmp == 0 || cmp == 1);
     };
 
@@ -201,7 +207,7 @@ export class Range {
      *
      * @returns {Boolean}
      **/
-    isEnd(row, column) {
+    isEnd(row: number, column: number): boolean {
         return this.end.row == row && this.end.column == column;
     };
 
@@ -212,7 +218,7 @@ export class Range {
      *
      * @returns {Boolean}
      **/
-    isStart(row, column) {
+    isStart(row: number, column: number): boolean {
         return this.start.row == row && this.start.column == column;
     };
 
@@ -222,7 +228,7 @@ export class Range {
      * @param {Number} column A column point to set
      *
      **/
-    setStart(row, column) {
+    setStart(row: number|Point, column: number) {
         if (typeof row == "object") {
             this.start.column = row.column;
             this.start.row = row.row;
@@ -238,7 +244,7 @@ export class Range {
      * @param {Number} column A column point to set
      *
      **/
-    setEnd(row, column) {
+    setEnd(row: number|Point, column: number) {
         if (typeof row == "object") {
             this.end.column = row.column;
             this.end.row = row.row;
@@ -257,7 +263,7 @@ export class Range {
      * @returns {Boolean}
      * @related Range.compare
      **/
-    inside(row, column) {
+    inside(row: number, column: number): boolean {
         if (this.compare(row, column) == 0) {
             if (this.isEnd(row, column) || this.isStart(row, column)) {
                 return false;
@@ -276,7 +282,7 @@ export class Range {
      * @returns {Boolean}
      * @related Range.compare
      **/
-    insideStart(row, column) {
+    insideStart(row: number, column: number): boolean {
         if (this.compare(row, column) == 0) {
             if (this.isEnd(row, column)) {
                 return false;
@@ -296,7 +302,7 @@ export class Range {
      * @related Range.compare
      *
      **/
-    insideEnd(row, column) {
+    insideEnd(row: number, column: number): boolean {
         if (this.compare(row, column) == 0) {
             if (this.isStart(row, column)) {
                 return false;
@@ -326,7 +332,7 @@ export class Range {
      * `p.column` is less than or equal to the calling range's ending column, this returns `0` <br/>
      * Otherwise, it returns 1
      **/
-    compare(row, column) {
+    compare(row: number, column: number): number {
         if (!this.isMultiLine()) {
             if (row === this.start.row) {
                 return column < this.start.column ? -1 : (column > this.end.column ? 1 : 0);
@@ -368,7 +374,7 @@ export class Range {
      * Otherwise, it returns 1
      *
      **/
-    compareStart(row, column) {
+    compareStart(row: number, column: number): number {
         if (this.start.row == row && this.start.column == column) {
             return -1;
         } else {
@@ -395,7 +401,7 @@ export class Range {
      * `p.column` is less than or equal to the calling range's ending column, this returns `0`<br/>
      * Otherwise, it returns 1
      */
-    compareEnd(row, column) {
+    compareEnd(row: number, column: number): number {
         if (this.end.row == row && this.end.column == column) {
             return 1;
         } else {
@@ -416,7 +422,7 @@ export class Range {
      * Otherwise, it returns the value after calling [[Range.compare `compare()`]].
      *
      **/
-    compareInside(row, column) {
+    compareInside(row: number, column: number): number {
         if (this.end.row == row && this.end.column == column) {
             return 1;
         } else if (this.start.row == row && this.start.column == column) {
@@ -434,16 +440,19 @@ export class Range {
      *
      * @returns {Range}
     **/
-    clipRows(firstRow, lastRow) {
+    clipRows(firstRow: number, lastRow: number): Range {
+        let end: Point = {row: 0, column: 0};
+        let start: Point = {row: 0, column: 0};
+        
         if (this.end.row > lastRow)
-            var end = {row: lastRow + 1, column: 0};
+            end = {row: lastRow + 1, column: 0};
         else if (this.end.row < firstRow)
-            var end = {row: firstRow, column: 0};
+            end = {row: firstRow, column: 0};
 
         if (this.start.row > lastRow)
-            var start = {row: lastRow + 1, column: 0};
+            start = {row: lastRow + 1, column: 0};
         else if (this.start.row < firstRow)
-            var start = {row: firstRow, column: 0};
+            start = {row: firstRow, column: 0};
 
         return Range.fromPoints(start || this.start, end || this.end);
     };
@@ -456,20 +465,22 @@ export class Range {
      *
      * @returns {Range} The original range with the new row
     **/
-    extend(row, column) {
-        var cmp = this.compare(row, column);
+    extend(row: number, column: number): Range {
+        const cmp = this.compare(row, column);
+        let start: Point = {row: 0, column: 0};
+        let end: Point = {row: 0, column: 0};
 
         if (cmp == 0)
             return this;
         else if (cmp == -1)
-            var start = {row: row, column: column};
+            start = {row: row, column: column};
         else
-            var end = {row: row, column: column};
+            end = {row: row, column: column};
 
         return Range.fromPoints(start || this.start, end || this.end);
     };
 
-    isEmpty() {
+    isEmpty(): Boolean {
         return (this.start.row === this.end.row && this.start.column === this.end.column);
     };
 
@@ -478,7 +489,7 @@ export class Range {
      * Returns `true` if the range spans across multiple lines.
      * @returns {Boolean}
     **/
-    isMultiLine() {
+    isMultiLine(): boolean {
         return (this.start.row !== this.end.row);
     };
 
@@ -487,7 +498,7 @@ export class Range {
      * Returns a duplicate of the calling range.
      * @returns {Range}
     **/
-    clone() {
+    clone(): Range {
         return Range.fromPoints(this.start, this.end);
     };
 
@@ -496,7 +507,7 @@ export class Range {
      * Returns a range containing the starting and ending rows of the original range, but with a column value of `0`.
      * @returns {Range}
     **/
-    collapseRows() {
+    collapseRows(): Range {
         if (this.end.column == 0)
             return new Range(this.start.row, 0, Math.max(this.start.row, this.end.row-1), 0);
         else
@@ -510,9 +521,9 @@ export class Range {
      *
      * @returns {Range}
     **/
-    toScreenRange(session) {
-        var screenPosStart = session.documentToScreenPosition(this.start);
-        var screenPosEnd = session.documentToScreenPosition(this.end);
+    toScreenRange(session: EditSession): Range {
+        const screenPosStart = session.documentToScreenPosition(this.start);
+        const screenPosEnd = session.documentToScreenPosition(this.end);
 
         return new Range(
             screenPosStart.row, screenPosStart.column,
@@ -522,7 +533,7 @@ export class Range {
     
     
     /* experimental */
-    moveBy(row, column) {
+    moveBy(row: number, column: number) {
         this.start.row += row;
         this.start.column += column;
         this.end.row += row;
@@ -536,11 +547,11 @@ export class Range {
      *
      * @returns {Range}
     **/
-    static fromPoints(start, end) {
+    static fromPoints(start: Point, end: Point): Range {
         return new Range(start.row, start.column, end.row, end.column);
     };
     
-    static comparePoints(p1, p2) {
+    static comparePoints(p1: Point, p2: Point): number {
         return p1.row - p2.row || p1.column - p2.column;
     };
 };

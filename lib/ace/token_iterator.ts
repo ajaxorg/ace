@@ -53,7 +53,7 @@ export class TokenIterator {
     $tokenIndex: number;
     $rowTokens: any[];
     
-    constructor(session, initialRow, initialColumn) {
+    constructor(session: EditSession, initialRow: number, initialColumn: number) {
         this.$session = session;
         this.$row = initialRow;
         this.$rowTokens = session.getTokens(initialRow);

@@ -4,7 +4,8 @@
         "allowJs": true,
         "target": "es5",
         "module": "amd",
-        "alwaysStrict": true
+        "alwaysStrict": true,
+        "strict": true
     },
     "types": [
         "node"

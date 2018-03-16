@@ -2290,17 +2290,20 @@ export class EditSession extends EventEmitter {
     }
     
     // Folding
-    unfold: (location: any, expandInner?: boolean) => void
-    getFoldLine: (docRow, startFoldLine?) => any;
-    addFolds: (folds: any) => void
-    removeFolds: (folds: any) => void
-    getFoldAt: (row: number, column: number, side: number) => any
-    getRowFoldStart: (docRow: number, startFoldRow?: number) => number
-    getRowFoldEnd: (docRow: number, startFoldRow?: number) => number
-    getFoldDisplayLine: (foldLine, endRow?, endColumn?, startRow?, startColumn?) => string
-    getNextFoldLine: (docRow: number, startFoldLine?: number) => any
-    getFoldsInRange: (range) => any[]
-    $setFolding: (foldMode: any) => void
+    unfold: (location?: any, expandInner?: boolean) => void;
+    getFoldLine: (docRow, startFoldLine?) => any;;
+    addFolds: (folds: any) => void;
+    removeFolds: (folds: any) => void;
+    toggleFold: (tryToUnfold: boolean) => void;
+    toggleFoldWidget: (toggleParent=false) => void;
+    foldAll: (startRow?: number, endRow?: number?, depth?: number) => void;
+    getFoldAt: (row: number, column: number, side: number) => any;
+    getRowFoldStart: (docRow: number, startFoldRow?: number) => number;
+    getRowFoldEnd: (docRow: number, startFoldRow?: number) => number;
+    getFoldDisplayLine: (foldLine, endRow?, endColumn?, startRow?, startColumn?) => string;
+    getNextFoldLine: (docRow: number, startFoldLine?: number) => any;
+    getFoldsInRange: (range) => any[];
+    $setFolding: (foldMode: any) => void;
     
     // Bracket matching
     getBracketRange: (pos: any) => any // TODO Range

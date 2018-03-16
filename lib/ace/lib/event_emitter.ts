@@ -28,15 +28,21 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-var stopPropagation = function() { this.propagationStopped = true; };
-var preventDefault = function() { this.defaultPrevented = true; };
+var stopPropagation = function(this: any) { 
+    this.propagationStopped = true; 
+};
+var preventDefault = function(this: any) {
+    this.defaultPrevented = true; 
+};
+
+type EventListener<T> = (e: any, target: T) => any;
 
 export class EventEmitter {
     
     _eventRegistry: any;
     _defaultHandlers: any;
     
-    _emit(eventName, e?) {
+    _emit(eventName: string, e?: any) {
         this._eventRegistry || (this._eventRegistry = {});
         this._defaultHandlers || (this._defaultHandlers = {});
     
@@ -66,7 +72,7 @@ export class EventEmitter {
             return defaultHandler(e, this);
     }
 
-    _signal(eventName, e?) {
+    _signal(eventName: string, e?: any) {
         var listeners = (this._eventRegistry || {})[eventName];
         if (!listeners)
             return;
@@ -75,7 +81,7 @@ export class EventEmitter {
             listeners[i](e, this);
     }
     
-    once(eventName, callback) {
+    once(eventName: string, callback: EventListener<this>) {
         var _self = this;
         callback && this.on(eventName, function newCallback() {
             _self.off(eventName, newCallback);
@@ -83,7 +89,7 @@ export class EventEmitter {
         });
     }
     
-    setDefaultHandler(eventName, callback) {
+    setDefaultHandler(eventName: string, callback: EventListener<this>) {
         var handlers = this._defaultHandlers;
         if (!handlers)
             handlers = this._defaultHandlers = {_disabled_: {}};
@@ -101,7 +107,7 @@ export class EventEmitter {
         handlers[eventName] = callback;
     }
     
-    removeDefaultHandler(eventName, callback) {
+    removeDefaultHandler(eventName: string, callback: EventListener<this>) {
         var handlers = this._defaultHandlers;
         if (!handlers)
             return;
@@ -118,7 +124,7 @@ export class EventEmitter {
         }
     }
     
-    on(eventName, callback, capturing=false) {
+    on(eventName: string, callback: EventListener<this>, capturing=false) {
         this._eventRegistry = this._eventRegistry || {};
     
         var listeners = this._eventRegistry[eventName];
@@ -131,11 +137,11 @@ export class EventEmitter {
     }
     
     // TODO remove
-    addEventListener(eventName, callback, capturing=false) {
+    addEventListener(eventName: string, callback: EventListener<this>, capturing=false) {
         return this.on(eventName, callback, capturing=false);
     }
     
-    off(eventName, callback) {
+    off(eventName: string, callback: EventListener<this>) {
         this._eventRegistry = this._eventRegistry || {};
     
         var listeners = this._eventRegistry[eventName];
@@ -148,16 +154,16 @@ export class EventEmitter {
     }
     
     // TODO remove
-    removeEventListener(eventName, callback) {
+    removeEventListener(eventName: string, callback: EventListener<this>) {
         return this.off(eventName, callback);
     }
     
     // TODO remove
-    removeListener(eventName, callback) {
+    removeListener(eventName: string, callback: EventListener<this>) {
         return this.off(eventName, callback);
     }
     
-    removeAllListeners(eventName) {
+    removeAllListeners(eventName: string) {
         if (this._eventRegistry) this._eventRegistry[eventName] = [];
     }
 }

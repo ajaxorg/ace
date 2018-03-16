@@ -31,8 +31,9 @@
 import lang = require("../lib/lang");
 import config = require("../config");
 import { Range } from "../range";
+import { Editor } from "../editor";
 
-function bindKey(win, mac) {
+function bindKey(win: string|null, mac: string|null) {
     return { win: win, mac: mac };
 }
 /*
@@ -42,8 +43,8 @@ function bindKey(win, mac) {
 export const commands = [{
         name: "showSettingsMenu",
         bindKey: bindKey("Ctrl-,", "Command-,"),
-        exec: function (editor) {
-            config.loadModule("ace/ext/settings_menu", function (module) {
+        exec: function(editor: Editor) {
+            config.loadModule("ace/ext/settings_menu", function(module: any) {
                 module.init(editor);
                 editor.showSettingsMenu();
             });
@@ -52,8 +53,8 @@ export const commands = [{
     }, {
         name: "goToNextError",
         bindKey: bindKey("Alt-E", "F4"),
-        exec: function (editor) {
-            config.loadModule("./ext/error_marker", function (module) {
+        exec: function(editor: Editor) {
+            config.loadModule("./ext/error_marker", function(module: any) {
                 module.showErrorMarker(editor, 1);
             });
         },
@@ -62,8 +63,8 @@ export const commands = [{
     }, {
         name: "goToPreviousError",
         bindKey: bindKey("Alt-Shift-E", "Shift-F4"),
-        exec: function (editor) {
-            config.loadModule("./ext/error_marker", function (module) {
+        exec: function(editor: Editor) {
+            config.loadModule("./ext/error_marker", function(module: any) {
                 module.showErrorMarker(editor, -1);
             });
         },
@@ -72,62 +73,62 @@ export const commands = [{
     }, {
         name: "selectall",
         bindKey: bindKey("Ctrl-A", "Command-A"),
-        exec: function (editor) { editor.selectAll(); },
+        exec: function(editor: Editor) { editor.selectAll(); },
         readOnly: true
     }, {
         name: "centerselection",
         bindKey: bindKey(null, "Ctrl-L"),
-        exec: function (editor) { editor.centerSelection(); },
+        exec: function(editor: Editor) { editor.centerSelection(); },
         readOnly: true
     }, {
         name: "gotoline",
         bindKey: bindKey("Ctrl-L", "Command-L"),
-        exec: function (editor, line) {
+        exec: function(editor: Editor, line: number|string) {
             if (typeof line !== "number")
-                line = parseInt(prompt("Enter line number:"), 10);
+                line = parseInt(<string> prompt("Enter line number:"), 10);
             if (!isNaN(line)) {
-                editor.gotoLine(line);
+                editor.gotoLine(<number> line);
             }
         },
         readOnly: true
     }, {
         name: "fold",
         bindKey: bindKey("Alt-L|Ctrl-F1", "Command-Alt-L|Command-F1"),
-        exec: function (editor) { editor.session.toggleFold(false); },
+        exec: function(editor: Editor) { editor.session.toggleFold(false); },
         multiSelectAction: "forEach",
         scrollIntoView: "center",
         readOnly: true
     }, {
         name: "unfold",
         bindKey: bindKey("Alt-Shift-L|Ctrl-Shift-F1", "Command-Alt-Shift-L|Command-Shift-F1"),
-        exec: function (editor) { editor.session.toggleFold(true); },
+        exec: function(editor: Editor) { editor.session.toggleFold(true); },
         multiSelectAction: "forEach",
         scrollIntoView: "center",
         readOnly: true
     }, {
         name: "toggleFoldWidget",
         bindKey: bindKey("F2", "F2"),
-        exec: function (editor) { editor.session.toggleFoldWidget(); },
+        exec: function(editor: Editor) { editor.session.toggleFoldWidget(); },
         multiSelectAction: "forEach",
         scrollIntoView: "center",
         readOnly: true
     }, {
         name: "toggleParentFoldWidget",
         bindKey: bindKey("Alt-F2", "Alt-F2"),
-        exec: function (editor) { editor.session.toggleFoldWidget(true); },
+        exec: function(editor: Editor) { editor.session.toggleFoldWidget(true); },
         multiSelectAction: "forEach",
         scrollIntoView: "center",
         readOnly: true
     }, {
         name: "foldall",
         bindKey: bindKey(null, "Ctrl-Command-Option-0"),
-        exec: function (editor) { editor.session.foldAll(); },
+        exec: function(editor: Editor) { editor.session.foldAll(); },
         scrollIntoView: "center",
         readOnly: true
     }, {
         name: "foldOther",
         bindKey: bindKey("Alt-0", "Command-Option-0"),
-        exec: function (editor) {
+        exec: function(editor: Editor) {
             editor.session.foldAll();
             editor.session.unfold(editor.selection.getAllRanges());
         },
@@ -136,27 +137,27 @@ export const commands = [{
     }, {
         name: "unfoldall",
         bindKey: bindKey("Alt-Shift-0", "Command-Option-Shift-0"),
-        exec: function (editor) { editor.session.unfold(); },
+        exec: function(editor: Editor) { editor.session.unfold(); },
         scrollIntoView: "center",
         readOnly: true
     }, {
         name: "findnext",
         bindKey: bindKey("Ctrl-K", "Command-G"),
-        exec: function (editor) { editor.findNext(); },
+        exec: function(editor: Editor) { editor.findNext(); },
         multiSelectAction: "forEach",
         scrollIntoView: "center",
         readOnly: true
     }, {
         name: "findprevious",
         bindKey: bindKey("Ctrl-Shift-K", "Command-Shift-G"),
-        exec: function (editor) { editor.findPrevious(); },
+        exec: function(editor: Editor) { editor.findPrevious(); },
         multiSelectAction: "forEach",
         scrollIntoView: "center",
         readOnly: true
     }, {
         name: "selectOrFindNext",
         bindKey: bindKey("Alt-K", "Ctrl-G"),
-        exec: function (editor) {
+        exec: function(editor: Editor) {
             if (editor.selection.isEmpty())
                 editor.selection.selectWord();
             else
@@ -166,7 +167,7 @@ export const commands = [{
     }, {
         name: "selectOrFindPrevious",
         bindKey: bindKey("Alt-Shift-K", "Ctrl-Shift-G"),
-        exec: function (editor) {
+        exec: function(editor: Editor) {
             if (editor.selection.isEmpty())
                 editor.selection.selectWord();
             else
@@ -176,19 +177,19 @@ export const commands = [{
     }, {
         name: "find",
         bindKey: bindKey("Ctrl-F", "Command-F"),
-        exec: function (editor) {
-            config.loadModule("ace/ext/searchbox", function (e) { e.Search(editor); });
+        exec: function(editor: Editor) {
+            config.loadModule("ace/ext/searchbox", function(e: any) { e.Search(editor); });
         },
         readOnly: true
     }, {
         name: "overwrite",
         bindKey: "Insert",
-        exec: function (editor) { editor.toggleOverwrite(); },
+        exec: function(editor: Editor) { editor.toggleOverwrite(); },
         readOnly: true
     }, {
         name: "selecttostart",
         bindKey: bindKey("Ctrl-Shift-Home", "Command-Shift-Home|Command-Shift-Up"),
-        exec: function (editor) { editor.getSelection().selectFileStart(); },
+        exec: function(editor: Editor) { editor.getSelection().selectFileStart(); },
         multiSelectAction: "forEach",
         readOnly: true,
         scrollIntoView: "animate",
@@ -196,7 +197,7 @@ export const commands = [{
     }, {
         name: "gotostart",
         bindKey: bindKey("Ctrl-Home", "Command-Home|Command-Up"),
-        exec: function (editor) { editor.navigateFileStart(); },
+        exec: function(editor: Editor) { editor.navigateFileStart(); },
         multiSelectAction: "forEach",
         readOnly: true,
         scrollIntoView: "animate",
@@ -204,21 +205,21 @@ export const commands = [{
     }, {
         name: "selectup",
         bindKey: bindKey("Shift-Up", "Shift-Up|Ctrl-Shift-P"),
-        exec: function (editor) { editor.getSelection().selectUp(); },
+        exec: function(editor: Editor) { editor.getSelection().selectUp(); },
         multiSelectAction: "forEach",
         scrollIntoView: "cursor",
         readOnly: true
     }, {
         name: "golineup",
         bindKey: bindKey("Up", "Up|Ctrl-P"),
-        exec: function (editor, args) { editor.navigateUp(args.times); },
+        exec: function(editor: Editor, args: any) { editor.navigateUp(args.times); },
         multiSelectAction: "forEach",
         scrollIntoView: "cursor",
         readOnly: true
     }, {
         name: "selecttoend",
         bindKey: bindKey("Ctrl-Shift-End", "Command-Shift-End|Command-Shift-Down"),
-        exec: function (editor) { editor.getSelection().selectFileEnd(); },
+        exec: function(editor: Editor) { editor.getSelection().selectFileEnd(); },
         multiSelectAction: "forEach",
         readOnly: true,
         scrollIntoView: "animate",
@@ -226,7 +227,7 @@ export const commands = [{
     }, {
         name: "gotoend",
         bindKey: bindKey("Ctrl-End", "Command-End|Command-Down"),
-        exec: function (editor) { editor.navigateFileEnd(); },
+        exec: function(editor: Editor) { editor.navigateFileEnd(); },
         multiSelectAction: "forEach",
         readOnly: true,
         scrollIntoView: "animate",
@@ -234,195 +235,195 @@ export const commands = [{
     }, {
         name: "selectdown",
         bindKey: bindKey("Shift-Down", "Shift-Down|Ctrl-Shift-N"),
-        exec: function (editor) { editor.getSelection().selectDown(); },
+        exec: function(editor: Editor) { editor.getSelection().selectDown(); },
         multiSelectAction: "forEach",
         scrollIntoView: "cursor",
         readOnly: true
     }, {
         name: "golinedown",
         bindKey: bindKey("Down", "Down|Ctrl-N"),
-        exec: function (editor, args) { editor.navigateDown(args.times); },
+        exec: function(editor: Editor, args: any) { editor.navigateDown(args.times); },
         multiSelectAction: "forEach",
         scrollIntoView: "cursor",
         readOnly: true
     }, {
         name: "selectwordleft",
         bindKey: bindKey("Ctrl-Shift-Left", "Option-Shift-Left"),
-        exec: function (editor) { editor.getSelection().selectWordLeft(); },
+        exec: function(editor: Editor) { editor.getSelection().selectWordLeft(); },
         multiSelectAction: "forEach",
         scrollIntoView: "cursor",
         readOnly: true
     }, {
         name: "gotowordleft",
         bindKey: bindKey("Ctrl-Left", "Option-Left"),
-        exec: function (editor) { editor.navigateWordLeft(); },
+        exec: function(editor: Editor) { editor.navigateWordLeft(); },
         multiSelectAction: "forEach",
         scrollIntoView: "cursor",
         readOnly: true
     }, {
         name: "selecttolinestart",
         bindKey: bindKey("Alt-Shift-Left", "Command-Shift-Left|Ctrl-Shift-A"),
-        exec: function (editor) { editor.getSelection().selectLineStart(); },
+        exec: function(editor: Editor) { editor.getSelection().selectLineStart(); },
         multiSelectAction: "forEach",
         scrollIntoView: "cursor",
         readOnly: true
     }, {
         name: "gotolinestart",
         bindKey: bindKey("Alt-Left|Home", "Command-Left|Home|Ctrl-A"),
-        exec: function (editor) { editor.navigateLineStart(); },
+        exec: function(editor: Editor) { editor.navigateLineStart(); },
         multiSelectAction: "forEach",
         scrollIntoView: "cursor",
         readOnly: true
     }, {
         name: "selectleft",
         bindKey: bindKey("Shift-Left", "Shift-Left|Ctrl-Shift-B"),
-        exec: function (editor) { editor.getSelection().selectLeft(); },
+        exec: function(editor: Editor) { editor.getSelection().selectLeft(); },
         multiSelectAction: "forEach",
         scrollIntoView: "cursor",
         readOnly: true
     }, {
         name: "gotoleft",
         bindKey: bindKey("Left", "Left|Ctrl-B"),
-        exec: function (editor, args) { editor.navigateLeft(args.times); },
+        exec: function(editor: Editor, args: any) { editor.navigateLeft(args.times); },
         multiSelectAction: "forEach",
         scrollIntoView: "cursor",
         readOnly: true
     }, {
         name: "selectwordright",
         bindKey: bindKey("Ctrl-Shift-Right", "Option-Shift-Right"),
-        exec: function (editor) { editor.getSelection().selectWordRight(); },
+        exec: function(editor: Editor) { editor.getSelection().selectWordRight(); },
         multiSelectAction: "forEach",
         scrollIntoView: "cursor",
         readOnly: true
     }, {
         name: "gotowordright",
         bindKey: bindKey("Ctrl-Right", "Option-Right"),
-        exec: function (editor) { editor.navigateWordRight(); },
+        exec: function(editor: Editor) { editor.navigateWordRight(); },
         multiSelectAction: "forEach",
         scrollIntoView: "cursor",
         readOnly: true
     }, {
         name: "selecttolineend",
         bindKey: bindKey("Alt-Shift-Right", "Command-Shift-Right|Shift-End|Ctrl-Shift-E"),
-        exec: function (editor) { editor.getSelection().selectLineEnd(); },
+        exec: function(editor: Editor) { editor.getSelection().selectLineEnd(); },
         multiSelectAction: "forEach",
         scrollIntoView: "cursor",
         readOnly: true
     }, {
         name: "gotolineend",
         bindKey: bindKey("Alt-Right|End", "Command-Right|End|Ctrl-E"),
-        exec: function (editor) { editor.navigateLineEnd(); },
+        exec: function(editor: Editor) { editor.navigateLineEnd(); },
         multiSelectAction: "forEach",
         scrollIntoView: "cursor",
         readOnly: true
     }, {
         name: "selectright",
         bindKey: bindKey("Shift-Right", "Shift-Right"),
-        exec: function (editor) { editor.getSelection().selectRight(); },
+        exec: function(editor: Editor) { editor.getSelection().selectRight(); },
         multiSelectAction: "forEach",
         scrollIntoView: "cursor",
         readOnly: true
     }, {
         name: "gotoright",
         bindKey: bindKey("Right", "Right|Ctrl-F"),
-        exec: function (editor, args) { editor.navigateRight(args.times); },
+        exec: function(editor: Editor, args: any) { editor.navigateRight(args.times); },
         multiSelectAction: "forEach",
         scrollIntoView: "cursor",
         readOnly: true
     }, {
         name: "selectpagedown",
         bindKey: "Shift-PageDown",
-        exec: function (editor) { editor.selectPageDown(); },
+        exec: function(editor: Editor) { editor.selectPageDown(); },
         readOnly: true
     }, {
         name: "pagedown",
         bindKey: bindKey(null, "Option-PageDown"),
-        exec: function (editor) { editor.scrollPageDown(); },
+        exec: function(editor: Editor) { editor.scrollPageDown(); },
         readOnly: true
     }, {
         name: "gotopagedown",
         bindKey: bindKey("PageDown", "PageDown|Ctrl-V"),
-        exec: function (editor) { editor.gotoPageDown(); },
+        exec: function(editor: Editor) { editor.gotoPageDown(); },
         readOnly: true
     }, {
         name: "selectpageup",
         bindKey: "Shift-PageUp",
-        exec: function (editor) { editor.selectPageUp(); },
+        exec: function(editor: Editor) { editor.selectPageUp(); },
         readOnly: true
     }, {
         name: "pageup",
         bindKey: bindKey(null, "Option-PageUp"),
-        exec: function (editor) { editor.scrollPageUp(); },
+        exec: function(editor: Editor) { editor.scrollPageUp(); },
         readOnly: true
     }, {
         name: "gotopageup",
         bindKey: "PageUp",
-        exec: function (editor) { editor.gotoPageUp(); },
+        exec: function(editor: Editor) { editor.gotoPageUp(); },
         readOnly: true
     }, {
         name: "scrollup",
         bindKey: bindKey("Ctrl-Up", null),
-        exec: function (e) { e.renderer.scrollBy(0, -2 * e.renderer.layerConfig.lineHeight); },
+        exec: function(e: any) { e.renderer.scrollBy(0, -2 * e.renderer.layerConfig.lineHeight); },
         readOnly: true
     }, {
         name: "scrolldown",
         bindKey: bindKey("Ctrl-Down", null),
-        exec: function (e) { e.renderer.scrollBy(0, 2 * e.renderer.layerConfig.lineHeight); },
+        exec: function(e: any) { e.renderer.scrollBy(0, 2 * e.renderer.layerConfig.lineHeight); },
         readOnly: true
     }, {
         name: "selectlinestart",
         bindKey: "Shift-Home",
-        exec: function (editor) { editor.getSelection().selectLineStart(); },
+        exec: function(editor: Editor) { editor.getSelection().selectLineStart(); },
         multiSelectAction: "forEach",
         scrollIntoView: "cursor",
         readOnly: true
     }, {
         name: "selectlineend",
         bindKey: "Shift-End",
-        exec: function (editor) { editor.getSelection().selectLineEnd(); },
+        exec: function(editor: Editor) { editor.getSelection().selectLineEnd(); },
         multiSelectAction: "forEach",
         scrollIntoView: "cursor",
         readOnly: true
     }, {
         name: "togglerecording",
         bindKey: bindKey("Ctrl-Alt-E", "Command-Option-E"),
-        exec: function (editor) { editor.commands.toggleRecording(editor); },
+        exec: function(editor: Editor) { editor.commands.toggleRecording(editor); },
         readOnly: true
     }, {
         name: "replaymacro",
         bindKey: bindKey("Ctrl-Shift-E", "Command-Shift-E"),
-        exec: function (editor) { editor.commands.replay(editor); },
+        exec: function(editor: Editor) { editor.commands.replay(editor); },
         readOnly: true
     }, {
         name: "jumptomatching",
         bindKey: bindKey("Ctrl-P", "Ctrl-P"),
-        exec: function (editor) { editor.jumpToMatching(); },
+        exec: function(editor: Editor) { editor.jumpToMatching(); },
         multiSelectAction: "forEach",
         scrollIntoView: "animate",
         readOnly: true
     }, {
         name: "selecttomatching",
         bindKey: bindKey("Ctrl-Shift-P", "Ctrl-Shift-P"),
-        exec: function (editor) { editor.jumpToMatching(true); },
+        exec: function(editor: Editor) { editor.jumpToMatching(true); },
         multiSelectAction: "forEach",
         scrollIntoView: "animate",
         readOnly: true
     }, {
         name: "expandToMatching",
         bindKey: bindKey("Ctrl-Shift-M", "Ctrl-Shift-M"),
-        exec: function (editor) { editor.jumpToMatching(true, true); },
+        exec: function(editor: Editor) { editor.jumpToMatching(true, true); },
         multiSelectAction: "forEach",
         scrollIntoView: "animate",
         readOnly: true
     }, {
         name: "passKeysToBrowser",
         bindKey: bindKey(null, null),
-        exec: function () { },
+        exec: function() { },
         passEvent: true,
         readOnly: true
     }, {
         name: "copy",
-        exec: function (editor) {
+        exec: function(editor: Editor) {
             // placeholder for replay macro
         },
         readOnly: true
@@ -430,7 +431,7 @@ export const commands = [{
     // commands disabled in readOnly mode
     {
         name: "cut",
-        exec: function (editor) {
+        exec: function(editor: Editor) {
             var cutLine = editor.$copyWithEmptySelection && editor.selection.isEmpty();
             var range = cutLine ? editor.selection.getLineRange() : editor.selection.getRange();
             editor._emit("cut", range);
@@ -442,102 +443,102 @@ export const commands = [{
         multiSelectAction: "forEach"
     }, {
         name: "paste",
-        exec: function (editor, args) {
+        exec: function(editor: Editor, args: any) {
             editor.$handlePaste(args);
         },
         scrollIntoView: "cursor"
     }, {
         name: "removeline",
         bindKey: bindKey("Ctrl-D", "Command-D"),
-        exec: function (editor) { editor.removeLines(); },
+        exec: function(editor: Editor) { editor.removeLines(); },
         scrollIntoView: "cursor",
         multiSelectAction: "forEachLine"
     }, {
         name: "duplicateSelection",
         bindKey: bindKey("Ctrl-Shift-D", "Command-Shift-D"),
-        exec: function (editor) { editor.duplicateSelection(); },
+        exec: function(editor: Editor) { editor.duplicateSelection(); },
         scrollIntoView: "cursor",
         multiSelectAction: "forEach"
     }, {
         name: "sortlines",
         bindKey: bindKey("Ctrl-Alt-S", "Command-Alt-S"),
-        exec: function (editor) { editor.sortLines(); },
+        exec: function(editor: Editor) { editor.sortLines(); },
         scrollIntoView: "selection",
         multiSelectAction: "forEachLine"
     }, {
         name: "togglecomment",
         bindKey: bindKey("Ctrl-/", "Command-/"),
-        exec: function (editor) { editor.toggleCommentLines(); },
+        exec: function(editor: Editor) { editor.toggleCommentLines(); },
         multiSelectAction: "forEachLine",
         scrollIntoView: "selectionPart"
     }, {
         name: "toggleBlockComment",
         bindKey: bindKey("Ctrl-Shift-/", "Command-Shift-/"),
-        exec: function (editor) { editor.toggleBlockComment(); },
+        exec: function(editor: Editor) { editor.toggleBlockComment(); },
         multiSelectAction: "forEach",
         scrollIntoView: "selectionPart"
     }, {
         name: "modifyNumberUp",
         bindKey: bindKey("Ctrl-Shift-Up", "Alt-Shift-Up"),
-        exec: function (editor) { editor.modifyNumber(1); },
+        exec: function(editor: Editor) { editor.modifyNumber(1); },
         scrollIntoView: "cursor",
         multiSelectAction: "forEach"
     }, {
         name: "modifyNumberDown",
         bindKey: bindKey("Ctrl-Shift-Down", "Alt-Shift-Down"),
-        exec: function (editor) { editor.modifyNumber(-1); },
+        exec: function(editor: Editor) { editor.modifyNumber(-1); },
         scrollIntoView: "cursor",
         multiSelectAction: "forEach"
     }, {
         name: "replace",
         bindKey: bindKey("Ctrl-H", "Command-Option-F"),
-        exec: function (editor) {
-            config.loadModule("ace/ext/searchbox", function (e) { e.Search(editor, true); });
+        exec: function(editor: Editor) {
+            config.loadModule("ace/ext/searchbox", function(e: any) { e.Search(editor, true); });
         }
     }, {
         name: "undo",
         bindKey: bindKey("Ctrl-Z", "Command-Z"),
-        exec: function (editor) { editor.undo(); }
+        exec: function(editor: Editor) { editor.undo(); }
     }, {
         name: "redo",
         bindKey: bindKey("Ctrl-Shift-Z|Ctrl-Y", "Command-Shift-Z|Command-Y"),
-        exec: function (editor) { editor.redo(); }
+        exec: function(editor: Editor) { editor.redo(); }
     }, {
         name: "copylinesup",
         bindKey: bindKey("Alt-Shift-Up", "Command-Option-Up"),
-        exec: function (editor) { editor.copyLinesUp(); },
+        exec: function(editor: Editor) { editor.copyLinesUp(); },
         scrollIntoView: "cursor"
     }, {
         name: "movelinesup",
         bindKey: bindKey("Alt-Up", "Option-Up"),
-        exec: function (editor) { editor.moveLinesUp(); },
+        exec: function(editor: Editor) { editor.moveLinesUp(); },
         scrollIntoView: "cursor"
     }, {
         name: "copylinesdown",
         bindKey: bindKey("Alt-Shift-Down", "Command-Option-Down"),
-        exec: function (editor) { editor.copyLinesDown(); },
+        exec: function(editor: Editor) { editor.copyLinesDown(); },
         scrollIntoView: "cursor"
     }, {
         name: "movelinesdown",
         bindKey: bindKey("Alt-Down", "Option-Down"),
-        exec: function (editor) { editor.moveLinesDown(); },
+        exec: function(editor: Editor) { editor.moveLinesDown(); },
         scrollIntoView: "cursor"
     }, {
         name: "del",
         bindKey: bindKey("Delete", "Delete|Ctrl-D|Shift-Delete"),
-        exec: function (editor) { editor.remove("right"); },
+        exec: function(editor: Editor) { editor.remove("right"); },
         multiSelectAction: "forEach",
         scrollIntoView: "cursor"
     }, {
         name: "backspace",
         bindKey: bindKey("Shift-Backspace|Backspace", "Ctrl-Backspace|Shift-Backspace|Backspace|Ctrl-H"),
-        exec: function (editor) { editor.remove("left"); },
+        exec: function(editor: Editor) { editor.remove("left"); },
         multiSelectAction: "forEach",
         scrollIntoView: "cursor"
     }, {
         name: "cut_or_delete",
         bindKey: bindKey("Shift-Delete", null),
-        exec: function (editor) {
+        exec: function(editor: Editor) {
             if (editor.selection.isEmpty()) {
                 editor.remove("left");
             }
@@ -550,19 +551,19 @@ export const commands = [{
     }, {
         name: "removetolinestart",
         bindKey: bindKey("Alt-Backspace", "Command-Backspace"),
-        exec: function (editor) { editor.removeToLineStart(); },
+        exec: function(editor: Editor) { editor.removeToLineStart(); },
         multiSelectAction: "forEach",
         scrollIntoView: "cursor"
     }, {
         name: "removetolineend",
         bindKey: bindKey("Alt-Delete", "Ctrl-K|Command-Delete"),
-        exec: function (editor) { editor.removeToLineEnd(); },
+        exec: function(editor: Editor) { editor.removeToLineEnd(); },
         multiSelectAction: "forEach",
         scrollIntoView: "cursor"
     }, {
         name: "removetolinestarthard",
         bindKey: bindKey("Ctrl-Shift-Backspace", null),
-        exec: function (editor) {
+        exec: function(editor: Editor) {
             var range = editor.selection.getRange();
             range.start.column = 0;
             editor.session.remove(range);
@@ -572,7 +573,7 @@ export const commands = [{
     }, {
         name: "removetolineendhard",
         bindKey: bindKey("Ctrl-Shift-Delete", null),
-        exec: function (editor) {
+        exec: function(editor: Editor) {
             var range = editor.selection.getRange();
             range.end.column = Number.MAX_VALUE;
             editor.session.remove(range);
@@ -582,47 +583,47 @@ export const commands = [{
     }, {
         name: "removewordleft",
         bindKey: bindKey("Ctrl-Backspace", "Alt-Backspace|Ctrl-Alt-Backspace"),
-        exec: function (editor) { editor.removeWordLeft(); },
+        exec: function(editor: Editor) { editor.removeWordLeft(); },
         multiSelectAction: "forEach",
         scrollIntoView: "cursor"
     }, {
         name: "removewordright",
         bindKey: bindKey("Ctrl-Delete", "Alt-Delete"),
-        exec: function (editor) { editor.removeWordRight(); },
+        exec: function(editor: Editor) { editor.removeWordRight(); },
         multiSelectAction: "forEach",
         scrollIntoView: "cursor"
     }, {
         name: "outdent",
         bindKey: bindKey("Shift-Tab", "Shift-Tab"),
-        exec: function (editor) { editor.blockOutdent(); },
+        exec: function(editor: Editor) { editor.blockOutdent(); },
         multiSelectAction: "forEach",
         scrollIntoView: "selectionPart"
     }, {
         name: "indent",
         bindKey: bindKey("Tab", "Tab"),
-        exec: function (editor) { editor.indent(); },
+        exec: function(editor: Editor) { editor.indent(); },
         multiSelectAction: "forEach",
         scrollIntoView: "selectionPart"
     }, {
         name: "blockoutdent",
         bindKey: bindKey("Ctrl-[", "Ctrl-["),
-        exec: function (editor) { editor.blockOutdent(); },
+        exec: function(editor: Editor) { editor.blockOutdent(); },
         multiSelectAction: "forEachLine",
         scrollIntoView: "selectionPart"
     }, {
         name: "blockindent",
         bindKey: bindKey("Ctrl-]", "Ctrl-]"),
-        exec: function (editor) { editor.blockIndent(); },
+        exec: function(editor: Editor) { editor.blockIndent(); },
         multiSelectAction: "forEachLine",
         scrollIntoView: "selectionPart"
     }, {
         name: "insertstring",
-        exec: function (editor, str) { editor.insert(str); },
+        exec: function(editor: Editor, str: string) { editor.insert(str); },
         multiSelectAction: "forEach",
         scrollIntoView: "cursor"
     }, {
         name: "inserttext",
-        exec: function (editor, args) {
+        exec: function(editor: Editor, args: any) {
             editor.insert(lang.stringRepeat(args.text || "", args.times || 1));
         },
         multiSelectAction: "forEach",
@@ -630,31 +631,31 @@ export const commands = [{
     }, {
         name: "splitline",
         bindKey: bindKey(null, "Ctrl-O"),
-        exec: function (editor) { editor.splitLine(); },
+        exec: function(editor: Editor) { editor.splitLine(); },
         multiSelectAction: "forEach",
         scrollIntoView: "cursor"
     }, {
         name: "transposeletters",
         bindKey: bindKey("Alt-Shift-X", "Ctrl-T"),
-        exec: function (editor) { editor.transposeLetters(); },
-        multiSelectAction: function (editor) { editor.transposeSelections(1); },
+        exec: function(editor: Editor) { editor.transposeLetters(); },
+        multiSelectAction: function(editor: Editor) { editor.transposeSelections(1); },
         scrollIntoView: "cursor"
     }, {
         name: "touppercase",
         bindKey: bindKey("Ctrl-U", "Ctrl-U"),
-        exec: function (editor) { editor.toUpperCase(); },
+        exec: function(editor: Editor) { editor.toUpperCase(); },
         multiSelectAction: "forEach",
         scrollIntoView: "cursor"
     }, {
         name: "tolowercase",
         bindKey: bindKey("Ctrl-Shift-U", "Ctrl-Shift-U"),
-        exec: function (editor) { editor.toLowerCase(); },
+        exec: function(editor: Editor) { editor.toLowerCase(); },
         multiSelectAction: "forEach",
         scrollIntoView: "cursor"
     }, {
         name: "expandtoline",
         bindKey: bindKey("Ctrl-Shift-L", "Command-Shift-L"),
-        exec: function (editor) {
+        exec: function(editor: Editor) {
             var range = editor.selection.getRange();
             range.start.column = range.end.column = 0;
             range.end.row++;
@@ -666,7 +667,7 @@ export const commands = [{
     }, {
         name: "joinlines",
         bindKey: bindKey(null, null),
-        exec: function (editor) {
+        exec: function(editor: Editor) {
             var isBackwards = editor.selection.isBackwards();
             var selectionStart = isBackwards ? editor.selection.getSelectionLead() : editor.selection.getSelectionAnchor();
             var selectionEnd = isBackwards ? editor.selection.getSelectionAnchor() : editor.selection.getSelectionLead();
@@ -703,7 +704,7 @@ export const commands = [{
     }, {
         name: "invertSelection",
         bindKey: bindKey(null, null),
-        exec: function (editor) {
+        exec: function(editor: Editor) {
             var endRow = editor.session.doc.getLength() - 1;
             var endCol = editor.session.doc.getLine(endRow).length;
             var ranges = editor.selection.rangeList.ranges;
