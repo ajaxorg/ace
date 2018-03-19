@@ -30,7 +30,7 @@
 
 import { EditSession } from "./edit_session";
 
-type Point = {
+export interface Position {
     row: number,
     column: number
 }
@@ -51,8 +51,8 @@ type Point = {
  **/
 export class Range {
     
-    start: Point;
-    end: Point;
+    start: Position;
+    end: Position;
     id: number;
     
     constructor(startRow: number, startColumn: number, endRow: number, endColumn: number) {
@@ -174,7 +174,7 @@ export class Range {
      * * `p.column` is less than or equal to the calling range's ending column, this returns `0`<br/>
      * * Otherwise, it returns 1<br/>
      **/
-    comparePoint(p: Point): number {
+    comparePoint(p: Position): number {
         return this.compare(p.row, p.column);
     };
 
@@ -228,12 +228,14 @@ export class Range {
      * @param {Number} column A column point to set
      *
      **/
-    setStart(row: number|Point, column: number) {
-        if (typeof row == "object") {
-            this.start.column = row.column;
-            this.start.row = row.row;
+    setStart(row: number, column: number): void;
+    setStart(position: Position): void;
+    setStart(rowOrPosition: number|Position, column?: number) {
+        if (typeof rowOrPosition == "object") {
+            this.start.column = rowOrPosition.column;
+            this.start.row = rowOrPosition.row;
         } else {
-            this.start.row = row;
+            this.start.row = rowOrPosition;
             this.start.column = column;
         }
     };
@@ -244,12 +246,14 @@ export class Range {
      * @param {Number} column A column point to set
      *
      **/
-    setEnd(row: number|Point, column: number) {
-        if (typeof row == "object") {
-            this.end.column = row.column;
-            this.end.row = row.row;
+    setEnd(row: number, column: number): void;
+    setEnd(position: Position): void;
+    setEnd(rowOrPosition: number|Position, column?: number) {
+        if (typeof rowOrPosition == "object") {
+            this.end.column = rowOrPosition.column;
+            this.end.row = rowOrPosition.row;
         } else {
-            this.end.row = row;
+            this.end.row = rowOrPosition;
             this.end.column = column;
         }
     };
@@ -437,12 +441,11 @@ export class Range {
      * @param {Number} firstRow The starting row
      * @param {Number} lastRow The ending row
      *
-     *
      * @returns {Range}
-    **/
+     **/
     clipRows(firstRow: number, lastRow: number): Range {
-        let end: Point = {row: 0, column: 0};
-        let start: Point = {row: 0, column: 0};
+        let end: Position;
+        let start: Position;
         
         if (this.end.row > lastRow)
             end = {row: lastRow + 1, column: 0};
@@ -462,13 +465,12 @@ export class Range {
      * @param {Number} row A new row to extend to
      * @param {Number} column A new column to extend to
      *
-     *
      * @returns {Range} The original range with the new row
     **/
     extend(row: number, column: number): Range {
         const cmp = this.compare(row, column);
-        let start: Point = {row: 0, column: 0};
-        let end: Point = {row: 0, column: 0};
+        let start: Position;
+        let end: Position;
 
         if (cmp == 0)
             return this;
@@ -547,11 +549,11 @@ export class Range {
      *
      * @returns {Range}
     **/
-    static fromPoints(start: Point, end: Point): Range {
+    static fromPoints(start: Position, end: Position): Range {
         return new Range(start.row, start.column, end.row, end.column);
     };
     
-    static comparePoints(p1: Point, p2: Point): number {
+    static comparePoints(p1: Position, p2: Position): number {
         return p1.row - p2.row || p1.column - p2.column;
     };
 };

@@ -42,12 +42,30 @@ import { TextInput } from "./keyboard/textinput";
 import { MouseHandler } from "./mouse/mouse_handler";
 import { FoldHandler } from "./mouse/fold_handler";
 import { KeyBinding } from "./keyboard/keybinding";
-import { EditSession } from "./edit_session";
+import { EditSession, MoveDirection } from "./edit_session";
 import { Search } from "./search";
-import { Range } from "./range";
+import { Selection } from "./selection";
+import { Range, Position } from "./range";
 import { EventEmitter } from "./lib/event_emitter";
 import { CommandManager } from "./commands/command_manager";
 import { TokenIterator } from "./token_iterator";
+
+export enum Direction {
+    Left = "left",
+    Right = "right"
+}
+
+export enum SelectionStyle {
+    Line = "line",
+    text = "text"
+}
+
+export enum CursorStyle {
+    Ace = "ace",
+    Slim = "slim",
+    Smooth = "smooth",
+    Wide = "wide"
+}
 
 /**
  * The main entry point into the Ace functionality.
@@ -76,8 +94,8 @@ export class Editor extends EventEmitter {
     
     $readOnly: boolean;
     $isFocused: boolean;
-    $cursorStyle: string;
-    $selectionStyle: string;
+    $cursorStyle: CursorStyle;
+    $selectionStyle: SelectionStyle;
     inVirtualSelectionMode: boolean;
     $highlightSelectedWord: boolean;
     $highlightTagPending: boolean;
@@ -87,27 +105,27 @@ export class Editor extends EventEmitter {
     mergeNextCommand: boolean;
     inMultiSelectMode: boolean;
     
-    $onSelectionChange: (...any) => any;
-    $onCursorChange: (...any) => any;
-    $onScrollLeftChange: (...any) => any;
-    $onScrollTopChange: (...any) => any;
-    $onChangeAnnotation: (...any) => any;
-    $onChangeBreakpoint: (...any) => any;
-    $onChangeBackMarker: (...any) => any;
-    $onChangeFrontMarker: (...any) => any;
-    $onChangeFold: (...any) => any;
-    $onChangeWrapMode: (...any) => any;
-    $onChangeWrapLimit: (...any) => any;
-    $onChangeTabSize: (...any) => any;
-    $onTokenizerUpdate: (...any) => any;
-    $onChangeMode: (...any) => any;
-    $onDocumentChange: (...any) => any;
+    $onSelectionChange: () => void;
+    $onCursorChange: () => void;
+    $onScrollLeftChange: () => void;
+    $onScrollTopChange: () => void;
+    $onChangeAnnotation: () => void;
+    $onChangeBreakpoint: () => void;
+    $onChangeBackMarker: () => void;
+    $onChangeFrontMarker: () => void;
+    $onChangeFold: () => void;
+    $onChangeWrapMode: () => void;
+    $onChangeWrapLimit: () => void;
+    $onChangeTabSize: () => void;
+    $onTokenizerUpdate: () => void;
+    $onChangeMode: () => void;
+    $onDocumentChange: () => void;
     
     _$emitInputEvent: any;
     
     session: EditSession;
     renderer: any;
-    selection: any;
+    selection: Selection;
     keyBinding: any;
     commands: any;
     textInput: any;
@@ -116,14 +134,14 @@ export class Editor extends EventEmitter {
     
     searchBox: any;
     
-    exitMultiSelectMode: (...any) => any;
+    exitMultiSelectMode: () => void;
     
-    getOption: (...any) => any;
-    setOption: (...any) => any;
-    setOptions: (...any) => any;
+    getOption: (key: string) => any;
+    setOption: (key: string, value: any) => void;
+    setOptions: (options: any) => void;
     
-    showSettingsMenu: (...any) => any;
-    transposeSelections: (...any) => any;
+    showSettingsMenu: () => any; // TODO TS
+    transposeSelections: (dir: number) => any; // TODO TS
     
     container: HTMLElement;
     $scrollAnchor: HTMLElement;
@@ -132,12 +150,12 @@ export class Editor extends EventEmitter {
     $lastSel: any;
     prevOp: any = {};
     $mergeUndoDeltas: any;
-    $keybindingId: string;
+    $keybindingId: string|null = null;
     sequenceStartTime: number;
     id: string;
     $opResetTimer: any;
 
-    constructor(renderer, session, options) {
+    constructor(renderer: any, session: EditSession, options: any) { // TODO TS
         super();
         
         var container = renderer.getContainerElement();
@@ -165,11 +183,11 @@ export class Editor extends EventEmitter {
     
         this.$initOperationListeners();
         
-        this._$emitInputEvent = lang.delayedCall(function() {
+        this._$emitInputEvent = lang.delayedCall(() => {
             this._signal("input", {});
             if (this.session && this.session.bgTokenizer)
                 this.session.bgTokenizer.scheduleStart();
-        }.bind(this));
+        });
         
         this.on("change", function(_, _self) {
             _self._$emitInputEvent.schedule(31);
@@ -189,24 +207,24 @@ export class Editor extends EventEmitter {
         this.$opResetTimer = lang.delayedCall(this.endOperation.bind(this));
         
         // todo: add before change events?
-        this.on("change", function() {
+        this.on("change", () => {
             if (!this.curOp) {
                 this.startOperation();
                 this.curOp.selectionBefore = this.$lastSel;
             }
             this.curOp.docChanged = true;
-        }.bind(this), true);
+        }, true);
         
-        this.on("changeSelection", function() {
+        this.on("changeSelection", () => {
             if (!this.curOp) {
                 this.startOperation();
                 this.curOp.selectionBefore = this.$lastSel;
             }
             this.curOp.selectionChanged = true;
-        }.bind(this), true);
+        }, true);
     };
 
-    startOperation(commadEvent) {
+    startOperation(commadEvent?: any) { // TODO TS
         if (this.curOp) {
             if (!commadEvent || this.curOp.command)
                 return;
@@ -226,10 +244,12 @@ export class Editor extends EventEmitter {
         this.curOp.selectionBefore = this.selection.toJSON();
     };
 
-    endOperation(e?) {
+    endOperation(e?: {returnValue: boolean}) {
         if (this.curOp) {
-            if (e && e.returnValue === false)
-                return (this.curOp = null);
+            if (e && e.returnValue === false) {
+                 this.curOp = null;
+                 return;
+            }
             this._signal("beforeEndOperation");
             var command = this.curOp.command;
             var scrollIntoView = command && command.scrollIntoView;
@@ -269,7 +289,7 @@ export class Editor extends EventEmitter {
         }
     };
 
-    $historyTracker(e) {
+    $historyTracker(e: {command: {name: string}, args: string}) {
         if (!this.$mergeUndoDeltas)
             return;
 
@@ -310,11 +330,11 @@ export class Editor extends EventEmitter {
      * @param {String} keyboardHandler The new key handler
      *
      **/
-    setKeyboardHandler(keyboardHandler, cb) {
+    setKeyboardHandler(keyboardHandler: any, cb?: () => void) { // TODO TS
         if (keyboardHandler && typeof keyboardHandler === "string" && keyboardHandler != "ace") {
             this.$keybindingId = keyboardHandler;
             var _self = this;
-            config.loadModule(["keybinding", keyboardHandler], function(module) {
+            config.loadModule(["keybinding", keyboardHandler], function(module: any) {
                 if (_self.$keybindingId == keyboardHandler)
                     _self.keyBinding.setKeyboardHandler(module && module.handler);
                 cb && cb();
@@ -348,7 +368,7 @@ export class Editor extends EventEmitter {
      * @param {EditSession} session The new session to use
      *
      **/
-    setSession(session) {
+    setSession(session: EditSession) {
         if (this.session == session)
             return;
         
@@ -477,7 +497,7 @@ export class Editor extends EventEmitter {
      * @returns {String} The current document value
      * @related Document.setValue
      **/
-    setValue(val, cursorPos) {
+    setValue(val: string, cursorPos: 0|1|-1 = 0): string {
         this.session.doc.setValue(val);
 
         if (!cursorPos)
@@ -516,7 +536,7 @@ export class Editor extends EventEmitter {
      *
      * @related VirtualRenderer.onResize
      **/
-    resize(force) {
+    resize(force=false) {
         this.renderer.onResize(force);
     };
 
@@ -525,7 +545,7 @@ export class Editor extends EventEmitter {
      * @param {String} theme The path to a theme
      * @param {Function} cb optional callback called when theme is loaded
      **/
-    setTheme(theme, cb) {
+    setTheme(theme: string, cb?: () => void): void {
         this.renderer.setTheme(theme, cb);
     };
 
@@ -546,7 +566,7 @@ export class Editor extends EventEmitter {
      *
      * @related VirtualRenderer.setStyle
      **/
-    setStyle(style) {
+    setStyle(style: string) {
         this.renderer.setStyle(style);
     };
 
@@ -554,7 +574,7 @@ export class Editor extends EventEmitter {
      * {:VirtualRenderer.unsetStyle}
      * @related VirtualRenderer.unsetStyle
      **/
-    unsetStyle(style) {
+    unsetStyle(style: string) {
         this.renderer.unsetStyle(style);
     };
 
@@ -572,7 +592,7 @@ export class Editor extends EventEmitter {
      *
      *
      **/
-    setFontSize(size) {
+    setFontSize(size: number) {
         this.setOption("fontSize", size);
     };
 
@@ -594,13 +614,15 @@ export class Editor extends EventEmitter {
             var session = self.session;
             if (!session || !session.bgTokenizer) return;
             var pos = session.findMatchingBracket(self.getCursorPosition());
+            var range: Range|null = null;
             if (pos) {
-                var range = new Range(pos.row, pos.column, pos.row, pos.column + 1);
+                range = new Range(pos.row, pos.column, pos.row, pos.column + 1);
             } else if (session.$mode.getMatching) {
-                var range = <Range> session.$mode.getMatching(self.session); //TODO TS
+                range = <Range> session.$mode.getMatching(self.session); //TODO TS
             }
-            if (range)
+            if (range) {
                 session.$bracketHighlight = session.addMarker(range, "ace_bracket", "text");
+            }
         }, 50);
     };
 
@@ -732,7 +754,7 @@ export class Editor extends EventEmitter {
      *
      *
      **/
-    onFocus(e) {
+    onFocus(e?: any) { // TODO TS
         if (this.$isFocused)
             return;
         this.$isFocused = true;
@@ -747,7 +769,7 @@ export class Editor extends EventEmitter {
      *
      *
      **/
-    onBlur(e) {
+    onBlur(e?: any) { // TODO TS
         if (!this.$isFocused)
             return;
         this.$isFocused = false;
@@ -768,7 +790,7 @@ export class Editor extends EventEmitter {
      *
      *
      **/
-    onDocumentChange(delta) {
+    onDocumentChange(delta: Range) {
         // Rerender and emit "change" event.
         var wrap = this.session.$useWrapMode;
         var lastRow = (delta.start.row == delta.end.row ? delta.end.row : Infinity);
@@ -781,7 +803,7 @@ export class Editor extends EventEmitter {
         this.$updateHighlightActiveLine();
     };
 
-    onTokenizerUpdate(e) {
+    onTokenizerUpdate(e: {data: {first: number, last: number}}) {
         var rows = e.data;
         this.renderer.updateLines(rows.first, rows.last);
     };
@@ -816,9 +838,9 @@ export class Editor extends EventEmitter {
             if (this.$selectionStyle != "line" || !this.selection.isMultiLine())
                 highlight = this.getCursorPosition();
             if (this.renderer.theme && this.renderer.theme.$selectionColorConflict && !this.selection.isEmpty())
-                highlight = false;
+                highlight = null;
             if (this.renderer.$maxLines && this.session.getLength() === 1 && !(this.renderer.$minLines > 1))
-                highlight = false;
+                highlight = null;
         }
 
         if (session.$highlightLineMarker && !highlight) {
@@ -836,7 +858,7 @@ export class Editor extends EventEmitter {
         }
     };
 
-    onSelectionChange(e?) {
+    onSelectionChange(e?: any) { // TODO TS
         var session = this.session;
 
         if (session.$selectionMarker) {
@@ -888,7 +910,6 @@ export class Editor extends EventEmitter {
         return re;
     };
 
-
     onChangeFrontMarker() {
         this.renderer.updateFrontMarkers();
     };
@@ -896,7 +917,6 @@ export class Editor extends EventEmitter {
     onChangeBackMarker() {
         this.renderer.updateBackMarkers();
     };
-
 
     onChangeBreakpoint() {
         this.renderer.updateBreakpoints();
@@ -906,8 +926,7 @@ export class Editor extends EventEmitter {
         this.renderer.setAnnotations(this.session.getAnnotations());
     };
 
-
-    onChangeMode(e?) {
+    onChangeMode(e?: any) { // TODO TS
         this.renderer.updateText();
         this._emit("changeMode", e);
     };
@@ -920,7 +939,6 @@ export class Editor extends EventEmitter {
     onChangeWrapMode() {
         this.renderer.onResize(true);
     };
-
 
     onChangeFold() {
         // Update the active line marker as due to folding changes the current
@@ -996,18 +1014,18 @@ export class Editor extends EventEmitter {
      *
      *
      **/
-    onPaste(text, event) {
+    onPaste(text: string, event: any) {
         var e = {text: text, event: event};
         this.commands.exec("paste", this, e);
     };
     
-    $handlePaste(e) {
+    $handlePaste(e: string|{text: string}) {
         if (typeof e == "string") 
             e = {text: e};
         this._signal("paste", e);
-        var text = e.text;
+        var text: string = e.text;
 
-        var lineMode = text == clipboard.lineMode;
+        var lineMode = text === (clipboard.lineMode).toString();
         var session = this.session;
         if (!this.inMultiSelectMode || this.inVirtualSelectionMode) {
             if (lineMode)
@@ -1015,7 +1033,7 @@ export class Editor extends EventEmitter {
             else
                 this.insert(text);
         } else if (lineMode) {
-            this.selection.rangeList.ranges.forEach(function(range) {
+            this.selection.rangeList.ranges.forEach(function(range: Range) {
                 session.insert({ row: range.start.row, column: 0 }, text);
             });
         } else {
@@ -1035,7 +1053,7 @@ export class Editor extends EventEmitter {
         }
     };
 
-    execCommand(command, args) {
+    execCommand(command: any, args: any) { // TODO TS
         return this.commands.exec(command, this, args);
     };
 
@@ -1044,7 +1062,7 @@ export class Editor extends EventEmitter {
      * @param {String} text The new text to add
      *
      **/
-    insert(text, pasted=false) {
+    insert(text: string, pasted=false) {
         var session = this.session;
         var mode = session.getMode();
         var cursor = this.getCursorPosition();
@@ -1118,11 +1136,11 @@ export class Editor extends EventEmitter {
             mode.autoOutdent(lineState, session, cursor.row);
     };
 
-    onTextInput(text) {
+    onTextInput(text: string) {
         this.keyBinding.onTextInput(text);
     };
 
-    onCommandKey(e, hashId, keyCode) {
+    onCommandKey(e: any, hashId: string, keyCode: string) {
         this.keyBinding.onCommandKey(e, hashId, keyCode);
     };
 
@@ -1133,7 +1151,7 @@ export class Editor extends EventEmitter {
      *
      * @related EditSession.setOverwrite
      **/
-    setOverwrite(overwrite) {
+    setOverwrite(overwrite: boolean) {
         this.session.setOverwrite(overwrite);
     };
 
@@ -1158,7 +1176,7 @@ export class Editor extends EventEmitter {
      * Sets how fast the mouse scrolling should do.
      * @param {Number} speed A value indicating the new speed (in milliseconds)
      **/
-    setScrollSpeed(speed) {
+    setScrollSpeed(speed: number) {
         this.setOption("scrollSpeed", speed);
     };
 
@@ -1174,7 +1192,7 @@ export class Editor extends EventEmitter {
      * Sets the delay (in milliseconds) of the mouse drag.
      * @param {Number} dragDelay A value indicating the new delay
      **/
-    setDragDelay(dragDelay) {
+    setDragDelay(dragDelay: number) {
         this.setOption("dragDelay", dragDelay);
     };
 
@@ -1196,7 +1214,7 @@ export class Editor extends EventEmitter {
      * @param {String} style The new selection style "line"|"text"
      *
      **/
-    setSelectionStyle(val) {
+    setSelectionStyle(val: SelectionStyle) {
         this.setOption("selectionStyle", val);
     };
 
@@ -1212,7 +1230,7 @@ export class Editor extends EventEmitter {
      * Determines whether or not the current line should be highlighted.
      * @param {Boolean} shouldHighlight Set to `true` to highlight the current line
      **/
-    setHighlightActiveLine(shouldHighlight) {
+    setHighlightActiveLine(shouldHighlight: boolean) {
         this.setOption("highlightActiveLine", shouldHighlight);
     };
     /**
@@ -1222,7 +1240,7 @@ export class Editor extends EventEmitter {
     getHighlightActiveLine() {
         return this.getOption("highlightActiveLine");
     };
-    setHighlightGutterLine(shouldHighlight) {
+    setHighlightGutterLine(shouldHighlight: boolean) {
         this.setOption("highlightGutterLine", shouldHighlight);
     };
 
@@ -1235,7 +1253,7 @@ export class Editor extends EventEmitter {
      * @param {Boolean} shouldHighlight Set to `true` to highlight the currently selected word
      *
      **/
-    setHighlightSelectedWord(shouldHighlight) {
+    setHighlightSelectedWord(shouldHighlight: boolean) {
         this.setOption("highlightSelectedWord", shouldHighlight);
     };
 
@@ -1247,7 +1265,7 @@ export class Editor extends EventEmitter {
         return this.$highlightSelectedWord;
     };
 
-    setAnimatedScroll(shouldAnimate){
+    setAnimatedScroll(shouldAnimate: boolean){
         this.renderer.setAnimatedScroll(shouldAnimate);
     };
 
@@ -1260,7 +1278,7 @@ export class Editor extends EventEmitter {
      * @param {Boolean} showInvisibles Specifies whether or not to show invisible characters
      *
      **/
-    setShowInvisibles(showInvisibles) {
+    setShowInvisibles(showInvisibles: boolean) {
         this.renderer.setShowInvisibles(showInvisibles);
     };
 
@@ -1272,7 +1290,7 @@ export class Editor extends EventEmitter {
         return this.renderer.getShowInvisibles();
     };
 
-    setDisplayIndentGuides(display) {
+    setDisplayIndentGuides(display: boolean) {
         this.renderer.setDisplayIndentGuides(display);
     };
 
@@ -1285,7 +1303,7 @@ export class Editor extends EventEmitter {
      * @param {Boolean} showPrintMargin Specifies whether or not to show the print margin
      *
      **/
-    setShowPrintMargin(showPrintMargin) {
+    setShowPrintMargin(showPrintMargin: boolean) {
         this.renderer.setShowPrintMargin(showPrintMargin);
     };
 
@@ -1302,7 +1320,7 @@ export class Editor extends EventEmitter {
      * @param {Number} showPrintMargin Specifies the new print margin
      *
      **/
-    setPrintMarginColumn(showPrintMargin) {
+    setPrintMarginColumn(showPrintMargin: boolean) {
         this.renderer.setPrintMarginColumn(showPrintMargin);
     };
 
@@ -1319,7 +1337,7 @@ export class Editor extends EventEmitter {
      * @param {Boolean} readOnly Specifies whether the editor can be modified or not
      *
      **/
-    setReadOnly(readOnly) {
+    setReadOnly(readOnly: boolean) {
         this.setOption("readOnly", readOnly);
     };
 
@@ -1336,7 +1354,7 @@ export class Editor extends EventEmitter {
      * @param {Boolean} enabled Enables or disables behaviors
      *
      **/
-    setBehavioursEnabled (enabled) {
+    setBehavioursEnabled(enabled: boolean) {
         this.setOption("behavioursEnabled", enabled);
     };
 
@@ -1355,14 +1373,14 @@ export class Editor extends EventEmitter {
      * @param {Boolean} enabled Enables or disables wrapping behaviors
      *
      **/
-    setWrapBehavioursEnabled (enabled) {
+    setWrapBehavioursEnabled(enabled: boolean) {
         this.setOption("wrapBehavioursEnabled", enabled);
     };
 
     /**
      * Returns `true` if the wrapping behaviors are currently enabled.
      **/
-    getWrapBehavioursEnabled () {
+    getWrapBehavioursEnabled() {
         return this.getOption("wrapBehavioursEnabled");
     };
 
@@ -1370,7 +1388,7 @@ export class Editor extends EventEmitter {
      * Indicates whether the fold widgets should be shown or not.
      * @param {Boolean} show Specifies whether the fold widgets are shown
      **/
-    setShowFoldWidgets(show) {
+    setShowFoldWidgets(show: boolean) {
         this.setOption("showFoldWidgets", show);
 
     };
@@ -1382,7 +1400,7 @@ export class Editor extends EventEmitter {
         return this.getOption("showFoldWidgets");
     };
 
-    setFadeFoldWidgets(fade) {
+    setFadeFoldWidgets(fade: boolean) {
         this.setOption("fadeFoldWidgets", fade);
     };
 
@@ -1395,7 +1413,7 @@ export class Editor extends EventEmitter {
      * @param {String} dir The direction of the deletion to occur, either "left" or "right"
      *
      **/
-    remove(dir) {
+    remove(dir: "left"|"right") {
         if (this.selection.isEmpty()){
             if (dir == "left")
                 this.selection.selectLeft();
@@ -1652,14 +1670,14 @@ export class Editor extends EventEmitter {
      * Works like [[EditSession.getTokenAt]], except it returns a number.
      * @returns {Number}
      **/
-    getNumberAt(row, column) {
+    getNumberAt(row: number, column: number) {
         var _numberRx = /[\-]?[0-9]+(?:\.[0-9]+)?/g;
         _numberRx.lastIndex = 0;
 
         var s = this.session.getLine(row);
         while (_numberRx.lastIndex < column) {
             var m = _numberRx.exec(s);
-            if(m.index <= column && m.index+m[0].length >= column){
+            if (m && m.index <= column && m.index+m[0].length >= column){
                 var number = {
                     value: m[0],
                     start: m.index,
@@ -1676,16 +1694,16 @@ export class Editor extends EventEmitter {
      * @param {Number} amount The value to change the numeral by (can be negative to decrease value)
      *
      **/
-    modifyNumber(amount) {
+    modifyNumber(amount: number) {
         var row = this.selection.getCursor().row;
         var column = this.selection.getCursor().column;
 
         // get the char before the cursor
         var charRange = new Range(row, column-1, row, column);
 
-        var c = this.session.getTextRange(charRange);
+        var c = parseFloat(this.session.getTextRange(charRange));
         // if the char is a digit
-        if (!isNaN(parseFloat(c)) && isFinite(c)) {
+        if (!isNaN(c) && isFinite(c)) {
             // get the whole number the digit is part of
             var nr = this.getNumberAt(row, column);
             // if number found
@@ -1776,7 +1794,7 @@ export class Editor extends EventEmitter {
      * @returns {Range} The new range where the text was moved to.
      * @related EditSession.moveText
      **/
-    moveText(range, toPosition, copy) {
+    moveText(range: Range, toPosition: Position, copy: boolean): Range {
         return this.session.moveText(range, toPosition, copy);
     };
 
@@ -1804,7 +1822,7 @@ export class Editor extends EventEmitter {
      * @ignore
      *
      **/
-    $moveLines(dir, copy) {
+    $moveLines(dir: MoveDirection, copy: boolean) {
         var rows, moved;
         var selection = this.selection;
         if (!selection.inMultiSelectMode || this.inVirtualSelectionMode) {
@@ -1863,7 +1881,7 @@ export class Editor extends EventEmitter {
      *
      * @returns {Object}
      **/
-    $getSelectedRows(range?) {
+    $getSelectedRows(range?: Range) {
         range = (range || this.getSelectionRange()).collapseRows();
 
         return {
@@ -1872,11 +1890,11 @@ export class Editor extends EventEmitter {
         };
     };
 
-    onCompositionStart(text) {
+    onCompositionStart(text: string) {
         this.renderer.showComposition(this.getCursorPosition());
     };
 
-    onCompositionUpdate(text) {
+    onCompositionUpdate(text: string) {
         this.renderer.setCompositionText(text);
     };
 
@@ -1910,7 +1928,7 @@ export class Editor extends EventEmitter {
      *
      * @returns {Boolean}
      **/
-    isRowVisible(row) {
+    isRowVisible(row: number): boolean {
         return (row >= this.getFirstVisibleRow() && row <= this.getLastVisibleRow());
     };
 
@@ -1921,7 +1939,7 @@ export class Editor extends EventEmitter {
      *
      * @returns {Boolean}
      **/
-    isRowFullyVisible(row) {
+    isRowFullyVisible(row: number): boolean {
         return (row >= this.renderer.getFirstFullyVisibleRow() && row <= this.renderer.getLastFullyVisibleRow());
     };
 
@@ -1933,14 +1951,14 @@ export class Editor extends EventEmitter {
         return this.renderer.getScrollBottomRow() - this.renderer.getScrollTopRow() + 1;
     };
 
-    $moveByPage(dir, select=false) {
+    $moveByPage(dir: number, select=false) {
         var renderer = this.renderer;
         var config = this.renderer.layerConfig;
         var rows = dir * Math.floor(config.height / config.lineHeight);
 
         if (select === true) {
-            this.selection.$moveSelection(function(){
-                this.moveCursorBy(rows, 0);
+            this.selection.$moveSelection(() => {
+                this.selection.moveCursorBy(rows, 0);
             });
         } else if (select === false) {
             this.selection.moveCursorBy(rows, 0);
@@ -2002,7 +2020,7 @@ export class Editor extends EventEmitter {
      * Moves the editor to the specified row.
      * @related VirtualRenderer.scrollToRow
      **/
-    scrollToRow(row) {
+    scrollToRow(row: number) {
         this.renderer.scrollToRow(row);
     };
 
@@ -2016,7 +2034,7 @@ export class Editor extends EventEmitter {
      *
      * @related VirtualRenderer.scrollToLine
      **/
-    scrollToLine(line, center, animate, callback?) {
+    scrollToLine(line: number, center=false, animate=false, callback?: () => void) { // TODO TS callback type
         this.renderer.scrollToLine(line, center, animate, callback);
     };
 
@@ -2089,7 +2107,7 @@ export class Editor extends EventEmitter {
      *
      * @related Selection.moveCursorTo
      **/
-    moveCursorTo(row, column) {
+    moveCursorTo(row: number, column: number) {
         this.selection.moveCursorTo(row, column);
     };
 
@@ -2100,7 +2118,7 @@ export class Editor extends EventEmitter {
      *
      * @related Selection.moveCursorToPosition
      **/
-    moveCursorToPosition(pos) {
+    moveCursorToPosition(pos: Position) {
         this.selection.moveCursorToPosition(pos);
     };
 
@@ -2119,10 +2137,10 @@ export class Editor extends EventEmitter {
         //get next closing tag or bracket
         var matchType;
         var found = false;
-        var depth = {};
+        var depth: {[key: string]: number} = {};
         var i = cursor.column - token.start;
         var bracketType;
-        var brackets = {
+        var brackets: {[key: string]: string} = {
             ")": "(",
             "(": "(",
             "]": "[",
@@ -2298,7 +2316,7 @@ export class Editor extends EventEmitter {
      *
      * @related Editor.moveCursorTo
      **/
-    navigateTo(row, column) {
+    navigateTo(row: number, column: number) {
         this.selection.moveTo(row, column);
     };
 
@@ -2308,7 +2326,7 @@ export class Editor extends EventEmitter {
      *
      *
      **/
-    navigateUp(times) {
+    navigateUp(times: number) {
         if (this.selection.isMultiLine() && !this.selection.isBackwards()) {
             var selectionStart = this.selection.anchor.getPosition();
             return this.moveCursorToPosition(selectionStart);
@@ -2323,7 +2341,7 @@ export class Editor extends EventEmitter {
      *
      *
      **/
-    navigateDown(times) {
+    navigateDown(times: number) {
         if (this.selection.isMultiLine() && this.selection.isBackwards()) {
             var selectionEnd = this.selection.anchor.getPosition();
             return this.moveCursorToPosition(selectionEnd);
@@ -2338,7 +2356,7 @@ export class Editor extends EventEmitter {
      *
      *
      **/
-    navigateLeft(times) {
+    navigateLeft(times: number) {
         if (!this.selection.isEmpty()) {
             var selectionStart = this.getSelectionRange().start;
             this.moveCursorToPosition(selectionStart);
@@ -2358,7 +2376,7 @@ export class Editor extends EventEmitter {
      *
      *
      **/
-    navigateRight(times) {
+    navigateRight(times: number) {
         if (!this.selection.isEmpty()) {
             var selectionEnd = this.getSelectionRange().end;
             this.moveCursorToPosition(selectionEnd);
@@ -2433,7 +2451,7 @@ export class Editor extends EventEmitter {
      *
      *
      **/
-    replace(replacement, options) {
+    replace(replacement: string, options: any): number { // TODO TS
         if (options)
             this.$search.set(options);
 
@@ -2459,7 +2477,7 @@ export class Editor extends EventEmitter {
      *
      *
      **/
-    replaceAll(replacement, options) {
+    replaceAll(replacement: string, options: any): number { // TODO TS
         if (options) {
             this.$search.set(options);
         }
@@ -2483,7 +2501,7 @@ export class Editor extends EventEmitter {
         return replaced;
     };
 
-    $tryReplace(range, replacement) {
+    $tryReplace(range: Range, replacement: string): Range|null {
         var input = this.session.getTextRange(range);
         replacement = this.$search.replace(input, replacement);
         if (replacement !== null) {
@@ -2512,7 +2530,7 @@ export class Editor extends EventEmitter {
      *
      * @related Search.find
      **/
-    find(needle, options, animate) {
+    find(needle: string|RegExp|Object, options: any, animate: boolean): void { // TODO TS options
         if (!options)
             options = {};
 
@@ -2575,7 +2593,7 @@ export class Editor extends EventEmitter {
         this.find(options, {skipCurrent: true, backwards: true}, animate);
     };
 
-    revealRange(range, animate) {
+    revealRange(range: Range, animate: boolean) {
         this.session.unfold(range);
         this.selection.setSelectionRange(range);
 
@@ -2622,9 +2640,9 @@ export class Editor extends EventEmitter {
     setAutoScrollEditorIntoView(enable: boolean) {
         if (!enable)
             return;
-        var rect;
+        var rect: {top: number} | null;
         var self = this;
-        var shouldScroll = false;
+        var shouldScroll: boolean|null = false;
         if (!this.$scrollAnchor)
             this.$scrollAnchor = document.createElement("div");
         var scrollAnchor = this.$scrollAnchor;
@@ -2652,7 +2670,7 @@ export class Editor extends EventEmitter {
                     pos.top + rect.top + config.lineHeight > window.innerHeight) {
                     shouldScroll = false;
                 } else {
-                    shouldScroll = null;
+                    shouldScroll = false;
                 }
                 if (shouldScroll != null) {
                     scrollAnchor.style.top = top + "px";
@@ -2673,49 +2691,48 @@ export class Editor extends EventEmitter {
         };
     };
 
-
     $resetCursorStyle() {
-        var style = this.$cursorStyle || "ace";
+        var style = this.$cursorStyle || CursorStyle.Ace;
         var cursorLayer = this.renderer.$cursorLayer;
         if (!cursorLayer)
             return;
         cursorLayer.setSmoothBlinking(/smooth/.test(style));
-        cursorLayer.isBlinking = !this.$readOnly && style != "wide";
+        cursorLayer.isBlinking = !this.$readOnly && style != CursorStyle.Wide;
         dom.setCssClass(cursorLayer.element, "ace_slim-cursors", /slim/.test(style));
     };
 };
 
 config.defineOptions(Editor.prototype, "editor", {
     selectionStyle: {
-        set: function(style) {
+        set: function(this: Editor, style: SelectionStyle) {
             this.onSelectionChange();
             this._signal("changeSelectionStyle", {data: style});
         },
         initialValue: "line"
     },
     highlightActiveLine: {
-        set: function() {this.$updateHighlightActiveLine();},
+        set: function(this: Editor) {this.$updateHighlightActiveLine();},
         initialValue: true
     },
     highlightSelectedWord: {
-        set: function(shouldHighlight) {this.$onSelectionChange();},
+        set: function(this: Editor, shouldHighlight: boolean) {this.$onSelectionChange();},
         initialValue: true
     },
     readOnly: {
-        set: function(readOnly) {
+        set: function(this: Editor, readOnly: boolean) {
             this.textInput.setReadOnly(readOnly);
             this.$resetCursorStyle(); 
         },
         initialValue: false
     },
     copyWithEmptySelection: {
-        set: function(value) {
+        set: function(this: Editor, value: boolean) {
             this.textInput.setCopyWithEmptySelection(value);
         },
         initialValue: false
     },
     cursorStyle: {
-        set: function(val) { this.$resetCursorStyle(); },
+        set: function(this: Editor, val: CursorStyle) { this.$resetCursorStyle(); },
         values: ["ace", "slim", "smooth", "wide"],
         initialValue: "ace"
     },
@@ -2726,15 +2743,15 @@ config.defineOptions(Editor.prototype, "editor", {
     behavioursEnabled: {initialValue: true},
     wrapBehavioursEnabled: {initialValue: true},
     autoScrollEditorIntoView: {
-        set: function(this: Editor, val: boolen) {this.setAutoScrollEditorIntoView(val);}
+        set: function(this: Editor, val: boolean) {this.setAutoScrollEditorIntoView(val);}
     },
     keyboardHandler: {
-        set: function(this: Editor, val) { this.setKeyboardHandler(val); },
+        set: function(this: Editor, val: any) { this.setKeyboardHandler(val); }, // TODO TS
         get: function(this: Editor) { return this.$keybindingId; },
         handlesSet: true
     },
     value: {
-        set: function(this: Editor, val) { this.session.setValue(val); },
+        set: function(this: Editor, val: string) { this.session.setValue(val); },
         get: function(this: Editor) { return this.getValue(); },
         handlesSet: true,
         hidden: true

@@ -108,7 +108,7 @@ export const commands = [{
     }, {
         name: "toggleFoldWidget",
         bindKey: bindKey("F2", "F2"),
-        exec: function(editor: Editor) { editor.session.toggleFoldWidget(); },
+        exec: function(editor: Editor) { editor.session.toggleFoldWidget(false); },
         multiSelectAction: "forEach",
         scrollIntoView: "center",
         readOnly: true

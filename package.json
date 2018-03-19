@@ -21,6 +21,7 @@
     "copyfiles": "^2.0.0",
     "dryice": "0.4.11",
     "jsdom": "9.3.0",
+    "tslint": "^5.9.1",
     "typescript": "^2.7.2"
   },
   "mappings": {
@@ -37,9 +38,9 @@
   },
   "scripts": {
     "start": "node static.js",
-    "test": "node lib/ace/test/all.js",
+    "test": "node built/test/all.js",
     "lint": "eslint 'lib/ace/**/*.js'",
-    "copyfiles": "copyfiles -u 2 lib/ace/**/*.css lib/ace/**/**/*.css lib/ace/**/**/*.snippets built/",
+    "copyfiles": "copyfiles -u 2 lib/ace/mode/_test/*.txt lib/ace/mode/_test/*.json lib/ace/**/*.css lib/ace/**/**/*.css lib/ace/**/**/*.snippets built/",
     "tsc": "tsc",
     "watch": "tsc --watch",
     "build": "npm run tsc && npm run copyfiles"

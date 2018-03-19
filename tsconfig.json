@@ -5,7 +5,9 @@
         "target": "es5",
         "module": "amd",
         "alwaysStrict": true,
-        "strict": true
+        "strict": true,
+        "strictPropertyInitialization": false,
+        "strictNullChecks": false
     },
     "types": [
         "node"
