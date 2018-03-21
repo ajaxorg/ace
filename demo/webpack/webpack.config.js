@@ -1,7 +1,7 @@
 "use strict";
 
 module.exports = {
-    mode: 'development',
+    mode: "development",
     entry: "./demo.js",
     output: {
         path: __dirname + "/dist",
@@ -15,9 +15,11 @@ module.exports = {
         __dirname: "mock",
         setImmediate: false
     },
-    module: {
-    },
-    resolve: {
+    resolveLoader: {
+        modules: [
+            "node_modules", 
+            __dirname + "/node_modules",
+        ],
     },
     devServer: {
         contentBase: __dirname,

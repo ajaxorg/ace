@@ -56,23 +56,24 @@ function main(args) {
     if (i != -1 && args[i+1])
         BUILD_DIR = args[i+1];
 
-    if (args.indexOf("--h") == -1) {
-        if (type == "minimal") {
-            buildAce({
-                compress: args.indexOf("--m") != -1,
-                noconflict: args.indexOf("--nc") != -1,
-                shrinkwrap: args.indexOf("--s") != -1
-            });
-        } else if (type == "normal") {
-            ace();
-        } else if (type == "demo") {
-            demo();
-        } else if (type == "full") {
-            ace();
-            demo();
-        } else if (type == "highlighter") {
-            // TODO
-        }
+    if (args.indexOf("--h") != -1 || args.indexOf("-h") != -1 || args.indexOf("--help") != -1) {
+        return showHelp();
+    }
+    if (type == "minimal") {
+        buildAce({
+            compress: args.indexOf("--m") != -1,
+            noconflict: args.indexOf("--nc") != -1,
+            shrinkwrap: args.indexOf("--s") != -1
+        });
+    } else if (type == "normal") {
+        ace();
+    } else if (type == "demo") {
+        demo();
+    } else if (type == "full") {
+        ace();
+        demo();
+    } else if (type == "highlighter") {
+        // TODO
     }
 }
 
@@ -105,33 +106,37 @@ function ace() {
     copy.file(ACE_HOME + "/ChangeLog.txt", BUILD_DIR + "/ChangeLog.txt");
     
     console.log('# ace ---------');
-    var typesUpdated;
     for (var i = 0; i < 4; i++) {
-        buildAce({compress: i & 2, noconflict: i & 1, check: true}, function() {
-            if (!typesUpdated)
-                buildTypes();
-            typesUpdated = true;
-        });
+        buildAce({compress: i & 2, noconflict: i & 1, check: true});
     }
 }
 
 function buildTypes() {
     copy.file(ACE_HOME + "/ace.d.ts", BUILD_DIR + "/ace.d.ts");
 
-    var paths = fs
-        .readdirSync(BUILD_DIR + '/src-noconflict')
-        .filter(function(path) {
-            return /^(mode|theme|ext)-/.test(path);
-        })
-        .map(function(path) {
-            return 'ace-builds/src-noconflict/' + path.split('.')[0];
-        });
+    var paths = fs.readdirSync(BUILD_DIR + '/src-noconflict');
 
     var pathModules = paths.map(function(path) {
-        return "declare module '" + path + "';";
-    }).join('\n');
+        if (/^(mode|theme|ext|keybinding)-/.test(path)) {
+            var moduleName = path.split('.')[0];
+            return "declare module 'ace-builds/src-noconflict/" + moduleName + "';";
+        }
+    }).filter(Boolean).join('\n')
+        + "\ndeclare module 'ace-builds/webpack-resolver';\n";
 
     fs.appendFileSync(BUILD_DIR + '/ace.d.ts', '\n' + pathModules);
+    
+    var loader = paths.map(function(path) {
+        if (/\.js$/.test(path) && !/^ace\.js$/.test(path)) {
+            var moduleName = path.split('.')[0].replace(/-/, "/");
+            if (/^worker/.test(moduleName))
+                moduleName = "mode" + moduleName.slice(6) + "_worker";
+            moduleName = moduleName.replace(/keybinding/, "keyboard");
+            return "ace.config.setModuleUrl('ace/" + moduleName + "', require('file-loader!./src-noconflict/" + path + "'))";
+        }
+    }).join('\n');
+    
+    fs.writeFileSync(BUILD_DIR + '/webpack-resolver.js', loader, "utf8");
 }
 
 function demo() {
@@ -368,7 +373,7 @@ function buildAce(options, callback) {
         buildSubmodule(options, {
             projectType: "mode",
             require: ["ace/mode/" + name]
-        }, "mode/" + name, addCb());
+        }, "mode-" + name, addCb());
     });
     // snippets
     modeNames.forEach(function(name) {
@@ -384,21 +389,21 @@ function buildAce(options, callback) {
         buildSubmodule(options, {
             projectType: "theme",
             require: ["ace/theme/" + name]
-        }, "theme/" +  name, addCb());
+        }, "theme-" +  name, addCb());
     });
     // keybindings
     ["vim", "emacs"].forEach(function(name) {
         buildSubmodule(options, {
             projectType: "keybinding",
             require: ["ace/keyboard/" + name ]
-        }, "keybinding/" + name, addCb());
+        }, "keybinding-" + name, addCb());
     });
     // extensions
     jsFileList("lib/ace/ext").forEach(function(name) {
         buildSubmodule(options, {
             projectType: "ext",
             require: ["ace/ext/" + name]
-        }, "ext/" + name, addCb());
+        }, "ext-" + name, addCb());
     });
     // workers
     workers("lib/ace/mode").forEach(function(name) {
@@ -423,6 +428,9 @@ function buildAce(options, callback) {
             return;
         if (options.check)
             sanityCheck(options, callback);
+        if (options.noconflict && !options.compress)
+            buildTypes();
+            
         if (callback) 
             return callback();
         console.log("Finished building " + getTargetDir(options))

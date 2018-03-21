@@ -269,7 +269,7 @@ export namespace Ace {
     getLineTokens(line: string, startState: string | string[]): Token[];
   }
 
-  export interface TextMode {
+  export interface SyntaxMode {
     getTokenizer(): Tokenizer;
     toggleCommentLines(state: any,
                        session: EditSession,
@@ -402,8 +402,8 @@ export namespace Ace {
     getNewLineMode(): NewLineMode;
     setUseWorker(useWorker: boolean): void;
     getUseWorker(): boolean;
-    setMode(mode: TextMode | string, callback?: () => void): void;
-    getMode(): TextMode;
+    setMode(mode: string | SyntaxMode, callback?: () => void): void;
+    getMode(): SyntaxMode;
     setScrollTop(scrollTop: number): void;
     getScrollTop(): number;
     setScrollLeft(scrollLeft: number): void;
@@ -576,6 +576,60 @@ export namespace Ace {
     destroy(): void;
   }
 
+
+  export interface Selection extends EventEmitter {
+    moveCursorWordLeft(): void;
+    moveCursorWordRight(): void;
+    fromOrientedRange(range: Range): void;
+    setSelectionRange(match: any): void;
+    getAllRanges(): Range[];
+    addRange(range: Range): void;
+    isEmpty(): boolean;
+    isMultiLine(): boolean;
+    setCursor(row: number, column: number): void;
+    setAnchor(row: number, column: number): void;
+    getAnchor(): Position;
+    getCursor(): Position;
+    isBackwards(): boolean;
+    getRange(): Range;
+    clearSelection(): void;
+    selectAll(): void;
+    setRange(range: Range, reverse?: boolean): void;
+    selectTo(row: number, column: number): void;
+    selectToPosition(pos: any): void;
+    selectUp(): void;
+    selectDown(): void;
+    selectRight(): void;
+    selectLeft(): void;
+    selectLineStart(): void;
+    selectLineEnd(): void;
+    selectFileEnd(): void;
+    selectFileStart(): void;
+    selectWordRight(): void;
+    selectWordLeft(): void;
+    getWordRange(): void;
+    selectWord(): void;
+    selectAWord(): void;
+    selectLine(): void;
+    moveCursorUp(): void;
+    moveCursorDown(): void;
+    moveCursorLeft(): void;
+    moveCursorRight(): void;
+    moveCursorLineStart(): void;
+    moveCursorLineEnd(): void;
+    moveCursorFileEnd(): void;
+    moveCursorFileStart(): void;
+    moveCursorLongWordRight(): void;
+    moveCursorLongWordLeft(): void;
+    moveCursorBy(rows: number, chars: number): void;
+    moveCursorToPosition(position: any): void;
+    moveCursorTo(row: number, column: number, keepDesiredColumn?: boolean): void;
+    moveCursorToScreen(row: number, column: number, keepDesiredColumn: boolean): void;
+  }
+  var Selection: {
+    new(session: EditSession): Selection;
+  }
+
   export interface Editor extends OptionsProvider, EventEmitter {
     container: HTMLElement;
     renderer: VirtualRenderer;
@@ -583,6 +637,7 @@ export namespace Ace {
     commands: CommandManager;
     keyBinding: KeyBinding;
     session: EditSession;
+    selection: Selection;
 
     on(name: 'blur', callback: (e: Event) => void): void;
     on(name: 'change', callback: (delta: Delta) => void): void;
@@ -724,12 +779,12 @@ export const version: string;
 export const config: Ace.Config;
 export function require(name: string): any;
 export function edit(el: Element | string, options?: Partial<Ace.EditorOptions>): Ace.Editor;
-export function createEditSession(text: Ace.Document | string, mode: Ace.TextMode): Ace.EditSession;
+export function createEditSession(text: Ace.Document | string, mode: Ace.SyntaxMode): Ace.EditSession;
 export const VirtualRenderer: {
   new(container: HTMLElement, theme?: string): Ace.VirtualRenderer;
 };
 export const EditSession: {
-  new(text: string | Document, mode?: Ace.TextMode): Ace.EditSession;
+  new(text: string | Document, mode?: Ace.SyntaxMode): Ace.EditSession;
 };
 export const UndoManager: {
   new(): Ace.UndoManager;
