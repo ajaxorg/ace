@@ -1,3 +1,6 @@
+2018.03.21 Version 1.3.2
+* add experimental support for using ace-builds with webpack
+
 2018.02.11 Version 1.3.1
 
 * fixed regression with selectionChange event not firing some times
