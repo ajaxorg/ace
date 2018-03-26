@@ -545,7 +545,7 @@ function exportAce(ns, modules, requireBase, extModules) {
                     for (var key in a) if (a.hasOwnProperty(key))
                         window.NS[key] = a[key];
                     window.NS["default"] = window.NS;
-                    if (typeof module == "object") {
+                    if (typeof module == "object" && typeof exports == "object" && module) {
                         module.exports = window.NS;
                     }
                 });
@@ -556,7 +556,7 @@ function exportAce(ns, modules, requireBase, extModules) {
             template = function() {
                 (function() {
                     REQUIRE_NS.require(MODULES, function(m) {
-                        if (typeof module == "object") {
+                        if (typeof module == "object" && typeof exports == "object" && module) {
                             module.exports = m;
                         }
                     });
