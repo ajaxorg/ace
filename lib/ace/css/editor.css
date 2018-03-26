@@ -233,6 +233,31 @@
     transition: opacity 0.18s;
 }
 
+.ace_animate-blinking .ace_cursor {
+    animation-duration: 1000ms;
+    animation-timing-function: step-end;
+    animation-name: blink-ace-animate;
+    animation-iteration-count: infinite;
+}
+
+.ace_animate-blinking.ace_smooth-blinking .ace_cursor {
+    animation-duration: 1000ms;
+    animation-timing-function: ease-in-out;
+    animation-name: blink-ace-animate-smooth;
+}
+    
+@keyframes blink-ace-animate {
+    from, to { opacity: 1; }
+    60% { opacity: 0; }
+}
+
+@keyframes blink-ace-animate-smooth {
+    from, to { opacity: 1; }
+    45% { opacity: 1; }
+    60% { opacity: 0; }
+    85% { opacity: 0; }
+}
+
 .ace_marker-layer .ace_step, .ace_marker-layer .ace_stack {
     position: absolute;
     z-index: 3;
