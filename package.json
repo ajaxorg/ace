@@ -14,7 +14,7 @@
         "url": "http://github.com/ajaxorg/ace.git"
     },
     "devDependencies": {
-        "asyncjs": "0.0.x",
+        "asyncjs": "~0.0.12",
         "jsdom": "9.3.0",
         "amd-loader": "~0.0.4",
         "dryice": "0.4.11",
