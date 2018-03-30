@@ -109,6 +109,17 @@
   ["text",";"]
 ],[
    "start",
+  ["text","        "],
+  ["keyword","int"],
+  ["text"," "],
+  ["identifier","open"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","30"],
+  ["text",";"]
+],[
+   "start",
   ["text","    "],
   ["rparen","}"]
 ],[
