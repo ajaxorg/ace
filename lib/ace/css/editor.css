@@ -50,6 +50,7 @@
     overflow : hidden;
     width: auto;
     top: 0;
+    bottom: 0;
     left: 0;
     cursor: default;
     z-index: 4;
@@ -57,6 +58,7 @@
     -moz-user-select: none;
     -webkit-user-select: none;
     user-select: none;
+    contain: style size layout;
 }
 
 .ace_gutter-active-line {
@@ -214,11 +216,8 @@
 }
 
  @media (-webkit-min-device-pixel-ratio: 1.5), (min-resolution: 1.5dppx) {
-    .ace_text-layer, .ace_gutter-layer, .ace_content {
+    .ace_text-layer, .ace_gutter-layer, .ace_content, .ace_gutter {
         contain: strict;
-        will-change: transform;
-    }
-    .ace_gutter {
         will-change: transform;
     }
 }
