@@ -24,11 +24,7 @@
     position: absolute;
     box-sizing: border-box;
     min-width: 100%;
-    will-change: transform;
-    backface-visibility: hidden;
-    contain: strict;
-    -moz-osx-font-smoothing: auto;
-    -webkit-font-smoothing: subpixel-antialiased;
+    contain: style size layout;
 }
 
 .ace_dragging .ace_scroller:before{
@@ -61,8 +57,6 @@
     -moz-user-select: none;
     -webkit-user-select: none;
     user-select: none;
-    will-change: transform;
-    backface-visibility: hidden;
 }
 
 .ace_gutter-active-line {
@@ -200,9 +194,7 @@
     text-align: right;
     pointer-events: auto;
     height: 1000000px;
-    will-change: transform;
-    backface-visibility: hidden;
-    contain: strict;
+    contain: style size layout;
 }
 
 .ace_text-layer {
@@ -210,21 +202,25 @@
     position: absolute;
     height: 1000000px;
     width: 1000000px;
-    will-change: transform;
-    backface-visibility: hidden;
-    contain: strict;
+    contain: style size layout;
 }
 
-.ace_text-layer div {
-    contain: strict;
+.ace_text-layer > .ace_line, .ace_text-layer > .ace_line_group {
+    contain: style size layout;
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
 }
 
-.ace_text-layer .ace_line_group .ace_line {
-    position: relative;
+ @media (-webkit-min-device-pixel-ratio: 1.5), (min-resolution: 1.5dppx) {
+    .ace_text-layer, .ace_gutter-layer, .ace_content {
+        contain: strict;
+        will-change: transform;
+    }
+    .ace_gutter {
+        will-change: transform;
+    }
 }
 
 .ace_cjk {
