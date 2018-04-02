@@ -37,7 +37,6 @@ require("ace/lib/fixoldbrowsers");
 require("ace/ext/rtl");
 
 require("ace/multi_select");
-require("ace/ext/spellcheck");
 require("./inline_editor");
 var devUtil = require("./dev_util");
 require("./file_drop");
@@ -376,7 +375,70 @@ optionsPanel.add({
         },
         "Show token info": {
             path: "showTokenInfo",
-            position: 1000
+            position: 2000
+        },
+        "Text Input Debugger": {
+            onchange: function(value) {
+                var sp = env.split;
+                if (sp.getSplits() == 2) {
+                    sp.setSplits(1);
+                }
+                if (env.textarea) {
+                    if (env.textarea.detach)
+                        env.textarea.detach();
+                    env.textarea.oldParent.appendChild(env.textarea);
+                    env.textarea.className = env.textarea.oldClassName;
+                    env.textarea = null;
+                }
+                if (value) {
+                    this.showConsole();
+                }
+            },
+            showConsole: function() {
+                var sp = env.split;
+                sp.setSplits(2);
+                sp.setOrientation(sp.BELOW);
+                
+                var editor = sp.$editors[0];
+                var text = editor.textInput.getElement();
+                text.oldParent = text.parentNode;
+                text.oldClassName = text.className;
+                text.className = "text-input-debug";
+                document.body.appendChild(text);
+                env.textarea = text;
+                
+                var addToLog = function(e) {
+                    var data = {
+                        _: e.type, 
+                        range: [text.selectionStart, text.selectionEnd], 
+                        value: text.value, 
+                        key: [e.code, e.key, e.keyCode] 
+                    };
+                    log.navigateFileEnd();
+                    log.insert(JSON.stringify(data) + "\n");
+                    log.renderer.scrollCursorIntoView();
+                };
+                var events = ["select", "input", "keypress", "keydown", "keyup", 
+                    "compositionstart", "compositionupdate", "compositionend", "cut", "copy", "paste"
+                ];
+                events.forEach(function(name) {
+                    text.addEventListener(name, addToLog, true);
+                });
+                text.detach = function() {
+                    events.forEach(function(name) {
+                        text.removeEventListener(name, addToLog, true);
+                    });
+                };
+                
+                var log = sp.$editors[1];
+                if (!this.session)
+                    this.session = new EditSession("");
+                log.setSession(this.session);
+                editor.focus();
+            },
+            getValue: function() {
+                return !!env.textarea;
+            }
         }
     }
 });

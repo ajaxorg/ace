@@ -55,3 +55,12 @@ body {
     color: rgb(255, 255, 255)!important;
     width: 10em!important;
 }*/
+.text-input-debug {
+    height: 100px!important;
+    position: absolute;
+    top: 0px!important;
+    left: 7px!important;
+    width: 260px!important;
+    z-index: 1000!important;
+    opacity: 1!important;
+}
