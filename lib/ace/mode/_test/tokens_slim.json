@@ -45,12 +45,16 @@
   ["string","\"favicon.png\""],
   ["paren",")"]
 ],[
-   ["mlString",4],
-  ["string","    javascript:"]
+   ["language-embed",[],["    ","javascript"],"start"],
+  ["keyword","    javascript:"]
 ],[
-   ["mlString",4],
-  ["indent","        "],
-  ["string","alert('Slim supports embedded javascript!')"]
+   ["language-embed","no_regex",["    ","javascript"],"start"],
+  ["text","    "],
+  ["text","    "],
+  ["support.function","alert"],
+  ["paren.lparen","("],
+  ["string","'Slim supports embedded javascript!'"],
+  ["paren.rparen",")"]
 ],[
    "start"
 ],[
