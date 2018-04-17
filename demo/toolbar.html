@@ -24,6 +24,7 @@
 require.config({paths: { "ace" : "../lib/ace"}});
 // load ace and extensions
 require(["ace/ace", "ace/ext/language_tools"], function(ace) {
+    var buildDom = require("ace/lib/dom").buildDom;
     var editor = ace.edit();
     editor.setOptions({
         theme: "ace/theme/tomorrow_night_eighties",
@@ -87,51 +88,6 @@ require(["ace/ace", "ace/ext/language_tools"], function(ace) {
     
     window.editor = editor;
 });
-
-function buildDom(arr, parent, refs) {
-    if (typeof arr == "string" && arr) {
-        var txt = document.createTextNode(arr);
-        if (parent)
-            parent.appendChild(txt);
-        return txt;
-    }
-    
-    if (!Array.isArray(arr))
-        return arr;
-    if (typeof arr[0] != "string" || !arr[0]) {
-        var els = [];
-        for (var i = 0; i < arr.length; i++) {
-            var ch = buildDom(arr[i], parent, refs);
-            ch && els.push(ch);
-        }
-        return els;
-    }
-    
-    var el = document.createElement(arr[0]);
-    var options = arr[1];
-    var childIndex = 1;
-    if (options && typeof options == "object" && !Array.isArray(options)) {
-        childIndex = 2;
-        Object.keys(options).forEach(function(n) {
-            var val = options[n];
-            if (n === "class") {
-                el.className = Array.isArray(val) ? val.join(" ") : val;
-            } else if (typeof val == "function") {
-                el[n] = val;
-            } else if (n === "ref") {
-                if (refs) refs[val] = el;
-            } else {
-                el.setAttribute(n, val);
-            }
-        });
-    }
-    for (var i = childIndex; i < arr.length; i++)
-        buildDom(arr[i], el, refs);
-    if (parent)
-        parent.appendChild(el);
-    return el;
-};
-
 
 </script>
 
