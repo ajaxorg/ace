@@ -424,7 +424,7 @@ export namespace Ace {
     moveText(fromRange: Range, toPosition: Position, copy?: boolean): void;
     indentRows(startRow: number, endRow: number, indentString: string): void;
     outdentRows(range: Range): void;
-    moveLinesUp(firstRow: number, lastRow, number): void;
+    moveLinesUp(firstRow: number, lastRow: number): void;
     moveLinesDown(firstRow: number, lastRow: number): void;
     duplicateLines(firstRow: number, lastRow: number): void;
     setUseWrapMode(useWrapMode: boolean): void;
@@ -446,7 +446,8 @@ export namespace Ace {
     screenToDocumentPosition(screenRow: number,
                              screenColumn: number,
                              offsetX?: number): Position;
-    documentToScreenPosition(docRow, docColumn): Position;
+    documentToScreenPosition(docRow: number, docColumn: number): Position;
+    documentToScreenPosition(position: Position): Position;
     documentToScreenColumn(row: number, docColumn: number): number;
     documentToScreenRow(docRow: number, docColumn: number): number;
     getScreenLength(): number;
@@ -651,7 +652,7 @@ export namespace Ace {
     setOption<T extends keyof EditorOptions>(name: T, value: EditorOptions[T]): void;
     getOption<T extends keyof EditorOptions>(name: T): EditorOptions[T];
 
-    setKeyboardHandler(keyboardHandler: string, callback?: () => void);
+    setKeyboardHandler(keyboardHandler: string, callback?: () => void): void;
     getKeyboardHandler(): string;
     setSession(session: EditSession): void;
     getSession(): EditSession;
@@ -659,7 +660,7 @@ export namespace Ace {
     getValue(): string;
     getSelection(): Selection;
     resize(force?: boolean): void;
-    setTheme(theme: string, callback?: () => void);
+    setTheme(theme: string, callback?: () => void): void;
     getTheme(): string;
     setStyle(style: string): void;
     unsetStyle(style: string): void;
