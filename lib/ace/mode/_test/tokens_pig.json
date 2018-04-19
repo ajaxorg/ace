@@ -1,0 +1,85 @@
+[[
+   "start",
+  ["text","A = "],
+  ["keyword.control.pig","load"],
+  ["text"," "],
+  ["string.quoted.single.pig","'mobydick.txt'"],
+  ["text",";"]
+],[
+   "start",
+  ["text","B = "],
+  ["keyword.control.pig","foreach"],
+  ["text"," A "],
+  ["keyword.control.pig","generate"],
+  ["text"," "],
+  ["support.function.udf.pig","flatten"],
+  ["text","("],
+  ["support.function.udf.string.pig","TOKENIZE"],
+  ["text","(("],
+  ["storage.datatypes.pig","chararray"],
+  ["text",")"],
+  ["variable.pig","$0"],
+  ["text",")) "],
+  ["keyword.control.pig","as"],
+  ["text"," word;"]
+],[
+   "start",
+  ["text","C = "],
+  ["keyword.control.pig","filter"],
+  ["text"," B "],
+  ["keyword.control.pig","by"],
+  ["text"," word "],
+  ["keyword.operator.comparison.pig","matches"],
+  ["text"," "],
+  ["string.quoted.single.pig","'"],
+  ["constant.character.escape.pig","\\\\"],
+  ["string.quoted.single.pig","w+'"],
+  ["text",";"]
+],[
+   "start",
+  ["text","D = "],
+  ["keyword.control.pig","group"],
+  ["text"," C "],
+  ["keyword.control.pig","by"],
+  ["text"," word;"]
+],[
+   "start",
+  ["text","E = "],
+  ["keyword.control.pig","foreach"],
+  ["text"," D "],
+  ["keyword.control.pig","generate"],
+  ["text"," "],
+  ["support.function.udf.math.pig","COUNT"],
+  ["text","(C) "],
+  ["keyword.control.pig","as"],
+  ["text"," "],
+  ["support.function.udf.math.pig","count"],
+  ["text",", "],
+  ["keyword.control.pig","group"],
+  ["text"," "],
+  ["keyword.control.pig","as"],
+  ["text"," word;"]
+],[
+   "start",
+  ["text","F = "],
+  ["keyword.control.pig","order"],
+  ["text"," E "],
+  ["keyword.control.pig","by"],
+  ["text"," "],
+  ["support.function.udf.math.pig","count"],
+  ["text"," "],
+  ["keyword.control.pig","desc"],
+  ["text",";"]
+],[
+   "start",
+  ["comment.line.double-dash.asciidoc","-- one comment"]
+],[
+   "start",
+  ["comment.block.pig","/* another comment */"]
+],[
+   "start",
+  ["keyword.control.pig","dump"],
+  ["text"," F;"]
+],[
+   "start"
+]]
