@@ -1,92 +1,245 @@
 [[
    "start",
-  ["keyword","test:"],
-  ["text"," recognises "],
+  ["text"," "],
+  ["string.unquoted","foo"]
+],[
+   "start",
+  ["keyword","foo:"],
+  ["text"," "],
+  ["string.unquoted","foo"],
+  ["text"," "],
   ["keyword.operator","AND"],
-  ["text"," as keyword"]
+  ["text"," "],
+  ["string.unquoted","bar"]
 ],[
    "start",
-  ["keyword","test:"],
-  ["text"," recognises "],
+  ["string.unquoted","foo"],
+  ["text"," "],
+  ["keyword.operator","AND"],
+  ["text"," "],
+  ["string.unquoted","bar"]
+],[
+   "start",
+  ["string.unquoted","foo"],
+  ["text"," "],
   ["keyword.operator","OR"],
-  ["text"," as keyword"]
+  ["text"," "],
+  ["string.unquoted","bar"]
 ],[
    "start",
-  ["keyword","test:"],
-  ["text"," recognises "],
+  ["string.unquoted","foo"],
+  ["text"," "],
   ["keyword.operator","NOT"],
-  ["text"," as keyword"]
+  ["text"," "],
+  ["string.unquoted","bar"]
 ],[
    "start",
-  ["keyword","test:"],
-  ["text"," recognises "],
-  ["string","\"hello this is dog\""],
-  ["text"," as string"]
+  ["string","\"foo bar\""]
 ],[
    "start",
-  ["keyword","test:"],
-  ["text"," recognises "],
+  ["string.unquoted","bar"],
+  ["text"," "],
+  ["string","\"foo bar\""]
+],[
+   "start",
+  ["string.unquoted","bar"],
+  ["text"," "],
   ["constant.character.negation","-"],
-  ["string","\"hello this is dog\""],
-  ["text"," as negation with string"]
+  ["string.unquoted","foo"]
 ],[
    "start",
-  ["keyword","test:"],
-  ["text"," recognises "],
+  ["string.unquoted","bar"],
+  ["text"," "],
+  ["constant.character.negation","-"],
+  ["string","\"foo bar\""]
+],[
+   "start",
+  ["constant.character.negation","-"],
+  ["string.unquoted","foo"]
+],[
+   "start",
+  ["constant.character.negation","-"],
+  ["string","\"foo bar\""]
+],[
+   "start",
+  ["string.unquoted","bar"],
+  ["text"," "],
+  ["string.unquoted","foo"],
+  ["constant.character.proximity","~100"]
+],[
+   "start",
+  ["string.unquoted","foo"],
+  ["constant.character.proximity","~100"]
+],[
+   "start",
+  ["string.unquoted","foo"],
   ["constant.character.proximity","~100"],
-  ["text"," as text with proximity"]
+  ["text"," "],
+  ["string.unquoted","bar"]
 ],[
    "start",
-  ["keyword","test:"],
-  ["text"," recognises "],
-  ["string","\"hello this is dog\""],
-  ["constant.character.proximity","~100"],
-  ["text"," as string with proximity"]
+  ["string","\"foo bar\""],
+  ["constant.character.proximity","~10"]
 ],[
    "start",
-  ["keyword","test:"],
-  ["text"," recognises "],
-  ["keyword","raw:"],
-  ["string","\"hello this is dog\""],
-  ["text"," as keyword"]
+  ["string.unquoted","foo"],
+  ["constant.character.proximity","~"]
 ],[
    "start",
-  ["keyword","test:"],
-  ["text"," recognises "],
-  ["keyword","raw:"],
-  ["text","foo as\"keyword'"]
+  ["string.unquoted","bar"],
+  ["text"," "],
+  ["string.unquoted","foo"],
+  ["constant.character.proximity","~"]
 ],[
    "start",
-  ["keyword","test:"],
-  ["text"," recognises "],
-  ["string","\"(\""],
-  ["text"," as opening parenthesis"]
+  ["string.unquoted","foo"],
+  ["constant.character.proximity","~"],
+  ["text"," "],
+  ["string.unquoted","bar"]
 ],[
    "start",
-  ["keyword","test:"],
-  ["text"," recognises "],
-  ["string","\")\""],
-  ["text"," as closing parenthesis"]
+  ["string.unquoted","foo"],
+  ["constant.character.proximity","~0.8"]
 ],[
    "start",
-  ["keyword","test:"],
-  ["text"," recognises foo"],
-  ["constant.character.asterisk","*"],
-  ["text"," as text with asterisk"]
+  ["keyword","field:"],
+  ["string.unquoted","foo"]
 ],[
    "start",
-  ["keyword","test:"],
-  ["text"," recognises foo"],
+  ["keyword","field:"],
+  ["string.unquoted","foo"],
+  ["text"," "],
+  ["string.unquoted","bar"]
+],[
+   "start",
+  ["keyword","field:"],
+  ["string","\"foo bar\""]
+],[
+   "start",
+  ["paren.lparen","("],
+  ["string.unquoted","foo"],
+  ["text"," "],
+  ["keyword.operator","AND"],
+  ["text"," "],
+  ["string.unquoted","bar"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["paren.lparen","("],
+  ["keyword","field:"],
+  ["string.unquoted","foo"],
+  ["text"," "],
+  ["keyword.operator","AND"],
+  ["text"," "],
+  ["keyword","field:"],
+  ["string","\"bar baz\""],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["string.unquoted","foo"],
+  ["constant.character.asterisk","*"]
+],[
+   "start",
+  ["string.unquoted","f"],
   ["constant.character.interro","?"],
-  ["text"," as text with interro"]
+  ["string.unquoted","o"]
 ],[
    "start",
-  ["keyword","test:"],
-  ["text"," recognises single word as text"]
+  ["string.unquoted","f"],
+  ["constant.character.asterisk","*"],
+  ["string.unquoted","o"]
 ],[
    "start",
-  ["text"," foo"]
+  ["constant.character.required","+"],
+  ["string.unquoted","foo"]
 ],[
    "start",
-  ["text"," "]
+  ["constant.character.required","+"],
+  ["string","\"foo bar\""]
+],[
+   "start",
+  ["string.unquoted","foo"],
+  ["constant.character.interro","?"]
+],[
+   "start",
+  ["constant.character.interro","?"],
+  ["string.unquoted","oo"]
+],[
+   "start",
+  ["string.unquoted","foo"]
+],[
+   "start",
+  ["keyword","field:"],
+  ["paren.lparen","("],
+  ["constant.character.negation","-"],
+  ["string.unquoted","foo"],
+  ["text"," "],
+  ["constant.character.required","+"],
+  ["string.unquoted","bar"],
+  ["text"," "],
+  ["constant.character.required","+"],
+  ["string","\"foo bar\""],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["keyword","field:"],
+  ["paren.lparen","{"],
+  ["string.unquoted","foo"],
+  ["text"," "],
+  ["keyword.operator","TO"],
+  ["text"," "],
+  ["string.unquoted","bar"],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["keyword","field:"],
+  ["paren.lparen","["],
+  ["string.unquoted","foo"],
+  ["text"," "],
+  ["keyword.operator","TO"],
+  ["text"," "],
+  ["string.unquoted","bar"],
+  ["paren.rparen","]"]
+],[
+   "start",
+  ["keyword","field:"],
+  ["paren.lparen","["],
+  ["string","\"a b c\""],
+  ["text"," "],
+  ["keyword.operator","TO"],
+  ["text"," "],
+  ["string.unquoted","def"],
+  ["paren.rparen","]"]
+],[
+   "start",
+  ["keyword","field:"],
+  ["paren.lparen","{"],
+  ["string","\"a b c\""],
+  ["text"," "],
+  ["keyword.operator","TO"],
+  ["text"," "],
+  ["string.unquoted","def"],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["keyword","field:"],
+  ["paren.lparen","{"],
+  ["string.unquoted","foo"],
+  ["text"," "],
+  ["keyword.operator","TO"],
+  ["text"," "],
+  ["string","\"bar\""],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["keyword","field:"],
+  ["paren.lparen","{"],
+  ["string.unquoted","20180101"],
+  ["text"," "],
+  ["keyword.operator","TO"],
+  ["text"," "],
+  ["string.unquoted","20190202"],
+  ["paren.rparen","}"]
+],[
+   "start"
 ]]
