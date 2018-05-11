@@ -34,6 +34,8 @@ define(function(require, exports, module) {
 
 require("ace/lib/fixoldbrowsers");
 
+require("ace/ext/rtl");
+
 require("ace/multi_select");
 require("ace/ext/spellcheck");
 require("./inline_editor");
@@ -368,6 +370,10 @@ optionsPanel.add({
         }
     },
     More: {
+        "Rtl Text": {
+            path: "rtlText",
+            position: 900
+        },
         "Show token info": {
             path: "showTokenInfo",
             position: 1000
