@@ -1,115 +1,115 @@
 [[
    "start",
   ["text"," "],
-  ["string.unquoted","foo"]
+  ["term","foo"]
 ],[
    "start",
   ["keyword","foo:"],
   ["text"," "],
-  ["string.unquoted","foo"],
+  ["term","foo"],
   ["text"," "],
   ["keyword.operator","AND"],
   ["text"," "],
-  ["string.unquoted","bar"]
+  ["term","bar"]
 ],[
    "start",
-  ["string.unquoted","foo"],
+  ["term","foo"],
   ["text"," "],
   ["keyword.operator","AND"],
   ["text"," "],
-  ["string.unquoted","bar"]
+  ["term","bar"]
 ],[
    "start",
-  ["string.unquoted","foo"],
+  ["term","foo"],
   ["text"," "],
   ["keyword.operator","OR"],
   ["text"," "],
-  ["string.unquoted","bar"]
+  ["term","bar"]
 ],[
    "start",
-  ["string.unquoted","foo"],
+  ["term","foo"],
   ["text"," "],
   ["keyword.operator","NOT"],
   ["text"," "],
-  ["string.unquoted","bar"]
+  ["term","bar"]
 ],[
    "start",
   ["string","\"foo bar\""]
 ],[
    "start",
-  ["string.unquoted","bar"],
+  ["term","bar"],
   ["text"," "],
   ["string","\"foo bar\""]
 ],[
    "start",
-  ["string.unquoted","bar"],
+  ["term","bar"],
   ["text"," "],
   ["constant.character.negation","-"],
-  ["string.unquoted","foo"]
+  ["term","foo"]
 ],[
    "start",
-  ["string.unquoted","bar"],
+  ["term","bar"],
   ["text"," "],
   ["constant.character.negation","-"],
   ["string","\"foo bar\""]
 ],[
    "start",
   ["constant.character.negation","-"],
-  ["string.unquoted","foo"]
+  ["term","foo"]
 ],[
    "start",
   ["constant.character.negation","-"],
   ["string","\"foo bar\""]
 ],[
    "start",
-  ["string.unquoted","bar"],
+  ["term","bar"],
   ["text"," "],
-  ["string.unquoted","foo"],
+  ["term","foo"],
   ["constant.character.proximity","~100"]
 ],[
    "start",
-  ["string.unquoted","foo"],
+  ["term","foo"],
   ["constant.character.proximity","~100"]
 ],[
    "start",
-  ["string.unquoted","foo"],
+  ["term","foo"],
   ["constant.character.proximity","~100"],
   ["text"," "],
-  ["string.unquoted","bar"]
+  ["term","bar"]
 ],[
    "start",
   ["string","\"foo bar\""],
   ["constant.character.proximity","~10"]
 ],[
    "start",
-  ["string.unquoted","foo"],
+  ["term","foo"],
   ["constant.character.proximity","~"]
 ],[
    "start",
-  ["string.unquoted","bar"],
+  ["term","bar"],
   ["text"," "],
-  ["string.unquoted","foo"],
+  ["term","foo"],
   ["constant.character.proximity","~"]
 ],[
    "start",
-  ["string.unquoted","foo"],
+  ["term","foo"],
   ["constant.character.proximity","~"],
   ["text"," "],
-  ["string.unquoted","bar"]
+  ["term","bar"]
 ],[
    "start",
-  ["string.unquoted","foo"],
+  ["term","foo"],
   ["constant.character.proximity","~0.8"]
 ],[
    "start",
   ["keyword","field:"],
-  ["string.unquoted","foo"]
+  ["term","foo"]
 ],[
    "start",
   ["keyword","field:"],
-  ["string.unquoted","foo"],
+  ["term","foo"],
   ["text"," "],
-  ["string.unquoted","bar"]
+  ["term","bar"]
 ],[
    "start",
   ["keyword","field:"],
@@ -117,17 +117,17 @@
 ],[
    "start",
   ["paren.lparen","("],
-  ["string.unquoted","foo"],
+  ["term","foo"],
   ["text"," "],
   ["keyword.operator","AND"],
   ["text"," "],
-  ["string.unquoted","bar"],
+  ["term","bar"],
   ["paren.rparen",")"]
 ],[
    "start",
   ["paren.lparen","("],
   ["keyword","field:"],
-  ["string.unquoted","foo"],
+  ["term","foo"],
   ["text"," "],
   ["keyword.operator","AND"],
   ["text"," "],
@@ -136,46 +136,46 @@
   ["paren.rparen",")"]
 ],[
    "start",
-  ["string.unquoted","foo"],
+  ["term","foo"],
   ["constant.character.asterisk","*"]
 ],[
    "start",
-  ["string.unquoted","f"],
+  ["term","f"],
   ["constant.character.interro","?"],
-  ["string.unquoted","o"]
+  ["term","o"]
 ],[
    "start",
-  ["string.unquoted","f"],
+  ["term","f"],
   ["constant.character.asterisk","*"],
-  ["string.unquoted","o"]
+  ["term","o"]
 ],[
    "start",
   ["constant.character.required","+"],
-  ["string.unquoted","foo"]
+  ["term","foo"]
 ],[
    "start",
   ["constant.character.required","+"],
   ["string","\"foo bar\""]
 ],[
    "start",
-  ["string.unquoted","foo"],
+  ["term","foo"],
   ["constant.character.interro","?"]
 ],[
    "start",
   ["constant.character.interro","?"],
-  ["string.unquoted","oo"]
+  ["term","oo"]
 ],[
    "start",
-  ["string.unquoted","foo"]
+  ["term","foo"]
 ],[
    "start",
   ["keyword","field:"],
   ["paren.lparen","("],
   ["constant.character.negation","-"],
-  ["string.unquoted","foo"],
+  ["term","foo"],
   ["text"," "],
   ["constant.character.required","+"],
-  ["string.unquoted","bar"],
+  ["term","bar"],
   ["text"," "],
   ["constant.character.required","+"],
   ["string","\"foo bar\""],
@@ -184,21 +184,21 @@
    "start",
   ["keyword","field:"],
   ["paren.lparen","{"],
-  ["string.unquoted","foo"],
+  ["term","foo"],
   ["text"," "],
   ["keyword.operator","TO"],
   ["text"," "],
-  ["string.unquoted","bar"],
+  ["term","bar"],
   ["paren.rparen","}"]
 ],[
    "start",
   ["keyword","field:"],
   ["paren.lparen","["],
-  ["string.unquoted","foo"],
+  ["term","foo"],
   ["text"," "],
   ["keyword.operator","TO"],
   ["text"," "],
-  ["string.unquoted","bar"],
+  ["term","bar"],
   ["paren.rparen","]"]
 ],[
    "start",
@@ -208,7 +208,7 @@
   ["text"," "],
   ["keyword.operator","TO"],
   ["text"," "],
-  ["string.unquoted","def"],
+  ["term","def"],
   ["paren.rparen","]"]
 ],[
    "start",
@@ -218,13 +218,13 @@
   ["text"," "],
   ["keyword.operator","TO"],
   ["text"," "],
-  ["string.unquoted","def"],
+  ["term","def"],
   ["paren.rparen","}"]
 ],[
    "start",
   ["keyword","field:"],
   ["paren.lparen","{"],
-  ["string.unquoted","foo"],
+  ["term","foo"],
   ["text"," "],
   ["keyword.operator","TO"],
   ["text"," "],
@@ -234,12 +234,98 @@
    "start",
   ["keyword","field:"],
   ["paren.lparen","{"],
-  ["string.unquoted","20180101"],
+  ["term","20180101"],
   ["text"," "],
   ["keyword.operator","TO"],
   ["text"," "],
-  ["string.unquoted","20190202"],
+  ["term","20190202"],
   ["paren.rparen","}"]
+],[
+   "start",
+  ["keyword","field:"],
+  ["paren.lparen","{"],
+  ["string","\"2018-01-01\""],
+  ["text"," "],
+  ["keyword.operator","TO"],
+  ["text"," "],
+  ["string","\"2019-02-02\""],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["constant.language.escape","\\+"],
+  ["term","escaped"]
+],[
+   "start",
+  ["constant.language.escape","\\-"],
+  ["term","escaped"]
+],[
+   "start",
+  ["term","esc"],
+  ["constant.language.escape","\\&"],
+  ["term","aped"]
+],[
+   "start",
+  ["term","esc"],
+  ["constant.language.escape","\\|"],
+  ["term","aped"]
+],[
+   "start",
+  ["constant.language.escape","\\!"],
+  ["term","escaped"]
+],[
+   "start",
+  ["constant.language.escape","\\("],
+  ["term","escaped"],
+  ["constant.language.escape","\\)"]
+],[
+   "start",
+  ["constant.language.escape","\\{"],
+  ["term","escaped"],
+  ["constant.language.escape","\\}"]
+],[
+   "start",
+  ["constant.language.escape","\\["],
+  ["term","escaped"],
+  ["constant.language.escape","\\]"]
+],[
+   "start",
+  ["term","escaped"],
+  ["constant.language.escape","\\^"],
+  ["term","4"]
+],[
+   "start",
+  ["constant.language.escape","\\\""],
+  ["term","escaped"],
+  ["constant.language.escape","\\\""]
+],[
+   "start",
+  ["term","escaped"],
+  ["constant.language.escape","\\~"],
+  ["term","0"],
+  ["text","."],
+  ["term","4"]
+],[
+   "start",
+  ["term","escaped"],
+  ["constant.language.escape","\\*"]
+],[
+   "start",
+  ["term","escaped"],
+  ["constant.language.escape","\\?"]
+],[
+   "start",
+  ["term","esc"],
+  ["constant.language.escape","\\:"],
+  ["term","aped"]
+],[
+   "start",
+  ["term","esc"],
+  ["constant.language.escape","\\\\"],
+  ["term","aped"]
+],[
+   "start",
+  ["keyword","esc\\ aped:"],
+  ["term","foo"]
 ],[
    "start"
 ]]

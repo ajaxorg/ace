@@ -37,3 +37,20 @@ field:["a b c" TO def]
 field:{"a b c" TO def}
 field:{foo TO "bar"}
 field:{20180101 TO 20190202}
+field:{"2018-01-01" TO "2019-02-02"}
+\+escaped
+\-escaped
+esc\&aped
+esc\|aped
+\!escaped
+\(escaped\)
+\{escaped\}
+\[escaped\]
+escaped\^4
+\"escaped\"
+escaped\~0.4
+escaped\*
+escaped\?
+esc\:aped
+esc\\aped
+esc\ aped:foo
