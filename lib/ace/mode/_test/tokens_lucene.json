@@ -327,5 +327,8 @@
   ["keyword","esc\\ aped:"],
   ["term","foo"]
 ],[
+   "start",
+  ["string","\"foo\\\"bar\""]
+],[
    "start"
 ]]

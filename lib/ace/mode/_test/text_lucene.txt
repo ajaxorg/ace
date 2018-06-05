@@ -54,3 +54,4 @@ escaped\?
 esc\:aped
 esc\\aped
 esc\ aped:foo
+"foo\"bar"
