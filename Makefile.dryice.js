@@ -112,9 +112,9 @@ function ace() {
 }
 
 function buildTypes() {
-    copy.file(ACE_HOME + "/ace.d.ts", BUILD_DIR + "/ace.d.ts");
-
+    var definitions = fs.readFileSync(ACE_HOME + '/ace.d.ts', 'utf8');
     var paths = fs.readdirSync(BUILD_DIR + '/src-noconflict');
+    var moduleRef = '/// <reference path="./ace-modules.d.ts" />';
 
     var pathModules = paths.map(function(path) {
         if (/^(mode|theme|ext|keybinding)-/.test(path)) {
@@ -124,7 +124,8 @@ function buildTypes() {
     }).filter(Boolean).join('\n')
         + "\ndeclare module 'ace-builds/webpack-resolver';\n";
 
-    fs.appendFileSync(BUILD_DIR + '/ace.d.ts', '\n' + pathModules);
+    fs.writeFileSync(BUILD_DIR + '/ace.d.ts', moduleRef + '\n' + definitions);
+    fs.writeFileSync(BUILD_DIR + '/ace-modules.d.ts', pathModules);
     
     var loader = paths.map(function(path) {
         if (/\.js$/.test(path) && !/^ace\.js$/.test(path)) {
