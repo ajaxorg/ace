@@ -348,6 +348,15 @@ editor.replace('bar');</code></pre>
     },
     readOnly: true // false if this command should not apply in readOnly mode
 });</code></pre>
+                            <h3>Configure dynamic loading of modes and themes</h3>
+                            <p>By default ace detcts the url for dynamic loading by finding the script node for ace.js.
+                            This doesn't work if ace.js is not loaded with a separate script tag, and in this case it is required to set url explicitely</p>
+                            <pre><code class="javascript">ace.config.set("basePath", "https://url.to.a/folder/that/contains-ace-modes");</code></pre>
+                            <p>Path for one module alone can be configured with:</p>
+                            <pre><code class="javascript">ace.config.setModuleUrl("ace/theme/textmate", "url for textmate.js");</code></pre>
+                            <p>When using ace with webpack, it is possible to configure paths for all submodules using</p>
+                            <pre><code class="javascript">require("ace-builds/webpack-resolver");</code></pre>
+                            <p>which depends on <a href="https://github.com/webpack-contrib/file-loader">file-loader</a></p>
                         </div>
                         <div class="tab-pane fade" id="higlighter">
                             <h1>Creating a Syntax Highlighter for Ace</h1>
