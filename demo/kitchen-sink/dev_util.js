@@ -31,6 +31,8 @@
 define(function(require, exports, module) {
 var dom = require("ace/lib/dom");
 var Range = require("ace/range").Range;
+var EditSession = require("ace/edit_session").EditSession;
+var UndoManager = require("ace/undomanager").UndoManager;
 function warn() {
     var s = (new Error()).stack || "";
     s = s.split("\n");
@@ -58,8 +60,8 @@ function def(o, key, get) {
     }
 }
 def(window, "ace", function(){ warn(); return window.env.editor });
-def(window, "editor", function(){ warn(); return window.env.editor });
-def(window, "session", function(){ warn(); return window.env.editor.session });
+def(window, "editor", function(){ warn(); return window.env.editor == logEditor ? editor : window.env.editor });
+def(window, "session", function(){ return window.editor.session });
 def(window, "split", function(){ warn(); return window.env.split });
 
 
@@ -97,6 +99,8 @@ exports.addGlobals = function() {
     window.getSelection = getSelection;
     window.setSelection = setSelection;
     window.testSelection = testSelection;
+    window.setValue = setValue;
+    window.testValue = testValue;
 };
 
 function getSelection(editor) {
@@ -138,79 +142,192 @@ function setSelection(editor, data) {
 function testSelection(editor, data) {
     assert.equal(getSelection(editor) + "", data + "");
 }
+function setValue(editor, value) {
+    editor.setValue(value, 1);
+}
+function testValue(editor, value) {
+    assert.equal(editor.getValue(), value);
+}
 
-exports.recordTestCase = function() {
+ 
+var editor;
+var logEditor;
+var logSession
+exports.openLogView = function() {
     exports.addGlobals();
-    var editor = window.editor;
-    var testcase = window.testcase = [];
-    var assert;
+    var sp = window.env.split;
+    sp.setSplits(1);
+    sp.setSplits(2);
+    sp.setOrientation(sp.BESIDE);
+    editor = sp.$editors[0];
+    logEditor = sp.$editors[1];
+    
+    if (!logSession) {
+        logSession = new EditSession(localStorage.lastTestCase || "", "ace/mode/javascript");
+        logSession.setUndoManager(new UndoManager)
+    }
+    logEditor.setSession(logSession);
+    logEditor.session.foldAll();
+    logEditor.on("input", save);
+}
+exports.record = function() {
+    exports.addGlobals();
+    exports.openLogView();
+    
+    logEditor.setValue("var Range = require(\"ace/range\").Range;"
+        + getSelection + "\n"
+        + testSelection + "\n"
+        + setSelection + "\n"
+        + testValue + "\n"
+        + setValue + "\n"
+        + "\n//-------------------------------------\n", 1);
+    logEditor.session.foldAll();
 
-    testcase.push({
+    addAction({
         type: "setValue",
         data: editor.getValue()
-    }, {
+    });
+    addAction({
         type: "setSelection",
         data: getSelection(editor)
     });
-    editor.commands.on("afterExec", function(e) {
-        testcase.push({
-            type: "exec",
-            data: e
-        });
-        testcase.push({
-            type: "value",
-            data: editor.getValue()
-        });
-        testcase.push({
-            type: "selection",
-            data: getSelection(editor)
-        });
+    editor.commands.on("afterExec", onAfterExec);
+    editor.on("mouseup", onMouseUp);
+    editor.selection.on("beforeEndOperation", onBeforeEndOperation);
+    editor.session.on("change", reportChange);
+    editor.selection.on("changeCursor", reportCursorChange);
+    editor.selection.on("changeSelection", reportSelectionChange);
+}
+
+exports.stop = function() {
+    save();
+    editor.commands.off("afterExec", onAfterExec);
+    editor.off("mouseup", onMouseUp);
+    editor.off("beforeEndOperation", onBeforeEndOperation);
+    editor.session.off("change", reportChange);
+    editor.selection.off("changeCursor", reportCursorChange);
+    editor.selection.off("changeSelection", reportSelectionChange);
+    logEditor.off("input", save);
+}
+exports.closeLogView = function() {
+    exports.stop(); 
+    var sp = window.env.split;
+    sp.setSplits(1);
+}
+
+exports.play = function() {
+    exports.openLogView();
+    exports.stop();
+    var code = logEditor ? logEditor.getValue() : localStorage.lastTestCase;
+    var fn = new Function("editor", "debugger;\n" + code);
+    fn(editor);
+}
+var reportChange = reportEvent.bind(null, "change");
+var reportCursorChange = reportEvent.bind(null, "CursorChange");
+var reportSelectionChange = reportEvent.bind(null, "SelectionChange");
+
+function save() {
+    localStorage.lastTestCase = logEditor.getValue();
+}
+
+function reportEvent(name) {
+    addAction({
+        type: "event",
+        source: name
     });
-    editor.on("mouseup", function() {
-        testcase.push({
-            type: "setSelection",
-            data: getSelection(editor)
-        });
+} 
+function onSelection() {
+    addAction({
+        type: "event",
+        data: "change",
+        source: "operationEnd"
     });
-    
-    testcase.toString = function() {
-        var lastValue = "";
-        // var lastSelection = ""
-        var str = this.map(function(x) {
-            var data = x.data;
-            switch (x.type) {
-                case "exec": 
-                    return 'editor.execCommand("' 
-                        + data.command.name
-                        + (data.args ? '", ' + JSON.stringify(data.args) : '"')
-                    + ')';
-                case "setSelection":
-                    return 'setSelection(editor, ' + JSON.stringify(data)  + ')';
-                case "setValue":
-                    if (lastValue != data) {
-                        lastValue = data;
-                        return 'editor.setValue(' + JSON.stringify(data) + ', -1)';
-                    }
-                    return;
-                case "selection":
-                    return 'testSelection(editor, ' + JSON.stringify(data) + ')';
-                case "value":
-                    if (lastValue != data) {
-                        lastValue = data;
-                        return 'assert.equal('
-                            + 'editor.getValue(),'
-                            + JSON.stringify(data)
-                        + ')';
-                    }
-                    return;
+} 
+function onBeforeEndOperation() {
+    addAction({
+        type: "setSelection",
+        data: getSelection(editor),
+        source: "operationEnd"
+    });
+} 
+function onMouseUp() {
+    addAction({
+        type: "setSelection",
+        data: getSelection(editor),
+        source: "mouseup"
+    });
+}
+function onAfterExec(e) {
+    addAction({
+        type: "exec",
+        data: e
+    });
+    addAction({
+        type: "value",
+        data: editor.getValue()
+    });
+    addAction({
+        type: "selection",
+        data: getSelection(editor)
+    });
+}
+
+function addAction(a) {
+    var str = toString(a);
+    if (str) {
+        logEditor.insert(str + "\n");
+        logEditor.renderer.scrollCursorIntoView();
+    }
+}
+
+var lastValue = "";
+function toString(x) {
+    var str = "";
+    var data = x.data;
+    switch (x.type) {
+        case "exec": 
+            str = 'editor.execCommand("' 
+                + data.command.name
+                + (data.args ? '", ' + JSON.stringify(data.args) : '"')
+            + ')';
+            break;
+        case "setSelection":
+            str = 'setSelection(editor, ' + JSON.stringify(data)  + ')';
+            break;
+        case "setValue":
+            if (lastValue != data) {
+                lastValue = data;
+                str = 'editor.setValue(' + JSON.stringify(data) + ', -1)';
             }
-        }).filter(Boolean).join("\n");
-        
-        return getSelection + "\n"
-            + testSelection + "\n"
-            + setSelection + "\n"
-            + "\n" + str + "\n";
-    };
+            else {
+                return;
+            }
+            break;
+        case "selection":
+            str = 'testSelection(editor, ' + JSON.stringify(data) + ')';
+            break;
+        case "value":
+            if (lastValue != data) {
+                lastValue = data;
+                str = 'testValue(editor, ' + JSON.stringify(data) + ')';
+            }
+            else  {
+                return;
+            }
+            break;
+    }
+    return str + (x.source ? " // " + x.source : "");
+}
+
+exports.getUI = function(container) {
+    return ["div", {},
+        " Test ", 
+        ["button", {onclick: exports.openLogView}, "O"],
+        ["button", {onclick: exports.record}, "Record"],
+        ["button", {onclick: exports.stop}, "Stop"],
+        ["button", {onclick: exports.play}, "Play"],
+        ["button", {onclick: exports.closeLogView}, "X"],
+    ];
 };
 
 
