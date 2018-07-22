@@ -184,8 +184,8 @@ function demo() {
                 removeRequireJS = true;
                 var scripts = m.split(/,\s*/);
                 var result = [];
-                function comment(str) {result.push("<!-- " + str + " -->")}
-                function script(str) {result.push('<script src="../src/' + str + '.js"></script>')}
+                function comment(str) {result.push("<!-- " + str + " -->");}
+                function script(str) {result.push('<script src="../src/' + str + '.js"></script>');}
                 scripts.forEach(function(s) {
                     s = s.replace(/"/g, "");
                     if (s == "ace/ace") {
@@ -419,10 +419,11 @@ function buildAce(options, callback) {
             }]
         }, "worker-" + name, addCb());
     });
+    
     // 
     function addCb() {
         addCb.count = (addCb.count || 0) + 1; 
-        return done
+        return done;
     }
     function done() {
         if (--addCb.count > 0)
@@ -431,10 +432,12 @@ function buildAce(options, callback) {
             sanityCheck(options, callback);
         if (options.noconflict && !options.compress)
             buildTypes();
-            
+
+        saveCss();
+        
         if (callback) 
             return callback();
-        console.log("Finished building " + getTargetDir(options))
+        console.log("Finished building " + getTargetDir(options));
     }
 }
 
@@ -461,17 +464,28 @@ function normalizeLineEndings(module) {
     return module.source = module.source.replace(/\r\n/g, "\n");
 }
 
+var cssModules = {};
+function saveCss() {
+    var css = "";
+    for (var id in cssModules) {
+        if (cssModules[id]) {
+            css += "\n/*" + id + "*/\n" + cssModules[id];
+        }
+    }
+    fs.writeFileSync(BUILD_DIR + "/all.css", css, "utf8");
+}
 function optimizeTextModules(sources) {
     var textModules = {};
-    return sources.filter(function(pkg) {
+    return sources = sources.filter(function(pkg) {
         if (!pkg.id) {
             return true;
         }
         else if (pkg.id.indexOf("text!") > -1) {
-            detectTextModules(pkg);
+            transformTextModule(pkg);
             return false;
         }
         else {
+            addInlineCss(pkg.source, pkg.id);
             pkg.source = rewriteTextImports(pkg.source, pkg.deps);
             return true;
         }
@@ -484,6 +498,12 @@ function optimizeTextModules(sources) {
         return pkg;
     });
     
+    function addInlineCss(source, id) {
+        cssModules[id] = "";
+        source.replace(/importCssString\("([^"\\]|\\[\s\S])+"/g, function(css) {
+            cssModules[id] += css.slice(1, -1).replace(/\\([\s\S])/g, "$1");
+        });
+    }
     function rewriteTextImports(text, deps) {
         return text.replace(/ require\(['"](?:ace|[.\/]+)\/requirejs\/text!(.*?)['"]\)/g, function(_, call) {
             if (call) {
@@ -501,9 +521,11 @@ function optimizeTextModules(sources) {
             }
         });
     }
-    function detectTextModules(pkg) {
+    function transformTextModule(pkg) {
         var input = pkg.source.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
         if (/\.css$/.test(pkg.id)) {
+            // if (!/theme/.test(pkg.id))
+                cssModules[pkg.id] = pkg.source;
             // remove unnecessary whitespace from css
             input = input.replace(/\n\s+/g, "\n");
             input = '"' + input.replace(/\n/g, '\\\n') + '"';
@@ -616,7 +638,7 @@ function addSnippetFile(modeName) {
 function compress(text) {
     var uglify = require("dryice").copy.filter.uglifyjs;
     uglify.options.mangle_toplevel = {except: ["ACE_NAMESPACE", "requirejs"]};
-    uglify.options.beautify = {ascii_only: true, inline_script: true}
+    uglify.options.beautify = {ascii_only: true, inline_script: true};
     return asciify(uglify(text));
     // copy.filter.uglifyjs.options.ascii_only = true; doesn't work with some uglify.js versions
     function asciify(text) {

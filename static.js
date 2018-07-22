@@ -70,7 +70,11 @@ http.createServer(function(req, res) {
 function writeHead(res, code, contentType) {
     var headers = {
         "Access-Control-Allow-Origin": "file://",
-        "Access-Control-Allow-Methods": "PUT, GET, OPTIONS, HEAD"
+        "Access-Control-Allow-Methods": "PUT, GET, OPTIONS, HEAD",
+        "Content-Security-Policy": ""
+            + "default-src  'self' blob: 'sha256-X6PWDJzV+nYIDTJluzs5F6Af8ZSpP8idqFuRvE5I4p0=' https://cloud9ide.github.io ; "
+            + "style-src  'self' 'sha256-47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=';" // <-sha of empty string
+            + "img-src  'self' data:"
     };
     headers["Content-Type"] = contentType || "text/plain";
     res.writeHead(code, headers);

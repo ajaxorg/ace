@@ -47,6 +47,13 @@ body {
     right: 0;
     border-left: 1px solid;
 }
+.test-links { text-align: left; padding: 0.5em 1em; line-height: 2; }
+.test-links a {color: whitesmoke }
+.hidden-scroll-container { position:absolute; height:100%; width:260px}
+.hidden-scroll-container > div { position: absolute; overflow: hidden; top:100px; bottom:0}
+#optionsPanel {width: 120%; height:100%; overflow-y: scroll}
+#ace-logo { width: 134px;margin: 46px 0px 4px 66px;}
+#c9-logo{width: 172px; margin: -9px 30px -12px 51px;}
 
 /* .ace_text-input {
     z-index: 10!important;
