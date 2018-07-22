@@ -424,11 +424,17 @@ optionsPanel.add({
                 events.forEach(function(name) {
                     text.addEventListener(name, addToLog, true);
                 });
+                function onMousedown(ev) {
+                    if (ev.domEvent.target == text)
+                        ev.$pos = editor.getCursorPosition();
+                }
                 text.detach = function() {
                     events.forEach(function(name) {
                         text.removeEventListener(name, addToLog, true);
                     });
+                    editor.off("mousedown", onMousedown);
                 };
+                editor.on("mousedown", onMousedown);
                 
                 var log = sp.$editors[1];
                 if (!this.session)
@@ -540,7 +546,6 @@ optionsPanelContainer.insertBefore(
 require("ace/ext/language_tools");
 env.editor.setOptions({
     enableBasicAutocompletion: true,
-    enableLiveAutocompletion: false,
     enableSnippets: true
 });
 

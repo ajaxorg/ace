@@ -57,10 +57,12 @@ body {
 }*/
 .text-input-debug {
     height: 100px!important;
-    position: absolute;
+    position: absolute!important;
+    transform: none!important;
     top: 0px!important;
     left: 7px!important;
     width: 260px!important;
     z-index: 1000!important;
     opacity: 1!important;
+    font-size: 1em!important;
 }
