@@ -175,7 +175,7 @@ exports.record = function() {
     exports.addGlobals();
     exports.openLogView();
     
-    logEditor.setValue("var Range = require(\"ace/range\").Range;"
+    logEditor.setValue("var Range = require(\"ace/range\").Range;\n"
         + getSelection + "\n"
         + testSelection + "\n"
         + setSelection + "\n"
