@@ -1,7 +1,7 @@
 language: node_js
 
 node_js:
-    - "4"
+    - "8"
 
 install:
     - cleanup() { find node_modules -regextype posix-extended -iregex '.*((test|example|doc|demo)s?|\.(md|ts)|license|idea|coverage|file.txt)$' -exec rm -rf {} \; || echo $?; };
@@ -9,7 +9,17 @@ install:
       cmp --silent package.json node_modules/package.json || install;
 
 script:
-    - node node_modules/eslint/bin/eslint "lib/ace/**/*.js"
+    -   changes=$(git diff --name-only origin/HEAD);
+        if [ "$changes" == "" ]; then
+            echo "checking all files";
+            node node_modules/eslint/bin/eslint "lib/ace/**/*.js";
+        else
+            changes=$(echo "$changes" | grep -P '.js$');
+            echo "checking $changes";
+            if [ "$changes" != "" ]; then
+                node node_modules/eslint/bin/eslint $changes;
+            fi
+        fi
     - node_modules/.bin/istanbul cover lib/ace/test/all.js
     - node_modules/.bin/codecov
 
