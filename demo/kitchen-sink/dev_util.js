@@ -30,6 +30,7 @@
 
 define(function(require, exports, module) {
 var dom = require("ace/lib/dom");
+var event = require("ace/lib/event");
 var Range = require("ace/range").Range;
 var EditSession = require("ace/edit_session").EditSession;
 var UndoManager = require("ace/undomanager").UndoManager;
@@ -174,7 +175,7 @@ exports.record = function() {
     exports.addGlobals();
     exports.openLogView();
     
-    logEditor.setValue("var Range = require(\"ace/range\").Range;"
+    logEditor.setValue("var Range = require(\"ace/range\").Range;\n"
         + getSelection + "\n"
         + testSelection + "\n"
         + setSelection + "\n"
@@ -330,5 +331,100 @@ exports.getUI = function(container) {
     ];
 };
 
+
+exports.textInputDebugger = {
+    position: 2000,
+    onchange: function(value) {
+        var sp = env.split;
+        if (sp.getSplits() == 2) {
+            sp.setSplits(1);
+        }
+        if (env.textarea) {
+            if (env.textarea.detach)
+                env.textarea.detach();
+            env.textarea.oldParent.appendChild(env.textarea);
+            env.textarea.className = env.textarea.oldClassName;
+            env.textarea = null;
+        }
+        if (value) {
+            this.showConsole();
+        }
+    },
+    showConsole: function() {
+        var sp = env.split;
+        sp.setSplits(2);
+        sp.setOrientation(sp.BELOW);
+        
+        var editor = sp.$editors[0];
+        var text = editor.textInput.getElement();
+        text.oldParent = text.parentNode;
+        text.oldClassName = text.className;
+        text.className = "text-input-debug";
+        document.body.appendChild(text);
+        env.textarea = text;
+        
+        var addToLog = function(e) {
+            if (ignoreEvents) return;
+            var data = {
+                _: e.type, 
+                range: [text.selectionStart, text.selectionEnd], 
+                value: text.value, 
+                key: e.key && {
+                    code: e.code,
+                    key: e.key, 
+                    keyCode: e.keyCode
+                },
+                modifier: event.getModifierString(e) || undefined                
+            };
+            log.navigateFileEnd();
+            var str = JSON.stringify(data).replace(/"(\w+)":/g, " $1: ");
+            log.insert(str + ",\n");
+            log.renderer.scrollCursorIntoView();
+        };
+        var events = ["select", "input", "keypress", "keydown", "keyup", 
+            "compositionstart", "compositionupdate", "compositionend", "cut", "copy", "paste"
+        ];
+        events.forEach(function(name) {
+            text.addEventListener(name, addToLog, true);
+        });
+        function onMousedown(ev) {
+            if (ev.domEvent.target == text)
+                ev.$pos = editor.getCursorPosition();
+        }
+        text.detach = function() {
+            delete text.value;
+            delete text.setSelectionRange;
+            
+            events.forEach(function(name) {
+                text.removeEventListener(name, addToLog, true);
+            });
+            editor.off("mousedown", onMousedown);
+        };
+        editor.on("mousedown", onMousedown);
+        
+        text.__defineSetter__("value", function(v) {
+            this.__proto__.__lookupSetter__("value").call(this, v); 
+            console.log(v);
+        });
+        text.__defineGetter__("value", function(v) {
+            var v = this.__proto__.__lookupGetter__("value").call(this); 
+            return v;
+        });
+        text.setSelectionRange = function(start, end) {
+            ignoreEvents = true;
+            this.__proto__.setSelectionRange.call(this, start, end)
+            ignoreEvents = false;
+        }
+        
+        var log = sp.$editors[1];
+        if (!this.session)
+            this.session = new EditSession("");
+        log.setSession(this.session);
+        editor.focus();
+    },
+    getValue: function() {
+        return !!env.textarea;
+    }
+}
 
 });

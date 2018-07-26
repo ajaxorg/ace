@@ -37,7 +37,6 @@ require("ace/lib/fixoldbrowsers");
 require("ace/ext/rtl");
 
 require("ace/multi_select");
-require("ace/ext/spellcheck");
 require("./inline_editor");
 var devUtil = require("./dev_util");
 require("./file_drop");
@@ -376,8 +375,9 @@ optionsPanel.add({
         },
         "Show token info": {
             path: "showTokenInfo",
-            position: 1000
-        }
+            position: 2000
+        },
+        "Text Input Debugger": devUtil.textInputDebugger
     }
 });
 
@@ -478,7 +478,6 @@ optionsPanelContainer.insertBefore(
 require("ace/ext/language_tools");
 env.editor.setOptions({
     enableBasicAutocompletion: true,
-    enableLiveAutocompletion: false,
     enableSnippets: true
 });
 
