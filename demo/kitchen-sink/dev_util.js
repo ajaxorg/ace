@@ -332,6 +332,7 @@ exports.getUI = function(container) {
 };
 
 
+var ignoreEvents = false;
 exports.textInputDebugger = {
     position: 2000,
     onchange: function(value) {
@@ -374,7 +375,7 @@ exports.textInputDebugger = {
                     key: e.key, 
                     keyCode: e.keyCode
                 },
-                modifier: event.getModifierString(e) || undefined                
+                modifier: event.getModifierString(e) || undefined
             };
             log.navigateFileEnd();
             var str = JSON.stringify(data).replace(/"(\w+)":/g, " $1: ");
