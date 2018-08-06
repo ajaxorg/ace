@@ -330,7 +330,7 @@ function buildAceModuleInternal(opts, callback) {
         pathConfig: pathConfig,
         additional: opts.additional,
         enableBrowser: true,
-        keepDepArrays: opts.noconflict ? "" : "all",
+        keepDepArrays: opts.noconflict || opts.projectType == "worker" ? "" : "all",
         noArchitect: true,
         compress: false,
         ignore: opts.ignore || [],

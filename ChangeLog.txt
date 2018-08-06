@@ -1,3 +1,10 @@
+2018.08.06 Version 1.4.0
+
+* remove usage of innerHTML
+* improved handling of textinput for IME and mobile
+* add support for relative line numbers
+* improve autocompletion popup 
+
 2018.03.26 Version 1.3.3
 * fix regession in static-highlight extension
 * use css animation for cursor blinking
