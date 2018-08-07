@@ -47,7 +47,7 @@ class AcePlayground extends HTMLElement {
     constructor() {
         super();
         
-        var shadow = this.createShadowRoot({mode: "open"});
+        var shadow = this.attachShadow({mode: "open"});
         
         var dom = require("ace/lib/dom");
         dom.buildDom(["div", {id: "host"},
