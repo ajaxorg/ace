@@ -1,3 +1,6 @@
+2018.08.07 Version 1.4.1
+* fix regression in autocomplete
+
 2018.08.06 Version 1.4.0
 
 * remove usage of innerHTML
