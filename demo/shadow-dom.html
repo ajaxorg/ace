@@ -81,13 +81,13 @@ class AcePlayground extends HTMLElement {
             theme: "ace/theme/solarized_light",
             mode: "ace/mode/html",
             value: "<div>\n\thollow world!\n</div>\n<script><\/script>",
-            autoScrollEditorIntoView: false
+            autoScrollEditorIntoView: true
         });
         var cssEditor = ace.edit(shadow.querySelector("#css"), {
             theme: "ace/theme/solarized_dark",
             mode: "ace/mode/css",
             value: "*{\n\tcolor:red\n}",
-            autoScrollEditorIntoView: false
+            autoScrollEditorIntoView: true
         });
         
         var preview = shadow.querySelector("#preview");
