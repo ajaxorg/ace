@@ -276,6 +276,12 @@ editor.session.insert({row: 0, column:0}, Date()+"");</code></pre>
                             <pre><code class="language-javascript">editor.insertSnippet("a$0b"); 
 editor.session.markUndoGroup(); 
 editor.insertSnippet("x$0y");</code></pre>
+                            <p>To disable undo of a an edit in a collaborative editor</p>
+                            <pre><code class="language-javascript">var rev = session.$undoManager.startNewGroup(); // start new undo group
+... // apply the edit 
+session.$undoManager.markIgnored(rev); // mark the new group as ignored</code></pre>
+
+
                             <p>To implement undo/redo buttons see <a target="_blank" rel="noreferer noopener" href="https://ace.c9.io/demo/toolbar.html">https://ace.c9.io/demo/toolbar.html</a></p>
 
                             <h3>Searching</h3>
