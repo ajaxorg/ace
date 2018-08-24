@@ -73,6 +73,20 @@ export namespace Ace {
     restoreRange(range: Range): void;
   }
 
+  interface Folding {
+    getFoldAt(row:number, column:number, side:number):Fold;
+    getFoldsInRange(range:Range):Array<Fold>;
+    getFoldsInRangeList(ranges:Array<Range>):Array<Fold>;
+    getAllFolds():Array<Fold>;
+    addFold(placeholder:string, range:Range):Fold;
+    addFolds(folds:Array<Fold>);
+    removeFold(fold:Fold);
+    removeFolds(folds:Array<Fold>);
+    expandFold(fold:Fold);
+    expandFolds(folds:Array<Fold>);
+    foldAll(startRow:number, endRow:number, depth:number);
+  }
+
   export interface Range {
     start: Point;
     end: Point;
@@ -269,6 +283,16 @@ export namespace Ace {
     getLineTokens(line: string, startState: string | string[]): Token[];
   }
 
+  interface TokenIterator{
+    getCurrentToken():Token;
+    getCurrentTokenColumn():number;
+    getCurrentTokenRow():number;
+    getCurrentTokenPosition():Point;
+    getCurrentTokenRange():Range;
+    stepBackward():Token;
+    stepForward():Token;
+  }
+  
   export interface SyntaxMode {
     getTokenizer(): Tokenizer;
     toggleCommentLines(state: any,
@@ -337,7 +361,7 @@ export namespace Ace {
     isAtBookmark(): boolean;
   }
 
-  export interface EditSession extends EventEmitter, OptionsProvider {
+  export interface EditSession extends EventEmitter, OptionsProvider, Folding {
     selection: Selection;
 
     on(name: 'changeFold',
