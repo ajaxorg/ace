@@ -80,19 +80,33 @@ function serveDirectory(filename, uri, req, res) {
     var files = fs.readdirSync(filename);
     writeHead(res, 200, "text/html");
     
-    files.push(".", "..");
+    files.push("..", ".");
     var html = files.map(function(name) {
-        var href = uri + "/" + name;
-        href = href.replace(/[\/\\]+/g, "/").replace(/\/$/g, "");
         try {
             var stat = fs.statSync(filename + "/" + name);
-            if (stat.isDirectory())
-                href += "/";
-            return "<a href='" + href + "'>" + name + "</a><br>";
         } catch(e) {}
-    }).filter(Boolean);
+        var index = name == "." ? 2 : name == ".." ? 3 : stat.isDirectory() ? 1 : 0;
+        return { name: name, index: index, size: stat.size };
+    }).filter(Boolean).sort(function(a, b) {
+        if (a.index == b.index)
+            return a.name.localeCompare(b.name);
+        return b.index - a.index;
+    }).map(function(stat) {
+        var name = stat.name;
+        if (stat.index) name += "/";
+        var size = ""
+        if (!stat.size) size = ""
+        else if (stat.size < 1024) size = stat.size + "b";
+        else if (stat.size < 1024 * 1024) size = (stat.size / 1024).toFixed(2) + "kb";
+        else size = (stat.size / 1024 / 1024).toFixed(2) + "mb";
+        return "<tr>"
+            + "<td>&nbsp;&nbsp;" + size + "&nbsp;&nbsp;</td>"
+            + "<td><a href='" + name + "'>" + name + "</a></td>"
+        + "</tr>";
+    }).join("");
+    html = "<table>" + html + "</table>"
 
-    res._hasBody && res.write(html.join(""));
+    res._hasBody && res.write(html);
     res.end();
 }
 
