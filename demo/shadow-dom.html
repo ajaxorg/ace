@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Editor</title>
+  <style type="text/css" media="screen">
+    .scrollmargin {
+        text-align: center;
+    }
+    .large-button {
+        color: lightblue;
+        cursor: pointer;
+        font: 30px arial;
+        padding: 20px;
+        text-align: center;
+        border: medium solid transparent;
+        display: inline-block;
+    }
+    .large-button:hover {
+        border: medium solid lightgray;
+        border-radius: 10px 10px 10px 10px;
+        box-shadow: 0 0 12px 0 lightblue;
+    }
+    body {
+        transform: translateZ(0);
+    }
+  </style>
+</head>
+<body>
+
+<div class="scrollmargin">
+    <span onclick="add()" class="large-button">+</span>
+</div>
+
+<ace-playground></ace-playground>
+
+<script src="kitchen-sink/require.js"></script>
+<script>
+require.config({paths: { "ace" : "../lib/ace"}});
+require(["ace/ace"], function(ace) {
+
+var dom = require("ace/lib/dom");
+
+
+class AcePlayground extends HTMLElement {
+    constructor() {
+        super();
+        
+        var shadow = this.attachShadow({mode: "open"});
+        
+        var dom = require("ace/lib/dom");
+        dom.buildDom(["div", {id: "host"},
+            ["div", {id: "html"}],
+            ["div", {id: "css"}], 
+            ["iframe", {id: "preview"}],
+            ["style", `
+                #host {
+                    border: solid 1px gray;
+                    display: grid;
+                    grid-template-areas: "html preview" "css preview";
+                }
+                #html {
+                    grid-area: html;
+                    height: 200px;
+                }
+                #css {
+                    grid-area: css;
+                    height: 200px;
+                }
+                #preview {
+                    grid-area: preview;
+                    width: 100%;
+                    height: 100%;
+                    border: none;
+                }
+            `]
+        ], shadow);
+        
+        var htmlEditor = ace.edit(shadow.querySelector("#html"), {
+            theme: "ace/theme/solarized_light",
+            mode: "ace/mode/html",
+            value: "<div>\n\thollow world!\n</div>\n<script><\/script>",
+            autoScrollEditorIntoView: true
+        });
+        var cssEditor = ace.edit(shadow.querySelector("#css"), {
+            theme: "ace/theme/solarized_dark",
+            mode: "ace/mode/css",
+            value: "*{\n\tcolor:red\n}",
+            autoScrollEditorIntoView: true
+        });
+        
+        var preview = shadow.querySelector("#preview");
+        
+        this.htmlEditor = htmlEditor;        
+        this.cssEditor = cssEditor;
+        this.preview = preview;
+        
+        htmlEditor.renderer.attachToShadowRoot();
+        
+        this.updatePreview = this.updatePreview.bind(this)
+        htmlEditor.on("input", this.updatePreview);
+        cssEditor.on("input", this.updatePreview);
+    
+        this.updatePreview();
+    }
+    updatePreview() {
+        var code = this.htmlEditor.getValue() + "<style>" + this.cssEditor.getValue() + "</style>";
+        this.preview.src = "data:text/html," + encodeURIComponent(code)
+    }
+}
+
+customElements.define('ace-playground', AcePlayground);
+
+window.add = function() {
+    var el = document.createElement("ace-playground");    
+    document.body.appendChild(el);
+};
+
+});
+</script>
+
+</body>
+</html>

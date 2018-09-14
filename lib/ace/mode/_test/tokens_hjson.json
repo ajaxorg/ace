@@ -1,0 +1,76 @@
+[[
+   "paren.lparen0",
+  ["paren.lparen","{"]
+],[
+   "paren.lparen0",
+  ["paren","  "],
+  ["comment.punctuation","#"],
+  ["comment.line"," specify rate in requests/second (because comments are helpful!)"]
+],[
+   "paren.lparen0",
+  ["paren","  "],
+  ["keyword","rate"],
+  ["text",":"],
+  ["paren"," "],
+  ["constant.numeric","1000"]
+],[
+   "paren.lparen0"
+],[
+   "paren.lparen0",
+  ["paren","  "],
+  ["comment.punctuation","//"],
+  ["comment.line"," prefer c-style comments?"]
+],[
+   "paren.lparen0",
+  ["paren","  "],
+  ["comment.punctuation","/*"],
+  ["comment.block"," feeling old fashioned? "],
+  ["comment.punctuation","*/"]
+],[
+   "paren.lparen0"
+],[
+   "paren.lparen0",
+  ["paren","  "],
+  ["comment.punctuation","#"],
+  ["comment.line"," did you notice that rate doesn't need quotes?"]
+],[
+   "paren.lparen0",
+  ["paren","  "],
+  ["keyword","hey"],
+  ["text",":"],
+  ["paren"," "],
+  ["string","look ma, no quotes for strings either!"]
+],[
+   "paren.lparen0"
+],[
+   "paren.lparen0",
+  ["paren","  "],
+  ["comment.punctuation","#"],
+  ["comment.line"," best of all"]
+],[
+   "paren.lparen0",
+  ["paren","  "],
+  ["keyword","notice"],
+  ["text",":"],
+  ["paren"," "],
+  ["paren.lparen","["],
+  ["paren.rparen","]"]
+],[
+   "paren.lparen0",
+  ["paren","  "],
+  ["keyword","anything"],
+  ["text",":"],
+  ["paren"," ?"]
+],[
+   "paren.lparen0"
+],[
+   "paren.lparen0",
+  ["paren","  "],
+  ["comment.punctuation","#"],
+  ["comment.line"," yes, commas are optional!"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+]]
