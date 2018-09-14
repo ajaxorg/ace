@@ -674,7 +674,7 @@ li.signature {
 #documentation .alias a:hover, #documentation .related-to a:hover {
     text-decoration: none;
 }
-.#documentation alias:hover, #documentation .related-to:hover {
+.#documentation .alias:hover, #documentation .related-to:hover {
     opacity: 0.8;
     cursor: pointer;
 }

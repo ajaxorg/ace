@@ -87,6 +87,39 @@
   ["text",";"]
 ],[
    "start",
+  ["text","        "],
+  ["keyword","int"],
+  ["text"," "],
+  ["identifier","exports"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","10"],
+  ["text",";"]
+],[
+   "start",
+  ["text","        "],
+  ["keyword","int"],
+  ["text"," "],
+  ["identifier","requires"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","20"],
+  ["text",";"]
+],[
+   "start",
+  ["text","        "],
+  ["keyword","int"],
+  ["text"," "],
+  ["identifier","open"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","30"],
+  ["text",";"]
+],[
+   "start",
   ["text","    "],
   ["rparen","}"]
 ],[

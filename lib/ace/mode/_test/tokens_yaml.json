@@ -10,13 +10,13 @@
 ],[
    "start",
   ["meta.tag","receipt"],
-  ["keyword",":     "],
-  ["text","Oz-Ware Purchase Invoice"]
+  ["keyword",":"],
+  ["text","     Oz-Ware Purchase Invoice"]
 ],[
    "start",
   ["meta.tag","date"],
-  ["keyword",":        "],
-  ["constant.numeric","2007-08-06"]
+  ["keyword",":"],
+  ["text","        2007-08-06"]
 ],[
    "start",
   ["meta.tag","customer"],
@@ -24,13 +24,13 @@
 ],[
    "start",
   ["meta.tag","    given"],
-  ["keyword",":   "],
-  ["text","Dorothy"]
+  ["keyword",":"],
+  ["text","   Dorothy"]
 ],[
    "start",
   ["meta.tag","    family"],
-  ["keyword",":  "],
-  ["text","Gale"]
+  ["keyword",":"],
+  ["text","  Gale"]
 ],[
    "start"
 ],[
@@ -41,25 +41,27 @@
    "start",
   ["list.markup","    - "],
   ["meta.tag","part_no"],
-  ["keyword",":   "],
+  ["keyword",":"],
+  ["text","   "],
   ["string","'A4786'"]
 ],[
    "start",
   ["meta.tag","      descrip"],
-  ["keyword",":   "],
-  ["text","Water Bucket "],
+  ["keyword",":"],
+  ["text","   Water Bucket "],
   ["paren.lparen","("],
-  ["text","Filled"],
-  ["paren.rparen",")"]
+  ["text","Filled)"]
 ],[
    "start",
   ["meta.tag","      price"],
-  ["keyword",":     "],
+  ["keyword",":"],
+  ["text","     "],
   ["constant.numeric","1.47"]
 ],[
    "start",
   ["meta.tag","      quantity"],
-  ["keyword",":  "],
+  ["keyword",":"],
+  ["text","  "],
   ["constant.numeric","4"]
 ],[
    "start"
@@ -67,41 +69,47 @@
    "start",
   ["list.markup","    - "],
   ["meta.tag","part_no"],
-  ["keyword",":   "],
+  ["keyword",":"],
+  ["text","   "],
   ["string","'E1628'"]
 ],[
    "start",
   ["meta.tag","      descrip"],
-  ["keyword",":   "],
-  ["text","High Heeled "],
+  ["keyword",":"],
+  ["text","   High Heeled "],
   ["string","\"Ruby\""],
   ["text"," Slippers"]
 ],[
    "start",
   ["meta.tag","      size"],
-  ["keyword",":      "],
+  ["keyword",":"],
+  ["text","      "],
   ["constant.numeric","8"]
 ],[
    "start",
   ["meta.tag","      price"],
-  ["keyword",":     "],
+  ["keyword",":"],
+  ["text","     "],
   ["constant.numeric","100.27"]
 ],[
    "start",
   ["meta.tag","      quantity"],
-  ["keyword",":  "],
+  ["keyword",":"],
+  ["text","  "],
   ["constant.numeric","1"]
 ],[
    "start"
 ],[
    "start",
   ["meta.tag","bill-to"],
-  ["keyword",":  "],
+  ["keyword",":"],
+  ["text","  "],
   ["constant.language","&id001"]
 ],[
    ["mlString",4],
   ["meta.tag","    street"],
-  ["keyword",": "],
+  ["keyword",":"],
+  ["text"," "],
   ["string","|"]
 ],[
    ["mlString",4],
@@ -115,26 +123,28 @@
    "start",
   ["indent","    "],
   ["meta.tag","city"],
-  ["keyword",":   "],
-  ["text","East Centerville"]
+  ["keyword",":"],
+  ["text","   East Centerville"]
 ],[
    "start",
   ["meta.tag","    state"],
-  ["keyword",":  "],
-  ["text","KS"]
+  ["keyword",":"],
+  ["text","  KS"]
 ],[
    "start"
 ],[
    "start",
   ["meta.tag","ship-to"],
-  ["keyword",":  "],
+  ["keyword",":"],
+  ["text","  "],
   ["constant.language","*id001"]
 ],[
    "start"
 ],[
    ["mlString",0],
   ["meta.tag","specialDelivery"],
-  ["keyword",":  "],
+  ["keyword",":"],
+  ["text","  "],
   ["string",">"]
 ],[
    ["mlString",0],

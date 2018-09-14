@@ -76,11 +76,12 @@
         no-undef: 2,
         no-redeclare: 0,
         // no-unused-vars: 1,
+        
+        no-debugger: 2,
 
         //////////////////////////////////////////////////////////////////
         //
         // no-unreachable: 2,
-        // no-debugger: 2,
         // no-proto: 2,
         // no-regex-spaces: 2,
         // no-extend-native: 2,
@@ -88,7 +89,7 @@
         // no-eval: 2,
         // dot-notation: 2,
         // no-alert: 2,
-        // no-extra-semi: 2, // doesn't handle ;(function() {})() pattern
+        no-extra-semi: 2, // doesn't handle ;(function() {})() pattern
         // radix: 2,
         // no-invalid-this: 2,
         // no-param-reassign: 2,
@@ -98,8 +99,7 @@
         // no-new: 2,
         // no-else-return: 2,
         // no-unused-expressions: 2,
-        // no-use-before-define : [2, "nofunc"],
-        
+        // no-use-before-define: [2, { "functions": false, "classes": false, "variables": false }],
         
         // array-bracket-spacing: 2, // enforce spacing inside array brackets (fixable)
         // block-spacing: 2, // disallow or enforce spaces inside of single line blocks (fixable)
@@ -110,7 +110,7 @@
         computed-property-spacing: 2, // require or disallow padding inside computed properties (fixable)
         // consistent-this: 2, // enforce consistent naming when capturing the current execution context        
         linebreak-style: 2, // disallow mixed 'LF' and 'CRLF' as linebreaks
-        // indent: 2, // specify tab or space width for your code (fixable)
+        // indent: ["error", 4, { "outerIIFEBody": 0 }], // specify tab or space width for your code (fixable)        
         // key-spacing: 2, // enforce spacing between keys and values in object literal properties
         // new-cap: 2, // require a capital letter for constructors
         // new-parens: 2, // disallow the omission of parentheses when invoking a constructor with no arguments
@@ -134,7 +134,7 @@
         // quotes: [2, "double", "avoid-escape"], // specify whether backticks, double or single quotes should be used (fixable)
         // require-jsdoc: 2, // Require JSDoc comment
         // semi-spacing: 2, // enforce spacing before and after semicolons
-        // semi: 2, // require or disallow use of semicolons instead of ASI (fixable)
+        semi: [ 2, "always", { "omitLastInOneLineBlock": false } ]// require or disallow use of semicolons instead of ASI (fixable)
         // keyword-spacing: 2, // require a space after certain keywords (fixable)
         // space-before-blocks: 2, // require or disallow a space before blocks (fixable)
         // space-before-function-paren: 2, // require or disallow a space before function opening parenthesis (fixable)
