@@ -315,15 +315,15 @@ styles.join("\n")
 }
     
 @keyframes blink-ace-animate {
-    from, to { opacity: 1; }
-    60% { opacity: 0; }
+    from, to { filter: opacity(1); }
+    60% { filter: opacity(0); }
 }
 
 @keyframes blink-ace-animate-smooth {
-    from, to { opacity: 1; }
-    45% { opacity: 1; }
-    60% { opacity: 0; }
-    85% { opacity: 0; }
+    from, to { filter: opacity(1); }
+    45% { filter: opacity(1); }
+    60% { filter: opacity(0); }
+    85% { filter: opacity(0); }
 }
 
 .ace_marker-layer .ace_step, .ace_marker-layer .ace_stack {
