@@ -1,0 +1,18 @@
+<apex:stylesheet value="{!URLFOR($Resource.BrowserCompatibility, 'css/style.css')}"/>
+
+<apex:page action="{!IF($User.Alias = 'JohnDoe' || $User.Alias = 'JBloggs' || $User.Alias = 'FooBar',
+    null,
+    urlFor($Action.Account.Delete, $CurrentPage.Parameters.id, [retURL='/001'], true)
+)}" standardController="Account"></apex:page>
+
+<apex:page action="{!IF(OR($User.Alias = 'JohnDoe', $User.Alias = 'JBloggs', $User.Alias = 'FooBar'),
+    NULL,
+    URLFOR($Action.Account.Delete, $CurrentPage.Parameters.id, [retURL='/001'], TRUE)
+)}" standardController="Account"></apex:page>
+
+<apex:commandLink action="{!URLFOR('/apex/' + $CurrentPage.Name, null, ['id'=id])}" 
+                   value="Full List" />
+<ideas:listOutputLink stickyAttributes="false">
+    
+</ideas:listOutputLink>
+{!IF(AND(Price < 1, Quantity < 1), "Small", null)}
