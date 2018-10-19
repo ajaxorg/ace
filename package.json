@@ -14,7 +14,7 @@
     "url": "http://github.com/ajaxorg/ace.git"
   },
   "devDependencies": {
-    "@types/node": "^9.4.7",
+    "@types/requirejs": "^2.1.31",
     "amd-loader": "~0.0.4",
     "architect-build": "https://github.com/c9/architect-build/tarball/17268dce65",
     "asyncjs": "0.0.x",

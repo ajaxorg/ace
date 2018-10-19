@@ -28,31 +28,36 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-define(function(require, exports, module) {
-"use strict";
 
-var lang = require("./lib/lang");
-var oop = require("./lib/oop");
-var Range = require("./range").Range;
+import lang = require("./lib/lang");
+import { Range } from "./range";
+import { Marker } from "./marker";
+import { EditSession } from "./edit_session";
 
-var SearchHighlight = function(regExp, clazz, type) {
-    this.setRegexp(regExp);
-    this.clazz = clazz;
-    this.type = type || "text";
-};
-
-(function() {
-    // needed to prevent long lines from freezing the browser
-    this.MAX_RANGES = 500;
+export class SearchHighlight implements Marker {
     
-    this.setRegexp = function(regExp) {
+    cache: Range[][];
+    regExp: RegExp;
+    type: string;
+    clazz: string;
+
+    // needed to prevent long lines from freezing the browser
+    readonly MAX_RANGES = 500;
+
+    constructor(regExp: RegExp, clazz: string, type: string) {
+        this.setRegexp(regExp);
+        this.clazz = clazz;
+        this.type = type || "text";
+    };
+    
+    setRegexp(regExp: RegExp) {
         if (this.regExp+"" == regExp+"")
             return;
         this.regExp = regExp;
         this.cache = [];
     };
 
-    this.update = function(html, markerLayer, session, config) {
+    update(html: string[], markerLayer: any, session: EditSession, config: any) { // TODO TS
         if (!this.regExp)
             return;
         var start = config.firstRow, end = config.lastRow;
@@ -60,13 +65,13 @@ var SearchHighlight = function(regExp, clazz, type) {
         for (var i = start; i <= end; i++) {
             var ranges = this.cache[i];
             if (ranges == null) {
-                ranges = lang.getMatchOffsets(session.getLine(i), this.regExp);
-                if (ranges.length > this.MAX_RANGES)
-                    ranges = ranges.slice(0, this.MAX_RANGES);
-                ranges = ranges.map(function(match) {
+                let offsets = lang.getMatchOffsets(session.getLine(i), this.regExp);
+                if (offsets.length > this.MAX_RANGES)
+                offsets = offsets.slice(0, this.MAX_RANGES);
+                ranges = offsets.map(function(match) {
                     return new Range(i, match.offset, i, match.offset + match.length);
                 });
-                this.cache[i] = ranges.length ? ranges : "";
+                this.cache[i] = ranges.length ? ranges : null;
             }
 
             for (var j = ranges.length; j --; ) {
@@ -76,7 +81,4 @@ var SearchHighlight = function(regExp, clazz, type) {
         }
     };
 
-}).call(SearchHighlight.prototype);
-
-exports.SearchHighlight = SearchHighlight;
-});
+};

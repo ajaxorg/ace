@@ -28,12 +28,11 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-define(function(require, exports, module) {
-"use strict";
-
-var oop = require("./lib/oop");
-var EventEmitter = require("./lib/event_emitter").EventEmitter;
-
+import { EventEmitter } from "./lib/event_emitter";
+import { Tokenizer } from "./tokenizer";
+import { Editor } from "./editor";
+import { Document } from "./document";
+import { Delta } from "./undomanager";
 
 /**
  * Tokenizes the current [[Document `Document`]] in the background, and caches the tokenized rows for future use. 
@@ -51,57 +50,62 @@ var EventEmitter = require("./lib/event_emitter").EventEmitter;
  * @constructor
  **/
 
-function BackgroundTokenizer(tokenizer, editor) {
-    this.running = false;
-    this.lines = [];
-    this.states = [];
-    this.currentLine = 0;
-    this.tokenizer = tokenizer;
+export class BackgroundTokenizer extends EventEmitter{
 
-    var self = this;
+    doc: Document;
+    private $worker: () => void;
+    tokenizer: Tokenizer;
+    currentLine: number;
+    states: (string|string[])[];
+    lines: string[];
+    running: number;
 
-    this.$worker = function() {
-        if (!self.running) { return; }
+    constructor(tokenizer: Tokenizer, editor: Editor) {
+        super();
+        this.running = 0;
+        this.lines = [];
+        this.states = [];
+        this.currentLine = 0;
+        this.tokenizer = tokenizer;
 
-        var workerStart = new Date();
-        var currentLine = self.currentLine;
-        var endLine = -1;
-        var doc = self.doc;
+        this.$worker = () => {
+            if (!this.running) { return; }
 
-        var startLine = currentLine;
-        while (self.lines[currentLine])
-            currentLine++;
-        
-        var len = doc.getLength();
-        var processedLines = 0;
-        self.running = false;
-        while (currentLine < len) {
-            self.$tokenizeRow(currentLine);
-            endLine = currentLine;
-            do {
+            var workerStart = Date.now();
+            var currentLine = this.currentLine;
+            var endLine = -1;
+            var doc = this.doc;
+
+            var startLine = currentLine;
+            while (this.lines[currentLine])
                 currentLine++;
-            } while (self.lines[currentLine]);
+            
+            var len = doc.getLength();
+            var processedLines = 0;
+            this.running = 0;
+            while (currentLine < len) {
+                this.$tokenizeRow(currentLine);
+                endLine = currentLine;
+                do {
+                    currentLine++;
+                } while (this.lines[currentLine]);
 
-            // only check every 5 lines
-            processedLines ++;
-            if ((processedLines % 5 === 0) && (new Date() - workerStart) > 20) {                
-                self.running = setTimeout(self.$worker, 20);
-                break;
+                // only check every 5 lines
+                processedLines ++;
+                if ((processedLines % 5 === 0) && (Date.now() - workerStart) > 20) {                
+                    this.running = setTimeout(this.$worker, 20);
+                    break;
+                }
             }
-        }
-        self.currentLine = currentLine;
-        
-        if (endLine == -1)
-            endLine = currentLine;
-        
-        if (startLine <= endLine)
-            self.fireUpdateEvent(startLine, endLine);
-    };
-}
-
-(function(){
-
-    oop.implement(this, EventEmitter.prototype);
+            this.currentLine = currentLine;
+            
+            if (endLine == -1)
+                endLine = currentLine;
+            
+            if (startLine <= endLine)
+                this.fireUpdateEvent(startLine, endLine);
+        };
+    }
 
     /**
      * Sets a new tokenizer for this object.
@@ -109,7 +113,7 @@ function BackgroundTokenizer(tokenizer, editor) {
      * @param {Tokenizer} tokenizer The new tokenizer to use
      *
      **/
-    this.setTokenizer = function(tokenizer) {
+    setTokenizer(tokenizer: Tokenizer) {
         this.tokenizer = tokenizer;
         this.lines = [];
         this.states = [];
@@ -121,7 +125,7 @@ function BackgroundTokenizer(tokenizer, editor) {
      * Sets a new document to associate with this object.
      * @param {Document} doc The new document to associate with
      **/
-    this.setDocument = function(doc) {
+    setDocument(doc: Document) {
         this.doc = doc;
         this.lines = [];
         this.states = [];
@@ -142,7 +146,7 @@ function BackgroundTokenizer(tokenizer, editor) {
      * @param {Number} lastRow The final row region
      *
      **/
-    this.fireUpdateEvent = function(firstRow, lastRow) {
+    fireUpdateEvent(firstRow: number, lastRow: number) {
         var data = {
             first: firstRow,
             last: lastRow
@@ -156,7 +160,7 @@ function BackgroundTokenizer(tokenizer, editor) {
      * @param {Number} startRow The row to start at
      *
      **/
-    this.start = function(startRow) {
+    start(startRow: number) {
         this.currentLine = Math.min(startRow || 0, this.currentLine, this.doc.getLength());
 
         // remove all cached items below this line
@@ -168,12 +172,12 @@ function BackgroundTokenizer(tokenizer, editor) {
         this.running = setTimeout(this.$worker, 700);
     };
     
-    this.scheduleStart = function() {
+    scheduleStart() {
         if (!this.running)
             this.running = setTimeout(this.$worker, 700);
     };
 
-    this.$updateOnChange = function(delta) {
+    $updateOnChange(delta: Delta) {
         var startRow = delta.start.row;
         var len = delta.end.row - startRow;
 
@@ -198,10 +202,10 @@ function BackgroundTokenizer(tokenizer, editor) {
      * Stops tokenizing.
      *
      **/
-    this.stop = function() {
+    stop() {
         if (this.running)
             clearTimeout(this.running);
-        this.running = false;
+        this.running = 0;
     };
 
     /**
@@ -212,7 +216,7 @@ function BackgroundTokenizer(tokenizer, editor) {
      * 
      *
      **/
-    this.getTokens = function(row) {
+    getTokens(row: number) {
         return this.lines[row] || this.$tokenizeRow(row);
     };
 
@@ -221,17 +225,17 @@ function BackgroundTokenizer(tokenizer, editor) {
      *
      * @param {Number} row The row to get state at
      **/
-    this.getState = function(row) {
+    getState(row: number) {
         if (this.currentLine == row)
             this.$tokenizeRow(row);
         return this.states[row] || "start";
     };
 
-    this.$tokenizeRow = function(row) {
+    $tokenizeRow(row: number) {
         var line = this.doc.getLine(row);
         var state = this.states[row - 1];
 
-        var data = this.tokenizer.getLineTokens(line, state, row);
+        var data = this.tokenizer.getLineTokens(line, state);
 
         if (this.states[row] + "" !== data.state + "") {
             this.states[row] = data.state;
@@ -245,7 +249,4 @@ function BackgroundTokenizer(tokenizer, editor) {
         return this.lines[row] = data.tokens;
     };
 
-}).call(BackgroundTokenizer.prototype);
-
-exports.BackgroundTokenizer = BackgroundTokenizer;
-});
+};

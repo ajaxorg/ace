@@ -28,12 +28,43 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-define(function(require, exports, module) {
-"use strict";
-
-var config = require("./config");
+import config = require("./config");
 // tokenizing lines longer than this makes editor very slow
-var MAX_TOKEN_COUNT = 2000;
+export let MAX_TOKEN_COUNT = 2000;
+
+export interface Token {
+    value: string,
+    index: number,
+    start: number
+}
+export interface Rule {
+    caseInsensitive?: boolean,
+    regex?: RegExp|string,
+    splitRegex?: RegExp,
+    token?: string|((value: string) => string),
+    next?: ((this: Rule, currentState: string, stack: string[]) => string)|Rule[]|string,
+    start?: string,
+    end?: string,
+    push?: boolean,
+    stateName?: string,
+    rules?: States,
+    include?: string|string[],
+    noEscape?: boolean,
+    keywordMap?: {
+        [key: string]: any
+    },
+    nextState?: ((this: Rule, currentState: string, stack: string[]) => string)|Rule[]|string|boolean,
+    defaultToken?: string,
+    tokenArray?: string[],
+    onMatch?: (value: string, currentState?: string, stack?: string[], line?: string) => Token[]|string;
+};
+export interface State extends Array<Rule>{
+    processed?: boolean;
+}
+export interface States {
+    [key: string]: State
+}
+
 /**
  * This class takes a set of highlighting rules, and creates a tokenizer out of them. For more information, see [the wiki on extending highlighters](https://github.com/ajaxorg/ace/wiki/Creating-or-Extending-an-Edit-Mode#wiki-extendingTheHighlighter).
  * @class Tokenizer
@@ -45,99 +76,111 @@ var MAX_TOKEN_COUNT = 2000;
  *
  * @constructor
  **/
-var Tokenizer = function(rules) {
-    this.states = rules;
+export class Tokenizer {
+    splitRegex: RegExp;
+    tokenArray: Token[];
+    matchMappings: {
+        [key: string]: {}
+    };
+    regExps: {
+        [key: string]: RegExp
+    };
+    states: States;
 
-    this.regExps = {};
-    this.matchMappings = {};
-    for (var key in this.states) {
-        var state = this.states[key];
-        var ruleRegExps = [];
-        var matchTotal = 0;
-        var mapping = this.matchMappings[key] = {defaultToken: "text"};
-        var flag = "g";
+    constructor(rules: States) {
+        this.states = rules;
 
-        var splitterRurles = [];
-        for (var i = 0; i < state.length; i++) {
-            var rule = state[i];
-            if (rule.defaultToken)
-                mapping.defaultToken = rule.defaultToken;
-            if (rule.caseInsensitive)
-                flag = "gi";
-            if (rule.regex == null)
-                continue;
+        this.regExps = {};
+        this.matchMappings = {};
+        for (var key in this.states) {
+            var state = this.states[key];
+            var ruleRegExps = [];
+            var matchTotal = 0;
+            var mapping = this.matchMappings[key] = {defaultToken: "text"};
+            var flag = "g";
 
-            if (rule.regex instanceof RegExp)
-                rule.regex = rule.regex.toString().slice(1, -1);
+            var splitterRurles = [];
+            for (var i = 0; i < state.length; i++) {
+                var rule = state[i];
+                if (rule.defaultToken)
+                    mapping.defaultToken = rule.defaultToken;
+                if (rule.caseInsensitive)
+                    flag = "gi";
+                if (rule.regex == null)
+                    continue;
 
-            // Count number of matching groups. 2 extra groups from the full match
-            // And the catch-all on the end (used to force a match);
-            var adjustedregex = rule.regex;
-            var matchcount = new RegExp("(?:(" + adjustedregex + ")|(.))").exec("a").length - 2;
-            if (Array.isArray(rule.token)) {
-                if (rule.token.length == 1 || matchcount == 1) {
-                    rule.token = rule.token[0];
-                } else if (matchcount - 1 != rule.token.length) {
-                    this.reportError("number of classes and regexp groups doesn't match", { 
-                        rule: rule,
-                        groupCount: matchcount - 1
-                    });
-                    rule.token = rule.token[0];
-                } else {
-                    rule.tokenArray = rule.token;
-                    rule.token = null;
-                    rule.onMatch = this.$arrayTokens;
+                if (rule.regex instanceof RegExp)
+                    rule.regex = rule.regex.toString().slice(1, -1);
+
+                var regExpString = <string>rule.regex;
+
+                // Count number of matching groups. 2 extra groups from the full match
+                // And the catch-all on the end (used to force a match);
+                var adjustedregex = regExpString;
+                var matchcount = new RegExp("(?:(" + adjustedregex + ")|(.))").exec("a").length - 2;
+                if (Array.isArray(rule.token)) {
+                    if (rule.token.length == 1 || matchcount == 1) {
+                        rule.token = rule.token[0];
+                    } else if (matchcount - 1 != rule.token.length) {
+                        this.reportError("number of classes and regexp groups doesn't match", { 
+                            rule: rule,
+                            groupCount: matchcount - 1
+                        });
+                        rule.token = rule.token[0];
+                    } else {
+                        rule.tokenArray = rule.token;
+                        rule.token = null;
+                        rule.onMatch = this.$arrayTokens;
+                    }
+                } else if (typeof rule.token == "function" && !rule.onMatch) {
+                    if (matchcount > 1)
+                        rule.onMatch = this.$applyToken;
+                    else
+                        rule.onMatch = rule.token;
                 }
-            } else if (typeof rule.token == "function" && !rule.onMatch) {
-                if (matchcount > 1)
-                    rule.onMatch = this.$applyToken;
-                else
-                    rule.onMatch = rule.token;
-            }
 
-            if (matchcount > 1) {
-                if (/\\\d/.test(rule.regex)) {
-                    // Replace any backreferences and offset appropriately.
-                    adjustedregex = rule.regex.replace(/\\([0-9]+)/g, function(match, digit) {
-                        return "\\" + (parseInt(digit, 10) + matchTotal + 1);
-                    });
-                } else {
-                    matchcount = 1;
-                    adjustedregex = this.removeCapturingGroups(rule.regex);
+                if (matchcount > 1) {
+                    if (/\\\d/.test(regExpString)) {
+                        // Replace any backreferences and offset appropriately.
+                        adjustedregex = regExpString.replace(/\\([0-9]+)/g, function(match, digit) {
+                            return "\\" + (parseInt(digit, 10) + matchTotal + 1);
+                        });
+                    } else {
+                        matchcount = 1;
+                        adjustedregex = this.removeCapturingGroups(regExpString);
+                    }
+                    if (!rule.splitRegex && typeof rule.token != "string")
+                        splitterRurles.push(rule); // flag will be known only at the very end
                 }
-                if (!rule.splitRegex && typeof rule.token != "string")
-                    splitterRurles.push(rule); // flag will be known only at the very end
+
+                mapping[matchTotal] = i;
+                matchTotal += matchcount;
+
+                ruleRegExps.push(adjustedregex);
+
+                // makes property access faster
+                if (!rule.onMatch)
+                    rule.onMatch = null;
             }
+            
+            if (!ruleRegExps.length) {
+                mapping[0] = 0;
+                ruleRegExps.push("$");
+            }
+            
+            splitterRurles.forEach((rule) => {
+                rule.splitRegex = this.createSplitterRegexp(regExpString, flag);
+            });
 
-            mapping[matchTotal] = i;
-            matchTotal += matchcount;
-
-            ruleRegExps.push(adjustedregex);
-
-            // makes property access faster
-            if (!rule.onMatch)
-                rule.onMatch = null;
+            this.regExps[key] = new RegExp("(" + ruleRegExps.join(")|(") + ")|($)", flag);
         }
-        
-        if (!ruleRegExps.length) {
-            mapping[0] = 0;
-            ruleRegExps.push("$");
-        }
-        
-        splitterRurles.forEach(function(rule) {
-            rule.splitRegex = this.createSplitterRegexp(rule.regex, flag);
-        }, this);
+    };
 
-        this.regExps[key] = new RegExp("(" + ruleRegExps.join(")|(") + ")|($)", flag);
-    }
-};
-
-(function() {
-    this.$setMaxTokenCount = function(m) {
+    $setMaxTokenCount(m: number) {
         MAX_TOKEN_COUNT = m | 0;
     };
     
-    this.$applyToken = function(str) {
+    $applyToken(str: string) {
         var values = this.splitRegex.exec(str).slice(1);
         var types = this.token.apply(this, values);
 
@@ -156,7 +199,7 @@ var Tokenizer = function(rules) {
         return tokens;
     };
 
-    this.$arrayTokens = function(str) {
+    private $arrayTokens(str: string): Token[]|string {
         if (!str)
             return [];
         var values = this.splitRegex.exec(str);
@@ -174,7 +217,7 @@ var Tokenizer = function(rules) {
         return tokens;
     };
 
-    this.removeCapturingGroups = function(src) {
+    removeCapturingGroups(src: string) {
         var r = src.replace(
             /\[(?:\\.|[^\]])*?\]|\\.|\(\?[:=!]|(\()/g,
             function(x, y) {return y ? "(?:" : x;}
@@ -182,11 +225,15 @@ var Tokenizer = function(rules) {
         return r;
     };
 
-    this.createSplitterRegexp = function(src, flag) {
+    createSplitterRegexp(src: string, flag: string) {
         if (src.indexOf("(?=") != -1) {
             var stack = 0;
             var inChClass = false;
-            var lastCapture = {};
+            var lastCapture: {
+                stack?: number,
+                start?: number,
+                end?: number
+            } = {};
             src.replace(/(\\.)|(\((?:\?[=!])?)|(\))|([\[\]])/g, function(
                 m, esc, parenOpen, parenClose, square, index
             ) {
@@ -225,16 +272,17 @@ var Tokenizer = function(rules) {
      * Returns an object containing two properties: `tokens`, which contains all the tokens; and `state`, the current state.
      * @returns {Object}
      **/
-    this.getLineTokens = function(line, startState) {
+    getLineTokens(line: string, startState) {
+        var stack: State;
         if (startState && typeof startState != "string") {
-            var stack = startState.slice(0);
+            stack = startState.slice(0);
             startState = stack[0];
             if (startState === "#tmp") {
                 stack.shift();
                 startState = stack.shift();
             }
         } else
-            var stack = [];
+            stack = [];
 
         var currentState = startState || "start";
         var state = this.states[currentState];
@@ -360,10 +408,8 @@ var Tokenizer = function(rules) {
             state : stack.length ? stack : currentState
         };
     };
-    
-    this.reportError = config.reportError;
-    
-}).call(Tokenizer.prototype);
 
-exports.Tokenizer = Tokenizer;
-});
+    reportError: (msg: string, data: any) => void;
+};
+
+Tokenizer.prototype.reportError = config.reportError;

@@ -1,8 +1,9 @@
 {
+    "compileOnSave": true,
     "compilerOptions": {
         "outDir": "./built",
         "allowJs": true,
-        "target": "es5",
+        "target": "ES6",
         "module": "amd",
         "alwaysStrict": true,
         "strict": true,

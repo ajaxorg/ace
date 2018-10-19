@@ -121,7 +121,9 @@ export class Editor extends EventEmitter {
     $onChangeMode: () => void;
     $onDocumentChange: () => void;
     
-    _$emitInputEvent: any;
+    _$emitInputEvent: {
+        schedule: (e: number) => void
+    }
     
     session: EditSession;
     renderer: any;

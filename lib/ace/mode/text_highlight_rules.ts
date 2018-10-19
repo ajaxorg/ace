@@ -28,29 +28,29 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-define(function(require, exports, module) {
-"use strict";
+import lang = require("../lib/lang");
+import { States, Rule } from "../tokenizer";
 
-var lang = require("../lib/lang");
+export class TextHighlightRules {
+    $keywords: any;
+    $embeds: string[];
+    $rules: States;
 
-var TextHighlightRules = function() {
+    constructor() {
+        // regexp must not have capturing parentheses
+        // regexps are ordered -> the first match is used
 
-    // regexp must not have capturing parentheses
-    // regexps are ordered -> the first match is used
-
-    this.$rules = {
-        "start" : [{
-            token : "empty_line",
-            regex : '^$'
-        }, {
-            defaultToken : "text"
-        }]
+        this.$rules = {
+            "start" : [{
+                token : "empty_line",
+                regex : '^$'
+            }, {
+                defaultToken : "text"
+            }]
+        };
     };
-};
 
-(function() {
-
-    this.addRules = function(rules, prefix) {
+    addRules(rules: States, prefix: string) {
         if (!prefix) {
             for (var key in rules)
                 this.$rules[key] = rules[key];
@@ -73,11 +73,11 @@ var TextHighlightRules = function() {
         }
     };
 
-    this.getRules = function() {
+    getRules() {
         return this.$rules;
     };
 
-    this.embedRules = function (HighlightRules, prefix, escapeRules, states, append) {
+    embedRules(HighlightRules, prefix: string, escapeRules: boolean, states: string[], append: boolean) {
         var embedRules = typeof HighlightRules == "function"
             ? new HighlightRules().getRules()
             : HighlightRules;
@@ -103,25 +103,14 @@ var TextHighlightRules = function() {
         this.$embeds.push(prefix);
     };
 
-    this.getEmbeds = function() {
+    getEmbeds() {
         return this.$embeds;
     };
 
-    var pushState = function(currentState, stack) {
-        if (currentState != "start" || stack.length)
-            stack.unshift(this.nextState, currentState);
-        return this.nextState;
-    };
-    var popState = function(currentState, stack) {
-        // if (stack[0] === currentState)
-        stack.shift();
-        return stack.shift() || "start";
-    };
-
-    this.normalizeRules = function() {
+    normalizeRules() {
         var id = 0;
         var rules = this.$rules;
-        function processState(key) {
+        let processState = (key: string) => {
             var state = rules[key];
             state.processed = true;
             for (var i = 0; i < state.length; i++) {
@@ -135,7 +124,7 @@ var TextHighlightRules = function() {
                     rule.regex = rule.start;
                     if (!rule.next)
                         rule.next = [];
-                    rule.next.push({
+                    (<Rule[]>rule.next).push({
                         defaultToken: rule.token
                     }, {
                         token: rule.token + ".end",
@@ -148,10 +137,11 @@ var TextHighlightRules = function() {
                 var next = rule.next || rule.push;
                 if (next && Array.isArray(next)) {
                     var stateName = rule.stateName;
-                    if (!stateName)  {
-                        stateName = rule.token;
-                        if (typeof stateName != "string")
+                    if (!stateName)  {                        
+                        if (typeof rule.token != "string")
                             stateName = stateName[0] || "";
+                        else
+                            stateName = rule.token;
                         if (rules[stateName])
                             stateName += id++;
                     }
@@ -204,16 +194,16 @@ var TextHighlightRules = function() {
                 }
             }
         }
-        Object.keys(rules).forEach(processState, this);
+        Object.keys(rules).forEach(processState);
     };
 
-    this.createKeywordMapper = function(map, defaultToken, ignoreCase, splitChar) {
+    createKeywordMapper(map, defaultToken, ignoreCase, splitChar="|") {
         var keywords = Object.create(null);
         Object.keys(map).forEach(function(className) {
             var a = map[className];
             if (ignoreCase)
                 a = a.toLowerCase();
-            var list = a.split(splitChar || "|");
+            var list = a.split(splitChar);
             for (var i = list.length; i--; )
                 keywords[list[i]] = className;
         });
@@ -225,15 +215,22 @@ var TextHighlightRules = function() {
         this.$keywordList = Object.keys(keywords);
         map = null;
         return ignoreCase
-            ? function(value) {return keywords[value.toLowerCase()] || defaultToken; }
-            : function(value) {return keywords[value] || defaultToken; };
+            ? function(value: string): string {return keywords[value.toLowerCase()] || defaultToken; }
+            : function(value: string): string {return keywords[value] || defaultToken; };
     };
 
-    this.getKeywords = function() {
+    getKeywords() {
         return this.$keywords;
     };
+};
 
-}).call(TextHighlightRules.prototype);
-
-exports.TextHighlightRules = TextHighlightRules;
-});
+var pushState = function(this: Rule, currentState: string, stack: string[]): string {
+    if (currentState != "start" || stack.length)
+        stack.unshift(this.nextState, currentState);
+    return this.nextState;
+};
+var popState = function(this: Rule, currentState: string, stack: string[]): string {
+    // if (stack[0] === currentState)
+    stack.shift();
+    return stack.shift() || "start";
+};

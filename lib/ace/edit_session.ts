@@ -43,15 +43,10 @@ import { BackgroundTokenizer } from "./background_tokenizer";
 import { SearchHighlight } from "./search_highlight";
 import { Folding } from "./edit_session/folding";
 import { BracketMatch } from "./edit_session/bracket_match";
-
-export interface Token {
-    value: string,
-    index: number,
-    start: number
-}
+import { Marker } from "./marker";
+import { Token } from "./tokenizer";
 
 export type LineWidget = any; // TODO TS
-export type Marker = any; // TODO TS
 interface Markers {
     [key: string]: Marker
 }
@@ -202,16 +197,16 @@ export class EditSession extends EventEmitter {
     $updating: boolean;
     $modified: boolean;
 
-    $selectionMarker: Marker;
+    $selectionMarker: number;
     $searchHighlight: any;
-    $highlightLineMarker: Marker;
+    $highlightLineMarker: Range;
     $frontMarkers: Markers;
     $backMarkers: Markers;
     $markerId: number;
     $bracketHighlight: any;
     $enableVarChar: boolean;
     $tagHighlight: any;
-    bgTokenizer: any;
+    bgTokenizer: BackgroundTokenizer;
     $annotations: string[];
     $decorations: any[];
     

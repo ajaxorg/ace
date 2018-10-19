@@ -28,20 +28,17 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-define(function(require, exports, module) {
-"no use strict";
-
-var oop = require("./oop");
-var EventEmitter = require("./event_emitter").EventEmitter;
+import { EventEmitter } from "./event_emitter";
+import oop = require("./oop");
 
 var optionsProvider = {
-    setOptions: function(optList) {
-        Object.keys(optList).forEach(function(key) {
+    setOptions: function(optList: any) {
+        Object.keys(optList).forEach((key) => {
             this.setOption(key, optList[key]);
-        }, this);
+        });
     },
-    getOptions: function(optionNames) {
-        var result = {};
+    getOptions: function(this: any, optionNames: string[]) {
+        var result: any = {};
         if (!optionNames) {
             var options = this.$options;
             optionNames = Object.keys(options).filter(function(key) {
@@ -51,12 +48,12 @@ var optionsProvider = {
             result = optionNames;
             optionNames = Object.keys(result);
         }
-        optionNames.forEach(function(key) {
+        optionNames.forEach((key) => {
             result[key] = this.getOption(key);
-        }, this);
+        });
         return result;
     },
-    setOption: function(name, value) {
+    setOption: function(this: any, name: string, value: any) {
         if (this["$" + name] === value)
             return;
         var opt = this.$options[name];
@@ -71,7 +68,7 @@ var optionsProvider = {
         if (opt && opt.set)
             opt.set.call(this, value);
     },
-    getOption: function(name) {
+    getOption: function(this: any, name: string) {
         var opt = this.$options[name];
         if (!opt) {
             return warn('misspelled option "' + name + '"');
@@ -82,30 +79,32 @@ var optionsProvider = {
     }
 };
 
-function warn(message) {
+function warn(message: string) {
     if (typeof console != "undefined" && console.warn)
         console.warn.apply(console, arguments);
 }
 
-function reportError(msg, data) {
+function reportError(msg: string, data: any) {
     var e = new Error(msg);
-    e.data = data;
+    (<any>e).data = data;
     if (typeof console == "object" && console.error)
         console.error(e);
     setTimeout(function() { throw e; });
 }
 
-var AppConfig = function() {
-    this.$defaultOptions = {};
-};
+export class AppConfig extends EventEmitter {
+    
+    $defaultOptions: any;
 
-(function() {
-    // module loading
-    oop.implement(this, EventEmitter.prototype);
+    constructor() {
+        super();
+        this.$defaultOptions = {};
+    };
+
     /*
      * option {name, value, initialValue, setterName, set, get }
      */
-    this.defineOptions = function(obj, path, options) {
+    defineOptions(obj: any, path: string, options: any) {
         if (!obj.$options)
             this.$defaultOptions[path] = obj.$options = {};
 
@@ -126,7 +125,7 @@ var AppConfig = function() {
         return this;
     };
 
-    this.resetOptions = function(obj) {
+    resetOptions(obj: any) {
         Object.keys(obj.$options).forEach(function(key) {
             var opt = obj.$options[key];
             if ("value" in opt)
@@ -134,7 +133,7 @@ var AppConfig = function() {
         });
     };
 
-    this.setDefaultValue = function(path, name, value) {
+    setDefaultValue(path: string, name: string, value: any) {
         var opts = this.$defaultOptions[path] || (this.$defaultOptions[path] = {});
         if (opts[name]) {
             if (opts.forwardTo)
@@ -144,17 +143,16 @@ var AppConfig = function() {
         }
     };
 
-    this.setDefaultValues = function(path, optionHash) {
-        Object.keys(optionHash).forEach(function(key) {
+    setDefaultValues(path: string, optionHash: any) {
+        Object.keys(optionHash).forEach((key) => {
             this.setDefaultValue(path, key, optionHash[key]);
-        }, this);
+        });
     };
-    
-    this.warn = warn;
-    this.reportError = reportError;
-    
-}).call(AppConfig.prototype);
 
-exports.AppConfig = AppConfig;
+    warn: (message: string) => void;
+    reportError: (msg: string, data: any) => void;
+};
 
-});
+AppConfig.prototype.warn = warn;
+AppConfig.prototype.reportError = reportError;
+
