@@ -2,7 +2,7 @@ export namespace Ace {
   export type NewLineMode = 'auto' | 'unix' | 'windows';
 
   export interface Anchor extends EventEmitter {
-    getPosition(): Position;
+    getPosition(): Point;
     getDocument(): Document;
     setPosition(row: number, column: number, noClip?: boolean): void;
     detach(): void;
@@ -22,24 +22,24 @@ export namespace Ace {
     getAllLines(): string[];
     getTextRange(range: Range): string;
     getLinesForRange(range: Range): string[];
-    insert(position: Position, text: string): Position;
-    insertInLine(position: Position, text: string): Position;
+    insert(position: Point, text: string): Point;
+    insertInLine(position: Point, text: string): Point;
     clippedPos(row: number, column: number): Point;
     clonePos(pos: Point): Point;
     pos(row: number, column: number): Point;
     insertFullLines(row: number, lines: string[]): void;
-    insertMergedLines(position: Position, lines: string[]): Point;
-    remove(range: Range): Position;
-    removeInLine(row: number, startColumn: number, endColumn: number): Position;
+    insertMergedLines(position: Point, lines: string[]): Point;
+    remove(range: Range): Point;
+    removeInLine(row: number, startColumn: number, endColumn: number): Point;
     removeFullLines(firstRow: number, lastRow: number): string[];
     removeNewLine(row: number): void;
-    replace(range: Range, text: string): Position;
+    replace(range: Range, text: string): Point;
     applyDeltas(deltas: Delta[]): void;
     revertDeltas(deltas: Delta[]): void;
     applyDelta(delta: Delta, doNotValidate?: boolean): void;
     revertDelta(delta: Delta): void;
-    indexToPosition(index: number, startRow: number): Position;
-    positionToIndex(pos: Position, startRow?: number): number;
+    indexToPosition(index: number, startRow: number): Point;
+    positionToIndex(pos: Point, startRow?: number): number;
   }
 
   export interface FoldLine {
@@ -302,7 +302,7 @@ export namespace Ace {
     toggleBlockComment(state: any,
                        session: EditSession,
                        range: Range,
-                       cursor: Position): void;
+                       cursor: Point): void;
     getNextLineIndent(state: any, line: string, tab: string): string;
     checkOutdent(state: any, line: string, input: string): boolean;
     autoOutdent(state: any, doc: Document, row: number): void;
@@ -317,7 +317,7 @@ export namespace Ace {
     getKeywords(append?: boolean): Array<string | RegExp>;
     getCompletions(state: string,
                    session: EditSession,
-                   pos: Position,
+                   pos: Point,
                    prefix: string): Completion[];
   }
 
@@ -392,7 +392,7 @@ export namespace Ace {
     getUseSoftTabs(): boolean;
     setTabSize(tabSize: number): void;
     getTabSize(): number;
-    isTabStop(position: Position): boolean;
+    isTabStop(position: Point): boolean;
     setNavigateWithinSoftTabs(navigateWithinSoftTabs: boolean): void;
     getNavigateWithinSoftTabs(): boolean;
     setOverwrite(overwrite: boolean): void;
@@ -438,14 +438,14 @@ export namespace Ace {
     getLines(firstRow: number, lastRow: number): string[];
     getLength(): number;
     getTextRange(range: Range): string;
-    insert(position: Position, text: string): void;
+    insert(position: Point, text: string): void;
     remove(range: Range): void;
     removeFullLines(firstRow: number, lastRow: number): void;
     undoChanges(deltas: Delta[], dontSelect?: boolean): void;
     redoChanges(deltas: Delta[], dontSelect?: boolean): void;
     setUndoSelect(enable: boolean): void;
     replace(range: Range, text: string): void;
-    moveText(fromRange: Range, toPosition: Position, copy?: boolean): void;
+    moveText(fromRange: Range, toPosition: Point, copy?: boolean): void;
     indentRows(startRow: number, endRow: number, indentString: string): void;
     outdentRows(range: Range): void;
     moveLinesUp(firstRow: number, lastRow: number): void;
@@ -462,16 +462,16 @@ export namespace Ace {
     getRowWrapIndent(screenRow: number): number;
     getScreenLastRowColumn(screenRow: number): number;
     getDocumentLastRowColumn(docRow: number, docColumn: number): number;
-    getdocumentLastRowColumnPosition(docRow: number, docColumn: number): Position;
+    getdocumentLastRowColumnPosition(docRow: number, docColumn: number): Point;
     getRowSplitData(row: number): string | undefined;
     getScreenTabSize(screenColumn: number): number;
     screenToDocumentRow(screenRow: number, screenColumn: number): number;
     screenToDocumentColumn(screenRow: number, screenColumn: number): number;
     screenToDocumentPosition(screenRow: number,
                              screenColumn: number,
-                             offsetX?: number): Position;
-    documentToScreenPosition(docRow: number, docColumn: number): Position;
-    documentToScreenPosition(position: Position): Position;
+                             offsetX?: number): Point;
+    documentToScreenPosition(docRow: number, docColumn: number): Point;
+    documentToScreenPosition(position: Point): Point;
     documentToScreenColumn(row: number, docColumn: number): number;
     documentToScreenRow(docRow: number, docColumn: number): number;
     getScreenLength(): number;
@@ -565,16 +565,16 @@ export namespace Ace {
     updateCursor(): void;
     hideCursor(): void;
     showCursor(): void;
-    scrollSelectionIntoView(anchor: Position,
-                            lead: Position,
+    scrollSelectionIntoView(anchor: Point,
+                            lead: Point,
                             offset?: number): void;
-    scrollCursorIntoView(cursor: Position, offset?: number): void;
+    scrollCursorIntoView(cursor: Point, offset?: number): void;
     getScrollTop(): number;
     getScrollLeft(): number;
     getScrollTopRow(): number;
     getScrollBottomRow(): number;
     scrollToRow(row: number): void;
-    alignCursor(cursor: Position | number, alignment: number): number;
+    alignCursor(cursor: Point | number, alignment: number): number;
     scrollToLine(line: number,
                  center: boolean,
                  animate: boolean,
@@ -613,8 +613,8 @@ export namespace Ace {
     isMultiLine(): boolean;
     setCursor(row: number, column: number): void;
     setAnchor(row: number, column: number): void;
-    getAnchor(): Position;
-    getCursor(): Position;
+    getAnchor(): Point;
+    getCursor(): Point;
     isBackwards(): boolean;
     getRange(): Range;
     clearSelection(): void;
