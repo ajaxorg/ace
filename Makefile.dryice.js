@@ -116,8 +116,12 @@ function buildTypes() {
     var paths = fs.readdirSync(BUILD_DIR + '/src-noconflict');
     var moduleRef = '/// <reference path="./ace-modules.d.ts" />';
 
+    fs.readdirSync(BUILD_DIR + '/src-noconflict/snippets').forEach(function(path) {
+        paths.push("snippets/" + path);
+    });
+    
     var pathModules = paths.map(function(path) {
-        if (/^(mode|theme|ext|keybinding)-/.test(path)) {
+        if (/^(mode|theme|ext|keybinding)-|^snippets\//.test(path)) {
             var moduleName = path.split('.')[0];
             return "declare module 'ace-builds/src-noconflict/" + moduleName + "';";
         }
@@ -184,8 +188,8 @@ function demo() {
                 removeRequireJS = true;
                 var scripts = m.split(/,\s*/);
                 var result = [];
-                function comment(str) {result.push("<!-- " + str + " -->")}
-                function script(str) {result.push('<script src="../src/' + str + '.js"></script>')}
+                function comment(str) {result.push("<!-- " + str + " -->");}
+                function script(str) {result.push('<script src="../src/' + str + '.js"></script>');}
                 scripts.forEach(function(s) {
                     s = s.replace(/"/g, "");
                     if (s == "ace/ace") {
@@ -422,7 +426,7 @@ function buildAce(options, callback) {
     // 
     function addCb() {
         addCb.count = (addCb.count || 0) + 1; 
-        return done
+        return done;
     }
     function done() {
         if (--addCb.count > 0)
@@ -434,7 +438,7 @@ function buildAce(options, callback) {
             
         if (callback) 
             return callback();
-        console.log("Finished building " + getTargetDir(options))
+        console.log("Finished building " + getTargetDir(options));
     }
 }
 
@@ -616,7 +620,7 @@ function addSnippetFile(modeName) {
 function compress(text) {
     var uglify = require("dryice").copy.filter.uglifyjs;
     uglify.options.mangle_toplevel = {except: ["ACE_NAMESPACE", "requirejs"]};
-    uglify.options.beautify = {ascii_only: true, inline_script: true}
+    uglify.options.beautify = {ascii_only: true, inline_script: true};
     return asciify(uglify(text));
     // copy.filter.uglifyjs.options.ascii_only = true; doesn't work with some uglify.js versions
     function asciify(text) {
