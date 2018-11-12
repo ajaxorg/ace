@@ -104,7 +104,8 @@
 
 .ace-cloud9-night .ace_entity.ace_name.ace_function,
 .ace-cloud9-night .ace_support.ace_function,
-.ace-cloud9-night .ace_variable {
+.ace-cloud9-night .ace_variable:not(.ace_parameter),
+.ace-cloud9-night .ace_constant:not(.ace_numeric) {
   color: #7AA6DA
 }
 
