@@ -9,7 +9,7 @@ install:
       cmp --silent package.json node_modules/package.json || install;
 
 script:
-    -   changes=$(git diff --name-only origin/HEAD);
+    -   changes=$(git diff --name-only origin/HEAD --no-renames --diff-filter=ACMR);
         if [ "$changes" == "" ]; then
             echo "checking all files";
             node node_modules/eslint/bin/eslint "lib/ace/**/*.js";

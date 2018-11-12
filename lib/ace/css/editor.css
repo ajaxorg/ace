@@ -528,10 +528,3 @@ styles.join("\n")
     position: absolute;
     z-index: 8;
 }
-
-
-.ace_text-input-ios {
-  position: absolute !important;
-  top: -100000px !important;
-  left: -100000px !important;
-}
