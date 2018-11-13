@@ -1,10 +1,9 @@
 /***** regexp tokenizer */
 require("amd-loader");
-var lib = require("./lib");
 
-var Tokenizer = require(lib.AceLib+ "ace/tokenizer").Tokenizer;
-var Tokenizer = require(lib.AceLib + "ace/tokenizer_dev").Tokenizer; // todo can't use tokenizer because of max token count
-var TextHighlightRules = require(lib.AceLib + "ace/mode/text_highlight_rules").TextHighlightRules;
+var Tokenizer = require("../lib/ace/tokenizer").Tokenizer;
+var Tokenizer = require("../lib/ace/tokenizer_dev").Tokenizer; // todo can't use tokenizer because of max token count
+var TextHighlightRules = require("../lib/ace/mode/text_highlight_rules").TextHighlightRules;
 
 var r = new TextHighlightRules()
 r.$rules = {

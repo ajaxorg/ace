@@ -68,7 +68,9 @@
   ["text","  "],
   ["identifier","print"],
   ["text","("],
-  ["string","'fib(20) = ${fib(20)}'"],
+  ["string","'fib(20) = "],
+  ["text","${fib(20)}"],
+  ["string","'"],
   ["text",");"]
 ],[
    "start",
