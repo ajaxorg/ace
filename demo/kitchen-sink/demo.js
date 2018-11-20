@@ -34,10 +34,11 @@ define(function(require, exports, module) {
 
 require("ace/lib/fixoldbrowsers");
 
+require("ace/ext/rtl");
+
 require("ace/multi_select");
-require("ace/ext/spellcheck");
 require("./inline_editor");
-require("./dev_util");
+var devUtil = require("./dev_util");
 require("./file_drop");
 
 var config = require("ace/config");
@@ -64,19 +65,34 @@ var whitespace = require("ace/ext/whitespace");
 
 
 var doclist = require("./doclist");
-var modelist = require("ace/ext/modelist");
-var themelist = require("ace/ext/themelist");
 var layout = require("./layout");
-var TokenTooltip = require("./token_tooltip").TokenTooltip;
 var util = require("./util");
 var saveOption = util.saveOption;
-var fillDropdown = util.fillDropdown;
-var bindCheckbox = util.bindCheckbox;
-var bindDropdown = util.bindDropdown;
+
 
 var ElasticTabstopsLite = require("ace/ext/elastic_tabstops_lite").ElasticTabstopsLite;
 
 var IncrementalSearch = require("ace/incremental_search").IncrementalSearch;
+
+
+var TokenTooltip = require("./token_tooltip").TokenTooltip;
+require("ace/config").defineOptions(Editor.prototype, "editor", {
+    showTokenInfo: {
+        set: function(val) {
+            if (val) {
+                this.tokenTooltip = this.tokenTooltip || new TokenTooltip(this);
+            }
+            else if (this.tokenTooltip) {
+                this.tokenTooltip.destroy();
+                delete this.tokenTooltip;
+            }
+        },
+        get: function() {
+            return !!this.tokenTooltip;
+        },
+        handlesSet: true
+    }
+});
 
 
 var workerModule = require("ace/worker/worker_client");
@@ -251,21 +267,6 @@ commands.addCommand({
     }
 });
 
-var keybindings = {
-    ace: null, // Null = use "default" keymapping
-    vim: require("ace/keyboard/vim").handler,
-    emacs: "ace/keyboard/emacs",
-    // This is a way to define simple keyboard remappings
-    custom: new HashHandler({
-        "gotoright":      "Tab",
-        "indent":         "]",
-        "outdent":        "[",
-        "gotolinestart":  "^",
-        "gotolineend":    "$"
-    })
-};
-
-
 
 /*********** manage layout ***************************/
 var consoleHeight = 20;
@@ -284,33 +285,6 @@ window.onresize = onResize;
 onResize();
 
 /*********** options panel ***************************/
-var docEl = document.getElementById("doc");
-var modeEl = document.getElementById("mode");
-var wrapModeEl = document.getElementById("soft_wrap");
-var themeEl = document.getElementById("theme");
-var foldingEl = document.getElementById("folding");
-var selectStyleEl = document.getElementById("select_style");
-var highlightActiveEl = document.getElementById("highlight_active");
-var showHiddenEl = document.getElementById("show_hidden");
-var showGutterEl = document.getElementById("show_gutter");
-var showPrintMarginEl = document.getElementById("show_print_margin");
-var highlightSelectedWordE = document.getElementById("highlight_selected_word");
-var showHScrollEl = document.getElementById("show_hscroll");
-var showVScrollEl = document.getElementById("show_vscroll");
-var animateScrollEl = document.getElementById("animate_scroll");
-var softTabEl = document.getElementById("soft_tab");
-var navigateWithinSoftTabEl = document.getElementById("navigate_within_soft_tab");
-var behavioursEl = document.getElementById("enable_behaviours");
-
-fillDropdown(docEl, doclist.all);
-
-fillDropdown(modeEl, modelist.modes);
-var modesByName = modelist.modesByName;
-bindDropdown("mode", function(value) {
-    env.editor.session.setMode(modesByName[value].mode || modesByName.text.mode);
-    env.editor.session.modeName = value;
-});
-
 doclist.history = doclist.docs.map(function(doc) {
     return doc.name;
 });
@@ -323,8 +297,7 @@ doclist.cycleOpen = function(editor, dir) {
     else if (h.index <= 0)
         h.index = h.length - 1;
     var s = h[h.index];
-    docEl.value = s;
-    docEl.onchange();
+    doclist.pickDocument(s);
 };
 doclist.addToHistory = function(name) {
     var h = this.history;
@@ -335,182 +308,100 @@ doclist.addToHistory = function(name) {
         h.index = h.push(name);
     }
 };
-
-bindDropdown("doc", function(name) {
+doclist.pickDocument = function(name) {
     doclist.loadDoc(name, function(session) {
         if (!session)
             return;
         doclist.addToHistory(session.name);
         session = env.split.setSession(session);
         whitespace.detectIndentation(session);
-        updateUIEditorOptions();
+        optionsPanel.render();
         env.editor.focus();
     });
-});
-
-
-function updateUIEditorOptions() {
-    var editor = env.editor;
-    var session = editor.session;
-
-    session.setFoldStyle(foldingEl.value);
-
-    saveOption(docEl, session.name);
-    saveOption(modeEl, session.modeName || "text");
-    saveOption(wrapModeEl, session.getUseWrapMode() ? session.getWrapLimitRange().min || "free" : "off");
-
-    saveOption(selectStyleEl, editor.getSelectionStyle() == "line");
-    saveOption(themeEl, editor.getTheme());
-    saveOption(highlightActiveEl, editor.getHighlightActiveLine());
-    saveOption(showHiddenEl, editor.getShowInvisibles());
-    saveOption(showGutterEl, editor.renderer.getShowGutter());
-    saveOption(showPrintMarginEl, editor.renderer.getShowPrintMargin());
-    saveOption(highlightSelectedWordE, editor.getHighlightSelectedWord());
-    saveOption(showHScrollEl, editor.renderer.getHScrollBarAlwaysVisible());
-    saveOption(animateScrollEl, editor.getAnimatedScroll());
-    saveOption(softTabEl, session.getUseSoftTabs());
-    saveOption(navigateWithinSoftTabEl, session.getNavigateWithinSoftTabs());
-    saveOption(behavioursEl, editor.getBehavioursEnabled());
-}
-
-themelist.themes.forEach(function(x){ x.value = x.theme });
-fillDropdown(themeEl, {
-    Bright: themelist.themes.filter(function(x){return !x.isDark}),
-    Dark: themelist.themes.filter(function(x){return x.isDark})
-});
-
-event.addListener(themeEl, "mouseover", function(e){
-    themeEl.desiredValue = e.target.value;
-    if (!themeEl.$timer)
-        themeEl.$timer = setTimeout(themeEl.updateTheme);
-});
-
-event.addListener(themeEl, "mouseout", function(e){
-    themeEl.desiredValue = null;
-    if (!themeEl.$timer)
-        themeEl.$timer = setTimeout(themeEl.updateTheme, 20);
-});
-
-themeEl.updateTheme = function(){
-    env.split.setTheme((themeEl.desiredValue || themeEl.selectedValue));
-    themeEl.$timer = null;
 };
 
-bindDropdown("theme", function(value) {
-    if (!value)
-        return;
-    env.editor.setTheme(value);
-    themeEl.selectedValue = value;
-});
 
-bindDropdown("keybinding", function(value) {
-    env.editor.setKeyboardHandler(keybindings[value]);
-});
 
-bindDropdown("fontsize", function(value) {
-    env.split.setFontSize(value);
-});
+var OptionPanel = require("ace/ext/options").OptionPanel;
+var optionsPanel = new OptionPanel(env.editor);
 
-bindDropdown("folding", function(value) {
-    env.editor.session.setFoldStyle(value);
-    env.editor.setShowFoldWidgets(value !== "manual");
-});
+optionsPanel.add({
+    Main: {
+        Document: {
+            type: "select",
+            path: "doc",
+            items: doclist.all,
+            position: -101,
+            onchange: doclist.pickDocument,
+            getValue: function() {
+                return env.editor.session.name || "javascript";
+            }
+        },
+        Split: {
+            type: "buttonBar",
+            path: "split",
+            values: ["None", "Below", "Beside"],
+            position: -100,
+            onchange: function(value) {
+                var sp = env.split;
+                if (value == "Below" || value == "Beside") {
+                    var newEditor = (sp.getSplits() == 1);
+                    sp.setOrientation(value == "Below" ? sp.BELOW : sp.BESIDE);
+                    sp.setSplits(2);
 
-bindDropdown("soft_wrap", function(value) {
-    env.editor.setOption("wrap", value);
-});
-
-bindCheckbox("select_style", function(checked) {
-    env.editor.setOption("selectionStyle", checked ? "line" : "text");
-});
-
-bindCheckbox("highlight_active", function(checked) {
-    env.editor.setHighlightActiveLine(checked);
-});
-
-bindCheckbox("show_hidden", function(checked) {
-    env.editor.setShowInvisibles(checked);
-});
-
-bindCheckbox("display_indent_guides", function(checked) {
-    env.editor.setDisplayIndentGuides(checked);
-});
-
-bindCheckbox("show_gutter", function(checked) {
-    env.editor.renderer.setShowGutter(checked);
-});
-
-bindCheckbox("show_print_margin", function(checked) {
-    env.editor.renderer.setShowPrintMargin(checked);
-});
-
-bindCheckbox("highlight_selected_word", function(checked) {
-    env.editor.setHighlightSelectedWord(checked);
-});
-
-bindCheckbox("show_hscroll", function(checked) {
-    env.editor.setOption("hScrollBarAlwaysVisible", checked);
-});
-
-bindCheckbox("show_vscroll", function(checked) {
-    env.editor.setOption("vScrollBarAlwaysVisible", checked);
-});
-
-bindCheckbox("animate_scroll", function(checked) {
-    env.editor.setAnimatedScroll(checked);
-});
-
-bindCheckbox("soft_tab", function(checked) {
-    env.editor.session.setUseSoftTabs(checked);
-});
-
-bindCheckbox("navigate_within_soft_tab", function(checked) {
-    env.editor.session.setNavigateWithinSoftTabs(checked);
-});
-
-bindCheckbox("enable_behaviours", function(checked) {
-    env.editor.setBehavioursEnabled(checked);
-});
-
-bindCheckbox("fade_fold_widgets", function(checked) {
-    env.editor.setFadeFoldWidgets(checked);
-});
-bindCheckbox("read_only", function(checked) {
-    env.editor.setReadOnly(checked);
-});
-bindCheckbox("scrollPastEnd", function(checked) {
-    env.editor.setOption("scrollPastEnd", checked);
-});
-
-bindDropdown("split", function(value) {
-    var sp = env.split;
-    if (value == "none") {
-        sp.setSplits(1);
-    } else {
-        var newEditor = (sp.getSplits() == 1);
-        sp.setOrientation(value == "below" ? sp.BELOW : sp.BESIDE);
-        sp.setSplits(2);
-
-        if (newEditor) {
-            var session = sp.getEditor(0).session;
-            var newSession = sp.setSession(session, 1);
-            newSession.name = session.name;
+                    if (newEditor) {
+                        var session = sp.getEditor(0).session;
+                        var newSession = sp.setSession(session, 1);
+                        newSession.name = session.name;
+                    }
+                } else {
+                    sp.setSplits(1);
+                }
+            },
+            getValue: function() {
+                var sp = env.split;
+                return sp.getSplits() == 1
+                    ? "None"
+                    : sp.getOrientation() == sp.BELOW
+                    ? "Below"
+                    : "Beside";
+            }
         }
+    },
+    More: {
+        "Rtl Text": {
+            path: "rtlText",
+            position: 900
+        },
+        "Show token info": {
+            path: "showTokenInfo",
+            position: 2000
+        },
+        "Text Input Debugger": devUtil.textInputDebugger
     }
 });
 
-
-bindCheckbox("elastic_tabstops", function(checked) {
-    env.editor.setOption("useElasticTabstops", checked);
+var optionsPanelContainer = document.getElementById("optionsPanel");
+optionsPanel.render();
+optionsPanelContainer.insertBefore(optionsPanel.container, optionsPanelContainer.firstChild);
+optionsPanel.on("setOption", function(e) {
+    util.saveOption(e.name, e.value);
 });
 
-var iSearchCheckbox = bindCheckbox("isearch", function(checked) {
-    env.editor.setOption("useIncrementalSearch", checked);
-});
+function updateUIEditorOptions() {
+    optionsPanel.editor = env.editor;
+    optionsPanel.render();
+}
 
-env.editor.addEventListener('incrementalSearchSettingChanged', function(event) {
-    iSearchCheckbox.checked = event.isEnabled;
-});
+optionsPanel.setOption("doc", util.getOption("doc") || "JavaScript");
+for (var i in optionsPanel.options) {
+    var value = util.getOption(i);
+    if (value != undefined) {
+        if ((i == "mode" || i == "theme") && !/[/]/.test(value))
+            value = "ace/" + i + "/" + value;
+        optionsPanel.setOption(i, value);
+    }
+}
 
 
 function synchroniseScrolling() {
@@ -522,16 +413,6 @@ function synchroniseScrolling() {
     s2.on('changeScrollLeft', function(pos) {s1.setScrollLeft(pos)});
 }
 
-bindCheckbox("highlight_token", function(checked) {
-    var editor = env.editor;
-    if (editor.tokenTooltip && !checked) {
-        editor.tokenTooltip.destroy();
-        delete editor.tokenTooltip;
-    } else if (checked) {
-        editor.tokenTooltip = new TokenTooltip(editor);
-    }
-});
-
 var StatusBar = require("ace/ext/statusbar").StatusBar;
 new StatusBar(env.editor, cmdLine.container);
 
@@ -542,8 +423,7 @@ net.loadScript("https://cloud9ide.github.io/emmet-core/emmet.js", function() {
     env.editor.setOption("enableEmmet", true);
 });
 
-
-// require("ace/placeholder").PlaceHolder;
+require("ace/placeholder").PlaceHolder;
 
 var snippetManager = require("ace/snippets").snippetManager;
 
@@ -578,10 +458,26 @@ env.editSnippets = function() {
     editor.focus();
 };
 
+optionsPanelContainer.insertBefore(
+    dom.buildDom(["div", {style: "text-align:right;margin-right: 60px"},
+        ["div", {}, 
+            ["button", {onclick: env.editSnippets}, "Edit Snippets"]],
+        ["div", {}, 
+            ["button", {onclick: function() {
+                var info = navigator.platform + "\n" + navigator.userAgent;
+                if (env.editor.getValue() == info)
+                    return env.editor.undo();
+                env.editor.setValue(info, -1);
+                env.editor.setOption("wrap", 80);
+            }}, "Show Browser Info"]],
+        devUtil.getUI()
+    ]),
+    optionsPanelContainer.children[1]
+);
+
 require("ace/ext/language_tools");
 env.editor.setOptions({
     enableBasicAutocompletion: true,
-    enableLiveAutocompletion: false,
     enableSnippets: true
 });
 
@@ -607,25 +503,25 @@ commandManager.addCommands([{
     name: "window-left",
     bindKey: {win: "cmd-alt-left", mac: "ctrl-cmd-left"},
     exec: function() {
-        moveFocus("left");
+        moveFocus();
     }
 }, {
     name: "window-right",
     bindKey: {win: "cmd-alt-right", mac: "ctrl-cmd-right"},
     exec: function() {
-        moveFocus("right");
+        moveFocus();
     }
 }, {
     name: "window-up",
     bindKey: {win: "cmd-alt-up", mac: "ctrl-cmd-up"},
     exec: function() {
-        moveFocus("up");
+        moveFocus();
     }
 }, {
     name: "window-down",
     bindKey: {win: "cmd-alt-down", mac: "ctrl-cmd-down"},
     exec: function() {
-        moveFocus("down");
+        moveFocus();
     }
 }]);
 

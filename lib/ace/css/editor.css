@@ -1,3 +1,31 @@
+/*
+styles = []
+for (var i = 1; i < 16; i++) {
+    styles.push(".ace_br" + i + "{" + (
+        ["top-left", "top-right", "bottom-right", "bottom-left"]
+    ).map(function(x, j) {
+        return i & (1<<j) ? "border-" + x + "-radius: 3px;" : "" 
+    }).filter(Boolean).join(" ") + "}")
+}
+styles.join("\n")
+*/
+.ace_br1 {border-top-left-radius    : 3px;}
+.ace_br2 {border-top-right-radius   : 3px;}
+.ace_br3 {border-top-left-radius    : 3px; border-top-right-radius:    3px;}
+.ace_br4 {border-bottom-right-radius: 3px;}
+.ace_br5 {border-top-left-radius    : 3px; border-bottom-right-radius: 3px;}
+.ace_br6 {border-top-right-radius   : 3px; border-bottom-right-radius: 3px;}
+.ace_br7 {border-top-left-radius    : 3px; border-top-right-radius:    3px; border-bottom-right-radius: 3px;}
+.ace_br8 {border-bottom-left-radius : 3px;}
+.ace_br9 {border-top-left-radius    : 3px; border-bottom-left-radius:  3px;}
+.ace_br10{border-top-right-radius   : 3px; border-bottom-left-radius:  3px;}
+.ace_br11{border-top-left-radius    : 3px; border-top-right-radius:    3px; border-bottom-left-radius:  3px;}
+.ace_br12{border-bottom-right-radius: 3px; border-bottom-left-radius:  3px;}
+.ace_br13{border-top-left-radius    : 3px; border-bottom-right-radius: 3px; border-bottom-left-radius:  3px;}
+.ace_br14{border-top-right-radius   : 3px; border-bottom-right-radius: 3px; border-bottom-left-radius:  3px;}
+.ace_br15{border-top-left-radius    : 3px; border-top-right-radius:    3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px;}
+
+
 .ace_editor {
     position: relative;
     overflow: hidden;
@@ -22,10 +50,9 @@
 
 .ace_content {
     position: absolute;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
     box-sizing: border-box;
     min-width: 100%;
+    contain: style size layout;
 }
 
 .ace_dragging .ace_scroller:before{
@@ -59,6 +86,7 @@
     -moz-user-select: none;
     -webkit-user-select: none;
     user-select: none;
+    contain: style size layout;
 }
 
 .ace_gutter-active-line {
@@ -72,6 +100,10 @@
 }
 
 .ace_gutter-cell {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
     padding-left: 19px;
     padding-right: 6px;
     background-repeat: no-repeat;
@@ -97,6 +129,7 @@
 }
 
 .ace_scrollbar {
+    contain: strict;
     position: absolute;
     right: 0;
     bottom: 0;
@@ -143,7 +176,7 @@
     font: inherit;
     padding: 0 1px;
     margin: 0 -1px;
-    text-indent: -1em;
+    contain: strict;
     -ms-user-select: text;
     -moz-user-select: text;
     -webkit-user-select: text;
@@ -151,13 +184,30 @@
     /*with `pre-line` chrome inserts &nbsp; instead of space*/
     white-space: pre!important;
 }
-
 .ace_text-input.ace_composition {
-    background: inherit;
+    background: transparent;
     color: inherit;
     z-index: 1000;
     opacity: 1;
-    text-indent: 0;
+}
+.ace_composition_placeholder { color: transparent }
+.ace_composition_marker { 
+    border-bottom: 1px solid;
+    position: absolute;
+    border-radius: 0;
+    margin-top: 1px;
+}
+
+[ace_nocontext=true] {
+    transform: none!important;
+    filter: none!important;
+    perspective: none!important;
+    clip-path: none!important;
+    mask : none!important;
+    contain: none!important;
+    perspective: none!important;
+    mix-blend-mode: initial!important;
+    z-index: auto;
 }
 
 .ace_layer {
@@ -169,8 +219,6 @@
     white-space: pre;
     height: 100%;
     width: 100%;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
     box-sizing: border-box;
     /* setting pointer-events: auto; on node under the mouse, which changes
         during scroll, will break mouse wheel scrolling in Safari */
@@ -182,10 +230,36 @@
     width: auto;
     text-align: right;
     pointer-events: auto;
+    height: 1000000px;
+    contain: style size layout;
 }
 
 .ace_text-layer {
     font: inherit !important;
+    position: absolute;
+    height: 1000000px;
+    width: 1000000px;
+    contain: style size layout;
+}
+
+.ace_text-layer > .ace_line, .ace_text-layer > .ace_line_group {
+    contain: style size layout;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+.ace_hidpi .ace_text-layer,
+.ace_hidpi .ace_gutter-layer,
+.ace_hidpi .ace_content,
+.ace_hidpi .ace_gutter {
+    contain: strict;
+    will-change: transform;
+}
+.ace_hidpi .ace_text-layer > .ace_line, 
+.ace_hidpi .ace_text-layer > .ace_line_group {
+    contain: strict;
 }
 
 .ace_cjk {
@@ -200,8 +274,6 @@
 .ace_cursor {
     z-index: 4;
     position: absolute;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
     box-sizing: border-box;
     border-left: 2px solid;
     /* workaround for smooth cursor repaintng whole screen in chrome */
@@ -226,8 +298,32 @@
 }
 
 .ace_smooth-blinking .ace_cursor {
-    -webkit-transition: opacity 0.18s;
-            transition: opacity 0.18s;
+    transition: opacity 0.18s;
+}
+
+.ace_animate-blinking .ace_cursor {
+    animation-duration: 1000ms;
+    animation-timing-function: step-end;
+    animation-name: blink-ace-animate;
+    animation-iteration-count: infinite;
+}
+
+.ace_animate-blinking.ace_smooth-blinking .ace_cursor {
+    animation-duration: 1000ms;
+    animation-timing-function: ease-in-out;
+    animation-name: blink-ace-animate-smooth;
+}
+    
+@keyframes blink-ace-animate {
+    from, to { opacity: 1; }
+    60% { opacity: 0; }
+}
+
+@keyframes blink-ace-animate-smooth {
+    from, to { opacity: 1; }
+    45% { opacity: 1; }
+    60% { opacity: 0; }
+    85% { opacity: 0; }
 }
 
 .ace_marker-layer .ace_step, .ace_marker-layer .ace_stack {
@@ -253,14 +349,10 @@
 .ace_marker-layer .ace_selected-word {
     position: absolute;
     z-index: 4;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
     box-sizing: border-box;
 }
 
 .ace_line .ace_fold {
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
     box-sizing: border-box;
 
     display: inline-block;
@@ -293,7 +385,6 @@
 
 .ace_tooltip {
     background-color: #FFF;
-    background-image: -webkit-linear-gradient(top, transparent, rgba(0, 0, 0, 0.1));
     background-image: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.1));
     border: 1px solid gray;
     border-radius: 1px;
@@ -303,8 +394,6 @@
     padding: 3px 4px;
     position: fixed;
     z-index: 999999;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
     box-sizing: border-box;
     cursor: default;
     white-space: pre;
@@ -321,8 +410,6 @@
 }
 
 .ace_fold-widget {
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
     box-sizing: border-box;
 
     margin: 0 -12px 0 1px;
@@ -383,20 +470,33 @@
     box-shadow: 0 1px 1px rgba(255, 255, 255, 0.2);
 }
 
+.ace_inline_button {
+    border: 1px solid lightgray;
+    display: inline-block;
+    margin: -1px 8px;
+    padding: 0 5px;
+    pointer-events: auto;
+    cursor: pointer;
+}
+.ace_inline_button:hover {
+    border-color: gray;
+    background: rgba(200,200,200,0.2);
+    display: inline-block;
+    pointer-events: auto;
+}
+
 .ace_fold-widget.ace_invalid {
     background-color: #FFB4B4;
     border-color: #DE5555;
 }
 
 .ace_fade-fold-widgets .ace_fold-widget {
-    -webkit-transition: opacity 0.4s ease 0.05s;
-            transition: opacity 0.4s ease 0.05s;
+    transition: opacity 0.4s ease 0.05s;
     opacity: 0;
 }
 
 .ace_fade-fold-widgets:hover .ace_fold-widget {
-    -webkit-transition: opacity 0.05s ease 0.05s;
-            transition: opacity 0.05s ease 0.05s;
+    transition: opacity 0.05s ease 0.05s;
     opacity:1;
 }
 
@@ -427,37 +527,4 @@
     background-color: rgba(255, 255, 0,0.2);
     position: absolute;
     z-index: 8;
-}
-
-/*
-styles = []
-for (var i = 1; i < 16; i++) {
-    styles.push(".ace_br" + i + "{" + (
-        ["top-left", "top-right", "bottom-right", "bottom-left"]
-    ).map(function(x, j) {
-        return i & (1<<j) ? "border-" + x + "-radius: 3px;" : "" 
-    }).filter(Boolean).join(" ") + "}")
-}
-styles.join("\n")
-*/
-.ace_br1 {border-top-left-radius    : 3px;}
-.ace_br2 {border-top-right-radius   : 3px;}
-.ace_br3 {border-top-left-radius    : 3px; border-top-right-radius:    3px;}
-.ace_br4 {border-bottom-right-radius: 3px;}
-.ace_br5 {border-top-left-radius    : 3px; border-bottom-right-radius: 3px;}
-.ace_br6 {border-top-right-radius   : 3px; border-bottom-right-radius: 3px;}
-.ace_br7 {border-top-left-radius    : 3px; border-top-right-radius:    3px; border-bottom-right-radius: 3px;}
-.ace_br8 {border-bottom-left-radius : 3px;}
-.ace_br9 {border-top-left-radius    : 3px; border-bottom-left-radius:  3px;}
-.ace_br10{border-top-right-radius   : 3px; border-bottom-left-radius:  3px;}
-.ace_br11{border-top-left-radius    : 3px; border-top-right-radius:    3px; border-bottom-left-radius:  3px;}
-.ace_br12{border-bottom-right-radius: 3px; border-bottom-left-radius:  3px;}
-.ace_br13{border-top-left-radius    : 3px; border-bottom-right-radius: 3px; border-bottom-left-radius:  3px;}
-.ace_br14{border-top-right-radius   : 3px; border-bottom-right-radius: 3px; border-bottom-left-radius:  3px;}
-.ace_br15{border-top-left-radius    : 3px; border-top-right-radius:    3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px;}
-
-.ace_text-input-ios {
-  position: absolute !important;
-  top: -100000px !important;
-  left: -100000px !important;
 }

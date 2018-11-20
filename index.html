@@ -22,7 +22,7 @@
         <div id="wrapper">
             <div class="content">
                 <div class="column2">
-                    <div id="top_container" class="collapse">
+                    <div id="top_container">
                         <h1><img src="./doc/site/images/textimage.png" alt="The high performance code editor for the web." /></h1>
                         <div id="page_logo">
                             <img src="./doc/site/images/ace-logo.png" />
@@ -86,7 +86,7 @@ console.log(addResult);
 </pre>
                             <p id="embed_link"><a href="#nav=embedding">Learn how to embed this in your own site</a></p>
                             <p class="highlight_note">Looking for a more full-featured demo? Check out the
-                                <a href="build/kitchen-sink.html" target="_blank">kitchen sink</a>.
+                                <a href="build/kitchen-sink.html" target="_blank"  rel="noreferer">kitchen sink</a>.
                             </p>
                             <h2>Features</h2>
                             <ul class="content-list">
@@ -168,7 +168,7 @@ console.log(addResult);
 &lt;script>
     var editor = ace.edit("editor");
     editor.setTheme("ace/theme/monokai");
-    editor.getSession().setMode("ace/mode/javascript");
+    editor.session.setMode("ace/mode/javascript");
 &lt;/script>
 &lt;/body>
 &lt;/html></pre>
@@ -190,32 +190,63 @@ console.log(addResult);
                             <p><em>In all of these examples Ace has been invoked 
                                 as shown in the <a href="#nav=embedding">embedding guide</a>.</em>
                             </p>
+                            <h2>Configuring the editor</h2>
+                            <p>there are several ways to pass configuration to Ace</p>
+                            <pre><code class="javascript">// pass options to ace.edit
+ace.edit(element, {
+    mode: "ace/mode/javascript",
+    selectionStyle: "text"
+})
+// use setOptions method to set several options at once
+editor.setOptions({
+    autoScrollEditorIntoView: true,
+    copyWithEmptySelection: true,
+});
+// use setOptions method
+editor.setOption("mergeUndoDeltas", "always");
+
+// some options are also available as methods e.g. 
+editor.setTheme(...)
+
+// to get the value of the option use
+editor.getOption("optionName");
+</code>
+</pre>
+                            <p>See <a href="https://github.com/ajaxorg/ace/wiki/Configuring-Ace">Configuring-Ace wiki page</a> for a more detailed list of options.</p>
+                            <h3>Changing the size of the editor</h3>
+                            <p>Ace only checks for changes of the size of it's container when window is resized. If you resize the editor div in another manner, and need Ace to resize, use the following:</p>
+                            <pre><code class="javascript">editor.resize()</code></pre>
+                            <p>if you want editor to change it's size based on contents, use maxLines option as shown in <a target="_blank" rel="noreferer noopener" href="https://ace.c9.io/demo/autoresize.html">https://ace.c9.io/demo/autoresize.html</a></p>
                             <h2>Setting Themes</h2>
                             <p>Themes are loaded on demand; all you have to do is pass the string name:</p>
                             <pre><code class="javascript">editor.setTheme("ace/theme/twilight");</code></pre>
-                            <p><span class="expand_arrow">&gt;</span> <a href="https://github.com/ajaxorg/ace/tree/master/lib/ace/theme" target="_blank">See all themes</a></p>
+                            <p><span class="expand_arrow">&gt;</span> <a href="https://github.com/ajaxorg/ace/tree/master/lib/ace/theme" target="_blank" rel="noreferer noopener">See all themes</a></p>
                             <h2>Setting the Programming Language Mode</h2>
                             <p>By default, the editor supports plain text mode. All other language modes are available as separate modules, loaded on demand like this:</p>
-                            <pre><code class="javascript">editor.getSession().setMode("ace/mode/javascript");</code></pre>
-                            <!--h2>One Editor, Multiple Sessions</h2>
+                            <pre><code class="javascript">editor.session.setMode("ace/mode/javascript");</code></pre>
+                            <h2>One Editor, Multiple Sessions</h2>
                                 <p>Ace keeps everything about the state of the editor (selection, scroll position, etc.)
                                     in <code class="javascript">editor.session</code>. This means you can grab the
                                     session, store it in a var, and set the editor to another session (e.g. a tabbed editor).</p>
                                 <p>You might accomplish this like so:</p>
                                 
                                 <pre><code class="javascript">var EditSession = require("ace/edit_session").EditSession;
-                                var js = new EditSession("some js code");
-                                var css = new EditSession(["some", "css", "code here"]);
-                                // and then to load document into editor, just call
-                                editor.setSession(js);</code></pre-->
+var js = new EditSession("some js code");
+var css = new EditSession(["some", "css", "code here"]);
+// and then to load document into editor, just call
+editor.setSession(js);</code></pre>
                             <h2>Common Operations</h2>
                             <p>Set and get content:</p>
-                            <pre><code class="javascript">editor.setValue("the new text here"); // or session.setValue
+                            <pre><code class="javascript">editor.setValue("the new text here");
+editor.session.setValue("the new text here"); // set value and reset undo history
 editor.getValue(); // or session.getValue</code></pre>
                             <p>Get selected text:</p>
-                            <pre><code class="javascript">editor.session.getTextRange(editor.getSelectionRange());</code></pre>
-                            <p>Insert at cursor:</p>
+                            <pre><code class="javascript">editor.getSelectedText(); // or for a specific range
+editor.session.getTextRange(editor.getSelectionRange()); </code></pre>
+                            <p>Insert at cursor, emulating user input:</p>
                             <pre><code class="javascript">editor.insert("Something cool");</code></pre>
+                            <p>Replace text in range:</p>
+                            <pre><code class="javascript">editor.session.replace(new ace.Range(0, 0, 1, 1), "new text");</code></pre>
                             <p>Get the current cursor line and column:</p>
                             <pre><code class="javascript">editor.selection.getCursor();</code></pre>
                             <p>Go to a line:</p>
@@ -223,22 +254,36 @@ editor.getValue(); // or session.getValue</code></pre>
                             <p>Get total number of lines:</p>
                             <pre><code class="javascript">editor.session.getLength();</code></pre>
                             <p>Set the default tab size:</p>
-                            <pre><code class="javascript">editor.getSession().setTabSize(4);</code></pre>
+                            <pre><code class="javascript">editor.session.setTabSize(4);</code></pre>
                             <p>Use soft tabs:</p>
-                            <pre><code class="javascript">editor.getSession().setUseSoftTabs(true);</code></pre>
+                            <pre><code class="javascript">editor.session.setUseSoftTabs(true);</code></pre>
                             <p>Set the font size:</p>
                             <pre><code class="javascript">document.getElementById('editor').style.fontSize='12px';</code></pre>
                             <p>Toggle word wrapping:</p>
-                            <pre><code class="javascript">editor.getSession().setUseWrapMode(true);</code></pre>
+                            <pre><code class="javascript">editor.session.setUseWrapMode(true);</code></pre>
                             <p>Set line highlighting:</p>
                             <pre><code class="javascript">editor.setHighlightActiveLine(false);</code></pre>
                             <p>Set the print margin visibility:</p>
                             <pre><code class="javascript">editor.setShowPrintMargin(false);</code></pre>
                             <p>Set the editor to read-only:</p>
                             <pre><code class="javascript">editor.setReadOnly(true);  // false to make it editable</code></pre>
-                            <h3>Triggering Resizes</h3>
-                            <p>Ace only resizes itself on window events. If you resize the editor div in another manner, and need Ace to resize, use the following:</p>
-                            <pre><code class="javascript">editor.resize()</code></pre>
+                            <h3>Using undo manager</h3>
+                            <p>To group undo delta of the next edit with the previous one set `mergeUndoDeltas` to true</p>
+                            <pre><code class="language-javascript">editor.session.mergeUndoDeltas = true; 
+editor.session.insert({row: 0, column:0}, Date()+"");</code></pre>
+
+                            <p>To start new undo group use `markUndoGroup` method</p>
+                            <pre><code class="language-javascript">editor.insertSnippet("a$0b"); 
+editor.session.markUndoGroup(); 
+editor.insertSnippet("x$0y");</code></pre>
+                            <p>To disable undo of a an edit in a collaborative editor</p>
+                            <pre><code class="language-javascript">var rev = session.$undoManager.startNewGroup(); // start new undo group
+... // apply the edit 
+session.$undoManager.markIgnored(rev); // mark the new group as ignored</code></pre>
+
+
+                            <p>To implement undo/redo buttons see <a target="_blank" rel="noreferer noopener" href="https://ace.c9.io/demo/toolbar.html">https://ace.c9.io/demo/toolbar.html</a></p>
+
                             <h3>Searching</h3>
                             <pre><code class="language-javascript">editor.find('needle',{
     backwards: false,
@@ -278,6 +323,9 @@ editor.findPrevious();</code></pre>
                                 <li>
                                     <code>skipCurrent</code>: Whether or not to include the current line in the search. Default to <code>false</code>.
                                 </li>
+				 <li>
+                                    <code>preventScroll</code>: Whether or not to move the cursor to the next match. Default to <code>false</code>.
+                                </li>
                             </ul>
                             <p>Here's how you can perform a replace:</p>
                             <pre><code class="javascript">editor.find('foo');
@@ -287,14 +335,14 @@ editor.replace('bar');</code></pre>
                             <p>(<code>editor.replaceAll</code> uses the needle set earlier by <code>editor.find('needle', ...</code>)</p>
                             <h3>Listening to Events</h3>
                             <p>To listen for an <code>onchange</code>:</p>
-                            <pre><code class="javascript">editor.getSession().on('change', function(e) {
-    // e.type, etc
+                            <pre><code class="javascript">editor.session.on('change', function(delta) {
+    // delta.start, delta.end, delta.lines, delta.action
 });</code></pre>
                             <p>To listen for an <code>selection</code> change:</p>
-                            <pre><code class="javascript">editor.getSession().selection.on('changeSelection', function(e) {
+                            <pre><code class="javascript">editor.session.selection.on('changeSelection', function(e) {
 });</code></pre>
                             <p>To listen for a <code>cursor</code> change:</p>
-                            <pre><code class="javascript">editor.getSession().selection.on('changeCursor', function(e) {
+                            <pre><code class="javascript">editor.session.selection.on('changeCursor', function(e) {
 });</code></pre>
                             <h3>Adding New Commands and Keybindings</h3>
                             <p>To assign key bindings to a custom function:</p>
@@ -306,12 +354,21 @@ editor.replace('bar');</code></pre>
     },
     readOnly: true // false if this command should not apply in readOnly mode
 });</code></pre>
+                            <h3>Configure dynamic loading of modes and themes</h3>
+                            <p>By default ace detcts the url for dynamic loading by finding the script node for ace.js.
+                            This doesn't work if ace.js is not loaded with a separate script tag, and in this case it is required to set url explicitely</p>
+                            <pre><code class="javascript">ace.config.set("basePath", "https://url.to.a/folder/that/contains-ace-modes");</code></pre>
+                            <p>Path for one module alone can be configured with:</p>
+                            <pre><code class="javascript">ace.config.setModuleUrl("ace/theme/textmate", "url for textmate.js");</code></pre>
+                            <p>When using ace with webpack, it is possible to configure paths for all submodules using</p>
+                            <pre><code class="javascript">require("ace-builds/webpack-resolver");</code></pre>
+                            <p>which depends on <a href="https://github.com/webpack-contrib/file-loader">file-loader</a></p>
                         </div>
                         <div class="tab-pane fade" id="higlighter">
                             <h1>Creating a Syntax Highlighter for Ace</h1>
                             <p>Creating a new syntax highlighter for Ace is extremely simple. You'll need to define two pieces of code: a new mode, and a new set of highlighting rules.</p>
                             <h2 id="where-to-start"><a class="heading_anchor" href="#where-to-start"><i class="headerLinkIcon"></i></a>Where to Start</h2>
-                            <p>We recommend using the the <a href="tool/mode_creator.html">Ace Mode Creator</a> when defining your highlighter. This allows you to inspect your code's tokens, as well as providing a live preview of the syntax highlighter in action.</p>
+                            <p>We recommend using the <a href="tool/mode_creator.html">Ace Mode Creator</a> when defining your highlighter. This allows you to inspect your code's tokens, as well as providing a live preview of the syntax highlighter in action.</p>
                             <h2 id="defining-a-mode"><a class="heading_anchor" href="#defining-a-mode"><i class="headerLinkIcon"></i></a>Defining a Mode</h2>
                             <p>Every language needs a mode. A mode contains the paths to a language's syntax highlighting rules, indentation rules, and code folding rules. Without defining a mode, Ace won't know anything about the finer aspects of your language.</p>
                             <p>Here is the starter template we'll use to create a new mode:</p>
@@ -482,7 +539,7 @@ var fonts = lang.arrayToMap(
         defaultToken : "text"
     } ]
 };</code></pre>
-                            <p>In this extremly short sample, we're defining some highlighting rules for when Ace detectes a <code>&lt;![CDATA</code> tag. When one is encountered, the tokenizer moves from <code>start</code> into the <code>cdata</code> state. It remains there, applying the <code>text</code> token to any string it encounters. Finally, when it hits a closing <code>]&gt;</code> symbol, it returns to the <code>start</code> state and continues to tokenize anything else.</p>
+                            <p>In this extremely short sample, we're defining some highlighting rules for when Ace detects a <code>&lt;![CDATA</code> tag. When one is encountered, the tokenizer moves from <code>start</code> into the <code>cdata</code> state. It remains there, applying the <code>text</code> token to any string it encounters. Finally, when it hits a closing <code>]&gt;</code> symbol, it returns to the <code>start</code> state and continues to tokenize anything else.</p>
                             <h2>Using the TMLanguage Tool</h2>
                             <p>There is a tool that 
                                 will take an existing <em>tmlanguage</em> file and do its best to convert it into Javascript for Ace to consume. Here's what you need to get started:
@@ -716,7 +773,7 @@ if (match) {
                                         information on how to work with Ace, check out the <a href="#nav=embedding">embedding guide</a>.
                                     </p>
                                     <p>Below is an ERD diagram describing some fundamentals about how the internals of Ace works:</p>
-                                    <img src="doc/template/resources/images/Ace_ERD.png" style="max-width:100%; max-height:100%" />
+                                    <img lazy-src="doc/template/resources/images/Ace_ERD.png" style="max-width:100%; max-height:100%" />
                                 </div>
                                 </div>
                             </div>
@@ -725,104 +782,82 @@ if (match) {
                             <h1>Projects Using Ace</h1>
                             <p>Ace is used all over the web in all kinds of production applications. Here is
                                 just a small sampling:</p>
-                            <ul class="menu-list">
+                            <ul class="menu-list" style="overflow: hidden;">
                                 <li>
-                                    <img src="doc/site/images/github-logo.png"
-                                        style="left: -15px; top: -9px;" />
-                                    <a href="https://github.com/blog/905-edit-like-an-ace">GitHub</a>
+                                    <div style="height: 100%;background: url(https://a0.awsstatic.com/main/images/logos/aws_smile-header-desktop-en-white_59x35@2x.png) no-repeat 0 7px/100px;"></div>
+                                    <a href="https://aws.amazon.com/">AWS</a>
                                 </li>
                                 <li>
-                                    <img src="doc/site/images/khan-logo.png"
+                                    <img lazy-src="doc/site/images/khan-logo.png"
                                         style="left: -10px; top: -27px; width: 120px" />
                                     <a href="http://ejohn.org/blog/introducing-khan-cs/">Khan Academy</a>
                                 </li>
                                 <li>
-                                    <img src="doc/site/images/cloud9-logo.png"
+                                    <img lazy-src="doc/site/images/cloud9-logo.png"
                                         style="left: -11px;top:-12px; width:122px" />
                                     <a href="https://github.com/ajaxorg/cloud9">Cloud9 IDE</a>
                                 </li>
                                 
                                 <li>
-                                    <img src="doc/site/images/firefox-logo.png"
-                                        style="left:10px;top:-5px;width:80px" />
-                                    <a href="https://builder.addons.mozilla.org/">Firefox Add-on Builder</a>
-                                </li>
-                                <li>
-                                    <img src="doc/site/images/codecademy-logo.png"
+                                    <img lazy-src="doc/site/images/codecademy-logo.png"
                                         style="left: -5px; top: 10px;" />
                                     <a href="http://www.codecademy.com/">Codecademy</a>
                                 </li>
                                 <li>
-                                    <img src="doc/site/images/rstudio_logo_64.png"
+                                    <img lazy-src="doc/site/images/rstudio_logo_64.png"
                                         style="left: 19px; top: 2px;" />
                                     <a href="http://rstudio.org/">RStudio</a>
                                 </li>
                                 <li>
-                                    <img src="https://zedapp.s3.amazonaws.com/uploads/2014/02/zed-small.png" style="left: -1px;top: -20px;width: 103px;">
+                                    <img lazy-src="https://zedapp.s3.amazonaws.com/uploads/2014/02/zed-small.png" style="left: -1px;top: -20px;width: 103px;">
                                     <a href="http://zedapp.org">Zed</a>
                                 </li>
                                 <li>
-                                    <img src="https://raw.githubusercontent.com/creationix/tedit/gh-pages/icons/icon-128.png"
+                                    <img lazy-src="https://raw.githubusercontent.com/creationix/tedit/gh-pages/icons/icon-128.png"
                                         style="width: 104px; left: -1px; top: -17px;">
                                     <a href="https://github.com/creationix/tedit">Tedit</a>
                                 </li>
                                 <li>
-                                    <img src="https://upload.wikimedia.org/wikipedia/commons/6/63/Wikipedia-logo.png" style="left: -5px; top: -35px; width: 110px;">
+                                    <img lazy-src="https://upload.wikimedia.org/wikipedia/commons/6/63/Wikipedia-logo.png" style="left: -5px; top: -35px; width: 110px;">
                                     <a href="https://en.wikipedia.org/wiki/Special:Version" style="font-family: 'Linux Libertine','Hoefler Text',Georgia,'Times New Roman',Times,serif;">W<span style="font-variant: small-caps;">ikipedi</span>A</a>
                                 </li>
                                 <li>
-                                    <img src="doc/site/images/codiad.png"
+                                    <img lazy-src="doc/site/images/codiad.png"
                                         style="left: 10px; top: -4px; width:80px" />
                                     <a href="http://codiad.com/">Codiad</a>
                                 </li>
                                 <li>
-                                    <img src="doc/site/images/zorba-logo.png"
-                                        style="left: -5px; top: 16px;
-                                                padding: 6px 4px 6px 6px; width: 100px" />
-                                    <a href="http://try.zorba.io/queries/xquery">Zorba XQuery</a>
+                                    <img lazy-src="doc/site/images/shiftedit-logo.png"
+                                        style="left: -10px; top: -20px; width: 120px" />
+                                    <a href="http://shiftedit.net/">ShiftEdit</a>
                                 </li>
                                 <li>
-                                    <img src="doc/site/images/plunker.png"
-                                        style="left: 13px; top: -4px; width: 75px" />
-                                    <a href="http://plnkr.co/edit/">Plunker</a>
-                                </li>
-                                <li>
-                                    <img src="https://raw.githubusercontent.com/dart-lang/chromedeveditor/master/ide/web/images/icon_128.png"
-                                        style="left: 0px;top: -15px;width: 100px;" />
-                                    <a href="https://github.com/dart-lang/chromedeveditor">Chrome Dev Editor</a>
-                                </li> 
-                                <li>
-                                    <img src="doc/site/images/sassmeister-logo.png"
+                                    <img lazy-src="doc/site/images/sassmeister-logo.png"
                                         style="left: 10px;top: -5px;width: 80px;" />
                                     <a href="http://sassmeister.com/">SassMeister</a>
                                 </li> 
                                 <li>
-                                    <img src="doc/site/images/sx-logo.png"
+                                    <img lazy-src="doc/site/images/sx-logo.png"
                                         style="left: -11px; top: -12px;">
                                     <a href="http://www.scroipe.com">Scroipe</a>
                                 </li>
                                 <li>
-                                    <img src="doc/site/images/ideone-logo.png"
+                                    <img lazy-src="doc/site/images/ideone-logo.png"
                                         style="left: -5px; top: 20px;">
                                     <a href="http://ideone.com">Ideone.com</a>
                                 </li>
                                 <li>
                                     <div style="
-                                        background: url(http://lively-web.org/core/media/lively-web-logo.png) no-repeat;
+                                        background: url(https://lively-web.org/core/media/lively-web-logo.png) no-repeat;
                                         position: absolute; left: -5px; height: 71px; width: 103px; background-size: 390px;
                                         background-position: 19px;"></div>
                                     
                                     <a href="http://lively-web.org">Lively Web</a>
                                 </li>
                                 <li>
-                                    <img src="doc/site/images/modx-logo-4.png"
+                                    <img lazy-src="doc/site/images/modx-logo-4.png"
                                         style="left: 18px; top: 6px;">
                                     <a href="http://modx.com/extras/package/ace">MODX</a>
-                                </li>
-                                <li>
-                                    <img src="doc/site/images/shiftedit-logo.png"
-                                        style="left: -10px; top: -20px; width: 120px" />
-                                    <a href="http://shiftedit.net/">ShiftEdit</a>
                                 </li>
                                 <li>
                                     <div class="rotating-logo" style="background:url(doc/site/images/habitat-logo.svg) center no-repeat;
@@ -830,41 +865,34 @@ if (match) {
                                     <a href="http://habitat.inkling.com">Inkling Habitat</a>
                                 </li>
                                 <li style="width: 248px;">
-                                    <img src="https://codecombat.com/images/pages/base/logo.png" style="left: 0px; top: 1px; width: 248px">
+                                    <img lazy-src="https://codecombat.com/images/pages/base/logo.png" style="left: 0px; top: 1px; width: 248px">
                                     <a href="http://codecombat.com">Code Combat</a>
                                 </li>
-                                <!--seems to be down <li>
-                                    <img src="doc/site/images/lws-logo.png"
-                                        style="left: 0px; top: 0px; width: 100px" />
-                                    <a href="http://liveworkspace.org">Live Workspace</a>
-                                </li>-->
                                 <li>
-                                    <img src="doc/site/images/repl.it-logo.png"
-                                        style="left: 0px; top: 17px; width: 100px" />
-                                    <a href="http://repl.it/">Repl.it</a>
+                                    <div class="text-logo" style="font-size: 18px;">ShareLaTeX</div>
+                                    <a href="https://www.sharelatex.com">ShareLaTeX</a>
                                 </li>
                                 <li>
-                                    <img src="doc/site/images/stypi-logo.png"
-                                        style="left: 9px; top: -5px; width: 84px" />
-                                    <a href="https://code.stypi.com/">Stypi</a>
+                                    <img lazy-src="https://papeeria.com/assets/all/images/papeeria_small.png" style="width: 95px; left: 2px; top: 8px;">
+                                    <a href="http://papeeria.com">Papeeria</a>
                                 </li>
                                 <li>
-                                    <img src="doc/site/images/weecod-logo.png"
-                                        style="left: 0px; top: 0px; width: 100px" />
-                                    <a href="http://www.weecod.com">Weecod</a>
+                                    <img lazy-src="https://www.codingame.com/blog/wp-content/uploads/2016/11/logo_codingame_hud.png"
+                                        style="left: -15px;top: 27px;width: 127px;background: black;" />
+                                    <a href="https://www.codingame.com">CodinGame</a>
                                 </li>
                                 <li>
-                                    <img src="doc/site/images/processwire-logo.svg"
+                                    <img lazy-src="doc/site/images/processwire-logo.svg"
                                         style="left: 0px; top: 25px; width: 102px" />
                                     <a href=" http://modules.processwire.com/modules/inputfield-ace-editor/">Process<i>Wire</i></a>
                                 </li>
                                 <li>
-                                    <img src="doc/site/images/crunchapp-logo.png"
+                                    <img lazy-src="https://getcrunch.co/wp-content/uploads/2015/07/crunch-icon_32.png"
                                         style="left: 9px; top: -5px; width: 84px" />
-                                    <a href="http://crunchapp.net/">Crunch</a>
+                                    <a href="http://getcrunch.co/">Crunch</a>
                                 </li>
                                 <li>
-                                    <img src="https://drivenotepad.github.io/images/icon-128.png" 
+                                    <img lazy-src="https://drivenotepad.github.io/images/icon-128.png" 
                                         style="left: 9px; top: -5px; width: 84px">
                                     <a href="https://drivenotepad.appspot.com/support">Drive Notepad</a>
                                 </li>
@@ -877,11 +905,7 @@ if (match) {
                                     <a href="http://dillinger.io/">Dillinger</a>
                                 </li>
                                 <li>
-                                    <div class="text-logo">Evaluzio</div>
-                                    <a href="http://www.evaluzio.net/editor">Evaluzio</a>
-                                </li>
-                                <li>
-                                    <div class="text-logo">CodeHelper</div>
+                                    <div class="text-logo" style="margin-left: -14px;">CodeHelper</div>
                                     <a href="http://www.gamedevhelper.com/">CodeHelper</a>
                                 </li>
                                 <li>
@@ -897,17 +921,9 @@ if (match) {
                                     <a href="http://orbit.bonsaijs.org/">BonsaiJS playground</a>
                                 </li>
                                 <li>
-                                    <img src="https://approximatrix.com/static/images/simplytext/logo-long-white.png"
+                                    <img lazy-src="https://approximatrix.com/static/images/simplytext/logo-long-white.png"
                                         style="width: 106px; left: -4px; top: 26px;">
                                     <a href="http://approximatrix.com/products/simplytext">Simply Text</a>
-                                </li>
-                                <li>
-                                    <div class="text-logo" style="font-size: 18px;">ShareLaTeX</div>
-                                    <a href="https://www.sharelatex.com">ShareLaTeX</a>
-                                </li>
-                                <li>
-                                    <div class="text-logo" style="font-size: 18px;">Code Complete</div>
-                                    <a href="http://pagesofinterest.net/shop/code-complete">Code Complete</a>
                                 </li>
                                 <li>
                                     <div class="text-logo" style="font-size: 18px;">ACEView</div>
@@ -918,7 +934,7 @@ if (match) {
                                     <a href="http://www.boottheme.com/">BootTheme</a>
                                 </li>
                                 <li>
-                                    <img src="https://codebender.cc/images/codebender-transparent.png"
+                                    <img lazy-src="https://codebender.cc/images/codebender-transparent.png"
                                         style="left: -9px; width: 117px;top: -22px;">
                                     <a href="http://codebender.cc/">Codebender</a>
                                 </li>
@@ -927,20 +943,9 @@ if (match) {
                                     <a href="http://www.debuggex.com">Debuggex</a>
                                 </li>
                                 <li>
-                                    <div style="width:90px; left:9px; top:-6px;background:rgb(23,23,23);color:rgb(181,232,83);
-                                        font: 90px/90px Monaco, 'Bitstream Vera Sans Mono', 'Lucida Console', Terminal, monospace;
-                                        text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1), 0 0 5px rgba(181, 232, 83, 0.1), 0 0 10px rgba(181, 232, 83, 0.1);
-                                        -webkit-font-smoothing: antialiased; text-align: center; position: absolute;">S</div>
-                                    <a href="http://slimtext.org/">Slim Text</a>
-                                </li>
-                                <li>
-                                    <img src="https://www.decor-tab-creator.com/_files/decor_logo_white_new.png"
+                                    <img lazy-src="https://www.decor-tab-creator.com/_files/decor_logo_white_new.png"
                                         style="left: -5px; width: 111px;top: 20px;">
                                     <a href="https://www.decor-tab-creator.com">Decor</a>
-                                </li>
-                                <li>
-                                    <img src="https://papeeria.com/assets/all/images/papeeria_small.png" style="width: 95px; left: 2px; top: 8px;">
-                                    <a href="http://papeeria.com">Papeeria</a>
                                 </li>
                                 <li>
                                     <script>
@@ -950,12 +955,12 @@ if (match) {
                                     <a href="https://chocolatejs.org">Chocolatejs</a>
                                 </li>
                                 <li>
-                                    <img src="doc/site/images/ac-logo.png"
+                                    <img lazy-src="doc/site/images/ac-logo.png"
                                         style="left: 4px; top: 25px;" />
                                     <a href="http://www.applicationcraft.com/">Application Craft</a>
                                 </li>
                                 <li>
-                                    <img src="https://playir.com/common/icon_playir.png"
+                                    <img lazy-src="https://playir.com/common/icon_playir.png"
                                         style="left: 11px; width: 96px;top: -17px;">
                                     <a href="http://playir.com">Playir</a>
                                 </li>
@@ -964,7 +969,7 @@ if (match) {
                                     <a href="http://runnable.com">Runnable</a>
                                 </li>
                                 <li>
-                                    <img src="https://joshnuss.github.io/mruby-web-irb/images/favicon.png"
+                                    <img lazy-src="https://joshnuss.github.io/mruby-web-irb/images/favicon.png"
                                         style="left: 4px; width: 90px;top: -17px;">
                                     <a href="http://joshnuss.github.io/mruby-web-irb/">Mruby-web-irb</a>
                                 </li>
@@ -976,43 +981,21 @@ if (match) {
                                     <div class="text-logo" style="margin-left:0px;">Jetstrap</div>
                                     <a href="http://jetstrap.com/">Jetstrap</a>
                                 </li>
-                                <li title="Remote pair programming">
-                                    <div class="text-logo" style="margin-left:0px;">MadEye</div>
-                                    <a href="http://madeye.io/">MadEye</a>
-                                </li>
-                                <li>
-                                    <div class="text-logo" style="text-shadow:none">Online Judge</div>
-                                    <a href="http://www.realoj.com">RealOJ</a>
-                                </li>
                                 <li title="WebRTC based video chat + code editor">
                                     <div class="text-logo" style="font-size: 18px;">(codassium);</div>
                                     <a href="http://codassium.com/">(codassium);</a>
                                 </li>
                                 <li>
                                     <div style="font-size:50px" class="text-logo">t<span style="color:green">p<span></div>
-                                    <a href="https://tutorialspoint.com">tutorialspoint</a>
-                                </li>
-                                <li>
-                                    <!-- <img src="https://iknode.com/iknode_symbol.png"
-                                        style="width: 96px; left: 2px; top: -21px;"> -->
-                                    <a href="http://iknode.com/">iKnode</a>
+                                    <a href="https://www.tutorialspoint.com/online_html_editor.php">tutorialspoint</a>
                                 </li>
                                 <li title="Online conference and code review tool">
                                     <div style="width: 90px; left: 10px; top: 0px;background:rgb(24,73,92);color: white;position: absolute;
                                         font-size: 68px;text-align: center;font-weight: bold;font-family: inherit;line-height: normal;">sT</div>
                                     <a href="http://sourcetalk.net/">SourceTalk</a>
                                 </li>
-                                <li title="Php framework">
-                                    <div class="text-logo" style="margin-left:-12px;">Andromeda</div>
-                                    <a href="http://www.andromeda-project.org/index.php">Andromeda</a>
-                                </li>
                                 <li>
-                                    <img src="https://raw.github.com/Gisto/Gisto/master/app/icon.png"
-                                        style="width: 96px; left: 2px; top: -21px;">
-                                    <a href="http://www.gistoapp.com/">Gisto</a>
-                                </li>
-                                <li>
-                                    <img src="https://jdoodle.com/static/images/jdoodle.png"
+                                    <img lazy-src="https://jdoodle.com/static/images/jdoodle.png"
                                         style="width: 122px; left: -3px; top: -12px;">
                                     <a href="http://jdoodle.com/">JDoodle</a>
                                 </li>
@@ -1021,21 +1004,13 @@ if (match) {
                                     <a href="https://github.com/websiteduck/Run-PHP-Code">RunPHPCode</a>
                                 </li>
                                 <li>
-                                    <div class="text-logo">InstaEDU</div>
-                                    <a href="http://instaedu.com/lesson-demo/">InstaEDU</a>
-                                </li>
-                                <li>
-                                    <img src="https://s7.postimg.org/tbw9lfcvb/cloudcmd.png"
-                                        style="width: 74px; left: 13px; top: -2px;">
+                                    <img lazy-src="https://cloudcmd.io/img/logo/cloudcmd.png"
+                                        style="width: 108px; left: -4px; top: -2px;">
                                     <a href="http://cloudcmd.io">Cloud Commander</a>
                                 </li>
                                 <li>
                                     <div class="text-logo">NapCat</div>
                                     <a href="http://napcatapp.tumblr.com/post/60598006734/version-1-3-is-released">NapCat</a>
-                                </li>
-                                <li>
-                                    <div class="text-logo">CorsLit</div>
-                                    <a href="http://www.corslit.com/new/melloWorld">CorsLit</a>
                                 </li>
                                 <li>
                                     <div style="color:orange;font-size:50px" class="text-logo">OJ</div>
@@ -1046,37 +1021,33 @@ if (match) {
                                     <a href="http://codechat.net/">Codechat</a>
                                 </li>
                                 <li>
-                                    <img src="doc/site/images/wolf_3d_logo_trans.png"
+                                    <img lazy-src="doc/site/images/wolf_3d_logo_trans.png"
                                         style="left: 10px; top: -4px; width:80px" />
                                     <a href="http://www.wolfcms.org/repository/133">Wolf CMS</a>
                                 </li>
                                 <li>
                                     <div style="color:green;font-size:50px" class="text-logo">&lt;/&gt;</div>
-                                    <a href="http://thlorenz.github.io/scriptie-talkie/">Scriptie-Talkie</a>
+                                    <a href="https://thlorenz.github.io/scriptie-talkie/">Scriptie-Talkie</a>
                                 </li>
                                 <li>
                                     <div class="text-logo">md</div>
-                                    <a href="http://thlorenz.github.io/browserify-markdown-editor/">browserify-markdown-editor</a>
+                                    <a href="https://thlorenz.github.io/browserify-markdown-editor/">browserify-markdown-editor</a>
                                 </li>
                                 <li>
                                     <!-- <img src="https://www.siteleaf.com/images/logo.svg" style="left: 20px; top: -15px; width: 60px;"> -->
-                                    <a href="http://www.siteleaf.com/">Siteleaf</a>
+                                    <a href="https://www.siteleaf.com/">Siteleaf</a>
                                 </li>
                                 <li>
                                     <div class="" style="
-                                        background: url(http://colorsublime.com/img/ColorSublime_logo.png);
+                                        background: url(https://colorsublime.github.io/assets/img/ColorSublime_logo.png);
                                         position: absolute;height: 65px;width: 99px;
                                         background-size: 310px 128px;background-position: 210px top;
                                     "></div>
-                                    <a href="http://colorsublime.com/">ColorSublime</a>
+                                    <a href="https://colorsublime.github.io/">ColorSublime</a>
                                 </li>
                                 <li>
                                     <div class="text-logo">iMDone</div>
                                     <a href="http://piascikj.github.io/imdone/">iMDone</a>
-                                </li>
-                                <li>
-                                    <div class="text-logo"></div>
-                                    <a href="http://bakemycss.mypathforpython.appspot.com/">BakeMyCss</a>
                                 </li>
                                 <li>
                                     <div style="
@@ -1086,7 +1057,7 @@ if (match) {
                                     <a href="http://spark.io/build">Spark Core</a>
                                 </li>
                                 <li>
-                                    <img src="https://2.gravatar.com/avatar/021e207e86fe81a7d81c67ef1ff38a0c" style="left: 11px; top: -5px;">
+                                    <img lazy-src="https://2.gravatar.com/avatar/021e207e86fe81a7d81c67ef1ff38a0c" style="left: 11px; top: -5px;">
                                     <a href="http://owncloud.org">ownCloud</a>
                                 </li>
                                 <li>
@@ -1102,9 +1073,9 @@ if (match) {
                                     <a href="http://sharejs.org/hello-ace.html">ShareJS</a>
                                 </li>
                                 <li>
-                                    <img src="https://neutron-drive.appspot.com/static/img/neutron_face_high.png"
+                                    <img lazy-src="https://neutron-drive.appspot.com/static/img/neutron_face_high.png"
                                         style="width: 86px; left: 7px; top: -11px;">
-                                    <a href="http://neutronide.com/">Neutron IDE</a>
+                                    <a href="https://super.neutrondrive.com/">Neutron IDE</a>
                                 </li>
                                 <li>
                                     <div style="
@@ -1114,52 +1085,40 @@ if (match) {
                                     <a href="http://www.pythonanywhere.com/">PythonAnywhere</a>
                                 </li>
                                 <li>
-                                    <!-- <img src="https://subtexteditor.com/images/subtext-icon-4.png"
-                                        style="width: 86px; left: 7px; top: -11px;"> -->
-                                    <a href="http://subtexteditor.com/">Subtext Editor</a>
+                                   <!--  <img src="https://asciidocfx.com/images/logo.png" style="width: 75px; left: 12px; top: 0px;"> -->
+                                    <a href="http://asciidocfx.com/">Asciidoc FX</a>
                                 </li>
                                 <li>
-                                    <img src="https://climbi.com/static/img/logo.png"
-                                        style="width: 86px; left: 7px; top: -11px;">
-                                    <a href="http://climbi.com/">Climbi</a>
-                                </li>
-                                <li>
-                                    <img src="https://octobercms.com/themes/website/assets/images/october.png" style="width: 95px; left: 2px; top: -17px;">
+                                    <img lazy-src="https://octobercms.com/themes/website/assets/images/october.png" style="width: 95px; left: 2px; top: -17px;">
                                     <a href="http://octobercms.com">October CMS</a>
                                 </li>
                                 <li style="width: 248px;">
-                                    <img src="https://www.codeavengers.com/image/RedLogoSmall.png" style="width: 248px; top: 30px;">
+                                    <img lazy-src="https://www.codeavengers.com/image/RedLogoSmall.png" style="width: 248px; top: 30px;">
                                     <a href="http://www.codeavengers.com/image/RedLogoSmall.png">Code Avengers</a>
-                                </li>
-                                <li style="width: 248px;">
-                                    <!-- <img src="https://playcodemonkey.com/images/logoSmallFaceTopTrans.png" style="width: 238px; top: -2px; left: 5px"> -->
-                                    <a href="http://www.codemonkey.co.il/">CodeMonkey</a>
-                                <li>
-                                    <img src="https://funprogramming.org/i/fun_programming_logo_for_ace.png" style="width: 75px; left: 12px; top: -5px;">
-                                    <a href="http://funprogramming.org">Fun Programming</a>
-                                </li>
                                 </li>
                                 <li>
                                     <div style="font-size:23px" class="text-logo">{dev<span style="color:#ef4423">un</span>ity}</div>
                                     <a href="http://devunity.com/">Devunity</a>
                                 </li>
+                                <li style="width: 248px;">
+                                    <img lazy-src="https://d2j5eocv5gptnv.cloudfront.net/assets/non_game_misc/site_header_logo.png?v=2" style="width: 238px; top: 15px; left: 5px">
+                                    <a href="http://www.codemonkey.co.il/">CodeMonkey</a>
+                                </li>
                                 <li>
-                                   <!--  <img src="https://asciidocfx.com/images/logo.png" style="width: 75px; left: 12px; top: 0px;"> -->
-                                    <a href="http://asciidocfx.com/">Asciidoc FX</a>
+                                    <img lazy-src="https://funprogramming.org/i/fun_programming_logo_for_ace.png" style="width: 75px; left: 12px; top: -5px;">
+                                    <a href="http://funprogramming.org">Fun Programming</a>
+                                </li>
                                 </li>
                                 <li>
                                     <!-- <img src="https://learn-angular.org/Content/Images/LearnAngular-small.png" style="width: 275px; left: -12px; top: 7px;"> -->
                                     <a href="http://learn-angular.org">Learn Angular</a>
                                 </li>
                                 <li>
-                                    <a href="http://www.divshot.com/">Divshot</a>
-                                </li>
-                                <li>
-                                    <img src="https://lh4.ggpht.com/hG5bDu1GBXwxpPnrgPcAmTNQyZK4ICBDC9aeLNmMZahEYQOz_2vYT6sBqLNGLIGPopWjdveEvPuM9NBuErUSLQ=s60" style="width: 75px; left: 12px; top: -5px;">
+                                    <img lazy-src="https://lh4.ggpht.com/hG5bDu1GBXwxpPnrgPcAmTNQyZK4ICBDC9aeLNmMZahEYQOz_2vYT6sBqLNGLIGPopWjdveEvPuM9NBuErUSLQ=s60" style="width: 75px; left: 12px; top: -5px;">
                                     <a href="http://bootzee.com">Bootzee</a>
                                 </li>
                                 <li>
-                                    <img src=" http://www.branchcms.com/layout/images/branch-brand-logo-2.png" style="width: 125px; left: -12px; top: 15px;">
+                                    <img lazy-src="https://www.branchcms.com/layout/images/branch-brand-logo-2.png" style="width: 125px; left: -12px; top: 15px;">
                                     <a href="http://www.branchcms.com/blog/post/new-code-editor-ace">Branch CMS</a>
                                 </li>
                                 <li>
@@ -1171,20 +1130,16 @@ if (match) {
                                     <a href="http://webftp.selfbuild.fr">SelfBuild </a>
                                 </li>
                                 <li>
-                                   <!--  <img src="https://fnboard.herokuapp.com/logo.png"
-                                        style="left: 5px; width: 90px;top: 0px;"> -->
+                                   <img src="https://fnboard.herokuapp.com/logo.png"
+                                        style="left: 5px; width: 90px;top: 0px;">
                                     <a href="http://fnboard.herokuapp.com/">Pixeladded</a>
-                                </li>
-                                <li>
-                                    <!-- <img src="https://www.aldryn.com/static/img/logo-main-print.png" style="width: 125px; left: -12px; top: 18px;"> -->
-                                    <a href="http://www.aldryn.com">Aldryn</a>
                                 </li>
                                 <li>
                                     <!-- <img src="https://sbp.selfbuild.fr/sbp.png" style="width: 95px; left: 2px; top: -8px;"> -->
                                     <a href="http://sbp.selfbuild.fr/">SBP</a>
                                 </li>
                                 <li>
-                                    <img src="https://mycodestock.com/assets/img/mycodestock.png?v=2.1.0" style="width: 126px; left: -18px; top: -30px;">
+                                    <img lazy-src="https://mycodestock.com/assets/img/mycodestock.png?v=2.1.0" style="width: 126px; left: -18px; top: -30px;">
                                     <a href="https://mycodestock.com/">my code stock</a>
                                 </li>
                                 <li>
@@ -1192,14 +1147,11 @@ if (match) {
                                     <a href="http://eseecode.com/">eSeeCode</a>
                                 </li>
                                 <li>
-                                    <img src="https://codinghire.com/static/img/twitter.png" style="width: 80px; left: 10px; top: -3px;">
+                                    <img lazy-src="https://codinghire.com/static/img/twitter.png" style="width: 80px; left: 10px; top: -3px;">
                                     <a href="https://codinghire.com/">Coding Hire</a>
                                 </li>
                                 <li>
-                                    <div style="
-                                        background: url(https://apiary.a.ssl.fastly.net/assets/images/website/logotype-apiary-cb8fa3918bdf3961.png) no-repeat;
-                                        position: absolute; height: 65px; width: 87px; background-size: 200px;
-                                        background-position: 19px;"></div>
+                                    <div style=""></div>
                                     <a href="http://apiary.io/">Apiary</a>
                                 </li>
                                 <li>
@@ -1207,7 +1159,7 @@ if (match) {
                                     <a href="http://exist-db.org">ExistDB</a>
                                 </li>
                                 <li>
-                                    <img src="https://jscalc.io/img/icons/jscalc_full_bleed_24.svg" style="width: 90px; left: 5px; top: -10px;">
+                                    <img lazy-src="https://jscalc.io/img/icons/jscalc_full_bleed_24.svg" style="width: 90px; left: 5px; top: -10px;">
                                     <a href="https://jscalc.io/">JSCalc</a>
                                 </li>
                                 <li>
@@ -1215,21 +1167,14 @@ if (match) {
                                     <a href="http://tworld-ai.com/imgs/web-app/rob_face.png">T-World</a>
                                 </li>
                                 <li>
-                                    <img src="https://www.gestixi.com/assets/img/icons/gestixi-64.png" style="width: 90px; left: 5px; top: 20px;">
+                                    <img lazy-src="https://www.gestixi.com/assets/img/icons/gestixi-64.png" style="width: 90px; left: 5px; top: 20px;">
                                     <a href="https://www.gestixi.com/">GestiXi</a>
-                                </li>
-                                <li>
-                                    <div class="text-logo">Clicpilot</div>
-                                    <a href="http://www.clicpilot.com/">clicpilot</a>
                                 </li>
                                 <li>
                                     <div class="text-logo" style="font-size:22px;text-shadow:none;margin-top:13px">Code-Fight.Club</div>
                                     <a href="http://code-fight.club">Code-Fight.Club</a>
                                 </li>
                                 
-                                <li>
-                                    <a href="https://cloud.formcycle.de/formcycle/fd2/">Formcycle</a>
-                                </li>
                                 <li>
                                     <a href="http://www.wavemaker.com/">WaveMaker</a>
                                 </li>
@@ -1238,12 +1183,6 @@ if (match) {
                                 </li>
                                 <li>
                                     <a href="http://ext.radiantcms.org/extensions/264-ace">Radiant CMS</a>
-                                </li>
-                                <li>
-                                    <a href="http://developercompanion.com/">Developer Companion</a>
-                                </li>
-                                <li>
-                                    <a href="http://www.akshell.com/">Akshell</a>
                                 </li>
                                 
                                 <li>
@@ -1259,16 +1198,14 @@ if (match) {
                                     <a href="https://github.com/krispo/git-edit">Git-Edit</a>
                                 </li>
                                 <li>
-                                    <a href="http://dev.cmsmadesimple.org/projects/aceeditor">CMS Made Simple</a>
-                                </li>
-                                <li>
-                                    <a href="http://tryjasmine.com/">Try Jasmine</a>
-                                </li>
-                                <li>
                                     <a href="http://codebender.cc/">Codebender</a>
                                 </li>
                                 <li>
                                     <a href="http://beautifytools.com/">BeautifyTools</a>
+                                </li>
+                                <li>
+                                    <div class="text-logo">trinket</div>
+                                     <a href="https://trinket.io/">trinket</a>
                                 </li>
                                 <li id="add_your_site">
                                     <p>+</p>

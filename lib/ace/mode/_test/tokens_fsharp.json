@@ -1,0 +1,140 @@
+[[
+   "start",
+  ["comment.start","(*"],
+  ["comment"," fsharp "],
+  ["comment.start","(*"],
+  ["comment"," example "],
+  ["comment.end","*)"],
+  ["comment"," "],
+  ["comment.end","*)"]
+],[
+   "start",
+  ["keyword","module"],
+  ["text"," "],
+  ["identifier","Test"],
+  ["text"," "],
+  ["keyword.operator","="]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","let"],
+  ["text"," "],
+  ["identifier","func1"],
+  ["text"," "],
+  ["identifier","x"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "]
+],[
+   "start",
+  ["text","        "],
+  ["keyword","if"],
+  ["text"," "],
+  ["identifier","x"],
+  ["text"," "],
+  ["keyword.operator","<"],
+  ["text"," "],
+  ["constant.integer","100"],
+  ["text"," "],
+  ["keyword","then"]
+],[
+   "start",
+  ["text","            "],
+  ["identifier","x"],
+  ["keyword.operator","*"],
+  ["identifier","x"]
+],[
+   "start",
+  ["text","        "],
+  ["keyword","else"]
+],[
+   "start",
+  ["text","            "],
+  ["identifier","x"],
+  ["keyword.operator","*"],
+  ["identifier","x"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["constant.integer","1"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","let"],
+  ["text"," "],
+  ["identifier","list"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["paren.lpar","("],
+  ["keyword.operator","-"],
+  ["constant.integer","1"],
+  ["text",", "],
+  ["constant.integer","42"],
+  ["paren.rpar",")"],
+  ["text"," :: "],
+  ["paren.lpar","["],
+  ["text"," "],
+  ["keyword","for"],
+  ["text"," "],
+  ["identifier","i"],
+  ["text"," "],
+  ["keyword","in"],
+  ["text"," "],
+  ["constant.integer","0"],
+  ["text"," .. "],
+  ["constant.integer","99"],
+  ["text"," "],
+  ["keyword.operator","->"],
+  ["text"," "],
+  ["paren.lpar","("],
+  ["identifier","i"],
+  ["text",", "],
+  ["identifier","func1"],
+  ["paren.lpar","("],
+  ["identifier","i"],
+  ["paren.rpar","))"],
+  ["text"," "],
+  ["paren.rpar","]"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","let"],
+  ["text"," "],
+  ["identifier","verbatim"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["verbatim.string","@"],
+  ["string","\""],
+  ["string","c:\\Program "],
+  ["constant.language.escape","\"\""],
+  ["string"," Files\\\""]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","let"],
+  ["text"," "],
+  ["identifier","trippleQuote"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["string","\"\"\" \"hello world\" \"\"\""]
+],[
+   "start",
+  ["text","    "]
+],[
+   "start",
+  ["text","    "],
+  ["comment","// print"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","printfn"],
+  ["text"," "],
+  ["string","\"The table of squares from 0 to 99 is:"],
+  ["constant.language.escape","\\n"],
+  ["string","%A\""],
+  ["text"," "],
+  ["identifier","list"]
+]]

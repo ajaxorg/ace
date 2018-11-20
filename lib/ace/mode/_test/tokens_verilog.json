@@ -110,4 +110,60 @@
   ["text","["],
   ["identifier","bufreadaddr"],
   ["text","];"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","module"],
+  ["text"," "],
+  ["identifier","test"],
+  ["text",";"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","assign"],
+  ["text"," "],
+  ["identifier","a"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["string.start","\""],
+  ["string","1"],
+  ["string.end","\""],
+  ["text",";"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","initial"],
+  ["text"," "],
+  ["keyword","begin"]
+],[
+   "string.start",
+  ["text","        "],
+  ["identifier","$display"],
+  ["paren.lparen","("],
+  ["string.start","\""],
+  ["string","Hello "],
+  ["constant.language.escape","\\77"],
+  ["string","8"],
+  ["constant.language.escape","\\xaa\\"]
+],[
+   "start",
+  ["string","                  "],
+  ["constant.language.escape","\\n"],
+  ["string"," world"],
+  ["string.end","\""],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","        "],
+  ["identifier","$finish"],
+  ["text",";"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","end"]
+],[
+   "start",
+  ["keyword","endmodule"]
 ]]

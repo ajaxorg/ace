@@ -9,6 +9,7 @@
     text-align: right;
     padding: 0 3px 0 0;
     margin-right: 3px;
+    contain: none;
 }
 
 .ace_static_highlight.ace_show_gutter .ace_line {

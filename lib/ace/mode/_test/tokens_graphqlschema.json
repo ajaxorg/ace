@@ -1,0 +1,400 @@
+[[
+   "start",
+  ["comment","# Main Schema"]
+],[
+   "start",
+  ["keyword","schema"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","\t"],
+  ["identifier","query"],
+  ["text",": "],
+  ["identifier","Query"],
+  ["text",";"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","scalar"],
+  ["text"," "],
+  ["identifier","Date"],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start",
+  ["comment","# Simple type to contain all scalar types"]
+],[
+   "start",
+  ["keyword","type"],
+  ["text"," "],
+  ["identifier","AllTypes"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","\t"],
+  ["comment","# Field Description for String"]
+],[
+   "start",
+  ["text","\t"],
+  ["identifier","testString"],
+  ["text",": "],
+  ["storage.type","String"],
+  ["text",";"]
+],[
+   "start",
+  ["text","\t"],
+  ["comment","# Field Description for Int"]
+],[
+   "start",
+  ["text","\t"],
+  ["identifier","testInt"],
+  ["text",": "],
+  ["storage.type","Int"],
+  ["text",";"]
+],[
+   "start",
+  ["text","\t"],
+  ["comment","# Field Description for ID"]
+],[
+   "start",
+  ["text","\t"],
+  ["identifier","testID"],
+  ["text",": "],
+  ["storage.type","ID"],
+  ["text",";"]
+],[
+   "start",
+  ["text","\t"],
+  ["comment","# Field Description for Boolean"]
+],[
+   "start",
+  ["text","\t"],
+  ["identifier","testBoolean"],
+  ["text",": "],
+  ["storage.type","Boolean"],
+  ["text",";"]
+],[
+   "start",
+  ["text","\t"],
+  ["comment","# Field Description for Float"]
+],[
+   "start",
+  ["text","\t"],
+  ["identifier","testFloat"],
+  ["text",": "],
+  ["storage.type","Float"],
+  ["text",";"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","interface"],
+  ["text"," "],
+  ["identifier","ISearchable"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","searchPreview"],
+  ["text",": "],
+  ["storage.type","String"],
+  ["text","!;"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","union"],
+  ["text"," "],
+  ["identifier","ProductTypes"],
+  ["text"," = "],
+  ["identifier","Movie"],
+  ["text"," | "],
+  ["identifier","Book"],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start",
+  ["comment","# Testing enum"]
+],[
+   "start",
+  ["keyword","enum"],
+  ["text"," "],
+  ["identifier","MovieGenere"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","ACTION"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","COMEDY"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","THRILLER"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","DRAMA"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["comment","# Testing Input"]
+],[
+   "start",
+  ["keyword","input"],
+  ["text"," "],
+  ["identifier","SearchByGenere"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","\t"],
+  ["identifier","before"],
+  ["text",": "],
+  ["identifier","Date"],
+  ["text",";"]
+],[
+   "start",
+  ["text","\t"],
+  ["identifier","after"],
+  ["text",": "],
+  ["identifier","Date"],
+  ["text",";"]
+],[
+   "start",
+  ["text","\t"],
+  ["identifier","genere"],
+  ["text",": "],
+  ["identifier","MovieGenere"],
+  ["text","!;"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["comment","# Testing Interface"]
+],[
+   "start",
+  ["keyword","type"],
+  ["text"," "],
+  ["identifier","Movie"],
+  ["text"," "],
+  ["keyword","implements"],
+  ["text"," "],
+  ["identifier","ISearchable"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","\t"],
+  ["identifier","id"],
+  ["text",": "],
+  ["storage.type","ID"],
+  ["text","!;"]
+],[
+   "start",
+  ["text","\t"],
+  ["identifier","searchPreview"],
+  ["text",": "],
+  ["storage.type","String"],
+  ["text","!;"]
+],[
+   "start",
+  ["text","\t"],
+  ["identifier","rentPrice"],
+  ["text",": "],
+  ["storage.type","Float"],
+  ["text",";"]
+],[
+   "start",
+  ["text","\t"],
+  ["identifier","publishDate"],
+  ["text",": "],
+  ["identifier","Date"],
+  ["text",";"]
+],[
+   "start",
+  ["text","\t"],
+  ["identifier","genere"],
+  ["text",": "],
+  ["identifier","MovieGenere"],
+  ["text",";"]
+],[
+   "start",
+  ["text","\t"],
+  ["identifier","cast"],
+  ["text",": "],
+  ["paren.lparen","["],
+  ["storage.type","String"],
+  ["paren.rparen","]"],
+  ["text",";"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["comment","# Testing Interface"]
+],[
+   "start",
+  ["keyword","type"],
+  ["text"," "],
+  ["identifier","Book"],
+  ["text"," "],
+  ["keyword","implements"],
+  ["text"," "],
+  ["identifier","ISearchable"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","id"],
+  ["text",": "],
+  ["storage.type","ID"],
+  ["text","!;"]
+],[
+   "start",
+  ["text","\t"],
+  ["identifier","searchPreview"],
+  ["text",": "],
+  ["storage.type","String"],
+  ["text","!;"]
+],[
+   "start",
+  ["text","\t"],
+  ["identifier","price"],
+  ["text",": "],
+  ["storage.type","Float"],
+  ["text",";"]
+],[
+   "start",
+  ["text","\t"],
+  ["identifier","publishDate"],
+  ["text",": "],
+  ["identifier","Date"],
+  ["text",";"]
+],[
+   "start",
+  ["text","\t"],
+  ["identifier","authors"],
+  ["text",": "],
+  ["paren.lparen","["],
+  ["storage.type","String"],
+  ["paren.rparen","]"],
+  ["text",";"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","type"],
+  ["text"," "],
+  ["identifier","Query"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","\t"],
+  ["identifier","testString"],
+  ["text",": "],
+  ["storage.type","String"],
+  ["text",";"]
+],[
+   "start",
+  ["text","\t"],
+  ["identifier","testDate"],
+  ["text","; "],
+  ["identifier","Date"],
+  ["text",";"]
+],[
+   "start",
+  ["text","\t"],
+  ["identifier","allTypes"],
+  ["text",": "],
+  ["identifier","AllTypes"],
+  ["text",";"]
+],[
+   "start",
+  ["text","\t"],
+  ["identifier","allProducts"],
+  ["text",": "],
+  ["paren.lparen","["],
+  ["identifier","ProductTypes"],
+  ["paren.rparen","]"],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start",
+  ["text","\t"],
+  ["comment","# searches only movies by genere with sophisticated argument"]
+],[
+   "start",
+  ["text","\t"],
+  ["identifier","searchMovieByGenere"],
+  ["paren.lparen","("],
+  ["identifier","searchObject"],
+  ["text",": "],
+  ["identifier","SearchByGenere"],
+  ["text","!"],
+  ["paren.rparen",")"],
+  ["text",": "],
+  ["paren.lparen","["],
+  ["identifier","Movie"],
+  ["paren.rparen","]"],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start",
+  ["text","\t"],
+  ["comment","# Searchs all products by text string"]
+],[
+   "start",
+  ["text","\t"],
+  ["identifier","searchProduct"],
+  ["paren.lparen","("],
+  ["identifier","text"],
+  ["text",": "],
+  ["storage.type","String"],
+  ["text","!"],
+  ["paren.rparen",")"],
+  ["text",": "],
+  ["paren.lparen","["],
+  ["identifier","ISearchable"],
+  ["paren.rparen","]"],
+  ["text",";"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+]]
