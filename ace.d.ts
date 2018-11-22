@@ -74,17 +74,49 @@ export namespace Ace {
   }
 
   interface Folding {
-    getFoldAt(row:number, column:number, side:number):Fold;
-    getFoldsInRange(range:Range):Array<Fold>;
-    getFoldsInRangeList(ranges:Array<Range>):Array<Fold>;
-    getAllFolds():Array<Fold>;
-    addFold(placeholder:string, range:Range):Fold;
-    addFolds(folds:Array<Fold>);
-    removeFold(fold:Fold);
-    removeFolds(folds:Array<Fold>);
-    expandFold(fold:Fold);
-    expandFolds(folds:Array<Fold>);
-    foldAll(startRow:number, endRow:number, depth:number);
+    getFoldAt(row: number, column: number, side: number): Fold;
+    getFoldsInRange(range: Range): Fold[];
+    getFoldsInRangeList(ranges: Range[]): Fold[];
+    getAllFolds(): Fold[];
+    getFoldStringAt(row: number,
+        column: number,
+        trim?: number,
+        foldLine?: FoldLine): string | null;
+    getFoldLine(docRow: number, startFoldLine?: FoldLine): FoldLine | null;
+    getNextFoldLine(docRow: number, startFoldLine?: FoldLine): FoldLine | null;
+    getFoldedRowCount(first: number, last: number): number;
+    addFold(placeholder: string | Fold, range?: Range): Fold;
+    addFolds(folds: Fold[]): void;
+    removeFold(fold: Fold): void;
+    removeFolds(folds: Fold[]): void;
+    expandFold(fold: Fold): void;
+    expandFolds(folds: Fold[]): void;
+    unfold(location: null | number | Point | Range,
+        expandInner?: boolean): Fold[] | undefined;
+    isRowFolded(docRow: number, startFoldRow?: FoldLine): boolean;
+    getFoldRowEnd(docRow: number, startFoldRow?: FoldLine): number;
+    getFoldRowStart(docRow: number, startFoldRow?: FoldLine): number;
+    getFoldDisplayLine(foldLine: FoldLine,
+        endRow: number | null,
+        endColumn: number | null,
+        startRow: number | null,
+        startColumn: number | null): string;
+    getDisplayLine(row: number,
+        endColumn: number | null,
+        startRow: number | null,
+        startColumn: number | null): string;
+    toggleFold(tryToUnfold?: boolean): void;
+    getCommentFoldRange(row: number,
+        column: number,
+        dir: number): Range | undefined;
+    foldAll(startRow?: number, endRow?: number, depth?: number): void;
+    setFoldStyle(style: string): void;
+    getParentFoldRangeData(row: number, ignoreCurrent?: boolean): {
+        range?: Range,
+        firstRange: Range
+    };
+    toggleFoldWidget(toggleParent?: boolean): void;
+    updateFoldWidgets(delta: Delta): void;
   }
 
   export interface Range {
@@ -284,13 +316,13 @@ export namespace Ace {
   }
 
   interface TokenIterator{
-    getCurrentToken():Token;
-    getCurrentTokenColumn():number;
-    getCurrentTokenRow():number;
-    getCurrentTokenPosition():Point;
-    getCurrentTokenRange():Range;
-    stepBackward():Token;
-    stepForward():Token;
+    getCurrentToken(): Token;
+    getCurrentTokenColumn(): number;
+    getCurrentTokenRow(): number;
+    getCurrentTokenPosition(): Point;
+    getCurrentTokenRange(): Range;
+    stepBackward(): Token;
+    stepForward(): Token;
   }
   
   export interface SyntaxMode {
