@@ -244,7 +244,6 @@ styles.join("\n")
 
 .ace_text-layer > .ace_line, .ace_text-layer > .ace_line_group {
     contain: style size layout;
-    position: absolute;
     top: 0;
     left: 0;
     right: 0;
