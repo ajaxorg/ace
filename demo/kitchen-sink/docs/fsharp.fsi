@@ -1,5 +1,6 @@
 (* fsharp (* example *) *)
 module Test =
+    let (*) x y = (x + y)
     let func1 x = 
         if x < 100 then
             x*x
