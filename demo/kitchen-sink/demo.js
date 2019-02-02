@@ -369,7 +369,11 @@ optionsPanel.add({
         }
     },
     More: {
-        "Rtl Text": {
+        "RTL": {
+            path: "rtl",
+            position: 900
+        },
+        "Line based RTL switching": {
             path: "rtlText",
             position: 900
         },
