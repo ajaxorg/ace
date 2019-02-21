@@ -397,7 +397,7 @@ function buildAce(options, callback) {
         }, "theme-" +  name, addCb());
     });
     // keybindings
-    ["vim", "emacs"].forEach(function(name) {
+    ["vim", "emacs", "sublime"].forEach(function(name) {
         buildSubmodule(options, {
             projectType: "keybinding",
             require: ["ace/keyboard/" + name ]
