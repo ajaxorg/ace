@@ -1,0 +1,508 @@
+[[
+   "comment",
+  ["comment","/*"]
+],[
+   "comment",
+  ["comment"," * Intel ACPI Component Architecture"]
+],[
+   "comment",
+  ["comment"," * AML/ASL+ Disassembler version 20180105"]
+],[
+   "comment",
+  ["comment"," *"]
+],[
+   "comment",
+  ["comment"," * ASL example"]
+],[
+   "start",
+  ["comment"," */"]
+],[
+   "start",
+  ["keyword","DefinitionBlock"],
+  ["text"," "],
+  ["lparen","("],
+  ["string","\"\""],
+  ["text",", "],
+  ["string","\"SSDT\""],
+  ["text",", "],
+  ["constant.numeric","1"],
+  ["text",", "],
+  ["string","\"PmRef\""],
+  ["text",", "],
+  ["string","\"Cpu0Ist\""],
+  ["text",", "],
+  ["constant.numeric","0x00003000"],
+  ["rparen",")"]
+],[
+   "start",
+  ["lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["function.buildin","External"],
+  ["text"," "],
+  ["lparen","("],
+  ["identifier","_PR_"],
+  ["text","."],
+  ["identifier","CPU0"],
+  ["text",", "],
+  ["storage.type","DeviceObj"],
+  ["rparen",")"]
+],[
+   "start",
+  ["text","    "],
+  ["function.buildin","External"],
+  ["text"," "],
+  ["lparen","("],
+  ["identifier","_SB_"],
+  ["text","."],
+  ["identifier","CPUP"],
+  ["text",", "],
+  ["storage.type","UnknownObj"],
+  ["rparen",")"]
+],[
+   "start"
+],[
+   "start",
+  ["text","    "],
+  ["keyword","Scope"],
+  ["text"," "],
+  ["lparen","("],
+  ["text","\\"],
+  ["identifier","_PR"],
+  ["text","."],
+  ["identifier","CPU0"],
+  ["rparen",")"]
+],[
+   "start",
+  ["text","    "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","        "],
+  ["keyword","Method"],
+  ["text"," "],
+  ["lparen","("],
+  ["identifier","_PCT"],
+  ["text",", "],
+  ["constant.numeric","0"],
+  ["text",", "],
+  ["constant.character","NotSerialized"],
+  ["rparen",")"],
+  ["text","  "],
+  ["comment","// _PCT: Performance Control"]
+],[
+   "start",
+  ["text","        "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","            "],
+  ["keyword","If"],
+  ["text"," "],
+  ["lparen","((("],
+  ["identifier","CFGD"],
+  ["text"," "],
+  ["keyword.operator","&"],
+  ["text"," "],
+  ["constant.numeric","One"],
+  ["rparen",")"],
+  ["text"," "],
+  ["keyword.operator","&&"],
+  ["text"," "],
+  ["lparen","("],
+  ["identifier","PDC0"],
+  ["text"," "],
+  ["keyword.operator","&"],
+  ["text"," "],
+  ["constant.numeric","One"],
+  ["rparen",")))"]
+],[
+   "start",
+  ["text","            "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","                "],
+  ["keyword","Return"],
+  ["text"," "],
+  ["lparen","("],
+  ["function.buildin","Package"],
+  ["text"," "],
+  ["lparen","("],
+  ["constant.numeric","0x02"],
+  ["rparen",")"]
+],[
+   "start",
+  ["text","                "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","                    "],
+  ["function.buildin","ResourceTemplate"],
+  ["text"," "],
+  ["lparen","("],
+  ["rparen",")"]
+],[
+   "start",
+  ["text","                    "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","                        "],
+  ["function.buildin","Register"],
+  ["text"," "],
+  ["lparen","("],
+  ["constant.character","FFixedHW"],
+  ["text",", "]
+],[
+   "start",
+  ["text","                            "],
+  ["constant.numeric","0x00"],
+  ["text",",               "],
+  ["comment","// Bit Width"]
+],[
+   "start",
+  ["text","                            "],
+  ["constant.numeric","0x00"],
+  ["text",",               "],
+  ["comment","// Bit Offset"]
+],[
+   "start",
+  ["text","                            "],
+  ["constant.numeric","0x0000000000000000"],
+  ["text",", "],
+  ["comment","// Address"]
+],[
+   "start",
+  ["text","                            ,"],
+  ["rparen",")"]
+],[
+   "start",
+  ["text","                    "],
+  ["rparen","}"],
+  ["text",", "]
+],[
+   "start"
+],[
+   "start",
+  ["text","                    "],
+  ["function.buildin","ResourceTemplate"],
+  ["text"," "],
+  ["lparen","("],
+  ["rparen",")"]
+],[
+   "start",
+  ["text","                    "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","                        "],
+  ["function.buildin","Register"],
+  ["text"," "],
+  ["lparen","("],
+  ["constant.character","FFixedHW"],
+  ["text",", "]
+],[
+   "start",
+  ["text","                            "],
+  ["constant.numeric","0x00"],
+  ["text",",               "],
+  ["comment","// Bit Width"]
+],[
+   "start",
+  ["text","                            "],
+  ["constant.numeric","0x00"],
+  ["text",",               "],
+  ["comment","// Bit Offset"]
+],[
+   "start",
+  ["text","                            "],
+  ["constant.numeric","0x0000000000000000"],
+  ["text",", "],
+  ["comment","// Address"]
+],[
+   "start",
+  ["text","                            ,"],
+  ["rparen",")"]
+],[
+   "start",
+  ["text","                    "],
+  ["rparen","}"]
+],[
+   "start",
+  ["text","                "],
+  ["rparen","})"]
+],[
+   "start",
+  ["text","            "],
+  ["rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["text","            "],
+  ["keyword","Return"],
+  ["text"," "],
+  ["lparen","("],
+  ["function.buildin","Package"],
+  ["text"," "],
+  ["lparen","("],
+  ["constant.numeric","0x02"],
+  ["rparen",")"]
+],[
+   "start",
+  ["text","            "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","                "],
+  ["function.buildin","ResourceTemplate"],
+  ["text"," "],
+  ["lparen","("],
+  ["rparen",")"]
+],[
+   "start",
+  ["text","                "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","                    "],
+  ["function.buildin","Register"],
+  ["text"," "],
+  ["lparen","("],
+  ["constant.character","SystemIO"],
+  ["text",", "]
+],[
+   "start",
+  ["text","                        "],
+  ["constant.numeric","0x10"],
+  ["text",",               "],
+  ["comment","// Bit Width"]
+],[
+   "start",
+  ["text","                        "],
+  ["constant.numeric","0x00"],
+  ["text",",               "],
+  ["comment","// Bit Offset"]
+],[
+   "start",
+  ["text","                        "],
+  ["constant.numeric","0x0000000000001000"],
+  ["text",", "],
+  ["comment","// Address"]
+],[
+   "start",
+  ["text","                        ,"],
+  ["rparen",")"]
+],[
+   "start",
+  ["text","                "],
+  ["rparen","}"],
+  ["text",", "]
+],[
+   "start"
+],[
+   "start",
+  ["text","                "],
+  ["function.buildin","ResourceTemplate"],
+  ["text"," "],
+  ["lparen","("],
+  ["rparen",")"]
+],[
+   "start",
+  ["text","                "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","                    "],
+  ["function.buildin","Register"],
+  ["text"," "],
+  ["lparen","("],
+  ["constant.character","SystemIO"],
+  ["text",", "]
+],[
+   "start",
+  ["text","                        "],
+  ["constant.numeric","0x08"],
+  ["text",",               "],
+  ["comment","// Bit Width"]
+],[
+   "start",
+  ["text","                        "],
+  ["constant.numeric","0x00"],
+  ["text",",               "],
+  ["comment","// Bit Offset"]
+],[
+   "start",
+  ["text","                        "],
+  ["constant.numeric","0x00000000000000B3"],
+  ["text",", "],
+  ["comment","// Address"]
+],[
+   "start",
+  ["text","                        ,"],
+  ["rparen",")"]
+],[
+   "start",
+  ["text","                "],
+  ["rparen","}"]
+],[
+   "start",
+  ["text","            "],
+  ["rparen","})"]
+],[
+   "start",
+  ["text","        "],
+  ["rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["text","        "],
+  ["function.buildin","Name"],
+  ["text"," "],
+  ["lparen","("],
+  ["identifier","PSDF"],
+  ["text",", "],
+  ["constant.numeric","Zero"],
+  ["rparen",")"]
+],[
+   "start",
+  ["text","        "],
+  ["keyword","Method"],
+  ["text"," "],
+  ["lparen","("],
+  ["identifier","_PSD"],
+  ["text",", "],
+  ["constant.numeric","0"],
+  ["text",", "],
+  ["constant.character","NotSerialized"],
+  ["rparen",")"],
+  ["text","  "],
+  ["comment","// _PSD: Power State Dependencies"]
+],[
+   "start",
+  ["text","        "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","            "],
+  ["keyword","If"],
+  ["text"," "],
+  ["lparen","("],
+  ["keyword.operator","!"],
+  ["identifier","PSDF"],
+  ["rparen",")"]
+],[
+   "start",
+  ["text","            "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","                "],
+  ["keyword.operator","DerefOf"],
+  ["text"," "],
+  ["lparen","("],
+  ["identifier","HPSD"],
+  ["text"," "],
+  ["comment","[Zero]"],
+  ["rparen",")"],
+  ["text"," "],
+  ["comment","[0x04]"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["identifier","TCNT"],
+  ["text"," "],
+  ["comment","/* External reference */"]
+],[
+   "start",
+  ["text","                "],
+  ["keyword.operator","DerefOf"],
+  ["text"," "],
+  ["lparen","("],
+  ["identifier","SPSD"],
+  ["text"," "],
+  ["comment","[Zero]"],
+  ["rparen",")"],
+  ["text"," "],
+  ["comment","[0x04]"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["identifier","TCNT"],
+  ["text"," "],
+  ["comment","/* External reference */"]
+],[
+   "start",
+  ["text","                "],
+  ["identifier","PSDF"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","Ones"]
+],[
+   "start",
+  ["text","            "],
+  ["rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["text","            "],
+  ["keyword","If"],
+  ["text"," "],
+  ["lparen","(("],
+  ["identifier","PDC0"],
+  ["text"," "],
+  ["keyword.operator","&"],
+  ["text"," "],
+  ["constant.numeric","0x0800"],
+  ["rparen","))"]
+],[
+   "start",
+  ["text","            "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","                "],
+  ["keyword","Return"],
+  ["text"," "],
+  ["lparen","("],
+  ["identifier","HPSD"],
+  ["rparen",")"],
+  ["text"," "],
+  ["comment","/* \\_PR_.CPU0.HPSD */"]
+],[
+   "start",
+  ["text","            "],
+  ["rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["text","            "],
+  ["keyword","Return"],
+  ["text"," "],
+  ["lparen","("],
+  ["identifier","SPSD"],
+  ["rparen",")"],
+  ["text"," "],
+  ["comment","/* \\_PR_.CPU0.SPSD */"]
+],[
+   "start",
+  ["text","        "],
+  ["rparen","}"]
+],[
+   "start",
+  ["text","    "],
+  ["rparen","}"]
+],[
+   "start",
+  ["rparen","}"]
+],[
+   "start"
+],[
+   "start"
+]]

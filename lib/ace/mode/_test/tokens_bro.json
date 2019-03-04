@@ -1,0 +1,106 @@
+[[
+   "start",
+  ["punctuation.definition.comment.bro","#"],
+  ["comment.line.number-sign.bro","#! Add countries for the originator and responder of a connection"]
+],[
+   "start",
+  ["punctuation.definition.comment.bro","#"],
+  ["comment.line.number-sign.bro","#! to the connection logs."]
+],[
+   "start"
+],[
+   "start",
+  ["text","module Conn;"]
+],[
+   "start"
+],[
+   "start",
+  ["text","export {"]
+],[
+   "start",
+  ["text","\t"],
+  ["storage.modifier.bro","redef"],
+  ["text"," "],
+  ["storage.type.bro","record"],
+  ["text"," Conn::Info += {"]
+],[
+   "start",
+  ["text","\t\t"],
+  ["punctuation.definition.comment.bro","#"],
+  ["comment.line.number-sign.bro","# Country code for the originator of the connection based "]
+],[
+   "start",
+  ["text","\t\t"],
+  ["punctuation.definition.comment.bro","#"],
+  ["comment.line.number-sign.bro","# on a GeoIP lookup."]
+],[
+   "start",
+  ["text","\t\torig_cc: "],
+  ["storage.type.bro","string"],
+  ["text"," &optional &log;"]
+],[
+   "start",
+  ["text","\t\t"],
+  ["punctuation.definition.comment.bro","#"],
+  ["comment.line.number-sign.bro","# Country code for the responser of the connection based "]
+],[
+   "start",
+  ["text","\t\t"],
+  ["punctuation.definition.comment.bro","#"],
+  ["comment.line.number-sign.bro","# on a GeoIP lookup."]
+],[
+   "start",
+  ["text","\t\tresp_cc: "],
+  ["storage.type.bro","string"],
+  ["text"," &optional &log;"]
+],[
+   "start",
+  ["text","\t};"]
+],[
+   "start",
+  ["text","}"]
+],[
+   "start"
+],[
+   "start",
+  ["meta.function.bro"," "],
+  ["storage.type.bro","connection_state_remove"],
+  ["meta.function.bro","("],
+  ["entity.name.function.bro","c: connection"],
+  ["meta.function.bro",") "],
+  "event connection_state_remove(c: connection) "
+],[
+   "start",
+  ["text","\t{"]
+],[
+   "start",
+  ["text","\t"],
+  ["storage.modifier.bro","local"],
+  ["text"," orig_loc = lookup_location(c$id$orig_h);"]
+],[
+   "start",
+  ["text","\t"],
+  ["keyword.control.bro","if"],
+  ["text"," ( orig_loc?$country_code )"]
+],[
+   "start",
+  ["text","\t\tc$conn$orig_cc = orig_loc$country_code;"]
+],[
+   "start"
+],[
+   "start",
+  ["text","\t"],
+  ["storage.modifier.bro","local"],
+  ["text"," resp_loc = lookup_location(c$id$resp_h);"]
+],[
+   "start",
+  ["text","\t"],
+  ["keyword.control.bro","if"],
+  ["text"," ( resp_loc?$country_code )"]
+],[
+   "start",
+  ["text","\t\tc$conn$resp_cc = resp_loc$country_code;"]
+],[
+   "start",
+  ["text","\t}"]
+]]
