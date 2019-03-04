@@ -1,0 +1,222 @@
+[[
+   "start",
+  ["storage.type.opening.logtalk",":- object"],
+  ["text","(bottles)"],
+  ["keyword.operator.misc.logtalk","."]
+],[
+   "start"
+],[
+   "start",
+  ["text","\t"],
+  ["storage.modifier.others.logtalk",":- initialization"],
+  ["text","(sing("],
+  ["constant.numeric.logtalk","99"],
+  ["text","))"],
+  ["keyword.operator.misc.logtalk","."]
+],[
+   "start"
+],[
+   "start",
+  ["text","\tsing("],
+  ["constant.numeric.logtalk","0"],
+  ["text",") "],
+  ["keyword.operator.message-sending.logtalk",":"],
+  ["keyword.operator.evaluable.logtalk","-"]
+],[
+   "start",
+  ["text","\t\t"],
+  ["support.function.term-io.logtalk","write"],
+  ["text","("],
+  ["punctuation.definition.string.begin.logtalk","'"],
+  ["string.quoted.single.logtalk","No more bottles of beer on the wall, no more bottles of beer."],
+  ["punctuation.definition.string.end.logtalk","'"],
+  ["text",")"],
+  ["keyword.operator.misc.logtalk",","],
+  ["text"," "],
+  ["support.function.chars-and-bytes-io.logtalk","nl"],
+  ["keyword.operator.misc.logtalk",","]
+],[
+   "start",
+  ["text","\t\t"],
+  ["support.function.term-io.logtalk","write"],
+  ["text","("],
+  ["punctuation.definition.string.begin.logtalk","'"],
+  ["string.quoted.single.logtalk","Go to the store and buy some more, 99 bottles of beer on the wall."],
+  ["punctuation.definition.string.end.logtalk","'"],
+  ["text",")"],
+  ["keyword.operator.misc.logtalk",","],
+  ["text"," "],
+  ["support.function.chars-and-bytes-io.logtalk","nl"],
+  ["keyword.operator.misc.logtalk",","],
+  ["text"," "],
+  ["support.function.chars-and-bytes-io.logtalk","nl"],
+  ["keyword.operator.misc.logtalk","."]
+],[
+   "start",
+  ["text","\tsing("],
+  ["variable.other.logtalk","N"],
+  ["text",") "],
+  ["keyword.operator.message-sending.logtalk",":"],
+  ["keyword.operator.evaluable.logtalk","-"]
+],[
+   "start",
+  ["text","\t\t"],
+  ["variable.other.logtalk","N"],
+  ["text"," "],
+  ["keyword.operator.comparison.arithmetic.logtalk",">"],
+  ["text"," "],
+  ["constant.numeric.logtalk","0"],
+  ["keyword.operator.misc.logtalk",","]
+],[
+   "start",
+  ["text","\t\t"],
+  ["variable.other.logtalk","N2"],
+  ["text"," "],
+  ["keyword.operator.misc.logtalk","is"],
+  ["text"," "],
+  ["variable.other.logtalk","N"],
+  ["text"," "],
+  ["keyword.operator.evaluable.logtalk","-"],
+  ["text"," "],
+  ["constant.numeric.logtalk","1"],
+  ["keyword.operator.misc.logtalk",","]
+],[
+   "start",
+  ["text","\t\tbeers("],
+  ["variable.other.logtalk","N"],
+  ["text",")"],
+  ["keyword.operator.misc.logtalk",","],
+  ["text"," "],
+  ["support.function.term-io.logtalk","write"],
+  ["text","("],
+  ["punctuation.definition.string.begin.logtalk","'"],
+  ["string.quoted.single.logtalk"," of beer on the wall, "],
+  ["punctuation.definition.string.end.logtalk","'"],
+  ["text",")"],
+  ["keyword.operator.misc.logtalk",","],
+  ["text"," beers("],
+  ["variable.other.logtalk","N"],
+  ["text",")"],
+  ["keyword.operator.misc.logtalk",","],
+  ["text"," "],
+  ["support.function.term-io.logtalk","write"],
+  ["text","("],
+  ["punctuation.definition.string.begin.logtalk","'"],
+  ["string.quoted.single.logtalk"," of beer."],
+  ["punctuation.definition.string.end.logtalk","'"],
+  ["text",")"],
+  ["keyword.operator.misc.logtalk",","],
+  ["text"," "],
+  ["support.function.chars-and-bytes-io.logtalk","nl"],
+  ["keyword.operator.misc.logtalk",","]
+],[
+   "start",
+  ["text","\t\t"],
+  ["support.function.term-io.logtalk","write"],
+  ["text","("],
+  ["punctuation.definition.string.begin.logtalk","'"],
+  ["string.quoted.single.logtalk","Take one down and pass it around, "],
+  ["punctuation.definition.string.end.logtalk","'"],
+  ["text",")"],
+  ["keyword.operator.misc.logtalk",","],
+  ["text"," beers("],
+  ["variable.other.logtalk","N2"],
+  ["text",")"],
+  ["keyword.operator.misc.logtalk",","],
+  ["text"," "],
+  ["support.function.term-io.logtalk","write"],
+  ["text","("],
+  ["punctuation.definition.string.begin.logtalk","'"],
+  ["string.quoted.single.logtalk"," of beer on the wall."],
+  ["punctuation.definition.string.end.logtalk","'"],
+  ["text",")"],
+  ["keyword.operator.misc.logtalk",","],
+  ["text"," "],
+  ["support.function.chars-and-bytes-io.logtalk","nl"],
+  ["keyword.operator.misc.logtalk",","],
+  ["text"," "],
+  ["support.function.chars-and-bytes-io.logtalk","nl"],
+  ["keyword.operator.misc.logtalk",","]
+],[
+   "start",
+  ["text","\t\tsing("],
+  ["variable.other.logtalk","N2"],
+  ["text",")"],
+  ["keyword.operator.misc.logtalk","."]
+],[
+   "start"
+],[
+   "start",
+  ["text","\tbeers("],
+  ["constant.numeric.logtalk","0"],
+  ["text",") "],
+  ["keyword.operator.message-sending.logtalk",":"],
+  ["keyword.operator.evaluable.logtalk","-"]
+],[
+   "start",
+  ["text","\t\t"],
+  ["support.function.term-io.logtalk","write"],
+  ["text","("],
+  ["punctuation.definition.string.begin.logtalk","'"],
+  ["string.quoted.single.logtalk","no more bottles"],
+  ["punctuation.definition.string.end.logtalk","'"],
+  ["text",")"],
+  ["keyword.operator.misc.logtalk","."]
+],[
+   "start",
+  ["text","\tbeers("],
+  ["constant.numeric.logtalk","1"],
+  ["text",") "],
+  ["keyword.operator.message-sending.logtalk",":"],
+  ["keyword.operator.evaluable.logtalk","-"]
+],[
+   "start",
+  ["text","\t\t"],
+  ["support.function.term-io.logtalk","write"],
+  ["text","("],
+  ["punctuation.definition.string.begin.logtalk","'"],
+  ["string.quoted.single.logtalk","1 bottle"],
+  ["punctuation.definition.string.end.logtalk","'"],
+  ["text",")"],
+  ["keyword.operator.misc.logtalk","."]
+],[
+   "start",
+  ["text","\tbeers("],
+  ["variable.other.logtalk","N"],
+  ["text",") "],
+  ["keyword.operator.message-sending.logtalk",":"],
+  ["keyword.operator.evaluable.logtalk","-"]
+],[
+   "start",
+  ["text","\t\t"],
+  ["variable.other.logtalk","N"],
+  ["text"," "],
+  ["keyword.operator.comparison.arithmetic.logtalk",">"],
+  ["text"," "],
+  ["constant.numeric.logtalk","1"],
+  ["keyword.operator.misc.logtalk",","]
+],[
+   "start",
+  ["text","\t\t"],
+  ["support.function.term-io.logtalk","write"],
+  ["text","("],
+  ["variable.other.logtalk","N"],
+  ["text",")"],
+  ["keyword.operator.misc.logtalk",","],
+  ["text"," "],
+  ["support.function.term-io.logtalk","write"],
+  ["text","("],
+  ["punctuation.definition.string.begin.logtalk","'"],
+  ["string.quoted.single.logtalk"," bottles"],
+  ["punctuation.definition.string.end.logtalk","'"],
+  ["text",")"],
+  ["keyword.operator.misc.logtalk","."]
+],[
+   "start"
+],[
+   "start",
+  ["storage.type.closing.logtalk",":- end_object"],
+  ["keyword.operator.misc.logtalk","."]
+],[
+   "start"
+]]

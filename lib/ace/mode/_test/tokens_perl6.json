@@ -1,0 +1,315 @@
+[[
+   "block_comment",
+  ["comment.doc","=begin comment"]
+],[
+   "block_comment",
+  ["comment.doc","Perl 6 example for ace"]
+],[
+   "start",
+  ["comment.doc","=end comment"]
+],[
+   "start",
+  ["keyword","class"],
+  ["text"," "],
+  ["identifier","Cook"],
+  ["text"," "],
+  ["keyword","is"],
+  ["text"," "],
+  ["identifier","Employee"],
+  ["text"," "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","has"],
+  ["text"," "],
+  ["variable.language","@.utensils"],
+  ["text","  "],
+  ["keyword","is"],
+  ["text"," "],
+  ["support.function","rw"],
+  ["text",";"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","has"],
+  ["text"," "],
+  ["variable.language","@.cookbooks"],
+  ["text"," "],
+  ["keyword","is"],
+  ["text"," "],
+  ["support.function","rw"],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start",
+  ["text","    "],
+  ["keyword","method"],
+  ["text"," "],
+  ["identifier","cook"],
+  ["lparen","("],
+  ["text"," "],
+  ["variable.language","$food"],
+  ["text"," "],
+  ["rparen",")"],
+  ["text"," "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","        "],
+  ["support.function","say"],
+  ["text"," "],
+  ["string.quoted.double","\"Cooking "],
+  ["variable.language","$food"],
+  ["string.quoted.double","\""],
+  ["text",";"]
+],[
+   "start",
+  ["text","    "],
+  ["rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["text","    "],
+  ["keyword","method"],
+  ["text"," "],
+  ["identifier","clean_utensils"],
+  ["text"," "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","        "],
+  ["support.function","say"],
+  ["text"," "],
+  ["string.quoted.double","\"Cleaning "],
+  ["variable.language","$_"],
+  ["string.quoted.double","\""],
+  ["text"," "],
+  ["keyword","for"],
+  ["text"," "],
+  ["variable.language","@.utensils"],
+  ["text",";"]
+],[
+   "start",
+  ["text","    "],
+  ["rparen","}"]
+],[
+   "start",
+  ["rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","class"],
+  ["text"," "],
+  ["identifier","Baker"],
+  ["text"," "],
+  ["keyword","is"],
+  ["text"," "],
+  ["identifier","Cook"],
+  ["text"," "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","method"],
+  ["text"," "],
+  ["identifier","cook"],
+  ["lparen","("],
+  ["text"," "],
+  ["variable.language","$confection"],
+  ["text"," "],
+  ["rparen",")"],
+  ["text"," "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","        "],
+  ["support.function","say"],
+  ["text"," "],
+  ["string.quoted.double","\"Baking a tasty "],
+  ["variable.language","$confection"],
+  ["string.quoted.double","\""],
+  ["text",";"]
+],[
+   "start",
+  ["text","    "],
+  ["rparen","}"]
+],[
+   "start",
+  ["rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","my"],
+  ["text"," "],
+  ["variable.language","$cook"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["identifier","Cook"],
+  ["keyword.operator","."],
+  ["support.function","new"],
+  ["lparen","("]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","utensils"],
+  ["text"," "],
+  ["keyword.operator","=>"],
+  ["text"," "],
+  ["string.quoted.single","<spoon ladle knife pan>"],
+  ["keyword.operator",","]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","cookbooks"],
+  ["text"," "],
+  ["keyword.operator","=>"],
+  ["text"," "],
+  ["string.quoted.single","'The Joy of Cooking'"],
+  ["keyword.operator",","]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","salary"],
+  ["text"," "],
+  ["keyword.operator","=>"],
+  ["text"," "],
+  ["constant.numeric","40000"],
+  ["rparen",")"],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start",
+  ["variable.language","$cook"],
+  ["keyword.operator","."],
+  ["identifier","cook"],
+  ["lparen","("],
+  ["text"," "],
+  ["string.quoted.single","'pizza'"],
+  ["text"," "],
+  ["rparen",")"],
+  ["text",";       "],
+  ["comment","# OUTPUT: «Cooking pizza␤»"]
+],[
+   "start",
+  ["support.function","say"],
+  ["text"," "],
+  ["variable.language","$cook"],
+  ["keyword.operator","."],
+  ["identifier","utensils"],
+  ["keyword.operator","."],
+  ["support.function","perl"],
+  ["text",";     "],
+  ["comment","# OUTPUT: «[\"spoon\", \"ladle\", \"knife\", \"pan\"]␤»"]
+],[
+   "start",
+  ["support.function","say"],
+  ["text"," "],
+  ["variable.language","$cook"],
+  ["keyword.operator","."],
+  ["identifier","cookbooks"],
+  ["keyword.operator","."],
+  ["support.function","perl"],
+  ["text",";    "],
+  ["comment","# OUTPUT: «[\"The Joy of Cooking\"]␤»"]
+],[
+   "start",
+  ["support.function","say"],
+  ["text"," "],
+  ["variable.language","$cook"],
+  ["keyword.operator","."],
+  ["identifier","salary"],
+  ["text",";            "],
+  ["comment","# OUTPUT: «40000␤»"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","my"],
+  ["text"," "],
+  ["variable.language","$baker"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["identifier","Baker"],
+  ["keyword.operator","."],
+  ["support.function","new"],
+  ["lparen","("]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","utensils"],
+  ["text"," "],
+  ["keyword.operator","=>"],
+  ["text"," "],
+  ["string.quoted.single","'self cleaning oven'"],
+  ["keyword.operator",","]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","cookbooks"],
+  ["text"," "],
+  ["keyword.operator","=>"],
+  ["text"," "],
+  ["string.quoted.double","\"The Baker's Apprentice\""],
+  ["keyword.operator",","]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","salary"],
+  ["text"," "],
+  ["keyword.operator","=>"],
+  ["text"," "],
+  ["constant.numeric","50000"],
+  ["rparen",")"],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start",
+  ["variable.language","$baker"],
+  ["keyword.operator","."],
+  ["identifier","cook"],
+  ["lparen","("],
+  ["string.quoted.single","'brioche'"],
+  ["rparen",")"],
+  ["text",";      "],
+  ["comment","# OUTPUT: «Baking a tasty brioche␤»"]
+],[
+   "start",
+  ["support.function","say"],
+  ["text"," "],
+  ["variable.language","$baker"],
+  ["keyword.operator","."],
+  ["identifier","utensils"],
+  ["keyword.operator","."],
+  ["support.function","perl"],
+  ["text",";    "],
+  ["comment","# OUTPUT: «[\"self cleaning oven\"]␤»"]
+],[
+   "start",
+  ["support.function","say"],
+  ["text"," "],
+  ["variable.language","$baker"],
+  ["keyword.operator","."],
+  ["identifier","cookbooks"],
+  ["keyword.operator","."],
+  ["support.function","perl"],
+  ["text",";   "],
+  ["comment","# OUTPUT: «[\"The Baker's Apprentice\"]␤»"]
+],[
+   "start",
+  ["support.function","say"],
+  ["text"," "],
+  ["variable.language","$baker"],
+  ["keyword.operator","."],
+  ["identifier","salary"],
+  ["text",";           "],
+  ["comment","# OUTPUT: «50000␤» "]
+]]
