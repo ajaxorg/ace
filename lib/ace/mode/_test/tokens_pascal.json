@@ -15,9 +15,14 @@
 ],[
    "start",
   ["keyword.control","PROGRAM"],
-  ["text"," Sort(input"],
+  ["text"," "],
+  ["identifier","Sort"],
+  ["text","("],
+  ["identifier","input"],
   ["keyword.operator",","],
-  ["text"," output)"],
+  ["text"," "],
+  ["identifier","output"],
+  ["text",")"],
   ["keyword.operator",";"]
 ],[
    "start",
@@ -31,7 +36,9 @@
   ["punctuation.definition.comment","*)"]
 ],[
    "start",
-  ["text","        MaxElts "],
+  ["text","        "],
+  ["identifier","MaxElts"],
+  ["text"," "],
   ["keyword.operator","="],
   ["text"," "],
   ["constant.numeric","50"],
@@ -49,15 +56,20 @@
   ["punctuation.definition.comment","*)"]
 ],[
    "start",
-  ["text","        IntArrType "],
+  ["text","        "],
+  ["identifier","IntArrType"],
+  ["text"," "],
   ["keyword.operator","="],
   ["text"," "],
   ["keyword.control","ARRAY"],
   ["text"," ["],
   ["constant.numeric","1"],
-  ["text","..MaxElts] "],
+  ["text",".."],
+  ["identifier","MaxElts"],
+  ["text","] "],
   ["keyword.control","OF"],
-  ["text"," Integer"],
+  ["text"," "],
+  ["identifier","Integer"],
   ["keyword.operator",";"]
 ],[
    "start"
@@ -73,13 +85,19 @@
   ["punctuation.definition.comment","*)"]
 ],[
    "start",
-  ["text","        i"],
+  ["text","        "],
+  ["identifier","i"],
   ["keyword.operator",","],
-  ["text"," j"],
+  ["text"," "],
+  ["identifier","j"],
   ["keyword.operator",","],
-  ["text"," tmp"],
+  ["text"," "],
+  ["identifier","tmp"],
   ["keyword.operator",","],
-  ["text"," size: integer"],
+  ["text"," "],
+  ["identifier","size"],
+  ["text",": "],
+  ["identifier","integer"],
   ["keyword.operator",";"]
 ],[
    "start"
@@ -91,7 +109,10 @@
   ["punctuation.definition.comment","*)"]
 ],[
    "start",
-  ["text","        arr: IntArrType"],
+  ["text","        "],
+  ["identifier","arr"],
+  ["text",": "],
+  ["identifier","IntArrType"],
   ["keyword.operator",";"]
 ],[
    "start"
@@ -109,11 +130,18 @@
   ["storage.type.function","ReadArr"],
   ["text","("],
   ["keyword.control","VAR"],
-  ["text"," size: Integer"],
+  ["text"," "],
+  ["identifier","size"],
+  ["text",": "],
+  ["identifier","Integer"],
   ["keyword.operator",";"],
   ["text"," "],
   ["keyword.control","VAR"],
-  ["text"," a: IntArrType)"],
+  ["text"," "],
+  ["identifier","a"],
+  ["text",": "],
+  ["identifier","IntArrType"],
+  ["text",")"],
   ["keyword.operator",";"],
   ["text"," "]
 ],[
@@ -122,7 +150,9 @@
   ["keyword.control","BEGIN"]
 ],[
    "start",
-  ["text","            size "],
+  ["text","            "],
+  ["identifier","size"],
+  ["text"," "],
   ["keyword.operator",":="],
   ["text"," "],
   ["constant.numeric","1"],
@@ -133,13 +163,21 @@
   ["keyword.control","WHILE"],
   ["text"," "],
   ["keyword.control","NOT"],
-  ["text"," eof "],
+  ["text"," "],
+  ["identifier","eof"],
+  ["text"," "],
   ["keyword.control","DO"],
   ["text"," "],
   ["keyword.control","BEGIN"]
 ],[
    "start",
-  ["text","                readln(a[size])"],
+  ["text","                "],
+  ["identifier","readln"],
+  ["text","("],
+  ["identifier","a"],
+  ["text","["],
+  ["identifier","size"],
+  ["text","])"],
   ["keyword.operator",";"]
 ],[
    "start",
@@ -147,14 +185,20 @@
   ["keyword.control","IF"],
   ["text"," "],
   ["keyword.control","NOT"],
-  ["text"," eof "],
+  ["text"," "],
+  ["identifier","eof"],
+  ["text"," "],
   ["keyword.control","THEN"],
   ["text"," "]
 ],[
    "start",
-  ["text","                    size "],
+  ["text","                    "],
+  ["identifier","size"],
+  ["text"," "],
   ["keyword.operator",":="],
-  ["text"," size "],
+  ["text"," "],
+  ["identifier","size"],
+  ["text"," "],
   ["keyword.operator","+"],
   ["text"," "],
   ["constant.numeric","1"]
@@ -181,9 +225,14 @@
   ["punctuation.definition.comment","*)"]
 ],[
    "start",
-  ["text","        ReadArr(size"],
+  ["text","        "],
+  ["identifier","ReadArr"],
+  ["text","("],
+  ["identifier","size"],
   ["keyword.operator",","],
-  ["text"," arr)"],
+  ["text"," "],
+  ["identifier","arr"],
+  ["text",")"],
   ["keyword.operator",";"]
 ],[
    "start"
@@ -197,13 +246,19 @@
    "start",
   ["text","        "],
   ["keyword.control","FOR"],
-  ["text"," i "],
+  ["text"," "],
+  ["identifier","i"],
+  ["text"," "],
   ["keyword.operator",":="],
-  ["text"," size "],
+  ["text"," "],
+  ["identifier","size"],
+  ["text"," "],
   ["keyword.operator","-"],
   ["text"," "],
   ["constant.numeric","1"],
-  ["text"," DOWNTO "],
+  ["text"," "],
+  ["identifier","DOWNTO"],
+  ["text"," "],
   ["constant.numeric","1"],
   ["text"," "],
   ["keyword.control","DO"]
@@ -211,20 +266,32 @@
    "start",
   ["text","            "],
   ["keyword.control","FOR"],
-  ["text"," j "],
+  ["text"," "],
+  ["identifier","j"],
+  ["text"," "],
   ["keyword.operator",":="],
   ["text"," "],
   ["constant.numeric","1"],
   ["text"," "],
   ["keyword.control","TO"],
-  ["text"," i "],
+  ["text"," "],
+  ["identifier","i"],
+  ["text"," "],
   ["keyword.control","DO"],
   ["text"," "]
 ],[
    "start",
   ["text","                "],
   ["keyword.control","IF"],
-  ["text"," arr[j] > arr[j "],
+  ["text"," "],
+  ["identifier","arr"],
+  ["text","["],
+  ["identifier","j"],
+  ["text","] > "],
+  ["identifier","arr"],
+  ["text","["],
+  ["identifier","j"],
+  ["text"," "],
   ["keyword.operator","+"],
   ["text"," "],
   ["constant.numeric","1"],
@@ -234,15 +301,29 @@
   ["keyword.control","BEGIN"]
 ],[
    "start",
-  ["text","                    tmp "],
+  ["text","                    "],
+  ["identifier","tmp"],
+  ["text"," "],
   ["keyword.operator",":="],
-  ["text"," arr[j]"],
+  ["text"," "],
+  ["identifier","arr"],
+  ["text","["],
+  ["identifier","j"],
+  ["text","]"],
   ["keyword.operator",";"]
 ],[
    "start",
-  ["text","                    arr[j] "],
+  ["text","                    "],
+  ["identifier","arr"],
+  ["text","["],
+  ["identifier","j"],
+  ["text","] "],
   ["keyword.operator",":="],
-  ["text"," arr[j "],
+  ["text"," "],
+  ["identifier","arr"],
+  ["text","["],
+  ["identifier","j"],
+  ["text"," "],
   ["keyword.operator","+"],
   ["text"," "],
   ["constant.numeric","1"],
@@ -250,13 +331,18 @@
   ["keyword.operator",";"]
 ],[
    "start",
-  ["text","                    arr[j "],
+  ["text","                    "],
+  ["identifier","arr"],
+  ["text","["],
+  ["identifier","j"],
+  ["text"," "],
   ["keyword.operator","+"],
   ["text"," "],
   ["constant.numeric","1"],
   ["text","] "],
   ["keyword.operator",":="],
-  ["text"," tmp"],
+  ["text"," "],
+  ["identifier","tmp"],
   ["keyword.operator",";"]
 ],[
    "start",
@@ -275,17 +361,27 @@
    "start",
   ["text","        "],
   ["keyword.control","FOR"],
-  ["text"," i "],
+  ["text"," "],
+  ["identifier","i"],
+  ["text"," "],
   ["keyword.operator",":="],
   ["text"," "],
   ["constant.numeric","1"],
   ["text"," "],
   ["keyword.control","TO"],
-  ["text"," size "],
+  ["text"," "],
+  ["identifier","size"],
+  ["text"," "],
   ["keyword.control","DO"]
 ],[
    "start",
-  ["text","            writeln(arr[i])"]
+  ["text","            "],
+  ["identifier","writeln"],
+  ["text","("],
+  ["identifier","arr"],
+  ["text","["],
+  ["identifier","i"],
+  ["text","])"]
 ],[
    "start",
   ["text","    "],
