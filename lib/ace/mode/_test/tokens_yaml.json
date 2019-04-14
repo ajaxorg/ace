@@ -106,17 +106,17 @@
   ["text","  "],
   ["constant.language","&id001"]
 ],[
-   ["mlString",4],
+   ["mlStringPre",4],
   ["meta.tag","    street"],
   ["keyword",":"],
   ["text"," "],
   ["string","|"]
 ],[
-   ["mlString",4],
+   ["mlString",11],
   ["indent","            "],
   ["string","123 Tornado Alley"]
 ],[
-   ["mlString",4],
+   ["mlString",11],
   ["indent","            "],
   ["string","Suite 16"]
 ],[
@@ -141,27 +141,181 @@
 ],[
    "start"
 ],[
-   ["mlString",0],
+   ["mlStringPre",0],
   ["meta.tag","specialDelivery"],
   ["keyword",":"],
   ["text","  "],
   ["string",">"]
 ],[
-   ["mlString",0],
+   ["mlString",3],
   ["indent","    "],
   ["string","Follow the Yellow Brick"]
 ],[
-   ["mlString",0],
+   ["mlString",3],
   ["indent","    "],
   ["string","Road to the Emerald City."]
 ],[
-   ["mlString",0],
+   ["mlString",3],
   ["indent","    "],
   ["string","Pay no attention to the"]
 ],[
-   ["mlString",0],
+   ["mlString",3],
   ["indent","    "],
   ["string","man behind the curtain."]
 ],[
-   ["mlString",0]
+   ["mlString",3]
+],[
+   ["mlStringPre",0],
+  ["list.markup","? "],
+  ["text","       "],
+  ["string","|"]
+],[
+   ["mlString",0],
+  ["indent"," "],
+  ["string","block key #1"]
+],[
+   ["mlString",0],
+  ["indent"," "],
+  ["string","kkk"]
+],[
+   ["mlStringPre",2],
+  ["text",": - "],
+  ["string","|"]
+],[
+   ["mlString",2],
+  ["indent","   "],
+  ["string","one "]
+],[
+   ["mlStringPre",2],
+  ["indent","  "],
+  ["text","- "],
+  ["string","|"]
+],[
+   ["mlString",2],
+  ["indent","   "],
+  ["string","tw #o "]
+],[
+   ["mlStringPre",4],
+  ["indent","  "],
+  ["text","- ? "],
+  ["string","|- "]
+],[
+   ["mlStringPre",4]
+],[
+   ["mlString",4],
+  ["indent","     "],
+  ["string","as #d"]
+],[
+   ["mlString",4]
+],[
+   ["mlString",4],
+  ["indent","     "],
+  ["string","q"]
+],[
+   "start",
+  ["indent","    "],
+  ["text","b"]
+],[
+   "start",
+  ["list.markup","  - "]
+],[
+   "start",
+  ["meta.tag","     x"],
+  ["keyword",":"],
+  ["text"," xx"]
+],[
+   "start",
+  ["meta.tag","     r"],
+  ["keyword",":"],
+  ["text"," xx"]
+],[
+   "start",
+  ["meta.tag","     z"],
+  ["keyword",":"],
+  ["text"," sss"]
+],[
+   "start",
+  ["meta.tag","     zdd"],
+  ["keyword",":"],
+  ["text"," dddd"]
+],[
+   "start",
+  ["text","     "],
+  ["string","\"block key 2\""],
+  ["text"," : "]
+],[
+   "start",
+  ["list.markup","       - "],
+  ["text","two "],
+  ["comment","# block value"]
+],[
+   ["mlStringPre",9],
+  ["list.markup","       - "],
+  ["text","? "],
+  ["string","| "]
+],[
+   ["mlString",9],
+  ["indent","          "],
+  ["string","as #d"]
+],[
+   ["mlStringPre",9],
+  ["indent","         "],
+  ["text",": "],
+  ["string","|"]
+],[
+   ["mlString",9],
+  ["indent","          "],
+  ["string","asdadas #d"]
+],[
+   ["mlString",9],
+  ["indent","          "],
+  ["string","asd"]
+],[
+   "start",
+  ["indent","         "],
+  ["meta.tag","a"],
+  ["keyword",":"],
+  ["text"," "],
+  ["constant.numeric","2"]
+],[
+   ["mlStringPre",9],
+  ["list.markup","       - "],
+  ["text","? "],
+  ["string","| "]
+],[
+   ["mlString",9],
+  ["indent","          "],
+  ["string","asdas #d"]
+],[
+   ["mlStringPre",9],
+  ["indent","         "],
+  ["text",":  "],
+  ["string","|"]
+],[
+   ["mlString",9],
+  ["indent","          "],
+  ["string","xx"]
+],[
+   ["mlString",12],
+  ["indent","         "],
+  ["meta.tag","s"],
+  ["keyword",":"],
+  ["text"," "],
+  ["string","|4+ #comment"]
+],[
+   ["mlString",12],
+  ["indent","               "],
+  ["string","7"]
+],[
+   ["mlString",12]
+],[
+   ["mlString",12],
+  ["indent","             "],
+  ["string","a "]
+],[
+   "start",
+  ["indent","           "],
+  ["text","a"]
+],[
+   "start"
 ]]
