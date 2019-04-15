@@ -134,21 +134,6 @@ env.editor.showCommandLine = function(val) {
  * This demonstrates how you can define commands and bind shortcuts to them.
  */
 env.editor.commands.addCommands([{
-    name: "gotoline",
-    bindKey: {win: "Ctrl-L", mac: "Command-L"},
-    exec: function(editor, line) {
-        if (typeof line == "object") {
-            var arg = this.name + " " + editor.getCursorPosition().row;
-            editor.cmdLine.setValue(arg, 1);
-            editor.cmdLine.focus();
-            return;
-        }
-        line = parseInt(line, 10);
-        if (!isNaN(line))
-            editor.gotoLine(line);
-    },
-    readOnly: true
-}, {
     name: "snippet",
     bindKey: {win: "Alt-C", mac: "Command-Alt-C"},
     exec: function(editor, needle) {
