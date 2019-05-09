@@ -439,7 +439,7 @@ export namespace Ace {
     clearBreakpoint(row: number): void;
     addMarker(range: Range,
               clazz: string,
-              type: MarkerRenderer,
+              type: MarkerRenderer | string,
               inFront: boolean): number;
     addDynamicMarker(marker: MarkerLike, inFront: boolean): MarkerLike;
     removeMarker(markerId: number): void;
