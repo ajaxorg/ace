@@ -438,16 +438,16 @@ export namespace Ace {
     setBreakpoint(row: number, className: string): void;
     clearBreakpoint(row: number): void;
     addMarker(range: Range,
-              clazz: string,
-              type: MarkerRenderer | string,
-              inFront: boolean): number;
+              className: string,
+              type: "fullLine" | "screenLine" | "text" | MarkerRenderer,
+              inFront?: boolean): number;
     addDynamicMarker(marker: MarkerLike, inFront: boolean): MarkerLike;
     removeMarker(markerId: number): void;
     getMarkers(inFront?: boolean): MarkerLike[];
     highlight(re: RegExp): void;
     highlightLines(startRow: number,
                    endRow: number,
-                   clazz: string,
+                   className: string,
                    inFront?: boolean): Range;
     setAnnotations(annotations: Annotation[]): void;
     getAnnotations(): Annotation[];
