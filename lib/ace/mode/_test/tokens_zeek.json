@@ -1,0 +1,1270 @@
+[[
+   "start",
+  ["comment.line","# An example of the Zeek scripting language."]
+],[
+   "start"
+],[
+   "start",
+  ["comment.line","##! A Zeekygen-style summmary comment."]
+],[
+   "start"
+],[
+   "start",
+  ["comment.line","# TODO: just an example of a todo-indicator"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword.other","@load"],
+  ["meta.preprocessor"," base/frameworks/notice"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword.other","@if"],
+  ["text"," "],
+  ["punctuation.section.parens.begin","("],
+  ["text"," "],
+  ["constant.language","F"],
+  ["text"," "],
+  ["punctuation.section.parens.end",")"]
+],[
+   "start",
+  ["keyword.other","@endif"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword.other","module"],
+  ["meta.namespace"," "],
+  ["entity.name.namespace","Example"],
+  ["punctuation.terminator",";"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword.other","export"],
+  ["text"," "],
+  ["punctuation.section.block.begin","{"]
+],[
+   "start"
+],[
+   "start",
+  ["text","  "],
+  ["keyword.other","type"],
+  ["meta.enum"," "],
+  ["entity.name.enum","SimpleEnum"],
+  ["punctuation.separator",":"],
+  ["meta.enum"," "],
+  ["storage.type.enum","enum"],
+  ["text"," "],
+  ["punctuation.section.block.begin","{"],
+  ["text"," ONE"],
+  ["punctuation.separator",","],
+  ["text"," TWO"],
+  ["punctuation.separator",","],
+  ["text"," THREE "],
+  ["punctuation.section.block.end","}"],
+  ["punctuation.terminator",";"]
+],[
+   "start"
+],[
+   "start",
+  ["text","  "],
+  ["keyword.other","redef"],
+  ["meta.enum"," "],
+  ["storage.type.enum","enum"],
+  ["meta.enum"," "],
+  ["entity.name.enum","SimpleEnum"],
+  ["text"," "],
+  ["keyword.operator","+="],
+  ["text"," "],
+  ["punctuation.section.block.begin","{"]
+],[
+   "start"
+],[
+   "start",
+  ["text","    "],
+  ["comment.line","## A Zeekygen-style comment."]
+],[
+   "start",
+  ["text","    FOUR"],
+  ["punctuation.separator",","]
+],[
+   "start",
+  ["text","    FIVE"],
+  ["punctuation.separator",","],
+  ["text"," "],
+  ["comment.line","##< A Zeekygen-style comment."]
+],[
+   "start",
+  ["text","  "],
+  ["punctuation.section.block.end","}"],
+  ["punctuation.terminator",";"]
+],[
+   "start"
+],[
+   "start",
+  ["text","  "],
+  ["keyword.other","type"],
+  ["meta.struct.record"," "],
+  ["entity.name.struct.record","SimpleRecord"],
+  ["punctuation.separator",":"],
+  ["meta.struct.record"," "],
+  ["storage.type.struct.record","record"],
+  ["text"," "],
+  ["punctuation.section.block.begin","{"]
+],[
+   "start",
+  ["text","    field1"],
+  ["punctuation.separator",":"],
+  ["text"," "],
+  ["storage.type","count"],
+  ["punctuation.terminator",";"]
+],[
+   "start",
+  ["text","    field2"],
+  ["punctuation.separator",":"],
+  ["text"," "],
+  ["storage.type","bool"],
+  ["punctuation.terminator",";"]
+],[
+   "start",
+  ["text","  "],
+  ["punctuation.section.block.end","}"],
+  ["text"," "],
+  ["storage.modifier.attribute","&redef"],
+  ["punctuation.terminator",";"]
+],[
+   "start"
+],[
+   "start",
+  ["text","  "],
+  ["keyword.other","redef"],
+  ["meta.struct.record"," "],
+  ["storage.type.struct.record","record"],
+  ["meta.struct.record"," "],
+  ["entity.name.struct.record","SimpleRecord"],
+  ["text"," "],
+  ["keyword.operator","+="],
+  ["text"," "],
+  ["punctuation.section.block.begin","{"]
+],[
+   "start"
+],[
+   "start",
+  ["text","    field3"],
+  ["punctuation.separator",":"],
+  ["text"," "],
+  ["storage.type","string"],
+  ["text"," "],
+  ["storage.modifier.attribute","&optional"],
+  ["punctuation.terminator",";"]
+],[
+   "start"
+],[
+   "start",
+  ["text","    field4"],
+  ["punctuation.separator",":"],
+  ["text"," "],
+  ["storage.type","string"],
+  ["text"," "],
+  ["storage.modifier.attribute","&default"],
+  ["keyword.operator","="],
+  ["string.double","\"blah\""],
+  ["punctuation.terminator",";"]
+],[
+   "start",
+  ["text","  "],
+  ["punctuation.section.block.end","}"],
+  ["punctuation.terminator",";"]
+],[
+   "start"
+],[
+   "start",
+  ["text","  "],
+  ["storage.modifier","const"],
+  ["text"," init_option"],
+  ["punctuation.separator",":"],
+  ["text"," "],
+  ["storage.type","bool"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.language","T"],
+  ["punctuation.terminator",";"]
+],[
+   "start"
+],[
+   "start",
+  ["text","  "],
+  ["storage.modifier","option"],
+  ["text"," runtime_option"],
+  ["punctuation.separator",":"],
+  ["text"," "],
+  ["storage.type","bool"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.language","F"],
+  ["punctuation.terminator",";"]
+],[
+   "start"
+],[
+   "start",
+  ["text","  "],
+  ["storage.modifier","global"],
+  ["text"," test_opaque"],
+  ["punctuation.separator",":"],
+  ["text"," "],
+  ["storage.type","opaque"],
+  ["text"," "],
+  ["keyword.operator","of"],
+  ["text"," "],
+  ["storage.type","md5"],
+  ["punctuation.terminator",";"]
+],[
+   "start"
+],[
+   "start",
+  ["text","  "],
+  ["storage.modifier","global"],
+  ["text"," test_vector"],
+  ["punctuation.separator",":"],
+  ["text"," "],
+  ["storage.type","vector"],
+  ["text"," "],
+  ["keyword.operator","of"],
+  ["text"," "],
+  ["storage.type","count"],
+  ["punctuation.terminator",";"]
+],[
+   "start"
+],[
+   "start",
+  ["text","  "],
+  ["storage.modifier","global"],
+  ["text"," myfunction"],
+  ["punctuation.separator",":"],
+  ["text"," "],
+  ["storage.type","function"],
+  ["punctuation.section.parens.begin","("],
+  ["text","msg"],
+  ["punctuation.separator",":"],
+  ["text"," "],
+  ["storage.type","string"],
+  ["punctuation.separator",","],
+  ["text"," c"],
+  ["punctuation.separator",":"],
+  ["text"," "],
+  ["storage.type","count"],
+  ["text"," "],
+  ["storage.modifier.attribute","&default"],
+  ["keyword.operator","="],
+  ["constant.numeric.integer.decimal","0"],
+  ["punctuation.section.parens.end",")"],
+  ["punctuation.separator",":"],
+  ["text"," "],
+  ["storage.type","count"],
+  ["punctuation.terminator",";"]
+],[
+   "start"
+],[
+   "start",
+  ["text","  "],
+  ["storage.modifier","global"],
+  ["text"," myhook"],
+  ["punctuation.separator",":"],
+  ["text"," "],
+  ["storage.type","hook"],
+  ["punctuation.section.parens.begin","("],
+  ["text","tag"],
+  ["punctuation.separator",":"],
+  ["text"," "],
+  ["storage.type","string"],
+  ["punctuation.section.parens.end",")"],
+  ["punctuation.terminator",";"]
+],[
+   "start"
+],[
+   "start",
+  ["text","  "],
+  ["storage.modifier","global"],
+  ["text"," myevent"],
+  ["punctuation.separator",":"],
+  ["text"," "],
+  ["storage.type","event"],
+  ["punctuation.section.parens.begin","("],
+  ["text","tag"],
+  ["punctuation.separator",":"],
+  ["text"," "],
+  ["storage.type","string"],
+  ["punctuation.section.parens.end",")"],
+  ["punctuation.terminator",";"]
+],[
+   "start",
+  ["punctuation.section.block.end","}"]
+],[
+   "start"
+],[
+   "start",
+  ["storage.type","function"],
+  ["text"," "],
+  ["entity.name.function","myfunction"],
+  ["punctuation.section.parens.begin","("],
+  ["text","msg"],
+  ["punctuation.separator",":"],
+  ["text"," "],
+  ["storage.type","string"],
+  ["punctuation.separator",","],
+  ["text"," c"],
+  ["punctuation.separator",":"],
+  ["text"," "],
+  ["storage.type","count"],
+  ["punctuation.section.parens.end",")"],
+  ["punctuation.separator",":"],
+  ["text"," "],
+  ["storage.type","count"]
+],[
+   "start",
+  ["text","  "],
+  ["punctuation.section.block.begin","{"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword.other","print"],
+  ["text"," "],
+  ["string.double","\"in myfunction\""],
+  ["punctuation.separator",","],
+  ["text"," msg"],
+  ["punctuation.separator",","],
+  ["text"," c"],
+  ["punctuation.terminator",";"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword.control","return"],
+  ["text"," "],
+  ["constant.numeric.integer.decimal","0"],
+  ["punctuation.terminator",";"]
+],[
+   "start",
+  ["text","  "],
+  ["punctuation.section.block.end","}"]
+],[
+   "start"
+],[
+   "start",
+  ["storage.type","event"],
+  ["text"," "],
+  ["entity.name.function.event","myevent"],
+  ["punctuation.section.parens.begin","("],
+  ["text","msg"],
+  ["punctuation.separator",":"],
+  ["text"," "],
+  ["storage.type","string"],
+  ["punctuation.section.parens.end",")"],
+  ["text"," "],
+  ["storage.modifier.attribute","&priority"],
+  ["keyword.operator","="],
+  ["constant.numeric.integer.decimal","1"]
+],[
+   "start",
+  ["text","  "],
+  ["punctuation.section.block.begin","{"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword.other","print"],
+  ["text"," "],
+  ["string.double","\"in myevent\""],
+  ["punctuation.terminator",";"]
+],[
+   "start",
+  ["text","  "],
+  ["punctuation.section.block.end","}"]
+],[
+   "start"
+],[
+   "start",
+  ["storage.type","hook"],
+  ["text"," "],
+  ["entity.name.function.hook","myhook"],
+  ["punctuation.section.parens.begin","("],
+  ["text","msg"],
+  ["punctuation.separator",":"],
+  ["text"," "],
+  ["storage.type","string"],
+  ["punctuation.section.parens.end",")"]
+],[
+   "start",
+  ["text","  "],
+  ["punctuation.section.block.begin","{"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword.other","print"],
+  ["text"," "],
+  ["string.double","\"in myevent\""],
+  ["punctuation.terminator",";"]
+],[
+   "start",
+  ["text","  "],
+  ["punctuation.section.block.end","}"]
+],[
+   "start"
+],[
+   "start",
+  ["storage.type","event"],
+  ["text"," "],
+  ["entity.name.function.event","zeek_init"],
+  ["punctuation.section.parens.begin","("],
+  ["punctuation.section.parens.end",")"]
+],[
+   "start",
+  ["text","  "],
+  ["punctuation.section.block.begin","{"]
+],[
+   "start",
+  ["text","  "],
+  ["storage.modifier","local"],
+  ["text"," b "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.language","T"],
+  ["punctuation.terminator",";"]
+],[
+   "start",
+  ["text","  "],
+  ["storage.modifier","local"],
+  ["text"," s "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["string.double","\""],
+  ["constant.character.escape","\\x"],
+  ["string.double","ff"],
+  ["constant.character.escape","\\x"],
+  ["string.double","af"],
+  ["constant.character.escape","\\\""],
+  ["string.double","and more after the escaped quote\""],
+  ["punctuation.terminator",";"]
+],[
+   "start",
+  ["text","  "],
+  ["storage.modifier","local"],
+  ["text"," p "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["string.regexp","/foo|bar"],
+  ["constant.character.escape","\\x"],
+  ["string.regexp","be"],
+  ["constant.character.escape","\\/"],
+  ["string.regexp","and more after the escaped slash/"],
+  ["punctuation.terminator",";"]
+],[
+   "start",
+  ["text","  "],
+  ["storage.modifier","local"],
+  ["text"," c "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric.integer.decimal","10"],
+  ["punctuation.terminator",";"]
+],[
+   "start"
+],[
+   "start",
+  ["text","  "],
+  ["storage.modifier","local"],
+  ["text"," sr "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["entity.name.function.call","SimpleRecord"],
+  ["punctuation.section.parens.begin","("],
+  ["punctuation.accessor","$"],
+  ["text","field1 "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric.integer.decimal","0"],
+  ["punctuation.separator",","],
+  ["text"," "],
+  ["punctuation.accessor","$"],
+  ["text","field2 "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.language","T"],
+  ["punctuation.separator",","],
+  ["text"," "],
+  ["punctuation.accessor","$"],
+  ["text","field3 "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["string.double","\"hi\""],
+  ["punctuation.section.parens.end",")"],
+  ["punctuation.terminator",";"]
+],[
+   "start"
+],[
+   "start",
+  ["text","  "],
+  ["keyword.other","print"],
+  ["text"," sr"],
+  ["punctuation.accessor","?$"],
+  ["text","field3"],
+  ["punctuation.separator",","],
+  ["text"," sr"],
+  ["punctuation.accessor","$"],
+  ["text","field1"],
+  ["punctuation.terminator",";"]
+],[
+   "start"
+],[
+   "start",
+  ["text","  "],
+  ["storage.modifier","local"],
+  ["text"," myset"],
+  ["punctuation.separator",":"],
+  ["text"," "],
+  ["storage.type","set"],
+  ["punctuation.section.brackets.begin","["],
+  ["storage.type","string"],
+  ["punctuation.section.brackets.end","]"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["storage.type","set"],
+  ["punctuation.section.parens.begin","("],
+  ["string.double","\"one\""],
+  ["punctuation.separator",","],
+  ["text"," "],
+  ["string.double","\"two\""],
+  ["punctuation.separator",","],
+  ["text"," "],
+  ["string.double","\"three\""],
+  ["punctuation.section.parens.end",")"],
+  ["punctuation.terminator",";"]
+],[
+   "start"
+],[
+   "start",
+  ["text","  "],
+  ["keyword.other","add"],
+  ["text"," myset"],
+  ["punctuation.section.brackets.begin","["],
+  ["string.double","\"four\""],
+  ["punctuation.section.brackets.end","]"],
+  ["punctuation.terminator",";"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword.other","delete"],
+  ["text"," myset"],
+  ["punctuation.section.brackets.begin","["],
+  ["string.double","\"one\""],
+  ["punctuation.section.brackets.end","]"],
+  ["punctuation.terminator",";"]
+],[
+   "start"
+],[
+   "start",
+  ["text","  "],
+  ["keyword.control","for"],
+  ["text"," "],
+  ["punctuation.section.parens.begin","("],
+  ["text"," ms "],
+  ["keyword.operator","in"],
+  ["text"," myset "],
+  ["punctuation.section.parens.end",")"]
+],[
+   "start",
+  ["text","    "],
+  ["punctuation.section.block.begin","{"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword.other","print"],
+  ["text"," ms "],
+  ["keyword.operator","is"],
+  ["text"," "],
+  ["storage.type","string"],
+  ["punctuation.separator",","],
+  ["text"," s "],
+  ["keyword.operator","as"],
+  ["text"," "],
+  ["storage.type","string"],
+  ["punctuation.terminator",";"]
+],[
+   "start"
+],[
+   "start",
+  ["text","    "],
+  ["keyword.other","print"],
+  ["text"," s"],
+  ["punctuation.section.brackets.begin","["],
+  ["constant.numeric.integer.decimal","1"],
+  ["punctuation.separator",":"],
+  ["constant.numeric.integer.decimal","3"],
+  ["punctuation.section.brackets.end","]"],
+  ["punctuation.terminator",";"]
+],[
+   "start"
+],[
+   "start",
+  ["text","    "],
+  ["storage.modifier","local"],
+  ["text"," tern"],
+  ["punctuation.separator",":"],
+  ["text"," "],
+  ["storage.type","count"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," s "],
+  ["keyword.operator","=="],
+  ["text"," "],
+  ["string.double","\"two\""],
+  ["text"," "],
+  ["keyword.operator","?"],
+  ["text"," "],
+  ["constant.numeric.integer.decimal","2"],
+  ["text"," "],
+  ["punctuation.separator",":"],
+  ["text"," "],
+  ["constant.numeric.integer.decimal","0"],
+  ["punctuation.terminator",";"]
+],[
+   "start"
+],[
+   "start",
+  ["text","    "],
+  ["keyword.control.conditional","if"],
+  ["text"," "],
+  ["punctuation.section.parens.begin","("],
+  ["text"," s "],
+  ["keyword.operator","!in"],
+  ["text"," myset "],
+  ["punctuation.section.parens.end",")"]
+],[
+   "start",
+  ["text","       "],
+  ["keyword.other","print"],
+  ["text"," "],
+  ["entity.name.function.call","fmt"],
+  ["punctuation.section.parens.begin","("],
+  ["string.double","\"error "],
+  ["constant.other.placeholder","%4.2f"],
+  ["string.double",": "],
+  ["constant.other.placeholder","%s"],
+  ["string.double","\""],
+  ["punctuation.separator",","],
+  ["text"," "],
+  ["constant.numeric.float.decimal","3.14159"],
+  ["punctuation.separator",","],
+  ["text"," "],
+  ["string.double","\"wtf?\""],
+  ["punctuation.section.parens.end",")"],
+  ["punctuation.terminator",";"]
+],[
+   "start",
+  ["text","    "],
+  ["punctuation.section.block.end","}"]
+],[
+   "start"
+],[
+   "start",
+  ["text","  "],
+  ["keyword.control","switch"],
+  ["text"," "],
+  ["punctuation.section.parens.begin","("],
+  ["text"," c "],
+  ["punctuation.section.parens.end",")"],
+  ["text"," "],
+  ["punctuation.section.block.begin","{"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword.control","case"],
+  ["text"," "],
+  ["constant.numeric.integer.decimal","1"],
+  ["punctuation.separator",":"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword.control","break"],
+  ["punctuation.terminator",";"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword.control","case"],
+  ["text"," "],
+  ["constant.numeric.integer.decimal","2"],
+  ["punctuation.separator",":"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword.control","fallthrough"],
+  ["punctuation.terminator",";"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword.control","default"],
+  ["punctuation.separator",":"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword.control","break"],
+  ["punctuation.terminator",";"]
+],[
+   "start",
+  ["text","  "],
+  ["punctuation.section.block.end","}"]
+],[
+   "start"
+],[
+   "start",
+  ["text","  "],
+  ["keyword.control.conditional","if"],
+  ["text"," "],
+  ["punctuation.section.parens.begin","("],
+  ["text"," "],
+  ["keyword.operator","!"],
+  ["text"," b "],
+  ["punctuation.section.parens.end",")"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword.other","print"],
+  ["text"," "],
+  ["string.double","\"here\""],
+  ["punctuation.terminator",";"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword.control.conditional","else"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword.other","print"],
+  ["text"," "],
+  ["string.double","\"there\""],
+  ["punctuation.terminator",";"]
+],[
+   "start"
+],[
+   "start",
+  ["text","  "],
+  ["keyword.control","while"],
+  ["text"," "],
+  ["punctuation.section.parens.begin","("],
+  ["text"," c "],
+  ["keyword.operator","!="],
+  ["text"," "],
+  ["constant.numeric.integer.decimal","0"],
+  ["text"," "],
+  ["punctuation.section.parens.end",")"]
+],[
+   "start",
+  ["text","    "],
+  ["punctuation.section.block.begin","{"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword.control.conditional","if"],
+  ["text"," "],
+  ["punctuation.section.parens.begin","("],
+  ["text"," c "],
+  ["keyword.operator",">="],
+  ["text"," "],
+  ["constant.numeric.integer.decimal","5"],
+  ["text"," "],
+  ["punctuation.section.parens.end",")"]
+],[
+   "start",
+  ["text","      c "],
+  ["keyword.operator","+="],
+  ["text"," "],
+  ["constant.numeric.integer.decimal","0"],
+  ["punctuation.terminator",";"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword.control.conditional","else"],
+  ["text"," "],
+  ["keyword.control.conditional","if"],
+  ["text"," "],
+  ["punctuation.section.parens.begin","("],
+  ["text"," c "],
+  ["keyword.operator","=="],
+  ["text"," "],
+  ["constant.numeric.integer.decimal","8"],
+  ["text"," "],
+  ["punctuation.section.parens.end",")"]
+],[
+   "start",
+  ["text","      c "],
+  ["keyword.operator","-="],
+  ["text"," "],
+  ["constant.numeric.integer.decimal","0"],
+  ["punctuation.terminator",";"]
+],[
+   "start"
+],[
+   "start",
+  ["text","    c "],
+  ["keyword.operator","="],
+  ["text"," c "],
+  ["keyword.operator","/"],
+  ["text"," "],
+  ["constant.numeric.integer.decimal","1"],
+  ["punctuation.terminator",";"]
+],[
+   "start",
+  ["text","    c "],
+  ["keyword.operator","="],
+  ["text"," c "],
+  ["keyword.operator","/"],
+  ["text"," "],
+  ["constant.numeric.integer.decimal","1"],
+  ["punctuation.terminator",";"]
+],[
+   "start",
+  ["text","    c "],
+  ["keyword.operator","="],
+  ["text"," c "],
+  ["keyword.operator","-"],
+  ["text"," "],
+  ["constant.numeric.integer.decimal","1"],
+  ["punctuation.terminator",";"]
+],[
+   "start",
+  ["text","    "],
+  ["punctuation.section.block.end","}"]
+],[
+   "start"
+],[
+   "start",
+  ["text","  "],
+  ["keyword.other","print"],
+  ["text"," "],
+  ["keyword.operator","|"],
+  ["text","myset"],
+  ["keyword.operator","|"],
+  ["punctuation.terminator",";"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword.other","print"],
+  ["text"," "],
+  ["keyword.operator","~"],
+  ["constant.numeric.integer.decimal","5"],
+  ["punctuation.terminator",";"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword.other","print"],
+  ["text"," "],
+  ["constant.numeric.integer.decimal","1"],
+  ["text"," "],
+  ["keyword.operator","&"],
+  ["text"," "],
+  ["constant.numeric.integer.hexadecimal","0xff"],
+  ["punctuation.terminator",";"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword.other","print"],
+  ["text"," "],
+  ["constant.numeric.integer.decimal","2"],
+  ["text"," "],
+  ["keyword.operator","^"],
+  ["text"," "],
+  ["constant.numeric.integer.decimal","5"],
+  ["punctuation.terminator",";"]
+],[
+   "start"
+],[
+   "start",
+  ["text","  "],
+  ["entity.name.function.call","myfunction"],
+  ["punctuation.section.parens.begin","("],
+  ["string.double","\"hello function\""],
+  ["punctuation.section.parens.end",")"],
+  ["punctuation.terminator",";"]
+],[
+   "start",
+  ["text","  "],
+  ["storage.type","hook"],
+  ["text"," "],
+  ["entity.name.function.hook","myhook"],
+  ["punctuation.section.parens.begin","("],
+  ["string.double","\"hell hook\""],
+  ["punctuation.section.parens.end",")"],
+  ["punctuation.terminator",";"]
+],[
+   "start",
+  ["text","  "],
+  ["storage.type","event"],
+  ["text"," "],
+  ["entity.name.function.event","myevent"],
+  ["punctuation.section.parens.begin","("],
+  ["string.double","\"hello event\""],
+  ["punctuation.section.parens.end",")"],
+  ["punctuation.terminator",";"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword.control","schedule"],
+  ["text"," "],
+  ["constant.numeric.float.decimal.interval","1sec"],
+  ["text"," "],
+  ["punctuation.section.block.begin","{"],
+  ["text"," "],
+  ["entity.name.function.call","myevent"],
+  ["punctuation.section.parens.begin","("],
+  ["string.double","\"hello scheduled event\""],
+  ["punctuation.section.parens.end",")"],
+  ["text"," "],
+  ["punctuation.section.block.end","}"],
+  ["punctuation.terminator",";"]
+],[
+   "start"
+],[
+   "start",
+  ["text","  "],
+  ["keyword.other","print"],
+  ["text"," "],
+  ["constant.numeric.integer.decimal","0"],
+  ["punctuation.separator",","],
+  ["text"," "],
+  ["constant.numeric.integer.decimal","7"],
+  ["punctuation.terminator",";"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword.other","print"],
+  ["text"," "],
+  ["constant.numeric.integer.hexadecimal","0xff"],
+  ["punctuation.separator",","],
+  ["text"," "],
+  ["constant.numeric.integer.hexadecimal","0xdeadbeef"],
+  ["punctuation.terminator",";"]
+],[
+   "start"
+],[
+   "start",
+  ["text","  "],
+  ["keyword.other","print"],
+  ["text"," "],
+  ["constant.numeric.float.decimal","3.14159"],
+  ["punctuation.terminator",";"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword.other","print"],
+  ["text"," "],
+  ["constant.numeric.float.decimal","1234.0"],
+  ["punctuation.terminator",";"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword.other","print"],
+  ["text"," "],
+  ["constant.numeric.float.decimal","1234e0"],
+  ["punctuation.terminator",";"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword.other","print"],
+  ["text"," "],
+  ["constant.numeric.float.decimal",".003E-23"],
+  ["punctuation.terminator",";"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword.other","print"],
+  ["text"," "],
+  ["constant.numeric.float.decimal",".003E+23"],
+  ["punctuation.terminator",";"]
+],[
+   "start"
+],[
+   "start",
+  ["text","  "],
+  ["keyword.other","print"],
+  ["text"," "],
+  ["constant.numeric.port","123/udp"],
+  ["punctuation.terminator",";"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword.other","print"],
+  ["text"," "],
+  ["constant.numeric.port","8000/tcp"],
+  ["punctuation.terminator",";"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword.other","print"],
+  ["text"," "],
+  ["constant.numeric.port","13/icmp"],
+  ["punctuation.terminator",";"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword.other","print"],
+  ["text"," "],
+  ["constant.numeric.port","42/unknown"],
+  ["punctuation.terminator",";"]
+],[
+   "start"
+],[
+   "start",
+  ["text","  "],
+  ["keyword.other","print"],
+  ["text"," "],
+  ["constant.numeric.hostname","google.com"],
+  ["punctuation.terminator",";"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword.other","print"],
+  ["text"," "],
+  ["constant.numeric.addr","192.168.50.1"],
+  ["punctuation.terminator",";"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword.other","print"],
+  ["text"," "],
+  ["constant.numeric.addr","255.255.255.255"],
+  ["punctuation.terminator",";"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword.other","print"],
+  ["text"," "],
+  ["constant.numeric.addr","0.0.0.0"],
+  ["punctuation.terminator",";"]
+],[
+   "start"
+],[
+   "start",
+  ["text","  "],
+  ["keyword.other","print"],
+  ["text"," "],
+  ["constant.numeric.addr","10.0.0.0"],
+  ["keyword.operator","/"],
+  ["constant.numeric.integer.decimal","16"],
+  ["punctuation.terminator",";"]
+],[
+   "start"
+],[
+   "start",
+  ["text","  "],
+  ["keyword.other","print"],
+  ["text"," "],
+  ["constant.numeric.addr","[2001:0db8:85a3:0000:0000:8a2e:0370:7334]"],
+  ["punctuation.terminator",";"]
+],[
+   "start",
+  ["text","  "],
+  ["comment.line","# test for case insensitivity"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword.other","print"],
+  ["text"," "],
+  ["constant.numeric.addr","[2001:0DB8:85A3:0000:0000:8A2E:0370:7334]"],
+  ["punctuation.terminator",";"]
+],[
+   "start",
+  ["text","  "],
+  ["comment.line","# any case mixture is allowed"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword.other","print"],
+  ["text"," "],
+  ["constant.numeric.addr","[2001:0dB8:85a3:0000:0000:8A2E:0370:7334]"],
+  ["punctuation.terminator",";"]
+],[
+   "start",
+  ["text","  "],
+  ["comment.line","# leading zeroes of a 16-bit group may be omitted"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword.other","print"],
+  ["text"," "],
+  ["constant.numeric.addr","[2001:db8:85a3:0:0:8a2e:370:7334]"],
+  ["punctuation.terminator",";"]
+],[
+   "start",
+  ["text","  "],
+  ["comment.line","# a single occurrence of consecutive groups of zeroes may be replaced by ::"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword.other","print"],
+  ["text"," "],
+  ["constant.numeric.addr","[2001:db8:85a3::8a2e:370:7334]"],
+  ["punctuation.terminator",";"]
+],[
+   "start",
+  ["text","  "],
+  ["comment.line","# all zeroes should work"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword.other","print"],
+  ["text"," "],
+  ["constant.numeric.addr","[0:0:0:0:0:0:0:0]"],
+  ["punctuation.terminator",";"]
+],[
+   "start",
+  ["text","  "],
+  ["comment.line","# all zeroes condensed should work"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword.other","print"],
+  ["text"," "],
+  ["constant.numeric.addr","[::]"],
+  ["punctuation.terminator",";"]
+],[
+   "start",
+  ["text","  "],
+  ["comment.line","# hybrid ipv6-ipv4 address should work"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword.other","print"],
+  ["text"," "],
+  ["constant.numeric.addr","[2001:db8:0:0:0:FFFF:192.168.0.5]"],
+  ["punctuation.terminator",";"]
+],[
+   "start",
+  ["text","  "],
+  ["comment.line","# hybrid ipv6-ipv4 address with zero ommission should work"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword.other","print"],
+  ["text"," "],
+  ["constant.numeric.addr","[2001:db8::FFFF:192.168.0.5]"],
+  ["punctuation.terminator",";"]
+],[
+   "start"
+],[
+   "start",
+  ["text","  "],
+  ["keyword.other","print"],
+  ["text"," "],
+  ["constant.numeric.addr","[2001:0db8:85a3:0000:0000:8a2e:0370:7334]"],
+  ["keyword.operator","/"],
+  ["constant.numeric.integer.decimal","64"],
+  ["punctuation.terminator",";"]
+],[
+   "start"
+],[
+   "start",
+  ["text","  "],
+  ["keyword.other","print"],
+  ["text"," "],
+  ["constant.numeric.float.decimal.interval","1day"],
+  ["punctuation.separator",","],
+  ["text"," "],
+  ["constant.numeric.float.decimal.interval","1days"],
+  ["punctuation.separator",","],
+  ["text"," "],
+  ["constant.numeric.float.decimal.interval","1.0day"],
+  ["punctuation.separator",","],
+  ["text"," "],
+  ["constant.numeric.float.decimal.interval","1.0days"],
+  ["punctuation.terminator",";"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword.other","print"],
+  ["text"," "],
+  ["constant.numeric.float.decimal.interval","1hr"],
+  ["punctuation.separator",","],
+  ["text"," "],
+  ["constant.numeric.float.decimal.interval","1hrs"],
+  ["punctuation.separator",","],
+  ["text"," "],
+  ["constant.numeric.float.decimal.interval","1.0hr"],
+  ["punctuation.separator",","],
+  ["text"," "],
+  ["constant.numeric.float.decimal.interval","1.0hrs"],
+  ["punctuation.terminator",";"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword.other","print"],
+  ["text"," "],
+  ["constant.numeric.float.decimal.interval","1min"],
+  ["punctuation.separator",","],
+  ["text"," "],
+  ["constant.numeric.float.decimal.interval","1mins"],
+  ["punctuation.separator",","],
+  ["text"," "],
+  ["constant.numeric.float.decimal.interval","1.0min"],
+  ["punctuation.separator",","],
+  ["text"," "],
+  ["constant.numeric.float.decimal.interval","1.0mins"],
+  ["punctuation.terminator",";"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword.other","print"],
+  ["text"," "],
+  ["constant.numeric.float.decimal.interval","1sec"],
+  ["punctuation.separator",","],
+  ["text"," "],
+  ["constant.numeric.float.decimal.interval","1secs"],
+  ["punctuation.separator",","],
+  ["text"," "],
+  ["constant.numeric.float.decimal.interval","1.0sec"],
+  ["punctuation.separator",","],
+  ["text"," "],
+  ["constant.numeric.float.decimal.interval","1.0secs"],
+  ["punctuation.terminator",";"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword.other","print"],
+  ["text"," "],
+  ["constant.numeric.float.decimal.interval","1msec"],
+  ["punctuation.separator",","],
+  ["text"," "],
+  ["constant.numeric.float.decimal.interval","1msecs"],
+  ["punctuation.separator",","],
+  ["text"," "],
+  ["constant.numeric.float.decimal.interval","1.0msec"],
+  ["punctuation.separator",","],
+  ["text"," "],
+  ["constant.numeric.float.decimal.interval","1.0msecs"],
+  ["punctuation.terminator",";"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword.other","print"],
+  ["text"," "],
+  ["constant.numeric.float.decimal.interval","1usec"],
+  ["punctuation.separator",","],
+  ["text"," "],
+  ["constant.numeric.float.decimal.interval","1usecs"],
+  ["punctuation.separator",","],
+  ["text"," "],
+  ["constant.numeric.float.decimal.interval","1.0usec"],
+  ["punctuation.separator",","],
+  ["text"," "],
+  ["constant.numeric.float.decimal.interval","1.0usecs"],
+  ["punctuation.terminator",";"]
+],[
+   "start",
+  ["text","  "],
+  ["punctuation.section.block.end","}"]
+],[
+   "start"
+]]
