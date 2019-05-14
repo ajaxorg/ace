@@ -73,7 +73,7 @@ node -e "
     }
     update('package.json');
     update('build/package.json');
-    update('./lib/ace/ace.js');
+    update('./lib/ace/config.js');
     update('ChangeLog.txt', function(str) {
         var date='"`date +%Y.%m.%d`"';
         return date + ' Version ' + version + '\n' + str.replace(/^\d+.*/, '').replace(/^\n/, '');
