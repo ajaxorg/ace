@@ -75,7 +75,7 @@
                 
         no-undef: 2,
         no-redeclare: 0,
-        // no-unused-vars: 1,
+        no-unused-vars: 1,
         
         no-debugger: 2,
 
@@ -88,7 +88,7 @@
         // no-useless-concat: 2,
         // no-eval: 2,
         // dot-notation: 2,
-        // no-alert: 2,
+        no-alert: 2,
         no-extra-semi: 2, // doesn't handle ;(function() {})() pattern
         // radix: 2,
         // no-invalid-this: 2,
