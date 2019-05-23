@@ -33,7 +33,7 @@
    "start",
   ["storage.type","events"],
   ["text"," "],
-  ["paren.lpar","{"]
+  ["paren.lparen","{"]
 ],[
    "start",
   ["text","  "],
@@ -44,14 +44,14 @@
   ["comment","## Default: 1024"]
 ],[
    "start",
-  ["paren.rpar","}"]
+  ["paren.rparen","}"]
 ],[
    "start"
 ],[
    "start",
   ["storage.type","http"],
   ["text"," "],
-  ["paren.lpar","{"]
+  ["paren.lparen","{"]
 ],[
    "start",
   ["text","  "],
@@ -155,7 +155,7 @@
   ["text","  "],
   ["storage.type","server"],
   ["text"," "],
-  ["paren.lpar","{"],
+  ["paren.lparen","{"],
   ["text"," "],
   ["comment","# php/fastcgi"]
 ],[
@@ -191,7 +191,7 @@
   ["storage.type","location"],
   ["text"," "],
   ["string.regexp","~ \\.php$ "],
-  ["paren.lpar","{"]
+  ["paren.lparen","{"]
 ],[
    "start",
   ["text","      "],
@@ -201,11 +201,11 @@
 ],[
    "start",
   ["text","    "],
-  ["paren.rpar","}"]
+  ["paren.rparen","}"]
 ],[
    "start",
   ["text","  "],
-  ["paren.rpar","}"]
+  ["paren.rparen","}"]
 ],[
    "start"
 ],[
@@ -213,7 +213,7 @@
   ["text","  "],
   ["storage.type","server"],
   ["text"," "],
-  ["paren.lpar","{"],
+  ["paren.lparen","{"],
   ["text"," "],
   ["comment","# simple reverse-proxy"]
 ],[
@@ -247,7 +247,7 @@
   ["storage.type","location"],
   ["text"," "],
   ["string.regexp","~ ^/(images|javascript|js|css|flash|media|static)/  "],
-  ["paren.lpar","{"]
+  ["paren.lparen","{"]
 ],[
    "start",
   ["text","      "],
@@ -263,7 +263,7 @@
 ],[
    "start",
   ["text","    "],
-  ["paren.rpar","}"]
+  ["paren.rparen","}"]
 ],[
    "start"
 ],[
@@ -276,7 +276,7 @@
   ["storage.type","location"],
   ["text"," "],
   ["text","/ "],
-  ["paren.lpar","{"]
+  ["paren.lparen","{"]
 ],[
    "start",
   ["text","      "],
@@ -286,11 +286,11 @@
 ],[
    "start",
   ["text","    "],
-  ["paren.rpar","}"]
+  ["paren.rparen","}"]
 ],[
    "start",
   ["text","  "],
-  ["paren.rpar","}"]
+  ["paren.rparen","}"]
 ],[
    "start"
 ],[
@@ -299,7 +299,7 @@
   ["storage.type","upstream"],
   ["text"," "],
   ["text","big_server_com "],
-  ["paren.lpar","{"]
+  ["paren.lparen","{"]
 ],[
    "start",
   ["text","    "],
@@ -327,7 +327,7 @@
 ],[
    "start",
   ["text","  "],
-  ["paren.rpar","}"]
+  ["paren.rparen","}"]
 ],[
    "start"
 ],[
@@ -335,7 +335,7 @@
   ["text","  "],
   ["storage.type","server"],
   ["text"," "],
-  ["paren.lpar","{"],
+  ["paren.lparen","{"],
   ["text"," "],
   ["comment","# simple load balancing"]
 ],[
@@ -365,7 +365,7 @@
   ["storage.type","location"],
   ["text"," "],
   ["text","/ "],
-  ["paren.lpar","{"]
+  ["paren.lparen","{"]
 ],[
    "start",
   ["text","      "],
@@ -375,12 +375,12 @@
 ],[
    "start",
   ["text","    "],
-  ["paren.rpar","}"]
+  ["paren.rparen","}"]
 ],[
    "start",
   ["text","  "],
-  ["paren.rpar","}"]
+  ["paren.rparen","}"]
 ],[
    "start",
-  ["paren.rpar","}"]
+  ["paren.rparen","}"]
 ]]

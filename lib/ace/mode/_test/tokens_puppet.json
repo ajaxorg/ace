@@ -25,7 +25,7 @@
   ["punctuation.quote.puppet","'"],
   ["punctuation.rpar.puppet",")"],
   ["keyword.name.resource.puppet"," "],
-  ["paren.lpar","{"]
+  ["paren.lparen","{"]
 ],[
    "start",
   ["text","  "],
@@ -49,7 +49,7 @@
 ],[
    "start",
   ["keyword.name.resource.puppet","  file"],
-  ["paren.lpar"," {"],
+  ["paren.lparen"," {"],
   ["text"," "],
   ["punctuation.quote.puppet","\""],
   ["variable.puppet","${vhost_dir"],
@@ -65,11 +65,11 @@
   ["keyword.operator"," =>"],
   ["text"," "],
   ["support.function.puppet","template"],
-  ["paren.lpar","("],
+  ["paren.lparen","("],
   ["punctuation.quote.puppet","'"],
   ["string","apache/vhost-default.conf.erb"],
   ["punctuation.quote.puppet","'"],
-  ["paren.rpar",")"],
+  ["paren.rparen",")"],
   ["keyword.operator",","]
 ],[
    "start",
@@ -108,11 +108,11 @@
   ["keyword.operator"," =>"],
   ["text"," "],
   ["constant.types.puppet","Package"],
-  ["paren.lpar","["],
+  ["paren.lparen","["],
   ["punctuation.quote.puppet","'"],
   ["string","httpd"],
   ["punctuation.quote.puppet","'"],
-  ["paren.rpar","]"],
+  ["paren.rparen","]"],
   ["keyword.operator",","]
 ],[
    "start",
@@ -121,19 +121,19 @@
   ["keyword.operator","  =>"],
   ["text"," "],
   ["constant.types.puppet","Service"],
-  ["paren.lpar","["],
+  ["paren.lparen","["],
   ["punctuation.quote.puppet","'"],
   ["string","httpd"],
   ["punctuation.quote.puppet","'"],
-  ["paren.rpar","]"],
+  ["paren.rparen","]"],
   ["keyword.operator",","]
 ],[
    "start",
   ["text","  "],
-  ["paren.rpar","}"]
+  ["paren.rparen","}"]
 ],[
    "start",
-  ["paren.rpar","}"]
+  ["paren.rparen","}"]
 ],[
    "start"
 ],[
@@ -145,13 +145,13 @@
   ["keyword.operator","="],
   ["text"," "],
   ["constant.types.puppet","Array"],
-  ["paren.lpar","["],
+  ["paren.lparen","["],
   ["constant.types.puppet","Variant"],
-  ["paren.lpar","["],
+  ["paren.lparen","["],
   ["constant.types.puppet","Data"],
   ["keyword.operator",","],
   ["text"," Tree"],
-  ["paren.rpar","]]"]
+  ["paren.rparen","]]"]
 ],[
    "start"
 ],[
@@ -160,28 +160,28 @@
   ["text"," apache"],
   ["keyword.operator","::"],
   ["text","bool2http"],
-  ["paren.lpar","("],
+  ["paren.lparen","("],
   ["constant.types.puppet","Variant"],
-  ["paren.lpar","["],
+  ["paren.lparen","["],
   ["constant.types.puppet","String"],
   ["keyword.operator",","],
   ["text"," "],
   ["constant.types.puppet","Boolean"],
-  ["paren.rpar","]"],
+  ["paren.rparen","]"],
   ["text"," "],
   ["variable.puppet","$arg"],
-  ["paren.rpar",")"],
+  ["paren.rparen",")"],
   ["text"," "],
   ["keyword.operator",">>"],
   ["keyword.name.resource.puppet"," String"],
-  ["paren.lpar"," {"]
+  ["paren.lparen"," {"]
 ],[
    "start",
   ["text","  "],
   ["keyword.control.puppet","case "],
   ["variable.puppet","$arg"],
   ["keyword.name.resource.puppet"," "],
-  ["paren.lpar","{"]
+  ["paren.lparen","{"]
 ],[
    "start",
   ["text","    "],
@@ -193,13 +193,13 @@
   ["regexp.begin.string.puppet"," /(?i:false)/"],
   ["text"," :"],
   ["keyword.name.resource.puppet"," "],
-  ["paren.lpar","{"],
+  ["paren.lparen","{"],
   ["text"," "],
   ["punctuation.quote.puppet","'"],
   ["string","Off"],
   ["punctuation.quote.puppet","'"],
   ["text"," "],
-  ["paren.rpar","}"]
+  ["paren.rparen","}"]
 ],[
    "start",
   ["text","    "],
@@ -208,33 +208,33 @@
   ["regexp.begin.string.puppet"," /(?i:true)/"],
   ["text","          :"],
   ["keyword.name.resource.puppet"," "],
-  ["paren.lpar","{"],
+  ["paren.lparen","{"],
   ["text"," "],
   ["punctuation.quote.puppet","'"],
   ["string","On"],
   ["punctuation.quote.puppet","'"],
   ["text"," "],
-  ["paren.rpar","}"]
+  ["paren.rparen","}"]
 ],[
    "start",
   ["text","    "],
   ["keyword.control.puppet","default"],
   ["text","               :"],
   ["keyword.name.resource.puppet"," "],
-  ["paren.lpar","{"],
+  ["paren.lparen","{"],
   ["text"," "],
   ["punctuation.quote.puppet","\""],
   ["variable.puppet","$arg"],
   ["punctuation.quote.puppet","\""],
   ["text"," "],
-  ["paren.rpar","}"]
+  ["paren.rparen","}"]
 ],[
    "start",
   ["text","  "],
-  ["paren.rpar","}"]
+  ["paren.rparen","}"]
 ],[
    "start",
-  ["paren.rpar","}"]
+  ["paren.rparen","}"]
 ],[
    "start"
 ],[
@@ -244,7 +244,7 @@
    "start",
   ["keyword.type.puppet","class"],
   ["constant.class.puppet"," apache "],
-  ["paren.lpar","("],
+  ["paren.lparen","("],
   ["constant.types.puppet","String"],
   ["text"," "],
   ["variable.puppet","$version"],
@@ -254,13 +254,13 @@
   ["punctuation.quote.puppet","'"],
   ["string","latest"],
   ["punctuation.quote.puppet","'"],
-  ["paren.rpar",")"],
+  ["paren.rparen",")"],
   ["keyword.name.resource.puppet"," "],
-  ["paren.lpar","{"]
+  ["paren.lparen","{"]
 ],[
    "start",
   ["keyword.name.resource.puppet","  package"],
-  ["paren.lpar"," {"],
+  ["paren.lparen"," {"],
   ["punctuation.quote.puppet","'"],
   ["string","httpd"],
   ["punctuation.quote.puppet","'"],
@@ -282,20 +282,20 @@
   ["keyword.operator"," =>"],
   ["text"," "],
   ["constant.types.puppet","File"],
-  ["paren.lpar","["],
+  ["paren.lparen","["],
   ["punctuation.quote.puppet","'"],
   ["string","/etc/httpd.conf"],
   ["punctuation.quote.puppet","'"],
-  ["paren.rpar","]"],
+  ["paren.rparen","]"],
   ["keyword.operator",","]
 ],[
    "start",
   ["text","  "],
-  ["paren.rpar","}"]
+  ["paren.rparen","}"]
 ],[
    "start",
   ["keyword.name.resource.puppet","  file"],
-  ["paren.lpar"," {"],
+  ["paren.lparen"," {"],
   ["punctuation.quote.puppet","'"],
   ["string","/etc/httpd.conf"],
   ["punctuation.quote.puppet","'"],
@@ -325,22 +325,22 @@
   ["keyword.operator"," =>"],
   ["text"," "],
   ["support.function.puppet","template"],
-  ["paren.lpar","("],
+  ["paren.lparen","("],
   ["punctuation.quote.puppet","'"],
   ["string","apache/httpd.conf.erb"],
   ["punctuation.quote.puppet","'"],
-  ["paren.rpar",")"],
+  ["paren.rparen",")"],
   ["keyword.operator",","],
   ["text"," "],
   ["singleline.comment.puppet","# Template from a module"]
 ],[
    "start",
   ["text","  "],
-  ["paren.rpar","}"]
+  ["paren.rparen","}"]
 ],[
    "start",
   ["keyword.name.resource.puppet","  service"],
-  ["paren.lpar"," {"],
+  ["paren.lparen"," {"],
   ["punctuation.quote.puppet","'"],
   ["string","httpd"],
   ["punctuation.quote.puppet","'"],
@@ -368,19 +368,19 @@
   ["keyword.operator"," =>"],
   ["text"," "],
   ["constant.types.puppet","File"],
-  ["paren.lpar","["],
+  ["paren.lparen","["],
   ["punctuation.quote.puppet","'"],
   ["string","/etc/httpd.conf"],
   ["punctuation.quote.puppet","'"],
-  ["paren.rpar","]"],
+  ["paren.rparen","]"],
   ["keyword.operator",","]
 ],[
    "start",
   ["text","  "],
-  ["paren.rpar","}"]
+  ["paren.rparen","}"]
 ],[
    "start",
-  ["paren.rpar","}"]
+  ["paren.rparen","}"]
 ],[
    "start"
 ],[
@@ -390,21 +390,21 @@
   ["keyword.control.puppet","if "],
   ["variable.puppet","$is_virtual"],
   ["keyword.name.resource.puppet"," "],
-  ["paren.lpar","{"]
+  ["paren.lparen","{"]
 ],[
    "start",
   ["text","  "],
   ["support.function.puppet","warning"],
-  ["paren.lpar","("],
+  ["paren.lparen","("],
   ["text"," "],
   ["punctuation.quote.puppet","'"],
   ["string","Tried to include class ntp on virtual machine; this node might be misclassified."],
   ["punctuation.quote.puppet","'"],
   ["text"," "],
-  ["paren.rpar",")"]
+  ["paren.rparen",")"]
 ],[
    "start",
-  ["paren.rpar","}"]
+  ["paren.rparen","}"]
 ],[
    "start",
   ["keyword.control.puppet","elsif "],
@@ -416,22 +416,22 @@
   ["string","Darwin"],
   ["punctuation.quote.puppet","'"],
   ["keyword.name.resource.puppet"," "],
-  ["paren.lpar","{"]
+  ["paren.lparen","{"]
 ],[
    "start",
   ["text","  "],
   ["support.function.puppet","warning"],
-  ["paren.lpar","("],
+  ["paren.lparen","("],
   ["text"," "],
   ["punctuation.quote.puppet","'"],
   ["string","This NTP module does not yet work on our Mac laptops."],
   ["punctuation.quote.puppet","'"],
   ["text"," "],
-  ["paren.rpar",")"]
+  ["paren.rparen",")"]
 ],[
    "start",
   ["keyword.name.resource.puppet","else"],
-  ["paren.lpar"," {"]
+  ["paren.lparen"," {"]
 ],[
    "start",
   ["text","  "],
@@ -439,5 +439,5 @@
   ["text"," ntp"]
 ],[
    "start",
-  ["paren.rpar","}"]
+  ["paren.rparen","}"]
 ]]

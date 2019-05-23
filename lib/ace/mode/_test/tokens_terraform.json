@@ -18,7 +18,7 @@
   ["string","ami"],
   ["punctuation.quote.terraform","\""],
   ["text"," "],
-  ["paren.lpar","{"]
+  ["paren.lparen","{"]
 ],[
    "start",
   ["text","  "],
@@ -30,7 +30,7 @@
   ["punctuation.quote.terraform","\""]
 ],[
    "start",
-  ["paren.rpar","}"]
+  ["paren.rparen","}"]
 ],[
    "start"
 ],[
@@ -53,7 +53,7 @@
   ["string","web"],
   ["punctuation.quote.terraform","\""],
   ["text"," "],
-  ["paren.lpar","{"]
+  ["paren.lparen","{"]
 ],[
    "start",
   ["text","  "],
@@ -86,7 +86,7 @@
   ["text","  "],
   ["language.support.class","connection"],
   ["text"," "],
-  ["paren.lpar","{"]
+  ["paren.lparen","{"]
 ],[
    "start",
   ["text","    "],
@@ -99,10 +99,10 @@
 ],[
    "start",
   ["text","  "],
-  ["paren.rpar","}"]
+  ["paren.rparen","}"]
 ],[
    "start",
-  ["paren.rpar","}"]
+  ["paren.rparen","}"]
 ],[
    "start"
 ],[
@@ -117,7 +117,7 @@
   ["string","web"],
   ["punctuation.quote.terraform","\""],
   ["text"," "],
-  ["paren.lpar","{"]
+  ["paren.lparen","{"]
 ],[
    "start",
   ["text","  "],
@@ -145,7 +145,7 @@
   ["punctuation.quote.terraform","\""]
 ],[
    "start",
-  ["paren.rpar","}"]
+  ["paren.rparen","}"]
 ],[
    "start"
 ],[
@@ -156,7 +156,7 @@
   ["string","count"],
   ["punctuation.quote.terraform","\""],
   ["text"," "],
-  ["paren.lpar","{"]
+  ["paren.lparen","{"]
 ],[
    "start",
   ["text","  "],
@@ -166,7 +166,7 @@
   ["constant.numeric.terraform","2"]
 ],[
    "start",
-  ["paren.rpar","}"]
+  ["paren.rparen","}"]
 ],[
    "start"
 ],[
@@ -177,14 +177,14 @@
   ["string","hostnames"],
   ["punctuation.quote.terraform","\""],
   ["text"," "],
-  ["paren.lpar","{"]
+  ["paren.lparen","{"]
 ],[
    "start",
   ["text","  "],
   ["variable.assignment.terraform","default"],
   ["keyword.operator"," ="],
   ["text"," "],
-  ["paren.lpar","{"]
+  ["paren.lparen","{"]
 ],[
    "start",
   ["text","    "],
@@ -212,10 +212,10 @@
 ],[
    "start",
   ["text","  "],
-  ["paren.rpar","}"]
+  ["paren.rparen","}"]
 ],[
    "start",
-  ["paren.rpar","}"]
+  ["paren.rparen","}"]
 ],[
    "start"
 ],[
@@ -230,7 +230,7 @@
   ["string","web_init"],
   ["punctuation.quote.terraform","\""],
   ["text"," "],
-  ["paren.lpar","{"]
+  ["paren.lparen","{"]
 ],[
    "start",
   ["text","  "],
@@ -268,7 +268,7 @@
 ],[
    "start",
   ["text","  vars "],
-  ["paren.lpar","{"]
+  ["paren.lparen","{"]
 ],[
    "start",
   ["text","    "],
@@ -282,18 +282,18 @@
   ["punctuation.quote.terraform","\""],
   ["punctuation.interpolated.begin.terraform","${"],
   ["variable.terraform","var.hostnames"],
-  ["paren.lpar","["],
+  ["paren.lparen","["],
   ["variable.terraform","count.index"],
-  ["paren.rpar","]"],
+  ["paren.rparen","]"],
   ["punctuation.interpolated.end.terraform","}"],
   ["punctuation.quote.terraform","\""]
 ],[
    "start",
   ["text","  "],
-  ["paren.rpar","}"]
+  ["paren.rparen","}"]
 ],[
    "start",
-  ["paren.rpar","}"]
+  ["paren.rparen","}"]
 ],[
    "start"
 ],[
@@ -308,7 +308,7 @@
   ["string","web"],
   ["punctuation.quote.terraform","\""],
   ["text"," "],
-  ["paren.lpar","{"]
+  ["paren.lparen","{"]
 ],[
    "start",
   ["text","  "],
@@ -344,14 +344,14 @@
   ["punctuation","data.template_file.web_init."],
   ["keyword.operator","*"],
   ["punctuation",".rendered"],
-  ["paren.lpar","["],
+  ["paren.lparen","["],
   ["variable.terraform","count.index"],
-  ["paren.rpar","]"],
+  ["paren.rparen","]"],
   ["punctuation.interpolated.end.terraform","}"],
   ["punctuation.quote.terraform","\""]
 ],[
    "start",
-  ["paren.rpar","}"]
+  ["paren.rparen","}"]
 ],[
    "start"
 ],[
@@ -362,7 +362,7 @@
   ["string","count"],
   ["punctuation.quote.terraform","\""],
   ["text"," "],
-  ["paren.lpar","{"]
+  ["paren.lparen","{"]
 ],[
    "start",
   ["text","  "],
@@ -372,7 +372,7 @@
   ["constant.numeric.terraform","2"]
 ],[
    "start",
-  ["paren.rpar","}"]
+  ["paren.rparen","}"]
 ],[
    "start"
 ],[
@@ -387,7 +387,7 @@
   ["variable.assignment.terraform","common_tags"],
   ["keyword.operator"," ="],
   ["text"," "],
-  ["paren.lpar","{"]
+  ["paren.lparen","{"]
 ],[
    "start",
   ["text","    "],
@@ -409,10 +409,10 @@
 ],[
    "start",
   ["text","  "],
-  ["paren.rpar","}"]
+  ["paren.rparen","}"]
 ],[
    "start",
-  ["paren.rpar","}"]
+  ["paren.rparen","}"]
 ],[
    "start"
 ],[
@@ -430,7 +430,7 @@
   ["string","server"],
   ["punctuation.quote.terraform","\""],
   ["text"," "],
-  ["paren.lpar","{"]
+  ["paren.lparen","{"]
 ],[
    "start",
   ["text","  "],
@@ -502,7 +502,7 @@
   ["punctuation.quote.terraform","\""]
 ],[
    "start",
-  ["paren.rpar","}"]
+  ["paren.rparen","}"]
 ],[
    "start"
 ],[
@@ -569,7 +569,7 @@
   ["string","web"],
   ["punctuation.quote.terraform","\""],
   ["text"," "],
-  ["paren.lpar","{"]
+  ["paren.lparen","{"]
 ],[
    "start",
   ["text","  "],
@@ -596,7 +596,7 @@
 ],[
    "start",
   ["text","  tags "],
-  ["paren.lpar","{"]
+  ["paren.lparen","{"]
 ],[
    "start",
   ["text","    "],
@@ -622,8 +622,8 @@
 ],[
    "start",
   ["text","  "],
-  ["paren.rpar","}"]
+  ["paren.rparen","}"]
 ],[
    "start",
-  ["paren.rpar","}"]
+  ["paren.rparen","}"]
 ]]
