@@ -1,4 +1,4 @@
- foo
+foo
 foo: foo AND bar
 foo AND bar
 foo OR bar

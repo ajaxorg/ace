@@ -1,4 +1,4 @@
- #test: symbol tokenizer
+#test: symbol tokenizer
   [:@thing, :$thing, :_thing, :thing, :Thing, :thing1, :thing_a,
               :THING, :thing!, :thing=, :thing?, :t?,
               :, :@, :$, :1, :1thing, :th?ing, :thi=ng, :1thing,

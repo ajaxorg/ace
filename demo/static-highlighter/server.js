@@ -4,7 +4,6 @@
  */
 
 // include ace search path and modules
-require("amd-loader");
 
 var http = require("http");
 var fs = require("fs");
