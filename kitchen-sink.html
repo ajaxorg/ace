@@ -55,17 +55,20 @@
     var os = /os=(\w+)|$/.exec(location.search)[1];
     if (os) Object.defineProperty(navigator, "platform", {configurable:true, value: os});
   </script>
-  <script type="text/javascript">
-      var require = {
-          baseUrl: window.location.protocol + "//" + window.location.host + window.location.pathname.split("/").slice(0, -1).join("/"),
-          paths: {
-              ace: "lib/ace"
-          },
-          waitSeconds: 30
-      };
+  <script src="demo/kitchen-sink/mini_require.js" type="text/javascript"></script>
+  <script>
+    require.config({
+        baseUrl: window.location.protocol + "//" + window.location.host + window.location.pathname.split("/").slice(0, -1).join("/"),
+        paths: {
+            ace: "lib/ace",
+            demo: "demo/kitchen-sink"
+        }
+    });
+    require([
+        "demo/demo.js"
+    ], function (demo) {
+    });
   </script>
-  <script src="demo/kitchen-sink/require.js" data-main="demo/kitchen-sink/demo" type="text/javascript"></script>
-
 <!--DEVEL-->
 
 <!--PACKAGE
