@@ -1,4 +1,5 @@
 {
+    "parserOptions": { "ecmaVersion": 6 },
     "globals": {
         define: true,
         require: true,

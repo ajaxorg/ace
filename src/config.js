@@ -74,29 +74,29 @@ exports.setModuleUrl = function(name, subst) {
 var loader = function(moduleName, cb) {
     if (moduleName == "ace/theme/textmate")
         return cb(null, require("./theme/textmate"));
-    return console.error("loader is not configured")
-}
+    return console.error("loader is not configured");
+};
 
 exports.setLoader = function(cb) {
-    loader = cb
-}
+    loader = cb;
+};
 
 exports.$loading = {};
 exports.loadModule = function(moduleName, onLoad) {
-    console.log(moduleName)
+    console.log(moduleName);
     var module, moduleType;
     if (Array.isArray(moduleName)) {
         moduleType = moduleName[0];
         moduleName = moduleName[1];
     }
     
-    var id = moduleName.replace(/^\.+/, "ace")
+    var id = moduleName.replace(/^\.+/, "ace");
     //exports.moduleUrl(moduleName, moduleType)
     loader(id, function(err, module) {
         onLoad(module);
     });
     
-console.log()
+console.log();
    
     // require(moduleName) can return empty object if called after require([moduleName], callback)
     if (module && !exports.$loading[moduleName])

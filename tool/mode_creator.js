@@ -1,7 +1,12 @@
 define(function(require, exports, module) {
 
 /** creates globals intentionally to make things easily accessible from console **/
-
+var config = require("ace/config");
+config.setLoader(function(moduleName, cb) {
+    require([moduleName], function(module) {
+        cb(null, module)
+    })
+});
 require("ace/ext/language_tools");
 require("ace/config").setDefaultValues("editor", {
     enableBasicAutocompletion: true,
@@ -70,7 +75,7 @@ util.bindDropdown(modeEl, function(value) {
         schedule();
         return;
     }
-    var hp = "./lib/ace/mode/" + value + "_highlight_rules.js";
+    var hp = "./src/mode/" + value + "_highlight_rules.js";
     net.get(hp, function(text) {
         var session = new EditSession(text);
         session.setUndoManager(new UndoManager());
@@ -199,7 +204,7 @@ function run() {
     var path = "ace/mode/new";
     var deps = getDeps(src, path);
     window.require.undef(path);
-    src = src.replace("define(", 'define("' + path +'", ["require","exports","module",' + deps +'],');
+    src = 'define("' + path +'", ["require","exports","module"],function(require,exports,module){' + src + '\n});';
     try {
         eval(src);
         require([path], function(e) {

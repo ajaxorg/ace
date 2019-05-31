@@ -233,12 +233,6 @@ exports.transformTextarea = function(element, options) {
     return editor;
 };
 
-function load(url, module, callback) {
-    net.loadScript(url, function() {
-        require([module], callback);
-    });
-}
-
 function setupApi(editor, editorDiv, settingDiv, ace, options) {
     var session = editor.getSession();
     var renderer = editor.renderer;

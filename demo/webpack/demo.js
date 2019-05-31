@@ -1,11 +1,11 @@
 "use strict";
 
 // import ace
-import ace from '../../lib/ace/ace'
+import ace from '../../src/ace'
 // import Range from ace (it is also available as ace.Range)
-import {Range, EditSession} from '../../lib/ace/ace'
+import {Range, EditSession} from '../../src/ace'
 
-import "../../lib/ace/webpack-resolver";
+import "../../src/webpack-resolver";
 
 // import modes that you want to include into your main bundle
 // import "../../build/src-noconflict/mode-javascript";
@@ -14,7 +14,7 @@ import "../../lib/ace/webpack-resolver";
 
 // if you want to allow dynamic loading of only a few modules use setModuleUrl for each of them manually
 /*
-import jsWorkerUrl from "file-loader!../../build/src-noconflict/worker-javascript";
+import jsWorkerUrl from "file-loader!../../src/ace/worker-javascript";
 ace.config.setModuleUrl("ace/mode/javascript_worker", jsWorkerUrl)
 */
 
@@ -31,6 +31,6 @@ editor.selection.setRange(new Range(0,0,0,3))
 document.body.appendChild(editor.container)
 
 /*
-import {Mode as JSMode} from "../../build/src-noconflict/mode-javascript"
+import {Mode as JSMode} from "../../src/mode/javascript"
 editor.setMode( new JSMode())
 */
