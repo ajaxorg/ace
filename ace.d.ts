@@ -79,9 +79,9 @@ export namespace Ace {
     getFoldsInRangeList(ranges: Range[]): Fold[];
     getAllFolds(): Fold[];
     getFoldStringAt(row: number,
-        column: number,
-        trim?: number,
-        foldLine?: FoldLine): string | null;
+      column: number,
+      trim?: number,
+      foldLine?: FoldLine): string | null;
     getFoldLine(docRow: number, startFoldLine?: FoldLine): FoldLine | null;
     getNextFoldLine(docRow: number, startFoldLine?: FoldLine): FoldLine | null;
     getFoldedRowCount(first: number, last: number): number;
@@ -92,28 +92,28 @@ export namespace Ace {
     expandFold(fold: Fold): void;
     expandFolds(folds: Fold[]): void;
     unfold(location: null | number | Point | Range,
-        expandInner?: boolean): Fold[] | undefined;
+      expandInner?: boolean): Fold[] | undefined;
     isRowFolded(docRow: number, startFoldRow?: FoldLine): boolean;
     getFoldRowEnd(docRow: number, startFoldRow?: FoldLine): number;
     getFoldRowStart(docRow: number, startFoldRow?: FoldLine): number;
     getFoldDisplayLine(foldLine: FoldLine,
-        endRow: number | null,
-        endColumn: number | null,
-        startRow: number | null,
-        startColumn: number | null): string;
+      endRow: number | null,
+      endColumn: number | null,
+      startRow: number | null,
+      startColumn: number | null): string;
     getDisplayLine(row: number,
-        endColumn: number | null,
-        startRow: number | null,
-        startColumn: number | null): string;
+      endColumn: number | null,
+      startRow: number | null,
+      startColumn: number | null): string;
     toggleFold(tryToUnfold?: boolean): void;
     getCommentFoldRange(row: number,
-        column: number,
-        dir: number): Range | undefined;
+      column: number,
+      dir: number): Range | undefined;
     foldAll(startRow?: number, endRow?: number, depth?: number): void;
     setFoldStyle(style: string): void;
     getParentFoldRangeData(row: number, ignoreCurrent?: boolean): {
-        range?: Range,
-        firstRange: Range
+      range?: Range,
+      firstRange: Range
     };
     toggleFoldWidget(toggleParent?: boolean): void;
     updateFoldWidgets(delta: Delta): void;
@@ -200,8 +200,8 @@ export namespace Ace {
   }
 
   export interface EditorOptions extends EditSessionOptions,
-                                         MouseHandlerOptions,
-                                         VirtualRendererOptions {
+    MouseHandlerOptions,
+    VirtualRendererOptions {
     selectionStyle: string;
     highlightActiveLine: boolean;
     highlightSelectedWord: boolean;
@@ -282,17 +282,17 @@ export namespace Ace {
     inFront: boolean;
     id: number;
     update?: (html: string[],
-              // TODO maybe define Marker class
-              marker: any,
-              session: EditSession,
-              config: any) => void;
+      // TODO maybe define Marker class
+      marker: any,
+      session: EditSession,
+      config: any) => void;
   }
 
   export type MarkerRenderer = (html: string[],
-                                range: Range,
-                                left: number,
-                                top: number,
-                                config: any) => void;
+    range: Range,
+    left: number,
+    top: number,
+    config: any) => void;
 
   export interface Token {
     type: string;
@@ -315,7 +315,7 @@ export namespace Ace {
     getLineTokens(line: string, startState: string | string[]): Token[];
   }
 
-  interface TokenIterator{
+  interface TokenIterator {
     getCurrentToken(): Token;
     getCurrentTokenColumn(): number;
     getCurrentTokenRow(): number;
@@ -324,53 +324,53 @@ export namespace Ace {
     stepBackward(): Token;
     stepForward(): Token;
   }
-  
+
   export interface SyntaxMode {
     getTokenizer(): Tokenizer;
     toggleCommentLines(state: any,
-                       session: EditSession,
-                       startRow: number,
-                       endRow: number): void;
+      session: EditSession,
+      startRow: number,
+      endRow: number): void;
     toggleBlockComment(state: any,
-                       session: EditSession,
-                       range: Range,
-                       cursor: Point): void;
+      session: EditSession,
+      range: Range,
+      cursor: Point): void;
     getNextLineIndent(state: any, line: string, tab: string): string;
     checkOutdent(state: any, line: string, input: string): boolean;
     autoOutdent(state: any, doc: Document, row: number): void;
     // TODO implement WorkerClient types
     createWorker(session: EditSession): any;
-    createModeDelegates(mapping: {[key: string]: string}): void;
+    createModeDelegates(mapping: { [key: string]: string }): void;
     transformAction(state: string,
-                    action: string,
-                    editor: Editor,
-                    session: EditSession,
-                    text: string): any;
+      action: string,
+      editor: Editor,
+      session: EditSession,
+      text: string): any;
     getKeywords(append?: boolean): Array<string | RegExp>;
     getCompletions(state: string,
-                   session: EditSession,
-                   pos: Point,
-                   prefix: string): Completion[];
+      session: EditSession,
+      pos: Point,
+      prefix: string): Completion[];
   }
 
   export interface Config {
     get(key: string): any;
     set(key: string, value: any): void;
-    all(): {[key: string]: any};
+    all(): { [key: string]: any };
     moduleUrl(name: string, component?: string): string;
     setModuleUrl(name: string, subst: string): string;
     loadModule(moduleName: string | [string, string],
-               onLoad: (module: any) => void): void;
+      onLoad: (module: any) => void): void;
     init(packaged: any): any;
-    defineOptions(obj: any, path: string, options: {[key: string]: any}): Config;
+    defineOptions(obj: any, path: string, options: { [key: string]: any }): Config;
     resetOptions(obj: any): void;
     setDefaultValue(path: string, name: string, value: any): void;
-    setDefaultValues(path: string, optionHash: {[key: string]: any}): void;
+    setDefaultValues(path: string, optionHash: { [key: string]: any }): void;
   }
 
   export interface OptionsProvider {
-    setOptions(optList: {[key: string]: any}): void;
-    getOptions(optionNames?: string[] | {[key: string]: any}): {[key: string]: any};
+    setOptions(optList: { [key: string]: any }): void;
+    getOptions(optionNames?: string[] | { [key: string]: any }): { [key: string]: any };
     setOption(name: string, value: any): void;
     getOption(name: string): any;
   }
@@ -397,11 +397,11 @@ export namespace Ace {
     selection: Selection;
 
     on(name: 'changeFold',
-       callback: (obj: { data: Fold, action: string }) => void): void;
-    on(name: 'changeScrollLeft', callback: (scrollLeft: number) => void): void;
-    on(name: 'changeScrollTop', callback: (scrollTop: number) => void): void;
+      callback: (obj: { data: Fold, action: string }) => void): Function;
+    on(name: 'changeScrollLeft', callback: (scrollLeft: number) => void): Function;
+    on(name: 'changeScrollTop', callback: (scrollTop: number) => void): Function;
     on(name: 'tokenizerUpdate',
-       callback: (obj: { data: { first: number, last: number } }) => void): void;
+      callback: (obj: { data: { first: number, last: number } }) => void): Function;
 
 
     setOption<T extends keyof EditSessionOptions>(name: T, value: EditSessionOptions[T]): void;
@@ -438,17 +438,17 @@ export namespace Ace {
     setBreakpoint(row: number, className: string): void;
     clearBreakpoint(row: number): void;
     addMarker(range: Range,
-              className: string,
-              type: "fullLine" | "screenLine" | "text" | MarkerRenderer,
-              inFront?: boolean): number;
+      className: string,
+      type: "fullLine" | "screenLine" | "text" | MarkerRenderer,
+      inFront?: boolean): number;
     addDynamicMarker(marker: MarkerLike, inFront: boolean): MarkerLike;
     removeMarker(markerId: number): void;
     getMarkers(inFront?: boolean): MarkerLike[];
     highlight(re: RegExp): void;
     highlightLines(startRow: number,
-                   endRow: number,
-                   className: string,
-                   inFront?: boolean): Range;
+      endRow: number,
+      className: string,
+      inFront?: boolean): Range;
     setAnnotations(annotations: Annotation[]): void;
     getAnnotations(): Annotation[];
     clearAnnotations(): void;
@@ -500,8 +500,8 @@ export namespace Ace {
     screenToDocumentRow(screenRow: number, screenColumn: number): number;
     screenToDocumentColumn(screenRow: number, screenColumn: number): number;
     screenToDocumentPosition(screenRow: number,
-                             screenColumn: number,
-                             offsetX?: number): Point;
+      screenColumn: number,
+      offsetX?: number): Point;
     documentToScreenPosition(docRow: number, docColumn: number): Point;
     documentToScreenPosition(position: Point): Point;
     documentToScreenColumn(row: number, docColumn: number): number;
@@ -519,16 +519,25 @@ export namespace Ace {
     getStatusText(): string;
   }
 
+  interface CommandMap {
+    [name: string]: Command;
+  }
+
+  type execEventHandler = (obj: {
+    editor: Editor,
+    command: Command,
+    args: any[]
+  }) => void;
+
   export interface CommandManager extends EventEmitter {
-    on(name: 'exec', callback: (obj: {
-                                  editor: Editor,
-                                  command: Command,
-                                  args: any[]
-                               }) => void): void;
+    byName: CommandMap,
+    commands: CommandMap,
+    on(name: 'exec', callback: execEventHandler): Function;
+    on(name: 'afterExec', callback: execEventHandler): Function;
     once(name: string, callback: Function): void;
     setDefaultHandler(name: string, callback: Function): void;
     removeDefaultHandler(name: string, callback: Function): void;
-    on(name: string, callback: Function, capturing?: boolean): void;
+    on(name: string, callback: Function, capturing?: boolean): Function;
     addEventListener(name: string, callback: Function, capturing?: boolean): void;
     off(name: string, callback: Function): void;
     removeListener(name: string, callback: Function): void;
@@ -539,9 +548,9 @@ export namespace Ace {
     replay(editor: Editor): void;
     addCommand(command: Command): void;
     removeCommand(command: Command, keepCommand?: boolean): void;
-    bindKey(key: string | { mac?: string, win?: string},
-            command: CommandLike,
-            position?: number): void;
+    bindKey(key: string | { mac?: string, win?: string },
+      command: CommandLike,
+      position?: number): void;
   }
 
   export interface VirtualRenderer extends OptionsProvider, EventEmitter {
@@ -581,9 +590,9 @@ export namespace Ace {
     getLastVisibleRow(): number;
     setPadding(padding: number): void;
     setScrollMargin(top: number,
-                    bottom: number,
-                    left: number,
-                    right: number): void;
+      bottom: number,
+      left: number,
+      right: number): void;
     setHScrollBarAlwaysVisible(alwaysVisible: boolean): void;
     getHScrollBarAlwaysVisible(): boolean;
     setVScrollBarAlwaysVisible(alwaysVisible: boolean): void;
@@ -598,8 +607,8 @@ export namespace Ace {
     hideCursor(): void;
     showCursor(): void;
     scrollSelectionIntoView(anchor: Point,
-                            lead: Point,
-                            offset?: number): void;
+      lead: Point,
+      offset?: number): void;
     scrollCursorIntoView(cursor: Point, offset?: number): void;
     getScrollTop(): number;
     getScrollLeft(): number;
@@ -608,16 +617,16 @@ export namespace Ace {
     scrollToRow(row: number): void;
     alignCursor(cursor: Point | number, alignment: number): number;
     scrollToLine(line: number,
-                 center: boolean,
-                 animate: boolean,
-                 callback: () => void): void;
+      center: boolean,
+      animate: boolean,
+      callback: () => void): void;
     animateScrolling(fromValue: number, callback: () => void): void;
     scrollToY(scrollTop: number): void;
     scrollToX(scrollLeft: number): void;
     scrollTo(x: number, y: number): void;
     scrollBy(deltaX: number, deltaY: number): void;
     isScrollableBy(deltaX: number, deltaY: number): boolean;
-    textToScreenCoordinates(row: number, column: number): { pageX: number, pageY: number};
+    textToScreenCoordinates(row: number, column: number): { pageX: number, pageY: number };
     visualizeFocus(): void;
     visualizeBlur(): void;
     showComposition(position: number): void;
@@ -682,7 +691,16 @@ export namespace Ace {
     moveCursorToPosition(position: any): void;
     moveCursorTo(row: number, column: number, keepDesiredColumn?: boolean): void;
     moveCursorToScreen(row: number, column: number, keepDesiredColumn: boolean): void;
+
+    toJSON(): SavedSelection | SavedSelection[];
+    fromJSON(selection: SavedSelection | SavedSelection[]): void;
   }
+  interface SavedSelection {
+    start: Point;
+    end: Point;
+    isBackwards: boolean;
+  }
+
   var Selection: {
     new(session: EditSession): Selection;
   }
@@ -696,14 +714,16 @@ export namespace Ace {
     session: EditSession;
     selection: Selection;
 
-    on(name: 'blur', callback: (e: Event) => void): void;
-    on(name: 'change', callback: (delta: Delta) => void): void;
-    on(name: 'changeSelectionStyle', callback: (obj: { data: string }) => void): void;
+    on(name: 'blur', callback: (e: Event) => void): Function;
+    on(name: 'input', callback: () => void): Function;
+    on(name: 'change', callback: (delta: Delta) => void): Function;
+    on(name: 'changeSelectionStyle', callback: (obj: { data: string }) => void): Function;
     on(name: 'changeSession',
-       callback: (obj: { session: EditSession, oldSession: EditSession }) => void): void;
-    on(name: 'copy', callback: (obj: { text: string }) => void): void;
-    on(name: 'focus', callback: (e: Event) => void): void;
-    on(name: 'paste', callback: (obj: { text: string }) => void): void;
+      callback: (obj: { session: EditSession, oldSession: EditSession }) => void
+    ): Function;
+    on(name: 'copy', callback: (obj: { text: string }) => void): Function;
+    on(name: 'focus', callback: (e: Event) => void): Function;
+    on(name: 'paste', callback: (obj: { text: string }) => void): Function;
 
     setOption<T extends keyof EditorOptions>(name: T, value: EditorOptions[T]): void;
     getOption<T extends keyof EditorOptions>(name: T): EditorOptions[T];
@@ -727,7 +747,7 @@ export namespace Ace {
     flur(): void;
     getSelectedText(): string;
     getCopyText(): string;
-    execCommand(command: string | string[], args: any): boolean;
+    execCommand(command: string | string[], args?: any): boolean;
     insert(text: string, pasted?: boolean): void;
     setOverwrite(overwrite: boolean): void;
     getOverwrite(): boolean;
@@ -829,8 +849,16 @@ export namespace Ace {
     redo(): void;
     destroy(): void;
     setAutoScrollEditorIntoView(enable: boolean): void;
+    completers: Completer[];
+  }
+
+  type CompleterCallback = (_, completions: Completion[]) => void;
+
+  interface Completer {
+    getCompletions(editor: Editor, session: EditSession, position: Point, prefix, callback: CompleterCallback): void;
   }
 }
+
 
 export const version: string;
 export const config: Ace.Config;
