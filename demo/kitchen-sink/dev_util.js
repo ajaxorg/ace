@@ -55,23 +55,6 @@ def(window, "split", function(){  return window.env.split });
 
 
 def(window, "devUtil", function(){ return exports });
-exports.showTextArea = function(argument) {
-    dom.importCssString("\
-      .ace_text-input {\
-        position: absolute;\
-        z-index: 10!important;\
-        width: 6em!important;\
-        height: 1em;\
-        opacity: 1!important;\
-        background: rgba(0, 92, 255, 0.11);\
-        border: none;\
-        font: inherit;\
-        padding: 0 1px;\
-        margin: 0 -1px;\
-        text-indent: 0em;\
-    }\
-    ");
-};
 
 exports.addGlobals = function() {
     window.oop = require("ace/lib/oop");
@@ -414,7 +397,17 @@ exports.textInputDebugger = {
     getValue: function() {
         return !!env.textarea;
     }
-}
+};
+
+exports.textPositionDebugger = {
+    position: 2000,
+    onchange: function(value) {
+        document.body.classList[value ? "add" : "remove"]("show-text-input")
+    },
+    getValue: function() {
+        return document.body.classList.contains("show-text-input");
+    }
+};
 
 exports.addGlobals();
 
