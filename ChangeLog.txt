@@ -1,3 +1,7 @@
+2019.06.17 Version 1.4.5
+* improve scrolling and selection on mobile 
+* improve type definitions
+
 2019.04.24 Version 1.4.4
 * add experimental command prompt
 * add chrystal, nim and nginx highlight rules
