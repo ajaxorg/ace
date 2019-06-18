@@ -37,8 +37,8 @@
   ["keyword","proc"],
   ["text"," "],
   ["support.function","getAlphabet"],
-  ["paren.lpar","("],
-  ["paren.rpar",")"],
+  ["paren.lparen","("],
+  ["paren.rparen",")"],
   ["keyword.operator",":"],
   ["text"," "],
   ["storage.type","string"],
@@ -75,9 +75,9 @@
   ["identifier","accm"],
   ["keyword.operator","."],
   ["support.function","add"],
-  ["paren.lpar","("],
+  ["paren.lparen","("],
   ["identifier","letter"],
-  ["paren.rpar",")"]
+  ["paren.rparen",")"]
 ],[
    "start",
   ["text","  "],
@@ -89,7 +89,7 @@
 ],[
    "start",
   ["support.function","assert"],
-  ["paren.lpar","("],
+  ["paren.lparen","("],
   ["string","\"a\""],
   ["text"," "],
   ["keyword.operator","*"],
@@ -99,7 +99,7 @@
   ["keyword.operator","=="],
   ["text"," "],
   ["string","\"aaaaaaaaaa\""],
-  ["paren.rpar",")"]
+  ["paren.rparen",")"]
 ],[
    "start"
 ]]

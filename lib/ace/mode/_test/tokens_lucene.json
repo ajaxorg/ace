@@ -234,11 +234,11 @@
    "start",
   ["keyword","field:"],
   ["paren.lparen","{"],
-  ["term","20180101"],
+  ["constant.numeric","20180101"],
   ["text"," "],
   ["keyword.operator","TO"],
   ["text"," "],
-  ["term","20190202"],
+  ["constant.numeric","20190202"],
   ["paren.rparen","}"]
 ],[
    "start",
@@ -291,7 +291,7 @@
    "start",
   ["term","escaped"],
   ["constant.language.escape","\\^"],
-  ["term","4"]
+  ["constant.numeric","4"]
 ],[
    "start",
   ["constant.language.escape","\\\""],
@@ -301,9 +301,7 @@
    "start",
   ["term","escaped"],
   ["constant.language.escape","\\~"],
-  ["term","0"],
-  ["text","."],
-  ["term","4"]
+  ["constant.numeric","0.4"]
 ],[
    "start",
   ["term","escaped"],

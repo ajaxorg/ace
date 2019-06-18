@@ -26,8 +26,10 @@
         z-index: 10;
     }
 
-    .fullScreen {
-        overflow: hidden
+    body.fullScreen {
+        overflow: hidden;
+        /*transform breaks position fixed*/
+        transform: none!important;
     }
 
     .scrollmargin {
@@ -80,10 +82,12 @@
 <script src="kitchen-sink/require.js"></script>
 <script>
 require.config({paths: { "ace" : "../lib/ace"}});
-require(["ace/ace", "ace/ext/themelist"], function(ace) {
+require(["ace/ace", "ace/ext/themelist", "ace/ext/language_tools"], function(ace) {
 
 var $ = document.getElementById.bind(document);
 var dom = require("ace/lib/dom");
+
+ace.config.set("enableBasicAutocompletion", true);
 
 //add command to all new editor instances
 require("ace/commands/default_commands").commands.push({

@@ -34,18 +34,6 @@ var event = require("ace/lib/event");
 var Range = require("ace/range").Range;
 var EditSession = require("ace/edit_session").EditSession;
 var UndoManager = require("ace/undomanager").UndoManager;
-function warn() {
-    var s = (new Error()).stack || "";
-    s = s.split("\n");
-    if (s[1] == "Error") s.shift(); // remove error description on chrome
-    s.shift(); // remove warn
-    s.shift(); // remove the getter
-    s = s.join("\n");
-    // allow easy access to ace in console, but not in ace code
-    if (!/at Object.InjectedScript.|@debugger eval|snippets:\/{3}|<anonymous>:\d+:\d+/.test(s)) {
-        console.error("trying to access to global variable");
-    }
-}
 function def(o, key, get) {
     try {
         Object.defineProperty(o, key, {
@@ -60,30 +48,13 @@ function def(o, key, get) {
         console.error(e);
     }
 }
-def(window, "ace", function(){ warn(); return window.env.editor });
-def(window, "editor", function(){ warn(); return window.env.editor == logEditor ? editor : window.env.editor });
+def(window, "ace", function(){  return window.env.editor });
+def(window, "editor", function(){  return window.env.editor == logEditor ? editor : window.env.editor });
 def(window, "session", function(){ return window.editor.session });
-def(window, "split", function(){ warn(); return window.env.split });
+def(window, "split", function(){  return window.env.split });
 
 
-def(window, "devUtil", function(){ warn(); return exports });
-exports.showTextArea = function(argument) {
-    dom.importCssString("\
-      .ace_text-input {\
-        position: absolute;\
-        z-index: 10!important;\
-        width: 6em!important;\
-        height: 1em;\
-        opacity: 1!important;\
-        background: rgba(0, 92, 255, 0.11);\
-        border: none;\
-        font: inherit;\
-        padding: 0 1px;\
-        margin: 0 -1px;\
-        text-indent: 0em;\
-    }\
-    ");
-};
+def(window, "devUtil", function(){ return exports });
 
 exports.addGlobals = function() {
     window.oop = require("ace/lib/oop");
@@ -426,6 +397,18 @@ exports.textInputDebugger = {
     getValue: function() {
         return !!env.textarea;
     }
-}
+};
+
+exports.textPositionDebugger = {
+    position: 2000,
+    onchange: function(value) {
+        document.body.classList[value ? "add" : "remove"]("show-text-input")
+    },
+    getValue: function() {
+        return document.body.classList.contains("show-text-input");
+    }
+};
+
+exports.addGlobals();
 
 });
