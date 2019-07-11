@@ -75,7 +75,7 @@
                 
         no-undef: 2,
         no-redeclare: 0,
-        no-unused-vars: 1,
+        no-unused-vars: [1, {"args": "none", "vars": "all"}],
         
         no-debugger: 2,
 
