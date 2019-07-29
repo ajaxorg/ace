@@ -366,8 +366,8 @@ optionsPanel.add({
             path: "showTokenInfo",
             position: 2000
         },
-        "Text Input Debugger": devUtil.textInputDebugger,
         "Show Textarea Position": devUtil.textPositionDebugger,
+        "Text Input Debugger": devUtil.textInputDebugger,
     }
 });
 
