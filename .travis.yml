@@ -4,8 +4,8 @@ node_js:
     - "8"
 
 install:
-    - cleanup() { find node_modules -regextype posix-extended -iregex '.*((test|example|doc|demo)s?|\.(md|ts)|license|idea|coverage|file.txt)$' -exec rm -rf {} \; || echo $?; };
-      install() { npm i && npm i eslint codecov istanbul && cp package.json node_modules/package.json; cleanup; };
+    - cleanup() { find node_modules -regextype posix-extended -iregex '.*((test|example|doc|demo)s?|\.(md)|license|idea|coverage|file.txt)$' -exec rm -rf {} \; || echo $?; };
+      install() { npm i && npm i eslint codecov istanbul typescript && cp package.json node_modules/package.json; cleanup; };
       cmp --silent package.json node_modules/package.json || install;
 
 script:
@@ -22,6 +22,7 @@ script:
         fi
     - node_modules/.bin/istanbul cover lib/ace/test/all.js
     - node_modules/.bin/codecov
+    - node_modules/.bin/tsc --noImplicitAny --strict --noUnusedLocals --noImplicitReturns --noUnusedParameters --noImplicitThis ace.d.ts
 
 matrix:
     fast_finish: false

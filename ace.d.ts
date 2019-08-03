@@ -852,7 +852,7 @@ export namespace Ace {
     completers: Completer[];
   }
 
-  type CompleterCallback = (_: any, completions: Completion[]) => void;
+  type CompleterCallback = (error: any, completions: Completion[]) => void;
 
   interface Completer {
     getCompletions(editor: Editor,
