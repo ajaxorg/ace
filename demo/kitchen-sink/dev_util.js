@@ -306,6 +306,7 @@ exports.getUI = function(container) {
 var ignoreEvents = false;
 exports.textInputDebugger = {
     position: 2000,
+    path: "textInputDebugger",
     onchange: function(value) {
         var sp = env.split;
         if (sp.getSplits() == 2) {
@@ -401,6 +402,7 @@ exports.textInputDebugger = {
 
 exports.textPositionDebugger = {
     position: 2000,
+    path: "textPositionDebugger",
     onchange: function(value) {
         document.body.classList[value ? "add" : "remove"]("show-text-input")
     },
