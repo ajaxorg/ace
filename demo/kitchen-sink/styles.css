@@ -48,6 +48,24 @@ body {
     border-left: 1px solid;
 }
 
+.toggleButton {
+  display: inline-block;
+  cursor: pointer;
+  position: absolute;
+}
+.toggleButton>div {
+    width: 15px;
+    height: 2px;
+    margin: 3px 2px;
+    background-color: #eee;
+    pointer-events: none;
+    transition: 0.5s;
+} 
+#sidePanel:not(.closed) .toggleButton >div:nth-child(1) {transform: translate(0px, 5px) rotate(-45deg)}
+#sidePanel:not(.closed) .toggleButton >div:nth-child(2) {opacity: 0}
+#sidePanel:not(.closed) .toggleButton >div:nth-child(3) {transform: translate(0px, -5px) rotate(45deg)}
+#sidePanel.closed>*:not(.toggleButton) {display: none}
+
 .show-text-input .ace_text-input {
     z-index: 10!important;
     opacity: 1!important;

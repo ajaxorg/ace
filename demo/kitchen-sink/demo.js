@@ -254,16 +254,35 @@ commands.addCommand({
 
 
 /*********** manage layout ***************************/
+var sidePanelContainer = document.getElementById("sidePanel");
+sidePanelContainer.onclick = function(e) {
+    if (dom.hasCssClass(sidePanelContainer, "closed"))
+        onResize(null, false);
+    else if (dom.hasCssClass(e.target, "toggleButton"))
+        onResize(null, true);
+}
 var consoleHeight = 20;
-function onResize() {
-    var left = env.split.$container.offsetLeft;
-    var width = document.documentElement.clientWidth - left;
+function onResize(e, closeSidePanel) {
+    var left = 280;
+    var width = document.documentElement.clientWidth;
+    var height = document.documentElement.clientHeight;
+    if (closeSidePanel == null)
+        closeSidePanel = width < 2 * left;
+    if (closeSidePanel)
+        left = 20;
+    width -= left;
     container.style.width = width + "px";
-    container.style.height = document.documentElement.clientHeight - consoleHeight + "px";
+    container.style.height = height - consoleHeight + "px";
+    container.style.left = left + "px";
     env.split.resize();
 
     consoleEl.style.width = width + "px";
+    consoleEl.style.left = left + "px";
     cmdLine.resize();
+    
+    sidePanel.style.width = left + "px";
+    sidePanel.style.height = height + "px";
+    dom.setCssClass(sidePanelContainer, "closed", closeSidePanel);
 }
 
 window.onresize = onResize;

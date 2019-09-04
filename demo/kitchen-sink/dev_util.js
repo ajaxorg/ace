@@ -73,6 +73,7 @@ exports.addGlobals = function() {
     window.testSelection = testSelection;
     window.setValue = setValue;
     window.testValue = testValue;
+    window.logToAce = exports.log;
 };
 
 function getSelection(editor) {
@@ -324,11 +325,7 @@ exports.textInputDebugger = {
         }
     },
     showConsole: function() {
-        var sp = env.split;
-        sp.setSplits(2);
-        sp.setOrientation(sp.BELOW);
-        
-        var editor = sp.$editors[0];
+        var editor = env.split.$editors[0];
         var text = editor.textInput.getElement();
         text.oldParent = text.parentNode;
         text.oldClassName = text.className;
@@ -349,10 +346,8 @@ exports.textInputDebugger = {
                 },
                 modifier: event.getModifierString(e) || undefined
             };
-            log.navigateFileEnd();
             var str = JSON.stringify(data).replace(/"(\w+)":/g, " $1: ");
-            log.insert(str + ",\n");
-            log.renderer.scrollCursorIntoView();
+            exports.log(str);
         };
         var events = ["select", "input", "keypress", "keydown", "keyup", 
             "compositionstart", "compositionupdate", "compositionend", "cut", "copy", "paste"
@@ -388,11 +383,7 @@ exports.textInputDebugger = {
             this.__proto__.setSelectionRange.call(this, start, end)
             ignoreEvents = false;
         }
-        
-        var log = sp.$editors[1];
-        if (!this.session)
-            this.session = new EditSession("");
-        log.setSession(this.session);
+        exports.openConsole();
         editor.focus();
     },
     getValue: function() {
@@ -409,6 +400,26 @@ exports.textPositionDebugger = {
     getValue: function() {
         return document.body.classList.contains("show-text-input");
     }
+};
+
+exports.openConsole = function() {
+    var sp = env.split;
+    var logEditor = sp.$editors[1];
+    if (!logEditor) {
+        sp.setSplits(2);
+        sp.setOrientation(sp.BELOW);
+        logEditor = sp.$editors[1];
+    }
+    if (!exports.session)
+        exports.session = new EditSession("");
+    logEditor.setSession(exports.session);
+    return logEditor
+};
+exports.log = function(str) {   
+    var logEditor = exports.openConsole();
+    logEditor.navigateFileEnd();
+    logEditor.insert(str + ",\n");
+    logEditor.renderer.scrollCursorIntoView();
 };
 
 exports.addGlobals();
