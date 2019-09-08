@@ -1,3 +1,8 @@
+2019.09.08 Version 1.4.6
+* restore native behavior of ctrl-p on mac (jumptomatching command is moved to cmd-\)
+* improve snippet manager
+* fix backspace handling on mobile
+
 2019.06.17 Version 1.4.5
 * improve scrolling and selection on mobile 
 * improve type definitions
