@@ -297,6 +297,10 @@ styles.join("\n")
     opacity: 0.2;
 }
 
+.ace_hasPlaceholder .ace_hidden-cursors .ace_cursor {
+    opacity: 0;
+}
+
 .ace_smooth-blinking .ace_cursor {
     transition: opacity 0.18s;
 }
@@ -560,4 +564,12 @@ styles.join("\n")
 }
 .ace_mobile-button:active {
     background-color: #ddd;
+}
+
+.ace_placeholder {
+    font-family: arial;
+    transform: scale(0.9);
+    opacity: 0.7;
+    transform-origin: left;
+    text-indent: 10px;
 }
