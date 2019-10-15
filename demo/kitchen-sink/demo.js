@@ -121,6 +121,7 @@ consoleEl.style.cssText = "position:fixed; bottom:1px; right:0;\
 border:1px solid #baf; z-index:100";
 
 var cmdLine = new layout.singleLineEditor(consoleEl);
+cmdLine.setOption("placeholder", "Enter a command...");
 cmdLine.editor = env.editor;
 env.editor.cmdLine = cmdLine;
 
