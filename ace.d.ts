@@ -213,6 +213,7 @@ export namespace Ace {
     wrapBehavioursEnabled: boolean;
     autoScrollEditorIntoView: boolean;
     keyboardHandler: string;
+    placeholder: string;
     value: string;
     session: EditSession;
   }
