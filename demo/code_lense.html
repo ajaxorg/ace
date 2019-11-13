@@ -45,33 +45,37 @@ require(["ace/ace", "ace/ext/code_lense"], function(ace, codeLense) {
             var p = []
             var l = session.getLength()
 
-            for (var row = 0; row < l; row += 2 + Math.floor(row / 10)) {
-                var endColumn = session.getLine(row).length
-                p.push({
-                    range: {
-                        startLineNumber: row,
-                        startColumn: 1,
-                        endLineNumber: 2 + row,
-                        endColumn: 1
-                    },
-                    command: {
-                        id: commandId,
-                        title: "Line " + (row + 1),
-                        arguments: ["line", row]
-                    }
-                }, {
-                    range: {
-                        startLineNumber: row,
-                        startColumn: row,
-                        endLineNumber: 12 + row,
-                        endColumn: row + 10
-                    },
-                    command: {
-                        id: commandId,
-                        title: "column " + endColumn,
-                        arguments: ["column", endColumn]
-                    }
-                });
+            for (var row = 0; row < l; row ++) {
+                var line = session.getLine(row);
+                var endColumn = line.length;
+                
+                if (/[{>]\s*$/.test(line)) {
+                    p.push({
+                        range: {
+                            startLineNumber: row,
+                            startColumn: 1,
+                            endLineNumber: 2 + row,
+                            endColumn: 1
+                        },
+                        command: {
+                            id: commandId,
+                            title: "Line " + (row + 1),
+                            arguments: ["line", row]
+                        }
+                    }, {
+                        range: {
+                            startLineNumber: row,
+                            startColumn: row,
+                            endLineNumber: 12 + row,
+                            endColumn: row + 10
+                        },
+                        command: {
+                            id: commandId,
+                            title: "column " + endColumn,
+                            arguments: ["column", endColumn]
+                        }
+                    });
+                }
             }
             return p;
         }
