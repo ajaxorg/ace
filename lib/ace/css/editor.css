@@ -201,7 +201,6 @@ styles.join("\n")
 [ace_nocontext=true] {
     transform: none!important;
     filter: none!important;
-    perspective: none!important;
     clip-path: none!important;
     mask : none!important;
     contain: none!important;
@@ -569,7 +568,8 @@ styles.join("\n")
 .ace_placeholder {
     font-family: arial;
     transform: scale(0.9);
-    opacity: 0.7;
     transform-origin: left;
-    text-indent: 10px;
+    white-space: pre;
+    opacity: 0.7;
+    margin: 0 10px;
 }
