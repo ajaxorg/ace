@@ -53,6 +53,7 @@ styles.join("\n")
     box-sizing: border-box;
     min-width: 100%;
     contain: style size layout;
+    font-variant-ligatures: no-common-ligatures;
 }
 
 .ace_dragging .ace_scroller:before{
