@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>ACE Autocompletion demo</title>
+  <title>ACE Code Lens demo</title>
   <style type="text/css" media="screen">
     body {
         overflow: hidden;
@@ -48,8 +48,8 @@ require(["ace/ace", "ace/ext/code_lens"], function(ace, codeLens) {
     });
     editor.setOption("enableCodeLens", true);
 
-    codeLens.setCodeLensProvider(editor, {
-        provideCodeLenses: function(session) {
+    codeLens.registerCodeLensProvider(editor, {
+        provideCodeLenses: function(session, callback) {
             var p = [{
                 start: {row: 0},
                 command: {
@@ -110,7 +110,7 @@ require(["ace/ace", "ace/ext/code_lens"], function(ace, codeLens) {
                 });
 
             }
-            return p;
+            callback(p);
         }
     });
 
