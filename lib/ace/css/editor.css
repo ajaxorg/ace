@@ -344,6 +344,12 @@ styles.join("\n")
     z-index: 6;
 }
 
+.ace_marker-layer .ace_error_bracket {
+    position: absolute;
+    border-bottom: 1px solid #DE5555;
+    border-radius: 0;
+}
+
 .ace_marker-layer .ace_active-line {
     position: absolute;
     z-index: 2;
