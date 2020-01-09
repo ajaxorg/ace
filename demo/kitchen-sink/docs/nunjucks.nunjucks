@@ -1,0 +1,129 @@
+{{ foo.bar }}
+{{ foo["bar"] }}
+{{ foo | title }}
+{{ foo | join(",") }}
+{{ foo | replace("foo", "bar") | capitalize }}
+{% block header %}
+This is the default content
+{% endblock %}
+
+<section class="left">
+  {% block left %}{% endblock %}
+</section>
+
+<section class="right">
+  {% block right %}
+  This is more content
+  {% endblock %}
+</section>
+{% extends "parent.html" %}
+
+{% block left %}
+This is the left side!
+{% endblock %}
+
+{% block right %}
+This is the right side!
+{% endblock %}
+
+{% block right %}
+{{ super() }}
+Right side!
+{% endblock %}
+
+{% if variable %}
+  It is true
+{% endif %}
+
+{% if hungry %}
+  I am hungry
+{% elif tired %}
+  I am tired
+{% else %}
+  I am good!
+{% endif %}
+
+<h1>Posts</h1>
+<ul>
+{% for item in items %}
+  <li>{{ item.title }}</li>
+{% else %}
+  <li>This would display if the 'item' collection were empty</li>
+{% endfor %}
+</ul>
+
+{% for ingredient, amount in food %}
+  Use {{ amount }} of {{ ingredient }}
+{% endfor %}
+
+{% for fruit, color in fruits %}
+  Did you know that {{ fruit }} is {{ color }}?
+{% endfor %}
+
+{% for x, y, z in points %}
+  Point: {{ x }}, {{ y }}, {{ z }}
+{% endfor %}
+
+<h1>Posts</h1>
+<ul>
+{% asyncEach item in items %}
+  {% include "item-template.html" %}
+{% endeach %}
+</ul>
+
+<h1>Posts</h1>
+<ul>
+{% asyncAll item in items %}
+  <li>{{ item.id | lookup }}</li>
+{% endall %}
+</ul>
+
+{% macro field(name, value='', type='text') %}
+<div class="field">
+  <input type="{{ type }}" name="{{ name }}"
+         value="{{ value | escape }}" />
+</div>
+{% endmacro %}
+
+{{ username }}
+{% set username = "joe" %}
+{{ username }}
+
+{% set standardModal %}
+    {% include 'standardModalData.html' %}
+{% endset %}
+
+<div class="js-modal" data-modal="{{standardModal | e}}">
+
+{% set standardModal %}
+    {% include 'standardModalData.html' %}
+{% endset %}
+
+<div class="js-modal" data-modal="{{standardModal | e}}">
+
+{% include "missing.html" ignore missing %}
+
+{% import "forms.html" as forms %}
+
+{{ forms.label('Username') }}
+{{ forms.field('user') }}
+{{ forms.label('Password') }}
+{{ forms.field('pass', type='password') }}
+
+{% from "forms.html" import field, label as description %}
+
+{{ description('Username') }}
+{{ field('user') }}
+{{ description('Password') }}
+{{ field('pass', type='password') }}
+
+{{ foo(1, 2, bar=3, baz=4) }}
+
+{# Loop through all the users #}
+{% for user in users %}...{% endfor %}
+
+
+{% set cls = cycler("odd", "even") %}
+{% for row in rows %}
+  <div class="{{ cls.next() }}">{{ row.name }}</div>
+{% endfor %}
