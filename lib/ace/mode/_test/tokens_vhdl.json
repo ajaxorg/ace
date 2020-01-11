@@ -124,7 +124,7 @@
 ],[
    "start",
   ["text","    "],
-  ["storage.type","signal"],
+  ["keyword","signal"],
   ["text"," "],
   ["identifier","count"],
   ["text"," "],
