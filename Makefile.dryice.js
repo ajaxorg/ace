@@ -137,7 +137,7 @@ function buildTypes() {
             if (/^worker/.test(moduleName))
                 moduleName = "mode" + moduleName.slice(6) + "_worker";
             moduleName = moduleName.replace(/keybinding/, "keyboard");
-            return "ace.config.setModuleUrl('ace/" + moduleName + "', require('file-loader!./src-noconflict/" + path + "'))";
+            return "ace.config.setModuleUrl('ace/" + moduleName + "', require('file-loader?esModule=false!./src-noconflict/" + path + "'))";
         }
     }).join('\n');
     
