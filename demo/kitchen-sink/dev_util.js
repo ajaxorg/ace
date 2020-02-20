@@ -293,13 +293,13 @@ function toString(x) {
 }
 
 exports.getUI = function(container) {
-    return ["div", {},
+    return ["div", {role: "group", "aria-label": "Test"},
         " Test ", 
-        ["button", {onclick: exports.openLogView}, "O"],
+        ["button", {"aria-label": "Open Log View", onclick: exports.openLogView}, "O"],
         ["button", {onclick: exports.record}, "Record"],
         ["button", {onclick: exports.stop}, "Stop"],
         ["button", {onclick: exports.play}, "Play"],
-        ["button", {onclick: exports.closeLogView}, "X"],
+        ["button", {"aria-label": "Close Log View", onclick: exports.closeLogView}, "X"],
     ];
 };
 

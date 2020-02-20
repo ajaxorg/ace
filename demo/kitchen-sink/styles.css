@@ -60,7 +60,16 @@ body {
     background-color: #eee;
     pointer-events: none;
     transition: 0.5s;
-} 
+}
+
+#sidePanel *:focus {
+    outline: 3px solid orange;
+}
+
+#sidePanel a {
+    display: inline-block;
+}
+
 #sidePanel:not(.closed) .toggleButton >div:nth-child(1) {transform: translate(0px, 5px) rotate(-45deg)}
 #sidePanel:not(.closed) .toggleButton >div:nth-child(2) {opacity: 0}
 #sidePanel:not(.closed) .toggleButton >div:nth-child(3) {transform: translate(0px, -5px) rotate(45deg)}
