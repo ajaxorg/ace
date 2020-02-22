@@ -26,7 +26,7 @@
 .ace-ambiance .ace_fold-widget.ace_start,
 .ace-ambiance .ace_fold-widget.ace_end,
 .ace-ambiance .ace_fold-widget.ace_closed{
-  background: none;
+  background: none !important;
   border: none;
   box-shadow: none;
 }
