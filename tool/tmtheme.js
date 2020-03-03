@@ -283,7 +283,7 @@ var themes = {
     "merbivore_soft": "Merbivore Soft",
     "mono_industrial": "monoindustrial",
     "monokai": "Monokai",
-    "nord-dark": "Nord Dark",
+    "nord_dark": "Nord Dark",
     "pastel_on_dark": "Pastels on Dark",
     "solarized_dark": "Solarized-dark",
     "solarized_light": "Solarized-light",
