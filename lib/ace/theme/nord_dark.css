@@ -1,6 +1,5 @@
 .ace-nord-dark .ace_gutter {
-  background: #3b4252;
-  color: #d0edf7
+  color: #4c566a;
 }
 
 .ace-nord-dark .ace_print-margin {
@@ -28,7 +27,7 @@
 
 .ace-nord-dark .ace_marker-layer .ace_active-line,
 .ace-nord-dark .ace_marker-layer .ace_selection {
-  background: rgba(255, 255, 255, 0.1);
+  background: #434c5e;
 }
 
 .ace-nord-dark.ace_multiselect .ace_selection.ace_start {
@@ -98,7 +97,7 @@
 }
 
 .ace-nord-dark .ace_comment {
-  color: #4c566a
+  color: #4c566a;
 }
 
 .ace-nord-dark .ace_indent-guide {
