@@ -26,10 +26,10 @@
 }
 
 .ace-nord-dark .ace_marker-layer .ace_active-line {
-  background: #434c5e;
+  background: #434c5ecc;
 }
 .ace-nord-dark .ace_marker-layer .ace_selection {
-  background: #88c0d066;
+  background: #434c5ecc;
 }
 
 .ace-nord-dark.ace_multiselect .ace_selection.ace_start {
