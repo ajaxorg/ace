@@ -146,7 +146,7 @@ Running the Unit Tests
 The Ace unit tests can run on node.js. Assuming you have already done `npm install`, just call:
 
 ```bash
-node lib/ace/test/all.js
+npm run test
 ```
 
 You can also run the tests in your browser by serving:
