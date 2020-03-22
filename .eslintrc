@@ -27,6 +27,9 @@
         XMLHttpRequest: true,
         localStorage: true,
     },
+    "parserOptions": {
+        "ecmaVersion": 2018
+    },
     "rules": {
         curly: 0,
         eqeqeq: 0,
