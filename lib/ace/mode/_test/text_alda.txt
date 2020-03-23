@@ -1,0 +1,11 @@
+vibraphone:
+  (quant 200)
+  (key-signature "f+ c+ g+")
+  a8 b > c d e f g a <
+  a b > c_ d e f_ g_ a <
+
+  (key-signature [:g :minor])
+  g a b > c+ d e f+ g <
+
+  (key-signature {:e [:flat] :b [:flat]})
+  g1~1/b/d
