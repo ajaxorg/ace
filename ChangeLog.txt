@@ -1,3 +1,8 @@
+2020.04.01 Version 1.4.9
+* added option to disable autoindent 
+* added new language modes
+* fixed backspace not working with some mobile keyboards
+
 2020.01.14 Version 1.4.8
 * highlight both matched braces, and highlight unmatched brace in red
 * improve snippet manager
