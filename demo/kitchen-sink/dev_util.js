@@ -337,6 +337,7 @@ exports.textInputDebugger = {
             if (ignoreEvents) return;
             var data = {
                 _: e.type, 
+                data: e.data,
                 inputType: e.inputType,
                 range: [text.selectionStart, text.selectionEnd], 
                 value: text.value, 
