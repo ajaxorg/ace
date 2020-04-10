@@ -2,7 +2,7 @@ myfilename = "C:\Wikipedia - VBScript - Example - Hello World.txt"
 MakeHelloWorldFile myfilename
  
 Sub MakeHelloWorldFile (FileName)
-'Create a new file in C: drive or overwrite existing file
+   'Create a new file in C: drive or overwrite existing file
    Set FSO = CreateObject("Scripting.FileSystemObject")
    If FSO.FileExists(FileName) Then 
       Answer = MsgBox ("File " & FileName & " exists ... OK to overwrite?", vbOKCancel)
