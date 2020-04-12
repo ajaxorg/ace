@@ -69,7 +69,7 @@
                       
                      }
                      
-                     /* triger tick event */
+                     /* trigger tick event */
                      $(element).trigger('scrollTick', {position: position, inside: inside, enters: enters, leaves: leaves})
                      if($.isFunction(o.onTick)){
                        o.onTick(element, position, inside, enters, leaves);
