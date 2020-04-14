@@ -1,0 +1,51 @@
+# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [12.x]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Fetch the master branch
+      run: git fetch origin HEAD:refs/remotes/origin/HEAD --depth 1
+    - name: Fetch the master branch
+      run: git diff --name-only origin/HEAD --no-renames --diff-filter=ACMR
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - run: npm i && npm i eslint istanbul typescript
+    - run: node_modules/.bin/istanbul cover lib/ace/test/all.js
+    - run: changes=$(git diff --name-only origin/HEAD --no-renames --diff-filter=ACMR);
+        if [ "$changes" == "" ]; then
+            echo "checking all files";
+            node node_modules/eslint/bin/eslint "lib/ace/**/*.js";
+        else
+            changes=$(echo "$changes" | grep -P '.js$');
+            echo "checking $changes";
+            if [ "$changes" != "" ]; then
+                node node_modules/eslint/bin/eslint $changes;
+            fi
+        fi
+    # - run: npm run lint
+    - run: node_modules/.bin/tsc --noImplicitAny --strict --noUnusedLocals --noImplicitReturns --noUnusedParameters --noImplicitThis ace.d.ts
+    - uses: codecov/codecov-action@v1
+      with:
+        file: ./coverage/coverage.json
+        flags: unittests
+        name: codecov-umbrella
+        fail_ci_if_error: true
