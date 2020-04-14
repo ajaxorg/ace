@@ -24,8 +24,18 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - run: npm install
-    - run: npm run build --if-present
-    - run: npm test
-      env:
-        CI: true
+    - run: npm i && npm i eslint codecov istanbul typescript
+    - run: changes=$(git diff --name-only origin/HEAD --no-renames --diff-filter=ACMR);
+        if [ "$changes" == "" ]; then
+            echo "checking all files";
+            node node_modules/eslint/bin/eslint "lib/ace/**/*.js";
+        else
+            changes=$(echo "$changes" | grep -P '.js$');
+            echo "checking $changes";
+            if [ "$changes" != "" ]; then
+                node node_modules/eslint/bin/eslint $changes;
+            fi
+        fi
+    - run: node_modules/.bin/istanbul cover lib/ace/test/all.js
+    - run: node_modules/.bin/codecov
+    - run: node_modules/.bin/tsc --noImplicitAny --strict --noUnusedLocals --noImplicitReturns --noUnusedParameters --noImplicitThis ace.d.ts
