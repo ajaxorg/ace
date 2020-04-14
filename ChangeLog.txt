@@ -1,3 +1,7 @@
+2020.04.15 Version 1.4.10
+* added workaround for chrome bug causing memory leak after calling editor.destroy
+* added code folding support for vbscript mode
+
 2020.04.01 Version 1.4.9
 * added option to disable autoindent 
 * added new language modes
