@@ -21,6 +21,8 @@ var UndoManager = require("ace/undomanager").UndoManager;
 var DebugTokenizer = require("ace/tokenizer_dev").Tokenizer;
 var Tokenizer = require("ace/tokenizer").Tokenizer;
 
+var themelist = require("ace/ext/themelist");
+
 // createEditor
 var splitEditor = window.splitEditor = util.createSplitEditor("editor");
 
@@ -126,8 +128,8 @@ function handleSaveResult(err, editor) {
         return log(
             "Write access to this file is disabled.\n"+
             "To enable saving your changes to disk, clone the Ace repository\n"+
-            "and run the included web server with the --allow-write option\n"+
-            "`node static.js --allow-write` or `static.py --puttable=*`"
+            "and run the included web server with the --allow-save option\n"+
+            "`node static.js --allow-save` or `static.py --puttable=*`"
         );
     }
     editor.session.getUndoManager().markClean();
@@ -156,14 +158,11 @@ document.getElementById("perfTest").onclick = function() {
     log("tokenized " + lines.length + " lines in " + t + " ms");
 };
 
-util.fillDropdown("themeEl", {
-    bright: [
-        "chrome", "clouds", "crimson_editor", "dawn", "dreamweaver", "eclipse", "github",
-        "solarized_light", "textmate", "tomorrow", "xcode"],
-    dark: [ "clouds_midnight", "cobalt", "idle_fingers", "kr_theme", "merbivore", "merbivore_soft",
-        "mono_industrial", "monokai", "pastel_on_dark", "solarized_dark",  "terminal", "tomorrow_night",
-        "tomorrow_night_blue", "tomorrow_night_bright", "tomorrow_night_eighties", "twilight", "vibrant_ink"]
+var themes = { Bright: [], Dark: [] };
+themelist.themes.forEach(function(x) {
+    themes[x.isDark ? "Dark" : "Bright"].push({ caption: x.caption, value: x.name });
 });
+util.fillDropdown("themeEl", themes);
 
 util.bindDropdown("themeEl", function(value) {
     if (!value)
@@ -203,7 +202,7 @@ function run() {
     src = src.replace("define(", 'define("' + path +'", ["require","exports","module",' + deps +'],');
     try {
         eval(src);
-        require(["ace/mode/new"], function(e) {
+        require([path], function(e) {
             try {
                 continueRun(e);
             } catch(e) {
@@ -228,7 +227,8 @@ var continueRun = function(rules) {
     }
     currentRules = new rules().getRules();
     var Tokenizer = DebugTokenizer;
-
+    var Mode = require(editor2.session.$mode.$id).Mode;
+    editor2.session.$mode = new Mode();
     var tk = new Tokenizer(currentRules);
     editor2.session.$mode.$tokenizer = tk;
     editor2.session.bgTokenizer.setTokenizer(tk);

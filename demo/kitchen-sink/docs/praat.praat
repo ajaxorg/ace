@@ -142,7 +142,14 @@ procedure oldStyle .str1$ .num .str2$
   .local = 1
 endproc
 
-# New-style procedure declaration
+# New-style procedure declaration with parentheses
 procedure newStyle (.str1$, .num, .str2$)
-  .local = 1
+  # Command with "local" variable
+  .local = Get total duration
+endproc
+
+# New-style procedure declaration with colon
+procedure newStyle: .str1$, .num, .str2$
+  # Command with "local" variable
+  newStyle.local = Get total duration
 endproc

@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Dom test</title>
+</head>
+<body>
+
+<pre id="root"></pre>
+
+<script type="text/javascript" charset="utf-8">
+    var tests = {};
+    tests.innerHTML = function() {
+        function update(rootEl, lines) {
+            var html = []
+            for (var i = 0; i < lines.length; i++) {
+                html.push("<div class='line'>")
+                renderLine(html, lines[i])
+                html.push("</div>")
+            }
+            rootEl.innerHTML = html.join("")
+        }
+    
+        function renderLine(html, tokens) {
+            for (var i = 0; i < tokens.length; i ++) {
+                html.push("<span class='", tokens[i], "'>", tokens[i], "</span>")
+            }
+        }
+        return update;
+    }
+    tests.domNewNodes = function() {
+        function elt(parent, name, className, content) {
+            var el = document.createElement(name);
+            if (content) {
+                el.appendChild(document.createTextNode(content))
+            }
+            parent && parent.appendChild(el)
+            el.className = className
+            return el;
+        }
+        function txtEl(parent, str) {
+            return parent.appendChild(document.createTextNode(str))
+        }
+        function clearEl(el) {
+            while (el.lastChild)
+                el.removeChild(el.lastChild);
+        }
+
+        
+        function update(rootEl, lines) {
+            clearEl(rootEl)
+            for (var i = 0; i < lines.length; i++) {
+                var el = elt(rootEl, "div", "line")
+                renderLine(el, lines[i])
+            }
+        }
+    
+        function renderLine(html, tokens) {
+            for (var i = 0; i < tokens.length; i ++) {
+                elt(html, "span", tokens[i], tokens[i])
+            }
+        }
+        return update;
+    }
+    tests.domCloneNode = function() {
+        var els = {}
+        function elt(parent, name, className, content) {
+            if (!els[name]) els[name] = document.createElement(name);
+            var el = els[name].cloneNode(false)
+            if (content) {
+                el.appendChild(document.createTextNode(content))
+            }
+            parent && parent.appendChild(el)
+            el.className = className
+            return el;
+        }
+        function txtEl(parent, str) {
+            return parent.appendChild(document.createTextNode(str))
+        }
+        function clearEl(el) {
+            while (el.lastChild)
+                el.removeChild(el.lastChild);
+        }
+
+        
+        function update(rootEl, lines) {
+            clearEl(rootEl)
+            for (var i = 0; i < lines.length; i++) {
+                var el = elt(rootEl, "div", "line")
+                renderLine(el, lines[i])
+            }
+        }
+    
+        function renderLine(html, tokens) {
+            for (var i = 0; i < tokens.length; i ++) {
+                elt(html, "span", tokens[i], tokens[i])
+            }
+        }
+        return update;
+    }
+    tests.domReuseNodes = function() {
+        function elt(parent, name, className, content) {
+            var el = document.createElement(name);
+            if (content) {
+                el.appendChild(document.createTextNode(content))
+            }
+            parent && parent.appendChild(el)
+            el.className = className
+            return el;
+        }
+        function txtEl(parent, str) {
+            return parent.appendChild(document.createTextNode(str))
+        }
+        function clearEl(el, l) {
+            while (l --> 0)
+                el.removeChild(el.lastChild);
+        }
+
+        
+        function update(rootEl, lines) {
+            var ch = rootEl.childNodes
+            for (var i = 0; i < lines.length; i++) {
+                if (ch[i]) {
+                    var el = ch[i]
+                    el.className = "line"
+                }
+                else
+                    var el = elt(rootEl, "div", "line")
+                renderLine(el, lines[i])
+            }
+            clearEl(rootEl, ch.length - i)
+        }
+    
+        function renderLine(rootEl, tokens) {
+            var ch = rootEl.childNodes
+            for (var i = 0; i < tokens.length; i ++) {
+                if (ch[i]) {
+                    var el = ch[i]
+                    el.className = tokens[i]
+                    el.firstChild.nodeValue = tokens[i]
+                }
+                else
+                    elt(rootEl, "span", tokens[i], tokens[i])
+            }
+            clearEl(rootEl, ch.length - i)
+        }
+        return update;
+    }
+    tests.domReuseNodesWithFragment = function() {
+        function elt(parent, name, className, content) {
+            var el = document.createElement(name);
+            if (content) {
+                el.appendChild(document.createTextNode(content))
+            }
+            parent && parent.appendChild(el)
+            el.className = className
+            return el;
+        }
+        function txtEl(parent, str) {
+            return parent.appendChild(document.createTextNode(str))
+        }
+        function clearEl(el, l) {
+            while (l --> 0)
+                el.removeChild(el.lastChild);
+        }
+
+        
+        function update(rootEl, lines) {
+            var fr = document.createDocumentFragment()
+            var ch = rootEl.childNodes
+            for (var i = 0; i < lines.length; i++) {
+                if (ch[i]) {
+                    var el = ch[i]
+                    el.className = "line"
+                    fr.appendChild(el)
+                }
+                else
+                    var el = elt(fr, "div", "line")
+                renderLine(el, lines[i])
+            }
+            clearEl(rootEl, ch.length - i)
+            rootEl.appendChild(fr)
+        }
+    
+        function renderLine(rootEl, tokens) {
+            var ch = rootEl.childNodes
+            for (var i = 0; i < tokens.length; i ++) {
+                if (ch[i]) {
+                    var el = ch[i]
+                    el.className = tokens[i]
+                    el.firstChild.nodeValue = tokens[i]
+                }
+                else
+                    elt(rootEl, "span", tokens[i], tokens[i])
+            }
+            clearEl(rootEl, ch.length - i)
+        }
+        return update;
+    }
+    tests.domWithFragment = function() {
+        function elt(parent, name, className, content) {
+            var el = document.createElement(name);
+            if (content) {
+                el.appendChild(document.createTextNode(content))
+            }
+            parent && parent.appendChild(el)
+            el.className = className
+            return el;
+        }
+        function txtEl(parent, str) {
+            return parent.appendChild(document.createTextNode(str))
+        }
+        function clearEl(el) {
+            while (el.lastChild)
+                el.removeChild(el.lastChild);
+        }
+
+        
+        function update(rootEl, lines) {
+            var fr = document.createDocumentFragment()
+            clearEl(rootEl)
+            for (var i = 0; i < lines.length; i++) {
+                var el = elt(fr, "div", "line")
+                renderLine(el, lines[i])
+            }
+            rootEl.appendChild(fr)
+        }
+    
+        function renderLine(html, tokens) {
+            for (var i = 0; i < tokens.length; i ++) {
+                elt(html, "span", tokens[i], tokens[i])
+            }
+        }
+        return update;
+    }
+    
+    tests.domdomReuseNodes_allowTextNodes = function dom31() {
+        function elt(parent, name, className, content) {
+            var el = document.createElement(name);
+            if (content) {
+                el.appendChild(document.createTextNode(content))
+            }
+            parent && parent.appendChild(el)
+            el.className = className
+            return el;
+        }
+        function txtEl(parent, str) {
+            return parent.appendChild(document.createTextNode(str))
+        }
+        function clearEl(el, l) {
+            while (l --> 0)
+                el.removeChild(el.lastChild);
+        }
+
+        
+        function update(rootEl, lines) {
+            var ch = rootEl.childNodes
+            for (var i = 0; i < lines.length; i++) {
+                if (ch[i]) {
+                    var el = ch[i]
+                    el.className = "line"
+                }
+                else
+                    var el = elt(rootEl, "div", "line")
+                renderLine(el, lines[i])
+            }
+            clearEl(rootEl, ch.length - i)
+        }
+    
+        function renderLine(rootEl, tokens) {
+            var ch = rootEl.childNodes
+            for (var i = 0; i < tokens.length; i ++) {
+                if (i % 2) {
+                    if (ch[i]) {
+                        var el = ch[i]
+                        el.className = tokens[i]
+                        el.firstChild.nodeValue = tokens[i]
+                    }
+                    else
+                        elt(rootEl, "span", tokens[i], tokens[i])
+                }
+                else {
+                    if (ch[i]) {
+                        var el = ch[i]
+                        el.nodeValue = tokens[i]
+                    }
+                    else
+                        txtEl(rootEl, tokens[i])
+                }
+            }
+            clearEl(rootEl, ch.length - i)
+        }
+        return update;
+    }
+    tests.domdomReuseNodes_AllWrapped = function dom32() {
+        function elt(parent, name, className, content) {
+            var el = document.createElement(name);
+            if (content) {
+                el.appendChild(document.createTextNode(content))
+            }
+            parent && parent.appendChild(el)
+            el.className = className
+            return el;
+        }
+        function txtEl(parent, str) {
+            return parent.appendChild(document.createTextNode(str))
+        }
+        function clearEl(el, l) {
+            while (l --> 0)
+                el.removeChild(el.lastChild);
+        }
+
+        
+        function update(rootEl, lines) {
+            var ch = rootEl.childNodes
+            for (var i = 0; i < lines.length; i++) {
+                if (ch[i]) {
+                    var el = ch[i]
+                    el.className = "line"
+                }
+                else
+                    var el = elt(rootEl, "div", "line")
+                renderLine(el, lines[i])
+            }
+            clearEl(rootEl, ch.length - i)
+        }
+    
+        function renderLine(rootEl, tokens) {
+            var ch = rootEl.childNodes
+            for (var i = 0; i < tokens.length; i ++) {
+                if (ch[i]) {
+                    var el = ch[i]
+                    el.className = tokens[i]
+                    el.firstChild.nodeValue = tokens[i]
+                }
+                else
+                    elt(rootEl, "span", tokens[i], tokens[i])
+            }
+            clearEl(rootEl, ch.length - i)
+        }
+        return update;
+    }
+    
+    function runTest(render, cb) {
+        var rootEl = document.getElementById("root")
+        rootEl.innerHTML = "";
+        var lines = [];
+        for (var i = 0; i < LINES; i++) {
+            var line = []
+            lines.push(line)
+            for (var j = 0; j < COLS; j ++) {
+                var ch = ((i + j) % COLS).toString(20)
+                var ch = " " + Array(5).join(ch) + " "
+                line.push(ch)
+            }
+        }
+        var now = performance.now();
+        var repeat = 100
+        function next() {
+            if (repeat --< 0) {
+                var dt = now - performance.now()
+                console.log(dt)
+                return cb && cb(null, dt)
+            }
+            lines.push(lines.shift())
+            render(rootEl, lines);
+            requestAnimationFrame(next)
+        }
+        next()
+    }
+    
+    var LINES = 100
+    var COLS = 50
+    var method = /test=(\w+)|$/.exec(location.search)[1]
+    window.clearResults = function() {
+        Object.keys(localStorage).forEach(function(x) {
+            if (/^m_/.test(x)) delete localStorage[x]
+        })
+        showResults()
+    }
+    
+    function showResults() {
+        document.getElementById("root").innerHTML = Object.keys(tests).map(function(x) { 
+            return "<a href='?test=" + x + "'>" + x + "</a>: " + (localStorage["m_" + x] || "no results");
+        }).join("<br>")
+        + "<br><br><a onclick='clearResults()' href='?'>clearResults</a>";
+    }
+    
+    if (method && tests[method]) {
+        var update = tests[method]();
+        runTest(update, function(e, a) {
+            var all = localStorage["m_" + method];
+            localStorage["m_" + method] = all ?   all + "," + a : a;
+            showResults()
+        })
+    } else {
+        showResults();
+    }
+    
+</script>
+
+</body>
+</html>

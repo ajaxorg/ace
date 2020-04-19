@@ -1,0 +1,171 @@
+/*
+ * A Gobstones implementation of Conwey's Game of Life
+ * that tries to use most of Gobstones syntax.
+ *
+ * Check out more about Gobstones at http://gobstones.org
+ */
+
+-----------------------------------------------------------
+--         HELPERS TO MOVE AROUND ALL THE BOARD          --
+-----------------------------------------------------------
+
+// This helpers allow the user to move around the board
+// one cell at a time
+procedure GoToStartOfBoard(firstDir, secondDir) {
+    IrAlBorde(opuesto(firstDir))
+    IrAlBorde(opuesto(secondDir))
+}
+
+function isEndOfBoard(firstDir, secondDir) {
+    return (not puedeMover(firstDir) && not puedeMover(secondDir))
+}
+
+procedure NextCellOfTheBoard(firstDir, secondDir) {
+    if (puedeMover(firstDir)) {
+        Mover(firstDir)
+    } else {
+        IrAlBorde(opuesto(firstDir))
+        Mover(secondDir)
+    }
+}
+
+-----------------------------------------------------------
+--                   TYPE DECLARATIONS                   --
+-----------------------------------------------------------
+// The cell type declarations
+type CellStatus is variant {
+    case Alive {}
+    case Dead  {}
+}
+
+type Cell is record {
+    field status  # CellStatus
+    field color   # Color
+}
+
+
+-----------------------------------------------------------
+--                  PROGRAM DEFINITION                   --
+-----------------------------------------------------------
+interactive program {
+    # Map key press to actions
+    K_UP     -> { PrepareNextTick()  }
+    K_RIGHT  -> { CompleteNextTick() }
+    K_RETURN -> { SimulateNextTick() }
+}
+
+/*
+program {
+    return ( numberOfNeighbors())
+}
+*/
+-----------------------------------------------------------
+--                      FUNCTIONS                        --
+-----------------------------------------------------------
+function isCellAlive() {
+    return (hayBolitas(Verde))
+}
+
+function cellStatus() {
+    return (
+        choose
+            Alive when (isCellAlive())
+            Dead otherwise
+    )
+}
+
+function readCell() {
+    return (
+        Cell(color <- Verde, status <- cellStatus())
+    )
+}
+
+function numberOfNeighbors() {
+    amountOfNeighbors := 0
+    foreach dir in [minDir() .. maxDir()] {
+        amountOfNeighbors := amountOfNeighbors + aliveCellsAt(dir)
+    }
+    return (amountOfNeighbors)
+}
+
+function aliveCellsAt(dir) {
+    firstCompare := puedeMover(dir) && hasAliveCellAt(dir)
+    secondCompare := puedeMover(dir) && puedeMover(siguiente(dir)) && hasAliveCellAtD(dir)
+    value :=
+        matching (firstCompare) select
+            1 on True
+            0 otherwise
+        +
+        matching (secondCompare) select
+            1 on True
+            0 otherwise
+    return (value)
+}
+
+function hasAliveCellAt(dir) {
+    Mover(dir)
+    return (isCellAlive())
+}
+
+function hasAliveCellAtD(dir) {
+    Mover(dir)
+    Mover(siguiente(dir))
+    return (isCellAlive())
+}
+
+-----------------------------------------------------------
+--              ROCEDURES DECLARATIONS                   --
+-----------------------------------------------------------
+procedure TagAsReanimated() {
+    Poner(Azul)
+}
+
+procedure TagAsDead() {
+    Poner(Rojo)
+}
+
+procedure ProcessAction() {
+    switch (hayBolitas(Rojo)) {
+        True -> { Sacar(Verde); Sacar(Rojo) }
+        _ -> {}
+    }
+    switch (hayBolitas(Azul)) {
+        True -> { Poner(Verde); Sacar(Azul) }
+        _ -> {}
+    }
+}
+
+procedure TagCell(numNeighbors) {
+    if     (    isCellAlive() && numNeighbors < 2)  { TagAsDead() }
+    elseif (    isCellAlive() && numNeighbors > 3)  { TagAsDead() }
+    elseif ((not isCellAlive()) && numNeighbors == 3) { TagAsReanimated() }
+}
+
+procedure SimulateTicks(amount) {
+    repeat(amount) {
+        SimulateNextTick()
+    }
+}
+
+procedure SimulateNextTick() {
+    PrepareNextTick()
+    CompleteNextTick()
+}
+
+procedure PrepareNextTick() {
+    GoToStartOfBoard(Norte, Este)
+    while (not isEndOfBoard(Norte, Este)) {
+        TagCell(numberOfNeighbors())
+        NextCellOfTheBoard(Norte, Este)
+    }
+    TagCell(numberOfNeighbors())
+}
+
+procedure CompleteNextTick() {
+    GoToStartOfBoard(Norte, Este)
+    while (not isEndOfBoard(Norte, Este)) {
+        ProcessAction()
+        NextCellOfTheBoard(Norte, Este)
+    }
+    ProcessAction()
+}

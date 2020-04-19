@@ -1,3 +1,146 @@
+2020.04.15 Version 1.4.10
+* added workaround for chrome bug causing memory leak after calling editor.destroy
+* added code folding support for vbscript mode
+
+2020.04.01 Version 1.4.9
+* added option to disable autoindent 
+* added new language modes
+* fixed backspace not working with some mobile keyboards
+
+2020.01.14 Version 1.4.8
+* highlight both matched braces, and highlight unmatched brace in red
+* improve snippet manager
+* compatibility with webpack file-loader v5
+* improve vim mode
+
+2019.10.17 Version 1.4.7
+* add placeholder option
+
+2019.09.08 Version 1.4.6
+* restore native behavior of ctrl-p on mac (jumptomatching command is moved to cmd-\)
+* improve snippet manager
+* fix backspace handling on mobile
+
+2019.06.17 Version 1.4.5
+* improve scrolling and selection on mobile 
+* improve type definitions
+
+2019.04.24 Version 1.4.4
+* add experimental command prompt
+* add chrystal, nim and nginx highlight rules
+* fix regression in vim mode on ios
+
+2019.02.21 Version 1.4.3
+* add sublime keybindings
+* add rtl option
+* implement ` and < textobjects in vim mode
+
+2018.11.21 Version 1.4.2
+* fix regression in vim mode
+* improve keyboard input handling on ipad and IE
+* add new syntax highlighters
+
+2018.08.07 Version 1.4.1
+* fix regression in autocomplete
+
+2018.08.06 Version 1.4.0
+
+* remove usage of innerHTML
+* improved handling of textinput for IME and mobile
+* add support for relative line numbers
+* improve autocompletion popup 
+
+2018.03.26 Version 1.3.3
+* fix regession in static-highlight extension
+* use css animation for cursor blinking
+
+2018.03.21 Version 1.3.2
+* add experimental support for using ace-builds with webpack
+
+2018.02.11 Version 1.3.1
+
+* fixed regression with selectionChange event not firing some times
+* improved handling of non-ascii characters in vim normal mode
+
+2018.01.31 Version 1.3.0
+
+* added copy copyWithEmptySelection option 
+* improved undoManager
+* improved settings_menu plugin
+* improved handling of files with very long lines
+* fixed bug with scrolling editor out of view in transformed elements
+
+2017.10.17 Version 1.2.9
+
+* added support for bidirectional text, with monospace font (Alex Shensis)
+* added support for emoji 😊
+
+* new language modes
+  - Red (Toomas Vooglaid)
+  - CSound (Nathan Whetsell)
+  - JSSM (John Haugeland)
+
+* New Themes
+  - Dracula (Austin Schwartz)
+
+2017.07.02 Version 1.2.8
+* Fixed small bugs in searchbox and autocompleter
+
+2017.06.18 Version 1.2.7
+
+* Added Support for arrow keys on external IPad keyboard (Emanuele Tamponi)
+* added match counter to searchbox extension
+
+- implemented higlighting of multiline strings in yaml mode (Maxim Trushin)
+- improved haml syntax highlighter (Andrés Álvarez)
+
+2016.12.03 Version 1.2.6
+
+* Fixed IME handling on new Chrome
+* Support for php 7 in the syntax checker
+
+2016.08.16 Version 1.2.5
+
+* Fixed regression in noconflict mode
+
+2016.07.27 Version 1.2.4
+
+* Maintenance release with several new modes and small bugfixes
+
+2016.01.17 Version 1.2.3
+
+* Bugfixes
+  - fix memory leak in setSession (Tyler Stalder)
+  - double click not working on linux/mac
+  
+* new language modes
+  - reStructuredText (Robin Jarry)
+  - NSIS (Jan T. Sott)
+
+
+2015.10.28 Version 1.2.1
+
+* new language modes
+  - Swift
+  - JSX
+
+2015.07.11 Version 1.2.0
+
+* New Features
+  - Indented soft wrap (danyaPostfactum)
+  - Rounded borders on selections
+
+* API Changes
+  - unified delta types `{start, end, action, lines}`  (Alden Daniels https://github.com/ajaxorg/ace/pull/1745)
+  - "change" event listeners on session and editor get delta objects directly
+
+* new language modes
+  - SQLServer (Morgan Yarbrough)
+  
+2015.04.03 Version 1.1.9
+
+  - Small Enhancements and Bugfixes
+
 2014.11.08 Version 1.1.8
 
 * API Changes

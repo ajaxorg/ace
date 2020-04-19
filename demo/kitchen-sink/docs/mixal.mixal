@@ -1,0 +1,6 @@
+* PROGRAM START
+ΔSTART     LDA  2000 LOAD A FROM CELL 2000
+           CMP7 =15=
+12345      HLT
+           END  START
+ABC        ALF abc

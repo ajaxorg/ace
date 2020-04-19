@@ -1,16 +1,17 @@
 test: header 1 
 #f
+# f
 test: header 2
 ## foo
 test: header ends with ' #'
 # # # 
 test: header ends with '#'
-#foo# 
+# foo# 
 test: 6+ #s is not a valid header
 ####### foo
-test: # followed be only space is not a valid header
+test: # followed be only space is a valid header
 # 
-test: only space between #s is not a valid header
+test: only space between #s is a valid header
 #  #
 
 # test links  [Cloud9 IDE](http://www.c9.io/) #

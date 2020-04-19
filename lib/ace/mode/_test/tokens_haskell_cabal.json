@@ -1,0 +1,278 @@
+[[
+   "start",
+  ["keyword","name:                "],
+  ["text","reload"]
+],[
+   "start",
+  ["keyword","version:             "],
+  ["constant.numeric","0.1.0.0"]
+],[
+   "start",
+  ["keyword","synopsis:            "],
+  ["text","Initial project template from stack"]
+],[
+   "start",
+  ["keyword","Description:"]
+],[
+   "start",
+  ["text","    The \\'cabal\\' command-line program simplifies the process of managing"]
+],[
+   "start",
+  ["text","    Haskell software by automating the fetching, configuration, compilation"]
+],[
+   "start",
+  ["text","    and installation of Haskell libraries and programs."]
+],[
+   "start",
+  ["keyword","homepage:            "],
+  ["text","https://github.com/jpmoresmau/dbIDE/reload#readme"]
+],[
+   "start",
+  ["keyword","license:             "],
+  ["text","BSD"],
+  ["constant.numeric","3"]
+],[
+   "start",
+  ["keyword","license-file:        "],
+  ["text","LICENSE"]
+],[
+   "start",
+  ["keyword","author:              "],
+  ["text","JP Moresmau"]
+],[
+   "start",
+  ["keyword","maintainer:          "],
+  ["text","jpmoresmau@gmail.com"]
+],[
+   "start",
+  ["keyword","copyright:           "],
+  ["constant.numeric","2016"],
+  ["text"," JP Moresmau"]
+],[
+   "start",
+  ["keyword","category:            "],
+  ["text","Web"]
+],[
+   "start",
+  ["keyword","build-type:          "],
+  ["text","Simple"]
+],[
+   "start",
+  ["comment","-- extra-source-files:"]
+],[
+   "start",
+  ["keyword","cabal-version:       "],
+  ["text",">="],
+  ["constant.numeric","1.10"]
+],[
+   "start"
+],[
+   "start",
+  ["markup.heading","Flag network-uri"]
+],[
+   "start",
+  ["keyword","  description:  "],
+  ["text","Get Network.URI from the network-uri package"]
+],[
+   "start",
+  ["keyword","  default:      "],
+  ["constant.language.boolean","True"]
+],[
+   "start"
+],[
+   "start",
+  ["markup.heading","library"]
+],[
+   "start",
+  ["keyword","  hs-source-dirs:      "],
+  ["text","src"]
+],[
+   "start",
+  ["keyword","  exposed-modules:     "],
+  ["text","Language.Haskell.Reload"]
+],[
+   "start",
+  ["keyword","  build-depends:       "],
+  ["text","base >= "],
+  ["constant.numeric","4.7"],
+  ["text"," && < "],
+  ["constant.numeric","5"]
+],[
+   "start",
+  ["text","                     , aeson"]
+],[
+   "start",
+  ["text","                     , scotty"]
+],[
+   "start",
+  ["text","                     , wai"]
+],[
+   "start",
+  ["text","                     , text"]
+],[
+   "start",
+  ["text","                     , directory"]
+],[
+   "start",
+  ["text","                     , filepath"]
+],[
+   "start",
+  ["text","                     , bytestring"]
+],[
+   "start",
+  ["text","                     , containers"]
+],[
+   "start",
+  ["text","                     , mime-types"]
+],[
+   "start",
+  ["text","                     , transformers"]
+],[
+   "start",
+  ["text","                     , wai-handler-launch"]
+],[
+   "start",
+  ["text","                     , wai-middleware-static"]
+],[
+   "start",
+  ["text","                     , wai-extra"]
+],[
+   "start",
+  ["text","                     , http-types"]
+],[
+   "start",
+  ["keyword","  default-language:    "],
+  ["text","Haskell"],
+  ["constant.numeric","2010"]
+],[
+   "start",
+  ["keyword","  other-modules:       "],
+  ["text","Language.Haskell.Reload.FileBrowser"]
+],[
+   "start",
+  ["keyword","  ghc-options:         "],
+  ["text","-Wall -O"],
+  ["constant.numeric","2"]
+],[
+   "start"
+],[
+   "start",
+  ["markup.heading","executable reload-exe"]
+],[
+   "start",
+  ["keyword","  hs-source-dirs:      "],
+  ["text","app"]
+],[
+   "start",
+  ["keyword","  main-is:             "],
+  ["text","Main.hs"]
+],[
+   "start",
+  ["keyword","  ghc-options:         "],
+  ["text","-threaded -O"],
+  ["constant.numeric","2"],
+  ["text"," -rtsopts -with-rtsopts=-N"]
+],[
+   "start",
+  ["keyword","  build-depends:       "],
+  ["text","base"]
+],[
+   "start",
+  ["text","                     , reload"]
+],[
+   "start",
+  ["keyword","  default-language:    "],
+  ["text","Haskell"],
+  ["constant.numeric","2010"]
+],[
+   "start"
+],[
+   "start",
+  ["markup.heading","test-suite reload-test"]
+],[
+   "start",
+  ["keyword","  type:                "],
+  ["text","exitcode-stdio-"],
+  ["constant.numeric","1.0"]
+],[
+   "start",
+  ["keyword","  hs-source-dirs:      "],
+  ["text","test"]
+],[
+   "start",
+  ["keyword","  main-is:             "],
+  ["text","Spec.hs"]
+],[
+   "start",
+  ["keyword","  build-depends:       "],
+  ["text","base"]
+],[
+   "start",
+  ["text","                     , reload"]
+],[
+   "start",
+  ["text","                     , hspec"]
+],[
+   "start",
+  ["text","                     , hspec-wai"]
+],[
+   "start",
+  ["text","                     , hspec-wai-json"]
+],[
+   "start",
+  ["text","                     , aeson"]
+],[
+   "start",
+  ["text","                     , directory"]
+],[
+   "start",
+  ["text","                     , filepath"]
+],[
+   "start",
+  ["text","                     , text"]
+],[
+   "start",
+  ["text","                     , containers"]
+],[
+   "start",
+  ["text","                     , unordered-containers"]
+],[
+   "start",
+  ["text","                     , bytestring"]
+],[
+   "start",
+  ["text","                     , wai-extra"]
+],[
+   "start",
+  ["keyword","  ghc-options:         "],
+  ["text","-threaded -O"],
+  ["constant.numeric","2"],
+  ["text"," -rtsopts -with-rtsopts=-N"]
+],[
+   "start",
+  ["keyword","  default-language:    "],
+  ["text","Haskell"],
+  ["constant.numeric","2010"]
+],[
+   "start",
+  ["keyword","  other-modules:       "],
+  ["text","Language.Haskell.Reload.FileBrowserSpec"]
+],[
+   "start",
+  ["text","                       Language.Haskell.ReloadSpec"]
+],[
+   "start"
+],[
+   "start",
+  ["markup.heading","source-repository head"]
+],[
+   "start",
+  ["keyword","  type:     "],
+  ["text","git"]
+],[
+   "start",
+  ["keyword","  location: "],
+  ["text","https://github.com/jpmoresmau/dbIDE/reload"]
+],[
+   "start"
+]]

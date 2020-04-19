@@ -1,4 +1,4 @@
-@these @are @tags
+@these @_are_ @tags
 Feature: Serve coffee
   Coffee should not be served until paid for
   Coffee should not be served until the button has been pressed
@@ -12,7 +12,7 @@ Feature: Serve coffee
     Examples:
       | start | eat | left |
       |  12   |  5  |  7   |
-      |  20   |  5  |  15  |    
+      |  @20  |  5  |  15  |    
 
   Scenario: Buy last coffee
     Given there are 1 coffees left in the machine

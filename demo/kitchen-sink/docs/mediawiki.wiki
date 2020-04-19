@@ -1,0 +1,31 @@
+{{Languages}}
+
+'''Ace''' is a standalone code editor written in [[wikipedia:JavaScript|JavaScript]]. Our goal is to create a browser based editor that matches and extends the features, usability and performance of existing native editors such as TextMate, Vim or Eclipse. It can be ''easily'' embedded in any web page or JavaScript application. Ace is developed as the primary editor for [http://www.cloud9ide.com/ Cloud9 IDE] and the successor of the Mozilla Skywriter (Bespin) Project.
+
+== Features ==
+* Syntax highlighting
+* Automatic indent and outdent
+* An optional command line
+* Handles huge documents (100,000 lines and more are no problem)
+* Fully customizable key bindings including VI and Emacs modes
+* Themes (TextMate themes can be imported)
+* Search and replace with regular expressions
+* Highlight matching parentheses
+* Toggle between soft tabs and real tabs
+* Displays hidden characters
+* Drag and drop text using the mouse
+* Line wrapping
+* Unstructured / user code folding
+* Live syntax checker (currently JavaScript/CoffeeScript)
+
+== Take Ace for a spin! ==
+Check out the Ace live [http://ajaxorg.github.com/ace/ demo] or get a [http://run.cloud9ide.com Cloud9 IDE account] to experience Ace while editing one of your own GitHub projects.
+
+If you want, you can use Ace as a textarea replacement thanks to the [http://ajaxorg.github.com/ace/build/textarea/editor.html Ace Bookmarklet].
+
+== Documentation ==
+You find a lot more sample code in the [https://github.com/ajaxorg/ace/blob/master/demo/demo.js demo app].
+
+There is also some documentation on the [https://github.com/ajaxorg/ace/wiki wiki page].
+
+If you still need help, feel free to drop a mail on the [http://groups.google.com/group/ace-discuss ace mailing list].

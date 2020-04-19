@@ -56,23 +56,24 @@ function main(args) {
     if (i != -1 && args[i+1])
         BUILD_DIR = args[i+1];
 
-    if (args.indexOf("--h") == -1) {
-        if (type == "minimal") {
-            buildAce({
-                compress: args.indexOf("--m") != -1,
-                noconflict: args.indexOf("--nc") != -1,
-                shrinkwrap: args.indexOf("--s") != -1
-            });
-        } else if (type == "normal") {
-            ace();
-        } else if (type == "demo") {
-            demo();
-        } else if (type == "full") {
-            ace();
-            demo();
-        } else if (type == "highlighter") {
-            // TODO
-        }
+    if (args.indexOf("--h") != -1 || args.indexOf("-h") != -1 || args.indexOf("--help") != -1) {
+        return showHelp();
+    }
+    if (type == "minimal") {
+        buildAce({
+            compress: args.indexOf("--m") != -1,
+            noconflict: args.indexOf("--nc") != -1,
+            shrinkwrap: args.indexOf("--s") != -1
+        });
+    } else if (type == "normal") {
+        ace();
+    } else if (type == "demo") {
+        demo();
+    } else if (type == "full") {
+        ace();
+        demo();
+    } else if (type == "highlighter") {
+        // TODO
     }
 }
 
@@ -105,8 +106,42 @@ function ace() {
     copy.file(ACE_HOME + "/ChangeLog.txt", BUILD_DIR + "/ChangeLog.txt");
     
     console.log('# ace ---------');
-    for (var i = 0; i < 4; i++)
-        buildAce({compress: i & 2, noconflict: i & 1});
+    for (var i = 0; i < 4; i++) {
+        buildAce({compress: i & 2, noconflict: i & 1, check: true});
+    }
+}
+
+function buildTypes() {
+    var definitions = fs.readFileSync(ACE_HOME + '/ace.d.ts', 'utf8');
+    var paths = fs.readdirSync(BUILD_DIR + '/src-noconflict');
+    var moduleRef = '/// <reference path="./ace-modules.d.ts" />';
+
+    fs.readdirSync(BUILD_DIR + '/src-noconflict/snippets').forEach(function(path) {
+        paths.push("snippets/" + path);
+    });
+    
+    var pathModules = paths.map(function(path) {
+        if (/^(mode|theme|ext|keybinding)-|^snippets\//.test(path)) {
+            var moduleName = path.split('.')[0];
+            return "declare module 'ace-builds/src-noconflict/" + moduleName + "';";
+        }
+    }).filter(Boolean).join('\n')
+        + "\ndeclare module 'ace-builds/webpack-resolver';\n";
+
+    fs.writeFileSync(BUILD_DIR + '/ace.d.ts', moduleRef + '\n' + definitions);
+    fs.writeFileSync(BUILD_DIR + '/ace-modules.d.ts', pathModules);
+    
+    var loader = paths.map(function(path) {
+        if (/\.js$/.test(path) && !/^ace\.js$/.test(path)) {
+            var moduleName = path.split('.')[0].replace(/-/, "/");
+            if (/^worker/.test(moduleName))
+                moduleName = "mode" + moduleName.slice(6) + "_worker";
+            moduleName = moduleName.replace(/keybinding/, "keyboard");
+            return "ace.config.setModuleUrl('ace/" + moduleName + "', require('file-loader?esModule=false!./src-noconflict/" + path + "'))";
+        }
+    }).join('\n');
+    
+    fs.writeFileSync(BUILD_DIR + '/webpack-resolver.js', loader, "utf8");
 }
 
 function demo() {
@@ -153,8 +188,8 @@ function demo() {
                 removeRequireJS = true;
                 var scripts = m.split(/,\s*/);
                 var result = [];
-                function comment(str) {result.push("<!-- " + str + " -->")}
-                function script(str) {result.push('<script src="../src/' + str + '.js"></script>')}
+                function comment(str) {result.push("<!-- " + str + " -->");}
+                function script(str) {result.push('<script src="../src/' + str + '.js"></script>');}
                 scripts.forEach(function(s) {
                     s = s.replace(/"/g, "");
                     if (s == "ace/ace") {
@@ -237,7 +272,7 @@ function buildAceModuleInternal(opts, callback) {
         paths: {
             ace: ACE_HOME + "/lib/ace",
             "kitchen-sink": ACE_HOME + "/demo/kitchen-sink",
-            build_support:  ACE_HOME + "/build_support",
+            build_support:  ACE_HOME + "/build_support"
         },
         root: ACE_HOME
     };
@@ -261,11 +296,7 @@ function buildAceModuleInternal(opts, callback) {
             code = result.codeMin;
         }
             
-        var targetDir =  BUILD_DIR + "/src";
-        if (opts.compress)
-            targetDir += "-min";
-        if (opts.noconflict)
-            targetDir += "-noconflict";
+        var targetDir = getTargetDir(opts);
         
         var to = /^([\\/]|\w:)/.test(opts.outputFile)
             ? opts.outputFile
@@ -280,16 +311,18 @@ function buildAceModuleInternal(opts, callback) {
         if (opts.noconflict)
             filters.push(namespace(ns));
         var projectType = opts.projectType;
-        if (projectType == "main" || projectType == "ext") {
+        if (projectType !== "worker") {
             filters.push(exportAce(ns, opts.require[0],
-                opts.noconflict ? ns : "", projectType == "ext"));
+                opts.noconflict ? ns : "", projectType !== "main"));
         }
-
+        
+        filters.push(normalizeLineEndings);
+        
         filters.forEach(function(f) { code = f(code); });
         
         build.writeToFile({code: code}, {
             outputFolder: path.dirname(to),
-            outputFile: path.basename(to),
+            outputFile: path.basename(to)
         }, function() {});
         
         callback && callback(err, result);
@@ -301,12 +334,13 @@ function buildAceModuleInternal(opts, callback) {
         pathConfig: pathConfig,
         additional: opts.additional,
         enableBrowser: true,
-        keepDepArrays: "all",
+        keepDepArrays: opts.noconflict || opts.projectType == "worker" ? "" : "all",
         noArchitect: true,
         compress: false,
         ignore: opts.ignore || [],
         withRequire: false,
         basepath: ACE_HOME,
+        transforms: [normalizeLineEndings],
         afterRead: [optimizeTextModules]
     }, write);
 }
@@ -334,47 +368,44 @@ function buildSubmodule(options, extra, file, callback) {
     });
 }
 
-function buildAce(options) {
+function buildAce(options, callback) {
     var snippetFiles = jsFileList("lib/ace/snippets");
     var modeNames = modeList();
 
-    buildCore(options, {outputFile: "ace.js"}),
+    buildCore(options, {outputFile: "ace.js"}, addCb());
     // modes
     modeNames.forEach(function(name) {
         buildSubmodule(options, {
             projectType: "mode",
             require: ["ace/mode/" + name]
-        }, "mode-" + name);
+        }, "mode-" + name, addCb());
     });
     // snippets
     modeNames.forEach(function(name) {
-        if (snippetFiles.indexOf(name + ".js") == -1)
-            addSnippetFile(name);
-        
         buildSubmodule(options, {
-            require: ["ace/snippets/" + name],
-        }, "snippets/" + name);
+            require: ["ace/snippets/" + name]
+        }, "snippets/" + name, addCb());
     });
     // themes
     jsFileList("lib/ace/theme").forEach(function(name) {
         buildSubmodule(options, {
             projectType: "theme",
             require: ["ace/theme/" + name]
-        }, "theme-" +  name);
+        }, "theme-" +  name, addCb());
     });
     // keybindings
-    ["vim", "emacs"].forEach(function(name) {
+    ["vim", "emacs", "sublime", "vscode"].forEach(function(name) {
         buildSubmodule(options, {
             projectType: "keybinding",
             require: ["ace/keyboard/" + name ]
-        }, "keybinding-" + name);
+        }, "keybinding-" + name, addCb());
     });
     // extensions
     jsFileList("lib/ace/ext").forEach(function(name) {
         buildSubmodule(options, {
             projectType: "ext",
             require: ["ace/ext/" + name]
-        }, "ext-" + name);
+        }, "ext-" + name, addCb());
     });
     // workers
     workers("lib/ace/mode").forEach(function(name) {
@@ -386,9 +417,26 @@ function buildAce(options) {
                 id: "ace/worker/worker",
                 transforms: [],
                 order: -1000
-            }],
-        }, "worker-" + name);
+            }]
+        }, "worker-" + name, addCb());
     });
+    // 
+    function addCb() {
+        addCb.count = (addCb.count || 0) + 1; 
+        return done;
+    }
+    function done() {
+        if (--addCb.count > 0)
+            return;
+        if (options.check)
+            sanityCheck(options, callback);
+        if (options.noconflict && !options.compress)
+            buildTypes();
+            
+        if (callback) 
+            return callback();
+        console.log("Finished building " + getTargetDir(options));
+    }
 }
 
 function getLoadedFileList(options, callback, result) {
@@ -404,7 +452,14 @@ function getLoadedFileList(options, callback, result) {
         });
     });
     delete deps["ace/theme/textmate"];
+    deps["ace/ace"] = 1;
     callback(Object.keys(deps));
+}
+
+function normalizeLineEndings(module) {
+    if (typeof module == "string") 
+        module = {source: module};
+    return module.source = module.source.replace(/\r\n/g, "\n");
 }
 
 function optimizeTextModules(sources) {
@@ -452,10 +507,10 @@ function optimizeTextModules(sources) {
         if (/\.css$/.test(pkg.id)) {
             // remove unnecessary whitespace from css
             input = input.replace(/\n\s+/g, "\n");
-            input = '"' + input.replace(/\r?\n/g, '\\\n') + '"';
+            input = '"' + input.replace(/\n/g, '\\\n') + '"';
         } else {
             // but don't break other files!
-            input = '"' + input.replace(/\r?\n/g, '\\n\\\n') + '"';
+            input = '"' + input.replace(/\n/g, '\\n\\\n') + '"';
         }
         textModules[pkg.id] = input;
     }
@@ -466,8 +521,10 @@ function namespace(ns) {
         text = text
             .toString()
             .replace(/ACE_NAMESPACE\s*=\s*""/, 'ACE_NAMESPACE = "' + ns +'"')
-            .replace(/(\.define)|\bdefine\(/g, function(_, a) {
-                return a || ns + ".define(";
+            .replace(/\bdefine\(/g, function(def, index, source) {
+                if (/(^|[;}),])\s*$/.test(source.slice(0, index)))
+                    return ns + "." + def;
+                return def;
             });
 
         return text;
@@ -481,11 +538,18 @@ function exportAce(ns, modules, requireBase, extModules) {
         var template = function() {
             (function() {
                 REQUIRE_NS.require(MODULES, function(a) {
-                    a && a.config.init(true);
+                    if (a) {
+                        a.config.init(true);
+                        a.define = REQUIRE_NS.define;
+                    }
                     if (!window.NS)
                         window.NS = a;
                     for (var key in a) if (a.hasOwnProperty(key))
                         window.NS[key] = a[key];
+                    window.NS["default"] = window.NS;
+                    if (typeof module == "object" && typeof exports == "object" && module) {
+                        module.exports = window.NS;
+                    }
                 });
             })();
         };
@@ -493,7 +557,11 @@ function exportAce(ns, modules, requireBase, extModules) {
         if (extModules) {
             template = function() {
                 (function() {
-                    REQUIRE_NS.require(MODULES, function() {});
+                    REQUIRE_NS.require(MODULES, function(m) {
+                        if (typeof module == "object" && typeof exports == "object" && module) {
+                            module.exports = m;
+                        }
+                    });
                 })();
             };
         }
@@ -534,23 +602,24 @@ function generateThemesModule(themes) {
     fs.writeFileSync(__dirname + '/lib/ace/ext/themelist_utils/themes.js', themelist, 'utf8');
 }
 
-function addSnippetFile(modeName) {
-    var snippetFilePath = ACE_HOME + "/lib/ace/snippets/" + modeName;
-    if (!fs.existsSync(snippetFilePath + ".js")) {
-        copy.file(ACE_HOME + "/tool/templates/snippets.js", snippetFilePath + ".js", function(t) {
-            return t.replace(/%modeName%/g, modeName);
+function compress(text) {
+    var uglify = require("dryice").copy.filter.uglifyjs;
+    uglify.options.mangle_toplevel = {except: ["ACE_NAMESPACE", "requirejs"]};
+    uglify.options.beautify = {ascii_only: true, inline_script: true};
+    return asciify(uglify(text));
+    // copy.filter.uglifyjs.options.ascii_only = true; doesn't work with some uglify.js versions
+    function asciify(text) {
+        return text.replace(/[\x00-\x08\x0b\x0c\x0e\x19\x80-\uffff]/g, function(c) {
+            c = c.charCodeAt(0).toString(16);
+            if (c.length == 1)
+                return "\\x0" + c;
+            if (c.length == 2)
+                return "\\x" + c;
+            if (c.length == 3)
+                return "\\u0" + c;
+            return "\\u" + c;
         });
     }
-    if (!fs.existsSync(snippetFilePath + ".snippets")) {
-        fs.writeFileSync(snippetFilePath + ".snippets", "");
-    }
-}
-
-function compress(text) {
-    var ujs = require("dryice").copy.filter.uglifyjs;
-    ujs.options.mangle_toplevel = {except: ["ACE_NAMESPACE", "requirejs"]};
-    ujs.options.beautify = {ascii_only: true, inline_script: true}
-    return ujs(text);
 }
 
 function extend(base, extra) {
@@ -558,6 +627,36 @@ function extend(base, extra) {
         base[k] = extra[k];
     });
     return base;
+}
+
+function getTargetDir(opts) {
+    var targetDir = BUILD_DIR + "/src";
+    if (opts.compress)
+        targetDir += "-min";
+    if (opts.noconflict)
+        targetDir += "-noconflict";
+    return targetDir;
+}
+
+function sanityCheck(opts, callback) {
+    var targetDir = getTargetDir(opts);
+    require("child_process").execFile(process.execPath, ["-e", "(" + function() {
+        window = global;
+        require("./ace");
+        if (typeof ace.edit != "function")
+            process.exit(1);
+        require("fs").readdirSync(".").forEach(function(p) {
+            if (!/ace\.js$/.test(p) && /\.js$/.test(p))
+                require("./" + p);
+        });
+        process.exit(0);
+    } + ")()"], {
+        cwd: targetDir
+    }, function(err, stdout) {
+        if (callback) return callback(err, stdout);
+        if (err)
+            throw err;
+    });
 }
 
 if (!module.parent)

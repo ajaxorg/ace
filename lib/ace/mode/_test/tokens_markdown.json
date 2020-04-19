@@ -3,8 +3,11 @@
   ["text.xml","test: header 1 "]
 ],[
    "start",
+  ["text.xml","#f"]
+],[
+   "start",
   ["markup.heading.1","#"],
-  ["heading","f"]
+  ["heading"," f"]
 ],[
    "start",
   ["text.xml","test: header 2"]
@@ -25,7 +28,7 @@
 ],[
    "start",
   ["markup.heading.1","#"],
-  ["heading","foo# "]
+  ["heading"," foo# "]
 ],[
    "start",
   ["text.xml","test: 6+ #s is not a valid header"]
@@ -34,16 +37,18 @@
   ["text.xml","####### foo"]
 ],[
    "start",
-  ["text.xml","test: # followed be only space is not a valid header"]
+  ["text.xml","test: # followed be only space is a valid header"]
 ],[
    "start",
-  ["text.xml","# "]
+  ["markup.heading.1","#"],
+  ["heading"," "]
 ],[
    "start",
-  ["text.xml","test: only space between #s is not a valid header"]
+  ["text.xml","test: only space between #s is a valid header"]
 ],[
    "start",
-  ["text.xml","#  #"]
+  ["markup.heading.1","#"],
+  ["heading","  #"]
 ],[
    "allowBlock"
 ],[
@@ -110,5 +115,5 @@
 ],[
    "allowBlock"
 ],[
-   "start"
+   "allowBlock"
 ]]

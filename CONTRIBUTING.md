@@ -7,16 +7,9 @@ Feel free to fork and improve/enhance Ace any way you want. If you feel that the
 
 There are two versions of the agreement:
 
-1. [The Individual CLA](https://github.com/ajaxorg/ace/raw/master/doc/Contributor_License_Agreement-v2.pdf): use this version if you're working on an ajax.org in your spare time, or can clearly claim ownership of copyright in what you'll be submitting.
-2. [The Corporate CLA](https://github.com/ajaxorg/ace/raw/master/doc/Corporate_Contributor_License_Agreement-v2.pdf): have your corporate lawyer review and submit this if your company is going to be contributing to ajax.org  projects
+1. [The Individual CLA](https://docs.google.com/a/c9.io/forms/d/1MfmfrxqD_PNlNsuK0lC2KSelRLxGLGfh_wEcG0ijVvo/viewform): use this version if you're working on the Cloud9 SDK or open source projects in your spare time, or can clearly claim ownership of copyright in what you'll be submitting.
+2. [The Corporate CLA](https://docs.google.com/a/c9.io/forms/d/1vFejn4111GdnCNuQ6BfnJDaxdsUEMD4KCo1ayovAfu0/viewform): have your corporate lawyer review and submit this if your company is going to be contributing to the Cloud9 SDK and/or open source projects.
 
-If you want to contribute to an ajax.org project please print the CLA and fill it out and sign it. Then either send it by snail mail or fax to us or send it back scanned (or as a photo) by email.
+If you want to contribute to the Cloud9 SDK and/or open source projects please go to the online form, fill it out and submit it.
 
-Email: ace+cla@c9.io
-
-Fax: +31 (0) 206388953
-
-Address: Ajax.org B.V.
-  Keizersgracht 241
-  1016 EA, Amsterdam
-  the Netherlands
+Happy coding, Cloud9

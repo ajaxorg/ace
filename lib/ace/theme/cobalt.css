@@ -5,7 +5,7 @@
 
 .ace-cobalt .ace_print-margin {
   width: 1px;
-  background: #011e3a
+  background: #555555
 }
 
 .ace-cobalt {
@@ -23,7 +23,6 @@
 
 .ace-cobalt.ace_multiselect .ace_selection.ace_start {
   box-shadow: 0 0 3px 0px #002240;
-  border-radius: 2px
 }
 
 .ace-cobalt .ace_marker-layer .ace_step {

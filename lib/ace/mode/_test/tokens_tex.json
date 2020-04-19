@@ -77,9 +77,8 @@
 ],[
    "start",
   ["text"," x="],
-  ["keyword","\\left\\"],
-  ["paren.keyword.operator","{"],
-  ["text"," "],
+  ["keyword","\\left"],
+  ["text", "\\{ "],
   ["keyword","\\begin"],
   ["paren.keyword.operator","{"],
   ["nospell.text","array"],

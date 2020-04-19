@@ -50,18 +50,19 @@
   ["meta.tag.style.tag-name.xml","style"],
   ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
-   ["css-ruleset","css-start"],
+   "css-ruleset",
   ["text","        "],
   ["variable",".class"],
   ["text"," "],
   ["paren.lparen","{"]
 ],[
-   ["css-ruleset","css-start"],
+   "css-ruleset",
   ["text","            "],
   ["support.type","background"],
-  ["text",": "],
+  ["punctuation.operator",":"],
+  ["text"," "],
   ["constant.numeric","#124356"],
-  ["text",";"]
+  ["punctuation.operator",";"]
 ],[
    "css-start",
   ["text","        "],

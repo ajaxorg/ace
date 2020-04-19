@@ -278,7 +278,7 @@
             <div class="description"><p>Sets up a new <code>EditSession</code> and associates it with the given <code>Document</code> and <code>TextMode</code>.</p>
 
               <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">text</td><td class="argType" "><a href="document.html" class="" title="Document (class)" data-id="Document">Document</a> | <a href="https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/String" class="" title="String" data-id="String">String</a></td><td class="argDescription "><p>Required. If <code>text</code> is a <code>Document</code>, it associates the <code>EditSession</code> with it. Otherwise, a new <code>Document</code> is created, with the initial text</p>
-</td></tr><tr class="argumentRow "><td class="argName ">mode</td><td class="argType" "><a href="https://github.com/ajaxorg/ace/blob/master/lib/ace/mode/text.js" class="" title="TextMode" data-id="TextMode">TextMode</a></td><td class="argDescription "><p>Required. The inital language mode to use for the document</p>
+</td></tr><tr class="argumentRow "><td class="argName ">mode</td><td class="argType" "><a href="https://github.com/ajaxorg/ace/blob/master/lib/ace/mode/text.js" class="" title="TextMode" data-id="TextMode">TextMode</a></td><td class="argDescription "><p>Required. The initial language mode to use for the document</p>
 </td></tr></table>
             </div>
           </div>
@@ -670,7 +670,7 @@
             </div>
             <div class="description"><p>Adds a dynamic marker to the session.</p>
 
-              <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">marker</td><td class="argType" "><a href="https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Object" class="" title="Object" data-id="Object">Object</a></td><td class="argDescription "><p>Required. object with update method</p>
+              <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">marker</td><td class="argType" "><a href="https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Object" class="" title="Object" data-id="Object">Object</a></td><td class="argDescription "><p>Required. Object with update method</p>
 </td></tr><tr class="argumentRow "><td class="argName ">inFront</td><td class="argType" "><a href="https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Boolean" class="" title="Boolean" data-id="Boolean">Boolean</a></td><td class="argDescription "><p>Required. Set to <code>true</code> to establish a front marker</p>
 </td></tr></table>
             </div>
@@ -781,10 +781,10 @@
             </ul>
           </div>
           <div class="sideToggler">
-            <div id="ellipsis_EditSession.clearBreakpoint" class="ellipsis_description"><p>Removes a breakpoint on the row number given by <code>rows</code>. This function also emites the <code>&#39;changeBreakpoint&#39;</code> event.</p>
+            <div id="ellipsis_EditSession.clearBreakpoint" class="ellipsis_description"><p>Removes a breakpoint on the row number given by <code>rows</code>. This function also emits the <code>&#39;changeBreakpoint&#39;</code> event.</p>
 
             </div>
-            <div class="description"><p>Removes a breakpoint on the row number given by <code>rows</code>. This function also emites the <code>&#39;changeBreakpoint&#39;</code> event.</p>
+            <div class="description"><p>Removes a breakpoint on the row number given by <code>rows</code>. This function also emits the <code>&#39;changeBreakpoint&#39;</code> event.</p>
 
               <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">row</td><td class="argType" "><a href="https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Number" class="" title="Number" data-id="Number">Number</a></td><td class="argDescription "><p>Required. A row index</p>
 </td></tr></table>
@@ -1599,10 +1599,10 @@
             </ul>
           </div>
           <div class="sideToggler">
-            <div id="ellipsis_EditSession.getSelection" class="ellipsis_description"><p>Returns the string of the current selection.</p>
+            <div id="ellipsis_EditSession.getSelection" class="ellipsis_description"><p>Returns selection object.</p>
 
             </div>
-            <div class="description"><p>Returns the string of the current selection.</p>
+            <div class="description"><p>Returns selection object.</p>
 
             </div>
           </div>
@@ -2398,7 +2398,7 @@
             <div class="description"><p>Re-implements a previously undone change to your document.</p>
 
               <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">deltas</td><td class="argType" "><a href="https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Array" class="" title="Array" data-id="Array">Array</a></td><td class="argDescription "><p>Required. An array of previous changes</p>
-</td></tr><tr class="argumentRow "><td class="argName ">dontSelect</td><td class="argType" "><a href="https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Boolean" class="" title="Boolean" data-id="Boolean">Boolean</a></td><td class="argDescription "><p>Required. If <code>true</code>, doesn&#39;t select the range of where the change occured</p>
+</td></tr><tr class="argumentRow "><td class="argName ">dontSelect</td><td class="argType" "><a href="https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Boolean" class="" title="Boolean" data-id="Boolean">Boolean</a></td><td class="argDescription "><p>Required. If <code>true</code>, doesn&#39;t select the range of where the change occurred</p>
 </td></tr></table>
             </div>
           </div>
@@ -2833,7 +2833,7 @@
 
             </div>
             <div class="description"><p>Pass in <code>true</code> to enable overwrites in your session, or <code>false</code> to disable. </p>
-<p>If overwrites is enabled, any text you enter will type over any text after it. If the value of <code>overwrite</code> changes, this function also emites the <code>changeOverwrite</code> event.</p>
+<p>If overwrites is enabled, any text you enter will type over any text after it. If the value of <code>overwrite</code> changes, this function also emits the <code>changeOverwrite</code> event.</p>
 
               <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">overwrite</td><td class="argType" "><a href="https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Boolean" class="" title="Boolean" data-id="Boolean">Boolean</a></td><td class="argDescription "><p>Required. Defines wheter or not to set overwrites</p>
 </td></tr></table>
@@ -3218,7 +3218,7 @@
             <div class="description"><p>Reverts previous changes to your document.</p>
 
               <h4>Arguments</h4><table class="argumentTable argument-list table table-striped table-bordered"><tr class="argumentRow "><td class="argName ">deltas</td><td class="argType" "><a href="https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Array" class="" title="Array" data-id="Array">Array</a></td><td class="argDescription "><p>Required. An array of previous changes</p>
-</td></tr><tr class="argumentRow "><td class="argName ">dontSelect</td><td class="argType" "><a href="https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Boolean" class="" title="Boolean" data-id="Boolean">Boolean</a></td><td class="argDescription "><p>Required. If <code>true</code>, doesn&#39;t select the range of where the change occured</p>
+</td></tr><tr class="argumentRow "><td class="argName ">dontSelect</td><td class="argType" "><a href="https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Boolean" class="" title="Boolean" data-id="Boolean">Boolean</a></td><td class="argDescription "><p>Required. If <code>true</code>, doesn&#39;t select the range of where the change occurred</p>
 </td></tr></table>
             </div>
           </div>

@@ -40,8 +40,29 @@ var Renderer = require("ace/virtual_renderer").VirtualRenderer;
 var Editor = require("ace/editor").Editor;
 var MultiSelect = require("ace/multi_select").MultiSelect;
 
+var urlOptions = {}
+try {
+    window.location.search.slice(1).split(/[&]/).forEach(function(e) {
+        var parts = e.split("=");
+        urlOptions[decodeURIComponent(parts[0])] = decodeURIComponent(parts[1]);
+    });
+} catch(e) {
+    console.error(e);
+}
 exports.createEditor = function(el) {
     return new Editor(new Renderer(el));
+};
+
+exports.getOption = function(name) {
+    if (urlOptions[name])
+        return urlOptions[name];
+    return localStorage && localStorage.getItem(name);
+};
+
+exports.saveOption = function(name, value) {
+    if (value == false)
+        value = "";
+    localStorage && localStorage.setItem(name, value);
 };
 
 exports.createSplitEditor = function(el) {
@@ -133,23 +154,17 @@ exports.stripLeadingComments = function(str) {
 };
 
 /***************************/
-exports.saveOption = function(el, val) {
+function saveOptionFromElement(el, val) {
     if (!el.onchange && !el.onclick)
         return;
 
     if ("checked" in el) {
-        if (val !== undefined)
-            el.checked = val;
-
         localStorage && localStorage.setItem(el.id, el.checked ? 1 : 0);
     }
     else {
-        if (val !== undefined)
-            el.value = val;
-
         localStorage && localStorage.setItem(el.id, el.value);
     }
-};
+}
 
 exports.bindCheckbox = function(id, callback, noInit) {
     if (typeof id == "string")
@@ -159,12 +174,15 @@ exports.bindCheckbox = function(id, callback, noInit) {
         id = el.id;
     }
     var el = document.getElementById(id);
-    if (localStorage && localStorage.getItem(id))
+    
+    if (urlOptions[id])
+        el.checked = urlOptions[id] == "1";
+    else if (localStorage && localStorage.getItem(id))
         el.checked = localStorage.getItem(id) == "1";
 
     var onCheck = function() {
         callback(!!el.checked);
-        exports.saveOption(el);
+        saveOptionFromElement(el);
     };
     el.onclick = onCheck;
     noInit || onCheck();
@@ -178,12 +196,15 @@ exports.bindDropdown = function(id, callback, noInit) {
         var el = id;
         id = el.id;
     }
-    if (localStorage && localStorage.getItem(id))
+    
+    if (urlOptions[id])
+        el.value = urlOptions[id];
+    else if (localStorage && localStorage.getItem(id))
         el.value = localStorage.getItem(id);
 
     var onChange = function() {
         callback(el.value);
-        exports.saveOption(el);
+        saveOptionFromElement(el);
     };
 
     el.onchange = onChange;

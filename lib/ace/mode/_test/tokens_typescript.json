@@ -1,26 +1,27 @@
 [[
    "start",
-  ["keyword.operator.ts","class"],
-  ["text"," "],
-  ["identifier","Greeter"],
+  ["keyword","class"],
+  ["storage.type.variable.ts"," Greeter"],
   ["text"," "],
   ["paren.lparen","{"]
 ],[
    "start",
   ["text","\t"],
-  ["variable.parameter.function.ts","greeting"],
-  ["text",": "],
-  ["variable.parameter.function.ts","string"],
+  ["identifier","greeting"],
+  ["punctuation.operator",":"],
+  ["text"," "],
+  ["storage.type.variable.ts","string"],
   ["punctuation.operator",";"]
 ],[
    "start",
   ["text","\t"],
-  ["keyword.operator.ts","constructor"],
+  ["keyword","constructor"],
   ["text"," "],
   ["paren.lparen","("],
-  ["variable.parameter.function.ts","message"],
-  ["text",": "],
-  ["variable.parameter.function.ts","string"],
+  ["identifier","message"],
+  ["punctuation.operator",":"],
+  ["text"," "],
+  ["storage.type.variable.ts","string"],
   ["paren.rparen",")"],
   ["text"," "],
   ["paren.lparen","{"]
@@ -100,14 +101,18 @@
   ["string","'button'"],
   ["paren.rparen",")"]
 ],[
-   "no_regex",
+   "start",
   ["identifier","button"],
   ["punctuation.operator","."],
   ["identifier","innerText"],
   ["text"," "],
   ["keyword.operator","="],
   ["text"," "],
-  ["string","\"Say Hello\""]
+  ["keyword.operator","<"],
+  ["storage.type.variable.ts","string"],
+  ["keyword.operator",">"],
+  ["string","\"Say Hello\""],
+  ["punctuation.operator",";"]
 ],[
    "start",
   ["storage.type","button"],
@@ -126,10 +131,11 @@
   ["text","\t"],
   ["support.function","alert"],
   ["paren.lparen","("],
-  ["entity.name.function.ts","greeter.greet"],
+  ["identifier","greeter"],
+  ["punctuation.operator","."],
+  ["identifier","greet"],
   ["paren.lparen","("],
-  ["paren.rparen",")"],
-  ["paren.rparen",")"]
+  ["paren.rparen","))"]
 ],[
    "no_regex",
   ["paren.rparen","}"]
@@ -150,8 +156,7 @@
 ],[
    "start",
   ["keyword","class"],
-  ["text"," "],
-  ["identifier","Snake"],
+  ["storage.type.variable.ts"," Snake"],
   ["text"," "],
   ["keyword","extends"],
   ["text"," "],
@@ -161,7 +166,7 @@
 ],[
    "start",
   ["text","   "],
-  ["entity.name.function.ts","move"],
+  ["identifier","move"],
   ["paren.lparen","("],
   ["paren.rparen",")"],
   ["text"," "],
@@ -177,10 +182,10 @@
 ],[
    "start",
   ["text","       "],
-  ["storage.type.variable.ts","super"],
-  ["text","("],
-  ["keyword.other.ts","5"],
-  ["text",")"],
+  ["keyword","super"],
+  ["paren.lparen","("],
+  ["constant.numeric","5"],
+  ["paren.rparen",")"],
   ["punctuation.operator",";"]
 ],[
    "no_regex",
@@ -194,8 +199,7 @@
 ],[
    "start",
   ["keyword","class"],
-  ["text"," "],
-  ["identifier","Horse"],
+  ["storage.type.variable.ts"," Horse"],
   ["text"," "],
   ["keyword","extends"],
   ["text"," "],
@@ -205,7 +209,7 @@
 ],[
    "start",
   ["text","   "],
-  ["entity.name.function.ts","move"],
+  ["identifier","move"],
   ["paren.lparen","("],
   ["paren.rparen",")"],
   ["text"," "],
@@ -221,7 +225,7 @@
 ],[
    "start",
   ["text","       "],
-  ["keyword.operator.ts","super"],
+  ["keyword","super"],
   ["punctuation.operator","."],
   ["identifier","move"],
   ["paren.lparen","("],
@@ -239,7 +243,7 @@
    "no_regex"
 ],[
    "start",
-  ["identifier","module"],
+  ["keyword","module"],
   ["text"," "],
   ["identifier","Sayings"],
   ["text"," "],
@@ -247,29 +251,30 @@
 ],[
    "start",
   ["text","    "],
-  ["keyword.operator.ts","export"],
+  ["keyword","export"],
   ["text"," "],
-  ["keyword.operator.ts","class"],
-  ["text"," "],
-  ["identifier","Greeter"],
+  ["keyword","class"],
+  ["storage.type.variable.ts"," Greeter"],
   ["text"," "],
   ["paren.lparen","{"]
 ],[
    "start",
   ["text","        "],
-  ["variable.parameter.function.ts","greeting"],
-  ["text",": "],
-  ["variable.parameter.function.ts","string"],
+  ["identifier","greeting"],
+  ["punctuation.operator",":"],
+  ["text"," "],
+  ["storage.type.variable.ts","string"],
   ["punctuation.operator",";"]
 ],[
    "start",
   ["text","        "],
-  ["keyword.operator.ts","constructor"],
+  ["keyword","constructor"],
   ["text"," "],
   ["paren.lparen","("],
-  ["variable.parameter.function.ts","message"],
-  ["text",": "],
-  ["variable.parameter.function.ts","string"],
+  ["identifier","message"],
+  ["punctuation.operator",":"],
+  ["text"," "],
+  ["storage.type.variable.ts","string"],
   ["paren.rparen",")"],
   ["text"," "],
   ["paren.lparen","{"]
@@ -320,7 +325,7 @@
   ["paren.rparen","}"]
 ],[
    "start",
-  ["identifier","module"],
+  ["keyword","module"],
   ["text"," "],
   ["identifier","Mankala"],
   ["text"," "],
@@ -328,28 +333,27 @@
 ],[
    "start",
   ["text","   "],
-  ["keyword.operator.ts","export"],
+  ["keyword","export"],
   ["text"," "],
-  ["keyword.operator.ts","class"],
-  ["text"," "],
-  ["identifier","Features"],
+  ["keyword","class"],
+  ["storage.type.variable.ts"," Features"],
   ["text"," "],
   ["paren.lparen","{"]
 ],[
    "start",
   ["text","       "],
-  ["keyword.operator.ts","public"],
+  ["keyword","public"],
   ["text"," "],
   ["identifier","turnContinues"],
   ["text"," "],
   ["keyword.operator","="],
   ["text"," "],
-  ["constant.language.boolean","false"],
+  ["storage.type.variable.ts","false"],
   ["punctuation.operator",";"]
 ],[
    "start",
   ["text","       "],
-  ["keyword.operator.ts","public"],
+  ["keyword","public"],
   ["text"," "],
   ["identifier","seedStoredCount"],
   ["text"," "],
@@ -360,7 +364,7 @@
 ],[
    "start",
   ["text","       "],
-  ["keyword.operator.ts","public"],
+  ["keyword","public"],
   ["text"," "],
   ["identifier","capturedCount"],
   ["text"," "],
@@ -371,7 +375,7 @@
 ],[
    "start",
   ["text","       "],
-  ["keyword.operator.ts","public"],
+  ["keyword","public"],
   ["text"," "],
   ["identifier","spaceCaptured"],
   ["text"," "],
@@ -384,9 +388,9 @@
 ],[
    "start",
   ["text","       "],
-  ["keyword.operator.ts","public"],
+  ["keyword","public"],
   ["text"," "],
-  ["entity.name.function.ts","clear"],
+  ["identifier","clear"],
   ["paren.lparen","("],
   ["paren.rparen",")"],
   ["text"," "],
@@ -399,7 +403,7 @@
   ["text"," "],
   ["keyword.operator","="],
   ["text"," "],
-  ["constant.language.boolean","false"],
+  ["storage.type.variable.ts","false"],
   ["punctuation.operator",";"]
 ],[
    "start",

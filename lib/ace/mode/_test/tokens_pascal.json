@@ -1,295 +1,391 @@
 [[
-   "punctuation.definition.comment.pascal",
-  ["punctuation.definition.comment.pascal","(*"],
-  ["comment.block.pascal.one","****************************************************************************"]
+   "punctuation.definition.comment",
+  ["punctuation.definition.comment","(*"],
+  ["comment.block.one","****************************************************************************"]
 ],[
-   "punctuation.definition.comment.pascal",
-  ["comment.block.pascal.one"," * A simple bubble sort program.  Reads integers, one per line, and prints   *"]
+   "punctuation.definition.comment",
+  ["comment.block.one"," * A simple bubble sort program.  Reads integers, one per line, and prints   *"]
 ],[
-   "punctuation.definition.comment.pascal",
-  ["comment.block.pascal.one"," * them out in sorted order.  Blows up if there are more than 49.            *"]
-],[
-   "start",
-  ["comment.block.pascal.one"," ****************************************************************************"],
-  ["punctuation.definition.comment.pascal","*)"]
+   "punctuation.definition.comment",
+  ["comment.block.one"," * them out in sorted order.  Blows up if there are more than 49.            *"]
 ],[
    "start",
-  ["keyword.control.pascal","PROGRAM"],
-  ["text"," Sort(input"],
-  ["keyword.operator",","],
-  ["text"," output)"],
-  ["keyword.operator",";"]
+  ["comment.block.one"," ****************************************************************************"],
+  ["punctuation.definition.comment","*)"]
 ],[
    "start",
-  ["text","    "],
-  ["keyword.control.pascal","CONST"]
-],[
-   "start",
-  ["text","        "],
-  ["punctuation.definition.comment.pascal","(*"],
-  ["comment.block.pascal.one"," Max array size. "],
-  ["punctuation.definition.comment.pascal","*)"]
-],[
-   "start",
-  ["text","        MaxElts "],
-  ["keyword.operator","="],
+  ["keyword.control","PROGRAM"],
   ["text"," "],
-  ["constant.numeric.pascal","50"],
-  ["keyword.operator",";"]
-],[
-   "start",
-  ["text","    "],
-  ["keyword.control.pascal","TYPE"],
-  ["text"," "]
-],[
-   "start",
-  ["text","        "],
-  ["punctuation.definition.comment.pascal","(*"],
-  ["comment.block.pascal.one"," Type of the element array. "],
-  ["punctuation.definition.comment.pascal","*)"]
-],[
-   "start",
-  ["text","        IntArrType "],
-  ["keyword.operator","="],
-  ["text"," "],
-  ["keyword.control.pascal","ARRAY"],
-  ["text"," ["],
-  ["constant.numeric.pascal","1"],
-  ["text","..MaxElts] "],
-  ["keyword.control.pascal","OF"],
-  ["text"," Integer"],
-  ["keyword.operator",";"]
-],[
-   "start"
-],[
-   "start",
-  ["text","    "],
-  ["keyword.control.pascal","VAR"]
-],[
-   "start",
-  ["text","        "],
-  ["punctuation.definition.comment.pascal","(*"],
-  ["comment.block.pascal.one"," Indexes, exchange temp, array size. "],
-  ["punctuation.definition.comment.pascal","*)"]
-],[
-   "start",
-  ["text","        i"],
-  ["keyword.operator",","],
-  ["text"," j"],
-  ["keyword.operator",","],
-  ["text"," tmp"],
-  ["keyword.operator",","],
-  ["text"," size: integer"],
-  ["keyword.operator",";"]
-],[
-   "start"
-],[
-   "start",
-  ["text","        "],
-  ["punctuation.definition.comment.pascal","(*"],
-  ["comment.block.pascal.one"," Array of ints "],
-  ["punctuation.definition.comment.pascal","*)"]
-],[
-   "start",
-  ["text","        arr: IntArrType"],
-  ["keyword.operator",";"]
-],[
-   "start"
-],[
-   "start",
-  ["text","    "],
-  ["punctuation.definition.comment.pascal","(*"],
-  ["comment.block.pascal.one"," Read in the integers. "],
-  ["punctuation.definition.comment.pascal","*)"]
-],[
-   "start",
-  ["text","    "],
-  ["variable.pascal","PROCEDURE"],
-  ["text"," "],
-  ["storage.type.function.pascal","ReadArr"],
+  ["identifier","Sort"],
   ["text","("],
-  ["keyword.control.pascal","VAR"],
-  ["text"," size: Integer"],
+  ["identifier","input"],
+  ["keyword.operator",","],
+  ["text"," "],
+  ["identifier","output"],
+  ["text",")"],
+  ["keyword.operator",";"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword.control","CONST"]
+],[
+   "start",
+  ["text","        "],
+  ["punctuation.definition.comment","(*"],
+  ["comment.block.one"," Max array size. "],
+  ["punctuation.definition.comment","*)"]
+],[
+   "start",
+  ["text","        "],
+  ["identifier","MaxElts"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","50"],
+  ["keyword.operator",";"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword.control","TYPE"],
+  ["text"," "]
+],[
+   "start",
+  ["text","        "],
+  ["punctuation.definition.comment","(*"],
+  ["comment.block.one"," Type of the element array. "],
+  ["punctuation.definition.comment","*)"]
+],[
+   "start",
+  ["text","        "],
+  ["identifier","IntArrType"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["keyword.control","ARRAY"],
+  ["text"," ["],
+  ["constant.numeric","1"],
+  ["text",".."],
+  ["identifier","MaxElts"],
+  ["text","] "],
+  ["keyword.control","OF"],
+  ["text"," "],
+  ["identifier","Integer"],
+  ["keyword.operator",";"]
+],[
+   "start"
+],[
+   "start",
+  ["text","    "],
+  ["keyword.control","VAR"]
+],[
+   "start",
+  ["text","        "],
+  ["punctuation.definition.comment","(*"],
+  ["comment.block.one"," Indexes, exchange temp, array size. "],
+  ["punctuation.definition.comment","*)"]
+],[
+   "start",
+  ["text","        "],
+  ["identifier","i"],
+  ["keyword.operator",","],
+  ["text"," "],
+  ["identifier","j"],
+  ["keyword.operator",","],
+  ["text"," "],
+  ["identifier","tmp"],
+  ["keyword.operator",","],
+  ["text"," "],
+  ["identifier","size"],
+  ["text",": "],
+  ["identifier","integer"],
+  ["keyword.operator",";"]
+],[
+   "start"
+],[
+   "start",
+  ["text","        "],
+  ["punctuation.definition.comment","(*"],
+  ["comment.block.one"," Array of ints "],
+  ["punctuation.definition.comment","*)"]
+],[
+   "start",
+  ["text","        "],
+  ["identifier","arr"],
+  ["text",": "],
+  ["identifier","IntArrType"],
+  ["keyword.operator",";"]
+],[
+   "start"
+],[
+   "start",
+  ["text","    "],
+  ["punctuation.definition.comment","(*"],
+  ["comment.block.one"," Read in the integers. "],
+  ["punctuation.definition.comment","*)"]
+],[
+   "start",
+  ["text","    "],
+  ["variable","PROCEDURE"],
+  ["text"," "],
+  ["storage.type.function","ReadArr"],
+  ["text","("],
+  ["keyword.control","VAR"],
+  ["text"," "],
+  ["identifier","size"],
+  ["text",": "],
+  ["identifier","Integer"],
   ["keyword.operator",";"],
   ["text"," "],
-  ["keyword.control.pascal","VAR"],
-  ["text"," a: IntArrType)"],
+  ["keyword.control","VAR"],
+  ["text"," "],
+  ["identifier","a"],
+  ["text",": "],
+  ["identifier","IntArrType"],
+  ["text",")"],
   ["keyword.operator",";"],
   ["text"," "]
 ],[
    "start",
   ["text","        "],
-  ["keyword.control.pascal","BEGIN"]
+  ["keyword.control","BEGIN"]
 ],[
    "start",
-  ["text","            size "],
+  ["text","            "],
+  ["identifier","size"],
+  ["text"," "],
   ["keyword.operator",":="],
   ["text"," "],
-  ["constant.numeric.pascal","1"],
+  ["constant.numeric","1"],
   ["keyword.operator",";"]
 ],[
    "start",
   ["text","            "],
-  ["keyword.control.pascal","WHILE"],
+  ["keyword.control","WHILE"],
   ["text"," "],
-  ["keyword.control.pascal","NOT"],
-  ["text"," eof "],
-  ["keyword.control.pascal","DO"],
+  ["keyword.control","NOT"],
   ["text"," "],
-  ["keyword.control.pascal","BEGIN"]
+  ["identifier","eof"],
+  ["text"," "],
+  ["keyword.control","DO"],
+  ["text"," "],
+  ["keyword.control","BEGIN"]
 ],[
    "start",
-  ["text","                readln(a[size])"],
+  ["text","                "],
+  ["identifier","readln"],
+  ["text","("],
+  ["identifier","a"],
+  ["text","["],
+  ["identifier","size"],
+  ["text","])"],
   ["keyword.operator",";"]
 ],[
    "start",
   ["text","                "],
-  ["keyword.control.pascal","IF"],
+  ["keyword.control","IF"],
   ["text"," "],
-  ["keyword.control.pascal","NOT"],
-  ["text"," eof "],
-  ["keyword.control.pascal","THEN"],
+  ["keyword.control","NOT"],
+  ["text"," "],
+  ["identifier","eof"],
+  ["text"," "],
+  ["keyword.control","THEN"],
   ["text"," "]
 ],[
    "start",
-  ["text","                    size "],
+  ["text","                    "],
+  ["identifier","size"],
+  ["text"," "],
   ["keyword.operator",":="],
-  ["text"," size "],
+  ["text"," "],
+  ["identifier","size"],
+  ["text"," "],
   ["keyword.operator","+"],
   ["text"," "],
-  ["constant.numeric.pascal","1"]
+  ["constant.numeric","1"]
 ],[
    "start",
   ["text","            "],
-  ["keyword.control.pascal","END"]
+  ["keyword.control","END"]
 ],[
    "start",
   ["text","        "],
-  ["keyword.control.pascal","END"],
+  ["keyword.control","END"],
   ["keyword.operator",";"]
 ],[
    "start"
 ],[
    "start",
   ["text","    "],
-  ["keyword.control.pascal","BEGIN"]
+  ["keyword.control","BEGIN"]
 ],[
    "start",
   ["text","        "],
-  ["punctuation.definition.comment.pascal","(*"],
-  ["comment.block.pascal.one"," Read "],
-  ["punctuation.definition.comment.pascal","*)"]
+  ["punctuation.definition.comment","(*"],
+  ["comment.block.one"," Read "],
+  ["punctuation.definition.comment","*)"]
 ],[
    "start",
-  ["text","        ReadArr(size"],
+  ["text","        "],
+  ["identifier","ReadArr"],
+  ["text","("],
+  ["identifier","size"],
   ["keyword.operator",","],
-  ["text"," arr)"],
+  ["text"," "],
+  ["identifier","arr"],
+  ["text",")"],
   ["keyword.operator",";"]
 ],[
    "start"
 ],[
    "start",
   ["text","        "],
-  ["punctuation.definition.comment.pascal","(*"],
-  ["comment.block.pascal.one"," Sort using bubble sort. "],
-  ["punctuation.definition.comment.pascal","*)"]
+  ["punctuation.definition.comment","(*"],
+  ["comment.block.one"," Sort using bubble sort. "],
+  ["punctuation.definition.comment","*)"]
 ],[
    "start",
   ["text","        "],
-  ["keyword.control.pascal","FOR"],
-  ["text"," i "],
+  ["keyword.control","FOR"],
+  ["text"," "],
+  ["identifier","i"],
+  ["text"," "],
   ["keyword.operator",":="],
-  ["text"," size "],
+  ["text"," "],
+  ["identifier","size"],
+  ["text"," "],
   ["keyword.operator","-"],
   ["text"," "],
-  ["constant.numeric.pascal","1"],
-  ["text"," DOWNTO "],
-  ["constant.numeric.pascal","1"],
+  ["constant.numeric","1"],
   ["text"," "],
-  ["keyword.control.pascal","DO"]
+  ["identifier","DOWNTO"],
+  ["text"," "],
+  ["constant.numeric","1"],
+  ["text"," "],
+  ["keyword.control","DO"]
 ],[
    "start",
   ["text","            "],
-  ["keyword.control.pascal","FOR"],
-  ["text"," j "],
+  ["keyword.control","FOR"],
+  ["text"," "],
+  ["identifier","j"],
+  ["text"," "],
   ["keyword.operator",":="],
   ["text"," "],
-  ["constant.numeric.pascal","1"],
+  ["constant.numeric","1"],
   ["text"," "],
-  ["keyword.control.pascal","TO"],
-  ["text"," i "],
-  ["keyword.control.pascal","DO"],
+  ["keyword.control","TO"],
+  ["text"," "],
+  ["identifier","i"],
+  ["text"," "],
+  ["keyword.control","DO"],
   ["text"," "]
 ],[
    "start",
   ["text","                "],
-  ["keyword.control.pascal","IF"],
-  ["text"," arr[j] > arr[j "],
+  ["keyword.control","IF"],
+  ["text"," "],
+  ["identifier","arr"],
+  ["text","["],
+  ["identifier","j"],
+  ["text","] > "],
+  ["identifier","arr"],
+  ["text","["],
+  ["identifier","j"],
+  ["text"," "],
   ["keyword.operator","+"],
   ["text"," "],
-  ["constant.numeric.pascal","1"],
+  ["constant.numeric","1"],
   ["text","] "],
-  ["keyword.control.pascal","THEN"],
+  ["keyword.control","THEN"],
   ["text"," "],
-  ["keyword.control.pascal","BEGIN"]
+  ["keyword.control","BEGIN"]
 ],[
    "start",
-  ["text","                    tmp "],
-  ["keyword.operator",":="],
-  ["text"," arr[j]"],
-  ["keyword.operator",";"]
-],[
-   "start",
-  ["text","                    arr[j] "],
-  ["keyword.operator",":="],
-  ["text"," arr[j "],
-  ["keyword.operator","+"],
+  ["text","                    "],
+  ["identifier","tmp"],
   ["text"," "],
-  ["constant.numeric.pascal","1"],
+  ["keyword.operator",":="],
+  ["text"," "],
+  ["identifier","arr"],
+  ["text","["],
+  ["identifier","j"],
   ["text","]"],
   ["keyword.operator",";"]
 ],[
    "start",
-  ["text","                    arr[j "],
-  ["keyword.operator","+"],
-  ["text"," "],
-  ["constant.numeric.pascal","1"],
+  ["text","                    "],
+  ["identifier","arr"],
+  ["text","["],
+  ["identifier","j"],
   ["text","] "],
   ["keyword.operator",":="],
-  ["text"," tmp"],
+  ["text"," "],
+  ["identifier","arr"],
+  ["text","["],
+  ["identifier","j"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["constant.numeric","1"],
+  ["text","]"],
+  ["keyword.operator",";"]
+],[
+   "start",
+  ["text","                    "],
+  ["identifier","arr"],
+  ["text","["],
+  ["identifier","j"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["constant.numeric","1"],
+  ["text","] "],
+  ["keyword.operator",":="],
+  ["text"," "],
+  ["identifier","tmp"],
   ["keyword.operator",";"]
 ],[
    "start",
   ["text","                "],
-  ["keyword.control.pascal","END"],
+  ["keyword.control","END"],
   ["keyword.operator",";"]
 ],[
    "start"
 ],[
    "start",
   ["text","        "],
-  ["punctuation.definition.comment.pascal","(*"],
-  ["comment.block.pascal.one"," Print. "],
-  ["punctuation.definition.comment.pascal","*)"]
+  ["punctuation.definition.comment","(*"],
+  ["comment.block.one"," Print. "],
+  ["punctuation.definition.comment","*)"]
 ],[
    "start",
   ["text","        "],
-  ["keyword.control.pascal","FOR"],
-  ["text"," i "],
+  ["keyword.control","FOR"],
+  ["text"," "],
+  ["identifier","i"],
+  ["text"," "],
   ["keyword.operator",":="],
   ["text"," "],
-  ["constant.numeric.pascal","1"],
+  ["constant.numeric","1"],
   ["text"," "],
-  ["keyword.control.pascal","TO"],
-  ["text"," size "],
-  ["keyword.control.pascal","DO"]
+  ["keyword.control","TO"],
+  ["text"," "],
+  ["identifier","size"],
+  ["text"," "],
+  ["keyword.control","DO"]
 ],[
    "start",
-  ["text","            writeln(arr[i])"]
+  ["text","            "],
+  ["identifier","writeln"],
+  ["text","("],
+  ["identifier","arr"],
+  ["text","["],
+  ["identifier","i"],
+  ["text","])"]
 ],[
    "start",
   ["text","    "],
-  ["keyword.control.pascal","END"],
+  ["keyword.control","END"],
   ["text","."]
 ],[
    "start",

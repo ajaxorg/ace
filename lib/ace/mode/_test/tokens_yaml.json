@@ -10,13 +10,13 @@
 ],[
    "start",
   ["meta.tag","receipt"],
-  ["keyword",":     "],
-  ["text","Oz-Ware Purchase Invoice"]
+  ["keyword",":"],
+  ["text","     Oz-Ware Purchase Invoice"]
 ],[
    "start",
   ["meta.tag","date"],
-  ["keyword",":        "],
-  ["constant.numeric","2007-08-06"]
+  ["keyword",":"],
+  ["text","        2007-08-06"]
 ],[
    "start",
   ["meta.tag","customer"],
@@ -24,13 +24,13 @@
 ],[
    "start",
   ["meta.tag","    given"],
-  ["keyword",":   "],
-  ["text","Dorothy"]
+  ["keyword",":"],
+  ["text","   Dorothy"]
 ],[
    "start",
   ["meta.tag","    family"],
-  ["keyword",":  "],
-  ["text","Gale"]
+  ["keyword",":"],
+  ["text","  Gale"]
 ],[
    "start"
 ],[
@@ -41,25 +41,27 @@
    "start",
   ["list.markup","    - "],
   ["meta.tag","part_no"],
-  ["keyword",":   "],
+  ["keyword",":"],
+  ["text","   "],
   ["string","'A4786'"]
 ],[
    "start",
   ["meta.tag","      descrip"],
-  ["keyword",":   "],
-  ["text","Water Bucket "],
+  ["keyword",":"],
+  ["text","   Water Bucket "],
   ["paren.lparen","("],
-  ["text","Filled"],
-  ["paren.rparen",")"]
+  ["text","Filled)"]
 ],[
    "start",
   ["meta.tag","      price"],
-  ["keyword",":     "],
+  ["keyword",":"],
+  ["text","     "],
   ["constant.numeric","1.47"]
 ],[
    "start",
   ["meta.tag","      quantity"],
-  ["keyword",":  "],
+  ["keyword",":"],
+  ["text","  "],
   ["constant.numeric","4"]
 ],[
    "start"
@@ -67,84 +69,253 @@
    "start",
   ["list.markup","    - "],
   ["meta.tag","part_no"],
-  ["keyword",":   "],
+  ["keyword",":"],
+  ["text","   "],
   ["string","'E1628'"]
 ],[
    "start",
   ["meta.tag","      descrip"],
-  ["keyword",":   "],
-  ["text","High Heeled "],
+  ["keyword",":"],
+  ["text","   High Heeled "],
   ["string","\"Ruby\""],
   ["text"," Slippers"]
 ],[
    "start",
   ["meta.tag","      size"],
-  ["keyword",":      "],
+  ["keyword",":"],
+  ["text","      "],
   ["constant.numeric","8"]
 ],[
    "start",
   ["meta.tag","      price"],
-  ["keyword",":     "],
+  ["keyword",":"],
+  ["text","     "],
   ["constant.numeric","100.27"]
 ],[
    "start",
   ["meta.tag","      quantity"],
-  ["keyword",":  "],
+  ["keyword",":"],
+  ["text","  "],
   ["constant.numeric","1"]
 ],[
    "start"
 ],[
    "start",
   ["meta.tag","bill-to"],
-  ["keyword",":  "],
+  ["keyword",":"],
+  ["text","  "],
   ["constant.language","&id001"]
 ],[
-   "qqstring",
+   ["mlStringPre",4],
   ["meta.tag","    street"],
-  ["keyword",": "],
+  ["keyword",":"],
+  ["text"," "],
   ["string","|"]
 ],[
-   "qqstring",
-  ["string","            123 Tornado Alley"]
+   ["mlString",11],
+  ["indent","            "],
+  ["string","123 Tornado Alley"]
 ],[
-   "qqstring",
-  ["string","            Suite 16"]
+   ["mlString",11],
+  ["indent","            "],
+  ["string","Suite 16"]
 ],[
    "start",
-  ["meta.tag","    city"],
-  ["keyword",":   "],
-  ["text","East Centerville"]
+  ["indent","    "],
+  ["meta.tag","city"],
+  ["keyword",":"],
+  ["text","   East Centerville"]
 ],[
    "start",
   ["meta.tag","    state"],
-  ["keyword",":  "],
-  ["text","KS"]
+  ["keyword",":"],
+  ["text","  KS"]
 ],[
    "start"
 ],[
    "start",
   ["meta.tag","ship-to"],
-  ["keyword",":  "],
+  ["keyword",":"],
+  ["text","  "],
   ["constant.language","*id001"]
 ],[
    "start"
 ],[
-   "qqstring",
+   ["mlStringPre",0],
   ["meta.tag","specialDelivery"],
-  ["keyword",":  "],
+  ["keyword",":"],
+  ["text","  "],
   ["string",">"]
 ],[
-   "qqstring",
-  ["string","    Follow the Yellow Brick"]
+   ["mlString",3],
+  ["indent","    "],
+  ["string","Follow the Yellow Brick"]
 ],[
-   "qqstring",
-  ["string","    Road to the Emerald City."]
+   ["mlString",3],
+  ["indent","    "],
+  ["string","Road to the Emerald City."]
 ],[
-   "qqstring",
-  ["string","    Pay no attention to the"]
+   ["mlString",3],
+  ["indent","    "],
+  ["string","Pay no attention to the"]
 ],[
-   "qqstring",
-  ["string","    man behind the curtain."]
+   ["mlString",3],
+  ["indent","    "],
+  ["string","man behind the curtain."]
 ],[
-   "qqstring"
+   ["mlString",3]
+],[
+   ["mlStringPre",0],
+  ["list.markup","? "],
+  ["text","       "],
+  ["string","|"]
+],[
+   ["mlString",0],
+  ["indent"," "],
+  ["string","block key #1"]
+],[
+   ["mlString",0],
+  ["indent"," "],
+  ["string","kkk"]
+],[
+   ["mlStringPre",2],
+  ["text",": - "],
+  ["string","|"]
+],[
+   ["mlString",2],
+  ["indent","   "],
+  ["string","one "]
+],[
+   ["mlStringPre",2],
+  ["indent","  "],
+  ["text","- "],
+  ["string","|"]
+],[
+   ["mlString",2],
+  ["indent","   "],
+  ["string","tw #o "]
+],[
+   ["mlStringPre",4],
+  ["indent","  "],
+  ["text","- ? "],
+  ["string","|- "]
+],[
+   ["mlStringPre",4]
+],[
+   ["mlString",4],
+  ["indent","     "],
+  ["string","as #d"]
+],[
+   ["mlString",4]
+],[
+   ["mlString",4],
+  ["indent","     "],
+  ["string","q"]
+],[
+   "start",
+  ["indent","    "],
+  ["text","b"]
+],[
+   "start",
+  ["list.markup","  - "]
+],[
+   "start",
+  ["meta.tag","     x"],
+  ["keyword",":"],
+  ["text"," xx"]
+],[
+   "start",
+  ["meta.tag","     r"],
+  ["keyword",":"],
+  ["text"," xx"]
+],[
+   "start",
+  ["meta.tag","     z"],
+  ["keyword",":"],
+  ["text"," sss"]
+],[
+   "start",
+  ["meta.tag","     zdd"],
+  ["keyword",":"],
+  ["text"," dddd"]
+],[
+   "start",
+  ["text","     "],
+  ["string","\"block key 2\""],
+  ["text"," : "]
+],[
+   "start",
+  ["list.markup","       - "],
+  ["text","two "],
+  ["comment","# block value"]
+],[
+   ["mlStringPre",9],
+  ["list.markup","       - "],
+  ["text","? "],
+  ["string","| "]
+],[
+   ["mlString",9],
+  ["indent","          "],
+  ["string","as #d"]
+],[
+   ["mlStringPre",9],
+  ["indent","         "],
+  ["text",": "],
+  ["string","|"]
+],[
+   ["mlString",9],
+  ["indent","          "],
+  ["string","asdadas #d"]
+],[
+   ["mlString",9],
+  ["indent","          "],
+  ["string","asd"]
+],[
+   "start",
+  ["indent","         "],
+  ["meta.tag","a"],
+  ["keyword",":"],
+  ["text"," "],
+  ["constant.numeric","2"]
+],[
+   ["mlStringPre",9],
+  ["list.markup","       - "],
+  ["text","? "],
+  ["string","| "]
+],[
+   ["mlString",9],
+  ["indent","          "],
+  ["string","asdas #d"]
+],[
+   ["mlStringPre",9],
+  ["indent","         "],
+  ["text",":  "],
+  ["string","|"]
+],[
+   ["mlString",9],
+  ["indent","          "],
+  ["string","xx"]
+],[
+   ["mlString",12],
+  ["indent","         "],
+  ["meta.tag","s"],
+  ["keyword",":"],
+  ["text"," "],
+  ["string","|4+ #comment"]
+],[
+   ["mlString",12],
+  ["indent","               "],
+  ["string","7"]
+],[
+   ["mlString",12]
+],[
+   ["mlString",12],
+  ["indent","             "],
+  ["string","a "]
+],[
+   "start",
+  ["indent","           "],
+  ["text","a"]
+],[
+   "start"
 ]]

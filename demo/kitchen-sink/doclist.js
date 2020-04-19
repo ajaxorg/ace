@@ -140,7 +140,7 @@ function prepareDocList(docs) {
         if (doc.desc.length > 18)
             doc.desc = doc.desc.slice(0, 7) + ".." + doc.desc.slice(-9);
 
-        fileCache[doc.name] = doc;
+        fileCache[doc.name.toLowerCase()] = doc;
         list.push(doc);
     }
 
@@ -148,7 +148,7 @@ function prepareDocList(docs) {
 }
 
 function loadDoc(name, callback) {
-    var doc = fileCache[name];
+    var doc = fileCache[name.toLowerCase()];
     if (!doc)
         return callback(null);
 
@@ -170,7 +170,7 @@ function loadDoc(name, callback) {
 }
 
 function saveDoc(name, callback) {
-    var doc = fileCache[name] || name;
+    var doc = fileCache[name.toLowerCase()] || name;
     if (!doc || !doc.session)
         return callback("Unknown document: " + name);
 
@@ -185,8 +185,11 @@ function saveDoc(name, callback) {
 }
 
 function upload(url, data, callback) {
-    url = net.qualifyURL(url);
-    if (!/https?:/.test(url))
+    var absUrl = net.qualifyURL(url);
+    if (/^file:/.test(absUrl))
+        absUrl = "http://localhost:8888/" + url;
+    url = absUrl;
+    if (!/^https?:/.test(url))
         return callback(new Error("Unsupported url scheme"));
     var xhr = new XMLHttpRequest();
     xhr.open("PUT", url, true);
@@ -196,8 +199,7 @@ function upload(url, data, callback) {
         }
     };
     xhr.send(data);
-};
-
+}
 
 module.exports = {
     fileCache: fileCache,
@@ -206,7 +208,7 @@ module.exports = {
     hugeDocs: prepareDocList(hugeDocs),
     initDoc: initDoc,
     loadDoc: loadDoc,
-    saveDoc: saveDoc,
+    saveDoc: saveDoc
 };
 module.exports.all = {
     "Mode Examples": module.exports.docs,

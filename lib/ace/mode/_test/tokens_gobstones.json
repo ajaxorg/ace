@@ -1,0 +1,1170 @@
+[[
+   "block_comment_end",
+  ["comment.block.dash-asterisc.gobstones","/*"]
+],[
+   "block_comment_end",
+  ["comment.block.dash-asterisc.gobstones"," * A Gobstones implementation of Conwey's Game of Life"]
+],[
+   "block_comment_end",
+  ["comment.block.dash-asterisc.gobstones"," * that tries to use most of Gobstones syntax."]
+],[
+   "block_comment_end",
+  ["comment.block.dash-asterisc.gobstones"," *"]
+],[
+   "block_comment_end",
+  ["comment.block.dash-asterisc.gobstones"," * Check out more about Gobstones at http://gobstones.org"]
+],[
+   "start",
+  ["comment.block.dash-asterisc.gobstones"," */"]
+],[
+   "start"
+],[
+   "start",
+  ["comment.line.double-dash.gobstones","-----------------------------------------------------------"]
+],[
+   "start",
+  ["comment.line.double-dash.gobstones","--         HELPERS TO MOVE AROUND ALL THE BOARD          --"]
+],[
+   "start",
+  ["comment.line.double-dash.gobstones","-----------------------------------------------------------"]
+],[
+   "start"
+],[
+   "start",
+  ["comment.line.double-slash.gobstones","// This helpers allow the user to move around the board"]
+],[
+   "start",
+  ["comment.line.double-slash.gobstones","// one cell at a time"]
+],[
+   "start",
+  ["storage.type.definitions.gobstones","procedure"],
+  ["text"," "],
+  ["identifier.gobstones","GoToStartOfBoard"],
+  ["lparen","("],
+  ["identifier.gobstones","firstDir"],
+  ["comma.gobstones",","],
+  ["text"," "],
+  ["identifier.gobstones","secondDir"],
+  ["rparen",")"],
+  ["text"," "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["support.function.gobstones","IrAlBorde"],
+  ["lparen","("],
+  ["support.variable.gobstones","opuesto"],
+  ["lparen","("],
+  ["identifier.gobstones","firstDir"],
+  ["rparen","))"]
+],[
+   "start",
+  ["text","    "],
+  ["support.function.gobstones","IrAlBorde"],
+  ["lparen","("],
+  ["support.variable.gobstones","opuesto"],
+  ["lparen","("],
+  ["identifier.gobstones","secondDir"],
+  ["rparen","))"]
+],[
+   "start",
+  ["rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["storage.type.definitions.gobstones","function"],
+  ["text"," "],
+  ["identifier.gobstones","isEndOfBoard"],
+  ["lparen","("],
+  ["identifier.gobstones","firstDir"],
+  ["comma.gobstones",","],
+  ["text"," "],
+  ["identifier.gobstones","secondDir"],
+  ["rparen",")"],
+  ["text"," "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["storage.type.definitions.gobstones","return"],
+  ["text"," "],
+  ["lparen","("],
+  ["keyword.operator.boolean.gobstones","not"],
+  ["text"," "],
+  ["support.variable.gobstones","puedeMover"],
+  ["lparen","("],
+  ["identifier.gobstones","firstDir"],
+  ["rparen",")"],
+  ["text"," "],
+  ["keyword.operator.boolean.gobstones","&&"],
+  ["text"," "],
+  ["keyword.operator.boolean.gobstones","not"],
+  ["text"," "],
+  ["support.variable.gobstones","puedeMover"],
+  ["lparen","("],
+  ["identifier.gobstones","secondDir"],
+  ["rparen","))"]
+],[
+   "start",
+  ["rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["storage.type.definitions.gobstones","procedure"],
+  ["text"," "],
+  ["identifier.gobstones","NextCellOfTheBoard"],
+  ["lparen","("],
+  ["identifier.gobstones","firstDir"],
+  ["comma.gobstones",","],
+  ["text"," "],
+  ["identifier.gobstones","secondDir"],
+  ["rparen",")"],
+  ["text"," "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword.control.commands.alternatives.gobstones","if"],
+  ["text"," "],
+  ["lparen","("],
+  ["support.variable.gobstones","puedeMover"],
+  ["lparen","("],
+  ["identifier.gobstones","firstDir"],
+  ["rparen","))"],
+  ["text"," "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","        "],
+  ["support.function.gobstones","Mover"],
+  ["lparen","("],
+  ["identifier.gobstones","firstDir"],
+  ["rparen",")"]
+],[
+   "start",
+  ["text","    "],
+  ["rparen","}"],
+  ["text"," "],
+  ["keyword.control.commands.alternatives.gobstones","else"],
+  ["text"," "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","        "],
+  ["support.function.gobstones","IrAlBorde"],
+  ["lparen","("],
+  ["support.variable.gobstones","opuesto"],
+  ["lparen","("],
+  ["identifier.gobstones","firstDir"],
+  ["rparen","))"]
+],[
+   "start",
+  ["text","        "],
+  ["support.function.gobstones","Mover"],
+  ["lparen","("],
+  ["identifier.gobstones","secondDir"],
+  ["rparen",")"]
+],[
+   "start",
+  ["text","    "],
+  ["rparen","}"]
+],[
+   "start",
+  ["rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["comment.line.double-dash.gobstones","-----------------------------------------------------------"]
+],[
+   "start",
+  ["comment.line.double-dash.gobstones","--                   TYPE DECLARATIONS                   --"]
+],[
+   "start",
+  ["comment.line.double-dash.gobstones","-----------------------------------------------------------"]
+],[
+   "start",
+  ["comment.line.double-slash.gobstones","// The cell type declarations"]
+],[
+   "start",
+  ["storage.type.types.gobstones","type"],
+  ["text"," "],
+  ["identifier.gobstones","CellStatus"],
+  ["text"," "],
+  ["storage.type.types.gobstones","is"],
+  ["text"," "],
+  ["storage.type.types.gobstones","variant"],
+  ["text"," "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["storage.type.types.gobstones","case"],
+  ["text"," "],
+  ["identifier.gobstones","Alive"],
+  ["text"," "],
+  ["lparen","{"],
+  ["rparen","}"]
+],[
+   "start",
+  ["text","    "],
+  ["storage.type.types.gobstones","case"],
+  ["text"," "],
+  ["identifier.gobstones","Dead"],
+  ["text","  "],
+  ["lparen","{"],
+  ["rparen","}"]
+],[
+   "start",
+  ["rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["storage.type.types.gobstones","type"],
+  ["text"," "],
+  ["identifier.gobstones","Cell"],
+  ["text"," "],
+  ["storage.type.types.gobstones","is"],
+  ["text"," "],
+  ["storage.type.types.gobstones","record"],
+  ["text"," "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["storage.type.types.gobstones","field"],
+  ["text"," "],
+  ["identifier.gobstones","status"],
+  ["text","  "],
+  ["comment.line.number-sign.gobstones","# CellStatus"]
+],[
+   "start",
+  ["text","    "],
+  ["storage.type.types.gobstones","field"],
+  ["text"," "],
+  ["identifier.gobstones","color"],
+  ["text","   "],
+  ["comment.line.number-sign.gobstones","# Color"]
+],[
+   "start",
+  ["rparen","}"]
+],[
+   "start"
+],[
+   "start"
+],[
+   "start",
+  ["comment.line.double-dash.gobstones","-----------------------------------------------------------"]
+],[
+   "start",
+  ["comment.line.double-dash.gobstones","--                  PROGRAM DEFINITION                   --"]
+],[
+   "start",
+  ["comment.line.double-dash.gobstones","-----------------------------------------------------------"]
+],[
+   "start",
+  ["storage.type.definitions.gobstones","interactive"],
+  ["text"," "],
+  ["storage.type.definitions.gobstones","program"],
+  ["text"," "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["comment.line.number-sign.gobstones","# Map key press to actions"]
+],[
+   "start",
+  ["text","    "],
+  ["variable.language.gobstones","K_UP"],
+  ["text","     "],
+  ["keyword.operator.other.gobstones","->"],
+  ["text"," "],
+  ["lparen","{"],
+  ["text"," "],
+  ["identifier.gobstones","PrepareNextTick"],
+  ["lparen","("],
+  ["rparen",")"],
+  ["text","  "],
+  ["rparen","}"]
+],[
+   "start",
+  ["text","    "],
+  ["variable.language.gobstones","K_RIGHT"],
+  ["text","  "],
+  ["keyword.operator.other.gobstones","->"],
+  ["text"," "],
+  ["lparen","{"],
+  ["text"," "],
+  ["identifier.gobstones","CompleteNextTick"],
+  ["lparen","("],
+  ["rparen",")"],
+  ["text"," "],
+  ["rparen","}"]
+],[
+   "start",
+  ["text","    "],
+  ["variable.language.gobstones","K_RETURN"],
+  ["text"," "],
+  ["keyword.operator.other.gobstones","->"],
+  ["text"," "],
+  ["lparen","{"],
+  ["text"," "],
+  ["identifier.gobstones","SimulateNextTick"],
+  ["lparen","("],
+  ["rparen",")"],
+  ["text"," "],
+  ["rparen","}"]
+],[
+   "start",
+  ["rparen","}"]
+],[
+   "start"
+],[
+   "block_comment_end",
+  ["comment.block.dash-asterisc.gobstones","/*"]
+],[
+   "block_comment_end",
+  ["comment.block.dash-asterisc.gobstones","program {"]
+],[
+   "block_comment_end",
+  ["comment.block.dash-asterisc.gobstones","    return ( numberOfNeighbors())"]
+],[
+   "block_comment_end",
+  ["comment.block.dash-asterisc.gobstones","}"]
+],[
+   "start",
+  ["comment.block.dash-asterisc.gobstones","*/"]
+],[
+   "start",
+  ["comment.line.double-dash.gobstones","-----------------------------------------------------------"]
+],[
+   "start",
+  ["comment.line.double-dash.gobstones","--                      FUNCTIONS                        --"]
+],[
+   "start",
+  ["comment.line.double-dash.gobstones","-----------------------------------------------------------"]
+],[
+   "start",
+  ["storage.type.definitions.gobstones","function"],
+  ["text"," "],
+  ["identifier.gobstones","isCellAlive"],
+  ["lparen","("],
+  ["rparen",")"],
+  ["text"," "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["storage.type.definitions.gobstones","return"],
+  ["text"," "],
+  ["lparen","("],
+  ["support.variable.gobstones","hayBolitas"],
+  ["lparen","("],
+  ["constant.language.colors.gobstones","Verde"],
+  ["rparen","))"]
+],[
+   "start",
+  ["rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["storage.type.definitions.gobstones","function"],
+  ["text"," "],
+  ["identifier.gobstones","cellStatus"],
+  ["lparen","("],
+  ["rparen",")"],
+  ["text"," "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["storage.type.definitions.gobstones","return"],
+  ["text"," "],
+  ["lparen","("]
+],[
+   "start",
+  ["text","        "],
+  ["keyword.control.expressions.alternatives.gobstones","choose"]
+],[
+   "start",
+  ["text","            "],
+  ["identifier.gobstones","Alive"],
+  ["text"," "],
+  ["keyword.control.expressions.alternatives.gobstones","when"],
+  ["text"," "],
+  ["lparen","("],
+  ["identifier.gobstones","isCellAlive"],
+  ["lparen","("],
+  ["rparen","))"]
+],[
+   "start",
+  ["text","            "],
+  ["identifier.gobstones","Dead"],
+  ["text"," "],
+  ["keyword.control.expressions.alternatives.gobstones","otherwise"]
+],[
+   "start",
+  ["text","    "],
+  ["rparen",")"]
+],[
+   "start",
+  ["rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["storage.type.definitions.gobstones","function"],
+  ["text"," "],
+  ["identifier.gobstones","readCell"],
+  ["lparen","("],
+  ["rparen",")"],
+  ["text"," "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["storage.type.definitions.gobstones","return"],
+  ["text"," "],
+  ["lparen","("]
+],[
+   "start",
+  ["text","        "],
+  ["identifier.gobstones","Cell"],
+  ["lparen","("],
+  ["identifier.gobstones","color"],
+  ["text"," "],
+  ["keyword.operator.other.gobstones","<-"],
+  ["text"," "],
+  ["constant.language.colors.gobstones","Verde"],
+  ["comma.gobstones",","],
+  ["text"," "],
+  ["identifier.gobstones","status"],
+  ["text"," "],
+  ["keyword.operator.other.gobstones","<-"],
+  ["text"," "],
+  ["identifier.gobstones","cellStatus"],
+  ["lparen","("],
+  ["rparen","))"]
+],[
+   "start",
+  ["text","    "],
+  ["rparen",")"]
+],[
+   "start",
+  ["rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["storage.type.definitions.gobstones","function"],
+  ["text"," "],
+  ["identifier.gobstones","numberOfNeighbors"],
+  ["lparen","("],
+  ["rparen",")"],
+  ["text"," "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier.gobstones","amountOfNeighbors"],
+  ["text"," := "],
+  ["constant.numeric.gobstones","0"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword.control.commands.repetitions.gobstones","foreach"],
+  ["text"," "],
+  ["identifier.gobstones","dir"],
+  ["text"," "],
+  ["keyword.control.commands.repetitions.gobstones","in"],
+  ["text"," "],
+  ["keyword.operator.other.gobstones","["],
+  ["support.variable.gobstones","minDir"],
+  ["lparen","("],
+  ["rparen",")"],
+  ["text"," .. "],
+  ["support.variable.gobstones","maxDir"],
+  ["lparen","("],
+  ["rparen",")"],
+  ["keyword.operator.other.gobstones","]"],
+  ["text"," "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","        "],
+  ["identifier.gobstones","amountOfNeighbors"],
+  ["text"," := "],
+  ["identifier.gobstones","amountOfNeighbors"],
+  ["text"," "],
+  ["keyword.operator.numeric.gobstones","+"],
+  ["text"," "],
+  ["identifier.gobstones","aliveCellsAt"],
+  ["lparen","("],
+  ["identifier.gobstones","dir"],
+  ["rparen",")"]
+],[
+   "start",
+  ["text","    "],
+  ["rparen","}"]
+],[
+   "start",
+  ["text","    "],
+  ["storage.type.definitions.gobstones","return"],
+  ["text"," "],
+  ["lparen","("],
+  ["identifier.gobstones","amountOfNeighbors"],
+  ["rparen",")"]
+],[
+   "start",
+  ["rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["storage.type.definitions.gobstones","function"],
+  ["text"," "],
+  ["identifier.gobstones","aliveCellsAt"],
+  ["lparen","("],
+  ["identifier.gobstones","dir"],
+  ["rparen",")"],
+  ["text"," "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier.gobstones","firstCompare"],
+  ["text"," := "],
+  ["support.variable.gobstones","puedeMover"],
+  ["lparen","("],
+  ["identifier.gobstones","dir"],
+  ["rparen",")"],
+  ["text"," "],
+  ["keyword.operator.boolean.gobstones","&&"],
+  ["text"," "],
+  ["identifier.gobstones","hasAliveCellAt"],
+  ["lparen","("],
+  ["identifier.gobstones","dir"],
+  ["rparen",")"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier.gobstones","secondCompare"],
+  ["text"," := "],
+  ["support.variable.gobstones","puedeMover"],
+  ["lparen","("],
+  ["identifier.gobstones","dir"],
+  ["rparen",")"],
+  ["text"," "],
+  ["keyword.operator.boolean.gobstones","&&"],
+  ["text"," "],
+  ["support.variable.gobstones","puedeMover"],
+  ["lparen","("],
+  ["support.variable.gobstones","siguiente"],
+  ["lparen","("],
+  ["identifier.gobstones","dir"],
+  ["rparen","))"],
+  ["text"," "],
+  ["keyword.operator.boolean.gobstones","&&"],
+  ["text"," "],
+  ["identifier.gobstones","hasAliveCellAtD"],
+  ["lparen","("],
+  ["identifier.gobstones","dir"],
+  ["rparen",")"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier.gobstones","value"],
+  ["text"," :="]
+],[
+   "start",
+  ["text","        "],
+  ["keyword.control.expressions.alternatives.gobstones","matching"],
+  ["text"," "],
+  ["lparen","("],
+  ["identifier.gobstones","firstCompare"],
+  ["rparen",")"],
+  ["text"," "],
+  ["keyword.control.expressions.alternatives.gobstones","select"]
+],[
+   "start",
+  ["text","            "],
+  ["constant.numeric.gobstones","1"],
+  ["text"," "],
+  ["keyword.control.expressions.alternatives.gobstones","on"],
+  ["text"," "],
+  ["constant.language.boolean.gobstones","True"]
+],[
+   "start",
+  ["text","            "],
+  ["constant.numeric.gobstones","0"],
+  ["text"," "],
+  ["keyword.control.expressions.alternatives.gobstones","otherwise"]
+],[
+   "start",
+  ["text","        "],
+  ["keyword.operator.numeric.gobstones","+"]
+],[
+   "start",
+  ["text","        "],
+  ["keyword.control.expressions.alternatives.gobstones","matching"],
+  ["text"," "],
+  ["lparen","("],
+  ["identifier.gobstones","secondCompare"],
+  ["rparen",")"],
+  ["text"," "],
+  ["keyword.control.expressions.alternatives.gobstones","select"]
+],[
+   "start",
+  ["text","            "],
+  ["constant.numeric.gobstones","1"],
+  ["text"," "],
+  ["keyword.control.expressions.alternatives.gobstones","on"],
+  ["text"," "],
+  ["constant.language.boolean.gobstones","True"]
+],[
+   "start",
+  ["text","            "],
+  ["constant.numeric.gobstones","0"],
+  ["text"," "],
+  ["keyword.control.expressions.alternatives.gobstones","otherwise"]
+],[
+   "start",
+  ["text","    "],
+  ["storage.type.definitions.gobstones","return"],
+  ["text"," "],
+  ["lparen","("],
+  ["identifier.gobstones","value"],
+  ["rparen",")"]
+],[
+   "start",
+  ["rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["storage.type.definitions.gobstones","function"],
+  ["text"," "],
+  ["identifier.gobstones","hasAliveCellAt"],
+  ["lparen","("],
+  ["identifier.gobstones","dir"],
+  ["rparen",")"],
+  ["text"," "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["support.function.gobstones","Mover"],
+  ["lparen","("],
+  ["identifier.gobstones","dir"],
+  ["rparen",")"]
+],[
+   "start",
+  ["text","    "],
+  ["storage.type.definitions.gobstones","return"],
+  ["text"," "],
+  ["lparen","("],
+  ["identifier.gobstones","isCellAlive"],
+  ["lparen","("],
+  ["rparen","))"]
+],[
+   "start",
+  ["rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["storage.type.definitions.gobstones","function"],
+  ["text"," "],
+  ["identifier.gobstones","hasAliveCellAtD"],
+  ["lparen","("],
+  ["identifier.gobstones","dir"],
+  ["rparen",")"],
+  ["text"," "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["support.function.gobstones","Mover"],
+  ["lparen","("],
+  ["identifier.gobstones","dir"],
+  ["rparen",")"]
+],[
+   "start",
+  ["text","    "],
+  ["support.function.gobstones","Mover"],
+  ["lparen","("],
+  ["support.variable.gobstones","siguiente"],
+  ["lparen","("],
+  ["identifier.gobstones","dir"],
+  ["rparen","))"]
+],[
+   "start",
+  ["text","    "],
+  ["storage.type.definitions.gobstones","return"],
+  ["text"," "],
+  ["lparen","("],
+  ["identifier.gobstones","isCellAlive"],
+  ["lparen","("],
+  ["rparen","))"]
+],[
+   "start",
+  ["rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["comment.line.double-dash.gobstones","-----------------------------------------------------------"]
+],[
+   "start",
+  ["comment.line.double-dash.gobstones","--              ROCEDURES DECLARATIONS                   --"]
+],[
+   "start",
+  ["comment.line.double-dash.gobstones","-----------------------------------------------------------"]
+],[
+   "start",
+  ["storage.type.definitions.gobstones","procedure"],
+  ["text"," "],
+  ["identifier.gobstones","TagAsReanimated"],
+  ["lparen","("],
+  ["rparen",")"],
+  ["text"," "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["support.function.gobstones","Poner"],
+  ["lparen","("],
+  ["constant.language.colors.gobstones","Azul"],
+  ["rparen",")"]
+],[
+   "start",
+  ["rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["storage.type.definitions.gobstones","procedure"],
+  ["text"," "],
+  ["identifier.gobstones","TagAsDead"],
+  ["lparen","("],
+  ["rparen",")"],
+  ["text"," "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["support.function.gobstones","Poner"],
+  ["lparen","("],
+  ["constant.language.colors.gobstones","Rojo"],
+  ["rparen",")"]
+],[
+   "start",
+  ["rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["storage.type.definitions.gobstones","procedure"],
+  ["text"," "],
+  ["identifier.gobstones","ProcessAction"],
+  ["lparen","("],
+  ["rparen",")"],
+  ["text"," "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword.control.commands.alternatives.gobstones","switch"],
+  ["text"," "],
+  ["lparen","("],
+  ["support.variable.gobstones","hayBolitas"],
+  ["lparen","("],
+  ["constant.language.colors.gobstones","Rojo"],
+  ["rparen","))"],
+  ["text"," "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","        "],
+  ["constant.language.boolean.gobstones","True"],
+  ["text"," "],
+  ["keyword.operator.other.gobstones","->"],
+  ["text"," "],
+  ["lparen","{"],
+  ["text"," "],
+  ["support.function.gobstones","Sacar"],
+  ["lparen","("],
+  ["constant.language.colors.gobstones","Verde"],
+  ["rparen",")"],
+  ["semicolon.gobstones",";"],
+  ["text"," "],
+  ["support.function.gobstones","Sacar"],
+  ["lparen","("],
+  ["constant.language.colors.gobstones","Rojo"],
+  ["rparen",")"],
+  ["text"," "],
+  ["rparen","}"]
+],[
+   "start",
+  ["text","        "],
+  ["keyword.operator.other.gobstones","_"],
+  ["text"," "],
+  ["keyword.operator.other.gobstones","->"],
+  ["text"," "],
+  ["lparen","{"],
+  ["rparen","}"]
+],[
+   "start",
+  ["text","    "],
+  ["rparen","}"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword.control.commands.alternatives.gobstones","switch"],
+  ["text"," "],
+  ["lparen","("],
+  ["support.variable.gobstones","hayBolitas"],
+  ["lparen","("],
+  ["constant.language.colors.gobstones","Azul"],
+  ["rparen","))"],
+  ["text"," "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","        "],
+  ["constant.language.boolean.gobstones","True"],
+  ["text"," "],
+  ["keyword.operator.other.gobstones","->"],
+  ["text"," "],
+  ["lparen","{"],
+  ["text"," "],
+  ["support.function.gobstones","Poner"],
+  ["lparen","("],
+  ["constant.language.colors.gobstones","Verde"],
+  ["rparen",")"],
+  ["semicolon.gobstones",";"],
+  ["text"," "],
+  ["support.function.gobstones","Sacar"],
+  ["lparen","("],
+  ["constant.language.colors.gobstones","Azul"],
+  ["rparen",")"],
+  ["text"," "],
+  ["rparen","}"]
+],[
+   "start",
+  ["text","        "],
+  ["keyword.operator.other.gobstones","_"],
+  ["text"," "],
+  ["keyword.operator.other.gobstones","->"],
+  ["text"," "],
+  ["lparen","{"],
+  ["rparen","}"]
+],[
+   "start",
+  ["text","    "],
+  ["rparen","}"]
+],[
+   "start",
+  ["rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["storage.type.definitions.gobstones","procedure"],
+  ["text"," "],
+  ["identifier.gobstones","TagCell"],
+  ["lparen","("],
+  ["identifier.gobstones","numNeighbors"],
+  ["rparen",")"],
+  ["text"," "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword.control.commands.alternatives.gobstones","if"],
+  ["text","     "],
+  ["lparen","("],
+  ["text","    "],
+  ["identifier.gobstones","isCellAlive"],
+  ["lparen","("],
+  ["rparen",")"],
+  ["text"," "],
+  ["keyword.operator.boolean.gobstones","&&"],
+  ["text"," "],
+  ["identifier.gobstones","numNeighbors"],
+  ["text"," "],
+  ["keyword.operator.compare.gobstones","<"],
+  ["text"," "],
+  ["constant.numeric.gobstones","2"],
+  ["rparen",")"],
+  ["text","  "],
+  ["lparen","{"],
+  ["text"," "],
+  ["identifier.gobstones","TagAsDead"],
+  ["lparen","("],
+  ["rparen",")"],
+  ["text"," "],
+  ["rparen","}"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword.control.commands.alternatives.gobstones","elseif"],
+  ["text"," "],
+  ["lparen","("],
+  ["text","    "],
+  ["identifier.gobstones","isCellAlive"],
+  ["lparen","("],
+  ["rparen",")"],
+  ["text"," "],
+  ["keyword.operator.boolean.gobstones","&&"],
+  ["text"," "],
+  ["identifier.gobstones","numNeighbors"],
+  ["text"," "],
+  ["keyword.operator.compare.gobstones",">"],
+  ["text"," "],
+  ["constant.numeric.gobstones","3"],
+  ["rparen",")"],
+  ["text","  "],
+  ["lparen","{"],
+  ["text"," "],
+  ["identifier.gobstones","TagAsDead"],
+  ["lparen","("],
+  ["rparen",")"],
+  ["text"," "],
+  ["rparen","}"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword.control.commands.alternatives.gobstones","elseif"],
+  ["text"," "],
+  ["lparen","(("],
+  ["keyword.operator.boolean.gobstones","not"],
+  ["text"," "],
+  ["identifier.gobstones","isCellAlive"],
+  ["lparen","("],
+  ["rparen","))"],
+  ["text"," "],
+  ["keyword.operator.boolean.gobstones","&&"],
+  ["text"," "],
+  ["identifier.gobstones","numNeighbors"],
+  ["text"," "],
+  ["keyword.operator.compare.gobstones","=="],
+  ["text"," "],
+  ["constant.numeric.gobstones","3"],
+  ["rparen",")"],
+  ["text"," "],
+  ["lparen","{"],
+  ["text"," "],
+  ["identifier.gobstones","TagAsReanimated"],
+  ["lparen","("],
+  ["rparen",")"],
+  ["text"," "],
+  ["rparen","}"]
+],[
+   "start",
+  ["rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["storage.type.definitions.gobstones","procedure"],
+  ["text"," "],
+  ["identifier.gobstones","SimulateTicks"],
+  ["lparen","("],
+  ["identifier.gobstones","amount"],
+  ["rparen",")"],
+  ["text"," "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword.control.commands.repetitions.gobstones","repeat"],
+  ["lparen","("],
+  ["identifier.gobstones","amount"],
+  ["rparen",")"],
+  ["text"," "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","        "],
+  ["identifier.gobstones","SimulateNextTick"],
+  ["lparen","("],
+  ["rparen",")"]
+],[
+   "start",
+  ["text","    "],
+  ["rparen","}"]
+],[
+   "start",
+  ["rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["storage.type.definitions.gobstones","procedure"],
+  ["text"," "],
+  ["identifier.gobstones","SimulateNextTick"],
+  ["lparen","("],
+  ["rparen",")"],
+  ["text"," "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier.gobstones","PrepareNextTick"],
+  ["lparen","("],
+  ["rparen",")"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier.gobstones","CompleteNextTick"],
+  ["lparen","("],
+  ["rparen",")"]
+],[
+   "start",
+  ["rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["storage.type.definitions.gobstones","procedure"],
+  ["text"," "],
+  ["identifier.gobstones","PrepareNextTick"],
+  ["lparen","("],
+  ["rparen",")"],
+  ["text"," "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier.gobstones","GoToStartOfBoard"],
+  ["lparen","("],
+  ["constant.language.cardinals.gobstones","Norte"],
+  ["comma.gobstones",","],
+  ["text"," "],
+  ["constant.language.cardinals.gobstones","Este"],
+  ["rparen",")"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword.control.commands.repetitions.gobstones","while"],
+  ["text"," "],
+  ["lparen","("],
+  ["keyword.operator.boolean.gobstones","not"],
+  ["text"," "],
+  ["identifier.gobstones","isEndOfBoard"],
+  ["lparen","("],
+  ["constant.language.cardinals.gobstones","Norte"],
+  ["comma.gobstones",","],
+  ["text"," "],
+  ["constant.language.cardinals.gobstones","Este"],
+  ["rparen","))"],
+  ["text"," "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","        "],
+  ["identifier.gobstones","TagCell"],
+  ["lparen","("],
+  ["identifier.gobstones","numberOfNeighbors"],
+  ["lparen","("],
+  ["rparen","))"]
+],[
+   "start",
+  ["text","        "],
+  ["identifier.gobstones","NextCellOfTheBoard"],
+  ["lparen","("],
+  ["constant.language.cardinals.gobstones","Norte"],
+  ["comma.gobstones",","],
+  ["text"," "],
+  ["constant.language.cardinals.gobstones","Este"],
+  ["rparen",")"]
+],[
+   "start",
+  ["text","    "],
+  ["rparen","}"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier.gobstones","TagCell"],
+  ["lparen","("],
+  ["identifier.gobstones","numberOfNeighbors"],
+  ["lparen","("],
+  ["rparen","))"]
+],[
+   "start",
+  ["rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["storage.type.definitions.gobstones","procedure"],
+  ["text"," "],
+  ["identifier.gobstones","CompleteNextTick"],
+  ["lparen","("],
+  ["rparen",")"],
+  ["text"," "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier.gobstones","GoToStartOfBoard"],
+  ["lparen","("],
+  ["constant.language.cardinals.gobstones","Norte"],
+  ["comma.gobstones",","],
+  ["text"," "],
+  ["constant.language.cardinals.gobstones","Este"],
+  ["rparen",")"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword.control.commands.repetitions.gobstones","while"],
+  ["text"," "],
+  ["lparen","("],
+  ["keyword.operator.boolean.gobstones","not"],
+  ["text"," "],
+  ["identifier.gobstones","isEndOfBoard"],
+  ["lparen","("],
+  ["constant.language.cardinals.gobstones","Norte"],
+  ["comma.gobstones",","],
+  ["text"," "],
+  ["constant.language.cardinals.gobstones","Este"],
+  ["rparen","))"],
+  ["text"," "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","        "],
+  ["identifier.gobstones","ProcessAction"],
+  ["lparen","("],
+  ["rparen",")"]
+],[
+   "start",
+  ["text","        "],
+  ["identifier.gobstones","NextCellOfTheBoard"],
+  ["lparen","("],
+  ["constant.language.cardinals.gobstones","Norte"],
+  ["comma.gobstones",","],
+  ["text"," "],
+  ["constant.language.cardinals.gobstones","Este"],
+  ["rparen",")"]
+],[
+   "start",
+  ["text","    "],
+  ["rparen","}"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier.gobstones","ProcessAction"],
+  ["lparen","("],
+  ["rparen",")"]
+],[
+   "start",
+  ["rparen","}"]
+],[
+   "start"
+]]

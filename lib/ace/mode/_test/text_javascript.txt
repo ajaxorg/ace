@@ -3,7 +3,7 @@ string.charCodeAt(23); document.getElementById('test'); console.log('Here it is'
 test: /**tokenize doc*/ comment
 /**tokenize doc comment with @tag {}*/
 //test: tokenize parens
-    var line = "[{( )}]";
+    var $line$ = "[{( )}]";
 //test tokenize arithmetic expression which looks like a regexp
 a/b/c
 a/=b/c
@@ -50,7 +50,7 @@ function () {
 	 * docComment
 	 **/
 	r = /u\t*/
-	g = 1.00E^1, y = 1.2 + .2 + 052 + 0x25
+	g = 1.00E^1, y = 1.2 + 1. + .2 + 052 + 0O7 + 0x25
 	t = ['d', '']
 }
 function () {
@@ -79,8 +79,22 @@ a = {
 	gta:function(a,b)
 }
 
+z>>=t<<f>>r>>>s>=0b1
 
 foo.protoype.d = function(a, b,
                           c, d)
 foo.d =function(a,     b)
 foo.d =function(a,  /*****/ d"string"   
+
+<div
+z=<div {...this.props} x={1 + 2} y="z{a}b&amp;" t={
+        1 + <a>{2}</a>
+    }>
+1 <a> { ++x  } </a>
+</div>
+
+var o = {
+    t:`${[].map(x => {
+        return x
+    })}`
+};

@@ -8,21 +8,29 @@ var spawn = require("child_process").spawn;
 var async = require("asyncjs");
 var rootDir = __dirname + "/../lib/ace/";
 
+var SKIP_NPM = false;
+
 var deps = {
     csslint: {
         path: "mode/css/csslint.js",
-        url: "https://raw.github.com/stubbornella/csslint/master/release/csslint.js",
-        needsFixup: true
+        // url: "https://raw.github.com/stubbornella/csslint/master/release/csslint.js",
+        browserify: {
+            npmModule: "git+https://github.com/CSSLint/csslint.git#master",
+            path: "jshint/src/jshint.js",
+            exports: "jshint"
+        },
+        fetch: browserify,
+        wrapAmd: true
     }, 
     requirejs: {
         path: "../../demo/kitchen-sink/require.js",
         url: "https://raw.github.com/jrburke/requirejs/master/require.js",
-        needsFixup: false
+        wrapAmd: false
     },
     luaparse: {
         path: "mode/lua/luaparse.js",
         url: "https://raw.github.com/oxyc/luaparse/master/luaparse.js",
-        needsFixup: true,
+        wrapAmd: true,
         postProcess: function(src) {
             return src.replace(
                 /\(function\s*\(root,\s*name,\s*factory\)\s*{[\s\S]*?}\(this,\s*'luaparse',/,
@@ -38,7 +46,7 @@ var deps = {
             exports: "SAXParser"
         },
         fetch: browserify,
-        needsFixup: true,
+        wrapAmd: true,
         postProcess: function(src) {
             return src;
         }
@@ -51,7 +59,7 @@ var deps = {
            exports: "XQueryLexer"
        },
        fetch: browserify,
-       needsFixup: true,
+       wrapAmd: true,
        postProcess: function(src){
            return src;
        }
@@ -64,7 +72,7 @@ var deps = {
            exports: "JSONiqLexer"
        },
        fetch: browserify,
-       needsFixup: true,
+       wrapAmd: true,
        postProcess: function(src){
            return src;
        }
@@ -77,7 +85,7 @@ var deps = {
            exports: "XQLint"
        },
        fetch: browserify,
-       needsFixup: true,
+       wrapAmd: true,
        postProcess: function(src){
            return src;
        }
@@ -90,7 +98,7 @@ var deps = {
             exports: "jshint"
         },
         fetch: browserify,
-        needsFixup: true,
+        wrapAmd: true,
         postProcess: function(src) {
             src = src.replace(
                 /"Expected a conditional expression and instead saw an assignment."/g,
@@ -140,69 +148,12 @@ var deps = {
         url: "https://raw.githubusercontent.com/gkz/LiveScript/master/lib/mode-ls.js"        
     },
     coffee: {
-        fetch: function(){
-            var rootHref = "https://raw.github.com/jashkenas/coffee-script/master/";
-            var path = "mode/coffee/";
-
-            var subDir = "lib/coffee-script/";
-            var deps = [
-                "helpers.js",
-                "lexer.js",
-                "nodes.js",
-                "parser.js",
-                "rewriter.js",
-                "scope.js"
-            ].map(function(x) {
-                return {
-                    name: x,
-                    href: rootHref + subDir + x,
-                    path: rootDir + path + x
-                };
-            });
-            deps.push({name:"LICENSE", href: rootHref + "LICENSE"});
-
-            var downloads = {}, counter = 0;
-
-            deps.forEach(function(x) {
-                download(x.href, function(err, data) {
-                    counter++;
-                    downloads[x.name] = data;
-                    if (counter == deps.length)
-                        allDone();
-                });
-            });
-            function allDone() {
-                deps.pop();
-                var license = downloads.LICENSE.split('\n');
-                license = "/**\n * " + license.join("\n * ") + "\n */";
-
-                deps.forEach(function(x) {
-                    var data = downloads[x.name];
-                    console.log(x.name);
-                    console.log(!data);
-                    if (!data)
-                        return;
-                    if (x.name == "parser.js") {
-                        data = data.replace("var parser = (function(){", "")
-                            .replace(/\nreturn (new Parser)[\s\S]*$/, "\n\nmodule.exports = $1;\n\n");
-                    } else {
-                        data = data.replace("(function() {", "")
-                            .replace(/\}\).call\(this\);\s*$/, "");
-                    }
-                    data = license
-                        + "\n\n"
-                        + "define(function(require, exports, module) {\n"
-                        + data
-                        + "\n});";
-
-                    fs.writeFile(x.path, data, "utf-8", function(err){
-                        if (err) throw err;
-                        console.log("File " + x.name + " saved.");
-                        console.warn("mode/coffee/coffee-script file needs to updated manually");
-                        console.warn("mode/coffee/parser.js: parseError function needs to be modified");
-                    });
-                });
-            }
+        path: "mode/coffee/coffee.js",
+        url: "https://raw.githubusercontent.com/jashkenas/coffeescript/master/extras/coffee-script.js",    
+        wrapAmd: true,
+        postProcess: function(src){
+            return "function define(f) { module.exports = f() }; define.amd = {};\n"
+                + dereqire(src);
         }
     },
     xmldom: {
@@ -251,7 +202,7 @@ var getDep = function(dep) {
     dep.fetch(dep.url, function(err, data) {
         if (dep.postProcess)
             data = dep.postProcess(data);
-        if (dep.needsFixup)
+        if (dep.wrapAmd)
             data = "define(function(require, exports, module) {\n"
                 + data
                 + "\n});";
@@ -279,7 +230,6 @@ function run(cmd, cb) {
         result += data;
 	});
 
-    proc.on('exit', done);
     proc.on('close', done);
     function done(code) {
         if (code !== 0) {
@@ -299,21 +249,54 @@ function unquote(str) {
     });
 }
 
+function dereqire(src) {
+    return require("derequire")(src, [
+        {from: 'require', to: '_dereq_'},
+        {from: 'define', to: '_defi_'}
+    ]);
+}
+
 function browserify(_, cb) {
     var br = this.browserify;
     var path = Path.join("node_modules", br.path)
-    run("npm install " + this.browserify.npmModule, function() {
-        run("browserify " + path + " -s " + br.exports, function(err, src) {
-            src = src.replace(/^.*return\s*\(function/, "module.exports = (function")
-                .replace(/\}\);\s*$/, "");
-            src = src.replace(/(\],|\{)((?:\d+|"\w+"):\[)/g, "$1\n$2")
-                .replace(/^(\},)(\{[^{}\[\]]*?\}\])/gm, "$1\n$2")
-            cb(err, src);
-        })
-    })
+    process.chdir(__dirname);
+    if (Path.sep == "\\" && !Path._relative) {
+        Path._relative = Path.relative;
+        Path.relative = function() {
+            var v = Path._relative.apply(this, arguments);
+            return v.replace(/\\/g, "/");
+        }
+    }
+    function done() {
+        var browserify = require('browserify');
+        var absPath = require.resolve(__dirname + "/" + path);
+        var defaultPreludePath = Path.join(require.resolve("browser-pack"), "../prelude.js");
+        var defaultPrelude = "module.exports = " + fs.readFileSync(defaultPreludePath, 'utf8')
+            .replace(/^[ \t]*\/\/.*/gm, "")
+            .replace(/^\s*\n\r?/gm, "")
+            .replace(/return newRequire;/, "return newRequire(entry[0]);")
+        var opts = {
+            expose: br.exports,
+            prelude: defaultPrelude,
+            exposeAll: true
+        }
+        var b = browserify(opts);
+        b.plugin(require("deps-sort"), opts);
+        b.add(absPath);
+        var p = b.bundle();
+        var buffer = "";
+        p.on("data", function(e) { buffer += e; });
+        p.on("end", function() {
+            var src = dereqire(buffer);
+            cb(null, src);
+        });
+    }
+    if (SKIP_NPM) return done();
+    run("npm install " + br.npmModule,  done);
 }
 
 var args = process.argv.slice(2);
+SKIP_NPM = args.indexOf("--skip-npm") != -1;
 args = args.filter(function(x) {return x[0] != "-" });
 if (!args.length)
     args = Object.keys(deps);

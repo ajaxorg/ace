@@ -33,7 +33,7 @@
   ["support.function","return"],
   ["text"," "],
   ["constant.numeric","1"],
-  ["text",";"]
+  ["punctuation.operator",";"]
 ],[
    "php-start",
   ["text","    "],
@@ -61,7 +61,7 @@
   ["text"," "],
   ["constant.numeric","1"],
   ["paren.rparen",")"],
-  ["text",";"]
+  ["punctuation.operator",";"]
 ],[
    "php-start",
   ["text","    "],
@@ -78,7 +78,7 @@
   ["string","\""],
   ["constant.language.escape","\\n\\n"],
   ["string","Please enter a whole number ... \""],
-  ["text",";"]
+  ["punctuation.operator",";"]
 ],[
    "php-start",
   ["variable","$num"],
@@ -91,7 +91,7 @@
   ["paren.lparen","("],
   ["constant.language","STDIN"],
   ["paren.rparen","))"],
-  ["text",";"]
+  ["punctuation.operator",";"]
 ],[
    "php-start"
 ],[
@@ -119,13 +119,13 @@
   ["string","\""],
   ["constant.language.escape","\\n\\n"],
   ["string","\""],
-  ["text",";"]
+  ["punctuation.operator",";"]
 ],[
    "php-start",
   ["support.function","echo"],
   ["text"," "],
   ["variable","$output"],
-  ["text",";"]
+  ["punctuation.operator",";"]
 ],[
    "php-start"
 ],[
@@ -145,19 +145,20 @@
 ],[
    ["php-start","js-start"],
   ["string","'"],
-  ["text",";"]
+  ["punctuation.operator",";"]
 ],[
    "js-start",
   ["support.php_tag","?>"]
 ],[
-   "js-comment_regex_allowed",
+   "js-comment1",
   ["comment","/*this is js "],
   ["support.php_tag","<?php"],
   ["text"," "],
   ["support.function","echo"],
   ["text"," "],
   ["string","':)'"],
-  ["text","; "],
+  ["punctuation.operator",";"],
+  ["text"," "],
   ["support.php_tag","?>"]
 ],[
    "start",

@@ -2,69 +2,114 @@
 
 var http = require("http")
   , path = require("path")
-  , mime = require("mime")
   , url = require("url")
   , fs = require("fs")
   , port = process.env.PORT || 8888
   , ip = process.env.IP || "0.0.0.0";
 
+function lookupMime(filename) {
+    var ext = /[^\/\\.]*$/.exec(filename)[0];
+    return {
+        js: "application/javascript",
+        ico: "image/x-icon",
+        css: "text/css",
+        svg: "image/svg+xml",
+        png: "image/png",
+        jpg: "image/jpg",
+        html: "text/html",
+        jpeg: "image/jpeg"
+    }[ext];
+}
+  
 // compatibility with node 0.6
 if (!fs.exists)
     fs.exists = path.exists;
 
 var allowSave = process.argv.indexOf("--allow-save") != -1;
+if (allowSave)
+    console.warn("writing files from browser is enabled");
 
 http.createServer(function(req, res) {
-    var uri = url.parse(req.url).pathname
-      , filename = path.join(process.cwd(), uri);
+    var uri = unescape(url.parse(req.url).pathname);
+    var filename = path.join(process.cwd(), uri);
 
+    if (req.method == "OPTIONS") {
+        writeHead(res, 200);
+        return res.end();
+    }
+    
     if (req.method == "PUT") {
         if (!allowSave)
             return error(res, 404, "Saving not allowed pass --allow-save to enable");
-        save(req, res, filename);
+        return save(req, res, filename);
     }
 
-    fs.exists(filename, function(exists) {
-        if (!exists)
-            return error(res, 404, "404 Not Found\n");
+    fs.stat(filename, function(err, stat) {
+        if (err)
+            return error(res, 404, "404 Not Found\n" + filename);
 
-        if (fs.statSync(filename).isDirectory()) {
-            var files = fs.readdirSync(filename);
-            res.writeHead(200, {"Content-Type": "text/html"});
-            
-            files.push(".", "..");
-            var html = files.map(function(name) {
-                var href = uri + "/" + name;
-                href = href.replace(/[\/\\]+/g, "/").replace(/\/$/g, "");
-                if (fs.statSync(filename + "/" + name + "/").isDirectory())
-                    href += "/";
-                return "<a href='" + href + "'>" + name + "</a><br>";
-            });
+        if (stat.isDirectory())
+            return serveDirectory(filename, uri, req, res);
 
-            res._hasBody && res.write(html.join(""));
-            res.end();
-            return;
-        }
-
-        fs.readFile(filename, "binary", function(err, file) {
-            if (err) {
-                res.writeHead(500, { "Content-Type": "text/plain" });
-                res.write(err + "\n");
-                res.end();
-                return;
-            }
-
-            var contentType = mime.lookup(filename) || "text/plain";
-            res.writeHead(200, { "Content-Type": contentType });
-            res.write(file, "binary");
+        var contentType = lookupMime(filename);
+        writeHead(res, 200, contentType);
+        res.setHeader("Content-Length", stat.size);
+        var stream = fs.createReadStream(filename, {});
+        req.on("close", stream.destroy.bind(stream));
+        stream.on("error", function(err){
+            if (res._header)
+                return req.destroy();
+            writeHead(res, 500, "text/plain");
             res.end();
         });
+        stream.pipe(res);
     });
 }).listen(port, ip);
 
+function writeHead(res, code, contentType) {
+    res.setHeader("Access-Control-Allow-Origin", "file://");
+    res.setHeader("Access-Control-Allow-Methods", "PUT, GET, OPTIONS, HEAD");
+    res.setHeader("Content-Type", contentType || "text/plain");
+    res.statusCode = code;
+}
+
+function serveDirectory(filename, uri, req, res) {
+    var files = fs.readdirSync(filename);
+    writeHead(res, 200, "text/html");
+    
+    files.push("..", ".");
+    var html = files.map(function(name) {
+        try {
+            var stat = fs.statSync(filename + "/" + name);
+        } catch(e) {}
+        var index = name == "." ? 2 : name == ".." ? 3 : stat.isDirectory() ? 1 : 0;
+        return { name: name, index: index, size: stat.size };
+    }).filter(Boolean).sort(function(a, b) {
+        if (a.index == b.index)
+            return a.name.localeCompare(b.name);
+        return b.index - a.index;
+    }).map(function(stat) {
+        var name = stat.name;
+        if (stat.index) name += "/";
+        var size = "";
+        if (!stat.size) size = "";
+        else if (stat.size < 1024) size = stat.size + "b";
+        else if (stat.size < 1024 * 1024) size = (stat.size / 1024).toFixed(2) + "kb";
+        else size = (stat.size / 1024 / 1024).toFixed(2) + "mb";
+        return "<tr>"
+            + "<td>&nbsp;&nbsp;" + size + "&nbsp;&nbsp;</td>"
+            + "<td><a href='" + name + "'>" + name + "</a></td>"
+        + "</tr>";
+    }).join("");
+    html = "<table>" + html + "</table>";
+
+    res._hasBody && res.write(html);
+    res.end();
+}
+
 function error(res, status, message, error) {
     console.error(error || message);
-    res.writeHead(status, { "Content-Type": "text/plain" });
+    writeHead(res, status, "text/plain");
     res.write(message);
     res.end();
 }
@@ -84,8 +129,9 @@ function save(req, res, filePath) {
         catch (e) {
             return error(res, 404, "Could't save file", e);
         }
-        res.statusCode = 200;
+        writeHead(res, 200);
         res.end("OK");
+        console.log("saved ", filePath);
     });
 }
 

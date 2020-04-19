@@ -9,8 +9,8 @@ if (typeof ace == "undefined" && typeof require == "undefined") {
 }
 
 function setValue() {
-    require("ace/lib/net").get(document.baseURI, function(t){
+    require("ace/lib/net").get(document.baseURI, function(text) {
         var el = document.getElementById("editor");
-        el.env.editor.setValue(t, 1);
+        el.env.editor.session.setValue(text);
     })
 }

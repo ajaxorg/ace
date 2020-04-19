@@ -1,0 +1,514 @@
+[[
+   "punctuation.definition.comment.begin.csound",
+  ["punctuation.definition.comment.begin.csound","/*"]
+],[
+   "punctuation.definition.comment.begin.csound",
+  ["comment.block.csound"," * comment"]
+],[
+   "start",
+  ["comment.block.csound"," "],
+  ["punctuation.definition.comment.end.csound","*/"]
+],[
+   "start",
+  ["comment.line.semicolon.csound","; comment"]
+],[
+   "start",
+  ["comment.line.double-slash.csound","// comment"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword.function.csound","instr"],
+  ["punctuation.definition.comment.begin.csound","/*"],
+  ["punctuation.definition.comment.end.csound","*/"],
+  ["entity.name.function.csound","1"],
+  ["text",","],
+  ["punctuation.definition.comment.begin.csound","/*"],
+  ["punctuation.definition.comment.end.csound","*/"],
+  ["entity.name.function.csound","N_a_M_e_"],
+  ["text",","],
+  ["punctuation.definition.comment.begin.csound","/*"],
+  ["punctuation.definition.comment.end.csound","*/"],
+  ["text","+"],
+  ["entity.name.function.csound","Name"],
+  ["punctuation.definition.comment.begin.csound","/*"],
+  ["punctuation.definition.comment.end.csound","*/"],
+  ["comment.line.double-slash.csound","//"]
+],[
+   "start",
+  ["text","  "],
+  ["text.csound","iDuration"],
+  ["text"," "],
+  ["keyword.operator.csound","="],
+  ["text"," "],
+  ["support.variable.csound","p3"]
+],[
+   "start",
+  ["text","  "],
+  ["support.function.csound","outc"],
+  ["punctuation.type-annotation.csound",":"],
+  ["type-annotation.storage.type.csound","a"],
+  ["text","("],
+  ["text.csound","aSignal"],
+  ["text",")"]
+],[
+   "start",
+  ["keyword.other.csound","endin"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword.function.csound","opcode"],
+  ["punctuation.definition.comment.begin.csound","/*"],
+  ["punctuation.definition.comment.end.csound","*/"],
+  ["entity.name.function.opcode.csound","aUDO"],
+  ["text",","],
+  ["punctuation.definition.comment.begin.csound","/*"],
+  ["punctuation.definition.comment.end.csound","*/"],
+  ["storage.type.csound","i[]"],
+  ["text",","],
+  ["punctuation.definition.comment.begin.csound","/*"],
+  ["punctuation.definition.comment.end.csound","*/"],
+  ["storage.type.csound","aik"],
+  ["comment.line.double-slash.csound","//"]
+],[
+   "start",
+  ["text","  "],
+  ["text.csound","aUDO"]
+],[
+   "start",
+  ["keyword.other.csound","endop"]
+],[
+   "start"
+],[
+   "start",
+  ["constant.numeric.integer.decimal.csound","123"],
+  ["text"," "],
+  ["constant.numeric.integer.decimal.csound","0123456789"]
+],[
+   "start",
+  ["storage.type.number.csound","0x"],
+  ["constant.numeric.integer.hexadecimal.csound","abcdef0123456789"],
+  ["text"," "],
+  ["storage.type.number.csound","0X"],
+  ["constant.numeric.integer.hexadecimal.csound","ABCDEF"]
+],[
+   "start",
+  ["constant.numeric.float.csound","1e2"],
+  ["text"," "],
+  ["constant.numeric.float.csound","3e+4"],
+  ["text"," "],
+  ["constant.numeric.float.csound","5e-6"],
+  ["text"," "],
+  ["constant.numeric.float.csound","7E8"],
+  ["text"," "],
+  ["constant.numeric.float.csound","9E+0"],
+  ["text"," "],
+  ["constant.numeric.float.csound","1E-2"],
+  ["text"," "],
+  ["constant.numeric.float.csound","3."],
+  ["text"," "],
+  ["constant.numeric.float.csound","4.56"],
+  ["text"," "],
+  ["constant.numeric.float.csound",".789"]
+],[
+   "start"
+],[
+   "start",
+  ["punctuation.definition.string.begin.csound","\""],
+  ["string.quoted.csound","characters"],
+  ["entity.name.function.preprocessor.csound","$MACRO."],
+  ["punctuation.definition.string.end.csound","\""]
+],[
+   "start",
+  ["punctuation.definition.string.begin.csound","\""],
+  ["constant.character.escape.csound","\\\\\\a\\b\\n\\r\\t\\012\\345\\67\\\""],
+  ["punctuation.definition.string.end.csound","\""]
+],[
+   "start"
+],[
+   ["#tmp","braced string","start","braced string"],
+  ["punctuation.definition.string.begin.csound","{{"]
+],[
+   ["#tmp","braced string","start","braced string"],
+  ["string.braced.csound","characters$MACRO."]
+],[
+   "start",
+  ["punctuation.definition.string.end.csound","}}"]
+],[
+   "start",
+  ["punctuation.definition.string.begin.csound","{{"],
+  ["constant.character.escape.csound","\\\\\\a\\b\\n\\r\\t\\\"\\012\\345\\67"],
+  ["punctuation.definition.string.end.csound","}}"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword.operator.csound","+"],
+  ["text"," "],
+  ["keyword.operator.csound","-"],
+  ["text"," "],
+  ["keyword.operator.csound","~"],
+  ["text"," "],
+  ["keyword.operator.csound","¬"],
+  ["text"," "],
+  ["keyword.operator.csound","!"],
+  ["text"," "],
+  ["keyword.operator.csound","*"],
+  ["text"," "],
+  ["keyword.operator.csound","/"],
+  ["text"," "],
+  ["keyword.operator.csound","^"],
+  ["text"," "],
+  ["keyword.operator.csound","%"],
+  ["text"," "],
+  ["keyword.operator.csound","<<"],
+  ["text"," "],
+  ["keyword.operator.csound",">>"],
+  ["text"," "],
+  ["keyword.operator.csound","<"],
+  ["text"," "],
+  ["keyword.operator.csound",">"],
+  ["text"," "],
+  ["keyword.operator.csound","<="],
+  ["text"," "],
+  ["keyword.operator.csound",">="],
+  ["text"," "],
+  ["keyword.operator.csound","=="],
+  ["text"," "],
+  ["keyword.operator.csound","!="],
+  ["text"," "],
+  ["keyword.operator.csound","&"],
+  ["text"," "],
+  ["keyword.operator.csound","#"],
+  ["text"," "],
+  ["keyword.operator.csound","|"],
+  ["text"," "],
+  ["keyword.operator.csound","&&"],
+  ["text"," "],
+  ["keyword.operator.csound","||"],
+  ["text"," "],
+  ["keyword.operator.csound","?"],
+  ["text"," "],
+  ["keyword.operator.csound",":"],
+  ["text"," "],
+  ["keyword.operator.csound","+="],
+  ["text"," "],
+  ["keyword.operator.csound","-="],
+  ["text"," "],
+  ["keyword.operator.csound","*="],
+  ["text"," "],
+  ["keyword.operator.csound","/="]
+],[
+   "start"
+],[
+   "start",
+  ["variable.language.csound","0dbfs"],
+  ["text"," "],
+  ["variable.language.csound","A4"],
+  ["text"," "],
+  ["variable.language.csound","kr"],
+  ["text"," "],
+  ["variable.language.csound","ksmps"],
+  ["text"," "],
+  ["variable.language.csound","nchnls"],
+  ["text"," "],
+  ["variable.language.csound","nchnls_i"],
+  ["text"," "],
+  ["variable.language.csound","sr"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword.control.csound","do"],
+  ["text"," "],
+  ["keyword.control.csound","else"],
+  ["text"," "],
+  ["keyword.control.csound","elseif"],
+  ["text"," "],
+  ["keyword.control.csound","endif"],
+  ["text"," "],
+  ["keyword.control.csound","enduntil"],
+  ["text"," "],
+  ["keyword.control.csound","fi"],
+  ["text"," "],
+  ["keyword.control.csound","if"],
+  ["text"," "],
+  ["keyword.control.csound","ithen"],
+  ["text"," "],
+  ["keyword.control.csound","kthen"],
+  ["text"," "],
+  ["keyword.control.csound","od"],
+  ["text"," "],
+  ["keyword.control.csound","then"],
+  ["text"," "],
+  ["keyword.control.csound","until"],
+  ["text"," "],
+  ["keyword.control.csound","while"]
+],[
+   "start",
+  ["keyword.control.csound","return"],
+  ["text"," "],
+  ["keyword.control.csound","rireturn"]
+],[
+   "start"
+],[
+   "start",
+  ["entity.name.label.csound","aLabel"],
+  ["entity.punctuation.label.csound",":"]
+],[
+   "start",
+  ["text.csound"," "],
+  ["entity.name.label.csound","label2"],
+  ["entity.punctuation.label.csound",":"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword.control.csound","goto"],
+  ["text.csound"," "],
+  ["entity.name.label.csound","aLabel"]
+],[
+   "start",
+  ["keyword.control.csound","reinit"],
+  ["text.csound"," "],
+  ["entity.name.label.csound","aLabel"]
+],[
+   "start",
+  ["keyword.control.csound","cggoto"],
+  ["text"," "],
+  ["constant.numeric.integer.decimal.csound","1"],
+  ["keyword.operator.csound","=="],
+  ["constant.numeric.integer.decimal.csound","0"],
+  ["text.csound",", "],
+  ["entity.name.label.csound","aLabel"]
+],[
+   "start",
+  ["keyword.control.csound","timout"],
+  ["text"," "],
+  ["constant.numeric.integer.decimal.csound","0"],
+  ["text.csound",","],
+  ["text"," "],
+  ["constant.numeric.integer.decimal.csound","0"],
+  ["text.csound",", "],
+  ["entity.name.label.csound","aLabel"]
+],[
+   "start",
+  ["keyword.control.csound","loop_ge"],
+  ["text"," "],
+  ["constant.numeric.integer.decimal.csound","0"],
+  ["text.csound",","],
+  ["text"," "],
+  ["constant.numeric.integer.decimal.csound","0"],
+  ["text.csound",","],
+  ["text"," "],
+  ["constant.numeric.integer.decimal.csound","0"],
+  ["text.csound",", "],
+  ["entity.name.label.csound","aLabel"]
+],[
+   "start"
+],[
+   ["#tmp","csound-score-start","start","Csound score opcode"],
+  ["support.function.csound","readscore"],
+  ["text"," "],
+  ["punctuation.definition.string.begin.csound","{{"]
+],[
+   ["#tmp","csound-score-start","start","Csound score opcode"],
+  ["keyword.control.csound-score","i"],
+  ["text"," "],
+  ["constant.numeric.integer.decimal.csound","1"],
+  ["text"," "],
+  ["constant.numeric.integer.decimal.csound","0"],
+  ["text"," "],
+  ["constant.numeric.integer.decimal.csound","0"]
+],[
+   "start",
+  ["punctuation.definition.string.end.csound","}}"]
+],[
+   ["#tmp","python-start","start","Python opcode"],
+  ["support.function.csound","pyrun"],
+  ["text"," "],
+  ["punctuation.definition.string.begin.csound","{{"]
+],[
+   ["#tmp","python-start","start","Python opcode"],
+  ["comment","# Python"]
+],[
+   "start",
+  ["punctuation.definition.string.end.csound","}}"]
+],[
+   ["#tmp","lua-start","start","Lua opcode"],
+  ["support.function.csound","lua_exec"],
+  ["text"," "],
+  ["punctuation.definition.string.begin.csound","{{"]
+],[
+   ["#tmp","lua-start","start","Lua opcode"],
+  ["comment","-- Lua"]
+],[
+   "start",
+  ["punctuation.definition.string.end.csound","}}"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword.preprocessor.csound","#include"],
+  ["punctuation.definition.comment.begin.csound","/*"],
+  ["punctuation.definition.comment.end.csound","*/"],
+  ["string.csound","\"file.udo\""]
+],[
+   "start",
+  ["keyword.preprocessor.csound","#include"],
+  ["punctuation.definition.comment.begin.csound","/*"],
+  ["punctuation.definition.comment.end.csound","*/"],
+  ["string.csound","|file.udo|"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword.preprocessor.csound","#ifdef"],
+  ["text"," "],
+  ["entity.name.function.preprocessor.csound","MACRO"]
+],[
+   "start",
+  ["keyword.preprocessor.csound","#else"]
+],[
+   "start",
+  ["keyword.preprocessor.csound","#ifndef"],
+  ["text"," "],
+  ["entity.name.function.preprocessor.csound","MACRO"]
+],[
+   "start",
+  ["keyword.preprocessor.csound","#endif"]
+],[
+   "start",
+  ["keyword.preprocessor.csound","#undef"],
+  ["text"," "],
+  ["entity.name.function.preprocessor.csound","MACRO"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword.preprocessor.csound","#   define"],
+  ["text"," "],
+  ["entity.name.function.preprocessor.csound","MACRO"],
+  ["punctuation.definition.macro.begin.csound","#"],
+  ["text.csound","macro_body"],
+  ["punctuation.definition.macro.end.csound","#"]
+],[
+   "define directive",
+  ["keyword.preprocessor.csound","#define"],
+  ["punctuation.definition.comment.begin.csound","/*"],
+  ["punctuation.definition.comment.end.csound","*/"]
+],[
+   "define directive",
+  ["entity.name.function.preprocessor.csound","MACRO"],
+  ["punctuation.definition.comment.begin.csound","/*"],
+  ["punctuation.definition.comment.end.csound","*/"]
+],[
+   "macro body",
+  ["punctuation.definition.macro.begin.csound","#"],
+  ["constant.character.escape.csound","\\#"],
+  ["text.csound","macro"]
+],[
+   "start",
+  ["text.csound","body"],
+  ["constant.character.escape.csound","\\#"],
+  ["punctuation.definition.macro.end.csound","#"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword.preprocessor.csound","#define"],
+  ["text"," "],
+  ["entity.name.function.preprocessor.csound","MACRO"],
+  ["punctuation.definition.macro-parameter-name-list.begin.csound","("],
+  ["variable.parameter.preprocessor.csound","ARG1"],
+  ["text","#"],
+  ["variable.parameter.preprocessor.csound","ARG2"],
+  ["punctuation.definition.macro-parameter-name-list.end.csound",")"],
+  ["text"," "],
+  ["punctuation.definition.macro.begin.csound","#"],
+  ["text.csound","macro_body"],
+  ["punctuation.definition.macro.end.csound","#"]
+],[
+   "define directive",
+  ["keyword.preprocessor.csound","#define"],
+  ["punctuation.definition.comment.begin.csound","/*"],
+  ["punctuation.definition.comment.end.csound","*/"]
+],[
+   "define directive",
+  ["entity.name.function.preprocessor.csound","MACRO"],
+  ["punctuation.definition.macro-parameter-name-list.begin.csound","("],
+  ["variable.parameter.preprocessor.csound","ARG1"],
+  ["text","'"],
+  ["variable.parameter.preprocessor.csound","ARG2"],
+  ["text","'"],
+  ["variable.parameter.preprocessor.csound","ARG3"],
+  ["punctuation.definition.macro-parameter-name-list.end.csound",")"],
+  ["punctuation.definition.comment.begin.csound","/*"],
+  ["punctuation.definition.comment.end.csound","*/"]
+],[
+   "macro body",
+  ["punctuation.definition.macro.begin.csound","#"],
+  ["constant.character.escape.csound","\\#"],
+  ["text.csound","macro"]
+],[
+   "start",
+  ["text.csound","body"],
+  ["constant.character.escape.csound","\\#"],
+  ["punctuation.definition.macro.end.csound","#"]
+],[
+   "start"
+],[
+   "start",
+  ["entity.name.function.preprocessor.csound","$MACRO"],
+  ["text"," "],
+  ["entity.name.function.preprocessor.csound","$MACRO."]
+],[
+   "start",
+  ["entity.name.function.preprocessor.csound","$MACRO"],
+  ["punctuation.definition.macro-parameter-value-list.begin.csound","("],
+  ["text","x"],
+  ["punctuation.definition.macro-parameter-value-list.end.csound",")"]
+],[
+   "start",
+  ["keyword.preprocessor.csound","@0"]
+],[
+   "start",
+  ["keyword.preprocessor.csound","@@ 1"]
+],[
+   "start",
+  ["entity.name.function.preprocessor.csound","$MACRO."],
+  ["punctuation.definition.macro-parameter-value-list.begin.csound","("],
+  ["punctuation.macro-parameter-value-parenthetical.begin.csound","(("],
+  ["text.csound","x"],
+  ["keyword.operator.csound","#"],
+  ["text.csound","y"],
+  ["constant.character.escape.csound","\\)"],
+  ["punctuation.macro-parameter-value-parenthetical.end.csound","))"],
+  ["punctuation.macro-parameter-value-separator.csound","'"],
+  ["text"," "],
+  ["punctuation.definition.string.begin.csound","\""],
+  ["invalid.illegal.csound","(#'"],
+  ["string.quoted.csound","x"],
+  ["invalid.illegal.csound",")"],
+  ["constant.character.escape.csound","\\)"],
+  ["string.quoted.csound","x"],
+  ["constant.character.escape.csound","\\)"],
+  ["invalid.illegal.csound",")"],
+  ["punctuation.definition.string.end.csound","\""],
+  ["punctuation.macro-parameter-value-separator.csound","#"],
+  ["text"," "],
+  ["punctuation.definition.string.begin.csound","{{"],
+  ["string.braced.csound","x"],
+  ["constant.character.escape.csound","\\)"],
+  ["invalid.illegal.csound.csound",")"],
+  ["string.braced.csound","x"],
+  ["invalid.illegal.csound.csound",")"],
+  ["constant.character.escape.csound","\\)"],
+  ["invalid.illegal.csound.csound","(#'"],
+  ["punctuation.definition.string.end.csound","}}"],
+  ["punctuation.definition.macro-parameter-value-list.end.csound",")"],
+  ["comment.line.semicolon.csound",";"]
+],[
+   "start"
+]]

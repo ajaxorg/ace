@@ -1,10 +1,10 @@
 [[
    "start",
-  ["comment","@these"],
+  ["variable.parameter","@these"],
   ["text"," "],
-  ["comment","@are"],
+  ["variable.parameter","@_are_"],
   ["text"," "],
-  ["comment","@tags"]
+  ["variable.parameter","@tags"]
 ],[
    "start",
   ["keyword","Feature:"],
@@ -56,34 +56,34 @@
 ],[
    "start",
   ["text","      "],
-  ["comment","| "],
-  ["string","start "],
-  ["comment","| "],
-  ["string","eat "],
-  ["comment","| "],
-  ["string","left "],
+  ["comment","|"],
+  ["string"," start "],
+  ["comment","|"],
+  ["string"," eat "],
+  ["comment","|"],
+  ["string"," left "],
   ["comment","|"]
 ],[
    "start",
   ["text","      "],
-  ["comment","| "],
-  ["string"," 12   "],
-  ["comment","| "],
-  ["string"," 5  "],
-  ["comment","| "],
-  ["string"," 7   "],
+  ["comment","|"],
+  ["string","  12   "],
+  ["comment","|"],
+  ["string","  5  "],
+  ["comment","|"],
+  ["string","  7   "],
   ["comment","|"]
 ],[
    "start",
   ["text","      "],
-  ["comment","| "],
-  ["string"," 20   "],
-  ["comment","| "],
-  ["string"," 5  "],
-  ["comment","| "],
-  ["string"," 15  "],
-  ["comment","| "],
-  ["string","   "]
+  ["comment","|"],
+  ["string","  @20  "],
+  ["comment","|"],
+  ["string","  5  "],
+  ["comment","|"],
+  ["string","  15  "],
+  ["comment","|"],
+  ["string","    "]
 ],[
    "start"
 ],[

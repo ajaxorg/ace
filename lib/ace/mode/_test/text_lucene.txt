@@ -1,16 +1,57 @@
-test: recognises AND as keyword
-test: recognises OR as keyword
-test: recognises NOT as keyword
-test: recognises "hello this is dog" as string
-test: recognises -"hello this is dog" as negation with string
-test: recognises ~100 as text with proximity
-test: recognises "hello this is dog"~100 as string with proximity
-test: recognises raw:"hello this is dog" as keyword
-test: recognises raw:foo as"keyword'
-test: recognises "(" as opening parenthesis
-test: recognises ")" as closing parenthesis
-test: recognises foo* as text with asterisk
-test: recognises foo? as text with interro
-test: recognises single word as text
  foo
- 
+foo: foo AND bar
+foo AND bar
+foo OR bar
+foo NOT bar
+"foo bar"
+bar "foo bar"
+bar -foo
+bar -"foo bar"
+-foo
+-"foo bar"
+bar foo~100
+foo~100
+foo~100 bar
+"foo bar"~10
+foo~
+bar foo~
+foo~ bar
+foo~0.8
+field:foo
+field:foo bar
+field:"foo bar"
+(foo AND bar)
+(field:foo AND field:"bar baz")
+foo*
+f?o
+f*o
++foo
++"foo bar"
+foo?
+?oo
+foo
+field:(-foo +bar +"foo bar")
+field:{foo TO bar}
+field:[foo TO bar]
+field:["a b c" TO def]
+field:{"a b c" TO def}
+field:{foo TO "bar"}
+field:{20180101 TO 20190202}
+field:{"2018-01-01" TO "2019-02-02"}
+\+escaped
+\-escaped
+esc\&aped
+esc\|aped
+\!escaped
+\(escaped\)
+\{escaped\}
+\[escaped\]
+escaped\^4
+\"escaped\"
+escaped\~0.4
+escaped\*
+escaped\?
+esc\:aped
+esc\\aped
+esc\ aped:foo
+"foo\"bar"

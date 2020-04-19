@@ -1,0 +1,962 @@
+[[
+   "form",
+  ["keyword","form"],
+  ["text"," "],
+  ["entity.name.section","Highlighter test"]
+],[
+   "form",
+  ["text","  "],
+  ["keyword","sentence "],
+  ["text","My_sentence "],
+  ["string","This should all be a string"]
+],[
+   "form",
+  ["text","  "],
+  ["keyword","text "],
+  ["text","My_text "],
+  ["string","This should also all be a string"]
+],[
+   "form",
+  ["text","  "],
+  ["keyword","word "],
+  ["text","My_word "],
+  ["string","Only"],
+  ["invalid.illegal"," the first word is a string, the rest is invalid"]
+],[
+   "form",
+  ["text","  "],
+  ["keyword","boolean "],
+  ["text","Binary "],
+  ["constant.language","1"]
+],[
+   "form",
+  ["text","  "],
+  ["keyword","boolean "],
+  ["text","Text "],
+  ["constant.language","no"]
+],[
+   "form",
+  ["text","  "],
+  ["keyword","boolean "],
+  ["text","Quoted "],
+  ["constant.language","\"yes\""]
+],[
+   "form",
+  ["text","  "],
+  ["keyword","comment "],
+  ["string","This should be a string"]
+],[
+   "form",
+  ["text","  "],
+  ["keyword","real "],
+  ["text","left_Range "],
+  ["constant.numeric","-123.6"]
+],[
+   "form",
+  ["text","  "],
+  ["keyword","positive "],
+  ["text","right_Range_max "],
+  ["constant.numeric","3.3"]
+],[
+   "form",
+  ["text","  "],
+  ["keyword","integer "],
+  ["text","Int "],
+  ["constant.numeric","4"]
+],[
+   "form",
+  ["text","  "],
+  ["keyword","natural "],
+  ["text","Nat "],
+  ["constant.numeric","4"]
+],[
+   "start",
+  ["keyword","endform"]
+],[
+   "start"
+],[
+   "start",
+  ["comment","# External scripts"]
+],[
+   "start",
+  ["keyword","include"],
+  ["text"," "],
+  ["string","/path/to/file"]
+],[
+   "start",
+  ["support.function","runScript"],
+  ["text",":"],
+  ["text"," "],
+  ["string","\"/path/to/file\""]
+],[
+   "start",
+  ["keyword","execute"],
+  ["text"," "],
+  ["string","/path/to/file"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","stopwatch"]
+],[
+   "start"
+],[
+   "start",
+  ["comment","# old-style procedure call"]
+],[
+   "start",
+  ["keyword","call"],
+  ["text"," "],
+  ["entity.name.function","oldStyle"],
+  ["text"," "],
+  ["string","\"quoted\""],
+  ["text"," "],
+  ["constant.numeric","2"],
+  ["text"," unquoted string"]
+],[
+   "start",
+  ["keyword","assert"],
+  ["text"," oldStyle.local"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","1"]
+],[
+   "start"
+],[
+   "start",
+  ["comment","# New-style procedure call with parens"]
+],[
+   "start",
+  ["entity.name.function","@newStyle"],
+  ["text","("],
+  ["string","\"quoted\""],
+  ["text",", "],
+  ["constant.numeric","2"],
+  ["text",", "],
+  ["string","\"quoted string\""],
+  ["text",")"]
+],[
+   "start",
+  ["keyword","if"],
+  ["text"," "],
+  ["variable.language","praatVersion"],
+  ["text"," "],
+  ["keyword.operator",">="],
+  ["text"," "],
+  ["constant.numeric","5364"],
+  ["text"," "]
+],[
+   "start",
+  ["comment","  # New-style procedure call with colon"]
+],[
+   "start",
+  ["text","  "],
+  ["entity.name.function","@newStyle"],
+  ["text",":"],
+  ["text"," "],
+  ["string","\"quoted\""],
+  ["text",", "],
+  ["constant.numeric","2"],
+  ["text",", "],
+  ["string","\"quoted string\""]
+],[
+   "start",
+  ["keyword","endif"]
+],[
+   "start"
+],[
+   "start",
+  ["comment","# if-block with built-in variables"]
+],[
+   "start",
+  ["keyword","if"],
+  ["text"," "],
+  ["variable.language","windows"]
+],[
+   "start",
+  ["comment","  # We are on Windows"]
+],[
+   "start",
+  ["keyword","elsif"],
+  ["text"," "],
+  ["variable.language","unix"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","1"],
+  ["text"," "],
+  ["keyword.operator","or"],
+  ["text"," "],
+  ["text","!"],
+  ["variable.language","macintosh"]
+],[
+   "start",
+  ["text","  "],
+  ["support.function","exitScript"],
+  ["text",":"],
+  ["text"," "],
+  ["string","\"We are on Linux\""]
+],[
+   "start",
+  ["keyword","else"],
+  ["text"," "],
+  ["variable.language","macintosh"],
+  ["text"," "],
+  ["keyword.operator","=="],
+  ["text"," "],
+  ["constant.numeric","1"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword","exit"],
+  ["text"," "],
+  ["string","We are on Mac"]
+],[
+   "start",
+  ["keyword","endif"]
+],[
+   "start"
+],[
+   "start",
+  ["comment","# inline if with inline comment"]
+],[
+   "start",
+  ["text","var"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["keyword","if"],
+  ["text"," "],
+  ["variable.language","macintosh"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","1"],
+  ["text"," "],
+  ["keyword","then"],
+  ["text"," "],
+  ["constant.numeric","0"],
+  ["text"," "],
+  ["keyword","else"],
+  ["text"," "],
+  ["constant.numeric","1"],
+  ["text"," "],
+  ["keyword","fi"],
+  ["text"," "],
+  ["comment","; This is an inline comment"]
+],[
+   "start"
+],[
+   "start",
+  ["comment","# for-loop with explicit from using local variable"]
+],[
+   "start",
+  ["comment","# and paren-style function calls and variable interpolation"]
+],[
+   "start",
+  ["text","n"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["support.function","numberOfSelected"],
+  ["text","("],
+  ["string","\"Sound\""],
+  ["text",")"]
+],[
+   "start",
+  ["keyword","for"],
+  ["text"," i "],
+  ["keyword","from"],
+  ["text"," newStyle.local "],
+  ["keyword","to"],
+  ["text"," n"]
+],[
+   "start",
+  ["text","  sound"],
+  ["string.interpolated","'i'"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["support.function","selected"],
+  ["text","("],
+  ["string","\"Sound\""],
+  ["text",", i)"]
+],[
+   "start",
+  ["text","  sound[i]"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["text","sound"],
+  ["string.interpolated","'i'"]
+],[
+   "start",
+  ["keyword","endfor"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","for"],
+  ["text"," i "],
+  ["keyword","from"],
+  ["text"," "],
+  ["constant.numeric","1"],
+  ["text"," "],
+  ["keyword","to"],
+  ["text"," n"]
+],[
+   "start",
+  ["comment","  # Different styles of object selection"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword","select"],
+  ["text"," sound"],
+  ["string.interpolated","'i'"]
+],[
+   "start",
+  ["text","  sound"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["support.function","selected"],
+  ["text","("],
+  ["text",")"]
+],[
+   "start",
+  ["text","  sound$"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["support.function","selected$"],
+  ["text","("],
+  ["string","\"Sound\""],
+  ["text",")"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword","select"],
+  ["text"," "],
+  ["entity.name.type","Sound"],
+  ["text"," "],
+  ["string.interpolated","'sound$'"]
+],[
+   "start",
+  ["text","  "],
+  ["support.function","selectObject"],
+  ["text","("],
+  ["text","sound[i])"]
+],[
+   "start",
+  ["text","  "],
+  ["support.function","selectObject"],
+  ["text",":"],
+  ["text"," sound"]
+],[
+   "start",
+  ["text","  "]
+],[
+   "start",
+  ["comment","  # Pause commands"]
+],[
+   "start",
+  ["text","  "],
+  ["support.function","beginPause"],
+  ["text","("],
+  ["string","\"Viewing \""],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["text","sound$)"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword","if"],
+  ["text"," i"],
+  ["text"," "],
+  ["keyword.operator",">"],
+  ["text"," "],
+  ["constant.numeric","1"]
+],[
+   "start",
+  ["text","    button"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["support.function","endPause"],
+  ["text","("],
+  ["string","\"Stop\""],
+  ["text",", "],
+  ["string","\"Previous\""],
+  ["text",","]
+],[
+   "start",
+  ["text","      ..."],
+  ["keyword","if"],
+  ["text"," i"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["text","total_sounds "],
+  ["keyword","then"],
+  ["text"," "],
+  ["string","\"Finish\""],
+  ["text"," "],
+  ["keyword","else"],
+  ["text"," "],
+  ["string","\"Next\""],
+  ["text"," "],
+  ["keyword","fi"],
+  ["text",","]
+],[
+   "start",
+  ["text","      ..."],
+  ["constant.numeric","3"],
+  ["text",", "],
+  ["constant.numeric","1"],
+  ["text",")"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword","else"]
+],[
+   "start",
+  ["text","    button"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["support.function","endPause"],
+  ["text","("],
+  ["string","\"Stop\""],
+  ["text",","]
+],[
+   "start",
+  ["text","      ..."],
+  ["keyword","if"],
+  ["text"," i"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["text","total_sounds "],
+  ["keyword","then"],
+  ["text"," "],
+  ["string","\"Finish\""],
+  ["text"," "],
+  ["keyword","else"],
+  ["text"," "],
+  ["string","\"Next\""],
+  ["text"," "],
+  ["keyword","fi"],
+  ["text",","]
+],[
+   "start",
+  ["text","      ..."],
+  ["constant.numeric","2"],
+  ["text",", "],
+  ["constant.numeric","1"],
+  ["text",")  "]
+],[
+   "start",
+  ["text","  "],
+  ["keyword","endif"]
+],[
+   "start",
+  ["text","  editor_name$"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["keyword","if"],
+  ["text"," total_textgrids "],
+  ["keyword","then"],
+  ["text"," "],
+  ["string","\"TextGrid \""],
+  ["text"," "],
+  ["keyword","else"],
+  ["text"," "],
+  ["string","\"Sound \""],
+  ["text"," "],
+  ["keyword","fi"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["text","name$"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword","nocheck"],
+  ["text"," "],
+  ["keyword","editor"],
+  ["text"," "],
+  ["string.interpolated","'editor_name$'"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","nocheck"],
+  ["text"," "],
+  ["keyword","Close"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword","nocheck"],
+  ["text"," "],
+  ["keyword","endeditor"]
+],[
+   "start",
+  ["text","  "]
+],[
+   "start",
+  ["comment","  # New-style standalone command call"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword","Rename:"],
+  ["text"," "],
+  ["string","\"SomeName\""]
+],[
+   "start"
+],[
+   "start",
+  ["comment","  # Command call with assignment"]
+],[
+   "start",
+  ["text","  "],
+  ["text","duration "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["keyword","Get total duration"]
+],[
+   "start",
+  ["text","  "]
+],[
+   "start",
+  ["comment","  # Multi-line command with modifier"]
+],[
+   "start",
+  ["text","  "],
+  ["text","pitch "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["keyword","noprogress"],
+  ["text"," "],
+  ["keyword","To Pitch (ac):"],
+  ["text"," "],
+  ["constant.numeric","0"],
+  ["text",", "],
+  ["constant.numeric","75"],
+  ["text",", "],
+  ["constant.numeric","15"],
+  ["text",", "],
+  ["string","\"no\""],
+  ["text",","]
+],[
+   "start",
+  ["text","    ..."],
+  ["constant.numeric","0.03"],
+  ["text",", "],
+  ["constant.numeric","0.45"],
+  ["text",", "],
+  ["constant.numeric","0.01"],
+  ["text",", "],
+  ["constant.numeric","0.35"],
+  ["text",", "],
+  ["constant.numeric","0.14"],
+  ["text",", "],
+  ["constant.numeric","600"]
+],[
+   "start",
+  ["text","    "]
+],[
+   "start",
+  ["comment","  # do-style command with assignment"]
+],[
+   "start",
+  ["text","  minimum"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["support.function","do"],
+  ["text","("],
+  ["string","\"Get minimum...\""],
+  ["text",", "],
+  ["constant.numeric","0"],
+  ["text",", "],
+  ["constant.numeric","0"],
+  ["text",", "],
+  ["string","\"Hertz\""],
+  ["text",", "],
+  ["string","\"Parabolic\""],
+  ["text",")"]
+],[
+   "start"
+],[
+   "start",
+  ["comment","  # New-style multi-line command call with broken strings"]
+],[
+   "start",
+  ["text","  "],
+  ["text","table "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["keyword","Create Table with column names:"],
+  ["text"," "],
+  ["string","\"table\""],
+  ["text",", "],
+  ["constant.numeric","0"],
+  ["text",","]
+],[
+   "brokenstring",
+  ["text","    ..."],
+  ["string","\"file subject speaker"]
+],[
+   "start",
+  ["text","    ..."],
+  ["string","f0 f1 f2 f3 "],
+  ["string","\""],
+  ["text"," +"]
+],[
+   "start",
+  ["text","    ..."],
+  ["string","\"duration response\""]
+],[
+   "start",
+  ["text","  "]
+],[
+   "start",
+  ["text","  "],
+  ["support.function","removeObject"],
+  ["text",":"],
+  ["text"," pitch, table"]
+],[
+   "start",
+  ["text","    "]
+],[
+   "start",
+  ["comment","  # Picture window commands"]
+],[
+   "start",
+  ["text","  "],
+  ["support.function","selectObject"],
+  ["text",":"],
+  ["text"," sound"]
+],[
+   "start",
+  ["comment","  # do-style command"]
+],[
+   "start",
+  ["text","  "],
+  ["support.function","do"],
+  ["text","("],
+  ["string","\"Select inner viewport...\""],
+  ["text",", "],
+  ["constant.numeric","1"],
+  ["text",", "],
+  ["constant.numeric","6"],
+  ["text",", "],
+  ["constant.numeric","0.5"],
+  ["text",", "],
+  ["constant.numeric","1.5"],
+  ["text",")"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword","Black"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword","Draw..."],
+  ["text"," "],
+  ["constant.numeric","0"],
+  ["text"," "],
+  ["constant.numeric","0"],
+  ["text"," "],
+  ["constant.numeric","0"],
+  ["text"," "],
+  ["constant.numeric","0"],
+  ["text"," "],
+  ["string","\"no\""],
+  ["text"," Curve"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword","Draw inner box"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword","Text bottom:"],
+  ["text"," "],
+  ["string","\"yes\""],
+  ["text",", sound$"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword","Erase all"]
+],[
+   "start",
+  ["text","  "]
+],[
+   "start",
+  ["comment","  # Demo window commands"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword","demo"],
+  ["text"," "],
+  ["keyword","Erase all"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword","demo"],
+  ["text"," "],
+  ["keyword","Select inner viewport..."],
+  ["text"," "],
+  ["constant.numeric","0"],
+  ["text"," "],
+  ["constant.numeric","100"],
+  ["text"," "],
+  ["constant.numeric","0"],
+  ["text"," "],
+  ["constant.numeric","100"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword","demo"],
+  ["text"," "],
+  ["keyword","Axes..."],
+  ["text"," "],
+  ["constant.numeric","0"],
+  ["text"," "],
+  ["constant.numeric","100"],
+  ["text"," "],
+  ["constant.numeric","0"],
+  ["text"," "],
+  ["constant.numeric","100"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword","demo"],
+  ["text"," "],
+  ["keyword","Paint rectangle..."],
+  ["text"," white "],
+  ["constant.numeric","0"],
+  ["text"," "],
+  ["constant.numeric","100"],
+  ["text"," "],
+  ["constant.numeric","0"],
+  ["text"," "],
+  ["constant.numeric","100"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword","demo"],
+  ["text"," "],
+  ["keyword","Text..."],
+  ["text"," "],
+  ["constant.numeric","50"],
+  ["text"," centre "],
+  ["constant.numeric","50"],
+  ["text"," half Click to finish"]
+],[
+   "start",
+  ["text","  "],
+  ["support.function","demoWaitForInput"],
+  ["text"," ("],
+  ["text"," )"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword","demo"],
+  ["text"," "],
+  ["keyword","Erase all"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword","demo"],
+  ["text"," "],
+  ["keyword","Text:"],
+  ["text"," "],
+  ["constant.numeric","50"],
+  ["text",", "],
+  ["string","\"centre\""],
+  ["text",", "],
+  ["constant.numeric","50"],
+  ["text",", "],
+  ["string","\"half\""],
+  ["text",", "],
+  ["string","\"Finished\""]
+],[
+   "start",
+  ["keyword","endfor"]
+],[
+   "start"
+],[
+   "start",
+  ["comment","# An old-style sendpraat block"]
+],[
+   "start",
+  ["keyword","sendpraat"],
+  ["text"," "],
+  ["string","Praat"]
+],[
+   "start",
+  ["text","  ..."],
+  ["string.interpolated","'newline$'"],
+  ["text"," Create "],
+  ["entity.name.type","Sound"],
+  ["text"," as pure tone... "],
+  ["string","\"tone\""],
+  ["text"," "],
+  ["constant.numeric","1"],
+  ["text"," "],
+  ["constant.numeric","0"],
+  ["text"," "],
+  ["constant.numeric","0.4"],
+  ["text"," "],
+  ["constant.numeric","44100"],
+  ["text"," "],
+  ["constant.numeric","440"],
+  ["text"," "],
+  ["constant.numeric","0.2"],
+  ["text"," "],
+  ["constant.numeric","0.01"],
+  ["text"," "],
+  ["constant.numeric","0.01"]
+],[
+   "start",
+  ["text","  ..."],
+  ["string.interpolated","'newline$'"],
+  ["text"," Play"]
+],[
+   "start",
+  ["text","  ..."],
+  ["string.interpolated","'newline$'"],
+  ["text"," Remove"]
+],[
+   "start"
+],[
+   "start",
+  ["comment","# A new-style sendpraat block"]
+],[
+   "start",
+  ["support.function","beginSendPraat"],
+  ["text",":"],
+  ["text"," "],
+  ["string","\"Praat\""]
+],[
+   "start",
+  ["text","  "],
+  ["keyword","Create Sound as pure tone:"],
+  ["text"," "],
+  ["string","\"tone\""],
+  ["text",", "],
+  ["constant.numeric","1"],
+  ["text",", "],
+  ["constant.numeric","0"],
+  ["text",", "],
+  ["constant.numeric","0.4"],
+  ["text",", "],
+  ["constant.numeric","44100"],
+  ["text",", "],
+  ["constant.numeric","440"],
+  ["text",", "],
+  ["constant.numeric","0.2"],
+  ["text",", "],
+  ["constant.numeric","0.01"],
+  ["text",", "],
+  ["constant.numeric","0.01"]
+],[
+   "start",
+  ["text","  "],
+  ["text","duration "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["keyword","Get total duration"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword","Remove"]
+],[
+   "start",
+  ["support.function","endSendPraat"],
+  ["text",":"],
+  ["text"," "],
+  ["string","\"duration\""]
+],[
+   "start",
+  ["support.function","appendInfoLine"],
+  ["text",":"],
+  ["text"," "],
+  ["string","\"The generated sound lasted for \""],
+  ["text",", duration, "],
+  ["string","\"seconds\""]
+],[
+   "start"
+],[
+   "start",
+  ["text","time "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["keyword","stopwatch"]
+],[
+   "start",
+  ["keyword","clearinfo"]
+],[
+   "start",
+  ["keyword","echo"],
+  ["text"," "],
+  ["string","This script took "]
+],[
+   "start",
+  ["keyword","print"],
+  ["text"," "],
+  ["string","'time' seconds to "]
+],[
+   "start",
+  ["keyword","printline"],
+  ["text"," "],
+  ["string","execute."]
+],[
+   "start"
+],[
+   "start",
+  ["comment","# Old-style procedure declaration"]
+],[
+   "start",
+  ["keyword","procedure"],
+  ["text"," "],
+  ["entity.name.function","oldStyle"],
+  ["text"," .str1$ .num .str2$"]
+],[
+   "start",
+  ["text","  .local"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","1"]
+],[
+   "start",
+  ["keyword","endproc"]
+],[
+   "start"
+],[
+   "start",
+  ["comment","# New-style procedure declaration"]
+],[
+   "start",
+  ["keyword","procedure"],
+  ["text"," "],
+  ["entity.name.function","newStyle"],
+  ["text"," (.str1$, .num, .str2$)"]
+],[
+   "start",
+  ["text","  .local"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","1"]
+],[
+   "start",
+  ["keyword","endproc"]
+],[
+   "start"
+]]

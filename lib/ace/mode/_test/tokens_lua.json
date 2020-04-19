@@ -283,13 +283,13 @@
    ["bracketedString",5,"start"],
   ["support.function","print"],
   ["paren.lparen","("],
-  ["comment","[===["]
+  ["string.start","[===["]
 ],[
    ["bracketedString",5,"start"],
-  ["comment","    blah blah %s, (%d %d)"]
+  ["string","    blah blah %s, (%d %d)"]
 ],[
    "start",
-  ["comment","]===]"],
+  ["string.end","]===]"],
   ["keyword.operator","%"],
   ["paren.lparen","{"],
   ["string","\"blah\""],
@@ -315,7 +315,7 @@
   ["paren.lparen","("],
   ["constant.library","table"],
   ["text","."],
-  ["invalid.deprecated","maxn"],
+  ["keyword.deprecated","maxn"],
   ["paren.lparen","{"],
   ["constant.numeric","1"],
   ["text",","],

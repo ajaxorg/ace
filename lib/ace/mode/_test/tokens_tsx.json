@@ -1,0 +1,30 @@
+[[
+   ["jsx",1],
+  ["storage.type","var"],
+  ["text"," "],
+  ["identifier","mode"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","div"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["string"," "]
+],[
+   ["jsx",1],
+  ["string","    Typescript + "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","b"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["string"," JSX "],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","b"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["string"," "]
+],[
+   "start",
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","div"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["punctuation.operator",";"]
+]]

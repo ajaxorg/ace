@@ -1,6 +1,8 @@
 Ace (Ajax.org Cloud9 Editor)
 ============================
 
+[![Build Status](https://secure.travis-ci.org/ajaxorg/ace.svg?branch=master)](http://travis-ci.org/ajaxorg/ace) [![npm](https://img.shields.io/npm/v/ace-builds.svg)](https://www.npmjs.com/package/ace-builds)
+
 _Note_: The new site at http://ace.c9.io contains all the info below along with an embedding guide and all the other resources you need to get started with Ace.
 
 Ace is a standalone code editor written in JavaScript. Our goal is to create a browser based editor that matches and extends the features, usability and performance of existing native editors such as TextMate, Vim or Eclipse. It can be easily embedded in any web page or JavaScript application. Ace is developed as the primary editor for [Cloud9 IDE](https://c9.io/) and the successor of the Mozilla Skywriter (Bespin) Project.
@@ -8,7 +10,7 @@ Ace is a standalone code editor written in JavaScript. Our goal is to create a b
 Features
 --------
 
-* Syntax highlighting for over 110 languages (TextMate/Sublime/_.tmlanguage_ files can be imported)
+* Syntax highlighting for over 120 languages (TextMate/Sublime/_.tmlanguage_ files can be imported)
 * Over 20 themes (TextMate/Sublime/_.tmtheme_ files can be imported)
 * Automatic indent and outdent
 * An optional command line
@@ -41,47 +43,55 @@ Ace can be easily embedded into any existing web page. You can either use one of
 The easiest version is simply:
 
 ```html
-    <div id="editor">some text</div>
-    <script src="src/ace.js" type="text/javascript" charset="utf-8"></script>
-    <script>
-        var editor = ace.edit("editor");
-    </script>
+<div id="editor">some text</div>
+<script src="src/ace.js" type="text/javascript" charset="utf-8"></script>
+<script>
+    var editor = ace.edit("editor");
+</script>
 ```
 
 With "editor" being the id of the DOM element, which should be converted to an editor. Note that this element must be explicitly sized and positioned `absolute` or `relative` for Ace to work. e.g.
 
 ```css
-    #editor {
-        position: absolute;
-        width: 500px;
-        height: 400px;
-    }
+#editor {
+    position: absolute;
+    width: 500px;
+    height: 400px;
+}
 ```
 
 To change the theme simply include the Theme's JavaScript file
 
 ```html
-    <script src="src/theme-twilight.js" type="text/javascript" charset="utf-8"></script>
+<script src="src/theme-twilight.js" type="text/javascript" charset="utf-8"></script>
 ```
 
 and configure the editor to use the theme:
 
 ```javascript
-    editor.setTheme("ace/theme/twilight");
+editor.setTheme("ace/theme/twilight");
 ```
 
 By default the editor only supports plain text mode; many other languages are available as separate modules. After including the mode's JavaScript file:
 
 ```html
-    <script src="src/mode-javascript.js" type="text/javascript" charset="utf-8"></script>
+<script src="src/mode-javascript.js" type="text/javascript" charset="utf-8"></script>
 ```
 
 The mode can then be used like this:
 
 ```javascript
-    var JavaScriptMode = require("ace/mode/javascript").Mode;
-    editor.getSession().setMode(new JavaScriptMode());
+var JavaScriptMode = ace.require("ace/mode/javascript").Mode;
+editor.session.setMode(new JavaScriptMode());
 ```
+
+to destroy editor use
+
+```javascript
+editor.destroy();
+editor.container.remove();
+```
+
 
 Documentation
 -------------
@@ -97,17 +107,10 @@ If you still need help, feel free to drop a mail on the [ace mailing list](http:
 Running Ace
 -----------
 
-After the checkout Ace works out of the box. No build step is required. To try it out, simply start the bundled mini HTTP server: 
+After the checkout Ace works out of the box. No build step is required. To try it out, simply start the bundled mini HTTP server using Node.JS
 
 ```bash
-    ./static.py
-```
-
-Or using Node.JS
-
-```bash
-    npm install mime
-    node ./static.js
+node ./static.js
 ```
 
 The editor can then be opened at http://localhost:8888/kitchen-sink.html. 
@@ -122,8 +125,8 @@ You do not generally need to build ACE. The [ace-builds repository](https://gith
 However, all you need is Node.js and npm installed to package ACE. Just run `npm install` in the ace folder to install dependencies:
 
 ```bash
-    npm install
-    node ./Makefile.dryice.js
+npm install
+node ./Makefile.dryice.js
 ```
 
 To package Ace, we use the dryice build tool developed by the Mozilla Skywriter team. Call `node Makefile.dryice.js` on the command-line to start the packing. This build script accepts the following options
@@ -143,7 +146,7 @@ Running the Unit Tests
 The Ace unit tests can run on node.js. Assuming you have already done `npm install`, just call:
 
 ```bash
-    node lib/ace/test/all.js
+npm run test
 ```
 
 You can also run the tests in your browser by serving:
@@ -158,11 +161,4 @@ Contributing
 Ace is a community project and wouldn't be what it is without contributions! We actively encourage and support contributions. The Ace source code is released under the BSD License. This license is very simple, and is friendly to all kinds of projects, whether open source or not. Take charge of your editor and add your favorite language highlighting and keybindings!
 
 Feel free to fork and improve/enhance Ace any way you want. If you feel that the editor or the Ace community will benefit from your changes, please open a pull request. For more information on our contributing guidelines, see [CONTRIBUTING.md](https://github.com/ajaxorg/ace/blob/master/CONTRIBUTING.md).
-
-Continuous Integration status
------------------------------
-
-This project is tested with [Travis CI](http://travis-ci.org)
-[![Build Status](https://secure.travis-ci.org/ajaxorg/ace.png?branch=master)](http://travis-ci.org/ajaxorg/ace)
-
 

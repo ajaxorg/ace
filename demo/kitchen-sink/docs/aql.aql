@@ -1,0 +1,3 @@
+FOR user IN users
+  FILTER user.username == "olivier"
+  RETURN user

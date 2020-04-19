@@ -34,7 +34,7 @@
 ],[
    "start",
   ["text","computeSize"],
-  ["punctuation.ahk","(){"]
+  ["paren","(){"]
 ],[
    "start",
   ["text","\t"],
@@ -46,7 +46,7 @@
   ["keyword.operator.ahk",":="],
   ["text"," "],
   ["support.function.ahk","Round"],
-  ["punctuation.ahk","("],
+  ["paren","("],
   ["text","ws_x"],
   ["keyword.operator.ahk","/"],
   ["text","zoom"],
@@ -54,34 +54,34 @@
   ["text","2 "],
   ["keyword.operator.ahk","-"],
   ["text"," 0.5"],
-  ["punctuation.ahk",")"]
+  ["paren",")"]
 ],[
    "start",
   ["text","\t"],
   ["keyword.control.ahk","if"],
   ["text"," "],
-  ["punctuation.ahk","("],
+  ["paren","("],
   ["text","zoom"],
   ["keyword.operator.ahk",">"],
   ["text","1"],
-  ["punctuation.ahk",")"],
+  ["paren",")"],
   ["text"," "],
-  ["punctuation.ahk","{"]
+  ["paren","{"]
 ],[
    "start",
   ["text","\t\tpix "],
   ["keyword.operator.ahk",":="],
   ["text"," "],
   ["support.function.ahk","Round"],
-  ["punctuation.ahk","("],
+  ["paren","("],
   ["text","zoom"],
-  ["punctuation.ahk",")"]
+  ["paren",")"]
 ],[
    "start",
   ["text","\t"],
-  ["punctuation.ahk","}"],
+  ["paren","}"],
   ["text"," ele "],
-  ["punctuation.ahk","{"]
+  ["paren","{"]
 ],[
    "start",
   ["text","\t\tpix "],
@@ -90,7 +90,7 @@
 ],[
    "start",
   ["text","\t"],
-  ["punctuation.ahk","}"]
+  ["paren","}"]
 ],[
    "start",
   ["text","    "],
@@ -114,7 +114,7 @@
   ["text"," "]
 ],[
    "start",
-  ["punctuation.ahk","}"]
+  ["paren","}"]
 ],[
    "start"
 ],[
@@ -123,7 +123,7 @@
   ["keyword.operator.ahk",":="],
   ["text"," "],
   ["support.function.ahk","DllCall"],
-  ["punctuation.ahk","("],
+  ["paren","("],
   ["punctuation.quote.double","\""],
   ["string.quoted.ahk","GetDC"],
   ["punctuation.quote.double","\""],
@@ -131,7 +131,7 @@
   ["text"," UInt"],
   ["punctuation.ahk",","],
   ["text"," MagnifierID"],
-  ["punctuation.ahk",")"]
+  ["paren",")"]
 ],[
    "start"
 ],[
@@ -140,7 +140,7 @@
 ],[
    "start",
   ["text","DrawCross"],
-  ["punctuation.ahk","("],
+  ["paren","("],
   ["keyword.control.ahk","byRef"],
   ["text"," x"],
   ["keyword.operator.ahk","="],
@@ -154,7 +154,7 @@
   ["text","z"],
   ["punctuation.ahk",","],
   ["text"," dc"],
-  ["punctuation.ahk","){"]
+  ["paren","){"]
 ],[
    "start",
   ["text","       "],
@@ -165,7 +165,7 @@
   ["keyword.operator.ahk",":="],
   ["text"," "],
   ["support.function.ahk","DllCall"],
-  ["punctuation.ahk","("],
+  ["paren","("],
   ["text"," "],
   ["punctuation.quote.double","\""],
   ["string.quoted.ahk","gdi32.dll\\CreatePen"],
@@ -184,10 +184,10 @@
   ["text"," UInt"],
   ["punctuation.ahk",","],
   ["text"," 0x0000FF"],
-  ["punctuation.ahk",")"]
+  ["paren",")"]
 ],[
    "start",
-  ["punctuation.ahk","}"]
+  ["paren","}"]
 ],[
    "start"
 ],[
@@ -214,13 +214,13 @@
    "start",
   ["text","    "],
   ["keyword.control.ahk","If"],
-  ["punctuation.ahk","("],
+  ["paren","("],
   ["text","zoom "],
   ["keyword.operator.ahk","<"],
   ["text"," ws_x "],
   ["variable.parameter","and"],
   ["text"," "],
-  ["punctuation.ahk","("],
+  ["paren","("],
   ["text"," "],
   ["variable.predefined.ahk","A_ThisHotKey"],
   ["text"," "],
@@ -238,9 +238,9 @@
   ["punctuation.quote.double","\""],
   ["string.quoted.ahk","^NumPadAdd"],
   ["punctuation.quote.double","\""],
-  ["punctuation.ahk",")"],
+  ["paren",")"],
   ["text"," "],
-  ["punctuation.ahk",")"]
+  ["paren",")"]
 ],[
    "start",
   ["text","\t\tzoom "],

@@ -1,0 +1,843 @@
+[[
+   "start",
+  ["punctuation.definition.comment.kotlin","/*"],
+  ["comment.block.kotlin","Taken from http://try.kotlinlang.org/#/Examples/Longer%20examples/Life/Life.kt"],
+  ["punctuation.definition.comment.kotlin","*/"]
+],[
+   "punctuation.definition.comment.kotlin",
+  ["punctuation.definition.comment.kotlin","/*"],
+  ["comment.block.kotlin","*"]
+],[
+   "punctuation.definition.comment.kotlin",
+  ["comment.block.kotlin"," * This is a straightforward implementation of The Game of Life"]
+],[
+   "punctuation.definition.comment.kotlin",
+  ["comment.block.kotlin"," * See http://en.wikipedia.org/wiki/Conway's_Game_of_Life"]
+],[
+   "start",
+  ["comment.block.kotlin"," "],
+  ["punctuation.definition.comment.kotlin","*/"]
+],[
+   "start",
+  ["keyword.other.kotlin","package"],
+  ["text"," "],
+  ["entity.name.package.kotlin","life"]
+],[
+   "start"
+],[
+   "punctuation.definition.comment.kotlin",
+  ["punctuation.definition.comment.kotlin","/*"]
+],[
+   "punctuation.definition.comment.kotlin",
+  ["comment.block.kotlin"," * A field where cells live. Effectively immutable"]
+],[
+   "start",
+  ["comment.block.kotlin"," "],
+  ["punctuation.definition.comment.kotlin","*/"]
+],[
+   ["text7","text5"],
+  ["text","class"],
+  ["text"," "],
+  ["entity.name.type.class.kotlin","Field"],
+  ["text","("]
+],[
+   ["text7","text5"],
+  ["text","        "],
+  ["storage.modifier.kotlin","val"],
+  ["text"," "],
+  ["variable.parameter.function.kotlin","width"],
+  ["keyword.operator.declaration.kotlin",":"],
+  ["text"," "],
+  ["storage.type.buildin.kotlin","Int"],
+  ["text",","]
+],[
+   ["text7","text5"],
+  ["text","        "],
+  ["storage.modifier.kotlin","val"],
+  ["text"," "],
+  ["variable.parameter.function.kotlin","height"],
+  ["keyword.operator.declaration.kotlin",":"],
+  ["text"," "],
+  ["storage.type.buildin.kotlin","Int"],
+  ["text",","]
+],[
+   ["text7","text5"],
+  ["text","        "],
+  ["keyword.operator.arithmetic.kotlin","//"],
+  ["text"," "],
+  ["variable.parameter.function.kotlin","This"],
+  ["text"," "],
+  ["variable.parameter.function.kotlin","function"],
+  ["text"," "],
+  ["variable.parameter.function.kotlin","tells"],
+  ["text"," "],
+  ["variable.parameter.function.kotlin","the"],
+  ["text"," "],
+  ["variable.parameter.function.kotlin","constructor"],
+  ["text"," "],
+  ["variable.parameter.function.kotlin","which"],
+  ["text"," "],
+  ["variable.parameter.function.kotlin","cells"],
+  ["text"," "],
+  ["variable.parameter.function.kotlin","are"],
+  ["text"," "],
+  ["variable.parameter.function.kotlin","alive"]
+],[
+   "start",
+  ["text","        "],
+  ["keyword.operator.arithmetic.kotlin","//"],
+  ["text"," "],
+  ["keyword.control.kotlin","if"],
+  ["text"," "],
+  ["variable.parameter.function.kotlin","init"],
+  ["text","("],
+  ["variable.parameter.function.kotlin","i"],
+  ["text",", "],
+  ["variable.parameter.function.kotlin","j"],
+  ["text",") is true, the cell ("],
+  ["variable.parameter.function.kotlin","i"],
+  ["text",", "],
+  ["variable.parameter.function.kotlin","j"],
+  ["text",") is alive"]
+],[
+   "start",
+  ["text","        init"],
+  ["keyword.operator.declaration.kotlin",":"],
+  ["text"," ("],
+  ["storage.type.buildin.kotlin","Int"],
+  ["text",", "],
+  ["storage.type.buildin.kotlin","Int"],
+  ["text",") "],
+  ["keyword.operator.declaration.kotlin","->"],
+  ["text"," "],
+  ["storage.type.buildin.kotlin","Boolean"]
+],[
+   "text",
+  ["text",") {"]
+],[
+   "text",
+  ["text","    "],
+  ["storage.modifier.kotlin","private"],
+  ["text"," "],
+  ["keyword.other.kotlin","val"],
+  ["text"," "],
+  ["entity.name.variable.kotlin","live"],
+  ["keyword.operator.declaration.kotlin",":"],
+  ["text"," Array<Array<"],
+  ["storage.type.buildin.kotlin","Boolean"],
+  ["text",">> "],
+  ["keyword.operator.assignment.kotlin","="],
+  ["text"," Array(height) { i "],
+  ["keyword.operator.declaration.kotlin","->"],
+  ["text"," Array(width) { j "],
+  ["keyword.operator.declaration.kotlin","->"],
+  ["text"," init(i, j) } }"]
+],[
+   "text"
+],[
+   ["text17","text"],
+  ["text","    "],
+  ["storage.modifier.kotlin","private"],
+  ["text"," "],
+  ["keyword.other.kotlin","fun"],
+  ["text"," "],
+  ["entity.name.function.kotlin","liveCount"],
+  ["text","("],
+  ["variable.parameter.function.kotlin","i"],
+  ["keyword.operator.declaration.kotlin",":"],
+  ["text"," "],
+  ["storage.type.buildin.kotlin","Int"],
+  ["text",", "],
+  ["variable.parameter.function.kotlin","j"],
+  ["keyword.operator.declaration.kotlin",":"],
+  ["text"," "],
+  ["storage.type.buildin.kotlin","Int"],
+  ["text",")"]
+],[
+   ["text3","keyword.operator.assignment.kotlin33","keyword.operator.assignment.kotlin33","text17","text17","text"],
+  ["text","            "],
+  ["keyword.operator.assignment.kotlin","="],
+  ["text"," "],
+  ["keyword.control.kotlin","if"],
+  ["text"," (i "],
+  ["storage.modifier.kotlin","in"],
+  ["text"," "],
+  ["constant.numeric.kotlin","0"],
+  ["keyword.operator.dot.kotlin",".."],
+  ["text","height "],
+  ["keyword.operator.arithmetic.kotlin","-"],
+  ["text"," "],
+  ["constant.numeric.kotlin","1"],
+  ["text"," "],
+  ["keyword.operator.logical.kotlin","&&"]
+],[
+   ["text3","keyword.operator.assignment.kotlin33","keyword.operator.assignment.kotlin33","text17","text17","text"],
+  ["text","            j "],
+  ["storage.modifier.kotlin","in"],
+  ["text"," "],
+  ["constant.numeric.kotlin","0"],
+  ["keyword.operator.dot.kotlin",".."],
+  ["text","width "],
+  ["keyword.operator.arithmetic.kotlin","-"],
+  ["text"," "],
+  ["constant.numeric.kotlin","1"],
+  ["text"," "],
+  ["keyword.operator.logical.kotlin","&&"]
+],[
+   ["text17","text"],
+  ["text","            live[i][j]) "],
+  ["constant.numeric.kotlin","1"],
+  ["text"," "],
+  ["keyword.control.kotlin","else"],
+  ["text"," "],
+  ["constant.numeric.kotlin","0"]
+],[
+   "text"
+],[
+   "text",
+  ["text","    "],
+  ["punctuation.definition.comment.kotlin","//"],
+  ["comment.line.double-slash.kotlin"," How many neighbors of (i, j) are alive?"]
+],[
+   ["keyword.operator.assignment.kotlin33","text17","text17","text"],
+  ["text","    "],
+  ["keyword.other.kotlin","fun"],
+  ["text"," "],
+  ["entity.name.function.kotlin","liveNeighbors"],
+  ["text","("],
+  ["variable.parameter.function.kotlin","i"],
+  ["keyword.operator.declaration.kotlin",":"],
+  ["text"," "],
+  ["storage.type.buildin.kotlin","Int"],
+  ["text",", "],
+  ["variable.parameter.function.kotlin","j"],
+  ["keyword.operator.declaration.kotlin",":"],
+  ["text"," "],
+  ["storage.type.buildin.kotlin","Int"],
+  ["text",") "],
+  ["keyword.operator.assignment.kotlin","="]
+],[
+   ["text17","text"],
+  ["text","            liveCount(i "],
+  ["keyword.operator.arithmetic.kotlin","-"],
+  ["text"," "],
+  ["constant.numeric.kotlin","1"],
+  ["text",", j "],
+  ["keyword.operator.arithmetic.kotlin","-"],
+  ["text"," "],
+  ["constant.numeric.kotlin","1"],
+  ["text",") "],
+  ["keyword.operator.arithmetic.kotlin","+"]
+],[
+   "text",
+  ["text","                    liveCount("],
+  ["variable.parameter.function.kotlin","i"],
+  ["text"," "],
+  ["keyword.operator.arithmetic.kotlin","-"],
+  ["text"," "],
+  ["variable.parameter.function.kotlin","1"],
+  ["text",", "],
+  ["variable.parameter.function.kotlin","j"],
+  ["text",") +"]
+],[
+   "text",
+  ["text","                    liveCount(i "],
+  ["keyword.operator.arithmetic.kotlin","-"],
+  ["text"," "],
+  ["constant.numeric.kotlin","1"],
+  ["text",", j "],
+  ["keyword.operator.arithmetic.kotlin","+"],
+  ["text"," "],
+  ["constant.numeric.kotlin","1"],
+  ["text",") "],
+  ["keyword.operator.arithmetic.kotlin","+"]
+],[
+   "text",
+  ["text","                    liveCount(i, j "],
+  ["keyword.operator.arithmetic.kotlin","-"],
+  ["text"," "],
+  ["constant.numeric.kotlin","1"],
+  ["text",") "],
+  ["keyword.operator.arithmetic.kotlin","+"]
+],[
+   "text",
+  ["text","                    liveCount(i, j "],
+  ["keyword.operator.arithmetic.kotlin","+"],
+  ["text"," "],
+  ["constant.numeric.kotlin","1"],
+  ["text",") "],
+  ["keyword.operator.arithmetic.kotlin","+"]
+],[
+   "text",
+  ["text","                    liveCount(i "],
+  ["keyword.operator.arithmetic.kotlin","+"],
+  ["text"," "],
+  ["constant.numeric.kotlin","1"],
+  ["text",", j "],
+  ["keyword.operator.arithmetic.kotlin","-"],
+  ["text"," "],
+  ["constant.numeric.kotlin","1"],
+  ["text",") "],
+  ["keyword.operator.arithmetic.kotlin","+"]
+],[
+   "text",
+  ["text","                    liveCount(i "],
+  ["keyword.operator.arithmetic.kotlin","+"],
+  ["text"," "],
+  ["constant.numeric.kotlin","1"],
+  ["text",", j) "],
+  ["keyword.operator.arithmetic.kotlin","+"]
+],[
+   "text",
+  ["text","                    liveCount(i "],
+  ["keyword.operator.arithmetic.kotlin","+"],
+  ["text"," "],
+  ["constant.numeric.kotlin","1"],
+  ["text",", j "],
+  ["keyword.operator.arithmetic.kotlin","+"],
+  ["text"," "],
+  ["constant.numeric.kotlin","1"],
+  ["text",")"]
+],[
+   "text"
+],[
+   "text",
+  ["text","    "],
+  ["punctuation.definition.comment.kotlin","//"],
+  ["comment.line.double-slash.kotlin"," You can say field[i, j], and this function gets called"]
+],[
+   ["text17","text"],
+  ["text","    "],
+  ["storage.modifier.kotlin","operator"],
+  ["text"," "],
+  ["keyword.other.kotlin","fun"],
+  ["text"," "],
+  ["entity.name.function.kotlin","get"],
+  ["text","("],
+  ["variable.parameter.function.kotlin","i"],
+  ["keyword.operator.declaration.kotlin",":"],
+  ["text"," "],
+  ["storage.type.buildin.kotlin","Int"],
+  ["text",", "],
+  ["variable.parameter.function.kotlin","j"],
+  ["keyword.operator.declaration.kotlin",":"],
+  ["text"," "],
+  ["storage.type.buildin.kotlin","Int"],
+  ["text",") "],
+  ["keyword.operator.assignment.kotlin","="],
+  ["text"," live[i][j]"]
+],[
+   "text",
+  ["text","}"]
+],[
+   "text"
+],[
+   ["punctuation.definition.comment.kotlin","text"],
+  ["punctuation.definition.comment.kotlin","/*"],
+  ["comment.block.kotlin","*"]
+],[
+   ["punctuation.definition.comment.kotlin","text"],
+  ["comment.block.kotlin"," * This function takes the present state of the field"]
+],[
+   ["punctuation.definition.comment.kotlin","text"],
+  ["comment.block.kotlin"," * and returns a new field representing the next moment of time"]
+],[
+   "text",
+  ["comment.block.kotlin"," "],
+  ["punctuation.definition.comment.kotlin","*/"]
+],[
+   ["text22","text17","text17","text"],
+  ["keyword.other.kotlin","fun"],
+  ["text"," "],
+  ["entity.name.function.kotlin","next"],
+  ["text","("],
+  ["variable.parameter.function.kotlin","field"],
+  ["keyword.operator.declaration.kotlin",":"],
+  ["text"," Field)"],
+  ["keyword.operator.declaration.kotlin",":"],
+  ["text"," Field {"]
+],[
+   ["text","text22","text22","text17","text17","text"],
+  ["text","    "],
+  ["keyword.control.kotlin","return"],
+  ["text"," Field(field"],
+  ["keyword.operator.dot.kotlin","."],
+  ["text","width, field"],
+  ["keyword.operator.dot.kotlin","."],
+  ["text","height) { i, j "],
+  ["keyword.operator.declaration.kotlin","->"]
+],[
+   ["text","text22","text22","text17","text17","text"],
+  ["text","        "],
+  ["keyword.other.kotlin","val"],
+  ["text"," "],
+  ["entity.name.variable.kotlin","n"],
+  ["text"," "],
+  ["keyword.operator.assignment.kotlin","="],
+  ["text"," field"],
+  ["keyword.operator.dot.kotlin","."],
+  ["text","liveNeighbors(i, j)"]
+],[
+   ["text","text22","text22","text17","text17","text"],
+  ["text","        "],
+  ["keyword.control.kotlin","if"],
+  ["text"," (field[i, j])"]
+],[
+   ["text","text22","text22","text17","text17","text"],
+  ["text","        "],
+  ["punctuation.definition.comment.kotlin","//"],
+  ["comment.line.double-slash.kotlin"," (i, j) is alive"]
+],[
+   ["text","text22","text22","text17","text17","text"],
+  ["text","            n "],
+  ["storage.modifier.kotlin","in"],
+  ["text"," "],
+  ["constant.numeric.kotlin","2"],
+  ["keyword.operator.dot.kotlin",".."],
+  ["constant.numeric.kotlin","3"],
+  ["text"," "],
+  ["punctuation.definition.comment.kotlin","//"],
+  ["comment.line.double-slash.kotlin"," It remains alive iff it has 2 or 3 neighbors"]
+],[
+   ["text","text22","text22","text17","text17","text"],
+  ["text","        "],
+  ["keyword.control.kotlin","else"]
+],[
+   ["text","text22","text22","text17","text17","text"],
+  ["text","        "],
+  ["punctuation.definition.comment.kotlin","//"],
+  ["comment.line.double-slash.kotlin"," (i, j) is dead"]
+],[
+   ["text","text22","text22","text17","text17","text"],
+  ["text","            n "],
+  ["keyword.operator.comparison.kotlin","=="],
+  ["text"," "],
+  ["constant.numeric.kotlin","3"],
+  ["text"," "],
+  ["punctuation.definition.comment.kotlin","//"],
+  ["comment.line.double-slash.kotlin"," A new cell is born if there are 3 neighbors alive"]
+],[
+   ["text22","text17","text17","text"],
+  ["text","    }"]
+],[
+   "text",
+  ["text","}"]
+],[
+   "text"
+],[
+   "text",
+  ["punctuation.definition.comment.kotlin","/*"],
+  ["comment.block.kotlin","* A few colony examples here "],
+  ["punctuation.definition.comment.kotlin","*/"]
+],[
+   ["text22","text17","text17","text"],
+  ["keyword.other.kotlin","fun"],
+  ["text"," "],
+  ["entity.name.function.kotlin","main"],
+  ["text","("],
+  ["variable.parameter.function.kotlin","args"],
+  ["keyword.operator.declaration.kotlin",":"],
+  ["text"," Array<"],
+  ["storage.type.buildin.kotlin","String"],
+  ["text",">) {"]
+],[
+   ["text22","text17","text17","text"],
+  ["text","    "],
+  ["punctuation.definition.comment.kotlin","//"],
+  ["comment.line.double-slash.kotlin"," Simplistic demo"]
+],[
+   ["text22","text17","text17","text"],
+  ["text","    runGameOfLife("],
+  ["punctuation.definition.string.begin.kotlin","\""],
+  ["string.quoted.double.kotlin","***"],
+  ["punctuation.definition.string.end.kotlin","\""],
+  ["text",", "],
+  ["constant.numeric.kotlin","3"],
+  ["text",")"]
+],[
+   ["text22","text17","text17","text"],
+  ["text","    "],
+  ["punctuation.definition.comment.kotlin","//"],
+  ["comment.line.double-slash.kotlin"," \"Star burst\""]
+],[
+   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
+  ["text","    runGameOfLife("],
+  ["punctuation.definition.string.begin.kotlin","\"\"\""]
+],[
+   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
+  ["string.quoted.third.kotlin","        _______"]
+],[
+   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
+  ["string.quoted.third.kotlin","        ___*___"]
+],[
+   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
+  ["string.quoted.third.kotlin","        __***__"]
+],[
+   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
+  ["string.quoted.third.kotlin","        ___*___"]
+],[
+   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
+  ["string.quoted.third.kotlin","        _______"]
+],[
+   ["text22","text17","text17","text"],
+  ["string.quoted.third.kotlin","    "],
+  ["punctuation.definition.string.end.kotlin","\"\"\""],
+  ["text",", "],
+  ["constant.numeric.kotlin","10"],
+  ["text",")"]
+],[
+   ["text22","text17","text17","text"],
+  ["text","    "],
+  ["punctuation.definition.comment.kotlin","//"],
+  ["comment.line.double-slash.kotlin"," Stable colony"]
+],[
+   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
+  ["text","    runGameOfLife("],
+  ["punctuation.definition.string.begin.kotlin","\"\"\""]
+],[
+   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
+  ["string.quoted.third.kotlin","        _____"]
+],[
+   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
+  ["string.quoted.third.kotlin","        __*__"]
+],[
+   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
+  ["string.quoted.third.kotlin","        _*_*_"]
+],[
+   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
+  ["string.quoted.third.kotlin","        __*__"]
+],[
+   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
+  ["string.quoted.third.kotlin","        _____"]
+],[
+   ["text22","text17","text17","text"],
+  ["string.quoted.third.kotlin","    "],
+  ["punctuation.definition.string.end.kotlin","\"\"\""],
+  ["text",", "],
+  ["constant.numeric.kotlin","3"],
+  ["text",")"]
+],[
+   ["text22","text17","text17","text"],
+  ["text","    "],
+  ["punctuation.definition.comment.kotlin","//"],
+  ["comment.line.double-slash.kotlin"," Stable from the step 2"]
+],[
+   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
+  ["text","    runGameOfLife("],
+  ["punctuation.definition.string.begin.kotlin","\"\"\""]
+],[
+   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
+  ["string.quoted.third.kotlin","        __**__"]
+],[
+   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
+  ["string.quoted.third.kotlin","        __**__"]
+],[
+   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
+  ["string.quoted.third.kotlin","        __**__"]
+],[
+   ["text22","text17","text17","text"],
+  ["string.quoted.third.kotlin","    "],
+  ["punctuation.definition.string.end.kotlin","\"\"\""],
+  ["text",", "],
+  ["constant.numeric.kotlin","3"],
+  ["text",")"]
+],[
+   ["text22","text17","text17","text"],
+  ["text","    "],
+  ["punctuation.definition.comment.kotlin","//"],
+  ["comment.line.double-slash.kotlin"," Oscillating colony"]
+],[
+   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
+  ["text","    runGameOfLife("],
+  ["punctuation.definition.string.begin.kotlin","\"\"\""]
+],[
+   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
+  ["string.quoted.third.kotlin","        __**____"]
+],[
+   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
+  ["string.quoted.third.kotlin","        __**____"]
+],[
+   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
+  ["string.quoted.third.kotlin","        ____**__"]
+],[
+   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
+  ["string.quoted.third.kotlin","        ____**__"]
+],[
+   ["text22","text17","text17","text"],
+  ["string.quoted.third.kotlin","    "],
+  ["punctuation.definition.string.end.kotlin","\"\"\""],
+  ["text",", "],
+  ["constant.numeric.kotlin","6"],
+  ["text",")"]
+],[
+   ["text22","text17","text17","text"],
+  ["text","    "],
+  ["punctuation.definition.comment.kotlin","//"],
+  ["comment.line.double-slash.kotlin"," A fancier oscillating colony"]
+],[
+   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
+  ["text","    runGameOfLife("],
+  ["punctuation.definition.string.begin.kotlin","\"\"\""]
+],[
+   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
+  ["string.quoted.third.kotlin","        -------------------"]
+],[
+   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
+  ["string.quoted.third.kotlin","        -------***---***---"]
+],[
+   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
+  ["string.quoted.third.kotlin","        -------------------"]
+],[
+   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
+  ["string.quoted.third.kotlin","        -----*----*-*----*-"]
+],[
+   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
+  ["string.quoted.third.kotlin","        -----*----*-*----*-"]
+],[
+   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
+  ["string.quoted.third.kotlin","        -----*----*-*----*-"]
+],[
+   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
+  ["string.quoted.third.kotlin","        -------***---***---"]
+],[
+   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
+  ["string.quoted.third.kotlin","        -------------------"]
+],[
+   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
+  ["string.quoted.third.kotlin","        -------***---***---"]
+],[
+   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
+  ["string.quoted.third.kotlin","        -----*----*-*----*-"]
+],[
+   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
+  ["string.quoted.third.kotlin","        -----*----*-*----*-"]
+],[
+   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
+  ["string.quoted.third.kotlin","        -----*----*-*----*-"]
+],[
+   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
+  ["string.quoted.third.kotlin","        -------------------"]
+],[
+   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
+  ["string.quoted.third.kotlin","        -------***---***---"]
+],[
+   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
+  ["string.quoted.third.kotlin","        -------------------"]
+],[
+   ["text22","text17","text17","text"],
+  ["string.quoted.third.kotlin","    "],
+  ["punctuation.definition.string.end.kotlin","\"\"\""],
+  ["text",", "],
+  ["constant.numeric.kotlin","10"],
+  ["text",")"]
+],[
+   "text",
+  ["text","}"]
+],[
+   "text"
+],[
+   "text",
+  ["punctuation.definition.comment.kotlin","//"],
+  ["comment.line.double-slash.kotlin"," UTILITIES"]
+],[
+   "text"
+],[
+   ["text22","text17","text17","text"],
+  ["keyword.other.kotlin","fun"],
+  ["text"," "],
+  ["entity.name.function.kotlin","runGameOfLife"],
+  ["text","("],
+  ["variable.parameter.function.kotlin","fieldText"],
+  ["keyword.operator.declaration.kotlin",":"],
+  ["text"," "],
+  ["storage.type.buildin.kotlin","String"],
+  ["text",", "],
+  ["variable.parameter.function.kotlin","steps"],
+  ["keyword.operator.declaration.kotlin",":"],
+  ["text"," "],
+  ["storage.type.buildin.kotlin","Int"],
+  ["text",") {"]
+],[
+   ["text22","text17","text17","text"],
+  ["text","    "],
+  ["keyword.other.kotlin","var"],
+  ["text"," "],
+  ["entity.name.variable.kotlin","field"],
+  ["text"," "],
+  ["keyword.operator.assignment.kotlin","="],
+  ["text"," makeField(fieldText)"]
+],[
+   ["text","text22","text22","text17","text17","text"],
+  ["text","    "],
+  ["keyword.control.kotlin","for"],
+  ["text"," (step "],
+  ["storage.modifier.kotlin","in"],
+  ["text"," "],
+  ["constant.numeric.kotlin","1"],
+  ["keyword.operator.dot.kotlin",".."],
+  ["text","steps) {"]
+],[
+   ["text","text22","text22","text17","text17","text"],
+  ["text","        println("],
+  ["punctuation.definition.string.begin.kotlin","\""],
+  ["string.quoted.double.kotlin","Step: "],
+  ["variable.parameter.template.kotlin","$step"],
+  ["punctuation.definition.string.end.kotlin","\""],
+  ["text",")"]
+],[
+   ["text","text","text","text22","text22","text17","text17","text"],
+  ["text","        "],
+  ["keyword.control.kotlin","for"],
+  ["text"," (i "],
+  ["storage.modifier.kotlin","in"],
+  ["text"," "],
+  ["constant.numeric.kotlin","0"],
+  ["keyword.operator.dot.kotlin",".."],
+  ["text","field"],
+  ["keyword.operator.dot.kotlin","."],
+  ["text","height "],
+  ["keyword.operator.arithmetic.kotlin","-"],
+  ["text"," "],
+  ["constant.numeric.kotlin","1"],
+  ["text",") {"]
+],[
+   ["text","text","text","text","text","text22","text22","text17","text17","text"],
+  ["text","            "],
+  ["keyword.control.kotlin","for"],
+  ["text"," (j "],
+  ["storage.modifier.kotlin","in"],
+  ["text"," "],
+  ["constant.numeric.kotlin","0"],
+  ["keyword.operator.dot.kotlin",".."],
+  ["text","field"],
+  ["keyword.operator.dot.kotlin","."],
+  ["text","width "],
+  ["keyword.operator.arithmetic.kotlin","-"],
+  ["text"," "],
+  ["constant.numeric.kotlin","1"],
+  ["text",") {"]
+],[
+   ["text","text","text","text","text","text22","text22","text17","text17","text"],
+  ["text","                print("],
+  ["keyword.control.kotlin","if"],
+  ["text"," (field[i, j]) "],
+  ["punctuation.definition.string.begin.kotlin","\""],
+  ["string.quoted.double.kotlin","*"],
+  ["punctuation.definition.string.end.kotlin","\""],
+  ["text"," "],
+  ["keyword.control.kotlin","else"],
+  ["text"," "],
+  ["punctuation.definition.string.begin.kotlin","\""],
+  ["string.quoted.double.kotlin"," "],
+  ["punctuation.definition.string.end.kotlin","\""],
+  ["text",")"]
+],[
+   ["text","text","text","text22","text22","text17","text17","text"],
+  ["text","            }"]
+],[
+   ["text","text","text","text22","text22","text17","text17","text"],
+  ["text","            println("],
+  ["punctuation.definition.string.begin.kotlin","\""],
+  ["punctuation.definition.string.end.kotlin","\""],
+  ["text",")"]
+],[
+   ["text","text22","text22","text17","text17","text"],
+  ["text","        }"]
+],[
+   ["text","text22","text22","text17","text17","text"],
+  ["text","        field "],
+  ["keyword.operator.assignment.kotlin","="],
+  ["text"," next(field)"]
+],[
+   ["text22","text17","text17","text"],
+  ["text","    }"]
+],[
+   "text",
+  ["text","}"]
+],[
+   "text"
+],[
+   ["text22","text17","text17","text"],
+  ["keyword.other.kotlin","fun"],
+  ["text"," "],
+  ["entity.name.function.kotlin","makeField"],
+  ["text","("],
+  ["variable.parameter.function.kotlin","s"],
+  ["keyword.operator.declaration.kotlin",":"],
+  ["text"," "],
+  ["storage.type.buildin.kotlin","String"],
+  ["text",")"],
+  ["keyword.operator.declaration.kotlin",":"],
+  ["text"," Field {"]
+],[
+   ["text22","text17","text17","text"],
+  ["text","    "],
+  ["keyword.other.kotlin","val"],
+  ["text"," "],
+  ["entity.name.variable.kotlin","lines"],
+  ["text"," "],
+  ["keyword.operator.assignment.kotlin","="],
+  ["text"," s"],
+  ["keyword.operator.dot.kotlin","."],
+  ["text","replace("],
+  ["punctuation.definition.string.begin.kotlin","\""],
+  ["string.quoted.double.kotlin"," "],
+  ["punctuation.definition.string.end.kotlin","\""],
+  ["text",", "],
+  ["punctuation.definition.string.begin.kotlin","\""],
+  ["punctuation.definition.string.end.kotlin","\""],
+  ["text",")"],
+  ["keyword.operator.dot.kotlin","."],
+  ["text","split("],
+  ["punctuation.definition.string.begin.kotlin","'"],
+  ["constant.character.escape.kotlin","\\n"],
+  ["punctuation.definition.string.end.kotlin","'"],
+  ["text",")"],
+  ["keyword.operator.dot.kotlin","."],
+  ["text","filter({ it"],
+  ["keyword.operator.dot.kotlin","."],
+  ["text","isNotEmpty() })"]
+],[
+   ["text22","text17","text17","text"],
+  ["text","    "],
+  ["keyword.other.kotlin","val"],
+  ["text"," "],
+  ["entity.name.variable.kotlin","longestLine"],
+  ["text"," "],
+  ["keyword.operator.assignment.kotlin","="],
+  ["text"," lines"],
+  ["keyword.operator.dot.kotlin","."],
+  ["text","toList()"],
+  ["keyword.operator.dot.kotlin","."],
+  ["text","maxBy { it"],
+  ["keyword.operator.dot.kotlin","."],
+  ["text","length } ?"],
+  ["keyword.operator.declaration.kotlin",":"],
+  ["text"," "],
+  ["punctuation.definition.string.begin.kotlin","\""],
+  ["punctuation.definition.string.end.kotlin","\""]
+],[
+   ["text22","text17","text17","text"]
+],[
+   ["text22","text17","text17","text"],
+  ["text","    "],
+  ["keyword.control.kotlin","return"],
+  ["text"," Field(longestLine"],
+  ["keyword.operator.dot.kotlin","."],
+  ["text","length, lines"],
+  ["keyword.operator.dot.kotlin","."],
+  ["text","size) { i, j "],
+  ["keyword.operator.declaration.kotlin","->"],
+  ["text"," lines[i][j] "],
+  ["keyword.operator.comparison.kotlin","=="],
+  ["text"," "],
+  ["punctuation.definition.string.begin.kotlin","'"],
+  ["string.quoted.single.kotlin","*"],
+  ["punctuation.definition.string.end.kotlin","'"],
+  ["text"," }"]
+],[
+   "text",
+  ["text","}"]
+],[
+   "text"
+]]

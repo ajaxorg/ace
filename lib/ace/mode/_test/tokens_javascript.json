@@ -48,7 +48,7 @@
   ["text","    "],
   ["storage.type","var"],
   ["text"," "],
-  ["identifier","line"],
+  ["identifier","$line$"],
   ["text"," "],
   ["keyword.operator","="],
   ["text"," "],
@@ -376,8 +376,7 @@
   ["text"," "],
   ["keyword.operator","="],
   ["text"," "],
-  ["constant.numeric","1."],
-  ["text","00"],
+  ["constant.numeric","1.00"],
   ["identifier","E"],
   ["keyword.operator","^"],
   ["constant.numeric","1"],
@@ -391,12 +390,19 @@
   ["text"," "],
   ["keyword.operator","+"],
   ["text"," "],
-  ["punctuation.operator","."],
-  ["constant.numeric","2"],
+  ["constant.numeric","1."],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["constant.numeric",".2"],
   ["text"," "],
   ["keyword.operator","+"],
   ["text"," "],
   ["constant.numeric","052"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["constant.numeric","0O7"],
   ["text"," "],
   ["keyword.operator","+"],
   ["text"," "],
@@ -535,6 +541,19 @@
 ],[
    "no_regex"
 ],[
+   "no_regex",
+  ["identifier","z"],
+  ["keyword.operator",">>="],
+  ["identifier","t"],
+  ["keyword.operator","<<"],
+  ["identifier","f"],
+  ["keyword.operator",">>"],
+  ["identifier","r"],
+  ["keyword.operator",">>>"],
+  ["identifier","s"],
+  ["keyword.operator",">="],
+  ["constant.numeric","0b1"]
+],[
    "no_regex"
 ],[
    "function_arguments",
@@ -590,4 +609,128 @@
   ["text","   "]
 ],[
    "no_regex"
+],[
+   "no_regex",
+  ["keyword.operator","<"],
+  ["identifier","div"]
+],[
+   ["start","jsxAttributes","jsxAttributes","jsx",1],
+  ["identifier","z"],
+  ["keyword.operator","="],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","div"],
+  ["text.tag-whitespace.xml"," "],
+  ["paren.quasi.start","{"],
+  ["keyword.operator","..."],
+  ["variable.language","this"],
+  ["punctuation.operator","."],
+  ["identifier","props"],
+  ["paren.quasi.end","}"],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","x"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["paren.quasi.start","{"],
+  ["constant.numeric","1"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["constant.numeric","2"],
+  ["paren.quasi.end","}"],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","y"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"z{a}b"],
+  ["constant.language.escape.reference.xml","&amp;"],
+  ["string.attribute-value.xml","\""],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","t"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["paren.quasi.start","{"]
+],[
+   ["start","jsxAttributes","jsxAttributes","jsx",1],
+  ["text","        "],
+  ["constant.numeric","1"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","a"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["paren.quasi.start","{"],
+  ["constant.numeric","2"],
+  ["paren.quasi.end","}"],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","a"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   ["jsx",1],
+  ["text","    "],
+  ["paren.quasi.end","}"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   ["jsx",1],
+  ["string","1 "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","a"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["string"," "],
+  ["paren.quasi.start","{"],
+  ["text"," "],
+  ["keyword.operator","++"],
+  ["identifier","x"],
+  ["text","  "],
+  ["paren.quasi.end","}"],
+  ["string"," "],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","a"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","div"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start"
+],[
+   "start",
+  ["storage.type","var"],
+  ["text"," "],
+  ["identifier","o"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   ["start","no_regex","start","string.quasi.start","string.quasi.start","no_regex"],
+  ["text","    "],
+  ["identifier","t"],
+  ["punctuation.operator",":"],
+  ["string.quasi.start","`"],
+  ["paren.quasi.start","${"],
+  ["paren.lparen","["],
+  ["paren.rparen","]"],
+  ["punctuation.operator","."],
+  ["identifier","map"],
+  ["paren.lparen","("],
+  ["identifier","x"],
+  ["text"," "],
+  ["storage.type","=>"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   ["#tmp","no_regex","start","no_regex","start","string.quasi.start","string.quasi.start","no_regex"],
+  ["text","        "],
+  ["keyword","return"],
+  ["text"," "],
+  ["identifier","x"]
+],[
+   "no_regex",
+  ["text","    "],
+  ["paren.rparen","})"],
+  ["paren.quasi.end","}"],
+  ["string.quasi.end","`"]
+],[
+   "start",
+  ["paren.rparen","}"],
+  ["punctuation.operator",";"]
 ]]

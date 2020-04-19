@@ -6,27 +6,26 @@
 ],[
    "ruleset",
   ["text","    "],
-  ["support.type","font-family"],
-  ["text",": Monaco, "],
-  ["string","\"Courier New\""],
+  ["support.type","font"],
+  ["punctuation.operator",":"],
+  ["text"," "],
+  ["constant.numeric","12"],
+  ["keyword","px"],
+  ["text"," Monaco, "],
+  ["string.start","\""],
+  ["string","Courier New"],
+  ["string.end","\""],
   ["text",", "],
   ["support.constant.fonts","monospace"],
-  ["text",";"]
-],[
-   "ruleset",
-  ["text","    "],
-  ["support.type","font-size"],
-  ["text",": "],
-  ["constant.numeric","12"],
-  ["keyword","pX"],
-  ["text",";"]
+  ["punctuation.operator",";"]
 ],[
    "ruleset",
   ["text","    "],
   ["support.type","cursor"],
-  ["text",": "],
+  ["punctuation.operator",":"],
+  ["text"," "],
   ["support.constant","text"],
-  ["text",";"]
+  ["punctuation.operator",";"]
 ],[
    "start",
   ["paren.rparen","}"]
@@ -40,33 +39,83 @@
 ],[
    "ruleset",
   ["text","    "],
-  ["support.type","animation-duration"],
-  ["text",": "],
+  ["support.type","animation"],
+  ["punctuation.operator",":"],
+  ["text"," blink "],
   ["constant.numeric","1"],
   ["keyword","s"],
-  ["text",";"]
-],[
-   "ruleset",
-  ["text","    "],
-  ["support.type","animation-name"],
-  ["text",": blink;"]
-],[
-   "ruleset",
-  ["text","    "],
-  ["support.type","animation-iteration-count"],
-  ["text",": infinite;"]
-],[
-   "ruleset",
-  ["text","    "],
-  ["support.type","animation-direction"],
-  ["text",": alternate;"]
-],[
-   "ruleset",
-  ["text","    "],
-  ["support.type","animation-timing-function"],
-  ["text",": "],
+  ["text"," "],
   ["support.constant","linear"],
-  ["text",";"]
+  ["text"," infinite alternate"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["string","@"],
+  ["keyword","keyframes"],
+  ["text"," blink "],
+  ["paren.lparen","{"]
+],[
+   "ruleset",
+  ["text","    "],
+  ["constant.numeric","0"],
+  ["keyword","%"],
+  ["text",", "],
+  ["constant.numeric","40"],
+  ["keyword","%"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   ["comment","ruleset"],
+  ["text","        "],
+  ["support.type","opacity"],
+  ["punctuation.operator",":"],
+  ["text"," "],
+  ["constant.numeric","0"],
+  ["punctuation.operator",";"],
+  ["text"," "],
+  ["comment","/*"]
+],[
+   "ruleset",
+  ["comment","        */"]
+],[
+   "ruleset",
+  ["text","        "],
+  ["support.type","opacity"],
+  ["punctuation.operator",":"],
+  ["text"," "],
+  ["constant.numeric","1"]
+],[
+   "start",
+  ["text","    "],
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "ruleset",
+  ["text","    "],
+  ["constant.numeric","40.5"],
+  ["keyword","%"],
+  ["text",", "],
+  ["constant.numeric","100"],
+  ["keyword","%"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "ruleset",
+  ["text","        "],
+  ["support.type","opacity"],
+  ["punctuation.operator",":"],
+  ["text"," "],
+  ["constant.numeric","1"]
+],[
+   "start",
+  ["text","    "],
+  ["paren.rparen","}"]
 ],[
    "start",
   ["paren.rparen","}"]
@@ -74,75 +123,114 @@
    "start"
 ],[
    "media",
-  ["string","@keyframes blink {"]
-],[
-   ["ruleset","media"],
-  ["text","    "],
-  ["constant","0"],
-  ["text","% "],
-  ["paren.lparen","{"]
-],[
-   ["ruleset","media"],
-  ["text","        "],
-  ["support.type","opacity"],
-  ["text",": "],
-  ["constant.numeric","0"],
-  ["text",";"]
+  ["string","@"],
+  ["keyword","document"],
+  ["text"," "],
+  ["support.function","url("],
+  ["string","http://c9.io/"],
+  ["support.function",")"],
+  ["text",", "],
+  ["support.function","url-prefix("],
+  ["string","http://ace.c9.io/build/"],
+  ["support.function",")"],
+  ["text",","]
 ],[
    "media",
-  ["text","    "],
-  ["paren.rparen","}"]
+  ["text","   "],
+  ["support.function","domain("],
+  ["string","c9.io"],
+  ["support.function",")"],
+  ["text",", "],
+  ["support.function","regexp("],
+  ["string","\"https:.*\""],
+  ["support.function",")"],
+  ["text"," "],
+  ["comment","/**/"]
 ],[
-   ["ruleset","media"],
-  ["text","    "],
-  ["constant","40"],
-  ["text","% "],
+   "start",
   ["paren.lparen","{"]
 ],[
-   ["ruleset","media"],
-  ["text","        "],
-  ["support.type","opacity"],
-  ["text",": "],
-  ["constant.numeric","0"],
-  ["text",";"]
-],[
-   "media",
+   "start",
   ["text","    "],
-  ["paren.rparen","}"]
+  ["comment","/**/"]
 ],[
-   ["ruleset","media"],
+   "start",
   ["text","    "],
-  ["constant","40"],
-  ["variable",".5"],
-  ["text","% "],
+  ["constant","img"],
+  ["text","["],
+  ["constant","title"],
+  ["text","]"],
+  ["string",":before"],
+  ["text"," "]
+],[
+   "ruleset",
+  ["text","    "],
   ["paren.lparen","{"]
 ],[
-   ["ruleset","media"],
+   ["string.start0","ruleset"],
   ["text","        "],
-  ["support.type","opacity"],
-  ["text",": "],
-  ["constant.numeric","1"]
+  ["support.type","content"],
+  ["punctuation.operator",":"],
+  ["text"," "],
+  ["support.function","attr"],
+  ["text","(title) "],
+  ["string.start","\""],
+  ["constant.language.escape","\\A"],
+  ["string","Image "],
+  ["constant.language.escape","\\"]
 ],[
-   "media",
-  ["text","    "],
-  ["paren.rparen","}"]
+   "ruleset",
+  ["string","            retrieved from"],
+  ["string.end","\""]
 ],[
-   ["ruleset","media"],
-  ["text","    "],
-  ["constant","100"],
-  ["text","% "],
-  ["paren.lparen","{"]
+   ["comment","ruleset"],
+  ["text","            "],
+  ["support.function","attr"],
+  ["text","(src)"],
+  ["punctuation.operator",";"],
+  ["text"," "],
+  ["comment","/*"]
 ],[
-   ["ruleset","media"],
+   "ruleset",
+  ["comment","            */"]
+],[
+   "ruleset",
   ["text","        "],
-  ["support.type","opacity"],
-  ["text",": "],
-  ["constant.numeric","1"]
+  ["support.type","white-space"],
+  ["punctuation.operator",":"],
+  ["text"," "],
+  ["support.constant","pre"],
+  ["punctuation.operator",";"]
 ],[
-   "media",
+   "ruleset",
+  ["text","        "],
+  ["support.type","display"],
+  ["punctuation.operator",":"],
+  ["text"," "],
+  ["support.constant","block"],
+  ["punctuation.operator",";"]
+],[
+   "ruleset",
+  ["text","        "],
+  ["support.type","background"],
+  ["punctuation.operator",":"],
+  ["text"," "],
+  ["support.function","url("],
+  ["string","asdasd"],
+  ["support.function",")"],
+  ["punctuation.operator",";"],
+  ["text"," "],
+  ["string.start","\""],
+  ["string","err"]
+],[
+   "start",
   ["text","    "],
   ["paren.rparen","}"]
 ],[
    "start",
-  ["string","}"]
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start"
 ]]

@@ -1,0 +1,51 @@
+define apache::vhost ($port, $docroot, $servername = $title, $vhost_name = '*') {
+  include apache
+  include apache::params
+  $vhost_dir = $apache::params::vhost_dir
+  file { "${vhost_dir}/${servername}.conf":
+      content => template('apache/vhost-default.conf.erb'),
+      owner   => 'www',
+      group   => 'www',
+      mode    => '644',
+      require => Package['httpd'],
+      notify  => Service['httpd'],
+  }
+}
+
+type MyModule::Tree = Array[Variant[Data, Tree]]
+
+function apache::bool2http(Variant[String, Boolean] $arg) >> String {
+  case $arg {
+    false, undef, /(?i:false)/ : { 'Off' }
+    true, /(?i:true)/          : { 'On' }
+    default               : { "$arg" }
+  }
+}
+
+# A class with parameters
+class apache (String $version = 'latest') {
+  package {'httpd':
+    ensure => $version, # Using the class parameter from above
+    before => File['/etc/httpd.conf'],
+  }
+  file {'/etc/httpd.conf':
+    ensure  => file,
+    owner   => 'httpd',
+    content => template('apache/httpd.conf.erb'), # Template from a module
+  }
+  service {'httpd':
+    ensure    => running,
+    enable    => true,
+    subscribe => File['/etc/httpd.conf'],
+  }
+}
+
+
+if $is_virtual {
+  warning( 'Tried to include class ntp on virtual machine; this node might be misclassified.' )
+}
+elsif $operatingsystem == 'Darwin' {
+  warning( 'This NTP module does not yet work on our Mac laptops.' )
+else {
+  include ntp
+}

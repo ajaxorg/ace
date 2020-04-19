@@ -1,0 +1,173 @@
+[[
+   "start"
+],[
+   "start",
+  ["constant.language.jssmLanguage","machine_name    :"],
+  ["text"," "],
+  ["entity.name.tag.jssmLabel.doublequoted","\"Three-state traffic light, plus off and flash-red\""],
+  ["text",";"]
+],[
+   "start",
+  ["constant.language.jssmLanguage","machine_version :"],
+  ["text"," "],
+  ["constant.numeric","1.2.1"],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start",
+  ["constant.language.jssmLanguage","jssm_version    :"],
+  ["text"," >= "],
+  ["constant.numeric","5.0.0"],
+  ["text",";"]
+],[
+   "start",
+  ["constant.language.jssmLanguage","graph_layout    :"],
+  ["text"," "],
+  ["entity.name.tag.jssmLabel.atom","dot"],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start",
+  ["entity.name.tag.jssmLabel.atom","on_init"],
+  ["text","         : "],
+  ["entity.name.function","${"],
+  ["keyword.other","setup"],
+  ["entity.name.function","}"],
+  ["text",";"]
+],[
+   "start",
+  ["entity.name.tag.jssmLabel.atom","on_halt"],
+  ["text","         : "],
+  ["entity.name.function","${"],
+  ["keyword.other","finalize"],
+  ["entity.name.function","}"],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start"
+],[
+   "start"
+],[
+   "start",
+  ["punctuation.definition.comment.mn","/*"],
+  ["comment.block.jssm"," turn on "],
+  ["punctuation.definition.comment.mn","*/"]
+],[
+   "start",
+  ["entity.name.tag.jssmLabel.atom","Off"],
+  ["text"," "],
+  ["constant.character.jssmAction","'Enable'"],
+  ["text"," { "],
+  ["entity.name.tag.jssmLabel.atom","follow"],
+  ["text",": "],
+  ["entity.name.function","${"],
+  ["keyword.other","turned_on"],
+  ["entity.name.function","}"],
+  ["text","; } "],
+  ["keyword.control.transition.jssmArrow.none_legal","->"],
+  ["text"," "],
+  ["entity.name.tag.jssmLabel.atom","Red"],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start",
+  ["comment.line.jssm","// main sequence"]
+],[
+   "start",
+  ["entity.name.tag.jssmLabel.atom","Red"],
+  ["text"," "],
+  ["constant.character.jssmAction","'Proceed'"],
+  ["text"," "],
+  ["keyword.control.transition.jssmArrow.none_main","=>"],
+  ["text"," "],
+  ["entity.name.tag.jssmLabel.atom","Green"],
+  ["text"," "],
+  ["constant.character.jssmAction","'Proceed'"],
+  ["text"," "],
+  ["keyword.control.transition.jssmArrow.none_main","=>"],
+  ["text"," "],
+  ["entity.name.tag.jssmLabel.atom","Yellow"],
+  ["text"," "],
+  ["constant.character.jssmAction","'Proceed'"],
+  ["text"," "],
+  ["keyword.control.transition.jssmArrow.none_main","=>"],
+  ["text"," "],
+  ["entity.name.tag.jssmLabel.atom","Red"],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start",
+  ["comment.line.jssm","// emergency flash red"]
+],[
+   "start",
+  ["text","["],
+  ["entity.name.tag.jssmLabel.atom","Red"],
+  ["text"," "],
+  ["entity.name.tag.jssmLabel.atom","Yellow"],
+  ["text"," "],
+  ["entity.name.tag.jssmLabel.atom","Green"],
+  ["text","] "],
+  ["constant.character.jssmAction","'Flash'"],
+  ["text"," "],
+  ["keyword.control.transition.jssmArrow.none_legal","->"],
+  ["text"," "],
+  ["entity.name.tag.jssmLabel.atom","Flash"],
+  ["text",";"]
+],[
+   "start",
+  ["entity.name.tag.jssmLabel.atom","Flash"],
+  ["text"," "],
+  ["constant.character.jssmAction","'Proceed'"],
+  ["text"," { "],
+  ["entity.name.tag.jssmLabel.atom","label"],
+  ["text",": "],
+  ["constant.character.jssmAction","'no change'"],
+  ["text","; } "],
+  ["keyword.control.transition.jssmArrow.none_legal","->"],
+  ["text"," "],
+  ["entity.name.tag.jssmLabel.atom","Flash"],
+  ["text"," "],
+  ["constant.character.jssmAction","'Exit'"],
+  ["text"," "],
+  ["keyword.control.transition.jssmArrow.none_legal","->"],
+  ["text"," "],
+  ["entity.name.tag.jssmLabel.atom","Red"],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start",
+  ["comment.line.jssm","// turn off"]
+],[
+   "start",
+  ["text","["],
+  ["entity.name.tag.jssmLabel.atom","Red"],
+  ["text"," "],
+  ["entity.name.tag.jssmLabel.atom","Yellow"],
+  ["text"," "],
+  ["entity.name.tag.jssmLabel.atom","Green"],
+  ["text"," "],
+  ["entity.name.tag.jssmLabel.atom","Flash"],
+  ["text","] "],
+  ["constant.character.jssmAction","'Disable'"],
+  ["text"," { "],
+  ["entity.name.tag.jssmLabel.atom","follow"],
+  ["text",": "],
+  ["entity.name.function","${"],
+  ["keyword.other","turned_off"],
+  ["entity.name.function","}"],
+  ["text","; } "],
+  ["keyword.control.transition.jssmArrow.none_forced","~>"],
+  ["text"," "],
+  ["entity.name.tag.jssmLabel.atom","Off"],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start"
+]]

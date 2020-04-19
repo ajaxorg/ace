@@ -90,7 +90,7 @@
   ["text"," "],
   ["paren.lparen","{"]
 ],[
-   ["css-block-ruleset","paren.lparen52","paren.lparen52","constant.language40"],
+   ["#tmp","css-block-ruleset","paren.lparen52","constant.language40"],
   ["text","    "],
   ["constant","html"],
   ["text",", "],
@@ -98,10 +98,11 @@
   ["text"," "],
   ["paren.lparen","{"]
 ],[
-   ["css-block-ruleset","paren.lparen52","paren.lparen52","constant.language40"],
+   ["#tmp","css-block-ruleset","paren.lparen52","constant.language40"],
   ["text","        "],
   ["support.type","background"],
-  ["text",": "],
+  ["punctuation.operator",":"],
+  ["text"," "],
   ["support.function","url("],
   ["string","'name.png'"],
   ["support.function",")"],
@@ -111,9 +112,9 @@
   ["constant.numeric","0"],
   ["text"," "],
   ["support.constant","no-repeat"],
-  ["text",";"]
+  ["punctuation.operator",";"]
 ],[
-   ["paren.lparen52","constant.language40"],
+   ["#tmp","css-block-start","paren.lparen52","constant.language40"],
   ["text","    "],
   ["paren.rparen","}"]
 ],[
@@ -262,7 +263,7 @@
   ["text"," "],
   ["keyword.operator","="],
   ["text"," "],
-  ["paren","{"]
+  ["paren.lparen","{"]
 ],[
    ["#tmp","js-statement-no_regex","start","js-statement-no_regex","constant.language53","start","paren.lparen13","constant.language","constant.language","start","paren.lparen39","constant.language27","constant.language27","start","paren.lparen52","constant.language40"],
   ["text","    "],

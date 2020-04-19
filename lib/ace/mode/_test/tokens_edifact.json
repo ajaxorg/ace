@@ -1,0 +1,252 @@
+[[
+   "start",
+  ["entity.name.segment","UNB"],
+  ["keyword.operator","+"],
+  ["keyword","UNOA"],
+  ["punctuation.operator",":"],
+  ["text","1"],
+  ["keyword.operator","+"],
+  ["text","005435656"],
+  ["punctuation.operator",":"],
+  ["text","1"],
+  ["keyword.operator","+"],
+  ["text","006415160"],
+  ["punctuation.operator",":"],
+  ["text","1"],
+  ["keyword.operator","+"],
+  ["text","060515"],
+  ["punctuation.operator",":"],
+  ["text","1434"],
+  ["keyword.operator","+"],
+  ["text","00000000000778"],
+  ["punctuation.operator","'"]
+],[
+   "start",
+  ["entity.name.header","UNH"],
+  ["keyword.operator","+"],
+  ["text","00000000000117"],
+  ["keyword.operator","+"],
+  ["identifier","INVnrOIC"],
+  ["punctuation.operator",":"],
+  ["identifier","D"],
+  ["punctuation.operator",":"],
+  ["text","97"],
+  ["identifier","B"],
+  ["punctuation.operator",":"],
+  ["identifier","UN"],
+  ["punctuation.operator","'"]
+],[
+   "start",
+  ["entity.name.segment","BGM"],
+  ["keyword.operator","+"],
+  ["text","380"],
+  ["keyword.operator","+"],
+  ["text","342459"],
+  ["keyword.operator","+"],
+  ["text","9"],
+  ["punctuation.operator","'"]
+],[
+   "start",
+  ["entity.name.segment","DTM"],
+  ["keyword.operator","+"],
+  ["text","3"],
+  ["punctuation.operator",":"],
+  ["text","20060515"],
+  ["punctuation.operator",":"],
+  ["text","102"],
+  ["punctuation.operator","'"]
+],[
+   "start",
+  ["entity.name.segment","RFF"],
+  ["keyword.operator","+"],
+  ["keyword","ON"],
+  ["punctuation.operator",":"],
+  ["text","521052"],
+  ["punctuation.operator","'"]
+],[
+   "start",
+  ["entity.name.segment","NAD"],
+  ["keyword.operator","+"],
+  ["keyword","BY"],
+  ["keyword.operator","+"],
+  ["text","792820524"],
+  ["punctuation.operator","::"],
+  ["text","16"],
+  ["keyword.operator","++"],
+  ["identifier","CUMMINS"],
+  ["text"," "],
+  ["identifier","MID"],
+  ["text","-"],
+  ["identifier","RANGE"],
+  ["text"," "],
+  ["identifier","ENGINE"],
+  ["text"," "],
+  ["identifier","PLANT"],
+  ["punctuation.operator","'"]
+],[
+   "start",
+  ["entity.name.segment","NAD"],
+  ["keyword.operator","+"],
+  ["keyword","SE"],
+  ["keyword.operator","+"],
+  ["text","005435656"],
+  ["punctuation.operator","::"],
+  ["text","16"],
+  ["keyword.operator","++"],
+  ["identifier","GENERAL"],
+  ["text"," "],
+  ["identifier","WIDGET"],
+  ["text"," "],
+  ["identifier","COMPANY"],
+  ["punctuation.operator","'"]
+],[
+   "start",
+  ["entity.name.segment","CUX"],
+  ["keyword.operator","+"],
+  ["text","1"],
+  ["punctuation.operator",":"],
+  ["identifier","USD"],
+  ["punctuation.operator","'"]
+],[
+   "start",
+  ["entity.name.segment","LIN"],
+  ["punctuation.operator","+1+"],
+  ["keyword.operator","+"],
+  ["text","157870"],
+  ["punctuation.operator",":"],
+  ["identifier","IN"],
+  ["punctuation.operator","'"]
+],[
+   "start",
+  ["entity.name.segment","IMD"],
+  ["punctuation.operator","+F+"],
+  ["keyword.operator","+"],
+  ["punctuation.operator",":::"],
+  ["identifier","WIDGET"],
+  ["punctuation.operator","'"]
+],[
+   "start",
+  ["entity.name.segment","QTY"],
+  ["keyword.operator","+"],
+  ["text","47"],
+  ["punctuation.operator",":"],
+  ["text","1020"],
+  ["punctuation.operator",":"],
+  ["identifier","EA"],
+  ["punctuation.operator","'"]
+],[
+   "start",
+  ["entity.name.segment","ALI"],
+  ["keyword.operator","+"],
+  ["identifier","US"],
+  ["punctuation.operator","'"]
+],[
+   "start",
+  ["entity.name.segment","MOA"],
+  ["keyword.operator","+"],
+  ["text","203"],
+  ["punctuation.operator",":"],
+  ["text","1202.58"],
+  ["punctuation.operator","'"]
+],[
+   "start",
+  ["entity.name.segment","PRI"],
+  ["keyword.operator","+"],
+  ["entity.name.segment","INV"],
+  ["punctuation.operator",":"],
+  ["text","1.179"],
+  ["punctuation.operator","'"]
+],[
+   "start",
+  ["entity.name.segment","LIN"],
+  ["punctuation.operator","+2+"],
+  ["keyword.operator","+"],
+  ["text","157871"],
+  ["punctuation.operator",":"],
+  ["identifier","IN"],
+  ["punctuation.operator","'"]
+],[
+   "start",
+  ["entity.name.segment","IMD"],
+  ["punctuation.operator","+F+"],
+  ["keyword.operator","+"],
+  ["punctuation.operator",":::"],
+  ["identifier","DIFFERENT"],
+  ["text"," "],
+  ["identifier","WIDGET"],
+  ["punctuation.operator","'"]
+],[
+   "start",
+  ["entity.name.segment","QTY"],
+  ["keyword.operator","+"],
+  ["text","47"],
+  ["punctuation.operator",":"],
+  ["text","20"],
+  ["punctuation.operator",":"],
+  ["identifier","EA"],
+  ["punctuation.operator","'"]
+],[
+   "start",
+  ["entity.name.segment","ALI"],
+  ["keyword.operator","+"],
+  ["keyword","JP"],
+  ["punctuation.operator","'"]
+],[
+   "start",
+  ["entity.name.segment","MOA"],
+  ["keyword.operator","+"],
+  ["text","203"],
+  ["punctuation.operator",":"],
+  ["text","410"],
+  ["punctuation.operator","'"]
+],[
+   "start",
+  ["entity.name.segment","PRI"],
+  ["keyword.operator","+"],
+  ["entity.name.segment","INV"],
+  ["punctuation.operator",":"],
+  ["text","20.5"],
+  ["punctuation.operator","'"]
+],[
+   "start",
+  ["entity.name.segment","UNS"],
+  ["keyword.operator","+"],
+  ["identifier","S"],
+  ["punctuation.operator","'"]
+],[
+   "start",
+  ["entity.name.segment","MOA"],
+  ["keyword.operator","+"],
+  ["text","39"],
+  ["punctuation.operator",":"],
+  ["text","2137.58"],
+  ["punctuation.operator","'"]
+],[
+   "start",
+  ["entity.name.segment","ALC"],
+  ["punctuation.operator","+C+"],
+  ["identifier","ABG"],
+  ["punctuation.operator","'"]
+],[
+   "start",
+  ["entity.name.segment","MOA"],
+  ["keyword.operator","+"],
+  ["text","8"],
+  ["punctuation.operator",":"],
+  ["text","525"],
+  ["punctuation.operator","'"]
+],[
+   "start",
+  ["entity.name.segment","UNT"],
+  ["keyword.operator","+"],
+  ["text","23"],
+  ["keyword.operator","+"],
+  ["text","00000000000117"],
+  ["punctuation.operator","'"]
+],[
+   "start",
+  ["entity.name.segment","UNZ"],
+  ["punctuation.operator","+1+"],
+  ["text","00000000000778"],
+  ["punctuation.operator","'"]
+]]

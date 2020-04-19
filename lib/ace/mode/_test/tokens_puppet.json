@@ -1,0 +1,443 @@
+[[
+   "start",
+  ["storage.function.puppet","define"],
+  ["name.function.puppet"," apache::vhost "],
+  ["punctuation.lpar","("],
+  ["variable.puppet","$port"],
+  ["keyword.operator",","],
+  ["string"," "],
+  ["variable.puppet","$docroot"],
+  ["keyword.operator",","],
+  ["string"," "],
+  ["variable.puppet","$servername"],
+  ["string"," "],
+  ["keyword.operator","="],
+  ["string"," "],
+  ["variable.puppet","$title"],
+  ["keyword.operator",","],
+  ["string"," "],
+  ["variable.puppet","$vhost_name"],
+  ["string"," "],
+  ["keyword.operator","="],
+  ["string"," "],
+  ["punctuation.quote.puppet","'"],
+  ["string","*"],
+  ["punctuation.quote.puppet","'"],
+  ["punctuation.rpar.puppet",")"],
+  ["keyword.name.resource.puppet"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword.control.puppet","include"],
+  ["text"," apache"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword.control.puppet","include"],
+  ["text"," apache"],
+  ["keyword.operator","::"],
+  ["text","params"]
+],[
+   "start",
+  ["text","  "],
+  ["variable.puppet","$vhost_dir"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["qualified.variable.puppet","$apache::params::vhost_dir"]
+],[
+   "start",
+  ["keyword.name.resource.puppet","  file"],
+  ["paren.lparen"," {"],
+  ["text"," "],
+  ["punctuation.quote.puppet","\""],
+  ["variable.puppet","${vhost_dir"],
+  ["string","}/"],
+  ["variable.puppet","${servername"],
+  ["string","}.conf"],
+  ["punctuation.quote.puppet","\""],
+  ["text",":"]
+],[
+   "start",
+  ["text","      "],
+  ["language.support.class","content"],
+  ["keyword.operator"," =>"],
+  ["text"," "],
+  ["support.function.puppet","template"],
+  ["paren.lparen","("],
+  ["punctuation.quote.puppet","'"],
+  ["string","apache/vhost-default.conf.erb"],
+  ["punctuation.quote.puppet","'"],
+  ["paren.rparen",")"],
+  ["keyword.operator",","]
+],[
+   "start",
+  ["text","      "],
+  ["language.support.class","owner"],
+  ["keyword.operator","   =>"],
+  ["text"," "],
+  ["punctuation.quote.puppet","'"],
+  ["string","www"],
+  ["punctuation.quote.puppet","'"],
+  ["keyword.operator",","]
+],[
+   "start",
+  ["text","      "],
+  ["language.support.class","group"],
+  ["keyword.operator","   =>"],
+  ["text"," "],
+  ["punctuation.quote.puppet","'"],
+  ["string","www"],
+  ["punctuation.quote.puppet","'"],
+  ["keyword.operator",","]
+],[
+   "start",
+  ["text","      "],
+  ["language.support.class","mode"],
+  ["keyword.operator","    =>"],
+  ["text"," "],
+  ["punctuation.quote.puppet","'"],
+  ["string","644"],
+  ["punctuation.quote.puppet","'"],
+  ["keyword.operator",","]
+],[
+   "start",
+  ["text","      "],
+  ["language.support.class","require"],
+  ["keyword.operator"," =>"],
+  ["text"," "],
+  ["constant.types.puppet","Package"],
+  ["paren.lparen","["],
+  ["punctuation.quote.puppet","'"],
+  ["string","httpd"],
+  ["punctuation.quote.puppet","'"],
+  ["paren.rparen","]"],
+  ["keyword.operator",","]
+],[
+   "start",
+  ["text","      "],
+  ["language.support.class","notify"],
+  ["keyword.operator","  =>"],
+  ["text"," "],
+  ["constant.types.puppet","Service"],
+  ["paren.lparen","["],
+  ["punctuation.quote.puppet","'"],
+  ["string","httpd"],
+  ["punctuation.quote.puppet","'"],
+  ["paren.rparen","]"],
+  ["keyword.operator",","]
+],[
+   "start",
+  ["text","  "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["support.function.puppet","type"],
+  ["text"," MyModule"],
+  ["keyword.operator","::"],
+  ["text","Tree "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.types.puppet","Array"],
+  ["paren.lparen","["],
+  ["constant.types.puppet","Variant"],
+  ["paren.lparen","["],
+  ["constant.types.puppet","Data"],
+  ["keyword.operator",","],
+  ["text"," Tree"],
+  ["paren.rparen","]]"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword.control.puppet","function"],
+  ["text"," apache"],
+  ["keyword.operator","::"],
+  ["text","bool2http"],
+  ["paren.lparen","("],
+  ["constant.types.puppet","Variant"],
+  ["paren.lparen","["],
+  ["constant.types.puppet","String"],
+  ["keyword.operator",","],
+  ["text"," "],
+  ["constant.types.puppet","Boolean"],
+  ["paren.rparen","]"],
+  ["text"," "],
+  ["variable.puppet","$arg"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["keyword.operator",">>"],
+  ["keyword.name.resource.puppet"," String"],
+  ["paren.lparen"," {"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword.control.puppet","case "],
+  ["variable.puppet","$arg"],
+  ["keyword.name.resource.puppet"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["constant.language.puppet","false"],
+  ["keyword.operator",","],
+  ["text"," "],
+  ["constant.language.puppet","undef"],
+  ["keyword.operator",","],
+  ["regexp.begin.string.puppet"," /(?i:false)/"],
+  ["text"," :"],
+  ["keyword.name.resource.puppet"," "],
+  ["paren.lparen","{"],
+  ["text"," "],
+  ["punctuation.quote.puppet","'"],
+  ["string","Off"],
+  ["punctuation.quote.puppet","'"],
+  ["text"," "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["text","    "],
+  ["constant.language.puppet","true"],
+  ["keyword.operator",","],
+  ["regexp.begin.string.puppet"," /(?i:true)/"],
+  ["text","          :"],
+  ["keyword.name.resource.puppet"," "],
+  ["paren.lparen","{"],
+  ["text"," "],
+  ["punctuation.quote.puppet","'"],
+  ["string","On"],
+  ["punctuation.quote.puppet","'"],
+  ["text"," "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword.control.puppet","default"],
+  ["text","               :"],
+  ["keyword.name.resource.puppet"," "],
+  ["paren.lparen","{"],
+  ["text"," "],
+  ["punctuation.quote.puppet","\""],
+  ["variable.puppet","$arg"],
+  ["punctuation.quote.puppet","\""],
+  ["text"," "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["text","  "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["singleline.comment.puppet","# A class with parameters"]
+],[
+   "start",
+  ["keyword.type.puppet","class"],
+  ["constant.class.puppet"," apache "],
+  ["paren.lparen","("],
+  ["constant.types.puppet","String"],
+  ["text"," "],
+  ["variable.puppet","$version"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["punctuation.quote.puppet","'"],
+  ["string","latest"],
+  ["punctuation.quote.puppet","'"],
+  ["paren.rparen",")"],
+  ["keyword.name.resource.puppet"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["keyword.name.resource.puppet","  package"],
+  ["paren.lparen"," {"],
+  ["punctuation.quote.puppet","'"],
+  ["string","httpd"],
+  ["punctuation.quote.puppet","'"],
+  ["text",":"]
+],[
+   "start",
+  ["text","    "],
+  ["language.support.class","ensure"],
+  ["keyword.operator"," =>"],
+  ["text"," "],
+  ["variable.puppet","$version"],
+  ["keyword.operator",","],
+  ["text"," "],
+  ["singleline.comment.puppet","# Using the class parameter from above"]
+],[
+   "start",
+  ["text","    "],
+  ["language.support.class","before"],
+  ["keyword.operator"," =>"],
+  ["text"," "],
+  ["constant.types.puppet","File"],
+  ["paren.lparen","["],
+  ["punctuation.quote.puppet","'"],
+  ["string","/etc/httpd.conf"],
+  ["punctuation.quote.puppet","'"],
+  ["paren.rparen","]"],
+  ["keyword.operator",","]
+],[
+   "start",
+  ["text","  "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["keyword.name.resource.puppet","  file"],
+  ["paren.lparen"," {"],
+  ["punctuation.quote.puppet","'"],
+  ["string","/etc/httpd.conf"],
+  ["punctuation.quote.puppet","'"],
+  ["text",":"]
+],[
+   "start",
+  ["text","    "],
+  ["language.support.class","ensure"],
+  ["keyword.operator","  =>"],
+  ["text"," "],
+  ["support.function.puppet","file"],
+  ["keyword.operator",","]
+],[
+   "start",
+  ["text","    "],
+  ["language.support.class","owner"],
+  ["keyword.operator","   =>"],
+  ["text"," "],
+  ["punctuation.quote.puppet","'"],
+  ["string","httpd"],
+  ["punctuation.quote.puppet","'"],
+  ["keyword.operator",","]
+],[
+   "start",
+  ["text","    "],
+  ["language.support.class","content"],
+  ["keyword.operator"," =>"],
+  ["text"," "],
+  ["support.function.puppet","template"],
+  ["paren.lparen","("],
+  ["punctuation.quote.puppet","'"],
+  ["string","apache/httpd.conf.erb"],
+  ["punctuation.quote.puppet","'"],
+  ["paren.rparen",")"],
+  ["keyword.operator",","],
+  ["text"," "],
+  ["singleline.comment.puppet","# Template from a module"]
+],[
+   "start",
+  ["text","  "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["keyword.name.resource.puppet","  service"],
+  ["paren.lparen"," {"],
+  ["punctuation.quote.puppet","'"],
+  ["string","httpd"],
+  ["punctuation.quote.puppet","'"],
+  ["text",":"]
+],[
+   "start",
+  ["text","    "],
+  ["language.support.class","ensure"],
+  ["keyword.operator","    =>"],
+  ["text"," "],
+  ["constant.language.puppet","running"],
+  ["keyword.operator",","]
+],[
+   "start",
+  ["text","    "],
+  ["language.support.class","enable"],
+  ["keyword.operator","    =>"],
+  ["text"," "],
+  ["constant.language.puppet","true"],
+  ["keyword.operator",","]
+],[
+   "start",
+  ["text","    "],
+  ["language.support.class","subscribe"],
+  ["keyword.operator"," =>"],
+  ["text"," "],
+  ["constant.types.puppet","File"],
+  ["paren.lparen","["],
+  ["punctuation.quote.puppet","'"],
+  ["string","/etc/httpd.conf"],
+  ["punctuation.quote.puppet","'"],
+  ["paren.rparen","]"],
+  ["keyword.operator",","]
+],[
+   "start",
+  ["text","  "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start"
+],[
+   "start",
+  ["keyword.control.puppet","if "],
+  ["variable.puppet","$is_virtual"],
+  ["keyword.name.resource.puppet"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","  "],
+  ["support.function.puppet","warning"],
+  ["paren.lparen","("],
+  ["text"," "],
+  ["punctuation.quote.puppet","'"],
+  ["string","Tried to include class ntp on virtual machine; this node might be misclassified."],
+  ["punctuation.quote.puppet","'"],
+  ["text"," "],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["keyword.control.puppet","elsif "],
+  ["variable.puppet","$operatingsystem"],
+  ["text"," "],
+  ["keyword.operator","=="],
+  ["text"," "],
+  ["punctuation.quote.puppet","'"],
+  ["string","Darwin"],
+  ["punctuation.quote.puppet","'"],
+  ["keyword.name.resource.puppet"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","  "],
+  ["support.function.puppet","warning"],
+  ["paren.lparen","("],
+  ["text"," "],
+  ["punctuation.quote.puppet","'"],
+  ["string","This NTP module does not yet work on our Mac laptops."],
+  ["punctuation.quote.puppet","'"],
+  ["text"," "],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["keyword.name.resource.puppet","else"],
+  ["paren.lparen"," {"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword.control.puppet","include"],
+  ["text"," ntp"]
+],[
+   "start",
+  ["paren.rparen","}"]
+]]

@@ -1,0 +1,334 @@
+generator photon {
+  provider = "photonjs"
+}
+
+model User {
+  id                 String           @default(cuid()) @id
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+  firstName          String
+  lastName           String
+  email              String           @unique
+  password           String
+  phone              String
+  responseRate       Float?
+  responseTime       Int?
+  ReportsTo  User?  @relation("EmployeeToEmployee_ReportsTo")
+  employees         User[] @relation("EmployeeToEmployee_ReportsTo")
+  isSuperHost        Boolean
+  ownedPlaces        Place[]
+  location           Location?
+  bookings           Booking[]
+  paymentAccount     PaymentAccount[]
+  sentMessages       Message[]        @relation("SentMessages")
+  receivedMessages   Message[]        @relation("ReceivedMessages")
+  notifications      Notification[]
+  profilePicture     Picture?
+  hostingExperiences Experience[]
+}
+
+model Place {
+  id                String             @default(cuid()) @id
+  name              String
+  size              PLACE_SIZES?
+  shortDescription  String
+  description       String
+  slug              String
+  maxGuests         Int
+  numBedrooms       Int
+  numBeds           Int
+  numBaths          Int
+  reviews           Review[]
+  amenities         Amenities
+  host              User
+  pricing           Pricing
+  location          Location
+  views             Views
+  guestRequirements GuestRequirements?
+  policies          Policies?
+  houseRules        HouseRules?
+  bookings          Booking[]
+  pictures          Picture[]
+  popularity        Int
+}
+
+model Pricing {
+  id              String    @default(cuid()) @id
+  place           Place
+  monthlyDiscount Int?
+  weeklyDiscount  Int?
+  perNight        Int
+  smartPricing    Boolean
+  basePrice       Int
+  averageWeekly   Int
+  averageMonthly  Int
+  cleaningFee     Int?
+  securityDeposit Int?
+  extraGuests     Int?
+  weekendPricing  Int?
+  currency        CURRENCY?
+}
+
+model GuestRequirements {
+  id                            String  @default(cuid()) @id
+  govIssuedId                   Boolean
+  recommendationsFromOtherHosts Boolean
+  guestTripInformation          Boolean
+  place                         Place
+}
+
+model Policies {
+  id               String   @default(cuid()) @id
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  checkInStartTime Float
+  checkInEndTime   Float
+  checkoutTime     Float
+  place            Place
+}
+
+model HouseRules {
+  id                      String   @default(cuid()) @id
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+  suitableForChildren     Boolean?
+  suitableForInfants      Boolean?
+  petsAllowed             Boolean?
+  smokingAllowed          Boolean?
+  partiesAndEventsAllowed Boolean?
+  additionalRules         String?
+}
+
+model Views {
+  id       String @default(cuid()) @id
+  lastWeek Int
+  place    Place
+}
+
+model Location {
+  id            String         @default(cuid()) @id
+  lat           Float
+  lng           Float
+  neighbourHood Neighbourhood?
+  user          User?
+  place         Place?
+  address       String
+  directions    String
+  experience    Experience?
+  restaurant    Restaurant?
+}
+
+model Neighbourhood {
+  id          String     @default(cuid()) @id
+  locations   Location[]
+  name        String
+  slug        String
+  homePreview Picture?
+  city        City
+  featured    Boolean
+  popularity  Int
+}
+
+model City {
+  id             String          @default(cuid()) @id
+  name           String
+  neighbourhoods Neighbourhood[]
+}
+
+model Picture {
+  id  String @default(cuid()) @id
+  url String
+}
+
+model Experience {
+  id             String              @default(cuid()) @id
+  category       ExperienceCategory?
+  title          String
+  host           User
+  location       Location
+  pricePerPerson Int
+  reviews        Review[]
+  preview        Picture
+  popularity     Int
+}
+
+model ExperienceCategory {
+  id         String      @default(cuid()) @id
+  mainColor  String
+  name       String
+  experience Experience?
+}
+
+model Amenities {
+  id                        String  @default(cuid()) @id
+  place                     Place
+  elevator                  Boolean
+  petsAllowed               Boolean
+  internet                  Boolean
+  kitchen                   Boolean
+  wirelessInternet          Boolean
+  familyKidFriendly         Boolean
+  freeParkingOnPremises     Boolean
+  hotTub                    Boolean
+  pool                      Boolean
+  smokingAllowed            Boolean
+  wheelchairAccessible      Boolean
+  breakfast                 Boolean
+  cableTv                   Boolean
+  suitableForEvents         Boolean
+  dryer                     Boolean
+  washer                    Boolean
+  indoorFireplace           Boolean
+  tv                        Boolean
+  heating                   Boolean
+  hangers                   Boolean
+  iron                      Boolean
+  hairDryer                 Boolean
+  doorman                   Boolean
+  paidParkingOffPremises    Boolean
+  freeParkingOnStreet       Boolean
+  gym                       Boolean
+  airConditioning           Boolean
+  shampoo                   Boolean
+  essentials                Boolean
+  laptopFriendlyWorkspace   Boolean
+  privateEntrance           Boolean
+  buzzerWirelessIntercom    Boolean
+  babyBath                  Boolean
+  babyMonitor               Boolean
+  babysitterRecommendations Boolean
+  bathtub                   Boolean
+  changingTable             Boolean
+  childrensBooksAndToys     Boolean
+  childrensDinnerware       Boolean
+  crib                      Boolean
+}
+
+model Review {
+  id            String      @default(cuid()) @id
+  createdAt     DateTime    @default(now())
+  text          String
+  stars         Int
+  accuracy      Int
+  location      Int
+  checkIn       Int
+  value         Int
+  cleanliness   Int
+  communication Int
+  place         Place
+  experience    Experience?
+}
+
+model Booking {
+  id        String   @default(cuid()) @id
+  createdAt DateTime @default(now())
+  bookee    User
+  place     Place
+  startDate DateTime
+  endDate   DateTime
+  payment   Payment?
+}
+
+model Payment {
+  id            String         @default(cuid()) @id
+  createdAt     DateTime       @default(now())
+  serviceFee    Float
+  placePrice    Float
+  totalPrice    Float
+  booking       Booking
+  paymentMethod PaymentAccount
+}
+
+model PaymentAccount {
+  id         String                 @default(cuid()) @id
+  createdAt  DateTime               @default(now())
+  type       PAYMENT_PROVIDER?
+  user       User
+  payments   Payment[]
+  paypal     PaypalInformation?
+  creditcard CreditCardInformation?
+}
+
+model PaypalInformation {
+  id             String         @default(cuid()) @id
+  createdAt      DateTime       @default(now())
+  email          String
+  paymentAccount PaymentAccount
+}
+
+model CreditCardInformation {
+  id             String          @default(cuid()) @id
+  createdAt      DateTime        @default(now())
+  cardNumber     String
+  expiresOnMonth Int
+  expiresOnYear  Int
+  securityCode   String
+  firstName      String
+  lastName       String
+  postalCode     String
+  country        String
+  paymentAccount PaymentAccount?
+}
+
+model Message {
+  id          String   @default(cuid()) @id
+  createdAt   DateTime @default(now())
+  from        User     @relation("SentMessages")
+  to          User     @relation("ReceivedMessages")
+  deliveredAt DateTime
+  readAt      DateTime
+}
+
+model Notification {
+  id        String             @default(cuid()) @id
+  createdAt DateTime           @default(now())
+  type      NOTIFICATION_TYPE?
+  user      User
+  link      String
+  readDate  DateTime
+}
+
+model Restaurant {
+  id                String    @default(cuid()) @id
+  createdAt         DateTime  @default(now())
+  title             String
+  avgPricePerPerson Int
+  pictures          Picture[]
+  location          Location
+  isCurated         Boolean
+  slug              String
+  popularity        Int
+}
+
+enum CURRENCY {
+  CAD
+  CHF
+  EUR
+  JPY
+  USD
+  ZAR
+}
+
+enum PLACE_SIZES {
+  ENTIRE_HOUSE
+  ENTIRE_APARTMENT
+  ENTIRE_EARTH_HOUSE
+  ENTIRE_CABIN
+  ENTIRE_VILLA
+  ENTIRE_PLACE
+  ENTIRE_BOAT
+  PRIVATE_ROOM
+}
+
+enum PAYMENT_PROVIDER {
+  PAYPAL
+  CREDIT_CARD
+}
+
+enum NOTIFICATION_TYPE {
+  OFFER
+  INSTANT_BOOK
+  RESPONSIVENESS
+  NEW_AMENITIES
+  HOUSE_RULES
+}
