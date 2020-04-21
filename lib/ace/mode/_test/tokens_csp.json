@@ -1,0 +1,94 @@
+[[
+   "start",
+  ["constant.language","child-src"]
+],[
+   "start",
+  ["constant.language","connect-src"]
+],[
+   "start",
+  ["constant.language","default-src"]
+],[
+   "start",
+  ["constant.language","font-src"]
+],[
+   "start",
+  ["constant.language","frame-src"]
+],[
+   "start",
+  ["constant.language","img-src"]
+],[
+   "start",
+  ["constant.language","manifest-src"]
+],[
+   "start",
+  ["constant.language","media-src"]
+],[
+   "start",
+  ["constant.language","object-src"]
+],[
+   "start",
+  ["constant.language","script-src"]
+],[
+   "start",
+  ["constant.language","style-src"]
+],[
+   "start",
+  ["constant.language","worker-src"]
+],[
+   "start",
+  ["constant.language","base-uri"]
+],[
+   "start",
+  ["constant.language","plugin-types"]
+],[
+   "start",
+  ["constant.language","sandbox"]
+],[
+   "start",
+  ["constant.language","disown-opener"]
+],[
+   "start",
+  ["constant.language","form-action"]
+],[
+   "start",
+  ["constant.language","frame-ancestors"]
+],[
+   "start",
+  ["constant.language","report-uri"]
+],[
+   "start",
+  ["constant.language","report-to"]
+],[
+   "start",
+  ["constant.language","upgrade-insecure-requests"]
+],[
+   "start",
+  ["constant.language","block-all-mixed-content"]
+],[
+   "start",
+  ["constant.language","require-sri-for"]
+],[
+   "start",
+  ["constant.language","reflected-xss"]
+],[
+   "start",
+  ["constant.language","referrer"]
+],[
+   "start",
+  ["constant.language","policy-uri"]
+],[
+   "start",
+  ["variable","'self'"]
+],[
+   "start",
+  ["variable","'unsafe-inline'"]
+],[
+   "start",
+  ["variable","'unsafe-eval'"]
+],[
+   "start",
+  ["variable","'strict-dynamic'"]
+],[
+   "start",
+  ["variable","'unsafe-hashed-attributes'"]
+]]

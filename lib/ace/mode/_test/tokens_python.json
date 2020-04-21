@@ -8,7 +8,8 @@
   ["keyword","import"],
   ["text"," "],
   ["identifier","string"],
-  ["text",", "],
+  ["punctuation",","],
+  ["text"," "],
   ["identifier","sys"]
 ],[
    "start"
@@ -22,12 +23,12 @@
   ["support.function","len"],
   ["paren.lparen","("],
   ["identifier","sys"],
-  ["text","."],
-  ["identifier","argv"],
+  ["punctuation","."],
+  ["function.support","argv"],
   ["paren.rparen",")"],
   ["keyword.operator","=="],
   ["constant.numeric","1"],
-  ["text",":"]
+  ["punctuation",":"]
 ],[
    "qstring3",
   ["text","    "],
@@ -41,13 +42,17 @@
    "start",
   ["text","    "],
   ["identifier","sys"],
-  ["text","."],
-  ["identifier","exit"],
+  ["punctuation","."],
+  ["function.support","exit"],
   ["paren.lparen","("],
   ["constant.numeric","0"],
   ["paren.rparen",")"]
 ],[
-   "start"
+   "start",
+  ["identifier","a"],
+  ["paren.lparen","["],
+  ["string","\"x\""],
+  ["paren.rparen","]"]
 ],[
    "start",
   ["comment","# Loop over the arguments"]
@@ -60,18 +65,18 @@
   ["keyword","in"],
   ["text"," "],
   ["identifier","sys"],
-  ["text","."],
-  ["identifier","argv"],
+  ["punctuation","."],
+  ["function.support","argv"],
   ["paren.lparen","["],
   ["constant.numeric","1"],
-  ["text",":"],
+  ["punctuation",":"],
   ["paren.rparen","]"],
-  ["text",":"]
+  ["punctuation",":"]
 ],[
    "start",
   ["text","    "],
   ["keyword","try"],
-  ["text",":"]
+  ["punctuation",":"]
 ],[
    "start",
   ["text","        "],
@@ -80,8 +85,8 @@
   ["support.function","float"],
   ["paren.lparen","("],
   ["identifier","string"],
-  ["text","."],
-  ["identifier","atoi"],
+  ["punctuation","."],
+  ["function.support","atoi"],
   ["paren.lparen","("],
   ["identifier","i"],
   ["paren.rparen","))"]
@@ -91,9 +96,9 @@
   ["keyword","except"],
   ["text"," "],
   ["identifier","string"],
-  ["text","."],
-  ["identifier","atoi_error"],
-  ["text",":"]
+  ["punctuation","."],
+  ["function.support","atoi_error"],
+  ["punctuation",":"]
 ],[
    "start",
   ["text","        "],
@@ -103,13 +108,14 @@
   ["paren.lparen","("],
   ["identifier","i"],
   ["paren.rparen",")"],
-  ["text",", "],
+  ["punctuation",","],
+  ["text"," "],
   ["string","\"not a numeric value\""]
 ],[
    "start",
   ["text","    "],
   ["keyword","else"],
-  ["text",":"]
+  ["punctuation",":"]
 ],[
    "start",
   ["text","        "],
@@ -142,11 +148,286 @@
   ["paren.lparen","("],
   ["identifier","fahrenheit"],
   ["paren.rparen",")"],
-  ["text",", "],
+  ["punctuation",","],
+  ["text"," "],
   ["support.function","int"],
   ["paren.lparen","("],
   ["identifier","celsius"],
   ["keyword.operator","+"],
   ["constant.numeric",".5"],
   ["paren.rparen","))"]
+],[
+   "start"
+],[
+   "start",
+  ["identifier","name"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["string","\"Fred\""]
+],[
+   "start",
+  ["string","f\"He said his name is "],
+  ["paren.lparen","{"],
+  ["identifier","name"],
+  ["function.support","!r"],
+  ["paren.rparen","}"],
+  ["string",".\""]
+],[
+   "start"
+],[
+   "start",
+  ["string","f\"He said his name is "],
+  ["paren.lparen","{"],
+  ["support.function","repr"],
+  ["paren.lparen","("],
+  ["identifier","name"],
+  ["text","+"],
+  ["constant.numeric","12"],
+  ["paren.rparen",")}"],
+  ["string",".\""],
+  ["text","  "],
+  ["comment","# repr() is equivalent to !r"]
+],[
+   "start"
+],[
+   "start",
+  ["identifier","width"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","10"]
+],[
+   "start",
+  ["identifier","precision"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","4"]
+],[
+   "start",
+  ["identifier","value"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["identifier","decimal"],
+  ["punctuation","."],
+  ["function.support","Decimal"],
+  ["paren.lparen","("],
+  ["string","\"12.34567\""],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["string","f\"result: "],
+  ["paren.lparen","{"],
+  ["identifier","value"],
+  ["text",":"],
+  ["paren.lparen","{"],
+  ["identifier","width"],
+  ["paren.rparen","}"],
+  ["text","."],
+  ["paren.lparen","{"],
+  ["identifier","precision"],
+  ["paren.rparen","}}"],
+  ["string","\""],
+  ["text","  "],
+  ["comment","# nested fields"]
+],[
+   "start",
+  ["string","'result:      12.35'"]
+],[
+   "start",
+  ["identifier","today"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["identifier","datetime"],
+  ["paren.lparen","("],
+  ["identifier","year"],
+  ["keyword.operator","="],
+  ["constant.numeric","2017"],
+  ["punctuation",","],
+  ["text"," "],
+  ["identifier","month"],
+  ["keyword.operator","="],
+  ["constant.numeric","1"],
+  ["punctuation",","],
+  ["text"," "],
+  ["identifier","day"],
+  ["keyword.operator","="],
+  ["constant.numeric","27"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["string","f\""],
+  ["paren.lparen","{"],
+  ["identifier","today"],
+  ["text",":%"],
+  ["identifier","B"],
+  ["string"," "],
+  ["text","%"],
+  ["identifier","d"],
+  ["text",","],
+  ["string"," "],
+  ["text","%"],
+  ["identifier","Y"],
+  ["paren.rparen","}"],
+  ["string","\""],
+  ["text","  "],
+  ["comment","# using date format specifier"]
+],[
+   "start",
+  ["string","'January 27, 2017'"]
+],[
+   "start",
+  ["identifier","number"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","1024"]
+],[
+   "start",
+  ["string","f\""],
+  ["paren.lparen","{"],
+  ["identifier","number"],
+  ["text",":#0"],
+  ["identifier","x"],
+  ["paren.rparen","}"],
+  ["string","\""],
+  ["text","  "],
+  ["comment","# using integer format specifier"]
+],[
+   "start",
+  ["string","'0x400'"]
+],[
+   "start"
+],[
+   "start",
+  ["string","F\"Hello, "],
+  ["paren.lparen","{"],
+  ["identifier","name"],
+  ["paren.rparen","}"],
+  ["string",". You are "],
+  ["paren.lparen","{"],
+  ["identifier","age"],
+  ["paren.rparen","}"],
+  ["string",".\""]
+],[
+   "start",
+  ["string","'Hello, Eric. You are 74.'"]
+],[
+   "start",
+  ["string","f\""],
+  ["paren.lparen","{"],
+  ["constant.numeric","2"],
+  ["string"," "],
+  ["text","*"],
+  ["string"," "],
+  ["constant.numeric","37"],
+  ["paren.rparen","}"],
+  ["string","\""]
+],[
+   "start",
+  ["string","'74'"]
+],[
+   "start",
+  ["keyword","def"],
+  ["text"," "],
+  ["identifier","to_lowercase"],
+  ["paren.lparen","("],
+  ["support.function","input"],
+  ["paren.rparen",")"],
+  ["punctuation",":"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","return"],
+  ["text"," "],
+  ["support.function","input"],
+  ["punctuation","."],
+  ["function.support","lower"],
+  ["paren.lparen","("],
+  ["paren.rparen",")"]
+],[
+   "start"
+],[
+   "start",
+  ["identifier","name"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["string","\"Eric Idle\""]
+],[
+   "start",
+  ["string","f\""],
+  ["paren.lparen","{"],
+  ["identifier","to_lowercase"],
+  ["paren.lparen","("],
+  ["identifier","name"],
+  ["paren.rparen",")}"],
+  ["string"," is funny.\""]
+],[
+   "start"
+],[
+   "start",
+  ["string","f\""],
+  ["paren.lparen","{"],
+  ["string","'Eric Idle'"],
+  ["paren.rparen","}"],
+  ["string","\""]
+],[
+   "start"
+],[
+   "start",
+  ["string","f'"],
+  ["paren.lparen","{"],
+  ["string","\"Eric Idle\""],
+  ["paren.rparen","}"],
+  ["string","'"]
+],[
+   "start"
+],[
+   "start",
+  ["string","f\"\"\""],
+  ["paren.lparen","{"],
+  ["identifier","Eric"],
+  ["string"," "],
+  ["identifier","Idle"],
+  ["paren.rparen","}"],
+  ["string","\"\"\""]
+],[
+   "start"
+],[
+   "start",
+  ["string","f'''"],
+  ["paren.lparen","{"],
+  ["identifier","Eric"],
+  ["string"," "],
+  ["identifier","Idle"],
+  ["paren.rparen","}"],
+  ["string","'''"]
+],[
+   "start",
+  ["string","f\"The "],
+  ["constant.language.escape","\\\""],
+  ["string","comedian"],
+  ["constant.language.escape","\\\""],
+  ["string"," is "],
+  ["paren.lparen","{"],
+  ["identifier","name"],
+  ["paren.rparen","}"],
+  ["string",", aged "],
+  ["paren.lparen","{"],
+  ["identifier","age"],
+  ["paren.rparen","}"],
+  ["string",".\""]
+],[
+   "start",
+  ["string","f\""],
+  ["paren.lparen","{{"],
+  ["constant.numeric","74"],
+  ["paren.rparen","}}"],
+  ["string","\""]
+],[
+   "start"
 ]]

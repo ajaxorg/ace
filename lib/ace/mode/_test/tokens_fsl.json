@@ -1,0 +1,341 @@
+[[
+   "start",
+  ["constant.language.fslLanguage","machine_name      :"],
+  ["text"," "],
+  ["string.quoted.double.fslLabel.doublequoted","\"BGP\""],
+  ["text",";"]
+],[
+   "start",
+  ["constant.language.fslLanguage","machine_version   :"],
+  ["text"," "],
+  ["constant.numeric","1.0.0"],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start",
+  ["constant.language.fslLanguage","machine_author    :"],
+  ["text"," "],
+  ["string.quoted.double.fslLabel.doublequoted","\"John Haugeland <stonecypher@gmail.com>\""],
+  ["text",";"]
+],[
+   "start",
+  ["constant.language.fslLanguage","machine_license   :"],
+  ["text"," "],
+  ["entity.name.tag.fslLabel.atom","MIT"],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start",
+  ["constant.language.fslLanguage","graph_layout      :"],
+  ["text"," "],
+  ["entity.name.tag.fslLabel.atom","dot"],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start"
+],[
+   "start"
+],[
+   "start",
+  ["entity.name.tag.fslLabel.atom","Idle"],
+  ["text"," "],
+  ["constant.character.fslAction","'Invite'"],
+  ["text"," "],
+  ["keyword.control.transition.fslArrow","=>"],
+  ["text"," "],
+  ["entity.name.tag.fslLabel.atom","Invited"],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start",
+  ["entity.name.tag.fslLabel.atom","Invited"],
+  ["text"," "],
+  ["constant.character.fslAction","'Invite, 1xx'"],
+  ["text"," "],
+  ["keyword.control.transition.fslArrow","->"],
+  ["text"," "],
+  ["entity.name.tag.fslLabel.atom","Invited"],
+  ["text",";"]
+],[
+   "start",
+  ["entity.name.tag.fslLabel.atom","Invited"],
+  ["text"," "],
+  ["constant.character.fslAction","'3xx'"],
+  ["text","         "],
+  ["keyword.control.transition.fslArrow","->"],
+  ["text"," "],
+  ["entity.name.tag.fslLabel.atom","Redirecting"],
+  ["text",";"]
+],[
+   "start",
+  ["entity.name.tag.fslLabel.atom","Invited"],
+  ["text"," "],
+  ["constant.character.fslAction","'Cancel'"],
+  ["text","      "],
+  ["keyword.control.transition.fslArrow","->"],
+  ["text"," "],
+  ["entity.name.tag.fslLabel.atom","Cancelling"],
+  ["text",";"]
+],[
+   "start",
+  ["entity.name.tag.fslLabel.atom","Invited"],
+  ["text"," "],
+  ["constant.character.fslAction","'200'"],
+  ["text","         "],
+  ["keyword.control.transition.fslArrow","=>"],
+  ["text"," "],
+  ["entity.name.tag.fslLabel.atom","Accepted"],
+  ["text",";"]
+],[
+   "start",
+  ["entity.name.tag.fslLabel.atom","Invited"],
+  ["text"," "],
+  ["constant.character.fslAction","'407'"],
+  ["text","         "],
+  ["keyword.control.transition.fslArrow","=>"],
+  ["text"," "],
+  ["entity.name.tag.fslLabel.atom","AuthRequested"],
+  ["text",";"]
+],[
+   "start",
+  ["entity.name.tag.fslLabel.atom","Invited"],
+  ["text"," "],
+  ["constant.character.fslAction","'4xx-6xx'"],
+  ["text","     "],
+  ["keyword.control.transition.fslArrow","->"],
+  ["text"," "],
+  ["entity.name.tag.fslLabel.atom","Failed"],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start",
+  ["entity.name.tag.fslLabel.atom","AuthRequested"],
+  ["text"," "],
+  ["constant.character.fslAction","'Ack'"],
+  ["text"," "],
+  ["keyword.control.transition.fslArrow","=>"],
+  ["text"," "],
+  ["entity.name.tag.fslLabel.atom","Invited"],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start",
+  ["entity.name.tag.fslLabel.atom","Redirecting"],
+  ["text"," "],
+  ["constant.character.fslAction","'Act'"],
+  ["text"," "],
+  ["keyword.control.transition.fslArrow","->"],
+  ["text"," "],
+  ["entity.name.tag.fslLabel.atom","Redirected"],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start",
+  ["entity.name.tag.fslLabel.atom","Cancelling"],
+  ["text"," "],
+  ["constant.character.fslAction","'200 (Invite)'"],
+  ["text"," "],
+  ["keyword.control.transition.fslArrow","->"],
+  ["text"," "],
+  ["entity.name.tag.fslLabel.atom","LateCancel"],
+  ["text",";"]
+],[
+   "start",
+  ["entity.name.tag.fslLabel.atom","Cancelling"],
+  ["text"," "],
+  ["constant.character.fslAction","'200 (Cancel)'"],
+  ["text"," "],
+  ["keyword.control.transition.fslArrow","->"],
+  ["text"," "],
+  ["entity.name.tag.fslLabel.atom","Cancelled"],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start",
+  ["entity.name.tag.fslLabel.atom","Accepted"],
+  ["text"," "],
+  ["constant.character.fslAction","'Cancel'"],
+  ["text"," "],
+  ["keyword.control.transition.fslArrow","->"],
+  ["text"," "],
+  ["entity.name.tag.fslLabel.atom","LateCancel"],
+  ["text",";"]
+],[
+   "start",
+  ["entity.name.tag.fslLabel.atom","Accepted"],
+  ["text"," "],
+  ["constant.character.fslAction","'Ack'"],
+  ["text","    "],
+  ["keyword.control.transition.fslArrow","=>"],
+  ["text"," "],
+  ["entity.name.tag.fslLabel.atom","Established"],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start",
+  ["entity.name.tag.fslLabel.atom","Failed"],
+  ["text"," "],
+  ["constant.character.fslAction","'Ack'"],
+  ["text"," "],
+  ["keyword.control.transition.fslArrow","->"],
+  ["text"," "],
+  ["entity.name.tag.fslLabel.atom","Terminated"],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start",
+  ["entity.name.tag.fslLabel.atom","Redirected"],
+  ["text"," "],
+  ["constant.character.fslAction","'Invite'"],
+  ["text","  "],
+  ["keyword.control.transition.fslArrow","->"],
+  ["text"," "],
+  ["entity.name.tag.fslLabel.atom","Invited"],
+  ["text",";"]
+],[
+   "start",
+  ["entity.name.tag.fslLabel.atom","Redirected"],
+  ["text"," "],
+  ["constant.character.fslAction","'Timeout'"],
+  ["text"," "],
+  ["keyword.control.transition.fslArrow","->"],
+  ["text"," "],
+  ["entity.name.tag.fslLabel.atom","Terminated"],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start",
+  ["entity.name.tag.fslLabel.atom","LateCancel"],
+  ["text"," "],
+  ["constant.character.fslAction","'Ack'"],
+  ["text"," "],
+  ["keyword.control.transition.fslArrow","->"],
+  ["text"," "],
+  ["entity.name.tag.fslLabel.atom","Established"],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start",
+  ["entity.name.tag.fslLabel.atom","Cancelled"],
+  ["text"," "],
+  ["constant.character.fslAction","'487'"],
+  ["text"," "],
+  ["keyword.control.transition.fslArrow","->"],
+  ["text"," "],
+  ["entity.name.tag.fslLabel.atom","Failed"],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start",
+  ["entity.name.tag.fslLabel.atom","Established"],
+  ["text"," "],
+  ["constant.character.fslAction","'Invite'"],
+  ["text"," "],
+  ["keyword.control.transition.fslArrow","=>"],
+  ["text"," "],
+  ["entity.name.tag.fslLabel.atom","SessionModifying"],
+  ["text",";"]
+],[
+   "start",
+  ["entity.name.tag.fslLabel.atom","Established"],
+  ["text"," "],
+  ["constant.character.fslAction","'Bye'"],
+  ["text","    "],
+  ["keyword.control.transition.fslArrow","->"],
+  ["text"," "],
+  ["entity.name.tag.fslLabel.atom","Closing"],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start",
+  ["entity.name.tag.fslLabel.atom","SessionModifying"],
+  ["text"," "],
+  ["constant.character.fslAction","'488'"],
+  ["text"," "],
+  ["keyword.control.transition.fslArrow","->"],
+  ["text"," "],
+  ["entity.name.tag.fslLabel.atom","SessionModificationRefused"],
+  ["text",";"]
+],[
+   "start",
+  ["entity.name.tag.fslLabel.atom","SessionModifying"],
+  ["text"," "],
+  ["constant.character.fslAction","'200'"],
+  ["text"," "],
+  ["keyword.control.transition.fslArrow","=>"],
+  ["text"," "],
+  ["entity.name.tag.fslLabel.atom","SessionModified"],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start",
+  ["entity.name.tag.fslLabel.atom","Closing"],
+  ["text"," "],
+  ["constant.character.fslAction","'Bye,Ack,200 (Invite)'"],
+  ["text"," "],
+  ["keyword.control.transition.fslArrow","->"],
+  ["text"," "],
+  ["entity.name.tag.fslLabel.atom","Closing"],
+  ["text",";"]
+],[
+   "start",
+  ["entity.name.tag.fslLabel.atom","Closing"],
+  ["text"," "],
+  ["constant.character.fslAction","'200 (Bye)'"],
+  ["text","            "],
+  ["keyword.control.transition.fslArrow","->"],
+  ["text"," "],
+  ["entity.name.tag.fslLabel.atom","Terminated"],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start",
+  ["entity.name.tag.fslLabel.atom","SessionModificationRefused"],
+  ["text"," "],
+  ["constant.character.fslAction","'Ack'"],
+  ["text"," "],
+  ["keyword.control.transition.fslArrow","->"],
+  ["text"," "],
+  ["entity.name.tag.fslLabel.atom","Established"],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start",
+  ["entity.name.tag.fslLabel.atom","SessionModified"],
+  ["text"," "],
+  ["constant.character.fslAction","'Ack'"],
+  ["text"," "],
+  ["keyword.control.transition.fslArrow","=>"],
+  ["text"," "],
+  ["entity.name.tag.fslLabel.atom","Established"],
+  ["text",";"]
+],[
+   "start",
+  ["entity.name.tag.fslLabel.atom","SessionModified"],
+  ["text"," "],
+  ["constant.character.fslAction","'Bye'"],
+  ["text"," "],
+  ["keyword.control.transition.fslArrow","->"],
+  ["text"," "],
+  ["entity.name.tag.fslLabel.atom","Closing"],
+  ["text",";"]
+],[
+   "start"
+]]

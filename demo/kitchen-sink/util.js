@@ -53,6 +53,18 @@ exports.createEditor = function(el) {
     return new Editor(new Renderer(el));
 };
 
+exports.getOption = function(name) {
+    if (urlOptions[name])
+        return urlOptions[name];
+    return localStorage && localStorage.getItem(name);
+};
+
+exports.saveOption = function(name, value) {
+    if (value == false)
+        value = "";
+    localStorage && localStorage.setItem(name, value);
+};
+
 exports.createSplitEditor = function(el) {
     if (typeof(el) == "string")
         el = document.getElementById(el);
@@ -142,23 +154,17 @@ exports.stripLeadingComments = function(str) {
 };
 
 /***************************/
-exports.saveOption = function(el, val) {
+function saveOptionFromElement(el, val) {
     if (!el.onchange && !el.onclick)
         return;
 
     if ("checked" in el) {
-        if (val !== undefined)
-            el.checked = val;
-
         localStorage && localStorage.setItem(el.id, el.checked ? 1 : 0);
     }
     else {
-        if (val !== undefined)
-            el.value = val;
-
         localStorage && localStorage.setItem(el.id, el.value);
     }
-};
+}
 
 exports.bindCheckbox = function(id, callback, noInit) {
     if (typeof id == "string")
@@ -176,7 +182,7 @@ exports.bindCheckbox = function(id, callback, noInit) {
 
     var onCheck = function() {
         callback(!!el.checked);
-        exports.saveOption(el);
+        saveOptionFromElement(el);
     };
     el.onclick = onCheck;
     noInit || onCheck();
@@ -198,7 +204,7 @@ exports.bindDropdown = function(id, callback, noInit) {
 
     var onChange = function() {
         callback(el.value);
-        exports.saveOption(el);
+        saveOptionFromElement(el);
     };
 
     el.onchange = onChange;

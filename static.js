@@ -44,55 +44,66 @@ http.createServer(function(req, res) {
         return save(req, res, filename);
     }
 
-    fs.exists(filename, function(exists) {
-        if (!exists)
+    fs.stat(filename, function(err, stat) {
+        if (err)
             return error(res, 404, "404 Not Found\n" + filename);
 
-        if (fs.statSync(filename).isDirectory())
+        if (stat.isDirectory())
             return serveDirectory(filename, uri, req, res);
 
-        fs.readFile(filename, "binary", function(err, file) {
-            if (err) {
-                writeHead(res, 500, "text/plain");
-                res.write(err + "\n");
-                res.end();
-                return;
-            }
-
-            var contentType = lookupMime(filename) || "text/plain";
-            writeHead(res, 200, contentType);
-            res.write(file, "binary");
+        var contentType = lookupMime(filename);
+        writeHead(res, 200, contentType);
+        res.setHeader("Content-Length", stat.size);
+        var stream = fs.createReadStream(filename, {});
+        req.on("close", stream.destroy.bind(stream));
+        stream.on("error", function(err){
+            if (res._header)
+                return req.destroy();
+            writeHead(res, 500, "text/plain");
             res.end();
         });
+        stream.pipe(res);
     });
 }).listen(port, ip);
 
 function writeHead(res, code, contentType) {
-    var headers = {
-        "Access-Control-Allow-Origin": "file://",
-        "Access-Control-Allow-Methods": "PUT, GET, OPTIONS, HEAD"
-    };
-    headers["Content-Type"] = contentType;
-    res.writeHead(code, headers);
+    res.setHeader("Access-Control-Allow-Origin", "file://");
+    res.setHeader("Access-Control-Allow-Methods", "PUT, GET, OPTIONS, HEAD");
+    res.setHeader("Content-Type", contentType || "text/plain");
+    res.statusCode = code;
 }
 
 function serveDirectory(filename, uri, req, res) {
     var files = fs.readdirSync(filename);
     writeHead(res, 200, "text/html");
     
-    files.push(".", "..");
+    files.push("..", ".");
     var html = files.map(function(name) {
-        var href = uri + "/" + name;
-        href = href.replace(/[\/\\]+/g, "/").replace(/\/$/g, "");
         try {
             var stat = fs.statSync(filename + "/" + name);
-            if (stat.isDirectory())
-                href += "/";
-            return "<a href='" + href + "'>" + name + "</a><br>";
         } catch(e) {}
-    }).filter(Boolean);
+        var index = name == "." ? 2 : name == ".." ? 3 : stat.isDirectory() ? 1 : 0;
+        return { name: name, index: index, size: stat.size };
+    }).filter(Boolean).sort(function(a, b) {
+        if (a.index == b.index)
+            return a.name.localeCompare(b.name);
+        return b.index - a.index;
+    }).map(function(stat) {
+        var name = stat.name;
+        if (stat.index) name += "/";
+        var size = "";
+        if (!stat.size) size = "";
+        else if (stat.size < 1024) size = stat.size + "b";
+        else if (stat.size < 1024 * 1024) size = (stat.size / 1024).toFixed(2) + "kb";
+        else size = (stat.size / 1024 / 1024).toFixed(2) + "mb";
+        return "<tr>"
+            + "<td>&nbsp;&nbsp;" + size + "&nbsp;&nbsp;</td>"
+            + "<td><a href='" + name + "'>" + name + "</a></td>"
+        + "</tr>";
+    }).join("");
+    html = "<table>" + html + "</table>";
 
-    res._hasBody && res.write(html.join(""));
+    res._hasBody && res.write(html);
     res.end();
 }
 

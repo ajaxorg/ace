@@ -491,7 +491,7 @@ function transformRegExp(str, rule) {
 
     str = str.replace(/(\\[xu]){([a-fA-F\d]+)}/g, '$1$2');
 
-    str = convertCharacterTypes(str, rule);
+    str = convertCharacterTypes(str);
 
     checkForNamedCaptures(str);
 

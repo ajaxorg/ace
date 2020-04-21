@@ -1,5 +1,5 @@
-library IEEE
-user IEEE.std_logic_1164.all;
+library IEEE;
+use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 
 entity COUNT16 is
@@ -14,7 +14,7 @@ entity COUNT16 is
 end entity;
 
 architecture count_rtl of COUNT16 is
-    signal count :std_logic_vector (15 downto 0);
+    signal count : unsigned (15 downto 0);
     
 begin
     process (clk, rst) begin
@@ -28,7 +28,7 @@ begin
         end if;
         
     end process;
-    cOut <= count;
+    cOut <= std_logic_vector(count);
 
 end architecture;
-    
+

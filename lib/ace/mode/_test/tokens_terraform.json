@@ -1,0 +1,629 @@
+[[
+   "start",
+  ["storage.function.terraform","export"],
+  ["text"," "],
+  ["variable.assignment.terraform","TF_LOG"],
+  ["keyword.operator","="],
+  ["text","TRACE"]
+],[
+   "start"
+],[
+   "start",
+  ["singleline.comment.terraform","# An AMI"]
+],[
+   "start",
+  ["storage.function.terraform","variable"],
+  ["text"," "],
+  ["punctuation.quote.terraform","\""],
+  ["string","ami"],
+  ["punctuation.quote.terraform","\""],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","  "],
+  ["variable.assignment.terraform","description"],
+  ["keyword.operator"," ="],
+  ["text"," "],
+  ["punctuation.quote.terraform","\""],
+  ["string","the AMI to use"],
+  ["punctuation.quote.terraform","\""]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "blockComment",
+  ["multiline.comment.begin.terraform","/*"],
+  ["comment"," A multi"]
+],[
+   "start",
+  ["comment","   line comment. "],
+  ["multiline.comment.end.terraform","*/"]
+],[
+   "start",
+  ["storage.function.terraform","resource"],
+  ["text"," "],
+  ["punctuation.quote.terraform","\""],
+  ["string","aws_instance"],
+  ["punctuation.quote.terraform","\""],
+  ["text"," "],
+  ["punctuation.quote.terraform","\""],
+  ["string","web"],
+  ["punctuation.quote.terraform","\""],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","  "],
+  ["variable.assignment.terraform","ami"],
+  ["keyword.operator","               ="],
+  ["text"," "],
+  ["punctuation.quote.terraform","\""],
+  ["punctuation.interpolated.begin.terraform","${"],
+  ["variable.terraform","var.ami"],
+  ["punctuation.interpolated.end.terraform","}"],
+  ["punctuation.quote.terraform","\""]
+],[
+   "start",
+  ["text","  "],
+  ["variable.assignment.terraform","count"],
+  ["keyword.operator","             ="],
+  ["text"," "],
+  ["constant.numeric.terraform","2"]
+],[
+   "start",
+  ["text","  "],
+  ["variable.assignment.terraform","source_dest_check"],
+  ["keyword.operator"," ="],
+  ["text"," "],
+  ["constant.language.terraform","false"]
+],[
+   "start"
+],[
+   "start",
+  ["text","  "],
+  ["language.support.class","connection"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["variable.assignment.terraform","user"],
+  ["keyword.operator"," ="],
+  ["text"," "],
+  ["punctuation.quote.terraform","\""],
+  ["string","root"],
+  ["punctuation.quote.terraform","\""]
+],[
+   "start",
+  ["text","  "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["storage.function.terraform","resource"],
+  ["text"," "],
+  ["punctuation.quote.terraform","\""],
+  ["string","aws_instance"],
+  ["punctuation.quote.terraform","\""],
+  ["text"," "],
+  ["punctuation.quote.terraform","\""],
+  ["string","web"],
+  ["punctuation.quote.terraform","\""],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","  "],
+  ["variable.assignment.terraform","subnet"],
+  ["keyword.operator"," ="],
+  ["text"," "],
+  ["punctuation.quote.terraform","\""],
+  ["punctuation.interpolated.begin.terraform","${"],
+  ["variable.terraform","var.env"],
+  ["punctuation"," "],
+  ["keyword.operator","=="],
+  ["punctuation"," "],
+  ["punctuation.quote.terraform","\""],
+  ["string","production"],
+  ["punctuation.quote.terraform","\""],
+  ["punctuation"," "],
+  ["keyword.operator","?"],
+  ["punctuation"," "],
+  ["variable.terraform","var.prod_subnet"],
+  ["punctuation"," "],
+  ["keyword.operator",":"],
+  ["punctuation"," "],
+  ["variable.terraform","var.dev_subnet"],
+  ["punctuation.interpolated.end.terraform","}"],
+  ["punctuation.quote.terraform","\""]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["storage.function.terraform","variable"],
+  ["text"," "],
+  ["punctuation.quote.terraform","\""],
+  ["string","count"],
+  ["punctuation.quote.terraform","\""],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","  "],
+  ["variable.assignment.terraform","default"],
+  ["keyword.operator"," ="],
+  ["text"," "],
+  ["constant.numeric.terraform","2"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["storage.function.terraform","variable"],
+  ["text"," "],
+  ["punctuation.quote.terraform","\""],
+  ["string","hostnames"],
+  ["punctuation.quote.terraform","\""],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","  "],
+  ["variable.assignment.terraform","default"],
+  ["keyword.operator"," ="],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["punctuation.quote.terraform","\""],
+  ["string","0"],
+  ["punctuation.quote.terraform","\""],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["punctuation.quote.terraform","\""],
+  ["string","example1.org"],
+  ["punctuation.quote.terraform","\""]
+],[
+   "start",
+  ["text","    "],
+  ["punctuation.quote.terraform","\""],
+  ["string","1"],
+  ["punctuation.quote.terraform","\""],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["punctuation.quote.terraform","\""],
+  ["string","example2.net"],
+  ["punctuation.quote.terraform","\""]
+],[
+   "start",
+  ["text","  "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["storage.function.terraform","data"],
+  ["text"," "],
+  ["punctuation.quote.terraform","\""],
+  ["string","template_file"],
+  ["punctuation.quote.terraform","\""],
+  ["text"," "],
+  ["punctuation.quote.terraform","\""],
+  ["string","web_init"],
+  ["punctuation.quote.terraform","\""],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","  "],
+  ["singleline.comment.terraform","# Render the template once for each instance"]
+],[
+   "start",
+  ["text","  "],
+  ["variable.assignment.terraform","count"],
+  ["keyword.operator","    ="],
+  ["text"," "],
+  ["punctuation.quote.terraform","\""],
+  ["punctuation.interpolated.begin.terraform","${"],
+  ["keyword.function.terraform","length"],
+  ["punctuation","("],
+  ["variable.terraform","var.hostnames"],
+  ["punctuation",")"],
+  ["punctuation.interpolated.end.terraform","}"],
+  ["punctuation.quote.terraform","\""]
+],[
+   "start",
+  ["text","  "],
+  ["variable.assignment.terraform","template"],
+  ["keyword.operator"," ="],
+  ["text"," "],
+  ["punctuation.quote.terraform","\""],
+  ["punctuation.interpolated.begin.terraform","${"],
+  ["keyword.function.terraform","file"],
+  ["punctuation","("],
+  ["punctuation.quote.terraform","\""],
+  ["string","templates/web_init.tpl"],
+  ["punctuation.quote.terraform","\""],
+  ["punctuation",")"],
+  ["punctuation.interpolated.end.terraform","}"],
+  ["punctuation.quote.terraform","\""]
+],[
+   "start",
+  ["text","  vars "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["singleline.comment.terraform","# count.index tells us the index of the instance we are rendering"]
+],[
+   "start",
+  ["text","    "],
+  ["variable.assignment.terraform","hostname"],
+  ["keyword.operator"," ="],
+  ["text"," "],
+  ["punctuation.quote.terraform","\""],
+  ["punctuation.interpolated.begin.terraform","${"],
+  ["variable.terraform","var.hostnames"],
+  ["paren.lparen","["],
+  ["variable.terraform","count.index"],
+  ["paren.rparen","]"],
+  ["punctuation.interpolated.end.terraform","}"],
+  ["punctuation.quote.terraform","\""]
+],[
+   "start",
+  ["text","  "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["storage.function.terraform","resource"],
+  ["text"," "],
+  ["punctuation.quote.terraform","\""],
+  ["string","aws_instance"],
+  ["punctuation.quote.terraform","\""],
+  ["text"," "],
+  ["punctuation.quote.terraform","\""],
+  ["string","web"],
+  ["punctuation.quote.terraform","\""],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","  "],
+  ["singleline.comment.terraform","# Create one instance for each hostname"]
+],[
+   "start",
+  ["text","  "],
+  ["variable.assignment.terraform","count"],
+  ["keyword.operator","     ="],
+  ["text"," "],
+  ["punctuation.quote.terraform","\""],
+  ["punctuation.interpolated.begin.terraform","${"],
+  ["keyword.function.terraform","length"],
+  ["punctuation","("],
+  ["variable.terraform","var.hostnames"],
+  ["punctuation",")"],
+  ["punctuation.interpolated.end.terraform","}"],
+  ["punctuation.quote.terraform","\""]
+],[
+   "start"
+],[
+   "start",
+  ["text","  "],
+  ["singleline.comment.terraform","# Pass each instance its corresponding template_file"]
+],[
+   "start",
+  ["text","  "],
+  ["variable.assignment.terraform","user_data"],
+  ["keyword.operator"," ="],
+  ["text"," "],
+  ["punctuation.quote.terraform","\""],
+  ["punctuation.interpolated.begin.terraform","${"],
+  ["punctuation","data.template_file.web_init."],
+  ["keyword.operator","*"],
+  ["punctuation",".rendered"],
+  ["paren.lparen","["],
+  ["variable.terraform","count.index"],
+  ["paren.rparen","]"],
+  ["punctuation.interpolated.end.terraform","}"],
+  ["punctuation.quote.terraform","\""]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["storage.function.terraform","variable"],
+  ["text"," "],
+  ["punctuation.quote.terraform","\""],
+  ["string","count"],
+  ["punctuation.quote.terraform","\""],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","  "],
+  ["variable.assignment.terraform","default"],
+  ["keyword.operator"," ="],
+  ["text"," "],
+  ["constant.numeric.terraform","2"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["singleline.comment.terraform","# Define the common tags for all resources"]
+],[
+   "start",
+  ["storage.function.terraform","locals {"]
+],[
+   "start",
+  ["text","  "],
+  ["variable.assignment.terraform","common_tags"],
+  ["keyword.operator"," ="],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["variable.assignment.terraform","Component"],
+  ["keyword.operator","   ="],
+  ["text"," "],
+  ["punctuation.quote.terraform","\""],
+  ["string","awesome-app"],
+  ["punctuation.quote.terraform","\""]
+],[
+   "start",
+  ["text","    "],
+  ["variable.assignment.terraform","Environment"],
+  ["keyword.operator"," ="],
+  ["text"," "],
+  ["punctuation.quote.terraform","\""],
+  ["string","production"],
+  ["punctuation.quote.terraform","\""]
+],[
+   "start",
+  ["text","  "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["singleline.comment.terraform","# Create a resource that blends the common tags with instance-specific tags."]
+],[
+   "start",
+  ["storage.function.terraform","resource"],
+  ["text"," "],
+  ["punctuation.quote.terraform","\""],
+  ["string","aws_instance"],
+  ["punctuation.quote.terraform","\""],
+  ["text"," "],
+  ["punctuation.quote.terraform","\""],
+  ["string","server"],
+  ["punctuation.quote.terraform","\""],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","  "],
+  ["variable.assignment.terraform","ami"],
+  ["keyword.operator","           ="],
+  ["text"," "],
+  ["punctuation.quote.terraform","\""],
+  ["string","ami-123456"],
+  ["punctuation.quote.terraform","\""]
+],[
+   "start",
+  ["text","  "],
+  ["variable.assignment.terraform","instance_type"],
+  ["keyword.operator"," ="],
+  ["text"," "],
+  ["punctuation.quote.terraform","\""],
+  ["string","t2.micro"],
+  ["punctuation.quote.terraform","\""]
+],[
+   "start"
+],[
+   ["punctuation.interpolated.begin.terraform","punctuation.quote.terraform0"],
+  ["text","  "],
+  ["variable.assignment.terraform","tags"],
+  ["keyword.operator"," ="],
+  ["text"," "],
+  ["punctuation.quote.terraform","\""],
+  ["punctuation.interpolated.begin.terraform","${"],
+  ["keyword.function.terraform","merge"],
+  ["punctuation","("]
+],[
+   ["punctuation.interpolated.begin.terraform","punctuation.quote.terraform0"],
+  ["punctuation","    "],
+  ["variable.terraform","local.common_tags"],
+  ["punctuation",","]
+],[
+   ["punctuation.interpolated.begin.terraform","punctuation.quote.terraform0"],
+  ["punctuation","    "],
+  ["keyword.function.terraform","map"],
+  ["punctuation","("]
+],[
+   ["punctuation.interpolated.begin.terraform","punctuation.quote.terraform0"],
+  ["punctuation","      "],
+  ["punctuation.quote.terraform","\""],
+  ["string","Name"],
+  ["punctuation.quote.terraform","\""],
+  ["punctuation",", "],
+  ["punctuation.quote.terraform","\""],
+  ["string","awesome-app-server"],
+  ["punctuation.quote.terraform","\""],
+  ["punctuation",","]
+],[
+   ["punctuation.interpolated.begin.terraform","punctuation.quote.terraform0"],
+  ["punctuation","      "],
+  ["punctuation.quote.terraform","\""],
+  ["string","Role"],
+  ["punctuation.quote.terraform","\""],
+  ["punctuation",", "],
+  ["punctuation.quote.terraform","\""],
+  ["string","server"],
+  ["punctuation.quote.terraform","\""]
+],[
+   ["punctuation.interpolated.begin.terraform","punctuation.quote.terraform0"],
+  ["punctuation","    )"]
+],[
+   "start",
+  ["punctuation","  )"],
+  ["punctuation.interpolated.end.terraform","}"],
+  ["punctuation.quote.terraform","\""]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["variable.terraform","$ "],
+  ["text","terraform apply "],
+  ["keyword.terraform","-var"],
+  ["text"," "],
+  ["variable.assignment.terraform","foo"],
+  ["keyword.operator","="],
+  ["text","bar "],
+  ["keyword.terraform","-var"],
+  ["text"," "],
+  ["variable.assignment.terraform","foo"],
+  ["keyword.operator","="],
+  ["text","baz"]
+],[
+   "variable.terraform",
+  ["variable.terraform","$ "],
+  ["text","terraform apply "],
+  ["keyword.terraform","-var"],
+  ["text"," "],
+  ["punctuation.quote.terraform","'"],
+  ["string","foo={quux=\"bar\"}"],
+  ["punctuation.quote.terraform","'"],
+  ["text"," "],
+  ["keyword.terraform","-var"],
+  ["text"," "],
+  ["punctuation.quote.terraform","'"],
+  ["string","foo={bar=\"baz\"}"],
+  ["punctuation.quote.terraform","'"]
+],[
+   "start"
+],[
+   "start",
+  ["variable.terraform","$ "],
+  ["text","terraform apply "],
+  ["keyword.terraform","-var-file"],
+  ["keyword.operator","="],
+  ["text","foo.tfvars "],
+  ["keyword.terraform","-var-file"],
+  ["keyword.operator","="],
+  ["text","bar.tfvars"]
+],[
+   "start",
+  ["variable.terraform","$ "],
+  ["variable.assignment.terraform","TF_VAR_somemap"],
+  ["keyword.operator","="],
+  ["punctuation.quote.terraform","'"],
+  ["string","{foo = \"bar\", baz = \"qux\"}"],
+  ["punctuation.quote.terraform","'"],
+  ["text"," terraform plan"]
+],[
+   "start"
+],[
+   "start",
+  ["storage.function.terraform","resource"],
+  ["text"," "],
+  ["punctuation.quote.terraform","\""],
+  ["string","aws_instance"],
+  ["punctuation.quote.terraform","\""],
+  ["text"," "],
+  ["punctuation.quote.terraform","\""],
+  ["string","web"],
+  ["punctuation.quote.terraform","\""],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","  "],
+  ["singleline.comment.terraform","# ..."]
+],[
+   "start"
+],[
+   "start",
+  ["text","  "],
+  ["variable.assignment.terraform","count"],
+  ["keyword.operator"," ="],
+  ["text"," "],
+  ["punctuation.quote.terraform","\""],
+  ["punctuation.interpolated.begin.terraform","${"],
+  ["variable.terraform","var.count"],
+  ["punctuation.interpolated.end.terraform","}"],
+  ["punctuation.quote.terraform","\""]
+],[
+   "start"
+],[
+   "start",
+  ["text","  "],
+  ["singleline.comment.terraform","# Tag the instance with a counter starting at 1, ie. web-001"]
+],[
+   "start",
+  ["text","  tags "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["variable.assignment.terraform","Name"],
+  ["keyword.operator"," ="],
+  ["text"," "],
+  ["punctuation.quote.terraform","\""],
+  ["punctuation.interpolated.begin.terraform","${"],
+  ["keyword.function.terraform","format"],
+  ["punctuation","("],
+  ["punctuation.quote.terraform","\""],
+  ["string","web-%03d"],
+  ["punctuation.quote.terraform","\""],
+  ["punctuation",", "],
+  ["variable.terraform","count.index"],
+  ["punctuation"," "],
+  ["keyword.operator","+"],
+  ["punctuation"," "],
+  ["constant.numeric.terraform","1"],
+  ["punctuation",")"],
+  ["punctuation.interpolated.end.terraform","}"],
+  ["punctuation.quote.terraform","\""]
+],[
+   "start",
+  ["text","  "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["paren.rparen","}"]
+]]

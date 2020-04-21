@@ -1,0 +1,160 @@
+[[
+   "start",
+  ["keyword.html.tags.slim","doctype html"]
+],[
+   "start",
+  ["keyword.html.tags.slim","html"]
+],[
+   "start",
+  ["keyword.html.tags.slim","  head"]
+],[
+   "start",
+  ["keyword.html.tags.slim","    title"],
+  ["text"," Slim Examples"]
+],[
+   "start",
+  ["keyword.html.tags.slim","    meta"],
+  ["text"," name"],
+  ["keyword.operator.equals.slim","="],
+  ["string","\"keywords\""],
+  ["text"," content"],
+  ["keyword.operator.equals.slim","="],
+  ["string","\"template language\""]
+],[
+   "start",
+  ["keyword.html.tags.slim","    meta"],
+  ["text"," name"],
+  ["keyword.operator.equals.slim","="],
+  ["string","\"author\""],
+  ["text"," content"],
+  ["keyword.operator.equals.slim","="],
+  ["text","author"]
+],[
+   "start",
+  ["keyword.html.tags.slim","    link"],
+  ["text"," rel"],
+  ["keyword.operator.equals.slim","="],
+  ["string","\"icon\""],
+  ["text"," type"],
+  ["keyword.operator.equals.slim","="],
+  ["string","\"image/png\""],
+  ["text"," href"],
+  ["keyword.operator.equals.slim","="],
+  ["text","file_path"],
+  ["paren","("],
+  ["string","\"favicon.png\""],
+  ["paren",")"]
+],[
+   ["language-embed",[],["    ","javascript"],"start"],
+  ["keyword","    javascript:"]
+],[
+   ["language-embed","no_regex",["    ","javascript"],"start"],
+  ["text","    "],
+  ["text","    "],
+  ["support.function","alert"],
+  ["paren.lparen","("],
+  ["string","'Slim supports embedded javascript!'"],
+  ["paren.rparen",")"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword.html.tags.slim","  body"]
+],[
+   "start",
+  ["keyword.html.tags.slim","    h1"],
+  ["text"," Markup examples"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword.slim","    #content"]
+],[
+   "start",
+  ["keyword.html.tags.slim","      p"],
+  ["text"," This example shows you how a basic Slim file looks."]
+],[
+   "start"
+],[
+   "start",
+  ["keyword.control.slim","    =="],
+  ["text"," "],
+  ["list.ruby.operators.slim","yield"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword.control.slim","    -"],
+  ["text"," "],
+  ["list.ruby.operators.slim","if"],
+  ["text"," items.any?"]
+],[
+   "start",
+  ["keyword.html.tags.slim","      table#items"]
+],[
+   "start",
+  ["keyword.control.slim","        -"],
+  ["text"," "],
+  ["list.ruby.operators.slim","for"],
+  ["text"," item "],
+  ["list.ruby.operators.slim","in"],
+  ["text"," items"]
+],[
+   "start",
+  ["keyword.html.tags.slim","          tr"]
+],[
+   "start",
+  ["keyword.html.tags.slim","            td.name"],
+  ["text"," "],
+  ["keyword.operator.equals.slim","="],
+  ["text"," item.name"]
+],[
+   "start",
+  ["keyword.html.tags.slim","            td.price"],
+  ["text"," "],
+  ["keyword.operator.equals.slim","="],
+  ["text"," item.price"]
+],[
+   "start",
+  ["keyword.control.slim","    -"],
+  ["text"," "],
+  ["list.ruby.operators.slim","else"]
+],[
+   "start",
+  ["keyword.html.tags.slim","      p"],
+  ["text"," No items found. Please add some inventory."]
+],[
+   "start",
+  ["text","        Thank you!"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword.html.tags.slim","    div"],
+  ["text"," id"],
+  ["keyword.operator.equals.slim","="],
+  ["string","\"footer\""]
+],[
+   "start",
+  ["keyword.control.slim","      =="],
+  ["text"," render "],
+  ["string","'footer'"]
+],[
+   ["mlString",6],
+  ["string","      | Copyright &copy; #{@year} #{@author}"]
+],[
+   ["mlString",6],
+  ["indent","        "],
+  ["string","indenting test"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword.control.slim","    -"],
+  ["text"," "],
+  ["class.variable.slim","@page_current"],
+  ["text"," "],
+  ["keyword.operator.ruby.embedded.slim","="],
+  ["text"," "],
+  ["list.meta.slim","true"]
+]]

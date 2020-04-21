@@ -1,0 +1,57 @@
+[[
+   "start",
+  ["constant.language.instrument.alda","vibraphone"],
+  ["meta.part.call.alda",":"]
+],[
+   "start",
+  ["text","  "],
+  ["meta.inline.clojure.alda","(quant 200)"]
+],[
+   "start",
+  ["text","  "],
+  ["meta.inline.clojure.alda","(key-signature \"f+ c+ g+\")"]
+],[
+   "start",
+  ["text","  a"],
+  ["string.quoted.operator.timing.alda","8"],
+  ["text"," b "],
+  ["keyword.operator.octave-shift.alda",">"],
+  ["text"," c d e f g a "],
+  ["keyword.operator.octave-shift.alda","<"]
+],[
+   "start",
+  ["text","  a b "],
+  ["keyword.operator.octave-shift.alda",">"],
+  ["text"," c_ d e f_ g_ a "],
+  ["keyword.operator.octave-shift.alda","<"]
+],[
+   "start"
+],[
+   "start",
+  ["text","  "],
+  ["meta.inline.clojure.alda","(key-signature [:g :minor])"]
+],[
+   "start",
+  ["text","  g a b "],
+  ["keyword.operator.octave-shift.alda",">"],
+  ["text"," c"],
+  ["variable.parameter.operator.pitch.alda","+"],
+  ["text"," d e f"],
+  ["variable.parameter.operator.pitch.alda","+"],
+  ["text"," g "],
+  ["keyword.operator.octave-shift.alda","<"]
+],[
+   "start"
+],[
+   "start",
+  ["text","  "],
+  ["meta.inline.clojure.alda","(key-signature {:e [:flat] :b [:flat]})"]
+],[
+   "pitch",
+  ["text","  g"],
+  ["string.quoted.operator.timing.alda","1~1"],
+  ["constant.numeric.subchord.alda","/"],
+  ["text","b"],
+  ["constant.numeric.subchord.alda","/"],
+  ["text","d"]
+]]

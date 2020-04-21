@@ -483,7 +483,11 @@
   ["text","name$"]
 ],[
    "start",
-  ["text","  nocheck editor "],
+  ["text","  "],
+  ["keyword","nocheck"],
+  ["text"," "],
+  ["keyword","editor"],
+  ["text"," "],
   ["string.interpolated","'editor_name$'"]
 ],[
    "start",
@@ -493,7 +497,10 @@
   ["keyword","Close"]
 ],[
    "start",
-  ["text","  nocheck endeditor"]
+  ["text","  "],
+  ["keyword","nocheck"],
+  ["text"," "],
+  ["keyword","endeditor"]
 ],[
    "start",
   ["text","  "]

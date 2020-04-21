@@ -1,0 +1,38 @@
+[[
+   "start",
+  ["comment.line.character","* PROGRAM START"]
+],[
+   "start",
+  ["variable.other","ΔSTART"],
+  ["text","     "],
+  ["keyword.control","LDA"],
+  ["text","  "],
+  ["text","2000"],
+  ["comment.line.character"," LOAD A FROM CELL 2000"]
+],[
+   "start",
+  ["text","           "],
+  ["invalid.illegal","CMP7"],
+  ["text"," "],
+  ["text","=15="]
+],[
+   "start",
+  ["invalid.illegal","12345"],
+  ["text","      "],
+  ["keyword.control","HLT"]
+],[
+   "start",
+  ["text","           "],
+  ["keyword.control","END"],
+  ["text","  "],
+  ["text","START"]
+],[
+   "start",
+  ["variable.other","ABC"],
+  ["text","        "],
+  ["keyword.control","ALF"],
+  ["text"," "],
+  ["invalid.illegal","abc"]
+],[
+   "start"
+]]

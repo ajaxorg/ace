@@ -1,0 +1,1297 @@
+[[
+   "start",
+  ["markup.heading","=========================================="]
+],[
+   "start",
+  ["markup.italic","*"],
+  ["markup.italic","reStructuredText*"],
+  ["text"," Highlighter for"],
+  ["text"," "],
+  ["markup.bold","**"],
+  ["markup.bold","Ace**"]
+],[
+   "start",
+  ["markup.heading","=========================================="]
+],[
+   "start"
+],[
+   "codeblock",
+  ["text",".. "],
+  ["keyword.operator","seealso::"]
+],[
+   "codeblock"
+],[
+   "codeblock",
+  ["support.function","   http://docutils.sourceforge.net/docs/user/rst/quickstart.html"]
+],[
+   "codeblock"
+],[
+   "codeblock"
+],[
+   "start",
+  ["text","ReStructuredText Primer"]
+],[
+   "start",
+  ["markup.heading","======================="]
+],[
+   "start"
+],[
+   "start",
+  ["text",":Author: Richard Jones"]
+],[
+   "start",
+  ["text",":Version: $Revision: 5801 $"]
+],[
+   "start",
+  ["text",":Copyright: This document has been placed in the public domain."]
+],[
+   "start"
+],[
+   "codeblock",
+  ["text",".. "],
+  ["keyword.operator","contents::"]
+],[
+   "codeblock"
+],[
+   "codeblock"
+],[
+   "start",
+  ["text","The text below contains links that look like \"("],
+  ["markup.underline.list","quickref__"],
+  ["text",")\".  These"]
+],[
+   "start",
+  ["text","are relative links that point to the"],
+  ["text"," "],
+  ["markup.underline.list","`"],
+  ["markup.underline.list","Quick reStructuredText`_"],
+  ["text"," user"]
+],[
+   "link",
+  ["text","reference.  If these links don't work, please refer to the"],
+  ["text"," "],
+  ["markup.underline.list","`"],
+  ["markup.underline.list","master"]
+],[
+   "start",
+  ["markup.underline.list","quick reference`_"],
+  ["text"," document."]
+],[
+   "start"
+],[
+   "start",
+  ["text","__"]
+],[
+   "start",
+  ["string",".. _Quick reStructuredText:"],
+  ["markup.underline.list"," quickref.html"]
+],[
+   "start",
+  ["string",".. _master quick reference:"]
+],[
+   "start",
+  ["text","   "],
+  ["markup.underline.list","http://docutils.sourceforge.net/docs/user/rst/quickref.html"]
+],[
+   "start"
+],[
+   "codeblock",
+  ["text",".. "],
+  ["keyword.operator","Note::"],
+  ["support.function"," This document is an informal introduction to"]
+],[
+   "codeblock",
+  ["support.function","   reStructuredText.  The `What Next?`_ section below has links to"]
+],[
+   "codeblock",
+  ["support.function","   further resources, including a formal reference."]
+],[
+   "codeblock"
+],[
+   "codeblock"
+],[
+   "start",
+  ["text","Structure"]
+],[
+   "start",
+  ["markup.heading","---------"]
+],[
+   "start"
+],[
+   "start",
+  ["text","From the outset, let me say that \"Structured Text\" is probably a bit"]
+],[
+   "start",
+  ["text","of a misnomer.  It's more like \"Relaxed Text\" that uses certain"]
+],[
+   "start",
+  ["text","consistent patterns.  These patterns are interpreted by a HTML"]
+],[
+   "start",
+  ["text","converter to produce \"Very Structured Text\" that can be used by a web"]
+],[
+   "start",
+  ["text","browser."]
+],[
+   "start"
+],[
+   "start",
+  ["text","The most basic pattern recognised is a"],
+  ["text"," "],
+  ["markup.bold","**"],
+  ["markup.bold","paragraph**"],
+  ["text"," ("],
+  ["markup.underline.list","quickref__"],
+  ["text",")."]
+],[
+   "start",
+  ["text","That's a chunk of text that is separated by blank lines (one is"]
+],[
+   "start",
+  ["text","enough).  Paragraphs must have the same indentation -- that is, line"]
+],[
+   "start",
+  ["text","up at their left edge.  Paragraphs that start indented will result in"]
+],[
+   "codeblock",
+  ["text","indented quote paragraphs. For example"],
+  ["keyword.operator","::"]
+],[
+   "codeblock"
+],[
+   "codeblock",
+  ["support.function","  This is a paragraph.  It's quite"]
+],[
+   "codeblock",
+  ["support.function","  short."]
+],[
+   "codeblock"
+],[
+   "codeblock",
+  ["support.function","     This paragraph will result in an indented block of"]
+],[
+   "codeblock",
+  ["support.function","     text, typically used for quoting other text."]
+],[
+   "codeblock"
+],[
+   "codeblock",
+  ["support.function","  This is another one."]
+],[
+   "codeblock"
+],[
+   "start",
+  ["text","Results in:"]
+],[
+   "start"
+],[
+   "start",
+  ["text","  This is a paragraph.  It's quite"]
+],[
+   "start",
+  ["text","  short."]
+],[
+   "start"
+],[
+   "start",
+  ["text","     This paragraph will result in an indented block of"]
+],[
+   "start",
+  ["text","     text, typically used for quoting other text."]
+],[
+   "start"
+],[
+   "start",
+  ["text","  This is another one."]
+],[
+   "start"
+],[
+   "start",
+  ["text","__ quickref.html#paragraphs"]
+],[
+   "start"
+],[
+   "start"
+],[
+   "start",
+  ["text","Text styles"]
+],[
+   "start",
+  ["markup.heading","-----------"]
+],[
+   "start"
+],[
+   "start",
+  ["text","("],
+  ["markup.underline.list","quickref__"],
+  ["text",")"]
+],[
+   "start"
+],[
+   "start",
+  ["text","__ quickref.html#inline-markup"]
+],[
+   "start"
+],[
+   "start",
+  ["text","Inside paragraphs and other bodies of text, you may additionally mark"]
+],[
+   "start",
+  ["text","text for"],
+  ["text"," "],
+  ["markup.italic","*"],
+  ["markup.italic","italics*"],
+  ["text"," with "],
+  ["text","\""],
+  ["support.function","``"],
+  ["support.function","*italics*``"],
+  ["text","\" or"],
+  ["text"," "],
+  ["markup.bold","**"],
+  ["markup.bold","bold**"],
+  ["text"," with"]
+],[
+   "start",
+  ["text","\""],
+  ["support.function","``"],
+  ["support.function","**bold**``"],
+  ["text","\".  This is called \"inline markup\"."]
+],[
+   "start"
+],[
+   "start",
+  ["text","If you want something to appear as a fixed-space literal, use"]
+],[
+   "start",
+  ["text","\""],
+  ["support.function","``"],
+  ["support.function","``double back-quotes````"],
+  ["text","\".  Note that no further fiddling is done"]
+],[
+   "start",
+  ["text","inside the double back-quotes -- so asterisks "],
+  ["text","\""],
+  ["support.function","``"],
+  ["support.function","*``"],
+  ["text","\" etc. are left"]
+],[
+   "start",
+  ["text","alone."]
+],[
+   "start"
+],[
+   "start",
+  ["text","If you find that you want to use one of the \"special\" characters in"]
+],[
+   "start",
+  ["text","text, it will generally be OK -- reStructuredText is pretty smart."]
+],[
+   "start",
+  ["text","For example, this lone asterisk * is handled just fine, as is the"]
+],[
+   "start",
+  ["text","asterisk in this equation: 5*6=30.  If you actually"]
+],[
+   "start",
+  ["text","want text \\*surrounded by asterisks* to"],
+  ["text"," "],
+  ["markup.bold","**"],
+  ["markup.bold","not**"],
+  ["text"," be italicised, then"]
+],[
+   "start",
+  ["text","you need to indicate that the asterisk is not special.  You do this by"]
+],[
+   "start",
+  ["text","placing a backslash just before it, like so "],
+  ["text","\""],
+  ["support.function","``"],
+  ["support.function","\\*``"],
+  ["text","\" ("],
+  ["markup.underline.list","quickref__"],
+  ["text","), or"]
+],[
+   "codeblock",
+  ["text","by enclosing it in double back-quotes (inline literals), like this"],
+  ["keyword.operator","::"]
+],[
+   "codeblock"
+],[
+   "codeblock",
+  ["support.function","    ``*``"]
+],[
+   "codeblock"
+],[
+   "start",
+  ["text","__ quickref.html#escaping"]
+],[
+   "start"
+],[
+   "codeblock",
+  ["text",".. "],
+  ["keyword.operator","Tip::"],
+  ["support.function"," Think of inline markup as a form of (parentheses) and use it"]
+],[
+   "codeblock",
+  ["support.function","   the same way: immediately before and after the text being marked"]
+],[
+   "codeblock",
+  ["support.function","   up.  Inline markup by itself (surrounded by whitespace) or in the"]
+],[
+   "codeblock",
+  ["support.function","   middle of a word won't be recognized.  See the `markup spec`__ for"]
+],[
+   "codeblock",
+  ["support.function","   full details."]
+],[
+   "codeblock"
+],[
+   "start",
+  ["text","__ ../../ref/rst/restructuredtext.html#inline-markup"]
+],[
+   "start"
+],[
+   "start"
+],[
+   "start",
+  ["text","Lists"]
+],[
+   "start",
+  ["markup.heading","-----"]
+],[
+   "start"
+],[
+   "start",
+  ["text","Lists of items come in three main flavours:"],
+  ["text"," "],
+  ["markup.bold","**"],
+  ["markup.bold","enumerated**"],
+  ["text",","]
+],[
+   "start",
+  ["markup.bold","**"],
+  ["markup.bold","bulleted**"],
+  ["text"," and"],
+  ["text"," "],
+  ["markup.bold","**"],
+  ["markup.bold","definitions**"],
+  ["text",".  In all list cases, you may have as"]
+],[
+   "start",
+  ["text","many paragraphs, sublists, etc. as you want, as long as the left-hand"]
+],[
+   "start",
+  ["text","side of the paragraph or whatever aligns with the first line of text"]
+],[
+   "start",
+  ["text","in the list item."]
+],[
+   "start"
+],[
+   "start",
+  ["text","Lists must always start a new paragraph -- that is, they must appear"]
+],[
+   "start",
+  ["text","after a blank line."]
+],[
+   "start"
+],[
+   "start",
+  ["markup.bold","**"],
+  ["markup.bold","enumerated**"],
+  ["text"," lists (numbers, letters or roman numerals; "],
+  ["markup.underline.list","quickref__"],
+  ["text",")"]
+],[
+   "start",
+  ["text","__ quickref.html#enumerated-lists"]
+],[
+   "start"
+],[
+   "start",
+  ["text","Start a line off with a number or letter followed by a period \".\","]
+],[
+   "start",
+  ["text","right bracket \")\" or surrounded by brackets \"( )\" -- whatever you're"]
+],[
+   "codeblock",
+  ["text","comfortable with.  All of the following forms are recognised"],
+  ["keyword.operator","::"]
+],[
+   "codeblock"
+],[
+   "codeblock",
+  ["support.function","  1. numbers"]
+],[
+   "codeblock"
+],[
+   "codeblock",
+  ["support.function","  A. upper-case letters"]
+],[
+   "codeblock",
+  ["support.function","     and it goes over many lines"]
+],[
+   "codeblock"
+],[
+   "codeblock",
+  ["support.function","     with two paragraphs and all!"]
+],[
+   "codeblock"
+],[
+   "codeblock",
+  ["support.function","  a. lower-case letters"]
+],[
+   "codeblock"
+],[
+   "codeblock",
+  ["support.function","     3. with a sub-list starting at a different number"]
+],[
+   "codeblock",
+  ["support.function","     4. make sure the numbers are in the correct sequence though!"]
+],[
+   "codeblock"
+],[
+   "codeblock",
+  ["support.function","  I. upper-case roman numerals"]
+],[
+   "codeblock"
+],[
+   "codeblock",
+  ["support.function","  i. lower-case roman numerals"]
+],[
+   "codeblock"
+],[
+   "codeblock",
+  ["support.function","  (1) numbers again"]
+],[
+   "codeblock"
+],[
+   "codeblock",
+  ["support.function","  1) and again"]
+],[
+   "codeblock"
+],[
+   "start",
+  ["text","Results in (note: the different enumerated list styles are not"]
+],[
+   "start",
+  ["text","always supported by every web browser, so you may not get the full"]
+],[
+   "start",
+  ["text","effect here):"]
+],[
+   "start"
+],[
+   "start",
+  ["markup.heading","1. "],
+  ["text","numbers"]
+],[
+   "start"
+],[
+   "start",
+  ["markup.heading","A. "],
+  ["text","upper-case letters"]
+],[
+   "start",
+  ["text","   and it goes over many lines"]
+],[
+   "start"
+],[
+   "start",
+  ["text","   with two paragraphs and all!"]
+],[
+   "start"
+],[
+   "start",
+  ["markup.heading","a. "],
+  ["text","lower-case letters"]
+],[
+   "start"
+],[
+   "start",
+  ["markup.heading","   3. "],
+  ["text","with a sub-list starting at a different number"]
+],[
+   "start",
+  ["markup.heading","   4. "],
+  ["text","make sure the numbers are in the correct sequence though!"]
+],[
+   "start"
+],[
+   "start",
+  ["markup.heading","I. "],
+  ["text","upper-case roman numerals"]
+],[
+   "start"
+],[
+   "start",
+  ["markup.heading","i. "],
+  ["text","lower-case roman numerals"]
+],[
+   "start"
+],[
+   "start",
+  ["markup.heading","(1) "],
+  ["text","numbers again"]
+],[
+   "start"
+],[
+   "start",
+  ["markup.heading","1) "],
+  ["text","and again"]
+],[
+   "start"
+],[
+   "start",
+  ["markup.bold","**"],
+  ["markup.bold","bulleted**"],
+  ["text"," lists ("],
+  ["markup.underline.list","quickref__"],
+  ["text",")"]
+],[
+   "start",
+  ["text","__ quickref.html#bullet-lists"]
+],[
+   "start"
+],[
+   "start",
+  ["text","Just like enumerated lists, start the line off with a bullet point"]
+],[
+   "codeblock",
+  ["text","character - either \"-\", \"+\" or \"\\*\""],
+  ["keyword.operator","::"]
+],[
+   "codeblock"
+],[
+   "codeblock",
+  ["support.function","  * a bullet point using \"\\*\""]
+],[
+   "codeblock"
+],[
+   "codeblock",
+  ["support.function","    - a sub-list using \"-\""]
+],[
+   "codeblock"
+],[
+   "codeblock",
+  ["support.function","      + yet another sub-list"]
+],[
+   "codeblock"
+],[
+   "codeblock",
+  ["support.function","    - another item"]
+],[
+   "codeblock"
+],[
+   "start",
+  ["text","Results in:"]
+],[
+   "start"
+],[
+   "start",
+  ["markup.heading","* "],
+  ["text","a bullet point using \"\\*\""]
+],[
+   "start"
+],[
+   "start",
+  ["markup.heading","  - "],
+  ["text","a sub-list using \"-\""]
+],[
+   "start"
+],[
+   "start",
+  ["markup.heading","    + "],
+  ["text","yet another sub-list"]
+],[
+   "start"
+],[
+   "start",
+  ["markup.heading","  - "],
+  ["text","another item"]
+],[
+   "start"
+],[
+   "start",
+  ["markup.bold","**"],
+  ["markup.bold","definition**"],
+  ["text"," lists ("],
+  ["markup.underline.list","quickref__"],
+  ["text",")"]
+],[
+   "start",
+  ["text","__ quickref.html#definition-lists"]
+],[
+   "start"
+],[
+   "start",
+  ["text","Unlike the other two, the definition lists consist of a term, and"]
+],[
+   "codeblock",
+  ["text","the definition of that term.  The format of a definition list is"],
+  ["keyword.operator","::"]
+],[
+   "codeblock"
+],[
+   "codeblock",
+  ["support.function","  what"]
+],[
+   "codeblock",
+  ["support.function","    Definition lists associate a term with a definition."]
+],[
+   "codeblock"
+],[
+   "codeblock",
+  ["support.function","  *how*"]
+],[
+   "codeblock",
+  ["support.function","    The term is a one-line phrase, and the definition is one or more"]
+],[
+   "codeblock",
+  ["support.function","    paragraphs or body elements, indented relative to the term."]
+],[
+   "codeblock",
+  ["support.function","    Blank lines are not allowed between term and definition."]
+],[
+   "codeblock"
+],[
+   "start",
+  ["text","Results in:"]
+],[
+   "start"
+],[
+   "start",
+  ["text","what"]
+],[
+   "start",
+  ["text","  Definition lists associate a term with a definition."]
+],[
+   "start"
+],[
+   "start",
+  ["markup.italic","*"],
+  ["markup.italic","how*"]
+],[
+   "start",
+  ["text","  The term is a one-line phrase, and the definition is one or more"]
+],[
+   "start",
+  ["text","  paragraphs or body elements, indented relative to the term."]
+],[
+   "start",
+  ["text","  Blank lines are not allowed between term and definition."]
+],[
+   "start"
+],[
+   "start"
+],[
+   "start",
+  ["text","Preformatting (code samples)"]
+],[
+   "start",
+  ["markup.heading","----------------------------"]
+],[
+   "start",
+  ["text","("],
+  ["markup.underline.list","quickref__"],
+  ["text",")"]
+],[
+   "start"
+],[
+   "start",
+  ["text","__ quickref.html#literal-blocks"]
+],[
+   "start"
+],[
+   "start",
+  ["text","To just include a chunk of preformatted, never-to-be-fiddled-with"]
+],[
+   "start",
+  ["text","text, finish the prior paragraph with "],
+  ["text","\""],
+  ["support.function","``"],
+  ["support.function","::``"],
+  ["text","\".  The preformatted"]
+],[
+   "start",
+  ["text","block is finished when the text falls back to the same indentation"]
+],[
+   "codeblock",
+  ["text","level as a paragraph prior to the preformatted block.  For example"],
+  ["keyword.operator","::"]
+],[
+   "codeblock"
+],[
+   "codeblock",
+  ["support.function","  An example::"]
+],[
+   "codeblock"
+],[
+   "codeblock",
+  ["support.function","      Whitespace, newlines, blank lines, and all kinds of markup"]
+],[
+   "codeblock",
+  ["support.function","        (like *this* or \\this) is preserved by literal blocks."]
+],[
+   "codeblock",
+  ["support.function","    Lookie here, I've dropped an indentation level"]
+],[
+   "codeblock",
+  ["support.function","    (but not far enough)"]
+],[
+   "codeblock"
+],[
+   "codeblock",
+  ["support.function","  no more example"]
+],[
+   "codeblock"
+],[
+   "start",
+  ["text","Results in:"]
+],[
+   "start"
+],[
+   "codeblock",
+  ["text","An example"],
+  ["keyword.operator","::"]
+],[
+   "codeblock"
+],[
+   "codeblock",
+  ["support.function","    Whitespace, newlines, blank lines, and all kinds of markup"]
+],[
+   "codeblock",
+  ["support.function","      (like *this* or \\this) is preserved by literal blocks."]
+],[
+   "codeblock",
+  ["support.function","  Lookie here, I've dropped an indentation level"]
+],[
+   "codeblock",
+  ["support.function","  (but not far enough)"]
+],[
+   "codeblock"
+],[
+   "start",
+  ["text","no more example"]
+],[
+   "start"
+],[
+   "start",
+  ["text","Note that if a paragraph consists only of "],
+  ["text","\""],
+  ["support.function","``"],
+  ["support.function","::``"],
+  ["text","\", then it's removed"]
+],[
+   "codeblock",
+  ["text","from the output"],
+  ["keyword.operator","::"]
+],[
+   "codeblock"
+],[
+   "codeblock",
+  ["support.function","  ::"]
+],[
+   "codeblock"
+],[
+   "codeblock",
+  ["support.function","      This is preformatted text, and the"]
+],[
+   "codeblock",
+  ["support.function","      last \"::\" paragraph is removed"]
+],[
+   "codeblock"
+],[
+   "start",
+  ["text","Results in:"]
+],[
+   "start"
+],[
+   "codeblock",
+  ["keyword.operator","::"]
+],[
+   "codeblock"
+],[
+   "codeblock",
+  ["support.function","    This is preformatted text, and the"]
+],[
+   "codeblock",
+  ["support.function","    last \"::\" paragraph is removed"]
+],[
+   "codeblock"
+],[
+   "codeblock"
+],[
+   "start",
+  ["text","Sections"]
+],[
+   "start",
+  ["markup.heading","--------"]
+],[
+   "start"
+],[
+   "start",
+  ["text","("],
+  ["markup.underline.list","quickref__"],
+  ["text",")"]
+],[
+   "start"
+],[
+   "start",
+  ["text","__ quickref.html#section-structure"]
+],[
+   "start"
+],[
+   "start",
+  ["text","To break longer text up into sections, you use"],
+  ["text"," "],
+  ["markup.bold","**"],
+  ["markup.bold","section headers**"],
+  ["text","."]
+],[
+   "start",
+  ["text","These are a single line of text (one or more words) with adornment: an"]
+],[
+   "start",
+  ["text","underline alone, or an underline and an overline together, in dashes"]
+],[
+   "start",
+  ["text","\""],
+  ["support.function","``"],
+  ["support.function","-----``"],
+  ["text","\", equals "],
+  ["text","\""],
+  ["support.function","``"],
+  ["support.function","======``"],
+  ["text","\", tildes "],
+  ["text","\""],
+  ["support.function","``"],
+  ["support.function","~~~~~~``"],
+  ["text","\" or any of the"]
+],[
+   "start",
+  ["text","non-alphanumeric characters"],
+  ["text"," "],
+  ["support.function","``"],
+  ["support.function","= - ` : ' \" ~ ^ _ * + # < >``"],
+  ["text"," that you"]
+],[
+   "start",
+  ["text","feel comfortable with.  An underline-only adornment is distinct from"]
+],[
+   "start",
+  ["text","an overline-and-underline adornment using the same character.  The"]
+],[
+   "start",
+  ["text","underline/overline must be at least as long as the title text.  Be"]
+],[
+   "start",
+  ["text","consistent, since all sections marked with the same adornment style"]
+],[
+   "codeblock",
+  ["text","are deemed to be at the same level"],
+  ["keyword.operator","::"]
+],[
+   "codeblock"
+],[
+   "codeblock",
+  ["support.function","  Chapter 1 Title"]
+],[
+   "codeblock",
+  ["support.function","  ==============="]
+],[
+   "codeblock"
+],[
+   "codeblock",
+  ["support.function","  Section 1.1 Title"]
+],[
+   "codeblock",
+  ["support.function","  -----------------"]
+],[
+   "codeblock"
+],[
+   "codeblock",
+  ["support.function","  Subsection 1.1.1 Title"]
+],[
+   "codeblock",
+  ["support.function","  ~~~~~~~~~~~~~~~~~~~~~~"]
+],[
+   "codeblock"
+],[
+   "codeblock",
+  ["support.function","  Section 1.2 Title"]
+],[
+   "codeblock",
+  ["support.function","  -----------------"]
+],[
+   "codeblock"
+],[
+   "codeblock",
+  ["support.function","  Chapter 2 Title"]
+],[
+   "codeblock",
+  ["support.function","  ==============="]
+],[
+   "codeblock"
+],[
+   "start",
+  ["text","This results in the following structure, illustrated by simplified"]
+],[
+   "codeblock",
+  ["text","pseudo-XML"],
+  ["keyword.operator","::"]
+],[
+   "codeblock"
+],[
+   "codeblock",
+  ["support.function","    <section>"]
+],[
+   "codeblock",
+  ["support.function","        <title>"]
+],[
+   "codeblock",
+  ["support.function","            Chapter 1 Title"]
+],[
+   "codeblock",
+  ["support.function","        <section>"]
+],[
+   "codeblock",
+  ["support.function","            <title>"]
+],[
+   "codeblock",
+  ["support.function","                Section 1.1 Title"]
+],[
+   "codeblock",
+  ["support.function","            <section>"]
+],[
+   "codeblock",
+  ["support.function","                <title>"]
+],[
+   "codeblock",
+  ["support.function","                    Subsection 1.1.1 Title"]
+],[
+   "codeblock",
+  ["support.function","        <section>"]
+],[
+   "codeblock",
+  ["support.function","            <title>"]
+],[
+   "codeblock",
+  ["support.function","                Section 1.2 Title"]
+],[
+   "codeblock",
+  ["support.function","    <section>"]
+],[
+   "codeblock",
+  ["support.function","        <title>"]
+],[
+   "codeblock",
+  ["support.function","            Chapter 2 Title"]
+],[
+   "codeblock"
+],[
+   "start",
+  ["text","(Pseudo-XML uses indentation for nesting and has no end-tags.  It's"]
+],[
+   "start",
+  ["text","not possible to show actual processed output, as in the other"]
+],[
+   "start",
+  ["text","examples, because sections cannot exist inside block quotes.  For a"]
+],[
+   "start",
+  ["text","concrete example, compare the section structure of this document's"]
+],[
+   "start",
+  ["text","source text and processed output.)"]
+],[
+   "start"
+],[
+   "start",
+  ["text","Note that section headers are available as link targets, just using"]
+],[
+   "start",
+  ["text","their name.  To link to the "],
+  ["markup.underline.list","Lists_"],
+  ["text"," heading, I write "],
+  ["text","\""],
+  ["support.function","``"],
+  ["support.function","Lists_``"],
+  ["text","\".  If"]
+],[
+   "start",
+  ["text","the heading has a space in it like"],
+  ["text"," "],
+  ["markup.underline.list","`"],
+  ["markup.underline.list","text styles`_"],
+  ["text",", we need to quote"]
+],[
+   "start",
+  ["text","the heading "],
+  ["text","\""],
+  ["support.function","``"],
+  ["support.function","`text styles`_``"],
+  ["text","\"."]
+],[
+   "start"
+],[
+   "start"
+],[
+   "start",
+  ["text","Document Title / Subtitle"]
+],[
+   "start",
+  ["markup.heading","`````````````````````````"]
+],[
+   "start"
+],[
+   "start",
+  ["text","The title of the whole document is distinct from section titles and"]
+],[
+   "start",
+  ["text","may be formatted somewhat differently (e.g. the HTML writer by default"]
+],[
+   "start",
+  ["text","shows it as a centered heading)."]
+],[
+   "start"
+],[
+   "start",
+  ["text","To indicate the document title in reStructuredText, use a unique adornment"]
+],[
+   "start",
+  ["text","style at the beginning of the document.  To indicate the document subtitle,"]
+],[
+   "start",
+  ["text","use another unique adornment style immediately after the document title.  For"]
+],[
+   "codeblock",
+  ["text","example"],
+  ["keyword.operator","::"]
+],[
+   "codeblock"
+],[
+   "codeblock",
+  ["support.function","    ================"]
+],[
+   "codeblock",
+  ["support.function","     Document Title"]
+],[
+   "codeblock",
+  ["support.function","    ================"]
+],[
+   "codeblock",
+  ["support.function","    ----------"]
+],[
+   "codeblock",
+  ["support.function","     Subtitle"]
+],[
+   "codeblock",
+  ["support.function","    ----------"]
+],[
+   "codeblock"
+],[
+   "codeblock",
+  ["support.function","    Section Title"]
+],[
+   "codeblock",
+  ["support.function","    ============="]
+],[
+   "codeblock"
+],[
+   "codeblock",
+  ["support.function","    ..."]
+],[
+   "codeblock"
+],[
+   "start",
+  ["text","Note that \"Document Title\" and \"Section Title\" above both use equals"]
+],[
+   "start",
+  ["text","signs, but are distict and unrelated styles.  The text of"]
+],[
+   "start",
+  ["text","overline-and-underlined titles (but not underlined-only) may be inset"]
+],[
+   "start",
+  ["text","for aesthetics."]
+],[
+   "start"
+],[
+   "start"
+],[
+   "start",
+  ["text","Images"]
+],[
+   "start",
+  ["markup.heading","------"]
+],[
+   "start"
+],[
+   "start",
+  ["text","("],
+  ["markup.underline.list","quickref__"],
+  ["text",")"]
+],[
+   "start"
+],[
+   "start",
+  ["text","__ quickref.html#directives"]
+],[
+   "start"
+],[
+   "start",
+  ["text","To include an image in your document, you use the the"],
+  ["text"," "],
+  ["support.function","``"],
+  ["support.function","image``"],
+  ["text"," "],
+  ["markup.underline.list","directive__"],
+  ["text","."]
+],[
+   "codeblock",
+  ["text","For example"],
+  ["keyword.operator","::"]
+],[
+   "codeblock"
+],[
+   "codeblock",
+  ["support.function","  .. image:: images/biohazard.png"]
+],[
+   "codeblock"
+],[
+   "start",
+  ["text","results in:"]
+],[
+   "start"
+],[
+   "codeblock",
+  ["text",".. "],
+  ["keyword.operator","image::"],
+  ["support.function"," images/biohazard.png"]
+],[
+   "codeblock"
+],[
+   "start",
+  ["text","The"],
+  ["text"," "],
+  ["support.function","``"],
+  ["support.function","images/biohazard.png``"],
+  ["text"," part indicates the filename of the image"]
+],[
+   "start",
+  ["text","you wish to appear in the document. There's no restriction placed on"]
+],[
+   "start",
+  ["text","the image (format, size etc).  If the image is to appear in HTML and"]
+],[
+   "codeblock",
+  ["text","you wish to supply additional information, you may"],
+  ["keyword.operator","::"]
+],[
+   "codeblock"
+],[
+   "codeblock",
+  ["support.function","  .. image:: images/biohazard.png"]
+],[
+   "codeblock",
+  ["support.function","     :height: 100"]
+],[
+   "codeblock",
+  ["support.function","     :width: 200"]
+],[
+   "codeblock",
+  ["support.function","     :scale: 50"]
+],[
+   "codeblock",
+  ["support.function","     :alt: alternate text"]
+],[
+   "codeblock"
+],[
+   "start",
+  ["text","See the full"],
+  ["text"," "],
+  ["markup.underline.list","`"],
+  ["markup.underline.list","image directive documentation`__"],
+  ["text"," for more info."]
+],[
+   "start"
+],[
+   "start",
+  ["text","__ ../../ref/rst/directives.html"]
+],[
+   "start",
+  ["text","__ ../../ref/rst/directives.html#images"]
+],[
+   "start"
+],[
+   "start"
+],[
+   "start",
+  ["text","What Next?"]
+],[
+   "start",
+  ["markup.heading","----------"]
+],[
+   "start"
+],[
+   "start",
+  ["text","This primer introduces the most common features of reStructuredText,"]
+],[
+   "start",
+  ["text","but there are a lot more to explore.  The"],
+  ["text"," "],
+  ["markup.underline.list","`"],
+  ["markup.underline.list","Quick reStructuredText`_"]
+],[
+   "start",
+  ["text","user reference is a good place to go next.  For complete details, the"]
+],[
+   "start",
+  ["markup.underline.list","`"],
+  ["markup.underline.list","reStructuredText Markup Specification`_"],
+  ["text"," is the place to go "],
+  ["markup.underline.list","[#]_"],
+  ["text","."]
+],[
+   "start"
+],[
+   "start",
+  ["text","Users who have questions or need assistance with Docutils or"]
+],[
+   "start",
+  ["text","reStructuredText should post a message to the "],
+  ["markup.underline.list","Docutils-users_"],
+  ["text"," mailing"]
+],[
+   "start",
+  ["text","list."]
+],[
+   "start"
+],[
+   "start",
+  ["string",".. [#] "],
+  ["text","If that relative link doesn't work, try the master document:"]
+],[
+   "start",
+  ["text","   "],
+  ["markup.underline.list","http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html."]
+],[
+   "start"
+],[
+   "start",
+  ["string",".. _reStructuredText Markup Specification:"]
+],[
+   "start",
+  ["text","   ../../ref/rst/restructuredtext.html"]
+],[
+   "start",
+  ["string",".. _Docutils-users:"],
+  ["markup.underline.list"," ../mailing-lists.html#docutils-users"]
+],[
+   "start",
+  ["string",".. _Docutils project web site:"],
+  ["markup.underline.list"," http://docutils.sourceforge.net/"]
+],[
+   "start"
+]]

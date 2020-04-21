@@ -1,0 +1,108 @@
+[[
+   "start",
+  ["keyword.other.prefix.turtle","@base"],
+  ["text"," "],
+  ["string.quoted.other.relative.url.turtle","<http://example.org/>"],
+  ["text"," "],
+  ["keyword.operator.punctuation.turtle","."]
+],[
+   "start",
+  ["keyword.other.prefix.turtle","@prefix"],
+  ["text"," "],
+  ["entity.name.other.qname.turtle","rdf:"],
+  ["text"," "],
+  ["string.quoted.other.relative.url.turtle","<http://www.w3.org/1999/02/22-rdf-syntax-ns#>"],
+  ["text"," "],
+  ["keyword.operator.punctuation.turtle","."]
+],[
+   "start",
+  ["keyword.other.prefix.turtle","@prefix"],
+  ["text"," "],
+  ["entity.name.other.qname.turtle","rdfs:"],
+  ["text"," "],
+  ["string.quoted.other.relative.url.turtle","<http://www.w3.org/2000/01/rdf-schema#>"],
+  ["text"," "],
+  ["keyword.operator.punctuation.turtle","."]
+],[
+   "start",
+  ["keyword.other.prefix.turtle","@prefix"],
+  ["text"," "],
+  ["entity.name.other.qname.turtle","foaf:"],
+  ["text"," "],
+  ["string.quoted.other.relative.url.turtle","<http://xmlns.com/foaf/0.1/>"],
+  ["text"," "],
+  ["keyword.operator.punctuation.turtle","."]
+],[
+   "start",
+  ["keyword.other.prefix.turtle","@prefix"],
+  ["text"," "],
+  ["entity.name.other.qname.turtle","rel:"],
+  ["text"," "],
+  ["string.quoted.other.relative.url.turtle","<http://www.perceive.net/schemas/relationship/>"],
+  ["text"," "],
+  ["keyword.operator.punctuation.turtle","."]
+],[
+   "start"
+],[
+   "start",
+  ["string.quoted.other.relative.url.turtle","<#green-goblin>"]
+],[
+   "start",
+  ["text","    "],
+  ["entity.name.other.qname.turtle","rel:enemyOf"],
+  ["text"," "],
+  ["string.quoted.other.relative.url.turtle","<#spiderman>"],
+  ["text"," "],
+  ["keyword.operator.punctuation.turtle",";"]
+],[
+   "start",
+  ["text","   "],
+  ["support.type.datatype.rdf.schema.turtle"," a "],
+  ["entity.name.other.qname.turtle","foaf:Person"],
+  ["text"," "],
+  ["keyword.operator.punctuation.turtle",";"],
+  ["text","    "],
+  ["punctuation.definition.comment.turtle","#"],
+  ["comment.line.hash.turtle"," in the context of the Marvel universe"]
+],[
+   "start",
+  ["text","    "],
+  ["entity.name.other.qname.turtle","foaf:name"],
+  ["text"," "],
+  ["string.quoted.double.turtle","\"Green Goblin\""],
+  ["text"," "],
+  ["keyword.operator.punctuation.turtle","."]
+],[
+   "start"
+],[
+   "start",
+  ["string.quoted.other.relative.url.turtle","<#spiderman>"]
+],[
+   "start",
+  ["text","    "],
+  ["entity.name.other.qname.turtle","rel:enemyOf"],
+  ["text"," "],
+  ["string.quoted.other.relative.url.turtle","<#green-goblin>"],
+  ["text"," "],
+  ["keyword.operator.punctuation.turtle",";"]
+],[
+   "start",
+  ["text","   "],
+  ["support.type.datatype.rdf.schema.turtle"," a "],
+  ["entity.name.other.qname.turtle","foaf:Person"],
+  ["text"," "],
+  ["keyword.operator.punctuation.turtle",";"]
+],[
+   "start",
+  ["text","    "],
+  ["entity.name.other.qname.turtle","foaf:name"],
+  ["text"," "],
+  ["string.quoted.double.turtle","\"Spiderman\""],
+  ["keyword.operator.punctuation.turtle",","],
+  ["text"," "],
+  ["string.quoted.double.turtle","\"Человек-паук\""],
+  ["keyword.operator.language.suffix.turtle","@"],
+  ["constant.language.suffix.turtle","ru"],
+  ["text"," "],
+  ["keyword.operator.punctuation.turtle","."]
+]]

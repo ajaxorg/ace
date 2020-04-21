@@ -1,0 +1,474 @@
+[[
+   "start",
+  ["comment.start.xml","<!--"],
+  ["comment.xml"," Stored in resources/views/layouts/app.blade.php "],
+  ["comment.end.xml","-->"]
+],[
+   "start"
+],[
+   "start",
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","html"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["text.xml","    "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","head"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["text.xml","        "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","title"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["text.xml","App Name - "],
+  ["directive.declaration.blade","@"],
+  ["keyword.directives.blade","yield"],
+  ["parenthesis.begin.blade","("],
+  ["punctuation.definition.string.begin.blade","'"],
+  ["string.quoted.double.blade","title"],
+  ["punctuation.definition.string.end.blade","'"],
+  ["parenthesis.end.blade",")"],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","title"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "js-start",
+  ["text.xml","        "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.script.tag-name.xml","script"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "js-start",
+  ["text","            "],
+  ["storage.type","var"],
+  ["text"," "],
+  ["identifier","app"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["directive.declaration.blade","@"],
+  ["keyword.directives.blade","json"],
+  ["parenthesis.begin.blade","("],
+  ["variable.blade","$array"],
+  ["parenthesis.end.blade",")"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["text","        "],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.script.tag-name.xml","script"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["text.xml","    "],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","head"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["text.xml","    "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","body"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["text.xml","        "],
+  ["directive.declaration.blade","@"],
+  ["keyword.directives.blade","extends"],
+  ["parenthesis.begin.blade","("],
+  ["punctuation.definition.string.begin.blade","'"],
+  ["string.quoted.double.blade","layouts.app"],
+  ["punctuation.definition.string.end.blade","'"],
+  ["parenthesis.end.blade",")"]
+],[
+   "start",
+  ["text.xml","        "],
+  ["directive.declaration.blade","@"],
+  ["keyword.directives.blade","section"],
+  ["parenthesis.begin.blade","("],
+  ["punctuation.definition.string.begin.blade","'"],
+  ["string.quoted.double.blade","sidebar"],
+  ["punctuation.definition.string.end.blade","'"],
+  ["parenthesis.end.blade",")"]
+],[
+   "start",
+  ["text.xml","            "],
+  ["directive.declaration.blade","@"],
+  ["keyword.directives.blade","parent"]
+],[
+   "start"
+],[
+   "start",
+  ["text.xml","            "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","p"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["text.xml","This is appended to the master sidebar."],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","p"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["text.xml","        "],
+  ["directive.declaration.blade","@"],
+  ["keyword.directives.blade","endsection"]
+],[
+   "start",
+  ["text.xml"," "]
+],[
+   "start",
+  ["text.xml","        "],
+  ["directive.declaration.blade","@"],
+  ["keyword.control.blade","if"],
+  ["text.xml"," "],
+  ["parenthesis.begin.blade","("],
+  ["source.blade","count"],
+  ["parenthesis.begin.blade","("],
+  ["variable.blade","$records"],
+  ["parenthesis.end.blade",")"],
+  ["source.blade"," "],
+  ["keyword.operator.blade","==="],
+  ["source.blade"," 1"],
+  ["parenthesis.end.blade",")"]
+],[
+   "start",
+  ["text.xml","            I have one record!"]
+],[
+   "start",
+  ["text.xml","        "],
+  ["directive.declaration.blade","@"],
+  ["keyword.control.blade","else"],
+  ["text.xml","if "],
+  ["parenthesis.begin.blade","("],
+  ["source.blade","count"],
+  ["parenthesis.begin.blade","("],
+  ["variable.blade","$records"],
+  ["parenthesis.end.blade",")"],
+  ["source.blade"," "],
+  ["keyword.operator.blade",">"],
+  ["source.blade"," 1"],
+  ["parenthesis.end.blade",")"]
+],[
+   "start",
+  ["text.xml","            I have multiple records!"]
+],[
+   "start",
+  ["text.xml","        "],
+  ["directive.declaration.blade","@"],
+  ["keyword.control.blade","else"]
+],[
+   "start",
+  ["text.xml","            I don't have any records!"]
+],[
+   "start",
+  ["text.xml","        "],
+  ["directive.declaration.blade","@"],
+  ["keyword.control.blade","endif"]
+],[
+   "start"
+],[
+   "start",
+  ["text.xml","        "],
+  ["directive.declaration.blade","@"],
+  ["keyword.control.blade","foreach"],
+  ["text.xml"," "],
+  ["parenthesis.begin.blade","("],
+  ["variable.blade","$users"],
+  ["source.blade"," "],
+  ["keyword.operator.blade","as"],
+  ["source.blade"," "],
+  ["variable.blade","$user"],
+  ["parenthesis.end.blade",")"]
+],[
+   "start",
+  ["text.xml","            "],
+  ["directive.declaration.blade","@"],
+  ["keyword.control.blade","if"],
+  ["text.xml"," "],
+  ["parenthesis.begin.blade","("],
+  ["variable.blade","$user"],
+  ["keyword.operator.blade","->"],
+  ["constant.other.property.blade","type"],
+  ["source.blade"," "],
+  ["keyword.operator.blade","=="],
+  ["source.blade"," 1"],
+  ["parenthesis.end.blade",")"]
+],[
+   "start",
+  ["text.xml","                "],
+  ["directive.declaration.blade","@"],
+  ["keyword.control.blade","continue"]
+],[
+   "start",
+  ["text.xml","            "],
+  ["directive.declaration.blade","@"],
+  ["keyword.control.blade","endif"]
+],[
+   "start"
+],[
+   "start",
+  ["text.xml","            "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","li"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["injections.begin.blade","{{"],
+  ["source.blade"," "],
+  ["variable.blade","$user"],
+  ["keyword.operator.blade","->"],
+  ["constant.other.property.blade","name"],
+  ["source.blade"," "],
+  ["injections.end.blade","}}"],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","li"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start"
+],[
+   "start",
+  ["text.xml","            "],
+  ["directive.declaration.blade","@"],
+  ["keyword.control.blade","if"],
+  ["text.xml"," "],
+  ["parenthesis.begin.blade","("],
+  ["variable.blade","$user"],
+  ["keyword.operator.blade","->"],
+  ["constant.other.property.blade","number"],
+  ["source.blade"," "],
+  ["keyword.operator.blade","=="],
+  ["source.blade"," 5"],
+  ["parenthesis.end.blade",")"]
+],[
+   "start",
+  ["text.xml","                "],
+  ["directive.declaration.blade","@"],
+  ["keyword.control.blade","break"]
+],[
+   "start",
+  ["text.xml","            "],
+  ["directive.declaration.blade","@"],
+  ["keyword.control.blade","endif"]
+],[
+   "start",
+  ["text.xml","        "],
+  ["directive.declaration.blade","@"],
+  ["keyword.control.blade","endforeach"]
+],[
+   "start"
+],[
+   "start",
+  ["text.xml","        "],
+  ["directive.declaration.blade","@"],
+  ["keyword.control.blade","foreach"],
+  ["text.xml"," "],
+  ["parenthesis.begin.blade","("],
+  ["variable.blade","$users"],
+  ["source.blade"," "],
+  ["keyword.operator.blade","as"],
+  ["source.blade"," "],
+  ["variable.blade","$user"],
+  ["parenthesis.end.blade",")"]
+],[
+   "start",
+  ["text.xml","            "],
+  ["directive.declaration.blade","@"],
+  ["keyword.control.blade","continue"],
+  ["parenthesis.begin.blade","("],
+  ["variable.blade","$user"],
+  ["keyword.operator.blade","->"],
+  ["constant.other.property.blade","type"],
+  ["source.blade"," "],
+  ["keyword.operator.blade","=="],
+  ["source.blade"," 1"],
+  ["parenthesis.end.blade",")"]
+],[
+   "start"
+],[
+   "start",
+  ["text.xml","            "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","li"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["injections.begin.blade","{{"],
+  ["source.blade"," "],
+  ["variable.blade","$user"],
+  ["keyword.operator.blade","->"],
+  ["constant.other.property.blade","name"],
+  ["source.blade"," "],
+  ["injections.end.blade","}}"],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","li"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start"
+],[
+   "start",
+  ["text.xml","            "],
+  ["directive.declaration.blade","@"],
+  ["keyword.control.blade","break"],
+  ["parenthesis.begin.blade","("],
+  ["variable.blade","$user"],
+  ["keyword.operator.blade","->"],
+  ["constant.other.property.blade","number"],
+  ["source.blade"," "],
+  ["keyword.operator.blade","=="],
+  ["source.blade"," 5"],
+  ["parenthesis.end.blade",")"]
+],[
+   "start",
+  ["text.xml","        "],
+  ["directive.declaration.blade","@"],
+  ["keyword.control.blade","endforeach"]
+],[
+   "start"
+],[
+   "start",
+  ["text.xml","        "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","div"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["text.xml","            "],
+  ["directive.declaration.blade","@"],
+  ["keyword.directives.blade","include"],
+  ["parenthesis.begin.blade","("],
+  ["punctuation.definition.string.begin.blade","'"],
+  ["string.quoted.double.blade","shared.errors"],
+  ["punctuation.definition.string.end.blade","'"],
+  ["parenthesis.end.blade",")"]
+],[
+   "start"
+],[
+   "start",
+  ["text.xml","            "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.form.tag-name.xml","form"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["text.xml","                "],
+  ["comment.start.xml","<!--"],
+  ["comment.xml"," Form Contents "],
+  ["comment.end.xml","-->"]
+],[
+   "start",
+  ["text.xml","            "],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.form.tag-name.xml","form"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["text.xml","        "],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","div"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start"
+],[
+   "start",
+  ["text.xml","        "],
+  ["directive.declaration.blade","@"],
+  ["keyword.directives.blade","includeIf"],
+  ["parenthesis.begin.blade","("],
+  ["punctuation.definition.string.begin.blade","'"],
+  ["string.quoted.double.blade","view.name"],
+  ["punctuation.definition.string.end.blade","'"],
+  ["keyword.operator.blade",","],
+  ["source.blade"," ["],
+  ["punctuation.definition.string.begin.blade","'"],
+  ["string.quoted.double.blade","some"],
+  ["punctuation.definition.string.end.blade","'"],
+  ["source.blade"," "],
+  ["keyword.operator.blade","=>"],
+  ["source.blade"," "],
+  ["punctuation.definition.string.begin.blade","'"],
+  ["string.quoted.double.blade","data"],
+  ["punctuation.definition.string.end.blade","'"],
+  ["source.blade","]"],
+  ["parenthesis.end.blade",")"]
+],[
+   "start"
+],[
+   "start",
+  ["text.xml","        "],
+  ["directive.declaration.blade","@"],
+  ["keyword.directives.blade","env"],
+  ["parenthesis.begin.blade","("],
+  ["punctuation.definition.string.begin.blade","'"],
+  ["string.quoted.double.blade","local"],
+  ["punctuation.definition.string.end.blade","'"],
+  ["parenthesis.end.blade",")"]
+],[
+   "start",
+  ["text.xml","            "],
+  ["punctuation.definition.comment.blade","// The application is in the local environment..."]
+],[
+   "start",
+  ["text.xml","        "],
+  ["directive.declaration.blade","@"],
+  ["keyword.directives.blade","elseenv"],
+  ["parenthesis.begin.blade","("],
+  ["punctuation.definition.string.begin.blade","'"],
+  ["string.quoted.double.blade","testing"],
+  ["punctuation.definition.string.end.blade","'"],
+  ["parenthesis.end.blade",")"]
+],[
+   "start",
+  ["text.xml","            "],
+  ["punctuation.definition.comment.blade","// The application is in the testing environment..."]
+],[
+   "start",
+  ["text.xml","        "],
+  ["directive.declaration.blade","@"],
+  ["keyword.control.blade","else"]
+],[
+   "start",
+  ["text.xml","            "],
+  ["punctuation.definition.comment.blade","// The application is not in the local or testing environment..."]
+],[
+   "start",
+  ["text.xml","        "],
+  ["directive.declaration.blade","@"],
+  ["keyword.directives.blade","endenv"]
+],[
+   "start"
+],[
+   "start",
+  ["text.xml","        "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","div"],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","class"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"container\""],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["text.xml","            "],
+  ["directive.declaration.blade","@"],
+  ["keyword.directives.blade","yield"],
+  ["parenthesis.begin.blade","("],
+  ["punctuation.definition.string.begin.blade","'"],
+  ["string.quoted.double.blade","content"],
+  ["punctuation.definition.string.end.blade","'"],
+  ["parenthesis.end.blade",")"]
+],[
+   "start",
+  ["text.xml","        "],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","div"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["text.xml","    "],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","body"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","html"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+]]

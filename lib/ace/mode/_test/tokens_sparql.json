@@ -1,0 +1,132 @@
+[[
+   "start",
+  ["keyword.other.sparql","PREFIX"],
+  ["text"," "],
+  ["entity.name.other.qname.sparql","dbpedia-owl:"],
+  ["text"," "],
+  ["keyword.operator.logical.sparql","<"],
+  ["entity.name.other.qname.sparql","http:"],
+  ["keyword.operator.logical.sparql","//"],
+  ["text","dbpedia"],
+  ["keyword.operator.punctuation.sparql","."],
+  ["text","org"],
+  ["keyword.operator.logical.sparql","/"],
+  ["text","on"],
+  ["keyword.other.sparql","to"],
+  ["text","logy"],
+  ["keyword.operator.logical.sparql","/>"]
+],[
+   "start",
+  ["keyword.other.sparql","PREFIX"],
+  ["text"," "],
+  ["entity.name.other.qname.sparql","rdfs:"],
+  ["text"," "],
+  ["keyword.operator.logical.sparql","<"],
+  ["entity.name.other.qname.sparql","http:"],
+  ["keyword.operator.logical.sparql","//"],
+  ["text","www"],
+  ["keyword.operator.punctuation.sparql","."],
+  ["text","w3"],
+  ["keyword.operator.punctuation.sparql","."],
+  ["text","org"],
+  ["keyword.operator.logical.sparql","/"],
+  ["text","2000"],
+  ["keyword.operator.logical.sparql","/"],
+  ["text","01"],
+  ["keyword.operator.logical.sparql","/"],
+  ["text","rdf"],
+  ["keyword.operator.logical.sparql","-"],
+  ["text","schema"],
+  ["punctuation.definition.comment.sparql","#"],
+  ["comment.line.hash.sparql",">"]
+],[
+   "start"
+],[
+   "start",
+  ["punctuation.definition.comment.sparql","#"],
+  ["comment.line.hash.sparql"," 1. Directors of movies starring Brad Pitt"]
+],[
+   "start",
+  ["punctuation.definition.comment.sparql","#"],
+  ["comment.line.hash.sparql"," Datasource: http://fragments.dbpedia.org/*/en"]
+],[
+   "start",
+  ["keyword.other.sparql","SELECT"],
+  ["text"," "],
+  ["variable.other.sparql","?movie"],
+  ["text"," "],
+  ["variable.other.sparql","?title"],
+  ["text"," "],
+  ["variable.other.sparql","?name"]
+],[
+   "start",
+  ["keyword.other.sparql","WHERE"],
+  ["text"," "],
+  ["keyword.operator.punctuation.sparql","{"]
+],[
+   "start",
+  ["text","  "],
+  ["variable.other.sparql","?movie"],
+  ["text"," "],
+  ["entity.name.other.qname.sparql","dbpedia-owl:starring"],
+  ["text"," [ "],
+  ["support.type.datatype.rdf.schema.sparql","rdfs:label"],
+  ["text"," "],
+  ["string.quoted.double.sparql","\"Brad Pitt\""],
+  ["keyword.operator.language.suffix.sparql","@"],
+  ["constant.language.suffix.sparql","en"],
+  ["text"," ]"],
+  ["keyword.operator.punctuation.sparql",";"]
+],[
+   "start",
+  ["text","         "],
+  ["support.type.datatype.rdf.schema.sparql","rdfs:label"],
+  ["text"," "],
+  ["variable.other.sparql","?title"],
+  ["keyword.operator.punctuation.sparql",";"]
+],[
+   "start",
+  ["text","         "],
+  ["entity.name.other.qname.sparql","dbpedia-owl:director"],
+  ["text"," [ "],
+  ["support.type.datatype.rdf.schema.sparql","rdfs:label"],
+  ["text"," "],
+  ["variable.other.sparql","?name"],
+  ["text"," ]"],
+  ["keyword.operator.punctuation.sparql","."]
+],[
+   "start",
+  ["text","  "],
+  ["keyword.other.sparql","FILTER"],
+  ["text"," "],
+  ["support.function.sparql","LANG"],
+  ["text","MATCHES"],
+  ["keyword.operator.punctuation.sparql","("],
+  ["support.function.sparql","LANG"],
+  ["keyword.operator.punctuation.sparql","("],
+  ["variable.other.sparql","?title"],
+  ["keyword.operator.punctuation.sparql","),"],
+  ["text"," "],
+  ["string.quoted.double.sparql","\"EN\""],
+  ["keyword.operator.punctuation.sparql",")"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword.other.sparql","FILTER"],
+  ["text"," "],
+  ["support.function.sparql","LANG"],
+  ["text","MATCHES"],
+  ["keyword.operator.punctuation.sparql","("],
+  ["support.function.sparql","LANG"],
+  ["keyword.operator.punctuation.sparql","("],
+  ["variable.other.sparql","?name"],
+  ["keyword.operator.punctuation.sparql","),"],
+  ["text","  "],
+  ["string.quoted.double.sparql","\"EN\""],
+  ["keyword.operator.punctuation.sparql",")"]
+],[
+   "start",
+  ["keyword.operator.punctuation.sparql","}"]
+],[
+   "start"
+]]

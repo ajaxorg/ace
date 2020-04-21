@@ -1,0 +1,51 @@
+machine_name      : "BGP";
+machine_version   : 1.0.0;
+
+machine_author    : "John Haugeland <stonecypher@gmail.com>";
+machine_license   : MIT;
+
+graph_layout      : dot;
+
+
+
+Idle 'Invite' => Invited;
+
+Invited 'Invite, 1xx' -> Invited;
+Invited '3xx'         -> Redirecting;
+Invited 'Cancel'      -> Cancelling;
+Invited '200'         => Accepted;
+Invited '407'         => AuthRequested;
+Invited '4xx-6xx'     -> Failed;
+
+AuthRequested 'Ack' => Invited;
+
+Redirecting 'Act' -> Redirected;
+
+Cancelling '200 (Invite)' -> LateCancel;
+Cancelling '200 (Cancel)' -> Cancelled;
+
+Accepted 'Cancel' -> LateCancel;
+Accepted 'Ack'    => Established;
+
+Failed 'Ack' -> Terminated;
+
+Redirected 'Invite'  -> Invited;
+Redirected 'Timeout' -> Terminated;
+
+LateCancel 'Ack' -> Established;
+
+Cancelled '487' -> Failed;
+
+Established 'Invite' => SessionModifying;
+Established 'Bye'    -> Closing;
+
+SessionModifying '488' -> SessionModificationRefused;
+SessionModifying '200' => SessionModified;
+
+Closing 'Bye,Ack,200 (Invite)' -> Closing;
+Closing '200 (Bye)'            -> Terminated;
+
+SessionModificationRefused 'Ack' -> Established;
+
+SessionModified 'Ack' => Established;
+SessionModified 'Bye' -> Closing;

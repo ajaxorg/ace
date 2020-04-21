@@ -73,7 +73,7 @@ node -e "
     }
     update('package.json');
     update('build/package.json');
-    update('./lib/ace/ace.js');
+    update('./lib/ace/config.js');
     update('ChangeLog.txt', function(str) {
         var date='"`date +%Y.%m.%d`"';
         return date + ' Version ' + version + '\n' + str.replace(/^\d+.*/, '').replace(/^\n/, '');
@@ -96,7 +96,7 @@ fi
 
 pause "continue pushing to github? [y/n]"
 
-git push --progress --tags "origin" HEAD:gh-pages HEAD:master
+git push --progress "origin" HEAD:gh-pages HEAD:master refs/tags/"v"$VERSION_NUM:refs/tags/"v"$VERSION_NUM
 
 echo "build repository updated"
 
@@ -113,7 +113,7 @@ fi
 
 pause "continue pushing to github? [y/n]"
 
-git push --progress --tags "origin" HEAD:gh-pages HEAD:master
+git push --progress "origin" HEAD:gh-pages HEAD:master refs/tags/"v"$VERSION_NUM:refs/tags/"v"$VERSION_NUM
 echo "All done!"
 pause "May I go now? [y/n]"
 

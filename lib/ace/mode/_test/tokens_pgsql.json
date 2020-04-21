@@ -606,12 +606,12 @@
   ["keyword","if"],
   ["text"," "],
   ["identifier","SD"],
-  ["text","."],
-  ["identifier","has_key"],
+  ["punctuation","."],
+  ["function.support","has_key"],
   ["paren.lparen","("],
   ["string","\"plan\""],
   ["paren.rparen",")"],
-  ["text",":"]
+  ["punctuation",":"]
 ],[
    "python-start",
   ["text","        "],
@@ -627,7 +627,7 @@
    "python-start",
   ["text","    "],
   ["keyword","else"],
-  ["text",":"]
+  ["punctuation",":"]
 ],[
    "python-start",
   ["text","        "],
@@ -636,8 +636,8 @@
   ["keyword.operator","="],
   ["text"," "],
   ["identifier","plpy"],
-  ["text","."],
-  ["identifier","prepare"],
+  ["punctuation","."],
+  ["function.support","prepare"],
   ["paren.lparen","("],
   ["string","\"SELECT 1\""],
   ["paren.rparen",")"]

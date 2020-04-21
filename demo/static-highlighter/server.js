@@ -27,7 +27,9 @@ http.createServer(function(req, res) {
     res.writeHead(200, {"Content-Type": "text/html; charset=utf-8"});
     fs.readFile(path, "utf8", function(err, data) {
         if (err) data = err.message;
+        var t = Date.now();
         var highlighted = highlighter.render(data, new JavaScriptMode(), theme);
+        console.log("Rendered " + (data.length/1000) + "kb in " + (Date.now() - t) + "ms");
         res.end(
             '<html><body>\n' +
                 '<style type="text/css" media="screen">\n' +

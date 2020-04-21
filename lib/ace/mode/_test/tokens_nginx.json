@@ -1,0 +1,386 @@
+[[
+   "start",
+  ["keyword","user"],
+  ["text","       www www"],
+  ["punctuation",";"],
+  ["text","  "],
+  ["comment","## Default: nobody"]
+],[
+   "start",
+  ["keyword","worker_processes"],
+  ["text","  5"],
+  ["punctuation",";"],
+  ["text","  "],
+  ["comment","## Default: 1"]
+],[
+   "start",
+  ["keyword","error_log"],
+  ["text","  logs/error.log"],
+  ["punctuation",";"]
+],[
+   "start",
+  ["keyword","pid"],
+  ["text","        logs/nginx.pid"],
+  ["punctuation",";"]
+],[
+   "start",
+  ["keyword","worker_rlimit_nofile"],
+  ["text"," 8192"],
+  ["punctuation",";"]
+],[
+   "start"
+],[
+   "start",
+  ["storage.type","events"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword","worker_connections"],
+  ["text","  4096"],
+  ["punctuation",";"],
+  ["text","  "],
+  ["comment","## Default: 1024"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["storage.type","http"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword","include"],
+  ["text","    conf/mime.types"],
+  ["punctuation",";"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword","include"],
+  ["text","    /etc/nginx/proxy.conf"],
+  ["punctuation",";"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword","include"],
+  ["text","    /etc/nginx/fastcgi.conf"],
+  ["punctuation",";"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword","index"],
+  ["text","    index.html index.htm index.php"],
+  ["punctuation",";"]
+],[
+   "start"
+],[
+   "start",
+  ["text","  "],
+  ["keyword","default_type"],
+  ["text"," application/octet-stream"],
+  ["punctuation",";"]
+],[
+   "keyword",
+  ["text","  "],
+  ["keyword","log_format"],
+  ["text","   "],
+  ["constant.language","main"],
+  ["text"," "],
+  ["string","'"],
+  ["variable","$remote_addr"],
+  ["string"," - "],
+  ["variable","$remote_user"],
+  ["string"," ["],
+  ["variable","$time_local"],
+  ["string","]  "],
+  ["variable","$status"],
+  ["string"," '"]
+],[
+   "keyword",
+  ["text","    "],
+  ["string","'\""],
+  ["variable","$request"],
+  ["string","\" "],
+  ["variable","$body_bytes_sent"],
+  ["string"," \""],
+  ["variable","$http_referer"],
+  ["string","\" '"]
+],[
+   "start",
+  ["text","    "],
+  ["string","'\""],
+  ["variable","$http_user_agent"],
+  ["string","\" \""],
+  ["variable","$http_x_forwarded_for"],
+  ["string","\"'"],
+  ["punctuation",";"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword","access_log"],
+  ["text","   logs/access.log  "],
+  ["constant.language","main"],
+  ["punctuation",";"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword","sendfile"],
+  ["text","     "],
+  ["constant.language","on"],
+  ["punctuation",";"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword","tcp_nopush"],
+  ["text","   "],
+  ["constant.language","on"],
+  ["punctuation",";"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword","server_names_hash_bucket_size"],
+  ["text"," 128"],
+  ["punctuation",";"],
+  ["text"," "],
+  ["comment","# this seems to be required for some vhosts"]
+],[
+   "start"
+],[
+   "start",
+  ["text","  "],
+  ["storage.type","server"],
+  ["text"," "],
+  ["paren.lparen","{"],
+  ["text"," "],
+  ["comment","# php/fastcgi"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","listen"],
+  ["text","       80"],
+  ["punctuation",";"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","server_name"],
+  ["text","  domain1.com www.domain1.com"],
+  ["punctuation",";"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","access_log"],
+  ["text","   logs/domain1.access.log  "],
+  ["constant.language","main"],
+  ["punctuation",";"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","root"],
+  ["text","         html"],
+  ["punctuation",";"]
+],[
+   "start"
+],[
+   "start",
+  ["text","    "],
+  ["storage.type","location"],
+  ["text"," "],
+  ["string.regexp","~ \\.php$ "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","      "],
+  ["keyword","fastcgi_pass"],
+  ["text","   127.0.0.1:1025"],
+  ["punctuation",";"]
+],[
+   "start",
+  ["text","    "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["text","  "],
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["text","  "],
+  ["storage.type","server"],
+  ["text"," "],
+  ["paren.lparen","{"],
+  ["text"," "],
+  ["comment","# simple reverse-proxy"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","listen"],
+  ["text","       80"],
+  ["punctuation",";"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","server_name"],
+  ["text","  domain2.com www.domain2.com"],
+  ["punctuation",";"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","access_log"],
+  ["text","   logs/domain2.access.log  "],
+  ["constant.language","main"],
+  ["punctuation",";"]
+],[
+   "start"
+],[
+   "start",
+  ["text","    "],
+  ["comment","# serve static files"]
+],[
+   "start",
+  ["text","    "],
+  ["storage.type","location"],
+  ["text"," "],
+  ["string.regexp","~ ^/(images|javascript|js|css|flash|media|static)/  "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","      "],
+  ["keyword","root"],
+  ["text","    /var/www/virtual/big.server.com/htdocs"],
+  ["punctuation",";"]
+],[
+   "start",
+  ["text","      "],
+  ["keyword","expires"],
+  ["text"," 30d"],
+  ["punctuation",";"]
+],[
+   "start",
+  ["text","    "],
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["text","    "],
+  ["comment","# pass requests for dynamic content to rails/turbogears/zope, et al"]
+],[
+   "start",
+  ["text","    "],
+  ["storage.type","location"],
+  ["text"," "],
+  ["text","/ "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","      "],
+  ["keyword","proxy_pass"],
+  ["text","      http://127.0.0.1:8080"],
+  ["punctuation",";"]
+],[
+   "start",
+  ["text","    "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["text","  "],
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["text","  "],
+  ["storage.type","upstream"],
+  ["text"," "],
+  ["text","big_server_com "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","server"],
+  ["text"," 127.0.0.3:8000 weight=5"],
+  ["punctuation",";"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","server"],
+  ["text"," 127.0.0.3:8001 weight=5"],
+  ["punctuation",";"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","server"],
+  ["text"," 192.168.0.1:8000"],
+  ["punctuation",";"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","server"],
+  ["text"," 192.168.0.1:8001"],
+  ["punctuation",";"]
+],[
+   "start",
+  ["text","  "],
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["text","  "],
+  ["storage.type","server"],
+  ["text"," "],
+  ["paren.lparen","{"],
+  ["text"," "],
+  ["comment","# simple load balancing"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","listen"],
+  ["text","          80"],
+  ["punctuation",";"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","server_name"],
+  ["text","     big.server.com"],
+  ["punctuation",";"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","access_log"],
+  ["text","      logs/big.server.access.log "],
+  ["constant.language","main"],
+  ["punctuation",";"]
+],[
+   "start"
+],[
+   "start",
+  ["text","    "],
+  ["storage.type","location"],
+  ["text"," "],
+  ["text","/ "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","      "],
+  ["keyword","proxy_pass"],
+  ["text","      http://big_server_com"],
+  ["punctuation",";"]
+],[
+   "start",
+  ["text","    "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["text","  "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["paren.rparen","}"]
+]]

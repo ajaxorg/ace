@@ -1,0 +1,105 @@
+[[
+   ["blockComment","blockComment"],
+  ["comment.start","#["],
+  ["comment","  "],
+  ["comment.start","#["],
+  ["comment"," Multiline comment in already"]
+],[
+   "blockComment",
+  ["comment","   commented out code. "],
+  ["comment.end","]#"]
+],[
+   "blockComment",
+  ["comment","proc p[T](x: T) = discard"]
+],[
+   "start",
+  ["comment.end","]#"]
+],[
+   "start",
+  ["keyword","echo"],
+  ["text"," "],
+  ["string","\"This is code\""]
+],[
+   "start",
+  ["variable","var"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","p"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.float","0B0_10001110100_0000101001000111101011101111111011000101001101001001'f64"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","proc"],
+  ["text"," "],
+  ["support.function","getAlphabet"],
+  ["paren.lparen","("],
+  ["paren.rparen",")"],
+  ["keyword.operator",":"],
+  ["text"," "],
+  ["storage.type","string"],
+  ["text"," "],
+  ["keyword.operator","="]
+],[
+   "start",
+  ["text","  "],
+  ["variable","var"],
+  ["text"," "],
+  ["identifier","accm"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["string","\"\""]
+],[
+   "start",
+  ["text","  "],
+  ["keyword","for"],
+  ["text"," "],
+  ["identifier","letter"],
+  ["text"," "],
+  ["keyword","in"],
+  ["text"," "],
+  ["string","'a'"],
+  ["keyword.operator",".."],
+  ["string","'z'"],
+  ["keyword.operator",":"],
+  ["text","  "],
+  ["comment","# see iterators"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","accm"],
+  ["keyword.operator","."],
+  ["support.function","add"],
+  ["paren.lparen","("],
+  ["identifier","letter"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword","return"],
+  ["text"," "],
+  ["identifier","accm"]
+],[
+   "start"
+],[
+   "start",
+  ["support.function","assert"],
+  ["paren.lparen","("],
+  ["string","\"a\""],
+  ["text"," "],
+  ["keyword.operator","*"],
+  ["text"," "],
+  ["constant.integer","10"],
+  ["text"," "],
+  ["keyword.operator","=="],
+  ["text"," "],
+  ["string","\"aaaaaaaaaa\""],
+  ["paren.rparen",")"]
+],[
+   "start"
+]]

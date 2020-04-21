@@ -21,6 +21,8 @@ var UndoManager = require("ace/undomanager").UndoManager;
 var DebugTokenizer = require("ace/tokenizer_dev").Tokenizer;
 var Tokenizer = require("ace/tokenizer").Tokenizer;
 
+var themelist = require("ace/ext/themelist");
+
 // createEditor
 var splitEditor = window.splitEditor = util.createSplitEditor("editor");
 
@@ -156,14 +158,11 @@ document.getElementById("perfTest").onclick = function() {
     log("tokenized " + lines.length + " lines in " + t + " ms");
 };
 
-util.fillDropdown("themeEl", {
-    bright: [
-        "chrome", "clouds", "crimson_editor", "dawn", "dreamweaver", "eclipse", "github",
-        "solarized_light", "textmate", "tomorrow", "xcode"],
-    dark: [ "clouds_midnight", "cobalt", "idle_fingers", "kr_theme", "merbivore", "merbivore_soft",
-        "mono_industrial", "monokai", "pastel_on_dark", "solarized_dark",  "terminal", "tomorrow_night",
-        "tomorrow_night_blue", "tomorrow_night_bright", "tomorrow_night_eighties", "twilight", "vibrant_ink"]
+var themes = { Bright: [], Dark: [] };
+themelist.themes.forEach(function(x) {
+    themes[x.isDark ? "Dark" : "Bright"].push({ caption: x.caption, value: x.name });
 });
+util.fillDropdown("themeEl", themes);
 
 util.bindDropdown("themeEl", function(value) {
     if (!value)

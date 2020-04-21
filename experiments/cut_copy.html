@@ -4,6 +4,7 @@
 <html lang="en">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<!--<meta name="viewport" content="width=device-width,height=device-height" />-->
 	<title>Text Events</title>
 	<meta name="author" content="Fabian Jakobs">
 	
@@ -19,6 +20,10 @@
         margin: 4px;
 	    width: 590px;
 	    height: 400px;
+	}
+	
+	#text {
+	    position: absolute;
 	}
 
 	</style>
@@ -70,6 +75,39 @@ function logKey(e) {
     console.log(e.type, e.charCode, e.keyCode, e);
 }
 
+addListener(canvas, "mousedown", function(e) {
+    text.focus();
+    e.preventDefault();
+}, false);
+
+var pos;
+addListener(canvas, "touchstart", function(e) {
+    text.value = ""
+    pos = e.touches[0]
+    text.focus();
+}, false);
+addListener(canvas, "contextmenu", function(e) {
+    text.value = "xxxxx";
+    var rect = canvas.getBoundingClientRect()
+    // text.selectionStart = 0
+    // text.selectionEnd = 20
+    text.style.opacity = 0
+    text.style.top = pos.clientY - 15 - rect.top + "px"
+    text.style.left = pos.clientX - 15 - rect.left + "px"
+    // canvas.style.fontSize = "300px"
+    // text.readOnly = true
+    // text.focus();
+    text.style.width = "50px"
+    text.style.height =  "50px"
+    text.select();
+    setTimeout(function() {
+        text.readOnly = false
+        // text.style.top = pos.clientY - 5 + "px"
+        // text.style.left = pos.clientY - 5 + "px"
+    }, 100)
+    //e.preventDefault();
+}, false);
+
 addListener(text, "keydown", logKey, false);
 addListener(text, "keyup", logKey, false);
 addListener(text, "keypress", logKey, false);
@@ -78,8 +116,9 @@ addListener(text, "textInput", function(e) {
     console.log(e.type, e.data, e);
 }, false);
 
+var i = 0;
 function fillSelection() {
-  text.value = "Juhu Kinners";
+  text.value = "Juhu Kinners " + (i++);
   text.select();
 }
 

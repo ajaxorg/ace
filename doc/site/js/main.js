@@ -18,7 +18,7 @@ $(function() {
         });
         
         ace.config.loadModule("ace/ext/emmet", function() {
-            ace.require("ace/lib/net").loadScript("http://cloud9ide.github.io/emmet-core/emmet.js", function() {
+            ace.require("ace/lib/net").loadScript("https://cloud9ide.github.io/emmet-core/emmet.js", function() {
                 embedded_editor.setOption("enableEmmet", true);
                 editor.setOption("enableEmmet", true);
             });
@@ -50,12 +50,12 @@ $(function() {
         }
     });
     
-    $("ul.menu-list li").click(function(e) {
+    $("ul.menu-list li").on("click auxclick", function(e) {
         if (e.target.tagName !== "A") {
             var href = $(this).find("a").attr("href");
-            if (e.button == 1)
+            if (e.originalEvent.button == 1)
                 window.open(href, "_blank");
-            else
+            else if (e.originalEvent.button == 0)
                 window.location = href;
         }
     });
@@ -133,12 +133,20 @@ $(function() {
                 }, 400);
             }
         }
-
+        
+        $($(this).attr("href") + " img[lazy-src]").each(function() {
+              var val = $.attr(this, "lazy-src");
+              $.attr(this, "src", val);
+              $.removeAttr(this, "lazy-src");
+        });
+        
         $(this).tab("show");
 
         var state = {};
         state.nav = $(this).attr("href").substr(1);
-        $.bbq.pushState(state);
+        var oldState = $.bbq.getState("nav") || "about";
+        if (state.nav != oldState)
+            $.bbq.pushState(state);
      });
 
     $('#tabnav a[data-toggle="tab"]').on('shown', function (e) {
