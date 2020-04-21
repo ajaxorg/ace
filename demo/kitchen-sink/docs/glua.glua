@@ -30,3 +30,8 @@ type Person<T> = {
 }
 
 type T1 = Person<string>
+
+let bool_test1 = a2 ~= a2  -- != is not valid in glua lang
+let bool_test2 = true and (false or true)
+
+
