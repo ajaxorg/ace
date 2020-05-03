@@ -79,7 +79,7 @@
   ["punctuation.definition.string.begin.asp","\""],
   ["string.quoted.double.asp"," exists ... OK to overwrite?\""],
   ["text",", "],
-  ["identifier","vbOKCancel"],
+  ["support.type.vb.asp","vbOKCancel"],
   ["text",")"]
 ],[
    "start",
@@ -106,7 +106,7 @@
   ["text"," "],
   ["keyword.operator.asp","<>"],
   ["text"," "],
-  ["identifier","vbOK"],
+  ["support.type.vb.asp","vbOK"],
   ["text"," "],
   ["keyword.control.asp","Then"],
   ["text"," "],
@@ -148,7 +148,7 @@
   ["punctuation.definition.string.begin.asp","\""],
   ["string.quoted.double.asp"," ... OK to create?\""],
   ["text",", "],
-  ["identifier","vbOKCancel"],
+  ["support.type.vb.asp","vbOKCancel"],
   ["text",")"]
 ],[
    "start",
@@ -161,7 +161,7 @@
   ["text"," "],
   ["keyword.operator.asp","<>"],
   ["text"," "],
-  ["identifier","vbOK"],
+  ["support.type.vb.asp","vbOK"],
   ["text"," "],
   ["keyword.control.asp","Then"],
   ["text"," "],
