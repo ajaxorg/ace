@@ -119,14 +119,18 @@ function buildTypes() {
     fs.readdirSync(BUILD_DIR + '/src-noconflict/snippets').forEach(function(path) {
         paths.push("snippets/" + path);
     });
-    
-    var pathModules = paths.map(function(path) {
-        if (/^(mode|theme|ext|keybinding)-|^snippets\//.test(path)) {
+
+    var moduleNameRegex = /^(mode|theme|ext|keybinding)-|^snippets\//;
+
+    var pathModules = [
+        "declare module 'ace-builds/webpack-resolver';",
+        "declare module 'ace-builds/src-noconflict/ace';"
+    ].concat(paths.map(function(path) {
+        if (moduleNameRegex.test(path)) {
             var moduleName = path.split('.')[0];
             return "declare module 'ace-builds/src-noconflict/" + moduleName + "';";
         }
-    }).filter(Boolean).join('\n')
-        + "\ndeclare module 'ace-builds/webpack-resolver';\n";
+    }).filter(Boolean)).join("\n") + "\n";
 
     fs.writeFileSync(BUILD_DIR + '/ace.d.ts', moduleRef + '\n' + definitions);
     fs.writeFileSync(BUILD_DIR + '/ace-modules.d.ts', pathModules);
