@@ -549,7 +549,7 @@ export namespace Ace {
     toggleRecording(editor: Editor): void;
     replay(editor: Editor): void;
     addCommand(command: Command): void;
-    removeCommand(command: Command, keepCommand?: boolean): void;
+    removeCommand(command: Command | string, keepCommand?: boolean): void;
     bindKey(key: string | { mac?: string, win?: string },
       command: CommandLike,
       position?: number): void;
