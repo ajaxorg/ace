@@ -424,6 +424,17 @@ function buildAce(options, callback) {
             }]
         }, "worker-" + name, addCb());
     });
+    // worker base
+    buildSubmodule(options, {
+        projectType: "worker",
+        require: ["ace/worker/mirror"],
+        ignore: [],
+        additional: [{
+            id: "ace/worker/worker",
+            transforms: [],
+            order: -1000
+        }]
+    }, "worker-base", addCb());
     // 
     function addCb() {
         addCb.count = (addCb.count || 0) + 1; 
