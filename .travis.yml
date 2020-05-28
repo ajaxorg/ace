@@ -5,7 +5,7 @@ node_js:
 
 install:
     - cleanup() { find node_modules -regextype posix-extended -iregex '.*((test|example|doc|demo)s?|\.(md)|license|idea|coverage|file.txt)$' -exec rm -rf {} \; || echo $?; };
-      install() { npm i && npm i eslint codecov istanbul typescript && cp package.json node_modules/package.json; cleanup; };
+      install() { npm i && npm i eslint@6.1.0 codecov istanbul typescript && cp package.json node_modules/package.json; cleanup; };
       cmp --silent package.json node_modules/package.json || install;
 
 script:
