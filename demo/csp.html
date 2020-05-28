@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta http-equiv="Content-Security-Policy" content="
+    style-src 'self' ;
+    img-src  'self' ;
+    script-src 'self' 'nonce-bootstrap-script';
+    worker-src 'self' blob:
+  ">
+  <title>Editor</title>
+</head>
+<body>
+<pre id="editor"></pre>
+
+<script src="../build/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+<link rel="stylesheet" href="../build/css/ace.css">
+<link rel="stylesheet" href="../build/css/theme/tomorrow_night_eighties.css">
+
+<script nonce="bootstrap-script">
+
+ace.config.set("useStrictCSP", true);
+
+var editor = ace.edit("editor", {
+    theme: "ace/theme/tomorrow_night_eighties",
+    mode: "ace/mode/html",
+    maxLines: 30,
+    wrap: true,
+    autoScrollEditorIntoView: true
+});
+
+</script>
+
+<script src="./show_own_source.js"></script>
+
+</body>
+</html>
