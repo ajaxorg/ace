@@ -1,0 +1,65 @@
+define(function(require, exports, module) {
+"use strict";
+
+var oop = require("../lib/oop");
+var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;
+
+var C_HighlightRules = function() {
+
+    var keywords = (
+        "auto|break|case|char|const|continue|default|do|int|long|register|return|" +
+        "short|signed|static|struck|switch|typedef|union|unsigned|void|volatile|while|double|" +
+        "else|enum|extern|float|for|goto|if"
+    );
+
+
+    var builtinFunctions = (
+        "main|printf|scanf|gets|puts|allstrcpy|strlen|strcmp|isalpha|isdigit|isupper|islower" 
+    );
+
+    
+    var keywordMapper = this.createKeywordMapper({
+        "support.function": builtinFunctions,
+        "keyword": keywords
+    }, "identifier");
+
+    var strPre = "[uU]?";
+    
+    var stringEscape = "\\\\(x[0-9A-Fa-f]{2}|[0-7]{3}|[\\\\abfnrtv'\"]|U[0-9A-Fa-f]{8}|u[0-9A-Fa-f]{4})";
+
+    this.$rules = {
+        "start" : [ {
+            token : "comment",
+            regex : "//.*$"
+        }, {
+            token : "string",           // " string
+            regex : strPre + '"(?=.)',
+            next : "qqstring"
+        }, {
+            token : "string",           // ' string
+            regex : strPre + "'(?=.)",
+            next : "qstring"
+        },{
+            token: "keyword.operator",
+            regex: "\\+|\\-|\\*|\\*\\*|\\/|\\/\\/|%|@|<<|>>|&|\\||\\^|~|<|>|<=|=>|==|!=|<>|="
+        }, {
+            token: "punctuation",
+            regex: ",|:|;|\\->|\\+=|\\-=|\\*=|\\/=|\\/\\/=|%=|@=|&=|\\|=|^=|>>=|<<=|\\*\\*="
+        }, {
+            token: "paren.lparen",
+            regex: "[\\[\\(\\{]"
+        }, {
+            token: "paren.rparen",
+            regex: "[\\]\\)\\}]"
+        }, {
+            defaultToken: "string"
+        }]
+    };
+    this.normalizeRules();
+};
+
+oop.inherits(C_HighlightRules, TextHighlightRules);
+
+exports.C_HighlightRules = C_HighlightRules;
+});
+

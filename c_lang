@@ -1,0 +1,27 @@
+define(function(require, exports, module) {
+"use strict";
+
+var oop = require("../lib/oop");
+var JavaScriptMode = require("./javascript").Mode;
+var C_HighlightRules = require("./java_highlight_rules").C_HighlightRules;
+var C_FoldMode = require("./folding/java").FoldMode;
+
+var Mode = function() {
+    JavaScriptMode.call(this);
+    this.HighlightRules = C_HighlightRules;
+    this.foldingRules = new C_FoldMode();
+};
+oop.inherits(Mode, JavaScriptMode);
+
+(function() {
+    
+    this.createWorker = function(session) {
+        return null;
+    };
+
+    this.$id = "ace/mode/c_lang";
+    this.snippetFileId = "ace/snippets/c_lang";
+}).call(Mode.prototype);
+
+exports.Mode = Mode;
+});
