@@ -152,7 +152,7 @@ export namespace Ace {
   }
 
   export interface EditSessionOptions {
-    wrap: boolean | number;
+    wrap: "off" | "free" | "printmargin" | boolean | number;
     wrapMethod: 'code' | 'text' | 'auto';
     indentedSoftWrap: boolean;
     firstLineNumber: number;
