@@ -268,6 +268,11 @@ styles.join("\n")
     text-align: center;
 }
 
+.ace_emoji {
+  font-size: .5rem;
+  transform: translateX(-.125rem);
+}
+
 .ace_cursor-layer {
     z-index: 4;
 }
