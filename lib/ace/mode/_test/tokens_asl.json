@@ -22,15 +22,20 @@
   ["text"," "],
   ["lparen","("],
   ["string","\"\""],
-  ["text",", "],
+  ["keyword.operator",","],
+  ["text"," "],
   ["string","\"SSDT\""],
-  ["text",", "],
+  ["keyword.operator",","],
+  ["text"," "],
   ["constant.numeric","1"],
-  ["text",", "],
+  ["keyword.operator",","],
+  ["text"," "],
   ["string","\"PmRef\""],
-  ["text",", "],
+  ["keyword.operator",","],
+  ["text"," "],
   ["string","\"Cpu0Ist\""],
-  ["text",", "],
+  ["keyword.operator",","],
+  ["text"," "],
   ["constant.numeric","0x00003000"],
   ["rparen",")"]
 ],[
@@ -39,25 +44,27 @@
 ],[
    "start",
   ["text","    "],
-  ["function.buildin","External"],
+  ["keyword","External"],
   ["text"," "],
   ["lparen","("],
   ["identifier","_PR_"],
-  ["text","."],
+  ["keyword.operator","."],
   ["identifier","CPU0"],
-  ["text",", "],
+  ["keyword.operator",","],
+  ["text"," "],
   ["storage.type","DeviceObj"],
   ["rparen",")"]
 ],[
    "start",
   ["text","    "],
-  ["function.buildin","External"],
+  ["keyword","External"],
   ["text"," "],
   ["lparen","("],
   ["identifier","_SB_"],
-  ["text","."],
+  ["keyword.operator","."],
   ["identifier","CPUP"],
-  ["text",", "],
+  ["keyword.operator",","],
+  ["text"," "],
   ["storage.type","UnknownObj"],
   ["rparen",")"]
 ],[
@@ -70,7 +77,7 @@
   ["lparen","("],
   ["text","\\"],
   ["identifier","_PR"],
-  ["text","."],
+  ["keyword.operator","."],
   ["identifier","CPU0"],
   ["rparen",")"]
 ],[
@@ -84,10 +91,12 @@
   ["text"," "],
   ["lparen","("],
   ["identifier","_PCT"],
-  ["text",", "],
+  ["keyword.operator",","],
+  ["text"," "],
   ["constant.numeric","0"],
-  ["text",", "],
-  ["constant.character","NotSerialized"],
+  ["keyword.operator",","],
+  ["text"," "],
+  ["constant.library","NotSerialized"],
   ["rparen",")"],
   ["text","  "],
   ["comment","// _PCT: Performance Control"]
@@ -127,7 +136,7 @@
   ["keyword","Return"],
   ["text"," "],
   ["lparen","("],
-  ["function.buildin","Package"],
+  ["keyword","Package"],
   ["text"," "],
   ["lparen","("],
   ["constant.numeric","0x02"],
@@ -139,7 +148,7 @@
 ],[
    "start",
   ["text","                    "],
-  ["function.buildin","ResourceTemplate"],
+  ["keyword","ResourceTemplate"],
   ["text"," "],
   ["lparen","("],
   ["rparen",")"]
@@ -150,44 +159,50 @@
 ],[
    "start",
   ["text","                        "],
-  ["function.buildin","Register"],
+  ["keyword","Register"],
   ["text"," "],
   ["lparen","("],
-  ["constant.character","FFixedHW"],
-  ["text",", "]
+  ["constant.library","FFixedHW"],
+  ["keyword.operator",","],
+  ["text"," "]
 ],[
    "start",
   ["text","                            "],
   ["constant.numeric","0x00"],
-  ["text",",               "],
+  ["keyword.operator",","],
+  ["text","               "],
   ["comment","// Bit Width"]
 ],[
    "start",
   ["text","                            "],
   ["constant.numeric","0x00"],
-  ["text",",               "],
+  ["keyword.operator",","],
+  ["text","               "],
   ["comment","// Bit Offset"]
 ],[
    "start",
   ["text","                            "],
   ["constant.numeric","0x0000000000000000"],
-  ["text",", "],
+  ["keyword.operator",","],
+  ["text"," "],
   ["comment","// Address"]
 ],[
    "start",
-  ["text","                            ,"],
+  ["text","                            "],
+  ["keyword.operator",","],
   ["rparen",")"]
 ],[
    "start",
   ["text","                    "],
   ["rparen","}"],
-  ["text",", "]
+  ["keyword.operator",","],
+  ["text"," "]
 ],[
    "start"
 ],[
    "start",
   ["text","                    "],
-  ["function.buildin","ResourceTemplate"],
+  ["keyword","ResourceTemplate"],
   ["text"," "],
   ["lparen","("],
   ["rparen",")"]
@@ -198,32 +213,37 @@
 ],[
    "start",
   ["text","                        "],
-  ["function.buildin","Register"],
+  ["keyword","Register"],
   ["text"," "],
   ["lparen","("],
-  ["constant.character","FFixedHW"],
-  ["text",", "]
+  ["constant.library","FFixedHW"],
+  ["keyword.operator",","],
+  ["text"," "]
 ],[
    "start",
   ["text","                            "],
   ["constant.numeric","0x00"],
-  ["text",",               "],
+  ["keyword.operator",","],
+  ["text","               "],
   ["comment","// Bit Width"]
 ],[
    "start",
   ["text","                            "],
   ["constant.numeric","0x00"],
-  ["text",",               "],
+  ["keyword.operator",","],
+  ["text","               "],
   ["comment","// Bit Offset"]
 ],[
    "start",
   ["text","                            "],
   ["constant.numeric","0x0000000000000000"],
-  ["text",", "],
+  ["keyword.operator",","],
+  ["text"," "],
   ["comment","// Address"]
 ],[
    "start",
-  ["text","                            ,"],
+  ["text","                            "],
+  ["keyword.operator",","],
   ["rparen",")"]
 ],[
    "start",
@@ -245,7 +265,7 @@
   ["keyword","Return"],
   ["text"," "],
   ["lparen","("],
-  ["function.buildin","Package"],
+  ["keyword","Package"],
   ["text"," "],
   ["lparen","("],
   ["constant.numeric","0x02"],
@@ -257,7 +277,7 @@
 ],[
    "start",
   ["text","                "],
-  ["function.buildin","ResourceTemplate"],
+  ["keyword","ResourceTemplate"],
   ["text"," "],
   ["lparen","("],
   ["rparen",")"]
@@ -268,44 +288,50 @@
 ],[
    "start",
   ["text","                    "],
-  ["function.buildin","Register"],
+  ["keyword","Register"],
   ["text"," "],
   ["lparen","("],
-  ["constant.character","SystemIO"],
-  ["text",", "]
+  ["constant.library","SystemIO"],
+  ["keyword.operator",","],
+  ["text"," "]
 ],[
    "start",
   ["text","                        "],
   ["constant.numeric","0x10"],
-  ["text",",               "],
+  ["keyword.operator",","],
+  ["text","               "],
   ["comment","// Bit Width"]
 ],[
    "start",
   ["text","                        "],
   ["constant.numeric","0x00"],
-  ["text",",               "],
+  ["keyword.operator",","],
+  ["text","               "],
   ["comment","// Bit Offset"]
 ],[
    "start",
   ["text","                        "],
   ["constant.numeric","0x0000000000001000"],
-  ["text",", "],
+  ["keyword.operator",","],
+  ["text"," "],
   ["comment","// Address"]
 ],[
    "start",
-  ["text","                        ,"],
+  ["text","                        "],
+  ["keyword.operator",","],
   ["rparen",")"]
 ],[
    "start",
   ["text","                "],
   ["rparen","}"],
-  ["text",", "]
+  ["keyword.operator",","],
+  ["text"," "]
 ],[
    "start"
 ],[
    "start",
   ["text","                "],
-  ["function.buildin","ResourceTemplate"],
+  ["keyword","ResourceTemplate"],
   ["text"," "],
   ["lparen","("],
   ["rparen",")"]
@@ -316,32 +342,37 @@
 ],[
    "start",
   ["text","                    "],
-  ["function.buildin","Register"],
+  ["keyword","Register"],
   ["text"," "],
   ["lparen","("],
-  ["constant.character","SystemIO"],
-  ["text",", "]
+  ["constant.library","SystemIO"],
+  ["keyword.operator",","],
+  ["text"," "]
 ],[
    "start",
   ["text","                        "],
   ["constant.numeric","0x08"],
-  ["text",",               "],
+  ["keyword.operator",","],
+  ["text","               "],
   ["comment","// Bit Width"]
 ],[
    "start",
   ["text","                        "],
   ["constant.numeric","0x00"],
-  ["text",",               "],
+  ["keyword.operator",","],
+  ["text","               "],
   ["comment","// Bit Offset"]
 ],[
    "start",
   ["text","                        "],
   ["constant.numeric","0x00000000000000B3"],
-  ["text",", "],
+  ["keyword.operator",","],
+  ["text"," "],
   ["comment","// Address"]
 ],[
    "start",
-  ["text","                        ,"],
+  ["text","                        "],
+  ["keyword.operator",","],
   ["rparen",")"]
 ],[
    "start",
@@ -360,11 +391,12 @@
 ],[
    "start",
   ["text","        "],
-  ["function.buildin","Name"],
+  ["keyword","Name"],
   ["text"," "],
   ["lparen","("],
   ["identifier","PSDF"],
-  ["text",", "],
+  ["keyword.operator",","],
+  ["text"," "],
   ["constant.numeric","Zero"],
   ["rparen",")"]
 ],[
@@ -374,10 +406,12 @@
   ["text"," "],
   ["lparen","("],
   ["identifier","_PSD"],
-  ["text",", "],
+  ["keyword.operator",","],
+  ["text"," "],
   ["constant.numeric","0"],
-  ["text",", "],
-  ["constant.character","NotSerialized"],
+  ["keyword.operator",","],
+  ["text"," "],
+  ["constant.library","NotSerialized"],
   ["rparen",")"],
   ["text","  "],
   ["comment","// _PSD: Power State Dependencies"]
