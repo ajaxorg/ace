@@ -1,3 +1,8 @@
+2020.07.06 Version 1.4.12
+* removed unused es5-shim
+* imporved ruby and vbscript highlighting and folding
+* workaround for double space being converted to dot on mobile keyboards
+
 2020.04.15 Version 1.4.10
 * added workaround for chrome bug causing memory leak after calling editor.destroy
 * added code folding support for vbscript mode
