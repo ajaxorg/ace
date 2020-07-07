@@ -52,6 +52,10 @@
 
 <!--DEVEL-->
   <script type="text/javascript">
+    var os = /os=(\w+)|$/.exec(location.search)[1];
+    if (os) Object.defineProperty(navigator, "platform", {configurable:true, value: os});
+  </script>
+  <script type="text/javascript">
       var require = {
           baseUrl: window.location.protocol + "//" + window.location.host + window.location.pathname.split("/").slice(0, -1).join("/"),
           paths: {

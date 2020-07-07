@@ -48,7 +48,6 @@ var env = {};
 var dom = require("ace/lib/dom");
 var net = require("ace/lib/net");
 var lang = require("ace/lib/lang");
-var useragent = require("ace/lib/useragent");
 
 var event = require("ace/lib/event");
 var theme = require("ace/theme/textmate");
