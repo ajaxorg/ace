@@ -18,6 +18,8 @@
    "start",
   ["keyword.control.csound-score","a"],
   ["text"," "],
+  ["keyword.control.csound-score","B"],
+  ["text"," "],
   ["keyword.control.csound-score","b"],
   ["text"," "],
   ["keyword.control.csound-score","C"],
