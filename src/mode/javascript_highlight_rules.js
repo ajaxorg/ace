@@ -274,10 +274,43 @@ var JavaScriptHighlightRules = function(options) {
                 defaultToken: "string.regexp.charachterclass"
             }
         ],
+        "default_parameter": [
+            {
+                token : "string",
+                regex : "'(?=.)"
+            }, {
+                token : "string",
+                regex : '"(?=.)'
+            }, {
+                token : "constant.language",
+                regex : "null|Infinity|NaN|undefined"
+            }, {
+                token : "constant.numeric", // hexadecimal, octal and binary
+                regex : /0(?:[xX][0-9a-fA-F]+|[oO][0-7]+|[bB][01]+)\b/
+            }, {
+                token : "constant.numeric", // decimal integers and floats
+                regex : /(?:\d\d*(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+\b)?/
+            }, {
+                token: "punctuation.operator",
+                regex: "[, ]+",
+                next: "function_arguments"
+            }, {
+                token: "punctuation.operator",
+                regex: "$"
+            }, {
+                token: "empty",
+                regex: "",
+                next: "no_regex"
+            }
+        ],
         "function_arguments": [
             {
                 token: "variable.parameter",
                 regex: identifierRe
+            }, {
+                token : "keyword.operator",
+                regex : "[= ]+",
+                next : "default_parameter"
             }, {
                 token: "punctuation.operator",
                 regex: "[, ]+"
