@@ -857,6 +857,7 @@ export namespace Ace {
   type CompleterCallback = (error: any, completions: Completion[]) => void;
 
   interface Completer {
+    identifierRegexps?: Array<RegExp>,
     getCompletions(editor: Editor,
       session: EditSession,
       position: Point,
