@@ -1,0 +1,309 @@
+[[
+   "start",
+  ["xml-pe.doctype.xml","<!"],
+  ["xml-pe.doctype.xml","doctype"],
+  ["text.whitespace.xml"," "],
+  ["xml-pe.xml","html"],
+  ["xml-pe.doctype.xml",">"]
+],[
+   "start",
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","html"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["text.xml","    "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","head"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["text.xml","        "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","title"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["meta.tag.punctuation.tag-open.latte","{"],
+  ["variable","$title"],
+  ["meta.tag.punctuation.tag-close.latte","}"],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","title"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "comment.start.latte",
+  ["text.xml","        "],
+  ["comment.start.latte","{*"],
+  ["comment"," "]
+],[
+   "comment.start.latte",
+  ["comment","        \tcomment"]
+],[
+   "start",
+  ["comment.end.latte","        *}"]
+],[
+   "start",
+  ["text.xml","    "],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","head"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["text.xml","    "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","body"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["text.xml","    \t"],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","h1"],
+  ["text.tag-whitespace.xml"," "],
+  ["meta.attribute.latte","n:inner-if"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["constant.numeric","0"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["entity.other.attribute-name.xml","My"],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","Webpage"],
+  ["text","</"],
+  ["entity.other.attribute-name.xml","h1"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start"
+],[
+   "start",
+  ["text.xml","        "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","ul"],
+  ["text.tag-whitespace.xml"," "],
+  ["meta.attribute.latte","n:if"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\""],
+  ["string.unquoted","count"],
+  ["paren.lparen","("],
+  ["variable","$navigation"],
+  ["paren.rparen",")"],
+  ["keyword.operator"," > "],
+  ["constant.numeric","0"],
+  ["string.attribute-value.xml","\""],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","id"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"navigation\""],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["text.xml","        "],
+  ["meta.tag.punctuation.tag-open.latte","{"],
+  ["meta.tag.latte","foreach"],
+  ["keyword.operator"," "],
+  ["paren.lparen","["],
+  ["string.unquoted","a"],
+  ["keyword.operator",", "],
+  ["string.unquoted","b"],
+  ["keyword.operator",", "],
+  ["string.start","'"],
+  ["string","x"],
+  ["string.end","'"],
+  ["keyword.operator",", "],
+  ["constant.numeric","10"],
+  ["paren.rparen","]"],
+  ["keyword.operator"," "],
+  ["keyword.control","as"],
+  ["keyword.operator"," "],
+  ["variable","$item"],
+  ["meta.tag.punctuation.tag-close.latte","}"]
+],[
+   "start",
+  ["text.xml","            "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","li"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.anchor.tag-name.xml","a"],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","href"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\""],
+  ["meta.tag.punctuation.tag-open.latte","{"],
+  ["variable","$item"],
+  ["meta.tag.punctuation.tag-close.latte","}"],
+  ["string.attribute-value.xml","\""],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["meta.tag.punctuation.tag-open.latte","{"],
+  ["meta.tag.latte","test"],
+  ["paren.lparen","("],
+  ["variable","$item"],
+  ["keyword.operator","->"],
+  ["string.unquoted","caption"],
+  ["paren.rparen",")"],
+  ["meta.tag.punctuation.tag-close.latte","}"],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.anchor.tag-name.xml","a"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","li"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["text.xml","        "],
+  ["meta.tag.punctuation.tag-open.latte","{/"],
+  ["meta.tag.latte","foreach"],
+  ["meta.tag.punctuation.tag-close.latte","}"]
+],[
+   "start",
+  ["text.xml","        "],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","ul"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start"
+],[
+   "start",
+  ["text.xml","        "],
+  ["meta.tag.punctuation.tag-open.latte","{"],
+  ["variable","$variable"],
+  ["meta.tag.punctuation.tag-close.latte","}"]
+],[
+   "start",
+  ["text.xml","        "],
+  ["meta.tag.punctuation.tag-open.latte","{"],
+  ["meta.tag.latte","="],
+  ["variable","$variable"],
+  ["meta.tag.punctuation.tag-close.latte","}"]
+],[
+   "start",
+  ["text.xml","        "],
+  ["meta.tag.punctuation.tag-open.latte","{"],
+  ["variable","$variable"],
+  ["keyword.operator","|"],
+  ["string.unquoted","filter"],
+  ["meta.tag.punctuation.tag-close.latte","}"]
+],[
+   "start",
+  ["text.xml","        "],
+  ["meta.tag.punctuation.tag-open.latte","{"],
+  ["variable","$variable"],
+  ["keyword.operator","|"],
+  ["string.unquoted","filter"],
+  ["keyword.operator",":"],
+  ["constant.numeric","10"],
+  ["keyword.operator",","],
+  ["constant.numeric","20"],
+  ["keyword.operator","|"],
+  ["string.unquoted","filter2"],
+  ["meta.tag.punctuation.tag-close.latte","}"]
+],[
+   "start"
+],[
+   "js-start",
+  ["text.xml","        "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.script.tag-name.xml","script"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "js-start",
+  ["text","\t        "],
+  ["storage.type","var"],
+  ["text"," "],
+  ["identifier","a"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["meta.tag.punctuation.tag-open.latte","{"],
+  ["variable","$a"],
+  ["meta.tag.punctuation.tag-close.latte","}"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["identifier","b"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["paren.lparen","{"],
+  ["string","'a'"],
+  ["punctuation.operator",":"],
+  ["text"," "],
+  ["constant.numeric","1"],
+  ["paren.rparen","}"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["identifier","c"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["paren.lparen","{"],
+  ["string","'a'"],
+  ["punctuation.operator",":"],
+  ["text"," "],
+  ["constant.numeric","1"],
+  ["paren.rparen","}"],
+  ["punctuation.operator",";"]
+],[
+   "js-start",
+  ["text","\t        "],
+  ["keyword","if"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["constant.language.boolean","true"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "js-start",
+  ["text","\t        \t"],
+  ["support.function","alert"],
+  ["paren.lparen","("],
+  ["paren.rparen",")"],
+  ["punctuation.operator",";"]
+],[
+   "js-no_regex",
+  ["text","\t        "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["text","        "],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.script.tag-name.xml","script"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start"
+],[
+   "css-start",
+  ["text.xml","        "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.style.tag-name.xml","style"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "css-start",
+  ["text","        \t"],
+  ["constant","body"],
+  ["text"," "],
+  ["paren.lparen","{"],
+  ["text"," "],
+  ["support.type","color"],
+  ["punctuation.operator",":"],
+  ["text"," "],
+  ["meta.tag.punctuation.tag-open.latte","{"],
+  ["variable","$color"],
+  ["meta.tag.punctuation.tag-close.latte","}"],
+  ["text"," "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["text","        "],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.style.tag-name.xml","style"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["text.xml","    "],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","body"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","html"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start"
+]]

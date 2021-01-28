@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+    <head>
+        <title>{$title}</title>
+        {* 
+        	comment
+        *}
+    </head>
+    <body>
+    	<h1 n:inner-if=1 title=1>My Webpage</h1>
+
+        <ul n:if="count($navigation) > 0" id="navigation">
+        {foreach [a, b, 'x', 10] as $item}
+            <li><a href="{$item}">{test($item->caption)}</a></li>
+        {/foreach}
+        </ul>
+
+        {$variable}
+        {=$variable}
+        {XXXX::func($variable /* comment */)|filter}
+        {$variable?->obj|filter:10, abc, 'x$var', "x$var"|filter2}
+
+        {if} ... {/if true}
+
+        <script>
+	        var a = {$a}, b = {'a': 1}, c = {'a': 1};
+	        if (true) {
+	        	alert();
+	        }
+        </script>
+
+        <style>
+        	body { color: {$color} }
+        </style>
+    </body>
+</html>
