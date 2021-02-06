@@ -100,7 +100,7 @@ $(function() {
     tabs.find(tab_a_selector).click(function(e) {
         e.preventDefault();
         if ($(this).attr("href") === "/") {
-            window.location = "http://ace.ajax.org";
+            window.location = "https://ace.c9.io";
             return;
         }
         if ($(this).attr("href").indexOf("#api") === 0) {

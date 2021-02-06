@@ -24,7 +24,7 @@ $(function () {
                 if (query) {
                     input.value = "";
                     input.blur();
-                    var url = "https://www.google.com/search?q=" + encodeURIComponent("site:ace.ajax.org" + " " + query);
+                    var url = "https://www.google.com/search?q=" + encodeURIComponent("site:ace.c9.io" + " " + query);
                     window.open(url);
                 }
                 return false;

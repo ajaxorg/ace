@@ -1,4 +1,4 @@
-# Defines an editing mode for [Ace](http://ace.ajax.org).
+# Defines an editing mode for [Ace](https://ace.c9.io).
 #
 # Open [test/ace.html](../test/ace.html) to test.
 
