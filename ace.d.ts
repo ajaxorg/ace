@@ -557,7 +557,7 @@ export namespace Ace {
     addCommand(command: Command): void;
     addCommands(command: Command[]): void;
     removeCommand(command: Command | string, keepCommand?: boolean): void;
-    removeCommands(command: Command[])
+    removeCommands(command: Command[]): void;
     bindKey(key: string | { mac?: string, win?: string },
       command: CommandLike,
       position?: number): void;
@@ -565,7 +565,7 @@ export namespace Ace {
     parseKeys(keyPart: string): {key: string, hashId: number};
     findKeyCommand(hashId: number, keyString: string): string | undefined;
     handleKeyboard(data: {}, hashId: number, keyString: string, keyCode: string | number): void | {command: string};
-    getStatusText(editor?: Editor, data: {}): string;
+    getStatusText(editor: Editor, data: {}): string;
   }
 
   export interface VirtualRenderer extends OptionsProvider, EventEmitter {
