@@ -20,10 +20,12 @@ export namespace Ace {
     getLine(row: number): string;
     getLines(firstRow: number, lastRow: number): string[];
     getAllLines(): string[];
+    getLength(): number;
     getTextRange(range: Range): string;
     getLinesForRange(range: Range): string[];
     insert(position: Point, text: string): Point;
     insertInLine(position: Point, text: string): Point;
+    insertNewLine(position: Point): Point;
     clippedPos(row: number, column: number): Point;
     clonePos(pos: Point): Point;
     pos(row: number, column: number): Point;
@@ -398,6 +400,8 @@ export namespace Ace {
   export interface EditSession extends EventEmitter, OptionsProvider, Folding {
     selection: Selection;
 
+    // TODO: define BackgroundTokenizer
+
     on(name: 'changeFold',
       callback: (obj: { data: Fold, action: string }) => void): Function;
     on(name: 'changeScrollLeft', callback: (scrollLeft: number) => void): Function;
@@ -519,6 +523,8 @@ export namespace Ace {
     removeKeyboardHandler(handler: KeyboardHandler): boolean;
     getKeyboardHandler(): KeyboardHandler;
     getStatusText(): string;
+    onCommandKey(e: any, hashId: number, keyCode: number): boolean;
+    onTextInput(text: string): boolean;
   }
 
   interface CommandMap {
@@ -549,10 +555,17 @@ export namespace Ace {
     toggleRecording(editor: Editor): void;
     replay(editor: Editor): void;
     addCommand(command: Command): void;
+    addCommands(command: Command[]): void;
     removeCommand(command: Command | string, keepCommand?: boolean): void;
+    removeCommands(command: Command[]): void;
     bindKey(key: string | { mac?: string, win?: string },
       command: CommandLike,
       position?: number): void;
+    bindKeys(keys: {[s: string]: Function}): void;
+    parseKeys(keyPart: string): {key: string, hashId: number};
+    findKeyCommand(hashId: number, keyString: string): string | undefined;
+    handleKeyboard(data: {}, hashId: number, keyString: string, keyCode: string | number): void | {command: string};
+    getStatusText(editor: Editor, data: {}): string;
   }
 
   export interface VirtualRenderer extends OptionsProvider, EventEmitter {
