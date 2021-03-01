@@ -1,5 +1,5 @@
 =begin comment
-Perl 6 example for ace
+Raku example for ace
 =end comment
 class Cook is Employee {
     has @.utensils  is rw;
@@ -38,4 +38,4 @@ my $baker = Baker.new(
 $baker.cook('brioche');      # OUTPUT: «Baking a tasty brioche␤»
 say $baker.utensils.perl;    # OUTPUT: «["self cleaning oven"]␤»
 say $baker.cookbooks.perl;   # OUTPUT: «["The Baker's Apprentice"]␤»
-say $baker.salary;           # OUTPUT: «50000␤» 
+say $baker.salary;           # OUTPUT: «50000␤»

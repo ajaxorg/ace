@@ -3,7 +3,7 @@
   ["comment.doc","=begin comment"]
 ],[
    "block_comment",
-  ["comment.doc","Perl 6 example for ace"]
+  ["comment.doc","Raku example for ace"]
 ],[
    "start",
   ["comment.doc","=end comment"]
