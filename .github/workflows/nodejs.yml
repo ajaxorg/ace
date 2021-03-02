@@ -30,15 +30,21 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: npm i && npm i eslint istanbul typescript
     - run: node_modules/.bin/istanbul cover lib/ace/test/all.js
-    - run: changes=$(git diff --name-only origin/HEAD --no-renames --diff-filter=ACMR);
+    - run: |
+        set -x;
+        git status;
+        git checkout HEAD -- package.json;
+        changes=$(git diff --name-only origin/HEAD --no-renames --diff-filter=ACMR);
         if [ "$changes" == "" ]; then
             echo "checking all files";
             node node_modules/eslint/bin/eslint "lib/ace/**/*.js";
         else
-            changes=$(echo "$changes" | grep -P '.js$');
-            echo "checking $changes";
-            if [ "$changes" != "" ]; then
-                node node_modules/eslint/bin/eslint $changes;
+            jsChanges=$(echo "$changes" | grep -P '.js$' || :);
+            if [ "$jsChanges" == "" ]; then
+                echo "nothing to check";
+            else
+                echo "checking $jsChanges";
+                node node_modules/eslint/bin/eslint $jsChanges;
             fi
         fi
     # - run: npm run lint
