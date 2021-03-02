@@ -284,6 +284,7 @@ var themes = {
     "mono_industrial": "monoindustrial",
     "monokai": "Monokai",
     "nord_dark": "Nord Dark",
+    "one_dark": "One Dark",
     "pastel_on_dark": "Pastels on Dark",
     "solarized_dark": "Solarized-dark",
     "solarized_light": "Solarized-light",
