@@ -148,7 +148,7 @@ module.exports = {
     "/node_modules/",
     ".*TestReact.*",
     ".*TestWeb.*"
-  ],
+  ]
 
   // The regexp pattern or array of patterns that Jest uses to detect test files
   // testRegex: [],
