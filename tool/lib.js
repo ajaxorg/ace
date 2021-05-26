@@ -15,7 +15,7 @@ exports.parsePlist = function(xmlOrJSON, callback) {
     } else {
         try {
             xmlOrJSON = xmlOrJSON.replace(
-                /("(?:\\.|[^"])*")|(?:,\s*)+([\]\}])|(\w+)\s*:|([\]\}]\s*[\[\{])|(\/\/.*|\/\*(?:[^\*]|\*(?=[^\/]))*?\*\/)/g,
+                /("(?:\\.|[^"\\])*")|(?:,\s*)+([\]\}])|(\w+)\s*:|([\]\}]\s*[\[\{])|(\/\/.*|\/\*(?:[^\*]|\*(?=[^\/]))*?\*\/)/g,
                 function(_, str, extraComma, noQuote, missingComma, comment) {
                     if (comment)
                         return "";
