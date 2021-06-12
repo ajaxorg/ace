@@ -96,8 +96,7 @@
 }
 
 .ace-twilight .ace_entity.ace_name.ace_function,
-.ace-twilight .ace_meta.ace_tag,
-.ace-twilight .ace_variable {
+.ace-twilight .ace_meta.ace_tag {
   color: #AC885B
 }
 
