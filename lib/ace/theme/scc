@@ -1,0 +1,115 @@
+ace.define("ace/theme/forest.yihan",[], function(require, exports, module) {
+
+exports.isDark = false;
+exports.cssClass = "ace-dawn";
+exports.cssText = ".ace-dawn .ace_gutter {\
+background: #663333;\
+color: #333\
+}\
+.ace-forest.yihan .ace_print-margin {\
+width: 2px;\
+background: #663333\
+}\
+.ace-forest.yihan {\
+background-color: #663333;\
+color: #080808\
+}\
+.ace-forest.yihan .ace_cursor {\
+color: #000000\
+}\
+.ace-forest.yihan .ace_marker-layer .ace_selection {\
+background: rgba(39, 95, 255, 0.30)\
+}\
+.ace-forest.yihan .ace_multiselect .ace_selection.ace_start {\
+box-shadow: 0 0 3px 0px #F9F9F9;\
+}\
+.ace-forest.yihan .ace_marker-layer .ace_step {\
+background: rgb(255, 255, 0)\
+}\
+.ace-forest.yihan .ace_marker-layer .ace_bracket {\
+margin: -2px 0 0 -2px;\
+border: 2px solid rgba(75, 75, 126, 0.50)\
+}\
+.ace-forest.yihan .ace_marker-layer .ace_active-line {\
+background: rgba(36, 99, 180, 0.12)\
+}\
+.ace-forest.yihan .ace_gutter-active-line {\
+background-color : #663333\
+}\
+.ace-forest.yihan .ace_marker-layer .ace_selected-word {\
+border: 2px solid rgba(39, 95, 255, 0.30)\
+}\
+.ace-forest.yihan .ace_invisible {\
+color: rgba(75, 75, 126, 0.50)\
+}\
+.ace-forest.yihan .ace_keyword,\
+.ace-forest.yihan .ace_meta {\
+color: #33cc33\
+}\
+.ace-forest.yihan .ace_constant,\
+.ace-forest.yihan .ace_constant.ace_character,\
+.ace-forest.yihan .ace_constant.ace_character.ace_escape,\
+.ace-forest.yihan .ace_constant.ace_other {\
+color: #00cccc\
+}\
+.ace-forest.yihan .ace_invalid.ace_illegal {\
+text-decoration: underline;\
+font-style: italic;\
+color: #F8F8F8;\
+background-color: #cc0000\
+}\
+.ace-forest.yihan .ace_invalid.ace_deprecated {\
+text-decoration: underline;\
+font-style: Code Pro
+color: #ffff00\
+}\
+.ace-forest.yihan .ace_support {\
+color: #33cc33\
+}\
+.ace-forest.yihan .ace_support.ace_constant {\
+color: #00cccc\
+}\
+.ace-forest.yihan .ace_fold {\
+background-color: #794938;\
+border-color: #663333\
+}\
+.ace-forest.yihan .ace_list,\
+.ace-forest.yihan .ace_markup.ace_list,\
+.ace-forest.yihan .ace_support.ace_function {\
+color: #cccccc\
+}\
+.ace-forest.yihan .ace_storage {\
+font-style: italic;\
+color: #006666\
+}\
+.ace-forest.yihan .ace_string {\
+color: #ffff66 \
+}\
+.ace-forest.yihan .ace_string.ace_regexp {\
+color:  #ffff66 \
+}\
+.ace-forest.yihan .ace_comment {\
+font-style: italic;\
+color: #999999\
+}\
+.ace-forest.yihan .ace_heading,\
+.ace-forest.yihan .ace_markup.ace_heading {\
+color: #0099ff\
+}\
+.ace-forest.yihan .ace_variable {\
+color: #99ff99\
+}\
+.ace-forest.yihan .ace_indent-guide {\
+background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAEklEQVQImWNgYGBgYLh/5+x/AAizA4hxNNsZAAAAAElFTkSuQmCC) right repeat-y\
+}";
+
+var dom = require("../lib/dom");
+dom.importCssString(exports.cssText, exports.cssClass);
+});
+                (function() {
+                    ace.require(["ace/theme/forest.yihan"], function(m) {
+                        if (typeof module == "object" && typeof exports == "object" && module) {
+                            module.exports = m;
+                        }
+                    });
+                })();
