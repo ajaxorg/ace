@@ -1,0 +1,97 @@
+define(function(require, exports, module) {
+"use strict";
+
+var propertyMap = {
+    "in-out-put" : {"printf": 1, "scanf": 1},
+    "str-fun" : {"allstrcpy": 1,"strlen": 1,"strcmp": 1,"isalpha": 1,"isdigit": 1,"isupper":1,"islower":1},
+	"var-type" : {"char": 1, "const": 1,"int": 1,"long": 1}
+    "fun-inside" : {"break": 1, "continue": 1, "return": 1, "else": 1, "for": 1, "goto": 1, "if": 1}
+   
+   
+};
+
+var C_Completions = function() {
+
+};
+
+(function() {
+
+    this.completionsDefined = false;
+
+    this.defineCompletions = function() {
+        //fill in missing properties
+        if (document) {
+            var style = document.createElement('c').style;
+
+            for (var i in style) {
+                if (typeof style[i] !== 'string')
+                    continue;
+
+                var name = i.replace(/[A-Z]/g, function(x) {
+                    return '-' + x.toLowerCase();
+                });
+
+                if (!propertyMap.hasOwnProperty(name))
+                    propertyMap[name] = 1;
+            }
+        }
+
+        this.completionsDefined = true;
+    };
+
+    this.getCompletions = function(state, session, pos, prefix) {
+        if (!this.completionsDefined) {
+            this.defineCompletions();
+        }
+
+        if (state==='ruleset' || session.$mode.$id == "ace/mode/scss") {
+            //css attribute value
+            var line = session.getLine(pos.row).substr(0, pos.column);
+            if (/:[^;]+$/.test(line)) {
+                /([\w\-]+):[^:]*$/.test(line);
+
+                return this.getPropertyValueCompletions(state, session, pos, prefix);
+            } else {
+                return this.getPropertyCompletions(state, session, pos, prefix);
+            }
+        }
+
+        return [];
+    };
+
+    this.getPropertyCompletions = function(state, session, pos, prefix) {
+        var properties = Object.keys(propertyMap);
+        return properties.map(function(property){
+            return {
+                caption: property,
+                snippet: property + ': $0;',
+                meta: "property",
+                score: 1000000
+            };
+        });
+    };
+
+    this.getPropertyValueCompletions = function(state, session, pos, prefix) {
+        var line = session.getLine(pos.row).substr(0, pos.column);
+        var property = (/([\w\-]+):[^:]*$/.exec(line) || {})[1];
+
+        if (!property)
+            return [];
+        var values = [];
+        if (property in propertyMap && typeof propertyMap[property] === "object") {
+            values = Object.keys(propertyMap[property]);
+        }
+        return values.map(function(value){
+            return {
+                caption: value,
+                snippet: value,
+                meta: "property value",
+                score: 1000000
+            };
+        });
+    };
+
+}).call(C_Completions.prototype);
+
+exports.C_Completions = C_Completions;
+});
