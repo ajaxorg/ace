@@ -38,6 +38,17 @@ var deps = {
             )
         }
     },
+    gluaparse: {
+        path: "mode/glua/gluaparse.js",
+        url: "",
+        wrapAmd: true,
+        postProcess: function(src) {
+            return src.replace(
+                /\(function\s*\(root,\s*name,\s*factory\)\s*{[\s\S]*?}\(this,\s*'gluaparse',/,
+                "(function (root, name, factory) {\n   factory(exports)\n}(this, 'gluaparse',"
+            )
+        }
+    },
     html5: {
         path: "mode/html/saxparser.js",
         browserify: {
