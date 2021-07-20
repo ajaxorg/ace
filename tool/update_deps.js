@@ -29,7 +29,7 @@ var deps = {
     },
     luaparse: {
         path: "mode/lua/luaparse.js",
-        url: "https://raw.github.com/oxyc/luaparse/master/luaparse.js",
+        url: "https://raw.githubusercontent.com/fstirlitz/luaparse/master/luaparse.js",
         wrapAmd: true,
         postProcess: function(src) {
             return src.replace(
