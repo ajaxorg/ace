@@ -69,7 +69,7 @@ require(["ace/ace", "ace/ext/static_highlight"], function(ace) {
         highlight(codeEl, {
             mode: codeEl.getAttribute("ace-mode"),
             theme: codeEl.getAttribute("ace-theme"),
-            startLineNumber: 1,
+            firstLineNumber: 1,
             showGutter: codeEl.getAttribute("ace-gutter"),
             trim: true
         }, function (highlighted) {
