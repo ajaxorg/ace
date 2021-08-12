@@ -59,6 +59,7 @@ def(window, "devUtil", function(){ return exports });
 exports.addGlobals = function() {
     window.oop = require("ace/lib/oop");
     window.dom = require("ace/lib/dom");
+    window.user = require("ace/test/user");
     window.Range = require("ace/range").Range;
     window.Editor = require("ace/editor").Editor;
     window.assert = require("ace/test/asyncjs/assert");
