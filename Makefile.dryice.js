@@ -376,6 +376,18 @@ function buildAce(options, callback) {
     var snippetFiles = jsFileList("lib/ace/snippets");
     var modeNames = modeList();
 
+    copy("lib/ace/", getTargetDir(options) + "/", {
+        exclude: function (name) {
+            // skip folders
+            if (/^[^.]*$/.test(name)) {
+                return false;
+            }
+
+            return /^(?!.*css$).*$/.test(name)
+        },
+        include: /\.css$/
+    });
+
     buildCore(options, {outputFile: "ace.js"}, addCb());
     // modes
     modeNames.forEach(function(name) {
@@ -435,11 +447,12 @@ function buildAce(options, callback) {
             order: -1000
         }]
     }, "worker-base", addCb());
-    // 
+
     function addCb() {
         addCb.count = (addCb.count || 0) + 1; 
         return done;
     }
+
     function done() {
         if (--addCb.count > 0)
             return;
