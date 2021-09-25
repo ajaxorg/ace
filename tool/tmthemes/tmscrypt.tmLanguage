@@ -377,7 +377,7 @@
             <key>name</key>
             <string>keyword.operator.arithmetic.scrypt</string>
             <key>match</key>
-            <string>(\+|\-|\/|\%|(?&lt;!\*)\*(?!\*))</string>
+            <string>\b(\+|\-|\/|\%|\*)\b</string>
           </dict>
           <dict>
             <key>name</key>
