@@ -449,15 +449,17 @@ function buildAce(options, callback) {
             sanityCheck(options, callback);
         if (options.noconflict && !options.compress)
             buildTypes();
-        extractCss(options);
+
+        extractCss(options, function() {
+            if (callback) 
+                return callback();
+            console.log("Finished building " + getTargetDir(options));
             
-        if (callback) 
-            return callback();
-        console.log("Finished building " + getTargetDir(options));
+        });
     }
 }
 
-function extractCss(options) {
+function extractCss(options, callback) {
     var dir = BUILD_DIR + "/src" + (options.noconflict ? "-noconflict" : "");
     var filenames = fs.readdirSync(dir);
     var css = "";
@@ -497,6 +499,7 @@ function extractCss(options) {
         outputFile: "ace.css"
     }, function() {
         saveImages();
+        callback();
     });
     
     function detectCssImports(code) {
