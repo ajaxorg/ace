@@ -1,3 +1,8 @@
+2021.09.30 Version 1.4.13
+* added useStrictCSP global option to use in environments where dynamic style creation is disabled
+  see demo/csp.html for an example of a page which loads external css files instead of generating styles with javascript
+* updated vim mode, added support for gqq command 
+
 2020.07.06 Version 1.4.12
 * removed unused es5-shim
 * imporved ruby and vbscript highlighting and folding
