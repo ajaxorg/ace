@@ -29,6 +29,8 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+/*global Buffer*/
+
 var fs = require("fs");
 var path = require("path");
 var copy = require('architect-build/copy');
@@ -447,10 +449,113 @@ function buildAce(options, callback) {
             sanityCheck(options, callback);
         if (options.noconflict && !options.compress)
             buildTypes();
+
+        extractCss(options, function() {
+            if (callback) 
+                return callback();
+            console.log("Finished building " + getTargetDir(options));
             
-        if (callback) 
-            return callback();
-        console.log("Finished building " + getTargetDir(options));
+        });
+    }
+}
+
+function extractCss(options, callback) {
+    var dir = BUILD_DIR + "/src" + (options.noconflict ? "-noconflict" : "");
+    var filenames = fs.readdirSync(dir);
+    var css = "";
+    var images = {};
+    var usedCss = {};
+    filenames.forEach(function(filename) {
+        var stat = fs.statSync(dir + "/" + filename);
+        if (stat.isDirectory()) return;
+        var value = fs.readFileSync(dir + "/" + filename, "utf8");
+            
+        var cssImports = detectCssImports(value);
+        
+        if (/theme-/.test(filename)) {
+            var name = filename.replace(/^theme-|\.js$/g, "");
+            var themeCss = "";
+            for (var i in cssImports) {
+                themeCss += cssImports[i];
+            }
+            themeCss = extractImages(themeCss, name, "..");
+            build.writeToFile({code: themeCss}, {
+                outputFolder: BUILD_DIR + "/css/theme",
+                outputFile: name + ".css"
+            }, function() {});
+        } else if (cssImports) {
+            css += "\n/*" + filename + "*/";
+            for (var i in cssImports) {
+                if (usedCss[cssImports[i]]) continue;
+                usedCss[cssImports[i]] = true;
+                css += "\n" + cssImports[i];
+            }
+        }
+    });
+    
+    css = extractImages(css, "main", ".").replace(/^\s*/gm, "");
+    build.writeToFile({code: css}, {
+        outputFolder: BUILD_DIR + "/css",
+        outputFile: "ace.css"
+    }, function() {
+        saveImages();
+        callback();
+    });
+    
+    function detectCssImports(code) {
+        code = code.replace(/^\s*\/\/.+|^\s*\/\*[\s\S]*?\*\//gm, "");
+
+        var stringRegex = /^("(?:[^"\\]|\\[\d\D])*"|'(?:[^'\\]|\\[\d\D])*'|)/;
+        var importCssRegex = /\.importCssString\(\s*(?:([^,)"']+)|["'])/g;
+       
+        var match;
+        var cssImports;
+        while (match = importCssRegex.exec(code)) {
+             if (match[1]) {
+                var locationRegex = new RegExp("[^.]" + match[1] + /\s*=\s*['"]/.source);
+                match = locationRegex.exec(code);
+                if (!match) continue;
+            }
+            var index = match.index + match[0].length - 1;
+            if (cssImports && cssImports[index]) continue;
+            var cssString = stringRegex.exec(code.slice(index))[0];
+            if (!cssString) continue;
+            if (!cssImports) cssImports = {};
+            cssImports[index] = cssString.slice(1, -1).replace(/\\(.|\n)/g, function(_, ch) {
+                if (ch == "n") return "";
+                return ch;
+            });
+        }
+        return cssImports;
+    }
+    
+    function extractImages(css, name, directory) {
+        var imageCounter = 0;
+        return css.replace(
+            /url\(\s*"data:([^"\\]|\\.)+"\s*\)|url\(\s*'data:([^'\\]|\\.)+'\s*\)|url\(data:[^)]+\)/g,
+            function(url) {
+                var data = url.slice(4, -1).trim();
+                if (/["']/.test(data[0])) {
+                    data = data.slice(1, -1).replace(/\\(.)/g, "$1");
+                }
+                data = data.slice(5);
+                var i = data.indexOf(",");
+                if (i == -1) {
+                    console.error(url);
+                    return url;
+                }
+                var buffer = Buffer.from(data.slice(i + 1), "base64");
+                imageCounter++;
+                var imageName = name + "-" + imageCounter + ".png";
+                images[imageName] = buffer;
+                return "url(\"" + directory + "/" + imageName + "\")";
+            }
+        );
+    }
+    function saveImages() {
+        for (var imageName in images) {
+            fs.writeFileSync(BUILD_DIR + "/css/" + imageName, images[imageName]);
+        }
     }
 }
 
@@ -466,7 +571,8 @@ function getLoadedFileList(options, callback, result) {
             if (!deps[p]) deps[p] = 1;
         });
     });
-    delete deps["ace/theme/textmate"];
+    if (options.projectType == "theme")
+        delete deps["ace/theme/textmate"];
     deps["ace/ace"] = 1;
     callback(Object.keys(deps));
 }
@@ -549,7 +655,7 @@ function namespace(ns) {
 function exportAce(ns, modules, requireBase, extModules) {
     requireBase = requireBase || "window";
     return function(text) {
-        /*globals REQUIRE_NS, MODULES, NS*/
+        /*globals REQUIRE_NS, MODULES*/
         var template = function() {
             (function() {
                 REQUIRE_NS.require(MODULES, function(a) {
