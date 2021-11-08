@@ -231,14 +231,14 @@ editor.getOption("optionName");
                                     session, store it in a var, and set the editor to another session (e.g. a tabbed editor).</p>
                                 <p>You might accomplish this like so:</p>
                                 
-                                <pre><code class="javascript">var EditSession = require("ace/edit_session").EditSession;
-var js = new EditSession("some js code");
-var css = new EditSession(["some", "css", "code here"]);
+                                <pre><code class="javascript">var js = ace.createEditSession("some js code");
+var css = ace.createEditSession(["some", "css", "code here"]);
 // and then to load document into editor, just call
 editor.setSession(js);</code></pre>
                             <h2>Common Operations</h2>
                             <p>Set and get content:</p>
                             <pre><code class="javascript">editor.setValue("the new text here");
+editor.setValue("text2", -1); // set value and move cursor to the start of the text
 editor.session.setValue("the new text here"); // set value and reset undo history
 editor.getValue(); // or session.getValue</code></pre>
                             <p>Get selected text:</p>
@@ -353,7 +353,9 @@ editor.replace('bar');</code></pre>
     exec: function(editor) {
         //...
     },
-    readOnly: true // false if this command should not apply in readOnly mode
+    readOnly: true, // false if this command should not apply in readOnly mode
+    // multiSelectAction: "forEach", optional way to control behavior with multiple cursors
+    // scrollIntoView: "cursor", control how cursor is scolled into view after the command
 });</code></pre>
                             <h3>Configure dynamic loading of modes and themes</h3>
                             <p>By default ace detcts the url for dynamic loading by finding the script node for ace.js.
