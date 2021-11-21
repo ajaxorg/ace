@@ -17,7 +17,8 @@ function lookupMime(filename) {
         png: "image/png",
         jpg: "image/jpg",
         html: "text/html",
-        jpeg: "image/jpeg"
+        jpeg: "image/jpeg",
+        wasm: "application/wasm"
     }[ext];
 }
   

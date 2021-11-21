@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Treesitter for ACE</title>
+	<!-- <script src="./lib/tree-sitter.js"/></script> -->
+	<style type="text/css" media="screen">
+		body {
+		    overflow: hidden;
+		}
+
+		#editor { 
+		    margin: 0;
+		    position: absolute;
+		    top: 0;
+		    bottom: 0;
+		    left: 0;
+		    right: 0;
+		}
+	</style>
+
+</head>
+<body>
+	<pre id="editor"></pre>
+	<script>LANGUAGE_BASE_URL = "https://tree-sitter.github.io";</script>
+	<script src="https://tree-sitter.github.io/tree-sitter.js"></script>
+	<script src="../kitchen-sink/require.js"></script>
+	<script>
+	// setup paths
+	require.config({paths: { "ace" : "../../lib/ace"}});
+	</script>
+
+	<script src="./ace-treesitter.js"></script>
+</body>
+</html>
