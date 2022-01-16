@@ -170,7 +170,10 @@ function loadDoc(name, callback) {
 }
 
 function saveDoc(name, callback) {
-    var doc = fileCache[name.toLowerCase()] || name;
+    var doc = name;
+    if (typeof(name) === 'string') {
+        doc = fileCache[name.toLowerCase()];
+    }
     if (!doc || !doc.session)
         return callback("Unknown document: " + name);
 
