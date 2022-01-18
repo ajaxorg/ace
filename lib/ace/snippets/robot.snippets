@@ -1,0 +1,29 @@
+snippet settings
+description Settings section
+scope robot
+  *** Settings ***
+  ${1:Library}    ${2}
+snippet keywords
+description Keywords section
+scope robot
+  *** Keywords ***
+snippet for
+description For Loop
+scope robot
+  FOR    ${1:\$\{item\}}    IN RANGE     ${2:10}
+      Log    ${1:\$\{item\}}
+  END
+snippet if
+description If Statement
+scope robot
+  IF    ${1:condition}
+      ${2:Do something}
+  END
+snippet elif
+description Else-If Statement
+scope robot
+  IF    ${1:condition}
+      ${2:Do something}
+  ELSE IF    ${3:condition}
+      ${4:Do something else}
+  END
