@@ -1,7 +1,7 @@
 {
     "name": "ace",
     "description": "Ajax.org Code Editor is a full featured source code highlighting editor that powers the Cloud9 IDE",
-    "version": "1.4.13",
+    "version": "1.4.14",
     "homepage": "http://github.com/ajaxorg/ace",
     "engines": {
         "node": ">= 0.6.0"
