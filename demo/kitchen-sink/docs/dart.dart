@@ -15,5 +15,5 @@ void main() {
 
   // This example uses HTML to display the result and it will appear
   // in a nested HTML frame (an iframe).
-  document.body.append(new HeadingElement.h1()..appendText(message));
+  document.body?.append(new HeadingElement.h1()..appendText(message));
 }
