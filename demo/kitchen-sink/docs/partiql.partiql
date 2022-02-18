@@ -1,0 +1,62 @@
+-- comment
+/* multi
+   line
+   comment */
+
+SELECT a, b, c FROM stuff s INNER CROSS JOIN @s WHERE f(s)  -- comment
+-- comment
+SELECT "a", b FROM stuff s, @s WHERE f(s)
+
+SELECT VALUE {'sensor': s.sensor,
+              'readings': (SELECT VALUE l.co
+                           FROM logs as l
+                           WHERE l.sensor = s.sensor
+                          )
+             }
+FROM sensors AS s
+
+SELECT VALUE (PIVOT v AT g
+              FROM UNPIVOT r as v At g
+              WHERE g LIKE 'co%')
+FROM sensors AS r
+
+
+SELECT x.*
+FROM [{'a':1, 'b':1}, {'a':2}, 'foo'] AS x
+
+-- NOTE: the embedded ion values parse as ion (inside the backticks "`")
+SELECT x.*
+FROM `[{'a':1, 'b':1}, {'a':2}, "foo"]` AS x
+
+SELECT VALUE {v.a: v.b, v.c: v.d}
+FROM <<{'a':'same', 'b':1, 'c':'same', 'd':2}>> AS v
+
+SELECT u.id, feedbackId, commentId, upvoteId
+FROM users as u, u.feedbacks as feedback at feedbackId
+LEFT CROSS JOIN feedback.comments as comment AT commentId
+LEFT CROSS JOIN UNPIVOT comment.upvotes as upvote at upvoteId
+
+
+SELECT (
+        SELECT numRec, tabulated
+        FROM committed.changes changes,
+          (SELECT u.id, feedbackId, commentId, upvoteId
+            FROM changes.tabulated as u,
+            u.feedbacks as feedback at feedbackId LEFT CROSS JOIN feedback.comments as comment AT commentId
+            LEFT CROSS JOIN UNPIVOT comment.upvotes as upvote at upvoteId
+          ) as tabulated,
+          changes.numRec as numRec
+        )
+    AS changes
+    FROM incoming_committed committed
+
+SELECT SUM(AVG(n)) FROM <<numbers, numbers>> AS n
+
+SELECT VALUES v.a
+FROM [{'a':1, 'b':true}, {'a':2, 'b':null}, {'a':3}] v
+WHERE v.b
+
+SELECT attributeId, COUNT(*) as the_count
+FROM repeating_things
+GROUP BY attributeId GROUP AS g
+HAVING 1 = 0
