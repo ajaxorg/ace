@@ -1,0 +1,75 @@
+/*****************************************************************************
+ *
+ *   SAC demo program
+ *
+ *   This SAC demo program implements 2-dimensional relaxation on double
+ *   precision floating point numbers applying a 4-point stencil and fixed
+ *   boundary conditions.
+ *
+ *   The vertical (SIZE1) and the horizontal (SIZE2) array size as well as
+ *   the number of iterations to be performed (LOOP) may be set at compile
+ *   time.
+ *
+ *****************************************************************************/
+
+#ifndef LOOP
+#define LOOP 100
+#endif
+
+#ifndef SIZE1
+#define SIZE1 1000
+#endif
+
+#ifndef SIZE2
+#define SIZE2 1000
+#endif
+
+use Array: all;
+use StdIO: all;
+
+inline
+double[+] onestep(double[+] B)
+{
+  A = with {
+        ( . < x < . ) : 0.25*(B[x+[1,0]]
+                              + B[x-[1,0]]
+                              + B[x+[0,1]]
+                              + B[x-[0,1]]);
+      } : modarray( B );
+
+  return(A);
+}
+
+inline
+double[+] relax(double[+] A, int steps)
+{
+  for (k=0; k<steps; k++) {
+    A = onestep(A);
+  }
+
+  return(A);
+}
+
+int main ()
+{
+  A = with {
+        ( . <= x <= . ) : 0.0d;
+      } : genarray( [SIZE1,SIZE2] );
+
+  A = modarray(A, [0,1], 500.0d);
+  A = relax( A, LOOP);
+
+  z = with {
+        ( 0*shape(A) <= x < shape(A) ) : A[x];
+      } : fold( +, 0d );
+
+#if 0
+  printf("%.10g\n", z);
+  return(0);
+#else
+  print( z);
+  return( 0);
+#endif
+}
+
+
