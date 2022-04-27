@@ -564,6 +564,7 @@ styles.join("\n")
     padding: 2px;
     cursor: pointer;
     overflow: hidden;
+    display: block;
 }
 .ace_mobile-button:hover {
     background-color: #eee;
