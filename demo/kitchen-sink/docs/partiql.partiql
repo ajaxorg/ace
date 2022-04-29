@@ -3,9 +3,8 @@
    line
    comment */
 
-SELECT a, b, c FROM stuff s INNER CROSS JOIN @s WHERE f(s)  -- comment
+SELECT "a", b, c FROM stuff s INNER CROSS JOIN @s WHERE f(s)  -- comment
 -- comment
-SELECT "a", b FROM stuff s, @s WHERE f(s)
 
 SELECT VALUE {'sensor': s.sensor,
               'readings': (SELECT VALUE l.co
@@ -30,6 +29,7 @@ FROM `[{'a':1, 'b':1}, {'a':2}, "foo"]` AS x
 
 SELECT VALUE {v.a: v.b, v.c: v.d}
 FROM <<{'a':'same', 'b':1, 'c':'same', 'd':2}>> AS v
+WHERE v.b
 
 SELECT u.id, feedbackId, commentId, upvoteId
 FROM users as u, u.feedbacks as feedback at feedbackId
@@ -52,9 +52,6 @@ SELECT (
 
 SELECT SUM(AVG(n)) FROM <<numbers, numbers>> AS n
 
-SELECT VALUES v.a
-FROM [{'a':1, 'b':true}, {'a':2, 'b':null}, {'a':3}] v
-WHERE v.b
 
 SELECT attributeId, COUNT(*) as the_count
 FROM repeating_things
