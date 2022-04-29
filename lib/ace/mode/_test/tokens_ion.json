@@ -62,10 +62,10 @@
 ],[
    ["punctuation.definition.list.begin.ion","punctuation.definition.sexp.begin.ion"],
   ["text.ion","    "],
-  ["constant.other.symbol.quoted.ion","'a'"],
+  ["storage.type.symbol.quoted.ion","'a'"],
   ["punctuation.definition.list.separator.ion",","],
   ["text.ion"," "],
-  ["constant.other.symbol.quoted.ion","'b'"],
+  ["storage.type.symbol.quoted.ion","'b'"],
   ["punctuation.definition.list.separator.ion",","]
 ],[
    ["punctuation.definition.list.begin.ion","punctuation.definition.sexp.begin.ion"],
@@ -163,7 +163,8 @@
    "start"
 ],[
    "punctuation.definition.struct.begin.ion",
-  ["variable.language.annotation.ion","states::"],
+  ["variable.language.annotation.ion","states"],
+  ["punctuation.definition.annotation.ion","::"],
   ["punctuation.definition.struct.begin.ion","{"]
 ],[
    "punctuation.definition.struct.begin.ion",
@@ -175,13 +176,15 @@
   ["constant.other.symbol.identifier.ion","root"],
   ["punctuation.definition.struct.separator.ion",":"],
   ["text.ion"," "],
-  ["variable.language.annotation.ion","rules::"],
+  ["variable.language.annotation.ion","rules"],
+  ["punctuation.definition.annotation.ion","::"],
   ["punctuation.definition.list.begin.ion","["]
 ],[
    ["punctuation.definition.list.begin.ion","punctuation.definition.struct.begin.ion"],
   ["text.ion","        "],
-  ["variable.language.annotation.ion","include::"],
-  ["constant.other.symbol.quoted.ion","'value'"]
+  ["variable.language.annotation.ion","include"],
+  ["punctuation.definition.annotation.ion","::"],
+  ["storage.type.symbol.quoted.ion","'value'"]
 ],[
    "punctuation.definition.struct.begin.ion",
   ["text.ion","    "],
@@ -199,12 +202,14 @@
   ["constant.other.symbol.identifier.ion","string"],
   ["punctuation.definition.struct.separator.ion",":"],
   ["text.ion"," "],
-  ["variable.language.annotation.ion","rules::"],
+  ["variable.language.annotation.ion","rules"],
+  ["punctuation.definition.annotation.ion","::"],
   ["punctuation.definition.list.begin.ion","["]
 ],[
    ["punctuation.definition.struct.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.struct.begin.ion"],
   ["text.ion","        "],
-  ["variable.language.annotation.ion","match::"],
+  ["variable.language.annotation.ion","match"],
+  ["punctuation.definition.annotation.ion","::"],
   ["punctuation.definition.struct.begin.ion","{"]
 ],[
    ["punctuation.definition.struct.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.struct.begin.ion"],
@@ -223,13 +228,13 @@
   ["punctuation.definition.struct.separator.ion",":"],
   ["text.ion"," "],
   ["punctuation.definition.list.begin.ion","["],
-  ["constant.other.symbol.quoted.ion","'string.dblq.punc.start'"],
+  ["storage.type.symbol.quoted.ion","'string.dblq.punc.start'"],
   ["punctuation.definition.list.separator.ion",","],
   ["text.ion"," "],
-  ["constant.other.symbol.quoted.ion","'string.dblq'"],
+  ["storage.type.symbol.quoted.ion","'string.dblq'"],
   ["punctuation.definition.list.separator.ion",","],
   ["text.ion"," "],
-  ["constant.other.symbol.quoted.ion","'string.dblq.punc.end'"],
+  ["storage.type.symbol.quoted.ion","'string.dblq.punc.end'"],
   ["punctuation.definition.list.end.ion","]"]
 ],[
    ["punctuation.definition.list.begin.ion","punctuation.definition.struct.begin.ion"],
@@ -239,7 +244,8 @@
 ],[
    ["punctuation.definition.struct.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.struct.begin.ion"],
   ["text.ion","        "],
-  ["variable.language.annotation.ion","push::"],
+  ["variable.language.annotation.ion","push"],
+  ["punctuation.definition.annotation.ion","::"],
   ["punctuation.definition.struct.begin.ion","{"]
 ],[
    ["punctuation.definition.struct.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.struct.begin.ion"],
@@ -257,7 +263,7 @@
   ["constant.other.symbol.identifier.ion","token"],
   ["punctuation.definition.struct.separator.ion",":"],
   ["text.ion"," "],
-  ["constant.other.symbol.quoted.ion","'string.trpq.punc.start'"],
+  ["storage.type.symbol.quoted.ion","'string.trpq.punc.start'"],
   ["punctuation.definition.struct.separator.ion",","]
 ],[
    ["punctuation.definition.list.begin.ion","punctuation.definition.struct.begin.ion","punctuation.definition.struct.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.struct.begin.ion"],
@@ -265,12 +271,14 @@
   ["constant.other.symbol.identifier.ion","states"],
   ["punctuation.definition.struct.separator.ion",":"],
   ["text.ion"," "],
-  ["variable.language.annotation.ion","rules::"],
+  ["variable.language.annotation.ion","rules"],
+  ["punctuation.definition.annotation.ion","::"],
   ["punctuation.definition.list.begin.ion","["]
 ],[
    ["punctuation.definition.struct.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.struct.begin.ion","punctuation.definition.struct.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.struct.begin.ion"],
   ["text.ion","                "],
-  ["variable.language.annotation.ion","pop::"],
+  ["variable.language.annotation.ion","pop"],
+  ["punctuation.definition.annotation.ion","::"],
   ["punctuation.definition.struct.begin.ion","{"]
 ],[
    ["punctuation.definition.struct.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.struct.begin.ion","punctuation.definition.struct.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.struct.begin.ion"],
@@ -288,7 +296,7 @@
   ["constant.other.symbol.identifier.ion","token"],
   ["punctuation.definition.struct.separator.ion",":"],
   ["text.ion"," "],
-  ["constant.other.symbol.quoted.ion","'string.trpq.punc.end'"],
+  ["storage.type.symbol.quoted.ion","'string.trpq.punc.end'"],
   ["punctuation.definition.struct.separator.ion",","]
 ],[
    ["punctuation.definition.list.begin.ion","punctuation.definition.struct.begin.ion","punctuation.definition.struct.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.struct.begin.ion"],
@@ -298,7 +306,8 @@
 ],[
    ["punctuation.definition.struct.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.struct.begin.ion","punctuation.definition.struct.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.struct.begin.ion"],
   ["text.ion","                "],
-  ["variable.language.annotation.ion","match::"],
+  ["variable.language.annotation.ion","match"],
+  ["punctuation.definition.annotation.ion","::"],
   ["punctuation.definition.struct.begin.ion","{"]
 ],[
    ["punctuation.definition.struct.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.struct.begin.ion","punctuation.definition.struct.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.struct.begin.ion"],
@@ -316,7 +325,7 @@
   ["constant.other.symbol.identifier.ion","token"],
   ["punctuation.definition.struct.separator.ion",":"],
   ["text.ion"," "],
-  ["constant.other.symbol.quoted.ion","'string.trpq'"]
+  ["storage.type.symbol.quoted.ion","'string.trpq'"]
 ],[
    ["punctuation.definition.list.begin.ion","punctuation.definition.struct.begin.ion","punctuation.definition.struct.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.struct.begin.ion"],
   ["text.ion","                "],
