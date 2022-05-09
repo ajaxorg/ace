@@ -1,225 +1,250 @@
 2022.01.26 Version 1.4.14
-* update vim mode
-* remove slow regex in beautify extension
 
-2021.09.30 Version 1.4.13
-* added useStrictCSP global option to use in environments where dynamic style creation is disabled
+- update vim mode
+- remove slow regex in beautify extension
+
+  2021.09.30 Version 1.4.13
+
+- added useStrictCSP global option to use in environments where dynamic style creation is disabled
   see demo/csp.html for an example of a page which loads external css files instead of generating styles with javascript
-* updated vim mode, added support for gqq command 
+- updated vim mode, added support for gqq command
 
-2020.07.06 Version 1.4.12
-* removed unused es5-shim
-* imporved ruby and vbscript highlighting and folding
-* workaround for double space being converted to dot on mobile keyboards
+  2020.07.06 Version 1.4.12
 
-2020.04.15 Version 1.4.10
-* added workaround for chrome bug causing memory leak after calling editor.destroy
-* added code folding support for vbscript mode
+- removed unused es5-shim
+- imporved ruby and vbscript highlighting and folding
+- workaround for double space being converted to dot on mobile keyboards
 
-2020.04.01 Version 1.4.9
-* added option to disable autoindent 
-* added new language modes
-* fixed backspace not working with some mobile keyboards
+  2020.04.15 Version 1.4.10
 
-2020.01.14 Version 1.4.8
-* highlight both matched braces, and highlight unmatched brace in red
-* improve snippet manager
-* compatibility with webpack file-loader v5
-* improve vim mode
+- added workaround for chrome bug causing memory leak after calling editor.destroy
+- added code folding support for vbscript mode
 
-2019.10.17 Version 1.4.7
-* add placeholder option
+  2020.04.01 Version 1.4.9
 
-2019.09.08 Version 1.4.6
-* restore native behavior of ctrl-p on mac (jumptomatching command is moved to cmd-\)
-* improve snippet manager
-* fix backspace handling on mobile
+- added option to disable autoindent
+- added new language modes
+- fixed backspace not working with some mobile keyboards
 
-2019.06.17 Version 1.4.5
-* improve scrolling and selection on mobile 
-* improve type definitions
+  2020.01.14 Version 1.4.8
 
-2019.04.24 Version 1.4.4
-* add experimental command prompt
-* add chrystal, nim and nginx highlight rules
-* fix regression in vim mode on ios
+- highlight both matched braces, and highlight unmatched brace in red
+- improve snippet manager
+- compatibility with webpack file-loader v5
+- improve vim mode
 
-2019.02.21 Version 1.4.3
-* add sublime keybindings
-* add rtl option
-* implement ` and < textobjects in vim mode
+  2019.10.17 Version 1.4.7
 
-2018.11.21 Version 1.4.2
-* fix regression in vim mode
-* improve keyboard input handling on ipad and IE
-* add new syntax highlighters
+- add placeholder option
 
-2018.08.07 Version 1.4.1
-* fix regression in autocomplete
+  2019.09.08 Version 1.4.6
 
-2018.08.06 Version 1.4.0
+- restore native behavior of ctrl-p on mac (jumptomatching command is moved to cmd-\)
+- improve snippet manager
+- fix backspace handling on mobile
 
-* remove usage of innerHTML
-* improved handling of textinput for IME and mobile
-* add support for relative line numbers
-* improve autocompletion popup 
+  2019.06.17 Version 1.4.5
 
-2018.03.26 Version 1.3.3
-* fix regession in static-highlight extension
-* use css animation for cursor blinking
+- improve scrolling and selection on mobile
+- improve type definitions
 
-2018.03.21 Version 1.3.2
-* add experimental support for using ace-builds with webpack
+  2019.04.24 Version 1.4.4
 
-2018.02.11 Version 1.3.1
+- add experimental command prompt
+- add chrystal, nim and nginx highlight rules
+- fix regression in vim mode on ios
 
-* fixed regression with selectionChange event not firing some times
-* improved handling of non-ascii characters in vim normal mode
+  2019.02.21 Version 1.4.3
 
-2018.01.31 Version 1.3.0
+- add sublime keybindings
+- add rtl option
+- implement ` and < textobjects in vim mode
 
-* added copy copyWithEmptySelection option 
-* improved undoManager
-* improved settings_menu plugin
-* improved handling of files with very long lines
-* fixed bug with scrolling editor out of view in transformed elements
+  2018.11.21 Version 1.4.2
 
-2017.10.17 Version 1.2.9
+- fix regression in vim mode
+- improve keyboard input handling on ipad and IE
+- add new syntax highlighters
 
-* added support for bidirectional text, with monospace font (Alex Shensis)
-* added support for emoji 😊
+  2018.08.07 Version 1.4.1
 
-* new language modes
+- fix regression in autocomplete
+
+  2018.08.06 Version 1.4.0
+
+- remove usage of innerHTML
+- improved handling of textinput for IME and mobile
+- add support for relative line numbers
+- improve autocompletion popup
+
+  2018.03.26 Version 1.3.3
+
+- fix regession in static-highlight extension
+- use css animation for cursor blinking
+
+  2018.03.21 Version 1.3.2
+
+- add experimental support for using ace-builds with webpack
+
+  2018.02.11 Version 1.3.1
+
+- fixed regression with selectionChange event not firing some times
+- improved handling of non-ascii characters in vim normal mode
+
+  2018.01.31 Version 1.3.0
+
+- added copy copyWithEmptySelection option
+- improved undoManager
+- improved settings_menu plugin
+- improved handling of files with very long lines
+- fixed bug with scrolling editor out of view in transformed elements
+
+  2017.10.17 Version 1.2.9
+
+- added support for bidirectional text, with monospace font (Alex Shensis)
+- added support for emoji 😊
+
+- new language modes
+
   - Red (Toomas Vooglaid)
   - CSound (Nathan Whetsell)
   - JSSM (John Haugeland)
 
-* New Themes
+- New Themes
+
   - Dracula (Austin Schwartz)
 
-2017.07.02 Version 1.2.8
-* Fixed small bugs in searchbox and autocompleter
+    2017.07.02 Version 1.2.8
 
-2017.06.18 Version 1.2.7
+- Fixed small bugs in searchbox and autocompleter
 
-* Added Support for arrow keys on external IPad keyboard (Emanuele Tamponi)
-* added match counter to searchbox extension
+  2017.06.18 Version 1.2.7
 
-- implemented higlighting of multiline strings in yaml mode (Maxim Trushin)
-- improved haml syntax highlighter (Andrés Álvarez)
+- Added Support for arrow keys on external IPad keyboard (Emanuele Tamponi)
+- added match counter to searchbox extension
 
-2016.12.03 Version 1.2.6
+* implemented higlighting of multiline strings in yaml mode (Maxim Trushin)
+* improved haml syntax highlighter (Andrés Álvarez)
 
-* Fixed IME handling on new Chrome
-* Support for php 7 in the syntax checker
+  2016.12.03 Version 1.2.6
 
-2016.08.16 Version 1.2.5
+- Fixed IME handling on new Chrome
+- Support for php 7 in the syntax checker
 
-* Fixed regression in noconflict mode
+  2016.08.16 Version 1.2.5
 
-2016.07.27 Version 1.2.4
+- Fixed regression in noconflict mode
 
-* Maintenance release with several new modes and small bugfixes
+  2016.07.27 Version 1.2.4
 
-2016.01.17 Version 1.2.3
+- Maintenance release with several new modes and small bugfixes
 
-* Bugfixes
+  2016.01.17 Version 1.2.3
+
+- Bugfixes
   - fix memory leak in setSession (Tyler Stalder)
   - double click not working on linux/mac
-  
-* new language modes
+- new language modes
+
   - reStructuredText (Robin Jarry)
   - NSIS (Jan T. Sott)
 
+    2015.10.28 Version 1.2.1
 
-2015.10.28 Version 1.2.1
+- new language modes
 
-* new language modes
   - Swift
   - JSX
 
-2015.07.11 Version 1.2.0
+    2015.07.11 Version 1.2.0
 
-* New Features
+- New Features
+
   - Indented soft wrap (danyaPostfactum)
   - Rounded borders on selections
 
-* API Changes
-  - unified delta types `{start, end, action, lines}`  (Alden Daniels https://github.com/ajaxorg/ace/pull/1745)
+- API Changes
+
+  - unified delta types `{start, end, action, lines}` (Alden Daniels https://github.com/ajaxorg/ace/pull/1745)
   - "change" event listeners on session and editor get delta objects directly
 
-* new language modes
+- new language modes
+
   - SQLServer (Morgan Yarbrough)
-  
-2015.04.03 Version 1.1.9
+
+    2015.04.03 Version 1.1.9
 
   - Small Enhancements and Bugfixes
 
-2014.11.08 Version 1.1.8
+    2014.11.08 Version 1.1.8
 
-* API Changes
+- API Changes
   - `editor.commands.commandKeyBinding` now contains direct map from keys to commands instead of grouping them by hashid
-  
-* New Features
+- New Features
   - Improved autoindent for html and php modes (Adam Jimenez)
   - Find All from searchbox (Colton Voege)
-  
-* new language modes
-  - Elixir, Elm
- 
-2014.09.21 Version 1.1.7
+- new language modes
 
-* Bugfixes
+  - Elixir, Elm
+    2014.09.21 Version 1.1.7
+
+- Bugfixes
+
   - fix several bugs in autocompletion
   - workaround for inaccurate getBoundingClientRect on chrome 37
 
-2014.08.17 Version 1.1.6
+    2014.08.17 Version 1.1.6
 
-* Bugfixes
-  - fix regression in double tap to highlight 
+- Bugfixes
+  - fix regression in double tap to highlight
   - Improved Latex Mode (Daniel Felder)
-  
-* API Changes
+- API Changes
+
   - editor.destroy destroys editor.session too (call editor.setSession(null) to prevent that)
 
-* new language modes
- - Praat (José Joaquín Atria)
- - Eiffel (Victorien Elvinger)
- - G-code (Adam Joseph Cook)
- 
-2014.07.09 Version 1.1.5
+- new language modes
 
-* Bugfixes
+* Praat (José Joaquín Atria)
+* Eiffel (Victorien Elvinger)
+* G-code (Adam Joseph Cook)
+  2014.07.09 Version 1.1.5
+
+- Bugfixes
+
   - fix regression in autocomplete popup
 
-* new language modes
- - gitignore (Devon Carew)
- 
-2014.07.01 Version 1.1.4
+- new language modes
 
-* New Features
+* gitignore (Devon Carew)
+  2014.07.01 Version 1.1.4
+
+- New Features
+
   - Highlight matching tags (Adam Jimenez)
   - Improved jump to matching command (Adam Jimenez)
 
-* new language modes
- - AppleScript (Yaogang Lian)
- - Vala
+- new language modes
 
-2014.03.08 Version 1.1.3
+* AppleScript (Yaogang Lian)
+* Vala
 
-* New Features
+  2014.03.08 Version 1.1.3
+
+- New Features
+
   - Allow syntax checkers to be loaded from CDN (Derk-Jan Hartman)
   - Add ColdFusion behavior (Abram Adams)
   - add showLineNumbers option
   - Add html syntax checker (danyaPostfactum)
- 
-* new language modes
+
+- new language modes
+
   - Gherkin (Patrick Nevels)
   - Smarty
 
-2013.12.02 Version 1.1.2
+    2013.12.02 Version 1.1.2
 
-* New Features
+- New Features
   - Accessibility Theme for Ace (Peter Xiao)
   - use snipetManager for expanding emmet snippets
   - update jshint to 2.1.4
@@ -231,24 +256,26 @@
   - add option to merge similar changes in undo history
   - add scrollPastEnd option
   - use html5 dragndrop for text dragging (danyaPostfactum)
-  
-* API Changes
+- API Changes
+
   - fixed typo in HashHandler commmandManager
 
-* new language modes
+- new language modes
+
   - Nix (Zef Hemel)
   - Protobuf (Zef Hemel)
   - Soy
   - Handlebars
 
-2013.06.04 Version 1.1.1
+    2013.06.04 Version 1.1.1
 
   - Improved emacs keybindings (Robert Krahn)
   - Added markClean, isClean methods to UndoManager (Joonsoo Jeon)
   - Do not allow `Toggle comments` command to remove spaces from indentation
   - Softer colors for indent guides in dark themes
 
-* new language modes
+- new language modes
+
   - Ada
   - Assembly_x86
   - Cobol
@@ -259,9 +286,10 @@
   - Twig
   - Verilog
 
-2013.05.01, Version 1.1.0
+    2013.05.01, Version 1.1.0
 
-* API Changes
+- API Changes
+
   - Default position of the editor container is changed to relative. Add `.ace_editor {position: absolute}` css rule to restore old behavior
   - Changed default line-height to `normal` to not conflict with bootstrap. Use `line-height: inherit` for old behavior.
   - Changed marker types accepted by session.addMarker. It now accepts "text"|"line"|"fullLine"|"screenLine"
@@ -269,7 +297,8 @@
   - Introduced `editor.setOption/getOption/setOptions/getOptions` methods
   - Introduced positionToIndex, indexToPosition methods
 
-* New Features
+- New Features
+
   - Improved emacs mode (chetstone)
     with Incremental search and Occur modes (Robert Krahn)
 
@@ -289,44 +318,46 @@
   - Added suppoert for Delete and SelectAll from context menu (danyaPostfactum)
 
   - Make wrapping behavior optional
-  - Selective bracket insertion/skipping 
-    
-  - Added commands for increase/decrease numbers, sort lines (Vlad Zinculescu)    
-  - Folding for Markdown, Lua, LaTeX    
+  - Selective bracket insertion/skipping
+  - Added commands for increase/decrease numbers, sort lines (Vlad Zinculescu)
+  - Folding for Markdown, Lua, LaTeX
   - Selective bracket insertion/skipping for C-like languages
 
-* Many new languages
+- Many new languages
+
   - Scheme (Mu Lei)
   - Dot (edwardsp)
   - FreeMarker (nguillaumin)
   - Tiny Mushcode (h3rb)
   - Velocity (Ryan Griffith)
-  - TOML (Garen Torikian) 
+  - TOML (Garen Torikian)
   - LSL (Nemurimasu Neiro, Builders Brewery)
   - Curly (Libo Cannici)
-  - vbScript (Jan Jongboom) 
-  - R (RStudio) 
+  - vbScript (Jan Jongboom)
+  - R (RStudio)
   - ABAP
   - Lucene (Graham Scott)
   - Haml (Garen Torikian)
-  - Objective-C (Garen Torikian) 
-  - Makefile (Garen Torikian) 
-  - TypeScript (Garen Torikian) 
-  - Lisp (Garen Torikian) 
-  - Stylus (Garen Torikian) 
+  - Objective-C (Garen Torikian)
+  - Makefile (Garen Torikian)
+  - TypeScript (Garen Torikian)
+  - Lisp (Garen Torikian)
+  - Stylus (Garen Torikian)
   - Dart (Garen Torikian)
 
-* Live syntax checks
+- Live syntax checks
+
   - PHP (danyaPostfactum)
   - Lua
 
-* New Themes
-  - Chaos 
-  - Terminal 
-   
-2012.09.17, Version 1.0.0
+- New Themes
 
-* New Features
+  - Chaos
+  - Terminal
+    2012.09.17, Version 1.0.0
+
+- New Features
+
   - Multiple cursors and selections (https://c9.io/site/blog/2012/08/be-an-armenian-warrior-with-block-selection-on-steroids/)
   - Fold buttons displayed in the gutter
   - Indent Guides
@@ -334,7 +365,8 @@
   - Improved emacs keybindings
   - Autoclosing of html tags (danyaPostfactum)
 
-* 20 New language modes
+- 20 New language modes
+
   - Coldfusion (Russ)
   - Diff
   - GLSL (Ed Mackey)
@@ -357,33 +389,38 @@
   - Yaml (Meg Sharkey)
 
   * Live syntax checks
+
   - for XQuery and JSON
 
-* New Themes
+- New Themes
+
   - Ambiance (Irakli Gozalishvili)
   - Dreamweaver (Adam Jimenez)
   - Github (bootstraponline)
   - Tommorrow themes (https://github.com/chriskempson/tomorrow-theme)
   - XCode
 
-* Many Small Enhancements and Bugfixes
- 
-2011.08.02, Version 0.2.0
+- Many Small Enhancements and Bugfixes
 
-* Split view (Julian Viereck)
+  2011.08.02, Version 0.2.0
+
+- Split view (Julian Viereck)
+
   - split editor area horizontally or vertivally to show two files at the same
     time
 
-* Code Folding (Julian Viereck)
+- Code Folding (Julian Viereck)
+
   - Unstructured code folding
   - Will be the basis for language aware folding
 
-* Mode behaviours (Chris Spencer)
+- Mode behaviours (Chris Spencer)
+
   - Adds mode specific hooks which allow transformations of entered text
   - Autoclosing of braces, paranthesis and quotation marks in C style modes
   - Autoclosing of angular brackets in XML style modes
 
-* New language modes
+- New language modes
   - Clojure (Carin Meier)
   - C# (Rob Conery)
   - Groovy (Ben Tilford)
@@ -395,19 +432,21 @@
   - SVG
   - Textile (Kelley van Evert)
   - SCAD (Jacob Hansson)
-  
-* Live syntax checks
+- Live syntax checks
+
   - Lint for CSS using CSS Lint <http://csslint.net/>
   - CoffeeScript
 
-* New Themes
+- New Themes
+
   - Crimson Editor (iebuggy)
   - Merbivore (Michael Schwartz)
   - Merbivore soft (Michael Schwartz)
   - Solarized dark/light <http://ethanschoonover.com/solarized> (David Alan Hjelle)
   - Vibrant Ink (Michael Schwartz)
 
-* Small Features/Enhancements
+- Small Features/Enhancements
+
   - Lots of render performance optimizations (Harutyun Amirjanyan)
   - Improved Ruby highlighting (Chris Wanstrath, Trent Ogren)
   - Improved PHP highlighting (Thomas Hruska)
@@ -420,7 +459,8 @@
   - When unfocused make cursor transparent instead of removing it (Harutyun Amirjanyan)
   - Support for matching groups in tokenizer with arrays of tokens (Chris Spencer)
 
-* Bug fixes
+- Bug fixes
+
   - Add support for the new OSX scroll bars
   - Properly highlight JavaScript regexp literals
   - Proper handling of unicode characters in JavaScript identifiers
@@ -428,55 +468,56 @@
   - Fix scroll wheel sluggishness in Safari
   - Make keyboard infrastructure route keys like []^$ the right way (Julian Viereck)
 
-2011.02.14, Version 0.1.6
+    2011.02.14, Version 0.1.6
 
-* Floating Anchors
-  - An Anchor is a floating pointer in the document. 
+- Floating Anchors
+  - An Anchor is a floating pointer in the document.
   - Whenever text is inserted or deleted before the cursor, the position of
     the cursor is updated
   - Usesd for the cursor and selection
   - Basis for bookmarks, multiple cursors and snippets in the future
-* Extensive support for Cocoa style keybindings on the Mac <https://github.com/ajaxorg/ace/issues/closed#issue/116/comment/767803>
-* New commands:
+- Extensive support for Cocoa style keybindings on the Mac <https://github.com/ajaxorg/ace/issues/closed#issue/116/comment/767803>
+- New commands:
   - center selection in viewport
   - remove to end/start of line
   - split line
   - transpose letters
-* Refator markers  
+- Refator markers
   - Custom code can be used to render markers
   - Markers can be in front or behind the text
   - Markers are now stored in the session (was in the renderer)
-* Lots of IE8 fixes including copy, cut and selections
-* Unit tests can also be run in the browser
+- Lots of IE8 fixes including copy, cut and selections
+- Unit tests can also be run in the browser
   <https://github.com/ajaxorg/ace/blob/master/lib/ace/test/tests.html>
-* Soft wrap can adapt to the width of the editor (Mike Ratcliffe, Joe Cheng)
-* Add minimal node server server.js to run the Ace demo in Chrome
-* The top level editor.html demo has been renamed to index.html
-* Bug fixes
+- Soft wrap can adapt to the width of the editor (Mike Ratcliffe, Joe Cheng)
+- Add minimal node server server.js to run the Ace demo in Chrome
+- The top level editor.html demo has been renamed to index.html
+- Bug fixes
+
   - Fixed gotoLine to consider wrapped lines when calculating where to scroll to (James Allen)
   - Fixed isues when the editor was scrolled in the web page (Eric Allam)
   - Highlighting of Python string literals
   - Syntax rule for PHP comments
 
-2011.02.08, Version 0.1.5
+    2011.02.08, Version 0.1.5
 
-* Add Coffeescript Mode (Satoshi Murakami)
-* Fix word wrap bug (Julian Viereck)
-* Fix packaged version of the Eclipse mode
-* Loading of workers is more robust
-* Fix "click selection"
-* Allow tokizing empty lines (Daniel Krech)
-* Make PageUp/Down behavior more consistent with native OS (Joe Cheng)
+- Add Coffeescript Mode (Satoshi Murakami)
+- Fix word wrap bug (Julian Viereck)
+- Fix packaged version of the Eclipse mode
+- Loading of workers is more robust
+- Fix "click selection"
+- Allow tokizing empty lines (Daniel Krech)
+- Make PageUp/Down behavior more consistent with native OS (Joe Cheng)
 
-2011.02.04, Version 0.1.4
+  2011.02.04, Version 0.1.4
 
-* Add C/C++ mode contributed by Gastón Kleiman
-* Fix exception in key input
+- Add C/C++ mode contributed by Gastón Kleiman
+- Fix exception in key input
 
-2011.02.04, Version 0.1.3
+  2011.02.04, Version 0.1.3
 
-* Let the packaged version play nice with requireJS
-* Add Ruby mode contributed by Shlomo Zalman Heigh
-* Add Java mode contributed by Tom Tasche
-* Fix annotation bug
-* Changing a document added a new empty line at the end
+- Let the packaged version play nice with requireJS
+- Add Ruby mode contributed by Shlomo Zalman Heigh
+- Add Java mode contributed by Tom Tasche
+- Fix annotation bug
+- Changing a document added a new empty line at the end

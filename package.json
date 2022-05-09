@@ -14,10 +14,11 @@
         "url": "http://github.com/ajaxorg/ace.git"
     },
     "devDependencies": {
-        "asyncjs": "~0.0.12",
         "amd-loader": "~0.0.4",
+        "architect-build": "https://github.com/c9/architect-build/tarball/43a6fdeffe",
+        "asyncjs": "~0.0.12",
         "dryice": "0.4.11",
-        "architect-build": "https://github.com/c9/architect-build/tarball/43a6fdeffe"
+        "standard-version": "^9.3.2"
     },
     "mappings": {
         "ace": "."
@@ -35,6 +36,13 @@
         "start": "node static.js",
         "test": "node lib/ace/test/all.js",
         "lint": "eslint \"lib/ace/**/*.js\"",
-        "fix": "eslint --fix 'lib/ace/**/*.js'"
+        "fix": "eslint --fix 'lib/ace/**/*.js'",
+        "changelog": "standard-version"
+    },
+    "standard-version": {
+        "skip": {
+            "commit": true,
+            "tag": true
+        }
     }
 }
