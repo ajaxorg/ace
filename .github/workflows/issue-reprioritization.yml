@@ -1,0 +1,22 @@
+name: issue-reprioritization
+on:
+  schedule:
+    - cron: "0 0 * * 0"
+
+jobs:
+  issue-reprioritization:
+    permissions:
+      issues: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: kaizencc/issue-reprioritization-manager@main
+        id: reprioritization-manager
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          original-label: p2
+          new-label: p1
+          reprioritization-threshold: 5
+      - uses: kaizencc/pr-triage-manager@main
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          on-pulls: ${{ steps.reprioritization-manager.outputs.linked-pulls }}
