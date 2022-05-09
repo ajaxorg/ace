@@ -66,3 +66,17 @@
         </div>
     </body>
 </html>
+
+
+{{-- comment --}}
+
+@if (
+    {{-- comment --}}
+    /*block comment*/
+    #another comment
+    $user->type == 1
+    // c comment
+    /* comment*/
+)
+    # not a comment <div id="#//x"></div>
+@endif

@@ -402,8 +402,7 @@
   ["parenthesis.end.blade",")"]
 ],[
    "start",
-  ["text.xml","            "],
-  ["punctuation.definition.comment.blade","// The application is in the local environment..."]
+  ["text.xml","            // The application is in the local environment..."]
 ],[
    "start",
   ["text.xml","        "],
@@ -416,8 +415,7 @@
   ["parenthesis.end.blade",")"]
 ],[
    "start",
-  ["text.xml","            "],
-  ["punctuation.definition.comment.blade","// The application is in the testing environment..."]
+  ["text.xml","            // The application is in the testing environment..."]
 ],[
    "start",
   ["text.xml","        "],
@@ -425,8 +423,7 @@
   ["keyword.control.blade","else"]
 ],[
    "start",
-  ["text.xml","            "],
-  ["punctuation.definition.comment.blade","// The application is not in the local or testing environment..."]
+  ["text.xml","            // The application is not in the local or testing environment..."]
 ],[
    "start",
   ["text.xml","        "],
@@ -471,4 +468,78 @@
   ["meta.tag.punctuation.end-tag-open.xml","</"],
   ["meta.tag.tag-name.xml","html"],
   ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start"
+],[
+   "start"
+],[
+   "start",
+  ["punctuation.definition.comment.begin.blade","{{--"],
+  ["comment.block.blade"," comment "],
+  ["punctuation.definition.comment.end.blade","--}}"]
+],[
+   "start"
+],[
+   "parenthesis.begin.blade",
+  ["directive.declaration.blade","@"],
+  ["keyword.control.blade","if"],
+  ["text.xml"," "],
+  ["parenthesis.begin.blade","("]
+],[
+   "parenthesis.begin.blade",
+  ["source.blade","    "],
+  ["punctuation.definition.comment.begin.blade","{{--"],
+  ["comment.block.blade"," comment "],
+  ["punctuation.definition.comment.end.blade","--}}"]
+],[
+   "parenthesis.begin.blade",
+  ["source.blade","    "],
+  ["punctuation.definition.comment.begin.php","/*"],
+  ["comment.block.blade","block comment"],
+  ["punctuation.definition.comment.end.php","*/"]
+],[
+   "parenthesis.begin.blade",
+  ["source.blade","    "],
+  ["punctuation.definition.comment.blade","#another comment"]
+],[
+   "parenthesis.begin.blade",
+  ["source.blade","    "],
+  ["variable.blade","$user"],
+  ["keyword.operator.blade","->"],
+  ["constant.other.property.blade","type"],
+  ["source.blade"," "],
+  ["keyword.operator.blade","=="],
+  ["source.blade"," 1"]
+],[
+   "parenthesis.begin.blade",
+  ["source.blade","    "],
+  ["punctuation.definition.comment.blade","// c comment"]
+],[
+   "parenthesis.begin.blade",
+  ["source.blade","    "],
+  ["punctuation.definition.comment.begin.php","/*"],
+  ["comment.block.blade"," comment"],
+  ["punctuation.definition.comment.end.php","*/"]
+],[
+   "start",
+  ["parenthesis.end.blade",")"]
+],[
+   "start",
+  ["text.xml","    # not a comment "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","div"],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","id"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"#//x\""],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","div"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["directive.declaration.blade","@"],
+  ["keyword.control.blade","endif"]
+],[
+   "start"
 ]]
