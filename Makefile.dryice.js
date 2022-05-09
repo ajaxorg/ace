@@ -105,7 +105,7 @@ function ace() {
 
     copy.file(ACE_HOME + "/build_support/editor.html",  BUILD_DIR + "/editor.html");
     copy.file(ACE_HOME + "/LICENSE", BUILD_DIR + "/LICENSE");
-    copy.file(ACE_HOME + "/ChangeLog.txt", BUILD_DIR + "/ChangeLog.txt");
+    copy.file(ACE_HOME + "/CHANGELOG.md", BUILD_DIR + "/CHANGELOG.md");
     
     console.log('# ace ---------');
     for (var i = 0; i < 4; i++) {
