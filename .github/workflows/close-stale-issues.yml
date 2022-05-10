@@ -34,7 +34,7 @@ jobs:
 
           # Issue timing
           days-before-stale: 7
-          days-before-close: 7
+          days-before-close: 2
           days-before-ancient: 365
 
           # If you don't want to mark a issue as being ancient based on a
