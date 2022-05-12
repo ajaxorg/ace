@@ -1,3 +1,20 @@
+# Changelog
+
+All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+## [1.5.0](https://github.com/ajaxorg/ace/compare/v1.4.14...v1.5.0) (2022-05-12)
+
+
+### Features
+
+* Added ability to configure certain format options for beautify extension ([20275de](https://github.com/ajaxorg/ace/commit/20275de79c40636d27d5ce293cf528c915338fbd))
+
+
+### Bug Fixes
+
+* Modify syntax ([b78d772](https://github.com/ajaxorg/ace/commit/b78d77240e1909b9d91fcd2ac35a4c17af05f56b))
+* Render bidirectional unicode characters as control characters ([#4693](https://github.com/ajaxorg/ace/issues/4693)) ([4d2ecf0](https://github.com/ajaxorg/ace/commit/4d2ecf08afeb1556f2511a1423729c2549802da8))
+
 2022.01.26 Version 1.4.14
 
 - update vim mode
