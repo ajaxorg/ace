@@ -1,0 +1,441 @@
+[[
+   "start",
+  ["comment.line.ion","// Comment"]
+],[
+   "comment.block.ion",
+  ["comment.block.ion","/*"]
+],[
+   "comment.block.ion",
+  ["comment.block.ion","Multi"]
+],[
+   "comment.block.ion",
+  ["comment.block.ion","Line"]
+],[
+   "comment.block.ion",
+  ["comment.block.ion","Comment"]
+],[
+   "start",
+  ["comment.block.ion","*/"]
+],[
+   "start",
+  ["punctuation.definition.list.begin.ion","["],
+  ["constant.numeric.integer.ion","1"],
+  ["punctuation.definition.list.separator.ion",","],
+  ["constant.numeric.integer.ion","2"],
+  ["punctuation.definition.list.separator.ion",","],
+  ["constant.numeric.integer.ion","3"],
+  ["punctuation.definition.list.separator.ion",","],
+  ["constant.numeric.integer.ion","45"],
+  ["text.ion"," "],
+  ["comment.block.ion","/*TODO: should be 42, obviously*/"],
+  ["punctuation.definition.list.separator.ion",","],
+  ["text.ion"," "],
+  ["constant.numeric.timestamp.ion","2016-04-21T08:10:46Z"],
+  ["punctuation.definition.list.separator.ion",","],
+  ["text.ion"," "],
+  ["constant.numeric.timestamp.ion","2016-04-21T08:10:46-08:00"],
+  ["punctuation.definition.list.separator.ion",","],
+  ["text.ion"," "],
+  ["constant.numeric.timestamp.ion","2016-04-21"],
+  ["punctuation.definition.list.separator.ion",","],
+  ["text.ion"," "],
+  ["constant.numeric.integer.ion","2016"],
+  ["punctuation.definition.list.separator.ion",","],
+  ["text.ion"," "],
+  ["constant.numeric.integer.hex.ion","0x5"],
+  ["punctuation.definition.list.separator.ion",","],
+  ["text.ion"," "],
+  ["constant.numeric.integer.binary.ion","0b0110"],
+  ["punctuation.definition.list.end.ion","]"]
+],[
+   ["punctuation.definition.list.begin.ion","punctuation.definition.sexp.begin.ion"],
+  ["punctuation.definition.sexp.begin.ion","("],
+  ["constant.numeric.integer.ion","5"],
+  ["text.ion"," "],
+  ["constant.numeric.integer.ion","7"],
+  ["text.ion"," "],
+  ["constant.numeric.integer.ion","1"],
+  ["text.ion"," "],
+  ["constant.numeric.integer.ion","3"],
+  ["text.ion"," "],
+  ["punctuation.definition.list.begin.ion","["]
+],[
+   ["punctuation.definition.list.begin.ion","punctuation.definition.sexp.begin.ion"],
+  ["text.ion","    "],
+  ["constant.other.symbol.quoted.ion","'a'"],
+  ["punctuation.definition.list.separator.ion",","],
+  ["text.ion"," "],
+  ["constant.other.symbol.quoted.ion","'b'"],
+  ["punctuation.definition.list.separator.ion",","]
+],[
+   ["punctuation.definition.list.begin.ion","punctuation.definition.sexp.begin.ion"],
+  ["text.ion","    "],
+  ["constant.language.null.ion","null"],
+  ["punctuation.definition.list.separator.ion",","],
+  ["text.ion"," "],
+  ["constant.language.null.ion","null.int"],
+  ["punctuation.definition.list.separator.ion",","],
+  ["text.ion"," "],
+  ["constant.language.null.ion","null.bool"],
+  ["punctuation.definition.list.separator.ion",","],
+  ["text.ion"," "],
+  ["constant.language.null.ion","null.list"]
+],[
+   ["punctuation.definition.list.begin.ion","punctuation.definition.sexp.begin.ion"],
+  ["text.ion","    "],
+  ["constant.language.bool.ion","true"],
+  ["punctuation.definition.list.separator.ion",","],
+  ["text.ion"," "],
+  ["constant.language.bool.ion","false"],
+  ["punctuation.definition.list.separator.ion",","]
+],[
+   ["punctuation.definition.list.begin.ion","punctuation.definition.sexp.begin.ion"],
+  ["text.ion","    "],
+  ["constant.numeric.float.ion","nan"],
+  ["punctuation.definition.list.separator.ion",","],
+  ["text.ion"," "],
+  ["constant.numeric.float.ion","-inf"],
+  ["punctuation.definition.list.separator.ion",","],
+  ["text.ion"," "],
+  ["constant.numeric.float.ion","+inf"],
+  ["punctuation.definition.list.separator.ion",","]
+],[
+   ["punctuation.definition.list.begin.ion","punctuation.definition.sexp.begin.ion"],
+  ["text.ion","    "],
+  ["punctuation.definition.string.begin.ion","\""],
+  ["string.quoted.double.ion","str"],
+  ["punctuation.definition.string.end.ion","\""],
+  ["punctuation.definition.list.separator.ion",","]
+],[
+   ["punctuation.definition.list.begin.ion","punctuation.definition.sexp.begin.ion"],
+  ["text.ion","    "],
+  ["punctuation.definition.string.begin.ion","\""],
+  ["string.quoted.double.ion","str with embedded \\\" "],
+  ["punctuation.definition.string.end.ion","\""],
+  ["punctuation.definition.list.separator.ion",","]
+],[
+   ["punctuation.definition.list.begin.ion","punctuation.definition.sexp.begin.ion"],
+  ["text.ion","    "],
+  ["punctuation.definition.string.begin.ion","'''"],
+  ["string.quoted.triple.ion","str with embedded \\''' "],
+  ["punctuation.definition.string.end.ion","'''"],
+  ["punctuation.definition.list.separator.ion",","]
+],[
+   ["punctuation.definition.list.begin.ion","punctuation.definition.sexp.begin.ion"],
+  ["text.ion","    "],
+  ["punctuation.definition.clob.begin.ion","{{"],
+  ["string.other.clob.ion","\"clob content\""],
+  ["punctuation.definition.clob.end.ion","}}"],
+  ["punctuation.definition.list.separator.ion",","]
+],[
+   ["punctuation.definition.list.begin.ion","punctuation.definition.sexp.begin.ion"],
+  ["text.ion","    "],
+  ["punctuation.definition.blob.begin.ion","{{"],
+  ["string.other.blob.ion"," AB/ "],
+  ["punctuation.definition.blob.end.ion","}}"]
+],[
+   "start",
+  ["text.ion","    "],
+  ["punctuation.definition.list.end.ion","]"],
+  ["punctuation.definition.sexp.end.ion",")"]
+],[
+   "start"
+],[
+   "punctuation.definition.string.begin.ion",
+  ["punctuation.definition.string.begin.ion","'''"]
+],[
+   "punctuation.definition.string.begin.ion"
+],[
+   "punctuation.definition.string.begin.ion",
+  ["string.quoted.triple.ion","multi"]
+],[
+   "punctuation.definition.string.begin.ion",
+  ["string.quoted.triple.ion","line"]
+],[
+   "punctuation.definition.string.begin.ion",
+  ["string.quoted.triple.ion","string"]
+],[
+   "punctuation.definition.string.begin.ion"
+],[
+   "start",
+  ["punctuation.definition.string.end.ion","'''"]
+],[
+   "start"
+],[
+   "punctuation.definition.struct.begin.ion",
+  ["variable.language.annotation.ion","states::"],
+  ["punctuation.definition.struct.begin.ion","{"]
+],[
+   "punctuation.definition.struct.begin.ion",
+  ["text.ion","    "],
+  ["comment.line.ion","// https://amzn.github.io/ion-docs/docs/spec.html"]
+],[
+   ["punctuation.definition.list.begin.ion","punctuation.definition.struct.begin.ion"],
+  ["text.ion","    "],
+  ["constant.other.symbol.identifier.ion","root"],
+  ["punctuation.definition.struct.separator.ion",":"],
+  ["text.ion"," "],
+  ["variable.language.annotation.ion","rules::"],
+  ["punctuation.definition.list.begin.ion","["]
+],[
+   ["punctuation.definition.list.begin.ion","punctuation.definition.struct.begin.ion"],
+  ["text.ion","        "],
+  ["variable.language.annotation.ion","include::"],
+  ["constant.other.symbol.quoted.ion","'value'"]
+],[
+   "punctuation.definition.struct.begin.ion",
+  ["text.ion","    "],
+  ["punctuation.definition.list.end.ion","]"],
+  ["punctuation.definition.struct.separator.ion",","]
+],[
+   "punctuation.definition.struct.begin.ion"
+],[
+   "punctuation.definition.struct.begin.ion",
+  ["text.ion","    "],
+  ["comment.line.ion","// https://amzn.github.io/ion-docs/docs/spec.html#string"]
+],[
+   ["punctuation.definition.list.begin.ion","punctuation.definition.struct.begin.ion"],
+  ["text.ion","    "],
+  ["constant.other.symbol.identifier.ion","string"],
+  ["punctuation.definition.struct.separator.ion",":"],
+  ["text.ion"," "],
+  ["variable.language.annotation.ion","rules::"],
+  ["punctuation.definition.list.begin.ion","["]
+],[
+   ["punctuation.definition.struct.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.struct.begin.ion"],
+  ["text.ion","        "],
+  ["variable.language.annotation.ion","match::"],
+  ["punctuation.definition.struct.begin.ion","{"]
+],[
+   ["punctuation.definition.struct.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.struct.begin.ion"],
+  ["text.ion","            "],
+  ["constant.other.symbol.identifier.ion","regex"],
+  ["punctuation.definition.struct.separator.ion",":"],
+  ["text.ion"," "],
+  ["punctuation.definition.string.begin.ion","\""],
+  ["string.quoted.double.ion","(\\\\\\\")((?:\\\\\\\\\\\"|[^\\\"])*)(\\\\\\\")"],
+  ["punctuation.definition.string.end.ion","\""],
+  ["punctuation.definition.struct.separator.ion",","]
+],[
+   ["punctuation.definition.struct.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.struct.begin.ion"],
+  ["text.ion","            "],
+  ["constant.other.symbol.identifier.ion","token"],
+  ["punctuation.definition.struct.separator.ion",":"],
+  ["text.ion"," "],
+  ["punctuation.definition.list.begin.ion","["],
+  ["constant.other.symbol.quoted.ion","'string.dblq.punc.start'"],
+  ["punctuation.definition.list.separator.ion",","],
+  ["text.ion"," "],
+  ["constant.other.symbol.quoted.ion","'string.dblq'"],
+  ["punctuation.definition.list.separator.ion",","],
+  ["text.ion"," "],
+  ["constant.other.symbol.quoted.ion","'string.dblq.punc.end'"],
+  ["punctuation.definition.list.end.ion","]"]
+],[
+   ["punctuation.definition.list.begin.ion","punctuation.definition.struct.begin.ion"],
+  ["text.ion","        "],
+  ["punctuation.definition.struct.end.ion","}"],
+  ["punctuation.definition.list.separator.ion",","]
+],[
+   ["punctuation.definition.struct.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.struct.begin.ion"],
+  ["text.ion","        "],
+  ["variable.language.annotation.ion","push::"],
+  ["punctuation.definition.struct.begin.ion","{"]
+],[
+   ["punctuation.definition.struct.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.struct.begin.ion"],
+  ["text.ion","            "],
+  ["constant.other.symbol.identifier.ion","regex"],
+  ["punctuation.definition.struct.separator.ion",":"],
+  ["text.ion"," "],
+  ["punctuation.definition.string.begin.ion","\""],
+  ["string.quoted.double.ion","\\'{3}"],
+  ["punctuation.definition.string.end.ion","\""],
+  ["punctuation.definition.struct.separator.ion",","]
+],[
+   ["punctuation.definition.struct.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.struct.begin.ion"],
+  ["text.ion","            "],
+  ["constant.other.symbol.identifier.ion","token"],
+  ["punctuation.definition.struct.separator.ion",":"],
+  ["text.ion"," "],
+  ["constant.other.symbol.quoted.ion","'string.trpq.punc.start'"],
+  ["punctuation.definition.struct.separator.ion",","]
+],[
+   ["punctuation.definition.list.begin.ion","punctuation.definition.struct.begin.ion","punctuation.definition.struct.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.struct.begin.ion"],
+  ["text.ion","            "],
+  ["constant.other.symbol.identifier.ion","states"],
+  ["punctuation.definition.struct.separator.ion",":"],
+  ["text.ion"," "],
+  ["variable.language.annotation.ion","rules::"],
+  ["punctuation.definition.list.begin.ion","["]
+],[
+   ["punctuation.definition.struct.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.struct.begin.ion","punctuation.definition.struct.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.struct.begin.ion"],
+  ["text.ion","                "],
+  ["variable.language.annotation.ion","pop::"],
+  ["punctuation.definition.struct.begin.ion","{"]
+],[
+   ["punctuation.definition.struct.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.struct.begin.ion","punctuation.definition.struct.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.struct.begin.ion"],
+  ["text.ion","                    "],
+  ["constant.other.symbol.identifier.ion","regex"],
+  ["punctuation.definition.struct.separator.ion",":"],
+  ["text.ion"," "],
+  ["punctuation.definition.string.begin.ion","\""],
+  ["string.quoted.double.ion","\\'{3}"],
+  ["punctuation.definition.string.end.ion","\""],
+  ["punctuation.definition.struct.separator.ion",","]
+],[
+   ["punctuation.definition.struct.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.struct.begin.ion","punctuation.definition.struct.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.struct.begin.ion"],
+  ["text.ion","                    "],
+  ["constant.other.symbol.identifier.ion","token"],
+  ["punctuation.definition.struct.separator.ion",":"],
+  ["text.ion"," "],
+  ["constant.other.symbol.quoted.ion","'string.trpq.punc.end'"],
+  ["punctuation.definition.struct.separator.ion",","]
+],[
+   ["punctuation.definition.list.begin.ion","punctuation.definition.struct.begin.ion","punctuation.definition.struct.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.struct.begin.ion"],
+  ["text.ion","                "],
+  ["punctuation.definition.struct.end.ion","}"],
+  ["punctuation.definition.list.separator.ion",","]
+],[
+   ["punctuation.definition.struct.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.struct.begin.ion","punctuation.definition.struct.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.struct.begin.ion"],
+  ["text.ion","                "],
+  ["variable.language.annotation.ion","match::"],
+  ["punctuation.definition.struct.begin.ion","{"]
+],[
+   ["punctuation.definition.struct.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.struct.begin.ion","punctuation.definition.struct.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.struct.begin.ion"],
+  ["text.ion","                    "],
+  ["constant.other.symbol.identifier.ion","regex"],
+  ["punctuation.definition.struct.separator.ion",":"],
+  ["text.ion"," "],
+  ["punctuation.definition.string.begin.ion","\""],
+  ["string.quoted.double.ion","(?:\\\\\\\\'*|.|[^']*)"],
+  ["punctuation.definition.string.end.ion","\""],
+  ["punctuation.definition.struct.separator.ion",","]
+],[
+   ["punctuation.definition.struct.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.struct.begin.ion","punctuation.definition.struct.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.struct.begin.ion"],
+  ["text.ion","                    "],
+  ["constant.other.symbol.identifier.ion","token"],
+  ["punctuation.definition.struct.separator.ion",":"],
+  ["text.ion"," "],
+  ["constant.other.symbol.quoted.ion","'string.trpq'"]
+],[
+   ["punctuation.definition.list.begin.ion","punctuation.definition.struct.begin.ion","punctuation.definition.struct.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.struct.begin.ion"],
+  ["text.ion","                "],
+  ["punctuation.definition.struct.end.ion","}"]
+],[
+   ["punctuation.definition.struct.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.list.begin.ion","punctuation.definition.struct.begin.ion"],
+  ["text.ion","            "],
+  ["punctuation.definition.list.end.ion","]"]
+],[
+   ["punctuation.definition.list.begin.ion","punctuation.definition.struct.begin.ion"],
+  ["text.ion","        "],
+  ["punctuation.definition.struct.end.ion","}"],
+  ["punctuation.definition.list.separator.ion",","]
+],[
+   "punctuation.definition.struct.begin.ion",
+  ["text.ion","    "],
+  ["punctuation.definition.list.end.ion","]"],
+  ["punctuation.definition.struct.separator.ion",","]
+],[
+   "punctuation.definition.struct.begin.ion"
+],[
+   ["comment.block.ion","punctuation.definition.struct.begin.ion"],
+  ["text.ion","    "],
+  ["comment.block.ion","/*"]
+],[
+   ["comment.block.ion","punctuation.definition.struct.begin.ion"],
+  ["comment.block.ion","    ..."]
+],[
+   "punctuation.definition.struct.begin.ion",
+  ["comment.block.ion","    */"]
+],[
+   "start",
+  ["punctuation.definition.struct.end.ion","}"]
+],[
+   "punctuation.definition.struct.begin.ion",
+  ["punctuation.definition.struct.begin.ion","{"]
+],[
+   ["punctuation.definition.struct.begin.ion","punctuation.definition.struct.begin.ion"],
+  ["text.ion"," "],
+  ["punctuation.definition.string.begin.ion","\""],
+  ["string.quoted.double.ion","json"],
+  ["punctuation.definition.string.end.ion","\""],
+  ["punctuation.definition.struct.separator.ion",":"],
+  ["text.ion"," "],
+  ["punctuation.definition.struct.begin.ion","{"]
+],[
+   ["punctuation.definition.struct.begin.ion","punctuation.definition.struct.begin.ion"],
+  ["text.ion","      "],
+  ["punctuation.definition.string.begin.ion","\""],
+  ["string.quoted.double.ion","compatibility"],
+  ["punctuation.definition.string.end.ion","\""],
+  ["punctuation.definition.struct.separator.ion",":"],
+  ["text.ion"," "],
+  ["constant.language.bool.ion","true"],
+  ["punctuation.definition.struct.separator.ion",","]
+],[
+   ["punctuation.definition.struct.begin.ion","punctuation.definition.struct.begin.ion"],
+  ["text.ion","      "],
+  ["punctuation.definition.string.begin.ion","\""],
+  ["string.quoted.double.ion","open sourced"],
+  ["punctuation.definition.string.end.ion","\""],
+  ["punctuation.definition.struct.separator.ion",":"],
+  ["text.ion"," "],
+  ["punctuation.definition.string.begin.ion","\""],
+  ["string.quoted.double.ion","2016-04-21T08:10:46Z"],
+  ["punctuation.definition.string.end.ion","\""],
+  ["punctuation.definition.struct.separator.ion",","]
+],[
+   ["punctuation.definition.struct.begin.ion","punctuation.definition.struct.begin.ion"],
+  ["text.ion","      "],
+  ["punctuation.definition.string.begin.ion","\""],
+  ["string.quoted.double.ion","foo"],
+  ["punctuation.definition.string.end.ion","\""],
+  ["punctuation.definition.struct.separator.ion",":"],
+  ["text.ion"," "],
+  ["constant.numeric.integer.ion","9"],
+  ["punctuation.definition.struct.separator.ion",","]
+],[
+   ["punctuation.definition.struct.begin.ion","punctuation.definition.struct.begin.ion"],
+  ["text.ion","      "],
+  ["punctuation.definition.string.begin.ion","\""],
+  ["string.quoted.double.ion","bar"],
+  ["punctuation.definition.string.end.ion","\""],
+  ["punctuation.definition.struct.separator.ion",":"],
+  ["text.ion"," "],
+  ["constant.numeric.decimal.ion","1.1"],
+  ["punctuation.definition.struct.separator.ion",","]
+],[
+   ["punctuation.definition.struct.begin.ion","punctuation.definition.struct.begin.ion"],
+  ["text.ion","      "],
+  ["punctuation.definition.string.begin.ion","\""],
+  ["string.quoted.double.ion","baz"],
+  ["punctuation.definition.string.end.ion","\""],
+  ["punctuation.definition.struct.separator.ion",":"],
+  ["text.ion"," "],
+  ["punctuation.definition.list.begin.ion","["],
+  ["punctuation.definition.struct.begin.ion","{"],
+  ["punctuation.definition.string.begin.ion","\""],
+  ["string.quoted.double.ion","id"],
+  ["punctuation.definition.string.end.ion","\""],
+  ["punctuation.definition.struct.separator.ion",":"],
+  ["text.ion"," "],
+  ["constant.numeric.integer.ion","1"],
+  ["punctuation.definition.struct.end.ion","}"],
+  ["punctuation.definition.list.separator.ion",","],
+  ["text.ion"," "],
+  ["punctuation.definition.struct.begin.ion","{"],
+  ["punctuation.definition.string.begin.ion","\""],
+  ["string.quoted.double.ion","id"],
+  ["punctuation.definition.string.end.ion","\""],
+  ["punctuation.definition.struct.separator.ion",":"],
+  ["constant.numeric.integer.ion","2"],
+  ["punctuation.definition.struct.end.ion","}"],
+  ["punctuation.definition.list.end.ion","]"]
+],[
+   "punctuation.definition.struct.begin.ion",
+  ["text.ion","  "],
+  ["punctuation.definition.struct.end.ion","}"]
+],[
+   "start",
+  ["punctuation.definition.struct.end.ion","}"]
+]]
