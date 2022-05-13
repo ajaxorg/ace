@@ -7,7 +7,7 @@ Comment
 [1,2,3,45 /*TODO: should be 42, obviously*/, 2016-04-21T08:10:46Z, 2016-04-21T08:10:46-08:00, 2016-04-21, 2016, 0x5, 0b0110]
 (5 7 1 3 [
     'a', 'b',
-    null, null.int, null.bool, null.list
+    null, null.int, null.bool, null.list,
     true, false,
     nan, -inf, +inf,
     "str",
@@ -33,7 +33,7 @@ states::{
 
     // https://amzn.github.io/ion-docs/docs/spec.html#string
     string: rules::[
-        match::{
+        match :: {
             regex: "(\\\")((?:\\\\\"|[^\"])*)(\\\")",
             token: ['string.dblq.punc.start', 'string.dblq', 'string.dblq.punc.end']
         },
@@ -41,7 +41,7 @@ states::{
             regex: "\'{3}",
             token: 'string.trpq.punc.start',
             states: rules::[
-                pop::{
+                pop     ::     {
                     regex: "\'{3}",
                     token: 'string.trpq.punc.end',
                 },
@@ -58,7 +58,7 @@ states::{
     */
 }
 {
- "json": {
+"json": {
       "compatibility": true,
       "open sourced": "2016-04-21T08:10:46Z",
       "foo": 9,
