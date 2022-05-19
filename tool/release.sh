@@ -52,10 +52,11 @@ git --no-pager log --color --first-parent --oneline v$CUR_VERSION..master |
 echo "current version is $CUR_VERSION"
 
 # get new version number
-VERSION_NUM=;
-until [[ "$VERSION_NUM" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] ; do
-    read -p "enter version number for the build " VERSION_NUM
-done
+git checkout -- package.json
+git checkout -- CHANGELOG.md
+npm run changelog
+VERSION_NUM="$(node -p "require('./package.json').version")";
+echo "version number for the build is" $VERSION_NUM
 
 # update version number everywhere
 node -e "

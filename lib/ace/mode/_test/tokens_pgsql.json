@@ -791,14 +791,14 @@
   ["variable","\"f1\""],
   ["text",": "],
   ["constant.numeric","5"],
-  ["text",","]
+  ["punctuation.operator",","]
 ],[
    "json-start",
   ["text","  "],
   ["variable","\"f2\""],
   ["text",": "],
   ["string","\"test\""],
-  ["text",","]
+  ["punctuation.operator",","]
 ],[
    "json-start",
   ["text","  "],

@@ -13,21 +13,21 @@
   ["variable","\"count\""],
   ["text",": "],
   ["constant.numeric","10"],
-  ["text",","]
+  ["punctuation.operator",","]
 ],[
    "start",
   ["text","  "],
   ["variable","\"created\""],
   ["text",": "],
   ["string","\"2011-06-21T08:10:46Z\""],
-  ["text",","]
+  ["punctuation.operator",","]
 ],[
    "start",
   ["text","  "],
   ["variable","\"lang\""],
   ["text",": "],
   ["string","\"en-US\""],
-  ["text",","]
+  ["punctuation.operator",","]
 ],[
    "start",
   ["text","  "],
@@ -50,56 +50,56 @@
   ["variable","\"farm\""],
   ["text",": "],
   ["string","\"6\""],
-  ["text",","]
+  ["punctuation.operator",","]
 ],[
    "start",
   ["text","     "],
   ["variable","\"id\""],
   ["text",": "],
   ["string","\"5855620975\""],
-  ["text",","]
+  ["punctuation.operator",","]
 ],[
    "start",
   ["text","     "],
   ["variable","\"isfamily\""],
   ["text",": "],
   ["string","\"0\""],
-  ["text",","]
+  ["punctuation.operator",","]
 ],[
    "start",
   ["text","     "],
   ["variable","\"isfriend\""],
   ["text",": "],
   ["string","\"0\""],
-  ["text",","]
+  ["punctuation.operator",","]
 ],[
    "start",
   ["text","     "],
   ["variable","\"ispublic\""],
   ["text",": "],
   ["string","\"1\""],
-  ["text",","]
+  ["punctuation.operator",","]
 ],[
    "start",
   ["text","     "],
   ["variable","\"owner\""],
   ["text",": "],
   ["string","\"32021554@N04\""],
-  ["text",","]
+  ["punctuation.operator",","]
 ],[
    "start",
   ["text","     "],
   ["variable","\"secret\""],
   ["text",": "],
   ["string","\"f1f5e8515d\""],
-  ["text",","]
+  ["punctuation.operator",","]
 ],[
    "start",
   ["text","     "],
   ["variable","\"server\""],
   ["text",": "],
   ["string","\"5110\""],
-  ["text",","]
+  ["punctuation.operator",","]
 ],[
    "start",
   ["text","     "],
@@ -110,7 +110,7 @@
    "start",
   ["text","    "],
   ["paren.rparen","}"],
-  ["text",","]
+  ["punctuation.operator",","]
 ],[
    "start",
   ["text","    "],
@@ -121,56 +121,56 @@
   ["variable","\"farm\""],
   ["text",": "],
   ["string","\"4\""],
-  ["text",","]
+  ["punctuation.operator",","]
 ],[
    "start",
   ["text","     "],
   ["variable","\"id\""],
   ["text",": "],
   ["string","\"5856170534\""],
-  ["text",","]
+  ["punctuation.operator",","]
 ],[
    "start",
   ["text","     "],
   ["variable","\"isfamily\""],
   ["text",": "],
   ["string","\"0\""],
-  ["text",","]
+  ["punctuation.operator",","]
 ],[
    "start",
   ["text","     "],
   ["variable","\"isfriend\""],
   ["text",": "],
   ["string","\"0\""],
-  ["text",","]
+  ["punctuation.operator",","]
 ],[
    "start",
   ["text","     "],
   ["variable","\"ispublic\""],
   ["text",": "],
   ["string","\"1\""],
-  ["text",","]
+  ["punctuation.operator",","]
 ],[
    "start",
   ["text","     "],
   ["variable","\"owner\""],
   ["text",": "],
   ["string","\"32021554@N04\""],
-  ["text",","]
+  ["punctuation.operator",","]
 ],[
    "start",
   ["text","     "],
   ["variable","\"secret\""],
   ["text",": "],
   ["string","\"ff1efb2a6f\""],
-  ["text",","]
+  ["punctuation.operator",","]
 ],[
    "start",
   ["text","     "],
   ["variable","\"server\""],
   ["text",": "],
   ["string","\"3217\""],
-  ["text",","]
+  ["punctuation.operator",","]
 ],[
    "start",
   ["text","     "],
@@ -181,7 +181,7 @@
    "start",
   ["text","    "],
   ["paren.rparen","}"],
-  ["text",","]
+  ["punctuation.operator",","]
 ],[
    "start",
   ["text","    "],
@@ -192,56 +192,56 @@
   ["variable","\"farm\""],
   ["text",": "],
   ["string","\"6\""],
-  ["text",","]
+  ["punctuation.operator",","]
 ],[
    "start",
   ["text","     "],
   ["variable","\"id\""],
   ["text",": "],
   ["string","\"5856172972\""],
-  ["text",","]
+  ["punctuation.operator",","]
 ],[
    "start",
   ["text","     "],
   ["variable","\"isfamily\""],
   ["text",": "],
   ["string","\"0\""],
-  ["text",","]
+  ["punctuation.operator",","]
 ],[
    "start",
   ["text","     "],
   ["variable","\"isfriend\""],
   ["text",": "],
   ["string","\"0\""],
-  ["text",","]
+  ["punctuation.operator",","]
 ],[
    "start",
   ["text","     "],
   ["variable","\"ispublic\""],
   ["text",": "],
   ["string","\"1\""],
-  ["text",","]
+  ["punctuation.operator",","]
 ],[
    "start",
   ["text","     "],
   ["variable","\"owner\""],
   ["text",": "],
   ["string","\"51249875@N03\""],
-  ["text",","]
+  ["punctuation.operator",","]
 ],[
    "start",
   ["text","     "],
   ["variable","\"secret\""],
   ["text",": "],
   ["string","\"6c6887347c\""],
-  ["text",","]
+  ["punctuation.operator",","]
 ],[
    "start",
   ["text","     "],
   ["variable","\"server\""],
   ["text",": "],
   ["string","\"5192\""],
-  ["text",","]
+  ["punctuation.operator",","]
 ],[
    "start",
   ["text","     "],
@@ -252,7 +252,7 @@
    "start",
   ["text","    "],
   ["paren.rparen","}"],
-  ["text",","]
+  ["punctuation.operator",","]
 ],[
    "start",
   ["text","    "],
@@ -263,56 +263,56 @@
   ["variable","\"farm\""],
   ["text",": "],
   ["string","\"6\""],
-  ["text",","]
+  ["punctuation.operator",","]
 ],[
    "start",
   ["text","     "],
   ["variable","\"id\""],
   ["text",": "],
   ["string","\"5856168328\""],
-  ["text",","]
+  ["punctuation.operator",","]
 ],[
    "start",
   ["text","     "],
   ["variable","\"isfamily\""],
   ["text",": "],
   ["string","\"0\""],
-  ["text",","]
+  ["punctuation.operator",","]
 ],[
    "start",
   ["text","     "],
   ["variable","\"isfriend\""],
   ["text",": "],
   ["string","\"0\""],
-  ["text",","]
+  ["punctuation.operator",","]
 ],[
    "start",
   ["text","     "],
   ["variable","\"ispublic\""],
   ["text",": "],
   ["string","\"1\""],
-  ["text",","]
+  ["punctuation.operator",","]
 ],[
    "start",
   ["text","     "],
   ["variable","\"owner\""],
   ["text",": "],
   ["string","\"32021554@N04\""],
-  ["text",","]
+  ["punctuation.operator",","]
 ],[
    "start",
   ["text","     "],
   ["variable","\"secret\""],
   ["text",": "],
   ["string","\"0c1cfdf64c\""],
-  ["text",","]
+  ["punctuation.operator",","]
 ],[
    "start",
   ["text","     "],
   ["variable","\"server\""],
   ["text",": "],
   ["string","\"5078\""],
-  ["text",","]
+  ["punctuation.operator",","]
 ],[
    "start",
   ["text","     "],
@@ -323,7 +323,7 @@
    "start",
   ["text","    "],
   ["paren.rparen","}"],
-  ["text",","]
+  ["punctuation.operator",","]
 ],[
    "start",
   ["text","    "],
@@ -334,56 +334,56 @@
   ["variable","\"farm\""],
   ["text",": "],
   ["string","\"3\""],
-  ["text",","]
+  ["punctuation.operator",","]
 ],[
    "start",
   ["text","     "],
   ["variable","\"id\""],
   ["text",": "],
   ["string","\"5856171774\""],
-  ["text",","]
+  ["punctuation.operator",","]
 ],[
    "start",
   ["text","     "],
   ["variable","\"isfamily\""],
   ["text",": "],
   ["string","\"0\""],
-  ["text",","]
+  ["punctuation.operator",","]
 ],[
    "start",
   ["text","     "],
   ["variable","\"isfriend\""],
   ["text",": "],
   ["string","\"0\""],
-  ["text",","]
+  ["punctuation.operator",","]
 ],[
    "start",
   ["text","     "],
   ["variable","\"ispublic\""],
   ["text",": "],
   ["string","\"1\""],
-  ["text",","]
+  ["punctuation.operator",","]
 ],[
    "start",
   ["text","     "],
   ["variable","\"owner\""],
   ["text",": "],
   ["string","\"32021554@N04\""],
-  ["text",","]
+  ["punctuation.operator",","]
 ],[
    "start",
   ["text","     "],
   ["variable","\"secret\""],
   ["text",": "],
   ["string","\"7f5a3180ab\""],
-  ["text",","]
+  ["punctuation.operator",","]
 ],[
    "start",
   ["text","     "],
   ["variable","\"server\""],
   ["text",": "],
   ["string","\"2696\""],
-  ["text",","]
+  ["punctuation.operator",","]
 ],[
    "start",
   ["text","     "],
