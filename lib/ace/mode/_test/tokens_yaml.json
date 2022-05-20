@@ -122,7 +122,12 @@
 ],[
    "start",
   ["indent","    "],
-  ["meta.tag","city"],
+  ["meta.tag","ref-id"],
+  ["keyword",":"],
+  ["text","   id123"]
+],[
+   "start",
+  ["meta.tag","    city"],
   ["keyword",":"],
   ["text","   East Centerville"]
 ],[
