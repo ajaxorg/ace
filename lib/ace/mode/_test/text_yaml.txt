@@ -23,6 +23,7 @@ bill-to:  &id001
     street: |
             123 Tornado Alley
             Suite 16
+    ref-id: id123  
     city:   East Centerville
     state:  KS
 
