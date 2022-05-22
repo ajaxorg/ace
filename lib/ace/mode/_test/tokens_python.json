@@ -333,7 +333,7 @@
    "start",
   ["keyword","def"],
   ["text"," "],
-  ["identifier","to_lowercase"],
+  ["entity.name.function","to_lowercase"],
   ["paren.lparen","("],
   ["support.function","input"],
   ["paren.rparen",")"],
