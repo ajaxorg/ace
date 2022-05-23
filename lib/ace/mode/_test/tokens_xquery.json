@@ -1,46 +1,44 @@
 [[
-   "start",
+   "[\"start\"]",
   ["keyword","xquery"],
   ["text"," "],
   ["keyword","version"],
   ["text"," "],
-  ["string","\"1.0\""],
+  ["string","\""],
+  ["string","1.0"],
+  ["string","\""],
   ["text",";"]
 ],[
-   "start"
+   "[\"start\"]"
 ],[
-   "start",
+   "[\"start\"]",
   ["keyword","let"],
   ["text"," "],
   ["variable","$message"],
   ["text"," "],
   ["keyword.operator",":="],
   ["text"," "],
-  ["string","\"Hello World!\""]
+  ["string","\""],
+  ["string","Hello World!"],
+  ["string","\""]
 ],[
-   "start",
+   "[\"start\",\"StartTag\",\"TagContent\"]",
   ["keyword","return"],
   ["text"," "],
-  ["text","<"],
-  ["meta.tag","results"],
-  ["text",">"]
+  ["meta.tag","<results"],
+  ["meta.tag",">"]
 ],[
-   "start",
+   "[\"start\",\"StartTag\",\"TagContent\"]",
   ["text","  "],
-  ["text","<"],
-  ["meta.tag","message"],
-  ["text",">"],
-  ["lparen","{"],
+  ["meta.tag","<message"],
+  ["meta.tag",">"],
+  ["text","{"],
   ["variable","$message"],
-  ["rparen","}"],
-  ["text","</"],
-  ["meta.tag","message"],
-  ["text",">"]
+  ["text","}"],
+  ["meta.tag","</message>"]
 ],[
-   "start",
-  ["text","</"],
-  ["meta.tag","results"],
-  ["text",">"]
+   "[\"start\"]",
+  ["meta.tag","</results>"]
 ],[
-   "start"
+   "[\"start\"]"
 ]]
