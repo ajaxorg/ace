@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.5.1](https://github.com/ajaxorg/ace/compare/v1.5.0...v1.5.1) (2022-05-23)
+
+
+### Bug Fixes
+
+* Correctly tokenize YAML meta tags with non alphabetical characters after multiline string ([#4706](https://github.com/ajaxorg/ace/issues/4706)) ([0164811](https://github.com/ajaxorg/ace/commit/0164811fd95ecae9a46ce6fd7278e9c8b0b48eed))
+* Made commas be tokenized as punctuation operator instead of text in JSON ([#4703](https://github.com/ajaxorg/ace/issues/4703)) ([4c4883a](https://github.com/ajaxorg/ace/commit/4c4883a854836b652dbb798b78f207ae4b1924b8))
+* Multiple Partiql and Amazon Ion textual notation fixes ([#4686](https://github.com/ajaxorg/ace/issues/4686)) ([bffba8d](https://github.com/ajaxorg/ace/commit/bffba8d934773bc9236d741f1a1ce2237a971b3e))
+* PHP syntax fix for AMPERSAND_FOLLOWED_BY_VAR_OR_VARARG ([#4705](https://github.com/ajaxorg/ace/issues/4705)) ([d59c22b](https://github.com/ajaxorg/ace/commit/d59c22b603eaa9d688249a3cc11812e641f25426))
+* Python functions should be highlighted as functions ([#4708](https://github.com/ajaxorg/ace/issues/4708)) ([b2aaf1f](https://github.com/ajaxorg/ace/commit/b2aaf1f5644397959bd8c94e9e705da176242edd))
+* Updated PHP mode to support PHP8.1 syntax ([#4696](https://github.com/ajaxorg/ace/issues/4696)) ([33cf1c6](https://github.com/ajaxorg/ace/commit/33cf1c66af970edaf7eb0a468276fca249b8a5c8))
+
 ## [1.5.0](https://github.com/ajaxorg/ace/compare/v1.4.14...v1.5.0) (2022-05-12)
 
 
