@@ -92,7 +92,9 @@
 
 .ace-tomorrow-night .ace_entity.ace_name.ace_function,
 .ace-tomorrow-night .ace_support.ace_function,
-.ace-tomorrow-night .ace_variable {
+.ace-tomorrow-night .ace_variable,
+.ace-tomorrow-night .ace_variable:not(.ace_parameter),
+.ace-tomorrow-night .ace_constant:not(.ace_numeric) {
   color: #81A2BE
 }
 

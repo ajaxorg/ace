@@ -71,10 +71,6 @@ styles.join("\n")
     background: rgba(0, 0, 0, 0.01);
 }
 
-.ace_selecting, .ace_selecting * {
-    cursor: text !important;
-}
-
 .ace_gutter {
     position: absolute;
     overflow : hidden;
