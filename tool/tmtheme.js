@@ -288,8 +288,8 @@ var themes = {
     "pastel_on_dark": "Pastels on Dark",
     "solarized_dark": "Solarized-dark",
     "solarized_light": "Solarized-light",
-    "katzenmilch": "Katzenmilch",
-    "kuroir": "Kuroir Theme",
+    //"katzenmilch": "Katzenmilch",
+    //"kuroir": "Kuroir Theme",
     //"textmate": "Textmate (Mac Classic)",
     "tomorrow": "Tomorrow",
     "tomorrow_night": "Tomorrow-Night",
@@ -298,7 +298,8 @@ var themes = {
     "tomorrow_night_eighties": "Tomorrow-Night-Eighties",
     "twilight": "Twilight",
     "vibrant_ink": "Vibrant Ink",
-    "xcode": "Xcode_default"
+    "xcode": "Xcode_default",
+	"visual_studio":"Visual Studio"
 };
 
 function convertBuiltinTheme(name) {
