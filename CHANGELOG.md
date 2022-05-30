@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.5.2](https://github.com/ajaxorg/ace/compare/v1.5.1...v1.5.2) (2022-05-30)
+
+
+### Bug Fixes
+
+* Added es6-shim library to fix old browsers ([#4720](https://github.com/ajaxorg/ace/issues/4720)) ([5ba71a0](https://github.com/ajaxorg/ace/commit/5ba71a0b8b0804d8cb385f7b2ee6b63e9bd1c3b8))
+* Added mockdom.before method ([#4724](https://github.com/ajaxorg/ace/issues/4724)) ([ffedba3](https://github.com/ajaxorg/ace/commit/ffedba3e18138d7739285d1a9b945d01d384948e))
+* Added support for cjs, mjs and log modes ([#4718](https://github.com/ajaxorg/ace/issues/4718)) ([375498a](https://github.com/ajaxorg/ace/commit/375498a12ff28cf955224baf60d242421817220d))
+* Adds missed functions into `php_completions.js` ([#4726](https://github.com/ajaxorg/ace/issues/4726)) ([7d5f4b8](https://github.com/ajaxorg/ace/commit/7d5f4b83f3ecc854e70f1508e9247e39ca9de30a))
+* Cannot read property of null for bgTokenizer after session is destroyed ([#4713](https://github.com/ajaxorg/ace/issues/4713)) ([d604f52](https://github.com/ajaxorg/ace/commit/d604f52d60e3ec2dced126337ad46a2cf71bf294))
+* Do not render selected word markers for the same range multiple times ([#4727](https://github.com/ajaxorg/ace/issues/4727)) ([cd30f59](https://github.com/ajaxorg/ace/commit/cd30f591e40d5286fdabaa9f688f3c6066fbffff))
+* Fixed popup CSS styling ([#4728](https://github.com/ajaxorg/ace/issues/4728)) ([045a3e6](https://github.com/ajaxorg/ace/commit/045a3e652ec37b1ab3b716cdf2bc24967a75eb77))
+* Fixed scrolling code lenses into view ([#4717](https://github.com/ajaxorg/ace/issues/4717)) ([710b14a](https://github.com/ajaxorg/ace/commit/710b14a7709d7499a4d182ad707b3cbbb6e73a64))
+* Multiple improvements for Ace themes ([#4715](https://github.com/ajaxorg/ace/issues/4715)) ([87ad55d](https://github.com/ajaxorg/ace/commit/87ad55daf243bdc619e15fbf220dc5ded235ed4c))
+* Only send postMessage through worker if it's defined ([#4722](https://github.com/ajaxorg/ace/issues/4722)) ([2afa4bf](https://github.com/ajaxorg/ace/commit/2afa4bf91bbc99f29bd0a7c1f0adc600af2ceeae))
+* Pass additional arguments for command.exec ([#4723](https://github.com/ajaxorg/ace/issues/4723)) ([3b36762](https://github.com/ajaxorg/ace/commit/3b36762c045246efbc2e11eaa08d20a90142d26f))
+* Removed focussing after timeout in text input ([#4716](https://github.com/ajaxorg/ace/issues/4716)) ([f8ea48f](https://github.com/ajaxorg/ace/commit/f8ea48f1fe6362696ed30e01030e75c117ce4323))
+* Throw invalid delta error if change is out of range and added V2 for worker and worker client ([#4721](https://github.com/ajaxorg/ace/issues/4721)) ([f269889](https://github.com/ajaxorg/ace/commit/f2698895d6617f1c7ebeed14b7ecbb1c5d71bb51))
+* Updated ace typings ([#4714](https://github.com/ajaxorg/ace/issues/4714)) ([d5d6f9a](https://github.com/ajaxorg/ace/commit/d5d6f9a32ad443d02aa89d9f140917637f5f52ab))
+
 ### [1.5.1](https://github.com/ajaxorg/ace/compare/v1.5.0...v1.5.1) (2022-05-23)
 
 
