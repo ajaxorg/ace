@@ -63,9 +63,7 @@
 .ace-merbivore .ace_constant.ace_character,
 .ace-merbivore .ace_constant.ace_character.ace_escape,
 .ace-merbivore .ace_constant.ace_other,
-.ace-merbivore .ace_support.ace_type,
-.ace-merbivore .ace_variable:not(.ace_parameter),
-.ace-merbivore .ace_constant:not(.ace_numeric) {
+.ace-merbivore .ace_support.ace_type {
   color: #1EDAFB
 }
 

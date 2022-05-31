@@ -80,9 +80,7 @@
   color: rgb(0, 0, 205);
 }
 
-.ace-chrome .ace_variable,
-.ace-chrome .ace_variable:not(.ace_parameter),
-.ace-chrome .ace_constant:not(.ace_numeric) {
+.ace-chrome .ace_variable {
   color: rgb(49, 132, 149);
 }
 

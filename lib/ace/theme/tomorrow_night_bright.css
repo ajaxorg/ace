@@ -104,9 +104,7 @@
 
 .ace-tomorrow-night-bright .ace_entity.ace_name.ace_function,
 .ace-tomorrow-night-bright .ace_support.ace_function,
-.ace-tomorrow-night-bright .ace_variable,
-.ace-tomorrow-night-bright .ace_variable:not(.ace_parameter),
-.ace-tomorrow-night-bright .ace_constant:not(.ace_numeric) {
+.ace-tomorrow-night-bright .ace_variable {
   color: #7AA6DA
 }
 
