@@ -70,9 +70,7 @@
 
 .ace-xcode .ace_entity.ace_other.ace_attribute-name,
 .ace-xcode .ace_support.ace_constant,
-.ace-xcode .ace_support.ace_function, 
-.ace-xcode .ace_variable:not(.ace_parameter),
-.ace-xcode .ace_constant:not(.ace_numeric) {
+.ace-xcode .ace_support.ace_function {
   color: #450084
 }
 

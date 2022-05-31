@@ -92,9 +92,7 @@
 
 .ace-tomorrow .ace_entity.ace_name.ace_function,
 .ace-tomorrow .ace_support.ace_function,
-.ace-tomorrow .ace_variable,
-.ace-tomorrow .ace_variable:not(.ace_parameter),
-.ace-tomorrow .ace_constant:not(.ace_numeric) {
+.ace-tomorrow .ace_variable {
   color: #4271AE
 }
 

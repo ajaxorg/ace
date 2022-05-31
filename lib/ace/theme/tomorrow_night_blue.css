@@ -89,9 +89,7 @@
 
 .ace-tomorrow-night-blue .ace_entity.ace_name.ace_function,
 .ace-tomorrow-night-blue .ace_support.ace_function,
-.ace-tomorrow-night-blue .ace_variable,
-.ace-tomorrow-night-blue .ace_variable:not(.ace_parameter),
-.ace-tomorrow-night-blue .ace_constant:not(.ace_numeric) {
+.ace-tomorrow-night-blue .ace_variable {
   color: #BBDAFF
 }
 
