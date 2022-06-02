@@ -17,7 +17,7 @@
         "amd-loader": "~0.0.4",
         "architect-build": "https://github.com/c9/architect-build/tarball/43a6fdeffe",
         "asyncjs": "~0.0.12",
-        "dryice": "^0.4.8",
+        "dryice": "0.4.11",
         "standard-version": "^9.3.2"
     },
     "mappings": {
