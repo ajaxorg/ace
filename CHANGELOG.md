@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.6.0](https://github.com/ajaxorg/ace/compare/v1.5.3...v1.6.0) (2022-06-10)
+
+
+### Bug Fixes
+
+* Add class to tooltip DOM element distinguish errors from warnings ([#4810](https://github.com/ajaxorg/ace/issues/4810)) ([d2446d6](https://github.com/ajaxorg/ace/commit/d2446d68e7ace4d1a860de6a5a3e5031f074161b))
+* Autocomplete stopped working after upgrade to v1.5.2 ([48e6b60](https://github.com/ajaxorg/ace/commit/48e6b601ad5ae03a99a341843194c3854d2376c2))
+* Fix css EOF duplicate errors [#4816](https://github.com/ajaxorg/ace/issues/4816) ([48176f6](https://github.com/ajaxorg/ace/commit/48176f66c8ca0dd239968329b471f55b548ee467))
+* Fix overflow button for long lines with one token ([#4818](https://github.com/ajaxorg/ace/issues/4818)) ([3f93451](https://github.com/ajaxorg/ace/commit/3f934510514a25c53edf64bb80911a96b7133908))
+
 ### [1.5.3](https://github.com/ajaxorg/ace/compare/v1.5.2...v1.5.3) (2022-05-31)
 
 
