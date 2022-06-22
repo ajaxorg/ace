@@ -98,6 +98,11 @@
   ["text","  "],
   ["constant.numeric","1"]
 ],[
+   "start",
+  ["meta.tag","      version"],
+  ["keyword",":"],
+  ["text","   1.2.3.4"]
+],[
    "start"
 ],[
    "start",
@@ -124,7 +129,7 @@
   ["indent","    "],
   ["meta.tag","ref-id"],
   ["keyword",":"],
-  ["text","   id123"]
+  ["text"," id123  "]
 ],[
    "start",
   ["meta.tag","    city"],
