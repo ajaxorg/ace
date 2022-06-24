@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.6.1](https://github.com/ajaxorg/ace/compare/v1.6.0...v1.6.1) (2022-06-24)
+
+
+### Bug Fixes
+
+* Highlight unicode characters in Python function and class names ([be6f2d1](https://github.com/ajaxorg/ace/commit/be6f2d125a8ffe70ceb336051da6a161ce9cf1bc))
+* Incorrect YAML syntax highlighting for version numbers with multiple periods ([049d761](https://github.com/ajaxorg/ace/commit/049d76131e6122f7397fb30cc341db34baaf2813))
+* Incorrect YAML syntax highlighting for version numbers with multiple periods [#4827](https://github.com/ajaxorg/ace/issues/4827) ([915fcaf](https://github.com/ajaxorg/ace/commit/915fcaf542469a7dc0e3e7235f23a66a3abaadb9))
+
 ## [1.6.0](https://github.com/ajaxorg/ace/compare/v1.5.3...v1.6.0) (2022-06-10)
 
 
