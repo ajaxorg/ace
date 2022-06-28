@@ -290,6 +290,8 @@ var themes = {
     "solarized_light": "Solarized-light",
     "katzenmilch": "Katzenmilch",
     "kuroir": "Kuroir Theme",
+    "gruvbox_dark_hard": "gruvboxDarkHard",
+    "gruvbox_light_hard": "gruvboxLightHard",
     //"textmate": "Textmate (Mac Classic)",
     "tomorrow": "Tomorrow",
     "tomorrow_night": "Tomorrow-Night",
