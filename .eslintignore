@@ -8,6 +8,7 @@ lib/ace/mode/php/*
 lib/ace/mode/xml/*
 lib/ace/mode/xquery/*
 lib/ace/mode/xquery.js
+lib/ace/mode/yaml/*
 lib/ace/test/asyncjs/
 lib/ace/lib/es5-shim.js
 lib/ace/keyboard/vim*.js
