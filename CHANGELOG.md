@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.7.1](https://github.com/ajaxorg/ace/compare/v1.7.0...v1.7.1) (2022-06-29)
+
+
+### Bug Fixes
+
+* Fixed accessing properties when err is null in onerror handler ([3b62a07](https://github.com/ajaxorg/ace/commit/3b62a0713e68fd76bfa9c52fa2112b56888d2349))
+* Uncaught TypeError: Cannot read properties of undefined in worker code ([ce068ac](https://github.com/ajaxorg/ace/commit/ce068ac29f0056f6a10d0fc99181b8ba3e274cfe))
+
 ## [1.7.0](https://github.com/ajaxorg/ace/compare/v1.6.1...v1.7.0) (2022-06-28)
 
 
