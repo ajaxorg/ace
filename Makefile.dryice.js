@@ -460,7 +460,7 @@ function buildAce(options, callback) {
 }
 
 function extractCss(options, callback) {
-    var dir = BUILD_DIR + "/src" + (options.noconflict ? "-noconflict" : "");
+    var dir = BUILD_DIR + "/src" + (options.compress ? "-min" : "") + (options.noconflict ? "-noconflict" : "");
     var filenames = fs.readdirSync(dir);
     var css = "";
     var images = {};
