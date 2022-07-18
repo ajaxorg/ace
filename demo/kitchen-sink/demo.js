@@ -32,8 +32,6 @@
 define(function(require, exports, module) {
 "use strict";
 
-require("ace/lib/fixoldbrowsers");
-
 require("ace/ext/rtl");
 
 require("ace/multi_select");
