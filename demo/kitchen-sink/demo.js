@@ -32,8 +32,6 @@
 define(function(require, exports, module) {
 "use strict";
 
-require("ace/lib/fixoldbrowsers");
-
 require("ace/ext/rtl");
 
 require("ace/multi_select");
@@ -42,7 +40,12 @@ var devUtil = require("./dev_util");
 require("./file_drop");
 
 var config = require("ace/config");
-config.init();
+config.setLoader(function(moduleName, cb) {
+    require([moduleName], function(module) {
+        cb(null, module)
+    })
+});
+
 var env = {};
 
 var dom = require("ace/lib/dom");

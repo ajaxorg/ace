@@ -29,6 +29,7 @@
  * ***** END LICENSE BLOCK ***** */
 
 define(function(require, exports, module) {
+var ace = require("ace/ace");
 var dom = require("ace/lib/dom");
 var event = require("ace/lib/event");
 var Range = require("ace/range").Range;
@@ -48,7 +49,7 @@ function def(o, key, get) {
         console.error(e);
     }
 }
-def(window, "ace", function(){  return window.env.editor });
+def(window, "ace", function(){  return ace });
 def(window, "editor", function(){  return window.env.editor == logEditor ? editor : window.env.editor });
 def(window, "session", function(){ return window.editor.session });
 def(window, "split", function(){  return window.env.split });

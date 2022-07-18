@@ -346,7 +346,7 @@ function buildAceModuleInternal(opts, callback) {
         ignore: opts.ignore || [],
         withRequire: false,
         basepath: ACE_HOME,
-        transforms: [normalizeLineEndings],
+        transforms: [normalizeLineEndings, includeLoader],
         afterRead: [optimizeTextModules]
     }, write);
 }
@@ -358,7 +358,7 @@ function buildCore(options, extra, callback) {
         order: -1000,
         literal: true
     }];
-    options.require =["ace/ace"];
+    options.require =["ace/ace", "ace/loader_build"];
     options.projectType = "main";
     options.ns = "ace";
     buildAceModule(options, callback);
@@ -581,6 +581,17 @@ function normalizeLineEndings(module) {
     if (typeof module == "string") 
         module = {source: module};
     return module.source = module.source.replace(/\r\n/g, "\n");
+}
+
+function includeLoader(module) {
+    var pattern = '"include loader_build";';
+    if (module.source && module.source.indexOf(pattern) != -1) {
+        console.log("=====================================  =====================================");
+        console.log(module);
+        console.log("=====================================  =====================================");
+        module.deps.push("ace/loader_build");
+        module.source = module.source.replace(pattern, 'require("./loader_build")(exports)');
+    }
 }
 
 function optimizeTextModules(sources) {
