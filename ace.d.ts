@@ -453,17 +453,17 @@ export namespace Ace {
     setBreakpoint(row: number, className: string): void;
     clearBreakpoint(row: number): void;
     addMarker(range: Range,
-              clazz: string,
-              type: MarkerRenderer|string,
-              inFront: boolean): number;
+      className: string,
+      type: "fullLine" | "screenLine" | "text" | MarkerRenderer,
+      inFront?: boolean): number;
     addDynamicMarker(marker: MarkerLike, inFront: boolean): MarkerLike;
     removeMarker(markerId: number): void;
     getMarkers(inFront?: boolean): MarkerLike[];
     highlight(re: RegExp): void;
     highlightLines(startRow: number,
-                   endRow: number,
-                   clazz: string,
-                   inFront?: boolean): Range;
+      endRow: number,
+      className: string,
+      inFront?: boolean): Range;
     setAnnotations(annotations: Annotation[]): void;
     getAnnotations(): Annotation[];
     clearAnnotations(): void;
@@ -752,6 +752,7 @@ export namespace Ace {
     textInput: TextInput;
 
     on(name: 'blur', callback: (e: Event) => void): void;
+    on(name: 'input', callback: () => void): void;
     on(name: 'change', callback: (delta: Delta) => void): void;
     on(name: 'changeSelectionStyle', callback: (obj: { data: string }) => void): void;
     on(name: 'changeSession',
@@ -770,7 +771,7 @@ export namespace Ace {
     getOption<T extends keyof EditorOptions>(name: T): EditorOptions[T];
 
     setKeyboardHandler(keyboardHandler: string, callback?: () => void): void;
-    setKeyboardHandler(keyboardHandler: KeyboardHandler): void;
+    setKeyboardHandler(keyboardHandler: KeyboardHandler|null): void;
     getKeyboardHandler(): string;
     setSession(session: EditSession): void;
     getSession(): EditSession;
