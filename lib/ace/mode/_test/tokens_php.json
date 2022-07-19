@@ -2,6 +2,43 @@
    "php-start",
   ["support.php_tag","<?php"]
 ],[
+   ["php-heredoc","EOD"],
+  ["variable","$bar"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["markup.list","<<<EOD"]
+],[
+   ["php-heredoc","EOD"],
+  ["string","highlightingWithNoSpaces"]
+],[
+   ["php-heredoc","EOD"],
+  ["string","doesn't break"]
+],[
+   "php-start",
+  ["markup.list","EOD"],
+  ["punctuation.operator",";"]
+],[
+   "php-start"
+],[
+   ["php-heredoc","TEST"],
+  ["identifier","lorem"],
+  ["paren.lparen","("],
+  ["string","'ipsum'"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["markup.list","<<<TEST"]
+],[
+   ["php-heredoc","TEST"],
+  ["string","foo bar"]
+],[
+   "php-start",
+  ["markup.list","TEST"]
+],[
+   "php-start",
+  ["paren.rparen",")"],
+  ["punctuation.operator",";"]
+],[
    "php-start"
 ],[
    "php-start",

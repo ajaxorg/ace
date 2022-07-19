@@ -1,4 +1,13 @@
 <?php
+$bar = <<<EOD
+highlightingWithNoSpaces
+doesn't break
+EOD;
+
+lorem('ipsum', <<<TEST
+foo bar
+TEST
+);
 
 function nfact($n) {
     if ($n == 0) {
