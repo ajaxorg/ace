@@ -503,7 +503,7 @@
         if (!/^\w+:/.test(path)) path = host + path;
         var onLoad = function(e, val) {
             if (e) return processLoadQueue({id: id, path: path});
-            if (!/^(\s|\/\*([^*]|[*](?!\/))*\*\/|\/\/.*\n)*define\(function\(require/.test(val))
+            if (!/^(\s|\/\*([^*]|[*](?!\/))*\*\/|\/\/.*[\r]?\n)*define\(function\(require/.test(val))
                 val = "define(function(require, exports, module){" + val + "\n});"
             nextModule = {name: id};
             /* eslint no-eval:0 */
