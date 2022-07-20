@@ -1,6 +1,6 @@
 var fs = require("fs");
 var path = require("path");
-var regexpTokenizer = require("../../../../tool/regexp_tokenizer");
+var regexpTokenizer = require("../../../tool/regexp_tokenizer");
 var EditSession = require("../../edit_session").EditSession;
 var Editor = require("../../editor").Editor;
 var MockRenderer = require("../../test/mockrenderer").MockRenderer;
@@ -55,6 +55,7 @@ function checkModes() {
     });
     
     jsFileList(cwd + "../../snippets").forEach(function(snippetFileName) {
+        if (/\.snippets$/.test(snippetFileName)) return;
         if (!snippets["ace/snippets/" + snippetFileName])
             throw new Error("Snippet file " + snippetFileName + " is not used");
         delete snippets["ace/snippets/" + snippetFileName];

@@ -23,8 +23,9 @@
     
 <div id="log"></div>
 
+<script src="../../demo/kitchen-sink/require.js" ></script>
 <script type="text/javascript">
-    var require = {
+    require.config({
         paths: {
             ace: "../"
         },
@@ -37,9 +38,10 @@
             location: "./asyncjs",
             main: "assert"
         }]
-    };
+    });
+    define("amd-loader", {})
+    require(["ace/test/all_browser"])
 </script>
-<script src="../../../demo/kitchen-sink/require.js" data-main="all_browser" type="text/javascript" charset="utf-8"></script>
 
 
 </body>

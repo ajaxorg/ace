@@ -22,8 +22,6 @@
  *     require("lazy!./module").load(function() {}) -
  */
 (function() {
-    var MODULE_LOAD_URL = "";
-
     var global = (function() {
         return this;
     })();
@@ -126,6 +124,14 @@
                 return p != id;
             });
             changed = true;
+            err.from = [];
+            for (var i in define.loaded) {
+                var index = define.loaded[i].deps.indexOf(id);
+                if (index != -1) {
+                    err.from.push(define.loaded[i].id);
+                }
+            }
+            console.error("Error loading " + id + " from " + err.from.slice(0, 2));
         } else if (id && !defQueue.length && !define.loaded[id]) {
             // the script didn't call define
             defQueue = [(config.shim && config.shim[id]) || [[], null]];
@@ -348,17 +354,18 @@
             global.shimIncluded = true;
         }
 
-        if (cfg.MODULE_LOAD_URL) require.MODULE_LOAD_URL = cfg.MODULE_LOAD_URL;
-
         if (cfg.assetUrl) config.assetUrl = cfg.assetUrl;
 
         if (cfg.$keepLoaders != undefined) config.$keepLoaders = cfg.$keepLoaders;
     });
 
     require.resetConfig = function(cfg) {
+        var location = global.location;
+        var baseUrl = location ? location.protocol + "//" + location.host 
+            + location.pathname.split("/").slice(0, -1).join("/") : "";
         config.packages = Object.create(null);
         config.paths = Object.create(null);
-        config.baseUrl = "";
+        config.baseUrl = baseUrl;
         config.useCache = false;
         config.transform = "";
         if (cfg) require.config(cfg);
@@ -374,7 +381,6 @@
             transform: config.transform,
             host: host,
             requireSourceUrl: !config.packed && script && script.src,
-            MODULE_LOAD_URL: require.MODULE_LOAD_URL,
             assetUrl: config.assetUrl,
         };
     };
@@ -417,8 +423,6 @@
         });
     }
 
-    require.MODULE_LOAD_URL = MODULE_LOAD_URL;
-
     require.toUrl = function(moduleName, ext, skipExt, isStatic) {
         var absRe = /^([\w\+\.\-]+:|\/)/;
         var index = moduleName.indexOf("!");
@@ -453,11 +457,6 @@
         if (!absRe.test(url)) {
             if (ext == ".js" && require.config.transform) url = addTransform(url, moduleName);
             var baseUrl = config.baseUrl;
-            if (!baseUrl) {
-                baseUrl = isStatic
-                    ? config.assetUrl || require.MODULE_LOAD_URL + "/../"
-                    : require.MODULE_LOAD_URL;
-            }
             if (baseUrl.slice(-1) != "/") baseUrl += "/";
             url = baseUrl + url;
         }

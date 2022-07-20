@@ -25,7 +25,7 @@
 <script src="kitchen-sink/require.js"></script>
 <script>
 // setup paths
-require.config({paths: { "ace" : "../lib/ace"}});
+require.config({paths: { "ace" : "../src"}});
 // load ace and extensions
 require(["ace/ace", "ace/ext/code_lens"], function(ace, codeLens) {
     var editor = ace.edit("editor");
@@ -110,7 +110,7 @@ require(["ace/ace", "ace/ext/code_lens"], function(ace, codeLens) {
                 });
 
             }
-            callback(p);
+            callback(null, p);
         }
     });
 

@@ -70,7 +70,7 @@ util.bindDropdown(modeEl, function(value) {
         schedule();
         return;
     }
-    var hp = "./lib/ace/mode/" + value + "_highlight_rules.js";
+    var hp = "./src/mode/" + value + "_highlight_rules.js";
     net.get(hp, function(text) {
         var session = new EditSession(text);
         session.setUndoManager(new UndoManager());

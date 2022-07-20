@@ -594,9 +594,6 @@ function normalizeLineEndings(module) {
 function includeLoader(module) {
     var pattern = '"include loader_build";';
     if (module.source && module.source.indexOf(pattern) != -1) {
-        console.log("=====================================  =====================================");
-        console.log(module);
-        console.log("=====================================  =====================================");
         module.deps.push("ace/loader_build");
         module.source = module.source.replace(pattern, 'require("./loader_build")(exports)');
     }
