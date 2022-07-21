@@ -1,22 +1,23 @@
 [[
    "start",
-  ["punctuation.definition.comment.kotlin","/*"],
-  ["comment.block.kotlin","Taken from http://try.kotlinlang.org/#/Examples/Longer%20examples/Life/Life.kt"],
-  ["punctuation.definition.comment.kotlin","*/"]
+  ["comment","#!/usr/bin/env kotlinc -script"]
 ],[
-   "punctuation.definition.comment.kotlin",
-  ["punctuation.definition.comment.kotlin","/*"],
-  ["comment.block.kotlin","*"]
-],[
-   "punctuation.definition.comment.kotlin",
-  ["comment.block.kotlin"," * This is a straightforward implementation of The Game of Life"]
-],[
-   "punctuation.definition.comment.kotlin",
-  ["comment.block.kotlin"," * See http://en.wikipedia.org/wiki/Conway's_Game_of_Life"]
+   "start"
 ],[
    "start",
-  ["comment.block.kotlin"," "],
-  ["punctuation.definition.comment.kotlin","*/"]
+  ["comment","/*Taken from http://try.kotlinlang.org/#/Examples/Longer%20examples/Life/Life.kt*/"]
+],[
+   "comment",
+  ["comment","/**"]
+],[
+   "comment",
+  ["comment"," * This is a straightforward implementation of The Game of Life"]
+],[
+   "comment",
+  ["comment"," * See http://en.wikipedia.org/wiki/Conway's_Game_of_Life"]
+],[
+   "start",
+  ["comment"," */"]
 ],[
    "start",
   ["keyword.other.kotlin","package"],
@@ -25,819 +26,1063 @@
 ],[
    "start"
 ],[
-   "punctuation.definition.comment.kotlin",
-  ["punctuation.definition.comment.kotlin","/*"]
+   "comment",
+  ["comment","/*"]
 ],[
-   "punctuation.definition.comment.kotlin",
-  ["comment.block.kotlin"," * A field where cells live. Effectively immutable"]
+   "comment",
+  ["comment"," * A field where cells live. Effectively immutable"]
 ],[
    "start",
-  ["comment.block.kotlin"," "],
-  ["punctuation.definition.comment.kotlin","*/"]
+  ["comment"," */"]
 ],[
-   ["text7","text5"],
-  ["text","class"],
+   "start",
+  ["keyword","class"],
   ["text"," "],
-  ["entity.name.type.class.kotlin","Field"],
-  ["text","("]
+  ["identifier","Field"],
+  ["paren.lparen","("]
 ],[
-   ["text7","text5"],
+   "start",
   ["text","        "],
   ["storage.modifier.kotlin","val"],
   ["text"," "],
-  ["variable.parameter.function.kotlin","width"],
+  ["identifier","width"],
   ["keyword.operator.declaration.kotlin",":"],
   ["text"," "],
   ["storage.type.buildin.kotlin","Int"],
-  ["text",","]
+  ["punctuation.kotlin",","]
 ],[
-   ["text7","text5"],
+   "start",
   ["text","        "],
   ["storage.modifier.kotlin","val"],
   ["text"," "],
-  ["variable.parameter.function.kotlin","height"],
+  ["identifier","height"],
   ["keyword.operator.declaration.kotlin",":"],
   ["text"," "],
   ["storage.type.buildin.kotlin","Int"],
-  ["text",","]
-],[
-   ["text7","text5"],
-  ["text","        "],
-  ["keyword.operator.arithmetic.kotlin","//"],
-  ["text"," "],
-  ["variable.parameter.function.kotlin","This"],
-  ["text"," "],
-  ["variable.parameter.function.kotlin","function"],
-  ["text"," "],
-  ["variable.parameter.function.kotlin","tells"],
-  ["text"," "],
-  ["variable.parameter.function.kotlin","the"],
-  ["text"," "],
-  ["variable.parameter.function.kotlin","constructor"],
-  ["text"," "],
-  ["variable.parameter.function.kotlin","which"],
-  ["text"," "],
-  ["variable.parameter.function.kotlin","cells"],
-  ["text"," "],
-  ["variable.parameter.function.kotlin","are"],
-  ["text"," "],
-  ["variable.parameter.function.kotlin","alive"]
+  ["punctuation.kotlin",","]
 ],[
    "start",
   ["text","        "],
-  ["keyword.operator.arithmetic.kotlin","//"],
-  ["text"," "],
-  ["keyword.control.kotlin","if"],
-  ["text"," "],
-  ["variable.parameter.function.kotlin","init"],
-  ["text","("],
-  ["variable.parameter.function.kotlin","i"],
-  ["text",", "],
-  ["variable.parameter.function.kotlin","j"],
-  ["text",") is true, the cell ("],
-  ["variable.parameter.function.kotlin","i"],
-  ["text",", "],
-  ["variable.parameter.function.kotlin","j"],
-  ["text",") is alive"]
+  ["comment","// This function tells the constructor which cells are alive"]
 ],[
    "start",
-  ["text","        init"],
+  ["text","        "],
+  ["comment","// if init(i, j) is true, the cell (i, j) is alive"]
+],[
+   "start",
+  ["text","        "],
+  ["identifier","init"],
   ["keyword.operator.declaration.kotlin",":"],
-  ["text"," ("],
+  ["text"," "],
+  ["paren.lparen","("],
   ["storage.type.buildin.kotlin","Int"],
-  ["text",", "],
+  ["punctuation.kotlin",","],
+  ["text"," "],
   ["storage.type.buildin.kotlin","Int"],
-  ["text",") "],
-  ["keyword.operator.declaration.kotlin","->"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["keyword.operator.kotlin","->"],
   ["text"," "],
   ["storage.type.buildin.kotlin","Boolean"]
 ],[
-   "text",
-  ["text",") {"]
+   "start",
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","{"]
 ],[
-   "text",
+   "start",
   ["text","    "],
   ["storage.modifier.kotlin","private"],
   ["text"," "],
-  ["keyword.other.kotlin","val"],
+  ["storage.modifier.kotlin","val"],
   ["text"," "],
-  ["entity.name.variable.kotlin","live"],
+  ["identifier","live"],
   ["keyword.operator.declaration.kotlin",":"],
-  ["text"," Array<Array<"],
+  ["text"," "],
+  ["storage.type.buildin.kotlin","Array"],
+  ["keyword.operator.kotlin","<"],
+  ["storage.type.buildin.kotlin","Array"],
+  ["keyword.operator.kotlin","<"],
   ["storage.type.buildin.kotlin","Boolean"],
-  ["text",">> "],
+  ["keyword.operator.kotlin",">>"],
+  ["text"," "],
   ["keyword.operator.assignment.kotlin","="],
-  ["text"," Array(height) { i "],
-  ["keyword.operator.declaration.kotlin","->"],
-  ["text"," Array(width) { j "],
-  ["keyword.operator.declaration.kotlin","->"],
-  ["text"," init(i, j) } }"]
+  ["text"," "],
+  ["storage.type.buildin.kotlin","Array"],
+  ["paren.lparen","("],
+  ["identifier","height"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","{"],
+  ["text"," "],
+  ["identifier","i"],
+  ["text"," "],
+  ["keyword.operator.kotlin","->"],
+  ["text"," "],
+  ["storage.type.buildin.kotlin","Array"],
+  ["paren.lparen","("],
+  ["identifier","width"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","{"],
+  ["text"," "],
+  ["identifier","j"],
+  ["text"," "],
+  ["keyword.operator.kotlin","->"],
+  ["text"," "],
+  ["identifier","init"],
+  ["paren.lparen","("],
+  ["identifier","i"],
+  ["punctuation.kotlin",","],
+  ["text"," "],
+  ["identifier","j"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.rparen","}"],
+  ["text"," "],
+  ["paren.rparen","}"]
 ],[
-   "text"
+   "start"
 ],[
-   ["text17","text"],
+   "start",
   ["text","    "],
   ["storage.modifier.kotlin","private"],
   ["text"," "],
-  ["keyword.other.kotlin","fun"],
+  ["keyword","fun"],
   ["text"," "],
-  ["entity.name.function.kotlin","liveCount"],
-  ["text","("],
-  ["variable.parameter.function.kotlin","i"],
+  ["identifier","liveCount"],
+  ["paren.lparen","("],
+  ["identifier","i"],
   ["keyword.operator.declaration.kotlin",":"],
   ["text"," "],
   ["storage.type.buildin.kotlin","Int"],
-  ["text",", "],
-  ["variable.parameter.function.kotlin","j"],
+  ["punctuation.kotlin",","],
+  ["text"," "],
+  ["identifier","j"],
   ["keyword.operator.declaration.kotlin",":"],
   ["text"," "],
   ["storage.type.buildin.kotlin","Int"],
-  ["text",")"]
+  ["paren.rparen",")"]
 ],[
-   ["text3","keyword.operator.assignment.kotlin33","keyword.operator.assignment.kotlin33","text17","text17","text"],
+   "start",
   ["text","            "],
   ["keyword.operator.assignment.kotlin","="],
   ["text"," "],
-  ["keyword.control.kotlin","if"],
-  ["text"," (i "],
-  ["storage.modifier.kotlin","in"],
+  ["keyword","if"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["identifier","i"],
+  ["text"," "],
+  ["keyword","in"],
   ["text"," "],
   ["constant.numeric.kotlin","0"],
   ["keyword.operator.dot.kotlin",".."],
-  ["text","height "],
+  ["identifier","height"],
+  ["text"," "],
   ["keyword.operator.arithmetic.kotlin","-"],
   ["text"," "],
   ["constant.numeric.kotlin","1"],
   ["text"," "],
   ["keyword.operator.logical.kotlin","&&"]
 ],[
-   ["text3","keyword.operator.assignment.kotlin33","keyword.operator.assignment.kotlin33","text17","text17","text"],
-  ["text","            j "],
-  ["storage.modifier.kotlin","in"],
+   "start",
+  ["text","            "],
+  ["identifier","j"],
+  ["text"," "],
+  ["keyword","in"],
   ["text"," "],
   ["constant.numeric.kotlin","0"],
   ["keyword.operator.dot.kotlin",".."],
-  ["text","width "],
+  ["identifier","width"],
+  ["text"," "],
   ["keyword.operator.arithmetic.kotlin","-"],
   ["text"," "],
   ["constant.numeric.kotlin","1"],
   ["text"," "],
   ["keyword.operator.logical.kotlin","&&"]
 ],[
-   ["text17","text"],
-  ["text","            live[i][j]) "],
+   "start",
+  ["text","            "],
+  ["identifier","live"],
+  ["paren.lparen","["],
+  ["identifier","i"],
+  ["paren.rparen","]"],
+  ["paren.lparen","["],
+  ["identifier","j"],
+  ["paren.rparen","])"],
+  ["text"," "],
   ["constant.numeric.kotlin","1"],
   ["text"," "],
-  ["keyword.control.kotlin","else"],
+  ["keyword","else"],
   ["text"," "],
   ["constant.numeric.kotlin","0"]
 ],[
-   "text"
+   "start"
 ],[
-   "text",
+   "start",
   ["text","    "],
-  ["punctuation.definition.comment.kotlin","//"],
-  ["comment.line.double-slash.kotlin"," How many neighbors of (i, j) are alive?"]
+  ["comment","// How many neighbors of (i, j) are alive?"]
 ],[
-   ["keyword.operator.assignment.kotlin33","text17","text17","text"],
+   "start",
   ["text","    "],
-  ["keyword.other.kotlin","fun"],
+  ["keyword","fun"],
   ["text"," "],
-  ["entity.name.function.kotlin","liveNeighbors"],
-  ["text","("],
-  ["variable.parameter.function.kotlin","i"],
+  ["identifier","liveNeighbors"],
+  ["paren.lparen","("],
+  ["identifier","i"],
   ["keyword.operator.declaration.kotlin",":"],
   ["text"," "],
   ["storage.type.buildin.kotlin","Int"],
-  ["text",", "],
-  ["variable.parameter.function.kotlin","j"],
+  ["punctuation.kotlin",","],
+  ["text"," "],
+  ["identifier","j"],
   ["keyword.operator.declaration.kotlin",":"],
   ["text"," "],
   ["storage.type.buildin.kotlin","Int"],
-  ["text",") "],
+  ["paren.rparen",")"],
+  ["text"," "],
   ["keyword.operator.assignment.kotlin","="]
 ],[
-   ["text17","text"],
-  ["text","            liveCount(i "],
-  ["keyword.operator.arithmetic.kotlin","-"],
-  ["text"," "],
-  ["constant.numeric.kotlin","1"],
-  ["text",", j "],
-  ["keyword.operator.arithmetic.kotlin","-"],
-  ["text"," "],
-  ["constant.numeric.kotlin","1"],
-  ["text",") "],
-  ["keyword.operator.arithmetic.kotlin","+"]
-],[
-   "text",
-  ["text","                    liveCount("],
-  ["variable.parameter.function.kotlin","i"],
+   "start",
+  ["text","            "],
+  ["identifier","liveCount"],
+  ["paren.lparen","("],
+  ["identifier","i"],
   ["text"," "],
   ["keyword.operator.arithmetic.kotlin","-"],
   ["text"," "],
-  ["variable.parameter.function.kotlin","1"],
-  ["text",", "],
-  ["variable.parameter.function.kotlin","j"],
-  ["text",") +"]
-],[
-   "text",
-  ["text","                    liveCount(i "],
+  ["constant.numeric.kotlin","1"],
+  ["punctuation.kotlin",","],
+  ["text"," "],
+  ["identifier","j"],
+  ["text"," "],
   ["keyword.operator.arithmetic.kotlin","-"],
   ["text"," "],
   ["constant.numeric.kotlin","1"],
-  ["text",", j "],
-  ["keyword.operator.arithmetic.kotlin","+"],
+  ["paren.rparen",")"],
   ["text"," "],
-  ["constant.numeric.kotlin","1"],
-  ["text",") "],
   ["keyword.operator.arithmetic.kotlin","+"]
 ],[
-   "text",
-  ["text","                    liveCount(i, j "],
+   "start",
+  ["text","                    "],
+  ["identifier","liveCount"],
+  ["paren.lparen","("],
+  ["identifier","i"],
+  ["text"," "],
   ["keyword.operator.arithmetic.kotlin","-"],
   ["text"," "],
   ["constant.numeric.kotlin","1"],
-  ["text",") "],
+  ["punctuation.kotlin",","],
+  ["text"," "],
+  ["identifier","j"],
+  ["paren.rparen",")"],
+  ["text"," "],
   ["keyword.operator.arithmetic.kotlin","+"]
 ],[
-   "text",
-  ["text","                    liveCount(i, j "],
-  ["keyword.operator.arithmetic.kotlin","+"],
+   "start",
+  ["text","                    "],
+  ["identifier","liveCount"],
+  ["paren.lparen","("],
+  ["identifier","i"],
   ["text"," "],
-  ["constant.numeric.kotlin","1"],
-  ["text",") "],
-  ["keyword.operator.arithmetic.kotlin","+"]
-],[
-   "text",
-  ["text","                    liveCount(i "],
-  ["keyword.operator.arithmetic.kotlin","+"],
-  ["text"," "],
-  ["constant.numeric.kotlin","1"],
-  ["text",", j "],
   ["keyword.operator.arithmetic.kotlin","-"],
   ["text"," "],
   ["constant.numeric.kotlin","1"],
-  ["text",") "],
+  ["punctuation.kotlin",","],
+  ["text"," "],
+  ["identifier","j"],
+  ["text"," "],
+  ["keyword.operator.arithmetic.kotlin","+"],
+  ["text"," "],
+  ["constant.numeric.kotlin","1"],
+  ["paren.rparen",")"],
+  ["text"," "],
   ["keyword.operator.arithmetic.kotlin","+"]
 ],[
-   "text",
-  ["text","                    liveCount(i "],
-  ["keyword.operator.arithmetic.kotlin","+"],
+   "start",
+  ["text","                    "],
+  ["identifier","liveCount"],
+  ["paren.lparen","("],
+  ["identifier","i"],
+  ["punctuation.kotlin",","],
+  ["text"," "],
+  ["identifier","j"],
+  ["text"," "],
+  ["keyword.operator.arithmetic.kotlin","-"],
   ["text"," "],
   ["constant.numeric.kotlin","1"],
-  ["text",", j) "],
+  ["paren.rparen",")"],
+  ["text"," "],
   ["keyword.operator.arithmetic.kotlin","+"]
 ],[
-   "text",
-  ["text","                    liveCount(i "],
+   "start",
+  ["text","                    "],
+  ["identifier","liveCount"],
+  ["paren.lparen","("],
+  ["identifier","i"],
+  ["punctuation.kotlin",","],
+  ["text"," "],
+  ["identifier","j"],
+  ["text"," "],
   ["keyword.operator.arithmetic.kotlin","+"],
   ["text"," "],
   ["constant.numeric.kotlin","1"],
-  ["text",", j "],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["keyword.operator.arithmetic.kotlin","+"]
+],[
+   "start",
+  ["text","                    "],
+  ["identifier","liveCount"],
+  ["paren.lparen","("],
+  ["identifier","i"],
+  ["text"," "],
   ["keyword.operator.arithmetic.kotlin","+"],
   ["text"," "],
   ["constant.numeric.kotlin","1"],
-  ["text",")"]
+  ["punctuation.kotlin",","],
+  ["text"," "],
+  ["identifier","j"],
+  ["text"," "],
+  ["keyword.operator.arithmetic.kotlin","-"],
+  ["text"," "],
+  ["constant.numeric.kotlin","1"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["keyword.operator.arithmetic.kotlin","+"]
 ],[
-   "text"
+   "start",
+  ["text","                    "],
+  ["identifier","liveCount"],
+  ["paren.lparen","("],
+  ["identifier","i"],
+  ["text"," "],
+  ["keyword.operator.arithmetic.kotlin","+"],
+  ["text"," "],
+  ["constant.numeric.kotlin","1"],
+  ["punctuation.kotlin",","],
+  ["text"," "],
+  ["identifier","j"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["keyword.operator.arithmetic.kotlin","+"]
 ],[
-   "text",
+   "start",
+  ["text","                    "],
+  ["identifier","liveCount"],
+  ["paren.lparen","("],
+  ["identifier","i"],
+  ["text"," "],
+  ["keyword.operator.arithmetic.kotlin","+"],
+  ["text"," "],
+  ["constant.numeric.kotlin","1"],
+  ["punctuation.kotlin",","],
+  ["text"," "],
+  ["identifier","j"],
+  ["text"," "],
+  ["keyword.operator.arithmetic.kotlin","+"],
+  ["text"," "],
+  ["constant.numeric.kotlin","1"],
+  ["paren.rparen",")"]
+],[
+   "start"
+],[
+   "start",
   ["text","    "],
-  ["punctuation.definition.comment.kotlin","//"],
-  ["comment.line.double-slash.kotlin"," You can say field[i, j], and this function gets called"]
+  ["comment","// You can say field[i, j], and this function gets called"]
 ],[
-   ["text17","text"],
+   "start",
   ["text","    "],
   ["storage.modifier.kotlin","operator"],
   ["text"," "],
-  ["keyword.other.kotlin","fun"],
+  ["keyword","fun"],
   ["text"," "],
   ["entity.name.function.kotlin","get"],
-  ["text","("],
-  ["variable.parameter.function.kotlin","i"],
+  ["paren.lparen","("],
+  ["identifier","i"],
   ["keyword.operator.declaration.kotlin",":"],
   ["text"," "],
   ["storage.type.buildin.kotlin","Int"],
-  ["text",", "],
-  ["variable.parameter.function.kotlin","j"],
+  ["punctuation.kotlin",","],
+  ["text"," "],
+  ["identifier","j"],
   ["keyword.operator.declaration.kotlin",":"],
   ["text"," "],
   ["storage.type.buildin.kotlin","Int"],
-  ["text",") "],
+  ["paren.rparen",")"],
+  ["text"," "],
   ["keyword.operator.assignment.kotlin","="],
-  ["text"," live[i][j]"]
-],[
-   "text",
-  ["text","}"]
-],[
-   "text"
-],[
-   ["punctuation.definition.comment.kotlin","text"],
-  ["punctuation.definition.comment.kotlin","/*"],
-  ["comment.block.kotlin","*"]
-],[
-   ["punctuation.definition.comment.kotlin","text"],
-  ["comment.block.kotlin"," * This function takes the present state of the field"]
-],[
-   ["punctuation.definition.comment.kotlin","text"],
-  ["comment.block.kotlin"," * and returns a new field representing the next moment of time"]
-],[
-   "text",
-  ["comment.block.kotlin"," "],
-  ["punctuation.definition.comment.kotlin","*/"]
-],[
-   ["text22","text17","text17","text"],
-  ["keyword.other.kotlin","fun"],
   ["text"," "],
-  ["entity.name.function.kotlin","next"],
-  ["text","("],
-  ["variable.parameter.function.kotlin","field"],
-  ["keyword.operator.declaration.kotlin",":"],
-  ["text"," Field)"],
-  ["keyword.operator.declaration.kotlin",":"],
-  ["text"," Field {"]
+  ["identifier","live"],
+  ["paren.lparen","["],
+  ["identifier","i"],
+  ["paren.rparen","]"],
+  ["paren.lparen","["],
+  ["identifier","j"],
+  ["paren.rparen","]"]
 ],[
-   ["text","text22","text22","text17","text17","text"],
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","class"],
+  ["text"," "],
+  ["identifier","Test"],
+  ["text"," "],
+  ["storage.modifier.kotlin","public"],
+  ["text"," "],
+  ["keyword","constructor"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["storage.modifier.kotlin","var"],
+  ["text"," "],
+  ["identifier","test"],
+  ["text"," "],
+  ["keyword.operator.assignment.kotlin","="],
+  ["text"," "],
+  ["string","\"test\""]
+],[
+   "start"
+],[
+   "comment",
+  ["comment","/**"]
+],[
+   "comment",
+  ["comment"," * This function takes the present state of the field"]
+],[
+   "comment",
+  ["comment"," * and returns a new field representing the next moment of time"]
+],[
+   "start",
+  ["comment"," */"]
+],[
+   "start",
+  ["keyword","fun"],
+  ["text"," "],
+  ["identifier","next"],
+  ["paren.lparen","("],
+  ["identifier","field"],
+  ["keyword.operator.declaration.kotlin",":"],
+  ["text"," "],
+  ["identifier","Field"],
+  ["paren.rparen",")"],
+  ["keyword.operator.declaration.kotlin",":"],
+  ["text"," "],
+  ["identifier","Field"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
   ["text","    "],
-  ["keyword.control.kotlin","return"],
-  ["text"," Field(field"],
-  ["keyword.operator.dot.kotlin","."],
-  ["text","width, field"],
-  ["keyword.operator.dot.kotlin","."],
-  ["text","height) { i, j "],
-  ["keyword.operator.declaration.kotlin","->"]
-],[
-   ["text","text22","text22","text17","text17","text"],
-  ["text","        "],
-  ["keyword.other.kotlin","val"],
+  ["keyword","return"],
   ["text"," "],
-  ["entity.name.variable.kotlin","n"],
+  ["identifier","Field"],
+  ["paren.lparen","("],
+  ["identifier","field"],
+  ["keyword.operator.dot.kotlin","."],
+  ["identifier","width"],
+  ["punctuation.kotlin",","],
+  ["text"," "],
+  ["identifier","field"],
+  ["keyword.operator.dot.kotlin","."],
+  ["identifier","height"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","{"],
+  ["text"," "],
+  ["identifier","i"],
+  ["punctuation.kotlin",","],
+  ["text"," "],
+  ["identifier","j"],
+  ["text"," "],
+  ["keyword.operator.kotlin","->"]
+],[
+   "start",
+  ["text","        "],
+  ["storage.modifier.kotlin","val"],
+  ["text"," "],
+  ["identifier","n"],
   ["text"," "],
   ["keyword.operator.assignment.kotlin","="],
-  ["text"," field"],
+  ["text"," "],
+  ["identifier","field"],
   ["keyword.operator.dot.kotlin","."],
-  ["text","liveNeighbors(i, j)"]
+  ["identifier","liveNeighbors"],
+  ["paren.lparen","("],
+  ["identifier","i"],
+  ["punctuation.kotlin",","],
+  ["text"," "],
+  ["identifier","j"],
+  ["paren.rparen",")"]
 ],[
-   ["text","text22","text22","text17","text17","text"],
+   "start",
   ["text","        "],
-  ["keyword.control.kotlin","if"],
-  ["text"," (field[i, j])"]
+  ["keyword","if"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["identifier","field"],
+  ["paren.lparen","["],
+  ["identifier","i"],
+  ["punctuation.kotlin",","],
+  ["text"," "],
+  ["identifier","j"],
+  ["paren.rparen","])"]
 ],[
-   ["text","text22","text22","text17","text17","text"],
+   "start",
   ["text","        "],
-  ["punctuation.definition.comment.kotlin","//"],
-  ["comment.line.double-slash.kotlin"," (i, j) is alive"]
+  ["comment","// (i, j) is alive"]
 ],[
-   ["text","text22","text22","text17","text17","text"],
-  ["text","            n "],
-  ["storage.modifier.kotlin","in"],
+   "start",
+  ["text","            "],
+  ["identifier","n"],
+  ["text"," "],
+  ["keyword","in"],
   ["text"," "],
   ["constant.numeric.kotlin","2"],
   ["keyword.operator.dot.kotlin",".."],
   ["constant.numeric.kotlin","3"],
   ["text"," "],
-  ["punctuation.definition.comment.kotlin","//"],
-  ["comment.line.double-slash.kotlin"," It remains alive iff it has 2 or 3 neighbors"]
+  ["comment","// It remains alive iff it has 2 or 3 neighbors"]
 ],[
-   ["text","text22","text22","text17","text17","text"],
+   "start",
   ["text","        "],
-  ["keyword.control.kotlin","else"]
+  ["keyword","else"]
 ],[
-   ["text","text22","text22","text17","text17","text"],
+   "start",
   ["text","        "],
-  ["punctuation.definition.comment.kotlin","//"],
-  ["comment.line.double-slash.kotlin"," (i, j) is dead"]
+  ["comment","// (i, j) is dead"]
 ],[
-   ["text","text22","text22","text17","text17","text"],
-  ["text","            n "],
-  ["keyword.operator.comparison.kotlin","=="],
+   "start",
+  ["text","            "],
+  ["identifier","n"],
+  ["text"," "],
+  ["keyword.operator.kotlin","=="],
   ["text"," "],
   ["constant.numeric.kotlin","3"],
   ["text"," "],
-  ["punctuation.definition.comment.kotlin","//"],
-  ["comment.line.double-slash.kotlin"," A new cell is born if there are 3 neighbors alive"]
+  ["comment","// A new cell is born if there are 3 neighbors alive"]
 ],[
-   ["text22","text17","text17","text"],
-  ["text","    }"]
+   "start",
+  ["text","    "],
+  ["paren.rparen","}"]
 ],[
-   "text",
-  ["text","}"]
+   "start",
+  ["paren.rparen","}"]
 ],[
-   "text"
+   "start"
 ],[
-   "text",
-  ["punctuation.definition.comment.kotlin","/*"],
-  ["comment.block.kotlin","* A few colony examples here "],
-  ["punctuation.definition.comment.kotlin","*/"]
+   "start",
+  ["comment","/** A few colony examples here */"]
 ],[
-   ["text22","text17","text17","text"],
-  ["keyword.other.kotlin","fun"],
+   "start",
+  ["keyword","fun"],
   ["text"," "],
-  ["entity.name.function.kotlin","main"],
-  ["text","("],
-  ["variable.parameter.function.kotlin","args"],
+  ["identifier","main"],
+  ["paren.lparen","("],
+  ["identifier","args"],
   ["keyword.operator.declaration.kotlin",":"],
-  ["text"," Array<"],
+  ["text"," "],
+  ["storage.type.buildin.kotlin","Array"],
+  ["keyword.operator.kotlin","<"],
   ["storage.type.buildin.kotlin","String"],
-  ["text",">) {"]
+  ["keyword.operator.kotlin",">"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","{"]
 ],[
-   ["text22","text17","text17","text"],
+   "start",
   ["text","    "],
-  ["punctuation.definition.comment.kotlin","//"],
-  ["comment.line.double-slash.kotlin"," Simplistic demo"]
+  ["comment","// Simplistic demo"]
 ],[
-   ["text22","text17","text17","text"],
-  ["text","    runGameOfLife("],
-  ["punctuation.definition.string.begin.kotlin","\""],
-  ["string.quoted.double.kotlin","***"],
-  ["punctuation.definition.string.end.kotlin","\""],
-  ["text",", "],
+   "start",
+  ["text","    "],
+  ["identifier","runGameOfLife"],
+  ["paren.lparen","("],
+  ["string","\"***\""],
+  ["punctuation.kotlin",","],
+  ["text"," "],
   ["constant.numeric.kotlin","3"],
-  ["text",")"]
+  ["paren.rparen",")"]
 ],[
-   ["text22","text17","text17","text"],
+   "start",
   ["text","    "],
-  ["punctuation.definition.comment.kotlin","//"],
-  ["comment.line.double-slash.kotlin"," \"Star burst\""]
+  ["comment","// \"Star burst\""]
 ],[
-   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
-  ["text","    runGameOfLife("],
-  ["punctuation.definition.string.begin.kotlin","\"\"\""]
+   "string",
+  ["text","    "],
+  ["identifier","runGameOfLife"],
+  ["paren.lparen","("],
+  ["string","\"\"\""]
 ],[
-   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
-  ["string.quoted.third.kotlin","        _______"]
+   "string",
+  ["string","        _______"]
 ],[
-   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
-  ["string.quoted.third.kotlin","        ___*___"]
+   "string",
+  ["string","        ___*___"]
 ],[
-   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
-  ["string.quoted.third.kotlin","        __***__"]
+   "string",
+  ["string","        __***__"]
 ],[
-   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
-  ["string.quoted.third.kotlin","        ___*___"]
+   "string",
+  ["string","        ___*___"]
 ],[
-   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
-  ["string.quoted.third.kotlin","        _______"]
+   "string",
+  ["string","        _______"]
 ],[
-   ["text22","text17","text17","text"],
-  ["string.quoted.third.kotlin","    "],
-  ["punctuation.definition.string.end.kotlin","\"\"\""],
-  ["text",", "],
+   "start",
+  ["string","    \"\"\""],
+  ["punctuation.kotlin",","],
+  ["text"," "],
   ["constant.numeric.kotlin","10"],
-  ["text",")"]
+  ["paren.rparen",")"]
 ],[
-   ["text22","text17","text17","text"],
+   "start",
   ["text","    "],
-  ["punctuation.definition.comment.kotlin","//"],
-  ["comment.line.double-slash.kotlin"," Stable colony"]
+  ["comment","// Stable colony"]
 ],[
-   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
-  ["text","    runGameOfLife("],
-  ["punctuation.definition.string.begin.kotlin","\"\"\""]
+   "string",
+  ["text","    "],
+  ["identifier","runGameOfLife"],
+  ["paren.lparen","("],
+  ["string","\"\"\""]
 ],[
-   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
-  ["string.quoted.third.kotlin","        _____"]
+   "string",
+  ["string","        _____"]
 ],[
-   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
-  ["string.quoted.third.kotlin","        __*__"]
+   "string",
+  ["string","        __*__"]
 ],[
-   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
-  ["string.quoted.third.kotlin","        _*_*_"]
+   "string",
+  ["string","        _*_*_"]
 ],[
-   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
-  ["string.quoted.third.kotlin","        __*__"]
+   "string",
+  ["string","        __*__"]
 ],[
-   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
-  ["string.quoted.third.kotlin","        _____"]
+   "string",
+  ["string","        _____"]
 ],[
-   ["text22","text17","text17","text"],
-  ["string.quoted.third.kotlin","    "],
-  ["punctuation.definition.string.end.kotlin","\"\"\""],
-  ["text",", "],
+   "start",
+  ["string","    \"\"\""],
+  ["punctuation.kotlin",","],
+  ["text"," "],
   ["constant.numeric.kotlin","3"],
-  ["text",")"]
+  ["paren.rparen",")"]
 ],[
-   ["text22","text17","text17","text"],
+   "start",
   ["text","    "],
-  ["punctuation.definition.comment.kotlin","//"],
-  ["comment.line.double-slash.kotlin"," Stable from the step 2"]
+  ["comment","// Stable from the step 2"]
 ],[
-   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
-  ["text","    runGameOfLife("],
-  ["punctuation.definition.string.begin.kotlin","\"\"\""]
+   "string",
+  ["text","    "],
+  ["identifier","runGameOfLife"],
+  ["paren.lparen","("],
+  ["string","\"\"\""]
 ],[
-   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
-  ["string.quoted.third.kotlin","        __**__"]
+   "string",
+  ["string","        __**__"]
 ],[
-   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
-  ["string.quoted.third.kotlin","        __**__"]
+   "string",
+  ["string","        __**__"]
 ],[
-   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
-  ["string.quoted.third.kotlin","        __**__"]
+   "string",
+  ["string","        __**__"]
 ],[
-   ["text22","text17","text17","text"],
-  ["string.quoted.third.kotlin","    "],
-  ["punctuation.definition.string.end.kotlin","\"\"\""],
-  ["text",", "],
+   "start",
+  ["string","    \"\"\""],
+  ["punctuation.kotlin",","],
+  ["text"," "],
   ["constant.numeric.kotlin","3"],
-  ["text",")"]
+  ["paren.rparen",")"]
 ],[
-   ["text22","text17","text17","text"],
+   "start",
   ["text","    "],
-  ["punctuation.definition.comment.kotlin","//"],
-  ["comment.line.double-slash.kotlin"," Oscillating colony"]
+  ["comment","// Oscillating colony"]
 ],[
-   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
-  ["text","    runGameOfLife("],
-  ["punctuation.definition.string.begin.kotlin","\"\"\""]
+   "string",
+  ["text","    "],
+  ["identifier","runGameOfLife"],
+  ["paren.lparen","("],
+  ["string","\"\"\""]
 ],[
-   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
-  ["string.quoted.third.kotlin","        __**____"]
+   "string",
+  ["string","        __**____"]
 ],[
-   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
-  ["string.quoted.third.kotlin","        __**____"]
+   "string",
+  ["string","        __**____"]
 ],[
-   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
-  ["string.quoted.third.kotlin","        ____**__"]
+   "string",
+  ["string","        ____**__"]
 ],[
-   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
-  ["string.quoted.third.kotlin","        ____**__"]
+   "string",
+  ["string","        ____**__"]
 ],[
-   ["text22","text17","text17","text"],
-  ["string.quoted.third.kotlin","    "],
-  ["punctuation.definition.string.end.kotlin","\"\"\""],
-  ["text",", "],
+   "start",
+  ["string","    \"\"\""],
+  ["punctuation.kotlin",","],
+  ["text"," "],
   ["constant.numeric.kotlin","6"],
-  ["text",")"]
+  ["paren.rparen",")"]
 ],[
-   ["text22","text17","text17","text"],
+   "start",
   ["text","    "],
-  ["punctuation.definition.comment.kotlin","//"],
-  ["comment.line.double-slash.kotlin"," A fancier oscillating colony"]
+  ["comment","// A fancier oscillating colony"]
 ],[
-   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
-  ["text","    runGameOfLife("],
-  ["punctuation.definition.string.begin.kotlin","\"\"\""]
+   "string",
+  ["text","    "],
+  ["identifier","runGameOfLife"],
+  ["paren.lparen","("],
+  ["string","\"\"\""]
 ],[
-   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
-  ["string.quoted.third.kotlin","        -------------------"]
+   "string",
+  ["string","        -------------------"]
 ],[
-   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
-  ["string.quoted.third.kotlin","        -------***---***---"]
+   "string",
+  ["string","        -------***---***---"]
 ],[
-   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
-  ["string.quoted.third.kotlin","        -------------------"]
+   "string",
+  ["string","        -------------------"]
 ],[
-   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
-  ["string.quoted.third.kotlin","        -----*----*-*----*-"]
+   "string",
+  ["string","        -----*----*-*----*-"]
 ],[
-   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
-  ["string.quoted.third.kotlin","        -----*----*-*----*-"]
+   "string",
+  ["string","        -----*----*-*----*-"]
 ],[
-   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
-  ["string.quoted.third.kotlin","        -----*----*-*----*-"]
+   "string",
+  ["string","        -----*----*-*----*-"]
 ],[
-   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
-  ["string.quoted.third.kotlin","        -------***---***---"]
+   "string",
+  ["string","        -------***---***---"]
 ],[
-   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
-  ["string.quoted.third.kotlin","        -------------------"]
+   "string",
+  ["string","        -------------------"]
 ],[
-   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
-  ["string.quoted.third.kotlin","        -------***---***---"]
+   "string",
+  ["string","        -------***---***---"]
 ],[
-   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
-  ["string.quoted.third.kotlin","        -----*----*-*----*-"]
+   "string",
+  ["string","        -----*----*-*----*-"]
 ],[
-   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
-  ["string.quoted.third.kotlin","        -----*----*-*----*-"]
+   "string",
+  ["string","        -----*----*-*----*-"]
 ],[
-   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
-  ["string.quoted.third.kotlin","        -----*----*-*----*-"]
+   "string",
+  ["string","        -----*----*-*----*-"]
 ],[
-   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
-  ["string.quoted.third.kotlin","        -------------------"]
+   "string",
+  ["string","        -------------------"]
 ],[
-   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
-  ["string.quoted.third.kotlin","        -------***---***---"]
+   "string",
+  ["string","        -------***---***---"]
 ],[
-   ["punctuation.definition.string.begin.kotlin","text3","text3","text22","text22","text17","text17","text"],
-  ["string.quoted.third.kotlin","        -------------------"]
+   "string",
+  ["string","        -------------------"]
 ],[
-   ["text22","text17","text17","text"],
-  ["string.quoted.third.kotlin","    "],
-  ["punctuation.definition.string.end.kotlin","\"\"\""],
-  ["text",", "],
-  ["constant.numeric.kotlin","10"],
-  ["text",")"]
-],[
-   "text",
-  ["text","}"]
-],[
-   "text"
-],[
-   "text",
-  ["punctuation.definition.comment.kotlin","//"],
-  ["comment.line.double-slash.kotlin"," UTILITIES"]
-],[
-   "text"
-],[
-   ["text22","text17","text17","text"],
-  ["keyword.other.kotlin","fun"],
+   "start",
+  ["string","    \"\"\""],
+  ["punctuation.kotlin",","],
   ["text"," "],
-  ["entity.name.function.kotlin","runGameOfLife"],
-  ["text","("],
-  ["variable.parameter.function.kotlin","fieldText"],
+  ["constant.numeric.kotlin","10"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["comment","// UTILITIES"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","fun"],
+  ["text"," "],
+  ["identifier","runGameOfLife"],
+  ["paren.lparen","("],
+  ["identifier","fieldText"],
   ["keyword.operator.declaration.kotlin",":"],
   ["text"," "],
   ["storage.type.buildin.kotlin","String"],
-  ["text",", "],
-  ["variable.parameter.function.kotlin","steps"],
+  ["punctuation.kotlin",","],
+  ["text"," "],
+  ["identifier","steps"],
   ["keyword.operator.declaration.kotlin",":"],
   ["text"," "],
   ["storage.type.buildin.kotlin","Int"],
-  ["text",") {"]
-],[
-   ["text22","text17","text17","text"],
-  ["text","    "],
-  ["keyword.other.kotlin","var"],
+  ["paren.rparen",")"],
   ["text"," "],
-  ["entity.name.variable.kotlin","field"],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["storage.modifier.kotlin","var"],
+  ["text"," "],
+  ["identifier","field"],
   ["text"," "],
   ["keyword.operator.assignment.kotlin","="],
-  ["text"," makeField(fieldText)"]
+  ["text"," "],
+  ["identifier","makeField"],
+  ["paren.lparen","("],
+  ["identifier","fieldText"],
+  ["paren.rparen",")"]
 ],[
-   ["text","text22","text22","text17","text17","text"],
+   "start",
   ["text","    "],
-  ["keyword.control.kotlin","for"],
-  ["text"," (step "],
-  ["storage.modifier.kotlin","in"],
+  ["keyword","for"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["identifier","step"],
+  ["text"," "],
+  ["keyword","in"],
   ["text"," "],
   ["constant.numeric.kotlin","1"],
   ["keyword.operator.dot.kotlin",".."],
-  ["text","steps) {"]
+  ["identifier","steps"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","{"]
 ],[
-   ["text","text22","text22","text17","text17","text"],
-  ["text","        println("],
-  ["punctuation.definition.string.begin.kotlin","\""],
-  ["string.quoted.double.kotlin","Step: "],
-  ["variable.parameter.template.kotlin","$step"],
-  ["punctuation.definition.string.end.kotlin","\""],
-  ["text",")"]
-],[
-   ["text","text","text","text22","text22","text17","text17","text"],
+   "start",
   ["text","        "],
-  ["keyword.control.kotlin","for"],
-  ["text"," (i "],
-  ["storage.modifier.kotlin","in"],
+  ["identifier","println"],
+  ["paren.lparen","("],
+  ["string","\"Step: "],
+  ["variable.parameter.template.kotlin","$step"],
+  ["string","\""],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","        "],
+  ["keyword","for"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["identifier","i"],
+  ["text"," "],
+  ["keyword","in"],
   ["text"," "],
   ["constant.numeric.kotlin","0"],
   ["keyword.operator.dot.kotlin",".."],
-  ["text","field"],
+  ["identifier","field"],
   ["keyword.operator.dot.kotlin","."],
-  ["text","height "],
+  ["identifier","height"],
+  ["text"," "],
   ["keyword.operator.arithmetic.kotlin","-"],
   ["text"," "],
   ["constant.numeric.kotlin","1"],
-  ["text",") {"]
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","{"]
 ],[
-   ["text","text","text","text","text","text22","text22","text17","text17","text"],
+   "start",
   ["text","            "],
-  ["keyword.control.kotlin","for"],
-  ["text"," (j "],
-  ["storage.modifier.kotlin","in"],
+  ["keyword","for"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["identifier","j"],
+  ["text"," "],
+  ["keyword","in"],
   ["text"," "],
   ["constant.numeric.kotlin","0"],
   ["keyword.operator.dot.kotlin",".."],
-  ["text","field"],
+  ["identifier","field"],
   ["keyword.operator.dot.kotlin","."],
-  ["text","width "],
+  ["identifier","width"],
+  ["text"," "],
   ["keyword.operator.arithmetic.kotlin","-"],
   ["text"," "],
   ["constant.numeric.kotlin","1"],
-  ["text",") {"]
-],[
-   ["text","text","text","text","text","text22","text22","text17","text17","text"],
-  ["text","                print("],
-  ["keyword.control.kotlin","if"],
-  ["text"," (field[i, j]) "],
-  ["punctuation.definition.string.begin.kotlin","\""],
-  ["string.quoted.double.kotlin","*"],
-  ["punctuation.definition.string.end.kotlin","\""],
+  ["paren.rparen",")"],
   ["text"," "],
-  ["keyword.control.kotlin","else"],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","                "],
+  ["identifier","print"],
+  ["paren.lparen","("],
+  ["keyword","if"],
   ["text"," "],
-  ["punctuation.definition.string.begin.kotlin","\""],
-  ["string.quoted.double.kotlin"," "],
-  ["punctuation.definition.string.end.kotlin","\""],
-  ["text",")"]
+  ["paren.lparen","("],
+  ["identifier","field"],
+  ["paren.lparen","["],
+  ["identifier","i"],
+  ["punctuation.kotlin",","],
+  ["text"," "],
+  ["identifier","j"],
+  ["paren.rparen","])"],
+  ["text"," "],
+  ["string","\"*\""],
+  ["text"," "],
+  ["keyword","else"],
+  ["text"," "],
+  ["string","\" \""],
+  ["paren.rparen",")"]
 ],[
-   ["text","text","text","text22","text22","text17","text17","text"],
-  ["text","            }"]
+   "start",
+  ["text","            "],
+  ["paren.rparen","}"]
 ],[
-   ["text","text","text","text22","text22","text17","text17","text"],
-  ["text","            println("],
-  ["punctuation.definition.string.begin.kotlin","\""],
-  ["punctuation.definition.string.end.kotlin","\""],
-  ["text",")"]
+   "start",
+  ["text","            "],
+  ["identifier","println"],
+  ["paren.lparen","("],
+  ["string","\"\""],
+  ["paren.rparen",")"]
 ],[
-   ["text","text22","text22","text17","text17","text"],
-  ["text","        }"]
+   "start",
+  ["text","        "],
+  ["paren.rparen","}"]
 ],[
-   ["text","text22","text22","text17","text17","text"],
-  ["text","        field "],
+   "start",
+  ["text","        "],
+  ["identifier","field"],
+  ["text"," "],
   ["keyword.operator.assignment.kotlin","="],
-  ["text"," next(field)"]
-],[
-   ["text22","text17","text17","text"],
-  ["text","    }"]
-],[
-   "text",
-  ["text","}"]
-],[
-   "text"
-],[
-   ["text22","text17","text17","text"],
-  ["keyword.other.kotlin","fun"],
   ["text"," "],
-  ["entity.name.function.kotlin","makeField"],
-  ["text","("],
-  ["variable.parameter.function.kotlin","s"],
+  ["identifier","next"],
+  ["paren.lparen","("],
+  ["identifier","field"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","    "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","fun"],
+  ["text"," "],
+  ["identifier","makeField"],
+  ["paren.lparen","("],
+  ["identifier","s"],
   ["keyword.operator.declaration.kotlin",":"],
   ["text"," "],
   ["storage.type.buildin.kotlin","String"],
-  ["text",")"],
+  ["paren.rparen",")"],
   ["keyword.operator.declaration.kotlin",":"],
-  ["text"," Field {"]
-],[
-   ["text22","text17","text17","text"],
-  ["text","    "],
-  ["keyword.other.kotlin","val"],
   ["text"," "],
-  ["entity.name.variable.kotlin","lines"],
+  ["identifier","Field"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["storage.modifier.kotlin","val"],
+  ["text"," "],
+  ["identifier","lines"],
   ["text"," "],
   ["keyword.operator.assignment.kotlin","="],
-  ["text"," s"],
+  ["text"," "],
+  ["identifier","s"],
   ["keyword.operator.dot.kotlin","."],
-  ["text","replace("],
-  ["punctuation.definition.string.begin.kotlin","\""],
-  ["string.quoted.double.kotlin"," "],
-  ["punctuation.definition.string.end.kotlin","\""],
-  ["text",", "],
-  ["punctuation.definition.string.begin.kotlin","\""],
-  ["punctuation.definition.string.end.kotlin","\""],
-  ["text",")"],
+  ["identifier","replace"],
+  ["paren.lparen","("],
+  ["string","\" \""],
+  ["punctuation.kotlin",","],
+  ["text"," "],
+  ["string","\"\""],
+  ["paren.rparen",")"],
   ["keyword.operator.dot.kotlin","."],
-  ["text","split("],
-  ["punctuation.definition.string.begin.kotlin","'"],
+  ["identifier","split"],
+  ["paren.lparen","("],
+  ["string","'"],
   ["constant.character.escape.kotlin","\\n"],
-  ["punctuation.definition.string.end.kotlin","'"],
-  ["text",")"],
+  ["string","'"],
+  ["paren.rparen",")"],
   ["keyword.operator.dot.kotlin","."],
-  ["text","filter({ it"],
-  ["keyword.operator.dot.kotlin","."],
-  ["text","isNotEmpty() })"]
-],[
-   ["text22","text17","text17","text"],
-  ["text","    "],
-  ["keyword.other.kotlin","val"],
+  ["identifier","filter"],
+  ["paren.lparen","({"],
   ["text"," "],
-  ["entity.name.variable.kotlin","longestLine"],
+  ["identifier","it"],
+  ["keyword.operator.dot.kotlin","."],
+  ["identifier","isNotEmpty"],
+  ["paren.lparen","("],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.rparen","})"]
+],[
+   "start",
+  ["text","    "],
+  ["storage.modifier.kotlin","val"],
+  ["text"," "],
+  ["identifier","longestLine"],
   ["text"," "],
   ["keyword.operator.assignment.kotlin","="],
-  ["text"," lines"],
+  ["text"," "],
+  ["identifier","lines"],
   ["keyword.operator.dot.kotlin","."],
-  ["text","toList()"],
+  ["identifier","toList"],
+  ["paren.lparen","("],
+  ["paren.rparen",")"],
   ["keyword.operator.dot.kotlin","."],
-  ["text","maxBy { it"],
+  ["identifier","maxBy"],
+  ["text"," "],
+  ["paren.lparen","{"],
+  ["text"," "],
+  ["identifier","it"],
   ["keyword.operator.dot.kotlin","."],
-  ["text","length } ?"],
+  ["identifier","length"],
+  ["text"," "],
+  ["paren.rparen","}"],
+  ["text"," ?"],
   ["keyword.operator.declaration.kotlin",":"],
   ["text"," "],
-  ["punctuation.definition.string.begin.kotlin","\""],
-  ["punctuation.definition.string.end.kotlin","\""]
+  ["string","\"\""]
 ],[
-   ["text22","text17","text17","text"]
+   "start"
 ],[
-   ["text22","text17","text17","text"],
+   "start",
   ["text","    "],
-  ["keyword.control.kotlin","return"],
-  ["text"," Field(longestLine"],
-  ["keyword.operator.dot.kotlin","."],
-  ["text","length, lines"],
-  ["keyword.operator.dot.kotlin","."],
-  ["text","size) { i, j "],
-  ["keyword.operator.declaration.kotlin","->"],
-  ["text"," lines[i][j] "],
-  ["keyword.operator.comparison.kotlin","=="],
+  ["keyword","return"],
   ["text"," "],
-  ["punctuation.definition.string.begin.kotlin","'"],
-  ["string.quoted.single.kotlin","*"],
-  ["punctuation.definition.string.end.kotlin","'"],
-  ["text"," }"]
+  ["identifier","Field"],
+  ["paren.lparen","("],
+  ["identifier","longestLine"],
+  ["keyword.operator.dot.kotlin","."],
+  ["identifier","length"],
+  ["punctuation.kotlin",","],
+  ["text"," "],
+  ["identifier","lines"],
+  ["keyword.operator.dot.kotlin","."],
+  ["identifier","size"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","{"],
+  ["text"," "],
+  ["identifier","i"],
+  ["punctuation.kotlin",","],
+  ["text"," "],
+  ["identifier","j"],
+  ["text"," "],
+  ["keyword.operator.kotlin","->"],
+  ["text"," "],
+  ["identifier","lines"],
+  ["paren.lparen","["],
+  ["identifier","i"],
+  ["paren.rparen","]"],
+  ["paren.lparen","["],
+  ["identifier","j"],
+  ["paren.rparen","]"],
+  ["text"," "],
+  ["keyword.operator.kotlin","=="],
+  ["text"," "],
+  ["string","'*'"],
+  ["text"," "],
+  ["paren.rparen","}"]
 ],[
-   "text",
-  ["text","}"]
+   "start",
+  ["paren.rparen","}"]
 ],[
-   "text"
+   "start"
 ]]
