@@ -450,14 +450,21 @@ function buildAce(options, callback) {
         if (options.noconflict && !options.compress)
             buildTypes();
 
-        extractCss(options, function() {
-            if (callback) 
-                return callback();
+        // call extractCss only once during a build
+        if (cssUpdated) {
             console.log("Finished building " + getTargetDir(options));
-            
-        });
+            return;
+        } else {
+            cssUpdated = true;
+            extractCss(options, function() {
+                if (callback) 
+                    return callback();
+                console.log("Finished building " + getTargetDir(options));                
+            });
+        }
     }
 }
+var cssUpdated = false;
 
 function extractCss(options, callback) {
     var dir = getTargetDir(options);
@@ -548,6 +555,7 @@ function extractCss(options, callback) {
                 imageCounter++;
                 var imageName = name + "-" + imageCounter + ".png";
                 images[imageName] = buffer;
+                console.log("url(\"" + directory + "/" + imageName + "\")");
                 return "url(\"" + directory + "/" + imageName + "\")";
             }
         );
