@@ -103,7 +103,7 @@ You can also find API documentation at [http://ace.c9.io/#nav=api](http://ace.c9
 
 Also check out the sample code for the kitchen sink [demo app](https://github.com/ajaxorg/ace/blob/master/demo/kitchen-sink/demo.js).
 
-If you still need help, feel free to drop a mail on the [ace mailing list](http://groups.google.com/group/ace-discuss), or at `irc.freenode.net#ace`.
+If you still need help, feel free to drop a mail on the [ace mailing list](http://groups.google.com/group/ace-discuss), or at `irc.libera.chat#ace`.
 
 Running Ace
 -----------
