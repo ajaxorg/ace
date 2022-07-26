@@ -886,4 +886,52 @@
   ["statementEnd",";"]
 ],[
    "start"
+],[
+   "start",
+  ["comment","-- Anonymous code block"]
+],[
+   "dollarSql",
+  ["keyword.statementBegin","DO"],
+  ["text"," "],
+  ["keyword","LANGUAGE"],
+  ["text"," "],
+  ["identifier","plpgsql"],
+  ["text"," "],
+  ["string","$$"]
+],[
+   "dollarSql",
+  ["keyword","BEGIN"]
+],[
+   "dollarSql",
+  ["text","    "],
+  ["comment","-- code block"]
+],[
+   "start",
+  ["keyword","END"],
+  ["text"," "],
+  ["string","$$"],
+  ["statementEnd",";"]
+],[
+   "start"
+],[
+   "dollarSql",
+  ["keyword.statementBegin","DO"],
+  ["text"," "],
+  ["string","$$"]
+],[
+   "dollarSql",
+  ["keyword","BEGIN"]
+],[
+   "dollarSql",
+  ["text","    "],
+  ["comment","-- code block"]
+],[
+   "start",
+  ["keyword","END"],
+  ["statementEnd",";"],
+  ["text"," "],
+  ["string","$$"],
+  ["statementEnd",";"]
+],[
+   "start"
 ]]
