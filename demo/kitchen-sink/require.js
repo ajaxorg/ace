@@ -131,7 +131,7 @@
                     err.from.push(define.loaded[i].id);
                 }
             }
-            console.error("Error loading " + id + " from " + err.from.slice(0, 2));
+            console.error("Error loading " + id + " required from " + err.from.slice(0, 2));
         } else if (id && !defQueue.length && !define.loaded[id]) {
             // the script didn't call define
             defQueue = [(config.shim && config.shim[id]) || [[], null]];
@@ -372,7 +372,7 @@
     };
 
     require.getConfig = function() {
-        var script = document.querySelector("script[src*=mini_require]");
+        var script = document.querySelector("script[src*=require]");
         return {
             packages: config.packages,
             paths: config.paths,
@@ -482,7 +482,7 @@
     }
 
     function loadText(path, callback) {
-        var xhr = new window.XMLHttpRequest();
+        var xhr = new global.XMLHttpRequest();
         xhr.open("GET", path, true);
         xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
         xhr.onload = function(e) {
@@ -502,11 +502,11 @@
         if (!/^\w+:/.test(path)) path = host + path;
         var onLoad = function(e, val) {
             if (e) return processLoadQueue({id: id, path: path});
-            if (!/^(\s|\/\*([^*]|[*](?!\/))*\*\/|\/\/.*[\r]?\n)*define\(function\(require/.test(val))
+            if (!/^(\s|\/\*([^*]|[*](?!\/))*\*\/|\/\/.*[\r]?\n)*define\s*\(\s*function\s*\(\s*require\b/.test(val) && !/define\(\[\],/.test(val))
                 val = "define(function(require, exports, module){" + val + "\n});"
             nextModule = {name: id};
             /* eslint no-eval:0 */
-            window.eval(val + "\n//# sourceURL=" + path);
+            global.eval(val + "\n//# sourceURL=" + path);
             callback(null, id);
             return define.loaded[id];
         };

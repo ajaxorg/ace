@@ -61,18 +61,53 @@
   <script src="demo/kitchen-sink/require.js" type="text/javascript"></script>
   <script>
     var useLib = /lib=1/.test(location.search);
+    var paths = useLib ? {
+      ace: "lib/ace",
+      demo: "demo/kitchen-sink"
+    } : {
+      ace: "src",
+      demo: "demo/kitchen-sink",
+      "ace/worker/worker_client": "lib/ace/worker/worker_client_v2",
+      "ace/worker": "lib/ace/worker",
+    };
+    
+    if (!useLib) {
+      [
+        "json_worker",
+        "xquery_worker",
+        "yaml_worker",
+        "xquery/xqlint",
+        "xquery/jsoniq_lexer",
+        "xquery/xquery_lexer",
+        "css/csslint",
+        "coffee_worker",
+        "css_worker",
+        "xquery",
+        "html/saxparser",
+        "php/php",
+        "lua/luaparse",
+        "xml/sax",
+        "xml/dom-parser",
+        "xml/dom",
+        "lua_worker",
+        "jsoniq",
+        "json/json_parse",
+        "xml_worker",
+        "coffee/coffee",
+        "javascript_worker",
+        "php_worker",
+        "yaml/yaml-lint",
+        "javascript/jshint",
+        "html_worker",
+      ].forEach(function(m) {
+        paths["ace/mode/" + m] = "lib/ace/mode/" + m
+      })
+    }
+    
     require.config({
-        paths: useLib ? {
-            ace: "lib/ace",
-            demo: "demo/kitchen-sink"
-        } : {
-            ace: "src",
-            demo: "demo/kitchen-sink"
-        }
+        paths: paths
     });
-    require(["ace/ace"], function (ace) {    
-        if (!useLib)
-            require("ace/config").setDefaultValue("session", "useWorker", false);
+    require(["ace/ace"], function (ace) {
         require(["demo/demo.js"], function (demo) {
         });
     });
