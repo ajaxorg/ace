@@ -280,7 +280,7 @@ export namespace Ace {
   }
 
   export interface MarkerLike {
-    range: Range;
+    range?: Range;
     type: string;
     renderer?: MarkerRenderer;
     clazz: string;
