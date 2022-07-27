@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ACE Beautify demo</title>
+  <style type="text/css" media="screen">
+    body {
+        overflow: hidden;
+    }
+    
+    #editor { 
+        margin: 0;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+    }
+  </style>
+</head>
+<body>
+
+<pre id="editor"></pre>
+
+<!-- load ace -->
+<script src="../build/src-noconflict/ace.js"></script>
+<!-- load ace language tools -->
+<script src="../build/src-noconflict/ext-language_tools.js"></script>
+<!-- load beautify -->
+<script src="../build/src-noconflict/ext-beautify.js"></script>
+<script>
+    // trigger extension
+    ace.require("ace/ext/language_tools");
+    // trigger beautify extension
+    var beautify = ace.require("ace/ext/beautify");
+    var editor = ace.edit("editor");
+    editor.session.setMode("ace/mode/html");
+</script>
+<script src="./generate-large-html.js"></script>
+<script>
+  window.onload = function(){
+    //beautify
+    beautify.formatOptions.useRequestAnimationFrame = true;
+    beautify.beautify(editor.session);
+  }
+</script>
+</body>
+</html>
