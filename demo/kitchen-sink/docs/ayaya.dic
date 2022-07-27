@@ -1,0 +1,113 @@
+/*---------------------------------------------------------------------------------------
+*  函式名：SQLite
+*  机能　：FUNCTIONEX改造版，执行SAORI并可指定输出的变数名
+*  引数　：	_argv[0]	选项或SQL语言
+*			_argv[1]	选项
+*						-r : 将符合的结果总数传回，并(随机)取出结果至valueex?。
+*						-j : 将结果作成阵列后传回，无valueex?。
+*						-f : 将符合的结果总数传回，valueex?的值为符合者的ID。
+* --------------------------------------------------------------------------------------
+*/
+SQLite{
+	//if _argv[1]
+		CALLSAORI('debeso', "%(_argv[0])", "%(_argv[1])")
+	//else
+		//CALLSAORI('debeso', "%(_argv[0])")
+}
+dicforma.main:void{//dicforma.main('aya/cmd.dic')
+	dicforma.varinit(_argv[0])
+	while dicforma.line.now!='dicforma.endflag'{
+		dicforma.line.now=RE_REPLACE(dicforma.line.now,'\s+//','//')
+		dicforma.line.now=RE_REPLACE(dicforma.line.now,';$','')
+		dicforma.line.now=REPLACE(dicforma.line.now,';'+'//','//')
+		//dicforma.line.now=RE_REPLACE(dicforma.line.now,'//\s+','//')
+		if RE_GREP(dicforma.line.now,'\"[^\"]*\"') + RE_GREP(dicforma.line.now,"\'[^\']*\'") == 1
+			dicforma.line.now=RE_REPLACEEX(dicforma.line.now,'\"([^'+"\'"+'%"]*)\"',"'$1'")
+		//while RE_GREP(dicforma.line.now,'\\n((\\w(\d|\[[^\]]+\]))+)/'+CHR(1)){
+			//dicforma.line.now=RE_REPLACEEX(dicforma.line.now,'\\n((\\w(\d|\[[^\]]+\]))+)/'+CHR(1),'$1\\n/'+CHR(1))
+		//}
+		//dicforma.line.now=RE_REPLACE(dicforma.line.now,'(?!\\\!\[\*\])(|○|◎|◆)?\\q\[(?!◇|○|◎|◆|◥|■|◢|◄|●|►|▲|▼|%|<<|[\S(?!>|\])]*>>|[ABCD].)','\\q\[◇')
+		//dicforma.line.now=RE_REPLACEEX(dicforma.line.now,'\s*(=|+|-|*|/|!|(=|+|-|*|/|!)=)\s*',' $1 ')
+		//
+		dicforma.tabnum_change
+		//
+		dicforma.writeline(dicforma.line.now)
+		//
+		dicforma.readline
+	}
+	dicforma.clearvar
+}
+On_ShioriEcho {
+	ClearShioriEchoVar
+	reference0 = reference.raw[0]
+	case CUTSPACE(reference0){
+		when 'reload'{
+			ReloadFromTerminal=1
+			OnReloadShiori
+		}
+		when 'errorlog'{
+			OnErrorLog
+			ShioriEcho.Result=GETERRORLOG
+		}
+		others{
+			if RE_GREP(reference0,'^\s*(help|openfunc)\s+'){
+				if RE_GREP(reference0,'^\s*help\s+'){
+					_funcname=RE_REPLACE(reference0,'^\s*help\s+','')
+					ShioriEcho.Special=Get_AYA_Function_Info(_funcname)
+					if ShioriEcho.Special{
+						'aya自带底层函数\n'+ShioriEcho.Special+'\n/
+						\q[◇打开在线文档,OnUrlOpen,'+Get_AYA_Function_Doc(_funcname)+']\n/
+						\q[◇无用,Cancel]\n/
+						'
+						--
+						IgnoreChoiceTimeout
+					}
+					else
+						ShioriEcho.Special='不是系统函数'
+				}
+				elseif RE_GREP(reference0,'^\s*openfunc\s+'){
+					_funcname=RE_REPLACE(reference0,'^\s*openfunc\s+','')
+					if Is_Defened_Event(_funcname)||Is_Defened_Event(_funcname+'Ex'){
+						_EXfunc=!Is_Defened_Event(_funcname)
+						if _EXfunc
+							_funcname=_funcname+'Ex'
+						_funcname=Get_Full_Defened_Event_Name(_funcname)
+						_info=GETFUNCINFO(_funcname)
+						_path=SPLITPATH(_info[0])
+						if _path
+							_path=_path[2]+_path[3]
+						else
+							_path=_info[0]
+						if _info!=-1{
+							OnOpenDicWithLineNum(_info[0],_info[1])
+							ShioriEcho.Special="打开%(_path)第%(_info[1])行"
+						}
+					}
+					else
+						ShioriEcho.Special='不是用户函数'
+				}
+			}
+			else{
+				OnCalculateVar
+				--
+				IgnoreChoiceTimeout
+			}
+		}
+	}
+}
+On_ShioriEcho.TabPress{
+	_lastname=RE_REPLACE(reference0,'^[\s\S]*[\[\]\(\)\+\-\*\/\=\'+"'"+'\" ]','')
+	_possible_names=IARRAY
+	if !reference0[1,' ']
+		_possible_names,=ARRAY.BeginAs(_lastname,'reload','errorlog','openfunc','help')
+	if reference0[0,' '] == 'help'
+		_possible_names=GETSYSTEMFUNCLIST(_lastname)
+	elseif reference0[0,' '] == 'openfunc'
+		_possible_names=GETFUNCLIST(_lastname)
+	else
+		_possible_names,=(GETVARLIST(_lastname),GETFUNCLIST(_lastname),GETSYSTEMFUNCLIST(_lastname))
+	if ARRAYSIZE(_possible_names){
+		_name_after_tab=_possible_names[reference1%ARRAYSIZE(_possible_names)]
+		SHIORI_FW.Make_X_SSTP_PassThru('Command',RE_REPLACE(reference0,_lastname+'$',_name_after_tab))
+	}
+}
