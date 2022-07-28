@@ -245,6 +245,7 @@ export namespace Ace {
     off(name: string, callback: Function): void;
     removeListener(name: string, callback: Function): void;
     removeEventListener(name: string, callback: Function): void;
+    removeAllListeners(name?: string): void;
   }
 
   export interface Point {
