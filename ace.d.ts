@@ -216,7 +216,7 @@ export namespace Ace {
     wrapBehavioursEnabled: boolean;
     enableAutoIndent: boolean;
     autoScrollEditorIntoView: boolean;
-    keyboardHandler: string;
+    keyboardHandler: string | null;
     placeholder: string;
     value: string;
     session: EditSession;
