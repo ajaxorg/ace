@@ -36,7 +36,7 @@ var Anchor = exports.Anchor = function(doc, row, column) {
 
     /**
      * Returns an object identifying the `row` and `column` position of the current anchor.
-     * @returns {Object}
+     * @returns {Ace.Point}
      **/
     this.getPosition = function() {
         return this.$clipPositionToDocument(this.row, this.column);
@@ -68,6 +68,10 @@ var Anchor = exports.Anchor = function(doc, row, column) {
      *  - `value`: An object describing the new Anchor position
      *
      **/
+    /**
+     * Internal function called when `"change"` event fired.
+     * @param {Ace.Delta} delta
+     */
     this.onChange = function(delta) {
         if (delta.start.row == delta.end.row && delta.start.row != this.row)
             return;
@@ -158,6 +162,12 @@ var Anchor = exports.Anchor = function(doc, row, column) {
     this.detach = function() {
         this.document.off("change", this.$onChange);
     };
+
+    /**
+     * When called, the `"change"` event listener is appended.
+     * @param {Document} doc The document to associate with
+     *
+     **/
     this.attach = function(doc) {
         this.document = doc || this.document;
         this.document.on("change", this.$onChange);
@@ -167,6 +177,7 @@ var Anchor = exports.Anchor = function(doc, row, column) {
      * Clips the anchor position to the specified row and column.
      * @param {Number} row The row index to clip the anchor to
      * @param {Number} column The column index to clip the anchor to
+     * @returns {Ace.Point}
      *
      **/
     this.$clipPositionToDocument = function(row, column) {

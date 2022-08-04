@@ -8,12 +8,11 @@ var comparePoints = function(p1, p2) {
  **/
 
 /**
- * Creates a new `Range` object with the given starting and ending row and column points.
+ * Creates a new `Range` object with the given starting and ending rows and columns.
  * @param {Number} startRow The starting row
  * @param {Number} startColumn The starting column
  * @param {Number} endRow The ending row
  * @param {Number} endColumn The ending column
- *
  * @constructor
  **/
 var Range = function(startRow, startColumn, endRow, endColumn) {
@@ -32,7 +31,6 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
     /**
      * Returns `true` if and only if the starting row and column, and ending row and column, are equivalent to those given by `range`.
      * @param {Range} range A range to check against
-     *
      * @return {Boolean}
      **/
     this.isEqual = function(range) {
@@ -43,7 +41,6 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
     };
 
     /**
-     *
      * Returns a string containing the range's row and column information, given like this:
      * ```
      *    [start.row/start.column] -> [end.row/end.column]
@@ -56,7 +53,6 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
     };
 
     /**
-     *
      * Returns `true` if the `row` and `column` provided are within the given range. This can better be expressed as returning `true` if:
      * ```javascript
      *    this.start.row <= row <= this.end.row &&
@@ -65,7 +61,7 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
      * @param {Number} row A row to check for
      * @param {Number} column A column to check for
      * @returns {Boolean}
-     * @related Range.compare
+     * @related [[Range.compare]]
      **/
 
     this.contains = function(row, column) {
@@ -75,15 +71,13 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
     /**
      * Compares `this` range (A) with another range (B).
      * @param {Range} range A range to compare with
-     *
-     * @related Range.compare
-     * @returns {Number} This method returns one of the following numbers:<br/>
-     * <br/>
-     * * `-2`: (B) is in front of (A), and doesn't intersect with (A)<br/>
-     * * `-1`: (B) begins before (A) but ends inside of (A)<br/>
-     * * `0`: (B) is completely inside of (A) OR (A) is completely inside of (B)<br/>
-     * * `+1`: (B) begins inside of (A) but ends outside of (A)<br/>
-     * * `+2`: (B) is after (A) and doesn't intersect with (A)<br/>
+     * @related [[Range.compare]]
+     * @returns {Number} This method returns one of the following numbers:
+     * * `-2`: (B) is in front of (A), and doesn't intersect with (A)
+     * * `-1`: (B) begins before (A) but ends inside of (A)
+     * * `0`: (B) is completely inside of (A) OR (A) is completely inside of (B)
+     * * `+1`: (B) begins inside of (A) but ends outside of (A)
+     * * `+2`: (B) is after (A) and doesn't intersect with (A)
      * * `42`: FTW state: (B) ends in (A) but starts outside of (A)
      **/
     this.compareRange = function(range) {
@@ -116,34 +110,20 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
     };
 
     /**
-     * Checks the row and column points of `p` with the row and column points of the calling range.
-     *
-     * @param {Range} p A point to compare with
-     *
-     * @related Range.compare
-     * @returns {Number} This method returns one of the following numbers:<br/>
-     * * `0` if the two points are exactly equal<br/>
-     * * `-1` if `p.row` is less then the calling range<br/>
-     * * `1` if `p.row` is greater than the calling range<br/>
-     * <br/>
-     * If the starting row of the calling range is equal to `p.row`, and:<br/>
-     * * `p.column` is greater than or equal to the calling range's starting column, this returns `0`<br/>
-     * * Otherwise, it returns -1<br/>
-     *<br/>
-     * If the ending row of the calling range is equal to `p.row`, and:<br/>
-     * * `p.column` is less than or equal to the calling range's ending column, this returns `0`<br/>
-     * * Otherwise, it returns 1<br/>
+     * Compares the row and column of `p` with the starting and ending [[Point]]'s of the calling range (by calling [[Range.compare]]).
+     * @param {Ace.Point} p A point to compare with
+     * @related [[Range.compare]]
+     * @returns {Number}
      **/
     this.comparePoint = function(p) {
         return this.compare(p.row, p.column);
     };
 
     /**
-     * Checks the start and end points of `range` and compares them to the calling range. Returns `true` if the `range` is contained within the caller's range.
+     * Checks the start and end [[Point]]'s of `range` and compares them to the calling range. Returns `true` if the `range` is contained within the caller's range.
      * @param {Range} range A range to compare with
-     *
      * @returns {Boolean}
-     * @related Range.comparePoint
+     * @related [[Range.comparePoint]]
      **/
     this.containsRange = function(range) {
         return this.comparePoint(range.start) == 0 && this.comparePoint(range.end) == 0;
@@ -152,7 +132,6 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
     /**
      * Returns `true` if passed in `range` intersects with the one calling this method.
      * @param {Range} range A range to compare with
-     *
      * @returns {Boolean}
      **/
     this.intersects = function(range) {
@@ -161,10 +140,9 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
     };
 
     /**
-     * Returns `true` if the caller's ending row point is the same as `row`, and if the caller's ending column is the same as `column`.
-     * @param {Number} row A row point to compare with
-     * @param {Number} column A column point to compare with
-     *
+     * Returns `true` if the caller's ending row is the same as `row`, and if the caller's ending column is the same as `column`.
+     * @param {Number} row A row to compare with
+     * @param {Number} column A column to compare with
      * @returns {Boolean}
      **/
     this.isEnd = function(row, column) {
@@ -172,10 +150,9 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
     };
 
     /**
-     * Returns `true` if the caller's starting row point is the same as `row`, and if the caller's starting column is the same as `column`.
-     * @param {Number} row A row point to compare with
-     * @param {Number} column A column point to compare with
-     *
+     * Returns `true` if the caller's starting row is the same as `row`, and if the caller's starting column is the same as `column`.
+     * @param {Number} row A row to compare with
+     * @param {Number} column A column to compare with
      * @returns {Boolean}
      **/
     this.isStart = function(row, column) {
@@ -184,8 +161,8 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
 
     /**
      * Sets the starting row and column for the range.
-     * @param {Number} row A row point to set
-     * @param {Number} column A column point to set
+     * @param {Number|Ace.Point} row A row to set
+     * @param {Number} column A column to set
      *
      **/
     this.setStart = function(row, column) {
@@ -200,8 +177,8 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
 
     /**
      * Sets the starting row and column for the range.
-     * @param {Number} row A row point to set
-     * @param {Number} column A column point to set
+     * @param {Number|Ace.Point} row A row to set
+     * @param {Number} column A column to set
      *
      **/
     this.setEnd = function(row, column) {
@@ -216,12 +193,10 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
 
     /**
      * Returns `true` if the `row` and `column` are within the given range.
-     * @param {Number} row A row point to compare with
-     * @param {Number} column A column point to compare with
-     *
-     *
+     * @param {Number} row A row to compare with
+     * @param {Number} column A column to compare with
      * @returns {Boolean}
-     * @related Range.compare
+     * @related [[Range.compare]]
      **/
     this.inside = function(row, column) {
         if (this.compare(row, column) == 0) {
@@ -235,12 +210,11 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
     };
 
     /**
-     * Returns `true` if the `row` and `column` are within the given range's starting points.
-     * @param {Number} row A row point to compare with
-     * @param {Number} column A column point to compare with
-     *
+     * Returns `true` if the `row` and `column` are within the given range's starting [[Point]].
+     * @param {Number} row A row to compare with
+     * @param {Number} column A column to compare with
      * @returns {Boolean}
-     * @related Range.compare
+     * @related [[Range.compare]]
      **/
     this.insideStart = function(row, column) {
         if (this.compare(row, column) == 0) {
@@ -254,12 +228,11 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
     };
 
     /**
-     * Returns `true` if the `row` and `column` are within the given range's ending points.
-     * @param {Number} row A row point to compare with
-     * @param {Number} column A column point to compare with
-     *
+     * Returns `true` if the `row` and `column` are within the given range's ending [[Point]].
+     * @param {Number} row A row to compare with
+     * @param {Number} column A column to compare with
      * @returns {Boolean}
-     * @related Range.compare
+     * @related [[Range.compare]]
      *
      **/
     this.insideEnd = function(row, column) {
@@ -274,23 +247,21 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
     };
 
     /**
-     * Checks the row and column points with the row and column points of the calling range.
-     * @param {Number} row A row point to compare with
-     * @param {Number} column A column point to compare with
+     * Compares the `row` and `column` with the starting and ending [[Point]]'s of the calling range.
+     * @param {Number} row A row to compare with
+     * @param {Number} column A column to compare with
+     * @returns {Number} This method returns one of the following numbers:
+     * * `1` if `row` is greater than the calling range
+     * * `-1` if `row` is less then the calling range
+     * * `0` otherwise
      *
+     * If the starting row of the calling range is equal to `row`, and:
+     * * `column` is greater than or equal to the calling range's starting column, this returns `0`
+     * * Otherwise, it returns -1
      *
-     * @returns {Number} This method returns one of the following numbers:<br/>
-     * `0` if the two points are exactly equal <br/>
-     * `-1` if `p.row` is less then the calling range <br/>
-     * `1` if `p.row` is greater than the calling range <br/>
-     *  <br/>
-     * If the starting row of the calling range is equal to `p.row`, and: <br/>
-     * `p.column` is greater than or equal to the calling range's starting column, this returns `0`<br/>
-     * Otherwise, it returns -1<br/>
-     * <br/>
-     * If the ending row of the calling range is equal to `p.row`, and: <br/>
-     * `p.column` is less than or equal to the calling range's ending column, this returns `0` <br/>
-     * Otherwise, it returns 1
+     * If the ending row of the calling range is equal to `row`, and:
+     * * `column` is less than or equal to the calling range's ending column, this returns `0`
+     * * Otherwise, it returns 1
      **/
     this.compare = function(row, column) {
         if (!this.isMultiLine()) {
@@ -315,24 +286,12 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
     };
 
     /**
-     * Checks the row and column points with the row and column points of the calling range.
-     * @param {Number} row A row point to compare with
-     * @param {Number} column A column point to compare with
-     *
-     * @returns {Number} This method returns one of the following numbers:<br/>
-     * <br/>
-     * `0` if the two points are exactly equal<br/>
-     * `-1` if `p.row` is less then the calling range<br/>
-     * `1` if `p.row` is greater than the calling range, or if `isStart` is `true`.<br/>
-     * <br/>
-     * If the starting row of the calling range is equal to `p.row`, and:<br/>
-     * `p.column` is greater than or equal to the calling range's starting column, this returns `0`<br/>
-     * Otherwise, it returns -1<br/>
-     * <br/>
-     * If the ending row of the calling range is equal to `p.row`, and:<br/>
-     * `p.column` is less than or equal to the calling range's ending column, this returns `0`<br/>
-     * Otherwise, it returns 1
-     *
+     * Compares the `row` and `column` with the starting and ending [[Point]]'s of the calling range.
+     * @param {Number} row A row to compare with
+     * @param {Number} column A column to compare with
+     * @returns {Number} This method returns one of the following numbers:
+     * * `-1` if calling range's starting column and calling range's starting row are equal `row` and `column`
+     * * Otherwise, it returns the value after calling [[Range.compare `compare()`]].
      **/
     this.compareStart = function(row, column) {
         if (this.start.row == row && this.start.column == column) {
@@ -343,23 +302,12 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
     };
 
     /**
-     * Checks the row and column points with the row and column points of the calling range.
-     * @param {Number} row A row point to compare with
-     * @param {Number} column A column point to compare with
-     *
-     *
-     * @returns {Number} This method returns one of the following numbers:<br/>
-     * `0` if the two points are exactly equal<br/>
-     * `-1` if `p.row` is less then the calling range<br/>
-     * `1` if `p.row` is greater than the calling range, or if `isEnd` is `true.<br/>
-     * <br/>
-     * If the starting row of the calling range is equal to `p.row`, and:<br/>
-     * `p.column` is greater than or equal to the calling range's starting column, this returns `0`<br/>
-     * Otherwise, it returns -1<br/>
-     *<br/>
-     * If the ending row of the calling range is equal to `p.row`, and:<br/>
-     * `p.column` is less than or equal to the calling range's ending column, this returns `0`<br/>
-     * Otherwise, it returns 1
+     * Compares the `row` and `column` with the starting and ending [[Point]]'s of the calling range.
+     * @param {Number} row A row to compare with
+     * @param {Number} column A column to compare with
+     * @returns {Number} This method returns one of the following numbers:
+     * * `1` if calling range's ending column and calling range's ending row are equal `row` and `column`.
+     * * Otherwise, it returns the value after calling [[Range.compare `compare()`]].
      */
     this.compareEnd = function(row, column) {
         if (this.end.row == row && this.end.column == column) {
@@ -370,17 +318,13 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
     };
 
     /**
-     * Checks the row and column points with the row and column points of the calling range.
-     * @param {Number} row A row point to compare with
-     * @param {Number} column A column point to compare with
-     *
-     *
-     * @returns {Number} This method returns one of the following numbers:<br/>
-     * * `1` if the ending row of the calling range is equal to `row`, and the ending column of the calling range is equal to `column`<br/>
-     * * `-1` if the starting row of the calling range is equal to `row`, and the starting column of the calling range is equal to `column`<br/>
-     * <br/>
-     * Otherwise, it returns the value after calling [[Range.compare `compare()`]].
-     *
+     * Compares the `row` and `column` with the start and end [[Point]]'s of the calling range.
+     * @param {Number} row A row to compare with
+     * @param {Number} column A column to compare with
+     * @returns {Number} This method returns one of the following numbers:
+     * * `1` if the ending row of the calling range is equal to `row`, and the ending column of the calling range is equal to `column`
+     * * `-1` if the starting row of the calling range is equal to `row`, and the starting column of the calling range is equal to `column`
+     * * Otherwise, it returns the value after calling [[Range.compare `compare()`]].
      **/
     this.compareInside = function(row, column) {
         if (this.end.row == row && this.end.column == column) {
@@ -396,8 +340,6 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
      * Returns the part of the current `Range` that occurs within the boundaries of `firstRow` and `lastRow` as a new `Range` object.
      * @param {Number} firstRow The starting row
      * @param {Number} lastRow The ending row
-     *
-     *
      * @returns {Range}
     **/
     this.clipRows = function(firstRow, lastRow) {
@@ -415,11 +357,9 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
     };
 
     /**
-     * Changes the row and column points for the calling range for both the starting and ending points.
+     * Changes the `row` and `column` for the calling range for both the starting and ending [[Point]]'s.
      * @param {Number} row A new row to extend to
      * @param {Number} column A new column to extend to
-     *
-     *
      * @returns {Range} The original range with the new row
     **/
     this.extend = function(row, column) {
@@ -435,12 +375,15 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
         return Range.fromPoints(start || this.start, end || this.end);
     };
 
+    /**
+     * Returns `true` if the calling range is empty (starting [[Point]] == ending [[Point]]).
+     * @returns {Boolean}
+     **/
     this.isEmpty = function() {
         return (this.start.row === this.end.row && this.start.column === this.end.column);
     };
 
     /**
-     *
      * Returns `true` if the range spans across multiple lines.
      * @returns {Boolean}
     **/
@@ -449,7 +392,6 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
     };
 
     /**
-     *
      * Returns a duplicate of the calling range.
      * @returns {Range}
     **/
@@ -458,7 +400,6 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
     };
 
     /**
-     *
      * Returns a range containing the starting and ending rows of the original range, but with a column value of `0`.
      * @returns {Range}
     **/
@@ -470,10 +411,8 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
     };
 
     /**
-     * Given the current `Range`, this function converts those starting and ending points into screen positions, and then returns a new `Range` object.
+     * Given the current `Range`, this function converts those starting and ending [[Point]]'s into screen positions, and then returns a new `Range` object.
      * @param {EditSession} session The `EditSession` to retrieve coordinates from
-     *
-     *
      * @returns {Range}
     **/
     this.toScreenRange = function(session) {
@@ -485,9 +424,13 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
             screenPosEnd.row, screenPosEnd.column
         );
     };
-    
-    
-    /* experimental */
+
+    /**
+     * Shift the calling range by `row` and `column` values.
+     * @param {Number} row
+     * @param {Number} column
+     * @experimental
+     */
     this.moveBy = function(row, column) {
         this.start.row += row;
         this.start.column += column;
@@ -498,10 +441,9 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
 }).call(Range.prototype);
 
 /**
- * Creates and returns a new `Range` based on the row and column of the given parameters.
- * @param {Range} start A starting point to use
- * @param {Range} end An ending point to use
- *
+ * Creates and returns a new `Range` based on the `start` [[Point]] and `end` [[Point]] of the given parameters.
+ * @param {Point} start A starting point to use
+ * @param {Point} end An ending point to use
  * @returns {Range}
 **/
 Range.fromPoints = function(start, end) {
@@ -509,6 +451,12 @@ Range.fromPoints = function(start, end) {
 };
 Range.comparePoints = comparePoints;
 
+/**
+ * Compares `p1` and `p2` [[Point]]'s, useful for sorting
+ * @param {Ace.Point} p1
+ * @param {Ace.Point} p2
+ * @returns {Number}
+ */
 Range.comparePoints = function(p1, p2) {
     return p1.row - p2.row || p1.column - p2.column;
 };

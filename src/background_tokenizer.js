@@ -74,9 +74,7 @@ var BackgroundTokenizer = function(tokenizer, editor) {
 
     /**
      * Sets a new tokenizer for this object.
-     *
      * @param {Tokenizer} tokenizer The new tokenizer to use
-     *
      **/
     this.setTokenizer = function(tokenizer) {
         this.tokenizer = tokenizer;
@@ -109,7 +107,6 @@ var BackgroundTokenizer = function(tokenizer, editor) {
      * Emits the `'update'` event. `firstRow` and `lastRow` are used to define the boundaries of the region to be updated.
      * @param {Number} firstRow The starting row region
      * @param {Number} lastRow The final row region
-     *
      **/
     this.fireUpdateEvent = function(firstRow, lastRow) {
         var data = {
@@ -121,9 +118,7 @@ var BackgroundTokenizer = function(tokenizer, editor) {
 
     /**
      * Starts tokenizing at the row indicated.
-     *
      * @param {Number} startRow The row to start at
-     *
      **/
     this.start = function(startRow) {
         this.currentLine = Math.min(startRow || 0, this.currentLine, this.doc.getLength());
@@ -136,7 +131,10 @@ var BackgroundTokenizer = function(tokenizer, editor) {
         // pretty long delay to prevent the tokenizer from interfering with the user
         this.running = setTimeout(this.$worker, 700);
     };
-    
+
+    /**
+     * Sets pretty long delay to prevent the tokenizer from interfering with the user
+     */
     this.scheduleStart = function() {
         if (!this.running)
             this.running = setTimeout(this.$worker, 700);
@@ -165,7 +163,6 @@ var BackgroundTokenizer = function(tokenizer, editor) {
 
     /**
      * Stops tokenizing.
-     *
      **/
     this.stop = function() {
         if (this.running)
@@ -174,21 +171,18 @@ var BackgroundTokenizer = function(tokenizer, editor) {
     };
 
     /**
-     * Gives list of tokens of the row. (tokens are cached)
-     * 
+     * Gives list of [[Token]]'s of the row. (tokens are cached)
      * @param {Number} row The row to get tokens at
-     *
-     * 
-     *
+     * @returns {Token[]}
      **/
     this.getTokens = function(row) {
         return this.lines[row] || this.$tokenizeRow(row);
     };
 
     /**
-     * [Returns the state of tokenization at the end of a row.]{: #BackgroundTokenizer.getState}
-     *
+     * Returns the state of tokenization at the end of a row.
      * @param {Number} row The row to get state at
+     * @returns {string}
      **/
     this.getState = function(row) {
         if (this.currentLine == row)
