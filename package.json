@@ -18,7 +18,10 @@
         "architect-build": "https://github.com/c9/architect-build/tarball/43a6fdeffe",
         "asyncjs": "~0.0.12",
         "dryice": "0.4.11",
-        "standard-version": "^9.3.2"
+        "eslint": "^8.20.0",
+        "istanbul": "^0.4.5",
+        "standard-version": "^9.3.2",
+        "typescript": "^4.7.4"
     },
     "mappings": {
         "ace": "."
@@ -34,9 +37,10 @@
     },
     "scripts": {
         "start": "node static.js",
-        "test": "node lib/ace/test/all.js",
-        "lint": "eslint \"lib/ace/**/*.js\"",
-        "fix": "eslint --fix 'lib/ace/**/*.js'",
+        "test": "node src/test/all.js",
+        "cover": "istanbul cover src/test/all.js",
+        "lint": "eslint \"src/**/*.js\"",
+        "fix": "eslint --fix \"src/**/*.js\"",
         "changelog": "standard-version"
     },
     "standard-version": {

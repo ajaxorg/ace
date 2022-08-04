@@ -40,10 +40,56 @@ var ACE_HOME = __dirname;
 var BUILD_DIR = ACE_HOME + "/build";
 var CACHE = {};
 
+function generateAmdModules() {
+    var root = ACE_HOME + "/";
+    function iterate(dir) {
+        var filenames = fs.readdirSync(root + dir);
+        filenames.forEach(function(name) {
+            var path = dir + name;
+            var stat = fs.statSync(root + path);
+            var newPath = path.replace("src", "lib/ace");
+            if (stat.isDirectory()) {
+                try {
+                    fs.mkdirSync(root + newPath);
+                } catch(e) {}
+                iterate(path + "/");
+            } else if (/\.js/.test(name) && !/worker_client\.js$/.test(name)) {
+                transform(path, newPath);
+            }
+        });
+    }
+    function transform(path, newPath) {
+        var data = fs.readFileSync(root + path, "utf-8");
+        data = compileTypescript(data);
+        fs.writeFileSync(root + newPath, data, "utf-8");
+    }
+    function compileTypescript(code) {
+        var ts = require("typescript");
+        return ts.transpileModule(code, {
+            compilerOptions: {
+                newLine: "lf",
+                downlevelIteration: true,
+                suppressExcessPropertyErrors: true,
+                module: ts.ModuleKind.CommonJS,
+                removeComments: false,
+                sourceMap: false,
+                inlineSourceMap: false,
+                target: "ES5"
+            },
+            fileName: ""
+        }).outputText;
+    }
+
+    iterate("src/");
+}
+
 function main(args) {
     if (args.indexOf("updateModes") !== -1) {
         return updateModes();
     }
+    
+    generateAmdModules();
+    
     var type = "minimal";
     args = args.map(function(x) {
         if (x[0] == "-" && x[1] != "-")
@@ -594,9 +640,6 @@ function normalizeLineEndings(module) {
 function includeLoader(module) {
     var pattern = '"include loader_build";';
     if (module.source && module.source.indexOf(pattern) != -1) {
-        console.log("=====================================  =====================================");
-        console.log(module);
-        console.log("=====================================  =====================================");
         module.deps.push("ace/loader_build");
         module.source = module.source.replace(pattern, 'require("./loader_build")(exports)');
     }

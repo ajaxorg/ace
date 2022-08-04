@@ -1,5 +1,3 @@
-
-define(function(require, exports, module) {
 "use strict";
 
 var dom = require("ace/lib/dom");
@@ -125,8 +123,3 @@ exports.singleLineEditor = function(el) {
 
     return editor;
 };
-
-
-
-});
-

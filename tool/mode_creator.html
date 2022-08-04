@@ -83,17 +83,17 @@
 </div>
 
 
+<script src="./demo/kitchen-sink/require.js"></script>
 <script type="text/javascript">
-  var require = {
-      baseUrl: window.location.protocol + "//" + window.location.host + window.location.pathname.split("/").slice(0, -1).join("/"),
+  require.config({
       paths: {
-          ace: "../lib/ace",
+          ace: "../src",
           demo: "../demo",
           tool: "../tool"
       }
-  };
+  });
+  require(["tool/mode_creator"])
 </script>
-<script src="./demo/kitchen-sink/require.js" data-main="mode_creator"></script>
 
 
 
