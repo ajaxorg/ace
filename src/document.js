@@ -16,7 +16,7 @@ var Anchor = require("./anchor").Anchor;
 /**
  *
  * Creates a new `Document`. If `text` is included, the `Document` contains those strings; otherwise, it's empty.
- * @param {String | Array} text The starting text
+ * @param {String | String[]} textOrLines text The starting text
  * @constructor
  **/
 
@@ -190,7 +190,7 @@ var Document = function(textOrLines) {
      * Returns all the text within `range` as an array of lines.
      * @param {Range} range The range to work with.
      * 
-     * @returns {Array}
+     * @returns {string[]}
      **/
     this.getLinesForRange = function(range) {
         var lines;
@@ -322,7 +322,7 @@ var Document = function(textOrLines) {
     /**
      * Inserts the elements in `lines` into the document as full lines (does not merge with existing line), starting at the row index given by `row`. This method also triggers the `"change"` event.
      * @param {Number} row The index of the row to insert at
-     * @param {Array} lines An array of strings
+     * @param {string[]} lines An array of strings
      * @returns {Object} Contains the final row and column, like this:  
      *   ```
      *   {row: endRow, column: 0}
@@ -358,7 +358,7 @@ var Document = function(textOrLines) {
     /**
      * Inserts the elements in `lines` into the document, starting at the position index given by `row`. This method also triggers the `"change"` event.
      * @param {Number} row The index of the row to insert at
-     * @param {Array} lines An array of strings
+     * @param {string[]} lines An array of strings
      * @returns {Object} Contains the final row and column, like this:  
      *   ```
      *   {row: endRow, column: 0}
@@ -514,7 +514,7 @@ var Document = function(textOrLines) {
 
     /**
      * Applies all changes in `deltas` to the document.
-     * @param {Array} deltas An array of delta objects (can include "insert" and "remove" actions)
+     * @param {Delta[]} deltas An array of delta objects (can include "insert" and "remove" actions)
      **/
     this.applyDeltas = function(deltas) {
         for (var i=0; i<deltas.length; i++) {
@@ -524,7 +524,7 @@ var Document = function(textOrLines) {
     
     /**
      * Reverts all changes in `deltas` from the document.
-     * @param {Array} deltas An array of delta objects (can include "insert" and "remove" actions)
+     * @param {Delta[]} deltas An array of delta objects (can include "insert" and "remove" actions)
      **/
     this.revertDeltas = function(deltas) {
         for (var i=deltas.length-1; i>=0; i--) {

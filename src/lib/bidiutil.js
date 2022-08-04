@@ -364,10 +364,10 @@ exports.hasBidiCharacters = function(text, textCharTypes){
 /**
  * Returns visual index corresponding to logical index basing on logicalFromvisual 
  * map provided by Unicode Bidi algorithm.
- * @param {int} logical index of character in text buffer
- * @param {Object} object containing logicalFromVisual map
+ * @param {Number} logIdx logical index of character in text buffer
+ * @param {Object} rowMap object containing logicalFromVisual map
  *
- * @return {int} visual index (on display) corresponding to logical index
+ * @return {Number} visual index (on display) corresponding to logical index
  **/	
 exports.getVisualFromLogicalIdx = function(logIdx, rowMap) {
 	for (var i = 0; i < rowMap.logicalFromVisual.length; i++) {

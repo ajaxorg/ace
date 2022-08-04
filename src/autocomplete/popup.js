@@ -25,17 +25,17 @@ var $singleLineEditor = function(el) {
     return editor;
 };
 
-    /**
-     * This object is used in some places where needed to show popups - like prompt; autocomplete etc.
-     * @class
-     */
+/**
+ * This object is used in some places where needed to show popups - like prompt; autocomplete etc.
+ * @class
+ */
 
-    /**
-     * Creates and renders single line editor in popup window. If `parentNode` param is isset, then attaching it to this element.
-     * @param {Element} parentNode
-     * @constructor
-     */
-    var AcePopup = function(parentNode) {
+/**
+ * Creates and renders single line editor in popup window. If `parentNode` param is isset, then attaching it to this element.
+ * @param {Element} parentNode
+ * @constructor
+ */
+var AcePopup = function(parentNode) {
     var el = dom.createElement("div");
     var popup = new $singleLineEditor(el);
 

@@ -226,9 +226,9 @@ var BidiHandler = function(session) {
 
     /**
      * Returns offset of character at position defined by column.
-     * @param {Number} the screen column position
+     * @param {Number} col the screen column position
      *
-     * @return {int} horizontal pixel offset of given screen column
+     * @return {Number} horizontal pixel offset of given screen column
      **/
     this.getPosLeft = function(col) {
         col -= this.wrapIndent;
@@ -258,10 +258,10 @@ var BidiHandler = function(session) {
 
     /**
      * Returns 'selections' - array of objects defining set of selection rectangles
-     * @param {Number} the start column position
-     * @param {Number} the end column position
+     * @param {Number} startCol the start column position
+     * @param {Number} endCol the end column position
      *
-     * @return {Array of Objects} Each object contains 'left' and 'width' values defining selection rectangle.
+     * @return {Object[]} Each object contains 'left' and 'width' values defining selection rectangle.
     **/
     this.getSelections = function(startCol, endCol) {
         var map = this.bidiMap, levels = map.bidiLevels, level, selections = [], offset = 0,
@@ -298,7 +298,7 @@ var BidiHandler = function(session) {
 
     /**
      * Converts character coordinates on the screen to respective document column number
-     * @param {int} character horizontal offset
+     * @param {Number} posX character horizontal offset
      *
      * @return {Number} screen column number corresponding to given pixel offset
     **/

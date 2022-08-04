@@ -22,7 +22,7 @@ dom.importCssString(cssText, "settings_menu.css", false);
  * @author <a href="mailto:matthewkastor@gmail.com">
  *  Matthew Christopher Kastor-Inare III </a><br />
  *  ☭ Hial Atropa!! ☭
- * @param {DOMElement} contentElement Any element which may be presented inside
+ * @param {Element} contentElement Any element which may be presented inside
  *  a div.
  */
 

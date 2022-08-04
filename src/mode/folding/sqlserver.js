@@ -47,7 +47,7 @@ oop.inherits(FoldMode, BaseFoldMode);
     };
     
     /**
-     * @returns {range} folding block for sequence that starts with 'CASE' or 'BEGIN' and ends with 'END'
+     * @returns {Range} folding block for sequence that starts with 'CASE' or 'BEGIN' and ends with 'END'
      * @param {string} matchSequence - the sequence of charaters that started the fold widget, which should remain visible when the fold widget is folded
      */
     this.getBeginEndBlock = function(session, row, column, matchSequence) {
