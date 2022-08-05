@@ -369,6 +369,27 @@ module.exports = {
         assert.equal(editor.getValue(), "");
         editor.redo();
         assert.equal(editor.getValue(), "\n\n\n\n");
+    },
+    "test: limit possible undos amount": function() {
+        editor.setValue("");
+        undoManager.startNewGroup();
+        editor.insert("a");
+        undoManager.startNewGroup();
+        editor.insert("b");
+        undoManager.startNewGroup();
+        editor.insert("c");
+        assert.equal(undoManager.$undoStack.length, 3);
+
+        undoManager.$undoDepth = 1;
+        editor.setValue("");
+        undoManager.startNewGroup();
+        editor.insert("a");
+        undoManager.startNewGroup();
+        editor.insert("b");
+        undoManager.startNewGroup();
+        editor.insert("c");
+        assert.equal(undoManager.$undoStack[0][0].lines[0], "c");
+        assert.equal(undoManager.$undoStack.length, undoManager.$undoDepth);
     }
 };
 

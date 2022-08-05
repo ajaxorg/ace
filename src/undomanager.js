@@ -13,6 +13,7 @@
 var UndoManager = function() {
     this.$maxRev = 0;
     this.$fromUndo = false;
+    this.$undoDepth = Infinity;
     this.reset();
 };
 
@@ -36,6 +37,10 @@ var UndoManager = function() {
         if (!this.$keepRedoStack) this.$redoStack.length = 0;
         if (allowMerge === false || !this.lastDeltas) {
             this.lastDeltas = [];
+            var undoStackLength = this.$undoStack.length;
+            if (undoStackLength > this.$undoDepth - 1) {
+                this.$undoStack.splice(0, undoStackLength - this.$undoDepth + 1);
+            }
             this.$undoStack.push(this.lastDeltas);
             delta.id = this.$rev = ++this.$maxRev;
         }
