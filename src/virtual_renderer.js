@@ -27,7 +27,7 @@ dom.importCssString(editorCss, "ace_editor.css", false);
 
 /**
  * Constructs a new `VirtualRenderer` within the `container` specified, applying the given `theme`.
- * @param {DOMElement} container The root element of the editor
+ * @param {Element} container The root element of the editor
  * @param {String} theme The starting theme
  *
  * @constructor
@@ -573,7 +573,7 @@ var VirtualRenderer = function(container, theme) {
     /**
      *
      * Returns the root element containing this renderer.
-     * @returns {DOMElement}
+     * @returns {Element}
      **/
     this.getContainerElement = function() {
         return this.container;
@@ -582,7 +582,7 @@ var VirtualRenderer = function(container, theme) {
     /**
      *
      * Returns the element that the mouse events are attached to
-     * @returns {DOMElement}
+     * @returns {Element}
      **/
     this.getMouseEventTarget = function() {
         return this.scroller;
@@ -591,7 +591,7 @@ var VirtualRenderer = function(container, theme) {
     /**
      *
      * Returns the element to which the hidden text area is added.
-     * @returns {DOMElement}
+     * @returns {Element}
      **/
     this.getTextAreaContainer = function() {
         return this.container;
@@ -1146,7 +1146,7 @@ var VirtualRenderer = function(container, theme) {
 
     /**
      * Sets annotations for the gutter.
-     * @param {Array} annotations An array containing annotations
+     * @param {Annotation[]} annotations An array containing annotations
      *
      **/
     this.setAnnotations = function(annotations) {

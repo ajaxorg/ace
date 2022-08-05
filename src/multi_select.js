@@ -157,7 +157,7 @@ var EditSession = require("./edit_session").EditSession;
 
     /**
      * Returns a concatenation of all the ranges.
-     * @returns {Array}
+     * @returns {Range[]}
      * @method Selection.getAllRanges
      **/
     this.getAllRanges = function() {

@@ -16,7 +16,7 @@ var MAX_SCROLL_H = 0x8000;
 
 /**
  * Creates a new `ScrollBar`. `parent` is the owner of the scroll bar.
- * @param {DOMElement} parent A DOM element 
+ * @param {Element} parent A DOM element
  *
  * @constructor
  **/
@@ -56,7 +56,7 @@ var ScrollBar = function(parent) {
 
 /**
  * Creates a new `VScrollBar`. `parent` is the owner of the scroll bar.
- * @param {DOMElement} parent A DOM element
+ * @param {Element} parent A DOM element
  * @param {Object} renderer An editor renderer
  *
  * @constructor
@@ -161,7 +161,7 @@ oop.inherits(VScrollBar, ScrollBar);
 
 /**
  * Creates a new `HScrollBar`. `parent` is the owner of the scroll bar.
- * @param {DOMElement} parent A DOM element
+ * @param {Element} parent A DOM element
  * @param {Object} renderer An editor renderer
  *
  * @constructor

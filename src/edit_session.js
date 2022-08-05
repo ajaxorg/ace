@@ -102,9 +102,9 @@ var SearchHighlight = require("./search_highlight").SearchHighlight;
 //}
 
 /**
- * Sets up a new `EditSession` and associates it with the given `Document` and `TextMode`.
+ * Sets up a new `EditSession` and associates it with the given `Document` and `Mode`.
  * @param {Document | String} text [If `text` is a `Document`, it associates the `EditSession` with it. Otherwise, a new `Document` is created, with the initial text]{: #textParam}
- * @param {TextMode} mode [The initial language mode to use for the document]{: #modeParam}
+ * @param {Mode} mode [The initial language mode to use for the document]{: #modeParam}
  *
  * @constructor
  **/
@@ -683,7 +683,7 @@ EditSession.$uid = 0;
      */
     /**
      * Sets annotations for the `EditSession`. This functions emits the `'changeAnnotation'` event.
-     * @param {Array} annotations A list of annotations
+     * @param {Annotation[]} annotations A list of annotations
      *
      **/
     this.setAnnotations = function(annotations) {
@@ -693,7 +693,7 @@ EditSession.$uid = 0;
 
     /**
      * Returns the annotations for the `EditSession`.
-     * @returns {Array}
+     * @returns {Annotation[]}
      **/
     this.getAnnotations = function() {
         return this.$annotations || [];
@@ -1113,7 +1113,7 @@ EditSession.$uid = 0;
 
     /**
      * Reverts previous changes to your document.
-     * @param {Array} deltas An array of previous changes
+     * @param {Delta[]} deltas An array of previous changes
      * @param {Boolean} dontSelect [If `true`, doesn't select the range of where the change occured]{: #dontSelect}
      *
      * @returns {Range}
@@ -1142,7 +1142,7 @@ EditSession.$uid = 0;
 
     /**
      * Re-implements a previously undone change to your document.
-     * @param {Array} deltas An array of previous changes
+     * @param {Delta[]} deltas An array of previous changes
      * @param {Boolean} dontSelect {:dontSelect}
      *
      * @returns {Range}
@@ -2077,7 +2077,7 @@ EditSession.$uid = 0;
      * Converts characters coordinates on the screen to characters coordinates within the document. [This takes into account code folding, word wrap, tab size, and any other visual modifications.]{: #conversionConsiderations}
      * @param {Number} screenRow The screen row to check
      * @param {Number} screenColumn The screen column to check
-     * @param {int} screen character x-offset [optional]
+     * @param {Number} offsetX screen character x-offset [optional]
      *
      * @returns {Object} The object returned has two properties: `row` and `column`.
      *
