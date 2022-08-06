@@ -29,7 +29,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-/*global Buffer*/
+/*global Buffer, setImmediate*/
 
 var fs = require("fs");
 var path = require("path");
@@ -60,7 +60,9 @@ function generateAmdModules() {
     }
     function transform(path, newPath) {
         var data = fs.readFileSync(root + path, "utf-8");
-        data = compileTypescript(data);
+        data = "define(function(require, exports, module){"
+            + compileTypescript(data)
+            +"\n});";
         fs.writeFileSync(root + newPath, data, "utf-8");
     }
     function compileTypescript(code) {
@@ -88,7 +90,10 @@ function main(args) {
         return updateModes();
     }
     
-    generateAmdModules();
+    if (args.indexOf("--reuse") === -1) {
+        console.log("updating files in lib/ace");
+        generateAmdModules();
+    }
     
     var type = "minimal";
     args = args.map(function(x) {
@@ -272,7 +277,7 @@ function jsFileList(path, filter) {
         filter = /_test/;
 
     return fs.readdirSync(path).map(function(x) {
-        if (x.slice(-3) == ".js" && !filter.test(x) && !/\s|BASE|(\b|_)dummy(\b|_)/.test(x))
+        if (x.slice(-3) == ".js" && !filter.test(x) && !/\s|BASE|(\b|_)dummy(\b|_)|\.css\.js$/.test(x))
             return x.slice(0, -3);
     }).filter(Boolean);
 }
@@ -296,8 +301,11 @@ function buildAceModule(opts, callback) {
             if (buildAceModule.running) return;
             var call = buildAceModule.queue.shift();
             buildAceModule.running = call;
-            if (call)
-                buildAceModuleInternal.apply(null, call);
+            if (call) {
+                setImmediate(function() {
+                    buildAceModuleInternal.apply(null, call);
+                });
+            }
         };
     }
     
