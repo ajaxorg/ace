@@ -74,7 +74,7 @@ node -e "
     }
     update('package.json');
     update('build/package.json');
-    update('./lib/ace/config.js');
+    update('./src/config.js');
 "
 
 pause "versions updated. do you want to start build script? [y/n]"
