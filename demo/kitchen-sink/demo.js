@@ -10,8 +10,8 @@ require("./file_drop");
 var config = require("ace/config");
 config.setLoader(function(moduleName, cb) {
     require([moduleName], function(module) {
-        cb(null, module)
-    })
+        cb(null, module);
+    });
 });
 
 var env = {};

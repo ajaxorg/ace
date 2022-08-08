@@ -400,7 +400,7 @@ function buildAceModuleInternal(opts, callback) {
         ignore: opts.ignore || [],
         withRequire: false,
         basepath: ACE_HOME,
-        transforms: [normalizeLineEndings, includeLoader],
+        transforms: [wrapCJS, normalizeLineEndings, includeLoader],
         afterRead: [optimizeTextModules]
     }, write);
 }
@@ -475,7 +475,7 @@ function buildAce(options, callback) {
             ignore: [],
             additional: [{
                 id: "ace/worker/worker",
-                transforms: [],
+                transforms: [wrapCJS],
                 order: -1000
             }]
         }, "worker-" + name, addCb());
@@ -487,7 +487,7 @@ function buildAce(options, callback) {
         ignore: [],
         additional: [{
             id: "ace/worker/worker",
-            transforms: [],
+            transforms: [wrapCJS],
             order: -1000
         }]
     }, "worker-base", addCb());
@@ -791,6 +791,27 @@ function generateThemesModule(themes) {
         ';\n\n});'
     ].join('');
     fs.writeFileSync(__dirname + '/lib/ace/ext/themelist_utils/themes.js', themelist, 'utf8');
+}
+
+function wrapCJS(module) {
+    if (module.loaderModule || module.noRequire || module.literal) return;
+    module.source = module.source.replace(/^#.*\n/, "");
+
+    if (!isCJS(module.source)) return;
+
+    module.source = `define(function(require, exports, module) {${module.source}\n});`;
+}
+
+function isCJS(source) {
+    var firstDefineCall = source.match(/define\(\s*[^)]*/);
+    if (firstDefineCall) {
+        // check if it is a normal define or some crazy umd trick
+        if (/define\(\s*(function\s*\(|{)/.test(firstDefineCall[0])) return;
+        if (/define\(\s*\[[^\]]*\],\s*\(?function\(/.test(firstDefineCall[0])) return;
+        if (/typeof define/.test(source)) return;
+    }
+    if (/"no use strict"/.test(source)) return;
+    return true;
 }
 
 function compress(text) {
