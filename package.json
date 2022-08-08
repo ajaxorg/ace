@@ -32,7 +32,12 @@
             "url": "http://opensource.org/licenses/BSD-3-Clause"
         }
     ],
-    "files": ["src", "ace.d.ts", "!**/*_test.js", "!_test"],
+    "files": [
+        "src",
+        "ace.d.ts",
+        "!**/*_test.js",
+        "!_test"
+    ],
     "scripts": {
         "start": "node static.js",
         "test": "node src/test/all.js",
