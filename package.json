@@ -26,12 +26,7 @@
     "mappings": {
         "ace": "."
     },
-    "licenses": [
-        {
-            "type": "BSD New",
-            "url": "http://opensource.org/licenses/BSD-3-Clause"
-        }
-    ],
+    "license": "BSD-3-Clause",
     "files": [
         "src",
         "ace.d.ts",
