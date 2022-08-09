@@ -483,6 +483,14 @@ var VirtualRenderer = function(container, theme) {
         this.setOption("displayIndentGuides", display);
     };
 
+    this.getHighlightIndentGuides = function() {
+        return this.getOption("highlightIndentGuides");
+    };
+
+    this.setHighlightIndentGuides = function(highlight) {
+        this.setOption("highlightIndentGuides", highlight);
+    };
+
     /**
      * Identifies whether you want to show the print margin or not.
      * @param {Boolean} showPrintMargin Set to `true` to show the print margin
@@ -1763,6 +1771,17 @@ config.defineOptions(VirtualRenderer.prototype, "renderer", {
         set: function(show) {
             if (this.$textLayer.setDisplayIndentGuides(show))
                 this.$loop.schedule(this.CHANGE_TEXT);
+        },
+        initialValue: true
+    },
+    highlightIndentGuides: {
+        set: function (show) {
+            if (this.$textLayer.setHighlightIndentGuides(show) == true) {
+                this.$textLayer.$highlightIndentGuide();
+            }
+            else {
+                this.$textLayer.$clearActiveIndentGuide(this.$textLayer.$lines.cells);
+            }
         },
         initialValue: true
     },

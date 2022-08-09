@@ -101,6 +101,15 @@ var Text = function(parentEl) {
         return true;
     };
 
+    this.highlightIndentGuides = true;
+    this.setHighlightIndentGuides = function (highlight) {
+        if (this.displayIndentGuides == false) return false;
+        if (this.highlightIndentGuides == highlight) return false;
+
+        this.highlightIndentGuides = highlight;
+        return highlight;
+    };
+
     this.$tabStrings = [];
     this.onChangeTabSize =
     this.$computeTabString = function() {
@@ -250,6 +259,7 @@ var Text = function(parentEl) {
         if (config.lastRow > oldConfig.lastRow) {
             this.$lines.push(this.$renderLinesFragment(config, oldConfig.lastRow + 1, config.lastRow));
         }
+        this.$highlightIndentGuide();
     };
 
     this.$renderLinesFragment = function(config, firstRow, lastRow) {
@@ -404,14 +414,123 @@ var Text = function(parentEl) {
             for (var i=0; i<count; i++) {
                 parent.appendChild(this.$tabStrings[" "].cloneNode(true));
             }
+            this.$highlightIndentGuide();
             return value.substr(cols);
         } else if (value[0] == "\t") {
             for (var i=0; i<cols; i++) {
                 parent.appendChild(this.$tabStrings["\t"].cloneNode(true));
             }
+            this.$highlightIndentGuide();
             return value.substr(cols);
         }
+        this.$highlightIndentGuide();
         return value;
+    };
+
+    this.$highlightIndentGuide = function () {
+        if (!this.highlightIndentGuides) return;
+
+        this.$highlightIndentGuideMarker = {
+            indentLevel: undefined,
+            start: undefined,
+            end: undefined,
+            dir: undefined
+        };
+        var lines = this.session.doc.$lines;
+        var cursor = this.session.selection.getCursor();
+        var initialIndent = /^\s*/.exec(this.session.doc.getLine(cursor.row))[0].length;
+        var elementIndentLevel = Math.floor(initialIndent / this.tabSize);
+        this.$highlightIndentGuideMarker = {
+            indentLevel: elementIndentLevel,
+            start: cursor.row
+        };
+
+        var bracketHighlight = this.session.$bracketHighlight;
+        if (bracketHighlight) {
+            var ranges = this.session.$bracketHighlight.ranges;
+            for (var i = 0; i < ranges.length; i++) {
+                if (cursor.row != ranges[i].start.row) {
+                    this.$highlightIndentGuideMarker.end = ranges[i].start.row;
+                    if (cursor.row > ranges[i].start.row) {
+                        this.$highlightIndentGuideMarker.dir = -1;
+                    }
+                    else {
+                        this.$highlightIndentGuideMarker.dir = 1;
+                    }
+                    break;
+                }
+            }
+        }
+
+        if (!this.$highlightIndentGuideMarker.end) {
+            if (lines[cursor.row] !== '' && cursor.column === lines[cursor.row].length) {
+                this.$highlightIndentGuideMarker.dir = 1;
+                for (var i = cursor.row + 1; i < lines.length; i++) {
+                    var line = lines[i];
+                    var currentIndent = /^\s*/.exec(line)[0].length;
+                    if (line != '') {
+                        this.$highlightIndentGuideMarker.end = i;
+                        if (currentIndent <= initialIndent) break;
+                    }
+                }
+            }
+        }
+
+        this.$renderHighlightIndentGuide();
+    };
+
+    this.$clearActiveIndentGuide = function () {
+        var cells = this.$lines.cells;
+        for (var i = 0; i < cells.length; i++) {
+            var cell = cells[i];
+            var childNodes = cell.element.childNodes;
+            if (childNodes.length > 0) {
+                for (var j = 0; j < childNodes.length; j++) {
+                    if (childNodes[j].className && childNodes[j].className.search("ace_indent-guide-active") != -1) {
+                        childNodes[j].className = childNodes[j].className.replace(
+                            "ace_indent-guide-active", "ace_indent-guide");
+                    }
+                }
+            }
+        }
+    };
+
+    this.$setIndentGuideActive = function (cell, indentLevel) {
+        var line = this.session.doc.getLine(cell.row);
+        if (line != "") {
+            var childNodes = cell.element.childNodes;
+            if (childNodes && childNodes[indentLevel - 1] && childNodes[indentLevel - 1].className) {
+                childNodes[indentLevel - 1].className = childNodes[indentLevel - 1].className.replace(
+                    "ace_indent-guide", "ace_indent-guide-active");
+            }
+        }
+    }
+
+    this.$renderHighlightIndentGuide = function () {
+        var cells = this.$lines.cells;
+        this.$clearActiveIndentGuide();
+        var indentLevel = this.$highlightIndentGuideMarker.indentLevel;
+        if (indentLevel != 0) {
+            if (this.$highlightIndentGuideMarker.dir == 1) {
+                for (var i = 0; i < cells.length; i++) {
+                    var cell = cells[i];
+                    if (this.$highlightIndentGuideMarker.end && cell.row >= this.$highlightIndentGuideMarker.start
+                        + 1) {
+                        if (cell.row >= this.$highlightIndentGuideMarker.end) break;
+                        this.$setIndentGuideActive(cell, indentLevel);
+                    }
+                }
+            }
+            else {
+                for (var i = cells.length - 1; i >= 0; i--) {
+                    var cell = cells[i];
+                    if (this.$highlightIndentGuideMarker.end && cell.row < this.$highlightIndentGuideMarker.start) {
+                        if (cell.row <= this.$highlightIndentGuideMarker.end) break;
+                        this.$setIndentGuideActive(cell, indentLevel);
+                    }
+                }
+            }
+        }
     };
 
     this.$createLineElement = function(parent) {
