@@ -521,7 +521,7 @@ function buildAce(options, callback) {
 var cssUpdated = false;
 
 function extractCss(options, callback) {
-    var dir = getTargetDir(options);
+    var dir = BUILD_DIR + "/src" + (options.noconflict ? "-noconflict" : "");
     var filenames = fs.readdirSync(dir);
     var css = "";
     var images = {};
