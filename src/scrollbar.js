@@ -234,7 +234,7 @@ oop.inherits(HScrollBar, ScrollBar);
 
     /**
      * Sets the scroll left of the scroll bar.
-     * @param {Number} scrollTop The new scroll left
+     * @param {Number} scrollLeft The new scroll left
      **/
     this.setScrollLeft = function(scrollLeft) {
         // on chrome 17+ for small zoom levels after calling this function
