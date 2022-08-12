@@ -174,3 +174,9 @@ MockRenderer.prototype.screenToTextCoordinates = function() {
 MockRenderer.prototype.adjustWrapLimit = function () {
 
 };
+
+MockRenderer.prototype.getHighlightIndentGuides = function() {
+};
+
+MockRenderer.prototype.setHighlightIndentGuides = function() {
+};
