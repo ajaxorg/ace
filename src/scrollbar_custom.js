@@ -91,67 +91,40 @@ oop.inherits(VScrollBar, ScrollBar);
      * Emitted when the scroll thumb dragged.
      **/
     this.onMouseDown = function (eType, e) {
-        if (eType === "dblclick") this.onMouseDoubleClick(e);
-
-        if (eType !== "mousedown") return
+        if (eType !== "mousedown") return;
 
         if (event.getButton(e) !== 0 || e.detail === 2) {
             return;
         }
-        var self = this;
-        var mousePageY = e.clientY;
-        var timerId;
-
-        var onMouseMove = function (e) {
-            mousePageY = e.clientY;
-        };
-
-        var onMouseUp = function () {
-            clearInterval(timerId);
-        };
 
         if (e.target === this.inner) {
+            var self = this;
+            var mousePageY = e.clientY;
+
+            var onMouseMove = function (e) {
+                mousePageY = e.clientY;
+            };
+
+            var onMouseUp = function () {
+                clearInterval(timerId);
+            };
             var startY = e.clientY;
             var startTop = this.thumbTop;
 
             var onScrollInterval = function () {
                 if (mousePageY === undefined) return;
-                var scrollTop = self.scrollTopFromThumbTop(startTop + mousePageY - startY)
+                var scrollTop = self.scrollTopFromThumbTop(startTop + mousePageY - startY);
                 if (scrollTop === self.scrollTop) return;
                 self._emit("scroll", {data: scrollTop});
             };
 
             event.capture(this.inner, onMouseMove, onMouseUp);
-            timerId = setInterval(onScrollInterval, 20);
+            var timerId = setInterval(onScrollInterval, 20);
             return event.preventDefault(e);
         }
-        var correction = this.element.getBoundingClientRect().top;
-
-        var onScrollInterval = function () {
-            if (mousePageY === undefined) return;
-            var desiredPos = mousePageY - correction - self.thumbHeight / 2;
-            var delta = desiredPos - self.thumbTop;
-            var speed = 2;
-            if (delta > speed) desiredPos = self.thumbTop + speed; else if (delta < -speed) desiredPos = self.thumbTop
-                - speed; else desiredPos = self.thumbTop;
-
-            var scrollTop = self.scrollTopFromThumbTop(desiredPos);
-            if (scrollTop === self.scrollTop) return;
-            self._emit("scroll", {data: scrollTop});
-        };
-        timerId = setInterval(onScrollInterval, 20);
-        event.capture(this.inner, onMouseMove, onMouseUp);
-        return event.preventDefault(e);
-    };
-
-    /**
-     * Emitted when the scroll bar double clicked.
-     * @event mouse double click
-     * @param {Object} e Contains one property, `"data"`, which indicates the current mouse position
-     **/
-    this.onMouseDoubleClick = function (e) {
         var top = e.clientY - this.element.getBoundingClientRect().top - this.thumbHeight / 2;
         this._emit("scroll", {data: this.scrollTopFromThumbTop(top)});
+        return event.preventDefault(e);
     };
 
     this.getHeight = function () {
@@ -192,7 +165,7 @@ oop.inherits(VScrollBar, ScrollBar);
         this.slideHeight = this.height;
         this.viewHeight = this.height;
 
-        this.setScrollHeight(this.pageHeight, true)
+        this.setScrollHeight(this.pageHeight, true);
     };
 
     /**
@@ -264,26 +237,24 @@ oop.inherits(HScrollBar, ScrollBar);
      * Emitted when the scroll thumb dragged.
      **/
     this.onMouseDown = function (eType, e) {
-        if (eType === "dblclick") this.onMouseDoubleClick(e);
-
         if (eType !== "mousedown") return;
 
         if (event.getButton(e) !== 0 || e.detail === 2) {
             return;
         }
-        var self = this;
-        var mousePageX = e.clientX;
-        var timerId;
 
-        var onMouseMove = function (e) {
-            mousePageX = e.clientX;
-        };
-
-        var onMouseUp = function () {
-            clearInterval(timerId);
-        };
 
         if (e.target === this.inner) {
+            var self = this;
+            var mousePageX = e.clientX;
+
+            var onMouseMove = function (e) {
+                mousePageX = e.clientX;
+            };
+
+            var onMouseUp = function () {
+                clearInterval(timerId);
+            };
             var startX = e.clientX;
             var startLeft = this.thumbLeft;
 
@@ -295,40 +266,14 @@ oop.inherits(HScrollBar, ScrollBar);
             };
 
             event.capture(this.inner, onMouseMove, onMouseUp);
-            timerId = setInterval(onScrollInterval, 20);
+            var timerId = setInterval(onScrollInterval, 20);
             return event.preventDefault(e);
         }
 
-        var correction = this.element.getBoundingClientRect().left;
-
-        var onScrollInterval = function () {
-            if (mousePageX === undefined) return;
-            var desiredPos = mousePageX - correction - self.thumbWidth / 2;
-            var delta = desiredPos - self.thumbLeft;
-            var speed = 2;
-            if (delta > speed) desiredPos = self.thumbLeft + speed; else if (delta < -speed) desiredPos = self.thumbLeft
-                - speed; else desiredPos = self.thumbLeft;
-
-            var scrollLeft = self.scrollLeftFromThumbLeft(desiredPos);
-            if (scrollLeft === self.scrollLeft) return;
-            self._emit("scroll", {data: scrollLeft});
-        };
-
-        timerId = setInterval(onScrollInterval, 20);
-        event.capture(this.inner, onMouseMove, onMouseUp);
-        return event.preventDefault(e);
-    };
-
-    /**
-     * Emitted when the scroll bar double clicked.
-     * @event mouse double click
-     * @param {Object} e Contains one property, `"data"`, which indicates the current mouse position
-     **/
-    this.onMouseDoubleClick = function (e) {
         var left = e.clientX - this.element.getBoundingClientRect().left - this.thumbWidth / 2;
         this._emit("scroll", {data: this.scrollLeftFromThumbLeft(left)});
+        return event.preventDefault(e);
     };
-
 
     /**
      * Returns the height of the scroll bar.
@@ -340,7 +285,7 @@ oop.inherits(HScrollBar, ScrollBar);
 
     /**
      * Returns new left for scroll thumb
-     * @param {Number}thumbLeft
+     * @param {Number} thumbLeft
      * @returns {Number}
      **/
     this.scrollLeftFromThumbLeft = function (thumbLeft) {
@@ -365,7 +310,7 @@ oop.inherits(HScrollBar, ScrollBar);
         this.slideWidth = this.width;
         this.viewWidth = this.width;
 
-        this.setScrollWidth(this.pageWidth, true)
+        this.setScrollWidth(this.pageWidth, true);
     };
 
     /**
