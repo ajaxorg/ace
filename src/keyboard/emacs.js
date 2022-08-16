@@ -11,37 +11,34 @@ exports.handler = new HashHandler();
 exports.handler.isEmacs = true;
 exports.handler.$id = "ace/keyboard/emacs";
 
-var initialized = false;
+
+dom.importCssString(`
+.emacs-mode .ace_cursor{
+    border: 1px rgba(50,250,50,0.8) solid!important;
+    box-sizing: border-box!important;
+    background-color: rgba(0,250,0,0.9);
+    opacity: 0.5;
+}
+.emacs-mode .ace_hidden-cursors .ace_cursor{
+    opacity: 1;
+    background-color: transparent;
+}
+.emacs-mode .ace_overwrite-cursors .ace_cursor {
+    opacity: 1;
+    background-color: transparent;
+    border-width: 0 0 2px 2px !important;
+}
+.emacs-mode .ace_text-layer {
+    z-index: 4
+}
+.emacs-mode .ace_cursor-layer {
+    z-index: 2
+}`, 'emacsMode'
+);
 var $formerLongWords;
 var $formerLineStart;
 
 exports.handler.attach = function(editor) {
-    if (!initialized) {
-        initialized = true;
-        dom.importCssString('\
-            .emacs-mode .ace_cursor{\
-                border: 1px rgba(50,250,50,0.8) solid!important;\
-                box-sizing: border-box!important;\
-                background-color: rgba(0,250,0,0.9);\
-                opacity: 0.5;\
-            }\
-            .emacs-mode .ace_hidden-cursors .ace_cursor{\
-                opacity: 1;\
-                background-color: transparent;\
-            }\
-            .emacs-mode .ace_overwrite-cursors .ace_cursor {\
-                opacity: 1;\
-                background-color: transparent;\
-                border-width: 0 0 2px 2px !important;\
-            }\
-            .emacs-mode .ace_text-layer {\
-                z-index: 4\
-            }\
-            .emacs-mode .ace_cursor-layer {\
-                z-index: 2\
-            }', 'emacsMode'
-        );
-    }
     // in emacs, gotowordleft/right should not count a space as a word..
     $formerLongWords = editor.session.$selectLongWords;
     editor.session.$selectLongWords = true;
