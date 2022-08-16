@@ -101,12 +101,11 @@ var Text = function(parentEl) {
         return true;
     };
 
-    this.highlightIndentGuides = true;
+    this.$highlightIndentGuides = true;
     this.setHighlightIndentGuides = function (highlight) {
-        if (this.displayIndentGuides === false) return false;
-        if (this.highlightIndentGuides === highlight) return false;
+        if (this.$highlightIndentGuides === highlight) return false;
 
-        this.highlightIndentGuides = highlight;
+        this.$highlightIndentGuides = highlight;
         return highlight;
     };
 
@@ -428,7 +427,7 @@ var Text = function(parentEl) {
     };
 
     this.$highlightIndentGuide = function () {
-        if (!this.highlightIndentGuides) return;
+        if (!this.$highlightIndentGuides || !this.displayIndentGuides) return;
 
         this.$highlightIndentGuideMarker = {
             indentLevel: undefined,
@@ -486,9 +485,9 @@ var Text = function(parentEl) {
             var childNodes = cell.element.childNodes;
             if (childNodes.length > 0) {
                 for (var j = 0; j < childNodes.length; j++) {
-                    if (childNodes[j].className && childNodes[j].className.search("ace_indent-guide-active") !== -1) {
-                        childNodes[j].className = childNodes[j].className.replace(
-                            "ace_indent-guide-active", "ace_indent-guide");
+                    if (childNodes[j].classList && childNodes[j].classList.contains("ace_indent-guide-active")) {
+                        childNodes[j].classList.remove("ace_indent-guide-active");
+                        break;
                     }
                 }
             }
@@ -499,9 +498,8 @@ var Text = function(parentEl) {
         var line = this.session.doc.getLine(cell.row);
         if (line !== "") {
             var childNodes = cell.element.childNodes;
-            if (childNodes && childNodes[indentLevel - 1] && childNodes[indentLevel - 1].className) {
-                childNodes[indentLevel - 1].className = childNodes[indentLevel - 1].className.replace(
-                    "ace_indent-guide", "ace_indent-guide-active");
+            if (childNodes && childNodes[indentLevel - 1] && childNodes[indentLevel - 1].classList) {
+                childNodes[indentLevel - 1].classList.add("ace_indent-guide-active");
             }
         }
     };

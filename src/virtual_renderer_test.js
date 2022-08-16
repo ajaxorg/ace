@@ -200,22 +200,20 @@ module.exports = {
         editor.session.selection.$setSelection(1, 22, 1, 22);
         editor.resize(true);
 
-        function assertIndentGuides(indentGuidesCount, activeIndentGuidesCount) {
-            var indentGuides = editor.container.querySelectorAll(".ace_indent-guide");
+        function assertIndentGuides(activeIndentGuidesCount) {
             var activeIndentGuides = editor.container.querySelectorAll(".ace_indent-guide-active");
-            assert.equal(indentGuides.length, indentGuidesCount);
             assert.equal(activeIndentGuides.length, activeIndentGuidesCount);
         }
 
-        assertIndentGuides(2, 0);
+        assertIndentGuides( 0);
 
         editor.setOption("highlightIndentGuides", true);
-        assertIndentGuides(0, 2);
+        assertIndentGuides( 2);
 
         editor.session.selection.clearSelection();
         editor.session.selection.$setSelection(1, 15, 1, 15);
         editor.resize(true);
-        assertIndentGuides(2, 0);
+        assertIndentGuides( 0);
     }
 
     // change tab size after setDocument (for text layer)
