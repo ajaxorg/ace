@@ -137,7 +137,7 @@ var Decorator = function (parent, renderer) {
             }
         }
         return compensateFold;
-    }
+    };
 }.call(Decorator.prototype));
 
 exports.Decorator = Decorator;
