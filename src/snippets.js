@@ -997,14 +997,14 @@ var moveRelative = function(point, start) {
 };
 
 
-dom.importCssString("\
-.ace_snippet-marker {\
-    -moz-box-sizing: border-box;\
-    box-sizing: border-box;\
-    background: rgba(194, 193, 208, 0.09);\
-    border: 1px dotted rgba(211, 208, 235, 0.62);\
-    position: absolute;\
-}", "snippets.css", false);
+dom.importCssString(`
+.ace_snippet-marker {
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    background: rgba(194, 193, 208, 0.09);
+    border: 1px dotted rgba(211, 208, 235, 0.62);
+    position: absolute;
+}`, "snippets.css", false);
 
 exports.snippetManager = new SnippetManager();
 

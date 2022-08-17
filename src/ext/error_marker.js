@@ -148,37 +148,37 @@ exports.showErrorMarker = function(editor, dir) {
 };
 
 
-dom.importCssString("\
-    .error_widget_wrapper {\
-        background: inherit;\
-        color: inherit;\
-        border:none\
-    }\
-    .error_widget {\
-        border-top: solid 2px;\
-        border-bottom: solid 2px;\
-        margin: 5px 0;\
-        padding: 10px 40px;\
-        white-space: pre-wrap;\
-    }\
-    .error_widget.ace_error, .error_widget_arrow.ace_error{\
-        border-color: #ff5a5a\
-    }\
-    .error_widget.ace_warning, .error_widget_arrow.ace_warning{\
-        border-color: #F1D817\
-    }\
-    .error_widget.ace_info, .error_widget_arrow.ace_info{\
-        border-color: #5a5a5a\
-    }\
-    .error_widget.ace_ok, .error_widget_arrow.ace_ok{\
-        border-color: #5aaa5a\
-    }\
-    .error_widget_arrow {\
-        position: absolute;\
-        border: solid 5px;\
-        border-top-color: transparent!important;\
-        border-right-color: transparent!important;\
-        border-left-color: transparent!important;\
-        top: -5px;\
-    }\
-", "error_marker.css", false);
+dom.importCssString(`
+    .error_widget_wrapper {
+        background: inherit;
+        color: inherit;
+        border:none
+    }
+    .error_widget {
+        border-top: solid 2px;
+        border-bottom: solid 2px;
+        margin: 5px 0;
+        padding: 10px 40px;
+        white-space: pre-wrap;
+    }
+    .error_widget.ace_error, .error_widget_arrow.ace_error{
+        border-color: #ff5a5a
+    }
+    .error_widget.ace_warning, .error_widget_arrow.ace_warning{
+        border-color: #F1D817
+    }
+    .error_widget.ace_info, .error_widget_arrow.ace_info{
+        border-color: #5a5a5a
+    }
+    .error_widget.ace_ok, .error_widget_arrow.ace_ok{
+        border-color: #5aaa5a
+    }
+    .error_widget_arrow {
+        position: absolute;
+        border: solid 5px;
+        border-top-color: transparent!important;
+        border-right-color: transparent!important;
+        border-left-color: transparent!important;
+        top: -5px;
+    }
+`, "error_marker.css", false);

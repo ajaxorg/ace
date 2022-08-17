@@ -237,21 +237,21 @@ exports.IncrementalSearch = IncrementalSearch;
  **/
 
 var dom = require('./lib/dom');
-dom.importCssString("\
-.ace_marker-layer .ace_isearch-result {\
-  position: absolute;\
-  z-index: 6;\
-  box-sizing: border-box;\
-}\
-div.ace_isearch-result {\
-  border-radius: 4px;\
-  background-color: rgba(255, 200, 0, 0.5);\
-  box-shadow: 0 0 4px rgb(255, 200, 0);\
-}\
-.ace_dark div.ace_isearch-result {\
-  background-color: rgb(100, 110, 160);\
-  box-shadow: 0 0 4px rgb(80, 90, 140);\
-}", "incremental-search-highlighting", false);
+dom.importCssString(`
+.ace_marker-layer .ace_isearch-result {
+  position: absolute;
+  z-index: 6;
+  box-sizing: border-box;
+}
+div.ace_isearch-result {
+  border-radius: 4px;
+  background-color: rgba(255, 200, 0, 0.5);
+  box-shadow: 0 0 4px rgb(255, 200, 0);
+}
+.ace_dark div.ace_isearch-result {
+  background-color: rgb(100, 110, 160);
+  box-shadow: 0 0 4px rgb(80, 90, 140);
+}`, "incremental-search-highlighting", false);
 
 // support for default keyboard handler
 var commands = require("./commands/command_manager");
