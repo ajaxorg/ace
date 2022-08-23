@@ -105,4 +105,8 @@ module.exports = `.ace-nord-dark .ace_gutter {
 .ace-nord-dark .ace_indent-guide {
   box-shadow: inset -1px 0 0 0 #434c5eb3;
 }
+
+.ace-nord-dark .ace_indent-guide-active {
+  box-shadow: inset -1px 0 0 0 #8395b8b3;
+}
 `;

@@ -126,6 +126,9 @@ var optionGroups = {
         "Show Indent Guides": {
             path: "displayIndentGuides"
         },
+        "Highlight Indent Guides": {
+            path: "highlightIndentGuides"
+        },
         "Persistent HScrollbar": {
             path: "hScrollBarAlwaysVisible"
         },

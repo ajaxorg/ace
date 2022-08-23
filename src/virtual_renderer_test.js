@@ -192,6 +192,28 @@ module.exports = {
         editor.renderer.$loop._flush();
         editor._signal("input", {});
         assert.equal(editor.renderer.content.textContent, "only visible for empty value");
+    },
+    "test: highlight indent guide": function () {
+        editor.session.setValue(
+            "function Test() {\n" + "    function Inner() {\n" + "        \n" + "        \n" + "    }\n" + "}");
+        editor.setOption("highlightIndentGuides", false);
+        editor.session.selection.$setSelection(1, 22, 1, 22);
+        editor.resize(true);
+
+        function assertIndentGuides(activeIndentGuidesCount) {
+            var activeIndentGuides = editor.container.querySelectorAll(".ace_indent-guide-active");
+            assert.equal(activeIndentGuides.length, activeIndentGuidesCount);
+        }
+
+        assertIndentGuides( 0);
+
+        editor.setOption("highlightIndentGuides", true);
+        assertIndentGuides( 2);
+
+        editor.session.selection.clearSelection();
+        editor.session.selection.$setSelection(1, 15, 1, 15);
+        editor.resize(true);
+        assertIndentGuides( 0);
     }
 
     // change tab size after setDocument (for text layer)

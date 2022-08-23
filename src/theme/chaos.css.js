@@ -138,7 +138,12 @@ module.exports = `.ace-chaos .ace_gutter {
 }
 
 .ace-chaos .ace_indent-guide {
-  border-right:1px dotted #333;
+  border-right:1px dotted #333333;
+  margin-right:-1px;
+}
+
+.ace-chaos .ace_indent-guide-active {
+  border-right:1px dotted #afafaf;
   margin-right:-1px;
 }
 

@@ -140,4 +140,13 @@ module.exports = `.ace-katzenmilch .ace_gutter,
 .ace-katzenmilch .ace_entity.ace_name.ace_tag {
   color: #3976a2;
   rbackground-color: rgba(73, 166, 210, 0.039)
-}`;
+}
+
+.ace-katzenmilch .ace_indent-guide {
+  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAE0lEQVQImWP4////f4bLly//BwAmVgd1/w11/gAAAABJRU5ErkJggg==") right repeat-y;
+}
+
+.ace-katzenmilch .ace_indent-guide-active {
+  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAAZSURBVHjaYvj///9/hivKyv8BAAAA//8DACLqBhbvk+/eAAAAAElFTkSuQmCC") right repeat-y;
+}
+`;
