@@ -27,8 +27,8 @@ if [ "$(git rev-parse --revs-only HEAD)" != "$(git rev-parse --revs-only refs/re
     echo build directory not clean; 
     exit 1
 fi
-if [  "$(git ls-files --others --exclude-standard)" ]; 
-    then echo untracked files;
+if [ "$(git ls-files --others --exclude-standard)" ];  then
+    echo untracked files;
     git ls-files --others --exclude-standard
     exit 1
 fi
@@ -110,7 +110,12 @@ fi
 
 pause "continue pushing to github? [y/n]"
 
-git push --progress "origin" HEAD:gh-pages HEAD:master refs/tags/"v"$VERSION_NUM:refs/tags/"v"$VERSION_NUM
+git push --progress "origin" HEAD:master refs/tags/"v"$VERSION_NUM:refs/tags/"v"$VERSION_NUM
+
+
+pause "update api docs [y/n]"
+bash tool/release-api-docs.sh
+
 echo "All done!"
 pause "May I go now? [y/n]"
 
