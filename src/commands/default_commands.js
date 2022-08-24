@@ -851,7 +851,7 @@ exports.commands = [{
     scrollIntoView: "cursor"
 }, {
     name: "openCommandPallete",
-    description: "Open command pallete",
+    description: "Open command palette",
     bindKey: bindKey("F1", "F1"),
     exec: function(editor) {
         editor.prompt({ $type: "commands" });
