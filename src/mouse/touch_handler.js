@@ -34,7 +34,7 @@ exports.addTouchListeners = function(el, editor) {
                     clipboard && ["span", { class: "ace_mobile-button", action: "paste" }, "Paste"],
                     hasUndo && ["span", { class: "ace_mobile-button", action: "undo" }, "Undo"],
                     ["span", { class: "ace_mobile-button", action: "find" }, "Find"],
-                    ["span", { class: "ace_mobile-button", action: "openCommandPallete" }, "Pallete"]
+                    ["span", { class: "ace_mobile-button", action: "openCommandPallete" }, "Palette"]
                 ] : ["span"]),
                 contextMenu.firstChild
             );
