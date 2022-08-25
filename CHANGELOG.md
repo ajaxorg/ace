@@ -2,6 +2,53 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.9.6](https://github.com/ajaxorg/ace/compare/v1.9.5...v1.9.6) (2022-08-17)
+
+
+### Bug Fixes
+
+* better way to extract css for csp environments ([1b0612b](https://github.com/ajaxorg/ace/commit/1b0612b5a5ed33a2f1931e4aa08cb2d54ec8585c))
+
+### [1.9.5](https://github.com/ajaxorg/ace/compare/v1.9.4...v1.9.5) (2022-08-10)
+
+
+### Bug Fixes
+
+* reverted fix build script CSS extract with `options.compress` ([#4894](https://github.com/ajaxorg/ace/issues/4894)) ([8fa4500](https://github.com/ajaxorg/ace/commit/8fa45008887c957bc9c78c65e805e73240f2b33f))
+
+### [1.9.4](https://github.com/ajaxorg/ace/compare/v1.9.2...v1.9.4) (2022-08-09)
+
+### [1.9.3](https://github.com/ajaxorg/ace/compare/v1.9.2...v1.9.3) (2022-08-08)
+
+### [1.9.2](https://github.com/ajaxorg/ace/compare/v1.9.1...v1.9.2) (2022-08-08)
+
+### [1.9.1](https://github.com/ajaxorg/ace/compare/v1.9.0...v1.9.1) (2022-08-08)
+
+## [1.9.0](https://github.com/ajaxorg/ace/compare/v1.8.1...v1.9.0) (2022-08-08)
+
+
+### Features
+
+* added ability to limit amount of undos/redos ([#4872](https://github.com/ajaxorg/ace/issues/4872)) ([897ee0a](https://github.com/ajaxorg/ace/commit/897ee0a071ef4341338a285a1d9d8781fe5689de))
+* publish Ace source code to ace-code NPM package ([#4881](https://github.com/ajaxorg/ace/issues/4881)) ([66cf041](https://github.com/ajaxorg/ace/commit/66cf0418bedf221a507d9a173583538c97885410))
+
+
+### Bug Fixes
+
+* Fix determination of anonymous code blocks in Postgres Mode (fixes [#4790](https://github.com/ajaxorg/ace/issues/4790)) ([06f7e22](https://github.com/ajaxorg/ace/commit/06f7e2290543ca6566aab56228a8fc8daddfcf55))
+* Fixed Ace typings ([23208f2](https://github.com/ajaxorg/ace/commit/23208f2f19020d1f69b90bc3b02460bda8422072))
+* Fixed jsDoc annotations ([e15abb4](https://github.com/ajaxorg/ace/commit/e15abb443abfad2de59c620ce49fc5498ce6d33e)), closes [#4879](https://github.com/ajaxorg/ace/issues/4879)
+* refactor of kotlin mode to simplify states and resolve incorrect highlights ([a30a99d](https://github.com/ajaxorg/ace/commit/a30a99df731c2f10c2006181ca58a96e7fc21155))
+* returned precise highlight for functions params, generics and types ([967aa6b](https://github.com/ajaxorg/ace/commit/967aa6b05c4a69a5deac1b20c297648444ade7d6))
+* Rust identifiers normally recognised now; generics highlight support; doc comments support ([#4868](https://github.com/ajaxorg/ace/issues/4868)) ([bbb5800](https://github.com/ajaxorg/ace/commit/bbb5800b4cf56d2996691edc63edc2783e19f427))
+
+### [1.8.1](https://github.com/ajaxorg/ace/compare/v1.8.0...v1.8.1) (2022-07-21)
+
+
+### Bug Fixes
+
+* prevent race condition when creating css files in build ([1777bfb](https://github.com/ajaxorg/ace/commit/1777bfb7dca4dcaf575293ac9cacbc284f692351))
+
 ## [1.8.0](https://github.com/ajaxorg/ace/compare/v1.7.1...v1.8.0) (2022-07-20)
 
 

@@ -98,6 +98,10 @@ $(function() {
     var firstLoad = true;
      
     tabs.find(tab_a_selector).click(function(e) {
+        if ($(this).attr("href").indexOf("http") === 0) {
+            return;
+        }
+
         e.preventDefault();
         if ($(this).attr("href") === "/") {
             window.location = "https://ace.c9.io";

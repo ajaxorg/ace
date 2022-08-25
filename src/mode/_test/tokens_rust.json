@@ -1,0 +1,341 @@
+[[
+   "start",
+  ["keyword.source.rust","use"],
+  ["text"," "],
+  ["support.constant","core::rand::"],
+  ["identifier","RngUtil"],
+  ["punctuation.operator",";"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword.source.rust","fn"],
+  ["text"," "],
+  ["entity.name.function.source.rust","main"],
+  ["paren.lparen","("],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword.source.rust","for"],
+  ["text"," "],
+  ["paren.lparen","["],
+  ["string.quoted.double.source.rust","\"Alice\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.quoted.double.source.rust","\"Bob\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.quoted.double.source.rust","\"Carol\""],
+  ["paren.rparen","]"],
+  ["punctuation.operator","."],
+  ["identifier","each"],
+  ["text"," "],
+  ["keyword.operator","|&"],
+  ["identifier","name"],
+  ["keyword.operator","|"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","        "],
+  ["keyword.source.rust","do"],
+  ["text"," "],
+  ["identifier","spawn"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","            "],
+  ["keyword.source.rust","let"],
+  ["text"," "],
+  ["identifier","v"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["support.constant","rand::"],
+  ["identifier","Rng"],
+  ["paren.lparen","("],
+  ["paren.rparen",")"],
+  ["punctuation.operator","."],
+  ["identifier","shuffle"],
+  ["paren.lparen","(["],
+  ["constant.numeric.source.rust","1"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["constant.numeric.source.rust","2"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["constant.numeric.source.rust","3"],
+  ["paren.rparen","])"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["text","            "],
+  ["keyword.source.rust","for"],
+  ["text"," "],
+  ["identifier","v"],
+  ["punctuation.operator","."],
+  ["identifier","each"],
+  ["text"," "],
+  ["keyword.operator","|&"],
+  ["identifier","num"],
+  ["keyword.operator","|"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","                "],
+  ["identifier","print"],
+  ["paren.lparen","("],
+  ["identifier","fmt"],
+  ["keyword.operator","!"],
+  ["paren.lparen","("],
+  ["string.quoted.double.source.rust","\"%s says: '%d'"],
+  ["constant.character.escape.source.rust","\\n"],
+  ["string.quoted.double.source.rust","\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["identifier","name"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["identifier","num"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["constant.numeric.source.rust","1"],
+  ["paren.rparen","))"]
+],[
+   "start",
+  ["text","            "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["text","        "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["text","    "],
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["text","    "],
+  ["keyword.source.rust","let"],
+  ["text"," "],
+  ["identifier","_"],
+  ["punctuation.operator",":"],
+  ["text"," "],
+  ["storage.type.source.rust","i128"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["keyword.operator","-"],
+  ["constant.numeric.source.rust","42i128"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword.source.rust","let"],
+  ["text"," "],
+  ["identifier","_"],
+  ["punctuation.operator",":"],
+  ["text"," "],
+  ["storage.type.source.rust","u128"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric.source.rust","42u128"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   ["comment","comment"],
+  ["comment.start.block.source.rust","/*"],
+  ["comment.block.source.rust"," nested "],
+  ["comment.start.block.source.rust","/*"],
+  ["comment.block.source.rust"," "]
+],[
+   "start",
+  ["comment.block.source.rust","    comments "],
+  ["comment.end.block.source.rust","*/"],
+  ["comment.block.source.rust"," "],
+  ["comment.end.block.source.rust","*/"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword.source.rust","fn"],
+  ["text"," "],
+  ["entity.name.function.source.rust","map"],
+  ["punctuation","<"],
+  ["identifier","T"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["identifier","U"],
+  ["punctuation",">"],
+  ["paren.lparen","("],
+  ["identifier","vector"],
+  ["punctuation.operator",":"],
+  ["text"," "],
+  ["keyword.operator","&"],
+  ["paren.lparen","["],
+  ["identifier","T"],
+  ["paren.rparen","]"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["identifier","function"],
+  ["punctuation.operator",":"],
+  ["text"," "],
+  ["keyword.operator","&"],
+  ["identifier","fn"],
+  ["paren.lparen","("],
+  ["identifier","v"],
+  ["punctuation.operator",":"],
+  ["text"," "],
+  ["keyword.operator","&"],
+  ["identifier","T"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["keyword.operator","->"],
+  ["text"," "],
+  ["identifier","U"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["keyword.operator","->"],
+  ["text"," ~"],
+  ["paren.lparen","["],
+  ["identifier","U"],
+  ["paren.rparen","]"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword.source.rust","let"],
+  ["text"," "],
+  ["keyword.source.rust","mut"],
+  ["text"," "],
+  ["identifier","accumulator"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," ~"],
+  ["paren.lparen","["],
+  ["paren.rparen","]"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword.source.rust","for"],
+  ["text"," "],
+  ["support.constant","vec::"],
+  ["identifier","each"],
+  ["paren.lparen","("],
+  ["identifier","vector"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["keyword.operator","|"],
+  ["identifier","element"],
+  ["keyword.operator","|"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","        "],
+  ["identifier","accumulator"],
+  ["punctuation.operator","."],
+  ["identifier","push"],
+  ["paren.lparen","("],
+  ["identifier","function"],
+  ["paren.lparen","("],
+  ["identifier","element"],
+  ["paren.rparen","))"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["text","    "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword.source.rust","return"],
+  ["text"," "],
+  ["identifier","accumulator"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start"
+],[
+   "start",
+  ["comment.line.double-dash.source.rust","// numbers"]
+],[
+   "start",
+  ["constant.numeric.source.rust","14E-111_f64"],
+  ["punctuation.operator",";"],
+  ["text"," "],
+  ["constant.numeric.source.rust","45isize"],
+  ["text"," "],
+  ["constant.numeric.source.rust","0x1i32"],
+  ["text"," "],
+  ["constant.numeric.source.rust","0o777u32"],
+  ["text"," "],
+  ["constant.numeric.source.rust","0b01"],
+  ["text"," "],
+  ["constant.numeric.source.rust","14f32"],
+  ["text"," "],
+  ["constant.numeric.source.rust","1_2.78f32"],
+  ["text"," "],
+  ["constant.numeric.source.rust","1_2.3E+7f32"]
+],[
+   "start"
+],[
+   "start",
+  ["comment.line.double-dash.source.rust","// not numbers"]
+],[
+   "start",
+  ["constant.numeric.source.rust","14"],
+  ["punctuation.operator","."],
+  ["identifier","_E"],
+  ["keyword.operator","-"],
+  ["constant.numeric.source.rust","111_f64"],
+  ["punctuation.operator",";"],
+  ["text"," 0"],
+  ["identifier","xi32"],
+  ["punctuation.operator",";"],
+  ["text"," 0"],
+  ["identifier","b777u"]
+],[
+   "start"
+],[
+   "start",
+  ["comment.line.double-dash.source.rust","// identifiers ending in constant.numeric"]
+],[
+   "start",
+  ["identifier","foo1"],
+  ["punctuation.operator",";"],
+  ["text"," "],
+  ["identifier","foo1u32"],
+  ["punctuation.operator",";"],
+  ["text"," "],
+  ["identifier","foo1f32"],
+  ["punctuation.operator",";"],
+  ["text"," "],
+  ["identifier","foo0xF"],
+  ["punctuation.operator",";"],
+  ["text"," "],
+  ["identifier","foo1"],
+  ["punctuation.operator","."],
+  ["constant.numeric.source.rust","0"]
+],[
+   "start"
+]]

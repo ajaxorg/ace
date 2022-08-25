@@ -116,3 +116,14 @@ lines - use dollar quotes
 $$;
 
 END;
+
+-- Anonymous code block
+DO LANGUAGE plpgsql $$
+BEGIN
+    -- code block
+END $$;
+
+DO $$
+BEGIN
+    -- code block
+END; $$;

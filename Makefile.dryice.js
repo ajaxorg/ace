@@ -29,7 +29,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-/*global Buffer*/
+/*global Buffer, setImmediate*/
 
 var fs = require("fs");
 var path = require("path");
@@ -40,10 +40,56 @@ var ACE_HOME = __dirname;
 var BUILD_DIR = ACE_HOME + "/build";
 var CACHE = {};
 
+function generateAmdModules() {
+    var root = ACE_HOME + "/";
+    function iterate(dir) {
+        var filenames = fs.readdirSync(root + dir);
+        filenames.forEach(function(name) {
+            var path = dir + name;
+            var stat = fs.statSync(root + path);
+            var newPath = path.replace("src", "lib/ace");
+            if (stat.isDirectory()) {
+                try {
+                    fs.mkdirSync(root + newPath);
+                } catch(e) {}
+                iterate(path + "/");
+            } else if (/\.js/.test(name) && !/worker_client\.js$/.test(name)) {
+                transform(path, newPath);
+            }
+        });
+    }
+    function transform(path, newPath) {
+        var data = fs.readFileSync(root + path, "utf-8");
+        data = "define(function(require, exports, module){"
+            + compileTypescript(data)
+            +"\n});";
+        fs.writeFileSync(root + newPath, data, "utf-8");
+    }
+    function compileTypescript(code) {
+        var ts = require("typescript");
+        return ts.transpileModule(code, {
+            compilerOptions: {
+                newLine: "lf",
+                downlevelIteration: true,
+                suppressExcessPropertyErrors: true,
+                module: ts.ModuleKind.CommonJS,
+                removeComments: false,
+                sourceMap: false,
+                inlineSourceMap: false,
+                target: "ES5"
+            },
+            fileName: ""
+        }).outputText;
+    }
+
+    iterate("src/");
+}
+
 function main(args) {
     if (args.indexOf("updateModes") !== -1) {
         return updateModes();
     }
+    
     var type = "minimal";
     args = args.map(function(x) {
         if (x[0] == "-" && x[1] != "-")
@@ -61,6 +107,16 @@ function main(args) {
     if (args.indexOf("--h") != -1 || args.indexOf("-h") != -1 || args.indexOf("--help") != -1) {
         return showHelp();
     }
+    
+    if (type == "css") {
+        return extractCss();
+    }
+
+    if (args.indexOf("--reuse") === -1) {
+        console.log("updating files in lib/ace");
+        generateAmdModules();
+    }
+
     if (type == "minimal") {
         buildAce({
             compress: args.indexOf("--m") != -1,
@@ -88,6 +144,7 @@ function showHelp(type) {
     console.log("  demo         Runs demo build of Ace");
     console.log("  full         all of above");
     console.log("  highlighter  ");
+    console.log("  css          extract css files");
     console.log("args:");
     console.log("  --target ./path   path to build folder");
     console.log("flags:");
@@ -226,7 +283,7 @@ function jsFileList(path, filter) {
         filter = /_test/;
 
     return fs.readdirSync(path).map(function(x) {
-        if (x.slice(-3) == ".js" && !filter.test(x) && !/\s|BASE|(\b|_)dummy(\b|_)/.test(x))
+        if (x.slice(-3) == ".js" && !filter.test(x) && !/\s|BASE|(\b|_)dummy(\b|_)|\.css\.js$/.test(x))
             return x.slice(0, -3);
     }).filter(Boolean);
 }
@@ -250,8 +307,11 @@ function buildAceModule(opts, callback) {
             if (buildAceModule.running) return;
             var call = buildAceModule.queue.shift();
             buildAceModule.running = call;
-            if (call)
-                buildAceModuleInternal.apply(null, call);
+            if (call) {
+                setImmediate(function() {
+                    buildAceModuleInternal.apply(null, call);
+                });
+            }
         };
     }
     
@@ -346,7 +406,7 @@ function buildAceModuleInternal(opts, callback) {
         ignore: opts.ignore || [],
         withRequire: false,
         basepath: ACE_HOME,
-        transforms: [normalizeLineEndings, includeLoader],
+        transforms: [wrapCJS, normalizeLineEndings, includeLoader],
         afterRead: [optimizeTextModules]
     }, write);
 }
@@ -421,7 +481,7 @@ function buildAce(options, callback) {
             ignore: [],
             additional: [{
                 id: "ace/worker/worker",
-                transforms: [],
+                transforms: [wrapCJS],
                 order: -1000
             }]
         }, "worker-" + name, addCb());
@@ -433,7 +493,7 @@ function buildAce(options, callback) {
         ignore: [],
         additional: [{
             id: "ace/worker/worker",
-            transforms: [],
+            transforms: [wrapCJS],
             order: -1000
         }]
     }, "worker-base", addCb());
@@ -450,48 +510,70 @@ function buildAce(options, callback) {
         if (options.noconflict && !options.compress)
             buildTypes();
 
-        extractCss(options, function() {
-            if (callback) 
-                return callback();
+        // call extractCss only once during a build
+        if (cssUpdated) {
             console.log("Finished building " + getTargetDir(options));
-            
-        });
+            return;
+        } else {
+            cssUpdated = true;
+            extractCss(function() {
+                if (callback) 
+                    return callback();
+                console.log("Finished building " + getTargetDir(options));                
+            });
+        }
     }
 }
+var cssUpdated = false;
 
-function extractCss(options, callback) {
-    var dir = getTargetDir(options);
-    var filenames = fs.readdirSync(dir);
-    var css = "";
+function extractCss(callback) {
     var images = {};
-    var usedCss = {};
-    filenames.forEach(function(filename) {
-        var stat = fs.statSync(dir + "/" + filename);
-        if (stat.isDirectory()) return;
-        var value = fs.readFileSync(dir + "/" + filename, "utf8");
-            
-        var cssImports = detectCssImports(value);
-        
-        if (/theme-/.test(filename)) {
-            var name = filename.replace(/^theme-|\.js$/g, "");
-            var themeCss = "";
-            for (var i in cssImports) {
-                themeCss += cssImports[i];
-            }
-            themeCss = extractImages(themeCss, name, "..");
-            build.writeToFile({code: themeCss}, {
-                outputFolder: BUILD_DIR + "/css/theme",
-                outputFile: name + ".css"
-            }, function() {});
-        } else if (cssImports) {
-            css += "\n/*" + filename + "*/";
-            for (var i in cssImports) {
-                if (usedCss[cssImports[i]]) continue;
-                usedCss[cssImports[i]] = true;
-                css += "\n" + cssImports[i];
-            }
+    var cssImports = {};
+    var fileName = "";
+
+    var extensions = jsFileList("src/ext");
+    var keybinding = jsFileList("src/keyboard");
+    var themes =  jsFileList("src/theme");
+    var dom = require("./src/lib/dom");
+    var index = 0;
+    dom.importCssString = function(value, id) {
+        if (!id) id = fileName + (index++);
+        cssImports[id] = value;
+    };
+    var loadFile = function(path) {
+        fileName = path;
+        require(path);
+    };
+    themes.forEach(function(name) {
+        cssImports = {};
+        loadFile("./src/theme/" + name);
+        delete require.cache[require.resolve("./src/theme/" + name)];
+
+        var themeCss = "";
+        for (var i in cssImports) {
+            themeCss += cssImports[i];
         }
+        themeCss = extractImages(themeCss, name, "..");
+        build.writeToFile({code: themeCss}, {
+            outputFolder: BUILD_DIR + "/css/theme",
+            outputFile: name + ".css"
+        }, function() {});
     });
+
+    cssImports = {};
+    loadFile("./src/ace");
+    extensions.forEach(function(name) {
+        loadFile("./src/ext/" + name);
+    });
+    keybinding.forEach(function(name) {
+        loadFile("./src/keyboard/" + name);
+    });
+
+    var css = "";
+    for (var i in cssImports) {
+        css += "\n/*" + i + "*/";
+        css += "\n" + cssImports[i];
+    }
     
     css = extractImages(css, "main", ".").replace(/^\s*/gm, "");
     build.writeToFile({code: css}, {
@@ -499,35 +581,8 @@ function extractCss(options, callback) {
         outputFile: "ace.css"
     }, function() {
         saveImages();
-        callback();
+        callback && callback();
     });
-    
-    function detectCssImports(code) {
-        code = code.replace(/^\s*\/\/.+|^\s*\/\*[\s\S]*?\*\//gm, "");
-
-        var stringRegex = /^("(?:[^"\\]|\\[\d\D])*"|'(?:[^'\\]|\\[\d\D])*'|)/;
-        var importCssRegex = /\.importCssString\(\s*(?:([^,)"']+)|["'])/g;
-       
-        var match;
-        var cssImports;
-        while (match = importCssRegex.exec(code)) {
-             if (match[1]) {
-                var locationRegex = new RegExp("[^.]" + match[1] + /\s*=\s*['"]/.source);
-                match = locationRegex.exec(code);
-                if (!match) continue;
-            }
-            var index = match.index + match[0].length - 1;
-            if (cssImports && cssImports[index]) continue;
-            var cssString = stringRegex.exec(code.slice(index))[0];
-            if (!cssString) continue;
-            if (!cssImports) cssImports = {};
-            cssImports[index] = cssString.slice(1, -1).replace(/\\(.|\n)/g, function(_, ch) {
-                if (ch == "n") return "";
-                return ch;
-            });
-        }
-        return cssImports;
-    }
     
     function extractImages(css, name, directory) {
         var imageCounter = 0;
@@ -548,6 +603,7 @@ function extractCss(options, callback) {
                 imageCounter++;
                 var imageName = name + "-" + imageCounter + ".png";
                 images[imageName] = buffer;
+                console.log("url(\"" + directory + "/" + imageName + "\")");
                 return "url(\"" + directory + "/" + imageName + "\")";
             }
         );
@@ -586,9 +642,6 @@ function normalizeLineEndings(module) {
 function includeLoader(module) {
     var pattern = '"include loader_build";';
     if (module.source && module.source.indexOf(pattern) != -1) {
-        console.log("=====================================  =====================================");
-        console.log(module);
-        console.log("=====================================  =====================================");
         module.deps.push("ace/loader_build");
         module.source = module.source.replace(pattern, 'require("./loader_build")(exports)');
     }
@@ -732,6 +785,27 @@ function generateThemesModule(themes) {
         ';\n\n});'
     ].join('');
     fs.writeFileSync(__dirname + '/lib/ace/ext/themelist_utils/themes.js', themelist, 'utf8');
+}
+
+function wrapCJS(module) {
+    if (module.loaderModule || module.noRequire || module.literal) return;
+    module.source = module.source.replace(/^#.*\n/, "");
+
+    if (!isCJS(module.source)) return;
+
+    module.source = `define(function(require, exports, module) {${module.source}\n});`;
+}
+
+function isCJS(source) {
+    var firstDefineCall = source.match(/define\(\s*[^)]*/);
+    if (firstDefineCall) {
+        // check if it is a normal define or some crazy umd trick
+        if (/define\(\s*(function\s*\(|{)/.test(firstDefineCall[0])) return;
+        if (/define\(\s*\[[^\]]*\],\s*\(?function\(/.test(firstDefineCall[0])) return;
+        if (/typeof define/.test(source)) return;
+    }
+    if (/"no use strict"/.test(source)) return;
+    return true;
 }
 
 function compress(text) {

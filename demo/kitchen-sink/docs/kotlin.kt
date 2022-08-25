@@ -1,3 +1,5 @@
+#!/usr/bin/env kotlinc -script
+
 /*Taken from http://try.kotlinlang.org/#/Examples/Longer%20examples/Life/Life.kt*/
 /**
  * This is a straightforward implementation of The Game of Life
@@ -36,6 +38,10 @@ class Field(
     // You can say field[i, j], and this function gets called
     operator fun get(i: Int, j: Int) = live[i][j]
 }
+
+class Test public constructor {
+}
+var test = "test"
 
 /**
  * This function takes the present state of the field

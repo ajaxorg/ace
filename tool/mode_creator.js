@@ -3,10 +3,17 @@ define(function(require, exports, module) {
 /** creates globals intentionally to make things easily accessible from console **/
 
 require("ace/ext/language_tools");
-require("ace/config").setDefaultValues("editor", {
+var config = require("ace/config");
+config.setDefaultValues("editor", {
     enableBasicAutocompletion: true,
     enableSnippets: true
 });
+config.setLoader(function(moduleName, cb) {
+    require([moduleName], function(module) {
+        cb(null, module);
+    });
+});
+
 var net = require("ace/lib/net");
 var Range = require("ace/range").Range;
 var util = require("demo/kitchen-sink/util");
@@ -70,7 +77,7 @@ util.bindDropdown(modeEl, function(value) {
         schedule();
         return;
     }
-    var hp = "./lib/ace/mode/" + value + "_highlight_rules.js";
+    var hp = "./src/mode/" + value + "_highlight_rules.js";
     net.get(hp, function(text) {
         var session = new EditSession(text);
         session.setUndoManager(new UndoManager());
@@ -199,6 +206,9 @@ function run() {
     var path = "ace/mode/new";
     var deps = getDeps(src, path);
     window.require.undef(path);
+    if (!/\bdefine\s*\(/.test(src)) {
+        src = "define(function(require, exports, module) {" + src + "\n});";
+    }
     src = src.replace("define(", 'define("' + path +'", ["require","exports","module",' + deps +'],');
     try {
         eval(src);

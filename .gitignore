@@ -24,3 +24,5 @@ jam/
 npm-debug.log
 deps/
 dist
+
+lib/ace
