@@ -593,7 +593,7 @@ function Folding() {
             if (dir != 1) {
                 do {
                     token = iterator.stepBackward();
-                } while (token && re.test(token.type));
+                } while (token && re.test(token.type) && !/^comment.end/.test(token.type));
                 token = iterator.stepForward();
             }
             
@@ -613,7 +613,7 @@ function Folding() {
                     } else if (iterator.$row > lastRow) {
                         break;
                     }
-                } while (token && re.test(token.type));
+                } while (token && re.test(token.type) && !/^comment.start/.test(token.type));
                 token = iterator.stepBackward();
             } else
                 token = iterator.getCurrentToken();
