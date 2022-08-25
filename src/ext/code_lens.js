@@ -209,26 +209,26 @@ require("../config").defineOptions(Editor.prototype, "editor", {
     }
 });
 
-dom.importCssString("\
-.ace_codeLens {\
-    position: absolute;\
-    color: #aaa;\
-    font-size: 88%;\
-    background: inherit;\
-    width: 100%;\
-    display: flex;\
-    align-items: flex-end;\
-    pointer-events: none;\
-}\
-.ace_codeLens > a {\
-    cursor: pointer;\
-    pointer-events: auto;\
-}\
-.ace_codeLens > a:hover {\
-    color: #0000ff;\
-    text-decoration: underline;\
-}\
-.ace_dark > .ace_codeLens > a:hover {\
-    color: #4e94ce;\
-}\
-", "codelense.css", false);
+dom.importCssString(`
+.ace_codeLens {
+    position: absolute;
+    color: #aaa;
+    font-size: 88%;
+    background: inherit;
+    width: 100%;
+    display: flex;
+    align-items: flex-end;
+    pointer-events: none;
+}
+.ace_codeLens > a {
+    cursor: pointer;
+    pointer-events: auto;
+}
+.ace_codeLens > a:hover {
+    color: #0000ff;
+    text-decoration: underline;
+}
+.ace_dark > .ace_codeLens > a:hover {
+    color: #4e94ce;
+}
+`, "codelense.css", false);

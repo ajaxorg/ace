@@ -156,4 +156,9 @@ module.exports = `.ace-gruvbox-dark-hard .ace_gutter {
 
 .ace-gruvbox-dark-hard .ace_markup.ace_list {
   color: #83a598
-}`;
+}
+
+.ace-gruvbox-dark-hard .ace_indent-guide-active {
+  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAAZSURBVHjaYvj///9/hivKyv8BAAAA//8DACLqBhbvk+/eAAAAAElFTkSuQmCC") right repeat-y;
+}
+`;

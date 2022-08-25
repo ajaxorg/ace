@@ -469,15 +469,15 @@ prompt.modes = function(editor, callback) {
     });
 };
 
-dom.importCssString(".ace_prompt_container {\
-    max-width: 600px;\
-    width: 100%;\
-    margin: 20px auto;\
-    padding: 3px;\
-    background: white;\
-    border-radius: 2px;\
-    box-shadow: 0px 2px 3px 0px #555;\
-}", "promtp.css", false);
+dom.importCssString(`.ace_prompt_container {
+    max-width: 600px;
+    width: 100%;
+    margin: 20px auto;
+    padding: 3px;
+    background: white;
+    border-radius: 2px;
+    box-shadow: 0px 2px 3px 0px #555;
+}`, "promtp.css", false);
 
 
 exports.prompt = prompt;

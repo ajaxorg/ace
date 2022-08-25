@@ -509,8 +509,10 @@ Editor.$uid = 0;
             var ranges = session.getMatchingBracketRanges(self.getCursorPosition());
             if (!ranges && session.$mode.getMatching) 
                 ranges = session.$mode.getMatching(self.session);
-            if (!ranges)
+            if (!ranges) {
+                if (self.getHighlightIndentGuides()) self.renderer.$textLayer.$highlightIndentGuide();
                 return;
+            }
 
             var markerType = "ace_bracket";
             if (!Array.isArray(ranges)) {
@@ -533,6 +535,7 @@ Editor.$uid = 0;
                     return session.addMarker(range, markerType, "text");
                 })
             };
+            if (self.getHighlightIndentGuides()) self.renderer.$textLayer.$highlightIndentGuide();
         }, 50);
     };
 
@@ -1307,6 +1310,14 @@ Editor.$uid = 0;
 
     this.getDisplayIndentGuides = function() {
         return this.renderer.getDisplayIndentGuides();
+    };
+
+    this.setHighlightIndentGuides = function(highlight) {
+        this.renderer.setHighlightIndentGuides(highlight);
+    };
+
+    this.getHighlightIndentGuides = function() {
+        return this.renderer.getHighlightIndentGuides();
     };
 
     /**
@@ -2937,6 +2948,7 @@ config.defineOptions(Editor.prototype, "editor", {
     fadeFoldWidgets: "renderer",
     showFoldWidgets: "renderer",
     displayIndentGuides: "renderer",
+    highlightIndentGuides: "renderer",
     showGutter: "renderer",
     fontSize: "renderer",
     fontFamily: "renderer",

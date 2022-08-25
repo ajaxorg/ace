@@ -224,8 +224,8 @@ var EditSession = require("./edit_session").EditSession;
      * 
      * Gets list of ranges composing rectangular block on the screen
      * 
-     * @param {Cursor} screenCursor The cursor to use
-     * @param {Anchor} screenAnchor The anchor to use
+     * @param {Position} screenCursor The cursor to use
+     * @param {Position} screenAnchor The anchor to use
      * @param {Boolean} includeEmptyLines If true, this includes ranges inside the block which are empty due to clipping
      * @returns {Range}
      * @method Selection.rectangularRangeBlock
