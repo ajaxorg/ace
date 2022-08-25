@@ -493,3 +493,7 @@ img {
     transform: rotate(360deg);
     transition: all 0.5s ease-in-out;
 }
+
+.nav>li>a.external-nav:hover {
+    text-decoration: underline;
+}
