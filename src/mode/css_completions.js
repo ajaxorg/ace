@@ -128,24 +128,29 @@ var CssCompletions = function() {
         if (state==='ruleset' || session.$mode.$id == "ace/mode/scss") {
             //css attribute value
             var line = session.getLine(pos.row).substr(0, pos.column);
+            var inParens = /\([^)]*$/.test(line);
+            if (inParens) {
+                line = line.substr(line.lastIndexOf('(') + 1);
+            }
             if (/:[^;]+$/.test(line)) {
                 /([\w\-]+):[^:]*$/.test(line);
 
                 return this.getPropertyValueCompletions(state, session, pos, prefix);
             } else {
-                return this.getPropertyCompletions(state, session, pos, prefix);
+                return this.getPropertyCompletions(state, session, pos, prefix, inParens);
             }
         }
 
         return [];
     };
 
-    this.getPropertyCompletions = function(state, session, pos, prefix) {
+    this.getPropertyCompletions = function(state, session, pos, prefix, skipSemicolon) {
+        skipSemicolon = skipSemicolon || false;
         var properties = Object.keys(propertyMap);
         return properties.map(function(property){
             return {
                 caption: property,
-                snippet: property + ': $0;',
+                snippet: property + ': $0' + (skipSemicolon ? '' : ';'),
                 meta: "property",
                 score: 1000000
             };
