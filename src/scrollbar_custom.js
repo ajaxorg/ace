@@ -88,7 +88,7 @@ oop.inherits(VScrollBar, ScrollBar);
     oop.implement(this, EventEmitter);
 
     /**
-     * Emitted when the scroll thumb dragged.
+     * Emitted when the scroll thumb dragged or scrollbar canvas clicked.
      **/
     this.onMouseDown = function (eType, e) {
         if (eType !== "mousedown") return;
@@ -234,7 +234,7 @@ oop.inherits(HScrollBar, ScrollBar);
     oop.implement(this, EventEmitter);
 
     /**
-     * Emitted when the scroll thumb dragged.
+     * Emitted when the scroll thumb dragged or scrollbar canvas clicked.
      **/
     this.onMouseDown = function (eType, e) {
         if (eType !== "mousedown") return;

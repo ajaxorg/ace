@@ -10,8 +10,8 @@ var VirtualRenderer = require("./virtual_renderer").VirtualRenderer;
 var Editor = require("./editor").Editor;
 var MouseEvent = function (type, opts) {
     var e = document.createEvent("MouseEvents");
-    e.initMouseEvent(/click|wheel/.test(type) ? type : "mouse" + type, true, true, window, opts.detail, opts.x,
-        opts.y, opts.x, opts.y, opts.ctrl, opts.alt, opts.shift, opts.meta, opts.button || 0, opts.relatedTarget
+    e.initMouseEvent(/click|wheel/.test(type) ? type : "mouse" + type, true, true, window, opts.detail, opts.x, opts.y,
+        opts.x, opts.y, opts.ctrl, opts.alt, opts.shift, opts.meta, opts.button || 0, opts.relatedTarget
     );
     return e;
 };
@@ -29,9 +29,8 @@ var editor = null;
 var renderer = null;
 module.exports = {
     name: "ACE scrollbar_custom.js",
-    setUp: function() {
-        if (editor)
-            editor.destroy();
+    setUp: function () {
+        if (editor) editor.destroy();
         var el = document.createElement("div");
 
         el.style.left = "20px";
@@ -44,14 +43,14 @@ module.exports = {
         renderer.layerConfig.maxHeight = 200;
         renderer.layerConfig.lineHeight = 14;
         editor = new Editor(renderer);
-        editor.on("destroy", function() {
+        editor.on("destroy", function () {
             document.body.removeChild(el);
         });
         editor.setOptions({
             customScrollbar: true
         });
     },
-    tearDown: function() {
+    tearDown: function () {
         editor && editor.destroy();
         editor = null;
     },
@@ -73,6 +72,28 @@ module.exports = {
         renderer.$loop._flush();
         assert.ok(renderer.scrollBarV.thumbTop > thumbTop);
     },
+    "test: dragging vertical scroll thumb": function (done) {
+        editor.setValue("a" + "\n".repeat(100) + "b" + "\nxxxxxx", -1);
+        renderer.$loop._flush();
+
+        renderer.scrollBarV.inner.dispatchEvent(MouseEvent("down", {
+            x: 5,
+            y: 10,
+            button: 0
+        }));
+        renderer.$loop._flush();
+
+        renderer.scrollBarV.inner.dispatchEvent(MouseEvent("move", {
+            x: 5,
+            y: 80,
+            button: 0
+        }));
+
+        setTimeout(function () {
+            assert.ok(renderer.scrollBarV.thumbTop > 0);
+            done();
+        }, 200);
+    },
     "test: horizontal scrolling": function () {
         assert.ok(!renderer.scrollBarH.isVisible);
         editor.setValue("a".repeat(1000), -1);
@@ -87,6 +108,28 @@ module.exports = {
         renderer.$loop._flush();
 
         assert.ok(renderer.scrollBarH.thumbLeft > 0);
+    },
+    "test: dragging horizontal scroll thumb": function (done) {
+        editor.setValue("a".repeat(1000), -1);
+        renderer.$loop._flush();
+
+        renderer.scrollBarH.inner.dispatchEvent(MouseEvent("down", {
+            x: 5,
+            y: 5,
+            button: 0
+        }));
+        renderer.$loop._flush();
+
+        renderer.scrollBarH.inner.dispatchEvent(MouseEvent("move", {
+            x: 80,
+            y: 5,
+            button: 0
+        }));
+
+        setTimeout(function () {
+            assert.ok(renderer.scrollBarH.thumbLeft > 0);
+            done();
+        }, 200);
     }
 
 };
