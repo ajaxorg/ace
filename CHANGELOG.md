@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.10.0](https://github.com/ajaxorg/ace/compare/v1.9.6...v1.10.0) (2022-08-31)
+
+
+### Features
+
+* editor option for indent guide highlighting ([f1f6517](https://github.com/ajaxorg/ace/commit/f1f6517a30d6819d1c8ca045744cdeb2925ccf0a))
+
+
+### Bug Fixes
+
+* add mock `getHighlightIndentGuides` and `setHighlightIndentGuides` for old tests to work ([4067512](https://github.com/ajaxorg/ace/commit/4067512a72934b23a0866eca33812425c37a7363))
+* added "flex-start" and "flex-end" ([#4912](https://github.com/ajaxorg/ace/issues/4912)) ([3e14988](https://github.com/ajaxorg/ace/commit/3e14988209354f94483307f168705690e15adaf5))
+* Fix problematic semicolon in CSS media queries ([#4849](https://github.com/ajaxorg/ace/issues/4849)) ([18a459a](https://github.com/ajaxorg/ace/commit/18a459a26430bfa58e0f798c4bacce6a799c77bd))
+* more optimal way to accessing an element's list of classes; mark `highlightIndentGuide` as internal property ([855a874](https://github.com/ajaxorg/ace/commit/855a874ffde4824bb8de6e56cb44fad64d49725b))
+* strictly equal instead of loosely ([d4c1ab8](https://github.com/ajaxorg/ace/commit/d4c1ab8ef6ee608e2570b7ca6d1d941c5a6628a9))
+* Updated Jshint to 2.13.5 ([#4911](https://github.com/ajaxorg/ace/issues/4911)) ([2401fbd](https://github.com/ajaxorg/ace/commit/2401fbd93f0d61cc01150c1071145e974dd6693f))
+
 ### [1.9.6](https://github.com/ajaxorg/ace/compare/v1.9.5...v1.9.6) (2022-08-17)
 
 
