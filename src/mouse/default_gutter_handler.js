@@ -7,7 +7,7 @@ var Tooltip = require("../tooltip").Tooltip;
 function GutterHandler(mouseHandler) {
     var editor = mouseHandler.editor;
     var gutter = editor.renderer.$gutterLayer;
-    var tooltip = new GutterTooltip(editor.container);
+    var tooltip = new GutterTooltip();
 
     mouseHandler.editor.setDefaultHandler("guttermousedown", function(e) {
         if (!editor.isFocused() || e.getButton() != 0)
@@ -126,8 +126,8 @@ function GutterHandler(mouseHandler) {
     editor.on("changeSession", hideTooltip);
 }
 
-function GutterTooltip(parentNode) {
-    Tooltip.call(this, parentNode);
+function GutterTooltip() {
+    Tooltip.call(this, window.document.body);
 }
 
 oop.inherits(GutterTooltip, Tooltip);
