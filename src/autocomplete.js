@@ -190,6 +190,15 @@ var Autocomplete = function() {
         "PageDown": function(editor) { editor.completer.popup.gotoPageDown(); }
     };
 
+    this.getPrefix = function(session, pos, prefixRegex) {
+        var line = session.getLine(pos.row);
+        var prefix = util.retrievePrecedingIdentifier(line, pos.column, prefixRegex);
+
+        this.base = session.doc.createAnchor(pos.row, pos.column - prefix.length);
+        this.base.$insertRight = true;
+        return prefix;
+    };
+
     this.gatherCompletions = function(editor, callback) {
         var session = editor.getSession();
         var pos = editor.getCursorPosition();
@@ -206,13 +215,14 @@ var Autocomplete = function() {
                 if (!err && results)
                     matches = matches.concat(results);
                 // Fetch prefix again, because they may have changed by now
+                var prefix = this.getPrefix(session, pos, results[0] && results[0].identifierRegex);
                 callback(null, {
-                    prefix: util.getCompletionPrefix(editor),
+                    prefix: prefix,
                     matches: matches,
                     finished: (--total === 0)
                 });
-            });
-        });
+            }.bind(this));
+        }, this);
         return true;
     };
 
