@@ -179,18 +179,18 @@ snippet forr
 
 #modules
 snippet def
-	define(function(require, exports, module) {
+	defin\x65(function(requir\x65, exports, module) {
 	"use strict";
-	var \${1/.*\\///} = require("\${1}");
+	var \${1/.*\\///} = requir\x65("\${1}");
 	
 	\$TM_SELECTED_TEXT
 	});
 snippet req
 guard ^\\s*
-	var \${1/.*\\///} = require("\${1}");
+	var \${1/.*\\///} = requir\x65("\${1}");
 	\$0
 snippet requ
 guard ^\\s*
-	var \${1/.*\\/(.)/\\u\$1/} = require("\${1}").\${1/.*\\/(.)/\\u\$1/};
+	var \${1/.*\\/(.)/\\u\$1/} = requir\x65("\${1}").\${1/.*\\/(.)/\\u\$1/};
 	\$0
 `;
