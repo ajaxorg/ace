@@ -230,7 +230,7 @@ export namespace Ace {
     skipCurrent: boolean;
     range: Range;
     preserveCase: boolean;
-    regExp: RegExp;
+    regExp: boolean;
     wholeWord: boolean;
     caseSensitive: boolean;
     wrap: boolean;
