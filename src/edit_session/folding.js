@@ -585,9 +585,9 @@ function Folding() {
         var token = iterator.getCurrentToken();
         var type = token && token.type;
         if (token && /^comment|string/.test(type)) {
-            type = type.match(/comment|string/)[0];
+            type = /comment|string/.exec(type)[0];
             if (type == "comment")
-                type += "|doc-start";
+                type += "|doc-start|empty";
             var re = new RegExp(type);
             var range = new Range();
             if (dir != 1) {

@@ -557,7 +557,7 @@ Editor.$uid = 0;
             var iterator = new TokenIterator(self.session, pos.row, pos.column);
             var token = iterator.getCurrentToken();
             
-            if (!token || !/\b(?:tag-open|tag-name)/.test(token.type)) {
+            if (!token || !/\b(?:tag-open|tag-name)/.test(token.type.toString())) {
                 session.removeMarker(session.$tagHighlight);
                 session.$tagHighlight = null;
                 return;
