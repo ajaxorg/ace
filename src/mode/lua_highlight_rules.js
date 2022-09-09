@@ -64,25 +64,22 @@ var LuaHighlightRules = function() {
     this.$rules = {
         "start" : [{
             stateName: "bracketedComment",
-            onMatch : function(value, currentState, stack){
-                stack.unshift(this.next, value.length - 2, currentState);
-                return "comment";
+            onMatch : function(value, scope){
+                var parent = scope.get("bracketedComment" + (value.length - 2))
+                parent.meta = (value.length - 2);
+                return parent.get(this.next).get("comment");
             },
             regex : /\-\-\[=*\[/,
             next  : [
                 {
-                    onMatch : function(value, currentState, stack) {
-                        if (value.length == stack[1]) {
-                            stack.shift();
-                            stack.shift();
-                            this.next = stack.shift();
+                    onMatch : function(value, scope) {
+                        if (scope.parent && value.length == scope.parent.meta) {
+                            return scope.parent.parent.get("comment");
                         } else {
-                            this.next = "";
+                            return scope.get("comment");
                         }
-                        return "comment";
                     },
                     regex : /\]=*\]/,
-                    next  : "start"
                 }, {
                     defaultToken : "comment"
                 }
@@ -95,26 +92,23 @@ var LuaHighlightRules = function() {
         },
         {
             stateName: "bracketedString",
-            onMatch : function(value, currentState, stack){
-                stack.unshift(this.next, value.length, currentState);
-                return "string.start";
+            onMatch : function(value, scope){
+                var parent = scope.get("bracketedString" + value.length);
+                parent.meta = value.length;
+                return parent.get(this.next).get("string.start");
             },
             regex : /\[=*\[/,
             next  : [
                 {
-                    onMatch : function(value, currentState, stack) {
-                        if (value.length == stack[1]) {
-                            stack.shift();
-                            stack.shift();
-                            this.next = stack.shift();
+                    onMatch : function(value, scope) {
+                        if (scope.parent && value.length == scope.parent.meta) {
+                            return scope.parent.parent.get("string.end");
                         } else {
-                            this.next = "";
+                            return scope.get("string.end");
                         }
-                        return "string.end";
                     },
                     
                     regex : /\]=*\]/,
-                    next  : "start"
                 }, {
                     defaultToken : "string"
                 }
