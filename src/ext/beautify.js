@@ -147,13 +147,13 @@ exports.beautify = function(session) {
                 breakBefore = true;
 
                 // trim value if not in a comment or string
-                if (!is(token, "comment") && !token.type.match(/^(comment|string)$/))
+                if (!is(token, "comment") && !/^(comment|string)$/.test(token.type))
                    value = value.trimLeft();
             }
 
             if (value) {
                 // whitespace
-                if (token.type === "keyword" && value.match(/^(if|else|elseif|for|foreach|while|switch)$/)) {
+                if (token.type === "keyword" && /^(if|else|elseif|for|foreach|while|switch)$/.test(value)) {
                     parents[depth] = value;
 
                     trimNext();

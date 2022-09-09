@@ -413,10 +413,10 @@ class Text {
 
         valueFragment.appendChild(this.dom.createTextNode(i ? value.slice(i) : value, this.element));
 
-        if (!isTextToken(token.type)) {
-            var classes = "ace_" + token.type.replace(/\./g, " ace_");
+        if (!isTextToken(token.type.toString())) {
+            var classes = "ace_" + token.type.toString().replace(/\./g, " ace_");
             var span = this.dom.createElement("span");
-            if (token.type == "fold"){
+            if (token.type.toString() === "fold")
                 span.style.width = (token.value.length * this.config.characterWidth) + "px";
                 span.setAttribute("title", nls("inline-fold.closed.title", "Unfold code"));
             }

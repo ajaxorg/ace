@@ -161,7 +161,7 @@ function checkModes() {
 }
 
 function generateTestData(names, force) {
-    var docRoot = root + "/demo/kitchen-sink/docs";
+    var docRoot = root + "/ace/demo/kitchen-sink/docs";
     var docs = fs.readdirSync(docRoot);
     var specialDocs = fs.readdirSync(cwd);
     var modes = modeList();
@@ -224,7 +224,7 @@ function generateTestData(names, force) {
             var tokenizedLine = "";
             data.tokens.forEach(function(x) {
                 tokenizedLine += x.value;
-                tmp.push(JSON.stringify([x.type, x.value]));
+                tmp.push(JSON.stringify([x.type.toString(), x.value]));
             });
             if (tokenizedLine != line)
                 tmp.push(JSON.stringify(line));

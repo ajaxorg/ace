@@ -1,6 +1,8 @@
 "use strict";
 const reportError = require("./lib/report_error").reportError;
 
+var oop = require("./lib/oop");
+var {Scope} = require("./scope");
 // tokenizing lines longer than this makes editor very slow
 var MAX_TOKEN_COUNT = 2000;
 /**
@@ -356,4 +358,194 @@ class Tokenizer {
 }
 
 Tokenizer.prototype.reportError = reportError;
+
+/**
+ * This class takes a set of highlighting rules, and creates a tokenizer out of them.
+ * @class CustomTokenizer
+ * @extends Tokenizer
+ **/
+
+/**
+ * Constructs a new experimental tokenizer based on the given rules and flags.
+ * @param {Object} rules The highlighting rules
+ * @param {String} modeName The highlighting mode name
+ *
+ * @constructor
+ **/
+var CustomTokenizer = function(rules, modeName) {
+    Tokenizer.call(this, rules);
+    this.rootScope = new Scope(modeName);
+}
+oop.inherits(CustomTokenizer, Tokenizer);
+
+(function() {
+    /**
+     * Returns an object containing two properties: `tokens`, which contains all the tokens; and `state`, the current state.
+     * @param {String} line
+     * @param {String|Scope} startState
+     * @returns {Object}
+     * @override
+     **/
+    this.getLineTokens = function(line, startState) {
+        var stack = [];
+
+        var currentState = (startState !== undefined) ? (startState instanceof Scope) ? startState
+            : this.rootScope.get(startState) : this.rootScope.get("start");
+        var state = this.states[currentState];
+        if (!state) {
+            currentState = this.rootScope.get("start");
+            state = this.states[currentState];
+        }
+        var mapping = this.matchMappings[currentState];
+        var re = this.regExps[currentState];
+        re.lastIndex = 0;
+
+        var match, tokens = [];
+        var lastIndex = 0;
+        var matchAttempts = 0;
+
+        var token = {type: null, value: ""};
+
+        while (match = re.exec(line)) {
+            var type = currentState.get(mapping.defaultToken);
+            var rule = null;
+            var rememberedState = undefined;
+            var value = match[0];
+            var index = re.lastIndex;
+
+            if (index - value.length > lastIndex) {
+                var skipped = line.substring(lastIndex, index - value.length);
+                if (token.type && token.type === type) {
+                    token.value += skipped;
+                } else {
+                    if (token.type)
+                        tokens.push(token);
+                    token = {type: currentState.get(type), value: skipped};
+                }
+            }
+
+            for (var i = 0; i < match.length-2; i++) {
+                if (match[i + 1] === undefined)
+                    continue;
+
+                rule = state[mapping[i]];
+
+                if (rule.onMatch) {
+                    type = rule.onMatch(value, currentState, stack, line);
+                    if (!(type instanceof Scope)) {
+                        if (!Array.isArray(type)) {
+                            type = currentState.get(type.toString());
+                        } else {
+                            for (var i = 0; i < type.length; i++) {
+                                type[i].type = currentState.get(type[i].type.toString());
+                            }
+                        }
+                    } else {
+                        rememberedState = type.parent;
+                        if (currentState !== rememberedState) {
+                            currentState = rememberedState;
+                            state = this.states[currentState];
+                            mapping = this.matchMappings[currentState];
+                            lastIndex = index;
+                            re = this.regExps[currentState];
+                            re.lastIndex = index;
+                        }
+                    }
+                }
+                else {
+                    if (rule.token)
+                        type = currentState.get(rule.token);
+                }
+
+                if (rule.next) {
+                    if (!rememberedState) {
+                        if (typeof rule.next !== 'function') {
+                            currentState = currentState.parent.get(rule.next);
+                        } else {
+                            currentState = rule.next(currentState, stack);
+                        }
+                    } else {
+                        currentState = rememberedState;
+                    }
+
+                    state = this.states[currentState];
+                    if (!state) {
+                        this.reportError("state doesn't exist", currentState);
+                        currentState = this.rootScope.get("start");
+                        state = this.states[currentState];
+                    }
+                    mapping = this.matchMappings[currentState];
+                    lastIndex = index;
+                    re = this.regExps[currentState];
+                    re.lastIndex = index;
+                }
+                if (rule.consumeLineEnd)
+                    lastIndex = index;
+                break;
+            }
+
+            if (value) {
+                if (!Array.isArray(type)) {
+                    if ((!rule || rule.merge !== false) && token.type === type) {
+                        token.value += value;
+                    } else {
+                        if (token.type)
+                            tokens.push(token);
+                        token = {type: currentState.get(type), value: value};
+                    }
+                } else if (type) {
+                    if (token.type)
+                        tokens.push(token);
+                    token = {type: null, value: ""};
+                    for (var i = 0; i < type.length; i++) {
+                        type[i].type=currentState.get(type[i].type);
+                        tokens.push(type[i]);
+                    }
+                }
+            }
+
+            if (lastIndex === line.length)
+                break;
+
+            lastIndex = index;
+
+            if (matchAttempts++ > MAX_TOKEN_COUNT) {
+                if (matchAttempts > 2 * line.length) {
+                    this.reportError("infinite loop with in ace tokenizer", {
+                        startState: startState,
+                        line: line
+                    });
+                }
+                // chrome doens't show contents of text nodes with very long text
+                while (lastIndex < line.length) {
+                    if (token.type)
+                        tokens.push(token);
+                    token = {
+                        value: line.substring(lastIndex, lastIndex += 500),
+                        type: currentState.get("overflow")
+                    };
+                }
+                currentState = this.rootScope.get("start");
+                break;
+            }
+        }
+
+        if (token.type)
+            tokens.push(token);
+
+        if (!tokens.length || tokens[tokens.length - 1].type.parent !== currentState) {
+            token = {
+                value: "",
+                type: currentState.get("empty")
+            };
+            tokens.push(token);
+        }
+
+        return {
+            tokens: tokens
+        };
+    };
+}).call(CustomTokenizer.prototype);
+
 exports.Tokenizer = Tokenizer;
+exports.CustomTokenizer = CustomTokenizer;

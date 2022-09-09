@@ -58,13 +58,23 @@ class TokenTooltip extends Tooltip {
             return;
         }
 
-        var tokenText = token.type;
-        if (token.state)
-            tokenText += "|" + token.state;
-        if (token.merge)
-            tokenText += "\n  merge";
-        if (token.stateTransitions)
-            tokenText += "\n  " + token.stateTransitions.join("\n  ");
+        var tokenText = "";
+        var scope = token.type;
+        if (scope.name !== undefined) {
+            do {
+                tokenText += scope.name + "\n"
+                if (!scope.parent)
+                    tokenText += "\ntoken count:" + count(scope);
+            } while(scope = scope.parent)
+        } else {
+            tokenText += token.type;
+            if (token.state)
+                tokenText += "|" + token.state;
+            if (token.merge)
+                tokenText += "\n  merge";
+            if (token.stateTransitions)
+                tokenText += "\n  " + token.stateTransitions.join("\n  ");
+        }
 
         if (this.tokenText != tokenText) {
             this.setText(tokenText);
@@ -119,6 +129,12 @@ class TokenTooltip extends Tooltip {
         delete this.editor.tokenTooltip;
     };
 
+}
+
+function count(root) {
+    return Object.keys(root.children).reduce(function (n, key) {
+        return n + count(root.children[key]);
+    }, 1);
 }
 
 exports.TokenTooltip = TokenTooltip;
