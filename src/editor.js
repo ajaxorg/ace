@@ -2936,7 +2936,7 @@ config.defineOptions(Editor.prototype, "editor", {
             this.$updatePlaceholder();
         }
     },
-
+    customScrollbar: "renderer",
     hScrollBarAlwaysVisible: "renderer",
     vScrollBarAlwaysVisible: "renderer",
     highlightGutterLine: "renderer",

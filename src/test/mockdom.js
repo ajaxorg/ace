@@ -472,7 +472,54 @@ function Node(name) {
         if (document.activeElement == this)
             document.body.focus();
     };
-    
+    this.getContext = function (contextId, options) {
+        if (this.contextMock !== undefined) return this.contextMock;
+        this.contextMock = {
+            points: [],
+            fillStyle: "#000",
+            clearRect: function (x, y, w, h) {
+                for (var i = x; i < w + x; i++) {
+                    for (var j = y; j < h + y; j++) {
+                        var point = this.points.find(el => el.x === i && el.y === j);
+                        if (point) {
+                            point.fillStyle = "rgba(0, 0, 0, 0)";
+                        }
+                        else {
+                            this.points.push({
+                                x: i,
+                                y: j,
+                                fillStyle: "rgba(0, 0, 0, 0)"
+                            });
+                        }
+                    }
+                }
+            },
+            fillRect: function (x, y, w, h) {
+                for (var i = x; i < w + x; i++) {
+                    for (var j = y; j < h + y; j++) {
+                        var point = this.points.find(el => el.x === i && el.y === j);
+                        if (point) {
+                            point.fillStyle = this.fillStyle;
+                        }
+                        else {
+                            this.points.push({
+                                x: i,
+                                y: j,
+                                fillStyle: this.fillStyle
+                            });
+                        }
+                    }
+                }
+            },
+            getImageData: function (sx, sy, sw, sh) {
+                return {
+                    "data": this.points.filter((el) => el.x >= sx && el.x <= sx + sw && el.y >= sy && el.y <= sy + sh)
+                };
+            }
+        };
+        return this.contextMock;
+    };
+
     function removeAllChildren(node) {
         node.children.forEach(function(node) {
             node.parentNode = null;

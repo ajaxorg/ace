@@ -214,6 +214,90 @@ module.exports = {
         editor.session.selection.$setSelection(1, 15, 1, 15);
         editor.resize(true);
         assertIndentGuides( 0);
+    },
+    "test annotation marks": function() {
+        function findPointFillStyle(points, x, y) {
+            var point = points.find(el => el.x === x && el.y === y);
+            if (point === undefined) return;
+
+            return point.fillStyle;
+        }
+
+        function assertCoordsColor(expected, points) {
+            for (var el of expected) {
+                assert.equal(findPointFillStyle(points, el.x, el.y), el.color);
+            }
+        }
+
+        var renderer = editor.renderer;
+        renderer.container.scrollHeight = 100;
+        renderer.layerConfig.maxHeight = 200;
+        renderer.layerConfig.lineHeight = 14;
+
+        editor.setOptions({
+            customScrollbar: true
+        });
+        editor.setValue("a" + "\n".repeat(100) + "b" + "\nxxxxxx", -1);
+        editor.session.setAnnotations([
+            {
+                row: 1,
+                column: 2,
+                type: "error"
+            }, {
+                row: 4,
+                column: 1,
+                type: "warning"
+            }, {
+                row: 20,
+                column: 1,
+                type: "info"
+            }
+        ]);
+        renderer.$loop._flush();
+        var context = renderer.$scrollDecorator.canvas.getContext();
+        var imageData = context.getImageData(0, 0, 50, 50);
+        var scrollDecoratorColors = renderer.$scrollDecorator.colors.light;
+        var values = [
+            // reflects cursor position on canvas
+            {x: 0, y: 0, color: "rgba(0, 0, 0, 0.5)"},
+            {x: 1, y: 1, color: "rgba(0, 0, 0, 0.5)"},
+            // reflects error annotation mark on canvas overlapped by cursor
+            {x: 2, y: 2, color: scrollDecoratorColors.error},
+            // default value
+            {x: 3, y: 3, color: "rgba(0, 0, 0, 0)"},
+            // reflects warning annotation mark on canvas
+            {x: 4, y: 4, color: scrollDecoratorColors.warning},
+            {x: 5, y: 5, color: scrollDecoratorColors.warning},
+            {x: 6, y: 6, color: "rgba(0, 0, 0, 0)"},
+            {x: 7, y: 20, color: scrollDecoratorColors.info},
+            {x: 8, y: 21, color: scrollDecoratorColors.info}
+        ];
+        assertCoordsColor(values, imageData.data);
+        editor.moveCursorTo(5, 6);
+        renderer.$loop._flush();
+        values = [
+            {x: 0, y: 0, color: "rgba(0, 0, 0, 0)"},
+            {x: 1, y: 1, color: scrollDecoratorColors.error},
+            {x: 2, y: 2, color: scrollDecoratorColors.error},
+            {x: 3, y: 3, color: "rgba(0, 0, 0, 0)"},
+            {x: 4, y: 4, color: scrollDecoratorColors.warning},
+            {x: 5, y: 5, color: "rgba(0, 0, 0, 0.5)"},
+            {x: 6, y: 6, color: "rgba(0, 0, 0, 0.5)"}
+        ];
+        assertCoordsColor(values, imageData.data);
+        renderer.session.addFold("...", new Range(0, 0, 3, 2));
+        editor.moveCursorTo(10, 0);
+        renderer.$loop._flush();
+        values = [
+            {x: 0, y: 0, color: scrollDecoratorColors.error},
+            {x: 1, y: 1, color: scrollDecoratorColors.error},
+            {x: 2, y: 2, color: scrollDecoratorColors.warning},
+            {x: 3, y: 3, color: "rgba(0, 0, 0, 0)"},
+            {x: 4, y: 4, color: "rgba(0, 0, 0, 0)"},
+            {x: 5, y: 5, color: "rgba(0, 0, 0, 0)"},
+            {x: 6, y: 6, color: "rgba(0, 0, 0, 0)"}
+        ];
+        assertCoordsColor(values, imageData.data);
     }
 
     // change tab size after setDocument (for text layer)

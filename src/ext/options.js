@@ -191,6 +191,9 @@ var optionGroups = {
         },
         "Live Autocompletion": {
             path: "enableLiveAutocompletion"
+        },
+        "Custom scrollbar": {
+            path: "customScrollbar"
         }
     }
 };
