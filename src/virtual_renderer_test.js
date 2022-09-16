@@ -218,7 +218,7 @@ module.exports = {
     "test annotation marks": function() {
         function findPointFillStyle(points, x, y) {
             var point = points.find(el => el.x === x && el.y === y);
-            if (point == undefined) return undefined;
+            if (point === undefined) return;
 
             return point.fillStyle;
         }
@@ -283,6 +283,19 @@ module.exports = {
             {x: 4, y: 4, color: scrollDecoratorColors.warning},
             {x: 5, y: 5, color: "rgba(0, 0, 0, 0.5)"},
             {x: 6, y: 6, color: "rgba(0, 0, 0, 0.5)"}
+        ];
+        assertCoordsColor(values, imageData.data);
+        renderer.session.addFold("...", new Range(0, 0, 3, 2));
+        editor.moveCursorTo(10, 0);
+        renderer.$loop._flush();
+        values = [
+            {x: 0, y: 0, color: scrollDecoratorColors.error},
+            {x: 1, y: 1, color: scrollDecoratorColors.error},
+            {x: 2, y: 2, color: scrollDecoratorColors.warning},
+            {x: 3, y: 3, color: "rgba(0, 0, 0, 0)"},
+            {x: 4, y: 4, color: "rgba(0, 0, 0, 0)"},
+            {x: 5, y: 5, color: "rgba(0, 0, 0, 0)"},
+            {x: 6, y: 6, color: "rgba(0, 0, 0, 0)"}
         ];
         assertCoordsColor(values, imageData.data);
     }

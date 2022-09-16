@@ -17,7 +17,7 @@ var Decorator = function (parent, renderer) {
 
     this.canvas.width = this.canvasWidth;
     this.canvas.height = this.canvasHeight;
-    this.canvas.style.top = 0  + "px";
+    this.canvas.style.top = 0 + "px";
     this.canvas.style.right = 0 + "px";
     this.canvas.style.zIndex = 7 + "px";
     this.canvas.style.position = "absolute";
@@ -50,43 +50,39 @@ var Decorator = function (parent, renderer) {
             var allLineHeight = (config.lastRow + 1) * this.lineHeight;
             if (allLineHeight < this.canvasHeight) {
                 this.heightRatio = 1;
-            } else {
+            }
+            else {
                 this.heightRatio = this.canvasHeight / this.maxHeight;
             }
         }
         var ctx = this.canvas.getContext("2d");
 
         function compare(a, b) {
-            if (a.typeNumber < b.typeNumber) return -1;
-            if (a.typeNumber > b.typeNumber) return 1;
+            if (a.priority < b.priority) return -1;
+            if (a.priority > b.priority) return 1;
             return 0;
         }
 
         var annotations = this.renderer.session.$annotations;
         ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         if (annotations) {
+            var priorities = {
+                "info": 1,
+                "warning": 2,
+                "error": 3
+            };
             annotations.forEach(function (item) {
-                switch (item.type) {
-                    case "info":
-                        item.typeNumber = 1;
-                        break;
-                    case "warning":
-                        item.typeNumber = 2;
-                        break;
-                    case "error":
-                        item.typeNumber = 3;
-                        break;
-                }
+                item.priority = priorities[item.type] || null;
             });
             annotations = annotations.sort(compare);
             var foldData = this.renderer.session.$foldData;
 
             for (let i = 0; i < annotations.length; i++) {
-                let currentRow = annotations[i].row;
-                let compensateFold = this.compensateFoldRows(currentRow, foldData);
-                let currentY = Math.round((currentRow - compensateFold) * this.lineHeight * this.heightRatio);
-                let y1 = Math.round(((currentRow - compensateFold) * this.lineHeight * this.heightRatio));
-                let y2 = Math.round((((currentRow - compensateFold) * this.lineHeight + this.lineHeight) * this.heightRatio));
+                let row = annotations[i].row;
+                let compensateFold = this.compensateFoldRows(row, foldData);
+                let currentY = Math.round((row - compensateFold) * this.lineHeight * this.heightRatio);
+                let y1 = Math.round(((row - compensateFold) * this.lineHeight * this.heightRatio));
+                let y2 = Math.round((((row - compensateFold) * this.lineHeight + this.lineHeight) * this.heightRatio));
                 const height = y2 - y1;
                 if (height < this.minDecorationHeight) {
                     let yCenter = ((y1 + y2) / 2) | 0;
@@ -100,17 +96,7 @@ var Decorator = function (parent, renderer) {
                     y2 = Math.round(yCenter + this.halfMinDecorationHeight);
                 }
 
-                switch (annotations[i].type) {
-                    case "info":
-                        ctx.fillStyle = colors.info;
-                        break;
-                    case "warning":
-                        ctx.fillStyle = colors.warning;
-                        break;
-                    case "error":
-                        ctx.fillStyle = colors.error;
-                        break;
-                }
+                ctx.fillStyle = colors[annotations[i].type] || null;
                 ctx.fillRect(0, currentY, this.canvasWidth, y2 - y1);
             }
         }
@@ -124,14 +110,14 @@ var Decorator = function (parent, renderer) {
 
     };
 
-    this.compensateFoldRows = function (currentRow, foldData) {
+    this.compensateFoldRows = function (row, foldData) {
         let compensateFold = 0;
         if (foldData && foldData.length > 0) {
             for (let j = 0; j < foldData.length; j++) {
-                if (currentRow > foldData[j].start.row && currentRow < foldData[j].end.row) {
-                    compensateFold += currentRow - foldData[j].start.row;
+                if (row > foldData[j].start.row && row < foldData[j].end.row) {
+                    compensateFold += row - foldData[j].start.row;
                 }
-                else if (currentRow >= foldData[j].end.row) {
+                else if (row >= foldData[j].end.row) {
                     compensateFold += foldData[j].end.row - foldData[j].start.row;
                 }
             }
