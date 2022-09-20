@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.11.0](https://github.com/ajaxorg/ace/compare/v1.10.1...v1.11.0) (2022-09-20)
+
+
+### Features
+
+* add gutter indicators for annotations; add custom scrollbar to display gutter indicators ([62fb0d8](https://github.com/ajaxorg/ace/commit/62fb0d8fba813241d01356962ed20ac868a29ede))
+
+
+### Bug Fixes
+
+* change scroll behaviour for `onmousedown` to immediate scroll to point ([392b224](https://github.com/ajaxorg/ace/commit/392b224ceb4e82b4d906c36aef2ea4953e3d440e))
+* Do not try apply highlight indent guide if the file is empty ([#4928](https://github.com/ajaxorg/ace/issues/4928)) ([a90ef27](https://github.com/ajaxorg/ace/commit/a90ef275298b524c493076e47aae13036f6e6271))
+* restrict annotation mark max height and optimise marks coords on canvas ([a6e2259](https://github.com/ajaxorg/ace/commit/a6e2259eb0a282c62fd9e6fde31d86b6c14ec06d))
+
 ### [1.10.1](https://github.com/ajaxorg/ace/compare/v1.10.0...v1.10.1) (2022-09-06)
 
 
