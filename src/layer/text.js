@@ -436,6 +436,8 @@ var Text = function(parentEl) {
             dir: undefined
         };
         var lines = this.session.doc.$lines;
+        if (!lines) return;
+
         var cursor = this.session.selection.getCursor();
         var initialIndent = /^\s*/.exec(this.session.doc.getLine(cursor.row))[0].length;
         var elementIndentLevel = Math.floor(initialIndent / this.tabSize);
