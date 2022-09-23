@@ -94,13 +94,37 @@ vim.CodeMirror.Vim.defineEx('write', 'w', function(cm) {
 // cm.replaceRange("x-", {ch: 4, line: 0}, {ch: 5, line: 0}); [editor.$vimModeHandler.cm.marks[0].find(),editor.$vimModeHandler.cm.marks[1].find()]
 
 var lineText, verbose = true;
-var eqCursorPos = assert.deepEqual;
-var eq = assert.equal;
-var is = assert.ok;
 // ace_patch}
+
+
+function eqCursorPos(a, b) {
+  if (a.line != b.line || a.ch != b.ch)
+    throw failure(
+      "Expected cursor position " +
+       JSON.stringify([a.line, a.ch]) +
+       " to be equal to " +
+       JSON.stringify([b.line, b.ch]),
+       eqCursorPos
+      );
+}
+function eq(a, b) {
+  if(a != b)
+    throw failure("Expected " + a +  " to be equal to " + b, eq);
+}
+function is(a) {
+  if (!a) throw failure("Expected " + a +  " to be truthy", is);
+}
+function failure(message, root) {
+  var error = new Error(message);
+  if (Error.captureStackTrace)
+    Error.captureStackTrace(error, root);
+  return error;
+}
 
 var Pos = CodeMirror.Pos;
 CodeMirror.Vim.suppressErrorLogging = true;
+
+var isOldCodeMirror = /^5\./.test(CodeMirror.version);
 
 var code = '' +
 ' wOrd1 (#%\n' +
@@ -295,7 +319,8 @@ function testVim(name, run, opts, expectedFail) {
         return CodeMirror.Vim.getRegisterController();
       },
       getNotificationText: function() {
-        return cm.getWrapperElement().querySelector(".cm-vim-message").textContent;
+        var container = cm.getWrapperElement().querySelector(".cm-vim-message");
+        return container && container.textContent;
       }
     }
     CodeMirror.Vim.resetVimGlobalState_();
@@ -415,6 +440,7 @@ testMotion('|_repeat', ['3', '|'], makeCursor(0, 2), makeCursor(0,4));
 testMotion('h', 'h', makeCursor(0, 0), word1.start);
 testMotion('h_repeat', ['3', 'h'], offsetCursor(word1.end, 0, -3), word1.end);
 testMotion('l', 'l', makeCursor(0, 1));
+testMotion('Space', 'Space', makeCursor(0, 1));
 testMotion('l_repeat', ['2', 'l'], makeCursor(0, 2));
 testMotion('j', 'j', offsetCursor(word1.end, 1, 0), word1.end);
 testMotion('j_repeat', ['2', 'j'], offsetCursor(word1.end, 2, 0), word1.end);
@@ -589,15 +615,15 @@ testVim('gj_gk', function(cm, vim, helpers) {
   // Test bottom of document edge case.
   helpers.doKeys('100', 'g', 'j');
   var endingPos = cm.getCursor();
-  is(endingPos != 0, 'gj should not be on wrapped line 0');
+  is(endingPos.ch != 0, 'gj should not be on wrapped line 0');
   var topLeftCharCoords = cm.charCoords(makeCursor(0, 0));
   var endingCharCoords = cm.charCoords(endingPos);
   is(topLeftCharCoords.left == endingCharCoords.left, 'gj should end up on column 0');
 },{ lineNumbers: false, lineWrapping:true, value: 'Thislineisintentionallylongtotestmovementofgjandgkoverwrappedlines.' });
 testVim('g0_g$', function(cm, vim, helpers) {
+  cm.setSize(120);
   var topLeftCharCoords = cm.charCoords(makeCursor(0, 0));
   cm.setCursor(0, 4);
-  cm.setSize(120);
   helpers.doKeys('g', 'Down');
   var secondLineCoords = cm.charCoords(cm.getCursor());
   is(secondLineCoords.top > topLeftCharCoords.top);
@@ -748,6 +774,86 @@ testVim('paragraph_motions', function(cm, vim, helpers) {
   is(register.linewise);
   eq('b\na\na\nc\n', register.toString());
 }, { value: 'a\na\n\n\n\nb\nc\n\n\n\n\n\n\nd\n\ne\nf' });
+
+testVim('sentence_selections', function(cm, vim, helpers) {
+  // vis at beginning of line
+  cm.setCursor(0, 0);
+  helpers.doKeys('v', 'i', 's');
+  eqCursorPos(new Pos(0, 0), cm.getCursor('anchor'));
+  eqCursorPos(new Pos(0, 14), cm.getCursor('head'));
+
+  // vas at beginning of line
+  cm.setCursor(0, 0);
+  helpers.doKeys('v', 'a', 's');
+  eqCursorPos(new Pos(0, 0), cm.getCursor('anchor'));
+  eqCursorPos(new Pos(0, 15), cm.getCursor('head'));
+
+  // vis on sentence end
+  cm.setCursor(0, 13);
+  helpers.doKeys('v', 'i', 's');
+  eqCursorPos(new Pos(0, 0), cm.getCursor('anchor'));
+  eqCursorPos(new Pos(0, 14), cm.getCursor('head'));
+
+  // vas on sentence end
+  cm.setCursor(0, 13);
+  helpers.doKeys('v', 'a', 's');
+  eqCursorPos(new Pos(0, 0), cm.getCursor('anchor'));
+  eqCursorPos(new Pos(0, 15), cm.getCursor('head'));
+
+  // vis at sentence end, no whitespace after it
+  cm.setCursor(1, 18);
+  helpers.doKeys('v', 'i', 's');
+  eqCursorPos(new Pos(1, 13), cm.getCursor('anchor'));
+  eqCursorPos(new Pos(1, 19), cm.getCursor('head'));
+
+  // vas at sentence end, no whitespace after it
+  cm.setCursor(1, 18);
+  helpers.doKeys('v', 'a', 's');
+  eqCursorPos(new Pos(1, 12), cm.getCursor('anchor'));
+  eqCursorPos(new Pos(1, 19), cm.getCursor('head'));
+
+  // vis at sentence beginning, on whitespace
+  cm.setCursor(0, 14);
+  helpers.doKeys('v', 'i', 's');
+  eqCursorPos(new Pos(0, 14), cm.getCursor('anchor'));
+  eqCursorPos(new Pos(0, 29), cm.getCursor('head'));
+
+  cm.setCursor(0, 0);
+  helpers.doKeys('d', 'i', 's');
+  var register = helpers.getRegisterController().getRegister();
+  eq('Test sentence.', register.toString());
+
+  // return to original value
+  helpers.doKeys('u')
+
+  cm.setCursor(0, 0);
+  helpers.doKeys('d', 'a', 's');
+  register = helpers.getRegisterController().getRegister();
+  eq('Test sentence. ', register.toString());
+
+  // return to original value
+  helpers.doKeys('u')
+
+  cm.setCursor(1, 20);
+  helpers.doKeys('c', 'a', 's', '<Esc>');
+  register = helpers.getRegisterController().getRegister();
+  eq('Test.', register.toString());
+
+  // return to original value
+  helpers.doKeys('u')
+
+  cm.setCursor(3, 11);
+  helpers.doKeys('y', 'a', 's');
+  register = helpers.getRegisterController().getRegister();
+  eq('This is more text. ', register.toString());
+
+  cm.setCursor(3, 31);
+  helpers.doKeys('y', 'a', 's');
+  register = helpers.getRegisterController().getRegister();
+  eq(' No end of sentence symbol', register.toString());
+
+}, { value: 'Test sentence. Test question?\nAgain.Never. Again.Test.\n\nHello. This is more text. No end of sentence symbol\n' });
+
 
 // Operator tests
 testVim('dl', function(cm, vim, helpers) {
@@ -1387,7 +1493,14 @@ testVim('._delete_visualBlock', function(cm, vim, helpers) {
   eq('ve\n\nsome\nsugar', cm.getValue());
   helpers.doKeys('j', 'j', '.');
   eq('ve\n\nome\nugar', cm.getValue());
-  helpers.doKeys('u', '<C-r>', '.');
+  helpers.doKeys('u');
+  if (!isOldCodeMirror) helpers.assertCursorAt(2, 0);
+  eq('ve\n\nsome\nsugar', cm.getValue());
+  helpers.doKeys('<C-r>');
+  helpers.assertCursorAt(2, 0);
+  eq('ve\n\nome\nugar', cm.getValue());
+  helpers.doKeys('.');
+  helpers.assertCursorAt(2, 0);
   eq('ve\n\nme\ngar', cm.getValue());
 },{value: 'give\nme\nsome\nsugar' });
 testVim('>{motion}', function(cm, vim, helpers) {
@@ -1442,13 +1555,12 @@ testVim('=', function(cm, vim, helpers) {
   eq(expectedValue, cm.getValue());
 }, { value: '   word1\n  word2\n  word3', indentUnit: 2 });
 
-// Edit tests - configureCm is an optional argument that gives caller
-// access to the cm object.
-function testEdit(name, before, pos, edit, after, configureCm) {
+
+// Edit tests
+function testEdit(name, before, pos, edit, after, opts) {
+  if (!opts) opts = {};
+  opts.value = before;
   return testVim(name, function(cm, vim, helpers) {
-             if (configureCm) {
-               configureCm(cm);
-             }
              var ch = before.search(pos)
              var line = before.substring(0, ch).split('\n').length - 1;
              if (line) {
@@ -1457,7 +1569,7 @@ function testEdit(name, before, pos, edit, after, configureCm) {
              cm.setCursor(line, ch);
              helpers.doKeys.apply(this, edit.split(''));
              eq(after, cm.getValue());
-           }, {value: before});
+           }, opts);
 }
 
 // These Delete tests effectively cover word-wise Change, Visual & Yank.
@@ -1555,24 +1667,24 @@ testEdit('da>_middle_spc', 'a\t<\n\tbar\n>b', /r/, 'da>', 'a\tb');
 
 // deleting tag objects
 isAce || testEdit('dat_noop', '<outer><inner>hello</inner></outer>', /n/, 'dat', '<outer><inner>hello</inner></outer>');
-isAce || testEdit('dat_open_tag', '<outer><inner>hello</inner></outer>', /n/, 'dat', '<outer></outer>', function(cm) {
-  cm.setOption('mode', 'xml');
+isAce || testEdit('dat_open_tag', '<outer><inner>hello</inner></outer>', /n/, 'dat', '<outer></outer>', {
+  mode: 'xml'
 });
-isAce || testEdit('dat_inside_tag', '<outer><inner>hello</inner></outer>', /l/, 'dat', '<outer></outer>', function(cm) {
-  cm.setOption('mode', 'xml');
+isAce || testEdit('dat_inside_tag', '<outer><inner>hello</inner></outer>', /l/, 'dat', '<outer></outer>', {
+  mode: 'xml'
 });
-isAce || testEdit('dat_close_tag', '<outer><inner>hello</inner></outer>', /\//, 'dat', '<outer></outer>', function(cm) {
-  cm.setOption('mode', 'xml');
+isAce || testEdit('dat_close_tag', '<outer><inner>hello</inner></outer>', /\//, 'dat', '<outer></outer>', {
+  mode: 'xml'
 });
 
-isAce || testEdit('dit_open_tag', '<outer><inner>hello</inner></outer>', /n/, 'dit', '<outer><inner></inner></outer>', function(cm) {
-  cm.setOption('mode', 'xml');
+isAce || testEdit('dit_open_tag', '<outer><inner>hello</inner></outer>', /n/, 'dit', '<outer><inner></inner></outer>', {
+  mode: 'xml'
 });
-isAce || testEdit('dit_inside_tag', '<outer><inner>hello</inner></outer>', /l/, 'dit', '<outer><inner></inner></outer>', function(cm) {
-  cm.setOption('mode', 'xml');
+isAce || testEdit('dit_inside_tag', '<outer><inner>hello</inner></outer>', /l/, 'dit', '<outer><inner></inner></outer>', {
+  mode: 'xml'
 });
-isAce || testEdit('dit_close_tag', '<outer><inner>hello</inner></outer>', /\//, 'dit', '<outer><inner></inner></outer>', function(cm) {
-  cm.setOption('mode', 'xml');
+isAce || testEdit('dit_close_tag', '<outer><inner>hello</inner></outer>', /\//, 'dit', '<outer><inner></inner></outer>', {
+  mode: 'xml'
 });
 
 function testSelection(name, before, pos, keys, sel) {
@@ -1690,7 +1802,7 @@ testVim('<C-x>/<C-a> search forward', function(cm, vim, helpers) {
     helpers.assertCursorAt(0, 11);
   });
 }, {value: '__jmp1 jmp2 jmp'});
-isAce || testVim('insert_ctrl_u', function(cm, vim, helpers) {
+testVim('insert_ctrl_u', function(cm, vim, helpers) {
   var curStart = makeCursor(0, 10);
   cm.setCursor(curStart);
   helpers.doKeys('a');
@@ -2008,11 +2120,11 @@ testVim('r_visual_block', function(cm, vim, helpers) {
   eq('1  l\n5  l\nalllefg', cm.getValue());
   cm.setCursor(2, 0);
   helpers.doKeys('o');
-  helpers.doKeys('\t\t')
+  helpers.doKeys('\t\t');
   helpers.doKeys('<Esc>');
   helpers.doKeys('<C-v>', 'h', 'h', 'r', 'r');
   eq('1  l\n5  l\nalllefg\nrrrrrrrr', cm.getValue());
-}, {value: '1234\n5678\nabcdefg'});
+}, {value: '1234\n5678\nabcdefg', indentWithTabs: true});
 testVim('R', function(cm, vim, helpers) {
   cm.setCursor(0, 1);
   helpers.doKeys('R');
@@ -2065,10 +2177,12 @@ testVim('mark\'', function(cm, vim, helpers) {
   helpers.assertCursorAt(1, 1);
   // edits
   helpers.doKeys('g', 'I', '\n', '<Esc>', 'l');
+  // the column may be different depending on editor behavior in insert mode
+  var ch = cm.getCursor().ch;
   helpers.doKeys('`', '`');
   helpers.assertCursorAt(7, 2);
   helpers.doKeys('`', '`');
-  helpers.assertCursorAt(2, 1);
+  helpers.assertCursorAt(2, ch);
 });
 testVim('mark.', function(cm, vim, helpers) {
   cm.setCursor(0, 0);
@@ -2476,9 +2590,29 @@ testVim('visual_join', function(cm, vim, helpers) {
 }, { value: ' 1\n 2\n 3\n 4\n 5' });
 testVim('visual_join_2', function(cm, vim, helpers) {
   helpers.doKeys('G', 'V', 'g', 'g', 'J');
-  eq('1 2 3 4 5 6 ', cm.getValue());
+  eq('1 2 3 4 5 6', cm.getValue());
   is(!vim.visualMode);
 }, { value: '1\n2\n3\n4\n5\n6\n'});
+testVim('visual_join_blank', function(cm, vim, helpers) {
+  var initialValue = cm.getValue();
+  helpers.doKeys('G', 'V', 'g', 'g', 'J');
+  eq('1  2 5 6', cm.getValue());
+  is(!vim.visualMode);
+  helpers.doKeys('u');
+  eq(initialValue, cm.getValue());
+  helpers.doKeys('G', 'V', 'g', 'g', 'g', 'J');
+  eq('1 \t2\t  5 6', cm.getValue());
+  helpers.doKeys('u');
+  eq(cm.getCursor().line, 0);
+  eq(initialValue, cm.getValue());
+  helpers.doKeys('J', 'J', 'J');
+  helpers.assertCursorAt(0, 3);
+  helpers.doKeys('J');
+  helpers.assertCursorAt(0, 4);
+  eq('1  2 5\n 6\n', cm.getValue());
+  helpers.doKeys('u');
+  eq('1  2\n5\n 6\n', cm.getValue());  
+}, { value: '1 \n\t2\n\t  \n\n5\n 6\n'});
 testVim('visual_blank', function(cm, vim, helpers) {
   helpers.doKeys('v', 'k');
   eq(vim.visualMode, true);
@@ -2825,7 +2959,7 @@ testVim('?_nongreedy', function(cm, vim, helpers) {
   helpers.doKeys('n');
   helpers.assertCursorAt(0, 4);
   helpers.doKeys('n');
-  helpers.assertCursorAt(0, 0); // ace_patch TODO this appears to be wrong in codemirror
+  helpers.assertCursorAt(0, isOldCodeMirror ? 1 : 0);
 }, { value: 'aaa aa \n a aa'});
 testVim('/_greedy', function(cm, vim, helpers) {
   helpers.doKeys('/', 'a+', '\n');
@@ -3028,7 +3162,9 @@ testVim('macro_insert', function(cm, vim, helpers) {
   helpers.doKeys('q', 'a', '0', 'i');
   helpers.doKeys('foo')
   helpers.doKeys('<Esc>');
+  eq(helpers.getNotificationText(), 'recording @a');
   helpers.doKeys('q', '@', 'a');
+  eq(helpers.getNotificationText(), null);
   eq('foofoo', cm.getValue());
 }, { value: ''});
 testVim('macro_insert_repeat', function(cm, vim, helpers) {
@@ -3649,6 +3785,32 @@ testVim('Ty,;', function(cm, vim, helpers) {
   helpers.doKeys('y', ',', 'P');
   eq('01230123456789', cm.getValue());
 }, { value: '0123456789'});
+testVim('page_motions', function(cm, vim, helpers) {
+  var value = "x".repeat(200).split("").map((_, i)=>i).join("\n");
+  cm.setValue(value);
+  cm.refresh();
+  var lines = 10;
+  var textHeight = cm.defaultTextHeight();
+  cm.setSize(600, lines*textHeight);
+  cm.setCursor(100, 0);
+  cm.refresh();
+  helpers.doKeys('<C-u>');
+  helpers.assertCursorAt(95, 0);
+  helpers.doKeys('<C-u>');
+  helpers.assertCursorAt(90, 0);
+  helpers.doKeys('<C-d>');
+  helpers.doKeys('<C-d>');
+  helpers.assertCursorAt(100, 0);
+  cm.refresh();
+  helpers.doKeys('<C-f>');
+  cm.refresh();
+  helpers.assertCursorAt(110, 0);
+
+  helpers.doKeys('<C-b>');
+  cm.refresh();
+  helpers.assertCursorAt(100, 0);
+  eq(value, cm.getValue());
+});
 testVim('HML', function(cm, vim, helpers) {
   cm.refresh();
   var lines = 35;
@@ -3672,6 +3834,7 @@ testVim('HML', function(cm, vim, helpers) {
 })()});
 
 var zVals = [];
+var cursorIndexVals = [];
 forEach(['zb','zz','zt','z-','z.','z<CR>'], function(e, idx){
   var lineNum = 250;
   var lines = 35;
@@ -3681,11 +3844,16 @@ forEach(['zb','zz','zt','z-','z.','z<CR>'], function(e, idx){
     var k2 = e.substring(1);
     var textHeight = cm.defaultTextHeight();
     cm.setSize(600, lines*textHeight);
-    cm.setCursor(lineNum, 0);
+    cm.setCursor(lineNum, 1);
+    var originalCursorIndex = cm.indexFromPos(cm.getCursor());
     helpers.doKeys(k1, k2);
     zVals[idx] = cm.getScrollInfo().top;
+    cursorIndexVals[idx] = {
+      before: originalCursorIndex,
+      after: cm.indexFromPos(cm.getCursor())
+    };
   }, { value: (function(){
-    return new Array(500).join('\n');
+    return new Array(500).join('12\n');
   })()});
 });
 testVim('zb_to_bottom', function(cm, vim, helpers){
@@ -3723,6 +3891,33 @@ testVim('zz==z.', function(cm, vim, helpers){
 });
 testVim('zt==z<CR>', function(cm, vim, helpers){
   eq(zVals[2], zVals[5]);
+});
+testVim('zt_no_cursor_change', function(cm, vim, helpers){
+  var cursorIndexes = cursorIndexVals[2];
+  eq(cursorIndexes.before, cursorIndexes.after);
+});
+testVim('z<CR>_cursor_change', function(cm, vim, helpers){
+  var cursorIndexes = cursorIndexVals[5];
+  eq(cursorIndexes.before, 751);
+  eq(cursorIndexes.after, 750);
+});
+testVim('zz_no_cursor_change', function(cm, vim, helpers){
+  var cursorIndexes = cursorIndexVals[1];
+  eq(cursorIndexes.before, cursorIndexes.after);
+});
+testVim('z._cursor_change', function(cm, vim, helpers){
+  var cursorIndexes = cursorIndexVals[4];
+  eq(cursorIndexes.before, 751);
+  eq(cursorIndexes.after, 750);
+});
+testVim('zb_no_cursor_change', function(cm, vim, helpers){
+  var cursorIndexes = cursorIndexVals[0];
+  eq(cursorIndexes.before, cursorIndexes.after);
+});
+testVim('z-_cursor_change', function(cm, vim, helpers){
+  var cursorIndexes = cursorIndexVals[3];
+  eq(cursorIndexes.before, 751);
+  eq(cursorIndexes.after, 750);
 });
 
 var moveTillCharacterSandbox =
@@ -3774,17 +3969,21 @@ var scrollMotionSandbox =
   '\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n';
 testVim('scrollMotion', function(cm, vim, helpers){
   var prevCursor, prevScrollInfo;
+  cm.setSize(320, 200);
   cm.setCursor(0, 0);
+  cm.refresh();
   // ctrl-y at the top of the file should have no effect.
   helpers.doKeys('<C-y>');
   eq(0, cm.getCursor().line);
+  cm.refresh();
   prevScrollInfo = cm.getScrollInfo();
   helpers.doKeys('<C-e>');
   eq(1, cm.getCursor().line);
+  cm.refresh();
   is(prevScrollInfo.top < cm.getScrollInfo().top);
   // Jump to the end of the sandbox.
   cm.setCursor(1000, 0);
-  cm.refresh(); //ace_patch
+  cm.refresh();
   prevCursor = cm.getCursor();
   // ctrl-e at the bottom of the file should have no effect.
   helpers.doKeys('<C-e>');
@@ -4797,6 +4996,15 @@ testVim('ex_map_key2key_from_colon', function(cm, vim, helpers) {
   CodeMirror.Vim.mapclear();
 }, { value: 'abc' });
 
+testVim('map <Esc> in normal mode', function(cm, vim, helpers) {
+  CodeMirror.Vim.noremap('<Esc>', 'i', 'normal');
+  helpers.doKeys('<Esc>');
+  is(vim.insertMode, "Didn't switch to insert mode.");
+  helpers.doKeys('<Esc>');
+  is(!vim.insertMode, "Didn't switch to normal mode.");
+  CodeMirror.Vim.mapclear();
+});
+
 testVim('noremap', function(cm, vim, helpers) {
   CodeMirror.Vim.noremap(';', 'l');
   cm.setCursor(0, 0);
@@ -5131,22 +5339,29 @@ var typeKey = function() {
     Backquote: [192, "`", "~"], Minus: [189, "-", "_"], Equal: [187, "=", "+"],
     BracketLeft: [219, "[", "{"], Backslash: [220, "\\", "|"], BracketRight: [221, "]", "}"],
     Semicolon: [186, ";", ":"], Quote: [222, "'", '"'], Comma: [188, ",", "<"],
-    Period: [190, ".", ">"], Slash: [191, "/", "?"], Space: [32, " "], NumpadAdd: [107, "+"],
+    Period: [190, ".", ">"], Slash: [191, "/", "?"], Space: [32, " ", " "], NumpadAdd: [107, "+"],
     NumpadDecimal: [110, "."], NumpadSubtract: [109, "-"], NumpadDivide: [111, "/"], NumpadMultiply: [106, "*"]
   };
   for (var i in specialKeys) {
     var key = specialKeys[i];
     printableKeys[i] = printableKeys[key[1]] = shiftedKeys[key[2]] = key[0];
     keyCodeToCode[key[0]] = i;
+    keyCodeToKey[key[0]] = key[1];
+    keyCodeToKey["s-" + key[0]] = key[2];
   }
   for (var i = 0; i < 10; i++) {
-    printableKeys[i] = shiftedKeys["!@#$%^&*()"[i]] = 48 + i;
+    var shifted = "!@#$%^&*()"[i];
+    printableKeys[i] = shiftedKeys[shifted] = 48 + i;
     keyCodeToCode[48 + i] = "Digit" + i;
+    keyCodeToKey[48 + i] = i.toString();
+    keyCodeToKey["s-" + (48 + i)] = shifted;
   }
   for (var i = 65; i < 91; i++) {
     var chr = String.fromCharCode(i + 32);
     printableKeys[chr] = shiftedKeys[chr.toUpperCase()] = i;
     keyCodeToCode[i] = "Key" + chr.toUpperCase();
+    keyCodeToKey[i] = chr;
+    keyCodeToKey["s-" + i] = chr.toUpperCase();
   }
   for (var i = 1; i < 13; i++) {
     controlKeys["F" + i] = 111 + i;
@@ -5156,6 +5371,7 @@ var typeKey = function() {
     keyCodeToKey[controlKeys[i]] = i;
     keyCodeToCode[controlKeys[i]] = i;
   }
+  controlKeys["\t"] = controlKeys.Tab;
   controlKeys["\n"] = controlKeys.Return;
   controlKeys.Del = controlKeys.Delete;
   controlKeys.Esc = controlKeys.Escape;
@@ -5198,6 +5414,10 @@ var typeKey = function() {
       text = text.toUpperCase();
     }
 
+    if (keyCodeToKey[keyCode] != text && keyCodeToKey["s-" + keyCode] == text) {
+      shift = true;
+    }
+
     var target = document.activeElement;
     var prevented = emit("keydown", true);
     if (isModifier) return;
@@ -5222,11 +5442,11 @@ var typeKey = function() {
       data.charCode = text.charCodeAt(0);
       data.keyCode = type == "keypress" ? data.charCode : keyCode;
       data.which = data.keyCode;
-      data.shiftKey = shift || shiftedKeys[text];
+      data.shiftKey = shift || (shiftedKeys[text] && !printableKeys[text]);
       data.ctrlKey = ctrl;
       data.altKey = alt;
       data.metaKey = meta;
-      data.key = text || keyCodeToKey[keyCode];
+      data.key = keyCodeToKey[(shift ? "s-" : "") + keyCode] || console.error(text);
       data.code = keyCodeToCode[keyCode];
       var event = new KeyboardEvent(type, data);
 
@@ -5236,6 +5456,7 @@ var typeKey = function() {
     }
     function updateTextInput() {
       if (target._handleInputEventForTest) {
+        if (!isTextInput) return;
         return target._handleInputEventForTest(text);
       }
       var isTextarea = "selectionStart" in target && typeof target.value == "string";
