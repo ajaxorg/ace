@@ -923,6 +923,20 @@ domLib.importCssString(`.normal-mode .ace_cursor{
     return range.head;
   }
 
+  function updateSelectionForSurrogateCharacters(cm, curStart, curEnd) {
+    // start and character position when no selection 
+    // is the same in visual mode, and differs in 1 character in normal mode
+    if (curStart.line === curEnd.line && curStart.ch >= curEnd.ch - 1) {
+      var text = cm.getLine(curStart.line);
+      var charCode = text.charCodeAt(curStart.ch);
+      if (0xD800 <= charCode && charCode <= 0xD8FF) {
+        curEnd.ch += 1;
+      }
+    }
+
+    return {start: curStart, end: curEnd};
+  }
+
   var defaultKeymap = [
     // Key to key mapping. This goes first to make it possible to override
     // existing mappings.
@@ -2540,9 +2554,10 @@ domLib.importCssString(`.normal-mode .ace_cursor{
             mode = vim.visualBlock ? 'block' :
                    linewise ? 'line' :
                    'char';
+            var newPositions = updateSelectionForSurrogateCharacters(cm, curStart, curEnd);
             cmSel = makeCmSelection(cm, {
-              anchor: curStart,
-              head: curEnd
+              anchor: newPositions.start,
+              head: newPositions.end
             }, mode);
             if (linewise) {
               var ranges = cmSel.ranges;
@@ -2574,9 +2589,10 @@ domLib.importCssString(`.normal-mode .ace_cursor{
             }
             mode = 'char';
             var exclusive = !motionArgs.inclusive || linewise;
+            var newPositions = updateSelectionForSurrogateCharacters(cm, curStart, curEnd);
             cmSel = makeCmSelection(cm, {
-              anchor: curStart,
-              head: curEnd
+              anchor: newPositions.start,
+              head: newPositions.end
             }, mode, exclusive);
           }
           cm.setSelections(cmSel.ranges, cmSel.primary);
@@ -3374,9 +3390,11 @@ domLib.importCssString(`.normal-mode .ace_cursor{
         } else if (insertAt == 'bol') {
           head = new Pos(head.line, 0);
         } else if (insertAt == 'charAfter') {
-          head = offsetCursor(head, 0, 1);
+          var newPosition = updateSelectionForSurrogateCharacters(cm, head, offsetCursor(head, 0, 1));
+          head = newPosition.end;
         } else if (insertAt == 'firstNonBlank') {
-          head = motions.moveToFirstNonWhiteSpaceCharacter(cm, head);
+          var newPosition = updateSelectionForSurrogateCharacters(cm, head, motions.moveToFirstNonWhiteSpaceCharacter(cm, head));
+          head = newPosition.end;
         } else if (insertAt == 'startOfSelectedArea') {
           if (!vim.visualMode)
               return;
@@ -3449,9 +3467,10 @@ domLib.importCssString(`.normal-mode .ace_cursor{
           vim.visualBlock = !!actionArgs.blockwise;
           head = clipCursorToContent(
               cm, new Pos(anchor.line, anchor.ch + repeat - 1));
+          var newPosition = updateSelectionForSurrogateCharacters(cm, anchor, head)
           vim.sel = {
-            anchor: anchor,
-            head: head
+            anchor: newPosition.start,
+            head: newPosition.end
           };
           CodeMirror.signal(cm, "vim-mode-change", {mode: "visual", subMode: vim.visualLine ? "linewise" : vim.visualBlock ? "blockwise" : ""});
           updateCmSelection(cm);
@@ -3749,18 +3768,25 @@ domLib.importCssString(`.normal-mode .ace_cursor{
           }
           curEnd = new Pos(curStart.line, replaceTo);
         }
+
+        var newPositions = updateSelectionForSurrogateCharacters(cm, curStart, curEnd);
+        curStart = newPositions.start;
+        curEnd = newPositions.end;
         if (replaceWith=='\n') {
           if (!vim.visualMode) cm.replaceRange('', curStart, curEnd);
           // special case, where vim help says to replace by just one line-break
           (CodeMirror.commands.newlineAndIndentContinueComment || CodeMirror.commands.newlineAndIndent)(cm);
         } else {
           var replaceWithStr = cm.getRange(curStart, curEnd);
+          // replace all surrogate characters with selected character
+          replaceWithStr = replaceWithStr.replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, replaceWith);
           //replace all characters in range by selected, but keep linebreaks
           replaceWithStr = replaceWithStr.replace(/[^\n]/g, replaceWith);
           if (vim.visualBlock) {
             // Tabs are split in visua block before replacing
             var spaces = new Array(cm.getOption("tabSize")+1).join(' ');
             replaceWithStr = cm.getSelection();
+            replaceWithStr = replaceWithStr.replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, replaceWith);
             replaceWithStr = replaceWithStr.replace(/\t/g, spaces).replace(/[^\n]/g, replaceWith).split('\n');
             cm.replaceSelections(replaceWithStr);
           } else {

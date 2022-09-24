@@ -1850,6 +1850,13 @@ testVim('a_eol', function(cm, vim, helpers) {
   helpers.assertCursorAt(0, lines[0].length);
   eq('vim-insert', cm.getOption('keyMap'));
 });
+testVim('a with surrogate characters', function(cm, vim, helpers) {
+  cm.setCursor(0, 0);
+  helpers.doKeys('a');
+  helpers.doKeys('test');
+  helpers.doKeys('<Esc>');
+  eq('😀test', cm.getValue());
+}, {value: '😀'});
 testVim('A_endOfSelectedArea', function(cm, vim, helpers) {
   cm.setCursor(0, 0);
   helpers.doKeys('v', 'j', 'l');
@@ -1863,6 +1870,13 @@ testVim('i', function(cm, vim, helpers) {
   helpers.assertCursorAt(0, 1);
   eq('vim-insert', cm.getOption('keyMap'));
 });
+testVim('i with surrogate characters', function(cm, vim, helpers) {
+  cm.setCursor(0, 0);
+  helpers.doKeys('i');
+  helpers.doKeys('test');
+  helpers.doKeys('<Esc>');
+  eq('test😀', cm.getValue());
+}, { value: '😀' });
 testVim('i_repeat', function(cm, vim, helpers) {
   helpers.doKeys('3', 'i');
   helpers.doKeys('test')
@@ -2111,6 +2125,11 @@ testVim('r', function(cm, vim, helpers) {
   helpers.doKeys('r', '<CR>');
   eq('\nx', cm.getValue());
 }, { value: 'wordet\nanother' });
+testVim('r with surrogate characters', function(cm, vim, helpers) {
+  cm.setCursor(0, 0);
+  helpers.doKeys('r', 'u');
+  eq('u', cm.getValue());
+}, { value: '😀' });
 testVim('r_visual_block', function(cm, vim, helpers) {
   cm.ace.setOptions({tabSize: 4, useSoftTabs: false}); // ace_patch TODO
   cm.setCursor(2, 3);
@@ -2125,6 +2144,16 @@ testVim('r_visual_block', function(cm, vim, helpers) {
   helpers.doKeys('<C-v>', 'h', 'h', 'r', 'r');
   eq('1  l\n5  l\nalllefg\nrrrrrrrr', cm.getValue());
 }, {value: '1234\n5678\nabcdefg', indentWithTabs: true});
+testVim('r_visual with surrogate characters', function(cm, vim, helpers) {
+  cm.setCursor(0, 0);
+  helpers.doKeys('v', 'r', 'u');
+  eq('u', cm.getValue());
+}, { value: '😀' });
+testVim('r_visual_block with surrogate characters', function(cm, vim, helpers) {
+  cm.setCursor(0, 0);
+  helpers.doKeys('<C-v>', 'r', 'u');
+  eq('u', cm.getValue());
+}, { value: '😀' });
 testVim('R', function(cm, vim, helpers) {
   cm.setCursor(0, 1);
   helpers.doKeys('R');
@@ -2673,6 +2702,13 @@ testVim('s_normal', function(cm, vim, helpers) {
   helpers.doKeys('<Esc>');
   eq('ac', cm.getValue());
 }, { value: 'abc'});
+testVim('s_normal surrogate character', function(cm, vim, helpers) {
+  cm.setCursor(0, 0);
+  helpers.doKeys('s');
+  helpers.doKeys('test');
+  helpers.doKeys('<Esc>');
+  eq('test', cm.getValue());
+}, { value: '😀' });
 testVim('s_visual', function(cm, vim, helpers) {
   cm.setCursor(0, 1);
   helpers.doKeys('v', 's');
@@ -2680,6 +2716,13 @@ testVim('s_visual', function(cm, vim, helpers) {
   helpers.assertCursorAt(0, 0);
   eq('ac', cm.getValue());
 }, { value: 'abc'});
+testVim('d with surrogate character', function(cm, vim, helpers) {
+  cm.setCursor(0, 0);
+  helpers.doKeys('v');
+  helpers.doKeys('d');
+  helpers.doKeys('<Esc>');
+  eq('', cm.getValue());
+}, { value: '😀' });
 testVim('o_visual', function(cm, vim, helpers) {
   cm.setCursor(0,0);
   helpers.doKeys('v','l','l','l','o');
