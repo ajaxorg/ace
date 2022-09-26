@@ -182,7 +182,7 @@ var BidiHandler = function(session) {
 
         this.fontMetrics = fontMetrics;
         var characterWidth = this.characterWidth = fontMetrics.$characterSize.width;
-        var bidiCharWidth = fontMetrics.$measureCharWidth("\u05d4");
+        var bidiCharWidth = fontMetrics.$measureCharWidth("\u0627");
 
         this.charWidths[bidiUtil.L] = this.charWidths[bidiUtil.EN] = this.charWidths[bidiUtil.ON_R] = characterWidth;
         this.charWidths[bidiUtil.R] = this.charWidths[bidiUtil.AN] = bidiCharWidth;
