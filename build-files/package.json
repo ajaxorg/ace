@@ -1,0 +1,17 @@
+{
+     "name": "ace-builds",
+     "main": "./src-noconflict/ace.js",
+     "typings": "ace.d.ts",
+     "version": "1.11.1",
+     "description": "Ace (Ajax.org Cloud9 Editor)",
+     "repository": {
+         "type": "git",
+         "url": "https://github.com/rezass/ace.git"
+     },
+     "author": "Ace Contributors",
+     "license": "BSD-3-Clause",
+     "bugs": {
+         "url": "https://github.com/rezass/ace/issues"
+     },
+     "homepage": "https://github.com/rezass/ace"
+ }
