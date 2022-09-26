@@ -20,8 +20,7 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: 18.x
-        cache: 'npm'
-    - run: npm ci
+    - run: npm i
     - run: node Makefile.dryice.js full --target ace-builds
     - run: cp build-files/* ace-builds
     - run: tar -czvf ace-builds.tar.gz ace-builds
