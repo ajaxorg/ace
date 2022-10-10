@@ -29,15 +29,15 @@ module.exports = {
         editor.setValue("<html><head></head> abcd</html>", 1);
         exec("gotostart", 1);
         exec("gotoright", 3);
-        assert.equal(editor.$highlightTagPending, true);
+        assert.equal(editor.$highlightPending, true);
         setTimeout(function() {
-            assert.equal(editor.$highlightTagPending, false);
-            assert.ok(editor.session.$tagHighlight);
+            assert.equal(editor.$highlightPending, false);
+            assert.ok(editor.session.$bracketHighlight);
             exec("gotoend", 1);
             exec("gotoleft", 3);
-            assert.equal(editor.$highlightTagPending, true);
+            assert.equal(editor.$highlightPending, true);
             setTimeout(function() {
-                assert.equal(editor.$highlightTagPending, false);
+                assert.equal(editor.$highlightPending, false);
                 done();
             }, 51);
         }, 51);

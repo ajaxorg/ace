@@ -506,8 +506,18 @@ Editor.$uid = 0;
                 });
                 session.$bracketHighlight = null;
             }
-            var ranges = session.getMatchingBracketRanges(self.getCursorPosition());
-            if (!ranges && session.$mode.getMatching) 
+            var pos = self.getCursorPosition();
+            var ranges = session.getMatchingBracketRanges(pos);
+            if (!ranges) {
+                var iterator = new TokenIterator(session, pos.row, pos.column);
+                var token = iterator.getCurrentToken();
+
+                if (token && /\b(?:tag-open|tag-name)/.test(token.type)) {
+                    var tagNamesRanges = session.getMatchingTags(pos);
+                    if (tagNamesRanges) ranges = [tagNamesRanges.openTagName, tagNamesRanges.closeTagName];
+                }
+            }
+            if (!ranges && session.$mode.getMatching)
                 ranges = session.$mode.getMatching(self.session);
             if (!ranges) {
                 if (self.getHighlightIndentGuides()) self.renderer.$textLayer.$highlightIndentGuide();
@@ -536,62 +546,6 @@ Editor.$uid = 0;
                 })
             };
             if (self.getHighlightIndentGuides()) self.renderer.$textLayer.$highlightIndentGuide();
-        }, 50);
-    };
-
-    // todo: move to mode.getMatching
-    this.$highlightTags = function() {
-        if (this.$highlightTagPending)
-            return;
-
-        // perform highlight async to not block the browser during navigation
-        var self = this;
-        this.$highlightTagPending = true;
-        setTimeout(function() {
-            self.$highlightTagPending = false;
-            
-            var session = self.session;
-            if (!session || session.destroyed) return;
-            if (!session.$tagHighlight) session.$tagHighlight = [];
-            
-            var pos = self.getCursorPosition();
-            var iterator = new TokenIterator(session, pos.row, pos.column);
-            var token = iterator.getCurrentToken();
-
-            if (!token || !/\b(?:tag-open|tag-name)/.test(token.type)) {
-                for (let i in session.$tagHighlight) {
-                    session.removeMarker(session.$tagHighlight[i]);
-                }
-                session.$tagHighlight = [];
-                return;
-            }
-
-            var tagNamesRanges = session.getMatchingTags(pos);
-
-            if (!tagNamesRanges) {
-                for (let i in session.$tagHighlight) {
-                    session.removeMarker(session.$tagHighlight[i]);
-                }
-                session.$tagHighlight = [];
-                return;
-            }
-            var ranges = [tagNamesRanges.openTagName, tagNamesRanges.closeTagName];
-
-            //remove range if different
-            var clean = false;
-            for (let i in session.$tagHighlight) {
-                var sbm = session.$backMarkers[session.$tagHighlight[i]];
-                if (session.$tagHighlight[i] && sbm !== undefined && ranges[i].compareRange(sbm.range) !== 0) {
-                    session.removeMarker(session.$tagHighlight[i]);
-                    clean = true;
-                }
-            }
-            if (clean) session.$tagHighlight = [];
-
-            for (let i in ranges) {
-                if (!session.$tagHighlight[i])
-                    session.$tagHighlight[i] = session.addMarker(ranges[i], "ace_bracket", "text");
-            }
         }, 50);
     };
 
@@ -652,7 +606,6 @@ Editor.$uid = 0;
     this.$cursorChange = function() {
         this.renderer.updateCursor();
         this.$highlightBrackets();
-        this.$highlightTags();
         this.$updateHighlightActiveLine();
     };
 
