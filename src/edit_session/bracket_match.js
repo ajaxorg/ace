@@ -403,6 +403,6 @@ function BracketMatch() {
                 closeTagName: closeTagName
             };
         }
-    }
+    };
 }
 exports.BracketMatch = BracketMatch;
