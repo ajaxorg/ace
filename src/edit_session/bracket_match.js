@@ -219,5 +219,190 @@ function BracketMatch() {
         
         return null;
     };
+
+    /**
+     * Returns [[Range]]'s for matching tags and tag names, if there are any
+     * @param {Position} pos
+     * @returns {{closeTag: Range, closeTagName: Range, openTag: Range, openTagName: Range} | undefined}
+     */
+    this.getMatchingTags = function (pos) {
+        var iterator = new TokenIterator(this, pos.row, pos.column);
+        var token = iterator.getCurrentToken();
+        var found = false;
+        var backward = false;
+        if (token && token.type.indexOf('tag-name') === -1) {
+            do {
+                if (backward) token = iterator.stepBackward(); else token = iterator.stepForward();
+                if (token) {
+                    if (token.value === "/>") backward = true;
+                    if (token.type.indexOf('tag-name') !== -1) {
+                        found = true;
+                    }
+                }
+            } while (token && !found);
+        }
+        if (!token) return;
+
+        var tag = token.value;
+        var currentTag = token.value;
+        var depth = 0;
+        var prevToken = iterator.stepBackward();
+
+        if (prevToken.value === '<') {
+            //find closing tag
+            var openTagStart = new Range(iterator.getCurrentTokenRow(), iterator.getCurrentTokenColumn(),
+                iterator.getCurrentTokenRow(), iterator.getCurrentTokenColumn() + 1
+            );
+            token = iterator.stepForward();
+            var openTagName = new Range(iterator.getCurrentTokenRow(), iterator.getCurrentTokenColumn(),
+                iterator.getCurrentTokenRow(), iterator.getCurrentTokenColumn() + token.value.length
+            );
+            iterator.stepBackward();
+            var foundOpenTagEnd = false;
+            do {
+                prevToken = token;
+                token = iterator.stepForward();
+                if (token) {
+                    if (token.value === '>' && !foundOpenTagEnd) {
+                        var openTagEnd = new Range(iterator.getCurrentTokenRow(), iterator.getCurrentTokenColumn(),
+                            iterator.getCurrentTokenRow(), iterator.getCurrentTokenColumn() + 1
+                        );
+                        foundOpenTagEnd = true;
+                    }
+                    if (token.type.indexOf('tag-name') !== -1) {
+                        currentTag = token.value;
+                        if (tag === currentTag) {
+                            if (prevToken.value === '<') {
+                                depth++;
+                            }
+                            else if (prevToken.value === '</') {
+                                depth--;
+                                if (depth < 0) {
+                                    iterator.stepBackward();
+                                    var closeTagStart = new Range(iterator.getCurrentTokenRow(),
+                                        iterator.getCurrentTokenColumn(), iterator.getCurrentTokenRow(),
+                                        iterator.getCurrentTokenColumn() + 2
+                                    );
+                                    token = iterator.stepForward();
+                                    var closeTagName = new Range(iterator.getCurrentTokenRow(),
+                                        iterator.getCurrentTokenColumn(), iterator.getCurrentTokenRow(),
+                                        iterator.getCurrentTokenColumn() + token.value.length
+                                    );
+                                    token = iterator.stepForward();
+                                    if (token && token.value === '>') {
+                                        var closeTagEnd = new Range(iterator.getCurrentTokenRow(),
+                                            iterator.getCurrentTokenColumn(), iterator.getCurrentTokenRow(),
+                                            iterator.getCurrentTokenColumn() + 1
+                                        );
+                                    }
+                                    else {
+                                        return;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else if (tag === currentTag && token.value === '/>') { // self closing tag
+                        depth--;
+                        if (depth < 0) {
+                            var closeTagStart = new Range(iterator.getCurrentTokenRow(),
+                                iterator.getCurrentTokenColumn(), iterator.getCurrentTokenRow(),
+                                iterator.getCurrentTokenColumn() + 2
+                            );
+                            var closeTagName = closeTagStart;
+
+                            var openTagEnd = new Range(openTagName.end.row, openTagName.end.column, openTagName.end.row,
+                                openTagName.end.column + 1
+                            );
+                            var closeTagEnd = closeTagName;
+                        }
+                    }
+                }
+            } while (token && depth >= 0);
+        }
+        else {
+            //find opening tag
+            var startRow = iterator.getCurrentTokenRow();
+            var startColumn = iterator.getCurrentTokenColumn();
+            var endColumn = startColumn + 1;
+            var closeTagStart = new Range(startRow, startColumn, startRow, endColumn);
+            iterator.stepForward();
+            var closeTagName = new Range(iterator.getCurrentTokenRow(), iterator.getCurrentTokenColumn(),
+                iterator.getCurrentTokenRow(), iterator.getCurrentTokenColumn() + token.value.length
+            );
+            token = iterator.stepForward();
+            if (!token || token.value !== ">") return;
+            var closeTagEnd = new Range(iterator.getCurrentTokenRow(), iterator.getCurrentTokenColumn(),
+                iterator.getCurrentTokenRow(), iterator.getCurrentTokenColumn() + 1
+            );
+            iterator.stepBackward();
+            iterator.stepBackward();
+            do {
+                token = prevToken;
+                startRow = iterator.getCurrentTokenRow();
+                startColumn = iterator.getCurrentTokenColumn();
+                endColumn = startColumn + token.value.length;
+
+                prevToken = iterator.stepBackward();
+
+                if (token) {
+                    if (token.type.indexOf('tag-name') !== -1) {
+                        if (tag === token.value) {
+                            if (prevToken.value === '<') {
+                                depth++;
+                                if (depth > 0) {
+                                    var openTagName = new Range(startRow, startColumn, startRow, endColumn);
+                                    var openTagStart = new Range(iterator.getCurrentTokenRow(),
+                                        iterator.getCurrentTokenColumn(), iterator.getCurrentTokenRow(),
+                                        iterator.getCurrentTokenColumn() + 1
+                                    );
+                                    do {
+                                        token = iterator.stepForward();
+                                    } while (token && token.value !== '>');
+                                    var openTagEnd = new Range(iterator.getCurrentTokenRow(),
+                                        iterator.getCurrentTokenColumn(), iterator.getCurrentTokenRow(),
+                                        iterator.getCurrentTokenColumn() + 1
+                                    );
+                                }
+                            }
+                            else if (prevToken.value === '</') {
+                                depth--;
+                            }
+                        }
+                    }
+                    else if (token.value === '/>') { // self closing tag
+                        var stepCount = 0;
+                        var tmpToken = prevToken;
+                        while (tmpToken) {
+                            if (tmpToken.type.indexOf('tag-name') !== -1 && tmpToken.value === tag) {
+                                depth--;
+                                break;
+                            }
+                            else if (tmpToken.value === '<') {
+                                break;
+                            }
+                            tmpToken = iterator.stepBackward();
+                            stepCount++;
+                        }
+                        for (var i = 0; i < stepCount; i++) {
+                            iterator.stepForward();
+                        }
+                    }
+                }
+            } while (prevToken && depth <= 0);
+        }
+        if (openTagStart && openTagEnd && closeTagStart && closeTagEnd && openTagName && closeTagName) {
+            return {
+                openTag: new Range(openTagStart.start.row, openTagStart.start.column, openTagEnd.end.row,
+                    openTagEnd.end.column
+                ),
+                closeTag: new Range(closeTagStart.start.row, closeTagStart.start.column, closeTagEnd.end.row,
+                    closeTagEnd.end.column
+                ),
+                openTagName: openTagName,
+                closeTagName: closeTagName
+            };
+        }
+    }
 }
 exports.BracketMatch = BracketMatch;

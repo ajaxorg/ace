@@ -230,14 +230,14 @@ module.exports = {
         exec("gotoright", 15);
         editor.execCommand(editor.commands.byName.selecttomatching);
         editor.execCommand(editor.commands.byName.selecttomatching);
-        assert.range(editor.selection.getRange(), 0, 6, 0, 15);
+        assert.range(editor.selection.getRange(), 0, 10, 0, 15);
 
         editor.setValue("<html>abcd</div></div></html>", 1);
         exec("gotostart", 1);
         exec("gotoright", 21);
         editor.execCommand(editor.commands.byName.selecttomatching);
         editor.execCommand(editor.commands.byName.selecttomatching);
-        assert.range(editor.selection.getRange(), 0, 6, 0, 21);
+        assert.range(editor.selection.getRange(), 0, 16, 0, 21);
 
         editor.setValue("", 1);
         exec("gotostart", 1);

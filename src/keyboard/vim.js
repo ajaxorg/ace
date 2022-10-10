@@ -136,8 +136,12 @@
   };
 
 
-  CodeMirror.findMatchingTag = function(cm, head) {
-    
+  CodeMirror.findMatchingTag = function (cm, head) {
+    return cm.findMatchingTag(head);
+  }
+
+  CodeMirror.findEnclosingTag = function (cm, head) {
+
   };
 
   CodeMirror.signal = function(o, name, e) { return o._signal(name, e) };
@@ -612,6 +616,20 @@
   this.findMatchingBracket = function(pos) {
     var m = this.ace.session.findMatchingBracket(toAcePos(pos));
     return {to: m && toCmPos(m)};
+  };
+  this.findMatchingTag = function (pos) {
+    var m = this.ace.session.getMatchingTags(toAcePos(pos));
+    if (!m) return;
+    return {
+      open: {
+        from: toCmPos(m.openTag.start),
+        to: toCmPos(m.openTag.end)
+      },
+      close: {
+        from: toCmPos(m.closeTag.start),
+        to: toCmPos(m.closeTag.end)
+      }
+    };
   };
   this.indentLine = function(line, method) {
     if (method === true)
