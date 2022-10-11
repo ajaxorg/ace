@@ -9,6 +9,8 @@ var Editor = require("./../editor").Editor;
 var UndoManager = require("./../undomanager").UndoManager;
 var MockRenderer = require("./../test/mockrenderer").MockRenderer;
 var JavaScriptMode = require("./../mode/javascript").Mode;
+var CSSMode = require("./../mode/css").Mode;
+var XMLMode = require("./../mode/xml").Mode;
 var VirtualRenderer = require("./../virtual_renderer").VirtualRenderer;
 var assert = require("./../test/assertions");
 var keys = require("./../lib/keys");
@@ -28,10 +30,14 @@ var phantom = window.name == "nodejs";
 var renderer = new VirtualRenderer(el);
 var editor = window.editor = new Editor(renderer);
 editor.session.setUndoManager(new UndoManager());
+var modes = {
+    js: new JavaScriptMode(),
+    css: new CSSMode(),
+    xml: new XMLMode()
+};
 editor.setOptions({
     useWorker: false,
     behavioursEnabled: false,
-    mode: new JavaScriptMode(),
 });
 function CodeMirror(place, opts) {
     var cm = editor.state && editor.state.cm;
@@ -48,6 +54,7 @@ function CodeMirror(place, opts) {
     editor.setOption("indentedSoftWrap", false);
     editor.setOption("wrap", opts.lineWrapping);
     editor.setOption("useSoftTabs", !opts.indentWithTabs);
+    editor.setOption("mode", opts.mode ? modes[opts.mode] : modes.js);
     cm.setOption("tabSize", opts.tabSize || 4);
     cm.setOption("indentUnit", opts.indentUnit || 2);
 
@@ -1665,9 +1672,8 @@ testEdit('di>_middle_spc', 'a\t<\n\tbar\n>b', /r/, 'di>', 'a\t<>b');
 testEdit('da<_middle_spc', 'a\t<\n\tbar\n>b', /r/, 'da<', 'a\tb');
 testEdit('da>_middle_spc', 'a\t<\n\tbar\n>b', /r/, 'da>', 'a\tb');
 
-//TODO: mode changing is not implemented for vim
-isAce || testEdit('dat_noop', '<outer><inner>hello</inner></outer>', /n/, 'dat', '<outer><inner>hello</inner></outer>',{
-    mode: 'text'
+testEdit('dat_noop', '<outer><inner>hello</inner></outer>', /n/, 'dat', '<outer><inner>hello</inner></outer>',{
+    mode: 'css'
 });
 testEdit('dat_open_tag', '<outer><inner>hello</inner></outer>', /n/, 'dat', '<outer></outer>', {
   mode: 'xml'
