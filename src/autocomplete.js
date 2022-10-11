@@ -8,10 +8,10 @@ var dom = require("./lib/dom");
 var snippetManager = require("./snippets").snippetManager;
 var config = require("./config");
 
-var Autocomplete = function() {
+var Autocomplete = function(editor) {
     this.autoInsert = false;
     this.autoSelect = true;
-    this.exactMatch = false;
+    this.exactMatch = editor.getOption('exactMatch') || false;
     this.gatherCompletionsId = 0;
     this.keyboardHandler = new HashHandler();
     this.keyboardHandler.bindKeys(this.commands);
@@ -451,7 +451,7 @@ Autocomplete.for = function(editor) {
             Autocomplete.$sharedInstance = new Autocomplete();
         editor.completer = Autocomplete.$sharedInstance;
     } else {
-        editor.completer = new Autocomplete();
+        editor.completer = new Autocomplete(editor);
         editor.once("destroy", function(e, editor) {
             editor.completer.destroy();
         });

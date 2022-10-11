@@ -2977,7 +2977,8 @@ config.defineOptions(Editor.prototype, "editor", {
     wrap: "session",
     indentedSoftWrap: "session",
     foldStyle: "session",
-    mode: "session"
+    mode: "session",
+    exactMatch: {initialValue: false}
 });
 
 
