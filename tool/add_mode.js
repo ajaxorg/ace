@@ -14,7 +14,7 @@ function main(displayName, extRe) {
 
     /** mode **/
     var template = fs.readFileSync(__dirname + "/templates/mode.js", "utf8");
-    var modePath = lib.AceLib + "ace/mode/" + name + ".js";
+    var modePath = lib.AceRoot + "src/mode/" + name + ".js";
     var text = lib.fillTemplate(template, {
         languageHighlightFilename: name,
         languagename: name,
@@ -27,7 +27,7 @@ function main(displayName, extRe) {
 
     /** highlight rules **/
     template = fs.readFileSync(__dirname + "/templates/highlight_rules.js", "utf8");
-    var hlPath = lib.AceLib + "ace/mode/" + name + "_highlight_rules.js";
+    var hlPath = lib.AceRoot + "src/mode/" + name + "_highlight_rules.js";
     template = template.replace(/\/\* THIS[\s\S]*?\*{3}\/\s*/, "");
     text = lib.fillTemplate(template, {
         language: name,
@@ -61,7 +61,7 @@ function main(displayName, extRe) {
     console.log("Created snippets file at: " + path.normalize(snipetsPath));
 
     /** modelist **/
-    var modelistPath = lib.AceLib + "ace/ext/modelist.js";
+    var modelistPath = lib.AceRoot + "src/ext/modelist.js";
     var modelist = fs.readFileSync(modelistPath, "utf8").replace(/\r\n?/g, "\n");
     modelist = modelist.replace(/(supportedModes = {\n)([\s\S]*?)(\n^};)/m, function(_, m1, m2, m3) {
         var langs = m2.split(/,\n/);
