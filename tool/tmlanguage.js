@@ -635,8 +635,8 @@ function convertTmLanguage(name, langStr) {
         
         require("./add_mode")(languageNameSanitized, (language.fileTypes || []).join("|"));
 
-        var highlighterFile = pathlib.normalize(lib.AceLib + "ace/mode/" + highlighterFilename + "_highlight_rules.js");
-        var modeFile = pathlib.normalize(lib.AceLib + "ace/mode/" + highlighterFilename + ".js");
+        var highlighterFile = pathlib.normalize(lib.AceRoot + "src/mode/" + highlighterFilename + "_highlight_rules.js");
+        var modeFile = pathlib.normalize(lib.AceRoot + "src/mode/" + highlighterFilename + ".js");
 
         if (devMode) {
             console.log(util.inspect(language.patterns, false, 4));
