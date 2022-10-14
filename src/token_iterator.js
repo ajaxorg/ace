@@ -29,8 +29,8 @@ var TokenIterator = function(session, initialRow, initialColumn) {
 (function() {
    
     /**
-     * Tokenizes all the items from the current point to the row prior in the document. 
-     * @returns {[String]} If the current point is not at the top of the file, this function returns `null`. Otherwise, it returns an array of the tokenized strings.
+     * Moves iterator position to the start of previous token.
+     * @returns {Token|null}
      **/ 
     this.stepBackward = function() {
         this.$tokenIndex -= 1;
@@ -48,10 +48,10 @@ var TokenIterator = function(session, initialRow, initialColumn) {
             
         return this.$rowTokens[this.$tokenIndex];
     };
-  
+
     /**
-     * Tokenizes all the items from the current point until the next row in the document. If the current point is at the end of the file, this function returns `null`. Otherwise, it returns the tokenized string.
-     * @returns {String}
+     * Moves iterator position to the start of next token.
+     * @returns {Token|null}
      **/   
     this.stepForward = function() {
         this.$tokenIndex += 1;
@@ -74,8 +74,8 @@ var TokenIterator = function(session, initialRow, initialColumn) {
  
     /**
      * 
-     * Returns the current tokenized string.
-     * @returns {String}
+     * Returns current token.
+     * @returns {Token}
      **/      
     this.getCurrentToken = function () {
         return this.$rowTokens[this.$tokenIndex];

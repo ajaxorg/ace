@@ -309,9 +309,7 @@ EditSession.$uid = 0;
     /**
      * Starts tokenizing at the row indicated. Returns a list of objects of the tokenized rows.
      * @param {Number} row The row to start at
-     *
-     *
-     *
+     * @returns {Token[]}
      **/
     this.getTokens = function(row) {
         return this.bgTokenizer.getTokens(row);
@@ -321,7 +319,7 @@ EditSession.$uid = 0;
      * Returns an object indicating the token at the current row. The object has two properties: `index` and `start`.
      * @param {Number} row The row number to retrieve from
      * @param {Number} column The column number to retrieve from
-     *
+     * @returns {Token}
      *
      **/
     this.getTokenAt = function(row, column) {
