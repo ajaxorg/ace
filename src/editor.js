@@ -506,8 +506,18 @@ Editor.$uid = 0;
                 });
                 session.$bracketHighlight = null;
             }
-            var ranges = session.getMatchingBracketRanges(self.getCursorPosition());
-            if (!ranges && session.$mode.getMatching) 
+            var pos = self.getCursorPosition();
+            var ranges = session.getMatchingBracketRanges(pos);
+            if (!ranges) {
+                var iterator = new TokenIterator(session, pos.row, pos.column);
+                var token = iterator.getCurrentToken();
+
+                if (token && /\b(?:tag-open|tag-name)/.test(token.type)) {
+                    var tagNamesRanges = session.getMatchingTags(pos);
+                    if (tagNamesRanges) ranges = [tagNamesRanges.openTagName, tagNamesRanges.closeTagName];
+                }
+            }
+            if (!ranges && session.$mode.getMatching)
                 ranges = session.$mode.getMatching(self.session);
             if (!ranges) {
                 if (self.getHighlightIndentGuides()) self.renderer.$textLayer.$highlightIndentGuide();
@@ -536,124 +546,6 @@ Editor.$uid = 0;
                 })
             };
             if (self.getHighlightIndentGuides()) self.renderer.$textLayer.$highlightIndentGuide();
-        }, 50);
-    };
-
-    // todo: move to mode.getMatching
-    this.$highlightTags = function() {
-        if (this.$highlightTagPending)
-            return;
-
-        // perform highlight async to not block the browser during navigation
-        var self = this;
-        this.$highlightTagPending = true;
-        setTimeout(function() {
-            self.$highlightTagPending = false;
-            
-            var session = self.session;
-            if (!session || session.destroyed) return;
-            
-            var pos = self.getCursorPosition();
-            var iterator = new TokenIterator(self.session, pos.row, pos.column);
-            var token = iterator.getCurrentToken();
-            
-            if (!token || !/\b(?:tag-open|tag-name)/.test(token.type)) {
-                session.removeMarker(session.$tagHighlight);
-                session.$tagHighlight = null;
-                return;
-            }
-            
-            if (token.type.indexOf("tag-open") !== -1) {
-                token = iterator.stepForward();
-                if (!token)
-                    return;
-            }
-            
-            var tag = token.value;
-            var currentTag = token.value;
-            var depth = 0;
-            var prevToken = iterator.stepBackward();
-            
-            if (prevToken.value === '<'){
-                //find closing tag
-                do {
-                    prevToken = token;
-                    token = iterator.stepForward();
-
-                    if (token) {
-                        if (token.type.indexOf('tag-name') !== -1) {
-                            currentTag = token.value;
-                            if (tag === currentTag) {
-                                if (prevToken.value === '<') {
-                                    depth++;
-                                } else if (prevToken.value === '</') {
-                                    depth--;
-                                }
-                            }
-                        } else if (tag === currentTag && token.value === '/>') { // self closing tag
-                            depth--;
-                        }
-                    }
-                    
-                } while (token && depth >= 0);
-            } else {
-                //find opening tag
-                do {
-                    token = prevToken;
-                    prevToken = iterator.stepBackward();
-
-                    if (token) {
-                        if (token.type.indexOf('tag-name') !== -1) {
-                            if (tag === token.value) {
-                                if (prevToken.value === '<') {
-                                    depth++;
-                                } else if (prevToken.value === '</') {
-                                    depth--;
-                                }
-                            }
-                        } else if (token.value === '/>') { // self closing tag
-                            var stepCount = 0;
-                            var tmpToken = prevToken;
-                            while (tmpToken) {
-                                if (tmpToken.type.indexOf('tag-name') !== -1 && tmpToken.value === tag) {
-                                    depth--;
-                                    break;
-                                } else if (tmpToken.value === '<') {
-                                    break;
-                                }
-                                tmpToken = iterator.stepBackward();
-                                stepCount++;
-                            }
-                            for (var i = 0; i < stepCount; i++) {
-                                iterator.stepForward();
-                            }
-                        }
-                    }
-                } while (prevToken && depth <= 0);
-                
-                //select tag again
-                iterator.stepForward();
-            }
-            
-            if (!token) {
-                session.removeMarker(session.$tagHighlight);
-                session.$tagHighlight = null;
-                return;
-            }
-            
-            var row = iterator.getCurrentTokenRow();
-            var column = iterator.getCurrentTokenColumn();
-            var range = new Range(row, column, row, column+token.value.length);
-            
-            //remove range if different
-            var sbm = session.$backMarkers[session.$tagHighlight];
-            if (session.$tagHighlight && sbm != undefined && range.compareRange(sbm.range) !== 0) {
-                session.removeMarker(session.$tagHighlight);
-                session.$tagHighlight = null;
-            }
-            
-            if (!session.$tagHighlight)
-                session.$tagHighlight = session.addMarker(range, "ace_bracket", "text");
         }, 50);
     };
 
@@ -714,7 +606,6 @@ Editor.$uid = 0;
     this.$cursorChange = function() {
         this.renderer.updateCursor();
         this.$highlightBrackets();
-        this.$highlightTags();
         this.$updateHighlightActiveLine();
     };
 
@@ -2228,10 +2119,14 @@ Editor.$uid = 0;
      * Moves the cursor's row and column to the next matching bracket or HTML tag.
      *
      **/
-    this.jumpToMatching = function(select, expand) {
+    this.jumpToMatching = function (select, expand) {
         var cursor = this.getCursorPosition();
         var iterator = new TokenIterator(this.session, cursor.row, cursor.column);
         var prevToken = iterator.getCurrentToken();
+        var tokenCount = 0;
+        if (prevToken && prevToken.type.indexOf('tag-name') !== -1) {
+            prevToken = iterator.stepBackward();
+        }
         var token = prevToken || iterator.stepForward();
 
         if (!token) return;
@@ -2250,7 +2145,7 @@ Editor.$uid = 0;
             "{": "{",
             "}": "{"
         };
-        
+
         do {
             if (token.value.match(/[{}()\[\]]/g)) {
                 for (; i < token.value.length && !found; i++) {
@@ -2279,7 +2174,7 @@ Editor.$uid = 0;
                                 matchType = 'bracket';
                                 found = true;
                             }
-                        break;
+                            break;
                     }
                 }
             }
@@ -2287,14 +2182,14 @@ Editor.$uid = 0;
                 if (isNaN(depth[token.value])) {
                     depth[token.value] = 0;
                 }
-                
-                if (prevToken.value === '<') {
+
+                if (prevToken.value === '<' && tokenCount > 1) {
                     depth[token.value]++;
                 }
                 else if (prevToken.value === '</') {
                     depth[token.value]--;
                 }
-                
+
                 if (depth[token.value] === -1) {
                     matchType = 'tag';
                     found = true;
@@ -2303,76 +2198,51 @@ Editor.$uid = 0;
 
             if (!found) {
                 prevToken = token;
+                tokenCount++;
                 token = iterator.stepForward();
                 i = 0;
             }
         } while (token && !found);
 
         //no match found
-        if (!matchType)
-            return;
+        if (!matchType) return;
 
         var range, pos;
         if (matchType === 'bracket') {
             range = this.session.getBracketRange(cursor);
             if (!range) {
-                range = new Range(
-                    iterator.getCurrentTokenRow(),
-                    iterator.getCurrentTokenColumn() + i - 1,
-                    iterator.getCurrentTokenRow(),
-                    iterator.getCurrentTokenColumn() + i - 1
+                range = new Range(iterator.getCurrentTokenRow(), iterator.getCurrentTokenColumn() + i - 1,
+                    iterator.getCurrentTokenRow(), iterator.getCurrentTokenColumn() + i - 1
                 );
                 pos = range.start;
-                if (expand || pos.row === cursor.row && Math.abs(pos.column - cursor.column) < 2)
-                    range = this.session.getBracketRange(pos);
+                if (expand || pos.row === cursor.row && Math.abs(pos.column - cursor.column)
+                    < 2) range = this.session.getBracketRange(pos);
             }
         }
         else if (matchType === 'tag') {
-            if (token && token.type.indexOf('tag-name') !== -1) 
-                var tag = token.value;
-            else
-                return;
-
-            range = new Range(
-                iterator.getCurrentTokenRow(),
-                iterator.getCurrentTokenColumn() - 2,
-                iterator.getCurrentTokenRow(),
-                iterator.getCurrentTokenColumn() - 2
+            if (!token || token.type.indexOf('tag-name') === -1) return;
+            range = new Range(iterator.getCurrentTokenRow(), iterator.getCurrentTokenColumn() - 2,
+                iterator.getCurrentTokenRow(), iterator.getCurrentTokenColumn() - 2
             );
 
             //find matching tag
             if (range.compare(cursor.row, cursor.column) === 0) {
-                found = false;
-                do {
-                    token = prevToken;
-                    prevToken = iterator.stepBackward();
-                    
-                    if (prevToken) {
-                        if (prevToken.type.indexOf('tag-close') !== -1) {
-                            range.setEnd(iterator.getCurrentTokenRow(), iterator.getCurrentTokenColumn() + 1);
-                        }
-
-                        if (token.value === tag && token.type.indexOf('tag-name') !== -1) {
-                            if (prevToken.value === '<') {
-                                depth[tag]++;
-                            }
-                            else if (prevToken.value === '</') {
-                                depth[tag]--;
-                            }
-                            
-                            if (depth[tag] === 0)
-                                found = true;
-                        }
+                var tagsRanges = this.session.getMatchingTags(cursor);
+                if (tagsRanges) {
+                    if (tagsRanges.openTag.contains(cursor.row, cursor.column)) {
+                        range = tagsRanges.closeTag;
+                        pos = range.start;
                     }
-                } while (prevToken && !found);
+                    else {
+                        range = tagsRanges.openTag;
+                        if (tagsRanges.closeTag.start.row === cursor.row && tagsRanges.closeTag.start.column
+                            === cursor.column) pos = range.end; else pos = range.start;
+                    }
+                }
             }
 
             //we found it
-            if (token && token.type.indexOf('tag-name')) {
-                pos = range.start;
-                if (pos.row == cursor.row && Math.abs(pos.column - cursor.column) < 2)
-                    pos = range.end;
-            }
+            pos = pos || range.start;
         }
 
         pos = range && range.cursor || pos;
@@ -2380,12 +2250,15 @@ Editor.$uid = 0;
             if (select) {
                 if (range && expand) {
                     this.selection.setRange(range);
-                } else if (range && range.isEqual(this.getSelectionRange())) {
+                }
+                else if (range && range.isEqual(this.getSelectionRange())) {
                     this.clearSelection();
-                } else {
+                }
+                else {
                     this.selection.selectTo(pos.row, pos.column);
                 }
-            } else {
+            }
+            else {
                 this.selection.moveTo(pos.row, pos.column);
             }
         }

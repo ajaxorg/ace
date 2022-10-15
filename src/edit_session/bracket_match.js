@@ -219,5 +219,230 @@ function BracketMatch() {
         
         return null;
     };
+
+    /**
+     * Returns [[Range]]'s for matching tags and tag names, if there are any
+     * @param {Position} pos
+     * @returns {{closeTag: Range, closeTagName: Range, openTag: Range, openTagName: Range} | undefined}
+     */
+    this.getMatchingTags = function (pos) {
+        var iterator = new TokenIterator(this, pos.row, pos.column);
+        var token = this.$findTagName(iterator);
+        if (!token) return;
+
+        var prevToken = iterator.stepBackward();
+
+        if (prevToken.value === '<') {
+            return this.$findClosingTag(iterator, token);
+        }
+        else {
+            return this.$findOpeningTag(iterator, token);
+        }
+    };
+
+    this.$findTagName = function (iterator) {
+        var token = iterator.getCurrentToken();
+        var found = false;
+        var backward = false;
+        if (token && token.type.indexOf('tag-name') === -1) {
+            do {
+                if (backward) token = iterator.stepBackward(); else token = iterator.stepForward();
+                if (token) {
+                    if (token.value === "/>") {
+                        //changing iterator direction for self-closing tags, when cursor is in between tag
+                        //name and tag closing
+                        backward = true;
+                    }
+                    else if (token.type.indexOf('tag-name') !== -1) {
+                        found = true;
+                    }
+                }
+            } while (token && !found);
+        }
+        return token;
+    };
+
+    this.$findClosingTag = function (iterator, token) {
+        var prevToken;
+        var currentTag = token.value;
+        var tag = token.value;
+        var depth = 0;
+
+        var openTagStart = new Range(iterator.getCurrentTokenRow(), iterator.getCurrentTokenColumn(),
+            iterator.getCurrentTokenRow(), iterator.getCurrentTokenColumn() + 1
+        );
+        token = iterator.stepForward();
+        var openTagName = new Range(iterator.getCurrentTokenRow(), iterator.getCurrentTokenColumn(),
+            iterator.getCurrentTokenRow(), iterator.getCurrentTokenColumn() + token.value.length
+        );
+        var foundOpenTagEnd = false;
+        do {
+            prevToken = token;
+            token = iterator.stepForward();
+            if (token) {
+                if (token.value === '>' && !foundOpenTagEnd) {
+                    var openTagEnd = new Range(iterator.getCurrentTokenRow(), iterator.getCurrentTokenColumn(),
+                        iterator.getCurrentTokenRow(), iterator.getCurrentTokenColumn() + 1
+                    ); //Range for `>`
+                    foundOpenTagEnd = true;
+                }
+                if (token.type.indexOf('tag-name') !== -1) {
+                    currentTag = token.value;
+                    if (tag === currentTag) {
+                        if (prevToken.value === '<') {
+                            depth++;
+                        }
+                        else if (prevToken.value === '</') {
+                            depth--;
+                            if (depth < 0) {//found closing tag
+                                iterator.stepBackward();
+                                var closeTagStart = new Range(iterator.getCurrentTokenRow(),
+                                    iterator.getCurrentTokenColumn(), iterator.getCurrentTokenRow(),
+                                    iterator.getCurrentTokenColumn() + 2
+                                ); //Range for </
+                                token = iterator.stepForward();
+                                var closeTagName = new Range(iterator.getCurrentTokenRow(),
+                                    iterator.getCurrentTokenColumn(), iterator.getCurrentTokenRow(),
+                                    iterator.getCurrentTokenColumn() + token.value.length
+                                );
+                                token = iterator.stepForward();
+                                if (token && token.value === '>') {
+                                    var closeTagEnd = new Range(iterator.getCurrentTokenRow(),
+                                        iterator.getCurrentTokenColumn(), iterator.getCurrentTokenRow(),
+                                        iterator.getCurrentTokenColumn() + 1
+                                    ); //Range for >
+                                }
+                                else {
+                                    return;
+                                }
+                            }
+                        }
+                    }
+                }
+                else if (tag === currentTag && token.value === '/>') { // self-closing tag
+                    depth--;
+                    if (depth < 0) {//found self-closing tag end
+                        //Example: <tagName attr/>
+                        //`<tagName ` - opening part of tag consist of `openTagStart`, `openTagName` and `openTagEnd`
+                        //`/>` - closing part of tag consist of `closeTagStart`, `closeTagName` and `closeTagEnd`
+                        var closeTagStart = new Range(iterator.getCurrentTokenRow(), iterator.getCurrentTokenColumn(),
+                            iterator.getCurrentTokenRow(), iterator.getCurrentTokenColumn() + 2
+                        );
+                        var closeTagName = closeTagStart;
+                        var closeTagEnd = closeTagName;
+
+                        var openTagEnd = new Range(openTagName.end.row, openTagName.end.column, openTagName.end.row,
+                            openTagName.end.column + 1
+                        );
+
+                    }
+                }
+            }
+        } while (token && depth >= 0);
+
+        if (openTagStart && openTagEnd && closeTagStart && closeTagEnd && openTagName && closeTagName) {
+            return {
+                openTag: new Range(openTagStart.start.row, openTagStart.start.column, openTagEnd.end.row,
+                    openTagEnd.end.column
+                ),
+                closeTag: new Range(closeTagStart.start.row, closeTagStart.start.column, closeTagEnd.end.row,
+                    closeTagEnd.end.column
+                ),
+                openTagName: openTagName,
+                closeTagName: closeTagName
+            };
+        }
+    };
+
+    this.$findOpeningTag = function (iterator, token) {
+        var prevToken = iterator.getCurrentToken();
+        var tag = token.value;
+        var depth = 0;
+
+        var startRow = iterator.getCurrentTokenRow();
+        var startColumn = iterator.getCurrentTokenColumn();
+        var endColumn = startColumn + 2;
+
+        //closing tag
+        var closeTagStart = new Range(startRow, startColumn, startRow, endColumn); //Range for </
+        iterator.stepForward();
+        var closeTagName = new Range(iterator.getCurrentTokenRow(), iterator.getCurrentTokenColumn(),
+            iterator.getCurrentTokenRow(), iterator.getCurrentTokenColumn() + token.value.length
+        );
+        token = iterator.stepForward();
+        if (!token || token.value !== ">") return;
+        var closeTagEnd = new Range(iterator.getCurrentTokenRow(), iterator.getCurrentTokenColumn(),
+            iterator.getCurrentTokenRow(), iterator.getCurrentTokenColumn() + 1
+        ); //Range for >
+
+        iterator.stepBackward();
+        iterator.stepBackward();
+        do {
+            token = prevToken;
+            startRow = iterator.getCurrentTokenRow();
+            startColumn = iterator.getCurrentTokenColumn();
+            endColumn = startColumn + token.value.length;
+
+            prevToken = iterator.stepBackward();
+
+            if (token) {
+                if (token.type.indexOf('tag-name') !== -1) {
+                    if (tag === token.value) {
+                        if (prevToken.value === '<') {
+                            depth++;
+                            if (depth > 0) {//found opening tag
+                                var openTagName = new Range(startRow, startColumn, startRow, endColumn);
+                                var openTagStart = new Range(iterator.getCurrentTokenRow(),
+                                    iterator.getCurrentTokenColumn(), iterator.getCurrentTokenRow(),
+                                    iterator.getCurrentTokenColumn() + 1
+                                ); //Range for <
+                                do {
+                                    token = iterator.stepForward();
+                                } while (token && token.value !== '>');
+                                var openTagEnd = new Range(iterator.getCurrentTokenRow(),
+                                    iterator.getCurrentTokenColumn(), iterator.getCurrentTokenRow(),
+                                    iterator.getCurrentTokenColumn() + 1
+                                ); //Range for >
+                            }
+                        }
+                        else if (prevToken.value === '</') {
+                            depth--;
+                        }
+                    }
+                }
+                else if (token.value === '/>') { // self-closing tag
+                    var stepCount = 0;
+                    var tmpToken = prevToken;
+                    while (tmpToken) {
+                        if (tmpToken.type.indexOf('tag-name') !== -1 && tmpToken.value === tag) {
+                            depth--;
+                            break;
+                        }
+                        else if (tmpToken.value === '<') {
+                            break;
+                        }
+                        tmpToken = iterator.stepBackward();
+                        stepCount++;
+                    }
+                    for (var i = 0; i < stepCount; i++) {
+                        iterator.stepForward();
+                    }
+                }
+            }
+        } while (prevToken && depth <= 0);
+
+        if (openTagStart && openTagEnd && closeTagStart && closeTagEnd && openTagName && closeTagName) {
+            return {
+                openTag: new Range(openTagStart.start.row, openTagStart.start.column, openTagEnd.end.row,
+                    openTagEnd.end.column
+                ),
+                closeTag: new Range(closeTagStart.start.row, closeTagStart.start.column, closeTagEnd.end.row,
+                    closeTagEnd.end.column
+                ),
+                openTagName: openTagName,
+                closeTagName: closeTagName
+            };
+        }
+    };
 }
 exports.BracketMatch = BracketMatch;
