@@ -141,6 +141,10 @@ var Autocomplete = function() {
             data = this.popup.getData(this.popup.getRow());
         if (!data)
             return false;
+	if (data.value === "") {
+            // explicitly given nothing to insert, so do exactly that.    
+            return this.detach();
+	}
 
         var completions = this.completions;
         this.editor.startOperation({command: {name: "insertMatch"}});
