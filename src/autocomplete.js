@@ -12,6 +12,11 @@ var Autocomplete = function() {
     this.autoInsert = false;
     this.autoSelect = true;
     this.exactMatch = false;
+    // `emptyMessage` can be set to a function which generates a message to
+    // display in the auto-complete popup when there are no suggestions.
+    //
+    // This method will be passed the `prefix` for the failed completion attempt
+    this.emptyMessage = null;
     this.gatherCompletionsId = 0;
     this.keyboardHandler = new HashHandler();
     this.keyboardHandler.bindKeys(this.commands);
@@ -272,7 +277,15 @@ var Autocomplete = function() {
         // Only detach if result gathering is finished
         var detachIfFinished = function(results) {
             if (!results.finished) return;
-            return this.detach();
+            if (!this.emptyMessage) return this.detach();
+            // pop up the empty completions message
+            var completionsForEmpty = [{
+                caption: this.emptyMessage(prefix),
+                value: ""
+            }];
+            this.completions = new FilteredList(completionsForEmpty);
+            this.completions.exactMatch = true;
+            this.openPopup(this.editor, prefix, keepPopupPosition);
         }.bind(this);
 
         var processResults = function(results) {
@@ -313,7 +326,7 @@ var Autocomplete = function() {
 
             // Wrong prefix or wrong session -> ignore
             if (prefix.indexOf(results.prefix) !== 0 || _id != this.gatherCompletionsId)
-                return;
+                return detachIfFinished();
 
             // If multiple completers return their results immediately, we want to process them together
             if (isImmediate) {
