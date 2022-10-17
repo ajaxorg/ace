@@ -63,12 +63,12 @@ var StylusHighlightRules = function() {
             regex: "(?:\\b)(a|abbr|acronym|address|area|article|aside|audio|b|base|big|blockquote|body|br|button|canvas|caption|cite|code|col|colgroup|datalist|dd|del|details|dfn|dialog|div|dl|dt|em|eventsource|fieldset|figure|figcaption|footer|form|frame|frameset|(?:h[1-6])|head|header|hgroup|hr|html|i|iframe|img|input|ins|kbd|label|legend|li|link|map|mark|menu|meta|meter|nav|noframes|noscript|object|ol|optgroup|option|output|p|param|pre|progress|q|samp|script|section|select|small|span|strike|strong|style|sub|summary|sup|table|tbody|td|textarea|tfoot|th|thead|time|title|tr|tt|ul|var|video)(?:\\b)"
         },
         {
-            token : "constant.numeric",  // hex6 color
-            regex : "#[a-f0-9]{6}"
+            token: "constant.numeric",  // hex6 color
+            regex: "#[a-fA-F0-9]{6}"
         }, 
         {
-            token : "constant.numeric", // hex3 color
-            regex : "#[a-f0-9]{3}"
+            token: "constant.numeric", // hex3 color
+            regex: "#[a-fA-F0-9]{3}"
         }, 
         {
             token: ["punctuation.definition.entity.stylus", "entity.other.attribute-name.id.stylus"],
