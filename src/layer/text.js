@@ -386,7 +386,7 @@ var Text = function(parentEl) {
         valueFragment.appendChild(this.dom.createTextNode(i ? value.slice(i) : value, this.element));
 
         if (!this.$textToken[token.type]) {
-            var classes = "ace_" + token.type.replace(/\./g, " ace_");
+            var classes = "ace_token ace_" + token.type.replace(/\./g, " ace_");
             var span = this.dom.createElement("span");
             if (token.type == "fold")
                 span.style.width = (token.value.length * this.config.characterWidth) + "px";
@@ -397,7 +397,10 @@ var Text = function(parentEl) {
             parent.appendChild(span);
         }
         else {
-            parent.appendChild(valueFragment);
+            var span = this.dom.createElement("span");
+            span.className = "ace_token";
+            span.appendCHild(valueFragment);
+            parent.appendChild(span);
         }
 
         return screenColumn + value.length;
