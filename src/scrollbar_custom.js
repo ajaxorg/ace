@@ -5,16 +5,44 @@ var dom = require("./lib/dom");
 var event = require("./lib/event");
 var EventEmitter = require("./lib/event_emitter").EventEmitter;
 
-dom.importCssString('.ace_editor>.ace_sb-v div, .ace_editor>.ace_sb-h div{\n' + '  position: absolute;\n'
-    + '  background: rgba(128, 128, 128, 0.6);\n' + '  -moz-box-sizing: border-box;\n' + '  box-sizing: border-box;\n'
-    + '  border: 1px solid #bbb;\n' + '  border-radius: 2px;\n' + '  z-index: 8;\n' + '}\n'
-    + '.ace_editor>.ace_sb-v, .ace_editor>.ace_sb-h {\n' + '  position: absolute;\n' + '  z-index: 6;\n'
-    + '  background: none;' + '  overflow: hidden!important;\n' + '}\n' + '.ace_editor>.ace_sb-v {\n'
-    + '  z-index: 6;\n' + '  right: 0;\n' + '  top: 0;\n' + '  width: 12px;\n' + '}' + '.ace_editor>.ace_sb-v div {\n'
-    + '  z-index: 8;\n' + '  right: 0;\n' + '  width: 100%;\n' + '}' + '.ace_editor>.ace_sb-h {\n' + '  bottom: 0;\n'
-    + '  left: 0;\n' + '  height: 12px;\n' + '}' + '.ace_editor>.ace_sb-h div {\n' + '  bottom: 0;\n'
-    + '  height: 100%;\n' + '}' + '.ace_editor>.ace_sb_grabbed {\n' + '  z-index: 8;\n' + '  background: #000;\n'
-    + '}');
+dom.importCssString(`.ace_editor>.ace_sb-v div, .ace_editor>.ace_sb-h div{
+  position: absolute;
+  background: rgba(128, 128, 128, 0.6);
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  border: 1px solid #bbb;
+  border-radius: 2px;
+  z-index: 8;
+}
+.ace_editor>.ace_sb-v, .ace_editor>.ace_sb-h {
+  position: absolute;
+  z-index: 6;
+  background: none;' + '  overflow: hidden!important;
+}
+.ace_editor>.ace_sb-v {
+  z-index: 6;
+  right: 0;
+  top: 0;
+  width: 12px;
+}
+.ace_editor>.ace_sb-v div {
+  z-index: 8;
+  right: 0;
+  width: 100%;
+}
+.ace_editor>.ace_sb-h {
+  bottom: 0;
+  left: 0;
+  height: 12px;
+}
+.ace_editor>.ace_sb-h div {
+  bottom: 0;
+  height: 100%;
+}
+.ace_editor>.ace_sb_grabbed {
+  z-index: 8;
+  background: #000;
+}`, "ace_scrollbar.css", false);
 
 /**
  * An abstract class representing a native scrollbar control.
