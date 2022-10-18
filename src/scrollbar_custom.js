@@ -17,7 +17,8 @@ dom.importCssString(`.ace_editor>.ace_sb-v div, .ace_editor>.ace_sb-h div{
 .ace_editor>.ace_sb-v, .ace_editor>.ace_sb-h {
   position: absolute;
   z-index: 6;
-  background: none;' + '  overflow: hidden!important;
+  background: none;
+  overflow: hidden!important;
 }
 .ace_editor>.ace_sb-v {
   z-index: 6;
