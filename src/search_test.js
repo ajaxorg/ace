@@ -483,6 +483,33 @@ module.exports = {
         check(2, 2, 3, 4);
         check(0, 2, 1, 4);
         check(4, 2, 5, 4);
+    },
+
+    "test: find all matches in a range" : function() {
+        var session = new EditSession([
+            "",
+            "    var myVar1 = 1; var myVar2 = 2; var myVar3 = 3;",
+            "    var myVar4 = 4; var myVar5 = 5; var myVar6 = 6;"
+        ]);
+
+        var search = new Search().set({
+            needle: "var",
+            backwards: true,
+            caseSensitive: true,
+            range: {start: {row: 1, column: 20}, end: {row: 2, column: 22}},
+            wholeWord: false,
+            regExp: false
+        });
+
+        var ranges = search.findAll(session);
+
+        assert.equal(ranges.length, 3);
+        assert.position(ranges[0].start, 1, 20);
+        assert.position(ranges[0].end, 1, 23);
+        assert.position(ranges[1].start, 1, 36);
+        assert.position(ranges[1].end, 1, 39);
+        assert.position(ranges[2].start, 2, 4);
+        assert.position(ranges[2].end, 2, 7);
     }
 };
 
