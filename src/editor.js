@@ -1730,6 +1730,38 @@ Editor.$uid = 0;
     };
 
     /**
+     * Finds link at defined {row} and {column}
+     * @returns {String}
+     **/
+    this.findLinkAt = function (row,column) {
+        var line = this.session.getLine(row);
+        var wordParts = line.split(/((?:https?|ftp):\/\/[\S]+)/);
+        var delta = column;
+        if (delta < 0) delta = 0;
+        var curLength = 0, itLength = 0, match;
+        wordParts.forEach(function (item) {
+            itLength = curLength + item.length;
+            if (delta >= curLength && delta <= itLength) {
+                if (item.match(/((?:https?|ftp):\/\/[\S]+)/)) {
+                    match = item.replace(/[\s:.,'";}\]]+$/, "");
+                }
+            }
+            curLength = itLength;
+        });
+        return match;
+    };
+
+    /**
+     * Open valid url under cursor in another tab
+     **/
+    this.jumptodef = function () {
+        var cursor =  this.selection.getCursor();
+        var url = this.findLinkAt(cursor.row, cursor.column);
+        if (url)
+            window.open(url, '_blank');
+    };
+
+    /**
      * Removes all the lines in the current selection
      * @related EditSession.remove
      **/
