@@ -507,7 +507,11 @@ Editor.$uid = 0;
                 session.$bracketHighlight = null;
             }
             var pos = self.getCursorPosition();
-            var ranges = session.getMatchingBracketRanges(pos);
+            var handler = self.getKeyboardHandler();
+            var vimOffset = handler && handler.$getCursorOffsetForHighlight && handler.$getCursorOffsetForHighlight(
+                self);
+            var ranges = session.getMatchingBracketRanges(pos, vimOffset);
+
             if (!ranges) {
                 var iterator = new TokenIterator(session, pos.row, pos.column);
                 var token = iterator.getCurrentToken();
