@@ -1733,32 +1733,35 @@ Editor.$uid = 0;
      * Finds link at defined {row} and {column}
      * @returns {String}
      **/
-    this.findLinkAt = function (row,column) {
+    this.findLinkAt = function (row, column) {
         var line = this.session.getLine(row);
         var wordParts = line.split(/((?:https?|ftp):\/\/[\S]+)/);
-        var delta = column;
-        if (delta < 0) delta = 0;
-        var curLength = 0, itLength = 0, match;
-        wordParts.forEach(function (item) {
-            itLength = curLength + item.length;
-            if (delta >= curLength && delta <= itLength) {
+        var columnPosition = column;
+        if (columnPosition < 0) columnPosition = 0;
+        var previousPosition = 0, currentPosition = 0, match;
+        for (let item of wordParts) {
+            currentPosition = previousPosition + item.length;
+            if (columnPosition >= previousPosition && columnPosition <= currentPosition) {
                 if (item.match(/((?:https?|ftp):\/\/[\S]+)/)) {
                     match = item.replace(/[\s:.,'";}\]]+$/, "");
+                    break;
                 }
             }
-            curLength = itLength;
-        });
+            previousPosition = currentPosition;
+        }
         return match;
     };
 
     /**
      * Open valid url under cursor in another tab
+     * @returns {Boolean}
      **/
-    this.jumptodef = function () {
+    this.openLink = function () {
         var cursor =  this.selection.getCursor();
         var url = this.findLinkAt(cursor.row, cursor.column);
         if (url)
             window.open(url, '_blank');
+        return url != null;
     };
 
     /**

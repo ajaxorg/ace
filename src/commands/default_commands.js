@@ -745,9 +745,9 @@ exports.commands = [{
     scrollIntoView: "cursor",
     readOnly: true
 }, {
-    name: "jumptodef",
+    name: "openlink",
     bindKey: bindKey("Ctrl+F3", "F3"),
-    exec: function(editor) { editor.jumptodef(); }
+    exec: function(editor) { editor.openLink(); }
 }, {
     name: "joinlines",
     description: "Join lines",
