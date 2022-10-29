@@ -5,8 +5,6 @@ if (typeof process !== "undefined") {
 
 "use strict";
 
-var ace = require("./ace");
-var EditSession = require("./edit_session").EditSession;
 var Editor = require("./editor").Editor;
 var UndoManager = require("./undomanager").UndoManager;
 var MockRenderer = require("./test/mockrenderer").MockRenderer;
@@ -533,6 +531,16 @@ module.exports = {
         exec("selectlineend", 1);
         editor.execCommand(editor.commands.byName.joinlines);
         assert.equal(editor.getValue(), "foo for foo foo foo for foo foo\nfoo for foo foo");
+    },
+    "test findlink": function() {
+        editor = new Editor(new MockRenderer());
+
+        editor.setValue("foo for foo foo\nhttps://www.google.com/", 1);
+        var url = editor.findLinkAt(0, 1);
+        assert.equal(url, null);
+
+        url = editor.findLinkAt(1, 5);
+        assert.equal(url, "https://www.google.com/");
     }
 };
 
