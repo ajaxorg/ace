@@ -48,7 +48,6 @@ var docs = {
 
     "docs/c9search.c9search_results": "C9 Search Results",
     "docs/mel.mel": "MEL",
-    "docs/Nix.nix": "Nix"
 };
 
 var ownSource = {
