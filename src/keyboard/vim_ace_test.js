@@ -323,26 +323,26 @@ module.exports = {
         editor.focus();
 
         var handler = editor.getKeyboardHandler();
-        var vimOffsetFunc = handler && handler.$getCursorOffsetForHighlight;
-        assert.ok(vimOffsetFunc);
+        var vimSideFunc = handler && handler.$getSideForHighlight;
+        assert.ok(vimSideFunc);
         var values = [
-            {offset: 0, anchorRow: 0, anchorColumn: 0, cursorRow: 0, cursorColumn: 0,
+            {side: 1, anchorRow: 0, anchorColumn: 0, cursorRow: 0, cursorColumn: 0,
                 startRow: 0, startColumn: 17, endRow: 0, endColumn: 18},
-            {offset: 0, anchorRow: 0, anchorColumn: 2, cursorRow: 0, cursorColumn: 2,
+            {side: 1, anchorRow: 0, anchorColumn: 2, cursorRow: 0, cursorColumn: 2,
                 startRow: 0, startColumn: 15, endRow: 0, endColumn: 16},
-            {offset: -1, anchorRow: 0, anchorColumn: 15, cursorRow: 0, cursorColumn: 17,
+            {side: 0, anchorRow: 0, anchorColumn: 15, cursorRow: 0, cursorColumn: 17,
                 startRow: 0, startColumn: 1, endRow: 0, endColumn: 2},
-            {offset: 0, anchorRow: 0, anchorColumn: 17, cursorRow: 0, cursorColumn: 16,
+            {side: 1, anchorRow: 0, anchorColumn: 17, cursorRow: 0, cursorColumn: 16,
                 startRow: 0, startColumn: 1, endRow: 0, endColumn: 2}
         ];
         values.forEach((el) => {
             editor.session.selection.$setSelection(el.anchorRow, el.anchorColumn, el.cursorRow, el.cursorColumn);
-            var offset = vimOffsetFunc(editor);
-            assert.ok(offset === el.offset);
+            var side = vimSideFunc(editor);
+            assert.ok(side === el.side);
             var ranges = editor.session.getMatchingBracketRanges({
                 row: el.cursorRow,
                 column: el.cursorColumn
-            }, offset);
+            }, side);
             assert.range(ranges[1], el.startRow, el.startColumn, el.endRow, el.endColumn);
         });
     }

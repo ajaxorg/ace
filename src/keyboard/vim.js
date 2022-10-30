@@ -6985,12 +6985,12 @@ domLib.importCssString(`.normal-mode .ace_cursor{
       domLib.setStyle(element.style, "width", w + "px");
       domLib.setStyle(element.style, "height", h + "px");
     },
-    $getCursorOffsetForHighlight: function (editor) {
+    $getSideForHighlight: function (editor) {
       var cm = editor.state.cm;
       var vim = getVim(cm);
       if (!vim.insertMode) {
         var isBackwards = editor.session.selection.isBackwards() || editor.session.selection.isEmpty();
-        return isBackwards ? 0 : -1;
+        return isBackwards ? 1 : 0;
       }
       return null;
     },

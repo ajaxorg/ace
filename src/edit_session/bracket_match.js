@@ -69,31 +69,21 @@ function BracketMatch() {
      * * one Range if there is only one bracket
      *
      * @param {Point} pos
-     * @param {number|null} offset
+     * @param {number|null} side
      * @returns {null|Range[]}
      */
-    this.getMatchingBracketRanges = function(pos, offset) {
+    this.getMatchingBracketRanges = function(pos, side) {
         var line = this.getLine(pos.row);
         var bracketsRegExp = /([\(\[\{])|([\)\]\}])/;
-        if (offset != null) {
-            var chr = line.charAt(pos.column + offset);
+        var chr = side !== 1 && line.charAt(pos.column - 1);
+        var match = chr && chr.match(bracketsRegExp);
+        if (!match) {
+            chr = side !== 0 && line.charAt(pos.column);
             pos = {
                 row: pos.row,
-                column: pos.column + offset + 1
+                column: pos.column + 1
             };
-            var match = chr && chr.match(bracketsRegExp);
-        }
-        else {
-            var chr = line.charAt(pos.column - 1);
-            var match = chr && chr.match(bracketsRegExp);
-            if (!match) {
-                var chr = line.charAt(pos.column);
-                pos = {
-                    row: pos.row,
-                    column: pos.column + 1
-                };
-                var match = chr && chr.match(bracketsRegExp);
-            }
+            match = chr && chr.match(bracketsRegExp);
         }
 
         if (!match)
