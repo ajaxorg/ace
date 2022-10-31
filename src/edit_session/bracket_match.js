@@ -69,16 +69,16 @@ function BracketMatch() {
      * * one Range if there is only one bracket
      *
      * @param {Point} pos
-     * @param {number|null} side
+     * @param {boolean} [isBackwards]
      * @returns {null|Range[]}
      */
-    this.getMatchingBracketRanges = function(pos, side) {
+    this.getMatchingBracketRanges = function(pos, isBackwards) {
         var line = this.getLine(pos.row);
         var bracketsRegExp = /([\(\[\{])|([\)\]\}])/;
-        var chr = side !== 1 && line.charAt(pos.column - 1);
+        var chr = !isBackwards && line.charAt(pos.column - 1);
         var match = chr && chr.match(bracketsRegExp);
         if (!match) {
-            chr = side !== 0 && line.charAt(pos.column);
+            chr = (isBackwards === undefined || isBackwards) && line.charAt(pos.column);
             pos = {
                 row: pos.row,
                 column: pos.column + 1

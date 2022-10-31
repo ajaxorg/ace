@@ -508,9 +508,8 @@ Editor.$uid = 0;
             }
             var pos = self.getCursorPosition();
             var handler = self.getKeyboardHandler();
-            var side = handler && handler.$getSideForHighlight && handler.$getSideForHighlight(
-                self);
-            var ranges = session.getMatchingBracketRanges(pos, side);
+            var isBackwards = handler && handler.$getDirectionForHighlight && handler.$getDirectionForHighlight(self);
+            var ranges = session.getMatchingBracketRanges(pos, isBackwards);
 
             if (!ranges) {
                 var iterator = new TokenIterator(session, pos.row, pos.column);

@@ -323,26 +323,26 @@ module.exports = {
         editor.focus();
 
         var handler = editor.getKeyboardHandler();
-        var vimSideFunc = handler && handler.$getSideForHighlight;
-        assert.ok(vimSideFunc);
+        var vimDirectionFunc = handler && handler.$getDirectionForHighlight;
+        assert.ok(vimDirectionFunc);
         var values = [
-            {side: 1, anchorRow: 0, anchorColumn: 0, cursorRow: 0, cursorColumn: 0,
+            {isBackwards: true, anchorRow: 0, anchorColumn: 0, cursorRow: 0, cursorColumn: 0,
                 startRow: 0, startColumn: 17, endRow: 0, endColumn: 18},
-            {side: 1, anchorRow: 0, anchorColumn: 2, cursorRow: 0, cursorColumn: 2,
+            {isBackwards: true, anchorRow: 0, anchorColumn: 2, cursorRow: 0, cursorColumn: 2,
                 startRow: 0, startColumn: 15, endRow: 0, endColumn: 16},
-            {side: 0, anchorRow: 0, anchorColumn: 15, cursorRow: 0, cursorColumn: 17,
+            {isBackwards: false, anchorRow: 0, anchorColumn: 15, cursorRow: 0, cursorColumn: 17,
                 startRow: 0, startColumn: 1, endRow: 0, endColumn: 2},
-            {side: 1, anchorRow: 0, anchorColumn: 17, cursorRow: 0, cursorColumn: 16,
+            {isBackwards: true, anchorRow: 0, anchorColumn: 17, cursorRow: 0, cursorColumn: 16,
                 startRow: 0, startColumn: 1, endRow: 0, endColumn: 2}
         ];
         values.forEach((el) => {
             editor.session.selection.$setSelection(el.anchorRow, el.anchorColumn, el.cursorRow, el.cursorColumn);
-            var side = vimSideFunc(editor);
-            assert.ok(side === el.side);
+            var isBackwards = vimDirectionFunc(editor);
+            assert.ok(isBackwards === el.isBackwards);
             var ranges = editor.session.getMatchingBracketRanges({
                 row: el.cursorRow,
                 column: el.cursorColumn
-            }, side);
+            }, isBackwards);
             assert.range(ranges[1], el.startRow, el.startColumn, el.endRow, el.endColumn);
         });
     }
