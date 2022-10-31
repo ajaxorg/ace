@@ -9,6 +9,7 @@ var Range = require("./range").Range;
 var Editor = require("./editor").Editor;
 var EditSession = require("./edit_session").EditSession;
 var VirtualRenderer = require("./virtual_renderer").VirtualRenderer;
+var vim = require("./keyboard/vim");
 var assert = require("./test/assertions");
 require("./ext/error_marker");
 
@@ -298,6 +299,32 @@ module.exports = {
             {x: 6, y: 6, color: "rgba(0, 0, 0, 0)"}
         ];
         assertCoordsColor(values, imageData.data);
+    },
+    "test: brackets highlighting": function (done) {
+        var renderer = editor.renderer;
+        editor.session.setValue(
+            "function Test() {\n" + "    function Inner(){\n" + "        \n" + "        \n" + "    }\n" + "}");
+        editor.session.selection.$setSelection(1, 21, 1, 21);
+        renderer.$loop._flush();
+
+        setTimeout(function () {
+            assert.ok(editor.session.$bracketHighlight);
+            assert.range(editor.session.$bracketHighlight.ranges[0], 1, 20, 1, 21);
+            assert.range(editor.session.$bracketHighlight.ranges[1], 4, 4, 4, 5);
+
+            editor.session.selection.$setSelection(1, 16, 1, 16);
+            setTimeout(function () {
+                assert.ok(editor.session.$bracketHighlight == null);
+                editor.setKeyboardHandler(vim.handler);
+                editor.session.selection.$setSelection(1, 20, 1, 20);
+                setTimeout(function () {
+                    assert.ok(editor.session.$bracketHighlight);
+                    assert.range(editor.session.$bracketHighlight.ranges[0], 1, 20, 1, 21);
+                    assert.range(editor.session.$bracketHighlight.ranges[1], 4, 4, 4, 5);
+                    done();
+                }, 60);
+            }, 60);
+        }, 60);
     }
 
     // change tab size after setDocument (for text layer)
