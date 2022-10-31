@@ -397,6 +397,10 @@ export namespace Ace {
     canRedo(): boolean;
     bookmark(rev?: number): void;
     isAtBookmark(): boolean;
+    hasUndo(): boolean;
+    hasRedo(): boolean;
+    isClean(): boolean;
+    markClean(rev?: number): void;
   }
 
   export interface Position {
@@ -459,7 +463,7 @@ export namespace Ace {
       inFront?: boolean): number;
     addDynamicMarker(marker: MarkerLike, inFront: boolean): MarkerLike;
     removeMarker(markerId: number): void;
-    getMarkers(inFront?: boolean): MarkerLike[];
+    getMarkers(inFront?: boolean): {[id: number]: MarkerLike};
     highlight(re: RegExp): void;
     highlightLines(startRow: number,
       endRow: number,
