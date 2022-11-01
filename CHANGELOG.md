@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.12.5](https://github.com/ajaxorg/ace/compare/v1.12.4...v1.12.5) (2022-11-01)
+
+
+### Bug Fixes
+
+* enableLiveAutocompletion documentation ([#4976](https://github.com/ajaxorg/ace/issues/4976)) ([987ab76](https://github.com/ajaxorg/ace/commit/987ab7602e06acc9b08c75914f5c1335d5cdc8cc))
+* vim "normal" mode brackets highlighting ([0fbc54c](https://github.com/ajaxorg/ace/commit/0fbc54cc5130b0271928995660413ba0fab678cb))
+
 ### [1.12.4](https://github.com/ajaxorg/ace/compare/v1.12.3...v1.12.4) (2022-10-31)
 
 
