@@ -205,7 +205,7 @@
     var result = fn();
     if (this.ace.curOp && this.ace.curOp.command.name == "vim") {
       if (this.state.dialog)
-        this.ace.curOp.command.scrollIntoView = false;
+        this.ace.curOp.command.scrollIntoView = "center-animate";
       this.ace.endOperation();
       if (!curOp.cursorActivity && !curOp.lastChange && prevOp)
         this.ace.prevOp = prevOp;
