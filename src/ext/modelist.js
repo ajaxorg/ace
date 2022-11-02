@@ -111,6 +111,7 @@ var supportedModes = {
     Jade:        ["jade|pug"],
     Java:        ["java"],
     JavaScript:  ["js|jsm|jsx|cjs|mjs"],
+    JEXL:        ["jexl"],
     JSON:        ["json"],
     JSON5:       ["json5"],
     JSONiq:      ["jq"],
