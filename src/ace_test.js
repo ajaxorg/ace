@@ -101,6 +101,20 @@ module.exports = {
 
         ace.config.set("useStrictCSP", false);
         assert.ok(getStyleNode());
+    },
+    "test: edit template" : function() {
+        var template = document.createElement("template");
+        var div = document.createElement("div");
+        template.content = document.createDocumentFragment();
+        template.content.appendChild(div);
+        var fragment = template.content.cloneNode(true);
+        var el = fragment.firstChild;
+        //emulating template content document fragment behaviour in browser
+        //which cause #4634 issue (virtual Document that doesn't have `documentElement`)
+        el.ownerDocument = {};
+        var editor = ace.edit(el);
+        assert.equal(editor.container, el);
+        editor.destroy();
     }
 };
 
