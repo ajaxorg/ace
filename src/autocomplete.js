@@ -278,6 +278,7 @@ var Autocomplete = function() {
         var detachIfFinished = function(results) {
             if (!results.finished) return;
             if (!this.emptyMessage) return this.detach();
+            var prefix = results.prefix;
             // pop up the empty completions message
             var completionsForEmpty = [{
                 caption: this.emptyMessage(prefix),
