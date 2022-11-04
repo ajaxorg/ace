@@ -183,7 +183,7 @@ function importCssString(cssText, id, target) {
             return cssCache.push([cssText, id]);
         }
     }
-    if (strictCSP) return;
+    if (strictCSP && !strictCSP.nonce) return;
 
     var container = target;
     if (!target || !target.getRootNode) {
@@ -204,6 +204,9 @@ function importCssString(cssText, id, target) {
         cssText += "\n/*# sourceURL=ace/css/" + id + " */";
     
     var style = exports.createElement("style");
+    if (strictCSP && strictCSP.nonce) {
+        style.setAttribute("nonce", strictCSP.nonce);
+    }
     style.appendChild(doc.createTextNode(cssText));
     if (id)
         style.id = id;
