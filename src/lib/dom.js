@@ -217,7 +217,7 @@ exports.importCssString = importCssString;
 exports.importCssStylsheet = function(uri, doc) {
     exports.buildDom(["link", {rel: "stylesheet", href: uri}], exports.getDocumentHead(doc));
 };
-exports.scrollbarWidth = function(document) {
+exports.scrollbarWidth = function(doc) {
     var inner = exports.createElement("ace_inner");
     inner.style.width = "100%";
     inner.style.minWidth = "0px";
@@ -237,7 +237,9 @@ exports.scrollbarWidth = function(document) {
 
     outer.appendChild(inner);
 
-    var body = document.documentElement;
+    var body = (doc && doc.documentElement) || (document && document.documentElement);
+    if (!body) return 0;
+
     body.appendChild(outer);
 
     var noScrollbar = inner.offsetWidth;
@@ -245,13 +247,13 @@ exports.scrollbarWidth = function(document) {
     style.overflow = "scroll";
     var withScrollbar = inner.offsetWidth;
 
-    if (noScrollbar == withScrollbar) {
+    if (noScrollbar === withScrollbar) {
         withScrollbar = outer.clientWidth;
     }
 
     body.removeChild(outer);
 
-    return noScrollbar-withScrollbar;
+    return noScrollbar - withScrollbar;
 };
 
 exports.computedStyle = function(element, style) {
