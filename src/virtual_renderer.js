@@ -1232,6 +1232,10 @@ var VirtualRenderer = function(container, theme) {
         
         var topMargin = $viewMargin && $viewMargin.top || 0;
         var bottomMargin = $viewMargin && $viewMargin.bottom || 0;
+
+        if (this.$scrollAnimation) {
+            this.$stopAnimation = true;
+        }
         
         var scrollTop = this.$scrollAnimation ? this.session.getScrollTop() : this.scrollTop;
         
@@ -1378,7 +1382,20 @@ var VirtualRenderer = function(container, theme) {
         _self.session.setScrollTop(steps.shift());
         // trick session to think it's already scrolled to not loose toValue
         _self.session.$scrollTop = toValue;
+        
+        function endAnimation() {
+            _self.$timer = clearInterval(_self.$timer);
+            _self.$scrollAnimation = null;
+            _self.$stopAnimation = false;
+            callback && callback();
+        }
+        
         this.$timer = setInterval(function() {
+            if (_self.$stopAnimation) {
+                endAnimation();
+                return;
+            }
+
             if (!_self.session) 
                 return clearInterval(_self.$timer);
             if (steps.length) {
@@ -1390,9 +1407,7 @@ var VirtualRenderer = function(container, theme) {
                 toValue = null;
             } else {
                 // do this on separate step to not get spurious scroll event from scrollbar
-                _self.$timer = clearInterval(_self.$timer);
-                _self.$scrollAnimation = null;
-                callback && callback();
+                endAnimation();
             }
         }, 10);
     };
