@@ -186,11 +186,9 @@
    "no_regex",
   ["string","still a string"]
 ],[
-   "no_regex",
-  ["text"," "]
+   "no_regex"
 ],[
-   "no_regex",
-  ["text"," "]
+   "no_regex"
 ],[
    "start",
   ["storage.type","function"],
@@ -198,7 +196,8 @@
   ["entity.name.function","foo"],
   ["paren.lparen","("],
   ["variable.parameter","items"],
-  ["punctuation.operator",", "],
+  ["punctuation.operator",","],
+  ["text"," "],
   ["variable.parameter","nada"],
   ["paren.rparen",")"],
   ["text"," "],
@@ -470,22 +469,13 @@
 ],[
    "no_regex"
 ],[
-   "no_regex",
-  ["string","\"trailing space"],
-  ["constant.language.escape","\\ "],
-  ["string","  "]
+   "qqstring",
+  ["string","\"trailing space\\"]
 ],[
    "no_regex",
-  ["string","\"         \""],
-  ["text","    "],
-  ["keyword.operator","/"],
-  ["identifier","not"],
-  ["text"," "],
-  ["identifier","a"],
-  ["text"," "],
-  ["identifier","regexp"],
-  ["keyword.operator","/"],
-  ["identifier","g"]
+  ["string","\""],
+  ["text","         "],
+  ["string","\"    /not a regexp/g"]
 ],[
    "no_regex"
 ],[
@@ -568,14 +558,16 @@
   ["storage.type","function"],
   ["paren.lparen","("],
   ["variable.parameter","a"],
-  ["punctuation.operator",", "],
+  ["punctuation.operator",","],
+  ["text"," "],
   ["variable.parameter","b"],
   ["punctuation.operator",","]
 ],[
    "no_regex",
-  ["punctuation.operator","                          "],
+  ["text","                          "],
   ["variable.parameter","c"],
-  ["punctuation.operator",", "],
+  ["punctuation.operator",","],
+  ["text"," "],
   ["variable.parameter","d"],
   ["paren.rparen",")"]
 ],[
@@ -588,7 +580,8 @@
   ["storage.type","function"],
   ["paren.lparen","("],
   ["variable.parameter","a"],
-  ["punctuation.operator",",     "],
+  ["punctuation.operator",","],
+  ["text","     "],
   ["variable.parameter","b"],
   ["paren.rparen",")"]
 ],[
@@ -601,12 +594,12 @@
   ["storage.type","function"],
   ["paren.lparen","("],
   ["variable.parameter","a"],
-  ["punctuation.operator",",  "],
-  ["comment.doc","/*****/"],
+  ["punctuation.operator",","],
+  ["text","  "],
+  ["comment","/*****/"],
   ["text"," "],
-  ["identifier","d"],
-  ["string","\"string\""],
-  ["text","   "]
+  ["variable.parameter","d"],
+  ["string","\"string\""]
 ],[
    "no_regex"
 ],[
@@ -712,9 +705,9 @@
   ["punctuation.operator","."],
   ["identifier","map"],
   ["paren.lparen","("],
-  ["identifier","x"],
+  ["variable.parameter","x"],
   ["text"," "],
-  ["storage.type","=>"],
+  ["keyword.operator","=>"],
   ["text"," "],
   ["paren.lparen","{"]
 ],[
@@ -733,4 +726,591 @@
    "start",
   ["paren.rparen","}"],
   ["punctuation.operator",";"]
+],[
+   "start"
+],[
+   "start",
+  ["comment","//test generator function"]
+],[
+   "start",
+  ["storage.type","function*"],
+  ["text"," "],
+  ["entity.name.function","range"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["variable.parameter","start"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["variable.parameter","end"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["variable.parameter","step"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","while"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["identifier","start"],
+  ["text"," "],
+  ["keyword.operator","<"],
+  ["text"," "],
+  ["identifier","end"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "no_regex",
+  ["text","        "],
+  ["keyword","yield"],
+  ["text"," "],
+  ["identifier","start"]
+],[
+   "no_regex",
+  ["text","        "],
+  ["identifier","start"],
+  ["text"," "],
+  ["keyword.operator","+="],
+  ["text"," "],
+  ["identifier","step"]
+],[
+   "no_regex",
+  ["text","    "],
+  ["paren.rparen","}"]
+],[
+   "no_regex",
+  ["paren.rparen","}"]
+],[
+   "no_regex",
+  ["comment","//test ES6 new built-in methods"]
+],[
+   "no_regex",
+  ["string","\"hello\""],
+  ["punctuation.operator","."],
+  ["support.function","startsWith"],
+  ["paren.lparen","("],
+  ["string","\"ello\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["constant.numeric","1"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["comment","// true"]
+],[
+   "no_regex",
+  ["string","\"hello\""],
+  ["punctuation.operator","."],
+  ["support.function","endsWith"],
+  ["paren.lparen","("],
+  ["string","\"hell\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["constant.numeric","4"],
+  ["paren.rparen",")"],
+  ["text","   "],
+  ["comment","// true"]
+],[
+   "no_regex",
+  ["string","\"hello\""],
+  ["punctuation.operator","."],
+  ["support.function","includes"],
+  ["paren.lparen","("],
+  ["string","\"ell\""],
+  ["paren.rparen",")"],
+  ["text","       "],
+  ["comment","// true"]
+],[
+   "no_regex",
+  ["paren.lparen","["],
+  ["text"," "],
+  ["constant.numeric","1"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["constant.numeric","3"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["constant.numeric","4"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["constant.numeric","2"],
+  ["text"," "],
+  ["paren.rparen","]"],
+  ["punctuation.operator","."],
+  ["support.function","find"],
+  ["paren.lparen","("],
+  ["variable.parameter","x"],
+  ["text"," "],
+  ["keyword.operator","=>"],
+  ["text"," "],
+  ["identifier","x"],
+  ["text"," "],
+  ["keyword.operator",">"],
+  ["text"," "],
+  ["constant.numeric","3"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["comment","// 4"]
+],[
+   "no_regex",
+  ["paren.lparen","["],
+  ["text"," "],
+  ["constant.numeric","1"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["constant.numeric","3"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["constant.numeric","4"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["constant.numeric","2"],
+  ["text"," "],
+  ["paren.rparen","]"],
+  ["punctuation.operator","."],
+  ["support.function","findIndex"],
+  ["paren.lparen","("],
+  ["variable.parameter","x"],
+  ["text"," "],
+  ["keyword.operator","=>"],
+  ["text"," "],
+  ["identifier","x"],
+  ["text"," "],
+  ["keyword.operator",">"],
+  ["text"," "],
+  ["constant.numeric","3"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["comment","// 2"]
+],[
+   "no_regex",
+  ["string","\"foo\""],
+  ["punctuation.operator","."],
+  ["support.function","repeat"],
+  ["paren.lparen","("],
+  ["constant.numeric","3"],
+  ["paren.rparen",")"]
+],[
+   "no_regex",
+  ["variable.language","Number"],
+  ["punctuation.operator","."],
+  ["support.function","isSafeInteger"],
+  ["paren.lparen","("],
+  ["constant.numeric","42"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["keyword.operator","==="],
+  ["text"," "],
+  ["constant.language.boolean","true"]
+],[
+   "no_regex"
+],[
+   "start",
+  ["storage.type","let"],
+  ["text"," "],
+  ["identifier","x"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["variable.language","Number"],
+  ["punctuation.operator","."],
+  ["constant.language","MAX_SAFE_INTEGER"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["storage.type","let"],
+  ["text"," "],
+  ["identifier","x"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["variable.language","Number"],
+  ["punctuation.operator","."],
+  ["constant.language","MIN_SAFE_INTEGER"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["storage.type","let"],
+  ["text"," "],
+  ["identifier","x"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["variable.language","Number"],
+  ["punctuation.operator","."],
+  ["constant.language","EPSILON"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["comment","//test Promises"]
+],[
+   "no_regex",
+  ["keyword","new"],
+  ["text"," "],
+  ["variable.language","Promise"],
+  ["paren.lparen","("],
+  ["identifier","tetheredGetNumber"],
+  ["paren.rparen",")"]
+],[
+   "no_regex",
+  ["text","  "],
+  ["punctuation.operator","."],
+  ["support.function","then"],
+  ["paren.lparen","("],
+  ["identifier","determineParity"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["identifier","troubleWithGetNumber"],
+  ["paren.rparen",")"]
+],[
+   "no_regex",
+  ["text","  "],
+  ["punctuation.operator","."],
+  ["support.function","then"],
+  ["paren.lparen","("],
+  ["identifier","promiseGetWord"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","  "],
+  ["punctuation.operator","."],
+  ["support.function","then"],
+  ["paren.lparen","(("],
+  ["variable.parameter","info"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["storage.type","=>"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["storage.type","console"],
+  ["punctuation.operator","."],
+  ["support.function.firebug","log"],
+  ["paren.lparen","("],
+  ["string.quasi.start","`"],
+  ["string.quasi","Got: "],
+  ["paren.quasi.start","${"],
+  ["identifier","info"],
+  ["punctuation.operator","."],
+  ["identifier","value"],
+  ["paren.quasi.end","}"],
+  ["string.quasi",", "],
+  ["paren.quasi.start","${"],
+  ["identifier","info"],
+  ["punctuation.operator","."],
+  ["identifier","wordEvenOdd"],
+  ["paren.quasi.end","}"],
+  ["string.quasi.end","`"],
+  ["paren.rparen",")"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","return"],
+  ["text"," "],
+  ["identifier","info"],
+  ["punctuation.operator",";"]
+],[
+   "no_regex",
+  ["text","  "],
+  ["paren.rparen","})"]
+],[
+   "start",
+  ["text","  "],
+  ["punctuation.operator","."],
+  ["support.function","catch"],
+  ["paren.lparen","(("],
+  ["variable.parameter","reason"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["storage.type","=>"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","if"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["identifier","reason"],
+  ["punctuation.operator","."],
+  ["identifier","cause"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","      "],
+  ["storage.type","console"],
+  ["punctuation.operator","."],
+  ["support.function.firebug","error"],
+  ["paren.lparen","("],
+  ["string","\"Had previously handled error\""],
+  ["paren.rparen",")"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["text","    "],
+  ["paren.rparen","}"],
+  ["text"," "],
+  ["keyword","else"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","      "],
+  ["storage.type","console"],
+  ["punctuation.operator","."],
+  ["support.function.firebug","error"],
+  ["paren.lparen","("],
+  ["string.quasi.start","`"],
+  ["string.quasi","Trouble with promiseGetWord(): "],
+  ["paren.quasi.start","${"],
+  ["identifier","reason"],
+  ["paren.quasi.end","}"],
+  ["string.quasi.end","`"],
+  ["paren.rparen",")"],
+  ["punctuation.operator",";"]
+],[
+   "no_regex",
+  ["text","    "],
+  ["paren.rparen","}"]
+],[
+   "no_regex",
+  ["text","  "],
+  ["paren.rparen","})"]
+],[
+   "start",
+  ["text","  "],
+  ["punctuation.operator","."],
+  ["support.function","finally"],
+  ["paren.lparen","(("],
+  ["variable.parameter","info"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["storage.type","=>"],
+  ["text"," "],
+  ["storage.type","console"],
+  ["punctuation.operator","."],
+  ["support.function.firebug","log"],
+  ["paren.lparen","("],
+  ["string","\"All done\""],
+  ["paren.rparen","))"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["comment","//test ES6 arrow functions"]
+],[
+   "start",
+  ["variable.parameter","param"],
+  ["text"," "],
+  ["storage.type","=>"],
+  ["text"," "],
+  ["identifier","expression"],
+  ["punctuation.operator",";"]
+],[
+   "start"
+],[
+   "start",
+  ["paren.lparen","("],
+  ["variable.parameter","param"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["storage.type","=>"],
+  ["text"," "],
+  ["identifier","expression"],
+  ["punctuation.operator",";"]
+],[
+   "start"
+],[
+   "start",
+  ["paren.lparen","("],
+  ["variable.parameter","param1"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","123"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["variable.parameter","paramN"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["string","\"test\""],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["storage.type","=>"],
+  ["text"," "],
+  ["identifier","expression"],
+  ["punctuation.operator",";"]
+],[
+   "start"
+],[
+   "start",
+  ["variable.parameter","param"],
+  ["text"," "],
+  ["storage.type","=>"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","  "],
+  ["identifier","statements"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["paren.rparen","}"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["paren.lparen","("],
+  ["variable.parameter","param1"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["variable.parameter","paramN"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["storage.type","=>"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "no_regex",
+  ["text","  "],
+  ["identifier","statements"]
+],[
+   "no_regex",
+  ["paren.rparen","}"]
+],[
+   "no_regex"
+],[
+   "start",
+  ["paren.lparen","("],
+  ["variable.parameter","a"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["variable.parameter","b"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["keyword.operator","..."],
+  ["variable.parameter","r"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["storage.type","=>"],
+  ["text"," "],
+  ["identifier","expression"],
+  ["punctuation.operator",";"]
+],[
+   "start"
+],[
+   "start",
+  ["paren.lparen","("],
+  ["variable.parameter","a"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","400"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["variable.parameter","b"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","20"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["variable.parameter","c"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["storage.type","=>"],
+  ["text"," "],
+  ["identifier","expression"],
+  ["punctuation.operator",";"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","async"],
+  ["text"," "],
+  ["variable.parameter","param"],
+  ["text"," "],
+  ["storage.type","=>"],
+  ["text"," "],
+  ["identifier","expression"],
+  ["punctuation.operator",";"]
+],[
+   "start"
+],[
+   "start",
+  ["comment","//test JSX functions arguments in arrow functions"]
+],[
+   ["start","no_regex","start","jsxAttributes","jsxAttributes","jsx",1],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","Component"],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","onclick"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["paren.quasi.start","{"],
+  ["paren.lparen","("],
+  ["variable.parameter","param1"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["variable.parameter","param2"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["string","\"Test\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["keyword.operator","..."],
+  ["variable.parameter","paramN"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["storage.type","=>"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   ["#tmp","no_regex","start","no_regex","start","jsxAttributes","jsxAttributes","jsx",1],
+  ["text","    "],
+  ["storage.type","console"],
+  ["punctuation.operator","."],
+  ["support.function.firebug","log"],
+  ["paren.lparen","("],
+  ["string","\"Test\""],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["paren.rparen","}"],
+  ["paren.quasi.end","}"],
+  ["meta.tag.punctuation.tag-close.xml","/>"]
+],[
+   ["start","no_regex","start","jsxAttributes","jsxAttributes","jsx",1],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","Component"],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","onclick"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["paren.quasi.start","{"],
+  ["variable.parameter","param1"],
+  ["text"," "],
+  ["storage.type","=>"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   ["#tmp","no_regex","start","no_regex","start","jsxAttributes","jsxAttributes","jsx",1],
+  ["text","    "],
+  ["storage.type","console"],
+  ["punctuation.operator","."],
+  ["support.function.firebug","log"],
+  ["paren.lparen","("],
+  ["string","\"Test\""],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["paren.rparen","}"],
+  ["paren.quasi.end","}"],
+  ["meta.tag.punctuation.tag-close.xml","/>"]
 ]]
