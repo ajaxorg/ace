@@ -314,7 +314,7 @@ var JavaScriptHighlightRules = function(options) {
                 next: "function_arguments"
             }, {
                 token: "text",
-                regex: "\\s+",
+                regex: "\\s+"
             }, {
                 token: "punctuation.operator",
                 regex: "$"
@@ -414,7 +414,7 @@ var JavaScriptHighlightRules = function(options) {
             }]
         }, {
             token: ["variable.parameter", "text"],
-            regex: "(" + identifierRe + ")(\\s*)(?=\\=>)",
+            regex: "(" + identifierRe + ")(\\s*)(?=\\=>)"
         }, {
             token: "paren.lparen",
             regex: "(\\()(?=.+\\s*=>)",
