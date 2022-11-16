@@ -108,8 +108,8 @@ var FontMetrics = exports.FontMetrics = function(parentEl, charCount) {
         const rect = node.getBoundingClientRect();
         const charSize = {
             height: rect.height,
-            width: rect.width / this.charCount,
-        }
+            width: rect.width / this.charCount
+        };
 
         // Size and width can be null if the editor is not visible or
         // detached from the document

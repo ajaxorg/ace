@@ -328,12 +328,12 @@ var Text = function(parentEl) {
             var valueChunk = value.substring(i, i + this.MAX_CHUNK_LENGTH);
             var tokenChunk = {
                 type: token.type,
-                value: valueChunk,
+                value: valueChunk
             };
             newScreenColumn = this.$renderToken(parent, screenColumn + i, tokenChunk, valueChunk);
         }
         return newScreenColumn;
-    }
+    };
 
     this.$renderToken = function(parent, screenColumn, token, value) {
         var self = this;
