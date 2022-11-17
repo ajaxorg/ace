@@ -1227,40 +1227,47 @@ var VirtualRenderer = function(container, theme) {
 
         var pos = this.$cursorLayer.getPixelPosition(cursor);
 
-        var left = pos.left;
-        var top = pos.top;
-        
+        var newLeft = pos.left;
+        var newTop = pos.top;
+
         var topMargin = $viewMargin && $viewMargin.top || 0;
         var bottomMargin = $viewMargin && $viewMargin.bottom || 0;
 
         if (this.$scrollAnimation) {
             this.$stopAnimation = true;
         }
-        
-        var scrollTop = this.$scrollAnimation ? this.session.getScrollTop() : this.scrollTop;
-        
-        if (scrollTop + topMargin > top) {
-            if (offset && scrollTop + topMargin > top + this.lineHeight)
-                top -= offset * this.$size.scrollerHeight;
-            if (top === 0)
-                top = -this.scrollMargin.top;
-            this.session.setScrollTop(top);
-        } else if (scrollTop + this.$size.scrollerHeight - bottomMargin < top + this.lineHeight) {
-            if (offset && scrollTop + this.$size.scrollerHeight - bottomMargin < top -  this.lineHeight)
-                top += offset * this.$size.scrollerHeight;
-            this.session.setScrollTop(top + this.lineHeight + bottomMargin - this.$size.scrollerHeight);
+
+        var currentTop = this.$scrollAnimation ? this.session.getScrollTop() : this.scrollTop;
+
+        if (currentTop + topMargin > newTop) {
+            if (offset && currentTop + topMargin > newTop + this.lineHeight)
+                newTop -= offset * this.$size.scrollerHeight;
+            if (newTop === 0)
+                newTop = -this.scrollMargin.top;
+            this.session.setScrollTop(newTop);
+        } else if (currentTop + this.$size.scrollerHeight - bottomMargin < newTop + this.lineHeight) {
+            if (offset && currentTop + this.$size.scrollerHeight - bottomMargin < newTop -  this.lineHeight)
+                newTop += offset * this.$size.scrollerHeight;
+            this.session.setScrollTop(newTop + this.lineHeight + bottomMargin - this.$size.scrollerHeight);
         }
 
-        var scrollLeft = this.scrollLeft;
+        var currentLeft = this.scrollLeft;
+        // Show 2 context characters of the line when moving to it
+        var twoCharsWidth = 2 * this.layerConfig.characterWidth;
 
-        if (scrollLeft > left) {
-            if (left < this.$padding + 2 * this.layerConfig.characterWidth)
-                left = -this.scrollMargin.left;
-            this.session.setScrollLeft(left);
-        } else if (scrollLeft + this.$size.scrollerWidth < left + this.characterWidth) {
-            this.session.setScrollLeft(Math.round(left + this.characterWidth - this.$size.scrollerWidth));
-        } else if (scrollLeft <= this.$padding && left - scrollLeft < this.characterWidth) {
-            this.session.setScrollLeft(0);
+        if (newLeft - twoCharsWidth < currentLeft) {
+            newLeft -= twoCharsWidth;
+            if (newLeft < this.$padding + twoCharsWidth) {
+                newLeft = -this.scrollMargin.left;
+            }
+            this.session.setScrollLeft(newLeft);
+        } else {
+            newLeft += twoCharsWidth;
+            if (currentLeft + this.$size.scrollerWidth < newLeft + this.characterWidth) {
+                this.session.setScrollLeft(Math.round(newLeft + this.characterWidth - this.$size.scrollerWidth));
+            } else if (currentLeft <= this.$padding && newLeft - currentLeft < this.characterWidth) {
+                this.session.setScrollLeft(0);
+            }
         }
     };
 
