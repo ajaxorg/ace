@@ -325,6 +325,33 @@ module.exports = {
                 }, 60);
             }, 60);
         }, 60);
+    },
+    "test: scroll cursor into view": function() {
+        function X(n) {
+            return "X".repeat(n);
+        }
+        editor.session.setValue(`${X(10)}\n${X(1000)}}`);
+
+        var initialContentLeft = editor.renderer.content.getBoundingClientRect().left;
+
+        // Scroll so far to the right that the first line is completely hidden
+        editor.session.selection.$setSelection(1, 1000, 1, 1000);
+        editor.renderer.scrollCursorIntoView();
+        editor.renderer.$loop._flush();
+
+        editor.session.selection.$setSelection(0, 10, 0, 10);
+        editor.renderer.scrollCursorIntoView();
+        editor.renderer.$loop._flush();
+
+        var contentLeft = editor.renderer.content.getBoundingClientRect().left;
+        var scrollDelta = initialContentLeft - contentLeft;
+
+        const leftBoundPixelPos = editor.renderer.$cursorLayer.getPixelPosition({row: 0, column: 8}).left;
+        const rightBoundPixelPos = editor.renderer.$cursorLayer.getPixelPosition({row: 0, column: 9}).left;
+        assert.ok(
+            scrollDelta >= leftBoundPixelPos && scrollDelta < rightBoundPixelPos,
+            "Expected content to have been scrolled two characters beyond the cursor"
+        );
     }
 
     // change tab size after setDocument (for text layer)
