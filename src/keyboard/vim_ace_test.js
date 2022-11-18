@@ -86,6 +86,12 @@ function applyEvent(data) {
     editor.resize(true);
 }
 
+function scrollTop() {
+    editor.endOperation();
+    editor.renderer.$loop._flush();
+    return editor.renderer.scrollTop / editor.renderer.lineHeight;
+}
+
 module.exports = {
     setUp: function() {
         if (!editor) {
@@ -119,7 +125,7 @@ module.exports = {
             { _: "keydown", range: [12,12], value: "\thello world\n\n", key: { code: "ControlLeft", key: "Control", keyCode: 17}, modifier: "ctrl-"},
             { _: "keydown", range: [12,12], value: "\thello world\n\n", key: { code: "AltLeft", key: "Alt", keyCode: 18}, modifier: "ctrl-alt-"},
             { _: "keydown", range: [6,11], value: "hello world\n\n", key: { code: "KeyL", key: "ﬁ", keyCode: 76}, modifier: "ctrl-alt-"},
-            
+
             { _: "keydown", range: [6,11], value: "hello world\n\n", key: { code: "KeyC", key: "c", keyCode: 67}},
             { _: "input", range: [7,7], value: "hello c\n\n"},
             { _: "keydown", range: [7,7], value: "hello c\n\n", key: { code: "KeyX", key: "x", keyCode: 88}},
@@ -136,10 +142,10 @@ module.exports = {
             },
             { _: "keydown", range: [7,7], value: "hello ^x\n\n", key: { code: "Escape", key: "Escape", keyCode: 27}},
             { _: "keydown",  key: { code: "KeyH", key: "˛", keyCode: 72}, modifier: "ctrl-alt-"},
-            
+
             { _: "keydown", range: [1,6], value: "\thello x\n\n", key: { code: "AltRight", key: "Alt", keyCode: 18}, modifier: "alt-"},
             { _: "keydown", range: [1,6], value: "\thello x\n\n", key: { code: "Digit4", key: "$", keyCode: 52}, modifier: "alt-"},
-            
+
             { _: "input", range: [2,2], value: "\t$ x\n\n"},
             function() {
                 testSelection(editor, [[1,5,1,8], [0,4,0,7]]);
@@ -149,7 +155,7 @@ module.exports = {
                 testSelection(editor, [[1,7],[0,6]]);
             },
             { _: "keydown", key: { code: "Escape", key: "Escape", keyCode: 27}},
-            
+
         ].forEach(function(data) {
             applyEvent(data);
         });
@@ -162,7 +168,7 @@ module.exports = {
             { _: "keydown", range: [12,12], value: "\thello world\n\n", key: { code: "ControlLeft", key: "Control", keyCode: 17}, modifier: "ctrl-"},
             { _: "keydown", range: [12,12], value: "\thello world\n\n", key: { code: "AltLeft", key: "Alt", keyCode: 18}, modifier: "ctrl-alt-"},
             { _: "keydown", range: [6,11], value: "hello world\n\n", key: { code: "KeyL", key: "ﬁ", keyCode: 76}, modifier: "ctrl-alt-"},
-            
+
             { _: "keydown", range: [6,11], value: "hello world\n\n", key: { code: "KeyC", key: "c", keyCode: 67}},
             { _: "input", range: [7,7], value: "hello c\n\n"},
             { _: "keydown", range: [7,7], value: "hello c\n\n", key: { code: "KeyX", key: "x", keyCode: 88}},
@@ -179,10 +185,10 @@ module.exports = {
             },
             { _: "keydown", range: [7,7], value: "hello ^x\n\n", key: { code: "Escape", key: "Escape", keyCode: 27}},
             { _: "keydown",  key: { code: "KeyH", key: "˛", keyCode: 72}, modifier: "ctrl-alt-"},
-            
+
             { _: "keydown", range: [1,6], value: "\thello x\n\n", key: { code: "AltRight", key: "Alt", keyCode: 18}, modifier: "alt-"},
             { _: "keydown", range: [1,6], value: "\thello x\n\n", key: { code: "Digit4", key: "$", keyCode: 52}, modifier: "alt-"},
-            
+
             { _: "input", range: [2,2], value: "\t$ x\n\n"},
             function() {
                 testSelection(editor, [[1,5,1,8], [0,4,0,7]]);
@@ -192,7 +198,7 @@ module.exports = {
                 testSelection(editor, [[1,7],[0,6]]);
             },
             { _: "keydown", key: { code: "Escape", key: "Escape", keyCode: 27}},
-            
+
         ].forEach(function(data) {
             applyEvent(data);
         });
@@ -206,15 +212,15 @@ module.exports = {
             { _: "keyup", range: [1,1], value: "V\n\n", key: { code: "KeyV", key: "V", keyCode: 86}, modifier: "shift-"},
             { _: "keyup", range: [1,1], value: "V\n\n", key: { code: "ShiftLeft", key: "Shift", keyCode: 16}},
             { _: "keydown", range: [1,1], value: "V\n\n", key: { code: "KeyK", key: "k", keyCode: 75}},
-            { _: "keypress", range: [1,1], value: "V\n\n", key: { code: "KeyK", key: "k", keyCode: 107}}, 
+            { _: "keypress", range: [1,1], value: "V\n\n", key: { code: "KeyK", key: "k", keyCode: 107}},
             { _: "input", range: [2,2], value: "Vk\n\n"},
             { _: "keyup", range: [2,2], value: "Vk\n\n", key: { code: "KeyK", key: "k", keyCode: 75}},
             { _: "keydown", range: [2,2], value: "Vk\n\n", key: { code: "KeyC", key: "c", keyCode: 67}},
-            { _: "keypress", range: [2,2], value: "Vk\n\n", key: { code: "KeyC", key: "c", keyCode: 99}}, 
+            { _: "keypress", range: [2,2], value: "Vk\n\n", key: { code: "KeyC", key: "c", keyCode: 99}},
             { _: "input", range: [3,3], value: "Vkc\n\n"},
             { _: "keyup", range: [3,3], value: "Vkc\n\n", key: { code: "KeyC", key: "c", keyCode: 67}},
             { _: "keydown", range: [3,3], value: "Vkc\n\n", key: { code: "KeyO", key: "o", keyCode: 79}},
-            { _: "keypress", range: [3,3], value: "Vkc\n\n", key: { code: "KeyO", key: "o", keyCode: 111}}, 
+            { _: "keypress", range: [3,3], value: "Vkc\n\n", key: { code: "KeyO", key: "o", keyCode: 111}},
             { _: "input", range: [4,4], value: "Vkco\n\n"},
             { _: "keyup", range: [4,4], value: "Vkco\n\n", key: { code: "KeyO", key: "o", keyCode: 79}},
             function() {
@@ -224,12 +230,12 @@ module.exports = {
             { _: "keydown", range: [0,0], value: "ozzz\n\n", key: { code: "Escape", key: "Escape", keyCode: 27}},
             { _: "keyup", range: [0,0], value: "ozzz\n\n", key: { code: "Escape", key: "Escape", keyCode: 27}},
             { _: "keydown", range: [0,0], value: "ozzz\n\n", key: { code: "ControlLeft", key: "Control", keyCode: 17}, modifier: "ctrl-"},
- 
+
             { _: "keydown", range: [0,1], value: "ozzz\n\n", key: { code: "KeyV", key: "v", keyCode: 86}, modifier: "ctrl-"},
             { _: "select", range: [0,1], value: "ozzz\n\n"},
             { _: "keyup", range: [0,1], value: "ozzz\n\n", key: { code: "KeyV", key: "v", keyCode: 86}, modifier: "ctrl-"},
             { _: "keyup", range: [0,1], value: "ozzz\n\n", key: { code: "ControlLeft", key: "Control", keyCode: 17}},
- 
+
             { _: "keydown", range: [0,1], value: "ccc\n\n", key: { code: "ArrowDown", key: "ArrowDown", keyCode: 40}},
             { _: "select", range: [0,1], value: "ccc\n\n"},
             { _: "keyup", range: [0,1], value: "ccc\n\n", key: { code: "ArrowDown", key: "ArrowDown", keyCode: 40}},
@@ -239,7 +245,7 @@ module.exports = {
             },
             { _: "keydown", range: [0,1], value: "ccc\n\n", key: { code: "Period", key: ".", keyCode: 190}},
             { _: "keypress", range: [0,1], value: "ccc\n\n", key: { code: "Period", key: ".", keyCode: 46}},
-             
+
             { _: "input", range: [1,1], value: ".cc\n\n"},
             { _: "keyup", range: [1,1], value: ".cc\n\n", key: { code: "Period", key: ".", keyCode: 190}},
             function() {
@@ -252,8 +258,8 @@ module.exports = {
     },
     "test vim gq": function() {
         editor.setValue(
-            "1\n2\nhello world\n" 
-             + "xxx ".repeat(20) + "\nyyy" 
+            "1\n2\nhello world\n"
+             + "xxx ".repeat(20) + "\nyyy"
              + "\n\nnext\nparagraph"
         );
         editor.selection.moveTo(2,5)
@@ -298,25 +304,19 @@ module.exports = {
         var screenSize = editor.renderer.layerConfig.height / editor.renderer.lineHeight;
 
         user.type("Escape", "gg");
-        assert.equal(scollTop(), 0);
+        assert.equal(scrollTop(), 0);
         user.type("/", "needle");
-        assert.ok(scollTop() > 40 - screenSize);
+        assert.ok(scrollTop() > 40 - screenSize);
         editor.endOperation();
         user.type("Escape");
-        assert.equal(scollTop(), 0);
+        assert.equal(scrollTop(), 0);
 
         user.type("/", "needle", "Enter");
-        assert.ok(scollTop() > 40 - screenSize);
-        assert.ok(scollTop() < 40);
+        assert.ok(scrollTop() > 40 - screenSize);
+        assert.ok(scrollTop() < 40);
         user.type("6", "/", "more", "Enter");
         editor.endOperation();
-        assert.ok(scollTop() > 40 + 16 - screenSize);
-
-        function scollTop() {
-            editor.endOperation();
-            editor.renderer.$loop._flush();
-            return editor.renderer.scrollTop / editor.renderer.lineHeight;
-        }
+        assert.ok(scrollTop() > 40 + 16 - screenSize);
     },
     "test: vim normal mode brackets highlighting": function () {
         editor.setValue("{((hello, world))}");
@@ -345,6 +345,23 @@ module.exports = {
             }, isBackwards);
             assert.range(ranges[1], el.startRow, el.startColumn, el.endRow, el.endColumn);
         });
+    },
+    "test: gotoline": function () {
+        editor.renderer.setOption("animatedScroll", false);
+        editor.setValue(
+            "very\nlong\n\ntext\n".repeat(20),
+            -1
+        );
+
+        editor.focus();
+        var screenSize = editor.renderer.layerConfig.height / editor.renderer.lineHeight;
+
+        assert.equal(scrollTop(), 0);
+        user.type(":30", "Enter");
+        editor.endOperation();
+
+        assert.ok(scrollTop() > 30 - screenSize);
+        assert.ok(scrollTop() < 30);
     }
 };
 

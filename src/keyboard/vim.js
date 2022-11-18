@@ -205,7 +205,7 @@
     var result = fn();
     if (this.ace.curOp && this.ace.curOp.command.name == "vim") {
       if (this.state.dialog)
-        this.ace.curOp.command.scrollIntoView = false;
+        this.ace.curOp.command.scrollIntoView = this.ace.curOp.vimDialogScroll;
       this.ace.endOperation();
       if (!curOp.cursorActivity && !curOp.lastChange && prevOp)
         this.ace.prevOp = prevOp;
@@ -2521,6 +2521,8 @@ domLib.importCssString(`.normal-mode .ace_cursor{
                 cursorIsBefore(newAnchor, newHead) ? newHead
                     : newAnchor);
           } else if (!operator) {
+            if (cm.ace.curOp)
+              cm.ace.curOp.vimDialogScroll = "center-animate"; // ace_patch
             newHead = clipCursorToContent(cm, newHead, oldHead);
             cm.setCursor(newHead.line, newHead.ch);
           }
