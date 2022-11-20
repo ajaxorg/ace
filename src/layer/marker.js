@@ -193,7 +193,7 @@ var Marker = function(parentEl) {
             this.elt(
                 clazz,
                 "height:" + height + "px;" +
-                "width:" + selection.width + (extraLength || 0) + "px;" +
+                "width:" + (selection.width + (extraLength || 0)) + "px;" +
                 "top:" + top + "px;" +
                 "left:" + (padding + selection.left) + "px;" + (extraStyle || "")
             );
