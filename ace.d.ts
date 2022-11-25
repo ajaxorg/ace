@@ -311,11 +311,12 @@ export namespace Ace {
   }
 
   export interface Completion {
-    value: string;
-    score: number;
+    value?: string;
+    snippet?: string;
+    score?: number;
     meta?: string;
-    name?: string;
     caption?: string;
+    docHTML?: string;
   }
 
   export interface Tokenizer {
@@ -913,6 +914,7 @@ export namespace Ace {
       position: Point,
       prefix: string,
       callback: CompleterCallback): void;
+    getDocTooltip(item: Completion): void;
   }
 }
 
