@@ -349,7 +349,7 @@ var SnippetManager = function() {
         return result;
     };
 
-    this.insertSnippetForSelection = function(editor, snippetText) {
+    this.insertSnippetForSelection = function(editor, snippetText, replaceRange) {
         var cursor = editor.getCursorPosition();
         var line = editor.session.getLine(cursor.row);
         var tabString = editor.session.getTabString();
@@ -467,6 +467,9 @@ var SnippetManager = function() {
             }
         });
         var range = editor.getSelectionRange();
+        if (replaceRange && replaceRange.compareRange(range) === 0) {
+            range = replaceRange;
+        }
         var end = editor.session.replace(range, text);
 
         var tabstopManager = new TabstopManager(editor);
@@ -474,13 +477,13 @@ var SnippetManager = function() {
         tabstopManager.addTabstops(tabstops, range.start, end, selectionId);
     };
     
-    this.insertSnippet = function(editor, snippetText) {
+    this.insertSnippet = function(editor, snippetText, replaceRange) {
         var self = this;
         if (editor.inVirtualSelectionMode)
-            return self.insertSnippetForSelection(editor, snippetText);
+            return self.insertSnippetForSelection(editor, snippetText, replaceRange);
         
         editor.forEachSelection(function() {
-            self.insertSnippetForSelection(editor, snippetText);
+            self.insertSnippetForSelection(editor, snippetText, replaceRange);
         }, null, {keepOrder: true});
         
         if (editor.tabstopManager)

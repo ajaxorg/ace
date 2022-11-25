@@ -8,6 +8,18 @@ var dom = require("./lib/dom");
 var snippetManager = require("./snippets").snippetManager;
 var config = require("./config");
 
+/**
+ * Completion represents a text snippet that is proposed to complete text
+ * @typedef Completion
+ * @property {string} [value] - text that would be inserted when selecting this completion (if `type` is "value")
+ * @property {string} [snippet] - snippet that would be inserted, if completion's type is "snippet"
+ * @property {number} [score] - determine order in which completions would be displayed, less score - further from start
+ * @property {string} [meta] - small description of completion
+ * @property {string} [caption] - text that would be displayed in completion list, if omitted `value` or `snippet`
+ * would be shown instead
+ * @property {string} [docHTML] - human-readable string that would be displayed as additional popup
+ */
+
 var Autocomplete = function() {
     this.autoInsert = false;
     this.autoSelect = true;
@@ -158,9 +170,21 @@ var Autocomplete = function() {
                 }
             }
             if (data.snippet)
-                snippetManager.insertSnippet(this.editor, data.snippet);
-            else
-                this.editor.execCommand("insertstring", data.value || data);
+                snippetManager.insertSnippet(this.editor, data.snippet, data.range);
+            else {
+                if (data.range) {
+                    this.editor.execCommand("replacestring", {
+                        range: data.range,
+                        str: data.value || data
+                    });
+                } else {
+                    this.editor.execCommand("insertstring", data.value || data);
+                }
+            }
+
+            if (data.command && data.command === "startAutocomplete") {
+                this.editor.execCommand(data.command);
+            }
         }
         // detach only if new popup was not opened while inserting match
         if (this.completions == completions)
