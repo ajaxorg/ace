@@ -17,7 +17,10 @@ var config = require("./config");
  * @property {string} [meta] - small description of completion
  * @property {string} [caption] - text that would be displayed in completion list, if omitted `value` or `snippet`
  * would be shown instead
- * @property {string} [docHTML] - human-readable string that would be displayed as additional popup
+ * @property {string} [docHTML] - html string that would be displayed as additional popup
+ * @property {string} [docText] - plain text that would be displayed as additional popup. If `docHtml` exists, it would
+ * be used instead of `docText`
+ * @property {string} [completerId] - completer's identifier
  */
 
 var Autocomplete = function() {
@@ -364,7 +367,7 @@ var Autocomplete = function() {
         if (!selected || !this.editor || !this.popup.isOpen)
             return this.hideDocTooltip();
         this.editor.completers.some(function(completer) {
-            if (completer.getDocTooltip)
+            if (completer.getDocTooltip && selected.completerId === completer.id)
                 doc = completer.getDocTooltip(selected);
             return doc;
         });

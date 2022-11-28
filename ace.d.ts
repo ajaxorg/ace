@@ -317,6 +317,8 @@ export namespace Ace {
     meta?: string;
     caption?: string;
     docHTML?: string;
+    docText?: string;
+    completerId?: string;
   }
 
   export interface Tokenizer {
@@ -915,6 +917,7 @@ export namespace Ace {
       prefix: string,
       callback: CompleterCallback): void;
     getDocTooltip(item: Completion): void;
+    id?: string;
   }
 }
 
