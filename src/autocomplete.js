@@ -175,14 +175,7 @@ var Autocomplete = function() {
             if (data.snippet)
                 snippetManager.insertSnippet(this.editor, data.snippet, data.range);
             else {
-                if (data.range) {
-                    this.editor.execCommand("replacestring", {
-                        range: data.range,
-                        str: data.value || data
-                    });
-                } else {
-                    this.editor.execCommand("insertstring", data.value || data);
-                }
+                this.$insertString(data);
             }
 
             if (data.command && data.command === "startAutocomplete") {
@@ -195,6 +188,26 @@ var Autocomplete = function() {
         this.editor.endOperation();
     };
 
+    this.$insertString = function (data) {
+        var text = data.value || data;
+        if (data.range) {
+            if (this.editor.inVirtualSelectionMode) {
+                return this.editor.session.replace(data.range, text);
+            }
+            this.editor.forEachSelection(() => {
+                var range = this.editor.getSelectionRange();
+                if (data.range.compareRange(range) === 0) {
+                    this.editor.session.replace(data.range, text);
+                }
+                else {
+                    this.editor.insert(text);
+                }
+            }, null, {keepOrder: true});
+        }
+        else {
+            this.editor.execCommand("insertstring", text);
+        }
+    };
 
     this.commands = {
         "Up": function(editor) { editor.completer.goTo("up"); },

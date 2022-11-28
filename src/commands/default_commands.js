@@ -696,12 +696,6 @@ exports.commands = [{
     multiSelectAction: "forEach",
     scrollIntoView: "cursor"
 }, {
-    name: "replacestring",
-    description: "Replace string",
-    exec: function(editor, args) { editor.session.replace(args.range, args.str); },
-    multiSelectAction: "forEach",
-    scrollIntoView: "cursor"
-}, {
     name: "splitline",
     description: "Split line",
     bindKey: bindKey(null, "Ctrl-O"),
