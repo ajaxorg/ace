@@ -217,6 +217,9 @@ export namespace Ace {
     behavioursEnabled: boolean;
     wrapBehavioursEnabled: boolean;
     enableAutoIndent: boolean;
+    enableBasicAutocompletion: boolean | Completer[],
+    enableLiveAutocompletion: boolean | Completer[],
+    enableSnippets: boolean,
     autoScrollEditorIntoView: boolean;
     keyboardHandler: string | null;
     placeholder: string;
