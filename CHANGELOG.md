@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.13.2](https://github.com/ajaxorg/ace/compare/v1.13.1...v1.13.2) (2022-12-07)
+
+
+### Bug Fixes
+
+* Add missing options to `EditorOptions` ([#5003](https://github.com/ajaxorg/ace/issues/5003)) ([451b63f](https://github.com/ajaxorg/ace/commit/451b63f2243762d6de2fc5b9ee8c580c348b933c))
+* Better ES6 support for JavaScript Mode ([6fb39e3](https://github.com/ajaxorg/ace/commit/6fb39e38c79dd966233e48ed06be800c59c4c101))
+* Fix vim keybindings scroll to the selected line ([#4980](https://github.com/ajaxorg/ace/issues/4980)) ([8562f94](https://github.com/ajaxorg/ace/commit/8562f9493e0ebef865064992f0526fdc6df8535a))
+* show 2 context characters of a line when moving to it ([#4998](https://github.com/ajaxorg/ace/issues/4998)) ([743190e](https://github.com/ajaxorg/ace/commit/743190ea71841c0186b2f513b3d1e1a9e30d3de3))
+
 ### [1.13.1](https://github.com/ajaxorg/ace/compare/v1.13.0...v1.13.1) (2022-11-16)
 
 
