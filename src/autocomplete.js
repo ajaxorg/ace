@@ -2,6 +2,7 @@
 
 var HashHandler = require("./keyboard/hash_handler").HashHandler;
 var AcePopup = require("./autocomplete/popup").AcePopup;
+var getAriaId = require("./autocomplete/popup").getAriaId;
 var util = require("./autocomplete/util");
 var lang = require("./lib/lang");
 var dom = require("./lib/dom");
@@ -54,6 +55,7 @@ var Autocomplete = function() {
         this.popup.autoSelect = this.autoSelect;
 
         this.popup.setData(this.completions.filtered, this.completions.filterText);
+        this.editor.textInput.setAriaOptions({activeDescendant: getAriaId(this.popup.getRow())});
 
         editor.keyBinding.addKeyboardHandler(this.keyboardHandler);
         

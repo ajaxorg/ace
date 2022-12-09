@@ -48,7 +48,23 @@ var TextInput = function(parentNode, host) {
     // FOCUS
     // ie9 throws error if document.activeElement is accessed too soon
     try { var isFocused = document.activeElement === text; } catch(e) {}
-    
+
+    this.setAriaOptions = function(options) {
+        if (options.activeDescendant) {
+            text.setAttribute("aria-haspopup", "true");
+            text.setAttribute("aria-autocomplete", "list");
+            text.setAttribute("aria-activedescendant", options.activeDescendant);
+        } else {
+            text.setAttribute("aria-haspopup", "false");
+            text.setAttribute("aria-autocomplete", "both");
+            text.removeAttribute("aria-activedescendant");
+        }
+        if (options.role) {
+            text.setAttribute("role", options.role);
+        }
+    };
+    this.setAriaOptions({role: "textbox"});
+
     event.addListener(text, "blur", function(e) {
         if (ignoreFocusEvents) return;
         host.onBlur(e);
