@@ -47,6 +47,8 @@ var SqlServerHighlightRules = function() {
         "@@CONNECTIONS|@@CPU_BUSY|@@IDLE|@@IO_BUSY|@@PACKET_ERRORS|@@PACK_RECEIVED|@@PACK_SENT|@@TIMETICKS|@@TOTAL_ERRORS|@@TOTAL_READ|@@TOTAL_WRITE|FN_VIRTUALFILESTATS|" +
         /* https://msdn.microsoft.com/en-us/library/ms188353.aspx */
         "PATINDEX|TEXTPTR|TEXTVALID|" +
+        /* logical */
+        "GREATEST|LEAST|" +
         /* other */
         "COALESCE|NULLIF"
     );
