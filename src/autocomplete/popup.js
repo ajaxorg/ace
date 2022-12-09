@@ -9,7 +9,7 @@ var dom = require("../lib/dom");
 
 var getAriaId = function(index) {
     return `suggest-aria-id:${index}`;
-}
+};
 
 var $singleLineEditor = function(el) {
     var renderer = new Renderer(el);
@@ -126,7 +126,7 @@ var AcePopup = function(parentNode) {
         if (selected !== t.selectedNode && t.selectedNode) {
             dom.removeCssClass(t.selectedNode, "ace_selected");
             el.removeAttribute("aria-activedescendant");
-            t.selectedNode.id = "ace_line_" + t.selectedNode.id.split(":")[1];
+            t.selectedNode.removeAttribute("id");
         }
         t.selectedNode = selected;
         if (selected) {

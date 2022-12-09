@@ -2,7 +2,7 @@
 
 var HashHandler = require("./keyboard/hash_handler").HashHandler;
 var AcePopup = require("./autocomplete/popup").AcePopup;
-var getAriaId = require("./autocomplete/popup").getAriaId
+var getAriaId = require("./autocomplete/popup").getAriaId;
 var util = require("./autocomplete/util");
 var lang = require("./lib/lang");
 var dom = require("./lib/dom");
