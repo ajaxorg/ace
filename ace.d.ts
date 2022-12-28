@@ -883,10 +883,10 @@ export namespace Ace {
     jumpToMatching(select: boolean, expand: boolean): void;
     gotoLine(lineNumber: number, column: number, animate: boolean): void;
     navigateTo(row: number, column: number): void;
-    navigateUp(): void;
-    navigateDown(): void;
-    navigateLeft(): void;
-    navigateRight(): void;
+    navigateUp(times?: number): void;
+    navigateDown(times?: number): void;
+    navigateLeft(times?: number): void;
+    navigateRight(times?: number): void;
     navigateLineStart(): void;
     navigateLineEnd(): void;
     navigateFileEnd(): void;

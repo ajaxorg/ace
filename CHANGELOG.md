@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.14.0](https://github.com/ajaxorg/ace/compare/v1.13.1...v1.14.0) (2022-12-12)
+
+
+### Features
+
+* Autocomplete accessibility features ([#5008](https://github.com/ajaxorg/ace/issues/5008)) ([3b7bb5e](https://github.com/ajaxorg/ace/commit/3b7bb5e4afbad0f2bdbc7f8487442a5cb78b8284))
+
+
+### Bug Fixes
+
+* Add missing options to `EditorOptions` ([#5003](https://github.com/ajaxorg/ace/issues/5003)) ([451b63f](https://github.com/ajaxorg/ace/commit/451b63f2243762d6de2fc5b9ee8c580c348b933c))
+* added GREATEST|LEAST logical functions added in SQL Server 2022 ([#5009](https://github.com/ajaxorg/ace/issues/5009)) ([e3f3e7a](https://github.com/ajaxorg/ace/commit/e3f3e7ab3efe540ac345325f06278a8ab1871371))
+* Better ES6 support for JavaScript Mode ([6fb39e3](https://github.com/ajaxorg/ace/commit/6fb39e38c79dd966233e48ed06be800c59c4c101))
+* Fix vim keybindings scroll to the selected line ([#4980](https://github.com/ajaxorg/ace/issues/4980)) ([8562f94](https://github.com/ajaxorg/ace/commit/8562f9493e0ebef865064992f0526fdc6df8535a))
+* show 2 context characters of a line when moving to it ([#4998](https://github.com/ajaxorg/ace/issues/4998)) ([743190e](https://github.com/ajaxorg/ace/commit/743190ea71841c0186b2f513b3d1e1a9e30d3de3))
+* Update ace.d.ts typings for navigate ([#5011](https://github.com/ajaxorg/ace/issues/5011)) ([a302709](https://github.com/ajaxorg/ace/commit/a30270990cc0041edb6985059915f96524ebb154))
+
 ### [1.13.2](https://github.com/ajaxorg/ace/compare/v1.13.1...v1.13.2) (2022-12-07)
 
 
