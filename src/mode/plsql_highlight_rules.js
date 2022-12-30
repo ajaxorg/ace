@@ -3,7 +3,7 @@
 var oop = require("../lib/oop");
 var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;
 
-var SqlHighlightRules = function() {
+var PlsqlHighlightRules = function() {
 
     var keywords = (
         "all|alter|and|any|array|arrow|as|asc|at|begin|between|by|case|check|clusters|cluster|colauth|columns|compress|connect|crash|create|cross|current|database|declare|default|delete|desc|distinct|drop|else|end|exception|exclusive|exists|fetch|form|for|foreign|from|goto|grant|group|having|identified|if|in|inner|indexes|index|insert|intersect|into|is|join|key|left|like|lock|minus|mode|natural|nocompress|not|nowait|null|of|on|option|or|order,overlaps|outer|primary|prior|procedure|public|range|record|references|resource|revoke|right|select|share|size|sql|start|subtype|tabauth|table|then|to|type|union|unique|update|use|values|view|views|when|where|with"
@@ -72,6 +72,6 @@ var SqlHighlightRules = function() {
     this.normalizeRules();
 };
 
-oop.inherits(SqlHighlightRules, TextHighlightRules);
+oop.inherits(PlsqlHighlightRules, TextHighlightRules);
 
-exports.SqlHighlightRules = SqlHighlightRules;
+exports.PlsqlHighlightRules = PlsqlHighlightRules;
