@@ -263,6 +263,9 @@ var SearchBox = function(editor, range, showReplaceForm) {
                 ? editor.session.getTextRange(this.searchRange)
                 : editor.getValue();
             
+                if (editor.$search.$isMultilineSearch(editor.$search.$options))
+                    value = value.replace(/\r\n|\r|\n/g, "\n");
+            
             var offset = editor.session.doc.positionToIndex(editor.selection.anchor);
             if (this.searchRange)
                 offset -= editor.session.doc.positionToIndex(this.searchRange.start);
