@@ -2,11 +2,11 @@
 
 var oop = require("../lib/oop");
 var TextMode = require("./text").Mode;
-var PlsqlHighlightRules = require("./plsql_highlight_rules").PlsqlHighlightRules;
+var SqlHighlightRules = require("./sql_highlight_rules").SqlHighlightRules;
 var SqlFoldMode = require("./folding/sql").FoldMode;
 
 var Mode = function() {
-    this.HighlightRules = PlsqlHighlightRules;
+    this.HighlightRules = SqlHighlightRules;
     this.foldingRules = new SqlFoldMode();
     this.$behaviour = this.$defaultBehaviour;
 };
