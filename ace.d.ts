@@ -665,6 +665,8 @@ export namespace Ace {
     showComposition(position: number): void;
     setCompositionText(text: string): void;
     hideComposition(): void;
+    setGhostText(text: string, position: Point): void;
+    removeGhostText(): void;
     setTheme(theme: string, callback?: () => void): void;
     getTheme(): string;
     setStyle(style: string, include?: boolean): void;
@@ -833,6 +835,8 @@ export namespace Ace {
     removeWordLeft(): void;
     removeLineToEnd(): void;
     splitLine(): void;
+    setGhostText(text: string, position: Point): void;
+    removeGhostText(): void;
     transposeLetters(): void;
     toLowerCase(): void;
     toUpperCase(): void;

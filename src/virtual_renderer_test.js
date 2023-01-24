@@ -298,6 +298,35 @@ module.exports = {
             {x: 6, y: 6, color: "rgba(0, 0, 0, 0)"}
         ];
         assertCoordsColor(values, imageData.data);
+    },
+    "test ghost text": function() {
+        editor.session.setValue("abcdef");
+        editor.setGhostText("Ghost");
+
+        editor.renderer.$loop._flush();
+        assert.equal(editor.renderer.content.textContent, "Ghostabcdef");
+
+        editor.setGhostText("Ghost", {row: 0, column: 3});
+
+        editor.renderer.$loop._flush();
+        assert.equal(editor.renderer.content.textContent, "abcGhostdef");
+
+        editor.setGhostText("Ghost", {row: 0, column: 6});
+
+        editor.renderer.$loop._flush();
+        assert.equal(editor.renderer.content.textContent, "abcdefGhost");
+    },
+
+    "test multiline ghost text": function() {
+        editor.session.setValue("abcdef");
+        editor.renderer.$loop._flush();
+
+        editor.setGhostText("Ghost1\nGhost2\nGhost3", {row: 0, column: 6});
+
+        editor.renderer.$loop._flush();
+        assert.equal(editor.renderer.content.textContent, "abcdefGhost1");
+        
+        assert.equal(editor.session.lineWidgets[0].el.textContent, "Ghost2\nGhost3");
     }
 
     // change tab size after setDocument (for text layer)
