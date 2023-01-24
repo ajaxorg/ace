@@ -583,4 +583,9 @@ styles.join("\\n")
     white-space: pre;
     opacity: 0.7;
     margin: 0 10px;
+}
+
+.ace_ghost_text {
+    opacity: 0.5;
+    font-style: italic;
 }`;
