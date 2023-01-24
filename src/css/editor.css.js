@@ -93,8 +93,15 @@ styles.join("\\n")
     right: 0;
 }
 
-.ace_scroller.ace_scroll-left {
+.ace_scroller.ace_scroll-left:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
     box-shadow: 17px 0 16px -16px rgba(0, 0, 0, 0.4) inset;
+    pointer-events: none;
 }
 
 .ace_gutter-cell {

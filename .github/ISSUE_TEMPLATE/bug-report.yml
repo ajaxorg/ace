@@ -61,7 +61,7 @@ body:
   - type: input
     id: ace-version
     attributes:
-      label: Ace Version
-      description: Ace editor version
+      label: Ace Version / Browser / OS / Keyboard layout
+      description: Information about software versions and keyboard configuration that can be relevant for reproducing the issue
     validations:
       required: true

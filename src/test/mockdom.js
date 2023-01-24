@@ -41,10 +41,10 @@ function ClassList(node) {
        dom.removeCssClass(this.el, str);
     };
     this.toggle = function(str) {
-       dom.toggleCssClass(this.el, str);
+       return dom.toggleCssClass(this.el, str);
     };
     this.contains = function(str) {
-       dom.hasCssClass(this.el, str);
+       return dom.hasCssClass(this.el, str);
     };
 }).call(ClassList.prototype);
 

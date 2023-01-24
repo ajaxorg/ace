@@ -108,6 +108,9 @@ var Keys = (function() {
         }
     };
 
+    // workaround for firefox bug
+    ret.PRINTABLE_KEYS[173] = '-';
+
     // A reverse map of FUNCTION_KEYS
     var name, i;
     for (i in ret.FUNCTION_KEYS) {
@@ -131,9 +134,6 @@ var Keys = (function() {
     ret.enter = ret["return"];
     ret.escape = ret.esc;
     ret.del = ret["delete"];
-
-    // workaround for firefox bug
-    ret[173] = '-';
     
     (function() {
         var mods = ["cmd", "ctrl", "alt", "shift"];

@@ -44,13 +44,13 @@ module.exports = {
         
         var parent = dom.createElement("div");
         this.textLayer.$renderLine(parent, 0);
-        assert.domNode(parent, ["div", {}, ["span", {class: "ace_cjk", style: "width: 20px;"}, "\u3000"]]);
+        assert.domNode(parent, ["div", {}, ["span", {}, ["span", {class: "ace_cjk", style: "width: 20px;"}, "\u3000"]]]);
 
         this.textLayer.setShowInvisibles(true);
         var parent = dom.createElement("div");
         this.textLayer.$renderLine(parent, 0);
         assert.domNode(parent, ["div", {},
-            ["span", {class: "ace_cjk ace_invisible ace_invisible_space", style: "width: 20px;"}, this.textLayer.SPACE_CHAR],
+            ["span", {}, ["span", {class: "ace_cjk ace_invisible ace_invisible_space", style: "width: 20px;"}, this.textLayer.SPACE_CHAR]],
             ["span", {class: "ace_invisible ace_invisible_eol"}, "\xB6"]
         ]);
     },
@@ -72,21 +72,21 @@ module.exports = {
         
         this.session.setValue("      \n\t\tf\n   ");
         testRender([
-            "<span class=\"ace_indent-guide\">" + SPACE(4) + "</span>" + SPACE(2),
-            "<span class=\"ace_indent-guide\">" + SPACE(4) + "</span>" + SPACE(4) + "<span class=\"ace_identifier\">f</span>",
-            SPACE(3)
+            "<span class=\"ace_indent-guide\">" + SPACE(4) + "</span><span>" + SPACE(2) + "</span>",
+            "<span class=\"ace_indent-guide\">" + SPACE(4) + "</span><span>" + SPACE(4) + "</span><span class=\"ace_identifier\">f</span>",
+            "<span>" + SPACE(3) + "</span>"
         ]);
         
         this.textLayer.setShowInvisibles(true);
         testRender([
-            "<span class=\"ace_indent-guide ace_invisible ace_invisible_space\">" + DOT(4) + "</span><span class=\"ace_invisible ace_invisible_space\">" + DOT(2) + "</span>" + EOL,
-            "<span class=\"ace_indent-guide ace_invisible ace_invisible_tab\">" + TAB(4) + "</span><span class=\"ace_invisible ace_invisible_tab\">" + TAB(4) + "</span><span class=\"ace_identifier\">f</span>" + EOL
+            "<span class=\"ace_indent-guide ace_invisible ace_invisible_space\">" + DOT(4) + "</span><span><span class=\"ace_invisible ace_invisible_space\">" + DOT(2) + "</span></span>" + EOL,
+            "<span class=\"ace_indent-guide ace_invisible ace_invisible_tab\">" + TAB(4) + "</span><span><span class=\"ace_invisible ace_invisible_tab\">" + TAB(4) + "</span></span><span class=\"ace_identifier\">f</span>" + EOL
         ]);
         
         this.textLayer.setDisplayIndentGuides(false);
         testRender([
-            "<span class=\"ace_invisible ace_invisible_space\">" + DOT(6) + "</span>" + EOL,
-            "<span class=\"ace_invisible ace_invisible_tab\">" + TAB(4) + "</span><span class=\"ace_invisible ace_invisible_tab\">" + TAB(4) + "</span><span class=\"ace_identifier\">f</span>" + EOL
+            "<span><span class=\"ace_invisible ace_invisible_space\">" + DOT(6) + "</span></span>" + EOL,
+            "<span><span class=\"ace_invisible ace_invisible_tab\">" + TAB(4) + "</span><span class=\"ace_invisible ace_invisible_tab\">" + TAB(4) + "</span></span><span class=\"ace_identifier\">f</span>" + EOL
         ]);
     }
 };

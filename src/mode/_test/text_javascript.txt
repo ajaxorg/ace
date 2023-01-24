@@ -30,8 +30,8 @@ console.log('\\u1232Feh'
 a='
 b="\
 still a string
- 
- 
+
+
 function foo(items, nada) {
     for (var i=0; i<items.length; i++) {
         alert(items[i] + "juhu\n");
@@ -66,7 +66,7 @@ string'
 '
 string'
 
-"trailing space\   
+"trailing space\
 "         "    /not a regexp/g
 
 /**
@@ -84,7 +84,7 @@ z>>=t<<f>>r>>>s>=0b1
 foo.protoype.d = function(a, b,
                           c, d)
 foo.d =function(a,     b)
-foo.d =function(a,  /*****/ d"string"   
+foo.d =function(a,  /*****/ d"string"
 
 <div
 z=<div {...this.props} x={1 + 2} y="z{a}b&amp;" t={
@@ -98,3 +98,66 @@ var o = {
         return x
     })}`
 };
+
+//test generator function
+function* range (start, end, step) {
+    while (start < end) {
+        yield start
+        start += step
+    }
+}
+//test ES6 new built-in methods
+"hello".startsWith("ello", 1) // true
+"hello".endsWith("hell", 4)   // true
+"hello".includes("ell")       // true
+[ 1, 3, 4, 2 ].find(x => x > 3) // 4
+[ 1, 3, 4, 2 ].findIndex(x => x > 3) // 2
+"foo".repeat(3)
+Number.isSafeInteger(42) === true
+
+let x = Number.MAX_SAFE_INTEGER;
+let x = Number.MIN_SAFE_INTEGER;
+let x = Number.EPSILON;
+//test Promises
+new Promise(tetheredGetNumber)
+  .then(determineParity, troubleWithGetNumber)
+  .then(promiseGetWord)
+  .then((info) => {
+    console.log(`Got: ${info.value}, ${info.wordEvenOdd}`);
+    return info;
+  })
+  .catch((reason) => {
+    if (reason.cause) {
+      console.error("Had previously handled error");
+    } else {
+      console.error(`Trouble with promiseGetWord(): ${reason}`);
+    }
+  })
+  .finally((info) => console.log("All done"));
+//test ES6 arrow functions
+param => expression;
+
+(param) => expression;
+
+(param1 = 123, paramN = "test") => expression;
+
+param => {
+  statements;
+};
+(param1, paramN) => {
+  statements
+}
+
+(a, b, ...r) => expression;
+
+(a = 400, b = 20, c) => expression;
+
+async param => expression;
+
+//test JSX functions arguments in arrow functions
+<Component onclick={(param1, param2 = "Test", ...paramN) => {
+    console.log("Test")
+}}/>
+<Component onclick={param1 => {
+    console.log("Test")
+}}/>

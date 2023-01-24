@@ -9,6 +9,7 @@ var Range = require("./range").Range;
 var Editor = require("./editor").Editor;
 var EditSession = require("./edit_session").EditSession;
 var VirtualRenderer = require("./virtual_renderer").VirtualRenderer;
+var vim = require("./keyboard/vim");
 var assert = require("./test/assertions");
 require("./ext/error_marker");
 
@@ -327,6 +328,59 @@ module.exports = {
         assert.equal(editor.renderer.content.textContent, "abcdefGhost1");
         
         assert.equal(editor.session.lineWidgets[0].el.textContent, "Ghost2\nGhost3");
+    },
+    "test: brackets highlighting": function (done) {
+        var renderer = editor.renderer;
+        editor.session.setValue(
+            "function Test() {\n" + "    function Inner(){\n" + "        \n" + "        \n" + "    }\n" + "}");
+        editor.session.selection.$setSelection(1, 21, 1, 21);
+        renderer.$loop._flush();
+
+        setTimeout(function () {
+            assert.ok(editor.session.$bracketHighlight);
+            assert.range(editor.session.$bracketHighlight.ranges[0], 1, 20, 1, 21);
+            assert.range(editor.session.$bracketHighlight.ranges[1], 4, 4, 4, 5);
+
+            editor.session.selection.$setSelection(1, 16, 1, 16);
+            setTimeout(function () {
+                assert.ok(editor.session.$bracketHighlight == null);
+                editor.setKeyboardHandler(vim.handler);
+                editor.session.selection.$setSelection(1, 20, 1, 20);
+                setTimeout(function () {
+                    assert.ok(editor.session.$bracketHighlight);
+                    assert.range(editor.session.$bracketHighlight.ranges[0], 1, 20, 1, 21);
+                    assert.range(editor.session.$bracketHighlight.ranges[1], 4, 4, 4, 5);
+                    done();
+                }, 60);
+            }, 60);
+        }, 60);
+    },
+    "test: scroll cursor into view": function() {
+        function X(n) {
+            return "X".repeat(n);
+        }
+        editor.session.setValue(`${X(10)}\n${X(1000)}}`);
+
+        var initialContentLeft = editor.renderer.content.getBoundingClientRect().left;
+
+        // Scroll so far to the right that the first line is completely hidden
+        editor.session.selection.$setSelection(1, 1000, 1, 1000);
+        editor.renderer.scrollCursorIntoView();
+        editor.renderer.$loop._flush();
+
+        editor.session.selection.$setSelection(0, 10, 0, 10);
+        editor.renderer.scrollCursorIntoView();
+        editor.renderer.$loop._flush();
+
+        var contentLeft = editor.renderer.content.getBoundingClientRect().left;
+        var scrollDelta = initialContentLeft - contentLeft;
+
+        const leftBoundPixelPos = editor.renderer.$cursorLayer.getPixelPosition({row: 0, column: 8}).left;
+        const rightBoundPixelPos = editor.renderer.$cursorLayer.getPixelPosition({row: 0, column: 9}).left;
+        assert.ok(
+            scrollDelta >= leftBoundPixelPos && scrollDelta < rightBoundPixelPos,
+            "Expected content to have been scrolled two characters beyond the cursor"
+        );
     }
 
     // change tab size after setDocument (for text layer)
