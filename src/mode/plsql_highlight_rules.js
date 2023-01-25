@@ -105,9 +105,6 @@ var plsqlHighlightRules = function() {
     this.normalizeRules();
 };
 
-plsqlHighlightRules.metaData = 
-
-
 oop.inherits(plsqlHighlightRules, TextHighlightRules);
 
 exports.plsqlHighlightRules = plsqlHighlightRules;
