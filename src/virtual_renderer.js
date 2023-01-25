@@ -1617,7 +1617,46 @@ var VirtualRenderer = function(container, theme) {
         this.$composition = null;
         this.$cursorLayer.element.style.display = "";
     };
-    
+
+    this.setGhostText = function(text, position) {
+        var cursor = this.session.selection.cursor;
+        var insertPosition = position || { row: cursor.row, column: cursor.column };
+
+        this.removeGhostText();
+
+        var textLines = text.split("\n");
+        this.addToken(textLines[0], "ghost_text", insertPosition.row, insertPosition.column);
+        this.$ghostText = {
+            text: text,
+            position: {
+                row: insertPosition.row,
+                column: insertPosition. column
+            }
+        };
+        if (textLines.length > 1) {
+            this.$ghostTextWidget = {
+                text: textLines.slice(1).join("\n"),
+                row: insertPosition.row,
+                column: insertPosition.column,
+                className: "ace_ghost_text"
+            };
+            this.session.widgetManager.addLineWidget(this.$ghostTextWidget);
+        }
+        
+    };
+
+    this.removeGhostText = function() {
+        if (!this.$ghostText) return;
+
+        var position = this.$ghostText.position;
+        this.removeExtraToken(position.row, position.column);
+        if (this.$ghostTextWidget) {
+            this.session.widgetManager.removeLineWidget(this.$ghostTextWidget);
+            this.$ghostTextWidget = null;
+        }
+        this.$ghostText = null;
+    };
+
     this.addToken = function(text, type, row, column) {
         var session = this.session;
         session.bgTokenizer.lines[row] = null;

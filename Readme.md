@@ -152,7 +152,7 @@ npm run test
 
 You can also run the tests in your browser by serving:
 
-    http://localhost:8888/lib/ace/test/tests.html
+    http://localhost:8888/src/test/tests.html
 
 This makes debugging failing tests way more easier.
 
