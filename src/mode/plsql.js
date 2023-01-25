@@ -36,11 +36,11 @@
 
 var oop = require("../lib/oop");
 var TextMode = require("./text").Mode;
-var HighlightRules = require("./plsql_highlight_rules").HighlightRules;
+var PLSqlHighlightRules = require("./plsql_highlight_rules").plsqlHighlightRules;
 var FoldMode = require("./folding/sql").FoldMode;
 
 var Mode = function() {
-    this.HighlightRules = HighlightRules;
+    this.HighlightRules = PLSqlHighlightRules;
     this.foldingRules = new FoldMode();
 };
 oop.inherits(Mode, TextMode);
