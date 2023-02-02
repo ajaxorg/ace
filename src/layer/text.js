@@ -293,7 +293,6 @@ var Text = function(parentEl) {
                 lineEl.className = "ace_line_group";
             } else {
                 lineEl.className = "ace_line";
-                lineEl.setAttribute("role", "option");
             }
             fragment.push(line);
 
