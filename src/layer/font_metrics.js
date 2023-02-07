@@ -5,30 +5,30 @@ var event = require("../lib/event");
 var useragent = require("../lib/useragent");
 var EventEmitter = require("../lib/event_emitter").EventEmitter;
 
-var DEFAULT_CHAR_COUNT = 250;
+var CHAR_COUNT = 512;
 var USE_OBSERVER = typeof ResizeObserver == "function";
 var L = 200;
 
-var FontMetrics = exports.FontMetrics = function(parentEl, charCount) {
-    this.charCount = charCount || DEFAULT_CHAR_COUNT;
-
+var FontMetrics = exports.FontMetrics = function(parentEl) {
     this.el = dom.createElement("div");
     this.$setMeasureNodeStyles(this.el.style, true);
-
+    
     this.$main = dom.createElement("div");
     this.$setMeasureNodeStyles(this.$main.style);
-
+    
     this.$measureNode = dom.createElement("div");
     this.$setMeasureNodeStyles(this.$measureNode.style);
-
+    
+    
     this.el.appendChild(this.$main);
     this.el.appendChild(this.$measureNode);
     parentEl.appendChild(this.el);
-
-    this.$measureNode.textContent = lang.stringRepeat("X", this.charCount);
-
+    
+    this.$measureNode.textContent = lang.stringRepeat("X", CHAR_COUNT);
+    
     this.$characterSize = {width: 0, height: 0};
-
+    
+    
     if (USE_OBSERVER)
         this.$addObserver();
     else
@@ -38,9 +38,9 @@ var FontMetrics = exports.FontMetrics = function(parentEl, charCount) {
 (function() {
 
     oop.implement(this, EventEmitter);
-
+        
     this.$characterSize = {width: 0, height: 0};
-
+    
     this.$setMeasureNodeStyles = function(style, isRoot) {
         style.width = style.height = "auto";
         style.left = style.top = "0px";
@@ -69,7 +69,7 @@ var FontMetrics = exports.FontMetrics = function(parentEl, charCount) {
             this._emit("changeCharacterSize", {data: size});
         }
     };
-
+    
     this.$addObserver = function() {
         var self = this;
         this.$observer = new window.ResizeObserver(function(e) {
@@ -83,13 +83,13 @@ var FontMetrics = exports.FontMetrics = function(parentEl, charCount) {
         if (this.$pollSizeChangesTimer || this.$observer)
             return this.$pollSizeChangesTimer;
         var self = this;
-
+        
         return this.$pollSizeChangesTimer = event.onIdle(function cb() {
             self.checkForSizeChanges();
             event.onIdle(cb, 500);
         }, 500);
     };
-
+    
     this.setPolling = function(val) {
         if (val) {
             this.$pollSizeChanges();
@@ -100,32 +100,24 @@ var FontMetrics = exports.FontMetrics = function(parentEl, charCount) {
     };
 
     this.$measureSizes = function(node) {
-        node = node || this.$measureNode;
-
-        // Avoid `Element.clientWidth` since it is rounded to an integer (see
-        // https://developer.mozilla.org/en-US/docs/Web/API/Element/clientWidth).
-        // Using it here can result in a noticeable cursor offset for long lines.
-        const rect = node.getBoundingClientRect();
-        const charSize = {
-            height: rect.height,
-            width: rect.width / this.charCount
+        var size = {
+            height: (node || this.$measureNode).clientHeight,
+            width: (node || this.$measureNode).clientWidth / CHAR_COUNT
         };
-
+        
         // Size and width can be null if the editor is not visible or
         // detached from the document
-        if (charSize.width === 0 || charSize.height === 0)
+        if (size.width === 0 || size.height === 0)
             return null;
-        return charSize;
+        return size;
     };
 
     this.$measureCharWidth = function(ch) {
-        this.$main.textContent = lang.stringRepeat(ch, this.charCount);
-        // Avoid `Element.clientWidth` since it is rounded to an integer (see
-        // https://developer.mozilla.org/en-US/docs/Web/API/Element/clientWidth).
+        this.$main.textContent = lang.stringRepeat(ch, CHAR_COUNT);
         var rect = this.$main.getBoundingClientRect();
-        return rect.width / this.charCount;
+        return rect.width / CHAR_COUNT;
     };
-
+    
     this.getCharacterWidth = function(ch) {
         var w = this.charSizes[ch];
         if (w === undefined) {
@@ -142,7 +134,7 @@ var FontMetrics = exports.FontMetrics = function(parentEl, charCount) {
             this.el.parentNode.removeChild(this.el);
     };
 
-
+    
     this.$getZoom = function getZoom(element) {
         if (!element || !element.parentElement) return 1;
         return (window.getComputedStyle(element).zoom || 1) * getZoom(element.parentElement);
@@ -179,7 +171,7 @@ var FontMetrics = exports.FontMetrics = function(parentEl, charCount) {
 
         if (!this.els)
             this.$initTransformMeasureNodes();
-
+        
         function p(el) {
             var r = el.getBoundingClientRect();
             return [r.left, r.top];
@@ -194,7 +186,7 @@ var FontMetrics = exports.FontMetrics = function(parentEl, charCount) {
 
         var m1 = mul(1 + h[0], sub(b, a));
         var m2 = mul(1 + h[1], sub(c, a));
-
+        
         if (elPos) {
             var x = elPos;
             var k = h[0] * x[0] / L + h[1] * x[1] / L + 1;
@@ -205,5 +197,5 @@ var FontMetrics = exports.FontMetrics = function(parentEl, charCount) {
         var f = solve(sub(m1, mul(h[0], u)), sub(m2, mul(h[1], u)), u);
         return mul(L, f);
     };
-
+    
 }).call(FontMetrics.prototype);
