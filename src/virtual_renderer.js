@@ -98,7 +98,7 @@ var VirtualRenderer = function(container, theme) {
         column : 0
     };
 
-    this.$fontMetrics = new FontMetrics(this.container, this.$textLayer.MAX_CHUNK_LENGTH);
+    this.$fontMetrics = new FontMetrics(this.container);
     this.$textLayer.$setFontMetrics(this.$fontMetrics);
     this.$textLayer.on("changeCharacterSize", function(e) {
         _self.updateCharacterSize();
