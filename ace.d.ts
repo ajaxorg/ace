@@ -943,3 +943,7 @@ export const Range: {
   fromPoints(start: Ace.Point, end: Ace.Point): Ace.Range;
   comparePoints(p1: Ace.Point, p2: Ace.Point): number;
 };
+export interface TextInput {
+    resetSelection(): void;
+    setAriaOption(activeDescendant: string, role: string): void;
+}
