@@ -1,4 +1,4 @@
-module.exports = `/*
+/*
 styles = []
 for (var i = 1; i < 16; i++) {
     styles.push(".ace_br" + i + "{" + (
@@ -9,6 +9,7 @@ for (var i = 1; i < 16; i++) {
 }
 styles.join("\\n")
 */
+module.exports = `
 .ace_br1 {border-top-left-radius    : 3px;}
 .ace_br2 {border-top-right-radius   : 3px;}
 .ace_br3 {border-top-left-radius    : 3px; border-top-right-radius:    3px;}
