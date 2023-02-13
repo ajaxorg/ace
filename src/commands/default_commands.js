@@ -28,7 +28,7 @@ exports.commands = [{
     description: "Go to next error",
     bindKey: bindKey("Alt-E", "F4"),
     exec: function(editor) {
-        config.loadModule("./ext/error_marker", function(module) {
+        config.loadModule("ace/ext/error_marker", function(module) {
             module.showErrorMarker(editor, 1);
         });
     },
@@ -39,7 +39,7 @@ exports.commands = [{
     description: "Go to previous error",
     bindKey: bindKey("Alt-Shift-E", "Shift-F4"),
     exec: function(editor) {
-        config.loadModule("./ext/error_marker", function(module) {
+        config.loadModule("ace/ext/error_marker", function(module) {
             module.showErrorMarker(editor, -1);
         });
     },
