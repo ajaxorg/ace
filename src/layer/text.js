@@ -436,6 +436,8 @@ var Text = function(parentEl) {
             dir: undefined
         };
         var lines = this.session.doc.$lines;
+        if (!lines) return;
+
         var cursor = this.session.selection.getCursor();
         var initialIndent = /^\s*/.exec(this.session.doc.getLine(cursor.row))[0].length;
         var elementIndentLevel = Math.floor(initialIndent / this.tabSize);
@@ -498,8 +500,10 @@ var Text = function(parentEl) {
         var line = this.session.doc.getLine(cell.row);
         if (line !== "") {
             var childNodes = cell.element.childNodes;
-            if (childNodes && childNodes[indentLevel - 1] && childNodes[indentLevel - 1].classList) {
-                childNodes[indentLevel - 1].classList.add("ace_indent-guide-active");
+            if (childNodes) {
+                let node = childNodes[indentLevel - 1];
+                if (node && node.classList && node.classList.contains("ace_indent-guide")) node.classList.add(
+                    "ace_indent-guide-active");
             }
         }
     };

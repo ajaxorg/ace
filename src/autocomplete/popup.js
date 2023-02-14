@@ -7,6 +7,10 @@ var event = require("../lib/event");
 var lang = require("../lib/lang");
 var dom = require("../lib/dom");
 
+var getAriaId = function(index) {
+    return `suggest-aria-id:${index}`;
+};
+
 var $singleLineEditor = function(el) {
     var renderer = new Renderer(el);
 
@@ -44,6 +48,10 @@ var AcePopup = function(parentNode) {
     el.style.display = "none";
     popup.renderer.content.style.cursor = "default";
     popup.renderer.setStyle("ace_autocomplete");
+
+    // Set aria attributes for the popup
+    popup.renderer.container.setAttribute("role", "listbox");
+    popup.renderer.container.setAttribute("aria-label", "Autocomplete suggestions");
 
     popup.setOption("displayIndentGuides", false);
     popup.setOption("dragDelay", 150);
@@ -114,11 +122,21 @@ var AcePopup = function(parentNode) {
         var row = popup.getRow();
         var t = popup.renderer.$textLayer;
         var selected = t.element.childNodes[row - t.config.firstRow];
-        if (selected !== t.selectedNode && t.selectedNode)
+        var el = document.activeElement; // Active element is textarea of main editor
+        if (selected !== t.selectedNode && t.selectedNode) {
             dom.removeCssClass(t.selectedNode, "ace_selected");
+            el.removeAttribute("aria-activedescendant");
+            t.selectedNode.removeAttribute("id");
+        }
         t.selectedNode = selected;
-        if (selected)
+        if (selected) {
             dom.addCssClass(selected, "ace_selected");
+            var ariaId = getAriaId(row);
+            selected.id = ariaId;
+            popup.renderer.container.setAttribute("aria-activedescendant", ariaId);
+            el.setAttribute("aria-activedescendant", ariaId);
+            selected.setAttribute("aria-label", popup.getData(row).value);
+        }
     });
     var hideHoverMarker = function() { setHoverMarker(-1); };
     var setHoverMarker = function(row, suppressRedraw) {
@@ -350,3 +368,4 @@ dom.importCssString(`
 
 exports.AcePopup = AcePopup;
 exports.$singleLineEditor = $singleLineEditor;
+exports.getAriaId = getAriaId;

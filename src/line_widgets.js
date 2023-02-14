@@ -182,8 +182,15 @@ function LineWidgets(session) {
             w.el = dom.createElement("div");
             w.el.innerHTML = w.html;
         }
+        if (w.text && !w.el) {
+            w.el = dom.createElement("div");
+            w.el.textContent = w.text;
+        }
         if (w.el) {
             dom.addCssClass(w.el, "ace_lineWidgetContainer");
+            if (w.className) {
+                dom.addCssClass(w.el, w.className);
+            }
             w.el.style.position = "absolute";
             w.el.style.zIndex = 5;
             renderer.container.appendChild(w.el);

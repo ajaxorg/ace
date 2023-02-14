@@ -1,0 +1,34 @@
+@Comment{
+  @Book{tes03,
+    author =	 {John Smith},
+    title =	 {Cooking},
+    publisher =	 {Culinary Expert},
+    year =	 1890
+  }
+}
+
+@String(mar = "march")
+
+@Book{sweig-42,
+  Author =	 { Stefan Sweig },
+  title =	 { The impossible book },
+  publisher =	 { Dead Poet Society},
+  year =	 1942,
+  month =        mar
+}
+
+@String {firstname = "John"}
+@String {lastname  = "Smith"}
+@String {email      = firstname # "." # lastname # "@imag.en"}
+
+@Article{key01,
+  title = { The history of @ sign }
+}
+
+Everything " " outside {entries} is treated as comment in BibTeX.
+
+@Article{key03,
+  title = "A {bunch {of} braces {in}} title"
+}
+
+@preamble {"This bibliography was generated on \today"}

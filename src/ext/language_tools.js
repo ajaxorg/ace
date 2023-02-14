@@ -162,10 +162,12 @@ require("../config").defineOptions(Editor.prototype, "editor", {
         value: false
     },
     /**
-     * Enable live autocomplete. If the value is an array, it is assumed to be an array of completers
-     * and will use them instead of the default completers.
+     * Enable live autocompletion
      */
     enableLiveAutocompletion: {
+        /**
+         * @param {boolean} val
+         */
         set: function(val) {
             if (val) {
                 if (!this.completers)

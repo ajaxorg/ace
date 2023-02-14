@@ -9,10 +9,13 @@ var TextLayer = require("./layer/text").Text;
 var CursorLayer = require("./layer/cursor").Cursor;
 var HScrollBar = require("./scrollbar").HScrollBar;
 var VScrollBar = require("./scrollbar").VScrollBar;
+var HScrollBarCustom = require("./scrollbar_custom").HScrollBar;
+var VScrollBarCustom = require("./scrollbar_custom").VScrollBar;
 var RenderLoop = require("./renderloop").RenderLoop;
 var FontMetrics = require("./layer/font_metrics").FontMetrics;
 var EventEmitter = require("./lib/event_emitter").EventEmitter;
 var editorCss = require("./css/editor.css");
+var Decorator = require("./layer/decorators").Decorator;
 
 var useragent = require("./lib/useragent");
 var HIDE_TEXTAREA = useragent.isIE;
@@ -358,6 +361,9 @@ var VirtualRenderer = function(container, theme) {
         // reset cached values on scrollbars, needs to be removed when switching to non-native scrollbars
         // see https://github.com/ajaxorg/ace/issues/2195
         this.scrollBarH.scrollLeft = this.scrollBarV.scrollTop = null;
+        if (this.$customScrollbar) {
+            this.$updateCustomScrollbar(true);
+        }
     };
     
     this.$updateCachedSize = function(force, gutterWidth, width, height) {
@@ -378,7 +384,7 @@ var VirtualRenderer = function(container, theme) {
             if (this.$horizScroll)
                 size.scrollerHeight -= this.scrollBarH.getHeight();
                 
-            // this.scrollBarV.setHeight(size.scrollerHeight);
+            this.scrollBarV.setHeight(size.scrollerHeight);
             this.scrollBarV.element.style.bottom = this.scrollBarH.getHeight() + "px";
 
             changes = changes | this.CHANGE_SCROLL;
@@ -403,7 +409,7 @@ var VirtualRenderer = function(container, theme) {
             dom.setStyle(this.scroller.style, "right", right);
             dom.setStyle(this.scroller.style, "bottom", this.scrollBarH.getHeight());
                 
-            // this.scrollBarH.element.style.setWidth(size.scrollerWidth);
+            this.scrollBarH.setWidth(size.scrollerWidth);
 
             if (this.session && this.session.getUseWrapMode() && this.adjustWrapLimit() || force) {
                 changes |= this.CHANGE_FULL;
@@ -872,6 +878,9 @@ var VirtualRenderer = function(container, theme) {
             this.$textLayer.update(config);
             if (this.$showGutter)
                 this.$gutterLayer.update(config);
+            if (this.$customScrollbar) {
+                this.$scrollDecorator.$updateDecorators(config);
+            }
             this.$markerBack.update(config);
             this.$markerFront.update(config);
             this.$cursorLayer.update(config);
@@ -894,6 +903,9 @@ var VirtualRenderer = function(container, theme) {
                 else
                     this.$gutterLayer.scrollLines(config);
             }
+            if (this.$customScrollbar) {
+                this.$scrollDecorator.$updateDecorators(config);
+            }
             this.$markerBack.update(config);
             this.$markerFront.update(config);
             this.$cursorLayer.update(config);
@@ -907,18 +919,30 @@ var VirtualRenderer = function(container, theme) {
             this.$textLayer.update(config);
             if (this.$showGutter)
                 this.$gutterLayer.update(config);
+            if (this.$customScrollbar) {
+                this.$scrollDecorator.$updateDecorators(config);
+            }
         }
         else if (changes & this.CHANGE_LINES) {
             if (this.$updateLines() || (changes & this.CHANGE_GUTTER) && this.$showGutter)
                 this.$gutterLayer.update(config);
+            if (this.$customScrollbar) {
+                this.$scrollDecorator.$updateDecorators(config);
+            }
         }
         else if (changes & this.CHANGE_TEXT || changes & this.CHANGE_GUTTER) {
             if (this.$showGutter)
                 this.$gutterLayer.update(config);
+            if (this.$customScrollbar) {
+                this.$scrollDecorator.$updateDecorators(config);
+            }
         }
         else if (changes & this.CHANGE_CURSOR) {
             if (this.$highlightGutterLine)
                 this.$gutterLayer.updateLineHighlight(config);
+            if (this.$customScrollbar) {
+                this.$scrollDecorator.$updateDecorators(config);
+            }
         }
 
         if (changes & this.CHANGE_CURSOR) {
@@ -1203,36 +1227,47 @@ var VirtualRenderer = function(container, theme) {
 
         var pos = this.$cursorLayer.getPixelPosition(cursor);
 
-        var left = pos.left;
-        var top = pos.top;
-        
+        var newLeft = pos.left;
+        var newTop = pos.top;
+
         var topMargin = $viewMargin && $viewMargin.top || 0;
         var bottomMargin = $viewMargin && $viewMargin.bottom || 0;
-        
-        var scrollTop = this.$scrollAnimation ? this.session.getScrollTop() : this.scrollTop;
-        
-        if (scrollTop + topMargin > top) {
-            if (offset && scrollTop + topMargin > top + this.lineHeight)
-                top -= offset * this.$size.scrollerHeight;
-            if (top === 0)
-                top = -this.scrollMargin.top;
-            this.session.setScrollTop(top);
-        } else if (scrollTop + this.$size.scrollerHeight - bottomMargin < top + this.lineHeight) {
-            if (offset && scrollTop + this.$size.scrollerHeight - bottomMargin < top -  this.lineHeight)
-                top += offset * this.$size.scrollerHeight;
-            this.session.setScrollTop(top + this.lineHeight + bottomMargin - this.$size.scrollerHeight);
+
+        if (this.$scrollAnimation) {
+            this.$stopAnimation = true;
         }
 
-        var scrollLeft = this.scrollLeft;
+        var currentTop = this.$scrollAnimation ? this.session.getScrollTop() : this.scrollTop;
 
-        if (scrollLeft > left) {
-            if (left < this.$padding + 2 * this.layerConfig.characterWidth)
-                left = -this.scrollMargin.left;
-            this.session.setScrollLeft(left);
-        } else if (scrollLeft + this.$size.scrollerWidth < left + this.characterWidth) {
-            this.session.setScrollLeft(Math.round(left + this.characterWidth - this.$size.scrollerWidth));
-        } else if (scrollLeft <= this.$padding && left - scrollLeft < this.characterWidth) {
-            this.session.setScrollLeft(0);
+        if (currentTop + topMargin > newTop) {
+            if (offset && currentTop + topMargin > newTop + this.lineHeight)
+                newTop -= offset * this.$size.scrollerHeight;
+            if (newTop === 0)
+                newTop = -this.scrollMargin.top;
+            this.session.setScrollTop(newTop);
+        } else if (currentTop + this.$size.scrollerHeight - bottomMargin < newTop + this.lineHeight) {
+            if (offset && currentTop + this.$size.scrollerHeight - bottomMargin < newTop -  this.lineHeight)
+                newTop += offset * this.$size.scrollerHeight;
+            this.session.setScrollTop(newTop + this.lineHeight + bottomMargin - this.$size.scrollerHeight);
+        }
+
+        var currentLeft = this.scrollLeft;
+        // Show 2 context characters of the line when moving to it
+        var twoCharsWidth = 2 * this.layerConfig.characterWidth;
+
+        if (newLeft - twoCharsWidth < currentLeft) {
+            newLeft -= twoCharsWidth;
+            if (newLeft < this.$padding + twoCharsWidth) {
+                newLeft = -this.scrollMargin.left;
+            }
+            this.session.setScrollLeft(newLeft);
+        } else {
+            newLeft += twoCharsWidth;
+            if (currentLeft + this.$size.scrollerWidth < newLeft + this.characterWidth) {
+                this.session.setScrollLeft(Math.round(newLeft + this.characterWidth - this.$size.scrollerWidth));
+            } else if (currentLeft <= this.$padding && newLeft - currentLeft < this.characterWidth) {
+                this.session.setScrollLeft(0);
+            }
         }
     };
 
@@ -1354,7 +1389,20 @@ var VirtualRenderer = function(container, theme) {
         _self.session.setScrollTop(steps.shift());
         // trick session to think it's already scrolled to not loose toValue
         _self.session.$scrollTop = toValue;
+        
+        function endAnimation() {
+            _self.$timer = clearInterval(_self.$timer);
+            _self.$scrollAnimation = null;
+            _self.$stopAnimation = false;
+            callback && callback();
+        }
+        
         this.$timer = setInterval(function() {
+            if (_self.$stopAnimation) {
+                endAnimation();
+                return;
+            }
+
             if (!_self.session) 
                 return clearInterval(_self.$timer);
             if (steps.length) {
@@ -1366,9 +1414,7 @@ var VirtualRenderer = function(container, theme) {
                 toValue = null;
             } else {
                 // do this on separate step to not get spurious scroll event from scrollbar
-                _self.$timer = clearInterval(_self.$timer);
-                _self.$scrollAnimation = null;
-                callback && callback();
+                endAnimation();
             }
         }, 10);
     };
@@ -1571,7 +1617,46 @@ var VirtualRenderer = function(container, theme) {
         this.$composition = null;
         this.$cursorLayer.element.style.display = "";
     };
-    
+
+    this.setGhostText = function(text, position) {
+        var cursor = this.session.selection.cursor;
+        var insertPosition = position || { row: cursor.row, column: cursor.column };
+
+        this.removeGhostText();
+
+        var textLines = text.split("\n");
+        this.addToken(textLines[0], "ghost_text", insertPosition.row, insertPosition.column);
+        this.$ghostText = {
+            text: text,
+            position: {
+                row: insertPosition.row,
+                column: insertPosition. column
+            }
+        };
+        if (textLines.length > 1) {
+            this.$ghostTextWidget = {
+                text: textLines.slice(1).join("\n"),
+                row: insertPosition.row,
+                column: insertPosition.column,
+                className: "ace_ghost_text"
+            };
+            this.session.widgetManager.addLineWidget(this.$ghostTextWidget);
+        }
+        
+    };
+
+    this.removeGhostText = function() {
+        if (!this.$ghostText) return;
+
+        var position = this.$ghostText.position;
+        this.removeExtraToken(position.row, position.column);
+        if (this.$ghostTextWidget) {
+            this.session.widgetManager.removeLineWidget(this.$ghostTextWidget);
+            this.$ghostTextWidget = null;
+        }
+        this.$ghostText = null;
+    };
+
     this.addToken = function(text, type, row, column) {
         var session = this.session;
         session.bgTokenizer.lines[row] = null;
@@ -1715,6 +1800,41 @@ var VirtualRenderer = function(container, theme) {
         this.container.textContent = "";
     };
 
+    this.$updateCustomScrollbar = function (val) {
+        var _self = this;
+        this.$horizScroll = this.$vScroll = null;
+        this.scrollBarV.element.remove();
+        this.scrollBarH.element.remove();
+        if (this.$scrollDecorator) {
+            delete this.$scrollDecorator;
+        }
+        if (val === true) {
+            this.scrollBarV = new VScrollBarCustom(this.container, this);
+            this.scrollBarH = new HScrollBarCustom(this.container, this);
+            this.scrollBarV.setHeight(this.$size.scrollerHeight);
+            this.scrollBarH.setWidth(this.$size.scrollerWidth);
+
+            this.scrollBarV.addEventListener("scroll", function (e) {
+                if (!_self.$scrollAnimation) _self.session.setScrollTop(e.data - _self.scrollMargin.top);
+            });
+            this.scrollBarH.addEventListener("scroll", function (e) {
+                if (!_self.$scrollAnimation) _self.session.setScrollLeft(e.data - _self.scrollMargin.left);
+            });
+            this.$scrollDecorator = new Decorator(this.scrollBarV, this);
+            this.$scrollDecorator.$updateDecorators();
+        }
+        else {
+            this.scrollBarV = new VScrollBar(this.container, this);
+            this.scrollBarH = new HScrollBar(this.container, this);
+            this.scrollBarV.addEventListener("scroll", function (e) {
+                if (!_self.$scrollAnimation) _self.session.setScrollTop(e.data - _self.scrollMargin.top);
+            });
+            this.scrollBarH.addEventListener("scroll", function (e) {
+                if (!_self.$scrollAnimation) _self.session.setScrollLeft(e.data - _self.scrollMargin.left);
+            });
+        }
+    };
+
 }).call(VirtualRenderer.prototype);
 
 
@@ -1855,6 +1975,12 @@ config.defineOptions(VirtualRenderer.prototype, "renderer", {
             this.$gutterLayer.$fixedWidth = !!val;
             this.$loop.schedule(this.CHANGE_GUTTER);
         }
+    },
+    customScrollbar: {
+        set: function(val) {
+            this.$updateCustomScrollbar(val);
+        },
+        initialValue: false
     },
     theme: {
         set: function(val) { this.setTheme(val); },

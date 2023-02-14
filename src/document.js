@@ -46,7 +46,7 @@ var Document = function(textOrLines) {
     this.setValue = function(text) {
         var len = this.getLength() - 1;
         this.remove(new Range(0, 0, len, this.getLine(len).length));
-        this.insert({row: 0, column: 0}, text);
+        this.insert({row: 0, column: 0}, text || "");
     };
 
     /**

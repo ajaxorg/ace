@@ -180,6 +180,7 @@ export namespace Ace {
     showFoldWidgets: boolean;
     showLineNumbers: boolean;
     displayIndentGuides: boolean;
+    highlightIndentGuides: boolean;
     highlightGutterLine: boolean;
     hScrollBarAlwaysVisible: boolean;
     vScrollBarAlwaysVisible: boolean;
@@ -189,6 +190,7 @@ export namespace Ace {
     minLines: number;
     scrollPastEnd: boolean;
     fixedWidthGutter: boolean;
+    customScrollbar: boolean;
     theme: string;
     hasCssTransforms: boolean;
     maxPixelHeight: number;
@@ -215,11 +217,15 @@ export namespace Ace {
     behavioursEnabled: boolean;
     wrapBehavioursEnabled: boolean;
     enableAutoIndent: boolean;
+    enableBasicAutocompletion: boolean | Completer[],
+    enableLiveAutocompletion: boolean | Completer[],
+    enableSnippets: boolean,
     autoScrollEditorIntoView: boolean;
     keyboardHandler: string | null;
     placeholder: string;
     value: string;
     session: EditSession;
+    relativeLineNumbers: boolean;
   }
 
   export interface SearchOptions {
@@ -230,7 +236,7 @@ export namespace Ace {
     skipCurrent: boolean;
     range: Range;
     preserveCase: boolean;
-    regExp: RegExp;
+    regExp: boolean;
     wholeWord: boolean;
     caseSensitive: boolean;
     wrap: boolean;
@@ -397,6 +403,10 @@ export namespace Ace {
     canRedo(): boolean;
     bookmark(rev?: number): void;
     isAtBookmark(): boolean;
+    hasUndo(): boolean;
+    hasRedo(): boolean;
+    isClean(): boolean;
+    markClean(rev?: number): void;
   }
 
   export interface Position {
@@ -459,7 +469,7 @@ export namespace Ace {
       inFront?: boolean): number;
     addDynamicMarker(marker: MarkerLike, inFront: boolean): MarkerLike;
     removeMarker(markerId: number): void;
-    getMarkers(inFront?: boolean): MarkerLike[];
+    getMarkers(inFront?: boolean): {[id: number]: MarkerLike};
     highlight(re: RegExp): void;
     highlightLines(startRow: number,
       endRow: number,
@@ -665,6 +675,8 @@ export namespace Ace {
     showComposition(position: number): void;
     setCompositionText(text: string): void;
     hideComposition(): void;
+    setGhostText(text: string, position: Point): void;
+    removeGhostText(): void;
     setTheme(theme: string, callback?: () => void): void;
     getTheme(): string;
     setStyle(style: string, include?: boolean): void;
@@ -833,6 +845,8 @@ export namespace Ace {
     removeWordLeft(): void;
     removeLineToEnd(): void;
     splitLine(): void;
+    setGhostText(text: string, position: Point): void;
+    removeGhostText(): void;
     transposeLetters(): void;
     toLowerCase(): void;
     toUpperCase(): void;
@@ -873,10 +887,10 @@ export namespace Ace {
     jumpToMatching(select: boolean, expand: boolean): void;
     gotoLine(lineNumber: number, column: number, animate: boolean): void;
     navigateTo(row: number, column: number): void;
-    navigateUp(): void;
-    navigateDown(): void;
-    navigateLeft(): void;
-    navigateRight(): void;
+    navigateUp(times?: number): void;
+    navigateDown(times?: number): void;
+    navigateLeft(times?: number): void;
+    navigateRight(times?: number): void;
     navigateLineStart(): void;
     navigateLineEnd(): void;
     navigateFileEnd(): void;

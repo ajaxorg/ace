@@ -9,6 +9,7 @@ var Range = require("./range").Range;
 var Editor = require("./editor").Editor;
 var EditSession = require("./edit_session").EditSession;
 var VirtualRenderer = require("./virtual_renderer").VirtualRenderer;
+var vim = require("./keyboard/vim");
 var assert = require("./test/assertions");
 require("./ext/error_marker");
 
@@ -214,6 +215,172 @@ module.exports = {
         editor.session.selection.$setSelection(1, 15, 1, 15);
         editor.resize(true);
         assertIndentGuides( 0);
+    },
+    "test annotation marks": function() {
+        function findPointFillStyle(points, x, y) {
+            var point = points.find(el => el.x === x && el.y === y);
+            if (point === undefined) return;
+
+            return point.fillStyle;
+        }
+
+        function assertCoordsColor(expected, points) {
+            for (var el of expected) {
+                assert.equal(findPointFillStyle(points, el.x, el.y), el.color);
+            }
+        }
+
+        var renderer = editor.renderer;
+        renderer.container.scrollHeight = 100;
+        renderer.layerConfig.maxHeight = 200;
+        renderer.layerConfig.lineHeight = 14;
+
+        editor.setOptions({
+            customScrollbar: true
+        });
+        editor.setValue("a" + "\n".repeat(100) + "b" + "\nxxxxxx", -1);
+        editor.session.setAnnotations([
+            {
+                row: 1,
+                column: 2,
+                type: "error"
+            }, {
+                row: 4,
+                column: 1,
+                type: "warning"
+            }, {
+                row: 20,
+                column: 1,
+                type: "info"
+            }
+        ]);
+        renderer.$loop._flush();
+        var context = renderer.$scrollDecorator.canvas.getContext();
+        var imageData = context.getImageData(0, 0, 50, 50);
+        var scrollDecoratorColors = renderer.$scrollDecorator.colors.light;
+        var values = [
+            // reflects cursor position on canvas
+            {x: 0, y: 0, color: "rgba(0, 0, 0, 0.5)"},
+            {x: 1, y: 1, color: "rgba(0, 0, 0, 0.5)"},
+            // reflects error annotation mark on canvas overlapped by cursor
+            {x: 2, y: 2, color: scrollDecoratorColors.error},
+            // default value
+            {x: 3, y: 3, color: "rgba(0, 0, 0, 0)"},
+            // reflects warning annotation mark on canvas
+            {x: 4, y: 4, color: scrollDecoratorColors.warning},
+            {x: 5, y: 5, color: scrollDecoratorColors.warning},
+            {x: 6, y: 6, color: "rgba(0, 0, 0, 0)"},
+            {x: 7, y: 20, color: scrollDecoratorColors.info},
+            {x: 8, y: 21, color: scrollDecoratorColors.info}
+        ];
+        assertCoordsColor(values, imageData.data);
+        editor.moveCursorTo(5, 6);
+        renderer.$loop._flush();
+        values = [
+            {x: 0, y: 0, color: "rgba(0, 0, 0, 0)"},
+            {x: 1, y: 1, color: scrollDecoratorColors.error},
+            {x: 2, y: 2, color: scrollDecoratorColors.error},
+            {x: 3, y: 3, color: "rgba(0, 0, 0, 0)"},
+            {x: 4, y: 4, color: scrollDecoratorColors.warning},
+            {x: 5, y: 5, color: "rgba(0, 0, 0, 0.5)"},
+            {x: 6, y: 6, color: "rgba(0, 0, 0, 0.5)"}
+        ];
+        assertCoordsColor(values, imageData.data);
+        renderer.session.addFold("...", new Range(0, 0, 3, 2));
+        editor.moveCursorTo(10, 0);
+        renderer.$loop._flush();
+        values = [
+            {x: 0, y: 0, color: scrollDecoratorColors.error},
+            {x: 1, y: 1, color: scrollDecoratorColors.error},
+            {x: 2, y: 2, color: scrollDecoratorColors.warning},
+            {x: 3, y: 3, color: "rgba(0, 0, 0, 0)"},
+            {x: 4, y: 4, color: "rgba(0, 0, 0, 0)"},
+            {x: 5, y: 5, color: "rgba(0, 0, 0, 0)"},
+            {x: 6, y: 6, color: "rgba(0, 0, 0, 0)"}
+        ];
+        assertCoordsColor(values, imageData.data);
+    },
+    "test ghost text": function() {
+        editor.session.setValue("abcdef");
+        editor.setGhostText("Ghost");
+
+        editor.renderer.$loop._flush();
+        assert.equal(editor.renderer.content.textContent, "Ghostabcdef");
+
+        editor.setGhostText("Ghost", {row: 0, column: 3});
+
+        editor.renderer.$loop._flush();
+        assert.equal(editor.renderer.content.textContent, "abcGhostdef");
+
+        editor.setGhostText("Ghost", {row: 0, column: 6});
+
+        editor.renderer.$loop._flush();
+        assert.equal(editor.renderer.content.textContent, "abcdefGhost");
+    },
+
+    "test multiline ghost text": function() {
+        editor.session.setValue("abcdef");
+        editor.renderer.$loop._flush();
+
+        editor.setGhostText("Ghost1\nGhost2\nGhost3", {row: 0, column: 6});
+
+        editor.renderer.$loop._flush();
+        assert.equal(editor.renderer.content.textContent, "abcdefGhost1");
+        
+        assert.equal(editor.session.lineWidgets[0].el.textContent, "Ghost2\nGhost3");
+    },
+    "test: brackets highlighting": function (done) {
+        var renderer = editor.renderer;
+        editor.session.setValue(
+            "function Test() {\n" + "    function Inner(){\n" + "        \n" + "        \n" + "    }\n" + "}");
+        editor.session.selection.$setSelection(1, 21, 1, 21);
+        renderer.$loop._flush();
+
+        setTimeout(function () {
+            assert.ok(editor.session.$bracketHighlight);
+            assert.range(editor.session.$bracketHighlight.ranges[0], 1, 20, 1, 21);
+            assert.range(editor.session.$bracketHighlight.ranges[1], 4, 4, 4, 5);
+
+            editor.session.selection.$setSelection(1, 16, 1, 16);
+            setTimeout(function () {
+                assert.ok(editor.session.$bracketHighlight == null);
+                editor.setKeyboardHandler(vim.handler);
+                editor.session.selection.$setSelection(1, 20, 1, 20);
+                setTimeout(function () {
+                    assert.ok(editor.session.$bracketHighlight);
+                    assert.range(editor.session.$bracketHighlight.ranges[0], 1, 20, 1, 21);
+                    assert.range(editor.session.$bracketHighlight.ranges[1], 4, 4, 4, 5);
+                    done();
+                }, 60);
+            }, 60);
+        }, 60);
+    },
+    "test: scroll cursor into view": function() {
+        function X(n) {
+            return "X".repeat(n);
+        }
+        editor.session.setValue(`${X(10)}\n${X(1000)}}`);
+
+        var initialContentLeft = editor.renderer.content.getBoundingClientRect().left;
+
+        // Scroll so far to the right that the first line is completely hidden
+        editor.session.selection.$setSelection(1, 1000, 1, 1000);
+        editor.renderer.scrollCursorIntoView();
+        editor.renderer.$loop._flush();
+
+        editor.session.selection.$setSelection(0, 10, 0, 10);
+        editor.renderer.scrollCursorIntoView();
+        editor.renderer.$loop._flush();
+
+        var contentLeft = editor.renderer.content.getBoundingClientRect().left;
+        var scrollDelta = initialContentLeft - contentLeft;
+
+        const leftBoundPixelPos = editor.renderer.$cursorLayer.getPixelPosition({row: 0, column: 8}).left;
+        const rightBoundPixelPos = editor.renderer.$cursorLayer.getPixelPosition({row: 0, column: 9}).left;
+        assert.ok(
+            scrollDelta >= leftBoundPixelPos && scrollDelta < rightBoundPixelPos,
+            "Expected content to have been scrolled two characters beyond the cursor"
+        );
     }
 
     // change tab size after setDocument (for text layer)

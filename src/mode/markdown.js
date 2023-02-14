@@ -1,6 +1,7 @@
 "use strict";
 
 var oop = require("../lib/oop");
+var CstyleBehaviour = require("./behaviour/cstyle").CstyleBehaviour;
 var TextMode = require("./text").CustomMode;
 var MarkdownHighlightRules = require("./markdown_highlight_rules").MarkdownHighlightRules;
 var MarkdownFoldMode = require("./folding/markdown").FoldMode;
@@ -18,7 +19,7 @@ var Mode = function() {
     });*/
 
     this.foldingRules = new MarkdownFoldMode();
-    this.$behaviour = this.$defaultBehaviour;
+    this.$behaviour = new CstyleBehaviour({ braces: true });
 };
 oop.inherits(Mode, TextMode);
 

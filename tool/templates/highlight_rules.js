@@ -34,7 +34,6 @@
  * fileTypes                                                                            *
  ****************************************************************************************/
 
-define(function(require, exports, module) {
 "use strict";
 
 var oop = require("../lib/oop");
@@ -55,4 +54,3 @@ var %language%HighlightRules = function() {
 oop.inherits(%language%HighlightRules, TextHighlightRules);
 
 exports.%language%HighlightRules = %language%HighlightRules;
-});
