@@ -16,8 +16,7 @@ oop.inherits(FoldMode, BaseFoldMode);
             return "";
 
         if (line[0] == "`") {
-            if (session.bgTokenizer.getState(row) == "start")
-                return "end";
+            if (session.bgTokenizer.getState(row).name == "start") return "end";
             return "start";
         }
 
@@ -34,7 +33,7 @@ oop.inherits(FoldMode, BaseFoldMode);
             return;
 
         if (line[0] == "`") {
-            if (session.bgTokenizer.getState(row) !== "start") {
+            if (session.bgTokenizer.getState(row).name !== "start") {
                 while (++row < maxRow) {
                     line = session.getLine(row);
                     if (line[0] == "`" & line.substring(0, 3) == "```")
@@ -54,7 +53,7 @@ oop.inherits(FoldMode, BaseFoldMode);
         var token;
         function isHeading(row) {
             token = session.getTokens(row)[0];
-            return token && token.type.lastIndexOf(heading, 0) === 0;
+            return token && token.type.name.lastIndexOf(heading, 0) === 0;
         }
 
         var heading = "markup.heading";
@@ -62,7 +61,7 @@ oop.inherits(FoldMode, BaseFoldMode);
             var ch = token.value[0];
             if (ch == "=") return 6;
             if (ch == "-") return 5;
-            return 7 - token.value.search(/[^#]|$/);
+            return 7 - token.value.search(/[^#]/);
         }
 
         if (isHeading(row)) {
