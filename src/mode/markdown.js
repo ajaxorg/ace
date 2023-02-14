@@ -1,10 +1,7 @@
 "use strict";
 
 var oop = require("../lib/oop");
-var TextMode = require("./text").Mode;
-var JavaScriptMode = require("./javascript").Mode;
-var XmlMode = require("./xml").Mode;
-var HtmlMode = require("./html").Mode;
+var TextMode = require("./text").CustomMode;
 var MarkdownHighlightRules = require("./markdown_highlight_rules").MarkdownHighlightRules;
 var MarkdownFoldMode = require("./folding/markdown").FoldMode;
 
@@ -27,7 +24,6 @@ oop.inherits(Mode, TextMode);
 
 (function() {
     this.type = "text";
-    this.blockComment = {start: "<!--", end: "-->"};
     this.$quotes = {'"': '"', "`": "`"};
 
     this.getNextLineIndent = function(state, line, tab) {
