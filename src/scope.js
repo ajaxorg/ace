@@ -1,7 +1,7 @@
 "use strict";
 
 var Scope = function (name, parent) {
-    this.name = name;
+    this.name = name.toString();
     this.children = {};
     this.parent = parent;
 };
@@ -9,7 +9,6 @@ var Scope = function (name, parent) {
     Scope.prototype.toString = function () {
         return this.name;
     };
-
     Scope.prototype.get = function (name, extraId = '') {
         return this.children[name.toString() + extraId] || (this.children[name.toString() + extraId] = new Scope(
             name, this));
@@ -38,6 +37,18 @@ var Scope = function (name, parent) {
         var s = 1;
         for (var i in this.children) s += this.children[i].count();
         return s;
+    };
+    /**
+     *
+     * @returns {string[]}
+     */
+    Scope.prototype.getAllScopeNames = function () {
+        var scopeNames = [];
+        var self = this;
+        do {
+            scopeNames.push(self.name);
+        } while (self = self.parent);
+        return scopeNames;
     };
 }).call(Scope.prototype);
 
