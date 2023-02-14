@@ -50,11 +50,11 @@ function checkModes() {
         testComments(m.lineCommentStart, testLineComment, tokenizer, modeName);
         testComments(m.blockComment, testBlockComment, tokenizer, modeName);
         testBrackets(m, modeName);
-        
+
         if (m.snippetFileId)
             snippets[m.snippetFileId] = modeName;
     });
-    
+
     jsFileList(cwd + "../../snippets").forEach(function(snippetFileName) {
         if (/\.snippets$/.test(snippetFileName)) return;
         if (!snippets["ace/snippets/" + snippetFileName])
@@ -65,7 +65,7 @@ function checkModes() {
         console.error("Snippet files missing", snippets);
         throw new Error("Snippet files missing");
     }
-    
+
     function testNextState(tokenizer, modeName) {
         let keys = Object.keys(tokenizer.states);
         for (let i = 0; i < keys.length; i++) {
@@ -97,24 +97,28 @@ function checkModes() {
             }
         }
     }
-    
+
     function testBlockComment(tokenizer, blockComment, modeName) {
         if (blockComment.lineStartOnly)
-            return; // TODO test 
+            return; // TODO test
         var str = blockComment.start + " " + blockComment.end;
         str = blockComment.start + str;
         if (blockComment.nestable)
-            str += blockComment.end;     
+            str += blockComment.end;
         var data = tokenizer.getLineTokens(str, "start");
+
+        var type = data.tokens.length > 0 ? data.tokens[data.tokens.length - 1].type : "";
+        var state = typeof type === "string" ? data.state : type.parent;
+
         var isBroken = data.tokens.some(function(t) { return !/comment/.test(t.type); });
         if (isBroken) {
             die("broken blockComment in " + modeName, data);
         }
-        if (!/start/.test(data.state)) {
+        if (!/start/.test(state)) {
             die("broken state after blockComment in " + modeName, data);
         }
     }
-    
+
     function testLineComment(tokenizer, commentStart, modeName) {
         var tokens = tokenizer.getLineTokens(commentStart + " ", "start").tokens;
         if (!/comment/.test(tokens[0].type)) {
@@ -124,11 +128,11 @@ function checkModes() {
 
     function testBrackets(mode, modeName) {
         if (/^(forth|mask)$/.test(modeName)) return;
-        
+
         var session = new EditSession("{ foo[ bar(baz) ] }", mode);
-        
-        var isInvalid = session.getTokens(0).some(function(t) { 
-            return /invalid|illegal|string/.test(t.type); 
+
+        var isInvalid = session.getTokens(0).some(function(t) {
+            return /invalid|illegal|string/.test(t.type);
         });
         if (isInvalid) return;
 
@@ -141,7 +145,7 @@ function checkModes() {
         position = session.findMatchingBracket({row:0, column:11});
         if (!position || position.column != 14)
             die("Matching bracket not found in " + modeName);
-        
+
         if (mode.$behaviour) {
             session.setValue("");
             editor.setSession(session);
@@ -183,7 +187,7 @@ function generateTestData(names, force) {
 
         if (names && names.length && names.indexOf(modeName) == -1)
             return;
-        
+
         var outputPath = cwd + "tokens_" + modeName + ".json";
         try {
             var oldOutput = require(outputPath);
@@ -197,7 +201,7 @@ function generateTestData(names, force) {
                 }).join("");
             }).join("\n");
         }
-        
+
         var filePath = "text_" + modeName + ".txt";
         if (specialDocs.indexOf(filePath) !== -1) {
             filePath = cwd + filePath;
@@ -206,7 +210,7 @@ function generateTestData(names, force) {
             // oldText = "";
         }
         var text = oldText ||fs.readFileSync(filePath, "utf8");
-        
+
         try {
             var Mode = require("../" + modeName).Mode;
         } catch(e) {
@@ -217,26 +221,33 @@ function generateTestData(names, force) {
         var tokenizer = new Mode().getTokenizer();
 
         var state = "start";
-        var data = text.split(/\r\n|\r|\n/).map(function(line) {
+        var data = text.split(/\r\n|\r|\n/).map(function (line) {
             var data = tokenizer.getLineTokens(line, state);
+
+            var type = data.tokens.length > 0 ? data.tokens[data.tokens.length - 1].type : "";
             var tmp = [];
-            tmp.push(JSON.stringify(data.state));
+            var stateString;
+            if (/^[\x00]/.test(line)) {
+                stateString = "start";
+            }
+            else {
+                stateString = typeof type === "string" ? data.state : type.getAllScopeNames();
+            }
+            tmp.push(JSON.stringify(stateString));
             var tokenizedLine = "";
-            data.tokens.forEach(function(x) {
+            data.tokens.forEach(function (x) {
                 tokenizedLine += x.value;
                 tmp.push(JSON.stringify([x.type.toString(), x.value]));
             });
-            if (tokenizedLine != line)
-                tmp.push(JSON.stringify(line));
-            state = data.state;
+            if (tokenizedLine !== line) tmp.push(JSON.stringify(line));
+            state = typeof type === "string" ? data.state : type.parent;
             return tmp.join(",\n  ");
         });
-        
+
         var jsonStr = "[[\n   " + data.join("\n],[\n   ") + "\n]]";
-        
-        if (oldOutput && JSON.stringify(JSON.parse(jsonStr)) == JSON.stringify(oldOutput))
-            return;
-        
+
+        if (oldOutput && JSON.stringify(JSON.parse(jsonStr)) == JSON.stringify(oldOutput)) return;
+
         fs.writeFileSync(outputPath, jsonStr, "utf8");
     });
 }
@@ -280,18 +291,19 @@ function testMode(modeName, i) {
         var tokens = tokenizer.getLineTokens(line, state);
         var values = tokens.tokens.map(function(x) {return x.value;});
         var types = tokens.tokens.map(function(x) {return x.type;});
-
+        var type = tokens.tokens.length > 0 ? tokens.tokens[tokens.tokens.length - 1].type: "";
+        var stateString = /^[\x00]/.test(line) ? "start" : typeof type === "string" ? tokens.state : type.getAllScopeNames();
         var err = testEqual([
-            JSON.stringify(lineData.state), JSON.stringify(tokens.state),
+            JSON.stringify(lineData.state), JSON.stringify(stateString),
             lineData.types, types,
             lineData.values, values]);
-        
+
         if (err) {
             console.log(line);
             throw "error";
         }
 
-        state = tokens.state;
+        state = typeof type === "string" ? tokens.state : type.parent;
     });
 }
 function testEqual(a) {
