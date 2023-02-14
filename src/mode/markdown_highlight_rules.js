@@ -327,8 +327,17 @@ var MarkdownHighlightRules = function () {
                 defaultToken: "heading"
             }
         ],
-
         "listBlock": [
+            {
+                token : "support.variable",
+                regex : /\[[ x]\]/,
+                onMatch: function (value, scope, stack, line) {
+                    if (/[*+-]\s(\[[ x]\]\s)/.test(line)) {
+                        return this.token;
+                    }
+                    return "list";
+                }
+            },
             { // block quote
                 token: "string.blockquote",
                 regex: /\s*>\s?/,
