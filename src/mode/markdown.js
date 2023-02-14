@@ -8,14 +8,14 @@ var MarkdownFoldMode = require("./folding/markdown").FoldMode;
 var Mode = function() {
     this.HighlightRules = MarkdownHighlightRules;
 
-    this.createModeDelegates({
+/*    this.createModeDelegates({
         javascript: require("./javascript").Mode,
         html: require("./html").Mode,
         bash: require("./sh").Mode,
         sh: require("./sh").Mode,
         xml: require("./xml").Mode,
         css: require("./css").Mode
-    });
+    });*/
 
     this.foldingRules = new MarkdownFoldMode();
     this.$behaviour = this.$defaultBehaviour;
