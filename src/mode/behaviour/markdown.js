@@ -6,12 +6,12 @@ var TokenIterator = require("../../token_iterator").TokenIterator;
 var Range = require("../../range").Range;
 
 var MarkdownBehaviour = function (options) {
+    CstyleBehaviour.call(this);
 
     this.add("autoindent", "insertion", function (scope, action, editor, session, text) {
         if (scope.parent && scope.parent.name === "listBlock" && /\s{2,}/.test(text)) {
             var cursor = editor.getCursorPosition();
-            if (cursor.row === 0)
-                return;
+            if (cursor.row === 0) return;
             var line = session.getLine(cursor.row);
             var previousLine = session.getLine(cursor.row - 1);
             if (!/^\s*(?:[*+-]|\d{1,9}[.)])/.test(previousLine)) {
