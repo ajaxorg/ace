@@ -414,7 +414,7 @@ export namespace Ace {
     column: number
   }
 
-  export interface EditSession extends EventEmitter, OptionsProvider {
+  export interface EditSession extends EventEmitter, OptionsProvider, Folding {
     selection: Selection;
 
     // TODO: define BackgroundTokenizer
