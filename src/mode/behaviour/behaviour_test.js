@@ -18,6 +18,7 @@ var XMLMode = require("../xml").Mode;
 var HTMLMode = require("../html").Mode;
 var CSSMode = require("../css").Mode;
 var MarkdownMode = require("../markdown").Mode;
+var PythonMode = require("../python").Mode;
 var editor;
 var exec = function(name, times, args) {
     do {
@@ -52,25 +53,25 @@ module.exports = {
         exec("addCursorBelow", 2);
 
         exec("insertstring", 1, "if ");
-        
-        // pairing ( 
+
+        // pairing (
         exec("insertstring", 1, "(");
         testValue("if ()");
         testSelection(0, 4);
         exec("insertstring", 1, ")");
         testValue("if ()");
         testSelection(0, 5);
-        
-        // pairing [ 
+
+        // pairing [
         exec("gotoleft", 1);
         exec("insertstring", 1, "[");
         testValue("if ([])");
         testSelection(0, 5);
-        
+
         exec("insertstring", 1, "]");
         testValue("if ([])");
         testSelection(0, 6);
-        
+
         // test deletion
         exec("gotoleft", 1);
         exec("backspace", 1);
@@ -81,22 +82,22 @@ module.exports = {
         exec("insertstring", 1, "{");
         testValue("if (){}");
         testSelection(0, 6);
-        
+
         exec("insertstring", 1, "}");
         testValue("if (){}");
         testSelection(0, 7);
-        
+
         exec("gotolinestart", 1);
         exec("insertstring", 1, "(");
         testValue("(if (){}");
         exec("backspace", 1);
-        
+
         editor.setValue("");
         exec("insertstring", 1, "{");
         assert.equal(editor.getValue(), "{");
         exec("insertstring", 1, "\n");
         assert.equal(editor.getValue(), "{\n    \n}");
-        
+
         editor.setValue("");
         exec("insertstring", 1, "(");
         exec("insertstring", 1, '"');
@@ -105,7 +106,7 @@ module.exports = {
         exec("backspace", 1);
         exec("insertstring", 1, '"');
         assert.equal(editor.getValue(), '("")');
-        
+
         editor.setValue("('foo')", 1);
         exec("gotoleft", 1);
         exec("selectleft", 1);
@@ -118,7 +119,7 @@ module.exports = {
         exec("selectleft", 1);
         exec("insertstring", 1, '"');
         assert.equal(editor.getValue(), '("foo")');
-        
+
         editor.setValue("", 1);
         exec("selectleft", 1);
         exec("insertstring", 1, '"');
@@ -127,8 +128,8 @@ module.exports = {
         exec("insertstring", 1, 'n');
         exec("insertstring", 1, '"');
         assert.equal(editor.getValue(), '"\\n"');
-        
-        editor.setValue("");        
+
+        editor.setValue("");
         exec("insertstring", 1, '`');
         assert.equal(editor.getValue(), '``');
         exec("insertstring", 1, 'n');
@@ -153,13 +154,13 @@ module.exports = {
         assert.equal(editor.session.getLine(2), "    ");
         editor.session.setValue(["<OuterTag",
             "    <xyzrt"
-        ].join("\n"));        
+        ].join("\n"));
         exec("golinedown", 1);
         exec("gotolineend", 1);
         exec("selectleft", 3);
         exec("insertstring", 1, '>');
         assert.equal(editor.session.getLine(1), "    <xy></xy>");
-        
+
         editor.setValue(["<a x='11'",
             "<b a='",
             "   ",
@@ -179,7 +180,7 @@ module.exports = {
             " >  ",
             "'>     >"
         ].join("\n"));
-        
+
         editor.setValue("");
         "<div x='1'>".split("").forEach(function(ch) {
             exec("insertstring", 1, ch);
@@ -187,16 +188,16 @@ module.exports = {
         assert.equal(editor.getValue(), "<div x='1'></div>");
         exec("insertstring", 1, ">");
         assert.equal(editor.getValue(), "<div x='1'>></div>");
-        
+
         editor.setValue("<div '", 1);
         exec("selectleft", 1);
         exec("insertstring", 1, '"');
         assert.equal(editor.getValue(), "<div \"");
-        
+
         exec("selectleft", 1);
         exec("insertstring", 1, "'");
         assert.equal(editor.getValue(), "<div '");
-        
+
         exec("selectleft", 1);
         exec("insertstring", 1, "a");
         exec("selectleft", 1);
@@ -210,13 +211,13 @@ module.exports = {
         exec("selectleft", 1);
         exec("insertstring", 1, "'");
         assert.equal(editor.getValue(), "<div '");
-        
+
         editor.setWrapBehavioursEnabled(true);
         editor.setValue("<div a", 1);
         exec("selectleft", 1);
         exec("insertstring", 1, "'");
         assert.equal(editor.getValue(), "<div 'a'");
-        
+
         editor.setValue("<div a=></div>", 1);
         exec("gotoleft", 7);
         exec("insertstring", 1, '"');
@@ -225,7 +226,7 @@ module.exports = {
         exec("gotoright", 1);
         exec("insertstring", 1, "\n");
         assert.equal(editor.getValue(), "<div a=\"\">\n    \n</div>");
-        
+
         exec("undo", 1);
         assert.equal(editor.getValue(), "<div a=\"\"></div>");
         exec("gotoleft", 1);
@@ -237,26 +238,26 @@ module.exports = {
         assert.equal(editor.getValue(), "<div a=></div>");
         exec("backspace", 1);
         assert.equal(editor.getValue(), "<div a></div>");
-        
+
         editor.setValue("    <div><div>", 1);
         editor.selection.moveTo(0, 9);
         exec("insertstring", 1, "\n");
         assert.equal(editor.getValue(), "    <div>\n        <div>");
-        
+
         editor.setValue("  <div></div>", 1);
         exec("insertstring", 1, "\n");
         assert.equal(editor.getValue(), "  <div></div>\n  ");
-        
+
         editor.setValue("    <br><br>", 1);
         editor.selection.moveTo(0, 8);
         exec("insertstring", 1, "\n");
         assert.equal(editor.getValue(), "    <br>\n    <br>");
-        
+
         editor.setValue("<div a='x", 1);
         exec("gotoleft", 1);
         exec("insertstring", 1, ">");
         assert.equal(editor.getValue(), "<div a='>x");
-        
+
         editor.setValue("");
         "<!DOCTYPE html></div><link><a>".split("").forEach(function(ch) {
             exec("insertstring", 1, ch);
@@ -273,7 +274,7 @@ module.exports = {
         exec("backspace", 2);
         exec("insertstring", 1, "'");
         assert.equal(editor.getValue(), "'");
-        
+
         editor.session.setMode(new JavaScriptMode);
         editor.setValue("");
         exec("insertstring", 1, '"');
@@ -393,6 +394,17 @@ module.exports = {
         exec("insertstring", 1, "`");
         exec("insertstring", 1, "`");
         assert.equal(editor.getValue(), "``-``");
+    },
+    "test: python": function() {
+        editor.session.setMode(new PythonMode());
+        editor.setValue("f", 1);
+        exec("insertstring", 1, '"');
+        assert.equal(editor.getValue(), 'f""');
+
+        // there is no such prefix for python
+        editor.setValue("p", 1);
+        exec("insertstring", 1, '"');
+        assert.equal(editor.getValue(), 'p"');
     }
 };
 
