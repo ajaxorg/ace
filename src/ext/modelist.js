@@ -191,6 +191,7 @@ var supportedModes = {
     Smarty:      ["smarty|tpl"],
     Smithy:      ["smithy"],
     snippets:    ["snippets"],
+    Solidity:    ["sol"],
     Soy_Template:["soy"],
     Space:       ["space"],
     SPARQL:      ["rq"],
