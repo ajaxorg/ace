@@ -10,9 +10,16 @@ var CStyleFoldMode = require("./folding/cstyle").FoldMode;
 
 var Mode = function() {
     this.HighlightRules = JavaScriptHighlightRules;
-    
+
     this.$outdent = new MatchingBraceOutdent();
-    this.$behaviour = new CstyleBehaviour();
+    this.$behaviour = new CstyleBehaviour({
+        quotesPrefixes: [
+            {
+                quotes: new RegExp("`"),
+                condition: new RegExp("\\w")
+            }
+        ]
+    });
     this.foldingRules = new CStyleFoldMode();
 };
 oop.inherits(Mode, TextMode);

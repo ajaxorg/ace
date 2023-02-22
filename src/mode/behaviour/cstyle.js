@@ -46,7 +46,15 @@ var getWrapped = function(selection, selected, opening, closing) {
             ]
     };
 };
-
+/**
+ * Creates a new Cstyle behaviour object with the specified options.
+ * @constructor
+ * @param {Object} options - The options for the Cstyle behaviour object.
+ * @param {boolean} options.braces - Whether to force braces auto-pairing.
+ * @param {Object[]} options.quotesPrefixes - An array of objects containing information about quotes prefixes.
+ * @param {RegExp} options.quotesPrefixes[].quotes - The regular expression used to determine which quote type the prefix applies to.
+ * @param {RegExp} options.quotesPrefixes[].condition - The regular expression used to determine if the character on the left of the quote is suitable.
+ */
 var CstyleBehaviour = function(options) {
     this.add("braces", "insertion", function(state, action, editor, session, text) {
         var cursor = editor.getCursorPosition();
@@ -223,7 +231,7 @@ var CstyleBehaviour = function(options) {
     this.add("string_dquotes", "insertion", function(state, action, editor, session, text) {
         var quotes = session.$mode.$quotes || defaultQuotes;
         if (text.length == 1 && quotes[text]) {
-            if (this.lineCommentStart && this.lineCommentStart.indexOf(text) != -1)
+            if (this.lineCommentStart && this.lineCommentStart.indexOf(text) != -1) 
                 return;
             initContext(editor);
             var quote = text;
@@ -236,16 +244,16 @@ var CstyleBehaviour = function(options) {
                 var line = session.doc.getLine(cursor.row);
                 var leftChar = line.substring(cursor.column-1, cursor.column);
                 var rightChar = line.substring(cursor.column, cursor.column + 1);
-
+                
                 var token = session.getTokenAt(cursor.row, cursor.column);
                 var rightToken = session.getTokenAt(cursor.row, cursor.column + 1);
                 // We're escaped.
                 if (leftChar == "\\" && token && /escape/.test(token.type))
                     return null;
-
+                
                 var stringBefore = token && /string|escape/.test(token.type);
                 var stringAfter = !rightToken || /string|escape/.test(rightToken.type);
-
+                
                 var pair;
                 if (rightChar == quote) {
                     pair = stringBefore !== stringAfter;
@@ -261,9 +269,17 @@ var CstyleBehaviour = function(options) {
                     var isWordBefore = wordRe.test(leftChar);
                     wordRe.lastIndex = 0;
                     var isWordAfter = wordRe.test(rightChar);
-                    let hasStringPrefixes = (options && options.quotePrefixes &&
-                        Array.isArray(options.quotePrefixes)) ? options.quotePrefixes.includes(leftChar) : null;
-
+                    var hasStringPrefixes = false;
+                    if (options && options.quotesPrefixes && Array.isArray(options.quotesPrefixes)) {
+                        for (var prefix of options.quotesPrefixes) {
+                            if (prefix.quotes && prefix.condition && prefix.quotes instanceof RegExp
+                                && prefix.quotes.test(quotes[text]) && prefix.condition instanceof RegExp
+                                && prefix.condition.test(leftChar)) {
+                                hasStringPrefixes = true;
+                                break;
+                            }
+                        }
+                    }
                     if ((!hasStringPrefixes && isWordBefore) || isWordAfter)
                         return null; // before or after alphanumeric
                     if (rightChar && !/[\s;,.})\]\\]/.test(rightChar))
@@ -298,11 +314,11 @@ var CstyleBehaviour = function(options) {
 
 };
 
-
+    
 CstyleBehaviour.isSaneInsertion = function(editor, session) {
     var cursor = editor.getCursorPosition();
     var iterator = new TokenIterator(session, cursor.row, cursor.column);
-
+    
     // Don't insert in the middle of a keyword/identifier/lexical
     if (!this.$matchTokenType(iterator.getCurrentToken() || "text", SAFE_INSERT_IN_TOKENS)) {
         if (/[)}\]]/.test(editor.session.getLine(cursor.row)[cursor.column]))
@@ -312,7 +328,7 @@ CstyleBehaviour.isSaneInsertion = function(editor, session) {
         if (!this.$matchTokenType(iterator2.getCurrentToken() || "text", SAFE_INSERT_IN_TOKENS))
             return false;
     }
-
+    
     // Only insert in front of whitespace/comments
     iterator.stepForward();
     return iterator.getCurrentTokenRow() !== cursor.row ||
