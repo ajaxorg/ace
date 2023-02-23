@@ -38,7 +38,11 @@ module.exports = {
         assert.equal(url, "_.js");
         
         url = config.moduleUrl("ace/ext/textarea");
-        assert.equal(url, "a/b/ext-textarea.js");        
+        assert.equal(url, "a/b/ext-textarea.js"); 
+        
+        var callback = () => "testCallback";
+        config.setModuleLoader("ace/test-module", callback);
+        assert.equal(config.dynamicModules["ace/test-module"], callback);
     },
     "test: define options" : function() {
         var o = {};
