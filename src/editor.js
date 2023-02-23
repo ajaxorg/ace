@@ -2756,7 +2756,7 @@ Editor.$uid = 0;
      **/
     this.prompt = function(message, options, callback) {
         var editor = this;
-        config.loadModule("./ext/prompt", function (module) {
+        config.loadModule("ace/ext/prompt", function (module) {
             module.prompt(editor, message, options, callback);
         });
     };

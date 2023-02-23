@@ -135,7 +135,10 @@ var AcePopup = function(parentNode) {
             selected.id = ariaId;
             popup.renderer.container.setAttribute("aria-activedescendant", ariaId);
             el.setAttribute("aria-activedescendant", ariaId);
+            selected.setAttribute("role", "option");
             selected.setAttribute("aria-label", popup.getData(row).value);
+            selected.setAttribute("aria-setsize", popup.data.length);
+            selected.setAttribute("aria-posinset", row);
         }
     });
     var hideHoverMarker = function() { setHoverMarker(-1); };

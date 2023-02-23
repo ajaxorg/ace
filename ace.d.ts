@@ -753,6 +753,7 @@ export namespace Ace {
 
   export interface TextInput {
     resetSelection(): void;
+    setAriaOption(activeDescendant: string, role: string): void;
   }
 
   export interface Editor extends OptionsProvider, EventEmitter {

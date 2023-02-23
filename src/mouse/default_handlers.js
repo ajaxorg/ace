@@ -79,9 +79,6 @@ function DefaultHandlers(mouseHandler) {
             editor.selection.moveToPosition(pos);
         if (!waitForClickSelection)
             this.select();
-        if (editor.renderer.scroller.setCapture) {
-            editor.renderer.scroller.setCapture();
-        }
         editor.setStyle("ace_selecting");
         this.setState("select");
     };
@@ -143,9 +140,6 @@ function DefaultHandlers(mouseHandler) {
     this.selectByLinesEnd = function() {
         this.$clickSelection = null;
         this.editor.unsetStyle("ace_selecting");
-        if (this.editor.renderer.scroller.releaseCapture) {
-            this.editor.renderer.scroller.releaseCapture();
-        }
     };
 
     this.focusWait = function() {

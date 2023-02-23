@@ -4,14 +4,13 @@ if (typeof process !== "undefined") {
 
 "use strict";
 
-var dom = require("./config");
 var config = require("./config");
 var assert = require("./test/assertions");
 
 module.exports = {
 
     "test: path resolution" : function() {
-        config.set("packaged", "true");
+        config.set("packaged", true);
         var url = config.moduleUrl("kr_theme", "theme");
         assert.equal(url, "theme-kr_theme.js");
         
@@ -38,7 +37,8 @@ module.exports = {
         assert.equal(url, "_.js");
         
         url = config.moduleUrl("ace/ext/textarea");
-        assert.equal(url, "a/b/ext-textarea.js"); 
+        assert.equal(url, "a/b/ext-textarea.js");
+        config.set("packaged", false);
         
         var callback = () => "testCallback";
         config.setModuleLoader("ace/test-module", callback);

@@ -20,13 +20,13 @@ var Range = require("./range").Range;
  **/
 /**
  * Emitted when the cursor selection changes.
- * 
+ *
  *  @event changeSelection
  **/
 /**
  * Creates a new `Selection` object.
  * @param {EditSession} session The session to use
- * 
+ *
  * @constructor
  **/
 var Selection = function(session) {
@@ -93,10 +93,16 @@ var Selection = function(session) {
      * @param {Number} column The new column
      *
      **/
-    this.setSelectionAnchor = function(row, column) {
+    this.setAnchor = function(row, column) {
         this.$isEmpty = false;
         this.anchor.setPosition(row, column);
     };
+
+    /**
+     * Left for backward compatibility
+     * @deprecated
+     */
+    this.setSelectionAnchor = this.setAnchor;
 
     /**
      * Returns an object containing the `row` and `column` of the calling selection anchor.
@@ -104,13 +110,18 @@ var Selection = function(session) {
      * @returns {Object}
      * @related Anchor.getPosition
      **/
-    this.getAnchor = 
-    this.getSelectionAnchor = function() {
+    this.getAnchor = function() {
         if (this.$isEmpty)
             return this.getSelectionLead();
-        
+
         return this.anchor.getPosition();
     };
+
+    /**
+     * Left for backward compatibility
+     * @deprecated
+     */
+    this.getSelectionAnchor = this.getAnchor;
 
     /**
      * Returns an object containing the `row` and `column` of the calling selection lead.
@@ -735,7 +746,7 @@ var Selection = function(session) {
             else
                 this.$desiredColumn = screenPos.column;
         }
-        
+
         if (rows != 0 && this.session.lineWidgets && this.session.lineWidgets[this.lead.row]) {
             var widget = this.session.lineWidgets[this.lead.row];
             if (rows < 0)
@@ -743,11 +754,11 @@ var Selection = function(session) {
             else if (rows > 0)
                 rows += widget.rowCount - (widget.rowsAbove || 0);
         }
-        
+
         var docPos = this.session.screenToDocumentPosition(screenPos.row + rows, screenPos.column, offsetX);
-        
+
         if (rows !== 0 && chars === 0 && docPos.row === this.lead.row && docPos.column === this.lead.column) {
-            
+
         }
 
         // move the cursor and update the desired column
