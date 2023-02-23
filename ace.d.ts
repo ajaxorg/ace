@@ -371,6 +371,7 @@ export namespace Ace {
     all(): { [key: string]: any };
     moduleUrl(name: string, component?: string): string;
     setModuleUrl(name: string, subst: string): string;
+    setModuleLoader(name: string, onLoad: Function): void;
     loadModule(moduleName: string | [string, string],
       onLoad?: (module: any) => void): void;
     init(packaged: any): any;

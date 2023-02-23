@@ -76,7 +76,7 @@ exports.setModuleUrl = function(name, subst) {
 };
 
 var loader = function(moduleName, cb) {
-    if (moduleName == "ace/theme/textmate")
+    if (moduleName === "ace/theme/textmate" || moduleName === "./theme/textmate")
         return cb(null, require("./theme/textmate"));
     return console.error("loader is not configured");
 };
@@ -122,8 +122,13 @@ exports.loadModule = function(moduleName, onLoad) {
     };
 
     if (exports.dynamicModules[moduleName]) {
-        exports.dynamicModules[moduleName]().then(function(module) {
-            load(module);
+        exports.dynamicModules[moduleName]().then(function (module) {
+            if (module.default) {
+                load(module.default);
+            }
+            else {
+                load(module);
+            }
         });
     } else {
         try {
