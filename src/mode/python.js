@@ -1,7 +1,6 @@
 "use strict";
 
 var oop = require("../lib/oop");
-var CstyleBehaviour = require("./behaviour/cstyle").CstyleBehaviour;
 var TextMode = require("./text").Mode;
 var PythonHighlightRules = require("./python_highlight_rules").PythonHighlightRules;
 var PythonFoldMode = require("./folding/pythonic").FoldMode;
@@ -10,18 +9,17 @@ var Range = require("../range").Range;
 var Mode = function() {
     this.HighlightRules = PythonHighlightRules;
     this.foldingRules = new PythonFoldMode("\\:");
-    this.$behaviour = new CstyleBehaviour({
-        pairQuotesAfter: {
-            "'": /[ruf]/i,
-            '"': /[ruf]/i
-        }
-    });
+    this.$behaviour = this.$defaultBehaviour;
 };
 oop.inherits(Mode, TextMode);
 
 (function() {
 
     this.lineCommentStart = "#";
+    this.$pairQuotesAfter = {
+        "'": /[ruf]/i,
+        '"': /[ruf]/i
+    };
 
     this.getNextLineIndent = function(state, line, tab) {
         var indent = this.$getIndent(line);

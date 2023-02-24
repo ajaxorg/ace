@@ -9,6 +9,20 @@ var lang = require("../lib/lang");
 var TokenIterator = require("../token_iterator").TokenIterator;
 var Range = require("../range").Range;
 
+/**
+ *
+ * @constructor
+ * @alias TextMode
+ * @property {{[quote: string]: string}} [$quotes] - quotes used by language mode
+ * @property {string} lineCommentStart - characters that indicate the start of a line comment
+ * @property {{start: string, end: string}} [blockComment] - characters that indicate the start and end of a block comment
+ * @property {TextHighlightRules} HighlightRules - language specific highlighters
+ * @property {FoldMode} foldingRules - language specific folding rules
+ * @property {MatchingBraceOutdent} $outdent
+ * @property {RegExp} tokenRe
+ * @property {RegExp} nonTokenRe
+ * @property {{[quote: string]: RegExp}} [$pairQuotesAfter] - An object containing conditions to determine whether to apply matching quote or not.
+ */
 var Mode = function() {
     this.HighlightRules = TextHighlightRules;
 };

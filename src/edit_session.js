@@ -821,13 +821,18 @@ EditSession.$uid = 0;
     this.$modes = config.$modes;
 
     /**
-     * Sets a new text mode for the `EditSession`. This method also emits the `'changeMode'` event. If a [[BackgroundTokenizer `BackgroundTokenizer`]] is set, the `'tokenizerUpdate'` event is also emitted.
-     * @param {TextMode} mode Set a new text mode
-     * @param {cb} optional callback
-     *
-     **/
+     * 
+     * @type {TextMode|null}
+     */
     this.$mode = null;
     this.$modeId = null;
+    
+    /**
+     * Sets a new text mode for the `EditSession`. This method also emits the `'changeMode'` event. If a [[BackgroundTokenizer `BackgroundTokenizer`]] is set, the `'tokenizerUpdate'` event is also emitted.
+     * @param {TextMode} mode Set a new text mode
+     * @param {Function} cb optional callback
+     *
+     **/
     this.setMode = function(mode, cb) {
         if (mode && typeof mode === "object") {
             if (mode.getTokenizer)

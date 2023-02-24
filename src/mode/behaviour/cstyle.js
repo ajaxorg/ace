@@ -49,9 +49,8 @@ var getWrapped = function(selection, selected, opening, closing) {
 /**
  * Creates a new Cstyle behaviour object with the specified options.
  * @constructor
- * @param {Object} options - The options for the Cstyle behaviour object.
- * @param {boolean} options.braces - Whether to force braces auto-pairing.
- * @param {{[quote: string]: RegExp}} options.pairQuotesAfter - An object containing conditions to determine whether to apply matching quote or not.
+ * @param {Object} [options] - The options for the Cstyle behaviour object.
+ * @param {boolean} [options.braces] - Whether to force braces auto-pairing.
  */
 var CstyleBehaviour = function(options) {
     this.add("braces", "insertion", function(state, action, editor, session, text) {
@@ -267,10 +266,11 @@ var CstyleBehaviour = function(options) {
                     var isWordBefore = wordRe.test(leftChar);
                     wordRe.lastIndex = 0;
                     var isWordAfter = wordRe.test(rightChar);
-                    var pairQuotesAfter = options && options.pairQuotesAfter && options.pairQuotesAfter[quotes[text]]
-                        && options.pairQuotesAfter[quotes[text]].test(leftChar);
+
+                    var pairQuotesAfter = session.$mode.$pairQuotesAfter;
+                    var shouldPairQuotes = pairQuotesAfter && pairQuotesAfter[quote] && pairQuotesAfter[quote].test(leftChar);
                     
-                    if ((!pairQuotesAfter && isWordBefore) || isWordAfter)
+                    if ((!shouldPairQuotes && isWordBefore) || isWordAfter)
                         return null; // before or after alphanumeric
                     if (rightChar && !/[\s;,.})\]\\]/.test(rightChar))
                         return null; // there is rightChar and it isn't closing
