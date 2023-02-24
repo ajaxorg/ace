@@ -11,12 +11,10 @@ var Mode = function() {
     this.HighlightRules = PythonHighlightRules;
     this.foldingRules = new PythonFoldMode("\\:");
     this.$behaviour = new CstyleBehaviour({
-        quotesPrefixes: [
-            {
-                quotes: new RegExp("['\"]"),
-                condition: new RegExp("[ruf]", "i")
-            }
-        ]
+        pairQuotesAfter: {
+            "'": /[ruf]/i,
+            '"': /[ruf]/i
+        }
     });
 };
 oop.inherits(Mode, TextMode);

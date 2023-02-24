@@ -13,12 +13,9 @@ var Mode = function() {
 
     this.$outdent = new MatchingBraceOutdent();
     this.$behaviour = new CstyleBehaviour({
-        quotesPrefixes: [
-            {
-                quotes: new RegExp("`"),
-                condition: new RegExp("\\w")
-            }
-        ]
+        pairQuotesAfter: {
+            "`": /\w/
+        }
     });
     this.foldingRules = new CStyleFoldMode();
 };

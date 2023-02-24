@@ -51,9 +51,7 @@ var getWrapped = function(selection, selected, opening, closing) {
  * @constructor
  * @param {Object} options - The options for the Cstyle behaviour object.
  * @param {boolean} options.braces - Whether to force braces auto-pairing.
- * @param {Object[]} options.quotesPrefixes - An array of objects containing information about quotes prefixes.
- * @param {RegExp} options.quotesPrefixes[].quotes - The regular expression used to determine which quote type the prefix applies to.
- * @param {RegExp} options.quotesPrefixes[].condition - The regular expression used to determine if the character on the left of the quote is suitable.
+ * @param {{[quote: string]: RegExp}} options.pairQuotesAfter - An object containing conditions to determine whether to apply matching quote or not.
  */
 var CstyleBehaviour = function(options) {
     this.add("braces", "insertion", function(state, action, editor, session, text) {
@@ -269,18 +267,10 @@ var CstyleBehaviour = function(options) {
                     var isWordBefore = wordRe.test(leftChar);
                     wordRe.lastIndex = 0;
                     var isWordAfter = wordRe.test(rightChar);
-                    var hasStringPrefixes = false;
-                    if (options && options.quotesPrefixes && Array.isArray(options.quotesPrefixes)) {
-                        for (var prefix of options.quotesPrefixes) {
-                            if (prefix.quotes && prefix.condition && prefix.quotes instanceof RegExp
-                                && prefix.quotes.test(quotes[text]) && prefix.condition instanceof RegExp
-                                && prefix.condition.test(leftChar)) {
-                                hasStringPrefixes = true;
-                                break;
-                            }
-                        }
-                    }
-                    if ((!hasStringPrefixes && isWordBefore) || isWordAfter)
+                    var pairQuotesAfter = options && options.pairQuotesAfter && options.pairQuotesAfter[quotes[text]]
+                        && options.pairQuotesAfter[quotes[text]].test(leftChar);
+                    
+                    if ((!pairQuotesAfter && isWordBefore) || isWordAfter)
                         return null; // before or after alphanumeric
                     if (rightChar && !/[\s;,.})\]\\]/.test(rightChar))
                         return null; // there is rightChar and it isn't closing
