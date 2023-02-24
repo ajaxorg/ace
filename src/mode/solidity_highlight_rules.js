@@ -61,7 +61,7 @@ define(function(require, exports, module) {
                 "seconds|minutes|hours|days|weeks",
             "constant.numeric.other.unit.time.deprecated":
                 "years"
-        }
+        };
         var mainKeywordMapper = this.createKeywordMapper(mainKeywordsByType, "identifier");
     
         // The purpose of this flag and all related code is that in function
@@ -75,7 +75,7 @@ define(function(require, exports, module) {
           if (
             hasSeenFirstFunctionArgumentKeyword
             &&
-            ("identifier" == mainKeywordToken)
+            (mainKeywordToken == "identifier")
           ) {
             mainKeywordToken = "variable.parameter";
           }
@@ -93,14 +93,14 @@ define(function(require, exports, module) {
             return {
                 token : "comment." + commentType + ".doc.documentation.tag.storage.type",
                 regex : "\\b(?:TODO|FIXME|XXX|HACK)\\b"
-            }
+            };
         };
     
         var natSpecRule = function natSpecRule(commentType) {
             return {
                 token : "comment." + commentType + ".doc.documentation.tag",
                 regex : "\\B@(?:author|dev|notice|param|return|title)\\b"
-            }
+            };
         };
     
         // Copied from ace/mode/text_highlight_rules and then "augmented".
