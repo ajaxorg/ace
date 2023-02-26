@@ -85,7 +85,7 @@ exports.setLoader = function(cb) {
     loader = cb;
 };
 
-exports.dynamicModules = {};
+exports.dynamicModules = Object.create(null);
 exports.$loading = {};
 exports.loadModule = function(moduleName, onLoad) {
     var module, moduleType;

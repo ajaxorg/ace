@@ -870,7 +870,11 @@ function sanityCheck(opts, callback) {
     });
 }
 
-if (!module.parent)
-    main(process.argv);
-else
+if (!module.parent) 
+    main(process.argv); 
+else {
     exports.buildAce = buildAce;
+    exports.jsFileList = jsFileList;
+    exports.modeList = modeList;
+}
+    

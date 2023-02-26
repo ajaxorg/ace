@@ -9,7 +9,7 @@ var assert = require("./test/assertions");
 
 module.exports = {
 
-    "test: path resolution" : function() {
+    "test: path resolution" : function(done) {
         config.set("packaged", true);
         var url = config.moduleUrl("kr_theme", "theme");
         assert.equal(url, "theme-kr_theme.js");
@@ -40,9 +40,14 @@ module.exports = {
         assert.equal(url, "a/b/ext-textarea.js");
         config.set("packaged", false);
         
-        var callback = () => "testCallback";
+        /* global Promise*/
+        var callback = () => Promise.resolve("success");
         config.setModuleLoader("ace/test-module", callback);
         assert.equal(config.dynamicModules["ace/test-module"], callback);
+        config.loadModule("ace/test-module", (module) => {
+            assert.equal(module, "success");
+            done();
+        });
     },
     "test: define options" : function() {
         var o = {};
