@@ -62,7 +62,7 @@ var supportedModes = {
     Clojure:     ["clj|cljs"],
     Cobol:       ["CBL|COB"],
     coffee:      ["coffee|cf|cson|^Cakefile"],
-    ColdFusion:  ["cfm"],
+    ColdFusion:  ["cfm|cfc"],
     Crystal:     ["cr"],
     CSharp:      ["cs"],
     Csound_Document: ["csd"],
