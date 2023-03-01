@@ -49,7 +49,7 @@ exports.moduleUrl = function(name, component) {
 
     var parts = name.split("/");
     component = component || parts[parts.length - 2] || "";
-    
+
     // todo make this configurable or get rid of '-'
     var sep = component == "snippets" ? "/" : "-";
     var base = parts[parts.length - 1];
@@ -76,7 +76,7 @@ exports.setModuleUrl = function(name, subst) {
 };
 
 var loader = function(moduleName, cb) {
-    if (moduleName == "ace/theme/textmate")
+    if (moduleName === "ace/theme/textmate" || moduleName === "./theme/textmate")
         return cb(null, require("./theme/textmate"));
     return console.error("loader is not configured");
 };
@@ -85,6 +85,7 @@ exports.setLoader = function(cb) {
     loader = cb;
 };
 
+exports.dynamicModules = Object.create(null);
 exports.$loading = {};
 exports.loadModule = function(moduleName, onLoad) {
     var module, moduleType;
@@ -93,42 +94,57 @@ exports.loadModule = function(moduleName, onLoad) {
         moduleName = moduleName[1];
     }
 
-    try {
-        module = require(moduleName);
-    } catch (e) {}
-    // require(moduleName) can return empty object if called after require([moduleName], callback)
-    if (module && !exports.$loading[moduleName])
-        return onLoad && onLoad(module);
+    var load = function (module) {
+        // require(moduleName) can return empty object if called after require([moduleName], callback)
+        if (module && !exports.$loading[moduleName]) return onLoad && onLoad(module);
 
-    if (!exports.$loading[moduleName])
-        exports.$loading[moduleName] = [];
+        if (!exports.$loading[moduleName]) exports.$loading[moduleName] = [];
 
-    exports.$loading[moduleName].push(onLoad);
+        exports.$loading[moduleName].push(onLoad);
 
-    if (exports.$loading[moduleName].length > 1)
-        return;
+        if (exports.$loading[moduleName].length > 1) return;
 
-    var afterLoad = function() {
-        loader(moduleName, function(err, module) {
-            exports._emit("load.module", {name: moduleName, module: module});
-            var listeners = exports.$loading[moduleName];
-            exports.$loading[moduleName] = null;
-            listeners.forEach(function(onLoad) {
-                onLoad && onLoad(module);
+        var afterLoad = function() {
+            loader(moduleName, function(err, module) {
+                exports._emit("load.module", {name: moduleName, module: module});
+                var listeners = exports.$loading[moduleName];
+                exports.$loading[moduleName] = null;
+                listeners.forEach(function(onLoad) {
+                    onLoad && onLoad(module);
+                });
             });
-        });
+        };
+
+        if (!exports.get("packaged")) return afterLoad();
+
+        net.loadScript(exports.moduleUrl(moduleName, moduleType), afterLoad);
+        reportErrorIfPathIsNotConfigured();
     };
 
-    if (!exports.get("packaged"))
-        return afterLoad();
-    
-    net.loadScript(exports.moduleUrl(moduleName, moduleType), afterLoad);
-    reportErrorIfPathIsNotConfigured();
+    if (exports.dynamicModules[moduleName]) {
+        exports.dynamicModules[moduleName]().then(function (module) {
+            if (module.default) {
+                load(module.default);
+            }
+            else {
+                load(module);
+            }
+        });
+    } else {
+        try {
+            module = require(moduleName);
+        } catch (e) {}
+        load(module);
+    }
+};
+
+exports.setModuleLoader = function (moduleName, onLoad) {
+    exports.dynamicModules[moduleName] = onLoad;
 };
 
 var reportErrorIfPathIsNotConfigured = function() {
     if (
-        !options.basePath && !options.workerPath 
+        !options.basePath && !options.workerPath
         && !options.modePath && !options.themePath
         && !Object.keys(options.$moduleUrls).length
     ) {

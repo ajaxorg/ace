@@ -39,7 +39,8 @@
         "cover": "istanbul cover src/test/all.js",
         "lint": "eslint \"src/**/*.js\"",
         "fix": "eslint --fix \"src/**/*.js\"",
-        "changelog": "standard-version"
+        "changelog": "standard-version",
+        "prepack": "node tool/esm_resolver_generator.js"
     },
     "standard-version": {
         "skip": {
