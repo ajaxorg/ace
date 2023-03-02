@@ -57,7 +57,7 @@ exports.defaultCommands = [{
     readOnly: true
 }, {
     name: "toggleSplitSelectionIntoLines",
-    description: "Split into lines",
+    description: "Split selection into lines",
     exec: function(editor) {
         if (editor.multiSelect.rangeCount > 1)
             editor.multiSelect.joinSelections();
