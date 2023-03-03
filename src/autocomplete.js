@@ -11,16 +11,20 @@ var config = require("./config");
 /**
  * Completion represents a text snippet that is proposed to complete text
  * @typedef Completion
- * @property {string} [value] - text that would be inserted when selecting this completion (if `type` is "value")
- * @property {string} [snippet] - snippet that would be inserted, if completion's type is "snippet"
- * @property {number} [score] - determine order in which completions would be displayed, less score - further from start
- * @property {string} [meta] - small description of completion
- * @property {string} [caption] - text that would be displayed in completion list, if omitted `value` or `snippet`
- * would be shown instead
- * @property {string} [docHTML] - html string that would be displayed as additional popup
- * @property {string} [docText] - plain text that would be displayed as additional popup. If `docHtml` exists, it would
- * be used instead of `docText`
- * @property {string} [completerId] - completer's identifier
+ * @property {string} [snippet] - a text snippet that would be inserted when the completion is selected
+ * @property {string} [value] - The text that would be inserted when selecting this completion. If a `snippet` is 
+ * provided, it will be used instead of `value`
+ * @property {number} [score] - a numerical value that determines the order in which completions would be displayed. 
+ * A lower score means that the completion would be displayed further from the start
+ * @property {string} [meta] - a short description of the completion
+ * @property {string} [caption] - the text that would be displayed in the completion list. If omitted, value or snippet 
+ * would be shown instead.
+ * @property {string} [docHTML] - an HTML string that would be displayed as an additional popup
+ * @property {string} [docText] - a plain text that would be displayed as an additional popup. If `docHTML` exists, 
+ * it would be used instead of `docText`.
+ * @property {string} [completerId] - the identifier of the completer
+ * @property {Ace.Range} [range] - an object that determines which range should be replaced in the text with new values (experimental)
+ * @property {string} [command] - A command that needs to be executed after the insertion of the completion (experimental)
  */
 
 var Autocomplete = function() {
@@ -379,11 +383,15 @@ var Autocomplete = function() {
         var doc = null;
         if (!selected || !this.editor || !this.popup.isOpen)
             return this.hideDocTooltip();
-        this.editor.completers.some(function(completer) {
-            if (completer.getDocTooltip && selected.completerId === completer.id)
+        
+        var completersLength = this.editor.completers.length;
+        for (var i = 0; i < completersLength; i++) {
+            var completer = this.editor.completers[i];
+            if (completer.getDocTooltip && selected.completerId === completer.id) {
                 doc = completer.getDocTooltip(selected);
-            return doc;
-        });
+                break;
+            }
+        }
         if (!doc && typeof selected != "string")
             doc = selected;
 

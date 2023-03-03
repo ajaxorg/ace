@@ -916,7 +916,7 @@ export namespace Ace {
       position: Point,
       prefix: string,
       callback: CompleterCallback): void;
-    getDocTooltip(item: Completion): void;
+    getDocTooltip?(item: Completion): undefined | string | Completion;
     id?: string;
   }
 }
