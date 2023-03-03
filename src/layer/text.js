@@ -27,8 +27,6 @@ var Text = function(parentEl) {
     this.SPACE_CHAR = "\xB7";
     this.$padding = 0;
     this.MAX_LINE_LENGTH = 10000;
-    // Smaller chunks result in higher cursor precision at the cost of more DOM nodes
-    this.MAX_CHUNK_LENGTH = 250;
 
     this.$updateEolChar = function() {
         var doc = this.session.doc;
@@ -322,19 +320,6 @@ var Text = function(parentEl) {
         "lparen": true
     };
 
-    this.$renderTokenInChunks = function(parent, screenColumn, token, value) {
-        var newScreenColumn;
-        for (var i = 0; i < value.length; i += this.MAX_CHUNK_LENGTH) {
-            var valueChunk = value.substring(i, i + this.MAX_CHUNK_LENGTH);
-            var tokenChunk = {
-                type: token.type,
-                value: valueChunk
-            };
-            newScreenColumn = this.$renderToken(parent, screenColumn + i, tokenChunk, valueChunk);
-        }
-        return newScreenColumn;
-    };
-
     this.$renderToken = function(parent, screenColumn, token, value) {
         var self = this;
         var re = /(\t)|( +)|([\x00-\x1f\x80-\xa0\xad\u1680\u180E\u2000-\u200f\u2028\u2029\u202F\u205F\uFEFF\uFFF9-\uFFFC\u2066\u2067\u2068\u202A\u202B\u202D\u202E\u202C\u2069]+)|(\u3000)|([\u1100-\u115F\u11A3-\u11A7\u11FA-\u11FF\u2329-\u232A\u2E80-\u2E99\u2E9B-\u2EF3\u2F00-\u2FD5\u2FF0-\u2FFB\u3001-\u303E\u3041-\u3096\u3099-\u30FF\u3105-\u312D\u3131-\u318E\u3190-\u31BA\u31C0-\u31E3\u31F0-\u321E\u3220-\u3247\u3250-\u32FE\u3300-\u4DBF\u4E00-\uA48C\uA490-\uA4C6\uA960-\uA97C\uAC00-\uD7A3\uD7B0-\uD7C6\uD7CB-\uD7FB\uF900-\uFAFF\uFE10-\uFE19\uFE30-\uFE52\uFE54-\uFE66\uFE68-\uFE6B\uFF01-\uFF60\uFFE0-\uFFE6]|[\uD800-\uDBFF][\uDC00-\uDFFF])/g;
@@ -400,16 +385,20 @@ var Text = function(parentEl) {
 
         valueFragment.appendChild(this.dom.createTextNode(i ? value.slice(i) : value, this.element));
 
-        var span = this.dom.createElement("span");
         if (!this.$textToken[token.type]) {
             var classes = "ace_" + token.type.replace(/\./g, " ace_");
+            var span = this.dom.createElement("span");
             if (token.type == "fold")
                 span.style.width = (token.value.length * this.config.characterWidth) + "px";
 
             span.className = classes;
+            span.appendChild(valueFragment);
+
+            parent.appendChild(span);
         }
-        span.appendChild(valueFragment);
-        parent.appendChild(span);
+        else {
+            parent.appendChild(valueFragment);
+        }
 
         return screenColumn + value.length;
     };
@@ -576,11 +565,11 @@ var Text = function(parentEl) {
             }
 
             if (chars + value.length < splitChars) {
-                screenColumn = this.$renderTokenInChunks(lineEl, screenColumn, token, value);
+                screenColumn = this.$renderToken(lineEl, screenColumn, token, value);
                 chars += value.length;
             } else {
                 while (chars + value.length >= splitChars) {
-                    screenColumn = this.$renderTokenInChunks(
+                    screenColumn = this.$renderToken(
                         lineEl, screenColumn,
                         token, value.substring(0, splitChars - chars)
                     );
@@ -598,7 +587,7 @@ var Text = function(parentEl) {
                 }
                 if (value.length != 0) {
                     chars += value.length;
-                    screenColumn = this.$renderTokenInChunks(
+                    screenColumn = this.$renderToken(
                         lineEl, screenColumn, token, value
                     );
                 }
@@ -620,23 +609,15 @@ var Text = function(parentEl) {
                 if (!value)
                     continue;
             }
-            if (screenColumn + value.length > this.MAX_LINE_LENGTH) {
-                this.$renderOverflowMessage(parent, screenColumn, token, value);
-                return;
-            }
-            screenColumn = this.$renderTokenInChunks(parent, screenColumn, token, value);
+            if (screenColumn + value.length > this.MAX_LINE_LENGTH)
+                return this.$renderOverflowMessage(parent, screenColumn, token, value);
+            screenColumn = this.$renderToken(parent, screenColumn, token, value);
         }
     };
 
     this.$renderOverflowMessage = function(parent, screenColumn, token, value, hide) {
-        if (token) {
-            this.$renderTokenInChunks(
-                parent,
-                screenColumn,
-                token,
-                value.slice(0, this.MAX_LINE_LENGTH - screenColumn)
-            );
-        }
+        token && this.$renderToken(parent, screenColumn, token,
+            value.slice(0, this.MAX_LINE_LENGTH - screenColumn));
 
         var overflowEl = this.dom.createElement("span");
         overflowEl.className = "ace_inline_button ace_keyword ace_toggle_wrap";

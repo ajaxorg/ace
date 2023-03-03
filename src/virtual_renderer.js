@@ -98,7 +98,7 @@ var VirtualRenderer = function(container, theme) {
         column : 0
     };
 
-    this.$fontMetrics = new FontMetrics(this.container, this.$textLayer.MAX_CHUNK_LENGTH);
+    this.$fontMetrics = new FontMetrics(this.container);
     this.$textLayer.$setFontMetrics(this.$fontMetrics);
     this.$textLayer.on("changeCharacterSize", function(e) {
         _self.updateCharacterSize();
@@ -1227,40 +1227,47 @@ var VirtualRenderer = function(container, theme) {
 
         var pos = this.$cursorLayer.getPixelPosition(cursor);
 
-        var left = pos.left;
-        var top = pos.top;
-        
+        var newLeft = pos.left;
+        var newTop = pos.top;
+
         var topMargin = $viewMargin && $viewMargin.top || 0;
         var bottomMargin = $viewMargin && $viewMargin.bottom || 0;
 
         if (this.$scrollAnimation) {
             this.$stopAnimation = true;
         }
-        
-        var scrollTop = this.$scrollAnimation ? this.session.getScrollTop() : this.scrollTop;
-        
-        if (scrollTop + topMargin > top) {
-            if (offset && scrollTop + topMargin > top + this.lineHeight)
-                top -= offset * this.$size.scrollerHeight;
-            if (top === 0)
-                top = -this.scrollMargin.top;
-            this.session.setScrollTop(top);
-        } else if (scrollTop + this.$size.scrollerHeight - bottomMargin < top + this.lineHeight) {
-            if (offset && scrollTop + this.$size.scrollerHeight - bottomMargin < top -  this.lineHeight)
-                top += offset * this.$size.scrollerHeight;
-            this.session.setScrollTop(top + this.lineHeight + bottomMargin - this.$size.scrollerHeight);
+
+        var currentTop = this.$scrollAnimation ? this.session.getScrollTop() : this.scrollTop;
+
+        if (currentTop + topMargin > newTop) {
+            if (offset && currentTop + topMargin > newTop + this.lineHeight)
+                newTop -= offset * this.$size.scrollerHeight;
+            if (newTop === 0)
+                newTop = -this.scrollMargin.top;
+            this.session.setScrollTop(newTop);
+        } else if (currentTop + this.$size.scrollerHeight - bottomMargin < newTop + this.lineHeight) {
+            if (offset && currentTop + this.$size.scrollerHeight - bottomMargin < newTop -  this.lineHeight)
+                newTop += offset * this.$size.scrollerHeight;
+            this.session.setScrollTop(newTop + this.lineHeight + bottomMargin - this.$size.scrollerHeight);
         }
 
-        var scrollLeft = this.scrollLeft;
+        var currentLeft = this.scrollLeft;
+        // Show 2 context characters of the line when moving to it
+        var twoCharsWidth = 2 * this.layerConfig.characterWidth;
 
-        if (scrollLeft > left) {
-            if (left < this.$padding + 2 * this.layerConfig.characterWidth)
-                left = -this.scrollMargin.left;
-            this.session.setScrollLeft(left);
-        } else if (scrollLeft + this.$size.scrollerWidth < left + this.characterWidth) {
-            this.session.setScrollLeft(Math.round(left + this.characterWidth - this.$size.scrollerWidth));
-        } else if (scrollLeft <= this.$padding && left - scrollLeft < this.characterWidth) {
-            this.session.setScrollLeft(0);
+        if (newLeft - twoCharsWidth < currentLeft) {
+            newLeft -= twoCharsWidth;
+            if (newLeft < this.$padding + twoCharsWidth) {
+                newLeft = -this.scrollMargin.left;
+            }
+            this.session.setScrollLeft(newLeft);
+        } else {
+            newLeft += twoCharsWidth;
+            if (currentLeft + this.$size.scrollerWidth < newLeft + this.characterWidth) {
+                this.session.setScrollLeft(Math.round(newLeft + this.characterWidth - this.$size.scrollerWidth));
+            } else if (currentLeft <= this.$padding && newLeft - currentLeft < this.characterWidth) {
+                this.session.setScrollLeft(0);
+            }
         }
     };
 
@@ -1610,7 +1617,46 @@ var VirtualRenderer = function(container, theme) {
         this.$composition = null;
         this.$cursorLayer.element.style.display = "";
     };
-    
+
+    this.setGhostText = function(text, position) {
+        var cursor = this.session.selection.cursor;
+        var insertPosition = position || { row: cursor.row, column: cursor.column };
+
+        this.removeGhostText();
+
+        var textLines = text.split("\n");
+        this.addToken(textLines[0], "ghost_text", insertPosition.row, insertPosition.column);
+        this.$ghostText = {
+            text: text,
+            position: {
+                row: insertPosition.row,
+                column: insertPosition. column
+            }
+        };
+        if (textLines.length > 1) {
+            this.$ghostTextWidget = {
+                text: textLines.slice(1).join("\n"),
+                row: insertPosition.row,
+                column: insertPosition.column,
+                className: "ace_ghost_text"
+            };
+            this.session.widgetManager.addLineWidget(this.$ghostTextWidget);
+        }
+        
+    };
+
+    this.removeGhostText = function() {
+        if (!this.$ghostText) return;
+
+        var position = this.$ghostText.position;
+        this.removeExtraToken(position.row, position.column);
+        if (this.$ghostTextWidget) {
+            this.session.widgetManager.removeLineWidget(this.$ghostTextWidget);
+            this.$ghostTextWidget = null;
+        }
+        this.$ghostText = null;
+    };
+
     this.addToken = function(text, type, row, column) {
         var session = this.session;
         session.bgTokenizer.lines[row] = null;

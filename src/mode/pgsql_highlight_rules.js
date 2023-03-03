@@ -53,7 +53,7 @@ var PgsqlHighlightRules = function() {
         "unlogged|until|update|user|using|uuid|vacuum|valid|validate|validator|value|values|varbit|" +
         "varchar|variadic|varying|verbose|version|view|void|volatile|when|where|whitespace|window|" +
         "with|without|work|wrapper|write|xid|xml|xmlattributes|xmlconcat|xmlelement|xmlexists|" +
-        "xmlforest|xmlparse|xmlpi|xmlroot|xmlserialize|year|yes|zone"
+        "xmlforest|xmlparse|xmlpi|xmlroot|xmlserialize|year|yes|zone|ties"
     );
 
 

@@ -16,6 +16,7 @@ var CommandManager = require("./commands/command_manager").CommandManager;
 var defaultCommands = require("./commands/default_commands").commands;
 var config = require("./config");
 var TokenIterator = require("./token_iterator").TokenIterator;
+var LineWidgets = require("./line_widgets").LineWidgets;
 
 var clipboard = require("./clipboard");
 
@@ -1426,6 +1427,31 @@ Editor.$uid = 0;
     };
 
     /**
+     * Set the "ghost" text in provided position. "Ghost" text is a kind of
+     * preview text inside the editor which can be used to preview some code
+     * inline in the editor such as, for example, code completions.
+     * 
+     * @param {String} text Text to be inserted as "ghost" text
+     * @param {object} position Position to insert text to
+     */
+    this.setGhostText = function(text, position) {
+        if (!this.session.widgetManager) {
+            this.session.widgetManager = new LineWidgets(this.session);
+            this.session.widgetManager.attach(this);
+        }
+        this.renderer.setGhostText(text, position);
+    };
+
+    /**
+     * Removes "ghost" text currently displayed in the editor.
+     */
+    this.removeGhostText = function() {
+        if (!this.session.widgetManager) return;
+
+        this.renderer.removeGhostText();
+    };
+
+    /**
      * Transposes current line.
      **/
     this.transposeLetters = function() {
@@ -2730,7 +2756,7 @@ Editor.$uid = 0;
      **/
     this.prompt = function(message, options, callback) {
         var editor = this;
-        config.loadModule("./ext/prompt", function (module) {
+        config.loadModule("ace/ext/prompt", function (module) {
             module.prompt(editor, message, options, callback);
         });
     };

@@ -1,5 +1,3 @@
-/*global CustomEvent*/
- 
 if (typeof process !== "undefined") {
     require("amd-loader");
 }
@@ -9,10 +7,14 @@ if (typeof process !== "undefined") {
 var assert = require("./../test/assertions");
 require("./../test/mockdom");
 var ace = require("../ace");
-var editor, changes, textarea;
+var editor, changes;
 
 module.exports = {
     setUp: function() {
+        ace.config.setLoader(function(moduleName, cb) {
+            if (moduleName == "ace/ext/error_marker")
+                return cb(null, require("../ext/error_marker"));
+        });
         if (!editor) {
             editor = ace.edit(null);
             document.body.appendChild(editor.container);
@@ -31,10 +33,10 @@ module.exports = {
         if (editor) {
             editor.destroy();
             editor.container.remove();
-            editor = textarea = null;
+            editor = null;
         }
     },
-    "test: simple text input": function() {
+    "test: go to next error": function() {
         editor.session.setValue("1\nerror 2 warning\n3\n4 info\n5\n6\n");
         editor.execCommand("goToNextError");
         editor.resize(true);
@@ -52,9 +54,19 @@ module.exports = {
                 type: type
             };
         }));
+        
         editor.execCommand("goToNextError");
         editor.renderer.$loop._flush();
-        assert.ok(/error_widget/.test(editor.container.innerHTML));
+        assert.ok(/error_widget\s+ace_error/.test(editor.container.innerHTML));
+                
+        editor.execCommand("goToNextError");
+        editor.renderer.$loop._flush();
+        assert.ok(/error_widget\s+ace_info/.test(editor.container.innerHTML));
+        
+        editor.execCommand("goToPreviousError");
+        editor.renderer.$loop._flush();
+        assert.ok(/error_widget\s+ace_error/.test(editor.container.innerHTML));
+        
         editor.execCommand("insertstring", "\n");
         editor.renderer.$loop._flush();
         assert.notOk(/error_widget/.test(editor.container.innerHTML));

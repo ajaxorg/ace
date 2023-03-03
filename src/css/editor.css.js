@@ -1,4 +1,4 @@
-module.exports = `/*
+/*
 styles = []
 for (var i = 1; i < 16; i++) {
     styles.push(".ace_br" + i + "{" + (
@@ -9,6 +9,7 @@ for (var i = 1; i < 16; i++) {
 }
 styles.join("\\n")
 */
+module.exports = `
 .ace_br1 {border-top-left-radius    : 3px;}
 .ace_br2 {border-top-right-radius   : 3px;}
 .ace_br3 {border-top-left-radius    : 3px; border-top-right-radius:    3px;}
@@ -93,8 +94,15 @@ styles.join("\\n")
     right: 0;
 }
 
-.ace_scroller.ace_scroll-left {
+.ace_scroller.ace_scroll-left:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
     box-shadow: 17px 0 16px -16px rgba(0, 0, 0, 0.4) inset;
+    pointer-events: none;
 }
 
 .ace_gutter-cell {
@@ -576,4 +584,9 @@ styles.join("\\n")
     white-space: pre;
     opacity: 0.7;
     margin: 0 10px;
+}
+
+.ace_ghost_text {
+    opacity: 0.5;
+    font-style: italic;
 }`;

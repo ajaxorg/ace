@@ -33,16 +33,16 @@ module.exports = {
         assert.ok(!editor.container.querySelector("style"));
 
         editor.execCommand("insertstring", "a");
-        checkInnerHTML('<d "ace_line ace_selected"><s "ace_completion-highlight">a</s><s "ace_">rraysort</s><s "ace_completion-meta">local</s></d><d "ace_line"><s "ace_completion-highlight">a</s><s "ace_">looooooooooooooooooooooooooooong_word</s><s "ace_completion-meta">local</s></d>', function() {
+        checkInnerHTML('<d "ace_line ace_selected" id="suggest-aria-id:0" role="option" aria-label="arraysort" aria-setsize=2 aria-posinset=0><s "ace_completion-highlight">a</s><s "ace_">rraysort</s><s "ace_completion-meta">local</s></d><d "ace_line"><s "ace_completion-highlight">a</s><s "ace_">looooooooooooooooooooooooooooong_word</s><s "ace_completion-meta">local</s></d>', function() {
             editor.execCommand("insertstring", "rr");
-            checkInnerHTML('<d "ace_line ace_selected"><s "ace_completion-highlight">arr</s><s "ace_">aysort</s><s "ace_completion-meta">local</s></d>', function() {
+            checkInnerHTML('<d "ace_line ace_selected" id="suggest-aria-id:0" role="option" aria-label="arraysort" aria-setsize=1 aria-posinset=0><s "ace_completion-highlight">arr</s><s "ace_">aysort</s><s "ace_completion-meta">local</s></d>', function() {
                 editor.execCommand("insertstring", "r");
-                checkInnerHTML('<d "ace_line ace_selected"><s "ace_completion-highlight">arr</s><s "ace_">ayso</s><s "ace_completion-highlight">r</s><s "ace_">t</s><s "ace_completion-meta">local</s></d>', function() {
-
+                checkInnerHTML('<d "ace_line ace_selected" id="suggest-aria-id:0" role="option" aria-label="arraysort" aria-setsize=1 aria-posinset=0><s "ace_completion-highlight">arr</s><s "ace_">ayso</s><s "ace_completion-highlight">r</s><s "ace_">t</s><s "ace_completion-meta">local</s></d>', function() {
+                    
                     editor.onCommandKey(null, 0, 13);
                     assert.equal(editor.getValue(), "arraysort\narraysort alooooooooooooooooooooooooooooong_word");
                     editor.execCommand("insertstring", " looooooooooooooooooooooooooooong_");
-                    checkInnerHTML('<d "ace_line ace_selected"><s "ace_">a</s><s "ace_completion-highlight">looooooooooooooooooooooooooooong_</s><s "ace_">word</s><s "ace_completion-meta">local</s></d>', function() {
+                    checkInnerHTML('<d "ace_line ace_selected" id="suggest-aria-id:0" role="option" aria-label="alooooooooooooooooooooooooooooong_word" aria-setsize=1 aria-posinset=0><s "ace_">a</s><s "ace_completion-highlight">looooooooooooooooooooooooooooong_</s><s "ace_">word</s><s "ace_completion-meta">local</s></d>', function() {
                         editor.onCommandKey(null, 0, 13);
                         editor.destroy();
                         editor.container.remove();
@@ -51,15 +51,16 @@ module.exports = {
                 });
             });
         });
-
+        
         var last;
         function checkInnerHTML(expected, callback) {
             var popup = editor.completer.popup;
-
+         
             popup.renderer.on("afterRender", function wait() {
                 var innerHTML = popup.renderer.$textLayer.element.innerHTML
                     .replace(/\s*style="[^"]+"|class=|(d)iv|(s)pan/g, "$1$2");
-                if (innerHTML == last) return;
+                if (innerHTML == last) 
+                    return;
                 assert.equal(innerHTML, expected);
                 last = innerHTML;
                 popup.renderer.off("afterRender", wait);
