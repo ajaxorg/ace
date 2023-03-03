@@ -30,6 +30,7 @@
     "files": [
         "src",
         "ace.d.ts",
+        "esm-resolver.js",
         "!**/*_test.js",
         "!_test"
     ],
