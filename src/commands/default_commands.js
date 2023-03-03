@@ -854,7 +854,7 @@ exports.commands = [{
     multiSelectAction: "forEach",
     scrollIntoView: "cursor"
 }, {
-    name: "openCommandPallete",
+    name: "openCommandPalette",
     description: "Open command palette",
     bindKey: bindKey("F1", "F1"),
     exec: function(editor) {
