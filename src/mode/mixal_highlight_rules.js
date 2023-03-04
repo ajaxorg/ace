@@ -18,7 +18,7 @@ var MixalHighlightRules = function() {
             'JAN', 'JAZ', 'JAP', 'JANN', 'JANZ', 'JANP', 'J1N', 'J1Z', 'J1P', 'J1NN', 'J1NZ',
             'J1NP', 'J2N', 'J2Z', 'J2P', 'J2NN', 'J2NZ', 'J2NP','J3N', 'J3Z', 'J3P', 'J3NN', 'J3NZ',
             'J3NP', 'J4N', 'J4Z', 'J4P', 'J4NN', 'J4NZ', 'J4NP', 'J5N', 'J5Z', 'J5P', 'J5NN',
-            'J5NZ', 'J5NP','J6N', 'J6Z', 'J6P', 'J6NN', 'J6NZ', 'J6NP', 'JXAN', 'JXZ', 'JXP',
+            'J5NZ', 'J5NP','J6N', 'J6Z', 'J6P', 'J6NN', 'J6NZ', 'J6NP', 'JXN', 'JXZ', 'JXP',
             'JXNN', 'JXNZ', 'JXNP', 'INCA', 'DECA', 'ENTA', 'ENNA', 'INC1', 'DEC1', 'ENT1', 'ENN1',
             'INC2', 'DEC2', 'ENT2', 'ENN2', 'INC3', 'DEC3', 'ENT3', 'ENN3', 'INC4', 'DEC4', 'ENT4',
             'ENN4', 'INC5', 'DEC5', 'ENT5', 'ENN5', 'INC6', 'DEC6', 'ENT6', 'ENN6', 'INCX', 'DECX',
