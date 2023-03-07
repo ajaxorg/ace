@@ -195,9 +195,12 @@ var BackgroundTokenizer = function(tokenizer, editor) {
         var state = this.states[row - 1];
 
         var data = this.tokenizer.getLineTokens(line, state, row);
+        var lastToken = data.tokens[data.tokens.length - 1];
+        var newState = (lastToken !== undefined && lastToken.type !== undefined && lastToken.type.parent !== undefined)
+            ? lastToken.type.parent : data.state;
 
-        if (this.states[row] + "" !== data.state + "") {
-            this.states[row] = data.state;
+        if (this.states[row] !== newState) {
+            this.states[row] = newState;
             this.lines[row + 1] = null;
             if (this.currentLine > row + 1)
                 this.currentLine = row + 1;

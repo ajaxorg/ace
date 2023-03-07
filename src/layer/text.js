@@ -385,10 +385,10 @@ var Text = function(parentEl) {
 
         valueFragment.appendChild(this.dom.createTextNode(i ? value.slice(i) : value, this.element));
 
-        if (!this.$textToken[token.type]) {
-            var classes = "ace_" + token.type.replace(/\./g, " ace_");
+        if (!this.$textToken[token.type.toString()]) {
+            var classes = "ace_" + token.type.toString().replace(/\./g, " ace_");
             var span = this.dom.createElement("span");
-            if (token.type == "fold")
+            if (token.type.toString() === "fold")
                 span.style.width = (token.value.length * this.config.characterWidth) + "px";
 
             span.className = classes;

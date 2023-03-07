@@ -40,7 +40,7 @@ function Tooltip (parentNode) {
      * @param {String} text
      **/
     this.setText = function(text) {
-        this.getElement().textContent = text;
+        this.getElement().textContent = text.toString();
     };
 
     /**
@@ -55,8 +55,8 @@ function Tooltip (parentNode) {
      * @param {Number} y
      **/
     this.setPosition = function(x, y) {
-        this.getElement().style.left = x + "px";
-        this.getElement().style.top = y + "px";
+        this.getElement().style.left = Math.round(x) + "px";
+        this.getElement().style.top = Math.round(y) + "px";
     };
 
     /**

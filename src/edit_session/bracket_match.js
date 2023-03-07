@@ -155,7 +155,7 @@ function BracketMatch() {
             // whose type matches typeRe
             do {
                 token = iterator.stepBackward();
-            } while (token && !typeRe.test(token.type));
+            } while (token && !typeRe.test(token.type.toString()));
 
             if (token == null)
                 break;
@@ -213,7 +213,7 @@ function BracketMatch() {
             // whose type matches typeRe
             do {
                 token = iterator.stepForward();
-            } while (token && !typeRe.test(token.type));
+            } while (token && !typeRe.test(token.type.toString()));
 
             if (token == null)
                 break;
