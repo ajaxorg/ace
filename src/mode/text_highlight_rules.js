@@ -149,6 +149,8 @@ var TextHighlightRules = function() {
                 }
                 var includeName = typeof rule == "string" ? rule : rule.include;
                 if (includeName) {
+                    if (includeName === "$self")
+                        includeName = "start";
                     if (Array.isArray(includeName))
                         toInsert = includeName.map(function(x) { return rules[x]; });
                     else
