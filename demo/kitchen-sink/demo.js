@@ -376,6 +376,7 @@ optionsPanel.add({
 var optionsPanelContainer = document.getElementById("optionsPanel");
 optionsPanel.render();
 optionsPanelContainer.insertBefore(optionsPanel.container, optionsPanelContainer.firstChild);
+optionsPanel.container.style.width = "80%";
 optionsPanel.on("setOption", function(e) {
     util.saveOption(e.name, e.value);
 });
@@ -451,7 +452,7 @@ env.editSnippets = function() {
 };
 
 optionsPanelContainer.insertBefore(
-    dom.buildDom(["div", {style: "text-align:right;margin-right: 60px"},
+    dom.buildDom(["div", {style: "text-align:right;width: 80%"},
         ["div", {}, 
             ["button", {onclick: env.editSnippets}, "Edit Snippets"]],
         ["div", {}, 
