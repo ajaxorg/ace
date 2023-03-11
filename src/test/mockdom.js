@@ -443,7 +443,7 @@ function Node(name) {
         if (!e.timeStamp) e.timeStamp = Date.now();
         e.currentTarget = this;
         var events = this._events && this._events[e.type];
-        events && events.forEach(function(listener) {
+        events && events.slice().forEach(function(listener) {
             listener.call(this, e);
         }, this);
         if (this["on" + e.type])

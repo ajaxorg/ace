@@ -153,6 +153,46 @@ module.exports = {
         assert.equal(editor.getValue(), "y");
     },
     
+    "test: android spacebar moves cursor": function() {
+        setUserAgentForTests(true, false);
+        var value = "Juhu kinners!";
+        editor.setValue(value);
+        editor.blur();
+        editor.focus();
+        var lastCommand = "";
+        editor.commands.on("exec", function(e) {
+            lastCommand += e.command.name;
+        });
+        
+        textarea.selectionStart = textarea.selectionEnd;
+        document.dispatchEvent(new CustomEvent("selectionchange"));
+        assert.equal(lastCommand, "gotoright");
+        lastCommand = "";
+        
+        textarea.selectionStart = 
+        textarea.selectionEnd = textarea.selectionStart - 1;
+        document.dispatchEvent(new CustomEvent("selectionchange"));
+        assert.equal(lastCommand, "gotoleft");
+        lastCommand = "";
+        
+        assert.equal(editor.getSelectedText(), "");
+        textarea.selectionStart = 0;
+        textarea.selectionEnd = textarea.value.length;
+        textarea.dispatchEvent(new CustomEvent("select"));
+        assert.equal(editor.getSelectedText(), value);
+        
+        textarea.selectionEnd = textarea.selectionStart;
+        document.dispatchEvent(new CustomEvent("selectionchange"));
+        assert.equal(lastCommand, "gotoleft");
+        lastCommand = "";
+        
+        textarea.selectionStart = 
+        textarea.selectionEnd = textarea.selectionEnd + 2;
+        document.dispatchEvent(new CustomEvent("selectionchange"));
+        assert.equal(lastCommand, "gotorightgotoright");
+        lastCommand = "";
+    },
+    
     "test: composition with visible textarea": function() {
         var data = [
             // select ll
