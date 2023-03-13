@@ -372,7 +372,7 @@ dom.importCssString(`
     width: calc(100% - 8px);
 }
 .ace_autocomplete_right .ace_line {
-    display: flex
+    display: flex;
 }
 .ace_autocomplete_right .ace_completion-meta {
     flex: 1;

@@ -399,8 +399,7 @@ module.exports = `
 }
 
 .ace_tooltip {
-    background-color: #FFF;
-    background-image: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.1));
+    background-color: #f5f5f5;
     border: 1px solid gray;
     border-radius: 1px;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
@@ -418,6 +417,10 @@ module.exports = `
     font-weight: normal;
     letter-spacing: normal;
     pointer-events: none;
+}
+
+.ace_tooltip:focus {
+    outline: 1px solid black;
 }
 
 .ace_folding-enabled > .ace_gutter-cell {
