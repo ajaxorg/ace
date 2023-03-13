@@ -589,4 +589,5 @@ module.exports = `
 .ace_ghost_text {
     opacity: 0.5;
     font-style: italic;
+    white-space: pre;
 }`;

@@ -25,6 +25,8 @@ var testNames = [
     "ace/editor_text_edit_test",
     "ace/editor_commands_test",
     "ace/ext/hardwrap_test",
+    "ace/ext/inline_autocomplete_test",
+    "ace/ext/inline_autocomplete_tooltip_test",
     "ace/ext/static_highlight_test",
     "ace/ext/whitespace_test",
     "ace/ext/error_marker_test",

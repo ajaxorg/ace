@@ -256,8 +256,10 @@ var AcePopup = function(parentNode) {
 
     popup.hide = function() {
         this.container.style.display = "none";
-        this._signal("hide");
-        popup.isOpen = false;
+        if (popup.isOpen) {
+            popup.isOpen = false;
+            this._signal("hide");
+        }
     };
     popup.show = function(pos, lineHeight, topdownOnly) {
         var el = this.container;
@@ -289,9 +291,11 @@ var AcePopup = function(parentNode) {
 
         el.style.left = left + "px";
 
-        this._signal("show");
-        lastMouseEvent = null;
-        popup.isOpen = true;
+        if (!popup.isOpen) {
+            popup.isOpen = true;
+            this._signal("show");
+            lastMouseEvent = null;
+        }
     };
 
     popup.goTo = function(where) {

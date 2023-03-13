@@ -1683,6 +1683,7 @@ var VirtualRenderer = function(container, theme) {
     };
 
     this.removeExtraToken = function(row, column) {
+        this.session.bgTokenizer.lines[row] = null;
         this.updateLines(row, row);
     };
 
