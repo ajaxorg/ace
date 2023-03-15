@@ -31,7 +31,7 @@ module.exports = `
     position: relative;
     overflow: hidden;
     padding: 0;
-    font: 12px/normal 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
+    font: 12px/normal 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'Source Code Pro', 'source-code-pro', monospace;
     direction: ltr;
     text-align: left;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
