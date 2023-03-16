@@ -76,7 +76,6 @@ var Autocomplete = function() {
     };
 
     this.$onPopupChange = function(hide) {
-        this.tooltipTimer.call(null, null);
         if (this.inlineRenderer && this.inlineEnabled) {
             var completion = hide ? null : this.popup.getData(this.popup.getRow());
             var prefix = util.getCompletionPrefix(this.editor);
@@ -85,6 +84,7 @@ var Autocomplete = function() {
             }
             this.$updatePopupPosition();
         }
+        this.tooltipTimer.call(null, null);
     };
 
     this.$updatePopupPosition = function() {
@@ -100,12 +100,26 @@ var Autocomplete = function() {
         pos.left += rect.left - editor.renderer.scrollLeft;
         pos.left += renderer.gutterWidth;
 
+        var posGhostText = {
+            top: pos.top,
+            left: pos.left
+        };
+
         if (renderer.$ghostText && renderer.$ghostTextWidget) {
             if (this.base.row === renderer.$ghostText.position.row) {
-                pos.top += renderer.$ghostTextWidget.el.offsetHeight;
+                posGhostText.top += renderer.$ghostTextWidget.el.offsetHeight;
             }
         }
 
+        // Try to render below ghost text, then above ghost text, then over ghost text
+        if (this.popup.tryShow(posGhostText, lineHeight, "bottom")) {
+            return;
+        }
+
+        if (this.popup.tryShow(pos, lineHeight, "top")) {
+            return;
+        }
+        
         this.popup.show(pos, lineHeight);
     };
 

@@ -985,6 +985,7 @@ export namespace Ace {
     getRow(line: number): void;
     hide(): void;
     show(pos: Point, lineHeight: number, topdownOnly: boolean): void;
+    tryShow(pos: Point, lineHeight: number, anchor: "top" | "bottom" | undefined, forceShow?: boolean): boolean;
     goTo(where: AcePopupNavigation): void;
   }
 }
