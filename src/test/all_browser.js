@@ -13,6 +13,7 @@ var el = document.createElement.bind(document);
 var testNames = [
     "ace/ace_test",
     "ace/anchor_test",
+    "ace/autocomplete/popup_test",
     "ace/autocomplete_test",
     "ace/background_tokenizer_test",
     "ace/commands/command_manager_test",

@@ -291,10 +291,20 @@ var AcePopup = function(parentNode) {
         var maxH = renderer.$maxLines * lineHeight * 1.4;
         var dims = { top: 0, bottom: 0, left: 0 };
 
+        var spaceBelow = screenHeight - pos.top - 3 * this.$borderSize - lineHeight;
+        var spaceAbove = pos.top - 3 * this.$borderSize;
+        if (!anchor) {
+            if (spaceAbove <= spaceBelow || spaceBelow >= maxH) {
+                anchor = "bottom";
+            } else {
+                anchor = "top";
+            }
+        }
+
         if (anchor === "top") {
             dims.bottom = pos.top - this.$borderSize;
             dims.top = dims.bottom - maxH;
-        } else {
+        } else if (anchor === "bottom") {
             dims.top = pos.top + lineHeight + this.$borderSize;
             dims.bottom = dims.top + maxH;
         }
@@ -306,16 +316,13 @@ var AcePopup = function(parentNode) {
         }
 
         if (!fitsX) {
-            var spaceBelow = screenHeight - pos.top - this.$borderSize - 0.2 * lineHeight;
-            var spaceAbove = pos.top - this.$borderSize;
-            if (!anchor) {
-                anchor = spaceAbove > spaceBelow ? "top" : "bottom";
-            }
             if (anchor === "top") {
                 renderer.$maxPixelHeight = spaceAbove;
             } else {
                 renderer.$maxPixelHeight = spaceBelow;
             }
+        } else {
+            renderer.$maxPixelHeight = null;
         }
 
 
