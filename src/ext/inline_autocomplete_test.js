@@ -6,7 +6,6 @@ if (typeof process !== "undefined") {
 
 "use strict";
 
-var ace = require("../ace");
 var Editor = require("../editor").Editor;
 var EditSession = require("../edit_session").EditSession;
 var InlineAutocomplete = require("./inline_autocomplete").InlineAutocomplete;

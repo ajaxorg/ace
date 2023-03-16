@@ -1662,7 +1662,7 @@ var VirtualRenderer = function(container, theme) {
         session.bgTokenizer.lines[row] = null;
         var newToken = {type: type, value: text};
         var tokens = session.getTokens(row);
-        if (column == null) {
+        if (column == null || !tokens.length) {
             tokens.push(newToken);
         } else {
             var l = 0;

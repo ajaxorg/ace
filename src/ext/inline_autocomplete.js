@@ -34,7 +34,8 @@ var minPosition = function (posA, posB) {
  * @class
  */
 
-var InlineAutocomplete = function() {
+var InlineAutocomplete = function(editor) {
+    this.editor = editor;
     this.tooltipEnabled = true;
     this.keyboardHandler = new HashHandler(this.commands);
     this.$index = -1;
@@ -57,7 +58,7 @@ var InlineAutocomplete = function() {
 
     this.getInlineTooltip = function() {
         if (!this.inlineTooltip) {
-            this.inlineTooltip = new InlineTooltip(document.body || document.documentElement);
+            this.inlineTooltip = new InlineTooltip(this.editor, document.body || document.documentElement);
             this.inlineTooltip.setCommands(this.commands);
         }
         return this.inlineTooltip;
@@ -69,24 +70,18 @@ var InlineAutocomplete = function() {
      * @param {Editor} editor
      * @param {CompletionOptions} options
      */
-    this.show = function(editor, options) {
-        if (!editor)
-            return;
-        if (this.editor && this.editor !== editor)
-            this.detach();
-
+    this.show = function(options) {
         this.activated = true;
 
-        this.editor = editor;
-        if (editor.completer !== this) {
-            if (editor.completer)
-                editor.completer.detach();
-            editor.completer = this;
+        if (this.editor.completer !== this) {
+            if (this.editor.completer)
+                this.editor.completer.detach();
+            this.editor.completer = this;
         }
 
-        editor.on("changeSelection", this.changeListener);
-        editor.on("blur", this.blurListener);
-        editor.on("mousewheel", this.mousewheelListener);
+        this.editor.on("changeSelection", this.changeListener);
+        this.editor.on("blur", this.blurListener);
+        this.editor.on("mousewheel", this.mousewheelListener);
 
         this.updateCompletions(options);
     };
@@ -245,7 +240,10 @@ var InlineAutocomplete = function() {
     };
 
     this.$showCompletion = function() {
-        this.getInlineRenderer().show(this.editor, this.completions.filtered[this.$index], this.completions.filterText);
+        if (!this.getInlineRenderer().show(this.editor, this.completions.filtered[this.$index], this.completions.filterText)) {
+            // Not able to show the completion, hide the previous one
+            this.getInlineRenderer().hide();
+        }
         if (this.inlineTooltip && this.inlineTooltip.isShown()) {
             this.inlineTooltip.updateButtons();
         }
@@ -359,7 +357,7 @@ InlineAutocomplete.for = function(editor) {
         editor.completer = null;
     }
 
-    editor.completer = new InlineAutocomplete();
+    editor.completer = new InlineAutocomplete(editor);
     editor.once("destroy", destroyCompleter);
     return editor.completer;
 };
@@ -368,7 +366,7 @@ InlineAutocomplete.startCommand = {
     name: "startInlineAutocomplete",
     exec: function(editor, options) {
         var completer = InlineAutocomplete.for(editor);
-        completer.show(editor, options);
+        completer.show(options);
     },
     bindKey: { win: "Alt-C", mac: "Option-C" }
 };
@@ -407,7 +405,8 @@ var BUTTON_CLASS_NAME = 'inline_autocomplete_tooltip_button';
 var TOOLTIP_CLASS_NAME = 'ace_tooltip ace_inline_autocomplete_tooltip';
 var TOOLTIP_ID = 'inline_autocomplete_tooltip';
 
-function InlineTooltip(parentElement) {
+function InlineTooltip(editor, parentElement) {
+    this.editor = editor;
     this.htmlElement = document.createElement('div');
     var el = this.htmlElement;
     el.style.display = 'none';
@@ -459,7 +458,8 @@ function InlineTooltip(parentElement) {
                     bindKey = useragent.isMac ? bindKey.mac : bindKey.win;
                 }
                 bindKey = bindKey.replace("|", " / ");
-                this.buttons[key].textContent = command.name + ' (' + bindKey + ')';
+                var buttonText = dom.createTextNode([command.name, "(", bindKey, ")"].join(" "));
+                this.buttons[key].appendChild(buttonText);
             }.bind(this));
     };
 
@@ -467,20 +467,18 @@ function InlineTooltip(parentElement) {
      * Displays the clickable command bar tooltip
      * @param {Record<string, TooltipCommand>} commands
      */
-    this.show = function(editor) {
+    this.show = function() {
         this.detach();
 
         this.htmlElement.style.display = '';
         this.htmlElement.addEventListener('mousedown', captureMousedown.bind(this));
-        
-        this.editor = editor;
 
         this.updatePosition();
         this.updateButtons(true);
     };
 
     this.isShown = function() {
-        return !!this.htmlElement && this.htmlElement.style.display !== "none";
+        return !!this.htmlElement && window.getComputedStyle(this.htmlElement).display !== "none";
     };
 
     /**
@@ -492,7 +490,12 @@ function InlineTooltip(parentElement) {
         }
         var renderer = this.editor.renderer;
 
-        var ranges = this.editor.selection.getAllRanges();
+        var ranges;
+        if (this.editor.selection.getAllRanges) {
+            ranges = this.editor.selection.getAllRanges();
+        } else {
+            ranges = [this.editor.getSelection()];
+        }
         if (!ranges.length) {
             return;
         }
@@ -512,11 +515,6 @@ function InlineTooltip(parentElement) {
         pos.left += renderer.gutterWidth;
 
         var top = pos.top - el.offsetHeight;
-
-        if (pos.top < 0) {
-            this.hide();
-            return;
-        }
 
         el.style.top = top + "px";
         el.style.bottom = "";
@@ -555,8 +553,9 @@ function InlineTooltip(parentElement) {
     };
     
     this.detach = function() {
-        if (this.eventListeners && Object.keys(this.eventListeners).length) {
-            Object.keys(this.eventListeners).forEach(function(key) {
+        var listenerKeys = Object.keys(this.eventListeners)
+        if (this.eventListeners && listenerKeys.length) {
+            listenerKeys.forEach(function(key) {
                 this.buttons[key].removeEventListener('mousedown', this.eventListeners[key]);
                 delete this.eventListeners[key];
             }.bind(this));

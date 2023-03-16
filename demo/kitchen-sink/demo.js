@@ -312,6 +312,8 @@ doclist.pickDocument = function(name) {
 var OptionPanel = require("ace/ext/options").OptionPanel;
 var optionsPanel = new OptionPanel(env.editor);
 
+var originalAutocompleteCommand = null;
+
 optionsPanel.add({
     Main: {
         Document: {
@@ -367,6 +369,29 @@ optionsPanel.add({
         "Show token info": {
             path: "showTokenInfo",
             position: 2000
+        },
+        "Inline preview for autocomplete": {
+            path: "inlineEnabledForAutocomplete",
+            position: 2000,
+            onchange: function(value) {
+                var Autocomplete = require("ace/autocomplete").Autocomplete;
+                if (value && !originalAutocompleteCommand) {
+                    originalAutocompleteCommand = Autocomplete.startCommand.exec;
+                    Autocomplete.startCommand.exec = function(editor) {
+                        var autocomplete = Autocomplete.for(editor);
+                        autocomplete.inlineEnabled = true;
+                        originalAutocompleteCommand(...arguments);
+                    }
+                } else if (!value) {
+                    var autocomplete = Autocomplete.for(editor);
+                    autocomplete.destroy();
+                    Autocomplete.startCommand.exec = originalAutocompleteCommand;
+                    originalAutocompleteCommand = null;
+                }
+            },
+            getValue: function() {
+                return !!originalAutocompleteCommand;
+            }
         },
         "Show Textarea Position": devUtil.textPositionDebugger,
         "Text Input Debugger": devUtil.textInputDebugger,
@@ -468,8 +493,10 @@ optionsPanelContainer.insertBefore(
 );
 
 require("ace/ext/language_tools");
+require("ace/ext/inline_autocomplete");
 env.editor.setOptions({
     enableBasicAutocompletion: true,
+    enableInlineAutocompletion: true,
     enableSnippets: true
 });
 

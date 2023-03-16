@@ -86,13 +86,42 @@ module.exports = {
         assert.strictEqual(editor.renderer.$ghostTextWidget.el.textContent, "        console.log('test');\n    }");
         done();
     },
-    "test: boundary conditions": function(done) {
-        inline.show(null, null, null);
-        inline.show(editor, null, null);
-        inline.show(editor, completions[1], null);
-        inline.show(editor, null, "");
-        inline.show(editor, completions[1], "");
-        inline.show(null, completions[3], "");
+    "test: boundary tests": function(done) {
+        var noRenderTestCases = [
+            [null, null, null],
+            [editor, null, null],
+            [editor, null, ""],
+            [null, completions[3], ""]
+        ];
+        var result;
+        noRenderTestCases.forEach(function(params) {
+            result = inline.show(params[0], params[1], params[2]);
+            editor.renderer.$loop._flush();
+            assert.notOk(result);
+            assert.equal(editor.renderer.$ghostText, null);
+            assert.equal(editor.renderer.$ghostTextWidget, null);
+        });
+
+        var renderTestCases = [
+            [editor, completions[1], undefined],
+            [editor, completions[1], null],
+            [editor, completions[1], ""],
+        ];
+        renderTestCases.forEach(function(params) {
+            result = inline.show(params[0], params[1], params[2]);
+            editor.renderer.$loop._flush();
+            assert.ok(result);
+            assert.strictEqual(editor.renderer.$ghostText.text, "function");
+            assert.strictEqual(getAllLines(), textBase + "ffunction");
+            assert.equal(editor.renderer.$ghostTextWidget, null);
+        });
+
+        result = inline.show(editor, completions[0], "foo");
+        editor.renderer.$loop._flush();
+        assert.ok(result);
+        assert.equal(editor.renderer.$ghostText, null);
+        assert.equal(editor.renderer.$ghostTextWidget, null);
+        
         done();
     },
     "test: only renders the ghost text without the prefix": function(done) {
@@ -111,11 +140,22 @@ module.exports = {
         assert.strictEqual(getAllLines(), textBase + "f");
         assert.strictEqual(inline.isOpen(), false);
 
+        inline.show(editor, completions[1], "function");
+        editor.renderer.$loop._flush();
+        assert.strictEqual(getAllLines(), textBase + "f");
+        assert.strictEqual(inline.isOpen(), false);
+        done();
+    },
+    "test: does not hide previous ghost text if cannot show current one": function(done) {
         inline.show(editor, completions[1], "f");
         editor.renderer.$loop._flush();
         assert.equal(getAllLines(), textBase + "function");
         assert.strictEqual(inline.isOpen(), true);
-        inline.show(editor, null, "f");
+        inline.show(editor, null, "");
+        editor.renderer.$loop._flush();
+        assert.equal(getAllLines(), textBase + "function");
+        assert.strictEqual(inline.isOpen(), true);
+        inline.hide();
         editor.renderer.$loop._flush();
         assert.strictEqual(getAllLines(), textBase + "f");
         assert.strictEqual(inline.isOpen(), false);

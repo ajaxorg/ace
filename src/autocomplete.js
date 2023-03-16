@@ -42,40 +42,49 @@ var Autocomplete = function() {
 };
 
 (function() {
-    this.$onPopupChange = function(hide) {
-        if (hide) {
-            if (this.inlineEnabled) {
-                this.inlineRenderer.show(this.editor, null, prefix);    
-            }
-            this.hideDocTooltip();
-        } else {
-            this.tooltipTimer.call(null, null);
-            if (this.inlineEnabled) {
-                var completion = hide ? null : this.popup.getData(this.popup.getRow());
-                var prefix = util.getCompletionPrefix(this.editor);
-                this.inlineRenderer.show(this.editor, completion, prefix);
-                this.$updatePopupPosition();
-            }
-        }
-    };
 
     this.$init = function() {
         this.popup = new AcePopup(document.body || document.documentElement);
-        this.inlineRenderer = new AceInline();
         this.popup.on("click", function(e) {
             this.insertMatch();
             e.stop();
         }.bind(this));
         this.popup.focus = this.editor.focus.bind(this.editor);
         this.popup.on("show", this.$onPopupChange.bind(this));
-        this.popup.on("hide", this.$onPopupChange.bind(this, true));
+        this.popup.on("hide", this.$onHidePopup.bind(this));
         this.popup.on("select", this.$onPopupChange.bind(this));
         this.popup.on("changeHoverMarker", this.tooltipTimer.bind(null, null));
         return this.popup;
     };
 
+    this.$initInline = function() {
+        if (!this.inlineEnabled || this.inlineRenderer)
+            return;
+        this.inlineRenderer = new AceInline();
+        return this.inlineRenderer;
+    }
+
     this.getPopup = function() {
         return this.popup || this.$init();
+    };
+
+    this.$onHidePopup = function() {
+        if (this.inlineRenderer) {
+            this.inlineRenderer.hide();
+        }
+        this.hideDocTooltip();
+    }
+
+    this.$onPopupChange = function(hide) {
+        this.tooltipTimer.call(null, null);
+        if (this.inlineRenderer && this.inlineEnabled) {
+            var completion = hide ? null : this.popup.getData(this.popup.getRow());
+            var prefix = util.getCompletionPrefix(this.editor);
+            if (!this.inlineRenderer.show(this.editor, completion, prefix)) {
+                this.inlineRenderer.hide();
+            }
+            this.$updatePopupPosition();
+        }
     };
 
     this.$updatePopupPosition = function() {
@@ -103,6 +112,9 @@ var Autocomplete = function() {
     this.openPopup = function(editor, prefix, keepPopupPosition) {
         if (!this.popup)
             this.$init();
+
+        if (this.inlineEnabled && !this.inlineRenderer)
+            this.$initInline();
 
         this.popup.autoSelect = this.autoSelect;
 
@@ -135,11 +147,13 @@ var Autocomplete = function() {
      * Detaches all elements from the editor, and cleans up the data for the session
      */
     this.detach = function() {
-        this.editor.keyBinding.removeKeyboardHandler(this.keyboardHandler);
-        this.editor.off("changeSelection", this.changeListener);
-        this.editor.off("blur", this.blurListener);
-        this.editor.off("mousedown", this.mousedownListener);
-        this.editor.off("mousewheel", this.mousewheelListener);
+        if (this.editor) {
+            this.editor.keyBinding.removeKeyboardHandler(this.keyboardHandler);
+            this.editor.off("changeSelection", this.changeListener);
+            this.editor.off("blur", this.blurListener);
+            this.editor.off("mousedown", this.mousedownListener);
+            this.editor.off("mousewheel", this.mousewheelListener);
+        }
         this.changeTimer.cancel();
         this.hideDocTooltip();
 

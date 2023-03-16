@@ -23,27 +23,28 @@ var AceInline = function() {
      * @param {Editor} editor
      * @param {Completion} completion
      * @param {string} prefix
+     * @returns {boolean} True if the completion could be rendered to the editor, false otherwise
      */
     this.show = function(editor, completion, prefix) {
+        prefix = prefix || "";
         if (this.editor && this.editor !== editor) {
             this.hide();
             this.editor = null;
         }
-        if (!editor) {
-            return false;
-        }
-        this.editor = editor;
-        if (!completion) {
-            editor.removeGhostText();
+        if (!editor || !completion) {
             return false;
         }
         var displayText = completion.snippet ? snippetManager.getDisplayTextForSnippet(editor, completion.snippet) : completion.value;
         if (!displayText || !displayText.startsWith(prefix)) {
-            editor.removeGhostText();
             return false;
         }
+        this.editor = editor;
         displayText = displayText.slice(prefix.length);
-        editor.setGhostText(displayText);
+        if (displayText === "") {
+            editor.removeGhostText();
+        } else {
+            editor.setGhostText(displayText);
+        }
         return true;
     };
 

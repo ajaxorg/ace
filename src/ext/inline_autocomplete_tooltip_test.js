@@ -84,7 +84,7 @@ module.exports = {
         var session = new EditSession("abc123\n\nfunc");
         editor = new Editor(renderer, session);
         counters = {};
-        inlineTooltip = new InlineTooltip(document.body);
+        inlineTooltip = new InlineTooltip(editor, document.body);
         inlineTooltip.setCommands(commands);
         testCommand2Enabled = true;
         editor.getSelection().moveCursorFileEnd();
@@ -93,11 +93,11 @@ module.exports = {
     "test: displays inline tooltip above cursor with commands": function(done) {
         var tooltipDomElement = document.getElementById(TOOLTIP_ID);
         assert.strictEqual(inlineTooltip.isShown(), false);
-        assert.strictEqual(tooltipDomElement.style.display, "none");
+        assert.strictEqual(window.getComputedStyle(tooltipDomElement).display, "none");
 
         inlineTooltip.show(editor);
         tooltipDomElement = document.getElementById(TOOLTIP_ID);
-        assert.strictEqual(tooltipDomElement.style.display, "");
+        assert.strictEqual(window.getComputedStyle(tooltipDomElement).display, "");
         assert.strictEqual(inlineTooltip.isShown(), true);
         done();
     },
@@ -142,7 +142,7 @@ module.exports = {
         inlineTooltip.detach();
         assert.strictEqual(inlineTooltip.isShown(), false);
         var tooltipDomElement = document.getElementById(TOOLTIP_ID);
-        assert.strictEqual(tooltipDomElement.style.display, "none");
+        assert.strictEqual(window.getComputedStyle(tooltipDomElement).display, "none");
         done();
     },
     "test: verify destroy": function(done) {
