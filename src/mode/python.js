@@ -16,6 +16,10 @@ oop.inherits(Mode, TextMode);
 (function() {
 
     this.lineCommentStart = "#";
+    this.$pairQuotesAfter = {
+        "'": /[ruf]/i,
+        '"': /[ruf]/i
+    };
 
     this.getNextLineIndent = function(state, line, tab) {
         var indent = this.$getIndent(line);
