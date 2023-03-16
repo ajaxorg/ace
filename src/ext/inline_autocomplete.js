@@ -553,7 +553,7 @@ function InlineTooltip(editor, parentElement) {
     };
     
     this.detach = function() {
-        var listenerKeys = Object.keys(this.eventListeners)
+        var listenerKeys = Object.keys(this.eventListeners);
         if (this.eventListeners && listenerKeys.length) {
             listenerKeys.forEach(function(key) {
                 this.buttons[key].removeEventListener('mousedown', this.eventListeners[key]);

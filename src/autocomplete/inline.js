@@ -27,7 +27,7 @@ var AceInline = function() {
      */
     this.show = function(editor, completion, prefix) {
         prefix = prefix || "";
-        if (this.editor && this.editor !== editor) {
+        if (editor && this.editor && this.editor !== editor) {
             this.hide();
             this.editor = null;
         }

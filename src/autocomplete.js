@@ -62,7 +62,7 @@ var Autocomplete = function() {
             return;
         this.inlineRenderer = new AceInline();
         return this.inlineRenderer;
-    }
+    };
 
     this.getPopup = function() {
         return this.popup || this.$init();
@@ -73,7 +73,7 @@ var Autocomplete = function() {
             this.inlineRenderer.hide();
         }
         this.hideDocTooltip();
-    }
+    };
 
     this.$onPopupChange = function(hide) {
         this.tooltipTimer.call(null, null);

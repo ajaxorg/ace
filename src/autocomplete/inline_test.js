@@ -12,6 +12,7 @@ var EditSession = require("../ace").EditSession;
 var VirtualRenderer = require("../ace").VirtualRenderer;
 
 var editor;
+var editor2;
 var inline;
 
 var textBase = "abc123\n\n    ";
@@ -39,10 +40,17 @@ var completions = [
     }
 ];
 
-var getAllLines = function() {
-    return editor.renderer.$textLayer.element.childNodes.map(function (node) {
+var getAllLines = function(editorOverride) {
+    editorOverride = editorOverride || editor;
+    return editorOverride.renderer.$textLayer.element.childNodes.map(function (node) {
         return node.textContent;
     }).join("\n");
+};
+
+var createEditor = function(element) {
+    var renderer = new VirtualRenderer(element);
+    var session = new EditSession("");
+    return new Editor(renderer, session);
 };
 
 module.exports = {
@@ -53,9 +61,7 @@ module.exports = {
         el.style.width = "500px";
         el.style.height = "500px";
         document.body.appendChild(el);
-        var renderer = new VirtualRenderer(el);
-        var session = new EditSession("");
-        editor = new Editor(renderer, session);
+        editor = createEditor(el);
         editor.execCommand("insertstring", textBase + "f");
         inline = new AceInline();
         editor.getSelection().moveCursorFileEnd();
@@ -105,7 +111,7 @@ module.exports = {
         var renderTestCases = [
             [editor, completions[1], undefined],
             [editor, completions[1], null],
-            [editor, completions[1], ""],
+            [editor, completions[1], ""]
         ];
         renderTestCases.forEach(function(params) {
             result = inline.show(params[0], params[1], params[2]);
@@ -161,6 +167,40 @@ module.exports = {
         assert.strictEqual(inline.isOpen(), false);
         done();
     },
+    "test: removes ghost text from previous editor if new valid editor is passed to show function": function(done) {
+        var el = document.createElement("div");
+        el.style.left = "520px";
+        el.style.top = "530px";
+        el.style.width = "500px";
+        el.style.height = "500px";
+        document.body.appendChild(el);
+        editor2 = createEditor(el);
+        var editor2Text = "different text\n\n    f";
+        editor2.execCommand("insertstring", editor2Text);
+
+        inline.show(editor, completions[1], "f");
+        editor.renderer.$loop._flush();
+        editor2.renderer.$loop._flush();
+        assert.strictEqual(getAllLines(), textBase + "function");
+        assert.strictEqual(getAllLines(editor2), editor2Text);
+        assert.strictEqual(inline.isOpen(), true);
+
+        inline.show(editor2, completions[2], "f");
+        editor.renderer.$loop._flush();
+        editor2.renderer.$loop._flush();
+        assert.strictEqual(getAllLines(), textBase + "f");
+        assert.strictEqual(getAllLines(editor2), editor2Text + "oobar");
+        assert.strictEqual(inline.isOpen(), true);
+
+        inline.show(null, completions[2], "f");
+        editor.renderer.$loop._flush();
+        editor2.renderer.$loop._flush();
+        assert.strictEqual(getAllLines(), textBase + "f");
+        assert.strictEqual(getAllLines(editor2), editor2Text + "oobar");
+        assert.strictEqual(inline.isOpen(), true);
+
+        done();
+    },
     "test: verify destroy": function(done) {
         inline.show(editor, completions[0], "f");
         editor.renderer.$loop._flush();
@@ -185,6 +225,9 @@ module.exports = {
     tearDown: function() {
         inline.destroy();
         editor.destroy();
+        if (editor2) {
+            editor2.destroy();
+        }
     }
 };
 
