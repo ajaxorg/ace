@@ -465,7 +465,7 @@ function InlineTooltip(editor, parentElement) {
 
     /**
      * Displays the clickable command bar tooltip
-     * @param {Record<string, TooltipCommand>} commands
+     * @param {Editor} editor
      */
     this.show = function() {
         this.detach();
