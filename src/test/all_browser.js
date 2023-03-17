@@ -13,6 +13,7 @@ var el = document.createElement.bind(document);
 var testNames = [
     "ace/ace_test",
     "ace/anchor_test",
+    "ace/autocomplete/popup_test",
     "ace/autocomplete_test",
     "ace/background_tokenizer_test",
     "ace/commands/command_manager_test",
@@ -25,6 +26,8 @@ var testNames = [
     "ace/editor_text_edit_test",
     "ace/editor_commands_test",
     "ace/ext/hardwrap_test",
+    "ace/ext/inline_autocomplete_test",
+    "ace/ext/inline_autocomplete_tooltip_test",
     "ace/ext/static_highlight_test",
     "ace/ext/whitespace_test",
     "ace/ext/error_marker_test",

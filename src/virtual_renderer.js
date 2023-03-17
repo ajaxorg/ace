@@ -1662,7 +1662,7 @@ var VirtualRenderer = function(container, theme) {
         session.bgTokenizer.lines[row] = null;
         var newToken = {type: type, value: text};
         var tokens = session.getTokens(row);
-        if (column == null) {
+        if (column == null || !tokens.length) {
             tokens.push(newToken);
         } else {
             var l = 0;
@@ -1683,6 +1683,7 @@ var VirtualRenderer = function(container, theme) {
     };
 
     this.removeExtraToken = function(row, column) {
+        this.session.bgTokenizer.lines[row] = null;
         this.updateLines(row, row);
     };
 

@@ -375,7 +375,7 @@ function Node(name) {
             else
                 width = rect.width - right - left;
             
-            if (this.style.width)
+            if (this.style.height)
                 height = parseCssLength(this.style.height || "100%", rect.height);
             else
                 height = rect.height - top - bottom;

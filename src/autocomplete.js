@@ -2,6 +2,7 @@
 
 var HashHandler = require("./keyboard/hash_handler").HashHandler;
 var AcePopup = require("./autocomplete/popup").AcePopup;
+var AceInline = require("./autocomplete/inline").AceInline;
 var getAriaId = require("./autocomplete/popup").getAriaId;
 var util = require("./autocomplete/util");
 var lang = require("./lib/lang");
@@ -9,11 +10,22 @@ var dom = require("./lib/dom");
 var snippetManager = require("./snippets").snippetManager;
 var config = require("./config");
 
+var destroyCompleter = function(e, editor) {
+    editor.completer && editor.completer.destroy();
+};
+
+
+/**
+ * This object controls the autocompletion components and their lifecycle.
+ * There is an autocompletion popup, an optional inline ghost text renderer and a docuent tooltip popup inside.
+ * @class
+ */
+
 var Autocomplete = function() {
     this.autoInsert = false;
     this.autoSelect = true;
     this.exactMatch = false;
-    this.gatherCompletionsId = 0;
+    this.inlineEnabled = false;
     this.keyboardHandler = new HashHandler();
     this.keyboardHandler.bindKeys(this.commands);
 
@@ -38,68 +50,138 @@ var Autocomplete = function() {
             e.stop();
         }.bind(this));
         this.popup.focus = this.editor.focus.bind(this.editor);
-        this.popup.on("show", this.tooltipTimer.bind(null, null));
-        this.popup.on("select", this.tooltipTimer.bind(null, null));
+        this.popup.on("show", this.$onPopupChange.bind(this));
+        this.popup.on("hide", this.$onHidePopup.bind(this));
+        this.popup.on("select", this.$onPopupChange.bind(this));
         this.popup.on("changeHoverMarker", this.tooltipTimer.bind(null, null));
         return this.popup;
+    };
+
+    this.$initInline = function() {
+        if (!this.inlineEnabled || this.inlineRenderer)
+            return;
+        this.inlineRenderer = new AceInline();
+        return this.inlineRenderer;
     };
 
     this.getPopup = function() {
         return this.popup || this.$init();
     };
 
+    this.$onHidePopup = function() {
+        if (this.inlineRenderer) {
+            this.inlineRenderer.hide();
+        }
+        this.hideDocTooltip();
+    };
+
+    this.$onPopupChange = function(hide) {
+        if (this.inlineRenderer && this.inlineEnabled) {
+            var completion = hide ? null : this.popup.getData(this.popup.getRow());
+            var prefix = util.getCompletionPrefix(this.editor);
+            if (!this.inlineRenderer.show(this.editor, completion, prefix)) {
+                this.inlineRenderer.hide();
+            }
+            this.$updatePopupPosition();
+        }
+        this.tooltipTimer.call(null, null);
+    };
+
+    this.$updatePopupPosition = function() {
+        var editor = this.editor;
+        var renderer = editor.renderer;
+
+        var lineHeight = renderer.layerConfig.lineHeight;
+        var pos = renderer.$cursorLayer.getPixelPosition(this.base, true);
+        pos.left -= this.popup.getTextLeftOffset();
+
+        var rect = editor.container.getBoundingClientRect();
+        pos.top += rect.top - renderer.layerConfig.offset;
+        pos.left += rect.left - editor.renderer.scrollLeft;
+        pos.left += renderer.gutterWidth;
+
+        var posGhostText = {
+            top: pos.top,
+            left: pos.left
+        };
+
+        if (renderer.$ghostText && renderer.$ghostTextWidget) {
+            if (this.base.row === renderer.$ghostText.position.row) {
+                posGhostText.top += renderer.$ghostTextWidget.el.offsetHeight;
+            }
+        }
+
+        // Try to render below ghost text, then above ghost text, then over ghost text
+        if (this.popup.tryShow(posGhostText, lineHeight, "bottom")) {
+            return;
+        }
+
+        if (this.popup.tryShow(pos, lineHeight, "top")) {
+            return;
+        }
+        
+        this.popup.show(pos, lineHeight);
+    };
+
     this.openPopup = function(editor, prefix, keepPopupPosition) {
         if (!this.popup)
             this.$init();
 
+        if (this.inlineEnabled && !this.inlineRenderer)
+            this.$initInline();
+
         this.popup.autoSelect = this.autoSelect;
 
         this.popup.setData(this.completions.filtered, this.completions.filterText);
-        if (this.editor.textInput.setAriaOptions)
-            this.editor.textInput.setAriaOptions({activeDescendant: getAriaId(this.popup.getRow())});
+        if (this.editor.textInput.setAriaOptions) {
+            this.editor.textInput.setAriaOptions({
+                activeDescendant: getAriaId(this.popup.getRow()),
+                inline: this.inlineEnabled
+            });
+        }
 
         editor.keyBinding.addKeyboardHandler(this.keyboardHandler);
         
-        var renderer = editor.renderer;
         this.popup.setRow(this.autoSelect ? 0 : -1);
         if (!keepPopupPosition) {
             this.popup.setTheme(editor.getTheme());
             this.popup.setFontSize(editor.getFontSize());
 
-            var lineHeight = renderer.layerConfig.lineHeight;
-
-            var pos = renderer.$cursorLayer.getPixelPosition(this.base, true);
-            pos.left -= this.popup.getTextLeftOffset();
-
-            var rect = editor.container.getBoundingClientRect();
-            pos.top += rect.top - renderer.layerConfig.offset;
-            pos.left += rect.left - editor.renderer.scrollLeft;
-            pos.left += renderer.gutterWidth;
-
-            this.popup.show(pos, lineHeight);
+            this.$updatePopupPosition();
+            if (this.tooltipNode) {
+                this.updateDocTooltip();
+            }
         } else if (keepPopupPosition && !prefix) {
             this.detach();
         }
         this.changeTimer.cancel();
     };
 
+    /**
+     * Detaches all elements from the editor, and cleans up the data for the session
+     */
     this.detach = function() {
-        this.editor.keyBinding.removeKeyboardHandler(this.keyboardHandler);
-        this.editor.off("changeSelection", this.changeListener);
-        this.editor.off("blur", this.blurListener);
-        this.editor.off("mousedown", this.mousedownListener);
-        this.editor.off("mousewheel", this.mousewheelListener);
+        if (this.editor) {
+            this.editor.keyBinding.removeKeyboardHandler(this.keyboardHandler);
+            this.editor.off("changeSelection", this.changeListener);
+            this.editor.off("blur", this.blurListener);
+            this.editor.off("mousedown", this.mousedownListener);
+            this.editor.off("mousewheel", this.mousewheelListener);
+        }
         this.changeTimer.cancel();
         this.hideDocTooltip();
 
-        this.gatherCompletionsId += 1;
+        if (this.completionProvider) {
+            this.completionProvider.detach();
+        }
+
         if (this.popup && this.popup.isOpen)
             this.popup.hide();
 
         if (this.base)
             this.base.detach();
         this.activated = false;
-        this.completions = this.base = null;
+        this.completionProvider = this.completions = this.base = null;
     };
 
     this.changeListener = function(e) {
@@ -144,33 +226,13 @@ var Autocomplete = function() {
             data = this.popup.getData(this.popup.getRow());
         if (!data)
             return false;
-
         var completions = this.completions;
-        this.editor.startOperation({command: {name: "insertMatch"}});
-        if (data.completer && data.completer.insertMatch) {
-            data.completer.insertMatch(this.editor, data);
-        } else {
-            // TODO add support for options.deleteSuffix
-            if (!completions)
-                return false;
-            if (completions.filterText) {
-                var ranges = this.editor.selection.getAllRanges();
-                for (var i = 0, range; range = ranges[i]; i++) {
-                    range.start.column -= completions.filterText.length;
-                    this.editor.session.remove(range);
-                }
-            }
-            if (data.snippet)
-                snippetManager.insertSnippet(this.editor, data.snippet);
-            else
-                this.editor.execCommand("insertstring", data.value || data);
-        }
+        var result = this.getCompletionProvider().insertMatch(this.editor, data, completions.filterText, options);
         // detach only if new popup was not opened while inserting match
         if (this.completions == completions)
             this.detach();
-        this.editor.endOperation();
+        return result;
     };
-
 
     this.commands = {
         "Up": function(editor) { editor.completer.goTo("up"); },
@@ -193,32 +255,11 @@ var Autocomplete = function() {
         "PageDown": function(editor) { editor.completer.popup.gotoPageDown(); }
     };
 
-    this.gatherCompletions = function(editor, callback) {
-        var session = editor.getSession();
-        var pos = editor.getCursorPosition();
-
-        var prefix = util.getCompletionPrefix(editor);
-
-        this.base = session.doc.createAnchor(pos.row, pos.column - prefix.length);
-        this.base.$insertRight = true;
-
-        var matches = [];
-        var total = editor.completers.length;
-        editor.completers.forEach(function(completer, i) {
-            completer.getCompletions(editor, session, pos, prefix, function(err, results) {
-                if (!err && results)
-                    matches = matches.concat(results);
-                // Fetch prefix again, because they may have changed by now
-                callback(null, {
-                    prefix: util.getCompletionPrefix(editor),
-                    matches: matches,
-                    finished: (--total === 0)
-                });
-            });
-        });
-        return true;
-    };
-
+    /**
+     * This is the entry point for the autocompletion class, triggers the actions which collect and display suggestions
+     * @param {Editor} editor
+     * @param {CompletionOptions} options
+     */
     this.showPopup = function(editor, options) {
         if (this.editor)
             this.detach();
@@ -238,6 +279,21 @@ var Autocomplete = function() {
         editor.on("mousewheel", this.mousewheelListener);
 
         this.updateCompletions(false, options);
+    };
+
+    this.getCompletionProvider = function() {
+        if (!this.completionProvider)
+            this.completionProvider = new CompletionProvider();
+        return this.completionProvider;
+    };
+
+    /**
+     * This method is deprecated, it is only kept for backwards compatibility.
+     * Use the same method include CompletionProvider instead for the same functionality.
+     * @deprecated
+     */
+    this.gatherCompletions = function(editor, callback) {
+        return this.getCompletionProvider().gatherCompletions(editor, callback);
     };
 
     this.updateCompletions = function(keepPopupPosition, options) {
@@ -265,70 +321,32 @@ var Autocomplete = function() {
             return this.openPopup(this.editor, "", keepPopupPosition);
         }
 
-        // Save current gatherCompletions session, session is close when a match is insert
-        var _id = this.gatherCompletionsId;
+        var session = this.editor.getSession();
+        var pos = this.editor.getCursorPosition();
+        var prefix = util.getCompletionPrefix(this.editor);
+        this.base = session.doc.createAnchor(pos.row, pos.column - prefix.length);
+        this.base.$insertRight = true;
+        var completionOptions = { exactMatch: this.exactMatch };
+        this.getCompletionProvider().provideCompletions(this.editor, completionOptions, function(err, completions, finished) {
+            var filtered = completions.filtered;
+            var prefix = util.getCompletionPrefix(this.editor);
 
-        // Only detach if result gathering is finished
-        var detachIfFinished = function(results) {
-            if (!results.finished) return;
-            return this.detach();
-        }.bind(this);
+            if (finished) {
+                // No results
+                if (!filtered.length)
+                    return this.detach();
 
-        var processResults = function(results) {
-            var prefix = results.prefix;
-            var matches = results.matches;
+                // One result equals to the prefix
+                if (filtered.length == 1 && filtered[0].value == prefix && !filtered[0].snippet)
+                    return this.detach();
 
-            this.completions = new FilteredList(matches);
-
-            if (this.exactMatch)
-                this.completions.exactMatch = true;
-
-            this.completions.setFilter(prefix);
-            var filtered = this.completions.filtered;
-
-            // No results
-            if (!filtered.length)
-                return detachIfFinished(results);
-
-            // One result equals to the prefix
-            if (filtered.length == 1 && filtered[0].value == prefix && !filtered[0].snippet)
-                return detachIfFinished(results);
-
-            // Autoinsert if one result
-            if (this.autoInsert && filtered.length == 1 && results.finished)
-                return this.insertMatch(filtered[0]);
-
-            this.openPopup(this.editor, prefix, keepPopupPosition);
-        }.bind(this);
-
-        var isImmediate = true;
-        var immediateResults = null;
-        this.gatherCompletions(this.editor, function(err, results) {
-            var prefix = results.prefix;
-            var matches = results && results.matches;
-
-            if (!matches || !matches.length)
-                return detachIfFinished(results);
-
-            // Wrong prefix or wrong session -> ignore
-            if (prefix.indexOf(results.prefix) !== 0 || _id != this.gatherCompletionsId)
-                return;
-
-            // If multiple completers return their results immediately, we want to process them together
-            if (isImmediate) {
-                immediateResults = results;
-                return;
+                // Autoinsert if one result
+                if (this.autoInsert && filtered.length == 1)
+                    return this.insertMatch(filtered[0]);
             }
-
-            processResults(results);
+            this.completions = completions;
+            this.openPopup(this.editor, prefix, keepPopupPosition);
         }.bind(this));
-        
-        isImmediate = false;
-        if (immediateResults) {
-            var results = immediateResults;
-            immediateResults = null;
-            processResults(results);
-        }
     };
 
     this.cancelContextMenu = function() {
@@ -437,27 +455,31 @@ var Autocomplete = function() {
             if (el && el.parentNode)
                 el.parentNode.removeChild(el);
         }
-        if (this.editor && this.editor.completer == this)
-            this.editor.completer == null;
-        this.popup = null;
+        if (this.editor && this.editor.completer == this) {
+            this.editor.off("destroy", destroyCompleter);
+            this.editor.completer = null;
+        }
+        this.inlineRenderer = this.popup = this.editor = null;
     };
 
 }).call(Autocomplete.prototype);
 
 
 Autocomplete.for = function(editor) {
-    if (editor.completer) {
+    if (editor.completer instanceof Autocomplete) {
         return editor.completer;
     }
+    if (editor.completer) {
+        editor.completer.destroy();
+        editor.completer = null;
+    }
     if (config.get("sharedPopups")) {
-        if (!Autocomplete.$shared)
+        if (!Autocomplete.$sharedInstance)
             Autocomplete.$sharedInstance = new Autocomplete();
         editor.completer = Autocomplete.$sharedInstance;
     } else {
         editor.completer = new Autocomplete();
-        editor.once("destroy", function(e, editor) {
-            editor.completer.destroy();
-        });
+        editor.once("destroy", destroyCompleter);
     }
     return editor.completer;
 };
@@ -475,11 +497,143 @@ Autocomplete.startCommand = {
     bindKey: "Ctrl-Space|Ctrl-Shift-Space|Alt-Space"
 };
 
+/**
+ * This class is responsible for providing completions and inserting them to the editor
+ * @class
+ */
+
+var CompletionProvider = function() {
+    this.active = true;
+};
+
+(function() {
+    this.insertByIndex = function(editor, index, options) {
+        if (!this.completions || !this.completions.filtered) {
+            return false;
+        }
+        return this.insertMatch(editor, this.completions.filtered[index], options);
+    };
+
+    this.insertMatch = function(editor, data, options) {
+        if (!data)
+            return false;
+
+        editor.startOperation({command: {name: "insertMatch"}});
+        if (data.completer && data.completer.insertMatch) {
+            data.completer.insertMatch(editor, data);
+        } else {
+            // TODO add support for options.deleteSuffix
+            if (!this.completions) {
+                return false;
+            }
+            if (this.completions.filterText) {
+                var ranges = editor.selection.getAllRanges();
+                for (var i = 0, range; range = ranges[i]; i++) {
+                    range.start.column -= this.completions.filterText.length;
+                    editor.session.remove(range);
+                }
+            }
+            if (data.snippet)
+                snippetManager.insertSnippet(editor, data.snippet);
+            else
+                editor.execCommand("insertstring", data.value || data);
+        }
+        editor.endOperation();
+        return true;
+    };
+
+    this.gatherCompletions = function(editor, callback) {
+        var session = editor.getSession();
+        var pos = editor.getCursorPosition();
+    
+        var prefix = util.getCompletionPrefix(editor);
+    
+        var matches = [];
+        var total = editor.completers.length;
+        editor.completers.forEach(function(completer, i) {
+            completer.getCompletions(editor, session, pos, prefix, function(err, results) {
+                if (!err && results)
+                    matches = matches.concat(results);
+                // Fetch prefix again, because they may have changed by now
+                callback(null, {
+                    prefix: util.getCompletionPrefix(editor),
+                    matches: matches,
+                    finished: (--total === 0)
+                });
+            });
+        });
+        return true;
+    };
+
+    /**
+     * This is the entry point to the class, it gathers, then provides the completions asynchronously via callback.
+     * The callback function may be called multiple times, the last invokation is marked with a `finished` flag
+     * @param {Editor} editor
+     * @param {CompletionProviderOptions} options
+     * @param {CompletionProviderCallback} callback
+     */
+    this.provideCompletions = function(editor, options, callback) {
+        var processResults = function(results) {
+            var prefix = results.prefix;
+            var matches = results.matches;
+
+            this.completions = new FilteredList(matches);
+
+            if (options.exactMatch)
+                this.completions.exactMatch = true;
+
+            if (options.ignoreCaption)
+                this.completions.ignoreCaption = true;
+
+            this.completions.setFilter(prefix);
+
+            callback(null, this.completions, results.finished);
+        }.bind(this);
+
+        var isImmediate = true;
+        var immediateResults = null;
+        this.gatherCompletions(editor, function(err, results) {
+            if (!this.active) {
+                return;
+            }
+            if (err) {
+                callback(err, [], true);
+                this.detach();
+            }
+            var prefix = results.prefix;
+
+            // Wrong prefix or wrong session -> ignore
+            if (prefix.indexOf(results.prefix) !== 0)
+                return;
+
+            // If multiple completers return their results immediately, we want to process them together
+            if (isImmediate) {
+                immediateResults = results;
+                return;
+            }
+
+            processResults(results);
+        }.bind(this));
+        
+        isImmediate = false;
+        if (immediateResults) {
+            var results = immediateResults;
+            immediateResults = null;
+            processResults(results);
+        }
+    };
+
+    this.detach = function() {
+        this.active = false;
+    };
+}).call(CompletionProvider.prototype);
+
 var FilteredList = function(array, filterText) {
     this.all = array;
     this.filtered = array;
     this.filterText = filterText || "";
     this.exactMatch = false;
+    this.ignoreCaption = false;
 };
 (function(){
     this.setFilter = function(str) {
@@ -506,12 +660,13 @@ var FilteredList = function(array, filterText) {
 
         this.filtered = matches;
     };
+
     this.filterCompletions = function(items, needle) {
         var results = [];
         var upper = needle.toUpperCase();
         var lower = needle.toLowerCase();
         loop: for (var i = 0, item; item = items[i]; i++) {
-            var caption = item.caption || item.value || item.snippet;
+            var caption = (!this.ignoreCaption && item.caption) || item.value || item.snippet;
             if (!caption) continue;
             var lastIndex = -1;
             var matchMask = 0;
@@ -560,4 +715,5 @@ var FilteredList = function(array, filterText) {
 }).call(FilteredList.prototype);
 
 exports.Autocomplete = Autocomplete;
+exports.CompletionProvider = CompletionProvider;
 exports.FilteredList = FilteredList;

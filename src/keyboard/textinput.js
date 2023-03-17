@@ -52,7 +52,7 @@ var TextInput = function(parentNode, host) {
     this.setAriaOptions = function(options) {
         if (options.activeDescendant) {
             text.setAttribute("aria-haspopup", "true");
-            text.setAttribute("aria-autocomplete", "list");
+            text.setAttribute("aria-autocomplete", options.inline ? "both" : "list");
             text.setAttribute("aria-activedescendant", options.activeDescendant);
         } else {
             text.setAttribute("aria-haspopup", "false");

@@ -320,6 +320,11 @@ module.exports = {
 
         editor.renderer.$loop._flush();
         assert.equal(editor.renderer.content.textContent, "abcdefGhost");
+
+        editor.removeGhostText();
+
+        editor.renderer.$loop._flush();
+        assert.equal(editor.renderer.content.textContent, "abcdef");
     },
 
     "test multiline ghost text": function() {
@@ -332,6 +337,13 @@ module.exports = {
         assert.equal(editor.renderer.content.textContent, "abcdefGhost1");
         
         assert.equal(editor.session.lineWidgets[0].el.textContent, "Ghost2\nGhost3");
+
+        editor.removeGhostText();
+
+        editor.renderer.$loop._flush();
+        assert.equal(editor.renderer.content.textContent, "abcdef");
+        
+        assert.equal(editor.session.lineWidgets, null);
     },
     "test: brackets highlighting": function (done) {
         var renderer = editor.renderer;

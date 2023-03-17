@@ -924,6 +924,72 @@ export namespace Ace {
       prefix: string,
       callback: CompleterCallback): void;
   }
+
+  export class AceInline {
+    show(editor: Editor, completion: Completion, prefix: string): void;
+    isOpen(): void;
+    hide(): void;
+    destroy(): void;
+  }
+
+  interface CompletionOptions {
+    matches?: Completion[];
+  }
+
+  type CompletionProviderOptions = {
+    exactMatch?: boolean;
+    ignoreCaption?: boolean;
+  }
+
+  type CompletionRecord = {
+    all: Completion[];
+    filtered: Completion[];
+    filterText: string;
+  } | CompletionProviderOptions
+
+  type GatherCompletionRecord = {
+    prefix: string;
+    matches: Completion[];
+    finished: boolean;
+  }
+
+  type CompletionCallbackFunction = (err: Error | undefined, data: GatherCompletionRecord) => void;
+  type CompletionProviderCallback = (err: Error | undefined, completions: CompletionRecord, finished: boolean) => void;
+
+  export class CompletionProvider {
+    insertByIndex(editor: Editor, index: number, options: CompletionProviderOptions): boolean;
+    insertMatch(editor: Editor, data: Completion, options: CompletionProviderOptions): boolean;
+    completions: CompletionRecord;
+    gatherCompletions(editor: Editor, callback: CompletionCallbackFunction): boolean;
+    provideCompletions(editor: Editor, options: CompletionProviderOptions, callback: CompletionProviderCallback): void;
+    detach(): void;
+  }
+
+  export class Autocomplete {
+    constructor();
+    autoInsert?: boolean;
+    autoSelect?: boolean;
+    exactMatch?: boolean;
+    inlineEnabled?: boolean;
+    getPopup(): AcePopup;
+    showPopup(editor: Editor, options: CompletionOptions): void;
+    detach(): void;
+    destroy(): void;
+  }
+
+  type AcePopupNavigation = "up" | "down" | "start" | "end";
+
+  export class AcePopup {
+    constructor(parentNode: HTMLElement);
+    setData(list: Completion[], filterText: string): void;
+    getData(row: number): Completion;
+    getRow(): number;
+    getRow(line: number): void;
+    hide(): void;
+    show(pos: Point, lineHeight: number, topdownOnly: boolean): void;
+    tryShow(pos: Point, lineHeight: number, anchor: "top" | "bottom" | undefined, forceShow?: boolean): boolean;
+    goTo(where: AcePopupNavigation): void;
+  }
 }
 
 
@@ -946,3 +1012,43 @@ export const Range: {
   fromPoints(start: Ace.Point, end: Ace.Point): Ace.Range;
   comparePoints(p1: Ace.Point, p2: Ace.Point): number;
 };
+
+
+type InlineAutocompleteAction = "prev" | "next" | "first" | "last";
+
+type TooltipCommandEnabledFunction = (editor: Ace.Editor) => boolean;
+
+interface TooltipCommand extends Ace.Command {
+  enabled: TooltipCommandEnabledFunction | boolean,
+  position?: number;
+}
+
+export class InlineAutocomplete {
+  constructor();
+  getInlineRenderer(): Ace.AceInline;
+  getInlineTooltip(): InlineTooltip;
+  getCompletionProvider(): Ace.CompletionProvider;
+  show(editor: Ace.Editor): void;
+  isOpen(): boolean;
+  detach(): void;
+  destroy(): void;
+  goTo(action: InlineAutocompleteAction): void;
+  tooltipEnabled: boolean;
+  commands: Record<string, TooltipCommand>
+  getIndex(): number;
+  setIndex(value: number): void;
+  getLength(): number;
+  getData(index?: number): Ace.Completion | undefined;
+  updateCompletions(options: Ace.CompletionOptions): void;
+}
+
+export class InlineTooltip {
+  constructor(parentElement: HTMLElement);
+  setCommands(commands: Record<string, TooltipCommand>): void;
+  show(editor: Ace.Editor): void;
+  updatePosition(): void;
+  updateButtons(force?: boolean): void;
+  isShown(): boolean;
+  detach(): void;
+  destroy(): void;
+}

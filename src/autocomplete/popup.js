@@ -256,27 +256,82 @@ var AcePopup = function(parentNode) {
 
     popup.hide = function() {
         this.container.style.display = "none";
-        this._signal("hide");
-        popup.isOpen = false;
+        popup.anchorPos = null;
+        popup.anchor = null;
+        if (popup.isOpen) {
+            popup.isOpen = false;
+            this._signal("hide");
+        }
     };
-    popup.show = function(pos, lineHeight, topdownOnly) {
+
+    /**
+     * Tries to show the popup anchored to the given position and anchors.
+     * If the anchor is not specified it tries to align to bottom and right as much as possible.
+     * If the popup does not have enough space to be rendered with the given anchors, it returns false without rendering the popup.
+     * The forceShow flag can be used to render the popup in these cases, which slides the popup so it entirely fits on the screen.
+     * @param {Point} pos
+     * @param {number} lineHeight
+     * @param {"top" | "bottom" | undefined} anchor
+     * @param {boolean} forceShow
+     * @returns {boolean}
+     */
+    popup.tryShow = function(pos, lineHeight, anchor, forceShow) {
+        if (!forceShow && popup.isOpen && popup.anchorPos && popup.anchor &&
+            popup.anchorPos.top === pos.top && popup.anchorPos.left === pos.left &&
+            popup.anchor === anchor
+        ) {
+            return true;
+        }
+
         var el = this.container;
         var screenHeight = window.innerHeight;
         var screenWidth = window.innerWidth;
         var renderer = this.renderer;
         // var maxLines = Math.min(renderer.$maxLines, this.session.getLength());
         var maxH = renderer.$maxLines * lineHeight * 1.4;
-        var top = pos.top + this.$borderSize;
-        var allowTopdown = top > screenHeight / 2 && !topdownOnly;
-        if (allowTopdown && top + lineHeight + maxH > screenHeight) {
-            renderer.$maxPixelHeight = top - 2 * this.$borderSize;
+        var dims = { top: 0, bottom: 0, left: 0 };
+
+        var spaceBelow = screenHeight - pos.top - 3 * this.$borderSize - lineHeight;
+        var spaceAbove = pos.top - 3 * this.$borderSize;
+        if (!anchor) {
+            if (spaceAbove <= spaceBelow || spaceBelow >= maxH) {
+                anchor = "bottom";
+            } else {
+                anchor = "top";
+            }
+        }
+
+        if (anchor === "top") {
+            dims.bottom = pos.top - this.$borderSize;
+            dims.top = dims.bottom - maxH;
+        } else if (anchor === "bottom") {
+            dims.top = pos.top + lineHeight + this.$borderSize;
+            dims.bottom = dims.top + maxH;
+        }
+
+        var fitsX = dims.top >= 0 && dims.bottom <= screenHeight;
+
+        if (!forceShow && !fitsX) {
+            return false;
+        }
+
+        if (!fitsX) {
+            if (anchor === "top") {
+                renderer.$maxPixelHeight = spaceAbove;
+            } else {
+                renderer.$maxPixelHeight = spaceBelow;
+            }
+        } else {
+            renderer.$maxPixelHeight = null;
+        }
+
+
+        if (anchor === "top") {
             el.style.top = "";
-            el.style.bottom = screenHeight - top + "px";
+            el.style.bottom = (screenHeight - dims.bottom) + "px";
             popup.isTopdown = false;
         } else {
-            top += lineHeight;
-            renderer.$maxPixelHeight = screenHeight - top - 0.2 * lineHeight;
-            el.style.top = top + "px";
+            el.style.top = dims.top + "px";
             el.style.bottom = "";
             popup.isTopdown = true;
         }
@@ -288,10 +343,22 @@ var AcePopup = function(parentNode) {
             left = screenWidth - el.offsetWidth;
 
         el.style.left = left + "px";
+        el.style.right = "";
 
-        this._signal("show");
-        lastMouseEvent = null;
-        popup.isOpen = true;
+        if (!popup.isOpen) {
+            popup.isOpen = true;
+            this._signal("show");
+            lastMouseEvent = null;
+        }
+
+        popup.anchorPos = pos;
+        popup.anchor = anchor;
+
+        return true;
+    };
+
+    popup.show = function(pos, lineHeight, topdownOnly) {
+        this.tryShow(pos, lineHeight, topdownOnly ? "bottom" : undefined, true);
     };
 
     popup.goTo = function(where) {
