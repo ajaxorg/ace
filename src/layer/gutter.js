@@ -53,23 +53,25 @@ var Gutter = function(parentEl) {
             var row = annotation.row;
             var rowInfo = this.$annotations[row];
             if (!rowInfo)
-                rowInfo = this.$annotations[row] = {text: []};
+                rowInfo = this.$annotations[row] = {text: [], type: []};
            
             var annoText = annotation.text;
+            var annoType = annotation.type;
             annoText = annoText ? lang.escapeHTML(annoText) : annotation.html || "";
 
-            if (rowInfo.text.indexOf(annoText) === -1)
+            if (rowInfo.text.indexOf(annoText) === -1){
                 rowInfo.text.push(annoText);
+                rowInfo.type.push(annoType);
+            }
 
-            var type = annotation.type;
             var className = annotation.className;
             if (className) 
                 rowInfo.className = className;
-            else if (type == "error")
+            else if (annoType == "error")
                 rowInfo.className = " ace_error";
-            else if (type == "warning" && rowInfo.className != " ace_error")
+            else if (annoType == "warning" && rowInfo.className != " ace_error")
                 rowInfo.className = " ace_warning";
-            else if (type == "info" && (!rowInfo.className))
+            else if (annoType == "info" && (!rowInfo.className))
                 rowInfo.className = " ace_info";
         }
     };

@@ -51,16 +51,33 @@ function GutterHandler(mouseHandler) {
                 return hideTooltip();
         }
 
-        if (tooltipAnnotation == annotation)
-            return;
-        tooltipAnnotation = annotation.text.join("<br/>");
+        var annotationMessages = {error: [], warning: [], info: []};
+
+        for (var i = 0; i < annotation.text.length; i++) {
+            var line = `<span class='ace_${annotation.type[i]}'> </span> ${annotation.text[i]}`;
+            annotationMessages[annotation.type[i]].push(line);
+        }
+                
+        var tooltipHeader = "<span class='ace_gutter-tooltip_header'>";
+
+        var isMoreThanOneAnnotationType = annotationMessages.warning.length > 0 || annotationMessages.info.length > 0;
+
+        if (annotationMessages.error.length > 0)
+            tooltipHeader += `${annotationMessages.error.length} error${annotationMessages.error.length > 1 ? "s" : ""}`; 
+
+        if (annotationMessages.warning.length > 0)
+            tooltipHeader += `${isMoreThanOneAnnotationType ? ", " : ""}${annotationMessages.warning.length} warning${annotationMessages.warning.length > 1 ? "s" : ""}`; 
+
+        if (annotationMessages.info.length > 0)
+            tooltipHeader += `${isMoreThanOneAnnotationType ? ", " : ""}${annotationMessages.info.length} information message${annotationMessages.info.length > 1 ? "s" : ""}`;
+
+        tooltipHeader += "</span><br>";
+
+        tooltipAnnotation = tooltipHeader;
+        tooltipAnnotation += [].concat(annotationMessages.error, annotationMessages.warning, annotationMessages.info).join("<br>");
 
         tooltip.setHtml(tooltipAnnotation);
-
-        var annotationClassName = annotation.className;
-        if (annotationClassName) {
-            tooltip.setClassName(annotationClassName.trim());
-        }
+        tooltip.setClassName("ace_gutter-tooltip");
 
         tooltip.show();
         editor._signal("showGutterTooltip", tooltip);
