@@ -153,12 +153,6 @@ $(function() {
             $.bbq.pushState(state);
      });
 
-    $('#tabnav a[data-toggle="tab"]').on('shown', function (e) {
-        $(".tab-content .tab-pane.active .ace_editor").each(function(i, el){
-            el.env.onResize();
-        });
-    });
-
     $(window).on("hashchange", function(e) {
         _gaq.push(['_trackPageview',location.pathname + location.search  + location.hash]);
         tabs.each(function() {
