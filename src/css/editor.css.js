@@ -260,7 +260,6 @@ module.exports = `
 .ace_hidpi .ace_content,
 .ace_hidpi .ace_gutter {
     contain: strict;
-    will-change: transform;
 }
 .ace_hidpi .ace_text-layer > .ace_line, 
 .ace_hidpi .ace_text-layer > .ace_line_group {
