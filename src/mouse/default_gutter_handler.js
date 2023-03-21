@@ -52,33 +52,38 @@ function GutterHandler(mouseHandler) {
         }
 
         var annotationMessages = {error: [], warning: [], info: []};
+        var annotationLabels = {
+            error: {singular: "error", plural: "errors"}, 
+            warning: {singular: "warning", plural: "warnings"},
+            info: {singular: "information message", plural: "information messages"}
+        };
 
+        // Construct the body of the tooltip.
         for (var i = 0; i < annotation.text.length; i++) {
-            var line = `<span class='ace_${annotation.type[i]}'> </span> ${annotation.text[i]}`;
+            var line = `<span class=ace_${annotation.type[i]} aria-label='${annotationLabels[annotation.type[i]].singular}' role=img> </span> ${annotation.text[i]}`;
             annotationMessages[annotation.type[i]].push(line);
         }
+        var tooltipBody = [].concat(annotationMessages.error, annotationMessages.warning, annotationMessages.info).join("<br>");
                 
+        // Construct the header of the tooltip.
+        var isMoreThanOneAnnotationType = false;
         var tooltipHeader = "<span class='ace_gutter-tooltip_header'>";
-
-        var isMoreThanOneAnnotationType = annotationMessages.warning.length > 0 || annotationMessages.info.length > 0;
-
-        if (annotationMessages.error.length > 0)
-            tooltipHeader += `${annotationMessages.error.length} error${annotationMessages.error.length > 1 ? "s" : ""}`; 
-
-        if (annotationMessages.warning.length > 0)
-            tooltipHeader += `${isMoreThanOneAnnotationType ? ", " : ""}${annotationMessages.warning.length} warning${annotationMessages.warning.length > 1 ? "s" : ""}`; 
-
-        if (annotationMessages.info.length > 0)
-            tooltipHeader += `${isMoreThanOneAnnotationType ? ", " : ""}${annotationMessages.info.length} information message${annotationMessages.info.length > 1 ? "s" : ""}`;
-
+        for (var i = 0; i < 3; i++){
+            var annotationType = ['error', 'warning', 'info'][i];
+            if (annotationMessages[annotationType].length > 0){
+                var label = annotationMessages[annotationType].length === 1 ? annotationLabels[annotationType].singular : annotationLabels[annotationType].plural;
+                tooltipHeader += `${isMoreThanOneAnnotationType ? ', ' : ''}${annotationMessages[annotationType].length} ${label}`;
+                isMoreThanOneAnnotationType = true;
+            } 
+        }
         tooltipHeader += "</span><br>";
 
-        tooltipAnnotation = tooltipHeader;
-        tooltipAnnotation += [].concat(annotationMessages.error, annotationMessages.warning, annotationMessages.info).join("<br>");
+        tooltipAnnotation = tooltipHeader + tooltipBody;
 
         tooltip.setHtml(tooltipAnnotation);
         tooltip.setClassName("ace_gutter-tooltip");
-
+        tooltip.$element.setAttribute("aria-live", "polite");
+        
         tooltip.show();
         editor._signal("showGutterTooltip", tooltip);
         editor.on("mousewheel", hideTooltip);
