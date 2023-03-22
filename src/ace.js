@@ -8,7 +8,6 @@
 "include loader_build";
 
 var dom = require("./lib/dom");
-var event = require("./lib/event");
 
 var Range = require("./range").Range;
 var Editor = require("./editor").Editor;
@@ -66,9 +65,7 @@ exports.edit = function(el, options) {
         onResize: editor.resize.bind(editor, null)
     };
     if (oldNode) env.textarea = oldNode;
-    event.addListener(window, "resize", env.onResize);
     editor.on("destroy", function() {
-        event.removeListener(window, "resize", env.onResize);
         env.editor.container.env = null; // prevent memory leak on old ie
     });
     editor.container.env = editor.env = env;

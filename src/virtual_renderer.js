@@ -2,6 +2,7 @@
 
 var oop = require("./lib/oop");
 var dom = require("./lib/dom");
+var lang = require("./lib/lang");
 var config = require("./config");
 var GutterLayer = require("./layer/gutter").Gutter;
 var MarkerLayer = require("./layer/marker").Marker;
@@ -156,6 +157,7 @@ var VirtualRenderer = function(container, theme) {
 
     this.updateCharacterSize();
     this.setPadding(4);
+    this.$addResizeObserver();
     config.resetOptions(this);
     config._signal("renderer", this);
 };
@@ -343,6 +345,7 @@ var VirtualRenderer = function(container, theme) {
             width = el.clientWidth || el.scrollWidth;
         var changes = this.$updateCachedSize(force, gutterWidth, width, height);
 
+        if (this.$resizeTimer) this.$resizeTimer.cancel();
         
         if (!this.$size.scrollerHeight || (!width && !height))
             return this.resizing = 0;
@@ -1798,6 +1801,7 @@ var VirtualRenderer = function(container, theme) {
         this.$cursorLayer.destroy();
         this.removeAllListeners();
         this.container.textContent = "";
+        this.setOption("useResizeObserver", false);
     };
 
     this.$updateCustomScrollbar = function (val) {
@@ -1835,10 +1839,42 @@ var VirtualRenderer = function(container, theme) {
         }
     };
 
+    this.$addResizeObserver = function() {
+        if (!window.ResizeObserver || this.$resizeObserver) return;
+        var self = this;
+        this.$resizeTimer = lang.delayedCall(function() {
+            if (!self.destroyed)  self.onResize();
+        }, 50);
+        this.$resizeObserver = new window.ResizeObserver(function(e) {
+            var w = e[0].contentRect.width;
+            var h = e[0].contentRect.height;
+            if (
+                Math.abs(self.$size.width - w) > 1
+                || Math.abs(self.$size.height - h) > 1
+            ) {
+                self.$resizeTimer.delay();
+            } else {
+                self.$resizeTimer.cancel();
+            }
+        });
+        this.$resizeObserver.observe(this.container);
+    };
+
 }).call(VirtualRenderer.prototype);
 
 
 config.defineOptions(VirtualRenderer.prototype, "renderer", {
+    useResizeObserver: {
+        set: function(value) {
+            if (!value && this.$resizeObserver) {
+                this.$resizeObserver.disconnect();
+                this.$resizeTimer.cancel();
+                this.$resizeTimer = this.$resizeObserver = null;
+            } else if (value && !this.$resizeObserver) {
+                this.$addResizeObserver();
+            }
+        }
+    },
     animatedScroll: {initialValue: false},
     showInvisibles: {
         set: function(value) {

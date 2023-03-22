@@ -1,5 +1,4 @@
 if (typeof process !== "undefined") {
-    require("amd-loader");
     require("./test/mockdom");
 }
 
@@ -101,6 +100,61 @@ module.exports = {
 
         ace.config.set("useStrictCSP", false);
         assert.ok(getStyleNode());
+    },
+    "test: resizeObserver": function(done) {
+        var mockObserver = {
+            disconnect: function() { mockObserver.target = null; },
+            observe: function(el) {
+                mockObserver.target = el;
+            },
+            $create: function(fn) {
+                mockObserver.callback = fn;
+                return mockObserver;
+            },
+            call: function() {
+                setTimeout(function() {
+                    if (mockObserver.target)
+                        mockObserver.callback([{contentRect: mockObserver.target.getBoundingClientRect()}]);
+                });
+            }
+        };
+        if (!window.ResizeObserver) {
+            window.ResizeObserver = mockObserver.$create;
+        }
+        var editor = ace.edit(null);
+        document.body.appendChild(editor.container);
+        editor.container.style.width = "100px";
+        editor.container.style.height = "100px";
+        mockObserver.call();
+        editor.resize(true);
+        assert.ok(!editor.renderer.$resizeTimer.isPending());
+        assert.equal(editor.renderer.$size.width, 100);
+        editor.container.style.width = "200px";
+        mockObserver.call();
+        setTimeout(function() {
+            if (editor.renderer.$resizeTimer.isPending())
+                editor.renderer.$resizeTimer.call();
+            assert.equal(editor.renderer.$size.width, 200);
+            editor.container.style.height = "200px";
+            mockObserver.call();
+            setTimeout(function() {
+                assert.ok(editor.renderer.$resizeTimer.isPending());
+                editor.container.style.height = "100px";
+                mockObserver.call();
+                setTimeout(function() {
+                    assert.ok(!editor.renderer.$resizeTimer.isPending());
+                    editor.setOption("useResizeObserver", false);
+                    editor.container.style.height = "300px";
+                    mockObserver.call();
+                    assert.ok(!editor.renderer.$resizeObserver);
+                    editor.setOption("useResizeObserver", true);
+                    assert.ok(editor.renderer.$resizeObserver);
+                    if (window.ResizeObserver === mockObserver.$create)
+                        window.ResizeObserver = undefined;
+                    done();
+                }, 15);
+            }, 15);
+        }, 15);
     },
     "test: edit template" : function() {
         var template = document.createElement("template");
