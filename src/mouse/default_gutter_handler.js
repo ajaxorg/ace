@@ -63,11 +63,13 @@ function GutterHandler(mouseHandler) {
             var line = `<span class=ace_${annotation.type[i]} aria-label='${annotationLabels[annotation.type[i]].singular}' role=img> </span> ${annotation.text[i]}`;
             annotationMessages[annotation.type[i]].push(line);
         }
-        var tooltipBody = [].concat(annotationMessages.error, annotationMessages.warning, annotationMessages.info).join("<br/>");
-                
+        var tooltipBody = "<div class='ace_gutter-tooltip_body'>";
+        tooltipBody += [].concat(annotationMessages.error, annotationMessages.warning, annotationMessages.info).join("<br>");
+        tooltipBody += '</div>';    
+        
         // Construct the header of the tooltip.
         var isMoreThanOneAnnotationType = false;
-        var tooltipHeader = "<span class='ace_gutter-tooltip_header'>";
+        var tooltipHeader = "<div class='ace_gutter-tooltip_header'>";
         for (var i = 0; i < 3; i++){
             var annotationType = ['error', 'warning', 'info'][i];
             if (annotationMessages[annotationType].length > 0){
@@ -76,7 +78,7 @@ function GutterHandler(mouseHandler) {
                 isMoreThanOneAnnotationType = true;
             } 
         }
-        tooltipHeader += "</span><br/>";
+        tooltipHeader += "</div>";
 
         tooltipAnnotation = tooltipHeader + tooltipBody;
 

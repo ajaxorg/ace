@@ -428,6 +428,10 @@ module.exports = `
     font-weight: bold;
 }
 
+.ace_gutter-tooltip_body {
+    padding-top: 5px;
+}
+
 .ace_gutter-tooltip .ace_error {
     display: inline-block;
     width: 18px;
