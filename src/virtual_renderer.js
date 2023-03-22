@@ -18,7 +18,6 @@ var editorCss = require("./css/editor.css");
 var Decorator = require("./layer/decorators").Decorator;
 
 var useragent = require("./lib/useragent");
-var HIDE_TEXTAREA = useragent.isIE;
 
 dom.importCssString(editorCss, "ace_editor.css", false);
 
@@ -632,7 +631,7 @@ var VirtualRenderer = function(container, theme) {
         var posLeft = pixelPos.left;
         posTop -= config.offset;
 
-        var h = composition && composition.useTextareaForIME ? this.lineHeight : HIDE_TEXTAREA ? 0 : 1;
+        var h = composition && composition.useTextareaForIME || useragent.isMobile ? this.lineHeight : 1;
         if (posTop < 0 || posTop > config.height - h) {
             dom.translate(this.textarea, 0, 0);
             return;
