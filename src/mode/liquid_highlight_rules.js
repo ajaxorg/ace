@@ -29,24 +29,24 @@ var LiquidHighlightRules = function () {
       const x = [
         {
           type: "meta.tag.punctuation.tag-open",
-          value: "{%",
+          value: "{%"
         },
         {
           type: "text",
-          value: value.slice(2, idx),
+          value: value.slice(2, idx)
         },
         {
           type: "keyword.tag" + name + ".tag-name",
-          value: value.slice(idx, idx + length),
+          value: value.slice(idx, idx + length)
         },
         {
           type: "text",
-          value: value.slice(idx + length, value.indexOf("%}")),
+          value: value.slice(idx + length, value.indexOf("%}"))
         },
         {
           type: "meta.tag.punctuation.tag-close",
-          value: "%}",
-        },
+          value: "%}"
+        }
       ];
 
       return x;
@@ -64,7 +64,7 @@ var LiquidHighlightRules = function () {
           {
             token: "comment.block",
             regex: /{%-?\s*endcomment\s*-?%}/,
-            next: "pop",
+            next: "pop"
           },
           {
             defaultToken: "comment",
@@ -79,7 +79,7 @@ var LiquidHighlightRules = function () {
           {
             token: "comment.line",
             regex: /-?%}/,
-            next: "pop",
+            next: "pop"
           },
           {
             defaultToken: "comment",
@@ -91,32 +91,43 @@ var LiquidHighlightRules = function () {
         token: 'style.embedded.start',
         regex: /({%-?\s*\bstyle\b\s*-?%})/,
         next: "style-start",
-        onMatch: onMatchEmbedded("style"),
+        onMatch: onMatchEmbedded("style")
       },
       {
         regex: /({%-?\s*\bstylesheet\b\s*-?%})/,
         next: "stylesheet-start",
-        onMatch: onMatchEmbedded("stylesheet"),
+        onMatch: onMatchEmbedded("stylesheet")
       },
       {
         regex: /({%-?\s*\bschema\b\s*-?%})/,
         next: "schema-start",
-        onMatch: onMatchEmbedded("schema"),
+        onMatch: onMatchEmbedded("schema")
       },
       {
         regex: /({%-?\s*\bjavascript\b\s*-?%})/,
         next: "javascript-start",
-        onMatch: onMatchEmbedded("javascript"),
+        onMatch: onMatchEmbedded("javascript")
       },
       {
         token: "meta.tag.punctuation.tag-open",
         regex: /({%)/,
-        push: "liquid-start",
+        next: [
+          {
+              token: "keyword.block",
+              regex: /-?\s*[a-zA-Z_$][a-zA-Z0-9_$]+\b/,
+              next: 'liquid-start'
+          },
+          {
+            token: "meta.tag.punctuation.tag-close",
+            regex: /(-?)(%})/,
+            next: "pop"
+          }
+        ]
       },
       {
         token: "meta.tag.punctuation.ouput-open",
         regex: /({{)/,
-        push: "liquid-start",
+        push: "liquid-start"
       }
     );
   }
@@ -130,8 +141,8 @@ var LiquidHighlightRules = function () {
       token: "schema-start",
       next: "pop",
       regex: /({%-?\s*\bendschema\b\s*-?%})/,
-      onMatch: onMatchEmbedded("endschema"),
-    },
+      onMatch: onMatchEmbedded("endschema")
+    }
   ]);
 
   this.embedRules(JavaScriptHighlightRules, "javascript-", [
@@ -139,8 +150,8 @@ var LiquidHighlightRules = function () {
       token: "javascript-start",
       next: "pop",
       regex: /({%-?\s*\bendjavascript\b\s*-?%})/,
-      onMatch: onMatchEmbedded("endjavascript"),
-    },
+      onMatch: onMatchEmbedded("endjavascript")
+    }
   ]);
 
 
@@ -150,8 +161,8 @@ var LiquidHighlightRules = function () {
       token: "style-start",
       next: "pop",
       regex: /({%-?\s*\bendstyle\b\s*-?%})/,
-      onMatch: onMatchEmbedded("endstyle"),
-    },
+      onMatch: onMatchEmbedded("endstyle")
+    }
   ]);
 
   this.embedRules(CssHighlightRules, "stylesheet-", [
@@ -159,8 +170,8 @@ var LiquidHighlightRules = function () {
       token: "stylesheet-start",
       next: "pop",
       regex: /({%-?\s*\bendstylesheet\b\s*-?%})/,
-      onMatch: onMatchEmbedded("endstylesheet"),
-    },
+      onMatch: onMatchEmbedded("endstylesheet")
+    }
   ]);
 
   /* -------------------------------------------- */
@@ -170,60 +181,56 @@ var LiquidHighlightRules = function () {
   this.addRules({
     "liquid-start": [
       {
-        token: "punctuation.close.output",
+        token: "meta.tag.punctuation.ouput-close",
         regex: /}}/,
-        next: "pop",
+        next: "pop"
       },
       {
-        token: "punctuation.close.tag",
+        token: "meta.tag.punctuation.tag-close",
         regex: /%}/,
-        next: "pop",
+        next: "pop"
       },
       {
         token: "string",
-        regex: /['](?:(?:\\.)|(?:[^'\\]))*?[']/,
+        regex: /['](?:(?:\\.)|(?:[^'\\]))*?[']/
       },
       {
         token: "string",
-        regex: /["](?:(?:\\.)|(?:[^'\\]))*?["]/,
+        regex: /["](?:(?:\\.)|(?:[^'\\]))*?["]/
       },
       {
         token: "constant.numeric",
-        regex: /0[xX][0-9a-fA-F]+\b/,
+        regex: /0[xX][0-9a-fA-F]+\b/
       },
       {
         token: "constant.numeric",
-        regex: /[+-]?\d+(?:(?:\.\d*)?(?:[eE][+-]?\d+)?)?\b/,
+        regex: /[+-]?\d+(?:(?:\.\d*)?(?:[eE][+-]?\d+)?)?\b/
       },
       {
         token: "keyword.operator",
-        regex: /\||\*|\-|\+|=|!=|\?\|\:/,
+        regex: /\*|\-|\+|=|!=|\?\|\:/
       },
       {
         token: "constant.language.boolean",
-        regex: /(?:true|false|nil|empty)\b/,
+        regex: /(?:true|false|nil|empty)\b/
       },
       {
         token: "keyword.operator",
-        regex: /(?:and|contains|in|with)\b/,
+        regex: /\s+(?:and|contains|in|with)\b\s+/
       },
       {
-        token: "keyword.block",
-        regex: /(?<={%-?)\s*([a-zA-Z_$][a-zA-Z0-9_$]+\b)/,
-      },
-      {
-        token: "support.function",
-        regex: /(?<=\|)\s*([a-zA-Z_]*\b)/,
+        token: ["keyword.operator", "support.function"],
+        regex: /(\|\s*)([a-zA-Z_]+)/
 
       },
       {
         token: "support.function",
-        regex: /(?<=[a-zA-Z_]\b:\s?)\s*([a-zA-Z_]+\b)(?=:)/,
+        regex: /\s*([a-zA-Z_]+\b)(?=:)/
       },
       {
         token: "keyword.operator",
         regex:
-          /(?<=[a-zA-Z_]\b)(:)\s*(?=[a-zA-Z_])/,
+          /(:)\s*(?=[a-zA-Z_])/
       },
       {
         token: [
@@ -233,34 +240,34 @@ var LiquidHighlightRules = function () {
           "keyword.operator",
           "variable.parameter"
         ],
-        regex: /(\s*\w+)(\.)(\w+)(\.)?(\w+)?/,
+        regex: /(\w+)(\.)(\w+)(\.)?(\w+)?/
       },
       {
         token: "variable.parameter",
-        regex: /\.([a-zA-Z_$][a-zA-Z0-9_$]*\b)$/,
+        regex: /\.([a-zA-Z_$][a-zA-Z0-9_$]*\b)$/
       },
       {
         token: "support.class",
-        regex: /(?:additional_checkout_buttons|content_for_additional_checkout_buttons)\b/,
+        regex: /(?:additional_checkout_buttons|content_for_additional_checkout_buttons)\b/
       },
       {
         token: "paren.lparen",
-        regex: /[\[\({]/,
+        regex: /[\[\({]/
       },
       {
         token: "paren.rparen",
-        regex: /[\])}]/,
+        regex: /[\])}]/
       },
       {
         token: "text",
-        regex: /\s+/,
-      },
-    ],
+        regex: /\s+/
+      }
+    ]
   });
 
   this.normalizeRules();
 
-}
+};
 
 oop.inherits(LiquidHighlightRules, TextHighlightRules);
 
