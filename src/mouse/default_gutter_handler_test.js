@@ -8,6 +8,7 @@ if (typeof process !== "undefined") {
 require("../multi_select");
 require("../theme/textmate");
 var Editor = require("../editor").Editor;
+var Mode = require("../mode/java").Mode;
 var VirtualRenderer = require("../virtual_renderer").VirtualRenderer;
 var assert = require("../test/assertions");
 var MouseEvent = function(type, opts){
@@ -37,6 +38,11 @@ module.exports = {
     },
 
     "test: gutter error tooltip" : function() {
+        var editor = this.editor;
+        var value = "";
+
+        editor.session.setMode(new Mode());
+        editor.setValue(value, -1);
         editor.session.setAnnotations([{row: 0, column: 0, text: "error test", type: "error"}]);
         editor.renderer.$loop._flush();
 
@@ -57,6 +63,11 @@ module.exports = {
         }, 100); 
     },
     "test: gutter warning tooltip" : function() {
+        var editor = this.editor;
+        var value = "";
+
+        editor.session.setMode(new Mode());
+        editor.setValue(value, -1);
         editor.session.setAnnotations([{row: 0, column: 0, text: "warning test", type: "warning"}]);
         editor.renderer.$loop._flush();
 
@@ -77,6 +88,11 @@ module.exports = {
         }, 100); 
     },
     "test: gutter info tooltip" : function() {
+        var editor = this.editor;
+        var value = "";
+
+        editor.session.setMode(new Mode());
+        editor.setValue(value, -1);
         editor.session.setAnnotations([{row: 0, column: 0, text: "info test", type: "info"}]);
         editor.renderer.$loop._flush();
 
@@ -98,8 +114,8 @@ module.exports = {
     },
     
     tearDown : function() {
-        editor.destroy();
-        document.body.removeChild(editor.container);
+        this.editor.destroy();
+        document.body.removeChild(this.editor.container);
     }
 };
 
