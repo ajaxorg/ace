@@ -8,7 +8,6 @@ if (typeof process !== "undefined") {
 require("../multi_select");
 require("../theme/textmate");
 var Editor = require("../editor").Editor;
-var Mode = require("../mode/java").Mode;
 var VirtualRenderer = require("../virtual_renderer").VirtualRenderer;
 var assert = require("../test/assertions");
 var MouseEvent = function(type, opts){
@@ -25,10 +24,8 @@ var MouseEvent = function(type, opts){
 var editor;
 
 module.exports = {
-
     setUp : function(next) {
         this.editor = new Editor(new VirtualRenderer());
-        this.editor.session.setValue("Juhu kinners!");
         this.editor.container.style.position = "absolute";
         this.editor.container.style.height = "500px";
         this.editor.container.style.width = "500px";
@@ -40,11 +37,6 @@ module.exports = {
     },
 
     "test: gutter error tooltip" : function() {
-        var editor = this.editor;
-        var value = "";
-
-        editor.session.setMode(new Mode());
-        editor.setValue(value, -1);
         editor.session.setAnnotations([{row: 0, column: 0, text: "error test", type: "error"}]);
         editor.renderer.$loop._flush();
 
@@ -52,9 +44,8 @@ module.exports = {
         var annotation = lines.cells[0].element;
         assert.ok(/ace_error/.test(annotation.className));
 
-        var target = editor.container.querySelector(".ace_gutter-cell");
-        var rect = target.getBoundingClientRect();
-        target.dispatchEvent(new MouseEvent("move", {clientX: rect.left, clientY: rect.top}));
+        var rect = annotation.getBoundingClientRect();
+        annotation.dispatchEvent(new MouseEvent("move", {clientX: rect.left, clientY: rect.top}));
 
         // Wait for the tooltip to appear after its timeout.
         setTimeout(function() {
@@ -66,11 +57,6 @@ module.exports = {
         }, 100); 
     },
     "test: gutter warning tooltip" : function() {
-        var editor = this.editor;
-        var value = "";
-
-        editor.session.setMode(new Mode());
-        editor.setValue(value, -1);
         editor.session.setAnnotations([{row: 0, column: 0, text: "warning test", type: "warning"}]);
         editor.renderer.$loop._flush();
 
@@ -78,9 +64,8 @@ module.exports = {
         var annotation = lines.cells[0].element;
         assert.ok(/ace_warning/.test(annotation.className));
 
-        var target = editor.container.querySelector(".ace_gutter-cell");
-        var rect = target.getBoundingClientRect();
-        target.dispatchEvent(new MouseEvent("move", {clientX: rect.left, clientY: rect.top}));
+        var rect = annotation.getBoundingClientRect();
+        annotation.dispatchEvent(new MouseEvent("move", {clientX: rect.left, clientY: rect.top}));
 
         // Wait for the tooltip to appear after its timeout.
         setTimeout(function() {
@@ -92,11 +77,6 @@ module.exports = {
         }, 100); 
     },
     "test: gutter info tooltip" : function() {
-        var editor = this.editor;
-        var value = "";
-
-        editor.session.setMode(new Mode());
-        editor.setValue(value, -1);
         editor.session.setAnnotations([{row: 0, column: 0, text: "info test", type: "info"}]);
         editor.renderer.$loop._flush();
 
@@ -104,9 +84,8 @@ module.exports = {
         var annotation = lines.cells[0].element;
         assert.ok(/ace_info/.test(annotation.className));
 
-        var target = editor.container.querySelector(".ace_gutter-cell");
-        var rect = target.getBoundingClientRect();
-        target.dispatchEvent(new MouseEvent("move", {clientX: rect.left, clientY: rect.top}));
+        var rect = annotation.getBoundingClientRect();
+        annotation.dispatchEvent(new MouseEvent("move", {clientX: rect.left, clientY: rect.top}));
 
         // Wait for the tooltip to appear after its timeout.
         setTimeout(function() {
@@ -119,8 +98,8 @@ module.exports = {
     },
     
     tearDown : function() {
-        this.editor.destroy();
-        document.body.removeChild(this.editor.container);
+        editor.destroy();
+        document.body.removeChild(editor.container);
     }
 };
 
