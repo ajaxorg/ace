@@ -13,7 +13,7 @@ if (!fs.existsSync)
 require("amd-loader");
 
 var cwd = __dirname + "/";
-var root = path.normalize(cwd + Array(5).join("../"));
+var root = path.normalize(cwd + Array(4).join("../"));
 
 function jsFileList(path, filter) {
     if (!filter) filter = /_test/;

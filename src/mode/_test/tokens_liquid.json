@@ -1,0 +1,783 @@
+[[
+   "start",
+  ["text.xml","There are a couple of different Liquid variations in circulation. This grammars supports"]
+],[
+   "start",
+  ["text.xml","both the Standard and Shopify Liquid variations. The following examples can be found in full at:"]
+],[
+   "start"
+],[
+   "start",
+  ["text.xml","Standard Variation: https://shopify.github.io/liquid"]
+],[
+   "start",
+  ["text.xml","Shopify Variation: https://shopify.dev/docs/api/liquid"]
+],[
+   "start"
+],[
+   "start",
+  ["text.xml","Liquid is an extraction from the e-commerce system Shopify."]
+],[
+   "start",
+  ["text.xml","Shopify powers many thousands of e-commerce stores which all call for unique designs."]
+],[
+   "start",
+  ["text.xml","For this we developed Liquid which allows our customers complete design freedom while"]
+],[
+   "start",
+  ["text.xml","maintaining the integrity of our servers."]
+],[
+   "start"
+],[
+   "start",
+  ["text.xml","Liquid has been in production use since June 2006 and is now used by many other"]
+],[
+   "start",
+  ["text.xml","hosted web applications."]
+],[
+   "start"
+],[
+   "start",
+  ["text.xml","It was developed for usage in Ruby on Rails web applications and integrates seamlessly"]
+],[
+   "start",
+  ["text.xml","as a plugin but it also works excellently as a stand alone library."]
+],[
+   "start"
+],[
+   "start",
+  ["text.xml","Here's what it looks like:"]
+],[
+   "start"
+],[
+   "start",
+  ["text.xml","  "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","ul"],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","id"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"products\""],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["text.xml","    "],
+  ["meta.tag.punctuation.tag-open","{%"],
+  ["keyword.block"," for"],
+  ["text"," product"],
+  ["keyword.operator"," in "],
+  ["text","products "],
+  ["meta.tag.punctuation.tag-close","%}"]
+],[
+   "start",
+  ["text.xml","      "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","li"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["text.xml","        "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","h2"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["meta.tag.punctuation.ouput-open","{{"],
+  ["text"," "],
+  ["support.class","product"],
+  ["keyword.operator","."],
+  ["support.object","title"],
+  ["text"," "],
+  ["meta.tag.punctuation.ouput-close","}}"],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","h2"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["text.xml","        Only "],
+  ["meta.tag.punctuation.ouput-open","{{"],
+  ["text"," "],
+  ["support.class","product"],
+  ["keyword.operator","."],
+  ["support.object","price"],
+  ["text"," "],
+  ["keyword.operator","| "],
+  ["support.function","format_as_money"],
+  ["text"," "],
+  ["meta.tag.punctuation.ouput-close","}}"]
+],[
+   "start"
+],[
+   "start",
+  ["text.xml","        "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","p"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["meta.tag.punctuation.ouput-open","{{"],
+  ["text"," "],
+  ["support.class","product"],
+  ["keyword.operator","."],
+  ["support.object","description"],
+  ["text"," "],
+  ["keyword.operator","| "],
+  ["support.function","prettyprint"],
+  ["text"," "],
+  ["keyword.operator","| "],
+  ["support.function","truncate"],
+  ["text",": "],
+  ["constant.numeric","200"],
+  ["text","  "],
+  ["meta.tag.punctuation.ouput-close","}}"],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","p"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start"
+],[
+   "start",
+  ["text.xml","      "],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","li"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["text.xml","    "],
+  ["meta.tag.punctuation.tag-open","{%"],
+  ["keyword.block"," endfor"],
+  ["text"," "],
+  ["meta.tag.punctuation.tag-close","%}"]
+],[
+   "start",
+  ["text.xml","  "],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","ul"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start"
+],[
+   "start"
+],[
+   "start",
+  ["text.xml","Some more features include:"]
+],[
+   "start"
+],[
+   "start",
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","h2"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["text.xml","Filters"],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","h2"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","p"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["text.xml"," The word \"tobi\" in uppercase: "],
+  ["meta.tag.punctuation.ouput-open","{{"],
+  ["text"," "],
+  ["string","'tobi'"],
+  ["text"," "],
+  ["keyword.operator","| "],
+  ["support.function","upcase"],
+  ["text"," "],
+  ["meta.tag.punctuation.ouput-close","}}"],
+  ["text.xml"," "],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","p"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","p"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["text.xml","The word \"tobi\" has "],
+  ["meta.tag.punctuation.ouput-open","{{"],
+  ["text"," "],
+  ["string","'tobi'"],
+  ["text"," "],
+  ["keyword.operator","| "],
+  ["support.function","size"],
+  ["text"," "],
+  ["meta.tag.punctuation.ouput-close","}}"],
+  ["text.xml"," letters! "],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","p"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","p"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["text.xml","Change \"Hello world\" to \"Hi world\": "],
+  ["meta.tag.punctuation.ouput-open","{{"],
+  ["text"," "],
+  ["string","'Hello world'"],
+  ["text"," "],
+  ["keyword.operator","| "],
+  ["support.function","replace"],
+  ["text",": "],
+  ["string","'Hello'"],
+  ["text",", "],
+  ["string","'Hi'"],
+  ["text"," "],
+  ["meta.tag.punctuation.ouput-close","}}"],
+  ["text.xml"," "],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","p"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","p"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["text.xml","The date today is "],
+  ["meta.tag.punctuation.ouput-open","{{"],
+  ["text"," "],
+  ["string","'now'"],
+  ["text"," "],
+  ["keyword.operator","| "],
+  ["support.function","date"],
+  ["text",": "],
+  ["string","\"%Y %b %d\""],
+  ["text"," "],
+  ["meta.tag.punctuation.ouput-close","}}"],
+  ["text.xml"," "],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","p"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start"
+],[
+   "start"
+],[
+   "start",
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","h2"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["text.xml","If"],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","h2"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","p"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["text.xml","  "],
+  ["meta.tag.punctuation.tag-open","{%"],
+  ["keyword.block"," if"],
+  ["text"," "],
+  ["support.class","user"],
+  ["keyword.operator","."],
+  ["support.object","name"],
+  ["text"," "],
+  ["keyword.operator","=="],
+  ["text"," "],
+  ["string","'tobi'"],
+  ["text"," or "],
+  ["support.class","user"],
+  ["keyword.operator","."],
+  ["support.object","name"],
+  ["text"," "],
+  ["keyword.operator","=="],
+  ["text"," "],
+  ["string","'marc'"],
+  ["text"," "],
+  ["meta.tag.punctuation.tag-close","%}"]
+],[
+   "start",
+  ["text.xml","    hi marc or tobi"]
+],[
+   "start",
+  ["text.xml","  "],
+  ["meta.tag.punctuation.tag-open","{%"],
+  ["keyword.block"," endif"],
+  ["text"," "],
+  ["meta.tag.punctuation.tag-close","%}"]
+],[
+   "start",
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","p"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start"
+],[
+   "start",
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","h2"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["text.xml","Comments"],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","h2"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start"
+],[
+   "start",
+  ["comment.line","{% #"],
+  ["comment"," Line Comment  "],
+  ["comment.line","%}"]
+],[
+   "start"
+],[
+   "comment.block",
+  ["comment.block","{% comment %}"]
+],[
+   "comment.block",
+  ["comment","  Block Comment"]
+],[
+   "start",
+  ["comment.block","{% endcomment %}"]
+],[
+   "start"
+],[
+   "start",
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","h2"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["text.xml","Case"],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","h2"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","p"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["text.xml","  "],
+  ["meta.tag.punctuation.tag-open","{%"],
+  ["keyword.block"," case"],
+  ["text"," template "],
+  ["meta.tag.punctuation.tag-close","%}"]
+],[
+   "start",
+  ["text.xml","    "],
+  ["meta.tag.punctuation.tag-open","{%"],
+  ["keyword.block"," when"],
+  ["text"," "],
+  ["string","'index'"],
+  ["text"," "],
+  ["meta.tag.punctuation.tag-close","%}"]
+],[
+   "start",
+  ["text.xml","       Welcome"]
+],[
+   "start",
+  ["text.xml","    "],
+  ["meta.tag.punctuation.tag-open","{%"],
+  ["keyword.block"," when"],
+  ["text"," "],
+  ["string","'product'"],
+  ["text"," "],
+  ["meta.tag.punctuation.tag-close","%}"]
+],[
+   "start",
+  ["text.xml","       "],
+  ["meta.tag.punctuation.ouput-open","{{"],
+  ["text"," "],
+  ["support.class","product"],
+  ["keyword.operator","."],
+  ["support.object","vendor"],
+  ["text"," "],
+  ["keyword.operator","| "],
+  ["support.function","link_to_vendor"],
+  ["text"," "],
+  ["meta.tag.punctuation.ouput-close","}}"],
+  ["text.xml"," / "],
+  ["meta.tag.punctuation.ouput-open","{{"],
+  ["text"," "],
+  ["support.class","product"],
+  ["keyword.operator","."],
+  ["support.object","title"],
+  ["text"," "],
+  ["meta.tag.punctuation.ouput-close","}}"]
+],[
+   "start",
+  ["text.xml","    "],
+  ["meta.tag.punctuation.tag-open","{%"],
+  ["keyword.block"," else"],
+  ["text"," "],
+  ["meta.tag.punctuation.tag-close","%}"]
+],[
+   "start",
+  ["text.xml","       "],
+  ["meta.tag.punctuation.ouput-open","{{"],
+  ["text"," page_title "],
+  ["meta.tag.punctuation.ouput-close","}}"]
+],[
+   "start",
+  ["text.xml","  "],
+  ["meta.tag.punctuation.tag-open","{%"],
+  ["keyword.block"," endcase"],
+  ["text"," "],
+  ["meta.tag.punctuation.tag-close","%}"]
+],[
+   "start",
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","p"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start"
+],[
+   "start"
+],[
+   "start",
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","h2"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["text.xml","For Loops"],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","h2"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","p"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["text.xml","  "],
+  ["meta.tag.punctuation.tag-open","{%"],
+  ["keyword.block"," for"],
+  ["text"," item"],
+  ["keyword.operator"," in "],
+  ["text","array "],
+  ["meta.tag.punctuation.tag-close","%}"]
+],[
+   "start",
+  ["text.xml","    "],
+  ["meta.tag.punctuation.ouput-open","{{"],
+  ["text"," item "],
+  ["meta.tag.punctuation.ouput-close","}}"]
+],[
+   "start",
+  ["text.xml","  "],
+  ["meta.tag.punctuation.tag-open","{%"],
+  ["keyword.block"," endfor"],
+  ["text"," "],
+  ["meta.tag.punctuation.tag-close","%}"]
+],[
+   "start",
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","p"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start"
+],[
+   "start"
+],[
+   "start",
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","h2"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["text.xml","Tables"],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","h2"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","p"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["text.xml","  "],
+  ["meta.tag.punctuation.tag-open","{%"],
+  ["keyword.block"," tablerow"],
+  ["text"," item"],
+  ["keyword.operator"," in "],
+  ["text","items"],
+  ["support.function"," cols"],
+  ["text",": "],
+  ["constant.numeric","3"],
+  ["text"," "],
+  ["meta.tag.punctuation.tag-close","%}"]
+],[
+   "start",
+  ["text.xml","    "],
+  ["meta.tag.punctuation.tag-open","{%"],
+  ["keyword.block"," if"],
+  ["text"," "],
+  ["support.class","tablerowloop"],
+  ["keyword.operator","."],
+  ["support.object","col_first"],
+  ["text"," "],
+  ["meta.tag.punctuation.tag-close","%}"]
+],[
+   "start",
+  ["text.xml","      First column: "],
+  ["meta.tag.punctuation.ouput-open","{{"],
+  ["text"," "],
+  ["support.class","item"],
+  ["keyword.operator","."],
+  ["support.object","variable"],
+  ["text"," "],
+  ["meta.tag.punctuation.ouput-close","}}"]
+],[
+   "start",
+  ["text.xml","    "],
+  ["meta.tag.punctuation.tag-open","{%"],
+  ["keyword.block"," else"],
+  ["text"," "],
+  ["meta.tag.punctuation.tag-close","%}"]
+],[
+   "start",
+  ["text.xml","      Different column: "],
+  ["meta.tag.punctuation.ouput-open","{{"],
+  ["text"," "],
+  ["support.class","item"],
+  ["keyword.operator","."],
+  ["support.object","variable"],
+  ["text"," "],
+  ["meta.tag.punctuation.ouput-close","}}"]
+],[
+   "start",
+  ["text.xml","    "],
+  ["meta.tag.punctuation.tag-open","{%"],
+  ["keyword.block"," endif"],
+  ["text"," "],
+  ["meta.tag.punctuation.tag-close","%}"]
+],[
+   "start",
+  ["text.xml","  "],
+  ["meta.tag.punctuation.tag-open","{%"],
+  ["keyword.block"," endtablerow"],
+  ["text"," "],
+  ["meta.tag.punctuation.tag-close","%}"]
+],[
+   "start",
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","p"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start"
+],[
+   "start",
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","h2"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["text.xml","Embedded Code Blocks"],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","h2"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start"
+],[
+   "start",
+  ["text.xml","This support Shopify Liquid variation JSON schema code blocks"]
+],[
+   "start"
+],[
+   "schema-start",
+  ["meta.tag.punctuation.tag-open","{%"],
+  ["text"," "],
+  ["keyword.tagschema.tag-name","schema"],
+  ["text"," "],
+  ["meta.tag.punctuation.tag-close","%}"]
+],[
+   "schema-start",
+  ["text","  "],
+  ["paren.lparen","{"]
+],[
+   "schema-start",
+  ["text","    "],
+  ["variable","\"string\""],
+  ["text",": "],
+  ["string","\"bar\""],
+  ["punctuation.operator",","]
+],[
+   "schema-start",
+  ["text","    "],
+  ["variable","\"boolean\""],
+  ["text",": "],
+  ["constant.language.boolean","true"],
+  ["punctuation.operator",","]
+],[
+   "schema-start",
+  ["text","    "],
+  ["variable","\"number\""],
+  ["text",": "],
+  ["constant.numeric","100"],
+  ["punctuation.operator",","]
+],[
+   "schema-start",
+  ["text","    "],
+  ["variable","\"object\""],
+  ["text",": "],
+  ["paren.lparen","{"]
+],[
+   "schema-start",
+  ["text","      "],
+  ["variable","\"array\""],
+  ["text",": "],
+  ["paren.lparen","["],
+  ["constant.numeric","100"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["constant.language.boolean","false"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string","\"string\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["paren.lparen","{"],
+  ["paren.rparen","}"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["paren.lparen","["],
+  ["paren.rparen","]"],
+  ["text"," "],
+  ["paren.rparen","]"]
+],[
+   "schema-start",
+  ["text","    "],
+  ["paren.rparen","}"]
+],[
+   "schema-start",
+  ["text","  "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["meta.tag.punctuation.tag-open","{%"],
+  ["text"," "],
+  ["keyword.tagendschema.tag-name","endschema"],
+  ["text"," "],
+  ["meta.tag.punctuation.tag-close","%}"]
+],[
+   "start"
+],[
+   "start",
+  ["text.xml","This support Shopify Liquid variation Stylesheet and Style code blocks"]
+],[
+   "start"
+],[
+   "style-start",
+  ["meta.tag.punctuation.tag-open","{%"],
+  ["text"," "],
+  ["keyword.tagstyle.tag-name","style"],
+  ["text"," "],
+  ["meta.tag.punctuation.tag-close","%}"]
+],[
+   "style-ruleset",
+  ["text"," "],
+  ["variable",".class"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "style-ruleset",
+  ["text","   "],
+  ["support.type","font-size"],
+  ["punctuation.operator",":"],
+  ["text"," "],
+  ["constant.numeric","10"],
+  ["keyword","px"],
+  ["punctuation.operator",";"],
+  ["text"," "],
+  ["comment","/* comment */"]
+],[
+   "style-start",
+  ["text"," "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["meta.tag.punctuation.tag-open","{%"],
+  ["text"," "],
+  ["keyword.tagendstyle.tag-name","endstyle"],
+  ["text"," "],
+  ["meta.tag.punctuation.tag-close","%}"]
+],[
+   "start"
+],[
+   "stylesheet-start",
+  ["meta.tag.punctuation.tag-open","{%"],
+  ["text"," "],
+  ["keyword.tagstylesheet.tag-name","stylesheet"],
+  ["text"," "],
+  ["meta.tag.punctuation.tag-close","%}"]
+],[
+   "stylesheet-ruleset",
+  ["text"," "],
+  ["variable",".class"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "stylesheet-ruleset",
+  ["text","   "],
+  ["support.type","font-size"],
+  ["punctuation.operator",":"],
+  ["text"," "],
+  ["constant.numeric","10"],
+  ["keyword","px"],
+  ["punctuation.operator",";"],
+  ["text"," "],
+  ["comment","/* comment */"]
+],[
+   "stylesheet-start",
+  ["text"," "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["meta.tag.punctuation.tag-open","{%"],
+  ["text"," "],
+  ["keyword.tagendstylesheet.tag-name","endstylesheet"],
+  ["text"," "],
+  ["meta.tag.punctuation.tag-close","%}"]
+],[
+   "start"
+],[
+   "start",
+  ["text.xml","This support Shopify Liquid variation JavaScript code blocks"]
+],[
+   "start"
+],[
+   "javascript-start",
+  ["meta.tag.punctuation.tag-open","{%"],
+  ["text"," "],
+  ["keyword.tagjavascript.tag-name","javascript"],
+  ["text"," "],
+  ["meta.tag.punctuation.tag-close","%}"]
+],[
+   "javascript-start"
+],[
+   "javascript-start",
+  ["text","  "],
+  ["storage.type","function"],
+  ["text"," "],
+  ["entity.name.function","foo"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["variable.parameter","param"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "javascript-start"
+],[
+   "javascript-no_regex",
+  ["text","    "],
+  ["keyword","return"],
+  ["text"," "],
+  ["string","'something'"],
+  ["text"," "],
+  ["comment","// comment"]
+],[
+   "javascript-no_regex",
+  ["text","  "],
+  ["paren.rparen","}"]
+],[
+   "javascript-no_regex"
+],[
+   "start",
+  ["meta.tag.punctuation.tag-open","{%"],
+  ["text"," "],
+  ["keyword.tagendjavascript.tag-name","endjavascript"],
+  ["text"," "],
+  ["meta.tag.punctuation.tag-close","%}"]
+],[
+   "start"
+]]
