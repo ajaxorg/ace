@@ -1,7 +1,6 @@
 "use strict";
 
 var oop = require("./lib/oop");
-var Range = require("./range").Range;
 var Search = require("./search").Search;
 var EditSession = require("./edit_session").EditSession;
 var SearchHighlight = require("./search_highlight").SearchHighlight;
@@ -34,7 +33,7 @@ class Occur extends Search {
         var translatedPos = this.originalToOccurPosition(editor.session, pos);
         editor.moveCursorToPosition(translatedPos);
         return true;
-    };
+    }
 
     /**
      * Disables occur mode. Resets the [[Sessions `EditSession`]] [[Document
@@ -52,14 +51,14 @@ class Occur extends Search {
         if (translatedPos)
             editor.moveCursorToPosition(translatedPos);
         return true;
-    };
+    }
 
     highlight(sess, regexp) {
         var hl = sess.$occurHighlight = sess.$occurHighlight || sess.addDynamicMarker(
                 new SearchHighlight(null, "ace_occur-highlight", "text"));
         hl.setRegexp(regexp);
         sess._emit("changeBackMarker"); // force highlight layer redraw
-    };
+    }
 
     displayOccurContent(editor, options) {
         // this.setSession(session || new EditSession(""))
@@ -74,12 +73,12 @@ class Occur extends Search {
         occurSession.$useEmacsStyleLineStart = this.$useEmacsStyleLineStart;
         this.highlight(occurSession, options.re);
         occurSession._emit('changeBackMarker');
-    };
+    }
 
     displayOriginalContent(editor) {
         editor.setSession(this.$originalSession);
         this.$originalSession.$useEmacsStyleLineStart = this.$useEmacsStyleLineStart;
-    };
+    }
 
     /**
     * Translates the position from the original document to the occur lines in
@@ -98,7 +97,7 @@ class Occur extends Search {
                 return {row: i, column: pos.column};
         }
         return nullPos;
-    };
+    }
 
     /**
     * Translates the position from the occur document to the original document
@@ -112,7 +111,7 @@ class Occur extends Search {
         if (!lines || !lines[pos.row])
             return pos;
         return {row: lines[pos.row].row, column: pos.column};
-    };
+    }
 
     matchingLines(session, options) {
         options = oop.mixin({}, options);
@@ -126,7 +125,7 @@ class Occur extends Search {
                 lines :
                 lines.concat({row: row, content: session.getLine(row)});
         }, []);
-    };
+    }
 
 }
 

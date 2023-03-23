@@ -9,20 +9,18 @@ class Marker {
         this.element = dom.createElement("div");
         this.element.className = "ace_layer ace_marker-layer";
         parentEl.appendChild(this.element);
-    };
-
-    $padding = 0;
-
+    }
+    
     setPadding(padding) {
         this.$padding = padding;
-    };
+    }
     setSession(session) {
         this.session = session;
-    };
+    }
     
     setMarkers(markers) {
         this.markers = markers;
-    };
+    }
     
     elt(className, css) {
         var x = this.i != -1 && this.element.childNodes[this.i];
@@ -35,7 +33,7 @@ class Marker {
         }
         x.style.cssText = css;
         x.className = className;
-    };
+    }
 
     update(config) {
         if (!config) return;
@@ -77,11 +75,11 @@ class Marker {
             while (this.i < this.element.childElementCount)
                 this.element.removeChild(this.element.lastChild);
         }
-    };
+    }
 
     $getTop(row, layerConfig) {
         return (row - layerConfig.firstRowScreen) * layerConfig.lineHeight;
-    };
+    }
 
 
     // Draws a marker, which spans a range of text on multiple lines 
@@ -106,7 +104,7 @@ class Marker {
                     + getBorderClass(row == start || row == start + 1 && range.start.column, prev < curr, curr > next, row == end),
                 layerConfig, row == end ? 0 : 1, extraStyle);
         }
-    };
+    }
 
     // Draws a multi line marker, where lines span the full width
     drawMultiLineMarker(stringBuilder, range, clazz, config, extraStyle) {
@@ -161,7 +159,7 @@ class Marker {
             "top:"+ top+ "px;"+
             "left:"+ padding+ "px;"+ (extraStyle || "")
         );
-    };
+    }
 
     // Draws a marker which covers part or whole width of a single screen line
     drawSingleLineMarker(stringBuilder, range, clazz, config, extraLength, extraStyle) {
@@ -180,7 +178,7 @@ class Marker {
             "top:"+ top+ "px;"+
             "left:"+ left+ "px;"+ (extraStyle || "")
         );
-    };
+    }
 
     // Draws Bidi marker which covers part or whole width of a single screen line
     drawBidiSingleLineMarker(stringBuilder, range, clazz, config, extraLength, extraStyle) {
@@ -196,7 +194,7 @@ class Marker {
                 "left:" + (padding + selection.left) + "px;" + (extraStyle || "")
             );
         }, this);
-    };
+    }
 
     drawFullLineMarker(stringBuilder, range, clazz, config, extraStyle) {
         var top = this.$getTop(range.start.row, config);
@@ -210,7 +208,7 @@ class Marker {
             "top:"+ top+ "px;"+
             "left:0;right:0;"+ (extraStyle || "")
         );
-    };
+    }
     
     drawScreenLineMarker(stringBuilder, range, clazz, config, extraStyle) {
         var top = this.$getTop(range.start.row, config);
@@ -222,9 +220,11 @@ class Marker {
             "top:"+ top+ "px;"+
             "left:0;right:0;"+ (extraStyle || "")
         );
-    };
+    }
 
 }
+
+Marker.prototype.$padding = 0;
 
 function getBorderClass(tl, tr, br, bl) {
     return (tl ? 1 : 0) | (tr ? 2 : 0) | (br ? 4 : 0) | (bl ? 8 : 0);

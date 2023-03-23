@@ -13,11 +13,11 @@ class UndoManager {
         this.$fromUndo = false;
         this.$undoDepth = Infinity;
         this.reset();
-    };
+    }
     
     addSession(session) {
         this.$session = session;
-    };
+    }
     /**
      * Provides a means for implementing your own undo manager. `options` has one property, `args`, an [[Array `Array`]], with two elements:
      *
@@ -43,19 +43,19 @@ class UndoManager {
         if (delta.action == "remove" || delta.action == "insert")
             this.$lastDelta = delta;
         this.lastDeltas.push(delta);
-    };
+    }
     
     addSelection(selection, rev) {
         this.selections.push({
             value: selection,
             rev: rev || this.$rev
         });
-    };
+    }
     
     startNewGroup() {
         this.lastDeltas = null;
         return this.$rev;
-    };
+    }
     
     markIgnored(from, to) {
         if (to == null) to = this.$rev + 1;
@@ -68,7 +68,7 @@ class UndoManager {
                 delta.ignore = true;
         }
         this.lastDeltas = null;
-    };
+    }
     
     getSelection(rev, after) {
         var stack = this.selections;
@@ -80,11 +80,11 @@ class UndoManager {
                 return selection;
             }
         }
-    };
+    }
     
     getRevision() {
         return this.$rev;
-    };
+    }
     
     getDeltas(from, to) {
         if (to == null) to = this.$rev + 1;
@@ -100,17 +100,17 @@ class UndoManager {
             }
         }
         return stack.slice(start, end);
-    };
+    }
     
     getChangedRanges(from, to) {
         if (to == null) to = this.$rev + 1;
         
-    };
+    }
     
     getChangedLines(from, to) {
         if (to == null) to = this.$rev + 1;
         
-    };
+    }
 
     /**
      * [Perform an undo operation on the document, reverting the last change.]{: #UndoManager.undo}
@@ -145,7 +145,7 @@ class UndoManager {
         this.$fromUndo = false;
 
         return undoSelectionRange;
-    };
+    }
     
     /**
      * [Perform a redo operation on the document, reimplementing the last change.]{: #UndoManager.redo}
@@ -178,7 +178,7 @@ class UndoManager {
         this.$fromUndo = false;
         
         return redoSelectionRange;
-    };
+    }
     
     $syncRev() {
         var stack = this.$undoStack;
@@ -186,7 +186,7 @@ class UndoManager {
         var id = nextDelta && nextDelta[0].id || 0;
         this.$redoStackBaseRev = id;
         this.$rev = id;
-    };
+    }
 
     /**
      * Destroys the stack of undo and redo redo operations.
@@ -200,7 +200,7 @@ class UndoManager {
         this.mark = 0;
         this.$redoStackBaseRev = this.$rev;
         this.selections = [];
-    };
+    }
 
     
     /**
@@ -209,7 +209,7 @@ class UndoManager {
      **/
     canUndo() {
         return this.$undoStack.length > 0;
-    };
+    }
 
     /**
      * Returns `true` if there are redo operations left to perform.
@@ -217,7 +217,7 @@ class UndoManager {
      **/
     canRedo() {
         return this.$redoStack.length > 0;
-    };
+    }
     
     /**
      * Marks the current status clean
@@ -226,7 +226,7 @@ class UndoManager {
         if (rev == undefined)
             rev = this.$rev;
         this.mark = rev;
-    };
+    }
 
     /**
      * Returns if the current status is clean
@@ -234,26 +234,27 @@ class UndoManager {
      **/
     isAtBookmark() {
         return this.$rev === this.mark;
-    };
+    }
     
     toJSON() {
         
-    };
+    }
     
     fromJSON() {
         
-    };
-    
-    hasUndo = this.canUndo;
-    hasRedo = this.canRedo;
-    isClean = this.isAtBookmark;
-    markClean = this.bookmark;
+    }
+
     
     $prettyPrint(delta) {
         if (delta) return stringifyDelta(delta);
         return stringifyDelta(this.$undoStack) + "\n---\n" + stringifyDelta(this.$redoStack);
-    };
+    }
 }
+
+UndoManager.prototype.hasUndo = UndoManager.prototype.canUndo;
+UndoManager.prototype.hasRedo = UndoManager.prototype.canRedo;
+UndoManager.prototype.isClean = UndoManager.prototype.isAtBookmark;
+UndoManager.prototype.markClean = UndoManager.prototype.bookmark;
 
 function rearrangeUndoStack(stack, pos) {
     for (var i = pos; i--; ) {

@@ -127,18 +127,27 @@ class SearchBox {
                 sb.$syncOptions();
             }
         }]);
-    };
+
+        //keybinding outside of the searchbox
+        this.$closeSearchBarKb = new HashHandler([{
+            bindKey: "Esc",
+            name: "closeSearchBar",
+            exec: function(editor) {
+                editor.searchBox.hide();
+            }
+        }]);
+    }
     
     setEditor(editor) {
         editor.searchBox = this;
         editor.renderer.scroller.appendChild(this.element);
         this.editor = editor;
-    };
+    }
     
     setSession(e) {
         this.searchRange = null;
         this.$syncOptions(true);
-    };
+    }
 
     $initElements(sb) {
         this.searchBox = sb.querySelector(".ace_search_form");
@@ -151,7 +160,7 @@ class SearchBox {
         this.searchInput = this.searchBox.querySelector(".ace_search_field");
         this.replaceInput = this.replaceBox.querySelector(".ace_search_field");
         this.searchCounter = sb.querySelector(".ace_search_counter");
-    };
+    }
     
     $init() {
         var sb = this.element;
@@ -199,16 +208,7 @@ class SearchBox {
             _this.activeInput = _this.replaceInput;
             _this.searchInput.value && _this.highlight();
         });
-    };
-
-    //keybinding outside of the searchbox
-    $closeSearchBarKb = new HashHandler([{
-        bindKey: "Esc",
-        name: "closeSearchBar",
-        exec: function(editor) {
-            editor.searchBox.hide();
-        }
-    }]);
+    }
     
     setSearchRange(range) {
         this.searchRange = range;
@@ -218,7 +218,7 @@ class SearchBox {
             this.editor.session.removeMarker(this.searchRangeMarker);
             this.searchRangeMarker = null;
         }
-    };
+    }
 
     $syncOptions(preventScroll) {
         dom.setCssClass(this.replaceOption, "checked", this.searchRange);
@@ -231,12 +231,12 @@ class SearchBox {
         this.replaceOption.style.display = readOnly ? "none" : "";
         this.replaceBox.style.display = this.replaceOption.checked && !readOnly ? "" : "none";
         this.find(false, false, preventScroll);
-    };
+    }
 
     highlight(re) {
         this.editor.session.highlight(re || this.editor.$search.$options.re);
         this.editor.renderer.updateBackMarkers();
-    };
+    }
     
     find(skipCurrent, backwards, preventScroll) {
         var range = this.editor.find(this.searchInput.value, {
@@ -254,7 +254,7 @@ class SearchBox {
         this.editor._emit("findSearchBox", { match: !noMatch });
         this.highlight();
         this.updateCounter();
-    };
+    }
     updateCounter() {
         var editor = this.editor;
         var regex = editor.$search.$options.re;
@@ -286,13 +286,13 @@ class SearchBox {
             }
         }
         this.searchCounter.textContent = before + " of " + (all > MAX_COUNT ? MAX_COUNT + "+" : all);
-    };
+    }
     findNext() {
         this.find(true, false);
-    };
+    }
     findPrev() {
         this.find(true, true);
-    };
+    }
     findAll(){
         var range = this.editor.findAll(this.searchInput.value, {            
             regExp: this.regExpOption.checked,
@@ -304,21 +304,21 @@ class SearchBox {
         this.editor._emit("findSearchBox", { match: !noMatch });
         this.highlight();
         this.hide();
-    };
+    }
     replace() {
         if (!this.editor.getReadOnly())
             this.editor.replace(this.replaceInput.value);
-    };    
+    }    
     replaceAndFindNext() {
         if (!this.editor.getReadOnly()) {
             this.editor.replace(this.replaceInput.value);
             this.findNext();
         }
-    };
+    }
     replaceAll() {
         if (!this.editor.getReadOnly())
             this.editor.replaceAll(this.replaceInput.value);
-    };
+    }
 
     hide() {
         this.active = false;
@@ -328,7 +328,7 @@ class SearchBox {
         this.element.style.display = "none";
         this.editor.keyBinding.removeKeyboardHandler(this.$closeSearchBarKb);
         this.editor.focus();
-    };
+    }
     show(value, isReplace) {
         this.active = true;
         this.editor.on("changeSession", this.setSession);
@@ -344,12 +344,12 @@ class SearchBox {
         this.editor.keyBinding.addKeyboardHandler(this.$closeSearchBarKb);
         
         this.$syncOptions(true);
-    };
+    }
 
     isFocused() {
         var el = document.activeElement;
         return el == this.searchInput || el == this.replaceInput;
-    };
+    }
 }
 
 exports.SearchBox = SearchBox;

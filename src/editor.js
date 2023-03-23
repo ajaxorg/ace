@@ -28,8 +28,6 @@ var clipboard = require("./clipboard");
  * Event sessions dealing with the mouse and keyboard are bubbled up from `Document` to the `Editor`, which decides what to do with them.
  **/
 class Editor {
-    static $uid = 0;
-    
     /**
      * Creates a new `Editor` object.
      *
@@ -78,7 +76,7 @@ class Editor {
         if (options)
             this.setOptions(options);
         config._signal("editor", this);
-    };
+    }
 
     $initOperationListeners() {
         this.commands.on("exec", this.startOperation.bind(this), true);
@@ -102,10 +100,8 @@ class Editor {
             }
             this.curOp.selectionChanged = true;
         }.bind(this), true);
-    };
+    }
 
-    curOp = null;
-    prevOp = {};
     startOperation(commandEvent) {
         if (this.curOp) {
             if (!commandEvent || this.curOp.command)
@@ -124,7 +120,7 @@ class Editor {
             scrollTop: this.renderer.scrollTop
         };
         this.curOp.selectionBefore = this.selection.toJSON();
-    };
+    }
 
     endOperation(e) {
         if (this.curOp && this.session) {
@@ -170,10 +166,8 @@ class Editor {
             this.prevOp = this.curOp;
             this.curOp = null;
         }
-    };
-
-    // TODO use property on commands instead of this
-    $mergeableCommands = ["backspace", "del", "insertstring"];
+    }
+    
     $historyTracker(e) {
         if (!this.$mergeUndoDeltas)
             return;
@@ -208,7 +202,7 @@ class Editor {
             this.session.mergeUndoDeltas = true;
         else if (mergeableCommands.indexOf(e.command.name) !== -1)
             this.sequenceStartTime = Date.now();
-    };
+    }
 
     /**
      * Sets a new key handler, such as "vim" or "windows".
@@ -229,7 +223,7 @@ class Editor {
             this.keyBinding.setKeyboardHandler(keyboardHandler);
             cb && cb();
         }
-    };
+    }
 
     /**
      * Returns the keyboard handler, such as "vim" or "windows".
@@ -239,7 +233,7 @@ class Editor {
      **/
     getKeyboardHandler() {
         return this.keyBinding.getKeyboardHandler();
-    };
+    }
 
 
     /**
@@ -364,7 +358,7 @@ class Editor {
         
         if (session && !session.destroyed)
             session.bgTokenizer.scheduleStart();
-    };
+    }
 
     /**
      * Returns the current session being used.
@@ -372,7 +366,7 @@ class Editor {
      **/
     getSession() {
         return this.session;
-    };
+    }
 
     /**
      * Sets the current document to `val`.
@@ -393,7 +387,7 @@ class Editor {
             this.navigateFileStart();
 
         return val;
-    };
+    }
 
     /**
      * Returns the current session's content.
@@ -403,7 +397,7 @@ class Editor {
      **/
     getValue() {
         return this.session.getValue();
-    };
+    }
 
     /**
      *
@@ -412,7 +406,7 @@ class Editor {
      **/
     getSelection() {
         return this.selection;
-    };
+    }
 
     /**
      * {:VirtualRenderer.onResize}
@@ -423,7 +417,7 @@ class Editor {
      **/
     resize(force) {
         this.renderer.onResize(force);
-    };
+    }
 
     /**
      * {:VirtualRenderer.setTheme}
@@ -432,7 +426,7 @@ class Editor {
      **/
     setTheme(theme, cb) {
         this.renderer.setTheme(theme, cb);
-    };
+    }
 
     /**
      * {:VirtualRenderer.getTheme}
@@ -442,7 +436,7 @@ class Editor {
      **/
     getTheme() {
         return this.renderer.getTheme();
-    };
+    }
 
     /**
      * {:VirtualRenderer.setStyle}
@@ -453,7 +447,7 @@ class Editor {
      **/
     setStyle(style) {
         this.renderer.setStyle(style);
-    };
+    }
 
     /**
      * {:VirtualRenderer.unsetStyle}
@@ -461,7 +455,7 @@ class Editor {
      **/
     unsetStyle(style) {
         this.renderer.unsetStyle(style);
-    };
+    }
 
     /**
      * Gets the current font size of the editor text.
@@ -469,7 +463,7 @@ class Editor {
     getFontSize() {
         return this.getOption("fontSize") ||
            dom.computedStyle(this.container).fontSize;
-    };
+    }
 
     /**
      * Set a new font size (in pixels) for the editor text.
@@ -479,7 +473,7 @@ class Editor {
      **/
     setFontSize(size) {
         this.setOption("fontSize", size);
-    };
+    }
 
     $highlightBrackets() {
         if (this.$highlightPending) {
@@ -543,7 +537,7 @@ class Editor {
             };
             if (self.getHighlightIndentGuides()) self.renderer.$textLayer.$highlightIndentGuide();
         }, 50);
-    };
+    }
 
     /**
      *
@@ -551,7 +545,7 @@ class Editor {
      **/
     focus() {
         this.textInput.focus();
-    };
+    }
 
     /**
      * Returns `true` if the current `textInput` is in focus.
@@ -559,7 +553,7 @@ class Editor {
      **/
     isFocused() {
         return this.textInput.isFocused();
-    };
+    }
 
     /**
      *
@@ -567,7 +561,7 @@ class Editor {
      **/
     blur() {
         this.textInput.blur();
-    };
+    }
 
     /**
      * Emitted once the editor comes into focus.
@@ -582,7 +576,7 @@ class Editor {
         this.renderer.showCursor();
         this.renderer.visualizeFocus();
         this._emit("focus", e);
-    };
+    }
 
     /**
      * Emitted once the editor has been blurred.
@@ -597,13 +591,13 @@ class Editor {
         this.renderer.hideCursor();
         this.renderer.visualizeBlur();
         this._emit("blur", e);
-    };
+    }
 
     $cursorChange() {
         this.renderer.updateCursor();
         this.$highlightBrackets();
         this.$updateHighlightActiveLine();
-    };
+    }
 
     /**
      * Emitted whenever the document is changed.
@@ -623,21 +617,21 @@ class Editor {
         
         // Update cursor because tab characters can influence the cursor position.
         this.$cursorChange();
-    };
+    }
 
     onTokenizerUpdate(e) {
         var rows = e.data;
         this.renderer.updateLines(rows.first, rows.last);
-    };
+    }
 
 
     onScrollTopChange() {
         this.renderer.scrollToY(this.session.getScrollTop());
-    };
+    }
 
     onScrollLeftChange() {
         this.renderer.scrollToX(this.session.getScrollLeft());
-    };
+    }
 
     /**
      * Emitted when the selection changes.
@@ -646,7 +640,7 @@ class Editor {
     onCursorChange() {
         this.$cursorChange();
         this._signal("changeSelection");
-    };
+    }
 
     $updateHighlightActiveLine() {
         var session = this.getSession();
@@ -674,7 +668,7 @@ class Editor {
             session.$highlightLineMarker.start.column = highlight.column;
             session._signal("changeBackMarker");
         }
-    };
+    }
 
     onSelectionChange(e) {
         var session = this.session;
@@ -696,7 +690,7 @@ class Editor {
         this.session.highlight(re);
 
         this._signal("changeSelection");
-    };
+    }
 
     $getSelectionHighLightRegexp() {
         var session = this.session;
@@ -726,40 +720,40 @@ class Editor {
             return;
         
         return re;
-    };
+    }
 
 
     onChangeFrontMarker() {
         this.renderer.updateFrontMarkers();
-    };
+    }
 
     onChangeBackMarker() {
         this.renderer.updateBackMarkers();
-    };
+    }
 
 
     onChangeBreakpoint() {
         this.renderer.updateBreakpoints();
-    };
+    }
 
     onChangeAnnotation() {
         this.renderer.setAnnotations(this.session.getAnnotations());
-    };
+    }
 
 
     onChangeMode (e) {
         this.renderer.updateText();
         this._emit("changeMode", e);
-    };
+    }
 
 
     onChangeWrapLimit() {
         this.renderer.updateFull();
-    };
+    }
 
     onChangeWrapMode() {
         this.renderer.onResize(true);
-    };
+    }
 
 
     onChangeFold() {
@@ -768,7 +762,7 @@ class Editor {
         this.$updateHighlightActiveLine();
         // TODO: This might be too much updating. Okay for now.
         this.renderer.updateFull();
-    };
+    }
 
     
     /**
@@ -777,7 +771,7 @@ class Editor {
      **/
     getSelectedText() {
         return this.session.getTextRange(this.getSelectionRange());
-    };
+    }
     
     /**
      * Emitted when text is copied.
@@ -807,21 +801,21 @@ class Editor {
         this._signal("copy", e);
         clipboard.lineMode = copyLine ? e.text : false;
         return e.text;
-    };
+    }
 
     /**
      * Called whenever a text "copy" happens.
      **/
     onCopy() {
         this.commands.exec("copy", this);
-    };
+    }
 
     /**
      * Called whenever a text "cut" happens.
      **/
     onCut() {
         this.commands.exec("cut", this);
-    };
+    }
 
     /**
      * Emitted when text is pasted.
@@ -839,7 +833,7 @@ class Editor {
     onPaste(text, event) {
         var e = {text: text, event: event};
         this.commands.exec("paste", this, e);
-    };
+    }
     
     $handlePaste(e) {
         if (typeof e == "string") 
@@ -874,11 +868,11 @@ class Editor {
                 session.insert(range.start, lines[i]);
             }
         }
-    };
+    }
 
     execCommand(command, args) {
         return this.commands.exec(command, this, args);
-    };
+    }
 
     /**
      * Inserts `text` into wherever the cursor is pointing.
@@ -958,7 +952,7 @@ class Editor {
             if (shouldOutdent)
                 mode.autoOutdent(lineState, session, cursor.row);
         }
-    };
+    }
 
     autoIndent() {
         var session = this.session;
@@ -1002,7 +996,7 @@ class Editor {
 
             mode.autoOutdent(prevLineState, session, row);
         }
-    };
+    }
 
 
     onTextInput(text, composition) {
@@ -1016,7 +1010,7 @@ class Editor {
         else
             applyComposition();
         this.endOperation();
-    };
+    }
     
     applyComposition(text, composition) {
         if (composition.extendLeft || composition.extendRight) {
@@ -1039,11 +1033,11 @@ class Editor {
             r.end.column -= composition.restoreEnd;
             this.selection.setRange(r);
         }
-    };
+    }
 
     onCommandKey(e, hashId, keyCode) {
         return this.keyBinding.onCommandKey(e, hashId, keyCode);
-    };
+    }
 
     /**
      * Pass in `true` to enable overwrites in your session, or `false` to disable. If overwrites is enabled, any text you enter will type over any text after it. If the value of `overwrite` changes, this function also emits the `changeOverwrite` event.
@@ -1054,7 +1048,7 @@ class Editor {
      **/
     setOverwrite(overwrite) {
         this.session.setOverwrite(overwrite);
-    };
+    }
 
     /**
      * Returns `true` if overwrites are enabled; `false` otherwise.
@@ -1063,7 +1057,7 @@ class Editor {
      **/
     getOverwrite() {
         return this.session.getOverwrite();
-    };
+    }
 
     /**
      * Sets the value of overwrite to the opposite of whatever it currently is.
@@ -1071,7 +1065,7 @@ class Editor {
      **/
     toggleOverwrite() {
         this.session.toggleOverwrite();
-    };
+    }
 
     /**
      * Sets how fast the mouse scrolling should do.
@@ -1079,7 +1073,7 @@ class Editor {
      **/
     setScrollSpeed(speed) {
         this.setOption("scrollSpeed", speed);
-    };
+    }
 
     /**
      * Returns the value indicating how fast the mouse scroll speed is (in milliseconds).
@@ -1087,7 +1081,7 @@ class Editor {
      **/
     getScrollSpeed() {
         return this.getOption("scrollSpeed");
-    };
+    }
 
     /**
      * Sets the delay (in milliseconds) of the mouse drag.
@@ -1095,7 +1089,7 @@ class Editor {
      **/
     setDragDelay(dragDelay) {
         this.setOption("dragDelay", dragDelay);
-    };
+    }
 
     /**
      * Returns the current mouse drag delay.
@@ -1103,7 +1097,7 @@ class Editor {
      **/
     getDragDelay() {
         return this.getOption("dragDelay");
-    };
+    }
 
     /**
      * Emitted when the selection style changes, via [[Editor.setSelectionStyle]].
@@ -1117,7 +1111,7 @@ class Editor {
      **/
     setSelectionStyle(val) {
         this.setOption("selectionStyle", val);
-    };
+    }
 
     /**
      * Returns the current selection style.
@@ -1125,7 +1119,7 @@ class Editor {
      **/
     getSelectionStyle() {
         return this.getOption("selectionStyle");
-    };
+    }
 
     /**
      * Determines whether or not the current line should be highlighted.
@@ -1133,21 +1127,21 @@ class Editor {
      **/
     setHighlightActiveLine(shouldHighlight) {
         this.setOption("highlightActiveLine", shouldHighlight);
-    };
+    }
     /**
      * Returns `true` if current lines are always highlighted.
      * @return {Boolean}
      **/
     getHighlightActiveLine() {
         return this.getOption("highlightActiveLine");
-    };
+    }
     setHighlightGutterLine(shouldHighlight) {
         this.setOption("highlightGutterLine", shouldHighlight);
-    };
+    }
 
     getHighlightGutterLine() {
         return this.getOption("highlightGutterLine");
-    };
+    }
 
     /**
      * Determines if the currently selected word should be highlighted.
@@ -1156,7 +1150,7 @@ class Editor {
      **/
     setHighlightSelectedWord(shouldHighlight) {
         this.setOption("highlightSelectedWord", shouldHighlight);
-    };
+    }
 
     /**
      * Returns `true` if currently highlighted words are to be highlighted.
@@ -1164,15 +1158,15 @@ class Editor {
      **/
     getHighlightSelectedWord() {
         return this.$highlightSelectedWord;
-    };
+    }
 
     setAnimatedScroll(shouldAnimate){
         this.renderer.setAnimatedScroll(shouldAnimate);
-    };
+    }
 
     getAnimatedScroll(){
         return this.renderer.getAnimatedScroll();
-    };
+    }
 
     /**
      * If `showInvisibles` is set to `true`, invisible characters&mdash;like spaces or new lines&mdash;are show in the editor.
@@ -1181,7 +1175,7 @@ class Editor {
      **/
     setShowInvisibles(showInvisibles) {
         this.renderer.setShowInvisibles(showInvisibles);
-    };
+    }
 
     /**
      * Returns `true` if invisible characters are being shown.
@@ -1189,23 +1183,23 @@ class Editor {
      **/
     getShowInvisibles() {
         return this.renderer.getShowInvisibles();
-    };
+    }
 
     setDisplayIndentGuides(display) {
         this.renderer.setDisplayIndentGuides(display);
-    };
+    }
 
     getDisplayIndentGuides() {
         return this.renderer.getDisplayIndentGuides();
-    };
+    }
 
     setHighlightIndentGuides(highlight) {
         this.renderer.setHighlightIndentGuides(highlight);
-    };
+    }
 
     getHighlightIndentGuides() {
         return this.renderer.getHighlightIndentGuides();
-    };
+    }
 
     /**
      * If `showPrintMargin` is set to `true`, the print margin is shown in the editor.
@@ -1214,7 +1208,7 @@ class Editor {
      **/
     setShowPrintMargin(showPrintMargin) {
         this.renderer.setShowPrintMargin(showPrintMargin);
-    };
+    }
 
     /**
      * Returns `true` if the print margin is being shown.
@@ -1222,7 +1216,7 @@ class Editor {
      **/
     getShowPrintMargin() {
         return this.renderer.getShowPrintMargin();
-    };
+    }
 
     /**
      * Sets the column defining where the print margin should be.
@@ -1231,7 +1225,7 @@ class Editor {
      **/
     setPrintMarginColumn(showPrintMargin) {
         this.renderer.setPrintMarginColumn(showPrintMargin);
-    };
+    }
 
     /**
      * Returns the column number of where the print margin is.
@@ -1239,7 +1233,7 @@ class Editor {
      **/
     getPrintMarginColumn() {
         return this.renderer.getPrintMarginColumn();
-    };
+    }
 
     /**
      * If `readOnly` is true, then the editor is set to read-only mode, and none of the content can change.
@@ -1248,7 +1242,7 @@ class Editor {
      **/
     setReadOnly(readOnly) {
         this.setOption("readOnly", readOnly);
-    };
+    }
 
     /**
      * Returns `true` if the editor is set to read-only mode.
@@ -1256,7 +1250,7 @@ class Editor {
      **/
     getReadOnly() {
         return this.getOption("readOnly");
-    };
+    }
 
     /**
      * Specifies whether to use behaviors or not. ["Behaviors" in this case is the auto-pairing of special characters, like quotation marks, parenthesis, or brackets.]{: #BehaviorsDef}
@@ -1265,7 +1259,7 @@ class Editor {
      **/
     setBehavioursEnabled(enabled) {
         this.setOption("behavioursEnabled", enabled);
-    };
+    }
 
     /**
      * Returns `true` if the behaviors are currently enabled. {:BehaviorsDef}
@@ -1274,7 +1268,7 @@ class Editor {
      **/
     getBehavioursEnabled() {
         return this.getOption("behavioursEnabled");
-    };
+    }
 
     /**
      * Specifies whether to use wrapping behaviors or not, i.e. automatically wrapping the selection with characters such as brackets
@@ -1284,14 +1278,14 @@ class Editor {
      **/
     setWrapBehavioursEnabled(enabled) {
         this.setOption("wrapBehavioursEnabled", enabled);
-    };
+    }
 
     /**
      * Returns `true` if the wrapping behaviors are currently enabled.
      **/
     getWrapBehavioursEnabled() {
         return this.getOption("wrapBehavioursEnabled");
-    };
+    }
 
     /**
      * Indicates whether the fold widgets should be shown or not.
@@ -1300,22 +1294,22 @@ class Editor {
     setShowFoldWidgets(show) {
         this.setOption("showFoldWidgets", show);
 
-    };
+    }
     /**
      * Returns `true` if the fold widgets are shown.
      * @return {Boolean}
      **/
     getShowFoldWidgets() {
         return this.getOption("showFoldWidgets");
-    };
+    }
 
     setFadeFoldWidgets(fade) {
         this.setOption("fadeFoldWidgets", fade);
-    };
+    }
 
     getFadeFoldWidgets() {
         return this.getOption("fadeFoldWidgets");
-    };
+    }
 
     /**
      * Removes the current selection or one character.
@@ -1351,7 +1345,7 @@ class Editor {
 
         this.session.remove(range);
         this.clearSelection();
-    };
+    }
 
     /**
      * Removes the word directly to the right of the current selection.
@@ -1362,7 +1356,7 @@ class Editor {
 
         this.session.remove(this.getSelectionRange());
         this.clearSelection();
-    };
+    }
 
     /**
      * Removes the word directly to the left of the current selection.
@@ -1373,7 +1367,7 @@ class Editor {
 
         this.session.remove(this.getSelectionRange());
         this.clearSelection();
-    };
+    }
 
     /**
      * Removes all the words to the left of the current selection, until the start of the line.
@@ -1385,7 +1379,7 @@ class Editor {
             this.selection.selectLeft();
         this.session.remove(this.getSelectionRange());
         this.clearSelection();
-    };
+    }
 
     /**
      * Removes all the words to the right of the current selection, until the end of the line.
@@ -1402,7 +1396,7 @@ class Editor {
 
         this.session.remove(range);
         this.clearSelection();
-    };
+    }
 
     /**
      * Splits the line at the current selection (by inserting an `'\n'`).
@@ -1416,7 +1410,7 @@ class Editor {
         var cursor = this.getCursorPosition();
         this.insert("\n");
         this.moveCursorToPosition(cursor);
-    };
+    }
 
     /**
      * Set the "ghost" text in provided position. "Ghost" text is a kind of
@@ -1432,7 +1426,7 @@ class Editor {
             this.session.widgetManager.attach(this);
         }
         this.renderer.setGhostText(text, position);
-    };
+    }
 
     /**
      * Removes "ghost" text currently displayed in the editor.
@@ -1441,7 +1435,7 @@ class Editor {
         if (!this.session.widgetManager) return;
 
         this.renderer.removeGhostText();
-    };
+    }
 
     /**
      * Transposes current line.
@@ -1468,7 +1462,7 @@ class Editor {
         }
         this.session.replace(range, swap);
         this.session.selection.moveToPosition(range.end);
-    };
+    }
 
     /**
      * Converts the current selection entirely into lowercase.
@@ -1483,7 +1477,7 @@ class Editor {
         var text = this.session.getTextRange(range);
         this.session.replace(range, text.toLowerCase());
         this.selection.setSelectionRange(originalRange);
-    };
+    }
 
     /**
      * Converts the current selection entirely into uppercase.
@@ -1498,7 +1492,7 @@ class Editor {
         var text = this.session.getTextRange(range);
         this.session.replace(range, text.toUpperCase());
         this.selection.setSelectionRange(originalRange);
-    };
+    }
 
     /**
      * Inserts an indentation into the current cursor position or indents the selected lines.
@@ -1540,7 +1534,7 @@ class Editor {
             indentString = "\t";
         }
         return this.insert(indentString);
-    };
+    }
 
     /**
      * Indents the current line.
@@ -1549,7 +1543,7 @@ class Editor {
     blockIndent() {
         var rows = this.$getSelectedRows();
         this.session.indentRows(rows.first, rows.last, "\t");
-    };
+    }
 
     /**
      * Outdents the current line.
@@ -1558,7 +1552,7 @@ class Editor {
     blockOutdent() {
         var selection = this.session.getSelection();
         this.session.outdentRows(selection.getRange());
-    };
+    }
 
     // TODO: move out of core when we have good mechanism for managing extensions
     sortLines() {
@@ -1583,7 +1577,7 @@ class Editor {
             deleteRange.end.column = line.length;
             session.replace(deleteRange, lines[i-rows.first]);
         }
-    };
+    }
 
     /**
      * Given the currently selected range, this function either comments all the lines, or uncomments all of them.
@@ -1592,14 +1586,14 @@ class Editor {
         var state = this.session.getState(this.getCursorPosition().row);
         var rows = this.$getSelectedRows();
         this.session.getMode().toggleCommentLines(state, this.session, rows.first, rows.last);
-    };
+    }
 
     toggleBlockComment() {
         var cursor = this.getCursorPosition();
         var state = this.session.getState(cursor.row);
         var range = this.getSelectionRange();
         this.session.getMode().toggleBlockComment(state, this.session, range, cursor);
-    };
+    }
 
     /**
      * Works like [[EditSession.getTokenAt]], except it returns a number.
@@ -1622,7 +1616,7 @@ class Editor {
             }
         }
         return null;
-    };
+    }
 
     /**
      * If the character before the cursor is a number, this functions changes its value by `amount`.
@@ -1671,34 +1665,8 @@ class Editor {
         } else {
             this.toggleWord();
         }
-    };
-
-    $toggleWordPairs = [
-        ["first", "last"],
-        ["true", "false"],
-        ["yes", "no"],
-        ["width", "height"],
-        ["top", "bottom"],
-        ["right", "left"],
-        ["on", "off"],
-        ["x", "y"],
-        ["get", "set"],
-        ["max", "min"],
-        ["horizontal", "vertical"],
-        ["show", "hide"],
-        ["add", "remove"],
-        ["up", "down"],
-        ["before", "after"],
-        ["even", "odd"],
-        ["in", "out"],
-        ["inside", "outside"],
-        ["next", "previous"],
-        ["increase", "decrease"],
-        ["attach", "detach"],
-        ["&&", "||"],
-        ["==", "!="]
-    ];
-
+    }
+    
     toggleWord() {
         var row = this.selection.getCursor().row;
         var column = this.selection.getCursor().column;
@@ -1748,7 +1716,7 @@ class Editor {
                 }
             }
         }
-    };
+    }
 
     /**
      * Finds link at defined {row} and {column}
@@ -1771,7 +1739,7 @@ class Editor {
             previousPosition = currentPosition;
         }
         return match;
-    };
+    }
 
     /**
      * Open valid url under cursor in another tab
@@ -1783,7 +1751,7 @@ class Editor {
         if (url)
             window.open(url, '_blank');
         return url != null;
-    };
+    }
 
     /**
      * Removes all the lines in the current selection
@@ -1793,7 +1761,7 @@ class Editor {
         var rows = this.$getSelectedRows();
         this.session.removeFullLines(rows.first, rows.last);
         this.clearSelection();
-    };
+    }
 
     duplicateSelection() {
         var sel = this.selection;
@@ -1811,7 +1779,7 @@ class Editor {
 
             sel.setSelectionRange(range, reverse);
         }
-    };
+    }
 
     /**
      * Shifts all the selected lines down one row.
@@ -1821,7 +1789,7 @@ class Editor {
      **/
     moveLinesDown() {
         this.$moveLines(1, false);
-    };
+    }
 
     /**
      * Shifts all the selected lines up one row.
@@ -1830,7 +1798,7 @@ class Editor {
      **/
     moveLinesUp() {
         this.$moveLines(-1, false);
-    };
+    }
 
     /**
      * Moves a range of text from the given range to the given position. `toPosition` is an object that looks like this:
@@ -1845,7 +1813,7 @@ class Editor {
      **/
     moveText(range, toPosition, copy) {
         return this.session.moveText(range, toPosition, copy);
-    };
+    }
 
     /**
      * Copies all the selected lines up one row.
@@ -1854,7 +1822,7 @@ class Editor {
      **/
    copyLinesUp() {
         this.$moveLines(-1, true);
-    };
+    }
 
     /**
      * Copies all the selected lines down one row.
@@ -1864,7 +1832,7 @@ class Editor {
      **/
     copyLinesDown() {
         this.$moveLines(1, true);
-    };
+    }
 
     /**
      * for internal use
@@ -1919,7 +1887,7 @@ class Editor {
             selection.rangeList.attach(this.session);
             this.inVirtualSelectionMode = false;
         }
-    };
+    }
 
     /**
      * Returns an object indicating the currently selected rows. The object looks like this:
@@ -1937,19 +1905,19 @@ class Editor {
             first: this.session.getRowFoldStart(range.start.row),
             last: this.session.getRowFoldEnd(range.end.row)
         };
-    };
+    }
 
     onCompositionStart(compositionState) {
         this.renderer.showComposition(compositionState);
-    };
+    }
 
     onCompositionUpdate(text) {
         this.renderer.setCompositionText(text);
-    };
+    }
 
     onCompositionEnd() {
         this.renderer.hideComposition();
-    };
+    }
 
     /**
      * {:VirtualRenderer.getFirstVisibleRow}
@@ -1959,7 +1927,7 @@ class Editor {
      **/
     getFirstVisibleRow() {
         return this.renderer.getFirstVisibleRow();
-    };
+    }
 
     /**
      * {:VirtualRenderer.getLastVisibleRow}
@@ -1969,7 +1937,7 @@ class Editor {
      **/
     getLastVisibleRow() {
         return this.renderer.getLastVisibleRow();
-    };
+    }
 
     /**
      * Indicates if the row is currently visible on the screen.
@@ -1979,7 +1947,7 @@ class Editor {
      **/
     isRowVisible(row) {
         return (row >= this.getFirstVisibleRow() && row <= this.getLastVisibleRow());
-    };
+    }
 
     /**
      * Indicates if the entire row is currently visible on the screen.
@@ -1990,7 +1958,7 @@ class Editor {
      **/
     isRowFullyVisible(row) {
         return (row >= this.renderer.getFirstFullyVisibleRow() && row <= this.renderer.getLastFullyVisibleRow());
-    };
+    }
 
     /**
      * Returns the number of currently visible rows.
@@ -1998,7 +1966,7 @@ class Editor {
      **/
     $getVisibleRowCount() {
         return this.renderer.getScrollBottomRow() - this.renderer.getScrollTopRow() + 1;
-    };
+    }
 
     $moveByPage(dir, select) {
         var renderer = this.renderer;
@@ -2021,49 +1989,49 @@ class Editor {
             renderer.scrollCursorIntoView(null, 0.5);
 
         renderer.animateScrolling(scrollTop);
-    };
+    }
 
     /**
      * Selects the text from the current position of the document until where a "page down" finishes.
      **/
     selectPageDown() {
         this.$moveByPage(1, true);
-    };
+    }
 
     /**
      * Selects the text from the current position of the document until where a "page up" finishes.
      **/
     selectPageUp() {
         this.$moveByPage(-1, true);
-    };
+    }
 
     /**
      * Shifts the document to wherever "page down" is, as well as moving the cursor position.
      **/
     gotoPageDown() {
        this.$moveByPage(1, false);
-    };
+    }
 
     /**
      * Shifts the document to wherever "page up" is, as well as moving the cursor position.
      **/
     gotoPageUp() {
         this.$moveByPage(-1, false);
-    };
+    }
 
     /**
      * Scrolls the document to wherever "page down" is, without changing the cursor position.
      **/
     scrollPageDown() {
         this.$moveByPage(1);
-    };
+    }
 
     /**
      * Scrolls the document to wherever "page up" is, without changing the cursor position.
      **/
     scrollPageUp() {
         this.$moveByPage(-1);
-    };
+    }
 
     /**
      * Moves the editor to the specified row.
@@ -2071,7 +2039,7 @@ class Editor {
      **/
     scrollToRow(row) {
         this.renderer.scrollToRow(row);
-    };
+    }
 
     /**
      * Scrolls to a line. If `center` is `true`, it puts the line in middle of screen (or attempts to).
@@ -2085,7 +2053,7 @@ class Editor {
      **/
     scrollToLine(line, center, animate, callback) {
         this.renderer.scrollToLine(line, center, animate, callback);
-    };
+    }
 
     /**
      * Attempts to center the current selection on the screen.
@@ -2097,7 +2065,7 @@ class Editor {
             column: Math.floor(range.start.column + (range.end.column - range.start.column) / 2)
         };
         this.renderer.alignCursor(pos, 0.5);
-    };
+    }
 
     /**
      * Gets the current position of the cursor.
@@ -2111,7 +2079,7 @@ class Editor {
      **/
     getCursorPosition() {
         return this.selection.getCursor();
-    };
+    }
 
     /**
      * Returns the screen position of the cursor.
@@ -2120,7 +2088,7 @@ class Editor {
      **/
     getCursorPositionScreen() {
         return this.session.documentToScreenPosition(this.getCursorPosition());
-    };
+    }
 
     /**
      * {:Selection.getRange}
@@ -2129,7 +2097,7 @@ class Editor {
      **/
     getSelectionRange() {
         return this.selection.getRange();
-    };
+    }
     
     /**
      * Selects all the text in editor.
@@ -2137,7 +2105,7 @@ class Editor {
      **/
     selectAll() {
         this.selection.selectAll();
-    };
+    }
 
     /**
      * {:Selection.clearSelection}
@@ -2145,7 +2113,7 @@ class Editor {
      **/
     clearSelection() {
         this.selection.clearSelection();
-    };
+    }
 
     /**
      * Moves the cursor to the specified row and column. Note that this does not de-select the current selection.
@@ -2155,7 +2123,7 @@ class Editor {
      **/
     moveCursorTo(row, column) {
         this.selection.moveCursorTo(row, column);
-    };
+    }
 
     /**
      * Moves the cursor to the position indicated by `pos.row` and `pos.column`.
@@ -2164,7 +2132,7 @@ class Editor {
      **/
     moveCursorToPosition(pos) {
         this.selection.moveCursorToPosition(pos);
-    };
+    }
 
     /**
      * Moves the cursor's row and column to the next matching bracket or HTML tag.
@@ -2313,7 +2281,7 @@ class Editor {
                 this.selection.moveTo(pos.row, pos.column);
             }
         }
-    };
+    }
 
     /**
      * Moves the cursor to the specified line number, and also into the indicated column.
@@ -2332,7 +2300,7 @@ class Editor {
 
         if (!this.isRowFullyVisible(lineNumber - 1))
             this.scrollToLine(lineNumber - 1, true, animate);
-    };
+    }
 
     /**
      * Moves the cursor to the specified row and column. Note that this does de-select the current selection.
@@ -2344,7 +2312,7 @@ class Editor {
      **/
     navigateTo(row, column) {
         this.selection.moveTo(row, column);
-    };
+    }
 
     /**
      * Moves the cursor up in the document the specified number of times. Note that this does de-select the current selection.
@@ -2359,7 +2327,7 @@ class Editor {
         }
         this.selection.clearSelection();
         this.selection.moveCursorBy(-times || -1, 0);
-    };
+    }
 
     /**
      * Moves the cursor down in the document the specified number of times. Note that this does de-select the current selection.
@@ -2374,7 +2342,7 @@ class Editor {
         }
         this.selection.clearSelection();
         this.selection.moveCursorBy(times || 1, 0);
-    };
+    }
 
     /**
      * Moves the cursor left in the document the specified number of times. Note that this does de-select the current selection.
@@ -2394,7 +2362,7 @@ class Editor {
             }
         }
         this.clearSelection();
-    };
+    }
 
     /**
      * Moves the cursor right in the document the specified number of times. Note that this does de-select the current selection.
@@ -2414,7 +2382,7 @@ class Editor {
             }
         }
         this.clearSelection();
-    };
+    }
 
     /**
      *
@@ -2423,7 +2391,7 @@ class Editor {
     navigateLineStart() {
         this.selection.moveCursorLineStart();
         this.clearSelection();
-    };
+    }
 
     /**
      *
@@ -2432,7 +2400,7 @@ class Editor {
     navigateLineEnd() {
         this.selection.moveCursorLineEnd();
         this.clearSelection();
-    };
+    }
 
     /**
      *
@@ -2441,7 +2409,7 @@ class Editor {
     navigateFileEnd() {
         this.selection.moveCursorFileEnd();
         this.clearSelection();
-    };
+    }
 
     /**
      *
@@ -2450,7 +2418,7 @@ class Editor {
     navigateFileStart() {
         this.selection.moveCursorFileStart();
         this.clearSelection();
-    };
+    }
 
     /**
      *
@@ -2459,7 +2427,7 @@ class Editor {
     navigateWordRight() {
         this.selection.moveCursorWordRight();
         this.clearSelection();
-    };
+    }
 
     /**
      *
@@ -2468,7 +2436,7 @@ class Editor {
     navigateWordLeft() {
         this.selection.moveCursorWordLeft();
         this.clearSelection();
-    };
+    }
 
     /**
      * Replaces the first occurrence of `options.needle` with the value in `replacement`.
@@ -2494,7 +2462,7 @@ class Editor {
         this.renderer.scrollSelectionIntoView(range.start, range.end);
 
         return replaced;
-    };
+    }
 
     /**
      * Replaces all occurrences of `options.needle` with the value in `replacement`.
@@ -2525,7 +2493,7 @@ class Editor {
         this.selection.setSelectionRange(selection);
 
         return replaced;
-    };
+    }
 
     $tryReplace(range, replacement) {
         var input = this.session.getTextRange(range);
@@ -2536,7 +2504,7 @@ class Editor {
         } else {
             return null;
         }
-    };
+    }
 
     /**
      * {:Search.getOptions} For more information on `options`, see [[Search `Search`]].
@@ -2545,7 +2513,7 @@ class Editor {
      **/
     getLastSearchOptions() {
         return this.$search.getOptions();
-    };
+    }
 
     /**
      * Attempts to find `needle` within the document. For more information on `options`, see [[Search `Search`]].
@@ -2591,7 +2559,7 @@ class Editor {
         else
             range.end = range.start;
         this.selection.setRange(range);
-    };
+    }
 
     /**
      * Performs another search for `needle` in the document. For more information on `options`, see [[Search `Search`]].
@@ -2603,7 +2571,7 @@ class Editor {
      **/
     findNext(options, animate) {
         this.find({skipCurrent: true, backwards: false}, options, animate);
-    };
+    }
 
     /**
      * Performs a search for `needle` backwards. For more information on `options`, see [[Search `Search`]].
@@ -2615,7 +2583,7 @@ class Editor {
      **/
     findPrevious(options, animate) {
         this.find(options, {skipCurrent: true, backwards: true}, animate);
-    };
+    }
 
     revealRange(range, animate) {
         this.session.unfold(range);
@@ -2625,7 +2593,7 @@ class Editor {
         this.renderer.scrollSelectionIntoView(range.start, range.end, 0.5);
         if (animate !== false)
             this.renderer.animateScrolling(scrollTop);
-    };
+    }
 
     /**
      * {:UndoManager.undo}
@@ -2634,7 +2602,7 @@ class Editor {
     undo() {
         this.session.getUndoManager().undo(this.session);
         this.renderer.scrollCursorIntoView(null, 0.5);
-    };
+    }
 
     /**
      * {:UndoManager.redo}
@@ -2643,7 +2611,7 @@ class Editor {
     redo() {
         this.session.getUndoManager().redo(this.session);
         this.renderer.scrollCursorIntoView(null, 0.5);
-    };
+    }
 
     /**
      *
@@ -2665,7 +2633,7 @@ class Editor {
         if (this._$emitInputEvent)
             this._$emitInputEvent.cancel();
         this.removeAllListeners();
-    };
+    }
 
     /**
      * Enables automatic scrolling of the cursor into view when editor itself is inside scrollable element
@@ -2723,7 +2691,7 @@ class Editor {
             this.renderer.off("afterRender", onAfterRender);
             this.renderer.off("beforeRender", onBeforeRender);
         };
-    };
+    }
 
 
     $resetCursorStyle() {
@@ -2734,7 +2702,7 @@ class Editor {
         cursorLayer.setSmoothBlinking(/smooth/.test(style));
         cursorLayer.isBlinking = !this.$readOnly && style != "wide";
         dom.setCssClass(cursorLayer.element, "ace_slim-cursors", /slim/.test(style));
-    };
+    }
 
     /**
      * opens a prompt displaying message
@@ -2744,9 +2712,40 @@ class Editor {
         config.loadModule("ace/ext/prompt", function (module) {
             module.prompt(editor, message, options, callback);
         });
-    };
+    }
 
 }
+
+Editor.$uid = 0;
+Editor.prototype.curOp = null;
+Editor.prototype.prevOp = {};
+// TODO use property on commands instead of this
+Editor.prototype.$mergeableCommands = ["backspace", "del", "insertstring"];
+Editor.prototype.$toggleWordPairs = [
+    ["first", "last"],
+    ["true", "false"],
+    ["yes", "no"],
+    ["width", "height"],
+    ["top", "bottom"],
+    ["right", "left"],
+    ["on", "off"],
+    ["x", "y"],
+    ["get", "set"],
+    ["max", "min"],
+    ["horizontal", "vertical"],
+    ["show", "hide"],
+    ["add", "remove"],
+    ["up", "down"],
+    ["before", "after"],
+    ["even", "odd"],
+    ["in", "out"],
+    ["inside", "outside"],
+    ["next", "previous"],
+    ["increase", "decrease"],
+    ["attach", "detach"],
+    ["&&", "||"],
+    ["==", "!="]
+];
 
 oop.implement(Editor.prototype, EventEmitter);
 

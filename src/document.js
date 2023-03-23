@@ -28,7 +28,7 @@ class Document {
         } else {
             this.insert({row: 0, column:0}, textOrLines);
         }
-    };
+    }
     
     /**
      * Replaces all the lines in the current `Document` with the value of `text`.
@@ -39,14 +39,14 @@ class Document {
         var len = this.getLength() - 1;
         this.remove(new Range(0, 0, len, this.getLine(len).length));
         this.insert({row: 0, column: 0}, text || "");
-    };
+    }
 
     /**
      * Returns all the lines in the document as a single string, joined by the new line character.
      **/
    getValue() {
         return this.getAllLines().join(this.getNewLineCharacter());
-    };
+    }
 
     /** 
      * Creates a new `Anchor` to define a floating point in the document.
@@ -56,28 +56,13 @@ class Document {
      **/
     createAnchor(row, column) {
         return new Anchor(this, row, column);
-    };
-
-    /** 
-     * Splits a string of text on any newline (`\n`) or carriage-return (`\r`) characters.
-     *
-     * @method $split
-     * @param {String} text The text to work with
-     * @returns {String} A String array, with each index containing a piece of the original `text` string.
-     *
-     **/
-    // check for IE split bug
-    $split = ("aaa".split(/a/).length === 0) ? function (text) {
-        return text.replace(/\r\n|\r/g, "\n").split("\n");
-    } : function (text) {
-        return text.split(/\r\n|\r|\n/);
-    };
+    }
 
     $detectNewLine(text) {
         var match = text.match(/^.*?(\r\n|\r|\n)/m);
         this.$autoNewLine = match ? match[1] : "\n";
         this._signal("changeNewLineMode");
-    };
+    }
 
     /**
      * Returns the newline character that's being used, depending on the value of `newLineMode`. 
@@ -95,10 +80,8 @@ class Document {
           default:
             return this.$autoNewLine || "\n";
         }
-    };
+    }
 
-    $autoNewLine = "";
-    $newLineMode = "auto";
     /**
      * [Sets the new line mode.]{: #Document.setNewLineMode.desc}
      * @param {String} newLineMode [The newline mode to use; can be either `windows`, `unix`, or `auto`]{: #Document.setNewLineMode.param}
@@ -110,7 +93,7 @@ class Document {
 
         this.$newLineMode = newLineMode;
         this._signal("changeNewLineMode");
-    };
+    }
 
     /**
      * [Returns the type of newlines being used; either `windows`, `unix`, or `auto`]{: #Document.getNewLineMode}
@@ -118,7 +101,7 @@ class Document {
      **/
     getNewLineMode() {
         return this.$newLineMode;
-    };
+    }
 
     /**
      * Returns `true` if `text` is a newline character (either `\r\n`, `\r`, or `\n`).
@@ -127,7 +110,7 @@ class Document {
      **/
     isNewLine(text) {
         return (text == "\r\n" || text == "\r" || text == "\n");
-    };
+    }
 
     /**
      * Returns a verbatim copy of the given line as it is in the document
@@ -136,7 +119,7 @@ class Document {
      **/
     getLine(row) {
         return this.$lines[row] || "";
-    };
+    }
 
     /**
      * Returns an array of strings of the rows between `firstRow` and `lastRow`. This function is inclusive of `lastRow`.
@@ -146,21 +129,21 @@ class Document {
      **/
     getLines(firstRow, lastRow) {
         return this.$lines.slice(firstRow, lastRow + 1);
-    };
+    }
 
     /**
      * Returns all lines in the document as string array.
      **/
     getAllLines() {
         return this.getLines(0, this.getLength());
-    };
+    }
 
     /**
      * Returns the number of rows in the document.
      **/
     getLength() {
         return this.$lines.length;
-    };
+    }
 
     /**
      * Returns all the text within `range` as a single string.
@@ -170,7 +153,7 @@ class Document {
      **/
     getTextRange(range) {
         return this.getLinesForRange(range).join(this.getNewLineCharacter());
-    };
+    }
     
     /**
      * Returns all the text within `range` as an array of lines.
@@ -192,21 +175,21 @@ class Document {
                 lines[l] = lines[l].substring(0, range.end.column);
         }
         return lines;
-    };
+    }
 
     // Deprecated methods retained for backwards compatibility.
     insertLines(row, lines) {
         console.warn("Use of document.insertLines is deprecated. Use the insertFullLines method instead.");
         return this.insertFullLines(row, lines);
-    };
+    }
     removeLines(firstRow, lastRow) {
         console.warn("Use of document.removeLines is deprecated. Use the removeFullLines method instead.");
         return this.removeFullLines(firstRow, lastRow);
-    };
+    }
     insertNewLine(position) {
         console.warn("Use of document.insertNewLine is deprecated. Use insertMergedLines(position, ['', '']) instead.");
         return this.insertMergedLines(position, ["", ""]);
-    };
+    }
 
     /**
      * Inserts a block of `text` at the indicated `position`.
@@ -221,7 +204,7 @@ class Document {
             this.$detectNewLine(text);
         
         return this.insertMergedLines(position, this.$split(text));
-    };
+    }
     
     /**
      * Inserts `text` into the `position` at the current row. This method also triggers the `"change"` event.
@@ -249,7 +232,7 @@ class Document {
         }, true);
         
         return this.clonePos(end);
-    };
+    }
     
     clippedPos(row, column) {
         var length = this.getLength();
@@ -266,15 +249,15 @@ class Document {
             column = line.length;
         column = Math.min(Math.max(column, 0), line.length);
         return {row: row, column: column};
-    };
+    }
     
     clonePos(pos) {
         return {row: pos.row, column: pos.column};
-    };
+    }
     
     pos(row, column) {
         return {row: row, column: column};
-    };
+    }
     
     $clipPosition(position) {
         var length = this.getLength();
@@ -286,7 +269,7 @@ class Document {
             position.column = Math.min(Math.max(position.column, 0), this.getLine(position.row).length);
         }
         return position;
-    };
+    }
 
     /**
      * Fires whenever the document changes.
@@ -339,7 +322,7 @@ class Document {
         
         // Insert.
         this.insertMergedLines({row: row, column: column}, lines);
-    };
+    }
 
     /**
      * Inserts the elements in `lines` into the document, starting at the position index given by `row`. This method also triggers the `"change"` event.
@@ -370,7 +353,7 @@ class Document {
         });
         
         return this.clonePos(end);
-    };
+    }
 
     /**
      * Removes the `range` from the document.
@@ -388,7 +371,7 @@ class Document {
             lines: this.getLinesForRange({start: start, end: end})
         });
         return this.clonePos(start);
-    };
+    }
 
     /**
      * Removes the specified columns from the `row`. This method also triggers a `"change"` event.
@@ -410,7 +393,7 @@ class Document {
         }, true);
         
         return this.clonePos(start);
-    };
+    }
 
     /**
      * Removes a range of full lines. This method also triggers the `"change"` event.
@@ -447,7 +430,7 @@ class Document {
         
         // Return the deleted lines.
         return deletedLines;
-    };
+    }
 
     /**
      * Removes the new line between `row` and the row immediately following it. This method also triggers the `"change"` event.
@@ -463,7 +446,7 @@ class Document {
                 lines: ["", ""]
             });
         }
-    };
+    }
 
     /**
      * Replaces a range in the document with the new `text`.
@@ -496,7 +479,7 @@ class Document {
         }
         
         return end;
-    };
+    }
 
     /**
      * Applies all changes in `deltas` to the document.
@@ -506,7 +489,7 @@ class Document {
         for (var i=0; i<deltas.length; i++) {
             this.applyDelta(deltas[i]);
         }
-    };
+    }
     
     /**
      * Reverts all changes in `deltas` from the document.
@@ -516,7 +499,7 @@ class Document {
         for (var i=deltas.length-1; i>=0; i--) {
             this.revertDelta(deltas[i]);
         }
-    };
+    }
     
     /**
      * Applies `delta` to the document.
@@ -538,7 +521,7 @@ class Document {
             applyDelta(this.$lines, delta, doNotValidate);
             this._signal("change", delta);
         }
-    };
+    }
     
     $safeApplyDelta(delta) {
         var docLength = this.$lines.length;
@@ -549,7 +532,7 @@ class Document {
         ) {
             this.applyDelta(delta);
         }
-    };
+    }
     
     $splitAndapplyLargeDelta(delta, MAX) {
         // Split large insert deltas. This is necessary because:
@@ -581,7 +564,7 @@ class Document {
         delta.start.row = row + from;
         delta.start.column = column;
         this.applyDelta(delta, true);
-    };
+    }
     
     /**
      * Reverts `delta` from the document.
@@ -594,7 +577,7 @@ class Document {
             action: (delta.action == "insert" ? "remove" : "insert"),
             lines: delta.lines.slice()
         });
-    };
+    }
     
     /**
      * Converts an index position in a document to a `{row, column}` object.
@@ -621,7 +604,7 @@ class Document {
                 return {row: i, column: index + lines[i].length + newlineLength};
         }
         return {row: l-1, column: index + lines[l-1].length + newlineLength};
-    };
+    }
 
     /**
      * Converts the `{row, column}` position in a document to the character's index.
@@ -648,9 +631,26 @@ class Document {
             index += lines[i].length + newlineLength;
 
         return index + pos.column;
-    };
+    }
 
 }
+
+/**
+ * Splits a string of text on any newline (`\n`) or carriage-return (`\r`) characters.
+ *
+ * @method $split
+ * @param {String} text The text to work with
+ * @returns {String} A String array, with each index containing a piece of the original `text` string.
+ *
+ **/
+// check for IE split bug
+Document.prototype.$split = ("aaa".split(/a/).length === 0) ? function (text) {
+    return text.replace(/\r\n|\r/g, "\n").split("\n");
+} : function (text) {
+    return text.split(/\r\n|\r|\n/);
+};
+Document.prototype.$autoNewLine = "";
+Document.prototype.$newLineMode = "auto";
 
 oop.implement(Document.prototype, EventEmitter);
 

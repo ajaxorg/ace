@@ -18,7 +18,7 @@ class StatusBar{
         editor.on("changeStatus", statusUpdate);
         editor.on("changeSelection", statusUpdate);
         editor.on("keyboardActivity", statusUpdate);
-    };
+    }
     
     updateStatus(editor) {
         var status = [];
@@ -42,7 +42,7 @@ class StatusBar{
             add("[" + sel.rangeCount + "]", " ");
         status.pop();
         this.element.textContent = status.join("");
-    };
+    }
 }
 
 exports.StatusBar = StatusBar;

@@ -22,7 +22,7 @@ class ElasticTabstopsLite {
                     changedRows.push(delta.end.row);
             }
         };
-    };
+    }
     
     processRows(rows) {
         this.$inChange = true;
@@ -46,7 +46,7 @@ class ElasticTabstopsLite {
             }
         }
         this.$inChange = false;
-    };
+    }
 
     $findCellWidthsForBlock(row) {
         var cellWidths = [], widths;
@@ -78,7 +78,7 @@ class ElasticTabstopsLite {
         }
 
         return { cellWidths: cellWidths, firstRow: firstRow };
-    };
+    }
 
     $cellWidthsForRow(row) {
         var selectionColumns = this.$selectionColumnsForRow(row);
@@ -98,7 +98,7 @@ class ElasticTabstopsLite {
         }
 
         return widths;
-    };
+    }
 
     $selectionColumnsForRow(row) {
         var selections = [], cursor = this.$editor.getCursorPosition();
@@ -109,7 +109,7 @@ class ElasticTabstopsLite {
         }
 
         return selections;
-    };
+    }
 
     $setBlockCellWidthsToMax(cellWidths) {
         var startingNewBlock = true, blockStartRow, blockEndRow, maxWidth;
@@ -147,7 +147,7 @@ class ElasticTabstopsLite {
         }
 
         return cellWidths;
-    };
+    }
 
     $rightmostSelectionInCell(selectionColumns, cellRightEdge) {
         var rightmost = 0;
@@ -164,7 +164,7 @@ class ElasticTabstopsLite {
         }
 
         return rightmost;
-    };
+    }
 
     $tabsForRow(row) {
         var rowTabs = [], line = this.$editor.session.getLine(row),
@@ -175,7 +175,7 @@ class ElasticTabstopsLite {
         }
 
         return rowTabs;
-    };
+    }
 
     $adjustRow(row, widths) {
         var rowTabs = this.$tabsForRow(row);
@@ -215,7 +215,7 @@ class ElasticTabstopsLite {
                 bias += difference;
             }
         }
-    };
+    }
 
     // the is a (naive) Python port--but works for these purposes
     $izip_longest(iterables) {
@@ -246,7 +246,7 @@ class ElasticTabstopsLite {
 
 
         return expandedSet;
-    };
+    }
 
     // an even more (naive) Python port
     $izip(widths, tabs) {
@@ -259,7 +259,7 @@ class ElasticTabstopsLite {
             expandedSet.push(set);
         }
         return expandedSet;
-    };
+    }
 
 }
 

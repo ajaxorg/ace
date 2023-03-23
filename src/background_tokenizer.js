@@ -62,7 +62,7 @@ class BackgroundTokenizer {
             if (startLine <= endLine)
                 self.fireUpdateEvent(startLine, endLine);
         };
-    };
+    }
     
     /**
      * Sets a new tokenizer for this object.
@@ -74,7 +74,7 @@ class BackgroundTokenizer {
         this.states = [];
 
         this.start(0);
-    };
+    }
 
     /**
      * Sets a new document to associate with this object.
@@ -86,7 +86,7 @@ class BackgroundTokenizer {
         this.states = [];
 
         this.stop();
-    };
+    }
 
      /**
      * Fires whenever the background tokeniziers between a range of rows are going to be updated.
@@ -106,7 +106,7 @@ class BackgroundTokenizer {
             last: lastRow
         };
         this._signal("update", {data: data});
-    };
+    }
 
     /**
      * Starts tokenizing at the row indicated.
@@ -122,7 +122,7 @@ class BackgroundTokenizer {
         this.stop();
         // pretty long delay to prevent the tokenizer from interfering with the user
         this.running = setTimeout(this.$worker, 700);
-    };
+    }
 
     /**
      * Sets pretty long delay to prevent the tokenizer from interfering with the user
@@ -130,7 +130,7 @@ class BackgroundTokenizer {
     scheduleStart() {
         if (!this.running)
             this.running = setTimeout(this.$worker, 700);
-    };
+    }
 
     $updateOnChange(delta) {
         var startRow = delta.start.row;
@@ -151,7 +151,7 @@ class BackgroundTokenizer {
         this.currentLine = Math.min(startRow, this.currentLine, this.doc.getLength());
 
         this.stop();
-    };
+    }
 
     /**
      * Stops tokenizing.
@@ -160,7 +160,7 @@ class BackgroundTokenizer {
         if (this.running)
             clearTimeout(this.running);
         this.running = false;
-    };
+    }
 
     /**
      * Gives list of [[Token]]'s of the row. (tokens are cached)
@@ -169,7 +169,7 @@ class BackgroundTokenizer {
      **/
     getTokens(row) {
         return this.lines[row] || this.$tokenizeRow(row);
-    };
+    }
 
     /**
      * Returns the state of tokenization at the end of a row.
@@ -180,7 +180,7 @@ class BackgroundTokenizer {
         if (this.currentLine == row)
             this.$tokenizeRow(row);
         return this.states[row] || "start";
-    };
+    }
 
     $tokenizeRow(row) {
         var line = this.doc.getLine(row);
@@ -198,15 +198,15 @@ class BackgroundTokenizer {
         }
 
         return this.lines[row] = data.tokens;
-    };
+    }
 
-    cleanup = function() {
+    cleanup() {
         this.running = false;
         this.lines = [];
         this.states = [];
         this.currentLine = 0;
         this.removeAllListeners();
-    };
+    }
 
 }
 

@@ -37,7 +37,7 @@ class Search {
     set(options) {
         oop.mixin(this.$options, options);
         return this;
-    };
+    }
 
     /**
      * [Returns an object containing all the search options.]{: #Search.getOptions}
@@ -45,7 +45,7 @@ class Search {
     **/
     getOptions() {
         return lang.copyObject(this.$options);
-    };
+    }
     
     /**
      * Sets the search options via the `options` parameter.
@@ -54,7 +54,7 @@ class Search {
     **/
     setOptions(options) {
         this.$options = options;
-    };
+    }
     /**
      * Searches for `options.needle`. If found, this method returns the [[Range `Range`]] where the text first occurs. If `options.backwards` is `true`, the search goes backwards in the session.
      * @param {EditSession} session The session to search with
@@ -82,7 +82,7 @@ class Search {
         });
 
         return firstRange;
-    };
+    }
 
     /**
      * Searches for all occurrances `options.needle`. If found, this method returns an array of [[Range `Range`s]] where the text first occurs. If `options.backwards` is `true`, the search goes backwards in the session.
@@ -158,7 +158,7 @@ class Search {
         }
 
         return ranges;
-    };
+    }
 
     /**
      * Searches for `options.needle` in `input`, and, if found, replaces it with `replacement`.
@@ -198,7 +198,7 @@ class Search {
         }
         
         return replacement;
-    };
+    }
 
     $assembleRegExp(options, $disableFakeMultiline) {
         if (options.needle instanceof RegExp)
@@ -227,7 +227,7 @@ class Search {
             re = false;
         }
         return options.re = re;
-    };
+    }
 
     $assembleMultilineRegExp(needle, modifier) {
         var parts = needle.replace(/\r\n|\r|\n/g, "$\n^").split("\n");
@@ -238,7 +238,7 @@ class Search {
             return false;
         }
         return re;
-    };
+    }
 
     $matchIterator(session, options) {
         var re = this.$assembleRegExp(options);
@@ -352,7 +352,7 @@ class Search {
             };
         }
         return {forEach: forEach};
-    };
+    }
 
 }
 

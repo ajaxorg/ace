@@ -143,7 +143,7 @@ class Tokenizer extends BaseTokenizer {
             tokens : tokens,
             state : stack.length ? stack : currentState
         };
-    };
+    }
 
 }
 

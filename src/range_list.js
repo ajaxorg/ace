@@ -8,8 +8,6 @@ class RangeList {
         this.ranges = [];
         this.$bias = 1;
     }
-    
-    comparePoints = comparePoints;
 
     pointIndex(pos, excludeEdges, startIndex) {
         var list = this.ranges;
@@ -28,7 +26,7 @@ class RangeList {
             return -i-1;
         }
         return -i - 1;
-    };
+    }
 
     add(range) {
         var excludeEdges = !range.isEmpty();
@@ -43,7 +41,7 @@ class RangeList {
         else
             endIndex++;
         return this.ranges.splice(startIndex, endIndex - startIndex, range);
-    };
+    }
 
     addList(list) {
         var removed = [];
@@ -51,14 +49,14 @@ class RangeList {
             removed.push.apply(removed, this.add(list[i]));
         }
         return removed;
-    };
+    }
 
     substractPoint(pos) {
         var i = this.pointIndex(pos);
 
         if (i >= 0)
             return this.ranges.splice(i, 1);
-    };
+    }
 
     // merge overlapping ranges
     merge() {
@@ -94,21 +92,21 @@ class RangeList {
         this.ranges = list;
 
         return removed;
-    };
+    }
 
     contains(row, column) {
         return this.pointIndex({row: row, column: column}) >= 0;
-    };
+    }
 
     containsPoint(pos) {
         return this.pointIndex(pos) >= 0;
-    };
+    }
 
     rangeAtPoint(pos) {
         var i = this.pointIndex(pos);
         if (i >= 0)
             return this.ranges[i];
-    };
+    }
 
 
     clipRows(startRow, endRow) {
@@ -128,11 +126,11 @@ class RangeList {
             clipped.push(list[i]);
         }
         return clipped;
-    };
+    }
 
     removeAll() {
         return this.ranges.splice(0, this.ranges.length);
-    };
+    }
 
     attach(session) {
         if (this.session)
@@ -142,14 +140,14 @@ class RangeList {
         this.onChange = this.$onChange.bind(this);
 
         this.session.on('change', this.onChange);
-    };
+    }
 
     detach() {
         if (!this.session)
             return;
         this.session.removeListener('change', this.onChange);
         this.session = null;
-    };
+    }
 
     $onChange(delta) {
         var start = delta.start;
@@ -260,8 +258,10 @@ class RangeList {
                 r.end.row += lineDif;
             }
         }
-    };
+    }
 
 }
+
+RangeList.prototype.comparePoints = comparePoints;
 
 exports.RangeList = RangeList;

@@ -16,18 +16,18 @@ class Fold extends RangeList {
 
         this.sameRow = range.start.row == range.end.row;
         this.subFolds = this.ranges = [];
-    };
+    }
     
     toString() {
         return '"' + this.placeholder + '" ' + this.range.toString();
-    };
+    }
 
     setFoldLine(foldLine) {
         this.foldLine = foldLine;
         this.subFolds.forEach(function(fold) {
             fold.setFoldLine(foldLine);
         });
-    };
+    }
 
     clone() {
         var range = this.range.clone();
@@ -37,7 +37,7 @@ class Fold extends RangeList {
         });
         fold.collapseChildren = this.collapseChildren;
         return fold;
-    };
+    }
 
     addSubFold(fold) {
         if (this.range.isEqual(fold))
@@ -78,11 +78,11 @@ class Fold extends RangeList {
         fold.setFoldLine(this.foldLine);
 
         return fold;
-    };
+    }
     
     restoreRange(range) {
         return restoreRange(range, this.start);
-    };
+    }
 
 }
 

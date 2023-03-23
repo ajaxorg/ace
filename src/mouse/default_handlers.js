@@ -65,7 +65,7 @@ class DefaultHandlers {
         this.captureMouse(ev);
         this.startSelect(pos, ev.domEvent._clicks > 1);
         return ev.preventDefault();
-    };
+    }
 
     startSelect(pos, waitForClickSelection) {
         pos = pos || this.editor.renderer.screenToTextCoordinates(this.x, this.y);
@@ -80,7 +80,7 @@ class DefaultHandlers {
             this.select();
         editor.setStyle("ace_selecting");
         this.setState("select");
-    };
+    }
 
     select() {
         var anchor, editor = this.editor;
@@ -101,7 +101,7 @@ class DefaultHandlers {
         }
         editor.selection.selectToPosition(cursor);
         editor.renderer.scrollCursorIntoView();
-    };
+    }
 
     extendSelectionBy(unitName) {
         var anchor, editor = this.editor;
@@ -131,16 +131,12 @@ class DefaultHandlers {
         }
         editor.selection.selectToPosition(cursor);
         editor.renderer.scrollCursorIntoView();
-    };
+    }
     
     selectByLinesEnd() {
         this.$clickSelection = null;
         this.editor.unsetStyle("ace_selecting");
-    };
-
-    selectEnd = this.selectByLinesEnd;
-    selectAllEnd = this.selectByLinesEnd;
-    selectByWordsEnd = this.selectByLinesEnd;
+    }
 
     focusWait() {
         var distance = calcDistance(this.mousedownEvent.x, this.mousedownEvent.y, this.x, this.y);
@@ -148,7 +144,7 @@ class DefaultHandlers {
 
         if (distance > DRAG_OFFSET || time - this.mousedownEvent.time > this.$focusTimeout)
             this.startSelect(this.mousedownEvent.getDocumentPosition());
-    };
+    }
 
     onDoubleClick(ev) {
         var pos = ev.getDocumentPosition();
@@ -168,7 +164,7 @@ class DefaultHandlers {
         }
         this.$clickSelection = range;
         this.select();
-    };
+    }
 
     onTripleClick(ev) {
         var pos = ev.getDocumentPosition();
@@ -183,7 +179,7 @@ class DefaultHandlers {
             this.$clickSelection = editor.selection.getLineRange(pos.row);
         }
         this.select();
-    };
+    }
 
     onQuadClick(ev) {
         var editor = this.editor;
@@ -191,7 +187,7 @@ class DefaultHandlers {
         editor.selectAll();
         this.$clickSelection = editor.getSelectionRange();
         this.setState("selectAll");
-    };
+    }
 
     onMouseWheel(ev) {
         if (ev.getAccelKey())
@@ -251,9 +247,12 @@ class DefaultHandlers {
             editor.renderer.scrollBy(ev.wheelX * ev.speed, ev.wheelY * ev.speed);
             return ev.stop();
         }
-    };
+    }
 
 }
+DefaultHandlers.prototype.selectEnd = DefaultHandlers.prototype.selectByLinesEnd;
+DefaultHandlers.prototype.selectAllEnd = DefaultHandlers.prototype.selectByLinesEnd;
+DefaultHandlers.prototype.selectByWordsEnd = DefaultHandlers.prototype.selectByLinesEnd;
 
 exports.DefaultHandlers = DefaultHandlers;
 

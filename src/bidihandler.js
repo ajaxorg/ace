@@ -35,7 +35,7 @@ class BidiHandler {
         this.wrapOffset = 0;
         this.isMoveLeftOperation = false;
         this.seenBidi = bidiRE.test(session.getValue());
-    };
+    }
     
     /**
      * Returns 'true' if row contains Bidi characters, in such case
@@ -54,7 +54,7 @@ class BidiHandler {
             this.updateBidiMap();
         }
         return this.bidiMap.bidiLevels;
-    };
+    }
 
     onChange(delta) {
         if (!this.seenBidi) {
@@ -66,7 +66,7 @@ class BidiHandler {
         else {
             this.currentRow = null;
         }
-    };
+    }
 
     getDocumentRow() {
         var docRow = 0;
@@ -78,7 +78,7 @@ class BidiHandler {
         }
 
         return docRow;
-    };
+    }
 
     getSplitIndex() {
         var splitIndex = 0;
@@ -98,7 +98,7 @@ class BidiHandler {
         }
 
         return splitIndex;
-    };
+    }
 
     updateRowLine(docRow, splitIndex) {
         if (docRow === undefined)
@@ -149,7 +149,7 @@ class BidiHandler {
             this.fontMetrics.$main.textContent = (this.line.charAt(this.line.length - 1) == bidiUtil.DOT) ? this.line.substr(0, this.line.length - 1) : this.line;
             this.rtlLineOffset = this.contentWidth - this.fontMetrics.$main.getBoundingClientRect().width;
         }
-    };
+    }
     
     updateBidiMap() {
         var textCharTypes = [];
@@ -158,14 +158,14 @@ class BidiHandler {
         } else {
             this.bidiMap = {};
         }
-    };
+    }
 
     /**
      * Resets stored info related to current screen row
     **/
     markAsDirty() {
         this.currentRow = null;
-    };
+    }
 
     /**
      * Updates array of character widths
@@ -186,20 +186,20 @@ class BidiHandler {
         this.charWidths[bidiUtil.B] = this.charWidths[bidiUtil.RLE] = 0;
 
         this.currentRow = null;
-    };
+    }
 
     setShowInvisibles(showInvisibles) {
         this.showInvisibles = showInvisibles;
         this.currentRow = null;
-    };
+    }
 
     setEolChar(eolChar) {
         this.EOL = eolChar; 
-    };
+    }
 
     setContentWidth(width) {
         this.contentWidth = width;
-    };
+    }
 
     isRtlLine(row) {
         if (this.$isRtl) return true;
@@ -207,7 +207,7 @@ class BidiHandler {
             return (this.session.getLine(row).charAt(0) == this.RLE);
         else
             return this.isRtlDir; 
-    };
+    }
 
     setRtlDirection(editor, isRtlDir) {
         var cursor = editor.getCursorPosition(); 
@@ -217,7 +217,7 @@ class BidiHandler {
             else if (isRtlDir && editor.session.getLine(row).charAt(0) !== editor.session.$bidiHandler.RLE)
                 editor.session.doc.insert({column: 0, row: row}, editor.session.$bidiHandler.RLE);
         }
-    };
+    }
 
 
     /**
@@ -226,7 +226,7 @@ class BidiHandler {
      *
      * @return {Number} horizontal pixel offset of given screen column
      **/
-    getPosLeft = function(col) {
+    getPosLeft(col) {
         col -= this.wrapIndent;
         var leftBoundary = (this.line.charAt(0) === this.RLE) ? 1 : 0;
         var logicalIdx = (col > leftBoundary) ? (this.session.getOverwrite() ? col : col - 1) : leftBoundary;
@@ -250,7 +250,7 @@ class BidiHandler {
             left += this.rtlLineOffset;
 
         return left;
-    };
+    }
 
     /**
      * Returns 'selections' - array of objects defining set of selection rectangles
@@ -259,7 +259,7 @@ class BidiHandler {
      *
      * @return {Object[]} Each object contains 'left' and 'width' values defining selection rectangle.
     **/
-    getSelections = function(startCol, endCol) {
+    getSelections(startCol, endCol) {
         var map = this.bidiMap, levels = map.bidiLevels, level, selections = [], offset = 0,
             selColMin = Math.min(startCol, endCol) - this.wrapIndent, selColMax = Math.max(startCol, endCol) - this.wrapIndent,
                 isSelected = false, isSelectedPrev = false, selectionStart = 0;
@@ -290,7 +290,7 @@ class BidiHandler {
             }
         }
         return selections;
-    };
+    }
 
     /**
      * Converts character coordinates on the screen to respective document column number
@@ -348,7 +348,7 @@ class BidiHandler {
             logicalIdx++;
 
         return (logicalIdx + this.wrapIndent);
-    };
+    }
 
 }
 

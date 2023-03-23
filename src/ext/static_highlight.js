@@ -16,11 +16,11 @@ class Element {
 
     cloneNode() {
         return this;
-    };
+    }
 
     appendChild(child) {
         this.textContent += child.toString();
-    };
+    }
 
     toString() {
         var stringBuilder = [];
@@ -46,7 +46,7 @@ class Element {
         }
 
         return stringBuilder.join("");
-    };
+    }
 }
 
 

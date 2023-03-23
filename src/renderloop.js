@@ -32,7 +32,7 @@ class RenderLoop {
                 _self.$recursionLimit = 2;
             }
         };
-    };
+    }
 
     schedule(change) {
         this.changes = this.changes | change;
@@ -40,13 +40,13 @@ class RenderLoop {
             event.nextFrame(this._flush);
             this.pending = true;
         }
-    };
+    }
 
     clear(change) {
         var changes = this.changes;
         this.changes = 0;
         return changes;
-    };
+    }
     
 }
 

@@ -204,14 +204,14 @@ class OptionPanel {
         this.container = element || document.createElement("div");
         this.groups = [];
         this.options = {};
-    };
+    }
     
     add(config) {
         if (config.Main)
             oop.mixin(optionGroups.Main, config.Main);
         if (config.More)
             oop.mixin(optionGroups.More, config.More);
-    };
+    }
     
     render() {
         this.container.innerHTML = "";
@@ -224,7 +224,7 @@ class OptionPanel {
             ]],
             ["tr", null, ["td", {colspan: 2}, "version " + config.version]]
         ], this.container);
-    };
+    }
     
     renderOptionGroup(group) {
         return Object.keys(group).map(function(key, i) {
@@ -239,7 +239,7 @@ class OptionPanel {
         }).map(function(item) {
             return this.renderOption(item.label, item);
         }, this);
-    };
+    }
     
     renderOptionControl(key, option) {
         var self = this;
@@ -325,7 +325,7 @@ class OptionPanel {
             }
         }
         return control;
-    };
+    }
     
     renderOption(key, option) {
         if (option.path && !option.onchange && !this.editor.$options[option.path])
@@ -338,7 +338,7 @@ class OptionPanel {
         return ["tr", {class: "ace_optionsMenuEntry"}, ["td",
             ["label", {for: safeKey, id: safeId}, key]
         ], ["td", control]];
-    };
+    }
     
     setOption(option, value) {
         if (typeof option == "string")
@@ -354,13 +354,13 @@ class OptionPanel {
         else if (option.path)
             this.editor.setOption(option.path, value);
         this._signal("setOption", {name: option.path, value: value});
-    };
+    }
     
     getOption(option) {
         if (option.getValue)
             return option.getValue();
         return this.editor.getOption(option.path);
-    };
+    }
 }
 oop.implement(OptionPanel.prototype, EventEmitter);
 

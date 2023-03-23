@@ -37,7 +37,7 @@ class Autocomplete {
         }.bind(this));
 
         this.tooltipTimer = lang.delayedCall(this.updateDocTooltip.bind(this), 50);
-    };
+    }
 
     $init() {
         this.popup = new AcePopup(document.body || document.documentElement);
@@ -51,25 +51,25 @@ class Autocomplete {
         this.popup.on("select", this.$onPopupChange.bind(this));
         this.popup.on("changeHoverMarker", this.tooltipTimer.bind(null, null));
         return this.popup;
-    };
+    }
 
     $initInline() {
         if (!this.inlineEnabled || this.inlineRenderer)
             return;
         this.inlineRenderer = new AceInline();
         return this.inlineRenderer;
-    };
+    }
 
     getPopup() {
         return this.popup || this.$init();
-    };
+    }
 
     $onHidePopup() {
         if (this.inlineRenderer) {
             this.inlineRenderer.hide();
         }
         this.hideDocTooltip();
-    };
+    }
 
     $onPopupChange(hide) {
         if (this.inlineRenderer && this.inlineEnabled) {
@@ -81,7 +81,7 @@ class Autocomplete {
             this.$updatePopupPosition();
         }
         this.tooltipTimer.call(null, null);
-    };
+    }
 
     $updatePopupPosition() {
         var editor = this.editor;
@@ -117,7 +117,7 @@ class Autocomplete {
         }
         
         this.popup.show(pos, lineHeight);
-    };
+    }
 
     openPopup(editor, prefix, keepPopupPosition) {
         if (!this.popup)
@@ -151,7 +151,7 @@ class Autocomplete {
             this.detach();
         }
         this.changeTimer.cancel();
-    };
+    }
 
     /**
      * Detaches all elements from the editor, and cleans up the data for the session
@@ -178,7 +178,7 @@ class Autocomplete {
             this.base.detach();
         this.activated = false;
         this.completionProvider = this.completions = this.base = null;
-    };
+    }
 
     changeListener(e) {
         var cursor = this.editor.selection.lead;
@@ -189,7 +189,7 @@ class Autocomplete {
             this.changeTimer.schedule();
         else
             this.detach();
-    };
+    }
 
     blurListener(e) {
         // we have to check if activeElement is a child of popup because
@@ -203,19 +203,19 @@ class Autocomplete {
         ) {
             this.detach();
         }
-    };
+    }
 
     mousedownListener(e) {
         this.detach();
-    };
+    }
 
     mousewheelListener(e) {
         this.detach();
-    };
+    }
 
    goTo(where) {
         this.popup.goTo(where);
-    };
+    }
 
     insertMatch(data, options) {
         if (!data)
@@ -228,29 +228,8 @@ class Autocomplete {
         if (this.completions == completions)
             this.detach();
         return result;
-    };
-
-    commands = {
-        "Up": function(editor) { editor.completer.goTo("up"); },
-        "Down": function(editor) { editor.completer.goTo("down"); },
-        "Ctrl-Up|Ctrl-Home": function(editor) { editor.completer.goTo("start"); },
-        "Ctrl-Down|Ctrl-End": function(editor) { editor.completer.goTo("end"); },
-
-        "Esc": function(editor) { editor.completer.detach(); },
-        "Return": function(editor) { return editor.completer.insertMatch(); },
-        "Shift-Return": function(editor) { editor.completer.insertMatch(null, {deleteSuffix: true}); },
-        "Tab": function(editor) {
-            var result = editor.completer.insertMatch();
-            if (!result && !editor.tabstopManager)
-                editor.completer.goTo("down");
-            else
-                return result;
-        },
-
-        "PageUp": function(editor) { editor.completer.popup.gotoPageUp(); },
-        "PageDown": function(editor) { editor.completer.popup.gotoPageDown(); }
-    };
-
+    }
+    
     /**
      * This is the entry point for the autocompletion class, triggers the actions which collect and display suggestions
      * @param {Editor} editor
@@ -275,13 +254,13 @@ class Autocomplete {
         editor.on("mousewheel", this.mousewheelListener);
 
         this.updateCompletions(false, options);
-    };
+    }
 
     getCompletionProvider() {
         if (!this.completionProvider)
             this.completionProvider = new CompletionProvider();
         return this.completionProvider;
-    };
+    }
 
     /**
      * This method is deprecated, it is only kept for backwards compatibility.
@@ -290,7 +269,7 @@ class Autocomplete {
      */
     gatherCompletions(editor, callback) {
         return this.getCompletionProvider().gatherCompletions(editor, callback);
-    };
+    }
 
     updateCompletions(keepPopupPosition, options) {
         if (keepPopupPosition && this.base && this.completions) {
@@ -343,11 +322,11 @@ class Autocomplete {
             this.completions = completions;
             this.openPopup(this.editor, prefix, keepPopupPosition);
         }.bind(this));
-    };
+    }
 
     cancelContextMenu() {
         this.editor.$mouseHandler.cancelContextMenu();
-    };
+    }
 
     updateDocTooltip() {
         var popup = this.popup;
@@ -369,7 +348,7 @@ class Autocomplete {
         if (!doc || !(doc.docHTML || doc.docText))
             return this.hideDocTooltip();
         this.showDocTooltip(doc);
-    };
+    }
 
     showDocTooltip(item) {
         if (!this.tooltipNode) {
@@ -418,7 +397,7 @@ class Autocomplete {
             tooltipNode.style.left = (rect.right + 1) + "px";
             tooltipNode.style.right = "";
         }
-    };
+    }
 
     hideDocTooltip() {
         this.tooltipTimer.cancel();
@@ -429,7 +408,7 @@ class Autocomplete {
         this.tooltipNode = null;
         if (el.parentNode)
             el.parentNode.removeChild(el);
-    };
+    }
     
     onTooltipClick(e) {
         var a = e.target;
@@ -441,7 +420,7 @@ class Autocomplete {
             }
             a = a.parentNode;
         }
-    };
+    }
 
     destroy() {
         this.detach();
@@ -456,9 +435,30 @@ class Autocomplete {
             this.editor.completer = null;
         }
         this.inlineRenderer = this.popup = this.editor = null;
-    };
+    }
 
 }
+
+Autocomplete.prototype.commands = {
+    "Up": function(editor) { editor.completer.goTo("up"); },
+    "Down": function(editor) { editor.completer.goTo("down"); },
+    "Ctrl-Up|Ctrl-Home": function(editor) { editor.completer.goTo("start"); },
+    "Ctrl-Down|Ctrl-End": function(editor) { editor.completer.goTo("end"); },
+
+    "Esc": function(editor) { editor.completer.detach(); },
+    "Return": function(editor) { return editor.completer.insertMatch(); },
+    "Shift-Return": function(editor) { editor.completer.insertMatch(null, {deleteSuffix: true}); },
+    "Tab": function(editor) {
+        var result = editor.completer.insertMatch();
+        if (!result && !editor.tabstopManager)
+            editor.completer.goTo("down");
+        else
+            return result;
+    },
+
+    "PageUp": function(editor) { editor.completer.popup.gotoPageUp(); },
+    "PageDown": function(editor) { editor.completer.popup.gotoPageDown(); }
+};
 
 
 Autocomplete.for = function(editor) {
@@ -500,14 +500,14 @@ class CompletionProvider {
     
     constructor() {
         this.active = true;
-    };
+    }
     
     insertByIndex(editor, index, options) {
         if (!this.completions || !this.completions.filtered) {
             return false;
         }
         return this.insertMatch(editor, this.completions.filtered[index], options);
-    };
+    }
 
     insertMatch(editor, data, options) {
         if (!data)
@@ -535,7 +535,7 @@ class CompletionProvider {
         }
         editor.endOperation();
         return true;
-    };
+    }
 
     gatherCompletions(editor, callback) {
         var session = editor.getSession();
@@ -558,7 +558,7 @@ class CompletionProvider {
             });
         });
         return true;
-    };
+    }
 
     /**
      * This is the entry point to the class, it gathers, then provides the completions asynchronously via callback.
@@ -616,11 +616,11 @@ class CompletionProvider {
             immediateResults = null;
             processResults(results);
         }
-    };
+    }
 
     detach() {
         this.active = false;
-    };
+    }
 }
 
 class FilteredList {
@@ -630,7 +630,7 @@ class FilteredList {
         this.filterText = filterText || "";
         this.exactMatch = false;
         this.ignoreCaption = false;
-    };
+    }
     
     setFilter(str) {
         if (str.length > this.filterText && str.lastIndexOf(this.filterText, 0) === 0)
@@ -655,7 +655,7 @@ class FilteredList {
         });
 
         this.filtered = matches;
-    };
+    }
 
     filterCompletions(items, needle) {
         var results = [];
@@ -707,7 +707,7 @@ class FilteredList {
             results.push(item);
         }
         return results;
-    };
+    }
 }
 
 exports.Autocomplete = Autocomplete;

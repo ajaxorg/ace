@@ -67,7 +67,7 @@ function reportError(msg, data) {
 class AppConfig {
     constructor() {
         this.$defaultOptions = {};
-    };
+    }
     
     /*
      * option {name, value, initialValue, setterName, set, get }
@@ -91,7 +91,7 @@ class AppConfig {
         oop.implement(obj, optionsProvider);
 
         return this;
-    };
+    }
 
     resetOptions(obj) {
         Object.keys(obj.$options).forEach(function(key) {
@@ -99,7 +99,7 @@ class AppConfig {
             if ("value" in opt)
                 obj.setOption(key, opt.value);
         });
-    };
+    }
 
     setDefaultValue(path, name, value) {
         if (!path) {
@@ -116,17 +116,17 @@ class AppConfig {
             else
                 opts[name].value = value;
         }
-    };
+    }
 
     setDefaultValues(path, optionHash) {
         Object.keys(optionHash).forEach(function(key) {
             this.setDefaultValue(path, key, optionHash[key]);
         }, this);
-    };
+    }
     
-    warn = warn;
-    reportError = reportError;
 }
+AppConfig.prototype.warn = warn;
+AppConfig.prototype.reportError = reportError;
 
 // module loading
 oop.implement(AppConfig.prototype, EventEmitter);

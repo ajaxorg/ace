@@ -26,7 +26,7 @@ class Range {
             row: endRow,
             column: endColumn
         };
-    };
+    }
     
     /**
      * Returns `true` if and only if the starting row and column, and ending row and column, are equivalent to those given by `range`.
@@ -38,7 +38,7 @@ class Range {
             this.end.row === range.end.row &&
             this.start.column === range.start.column &&
             this.end.column === range.end.column;
-    };
+    }
 
     /**
      * Returns a string containing the range's row and column information, given like this:
@@ -50,7 +50,7 @@ class Range {
     toString() {
         return ("Range: [" + this.start.row + "/" + this.start.column +
             "] -> [" + this.end.row + "/" + this.end.column + "]");
-    };
+    }
 
     /**
      * Returns `true` if the `row` and `column` provided are within the given range. This can better be expressed as returning `true` if:
@@ -66,7 +66,7 @@ class Range {
 
     contains(row, column) {
         return this.compare(row, column) == 0;
-    };
+    }
 
     /**
      * Compares `this` range (A) with another range (B).
@@ -107,7 +107,7 @@ class Range {
                 return 0;
             }
         }
-    };
+    }
 
     /**
      * Compares the row and column of `p` with the starting and ending [[Point]]'s of the calling range (by calling [[Range.compare]]).
@@ -117,7 +117,7 @@ class Range {
      **/
     comparePoint(p) {
         return this.compare(p.row, p.column);
-    };
+    }
 
     /**
      * Checks the start and end [[Point]]'s of `range` and compares them to the calling range. Returns `true` if the `range` is contained within the caller's range.
@@ -127,7 +127,7 @@ class Range {
      **/
     containsRange(range) {
         return this.comparePoint(range.start) == 0 && this.comparePoint(range.end) == 0;
-    };
+    }
 
     /**
      * Returns `true` if passed in `range` intersects with the one calling this method.
@@ -137,7 +137,7 @@ class Range {
     intersects(range) {
         var cmp = this.compareRange(range);
         return (cmp == -1 || cmp == 0 || cmp == 1);
-    };
+    }
 
     /**
      * Returns `true` if the caller's ending row is the same as `row`, and if the caller's ending column is the same as `column`.
@@ -147,7 +147,7 @@ class Range {
      **/
     isEnd(row, column) {
         return this.end.row == row && this.end.column == column;
-    };
+    }
 
     /**
      * Returns `true` if the caller's starting row is the same as `row`, and if the caller's starting column is the same as `column`.
@@ -157,7 +157,7 @@ class Range {
      **/
     isStart(row, column) {
         return this.start.row == row && this.start.column == column;
-    };
+    }
 
     /**
      * Sets the starting row and column for the range.
@@ -173,7 +173,7 @@ class Range {
             this.start.row = row;
             this.start.column = column;
         }
-    };
+    }
 
     /**
      * Sets the starting row and column for the range.
@@ -189,7 +189,7 @@ class Range {
             this.end.row = row;
             this.end.column = column;
         }
-    };
+    }
 
     /**
      * Returns `true` if the `row` and `column` are within the given range.
@@ -207,7 +207,7 @@ class Range {
             }
         }
         return false;
-    };
+    }
 
     /**
      * Returns `true` if the `row` and `column` are within the given range's starting [[Point]].
@@ -225,7 +225,7 @@ class Range {
             }
         }
         return false;
-    };
+    }
 
     /**
      * Returns `true` if the `row` and `column` are within the given range's ending [[Point]].
@@ -244,7 +244,7 @@ class Range {
             }
         }
         return false;
-    };
+    }
 
     /**
      * Compares the `row` and `column` with the starting and ending [[Point]]'s of the calling range.
@@ -283,7 +283,7 @@ class Range {
             return column <= this.end.column ? 0 : 1;
 
         return 0;
-    };
+    }
 
     /**
      * Compares the `row` and `column` with the starting and ending [[Point]]'s of the calling range.
@@ -299,7 +299,7 @@ class Range {
         } else {
             return this.compare(row, column);
         }
-    };
+    }
 
     /**
      * Compares the `row` and `column` with the starting and ending [[Point]]'s of the calling range.
@@ -315,7 +315,7 @@ class Range {
         } else {
             return this.compare(row, column);
         }
-    };
+    }
 
     /**
      * Compares the `row` and `column` with the start and end [[Point]]'s of the calling range.
@@ -334,7 +334,7 @@ class Range {
         } else {
             return this.compare(row, column);
         }
-    };
+    }
 
     /**
      * Returns the part of the current `Range` that occurs within the boundaries of `firstRow` and `lastRow` as a new `Range` object.
@@ -354,7 +354,7 @@ class Range {
             var start = {row: firstRow, column: 0};
 
         return Range.fromPoints(start || this.start, end || this.end);
-    };
+    }
 
     /**
      * Changes the `row` and `column` for the calling range for both the starting and ending [[Point]]'s.
@@ -373,7 +373,7 @@ class Range {
             var end = {row: row, column: column};
 
         return Range.fromPoints(start || this.start, end || this.end);
-    };
+    }
 
     /**
      * Returns `true` if the calling range is empty (starting [[Point]] == ending [[Point]]).
@@ -381,7 +381,7 @@ class Range {
      **/
     isEmpty() {
         return (this.start.row === this.end.row && this.start.column === this.end.column);
-    };
+    }
 
     /**
      * Returns `true` if the range spans across multiple lines.
@@ -389,7 +389,7 @@ class Range {
     **/
     isMultiLine() {
         return (this.start.row !== this.end.row);
-    };
+    }
 
     /**
      * Returns a duplicate of the calling range.
@@ -397,7 +397,7 @@ class Range {
     **/
     clone() {
         return Range.fromPoints(this.start, this.end);
-    };
+    }
 
     /**
      * Returns a range containing the starting and ending rows of the original range, but with a column value of `0`.
@@ -408,7 +408,7 @@ class Range {
             return new Range(this.start.row, 0, Math.max(this.start.row, this.end.row-1), 0);
         else
             return new Range(this.start.row, 0, this.end.row, 0);
-    };
+    }
 
     /**
      * Given the current `Range`, this function converts those starting and ending [[Point]]'s into screen positions, and then returns a new `Range` object.
@@ -423,7 +423,7 @@ class Range {
             screenPosStart.row, screenPosStart.column,
             screenPosEnd.row, screenPosEnd.column
         );
-    };
+    }
 
     /**
      * Shift the calling range by `row` and `column` values.
@@ -436,7 +436,7 @@ class Range {
         this.start.column += column;
         this.end.row += row;
         this.end.column += column;
-    };
+    }
 
 }
 

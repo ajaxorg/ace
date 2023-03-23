@@ -46,13 +46,13 @@ class InlineAutocomplete {
         this.changeTimer = lang.delayedCall(function() {
             this.updateCompletions();
         }.bind(this));
-    };
+    }
     
     getInlineRenderer() {
         if (!this.inlineRenderer)
             this.inlineRenderer = new AceInline();
         return this.inlineRenderer;
-    };
+    }
 
     getInlineTooltip() {
         if (!this.inlineTooltip) {
@@ -60,7 +60,7 @@ class InlineAutocomplete {
             this.inlineTooltip.setCommands(this.commands);
         }
         return this.inlineTooltip;
-    };
+    }
 
 
     /**
@@ -81,7 +81,7 @@ class InlineAutocomplete {
         this.editor.on("mousewheel", this.mousewheelListener);
 
         this.updateCompletions(options);
-    };
+    }
 
     $open() {
         if (this.editor.textInput.setAriaOptions) {
@@ -102,58 +102,13 @@ class InlineAutocomplete {
         }
         
         this.changeTimer.cancel();
-    };
+    }
     
     insertMatch() {
         var result = this.getCompletionProvider().insertByIndex(this.editor, this.$index);
         this.detach();
         return result;
-    };
-
-    commands = {
-        "Previous": {
-            bindKey: "Alt-[",
-            name: "Previous",
-            exec: function(editor) {
-                editor.completer.goTo("prev");
-            },
-            enabled: function(editor) {
-                return editor.completer.getIndex() > 0;
-            },
-            position: 10
-        },
-        "Next": {
-            bindKey: "Alt-]",
-            name: "Next",
-            exec: function(editor) {
-                editor.completer.goTo("next");
-            },
-            enabled: function(editor) {
-                return editor.completer.getIndex() < editor.completer.getLength() - 1;
-            },
-            position: 20
-        },
-        "Accept": {
-            bindKey: { win: "Tab|Ctrl-Right", mac: "Tab|Cmd-Right" },
-            name: "Accept",
-            exec: function(editor) {
-                return editor.completer.insertMatch();
-            },
-            enabled: function(editor) {
-                return editor.completer.getIndex() >= 0;
-            },
-            position: 30
-        },
-        "Close": {
-            bindKey: "Esc",
-            name: "Close",
-            exec: function(editor) {
-                editor.completer.detach();
-            },
-            enabled: true,
-            position: 40
-        }
-    };
+    }
 
     changeListener(e) {
         var cursor = this.editor.selection.lead;
@@ -164,17 +119,17 @@ class InlineAutocomplete {
             this.changeTimer.schedule();
         else
             this.detach();
-    };
+    }
 
     blurListener(e) {
         this.detach();
-    };
+    }
 
     mousewheelListener(e) {
         if (this.inlineTooltip && this.inlineTooltip.isShown()) {
             this.inlineTooltip.updatePosition();
         }
-    };
+    }
 
     goTo(where) {
         if (!this.completions || !this.completions.filtered) {
@@ -194,14 +149,14 @@ class InlineAutocomplete {
                 this.setIndex(this.completions.filtered.length - 1);
                 break;
         }
-    };
+    }
 
     getLength() {
         if (!this.completions || !this.completions.filtered) {
             return 0;
         }
         return this.completions.filtered.length;
-    };
+    }
 
     getData(index) {
         if (index == undefined || index === null) {
@@ -209,15 +164,15 @@ class InlineAutocomplete {
         } else {
             return this.completions.filtered[index];
         }
-    };
+    }
 
     getIndex() {
         return this.$index;
-    };
+    }
 
     isOpen() {
         return this.$index >= 0;
-    };
+    }
 
     setIndex(value) {
         if (!this.completions || !this.completions.filtered) {
@@ -228,13 +183,13 @@ class InlineAutocomplete {
             this.$index = newIndex;
             this.$showCompletion();
         }
-    };
+    }
 
     getCompletionProvider() {
         if (!this.completionProvider)
             this.completionProvider = new CompletionProvider();
         return this.completionProvider;
-    };
+    }
 
     $showCompletion() {
         if (!this.getInlineRenderer().show(this.editor, this.completions.filtered[this.$index], this.completions.filterText)) {
@@ -244,7 +199,7 @@ class InlineAutocomplete {
         if (this.inlineTooltip && this.inlineTooltip.isShown()) {
             this.inlineTooltip.updateButtons();
         }
-    };
+    }
 
     $updatePrefix() {
         var pos = this.editor.getCursorPosition();
@@ -258,7 +213,7 @@ class InlineAutocomplete {
             return this.detach();
         this.$open(this.editor, prefix);
         return prefix;
-    };
+    }
 
     updateCompletions(options) {
         var prefix = "";
@@ -300,7 +255,7 @@ class InlineAutocomplete {
             this.completions = completions;
             this.$open(this.editor, prefix);
         }.bind(this));
-    };
+    }
 
     detach() {
         if (this.editor) {
@@ -328,7 +283,7 @@ class InlineAutocomplete {
             this.base.detach();
         this.activated = false;
         this.completionProvider = this.completions = this.base = null;
-    };
+    }
 
     destroy() {
         this.detach();
@@ -341,9 +296,54 @@ class InlineAutocomplete {
             this.editor.completer = null;
         }
         this.inlineTooltip = this.editor = this.inlineRenderer = null;
-    };
+    }
 
 }
+
+InlineAutocomplete.prototype.commands = {
+    "Previous": {
+        bindKey: "Alt-[",
+        name: "Previous",
+        exec: function(editor) {
+            editor.completer.goTo("prev");
+        },
+        enabled: function(editor) {
+            return editor.completer.getIndex() > 0;
+        },
+        position: 10
+    },
+    "Next": {
+        bindKey: "Alt-]",
+        name: "Next",
+        exec: function(editor) {
+            editor.completer.goTo("next");
+        },
+        enabled: function(editor) {
+            return editor.completer.getIndex() < editor.completer.getLength() - 1;
+        },
+        position: 20
+    },
+    "Accept": {
+        bindKey: { win: "Tab|Ctrl-Right", mac: "Tab|Cmd-Right" },
+        name: "Accept",
+        exec: function(editor) {
+            return editor.completer.insertMatch();
+        },
+        enabled: function(editor) {
+            return editor.completer.getIndex() >= 0;
+        },
+        position: 30
+    },
+    "Close": {
+        bindKey: "Esc",
+        name: "Close",
+        exec: function(editor) {
+            editor.completer.detach();
+        },
+        enabled: true,
+        position: 40
+    }
+};
 
 InlineAutocomplete.for = function(editor) {
     if (editor.completer instanceof InlineAutocomplete) {
@@ -451,7 +451,7 @@ class InlineTooltip {
                 var buttonText = dom.createTextNode([command.name, "(", bindKey, ")"].join(" "));
                 this.buttons[key].appendChild(buttonText);
             }.bind(this));
-    };
+    }
 
     /**
      * Displays the clickable command bar tooltip
@@ -464,11 +464,11 @@ class InlineTooltip {
 
         this.updatePosition();
         this.updateButtons(true);
-    };
+    }
 
     isShown() {
         return !!this.htmlElement && window.getComputedStyle(this.htmlElement).display !== "none";
-    };
+    }
 
     /**
      * Updates the position of the command bar tooltip. It aligns itself above the topmost selection in the editor.
@@ -508,7 +508,7 @@ class InlineTooltip {
         el.style.top = top + "px";
         el.style.bottom = "";
         el.style.left = Math.min(screenWidth - el.offsetWidth, pos.left) + "px";
-    };
+    }
 
     /**
      * Updates the buttons in the command bar tooltip. Should be called every time when any of the buttons can become disabled or enabled.
@@ -539,7 +539,7 @@ class InlineTooltip {
                 delete this.eventListeners[key];
             }
         }.bind(this));
-    };
+    }
     
     detach() {
         var listenerKeys = Object.keys(this.eventListeners);
@@ -553,7 +553,7 @@ class InlineTooltip {
             this.htmlElement.removeEventListener('mousedown', captureMousedown.bind(this));
             this.htmlElement.style.display = 'none';
         }
-    };
+    }
 
     destroy() {
         this.detach();
@@ -564,7 +564,7 @@ class InlineTooltip {
         this.buttons = null;
         this.htmlElement = null;
         this.controls = null;
-    };
+    }
 }
 
 var captureMousedown = function(e) {

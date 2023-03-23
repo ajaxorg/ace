@@ -1,6 +1,5 @@
 "use strict";
 var dom = require("../lib/dom");
-var oop = require("../lib/oop");
 var event = require("../lib/event");
 var Tooltip = require("../tooltip").Tooltip;
 
@@ -141,7 +140,7 @@ class GutterTooltip extends Tooltip {
             y -= 20 + height;
         }
         Tooltip.prototype.setPosition.call(this, x, y);
-    };
+    }
 
 }
 

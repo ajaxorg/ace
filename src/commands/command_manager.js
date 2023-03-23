@@ -19,7 +19,7 @@ class CommandManager extends MultiHashHandler{
             }
             return e.command.exec(e.editor, e.args, e.event, false);
         });
-    };
+    }
     
     exec(command, editor, args) {
         if (Array.isArray(command)) {
@@ -46,7 +46,7 @@ class CommandManager extends MultiHashHandler{
         this._signal("afterExec", e);
 
         return e.returnValue === false ? false : true;
-    };
+    }
 
     toggleRecording(editor) {
         if (this.$inReplay)
@@ -72,7 +72,7 @@ class CommandManager extends MultiHashHandler{
         this.macro = [];
         this.on("exec", this.$addCommandToMacro);
         return this.recording = true;
-    };
+    }
 
     replay(editor) {
         if (this.$inReplay || !this.macro)
@@ -92,7 +92,7 @@ class CommandManager extends MultiHashHandler{
         } finally {
             this.$inReplay = false;
         }
-    };
+    }
 
     trimMacro(m) {
         return m.map(function(x){
@@ -102,7 +102,7 @@ class CommandManager extends MultiHashHandler{
                 x = x[0];
             return x;
         });
-    };
+    }
 
 }
 oop.implement(CommandManager.prototype, EventEmitter);

@@ -68,13 +68,13 @@ class ScrollBar {
         this.skipEvent = false;
 
         event.addMultiMouseDownListener(this.element, [500, 300, 300], this, "onMouseDown");
-    };
+    }
 
     setVisible(isVisible) {
         this.element.style.display = isVisible ? "" : "none";
         this.isVisible = isVisible;
         this.coeff = 1;
-    };
+    }
 }
 
 oop.implement(ScrollBar.prototype, EventEmitter);
@@ -101,7 +101,7 @@ class VScrollBar extends ScrollBar {
         this.renderer = renderer;
         this.inner.style.width = this.element.style.width = (this.width || 15) + "px";
         this.$minWidth = 0;
-    };
+    }
     
     /**
      * Emitted when the scroll thumb dragged or scrollbar canvas clicked.
@@ -141,11 +141,11 @@ class VScrollBar extends ScrollBar {
         var top = e.clientY - this.element.getBoundingClientRect().top - this.thumbHeight / 2;
         this._emit("scroll", {data: this.scrollTopFromThumbTop(top)});
         return event.preventDefault(e);
-    };
+    }
 
     getHeight() {
         return this.height;
-    };
+    }
 
     /**
      * Returns new top for scroll thumb
@@ -162,7 +162,7 @@ class VScrollBar extends ScrollBar {
             scrollTop = this.pageHeight - this.viewHeight;
         }
         return scrollTop;
-    };
+    }
 
     /**
      * Returns the width of the scroll bar.
@@ -170,7 +170,7 @@ class VScrollBar extends ScrollBar {
      **/
     getWidth() {
         return Math.max(this.isVisible ? this.width : 0, this.$minWidth || 0);
-    };
+    }
 
     /**
      * Sets the height of the scroll bar, in pixels.
@@ -182,7 +182,7 @@ class VScrollBar extends ScrollBar {
         this.viewHeight = this.height;
 
         this.setScrollHeight(this.pageHeight, true);
-    };
+    }
 
     /**
      * Sets the inner and scroll height of the scroll bar, in pixels.
@@ -205,9 +205,7 @@ class VScrollBar extends ScrollBar {
             if (this.scrollTop < 0) this.scrollTop = 0;
             this._emit("scroll", {data: this.scrollTop});
         }
-    };
-
-    setInnerHeight = this.setScrollHeight;
+    }
 
     /**
      * Sets the scroll top of the scroll bar.
@@ -218,9 +216,10 @@ class VScrollBar extends ScrollBar {
         if (scrollTop < 0) scrollTop = 0;
         this.thumbTop = scrollTop * (this.slideHeight - this.thumbHeight) / (this.pageHeight - this.viewHeight);
         this.inner.style.top = this.thumbTop + "px";
-    };
+    }
 }
 
+VScrollBar.prototype.setInnerHeight = VScrollBar.prototype.setScrollHeight;
 
 /**
  * Represents a horizontal scroll bar.
@@ -238,7 +237,7 @@ class HScrollBar extends ScrollBar {
         this.height = this.HScrollHeight;
         this.inner.style.height = this.element.style.height = (this.height || 12) + "px";
         this.renderer = renderer;
-    };
+    }
     
     /**
      * Emitted when the scroll thumb dragged or scrollbar canvas clicked.
@@ -280,7 +279,7 @@ class HScrollBar extends ScrollBar {
         var left = e.clientX - this.element.getBoundingClientRect().left - this.thumbWidth / 2;
         this._emit("scroll", {data: this.scrollLeftFromThumbLeft(left)});
         return event.preventDefault(e);
-    };
+    }
 
     /**
      * Returns the height of the scroll bar.
@@ -288,7 +287,7 @@ class HScrollBar extends ScrollBar {
      **/
     getHeight() {
         return this.isVisible ? this.height : 0;
-    };
+    }
 
     /**
      * Returns new left for scroll thumb
@@ -305,7 +304,7 @@ class HScrollBar extends ScrollBar {
             scrollLeft = this.pageWidth - this.viewWidth;
         }
         return scrollLeft;
-    };
+    }
 
     /**
      * Sets the width of the scroll bar, in pixels.
@@ -318,7 +317,7 @@ class HScrollBar extends ScrollBar {
         this.viewWidth = this.width;
 
         this.setScrollWidth(this.pageWidth, true);
-    };
+    }
 
     /**
      * Sets the inner and scroll width of the scroll bar, in pixels.
@@ -339,9 +338,8 @@ class HScrollBar extends ScrollBar {
             if (this.scrollLeft < 0) this.scrollLeft = 0;
             this._emit("scroll", {data: this.scrollLeft});
         }
-    };
+    }
 
-    setInnerWidth = this.setScrollWidth;
 
     /**
      * Sets the scroll left of the scroll bar.
@@ -352,9 +350,11 @@ class HScrollBar extends ScrollBar {
         if (scrollLeft < 0) scrollLeft = 0;
         this.thumbLeft = scrollLeft * (this.slideWidth - this.thumbWidth) / (this.pageWidth - this.viewWidth);
         this.inner.style.left = (this.thumbLeft) + "px";
-    };
+    }
 
 }
+
+HScrollBar.prototype.setInnerWidth = HScrollBar.prototype.setScrollWidth;
 
 exports.ScrollBar = VScrollBar; // backward compatibility
 exports.ScrollBarV = VScrollBar; // backward compatibility

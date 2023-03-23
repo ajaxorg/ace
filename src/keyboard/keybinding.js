@@ -10,13 +10,13 @@ class KeyBinding {
         this.$data = {editor: editor};
         this.$handlers = [];
         this.setDefaultHandler(editor.commands);
-    };
+    }
     
     setDefaultHandler(kb) {
         this.removeKeyboardHandler(this.$defaultHandler);
         this.$defaultHandler = kb;
         this.addKeyboardHandler(kb, 0);
-    };
+    }
 
     setKeyboardHandler(kb) {
         var h = this.$handlers;
@@ -27,7 +27,7 @@ class KeyBinding {
             this.removeKeyboardHandler(h[h.length - 1]);
 
         this.addKeyboardHandler(kb, 1);
-    };
+    }
 
     addKeyboardHandler(kb, pos) {
         if (!kb)
@@ -45,7 +45,7 @@ class KeyBinding {
 
         if (i == -1 && kb.attach)
             kb.attach(this.$editor);
-    };
+    }
 
     removeKeyboardHandler(kb) {
         var i = this.$handlers.indexOf(kb);
@@ -54,11 +54,11 @@ class KeyBinding {
         this.$handlers.splice(i, 1);
         kb.detach && kb.detach(this.$editor);
         return true;
-    };
+    }
 
     getKeyboardHandler() {
         return this.$handlers[this.$handlers.length - 1];
-    };
+    }
     
     getStatusText() {
         var data = this.$data;
@@ -66,7 +66,7 @@ class KeyBinding {
         return this.$handlers.map(function(h) {
             return h.getStatusText && h.getStatusText(editor, data) || "";
         }).filter(Boolean).join(" ");
-    };
+    }
 
     $callKeyboardHandlers(hashId, keyString, keyCode, e) {
         var toExecute;
@@ -105,16 +105,16 @@ class KeyBinding {
             this.$editor._signal("keyboardActivity", toExecute);
         
         return success;
-    };
+    }
 
     onCommandKey(e, hashId, keyCode) {
         var keyString = keyUtil.keyCodeToString(keyCode);
         return this.$callKeyboardHandlers(hashId, keyString, keyCode, e);
-    };
+    }
 
     onTextInput(text) {
         return this.$callKeyboardHandlers(-1, text);
-    };
+    }
 
 }
 

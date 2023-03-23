@@ -37,7 +37,7 @@ class Decorator {
 
         parent.element.appendChild(this.canvas);
 
-    };
+    }
     
     $updateDecorators(config) {
         var colors = (this.renderer.theme.isDark === true) ? this.colors.dark : this.colors.light;
@@ -106,7 +106,7 @@ class Decorator {
             ctx.fillRect(0, currentY, this.canvasWidth, 2);
         }
 
-    };
+    }
 
     compensateFoldRows(row, foldData) {
         let compensateFold = 0;
@@ -121,7 +121,7 @@ class Decorator {
             }
         }
         return compensateFold;
-    };
+    }
 }
 
 oop.implement(Decorator.prototype, EventEmitter);

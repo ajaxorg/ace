@@ -34,7 +34,7 @@ class FoldLine {
             fold.start.row += shift;
             fold.end.row += shift;
         });
-    };
+    }
 
     addFold(fold) {
         if (fold.sameRow) {
@@ -64,11 +64,11 @@ class FoldLine {
             throw new Error("Trying to add fold to FoldRow that doesn't have a matching row");
         }
         fold.foldLine = this;
-    };
+    }
 
     containsRow(row) {
         return row >= this.start.row && row <= this.end.row;
-    };
+    }
 
     walk(callback, endRow, endColumn) {
         var lastEnd = 0,
@@ -106,7 +106,7 @@ class FoldLine {
             lastEnd = fold.end.column;
         }
         callback(null, endRow, endColumn, lastEnd, isNewRow);
-    };
+    }
 
     getNextFoldTo(row, column) {
         var fold, cmp;
@@ -126,7 +126,7 @@ class FoldLine {
             }
         }
         return null;
-    };
+    }
 
     addRemoveChars(row, column, len) {
         var ret = this.getNextFoldTo(row, column),
@@ -157,7 +157,7 @@ class FoldLine {
                 this.end.column += len;
             }
         }
-    };
+    }
 
     split(row, column) {
         var pos = this.getNextFoldTo(row, column);
@@ -181,7 +181,7 @@ class FoldLine {
         var newFoldLine = new FoldLine(foldData, folds);
         foldData.splice(foldData.indexOf(this) + 1, 0, newFoldLine);
         return newFoldLine;
-    };
+    }
 
     merge(foldLineNext) {
         var folds = foldLineNext.folds;
@@ -192,7 +192,7 @@ class FoldLine {
         // it's merged now with foldLineNext.
         var foldData = this.foldData;
         foldData.splice(foldData.indexOf(foldLineNext), 1);
-    };
+    }
 
     toString() {
         var ret = [this.range.toString() + ": [" ];
@@ -202,7 +202,7 @@ class FoldLine {
         });
         ret.push("]");
         return ret.join("\n");
-    };
+    }
 
     idxToPosition(idx) {
         var lastFoldEndColumn = 0;
@@ -230,7 +230,7 @@ class FoldLine {
             row: this.end.row,
             column: this.end.column + idx
         };
-    };
+    }
 }
 
 exports.FoldLine = FoldLine;

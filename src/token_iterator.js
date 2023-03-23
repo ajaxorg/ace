@@ -19,7 +19,7 @@ class TokenIterator {
 
         var token = session.getTokenAt(initialRow, initialColumn);
         this.$tokenIndex = token ? token.index : -1;
-    };
+    }
     
     /**
      * Moves iterator position to the start of previous token.
@@ -40,7 +40,7 @@ class TokenIterator {
         }
             
         return this.$rowTokens[this.$tokenIndex];
-    };
+    }
 
     /**
      * Moves iterator position to the start of next token.
@@ -63,7 +63,7 @@ class TokenIterator {
         }
             
         return this.$rowTokens[this.$tokenIndex];
-    };
+    }
  
     /**
      * 
@@ -72,7 +72,7 @@ class TokenIterator {
      **/      
     getCurrentToken() {
         return this.$rowTokens[this.$tokenIndex];
-    };
+    }
 
     /**
      * 
@@ -81,7 +81,7 @@ class TokenIterator {
      **/      
     getCurrentTokenRow() {
         return this.$row;
-    };
+    }
 
     /**
      * 
@@ -104,7 +104,7 @@ class TokenIterator {
         }
         
         return column;  
-    };
+    }
 
     /**
      * Return the current token position.
@@ -112,7 +112,7 @@ class TokenIterator {
      */
     getCurrentTokenPosition() {
         return {row: this.$row, column: this.getCurrentTokenColumn()};
-    };
+    }
     
     /**
      * Return the current token range.
@@ -122,7 +122,7 @@ class TokenIterator {
         var token = this.$rowTokens[this.$tokenIndex];
         var column = this.getCurrentTokenColumn();
         return new Range(this.$row, column, this.$row, column + token.value.length);
-    };
+    }
     
 }
 

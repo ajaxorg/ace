@@ -99,11 +99,11 @@ class Tokenizer {
 
             this.regExps[key] = new RegExp("(" + ruleRegExps.join(")|(") + ")|($)", flag);
         }
-    };
+    }
     
     $setMaxTokenCount(m) {
         MAX_TOKEN_COUNT = m | 0;
-    };
+    }
     
     $applyToken(str) {
         var values = this.splitRegex.exec(str).slice(1);
@@ -122,7 +122,7 @@ class Tokenizer {
                 };
         }
         return tokens;
-    };
+    }
 
     $arrayTokens(str) {
         if (!str)
@@ -140,7 +140,7 @@ class Tokenizer {
                 };
         }
         return tokens;
-    };
+    }
 
     removeCapturingGroups(src) {
         var r = src.replace(
@@ -148,7 +148,7 @@ class Tokenizer {
             function(x, y) {return y ? "(?:" : x;}
         );
         return r;
-    };
+    }
 
     createSplitterRegexp(src, flag) {
         if (src.indexOf("(?=") != -1) {
@@ -187,7 +187,7 @@ class Tokenizer {
         if (src.charAt(src.length - 1) != "$") src += "$";
         
         return new RegExp(src, (flag||"").replace("g", ""));
-    };
+    }
 
     /**
      * Returns an object containing two properties: `tokens`, which contains all the tokens; and `state`, the current state.
@@ -327,10 +327,9 @@ class Tokenizer {
             tokens : tokens,
             state : stack.length ? stack : currentState
         };
-    };
-    
-    reportError = config.reportError;
-    
+    }
 }
+
+Tokenizer.prototype.reportError = config.reportError;
 
 exports.Tokenizer = Tokenizer;

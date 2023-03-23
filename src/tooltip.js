@@ -20,28 +20,28 @@ class Tooltip {
         this.$element.style.display = "none";
         this.$parentNode.appendChild(this.$element);
         return this.$element;
-    };
+    }
 
     /**
      * @returns {Element}
      **/
     getElement() {
         return this.$element || this.$init();
-    };
+    }
 
     /**
      * @param {String} text
      **/
     setText(text) {
         this.getElement().textContent = text;
-    };
+    }
 
     /**
      * @param {String} html
      **/
     setHtml(html) {
         this.getElement().innerHTML = html;
-    };
+    }
 
     /**
      * @param {Number} x
@@ -50,14 +50,14 @@ class Tooltip {
     setPosition(x, y) {
         this.getElement().style.left = x + "px";
         this.getElement().style.top = y + "px";
-    };
+    }
 
     /**
      * @param {String} className
      **/
     setClassName(className) {
         dom.addCssClass(this.getElement(), className);
-    };
+    }
 
     /**
      * @param {String} text
@@ -73,7 +73,7 @@ class Tooltip {
             this.getElement().style.display = "block";
             this.isOpen = true;
         }
-    };
+    }
 
     hide() {
         if (this.isOpen) {
@@ -81,28 +81,28 @@ class Tooltip {
             this.getElement().className = CLASSNAME;
             this.isOpen = false;
         }
-    };
+    }
 
     /**
      * @returns {Number}
      **/
     getHeight() {
         return this.getElement().offsetHeight;
-    };
+    }
 
     /**
      * @returns {Number}
      **/
     getWidth() {
         return this.getElement().offsetWidth;
-    };
+    }
     
     destroy() {
         this.isOpen = false;
         if (this.$element && this.$element.parentNode) {
             this.$element.parentNode.removeChild(this.$element);
         }
-    };
+    }
 
 }
 

@@ -22,7 +22,7 @@ class Anchor {
             this.setPosition(row.row, row.column);
         else
             this.setPosition(row, column);
-    };
+    }
     
     /**
      * Returns an object identifying the `row` and `column` position of the current anchor.
@@ -30,7 +30,7 @@ class Anchor {
      **/
     getPosition() {
         return this.$clipPositionToDocument(this.row, this.column);
-    };
+    }
 
     /**
      *
@@ -39,12 +39,8 @@ class Anchor {
      **/
     getDocument() {
         return this.document;
-    };
-
-    /**
-     * experimental: allows anchor to stick to the next on the left
-     */
-    $insertRight = false;
+    }
+    
     /**
      * Fires whenever the anchor position changes.
      *
@@ -71,7 +67,7 @@ class Anchor {
             
         var point = $getTransformedPoint(delta, {row: this.row, column: this.column}, this.$insertRight);
         this.setPosition(point.row, point.column, true);
-    };
+    }
 
     /**
      * Sets the anchor position to the specified row and column. If `noClip` is `true`, the position is not clipped.
@@ -105,7 +101,7 @@ class Anchor {
             old: old,
             value: pos
         });
-    };
+    }
 
     /**
      * When called, the `"change"` event listener is removed.
@@ -113,7 +109,7 @@ class Anchor {
      **/
     detach() {
         this.document.off("change", this.$onChange);
-    };
+    }
 
     /**
      * When called, the `"change"` event listener is appended.
@@ -123,7 +119,7 @@ class Anchor {
     attach(doc) {
         this.document = doc || this.document;
         this.document.on("change", this.$onChange);
-    };
+    }
 
     /**
      * Clips the anchor position to the specified row and column.
@@ -152,8 +148,13 @@ class Anchor {
             pos.column = 0;
 
         return pos;
-    };
+    }
 }
+
+/**
+ * experimental: allows anchor to stick to the next on the left
+ */
+Anchor.prototype.$insertRight = false;
 
 oop.implement(Anchor.prototype, EventEmitter);
 

@@ -11,45 +11,45 @@ class Lines {
         this.cells = [];
         this.cellCache = [];
         this.$offsetCoefficient = 0;
-    };
+    }
     
     moveContainer(config) {
         dom.translate(this.element, 0, -((config.firstRowScreen * config.lineHeight) % this.canvasHeight) - config.offset * this.$offsetCoefficient);
-    };    
+    }    
     
     pageChanged(oldConfig, newConfig) {
         return (
             Math.floor((oldConfig.firstRowScreen * oldConfig.lineHeight) / this.canvasHeight) !==
             Math.floor((newConfig.firstRowScreen * newConfig.lineHeight) / this.canvasHeight)
         );
-    };
+    }
     
     computeLineTop(row, config, session) {
         var screenTop = config.firstRowScreen * config.lineHeight;
         var screenPage = Math.floor(screenTop / this.canvasHeight);
         var lineTop = session.documentToScreenRow(row, 0) * config.lineHeight;
         return lineTop - (screenPage * this.canvasHeight);
-    };
+    }
     
     computeLineHeight(row, config, session) {
         return config.lineHeight * session.getRowLineCount(row);
-    };
+    }
     
     getLength() {
         return this.cells.length;
-    };
+    }
     
     get(index) {
         return this.cells[index];
-    };
+    }
     
     shift() {
         this.$cacheCell(this.cells.shift());
-    };
+    }
     
     pop() {
         this.$cacheCell(this.cells.pop());
-    };
+    }
     
     push(cell) {
         if (Array.isArray(cell)) {
@@ -63,7 +63,7 @@ class Lines {
             this.cells.push(cell);
             this.element.appendChild(cell.element);
         }
-    };
+    }
     
     unshift(cell) {
         if (Array.isArray(cell)) {
@@ -80,14 +80,14 @@ class Lines {
             this.cells.unshift(cell);
             this.element.insertAdjacentElement("afterbegin", cell.element);
         }
-    };
+    }
     
     last() {
         if (this.cells.length)
             return this.cells[this.cells.length-1];
         else
             return null;
-    };
+    }
     
     $cacheCell(cell) {
         if (!cell)
@@ -95,7 +95,7 @@ class Lines {
             
         cell.element.remove();
         this.cellCache.push(cell);
-    };
+    }
     
     createCell(row, config, session, initElement) {
         var cell = this.cellCache.pop();
@@ -115,7 +115,7 @@ class Lines {
         cell.row = row;
         
         return cell;
-    };
+    }
     
 }
 

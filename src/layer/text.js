@@ -15,7 +15,7 @@ class Text {
         parentEl.appendChild(this.element);
         this.$updateEolChar = this.$updateEolChar.bind(this);
         this.$lines = new Lines(this.element);
-    };
+    }
     
     $updateEolChar() {
         var doc = this.session.doc;
@@ -25,20 +25,20 @@ class Text {
             this.EOL_CHAR = EOL_CHAR;
             return true;
         }
-    };
+    }
 
     setPadding(padding) {
         this.$padding = padding;
         this.element.style.margin = "0 " + padding + "px";
-    };
+    }
 
     getLineHeight() {
         return this.$fontMetrics.$characterSize.height || 0;
-    };
+    }
 
     getCharacterWidth() {
         return this.$fontMetrics.$characterSize.width || 0;
-    };
+    }
 
     $setFontMetrics(measure) {
         this.$fontMetrics = measure;
@@ -46,19 +46,19 @@ class Text {
             this._signal("changeCharacterSize", e);
         }.bind(this));
         this.$pollSizeChanges();
-    };
+    }
 
     checkForSizeChanges() {
         this.$fontMetrics.checkForSizeChanges();
-    };
+    }
     $pollSizeChanges() {
         return this.$pollSizeChangesTimer = this.$fontMetrics.$pollSizeChanges();
-    };
+    }
     setSession(session) {
         this.session = session;
         if (session)
             this.$computeTabString();
-    };
+    }
     
     setShowInvisibles(showInvisibles) {
         if (this.showInvisibles == showInvisibles)
@@ -74,7 +74,7 @@ class Text {
         }
         this.$computeTabString();
         return true;
-    };
+    }
     
     setDisplayIndentGuides(display) {
         if (this.displayIndentGuides == display)
@@ -83,14 +83,14 @@ class Text {
         this.displayIndentGuides = display;
         this.$computeTabString();
         return true;
-    };
+    }
     
     setHighlightIndentGuides(highlight) {
         if (this.$highlightIndentGuides === highlight) return false;
 
         this.$highlightIndentGuides = highlight;
         return highlight;
-    };
+    }
     
     $computeTabString() {
         var tabSize = this.session.getTabSize();
@@ -129,8 +129,7 @@ class Text {
             span.textContent = tabContent;
             this.$tabStrings["\t"] = span;
         }
-    };
-    onChangeTabSize = this.$computeTabString;
+    }
 
     updateLines(config, firstRow, lastRow) {
         // Due to wrap line changes there can be new lines if e.g.
@@ -199,7 +198,7 @@ class Text {
                 cell.element.style.top = this.$lines.computeLineTop(cell.row, config, this.session) + "px";
             }
         }
-    };
+    }
 
     scrollLines(config) {
         var oldConfig = this.config;
@@ -241,7 +240,7 @@ class Text {
             this.$lines.push(this.$renderLinesFragment(config, oldConfig.lastRow + 1, config.lastRow));
         }
         this.$highlightIndentGuide();
-    };
+    }
 
     $renderLinesFragment(config, firstRow, lastRow) {
         var fragment = [];
@@ -279,7 +278,7 @@ class Text {
             row++;
         }
         return fragment;
-    };
+    }
 
     update(config) {
         this.$lines.moveContainer(config);
@@ -294,7 +293,7 @@ class Text {
             lines.pop();
 
         lines.push(this.$renderLinesFragment(config, firstRow, lastRow));
-    };
+    }
 
     $renderToken(parent, screenColumn, token, value) {
         var self = this;
@@ -377,7 +376,7 @@ class Text {
         }
 
         return screenColumn + value.length;
-    };
+    }
 
     renderIndentGuide(parent, value, max) {
         var cols = value.search(this.$indentGuideRe);
@@ -400,7 +399,7 @@ class Text {
         }
         this.$highlightIndentGuide();
         return value;
-    };
+    }
 
     $highlightIndentGuide() {
         if (!this.$highlightIndentGuides || !this.displayIndentGuides) return;
@@ -454,7 +453,7 @@ class Text {
         }
 
         this.$renderHighlightIndentGuide();
-    };
+    }
 
     $clearActiveIndentGuide() {
         var cells = this.$lines.cells;
@@ -470,7 +469,7 @@ class Text {
                 }
             }
         }
-    };
+    }
 
     $setIndentGuideActive(cell, indentLevel) {
         var line = this.session.doc.getLine(cell.row);
@@ -482,7 +481,7 @@ class Text {
                     "ace_indent-guide-active");
             }
         }
-    };
+    }
 
     $renderHighlightIndentGuide() {
         if (!this.$lines) return;
@@ -510,7 +509,7 @@ class Text {
                 }
             }
         }
-    };
+    }
 
     $createLineElement(parent) {
         var lineEl = this.dom.createElement("div");
@@ -518,7 +517,7 @@ class Text {
         lineEl.style.height = this.config.lineHeight + "px";
 
         return lineEl;
-    };
+    }
 
     $renderWrappedLine(parent, tokens, splits) {
         var chars = 0;
@@ -572,7 +571,7 @@ class Text {
 
         if (splits[splits.length - 1] > this.MAX_LINE_LENGTH)
             this.$renderOverflowMessage(lineEl, screenColumn, null, "", true);
-    };
+    }
 
     $renderSimpleLine(parent, tokens) {
         var screenColumn = 0;
@@ -589,7 +588,7 @@ class Text {
                 return this.$renderOverflowMessage(parent, screenColumn, token, value);
             screenColumn = this.$renderToken(parent, screenColumn, token, value);
         }
-    };
+    }
 
     $renderOverflowMessage(parent, screenColumn, token, value, hide) {
         token && this.$renderToken(parent, screenColumn, token,
@@ -600,7 +599,7 @@ class Text {
         overflowEl.textContent = hide ? "<hide>" : "<click to see more...>";
 
         parent.appendChild(overflowEl);
-    };
+    }
 
     // row is either first row of foldline or not in fold
     $renderLine(parent, row, foldLine) {
@@ -641,7 +640,7 @@ class Text {
 
             lastLineEl.appendChild(invisibleEl);
         }
-    };
+    }
 
     $getFoldLineTokens(row, foldLine) {
         var session = this.session;
@@ -702,7 +701,7 @@ class Text {
         }, foldLine.end.row, this.session.getLine(foldLine.end.row).length);
 
         return renderTokens;
-    };
+    }
 
     $useLineGroups() {
         // For the updateLines function to work correctly, it's important that the
@@ -711,7 +710,7 @@ class Text {
         // wrapped, this means we need to add a layer to the node hierarchy (tagged
         // with the class name ace_line_group).
         return this.session.getUseWrapMode();
-    };
+    }
 }
 
 Text.prototype.$textToken = {
@@ -735,6 +734,7 @@ Text.prototype.displayIndentGuides = true;
 Text.prototype.$highlightIndentGuides = true;
 Text.prototype.$tabStrings = [];
 Text.prototype.destroy = {};
+Text.prototype.onChangeTabSize = Text.prototype.$computeTabString;
 
 oop.implement(Text.prototype, EventEmitter);
 

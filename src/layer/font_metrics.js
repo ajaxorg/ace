@@ -35,9 +35,7 @@ class FontMetrics {
             this.$addObserver();
         else
             this.checkForSizeChanges();
-    };
-        
-    $characterSize = {width: 0, height: 0};
+    }
     
     $setMeasureNodeStyles(style, isRoot) {
         style.width = style.height = "auto";
@@ -52,7 +50,7 @@ class FontMetrics {
             style.font = "inherit";
         }
         style.overflow = isRoot ? "hidden" : "visible";
-    };
+    }
 
     checkForSizeChanges(size) {
         if (size === undefined)
@@ -66,7 +64,7 @@ class FontMetrics {
             this.allowBoldFonts = boldSize && boldSize.width === size.width && boldSize.height === size.height;
             this._emit("changeCharacterSize", {data: size});
         }
-    };
+    }
     
     $addObserver() {
         var self = this;
@@ -75,7 +73,7 @@ class FontMetrics {
             self.checkForSizeChanges();
         });
         this.$observer.observe(this.$measureNode);
-    };
+    }
 
     $pollSizeChanges() {
         if (this.$pollSizeChangesTimer || this.$observer)
@@ -86,7 +84,7 @@ class FontMetrics {
             self.checkForSizeChanges();
             event.onIdle(cb, 500);
         }, 500);
-    };
+    }
     
     setPolling(val) {
         if (val) {
@@ -95,7 +93,7 @@ class FontMetrics {
             clearInterval(this.$pollSizeChangesTimer);
             this.$pollSizeChangesTimer = 0;
         }
-    };
+    }
 
     $measureSizes(node) {
         var size = {
@@ -108,13 +106,13 @@ class FontMetrics {
         if (size.width === 0 || size.height === 0)
             return null;
         return size;
-    };
+    }
 
     $measureCharWidth(ch) {
         this.$main.textContent = lang.stringRepeat(ch, CHAR_COUNT);
         var rect = this.$main.getBoundingClientRect();
         return rect.width / CHAR_COUNT;
-    };
+    }
     
     getCharacterWidth(ch) {
         var w = this.charSizes[ch];
@@ -122,7 +120,7 @@ class FontMetrics {
             w = this.charSizes[ch] = this.$measureCharWidth(ch) / this.$characterSize.width;
         }
         return w;
-    };
+    }
 
     destroy() {
         clearInterval(this.$pollSizeChangesTimer);
@@ -130,13 +128,13 @@ class FontMetrics {
             this.$observer.disconnect();
         if (this.el && this.el.parentNode)
             this.el.parentNode.removeChild(this.el);
-    };
+    }
 
     
     $getZoom(element) {
         if (!element || !element.parentElement) return 1;
         return (window.getComputedStyle(element).zoom || 1) * this.$getZoom(element.parentElement);
-    };
+    }
     
     $initTransformMeasureNodes() {
         var t = function(t, l) {
@@ -145,7 +143,7 @@ class FontMetrics {
             }];
         };
         this.els = dom.buildDom([t(0, 0), t(L, 0), t(0, L), t(L, L)], this.el);
-    };
+    }
     // general transforms from element coordinates x to screen coordinates u have the form
     // | m1[0] m2[0] t[0] |   | x |       | u |
     // | m1[1] m2[1] t[1] | . | y |  == k | v |
@@ -195,9 +193,10 @@ class FontMetrics {
         var u = sub(clientPos, a);
         var f = solve(sub(m1, mul(h[0], u)), sub(m2, mul(h[1], u)), u);
         return mul(L, f);
-    };
+    }
     
 }
+FontMetrics.prototype.$characterSize = {width: 0, height: 0};
 
 oop.implement(FontMetrics.prototype, EventEmitter);
 

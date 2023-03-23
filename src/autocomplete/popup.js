@@ -382,7 +382,7 @@ class AcePopup {
         popup.$borderSize = 1;
 
         return popup;
-    };
+    }
 } 
 
 dom.importCssString(`

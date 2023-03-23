@@ -71,12 +71,12 @@ class MouseHandler {
                 renderer.setCursorStyle("");
             }
         }, editor);
-    };
+    }
 
     onMouseEvent(name, e) {
         if (!this.editor.session) return;
         this.editor._emit(name, new MouseEvent(e, this.editor));
-    };
+    }
 
     onMouseMove(name, e) {
         // optimization, because mousemove doesn't have a default handler.
@@ -85,7 +85,7 @@ class MouseHandler {
             return;
 
         this.editor._emit(name, new MouseEvent(e, this.editor));
-    };
+    }
 
     onMouseWheel(name, e) {
         var mouseEvent = new MouseEvent(e, this.editor);
@@ -94,11 +94,11 @@ class MouseHandler {
         mouseEvent.wheelY = e.wheelY;
 
         this.editor._emit(name, mouseEvent);
-    };
+    }
     
     setState(state) {
         this.state = state;
-    };
+    }
 
     captureMouse(ev, mouseMoveHandler) {
         this.x = ev.x;
@@ -166,8 +166,7 @@ class MouseHandler {
         self.$onCaptureMouseMove = onMouseMove;
         self.releaseMouse = event.capture(this.editor.container, onMouseMove, onCaptureEnd);
         var timerId = setInterval(onCaptureInterval, 20);
-    };
-    releaseMouse = null;
+    }
     cancelContextMenu() {
         var stop = function(e) {
             if (e && e.domEvent && e.domEvent.type != "contextmenu")
@@ -178,11 +177,13 @@ class MouseHandler {
         }.bind(this);
         setTimeout(stop, 10);
         this.editor.on("nativecontextmenu", stop);
-    };
+    }
     destroy() {
         if (this.releaseMouse) this.releaseMouse();
-    };
+    }
 }
+
+MouseHandler.prototype.releaseMouse = null;
 
 config.defineOptions(MouseHandler.prototype, "mouseHandler", {
     scrollSpeed: {initialValue: 2},

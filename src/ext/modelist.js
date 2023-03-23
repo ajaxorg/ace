@@ -36,11 +36,11 @@ class Mode {
         }
 
         this.extRe = new RegExp(re, "gi");
-    };
+    }
 
     supportsFile(filename) {
         return filename.match(this.extRe);
-    };
+    }
 }
 
 // todo firstlinematch

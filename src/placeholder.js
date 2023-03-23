@@ -37,7 +37,7 @@ class PlaceHolder {
         this.setup();
 
         session.selection.on("changeCursor", this.$onCursorChange);
-    };
+    }
 
     /**
      * PlaceHolder.setup()
@@ -67,7 +67,7 @@ class PlaceHolder {
             _self.others.push(anchor);
         });
         session.setUndoSelect(false);
-    };
+    }
     
     /**
      * PlaceHolder.showOtherMarkers()
@@ -83,7 +83,7 @@ class PlaceHolder {
         this.others.forEach(function(anchor) {
             anchor.markerId = session.addMarker(new Range(anchor.row, anchor.column, anchor.row, anchor.column+_self.length), _self.othersClass, null, false);
         });
-    };
+    }
     
     /**
      * PlaceHolder.hideOtherMarkers()
@@ -97,7 +97,7 @@ class PlaceHolder {
         for (var i = 0; i < this.others.length; i++) {
             this.session.removeMarker(this.others[i].markerId);
         }
-    };
+    }
 
     /**
      * PlaceHolder@onUpdate(e)
@@ -140,14 +140,14 @@ class PlaceHolder {
         
         this.$updating = false;
         this.updateMarkers();
-    };
+    }
     
     updateAnchors(delta) {
         this.pos.onChange(delta);
         for (var i = this.others.length; i--;)
             this.others[i].onChange(delta);
         this.updateMarkers();
-    };
+    }
     
     updateMarkers() {
         if (this.$updating)
@@ -161,7 +161,7 @@ class PlaceHolder {
         updateMarker(this.pos, this.mainClass);
         for (var i = this.others.length; i--;)
             updateMarker(this.others[i], this.othersClass);
-    };
+    }
     
     /**
      * PlaceHolder@onCursorChange(e)
@@ -180,7 +180,7 @@ class PlaceHolder {
             this.hideOtherMarkers();
             this._emit("cursorLeave", event);
         }
-    };
+    }
     
     /**
      * PlaceHolder.detach()
@@ -195,7 +195,7 @@ class PlaceHolder {
         this.session.selection.off("changeCursor", this.$onCursorChange);
         this.session.setUndoSelect(true);
         this.session = null;
-    };
+    }
     
     /**
      * PlaceHolder.cancel()
@@ -213,7 +213,7 @@ class PlaceHolder {
         }
         if (this.selectionBefore)
             this.session.selection.fromJSON(this.selectionBefore);
-    };
+    }
 }
 
 oop.implement(PlaceHolder.prototype, EventEmitter);

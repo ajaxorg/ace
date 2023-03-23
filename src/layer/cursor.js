@@ -18,13 +18,13 @@ class Cursor {
         this.cursor = this.addCursor();
         dom.addCssClass(this.element, "ace_hidden-cursors");
         this.$updateCursors = this.$updateOpacity.bind(this);
-    };
+    }
     
     $updateOpacity(val) {
         var cursors = this.cursors;
         for (var i = cursors.length; i--; )
             dom.setStyle(cursors[i].style, "opacity", val ? "" : "0");
-    };
+    }
 
     $startCssAnimation() {
         var cursors = this.cursors;
@@ -37,35 +37,34 @@ class Cursor {
                 dom.addCssClass(this.element, "ace_animate-blinking");
             }
         }.bind(this));
-    };
+    }
     
     $stopCssAnimation() {
         this.$isAnimating = false;
         dom.removeCssClass(this.element, "ace_animate-blinking");
-    };
-
-    $padding = 0;
+    }
+    
     setPadding(padding) {
         this.$padding = padding;
-    };
+    }
 
     setSession(session) {
         this.session = session;
-    };
+    }
 
     setBlinking(blinking) {
         if (blinking != this.isBlinking) {
             this.isBlinking = blinking;
             this.restartTimer();
         }
-    };
+    }
 
     setBlinkInterval(blinkInterval) {
         if (blinkInterval != this.blinkInterval) {
             this.blinkInterval = blinkInterval;
             this.restartTimer();
         }
-    };
+    }
 
     setSmoothBlinking(smoothBlinking) {
         if (smoothBlinking != this.smoothBlinking) {
@@ -74,7 +73,7 @@ class Cursor {
             this.$updateCursors(true);
             this.restartTimer();
         }
-    };
+    }
 
     addCursor() {
         var el = dom.createElement("div");
@@ -82,7 +81,7 @@ class Cursor {
         this.element.appendChild(el);
         this.cursors.push(el);
         return el;
-    };
+    }
 
     removeCursor() {
         if (this.cursors.length > 1) {
@@ -90,19 +89,19 @@ class Cursor {
             el.parentNode.removeChild(el);
             return el;
         }
-    };
+    }
 
     hideCursor() {
         this.isVisible = false;
         dom.addCssClass(this.element, "ace_hidden-cursors");
         this.restartTimer();
-    };
+    }
 
     showCursor() {
         this.isVisible = true;
         dom.removeCssClass(this.element, "ace_hidden-cursors");
         this.restartTimer();
-    };
+    }
 
     restartTimer() {
         var update = this.$updateCursors;
@@ -146,7 +145,7 @@ class Cursor {
             }, this.blinkInterval);
             blink();
         }
-    };
+    }
 
     getPixelPosition(position, onScreen) {
         if (!this.config || !this.session)
@@ -163,11 +162,11 @@ class Cursor {
             this.config.lineHeight;
 
         return {left : cursorLeft, top : cursorTop};
-    };
+    }
 
     isCursorInView(pixelPos, config) {
         return pixelPos.top >= 0 && pixelPos.top < config.maxHeight;
-    };
+    }
 
     update(config) {
         this.config = config;
@@ -211,9 +210,7 @@ class Cursor {
         // cache for textarea and gutter highlight
         this.$pixelPos = pixelPos;
         this.restartTimer();
-    };
-    
-    drawCursor = null;
+    }
 
     $setOverwrite(overwrite) {
         if (overwrite != this.overwrite) {
@@ -223,13 +220,17 @@ class Cursor {
             else
                 dom.removeCssClass(this.element, "ace_overwrite-cursors");
         }
-    };
+    }
 
     destroy() {
         clearInterval(this.intervalId);
         clearTimeout(this.timeoutId);
-    };
+    }
 
 }
+
+Cursor.prototype.$padding = 0;
+Cursor.prototype.drawCursor = null;
+
 
 exports.Cursor = Cursor;

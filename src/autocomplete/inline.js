@@ -11,7 +11,7 @@ class AceInline {
      */
     constructor() {
         this.editor = null;
-    };
+    }
     
     /**
      * Renders the completion as ghost text to the current cursor position
@@ -41,14 +41,14 @@ class AceInline {
             editor.setGhostText(displayText);
         }
         return true;
-    };
+    }
 
     isOpen() {
         if (!this.editor) {
             return false;
         }
         return !!this.editor.renderer.$ghostText;
-    };
+    }
 
     hide() {
         if (!this.editor) {
@@ -56,12 +56,12 @@ class AceInline {
         }
         this.editor.removeGhostText();
         return true;
-    };
+    }
 
     destroy() {
         this.hide();
         this.editor = null;
-    };
+    }
 }
 
 

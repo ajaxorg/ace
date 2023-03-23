@@ -156,19 +156,8 @@ class VirtualRenderer {
         this.$addResizeObserver();
         config.resetOptions(this);
         config._signal("renderer", this);
-    };
+    }
 
-    CHANGE_CURSOR = 1;
-    CHANGE_MARKER = 2;
-    CHANGE_GUTTER = 4;
-    CHANGE_SCROLL = 8;
-    CHANGE_LINES = 16;
-    CHANGE_TEXT = 32;
-    CHANGE_SIZE = 64;
-    CHANGE_MARKER_BACK = 128;
-    CHANGE_MARKER_FRONT = 256;
-    CHANGE_FULL = 512;
-    CHANGE_H_SCROLL = 1024;
 
     // this.$logChanges = function(changes) {
     //     var a = ""
@@ -199,7 +188,7 @@ class VirtualRenderer {
         this.$updatePrintMargin();
         // set explicit line height to avoid normal resolving to different values based on text
         dom.setStyle(this.scroller.style, "line-height", this.lineHeight + "px");
-    };
+    }
 
     /**
      *
@@ -228,7 +217,7 @@ class VirtualRenderer {
         this.onChangeNewLineMode = this.onChangeNewLineMode.bind(this);
         this.onChangeNewLineMode();
         this.session.doc.on("changeNewLineMode", this.onChangeNewLineMode);
-    };
+    }
 
     /**
      * Triggers a partial update of the text, from the range given by the two parameters.
@@ -267,25 +256,25 @@ class VirtualRenderer {
         if (this.$changedLines.firstRow > this.layerConfig.lastRow)
             return;
         this.$loop.schedule(this.CHANGE_LINES);
-    };
+    }
 
     onChangeNewLineMode() {
         this.$loop.schedule(this.CHANGE_TEXT);
         this.$textLayer.$updateEolChar();
         this.session.$bidiHandler.setEolChar(this.$textLayer.EOL_CHAR);
-    };
+    }
     
     onChangeTabSize() {
         this.$loop.schedule(this.CHANGE_TEXT | this.CHANGE_MARKER);
         this.$textLayer.onChangeTabSize();
-    };
+    }
 
     /**
      * Triggers a full update of the text, for all the rows.
      **/
     updateText() {
         this.$loop.schedule(this.CHANGE_TEXT);
-    };
+    }
 
     /**
      * Triggers a full update of all the layers, for all the rows.
@@ -296,22 +285,21 @@ class VirtualRenderer {
             this.$renderChanges(this.CHANGE_FULL, true);
         else
             this.$loop.schedule(this.CHANGE_FULL);
-    };
+    }
 
     /**
      * Updates the font size.
      **/
     updateFontSize() {
         this.$textLayer.checkForSizeChanges();
-    };
+    }
 
-    $changes = 0;
     $updateSizeAsync() {
         if (this.$loop.pending)
             this.$size.$dirty = true;
         else
             this.onResize();
-    };
+    }
     /**
      * [Triggers a resize of the editor.]{: #VirtualRenderer.onResize}
      * @param {Boolean} force If `true`, recomputes the size, even if the height and width haven't changed
@@ -357,7 +345,7 @@ class VirtualRenderer {
         if (this.$customScrollbar) {
             this.$updateCustomScrollbar(true);
         }
-    };
+    }
     
     $updateCachedSize(force, gutterWidth, width, height) {
         height -= (this.$extraHeight || 0);
@@ -415,7 +403,7 @@ class VirtualRenderer {
             this._signal("resize", oldSize);
 
         return changes;
-    };
+    }
 
     onGutterResize(width) {
         var gutterWidth = this.$showGutter ? width : 0;
@@ -429,7 +417,7 @@ class VirtualRenderer {
         } else {
             this.$computeLayerConfig();
         }
-    };
+    }
 
     /**
      * Adjusts the wrap limit, which is the number of characters that can fit within the width of the edit area on screen.
@@ -438,7 +426,7 @@ class VirtualRenderer {
         var availableWidth = this.$size.scrollerWidth - this.$padding * 2;
         var limit = Math.floor(availableWidth / this.characterWidth);
         return this.session.adjustWrapLimit(limit, this.$showPrintMargin && this.$printMarginColumn);
-    };
+    }
 
     /**
      * Identifies whether you want to have an animated scroll or not.
@@ -447,7 +435,7 @@ class VirtualRenderer {
      **/
     setAnimatedScroll(shouldAnimate){
         this.setOption("animatedScroll", shouldAnimate);
-    };
+    }
 
     /**
      * Returns whether an animated scroll happens or not.
@@ -455,7 +443,7 @@ class VirtualRenderer {
      **/
     getAnimatedScroll() {
         return this.$animatedScroll;
-    };
+    }
 
     /**
      * Identifies whether you want to show invisible characters or not.
@@ -465,7 +453,7 @@ class VirtualRenderer {
     setShowInvisibles(showInvisibles) {
         this.setOption("showInvisibles", showInvisibles);
         this.session.$bidiHandler.setShowInvisibles(showInvisibles);
-    };
+    }
 
     /**
      * Returns whether invisible characters are being shown or not.
@@ -473,22 +461,22 @@ class VirtualRenderer {
      **/
     getShowInvisibles() {
         return this.getOption("showInvisibles");
-    };
+    }
     getDisplayIndentGuide() {
         return this.getOption("displayIndentGuides");
-    };
+    }
 
     setDisplayIndentGuides(display) {
         this.setOption("displayIndentGuides", display);
-    };
+    }
 
     getHighlightIndentGuides() {
         return this.getOption("highlightIndentGuides");
-    };
+    }
 
     setHighlightIndentGuides(highlight) {
         this.setOption("highlightIndentGuides", highlight);
-    };
+    }
 
     /**
      * Identifies whether you want to show the print margin or not.
@@ -497,7 +485,7 @@ class VirtualRenderer {
      **/
     setShowPrintMargin(showPrintMargin) {
         this.setOption("showPrintMargin", showPrintMargin);
-    };
+    }
 
     /**
      * Returns whether the print margin is being shown or not.
@@ -505,7 +493,7 @@ class VirtualRenderer {
      **/
     getShowPrintMargin() {
         return this.getOption("showPrintMargin");
-    };
+    }
     /**
      * Identifies whether you want to show the print margin column or not.
      * @param {Boolean} showPrintMargin Set to `true` to show the print margin column
@@ -513,7 +501,7 @@ class VirtualRenderer {
      **/
     setPrintMarginColumn(showPrintMargin) {
         this.setOption("printMarginColumn", showPrintMargin);
-    };
+    }
 
     /**
      * Returns whether the print margin column is being shown or not.
@@ -521,7 +509,7 @@ class VirtualRenderer {
      **/
     getPrintMarginColumn() {
         return this.getOption("printMarginColumn");
-    };
+    }
 
     /**
      * Returns `true` if the gutter is being shown.
@@ -529,7 +517,7 @@ class VirtualRenderer {
      **/
     getShowGutter(){
         return this.getOption("showGutter");
-    };
+    }
 
     /**
      * Identifies whether you want to show the gutter or not.
@@ -538,23 +526,23 @@ class VirtualRenderer {
      **/
     setShowGutter(show){
         return this.setOption("showGutter", show);
-    };
+    }
 
     getFadeFoldWidgets(){
         return this.getOption("fadeFoldWidgets");
-    };
+    }
 
     setFadeFoldWidgets(show) {
         this.setOption("fadeFoldWidgets", show);
-    };
+    }
 
     setHighlightGutterLine(shouldHighlight) {
         this.setOption("highlightGutterLine", shouldHighlight);
-    };
+    }
 
     getHighlightGutterLine() {
         return this.getOption("highlightGutterLine");
-    };
+    }
 
     $updatePrintMargin() {
         if (!this.$showPrintMargin && !this.$printMarginEl)
@@ -575,7 +563,7 @@ class VirtualRenderer {
         
         if (this.session && this.session.$wrap == -1)
             this.adjustWrapLimit();
-    };
+    }
 
     /**
      *
@@ -584,7 +572,7 @@ class VirtualRenderer {
      **/
     getContainerElement() {
         return this.container;
-    };
+    }
 
     /**
      *
@@ -593,7 +581,7 @@ class VirtualRenderer {
      **/
     getMouseEventTarget() {
         return this.scroller;
-    };
+    }
 
     /**
      *
@@ -602,7 +590,7 @@ class VirtualRenderer {
      **/
     getTextAreaContainer() {
         return this.container;
-    };
+    }
 
     // move text input over the cursor
     // this is required for IME
@@ -655,7 +643,7 @@ class VirtualRenderer {
         dom.setStyle(style, "height", h + "px");
         dom.setStyle(style, "width", w + "px");
         dom.translate(this.textarea, Math.min(posLeft, this.$size.scrollerWidth - w), Math.min(posTop, maxTop));
-    };
+    }
 
     /**
      * [Returns the index of the first visible row.]{: #VirtualRenderer.getFirstVisibleRow}
@@ -663,7 +651,7 @@ class VirtualRenderer {
      **/
     getFirstVisibleRow() {
         return this.layerConfig.firstRow;
-    };
+    }
 
     /**
      *
@@ -672,7 +660,7 @@ class VirtualRenderer {
      **/
     getFirstFullyVisibleRow() {
         return this.layerConfig.firstRow + (this.layerConfig.offset === 0 ? 0 : 1);
-    };
+    }
 
     /**
      *
@@ -686,7 +674,7 @@ class VirtualRenderer {
         if (top - this.session.getScrollTop() > config.height - config.lineHeight)
             return lastRow - 1;
         return lastRow;
-    };
+    }
 
     /**
      *
@@ -695,9 +683,7 @@ class VirtualRenderer {
      **/
     getLastVisibleRow() {
         return this.layerConfig.lastRow;
-    };
-
-    $padding = null;
+    }
 
     /**
      * Sets the padding for all the layers.
@@ -712,7 +698,7 @@ class VirtualRenderer {
         this.$markerBack.setPadding(padding);
         this.$loop.schedule(this.CHANGE_FULL);
         this.$updatePrintMargin();
-    };
+    }
     
     setScrollMargin(top, bottom, left, right) {
         var sm = this.scrollMargin;
@@ -725,7 +711,7 @@ class VirtualRenderer {
         if (sm.top && this.scrollTop <= 0 && this.session)
             this.session.setScrollTop(-sm.top);
         this.updateFull();
-    };
+    }
     
     setMargin(top, bottom, left, right) {
         var sm = this.margin;
@@ -737,7 +723,7 @@ class VirtualRenderer {
         sm.h = sm.left + sm.right;
         this.$updateCachedSize(true, this.gutterWidth, this.$size.width, this.$size.height);
         this.updateFull();
-    };
+    }
 
     /**
      * Returns whether the horizontal scrollbar is set to be always visible.
@@ -745,7 +731,7 @@ class VirtualRenderer {
      **/
     getHScrollBarAlwaysVisible() {
         return this.$hScrollBarAlwaysVisible;
-    };
+    }
 
     /**
      * Identifies whether you want to show the horizontal scrollbar or not.
@@ -753,14 +739,14 @@ class VirtualRenderer {
      **/
     setHScrollBarAlwaysVisible(alwaysVisible) {
         this.setOption("hScrollBarAlwaysVisible", alwaysVisible);
-    };
+    }
     /**
      * Returns whether the horizontal scrollbar is set to be always visible.
      * @returns {Boolean}
      **/
     getVScrollBarAlwaysVisible() {
         return this.$vScrollBarAlwaysVisible;
-    };
+    }
 
     /**
      * Identifies whether you want to show the horizontal scrollbar or not.
@@ -768,7 +754,7 @@ class VirtualRenderer {
      **/
     setVScrollBarAlwaysVisible(alwaysVisible) {
         this.setOption("vScrollBarAlwaysVisible", alwaysVisible);
-    };
+    }
 
     $updateScrollBarV() {
         var scrollHeight = this.layerConfig.maxHeight;
@@ -782,20 +768,19 @@ class VirtualRenderer {
         }
         this.scrollBarV.setScrollHeight(scrollHeight + this.scrollMargin.v);
         this.scrollBarV.setScrollTop(this.scrollTop + this.scrollMargin.top);
-    };
+    }
     $updateScrollBarH() {
         this.scrollBarH.setScrollWidth(this.layerConfig.width + 2 * this.$padding + this.scrollMargin.h);
         this.scrollBarH.setScrollLeft(this.scrollLeft + this.scrollMargin.left);
-    };
-    
-    $frozen = false;
+    }
+
     freeze() {
         this.$frozen = true;
-    };
+    }
     
     unfreeze() {
         this.$frozen = false;
-    };
+    }
 
     $renderChanges(changes, force) {
         if (this.$changes) {
@@ -952,7 +937,7 @@ class VirtualRenderer {
         }
 
         this._signal("afterRender", changes);
-    };
+    }
 
     
     $autosize() {
@@ -984,7 +969,7 @@ class VirtualRenderer {
             
             this._signal("autosize");
         }
-    };
+    }
     
     $computeLayerConfig() {
         var session = this.session;
@@ -1090,7 +1075,7 @@ class VirtualRenderer {
         // console.log(JSON.stringify(this.layerConfig));
 
         return changes;
-    };
+    }
 
     $updateLines() {
         if (!this.$changedLines) return;
@@ -1114,7 +1099,7 @@ class VirtualRenderer {
         // else update only the changed rows
         this.$textLayer.updateLines(layerConfig, firstRow, lastRow);
         return true;
-    };
+    }
 
     $getLongestLine() {
         var charCount = this.session.getScreenWidth();
@@ -1125,7 +1110,7 @@ class VirtualRenderer {
             charCount = this.$textLayer.MAX_LINE_LENGTH + 30;
 
         return Math.max(this.$size.scrollerWidth - 2 * this.$padding, Math.round(charCount * this.characterWidth));
-    };
+    }
 
     /**
      * Schedules an update to all the front markers in the document.
@@ -1133,7 +1118,7 @@ class VirtualRenderer {
     updateFrontMarkers() {
         this.$markerFront.setMarkers(this.session.getMarkers(true));
         this.$loop.schedule(this.CHANGE_MARKER_FRONT);
-    };
+    }
 
     /**
      *
@@ -1142,7 +1127,7 @@ class VirtualRenderer {
     updateBackMarkers() {
         this.$markerBack.setMarkers(this.session.getMarkers());
         this.$loop.schedule(this.CHANGE_MARKER_BACK);
-    };
+    }
 
     /**
      *
@@ -1151,7 +1136,7 @@ class VirtualRenderer {
      **/
     addGutterDecoration(row, className){
         this.$gutterLayer.addGutterDecoration(row, className);
-    };
+    }
 
     /**
      * Deprecated; (moved to [[EditSession]])
@@ -1159,7 +1144,7 @@ class VirtualRenderer {
      **/
     removeGutterDecoration(row, className){
         this.$gutterLayer.removeGutterDecoration(row, className);
-    };
+    }
 
     /**
      *
@@ -1167,7 +1152,7 @@ class VirtualRenderer {
      **/
     updateBreakpoints(rows) {
         this.$loop.schedule(this.CHANGE_GUTTER);
-    };
+    }
 
     /**
      * Sets annotations for the gutter.
@@ -1177,7 +1162,7 @@ class VirtualRenderer {
     setAnnotations(annotations) {
         this.$gutterLayer.setAnnotations(annotations);
         this.$loop.schedule(this.CHANGE_GUTTER);
-    };
+    }
 
     /**
      *
@@ -1185,7 +1170,7 @@ class VirtualRenderer {
      **/
     updateCursor() {
         this.$loop.schedule(this.CHANGE_CURSOR);
-    };
+    }
 
     /**
      *
@@ -1193,7 +1178,7 @@ class VirtualRenderer {
      **/
     hideCursor() {
         this.$cursorLayer.hideCursor();
-    };
+    }
 
     /**
      *
@@ -1201,13 +1186,13 @@ class VirtualRenderer {
      **/
     showCursor() {
         this.$cursorLayer.showCursor();
-    };
+    }
 
     scrollSelectionIntoView(anchor, lead, offset) {
         // first scroll anchor into view then scroll lead into view
         this.scrollCursorIntoView(anchor, offset);
         this.scrollCursorIntoView(lead, offset);
-    };
+    }
 
     /**
      *
@@ -1262,7 +1247,7 @@ class VirtualRenderer {
                 this.session.setScrollLeft(0);
             }
         }
-    };
+    }
 
     /**
      * {:EditSession.getScrollTop}
@@ -1271,7 +1256,7 @@ class VirtualRenderer {
      **/
     getScrollTop() {
         return this.session.getScrollTop();
-    };
+    }
 
     /**
      * {:EditSession.getScrollLeft}
@@ -1280,7 +1265,7 @@ class VirtualRenderer {
      **/
     getScrollLeft() {
         return this.session.getScrollLeft();
-    };
+    }
 
     /**
      * Returns the first visible row, regardless of whether it's fully visible or not.
@@ -1288,7 +1273,7 @@ class VirtualRenderer {
      **/
     getScrollTopRow() {
         return this.scrollTop / this.lineHeight;
-    };
+    }
 
     /**
      * Returns the last visible row, regardless of whether it's fully visible or not.
@@ -1296,7 +1281,7 @@ class VirtualRenderer {
      **/
     getScrollBottomRow() {
         return Math.max(0, Math.floor((this.scrollTop + this.$size.scrollerHeight) / this.lineHeight) - 1);
-    };
+    }
 
     /**
      * Gracefully scrolls from the top of the editor to the row indicated.
@@ -1306,7 +1291,7 @@ class VirtualRenderer {
      **/
     scrollToRow(row) {
         this.session.setScrollTop(row * this.lineHeight);
-    };
+    }
 
     alignCursor(cursor, alignment) {
         if (typeof cursor == "number")
@@ -1318,9 +1303,8 @@ class VirtualRenderer {
 
         this.session.setScrollTop(offset);
         return offset;
-    };
+    }
 
-    STEPS = 8;
     $calcSteps(fromValue, toValue){
         var i = 0;
         var l = this.STEPS;
@@ -1334,7 +1318,7 @@ class VirtualRenderer {
             steps.push(func(i / this.STEPS, fromValue, toValue - fromValue));
 
         return steps;
-    };
+    }
 
     /**
      * Gracefully scrolls the editor to the row indicated.
@@ -1354,7 +1338,7 @@ class VirtualRenderer {
         this.session.setScrollTop(offset);
         if (animate !== false)
             this.animateScrolling(initialScroll, callback);
-    };
+    }
 
     animateScrolling(fromValue, callback) {
         var toValue = this.scrollTop;
@@ -1410,7 +1394,7 @@ class VirtualRenderer {
                 endAnimation();
             }
         }, 10);
-    };
+    }
 
     /**
      * Scrolls the editor to the y pixel indicated.
@@ -1425,7 +1409,7 @@ class VirtualRenderer {
             this.$loop.schedule(this.CHANGE_SCROLL);
             this.scrollTop = scrollTop;
         }
-    };
+    }
 
     /**
      * Scrolls the editor across the x-axis to the pixel indicated.
@@ -1437,7 +1421,7 @@ class VirtualRenderer {
         if (this.scrollLeft !== scrollLeft)
             this.scrollLeft = scrollLeft;
         this.$loop.schedule(this.CHANGE_H_SCROLL);
-    };
+    }
 
     /**
      * Scrolls the editor across both x- and y-axes.
@@ -1447,7 +1431,7 @@ class VirtualRenderer {
     scrollTo(x, y) {
         this.session.setScrollTop(y);
         this.session.setScrollLeft(x);
-    };
+    }
     
     /**
      * Scrolls the editor across both x- and y-axes.
@@ -1457,7 +1441,7 @@ class VirtualRenderer {
     scrollBy(deltaX, deltaY) {
         deltaY && this.session.setScrollTop(this.session.getScrollTop() + deltaY);
         deltaX && this.session.setScrollLeft(this.session.getScrollLeft() + deltaX);
-    };
+    }
 
     /**
      * Returns `true` if you can still scroll by either parameter; in other words, you haven't reached the end of the file or line.
@@ -1477,7 +1461,7 @@ class VirtualRenderer {
         if (deltaX > 0 && this.session.getScrollLeft() + this.$size.scrollerWidth
             - this.layerConfig.width < -1 + this.scrollMargin.right)
            return true;
-    };
+    }
 
     pixelToScreenCoordinates(x, y) {
         var canvasPos;
@@ -1496,7 +1480,7 @@ class VirtualRenderer {
         var col = this.$blockCursor ? Math.floor(offset) : Math.round(offset);
 
         return {row: row, column: col, side: offset - col > 0 ? 1 : -1, offsetX:  offsetX};
-    };
+    }
 
     screenToTextCoordinates(x, y) {
         var canvasPos;
@@ -1516,7 +1500,7 @@ class VirtualRenderer {
         var row = Math.floor((y + this.scrollTop - canvasPos.top) / this.lineHeight);
 
         return this.session.screenToDocumentPosition(row, Math.max(col, 0), offsetX);
-    };
+    }
 
     /**
      * Returns an object containing the `pageX` and `pageY` coordinates of the document position.
@@ -1539,7 +1523,7 @@ class VirtualRenderer {
             pageX: canvasPos.left + x - this.scrollLeft,
             pageY: canvasPos.top + y - this.scrollTop
         };
-    };
+    }
 
     /**
      *
@@ -1547,7 +1531,7 @@ class VirtualRenderer {
      **/
     visualizeFocus() {
         dom.addCssClass(this.container, "ace_focus");
-    };
+    }
 
     /**
      *
@@ -1555,7 +1539,7 @@ class VirtualRenderer {
      **/
     visualizeBlur() {
         dom.removeCssClass(this.container, "ace_focus");
-    };
+    }
 
     /**
      * @param {Object} composition
@@ -1579,7 +1563,7 @@ class VirtualRenderer {
         else {
             composition.markerId = this.session.addMarker(composition.markerRange, "ace_composition_marker", "text");
         }
-    };
+    }
 
     /**
      * @param {String} text A string of text to use
@@ -1590,7 +1574,7 @@ class VirtualRenderer {
         var cursor = this.session.selection.cursor;
         this.addToken(text, "composition_placeholder", cursor.row, cursor.column);
         this.$moveTextAreaToCursor();
-    };
+    }
 
     /**
      *
@@ -1609,7 +1593,7 @@ class VirtualRenderer {
         this.removeExtraToken(cursor.row, cursor.column);
         this.$composition = null;
         this.$cursorLayer.element.style.display = "";
-    };
+    }
 
     setGhostText(text, position) {
         var cursor = this.session.selection.cursor;
@@ -1636,7 +1620,7 @@ class VirtualRenderer {
             this.session.widgetManager.addLineWidget(this.$ghostTextWidget);
         }
         
-    };
+    }
 
     removeGhostText() {
         if (!this.$ghostText) return;
@@ -1648,7 +1632,7 @@ class VirtualRenderer {
             this.$ghostTextWidget = null;
         }
         this.$ghostText = null;
-    };
+    }
 
     addToken(text, type, row, column) {
         var session = this.session;
@@ -1673,12 +1657,12 @@ class VirtualRenderer {
             }
         }
         this.updateLines(row, row);
-    };
+    }
 
     removeExtraToken(row, column) {
         this.session.bgTokenizer.lines[row] = null;
         this.updateLines(row, row);
-    };
+    }
 
     /**
      * [Sets a new theme for the editor. `theme` should exist, and be a directory path, like `ace/theme/textmate`.]{: #VirtualRenderer.setTheme}
@@ -1735,7 +1719,7 @@ class VirtualRenderer {
             _self._dispatchEvent('themeLoaded', {theme:module});
             cb && cb();
         }
-    };
+    }
 
     /**
      * [Returns the path of the current theme.]{: #VirtualRenderer.getTheme}
@@ -1743,7 +1727,7 @@ class VirtualRenderer {
      **/
     getTheme() {
         return this.$themeId;
-    };
+    }
 
     // Methods allows to add / remove CSS classnames to the editor element.
     // This feature can be used by plug-ins to provide a visual indication of
@@ -1756,7 +1740,7 @@ class VirtualRenderer {
      **/
     setStyle(style, include) {
         dom.setCssClass(this.container, style, include !== false);
-    };
+    }
 
     /**
      * [Removes the class `style` from the editor.]{: #VirtualRenderer.unsetStyle}
@@ -1765,11 +1749,11 @@ class VirtualRenderer {
      **/
     unsetStyle(style) {
         dom.removeCssClass(this.container, style);
-    };
+    }
     
     setCursorStyle(style) {
         dom.setStyle(this.scroller.style, "cursor", style);
-    };
+    }
 
     /**
      * @param {String} cursorStyle A css cursor style
@@ -1777,11 +1761,11 @@ class VirtualRenderer {
      **/
     setMouseCursor(cursorStyle) {
         dom.setStyle(this.scroller.style, "cursor", cursorStyle);
-    };
+    }
     
     attachToShadowRoot() {
         dom.importCssString(editorCss, "ace_editor.css", this.container);
-    };
+    }
 
     /**
      * Destroys the text and cursor layers for this renderer.
@@ -1793,7 +1777,7 @@ class VirtualRenderer {
         this.removeAllListeners();
         this.container.textContent = "";
         this.setOption("useResizeObserver", false);
-    };
+    }
 
     $updateCustomScrollbar(val) {
         var _self = this;
@@ -1828,7 +1812,7 @@ class VirtualRenderer {
                 if (!_self.$scrollAnimation) _self.session.setScrollLeft(e.data - _self.scrollMargin.left);
             });
         }
-    };
+    }
 
     $addResizeObserver() {
         if (!window.ResizeObserver || this.$resizeObserver) return;
@@ -1849,9 +1833,26 @@ class VirtualRenderer {
             }
         });
         this.$resizeObserver.observe(this.container);
-    };
+    }
 
 }
+
+VirtualRenderer.prototype.CHANGE_CURSOR = 1;
+VirtualRenderer.prototype.CHANGE_MARKER = 2;
+VirtualRenderer.prototype.CHANGE_GUTTER = 4;
+VirtualRenderer.prototype.CHANGE_SCROLL = 8;
+VirtualRenderer.prototype.CHANGE_LINES = 16;
+VirtualRenderer.prototype.CHANGE_TEXT = 32;
+VirtualRenderer.prototype.CHANGE_SIZE = 64;
+VirtualRenderer.prototype.CHANGE_MARKER_BACK = 128;
+VirtualRenderer.prototype.CHANGE_MARKER_FRONT = 256;
+VirtualRenderer.prototype.CHANGE_FULL = 512;
+VirtualRenderer.prototype.CHANGE_H_SCROLL = 1024;
+VirtualRenderer.prototype.$changes = 0;
+VirtualRenderer.prototype.$padding = null;
+VirtualRenderer.prototype.$frozen = false;
+VirtualRenderer.prototype.STEPS = 8;
+
 oop.implement(VirtualRenderer.prototype, EventEmitter);
 
 config.defineOptions(VirtualRenderer.prototype, "renderer", {

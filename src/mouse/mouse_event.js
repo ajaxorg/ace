@@ -19,22 +19,28 @@ class MouseEvent {
 
         this.propagationStopped = false;
         this.defaultPrevented = false;
-    };
+
+        this.getAccelKey = useragent.isMac ? function () {
+            return this.domEvent.metaKey;
+        } : function () {
+            return this.domEvent.ctrlKey;
+        };
+    }
     
     stopPropagation() {
         event.stopPropagation(this.domEvent);
         this.propagationStopped = true;
-    };
+    }
     
     preventDefault() {
         event.preventDefault(this.domEvent);
         this.defaultPrevented = true;
-    };
+    }
     
     stop() {
         this.stopPropagation();
         this.preventDefault();
-    };
+    }
 
     /**
      * Get the document position below the mouse cursor
@@ -47,7 +53,7 @@ class MouseEvent {
         
         this.$pos = this.editor.renderer.screenToTextCoordinates(this.clientX, this.clientY);
         return this.$pos;
-    };
+    }
     
     /**
      * Check if the mouse cursor is inside of the text selection
@@ -70,7 +76,7 @@ class MouseEvent {
         }
 
         return this.$inSelection;
-    };
+    }
     
     /**
      * Get the clicked mouse button
@@ -79,18 +85,14 @@ class MouseEvent {
      */
     getButton() {
         return event.getButton(this.domEvent);
-    };
+    }
     
     /**
      * @return {Boolean} whether the shift key was pressed when the event was emitted
      */
     getShiftKey() {
         return this.domEvent.shiftKey;
-    };
-    
-    getAccelKey = useragent.isMac
-        ? function() { return this.domEvent.metaKey; }
-        : function() { return this.domEvent.ctrlKey; };
+    }
     
 }
 

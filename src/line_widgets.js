@@ -32,7 +32,7 @@ class LineWidgets {
         } else {
             return this.$wrapData[row].length + 1 + h;
         }
-    };
+    }
 
     $getWidgetScreenLength() {
         var screenRows = 0;
@@ -41,11 +41,11 @@ class LineWidgets {
                 screenRows += w.rowCount;
         });
         return screenRows;
-    };    
+    }    
     
     $onChangeEditor(e) {
         this.attach(e.editor);
-    };
+    }
     
     attach(editor) {
         if (editor  && editor.widgetManager && editor.widgetManager != this)
@@ -62,7 +62,7 @@ class LineWidgets {
             editor.renderer.on("beforeRender", this.measureWidgets);
             editor.renderer.on("afterRender", this.renderWidgets);
         }
-    };
+    }
     detach(e) {
         var editor = this.editor;
         if (!editor)
@@ -80,7 +80,7 @@ class LineWidgets {
                 w.el.parentNode.removeChild(w.el);
             }
         });
-    };
+    }
 
     updateOnFold(e, session) {
         var lineWidgets = session.lineWidgets;
@@ -106,7 +106,7 @@ class LineWidgets {
                 lineWidgets[end].hidden = hide;
             }
         }
-    };
+    }
     
     updateOnChange(delta) {
         var lineWidgets = this.session.lineWidgets;
@@ -136,7 +136,7 @@ class LineWidgets {
             lineWidgets.splice.apply(lineWidgets, args);
             this.$updateRows();
         }
-    };
+    }
     
     $updateRows() {
         var lineWidgets = this.session.lineWidgets;
@@ -154,7 +154,7 @@ class LineWidgets {
         });
         if (noWidgets)
             this.session.lineWidgets = null;
-    };
+    }
 
     $registerLineWidget(w) {
         if (!this.session.lineWidgets)
@@ -171,7 +171,7 @@ class LineWidgets {
             
         this.session.lineWidgets[w.row] = w;
         return w;
-    };
+    }
     
     addLineWidget(w) {
         this.$registerLineWidget(w);
@@ -225,7 +225,7 @@ class LineWidgets {
         this.renderWidgets(null, renderer);
         this.onWidgetChanged(w);
         return w;
-    };
+    }
     
     removeLineWidget(w) {
         w._inDocument = false;
@@ -253,7 +253,7 @@ class LineWidgets {
         }
         this.session._emit("changeFold", {data:{start:{row: w.row}}});
         this.$updateRows();
-    };
+    }
     
     getWidgetsAtRow(row) {
         var lineWidgets = this.session.lineWidgets;
@@ -264,12 +264,12 @@ class LineWidgets {
             w = w.$oldWidget;
         }
         return list;
-    };
+    }
     
     onWidgetChanged(w) {
         this.session._changedWidgets.push(w);
         this.editor && this.editor.renderer.updateFull();
-    };
+    }
     
     measureWidgets(e, renderer) {
         var changedWidgets = this.session._changedWidgets;
@@ -312,7 +312,7 @@ class LineWidgets {
             this.session.lineWidgetWidth = null;
         }
         this.session._changedWidgets = [];
-    };
+    }
     
     renderWidgets(e, renderer) {
         var config = renderer.layerConfig;
@@ -360,7 +360,7 @@ class LineWidgets {
                 w.el.style.right = "";
             }
         }
-    };
+    }
     
 }
 

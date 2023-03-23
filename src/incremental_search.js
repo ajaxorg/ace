@@ -1,6 +1,5 @@
 "use strict";
 
-var oop = require("./lib/oop");
 var Range = require("./range").Range;
 var Search = require("./search").Search;
 var SearchHighlight = require("./search_highlight").SearchHighlight;
@@ -63,7 +62,7 @@ class IncrementalSearch extends Search {
         this.$mousedownHandler = editor.on('mousedown', this.onMouseDown.bind(this));
         this.selectionFix(editor);
         this.statusMessage(true);
-    };
+    }
 
     deactivate(reset) {
         this.cancelSearch(reset);
@@ -75,7 +74,7 @@ class IncrementalSearch extends Search {
         }
         editor.onPaste = this.$originalEditorOnPaste;
         this.message('');
-    };
+    }
 
     selectionFix(editor) {
         // Fix selection bug: When clicked inside the editor
@@ -86,7 +85,7 @@ class IncrementalSearch extends Search {
         if (editor.selection.isEmpty() && !editor.session.$emacsMark) {
             editor.clearSelection();
         }
-    };
+    }
 
     highlight(regexp) {
         var sess = this.$editor.session,
@@ -94,7 +93,7 @@ class IncrementalSearch extends Search {
                 new SearchHighlight(null, "ace_isearch-result", "text"));
         hl.setRegexp(regexp);
         sess._emit("changeBackMarker"); // force highlight layer redraw
-    };
+    }
 
     cancelSearch(reset) {
         var e = this.$editor;
@@ -108,7 +107,7 @@ class IncrementalSearch extends Search {
         }
         this.highlight(null);
         return Range.fromPoints(this.$currentPos, this.$currentPos);
-    };
+    }
 
     highlightAndFindWithNeedle(moveToNext, needleUpdateFunc) {
         if (!this.$editor) return null;
@@ -140,7 +139,7 @@ class IncrementalSearch extends Search {
         this.statusMessage(found);
 
         return found;
-    };
+    }
 
     addString(s) {
         return this.highlightAndFindWithNeedle(false, function(needle) {
@@ -150,7 +149,7 @@ class IncrementalSearch extends Search {
             reObj.expression += s;
             return objectToRegExp(reObj);
         });
-    };
+    }
 
     removeChar(c) {
         return this.highlightAndFindWithNeedle(false, function(needle) {
@@ -160,7 +159,7 @@ class IncrementalSearch extends Search {
             reObj.expression = reObj.expression.substring(0, reObj.expression.length-1);
             return objectToRegExp(reObj);
         });
-    };
+    }
 
     next(options) {
         // try to find the next occurrence of whatever we have searched for
@@ -173,29 +172,29 @@ class IncrementalSearch extends Search {
             return options.useCurrentOrPrevSearch && needle.length === 0 ?
                 this.$prevNeedle || '' : needle;
         });
-    };
+    }
 
     onMouseDown(evt) {
         // when mouse interaction happens then we quit incremental search
         this.deactivate();
         return true;
-    };
+    }
 
     onPaste(text) {
         this.addString(text);
-    };
+    }
 
     convertNeedleToRegExp() {
         return this.highlightAndFindWithNeedle(false, function(needle) {
             return isRegExp(needle) ? needle : stringToRegExp(needle, 'ig');
         });
-    };
+    }
 
     convertNeedleToString() {
         return this.highlightAndFindWithNeedle(false, function(needle) {
             return isRegExp(needle) ? regExpToObject(needle).expression : needle;
         });
-    };
+    }
 
     statusMessage(found) {
         var options = this.$options, msg = '';
@@ -203,14 +202,14 @@ class IncrementalSearch extends Search {
         msg += 'isearch: ' + options.needle;
         msg += found ? '' : ' (not found)';
         this.message(msg);
-    };
+    }
 
     message(msg) {
         if (this.$editor.showCommandLine) {
             this.$editor.showCommandLine(msg);
             this.$editor.focus();
         }
-    };
+    }
 
 }
 

@@ -20,7 +20,7 @@ class Gutter{
 
         this.$lines = new Lines(this.element);
         this.$lines.$offsetCoefficient = 1;
-    };
+    }
 
     setSession(session) {
         if (this.session)
@@ -28,19 +28,19 @@ class Gutter{
         this.session = session;
         if (session)
             session.on("change", this.$updateAnnotations);
-    };
+    }
 
     addGutterDecoration(row, className) {
         if (window.console)
             console.warn && console.warn("deprecated use session.addGutterDecoration");
         this.session.addGutterDecoration(row, className);
-    };
+    }
 
     removeGutterDecoration(row, className) {
         if (window.console)
             console.warn && console.warn("deprecated use session.removeGutterDecoration");
         this.session.removeGutterDecoration(row, className);
-    };
+    }
 
     setAnnotations(annotations) {
         // iterate over sparse array
@@ -69,7 +69,7 @@ class Gutter{
             else if (type == "info" && (!rowInfo.className))
                 rowInfo.className = " ace_info";
         }
-    };
+    }
 
     $updateAnnotations(delta) {
         if (!this.$annotations.length)
@@ -85,7 +85,7 @@ class Gutter{
             args.unshift(firstRow, 1);
             this.$annotations.splice.apply(this.$annotations, args);
         }
-    };
+    }
 
     update(config) {
         this.config = config;
@@ -135,7 +135,7 @@ class Gutter{
         
         this._signal("afterRender");
         this.$updateGutterWidth(config);
-    };
+    }
 
     $updateGutterWidth(config) {
         var session = this.session;
@@ -160,7 +160,7 @@ class Gutter{
             this.element.style.width = Math.ceil(this.gutterWidth) + "px";
             this._signal("changeGutterWidth", gutterWidth);
         }
-    };
+    }
     
     $updateCursorRow() {
         if (!this.$highlightGutterLine)
@@ -171,7 +171,7 @@ class Gutter{
             return;
         
         this.$cursorRow = position.row;
-    };
+    }
     
     updateLineHighlight() {
         if (!this.$highlightGutterLine)
@@ -200,7 +200,7 @@ class Gutter{
                 break;
             }
         }
-    };
+    }
     
     scrollLines(config) {
         var oldConfig = this.config;
@@ -243,7 +243,7 @@ class Gutter{
         
         this._signal("afterRender");
         this.$updateGutterWidth(config);
-    };
+    }
 
     $renderLines(config, firstRow, lastRow) {
         var fragment = [];
@@ -267,7 +267,7 @@ class Gutter{
             row++;
         }
         return fragment;
-    };
+    }
     
     $renderCell(cell, config, fold, row) {
         var element = cell.element;
@@ -344,30 +344,24 @@ class Gutter{
         
         cell.text = text;
         return cell;
-    };
-
-    $fixedWidth = false;
+    }
     
-    $highlightGutterLine = true;
-    $renderer = "";
     setHighlightGutterLine(highlightGutterLine) {
         this.$highlightGutterLine = highlightGutterLine;
-    };
+    }
     
-    $showLineNumbers = true;
-    $renderer = "";
+
     setShowLineNumbers(show) {
         this.$renderer = !show && {
             getWidth: function() {return 0;},
             getText: function() {return "";}
         };
-    };
+    }
     
     getShowLineNumbers() {
         return this.$showLineNumbers;
-    };
+    }
     
-    $showFoldWidgets = true;
     setShowFoldWidgets(show) {
         if (show)
             dom.addCssClass(this.element, "ace_folding-enabled");
@@ -376,11 +370,11 @@ class Gutter{
 
         this.$showFoldWidgets = show;
         this.$padding = null;
-    };
+    }
     
     getShowFoldWidgets() {
         return this.$showFoldWidgets;
-    };
+    }
 
     $computePadding() {
         if (!this.element.firstChild)
@@ -392,7 +386,7 @@ class Gutter{
         this.$padding.right = (parseInt(style.borderRightWidth) || 0)
             + (parseInt(style.paddingRight) || 0);
         return this.$padding;
-    };
+    }
 
     getRegion(point) {
         var padding = this.$padding || this.$computePadding();
@@ -401,9 +395,15 @@ class Gutter{
             return "markers";
         if (this.$showFoldWidgets && point.x > rect.right - padding.right)
             return "foldWidgets";
-    };
+    }
 
 }
+
+Gutter.prototype.$fixedWidth = false;
+Gutter.prototype.$highlightGutterLine = true;
+Gutter.prototype.$renderer = "";
+Gutter.prototype.$showLineNumbers = true;
+Gutter.prototype.$showFoldWidgets = true;
 
 oop.implement(Gutter.prototype, EventEmitter);
 
