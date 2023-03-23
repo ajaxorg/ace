@@ -126,14 +126,8 @@ function GutterHandler(mouseHandler) {
     editor.on("changeSession", hideTooltip);
 }
 
-function GutterTooltip(parentNode) {
-    Tooltip.call(this, parentNode);
-}
-
-oop.inherits(GutterTooltip, Tooltip);
-
-(function(){
-    this.setPosition = function(x, y) {
+class GutterTooltip extends Tooltip {
+    setPosition(x, y) {
         var windowWidth = window.innerWidth || document.documentElement.clientWidth;
         var windowHeight = window.innerHeight || document.documentElement.clientHeight;
         var width = this.getWidth();
@@ -149,8 +143,6 @@ oop.inherits(GutterTooltip, Tooltip);
         Tooltip.prototype.setPosition.call(this, x, y);
     };
 
-}).call(GutterTooltip.prototype);
-
-
+}
 
 exports.GutterHandler = GutterHandler;

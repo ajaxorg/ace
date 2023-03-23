@@ -2,33 +2,32 @@
 
 var Range = require("../range").Range;
 
-/*
- * If an array is passed in, the folds are expected to be sorted already.
- */
-function FoldLine(foldData, folds) {
-    this.foldData = foldData;
-    if (Array.isArray(folds)) {
-        this.folds = folds;
-    } else {
-        folds = this.folds = [ folds ];
+class FoldLine {
+    /**
+     * If an array is passed in, the folds are expected to be sorted already.
+     */
+    constructor(foldData, folds) {
+        this.foldData = foldData;
+        if (Array.isArray(folds)) {
+            this.folds = folds;
+        } else {
+            folds = this.folds = [ folds ];
+        }
+
+        var last = folds[folds.length - 1];
+        this.range = new Range(folds[0].start.row, folds[0].start.column,
+            last.end.row, last.end.column);
+        this.start = this.range.start;
+        this.end   = this.range.end;
+
+        this.folds.forEach(function(fold) {
+            fold.setFoldLine(this);
+        }, this);
     }
-
-    var last = folds[folds.length - 1];
-    this.range = new Range(folds[0].start.row, folds[0].start.column,
-                           last.end.row, last.end.column);
-    this.start = this.range.start;
-    this.end   = this.range.end;
-
-    this.folds.forEach(function(fold) {
-        fold.setFoldLine(this);
-    }, this);
-}
-
-(function() {
     /*
      * Note: This doesn't update wrapData!
      */
-    this.shiftRow = function(shift) {
+    shiftRow(shift) {
         this.start.row += shift;
         this.end.row += shift;
         this.folds.forEach(function(fold) {
@@ -37,7 +36,7 @@ function FoldLine(foldData, folds) {
         });
     };
 
-    this.addFold = function(fold) {
+    addFold(fold) {
         if (fold.sameRow) {
             if (fold.start.row < this.startRow || fold.endRow > this.endRow) {
                 throw new Error("Can't add a fold to this FoldLine as it has no connection");
@@ -67,11 +66,11 @@ function FoldLine(foldData, folds) {
         fold.foldLine = this;
     };
 
-    this.containsRow = function(row) {
+    containsRow(row) {
         return row >= this.start.row && row <= this.end.row;
     };
 
-    this.walk = function(callback, endRow, endColumn) {
+    walk(callback, endRow, endColumn) {
         var lastEnd = 0,
             folds = this.folds,
             fold,
@@ -109,7 +108,7 @@ function FoldLine(foldData, folds) {
         callback(null, endRow, endColumn, lastEnd, isNewRow);
     };
 
-    this.getNextFoldTo = function(row, column) {
+    getNextFoldTo(row, column) {
         var fold, cmp;
         for (var i = 0; i < this.folds.length; i++) {
             fold = this.folds[i];
@@ -129,7 +128,7 @@ function FoldLine(foldData, folds) {
         return null;
     };
 
-    this.addRemoveChars = function(row, column, len) {
+    addRemoveChars(row, column, len) {
         var ret = this.getNextFoldTo(row, column),
             fold, folds;
         if (ret) {
@@ -160,7 +159,7 @@ function FoldLine(foldData, folds) {
         }
     };
 
-    this.split = function(row, column) {
+    split(row, column) {
         var pos = this.getNextFoldTo(row, column);
         
         if (!pos || pos.kind == "inside")
@@ -184,7 +183,7 @@ function FoldLine(foldData, folds) {
         return newFoldLine;
     };
 
-    this.merge = function(foldLineNext) {
+    merge(foldLineNext) {
         var folds = foldLineNext.folds;
         for (var i = 0; i < folds.length; i++) {
             this.addFold(folds[i]);
@@ -195,7 +194,7 @@ function FoldLine(foldData, folds) {
         foldData.splice(foldData.indexOf(foldLineNext), 1);
     };
 
-    this.toString = function() {
+    toString() {
         var ret = [this.range.toString() + ": [" ];
 
         this.folds.forEach(function(fold) {
@@ -205,7 +204,7 @@ function FoldLine(foldData, folds) {
         return ret.join("\n");
     };
 
-    this.idxToPosition = function(idx) {
+    idxToPosition(idx) {
         var lastFoldEndColumn = 0;
 
         for (var i = 0; i < this.folds.length; i++) {
@@ -232,6 +231,6 @@ function FoldLine(foldData, folds) {
             column: this.end.column + idx
         };
     };
-}).call(FoldLine.prototype);
+}
 
 exports.FoldLine = FoldLine;

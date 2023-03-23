@@ -4,24 +4,26 @@ var lang = require("./lib/lang");
 var oop = require("./lib/oop");
 var Range = require("./range").Range;
 
-var SearchHighlight = function(regExp, clazz, type) {
-    this.setRegexp(regExp);
-    this.clazz = clazz;
-    this.type = type || "text";
-};
+var SearchHighlight = 
 
-(function() {
-    // needed to prevent long lines from freezing the browser
-    this.MAX_RANGES = 500;
+class SearchHighlight {
+    constructor(regExp, clazz, type = "text") {
+        this.setRegexp(regExp);
+        this.clazz = clazz;
+        this.type = type;
+    };
     
-    this.setRegexp = function(regExp) {
+    // needed to prevent long lines from freezing the browser
+    MAX_RANGES = 500;
+    
+    setRegexp(regExp) {
         if (this.regExp+"" == regExp+"")
             return;
         this.regExp = regExp;
         this.cache = [];
     };
 
-    this.update = function(html, markerLayer, session, config) {
+    update(html, markerLayer, session, config) {
         if (!this.regExp)
             return;
         var start = config.firstRow, end = config.lastRow;
@@ -51,6 +53,6 @@ var SearchHighlight = function(regExp, clazz, type) {
         }
     };
 
-}).call(SearchHighlight.prototype);
+};
 
 exports.SearchHighlight = SearchHighlight;

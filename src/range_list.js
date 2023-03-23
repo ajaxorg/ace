@@ -2,15 +2,16 @@
 var Range = require("./range").Range;
 var comparePoints = Range.comparePoints;
 
-var RangeList = function() {
-    this.ranges = [];
-    this.$bias = 1;
-};
+class RangeList {
+    
+    constructor() {
+        this.ranges = [];
+        this.$bias = 1;
+    }
+    
+    comparePoints = comparePoints;
 
-(function() {
-    this.comparePoints = comparePoints;
-
-    this.pointIndex = function(pos, excludeEdges, startIndex) {
+    pointIndex(pos, excludeEdges, startIndex) {
         var list = this.ranges;
 
         for (var i = startIndex || 0; i < list.length; i++) {
@@ -29,7 +30,7 @@ var RangeList = function() {
         return -i - 1;
     };
 
-    this.add = function(range) {
+    add(range) {
         var excludeEdges = !range.isEmpty();
         var startIndex = this.pointIndex(range.start, excludeEdges);
         if (startIndex < 0)
@@ -44,7 +45,7 @@ var RangeList = function() {
         return this.ranges.splice(startIndex, endIndex - startIndex, range);
     };
 
-    this.addList = function(list) {
+    addList(list) {
         var removed = [];
         for (var i = list.length; i--; ) {
             removed.push.apply(removed, this.add(list[i]));
@@ -52,7 +53,7 @@ var RangeList = function() {
         return removed;
     };
 
-    this.substractPoint = function(pos) {
+    substractPoint(pos) {
         var i = this.pointIndex(pos);
 
         if (i >= 0)
@@ -60,7 +61,7 @@ var RangeList = function() {
     };
 
     // merge overlapping ranges
-    this.merge = function() {
+    merge() {
         var removed = [];
         var list = this.ranges;
         
@@ -95,22 +96,22 @@ var RangeList = function() {
         return removed;
     };
 
-    this.contains = function(row, column) {
+    contains(row, column) {
         return this.pointIndex({row: row, column: column}) >= 0;
     };
 
-    this.containsPoint = function(pos) {
+    containsPoint(pos) {
         return this.pointIndex(pos) >= 0;
     };
 
-    this.rangeAtPoint = function(pos) {
+    rangeAtPoint(pos) {
         var i = this.pointIndex(pos);
         if (i >= 0)
             return this.ranges[i];
     };
 
 
-    this.clipRows = function(startRow, endRow) {
+    clipRows(startRow, endRow) {
         var list = this.ranges;
         if (list[0].start.row > endRow || list[list.length - 1].start.row < startRow)
             return [];
@@ -129,11 +130,11 @@ var RangeList = function() {
         return clipped;
     };
 
-    this.removeAll = function() {
+    removeAll() {
         return this.ranges.splice(0, this.ranges.length);
     };
 
-    this.attach = function(session) {
+    attach(session) {
         if (this.session)
             this.detach();
 
@@ -143,14 +144,14 @@ var RangeList = function() {
         this.session.on('change', this.onChange);
     };
 
-    this.detach = function() {
+    detach() {
         if (!this.session)
             return;
         this.session.removeListener('change', this.onChange);
         this.session = null;
     };
 
-    this.$onChange = function(delta) {
+    $onChange(delta) {
         var start = delta.start;
         var end = delta.end;
         var startRow = start.row;
@@ -261,6 +262,6 @@ var RangeList = function() {
         }
     };
 
-}).call(RangeList.prototype);
+}
 
 exports.RangeList = RangeList;

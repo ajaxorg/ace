@@ -9,76 +9,76 @@ var DragdropHandler = require("./dragdrop_handler").DragdropHandler;
 var addTouchListeners = require("./touch_handler").addTouchListeners;
 var config = require("../config");
 
-var MouseHandler = function(editor) {
-    var _self = this;
-    this.editor = editor;
+class MouseHandler {
+    constructor(editor) {
+        var _self = this;
+        this.editor = editor;
 
-    new DefaultHandlers(this);
-    new DefaultGutterHandler(this);
-    new DragdropHandler(this);
+        new DefaultHandlers(this);
+        new DefaultGutterHandler(this);
+        new DragdropHandler(this);
 
-    var focusEditor = function(e) {
-        // because we have to call event.preventDefault() any window on ie and iframes
-        // on other browsers do not get focus, so we have to call window.focus() here
-        var windowBlurred = !document.hasFocus || !document.hasFocus()
-            || !editor.isFocused() && document.activeElement == (editor.textInput && editor.textInput.getElement());
-        if (windowBlurred)
-            window.focus();
-        editor.focus();
-        // Without this editor is blurred after double click
-        setTimeout(function () {
-            if (!editor.isFocused()) editor.focus();
-        });
+        var focusEditor = function(e) {
+            // because we have to call event.preventDefault() any window on ie and iframes
+            // on other browsers do not get focus, so we have to call window.focus() here
+            var windowBlurred = !document.hasFocus || !document.hasFocus()
+                || !editor.isFocused() && document.activeElement == (editor.textInput && editor.textInput.getElement());
+            if (windowBlurred)
+                window.focus();
+            editor.focus();
+            // Without this editor is blurred after double click
+            setTimeout(function () {
+                if (!editor.isFocused()) editor.focus();
+            });
+        };
+
+        var mouseTarget = editor.renderer.getMouseEventTarget();
+        event.addListener(mouseTarget, "click", this.onMouseEvent.bind(this, "click"), editor);
+        event.addListener(mouseTarget, "mousemove", this.onMouseMove.bind(this, "mousemove"), editor);
+        event.addMultiMouseDownListener([
+            mouseTarget,
+            editor.renderer.scrollBarV && editor.renderer.scrollBarV.inner,
+            editor.renderer.scrollBarH && editor.renderer.scrollBarH.inner,
+            editor.textInput && editor.textInput.getElement()
+        ].filter(Boolean), [400, 300, 250], this, "onMouseEvent", editor);
+        event.addMouseWheelListener(editor.container, this.onMouseWheel.bind(this, "mousewheel"), editor);
+        addTouchListeners(editor.container, editor);
+
+        var gutterEl = editor.renderer.$gutter;
+        event.addListener(gutterEl, "mousedown", this.onMouseEvent.bind(this, "guttermousedown"), editor);
+        event.addListener(gutterEl, "click", this.onMouseEvent.bind(this, "gutterclick"), editor);
+        event.addListener(gutterEl, "dblclick", this.onMouseEvent.bind(this, "gutterdblclick"), editor);
+        event.addListener(gutterEl, "mousemove", this.onMouseEvent.bind(this, "guttermousemove"), editor);
+
+        event.addListener(mouseTarget, "mousedown", focusEditor, editor);
+        event.addListener(gutterEl, "mousedown", focusEditor, editor);
+        if (useragent.isIE && editor.renderer.scrollBarV) {
+            event.addListener(editor.renderer.scrollBarV.element, "mousedown", focusEditor, editor);
+            event.addListener(editor.renderer.scrollBarH.element, "mousedown", focusEditor, editor);
+        }
+
+        editor.on("mousemove", function(e){
+            if (_self.state || _self.$dragDelay || !_self.$dragEnabled)
+                return;
+
+            var character = editor.renderer.screenToTextCoordinates(e.x, e.y);
+            var range = editor.session.selection.getRange();
+            var renderer = editor.renderer;
+
+            if (!range.isEmpty() && range.insideStart(character.row, character.column)) {
+                renderer.setCursorStyle("default");
+            } else {
+                renderer.setCursorStyle("");
+            }
+        }, editor);
     };
 
-    var mouseTarget = editor.renderer.getMouseEventTarget();
-    event.addListener(mouseTarget, "click", this.onMouseEvent.bind(this, "click"), editor);
-    event.addListener(mouseTarget, "mousemove", this.onMouseMove.bind(this, "mousemove"), editor);
-    event.addMultiMouseDownListener([
-        mouseTarget,
-        editor.renderer.scrollBarV && editor.renderer.scrollBarV.inner,
-        editor.renderer.scrollBarH && editor.renderer.scrollBarH.inner,
-        editor.textInput && editor.textInput.getElement()
-    ].filter(Boolean), [400, 300, 250], this, "onMouseEvent", editor);
-    event.addMouseWheelListener(editor.container, this.onMouseWheel.bind(this, "mousewheel"), editor);
-    addTouchListeners(editor.container, editor);
-
-    var gutterEl = editor.renderer.$gutter;
-    event.addListener(gutterEl, "mousedown", this.onMouseEvent.bind(this, "guttermousedown"), editor);
-    event.addListener(gutterEl, "click", this.onMouseEvent.bind(this, "gutterclick"), editor);
-    event.addListener(gutterEl, "dblclick", this.onMouseEvent.bind(this, "gutterdblclick"), editor);
-    event.addListener(gutterEl, "mousemove", this.onMouseEvent.bind(this, "guttermousemove"), editor);
-
-    event.addListener(mouseTarget, "mousedown", focusEditor, editor);
-    event.addListener(gutterEl, "mousedown", focusEditor, editor);
-    if (useragent.isIE && editor.renderer.scrollBarV) {
-        event.addListener(editor.renderer.scrollBarV.element, "mousedown", focusEditor, editor);
-        event.addListener(editor.renderer.scrollBarH.element, "mousedown", focusEditor, editor);
-    }
-
-    editor.on("mousemove", function(e){
-        if (_self.state || _self.$dragDelay || !_self.$dragEnabled)
-            return;
-
-        var character = editor.renderer.screenToTextCoordinates(e.x, e.y);
-        var range = editor.session.selection.getRange();
-        var renderer = editor.renderer;
-
-        if (!range.isEmpty() && range.insideStart(character.row, character.column)) {
-            renderer.setCursorStyle("default");
-        } else {
-            renderer.setCursorStyle("");
-        }
-    }, editor);
-};
-
-(function() {
-    this.onMouseEvent = function(name, e) {
+    onMouseEvent(name, e) {
         if (!this.editor.session) return;
         this.editor._emit(name, new MouseEvent(e, this.editor));
     };
 
-    this.onMouseMove = function(name, e) {
+    onMouseMove(name, e) {
         // optimization, because mousemove doesn't have a default handler.
         var listeners = this.editor._eventRegistry && this.editor._eventRegistry.mousemove;
         if (!listeners || !listeners.length)
@@ -87,7 +87,7 @@ var MouseHandler = function(editor) {
         this.editor._emit(name, new MouseEvent(e, this.editor));
     };
 
-    this.onMouseWheel = function(name, e) {
+    onMouseWheel(name, e) {
         var mouseEvent = new MouseEvent(e, this.editor);
         mouseEvent.speed = this.$scrollSpeed * 2;
         mouseEvent.wheelX = e.wheelX;
@@ -96,11 +96,11 @@ var MouseHandler = function(editor) {
         this.editor._emit(name, mouseEvent);
     };
     
-    this.setState = function(state) {
+    setState(state) {
         this.state = state;
     };
 
-    this.captureMouse = function(ev, mouseMoveHandler) {
+    captureMouse(ev, mouseMoveHandler) {
         this.x = ev.x;
         this.y = ev.y;
 
@@ -167,8 +167,8 @@ var MouseHandler = function(editor) {
         self.releaseMouse = event.capture(this.editor.container, onMouseMove, onCaptureEnd);
         var timerId = setInterval(onCaptureInterval, 20);
     };
-    this.releaseMouse = null;
-    this.cancelContextMenu = function() {
+    releaseMouse = null;
+    cancelContextMenu() {
         var stop = function(e) {
             if (e && e.domEvent && e.domEvent.type != "contextmenu")
                 return;
@@ -179,10 +179,10 @@ var MouseHandler = function(editor) {
         setTimeout(stop, 10);
         this.editor.on("nativecontextmenu", stop);
     };
-    this.destroy = function() {
+    destroy() {
         if (this.releaseMouse) this.releaseMouse();
     };
-}).call(MouseHandler.prototype);
+}
 
 config.defineOptions(MouseHandler.prototype, "mouseHandler", {
     scrollSpeed: {initialValue: 2},

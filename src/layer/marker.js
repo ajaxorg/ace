@@ -3,28 +3,28 @@
 var Range = require("../range").Range;
 var dom = require("../lib/dom");
 
-var Marker = function(parentEl) {
-    this.element = dom.createElement("div");
-    this.element.className = "ace_layer ace_marker-layer";
-    parentEl.appendChild(this.element);
-};
 
-(function() {
+class Marker {
+    constructor(parentEl) {
+        this.element = dom.createElement("div");
+        this.element.className = "ace_layer ace_marker-layer";
+        parentEl.appendChild(this.element);
+    };
 
-    this.$padding = 0;
+    $padding = 0;
 
-    this.setPadding = function(padding) {
+    setPadding(padding) {
         this.$padding = padding;
     };
-    this.setSession = function(session) {
+    setSession(session) {
         this.session = session;
     };
     
-    this.setMarkers = function(markers) {
+    setMarkers(markers) {
         this.markers = markers;
     };
     
-    this.elt = function(className, css) {
+    elt(className, css) {
         var x = this.i != -1 && this.element.childNodes[this.i];
         if (!x) {
             x = document.createElement("div");
@@ -37,7 +37,7 @@ var Marker = function(parentEl) {
         x.className = className;
     };
 
-    this.update = function(config) {
+    update(config) {
         if (!config) return;
 
         this.config = config;
@@ -79,15 +79,13 @@ var Marker = function(parentEl) {
         }
     };
 
-    this.$getTop = function(row, layerConfig) {
+    $getTop(row, layerConfig) {
         return (row - layerConfig.firstRowScreen) * layerConfig.lineHeight;
     };
 
-    function getBorderClass(tl, tr, br, bl) {
-        return (tl ? 1 : 0) | (tr ? 2 : 0) | (br ? 4 : 0) | (bl ? 8 : 0);
-    }
+
     // Draws a marker, which spans a range of text on multiple lines 
-    this.drawTextMarker = function(stringBuilder, range, clazz, layerConfig, extraStyle) {
+    drawTextMarker(stringBuilder, range, clazz, layerConfig, extraStyle) {
         var session = this.session;
         var start = range.start.row;
         var end = range.end.row;
@@ -111,7 +109,7 @@ var Marker = function(parentEl) {
     };
 
     // Draws a multi line marker, where lines span the full width
-    this.drawMultiLineMarker = function(stringBuilder, range, clazz, config, extraStyle) {
+    drawMultiLineMarker(stringBuilder, range, clazz, config, extraStyle) {
         // from selection start to the end of the line
         var padding = this.$padding;
         var height = config.lineHeight;
@@ -166,7 +164,7 @@ var Marker = function(parentEl) {
     };
 
     // Draws a marker which covers part or whole width of a single screen line
-    this.drawSingleLineMarker = function(stringBuilder, range, clazz, config, extraLength, extraStyle) {
+    drawSingleLineMarker(stringBuilder, range, clazz, config, extraLength, extraStyle) {
         if (this.session.$bidiHandler.isBidiRow(range.start.row))
             return this.drawBidiSingleLineMarker(stringBuilder, range, clazz, config, extraLength, extraStyle);
         var height = config.lineHeight;
@@ -185,7 +183,7 @@ var Marker = function(parentEl) {
     };
 
     // Draws Bidi marker which covers part or whole width of a single screen line
-    this.drawBidiSingleLineMarker = function(stringBuilder, range, clazz, config, extraLength, extraStyle) {
+    drawBidiSingleLineMarker(stringBuilder, range, clazz, config, extraLength, extraStyle) {
         var height = config.lineHeight, top = this.$getTop(range.start.row, config), padding = this.$padding;
         var selections = this.session.$bidiHandler.getSelections(range.start.column, range.end.column);
 
@@ -200,7 +198,7 @@ var Marker = function(parentEl) {
         }, this);
     };
 
-    this.drawFullLineMarker = function(stringBuilder, range, clazz, config, extraStyle) {
+    drawFullLineMarker(stringBuilder, range, clazz, config, extraStyle) {
         var top = this.$getTop(range.start.row, config);
         var height = config.lineHeight;
         if (range.start.row != range.end.row)
@@ -214,7 +212,7 @@ var Marker = function(parentEl) {
         );
     };
     
-    this.drawScreenLineMarker = function(stringBuilder, range, clazz, config, extraStyle) {
+    drawScreenLineMarker(stringBuilder, range, clazz, config, extraStyle) {
         var top = this.$getTop(range.start.row, config);
         var height = config.lineHeight;
 
@@ -226,6 +224,10 @@ var Marker = function(parentEl) {
         );
     };
 
-}).call(Marker.prototype);
+}
+
+function getBorderClass(tl, tr, br, bl) {
+    return (tl ? 1 : 0) | (tr ? 2 : 0) | (br ? 4 : 0) | (bl ? 8 : 0);
+}
 
 exports.Marker = Marker;

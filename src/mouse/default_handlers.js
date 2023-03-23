@@ -5,30 +5,29 @@ var useragent = require("../lib/useragent");
 var DRAG_OFFSET = 0; // pixels
 var SCROLL_COOLDOWN_T = 550; // milliseconds
 
-function DefaultHandlers(mouseHandler) {
-    mouseHandler.$clickSelection = null;
+class DefaultHandlers {
+    constructor(mouseHandler) {
+        mouseHandler.$clickSelection = null;
 
-    var editor = mouseHandler.editor;
-    editor.setDefaultHandler("mousedown", this.onMouseDown.bind(mouseHandler));
-    editor.setDefaultHandler("dblclick", this.onDoubleClick.bind(mouseHandler));
-    editor.setDefaultHandler("tripleclick", this.onTripleClick.bind(mouseHandler));
-    editor.setDefaultHandler("quadclick", this.onQuadClick.bind(mouseHandler));
-    editor.setDefaultHandler("mousewheel", this.onMouseWheel.bind(mouseHandler));
+        var editor = mouseHandler.editor;
+        editor.setDefaultHandler("mousedown", this.onMouseDown.bind(mouseHandler));
+        editor.setDefaultHandler("dblclick", this.onDoubleClick.bind(mouseHandler));
+        editor.setDefaultHandler("tripleclick", this.onTripleClick.bind(mouseHandler));
+        editor.setDefaultHandler("quadclick", this.onQuadClick.bind(mouseHandler));
+        editor.setDefaultHandler("mousewheel", this.onMouseWheel.bind(mouseHandler));
 
-    var exports = ["select", "startSelect", "selectEnd", "selectAllEnd", "selectByWordsEnd",
-        "selectByLinesEnd", "dragWait", "dragWaitEnd", "focusWait"];
+        var exports = ["select", "startSelect", "selectEnd", "selectAllEnd", "selectByWordsEnd",
+            "selectByLinesEnd", "dragWait", "dragWaitEnd", "focusWait"];
 
-    exports.forEach(function(x) {
-        mouseHandler[x] = this[x];
-    }, this);
+        exports.forEach(function(x) {
+            mouseHandler[x] = this[x];
+        }, this);
 
-    mouseHandler.selectByLines = this.extendSelectionBy.bind(mouseHandler, "getLineRange");
-    mouseHandler.selectByWords = this.extendSelectionBy.bind(mouseHandler, "getWordRange");
-}
+        mouseHandler.selectByLines = this.extendSelectionBy.bind(mouseHandler, "getLineRange");
+        mouseHandler.selectByWords = this.extendSelectionBy.bind(mouseHandler, "getWordRange");
+    }
 
-(function() {
-
-    this.onMouseDown = function(ev) {
+    onMouseDown(ev) {
         var inSelection = ev.inSelection();
         var pos = ev.getDocumentPosition();
         this.mousedownEvent = ev;
@@ -68,7 +67,7 @@ function DefaultHandlers(mouseHandler) {
         return ev.preventDefault();
     };
 
-    this.startSelect = function(pos, waitForClickSelection) {
+    startSelect(pos, waitForClickSelection) {
         pos = pos || this.editor.renderer.screenToTextCoordinates(this.x, this.y);
         var editor = this.editor;
         if (!this.mousedownEvent) return;
@@ -83,7 +82,7 @@ function DefaultHandlers(mouseHandler) {
         this.setState("select");
     };
 
-    this.select = function() {
+    select() {
         var anchor, editor = this.editor;
         var cursor = editor.renderer.screenToTextCoordinates(this.x, this.y);
         if (this.$clickSelection) {
@@ -104,7 +103,7 @@ function DefaultHandlers(mouseHandler) {
         editor.renderer.scrollCursorIntoView();
     };
 
-    this.extendSelectionBy = function(unitName) {
+    extendSelectionBy(unitName) {
         var anchor, editor = this.editor;
         var cursor = editor.renderer.screenToTextCoordinates(this.x, this.y);
         var range = editor.selection[unitName](cursor.row, cursor.column);
@@ -133,16 +132,17 @@ function DefaultHandlers(mouseHandler) {
         editor.selection.selectToPosition(cursor);
         editor.renderer.scrollCursorIntoView();
     };
-
-    this.selectEnd =
-    this.selectAllEnd =
-    this.selectByWordsEnd =
-    this.selectByLinesEnd = function() {
+    
+    selectByLinesEnd() {
         this.$clickSelection = null;
         this.editor.unsetStyle("ace_selecting");
     };
 
-    this.focusWait = function() {
+    selectEnd = this.selectByLinesEnd;
+    selectAllEnd = this.selectByLinesEnd;
+    selectByWordsEnd = this.selectByLinesEnd;
+
+    focusWait() {
         var distance = calcDistance(this.mousedownEvent.x, this.mousedownEvent.y, this.x, this.y);
         var time = Date.now();
 
@@ -150,7 +150,7 @@ function DefaultHandlers(mouseHandler) {
             this.startSelect(this.mousedownEvent.getDocumentPosition());
     };
 
-    this.onDoubleClick = function(ev) {
+    onDoubleClick(ev) {
         var pos = ev.getDocumentPosition();
         var editor = this.editor;
         var session = editor.session;
@@ -170,7 +170,7 @@ function DefaultHandlers(mouseHandler) {
         this.select();
     };
 
-    this.onTripleClick = function(ev) {
+    onTripleClick(ev) {
         var pos = ev.getDocumentPosition();
         var editor = this.editor;
 
@@ -185,7 +185,7 @@ function DefaultHandlers(mouseHandler) {
         this.select();
     };
 
-    this.onQuadClick = function(ev) {
+    onQuadClick(ev) {
         var editor = this.editor;
 
         editor.selectAll();
@@ -193,7 +193,7 @@ function DefaultHandlers(mouseHandler) {
         this.setState("selectAll");
     };
 
-    this.onMouseWheel = function(ev) {
+    onMouseWheel(ev) {
         if (ev.getAccelKey())
             return;
 
@@ -253,7 +253,7 @@ function DefaultHandlers(mouseHandler) {
         }
     };
 
-}).call(DefaultHandlers.prototype);
+}
 
 exports.DefaultHandlers = DefaultHandlers;
 

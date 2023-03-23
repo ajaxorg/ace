@@ -47,44 +47,37 @@ dom.importCssString(`.ace_editor>.ace_sb-v div, .ace_editor>.ace_sb-h div{
 
 /**
  * An abstract class representing a native scrollbar control.
- * @class ScrollBar
  **/
+class ScrollBar {
+    /**
+     * Creates a new `ScrollBar`. `parent` is the owner of the scroll bar.
+     * @param {Element} parent A DOM element
+     * @param {string} classSuffix
+     **/
+    constructor(parent, classSuffix) {
+        this.element = dom.createElement("div");
+        this.element.className = "ace_sb" + classSuffix;
+        this.inner = dom.createElement("div");
+        this.inner.className = "";
+        this.element.appendChild(this.inner);
+        this.VScrollWidth = 12;
+        this.HScrollHeight = 12;
 
-/**
- * Creates a new `ScrollBar`. `parent` is the owner of the scroll bar.
- * @param {Element} parent A DOM element
- *
- * @constructor
- **/
+        parent.appendChild(this.element);
+        this.setVisible(false);
+        this.skipEvent = false;
 
-var ScrollBar = function (parent) {
-    this.element = dom.createElement("div");
-    this.element.className = "ace_sb" + this.classSuffix;
-    this.inner = dom.createElement("div");
-    this.inner.className = "";
-    this.element.appendChild(this.inner);
-    this.VScrollWidth = 12;
-    this.HScrollHeight = 12;
+        event.addMultiMouseDownListener(this.element, [500, 300, 300], this, "onMouseDown");
+    };
 
-    parent.appendChild(this.element);
-    this.setVisible(false);
-    this.skipEvent = false;
-
-    event.addMultiMouseDownListener(this.element, [500, 300, 300], this, "onMouseDown");
-};
-
-(function () {
-    oop.implement(this, EventEmitter);
-
-    this.setVisible = function (isVisible) {
+    setVisible(isVisible) {
         this.element.style.display = isVisible ? "" : "none";
         this.isVisible = isVisible;
         this.coeff = 1;
     };
+}
 
-
-}).call(ScrollBar.prototype);
-
+oop.implement(ScrollBar.prototype, EventEmitter);
 /**
  * Represents a vertical scroll bar.
  * @class VScrollBar
@@ -97,29 +90,23 @@ var ScrollBar = function (parent) {
  *
  * @constructor
  **/
-
-var VScrollBar = function (parent, renderer) {
-    ScrollBar.call(this, parent);
-    this.scrollTop = 0;
-    this.scrollHeight = 0;
-    this.parent = parent;
-    this.width = this.VScrollWidth;
-    this.renderer = renderer;
-    this.inner.style.width = this.element.style.width = (this.width || 15) + "px";
-    this.$minWidth = 0;
-};
-
-oop.inherits(VScrollBar, ScrollBar);
-
-(function () {
-    this.classSuffix = '-v';
-
-    oop.implement(this, EventEmitter);
-
+class VScrollBar extends ScrollBar {
+    
+    constructor(parent, renderer) {
+        super(parent, '-v');
+        this.scrollTop = 0;
+        this.scrollHeight = 0;
+        this.parent = parent;
+        this.width = this.VScrollWidth;
+        this.renderer = renderer;
+        this.inner.style.width = this.element.style.width = (this.width || 15) + "px";
+        this.$minWidth = 0;
+    };
+    
     /**
      * Emitted when the scroll thumb dragged or scrollbar canvas clicked.
      **/
-    this.onMouseDown = function (eType, e) {
+    onMouseDown(eType, e) {
         if (eType !== "mousedown") return;
 
         if (event.getButton(e) !== 0 || e.detail === 2) {
@@ -156,7 +143,7 @@ oop.inherits(VScrollBar, ScrollBar);
         return event.preventDefault(e);
     };
 
-    this.getHeight = function () {
+    getHeight() {
         return this.height;
     };
 
@@ -165,7 +152,7 @@ oop.inherits(VScrollBar, ScrollBar);
      * @param {Number}thumbTop
      * @returns {Number}
      **/
-    this.scrollTopFromThumbTop = function (thumbTop) {
+    scrollTopFromThumbTop(thumbTop) {
         var scrollTop = thumbTop * (this.pageHeight - this.viewHeight) / (this.slideHeight - this.thumbHeight);
         scrollTop = scrollTop >> 0;
         if (scrollTop < 0) {
@@ -181,7 +168,7 @@ oop.inherits(VScrollBar, ScrollBar);
      * Returns the width of the scroll bar.
      * @returns {Number}
      **/
-    this.getWidth = function () {
+    getWidth() {
         return Math.max(this.isVisible ? this.width : 0, this.$minWidth || 0);
     };
 
@@ -189,7 +176,7 @@ oop.inherits(VScrollBar, ScrollBar);
      * Sets the height of the scroll bar, in pixels.
      * @param {Number} height The new height
      **/
-    this.setHeight = function (height) {
+    setHeight(height) {
         this.height = Math.max(0, height);
         this.slideHeight = this.height;
         this.viewHeight = this.height;
@@ -203,7 +190,7 @@ oop.inherits(VScrollBar, ScrollBar);
      *
      * @param {boolean} force Forcely update height
      **/
-    this.setInnerHeight = this.setScrollHeight = function (height, force) {
+    setScrollHeight(height, force) {
         if (this.pageHeight === height && !force) return;
         this.pageHeight = height;
         this.thumbHeight = this.slideHeight * this.viewHeight / this.pageHeight;
@@ -220,52 +207,43 @@ oop.inherits(VScrollBar, ScrollBar);
         }
     };
 
+    setInnerHeight = this.setScrollHeight;
+
     /**
      * Sets the scroll top of the scroll bar.
      * @param {Number} scrollTop The new scroll top
      **/
-    this.setScrollTop = function (scrollTop) {
+    setScrollTop(scrollTop) {
         this.scrollTop = scrollTop;
         if (scrollTop < 0) scrollTop = 0;
         this.thumbTop = scrollTop * (this.slideHeight - this.thumbHeight) / (this.pageHeight - this.viewHeight);
         this.inner.style.top = this.thumbTop + "px";
     };
+}
 
-}).call(VScrollBar.prototype);
 
 /**
  * Represents a horizontal scroll bar.
- * @class HScrollBar
  **/
-
-/**
- * Creates a new `HScrollBar`. `parent` is the owner of the scroll bar.
- * @param {Element} parent A DOM element
- * @param {Object} renderer An editor renderer
- *
- * @constructor
- **/
-var HScrollBar = function (parent, renderer) {
-    ScrollBar.call(this, parent);
-    this.scrollLeft = 0;
-    this.scrollWidth = 0;
-    this.height = this.HScrollHeight;
-    this.inner.style.height = this.element.style.height = (this.height || 12) + "px";
-    this.renderer = renderer;
-};
-
-oop.inherits(HScrollBar, ScrollBar);
-
-(function () {
-
-    this.classSuffix = '-h';
-
-    oop.implement(this, EventEmitter);
-
+class HScrollBar extends ScrollBar {
+    /**
+     * Creates a new `HScrollBar`. `parent` is the owner of the scroll bar.
+     * @param {Element} parent A DOM element
+     * @param {Object} renderer An editor renderer
+     **/
+    constructor(parent, renderer) {
+        super(parent, '-h');
+        this.scrollLeft = 0;
+        this.scrollWidth = 0;
+        this.height = this.HScrollHeight;
+        this.inner.style.height = this.element.style.height = (this.height || 12) + "px";
+        this.renderer = renderer;
+    };
+    
     /**
      * Emitted when the scroll thumb dragged or scrollbar canvas clicked.
      **/
-    this.onMouseDown = function (eType, e) {
+    onMouseDown(eType, e) {
         if (eType !== "mousedown") return;
 
         if (event.getButton(e) !== 0 || e.detail === 2) {
@@ -308,7 +286,7 @@ oop.inherits(HScrollBar, ScrollBar);
      * Returns the height of the scroll bar.
      * @returns {Number}
      **/
-    this.getHeight = function () {
+    getHeight() {
         return this.isVisible ? this.height : 0;
     };
 
@@ -317,7 +295,7 @@ oop.inherits(HScrollBar, ScrollBar);
      * @param {Number} thumbLeft
      * @returns {Number}
      **/
-    this.scrollLeftFromThumbLeft = function (thumbLeft) {
+    scrollLeftFromThumbLeft(thumbLeft) {
         var scrollLeft = thumbLeft * (this.pageWidth - this.viewWidth) / (this.slideWidth - this.thumbWidth);
         scrollLeft = scrollLeft >> 0;
         if (scrollLeft < 0) {
@@ -333,7 +311,7 @@ oop.inherits(HScrollBar, ScrollBar);
      * Sets the width of the scroll bar, in pixels.
      * @param {Number} width The new width
      **/
-    this.setWidth = function (width) {
+    setWidth(width) {
         this.width = Math.max(0, width);
         this.element.style.width = this.width + "px";
         this.slideWidth = this.width;
@@ -347,7 +325,7 @@ oop.inherits(HScrollBar, ScrollBar);
      * @param {Number} width The new inner width
      * @param {boolean} force Forcely update width
      **/
-    this.setInnerWidth = this.setScrollWidth = function (width, force) {
+     setScrollWidth(width, force) {
         if (this.pageWidth === width && !force) return;
         this.pageWidth = width;
         this.thumbWidth = this.slideWidth * this.viewWidth / this.pageWidth;
@@ -363,18 +341,20 @@ oop.inherits(HScrollBar, ScrollBar);
         }
     };
 
+    setInnerWidth = this.setScrollWidth;
+
     /**
      * Sets the scroll left of the scroll bar.
      * @param {Number} scrollLeft The new scroll left
      **/
-    this.setScrollLeft = function (scrollLeft) {
+    setScrollLeft(scrollLeft) {
         this.scrollLeft = scrollLeft;
         if (scrollLeft < 0) scrollLeft = 0;
         this.thumbLeft = scrollLeft * (this.slideWidth - this.thumbWidth) / (this.pageWidth - this.viewWidth);
         this.inner.style.left = (this.thumbLeft) + "px";
     };
 
-}).call(HScrollBar.prototype);
+}
 
 exports.ScrollBar = VScrollBar; // backward compatibility
 exports.ScrollBarV = VScrollBar; // backward compatibility

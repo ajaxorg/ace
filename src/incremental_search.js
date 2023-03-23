@@ -7,32 +7,6 @@ var SearchHighlight = require("./search_highlight").SearchHighlight;
 var iSearchCommandModule = require("./commands/incremental_search_commands");
 var ISearchKbd = iSearchCommandModule.IncrementalSearchKeyboardHandler;
 
-/**
- * @class IncrementalSearch
- *
- * Implements immediate searching while the user is typing. When incremental
- * search is activated, keystrokes into the editor will be used for composing
- * a search term. Immediately after every keystroke the search is updated:
- * - so-far-matching characters are highlighted
- * - the cursor is moved to the next match
- *
- **/
-
-
-/**
- *
- *
- * Creates a new `IncrementalSearch` object.
- *
- * @constructor
- **/
-function IncrementalSearch() {
-    this.$options = {wrap: false, skipCurrent: false};
-    this.$keyboardHandler = new ISearchKbd(this);
-}
-
-oop.inherits(IncrementalSearch, Search);
-
 // regexp handling
 
 function isRegExp(obj) {
@@ -59,11 +33,25 @@ function objectToRegExp(obj) {
     return stringToRegExp(obj.expression, obj.flags);
 }
 
-// iSearch class
-
-(function() {
-
-    this.activate = function(editor, backwards) {
+/**
+ * Implements immediate searching while the user is typing. When incremental
+ * search is activated, keystrokes into the editor will be used for composing
+ * a search term. Immediately after every keystroke the search is updated:
+ * - so-far-matching characters are highlighted
+ * - the cursor is moved to the next match
+ *
+ **/
+class IncrementalSearch extends Search {
+    /**
+     * Creates a new `IncrementalSearch` object.
+     **/
+    constructor() {
+        super();
+        this.$options = {wrap: false, skipCurrent: false};
+        this.$keyboardHandler = new ISearchKbd(this);
+    }
+    
+    activate(editor, backwards) {
         this.$editor = editor;
         this.$startPos = this.$currentPos = editor.getCursorPosition();
         this.$options.needle = '';
@@ -77,7 +65,7 @@ function objectToRegExp(obj) {
         this.statusMessage(true);
     };
 
-    this.deactivate = function(reset) {
+    deactivate(reset) {
         this.cancelSearch(reset);
         var editor = this.$editor;
         editor.keyBinding.removeKeyboardHandler(this.$keyboardHandler);
@@ -89,7 +77,7 @@ function objectToRegExp(obj) {
         this.message('');
     };
 
-    this.selectionFix = function(editor) {
+    selectionFix(editor) {
         // Fix selection bug: When clicked inside the editor
         // editor.selection.$isEmpty is false even if the mouse click did not
         // open a selection. This is interpreted by the move commands to
@@ -100,7 +88,7 @@ function objectToRegExp(obj) {
         }
     };
 
-    this.highlight = function(regexp) {
+    highlight(regexp) {
         var sess = this.$editor.session,
             hl = sess.$isearchHighlight = sess.$isearchHighlight || sess.addDynamicMarker(
                 new SearchHighlight(null, "ace_isearch-result", "text"));
@@ -108,7 +96,7 @@ function objectToRegExp(obj) {
         sess._emit("changeBackMarker"); // force highlight layer redraw
     };
 
-    this.cancelSearch = function(reset) {
+    cancelSearch(reset) {
         var e = this.$editor;
         this.$prevNeedle = this.$options.needle;
         this.$options.needle = '';
@@ -122,7 +110,7 @@ function objectToRegExp(obj) {
         return Range.fromPoints(this.$currentPos, this.$currentPos);
     };
 
-    this.highlightAndFindWithNeedle = function(moveToNext, needleUpdateFunc) {
+    highlightAndFindWithNeedle(moveToNext, needleUpdateFunc) {
         if (!this.$editor) return null;
         var options = this.$options;
 
@@ -154,7 +142,7 @@ function objectToRegExp(obj) {
         return found;
     };
 
-    this.addString = function(s) {
+    addString(s) {
         return this.highlightAndFindWithNeedle(false, function(needle) {
             if (!isRegExp(needle))
               return needle + s;
@@ -164,7 +152,7 @@ function objectToRegExp(obj) {
         });
     };
 
-    this.removeChar = function(c) {
+    removeChar(c) {
         return this.highlightAndFindWithNeedle(false, function(needle) {
             if (!isRegExp(needle))
               return needle.substring(0, needle.length-1);
@@ -174,7 +162,7 @@ function objectToRegExp(obj) {
         });
     };
 
-    this.next = function(options) {
+    next(options) {
         // try to find the next occurrence of whatever we have searched for
         // earlier.
         // options = {[backwards: BOOL], [useCurrentOrPrevSearch: BOOL]}
@@ -187,29 +175,29 @@ function objectToRegExp(obj) {
         });
     };
 
-    this.onMouseDown = function(evt) {
+    onMouseDown(evt) {
         // when mouse interaction happens then we quit incremental search
         this.deactivate();
         return true;
     };
 
-    this.onPaste = function(text) {
+    onPaste(text) {
         this.addString(text);
     };
 
-    this.convertNeedleToRegExp = function() {
+    convertNeedleToRegExp() {
         return this.highlightAndFindWithNeedle(false, function(needle) {
             return isRegExp(needle) ? needle : stringToRegExp(needle, 'ig');
         });
     };
 
-    this.convertNeedleToString = function() {
+    convertNeedleToString() {
         return this.highlightAndFindWithNeedle(false, function(needle) {
             return isRegExp(needle) ? regExpToObject(needle).expression : needle;
         });
     };
 
-    this.statusMessage = function(found) {
+    statusMessage(found) {
         var options = this.$options, msg = '';
         msg += options.backwards ? 'reverse-' : '';
         msg += 'isearch: ' + options.needle;
@@ -217,15 +205,14 @@ function objectToRegExp(obj) {
         this.message(msg);
     };
 
-    this.message = function(msg) {
+    message(msg) {
         if (this.$editor.showCommandLine) {
             this.$editor.showCommandLine(msg);
             this.$editor.focus();
         }
     };
 
-}).call(IncrementalSearch.prototype);
-
+}
 
 exports.IncrementalSearch = IncrementalSearch;
 

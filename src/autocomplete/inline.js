@@ -4,20 +4,15 @@ var snippetManager = require("../snippets").snippetManager;
 
 /**
  * This object is used to manage inline code completions rendered into an editor with ghost text.
- * @class
  */
-
-/**
- * Creates the inline completion renderer which renders the inline code completions directly in the target editor.
- * @constructor
- */
-
-var AceInline = function() {
-    this.editor = null;
-};
-
-(function() {
-
+class AceInline {
+    /**
+     * Creates the inline completion renderer which renders the inline code completions directly in the target editor.
+     */
+    constructor() {
+        this.editor = null;
+    };
+    
     /**
      * Renders the completion as ghost text to the current cursor position
      * @param {Editor} editor
@@ -25,7 +20,7 @@ var AceInline = function() {
      * @param {string} prefix
      * @returns {boolean} True if the completion could be rendered to the editor, false otherwise
      */
-    this.show = function(editor, completion, prefix) {
+    show(editor, completion, prefix) {
         prefix = prefix || "";
         if (editor && this.editor && this.editor !== editor) {
             this.hide();
@@ -48,14 +43,14 @@ var AceInline = function() {
         return true;
     };
 
-    this.isOpen = function() {
+    isOpen() {
         if (!this.editor) {
             return false;
         }
         return !!this.editor.renderer.$ghostText;
     };
 
-    this.hide = function() {
+    hide() {
         if (!this.editor) {
             return false;
         }
@@ -63,11 +58,11 @@ var AceInline = function() {
         return true;
     };
 
-    this.destroy = function() {
+    destroy() {
         this.hide();
         this.editor = null;
     };
-}).call(AceInline.prototype);
+}
 
 
 exports.AceInline = AceInline;

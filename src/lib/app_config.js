@@ -64,17 +64,15 @@ function reportError(msg, data) {
     setTimeout(function() { throw e; });
 }
 
-var AppConfig = function() {
-    this.$defaultOptions = {};
-};
-
-(function() {
-    // module loading
-    oop.implement(this, EventEmitter);
+class AppConfig {
+    constructor() {
+        this.$defaultOptions = {};
+    };
+    
     /*
      * option {name, value, initialValue, setterName, set, get }
      */
-    this.defineOptions = function(obj, path, options) {
+    defineOptions(obj, path, options) {
         if (!obj.$options)
             this.$defaultOptions[path] = obj.$options = {};
 
@@ -95,7 +93,7 @@ var AppConfig = function() {
         return this;
     };
 
-    this.resetOptions = function(obj) {
+    resetOptions(obj) {
         Object.keys(obj.$options).forEach(function(key) {
             var opt = obj.$options[key];
             if ("value" in opt)
@@ -103,7 +101,7 @@ var AppConfig = function() {
         });
     };
 
-    this.setDefaultValue = function(path, name, value) {
+    setDefaultValue(path, name, value) {
         if (!path) {
             for (path in this.$defaultOptions)
                 if (this.$defaultOptions[path][name])
@@ -120,15 +118,17 @@ var AppConfig = function() {
         }
     };
 
-    this.setDefaultValues = function(path, optionHash) {
+    setDefaultValues(path, optionHash) {
         Object.keys(optionHash).forEach(function(key) {
             this.setDefaultValue(path, key, optionHash[key]);
         }, this);
     };
     
-    this.warn = warn;
-    this.reportError = reportError;
-    
-}).call(AppConfig.prototype);
+    warn = warn;
+    reportError = reportError;
+}
+
+// module loading
+oop.implement(AppConfig.prototype, EventEmitter);
 
 exports.AppConfig = AppConfig;
