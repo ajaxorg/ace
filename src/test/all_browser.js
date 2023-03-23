@@ -62,6 +62,7 @@ var testNames = [
     "ace/mode/behaviour/behaviour_test",
     "ace/multi_select_test",
     "ace/mouse/mouse_handler_test",
+    "ace/mouse/default_gutter_handler_test",
     "ace/occur_test",
     "ace/placeholder_test",
     "ace/range_test",
