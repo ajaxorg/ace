@@ -52,8 +52,8 @@ module.exports = {
         var annotation = lines.cells[0].element;
         assert.ok(/ace_error/.test(annotation.className));
 
-        target = editor.container.querySelector(".ace_gutter-cell");
-        rect = target.getBoundingClientRect();
+        var target = editor.container.querySelector(".ace_gutter-cell");
+        var rect = target.getBoundingClientRect();
         target.dispatchEvent(new MouseEvent("move", {clientX: rect.left, clientY: rect.top}));
 
         // Wait for the tooltip to appear after its timeout.
@@ -78,8 +78,8 @@ module.exports = {
         var annotation = lines.cells[0].element;
         assert.ok(/ace_warning/.test(annotation.className));
 
-        target = editor.container.querySelector(".ace_gutter-cell");
-        rect = target.getBoundingClientRect();
+        var target = editor.container.querySelector(".ace_gutter-cell");
+        var rect = target.getBoundingClientRect();
         target.dispatchEvent(new MouseEvent("move", {clientX: rect.left, clientY: rect.top}));
 
         // Wait for the tooltip to appear after its timeout.
@@ -104,8 +104,8 @@ module.exports = {
         var annotation = lines.cells[0].element;
         assert.ok(/ace_info/.test(annotation.className));
 
-        target = editor.container.querySelector(".ace_gutter-cell");
-        rect = target.getBoundingClientRect();
+        var target = editor.container.querySelector(".ace_gutter-cell");
+        var rect = target.getBoundingClientRect();
         target.dispatchEvent(new MouseEvent("move", {clientX: rect.left, clientY: rect.top}));
 
         // Wait for the tooltip to appear after its timeout.
