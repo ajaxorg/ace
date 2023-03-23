@@ -810,9 +810,7 @@ class EditSession {
         this.bgTokenizer.start(rows.first);
         this._signal("tokenizerUpdate", e);
     };
-
-    $modes = config.$modes;
-
+    
     /**
      * 
      * @type {TextMode|null}
@@ -2358,6 +2356,8 @@ class EditSession {
     isFullWidth = isFullWidth;
     
 }
+EditSession.prototype.$modes = config.$modes;
+
 oop.implement(EditSession.prototype, EventEmitter);
 
 // "Tokens"

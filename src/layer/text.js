@@ -17,15 +17,6 @@ class Text {
         this.$lines = new Lines(this.element);
     };
     
-    EOF_CHAR = "\xB6";
-    EOL_CHAR_LF = "\xAC";
-    EOL_CHAR_CRLF = "\xa4";
-    EOL_CHAR = this.EOL_CHAR_LF;
-    TAB_CHAR = "\u2014"; //"\u21E5";
-    SPACE_CHAR = "\xB7";
-    $padding = 0;
-    MAX_LINE_LENGTH = 10000;
-
     $updateEolChar() {
         var doc = this.session.doc;
         var unixMode = doc.getNewLineCharacter() == "\n" && doc.getNewLineMode() != "windows";
@@ -68,11 +59,7 @@ class Text {
         if (session)
             this.$computeTabString();
     };
-
-    showInvisibles = false;
-    showSpaces = false;
-    showTabs = false;
-    showEOL = false;
+    
     setShowInvisibles(showInvisibles) {
         if (this.showInvisibles == showInvisibles)
             return false;
@@ -88,8 +75,7 @@ class Text {
         this.$computeTabString();
         return true;
     };
-
-    displayIndentGuides = true;
+    
     setDisplayIndentGuides(display) {
         if (this.displayIndentGuides == display)
             return false;
@@ -98,17 +84,13 @@ class Text {
         this.$computeTabString();
         return true;
     };
-
-    $highlightIndentGuides = true;
+    
     setHighlightIndentGuides(highlight) {
         if (this.$highlightIndentGuides === highlight) return false;
 
         this.$highlightIndentGuides = highlight;
         return highlight;
     };
-
-    $tabStrings = [];
-    
     
     $computeTabString() {
         var tabSize = this.session.getTabSize();
@@ -312,12 +294,6 @@ class Text {
             lines.pop();
 
         lines.push(this.$renderLinesFragment(config, firstRow, lastRow));
-    };
-
-    $textToken = {
-        "text": true,
-        "rparen": true,
-        "lparen": true
     };
 
     $renderToken(parent, screenColumn, token, value) {
@@ -736,9 +712,29 @@ class Text {
         // with the class name ace_line_group).
         return this.session.getUseWrapMode();
     };
-
-    destroy = {};
 }
+
+Text.prototype.$textToken = {
+    "text": true,
+    "rparen": true,
+    "lparen": true
+};
+Text.prototype.EOF_CHAR = "\xB6";
+Text.prototype.EOL_CHAR_LF = "\xAC";
+Text.prototype.EOL_CHAR_CRLF = "\xa4";
+Text.prototype.EOL_CHAR = Text.prototype.EOL_CHAR_LF;
+Text.prototype.TAB_CHAR = "\u2014"; //"\u21E5";
+Text.prototype.SPACE_CHAR = "\xB7";
+Text.prototype.$padding = 0;
+Text.prototype.MAX_LINE_LENGTH = 10000;
+Text.prototype.showInvisibles = false;
+Text.prototype.showSpaces = false;
+Text.prototype.showTabs = false;
+Text.prototype.showEOL = false;
+Text.prototype.displayIndentGuides = true;
+Text.prototype.$highlightIndentGuides = true;
+Text.prototype.$tabStrings = [];
+Text.prototype.destroy = {};
 
 oop.implement(Text.prototype, EventEmitter);
 

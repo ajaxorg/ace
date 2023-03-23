@@ -63,12 +63,10 @@ var simpleDom = {
 };
 
 
-class SimpleTextLayer {
-    constructor() {
-        this.config = {};
-        this.dom = simpleDom;
-    };
-}
+var SimpleTextLayer = function() {
+    this.config = {};
+    this.dom = simpleDom;
+};
 SimpleTextLayer.prototype = TextLayer.prototype;
 
 var highlight = function(el, opts, callback) {
