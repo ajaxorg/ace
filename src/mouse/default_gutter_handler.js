@@ -51,17 +51,41 @@ function GutterHandler(mouseHandler) {
                 return hideTooltip();
         }
 
-        if (tooltipAnnotation == annotation)
-            return;
-        tooltipAnnotation = annotation.text.join("<br/>");
+        var annotationMessages = {error: [], warning: [], info: []};
+        var annotationLabels = {
+            error: {singular: "error", plural: "errors"}, 
+            warning: {singular: "warning", plural: "warnings"},
+            info: {singular: "information message", plural: "information messages"}
+        };
+
+        // Construct the body of the tooltip.
+        for (var i = 0; i < annotation.text.length; i++) {
+            var line = `<span class='ace_${annotation.type[i]} ace_icon' aria-label='${annotationLabels[annotation.type[i]].singular}' role=img> </span> ${annotation.text[i]}`;
+            annotationMessages[annotation.type[i]].push(line);
+        }
+        var tooltipBody = "<div class='ace_gutter-tooltip_body'>";
+        tooltipBody += [].concat(annotationMessages.error, annotationMessages.warning, annotationMessages.info).join("<br>");
+        tooltipBody += '</div>';    
+        
+        // Construct the header of the tooltip.
+        var isMoreThanOneAnnotationType = false;
+        var tooltipHeader = "<div class='ace_gutter-tooltip_header'>";
+        for (var i = 0; i < 3; i++){
+            var annotationType = ['error', 'warning', 'info'][i];
+            if (annotationMessages[annotationType].length > 0){
+                var label = annotationMessages[annotationType].length === 1 ? annotationLabels[annotationType].singular : annotationLabels[annotationType].plural;
+                tooltipHeader += `${isMoreThanOneAnnotationType ? ', ' : ''}${annotationMessages[annotationType].length} ${label}`;
+                isMoreThanOneAnnotationType = true;
+            } 
+        }
+        tooltipHeader += "</div>";
+
+        tooltipAnnotation = tooltipHeader + tooltipBody;
 
         tooltip.setHtml(tooltipAnnotation);
-
-        var annotationClassName = annotation.className;
-        if (annotationClassName) {
-            tooltip.setClassName(annotationClassName.trim());
-        }
-
+        tooltip.setClassName("ace_gutter-tooltip");
+        tooltip.$element.setAttribute("aria-live", "polite");
+        
         tooltip.show();
         editor._signal("showGutterTooltip", tooltip);
         editor.on("mousewheel", hideTooltip);
