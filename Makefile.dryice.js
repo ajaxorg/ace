@@ -606,7 +606,11 @@ function extractCss(callback) {
                 }
                 var buffer = Buffer.from(data.slice(i + 1), "base64");
                 imageCounter++;
-                var imageName = name + "-" + imageCounter + ".png";
+                var imageName;
+                if (/^image\/svg\+xml/.test(data))
+                    imageName = name + "-" + imageCounter + ".svg";
+                else   
+                    imageName = name + "-" + imageCounter + ".png";
                 images[imageName] = buffer;
                 console.log("url(\"" + directory + "/" + imageName + "\")");
                 return "url(\"" + directory + "/" + imageName + "\")";
