@@ -5,35 +5,27 @@ var oop = require("./lib/oop");
 var Range = require("./range").Range;
 
 /**
- * @class Search
- *
  * A class designed to handle all sorts of text searches within a [[Document `Document`]].
- *
  **/
-
-/**
- * 
- *
- * Creates a new `Search` object. The following search options are available:
- *
- * - `needle`: The string or regular expression you're looking for
- * - `backwards`: Whether to search backwards from where cursor currently is. Defaults to `false`.
- * - `wrap`: Whether to wrap the search back to the beginning when it hits the end. Defaults to `false`.
- * - `caseSensitive`: Whether the search ought to be case-sensitive. Defaults to `false`.
- * - `wholeWord`: Whether the search matches only on whole words. Defaults to `false`.
- * - `range`: The [[Range]] to search within. Set this to `null` for the whole document
- * - `regExp`: Whether the search is a regular expression or not. Defaults to `false`.
- * - `start`: The starting [[Range]] or cursor position to begin the search
- * - `skipCurrent`: Whether or not to include the current line in the search. Default to `false`.
- * 
- * @constructor
- **/
-
-var Search = function() {
-    this.$options = {};
-};
-
-(function() {
+class Search {
+    /**
+     * Creates a new `Search` object. The following search options are available:
+     *
+     * - `needle`: The string or regular expression you're looking for
+     * - `backwards`: Whether to search backwards from where cursor currently is. Defaults to `false`.
+     * - `wrap`: Whether to wrap the search back to the beginning when it hits the end. Defaults to `false`.
+     * - `caseSensitive`: Whether the search ought to be case-sensitive. Defaults to `false`.
+     * - `wholeWord`: Whether the search matches only on whole words. Defaults to `false`.
+     * - `range`: The [[Range]] to search within. Set this to `null` for the whole document
+     * - `regExp`: Whether the search is a regular expression or not. Defaults to `false`.
+     * - `start`: The starting [[Range]] or cursor position to begin the search
+     * - `skipCurrent`: Whether or not to include the current line in the search. Default to `false`.
+     *
+     **/
+    constructor() {
+        this.$options = {};
+    }
+    
     /**
      * Sets the search options via the `options` parameter.
      * @param {Object} options An object containing all the new search properties
@@ -42,27 +34,27 @@ var Search = function() {
      * @returns {Search}
      * @chainable
     **/
-    this.set = function(options) {
+    set(options) {
         oop.mixin(this.$options, options);
         return this;
-    };
+    }
 
     /**
      * [Returns an object containing all the search options.]{: #Search.getOptions}
      * @returns {Object}
     **/
-    this.getOptions = function() {
+    getOptions() {
         return lang.copyObject(this.$options);
-    };
+    }
     
     /**
      * Sets the search options via the `options` parameter.
-     * @param {Object} An object containing all the search propertie
+     * @param {Object} options object containing all the search propertie
      * @related Search.set
     **/
-    this.setOptions = function(options) {
+    setOptions(options) {
         this.$options = options;
-    };
+    }
     /**
      * Searches for `options.needle`. If found, this method returns the [[Range `Range`]] where the text first occurs. If `options.backwards` is `true`, the search goes backwards in the session.
      * @param {EditSession} session The session to search with
@@ -70,7 +62,7 @@ var Search = function() {
      * 
      * @returns {Range}
     **/
-    this.find = function(session) {
+    find(session) {
         var options = this.$options;
         var iterator = this.$matchIterator(session, options);
         if (!iterator)
@@ -90,7 +82,7 @@ var Search = function() {
         });
 
         return firstRange;
-    };
+    }
 
     /**
      * Searches for all occurrances `options.needle`. If found, this method returns an array of [[Range `Range`s]] where the text first occurs. If `options.backwards` is `true`, the search goes backwards in the session.
@@ -99,7 +91,7 @@ var Search = function() {
      * 
      * @returns {[Range]}
     **/
-    this.findAll = function(session) {
+    findAll(session) {
         var options = this.$options;
         if (!options.needle)
             return [];
@@ -166,7 +158,7 @@ var Search = function() {
         }
 
         return ranges;
-    };
+    }
 
     /**
      * Searches for `options.needle` in `input`, and, if found, replaces it with `replacement`.
@@ -178,7 +170,7 @@ var Search = function() {
      * 
      * @returns {String}
     **/
-    this.replace = function(input, replacement) {
+    replace(input, replacement) {
         var options = this.$options;
 
         var re = this.$assembleRegExp(options);
@@ -206,9 +198,9 @@ var Search = function() {
         }
         
         return replacement;
-    };
+    }
 
-    this.$assembleRegExp = function(options, $disableFakeMultiline) {
+    $assembleRegExp(options, $disableFakeMultiline) {
         if (options.needle instanceof RegExp)
             return options.re = options.needle;
 
@@ -235,9 +227,9 @@ var Search = function() {
             re = false;
         }
         return options.re = re;
-    };
+    }
 
-    this.$assembleMultilineRegExp = function(needle, modifier) {
+    $assembleMultilineRegExp(needle, modifier) {
         var parts = needle.replace(/\r\n|\r|\n/g, "$\n^").split("\n");
         var re = [];
         for (var i = 0; i < parts.length; i++) try {
@@ -246,9 +238,9 @@ var Search = function() {
             return false;
         }
         return re;
-    };
+    }
 
-    this.$matchIterator = function(session, options) {
+    $matchIterator(session, options) {
         var re = this.$assembleRegExp(options);
         if (!re)
             return false;
@@ -360,9 +352,9 @@ var Search = function() {
             };
         }
         return {forEach: forEach};
-    };
+    }
 
-}).call(Search.prototype);
+}
 
 function addWordBoundary(needle, options) {
     function wordBoundary(c) {
