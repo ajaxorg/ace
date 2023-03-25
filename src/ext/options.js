@@ -194,6 +194,9 @@ var optionGroups = {
         },
         "Custom scrollbar": {
             path: "customScrollbar"
+        },
+        "Use SVG gutter icons": {
+            path: "useSvgGutterIcons"
         }
     }
 };

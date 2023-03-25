@@ -16,13 +16,11 @@ var RenderLoop = require("./renderloop").RenderLoop;
 var FontMetrics = require("./layer/font_metrics").FontMetrics;
 var EventEmitter = require("./lib/event_emitter").EventEmitter;
 var editorCss = require("./css/editor.css");
-var iconsCss = require("./css/icons.css");
 var Decorator = require("./layer/decorators").Decorator;
 
 var useragent = require("./lib/useragent");
 
 dom.importCssString(editorCss, "ace_editor.css", false);
-dom.importCssString(iconsCss, "ace_icons.css", false);
 
 /**
  * The class that is responsible for drawing everything you see on the screen!
@@ -1792,7 +1790,6 @@ var VirtualRenderer = function(container, theme) {
     
     this.attachToShadowRoot = function() {
         dom.importCssString(editorCss, "ace_editor.css", this.container);
-        dom.importCssString(iconsCss, "ace_icons.css", this.container);
     };
 
     /**
@@ -1912,6 +1909,12 @@ config.defineOptions(VirtualRenderer.prototype, "renderer", {
             this.onGutterResize();
         },
         initialValue: true
+    },
+    useSvgGutterIcons: {
+        set: function(show){
+            this.$gutterLayer.useSvgGutterIcons = show;
+        },
+        initialValue: false
     },
     fadeFoldWidgets: {
         set: function(show) {

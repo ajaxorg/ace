@@ -279,8 +279,9 @@ var Gutter = function(parentEl) {
         
         var session = this.session;
         
-        var textNode = element.childNodes[0];
-        var foldWidget = element.childNodes[1];
+        var annotationNode = element.childNodes[0];
+        var textNode = element.childNodes[1];
+        var foldWidget = element.childNodes[2];
 
         var firstLineNumber = session.$firstLineNumber;
         
@@ -290,7 +291,27 @@ var Gutter = function(parentEl) {
         var foldWidgets = this.$showFoldWidgets && session.foldWidgets;
         var foldStart = fold ? fold.start.row : Number.MAX_VALUE;
         
-        var className = "ace_gutter-cell ";
+        var lineHeight = config.lineHeight + "px";
+
+        var className;
+        if (this.useSvgGutterIcons){
+            className = "ace_gutter-cell_svg-icons ";
+
+            if (this.$annotations[row]){
+                annotationNode.className = "ace_icon_svg" + this.$annotations[row].className;
+
+                dom.setStyle(annotationNode.style, "height", lineHeight);
+                dom.setStyle(annotationNode.style, "display", "inline-block");
+            }
+            else {
+                dom.setStyle(annotationNode.style, "display", "none");
+            }
+        }
+        else {
+            className = "ace_gutter-cell ";
+            dom.setStyle(annotationNode.style, "display", "none");
+        }
+
         if (this.$highlightGutterLine) {
             if (row == this.$cursorRow || (fold && row < this.$cursorRow && row >= foldStart &&  this.$cursorRow <= fold.end.row)) {
                 className += "ace_gutter-active-line ";
@@ -327,8 +348,7 @@ var Gutter = function(parentEl) {
             if (foldWidget.className != className)
                 foldWidget.className = className;
 
-            var foldHeight = config.lineHeight + "px";
-            dom.setStyle(foldWidget.style, "height", foldHeight);
+            dom.setStyle(foldWidget.style, "height", lineHeight);
             dom.setStyle(foldWidget.style, "display", "inline-block");
         } else {
             if (foldWidget) {
@@ -411,6 +431,9 @@ var Gutter = function(parentEl) {
 }).call(Gutter.prototype);
 
 function onCreateCell(element) {
+    var annotationNode = dom.createElement("span");
+    element.appendChild(annotationNode);
+
     var textNode = document.createTextNode('');
     element.appendChild(textNode);
     
