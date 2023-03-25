@@ -1,25 +1,26 @@
 "use strict";
-/** simple statusbar **/
+
 var dom = require("../lib/dom");
 var lang = require("../lib/lang");
 
-var StatusBar = function(editor, parentNode) {
-    this.element = dom.createElement("div");
-    this.element.className = "ace_status-indicator";
-    this.element.style.cssText = "display: inline-block;";
-    parentNode.appendChild(this.element);
+/** simple statusbar **/
+class StatusBar{
+    constructor(editor, parentNode) {
+        this.element = dom.createElement("div");
+        this.element.className = "ace_status-indicator";
+        this.element.style.cssText = "display: inline-block;";
+        parentNode.appendChild(this.element);
 
-    var statusUpdate = lang.delayedCall(function(){
-        this.updateStatus(editor);
-    }.bind(this)).schedule.bind(null, 100);
+        var statusUpdate = lang.delayedCall(function(){
+            this.updateStatus(editor);
+        }.bind(this)).schedule.bind(null, 100);
+
+        editor.on("changeStatus", statusUpdate);
+        editor.on("changeSelection", statusUpdate);
+        editor.on("keyboardActivity", statusUpdate);
+    }
     
-    editor.on("changeStatus", statusUpdate);
-    editor.on("changeSelection", statusUpdate);
-    editor.on("keyboardActivity", statusUpdate);
-};
-
-(function(){
-    this.updateStatus = function(editor) {
+    updateStatus(editor) {
         var status = [];
         function add(str, separator) {
             str && status.push(str, separator || "|");
@@ -41,7 +42,7 @@ var StatusBar = function(editor, parentNode) {
             add("[" + sel.rangeCount + "]", " ");
         status.pop();
         this.element.textContent = status.join("");
-    };
-}).call(StatusBar.prototype);
+    }
+}
 
 exports.StatusBar = StatusBar;

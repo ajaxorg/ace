@@ -2,31 +2,31 @@
 
 var dom = require("../lib/dom");
 
-var Cursor = function(parentEl) {
-    this.element = dom.createElement("div");
-    this.element.className = "ace_layer ace_cursor-layer";
-    parentEl.appendChild(this.element);
-    
-    this.isVisible = false;
-    this.isBlinking = true;
-    this.blinkInterval = 1000;
-    this.smoothBlinking = false;
 
-    this.cursors = [];
-    this.cursor = this.addCursor();
-    dom.addCssClass(this.element, "ace_hidden-cursors");
-    this.$updateCursors = this.$updateOpacity.bind(this);
-};
+class Cursor {
+    constructor(parentEl) {
+        this.element = dom.createElement("div");
+        this.element.className = "ace_layer ace_cursor-layer";
+        parentEl.appendChild(this.element);
 
-(function() {
+        this.isVisible = false;
+        this.isBlinking = true;
+        this.blinkInterval = 1000;
+        this.smoothBlinking = false;
+
+        this.cursors = [];
+        this.cursor = this.addCursor();
+        dom.addCssClass(this.element, "ace_hidden-cursors");
+        this.$updateCursors = this.$updateOpacity.bind(this);
+    }
     
-    this.$updateOpacity = function(val) {
+    $updateOpacity(val) {
         var cursors = this.cursors;
         for (var i = cursors.length; i--; )
             dom.setStyle(cursors[i].style, "opacity", val ? "" : "0");
-    };
+    }
 
-    this.$startCssAnimation = function() {
+    $startCssAnimation() {
         var cursors = this.cursors;
         for (var i = cursors.length; i--; )
             cursors[i].style.animationDuration = this.blinkInterval + "ms";
@@ -37,74 +37,73 @@ var Cursor = function(parentEl) {
                 dom.addCssClass(this.element, "ace_animate-blinking");
             }
         }.bind(this));
-    };
+    }
     
-    this.$stopCssAnimation = function() {
+    $stopCssAnimation() {
         this.$isAnimating = false;
         dom.removeCssClass(this.element, "ace_animate-blinking");
-    };
-
-    this.$padding = 0;
-    this.setPadding = function(padding) {
+    }
+    
+    setPadding(padding) {
         this.$padding = padding;
-    };
+    }
 
-    this.setSession = function(session) {
+    setSession(session) {
         this.session = session;
-    };
+    }
 
-    this.setBlinking = function(blinking) {
+    setBlinking(blinking) {
         if (blinking != this.isBlinking) {
             this.isBlinking = blinking;
             this.restartTimer();
         }
-    };
+    }
 
-    this.setBlinkInterval = function(blinkInterval) {
+    setBlinkInterval(blinkInterval) {
         if (blinkInterval != this.blinkInterval) {
             this.blinkInterval = blinkInterval;
             this.restartTimer();
         }
-    };
+    }
 
-    this.setSmoothBlinking = function(smoothBlinking) {
+    setSmoothBlinking(smoothBlinking) {
         if (smoothBlinking != this.smoothBlinking) {
             this.smoothBlinking = smoothBlinking;
             dom.setCssClass(this.element, "ace_smooth-blinking", smoothBlinking);
             this.$updateCursors(true);
             this.restartTimer();
         }
-    };
+    }
 
-    this.addCursor = function() {
+    addCursor() {
         var el = dom.createElement("div");
         el.className = "ace_cursor";
         this.element.appendChild(el);
         this.cursors.push(el);
         return el;
-    };
+    }
 
-    this.removeCursor = function() {
+    removeCursor() {
         if (this.cursors.length > 1) {
             var el = this.cursors.pop();
             el.parentNode.removeChild(el);
             return el;
         }
-    };
+    }
 
-    this.hideCursor = function() {
+    hideCursor() {
         this.isVisible = false;
         dom.addCssClass(this.element, "ace_hidden-cursors");
         this.restartTimer();
-    };
+    }
 
-    this.showCursor = function() {
+    showCursor() {
         this.isVisible = true;
         dom.removeCssClass(this.element, "ace_hidden-cursors");
         this.restartTimer();
-    };
+    }
 
-    this.restartTimer = function() {
+    restartTimer() {
         var update = this.$updateCursors;
         clearInterval(this.intervalId);
         clearTimeout(this.timeoutId);
@@ -146,9 +145,9 @@ var Cursor = function(parentEl) {
             }, this.blinkInterval);
             blink();
         }
-    };
+    }
 
-    this.getPixelPosition = function(position, onScreen) {
+    getPixelPosition(position, onScreen) {
         if (!this.config || !this.session)
             return {left : 0, top : 0};
 
@@ -163,13 +162,13 @@ var Cursor = function(parentEl) {
             this.config.lineHeight;
 
         return {left : cursorLeft, top : cursorTop};
-    };
+    }
 
-    this.isCursorInView = function(pixelPos, config) {
+    isCursorInView(pixelPos, config) {
         return pixelPos.top >= 0 && pixelPos.top < config.maxHeight;
-    };
+    }
 
-    this.update = function(config) {
+    update(config) {
         this.config = config;
 
         var selections = this.session.$selectionMarkers;
@@ -211,11 +210,9 @@ var Cursor = function(parentEl) {
         // cache for textarea and gutter highlight
         this.$pixelPos = pixelPos;
         this.restartTimer();
-    };
-    
-    this.drawCursor = null;
+    }
 
-    this.$setOverwrite = function(overwrite) {
+    $setOverwrite(overwrite) {
         if (overwrite != this.overwrite) {
             this.overwrite = overwrite;
             if (overwrite)
@@ -223,13 +220,17 @@ var Cursor = function(parentEl) {
             else
                 dom.removeCssClass(this.element, "ace_overwrite-cursors");
         }
-    };
+    }
 
-    this.destroy = function() {
+    destroy() {
         clearInterval(this.intervalId);
         clearTimeout(this.timeoutId);
-    };
+    }
 
-}).call(Cursor.prototype);
+}
+
+Cursor.prototype.$padding = 0;
+Cursor.prototype.drawCursor = null;
+
 
 exports.Cursor = Cursor;

@@ -1,7 +1,6 @@
 "no use strict";
 
 var lang = require("./lib/lang");
-var oop = require("./lib/oop");
 var net = require("./lib/net");
 var dom = require("./lib/dom");
 var AppConfig = require("./lib/app_config").AppConfig;

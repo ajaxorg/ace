@@ -6,27 +6,25 @@ var event = require("ace/lib/event");
 var Range = require("ace/range").Range;
 var Tooltip = require("ace/tooltip").Tooltip;
 
-function TokenTooltip (editor) {
-    if (editor.tokenTooltip)
-        return;
-    Tooltip.call(this, editor.container);
-    editor.tokenTooltip = this;
-    this.editor = editor;
+class TokenTooltip extends Tooltip {
+    constructor(editor) {
+        if (editor.tokenTooltip)
+            return;
+        super(editor.container);
+        editor.tokenTooltip = this;
+        this.editor = editor;
 
-    this.update = this.update.bind(this);
-    this.onMouseMove = this.onMouseMove.bind(this);
-    this.onMouseOut = this.onMouseOut.bind(this);
-    event.addListener(editor.renderer.scroller, "mousemove", this.onMouseMove);
-    event.addListener(editor.renderer.content, "mouseout", this.onMouseOut);
-}
-
-oop.inherits(TokenTooltip, Tooltip);
-
-(function(){
-    this.token = {};
-    this.range = new Range();
+        this.update = this.update.bind(this);
+        this.onMouseMove = this.onMouseMove.bind(this);
+        this.onMouseOut = this.onMouseOut.bind(this);
+        event.addListener(editor.renderer.scroller, "mousemove", this.onMouseMove);
+        event.addListener(editor.renderer.content, "mouseout", this.onMouseOut);
+    }
+    token = {};
     
-    this.update = function() {
+    range = new Range();
+    
+    update() {
         this.$timer = null;
         
         var r = this.editor.renderer;
@@ -83,7 +81,7 @@ oop.inherits(TokenTooltip, Tooltip);
         this.marker = session.addMarker(this.range, "ace_bracket", "text");
     };
     
-    this.onMouseMove = function(e) {
+    onMouseMove(e) {
         this.x = e.clientX;
         this.y = e.clientY;
         if (this.isOpen) {
@@ -94,7 +92,7 @@ oop.inherits(TokenTooltip, Tooltip);
             this.$timer = setTimeout(this.update, 100);
     };
 
-    this.onMouseOut = function(e) {
+    onMouseOut(e) {
         if (e && e.currentTarget.contains(e.relatedTarget))
             return;
         this.hide();
@@ -102,7 +100,7 @@ oop.inherits(TokenTooltip, Tooltip);
         this.$timer = clearTimeout(this.$timer);
     };
 
-    this.setPosition = function(x, y) {
+    setPosition(x, y) {
         if (x + 10 + this.width > this.maxWidth)
             x = window.innerWidth - this.width - 10;
         if (y > window.innerHeight * 0.75 || y + 20 + this.height > this.maxHeight)
@@ -111,13 +109,13 @@ oop.inherits(TokenTooltip, Tooltip);
         Tooltip.prototype.setPosition.call(this, x + 10, y + 20);
     };
 
-    this.destroy = function() {
+    destroy() {
         this.onMouseOut();
         event.removeListener(this.editor.renderer.scroller, "mousemove", this.onMouseMove);
         event.removeListener(this.editor.renderer.content, "mouseout", this.onMouseOut);
         delete this.editor.tokenTooltip;
     };
 
-}).call(TokenTooltip.prototype);
+}
 
 exports.TokenTooltip = TokenTooltip;

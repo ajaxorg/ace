@@ -14,36 +14,32 @@ var destroyCompleter = function(e, editor) {
     editor.completer && editor.completer.destroy();
 };
 
-
 /**
  * This object controls the autocompletion components and their lifecycle.
  * There is an autocompletion popup, an optional inline ghost text renderer and a docuent tooltip popup inside.
- * @class
  */
+class Autocomplete {
+    constructor() {
+        this.autoInsert = false;
+        this.autoSelect = true;
+        this.exactMatch = false;
+        this.inlineEnabled = false;
+        this.keyboardHandler = new HashHandler();
+        this.keyboardHandler.bindKeys(this.commands);
 
-var Autocomplete = function() {
-    this.autoInsert = false;
-    this.autoSelect = true;
-    this.exactMatch = false;
-    this.inlineEnabled = false;
-    this.keyboardHandler = new HashHandler();
-    this.keyboardHandler.bindKeys(this.commands);
+        this.blurListener = this.blurListener.bind(this);
+        this.changeListener = this.changeListener.bind(this);
+        this.mousedownListener = this.mousedownListener.bind(this);
+        this.mousewheelListener = this.mousewheelListener.bind(this);
 
-    this.blurListener = this.blurListener.bind(this);
-    this.changeListener = this.changeListener.bind(this);
-    this.mousedownListener = this.mousedownListener.bind(this);
-    this.mousewheelListener = this.mousewheelListener.bind(this);
+        this.changeTimer = lang.delayedCall(function() {
+            this.updateCompletions(true);
+        }.bind(this));
 
-    this.changeTimer = lang.delayedCall(function() {
-        this.updateCompletions(true);
-    }.bind(this));
+        this.tooltipTimer = lang.delayedCall(this.updateDocTooltip.bind(this), 50);
+    }
 
-    this.tooltipTimer = lang.delayedCall(this.updateDocTooltip.bind(this), 50);
-};
-
-(function() {
-
-    this.$init = function() {
+    $init() {
         this.popup = new AcePopup(document.body || document.documentElement);
         this.popup.on("click", function(e) {
             this.insertMatch();
@@ -55,27 +51,27 @@ var Autocomplete = function() {
         this.popup.on("select", this.$onPopupChange.bind(this));
         this.popup.on("changeHoverMarker", this.tooltipTimer.bind(null, null));
         return this.popup;
-    };
+    }
 
-    this.$initInline = function() {
+    $initInline() {
         if (!this.inlineEnabled || this.inlineRenderer)
             return;
         this.inlineRenderer = new AceInline();
         return this.inlineRenderer;
-    };
+    }
 
-    this.getPopup = function() {
+    getPopup() {
         return this.popup || this.$init();
-    };
+    }
 
-    this.$onHidePopup = function() {
+    $onHidePopup() {
         if (this.inlineRenderer) {
             this.inlineRenderer.hide();
         }
         this.hideDocTooltip();
-    };
+    }
 
-    this.$onPopupChange = function(hide) {
+    $onPopupChange(hide) {
         if (this.inlineRenderer && this.inlineEnabled) {
             var completion = hide ? null : this.popup.getData(this.popup.getRow());
             var prefix = util.getCompletionPrefix(this.editor);
@@ -85,9 +81,9 @@ var Autocomplete = function() {
             this.$updatePopupPosition();
         }
         this.tooltipTimer.call(null, null);
-    };
+    }
 
-    this.$updatePopupPosition = function() {
+    $updatePopupPosition() {
         var editor = this.editor;
         var renderer = editor.renderer;
 
@@ -121,9 +117,9 @@ var Autocomplete = function() {
         }
         
         this.popup.show(pos, lineHeight);
-    };
+    }
 
-    this.openPopup = function(editor, prefix, keepPopupPosition) {
+    openPopup(editor, prefix, keepPopupPosition) {
         if (!this.popup)
             this.$init();
 
@@ -155,12 +151,12 @@ var Autocomplete = function() {
             this.detach();
         }
         this.changeTimer.cancel();
-    };
+    }
 
     /**
      * Detaches all elements from the editor, and cleans up the data for the session
      */
-    this.detach = function() {
+    detach() {
         if (this.editor) {
             this.editor.keyBinding.removeKeyboardHandler(this.keyboardHandler);
             this.editor.off("changeSelection", this.changeListener);
@@ -182,9 +178,9 @@ var Autocomplete = function() {
             this.base.detach();
         this.activated = false;
         this.completionProvider = this.completions = this.base = null;
-    };
+    }
 
-    this.changeListener = function(e) {
+    changeListener(e) {
         var cursor = this.editor.selection.lead;
         if (cursor.row != this.base.row || cursor.column < this.base.column) {
             this.detach();
@@ -193,9 +189,9 @@ var Autocomplete = function() {
             this.changeTimer.schedule();
         else
             this.detach();
-    };
+    }
 
-    this.blurListener = function(e) {
+    blurListener(e) {
         // we have to check if activeElement is a child of popup because
         // on IE preventDefault doesn't stop scrollbar from being focussed
         var el = document.activeElement;
@@ -207,21 +203,21 @@ var Autocomplete = function() {
         ) {
             this.detach();
         }
-    };
+    }
 
-    this.mousedownListener = function(e) {
+    mousedownListener(e) {
         this.detach();
-    };
+    }
 
-    this.mousewheelListener = function(e) {
+    mousewheelListener(e) {
         this.detach();
-    };
+    }
 
-    this.goTo = function(where) {
+   goTo(where) {
         this.popup.goTo(where);
-    };
+    }
 
-    this.insertMatch = function(data, options) {
+    insertMatch(data, options) {
         if (!data)
             data = this.popup.getData(this.popup.getRow());
         if (!data)
@@ -232,35 +228,14 @@ var Autocomplete = function() {
         if (this.completions == completions)
             this.detach();
         return result;
-    };
-
-    this.commands = {
-        "Up": function(editor) { editor.completer.goTo("up"); },
-        "Down": function(editor) { editor.completer.goTo("down"); },
-        "Ctrl-Up|Ctrl-Home": function(editor) { editor.completer.goTo("start"); },
-        "Ctrl-Down|Ctrl-End": function(editor) { editor.completer.goTo("end"); },
-
-        "Esc": function(editor) { editor.completer.detach(); },
-        "Return": function(editor) { return editor.completer.insertMatch(); },
-        "Shift-Return": function(editor) { editor.completer.insertMatch(null, {deleteSuffix: true}); },
-        "Tab": function(editor) {
-            var result = editor.completer.insertMatch();
-            if (!result && !editor.tabstopManager)
-                editor.completer.goTo("down");
-            else
-                return result;
-        },
-
-        "PageUp": function(editor) { editor.completer.popup.gotoPageUp(); },
-        "PageDown": function(editor) { editor.completer.popup.gotoPageDown(); }
-    };
-
+    }
+    
     /**
      * This is the entry point for the autocompletion class, triggers the actions which collect and display suggestions
      * @param {Editor} editor
      * @param {CompletionOptions} options
      */
-    this.showPopup = function(editor, options) {
+    showPopup(editor, options) {
         if (this.editor)
             this.detach();
 
@@ -279,24 +254,24 @@ var Autocomplete = function() {
         editor.on("mousewheel", this.mousewheelListener);
 
         this.updateCompletions(false, options);
-    };
+    }
 
-    this.getCompletionProvider = function() {
+    getCompletionProvider() {
         if (!this.completionProvider)
             this.completionProvider = new CompletionProvider();
         return this.completionProvider;
-    };
+    }
 
     /**
      * This method is deprecated, it is only kept for backwards compatibility.
      * Use the same method include CompletionProvider instead for the same functionality.
      * @deprecated
      */
-    this.gatherCompletions = function(editor, callback) {
+    gatherCompletions(editor, callback) {
         return this.getCompletionProvider().gatherCompletions(editor, callback);
-    };
+    }
 
-    this.updateCompletions = function(keepPopupPosition, options) {
+    updateCompletions(keepPopupPosition, options) {
         if (keepPopupPosition && this.base && this.completions) {
             var pos = this.editor.getCursorPosition();
             var prefix = this.editor.session.getTextRange({start: this.base, end: pos});
@@ -347,13 +322,13 @@ var Autocomplete = function() {
             this.completions = completions;
             this.openPopup(this.editor, prefix, keepPopupPosition);
         }.bind(this));
-    };
+    }
 
-    this.cancelContextMenu = function() {
+    cancelContextMenu() {
         this.editor.$mouseHandler.cancelContextMenu();
-    };
+    }
 
-    this.updateDocTooltip = function() {
+    updateDocTooltip() {
         var popup = this.popup;
         var all = popup.data;
         var selected = all && (all[popup.getHoveredRow()] || all[popup.getRow()]);
@@ -373,9 +348,9 @@ var Autocomplete = function() {
         if (!doc || !(doc.docHTML || doc.docText))
             return this.hideDocTooltip();
         this.showDocTooltip(doc);
-    };
+    }
 
-    this.showDocTooltip = function(item) {
+    showDocTooltip(item) {
         if (!this.tooltipNode) {
             this.tooltipNode = dom.createElement("div");
             this.tooltipNode.className = "ace_tooltip ace_doc-tooltip";
@@ -422,9 +397,9 @@ var Autocomplete = function() {
             tooltipNode.style.left = (rect.right + 1) + "px";
             tooltipNode.style.right = "";
         }
-    };
+    }
 
-    this.hideDocTooltip = function() {
+    hideDocTooltip() {
         this.tooltipTimer.cancel();
         if (!this.tooltipNode) return;
         var el = this.tooltipNode;
@@ -433,9 +408,9 @@ var Autocomplete = function() {
         this.tooltipNode = null;
         if (el.parentNode)
             el.parentNode.removeChild(el);
-    };
+    }
     
-    this.onTooltipClick = function(e) {
+    onTooltipClick(e) {
         var a = e.target;
         while (a && a != this.tooltipNode) {
             if (a.nodeName == "A" && a.href) {
@@ -445,9 +420,9 @@ var Autocomplete = function() {
             }
             a = a.parentNode;
         }
-    };
+    }
 
-    this.destroy = function() {
+    destroy() {
         this.detach();
         if (this.popup) {
             this.popup.destroy();
@@ -460,9 +435,30 @@ var Autocomplete = function() {
             this.editor.completer = null;
         }
         this.inlineRenderer = this.popup = this.editor = null;
-    };
+    }
 
-}).call(Autocomplete.prototype);
+}
+
+Autocomplete.prototype.commands = {
+    "Up": function(editor) { editor.completer.goTo("up"); },
+    "Down": function(editor) { editor.completer.goTo("down"); },
+    "Ctrl-Up|Ctrl-Home": function(editor) { editor.completer.goTo("start"); },
+    "Ctrl-Down|Ctrl-End": function(editor) { editor.completer.goTo("end"); },
+
+    "Esc": function(editor) { editor.completer.detach(); },
+    "Return": function(editor) { return editor.completer.insertMatch(); },
+    "Shift-Return": function(editor) { editor.completer.insertMatch(null, {deleteSuffix: true}); },
+    "Tab": function(editor) {
+        var result = editor.completer.insertMatch();
+        if (!result && !editor.tabstopManager)
+            editor.completer.goTo("down");
+        else
+            return result;
+    },
+
+    "PageUp": function(editor) { editor.completer.popup.gotoPageUp(); },
+    "PageDown": function(editor) { editor.completer.popup.gotoPageDown(); }
+};
 
 
 Autocomplete.for = function(editor) {
@@ -499,22 +495,21 @@ Autocomplete.startCommand = {
 
 /**
  * This class is responsible for providing completions and inserting them to the editor
- * @class
  */
-
-var CompletionProvider = function() {
-    this.active = true;
-};
-
-(function() {
-    this.insertByIndex = function(editor, index, options) {
+class CompletionProvider {
+    
+    constructor() {
+        this.active = true;
+    }
+    
+    insertByIndex(editor, index, options) {
         if (!this.completions || !this.completions.filtered) {
             return false;
         }
         return this.insertMatch(editor, this.completions.filtered[index], options);
-    };
+    }
 
-    this.insertMatch = function(editor, data, options) {
+    insertMatch(editor, data, options) {
         if (!data)
             return false;
 
@@ -540,9 +535,9 @@ var CompletionProvider = function() {
         }
         editor.endOperation();
         return true;
-    };
+    }
 
-    this.gatherCompletions = function(editor, callback) {
+    gatherCompletions(editor, callback) {
         var session = editor.getSession();
         var pos = editor.getCursorPosition();
     
@@ -563,7 +558,7 @@ var CompletionProvider = function() {
             });
         });
         return true;
-    };
+    }
 
     /**
      * This is the entry point to the class, it gathers, then provides the completions asynchronously via callback.
@@ -572,7 +567,7 @@ var CompletionProvider = function() {
      * @param {CompletionProviderOptions} options
      * @param {CompletionProviderCallback} callback
      */
-    this.provideCompletions = function(editor, options, callback) {
+    provideCompletions(editor, options, callback) {
         var processResults = function(results) {
             var prefix = results.prefix;
             var matches = results.matches;
@@ -621,22 +616,23 @@ var CompletionProvider = function() {
             immediateResults = null;
             processResults(results);
         }
-    };
+    }
 
-    this.detach = function() {
+    detach() {
         this.active = false;
-    };
-}).call(CompletionProvider.prototype);
+    }
+}
 
-var FilteredList = function(array, filterText) {
-    this.all = array;
-    this.filtered = array;
-    this.filterText = filterText || "";
-    this.exactMatch = false;
-    this.ignoreCaption = false;
-};
-(function(){
-    this.setFilter = function(str) {
+class FilteredList {
+    constructor(array, filterText) {
+        this.all = array;
+        this.filtered = array;
+        this.filterText = filterText || "";
+        this.exactMatch = false;
+        this.ignoreCaption = false;
+    }
+    
+    setFilter(str) {
         if (str.length > this.filterText && str.lastIndexOf(this.filterText, 0) === 0)
             var matches = this.filtered;
         else
@@ -659,9 +655,9 @@ var FilteredList = function(array, filterText) {
         });
 
         this.filtered = matches;
-    };
+    }
 
-    this.filterCompletions = function(items, needle) {
+    filterCompletions(items, needle) {
         var results = [];
         var upper = needle.toUpperCase();
         var lower = needle.toLowerCase();
@@ -711,8 +707,8 @@ var FilteredList = function(array, filterText) {
             results.push(item);
         }
         return results;
-    };
-}).call(FilteredList.prototype);
+    }
+}
 
 exports.Autocomplete = Autocomplete;
 exports.CompletionProvider = CompletionProvider;

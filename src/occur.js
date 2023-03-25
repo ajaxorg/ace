@@ -1,7 +1,6 @@
 "use strict";
 
 var oop = require("./lib/oop");
-var Range = require("./range").Range;
 var Search = require("./search").Search;
 var EditSession = require("./edit_session").EditSession;
 var SearchHighlight = require("./search_highlight").SearchHighlight;
@@ -14,18 +13,7 @@ var SearchHighlight = require("./search_highlight").SearchHighlight;
  * track of the mapping between the occur doc and the original doc.
  *
  **/
-
-
-/**
- * Creates a new `Occur` object.
- *
- * @constructor
- **/
-function Occur() {}
-
-oop.inherits(Occur, Search);
-
-(function() {
+class Occur extends Search {
 
     /**
      * Enables occur mode. expects that `options.needle` is a search term.
@@ -38,14 +26,14 @@ oop.inherits(Occur, Search);
      * @return {Boolean} Whether occur activation was successful
      *
      **/
-    this.enter = function(editor, options) {
+    enter(editor, options) {
         if (!options.needle) return false;
         var pos = editor.getCursorPosition();
         this.displayOccurContent(editor, options);
         var translatedPos = this.originalToOccurPosition(editor.session, pos);
         editor.moveCursorToPosition(translatedPos);
         return true;
-    };
+    }
 
     /**
      * Disables occur mode. Resets the [[Sessions `EditSession`]] [[Document
@@ -56,23 +44,23 @@ oop.inherits(Occur, Search);
      * @return {Boolean} Whether occur deactivation was successful
      *
      **/
-    this.exit = function(editor, options) {
+    exit(editor, options) {
         var pos = options.translatePosition && editor.getCursorPosition();
         var translatedPos = pos && this.occurToOriginalPosition(editor.session, pos);
         this.displayOriginalContent(editor);
         if (translatedPos)
             editor.moveCursorToPosition(translatedPos);
         return true;
-    };
+    }
 
-    this.highlight = function(sess, regexp) {
+    highlight(sess, regexp) {
         var hl = sess.$occurHighlight = sess.$occurHighlight || sess.addDynamicMarker(
                 new SearchHighlight(null, "ace_occur-highlight", "text"));
         hl.setRegexp(regexp);
         sess._emit("changeBackMarker"); // force highlight layer redraw
-    };
+    }
 
-    this.displayOccurContent = function(editor, options) {
+    displayOccurContent(editor, options) {
         // this.setSession(session || new EditSession(""))
         this.$originalSession = editor.session;
         var found = this.matchingLines(editor.session, options);
@@ -85,12 +73,12 @@ oop.inherits(Occur, Search);
         occurSession.$useEmacsStyleLineStart = this.$useEmacsStyleLineStart;
         this.highlight(occurSession, options.re);
         occurSession._emit('changeBackMarker');
-    };
+    }
 
-    this.displayOriginalContent = function(editor) {
+    displayOriginalContent(editor) {
         editor.setSession(this.$originalSession);
         this.$originalSession.$useEmacsStyleLineStart = this.$useEmacsStyleLineStart;
-    };
+    }
 
     /**
     * Translates the position from the original document to the occur lines in
@@ -100,7 +88,7 @@ oop.inherits(Occur, Search);
     * @param {Object} pos The position in the original document
     * @return {Object} position in occur doc
     **/
-    this.originalToOccurPosition = function(session, pos) {
+    originalToOccurPosition(session, pos) {
         var lines = session.$occurMatchingLines;
         var nullPos = {row: 0, column: 0};
         if (!lines) return nullPos;
@@ -109,7 +97,7 @@ oop.inherits(Occur, Search);
                 return {row: i, column: pos.column};
         }
         return nullPos;
-    };
+    }
 
     /**
     * Translates the position from the occur document to the original document
@@ -118,14 +106,14 @@ oop.inherits(Occur, Search);
     * @param {Object} pos The position in the occur session document
     * @return {Object} position
     **/
-    this.occurToOriginalPosition = function(session, pos) {
+    occurToOriginalPosition(session, pos) {
         var lines = session.$occurMatchingLines;
         if (!lines || !lines[pos.row])
             return pos;
         return {row: lines[pos.row].row, column: pos.column};
-    };
+    }
 
-    this.matchingLines = function(session, options) {
+    matchingLines(session, options) {
         options = oop.mixin({}, options);
         if (!session || !options.needle) return [];
         var search = new Search();
@@ -137,9 +125,9 @@ oop.inherits(Occur, Search);
                 lines :
                 lines.concat({row: row, content: session.getLine(row)});
         }, []);
-    };
+    }
 
-}).call(Occur.prototype);
+}
 
 var dom = require('./lib/dom');
 dom.importCssString(".ace_occur-highlight {\n\

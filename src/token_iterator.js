@@ -3,36 +3,29 @@
 var Range = require("./range").Range;
 
 /**
- * 
- *
  * This class provides an essay way to treat the document as a stream of tokens, and provides methods to iterate over these tokens.
- * @class TokenIterator
  **/
+class TokenIterator {
+    /**
+     * Creates a new token iterator object. The inital token index is set to the provided row and column coordinates.
+     * @param {EditSession} session The session to associate with
+     * @param {Number} initialRow The row to start the tokenizing at
+     * @param {Number} initialColumn The column to start the tokenizing at
+     **/
+    constructor(session, initialRow, initialColumn) {
+        this.$session = session;
+        this.$row = initialRow;
+        this.$rowTokens = session.getTokens(initialRow);
 
-/**
- * Creates a new token iterator object. The inital token index is set to the provided row and column coordinates.
- * @param {EditSession} session The session to associate with
- * @param {Number} initialRow The row to start the tokenizing at
- * @param {Number} initialColumn The column to start the tokenizing at
- *
- * @constructor
- **/
-var TokenIterator = function(session, initialRow, initialColumn) {
-    this.$session = session;
-    this.$row = initialRow;
-    this.$rowTokens = session.getTokens(initialRow);
-
-    var token = session.getTokenAt(initialRow, initialColumn);
-    this.$tokenIndex = token ? token.index : -1;
-};
-
-(function() {
-   
+        var token = session.getTokenAt(initialRow, initialColumn);
+        this.$tokenIndex = token ? token.index : -1;
+    }
+    
     /**
      * Moves iterator position to the start of previous token.
      * @returns {Token|null}
      **/ 
-    this.stepBackward = function() {
+    stepBackward() {
         this.$tokenIndex -= 1;
         
         while (this.$tokenIndex < 0) {
@@ -47,13 +40,13 @@ var TokenIterator = function(session, initialRow, initialColumn) {
         }
             
         return this.$rowTokens[this.$tokenIndex];
-    };
+    }
 
     /**
      * Moves iterator position to the start of next token.
      * @returns {Token|null}
      **/   
-    this.stepForward = function() {
+    stepForward() {
         this.$tokenIndex += 1;
         var rowCount;
         while (this.$tokenIndex >= this.$rowTokens.length) {
@@ -70,32 +63,32 @@ var TokenIterator = function(session, initialRow, initialColumn) {
         }
             
         return this.$rowTokens[this.$tokenIndex];
-    };
+    }
  
     /**
      * 
      * Returns current token.
      * @returns {Token}
      **/      
-    this.getCurrentToken = function () {
+    getCurrentToken() {
         return this.$rowTokens[this.$tokenIndex];
-    };
+    }
 
     /**
      * 
      * Returns the current row.
      * @returns {Number}
      **/      
-    this.getCurrentTokenRow = function () {
+    getCurrentTokenRow() {
         return this.$row;
-    };
+    }
 
     /**
      * 
      * Returns the current column.
      * @returns {Number}
      **/     
-    this.getCurrentTokenColumn = function() {
+    getCurrentTokenColumn() {
         var rowTokens = this.$rowTokens;
         var tokenIndex = this.$tokenIndex;
         
@@ -111,26 +104,26 @@ var TokenIterator = function(session, initialRow, initialColumn) {
         }
         
         return column;  
-    };
+    }
 
     /**
      * Return the current token position.
      * @returns {Position}
      */
-    this.getCurrentTokenPosition = function() {
+    getCurrentTokenPosition() {
         return {row: this.$row, column: this.getCurrentTokenColumn()};
-    };
+    }
     
     /**
      * Return the current token range.
      * @returns {Range}
      */
-    this.getCurrentTokenRange = function() {
+    getCurrentTokenRange() {
         var token = this.$rowTokens[this.$tokenIndex];
         var column = this.getCurrentTokenColumn();
         return new Range(this.$row, column, this.$row, column + token.value.length);
-    };
+    }
     
-}).call(TokenIterator.prototype);
+}
 
 exports.TokenIterator = TokenIterator;
