@@ -194,6 +194,7 @@ export namespace Ace {
     theme: string;
     hasCssTransforms: boolean;
     maxPixelHeight: number;
+    useSvgGutterIcons: boolean;
   }
 
   export interface MouseHandlerOptions {
