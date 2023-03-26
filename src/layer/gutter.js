@@ -276,9 +276,9 @@ class Gutter{
         
         var session = this.session;
         
-        var annotationNode = element.childNodes[0];
-        var textNode = element.childNodes[1];
-        var foldWidget = element.childNodes[2];
+        var textNode = element.childNodes[0];
+        var foldWidget = element.childNodes[1];
+        var annotationNode = element.childNodes[2];
 
         var firstLineNumber = session.$firstLineNumber;
         
@@ -430,14 +430,14 @@ Gutter.prototype.$showFoldWidgets = true;
 oop.implement(Gutter.prototype, EventEmitter);
 
 function onCreateCell(element) {
-    var annotationNode = dom.createElement("span");
-    element.appendChild(annotationNode);
-
     var textNode = document.createTextNode('');
     element.appendChild(textNode);
     
     var foldWidget = dom.createElement("span");
     element.appendChild(foldWidget);
+
+    var annotationNode = dom.createElement("span");
+    element.appendChild(annotationNode);
     
     return element;
 }
