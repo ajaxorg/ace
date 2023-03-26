@@ -112,6 +112,39 @@ module.exports = {
             assert.ok(/info test/.test(tooltipBody.textContent));
         }, 100); 
     },
+    "test: gutter tooltip svg icons" : function() {
+        var editor = this.editor;
+        var value = "";
+
+        editor.session.setMode(new Mode());
+        editor.setValue(value, -1);
+        editor.session.setAnnotations([{row: 0, column: 0, type: "error", text: "error test"}]);
+        editor.renderer.$gutterLayer.useSvgGutterIcons = true;
+        editor.renderer.$loop._flush();
+
+        var lines = editor.renderer.$gutterLayer.$lines;
+        var line = lines.cells[0].element;
+        assert.ok(/ace_gutter-cell_svg-icons/.test(line.className));
+
+        var annotation = line.children[0];
+        assert.ok(/ace_icon_svg/.test(annotation.className));
+
+        var rect = annotation.getBoundingClientRect();
+        annotation.dispatchEvent(new MouseEvent("move", {clientX: rect.left, clientY: rect.top}));
+
+        // Wait for the tooltip to appear after its timeout.
+        setTimeout(function() {
+            editor.renderer.$loop._flush();
+            var tooltipHeader = editor.container.querySelector(".ace_gutter-tooltip_header");
+            var tooltipBody = editor.container.querySelector(".ace_gutter-tooltip_body");
+            assert.ok(/1 error message/.test(tooltipHeader.textContent));
+            assert.ok(/error test/.test(tooltipBody.textContent));
+
+            var icon = tooltipBody.querySelector(".ace_error");
+            assert.ok(/ace_icon_svg/.test(icon.className));
+        }, 100); 
+    },
+    
     
     tearDown : function() {
         this.editor.destroy();
