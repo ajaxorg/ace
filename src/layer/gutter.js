@@ -298,7 +298,7 @@ class Gutter{
                 annotationNode.className = "ace_icon_svg" + this.$annotations[row].className;
 
                 dom.setStyle(annotationNode.style, "height", lineHeight);
-                dom.setStyle(annotationNode.style, "display", "inline-block");
+                dom.setStyle(annotationNode.style, "display", "block");
             }
             else {
                 dom.setStyle(annotationNode.style, "display", "none");
