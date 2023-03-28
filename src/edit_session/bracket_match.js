@@ -126,6 +126,7 @@ function BracketMatch() {
                 "(\\.?" +
                 token.type.replace(".", "\\.").replace("rparen", ".paren")
                     .replace(/\b(?:end)\b/, "(?:start|begin|end)")
+                    .replace(/-close\b/, "-(close|open)")
                 + ")+"
             );
         }
@@ -183,6 +184,7 @@ function BracketMatch() {
                 "(\\.?" +
                 token.type.replace(".", "\\.").replace("lparen", ".paren")
                     .replace(/\b(?:start|begin)\b/, "(?:start|begin|end)")
+                    .replace(/-open\b/, "-(close|open)")
                 + ")+"
             );
         }
