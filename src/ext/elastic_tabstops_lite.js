@@ -1,30 +1,30 @@
 "use strict";
 
-var ElasticTabstopsLite = function(editor) {
-    this.$editor = editor;
-    var self = this;
-    var changedRows = [];
-    var recordChanges = false;
-    this.onAfterExec = function() {
-        recordChanges = false;
-        self.processRows(changedRows);
-        changedRows = [];
-    };
-    this.onExec = function() {
-        recordChanges = true;
-    };
-    this.onChange = function(delta) {
-        if (recordChanges) {
-            if (changedRows.indexOf(delta.start.row) == -1)
-                changedRows.push(delta.start.row);
-            if (delta.end.row != delta.start.row)
-                changedRows.push(delta.end.row);
-        }
-    };
-};
-
-(function() {
-    this.processRows = function(rows) {
+class ElasticTabstopsLite {
+    constructor(editor) {
+        this.$editor = editor;
+        var self = this;
+        var changedRows = [];
+        var recordChanges = false;
+        this.onAfterExec = function() {
+            recordChanges = false;
+            self.processRows(changedRows);
+            changedRows = [];
+        };
+        this.onExec = function() {
+            recordChanges = true;
+        };
+        this.onChange = function(delta) {
+            if (recordChanges) {
+                if (changedRows.indexOf(delta.start.row) == -1)
+                    changedRows.push(delta.start.row);
+                if (delta.end.row != delta.start.row)
+                    changedRows.push(delta.end.row);
+            }
+        };
+    }
+    
+    processRows(rows) {
         this.$inChange = true;
         var checkedRows = [];
 
@@ -46,9 +46,9 @@ var ElasticTabstopsLite = function(editor) {
             }
         }
         this.$inChange = false;
-    };
+    }
 
-    this.$findCellWidthsForBlock = function(row) {
+    $findCellWidthsForBlock(row) {
         var cellWidths = [], widths;
 
         // starting row and backward
@@ -78,9 +78,9 @@ var ElasticTabstopsLite = function(editor) {
         }
 
         return { cellWidths: cellWidths, firstRow: firstRow };
-    };
+    }
 
-    this.$cellWidthsForRow = function(row) {
+    $cellWidthsForRow(row) {
         var selectionColumns = this.$selectionColumnsForRow(row);
         // todo: support multicursor
 
@@ -98,9 +98,9 @@ var ElasticTabstopsLite = function(editor) {
         }
 
         return widths;
-    };
+    }
 
-    this.$selectionColumnsForRow = function(row) {
+    $selectionColumnsForRow(row) {
         var selections = [], cursor = this.$editor.getCursorPosition();
         if (this.$editor.session.getSelection().isEmpty()) {
             // todo: support multicursor
@@ -109,9 +109,9 @@ var ElasticTabstopsLite = function(editor) {
         }
 
         return selections;
-    };
+    }
 
-    this.$setBlockCellWidthsToMax = function(cellWidths) {
+    $setBlockCellWidthsToMax(cellWidths) {
         var startingNewBlock = true, blockStartRow, blockEndRow, maxWidth;
         var columnInfo = this.$izip_longest(cellWidths);
 
@@ -147,9 +147,9 @@ var ElasticTabstopsLite = function(editor) {
         }
 
         return cellWidths;
-    };
+    }
 
-    this.$rightmostSelectionInCell = function(selectionColumns, cellRightEdge) {
+    $rightmostSelectionInCell(selectionColumns, cellRightEdge) {
         var rightmost = 0;
 
         if (selectionColumns.length) {
@@ -164,9 +164,9 @@ var ElasticTabstopsLite = function(editor) {
         }
 
         return rightmost;
-    };
+    }
 
-    this.$tabsForRow = function(row) {
+    $tabsForRow(row) {
         var rowTabs = [], line = this.$editor.session.getLine(row),
             re = /\t/g, match;
 
@@ -175,9 +175,9 @@ var ElasticTabstopsLite = function(editor) {
         }
 
         return rowTabs;
-    };
+    }
 
-    this.$adjustRow = function(row, widths) {
+    $adjustRow(row, widths) {
         var rowTabs = this.$tabsForRow(row);
 
         if (rowTabs.length == 0)
@@ -215,10 +215,10 @@ var ElasticTabstopsLite = function(editor) {
                 bias += difference;
             }
         }
-    };
+    }
 
     // the is a (naive) Python port--but works for these purposes
-    this.$izip_longest = function(iterables) {
+    $izip_longest(iterables) {
         if (!iterables[0])
             return [];
         var longest = iterables[0].length;
@@ -246,10 +246,10 @@ var ElasticTabstopsLite = function(editor) {
 
 
         return expandedSet;
-    };
+    }
 
     // an even more (naive) Python port
-    this.$izip = function(widths, tabs) {
+    $izip(widths, tabs) {
         // grab the shorter size
         var size = widths.length >= tabs.length ? tabs.length : widths.length;
 
@@ -259,9 +259,9 @@ var ElasticTabstopsLite = function(editor) {
             expandedSet.push(set);
         }
         return expandedSet;
-    };
+    }
 
-}).call(ElasticTabstopsLite.prototype);
+}
 
 exports.ElasticTabstopsLite = ElasticTabstopsLite;
 

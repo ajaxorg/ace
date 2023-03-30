@@ -312,6 +312,8 @@ doclist.pickDocument = function(name) {
 var OptionPanel = require("ace/ext/options").OptionPanel;
 var optionsPanel = new OptionPanel(env.editor);
 
+var originalAutocompleteCommand = null;
+
 optionsPanel.add({
     Main: {
         Document: {
@@ -368,6 +370,29 @@ optionsPanel.add({
             path: "showTokenInfo",
             position: 2000
         },
+        "Inline preview for autocomplete": {
+            path: "inlineEnabledForAutocomplete",
+            position: 2000,
+            onchange: function(value) {
+                var Autocomplete = require("ace/autocomplete").Autocomplete;
+                if (value && !originalAutocompleteCommand) {
+                    originalAutocompleteCommand = Autocomplete.startCommand.exec;
+                    Autocomplete.startCommand.exec = function(editor) {
+                        var autocomplete = Autocomplete.for(editor);
+                        autocomplete.inlineEnabled = true;
+                        originalAutocompleteCommand(...arguments);
+                    }
+                } else if (!value) {
+                    var autocomplete = Autocomplete.for(editor);
+                    autocomplete.destroy();
+                    Autocomplete.startCommand.exec = originalAutocompleteCommand;
+                    originalAutocompleteCommand = null;
+                }
+            },
+            getValue: function() {
+                return !!originalAutocompleteCommand;
+            }
+        },
         "Show Textarea Position": devUtil.textPositionDebugger,
         "Text Input Debugger": devUtil.textInputDebugger,
     }
@@ -376,6 +401,7 @@ optionsPanel.add({
 var optionsPanelContainer = document.getElementById("optionsPanel");
 optionsPanel.render();
 optionsPanelContainer.insertBefore(optionsPanel.container, optionsPanelContainer.firstChild);
+optionsPanel.container.style.width = "80%";
 optionsPanel.on("setOption", function(e) {
     util.saveOption(e.name, e.value);
 });
@@ -451,7 +477,7 @@ env.editSnippets = function() {
 };
 
 optionsPanelContainer.insertBefore(
-    dom.buildDom(["div", {style: "text-align:right;margin-right: 60px"},
+    dom.buildDom(["div", {style: "text-align:right;width: 80%"},
         ["div", {}, 
             ["button", {onclick: env.editSnippets}, "Edit Snippets"]],
         ["div", {}, 
@@ -462,14 +488,83 @@ optionsPanelContainer.insertBefore(
                 env.editor.setValue(info, -1);
                 env.editor.setOption("wrap", 80);
             }}, "Show Browser Info"]],
-        devUtil.getUI()
+        devUtil.getUI(),
+        ["div", {},
+            "Open Dialog ",
+            ["button",  {onclick: openTestDialog.bind(null, false)}, "Scale"],
+            ["button",  {onclick: openTestDialog.bind(null, true)}, "Height"]
+        ]
     ]),
     optionsPanelContainer.children[1]
 );
 
+function openTestDialog(animateHeight) {
+    if (window.dialogEditor) 
+        window.dialogEditor.destroy();
+    var editor = ace.edit(null, {
+        value: "test editor", 
+        mode: "ace/mode/javascript"
+    });
+    window.dialogEditor = editor;
+
+    var dialog = dom.buildDom(["div", {
+        style: "transition: all 1s; position: fixed; z-index: 100000;"
+          + "background: darkblue; border: solid 1px black; display: flex; flex-direction: column"
+        }, 
+        ["div", {}, "test dialog"],
+        editor.container
+    ], document.body);
+    editor.container.style.flex = "1";
+    if (animateHeight) {
+        dialog.style.width = "0vw";
+        dialog.style.height = "0vh";
+        dialog.style.left = "20vw";
+        dialog.style.top = "20vh";
+        setTimeout(function() {            
+            dialog.style.width = "80vw";
+            dialog.style.height = "80vh";
+            dialog.style.left = "10vw";
+            dialog.style.top = "10vh";
+        }, 0);
+        
+    } else {
+        dialog.style.width = "80vw";
+        dialog.style.height = "80vh";
+        dialog.style.left = "10vw";
+        dialog.style.top = "10vh";
+        dialog.style.transform = "scale(0)";
+        setTimeout(function() {
+            dialog.style.transform = "scale(1)"
+        }, 0);
+    }
+    function close(e) {
+        if (!e || !dialog.contains(e.target)) {
+            if (animateHeight) {
+                dialog.style.width = "0vw";
+                dialog.style.height = "0vh";
+                dialog.style.left = "80vw";
+                dialog.style.top = "80vh";
+            } else {
+                dialog.style.transform = "scale(0)"
+            }
+            window.removeEventListener("mousedown", close);
+            dialog.addEventListener("transitionend", function() {
+                dialog.remove();
+                editor.destroy();
+            });
+        }
+    }
+    window.addEventListener("mousedown", close);
+    editor.focus()
+    editor.commands.bindKey("Esc", function() { close(); });
+}
+
+
 require("ace/ext/language_tools");
+require("ace/ext/inline_autocomplete");
 env.editor.setOptions({
     enableBasicAutocompletion: true,
+    enableInlineAutocompletion: true,
     enableSnippets: true
 });
 

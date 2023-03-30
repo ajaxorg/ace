@@ -198,26 +198,22 @@ var optionGroups = {
     }
 };
 
-
-var OptionPanel = function(editor, element) {
-    this.editor = editor;
-    this.container = element || document.createElement("div");
-    this.groups = [];
-    this.options = {};
-};
-
-(function() {
+class OptionPanel {
+    constructor(editor, element) {
+        this.editor = editor;
+        this.container = element || document.createElement("div");
+        this.groups = [];
+        this.options = {};
+    }
     
-    oop.implement(this, EventEmitter);
-    
-    this.add = function(config) {
+    add(config) {
         if (config.Main)
             oop.mixin(optionGroups.Main, config.Main);
         if (config.More)
             oop.mixin(optionGroups.More, config.More);
-    };
+    }
     
-    this.render = function() {
+    render() {
         this.container.innerHTML = "";
         buildDom(["table", {role: "presentation", id: "controls"}, 
             this.renderOptionGroup(optionGroups.Main),
@@ -228,9 +224,9 @@ var OptionPanel = function(editor, element) {
             ]],
             ["tr", null, ["td", {colspan: 2}, "version " + config.version]]
         ], this.container);
-    };
+    }
     
-    this.renderOptionGroup = function(group) {
+    renderOptionGroup(group) {
         return Object.keys(group).map(function(key, i) {
             var item = group[key];
             if (!item.position)
@@ -243,9 +239,9 @@ var OptionPanel = function(editor, element) {
         }).map(function(item) {
             return this.renderOption(item.label, item);
         }, this);
-    };
+    }
     
-    this.renderOptionControl = function(key, option) {
+    renderOptionControl(key, option) {
         var self = this;
         if (Array.isArray(option)) {
             return option.map(function(x) {
@@ -329,9 +325,9 @@ var OptionPanel = function(editor, element) {
             }
         }
         return control;
-    };
+    }
     
-    this.renderOption = function(key, option) {
+    renderOption(key, option) {
         if (option.path && !option.onchange && !this.editor.$options[option.path])
             return;
         var path = Array.isArray(option) ? option[0].path : option.path;
@@ -342,9 +338,9 @@ var OptionPanel = function(editor, element) {
         return ["tr", {class: "ace_optionsMenuEntry"}, ["td",
             ["label", {for: safeKey, id: safeId}, key]
         ], ["td", control]];
-    };
+    }
     
-    this.setOption = function(option, value) {
+    setOption(option, value) {
         if (typeof option == "string")
             option = this.options[option];
         if (value == "false") value = false;
@@ -358,14 +354,14 @@ var OptionPanel = function(editor, element) {
         else if (option.path)
             this.editor.setOption(option.path, value);
         this._signal("setOption", {name: option.path, value: value});
-    };
+    }
     
-    this.getOption = function(option) {
+    getOption(option) {
         if (option.getValue)
             return option.getValue();
         return this.editor.getOption(option.path);
-    };
-    
-}).call(OptionPanel.prototype);
+    }
+}
+oop.implement(OptionPanel.prototype, EventEmitter);
 
 exports.OptionPanel = OptionPanel;

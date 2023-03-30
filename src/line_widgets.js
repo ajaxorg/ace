@@ -2,24 +2,26 @@
 
 var dom = require("./lib/dom");
 
-function LineWidgets(session) {
-    this.session = session;
-    this.session.widgetManager = this;
-    this.session.getRowLength = this.getRowLength;
-    this.session.$getWidgetScreenLength = this.$getWidgetScreenLength;
-    this.updateOnChange = this.updateOnChange.bind(this);
-    this.renderWidgets = this.renderWidgets.bind(this);
-    this.measureWidgets = this.measureWidgets.bind(this);
-    this.session._changedWidgets = [];
-    this.$onChangeEditor = this.$onChangeEditor.bind(this);
-    
-    this.session.on("change", this.updateOnChange);
-    this.session.on("changeFold", this.updateOnFold);
-    this.session.on("changeEditor", this.$onChangeEditor);
-}
 
-(function() {
-    this.getRowLength = function(row) {
+
+class LineWidgets {
+    constructor(session) {
+        this.session = session;
+        this.session.widgetManager = this;
+        this.session.getRowLength = this.getRowLength;
+        this.session.$getWidgetScreenLength = this.$getWidgetScreenLength;
+        this.updateOnChange = this.updateOnChange.bind(this);
+        this.renderWidgets = this.renderWidgets.bind(this);
+        this.measureWidgets = this.measureWidgets.bind(this);
+        this.session._changedWidgets = [];
+        this.$onChangeEditor = this.$onChangeEditor.bind(this);
+
+        this.session.on("change", this.updateOnChange);
+        this.session.on("changeFold", this.updateOnFold);
+        this.session.on("changeEditor", this.$onChangeEditor);
+    }
+    
+    getRowLength(row) {
         var h;
         if (this.lineWidgets)
             h = this.lineWidgets[row] && this.lineWidgets[row].rowCount || 0;
@@ -30,22 +32,22 @@ function LineWidgets(session) {
         } else {
             return this.$wrapData[row].length + 1 + h;
         }
-    };
+    }
 
-    this.$getWidgetScreenLength = function() {
+    $getWidgetScreenLength() {
         var screenRows = 0;
         this.lineWidgets.forEach(function(w){
             if (w && w.rowCount && !w.hidden)
                 screenRows += w.rowCount;
         });
         return screenRows;
-    };    
+    }    
     
-    this.$onChangeEditor = function(e) {
+    $onChangeEditor(e) {
         this.attach(e.editor);
-    };
+    }
     
-    this.attach = function(editor) {
+    attach(editor) {
         if (editor  && editor.widgetManager && editor.widgetManager != this)
             editor.widgetManager.detach();
 
@@ -60,8 +62,8 @@ function LineWidgets(session) {
             editor.renderer.on("beforeRender", this.measureWidgets);
             editor.renderer.on("afterRender", this.renderWidgets);
         }
-    };
-    this.detach = function(e) {
+    }
+    detach(e) {
         var editor = this.editor;
         if (!editor)
             return;
@@ -78,9 +80,9 @@ function LineWidgets(session) {
                 w.el.parentNode.removeChild(w.el);
             }
         });
-    };
+    }
 
-    this.updateOnFold = function(e, session) {
+    updateOnFold(e, session) {
         var lineWidgets = session.lineWidgets;
         if (!lineWidgets || !e.action)
             return;
@@ -104,9 +106,9 @@ function LineWidgets(session) {
                 lineWidgets[end].hidden = hide;
             }
         }
-    };
+    }
     
-    this.updateOnChange = function(delta) {
+    updateOnChange(delta) {
         var lineWidgets = this.session.lineWidgets;
         if (!lineWidgets) return;
         
@@ -134,9 +136,9 @@ function LineWidgets(session) {
             lineWidgets.splice.apply(lineWidgets, args);
             this.$updateRows();
         }
-    };
+    }
     
-    this.$updateRows = function() {
+    $updateRows() {
         var lineWidgets = this.session.lineWidgets;
         if (!lineWidgets) return;
         var noWidgets = true;
@@ -152,9 +154,9 @@ function LineWidgets(session) {
         });
         if (noWidgets)
             this.session.lineWidgets = null;
-    };
+    }
 
-    this.$registerLineWidget = function(w) {
+    $registerLineWidget(w) {
         if (!this.session.lineWidgets)
             this.session.lineWidgets = new Array(this.session.getLength());
         
@@ -169,9 +171,9 @@ function LineWidgets(session) {
             
         this.session.lineWidgets[w.row] = w;
         return w;
-    };
+    }
     
-    this.addLineWidget = function(w) {
+    addLineWidget(w) {
         this.$registerLineWidget(w);
         w.session = this.session;
         
@@ -223,9 +225,9 @@ function LineWidgets(session) {
         this.renderWidgets(null, renderer);
         this.onWidgetChanged(w);
         return w;
-    };
+    }
     
-    this.removeLineWidget = function(w) {
+    removeLineWidget(w) {
         w._inDocument = false;
         w.session = null;
         if (w.el && w.el.parentNode)
@@ -251,9 +253,9 @@ function LineWidgets(session) {
         }
         this.session._emit("changeFold", {data:{start:{row: w.row}}});
         this.$updateRows();
-    };
+    }
     
-    this.getWidgetsAtRow = function(row) {
+    getWidgetsAtRow(row) {
         var lineWidgets = this.session.lineWidgets;
         var w = lineWidgets && lineWidgets[row];
         var list = [];
@@ -262,14 +264,14 @@ function LineWidgets(session) {
             w = w.$oldWidget;
         }
         return list;
-    };
+    }
     
-    this.onWidgetChanged = function(w) {
+    onWidgetChanged(w) {
         this.session._changedWidgets.push(w);
         this.editor && this.editor.renderer.updateFull();
-    };
+    }
     
-    this.measureWidgets = function(e, renderer) {
+    measureWidgets(e, renderer) {
         var changedWidgets = this.session._changedWidgets;
         var config = renderer.layerConfig;
         
@@ -310,9 +312,9 @@ function LineWidgets(session) {
             this.session.lineWidgetWidth = null;
         }
         this.session._changedWidgets = [];
-    };
+    }
     
-    this.renderWidgets = function(e, renderer) {
+    renderWidgets(e, renderer) {
         var config = renderer.layerConfig;
         var lineWidgets = this.session.lineWidgets;
         if (!lineWidgets)
@@ -358,9 +360,9 @@ function LineWidgets(session) {
                 w.el.style.right = "";
             }
         }
-    };
+    }
     
-}).call(LineWidgets.prototype);
+}
 
 
 exports.LineWidgets = LineWidgets;

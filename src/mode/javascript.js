@@ -10,7 +10,7 @@ var CStyleFoldMode = require("./folding/cstyle").FoldMode;
 
 var Mode = function() {
     this.HighlightRules = JavaScriptHighlightRules;
-    
+
     this.$outdent = new MatchingBraceOutdent();
     this.$behaviour = new CstyleBehaviour();
     this.foldingRules = new CStyleFoldMode();
@@ -22,6 +22,9 @@ oop.inherits(Mode, TextMode);
     this.lineCommentStart = "//";
     this.blockComment = {start: "/*", end: "*/"};
     this.$quotes = {'"': '"', "'": "'", "`": "`"};
+    this.$pairQuotesAfter = {
+        "`": /\w/
+    };
 
     this.getNextLineIndent = function(state, line, tab) {
         var indent = this.$getIndent(line);

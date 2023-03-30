@@ -6,46 +6,43 @@ var lang = require("../lib/lang");
 var EventEmitter = require("../lib/event_emitter").EventEmitter;
 var Lines = require("./lines").Lines;
 
-var Gutter = function(parentEl) {
-    this.element = dom.createElement("div");
-    this.element.className = "ace_layer ace_gutter-layer";
-    parentEl.appendChild(this.element);
-    this.setShowFoldWidgets(this.$showFoldWidgets);
-    
-    this.gutterWidth = 0;
+class Gutter{
+    constructor(parentEl) {
+        this.element = dom.createElement("div");
+        this.element.className = "ace_layer ace_gutter-layer";
+        parentEl.appendChild(this.element);
+        this.setShowFoldWidgets(this.$showFoldWidgets);
 
-    this.$annotations = [];
-    this.$updateAnnotations = this.$updateAnnotations.bind(this);
-    
-    this.$lines = new Lines(this.element);
-    this.$lines.$offsetCoefficient = 1;
-};
+        this.gutterWidth = 0;
 
-(function() {
+        this.$annotations = [];
+        this.$updateAnnotations = this.$updateAnnotations.bind(this);
 
-    oop.implement(this, EventEmitter);
+        this.$lines = new Lines(this.element);
+        this.$lines.$offsetCoefficient = 1;
+    }
 
-    this.setSession = function(session) {
+    setSession(session) {
         if (this.session)
             this.session.off("change", this.$updateAnnotations);
         this.session = session;
         if (session)
             session.on("change", this.$updateAnnotations);
-    };
+    }
 
-    this.addGutterDecoration = function(row, className) {
+    addGutterDecoration(row, className) {
         if (window.console)
             console.warn && console.warn("deprecated use session.addGutterDecoration");
         this.session.addGutterDecoration(row, className);
-    };
+    }
 
-    this.removeGutterDecoration = function(row, className) {
+    removeGutterDecoration(row, className) {
         if (window.console)
             console.warn && console.warn("deprecated use session.removeGutterDecoration");
         this.session.removeGutterDecoration(row, className);
-    };
+    }
 
-    this.setAnnotations = function(annotations) {
+    setAnnotations(annotations) {
         // iterate over sparse array
         this.$annotations = [];
         for (var i = 0; i < annotations.length; i++) {
@@ -53,28 +50,30 @@ var Gutter = function(parentEl) {
             var row = annotation.row;
             var rowInfo = this.$annotations[row];
             if (!rowInfo)
-                rowInfo = this.$annotations[row] = {text: []};
+                rowInfo = this.$annotations[row] = {text: [], type: []};
            
             var annoText = annotation.text;
+            var annoType = annotation.type;
             annoText = annoText ? lang.escapeHTML(annoText) : annotation.html || "";
 
-            if (rowInfo.text.indexOf(annoText) === -1)
+            if (rowInfo.text.indexOf(annoText) === -1){
                 rowInfo.text.push(annoText);
+                rowInfo.type.push(annoType);
+            }
 
-            var type = annotation.type;
             var className = annotation.className;
             if (className) 
                 rowInfo.className = className;
-            else if (type == "error")
+            else if (annoType == "error")
                 rowInfo.className = " ace_error";
-            else if (type == "warning" && rowInfo.className != " ace_error")
+            else if (annoType == "warning" && rowInfo.className != " ace_error")
                 rowInfo.className = " ace_warning";
-            else if (type == "info" && (!rowInfo.className))
+            else if (annoType == "info" && (!rowInfo.className))
                 rowInfo.className = " ace_info";
         }
-    };
+    }
 
-    this.$updateAnnotations = function (delta) {
+    $updateAnnotations(delta) {
         if (!this.$annotations.length)
             return;
         var firstRow = delta.start.row;
@@ -88,9 +87,9 @@ var Gutter = function(parentEl) {
             args.unshift(firstRow, 1);
             this.$annotations.splice.apply(this.$annotations, args);
         }
-    };
+    }
 
-    this.update = function(config) {
+    update(config) {
         this.config = config;
         
         var session = this.session;
@@ -138,9 +137,9 @@ var Gutter = function(parentEl) {
         
         this._signal("afterRender");
         this.$updateGutterWidth(config);
-    };
+    }
 
-    this.$updateGutterWidth = function(config) {
+    $updateGutterWidth(config) {
         var session = this.session;
         
         var gutterRenderer = session.gutterRenderer || this.$renderer;
@@ -163,9 +162,9 @@ var Gutter = function(parentEl) {
             this.element.style.width = Math.ceil(this.gutterWidth) + "px";
             this._signal("changeGutterWidth", gutterWidth);
         }
-    };
+    }
     
-    this.$updateCursorRow = function() {
+    $updateCursorRow() {
         if (!this.$highlightGutterLine)
             return;
             
@@ -174,9 +173,9 @@ var Gutter = function(parentEl) {
             return;
         
         this.$cursorRow = position.row;
-    };
+    }
     
-    this.updateLineHighlight = function() {
+    updateLineHighlight() {
         if (!this.$highlightGutterLine)
             return;
         var row = this.session.selection.cursor.row;
@@ -203,9 +202,9 @@ var Gutter = function(parentEl) {
                 break;
             }
         }
-    };
+    }
     
-    this.scrollLines = function(config) {
+    scrollLines(config) {
         var oldConfig = this.config;
         this.config = config;
         
@@ -246,9 +245,9 @@ var Gutter = function(parentEl) {
         
         this._signal("afterRender");
         this.$updateGutterWidth(config);
-    };
+    }
 
-    this.$renderLines = function(config, firstRow, lastRow) {
+    $renderLines(config, firstRow, lastRow) {
         var fragment = [];
         var row = firstRow;
         var foldLine = this.session.getNextFoldLine(row);
@@ -270,9 +269,9 @@ var Gutter = function(parentEl) {
             row++;
         }
         return fragment;
-    };
+    }
     
-    this.$renderCell = function(cell, config, fold, row) {
+    $renderCell(cell, config, fold, row) {
         var element = cell.element;
         
         var session = this.session;
@@ -347,31 +346,25 @@ var Gutter = function(parentEl) {
         
         cell.text = text;
         return cell;
-    };
-
-    this.$fixedWidth = false;
+    }
     
-    this.$highlightGutterLine = true;
-    this.$renderer = "";
-    this.setHighlightGutterLine = function(highlightGutterLine) {
+    setHighlightGutterLine(highlightGutterLine) {
         this.$highlightGutterLine = highlightGutterLine;
-    };
+    }
     
-    this.$showLineNumbers = true;
-    this.$renderer = "";
-    this.setShowLineNumbers = function(show) {
+
+    setShowLineNumbers(show) {
         this.$renderer = !show && {
             getWidth: function() {return 0;},
             getText: function() {return "";}
         };
-    };
+    }
     
-    this.getShowLineNumbers = function() {
+    getShowLineNumbers() {
         return this.$showLineNumbers;
-    };
+    }
     
-    this.$showFoldWidgets = true;
-    this.setShowFoldWidgets = function(show) {
+    setShowFoldWidgets(show) {
         if (show)
             dom.addCssClass(this.element, "ace_folding-enabled");
         else
@@ -379,13 +372,13 @@ var Gutter = function(parentEl) {
 
         this.$showFoldWidgets = show;
         this.$padding = null;
-    };
+    }
     
-    this.getShowFoldWidgets = function() {
+    getShowFoldWidgets() {
         return this.$showFoldWidgets;
-    };
+    }
 
-    this.$computePadding = function() {
+    $computePadding() {
         if (!this.element.firstChild)
             return {left: 0, right: 0};
         var style = dom.computedStyle(this.element.firstChild);
@@ -395,18 +388,26 @@ var Gutter = function(parentEl) {
         this.$padding.right = (parseInt(style.borderRightWidth) || 0)
             + (parseInt(style.paddingRight) || 0);
         return this.$padding;
-    };
+    }
 
-    this.getRegion = function(point) {
+    getRegion(point) {
         var padding = this.$padding || this.$computePadding();
         var rect = this.element.getBoundingClientRect();
         if (point.x < padding.left + rect.left)
             return "markers";
         if (this.$showFoldWidgets && point.x > rect.right - padding.right)
             return "foldWidgets";
-    };
+    }
 
-}).call(Gutter.prototype);
+}
+
+Gutter.prototype.$fixedWidth = false;
+Gutter.prototype.$highlightGutterLine = true;
+Gutter.prototype.$renderer = "";
+Gutter.prototype.$showLineNumbers = true;
+Gutter.prototype.$showFoldWidgets = true;
+
+oop.implement(Gutter.prototype, EventEmitter);
 
 function onCreateCell(element) {
     var textNode = document.createTextNode('');

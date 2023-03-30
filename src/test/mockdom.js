@@ -375,7 +375,7 @@ function Node(name) {
             else
                 width = rect.width - right - left;
             
-            if (this.style.width)
+            if (this.style.height)
                 height = parseCssLength(this.style.height || "100%", rect.height);
             else
                 height = rect.height - top - bottom;
@@ -443,7 +443,7 @@ function Node(name) {
         if (!e.timeStamp) e.timeStamp = Date.now();
         e.currentTarget = this;
         var events = this._events && this._events[e.type];
-        events && events.forEach(function(listener) {
+        events && events.slice().forEach(function(listener) {
             listener.call(this, e);
         }, this);
         if (this["on" + e.type])

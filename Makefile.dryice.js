@@ -194,17 +194,22 @@ function buildTypes() {
     fs.writeFileSync(BUILD_DIR + '/ace.d.ts', moduleRef + '\n' + definitions);
     fs.writeFileSync(BUILD_DIR + '/ace-modules.d.ts', pathModules);
     
+    var esmUrls = [];
     var loader = paths.map(function(path) {
         if (/\.js$/.test(path) && !/^ace\.js$/.test(path)) {
             var moduleName = path.split('.')[0].replace(/-/, "/");
             if (/^worker/.test(moduleName))
                 moduleName = "mode" + moduleName.slice(6) + "_worker";
             moduleName = moduleName.replace(/keybinding/, "keyboard");
-            return "ace.config.setModuleUrl('ace/" + moduleName + "', require('file-loader?esModule=false!./src-noconflict/" + path + "'))";
+            
+            esmUrls.push("ace.config.setModuleLoader('ace/" + moduleName + "', () => import('./src-noconflict/" + path + "'));");
+            return "ace.config.setModuleUrl('ace/" + moduleName + "', require('file-loader?esModule=false!./src-noconflict/" + path + "'));";
         }
     }).join('\n');
+    var esmLoader = esmUrls.join('\n');
     
     fs.writeFileSync(BUILD_DIR + '/webpack-resolver.js', loader, "utf8");
+    fs.writeFileSync(BUILD_DIR + '/esm-resolver.js', esmLoader, "utf8");
 }
 
 function demo() {
@@ -865,7 +870,11 @@ function sanityCheck(opts, callback) {
     });
 }
 
-if (!module.parent)
-    main(process.argv);
-else
+if (!module.parent) 
+    main(process.argv); 
+else {
     exports.buildAce = buildAce;
+    exports.jsFileList = jsFileList;
+    exports.modeList = modeList;
+}
+    

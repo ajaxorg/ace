@@ -1,103 +1,274 @@
 "use strict";
 
 var oop = require("../lib/oop");
+
 var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;
+var CssHighlightRules = require("./css_highlight_rules").CssHighlightRules;
 var HtmlHighlightRules = require("./html_highlight_rules").HtmlHighlightRules;
+var JsonHighlightRules = require("./json_highlight_rules").JsonHighlightRules;
+var JavaScriptHighlightRules =  require("./javascript_highlight_rules").JavaScriptHighlightRules;
 
-var LiquidHighlightRules = function() {
-    HtmlHighlightRules.call(this);
+var LiquidHighlightRules = function () {
 
-    // see: https://developer.mozilla.org/en/Liquid/Reference/Global_Objects
-    var functions = (
-      // Standard Filters
-        "date|capitalize|downcase|upcase|first|last|join|sort|map|size|escape|" +
-         "escape_once|strip_html|strip_newlines|newline_to_br|replace|replace_first|" +
-         "truncate|truncatewords|prepend|append|minus|plus|times|divided_by|split"
+  HtmlHighlightRules.call(this);
+
+  /**
+   * Embedded Matches
+   *
+   * Handles `onMatch` tokens and correct parses the
+   * inner contents of the tag.
+   */
+  function onMatchEmbedded(name) {
+
+    const length = name.length;
+
+    return function (value) {
+
+      const idx = value.indexOf(name);
+
+      const x = [
+        {
+          type: "meta.tag.punctuation.tag-open",
+          value: "{%"
+        },
+        {
+          type: "text",
+          value: value.slice(2, idx)
+        },
+        {
+          type: "keyword.tag" + name + ".tag-name",
+          value: value.slice(idx, idx + length)
+        },
+        {
+          type: "text",
+          value: value.slice(idx + length, value.indexOf("%}"))
+        },
+        {
+          type: "meta.tag.punctuation.tag-close",
+          value: "%}"
+        }
+      ];
+
+      return x;
+    };
+  }
+
+
+  for (var rule in this.$rules) {
+
+    this.$rules[rule].unshift(
+      {
+        token: "comment.block",
+        regex: /{%-?\s*comment\s*-?%}/,
+        next: [
+          {
+            token: "comment.block",
+            regex: /{%-?\s*endcomment\s*-?%}/,
+            next: "pop"
+          },
+          {
+            defaultToken: "comment",
+            caseInsensitive: false
+          }
+        ]
+      },
+      {
+        token: "comment.line",
+        regex: /{%-?\s*#/,
+        next: [
+          {
+            token: "comment.line",
+            regex: /-?%}/,
+            next: "pop"
+          },
+          {
+            defaultToken: "comment",
+            caseInsensitive: false
+          }
+        ]
+      },
+      {
+        token: 'style.embedded.start',
+        regex: /({%-?\s*\bstyle\b\s*-?%})/,
+        next: "style-start",
+        onMatch: onMatchEmbedded("style")
+      },
+      {
+        regex: /({%-?\s*\bstylesheet\b\s*-?%})/,
+        next: "stylesheet-start",
+        onMatch: onMatchEmbedded("stylesheet")
+      },
+      {
+        regex: /({%-?\s*\bschema\b\s*-?%})/,
+        next: "schema-start",
+        onMatch: onMatchEmbedded("schema")
+      },
+      {
+        regex: /({%-?\s*\bjavascript\b\s*-?%})/,
+        next: "javascript-start",
+        onMatch: onMatchEmbedded("javascript")
+      },
+      {
+        token: "meta.tag.punctuation.tag-open",
+        regex: /({%)/,
+        next: [
+          {
+              token: "keyword.block",
+              regex: /-?\s*[a-zA-Z_$][a-zA-Z0-9_$]+\b/,
+              next: 'liquid-start'
+          },
+          {
+            token: "meta.tag.punctuation.tag-close",
+            regex: /(-?)(%})/,
+            next: "pop"
+          }
+        ]
+      },
+      {
+        token: "meta.tag.punctuation.ouput-open",
+        regex: /({{)/,
+        push: "liquid-start"
+      }
     );
+  }
 
-    var keywords = (
-      // Standard Tags
-        "capture|endcapture|case|endcase|when|comment|endcomment|" +
-        "cycle|for|endfor|in|reversed|if|endif|else|elsif|include|endinclude|unless|endunless|" +
-      // Commonly used tags
-        "style|text|image|widget|plugin|marker|endmarker|tablerow|endtablerow"
-    );
-    
-    // common standard block tags that require to be closed with an end[block] token
-    var blocks = 'for|if|case|capture|unless|tablerow|marker|comment';
+  /* -------------------------------------------- */
+  /* EMBEDDED REGIONS                             */
+  /* -------------------------------------------- */
 
-    var builtinVariables = 'forloop|tablerowloop';
-        // "forloop\\.(length|index|index0|rindex|rindex0|first|last)|limit|offset|range" +
-        // "tablerowloop\\.(length|index|index0|rindex|rindex0|first|last|col|col0|"+
-        // "col_first|col_last)"
-
-    var definitions = ("assign");
-
-    var keywordMapper = this.createKeywordMapper({
-        "variable.language": builtinVariables,
-        "keyword": keywords,
-        "keyword.block": blocks,
-        "support.function": functions,
-        "keyword.definition": definitions
-    }, "identifier");
-
-    // add liquid start tags to the HTML start tags
-    for (var rule in this.$rules) {
-        this.$rules[rule].unshift({
-            token : "variable",
-            regex : "{%",
-            push : "liquid-start"
-        }, {
-            token : "variable",
-            regex : "{{",
-            push : "liquid-start"
-        });
+  this.embedRules(JsonHighlightRules, "schema-", [
+    {
+      token: "schema-start",
+      next: "pop",
+      regex: /({%-?\s*\bendschema\b\s*-?%})/,
+      onMatch: onMatchEmbedded("endschema")
     }
+  ]);
 
-    this.addRules({
-        "liquid-start" : [{
-            token: "variable",
-            regex: "}}",
-            next: "pop"
-        }, {
-            token: "variable",
-            regex: "%}",
-            next: "pop"
-        }, {
-            token : "string", // single line
-            regex : '["](?:(?:\\\\.)|(?:[^"\\\\]))*?["]'
-        }, {
-            token : "string", // single line
-            regex : "['](?:(?:\\\\.)|(?:[^'\\\\]))*?[']"
-        }, {
-            token : "constant.numeric", // hex
-            regex : "0[xX][0-9a-fA-F]+\\b"
-        }, {
-            token : "constant.numeric", // float
-            regex : "[+-]?\\d+(?:(?:\\.\\d*)?(?:[eE][+-]?\\d+)?)?\\b"
-        }, {
-            token : "constant.language.boolean",
-            regex : "(?:true|false)\\b"
-        }, {
-            token : keywordMapper,
-            regex : "[a-zA-Z_$][a-zA-Z0-9_$]*\\b"
-        }, {
-            token : "keyword.operator",
-            regex : "/|\\*|\\-|\\+|=|!=|\\?\\:"
-        }, {
-            token : "paren.lparen",
-            regex : /[\[\({]/
-        }, {
-            token : "paren.rparen",
-            regex : /[\])}]/
-        }, {
-            token : "text",
-            regex : "\\s+"
-        }]
-    });
+  this.embedRules(JavaScriptHighlightRules, "javascript-", [
+    {
+      token: "javascript-start",
+      next: "pop",
+      regex: /({%-?\s*\bendjavascript\b\s*-?%})/,
+      onMatch: onMatchEmbedded("endjavascript")
+    }
+  ]);
 
-    this.normalizeRules();
+
+
+  this.embedRules(CssHighlightRules, "style-", [
+    {
+      token: "style-start",
+      next: "pop",
+      regex: /({%-?\s*\bendstyle\b\s*-?%})/,
+      onMatch: onMatchEmbedded("endstyle")
+    }
+  ]);
+
+  this.embedRules(CssHighlightRules, "stylesheet-", [
+    {
+      token: "stylesheet-start",
+      next: "pop",
+      regex: /({%-?\s*\bendstylesheet\b\s*-?%})/,
+      onMatch: onMatchEmbedded("endstylesheet")
+    }
+  ]);
+
+  /* -------------------------------------------- */
+  /* LIQUID GRAMMARS                              */
+  /* -------------------------------------------- */
+
+  this.addRules({
+    "liquid-start": [
+      {
+        token: "meta.tag.punctuation.ouput-close",
+        regex: /}}/,
+        next: "pop"
+      },
+      {
+        token: "meta.tag.punctuation.tag-close",
+        regex: /%}/,
+        next: "pop"
+      },
+      {
+        token: "string",
+        regex: /['](?:(?:\\.)|(?:[^'\\]))*?[']/
+      },
+      {
+        token: "string",
+        regex: /["](?:(?:\\.)|(?:[^'\\]))*?["]/
+      },
+      {
+        token: "constant.numeric",
+        regex: /0[xX][0-9a-fA-F]+\b/
+      },
+      {
+        token: "constant.numeric",
+        regex: /[+-]?\d+(?:(?:\.\d*)?(?:[eE][+-]?\d+)?)?\b/
+      },
+      {
+        token: "keyword.operator",
+        regex: /\*|\-|\+|=|!=|\?\|\:/
+      },
+      {
+        token: "constant.language.boolean",
+        regex: /(?:true|false|nil|empty)\b/
+      },
+      {
+        token: "keyword.operator",
+        regex: /\s+(?:and|contains|in|with)\b\s+/
+      },
+      {
+        token: ["keyword.operator", "support.function"],
+        regex: /(\|\s*)([a-zA-Z_]+)/
+
+      },
+      {
+        token: "support.function",
+        regex: /\s*([a-zA-Z_]+\b)(?=:)/
+      },
+      {
+        token: "keyword.operator",
+        regex:
+          /(:)\s*(?=[a-zA-Z_])/
+      },
+      {
+        token: [
+          "support.class",
+          "keyword.operator",
+          "support.object",
+          "keyword.operator",
+          "variable.parameter"
+        ],
+        regex: /(\w+)(\.)(\w+)(\.)?(\w+)?/
+      },
+      {
+        token: "variable.parameter",
+        regex: /\.([a-zA-Z_$][a-zA-Z0-9_$]*\b)$/
+      },
+      {
+        token: "support.class",
+        regex: /(?:additional_checkout_buttons|content_for_additional_checkout_buttons)\b/
+      },
+      {
+        token: "paren.lparen",
+        regex: /[\[\({]/
+      },
+      {
+        token: "paren.rparen",
+        regex: /[\])}]/
+      },
+      {
+        token: "text",
+        regex: /\s+/
+      }
+    ]
+  });
+
+  this.normalizeRules();
+
 };
+
 oop.inherits(LiquidHighlightRules, TextHighlightRules);
 
 exports.LiquidHighlightRules = LiquidHighlightRules;
