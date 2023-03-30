@@ -553,7 +553,7 @@ class CompletionProvider {
             if (data.snippet)
                 snippetManager.insertSnippet(editor, data.snippet, data.range);
             else {
-                this.$insertString(data);
+                this.$insertString(editor, data);
             }
 
             if (data.command && data.command === "startAutocomplete") {
@@ -564,24 +564,24 @@ class CompletionProvider {
         return true;
     }
 
-    $insertString = function (data) {
+    $insertString(editor, data) {
         var text = data.value || data;
         if (data.range) {
-            if (this.editor.inVirtualSelectionMode) {
-                return this.editor.session.replace(data.range, text);
+            if (editor.inVirtualSelectionMode) {
+                return editor.session.replace(data.range, text);
             }
-            this.editor.forEachSelection(() => {
-                var range = this.editor.getSelectionRange();
+            editor.forEachSelection(() => {
+                var range = editor.getSelectionRange();
                 if (data.range.compareRange(range) === 0) {
-                    this.editor.session.replace(data.range, text);
+                    editor.session.replace(data.range, text);
                 }
                 else {
-                    this.editor.insert(text);
+                    editor.insert(text);
                 }
             }, null, {keepOrder: true});
         }
         else {
-            this.editor.execCommand("insertstring", text);
+            editor.execCommand("insertstring", text);
         }
     }
 
