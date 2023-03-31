@@ -1,3 +1,8 @@
+/**
+ * 
+ * @param {string[]} items
+ * @param nada
+ */
 function foo(items, nada) {
     for (var i=0; i<items.length; i++) {
         alert(items[i] + "juhu\n");
