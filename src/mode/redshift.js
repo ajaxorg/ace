@@ -1,10 +1,11 @@
 var oop = require("../lib/oop");
 var TextMode = require("../mode/text").Mode;
 var RedshiftHighlightRules = require("./redshift_highlight_rules").RedshiftHighlightRules;
-var Range = require("../range").Range;
+var DocCommentBehaviour = require("../mode/behaviour/doc_comment").DocCommentBehaviour;
 
 var Mode = function() {
     this.HighlightRules = RedshiftHighlightRules;
+    this.$behaviour = new DocCommentBehaviour();
 };
 oop.inherits(Mode, TextMode);
 

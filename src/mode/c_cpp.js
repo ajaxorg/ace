@@ -5,14 +5,14 @@ var TextMode = require("./text").Mode;
 var c_cppHighlightRules = require("./c_cpp_highlight_rules").c_cppHighlightRules;
 var MatchingBraceOutdent = require("./matching_brace_outdent").MatchingBraceOutdent;
 var Range = require("../range").Range;
-var CstyleBehaviour = require("./behaviour/cstyle").CstyleBehaviour;
+var DocCommentBehaviour = require("../mode/behaviour/doc_comment").DocCommentBehaviour;
 var CStyleFoldMode = require("./folding/cstyle").FoldMode;
 
 var Mode = function() {
     this.HighlightRules = c_cppHighlightRules;
 
     this.$outdent = new MatchingBraceOutdent();
-    this.$behaviour = new CstyleBehaviour();
+    this.$behaviour = new DocCommentBehaviour();
 
     this.foldingRules = new CStyleFoldMode();
 };

@@ -6,14 +6,14 @@ var oop = require("../lib/oop");
 var TextMode = require("../mode/text").Mode;
 var ApexHighlightRules = require("./apex_highlight_rules").ApexHighlightRules;
 var FoldMode = require("../mode/folding/cstyle").FoldMode;
-var CstyleBehaviour = require("../mode/behaviour/cstyle").CstyleBehaviour;
+var DocCommentBehaviour = require("../mode/behaviour/doc_comment").DocCommentBehaviour;
 
 function ApexMode() {
     TextMode.call(this);
 
     this.HighlightRules = ApexHighlightRules;
     this.foldingRules = new FoldMode();
-    this.$behaviour = new CstyleBehaviour();
+    this.$behaviour = new DocCommentBehaviour();
 }
 
 oop.inherits(ApexMode, TextMode);

@@ -208,7 +208,9 @@
    "doc-start",
   ["comment.doc"," * "],
   ["comment.doc.tag","@param"],
-  ["comment.doc"," name who we'll salute?"]
+  ["text"," "],
+  ["variable.parameter.doc","name"],
+  ["comment.doc"," who we'll salute?"]
 ],[
    "start",
   ["comment.doc"," */"]

@@ -5,12 +5,13 @@ var TextMode = require("./text").Mode;
 var MatchingBraceOutdent = require("./matching_brace_outdent").MatchingBraceOutdent;
 var DotHighlightRules = require("./dot_highlight_rules").DotHighlightRules;
 var DotFoldMode = require("./folding/cstyle").FoldMode;
+var DocCommentBehaviour = require("../mode/behaviour/doc_comment").DocCommentBehaviour;
 
 var Mode = function() {
     this.HighlightRules = DotHighlightRules;
     this.$outdent = new MatchingBraceOutdent();
     this.foldingRules = new DotFoldMode();
-    this.$behaviour = this.$defaultBehaviour;
+    this.$behaviour = new DocCommentBehaviour();
 };
 oop.inherits(Mode, TextMode);
 

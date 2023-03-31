@@ -8,11 +8,12 @@ var oop = require("../lib/oop");
 var TextMode = require("./text").Mode;
 var DHighlightRules = require("./d_highlight_rules").DHighlightRules;
 var FoldMode = require("./folding/cstyle").FoldMode;
+var DocCommentBehaviour = require("../mode/behaviour/doc_comment").DocCommentBehaviour;
 
 var Mode = function() {
     this.HighlightRules = DHighlightRules;
     this.foldingRules = new FoldMode();
-    this.$behaviour = this.$defaultBehaviour;
+    this.$behaviour = new DocCommentBehaviour();
 };
 oop.inherits(Mode, TextMode);
 

@@ -4,11 +4,12 @@ var oop = require("../lib/oop");
 var TextMode = require("./text").Mode;
 var DroolsHighlightRules = require("./drools_highlight_rules").DroolsHighlightRules;
 var DroolsFoldMode = require("./folding/drools").FoldMode;
+var DocCommentBehaviour = require("../mode/behaviour/doc_comment").DocCommentBehaviour;
 
 var Mode = function() {
     this.HighlightRules = DroolsHighlightRules;
     this.foldingRules = new DroolsFoldMode();
-    this.$behaviour = this.$defaultBehaviour;
+    this.$behaviour = new DocCommentBehaviour();
 
 };
 oop.inherits(Mode, TextMode);
