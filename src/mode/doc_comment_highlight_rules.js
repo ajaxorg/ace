@@ -68,19 +68,19 @@ var DocCommentHighlightRules = function() {
                 regex: "(@(?:alias|memberof|instance|module|name|lends|namespace|external|this|template|" 
                     + "requires|param|implements|function|extends|typedef|mixes|constructor|var|" 
                     + "memberof\\!|event|listens|exports|class|constructs|interface|emits|fires|" 
-                    + "throws|const|callback|borrows|augments))(\\s+)(\\w[\\w#\.:\/~\"\\-]*)?",
+                    + "throws|const|callback|borrows|augments))(\\s+)(\\w[\\w#\.:\/~\"\\-]*)?"
             }, {
                 token: ["comment.doc.tag", "text", "variable.parameter.doc"],
-                regex: "(@method)(\\s+)(\\w[\\w\.\\(\\)]*)",
+                regex: "(@method)(\\s+)(\\w[\\w\.\\(\\)]*)"
             }, {
                 token: "comment.doc.tag",
-                regex: "@access\\s+(?:private|public|protected)",
+                regex: "@access\\s+(?:private|public|protected)"
             }, {
                 token: "comment.doc.tag",
-                regex: "@kind\\s+(?:class|constant|event|external|file|function|member|mixin|module|namespace|typedef)",
+                regex: "@kind\\s+(?:class|constant|event|external|file|function|member|mixin|module|namespace|typedef)"
             }, {
                 token: "comment.doc.tag",
-                regex: "@\\w+(?=\\s|$)",
+                regex: "@\\w+(?=\\s|$)"
             },
         DocCommentHighlightRules.getTagRule(),
         {
