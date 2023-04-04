@@ -2,14 +2,14 @@ var oop = require("../lib/oop");
 var TextMode = require("./text").Mode;
 var GolangHighlightRules = require("./golang_highlight_rules").GolangHighlightRules;
 var MatchingBraceOutdent = require("./matching_brace_outdent").MatchingBraceOutdent;
-var DocCommentBehaviour = require("../mode/behaviour/doc_comment").DocCommentBehaviour;
+var CstyleBehaviour = require("../mode/behaviour/cstyle").CstyleBehaviour;
 var CStyleFoldMode = require("./folding/cstyle").FoldMode;
 
 var Mode = function() {
     this.HighlightRules = GolangHighlightRules;
     this.$outdent = new MatchingBraceOutdent();
     this.foldingRules = new CStyleFoldMode();
-    this.$behaviour = new DocCommentBehaviour();
+    this.$behaviour = new CstyleBehaviour({closeDocComment: true});
 };
 oop.inherits(Mode, TextMode);
 

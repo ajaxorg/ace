@@ -8,13 +8,13 @@ var oop = require("../lib/oop");
 var CMode = require("./c_cpp").Mode;
 var DartHighlightRules = require("./dart_highlight_rules").DartHighlightRules;
 var CStyleFoldMode = require("./folding/cstyle").FoldMode;
-var DocCommentBehaviour = require("../mode/behaviour/doc_comment").DocCommentBehaviour;
+var CstyleBehaviour = require("../mode/behaviour/cstyle").CstyleBehaviour;
 
 var Mode = function() {
     CMode.call(this);
     this.HighlightRules = DartHighlightRules;
     this.foldingRules = new CStyleFoldMode();
-    this.$behaviour = new DocCommentBehaviour();
+    this.$behaviour = new CstyleBehaviour({closeDocComment: true});
 };
 oop.inherits(Mode, CMode);
 

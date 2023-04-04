@@ -7,14 +7,14 @@
 var oop = require("../lib/oop");
 var TextMode = require("./text").Mode;
 var HighlightRules = require("./swift_highlight_rules").HighlightRules;
-var DocCommentBehaviour = require("../mode/behaviour/doc_comment").DocCommentBehaviour;
+var CstyleBehaviour = require("../mode/behaviour/cstyle").CstyleBehaviour;
 // TODO: pick appropriate fold mode
 var FoldMode = require("./folding/cstyle").FoldMode;
 
 var Mode = function() {
     this.HighlightRules = HighlightRules;
     this.foldingRules = new FoldMode();
-    this.$behaviour = new DocCommentBehaviour();
+    this.$behaviour = new CstyleBehaviour({closeDocComment: true});
     this.$behaviour = this.$defaultBehaviour;
 };
 oop.inherits(Mode, TextMode);

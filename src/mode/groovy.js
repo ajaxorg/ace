@@ -3,12 +3,12 @@
 var oop = require("../lib/oop");
 var JavaScriptMode = require("./javascript").Mode;
 var GroovyHighlightRules = require("./groovy_highlight_rules").GroovyHighlightRules;
-var DocCommentBehaviour = require("../mode/behaviour/doc_comment").DocCommentBehaviour;
+var CstyleBehaviour = require("../mode/behaviour/cstyle").CstyleBehaviour;
 
 var Mode = function() {
     JavaScriptMode.call(this);
     this.HighlightRules = GroovyHighlightRules;
-    this.$behaviour = new DocCommentBehaviour();
+    this.$behaviour = new CstyleBehaviour({closeDocComment: true});
 };
 oop.inherits(Mode, JavaScriptMode);
 

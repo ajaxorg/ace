@@ -4,13 +4,13 @@ var oop = require("../lib/oop");
 var TextMode = require("./text").Mode;
 var CSharpHighlightRules = require("./csharp_highlight_rules").CSharpHighlightRules;
 var MatchingBraceOutdent = require("./matching_brace_outdent").MatchingBraceOutdent;
-var DocCommentBehaviour = require("../mode/behaviour/doc_comment").DocCommentBehaviour;
+var CstyleBehaviour = require("../mode/behaviour/cstyle").CstyleBehaviour;
 var CStyleFoldMode = require("./folding/csharp").FoldMode;
 
 var Mode = function() {
     this.HighlightRules = CSharpHighlightRules;
     this.$outdent = new MatchingBraceOutdent();
-    this.$behaviour = new DocCommentBehaviour();
+    this.$behaviour = new CstyleBehaviour({closeDocComment: true});
     this.foldingRules = new CStyleFoldMode();
 };
 oop.inherits(Mode, TextMode);

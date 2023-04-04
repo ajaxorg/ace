@@ -8,7 +8,7 @@ var MatchingBraceOutdent = require("./matching_brace_outdent").MatchingBraceOutd
 var Range = require("../range").Range;
 var WorkerClient = require("../worker/worker_client").WorkerClient;
 var PhpCompletions = require("./php_completions").PhpCompletions;
-var DocCommentBehaviour = require("../mode/behaviour/doc_comment").DocCommentBehaviour;
+var CstyleBehaviour = require("../mode/behaviour/cstyle").CstyleBehaviour;
 var CStyleFoldMode = require("./folding/cstyle").FoldMode;
 var unicode = require("../unicode");
 var HtmlMode = require("./html").Mode;
@@ -18,7 +18,7 @@ var CssMode = require("./css").Mode;
 var PhpMode = function(opts) {
     this.HighlightRules = PhpLangHighlightRules;
     this.$outdent = new MatchingBraceOutdent();
-    this.$behaviour = new DocCommentBehaviour();
+    this.$behaviour = new CstyleBehaviour({closeDocComment: true});
     this.$completer = new PhpCompletions();
     this.foldingRules = new CStyleFoldMode();
 };

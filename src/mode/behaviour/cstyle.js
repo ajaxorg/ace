@@ -51,6 +51,7 @@ var getWrapped = function(selection, selected, opening, closing) {
  * @constructor
  * @param {Object} [options] - The options for the Cstyle behaviour object.
  * @param {boolean} [options.braces] - Whether to force braces auto-pairing.
+ * @param {boolean} [options.closeDocComment] - enables automatic insertion of closing tags for documentation comments.
  */
 var CstyleBehaviour = function(options) {
     this.add("braces", "insertion", function(state, action, editor, session, text) {
@@ -301,7 +302,38 @@ var CstyleBehaviour = function(options) {
             }
         }
     });
+    
+    if (options && options.closeDocComment) {
+        this.add("doc comment end", "insertion", function (state, action, editor, session, text) {
+            if (state === "doc-start" && (text === "\n" || text === "\r\n") && editor.selection.isEmpty()) {
+                var cursor = editor.getCursorPosition();
+                var line = session.doc.getLine(cursor.row);
+                var nextLine = session.doc.getLine(cursor.row + 1);
+                var indent = this.$getIndent(line);
+                if (/\s*\*/.test(nextLine)) {
+                    if (/^\s*\*/.test(line)) {
+                        return {
+                            text: text + indent + "* ",
+                            selection: [1, 3 + indent.length, 1, 3 + indent.length]
+                        };
+                    }
+                    else {
+                        return {
+                            text: text + indent + " * ",
+                            selection: [1, 3 + indent.length, 1, 3 + indent.length]
+                        };
+                    }
 
+                }
+                if (/\/\*\*/.test(line.substring(0, cursor.column))) {
+                    return {
+                        text: text + indent + " * " + text + " " + indent + "*/",
+                        selection: [1, 4 + indent.length, 1, 4 + indent.length]
+                    };
+                }
+            }
+        });
+    }
 };
 
     

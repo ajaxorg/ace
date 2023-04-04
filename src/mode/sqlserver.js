@@ -4,12 +4,12 @@ var oop = require("../lib/oop");
 var TextMode = require("./text").Mode;
 var SqlServerHighlightRules = require("./sqlserver_highlight_rules").SqlHighlightRules;
 var SqlServerFoldMode = require("./folding/sqlserver").FoldMode;
-var DocCommentBehaviour = require("../mode/behaviour/doc_comment").DocCommentBehaviour;
+var CstyleBehaviour = require("../mode/behaviour/cstyle").CstyleBehaviour;
 
 var Mode = function() {
     this.HighlightRules = SqlServerHighlightRules;
     this.foldingRules = new SqlServerFoldMode();
-    this.$behaviour = new DocCommentBehaviour();
+    this.$behaviour = new CstyleBehaviour({closeDocComment: true});
 };
 oop.inherits(Mode, TextMode);
 

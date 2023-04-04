@@ -416,7 +416,7 @@ module.exports = {
         exec("insertstring", 1, '"');
         assert.equal(editor.getValue(), 'p"');
     },
-    "test: doc comment": function() {
+    "test: doc comment auto-closing": function() {
         editor.session.setMode(new JavaScriptMode());
         editor.setWrapBehavioursEnabled(true);
 
