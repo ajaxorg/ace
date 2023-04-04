@@ -313,13 +313,24 @@ export namespace Ace {
     start?: number;
   }
 
-  export interface Completion {
-    value: string;
-    score: number;
+  interface BaseCompletion {
+    score?: number;
     meta?: string;
-    name?: string;
     caption?: string;
+    docHTML?: string;
+    docText?: string;
+    completerId?: string;
   }
+
+  export interface SnippetCompletion extends BaseCompletion {
+    snippet: string;
+  }
+
+  export interface ValueCompletion extends BaseCompletion {
+    value: string;
+  }
+
+  export type Completion = SnippetCompletion | ValueCompletion
 
   export interface Tokenizer {
     removeCapturingGroups(src: string): string;
@@ -923,6 +934,8 @@ export namespace Ace {
       position: Point,
       prefix: string,
       callback: CompleterCallback): void;
+    getDocTooltip?(item: Completion): undefined | string | Completion;
+    id?: string;
   }
 
   export class AceInline {
