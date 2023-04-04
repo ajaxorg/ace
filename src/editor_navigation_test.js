@@ -158,28 +158,10 @@ module.exports = {
         assert.position(editor.getCursorPosition(), 1, 7);
     },
 
-    "test: when not using keyboard navigation option should not allow escaping focus": function() {
+    "test: should allow to toggle between keyboard trapping modes": function() {
         var editor = new Editor(new VirtualRenderer(), new EditSession(["1234", "1234567890"]));
 
-        editor.setOption("preventKeyboardTrapping", false);
-
-        // Focus on editor
-        editor.focus();
-
-        // Focus should be on textInput
-        assert.equal(document.activeElement, editor.textInput.getElement());
-        assert.notEqual(document.activeElement, editor.renderer.content);
-
-        editor.onCommandKey({}, 0, keys["escape"]);
- 
-        // Focus should be on the content div after pressing Esc
-        assert.equal(document.activeElement, editor.textInput.getElement());
-        assert.notEqual(document.activeElement, editor.renderer.content);
-    },
-
-    "test: when using keyboard navigation option should allow escaping focus": function() {
-        var editor = new Editor(new VirtualRenderer(), new EditSession(["1234", "1234567890"]));
-
+        // Should not trap focus
         editor.setOption("preventKeyboardTrapping", true);
 
         // Focus on editor
@@ -194,6 +176,22 @@ module.exports = {
         // Focus should be on the content div after pressing Esc
         assert.notEqual(document.activeElement, editor.textInput.getElement());
         assert.equal(document.activeElement, editor.renderer.content);
+
+        // Should trap focus
+        editor.setOption("preventKeyboardTrapping", false);
+
+        // Focus on editor
+        editor.focus();
+
+        // Focus should be on textInput
+        assert.equal(document.activeElement, editor.textInput.getElement());
+        assert.notEqual(document.activeElement, editor.renderer.content);
+
+        editor.onCommandKey({}, 0, keys["escape"]);
+ 
+        // Focus should still be on the textInput
+        assert.equal(document.activeElement, editor.textInput.getElement());
+        assert.notEqual(document.activeElement, editor.renderer.content);
     }
 };
 
