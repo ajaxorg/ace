@@ -2871,7 +2871,7 @@ config.defineOptions(Editor.prototype, "editor", {
                 readOnly: true
             };
 
-            var focusCommand = (e) => {
+            var focusCommand = function (e) {
                 // Keycode 13 == enter key.
                 if (e.target == this.renderer.content && e.keyCode === 13){
                     e.stopPropagation();
@@ -2880,6 +2880,8 @@ config.defineOptions(Editor.prototype, "editor", {
                 }
             };
 
+            // If true, prevent focus to be captured when tabbing through the page. When focus is set to the content div, 
+            // press Enter key to give focus to Ace and press Esc to allow again to tab through the page.
             if (value){
                 this.textInput.getElement().setAttribute("tabindex", -1);
                 this.renderer.content.setAttribute("tabindex", 0);
