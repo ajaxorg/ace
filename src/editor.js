@@ -50,6 +50,23 @@ class Editor {
             new FoldHandler(this);
         }
 
+        // TODO: move to editor options
+        var preventKeyboardTrapping = true;
+
+        // if preventKeyboardTrapping is true, prevent direct stepping into the text input 
+        // and set focus only on keypress.
+        if (preventKeyboardTrapping){
+            this.textInput.getElement().setAttribute("tabindex", -1);
+            this.renderer.content.setAttribute("tabindex", 0);
+            this.renderer.content.addEventListener("keydown", (e) => {
+                if (e.target == this.renderer.content && e.keyCode === 13){
+                    e.stopPropagation();
+                    e.preventDefault();
+                    this.focus();
+                }
+            });
+        }
+
         this.keyBinding = new KeyBinding(this);
 
         this.$search = new Search().set({
