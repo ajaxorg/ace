@@ -197,7 +197,7 @@ var optionGroups = {
         },
         "Prevent keyboard trapping": {
             path: "preventKeyboardTrapping"
-        },
+        }
     }
 };
 
