@@ -11,6 +11,7 @@ var Range = require("./range").Range;
 var Document = require("./document").Document;
 var BackgroundTokenizer = require("./background_tokenizer").BackgroundTokenizer;
 var SearchHighlight = require("./search_highlight").SearchHighlight;
+var TooltipMarkerGroup = require("./tooltip_marker").TooltipMarkerGroup;
 
 //{ events
 /**
@@ -638,6 +639,22 @@ class EditSession {
         var range = new Range(startRow, 0, endRow, Infinity);
         range.id = this.addMarker(range, clazz, "fullLine", inFront);
         return range;
+    }
+
+    /**
+     * Sets an array of tooltip markers to be displayed for the session.
+     * These markers display the content of `tooltipText` on hover.
+     * 
+     * @param {Ace.TooltipMarker[]} markers an array of tooltip marker definitions.
+     * @param {Ace.TooltipMarkerManager} tooltipMarkerManager controls display of tooltips on hover over markers.
+     */
+    setTooltipMarkers(markers, tooltipMarkerManager) {
+        if (!this.$tooltipMarkerGroup) {
+            const tooltipMarkerGroup = new TooltipMarkerGroup();
+            this.$tooltipMarkerGroup = this.addDynamicMarker(tooltipMarkerGroup);
+            tooltipMarkerManager.setMarkerGroupForSession(this.$tooltipMarkerGroup, this);
+        }
+        this.$tooltipMarkerGroup.setMarkers(markers);
     }
 
     /*
