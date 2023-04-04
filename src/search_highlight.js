@@ -3,8 +3,6 @@
 var lang = require("./lib/lang");
 var Range = require("./range").Range;
 
-var SearchHighlight = 
-
 class SearchHighlight {
     constructor(regExp, clazz, type = "text") {
         this.setRegexp(regExp);

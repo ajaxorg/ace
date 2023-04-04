@@ -29,6 +29,7 @@ var HashHandler = require("ace/keyboard/hash_handler").HashHandler;
 
 var Renderer = require("ace/virtual_renderer").VirtualRenderer;
 var Editor = require("ace/editor").Editor;
+var Range = require("ace/range").Range;
 
 var whitespace = require("ace/ext/whitespace");
 
@@ -44,8 +45,8 @@ var ElasticTabstopsLite = require("ace/ext/elastic_tabstops_lite").ElasticTabsto
 
 var IncrementalSearch = require("ace/incremental_search").IncrementalSearch;
 
-
 var TokenTooltip = require("./token_tooltip").TokenTooltip;
+var TooltipMarkerManager = require("ace/tooltip_marker").TooltipMarkerManager;
 require("ace/config").defineOptions(Editor.prototype, "editor", {
     showTokenInfo: {
         set: function(val) {
@@ -62,6 +63,28 @@ require("ace/config").defineOptions(Editor.prototype, "editor", {
         },
         handlesSet: true
     },
+    showTooltipMarkers: {
+        set: function(val) {
+            if (val) {
+                this.tooltipMarkerManager = this.tooltipMarkerManager || new TooltipMarkerManager(this);
+                const singleLineMarker = {
+                    range: new Range(0, 0, 0, 5),
+                    tooltipText: "Single line marker",
+                    className: "ace_tooltip-marker_test",
+                };
+                const multiLineMarker = {
+                    range: new Range(3, 2, 4, 5),
+                    tooltipText: "Multi line marker",
+                    className: "ace_tooltip-marker_test",
+                };
+                editor.session.setTooltipMarkers([singleLineMarker, multiLineMarker], this.tooltipMarkerManager);
+            } else if (this.tooltipMarkerManager) {
+                editor.session.setTooltipMarkers([], this.tooltipMarkerManager);
+                this.tooltipMarkerManager.destroy();
+                delete this.tooltipMarkerManager;
+            }
+        }
+    }
 });
 
 require("ace/config").defineOptions(Editor.prototype, "editor", {
@@ -89,7 +112,6 @@ function loadLanguageProvider(editor) {
         window.languageProvider.registerEditor(editor);
         if (languageProvider.$descriptionTooltip)
             editor.off("mousemove", languageProvider.$descriptionTooltip.onMouseMove);
-        
         
         docTooltip.setDataProvider(function(e, editor) {
             var renderer = editor.renderer;
@@ -440,6 +462,10 @@ optionsPanel.add({
             getValue: function() {
                 return !!originalAutocompleteCommand;
             }
+        },
+        "Show tooltip markers for active session": {
+            path: "showTooltipMarkers",
+            position: 2000
         },
         "Use Ace Linters": {
             position: 3000,

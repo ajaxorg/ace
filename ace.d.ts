@@ -275,6 +275,24 @@ export namespace Ace {
     type: string;
   }
 
+export interface TooltipMarker {
+  range: Range;
+  tooltipText: string;
+  className?: string;
+  priority?: number;
+}
+
+export class TooltipMarkerGroup {
+  constructor();
+  setMarkers: (markers: TooltipMarker[]) => void;
+}
+
+export class TooltipMarkerManager {
+  constructor(editor: Editor);
+  setMarkerGroupForSession: (tooltipMarkerGroup: TooltipMarkerGroup, session: EditSession) => void;
+  destroy: () => void;
+}
+
   export interface Command {
     name?: string;
     bindKey?: string | { mac?: string, win?: string };
