@@ -1903,8 +1903,8 @@ config.defineOptions(VirtualRenderer.prototype, "renderer", {
         initialValue: true
     },
     useSvgGutterIcons: {
-        set: function(show){
-            this.$gutterLayer.useSvgGutterIcons = show;
+        set: function(value){
+            this.$gutterLayer.$useSvgGutterIcons = value;
         },
         initialValue: false
     },

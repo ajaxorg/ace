@@ -119,7 +119,7 @@ module.exports = {
         editor.session.setMode(new Mode());
         editor.setValue(value, -1);
         editor.session.setAnnotations([{row: 0, column: 0, type: "error", text: "error test"}]);
-        editor.renderer.$gutterLayer.useSvgGutterIcons = true;
+        editor.renderer.$gutterLayer.$useSvgGutterIcons = true;
         editor.renderer.$loop._flush();
 
         var lines = editor.renderer.$gutterLayer.$lines;

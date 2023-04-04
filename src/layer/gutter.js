@@ -291,7 +291,7 @@ class Gutter{
         var lineHeight = config.lineHeight + "px";
 
         var className;
-        if (this.useSvgGutterIcons){
+        if (this.$useSvgGutterIcons){
             className = "ace_gutter-cell_svg-icons ";
 
             if (this.$annotations[row]){
