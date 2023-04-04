@@ -34,7 +34,7 @@ exports.commands = [{
     },
     scrollIntoView: "animate",
     readOnly: true
-},  {
+}, {
     name: "goToPreviousError",
     description: "Go to previous error",
     bindKey: bindKey("Alt-Shift-E", "Shift-F4"),
