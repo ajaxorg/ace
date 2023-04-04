@@ -11,11 +11,7 @@ var snippetManager = require("./snippets").snippetManager;
 var config = require("./config");
 
 /**
- * Completion represents a text snippet that is proposed to complete text
- * @typedef Completion
- * @property {string} [snippet] - a text snippet that would be inserted when the completion is selected
- * @property {string} [value] - The text that would be inserted when selecting this completion. If a `snippet` is
- * provided, it will be used instead of `value`
+ * @typedef BaseCompletion
  * @property {number} [score] - a numerical value that determines the order in which completions would be displayed.
  * A lower score means that the completion would be displayed further from the start
  * @property {string} [meta] - a short description of the completion
@@ -25,8 +21,26 @@ var config = require("./config");
  * @property {string} [docText] - a plain text that would be displayed as an additional popup. If `docHTML` exists,
  * it would be used instead of `docText`.
  * @property {string} [completerId] - the identifier of the completer
- * @property {Ace.Range} [range] - an object that determines which range should be replaced in the text with new values (experimental)
- * @property {string} [command] - A command that needs to be executed after the insertion of the completion (experimental)
+ * @property {Ace.Range} [range] - An object specifying the range of text to be replaced with the new completion value (experimental)
+ * @property {string} [command] - A command to be executed after the completion is inserted (experimental)
+ */
+
+/**
+ * @typedef SnippetCompletion
+ * @extends BaseCompletion
+ * @property {string} snippet - a text snippet that would be inserted when the completion is selected
+ */
+
+/**
+ * @typedef ValueCompletion
+ * @extends BaseCompletion
+ * @property {string} value - The text that would be inserted when selecting this completion.
+ */
+
+/**
+ * Represents a suggested text snippet intended to complete a user's input
+ * @typedef Completion
+ * @type {SnippetCompletion|ValueCompletion}
  */
 
 var destroyCompleter = function(e, editor) {
@@ -704,7 +718,7 @@ class FilteredList {
 
         this.filtered = matches;
     }
-
+    
     filterCompletions(items, needle) {
         var results = [];
         var upper = needle.toUpperCase();

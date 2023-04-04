@@ -313,9 +313,7 @@ export namespace Ace {
     start?: number;
   }
 
-  export interface Completion {
-    value?: string;
-    snippet?: string;
+  interface BaseCompletion {
     score?: number;
     meta?: string;
     caption?: string;
@@ -323,6 +321,16 @@ export namespace Ace {
     docText?: string;
     completerId?: string;
   }
+
+  export interface SnippetCompletion extends BaseCompletion {
+    snippet: string;
+  }
+
+  export interface ValueCompletion extends BaseCompletion {
+    value: string;
+  }
+
+  export type Completion = SnippetCompletion | ValueCompletion
 
   export interface Tokenizer {
     removeCapturingGroups(src: string): string;
