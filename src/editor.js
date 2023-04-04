@@ -19,6 +19,7 @@ var TokenIterator = require("./token_iterator").TokenIterator;
 var LineWidgets = require("./line_widgets").LineWidgets;
 
 var clipboard = require("./clipboard");
+var keys = require('./lib/keys');
 
 /**
  * The main entry point into the Ace functionality.
@@ -2872,8 +2873,7 @@ config.defineOptions(Editor.prototype, "editor", {
             };
 
             var focusCommand = function (e) {
-                // Keycode 13 == enter key.
-                if (e.target == this.renderer.content && e.keyCode === 13){
+                if (e.target == this.renderer.content && e.keyCode === keys['enter']){
                     e.stopPropagation();
                     e.preventDefault();
                     this.focus();
@@ -2886,13 +2886,13 @@ config.defineOptions(Editor.prototype, "editor", {
                 this.textInput.getElement().setAttribute("tabindex", -1);
                 this.renderer.content.setAttribute("tabindex", 0);
 
-                this.renderer.content.addEventListener("keydown", focusCommand);
+                this.renderer.content.addEventListener("keydown", focusCommand.bind(this));
                 this.commands.addCommand(blurCommand);
             } else {
                 this.textInput.getElement().setAttribute("tabindex", 0);
                 this.renderer.content.setAttribute("tabindex", -1);
 
-                this.renderer.content.removeEventListener("keydown", focusCommand);
+                this.renderer.content.removeEventListener("keydown", focusCommand.bind(this));
                 this.commands.removeCommand(blurCommand);
             }
         },
