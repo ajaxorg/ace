@@ -10,6 +10,39 @@ var dom = require("./lib/dom");
 var snippetManager = require("./snippets").snippetManager;
 var config = require("./config");
 
+/**
+ * @typedef BaseCompletion
+ * @property {number} [score] - a numerical value that determines the order in which completions would be displayed.
+ * A lower score means that the completion would be displayed further from the start
+ * @property {string} [meta] - a short description of the completion
+ * @property {string} [caption] - the text that would be displayed in the completion list. If omitted, value or snippet
+ * would be shown instead.
+ * @property {string} [docHTML] - an HTML string that would be displayed as an additional popup
+ * @property {string} [docText] - a plain text that would be displayed as an additional popup. If `docHTML` exists,
+ * it would be used instead of `docText`.
+ * @property {string} [completerId] - the identifier of the completer
+ * @property {Ace.Range} [range] - An object specifying the range of text to be replaced with the new completion value (experimental)
+ * @property {string} [command] - A command to be executed after the completion is inserted (experimental)
+ */
+
+/**
+ * @typedef SnippetCompletion
+ * @extends BaseCompletion
+ * @property {string} snippet - a text snippet that would be inserted when the completion is selected
+ */
+
+/**
+ * @typedef ValueCompletion
+ * @extends BaseCompletion
+ * @property {string} value - The text that would be inserted when selecting this completion.
+ */
+
+/**
+ * Represents a suggested text snippet intended to complete a user's input
+ * @typedef Completion
+ * @type {SnippetCompletion|ValueCompletion}
+ */
+
 var destroyCompleter = function(e, editor) {
     editor.completer && editor.completer.destroy();
 };
@@ -335,11 +368,15 @@ class Autocomplete {
         var doc = null;
         if (!selected || !this.editor || !this.popup.isOpen)
             return this.hideDocTooltip();
-        this.editor.completers.some(function(completer) {
-            if (completer.getDocTooltip)
+        
+        var completersLength = this.editor.completers.length;
+        for (var i = 0; i < completersLength; i++) {
+            var completer = this.editor.completers[i];
+            if (completer.getDocTooltip && selected.completerId === completer.id) {
                 doc = completer.getDocTooltip(selected);
-            return doc;
-        });
+                break;
+            }
+        }
         if (!doc && typeof selected != "string")
             doc = selected;
 
@@ -518,9 +555,8 @@ class CompletionProvider {
             data.completer.insertMatch(editor, data);
         } else {
             // TODO add support for options.deleteSuffix
-            if (!this.completions) {
+            if (!this.completions)
                 return false;
-            }
             if (this.completions.filterText) {
                 var ranges = editor.selection.getAllRanges();
                 for (var i = 0, range; range = ranges[i]; i++) {
@@ -529,12 +565,38 @@ class CompletionProvider {
                 }
             }
             if (data.snippet)
-                snippetManager.insertSnippet(editor, data.snippet);
-            else
-                editor.execCommand("insertstring", data.value || data);
+                snippetManager.insertSnippet(editor, data.snippet, data.range);
+            else {
+                this.$insertString(editor, data);
+            }
+
+            if (data.command && data.command === "startAutocomplete") {
+                editor.execCommand(data.command);
+            }
         }
         editor.endOperation();
         return true;
+    }
+
+    $insertString(editor, data) {
+        var text = data.value || data;
+        if (data.range) {
+            if (editor.inVirtualSelectionMode) {
+                return editor.session.replace(data.range, text);
+            }
+            editor.forEachSelection(() => {
+                var range = editor.getSelectionRange();
+                if (data.range.compareRange(range) === 0) {
+                    editor.session.replace(data.range, text);
+                }
+                else {
+                    editor.insert(text);
+                }
+            }, null, {keepOrder: true});
+        }
+        else {
+            editor.execCommand("insertstring", text);
+        }
     }
 
     gatherCompletions(editor, callback) {
@@ -656,7 +718,7 @@ class FilteredList {
 
         this.filtered = matches;
     }
-
+    
     filterCompletions(items, needle) {
         var results = [];
         var upper = needle.toUpperCase();
