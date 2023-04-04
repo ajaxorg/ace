@@ -50,23 +50,6 @@ class Editor {
             new FoldHandler(this);
         }
 
-        // TODO: move to editor options
-        var preventKeyboardTrapping = true;
-
-        // if preventKeyboardTrapping is true, prevent direct stepping into the text input 
-        // and set focus only on keypress.
-        if (preventKeyboardTrapping){
-            this.textInput.getElement().setAttribute("tabindex", -1);
-            this.renderer.content.setAttribute("tabindex", 0);
-            this.renderer.content.addEventListener("keydown", (e) => {
-                if (e.target == this.renderer.content && e.keyCode === 13){
-                    e.stopPropagation();
-                    e.preventDefault();
-                    this.focus();
-                }
-            });
-        }
-
         this.keyBinding = new KeyBinding(this);
 
         this.$search = new Search().set({
@@ -2874,6 +2857,44 @@ config.defineOptions(Editor.prototype, "editor", {
             }
             this.$updatePlaceholder();
         }
+    },
+    preventKeyboardTrapping: {
+        set: function(value) {
+            var blurCommand = {
+                name: "blurTextInput",
+                description: "Set focus to the editor content div to allow tabbing through the page",
+                bindKey: "Esc",
+                exec: function(editor) {
+                    editor.blur();
+                    editor.renderer.content.focus();
+                },
+                readOnly: true
+            };
+
+            var focusCommand = (e) => {
+                // Keycode 13 == enter key.
+                if (e.target == this.renderer.content && e.keyCode === 13){
+                    e.stopPropagation();
+                    e.preventDefault();
+                    this.focus();
+                }
+            };
+
+            if (value){
+                this.textInput.getElement().setAttribute("tabindex", -1);
+                this.renderer.content.setAttribute("tabindex", 0);
+
+                this.renderer.content.addEventListener("keydown", focusCommand);
+                this.commands.addCommand(blurCommand);
+            } else {
+                this.textInput.getElement().setAttribute("tabindex", 0);
+                this.renderer.content.setAttribute("tabindex", -1);
+
+                this.renderer.content.removeEventListener("keydown", focusCommand);
+                this.commands.removeCommand(blurCommand);
+            }
+        },
+        initialValue: false
     },
     customScrollbar: "renderer",
     hScrollBarAlwaysVisible: "renderer",

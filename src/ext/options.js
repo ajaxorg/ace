@@ -194,7 +194,10 @@ var optionGroups = {
         },
         "Custom scrollbar": {
             path: "customScrollbar"
-        }
+        },
+        "Prevent keyboard trapping": {
+            path: "preventKeyboardTrapping"
+        },
     }
 };
 

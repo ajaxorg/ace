@@ -17,7 +17,6 @@ exports.commands = [{
     description: "Show settings menu",
     bindKey: bindKey("Ctrl-,", "Command-,"),
     exec: function(editor) {
-        console.log("show settings");
         config.loadModule("ace/ext/settings_menu", function(module) {
             module.init(editor);
             editor.showSettingsMenu();
@@ -35,15 +34,6 @@ exports.commands = [{
     },
     scrollIntoView: "animate",
     readOnly: true
-}, {
-    name: "blurTextInput",
-    description: "Set focus to the editor content div to allow tabbing through the page",
-    bindKey: "Esc",
-    exec: function(editor) {
-        editor.blur();
-        editor.renderer.content.focus();
-    },
-    readOnly: false
 },  {
     name: "goToPreviousError",
     description: "Go to previous error",
