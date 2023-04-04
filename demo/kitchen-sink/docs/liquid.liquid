@@ -1,4 +1,8 @@
-The following examples can be found in full at http://liquidmarkup.org/
+There are a couple of different Liquid variations in circulation. This grammars supports
+both the Standard and Shopify Liquid variations. The following examples can be found in full at:
+
+Standard Variation: https://shopify.github.io/liquid
+Shopify Variation: https://shopify.dev/docs/api/liquid
 
 Liquid is an extraction from the e-commerce system Shopify.
 Shopify powers many thousands of e-commerce stores which all call for unique designs.
@@ -37,11 +41,18 @@ Some more features include:
 
 <h2>If</h2>
 <p>
-  {% if user.name == 'tobi' or user.name == 'marc' %} 
+  {% if user.name == 'tobi' or user.name == 'marc' %}
     hi marc or tobi
   {% endif %}
 </p>
 
+<h2>Comments</h2>
+
+{% # Line Comment  %}
+
+{% comment %}
+  Block Comment
+{% endcomment %}
 
 <h2>Case</h2>
 <p>
@@ -58,7 +69,7 @@ Some more features include:
 
 <h2>For Loops</h2>
 <p>
-  {% for item in array %} 
+  {% for item in array %}
     {{ item }}
   {% endfor %}
 </p>
@@ -74,3 +85,43 @@ Some more features include:
     {% endif %}
   {% endtablerow %}
 </p>
+
+<h2>Embedded Code Blocks</h2>
+
+This support Shopify Liquid variation JSON schema code blocks
+
+{% schema %}
+  {
+    "string": "bar",
+    "boolean": true,
+    "number": 100,
+    "object": {
+      "array": [100, false, "string", {}, [] ]
+    }
+  }
+{% endschema %}
+
+This support Shopify Liquid variation Stylesheet and Style code blocks
+
+{% style %}
+ .class {
+   font-size: 10px; /* comment */
+ }
+{% endstyle %}
+
+{% stylesheet %}
+ .class {
+   font-size: 10px; /* comment */
+ }
+{% endstylesheet %}
+
+This support Shopify Liquid variation JavaScript code blocks
+
+{% javascript %}
+
+  function foo (param) {
+
+    return 'something' // comment
+  }
+
+{% endjavascript %}
