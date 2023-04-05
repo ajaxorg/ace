@@ -195,11 +195,15 @@ var optionGroups = {
         "Custom scrollbar": {
             path: "customScrollbar"
         },
-        "Prevent keyboard trapping": {
-            path: "preventKeyboardTrapping"
-        },
         "Use SVG gutter icons": {
             path: "useSvgGutterIcons"
+        },
+        "Keyboard Accessibility Mode": {
+            path: "keyboardAccessibilityMode",
+            items: [
+                { caption : "Content",  value : "content" },
+                { caption : "Off",   value : "off" }
+             ]
         }
     }
 };

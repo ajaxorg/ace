@@ -227,7 +227,7 @@ export namespace Ace {
     value: string;
     session: EditSession;
     relativeLineNumbers: boolean;
-    preventKeyboardTrapping: boolean;
+    keyboardAccessibilityMode: 'content' | 'off';
   }
 
   export interface SearchOptions {

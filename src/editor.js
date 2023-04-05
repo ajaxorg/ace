@@ -2859,7 +2859,7 @@ config.defineOptions(Editor.prototype, "editor", {
             this.$updatePlaceholder();
         }
     },
-    preventKeyboardTrapping: {
+    keyboardAccessibilityMode: {
         set: function(value) {
             var blurCommand = {
                 name: "blurTextInput",
@@ -2882,21 +2882,25 @@ config.defineOptions(Editor.prototype, "editor", {
 
             // If true, prevent focus to be captured when tabbing through the page. When focus is set to the content div, 
             // press Enter key to give focus to Ace and press Esc to allow again to tab through the page.
-            if (value){
+            if (value === 'content'){
                 this.textInput.getElement().setAttribute("tabindex", -1);
                 this.renderer.content.setAttribute("tabindex", 0);
+                this.renderer.content.setAttribute("aria-label",
+                    "Editor, press Enter key to start editing, press Escape key to exit"
+                );
 
                 this.renderer.content.addEventListener("keydown", focusCommand.bind(this));
                 this.commands.addCommand(blurCommand);
-            } else {
+            } else if (value === 'off') {
                 this.textInput.getElement().setAttribute("tabindex", 0);
                 this.renderer.content.setAttribute("tabindex", -1);
-
+                this.renderer.content.setAttribute("aria-label", "");
+            
                 this.renderer.content.removeEventListener("keydown", focusCommand.bind(this));
                 this.commands.removeCommand(blurCommand);
             }
         },
-        initialValue: false
+        initialValue: 'off'
     },
     customScrollbar: "renderer",
     hScrollBarAlwaysVisible: "renderer",

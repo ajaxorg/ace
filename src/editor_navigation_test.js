@@ -162,7 +162,7 @@ module.exports = {
         var editor = new Editor(new VirtualRenderer(), new EditSession(["1234", "1234567890"]));
 
         // Should not trap focus
-        editor.setOption("preventKeyboardTrapping", true);
+        editor.setOption('keyboardAccessibilityMode', 'content');
 
         // Focus on editor
         editor.focus();
@@ -178,7 +178,7 @@ module.exports = {
         assert.equal(document.activeElement, editor.renderer.content);
 
         // Should trap focus
-        editor.setOption("preventKeyboardTrapping", false);
+        editor.setOption('keyboardAccessibilityMode', 'off');
 
         // Focus on editor
         editor.focus();
