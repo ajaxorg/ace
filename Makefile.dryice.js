@@ -300,8 +300,9 @@ function workers(path) {
     }).filter(function(x) { return !!x; });
 }
 
-function modeList() {
-    return jsFileList("lib/ace/mode", /_highlight_rules|_test|_worker|xml_util|_outdent|behaviour|completions/);
+function modeList(path) {
+    path = path || "lib/ace/mode";
+    return jsFileList(path, /_highlight_rules|_test|_worker|xml_util|_outdent|behaviour|completions/);
 }
 
 function buildAceModule(opts, callback) {
