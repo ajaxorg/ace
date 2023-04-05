@@ -10,7 +10,7 @@ Potential improvements:
 - don't cut off total amount of markers at 500
 */
 
-class TooltipMarkerGroup {
+class MarkerGroup {
     constructor() {
         this.markers = [];
     }
@@ -71,9 +71,9 @@ class TooltipMarkerGroup {
 
 // this caps total amount of markers at 500 - should it maybe be done only for rendered markers?
 // on top of it, do we need to cap the length of a rendered marker range to avoid performance issues?
-TooltipMarkerGroup.prototype.MAX_MARKERS = 500;
+MarkerGroup.prototype.MAX_MARKERS = 500;
 
-exports.TooltipMarkerGroup = TooltipMarkerGroup;
+exports.MarkerGroup = MarkerGroup;
 
 
 class TooltipMarkerManager {
@@ -105,11 +105,11 @@ class TooltipMarkerManager {
      * session is active, markers from that group will be matched against hover position
      * in the document to determine which tooltip to display.
      * 
-     * @param {Ace.TooltipMarkerGroup} tooltipMarkerGroup marker group.
+     * @param {Ace.MarkerGroup} markerGroup marker group.
      * @param {Ace.EditSession} session edit session.
      */
-    setMarkerGroupForSession(tooltipMarkerGroup, session) {
-        this.markerTooltipGroups[session.id] = tooltipMarkerGroup;
+    setMarkerGroupForSession(markerGroup, session) {
+        this.markerTooltipGroups[session.id] = markerGroup;
     }
 
     /**

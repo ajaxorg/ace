@@ -282,14 +282,14 @@ export interface TooltipMarker {
   priority?: number;
 }
 
-export class TooltipMarkerGroup {
+export class MarkerGroup {
   constructor();
   setMarkers: (markers: TooltipMarker[]) => void;
 }
 
 export class TooltipMarkerManager {
   constructor(editor: Editor);
-  setMarkerGroupForSession: (tooltipMarkerGroup: TooltipMarkerGroup, session: EditSession) => void;
+  setMarkerGroupForSession: (markerGroup: MarkerGroup, session: EditSession) => void;
   destroy: () => void;
 }
 
