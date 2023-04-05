@@ -197,6 +197,9 @@ var optionGroups = {
         },
         "Prevent keyboard trapping": {
             path: "preventKeyboardTrapping"
+        },
+        "Use SVG gutter icons": {
+            path: "useSvgGutterIcons"
         }
     }
 };

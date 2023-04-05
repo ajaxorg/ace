@@ -300,8 +300,9 @@ function workers(path) {
     }).filter(function(x) { return !!x; });
 }
 
-function modeList() {
-    return jsFileList("lib/ace/mode", /_highlight_rules|_test|_worker|xml_util|_outdent|behaviour|completions/);
+function modeList(path) {
+    path = path || "lib/ace/mode";
+    return jsFileList(path, /_highlight_rules|_test|_worker|xml_util|_outdent|behaviour|completions/);
 }
 
 function buildAceModule(opts, callback) {
@@ -606,7 +607,11 @@ function extractCss(callback) {
                 }
                 var buffer = Buffer.from(data.slice(i + 1), "base64");
                 imageCounter++;
-                var imageName = name + "-" + imageCounter + ".png";
+                var imageName;
+                if (/^image\/svg\+xml/.test(data))
+                    imageName = name + "-" + imageCounter + ".svg";
+                else   
+                    imageName = name + "-" + imageCounter + ".png";
                 images[imageName] = buffer;
                 console.log("url(\"" + directory + "/" + imageName + "\")");
                 return "url(\"" + directory + "/" + imageName + "\")";

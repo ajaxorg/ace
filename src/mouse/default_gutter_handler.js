@@ -57,9 +57,11 @@ function GutterHandler(mouseHandler) {
             info: {singular: "information message", plural: "information messages"}
         };
 
+        var iconClassName = gutter.$useSvgGutterIcons ? "ace_icon_svg" : "ace_icon";
+
         // Construct the body of the tooltip.
         for (var i = 0; i < annotation.text.length; i++) {
-            var line = `<span class='ace_${annotation.type[i]} ace_icon' aria-label='${annotationLabels[annotation.type[i]].singular}' role=img> </span> ${annotation.text[i]}`;
+            var line = `<span class='ace_${annotation.type[i]} ${iconClassName}' aria-label='${annotationLabels[annotation.type[i]].singular}' role=img> </span> ${annotation.text[i]}`;
             annotationMessages[annotation.type[i]].push(line);
         }
         var tooltipBody = "<div class='ace_gutter-tooltip_body'>";

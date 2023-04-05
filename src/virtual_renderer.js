@@ -1902,6 +1902,12 @@ config.defineOptions(VirtualRenderer.prototype, "renderer", {
         },
         initialValue: true
     },
+    useSvgGutterIcons: {
+        set: function(value){
+            this.$gutterLayer.$useSvgGutterIcons = value;
+        },
+        initialValue: false
+    },
     fadeFoldWidgets: {
         set: function(show) {
             dom.setCssClass(this.$gutter, "ace_fade-fold-widgets", show);
