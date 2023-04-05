@@ -1,5 +1,5 @@
 var fs = require("fs");
-const {modeList, jsFileList} = require("../Makefile.dryice");
+const {jsFileList} = require("../Makefile.dryice");
 
 function buildResolver() {
     var moduleNames = getModuleNames();
@@ -13,7 +13,7 @@ function buildResolver() {
 
 function getModuleNames() {
     let paths = [];
-    var modeNames = modeList();
+    var modeNames = jsFileList("src/mode", /_highlight_rules|_test|_worker|xml_util|_outdent|behaviour|completions/);
     // modes
     let modeNamePaths = modeNames.map(function (name) {
         return "ace/mode/" + name;
