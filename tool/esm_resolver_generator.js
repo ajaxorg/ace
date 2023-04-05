@@ -13,7 +13,7 @@ function buildResolver() {
 
 function getModuleNames() {
     let paths = [];
-    var modeNames = modeList();
+    var modeNames = modeList("src/mode");
     // modes
     let modeNamePaths = modeNames.map(function (name) {
         return "ace/mode/" + name;
