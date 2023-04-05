@@ -2883,6 +2883,7 @@ config.defineOptions(Editor.prototype, "editor", {
     maxPixelHeight: "renderer",
     useTextareaForIME: "renderer",
     useResizeObserver: "renderer",
+    useSvgGutterIcons: "renderer",
 
     scrollSpeed: "$mouseHandler",
     dragDelay: "$mouseHandler",
