@@ -11,7 +11,7 @@ var Range = require("./range").Range;
 var Document = require("./document").Document;
 var BackgroundTokenizer = require("./background_tokenizer").BackgroundTokenizer;
 var SearchHighlight = require("./search_highlight").SearchHighlight;
-var TooltipMarkerGroup = require("./tooltip_marker").TooltipMarkerGroup;
+var MarkerGroup = require("./tooltip_marker").MarkerGroup;
 
 //{ events
 /**
@@ -650,7 +650,7 @@ class EditSession {
      */
     setTooltipMarkers(markers, tooltipMarkerManager) {
         if (!this.$tooltipMarkerGroup) {
-            const tooltipMarkerGroup = new TooltipMarkerGroup();
+            const tooltipMarkerGroup = new MarkerGroup();
             this.$tooltipMarkerGroup = this.addDynamicMarker(tooltipMarkerGroup);
             tooltipMarkerManager.setMarkerGroupForSession(this.$tooltipMarkerGroup, this);
         }
