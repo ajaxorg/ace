@@ -2880,8 +2880,8 @@ config.defineOptions(Editor.prototype, "editor", {
                 }
             };
 
-            // If true, prevent focus to be captured when tabbing through the page. When focus is set to the content div, 
-            // press Enter key to give focus to Ace and press Esc to allow again to tab through the page.
+            // Prevent focus to be captured when tabbing through the page. When focus is set to the content div, 
+            // press Enter key to give focus to Ace and press Esc to again allow to tab through the page.
             if (value === 'content'){
                 this.textInput.getElement().setAttribute("tabindex", -1);
                 this.renderer.content.setAttribute("tabindex", 0);
