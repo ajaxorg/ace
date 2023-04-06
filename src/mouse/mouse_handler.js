@@ -190,7 +190,7 @@ config.defineOptions(MouseHandler.prototype, "mouseHandler", {
     dragDelay: {initialValue: (useragent.isMac ? 150 : 0)},
     dragEnabled: {initialValue: true},
     focusTimeout: {initialValue: 0},
-    tooltipFollowsMouse: {initialValue: false}
+    tooltipFollowsMouse: {initialValue: true}
 });
 
 
