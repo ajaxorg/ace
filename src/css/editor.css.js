@@ -105,7 +105,7 @@ module.exports = `
     pointer-events: none;
 }
 
-.ace_gutter-cell, .ace_gutter-cell_svg-icons  {
+.ace_gutter-cell, .ace_gutter-cell_svg-icons {
     position: absolute;
     top: 0;
     left: 0;
@@ -115,12 +115,12 @@ module.exports = `
     background-repeat: no-repeat;
 }
 
-.ace_gutter-cell_svg-icons .ace_icon_svg{
+.ace_gutter-cell_svg-icons .ace_icon_svg {
     margin-left: -14px;
     float: left;
 }
 
-.ace_gutter-cell .ace_icon{
+.ace_gutter-cell .ace_icon {
     margin-left: -18px;
     float: left;
 }
