@@ -199,7 +199,7 @@ var optionGroups = {
             path: "useSvgGutterIcons"
         },
         "Keyboard Accessibility Mode": {
-            path: "enableKeyboardAccessibility",
+            path: "enableKeyboardAccessibility"
         }
     }
 };
