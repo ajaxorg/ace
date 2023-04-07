@@ -2859,7 +2859,7 @@ config.defineOptions(Editor.prototype, "editor", {
             this.$updatePlaceholder();
         }
     },
-    keyboardAccessibilityMode: {
+    enableKeyboardAccessibility: {
         set: function(value) {
             var blurCommand = {
                 name: "blurTextInput",
@@ -2884,7 +2884,7 @@ config.defineOptions(Editor.prototype, "editor", {
 
             // Prevent focus to be captured when tabbing through the page. When focus is set to the content div, 
             // press Enter key to give focus to Ace and press Esc to again allow to tab through the page.
-            if (value === 'content'){
+            if (value){
                 this.textInput.getElement().setAttribute("tabindex", -1);
                 this.renderer.content.setAttribute("tabindex", 0);
                 this.renderer.content.classList.add(keyboardFocusClassName);
@@ -2894,7 +2894,7 @@ config.defineOptions(Editor.prototype, "editor", {
 
                 this.renderer.content.addEventListener("keyup", focusOnEnterKeyup.bind(this));
                 this.commands.addCommand(blurCommand);
-            } else if (value === 'off') {
+            } else {
                 this.textInput.getElement().setAttribute("tabindex", 0);
                 this.renderer.content.setAttribute("tabindex", -1);
                 this.renderer.content.classList.remove(keyboardFocusClassName);
@@ -2904,7 +2904,7 @@ config.defineOptions(Editor.prototype, "editor", {
                 this.commands.removeCommand(blurCommand);
             }
         },
-        initialValue: 'off'
+        initialValue: false
     },
     customScrollbar: "renderer",
     hScrollBarAlwaysVisible: "renderer",
