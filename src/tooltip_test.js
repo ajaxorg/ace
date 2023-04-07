@@ -13,19 +13,11 @@ module.exports = {
     setUp: function() {
         docTooltip = new HoverTooltip();
         editor = ace.edit(null, {
-            value: "Hello empty world\n"
+            value: "Hello empty world"
         });
         document.body.appendChild(editor.container);
         editor.container.style.height = "200px";
         editor.container.style.width = "300px";
-    },
-    tearDown: function() {
-        editor.destroy();
-        docTooltip.destroy();
-        editor = docTooltip = null;
-    },
-   "test: show doc tooltip" : function(next) {
-        docTooltip.addToEditor(editor);
         
         docTooltip.setDataProvider(function(e, editor) {
             let session = editor.session;
@@ -38,7 +30,14 @@ module.exports = {
             domNode.className = "doc-tooltip";
             docTooltip.showForRange(editor, range, domNode, e);
         });
-        
+    },
+    tearDown: function() {
+        editor.destroy();
+        docTooltip.destroy();
+        editor = docTooltip = null;
+    },
+    "test: show doc tooltip" : function(next) {
+        docTooltip.addToEditor(editor);
         
         editor.resize(true);
         docTooltip.idleTime = 3;
@@ -81,12 +80,24 @@ module.exports = {
                         docTooltip.waitForHover();
                         assert.equal(docTooltip.$element.style.display, "block");
 
-                        
                         assert.equal(docTooltip.$element.textContent, "tooltip Range: [0/12] -> [0/17]");
                         mouse("out", docTooltip.$element, {relatedTarget: document.body});
                         assert.equal(docTooltip.$element.style.display, "none");
                         assert.ok(!docTooltip.timeout);
-                        next();
+
+                        docTooltip.idleTime = 3;
+                        mouse("move", editor.container);
+                        setTimeout(function() {
+                            mouse("move", {row: 0, column: 13});
+                            assert.equal(docTooltip.$element.style.display, "none");
+                            setTimeout(function() {
+                                assert.equal(docTooltip.$element.style.display, "block");
+                                assert.equal(docTooltip.$element.textContent, "tooltip Range: [0/12] -> [0/17]");
+                                mouse("move", editor.renderer.scroller);
+                                assert.equal(docTooltip.$element.style.display, "none");
+                                next();
+                            }, 6);
+                        }, 6);
                     }, 6);
                 }, 6);
             }, 6);

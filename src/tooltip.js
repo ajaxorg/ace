@@ -189,6 +189,7 @@ class HoverTooltip extends Tooltip {
     
     addToEditor(editor, callback, cancel) {
         editor.on("mousemove", this.onMouseMove);
+        editor.renderer.getMouseEventTarget().addEventListener("mouseout", this.onMouseOut, true);
     }
     
     onMouseMove(e, editor) {
@@ -196,16 +197,18 @@ class HoverTooltip extends Tooltip {
         this.lastT = Date.now();
         var isMousePressed = editor.$mouseHandler.isMousePressed;
         if (this.isOpen) {
-            var pos = this.lastEvent.getDocumentPosition();
+            var pos = this.lastEvent && this.lastEvent.getDocumentPosition();
             if (
                 !this.range 
-                || !this.range.contains(pos.row, pos.column) 
+                || !this.range.contains(pos.row, pos.column)
                 || isMousePressed
+                || this.isOutsideOfText(this.lastEvent)
             ) {
                 this.hide();
             }
         }
         if (this.timeout || isMousePressed) return;
+        this.lastEvent = e;
         this.timeout = setTimeout(this.waitForHover, this.idleTime);
     }
     waitForHover() {
@@ -217,7 +220,26 @@ class HoverTooltip extends Tooltip {
         }
         
         this.timeout = null;
-        this.$gatherData(this.lastEvent, this.lastEvent.editor);
+        if (this.lastEvent && !this.isOutsideOfText(this.lastEvent)) {
+            this.$gatherData(this.lastEvent, this.lastEvent.editor);
+        }
+    }
+
+    isOutsideOfText(e) {
+        var editor = e.editor;
+        var docPos = e.getDocumentPosition();
+        var line = editor.session.getLine(docPos.row);
+        if (docPos.column == line.length) {
+            var screenPos = editor.renderer.pixelToScreenCoordinates(e.clientX, e.clientY);
+            var clippedPos = editor.session.documentToScreenPosition(docPos.row, docPos.column);
+            if (
+                clippedPos.column != screenPos.column
+                || clippedPos.row != screenPos.row
+            ) {
+                return true;
+            }
+        }
+        return false;
     }
     
     setDataProvider(value) {
@@ -289,6 +311,7 @@ class HoverTooltip extends Tooltip {
             return;
         if (e && e.target && this.$element.contains(e.target))
             return;
+        this.lastEvent = null;
         clearTimeout(this.timeout);
         this.timeout = null;
         this.addMarker(null);
@@ -313,8 +336,13 @@ class HoverTooltip extends Tooltip {
     }
 
     onMouseOut(e) {
-        clearTimeout(this.timeout);
-        this.timeout = null;
+        if (this.timeout) {
+            clearTimeout(this.timeout);
+            this.timeout = null;
+        }
+        this.lastEvent = null;
+        if (!this.isOpen) return;
+
         if (!e.relatedTarget || e.relatedTarget == this.getElement()) return;
 
         if (e && e.currentTarget.contains(e.relatedTarget)) return;
