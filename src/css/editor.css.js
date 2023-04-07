@@ -58,7 +58,7 @@ module.exports = `
     font-variant-ligatures: no-common-ligatures;
 }
 
-.ace_content:focus {
+.ace_keyboard-focus:focus {
     box-shadow: inset 0 0 0 2px #5E9ED6;
     outline: none;
 }

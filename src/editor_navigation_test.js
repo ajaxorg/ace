@@ -174,8 +174,8 @@ module.exports = {
         editor.onCommandKey({}, 0, keys["escape"]);
  
         // Focus should be on the content div after pressing Esc
-        assert.notEqual(document.activeElement, editor.textInput.getElement());
         assert.equal(document.activeElement, editor.renderer.content);
+        assert.notEqual(document.activeElement, editor.textInput.getElement());
 
         // Should trap focus
         editor.setOption('keyboardAccessibilityMode', 'off');

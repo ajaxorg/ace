@@ -2872,7 +2872,7 @@ config.defineOptions(Editor.prototype, "editor", {
                 readOnly: true
             };
 
-            var focusCommand = function (e) {
+            var focusOnEnterKeyup = function (e) {
                 if (e.target == this.renderer.content && e.keyCode === keys['enter']){
                     e.stopPropagation();
                     e.preventDefault();
@@ -2880,23 +2880,27 @@ config.defineOptions(Editor.prototype, "editor", {
                 }
             };
 
+            var keyboardFocusClassName = "ace_keyboard-focus";
+
             // Prevent focus to be captured when tabbing through the page. When focus is set to the content div, 
             // press Enter key to give focus to Ace and press Esc to again allow to tab through the page.
             if (value === 'content'){
                 this.textInput.getElement().setAttribute("tabindex", -1);
                 this.renderer.content.setAttribute("tabindex", 0);
+                this.renderer.content.classList.add(keyboardFocusClassName);
                 this.renderer.content.setAttribute("aria-label",
                     "Editor, press Enter key to start editing, press Escape key to exit"
                 );
 
-                this.renderer.content.addEventListener("keydown", focusCommand.bind(this));
+                this.renderer.content.addEventListener("keyup", focusOnEnterKeyup.bind(this));
                 this.commands.addCommand(blurCommand);
             } else if (value === 'off') {
                 this.textInput.getElement().setAttribute("tabindex", 0);
                 this.renderer.content.setAttribute("tabindex", -1);
+                this.renderer.content.classList.remove(keyboardFocusClassName);
                 this.renderer.content.setAttribute("aria-label", "");
             
-                this.renderer.content.removeEventListener("keydown", focusCommand.bind(this));
+                this.renderer.content.removeEventListener("keyup", focusOnEnterKeyup.bind(this));
                 this.commands.removeCommand(blurCommand);
             }
         },
