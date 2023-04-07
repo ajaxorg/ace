@@ -19,7 +19,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [12.x]
+        node-version: [16.x]
 
     steps:
     - uses: actions/checkout@v2
@@ -52,7 +52,7 @@ jobs:
         fi
     # - run: npm run lint
     - run: node_modules/.bin/tsc --noImplicitAny --strict --noUnusedLocals --noImplicitReturns --noUnusedParameters --noImplicitThis ace.d.ts
-    - uses: codecov/codecov-action@v1
+    - uses: codecov/codecov-action@v3
       with:
         file: ./coverage/coverage.json
         flags: unittests
