@@ -830,14 +830,14 @@ exports.load = function() {
     if (typeof global == "undefined") return;
     window.window = global;
     Object.keys(window).forEach(function(i) {
-        if (!global[i]) {
-            addedProperties.push(i);
-            global.__defineGetter__(i, function() {
-                return window[i];
-            });
-            global.__defineSetter__(i, function() {
-            });
-        }
+        var desc = Object.getOwnPropertyDescriptor(global, i);
+        addedProperties.push({name: i, desc: desc});
+        global.__defineGetter__(i, function() {
+            return window[i];
+        });
+        global.__defineSetter__(i, function() {
+            console.log("attempt to set " + i);
+        });
     });
 };
 
@@ -894,7 +894,10 @@ exports.unload = function() {
     var cache = req("module")._cache;
     delete cache[__filename];
     addedProperties.forEach(function(i) {
-        delete global[i];
+        delete global[i.name];
+        if (i.desc) {
+            Object.defineProperty(global, i.name, i.desc);
+        }
     });
 };
 

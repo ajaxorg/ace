@@ -33,7 +33,7 @@ var WheelEvent = function(opts) {
 };
 
 function sendTouchEvent(type, opts, editor) {
-    var e = new window.Event("touch" + type, {bubbles: true, cancelable: true});
+    var e = new window.CustomEvent("touch" + type, {bubbles: true, cancelable: true});
     Object.defineProperties(e, Object.getOwnPropertyDescriptors(opts));
     editor.container.dispatchEvent(e);
 }
