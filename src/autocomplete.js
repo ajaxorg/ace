@@ -644,7 +644,8 @@ class CompletionProvider {
 
             this.completions.setFilter(prefix);
 
-            callback(null, this.completions, results.finished);
+            if (results.finished || this.completions.filtered.length)
+                callback(null, this.completions, results.finished);
         }.bind(this);
 
         var isImmediate = true;
