@@ -290,19 +290,15 @@ class Gutter{
         
         var lineHeight = config.lineHeight + "px";
 
-        var className;
-        var iconClassName;
-        if (this.$useSvgGutterIcons){
-            className = "ace_gutter-cell_svg-icons ";
-            iconClassName = "ace_icon_svg";
-        }
-        else {
-            className = "ace_gutter-cell ";
-            iconClassName = "ace_icon";
-        }
+        var className = this.$useSvgGutterIcons ? "ace_gutter-cell_svg-icons " : "ace_gutter-cell ";
+        var iconClassName = this.$useSvgGutterIcons ? "ace_icon_svg" : "ace_icon";
+        
 
         if (this.$annotations[row]){
-            annotationNode.className = iconClassName + this.$annotations[row].className;
+            annotationNode.className = iconClassName;
+
+            if (this.$useSvgGutterIcons)
+                annotationNode.className += this.$annotations[row].className;
 
             dom.setStyle(annotationNode.style, "height", lineHeight);
             dom.setStyle(annotationNode.style, "display", "block");
