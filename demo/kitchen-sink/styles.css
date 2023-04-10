@@ -93,3 +93,25 @@ body {
     opacity: 1!important;
     font-size: 1em!important;
 }
+
+.ace_tooltip-marker_test {
+    position: absolute;
+}
+.ace_tooltip-marker_test::after,
+.ace_tooltip-marker_test::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: inherit;
+    background-size: 6px 100%;
+}
+.ace_tooltip-marker_test::before {
+    top: 2px;
+    background-image: linear-gradient(45deg, red 35%, transparent 0),
+        linear-gradient(-45deg, red 35%, transparent 0);
+}
+.ace_tooltip-marker_test::after {
+    top: 4px;
+    background-image: linear-gradient(45deg, white 35%, transparent 0),
+        linear-gradient(-45deg, white 35%, transparent 0);
+}
