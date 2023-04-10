@@ -307,7 +307,7 @@ function Node(name) {
     });
     this.__defineGetter__("outerHTML", function() {
         var attributes = this.attributes.map(function(attr) {
-            return attr.name + "=" + JSON.stringify(attr.value);
+            return attr.name + "=" + JSON.stringify(attr.value + "");
         }, this).join(" ");
         return "<" + this.localName + (attributes ? " " + attributes : "") + ">" + this.innerHTML + "</" + this.localName + ">";
     });

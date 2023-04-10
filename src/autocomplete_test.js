@@ -1,10 +1,10 @@
 if (typeof process !== "undefined") {
-    require("amd-loader");
     require("./test/mockdom");
 }
 
 "use strict";
 
+var sendKey = require("./test/user").type;
 var ace = require("./ace");
 var assert = require("./test/assertions");
 var Range = require("./range").Range;
@@ -18,6 +18,7 @@ function initEditor(value) {
         enableLiveAutocompletion: true
     });
     document.body.appendChild(editor.container);
+    editor.focus();
 
     // workaround for autocomplete using non-relative path
     editor.renderer.$themeId = "./theme/textmate";
@@ -32,18 +33,18 @@ module.exports = {
 
         assert.ok(!editor.container.querySelector("style"));
 
-        editor.execCommand("insertstring", "a");
-        checkInnerHTML('<d "ace_line ace_selected" id="suggest-aria-id:0" role="option" aria-label="arraysort" aria-setsize=2 aria-posinset=0><s "ace_completion-highlight">a</s><s "ace_">rraysort</s><s "ace_completion-meta">local</s></d><d "ace_line"><s "ace_completion-highlight">a</s><s "ace_">looooooooooooooooooooooooooooong_word</s><s "ace_completion-meta">local</s></d>', function() {
-            editor.execCommand("insertstring", "rr");
-            checkInnerHTML('<d "ace_line ace_selected" id="suggest-aria-id:0" role="option" aria-label="arraysort" aria-setsize=1 aria-posinset=0><s "ace_completion-highlight">arr</s><s "ace_">aysort</s><s "ace_completion-meta">local</s></d>', function() {
-                editor.execCommand("insertstring", "r");
-                checkInnerHTML('<d "ace_line ace_selected" id="suggest-aria-id:0" role="option" aria-label="arraysort" aria-setsize=1 aria-posinset=0><s "ace_completion-highlight">arr</s><s "ace_">ayso</s><s "ace_completion-highlight">r</s><s "ace_">t</s><s "ace_completion-meta">local</s></d>', function() {
+        sendKey("a");
+        checkInnerHTML('<d "ace_line ace_selected" id="suggest-aria-id:0" role="option" aria-label="arraysort" aria-setsize="2" aria-posinset="0"><s "ace_completion-highlight">a</s><s "ace_">rraysort</s><s "ace_completion-meta">local</s></d><d "ace_line"><s "ace_completion-highlight">a</s><s "ace_">looooooooooooooooooooooooooooong_word</s><s "ace_completion-meta">local</s></d>', function() {
+            sendKey("rr");
+            checkInnerHTML('<d "ace_line ace_selected" id="suggest-aria-id:0" role="option" aria-label="arraysort" aria-setsize="1" aria-posinset="0"><s "ace_completion-highlight">arr</s><s "ace_">aysort</s><s "ace_completion-meta">local</s></d>', function() {
+                sendKey("r");
+                checkInnerHTML('<d "ace_line ace_selected" id="suggest-aria-id:0" role="option" aria-label="arraysort" aria-setsize="1" aria-posinset="0"><s "ace_completion-highlight">arr</s><s "ace_">ayso</s><s "ace_completion-highlight">r</s><s "ace_">t</s><s "ace_completion-meta">local</s></d>', function() {
                     
-                    editor.onCommandKey(null, 0, 13);
+                    sendKey("Return");
                     assert.equal(editor.getValue(), "arraysort\narraysort alooooooooooooooooooooooooooooong_word");
                     editor.execCommand("insertstring", " looooooooooooooooooooooooooooong_");
-                    checkInnerHTML('<d "ace_line ace_selected" id="suggest-aria-id:0" role="option" aria-label="alooooooooooooooooooooooooooooong_word" aria-setsize=1 aria-posinset=0><s "ace_">a</s><s "ace_completion-highlight">looooooooooooooooooooooooooooong_</s><s "ace_">word</s><s "ace_completion-meta">local</s></d>', function() {
-                        editor.onCommandKey(null, 0, 13);
+                    checkInnerHTML('<d "ace_line ace_selected" id="suggest-aria-id:0" role="option" aria-label="alooooooooooooooooooooooooooooong_word" aria-setsize="1" aria-posinset="0"><s "ace_">a</s><s "ace_completion-highlight">looooooooooooooooooooooooooooong_</s><s "ace_">word</s><s "ace_completion-meta">local</s></d>', function() {
+                        sendKey("Return");
                         editor.destroy();
                         editor.container.remove();
                         done();
@@ -93,7 +94,7 @@ module.exports = {
         ];
 
         editor.moveCursorTo(0, 6);
-        editor.execCommand("insertstring", "w");
+        sendKey("w");
         var popup = editor.completer.popup;
         check(function () {
             assert.equal(popup.data.length, 1);
@@ -169,18 +170,18 @@ module.exports = {
             }
         ];
 
-        editor.execCommand("insertstring", "c");
+        sendKey("c");
         var popup = editor.completer.popup;
         check(function () {
             assert.equal(popup.data.length, 4);
             assert.equal(document.body.lastChild.innerHTML, firstDoc);
-            editor.onCommandKey(null, 0, 40);
+            sendKey("Down");
             check(function () {
                 assert.equal(document.body.lastChild.innerHTML, secondDoc);
-                editor.onCommandKey(null, 0, 40);
+                sendKey("Down");
                 check(function () {
                     assert.equal(document.body.lastChild.innerHTML, firstDoc);
-                    editor.onCommandKey(null, 0, 40);
+                    sendKey("Down");
                     check(function () {
                         assert.equal(document.body.lastChild.innerHTML, secondDoc);
                         editor.destroy();
@@ -194,7 +195,7 @@ module.exports = {
         function check(callback) {
             setTimeout(function wait() {
                 callback();
-            }, 70);
+            }, 10);
         }
     },
     "test: slow and fast completers": function(done) {
@@ -230,15 +231,15 @@ module.exports = {
             editor.completer.popup.renderer.$loop._flush();
             assert.equal(editor.completer.popup.renderer.scrollTop, 0);
             assert.equal(editor.completer.popup.renderer.scroller.textContent, "some");
-            editor.onCommandKey(null, 0, 13);
+            sendKey("Return");
             assert.equal(editor.getValue(), "some");
-            editor.execCommand("insertstring", " ");
+            sendKey(" ");
             assert.equal(editor.completer.popup.isOpen, false);
-            editor.execCommand("insertstring", "t");
+            sendKey("t");
             assert.equal(editor.completer.popup.isOpen, true);
-            editor.onCommandKey(null, 0, 13);
-            editor.execCommand("insertstring", " ");
-            editor.execCommand("insertstring", "q");
+            sendKey("Return");
+            sendKey(" ");
+            sendKey("q");
             assert.equal(editor.completer.popup.isOpen, false);
             
             editor.destroy();
