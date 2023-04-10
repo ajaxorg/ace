@@ -196,6 +196,55 @@ module.exports = {
                 callback();
             }, 70);
         }
+    },
+    "test: slow and fast completers": function(done) {
+        var syncCompleter={
+            getCompletions: function(editor, session, pos, prefix, callback) {
+                callback(null,[{
+                    value: "test"
+                }]);
+            },
+            id: "asyncCompleter"
+        };
+
+        var asyncCompleter = {
+            getCompletions: function(editor, session, pos, prefix, callback) {
+                setTimeout(() => {
+                    callback(null,[{
+                        value: "some"
+                    }]);
+                }, 10);
+            },
+            id: "asyncCompleter"
+        };
+        var editor = initEditor("");
+        editor.completers=[
+            syncCompleter,asyncCompleter
+        ];
+        editor.resize(true);
+        editor.execCommand("insertstring", "o");
+        assert.notOk(!!editor.completer.popup);
+        setTimeout(function() {
+            assert.ok(editor.completer.popup.isOpen);
+            assert.equal(editor.completer.popup.renderer.scrollTop, 0);
+            editor.completer.popup.renderer.$loop._flush();
+            assert.equal(editor.completer.popup.renderer.scrollTop, 0);
+            assert.equal(editor.completer.popup.renderer.scroller.textContent, "some");
+            editor.onCommandKey(null, 0, 13);
+            assert.equal(editor.getValue(), "some");
+            editor.execCommand("insertstring", " ");
+            assert.equal(editor.completer.popup.isOpen, false);
+            editor.execCommand("insertstring", "t");
+            assert.equal(editor.completer.popup.isOpen, true);
+            editor.onCommandKey(null, 0, 13);
+            editor.execCommand("insertstring", " ");
+            editor.execCommand("insertstring", "q");
+            assert.equal(editor.completer.popup.isOpen, false);
+            
+            editor.destroy();
+            editor.container.remove();
+            done();
+        }, 10);
     }
 };
 

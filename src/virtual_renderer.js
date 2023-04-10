@@ -821,7 +821,7 @@ class VirtualRenderer {
             // scrollTop so that the cursor and onscreen content stays in the same place.
             // TODO: find a better way to handle this, that works non wrapped case and doesn't compute layerConfig twice
             if (config.firstRow != this.layerConfig.firstRow && config.firstRowScreen == this.layerConfig.firstRowScreen) {
-                var st = this.scrollTop + (config.firstRow - this.layerConfig.firstRow) * this.lineHeight;
+                var st = this.scrollTop + (config.firstRow - Math.max(this.layerConfig.firstRow, 0)) * this.lineHeight;
                 if (st > 0) {
                     // this check is needed as a workaround for the documentToScreenRow returning -1 if document.length == 0
                     this.scrollTop = st;
