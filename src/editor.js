@@ -19,6 +19,7 @@ var TokenIterator = require("./token_iterator").TokenIterator;
 var LineWidgets = require("./line_widgets").LineWidgets;
 
 var clipboard = require("./clipboard");
+var keys = require('./lib/keys');
 
 /**
  * The main entry point into the Ace functionality.
@@ -2857,6 +2858,53 @@ config.defineOptions(Editor.prototype, "editor", {
             }
             this.$updatePlaceholder();
         }
+    },
+    enableKeyboardAccessibility: {
+        set: function(value) {
+            var blurCommand = {
+                name: "blurTextInput",
+                description: "Set focus to the editor content div to allow tabbing through the page",
+                bindKey: "Esc",
+                exec: function(editor) {
+                    editor.blur();
+                    editor.renderer.content.focus();
+                },
+                readOnly: true
+            };
+
+            var focusOnEnterKeyup = function (e) {
+                if (e.target == this.renderer.content && e.keyCode === keys['enter']){
+                    e.stopPropagation();
+                    e.preventDefault();
+                    this.focus();
+                }
+            };
+
+            var keyboardFocusClassName = "ace_keyboard-focus";
+
+            // Prevent focus to be captured when tabbing through the page. When focus is set to the content div, 
+            // press Enter key to give focus to Ace and press Esc to again allow to tab through the page.
+            if (value){
+                this.textInput.getElement().setAttribute("tabindex", -1);
+                this.renderer.content.setAttribute("tabindex", 0);
+                this.renderer.content.classList.add(keyboardFocusClassName);
+                this.renderer.content.setAttribute("aria-label",
+                    "Editor, press Enter key to start editing, press Escape key to exit"
+                );
+
+                this.renderer.content.addEventListener("keyup", focusOnEnterKeyup.bind(this));
+                this.commands.addCommand(blurCommand);
+            } else {
+                this.textInput.getElement().setAttribute("tabindex", 0);
+                this.renderer.content.setAttribute("tabindex", -1);
+                this.renderer.content.classList.remove(keyboardFocusClassName);
+                this.renderer.content.setAttribute("aria-label", "");
+            
+                this.renderer.content.removeEventListener("keyup", focusOnEnterKeyup.bind(this));
+                this.commands.removeCommand(blurCommand);
+            }
+        },
+        initialValue: false
     },
     customScrollbar: "renderer",
     hScrollBarAlwaysVisible: "renderer",

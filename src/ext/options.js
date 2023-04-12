@@ -197,6 +197,9 @@ var optionGroups = {
         },
         "Use SVG gutter icons": {
             path: "useSvgGutterIcons"
+        },
+        "Keyboard Accessibility Mode": {
+            path: "enableKeyboardAccessibility"
         }
     }
 };
