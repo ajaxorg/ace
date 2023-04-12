@@ -9,7 +9,7 @@ var ace = require("./ace");
 var assert = require("./test/assertions");
 var EditSession = require("./edit_session").EditSession;
 var Range = require("./range").Range;
-var TooltipMarkerManager = require("./tooltip_marker").TooltipMarkerManager;
+var TooltipMarkerManager = require("./marker_group").TooltipMarkerManager;
 var editor, tooltipMarkerManager;
 var session1, session2;
 

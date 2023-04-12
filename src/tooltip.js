@@ -147,8 +147,8 @@ class PopupManager {
     }
 
     doPopupsOverlap (popupA, popupB) {
-        const rectA = popupA.getRect();
-        const rectB = popupB.getRect();
+        const rectA = popupA.getElement().getBoundingClientRect();
+        const rectB = popupB.getElement().getBoundingClientRect();
 
         return (rectA.left < rectB.right && rectA.right > rectB.left && rectA.top < rectB.bottom && rectA.bottom
             > rectB.top);

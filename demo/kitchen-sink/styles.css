@@ -94,24 +94,43 @@ body {
     font-size: 1em!important;
 }
 
-.ace_tooltip-marker_test {
-    position: absolute;
+
+.language_highlight_error {
+	position: absolute;
+	border-bottom: dotted 1px #e00404;
+	z-index: 2000;
+    border-radius: 0;
 }
-.ace_tooltip-marker_test::after,
-.ace_tooltip-marker_test::before {
-    content: '';
-    position: absolute;
-    width: 100%;
-    height: inherit;
-    background-size: 6px 100%;
+.language_highlight_warning {
+	position: absolute;
+	border-bottom: solid 1px #DDC50F;
+	z-index: 2000;
+    border-radius: 0;
 }
-.ace_tooltip-marker_test::before {
-    top: 2px;
-    background-image: linear-gradient(45deg, red 35%, transparent 0),
-        linear-gradient(-45deg, red 35%, transparent 0);
+.language_highlight_info {
+	position: absolute;
+	border-bottom: dotted 1px #999;
+	z-index: 2000;
+    border-radius: 0;
 }
-.ace_tooltip-marker_test::after {
-    top: 4px;
-    background-image: linear-gradient(45deg, white 35%, transparent 0),
-        linear-gradient(-45deg, white 35%, transparent 0);
+.language_highlight_occurrence_main {
+	position: absolute;
+	box-sizing: border-box;
+	border: solid 1px #888;
+	z-index: 2000;
+}
+.ace_dark .language_highlight_occurrence_main {
+	border: solid 1px #888;
+}
+.language_highlight_occurrence_other {
+	position: absolute;
+	box-sizing: border-box;
+	border: solid 1px #888;
+	z-index: 2000;
+}
+.ace_dark .language_highlight_occurrence_other {
+	border: solid 1px #888;
+}
+.ace_doc-tooltip pre {
+    margin: 0;
 }
