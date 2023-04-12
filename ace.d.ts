@@ -273,23 +273,19 @@ export namespace Ace {
     type: string;
   }
 
-export interface TooltipMarker {
-  range: Range;
-  tooltipText: string;
-  className?: string;
-  priority?: number;
-}
+  export interface TooltipMarker {
+    range: Range;
+    tooltipText: string;
+    className?: string;
+    priority?: number;
+  }
 
-export class MarkerGroup {
-  constructor();
-  setMarkers: (markers: TooltipMarker[]) => void;
-}
+  export class MarkerGroup {
+    constructor();
+    setMarkers: (markers: TooltipMarker[]) => void;
+    getMarkerAtPos: (pos: Position) => TooltipMarker;
+  }
 
-export class TooltipMarkerManager {
-  constructor(editor: Editor);
-  setMarkerGroupForSession: (markerGroup: MarkerGroup, session: EditSession) => void;
-  destroy: () => void;
-}
 
   export interface Command {
     name?: string;

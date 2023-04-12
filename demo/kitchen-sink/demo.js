@@ -46,7 +46,7 @@ var ElasticTabstopsLite = require("ace/ext/elastic_tabstops_lite").ElasticTabsto
 var IncrementalSearch = require("ace/incremental_search").IncrementalSearch;
 
 var TokenTooltip = require("./token_tooltip").TokenTooltip;
-var TooltipMarkerManager = require("ace/tooltip_marker").TooltipMarkerManager;
+var TooltipMarkerManager = require("ace/marker_group").TooltipMarkerManager;
 require("ace/config").defineOptions(Editor.prototype, "editor", {
     showTokenInfo: {
         set: function(val) {
@@ -62,28 +62,6 @@ require("ace/config").defineOptions(Editor.prototype, "editor", {
             return !!this.tokenTooltip;
         },
         handlesSet: true
-    },
-    showTooltipMarkers: {
-        set: function(val) {
-            if (val) {
-                this.tooltipMarkerManager = this.tooltipMarkerManager || new TooltipMarkerManager(this);
-                const singleLineMarker = {
-                    range: new Range(0, 0, 0, 5),
-                    tooltipText: "Single line marker",
-                    className: "ace_tooltip-marker_test",
-                };
-                const multiLineMarker = {
-                    range: new Range(3, 2, 4, 5),
-                    tooltipText: "Multi line marker",
-                    className: "ace_tooltip-marker_test",
-                };
-                editor.session.setTooltipMarkers([singleLineMarker, multiLineMarker], this.tooltipMarkerManager);
-            } else if (this.tooltipMarkerManager) {
-                editor.session.setTooltipMarkers([], this.tooltipMarkerManager);
-                this.tooltipMarkerManager.destroy();
-                delete this.tooltipMarkerManager;
-            }
-        }
     }
 });
 
@@ -103,29 +81,104 @@ require("ace/config").defineOptions(Editor.prototype, "editor", {
 });
 
 var {HoverTooltip} = require("ace/tooltip");
+var MarkerGroup = require("ace/marker_group").MarkerGroup;
 var docTooltip = new HoverTooltip();
 function loadLanguageProvider(editor) {
     require([
         "https://www.unpkg.com/ace-linters/build/ace-linters.js"
-    ], (m) => {
-        window.languageProvider = m.LanguageProvider.fromCdn("https://www.unpkg.com/ace-linters/build");
-        window.languageProvider.registerEditor(editor);
+    ], function(m) {
+        var languageProvider = m.LanguageProvider.fromCdn("https://www.unpkg.com/ace-linters/build", {
+            functionality: {
+                hover: true,
+                completion: {
+                    overwriteCompleters: true
+                },
+                completionResolve: true,
+                format: true,
+                documentHighlights: true,
+                signatureHelp: false
+            }
+        });
+        window.languageProvider = languageProvider;
+        languageProvider.registerEditor(editor);
         if (languageProvider.$descriptionTooltip)
             editor.off("mousemove", languageProvider.$descriptionTooltip.onMouseMove);
+        languageProvider.$messageController.$worker.addEventListener("message", function(e) {
+            var id = e.data.sessionId.split(".")[0];
+            var session = languageProvider.$getSessionLanguageProvider({id: id})?.session;
+            if (e.data.type == 6) {
+                e.stopPropagation();
+                if (session) {
+                    showAnnotations(session, e.data.value);
+                }
+            } else if (e.data.type == 13) {
+                // ignore signatures
+                if (session) showOccurrenceMarkers(session, e.data.value);
+            }
+        }, true);
+        function showOccurrenceMarkers(session, positions) {
+            if (!session.state.occurrenceMarkers) {
+                session.state.occurrenceMarkers = new MarkerGroup(session);
+            }
+            session.state.occurrenceMarkers.setMarkers(positions.map(function(el) {
+                var r = el.range;
+                return {
+                    range: new Range(r.start.line, r.start.character, r.end.line, r.end.character),
+                    className: el.kind == 3
+                        ? "language_highlight_occurrence_main"
+                        : "language_highlight_occurrence_other"
+                };
+            }));
+        }
+        function showAnnotations(session, diagnostics) {
+            session.clearAnnotations();
+            let annotations = diagnostics.map((el) => {
+                console.log(el.severity, el)
+                return {
+                    row: el.range.start.line,
+                    column: el.range.start.character,
+                    text: el.message,
+                    type: el.severity === 1 ? "error" : el.severity === 2 ? "warning" : "info"
+                };
+            });
+            if (annotations && annotations.length > 0) {
+                session.setAnnotations(annotations);
+            }
+            
+            if (!session.state) session.state = {}
+            if (!session.state.diagnosticMarkers) {
+                session.state.diagnosticMarkers = new MarkerGroup(session);
+            }
+            session.state.diagnosticMarkers.setMarkers(diagnostics.map(function(el) {
+                var r = el.range;
+                return {
+                    range: new Range(r.start.line, r.start.character, r.end.line, r.end.character),
+                    tooltipText: el.message,
+                    className:  "language_highlight_error"
+                };
+            }));
+        };
         
         docTooltip.setDataProvider(function(e, editor) {
-            var renderer = editor.renderer;
-
             let session = editor.session;
-            let docPos = e.getDocumentPosition() ;
+            let docPos = e.getDocumentPosition();
 
             languageProvider.doHover(session, docPos, function(hover) {
-                if (!hover) {
-                    return;
-                }
-                // todo should ace itself handle markdown?
-                var domNode = dom.buildDom(["p", {}, hover.content.text]);
-                docTooltip.showForRange(editor, hover.range, domNode, e);
+                var errorMarker = session.state?.diagnosticMarkers.getMarkerAtPosition(docPos);
+                var range = hover?.range || errorMarker?.range;
+                if (!range) return;
+                var hoverNode = hover && dom.buildDom(["div", {}])
+                if (hoverNode) {
+                    hover.content.text = hover.content.text.replace(/(?!^)`{3}/gm, "\n$&");
+                    // todo render markdown using ace markdown mode
+                    hoverNode.innerHTML = languageProvider.getTooltipText(hover);
+                };
+                
+                var domNode = dom.buildDom(["div", {},
+                    hoverNode,
+                    errorMarker && ["div", {}, errorMarker.tooltipText.trim()]
+                ]);
+                docTooltip.showForRange(editor, range, domNode, e);
             });
         });
         
@@ -462,10 +515,6 @@ optionsPanel.add({
             getValue: function() {
                 return !!originalAutocompleteCommand;
             }
-        },
-        "Show tooltip markers for active session": {
-            path: "showTooltipMarkers",
-            position: 2000
         },
         "Use Ace Linters": {
             position: 3000,
