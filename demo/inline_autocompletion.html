@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ACE Inline Autocompletion demo</title>
+  <style type="text/css" media="screen">
+    body {
+        overflow: hidden;
+    }
+
+    #editor {
+        margin: 0;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+    }
+  </style>
+</head>
+<body>
+
+<pre id="editor"></pre>
+
+<script src="kitchen-sink/require.js"></script>
+<script>
+// setup paths
+require.config({paths: { "ace" : "../src"}});
+// load ace and extensions
+require(["ace/ace", "ace/mode/javascript", "ace/ext/language_tools", "ace/ext/inline_autocomplete"], function(ace, codeLens) {
+    var editor = ace.edit("editor");
+    editor.session.setMode("ace/mode/javascript");
+    editor.setTheme("ace/theme/tomorrow");
+    // enable inline autocompletion
+    editor.setOptions({
+        enableBasicAutocompletion: false,
+        enableInlineAutocompletion: true,
+        enableSnippets: true,
+        enableLiveAutocompletion: false
+    });
+
+    window.editor = editor;
+});
+</script>
+
+<script src="./show_own_source.js"></script>
+</body>
+</html>

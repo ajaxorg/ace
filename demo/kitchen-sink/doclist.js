@@ -79,8 +79,8 @@ modelist.modes.forEach(function(m) {
 
 
 
-if (window.require && window.require.s) try {
-    for (var path in window.require.s.contexts._.defined) {
+if (window.define && window.define.modules) try {
+    for (var path in window.define.modules) {
         if (path.indexOf("!") != -1)
             path = path.split("!").pop();
         else
@@ -129,7 +129,7 @@ function loadDoc(name, callback) {
     if (parts[0] == "docs")
         path = "demo/kitchen-sink/" + path;
     else if (parts[0] == "ace")
-        path = "lib/" + path;
+        path = "src/" + parts.slice(1).join("/");
 
     net.get(path, function(x) {
         initDoc(x, path, doc);
@@ -150,7 +150,7 @@ function saveDoc(name, callback) {
     if (parts[0] == "docs")
         path = "demo/kitchen-sink/" + path;
     else if (parts[0] == "ace")
-        path = "lib/" + path;
+        path = "src/" + parts.slice(1).join("/");
 
     upload(path, doc.session.getValue(), callback);
 }

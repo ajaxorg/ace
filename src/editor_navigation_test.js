@@ -8,7 +8,9 @@ if (typeof process !== "undefined") {
 var EditSession = require("./edit_session").EditSession;
 var Editor = require("./editor").Editor;
 var MockRenderer = require("./test/mockrenderer").MockRenderer;
+var VirtualRenderer = require("./virtual_renderer").VirtualRenderer;
 var assert = require("./test/assertions");
+var keys = require('./lib/keys');
 
 module.exports = {
     createEditSession : function(rows, cols) {
@@ -154,6 +156,42 @@ module.exports = {
         
         editor.navigateDown();
         assert.position(editor.getCursorPosition(), 1, 7);
+    },
+
+    "test: should allow to toggle between keyboard trapping modes": function() {
+        var editor = new Editor(new VirtualRenderer(), new EditSession(["1234", "1234567890"]));
+
+        // Should not trap focus
+        editor.setOption('enableKeyboardAccessibility', true);
+
+        // Focus on editor
+        editor.focus();
+
+        // Focus should be on textInput
+        assert.equal(document.activeElement, editor.textInput.getElement());
+        assert.notEqual(document.activeElement, editor.renderer.content);
+
+        editor.onCommandKey({}, 0, keys["escape"]);
+ 
+        // Focus should be on the content div after pressing Esc
+        assert.equal(document.activeElement, editor.renderer.content);
+        assert.notEqual(document.activeElement, editor.textInput.getElement());
+
+        // Should trap focus
+        editor.setOption('enableKeyboardAccessibility', false);
+
+        // Focus on editor
+        editor.focus();
+
+        // Focus should be on textInput
+        assert.equal(document.activeElement, editor.textInput.getElement());
+        assert.notEqual(document.activeElement, editor.renderer.content);
+
+        editor.onCommandKey({}, 0, keys["escape"]);
+ 
+        // Focus should still be on the textInput
+        assert.equal(document.activeElement, editor.textInput.getElement());
+        assert.notEqual(document.activeElement, editor.renderer.content);
     }
 };
 

@@ -1,42 +1,50 @@
 if (typeof process !== "undefined") {
-    require("amd-loader");
     require("./test/mockdom");
 }
 
 "use strict";
 
+var sendKey = require("./test/user").type;
 var ace = require("./ace");
 var assert = require("./test/assertions");
+var Range = require("./range").Range;
 require("./ext/language_tools");
 
+function initEditor(value) {
+    var editor = ace.edit(null, {
+        value: value,
+        maxLines: 10,
+        enableBasicAutocompletion: true,
+        enableLiveAutocompletion: true
+    });
+    document.body.appendChild(editor.container);
+    editor.focus();
+
+    // workaround for autocomplete using non-relative path
+    editor.renderer.$themeId = "./theme/textmate";
+    return editor;
+}
+
 module.exports = {
-   "test: highlighting in the popup" : function(done) {
-        var editor = ace.edit(null, {
-            value: "\narraysort alooooooooooooooooooooooooooooong_word",
-            maxLines: 10,
-            enableBasicAutocompletion: true,
-            enableLiveAutocompletion: true
-        });
-      //   editor.container.style.width = "500px";
-       //  editor.container.style.height = "500px";
-        document.body.appendChild(editor.container);
+    "test: highlighting in the popup": function (done) {
+        var editor = initEditor("\narraysort alooooooooooooooooooooooooooooong_word");
+        //   editor.container.style.width = "500px";
+        //  editor.container.style.height = "500px";
+
         assert.ok(!editor.container.querySelector("style"));
-        
-        // workaround for autocomplete using non-relative path
-        editor.renderer.$themeId = "./theme/textmate";
-        
-        editor.execCommand("insertstring", "a");
-        checkInnerHTML('<d "ace_line ace_selected" id="suggest-aria-id:0" aria-label="arraysort"><s "ace_completion-highlight">a</s><s "ace_">rraysort</s><s "ace_completion-meta">local</s></d><d "ace_line"><s "ace_completion-highlight">a</s><s "ace_">looooooooooooooooooooooooooooong_word</s><s "ace_completion-meta">local</s></d>', function() {
-            editor.execCommand("insertstring", "rr");
-            checkInnerHTML('<d "ace_line ace_selected" id="suggest-aria-id:0" aria-label="arraysort"><s "ace_completion-highlight">arr</s><s "ace_">aysort</s><s "ace_completion-meta">local</s></d>', function() {
-                editor.execCommand("insertstring", "r");
-                checkInnerHTML('<d "ace_line ace_selected" id="suggest-aria-id:0" aria-label="arraysort"><s "ace_completion-highlight">arr</s><s "ace_">ayso</s><s "ace_completion-highlight">r</s><s "ace_">t</s><s "ace_completion-meta">local</s></d>', function() {
+
+        sendKey("a");
+        checkInnerHTML('<d "ace_line ace_selected" id="suggest-aria-id:0" role="option" aria-label="arraysort" aria-setsize="2" aria-posinset="0"><s "ace_completion-highlight">a</s><s "ace_">rraysort</s><s "ace_completion-meta">local</s></d><d "ace_line"><s "ace_completion-highlight">a</s><s "ace_">looooooooooooooooooooooooooooong_word</s><s "ace_completion-meta">local</s></d>', function() {
+            sendKey("rr");
+            checkInnerHTML('<d "ace_line ace_selected" id="suggest-aria-id:0" role="option" aria-label="arraysort" aria-setsize="1" aria-posinset="0"><s "ace_completion-highlight">arr</s><s "ace_">aysort</s><s "ace_completion-meta">local</s></d>', function() {
+                sendKey("r");
+                checkInnerHTML('<d "ace_line ace_selected" id="suggest-aria-id:0" role="option" aria-label="arraysort" aria-setsize="1" aria-posinset="0"><s "ace_completion-highlight">arr</s><s "ace_">ayso</s><s "ace_completion-highlight">r</s><s "ace_">t</s><s "ace_completion-meta">local</s></d>', function() {
                     
-                    editor.onCommandKey(null, 0, 13);
+                    sendKey("Return");
                     assert.equal(editor.getValue(), "arraysort\narraysort alooooooooooooooooooooooooooooong_word");
                     editor.execCommand("insertstring", " looooooooooooooooooooooooooooong_");
-                    checkInnerHTML('<d "ace_line ace_selected" id="suggest-aria-id:0" aria-label="alooooooooooooooooooooooooooooong_word"><s "ace_">a</s><s "ace_completion-highlight">looooooooooooooooooooooooooooong_</s><s "ace_">word</s><s "ace_completion-meta">local</s></d>', function() {
-                        editor.onCommandKey(null, 0, 13);
+                    checkInnerHTML('<d "ace_line ace_selected" id="suggest-aria-id:0" role="option" aria-label="alooooooooooooooooooooooooooooong_word" aria-setsize="1" aria-posinset="0"><s "ace_">a</s><s "ace_completion-highlight">looooooooooooooooooooooooooooong_</s><s "ace_">word</s><s "ace_completion-meta">local</s></d>', function() {
+                        sendKey("Return");
                         editor.destroy();
                         editor.container.remove();
                         done();
@@ -60,6 +68,184 @@ module.exports = {
                 callback();
             });
         }
+    },
+    "test: completions range and command properties": function (done) {
+        var editor = initEditor("goods ");
+
+        editor.completers = [
+            {
+                getCompletions: function (editor, session, pos, prefix, callback) {
+                    var completions = [
+                        {
+                            caption: "will",
+                            snippet: "will: $1",
+                            meta: "snippet",
+                            command: "startAutocomplete",
+                            range: new Range(0, 4, 0, 6)
+                        }, {
+                            caption: "here",
+                            value: "-here",
+                            range: new Range(0, 8, 0, 10)
+                        }
+                    ];
+                    callback(null, completions);
+                }
+            }
+        ];
+
+        editor.moveCursorTo(0, 6);
+        sendKey("w");
+        var popup = editor.completer.popup;
+        check(function () {
+            assert.equal(popup.data.length, 1);
+            editor.onCommandKey(null, 0, 13);
+            assert.equal(popup.data.length, 2);
+            assert.equal(editor.getValue(), "goodwill: ");
+            check(function () {
+                editor.onCommandKey(null, 0, 13);
+                assert.equal(editor.getValue(), "goodwill-here");
+                editor.destroy();
+                editor.container.remove();
+                done();
+            });
+        });
+
+        function check(callback) {
+            popup = editor.completer.popup;
+            popup.renderer.on("afterRender", function wait() {
+                popup.renderer.off("afterRender", wait);
+                callback();
+            });
+        }
+    },
+    "test: different completers tooltips": function (done) {
+        var editor = initEditor("");
+        var firstDoc = "<b>First</b>";
+        var secondDoc = "Second";
+        editor.completers = [
+            {
+                getCompletions: function (editor, session, pos, prefix, callback) {
+                    var completions = [
+                        {
+                            caption: "abc",
+                            snippet: "ab: $1",
+                            meta: "snippet",
+                            completerId: "firstCompleter"
+                        }, {
+                            caption: "cde",
+                            value: "cde",
+                            completerId: "firstCompleter"
+                        }
+                    ];
+                    callback(null, completions);
+                },
+                getDocTooltip: function (item) {
+                    if (!item.docHTML) {
+                        item.docHTML = firstDoc;
+                    }
+                },
+                id: "firstCompleter"
+            }, {
+                getCompletions: function (editor, session, pos, prefix, callback) {
+                    var completions = [
+                        {
+                            caption: "abcd",
+                            snippet: "abcd: $1",
+                            meta: "snippet",
+                            completerId: "secondCompleter"
+                        }, {
+                            caption: "cdef",
+                            value: "cdef",
+                            completerId: "secondCompleter"
+                        }
+                    ];
+                    callback(null, completions);
+                },
+                getDocTooltip: function (item) {
+                    if (!item.docText) {
+                        item.docText = secondDoc;
+                    }
+                },
+                id: "secondCompleter"
+            }
+        ];
+
+        sendKey("c");
+        var popup = editor.completer.popup;
+        check(function () {
+            assert.equal(popup.data.length, 4);
+            assert.equal(document.body.lastChild.innerHTML, firstDoc);
+            sendKey("Down");
+            check(function () {
+                assert.equal(document.body.lastChild.innerHTML, secondDoc);
+                sendKey("Down");
+                check(function () {
+                    assert.equal(document.body.lastChild.innerHTML, firstDoc);
+                    sendKey("Down");
+                    check(function () {
+                        assert.equal(document.body.lastChild.innerHTML, secondDoc);
+                        editor.destroy();
+                        editor.container.remove();
+                        done();
+                    });
+                });
+            });
+        });
+
+        function check(callback) {
+            setTimeout(function wait() {
+                callback();
+            }, 10);
+        }
+    },
+    "test: slow and fast completers": function(done) {
+        var syncCompleter={
+            getCompletions: function(editor, session, pos, prefix, callback) {
+                callback(null,[{
+                    value: "test"
+                }]);
+            },
+            id: "asyncCompleter"
+        };
+
+        var asyncCompleter = {
+            getCompletions: function(editor, session, pos, prefix, callback) {
+                setTimeout(() => {
+                    callback(null,[{
+                        value: "some"
+                    }]);
+                }, 10);
+            },
+            id: "asyncCompleter"
+        };
+        var editor = initEditor("");
+        editor.completers=[
+            syncCompleter,asyncCompleter
+        ];
+        editor.resize(true);
+        editor.execCommand("insertstring", "o");
+        assert.notOk(!!editor.completer.popup);
+        setTimeout(function() {
+            assert.ok(editor.completer.popup.isOpen);
+            assert.equal(editor.completer.popup.renderer.scrollTop, 0);
+            editor.completer.popup.renderer.$loop._flush();
+            assert.equal(editor.completer.popup.renderer.scrollTop, 0);
+            assert.equal(editor.completer.popup.renderer.scroller.textContent, "some");
+            sendKey("Return");
+            assert.equal(editor.getValue(), "some");
+            sendKey(" ");
+            assert.equal(editor.completer.popup.isOpen, false);
+            sendKey("t");
+            assert.equal(editor.completer.popup.isOpen, true);
+            sendKey("Return");
+            sendKey(" ");
+            sendKey("q");
+            assert.equal(editor.completer.popup.isOpen, false);
+            
+            editor.destroy();
+            editor.container.remove();
+            done();
+        }, 10);
     }
 };
 

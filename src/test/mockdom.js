@@ -307,7 +307,7 @@ function Node(name) {
     });
     this.__defineGetter__("outerHTML", function() {
         var attributes = this.attributes.map(function(attr) {
-            return attr.name + "=" + JSON.stringify(attr.value);
+            return attr.name + "=" + JSON.stringify(attr.value + "");
         }, this).join(" ");
         return "<" + this.localName + (attributes ? " " + attributes : "") + ">" + this.innerHTML + "</" + this.localName + ">";
     });
@@ -375,7 +375,7 @@ function Node(name) {
             else
                 width = rect.width - right - left;
             
-            if (this.style.width)
+            if (this.style.height)
                 height = parseCssLength(this.style.height || "100%", rect.height);
             else
                 height = rect.height - top - bottom;
@@ -443,7 +443,7 @@ function Node(name) {
         if (!e.timeStamp) e.timeStamp = Date.now();
         e.currentTarget = this;
         var events = this._events && this._events[e.type];
-        events && events.forEach(function(listener) {
+        events && events.slice().forEach(function(listener) {
             listener.call(this, e);
         }, this);
         if (this["on" + e.type])
@@ -830,14 +830,14 @@ exports.load = function() {
     if (typeof global == "undefined") return;
     window.window = global;
     Object.keys(window).forEach(function(i) {
-        if (!global[i]) {
-            addedProperties.push(i);
-            global.__defineGetter__(i, function() {
-                return window[i];
-            });
-            global.__defineSetter__(i, function() {
-            });
-        }
+        var desc = Object.getOwnPropertyDescriptor(global, i);
+        addedProperties.push({name: i, desc: desc});
+        global.__defineGetter__(i, function() {
+            return window[i];
+        });
+        global.__defineSetter__(i, function() {
+            console.log("attempt to set " + i);
+        });
     });
 };
 
@@ -894,7 +894,10 @@ exports.unload = function() {
     var cache = req("module")._cache;
     delete cache[__filename];
     addedProperties.forEach(function(i) {
-        delete global[i];
+        delete global[i.name];
+        if (i.desc) {
+            Object.defineProperty(global, i.name, i.desc);
+        }
     });
 };
 

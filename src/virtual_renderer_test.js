@@ -11,7 +11,6 @@ var EditSession = require("./edit_session").EditSession;
 var VirtualRenderer = require("./virtual_renderer").VirtualRenderer;
 var vim = require("./keyboard/vim");
 var assert = require("./test/assertions");
-require("./ext/error_marker");
 
 function setScreenPosition(node, rect) {
     node.style.left = rect[0] + "px";
@@ -23,6 +22,11 @@ function setScreenPosition(node, rect) {
 var editor = null;
 module.exports = {
     setUp: function() {
+        require("./config").setLoader(function(moduleName, cb) {
+            if (moduleName == "ace/ext/error_marker")
+                return cb(null, require("./ext/error_marker"));
+        });
+        
         if (editor)
             editor.destroy();
         var el = document.createElement("div");
@@ -255,7 +259,7 @@ module.exports = {
             }
         ]);
         renderer.$loop._flush();
-        var context = renderer.$scrollDecorator.canvas.getContext();
+        var context = renderer.$scrollDecorator.canvas.getContext("2d");
         var imageData = context.getImageData(0, 0, 50, 50);
         var scrollDecoratorColors = renderer.$scrollDecorator.colors.light;
         var values = [
@@ -316,6 +320,11 @@ module.exports = {
 
         editor.renderer.$loop._flush();
         assert.equal(editor.renderer.content.textContent, "abcdefGhost");
+
+        editor.removeGhostText();
+
+        editor.renderer.$loop._flush();
+        assert.equal(editor.renderer.content.textContent, "abcdef");
     },
 
     "test multiline ghost text": function() {
@@ -328,6 +337,13 @@ module.exports = {
         assert.equal(editor.renderer.content.textContent, "abcdefGhost1");
         
         assert.equal(editor.session.lineWidgets[0].el.textContent, "Ghost2\nGhost3");
+
+        editor.removeGhostText();
+
+        editor.renderer.$loop._flush();
+        assert.equal(editor.renderer.content.textContent, "abcdef");
+        
+        assert.equal(editor.session.lineWidgets, null);
     },
     "test: brackets highlighting": function (done) {
         var renderer = editor.renderer;

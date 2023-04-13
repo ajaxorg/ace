@@ -18,6 +18,7 @@ var XMLMode = require("../xml").Mode;
 var HTMLMode = require("../html").Mode;
 var CSSMode = require("../css").Mode;
 var MarkdownMode = require("../markdown").Mode;
+var PythonMode = require("../python").Mode;
 var editor;
 var exec = function(name, times, args) {
     do {
@@ -286,6 +287,16 @@ module.exports = {
         exec("insertstring", 1, '`');
         exec("insertstring", 1, 'b');
         assert.equal(editor.getValue(), "`b`");
+
+        editor.setValue("");
+        exec("insertstring", 1, 'a');
+        exec("insertstring", 1, "'");
+        assert.equal(editor.getValue(), "a'");
+
+        editor.setValue("");
+        exec("insertstring", 1, 'b');
+        exec("insertstring", 1, "`");
+        assert.equal(editor.getValue(), "b``");
     },
     "test: css": function() {
         editor.session.setMode(new CSSMode());
@@ -393,6 +404,17 @@ module.exports = {
         exec("insertstring", 1, "`");
         exec("insertstring", 1, "`");
         assert.equal(editor.getValue(), "``-``");
+    },
+    "test: python": function() {
+        editor.session.setMode(new PythonMode());
+        editor.setValue("f", 1);
+        exec("insertstring", 1, '"');
+        assert.equal(editor.getValue(), 'f""');
+
+        // there is no such prefix for python
+        editor.setValue("p", 1);
+        exec("insertstring", 1, '"');
+        assert.equal(editor.getValue(), 'p"');
     }
 };
 

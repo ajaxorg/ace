@@ -3,21 +3,22 @@
 var keyUtil  = require("../lib/keys");
 var event = require("../lib/event");
 
-var KeyBinding = function(editor) {
-    this.$editor = editor;
-    this.$data = {editor: editor};
-    this.$handlers = [];
-    this.setDefaultHandler(editor.commands);
-};
 
-(function() {
-    this.setDefaultHandler = function(kb) {
+class KeyBinding {
+    constructor(editor) {
+        this.$editor = editor;
+        this.$data = {editor: editor};
+        this.$handlers = [];
+        this.setDefaultHandler(editor.commands);
+    }
+    
+    setDefaultHandler(kb) {
         this.removeKeyboardHandler(this.$defaultHandler);
         this.$defaultHandler = kb;
         this.addKeyboardHandler(kb, 0);
-    };
+    }
 
-    this.setKeyboardHandler = function(kb) {
+    setKeyboardHandler(kb) {
         var h = this.$handlers;
         if (h[h.length - 1] == kb)
             return;
@@ -26,9 +27,9 @@ var KeyBinding = function(editor) {
             this.removeKeyboardHandler(h[h.length - 1]);
 
         this.addKeyboardHandler(kb, 1);
-    };
+    }
 
-    this.addKeyboardHandler = function(kb, pos) {
+    addKeyboardHandler(kb, pos) {
         if (!kb)
             return;
         if (typeof kb == "function" && !kb.handleKeyboard)
@@ -44,30 +45,30 @@ var KeyBinding = function(editor) {
 
         if (i == -1 && kb.attach)
             kb.attach(this.$editor);
-    };
+    }
 
-    this.removeKeyboardHandler = function(kb) {
+    removeKeyboardHandler(kb) {
         var i = this.$handlers.indexOf(kb);
         if (i == -1)
             return false;
         this.$handlers.splice(i, 1);
         kb.detach && kb.detach(this.$editor);
         return true;
-    };
+    }
 
-    this.getKeyboardHandler = function() {
+    getKeyboardHandler() {
         return this.$handlers[this.$handlers.length - 1];
-    };
+    }
     
-    this.getStatusText = function() {
+    getStatusText() {
         var data = this.$data;
         var editor = data.editor;
         return this.$handlers.map(function(h) {
             return h.getStatusText && h.getStatusText(editor, data) || "";
         }).filter(Boolean).join(" ");
-    };
+    }
 
-    this.$callKeyboardHandlers = function(hashId, keyString, keyCode, e) {
+    $callKeyboardHandlers(hashId, keyString, keyCode, e) {
         var toExecute;
         var success = false;
         var commands = this.$editor.commands;
@@ -104,17 +105,17 @@ var KeyBinding = function(editor) {
             this.$editor._signal("keyboardActivity", toExecute);
         
         return success;
-    };
+    }
 
-    this.onCommandKey = function(e, hashId, keyCode) {
+    onCommandKey(e, hashId, keyCode) {
         var keyString = keyUtil.keyCodeToString(keyCode);
         return this.$callKeyboardHandlers(hashId, keyString, keyCode, e);
-    };
+    }
 
-    this.onTextInput = function(text) {
+    onTextInput(text) {
         return this.$callKeyboardHandlers(-1, text);
-    };
+    }
 
-}).call(KeyBinding.prototype);
+}
 
 exports.KeyBinding = KeyBinding;

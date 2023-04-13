@@ -194,6 +194,7 @@ export namespace Ace {
     theme: string;
     hasCssTransforms: boolean;
     maxPixelHeight: number;
+    useSvgGutterIcons: boolean;
   }
 
   export interface MouseHandlerOptions {
@@ -226,6 +227,7 @@ export namespace Ace {
     value: string;
     session: EditSession;
     relativeLineNumbers: boolean;
+    enableKeyboardAccessibility: boolean;
   }
 
   export interface SearchOptions {
@@ -313,13 +315,24 @@ export namespace Ace {
     start?: number;
   }
 
-  export interface Completion {
-    value: string;
-    score: number;
+  interface BaseCompletion {
+    score?: number;
     meta?: string;
-    name?: string;
     caption?: string;
+    docHTML?: string;
+    docText?: string;
+    completerId?: string;
   }
+
+  export interface SnippetCompletion extends BaseCompletion {
+    snippet: string;
+  }
+
+  export interface ValueCompletion extends BaseCompletion {
+    value: string;
+  }
+
+  export type Completion = SnippetCompletion | ValueCompletion
 
   export interface Tokenizer {
     removeCapturingGroups(src: string): string;
@@ -371,6 +384,8 @@ export namespace Ace {
     all(): { [key: string]: any };
     moduleUrl(name: string, component?: string): string;
     setModuleUrl(name: string, subst: string): string;
+    setLoader(cb: Function): void;
+    setModuleLoader(name: string, onLoad: Function): void;
     loadModule(moduleName: string | [string, string],
       onLoad?: (module: any) => void): void;
     init(packaged: any): any;
@@ -414,7 +429,7 @@ export namespace Ace {
     column: number
   }
 
-  export interface EditSession extends EventEmitter, OptionsProvider {
+  export interface EditSession extends EventEmitter, OptionsProvider, Folding {
     selection: Selection;
 
     // TODO: define BackgroundTokenizer
@@ -752,6 +767,7 @@ export namespace Ace {
 
   export interface TextInput {
     resetSelection(): void;
+    setAriaOption(activeDescendant: string, role: string): void;
   }
 
   export interface Editor extends OptionsProvider, EventEmitter {
@@ -777,6 +793,7 @@ export namespace Ace {
     on(name: 'mouseup', callback: (e: any) => void): void;
     on(name: 'mousewheel', callback: (e: any) => void): void;
     on(name: 'click', callback: (e: any) => void): void;
+    on(name: 'guttermousedown', callback: (e: any) => void): void;
 
     onPaste(text: string, event: any): void;
 
@@ -920,6 +937,74 @@ export namespace Ace {
       position: Point,
       prefix: string,
       callback: CompleterCallback): void;
+    getDocTooltip?(item: Completion): undefined | string | Completion;
+    id?: string;
+  }
+
+  export class AceInline {
+    show(editor: Editor, completion: Completion, prefix: string): void;
+    isOpen(): void;
+    hide(): void;
+    destroy(): void;
+  }
+
+  interface CompletionOptions {
+    matches?: Completion[];
+  }
+
+  type CompletionProviderOptions = {
+    exactMatch?: boolean;
+    ignoreCaption?: boolean;
+  }
+
+  type CompletionRecord = {
+    all: Completion[];
+    filtered: Completion[];
+    filterText: string;
+  } | CompletionProviderOptions
+
+  type GatherCompletionRecord = {
+    prefix: string;
+    matches: Completion[];
+    finished: boolean;
+  }
+
+  type CompletionCallbackFunction = (err: Error | undefined, data: GatherCompletionRecord) => void;
+  type CompletionProviderCallback = (err: Error | undefined, completions: CompletionRecord, finished: boolean) => void;
+
+  export class CompletionProvider {
+    insertByIndex(editor: Editor, index: number, options: CompletionProviderOptions): boolean;
+    insertMatch(editor: Editor, data: Completion, options: CompletionProviderOptions): boolean;
+    completions: CompletionRecord;
+    gatherCompletions(editor: Editor, callback: CompletionCallbackFunction): boolean;
+    provideCompletions(editor: Editor, options: CompletionProviderOptions, callback: CompletionProviderCallback): void;
+    detach(): void;
+  }
+
+  export class Autocomplete {
+    constructor();
+    autoInsert?: boolean;
+    autoSelect?: boolean;
+    exactMatch?: boolean;
+    inlineEnabled?: boolean;
+    getPopup(): AcePopup;
+    showPopup(editor: Editor, options: CompletionOptions): void;
+    detach(): void;
+    destroy(): void;
+  }
+
+  type AcePopupNavigation = "up" | "down" | "start" | "end";
+
+  export class AcePopup {
+    constructor(parentNode: HTMLElement);
+    setData(list: Completion[], filterText: string): void;
+    getData(row: number): Completion;
+    getRow(): number;
+    getRow(line: number): void;
+    hide(): void;
+    show(pos: Point, lineHeight: number, topdownOnly: boolean): void;
+    tryShow(pos: Point, lineHeight: number, anchor: "top" | "bottom" | undefined, forceShow?: boolean): boolean;
+    goTo(where: AcePopupNavigation): void;
   }
 }
 
@@ -943,3 +1028,43 @@ export const Range: {
   fromPoints(start: Ace.Point, end: Ace.Point): Ace.Range;
   comparePoints(p1: Ace.Point, p2: Ace.Point): number;
 };
+
+
+type InlineAutocompleteAction = "prev" | "next" | "first" | "last";
+
+type TooltipCommandEnabledFunction = (editor: Ace.Editor) => boolean;
+
+interface TooltipCommand extends Ace.Command {
+  enabled: TooltipCommandEnabledFunction | boolean,
+  position?: number;
+}
+
+export class InlineAutocomplete {
+  constructor();
+  getInlineRenderer(): Ace.AceInline;
+  getInlineTooltip(): InlineTooltip;
+  getCompletionProvider(): Ace.CompletionProvider;
+  show(editor: Ace.Editor): void;
+  isOpen(): boolean;
+  detach(): void;
+  destroy(): void;
+  goTo(action: InlineAutocompleteAction): void;
+  tooltipEnabled: boolean;
+  commands: Record<string, TooltipCommand>
+  getIndex(): number;
+  setIndex(value: number): void;
+  getLength(): number;
+  getData(index?: number): Ace.Completion | undefined;
+  updateCompletions(options: Ace.CompletionOptions): void;
+}
+
+export class InlineTooltip {
+  constructor(parentElement: HTMLElement);
+  setCommands(commands: Record<string, TooltipCommand>): void;
+  show(editor: Ace.Editor): void;
+  updatePosition(): void;
+  updateButtons(force?: boolean): void;
+  isShown(): boolean;
+  detach(): void;
+  destroy(): void;
+}
