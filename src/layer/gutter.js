@@ -293,20 +293,6 @@ class Gutter{
         var className = this.$useSvgGutterIcons ? "ace_gutter-cell_svg-icons " : "ace_gutter-cell ";
         var iconClassName = this.$useSvgGutterIcons ? "ace_icon_svg" : "ace_icon";
         
-
-        if (this.$annotations[row]){
-            annotationNode.className = iconClassName;
-
-            if (this.$useSvgGutterIcons)
-                annotationNode.className += this.$annotations[row].className;
-
-            dom.setStyle(annotationNode.style, "height", lineHeight);
-            dom.setStyle(annotationNode.style, "display", "block");
-        }
-        else {
-            dom.setStyle(annotationNode.style, "display", "none");
-        }
-
         if (this.$highlightGutterLine) {
             if (row == this.$cursorRow || (fold && row < this.$cursorRow && row >= foldStart &&  this.$cursorRow <= fold.end.row)) {
                 className += "ace_gutter-active-line ";
@@ -322,7 +308,7 @@ class Gutter{
             className += breakpoints[row];
         if (decorations[row])
             className += decorations[row];
-        if (this.$annotations[row])
+        if (this.$annotations[row] && row !== foldStart)
             className += this.$annotations[row].className;
         if (element.className != className)
             element.className = className;
@@ -336,8 +322,32 @@ class Gutter{
 
         if (c) {
             var className = "ace_fold-widget ace_" + c;
-            if (c == "start" && row == foldStart && row < fold.end.row)
+            if (c == "start" && row == foldStart && row < fold.end.row){
                 className += " ace_closed";
+                var foldAnnotationClass;
+                var annotationInFold = false;
+
+                for (var i = row; i <= fold.end.row; i++){
+                    if (!this.$annotations[i])
+                        continue;
+
+                    if (!annotationInFold)
+                        annotationInFold = true;
+
+                    if (this.$annotations[i].className === " ace_error"){
+                        foldAnnotationClass = " ace_error_fold";
+                        break;
+                    } 
+                    if (this.$annotations[i].className === " ace_warning"){
+                        foldAnnotationClass = " ace_warning_fold";
+                        continue;
+                    }
+
+                    foldAnnotationClass = " ace_info_fold"; 
+                }
+
+                element.className += foldAnnotationClass;
+            }
             else
                 className += " ace_open";
             if (foldWidget.className != className)
@@ -349,6 +359,26 @@ class Gutter{
             if (foldWidget) {
                 dom.setStyle(foldWidget.style, "display", "none");
             }
+        }
+
+        if (annotationInFold){
+            annotationNode.className = iconClassName;
+            annotationNode.className += foldAnnotationClass;
+
+            dom.setStyle(annotationNode.style, "height", lineHeight);
+            dom.setStyle(annotationNode.style, "display", "block");
+        }
+        else if (this.$annotations[row]){
+            annotationNode.className = iconClassName;
+
+            if (this.$useSvgGutterIcons)
+                annotationNode.className += this.$annotations[row].className;
+
+            dom.setStyle(annotationNode.style, "height", lineHeight);
+            dom.setStyle(annotationNode.style, "display", "block");
+        }
+        else {
+            dom.setStyle(annotationNode.style, "display", "none");
         }
         
         var text = (gutterRenderer

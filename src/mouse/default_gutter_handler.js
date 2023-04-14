@@ -36,11 +36,65 @@ function GutterHandler(mouseHandler) {
 
     var tooltipTimeout, mouseEvent, tooltipAnnotation;
 
+    var annotationLabels = {
+        error: {singular: "error", plural: "errors"}, 
+        warning: {singular: "warning", plural: "warnings"},
+        info: {singular: "information message", plural: "information messages"}
+    };
+
     function showTooltip() {
         var row = mouseEvent.getDocumentPosition().row;
-        var annotation = gutter.$annotations[row];
-        if (!annotation)
+        var rowAnnotation = gutter.$annotations[row];
+        var annotation;
+
+        if (rowAnnotation)
+            annotation = {text: [...rowAnnotation.text], type: [...rowAnnotation.type]};
+
+        // If the tooltip is for a row which has a closed fold, check whether there are
+        // annotations in the folded lines. If so, add a summary to the list of annotations.
+        var fold = gutter.session.getNextFoldLine(row);
+        if (fold){
+            var foldedAnnotationMessages = {error: [], warning: [], info: []};
+            var mostSevereFoldedAnnotationType;
+
+            for (var i = row + 1; i <= fold.end.row; i++){
+                if (!gutter.$annotations[i])
+                    continue;
+
+                for (var j = 0; j < gutter.$annotations[i].text.length; j++) {
+                    var annotationType = gutter.$annotations[i].type[j];
+                    foldedAnnotationMessages[annotationType].push(gutter.$annotations[i].text[j]);
+
+                    if (!mostSevereFoldedAnnotationType){
+                        mostSevereFoldedAnnotationType = annotationType;
+                        continue;
+                    }
+
+                    if (annotationType == "error"){
+                        mostSevereFoldedAnnotationType = annotationType;
+                        continue;
+                    }
+
+                    if (annotationType == "warning" && mostSevereFoldedAnnotationType == "info"){
+                        mostSevereFoldedAnnotationType = annotationType;
+                        continue;
+                    }
+                }
+            }
+            var summaryFoldedAnnotations = `${annotationsToSummaryString(foldedAnnotationMessages)} in folded code.`;
+
+            if (mostSevereFoldedAnnotationType == "error" || mostSevereFoldedAnnotationType == "warning"){
+                if (!annotation)
+                    annotation = {text: [], type: []};
+
+                annotation.text.push(summaryFoldedAnnotations);
+                annotation.type.push(mostSevereFoldedAnnotationType);
+            }
+        }
+        
+        if (!annotation || annotation.text == 0){
             return hideTooltip();
+        }
 
         var maxRow = editor.session.getLength();
         if (row == maxRow) {
@@ -51,38 +105,15 @@ function GutterHandler(mouseHandler) {
         }
 
         var annotationMessages = {error: [], warning: [], info: []};
-        var annotationLabels = {
-            error: {singular: "error", plural: "errors"}, 
-            warning: {singular: "warning", plural: "warnings"},
-            info: {singular: "information message", plural: "information messages"}
-        };
-
         var iconClassName = gutter.$useSvgGutterIcons ? "ace_icon_svg" : "ace_icon";
 
-        // Construct the body of the tooltip.
+        // Construct the contents of the tooltip.
         for (var i = 0; i < annotation.text.length; i++) {
             var line = `<span class='ace_${annotation.type[i]} ${iconClassName}' aria-label='${annotationLabels[annotation.type[i]].singular}' role=img> </span> ${annotation.text[i]}`;
             annotationMessages[annotation.type[i]].push(line);
         }
-        var tooltipBody = "<div class='ace_gutter-tooltip_body'>";
-        tooltipBody += [].concat(annotationMessages.error, annotationMessages.warning, annotationMessages.info).join("<br>");
-        tooltipBody += '</div>';    
-        
-        // Construct the header of the tooltip.
-        var isMoreThanOneAnnotationType = false;
-        var tooltipHeader = "<div class='ace_gutter-tooltip_header'>";
-        for (var i = 0; i < 3; i++){
-            var annotationType = ['error', 'warning', 'info'][i];
-            if (annotationMessages[annotationType].length > 0){
-                var label = annotationMessages[annotationType].length === 1 ? annotationLabels[annotationType].singular : annotationLabels[annotationType].plural;
-                tooltipHeader += `${isMoreThanOneAnnotationType ? ', ' : ''}${annotationMessages[annotationType].length} ${label}`;
-                isMoreThanOneAnnotationType = true;
-            } 
-        }
-        tooltipHeader += "</div>";
-
-        tooltipAnnotation = tooltipHeader + tooltipBody;
-
+        tooltipAnnotation = [].concat(annotationMessages.error, annotationMessages.warning, annotationMessages.info).join("<br>");
+ 
         tooltip.setHtml(tooltipAnnotation);
         tooltip.setClassName("ace_gutter-tooltip");
         tooltip.$element.setAttribute("aria-live", "polite");
@@ -111,6 +142,20 @@ function GutterHandler(mouseHandler) {
             editor._signal("hideGutterTooltip", tooltip);
             editor.off("mousewheel", hideTooltip);
         }
+    }
+
+    function annotationsToSummaryString(annotations) {
+        var isMoreThanOneAnnotationType = false;
+        var summaryString = "";
+        for (var i = 0; i < 3; i++){
+            var annotationType = ['error', 'warning', 'info'][i];
+            if (annotations[annotationType].length > 0){
+                var label = annotations[annotationType].length === 1 ? annotationLabels[annotationType].singular : annotationLabels[annotationType].plural;
+                summaryString += `${isMoreThanOneAnnotationType ? ', ' : ''}${annotations[annotationType].length} ${label}`;
+                isMoreThanOneAnnotationType = true;
+            } 
+        }
+        return summaryString;
     }
 
     function moveTooltip(e) {
