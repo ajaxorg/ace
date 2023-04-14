@@ -2062,7 +2062,9 @@ domLib.importCssString(`.normal-mode .ace_cursor{
         } else {
           register.setText(text, linewise, blockwise);
         }
-        if (registerName === '+') {
+        if (registerName === '+' && typeof navigator !== 'undefined' &&
+          typeof navigator.clipboard !== 'undefined' &&
+          typeof navigator.clipboard.readText === 'function') {
           navigator.clipboard.writeText(text);
         }
         // The unnamed register always has the same value as the last used
@@ -3597,14 +3599,20 @@ domLib.importCssString(`.normal-mode .ace_cursor{
       },
       paste: function(cm, actionArgs, vim) {
         var register = vimGlobalState.registerController.getRegister(
-            actionArgs.registerName);
-        if (actionArgs.registerName === '+') {
-          navigator.clipboard.readText().then((value) => {
-            this.continuePaste(cm, actionArgs, vim, value, register);
-          })
-        } else {
+          actionArgs.registerName);
+        var fallback = () => {
           var text = register.toString();
           this.continuePaste(cm, actionArgs, vim, text, register);
+        }
+        if (actionArgs.registerName === '+' &&
+              typeof navigator !== 'undefined' &&
+              typeof navigator.clipboard !== 'undefined' &&
+              typeof navigator.clipboard.readText === 'function') {
+          navigator.clipboard.readText().then((value) => {
+            this.continuePaste(cm, actionArgs, vim, value, register);
+          }, () => { fallback() })
+        } else {
+          fallback()
         }
       },
       continuePaste: function(cm, actionArgs, vim, text, register) {
