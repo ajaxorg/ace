@@ -66,24 +66,24 @@ function GutterHandler(mouseHandler) {
                     foldedAnnotationMessages[annotationType].push(gutter.$annotations[i].text[j]);
 
                     if (!mostSevereFoldedAnnotationType){
-                        mostSevereFoldedAnnotationType = annotationType;
+                        mostSevereFoldedAnnotationType = `${annotationType}_fold`;
                         continue;
                     }
 
                     if (annotationType == "error"){
-                        mostSevereFoldedAnnotationType = annotationType;
+                        mostSevereFoldedAnnotationType = "error_fold";
                         continue;
                     }
 
                     if (annotationType == "warning" && mostSevereFoldedAnnotationType == "info"){
-                        mostSevereFoldedAnnotationType = annotationType;
+                        mostSevereFoldedAnnotationType = "warning_fold";
                         continue;
                     }
                 }
             }
             var summaryFoldedAnnotations = `${annotationsToSummaryString(foldedAnnotationMessages)} in folded code.`;
 
-            if (mostSevereFoldedAnnotationType == "error" || mostSevereFoldedAnnotationType == "warning"){
+            if (mostSevereFoldedAnnotationType == "error_fold" || mostSevereFoldedAnnotationType == "warning_fold"){
                 if (!annotation)
                     annotation = {text: [], type: []};
 
@@ -109,8 +109,8 @@ function GutterHandler(mouseHandler) {
 
         // Construct the contents of the tooltip.
         for (var i = 0; i < annotation.text.length; i++) {
-            var line = `<span class='ace_${annotation.type[i]} ${iconClassName}' aria-label='${annotationLabels[annotation.type[i]].singular}' role=img> </span> ${annotation.text[i]}`;
-            annotationMessages[annotation.type[i]].push(line);
+            var line = `<span class='ace_${annotation.type[i]} ${iconClassName}' aria-label='${annotationLabels[annotation.type[i].replace("_fold","")].singular}' role=img> </span> ${annotation.text[i]}`;
+            annotationMessages[annotation.type[i].replace("_fold","")].push(line);
         }
         tooltipAnnotation = [].concat(annotationMessages.error, annotationMessages.warning, annotationMessages.info).join("<br>");
  
