@@ -56,10 +56,8 @@ module.exports = {
         // Wait for the tooltip to appear after its timeout.
         setTimeout(function() {
             editor.renderer.$loop._flush();
-            var tooltipHeader = editor.container.querySelector(".ace_gutter-tooltip_header");
-            var tooltipBody = editor.container.querySelector(".ace_gutter-tooltip_body");
-            assert.ok(/1 error/.test(tooltipHeader.textContent));
-            assert.ok(/error test/.test(tooltipBody.textContent));
+            var tooltip = editor.container.querySelector(".ace_gutter-tooltip");
+            assert.ok(/error test/.test(tooltip.textContent));
         }, 100); 
     },
     "test: gutter warning tooltip" : function() {
@@ -81,10 +79,8 @@ module.exports = {
         // Wait for the tooltip to appear after its timeout.
         setTimeout(function() {
             editor.renderer.$loop._flush();
-            var tooltipHeader = editor.container.querySelector(".ace_gutter-tooltip_header");
-            var tooltipBody = editor.container.querySelector(".ace_gutter-tooltip_body");
-            assert.ok(/1 warning/.test(tooltipHeader.textContent));
-            assert.ok(/warning test/.test(tooltipBody.textContent));
+            var tooltip = editor.container.querySelector(".ace_gutter-tooltip");
+            assert.ok(/warning test/.test(tooltip.textContent));
         }, 100); 
     },
     "test: gutter info tooltip" : function() {
@@ -106,10 +102,8 @@ module.exports = {
         // Wait for the tooltip to appear after its timeout.
         setTimeout(function() {
             editor.renderer.$loop._flush();
-            var tooltipHeader = editor.container.querySelector(".ace_gutter-tooltip_header");
-            var tooltipBody = editor.container.querySelector(".ace_gutter-tooltip_body");
-            assert.ok(/1 information message/.test(tooltipHeader.textContent));
-            assert.ok(/info test/.test(tooltipBody.textContent));
+            var tooltip = editor.container.querySelector(".ace_gutter-tooltip");
+            assert.ok(/info test/.test(tooltip.textContent));
         }, 100); 
     },
     "test: gutter svg icons" : function() {

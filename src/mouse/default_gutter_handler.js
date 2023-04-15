@@ -92,9 +92,8 @@ function GutterHandler(mouseHandler) {
             }
         }
         
-        if (!annotation || annotation.text == 0){
+        if (!annotation || annotation.text == 0)
             return hideTooltip();
-        }
 
         var maxRow = editor.session.getLength();
         if (row == maxRow) {

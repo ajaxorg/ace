@@ -397,7 +397,6 @@ class Gutter{
         this.$highlightGutterLine = highlightGutterLine;
     }
     
-
     setShowLineNumbers(show) {
         this.$renderer = !show && {
             getWidth: function() {return 0;},
