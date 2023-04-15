@@ -226,6 +226,7 @@ export namespace Ace {
     value: string;
     session: EditSession;
     relativeLineNumbers: boolean;
+    enableMultiselect: boolean;
   }
 
   export interface SearchOptions {
@@ -273,17 +274,15 @@ export namespace Ace {
     type: string;
   }
 
-  export interface TooltipMarker {
+  export interface MarkerGroupItem {
     range: Range;
-    tooltipText: string;
-    className?: string;
-    priority?: number;
+    className: string;
   }
 
   export class MarkerGroup {
-    constructor();
-    setMarkers: (markers: TooltipMarker[]) => void;
-    getMarkerAtPos: (pos: Position) => TooltipMarker;
+    constructor(session: EditSession);
+    setMarkers: (markers: MarkerGroupItem[]) => void;
+    getMarkerAtPosition: (pos: Position) => MarkerGroupItem;
   }
 
 

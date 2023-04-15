@@ -14,6 +14,11 @@ class MarkerGroup {
         session.addDynamicMarker(this);
     }
 
+    /**
+     * Finds the first marker containing pos
+     * @param {Position} pos 
+     * @returns MarkerGroupItem
+     */
     getMarkerAtPosition(pos) {
         return this.markers.find(function(marker) {
             return marker.range.contains(pos.row, pos.column);
@@ -33,7 +38,7 @@ class MarkerGroup {
 
     /**
      * Sets marker definitions to be rendered. Limits the number of markers at MAX_MARKERS.
-     * @param {Ace.TooltipMarker[]} markers an array of marker definitions.
+     * @param {Ace.MarkerGroupItem[]} markers an array of marker definitions.
      */
     setMarkers(markers) {
         this.markers = markers.sort(this.markersComparator).slice(0, this.MAX_MARKERS);
@@ -77,7 +82,7 @@ class MarkerGroup {
 
 // this caps total amount of markers at 500 - should it maybe be done only for rendered markers?
 // on top of it, do we need to cap the length of a rendered marker range to avoid performance issues?
-MarkerGroup.prototype.MAX_MARKERS = 500;
+MarkerGroup.prototype.MAX_MARKERS = 10000;
 
 exports.MarkerGroup = MarkerGroup;
 

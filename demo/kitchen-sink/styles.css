@@ -113,23 +113,14 @@ body {
 	z-index: 2000;
     border-radius: 0;
 }
-.language_highlight_occurrence_main {
+.language_highlight_text, .language_highlight_read, .language_highlight_write {
 	position: absolute;
 	box-sizing: border-box;
 	border: solid 1px #888;
 	z-index: 2000;
 }
-.ace_dark .language_highlight_occurrence_main {
-	border: solid 1px #888;
-}
-.language_highlight_occurrence_other {
-	position: absolute;
-	box-sizing: border-box;
-	border: solid 1px #888;
-	z-index: 2000;
-}
-.ace_dark .language_highlight_occurrence_other {
-	border: solid 1px #888;
+.language_highlight_write {
+    border: solid 1px #F88;
 }
 .ace_doc-tooltip pre {
     margin: 0;
