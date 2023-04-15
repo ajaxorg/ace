@@ -331,19 +331,16 @@ class Gutter{
                     if (!this.$annotations[i])
                         continue;
 
-                    if (!annotationInFold)
-                        annotationInFold = true;
-
                     if (this.$annotations[i].className === " ace_error"){
+                        annotationInFold = true;
                         foldAnnotationClass = " ace_error_fold";
                         break;
                     } 
                     if (this.$annotations[i].className === " ace_warning"){
+                        annotationInFold = true;
                         foldAnnotationClass = " ace_warning_fold";
                         continue;
                     }
-
-                    foldAnnotationClass = " ace_info_fold"; 
                 }
 
                 element.className += foldAnnotationClass;
