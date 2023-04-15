@@ -47,7 +47,7 @@ class SearchHighlight {
         }
     }
 
-};
+}
 
 // needed to prevent long lines from freezing the browser
 SearchHighlight.prototype.MAX_RANGES = 500;

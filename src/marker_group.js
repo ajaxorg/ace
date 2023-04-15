@@ -2,9 +2,7 @@
 
 /*
 Potential improvements:
-- cap the length of rendered marker range
-- save rendered markers and only search through rendered markers when looking for hover match
-- don't cut off total amount of markers at 500
+- use binary search when looking for hover match
 */
 
 class MarkerGroup {
@@ -14,6 +12,11 @@ class MarkerGroup {
         session.addDynamicMarker(this);
     }
 
+    /**
+     * Finds the first marker containing pos
+     * @param {Position} pos 
+     * @returns Ace.MarkerGroupItem
+     */
     getMarkerAtPosition(pos) {
         return this.markers.find(function(marker) {
             return marker.range.contains(pos.row, pos.column);
@@ -23,8 +26,8 @@ class MarkerGroup {
     /**
      * Comparator for Array.sort function, which sorts marker definitions by their positions
      * 
-     * @param {Ace.TooltipMarker} a first marker.
-     * @param {Ace.TooltipMarker} b second marker.
+     * @param {Ace.MarkerGroupItem} a first marker.
+     * @param {Ace.MarkerGroupItem} b second marker.
      * @returns {number} negative number if a should be before b, positive number if b should be before a, 0 otherwise.
      */
     markersComparator(a, b) {
@@ -33,7 +36,7 @@ class MarkerGroup {
 
     /**
      * Sets marker definitions to be rendered. Limits the number of markers at MAX_MARKERS.
-     * @param {Ace.TooltipMarker[]} markers an array of marker definitions.
+     * @param {Ace.MarkerGroupItem[]} markers an array of marker definitions.
      */
     setMarkers(markers) {
         this.markers = markers.sort(this.markersComparator).slice(0, this.MAX_MARKERS);
@@ -44,9 +47,9 @@ class MarkerGroup {
         if (!this.markers || !this.markers.length)
             return;
         var visibleRangeStartRow = config.firstRow, visibleRangeEndRow = config.lastRow;
-        this.renderedMarkerRanges = {};
-
-        // TODO: if there are markers with overlapping ranges, do we merge them? if yes, how do we merge them?
+        var foldLine;
+        var markersOnOneLine = 0;
+        var lastRow = 0;
 
         for (var i = 0; i < this.markers.length; i++) {
             var marker = this.markers[i];
@@ -54,30 +57,46 @@ class MarkerGroup {
             if (marker.range.end.row < visibleRangeStartRow) continue;
             if (marker.range.start.row > visibleRangeEndRow) continue;
 
+            if (marker.range.start.row === lastRow) {
+                markersOnOneLine++;
+            } else {
+                lastRow = marker.range.start.row;
+                markersOnOneLine = 0;
+            }
+            // do not render too many markers on one line
+            // because we do not have virtual scroll for horizontal direction
+            if (markersOnOneLine > 200) {
+                continue;
+            }
+
             var markerVisibleRange = marker.range.clipRows(visibleRangeStartRow, visibleRangeEndRow);
             if (markerVisibleRange.start.row === markerVisibleRange.end.row
                 && markerVisibleRange.start.column === markerVisibleRange.end.column) {
                     continue; // visible range is empty
                 }
 
-            var rangeToAddMarkerTo = markerVisibleRange.toScreenRange(session);
-            var rangeAsString = rangeToAddMarkerTo.toString();
-            if (this.renderedMarkerRanges[rangeAsString]) continue;
+            var screenRange = markerVisibleRange.toScreenRange(session);
+            if (screenRange.isEmpty()) {
+                // we are inside a fold
+                foldLine = session.getNextFoldLine(markerVisibleRange.end.row, foldLine);
+                if (foldLine && foldLine.end.row > markerVisibleRange.end.row) {
+                    visibleRangeStartRow = foldLine.end.row;
+                }
+                continue;
+            }
 
-            this.renderedMarkerRanges[rangeAsString] = true;
-            if (rangeToAddMarkerTo.isMultiLine()) {
-                markerLayer.drawTextMarker(html, rangeToAddMarkerTo, marker.className, config);
+            if (screenRange.isMultiLine()) {
+                markerLayer.drawTextMarker(html, screenRange, marker.className, config);
             } else {
-                markerLayer.drawSingleLineMarker(html, rangeToAddMarkerTo, marker.className, config);
+                markerLayer.drawSingleLineMarker(html, screenRange, marker.className, config);
             }
         }
-    };
+    }
 
-};
+}
 
-// this caps total amount of markers at 500 - should it maybe be done only for rendered markers?
-// on top of it, do we need to cap the length of a rendered marker range to avoid performance issues?
-MarkerGroup.prototype.MAX_MARKERS = 500;
+// this caps total amount of markers at 10K
+MarkerGroup.prototype.MAX_MARKERS = 10000;
 
 exports.MarkerGroup = MarkerGroup;
 

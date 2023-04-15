@@ -46,7 +46,6 @@ var ElasticTabstopsLite = require("ace/ext/elastic_tabstops_lite").ElasticTabsto
 var IncrementalSearch = require("ace/incremental_search").IncrementalSearch;
 
 var TokenTooltip = require("./token_tooltip").TokenTooltip;
-var TooltipMarkerManager = require("ace/marker_group").TooltipMarkerManager;
 require("ace/config").defineOptions(Editor.prototype, "editor", {
     showTokenInfo: {
         set: function(val) {
@@ -101,18 +100,21 @@ function loadLanguageProvider(editor) {
         });
         window.languageProvider = languageProvider;
         languageProvider.registerEditor(editor);
+        // hack to replace tooltip implementation from ace-linters with hover tooltip
+        // can be removed when ace-linters is updated to use MarkerGroup and HoverTooltip
         if (languageProvider.$descriptionTooltip)
             editor.off("mousemove", languageProvider.$descriptionTooltip.onMouseMove);
         languageProvider.$messageController.$worker.addEventListener("message", function(e) {
             var id = e.data.sessionId.split(".")[0];
             var session = languageProvider.$getSessionLanguageProvider({id: id})?.session;
             if (e.data.type == 6) {
+                // annotation message
                 e.stopPropagation();
                 if (session) {
                     showAnnotations(session, e.data.value);
                 }
             } else if (e.data.type == 13) {
-                // ignore signatures
+                // highlights message
                 if (session) showOccurrenceMarkers(session, e.data.value);
             }
         }, true);
@@ -124,9 +126,12 @@ function loadLanguageProvider(editor) {
                 var r = el.range;
                 return {
                     range: new Range(r.start.line, r.start.character, r.end.line, r.end.character),
-                    className: el.kind == 3
-                        ? "language_highlight_occurrence_main"
-                        : "language_highlight_occurrence_other"
+                    // https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#documentHighlightKind
+                    className: el.kind == 2
+                        ? "language_highlight_read"
+                        : el.kind == 3
+                        ? "language_highlight_write"
+                        : "language_highlight_text"
                 };
             }));
         }
@@ -175,8 +180,8 @@ function loadLanguageProvider(editor) {
                 };
                 
                 var domNode = dom.buildDom(["div", {},
-                    hoverNode,
-                    errorMarker && ["div", {}, errorMarker.tooltipText.trim()]
+                    errorMarker && ["div", {}, errorMarker.tooltipText.trim()],
+                    hoverNode
                 ]);
                 docTooltip.showForRange(editor, range, domNode, e);
             });
