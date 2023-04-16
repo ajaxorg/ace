@@ -53,7 +53,7 @@ function GutterHandler(mouseHandler) {
         // If the tooltip is for a row which has a closed fold, check whether there are
         // annotations in the folded lines. If so, add a summary to the list of annotations.
         var fold = gutter.session.getNextFoldLine(row);
-        if (fold){
+        if (fold && gutter.$showFoldedAnnotations){
             var foldedAnnotationMessages = {error: [], warning: [], info: []};
             var mostSevereFoldedAnnotationType;
 

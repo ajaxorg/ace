@@ -2932,6 +2932,7 @@ config.defineOptions(Editor.prototype, "editor", {
     useTextareaForIME: "renderer",
     useResizeObserver: "renderer",
     useSvgGutterIcons: "renderer",
+    showFoldedAnnotations: "renderer",
 
     scrollSpeed: "$mouseHandler",
     dragDelay: "$mouseHandler",

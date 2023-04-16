@@ -1908,6 +1908,12 @@ config.defineOptions(VirtualRenderer.prototype, "renderer", {
         },
         initialValue: false
     },
+    showFoldedAnnotations: {
+        set: function(value){
+            this.$gutterLayer.$showFoldedAnnotations = value;
+        },
+        initialValue: false
+    },
     fadeFoldWidgets: {
         set: function(show) {
             dom.setCssClass(this.$gutter, "ace_fade-fold-widgets", show);

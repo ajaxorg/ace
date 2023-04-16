@@ -123,11 +123,12 @@ module.exports = {
         var annotation = line.children[2];
         assert.ok(/ace_icon_svg/.test(annotation.className));
     },
-    "test: error in fold" : function() {
+    "test: error show up in fold" : function() {
         var editor = this.editor;
         var value = "x {" + "\n".repeat(50) + "}";
         value = value.repeat(50);
         editor.session.setMode(new Mode());
+        editor.setOption("showFoldedAnnotations", true);
         editor.setValue(value, -1);
         editor.session.setAnnotations([{row: 1, column: 0, type: "error", text: "error test"}]);
         editor.renderer.$loop._flush();
@@ -147,11 +148,12 @@ module.exports = {
         var annotation = lines.cells[0].element.children[2];
         assert.ok(/ace_error_fold/.test(annotation.className));
     },
-    "test: warning in fold" : function() {
+    "test: warning show up in fold" : function() {
         var editor = this.editor;
         var value = "x {" + "\n".repeat(50) + "}";
         value = value.repeat(50);
         editor.session.setMode(new Mode());
+        editor.setOption("showFoldedAnnotations", true);
         editor.setValue(value, -1);
         editor.session.setAnnotations([{row: 1, column: 0, type: "warning", text: "warning test"}]);
         editor.renderer.$loop._flush();
@@ -171,11 +173,12 @@ module.exports = {
         var annotation = lines.cells[0].element.children[2];
         assert.ok(/ace_warning_fold/.test(annotation.className));
     },
-    "test: not info in fold" : function() {
+    "test: info not show up in fold" : function() {
         var editor = this.editor;
         var value = "x {" + "\n".repeat(50) + "}";
         value = value.repeat(50);
         editor.session.setMode(new Mode());
+        editor.setOption("showFoldedAnnotations", true);
         editor.setValue(value, -1);
         editor.session.setAnnotations([{row: 1, column: 0, type: "info", text: "info test"}]);
         editor.renderer.$loop._flush();

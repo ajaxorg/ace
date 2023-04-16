@@ -327,7 +327,7 @@ class Gutter{
                 var foldAnnotationClass;
                 var annotationInFold = false;
 
-                for (var i = row; i <= fold.end.row; i++){
+                for (var i = row + 1; i <= fold.end.row; i++){
                     if (!this.$annotations[i])
                         continue;
 
@@ -358,7 +358,7 @@ class Gutter{
             }
         }
 
-        if (annotationInFold){
+        if (annotationInFold && this.$showFoldedAnnotations){
             annotationNode.className = iconClassName;
             annotationNode.className += foldAnnotationClass;
 
@@ -370,6 +370,8 @@ class Gutter{
 
             if (this.$useSvgGutterIcons)
                 annotationNode.className += this.$annotations[row].className;
+            else 
+                element.classList.add(this.$annotations[row].className.replace(" ", ""));
 
             dom.setStyle(annotationNode.style, "height", lineHeight);
             dom.setStyle(annotationNode.style, "display", "block");
