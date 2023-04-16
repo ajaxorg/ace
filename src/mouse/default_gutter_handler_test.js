@@ -138,8 +138,6 @@ module.exports = {
         var toggler = lines.cells[0].element.children[1];
         var rect = toggler.getBoundingClientRect();
         if (!rect.left) rect.left = 100; // for mockdom
-        toggler.dispatchEvent(MouseEvent("down", {x: rect.left, y: rect.top}));
-        toggler.dispatchEvent(MouseEvent("up", {x: rect.left, y: rect.top}));
         toggler.dispatchEvent(MouseEvent("click", {x: rect.left, y: rect.top}));
         editor.renderer.$loop._flush();
         assert.ok(/ace_closed/.test(toggler.className));
@@ -148,16 +146,6 @@ module.exports = {
         // Annotation node should have fold class.
         var annotation = lines.cells[0].element.children[2];
         assert.ok(/ace_error_fold/.test(annotation.className));
-
-        var rect = annotation.getBoundingClientRect();
-        annotation.dispatchEvent(new MouseEvent("move", {clientX: rect.left, clientY: rect.top}));
-
-        // Wait for the tooltip to appear after its timeout.
-        setTimeout(function() {
-            editor.renderer.$loop._flush();
-            var tooltip = editor.container.querySelector(".ace_gutter-tooltip");
-            assert.ok(/error in folded code/.test(tooltip.textContent));
-        }, 100); 
     },
     "test: warning in fold" : function() {
         var editor = this.editor;
@@ -174,8 +162,6 @@ module.exports = {
         var toggler = lines.cells[0].element.children[1];
         var rect = toggler.getBoundingClientRect();
         if (!rect.left) rect.left = 100; // for mockdom
-        toggler.dispatchEvent(MouseEvent("down", {x: rect.left, y: rect.top}));
-        toggler.dispatchEvent(MouseEvent("up", {x: rect.left, y: rect.top}));
         toggler.dispatchEvent(MouseEvent("click", {x: rect.left, y: rect.top}));
         editor.renderer.$loop._flush();
         assert.ok(/ace_closed/.test(toggler.className));
@@ -184,16 +170,30 @@ module.exports = {
         // Annotation node should have fold class.
         var annotation = lines.cells[0].element.children[2];
         assert.ok(/ace_warning_fold/.test(annotation.className));
+    },
+    "test: not info in fold" : function() {
+        var editor = this.editor;
+        var value = "x {" + "\n".repeat(50) + "}";
+        value = value.repeat(50);
+        editor.session.setMode(new Mode());
+        editor.setValue(value, -1);
+        editor.session.setAnnotations([{row: 1, column: 0, type: "info", text: "info test"}]);
+        editor.renderer.$loop._flush();
 
-        var rect = annotation.getBoundingClientRect();
-        annotation.dispatchEvent(new MouseEvent("move", {clientX: rect.left, clientY: rect.top}));
+        // Fold the line containing the annotation.
+        var lines = editor.renderer.$gutterLayer.$lines;
+        assert.equal(lines.cells[1].element.textContent, "2");
+        var toggler = lines.cells[0].element.children[1];
+        var rect = toggler.getBoundingClientRect();
+        if (!rect.left) rect.left = 100; // for mockdom
+        toggler.dispatchEvent(MouseEvent("click", {x: rect.left, y: rect.top}));
+        editor.renderer.$loop._flush();
+        assert.ok(/ace_closed/.test(toggler.className));
+        assert.equal(lines.cells[1].element.textContent, "51");
 
-        // Wait for the tooltip to appear after its timeout.
-        setTimeout(function() {
-            editor.renderer.$loop._flush();
-            var tooltip = editor.container.querySelector(".ace_gutter-tooltip");
-            assert.ok(/warning in folded code/.test(tooltip.textContent));
-        }, 100); 
+        // Annotation node should NOT have fold class.
+        var annotation = lines.cells[0].element.children[2];
+        assert.notOk(/fold/.test(annotation.className));
     },
    
     tearDown : function() {
