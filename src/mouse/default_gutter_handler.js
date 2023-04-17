@@ -87,6 +87,9 @@ function GutterHandler(mouseHandler) {
         tooltip.setClassName("ace_gutter-tooltip");
         tooltip.$element.setAttribute("aria-live", "polite");
         
+        if (!tooltip.isOpen) {
+            tooltip.setTheme(editor.renderer.theme);
+        }
         tooltip.show();
         editor._signal("showGutterTooltip", tooltip);
         editor.on("mousewheel", hideTooltip);

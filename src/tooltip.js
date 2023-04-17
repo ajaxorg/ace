@@ -24,7 +24,7 @@ class Tooltip {
     }
 
     /**
-     * @returns {Element}
+     * @returns {HTMLElement}
      **/
     getElement() {
         return this.$element || this.$init();
@@ -58,6 +58,11 @@ class Tooltip {
      **/
     setClassName(className) {
         dom.addCssClass(this.getElement(), className);
+    }
+
+    setTheme(theme) {
+        this.$element.className = CLASSNAME + " " +
+            (theme.isDark? "ace_dark " : "") + (theme.cssClass || "");
     }
 
     /**
@@ -179,7 +184,6 @@ class HoverTooltip extends Tooltip {
         el.style.whiteSpace = "pre-wrap";
         el.style.pointerEvents = "auto";
         el.addEventListener("mouseout", this.onMouseOut);
-        el.classList.add("ace_doc-tooltip");
         el.tabIndex = -1;
         
         el.addEventListener("blur", function() {
@@ -212,7 +216,7 @@ class HoverTooltip extends Tooltip {
         this.timeout = setTimeout(this.waitForHover, this.idleTime);
     }
     waitForHover() {
-        clearTimeout(this.timeout);
+        if (this.timeout) clearTimeout(this.timeout);
         var dt = Date.now() - this.lastT;
         if (this.idleTime - dt > 10) {
             this.timeout = setTimeout(this.waitForHover, this.idleTime - dt);
@@ -250,9 +254,11 @@ class HoverTooltip extends Tooltip {
         if (startingEvent && startingEvent != this.lastEvent) return;
         if (this.isOpen && document.activeElement == this.getElement()) return;
         
+        var renderer = editor.renderer;
         if (!this.isOpen) {
             popupManager.addPopup(this);
             this.$registerCloseEvents();
+            this.setTheme(renderer.theme);
         }
         this.isOpen = true;
         
@@ -264,7 +270,6 @@ class HoverTooltip extends Tooltip {
         element.appendChild(domNode);
         element.style.display = "block";
         
-        var renderer = editor.renderer;
         var position = renderer.textToScreenCoordinates(range.start.row, range.start.column);
         var cursorPos = editor.getCursorPosition();
         
@@ -312,7 +317,7 @@ class HoverTooltip extends Tooltip {
         if (e && e.target && this.$element.contains(e.target))
             return;
         this.lastEvent = null;
-        clearTimeout(this.timeout);
+        if (this.timeout) clearTimeout(this.timeout);
         this.timeout = null;
         this.addMarker(null);
         if (this.isOpen) {
@@ -348,8 +353,6 @@ class HoverTooltip extends Tooltip {
         if (e && e.currentTarget.contains(e.relatedTarget)) return;
         if (!e.relatedTarget.classList.contains("ace_content")) this.hide();
     }
-
-
 }
 
 exports.HoverTooltip = HoverTooltip;
