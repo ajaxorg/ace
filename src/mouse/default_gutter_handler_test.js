@@ -147,6 +147,16 @@ module.exports = {
         // Annotation node should have fold class.
         var annotation = lines.cells[0].element.children[2];
         assert.ok(/ace_error_fold/.test(annotation.className));
+
+        var rect = annotation.getBoundingClientRect();
+        annotation.dispatchEvent(new MouseEvent("move", {x: rect.left, y: rect.top}));
+
+        // Wait for the tooltip to appear after its timeout.
+        setTimeout(function() {
+            editor.renderer.$loop._flush();
+            var tooltip = editor.container.querySelector(".ace_gutter-tooltip");
+            assert.ok(/error in folded/.test(tooltip.textContent));
+        }, 100); 
     },
     "test: warning show up in fold" : function() {
         var editor = this.editor;
@@ -172,6 +182,16 @@ module.exports = {
         // Annotation node should have fold class.
         var annotation = lines.cells[0].element.children[2];
         assert.ok(/ace_warning_fold/.test(annotation.className));
+
+        var rect = annotation.getBoundingClientRect();
+        annotation.dispatchEvent(new MouseEvent("move", {x: rect.left, y: rect.top}));
+
+        // Wait for the tooltip to appear after its timeout.
+        setTimeout(function() {
+            editor.renderer.$loop._flush();
+            var tooltip = editor.container.querySelector(".ace_gutter-tooltip");
+            assert.ok(/warning in folded/.test(tooltip.textContent));
+        }, 100); 
     },
     "test: info not show up in fold" : function() {
         var editor = this.editor;
@@ -204,7 +224,6 @@ module.exports = {
         document.body.removeChild(this.editor.container);
     }
 };
-
 
 if (typeof module !== "undefined" && module === require.main) {
     require("asyncjs").test.testcase(module.exports).exec();
