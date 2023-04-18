@@ -10,12 +10,12 @@ module.exports = `.ace-solarized-dark .ace_gutter {
 
 .ace-solarized-dark {
   background-color: #002B36;
-  color: #93A1A1
+  color: #839496
 }
 
 .ace-solarized-dark .ace_entity.ace_other.ace_attribute-name,
 .ace-solarized-dark .ace_storage {
-  color: #93A1A1
+  color: #839496
 }
 
 .ace-solarized-dark .ace_cursor,
