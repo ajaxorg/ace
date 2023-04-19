@@ -227,6 +227,7 @@ export namespace Ace {
     value: string;
     session: EditSession;
     relativeLineNumbers: boolean;
+    enableMultiselect: boolean;
     enableKeyboardAccessibility: boolean;
   }
 
@@ -274,6 +275,18 @@ export namespace Ace {
     text: string;
     type: string;
   }
+
+  export interface MarkerGroupItem {
+    range: Range;
+    className: string;
+  }
+
+  export class MarkerGroup {
+    constructor(session: EditSession);
+    setMarkers: (markers: MarkerGroupItem[]) => void;
+    getMarkerAtPosition: (pos: Position) => MarkerGroupItem;
+  }
+
 
   export interface Command {
     name?: string;

@@ -70,6 +70,7 @@ var testNames = [
     "ace/search_test",
     "ace/selection_test",
     "ace/snippets_test",
+    "ace/marker_group_test",
     "ace/tooltip_test",
     "ace/token_iterator_test",
     "ace/tokenizer_test",

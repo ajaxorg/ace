@@ -147,8 +147,8 @@ class PopupManager {
     }
 
     doPopupsOverlap (popupA, popupB) {
-        const rectA = popupA.getRect();
-        const rectB = popupB.getRect();
+        const rectA = popupA.getElement().getBoundingClientRect();
+        const rectB = popupB.getElement().getBoundingClientRect();
 
         return (rectA.left < rectB.right && rectA.right > rectB.left && rectA.top < rectB.bottom && rectA.bottom
             > rectB.top);
@@ -187,11 +187,22 @@ class HoverTooltip extends Tooltip {
         }.bind(this));
     }
     
-    addToEditor(editor, callback, cancel) {
+    addToEditor(editor) {
         editor.on("mousemove", this.onMouseMove);
+        editor.on("mousedown", this.hide);
         editor.renderer.getMouseEventTarget().addEventListener("mouseout", this.onMouseOut, true);
     }
-    
+
+    removeFromEditor(editor) {
+        editor.off("mousemove", this.onMouseMove);
+        editor.off("mousedown", this.hide);
+        editor.renderer.getMouseEventTarget().removeEventListener("mouseout", this.onMouseOut, true);
+        if (this.timeout) {
+            clearTimeout(this.timeout);
+            this.timeout = null;
+        }
+    }
+
     onMouseMove(e, editor) {
         this.lastEvent = e;
         this.lastT = Date.now();
@@ -309,7 +320,7 @@ class HoverTooltip extends Tooltip {
     hide(e) {
         if (!e && document.activeElement == this.getElement())
             return;
-        if (e && e.target && this.$element.contains(e.target))
+        if (e && e.target && e.type != "keydown" && this.$element.contains(e.target))
             return;
         this.lastEvent = null;
         clearTimeout(this.timeout);
