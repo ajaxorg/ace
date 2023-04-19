@@ -198,7 +198,7 @@ var optionGroups = {
         "Use SVG gutter icons": {
             path: "useSvgGutterIcons"
         },
-        "Show annotations folded lines": {
+        "Annotations for folded lines": {
             path: "showFoldedAnnotations"
         },
         "Keyboard Accessibility Mode": {
