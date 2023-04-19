@@ -57,7 +57,7 @@ function GutterHandler(mouseHandler) {
         var fold = gutter.session.getNextFoldLine(row);
         if (fold && gutter.$showFoldedAnnotations){
             var annotationsInFold = {error: [], warning: [], info: []};
-            var typeMostSevereAnnotationInFold;
+            var mostSevereAnnotationInFoldType;
 
             for (var i = row + 1; i <= fold.end.row; i++){
                 if (!gutter.$annotations[i])
@@ -67,27 +67,27 @@ function GutterHandler(mouseHandler) {
                     var annotationType = gutter.$annotations[i].type[j];
                     annotationsInFold[annotationType].push(gutter.$annotations[i].text[j]);
 
-                    if (annotationType == "error"){
-                        typeMostSevereAnnotationInFold = "error_fold";
+                    if (annotationType === "error"){
+                        mostSevereAnnotationInFoldType = "error_fold";
                         continue;
                     }
 
-                    if (annotationType == "warning"){
-                        typeMostSevereAnnotationInFold = "warning_fold";
+                    if (annotationType === "warning"){
+                        mostSevereAnnotationInFoldType = "warning_fold";
                         continue;
                     }
                 }
             }
            
-            if (typeMostSevereAnnotationInFold == "error_fold" || typeMostSevereAnnotationInFold == "warning_fold"){
+            if (mostSevereAnnotationInFoldType === "error_fold" || mostSevereAnnotationInFoldType === "warning_fold"){
                 var summaryFoldedAnnotations = `${annotationsToSummaryString(annotationsInFold)} in folded code.`;
 
                 annotation.text.push(summaryFoldedAnnotations);
-                annotation.type.push(typeMostSevereAnnotationInFold);
+                annotation.type.push(mostSevereAnnotationInFoldType);
             }
         }
         
-        if (annotation.text.length == 0)
+        if (annotation.text.length === 0)
             return hideTooltip();
 
         var maxRow = editor.session.getLength();
@@ -119,7 +119,7 @@ function GutterHandler(mouseHandler) {
         if (mouseHandler.$tooltipFollowsMouse) {
             moveTooltip(mouseEvent);
         } else {
-            var gutterElement = gutter.$lines.cells[row].element.children[1];
+            var gutterElement = gutter.$lines.cells[row].element.querySelector("[class*=ace_icon]");
             var rect = gutterElement.getBoundingClientRect();
             var style = tooltip.getElement().style;
             style.left = rect.right + "px";
@@ -139,17 +139,14 @@ function GutterHandler(mouseHandler) {
     }
 
     function annotationsToSummaryString(annotations) {
-        var isMoreThanOneAnnotationType = false;
-        var summaryString = "";
-        for (var i = 0; i < 3; i++){
-            var annotationType = ['error', 'warning', 'info'][i];
-            if (annotations[annotationType].length > 0){
-                var label = annotations[annotationType].length === 1 ? annotationLabels[annotationType].singular : annotationLabels[annotationType].plural;
-                summaryString += `${isMoreThanOneAnnotationType ? ', ' : ''}${annotations[annotationType].length} ${label}`;
-                isMoreThanOneAnnotationType = true;
-            } 
+        const summary = [];
+        const annotationTypes = ['error', 'warning', 'info'];
+        for (const annotationType of annotationTypes) {
+            if (!annotations[annotationType].length) continue;
+            const label = annotations[annotationType].length === 1 ? annotationLabels[annotationType].singular : annotationLabels[annotationType].plural;
+            summary.push(`${annotations[annotationType].length} ${label}`);
         }
-        return summaryString;
+        return summary.join(", ");
     }
 
     function moveTooltip(e) {
