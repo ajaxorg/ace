@@ -443,8 +443,13 @@ module.exports = `
     pointer-events: none;
 }
 
+.ace_tooltip.ace_dark {
+    background-color: #636363;
+    color: #fff;
+}
+
 .ace_tooltip:focus {
-    outline: 1px solid black;
+    outline: 1px solid #5E9ED6;
 }
 
 .ace_gutter-tooltip_header {
