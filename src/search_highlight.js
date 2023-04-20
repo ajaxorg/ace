@@ -3,8 +3,6 @@
 var lang = require("./lib/lang");
 var Range = require("./range").Range;
 
-var SearchHighlight = 
-
 class SearchHighlight {
     constructor(regExp, clazz, type = "text") {
         this.setRegexp(regExp);
@@ -49,7 +47,7 @@ class SearchHighlight {
         }
     }
 
-};
+}
 
 // needed to prevent long lines from freezing the browser
 SearchHighlight.prototype.MAX_RANGES = 500;

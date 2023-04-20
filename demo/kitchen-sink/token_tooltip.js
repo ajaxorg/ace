@@ -72,6 +72,9 @@ class TokenTooltip extends Tooltip {
             this.height = this.getHeight();
             this.tokenText = tokenText;
         }
+        if (!this.isOpen) {
+            this.setTheme(r.theme);
+        }
 
         this.show(null, this.x, this.y);
 

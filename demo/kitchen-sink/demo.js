@@ -29,6 +29,7 @@ var HashHandler = require("ace/keyboard/hash_handler").HashHandler;
 
 var Renderer = require("ace/virtual_renderer").VirtualRenderer;
 var Editor = require("ace/editor").Editor;
+var Range = require("ace/range").Range;
 
 var whitespace = require("ace/ext/whitespace");
 
@@ -43,7 +44,6 @@ var saveOption = util.saveOption;
 var ElasticTabstopsLite = require("ace/ext/elastic_tabstops_lite").ElasticTabstopsLite;
 
 var IncrementalSearch = require("ace/incremental_search").IncrementalSearch;
-
 
 var TokenTooltip = require("./token_tooltip").TokenTooltip;
 require("ace/config").defineOptions(Editor.prototype, "editor", {
@@ -61,7 +61,7 @@ require("ace/config").defineOptions(Editor.prototype, "editor", {
             return !!this.tokenTooltip;
         },
         handlesSet: true
-    },
+    }
 });
 
 require("ace/config").defineOptions(Editor.prototype, "editor", {
@@ -80,30 +80,110 @@ require("ace/config").defineOptions(Editor.prototype, "editor", {
 });
 
 var {HoverTooltip} = require("ace/tooltip");
+var MarkerGroup = require("ace/marker_group").MarkerGroup;
 var docTooltip = new HoverTooltip();
 function loadLanguageProvider(editor) {
     require([
         "https://www.unpkg.com/ace-linters/build/ace-linters.js"
-    ], (m) => {
-        window.languageProvider = m.LanguageProvider.fromCdn("https://www.unpkg.com/ace-linters/build");
-        window.languageProvider.registerEditor(editor);
+    ], function(m) {
+        var languageProvider = m.LanguageProvider.fromCdn("https://www.unpkg.com/ace-linters/build", {
+            functionality: {
+                hover: true,
+                completion: {
+                    overwriteCompleters: true
+                },
+                completionResolve: true,
+                format: true,
+                documentHighlights: true,
+                signatureHelp: false
+            }
+        });
+        window.languageProvider = languageProvider;
+        languageProvider.registerEditor(editor);
+        // hack to replace tooltip implementation from ace-linters with hover tooltip
+        // can be removed when ace-linters is updated to use MarkerGroup and HoverTooltip
         if (languageProvider.$descriptionTooltip)
             editor.off("mousemove", languageProvider.$descriptionTooltip.onMouseMove);
-        
+        languageProvider.$messageController.$worker.addEventListener("message", function(e) {
+            var id = e.data.sessionId.split(".")[0];
+            var session = languageProvider.$getSessionLanguageProvider({id: id})?.session;
+            if (e.data.type == 6) {
+                // annotation message
+                e.stopPropagation();
+                if (session) {
+                    showAnnotations(session, e.data.value);
+                }
+            } else if (e.data.type == 13) {
+                // highlights message
+                if (session) showOccurrenceMarkers(session, e.data.value);
+            }
+        }, true);
+        function showOccurrenceMarkers(session, positions) {
+            if (!session.state.occurrenceMarkers) {
+                session.state.occurrenceMarkers = new MarkerGroup(session);
+            }
+            session.state.occurrenceMarkers.setMarkers(positions.map(function(el) {
+                var r = el.range;
+                return {
+                    range: new Range(r.start.line, r.start.character, r.end.line, r.end.character),
+                    // https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#documentHighlightKind
+                    className: el.kind == 2
+                        ? "language_highlight_read"
+                        : el.kind == 3
+                        ? "language_highlight_write"
+                        : "language_highlight_text"
+                };
+            }));
+        }
+        function showAnnotations(session, diagnostics) {
+            session.clearAnnotations();
+            let annotations = diagnostics.map((el) => {
+                console.log(el.severity, el)
+                return {
+                    row: el.range.start.line,
+                    column: el.range.start.character,
+                    text: el.message,
+                    type: el.severity === 1 ? "error" : el.severity === 2 ? "warning" : "info"
+                };
+            });
+            if (annotations && annotations.length > 0) {
+                session.setAnnotations(annotations);
+            }
+            
+            if (!session.state) session.state = {}
+            if (!session.state.diagnosticMarkers) {
+                session.state.diagnosticMarkers = new MarkerGroup(session);
+            }
+            session.state.diagnosticMarkers.setMarkers(diagnostics.map(function(el) {
+                var r = el.range;
+                return {
+                    range: new Range(r.start.line, r.start.character, r.end.line, r.end.character),
+                    tooltipText: el.message,
+                    className:  "language_highlight_error"
+                };
+            }));
+        };
         
         docTooltip.setDataProvider(function(e, editor) {
-            var renderer = editor.renderer;
-
             let session = editor.session;
-            let docPos = e.getDocumentPosition() ;
+            let docPos = e.getDocumentPosition();
 
             languageProvider.doHover(session, docPos, function(hover) {
-                if (!hover) {
-                    return;
-                }
-                // todo should ace itself handle markdown?
-                var domNode = dom.buildDom(["p", {}, hover.content.text]);
-                docTooltip.showForRange(editor, hover.range, domNode, e);
+                var errorMarker = session.state?.diagnosticMarkers.getMarkerAtPosition(docPos);
+                var range = hover?.range || errorMarker?.range;
+                if (!range) return;
+                var hoverNode = hover && dom.buildDom(["div", {}])
+                if (hoverNode) {
+                    hover.content.text = hover.content.text.replace(/(?!^)`{3}/gm, "\n$&");
+                    // todo render markdown using ace markdown mode
+                    hoverNode.innerHTML = languageProvider.getTooltipText(hover);
+                };
+                
+                var domNode = dom.buildDom(["div", {},
+                    errorMarker && ["div", {}, errorMarker.tooltipText.trim()],
+                    hoverNode
+                ]);
+                docTooltip.showForRange(editor, range, domNode, e);
             });
         });
         

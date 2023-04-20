@@ -102,6 +102,17 @@ module.exports = {
                 }, 6);
             }, 6);
         }, 6);
+    },
+    "test: remove listeners": function() {
+        var l = editor._eventRegistry.mousemove.length;
+        docTooltip.addToEditor(editor);
+        assert.ok(!docTooltip.timeout);
+        assert.equal(editor._eventRegistry.mousemove.length, l + 1);
+        mouse("move", {row: 0, column: 1});
+        assert.ok(docTooltip.timeout);
+        docTooltip.removeFromEditor(editor);
+        assert.ok(!docTooltip.timeout);
+        assert.equal(editor._eventRegistry.mousemove.length, l);
     }
 };
 
