@@ -56,7 +56,7 @@ module.exports = {
         // Wait for the tooltip to appear after its timeout.
         setTimeout(function() {
             editor.renderer.$loop._flush();
-            var tooltip = editor.container.querySelector(".ace_gutter-tooltip");
+            var tooltip = editor.container.querySelector(".ace_tooltip");
             assert.ok(/error test/.test(tooltip.textContent));
         }, 100); 
     },
@@ -79,7 +79,7 @@ module.exports = {
         // Wait for the tooltip to appear after its timeout.
         setTimeout(function() {
             editor.renderer.$loop._flush();
-            var tooltip = editor.container.querySelector(".ace_gutter-tooltip");
+            var tooltip = editor.container.querySelector(".ace_tooltip");
             assert.ok(/warning test/.test(tooltip.textContent));
         }, 100); 
     },
@@ -102,7 +102,7 @@ module.exports = {
         // Wait for the tooltip to appear after its timeout.
         setTimeout(function() {
             editor.renderer.$loop._flush();
-            var tooltip = editor.container.querySelector(".ace_gutter-tooltip");
+            var tooltip = editor.container.querySelector(".ace_tooltip");
             assert.ok(/info test/.test(tooltip.textContent));
         }, 100); 
     },
@@ -154,7 +154,7 @@ module.exports = {
         // Wait for the tooltip to appear after its timeout.
         setTimeout(function() {
             editor.renderer.$loop._flush();
-            var tooltip = editor.container.querySelector(".ace_gutter-tooltip");
+            var tooltip = editor.container.querySelector(".ace_tooltip");
             assert.ok(/error in folded/.test(tooltip.textContent));
         }, 100); 
     },
@@ -189,7 +189,7 @@ module.exports = {
         // Wait for the tooltip to appear after its timeout.
         setTimeout(function() {
             editor.renderer.$loop._flush();
-            var tooltip = editor.container.querySelector(".ace_gutter-tooltip");
+            var tooltip = editor.container.querySelector(".ace_tooltip");
             assert.ok(/warning in folded/.test(tooltip.textContent));
         }, 100); 
     },
