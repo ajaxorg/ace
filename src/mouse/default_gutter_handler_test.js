@@ -51,7 +51,7 @@ module.exports = {
         assert.ok(/ace_error/.test(annotation.className));
 
         var rect = annotation.getBoundingClientRect();
-        annotation.dispatchEvent(new MouseEvent("move", {clientX: rect.left, clientY: rect.top}));
+        annotation.dispatchEvent(new MouseEvent("move", {x: rect.left, y: rect.top}));
 
         // Wait for the tooltip to appear after its timeout.
         setTimeout(function() {
@@ -74,7 +74,7 @@ module.exports = {
         assert.ok(/ace_warning/.test(annotation.className));
 
         var rect = annotation.getBoundingClientRect();
-        annotation.dispatchEvent(new MouseEvent("move", {clientX: rect.left, clientY: rect.top}));
+        annotation.dispatchEvent(new MouseEvent("move", {x: rect.left, y: rect.top}));
 
         // Wait for the tooltip to appear after its timeout.
         setTimeout(function() {
@@ -97,7 +97,7 @@ module.exports = {
         assert.ok(/ace_info/.test(annotation.className));
 
         var rect = annotation.getBoundingClientRect();
-        annotation.dispatchEvent(new MouseEvent("move", {clientX: rect.left, clientY: rect.top}));
+        annotation.dispatchEvent(new MouseEvent("move", {x: rect.left, y: rect.top}));
 
         // Wait for the tooltip to appear after its timeout.
         setTimeout(function() {
