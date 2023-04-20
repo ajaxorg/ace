@@ -48,7 +48,7 @@ function GutterHandler(mouseHandler) {
         var annotation;
 
         if (annotationsInRow)
-            annotation = {text: [...annotationsInRow.text], type: [...annotationsInRow.type]};
+            annotation = {text: Array.from(annotationsInRow.text), type: Array.from(annotationsInRow.type)};
         else
             annotation = {text: [], type: []};
 
