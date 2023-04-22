@@ -61,8 +61,56 @@ require("ace/config").defineOptions(Editor.prototype, "editor", {
             return !!this.tokenTooltip;
         },
         handlesSet: true
+    },
+});
+
+require("ace/config").defineOptions(Editor.prototype, "editor", {
+    useAceLinters: {
+        set: function(val) {
+            if (val && !window.languageProvider) {
+                loadLanguageProvider(editor);
+            }
+            else if (val) {
+                window.languageProvider.registerEditor(this);
+            } else {
+                // todo unregister
+            }
+        }
     }
 });
+
+var {HoverTooltip} = require("ace/tooltip");
+var docTooltip = new HoverTooltip();
+function loadLanguageProvider(editor) {
+    require([
+        "https://www.unpkg.com/ace-linters/build/ace-linters.js"
+    ], (m) => {
+        window.languageProvider = m.LanguageProvider.fromCdn("https://www.unpkg.com/ace-linters/build");
+        window.languageProvider.registerEditor(editor);
+        if (languageProvider.$descriptionTooltip)
+            editor.off("mousemove", languageProvider.$descriptionTooltip.onMouseMove);
+        
+        
+        docTooltip.setDataProvider(function(e, editor) {
+            var renderer = editor.renderer;
+
+            let session = editor.session;
+            let docPos = e.getDocumentPosition() ;
+
+            languageProvider.doHover(session, docPos, function(hover) {
+                if (!hover) {
+                    return;
+                }
+                // todo should ace itself handle markdown?
+                var domNode = dom.buildDom(["p", {}, hover.content.text]);
+                docTooltip.showForRange(editor, hover.range, domNode, e);
+            });
+        });
+        
+        docTooltip.addToEditor(editor)
+    });
+}
+
 
 
 var workerModule = require("ace/worker/worker_client");
@@ -392,6 +440,10 @@ optionsPanel.add({
             getValue: function() {
                 return !!originalAutocompleteCommand;
             }
+        },
+        "Use Ace Linters": {
+            position: 3000,
+            path: "useAceLinters"
         },
         "Show Textarea Position": devUtil.textPositionDebugger,
         "Text Input Debugger": devUtil.textInputDebugger,
