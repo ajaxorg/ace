@@ -54,6 +54,7 @@ jobs:
     - run: node_modules/.bin/tsc --noImplicitAny --strict --noUnusedLocals --noImplicitReturns --noUnusedParameters --noImplicitThis ace.d.ts
     - uses: codecov/codecov-action@v3
       with:
+        token: d8edca4b-8e97-41e5-b54e-34c7cf3b2d47
         file: ./coverage/coverage.json
         flags: unittests
         name: codecov-umbrella
