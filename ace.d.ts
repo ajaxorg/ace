@@ -1,3 +1,5 @@
+/// <reference path="./ace-modes.d.ts" />
+
 export namespace Ace {
   export type NewLineMode = 'auto' | 'unix' | 'windows';
 
@@ -364,7 +366,66 @@ export namespace Ace {
     stepForward(): Token;
   }
 
+  export type HighlightRule = {defaultToken: string} | {include: string} | {todo: string} | {
+    token: string | string[] | ((value: string) => string);
+    regex: string | RegExp;
+    next?: string;
+    push?: string;
+    comment?: string;
+    caseInsensitive?: boolean;
+  }
+
+  export type HighlightRulesMap = Record<string, HighlightRule[]>;
+
+  export type KeywordMapper = (keyword: string) => string;
+
+  export interface HighlightRules {
+    $rules: HighlightRulesMap;
+    $embeds?: string[];
+    $keywordList?: string[];
+    $keywords?: KeywordMapper;
+    addRules(rules: HighlightRulesMap, prefix?: string): void;
+    getRules(): HighlightRulesMap;
+    embedRules(rules: (new () => HighlightRules) | HighlightRulesMap, prefix: string, escapeRules?: boolean, append?: boolean): void;
+    getEmbeds(): string[];
+    normalizeRules(): void;
+    createKeywordMapper(map: Record<string, string>, defaultToken?: string, ignoreCase?: boolean, splitChar?: string): KeywordMapper;
+  }
+
+  export interface FoldMode {
+    foldingStartMarker: RegExp;
+    foldingStopMarker?: RegExp;
+    getFoldWidget(session: EditSession, foldStyle: string, row: number): string;
+    getFoldWidgetRange(session: EditSession, foldStyle: string, row: number, forceMultiline?: boolean): Range | undefined;
+    indentationBlock(session: EditSession, row: number, column?: number): Range | undefined;
+    openingBracketBlock(session: EditSession, bracket: string, row: number, column: number, typeRe?: RegExp): Range | undefined;
+    closingBracketBlock(session: EditSession, bracket: string, row: number, column: number, typeRe?: RegExp): Range | undefined;
+  }
+
+  type BehaviorAction = (state: string, action: string, editor: Editor, session: EditSession, text: string) => {text: string, selection: number[]} | Range | undefined;
+  type BehaviorMap = Record<string, Record<string, BehaviorAction>>;
+
+  export interface Behaviour {
+    $behaviours: BehaviorMap;
+    add(name: string, action: string, callback: BehaviorAction): void;
+    addBehaviours(behaviours: BehaviorMap): void;
+    remove(name: string): void;
+    inherit(mode: SyntaxMode | (new () => SyntaxMode), filter: string[]): void;
+    getBehaviours(filter: string[]): BehaviorMap;
+  }
+
+  export interface Outdent {
+    checkOutdent(line: string, input: string): boolean;
+    autoOutdent(doc: Document, row: number): number | undefined;
+    $getIndent(line: string): string;
+  }
+
   export interface SyntaxMode {
+    HighlightRules: new () => HighlightRules;
+    foldingRules?: FoldMode;
+    $behaviour?: Behaviour;
+    $defaultBehaviour?: Behaviour;
+    lineCommentStart?: string;
     getTokenizer(): Tokenizer;
     toggleCommentLines(state: any,
       session: EditSession,
@@ -377,14 +438,11 @@ export namespace Ace {
     getNextLineIndent(state: any, line: string, tab: string): string;
     checkOutdent(state: any, line: string, input: string): boolean;
     autoOutdent(state: any, doc: Document, row: number): void;
+    $getIndent(line: string): string;
     // TODO implement WorkerClient types
     createWorker(session: EditSession): any;
     createModeDelegates(mapping: { [key: string]: string }): void;
-    transformAction(state: string,
-      action: string,
-      editor: Editor,
-      session: EditSession,
-      text: string): any;
+    transformAction: BehaviorAction;
     getKeywords(append?: boolean): Array<string | RegExp>;
     getCompletions(state: string,
       session: EditSession,
@@ -392,13 +450,16 @@ export namespace Ace {
       prefix: string): Completion[];
   }
 
+  type AfterLoadCallback = (err: Error | null, module: unknown) => void;
+  type LoaderFunction = (moduleName: string, afterLoad: AfterLoadCallback) => void;
+
   export interface Config {
     get(key: string): any;
     set(key: string, value: any): void;
     all(): { [key: string]: any };
     moduleUrl(name: string, component?: string): string;
     setModuleUrl(name: string, subst: string): string;
-    setLoader(cb: Function): void;
+    setLoader(cb: LoaderFunction): void;
     setModuleLoader(name: string, onLoad: Function): void;
     loadModule(moduleName: string | [string, string],
       onLoad?: (module: any) => void): void;
@@ -455,11 +516,12 @@ export namespace Ace {
     on(name: 'tokenizerUpdate',
        callback: (obj: { data: { first: number, last: number } }) => void): Function;
     on(name: 'change', callback: () => void): Function;
+    on(name: 'changeTabSize', callback: () => void): Function;
 
 
     setOption<T extends keyof EditSessionOptions>(name: T, value: EditSessionOptions[T]): void;
     getOption<T extends keyof EditSessionOptions>(name: T): EditSessionOptions[T];
-    
+
     readonly doc: Document;
 
     setDocument(doc: Document): void;
@@ -817,7 +879,7 @@ export namespace Ace {
     setKeyboardHandler(keyboardHandler: string, callback?: () => void): void;
     setKeyboardHandler(keyboardHandler: KeyboardHandler|null): void;
     getKeyboardHandler(): string;
-    setSession(session: EditSession): void;
+    setSession(session: EditSession | undefined): void;
     getSession(): EditSession;
     setValue(val: string, cursorPos?: number): string;
     getValue(): string;
@@ -1032,7 +1094,7 @@ export const VirtualRenderer: {
   new(container: HTMLElement, theme?: string): Ace.VirtualRenderer;
 };
 export const EditSession: {
-  new(text: string | Document, mode?: Ace.SyntaxMode): Ace.EditSession;
+  new(text: string | Ace.Document, mode?: Ace.SyntaxMode): Ace.EditSession;
 };
 export const UndoManager: {
   new(): Ace.UndoManager;
