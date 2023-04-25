@@ -284,8 +284,8 @@ export namespace Ace {
 
   export class MarkerGroup {
     constructor(session: EditSession);
-    setMarkers: (markers: MarkerGroupItem[]) => void;
-    getMarkerAtPosition: (pos: Position) => MarkerGroupItem;
+    setMarkers(markers: MarkerGroupItem[]): void;
+    getMarkerAtPosition(pos: Position): MarkerGroupItem;
   }
 
 
