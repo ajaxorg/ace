@@ -380,10 +380,6 @@ export namespace Ace {
   export type KeywordMapper = (keyword: string) => string;
 
   export interface HighlightRules {
-    $rules: HighlightRulesMap;
-    $embeds?: string[];
-    $keywordList?: string[];
-    $keywords?: KeywordMapper;
     addRules(rules: HighlightRulesMap, prefix?: string): void;
     getRules(): HighlightRulesMap;
     embedRules(rules: (new () => HighlightRules) | HighlightRulesMap, prefix: string, escapeRules?: boolean, append?: boolean): void;
@@ -406,7 +402,6 @@ export namespace Ace {
   type BehaviorMap = Record<string, Record<string, BehaviorAction>>;
 
   export interface Behaviour {
-    $behaviours: BehaviorMap;
     add(name: string, action: string, callback: BehaviorAction): void;
     addBehaviours(behaviours: BehaviorMap): void;
     remove(name: string): void;
@@ -417,7 +412,6 @@ export namespace Ace {
   export interface Outdent {
     checkOutdent(line: string, input: string): boolean;
     autoOutdent(doc: Document, row: number): number | undefined;
-    $getIndent(line: string): string;
   }
 
   export interface SyntaxMode {
