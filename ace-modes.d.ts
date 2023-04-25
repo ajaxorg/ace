@@ -1,14 +1,8 @@
 declare module "ace-code/src/mode/matching_brace_outdent" {
   export const MatchingBraceOutdent: new () => import(".").Ace.Outdent;
 }
-declare module "ace-code/src/mode/matching_highlight_rules" {
-  export const MatchingHighlightRules: new () => import(".").Ace.HighlightRules;
-}
 declare module "ace-code/src/mode/matching_parens_outdent" {
   export const MatchingParensOutdent: new () => import(".").Ace.Outdent;
-}
-declare module "ace-code/src/mode/matching_highlight_rules" {
-  export const MatchingHighlightRules: new () => import(".").Ace.HighlightRules;
 }
 
 
@@ -445,8 +439,8 @@ declare module "ace-code/src/mode/haskell_highlight_rules" {
 declare module "ace-code/src/mode/haskell_cabal" {
   export const Mode: new () => import(".").Ace.SyntaxMode;
 }
-declare module "ace-code/src/mode/haskell_highlight_rules" {
-  export const HaskellHighlightRules: new () => import(".").Ace.HighlightRules;
+declare module "ace-code/src/mode/haskell_cabal_highlight_rules" {
+  export const CabalHighlightRules: new () => import(".").Ace.HighlightRules;
 }
 declare module "ace-code/src/mode/haxe" {
   export const Mode: new () => import(".").Ace.SyntaxMode;
@@ -778,8 +772,8 @@ declare module "ace-code/src/mode/php_highlight_rules" {
 declare module "ace-code/src/mode/php_laravel_blade" {
   export const Mode: new () => import(".").Ace.SyntaxMode;
 }
-declare module "ace-code/src/mode/php_highlight_rules" {
-  export const PhpHighlightRules: new () => import(".").Ace.HighlightRules;
+declare module "ace-code/src/mode/php_laravel_blade_highlight_rules" {
+  export const PHPLaravelBladeHighlightRules: new () => import(".").Ace.HighlightRules;
 }
 declare module "ace-code/src/mode/pig" {
   export const Mode: new () => import(".").Ace.SyntaxMode;
