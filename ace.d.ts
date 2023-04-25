@@ -432,7 +432,6 @@ export namespace Ace {
     getNextLineIndent(state: any, line: string, tab: string): string;
     checkOutdent(state: any, line: string, input: string): boolean;
     autoOutdent(state: any, doc: Document, row: number): void;
-    $getIndent(line: string): string;
     // TODO implement WorkerClient types
     createWorker(session: EditSession): any;
     createModeDelegates(mapping: { [key: string]: string }): void;
