@@ -328,6 +328,14 @@ module.exports = {
         this.editor.tabstopManager.tabNext();
         editor.execCommand("insertstring", ".");
         assert.equal(editor.getValue(), "qt qt qt.");
+    },
+    "test: should work as expected with object of Range interface": function () {
+        var content = "test";
+        this.editor.setValue("replace1");
+        snippetManager.insertSnippet(this.editor, content, {
+            start: {row: 0, column: 0}, end: {row: 0, column: 7}
+        });
+        assert.equal(this.editor.getValue(), "test1");
     }
 };
 
