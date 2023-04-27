@@ -1,7 +1,6 @@
 "use strict";
 
 var keys = require('../lib/keys');
-var keyboardFocusClassName = "ace_keyboard-focus";
 
 class GutterKeyboardHandler {
     constructor(editor) {
@@ -29,11 +28,12 @@ class GutterKeyboardHandler {
 
     $focusFoldWidget(index) {
         var foldWidget = this.$getFoldWidget(index);
+        var activeRow = this.$rowIndexToRow(this.activeRowIndex) + 1;
 
         foldWidget.setAttribute("tabindex", 0);
         foldWidget.classList.add(this.editor.keyboardFocusClassName);
         foldWidget.setAttribute('role', 'button');
-        foldWidget.setAttribute('aria-label', `Fold code row ${row + 1}`);
+        foldWidget.setAttribute('aria-label', `Fold code row ${activeRow}`);
         foldWidget.focus();
     }
 
@@ -53,30 +53,30 @@ class GutterKeyboardHandler {
     }
 
     $onGutterKeyDown(e) {
+        // If focus is on the gutter element, set focus to fold widget on enter press.
         if (e.target === this.element) {
             if (e.keyCode === keys['enter']){
-                e.stopPropagation();
                 e.preventDefault();
                 this.$focusFoldWidget(this.activeRowIndex);
                 return;
             }
         } else {
+            // If focus is on a gutter icon, set focus to gutter on escape press.
             if (e.keyCode === keys['escape']){
-                e.stopPropagation();
                 e.preventDefault();
                 this.$blurFoldWidget(this.activeRowIndex);
                 this.element.focus();
                 return;
             }
 
+            // Prevent tabbing when interacting with the gutter icons.
             if (e.keyCode === keys['tab']){
-                e.stopPropagation();
                 e.preventDefault();
                 return;
             }
 
+            // Navigate up to next available fold widget.
             if (e.keyCode === keys['up']){
-                e.stopPropagation();
                 e.preventDefault();
 
                 var index = this.activeRowIndex;
@@ -94,8 +94,8 @@ class GutterKeyboardHandler {
                 return;
             }
 
+            // Navigate down to next available fold widget.
             if (e.keyCode === keys['down']){
-                e.stopPropagation();
                 e.preventDefault();
 
                 var index = this.activeRowIndex;
@@ -113,12 +113,10 @@ class GutterKeyboardHandler {
                 return;
             }
 
+            // When focus on foldwidget, fold lines on enter press.
             if (e.keyCode === keys['enter']){
-                e.stopPropagation();
                 e.preventDefault();
                 this.editor.session.onFoldWidgetClick(this.$rowIndexToRow(this.activeRowIndex), e);
-                var foldWidget = this.$getFoldWidget(this.activeRowIndex);
-                foldWidget.classList.add(keyboardFocusClassName);
                 return;
             }
         }
