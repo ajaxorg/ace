@@ -755,7 +755,9 @@ function Folding() {
     };
 
     this.onFoldWidgetClick = function(row, e) {
-        e = e.domEvent;
+        if (e.domEvent)
+            e = e.domEvent
+
         var options = {
             children: e.shiftKey,
             all: e.ctrlKey || e.metaKey,
