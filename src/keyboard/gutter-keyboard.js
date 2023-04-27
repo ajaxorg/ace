@@ -24,14 +24,17 @@ class GutterKeyboardHandler {
             if (e.keyCode === keys['enter']){
                 e.preventDefault();
                 
+                // Scroll if the cursor is not currently within the viewport.
                 var row = this.editor.getCursorPosition().row;
-                var index = this.$rowToRowIndex(row)
-                this.activeRowIndex = this.$findNearestFoldWidgetAtIndex(index);
-
-                if (this.activeRowIndex == null) {return;}
-
-                this.$focusFoldWidget(this.activeRowIndex);
-                return;
+                this.editor.renderer.scrollToRow(row, true, true);
+         
+                // Wait until the scrolling is completed to check the viewport.
+                setTimeout(function() {
+                    var index = this.$rowToRowIndex(row);
+                    this.activeRowIndex = this.$findNearestFoldWidgetAtIndex(index);
+                    if (this.activeRowIndex == null) {return;}
+                    this.$focusFoldWidget(this.activeRowIndex);
+                }.bind(this), 10);
             }
         } else {
             // If focus is on a gutter icon, set focus to gutter on escape press.
@@ -93,7 +96,7 @@ class GutterKeyboardHandler {
                 if (this.gutterLayer.session.foldWidgets[this.$rowIndexToRow(this.activeRowIndex)] === 'start') {
                     this.editor.session.onFoldWidgetClick(this.$rowIndexToRow(this.activeRowIndex), e);
                 } else if (this.gutterLayer.session.foldWidgets[this.$rowIndexToRow(this.activeRowIndex)] === 'end') {
-                    /* to do: deal with 'end' fold widgets correctly */
+                    /* TO DO: deal with 'end' fold widgets */
                 }
 
                 return;
@@ -113,11 +116,11 @@ class GutterKeyboardHandler {
         var foldWidgets = this.gutterLayer.session.foldWidgets;
         var row = this.$rowIndexToRow(index);
 
-        // If fold widget exists at index, return that index.
+        // If fold widget exists at index, return index.
         if (foldWidgets[row])
             return index;
 
-        // else, find the nearest index which has a fold widget.
+        // else, find the nearest index with fold widget within viewport.
         var i = 0;
         while (index - i > 0 || index + i < this.lines.getLength() - 1){
             i++;
