@@ -36,8 +36,8 @@ class GutterKeyboardHandler {
 
         // If focus is on the gutter element, set focus to fold widget on enter press.
         if (e.target === this.element) {
-            e.preventDefault();
             if (e.keyCode != keys['enter']) {return;}
+            e.preventDefault();
 
             // Scroll if the cursor is not currently within the viewport.
             var row = this.editor.getCursorPosition().row;
@@ -106,7 +106,7 @@ class GutterKeyboardHandler {
                     while (index > 0){
                         index--;
         
-                        if (this.gutterLayer.session.foldWidgets[this.$rowIndexToRow(index)]){
+                        if (this.$isFoldWidgetVisible(index)){
                             this.$blurFoldWidget(this.activeRowIndex);
                             this.activeRowIndex = index;
                             this.$focusFoldWidget(this.activeRowIndex);
@@ -119,7 +119,7 @@ class GutterKeyboardHandler {
                     while (index > 0){
                         index--;
         
-                        if (this.gutterLayer.$annotations[this.$rowIndexToRow(index)]){
+                        if (this.$isAnnotationVisible(index)){
                             this.$blurAnnotation(this.activeRowIndex);
                             this.activeRowIndex = index;
                             this.$focusAnnotation(this.activeRowIndex);
@@ -139,7 +139,7 @@ class GutterKeyboardHandler {
                     while (index < this.lines.getLength() - 1){
                         index++;
         
-                        if (this.gutterLayer.session.foldWidgets[this.$rowIndexToRow(index)]){
+                        if (this.$isFoldWidgetVisible(index)){
                             this.$blurFoldWidget(this.activeRowIndex);
                             this.activeRowIndex = index;
                             this.$focusFoldWidget(this.activeRowIndex);
@@ -151,8 +151,8 @@ class GutterKeyboardHandler {
                 case 'annotation':
                     while (index < this.lines.getLength() - 1){
                         index++;
-        
-                        if (this.gutterLayer.$annotations[this.$rowIndexToRow(index)]){
+
+                        if (this.$isAnnotationVisible(index)){
                             this.$blurAnnotation(this.activeRowIndex);
                             this.activeRowIndex = index;
                             this.$focusAnnotation(this.activeRowIndex);
@@ -218,6 +218,14 @@ class GutterKeyboardHandler {
         }   
     }
 
+    $isFoldWidgetVisible(index) {
+        return this.$getFoldWidget(index).style.display !== "none";
+    }
+
+    $isAnnotationVisible(index) {
+        return this.$getAnnotation(index).style.display !== "none";
+    }
+
     $getFoldWidget(index) {
         var cell = this.lines.get(index);
         var element = cell.element;
@@ -232,11 +240,8 @@ class GutterKeyboardHandler {
 
     // Given an index, find the nearest index with a foldwidget
     $findNearestFoldWidgetAtIndex(index) {
-        var foldWidgets = this.gutterLayer.session.foldWidgets;
-        var row = this.$rowIndexToRow(index);
-
         // If fold widget exists at index, return index.
-        if (foldWidgets[row])
+        if (this.$isFoldWidgetVisible(index))
             return index;
 
         // else, find the nearest index with fold widget within viewport.
@@ -244,12 +249,10 @@ class GutterKeyboardHandler {
         while (index - i > 0 || index + i < this.lines.getLength() - 1){
             i++;
 
-            row = this.$rowIndexToRow(index - i);
-            if (foldWidgets[row])
+            if (index - i >= 0 && this.$isFoldWidgetVisible(index - i))
                 return index - i;
 
-            row = this.$rowIndexToRow(index + i);
-            if (foldWidgets[row])
+            if (index + i <= this.lines.getLength() - 1 && this.$isFoldWidgetVisible(index + i))
                 return index + i;
         }
 
@@ -259,11 +262,8 @@ class GutterKeyboardHandler {
 
     // Given an index, find the nearest index with an annotation.
     $findNearestAnnotationAtIndex(index) {
-        var annotations = this.gutterLayer.$annotations;
-        var row = this.$rowIndexToRow(index);
-
         // If fold widget exists at index, return index.
-        if (annotations[row])
+        if (this.$isAnnotationVisible(index))
             return index;
 
         // else, find the nearest index with fold widget within viewport.
@@ -271,12 +271,10 @@ class GutterKeyboardHandler {
         while (index - i > 0 || index + i < this.lines.getLength() - 1){
             i++;
 
-            row = this.$rowIndexToRow(index - i);
-            if (annotations[row])
+            if (index - i >= 0 && this.$isAnnotationVisible(index - i))
                 return index - i;
 
-            row = this.$rowIndexToRow(index + i);
-            if (annotations[row])
+            if (index + i <= this.lines.getLength() - 1 && this.$isAnnotationVisible(index + i))
                 return index + i;
         }
 
