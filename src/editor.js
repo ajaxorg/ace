@@ -2876,6 +2876,11 @@ config.defineOptions(Editor.prototype, "editor", {
             var focusOnEnterKeyup = function (e) {
                 if (e.target == this.renderer.content && e.keyCode === keys['enter']){
                     e.preventDefault();
+                    var row = this.getCursorPosition().row;
+                    
+                    if (!this.isRowVisible(row))
+                        this.scrollToLine(row, true, true);
+    
                     this.focus();
                 }
             };

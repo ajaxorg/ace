@@ -36,15 +36,17 @@ class GutterKeyboardHandler {
 
         // If focus is on the gutter element, set focus to fold widget on enter press.
         if (e.target === this.element) {
+            e.preventDefault();
             if (e.keyCode != keys['enter']) {return;}
 
             // Scroll if the cursor is not currently within the viewport.
             var row = this.editor.getCursorPosition().row;
-            this.editor.renderer.scrollToRow(row, true, true);
+
+            if (!this.editor.isRowVisible(row))
+                this.editor.scrollToLine(row, true, true);
 
             switch (this.lane) {
                 case 'fold':
-                    e.preventDefault();
                     // Wait until the scrolling is completed to check the viewport.
                     setTimeout(function() {
                         var index = this.$rowToRowIndex(row);
@@ -56,7 +58,6 @@ class GutterKeyboardHandler {
                     break;
                 
                 case 'annotation':
-                    e.preventDefault();
                     // Wait until the scrolling is completed to check the viewport.
                     setTimeout(function() {
                         var index = this.$rowToRowIndex(row);
