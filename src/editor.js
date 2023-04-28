@@ -17,7 +17,7 @@ var defaultCommands = require("./commands/default_commands").commands;
 var config = require("./config");
 var TokenIterator = require("./token_iterator").TokenIterator;
 var LineWidgets = require("./line_widgets").LineWidgets;
-var GutterKeyboardHandler = require("./keyboard/gutter-keyboard").GutterKeyboardHandler;
+var GutterKeyboardHandler = require("./keyboard/gutter_handler").GutterKeyboardHandler;
 
 var clipboard = require("./clipboard");
 var keys = require('./lib/keys');

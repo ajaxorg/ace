@@ -6,7 +6,7 @@ var Tooltip = require("../tooltip").Tooltip;
 function GutterHandler(mouseHandler) {
     var editor = mouseHandler.editor;
     var gutter = editor.renderer.$gutterLayer;
-    var tooltip = new GutterTooltip(editor.container);
+    var tooltip = new GutterTooltip(editor);
 
     mouseHandler.editor.setDefaultHandler("guttermousedown", function(e) {
         if (!editor.isFocused() || e.getButton() != 0)
@@ -37,7 +37,7 @@ function GutterHandler(mouseHandler) {
 
     function showTooltip() {
         var row = mouseEvent.getDocumentPosition().row;
-        tooltip.showTooltip(mouseHandler.editor, row);
+        tooltip.showTooltip(row);
 
         editor.on("mousewheel", hideTooltip);
 
@@ -101,6 +101,11 @@ function GutterHandler(mouseHandler) {
 }
 
 class GutterTooltip extends Tooltip {
+    constructor(editor) {
+        super(editor.container);
+        this.editor = editor;
+    }
+
     setPosition(x, y) {
         var windowWidth = window.innerWidth || document.documentElement.clientWidth;
         var windowHeight = window.innerHeight || document.documentElement.clientHeight;
@@ -123,8 +128,8 @@ class GutterTooltip extends Tooltip {
         info: {singular: "information message", plural: "information messages"}
     };
 
-    showTooltip(editor, row) {
-        var gutter = editor.renderer.$gutterLayer;
+    showTooltip(row) {
+        var gutter = this.editor.renderer.$gutterLayer;
         var annotationsInRow = gutter.$annotations[row];
         var annotation;
 
@@ -161,7 +166,7 @@ class GutterTooltip extends Tooltip {
             }
            
             if (mostSevereAnnotationInFoldType === "error_fold" || mostSevereAnnotationInFoldType === "warning_fold"){
-                var summaryFoldedAnnotations = `${this.annotationsToSummaryString(annotationsInFold)} in folded code.`;
+                var summaryFoldedAnnotations = `${GutterTooltip.annotationsToSummaryString(annotationsInFold)} in folded code.`;
 
                 annotation.text.push(summaryFoldedAnnotations);
                 annotation.type.push(mostSevereAnnotationInFoldType);
@@ -171,11 +176,11 @@ class GutterTooltip extends Tooltip {
         if (annotation.text.length === 0)
             return this.hide();
 
-        var maxRow = editor.session.getLength();
+        var maxRow = this.editor.session.getLength();
         if (row == maxRow) {
-            var screenRow = editor.renderer.pixelToScreenCoordinates(0, mouseEvent.y).row;
+            var screenRow = this.editor.renderer.pixelToScreenCoordinates(0, mouseEvent.y).row;
             var pos = mouseEvent.$pos;
-            if (screenRow > editor.session.documentToScreenRow(pos.row, pos.column))
+            if (screenRow > this.editor.session.documentToScreenRow(pos.row, pos.column))
                 return hideTooltip();
         }
 
@@ -194,14 +199,14 @@ class GutterTooltip extends Tooltip {
         this.$element.setAttribute("aria-live", "polite");
         
         if (!this.isOpen) {
-            this.setTheme(editor.renderer.theme);
+            this.setTheme(this.editor.renderer.theme);
         }
 
-        editor._signal("showGutterTooltip", this);
+        this.editor._signal("showGutterTooltip", this);
         this.show();
     }
 
-    annotationsToSummaryString(annotations) {
+    static annotationsToSummaryString(annotations) {
         const summary = [];
         const annotationTypes = ['error', 'warning', 'info'];
         for (const annotationType of annotationTypes) {

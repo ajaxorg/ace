@@ -13,7 +13,7 @@ class GutterKeyboardHandler {
         this.activeRowIndex = 0;
         this.lane = 'fold';
 
-        this.annotationTooltip = new GutterTooltip(this.editor.container);
+        this.annotationTooltip = new GutterTooltip(this.editor);
     }
 
     addListener() {
@@ -25,6 +25,16 @@ class GutterKeyboardHandler {
     }
 
     $onGutterKeyDown(e) {
+        // if the tooltip is open, we only want to respond to commands to close it (like a modal)
+        if (this.annotationTooltip.isOpen) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            if (e.keyCode === keys['escape'])
+                this.annotationTooltip.hide();
+            return;
+        }
+
         // If focus is on the gutter element, set focus to fold widget on enter press.
         if (e.target === this.element) {
             if (this.lane === 'fold' && e.keyCode === keys['enter']){
@@ -71,8 +81,12 @@ class GutterKeyboardHandler {
 
             if (this.lane === 'annotation' && e.keyCode === keys['escape']){
                 e.preventDefault();
-                this.$blurAnnotation(this.activeRowIndex);
-                this.element.focus();
+                if (this.annotationTooltip.isOpen) {
+                    this.annotationTooltip.hide();
+                } else {
+                    this.$blurAnnotation(this.activeRowIndex);
+                    this.element.focus();
+                }
                 return;
             }
 
@@ -199,7 +213,12 @@ class GutterKeyboardHandler {
 
             if (this.lane === 'annotation' && e.keyCode === keys['enter']){
                 e.preventDefault();
-                this.annotationTooltip.showTooltip(this.editor, this.$rowIndexToRow(this.activeRowIndex));                
+                var gutterElement = this.lines.cells[this.activeRowIndex].element.querySelector("[class*=ace_icon]");
+                var rect = gutterElement.getBoundingClientRect();
+                var style = this.annotationTooltip.getElement().style;
+                style.left = rect.right + "px";
+                style.top = rect.bottom + "px";
+                this.annotationTooltip.showTooltip(this.$rowIndexToRow(this.activeRowIndex));                
                 return;
             }
         }
