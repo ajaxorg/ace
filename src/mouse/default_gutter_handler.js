@@ -37,6 +37,15 @@ function GutterHandler(mouseHandler) {
 
     function showTooltip() {
         var row = mouseEvent.getDocumentPosition().row;
+
+        var maxRow = editor.session.getLength();
+        if (row == maxRow) {
+            var screenRow = editor.renderer.pixelToScreenCoordinates(0, mouseEvent.y).row;
+            var pos = mouseEvent.$pos;
+            if (screenRow > editor.session.documentToScreenRow(pos.row, pos.column))
+                return hideTooltip();
+        }
+
         tooltip.showTooltip(row);
 
         editor.on("mousewheel", hideTooltip);
@@ -122,11 +131,12 @@ class GutterTooltip extends Tooltip {
         Tooltip.prototype.setPosition.call(this, x, y);
     }
     
-    static annotationLabels = {
-        error: {singular: "error", plural: "errors"}, 
-        warning: {singular: "warning", plural: "warnings"},
-        info: {singular: "information message", plural: "information messages"}
-    };
+    static get annotationLabels() { return {
+            error: {singular: "error", plural: "errors"}, 
+            warning: {singular: "warning", plural: "warnings"},
+            info: {singular: "information message", plural: "information messages"}
+        };
+    }
 
     showTooltip(row) {
         var gutter = this.editor.renderer.$gutterLayer;
@@ -175,14 +185,6 @@ class GutterTooltip extends Tooltip {
         
         if (annotation.text.length === 0)
             return this.hide();
-
-        var maxRow = this.editor.session.getLength();
-        if (row == maxRow) {
-            var screenRow = this.editor.renderer.pixelToScreenCoordinates(0, mouseEvent.y).row;
-            var pos = mouseEvent.$pos;
-            if (screenRow > this.editor.session.documentToScreenRow(pos.row, pos.column))
-                return hideTooltip();
-        }
 
         var annotationMessages = {error: [], warning: [], info: []};
         var iconClassName = gutter.$useSvgGutterIcons ? "ace_icon_svg" : "ace_icon";
