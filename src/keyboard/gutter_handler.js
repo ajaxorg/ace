@@ -205,7 +205,6 @@ class GutterKeyboardHandler {
                     return; 
                 
                 case 'annotation':
-                    e.preventDefault();
                     var gutterElement = this.lines.cells[this.activeRowIndex].element.querySelector("[class*=ace_icon]");
                     var rect = gutterElement.getBoundingClientRect();
                     var style = this.annotationTooltip.getElement().style;
@@ -244,12 +243,13 @@ class GutterKeyboardHandler {
         while (index - i > 0 || index + i < this.lines.getLength() - 1){
             i++;
 
-            if (foldWidgets[row - i]){
+            row = this.$rowIndexToRow(index - i)
+            if (foldWidgets[row])
                 return index - i;
-            }
-            if (foldWidgets[row + i]){
+
+            row = this.$rowIndexToRow(index + i)
+            if (foldWidgets[row])
                 return index + i;
-            }
         }
 
         // If there are no fold widgets within the viewport, return null.
@@ -270,12 +270,13 @@ class GutterKeyboardHandler {
         while (index - i > 0 || index + i < this.lines.getLength() - 1){
             i++;
 
-            if (annotations[row - i]){
+            row = this.$rowIndexToRow(index - i)
+            if (annotations[row])
                 return index - i;
-            }
-            if (annotations[row + i]){
+
+            row = this.$rowIndexToRow(index + i)
+            if (annotations[row])
                 return index + i;
-            }
         }
 
         // If there are no fold widgets within the viewport, return null.
@@ -333,7 +334,10 @@ class GutterKeyboardHandler {
     // Convert row index (viewport space) to row (document space).
     $rowIndexToRow(index) {
         var cell = this.lines.get(index);
-        return cell.row;
+        if (cell)
+            return cell.row;
+
+        return null;
     }
 
     // Convert row (document space) to row index (viewport space).
