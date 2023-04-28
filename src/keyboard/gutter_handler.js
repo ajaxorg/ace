@@ -89,12 +89,9 @@ class GutterKeyboardHandler {
                     break;
 
                 case 'annotation':
-                    if (this.annotationTooltip.isOpen) {
-                        this.annotationTooltip.hide();
-                    } else {
-                        this.$blurAnnotation(this.activeRowIndex);
-                        this.element.focus();
-                    }
+                    this.$blurAnnotation(this.activeRowIndex);
+                    this.element.focus();
+                    break;     
             }
             return;
         }
