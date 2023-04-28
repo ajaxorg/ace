@@ -243,11 +243,11 @@ class GutterKeyboardHandler {
         while (index - i > 0 || index + i < this.lines.getLength() - 1){
             i++;
 
-            row = this.$rowIndexToRow(index - i)
+            row = this.$rowIndexToRow(index - i);
             if (foldWidgets[row])
                 return index - i;
 
-            row = this.$rowIndexToRow(index + i)
+            row = this.$rowIndexToRow(index + i);
             if (foldWidgets[row])
                 return index + i;
         }
@@ -270,11 +270,11 @@ class GutterKeyboardHandler {
         while (index - i > 0 || index + i < this.lines.getLength() - 1){
             i++;
 
-            row = this.$rowIndexToRow(index - i)
+            row = this.$rowIndexToRow(index - i);
             if (annotations[row])
                 return index - i;
 
-            row = this.$rowIndexToRow(index + i)
+            row = this.$rowIndexToRow(index + i);
             if (annotations[row])
                 return index + i;
         }
