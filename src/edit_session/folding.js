@@ -756,7 +756,7 @@ function Folding() {
 
     this.onFoldWidgetClick = function(row, e) {
         if (e.domEvent)
-            e = e.domEvent
+            e = e.domEvent;
 
         var options = {
             children: e.shiftKey,

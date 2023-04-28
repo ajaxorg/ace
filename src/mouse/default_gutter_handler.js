@@ -121,7 +121,7 @@ class GutterTooltip extends Tooltip {
         }
         Tooltip.prototype.setPosition.call(this, x, y);
     }
-
+    
     static annotationLabels = {
         error: {singular: "error", plural: "errors"}, 
         warning: {singular: "warning", plural: "warnings"},

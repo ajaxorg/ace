@@ -197,7 +197,7 @@ class GutterKeyboardHandler {
                 case 'fold':
                     if (this.gutterLayer.session.foldWidgets[this.$rowIndexToRow(this.activeRowIndex)] === 'start') {
                         this.editor.session.onFoldWidgetClick(this.$rowIndexToRow(this.activeRowIndex), e);
-                        break;;
+                        break;
                     } else if (this.gutterLayer.session.foldWidgets[this.$rowIndexToRow(this.activeRowIndex)] === 'end') {
                         /* TO DO: deal with 'end' fold widgets */
                         break;
@@ -218,7 +218,6 @@ class GutterKeyboardHandler {
         }   
     }
 
-    // Get the foldwidget element given an index.
     $getFoldWidget(index) {
         var cell = this.lines.get(index);
         var element = cell.element;
@@ -262,8 +261,6 @@ class GutterKeyboardHandler {
         var annotations = this.gutterLayer.$annotations;
         var row = this.$rowIndexToRow(index);
 
-        console.log(annotations)
-
         // If fold widget exists at index, return index.
         if (annotations[row])
             return index;
@@ -285,9 +282,7 @@ class GutterKeyboardHandler {
         return null;
     }
 
-    // Focus the fold widget at given index.
     $focusFoldWidget(index) {
-        // If there are no fold widgets within the current viewport, do nothing.
         if (index == null)
             return;
 
@@ -315,7 +310,6 @@ class GutterKeyboardHandler {
         annotation.focus();
     }
 
-    // Blur the fold widget at given index.
     $blurFoldWidget(index) {
         var foldWidget = this.$getFoldWidget(index);
 
