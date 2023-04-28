@@ -560,7 +560,12 @@ class CompletionProvider {
             if (!this.completions)
                 return false;
             if (this.completions.filterText) {
-                var ranges = editor.selection.getAllRanges();
+                var ranges;
+                if (editor.selection.getAllRanges) {
+                    ranges = editor.selection.getAllRanges();
+                } else {
+                    ranges = [editor.getSelectionRange()];
+                }
                 for (var i = 0, range; range = ranges[i]; i++) {
                     range.start.column -= this.completions.filterText.length;
                     editor.session.remove(range);
