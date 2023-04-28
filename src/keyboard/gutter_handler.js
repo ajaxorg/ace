@@ -28,7 +28,6 @@ class GutterKeyboardHandler {
         // if the tooltip is open, we only want to respond to commands to close it (like a modal)
         if (this.annotationTooltip.isOpen) {
             e.preventDefault();
-            e.stopPropagation();
 
             if (e.keyCode === keys['escape'])
                 this.annotationTooltip.hide();
@@ -37,191 +36,189 @@ class GutterKeyboardHandler {
 
         // If focus is on the gutter element, set focus to fold widget on enter press.
         if (e.target === this.element) {
-            if (this.lane === 'fold' && e.keyCode === keys['enter']){
-                e.preventDefault();
+            if (e.keyCode != keys['enter']) {return;}
+
+            // Scroll if the cursor is not currently within the viewport.
+            var row = this.editor.getCursorPosition().row;
+            this.editor.renderer.scrollToRow(row, true, true);
+
+            switch (this.lane) {
+                case 'fold':
+                    e.preventDefault();
+                    // Wait until the scrolling is completed to check the viewport.
+                    setTimeout(function() {
+                        var index = this.$rowToRowIndex(row);
+
+                        this.activeRowIndex = this.$findNearestFoldWidgetAtIndex(index);
+                        if (this.activeRowIndex == null) {return;}
+                        this.$focusFoldWidget(this.activeRowIndex);
+                    }.bind(this), 10);
+                    break;
                 
-                // Scroll if the cursor is not currently within the viewport.
-                var row = this.editor.getCursorPosition().row;
-                this.editor.renderer.scrollToRow(row, true, true);
-         
-                // Wait until the scrolling is completed to check the viewport.
-                setTimeout(function() {
-                    var index = this.$rowToRowIndex(row);
+                case 'annotation':
+                    e.preventDefault();
+                    // Wait until the scrolling is completed to check the viewport.
+                    setTimeout(function() {
+                        var index = this.$rowToRowIndex(row);
 
-                    this.activeRowIndex = this.$findNearestFoldWidgetAtIndex(index);
-                    if (this.activeRowIndex == null) {return;}
-                    this.$focusFoldWidget(this.activeRowIndex);
-                }.bind(this), 10);
+                        this.activeRowIndex = this.$findNearestAnnotationAtIndex(index);
+                        if (this.activeRowIndex == null) {return;}
+                        this.$focusAnnotation(this.activeRowIndex);
+                    }.bind(this), 10);
+                    break;
             }
+            return;
+        } 
 
-            if (this.lane === 'annotation' && e.keyCode === keys['enter']){
-                e.preventDefault();
-                
-                // Scroll if the cursor is not currently within the viewport.
-                var row = this.editor.getCursorPosition().row;
-                this.editor.renderer.scrollToRow(row, true, true);
-         
-                // Wait until the scrolling is completed to check the viewport.
-                setTimeout(function() {
-                    var index = this.$rowToRowIndex(row);
+        // Focus not on the gutter div:
 
-                    this.activeRowIndex = this.$findNearestAnnotationAtIndex(index);
-                    if (this.activeRowIndex == null) {return;}
-                    this.$focusAnnotation(this.activeRowIndex);
-                }.bind(this), 10);
-            }
-        } else {
-            // If focus is on a gutter icon, set focus to gutter on escape press.
-            if (this.lane === 'fold' && e.keyCode === keys['escape']){
-                e.preventDefault();
-                this.$blurFoldWidget(this.activeRowIndex);
-                this.element.focus();
-                return;
-            }
+        // Prevent tabbing when interacting with the gutter icons.
+        if (e.keyCode === keys['tab']){
+            e.preventDefault();
+            return;
+        } 
 
-            if (this.lane === 'annotation' && e.keyCode === keys['escape']){
-                e.preventDefault();
-                if (this.annotationTooltip.isOpen) {
-                    this.annotationTooltip.hide();
-                } else {
-                    this.$blurAnnotation(this.activeRowIndex);
+        // If focus is on a gutter icon, set focus to gutter on escape press.
+        if (e.keyCode === keys['escape']) {
+            e.preventDefault();
+
+            switch (this.lane) {
+                case 'fold':
+                    this.$blurFoldWidget(this.activeRowIndex);
                     this.element.focus();
-                }
-                return;
-            }
+                    break;
 
-            // Prevent tabbing when interacting with the gutter icons.
-            if (e.keyCode === keys['tab']){
-                e.preventDefault();
-                return;
-            }
-
-            // Navigate up to next available fold widget.
-            if (this.lane === 'fold' && e.keyCode === keys['up']){
-                e.preventDefault();
-
-                var index = this.activeRowIndex;
-
-                while (index > 0){
-                    index--;
-
-                    if (this.gutterLayer.session.foldWidgets[this.$rowIndexToRow(index)]){
-                        this.$blurFoldWidget(this.activeRowIndex);
-                        this.activeRowIndex = index;
-                        this.$focusFoldWidget(this.activeRowIndex);
-                        return;
-                    }
-                }
-                return;
-            }
-
-            // Navigate down to next available fold widget.
-            if (this.lane === 'fold' && e.keyCode === keys['down']){
-                e.preventDefault();
-                
-                var index = this.activeRowIndex;
-
-                while (index < this.lines.getLength() - 1){
-                    index++;
-
-                    if (this.gutterLayer.session.foldWidgets[this.$rowIndexToRow(index)]){
-                        this.$blurFoldWidget(this.activeRowIndex);
-                        this.activeRowIndex = index;
-                        this.$focusFoldWidget(this.activeRowIndex);
-                        return;
-                    }
-                }
-                return;
-            }
-
-            if (this.lane === 'annotation' && e.keyCode === keys['up']){
-                e.preventDefault();
-
-                var index = this.activeRowIndex;
-
-                while (index > 0){
-                    index--;
-
-                    if (this.gutterLayer.$annotations[this.$rowIndexToRow(index)]){
+                case 'annotation':
+                    if (this.annotationTooltip.isOpen) {
+                        this.annotationTooltip.hide();
+                    } else {
                         this.$blurAnnotation(this.activeRowIndex);
-                        this.activeRowIndex = index;
-                        this.$focusAnnotation(this.activeRowIndex);
-                        return;
+                        this.element.focus();
                     }
-                }
-                return;
             }
-
-            if (this.lane === 'annotation' && e.keyCode === keys['down']){
-                e.preventDefault();
-                
-                var index = this.activeRowIndex;
-
-                while (index < this.lines.getLength() - 1){
-                    index++;
-                    console.log(index)
-                    console.log(this.gutterLayer.annotations)
-                    if (this.gutterLayer.$annotations[this.$rowIndexToRow(index)]){
-                        this.$blurAnnotation(this.activeRowIndex);
-                        this.activeRowIndex = index;
-                        this.$focusAnnotation(this.activeRowIndex);
-                        return;
-                    }
-                }
-                return;
-            }
-
-            if (e.keyCode === keys['left']){
-                e.preventDefault();
-                
-                if (this.lane === 'annotation') {return;}
-                this.lane = 'annotation';
-
-                this.activeRowIndex = this.$findNearestAnnotationAtIndex(this.activeRowIndex);
-                if (this.activeRowIndex == null) {return;}
-                this.$focusAnnotation(this.activeRowIndex);
-
-                return;
-            }
-
-            if (e.keyCode === keys['right']){
-                e.preventDefault();
-                
-                if (this.lane === 'fold') {return;}
-                this.lane = 'fold';
-
-                this.activeRowIndex = this.$findNearestFoldWidgetAtIndex(this.activeRowIndex);
-                if (this.activeRowIndex == null) {return;}
-                this.$focusFoldWidget(this.activeRowIndex);
-                
-                return;
-            }
-
-            // When focus on foldwidget, fold lines on enter press.
-            if (this.lane === 'fold' && e.keyCode === keys['enter']){
-                e.preventDefault();
-
-                if (this.gutterLayer.session.foldWidgets[this.$rowIndexToRow(this.activeRowIndex)] === 'start') {
-                    this.editor.session.onFoldWidgetClick(this.$rowIndexToRow(this.activeRowIndex), e);
-                    return;
-                } else if (this.gutterLayer.session.foldWidgets[this.$rowIndexToRow(this.activeRowIndex)] === 'end') {
-                    /* TO DO: deal with 'end' fold widgets */
-                    return;
-                }
-                return;
-            }
-
-            if (this.lane === 'annotation' && e.keyCode === keys['enter']){
-                e.preventDefault();
-                var gutterElement = this.lines.cells[this.activeRowIndex].element.querySelector("[class*=ace_icon]");
-                var rect = gutterElement.getBoundingClientRect();
-                var style = this.annotationTooltip.getElement().style;
-                style.left = rect.right + "px";
-                style.top = rect.bottom + "px";
-                this.annotationTooltip.showTooltip(this.$rowIndexToRow(this.activeRowIndex));                
-                return;
-            }
+            return;
         }
+
+        if (e.keyCode === keys['up']) {
+            e.preventDefault();
+            var index = this.activeRowIndex;
+
+            switch (this.lane){
+                case 'fold':
+                    while (index > 0){
+                        index--;
+        
+                        if (this.gutterLayer.session.foldWidgets[this.$rowIndexToRow(index)]){
+                            this.$blurFoldWidget(this.activeRowIndex);
+                            this.activeRowIndex = index;
+                            this.$focusFoldWidget(this.activeRowIndex);
+                            break;
+                        }
+                    }
+                    break;
+                
+                case 'annotation':
+                    while (index > 0){
+                        index--;
+        
+                        if (this.gutterLayer.$annotations[this.$rowIndexToRow(index)]){
+                            this.$blurAnnotation(this.activeRowIndex);
+                            this.activeRowIndex = index;
+                            this.$focusAnnotation(this.activeRowIndex);
+                            break;
+                        }
+                    }
+            }
+            return;
+        }
+
+        if (e.keyCode === keys['down']) {
+            e.preventDefault();
+            var index = this.activeRowIndex;
+
+            switch (this.lane){
+                case 'fold':
+                    while (index < this.lines.getLength() - 1){
+                        index++;
+        
+                        if (this.gutterLayer.session.foldWidgets[this.$rowIndexToRow(index)]){
+                            this.$blurFoldWidget(this.activeRowIndex);
+                            this.activeRowIndex = index;
+                            this.$focusFoldWidget(this.activeRowIndex);
+                            break;
+                        }
+                    }
+                    break;
+                
+                case 'annotation':
+                    while (index < this.lines.getLength() - 1){
+                        index++;
+        
+                        if (this.gutterLayer.$annotations[this.$rowIndexToRow(index)]){
+                            this.$blurAnnotation(this.activeRowIndex);
+                            this.activeRowIndex = index;
+                            this.$focusAnnotation(this.activeRowIndex);
+                            break;
+                        }
+                    }
+            }
+            return;
+        }
+
+        if (e.keyCode === keys['left']){
+            e.preventDefault();
+            
+            if (this.lane === 'annotation') {return;}
+            this.lane = 'annotation';
+
+            this.$blurFoldWidget(this.activeRowIndex);
+            this.activeRowIndex = this.$findNearestAnnotationAtIndex(this.activeRowIndex);
+            if (this.activeRowIndex == null) {return;}
+            this.$focusAnnotation(this.activeRowIndex);
+
+            return;
+        }
+
+        if (e.keyCode === keys['right']){
+            e.preventDefault();
+            
+            if (this.lane === 'fold') {return;}
+            this.lane = 'fold';
+
+            this.$blurAnnotation(this.activeRowIndex);
+            this.activeRowIndex = this.$findNearestFoldWidgetAtIndex(this.activeRowIndex);
+            if (this.activeRowIndex == null) {return;}
+            this.$focusFoldWidget(this.activeRowIndex);
+            
+            return;
+        }
+
+        if (e.keyCode === keys['enter']){
+            e.preventDefault();
+
+            switch (this.lane) {
+                case 'fold':
+                    if (this.gutterLayer.session.foldWidgets[this.$rowIndexToRow(this.activeRowIndex)] === 'start') {
+                        this.editor.session.onFoldWidgetClick(this.$rowIndexToRow(this.activeRowIndex), e);
+                        break;;
+                    } else if (this.gutterLayer.session.foldWidgets[this.$rowIndexToRow(this.activeRowIndex)] === 'end') {
+                        /* TO DO: deal with 'end' fold widgets */
+                        break;
+                    }
+                    return; 
+                
+                case 'annotation':
+                    e.preventDefault();
+                    var gutterElement = this.lines.cells[this.activeRowIndex].element.querySelector("[class*=ace_icon]");
+                    var rect = gutterElement.getBoundingClientRect();
+                    var style = this.annotationTooltip.getElement().style;
+                    style.left = rect.right + "px";
+                    style.top = rect.bottom + "px";
+                    this.annotationTooltip.showTooltip(this.$rowIndexToRow(this.activeRowIndex));                
+                    break;
+            }
+            return;
+        }   
     }
 
     // Get the foldwidget element given an index.
