@@ -292,7 +292,13 @@ class GutterKeyboardHandler {
         foldWidget.setAttribute("tabindex", 0);
         foldWidget.classList.add(this.editor.keyboardFocusClassName);
         foldWidget.setAttribute('role', 'button');
-        foldWidget.setAttribute('aria-label', `Fold code row ${activeRow}`);
+
+        // Check whether the code is folded at this row.
+        if (this.editor.session.getFoldLine(activeRow - 1))
+            foldWidget.setAttribute('aria-label', `Unfold code row ${activeRow}`);
+        else
+            foldWidget.setAttribute('aria-label', `Fold code row ${activeRow}`);
+
         foldWidget.focus();
     }
 
