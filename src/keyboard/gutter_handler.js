@@ -179,13 +179,13 @@ class GutterKeyboardHandler {
             e.preventDefault();
             
             if (this.lane === 'annotation') {return;}
-            var foldWidgetIndex = this.$findNearestAnnotationAtIndex(this.activeRowIndex);
-            if (foldWidgetIndex == null) {return;}
+            var annotationIndex = this.$findNearestAnnotationAtIndex(this.activeRowIndex);
+            if (annotationIndex == null) {return;}
 
             this.lane = 'annotation';
 
             this.$blurFoldWidget(this.activeRowIndex);
-            this.activeRowIndex = foldWidgetIndex;
+            this.activeRowIndex = annotationIndex;
             this.$focusAnnotation(this.activeRowIndex);
 
             return;
@@ -195,13 +195,13 @@ class GutterKeyboardHandler {
             e.preventDefault();
             
             if (this.lane === 'fold') {return;}
-            var annotationIndex = this.$findNearestAnnotationAtIndex(this.activeRowIndex);
-            if (annotationIndex == null) {return;}
+            var foldWidgetIndex = this.$findNearestFoldWidgetAtIndex(this.activeRowIndex);
+            if (foldWidgetIndex == null) {return;}
 
             this.lane = 'fold';
 
             this.$blurAnnotation(this.activeRowIndex);
-            this.activeRowIndex = annotationIndex;
+            this.activeRowIndex = foldWidgetIndex;
             this.$focusFoldWidget(this.activeRowIndex);
             
             return;
@@ -310,10 +310,11 @@ class GutterKeyboardHandler {
         foldWidget.setAttribute('role', 'button');
 
         // Check whether the code is folded at this row.
-        if (this.editor.session.getFoldLine(activeRow - 1))
-            foldWidget.setAttribute('aria-label', `Unfold code row ${activeRow}`);
+        var fold = this.editor.session.getFoldLine(activeRow - 1);
+        if (fold)
+            foldWidget.setAttribute('aria-label', `Unfold rows ${activeRow} to ${fold.end.row + 1}`);
         else
-            foldWidget.setAttribute('aria-label', `Fold code row ${activeRow}`);
+            foldWidget.setAttribute('aria-label', `Fold at row ${activeRow}`);
 
         foldWidget.focus();
     }
