@@ -92,6 +92,10 @@ var TextInput = function(parentNode, host) {
     }, host);
     this.$focusScroll = false;
     this.focus = function() {
+        // On focusing on the textarea, read active row to assistive tech.
+        var row = host.session.selection.cursor.row;
+        text.setAttribute("aria-label", `Cursor at row ${row}`);
+
         if (tempStyle || HAS_FOCUS_ARGS || this.$focusScroll == "browser")
             return text.focus({ preventScroll: true });
 

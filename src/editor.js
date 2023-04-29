@@ -2894,9 +2894,11 @@ config.defineOptions(Editor.prototype, "editor", {
 
                 this.textInput.getElement().setAttribute("tabindex", -1);
                 this.renderer.content.setAttribute("tabindex", 0);
+                this.renderer.content.setAttribute("role", "group");
+                this.renderer.content.setAttribute("aria-roledescription", "editor");
                 this.renderer.content.classList.add(this.keyboardFocusClassName);
                 this.renderer.content.setAttribute("aria-label",
-                    "Editor, press Enter key to start editing, press Escape key to exit"
+                    "Editor, press Enter to start editing, press Escape to exit"
                 );
 
                 this.renderer.content.addEventListener("keyup", focusOnEnterKeyup.bind(this));
@@ -2905,7 +2907,7 @@ config.defineOptions(Editor.prototype, "editor", {
                 this.renderer.$gutter.setAttribute("tabindex", 0);
                 this.renderer.$gutter.setAttribute("aria-hidden", false);
                 this.renderer.$gutter.setAttribute("aria-label",
-                    "Editor Gutter, press Enter key to interact with folding controls, press Escape key to exit"
+                    "Gutter, press Enter to interact with controls, press Escape to exit"
                 );
                 this.renderer.$gutter.classList.add(this.keyboardFocusClassName);
 
@@ -2916,6 +2918,8 @@ config.defineOptions(Editor.prototype, "editor", {
             } else {
                 this.textInput.getElement().setAttribute("tabindex", 0);
                 this.renderer.content.setAttribute("tabindex", -1);
+                this.renderer.content.setAttribute("role", "");
+                this.renderer.content.setAttribute("aria-roledescription", "");
                 this.renderer.content.classList.remove(this.keyboardFocusClassName);
                 this.renderer.content.setAttribute("aria-label", "");
             
