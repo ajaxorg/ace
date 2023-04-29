@@ -52,7 +52,13 @@ class GutterKeyboardHandler {
                         var index = this.$rowToRowIndex(row);
 
                         this.activeRowIndex = this.$findNearestFoldWidgetAtIndex(index);
-                        if (this.activeRowIndex == null) {return;}
+                        if (this.activeRowIndex == null) {
+                            this.activeRowIndex = this.$findNearestAnnotationAtIndex(index);
+                            if (this.activeRowIndex == null) {return;}
+                            this.lane = 'annotation';
+                            this.$focusAnnotation(this.activeRowIndex)
+                            return;
+                        }
                         this.$focusFoldWidget(this.activeRowIndex);
                     }.bind(this), 10);
                     break;
@@ -63,7 +69,13 @@ class GutterKeyboardHandler {
                         var index = this.$rowToRowIndex(row);
 
                         this.activeRowIndex = this.$findNearestAnnotationAtIndex(index);
-                        if (this.activeRowIndex == null) {return;}
+                        if (this.activeRowIndex == null) {
+                            this.activeRowIndex = this.$findNearestFoldWidgetAtIndex(index);
+                            if (this.activeRowIndex == null) {return;}
+                            this.lane = 'fold';
+                            this.$focusFoldWidget(this.activeRowIndex)
+                            return;
+                        }
                         this.$focusAnnotation(this.activeRowIndex);
                     }.bind(this), 10);
                     break;
@@ -167,11 +179,13 @@ class GutterKeyboardHandler {
             e.preventDefault();
             
             if (this.lane === 'annotation') {return;}
+            var foldWidgetIndex = this.$findNearestAnnotationAtIndex(this.activeRowIndex);
+            if (foldWidgetIndex == null) {return;}
+
             this.lane = 'annotation';
 
             this.$blurFoldWidget(this.activeRowIndex);
-            this.activeRowIndex = this.$findNearestAnnotationAtIndex(this.activeRowIndex);
-            if (this.activeRowIndex == null) {return;}
+            this.activeRowIndex = foldWidgetIndex;
             this.$focusAnnotation(this.activeRowIndex);
 
             return;
@@ -181,11 +195,13 @@ class GutterKeyboardHandler {
             e.preventDefault();
             
             if (this.lane === 'fold') {return;}
+            var annotationIndex = this.$findNearestAnnotationAtIndex(this.activeRowIndex)
+            if (annotationIndex == null) {return;}
+
             this.lane = 'fold';
 
             this.$blurAnnotation(this.activeRowIndex);
-            this.activeRowIndex = this.$findNearestFoldWidgetAtIndex(this.activeRowIndex);
-            if (this.activeRowIndex == null) {return;}
+            this.activeRowIndex = annotationIndex;
             this.$focusFoldWidget(this.activeRowIndex);
             
             return;
