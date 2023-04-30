@@ -70,6 +70,7 @@ var TextInput = function(parentNode, host) {
         else
             row = host.session.selection.cursor.row;
 
+        text.setAttribute("aria-roledescription", "editor");
         text.setAttribute("aria-label", `Cursor at row ${row + 1}`);
     };
 

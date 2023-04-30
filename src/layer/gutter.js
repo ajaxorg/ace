@@ -293,6 +293,10 @@ class Gutter{
         var className = this.$useSvgGutterIcons ? "ace_gutter-cell_svg-icons " : "ace_gutter-cell ";
         var iconClassName = this.$useSvgGutterIcons ? "ace_icon_svg" : "ace_icon";
         
+        var rowText = (gutterRenderer
+            ? gutterRenderer.getText(session, row)
+            : row + firstLineNumber).toString();
+
         if (this.$highlightGutterLine) {
             if (row == this.$cursorRow || (fold && row < this.$cursorRow && row >= foldStart &&  this.$cursorRow <= fold.end.row)) {
                 className += "ace_gutter-active-line ";
@@ -352,9 +356,23 @@ class Gutter{
 
             dom.setStyle(foldWidget.style, "height", lineHeight);
             dom.setStyle(foldWidget.style, "display", "inline-block");
+            
+            // Set a11y properties.
+            foldWidget.setAttribute('role', 'button');
+            var fold = session.getFoldLine(rowText - 1);
+            if (fold) {
+                foldWidget.setAttribute('aria-label', `Unfold rows ${rowText} to ${fold.end.row + 1}`);
+                foldWidget.setAttribute('title', `Unfold code`);
+            }
+            else {
+                foldWidget.setAttribute('aria-label', `Fold at row ${rowText}`);  
+                foldWidget.setAttribute('title', `Fold code`);  
+            }          
         } else {
             if (foldWidget) {
                 dom.setStyle(foldWidget.style, "display", "none");
+                foldWidget.setAttribute('role', '');
+                foldWidget.setAttribute('aria-label', '');
             }
         }
 
@@ -364,6 +382,7 @@ class Gutter{
 
             dom.setStyle(annotationNode.style, "height", lineHeight);
             dom.setStyle(annotationNode.style, "display", "block");
+            annotation.setAttribute("aria-label", `Read annotations row ${rowText}`);
         }
         else if (this.$annotations[row]){
             annotationNode.className = iconClassName;
@@ -375,23 +394,23 @@ class Gutter{
 
             dom.setStyle(annotationNode.style, "height", lineHeight);
             dom.setStyle(annotationNode.style, "display", "block");
+            annotation.setAttribute("aria-label", `Read annotations row ${rowText}`);
         }
         else {
             dom.setStyle(annotationNode.style, "display", "none");
+            annotationNode.setAttribute('aria-label', '');
         }
         
-        var text = (gutterRenderer
-            ? gutterRenderer.getText(session, row)
-            : row + firstLineNumber).toString();
+        
             
-        if (text !== textNode.data) {
-            textNode.data = text;
-        }
-        
+        if (rowText !== textNode.data) {
+            textNode.data = rowText;
+        } 
+
         dom.setStyle(cell.element.style, "height", this.$lines.computeLineHeight(row, config, session) + "px");
         dom.setStyle(cell.element.style, "top", this.$lines.computeLineTop(row, config, session) + "px");
         
-        cell.text = text;
+        cell.text = rowText;
         return cell;
     }
     

@@ -11,7 +11,7 @@ class GutterKeyboardHandler {
         this.lines = editor.renderer.$gutterLayer.$lines;
 
         this.activeRowIndex = 0;
-        this.lane = 'fold';
+        this.lane = "fold";
 
         this.annotationTooltip = new GutterTooltip(this.editor);
     }
@@ -36,7 +36,7 @@ class GutterKeyboardHandler {
 
         // If focus is on the gutter element, set focus to fold widget on enter press.
         if (e.target === this.element) {
-            if (e.keyCode != keys['enter']) {return;}
+            if (e.keyCode != keys["enter"]) {return;}
             e.preventDefault();
 
             // Scroll if the cursor is not currently within the viewport.
@@ -46,7 +46,7 @@ class GutterKeyboardHandler {
                 this.editor.scrollToLine(row, true, true);
 
             switch (this.lane) {
-                case 'fold':
+                case "fold":
                     // Wait until the scrolling is completed to check the viewport.
                     setTimeout(function() {
                         var index = this.$rowToRowIndex(row);
@@ -55,7 +55,7 @@ class GutterKeyboardHandler {
                         if (this.activeRowIndex == null) {
                             this.activeRowIndex = this.$findNearestAnnotationAtIndex(index);
                             if (this.activeRowIndex == null) {return;}
-                            this.lane = 'annotation';
+                            this.lane = "annotation";
                             this.$focusAnnotation(this.activeRowIndex);
                             return;
                         }
@@ -63,7 +63,7 @@ class GutterKeyboardHandler {
                     }.bind(this), 10);
                     break;
                 
-                case 'annotation':
+                case "annotation":
                     // Wait until the scrolling is completed to check the viewport.
                     setTimeout(function() {
                         var index = this.$rowToRowIndex(row);
@@ -72,7 +72,7 @@ class GutterKeyboardHandler {
                         if (this.activeRowIndex == null) {
                             this.activeRowIndex = this.$findNearestFoldWidgetAtIndex(index);
                             if (this.activeRowIndex == null) {return;}
-                            this.lane = 'fold';
+                            this.lane = "fold";
                             this.$focusFoldWidget(this.activeRowIndex);
                             return;
                         }
@@ -96,12 +96,12 @@ class GutterKeyboardHandler {
             e.preventDefault();
 
             switch (this.lane) {
-                case 'fold':
+                case "fold":
                     this.$blurFoldWidget(this.activeRowIndex);
                     this.element.focus();
                     break;
 
-                case 'annotation':
+                case "annotation":
                     this.$blurAnnotation(this.activeRowIndex);
                     this.element.focus();
                     break;     
@@ -109,12 +109,12 @@ class GutterKeyboardHandler {
             return;
         }
 
-        if (e.keyCode === keys['up']) {
+        if (e.keyCode === keys["up"]) {
             e.preventDefault();
             var index = this.activeRowIndex;
 
             switch (this.lane){
-                case 'fold':
+                case "fold":
                     while (index > 0){
                         index--;
         
@@ -127,7 +127,7 @@ class GutterKeyboardHandler {
                     }
                     break;
                 
-                case 'annotation':
+                case "annotation":
                     while (index > 0){
                         index--;
         
@@ -142,12 +142,12 @@ class GutterKeyboardHandler {
             return;
         }
 
-        if (e.keyCode === keys['down']) {
+        if (e.keyCode === keys["down"]) {
             e.preventDefault();
             var index = this.activeRowIndex;
 
             switch (this.lane){
-                case 'fold':
+                case "fold":
                     while (index < this.lines.getLength() - 1){
                         index++;
         
@@ -160,7 +160,7 @@ class GutterKeyboardHandler {
                     }
                     break;
                 
-                case 'annotation':
+                case "annotation":
                     while (index < this.lines.getLength() - 1){
                         index++;
 
@@ -175,14 +175,14 @@ class GutterKeyboardHandler {
             return;
         }
 
-        if (e.keyCode === keys['left']){
+        if (e.keyCode === keys["left"]){
             e.preventDefault();
             
-            if (this.lane === 'annotation') {return;}
+            if (this.lane === "annotation") {return;}
             var annotationIndex = this.$findNearestAnnotationAtIndex(this.activeRowIndex);
             if (annotationIndex == null) {return;}
 
-            this.lane = 'annotation';
+            this.lane = "annotation";
 
             this.$blurFoldWidget(this.activeRowIndex);
             this.activeRowIndex = annotationIndex;
@@ -191,14 +191,14 @@ class GutterKeyboardHandler {
             return;
         }
 
-        if (e.keyCode === keys['right']){
+        if (e.keyCode === keys["right"]){
             e.preventDefault();
             
-            if (this.lane === 'fold') {return;}
+            if (this.lane === "fold") {return;}
             var foldWidgetIndex = this.$findNearestFoldWidgetAtIndex(this.activeRowIndex);
             if (foldWidgetIndex == null) {return;}
 
-            this.lane = 'fold';
+            this.lane = "fold";
 
             this.$blurAnnotation(this.activeRowIndex);
             this.activeRowIndex = foldWidgetIndex;
@@ -207,11 +207,11 @@ class GutterKeyboardHandler {
             return;
         }
 
-        if (e.keyCode === keys['enter']){
+        if (e.keyCode === keys["enter"] || e.keyCode === keys["space"]){
             e.preventDefault();
 
             switch (this.lane) {
-                case 'fold':
+                case "fold":
                     if (this.gutterLayer.session.foldWidgets[this.$rowIndexToRow(this.activeRowIndex)] === 'start') {
                         this.editor.session.onFoldWidgetClick(this.$rowIndexToRow(this.activeRowIndex), e);
                         break;
@@ -221,7 +221,7 @@ class GutterKeyboardHandler {
                     }
                     return; 
                 
-                case 'annotation':
+                case "annotation":
                     var gutterElement = this.lines.cells[this.activeRowIndex].element.querySelector("[class*=ace_icon]");
                     var rect = gutterElement.getBoundingClientRect();
                     var style = this.annotationTooltip.getElement().style;
@@ -303,19 +303,9 @@ class GutterKeyboardHandler {
             return;
 
         var foldWidget = this.$getFoldWidget(index);
-        var activeRow = this.$rowIndexToRow(index) + 1;
 
         foldWidget.setAttribute("tabindex", 0);
         foldWidget.classList.add(this.editor.keyboardFocusClassName);
-        foldWidget.setAttribute('role', 'button');
-
-        // Check whether the code is folded at this row.
-        var fold = this.editor.session.getFoldLine(activeRow - 1);
-        if (fold)
-            foldWidget.setAttribute('aria-label', `Unfold rows ${activeRow} to ${fold.end.row + 1}`);
-        else
-            foldWidget.setAttribute('aria-label', `Fold at row ${activeRow}`);
-
         foldWidget.focus();
     }
 
@@ -328,8 +318,7 @@ class GutterKeyboardHandler {
 
         annotation.setAttribute("tabindex", 0);
         annotation.classList.add(this.editor.keyboardFocusClassName);
-        annotation.setAttribute('role', 'button');
-        annotation.setAttribute('aria-label', `Read annotations row ${activeRow}`);
+        annotation.setAttribute("role", "button");
         annotation.focus();
     }
 
@@ -338,8 +327,6 @@ class GutterKeyboardHandler {
 
         foldWidget.setAttribute("tabindex", -1);
         foldWidget.classList.remove(this.editor.keyboardFocusClassName);
-        foldWidget.setAttribute('role', '');
-        foldWidget.setAttribute('aria-label', '');
         foldWidget.blur();
     }
 
@@ -348,8 +335,7 @@ class GutterKeyboardHandler {
 
         annotation.setAttribute("tabindex", -1);
         annotation.classList.remove(this.editor.keyboardFocusClassName);
-        annotation.setAttribute('role', '');
-        annotation.setAttribute('aria-label', '');
+        annotation.setAttribute("role", "");
         annotation.blur();
     }
 
