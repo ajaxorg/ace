@@ -483,7 +483,7 @@ var SnippetManager = function() {
         var processedSnippet = processSnippetText.call(this, editor, snippetText);
         
         var range = editor.getSelectionRange();
-        if (replaceRange && range.compareRange(replaceRange) === 0) {
+        if (replaceRange && replaceRange.compareRange(range) === 0) {
             range = replaceRange;
         }
         var end = editor.session.replace(range, processedSnippet.text);
@@ -495,6 +495,9 @@ var SnippetManager = function() {
     
     this.insertSnippet = function(editor, snippetText, replaceRange) {
         var self = this;
+        if (replaceRange && !(replaceRange instanceof Range))
+            replaceRange = Range.fromPoints(replaceRange.start, replaceRange.end);
+        
         if (editor.inVirtualSelectionMode)
             return self.insertSnippetForSelection(editor, snippetText, replaceRange);
         

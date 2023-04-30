@@ -333,9 +333,9 @@ module.exports = {
         var content = "test";
         this.editor.setValue("replace1");
         snippetManager.insertSnippet(this.editor, content, {
-            start: {row: 0, column: 0}, end: {row: 0, column: 7}
+            start: {row: 0, column: 0}, end: {row: 0, column: 8}
         });
-        assert.equal(this.editor.getValue(), "test1");
+        assert.equal(this.editor.getValue(), "test");
     }
 };
 
