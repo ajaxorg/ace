@@ -382,7 +382,7 @@ class Gutter{
 
             dom.setStyle(annotationNode.style, "height", lineHeight);
             dom.setStyle(annotationNode.style, "display", "block");
-            annotation.setAttribute("aria-label", `Read annotations row ${rowText}`);
+            annotationNode.setAttribute("aria-label", `Read annotations row ${rowText}`);
         }
         else if (this.$annotations[row]){
             annotationNode.className = iconClassName;
@@ -394,7 +394,7 @@ class Gutter{
 
             dom.setStyle(annotationNode.style, "height", lineHeight);
             dom.setStyle(annotationNode.style, "display", "block");
-            annotation.setAttribute("aria-label", `Read annotations row ${rowText}`);
+            annotationNode.setAttribute("aria-label", `Read annotations row ${rowText}`);
         }
         else {
             dom.setStyle(annotationNode.style, "display", "none");

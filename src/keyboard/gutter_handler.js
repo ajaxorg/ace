@@ -314,7 +314,6 @@ class GutterKeyboardHandler {
             return;
 
         var annotation = this.$getAnnotation(index);
-        var activeRow = this.$rowIndexToRow(index) + 1;
 
         annotation.setAttribute("tabindex", 0);
         annotation.classList.add(this.editor.keyboardFocusClassName);
