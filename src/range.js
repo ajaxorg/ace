@@ -75,7 +75,7 @@ class Range {
      * @returns {Number} This method returns one of the following numbers:
      * * `-2`: (B) is in front of (A), and doesn't intersect with (A)
      * * `-1`: (B) begins before (A) but ends inside of (A)
-     * * `0`: (B) is completely inside of (A) OR (A) is completely inside of (B)
+     * * `0`: (B) is completely inside of (A)
      * * `+1`: (B) begins inside of (A) but ends outside of (A)
      * * `+2`: (B) is after (A) and doesn't intersect with (A)
      * * `42`: FTW state: (B) ends in (A) but starts outside of (A)
