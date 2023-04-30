@@ -953,6 +953,7 @@ export namespace Ace {
       callback: CompleterCallback): void;
     getDocTooltip?(item: Completion): undefined | string | Completion;
     id?: string;
+    triggerCharacters?: string[]
   }
 
   export class AceInline {
