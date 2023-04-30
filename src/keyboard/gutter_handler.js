@@ -222,7 +222,7 @@ class GutterKeyboardHandler {
                     return; 
                 
                 case "annotation":
-                    var gutterElement = this.lines.cells[this.activeRowIndex].element.querySelector("[class*=ace_icon]");
+                    var gutterElement = this.lines.cells[this.activeRowIndex].element.childNodes[2];
                     var rect = gutterElement.getBoundingClientRect();
                     var style = this.annotationTooltip.getElement().style;
                     style.left = rect.right + "px";
