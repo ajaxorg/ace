@@ -31,7 +31,7 @@ function emit(keyCode) {
 var editor;
 
 module.exports = {
-    setUp : function(next) {
+    setUp : function(done) {
         this.editor = new Editor(new VirtualRenderer());
         this.editor.container.style.position = "absolute";
         this.editor.container.style.height = "500px";
@@ -40,9 +40,9 @@ module.exports = {
         this.editor.container.style.top = "10px";
         document.body.appendChild(this.editor.container);
         editor = this.editor;
-        next();
+        done();
     },
-    "test: keyboard code folding" : function() {
+    "test: keyboard code folding: basic functionality" : function(done) {
         var editor = this.editor;
         var value = "x {" + "\n".repeat(50) + "}\n";
         value = value.repeat(50);
@@ -73,12 +73,15 @@ module.exports = {
                 assert.ok(/ace_closed/.test(toggler.className));
                 assert.equal(lines.cells[1].element.textContent, "52");
 
-                editor.destroy();
-                document.body.removeChild(editor.container);
+                // After escape focus should be back to the gutter.
+                emit(keys["escape"]);
+                assert.equal(document.activeElement, editor.renderer.$gutter);
+
+                done();
             }, 20);
         }, 20);
     },
-    "test: keyboard annotation" : function() {
+    "test: keyboard annotation: basic functionality" : function(done) {
         var editor = this.editor;
         var value = "x {" + "\n".repeat(50) + "}\n";
         value = value.repeat(50);
@@ -110,11 +113,78 @@ module.exports = {
                 var tooltip = editor.container.querySelector(".ace_tooltip");
                 assert.ok(/error test/.test(tooltip.textContent));
 
-                editor.destroy();
-                document.body.removeChild(editor.container);
+                // Press escape to dismiss the tooltip.
+                emit(keys["escape"]);
+
+                // After escape again focus should be back to the gutter.
+                emit(keys["escape"]);
+                assert.equal(document.activeElement, editor.renderer.$gutter);
+
+                done();
             }, 20);
         }, 20);
+    },"test: keyboard annotation: multiple annotations" : function(done) {
+        var editor = this.editor;
+        var value = "x {" + "\n".repeat(50) + "}\n";
+        value = value.repeat(50);
+        editor.session.setMode(new Mode());
+        editor.setOption("enableKeyboardAccessibility", true);
+        editor.setValue(value, -1);
+        editor.session.setAnnotations([
+            {row: 1, column: 0, text: "error test", type: "error"},
+            {row: 2, column: 0, text: "warning test", type: "warning"}
+        ]);
+        editor.renderer.$loop._flush();
+
+        var lines = editor.renderer.$gutterLayer.$lines;
+
+        // Set focus to the gutter div.
+        editor.renderer.$gutter.focus();
+        assert.equal(document.activeElement, editor.renderer.$gutter);
+
+        // Focus on the annotation.
+        emit(keys["enter"]);
+        
+        setTimeout(function() {
+            emit(keys["left"]);
+            assert.equal(document.activeElement, lines.cells[1].element.childNodes[2]);
+
+            // Click annotation.
+            emit(keys["enter"]);
+            
+            setTimeout(function() {
+                // Check annotation is rendered.
+                editor.renderer.$loop._flush();
+                var tooltip = editor.container.querySelector(".ace_tooltip");
+                assert.ok(/error test/.test(tooltip.textContent));
+
+                // Press escape to dismiss the tooltip.
+                emit(keys["escape"]);
+
+                // Press down to move to next annotation.
+                emit(keys["down"]);
+                assert.equal(document.activeElement, lines.cells[2].element.childNodes[2]);
+
+                // Click annotation.
+                emit(keys["enter"]);
+
+                setTimeout(function() {
+                    // Check annotation is rendered.
+                    editor.renderer.$loop._flush();
+                    var tooltip = editor.container.querySelector(".ace_tooltip");
+                    assert.ok(/warning test/.test(tooltip.textContent));
+
+                    done();
+                }, 20);
+            }, 20);
+        }, 20);
+    },
+    
+    tearDown : function() {
+        this.editor.destroy();
+        document.body.removeChild(this.editor.container);
     }
+    
 };
 
 if (typeof module !== "undefined" && module === require.main) {
