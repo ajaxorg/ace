@@ -14,11 +14,11 @@ var Mode = require("../mode/java").Mode;
 var VirtualRenderer = require("../virtual_renderer").VirtualRenderer;
 var assert = require("../test/assertions");
 
-function emit(keyCode, shift) {
+function emit(keyCode) {
     var data = {bubbles: true, cancelable: true};
     data.keyCode = keyCode;
     data.which = data.keyCode;
-    data.shiftKey = shift;
+    data.shiftKey = false;
     data.ctrlKey = false;
     data.altKey = false;
 
@@ -42,7 +42,6 @@ module.exports = {
         editor = this.editor;
         next();
     },
-    /* TO DO; fix test
     "test: keyboard code folding" : function() {
         var editor = this.editor;
         var value = "x {" + "\n".repeat(50) + "}\n";
@@ -60,23 +59,25 @@ module.exports = {
         assert.equal(document.activeElement, editor.renderer.$gutter);
 
         // Focus on the fold widget.
-        emit(keys["enter"], false);
-        
+        emit(keys["enter"]);
+
         setTimeout(function() {
             assert.equal(document.activeElement, lines.cells[0].element.childNodes[1]);
-    
+
             // Click the fold the widget.
-            emit(keys["enter"], false);
+            emit(keys["enter"]);
 
             setTimeout(function() {
                 // Check that code is folded.
                 editor.renderer.$loop._flush();
                 assert.ok(/ace_closed/.test(toggler.className));
                 assert.equal(lines.cells[1].element.textContent, "52");
+
+                editor.destroy();
+                document.body.removeChild(editor.container);
             }, 20);
         }, 20);
     },
-    */
     "test: keyboard annotation" : function() {
         var editor = this.editor;
         var value = "x {" + "\n".repeat(50) + "}\n";
@@ -94,28 +95,26 @@ module.exports = {
         assert.equal(document.activeElement, editor.renderer.$gutter);
 
         // Focus on the annotation.
-        emit(keys["enter"], false);
+        emit(keys["enter"]);
         
         setTimeout(function() {
-            emit(keys["left"], false);
+            emit(keys["left"]);
             assert.equal(document.activeElement, lines.cells[0].element.childNodes[2]);
 
             // Click annotation.
-            emit(keys["enter"], false);
+            emit(keys["enter"]);
             
             setTimeout(function() {
                 // Check annotation is rendered.
                 editor.renderer.$loop._flush();
                 var tooltip = editor.container.querySelector(".ace_tooltip");
                 assert.ok(/error test/.test(tooltip.textContent));
+
+                editor.destroy();
+                document.body.removeChild(editor.container);
             }, 20);
         }, 20);
     },
-    
-    tearDown : function() {
-        this.editor.destroy();
-        document.body.removeChild(this.editor.container);
-    }
 };
 
 if (typeof module !== "undefined" && module === require.main) {

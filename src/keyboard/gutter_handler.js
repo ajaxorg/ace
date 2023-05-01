@@ -18,10 +18,12 @@ class GutterKeyboardHandler {
 
     addListener() {
         this.element.addEventListener("keydown", this.$onGutterKeyDown.bind(this));
+        this.element.addEventListener("blur", this.$onGutterBlur.bind(this));
     }
 
     removeListener() {
         this.element.removeEventListener("keydown", this.$onGutterKeyDown.bind(this));
+        this.element.removeEventListener("blur", this.$onGutterBlur.bind(this));
     }
 
     $onGutterKeyDown(e) {
@@ -94,18 +96,8 @@ class GutterKeyboardHandler {
         // If focus is on a gutter icon, set focus to gutter on escape press.
         if (e.keyCode === keys['escape']) {
             e.preventDefault();
-
-            switch (this.lane) {
-                case "fold":
-                    this.$blurFoldWidget(this.activeRowIndex);
-                    this.element.focus();
-                    break;
-
-                case "annotation":
-                    this.$blurAnnotation(this.activeRowIndex);
-                    this.element.focus();
-                    break;     
-            }
+            this.$onGutterBlur();
+            this.element.focus();
             return;
         }
 
@@ -232,6 +224,20 @@ class GutterKeyboardHandler {
             }
             return;
         }   
+    }
+
+    $onGutterBlur() {
+        if (this.activeRowIndex){
+            switch (this.lane){
+                case "fold":
+                    this.$blurFoldWidget(this.activeRowIndex);
+                    break;
+
+                case "annotation":
+                    this.$blurAnnotation(this.activeRowIndex);
+                    break;
+            }
+        }
     }
 
     $isFoldWidgetVisible(index) {
