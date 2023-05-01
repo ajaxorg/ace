@@ -18,12 +18,12 @@ class GutterKeyboardHandler {
 
     addListener() {
         this.element.addEventListener("keydown", this.$onGutterKeyDown.bind(this));
-        this.element.addEventListener("blur", this.$onGutterBlur.bind(this));
+        this.element.addEventListener("blur", this.$blurGutter.bind(this));
     }
 
     removeListener() {
         this.element.removeEventListener("keydown", this.$onGutterKeyDown.bind(this));
-        this.element.removeEventListener("blur", this.$onGutterBlur.bind(this));
+        this.element.removeEventListener("blur", this.$blurGutter.bind(this));
     }
 
     $onGutterKeyDown(e) {
@@ -57,7 +57,7 @@ class GutterKeyboardHandler {
                         this.activeRowIndex = this.$findNearestFoldWidget(index);
 
                         // If there are no fold widgets, check if there are annotations.
-                        if (this.activeRowIndex == null) {
+                        if (this.activeRowIndex === null) {
                             this.activeRowIndex = this.$findNearestAnnotation(index);
                             if (this.activeRowIndex == null) {return;}
                             this.lane = "annotation";
@@ -76,7 +76,7 @@ class GutterKeyboardHandler {
                         this.activeRowIndex = this.$findNearestAnnotation(index);
 
                         // If there are no annotations, check if there are fold widgets.
-                        if (this.activeRowIndex == null) {
+                        if (this.activeRowIndex === null) {
                             this.activeRowIndex = this.$findNearestFoldWidget(index);
                             if (this.activeRowIndex == null) {return;}
                             this.lane = "fold";
@@ -101,73 +101,37 @@ class GutterKeyboardHandler {
         // If focus is on a gutter icon, set focus to gutter on escape press.
         if (e.keyCode === keys["escape"]) {
             e.preventDefault();
-            this.$onGutterBlur();
+            this.$blurGutter();
             this.element.focus();
             return;
         }
 
         if (e.keyCode === keys["up"]) {
             e.preventDefault();
-            var index = this.activeRowIndex;
-
+  
             switch (this.lane){
                 case "fold":
-                    while (index > 0){
-                        index--;
-        
-                        if (this.$isFoldWidgetVisible(index)){
-                            this.$blurFoldWidget(this.activeRowIndex);
-                            this.activeRowIndex = index;
-                            this.$focusFoldWidget(this.activeRowIndex);
-                            break;
-                        }
-                    }
+                    this.$moveFoldWidgetUp();
                     break;
                 
                 case "annotation":
-                    while (index > 0){
-                        index--;
-        
-                        if (this.$isAnnotationVisible(index)){
-                            this.$blurAnnotation(this.activeRowIndex);
-                            this.activeRowIndex = index;
-                            this.$focusAnnotation(this.activeRowIndex);
-                            break;
-                        }
-                    }
+                    this.$moveAnnotationUp();
+                    break;
             }
             return;
         }
 
         if (e.keyCode === keys["down"]) {
             e.preventDefault();
-            var index = this.activeRowIndex;
 
             switch (this.lane){
                 case "fold":
-                    while (index < this.lines.getLength() - 1){
-                        index++;
-        
-                        if (this.$isFoldWidgetVisible(index)){
-                            this.$blurFoldWidget(this.activeRowIndex);
-                            this.activeRowIndex = index;
-                            this.$focusFoldWidget(this.activeRowIndex);
-                            break;
-                        }
-                    }
+                    this.$moveFoldWidgetDown();
                     break;
                 
                 case "annotation":
-                    while (index < this.lines.getLength() - 1){
-                        index++;
-
-                        if (this.$isAnnotationVisible(index)){
-                            this.$blurAnnotation(this.activeRowIndex);
-                            this.activeRowIndex = index;
-                            this.$focusAnnotation(this.activeRowIndex);
-                            break;
-                        }
-                    }
+                    this.$moveAnnotationDown();
+                    break;
             }
             return;
         }
@@ -175,35 +139,13 @@ class GutterKeyboardHandler {
         // Try to switch from fold widgets to annotations.
         if (e.keyCode === keys["left"]){
             e.preventDefault();
-            
-            if (this.lane === "annotation") {return;}
-            var annotationIndex = this.$findNearestAnnotation(this.activeRowIndex);
-            if (annotationIndex == null) {return;}
-
-            this.lane = "annotation";
-
-            this.$blurFoldWidget(this.activeRowIndex);
-            this.activeRowIndex = annotationIndex;
-            this.$focusAnnotation(this.activeRowIndex);
-
-            return;
+            this.$switchLane("annotation");
         }
 
         // Try to switch from annotations to fold widgets.
         if (e.keyCode === keys["right"]){
             e.preventDefault();
-            
-            if (this.lane === "fold") {return;}
-            var foldWidgetIndex = this.$findNearestFoldWidget(this.activeRowIndex);
-            if (foldWidgetIndex == null) {return;}
-
-            this.lane = "fold";
-
-            this.$blurAnnotation(this.activeRowIndex);
-            this.activeRowIndex = foldWidgetIndex;
-            this.$focusFoldWidget(this.activeRowIndex);
-            
-            return;
+            this.$switchLane("fold");
         }
 
         if (e.keyCode === keys["enter"] || e.keyCode === keys["space"]){
@@ -233,8 +175,8 @@ class GutterKeyboardHandler {
         }   
     }
 
-    $onGutterBlur() {
-        if (this.activeRowIndex){
+    $blurGutter() {
+        if (this.activeRowIndex !== null){
             switch (this.lane){
                 case "fold":
                     this.$blurFoldWidget(this.activeRowIndex);
@@ -349,6 +291,101 @@ class GutterKeyboardHandler {
         annotation.classList.remove(this.editor.keyboardFocusClassName);
         annotation.setAttribute("role", "");
         annotation.blur();
+    }
+
+    $moveFoldWidgetUp() {
+        var index = this.activeRowIndex;
+
+        while (index > 0){
+            index--;
+
+            if (this.$isFoldWidgetVisible(index)){
+                this.$blurFoldWidget(this.activeRowIndex);
+                this.activeRowIndex = index;
+                this.$focusFoldWidget(this.activeRowIndex);
+                return;
+            }
+        }
+        return;
+    }
+
+    $moveFoldWidgetDown() {
+        var index = this.activeRowIndex;
+
+        while (index < this.lines.getLength() - 1){
+            index++;
+
+            if (this.$isFoldWidgetVisible(index)){
+                this.$blurFoldWidget(this.activeRowIndex);
+                this.activeRowIndex = index;
+                this.$focusFoldWidget(this.activeRowIndex);
+                return;
+            }
+        }
+        return;
+    }
+
+    $moveAnnotationUp() {
+        var index = this.activeRowIndex;
+
+        while (index > 0){
+            index--;
+
+            if (this.$isAnnotationVisible(index)){
+                this.$blurAnnotation(this.activeRowIndex);
+                this.activeRowIndex = index;
+                this.$focusAnnotation(this.activeRowIndex);
+                return;
+            }
+        }
+        return;
+    }
+
+    $moveAnnotationDown() {
+        var index = this.activeRowIndex;
+
+        while (index < this.lines.getLength() - 1){
+            index++;
+
+            if (this.$isAnnotationVisible(index)){
+                this.$blurAnnotation(this.activeRowIndex);
+                this.activeRowIndex = index;
+                this.$focusAnnotation(this.activeRowIndex);
+                return;
+            }
+        }
+        return;
+    }
+
+    $switchLane(desinationLane){
+        switch (desinationLane) {
+            case "annotation":
+                if (this.lane === "annotation") {break;}
+                var annotationIndex = this.$findNearestAnnotation(this.activeRowIndex);
+                if (annotationIndex == null) {break;}
+
+                this.lane = "annotation";
+
+                this.$blurFoldWidget(this.activeRowIndex);
+                this.activeRowIndex = annotationIndex;
+                this.$focusAnnotation(this.activeRowIndex);
+
+                break;
+
+            case "fold": 
+                if (this.lane === "fold") {break;}
+                var foldWidgetIndex = this.$findNearestFoldWidget(this.activeRowIndex);
+                if (foldWidgetIndex == null) {break;}
+
+                this.lane = "fold";
+
+                this.$blurAnnotation(this.activeRowIndex);
+                this.activeRowIndex = foldWidgetIndex;
+                this.$focusFoldWidget(this.activeRowIndex);
+                
+                break;
+        }
+        return;
     }
 
     // Convert row index (viewport space) to row (document space).
