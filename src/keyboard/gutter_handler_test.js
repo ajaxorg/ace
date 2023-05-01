@@ -123,6 +123,11 @@ module.exports = {
                 setTimeout(function() {
                     // Check that code is folded.
                     assert.equal(lines.cells[4].element.textContent, "15");
+
+                    // Move back up one fold widget.
+                    emit(keys["up"]);
+                    assert.equal(document.activeElement, lines.cells[1].element.childNodes[1]);
+
                     done();
                 }, 20);
             }, 20);
@@ -223,6 +228,10 @@ module.exports = {
 
                     // Press escape to dismiss the tooltip.
                     emit(keys["escape"]);
+
+                    // Move back up one annotation.
+                    emit(keys["up"]);
+                    assert.equal(document.activeElement, lines.cells[1].element.childNodes[2]);
 
                     // Move back to the folds, focus should be on the fold on line 1.
                     emit(keys["right"]);
