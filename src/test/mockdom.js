@@ -89,6 +89,14 @@ var initializers = {
            insertRule: function() {},
            cssRules: []
        };
+    },
+    a: function() {
+        this.__defineGetter__("href", function() {
+            return this.getAttribute("href");
+        });
+        this.__defineSetter__("href", function(v) {
+            return this.setAttribute("href", v);
+        });
     }
 };
 
@@ -173,31 +181,30 @@ function Node(name) {
     this.__defineGetter__("childElementCount", function() {
         return this.childNodes.length;
     });
+    this.hasAttribute = function(x) {
+        return this.$attributes.hasOwnProperty(x);
+    };
     this.hasAttributes = function() {
         return Object.keys(this.$attributes).length > 0;
     };
     this.querySelectorAll = function(selector) {
+        return querySelector(this, selector, true);
+    };
+    this.querySelector = function(selector) {
+        return querySelector(this, selector, false)[0];
+    };
+    function querySelector(node, selector, all) {
         var parts = parseSelector(selector);
         
         var nodes = [];
-        function search(root, parts) {
-            var operator = parts[0];
-            var tests = parts[1];
-            var iterator = operator == ">" ? walkShallow : walk;
-            iterator(root, function(node) {
-                var isAMatch = tests.every(function(t) {return t(node);});
-                if (isAMatch) {
-                    if (parts.length > 3) search(node, parts.slice(2));
-                    else nodes.push(node);
-                }
-            });
-        }
-        search(this, parts);
+        walk(node, function(node) {
+            if (node.matches && node.matches(parts)) {
+                nodes.push(node);
+                if (!all) return true;
+            }
+        });
         return nodes;
-    };
-    this.querySelector = function(s) {
-        return this.querySelectorAll(s)[0];
-    };
+    }
     this.getElementsByTagName = function(s) {
         var nodes = [];
         walk(this, function(node) {
@@ -206,28 +213,24 @@ function Node(name) {
         });
         return nodes;
     };
-    this.getElementById = function(s) {
-        return walk(this, function(node) {
-            // console.log(node.getAttribute && node.getAttribute("id"))
-            if (node.getAttribute && node.getAttribute("id") == s)
-                return node;
-        });
-    };
     this.matches = function(selector) {
         var parts = parseSelector(selector);
         var node = this;
-        var operator, tests, skip;
-        while (parts.length && node) {
-            if (!skip) {
-                tests = parts.pop();
-                operator = parts.pop();
-                skip = operator != ">";
-            }
+        var operator = parts.pop();
+        var tests = parts.pop();
+        while (node && node.nodeType != 9) {
             if (!tests) return true;
             var isAMatch = tests.every(function(t) {return t(node);});
-            if (!isAMatch && !skip) return false;
+            if (!isAMatch) {
+                if (!operator || operator === ">")
+                    return false;
+            } else {
+                operator = parts.pop();
+                tests = parts.pop();
+            }
             node = node.parentNode;
         }
+        return !tests;
     };
     this.closest = function(s) {
         var el = this;
@@ -531,6 +534,7 @@ function Node(name) {
 }).call(Node.prototype);
 
 function parseSelector(selector) {
+    if (Array.isArray(selector)) return selector.slice();
     var parts = selector.split(/((?:[^\s>"[]|"[^"]+"?|\[[^\]]*\]?)+)/);
     for (var i = 1; i < parts.length; i += 2) {
         parts[i] = parseSimpleSelector(parts[i]);
@@ -541,7 +545,7 @@ function parseSelector(selector) {
 function parseSimpleSelector(selector) {
     var tests = [];
     selector.replace(
-        /([#.])?([\w-]+)|\[\s*([\w-]+)\s*(?:=\s*"?([\w-]+)"?\s*)?\]|\*|./g,
+        /([#.])?([\w-]+)|\[\s*([\w-]+)\s*(?:=\s*["']?([\w-]+)["']?\s*)?\]|\*|./g,
         function(_, hash, name, attr, attrValue) {
             if (hash == "#") {
                 tests.push(function(node) { return node.id == name; });
@@ -554,8 +558,10 @@ function parseSimpleSelector(selector) {
                 tests.push(function(node) { return node.localName == name; });
             }
             else if (attr) {
-                tests.push(function(node) {
-                    return node.getAttribute(attr) == attrValue;
+                tests.push(attrValue != undefined ? function(node) {
+                    return node.getAttribute && node.getAttribute(attr) == attrValue;
+                } : function(node) {
+                    return node.hasAttribute && node.hasAttribute(attr);
                 });
             }
             else if (_ == "*") {
@@ -614,7 +620,7 @@ function setInnerHTML(markup, parent, strict) {
                 } else {
                     root = root.appendChild(document.createElement(tagName));
                 }
-                attributes && attributes.replace(/([\w:-]+)\s*=\s*(?:"([^"]*)"|'([^"]*)'|(\w+))/g, function(_, key, v1,v2,v3) {
+                attributes && attributes.replace(/([\w:-]+)\s*=\s*(?:"([^"]*)"|'([^']*)'|(\w+))/g, function(_, key, v1,v2,v3) {
                     root.setAttribute(key, v1 || v2 || v3 || key);
                 });
             } 
@@ -708,14 +714,6 @@ function walk(node, fn) {
             return result;
     }
 }
-function walkShallow(node, fn) {
-    var children = node.children || [];
-    for (var i = 0; i < children.length; i++) {
-        var result = fn(children[i]);
-        if (result)
-            return result;
-    }
-}
 
 function TextNode(value) {
     this.data = value || "";
@@ -745,6 +743,7 @@ window.HTMLDocument = window.XMLDocument = window.Document = function() {
     var document = this;
     if (!window.document) window.document = document;
     Node.call(this, "#document");
+    this.nodeType = 9;
     document.navigator = window.navigator;
     document.styleSheets = [];
     document.createElementNS = function(ns, t) {
@@ -772,7 +771,15 @@ window.HTMLDocument = window.XMLDocument = window.Document = function() {
     document.documentElement.appendChild(document.body);
     return document;
 };
-window.Document.prototype = Node.prototype;
+window.Document.prototype = Object.create(Node.prototype);
+(function() {
+    this.getElementById = function(s) {
+        return walk(this, function(node) {
+            if (node.getAttribute && node.getAttribute("id") == s)
+                return node;
+        });
+    };
+}.call(window.Document.prototype));
 
 window.DOMParser = function() {
     this.parseFromString = function(str, mode) {
