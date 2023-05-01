@@ -64,7 +64,7 @@ module.exports = {
         setTimeout(function() {
             assert.equal(document.activeElement, lines.cells[0].element.childNodes[1]);
 
-            // Click the fold the widget.
+            // Click the fold widget.
             emit(keys["enter"]);
 
             setTimeout(function() {
@@ -78,6 +78,53 @@ module.exports = {
                 assert.equal(document.activeElement, editor.renderer.$gutter);
 
                 done();
+            }, 20);
+        }, 20);
+    },
+    "test: keyboard code folding: multiple folds" : function(done) {
+        var editor = this.editor;
+        var value = "\n x {" + "\n".repeat(5) + "}\n";
+        value = value.repeat(50);
+        editor.session.setMode(new Mode());
+        editor.setValue(value, -1);
+        editor.setOption("enableKeyboardAccessibility", true);
+        editor.renderer.$loop._flush();
+
+        var lines = editor.renderer.$gutterLayer.$lines;
+  
+        // Set focus to the gutter div.
+        editor.renderer.$gutter.focus();
+        assert.equal(document.activeElement, editor.renderer.$gutter);
+
+        assert.equal(lines.cells[2].element.textContent, "3");
+
+        // Focus on the fold widgets.
+        emit(keys["enter"]);
+
+        setTimeout(function() {
+            assert.equal(document.activeElement, lines.cells[1].element.childNodes[1]);
+
+            // Click the first fold widget.
+            emit(keys["enter"]);
+
+            setTimeout(function() {
+                // Check that code is folded.
+                editor.renderer.$loop._flush();
+                assert.equal(lines.cells[2].element.textContent, "8");
+
+                // Move to the next fold widget.
+                emit(keys["down"]);
+                assert.equal(document.activeElement, lines.cells[3].element.childNodes[1]);
+                assert.equal(lines.cells[4].element.textContent, "10");
+
+                // Click the fold widget.
+                emit(keys["enter"]);
+
+                setTimeout(function() {
+                    // Check that code is folded.
+                    assert.equal(lines.cells[4].element.textContent, "15");
+                    done();
+                }, 20);
             }, 20);
         }, 20);
     },
