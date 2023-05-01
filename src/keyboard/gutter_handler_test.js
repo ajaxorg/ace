@@ -221,9 +221,40 @@ module.exports = {
                     var tooltip = editor.container.querySelector(".ace_tooltip");
                     assert.ok(/warning test/.test(tooltip.textContent));
 
+                    // Press escape to dismiss the tooltip.
+                    emit(keys["escape"]);
+
+                    // Move back to the folds, focus should be on the fold on line 1.
+                    emit(keys["right"]);
+                    assert.equal(document.activeElement, lines.cells[0].element.childNodes[1]);
+
                     done();
                 }, 20);
             }, 20);
+        }, 20);
+    },"test: keyboard annotation: no folds" : function(done) {
+        var editor = this.editor;
+        var value = "x\n";
+        value = value.repeat(50);
+        editor.session.setMode(new Mode());
+        editor.setOption("enableKeyboardAccessibility", true);
+        editor.setValue(value, -1);
+        editor.session.setAnnotations([{row: 1, column: 0, text: "error test", type: "error"}]);
+        editor.renderer.$loop._flush();
+
+        var lines = editor.renderer.$gutterLayer.$lines;
+
+        // Set focus to the gutter div.
+        editor.renderer.$gutter.focus();
+        assert.equal(document.activeElement, editor.renderer.$gutter);
+
+        // Focus on gutter interaction.
+        emit(keys["enter"]);
+        
+        setTimeout(function() {
+            // Focus should be on the annotation directly.
+            assert.equal(document.activeElement, lines.cells[1].element.childNodes[2]);
+            done();
         }, 20);
     },
     
