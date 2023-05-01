@@ -2906,6 +2906,8 @@ config.defineOptions(Editor.prototype, "editor", {
 
                 this.renderer.$gutter.setAttribute("tabindex", 0);
                 this.renderer.$gutter.setAttribute("aria-hidden", false);
+                this.renderer.content.setAttribute("role", "group");
+                this.renderer.content.setAttribute("aria-roledescription", "gutter");
                 this.renderer.$gutter.setAttribute("aria-label",
                     "Gutter, press Enter to interact with controls, press Escape to exit"
                 );
@@ -2928,6 +2930,8 @@ config.defineOptions(Editor.prototype, "editor", {
 
                 this.renderer.$gutter.setAttribute("tabindex", -1);
                 this.renderer.$gutter.setAttribute("aria-hidden", true);
+                this.renderer.content.setAttribute("role", "");
+                this.renderer.content.setAttribute("aria-roledescription", "");
                 this.renderer.$gutter.setAttribute("aria-label", "");
                 this.renderer.$gutter.classList.remove(this.keyboardFocusClassName);
 

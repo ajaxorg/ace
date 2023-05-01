@@ -31,8 +31,9 @@ class GutterKeyboardHandler {
         if (this.annotationTooltip.isOpen) {
             e.preventDefault();
 
-            if (e.keyCode === keys['escape'])
+            if (e.keyCode === keys["escape"])
                 this.annotationTooltip.hide();
+
             return;
         }
 
@@ -53,9 +54,11 @@ class GutterKeyboardHandler {
                     setTimeout(function() {
                         var index = this.$rowToRowIndex(row);
 
-                        this.activeRowIndex = this.$findNearestFoldWidgetAtIndex(index);
+                        this.activeRowIndex = this.$findNearestFoldWidget(index);
+
+                        // If there are no fold widgets, check if there are annotations.
                         if (this.activeRowIndex == null) {
-                            this.activeRowIndex = this.$findNearestAnnotationAtIndex(index);
+                            this.activeRowIndex = this.$findNearestAnnotation(index);
                             if (this.activeRowIndex == null) {return;}
                             this.lane = "annotation";
                             this.$focusAnnotation(this.activeRowIndex);
@@ -70,9 +73,11 @@ class GutterKeyboardHandler {
                     setTimeout(function() {
                         var index = this.$rowToRowIndex(row);
 
-                        this.activeRowIndex = this.$findNearestAnnotationAtIndex(index);
+                        this.activeRowIndex = this.$findNearestAnnotation(index);
+
+                        // If there are no annotations, check if there are fold widgets.
                         if (this.activeRowIndex == null) {
-                            this.activeRowIndex = this.$findNearestFoldWidgetAtIndex(index);
+                            this.activeRowIndex = this.$findNearestFoldWidget(index);
                             if (this.activeRowIndex == null) {return;}
                             this.lane = "fold";
                             this.$focusFoldWidget(this.activeRowIndex);
@@ -85,16 +90,16 @@ class GutterKeyboardHandler {
             return;
         } 
 
-        // Focus not on the gutter div:
+        // When focus is not on the gutter element, we want to interact with the icons.
 
         // Prevent tabbing when interacting with the gutter icons.
-        if (e.keyCode === keys['tab']){
+        if (e.keyCode === keys["tab"]){
             e.preventDefault();
             return;
         } 
 
         // If focus is on a gutter icon, set focus to gutter on escape press.
-        if (e.keyCode === keys['escape']) {
+        if (e.keyCode === keys["escape"]) {
             e.preventDefault();
             this.$onGutterBlur();
             this.element.focus();
@@ -167,11 +172,12 @@ class GutterKeyboardHandler {
             return;
         }
 
+        // Try to switch from fold widgets to annotations.
         if (e.keyCode === keys["left"]){
             e.preventDefault();
             
             if (this.lane === "annotation") {return;}
-            var annotationIndex = this.$findNearestAnnotationAtIndex(this.activeRowIndex);
+            var annotationIndex = this.$findNearestAnnotation(this.activeRowIndex);
             if (annotationIndex == null) {return;}
 
             this.lane = "annotation";
@@ -183,11 +189,12 @@ class GutterKeyboardHandler {
             return;
         }
 
+        // Try to switch from annotations to fold widgets.
         if (e.keyCode === keys["right"]){
             e.preventDefault();
             
             if (this.lane === "fold") {return;}
-            var foldWidgetIndex = this.$findNearestFoldWidgetAtIndex(this.activeRowIndex);
+            var foldWidgetIndex = this.$findNearestFoldWidget(this.activeRowIndex);
             if (foldWidgetIndex == null) {return;}
 
             this.lane = "fold";
@@ -261,7 +268,7 @@ class GutterKeyboardHandler {
     }
 
     // Given an index, find the nearest index with a foldwidget
-    $findNearestFoldWidgetAtIndex(index) {
+    $findNearestFoldWidget(index) {
         // If fold widget exists at index, return index.
         if (this.$isFoldWidgetVisible(index))
             return index;
@@ -283,7 +290,7 @@ class GutterKeyboardHandler {
     }
 
     // Given an index, find the nearest index with an annotation.
-    $findNearestAnnotationAtIndex(index) {
+    $findNearestAnnotation(index) {
         // If fold widget exists at index, return index.
         if (this.$isAnnotationVisible(index))
             return index;

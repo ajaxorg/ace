@@ -358,21 +358,21 @@ class Gutter{
             dom.setStyle(foldWidget.style, "display", "inline-block");
             
             // Set a11y properties.
-            foldWidget.setAttribute('role', 'button');
+            foldWidget.setAttribute("role", "button");
             var fold = session.getFoldLine(rowText - 1);
             if (fold) {
-                foldWidget.setAttribute('aria-label', `Unfold rows ${rowText} to ${fold.end.row + 1}`);
-                foldWidget.setAttribute('title', `Unfold code`);
+                foldWidget.setAttribute("aria-label", `Unfold rows ${rowText} to ${fold.end.row + 1}`);
+                foldWidget.setAttribute("title", "Unfold code");
             }
             else {
-                foldWidget.setAttribute('aria-label', `Fold at row ${rowText}`);  
-                foldWidget.setAttribute('title', `Fold code`);  
+                foldWidget.setAttribute("aria-label", `Fold at row ${rowText}`);  
+                foldWidget.setAttribute("title", "Fold code");  
             }          
         } else {
             if (foldWidget) {
                 dom.setStyle(foldWidget.style, "display", "none");
-                foldWidget.setAttribute('role', '');
-                foldWidget.setAttribute('aria-label', '');
+                foldWidget.setAttribute("role", "");
+                foldWidget.setAttribute("aria-label", "");
             }
         }
 
@@ -398,7 +398,7 @@ class Gutter{
         }
         else {
             dom.setStyle(annotationNode.style, "display", "none");
-            annotationNode.setAttribute('aria-label', '');
+            annotationNode.setAttribute("aria-label", "");
         }
         
         
