@@ -114,7 +114,7 @@ module.exports = {
                 document.body.removeChild(editor.container);
             }, 20);
         }, 20);
-    },
+    }
 };
 
 if (typeof module !== "undefined" && module === require.main) {
