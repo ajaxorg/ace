@@ -11,7 +11,7 @@ class GutterKeyboardHandler {
         this.lines = editor.renderer.$gutterLayer.$lines;
 
         this.activeRowIndex = 0;
-        this.lane = "fold";
+        this.activeLane = "fold";
 
         this.annotationTooltip = new GutterTooltip(this.editor);
     }
@@ -48,7 +48,7 @@ class GutterKeyboardHandler {
             if (!this.editor.isRowVisible(row))
                 this.editor.scrollToLine(row, true, true);
 
-            switch (this.lane) {
+            switch (this.activeLane) {
                 case "fold":
                     // Wait until the scrolling is completed to check the viewport.
                     setTimeout(function() {
@@ -60,7 +60,7 @@ class GutterKeyboardHandler {
                         if (this.activeRowIndex === null) {
                             this.activeRowIndex = this.$findNearestAnnotation(index);
                             if (this.activeRowIndex == null) {return;}
-                            this.lane = "annotation";
+                            this.activeLane = "annotation";
                             this.$focusAnnotation(this.activeRowIndex);
                             return;
                         }
@@ -79,7 +79,7 @@ class GutterKeyboardHandler {
                         if (this.activeRowIndex === null) {
                             this.activeRowIndex = this.$findNearestFoldWidget(index);
                             if (this.activeRowIndex == null) {return;}
-                            this.lane = "fold";
+                            this.activeLane = "fold";
                             this.$focusFoldWidget(this.activeRowIndex);
                             return;
                         }
@@ -109,7 +109,7 @@ class GutterKeyboardHandler {
         if (e.keyCode === keys["up"]) {
             e.preventDefault();
   
-            switch (this.lane){
+            switch (this.activeLane){
                 case "fold":
                     this.$moveFoldWidgetUp();
                     break;
@@ -124,7 +124,7 @@ class GutterKeyboardHandler {
         if (e.keyCode === keys["down"]) {
             e.preventDefault();
 
-            switch (this.lane){
+            switch (this.activeLane){
                 case "fold":
                     this.$moveFoldWidgetDown();
                     break;
@@ -151,7 +151,7 @@ class GutterKeyboardHandler {
         if (e.keyCode === keys["enter"] || e.keyCode === keys["space"]){
             e.preventDefault();
 
-            switch (this.lane) {
+            switch (this.activeLane) {
                 case "fold":
                     if (this.gutterLayer.session.foldWidgets[this.$rowIndexToRow(this.activeRowIndex)] === 'start') {
                         this.editor.session.onFoldWidgetClick(this.$rowIndexToRow(this.activeRowIndex), e);
@@ -177,7 +177,7 @@ class GutterKeyboardHandler {
 
     $blurGutter() {
         if (this.activeRowIndex !== null){
-            switch (this.lane){
+            switch (this.activeLane){
                 case "fold":
                     this.$blurFoldWidget(this.activeRowIndex);
                     break;
@@ -360,11 +360,11 @@ class GutterKeyboardHandler {
     $switchLane(desinationLane){
         switch (desinationLane) {
             case "annotation":
-                if (this.lane === "annotation") {break;}
+                if (this.activeLane === "annotation") {break;}
                 var annotationIndex = this.$findNearestAnnotation(this.activeRowIndex);
                 if (annotationIndex == null) {break;}
 
-                this.lane = "annotation";
+                this.activeLane = "annotation";
 
                 this.$blurFoldWidget(this.activeRowIndex);
                 this.activeRowIndex = annotationIndex;
@@ -373,11 +373,11 @@ class GutterKeyboardHandler {
                 break;
 
             case "fold": 
-                if (this.lane === "fold") {break;}
+                if (this.activeLane === "fold") {break;}
                 var foldWidgetIndex = this.$findNearestFoldWidget(this.activeRowIndex);
                 if (foldWidgetIndex == null) {break;}
 
-                this.lane = "fold";
+                this.activeLane = "fold";
 
                 this.$blurAnnotation(this.activeRowIndex);
                 this.activeRowIndex = foldWidgetIndex;
