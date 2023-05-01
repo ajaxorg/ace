@@ -171,7 +171,10 @@ function ace() {
 }
 
 function buildTypes() {
-    var definitions = fs.readFileSync(ACE_HOME + '/ace.d.ts', 'utf8');
+    var aceCodeModeDefinitions = '/// <reference path="./ace-modes.d.ts" />';
+    // ace-builds package has different structure and can't use mode types defined for the ace-code.
+    // ace-builds modes are declared along with other modules in the ace-modules.d.ts file below.
+    var definitions = fs.readFileSync(ACE_HOME + '/ace.d.ts', 'utf8').replace(aceCodeModeDefinitions, '');
     var paths = fs.readdirSync(BUILD_DIR + '/src-noconflict');
     var moduleRef = '/// <reference path="./ace-modules.d.ts" />';
 
@@ -193,21 +196,20 @@ function buildTypes() {
 
     fs.writeFileSync(BUILD_DIR + '/ace.d.ts', moduleRef + '\n' + definitions);
     fs.writeFileSync(BUILD_DIR + '/ace-modules.d.ts', pathModules);
-    
     var esmUrls = [];
+
     var loader = paths.map(function(path) {
         if (/\.js$/.test(path) && !/^ace\.js$/.test(path)) {
             var moduleName = path.split('.')[0].replace(/-/, "/");
             if (/^worker/.test(moduleName))
                 moduleName = "mode" + moduleName.slice(6) + "_worker";
             moduleName = moduleName.replace(/keybinding/, "keyboard");
-            
             esmUrls.push("ace.config.setModuleLoader('ace/" + moduleName + "', () => import('./src-noconflict/" + path + "'));");
             return "ace.config.setModuleUrl('ace/" + moduleName + "', require('file-loader?esModule=false!./src-noconflict/" + path + "'));";
         }
     }).join('\n');
     var esmLoader = esmUrls.join('\n');
-    
+
     fs.writeFileSync(BUILD_DIR + '/webpack-resolver.js', loader, "utf8");
     fs.writeFileSync(BUILD_DIR + '/esm-resolver.js', esmLoader, "utf8");
 }

@@ -633,22 +633,19 @@ class Document {
         return index + pos.column;
     }
 
+    /**
+     * Splits a string of text on any newline (`\n`) or carriage-return (`\r`) characters.
+     *
+     * @method $split
+     * @param {String} text The text to work with
+     * @returns {String} A String array, with each index containing a piece of the original `text` string.
+     *
+     **/
+    $split(text) {
+        return text.split(/\r\n|\r|\n/);
+    }
 }
 
-/**
- * Splits a string of text on any newline (`\n`) or carriage-return (`\r`) characters.
- *
- * @method $split
- * @param {String} text The text to work with
- * @returns {String} A String array, with each index containing a piece of the original `text` string.
- *
- **/
-// check for IE split bug
-Document.prototype.$split = ("aaa".split(/a/).length === 0) ? function (text) {
-    return text.replace(/\r\n|\r/g, "\n").split("\n");
-} : function (text) {
-    return text.split(/\r\n|\r|\n/);
-};
 Document.prototype.$autoNewLine = "";
 Document.prototype.$newLineMode = "auto";
 
