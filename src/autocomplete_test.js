@@ -246,6 +246,45 @@ module.exports = {
             editor.container.remove();
             done();
         }, 10);
+    },
+    "test: trigger autocomplete for specific characters": function (done) {
+        var editor = initEditor("document");
+
+        editor.completers = [
+            {
+                getCompletions: function (editor, session, pos, prefix, callback) {
+                    var completions = [
+                        {
+                            caption: "append",
+                            value: "append"
+                        }, {
+                            caption: "all",
+                            value: "all"
+                        }
+                    ];
+                    callback(null, completions);
+                },
+                triggerCharacters: ["."]
+            }
+        ];
+        
+        editor.moveCursorTo(0, 8);
+        sendKey(".");
+        var popup = editor.completer.popup;
+        check(function () {
+            assert.equal(popup.data.length, 2);
+            editor.onCommandKey(null, 0, 13);
+            assert.equal(editor.getValue(), "document.all");
+            done();
+        });
+
+        function check(callback) {
+            popup = editor.completer.popup;
+            popup.renderer.on("afterRender", function wait() {
+                popup.renderer.off("afterRender", wait);
+                callback();
+            });
+        }
     }
 };
 
