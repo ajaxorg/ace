@@ -29,6 +29,7 @@
     "license": "BSD-3-Clause",
     "files": [
         "src",
+        "build/css",
         "ace.d.ts",
         "esm-resolver.js",
         "!**/*_test.js",
