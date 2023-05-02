@@ -43,8 +43,7 @@ class GutterKeyboardHandler {
             e.preventDefault();
 
             // Scroll if the cursor is not currently within the viewport.
-            var row = this.editor.getCursorPosition().row;
-
+            var row = this.editor.getCursorPositionScreen(this.editor.getCursorPosition()).row;
             if (!this.editor.isRowVisible(row))
                 this.editor.scrollToLine(row, true, true);
 
@@ -399,7 +398,9 @@ class GutterKeyboardHandler {
 
     // Convert row (document space) to row index (viewport space).
     $rowToRowIndex(row) {
+        console.log(`row ${row}`)
         for (var i = 0; i < this.lines.getLength(); i++){
+            console.log(i)
             var cell = this.lines.get(i);
             if (cell.row == row)
                 return i;
