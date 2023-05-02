@@ -54,8 +54,22 @@ class GutterKeyboardHandler {
                 var nearestFoldIndex = this.$findNearestFoldWidget(index);
                 var nearestAnnotationIndex = this.$findNearestAnnotation(index);
 
-                if (nearestFoldIndex == null && nearestAnnotationIndex == null)
+                if (nearestFoldIndex === null && nearestAnnotationIndex === null)
                     return;
+
+                if (nearestFoldIndex === null && nearestAnnotationIndex !== null){
+                    this.activeRowIndex = nearestAnnotationIndex;
+                    this.activeLane = "annotation";
+                    this.$focusAnnotation(this.activeRowIndex);
+                    return;
+                }
+
+                if (nearestFoldIndex !== null && nearestAnnotationIndex === null){
+                    this.activeRowIndex = nearestFoldIndex;
+                    this.activeLane = "fold";
+                    this.$focusFoldWidget(this.activeRowIndex);
+                    return;
+                }
 
                 if (Math.abs(nearestAnnotationIndex - index) < Math.abs(nearestFoldIndex - index)){
                     this.activeRowIndex = nearestAnnotationIndex;
