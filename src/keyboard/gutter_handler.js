@@ -398,9 +398,7 @@ class GutterKeyboardHandler {
 
     // Convert row (document space) to row index (viewport space).
     $rowToRowIndex(row) {
-        console.log(`row ${row}`)
         for (var i = 0; i < this.lines.getLength(); i++){
-            console.log(i)
             var cell = this.lines.get(i);
             if (cell.row == row)
                 return i;

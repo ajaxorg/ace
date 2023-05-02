@@ -109,6 +109,8 @@ function GutterHandler(mouseHandler) {
     editor.on("changeSession", hideTooltip);
 }
 
+exports.GutterHandler = GutterHandler;
+
 class GutterTooltip extends Tooltip {
     constructor(editor) {
         super(editor.container);
@@ -221,4 +223,3 @@ class GutterTooltip extends Tooltip {
 }
 
 exports.GutterTooltip = GutterTooltip;
-exports.GutterHandler = GutterHandler;
