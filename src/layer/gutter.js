@@ -279,7 +279,7 @@ class Gutter{
         var textNode = element.childNodes[0];
         var foldWidget = element.childNodes[1];
         var annotationNode = element.childNodes[2];
-        var annotationContentNode = annotationNode.firstChild;
+        var annotationIconNode = annotationNode.firstChild;
 
         var firstLineNumber = session.$firstLineNumber;
         
@@ -378,37 +378,33 @@ class Gutter{
         }
 
         if (annotationInFold && this.$showFoldedAnnotations){
-            annotationNode.className = iconClassName;
-            annotationContentNode.className = foldAnnotationClass;
+            annotationNode.className = "ace_gutter_annotation";
+            annotationIconNode.className = iconClassName;
+            annotationIconNode.className += foldAnnotationClass;
 
-            dom.setStyle(annotationContentNode.style, "height", lineHeight);
-            dom.setStyle(annotationContentNode.style, "display", "block");
+            dom.setStyle(annotationIconNode.style, "height", lineHeight);
             dom.setStyle(annotationNode.style, "display", "block");
             dom.setStyle(annotationNode.style, "height", lineHeight);
             annotationNode.setAttribute("aria-label", `Read annotations row ${rowText}`);
         }
         else if (this.$annotations[row]){
-            annotationNode.className = iconClassName;
+            annotationNode.className = "ace_gutter_annotation";
+            annotationIconNode.className = iconClassName;
 
             if (this.$useSvgGutterIcons)
-                annotationContentNode.className = this.$annotations[row].className;
+                annotationIconNode.className += this.$annotations[row].className;
             else 
                 element.classList.add(this.$annotations[row].className.replace(" ", ""));
 
-            dom.setStyle(annotationContentNode.style, "height", lineHeight);
-            dom.setStyle(annotationContentNode.style, "display", "block");
+            dom.setStyle(annotationIconNode.style, "height", lineHeight);
             dom.setStyle(annotationNode.style, "display", "block");
             dom.setStyle(annotationNode.style, "height", lineHeight);
             annotationNode.setAttribute("aria-label", `Read annotations row ${rowText}`);
         }
         else {
-            dom.setStyle(annotationContentNode.style, "display", "none");
             dom.setStyle(annotationNode.style, "display", "none");
             annotationNode.setAttribute("aria-label", "");
         }
-        
-        
-            
         if (rowText !== textNode.data) {
             textNode.data = rowText;
         } 
@@ -490,8 +486,8 @@ function onCreateCell(element) {
     var annotationNode = dom.createElement("span");
     element.appendChild(annotationNode);
 
-    var annotationContentNode = dom.createElement("span");
-    annotationNode.appendChild(annotationContentNode);
+    var annotationIconNode = dom.createElement("span");
+    annotationNode.appendChild(annotationIconNode);
     
     return element;
 }
