@@ -43,49 +43,32 @@ class GutterKeyboardHandler {
             e.preventDefault();
 
             // Scroll if the cursor is not currently within the viewport.
-            var row = this.editor.getCursorPositionScreen(this.editor.getCursorPosition()).row;
+            var row = this.editor.getCursorPosition().row;
+            var index = this.editor.getCursorPositionScreen().row;
+   
             if (!this.editor.isRowVisible(row))
                 this.editor.scrollToLine(row, true, true);
 
-            switch (this.activeLane) {
-                case "fold":
-                    // Wait until the scrolling is completed to check the viewport.
-                    setTimeout(function() {
-                        var index = this.$rowToRowIndex(row);
+            // After scrolling is completed, find the nearest gutter icon and set focus to it.
+            setTimeout(function() {
+                var nearestFoldIndex = this.$findNearestFoldWidget(index);
+                var nearestAnnotationIndex = this.$findNearestAnnotation(index);
 
-                        this.activeRowIndex = this.$findNearestFoldWidget(index);
+                if (nearestFoldIndex == null && nearestAnnotationIndex == null)
+                    return;
 
-                        // If there are no fold widgets, check if there are annotations.
-                        if (this.activeRowIndex === null) {
-                            this.activeRowIndex = this.$findNearestAnnotation(index);
-                            if (this.activeRowIndex == null) {return;}
-                            this.activeLane = "annotation";
-                            this.$focusAnnotation(this.activeRowIndex);
-                            return;
-                        }
-                        this.$focusFoldWidget(this.activeRowIndex);
-                    }.bind(this), 10);
-                    break;
-                
-                case "annotation":
-                    // Wait until the scrolling is completed to check the viewport.
-                    setTimeout(function() {
-                        var index = this.$rowToRowIndex(row);
-
-                        this.activeRowIndex = this.$findNearestAnnotation(index);
-
-                        // If there are no annotations, check if there are fold widgets.
-                        if (this.activeRowIndex === null) {
-                            this.activeRowIndex = this.$findNearestFoldWidget(index);
-                            if (this.activeRowIndex == null) {return;}
-                            this.activeLane = "fold";
-                            this.$focusFoldWidget(this.activeRowIndex);
-                            return;
-                        }
-                        this.$focusAnnotation(this.activeRowIndex);
-                    }.bind(this), 10);
-                    break;
-            }
+                if (Math.abs(nearestAnnotationIndex - index) < Math.abs(nearestFoldIndex - index)){
+                    this.activeRowIndex = nearestAnnotationIndex;
+                    this.activeLane = "annotation";
+                    this.$focusAnnotation(this.activeRowIndex);
+                    return;
+                } else {
+                    this.activeRowIndex = nearestFoldIndex;
+                    this.activeLane = "fold";
+                    this.$focusFoldWidget(this.activeRowIndex);
+                    return;
+                }
+            }.bind(this), 10);
             return;
         } 
 
@@ -102,6 +85,7 @@ class GutterKeyboardHandler {
             e.preventDefault();
             this.$blurGutter();
             this.element.focus();
+            this.lane = null;
             return;
         }
 
