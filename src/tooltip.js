@@ -325,7 +325,7 @@ class HoverTooltip extends Tooltip {
     hide(e) {
         if (!e && document.activeElement == this.getElement())
             return;
-        if (e && e.target && e.type != "keydown" && this.$element.contains(e.target))
+        if (e && e.target && (e.type != "keydown" || e.ctrlKey || e.metaKey) && this.$element.contains(e.target))
             return;
         this.lastEvent = null;
         if (this.timeout) clearTimeout(this.timeout);
