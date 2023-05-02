@@ -279,6 +279,7 @@ class Gutter{
         var textNode = element.childNodes[0];
         var foldWidget = element.childNodes[1];
         var annotationNode = element.childNodes[2];
+        var annotationContentNode = annotationNode.firstChild;
 
         var firstLineNumber = session.$firstLineNumber;
         
@@ -378,27 +379,32 @@ class Gutter{
 
         if (annotationInFold && this.$showFoldedAnnotations){
             annotationNode.className = iconClassName;
-            annotationNode.className += foldAnnotationClass;
+            annotationContentNode.className = foldAnnotationClass;
 
-            dom.setStyle(annotationNode.style, "height", lineHeight);
+            dom.setStyle(annotationContentNode.style, "height", lineHeight);
+            dom.setStyle(annotationContentNode.style, "display", "block");
             dom.setStyle(annotationNode.style, "display", "block");
-            annotationNode.setAttribute("aria-label", `Read annotations row ${rowText}`);
+            dom.setStyle(annotationNode.style, "height", lineHeight);
+            annotationContentNode.setAttribute("aria-label", `Read annotations row ${rowText}`);
         }
         else if (this.$annotations[row]){
             annotationNode.className = iconClassName;
 
             if (this.$useSvgGutterIcons)
-                annotationNode.className += this.$annotations[row].className;
+                annotationContentNode.className = this.$annotations[row].className;
             else 
                 element.classList.add(this.$annotations[row].className.replace(" ", ""));
 
-            dom.setStyle(annotationNode.style, "height", lineHeight);
+            dom.setStyle(annotationContentNode.style, "height", lineHeight);
+            dom.setStyle(annotationContentNode.style, "display", "block");
             dom.setStyle(annotationNode.style, "display", "block");
-            annotationNode.setAttribute("aria-label", `Read annotations row ${rowText}`);
+            dom.setStyle(annotationNode.style, "height", lineHeight);
+            annotationContentNode.setAttribute("aria-label", `Read annotations row ${rowText}`);
         }
         else {
+            dom.setStyle(annotationContentNode.style, "display", "none");
             dom.setStyle(annotationNode.style, "display", "none");
-            annotationNode.setAttribute("aria-label", "");
+            annotationContentNode.setAttribute("aria-label", "");
         }
         
         
@@ -483,6 +489,9 @@ function onCreateCell(element) {
 
     var annotationNode = dom.createElement("span");
     element.appendChild(annotationNode);
+
+    var annotationContentNode = dom.createElement("span");
+    annotationNode.appendChild(annotationContentNode);
     
     return element;
 }
