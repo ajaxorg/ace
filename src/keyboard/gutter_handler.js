@@ -11,7 +11,7 @@ class GutterKeyboardHandler {
         this.lines = editor.renderer.$gutterLayer.$lines;
 
         this.activeRowIndex = 0;
-        this.activeLane = "fold";
+        this.activeLane = null;
 
         this.annotationTooltip = new GutterTooltip(this.editor);
     }
