@@ -10,7 +10,7 @@ class GutterKeyboardHandler {
         this.element = editor.renderer.$gutter;
         this.lines = editor.renderer.$gutterLayer.$lines;
 
-        this.activeRowIndex = 0;
+        this.activeRowIndex = null;
         this.activeLane = null;
 
         this.annotationTooltip = new GutterTooltip(this.editor);
@@ -43,9 +43,9 @@ class GutterKeyboardHandler {
             e.preventDefault();
 
             // Scroll if the cursor is not currently within the viewport.
-            var row = this.editor.getCursorPosition().row;
-            var index = this.editor.getCursorPositionScreen().row;
-   
+            var row = this.gutterLayer.$cursorCell.row;
+            var index = this.$rowToRowIndex(row);
+
             if (!this.editor.isRowVisible(row))
                 this.editor.scrollToLine(row, true, true);
 
