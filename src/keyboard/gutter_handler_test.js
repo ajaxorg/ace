@@ -15,20 +15,12 @@ var VirtualRenderer = require("../virtual_renderer").VirtualRenderer;
 var assert = require("../test/assertions");
 
 function emit(keyCode) {
-    var data = {bubbles: true, cancelable: true};
-    data.keyCode = keyCode;
-    data.which = data.keyCode;
-    data.shiftKey = false;
-    data.ctrlKey = false;
-    data.altKey = false;
-
+    var data = {bubbles: true, keyCode};
     var event = new KeyboardEvent("keydown", data);
 
     var el = document.activeElement;
     el.dispatchEvent(event);
 }
-
-var editor;
 
 module.exports = {
     setUp : function(done) {
@@ -39,7 +31,6 @@ module.exports = {
         this.editor.container.style.left = "50px";
         this.editor.container.style.top = "10px";
         document.body.appendChild(this.editor.container);
-        editor = this.editor;
         done();
     },
     "test: keyboard code folding: basic functionality" : function(done) {

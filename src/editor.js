@@ -2909,7 +2909,7 @@ config.defineOptions(Editor.prototype, "editor", {
                 this.renderer.content.setAttribute("role", "group");
                 this.renderer.content.setAttribute("aria-roledescription", "gutter");
                 this.renderer.$gutter.setAttribute("aria-label",
-                    "Gutter, press Enter to interact with controls, press Escape to exit"
+                    "Gutter, press Enter to interact with controls using arrow keys, press Escape to exit"
                 );
                 this.renderer.$gutter.classList.add(this.keyboardFocusClassName);
 

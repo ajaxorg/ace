@@ -37,7 +37,7 @@ class GutterKeyboardHandler {
             return;
         }
 
-        // If focus is on the gutter element, set focus to fold widget on enter press.
+        // If focus is on the gutter element, set focus to nearest gutter icon on enter press.
         if (e.target === this.element) {
             if (e.keyCode != keys["enter"]) {return;}
             e.preventDefault();
@@ -86,8 +86,7 @@ class GutterKeyboardHandler {
             return;
         } 
 
-        // When focus is not on the gutter element, we want to interact with the icons.
-
+        // After here, foucs is on a gutter icon and we want to interact with them.
         // Prevent tabbing when interacting with the gutter icons.
         if (e.keyCode === keys["tab"]){
             e.preventDefault();
@@ -235,11 +234,11 @@ class GutterKeyboardHandler {
 
     // Given an index, find the nearest index with an annotation.
     $findNearestAnnotation(index) {
-        // If fold widget exists at index, return index.
+        // If annotation exists at index, return index.
         if (this.$isAnnotationVisible(index))
             return index;
 
-        // else, find the nearest index with fold widget within viewport.
+        // else, find the nearest index with annotation within viewport.
         var i = 0;
         while (index - i > 0 || index + i < this.lines.getLength() - 1){
             i++;
@@ -251,7 +250,7 @@ class GutterKeyboardHandler {
                 return index + i;
         }
 
-        // If there are no fold widgets within the viewport, return null.
+        // If there are no annotations within the viewport, return null.
         return null;
     }
 
