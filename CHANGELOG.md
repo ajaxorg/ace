@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.19.0](https://github.com/ajaxorg/ace/compare/v1.18.1...v1.19.0) (2023-05-03)
+
+
+### Features
+
+* publishing generated styling files to ace-code package ([1fa223e](https://github.com/ajaxorg/ace/commit/1fa223e4ca0df16c9a0e0a6df2996fa010189666))
+
 ### [1.18.1](https://github.com/ajaxorg/ace/compare/v1.18.0...v1.18.1) (2023-05-03)
 
 
