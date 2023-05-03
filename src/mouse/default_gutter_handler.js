@@ -2,6 +2,7 @@
 var dom = require("../lib/dom");
 var event = require("../lib/event");
 var Tooltip = require("../tooltip").Tooltip;
+var nls = require("../config").nls;
 
 function GutterHandler(mouseHandler) {
     var editor = mouseHandler.editor;
@@ -134,9 +135,9 @@ class GutterTooltip extends Tooltip {
     }
     
     static get annotationLabels() { return {
-            error: {singular: "error", plural: "errors"}, 
-            warning: {singular: "warning", plural: "warnings"},
-            info: {singular: "information message", plural: "information messages"}
+            error: {singular: nls("error"), plural: nls("errors")},
+            warning: {singular: nls("warning"), plural: nls("warnings")},
+            info: {singular: nls("information message"), plural: nls("information messages")}
         };
     }
 
