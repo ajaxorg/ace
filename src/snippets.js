@@ -349,7 +349,7 @@ var SnippetManager = function() {
         return result;
     };
 
-    var processSnippetText = function(editor, snippetText, replaceRange) {
+    var processSnippetText = function(editor, snippetText, removeExtraIndent) {
         var cursor = editor.getCursorPosition();
         var line = editor.session.getLine(cursor.row);
         var tabString = editor.session.getTabString();
@@ -363,7 +363,7 @@ var SnippetManager = function() {
         tokens = this.resolveVariables(tokens, editor);
         // indent
         tokens = tokens.map(function(x) {
-            if (x == "\n")
+            if (x == "\n" && !removeExtraIndent)
                 return x + indentString;
             if (typeof x == "string")
                 return x.replace(/\t/g, tabString);
@@ -479,8 +479,8 @@ var SnippetManager = function() {
         return processedSnippet.text;
     };
 
-    this.insertSnippetForSelection = function(editor, snippetText, replaceRange) {
-        var processedSnippet = processSnippetText.call(this, editor, snippetText);
+    this.insertSnippetForSelection = function(editor, snippetText, replaceRange, removeExtraIndent) {
+        var processedSnippet = processSnippetText.call(this, editor, snippetText, removeExtraIndent);
         
         var range = editor.getSelectionRange();
         if (replaceRange && replaceRange.compareRange(range) === 0) {
@@ -493,16 +493,16 @@ var SnippetManager = function() {
         tabstopManager.addTabstops(processedSnippet.tabstops, range.start, end, selectionId);
     };
     
-    this.insertSnippet = function(editor, snippetText, replaceRange) {
+    this.insertSnippet = function(editor, snippetText, replaceRange, removeExtraIndent) {
         var self = this;
         if (replaceRange && !(replaceRange instanceof Range))
             replaceRange = Range.fromPoints(replaceRange.start, replaceRange.end);
         
         if (editor.inVirtualSelectionMode)
-            return self.insertSnippetForSelection(editor, snippetText, replaceRange);
+            return self.insertSnippetForSelection(editor, snippetText, replaceRange, removeExtraIndent);
         
         editor.forEachSelection(function() {
-            self.insertSnippetForSelection(editor, snippetText, replaceRange);
+            self.insertSnippetForSelection(editor, snippetText, replaceRange, removeExtraIndent);
         }, null, {keepOrder: true});
         
         if (editor.tabstopManager)
