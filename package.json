@@ -29,6 +29,7 @@
     "license": "BSD-3-Clause",
     "files": [
         "src",
+        "styles",
         "ace.d.ts",
         "esm-resolver.js",
         "!**/*_test.js",
@@ -41,7 +42,7 @@
         "lint": "eslint \"src/**/*.js\"",
         "fix": "eslint --fix \"src/**/*.js\"",
         "changelog": "standard-version",
-        "prepack": "node tool/esm_resolver_generator.js"
+        "prepack": "node tool/esm_resolver_generator.js && node Makefile.dryice.js css --target build-styles && mv build-styles/css styles"
     },
     "standard-version": {
         "skip": {
