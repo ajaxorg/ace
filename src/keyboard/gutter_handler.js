@@ -18,12 +18,12 @@ class GutterKeyboardHandler {
 
     addListener() {
         this.element.addEventListener("keydown", this.$onGutterKeyDown.bind(this));
-        this.element.addEventListener("blur", this.$blurGutter.bind(this));
+        this.element.addEventListener("focusout", this.$blurGutter.bind(this));
     }
 
     removeListener() {
         this.element.removeEventListener("keydown", this.$onGutterKeyDown.bind(this));
-        this.element.removeEventListener("blur", this.$blurGutter.bind(this));
+        this.element.removeEventListener("focusout", this.$blurGutter.bind(this));
     }
 
     $onGutterKeyDown(e) {
@@ -184,6 +184,11 @@ class GutterKeyboardHandler {
                     break;
             }
         }
+
+        if (this.annotationTooltip.isOpen)
+            this.annotationTooltip.hide();
+
+        return;
     }
 
     $isFoldWidgetVisible(index) {
