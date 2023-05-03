@@ -54,6 +54,7 @@ var getWrapped = function(selection, selected, opening, closing) {
  * @param {boolean} [options.closeDocComment] - enables automatic insertion of closing tags for documentation comments.
  */
 var CstyleBehaviour = function(options) {
+    options = options || {};
     this.add("braces", "insertion", function(state, action, editor, session, text) {
         var cursor = editor.getCursorPosition();
         var line = session.doc.getLine(cursor.row);
@@ -64,7 +65,7 @@ var CstyleBehaviour = function(options) {
             if (selected !== "" && selected !== "{" && editor.getWrapBehavioursEnabled()) {
                 return getWrapped(selection, selected, '{', '}');
             } else if (CstyleBehaviour.isSaneInsertion(editor, session)) {
-                if (/[\]\}\)]/.test(line[cursor.column]) || editor.inMultiSelectMode || options && options.braces) {
+                if (/[\]\}\)]/.test(line[cursor.column]) || editor.inMultiSelectMode || options.braces) {
                     CstyleBehaviour.recordAutoInsert(editor, session, "}");
                     return {
                         text: '{}',
@@ -303,7 +304,7 @@ var CstyleBehaviour = function(options) {
         }
     });
     
-    if (options && options.closeDocComment) {
+    if (options.closeDocComment !== false) {
         this.add("doc comment end", "insertion", function (state, action, editor, session, text) {
             if (state === "doc-start" && (text === "\n" || text === "\r\n") && editor.selection.isEmpty()) {
                 var cursor = editor.getCursorPosition();

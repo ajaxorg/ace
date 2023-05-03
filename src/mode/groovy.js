@@ -8,7 +8,7 @@ var CstyleBehaviour = require("../mode/behaviour/cstyle").CstyleBehaviour;
 var Mode = function() {
     JavaScriptMode.call(this);
     this.HighlightRules = GroovyHighlightRules;
-    this.$behaviour = new CstyleBehaviour({closeDocComment: true});
+    this.$behaviour = new CstyleBehaviour();
 };
 oop.inherits(Mode, JavaScriptMode);
 

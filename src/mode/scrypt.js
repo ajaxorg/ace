@@ -13,7 +13,7 @@ var CstyleBehaviour = require("../mode/behaviour/cstyle").CstyleBehaviour;
 var Mode = function () {
     this.HighlightRules = scryptHighlightRules;
     this.foldingRules = new FoldMode();
-    this.$behaviour = new CstyleBehaviour({closeDocComment: true});
+    this.$behaviour = new CstyleBehaviour();
 };
 oop.inherits(Mode, TextMode);
 

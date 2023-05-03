@@ -8,7 +8,7 @@ var CstyleBehaviour = require("../mode/behaviour/cstyle").CstyleBehaviour;
 var Mode = function() {
    
     this.HighlightRules = EdifactHighlightRules;
-    this.$behaviour = new CstyleBehaviour({closeDocComment: true});
+    this.$behaviour = new CstyleBehaviour();
 };
 oop.inherits(Mode, TextMode);
 

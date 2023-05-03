@@ -8,12 +8,11 @@ var oop = require("../lib/oop");
 var TextMode = require("./text").Mode;
 var RustHighlightRules = require("./rust_highlight_rules").RustHighlightRules;
 var FoldMode = require("./folding/cstyle").FoldMode;
-var CstyleBehaviour = require("../mode/behaviour/cstyle").CstyleBehaviour;
 
 var Mode = function() {
     this.HighlightRules = RustHighlightRules;
     this.foldingRules = new FoldMode();
-    this.$behaviour = new CstyleBehaviour({closeDocComment: true});
+    this.$behaviour = this.$defaultBehaviour;
 };
 oop.inherits(Mode, TextMode);
 

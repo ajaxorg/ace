@@ -13,7 +13,7 @@ function ApexMode() {
 
     this.HighlightRules = ApexHighlightRules;
     this.foldingRules = new FoldMode();
-    this.$behaviour = new CstyleBehaviour({closeDocComment: true});
+    this.$behaviour = new CstyleBehaviour();
 }
 
 oop.inherits(ApexMode, TextMode);

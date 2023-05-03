@@ -1,11 +1,10 @@
 var oop = require("../lib/oop");
 var TextMode = require("../mode/text").Mode;
 var MysqlHighlightRules = require("./mysql_highlight_rules").MysqlHighlightRules;
-var CstyleBehaviour = require("../mode/behaviour/cstyle").CstyleBehaviour;
 
 var Mode = function() {
     this.HighlightRules = MysqlHighlightRules;
-    this.$behaviour = new CstyleBehaviour({closeDocComment: true});
+    this.$behaviour = this.$defaultBehaviour;
 };
 oop.inherits(Mode, TextMode);
 

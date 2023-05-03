@@ -1,11 +1,10 @@
 var oop = require("../lib/oop");
 var TextMode = require("../mode/text").Mode;
 var PgsqlHighlightRules = require("./pgsql_highlight_rules").PgsqlHighlightRules;
-var CstyleBehaviour = require("../mode/behaviour/cstyle").CstyleBehaviour;
 
 var Mode = function() {
     this.HighlightRules = PgsqlHighlightRules;
-    this.$behaviour = new CstyleBehaviour({closeDocComment: true});
+    this.$behaviour = this.$defaultBehaviour;
 };
 oop.inherits(Mode, TextMode);
 
