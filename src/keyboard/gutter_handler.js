@@ -155,8 +155,11 @@ class GutterKeyboardHandler {
                         // After folding, check that the right fold widget is still in focus.
                         // If not (e.g. folding close to bottom of doc), put right widget in focus.
                         setTimeout(function() {
-                            if (this.$rowIndexToRow(this.activeRowIndex) !== rowFoldingWidget) 
-                                this.$focusFoldWidget(this.$rowToRowIndex(rowFoldingWidget));
+                            if (this.$rowIndexToRow(this.activeRowIndex) !== rowFoldingWidget){ 
+                                this.$blurFoldWidget(this.activeRowIndex);
+                                this.activeRowIndex = this.$rowToRowIndex(rowFoldingWidget);
+                                this.$focusFoldWidget(this.activeRowIndex);
+                            }
                         }.bind(this), 10);
 
                         break;
@@ -272,7 +275,6 @@ class GutterKeyboardHandler {
 
         var foldWidget = this.$getFoldWidget(index);
 
-        foldWidget.setAttribute("tabindex", 0);
         foldWidget.classList.add(this.editor.keyboardFocusClassName);
         foldWidget.focus();
     }
@@ -283,7 +285,6 @@ class GutterKeyboardHandler {
 
         var annotation = this.$getAnnotation(index);
 
-        annotation.setAttribute("tabindex", 0);
         annotation.classList.add(this.editor.keyboardFocusClassName);
         annotation.setAttribute("role", "button");
         annotation.focus();
@@ -292,7 +293,6 @@ class GutterKeyboardHandler {
     $blurFoldWidget(index) {
         var foldWidget = this.$getFoldWidget(index);
 
-        foldWidget.setAttribute("tabindex", -1);
         foldWidget.classList.remove(this.editor.keyboardFocusClassName);
         foldWidget.blur();
     }
@@ -300,7 +300,6 @@ class GutterKeyboardHandler {
     $blurAnnotation(index) {
         var annotation = this.$getAnnotation(index);
 
-        annotation.setAttribute("tabindex", -1);
         annotation.classList.remove(this.editor.keyboardFocusClassName);
         annotation.removeAttribute("role");
         annotation.blur();

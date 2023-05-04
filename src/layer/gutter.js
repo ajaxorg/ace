@@ -360,6 +360,7 @@ class Gutter{
             
             // Set a11y properties.
             foldWidget.setAttribute("role", "button");
+            foldWidget.setAttribute("tabindex", "-1");
             var fold = session.getFoldLine(rowText - 1);
             if (fold) {
                 foldWidget.setAttribute("aria-label", `Unfold rows ${rowText} to ${fold.end.row + 1}`);
@@ -372,8 +373,9 @@ class Gutter{
         } else {
             if (foldWidget) {
                 dom.setStyle(foldWidget.style, "display", "none");
-                foldWidget.setAttribute("role", "");
-                foldWidget.setAttribute("aria-label", "");
+                foldWidget.setAttribute("tabindex", "0");
+                foldWidget.removeAttribute("role");
+                foldWidget.removeAttribute("aria-label");
             }
         }
 
@@ -386,6 +388,7 @@ class Gutter{
             dom.setStyle(annotationNode.style, "display", "block");
             dom.setStyle(annotationNode.style, "height", lineHeight);
             annotationNode.setAttribute("aria-label", `Read annotations row ${rowText}`);
+            annotationNode.setAttribute("tabindex", "-1");
         }
         else if (this.$annotations[row]){
             annotationNode.className = "ace_gutter_annotation";
@@ -400,10 +403,12 @@ class Gutter{
             dom.setStyle(annotationNode.style, "display", "block");
             dom.setStyle(annotationNode.style, "height", lineHeight);
             annotationNode.setAttribute("aria-label", `Read annotations row ${rowText}`);
+            annotationNode.setAttribute("tabindex", "-1");
         }
         else {
             dom.setStyle(annotationNode.style, "display", "none");
-            annotationNode.setAttribute("aria-label", "");
+            annotationNode.removeAttribute("aria-label");
+            annotationNode.setAttribute("tabindex", "0");
         }
         if (rowText !== textNode.data) {
             textNode.data = rowText;
