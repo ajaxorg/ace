@@ -149,7 +149,16 @@ class GutterKeyboardHandler {
             switch (this.activeLane) {
                 case "fold":
                     if (this.gutterLayer.session.foldWidgets[this.$rowIndexToRow(this.activeRowIndex)] === 'start') {
+                        var rowFoldingWidget = this.$rowIndexToRow(this.activeRowIndex);
                         this.editor.session.onFoldWidgetClick(this.$rowIndexToRow(this.activeRowIndex), e);
+
+                        // After folding, check that the right fold widget is still in focus.
+                        // If not (e.g. folding close to bottom of doc), put right widget in focus.
+                        setTimeout(function() {
+                            if (this.$rowIndexToRow(this.activeRowIndex) !== rowFoldingWidget) 
+                                this.$focusFoldWidget(this.$rowToRowIndex(rowFoldingWidget));
+                        }.bind(this), 10);
+
                         break;
                     } else if (this.gutterLayer.session.foldWidgets[this.$rowIndexToRow(this.activeRowIndex)] === 'end') {
                         /* TO DO: deal with 'end' fold widgets */
