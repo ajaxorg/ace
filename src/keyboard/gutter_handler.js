@@ -19,11 +19,13 @@ class GutterKeyboardHandler {
     addListener() {
         this.element.addEventListener("keydown", this.$onGutterKeyDown.bind(this));
         this.element.addEventListener("focusout", this.$blurGutter.bind(this));
+        this.editor.on("mousewheel", this.$blurGutter.bind(this));
     }
 
     removeListener() {
         this.element.removeEventListener("keydown", this.$onGutterKeyDown.bind(this));
         this.element.removeEventListener("focusout", this.$blurGutter.bind(this));
+        this.editor.off("mousewheel", this.$blurGutter.bind(this));
     }
 
     $onGutterKeyDown(e) {
