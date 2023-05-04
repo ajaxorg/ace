@@ -347,7 +347,7 @@ module.exports = {
             "def multiply_with_random(array):",
             "    for i in range(len(array)):",
             "            array[i] *= random.randint(1, 10)",
-            "        return array",
+            "        return array"
         ].join("\n"));
 
         editor.setValue("");
@@ -357,7 +357,7 @@ module.exports = {
             "def multiply_with_random(array):",
             "    for i in range(len(array)):",
             "        array[i] *= random.randint(1, 10)",
-            "    return array",
+            "    return array"
         ].join("\n"));
     }
 };
