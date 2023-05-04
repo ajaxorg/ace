@@ -336,6 +336,29 @@ module.exports = {
             start: {row: 0, column: 0}, end: {row: 0, column: 8}
         });
         assert.equal(this.editor.getValue(), "test");
+    },
+    "test: insert snippet without extra indentation": function() {
+        var editor = this.editor;
+
+        editor.setValue("");
+        snippetManager.insertSnippet(this.editor, "def multiply_with_random(array):\n\t");
+        snippetManager.insertSnippet(this.editor, "for i in range(len(array)):\n\t\tarray[i] *= random.randint(1, 10)\n\treturn array");
+        assert.equal(editor.getValue(), [
+            "def multiply_with_random(array):",
+            "    for i in range(len(array)):",
+            "            array[i] *= random.randint(1, 10)",
+            "        return array",
+        ].join("\n"));
+
+        editor.setValue("");
+        snippetManager.insertSnippet(this.editor, "def multiply_with_random(array):\n\t", undefined, true);
+        snippetManager.insertSnippet(this.editor, "for i in range(len(array)):\n\t\tarray[i] *= random.randint(1, 10)\n\treturn array", undefined, true);
+        assert.equal(editor.getValue(), [
+            "def multiply_with_random(array):",
+            "    for i in range(len(array)):",
+            "        array[i] *= random.randint(1, 10)",
+            "    return array",
+        ].join("\n"));
     }
 };
 
