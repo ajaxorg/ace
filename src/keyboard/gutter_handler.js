@@ -191,11 +191,15 @@ class GutterKeyboardHandler {
     }
 
     $isFoldWidgetVisible(index) {
-        return this.$getFoldWidget(index).style.display !== "none";
+        var isRowFullyVisible = this.editor.isRowFullyVisible(this.$rowIndexToRow(index));
+        var isIconVisible = this.$getFoldWidget(index).style.display !== "none";
+        return isRowFullyVisible && isIconVisible;
     }
 
     $isAnnotationVisible(index) {
-        return this.$getAnnotation(index).style.display !== "none";
+        var isRowFullyVisible = this.editor.isRowFullyVisible(this.$rowIndexToRow(index));
+        var isIconVisible = this.$getAnnotation(index).style.display !== "none";
+        return isRowFullyVisible && isIconVisible;
     }
 
     $getFoldWidget(index) {
