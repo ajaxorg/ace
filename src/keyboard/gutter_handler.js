@@ -294,7 +294,7 @@ class GutterKeyboardHandler {
 
         annotation.setAttribute("tabindex", -1);
         annotation.classList.remove(this.editor.keyboardFocusClassName);
-        annotation.setAttribute("role", "");
+        annotation.removeAttribute("role");
         annotation.blur();
     }
 

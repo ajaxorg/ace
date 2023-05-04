@@ -2920,19 +2920,19 @@ config.defineOptions(Editor.prototype, "editor", {
             } else {
                 this.textInput.getElement().setAttribute("tabindex", 0);
                 this.renderer.content.setAttribute("tabindex", -1);
-                this.renderer.content.setAttribute("role", "");
-                this.renderer.content.setAttribute("aria-roledescription", "");
+                this.renderer.content.removeAttribute("role");
+                this.renderer.content.removeAttribute("aria-roledescription");
                 this.renderer.content.classList.remove(this.keyboardFocusClassName);
-                this.renderer.content.setAttribute("aria-label", "");
+                this.renderer.content.removeAttribute("aria-label");
             
                 this.renderer.content.removeEventListener("keyup", focusOnEnterKeyup.bind(this));
                 this.commands.removeCommand(blurCommand);
 
                 this.renderer.$gutter.setAttribute("tabindex", -1);
                 this.renderer.$gutter.setAttribute("aria-hidden", true);
-                this.renderer.content.setAttribute("role", "");
-                this.renderer.content.setAttribute("aria-roledescription", "");
-                this.renderer.$gutter.setAttribute("aria-label", "");
+                this.renderer.content.removeAttribute("role");
+                this.renderer.content.removeAttribute("aria-roledescription");
+                this.renderer.$gutter.removeAttribute("aria-label");
                 this.renderer.$gutter.classList.remove(this.keyboardFocusClassName);
 
                 if (gutterKeyboardHandler)
