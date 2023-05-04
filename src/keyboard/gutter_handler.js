@@ -43,14 +43,13 @@ class GutterKeyboardHandler {
             e.preventDefault();
 
             // Scroll if the cursor is not currently within the viewport.
-            var row = this.gutterLayer.$cursorCell.row;
-            var index = this.$rowToRowIndex(row);
-
+            var row = this.editor.getCursorPosition().row;       
             if (!this.editor.isRowVisible(row))
                 this.editor.scrollToLine(row, true, true);
 
             // After scrolling is completed, find the nearest gutter icon and set focus to it.
             setTimeout(function() {
+                var index = this.$rowToRowIndex(this.gutterLayer.$cursorCell.row);
                 var nearestFoldIndex = this.$findNearestFoldWidget(index);
                 var nearestAnnotationIndex = this.$findNearestAnnotation(index);
 
