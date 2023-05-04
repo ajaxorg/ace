@@ -3,12 +3,11 @@
 var oop = require("../lib/oop");
 var JavaScriptMode = require("./javascript").Mode;
 var GroovyHighlightRules = require("./groovy_highlight_rules").GroovyHighlightRules;
-var CstyleBehaviour = require("../mode/behaviour/cstyle").CstyleBehaviour;
 
 var Mode = function() {
     JavaScriptMode.call(this);
     this.HighlightRules = GroovyHighlightRules;
-    this.$behaviour = new CstyleBehaviour();
+    this.$behaviour = this.$defaultBehaviour;
 };
 oop.inherits(Mode, JavaScriptMode);
 

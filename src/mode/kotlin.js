@@ -7,13 +7,12 @@
 var oop = require("../lib/oop");
 var TextMode = require("./text").Mode;
 var KotlinHighlightRules = require("./kotlin_highlight_rules").KotlinHighlightRules;
-var CstyleBehaviour = require("./behaviour/cstyle").CstyleBehaviour;
 var FoldMode = require("./folding/cstyle").FoldMode;
 
 var Mode = function() {
     this.HighlightRules = KotlinHighlightRules;
     this.foldingRules = new FoldMode();
-    this.$behaviour = new CstyleBehaviour();
+    this.$behaviour = this.$defaultBehaviour;
 };
 oop.inherits(Mode, TextMode);
 
