@@ -349,7 +349,7 @@ var SnippetManager = function() {
         return result;
     };
 
-    var processSnippetText = function(editor, snippetText, removeExtraIndent) {
+    var processSnippetText = function(editor, snippetText, options={}) {
         var cursor = editor.getCursorPosition();
         var line = editor.session.getLine(cursor.row);
         var tabString = editor.session.getTabString();
@@ -363,7 +363,7 @@ var SnippetManager = function() {
         tokens = this.resolveVariables(tokens, editor);
         // indent
         tokens = tokens.map(function(x) {
-            if (x == "\n" && !removeExtraIndent)
+            if (x == "\n" && !options.excludeExtraIndent)
                 return x + indentString;
             if (typeof x == "string")
                 return x.replace(/\t/g, tabString);
@@ -479,12 +479,12 @@ var SnippetManager = function() {
         return processedSnippet.text;
     };
 
-    this.insertSnippetForSelection = function(editor, snippetText, replaceRange, removeExtraIndent) {
-        var processedSnippet = processSnippetText.call(this, editor, snippetText, removeExtraIndent);
+    this.insertSnippetForSelection = function(editor, snippetText, options={}) {
+        var processedSnippet = processSnippetText.call(this, editor, snippetText, options);
         
         var range = editor.getSelectionRange();
-        if (replaceRange && replaceRange.compareRange(range) === 0) {
-            range = replaceRange;
+        if (options.replaceRange && options.replaceRange.compareRange(range) === 0) {
+            range = options.replaceRange;
         }
         var end = editor.session.replace(range, processedSnippet.text);
 
@@ -493,16 +493,17 @@ var SnippetManager = function() {
         tabstopManager.addTabstops(processedSnippet.tabstops, range.start, end, selectionId);
     };
     
-    this.insertSnippet = function(editor, snippetText, replaceRange, removeExtraIndent) {
+    this.insertSnippet = function(editor, snippetText, options={}) {
         var self = this;
-        if (replaceRange && !(replaceRange instanceof Range))
-            replaceRange = Range.fromPoints(replaceRange.start, replaceRange.end);
+        if (options.replaceRange && !(options.replaceRange instanceof Range)){
+            console.log(options.replaceRange);
+            options.replaceRange = Range.fromPoints(options.replaceRange.start, options.replaceRange.end);}
         
         if (editor.inVirtualSelectionMode)
-            return self.insertSnippetForSelection(editor, snippetText, replaceRange, removeExtraIndent);
+            return self.insertSnippetForSelection(editor, snippetText, options);
         
         editor.forEachSelection(function() {
-            self.insertSnippetForSelection(editor, snippetText, replaceRange, removeExtraIndent);
+            self.insertSnippetForSelection(editor, snippetText, options);
         }, null, {keepOrder: true});
         
         if (editor.tabstopManager)
