@@ -2898,7 +2898,7 @@ config.defineOptions(Editor.prototype, "editor", {
                 this.renderer.content.setAttribute("aria-roledescription", "editor");
                 this.renderer.content.classList.add(this.keyboardFocusClassName);
                 this.renderer.content.setAttribute("aria-label",
-                    "Editor, press Enter to start editing, press Escape to exit"
+                    "Editor content, press Enter to start editing, press Escape to exit"
                 );
 
                 this.renderer.content.addEventListener("keyup", focusOnEnterKeyup.bind(this));
@@ -2906,10 +2906,10 @@ config.defineOptions(Editor.prototype, "editor", {
 
                 this.renderer.$gutter.setAttribute("tabindex", 0);
                 this.renderer.$gutter.setAttribute("aria-hidden", false);
-                this.renderer.content.setAttribute("role", "group");
-                this.renderer.content.setAttribute("aria-roledescription", "gutter");
+                this.renderer.$gutter.setAttribute("role", "group");
+                this.renderer.$gutter.setAttribute("aria-roledescription", "editor");
                 this.renderer.$gutter.setAttribute("aria-label",
-                    "Gutter, press Enter to interact with controls using arrow keys, press Escape to exit"
+                    "Editor gutter, press Enter to interact with controls using arrow keys, press Escape to exit"
                 );
                 this.renderer.$gutter.classList.add(this.keyboardFocusClassName);
 
@@ -2930,8 +2930,8 @@ config.defineOptions(Editor.prototype, "editor", {
 
                 this.renderer.$gutter.setAttribute("tabindex", -1);
                 this.renderer.$gutter.setAttribute("aria-hidden", true);
-                this.renderer.content.removeAttribute("role");
-                this.renderer.content.removeAttribute("aria-roledescription");
+                this.renderer.$gutter.removeAttribute("role");
+                this.renderer.$gutter.removeAttribute("aria-roledescription");
                 this.renderer.$gutter.removeAttribute("aria-label");
                 this.renderer.$gutter.classList.remove(this.keyboardFocusClassName);
 
