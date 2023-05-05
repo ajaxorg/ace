@@ -120,7 +120,7 @@ module.exports = {
         var line = lines.cells[0].element;
         assert.ok(/ace_gutter-cell_svg-icons/.test(line.className));
 
-        var annotation = line.children[2];
+        var annotation = line.children[2].firstChild;
         assert.ok(/ace_icon_svg/.test(annotation.className));
     },
     "test: error show up in fold" : function() {
@@ -145,7 +145,7 @@ module.exports = {
         assert.equal(lines.cells[1].element.textContent, "51");
 
         // Annotation node should have fold class.
-        var annotation = lines.cells[0].element.children[2];
+        var annotation = lines.cells[0].element.children[2].firstChild;
         assert.ok(/ace_error_fold/.test(annotation.className));
 
         var rect = annotation.getBoundingClientRect();
@@ -180,7 +180,7 @@ module.exports = {
         assert.equal(lines.cells[1].element.textContent, "51");
 
         // Annotation node should have fold class.
-        var annotation = lines.cells[0].element.children[2];
+        var annotation = lines.cells[0].element.children[2].firstChild;
         assert.ok(/ace_warning_fold/.test(annotation.className));
 
         var rect = annotation.getBoundingClientRect();

@@ -363,8 +363,10 @@ class Text {
         if (!this.$textToken[token.type]) {
             var classes = "ace_" + token.type.replace(/\./g, " ace_");
             var span = this.dom.createElement("span");
-            if (token.type == "fold")
+            if (token.type == "fold"){
                 span.style.width = (token.value.length * this.config.characterWidth) + "px";
+                span.setAttribute("title", "Unfold code");
+            }
 
             span.className = classes;
             span.appendChild(valueFragment);

@@ -17,6 +17,7 @@ var defaultCommands = require("./commands/default_commands").commands;
 var config = require("./config");
 var TokenIterator = require("./token_iterator").TokenIterator;
 var LineWidgets = require("./line_widgets").LineWidgets;
+var GutterKeyboardHandler = require("./keyboard/gutter_handler").GutterKeyboardHandler;
 
 var clipboard = require("./clipboard");
 var keys = require('./lib/keys');
@@ -2874,34 +2875,68 @@ config.defineOptions(Editor.prototype, "editor", {
 
             var focusOnEnterKeyup = function (e) {
                 if (e.target == this.renderer.content && e.keyCode === keys['enter']){
-                    e.stopPropagation();
                     e.preventDefault();
+                    var row = this.getCursorPosition().row;
+                    
+                    if (!this.isRowVisible(row))
+                        this.scrollToLine(row, true, true);
+    
                     this.focus();
                 }
             };
 
-            var keyboardFocusClassName = "ace_keyboard-focus";
+            var gutterKeyboardHandler;
 
             // Prevent focus to be captured when tabbing through the page. When focus is set to the content div, 
             // press Enter key to give focus to Ace and press Esc to again allow to tab through the page.
             if (value){
+                this.keyboardFocusClassName = "ace_keyboard-focus";
+
                 this.textInput.getElement().setAttribute("tabindex", -1);
                 this.renderer.content.setAttribute("tabindex", 0);
-                this.renderer.content.classList.add(keyboardFocusClassName);
+                this.renderer.content.setAttribute("role", "group");
+                this.renderer.content.setAttribute("aria-roledescription", "editor");
+                this.renderer.content.classList.add(this.keyboardFocusClassName);
                 this.renderer.content.setAttribute("aria-label",
-                    "Editor, press Enter key to start editing, press Escape key to exit"
+                    "Editor content, press Enter to start editing, press Escape to exit"
                 );
 
                 this.renderer.content.addEventListener("keyup", focusOnEnterKeyup.bind(this));
                 this.commands.addCommand(blurCommand);
+
+                this.renderer.$gutter.setAttribute("tabindex", 0);
+                this.renderer.$gutter.setAttribute("aria-hidden", false);
+                this.renderer.$gutter.setAttribute("role", "group");
+                this.renderer.$gutter.setAttribute("aria-roledescription", "editor");
+                this.renderer.$gutter.setAttribute("aria-label",
+                    "Editor gutter, press Enter to interact with controls using arrow keys, press Escape to exit"
+                );
+                this.renderer.$gutter.classList.add(this.keyboardFocusClassName);
+
+                if (!gutterKeyboardHandler)
+                    gutterKeyboardHandler = new GutterKeyboardHandler(this);
+
+                gutterKeyboardHandler.addListener();
             } else {
                 this.textInput.getElement().setAttribute("tabindex", 0);
                 this.renderer.content.setAttribute("tabindex", -1);
-                this.renderer.content.classList.remove(keyboardFocusClassName);
-                this.renderer.content.setAttribute("aria-label", "");
+                this.renderer.content.removeAttribute("role");
+                this.renderer.content.removeAttribute("aria-roledescription");
+                this.renderer.content.classList.remove(this.keyboardFocusClassName);
+                this.renderer.content.removeAttribute("aria-label");
             
                 this.renderer.content.removeEventListener("keyup", focusOnEnterKeyup.bind(this));
                 this.commands.removeCommand(blurCommand);
+
+                this.renderer.$gutter.setAttribute("tabindex", -1);
+                this.renderer.$gutter.setAttribute("aria-hidden", true);
+                this.renderer.$gutter.removeAttribute("role");
+                this.renderer.$gutter.removeAttribute("aria-roledescription");
+                this.renderer.$gutter.removeAttribute("aria-label");
+                this.renderer.$gutter.classList.remove(this.keyboardFocusClassName);
+
+                if (gutterKeyboardHandler)
+                    gutterKeyboardHandler.removeListener();
             }
         },
         initialValue: false
