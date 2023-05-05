@@ -167,8 +167,8 @@ exports.Tooltip = Tooltip;
 
 
 class HoverTooltip extends Tooltip {
-    constructor() {
-        super(document.body);
+    constructor(parentNode=document.body) {
+        super(parentNode);
         
         this.timeout = undefined;
         this.lastT = 0;
