@@ -58,6 +58,8 @@ class ScrollBar {
         this.element = dom.createElement("div");
         this.element.className = "ace_sb" + classSuffix;
         this.inner = dom.createElement("div");
+        this.element.setAttribute("aria-hidden", "true");
+        this.element.setAttribute("role", "presentation");
         this.inner.className = "";
         this.element.appendChild(this.inner);
         this.VScrollWidth = 12;

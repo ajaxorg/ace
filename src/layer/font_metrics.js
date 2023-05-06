@@ -13,6 +13,7 @@ class FontMetrics {
     
     constructor(parentEl) {
         this.el = dom.createElement("div");
+        this.el.setAttribute("aria-hidden", "true");
         this.$setMeasureNodeStyles(this.el.style, true);
 
         this.$main = dom.createElement("div");

@@ -8,6 +8,8 @@ class Marker {
     constructor(parentEl) {
         this.element = dom.createElement("div");
         this.element.className = "ace_layer ace_marker-layer";
+        this.element.setAttribute("aria-hidden", "true");
+        this.element.setAttribute("role", "presentation");
         parentEl.appendChild(this.element);
     }
     

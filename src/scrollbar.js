@@ -21,7 +21,8 @@ class Scrollbar {
     constructor(parent, classSuffix) {
         this.element = dom.createElement("div");
         this.element.className = "ace_scrollbar ace_scrollbar" + classSuffix;
-
+        this.element.setAttribute("aria-hidden", "true");
+        this.element.setAttribute("role", "presentation");
         this.inner = dom.createElement("div");
         this.inner.className = "ace_scrollbar-inner";
         // on safari scrollbar is not shown for empty elements

@@ -551,6 +551,8 @@ class VirtualRenderer {
         if (!this.$printMarginEl) {
             var containerEl = dom.createElement("div");
             containerEl.className = "ace_layer ace_print-margin-layer";
+            containerEl.setAttribute("aria-hidden", "true");
+            containerEl.setAttribute("role", "presentation");
             this.$printMarginEl = dom.createElement("div");
             this.$printMarginEl.className = "ace_print-margin";
             containerEl.appendChild(this.$printMarginEl);
