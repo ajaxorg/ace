@@ -99,7 +99,7 @@ var Split = function(){
 
 
 exports.singleLineEditor = function(el) {
-    var renderer = new Renderer(el);
+    var renderer = new Renderer(el, undefined, {isSingleLineEditor: true});
     el.style.overflow = "hidden";
 
     renderer.screenToTextCoordinates = function(x, y) {

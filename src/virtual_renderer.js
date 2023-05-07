@@ -32,7 +32,7 @@ class VirtualRenderer {
      * @param {Element} container The root element of the editor
      * @param {String} [theme] The starting theme
      **/
-    constructor(container, theme) {
+    constructor(container, theme, options={}) {
         var _self = this;
 
         this.container = container || dom.createElement("div");
@@ -64,6 +64,12 @@ class VirtualRenderer {
         this.$markerBack = new MarkerLayer(this.content);
 
         var textLayer = this.$textLayer = new TextLayer(this.content);
+
+        if (options.isSingleLineEditor){
+            this.$isSingleLineEditor = true;
+            this.$textLayer.element.setAttribute("aria-hidden", true);
+        }
+
         this.canvas = textLayer.element;
 
         this.$markerFront = new MarkerLayer(this.content);
@@ -552,7 +558,6 @@ class VirtualRenderer {
             var containerEl = dom.createElement("div");
             containerEl.className = "ace_layer ace_print-margin-layer";
             containerEl.setAttribute("aria-hidden", "true");
-            containerEl.setAttribute("role", "presentation");
             this.$printMarginEl = dom.createElement("div");
             this.$printMarginEl.className = "ace_print-margin";
             containerEl.appendChild(this.$printMarginEl);
