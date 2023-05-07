@@ -104,7 +104,7 @@ var TextInput = function(parentNode, host) {
     }, host);
     this.$focusScroll = false;
     this.focus = function() {
-        // On focusing on the textarea, read active row to assistive tech.
+        // On focusing on the textarea, read active row number to assistive tech.
         this.setAriaLabel();
 
         if (tempStyle || HAS_FOCUS_ARGS || this.$focusScroll == "browser")
