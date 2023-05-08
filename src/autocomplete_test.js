@@ -174,16 +174,16 @@ module.exports = {
         var popup = editor.completer.popup;
         check(function () {
             assert.equal(popup.data.length, 4);
-            assert.equal(document.body.lastChild.innerHTML, firstDoc);
+            assert.equal(popup.container.lastChild.innerHTML, firstDoc);
             sendKey("Down");
             check(function () {
-                assert.equal(document.body.lastChild.innerHTML, secondDoc);
+                assert.equal(popup.container.lastChild.innerHTML, secondDoc);
                 sendKey("Down");
                 check(function () {
-                    assert.equal(document.body.lastChild.innerHTML, firstDoc);
+                    assert.equal(popup.container.lastChild.innerHTML, firstDoc);
                     sendKey("Down");
                     check(function () {
-                        assert.equal(document.body.lastChild.innerHTML, secondDoc);
+                        assert.equal(popup.container.lastChild.innerHTML, secondDoc);
                         editor.destroy();
                         editor.container.remove();
                         done();
