@@ -77,8 +77,6 @@ class Editor {
         config.resetOptions(this);
         if (options)
             this.setOptions(options);
-
-
         config._signal("editor", this);
     }
 

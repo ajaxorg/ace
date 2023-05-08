@@ -21,6 +21,7 @@ class Scrollbar {
     constructor(parent, classSuffix) {
         this.element = dom.createElement("div");
         this.element.className = "ace_scrollbar ace_scrollbar" + classSuffix;
+        
         this.element.setAttribute("aria-hidden", "true");
         this.inner = dom.createElement("div");
         this.inner.className = "ace_scrollbar-inner";
