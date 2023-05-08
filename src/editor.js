@@ -78,7 +78,6 @@ class Editor {
         if (options)
             this.setOptions(options);
 
-        this.renderer.$textLayer.element.setAttribute("aria-hidden", true);
 
         config._signal("editor", this);
     }
@@ -2916,6 +2915,8 @@ config.defineOptions(Editor.prototype, "editor", {
                 );
                 this.renderer.$gutter.classList.add(this.keyboardFocusClassName);
 
+                this.renderer.$textLayer.element.setAttribute("aria-hidden", true);
+
                 if (!gutterKeyboardHandler)
                     gutterKeyboardHandler = new GutterKeyboardHandler(this);
 
@@ -2937,6 +2938,8 @@ config.defineOptions(Editor.prototype, "editor", {
                 this.renderer.$gutter.removeAttribute("aria-roledescription");
                 this.renderer.$gutter.removeAttribute("aria-label");
                 this.renderer.$gutter.classList.remove(this.keyboardFocusClassName);
+
+                this.renderer.$textLayer.element.setAttribute("aria-hidden", false);
 
                 if (gutterKeyboardHandler)
                     gutterKeyboardHandler.removeListener();

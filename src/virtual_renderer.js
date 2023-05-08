@@ -64,7 +64,6 @@ class VirtualRenderer {
         this.$markerBack = new MarkerLayer(this.content);
 
         var textLayer = this.$textLayer = new TextLayer(this.content);
-
         this.canvas = textLayer.element;
 
         this.$markerFront = new MarkerLayer(this.content);

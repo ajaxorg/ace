@@ -64,6 +64,7 @@ var TextInput = function(parentNode, host) {
         }     
     };
     this.setAriaLabel = function() {
+        var row;
         if (!host.session)
             row = 0;
         else
