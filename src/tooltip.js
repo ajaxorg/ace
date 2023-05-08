@@ -186,8 +186,8 @@ class HoverTooltip extends Tooltip {
         el.addEventListener("mouseout", this.onMouseOut);
         el.tabIndex = -1;
         
-        el.addEventListener("blur", function() {
-            if (document.activeElement != el) this.hide();
+        el.addEventListener("blur", function(e) {
+            if (document.activeElement != el && !el.contains(document.activeElement)) this.hide(e);
         }.bind(this));
     }
     
@@ -219,7 +219,7 @@ class HoverTooltip extends Tooltip {
                 || isMousePressed
                 || this.isOutsideOfText(this.lastEvent)
             ) {
-                this.hide();
+                this.hide(e);
             }
         }
         if (this.timeout || isMousePressed) return;
@@ -362,7 +362,7 @@ class HoverTooltip extends Tooltip {
         if (!e.relatedTarget || e.relatedTarget == this.getElement()) return;
 
         if (e && e.currentTarget.contains(e.relatedTarget)) return;
-        if (!e.relatedTarget.classList.contains("ace_content")) this.hide();
+        if (!e.relatedTarget.classList.contains("ace_content")) this.hide(e);
     }
 }
 
