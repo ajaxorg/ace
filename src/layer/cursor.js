@@ -7,7 +7,6 @@ class Cursor {
     constructor(parentEl) {
         this.element = dom.createElement("div");
         this.element.className = "ace_layer ace_cursor-layer";
-        this.element.setAttribute("aria-hidden", "true");
         parentEl.appendChild(this.element);
 
         this.isVisible = false;

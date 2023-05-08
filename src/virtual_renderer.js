@@ -62,13 +62,16 @@ class VirtualRenderer {
         this.$gutterLayer.on("changeGutterWidth", this.onGutterResize.bind(this));
 
         this.$markerBack = new MarkerLayer(this.content);
+        this.$markerBack.element.setAttribute("aria-hidden", true);
 
         var textLayer = this.$textLayer = new TextLayer(this.content);
         this.canvas = textLayer.element;
 
         this.$markerFront = new MarkerLayer(this.content);
+        this.$markerFront.element.setAttribute("aria-hidden", true);
 
         this.$cursorLayer = new CursorLayer(this.content);
+        this.$cursorLayer.element.setAttribute("aria-hidden", true);
 
         // Indicates whether the horizontal scrollbar is visible
         this.$horizScroll = false;
@@ -76,7 +79,9 @@ class VirtualRenderer {
 
         this.scrollBar =
             this.scrollBarV = new VScrollBar(this.container, this);
+        this.scrollBarV.element.setAttribute("aria-hidden", true);
         this.scrollBarH = new HScrollBar(this.container, this);
+        this.scrollBarH.element.setAttribute("aria-hidden", true);
         this.scrollBarV.on("scroll", function(e) {
             if (!_self.$scrollAnimation)
                 _self.session.setScrollTop(e.data - _self.scrollMargin.top);
@@ -1813,6 +1818,8 @@ class VirtualRenderer {
                 if (!_self.$scrollAnimation) _self.session.setScrollLeft(e.data - _self.scrollMargin.left);
             });
         }
+        this.scrollBarV.element.setAttribute("aria-hidden", true);
+        this.scrollBarH.element.setAttribute("aria-hidden", true);
     }
 
     $addResizeObserver() {
