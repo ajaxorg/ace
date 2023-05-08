@@ -41,8 +41,10 @@ class AcePopup {
         var el = dom.createElement("div");
         var popup = new $singleLineEditor(el);
 
-        if (parentNode)
+        if (parentNode) {
+            // console.log(parentNode);
             parentNode.appendChild(el);
+        }
         el.style.display = "none";
         popup.renderer.content.style.cursor = "default";
         popup.renderer.setStyle("ace_autocomplete");

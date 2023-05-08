@@ -59,6 +59,8 @@ class Autocomplete {
         this.inlineEnabled = false;
         this.keyboardHandler = new HashHandler();
         this.keyboardHandler.bindKeys(this.commands);
+        this.emptyMessage = null;
+        this.parentNode = null;
 
         this.blurListener = this.blurListener.bind(this);
         this.changeListener = this.changeListener.bind(this);
@@ -73,7 +75,7 @@ class Autocomplete {
     }
 
     $init() {
-        this.popup = new AcePopup(document.body || document.documentElement);
+        this.popup = new AcePopup(this.parentNode || document.body || document.documentElement); 
         this.popup.on("click", function(e) {
             this.insertMatch();
             e.stop();
@@ -255,6 +257,8 @@ class Autocomplete {
             data = this.popup.getData(this.popup.getRow());
         if (!data)
             return false;
+        if (data.value === "") // Explicitly given nothing to insert, e.g. "No suggestion state"
+            return this.detach();
         var completions = this.completions;
         var result = this.getCompletionProvider().insertMatch(this.editor, data, completions.filterText, options);
         // detach only if new popup was not opened while inserting match
@@ -341,8 +345,19 @@ class Autocomplete {
 
             if (finished) {
                 // No results
-                if (!filtered.length)
+                if (!filtered.length && !this.emptyMessage)
                     return this.detach();
+
+                if (!filtered.length && this.emptyMessage) {
+                    var completionsForEmpty = [{
+                        caption: this.emptyMessage(prefix),
+                        value: ""
+                    }];
+                    this.completions = new FilteredList(completionsForEmpty);
+                    this.completions.exactMatch = true;
+                    this.openPopup(this.editor, prefix, keepPopupPosition);
+                    return;
+                }
 
                 // One result equals to the prefix
                 if (filtered.length == 1 && filtered[0].value == prefix && !filtered[0].snippet)
@@ -408,7 +423,8 @@ class Autocomplete {
         }
 
         if (!tooltipNode.parentNode)
-            document.body.appendChild(tooltipNode);
+            this.popup.container.appendChild(this.tooltipNode);
+
         var popup = this.popup;
         var rect = popup.container.getBoundingClientRect();
         tooltipNode.style.top = popup.container.style.top;

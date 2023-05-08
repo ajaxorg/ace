@@ -1056,6 +1056,8 @@ export namespace Ace {
     autoSelect?: boolean;
     exactMatch?: boolean;
     inlineEnabled?: boolean;
+    parentNode?: HTMLElement;
+    emptyMessage?(prefix: String): String;
     getPopup(): AcePopup;
     showPopup(editor: Editor, options: CompletionOptions): void;
     detach(): void;
