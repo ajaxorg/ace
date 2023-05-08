@@ -259,7 +259,8 @@ function testMode(modeName, i) {
     var Mode = require("../" + modeName).Mode;
     var tokenizer = new Mode().getTokenizer();
 
-    checkBacktracking(tokenizer);
+    // TODO this is too slow to run in regular tests
+    if (RECHECK) checkBacktracking(tokenizer);
 
     var state = "start";
     data.forEach(function(lineData) {
@@ -323,51 +324,29 @@ function padNumber(num, digits) {
     return ("      " + num).slice(-digits);
 }
 
-function maybeCatastrophicBacktracking(regex) {
-    var tokens = regexpTokenizer.tokenize(regex.source);
-    var quantifiedGroups = [];
-    var groups = [];
-    var groupIndex = 0;
-    for (var i = 0; i < tokens.length; i++) {
-        var token = tokens[i];
-        if (token.type == "group.start") {
-            var endIndex = tokens.indexOf(token.end, i);
-            var next = tokens[endIndex + 1];
-            if (next && next.type == "quantifier" && next.value != "?") {
-                quantifiedGroups.push(token.end);
-            }
-            groups.push(token.end);
-        }
-        if (token.type == "group.end") {
-            if (quantifiedGroups[quantifiedGroups.length - 1] == token)
-                quantifiedGroups.pop();
-            if (groups[groups.length - 1] == token)
-                groups.pop();
-            if (groups.length == 0)
-                groupIndex++;
-        }
-        if (token.type == "quantifier" && quantifiedGroups.length >= 1 && token.value != "?") {
-            return groupIndex;
-        }
-    }
-    return null;
-}
 function checkBacktracking(tokenizer) {
-    var regExps = tokenizer.regExps;
-    Object.keys(regExps || {}).forEach(function(state) {
-        var i = maybeCatastrophicBacktracking(regExps[state]);
-        if (i != null) {
-            i = tokenizer.matchMappings[state][i];
-            var rule = tokenizer.states[state][i];
-            console.log("\tPossible error in", state, rule && rule.token, i);
-        }
+    var states = tokenizer.states;
+    Object.keys(states || {}).forEach(function(state) {
+        states[state].forEach(function(rule) {
+            var regex = rule.regex;
+            if (regex && typeof regex != "string") regex = regex.source;
+            if (!regex) return;
+            var result = require("recheck").checkSync(regex, "gmi", {
+                checker: "automaton",
+                timeout: 100000
+            });
+            if (result.status != "safe") {
+                if (result.attack && result.attack.string) delete result.attack.string;
+                
+                console.log("\tPossible error in", state, rule, result);
+            }
+        });
     });
 }
 
-
-
 // cli
 var arg = process.argv[2];
+var RECHECK = process.argv.indexOf("--recheck") !== -1;
 if (!arg) {
     test();
     checkModes();

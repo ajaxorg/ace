@@ -17,3 +17,7 @@
 (println (parting "Mark")) ; -> Goodbye, Mark
 (println (parting "Mark" "es")) ; -> Adios, Mark
 (println (parting "Mark", "xy")) ; -> java.lang.IllegalArgumentException: unsupported language xy
+
+(print (re-matches #"abc(.*)
+            (r)" "abcxyz
+            r") )
