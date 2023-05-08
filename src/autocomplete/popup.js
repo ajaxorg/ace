@@ -42,7 +42,6 @@ class AcePopup {
         var popup = new $singleLineEditor(el);
 
         if (parentNode) {
-            // console.log(parentNode);
             parentNode.appendChild(el);
         }
         el.style.display = "none";
