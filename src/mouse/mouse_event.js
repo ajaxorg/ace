@@ -19,12 +19,6 @@ class MouseEvent {
 
         this.propagationStopped = false;
         this.defaultPrevented = false;
-
-        this.getAccelKey = useragent.isMac ? function () {
-            return this.domEvent.metaKey;
-        } : function () {
-            return this.domEvent.ctrlKey;
-        };
     }
     
     stopPropagation() {
@@ -93,7 +87,10 @@ class MouseEvent {
     getShiftKey() {
         return this.domEvent.shiftKey;
     }
-    
+
+    getAccelKey() {
+        return useragent.isMac ? this.domEvent.metaKey : this.domEvent.ctrlKey;
+    }
 }
 
 exports.MouseEvent = MouseEvent;

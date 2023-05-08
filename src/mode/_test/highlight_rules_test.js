@@ -45,7 +45,8 @@ function checkModes() {
         if (!m.$behaviour)
             console.warn("missing behavior in " + modeName);
         var tokenizer = m.getTokenizer();
-        
+
+        testNextState(tokenizer, modeName);
         testComments(m.lineCommentStart, testLineComment, tokenizer, modeName);
         testComments(m.blockComment, testBlockComment, tokenizer, modeName);
         testBrackets(m, modeName);
@@ -63,6 +64,26 @@ function checkModes() {
     if (Object.keys(snippets).length) {
         console.error("Snippet files missing", snippets);
         throw new Error("Snippet files missing");
+    }
+    
+    function testNextState(tokenizer, modeName) {
+        let keys = Object.keys(tokenizer.states);
+        for (let i = 0; i < keys.length; i++) {
+            let key = keys[i];
+            let tokens = tokenizer.states[key];
+            for (let j = 0; j < tokens.length; j++) {
+                let token = tokens[j];
+                checkState(keys, token, "nextState", modeName);
+                checkState(keys, token, "next", modeName);
+            }
+        }
+    }
+
+    function checkState(stateNames, token, property, modeName) {
+        if (token.hasOwnProperty(property) && typeof token[property] === "string" && !stateNames.includes(
+            token[property])) {
+            console.warn("non-existent next state '" + token[property] + "' in " + modeName);
+        }
     }
     
     function testComments(desc, fn, tokenizer, modeName) {

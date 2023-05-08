@@ -328,5 +328,11 @@
    "start",
   ["string","\"foo\\\"bar\""]
 ],[
+   "start",
+  ["keyword","foo:"],
+  ["string.regexp.start","/"],
+  ["string.regexp","bar"],
+  ["string.regexp.end","/"]
+],[
    "start"
 ]]

@@ -6,7 +6,7 @@ var Tooltip = require("../tooltip").Tooltip;
 function GutterHandler(mouseHandler) {
     var editor = mouseHandler.editor;
     var gutter = editor.renderer.$gutterLayer;
-    var tooltip = new GutterTooltip(editor.container);
+    var tooltip = new GutterTooltip(editor);
 
     mouseHandler.editor.setDefaultHandler("guttermousedown", function(e) {
         if (!editor.isFocused() || e.getButton() != 0)
@@ -33,14 +33,10 @@ function GutterHandler(mouseHandler) {
         return e.preventDefault();
     });
 
-
-    var tooltipTimeout, mouseEvent, tooltipAnnotation;
+    var tooltipTimeout, mouseEvent;
 
     function showTooltip() {
         var row = mouseEvent.getDocumentPosition().row;
-        var annotation = gutter.$annotations[row];
-        if (!annotation)
-            return hideTooltip();
 
         var maxRow = editor.session.getLength();
         if (row == maxRow) {
@@ -50,51 +46,14 @@ function GutterHandler(mouseHandler) {
                 return hideTooltip();
         }
 
-        var annotationMessages = {error: [], warning: [], info: []};
-        var annotationLabels = {
-            error: {singular: "error", plural: "errors"}, 
-            warning: {singular: "warning", plural: "warnings"},
-            info: {singular: "information message", plural: "information messages"}
-        };
+        tooltip.showTooltip(row);
 
-        var iconClassName = gutter.$useSvgGutterIcons ? "ace_icon_svg" : "ace_icon";
-
-        // Construct the body of the tooltip.
-        for (var i = 0; i < annotation.text.length; i++) {
-            var line = `<span class='ace_${annotation.type[i]} ${iconClassName}' aria-label='${annotationLabels[annotation.type[i]].singular}' role=img> </span> ${annotation.text[i]}`;
-            annotationMessages[annotation.type[i]].push(line);
-        }
-        var tooltipBody = "<div class='ace_gutter-tooltip_body'>";
-        tooltipBody += [].concat(annotationMessages.error, annotationMessages.warning, annotationMessages.info).join("<br>");
-        tooltipBody += '</div>';    
-        
-        // Construct the header of the tooltip.
-        var isMoreThanOneAnnotationType = false;
-        var tooltipHeader = "<div class='ace_gutter-tooltip_header'>";
-        for (var i = 0; i < 3; i++){
-            var annotationType = ['error', 'warning', 'info'][i];
-            if (annotationMessages[annotationType].length > 0){
-                var label = annotationMessages[annotationType].length === 1 ? annotationLabels[annotationType].singular : annotationLabels[annotationType].plural;
-                tooltipHeader += `${isMoreThanOneAnnotationType ? ', ' : ''}${annotationMessages[annotationType].length} ${label}`;
-                isMoreThanOneAnnotationType = true;
-            } 
-        }
-        tooltipHeader += "</div>";
-
-        tooltipAnnotation = tooltipHeader + tooltipBody;
-
-        tooltip.setHtml(tooltipAnnotation);
-        tooltip.setClassName("ace_gutter-tooltip");
-        tooltip.$element.setAttribute("aria-live", "polite");
-        
-        tooltip.show();
-        editor._signal("showGutterTooltip", tooltip);
         editor.on("mousewheel", hideTooltip);
 
         if (mouseHandler.$tooltipFollowsMouse) {
             moveTooltip(mouseEvent);
         } else {
-            var gutterElement = mouseEvent.domEvent.target;
+            var gutterElement = gutter.$lines.cells[row].element.querySelector("[class*=ace_icon]");
             var rect = gutterElement.getBoundingClientRect();
             var style = tooltip.getElement().style;
             style.left = rect.right + "px";
@@ -105,9 +64,8 @@ function GutterHandler(mouseHandler) {
     function hideTooltip() {
         if (tooltipTimeout)
             tooltipTimeout = clearTimeout(tooltipTimeout);
-        if (tooltipAnnotation) {
+        if (tooltip.isOpen) {
             tooltip.hide();
-            tooltipAnnotation = null;
             editor._signal("hideGutterTooltip", tooltip);
             editor.off("mousewheel", hideTooltip);
         }
@@ -122,7 +80,7 @@ function GutterHandler(mouseHandler) {
         if (dom.hasCssClass(target, "ace_fold-widget"))
             return hideTooltip();
 
-        if (tooltipAnnotation && mouseHandler.$tooltipFollowsMouse)
+        if (tooltip.isOpen && mouseHandler.$tooltipFollowsMouse)
             moveTooltip(e);
 
         mouseEvent = e;
@@ -139,7 +97,7 @@ function GutterHandler(mouseHandler) {
 
     event.addListener(editor.renderer.$gutter, "mouseout", function(e) {
         mouseEvent = null;
-        if (!tooltipAnnotation || tooltipTimeout)
+        if (!tooltip.isOpen || tooltipTimeout)
             return;
 
         tooltipTimeout = setTimeout(function() {
@@ -151,7 +109,14 @@ function GutterHandler(mouseHandler) {
     editor.on("changeSession", hideTooltip);
 }
 
+exports.GutterHandler = GutterHandler;
+
 class GutterTooltip extends Tooltip {
+    constructor(editor) {
+        super(editor.container);
+        this.editor = editor;
+    }
+
     setPosition(x, y) {
         var windowWidth = window.innerWidth || document.documentElement.clientWidth;
         var windowHeight = window.innerHeight || document.documentElement.clientHeight;
@@ -167,7 +132,94 @@ class GutterTooltip extends Tooltip {
         }
         Tooltip.prototype.setPosition.call(this, x, y);
     }
+    
+    static get annotationLabels() { return {
+            error: {singular: "error", plural: "errors"}, 
+            warning: {singular: "warning", plural: "warnings"},
+            info: {singular: "information message", plural: "information messages"}
+        };
+    }
 
+    showTooltip(row) {
+        var gutter = this.editor.renderer.$gutterLayer;
+        var annotationsInRow = gutter.$annotations[row];
+        var annotation;
+
+        if (annotationsInRow)
+            annotation = {text: Array.from(annotationsInRow.text), type: Array.from(annotationsInRow.type)};
+        else
+            annotation = {text: [], type: []};
+
+        // If the tooltip is for a row which has a closed fold, check whether there are
+        // annotations in the folded lines. If so, add a summary to the list of annotations.
+        var fold = gutter.session.getFoldLine(row);
+        if (fold && gutter.$showFoldedAnnotations){
+            var annotationsInFold = {error: [], warning: [], info: []};
+            var mostSevereAnnotationInFoldType;
+
+            for (var i = row + 1; i <= fold.end.row; i++){
+                if (!gutter.$annotations[i])
+                    continue;
+
+                for (var j = 0; j < gutter.$annotations[i].text.length; j++) {
+                    var annotationType = gutter.$annotations[i].type[j];
+                    annotationsInFold[annotationType].push(gutter.$annotations[i].text[j]);
+
+                    if (annotationType === "error"){
+                        mostSevereAnnotationInFoldType = "error_fold";
+                        continue;
+                    }
+
+                    if (annotationType === "warning"){
+                        mostSevereAnnotationInFoldType = "warning_fold";
+                        continue;
+                    }
+                }
+            }
+           
+            if (mostSevereAnnotationInFoldType === "error_fold" || mostSevereAnnotationInFoldType === "warning_fold"){
+                var summaryFoldedAnnotations = `${GutterTooltip.annotationsToSummaryString(annotationsInFold)} in folded code.`;
+
+                annotation.text.push(summaryFoldedAnnotations);
+                annotation.type.push(mostSevereAnnotationInFoldType);
+            }
+        }
+        
+        if (annotation.text.length === 0)
+            return this.hide();
+
+        var annotationMessages = {error: [], warning: [], info: []};
+        var iconClassName = gutter.$useSvgGutterIcons ? "ace_icon_svg" : "ace_icon";
+
+        // Construct the contents of the tooltip.
+        for (var i = 0; i < annotation.text.length; i++) {
+            var line = `<span class='ace_${annotation.type[i]} ${iconClassName}' aria-label='${GutterTooltip.annotationLabels[annotation.type[i].replace("_fold","")].singular}' role=img> </span> ${annotation.text[i]}`;
+            annotationMessages[annotation.type[i].replace("_fold","")].push(line);
+        }
+        var tooltipContent = [].concat(annotationMessages.error, annotationMessages.warning, annotationMessages.info).join("<br>");
+ 
+        this.setHtml(tooltipContent);
+        this.setClassName("ace_gutter-tooltip");
+        this.$element.setAttribute("aria-live", "polite");
+        
+        if (!this.isOpen) {
+            this.setTheme(this.editor.renderer.theme);
+        }
+
+        this.editor._signal("showGutterTooltip", this);
+        this.show();
+    }
+
+    static annotationsToSummaryString(annotations) {
+        const summary = [];
+        const annotationTypes = ['error', 'warning', 'info'];
+        for (const annotationType of annotationTypes) {
+            if (!annotations[annotationType].length) continue;
+            const label = annotations[annotationType].length === 1 ? GutterTooltip.annotationLabels[annotationType].singular : GutterTooltip.annotationLabels[annotationType].plural;
+            summary.push(`${annotations[annotationType].length} ${label}`);
+        }
+        return summary.join(", ");
+    }
 }
 
-exports.GutterHandler = GutterHandler;
+exports.GutterTooltip = GutterTooltip;
