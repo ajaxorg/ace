@@ -187,7 +187,7 @@ class HoverTooltip extends Tooltip {
         el.tabIndex = -1;
         
         el.addEventListener("blur", function() {
-            if (document.activeElement != el && !el.contains(document.activeElement)) this.hide();
+            if (!el.contains(document.activeElement)) this.hide();
         }.bind(this));
     }
     
