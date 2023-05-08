@@ -64,19 +64,13 @@ var TextInput = function(parentNode, host) {
         }     
     };
     this.setAriaLabel = function() {
-        if(host.renderer.$isSingleLineEditor){
-            text.removeAttribute("aria-roledescription");
-            text.removeAttribute("aria-label");
-        } else {
-            var row;
-            if (!host.session)
-                row = 0;
-            else
-                row = host.session.selection.cursor.row;
+        if (!host.session)
+            row = 0;
+        else
+            row = host.session.selection.cursor.row;
 
-            text.setAttribute("aria-roledescription", "editor");
-            text.setAttribute("aria-label", `Cursor at row ${row + 1}`);
-        }
+        text.setAttribute("aria-roledescription", "editor");
+        text.setAttribute("aria-label", `Cursor at row ${row + 1}`);
     };
 
     this.setAriaOptions({role: "textbox"});

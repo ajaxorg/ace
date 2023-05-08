@@ -32,7 +32,7 @@ class VirtualRenderer {
      * @param {Element} container The root element of the editor
      * @param {String} [theme] The starting theme
      **/
-    constructor(container, theme, options={}) {
+    constructor(container, theme) {
         var _self = this;
 
         this.container = container || dom.createElement("div");
@@ -64,11 +64,6 @@ class VirtualRenderer {
         this.$markerBack = new MarkerLayer(this.content);
 
         var textLayer = this.$textLayer = new TextLayer(this.content);
-
-        if (options.isSingleLineEditor){
-            this.$isSingleLineEditor = true;
-            this.$textLayer.element.setAttribute("aria-hidden", true);
-        }
 
         this.canvas = textLayer.element;
 

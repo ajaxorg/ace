@@ -12,7 +12,7 @@ var getAriaId = function(index) {
 };
 
 var $singleLineEditor = function(el) {
-    var renderer = new Renderer(el, undefined, {isSingleLineEditor: true});
+    var renderer = new Renderer(el);
 
     renderer.$maxLines = 4;
 

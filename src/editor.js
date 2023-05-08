@@ -77,6 +77,9 @@ class Editor {
         config.resetOptions(this);
         if (options)
             this.setOptions(options);
+
+        this.renderer.$textLayer.element.setAttribute("aria-hidden", true);
+
         config._signal("editor", this);
     }
 
