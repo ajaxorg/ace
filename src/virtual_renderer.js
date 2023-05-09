@@ -62,16 +62,13 @@ class VirtualRenderer {
         this.$gutterLayer.on("changeGutterWidth", this.onGutterResize.bind(this));
 
         this.$markerBack = new MarkerLayer(this.content);
-        this.$markerBack.element.setAttribute("aria-hidden", true);
 
         var textLayer = this.$textLayer = new TextLayer(this.content);
         this.canvas = textLayer.element;
 
         this.$markerFront = new MarkerLayer(this.content);
-        this.$markerFront.element.setAttribute("aria-hidden", true);
 
         this.$cursorLayer = new CursorLayer(this.content);
-        this.$cursorLayer.element.setAttribute("aria-hidden", true);
 
         // Indicates whether the horizontal scrollbar is visible
         this.$horizScroll = false;
@@ -554,7 +551,6 @@ class VirtualRenderer {
         if (!this.$printMarginEl) {
             var containerEl = dom.createElement("div");
             containerEl.className = "ace_layer ace_print-margin-layer";
-            containerEl.setAttribute("aria-hidden", "true");
             this.$printMarginEl = dom.createElement("div");
             this.$printMarginEl.className = "ace_print-margin";
             containerEl.appendChild(this.$printMarginEl);
@@ -852,6 +848,8 @@ class VirtualRenderer {
         if (changes & this.CHANGE_H_SCROLL) {
             dom.translate(this.content, -this.scrollLeft, -config.offset);
             this.scroller.className = this.scrollLeft <= 0 ? "ace_scroller" : "ace_scroller ace_scroll-left";
+            if (this.enableKeyboardAccessibility)
+                this.scroller.className += " " + this.keyboardFocusClassName;
         }
 
         // full

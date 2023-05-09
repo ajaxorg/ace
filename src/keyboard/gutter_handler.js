@@ -277,7 +277,7 @@ class GutterKeyboardHandler {
 
         var foldWidget = this.$getFoldWidget(index);
 
-        foldWidget.classList.add(this.editor.keyboardFocusClassName);
+        foldWidget.classList.add(this.editor.renderer.keyboardFocusClassName);
         foldWidget.focus();
     }
 
@@ -287,7 +287,7 @@ class GutterKeyboardHandler {
 
         var annotation = this.$getAnnotation(index);
 
-        annotation.classList.add(this.editor.keyboardFocusClassName);
+        annotation.classList.add(this.editor.renderer.keyboardFocusClassName);
         annotation.setAttribute("role", "button");
         annotation.focus();
     }
@@ -295,14 +295,14 @@ class GutterKeyboardHandler {
     $blurFoldWidget(index) {
         var foldWidget = this.$getFoldWidget(index);
 
-        foldWidget.classList.remove(this.editor.keyboardFocusClassName);
+        foldWidget.classList.remove(this.editor.renderer.keyboardFocusClassName);
         foldWidget.blur();
     }
 
     $blurAnnotation(index) {
         var annotation = this.$getAnnotation(index);
 
-        annotation.classList.remove(this.editor.keyboardFocusClassName);
+        annotation.classList.remove(this.editor.renderer.keyboardFocusClassName);
         annotation.removeAttribute("role");
         annotation.blur();
     }
