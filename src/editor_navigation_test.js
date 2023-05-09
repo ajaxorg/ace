@@ -169,12 +169,12 @@ module.exports = {
 
         // Focus should be on textInput
         assert.equal(document.activeElement, editor.textInput.getElement());
-        assert.notEqual(document.activeElement, editor.renderer.content);
+        assert.notEqual(document.activeElement, editor.renderer.scroller);
 
         editor.onCommandKey({}, 0, keys["escape"]);
  
         // Focus should be on the content div after pressing Esc
-        assert.equal(document.activeElement, editor.renderer.content);
+        assert.equal(document.activeElement, editor.renderer.scroller);
         assert.notEqual(document.activeElement, editor.textInput.getElement());
 
         // Should trap focus
@@ -185,13 +185,13 @@ module.exports = {
 
         // Focus should be on textInput
         assert.equal(document.activeElement, editor.textInput.getElement());
-        assert.notEqual(document.activeElement, editor.renderer.content);
+        assert.notEqual(document.activeElement, editor.renderer.scroller);
 
         editor.onCommandKey({}, 0, keys["escape"]);
  
         // Focus should still be on the textInput
         assert.equal(document.activeElement, editor.textInput.getElement());
-        assert.notEqual(document.activeElement, editor.renderer.content);
+        assert.notEqual(document.activeElement, editor.renderer.scroller);
     }
 };
 
