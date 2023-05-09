@@ -32,6 +32,7 @@
         "styles",
         "ace.d.ts",
         "esm-resolver.js",
+        "translations",
         "!**/*_test.js",
         "!_test"
     ],

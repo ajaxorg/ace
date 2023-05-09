@@ -22,9 +22,9 @@
 
 "use strict";
 
+var nls = require("../config").nls;
 var Range = require("../range").Range;
 var dom = require("../lib/dom");
-var shortcuts = require("../ext/menu_tools/get_editor_keyboard_shortcuts");
 var FilteredList= require("../autocomplete").FilteredList;
 var AcePopup = require('../autocomplete/popup').AcePopup;
 var $singleLineEditor = require('../autocomplete/popup').$singleLineEditor;
@@ -276,7 +276,6 @@ prompt.gotoLine = function(editor, callback) {
             editor.renderer.animateScrolling(scrollTop);
         },
         history: function() {
-            var undoManager = editor.session.getUndoManager();
             if (!prompt.gotoLine._history)
                 return [];
             return prompt.gotoLine._history;
@@ -419,13 +418,13 @@ prompt.commands = function(editor, callback) {
             otherCommands = getFilteredCompletions(otherCommands, prefix);
 
             if (recentlyUsedCommands.length && otherCommands.length) {
-                recentlyUsedCommands[0]["message"] = " Recently used";
-                otherCommands[0]["message"] = " Other commands";
+                recentlyUsedCommands[0].message = nls("Recently used");
+                otherCommands[0].message = nls("Other commands");
             }
 
             var completions = recentlyUsedCommands.concat(otherCommands);
             return completions.length > 0 ? completions : [{
-                value: "No matching commands",
+                value: nls("No matching commands"),
                 error: 1
             }];
         }

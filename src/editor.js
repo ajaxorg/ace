@@ -18,6 +18,7 @@ var config = require("./config");
 var TokenIterator = require("./token_iterator").TokenIterator;
 var LineWidgets = require("./line_widgets").LineWidgets;
 var GutterKeyboardHandler = require("./keyboard/gutter_handler").GutterKeyboardHandler;
+var nls = require("./config").nls;
 
 var clipboard = require("./clipboard");
 var keys = require('./lib/keys');
@@ -2895,10 +2896,10 @@ config.defineOptions(Editor.prototype, "editor", {
                 this.textInput.getElement().setAttribute("tabindex", -1);
                 this.renderer.content.setAttribute("tabindex", 0);
                 this.renderer.content.setAttribute("role", "group");
-                this.renderer.content.setAttribute("aria-roledescription", "editor");
+                this.renderer.content.setAttribute("aria-roledescription", nls("editor"));
                 this.renderer.content.classList.add(this.keyboardFocusClassName);
                 this.renderer.content.setAttribute("aria-label",
-                    "Editor content, press Enter to start editing, press Escape to exit"
+                    nls("Editor content, press Enter to start editing, press Escape to exit")
                 );
 
                 this.renderer.content.addEventListener("keyup", focusOnEnterKeyup.bind(this));
@@ -2907,9 +2908,9 @@ config.defineOptions(Editor.prototype, "editor", {
                 this.renderer.$gutter.setAttribute("tabindex", 0);
                 this.renderer.$gutter.setAttribute("aria-hidden", false);
                 this.renderer.$gutter.setAttribute("role", "group");
-                this.renderer.$gutter.setAttribute("aria-roledescription", "editor");
+                this.renderer.$gutter.setAttribute("aria-roledescription", nls("editor"));
                 this.renderer.$gutter.setAttribute("aria-label",
-                    "Editor gutter, press Enter to interact with controls using arrow keys, press Escape to exit"
+                    nls("Editor gutter, press Enter to interact with controls using arrow keys, press Escape to exit")
                 );
                 this.renderer.$gutter.classList.add(this.keyboardFocusClassName);
 

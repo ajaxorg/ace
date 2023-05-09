@@ -2,6 +2,7 @@
 var LineWidgets = require("../line_widgets").LineWidgets;
 var dom = require("../lib/dom");
 var Range = require("../range").Range;
+var nls = require("../config").nls;
 
 function binarySearch(array, needle, comparator) {
     var first = 0;
@@ -88,7 +89,7 @@ exports.showErrorMarker = function(editor, dir) {
         return;
     } else {
         gutterAnno = {
-            text: ["Looks good!"],
+            text: [nls("Looks good!")],
             className: "ace_ok"
         };
     }

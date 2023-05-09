@@ -5,6 +5,7 @@ var oop = require("../lib/oop");
 var lang = require("../lib/lang");
 var EventEmitter = require("../lib/event_emitter").EventEmitter;
 var Lines = require("./lines").Lines;
+var nls = require("../config").nls;
 
 class Gutter{
     constructor(parentEl) {
@@ -363,13 +364,13 @@ class Gutter{
             foldWidget.setAttribute("tabindex", "-1");
             var fold = session.getFoldLine(rowText - 1);
             if (fold) {
-                foldWidget.setAttribute("aria-label", `Unfold rows ${rowText} to ${fold.end.row + 1}`);
-                foldWidget.setAttribute("title", "Unfold code");
+                foldWidget.setAttribute("aria-label", nls("Unfold rows $0 to $1", [rowText, fold.end.row + 1]));
+                foldWidget.setAttribute("title", nls("Unfold code"));
             }
             else {
-                foldWidget.setAttribute("aria-label", `Fold at row ${rowText}`);  
-                foldWidget.setAttribute("title", "Fold code");  
-            }          
+                foldWidget.setAttribute("aria-label", nls("Fold at row $0", [rowText]));
+                foldWidget.setAttribute("title", nls("Fold code"));
+            }
         } else {
             if (foldWidget) {
                 dom.setStyle(foldWidget.style, "display", "none");
@@ -387,7 +388,7 @@ class Gutter{
             dom.setStyle(annotationIconNode.style, "height", lineHeight);
             dom.setStyle(annotationNode.style, "display", "block");
             dom.setStyle(annotationNode.style, "height", lineHeight);
-            annotationNode.setAttribute("aria-label", `Read annotations row ${rowText}`);
+            annotationNode.setAttribute("aria-label", nls("Read annotations row $0", [rowText]));
             annotationNode.setAttribute("tabindex", "-1");
         }
         else if (this.$annotations[row]){
@@ -402,7 +403,7 @@ class Gutter{
             dom.setStyle(annotationIconNode.style, "height", lineHeight);
             dom.setStyle(annotationNode.style, "display", "block");
             dom.setStyle(annotationNode.style, "height", lineHeight);
-            annotationNode.setAttribute("aria-label", `Read annotations row ${rowText}`);
+            annotationNode.setAttribute("aria-label", nls("Read annotations row $0", [rowText]));
             annotationNode.setAttribute("tabindex", "-1");
         }
         else {
