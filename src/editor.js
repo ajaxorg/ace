@@ -2838,13 +2838,14 @@ config.defineOptions(Editor.prototype, "editor", {
         set: function(message) {
             if (!this.$updatePlaceholder) {
                 this.$updatePlaceholder = function() {
-                    var value = this.session && (this.renderer.$composition || this.getValue());
-                    if (value && this.renderer.placeholderNode) {
+                    var hasValue = this.session && (this.renderer.$composition ||
+                         this.session.getLength() > 1 || this.session.getLine(0).length > 0);
+                    if (hasValue && this.renderer.placeholderNode) {
                         this.renderer.off("afterRender", this.$updatePlaceholder);
                         dom.removeCssClass(this.container, "ace_hasPlaceholder");
                         this.renderer.placeholderNode.remove();
                         this.renderer.placeholderNode = null;
-                    } else if (!value && !this.renderer.placeholderNode) {
+                    } else if (!hasValue && !this.renderer.placeholderNode) {
                         this.renderer.on("afterRender", this.$updatePlaceholder);
                         dom.addCssClass(this.container, "ace_hasPlaceholder");
                         var el = dom.createElement("div");
@@ -2852,7 +2853,7 @@ config.defineOptions(Editor.prototype, "editor", {
                         el.textContent = this.$placeholder || "";
                         this.renderer.placeholderNode = el;
                         this.renderer.content.appendChild(this.renderer.placeholderNode);
-                    } else if (!value && this.renderer.placeholderNode) {
+                    } else if (!hasValue && this.renderer.placeholderNode) {
                         this.renderer.placeholderNode.textContent = this.$placeholder || "";
                     }
                 }.bind(this);
