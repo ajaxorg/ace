@@ -2892,7 +2892,6 @@ config.defineOptions(Editor.prototype, "editor", {
             // press Enter key to give focus to Ace and press Esc to again allow to tab through the page.
             if (value){
                 this.renderer.enableKeyboardAccessibility = true;
-
                 this.renderer.keyboardFocusClassName = "ace_keyboard-focus";
 
                 this.textInput.getElement().setAttribute("tabindex", -1);
@@ -2923,7 +2922,7 @@ config.defineOptions(Editor.prototype, "editor", {
 
                 gutterKeyboardHandler.addListener();
             } else {
-                this.renderer.enableKeyboardAccessibility = true;
+                this.renderer.enableKeyboardAccessibility = false;
 
                 this.textInput.getElement().setAttribute("tabindex", 0);
                 this.renderer.scroller.setAttribute("tabindex", -1);
