@@ -79,9 +79,7 @@ class VirtualRenderer {
 
         this.scrollBar =
             this.scrollBarV = new VScrollBar(this.container, this);
-        this.scrollBarV.element.setAttribute("aria-hidden", true);
         this.scrollBarH = new HScrollBar(this.container, this);
-        this.scrollBarH.element.setAttribute("aria-hidden", true);
         this.scrollBarV.on("scroll", function(e) {
             if (!_self.$scrollAnimation)
                 _self.session.setScrollTop(e.data - _self.scrollMargin.top);
@@ -1818,8 +1816,6 @@ class VirtualRenderer {
                 if (!_self.$scrollAnimation) _self.session.setScrollLeft(e.data - _self.scrollMargin.left);
             });
         }
-        this.scrollBarV.element.setAttribute("aria-hidden", true);
-        this.scrollBarH.element.setAttribute("aria-hidden", true);
     }
 
     $addResizeObserver() {
