@@ -1,6 +1,7 @@
 "use strict";
 
 var event = require("../lib/event");
+var nls = require("../config").nls;
 var useragent = require("../lib/useragent");
 var dom = require("../lib/dom");
 var lang = require("../lib/lang");
@@ -70,8 +71,8 @@ var TextInput = function(parentNode, host) {
         else
             row = host.session.selection.cursor.row;
 
-        text.setAttribute("aria-roledescription", "editor");
-        text.setAttribute("aria-label", `Cursor at row ${row + 1}`);
+        text.setAttribute("aria-roledescription", nls("editor"));
+        text.setAttribute("aria-label", nls("Cursor at row $0", [row + 1]));
     };
 
     this.setAriaOptions({role: "textbox"});

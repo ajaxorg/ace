@@ -64,6 +64,8 @@ function reportError(msg, data) {
     setTimeout(function() { throw e; });
 }
 
+var messages;
+
 class AppConfig {
     constructor() {
         this.$defaultOptions = {};
@@ -124,6 +126,20 @@ class AppConfig {
         }, this);
     }
     
+    setMessages(value) {
+        messages = value;
+    }
+    
+    nls(string, params) {
+        var translated = messages && messages[string] || string;
+        if (params) {
+            translated = translated.replace(/\$(\$|[\d]+)/g, function(_, name) {
+                if (name == "$") return "$";
+                return params[name];
+            });
+        }
+        return translated;
+    }
 }
 AppConfig.prototype.warn = warn;
 AppConfig.prototype.reportError = reportError;
