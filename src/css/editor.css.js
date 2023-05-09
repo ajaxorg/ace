@@ -120,13 +120,13 @@ module.exports = `
     background-repeat: no-repeat;
 }
 
-.ace_gutter-cell_svg-icons .ace_icon_svg {
+.ace_gutter-cell_svg-icons .ace_gutter_annotation {
     margin-left: -14px;
     float: left;
 }
 
-.ace_gutter-cell .ace_icon {
-    margin-left: -18px;
+.ace_gutter-cell .ace_gutter_annotation {
+    margin-left: -19px;
     float: left;
 }
 

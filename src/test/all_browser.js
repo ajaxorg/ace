@@ -40,6 +40,7 @@ var testNames = [
     "ace/keyboard/vim_test",
     "ace/keyboard/vim_ace_test",
     "ace/keyboard/sublime_test",
+    "ace/keyboard/gutter_handler_test",
     "ace/layer/text_test",
     "ace/lib/event_emitter_test",
     "ace/mode/coffee/parser_test",

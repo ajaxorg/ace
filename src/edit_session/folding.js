@@ -4,6 +4,7 @@ var Range = require("../range").Range;
 var FoldLine = require("./fold_line").FoldLine;
 var Fold = require("./fold").Fold;
 var TokenIterator = require("../token_iterator").TokenIterator;
+var MouseEvent = require("../mouse/mouse_event").MouseEvent;
 
 function Folding() {
     /*
@@ -755,7 +756,9 @@ function Folding() {
     };
 
     this.onFoldWidgetClick = function(row, e) {
-        e = e.domEvent;
+        if (e instanceof MouseEvent)
+            e = e.domEvent;
+
         var options = {
             children: e.shiftKey,
             all: e.ctrlKey || e.metaKey,
