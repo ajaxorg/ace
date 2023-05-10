@@ -375,11 +375,15 @@ function Node(name) {
 
             if (this.style.width)
                 width = parseCssLength(this.style.width || "100%", rect.width);
+            else if (this.style.widthHint)
+                width = this.style.widthHint;
             else
                 width = rect.width - right - left;
             
             if (this.style.height)
                 height = parseCssLength(this.style.height || "100%", rect.height);
+            else if (this.style.heightHint)
+                height = this.style.heightHint;
             else
                 height = rect.height - top - bottom;
             

@@ -1101,17 +1101,20 @@ export const Range: {
 
 type InlineAutocompleteAction = "prev" | "next" | "first" | "last";
 
-type TooltipCommandEnabledFunction = (editor: Ace.Editor) => boolean;
+type TooltipCommandFunction<T> = (editor: Ace.Editor) => T;
 
 interface TooltipCommand extends Ace.Command {
-  enabled: TooltipCommandEnabledFunction | boolean,
-  position?: number;
+  enabled: TooltipCommandFunction<boolean> | boolean,
+  getValue?: TooltipCommandFunction<any>,
+  type: "button" | "text" | "checkbox"
+  iconCssClass: string,
+  cssClass: string
 }
 
 export class InlineAutocomplete {
   constructor();
   getInlineRenderer(): Ace.AceInline;
-  getInlineTooltip(): InlineTooltip;
+  getInlineTooltip(): CommandBarTooltip;
   getCompletionProvider(): Ace.CompletionProvider;
   show(editor: Ace.Editor): void;
   isOpen(): boolean;
@@ -1119,7 +1122,7 @@ export class InlineAutocomplete {
   destroy(): void;
   goTo(action: InlineAutocompleteAction): void;
   tooltipEnabled: boolean;
-  commands: Record<string, TooltipCommand>
+  commands: Record<string, Ace.Command>
   getIndex(): number;
   setIndex(value: number): void;
   getLength(): number;
@@ -1127,13 +1130,15 @@ export class InlineAutocomplete {
   updateCompletions(options: Ace.CompletionOptions): void;
 }
 
-export class InlineTooltip {
+export class CommandBarTooltip {
   constructor(parentElement: HTMLElement);
-  setCommands(commands: Record<string, TooltipCommand>): void;
-  show(editor: Ace.Editor): void;
+  registerCommand(id: string, command: TooltipCommand): void;
+  attach(editor: Ace.Editor): void;
   updatePosition(): void;
-  updateButtons(force?: boolean): void;
+  update(): void;
   isShown(): boolean;
+  getAlwaysShow(): boolean;
+  setAlwaysShow(alwaysShow: boolean): void;
   detach(): void;
   destroy(): void;
 }
