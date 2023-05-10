@@ -65,13 +65,9 @@ var TextInput = function(parentNode, host) {
         }     
     };
     this.setAriaLabel = function() {
-        if(host.renderer.enableKeyboardAccessibility)
+        if(host.session && host.renderer.enableKeyboardAccessibility)
         {
-            var row;
-            if (!host.session)
-                row = 0;
-            else
-                row = host.session.selection.cursor.row;
+            var row =  host.session.selection.cursor.row;
 
             text.setAttribute("aria-roledescription", nls("editor"));
             text.setAttribute("aria-label", nls("Cursor at row $0", [row + 1]));

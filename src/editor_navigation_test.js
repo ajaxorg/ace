@@ -202,7 +202,7 @@ module.exports = {
         assert.notEqual(document.activeElement, editor.renderer.scroller);
     },
 
-    "test: should allow to focus on textInput using keyboard in trapping mode": function() {
+    "test: should allow to focus on textInput using keyboard in non-trapping mode": function() {
         var editor = new Editor(new VirtualRenderer(), new EditSession(["1234", "1234567890"]));
 
         // Set to not trap focus mode
