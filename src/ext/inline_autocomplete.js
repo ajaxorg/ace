@@ -6,9 +6,11 @@ var FilteredList = require("../autocomplete").FilteredList;
 var CompletionProvider = require("../autocomplete").CompletionProvider;
 var Editor = require("../editor").Editor;
 var util = require("../autocomplete/util");
-var lang = require("../lib/lang");
 var dom = require("../lib/dom");
-var useragent = require("../lib/useragent");
+var lang = require("../lib/lang");
+var CommandBarTooltip = require("./command_bar").CommandBarTooltip;
+var BUTTON_CLASS_NAME = require("./command_bar").BUTTON_CLASS_NAME;
+
 var snippetCompleter = require("./language_tools").snippetCompleter;
 var textCompleter = require("./language_tools").textCompleter;
 var keyWordCompleter = require("./language_tools").keyWordCompleter;
@@ -16,16 +18,6 @@ var keyWordCompleter = require("./language_tools").keyWordCompleter;
 var destroyCompleter = function(e, editor) {
     editor.completer && editor.completer.destroy();
 };
-
-var minPosition = function (posA, posB) {
-    if (posB.row > posA.row) {
-        return posA;
-    } else if (posB.row === posA.row && posB.column > posA.column) {
-        return posA;
-    }
-    return posB;
-};
-
 
 /**
  * This class controls the inline-only autocompletion components and their lifecycle.
@@ -35,13 +27,12 @@ var minPosition = function (posA, posB) {
 class InlineAutocomplete {
     constructor(editor) {
         this.editor = editor;
-        this.tooltipEnabled = true;
         this.keyboardHandler = new HashHandler(this.commands);
         this.$index = -1;
 
         this.blurListener = this.blurListener.bind(this);
         this.changeListener = this.changeListener.bind(this);
-        this.mousewheelListener = this.mousewheelListener.bind(this);
+
 
         this.changeTimer = lang.delayedCall(function() {
             this.updateCompletions();
@@ -56,8 +47,7 @@ class InlineAutocomplete {
 
     getInlineTooltip() {
         if (!this.inlineTooltip) {
-            this.inlineTooltip = new InlineTooltip(this.editor, document.body || document.documentElement);
-            this.inlineTooltip.setCommands(this.commands);
+            this.inlineTooltip = InlineAutocomplete.createInlineTooltip(document.body || document.documentElement);
         }
         return this.inlineTooltip;
     }
@@ -78,7 +68,6 @@ class InlineAutocomplete {
 
         this.editor.on("changeSelection", this.changeListener);
         this.editor.on("blur", this.blurListener);
-        this.editor.on("mousewheel", this.mousewheelListener);
 
         this.updateCompletions(options);
     }
@@ -88,12 +77,8 @@ class InlineAutocomplete {
             this.editor.textInput.setAriaOptions({});
         }
 
-        if (this.tooltipEnabled) {
-            this.getInlineTooltip().show(this.editor);
-        } else if (this.tooltipEnabled === "hover") {
-        }
-
         this.editor.keyBinding.addKeyboardHandler(this.keyboardHandler);
+        this.getInlineTooltip().attach(this.editor);
 
         if (this.$index === -1) {
             this.setIndex(0);
@@ -125,22 +110,17 @@ class InlineAutocomplete {
         this.detach();
     }
 
-    mousewheelListener(e) {
-        if (this.inlineTooltip && this.inlineTooltip.isShown()) {
-            this.inlineTooltip.updatePosition();
-        }
-    }
-
     goTo(where) {
         if (!this.completions || !this.completions.filtered) {
             return;
         }
+        var completionLength = this.completions.filtered.length;
         switch(where.toLowerCase()) {
             case "prev":
-                this.setIndex(Math.max(0, this.$index - 1));
+                this.setIndex((this.$index - 1 + completionLength) % completionLength);
                 break;
             case "next":
-                this.setIndex(this.$index + 1);
+                this.setIndex((this.$index + 1 + completionLength) % completionLength);
                 break;
             case "first":
                 this.setIndex(0);
@@ -197,7 +177,7 @@ class InlineAutocomplete {
             this.getInlineRenderer().hide();
         }
         if (this.inlineTooltip && this.inlineTooltip.isShown()) {
-            this.inlineTooltip.updateButtons();
+            this.inlineTooltip.update();
         }
     }
 
@@ -262,7 +242,6 @@ class InlineAutocomplete {
             this.editor.keyBinding.removeKeyboardHandler(this.keyboardHandler);
             this.editor.off("changeSelection", this.changeListener);
             this.editor.off("blur", this.blurListener);
-            this.editor.off("mousewheel", this.mousewheelListener);
         }
         this.changeTimer.cancel();
         if (this.inlineTooltip) {
@@ -306,42 +285,28 @@ InlineAutocomplete.prototype.commands = {
         name: "Previous",
         exec: function(editor) {
             editor.completer.goTo("prev");
-        },
-        enabled: function(editor) {
-            return editor.completer.getIndex() > 0;
-        },
-        position: 10
+        }
     },
     "Next": {
         bindKey: "Alt-]",
         name: "Next",
         exec: function(editor) {
             editor.completer.goTo("next");
-        },
-        enabled: function(editor) {
-            return editor.completer.getIndex() < editor.completer.getLength() - 1;
-        },
-        position: 20
+        }
     },
     "Accept": {
         bindKey: { win: "Tab|Ctrl-Right", mac: "Tab|Cmd-Right" },
         name: "Accept",
         exec: function(editor) {
             return editor.completer.insertMatch();
-        },
-        enabled: function(editor) {
-            return editor.completer.getIndex() >= 0;
-        },
-        position: 30
+        }
     },
     "Close": {
         bindKey: "Esc",
         name: "Close",
         exec: function(editor) {
             editor.completer.detach();
-        },
-        enabled: true,
-        position: 40
+        }
     }
 };
 
@@ -386,218 +351,72 @@ require("../config").defineOptions(Editor.prototype, "editor", {
     }
 });
 
-
-var ENTRY_CLASS_NAME = 'inline_autocomplete_tooltip_entry';
-var BUTTON_CLASS_NAME = 'inline_autocomplete_tooltip_button';
-var TOOLTIP_CLASS_NAME = 'ace_tooltip ace_inline_autocomplete_tooltip';
-var TOOLTIP_ID = 'inline_autocomplete_tooltip';
-
 /**
- * Displays a command tooltip above the selection, with clickable elements.
+ * Factory method to create a command bar tooltip for inline autocomplete.
+ * 
+ * @param {HTMLElement} parentEl  The parent element where the tooltip HTML elements will be added.
+ * @returns {CommandBarTooltip}   The command bar tooltip for inline autocomplete
  */
-class InlineTooltip {
-    /**
-     * Creates the inline command tooltip helper which displays the available keyboard commands for the user.
-     * @param {Editor} editor
-     * @param {HTMLElement} parentElement
-     */
-    constructor(editor, parentElement) {
-        this.editor = editor;
-        this.htmlElement = document.createElement('div');
-        var el = this.htmlElement;
-        el.style.display = 'none';
-        if (parentElement) {
-            parentElement.appendChild(el);
-        }
-        el.id = TOOLTIP_ID;
-        el.style['pointer-events'] = 'auto';
-        el.className = TOOLTIP_CLASS_NAME;
-        this.commands = {};
-        this.buttons = {};
-        this.eventListeners = {};
-    }
-
-    /**
-     * This function sets the commands. Note that it is advised to call this before calling show, otherwise there are no buttons to render
-     * @param {Record<string, TooltipCommand>} commands
-     */
-    setCommands(commands) {
-        if (!commands || !this.htmlElement) {
-            return;
-        }
-        this.detach();
-        var el = this.htmlElement;
-        while (el.hasChildNodes()) {
-            el.removeChild(el.firstChild);
-        }
-
-        this.commands = commands;
-        this.buttons = {};
-        this.eventListeners = {};
-    
-        Object.keys(commands)
-            .map(function(key) { return [key, commands[key]]; })
-            .filter(function (entry) { return entry[1].position > 0; })
-            .sort(function (a, b) { return a[1].position - b[1].position; })
-            .forEach(function (entry) {
-                var key = entry[0];
-                var command = entry[1];
-                dom.buildDom(["div", { class: ENTRY_CLASS_NAME }, [['div', { class: BUTTON_CLASS_NAME, ref: key }, this.buttons]]], el, this.buttons);
-                var bindKey = command.bindKey;
-                if (typeof bindKey === 'object') {
-                    bindKey = useragent.isMac ? bindKey.mac : bindKey.win;
-                }
-                bindKey = bindKey.replace("|", " / ");
-                var buttonText = dom.createTextNode([command.name, "(", bindKey, ")"].join(" "));
-                this.buttons[key].appendChild(buttonText);
-            }.bind(this));
-    }
-
-    /**
-     * Displays the clickable command bar tooltip
-     */
-    show() {
-        this.detach();
-
-        this.htmlElement.style.display = '';
-        this.htmlElement.addEventListener('mousedown', captureMousedown.bind(this));
-
-        this.updatePosition();
-        this.updateButtons(true);
-    }
-
-    isShown() {
-        return !!this.htmlElement && window.getComputedStyle(this.htmlElement).display !== "none";
-    }
-
-    /**
-     * Updates the position of the command bar tooltip. It aligns itself above the topmost selection in the editor.
-     */
-    updatePosition() {
-        if (!this.editor) {
-            return;
-        }
-        var renderer = this.editor.renderer;
-
-        var ranges;
-        if (this.editor.selection.getAllRanges) {
-            ranges = this.editor.selection.getAllRanges();
-        } else {
-            ranges = [this.editor.getSelection()];
-        }
-        if (!ranges.length) {
-            return;
-        }
-        var minPos = minPosition(ranges[0].start, ranges[0].end);
-        for (var i = 0, range; range = ranges[i]; i++) {
-            minPos = minPosition(minPos, minPosition(range.start, range.end));
-        }
-
-        var pos = renderer.$cursorLayer.getPixelPosition(minPos, true);
-
-        var el = this.htmlElement;
-        var screenWidth = window.innerWidth;
-        var rect = this.editor.container.getBoundingClientRect();
-
-        pos.top += rect.top - renderer.layerConfig.offset;
-        pos.left += rect.left - this.editor.renderer.scrollLeft;
-        pos.left += renderer.gutterWidth;
-
-        var top = pos.top - el.offsetHeight;
-
-        el.style.top = top + "px";
-        el.style.bottom = "";
-        el.style.left = Math.min(screenWidth - el.offsetWidth, pos.left) + "px";
-    }
-
-    /**
-     * Updates the buttons in the command bar tooltip. Should be called every time when any of the buttons can become disabled or enabled.
-     */
-    updateButtons(force) {
-        Object.keys(this.buttons).forEach(function(key) {
-            var commandEnabled = this.commands[key].enabled;
-            if (typeof commandEnabled === 'function') {
-                commandEnabled = commandEnabled(this.editor);
-            }
-
-            if (commandEnabled && (force || !this.eventListeners[key])) {
-                this.buttons[key].className = BUTTON_CLASS_NAME;
-                this.buttons[key].ariaDisabled = this.buttons[key].disabled = false;
-                this.buttons[key].removeAttribute("disabled");
-                var eventListener = function(e) {
-                    this.commands[key].exec(this.editor);
-                    e.preventDefault();
-                }.bind(this);
-                this.eventListeners[key] = eventListener;
-                this.buttons[key].addEventListener('mousedown', eventListener);
-            }
-            if (!commandEnabled && (force || this.eventListeners[key])) {
-                this.buttons[key].className = BUTTON_CLASS_NAME + "_disabled";
-                this.buttons[key].ariaDisabled = this.buttons[key].disabled = true;
-                this.buttons[key].setAttribute("disabled", "");
-                this.buttons[key].removeEventListener('mousedown', this.eventListeners[key]);
-                delete this.eventListeners[key];
-            }
-        }.bind(this));
-    }
-    
-    detach() {
-        var listenerKeys = Object.keys(this.eventListeners);
-        if (this.eventListeners && listenerKeys.length) {
-            listenerKeys.forEach(function(key) {
-                this.buttons[key].removeEventListener('mousedown', this.eventListeners[key]);
-                delete this.eventListeners[key];
-            }.bind(this));
-        }
-        if (this.htmlElement) {
-            this.htmlElement.removeEventListener('mousedown', captureMousedown.bind(this));
-            this.htmlElement.style.display = 'none';
-        }
-    }
-
-    destroy() {
-        this.detach();
-        if (this.htmlElement) {
-            this.htmlElement.parentNode.removeChild(this.htmlElement);
-        }
-        this.editor = null;
-        this.buttons = null;
-        this.htmlElement = null;
-        this.controls = null;
-    }
-}
-
-var captureMousedown = function(e) {
-    e.preventDefault();
+InlineAutocomplete.createInlineTooltip = function(parentEl) {
+    var inlineTooltip = new CommandBarTooltip(parentEl);
+    inlineTooltip.registerCommand("Previous", 
+        Object.assign({}, InlineAutocomplete.prototype.commands["Previous"], {
+            enabled: true,
+            type: "button",
+            iconCssClass: "ace_arrow_rotated"
+        })
+    );
+    inlineTooltip.registerCommand("Position", {
+        enabled: false,
+        getValue: function(editor) {
+            return editor ? [editor.completer.getIndex() + 1, editor.completer.getLength()].join("/") : "";
+        },
+        type: "text",
+        cssClass: "completion_position"
+    });
+    inlineTooltip.registerCommand("Next", 
+        Object.assign({}, InlineAutocomplete.prototype.commands["Next"], {
+            enabled: true,
+            type: "button",
+            iconCssClass: "ace_arrow"
+        })
+    );
+    inlineTooltip.registerCommand("Accept", 
+        Object.assign({}, InlineAutocomplete.prototype.commands["Accept"], {
+            enabled: function(editor) {
+                return !!editor && editor.completer.getIndex() >= 0;
+            },
+            type: "button"
+        })
+    );
+    inlineTooltip.registerCommand("ShowTooltip", {
+        name: "Always Show Tooltip",
+        exec: function() {
+            inlineTooltip.setAlwaysShow(!inlineTooltip.getAlwaysShow());
+        },
+        enabled: true,
+        getValue: function() {
+            return inlineTooltip.getAlwaysShow();
+        },
+        type: "checkbox"
+    });
+    return inlineTooltip;
 };
 
 dom.importCssString(`
-.ace_inline_autocomplete_tooltip {
-    display: inline-block;
-}
-.${ENTRY_CLASS_NAME} {
-    display: inline-block;
-    padding: 0 5px;
+
+.ace_icon_svg.ace_arrow,
+.ace_icon_svg.ace_arrow_rotated {
+    -webkit-mask-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsaXAtcnVsZT0iZXZlbm9kZCIgZD0iTTUuODM3MDEgMTVMNC41ODc1MSAxMy43MTU1TDEwLjE0NjggOEw0LjU4NzUxIDIuMjg0NDZMNS44MzcwMSAxTDEyLjY0NjUgOEw1LjgzNzAxIDE1WiIgZmlsbD0iYmxhY2siLz48L3N2Zz4=");
 }
 
-.${BUTTON_CLASS_NAME} {
-    display: inline-block;
-    cursor: pointer;
-    padding: 5px;
+.ace_icon_svg.ace_arrow_rotated {
+    transform: rotate(180deg);
 }
 
-.${BUTTON_CLASS_NAME}:hover {
-    background-color: rgba(0, 0, 0, 0.1);
+div.${BUTTON_CLASS_NAME}.completion_position {
+    padding: 0;
 }
-
-div.${BUTTON_CLASS_NAME}_disabled {
-    display: inline-block;
-    padding: 5px;
-    cursor: default;
-    color: #777;
-}`, "inlinetooltip.css", false);
+`, "inlineautocomplete.css", false);
 
 exports.InlineAutocomplete = InlineAutocomplete;
-exports.InlineTooltip = InlineTooltip;
-exports.TOOLTIP_ID = TOOLTIP_ID;
-exports.BUTTON_CLASS_NAME = BUTTON_CLASS_NAME;
