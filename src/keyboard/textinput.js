@@ -65,14 +65,15 @@ var TextInput = function(parentNode, host) {
         }     
     };
     this.setAriaLabel = function() {
-        var row;
-        if (!host.session)
-            row = 0;
-        else
-            row = host.session.selection.cursor.row;
+        if(host.session && host.renderer.enableKeyboardAccessibility) {
+            var row =  host.session.selection.cursor.row;
 
-        text.setAttribute("aria-roledescription", nls("editor"));
-        text.setAttribute("aria-label", nls("Cursor at row $0", [row + 1]));
+            text.setAttribute("aria-roledescription", nls("editor"));
+            text.setAttribute("aria-label", nls("Cursor at row $0", [row + 1]));
+        } else {
+            text.removeAttribute("aria-roledescription");
+            text.removeAttribute("aria-label");
+        }
     };
 
     this.setAriaOptions({role: "textbox"});
@@ -105,7 +106,7 @@ var TextInput = function(parentNode, host) {
     }, host);
     this.$focusScroll = false;
     this.focus = function() {
-        // On focusing on the textarea, read active row to assistive tech.
+        // On focusing on the textarea, read active row number to assistive tech.
         this.setAriaLabel();
 
         if (tempStyle || HAS_FOCUS_ARGS || this.$focusScroll == "browser")

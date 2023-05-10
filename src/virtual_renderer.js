@@ -847,7 +847,9 @@ class VirtualRenderer {
         // horizontal scrolling
         if (changes & this.CHANGE_H_SCROLL) {
             dom.translate(this.content, -this.scrollLeft, -config.offset);
-            this.scroller.className = this.scrollLeft <= 0 ? "ace_scroller" : "ace_scroller ace_scroll-left";
+            this.scroller.className = this.scrollLeft <= 0 ? "ace_scroller " : "ace_scroller ace_scroll-left ";
+            if (this.enableKeyboardAccessibility)
+                this.scroller.className += this.keyboardFocusClassName;
         }
 
         // full

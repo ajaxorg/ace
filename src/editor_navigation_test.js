@@ -12,6 +12,14 @@ var VirtualRenderer = require("./virtual_renderer").VirtualRenderer;
 var assert = require("./test/assertions");
 var keys = require('./lib/keys');
 
+function emit(keyCode) {
+    var data = {bubbles: true, keyCode};
+    var event = new KeyboardEvent("keyup", data);
+
+    var el = document.activeElement;
+    el.dispatchEvent(event);
+}
+
 module.exports = {
     createEditSession : function(rows, cols) {
         var line = new Array(cols + 1).join("a");
@@ -169,12 +177,12 @@ module.exports = {
 
         // Focus should be on textInput
         assert.equal(document.activeElement, editor.textInput.getElement());
-        assert.notEqual(document.activeElement, editor.renderer.content);
+        assert.notEqual(document.activeElement, editor.renderer.scroller);
 
         editor.onCommandKey({}, 0, keys["escape"]);
  
         // Focus should be on the content div after pressing Esc
-        assert.equal(document.activeElement, editor.renderer.content);
+        assert.equal(document.activeElement, editor.renderer.scroller);
         assert.notEqual(document.activeElement, editor.textInput.getElement());
 
         // Should trap focus
@@ -185,13 +193,34 @@ module.exports = {
 
         // Focus should be on textInput
         assert.equal(document.activeElement, editor.textInput.getElement());
-        assert.notEqual(document.activeElement, editor.renderer.content);
+        assert.notEqual(document.activeElement, editor.renderer.scroller);
 
         editor.onCommandKey({}, 0, keys["escape"]);
  
         // Focus should still be on the textInput
         assert.equal(document.activeElement, editor.textInput.getElement());
-        assert.notEqual(document.activeElement, editor.renderer.content);
+        assert.notEqual(document.activeElement, editor.renderer.scroller);
+    },
+
+    "test: should allow to focus on textInput using keyboard in non-trapping mode": function() {
+        var editor = new Editor(new VirtualRenderer(), new EditSession(["1234", "1234567890"]));
+
+        // Set to not trap focus mode
+        editor.setOption('enableKeyboardAccessibility', true);
+
+        // Focus on editor
+        editor.renderer.scroller.focus();
+
+        // Focus should be on scroller
+        assert.equal(document.activeElement, editor.renderer.scroller);
+        assert.notEqual(document.activeElement, editor.textInput.getElement());
+
+        // Press enter to give focus to the textinput
+        emit(keys["enter"]);
+
+        // Focus should be on the textinput
+        assert.equal(document.activeElement, editor.textInput.getElement());
+        assert.notEqual(document.activeElement, editor.renderer.scroller);        
     }
 };
 

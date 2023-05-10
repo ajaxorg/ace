@@ -2869,13 +2869,13 @@ config.defineOptions(Editor.prototype, "editor", {
                 bindKey: "Esc",
                 exec: function(editor) {
                     editor.blur();
-                    editor.renderer.content.focus();
+                    editor.renderer.scroller.focus();
                 },
                 readOnly: true
             };
 
             var focusOnEnterKeyup = function (e) {
-                if (e.target == this.renderer.content && e.keyCode === keys['enter']){
+                if (e.target == this.renderer.scroller && e.keyCode === keys['enter']){
                     e.preventDefault();
                     var row = this.getCursorPosition().row;
                     
@@ -2891,18 +2891,19 @@ config.defineOptions(Editor.prototype, "editor", {
             // Prevent focus to be captured when tabbing through the page. When focus is set to the content div, 
             // press Enter key to give focus to Ace and press Esc to again allow to tab through the page.
             if (value){
-                this.keyboardFocusClassName = "ace_keyboard-focus";
+                this.renderer.enableKeyboardAccessibility = true;
+                this.renderer.keyboardFocusClassName = "ace_keyboard-focus";
 
                 this.textInput.getElement().setAttribute("tabindex", -1);
-                this.renderer.content.setAttribute("tabindex", 0);
-                this.renderer.content.setAttribute("role", "group");
-                this.renderer.content.setAttribute("aria-roledescription", nls("editor"));
-                this.renderer.content.classList.add(this.keyboardFocusClassName);
-                this.renderer.content.setAttribute("aria-label",
+                this.renderer.scroller.setAttribute("tabindex", 0);
+                this.renderer.scroller.setAttribute("role", "group");
+                this.renderer.scroller.setAttribute("aria-roledescription", nls("editor"));
+                this.renderer.scroller.classList.add(this.renderer.keyboardFocusClassName);
+                this.renderer.scroller.setAttribute("aria-label",
                     nls("Editor content, press Enter to start editing, press Escape to exit")
                 );
 
-                this.renderer.content.addEventListener("keyup", focusOnEnterKeyup.bind(this));
+                this.renderer.scroller.addEventListener("keyup", focusOnEnterKeyup.bind(this));
                 this.commands.addCommand(blurCommand);
 
                 this.renderer.$gutter.setAttribute("tabindex", 0);
@@ -2912,29 +2913,35 @@ config.defineOptions(Editor.prototype, "editor", {
                 this.renderer.$gutter.setAttribute("aria-label",
                     nls("Editor gutter, press Enter to interact with controls using arrow keys, press Escape to exit")
                 );
-                this.renderer.$gutter.classList.add(this.keyboardFocusClassName);
+                this.renderer.$gutter.classList.add(this.renderer.keyboardFocusClassName);
+
+                this.renderer.content.setAttribute("aria-hidden", true);
 
                 if (!gutterKeyboardHandler)
                     gutterKeyboardHandler = new GutterKeyboardHandler(this);
 
                 gutterKeyboardHandler.addListener();
             } else {
+                this.renderer.enableKeyboardAccessibility = false;
+
                 this.textInput.getElement().setAttribute("tabindex", 0);
-                this.renderer.content.setAttribute("tabindex", -1);
-                this.renderer.content.removeAttribute("role");
-                this.renderer.content.removeAttribute("aria-roledescription");
-                this.renderer.content.classList.remove(this.keyboardFocusClassName);
-                this.renderer.content.removeAttribute("aria-label");
+                this.renderer.scroller.setAttribute("tabindex", -1);
+                this.renderer.scroller.removeAttribute("role");
+                this.renderer.scroller.removeAttribute("aria-roledescription");
+                this.renderer.scroller.classList.remove(this.renderer.keyboardFocusClassName);
+                this.renderer.scroller.removeAttribute("aria-label");
             
-                this.renderer.content.removeEventListener("keyup", focusOnEnterKeyup.bind(this));
+                this.renderer.scroller.removeEventListener("keyup", focusOnEnterKeyup.bind(this));
                 this.commands.removeCommand(blurCommand);
+
+                this.renderer.content.removeAttribute("aria-hidden");
 
                 this.renderer.$gutter.setAttribute("tabindex", -1);
                 this.renderer.$gutter.setAttribute("aria-hidden", true);
                 this.renderer.$gutter.removeAttribute("role");
                 this.renderer.$gutter.removeAttribute("aria-roledescription");
                 this.renderer.$gutter.removeAttribute("aria-label");
-                this.renderer.$gutter.classList.remove(this.keyboardFocusClassName);
+                this.renderer.$gutter.classList.remove(this.renderer.keyboardFocusClassName);
 
                 if (gutterKeyboardHandler)
                     gutterKeyboardHandler.removeListener();
