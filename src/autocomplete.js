@@ -345,9 +345,6 @@ class Autocomplete {
 
             if (finished) {
                 // No results
-                if (!filtered.length && (!this.emptyMessage || this.autoShown))
-                    return this.detach();
-
                 if (!filtered.length) {
                     var emptyMessage = !this.autoShown && this.emptyMessage;
                     if ( typeof emptyMessage == "function")
@@ -359,8 +356,9 @@ class Autocomplete {
                         }];
                         this.completions = new FilteredList(completionsForEmpty);
                         this.openPopup(this.editor, prefix, keepPopupPosition);
+                        return;
                     }
-                    return;
+                    return this.detach();
                 }
 
                 // One result equals to the prefix

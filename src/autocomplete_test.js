@@ -7,8 +7,10 @@ if (typeof process !== "undefined") {
 var sendKey = require("./test/user").type;
 var ace = require("./ace");
 var assert = require("./test/assertions");
+var user = require("./test/user");
 var Range = require("./range").Range;
 require("./ext/language_tools");
+var Autocomplete = require("./autocomplete").Autocomplete;
 
 function initEditor(value) {
     var editor = ace.edit(null, {
@@ -246,6 +248,24 @@ module.exports = {
             editor.container.remove();
             done();
         }, 10);
+    },
+    "test: empty message if no suggestions available": function(done) {
+        var editor = initEditor("");
+        var emptyMessageText = "No suggestions.";
+        var autocomplete = Autocomplete.for(editor);
+        autocomplete.emptyMessage = () => emptyMessageText;
+
+        user.type("thereisnoautosuggestionforthisword");
+
+        // Open autocompletion via key-binding and verify empty message
+        user.type("Ctrl-Space");
+        assert.equal(editor.completer.popup.isOpen, true);
+        assert.equal(editor.completer.popup.data[0].caption, emptyMessageText);
+
+        user.type("Return");
+        assert.equal(editor.completer.popup.isOpen, false);
+
+        done();
     }
 };
 
