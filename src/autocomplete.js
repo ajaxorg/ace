@@ -55,6 +55,7 @@ class Autocomplete {
     constructor() {
         this.autoInsert = false;
         this.autoSelect = true;
+        this.autoShown = false;
         this.exactMatch = false;
         this.inlineEnabled = false;
         this.keyboardHandler = new HashHandler();
@@ -345,10 +346,10 @@ class Autocomplete {
 
             if (finished) {
                 // No results
-                if (!filtered.length && !this.emptyMessage)
+                if (!filtered.length && (!this.emptyMessage || this.autoShown))
                     return this.detach();
 
-                if (!filtered.length && this.emptyMessage) {
+                if (!filtered.length && this.emptyMessage && !this.autoShown) {
                     var completionsForEmpty = [{
                         caption: this.emptyMessage(prefix),
                         value: ""
@@ -364,7 +365,7 @@ class Autocomplete {
                     return this.detach();
 
                 // Autoinsert if one result
-                if (this.autoInsert && filtered.length == 1)
+                if (this.autoInsert && !autoShown && filtered.length == 1)
                     return this.insertMatch(filtered[0]);
             }
             this.completions = completions;
@@ -541,6 +542,7 @@ Autocomplete.startCommand = {
         var completer = Autocomplete.for(editor);
         completer.autoInsert = false;
         completer.autoSelect = true;
+        completer.autoShown = false;
         completer.showPopup(editor, options);
         // prevent ctrl-space opening context menu on firefox on mac
         completer.cancelContextMenu();

@@ -1054,6 +1054,7 @@ export namespace Ace {
     constructor();
     autoInsert?: boolean;
     autoSelect?: boolean;
+    autoShown?: boolean;
     exactMatch?: boolean;
     inlineEnabled?: boolean;
     parentNode?: HTMLElement;
