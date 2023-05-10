@@ -65,14 +65,20 @@ var TextInput = function(parentNode, host) {
         }     
     };
     this.setAriaLabel = function() {
-        var row;
-        if (!host.session)
-            row = 0;
-        else
-            row = host.session.selection.cursor.row;
+        if(host.renderer.enableKeyboardAccessibility)
+        {
+            var row;
+            if (!host.session)
+                row = 0;
+            else
+                row = host.session.selection.cursor.row;
 
-        text.setAttribute("aria-roledescription", nls("editor"));
-        text.setAttribute("aria-label", nls("Cursor at row $0", [row + 1]));
+            text.setAttribute("aria-roledescription", nls("editor"));
+            text.setAttribute("aria-label", nls("Cursor at row $0", [row + 1]));
+        } else {
+            text.removeAttribute("aria-roledescription");
+            text.removeAttribute("aria-label");
+        }
     };
 
     this.setAriaOptions({role: "textbox"});
