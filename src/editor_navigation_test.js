@@ -11,7 +11,6 @@ var MockRenderer = require("./test/mockrenderer").MockRenderer;
 var VirtualRenderer = require("./virtual_renderer").VirtualRenderer;
 var assert = require("./test/assertions");
 var keys = require('./lib/keys');
-const { L } = require("./lib/bidiutil");
 
 function emit(keyCode) {
     var data = {bubbles: true, keyCode};
