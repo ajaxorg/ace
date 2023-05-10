@@ -167,8 +167,8 @@ exports.Tooltip = Tooltip;
 
 
 class HoverTooltip extends Tooltip {
-    constructor() {
-        super(document.body);
+    constructor(parentNode=document.body) {
+        super(parentNode);
         
         this.timeout = undefined;
         this.lastT = 0;
@@ -187,7 +187,7 @@ class HoverTooltip extends Tooltip {
         el.tabIndex = -1;
         
         el.addEventListener("blur", function() {
-            if (document.activeElement != el) this.hide();
+            if (!el.contains(document.activeElement)) this.hide();
         }.bind(this));
     }
     
