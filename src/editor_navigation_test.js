@@ -11,6 +11,15 @@ var MockRenderer = require("./test/mockrenderer").MockRenderer;
 var VirtualRenderer = require("./virtual_renderer").VirtualRenderer;
 var assert = require("./test/assertions");
 var keys = require('./lib/keys');
+const { L } = require("./lib/bidiutil");
+
+function emit(keyCode) {
+    var data = {bubbles: true, keyCode};
+    var event = new KeyboardEvent("keyup", data);
+
+    var el = document.activeElement;
+    el.dispatchEvent(event);
+}
 
 module.exports = {
     createEditSession : function(rows, cols) {
@@ -192,6 +201,27 @@ module.exports = {
         // Focus should still be on the textInput
         assert.equal(document.activeElement, editor.textInput.getElement());
         assert.notEqual(document.activeElement, editor.renderer.scroller);
+    },
+
+    "test: should allow to focus on textInput using keyboard in trapping mode": function() {
+        var editor = new Editor(new VirtualRenderer(), new EditSession(["1234", "1234567890"]));
+
+        // Set to not trap focus mode
+        editor.setOption('enableKeyboardAccessibility', true);
+
+        // Focus on editor
+        editor.renderer.scroller.focus();
+
+        // Focus should be on scroller
+        assert.equal(document.activeElement, editor.renderer.scroller);
+        assert.notEqual(document.activeElement, editor.textInput.getElement());
+
+        // Press enter to give focus to the textinput
+        emit(keys["enter"]);
+
+        // Focus should be on the textinput
+        assert.equal(document.activeElement, editor.textInput.getElement());
+        assert.notEqual(document.activeElement, editor.renderer.scroller);        
     }
 };
 
