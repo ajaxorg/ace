@@ -60,7 +60,6 @@ class Autocomplete {
         this.inlineEnabled = false;
         this.keyboardHandler = new HashHandler();
         this.keyboardHandler.bindKeys(this.commands);
-        this.emptyMessage = null;
         this.parentNode = null;
 
         this.blurListener = this.blurListener.bind(this);
@@ -349,14 +348,18 @@ class Autocomplete {
                 if (!filtered.length && (!this.emptyMessage || this.autoShown))
                     return this.detach();
 
-                if (!filtered.length && this.emptyMessage && !this.autoShown) {
-                    var completionsForEmpty = [{
-                        caption: this.emptyMessage(prefix),
-                        value: ""
-                    }];
-                    this.completions = new FilteredList(completionsForEmpty);
-                    this.completions.exactMatch = true;
-                    this.openPopup(this.editor, prefix, keepPopupPosition);
+                if (!filtered.length) {
+                    var emptyMessage = !this.autoShown && this.emptyMessage;
+                    if ( typeof emptyMessage == "function")
+                          emptyMessage = this.emptyMessage(prefix);
+                    if (emptyMessage) {
+                        var completionsForEmpty = [{
+                            caption: this.emptyMessage(prefix),
+                            value: ""
+                        }];
+                        this.completions = new FilteredList(completionsForEmpty);
+                        this.openPopup(this.editor, prefix, keepPopupPosition);
+                    }
                     return;
                 }
 
@@ -365,7 +368,7 @@ class Autocomplete {
                     return this.detach();
 
                 // Autoinsert if one result
-                if (this.autoInsert && !autoShown && filtered.length == 1)
+                if (this.autoInsert && !this.autoShown && filtered.length == 1)
                     return this.insertMatch(filtered[0]);
             }
             this.completions = completions;
