@@ -7,6 +7,7 @@ var GroovyHighlightRules = require("./groovy_highlight_rules").GroovyHighlightRu
 var Mode = function() {
     JavaScriptMode.call(this);
     this.HighlightRules = GroovyHighlightRules;
+    this.$behaviour = this.$defaultBehaviour;
 };
 oop.inherits(Mode, JavaScriptMode);
 

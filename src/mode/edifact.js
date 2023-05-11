@@ -7,6 +7,7 @@ var EdifactHighlightRules = require("./edifact_highlight_rules").EdifactHighligh
 var Mode = function() {
    
     this.HighlightRules = EdifactHighlightRules;
+    this.$behaviour = this.$defaultBehaviour;
 };
 oop.inherits(Mode, TextMode);
 

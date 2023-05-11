@@ -13,6 +13,7 @@ var Mode = function() {
     CMode.call(this);
     this.HighlightRules = DartHighlightRules;
     this.foldingRules = new CStyleFoldMode();
+    this.$behaviour = this.$defaultBehaviour;
 };
 oop.inherits(Mode, CMode);
 

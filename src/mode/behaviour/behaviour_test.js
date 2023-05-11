@@ -415,6 +415,26 @@ module.exports = {
         editor.setValue("p", 1);
         exec("insertstring", 1, '"');
         assert.equal(editor.getValue(), 'p"');
+    },
+    "test: doc comment auto-closing": function() {
+        editor.session.setMode(new JavaScriptMode());
+        editor.setWrapBehavioursEnabled(true);
+
+        // Test case 1: Starting a new doc comment
+        editor.setValue("/**", 1);
+        exec("insertstring", 1, "\n");
+        assert.equal(editor.getValue(), "/**\n * \n */");
+
+        // Test case 2: Continuing an existing doc comment with asterisk on a new line
+        editor.setValue("/**\n * Test", 1);
+        editor.gotoLine(1, 5);
+        exec("insertstring", 1, "\n");
+        assert.equal(editor.getValue(), "/**\n * \n * Test");
+        
+        // Test case 3: Starting a new doc comment with 4-space indentation
+        editor.setValue("    /**", 1);
+        exec("insertstring", 1, "\n");
+        assert.equal(editor.getValue(), "    /**\n     * \n     */");
     }
 };
 

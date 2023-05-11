@@ -5,13 +5,12 @@ var TextMode = require("./text").Mode;
 var RubyHighlightRules = require("./ruby_highlight_rules").RubyHighlightRules;
 var MatchingBraceOutdent = require("./matching_brace_outdent").MatchingBraceOutdent;
 var Range = require("../range").Range;
-var CstyleBehaviour = require("./behaviour/cstyle").CstyleBehaviour;
 var FoldMode = require("./folding/ruby").FoldMode;
 
 var Mode = function() {
     this.HighlightRules = RubyHighlightRules;
     this.$outdent = new MatchingBraceOutdent();
-    this.$behaviour = new CstyleBehaviour();
+    this.$behaviour = this.$defaultBehaviour;
     this.foldingRules = new FoldMode();
     this.indentKeywords = this.foldingRules.indentKeywords;
 };
