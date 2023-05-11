@@ -103,7 +103,7 @@ You can also find API documentation at [https://ajaxorg.github.io/ace-api-docs/]
 
 Also check out the sample code for the kitchen sink [demo app](https://github.com/ajaxorg/ace/blob/master/demo/kitchen-sink/demo.js).
 
-If you still need help, feel free to drop a mail on the [ace mailing list](http://groups.google.com/group/ace-discuss), or at `irc.freenode.net#ace`.
+If you still need help, feel free to ask a question on our [discussions page](https://github.com/ajaxorg/ace/discussions).
 
 Running Ace
 -----------

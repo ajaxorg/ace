@@ -1,6 +1,7 @@
 "use strict";
 
 var event = require("../lib/event");
+var nls = require("../config").nls;
 var useragent = require("../lib/useragent");
 var dom = require("../lib/dom");
 var lang = require("../lib/lang");
@@ -61,9 +62,22 @@ var TextInput = function(parentNode, host) {
         }
         if (options.role) {
             text.setAttribute("role", options.role);
+        }     
+    };
+    this.setAriaLabel = function() {
+        if(host.session && host.renderer.enableKeyboardAccessibility) {
+            var row =  host.session.selection.cursor.row;
+
+            text.setAttribute("aria-roledescription", nls("editor"));
+            text.setAttribute("aria-label", nls("Cursor at row $0", [row + 1]));
+        } else {
+            text.removeAttribute("aria-roledescription");
+            text.removeAttribute("aria-label");
         }
     };
+
     this.setAriaOptions({role: "textbox"});
+    this.setAriaLabel();
 
     event.addListener(text, "blur", function(e) {
         if (ignoreFocusEvents) return;
@@ -92,6 +106,9 @@ var TextInput = function(parentNode, host) {
     }, host);
     this.$focusScroll = false;
     this.focus = function() {
+        // On focusing on the textarea, read active row number to assistive tech.
+        this.setAriaLabel();
+
         if (tempStyle || HAS_FOCUS_ARGS || this.$focusScroll == "browser")
             return text.focus({ preventScroll: true });
 

@@ -6,6 +6,7 @@ var Range = require("../range").Range;
 var event = require("../lib/event");
 var lang = require("../lib/lang");
 var dom = require("../lib/dom");
+var nls = require("../config").nls;
 
 var getAriaId = function(index) {
     return `suggest-aria-id:${index}`;
@@ -41,15 +42,16 @@ class AcePopup {
         var el = dom.createElement("div");
         var popup = new $singleLineEditor(el);
 
-        if (parentNode)
+        if (parentNode) {
             parentNode.appendChild(el);
+        }
         el.style.display = "none";
         popup.renderer.content.style.cursor = "default";
         popup.renderer.setStyle("ace_autocomplete");
 
         // Set aria attributes for the popup
         popup.renderer.container.setAttribute("role", "listbox");
-        popup.renderer.container.setAttribute("aria-label", "Autocomplete suggestions");
+        popup.renderer.container.setAttribute("aria-label", nls("Autocomplete suggestions"));
 
         popup.setOption("displayIndentGuides", false);
         popup.setOption("dragDelay", 150);

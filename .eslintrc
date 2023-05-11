@@ -29,6 +29,7 @@
         prompt: true,
         XMLHttpRequest: true,
         localStorage: true,
+        KeyboardEvent: true,
     },
     "rules": {
         curly: 0,

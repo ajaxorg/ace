@@ -10,7 +10,27 @@ if (typeof process !== "undefined") {
 var assert = require("./assertions");
 
 module.exports = {
-   "test: getBoundingClientRect" : function() {
+    "test: selectors": function() {
+        document.body.innerHTML = `<div x=1 y='2'>
+            <span z=dd>span1</span>
+            xxx
+            <span class=x>some text </span>
+            <a x=3></a>
+        </div>`;
+        var spans = document.querySelectorAll("span");
+        assert.equal(spans[0].matches("[z=dd]"), true);
+        assert.equal(spans[0].matches("[z=dde]"), false);
+        assert.equal(spans[1].matches("div>[class=x]"), true);
+        assert.equal(spans[1].matches("body>[class=x]"), false);
+        assert.equal(spans[0].matches("body [z=dd]"), true);
+        
+        assert.equal(document.querySelectorAll("body     [x]").length, 2);
+        assert.equal(document.querySelectorAll("html *>  [x]").length, 2);
+        assert.equal(document.querySelectorAll("html * * [x]").length, 1);
+        assert.equal(document.querySelectorAll(" * * * * [x]").length, 0);
+
+    },
+    "test: getBoundingClientRect" : function() {
         var span = document.createElement("span");
         span.textContent = "x";
         

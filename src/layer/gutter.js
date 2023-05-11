@@ -5,6 +5,7 @@ var oop = require("../lib/oop");
 var lang = require("../lib/lang");
 var EventEmitter = require("../lib/event_emitter").EventEmitter;
 var Lines = require("./lines").Lines;
+var nls = require("../config").nls;
 
 class Gutter{
     constructor(parentEl) {
@@ -279,6 +280,7 @@ class Gutter{
         var textNode = element.childNodes[0];
         var foldWidget = element.childNodes[1];
         var annotationNode = element.childNodes[2];
+        var annotationIconNode = annotationNode.firstChild;
 
         var firstLineNumber = session.$firstLineNumber;
         
@@ -293,6 +295,10 @@ class Gutter{
         var className = this.$useSvgGutterIcons ? "ace_gutter-cell_svg-icons " : "ace_gutter-cell ";
         var iconClassName = this.$useSvgGutterIcons ? "ace_icon_svg" : "ace_icon";
         
+        var rowText = (gutterRenderer
+            ? gutterRenderer.getText(session, row)
+            : row + firstLineNumber).toString();
+
         if (this.$highlightGutterLine) {
             if (row == this.$cursorRow || (fold && row < this.$cursorRow && row >= foldStart &&  this.$cursorRow <= fold.end.row)) {
                 className += "ace_gutter-active-line ";
@@ -352,46 +358,74 @@ class Gutter{
 
             dom.setStyle(foldWidget.style, "height", lineHeight);
             dom.setStyle(foldWidget.style, "display", "inline-block");
+            
+            // Set a11y properties.
+            foldWidget.setAttribute("role", "button");
+            foldWidget.setAttribute("tabindex", "-1");
+            var fold = session.getFoldLine(rowText - 1);
+            if (fold) {
+                foldWidget.setAttribute("aria-label", nls("Unfold rows $0 to $1", [rowText, fold.end.row + 1]));
+                foldWidget.setAttribute("title", nls("Unfold code"));
+            }
+            else {
+                foldWidget.setAttribute("aria-label", nls("Fold at row $0", [rowText]));
+                foldWidget.setAttribute("title", nls("Fold code"));
+            }
         } else {
             if (foldWidget) {
                 dom.setStyle(foldWidget.style, "display", "none");
+                foldWidget.setAttribute("tabindex", "0");
+                foldWidget.removeAttribute("role");
+                foldWidget.removeAttribute("aria-label");
             }
         }
 
         if (annotationInFold && this.$showFoldedAnnotations){
-            annotationNode.className = iconClassName;
-            annotationNode.className += foldAnnotationClass;
+            annotationNode.className = "ace_gutter_annotation";
+            annotationIconNode.className = iconClassName;
+            annotationIconNode.className += foldAnnotationClass;
 
-            dom.setStyle(annotationNode.style, "height", lineHeight);
+            dom.setStyle(annotationIconNode.style, "height", lineHeight);
             dom.setStyle(annotationNode.style, "display", "block");
+            dom.setStyle(annotationNode.style, "height", lineHeight);
+            annotationNode.setAttribute("aria-label", nls("Read annotations row $0", [rowText]));
+            annotationNode.setAttribute("tabindex", "-1");
         }
         else if (this.$annotations[row]){
-            annotationNode.className = iconClassName;
+            annotationNode.className = "ace_gutter_annotation";
+            annotationIconNode.className = iconClassName;
 
             if (this.$useSvgGutterIcons)
-                annotationNode.className += this.$annotations[row].className;
+                annotationIconNode.className += this.$annotations[row].className;
             else 
                 element.classList.add(this.$annotations[row].className.replace(" ", ""));
 
-            dom.setStyle(annotationNode.style, "height", lineHeight);
+            dom.setStyle(annotationIconNode.style, "height", lineHeight);
             dom.setStyle(annotationNode.style, "display", "block");
+            dom.setStyle(annotationNode.style, "height", lineHeight);
+            annotationNode.setAttribute("aria-label", nls("Read annotations row $0", [rowText]));
+            annotationNode.setAttribute("tabindex", "-1");
         }
         else {
             dom.setStyle(annotationNode.style, "display", "none");
+            annotationNode.removeAttribute("aria-label");
+            annotationNode.setAttribute("tabindex", "0");
         }
-        
-        var text = (gutterRenderer
-            ? gutterRenderer.getText(session, row)
-            : row + firstLineNumber).toString();
-            
-        if (text !== textNode.data) {
-            textNode.data = text;
-        }
-        
+        if (rowText !== textNode.data) {
+            textNode.data = rowText;
+        } 
+
         dom.setStyle(cell.element.style, "height", this.$lines.computeLineHeight(row, config, session) + "px");
         dom.setStyle(cell.element.style, "top", this.$lines.computeLineTop(row, config, session) + "px");
         
-        cell.text = text;
+        cell.text = rowText;
+
+        // If there are no annotations or fold widgets in the gutter cell, hide it from assistive tech.
+        if (annotationNode.style.display === "none" && foldWidget.style.display === "none")
+            cell.element.setAttribute("aria-hidden", true);
+        else
+            cell.element.setAttribute("aria-hidden", false);
+        
         return cell;
     }
     
@@ -464,6 +498,9 @@ function onCreateCell(element) {
 
     var annotationNode = dom.createElement("span");
     element.appendChild(annotationNode);
+
+    var annotationIconNode = dom.createElement("span");
+    annotationNode.appendChild(annotationIconNode);
     
     return element;
 }

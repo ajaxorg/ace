@@ -49,6 +49,17 @@ module.exports = {
             done();
         });
     },
+    "test: nls": function() {
+        var nls = config.nls;
+        config.setMessages({
+            foo: "hello world of $1"
+        });
+        assert.equal(nls("bar $1"), "bar $1");
+        assert.equal(nls("bar"), "bar");
+        assert.equal(nls("foo"), "hello world of $1");
+        assert.equal(nls("foo", {1: "goo"}), "hello world of goo");
+        assert.equal(nls("$0B is $1$$", [0.11, 22]), "0.11B is 22$");
+    },
     "test: define options" : function() {
         var o = {};
         config.defineOptions(o, "test_object", {

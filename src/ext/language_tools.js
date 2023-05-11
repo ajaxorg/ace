@@ -147,8 +147,8 @@ var doLiveAutocomplete = function(e) {
         var triggerAutocomplete = util.triggerAutocomplete(editor);
         if ((prefix || triggerAutocomplete) && !hasCompleter) {
             var completer = Autocomplete.for(editor);
-            // Disable autoInsert
-            completer.autoInsert = false;
+            // Set a flag for auto shown
+            completer.autoShown = true;
             completer.showPopup(editor);
         }
     }
