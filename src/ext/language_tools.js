@@ -146,8 +146,8 @@ var doLiveAutocomplete = function(e) {
         // Only autocomplete if there's a prefix that can be matched
         if (prefix && !hasCompleter) {
             var completer = Autocomplete.for(editor);
-            // Disable autoInsert
-            completer.autoInsert = false;
+            // Set a flag for auto shown
+            completer.autoShown = true;
             completer.showPopup(editor);
         }
     }
