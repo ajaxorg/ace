@@ -5,6 +5,8 @@ var mockdom = require("../test/mockdom");
 var AsyncTest = require("asyncjs").test;
 var async = require("asyncjs");
 
+var useMockdom = location.search.indexOf("mock=1") != -1;
+
 var passed = 0;
 var failed = 0;
 var log = document.getElementById("log");
@@ -43,13 +45,10 @@ var testNames = [
     "ace/keyboard/gutter_handler_test",
     "ace/layer/text_test",
     "ace/lib/event_emitter_test",
-    "ace/mode/coffee/parser_test",
     "ace/mode/coldfusion_test",
     "ace/mode/css_test",
-    "ace/mode/css_worker",
     "ace/mode/html_test",
     "ace/mode/javascript_test",
-    "ace/mode/javascript_worker_test",
     "ace/mode/logiql_test",
     "ace/mode/python_test",
     "ace/mode/text_test",
@@ -77,14 +76,16 @@ var testNames = [
     "ace/tokenizer_test",
     "ace/test/mockdom_test",
     "ace/undomanager_test",
-    "ace/virtual_renderer_test",
-    "ace/mode/yaml_worker_test"
+    "ace/virtual_renderer_test"
 ];
 
-var html = ["<a href='?'>all tests</a><br>"];
+var html = [
+    "<a href='?mock=1'>use mockdom</a><br>",
+    "<a href='?runall'>Run all tests</a><br>"
+];
 for (var i in testNames) {
     var href = testNames[i];
-    html.push("<a href='?", href, "'>", href.replace(/^ace\//, "") ,"</a><br>");
+    html.push("<a href='?", href, (useMockdom ? "&mock=1" : ""), "'>", href.replace(/^ace\//, "") ,"</a><br>");
 }
 
 var nav = el("div");
@@ -110,21 +111,23 @@ if (location.search.indexOf("show=1") != -1) {
     });
 }
 
-if (location.search.indexOf("mock=1") != -1) {
+if (useMockdom) {
     mockdom.loadInBrowser(window);
 }
 
-
+var selectedTests = [];
 if (location.search) {
     var parts = location.search.split(/[&?]|\w+=\w+/).filter(Boolean);
-    if (parts[0])
-        testNames = parts[0].split(",");
+    if (parts[0] == "runall")
+        selectedTests = testNames;
+    else
+        selectedTests = parts[0].split(",");
 }
 var filter = location.hash.substr(1);
 window.onhashchange = function() { location.reload(); };
 
-require(testNames, function() {
-    var tests = testNames.map(function(x) {
+require(selectedTests, function() {
+    var tests = selectedTests.map(function(x) {
         var module = require(x);
         module.href = x;
         return module;
