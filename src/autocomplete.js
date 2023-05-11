@@ -55,10 +55,12 @@ class Autocomplete {
     constructor() {
         this.autoInsert = false;
         this.autoSelect = true;
+        this.autoShown = false;
         this.exactMatch = false;
         this.inlineEnabled = false;
         this.keyboardHandler = new HashHandler();
         this.keyboardHandler.bindKeys(this.commands);
+        this.parentNode = null;
 
         this.blurListener = this.blurListener.bind(this);
         this.changeListener = this.changeListener.bind(this);
@@ -73,7 +75,7 @@ class Autocomplete {
     }
 
     $init() {
-        this.popup = new AcePopup(document.body || document.documentElement);
+        this.popup = new AcePopup(this.parentNode || document.body || document.documentElement); 
         this.popup.on("click", function(e) {
             this.insertMatch();
             e.stop();
@@ -255,6 +257,8 @@ class Autocomplete {
             data = this.popup.getData(this.popup.getRow());
         if (!data)
             return false;
+        if (data.value === "") // Explicitly given nothing to insert, e.g. "No suggestion state"
+            return this.detach();
         var completions = this.completions;
         var result = this.getCompletionProvider().insertMatch(this.editor, data, completions.filterText, options);
         // detach only if new popup was not opened while inserting match
@@ -341,15 +345,28 @@ class Autocomplete {
 
             if (finished) {
                 // No results
-                if (!filtered.length)
+                if (!filtered.length) {
+                    var emptyMessage = !this.autoShown && this.emptyMessage;
+                    if ( typeof emptyMessage == "function")
+                          emptyMessage = this.emptyMessage(prefix);
+                    if (emptyMessage) {
+                        var completionsForEmpty = [{
+                            caption: this.emptyMessage(prefix),
+                            value: ""
+                        }];
+                        this.completions = new FilteredList(completionsForEmpty);
+                        this.openPopup(this.editor, prefix, keepPopupPosition);
+                        return;
+                    }
                     return this.detach();
+                }
 
                 // One result equals to the prefix
                 if (filtered.length == 1 && filtered[0].value == prefix && !filtered[0].snippet)
                     return this.detach();
 
                 // Autoinsert if one result
-                if (this.autoInsert && filtered.length == 1)
+                if (this.autoInsert && !this.autoShown && filtered.length == 1)
                     return this.insertMatch(filtered[0]);
             }
             this.completions = completions;
@@ -408,7 +425,8 @@ class Autocomplete {
         }
 
         if (!tooltipNode.parentNode)
-            document.body.appendChild(tooltipNode);
+            this.popup.container.appendChild(this.tooltipNode);
+
         var popup = this.popup;
         var rect = popup.container.getBoundingClientRect();
         tooltipNode.style.top = popup.container.style.top;
@@ -525,6 +543,7 @@ Autocomplete.startCommand = {
         var completer = Autocomplete.for(editor);
         completer.autoInsert = false;
         completer.autoSelect = true;
+        completer.autoShown = false;
         completer.showPopup(editor, options);
         // prevent ctrl-space opening context menu on firefox on mac
         completer.cancelContextMenu();

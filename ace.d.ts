@@ -1054,8 +1054,11 @@ export namespace Ace {
     constructor();
     autoInsert?: boolean;
     autoSelect?: boolean;
+    autoShown?: boolean;
     exactMatch?: boolean;
     inlineEnabled?: boolean;
+    parentNode?: HTMLElement;
+    emptyMessage?(prefix: String): String;
     getPopup(): AcePopup;
     showPopup(editor: Editor, options: CompletionOptions): void;
     detach(): void;
