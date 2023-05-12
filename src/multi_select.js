@@ -917,10 +917,8 @@ require("./config").defineOptions(Editor.prototype, "editor", {
         set: function(val) {
             MultiSelect(this);
             if (val) {
-                this.on("changeSession", this.$multiselectOnSessionChange);
                 this.on("mousedown", onMouseDown);
             } else {
-                this.off("changeSession", this.$multiselectOnSessionChange);
                 this.off("mousedown", onMouseDown);
             }
         },
