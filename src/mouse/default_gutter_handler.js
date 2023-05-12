@@ -108,6 +108,7 @@ function GutterHandler(mouseHandler) {
     }, editor);
     
     editor.on("changeSession", hideTooltip);
+    editor.on("input", hideTooltip);
 }
 
 exports.GutterHandler = GutterHandler;
