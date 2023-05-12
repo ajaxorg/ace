@@ -54,3 +54,15 @@ exports.getCompletionPrefix = function (editor) {
     }.bind(this));
     return prefix || this.retrievePrecedingIdentifier(line, pos.column);
 };
+
+exports.triggerAutocomplete = function (editor) {
+    var pos = editor.getCursorPosition();
+    var line = editor.session.getLine(pos.row);
+    var column = (pos.column === 0) ? 0 : pos.column - 1;
+    var previousChar = line[column];
+    return editor.completers.some((el) => {
+        if (el.triggerCharacters && Array.isArray(el.triggerCharacters)) {
+            return el.triggerCharacters.includes(previousChar);
+        }
+    });
+};
