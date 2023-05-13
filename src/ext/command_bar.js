@@ -83,7 +83,7 @@ class CommandBarTooltip {
      * toolbar, the remaining elements are added to the overflow menu.
      * 
      * @param {string}            id      
-     * @param {CommandBarCommand} command
+     * @param {TooltipCommand} command
      */
     registerCommand(id, command) {
         var registerForMainTooltip = Object.keys(this.commands).length < this.maxElementsOnTooltip;
