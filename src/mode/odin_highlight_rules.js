@@ -108,10 +108,6 @@ var OdinHighlightRules = function () {
         next: "bqstring"
       },
       {
-        token: "support.constant",
-        regex: /#[a-z_]+/
-      },
-      {
         token: "constant.numeric", // rune
         regex:
           "'(?:[^\\'\uD800-\uDBFF]|[\uD800-\uDBFF][\uDC00-\uDFFF]|" +
