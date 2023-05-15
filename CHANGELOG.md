@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.21.0](https://github.com/ajaxorg/ace/compare/v1.20.0...v1.21.0) (2023-05-15)
+
+
+### Features
+
+* Custom empty message when no completion found ([#5158](https://github.com/ajaxorg/ace/issues/5158)) ([204aafa](https://github.com/ajaxorg/ace/commit/204aafa04c268e98655fb83b4877302a0f82fa4d))
+* Special trigger characters to start autocomplete ([#5147](https://github.com/ajaxorg/ace/issues/5147)) ([c2cfc5a](https://github.com/ajaxorg/ace/commit/c2cfc5a9f1448f64e62f7652c995a48c4ea31ab3))
+
+
+### Bug Fixes
+
+* command bar command type ([#5168](https://github.com/ajaxorg/ace/issues/5168)) ([64c8253](https://github.com/ajaxorg/ace/commit/64c8253e3cd4348b7ecd3684dae057c8fd5f79b9))
+
 ## [1.20.0](https://github.com/ajaxorg/ace/compare/v1.19.0...v1.20.0) (2023-05-10)
 
 
