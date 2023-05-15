@@ -155,12 +155,14 @@ var doLiveAutocomplete = function(e) {
 };
 
 var lastExec_e;
-var liveAutocompleteTimer = lang.delayedCall(function () { doLiveAutocomplete(lastExec_e); }, 0);
+var liveAutocompleteTimer = lang.delayedCall(function () {
+    doLiveAutocomplete(lastExec_e);
+}, 0);
 
-var scheduleAutocomplete = function(e)
-{
+var scheduleAutocomplete = function (e) {
     lastExec_e = e;
-    liveAutocompleteTimer.delay(e.editor.$liveAutocompletionDelay);
+    const delay  = e.editor.$liveAutocompletionDelay;
+    liveAutocompleteTimer.delay(delay);
 };
 
 var Editor = require("../editor").Editor;
@@ -197,10 +199,26 @@ require("../config").defineOptions(Editor.prototype, "editor", {
         value: false
     },
     liveAutocompletionDelay: {
-        value: 100
+        set: function (val) {
+            if (val) {
+                this.$liveAutocompletionDelay = val;
+            }
+        },
+        get: function () {
+            return this.$liveAutocompletionDelay;
+        },
+        initialValue: 300
     },
     liveAutocompletionThreshold: {
-        value: 0
+        set: function (val) {
+            if (val) {
+                this.$liveAutocompletionThreshold = val;
+            }
+        },
+        get: function () {
+            return this.$liveAutocompletionThreshold;
+        },
+        initialValue: 0
     },
     enableSnippets: {
         set: function(val) {
