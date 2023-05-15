@@ -136,8 +136,12 @@
   };
 
 
-  CodeMirror.findMatchingTag = function(cm, head) {
-    
+  CodeMirror.findMatchingTag = function (cm, head) {
+    return cm.findMatchingTag(head);
+  }
+
+  CodeMirror.findEnclosingTag = function (cm, head) {
+
   };
 
   CodeMirror.signal = function(o, name, e) { return o._signal(name, e) };
@@ -201,7 +205,7 @@
     var result = fn();
     if (this.ace.curOp && this.ace.curOp.command.name == "vim") {
       if (this.state.dialog)
-        this.ace.curOp.command.scrollIntoView = false;
+        this.ace.curOp.command.scrollIntoView = this.ace.curOp.vimDialogScroll;
       this.ace.endOperation();
       if (!curOp.cursorActivity && !curOp.lastChange && prevOp)
         this.ace.prevOp = prevOp;
@@ -612,6 +616,20 @@
   this.findMatchingBracket = function(pos) {
     var m = this.ace.session.findMatchingBracket(toAcePos(pos));
     return {to: m && toCmPos(m)};
+  };
+  this.findMatchingTag = function (pos) {
+    var m = this.ace.session.getMatchingTags(toAcePos(pos));
+    if (!m) return;
+    return {
+      open: {
+        from: toCmPos(m.openTag.start),
+        to: toCmPos(m.openTag.end)
+      },
+      close: {
+        from: toCmPos(m.closeTag.start),
+        to: toCmPos(m.closeTag.end)
+      }
+    };
   };
   this.indentLine = function(line, method) {
     if (method === true)
@@ -2044,7 +2062,9 @@ domLib.importCssString(`.normal-mode .ace_cursor{
         } else {
           register.setText(text, linewise, blockwise);
         }
-        if (registerName === '+') {
+        if (registerName === '+' && typeof navigator !== 'undefined' &&
+          typeof navigator.clipboard !== 'undefined' &&
+          typeof navigator.clipboard.readText === 'function') {
           navigator.clipboard.writeText(text);
         }
         // The unnamed register always has the same value as the last used
@@ -2503,6 +2523,8 @@ domLib.importCssString(`.normal-mode .ace_cursor{
                 cursorIsBefore(newAnchor, newHead) ? newHead
                     : newAnchor);
           } else if (!operator) {
+            if (cm.ace.curOp)
+              cm.ace.curOp.vimDialogScroll = "center-animate"; // ace_patch
             newHead = clipCursorToContent(cm, newHead, oldHead);
             cm.setCursor(newHead.line, newHead.ch);
           }
@@ -3577,14 +3599,20 @@ domLib.importCssString(`.normal-mode .ace_cursor{
       },
       paste: function(cm, actionArgs, vim) {
         var register = vimGlobalState.registerController.getRegister(
-            actionArgs.registerName);
-        if (actionArgs.registerName === '+') {
-          navigator.clipboard.readText().then((value) => {
-            this.continuePaste(cm, actionArgs, vim, value, register);
-          })
-        } else {
+          actionArgs.registerName);
+        var fallback = () => {
           var text = register.toString();
           this.continuePaste(cm, actionArgs, vim, text, register);
+        }
+        if (actionArgs.registerName === '+' &&
+              typeof navigator !== 'undefined' &&
+              typeof navigator.clipboard !== 'undefined' &&
+              typeof navigator.clipboard.readText === 'function') {
+          navigator.clipboard.readText().then((value) => {
+            this.continuePaste(cm, actionArgs, vim, value, register);
+          }, () => { fallback() })
+        } else {
+          fallback()
         }
       },
       continuePaste: function(cm, actionArgs, vim, text, register) {
@@ -6966,6 +6994,13 @@ domLib.importCssString(`.normal-mode .ace_cursor{
       domLib.translate(element, left, top);
       domLib.setStyle(element.style, "width", w + "px");
       domLib.setStyle(element.style, "height", h + "px");
+    },
+    $getDirectionForHighlight: function (editor) {
+      var cm = editor.state.cm;
+      var vim = getVim(cm);
+      if (!vim.insertMode) {
+        return editor.session.selection.isBackwards() || editor.session.selection.isEmpty();
+      }
     },
     handleKeyboard: function(data, hashId, key, keyCode, e) {
       var editor = data.editor;

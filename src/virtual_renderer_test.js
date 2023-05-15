@@ -9,8 +9,8 @@ var Range = require("./range").Range;
 var Editor = require("./editor").Editor;
 var EditSession = require("./edit_session").EditSession;
 var VirtualRenderer = require("./virtual_renderer").VirtualRenderer;
+var vim = require("./keyboard/vim");
 var assert = require("./test/assertions");
-require("./ext/error_marker");
 
 function setScreenPosition(node, rect) {
     node.style.left = rect[0] + "px";
@@ -22,6 +22,11 @@ function setScreenPosition(node, rect) {
 var editor = null;
 module.exports = {
     setUp: function() {
+        require("./config").setLoader(function(moduleName, cb) {
+            if (moduleName == "ace/ext/error_marker")
+                return cb(null, require("./ext/error_marker"));
+        });
+        
         if (editor)
             editor.destroy();
         var el = document.createElement("div");
@@ -254,7 +259,7 @@ module.exports = {
             }
         ]);
         renderer.$loop._flush();
-        var context = renderer.$scrollDecorator.canvas.getContext();
+        var context = renderer.$scrollDecorator.canvas.getContext("2d");
         var imageData = context.getImageData(0, 0, 50, 50);
         var scrollDecoratorColors = renderer.$scrollDecorator.colors.light;
         var values = [
@@ -298,6 +303,100 @@ module.exports = {
             {x: 6, y: 6, color: "rgba(0, 0, 0, 0)"}
         ];
         assertCoordsColor(values, imageData.data);
+    },
+    "test ghost text": function() {
+        editor.session.setValue("abcdef");
+        editor.setGhostText("Ghost");
+
+        editor.renderer.$loop._flush();
+        assert.equal(editor.renderer.content.textContent, "Ghostabcdef");
+
+        editor.setGhostText("Ghost", {row: 0, column: 3});
+
+        editor.renderer.$loop._flush();
+        assert.equal(editor.renderer.content.textContent, "abcGhostdef");
+
+        editor.setGhostText("Ghost", {row: 0, column: 6});
+
+        editor.renderer.$loop._flush();
+        assert.equal(editor.renderer.content.textContent, "abcdefGhost");
+
+        editor.removeGhostText();
+
+        editor.renderer.$loop._flush();
+        assert.equal(editor.renderer.content.textContent, "abcdef");
+    },
+
+    "test multiline ghost text": function() {
+        editor.session.setValue("abcdef");
+        editor.renderer.$loop._flush();
+
+        editor.setGhostText("Ghost1\nGhost2\nGhost3", {row: 0, column: 6});
+
+        editor.renderer.$loop._flush();
+        assert.equal(editor.renderer.content.textContent, "abcdefGhost1");
+        
+        assert.equal(editor.session.lineWidgets[0].el.textContent, "Ghost2\nGhost3");
+
+        editor.removeGhostText();
+
+        editor.renderer.$loop._flush();
+        assert.equal(editor.renderer.content.textContent, "abcdef");
+        
+        assert.equal(editor.session.lineWidgets, null);
+    },
+    "test: brackets highlighting": function (done) {
+        var renderer = editor.renderer;
+        editor.session.setValue(
+            "function Test() {\n" + "    function Inner(){\n" + "        \n" + "        \n" + "    }\n" + "}");
+        editor.session.selection.$setSelection(1, 21, 1, 21);
+        renderer.$loop._flush();
+
+        setTimeout(function () {
+            assert.ok(editor.session.$bracketHighlight);
+            assert.range(editor.session.$bracketHighlight.ranges[0], 1, 20, 1, 21);
+            assert.range(editor.session.$bracketHighlight.ranges[1], 4, 4, 4, 5);
+
+            editor.session.selection.$setSelection(1, 16, 1, 16);
+            setTimeout(function () {
+                assert.ok(editor.session.$bracketHighlight == null);
+                editor.setKeyboardHandler(vim.handler);
+                editor.session.selection.$setSelection(1, 20, 1, 20);
+                setTimeout(function () {
+                    assert.ok(editor.session.$bracketHighlight);
+                    assert.range(editor.session.$bracketHighlight.ranges[0], 1, 20, 1, 21);
+                    assert.range(editor.session.$bracketHighlight.ranges[1], 4, 4, 4, 5);
+                    done();
+                }, 60);
+            }, 60);
+        }, 60);
+    },
+    "test: scroll cursor into view": function() {
+        function X(n) {
+            return "X".repeat(n);
+        }
+        editor.session.setValue(`${X(10)}\n${X(1000)}}`);
+
+        var initialContentLeft = editor.renderer.content.getBoundingClientRect().left;
+
+        // Scroll so far to the right that the first line is completely hidden
+        editor.session.selection.$setSelection(1, 1000, 1, 1000);
+        editor.renderer.scrollCursorIntoView();
+        editor.renderer.$loop._flush();
+
+        editor.session.selection.$setSelection(0, 10, 0, 10);
+        editor.renderer.scrollCursorIntoView();
+        editor.renderer.$loop._flush();
+
+        var contentLeft = editor.renderer.content.getBoundingClientRect().left;
+        var scrollDelta = initialContentLeft - contentLeft;
+
+        const leftBoundPixelPos = editor.renderer.$cursorLayer.getPixelPosition({row: 0, column: 8}).left;
+        const rightBoundPixelPos = editor.renderer.$cursorLayer.getPixelPosition({row: 0, column: 9}).left;
+        assert.ok(
+            scrollDelta >= leftBoundPixelPos && scrollDelta < rightBoundPixelPos,
+            "Expected content to have been scrolled two characters beyond the cursor"
+        );
     }
 
     // change tab size after setDocument (for text layer)

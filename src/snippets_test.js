@@ -5,6 +5,7 @@ if (typeof process !== "undefined") {
 
 "use strict";
 var Editor = require("./editor").Editor;
+var EditSession = require("./edit_session").EditSession;
 var MockRenderer = require("./test/mockrenderer").MockRenderer;
 var JavascriptMode = require("./mode/javascript").Mode;
 require("./multi_select");
@@ -328,6 +329,47 @@ module.exports = {
         this.editor.tabstopManager.tabNext();
         editor.execCommand("insertstring", ".");
         assert.equal(editor.getValue(), "qt qt qt.");
+    },
+    "test: should work as expected with object of Range interface": function () {
+        var content = "test";
+        this.editor.setValue("replace1");
+        snippetManager.insertSnippet(this.editor, content, {
+            start: {row: 0, column: 0}, end: {row: 0, column: 8}
+        });
+        assert.equal(this.editor.getValue(), "test");
+    },
+    "test: insert snippet without extra indentation": function() {
+        var editor = this.editor;
+        const options = {
+            excludeExtraIndent: true
+        };
+        const correctlyFormattedCode = [
+            "def multiply_with_random(array):",
+            "    for i in range(len(array)):",
+            "        array[i] *= random.randint(1, 10)",
+            "    return array"
+        ].join("\n");
+
+        editor.setValue("");
+        snippetManager.insertSnippet(this.editor, "def multiply_with_random(array):\n\t");
+        snippetManager.insertSnippet(this.editor, "for i in range(len(array)):\n\t\tarray[i] *= random.randint(1, 10)\n\treturn array");
+        assert.notEqual(editor.getValue(), correctlyFormattedCode);
+
+        editor.setValue("");
+        snippetManager.insertSnippet(this.editor, "def multiply_with_random(array):\n\t", options);
+        snippetManager.insertSnippet(this.editor, "for i in range(len(array)):\n\t\tarray[i] *= random.randint(1, 10)\n\treturn array", options);
+        assert.equal(editor.getValue(), correctlyFormattedCode);
+    },
+    
+    "test: snippets without multiselct": function() {
+        var session = new EditSession([]);
+        var editor = new Editor(new MockRenderer());
+        editor.setOption("enableMultiselect", false);
+        editor.setSession(session);
+
+        editor.insertSnippet("hello $1 world $1");
+        editor.onTextInput("!");
+        assert.equal(editor.getValue(), "hello ! world !");
     }
 };
 

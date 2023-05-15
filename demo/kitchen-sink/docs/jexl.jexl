@@ -1,0 +1,20 @@
+#pragma execution.option 42
+
+##
+## This is a test script
+##
+
+/* This is
+a multi-line
+comment
+*/
+if (out != null and result == null) out.println("The result is " + result);
+x = ~/\w+\/test/;
+y = 2;
+result = x * y + 5;
+if (out != null) out.println("The result is " + result);
+
+@lenient @silent x.someMethod();
+
+`multi-line string
+with ${var interpolation = "Hey!"} and \escap\u00E9 chars`

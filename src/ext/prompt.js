@@ -22,9 +22,9 @@
 
 "use strict";
 
+var nls = require("../config").nls;
 var Range = require("../range").Range;
 var dom = require("../lib/dom");
-var shortcuts = require("../ext/menu_tools/get_editor_keyboard_shortcuts");
 var FilteredList= require("../autocomplete").FilteredList;
 var AcePopup = require('../autocomplete/popup').AcePopup;
 var $singleLineEditor = require('../autocomplete/popup').$singleLineEditor;
@@ -72,6 +72,7 @@ function prompt(editor, message, options, callback) {
     if (options.getCompletions) {
         var popup = new AcePopup();
         popup.renderer.setStyle("ace_autocomplete_inline");
+        popup.renderer.setStyle("ace_autocomplete_right");
         popup.container.style.display = "block";
         popup.container.style.maxWidth = "600px";
         popup.container.style.width = "100%";
@@ -275,7 +276,6 @@ prompt.gotoLine = function(editor, callback) {
             editor.renderer.animateScrolling(scrollTop);
         },
         history: function() {
-            var undoManager = editor.session.getUndoManager();
             if (!prompt.gotoLine._history)
                 return [];
             return prompt.gotoLine._history;
@@ -418,13 +418,13 @@ prompt.commands = function(editor, callback) {
             otherCommands = getFilteredCompletions(otherCommands, prefix);
 
             if (recentlyUsedCommands.length && otherCommands.length) {
-                recentlyUsedCommands[0]["message"] = " Recently used";
-                otherCommands[0]["message"] = " Other commands";
+                recentlyUsedCommands[0].message = nls("Recently used");
+                otherCommands[0].message = nls("Other commands");
             }
 
             var completions = recentlyUsedCommands.concat(otherCommands);
             return completions.length > 0 ? completions : [{
-                value: "No matching commands",
+                value: nls("No matching commands"),
                 error: 1
             }];
         }
@@ -470,7 +470,7 @@ prompt.modes = function(editor, callback) {
 };
 
 dom.importCssString(`.ace_prompt_container {
-    max-width: 600px;
+    max-width: 603px;
     width: 100%;
     margin: 20px auto;
     padding: 3px;

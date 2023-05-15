@@ -5,14 +5,15 @@ if (typeof process !== "undefined") {
 
 "use strict";
 
-var ace = require("./ace");
-var EditSession = require("./edit_session").EditSession;
 var Editor = require("./editor").Editor;
 var UndoManager = require("./undomanager").UndoManager;
 var MockRenderer = require("./test/mockrenderer").MockRenderer;
 var JavaScriptMode = require("./mode/javascript").Mode;
 var HTMLMode = require("./mode/html").Mode;
 var assert = require("./test/assertions");
+
+require("./multi_select");
+
 var editor;
 
 var exec = function(name, times, args) {
@@ -29,19 +30,39 @@ module.exports = {
         editor.setValue("<html><head></head> abcd</html>", 1);
         exec("gotostart", 1);
         exec("gotoright", 3);
-        assert.equal(editor.$highlightTagPending, true);
+        assert.equal(editor.$highlightPending, true);
         setTimeout(function() {
-            assert.equal(editor.$highlightTagPending, false);
-            assert.ok(editor.session.$tagHighlight);
+            assert.equal(editor.$highlightPending, false);
+            assert.ok(editor.session.$bracketHighlight);
+            assert.equal(
+                editor.session.$bracketHighlight.ranges + "",
+                "Range: [0/1] -> [0/5],Range: [0/26] -> [0/30]"
+            );
             exec("gotoend", 1);
             exec("gotoleft", 3);
-            assert.equal(editor.$highlightTagPending, true);
+            assert.equal(editor.$highlightPending, true);
             setTimeout(function() {
-                assert.equal(editor.$highlightTagPending, false);
-                done();
+                assert.equal(editor.$highlightPending, false);
+
+                editor.setValue("{}");
+                exec("gotostart", 1);
+                setTimeout(function() {
+                    assert.equal(
+                        editor.session.$bracketHighlight.ranges + "",
+                        'Range: [0/0] -> [0/2]'
+                    );
+                    exec("gotoend", 1);
+                    setTimeout(function() {
+                        assert.equal(
+                            editor.session.$bracketHighlight.ranges + "",
+                            'Range: [0/0] -> [0/2]'
+                        );
+                        done();
+                    }, 51);
+                }, 51);
             }, 51);
         }, 51);
-    },    
+    },
     "test modifyNumber": function() {
         editor = new Editor(new MockRenderer());
         editor.setValue("999");
@@ -230,14 +251,14 @@ module.exports = {
         exec("gotoright", 15);
         editor.execCommand(editor.commands.byName.selecttomatching);
         editor.execCommand(editor.commands.byName.selecttomatching);
-        assert.range(editor.selection.getRange(), 0, 6, 0, 15);
+        assert.range(editor.selection.getRange(), 0, 10, 0, 15);
 
         editor.setValue("<html>abcd</div></div></html>", 1);
         exec("gotostart", 1);
         exec("gotoright", 21);
         editor.execCommand(editor.commands.byName.selecttomatching);
         editor.execCommand(editor.commands.byName.selecttomatching);
-        assert.range(editor.selection.getRange(), 0, 6, 0, 21);
+        assert.range(editor.selection.getRange(), 0, 16, 0, 21);
 
         editor.setValue("", 1);
         exec("gotostart", 1);
@@ -533,6 +554,16 @@ module.exports = {
         exec("selectlineend", 1);
         editor.execCommand(editor.commands.byName.joinlines);
         assert.equal(editor.getValue(), "foo for foo foo foo for foo foo\nfoo for foo foo");
+    },
+    "test findlink": function() {
+        editor = new Editor(new MockRenderer());
+
+        editor.setValue("foo for foo foo\nhttps://www.google.com/", 1);
+        var url = editor.findLinkAt(0, 1);
+        assert.equal(url, null);
+
+        url = editor.findLinkAt(1, 5);
+        assert.equal(url, "https://www.google.com/");
     }
 };
 

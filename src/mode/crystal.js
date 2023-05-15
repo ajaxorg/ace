@@ -5,13 +5,12 @@ var TextMode = require("./text").Mode;
 var CrystalHighlightRules = require("./crystal_highlight_rules").CrystalHighlightRules;
 var MatchingBraceOutdent = require("./matching_brace_outdent").MatchingBraceOutdent;
 var Range = require("../range").Range;
-var CstyleBehaviour = require("./behaviour/cstyle").CstyleBehaviour;
 var FoldMode = require("./folding/coffee").FoldMode;
 
 var Mode = function() {
     this.HighlightRules = CrystalHighlightRules;
     this.$outdent = new MatchingBraceOutdent();
-    this.$behaviour = new CstyleBehaviour();
+    this.$behaviour = this.$defaultBehaviour;
     this.foldingRules = new FoldMode();
 };
 oop.inherits(Mode, TextMode);

@@ -159,4 +159,31 @@
   ["keyword","))"],
   ["text"," "],
   ["comment","; -> java.lang.IllegalArgumentException: unsupported language xy"]
+],[
+   "start"
+],[
+   "regex",
+  ["keyword","("],
+  ["support.function","print"],
+  ["text"," "],
+  ["keyword","("],
+  ["support.function","re-matches"],
+  ["text"," "],
+  ["string.regexp","#\"abc"],
+  ["constant.language.escape","(.*)"]
+],[
+   "string",
+  ["string.regexp","            "],
+  ["constant.language.escape","("],
+  ["string.regexp","r"],
+  ["constant.language.escape",")"],
+  ["string.regexp","\""],
+  ["text"," "],
+  ["string","\"abcxyz"]
+],[
+   "start",
+  ["string","            r\""],
+  ["keyword",")"],
+  ["text"," "],
+  ["keyword",")"]
 ]]

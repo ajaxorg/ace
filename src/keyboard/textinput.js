@@ -1,6 +1,7 @@
 "use strict";
 
 var event = require("../lib/event");
+var nls = require("../config").nls;
 var useragent = require("../lib/useragent");
 var dom = require("../lib/dom");
 var lang = require("../lib/lang");
@@ -48,11 +49,42 @@ var TextInput = function(parentNode, host) {
     // FOCUS
     // ie9 throws error if document.activeElement is accessed too soon
     try { var isFocused = document.activeElement === text; } catch(e) {}
-    
+
+    this.setAriaOptions = function(options) {
+        if (options.activeDescendant) {
+            text.setAttribute("aria-haspopup", "true");
+            text.setAttribute("aria-autocomplete", options.inline ? "both" : "list");
+            text.setAttribute("aria-activedescendant", options.activeDescendant);
+        } else {
+            text.setAttribute("aria-haspopup", "false");
+            text.setAttribute("aria-autocomplete", "both");
+            text.removeAttribute("aria-activedescendant");
+        }
+        if (options.role) {
+            text.setAttribute("role", options.role);
+        }     
+    };
+    this.setAriaLabel = function() {
+        if(host.session && host.renderer.enableKeyboardAccessibility) {
+            var row =  host.session.selection.cursor.row;
+
+            text.setAttribute("aria-roledescription", nls("editor"));
+            text.setAttribute("aria-label", nls("Cursor at row $0", [row + 1]));
+        } else {
+            text.removeAttribute("aria-roledescription");
+            text.removeAttribute("aria-label");
+        }
+    };
+
+    this.setAriaOptions({role: "textbox"});
+    this.setAriaLabel();
+
     event.addListener(text, "blur", function(e) {
         if (ignoreFocusEvents) return;
         host.onBlur(e);
         isFocused = false;
+        if (isMobile && !isIOS)
+            document.removeEventListener("selectionchange", detectSelectionChange);
     }, host);
     event.addListener(text, "focus", function(e) {
         if (ignoreFocusEvents) return;
@@ -69,9 +101,14 @@ var TextInput = function(parentNode, host) {
             setTimeout(resetSelection);
         else
             resetSelection();
+        if (isMobile && !isIOS)
+            document.addEventListener("selectionchange", detectSelectionChange);
     }, host);
     this.$focusScroll = false;
     this.focus = function() {
+        // On focusing on the textarea, read active row number to assistive tech.
+        this.setAriaLabel();
+
         if (tempStyle || HAS_FOCUS_ARGS || this.$focusScroll == "browser")
             return text.focus({ preventScroll: true });
 
@@ -253,6 +290,26 @@ var TextInput = function(parentNode, host) {
             resetSelection();
         }
     };
+
+    function detectSelectionChange(e) {
+        if (!text || !text.parentNode)
+            document.removeEventListener("selectionchange", detectSelectionChange);
+        if (inComposition) return;
+
+        if (text.selectionStart !== text.selectionEnd) return;
+        var startDiff = text.selectionStart - lastSelectionStart;
+        var oldLenght = lastSelectionEnd - lastSelectionStart;
+        if (startDiff > 0) {
+            startDiff = Math.max(startDiff - oldLenght, 1);
+        } else if (startDiff === 0 && oldLenght) {
+            startDiff = -1;
+        }
+        var repeat = Math.abs(startDiff);
+        var key = startDiff > 0 ? KEYS.right : KEYS.left;
+        for (var i = 0; i < repeat; i++) {
+            host.onCommandKey({}, 0, key);
+        }
+    }
 
     var inputHandler = null;
     this.setInputHandler = function(cb) {inputHandler = cb;};

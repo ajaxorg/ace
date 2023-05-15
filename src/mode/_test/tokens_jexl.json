@@ -1,0 +1,156 @@
+[[
+   "start",
+  ["comment","#pragma"],
+  ["text"," execution.option 42"]
+],[
+   "start"
+],[
+   "start",
+  ["comment","##"]
+],[
+   "start",
+  ["comment","## This is a test script"]
+],[
+   "start",
+  ["comment","##"]
+],[
+   "start"
+],[
+   "comment",
+  ["comment","/* This is"]
+],[
+   "comment",
+  ["comment","a multi-line"]
+],[
+   "comment",
+  ["comment","comment"]
+],[
+   "start",
+  ["comment","*/"]
+],[
+   "start",
+  ["keyword","if"],
+  ["text"," "],
+  ["lparen","("],
+  ["identifier","out"],
+  ["text"," "],
+  ["keyword.operator","!="],
+  ["text"," "],
+  ["constant.language","null"],
+  ["text"," "],
+  ["keyword","and"],
+  ["text"," "],
+  ["identifier","result"],
+  ["text"," "],
+  ["keyword.operator","=="],
+  ["text"," "],
+  ["constant.language","null"],
+  ["rparen",")"],
+  ["text"," "],
+  ["identifier","out"],
+  ["punctuation","."],
+  ["identifier","println"],
+  ["lparen","("],
+  ["string","\"The result is \""],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["identifier","result"],
+  ["rparen",")"],
+  ["text",";"]
+],[
+   "start",
+  ["identifier","x"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["string.regexp","~/\\w+"],
+  ["constant.language.escape","\\/"],
+  ["string.regexp","test/"],
+  ["text",";"]
+],[
+   "start",
+  ["identifier","y"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","2"],
+  ["text",";"]
+],[
+   "start",
+  ["identifier","result"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["identifier","x"],
+  ["text"," "],
+  ["keyword.operator","*"],
+  ["text"," "],
+  ["identifier","y"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["constant.numeric","5"],
+  ["text",";"]
+],[
+   "start",
+  ["keyword","if"],
+  ["text"," "],
+  ["lparen","("],
+  ["identifier","out"],
+  ["text"," "],
+  ["keyword.operator","!="],
+  ["text"," "],
+  ["constant.language","null"],
+  ["rparen",")"],
+  ["text"," "],
+  ["identifier","out"],
+  ["punctuation","."],
+  ["identifier","println"],
+  ["lparen","("],
+  ["string","\"The result is \""],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["identifier","result"],
+  ["rparen",")"],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start",
+  ["storage.type.annotation","@lenient"],
+  ["text"," "],
+  ["storage.type.annotation","@silent"],
+  ["text"," "],
+  ["identifier","x"],
+  ["punctuation","."],
+  ["identifier","someMethod"],
+  ["lparen","("],
+  ["rparen",")"],
+  ["text",";"]
+],[
+   "start"
+],[
+   "string",
+  ["string","`multi-line string"]
+],[
+   "start",
+  ["string","with "],
+  ["lparen","${"],
+  ["keyword","var"],
+  ["text"," "],
+  ["identifier","interpolation"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["string","\"Hey!\""],
+  ["rparen","}"],
+  ["string"," and "],
+  ["constant.language.escape","\\"],
+  ["string","escap"],
+  ["constant.language.escape","\\u00E9"],
+  ["string"," chars`"]
+],[
+   "start"
+]]

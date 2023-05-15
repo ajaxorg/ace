@@ -14,8 +14,13 @@ var keyWordCompleter = {
         }
         var state = editor.session.getState(pos.row);
         var completions = session.$mode.getCompletions(state, session, pos, prefix);
+        completions = completions.map((el) => {
+            el.completerId = keyWordCompleter.id;
+            return el;
+        });
         callback(null, completions);
-    }
+    },
+    id: "keywordCompleter"
 };
 
 var transformSnippetTooltip = function(str) {
@@ -51,20 +56,21 @@ var snippetCompleter = {
                     caption: caption,
                     snippet: s.content,
                     meta: s.tabTrigger && !s.name ? s.tabTrigger + "\u21E5 " : "snippet",
-                    type: "snippet"
+                    completerId: snippetCompleter.id
                 });
             }
         }, this);
         callback(null, completions);
     },
     getDocTooltip: function(item) {
-        if (item.type == "snippet" && !item.docHTML) {
+        if (item.snippet && !item.docHTML) {
             item.docHTML = [
                 "<b>", lang.escapeHTML(item.caption), "</b>", "<hr></hr>",
                 lang.escapeHTML(transformSnippetTooltip(item.snippet))
             ].join("");
         }
-    }
+    },
+    id: "snippetCompleter"
 };
 
 var completers = [snippetCompleter, textCompleter, keyWordCompleter];
@@ -137,11 +143,12 @@ var doLiveAutocomplete = function(e) {
     }
     else if (e.command.name === "insertstring") {
         var prefix = util.getCompletionPrefix(editor);
-        // Only autocomplete if there's a prefix that can be matched
-        if (prefix && !hasCompleter) {
+        // Only autocomplete if there's a prefix that can be matched or previous char is trigger character 
+        var triggerAutocomplete = util.triggerAutocomplete(editor);
+        if ((prefix || triggerAutocomplete) && !hasCompleter) {
             var completer = Autocomplete.for(editor);
-            // Disable autoInsert
-            completer.autoInsert = false;
+            // Set a flag for auto shown
+            completer.autoShown = true;
             completer.showPopup(editor);
         }
     }
@@ -162,10 +169,12 @@ require("../config").defineOptions(Editor.prototype, "editor", {
         value: false
     },
     /**
-     * Enable live autocomplete. If the value is an array, it is assumed to be an array of completers
-     * and will use them instead of the default completers.
+     * Enable live autocompletion
      */
     enableLiveAutocompletion: {
+        /**
+         * @param {boolean} val
+         */
         set: function(val) {
             if (val) {
                 if (!this.completers)

@@ -28,7 +28,6 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-define(function(require, exports, module) {
 
 exports.isDark = %isDark%;
 exports.cssClass = "%cssClass%";
@@ -36,4 +35,3 @@ exports.cssText = %css%;
 
 var dom = require("../lib/dom");
 dom.importCssString(exports.cssText, exports.cssClass);
-});

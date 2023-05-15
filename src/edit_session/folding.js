@@ -4,6 +4,7 @@ var Range = require("../range").Range;
 var FoldLine = require("./fold_line").FoldLine;
 var Fold = require("./fold").Fold;
 var TokenIterator = require("../token_iterator").TokenIterator;
+var MouseEvent = require("../mouse/mouse_event").MouseEvent;
 
 function Folding() {
     /*
@@ -593,12 +594,12 @@ function Folding() {
             if (dir != 1) {
                 do {
                     token = iterator.stepBackward();
-                } while (token && re.test(token.type));
-                iterator.stepForward();
+                } while (token && re.test(token.type) && !/^comment.end/.test(token.type));
+                token = iterator.stepForward();
             }
             
             range.start.row = iterator.getCurrentTokenRow();
-            range.start.column = iterator.getCurrentTokenColumn() + 2;
+            range.start.column = iterator.getCurrentTokenColumn() + (/^comment.start/.test(token.type) ? token.value.length : 2);
 
             iterator = new TokenIterator(this, row, column);
             
@@ -613,13 +614,16 @@ function Folding() {
                     } else if (iterator.$row > lastRow) {
                         break;
                     }
-                } while (token && re.test(token.type));
+                } while (token && re.test(token.type) && !/^comment.start/.test(token.type));
                 token = iterator.stepBackward();
             } else
                 token = iterator.getCurrentToken();
 
             range.end.row = iterator.getCurrentTokenRow();
-            range.end.column = iterator.getCurrentTokenColumn() + token.value.length - 2;
+            range.end.column = iterator.getCurrentTokenColumn();
+            if (!/^comment.end/.test(token.type)) {
+                range.end.column += token.value.length - 2;
+            }
             return range;
         }
     };
@@ -752,7 +756,9 @@ function Folding() {
     };
 
     this.onFoldWidgetClick = function(row, e) {
-        e = e.domEvent;
+        if (e instanceof MouseEvent)
+            e = e.domEvent;
+
         var options = {
             children: e.shiftKey,
             all: e.ctrlKey || e.metaKey,

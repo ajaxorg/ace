@@ -111,6 +111,9 @@ function main(args) {
     if (type == "css") {
         return extractCss();
     }
+    if (type == "nls") {
+        return extractNls();
+    }
 
     if (args.indexOf("--reuse") === -1) {
         console.log("updating files in lib/ace");
@@ -145,6 +148,7 @@ function showHelp(type) {
     console.log("  full         all of above");
     console.log("  highlighter  ");
     console.log("  css          extract css files");
+    console.log("  nls          extract nls messages");
     console.log("args:");
     console.log("  --target ./path   path to build folder");
     console.log("flags:");
@@ -171,7 +175,10 @@ function ace() {
 }
 
 function buildTypes() {
-    var definitions = fs.readFileSync(ACE_HOME + '/ace.d.ts', 'utf8');
+    var aceCodeModeDefinitions = '/// <reference path="./ace-modes.d.ts" />';
+    // ace-builds package has different structure and can't use mode types defined for the ace-code.
+    // ace-builds modes are declared along with other modules in the ace-modules.d.ts file below.
+    var definitions = fs.readFileSync(ACE_HOME + '/ace.d.ts', 'utf8').replace(aceCodeModeDefinitions, '');
     var paths = fs.readdirSync(BUILD_DIR + '/src-noconflict');
     var moduleRef = '/// <reference path="./ace-modules.d.ts" />';
 
@@ -193,18 +200,22 @@ function buildTypes() {
 
     fs.writeFileSync(BUILD_DIR + '/ace.d.ts', moduleRef + '\n' + definitions);
     fs.writeFileSync(BUILD_DIR + '/ace-modules.d.ts', pathModules);
-    
+    var esmUrls = [];
+
     var loader = paths.map(function(path) {
         if (/\.js$/.test(path) && !/^ace\.js$/.test(path)) {
             var moduleName = path.split('.')[0].replace(/-/, "/");
             if (/^worker/.test(moduleName))
                 moduleName = "mode" + moduleName.slice(6) + "_worker";
             moduleName = moduleName.replace(/keybinding/, "keyboard");
-            return "ace.config.setModuleUrl('ace/" + moduleName + "', require('file-loader?esModule=false!./src-noconflict/" + path + "'))";
+            esmUrls.push("ace.config.setModuleLoader('ace/" + moduleName + "', () => import('./src-noconflict/" + path + "'));");
+            return "ace.config.setModuleUrl('ace/" + moduleName + "', require('file-loader?esModule=false!./src-noconflict/" + path + "'));";
         }
     }).join('\n');
-    
+    var esmLoader = esmUrls.join('\n');
+
     fs.writeFileSync(BUILD_DIR + '/webpack-resolver.js', loader, "utf8");
+    fs.writeFileSync(BUILD_DIR + '/esm-resolver.js', esmLoader, "utf8");
 }
 
 function demo() {
@@ -288,6 +299,24 @@ function jsFileList(path, filter) {
     }).filter(Boolean);
 }
 
+function searchFiles(dir, fn) {
+    var files = fs.readdirSync(dir);
+    files.forEach(function(name) {
+        var path = dir + "/" + name;
+        try {
+            var stat = fs.statSync(path);
+        } catch (e) {
+            return;
+        }
+        if (stat.isFile() && /\.js$/.test(path)) {
+            fn(path);
+        } else if (stat.isDirectory()) {
+            if (/node_modules|[#\s]/.test(name)) return;
+            searchFiles(path, fn);
+        }
+    });
+}
+
 function workers(path) {
     return jsFileList(path).map(function(x) {
         if (x.slice(-7) == "_worker")
@@ -295,8 +324,9 @@ function workers(path) {
     }).filter(function(x) { return !!x; });
 }
 
-function modeList() {
-    return jsFileList("lib/ace/mode", /_highlight_rules|_test|_worker|xml_util|_outdent|behaviour|completions/);
+function modeList(path) {
+    path = path || "lib/ace/mode";
+    return jsFileList(path, /_highlight_rules|_test|_worker|xml_util|_outdent|behaviour|completions/);
 }
 
 function buildAceModule(opts, callback) {
@@ -601,7 +631,11 @@ function extractCss(callback) {
                 }
                 var buffer = Buffer.from(data.slice(i + 1), "base64");
                 imageCounter++;
-                var imageName = name + "-" + imageCounter + ".png";
+                var imageName;
+                if (/^image\/svg\+xml/.test(data))
+                    imageName = name + "-" + imageCounter + ".svg";
+                else   
+                    imageName = name + "-" + imageCounter + ".png";
                 images[imageName] = buffer;
                 console.log("url(\"" + directory + "/" + imageName + "\")");
                 return "url(\"" + directory + "/" + imageName + "\")";
@@ -613,6 +647,33 @@ function extractCss(callback) {
             fs.writeFileSync(BUILD_DIR + "/css/" + imageName, images[imageName]);
         }
     }
+}
+
+function extractNls() {
+    var allMessages = {};
+    searchFiles(__dirname + "/src", function(path) {
+        if (/_test/.test(path)) return;
+        var text = fs.readFileSync(path, "utf8");
+        var matches = text.match(/nls\s*\(\s*("([^"\\]|\\.)+"|'([^'\\]|\\.)+')/g);
+        matches && matches.forEach(function(m) {
+            var eng = m.replace(/^nls\s*\(\s*["']|["']$/g, "");
+            allMessages[eng] = "";
+        });
+    });
+    
+    fs.readdirSync(__dirname + "/translations").forEach(function(x) {
+        if (!/\.json$/.test(x)) return;
+        var path = __dirname + "/translations/" + x;
+        var existingStr = fs.readFileSync(path, "utf8");
+        var existing = JSON.parse(existingStr);
+        
+        var newData = {$id: existing.$id};
+        for (var i in allMessages) {
+            newData[i] = existing[i] || "";
+        }
+        fs.writeFileSync(path, JSON.stringify(newData, null, 4), "utf8");
+        console.log("Saved " + x);
+    });
 }
 
 function getLoadedFileList(options, callback, result) {
@@ -865,7 +926,11 @@ function sanityCheck(opts, callback) {
     });
 }
 
-if (!module.parent)
-    main(process.argv);
-else
+if (!module.parent) 
+    main(process.argv); 
+else {
     exports.buildAce = buildAce;
+    exports.jsFileList = jsFileList;
+    exports.modeList = modeList;
+}
+    

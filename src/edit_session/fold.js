@@ -1,37 +1,35 @@
 "use strict";
 
 var RangeList = require("../range_list").RangeList;
-var oop = require("../lib/oop");
+
 /*
  * Simple fold-data struct.
  **/
-var Fold = exports.Fold = function(range, placeholder) {
-    this.foldLine = null;
-    this.placeholder = placeholder;
-    this.range = range;
-    this.start = range.start;
-    this.end = range.end;
+class Fold extends RangeList {
+    constructor(range, placeholder) {
+        super();
+        this.foldLine = null;
+        this.placeholder = placeholder;
+        this.range = range;
+        this.start = range.start;
+        this.end = range.end;
 
-    this.sameRow = range.start.row == range.end.row;
-    this.subFolds = this.ranges = [];
-};
-
-oop.inherits(Fold, RangeList);
-
-(function() {
-
-    this.toString = function() {
+        this.sameRow = range.start.row == range.end.row;
+        this.subFolds = this.ranges = [];
+    }
+    
+    toString() {
         return '"' + this.placeholder + '" ' + this.range.toString();
-    };
+    }
 
-    this.setFoldLine = function(foldLine) {
+    setFoldLine(foldLine) {
         this.foldLine = foldLine;
         this.subFolds.forEach(function(fold) {
             fold.setFoldLine(foldLine);
         });
-    };
+    }
 
-    this.clone = function() {
+    clone() {
         var range = this.range.clone();
         var fold = new Fold(range, this.placeholder);
         this.subFolds.forEach(function(subFold) {
@@ -39,9 +37,9 @@ oop.inherits(Fold, RangeList);
         });
         fold.collapseChildren = this.collapseChildren;
         return fold;
-    };
+    }
 
-    this.addSubFold = function(fold) {
+    addSubFold(fold) {
         if (this.range.isEqual(fold))
             return;
 
@@ -80,13 +78,13 @@ oop.inherits(Fold, RangeList);
         fold.setFoldLine(this.foldLine);
 
         return fold;
-    };
+    }
     
-    this.restoreRange = function(range) {
+    restoreRange(range) {
         return restoreRange(range, this.start);
-    };
+    }
 
-}).call(Fold.prototype);
+}
 
 function consumePoint(point, anchor) {
     point.row -= anchor.row;
@@ -106,3 +104,5 @@ function restoreRange(range, anchor) {
     restorePoint(range.start, anchor);
     restorePoint(range.end, anchor);
 }
+
+exports.Fold = Fold;

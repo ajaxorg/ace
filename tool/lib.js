@@ -9,9 +9,7 @@ var http = require("http");
 exports.parsePlist = function(xmlOrJSON, callback) {
     var json;
     if (xmlOrJSON[0] == "<") {
-        plist.parseString(xmlOrJSON, function(_, result) {
-            json = result[0];
-        });
+        json = plist.parse(xmlOrJSON);
     } else {
         try {
             xmlOrJSON = xmlOrJSON.replace(
