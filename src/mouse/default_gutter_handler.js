@@ -39,6 +39,9 @@ function GutterHandler(mouseHandler) {
     function showTooltip() {
         var row = mouseEvent.getDocumentPosition().row;
 
+        if (!gutter.$annotations[row])
+            return hideTooltip();
+
         var maxRow = editor.session.getLength();
         if (row == maxRow) {
             var screenRow = editor.renderer.pixelToScreenCoordinates(0, mouseEvent.y).row;
@@ -49,9 +52,6 @@ function GutterHandler(mouseHandler) {
 
         tooltip.showTooltip(row);
         
-        if (!tooltip.isOpen)
-            return;
-
         editor.on("mousewheel", hideTooltip);
 
         if (mouseHandler.$tooltipFollowsMouse) {
