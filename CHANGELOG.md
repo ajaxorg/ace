@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.21.1](https://github.com/ajaxorg/ace/compare/v1.21.0...v1.21.1) (2023-05-16)
+
+
+### Bug Fixes
+
+* console error when hovering over empty gutter cell with tooltipFollowsMouse set to false ([#5173](https://github.com/ajaxorg/ace/issues/5173)) ([5ff8d4c](https://github.com/ajaxorg/ace/commit/5ff8d4cc064ac647a2f40bf977f88b2972ae17ef))
+
 ## [1.21.0](https://github.com/ajaxorg/ace/compare/v1.20.0...v1.21.0) (2023-05-15)
 
 
