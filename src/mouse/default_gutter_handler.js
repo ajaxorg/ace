@@ -49,6 +49,9 @@ function GutterHandler(mouseHandler) {
 
         tooltip.showTooltip(row);
 
+        if (!tooltip.isOpen)
+            return;
+
         editor.on("mousewheel", hideTooltip);
 
         if (mouseHandler.$tooltipFollowsMouse) {
