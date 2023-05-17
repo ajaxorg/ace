@@ -108,6 +108,10 @@ var OdinHighlightRules = function () {
         next: "bqstring"
       },
       {
+        token: "support.constant",
+        regex: /#[a-z_]+/
+      },
+      {
         token: "constant.numeric", // rune
         regex:
           "'(?:[^\\'\uD800-\uDBFF]|[\uD800-\uDBFF][\uDC00-\uDFFF]|" +
@@ -131,10 +135,6 @@ var OdinHighlightRules = function () {
           "keyword"
         ],
         regex: "([a-zA-Z_$][a-zA-Z0-9_$]*)(\\s+)(::)(\\s+)(proc)\\b"
-      },
-      {
-        token: "constant",
-        regex: /[A-Z_0-9]+/
       },
       {
         token: function (val) {
