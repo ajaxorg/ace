@@ -5,7 +5,7 @@ var dom = require("../lib/dom");
 var lang = require("../lib/lang");
 var Lines = require("./lines").Lines;
 var EventEmitter = require("../lib/event_emitter").EventEmitter;
-
+var nls = require("../config").nls;
 
 class Text {
     constructor(parentEl) {
@@ -365,7 +365,7 @@ class Text {
             var span = this.dom.createElement("span");
             if (token.type == "fold"){
                 span.style.width = (token.value.length * this.config.characterWidth) + "px";
-                span.setAttribute("title", "Unfold code");
+                span.setAttribute("title", nls("Unfold code"));
             }
 
             span.className = classes;
