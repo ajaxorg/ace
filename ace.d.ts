@@ -1008,6 +1008,7 @@ export namespace Ace {
       prefix: string,
       callback: CompleterCallback): void;
     getDocTooltip?(item: Completion): undefined | string | Completion;
+    cancel?(): void;
     id?: string;
     triggerCharacters?: string[]
   }

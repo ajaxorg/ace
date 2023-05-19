@@ -233,7 +233,7 @@ class Autocomplete {
         this.hideDocTooltip();
 
         if (this.completionProvider) {
-            this.completionProvider.detach();
+            this.completionProvider.detach(this.editor);
         }
 
         if (this.popup && this.popup.isOpen)
@@ -740,8 +740,13 @@ class CompletionProvider {
         }
     }
 
-    detach() {
+    detach(editor) {
         this.active = false;
+        editor.completers.forEach((completer) => {
+            if (typeof completer.cancel === "function") {
+                completer.cancel();        
+            }
+        })
     }
 }
 
