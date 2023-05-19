@@ -390,6 +390,7 @@ class Gutter{
             dom.setStyle(annotationNode.style, "height", lineHeight);
             annotationNode.setAttribute("aria-label", nls("Read annotations row $0", [rowText]));
             annotationNode.setAttribute("tabindex", "-1");
+            annotationNode.setAttribute("role", "button");
         }
         else if (this.$annotations[row]){
             annotationNode.className = "ace_gutter_annotation";
@@ -405,10 +406,12 @@ class Gutter{
             dom.setStyle(annotationNode.style, "height", lineHeight);
             annotationNode.setAttribute("aria-label", nls("Read annotations row $0", [rowText]));
             annotationNode.setAttribute("tabindex", "-1");
+            annotationNode.setAttribute("role", "button");
         }
         else {
             dom.setStyle(annotationNode.style, "display", "none");
             annotationNode.removeAttribute("aria-label");
+            annotationNode.removeAttribute("role");
             annotationNode.setAttribute("tabindex", "0");
         }
         if (rowText !== textNode.data) {
