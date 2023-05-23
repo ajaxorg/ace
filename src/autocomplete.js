@@ -233,7 +233,7 @@ class Autocomplete {
         this.hideDocTooltip();
 
         if (this.completionProvider) {
-            this.completionProvider.detach(this.editor);
+            this.completionProvider.detach();
         }
 
         if (this.popup && this.popup.isOpen)
@@ -665,6 +665,7 @@ class CompletionProvider {
         var prefix = util.getCompletionPrefix(editor);
     
         var matches = [];
+        this.completers = editor.completers;
         var total = editor.completers.length;
         editor.completers.forEach(function(completer, i) {
             completer.getCompletions(editor, session, pos, prefix, function(err, results) {
@@ -740,13 +741,13 @@ class CompletionProvider {
         }
     }
 
-    detach(editor) {
+    detach() {
         this.active = false;
-        editor.completers.forEach((completer) => {
+        this.completers && this.completers.forEach(function(completer) {
             if (typeof completer.cancel === "function") {
-                completer.cancel();        
+                completer.cancel();
             }
-        })
+        });
     }
 }
 
