@@ -31,6 +31,7 @@
         "src",
         "styles",
         "ace.d.ts",
+        "ace-modes.d.ts",
         "esm-resolver.js",
         "translations",
         "!**/*_test.js",
