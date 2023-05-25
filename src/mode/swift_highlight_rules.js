@@ -89,7 +89,7 @@ var SwiftHighlightRules = function() {
     function comments() {
         return [{
                 token : "comment",
-                regex : "\\/\\/(?=.)",
+                regex : /\/\//,
                 next : [
                     DocCommentHighlightRules.getTagRule(),
                     {token : "comment", regex : "$|^", next: "start"},
