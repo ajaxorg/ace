@@ -63,10 +63,10 @@ function parse(str) {
     }
 }
 
-var HighlgihtRules = require("../src/mode/objectivec_highlight_rules").ObjectiveCHighlightRules
+var HighlightRules = require("../src/mode/objectivec_highlight_rules").ObjectiveCHighlightRules;
 
 
-var rules = new HighlgihtRules().$rules.start
+var rules = new HighlightRules().$rules.start
     .filter(x => /support.function.C99.c/.test(x.token))
 
 
