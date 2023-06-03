@@ -15,7 +15,7 @@ var VScrollBarCustom = require("./scrollbar_custom").VScrollBar;
 var RenderLoop = require("./renderloop").RenderLoop;
 var FontMetrics = require("./layer/font_metrics").FontMetrics;
 var EventEmitter = require("./lib/event_emitter").EventEmitter;
-var editorCss = require("./css/editor.css");
+var editorCss = require("./css/editor-css");
 var Decorator = require("./layer/decorators").Decorator;
 
 var useragent = require("./lib/useragent");
