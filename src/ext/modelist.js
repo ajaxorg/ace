@@ -225,7 +225,8 @@ var supportedModes = {
     YAML:        ["yaml|yml"],
     Zeek:        ["zeek|bro"],
     // Add the missing mode "Django" to ext-modelist
-    Django:      ["html"]
+    Django:      ["html"],
+    WGSL:        ["wgsl"]
 };
 
 var nameOverrides = {
