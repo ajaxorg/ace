@@ -883,7 +883,7 @@ export namespace Ace {
     setStyle(style: string): void;
     unsetStyle(style: string): void;
     getFontSize(): string;
-    setFontSize(size: number): void;
+    setFontSize(size: number|string): void;
     focus(): void;
     isFocused(): boolean;
     blur(): void;
@@ -1095,6 +1095,9 @@ export const EditSession: {
 };
 export const UndoManager: {
   new(): Ace.UndoManager;
+};
+export const Editor: {
+  new(): Ace.Editor;
 };
 export const Range: {
   new(startRow: number, startColumn: number, endRow: number, endColumn: number): Ace.Range;
