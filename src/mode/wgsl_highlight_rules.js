@@ -1,7 +1,7 @@
 "use strict";
 
 var oop = require("../lib/oop");
-var rustHighlightRules = require("./rust_highlight_rules").RustHighlightRules;
+var cCppHighlightRules = require("./c_cpp_highlight_rules").C_CPPHighlightRules;
 
 var wgslHighlightRules = function() {
 
@@ -42,6 +42,6 @@ wgslHighlightRules.metaData = {
   scopeName: "source.wgsl"
 };
 
-oop.inherits(wgslHighlightRules, rustHighlightRules);
+oop.inherits(wgslHighlightRules, cCppHighlightRules);
 
 exports.wgslHighlightRules = wgslHighlightRules;
