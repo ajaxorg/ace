@@ -370,6 +370,13 @@ module.exports = {
         editor.insertSnippet("hello $1 world $1");
         editor.onTextInput("!");
         assert.equal(editor.getValue(), "hello ! world !");
+    },
+
+    "test: TabstopManager does not throw unhandled errors when session becomes `undefined`": function() {
+        var editor = new Editor(new MockRenderer());
+        editor.setSession(new EditSession("dummy content"));
+        snippetManager.insertSnippet(editor, "snippet $1 with $2 tabstops");
+        editor.setSession(undefined);
     }
 };
 

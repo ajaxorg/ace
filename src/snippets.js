@@ -964,6 +964,7 @@ var TabstopManager = function(editor) {
     };
     this.removeTabstopMarkers = function(ts) {
         var session = this.editor.session;
+        if (!session) return;
         ts.forEach(function(range) {
             session.removeMarker(range.markerId);
             range.markerId = null;
