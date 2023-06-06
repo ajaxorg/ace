@@ -374,9 +374,12 @@ module.exports = {
 
     "test: TabstopManager does not throw unhandled errors when session becomes `undefined`": function() {
         var editor = new Editor(new MockRenderer());
-        editor.setSession(new EditSession("dummy content"));
+        var session = new EditSession("dummy content");
+        editor.setSession(session);
         snippetManager.insertSnippet(editor, "snippet $1 with $2 tabstops");
+        assert.equal(session.$backMarkers[5].clazz, "ace_snippet-marker");
         editor.setSession(undefined);
+        assert.equal(session.$backMarkers[5], undefined);
     }
 };
 
