@@ -6,11 +6,15 @@ var KEY_MODS = keyUtil.KEY_MODS;
 
 class MultiHashHandler {
     constructor(config, platform) {
+        this.$init(config, platform, false);
+    }
+
+    $init(config, platform, $singleCommand) {
         this.platform = platform || (useragent.isMac ? "mac" : "win");
         this.commands = {};
         this.commandKeyBinding = {};
         this.addCommands(config);
-        this.$singleCommand = false;
+        this.$singleCommand = $singleCommand;
     }
 
     addCommand(command) {
@@ -218,6 +222,13 @@ class HashHandler extends MultiHashHandler {
         this.$singleCommand = true;
     }
 }
+
+HashHandler.call = function(thisArg, config, platform) {
+    MultiHashHandler.prototype.$init.call(thisArg, config, platform, true);
+};
+MultiHashHandler.call = function(thisArg, config, platform) {
+    MultiHashHandler.prototype.$init.call(thisArg, config, platform, false);
+};
 
 exports.HashHandler = HashHandler;
 exports.MultiHashHandler = MultiHashHandler;
