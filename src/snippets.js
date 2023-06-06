@@ -769,6 +769,7 @@ class TabstopManager {
         this.selectedTabstop = null;
 
         this.editor = editor;
+        this.session = editor.session;
         this.editor.on("change", this.$onChange);
         this.editor.on("changeSelection", this.$onChangeSelection);
         this.editor.on("changeSession", this.$onChangeSession);
@@ -786,6 +787,7 @@ class TabstopManager {
         this.editor.commands.off("afterExec", this.$onAfterExec);
         this.editor.keyBinding.removeKeyboardHandler(this.keyboardHandler);
         this.editor.tabstopManager = null;
+        this.session = null;
         this.editor = null;
     }
 
@@ -811,7 +813,7 @@ class TabstopManager {
             }
             ts.rangeList.$onChange(delta);
         }
-        var session = this.editor.session;
+        var session = this.session;
         if (!this.$inChange && isRemove && session.getLength() == 1 && !session.getValue())
             this.detach();
     }
@@ -820,7 +822,7 @@ class TabstopManager {
         if (!ts || !ts.hasLinkedRanges || !ts.firstNonLinked)
             return;
         this.$inChange = true;
-        var session = this.editor.session;
+        var session = this.session;
         var text = session.getTextRange(ts.firstNonLinked);
         for (var i = 0; i < ts.length; i++) {
             var range = ts[i];
@@ -953,15 +955,14 @@ class TabstopManager {
     }
 
     addTabstopMarkers(ts) {
-        var session = this.editor.session;
+        var session = this.session;
         ts.forEach(function(range) {
             if  (!range.markerId)
                 range.markerId = session.addMarker(range, "ace_snippet-marker", "text");
         });
     }
     removeTabstopMarkers(ts) {
-        var session = this.editor.session;
-        if (!session) return;
+        var session = this.session;
         ts.forEach(function(range) {
             session.removeMarker(range.markerId);
             range.markerId = null;
@@ -974,7 +975,7 @@ class TabstopManager {
         if (i != -1) this.ranges.splice(i, 1);
         i = range.tabstop.rangeList.ranges.indexOf(range);
         if (i != -1) range.tabstop.splice(i, 1);
-        this.editor.session.removeMarker(range.markerId);
+        this.session.removeMarker(range.markerId);
         if (!range.tabstop.length) {
             i = this.tabstops.indexOf(range.tabstop);
             if (i != -1)
