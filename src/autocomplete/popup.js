@@ -139,6 +139,7 @@ class AcePopup {
                 selected.setAttribute("aria-label", popup.getData(row).value);
                 selected.setAttribute("aria-setsize", popup.data.length);
                 selected.setAttribute("aria-posinset", row);
+                selected.setAttribute("aria-describedby", "doc-tooltip");
             }
         });
         var hideHoverMarker = function() { setHoverMarker(-1); };
