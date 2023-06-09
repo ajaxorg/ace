@@ -30,7 +30,7 @@ class GutterKeyboardHandler {
     }
 
     $onGutterKeyDown(e) {
-        this.editor._emit("gutterkeydown", new GutterKeyboardEvent(e, this.editor, {
+        this.editor._signal("gutterkeydown", new GutterKeyboardEvent(e, this.editor, {
             row: this.$rowIndexToRow(this.activeRowIndex),
             rowIndex: this.activeRowIndex,
             activeLane: this.activeLane,
