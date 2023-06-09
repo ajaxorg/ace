@@ -43,7 +43,7 @@ class GutterKeyboardHandler {
             e.preventDefault();
 
             if (e.keyCode === keys["escape"])
-                this.annotationTooltip.hide();
+                this.annotationTooltip.hideTooltip();
 
             return;
         }
@@ -207,7 +207,7 @@ class GutterKeyboardHandler {
         }
 
         if (this.annotationTooltip.isOpen)
-            this.annotationTooltip.hide();
+            this.annotationTooltip.hideTooltip();
 
         return;
     }
