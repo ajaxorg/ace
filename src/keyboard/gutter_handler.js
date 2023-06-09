@@ -446,21 +446,6 @@ class GutterKeyboardEvent {
         this.propagationStopped = false;
         this.defaultPrevented = false;
     }
-    
-    stopPropagation() {
-        event.stopPropagation(this.domEvent);
-        this.propagationStopped = true;
-    }
-    
-    preventDefault() {
-        event.preventDefault(this.domEvent);
-        this.defaultPrevented = true;
-    }
-    
-    stop() {
-        this.stopPropagation();
-        this.preventDefault();
-    }
 
     getKey() {
         return this.domEvent.key;
