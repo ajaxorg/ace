@@ -1,6 +1,7 @@
 "use strict";
 
 var keys = require('../lib/keys');
+var event = require("../lib/event");
 var GutterTooltip = require("../mouse/default_gutter_handler").GutterTooltip;
 
 class GutterKeyboardHandler {
@@ -29,6 +30,14 @@ class GutterKeyboardHandler {
     }
 
     $onGutterKeyDown(e) {
+        this.editor._emit("gutterkeydown", new GutterKeyboardEvent(e, this.editor, {
+            row: this.$rowIndexToRow(this.activeRowIndex),
+            rowIndex: this.activeRowIndex,
+            activeLane: this.activeLane,
+            isTooltipOpen: this.annotationTooltip.isOpen
+        }
+        ));
+
         // if the tooltip is open, we only want to respond to commands to close it (like a modal)
         if (this.annotationTooltip.isOpen) {
             e.preventDefault();
@@ -424,3 +433,36 @@ class GutterKeyboardHandler {
 }
 
 exports.GutterKeyboardHandler = GutterKeyboardHandler;
+
+class GutterKeyboardEvent {
+    constructor(domEvent, editor, gutterEvent) {
+        this.domEvent = domEvent;
+        this.editor = editor;
+        this.row = gutterEvent.row;
+        this.rowIndex = gutterEvent.rowIndex;
+        this.activeLane = gutterEvent.activeLane;
+        this.isTooltipOpen = gutterEvent.isTooltipOpen;
+
+        this.propagationStopped = false;
+        this.defaultPrevented = false;
+    }
+    
+    stopPropagation() {
+        event.stopPropagation(this.domEvent);
+        this.propagationStopped = true;
+    }
+    
+    preventDefault() {
+        event.preventDefault(this.domEvent);
+        this.defaultPrevented = true;
+    }
+    
+    stop() {
+        this.stopPropagation();
+        this.preventDefault();
+    }
+
+    getKey() {
+        return this.domEvent.key;
+    }
+}
