@@ -1,7 +1,6 @@
 "use strict";
 
 var keys = require('../lib/keys');
-var event = require("../lib/event");
 var GutterTooltip = require("../mouse/default_gutter_handler").GutterTooltip;
 
 class GutterKeyboardHandler {
