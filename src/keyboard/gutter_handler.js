@@ -48,7 +48,6 @@ class GutterKeyboardHandler {
     }
 
     $onGutterKeyDown(e) {
-
         // if the tooltip is open, we only want to respond to commands to close it (like a modal)
         if (this.annotationTooltip.isOpen) {
             e.preventDefault();
