@@ -14,6 +14,25 @@ class GutterKeyboardHandler {
         this.activeLane = null;
 
         this.annotationTooltip = new GutterTooltip(this.editor);
+
+        //////////////
+        // This just here to test the changes ignore this.
+        this.editor.on("gutterkeydown", function(gutterKeyboardEvent) {
+            var isAnnotation = gutterKeyboardEvent.inAnnotationLane();
+            var row = gutterKeyboardEvent.getRow();
+            var key = gutterKeyboardEvent.getKey();
+
+            if (key !== "return") {return;}
+            if (!isAnnotation) {return;}
+
+            console.log(`Tried to open the gutter tooltip using the keyboard at row ${row}`);
+        });
+
+        this.editor.on('showGutterTooltip', (tooltip) => {
+            tooltip.hideTooltip();
+            console.log("Gutter tooltip hidden");
+        });
+        //////////////
     }
 
     addListener() {
@@ -29,13 +48,6 @@ class GutterKeyboardHandler {
     }
 
     $onGutterKeyDown(e) {
-        this.editor._signal("gutterkeydown", new GutterKeyboardEvent(e, this.editor, {
-            row: this.$rowIndexToRow(this.activeRowIndex),
-            rowIndex: this.activeRowIndex,
-            activeLane: this.activeLane,
-            isTooltipOpen: this.annotationTooltip.isOpen
-        }
-        ));
 
         // if the tooltip is open, we only want to respond to commands to close it (like a modal)
         if (this.annotationTooltip.isOpen) {
@@ -101,6 +113,9 @@ class GutterKeyboardHandler {
             e.preventDefault();
             return;
         } 
+
+        // Signal to the editor that a key is pressed inside the gutter.
+        this.editor._signal("gutterkeydown", new GutterKeyboardEvent(e, this));
 
         // If focus is on a gutter icon, set focus to gutter on escape press.
         if (e.keyCode === keys["escape"]) {
@@ -296,7 +311,6 @@ class GutterKeyboardHandler {
         var annotation = this.$getAnnotation(index);
 
         annotation.classList.add(this.editor.renderer.keyboardFocusClassName);
-        annotation.setAttribute("role", "button");
         annotation.focus();
     }
 
@@ -311,7 +325,6 @@ class GutterKeyboardHandler {
         var annotation = this.$getAnnotation(index);
 
         annotation.classList.remove(this.editor.renderer.keyboardFocusClassName);
-        annotation.removeAttribute("role");
         annotation.blur();
     }
 
@@ -434,19 +447,24 @@ class GutterKeyboardHandler {
 exports.GutterKeyboardHandler = GutterKeyboardHandler;
 
 class GutterKeyboardEvent {
-    constructor(domEvent, editor, gutterEvent) {
+    constructor(domEvent, gutterKeyboardHandler) {
+        this.gutterKeyboardHandler = gutterKeyboardHandler;
         this.domEvent = domEvent;
-        this.editor = editor;
-        this.row = gutterEvent.row;
-        this.rowIndex = gutterEvent.rowIndex;
-        this.activeLane = gutterEvent.activeLane;
-        this.isTooltipOpen = gutterEvent.isTooltipOpen;
-
-        this.propagationStopped = false;
-        this.defaultPrevented = false;
     }
 
     getKey() {
-        return this.domEvent.key;
+        return keys.keyCodeToString(this.domEvent.keyCode);
+    }
+
+    getRow() {
+        return this.gutterKeyboardHandler.$rowIndexToRow(this.gutterKeyboardHandler.activeRowIndex);
+    }
+
+    inAnnotationLane() {
+        return this.gutterKeyboardHandler.activeLane === "annotation";
+    }
+
+    inFoldLane() {
+        return this.gutterKeyboardHandler.activeLane === "fold";
     }
 }
