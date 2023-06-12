@@ -316,8 +316,6 @@ class Gutter{
             className += decorations[row];
         if (this.$annotations[row] && row !== foldStart)
             className += this.$annotations[row].className;
-        if (element.className != className)
-            element.className = className;
 
         if (foldWidgets) {
             var c = foldWidgets[row];
@@ -327,10 +325,10 @@ class Gutter{
         }
 
         if (c) {
-            var className = "ace_fold-widget ace_" + c;
+            var foldClass = "ace_fold-widget ace_" + c;
             if (c == "start" && row == foldStart && row < fold.end.row){
-                className += " ace_closed";
-                var foldAnnotationClass;
+                foldClass += " ace_closed";
+                var foldAnnotationClass = '';
                 var annotationInFold = false;
 
                 for (var i = row + 1; i <= fold.end.row; i++){
@@ -349,12 +347,12 @@ class Gutter{
                     }
                 }
 
-                element.className += foldAnnotationClass;
+                className += foldAnnotationClass;
             }
             else
-                className += " ace_open";
-            if (foldWidget.className != className)
-                foldWidget.className = className;
+                foldClass += " ace_open";
+            if (foldWidget.className != foldClass)
+                foldWidget.className = foldClass;
 
             dom.setStyle(foldWidget.style, "height", lineHeight);
             dom.setStyle(foldWidget.style, "display", "inline-block");
@@ -418,6 +416,8 @@ class Gutter{
             textNode.data = rowText;
         } 
 
+        if (element.className != className)
+            element.className = className;
         dom.setStyle(cell.element.style, "height", this.$lines.computeLineHeight(row, config, session) + "px");
         dom.setStyle(cell.element.style, "top", this.$lines.computeLineTop(row, config, session) + "px");
         
