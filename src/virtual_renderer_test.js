@@ -25,6 +25,9 @@ module.exports = {
         require("./config").setLoader(function(moduleName, cb) {
             if (moduleName == "ace/ext/error_marker")
                 return cb(null, require("./ext/error_marker"));
+            if (moduleName == "ace/mode/javascript")
+                return cb(null, require("./mode/javascript"));
+            throw new Error("module not configured " + moduleName);
         });
         
         if (editor)
@@ -397,6 +400,26 @@ module.exports = {
             scrollDelta >= leftBoundPixelPos && scrollDelta < rightBoundPixelPos,
             "Expected content to have been scrolled two characters beyond the cursor"
         );
+    },
+    "test: set gutter class": function(done) {
+        editor.session.setMode("ace/mode/javascript", function() {
+            editor.session.setValue("x = {\n  foo: 1\n}");
+            editor.execCommand("toggleFoldWidget");
+            editor.renderer.$loop._flush();
+            assert.equal(editor.renderer.$loop.changes, 0);
+            var cell = editor.renderer.$gutterLayer.$lines.cells[0];
+            assert.equal(cell.element.children[0].className, "ace_fold-widget ace_start ace_closed");
+            assert.equal(cell.element.className.trim(), "ace_gutter-cell ace_gutter-active-line");
+
+            editor.session.setBreakpoint(0, "hello");
+            assert.notEqual(editor.renderer.$loop.changes, 0);
+            editor.renderer.$loop._flush();
+
+            cell = editor.renderer.$gutterLayer.$lines.cells[0];
+            assert.equal(editor.renderer.$loop.changes, 0);
+            assert.equal(cell.element.className, "ace_gutter-cell ace_gutter-active-line hello");
+            done()
+        });
     }
 
     // change tab size after setDocument (for text layer)
