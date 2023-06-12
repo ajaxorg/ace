@@ -265,11 +265,12 @@ module.exports = {
         editor.setValue(value, -1);
         editor.session.setAnnotations([{row: 0, column: 0, text: "error test", type: "error"}]);
 
-        var row, isAnnotation, isFold;
+        var row, isAnnotation, isFold, key;
         editor.on("gutterkeydown", function(event) {
             row = event.getRow();
             isAnnotation = event.isInAnnotationLane();
             isFold = event.isInFoldLane();
+            key = event.getKey();
         });
 
         editor.renderer.$loop._flush();
@@ -291,6 +292,7 @@ module.exports = {
                 assert.equal(row, 0);
                 assert.equal(isAnnotation, true);
                 assert.equal(isFold, false);
+                assert.equal(key, "left");
                 done();
             }, 20);
         }, 20);
