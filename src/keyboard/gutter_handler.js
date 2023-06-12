@@ -449,11 +449,11 @@ class GutterKeyboardEvent {
         return this.gutterKeyboardHandler.$rowIndexToRow(this.gutterKeyboardHandler.activeRowIndex);
     }
 
-    inAnnotationLane() {
+    isInAnnotationLane() {
         return this.gutterKeyboardHandler.activeLane === "annotation";
     }
 
-    inFoldLane() {
+    isInFoldLane() {
         return this.gutterKeyboardHandler.activeLane === "fold";
     }
 }
