@@ -224,16 +224,17 @@ module.exports = {
         assertIndentGuides( 0);
     },
     "test annotation marks": function() {
-        function findPointFillStyle(points, x, y) {
-            var point = points.find(el => el.x === x && el.y === y);
-            if (point === undefined) return;
-
-            return point.fillStyle;
+        function findPointFillStyle(imageData, x, y) {
+            var data = imageData.slice(4 * y, 4 * (y + 1));
+            var a = Math.round(data[3] / 256 * 100);
+            if (a == 100) return "rgb(" + data.slice(0, 3).join(",") + ")";
+            return "rgba(" + data.slice(0, 3).join(",") + "," + (a / 100) + ")";
         }
 
-        function assertCoordsColor(expected, points) {
+        function assertCoordsColor(expected) {
+            var imageData = context.getImageData(0, 0, 1, 100).data;
             for (var el of expected) {
-                assert.equal(findPointFillStyle(points, el.x, el.y), el.color);
+                assert.equal(findPointFillStyle(imageData, el.x, el.y), el.color);
             }
         }
 
@@ -243,7 +244,8 @@ module.exports = {
         renderer.layerConfig.lineHeight = 14;
 
         editor.setOptions({
-            customScrollbar: true
+            customScrollbar: true,
+            vScrollBarAlwaysVisible: true
         });
         editor.setValue("a" + "\n".repeat(100) + "b" + "\nxxxxxx", -1);
         editor.session.setAnnotations([
@@ -263,49 +265,46 @@ module.exports = {
         ]);
         renderer.$loop._flush();
         var context = renderer.$scrollDecorator.canvas.getContext("2d");
-        var imageData = context.getImageData(0, 0, 50, 50);
         var scrollDecoratorColors = renderer.$scrollDecorator.colors.light;
         var values = [
             // reflects cursor position on canvas
-            {x: 0, y: 0, color: "rgba(0, 0, 0, 0.5)"},
-            {x: 1, y: 1, color: "rgba(0, 0, 0, 0.5)"},
+            {x: 0, y: 0, color: "rgba(0,0,0,0.5)"},
             // reflects error annotation mark on canvas overlapped by cursor
-            {x: 2, y: 2, color: scrollDecoratorColors.error},
+            {x: 0, y: 2, color: scrollDecoratorColors.error},
             // default value
-            {x: 3, y: 3, color: "rgba(0, 0, 0, 0)"},
+            {x: 0, y: 3, color: "rgba(0,0,0,0)"},
             // reflects warning annotation mark on canvas
-            {x: 4, y: 4, color: scrollDecoratorColors.warning},
-            {x: 5, y: 5, color: scrollDecoratorColors.warning},
-            {x: 6, y: 6, color: "rgba(0, 0, 0, 0)"},
-            {x: 7, y: 20, color: scrollDecoratorColors.info},
-            {x: 8, y: 21, color: scrollDecoratorColors.info}
+            {x: 0, y: 4, color: scrollDecoratorColors.warning},
+            {x: 0, y: 5, color: scrollDecoratorColors.warning},
+            {x: 0, y: 6, color: "rgba(0,0,0,0)"},
+            {x: 0, y: 20, color: scrollDecoratorColors.info},
+            {x: 0, y: 21, color: scrollDecoratorColors.info}
         ];
-        assertCoordsColor(values, imageData.data);
+        assertCoordsColor(values);
         editor.moveCursorTo(5, 6);
         renderer.$loop._flush();
         values = [
-            {x: 0, y: 0, color: "rgba(0, 0, 0, 0)"},
-            {x: 1, y: 1, color: scrollDecoratorColors.error},
-            {x: 2, y: 2, color: scrollDecoratorColors.error},
-            {x: 3, y: 3, color: "rgba(0, 0, 0, 0)"},
-            {x: 4, y: 4, color: scrollDecoratorColors.warning},
-            {x: 5, y: 5, color: "rgba(0, 0, 0, 0.5)"},
-            {x: 6, y: 6, color: "rgba(0, 0, 0, 0.5)"}
+            {x: 0, y: 0, color: "rgba(0,0,0,0)"},
+            {x: 0, y: 1, color: scrollDecoratorColors.error},
+            {x: 0, y: 2, color: scrollDecoratorColors.error},
+            {x: 0, y: 3, color: "rgba(0,0,0,0)"},
+            {x: 0, y: 4, color: scrollDecoratorColors.warning},
+            {x: 6, y: 6, color: "rgba(0,0,0,0.5)"}
         ];
-        assertCoordsColor(values, imageData.data);
+        assertCoordsColor(values);
         renderer.session.addFold("...", new Range(0, 0, 3, 2));
         editor.moveCursorTo(10, 0);
         renderer.$loop._flush();
         values = [
             {x: 0, y: 0, color: scrollDecoratorColors.error},
-            {x: 1, y: 1, color: scrollDecoratorColors.error},
-            {x: 2, y: 2, color: scrollDecoratorColors.warning},
-            {x: 3, y: 3, color: "rgba(0, 0, 0, 0)"},
-            {x: 4, y: 4, color: "rgba(0, 0, 0, 0)"},
-            {x: 5, y: 5, color: "rgba(0, 0, 0, 0)"},
-            {x: 6, y: 6, color: "rgba(0, 0, 0, 0)"}
+            {x: 0, y: 1, color: scrollDecoratorColors.error},
+            {x: 0, y: 2, color: scrollDecoratorColors.warning},
+            {x: 0, y: 3, color: "rgba(0,0,0,0)"},
+            {x: 0, y: 4, color: "rgba(0,0,0,0)"},
+            {x: 0, y: 5, color: "rgba(0,0,0,0)"},
+            {x: 0, y: 6, color: "rgba(0,0,0,0)"}
         ];
-        assertCoordsColor(values, imageData.data);
+        assertCoordsColor(values);
     },
     "test ghost text": function() {
         editor.session.setValue("abcdef");
@@ -408,7 +407,7 @@ module.exports = {
             editor.renderer.$loop._flush();
             assert.equal(editor.renderer.$loop.changes, 0);
             var cell = editor.renderer.$gutterLayer.$lines.cells[0];
-            assert.equal(cell.element.children[0].className, "ace_fold-widget ace_start ace_closed");
+            assert.equal(cell.element.childNodes[1].className, "ace_fold-widget ace_start ace_closed");
             assert.equal(cell.element.className.trim(), "ace_gutter-cell ace_gutter-active-line");
 
             editor.session.setBreakpoint(0, "hello");
@@ -418,7 +417,7 @@ module.exports = {
             cell = editor.renderer.$gutterLayer.$lines.cells[0];
             assert.equal(editor.renderer.$loop.changes, 0);
             assert.equal(cell.element.className, "ace_gutter-cell ace_gutter-active-line hello");
-            done()
+            done();
         });
     }
 
