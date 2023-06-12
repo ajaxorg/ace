@@ -14,25 +14,6 @@ class GutterKeyboardHandler {
         this.activeLane = null;
 
         this.annotationTooltip = new GutterTooltip(this.editor);
-
-        //////////////
-        // This just here to test the changes ignore this.
-        this.editor.on("gutterkeydown", function(gutterKeyboardEvent) {
-            var isAnnotation = gutterKeyboardEvent.inAnnotationLane();
-            var row = gutterKeyboardEvent.getRow();
-            var key = gutterKeyboardEvent.getKey();
-
-            if (key !== "return") {return;}
-            if (!isAnnotation) {return;}
-
-            console.log(`Tried to open the gutter tooltip using the keyboard at row ${row}`);
-        });
-
-        this.editor.on('showGutterTooltip', (tooltip) => {
-            tooltip.hideTooltip();
-            console.log("Gutter tooltip hidden");
-        });
-        //////////////
     }
 
     addListener() {
@@ -107,14 +88,21 @@ class GutterKeyboardHandler {
         } 
 
         // After here, foucs is on a gutter icon and we want to interact with them.
+        this.$handleGutterKeyboardInteraction(e);
+
+        // Wait until folding is completed and then signal gutterkeydown to the editor.
+        setTimeout(function() {
+            // Signal to the editor that a key is pressed inside the gutter.
+            this.editor._signal("gutterkeydown", new GutterKeyboardEvent(e, this));
+        }.bind(this), 10);
+    }
+
+    $handleGutterKeyboardInteraction(e) {
         // Prevent tabbing when interacting with the gutter icons.
         if (e.keyCode === keys["tab"]){
             e.preventDefault();
             return;
         } 
-
-        // Signal to the editor that a key is pressed inside the gutter.
-        this.editor._signal("gutterkeydown", new GutterKeyboardEvent(e, this));
 
         // If focus is on a gutter icon, set focus to gutter on escape press.
         if (e.keyCode === keys["escape"]) {
@@ -159,12 +147,14 @@ class GutterKeyboardHandler {
         if (e.keyCode === keys["left"]){
             e.preventDefault();
             this.$switchLane("annotation");
+            return;
         }
 
         // Try to switch from annotations to fold widgets.
         if (e.keyCode === keys["right"]){
             e.preventDefault();
             this.$switchLane("fold");
+            return;
         }
 
         if (e.keyCode === keys["enter"] || e.keyCode === keys["space"]){
