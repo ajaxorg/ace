@@ -1,4 +1,5 @@
 "use strict";
+/*global Uint8ClampedArray*/
 
 var dom = require("../lib/dom");
 
@@ -97,8 +98,65 @@ var initializers = {
         this.__defineSetter__("href", function(v) {
             return this.setAttribute("href", v);
         });
+    },
+    canvas: function() {
+        this.getContext = function (contextId, options) {
+            if (this._contextMock !== undefined) return this._contextMock;
+            return this._contextMock = new Context2d(this.width, this.height);
+        };
     }
 };
+
+function Context2d(w, h) {
+    this.width = w;
+    this.height = h;
+    this.points = new Uint8ClampedArray(4 * this.width * this.height);
+    this.fillStyle = [0, 0, 0, 0];
+}
+(function() {
+    this.clearRect = function(x, y, w, h) {
+        var fillStyle = this.fillStyle;
+        this.fillStyle = [0, 0, 0, 0];
+        this.fillRect(x, y, w, h);
+        this.fillStyle = fillStyle;
+    };
+    this.fillRect = function(x, y, w, h) {
+        var fillStyle = this.fillStyle;
+        if (typeof fillStyle == "string")
+            fillStyle = this.fillStyle = this.$parseColor(this.fillStyle);
+        for (var i = x; i < w + x; i++) {
+            for (var j = y; j < h + y; j++) {
+                var index = (this.width * j + i) * 4;
+                for (var k = 0; k < 4; k++)
+                    this.points[index++] = fillStyle[k];
+            }
+        }
+    };
+    this.getImageData = function(sx, sy, sw, sh) {
+        var data = new Uint8ClampedArray(sw * sh * 4);
+        var newIndex = 0;
+        for (var i = sx; i < sw + sy; i++) {
+            for (var j = sy; j < sh + sy; j++) {
+                var index = (this.width * j + i) * 4;
+                for (var k = 0; k < 4; k++)
+                    data[newIndex++] = this.points[index++];
+            }
+        }
+        return {
+            data: data
+        };
+    };
+    this.$parseColor = function(str) {
+        var color = str.match(/\(([^,)]+),([^,)]+),([^,)]+)(?:,([^,)]+))?/).slice(1);
+        color[3] = Math.round((color[3] ? parseFloat(color[3]) : 1) * 255);
+        for (var i = 0; i < 3; i++) {
+            color[i] = parseInt(color[i]);
+        }
+        return color;
+    };
+}).call(Context2d.prototype);
+
+
 
 function getItem(i) { return this[i]; }
 
@@ -123,7 +181,7 @@ function Node(name) {
             clone.setAttribute(i, this.$attributes[i]);
         }
         if (recursive) {
-            this.children.forEach(function(ch) {
+            this.childNodes.forEach(function(ch) {
                 clone.appendChild(ch.cloneNode(true));
             }, this);
         }
@@ -133,11 +191,11 @@ function Node(name) {
         return this.insertBefore(node, null);
     };
     this.removeChild = function(node) {
-        var i = this.children.indexOf(node);
+        var i = this.childNodes.indexOf(node);
         if (i == -1)
             throw new Error("not a child");
         node.parentNode = node.nextSibling = node.previousSibling = null;
-        this.children.splice(i, 1);
+        this.childNodes.splice(i, 1);
         if (!document.contains(document.activeElement))
             document.activeElement = document.body;
     };
@@ -152,17 +210,17 @@ function Node(name) {
     this.insertBefore = function(node, before) {
         if (node.parentNode)
             node.parentNode.removeChild(node);
-        var i = this.children.indexOf(before);
-        if (i == -1) i = this.children.length + 1;
+        var i = this.childNodes.indexOf(before);
+        if (i == -1) i = this.childNodes.length + 1;
         if (node.localName == "#fragment") {
-            var children = node.children.slice();
+            var children = node.childNodes.slice();
             for (var j = 0; j < children.length; j++)
                 this.insertBefore(children[j], before);
         }
         else {
-            this.children.splice(i, 0, node);
-            node.nextSibling = this.children[i];
-            node.previousSibling = this.children[i - 2];
+            this.childNodes.splice(i, 0, node);
+            node.nextSibling = this.childNodes[i];
+            node.previousSibling = this.childNodes[i - 2];
             if (node.nextSibling)
                 node.nextSibling.previousSibling = node;
             if (node.previousSibling)
@@ -179,7 +237,7 @@ function Node(name) {
         return this.childNodes.length > 0;
     };
     this.__defineGetter__("childElementCount", function() {
-        return this.childNodes.length;
+        return this.children.length;
     });
     this.hasAttribute = function(x) {
         return this.$attributes.hasOwnProperty(x);
@@ -304,7 +362,7 @@ function Node(name) {
         return this.parentNode == document ? null : this.parentNode;
     });
     this.__defineGetter__("innerHTML", function() {
-        return this.children.map(function(ch) {
+        return this.childNodes.map(function(ch) {
             return "outerHTML" in ch ? ch.outerHTML : escapeHTML(ch.data);
         }).join("");
     });
@@ -320,7 +378,7 @@ function Node(name) {
             return attr.name + "=" + JSON.stringify(attr.value);
         }, this).join(" ");
         return indent + "<" + this.localName + (attributes ? " " + attributes : "") + ">" + 
-            this.children.map(function(ch) {
+            this.childNodes.map(function(ch) {
                 return "__format" in ch ? "\n" + ch.__format(indent + "    ") : escapeHTML(ch.data);
             }).join("")
             + "\n" + indent + "</" + this.localName + ">";
@@ -479,59 +537,11 @@ function Node(name) {
         if (document.activeElement == this)
             document.body.focus();
     };
-    this.getContext = function (contextId, options) {
-        if (this.contextMock !== undefined) return this.contextMock;
-        this.contextMock = {
-            points: [],
-            fillStyle: "#000",
-            clearRect: function (x, y, w, h) {
-                for (var i = x; i < w + x; i++) {
-                    for (var j = y; j < h + y; j++) {
-                        var point = this.points.find(el => el.x === i && el.y === j);
-                        if (point) {
-                            point.fillStyle = "rgba(0, 0, 0, 0)";
-                        }
-                        else {
-                            this.points.push({
-                                x: i,
-                                y: j,
-                                fillStyle: "rgba(0, 0, 0, 0)"
-                            });
-                        }
-                    }
-                }
-            },
-            fillRect: function (x, y, w, h) {
-                for (var i = x; i < w + x; i++) {
-                    for (var j = y; j < h + y; j++) {
-                        var point = this.points.find(el => el.x === i && el.y === j);
-                        if (point) {
-                            point.fillStyle = this.fillStyle;
-                        }
-                        else {
-                            this.points.push({
-                                x: i,
-                                y: j,
-                                fillStyle: this.fillStyle
-                            });
-                        }
-                    }
-                }
-            },
-            getImageData: function (sx, sy, sw, sh) {
-                return {
-                    "data": this.points.filter((el) => el.x >= sx && el.x <= sx + sw && el.y >= sy && el.y <= sy + sh)
-                };
-            }
-        };
-        return this.contextMock;
-    };
-
     function removeAllChildren(node) {
-        node.children.forEach(function(node) {
+        node.childNodes.forEach(function(node) {
             node.parentNode = null;
         });
-        node.children.length = 0;
+        node.childNodes.length = 0;
         if (!document.contains(document.activeElement))
             document.activeElement = document.body;
     }
@@ -711,7 +721,7 @@ function Event(type, options) {
 }).call(Event.prototype);
 
 function walk(node, fn) {
-    var children = node.children || [];
+    var children = node.childNodes || [];
     for (var i = 0; i < children.length; i++) {
         var result = fn(children[i]) || walk(children[i], fn);
         if (result)
