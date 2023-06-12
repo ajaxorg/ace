@@ -216,7 +216,7 @@ class GutterTooltip extends Tooltip {
 
     hideTooltip() {
         this.hide();
-        editor._signal("hideGutterTooltip", this);
+        this.editor._signal("hideGutterTooltip", this);
     }
 
     static annotationsToSummaryString(annotations) {
