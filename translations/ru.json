@@ -19,7 +19,7 @@
     "Search In Selection": "Искать в выделенном",
     "$0 of $1": "$0 из $1",
     "Cursor at row $0": "",
-    "Code folding, rows $0 to $1": "",
+    "Code folding, rows $0 through $1": "",
     "Unfold code": "",
     "Fold code": "",
     "Read annotations row $0": "",
