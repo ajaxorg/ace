@@ -295,7 +295,7 @@ function Node(name) {
         do {
             if (el.matches(s)) return el;
             el = el.parentElement || el.parentNode;
-        } while (el !== null && el.nodeType === 1);
+        } while (el != null && el.nodeType === 1);
         return null;
     };
     this.removeAttribute = function(a) {
@@ -846,20 +846,33 @@ if (typeof Buffer != "undefined") {
     };
 }
 
-var addedProperties = [];
+var originalProperties = {};
+var overriddenValues = {};
+var loaded = false;
+var overridableProperties = ["setTimeout", "clearTimeout", "getComputedStyle"];
 exports.load = function() {
-    if (typeof global == "undefined") return;
+    if (loaded || typeof global == "undefined") return;
     window.window = global;
     Object.keys(window).forEach(function(i) {
         var desc = Object.getOwnPropertyDescriptor(global, i);
-        addedProperties.push({name: i, desc: desc});
+        originalProperties[i] = desc;
         global.__defineGetter__(i, function() {
-            return window[i];
+            return overriddenValues[i] || window[i];
         });
-        global.__defineSetter__(i, function() {
-            console.log("attempt to set " + i);
+        global.__defineSetter__(i, function(value) {
+            if (!overridableProperties.includes(i)) {
+                console.log("attempt to set " + i);
+            } else if (value === window[i]) {
+                delete overriddenValues[i];
+                if (!loaded) {
+                    unloadProperty(i);
+                }
+            } else {
+                overriddenValues[i] = value;
+            }
         });
     });
+    loaded = true;
 };
 
 exports.loadInBrowser = function(global) {
@@ -907,19 +920,28 @@ exports.loadInBrowser = function(global) {
             );
         }
     }
+    loaded = true;
 };
+
+function unloadProperty(name) {
+    if (global[name] === window[name]) {
+        delete global[name];
+        if (originalProperties[name]) {
+            Object.defineProperty(global, name, originalProperties[name]);
+            delete originalProperties[name];
+        }
+    }
+}
 
 exports.unload = function() {
     if (typeof global == "undefined") return;
     var req = require;
     var cache = req("module")._cache;
     delete cache[__filename];
-    addedProperties.forEach(function(i) {
-        delete global[i.name];
-        if (i.desc) {
-            Object.defineProperty(global, i.name, i.desc);
-        }
+    Object.keys(originalProperties).forEach(function(name) {
+        unloadProperty(name);
     });
+    loaded = false;
 };
 
 exports.load();
