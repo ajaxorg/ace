@@ -326,7 +326,8 @@ class Gutter{
 
         if (c) {
             var foldClass = "ace_fold-widget ace_" + c;
-            if (c == "start" && row == foldStart && row < fold.end.row){
+            var isClosedFold = c == "start" && row == foldStart && row < fold.end.row;
+            if (isClosedFold){
                 foldClass += " ace_closed";
                 var foldAnnotationClass = '';
                 var annotationInFold = false;
@@ -360,11 +361,12 @@ class Gutter{
             // Set a11y properties.
             foldWidget.setAttribute("role", "button");
             foldWidget.setAttribute("tabindex", "-1");
-            var foldrange = session.getFoldWidgetRange(rowText - 1);
+            var foldRange = session.getFoldWidgetRange(row);
             
-            foldWidget.setAttribute("aria-label", nls("Code folding, rows $0 through $1", [foldrange.start.row + 1, foldrange.end.row + 1]));
+            if (foldRange)
+                foldWidget.setAttribute("aria-label", nls("Code folding, rows $0 through $1", [foldRange.start.row + 1, foldRange.end.row + 1]));
 
-            if (c == "start" && row == foldStart && row < fold.end.row) {
+            if (isClosedFold) {
                 foldWidget.setAttribute("aria-expanded", false);
                 foldWidget.setAttribute("title", nls("Unfold code"));
             }
