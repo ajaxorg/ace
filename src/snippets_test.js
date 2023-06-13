@@ -5,6 +5,7 @@ if (typeof process !== "undefined") {
 
 "use strict";
 var Editor = require("./editor").Editor;
+var EditSession = require("./edit_session").EditSession;
 var MockRenderer = require("./test/mockrenderer").MockRenderer;
 var JavascriptMode = require("./mode/javascript").Mode;
 require("./multi_select");
@@ -358,6 +359,27 @@ module.exports = {
         snippetManager.insertSnippet(this.editor, "def multiply_with_random(array):\n\t", options);
         snippetManager.insertSnippet(this.editor, "for i in range(len(array)):\n\t\tarray[i] *= random.randint(1, 10)\n\treturn array", options);
         assert.equal(editor.getValue(), correctlyFormattedCode);
+    },
+    
+    "test: snippets without multiselct": function() {
+        var session = new EditSession([]);
+        var editor = new Editor(new MockRenderer());
+        editor.setOption("enableMultiselect", false);
+        editor.setSession(session);
+
+        editor.insertSnippet("hello $1 world $1");
+        editor.onTextInput("!");
+        assert.equal(editor.getValue(), "hello ! world !");
+    },
+
+    "test: TabstopManager does not throw unhandled errors when session becomes `undefined`": function() {
+        var editor = new Editor(new MockRenderer());
+        var session = new EditSession("dummy content");
+        editor.setSession(session);
+        snippetManager.insertSnippet(editor, "snippet $1 with $2 tabstops");
+        assert.equal(session.$backMarkers[5].clazz, "ace_snippet-marker");
+        editor.setSession(undefined);
+        assert.equal(session.$backMarkers[5], undefined);
     }
 };
 

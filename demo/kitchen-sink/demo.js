@@ -40,10 +40,8 @@ var layout = require("./layout");
 var util = require("./util");
 var saveOption = util.saveOption;
 
-
-var ElasticTabstopsLite = require("ace/ext/elastic_tabstops_lite").ElasticTabstopsLite;
-
-var IncrementalSearch = require("ace/incremental_search").IncrementalSearch;
+require("ace/ext/elastic_tabstops_lite");
+require("ace/incremental_search");
 
 var TokenTooltip = require("./token_tooltip").TokenTooltip;
 require("ace/config").defineOptions(Editor.prototype, "editor", {
@@ -84,9 +82,9 @@ var MarkerGroup = require("ace/marker_group").MarkerGroup;
 var docTooltip = new HoverTooltip();
 function loadLanguageProvider(editor) {
     require([
-        "https://www.unpkg.com/ace-linters/build/ace-linters.js"
+        "https://mkslanc.github.io/ace-linters/build/ace-linters.js"
     ], function(m) {
-        var languageProvider = m.LanguageProvider.fromCdn("https://www.unpkg.com/ace-linters/build", {
+        var languageProvider = m.LanguageProvider.fromCdn("https://mkslanc.github.io/ace-linters/build", {
             functionality: {
                 hover: true,
                 completion: {
@@ -138,7 +136,6 @@ function loadLanguageProvider(editor) {
         function showAnnotations(session, diagnostics) {
             session.clearAnnotations();
             let annotations = diagnostics.map((el) => {
-                console.log(el.severity, el)
                 return {
                     row: el.range.start.line,
                     column: el.range.start.character,
@@ -170,11 +167,13 @@ function loadLanguageProvider(editor) {
 
             languageProvider.doHover(session, docPos, function(hover) {
                 var errorMarker = session.state?.diagnosticMarkers.getMarkerAtPosition(docPos);
+
+                if (!errorMarker && !hover.content) return;
+
                 var range = hover?.range || errorMarker?.range;
-                if (!range) return;
-                var hoverNode = hover && dom.buildDom(["div", {}])
+                range = range ? Range.fromPoints(range.start, range.end) : session.getWordRange(docPos.row, docPos.column);
+                var hoverNode = hover && dom.buildDom(["div", {}]);
                 if (hoverNode) {
-                    hover.content.text = hover.content.text.replace(/(?!^)`{3}/gm, "\n$&");
                     // todo render markdown using ace markdown mode
                     hoverNode.innerHTML = languageProvider.getTooltipText(hover);
                 };

@@ -4,25 +4,20 @@ var keyUtil = require("../lib/keys");
 var useragent = require("../lib/useragent");
 var KEY_MODS = keyUtil.KEY_MODS;
 
-function HashHandler(config, platform) {
-    this.platform = platform || (useragent.isMac ? "mac" : "win");
-    this.commands = {};
-    this.commandKeyBinding = {};
-    this.addCommands(config);
-    this.$singleCommand = true;
-}
+class MultiHashHandler {
+    constructor(config, platform) {
+        this.$init(config, platform, false);
+    }
 
-function MultiHashHandler(config, platform) {
-    HashHandler.call(this, config, platform);
-    this.$singleCommand = false;
-}
+    $init(config, platform, $singleCommand) {
+        this.platform = platform || (useragent.isMac ? "mac" : "win");
+        this.commands = {};
+        this.commandKeyBinding = {};
+        this.addCommands(config);
+        this.$singleCommand = $singleCommand;
+    }
 
-MultiHashHandler.prototype = HashHandler.prototype;
-
-(function() {
-    
-
-    this.addCommand = function(command) {
+    addCommand(command) {
         if (this.commands[command.name])
             this.removeCommand(command);
 
@@ -30,9 +25,9 @@ MultiHashHandler.prototype = HashHandler.prototype;
 
         if (command.bindKey)
             this._buildKeyHash(command);
-    };
+    }
 
-    this.removeCommand = function(command, keepCommand) {
+    removeCommand(command, keepCommand) {
         var name = command && (typeof command === 'string' ? command : command.name);
         command = this.commands[name];
         if (!keepCommand)
@@ -54,9 +49,9 @@ MultiHashHandler.prototype = HashHandler.prototype;
                 }
             }
         }
-    };
+    }
 
-    this.bindKey = function(key, command, position) {
+    bindKey(key, command, position) {
         if (typeof key == "object" && key) {
             if (position == undefined)
                 position = key.position;
@@ -84,14 +79,9 @@ MultiHashHandler.prototype = HashHandler.prototype;
             var id = KEY_MODS[binding.hashId] + binding.key;
             this._addCommandToBinding(chain + id, command, position);
         }, this);
-    };
-    
-    function getPosition(command) {
-        return typeof command == "object" && command.bindKey
-            && command.bindKey.position 
-            || (command.isDefault ? -100 : 0);
     }
-    this._addCommandToBinding = function(keyId, command, position) {
+    
+    _addCommandToBinding(keyId, command, position) {
         var ckb = this.commandKeyBinding, i;
         if (!command) {
             delete ckb[keyId];
@@ -117,9 +107,9 @@ MultiHashHandler.prototype = HashHandler.prototype;
             }
             commands.splice(i, 0, command);
         }
-    };
+    }
 
-    this.addCommands = function(commands) {
+    addCommands(commands) {
         commands && Object.keys(commands).forEach(function(name) {
             var command = commands[name];
             if (!command)
@@ -139,27 +129,27 @@ MultiHashHandler.prototype = HashHandler.prototype;
 
             this.addCommand(command);
         }, this);
-    };
+    }
 
-    this.removeCommands = function(commands) {
+    removeCommands(commands) {
         Object.keys(commands).forEach(function(name) {
             this.removeCommand(commands[name]);
         }, this);
-    };
+    }
 
-    this.bindKeys = function(keyList) {
+    bindKeys(keyList) {
         Object.keys(keyList).forEach(function(key) {
             this.bindKey(key, keyList[key]);
         }, this);
-    };
+    }
 
-    this._buildKeyHash = function(command) {
+    _buildKeyHash(command) {
         this.bindKey(command.bindKey, command);
-    };
+    }
 
     // accepts keys in the form ctrl+Enter or ctrl-Enter
     // keys without modifiers or shift only 
-    this.parseKeys = function(keys) {
+    parseKeys(keys) {
         var parts = keys.toLowerCase().split(/[\-\+]([\-\+])?/).filter(function(x){return x;});
         var key = parts.pop();
 
@@ -182,14 +172,14 @@ MultiHashHandler.prototype = HashHandler.prototype;
             hashId |= modifier;
         }
         return {key: key, hashId: hashId};
-    };
+    }
 
-    this.findKeyCommand = function findKeyCommand(hashId, keyString) {
+    findKeyCommand(hashId, keyString) {
         var key = KEY_MODS[hashId] + keyString;
         return this.commandKeyBinding[key];
-    };
+    }
 
-    this.handleKeyboard = function(data, hashId, keyString, keyCode) {
+    handleKeyboard(data, hashId, keyString, keyCode) {
         if (keyCode < 0) return;
         var key = KEY_MODS[hashId] + keyString;
         var command = this.commandKeyBinding[key];
@@ -212,13 +202,33 @@ MultiHashHandler.prototype = HashHandler.prototype;
                 data.$keyChain = ""; // reset keyChain
         }
         return {command: command};
-    };
+    }
     
-    this.getStatusText = function(editor, data) {
+    getStatusText(editor, data) {
         return data.$keyChain || "";
-    };
+    }
 
-}).call(HashHandler.prototype);
+}
+
+function getPosition(command) {
+    return typeof command == "object" && command.bindKey
+        && command.bindKey.position 
+        || (command.isDefault ? -100 : 0);
+}
+
+class HashHandler extends MultiHashHandler {
+    constructor(config, platform) {
+        super(config, platform);
+        this.$singleCommand = true;
+    }
+}
+
+HashHandler.call = function(thisArg, config, platform) {
+    MultiHashHandler.prototype.$init.call(thisArg, config, platform, true);
+};
+MultiHashHandler.call = function(thisArg, config, platform) {
+    MultiHashHandler.prototype.$init.call(thisArg, config, platform, false);
+};
 
 exports.HashHandler = HashHandler;
 exports.MultiHashHandler = MultiHashHandler;

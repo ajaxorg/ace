@@ -139,6 +139,7 @@ class AcePopup {
                 selected.setAttribute("aria-label", popup.getData(row).value);
                 selected.setAttribute("aria-setsize", popup.data.length);
                 selected.setAttribute("aria-posinset", row);
+                selected.setAttribute("aria-describedby", "doc-tooltip");
             }
         });
         var hideHoverMarker = function() { setHoverMarker(-1); };
@@ -202,6 +203,7 @@ class AcePopup {
             }
             addToken(caption.slice(lastIndex, caption.length), "");
 
+            tokens.push({type: "completion-spacer", value: " "});
             if (data.meta)
                 tokens.push({type: "completion-meta", value: data.meta});
             if (data.message)
@@ -237,7 +239,7 @@ class AcePopup {
             return selectionMarker.start.row;
         };
         popup.setRow = function(line) {
-            line = Math.max(this.autoSelect ? 0 : -1, Math.min(this.data.length, line));
+            line = Math.max(this.autoSelect ? 0 : -1, Math.min(this.data.length - 1, line));
             if (selectionMarker.start.row != line) {
                 popup.selection.clearSelection();
                 selectionMarker.start.row = selectionMarker.end.row = line || 0;
@@ -442,9 +444,8 @@ dom.importCssString(`
 .ace_autocomplete_right .ace_line {
     display: flex;
 }
-.ace_autocomplete_right .ace_completion-meta {
+.ace_autocomplete_right .ace_completion-spacer {
     flex: 1;
-    text-align: right;
 }
 `, "autocompletion.css", false);
 
