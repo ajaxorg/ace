@@ -360,12 +360,11 @@ class Gutter{
             // Set a11y properties.
             foldWidget.setAttribute("role", "button");
             foldWidget.setAttribute("tabindex", "-1");
-            var fold = session.getFoldLine(rowText - 1);
-            var foldrange = session.getParentFoldRangeData(rowText);
+            var foldrange = session.getFoldWidgetRange(rowText - 1);
+            
+            foldWidget.setAttribute("aria-label", nls("Code folding, rows $0 through $1", [foldrange.start.row + 1, foldrange.end.row + 1]));
 
-            foldWidget.setAttribute("aria-label", nls("Code folding, rows $0 through $1", [foldrange.range.start.row + 1, foldrange.range.end.row + 1]));
-
-            if (fold) {
+            if (c == "start" && row == foldStart && row < fold.end.row) {
                 foldWidget.setAttribute("aria-expanded", false);
                 foldWidget.setAttribute("title", nls("Unfold code"));
             }
