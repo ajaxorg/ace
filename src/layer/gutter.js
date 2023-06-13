@@ -365,10 +365,12 @@ class Gutter{
             var fold = session.getFoldLine(rowText - 1);
             if (fold) {
                 foldWidget.setAttribute("aria-label", nls("Unfold rows $0 to $1", [rowText, fold.end.row + 1]));
+                foldWidget.setAttribute("aria-expanded", false);
                 foldWidget.setAttribute("title", nls("Unfold code"));
             }
             else {
                 foldWidget.setAttribute("aria-label", nls("Fold at row $0", [rowText]));
+                foldWidget.setAttribute("aria-expanded", true);
                 foldWidget.setAttribute("title", nls("Fold code"));
             }
         } else {
