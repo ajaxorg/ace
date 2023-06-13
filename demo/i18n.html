@@ -128,14 +128,10 @@ require(["ace/ace", "ace/ext/searchbox"], function(ace) {
     } else {
         ace.config.setMessages(messagesArmenian);
     }
-
-    
     var editor = ace.edit("editor", {
         mode: "ace/mode/html"
     });
     
-    editor.setOption("enableKeyboardAccessibility", true);
-
     editor.execCommand("find");
     setTimeout(function() {
         editor.execCommand("goToNextError");
