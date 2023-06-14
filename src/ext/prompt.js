@@ -72,7 +72,6 @@ function prompt(editor, message, options, callback) {
     if (options.getCompletions) {
         var popup = new AcePopup();
         popup.renderer.setStyle("ace_autocomplete_inline");
-        popup.renderer.setStyle("ace_autocomplete_right");
         popup.container.style.display = "block";
         popup.container.style.maxWidth = "600px";
         popup.container.style.width = "100%";

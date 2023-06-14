@@ -438,18 +438,18 @@ dom.importCssString(`
     background: #25282c;
     color: #c1c1c1;
 }
-.ace_autocomplete_right .ace_text-layer  {
+.ace_autocomplete .ace_text-layer  {
     width: 100%;
 }
-.ace_autocomplete_right .ace_line {
+.ace_autocomplete .ace_line {
     display: flex;
 }
-.ace_autocomplete_right .ace_line .ace_ {
+.ace_autocomplete .ace_line .ace_ {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
 }
-.ace_autocomplete_right .ace_completion-spacer {
+.ace_autocomplete .ace_completion-spacer {
     flex: 1;
 }
 `, "autocompletion.css", false);
