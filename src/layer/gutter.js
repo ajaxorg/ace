@@ -367,18 +367,18 @@ class Gutter{
             if (foldRange)
                 foldWidget.setAttribute("aria-label", nls("Code folding, rows $0 through $1", [foldRange.start.row + 1, foldRange.end.row + 1]));
             else {
-                if (isClosedFold)
+                if (fold)
                     foldWidget.setAttribute("aria-label", nls("Code folding, rows $0 through $1", [fold.start.row + 1, fold.end.row + 1]));
                 else
                     foldWidget.setAttribute("aria-label", nls("Code folding, row $0", [row + 1]));
             }
 
             if (isClosedFold) {
-                foldWidget.setAttribute("aria-expanded", false);
+                foldWidget.setAttribute("aria-expanded", "false");
                 foldWidget.setAttribute("title", nls("Unfold code"));
             }
             else {
-                foldWidget.setAttribute("aria-expanded", true);
+                foldWidget.setAttribute("aria-expanded", "true");
                 foldWidget.setAttribute("title", nls("Fold code"));
             }
         } else {
