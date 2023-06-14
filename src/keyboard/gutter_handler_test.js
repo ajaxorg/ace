@@ -12,7 +12,6 @@ require("../theme/textmate");
 var Editor = require("../editor").Editor;
 var Mode = require("../mode/java").Mode;
 var VirtualRenderer = require("../virtual_renderer").VirtualRenderer;
-var Range = require("../range").Range;
 var assert = require("../test/assertions");
 
 function emit(keyCode) {
