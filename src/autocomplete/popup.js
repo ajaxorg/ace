@@ -443,10 +443,16 @@ dom.importCssString(`
 }
 .ace_autocomplete .ace_line {
     display: flex;
+    align-items: center;
 }
-.ace_autocomplete .ace_line .ace_ {
+.ace_autocomplete .ace_line > * {
+    min-width: 0;
+    flex: 0 0 auto;
     overflow: hidden;
     white-space: nowrap;
+}
+.ace_autocomplete .ace_line .ace_ {
+    flex: 0 1 auto; 
     text-overflow: ellipsis;
 }
 .ace_autocomplete .ace_completion-spacer {
