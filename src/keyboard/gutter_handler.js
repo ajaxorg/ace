@@ -435,25 +435,50 @@ class GutterKeyboardHandler {
 
 exports.GutterKeyboardHandler = GutterKeyboardHandler;
 
+/*
+ * Custom Ace gutter keyboard event
+ */
 class GutterKeyboardEvent {
     constructor(domEvent, gutterKeyboardHandler) {
         this.gutterKeyboardHandler = gutterKeyboardHandler;
         this.domEvent = domEvent;
     }
 
+    /**
+     * Returns the key that was presssed.
+     * 
+     * @return {string} the key that was pressed.
+     */
     getKey() {
         return keys.keyCodeToString(this.domEvent.keyCode);
     }
 
+    /**
+     * Returns the row in the gutter that was focused after the keyboard event was handled.
+     * 
+     * @return {number} the key that was pressed.
+     */
     getRow() {
         return this.gutterKeyboardHandler.$rowIndexToRow(this.gutterKeyboardHandler.activeRowIndex);
     }
 
+    /**
+     * Returns whether focus is on the annotation lane after the keyboard event was handled.
+     * 
+     * @return {boolean} true if focus was on the annotation lane after the keyboard event.
+     */
     isInAnnotationLane() {
         return this.gutterKeyboardHandler.activeLane === "annotation";
     }
 
+    /**
+     * Returns whether focus is on the fold lane after the keyboard event was handled.
+     * 
+     * @return {boolean} true if focus was on the fold lane after the keyboard event.
+     */
     isInFoldLane() {
         return this.gutterKeyboardHandler.activeLane === "fold";
     }
 }
+
+exports.GutterKeyboardEvent = GutterKeyboardEvent;
