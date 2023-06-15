@@ -410,7 +410,7 @@ dom.importCssString(`
 }
 .ace_completion-meta {
     opacity: 0.5;
-    margin: 0 0.9em;
+    margin-left: 0.9em;
 }
 .ace_completion-message {
     color: blue;
@@ -439,7 +439,7 @@ dom.importCssString(`
     color: #c1c1c1;
 }
 .ace_autocomplete .ace_text-layer  {
-    width: 100%;
+    width: calc(100% - 8px);
 }
 .ace_autocomplete .ace_line {
     display: flex;
