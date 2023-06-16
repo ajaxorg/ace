@@ -111,7 +111,7 @@ function loadLanguageProvider(editor) {
                 if (session) {
                     showAnnotations(session, e.data.value);
                 }
-            } else if (e.data.type == 13) {
+            } else if (e.data.type == 14) {
                 // highlights message
                 if (session) showOccurrenceMarkers(session, e.data.value);
             }
@@ -168,7 +168,7 @@ function loadLanguageProvider(editor) {
             languageProvider.doHover(session, docPos, function(hover) {
                 var errorMarker = session.state?.diagnosticMarkers.getMarkerAtPosition(docPos);
 
-                if (!errorMarker && !hover.content) return;
+                if (!errorMarker && !hover?.content) return;
 
                 var range = hover?.range || errorMarker?.range;
                 range = range ? Range.fromPoints(range.start, range.end) : session.getWordRange(docPos.row, docPos.column);
