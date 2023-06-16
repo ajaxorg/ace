@@ -37,9 +37,10 @@
   </style>
 </head>
 <body>
-<a href="?lang=Ru"/>Russian</a> &nbsp;
-<a href="?lang=Am"/>Armenian</a>&nbsp; 
-<a href="?lang=En"/>English</a>&nbsp;
+<a href="?lang=Ru">Russian</a> &nbsp;
+<a href="?lang=Am">Armenian</a>&nbsp; 
+<a href="?lang=En">English</a>&nbsp;
+<a href="?lang=Es">Spanish</a>&nbsp;
 <pre id="editor"></pre>
     
 <script src="kitchen-sink/require.js"></script>
@@ -84,6 +85,7 @@ require(["ace/ace", "ace/ext/searchbox"], function(ace) {
         "information message": "информационное сообщение",
         "information messages": "информационные сообщения"
     };
+    
     var messagesArmenian = {
         "$id": "am",
         
@@ -121,13 +123,52 @@ require(["ace/ace", "ace/ext/searchbox"], function(ace) {
         "information messages": "տեղեկատվություններ"
     };
 
+    var messagesSpanish = {
+        "$id": "es",
+        "Autocomplete suggestions": "Sugerencias de autocompletar",
+        "editor": "editor",
+        "Editor content, press Enter to start editing, press Escape to exit": "Contenido del editor, presiona Entrar para empezar a editar, presiona Escape para salir",
+        "Editor gutter, press Enter to interact with controls using arrow keys, press Escape to exit": "Canaleta de editor, presiona Entrar para por, presiona Escape para salir",
+        "Looks good!": "¡Parece bien!",
+        "Recently used": "Usado recientemente",
+        "Other commands": "Otros mandos",
+        "No matching commands": "No hay mandos que hacen juego",
+        "Search for": "Buscar",
+        "All": "Todo",
+        "Replace with": "Reemplazar con",
+        "Replace": "Reemplazar",
+        "Toggle Replace mode": "Pasar el modo de reemplazar",
+        "RegExp Search": "Búsqueda de RegExp",
+        "CaseSensitive Search": "Búsqueda sensible a mayúsculas y minúsculas",
+        "Whole Word Search": "Búsqueda de palabras enteras",
+        "Search In Selection": "Buscar en la selección",
+        "$0 of $1": "$0 de $1",
+        "Cursor at row $0": "Cursor en row $0",
+        "Unfold rows $0 to $1": "Desplegar las filas desde $0 hasta $1",
+        "Unfold code": "Desplegar el codigo",
+        "Fold at row $0": "Plegar en fila $0",
+        "Fold code": "Plegar el codigo",
+        "Read annotations row $0": "Leer anotaciones fila $0",
+        "error": "error",
+        "errors": "errores",
+        "warning": "advertencia",
+        "warnings": "advertencias",
+        "information message": "mensaje de informacion",
+        "information messages": "mensajes de informacion"
+    }
+
+
+
     if (/lang=ru/i.test(location.href)) {
         ace.config.setMessages(messagesRussian);
     } else if (/lang=en/i.test(location.href)) {
         ace.config.setMessages();
+    } else if (/lang=es/i.test(location.href)) {
+        ace.config.setMessages(messagesSpanish)
     } else {
         ace.config.setMessages(messagesArmenian);
     }
+
     var editor = ace.edit("editor", {
         mode: "ace/mode/html"
     });
