@@ -306,6 +306,20 @@ module.exports = {
         assert.equal(editor.completer.popup.isOpen, false);
 
         done();
+    },
+    "test: scroll and resize": function() {
+        var editor = initEditor("hello world\n");
+        user.type("Ctrl-Space");
+        assert.equal(editor.completer.popup.isOpen, true);
+        var called = false;
+        editor.completer.$updatePopupPosition = function() {
+            called = true;
+        };
+        editor.container.parentNode.dispatchEvent(new CustomEvent("scroll"));
+        assert.ok(called);
+        
+        editor.destroy();
+        editor.container.remove();
     }
 };
 

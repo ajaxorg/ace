@@ -122,6 +122,7 @@ class Autocomplete {
     observeLayoutChanges() {
         if (this.$elements || !this.editor) return;
         window.addEventListener("resize", this.onLayoutChange, {passive: true});
+        window.addEventListener("wheel", this.mousewheelListener);
 
         var el = this.editor.container.parentNode;
         var elements = [];
@@ -134,6 +135,7 @@ class Autocomplete {
     }
     unObserveLayoutChanges() {
         window.removeEventListener("resize", this.onLayoutChange, {passive: true});
+        window.removeEventListener("wheel", this.mousewheelListener);
         this.$elements && this.$elements.forEach((el) => {
             el.removeEventListener("scroll", this.onLayoutChange, {passive: true});
         });

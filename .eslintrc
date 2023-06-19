@@ -30,6 +30,7 @@
         XMLHttpRequest: true,
         localStorage: true,
         KeyboardEvent: true,
+        CustomEvent: true
     },
     "rules": {
         curly: 0,
