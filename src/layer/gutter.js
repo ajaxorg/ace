@@ -365,12 +365,12 @@ class Gutter{
 
             // getFoldWidgetRange is optional to be implemented by fold modes, if not available we fall-back.
             if (foldRange)
-                foldWidget.setAttribute("aria-label", nls("Code folding, rows $0 through $1", [foldRange.start.row + 1, foldRange.end.row + 1]));
+                foldWidget.setAttribute("aria-label", nls("Toggle code folding, rows $0 through $1", [foldRange.start.row + 1, foldRange.end.row + 1]));
             else {
                 if (fold)
-                    foldWidget.setAttribute("aria-label", nls("Code folding, rows $0 through $1", [fold.start.row + 1, fold.end.row + 1]));
+                    foldWidget.setAttribute("aria-label", nls("Toggle code folding, rows $0 through $1", [fold.start.row + 1, fold.end.row + 1]));
                 else
-                    foldWidget.setAttribute("aria-label", nls("Code folding, row $0", [row + 1]));
+                    foldWidget.setAttribute("aria-label", nls("Toggle code folding, row $0", [row + 1]));
             }
 
             if (isClosedFold) {
