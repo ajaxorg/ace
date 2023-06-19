@@ -267,14 +267,14 @@ module.exports = {
         var lines = editor.renderer.$gutterLayer.$lines;
         var toggler = lines.cells[0].element.children[1];
 
-        assert.equal(toggler.getAttribute("aria-label"), "Code folding, rows 1 through 6");
+        assert.equal(toggler.getAttribute("aria-label"), "Toggle code folding, rows 1 through 6");
         assert.equal(toggler.getAttribute("aria-expanded"), "true");
         assert.equal(toggler.getAttribute("title"), "Fold code");
 
         editor.session.$toggleFoldWidget(0, {});
         editor.renderer.$loop._flush();
 
-        assert.equal(toggler.getAttribute("aria-label"), "Code folding, rows 1 through 6");
+        assert.equal(toggler.getAttribute("aria-label"), "Toggle code folding, rows 1 through 6");
         assert.equal(toggler.getAttribute("aria-expanded"), "false");
         assert.equal(toggler.getAttribute("title"), "Unfold code");    
     },
@@ -293,7 +293,7 @@ module.exports = {
         var lines = editor.renderer.$gutterLayer.$lines;
         var toggler = lines.cells[0].element.children[1];
 
-        assert.equal(toggler.getAttribute("aria-label"), "Code folding, row 1");
+        assert.equal(toggler.getAttribute("aria-label"), "Toggle code folding, row 1");
         assert.equal(toggler.getAttribute("aria-expanded"), "true");
         assert.equal(toggler.getAttribute("title"), "Fold code"); 
     },"test: should signal keyboard event" : function(done) {
