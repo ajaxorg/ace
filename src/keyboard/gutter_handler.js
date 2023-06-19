@@ -34,7 +34,7 @@ class GutterKeyboardHandler {
             e.preventDefault();
 
             if (e.keyCode === keys["escape"])
-                this.annotationTooltip.hide();
+                this.annotationTooltip.hideTooltip();
 
             return;
         }
@@ -88,6 +88,16 @@ class GutterKeyboardHandler {
         } 
 
         // After here, foucs is on a gutter icon and we want to interact with them.
+        this.$handleGutterKeyboardInteraction(e);
+
+        // Wait until folding is completed and then signal gutterkeydown to the editor.
+        setTimeout(function() {
+            // Signal to the editor that a key is pressed inside the gutter.
+            this.editor._signal("gutterkeydown", new GutterKeyboardEvent(e, this));
+        }.bind(this), 10);
+    }
+
+    $handleGutterKeyboardInteraction(e) {
         // Prevent tabbing when interacting with the gutter icons.
         if (e.keyCode === keys["tab"]){
             e.preventDefault();
@@ -137,12 +147,14 @@ class GutterKeyboardHandler {
         if (e.keyCode === keys["left"]){
             e.preventDefault();
             this.$switchLane("annotation");
+            return;
         }
 
         // Try to switch from annotations to fold widgets.
         if (e.keyCode === keys["right"]){
             e.preventDefault();
             this.$switchLane("fold");
+            return;
         }
 
         if (e.keyCode === keys["enter"] || e.keyCode === keys["space"]){
@@ -198,7 +210,7 @@ class GutterKeyboardHandler {
         }
 
         if (this.annotationTooltip.isOpen)
-            this.annotationTooltip.hide();
+            this.annotationTooltip.hideTooltip();
 
         return;
     }
@@ -288,7 +300,6 @@ class GutterKeyboardHandler {
         var annotation = this.$getAnnotation(index);
 
         annotation.classList.add(this.editor.renderer.keyboardFocusClassName);
-        annotation.setAttribute("role", "button");
         annotation.focus();
     }
 
@@ -303,7 +314,6 @@ class GutterKeyboardHandler {
         var annotation = this.$getAnnotation(index);
 
         annotation.classList.remove(this.editor.renderer.keyboardFocusClassName);
-        annotation.removeAttribute("role");
         annotation.blur();
     }
 
@@ -424,3 +434,51 @@ class GutterKeyboardHandler {
 }
 
 exports.GutterKeyboardHandler = GutterKeyboardHandler;
+
+/*
+ * Custom Ace gutter keyboard event
+ */
+class GutterKeyboardEvent {
+    constructor(domEvent, gutterKeyboardHandler) {
+        this.gutterKeyboardHandler = gutterKeyboardHandler;
+        this.domEvent = domEvent;
+    }
+
+    /**
+     * Returns the key that was presssed.
+     * 
+     * @return {string} the key that was pressed.
+     */
+    getKey() {
+        return keys.keyCodeToString(this.domEvent.keyCode);
+    }
+
+    /**
+     * Returns the row in the gutter that was focused after the keyboard event was handled.
+     * 
+     * @return {number} the key that was pressed.
+     */
+    getRow() {
+        return this.gutterKeyboardHandler.$rowIndexToRow(this.gutterKeyboardHandler.activeRowIndex);
+    }
+
+    /**
+     * Returns whether focus is on the annotation lane after the keyboard event was handled.
+     * 
+     * @return {boolean} true if focus was on the annotation lane after the keyboard event.
+     */
+    isInAnnotationLane() {
+        return this.gutterKeyboardHandler.activeLane === "annotation";
+    }
+
+    /**
+     * Returns whether focus is on the fold lane after the keyboard event was handled.
+     * 
+     * @return {boolean} true if focus was on the fold lane after the keyboard event.
+     */
+    isInFoldLane() {
+        return this.gutterKeyboardHandler.activeLane === "fold";
+    }
+}
+
+exports.GutterKeyboardEvent = GutterKeyboardEvent;
