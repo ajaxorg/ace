@@ -132,7 +132,7 @@ class AppConfig {
     
     nls(string, params) {
         if (messages && !messages[string])  {
-            warn("No message found for '" + string + "' in the provided messages.");
+            warn("No message found for '" + string + "' in the provided messages, falling back to default English message.");
         }
         var translated = messages && messages[string] || string;
         if (params) {
