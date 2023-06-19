@@ -256,6 +256,46 @@ module.exports = {
             assert.equal(document.activeElement, lines.cells[1].element.childNodes[2]);
             done();
         }, 20);
+    },"test: should signal keyboard event" : function(done) {
+        var editor = this.editor;
+        var value = "x {" + "\n".repeat(50) + "}\n";
+        value = value.repeat(50);
+        editor.session.setMode(new Mode());
+        editor.setOption("enableKeyboardAccessibility", true);
+        editor.setValue(value, -1);
+        editor.session.setAnnotations([{row: 0, column: 0, text: "error test", type: "error"}]);
+
+        var row, isAnnotation, isFold, key;
+        editor.on("gutterkeydown", function(event) {
+            row = event.getRow();
+            isAnnotation = event.isInAnnotationLane();
+            isFold = event.isInFoldLane();
+            key = event.getKey();
+        });
+
+        editor.renderer.$loop._flush();
+
+        var lines = editor.renderer.$gutterLayer.$lines;
+
+        // Set focus to the gutter div.
+        editor.renderer.$gutter.focus();
+        assert.equal(document.activeElement, editor.renderer.$gutter);
+
+        // Focus on the annotation.
+        emit(keys["enter"]);
+        
+        setTimeout(function() {
+            emit(keys["left"]);
+            assert.equal(document.activeElement, lines.cells[0].element.childNodes[2]);
+            
+            setTimeout(function() {
+                assert.equal(row, 0);
+                assert.equal(isAnnotation, true);
+                assert.equal(isFold, false);
+                assert.equal(key, "left");
+                done();
+            }, 20);
+        }, 20);
     },
     
     tearDown : function() {

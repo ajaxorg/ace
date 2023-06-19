@@ -69,8 +69,7 @@ function GutterHandler(mouseHandler) {
         if (tooltipTimeout)
             tooltipTimeout = clearTimeout(tooltipTimeout);
         if (tooltip.isOpen) {
-            tooltip.hide();
-            editor._signal("hideGutterTooltip", tooltip);
+            tooltip.hideTooltip();
             editor.off("mousewheel", hideTooltip);
         }
     }
@@ -211,8 +210,13 @@ class GutterTooltip extends Tooltip {
             this.setTheme(this.editor.renderer.theme);
         }
 
-        this.editor._signal("showGutterTooltip", this);
         this.show();
+        this.editor._signal("showGutterTooltip", this);
+    }
+
+    hideTooltip() {
+        this.hide();
+        this.editor._signal("hideGutterTooltip", this);
     }
 
     static annotationsToSummaryString(annotations) {

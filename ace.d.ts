@@ -863,6 +863,7 @@ export namespace Ace {
     on(name: 'mousewheel', callback: (e: any) => void): void;
     on(name: 'click', callback: (e: any) => void): void;
     on(name: 'guttermousedown', callback: (e: any) => void): void;
+    on(name: 'gutterkeydown', callback: (e: any) => void): void;
 
     onPaste(text: string, event: any): void;
 
