@@ -256,6 +256,46 @@ module.exports = {
             assert.equal(document.activeElement, lines.cells[1].element.childNodes[2]);
             done();
         }, 20);
+    },"test: aria attributes mode with getFoldWidgetRange" : function() {
+        var editor = this.editor;
+        var value = "x {" + "\n".repeat(5) + "}";
+        editor.session.setMode(new Mode());
+        editor.setOption("enableKeyboardAccessibility", true);
+        editor.setValue(value, -1);
+        editor.renderer.$loop._flush();
+
+        var lines = editor.renderer.$gutterLayer.$lines;
+        var toggler = lines.cells[0].element.children[1];
+
+        assert.equal(toggler.getAttribute("aria-label"), "Toggle code folding, rows 1 through 6");
+        assert.equal(toggler.getAttribute("aria-expanded"), "true");
+        assert.equal(toggler.getAttribute("title"), "Fold code");
+
+        editor.session.$toggleFoldWidget(0, {});
+        editor.renderer.$loop._flush();
+
+        assert.equal(toggler.getAttribute("aria-label"), "Toggle code folding, rows 1 through 6");
+        assert.equal(toggler.getAttribute("aria-expanded"), "false");
+        assert.equal(toggler.getAttribute("title"), "Unfold code");    
+    },
+    "test: aria attributes mode without getFoldWidgetRange" : function() {
+        var editor = this.editor;
+        var value = "x {" + "\n".repeat(5) + "}";
+        var mode = new Mode();
+        mode.foldingRules.getFoldWidgetRange = function(session, foldStyle, row) {
+            return null;
+        };
+        editor.session.setMode(mode);
+        editor.setOption("enableKeyboardAccessibility", true);
+        editor.setValue(value, -1);
+        editor.renderer.$loop._flush();
+
+        var lines = editor.renderer.$gutterLayer.$lines;
+        var toggler = lines.cells[0].element.children[1];
+
+        assert.equal(toggler.getAttribute("aria-label"), "Toggle code folding, row 1");
+        assert.equal(toggler.getAttribute("aria-expanded"), "true");
+        assert.equal(toggler.getAttribute("title"), "Fold code"); 
     },"test: should signal keyboard event" : function(done) {
         var editor = this.editor;
         var value = "x {" + "\n".repeat(50) + "}\n";
