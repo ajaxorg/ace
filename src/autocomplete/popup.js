@@ -410,7 +410,7 @@ dom.importCssString(`
 }
 .ace_completion-meta {
     opacity: 0.5;
-    margin: 0 0.9em;
+    margin-left: 0.9em;
 }
 .ace_completion-message {
     color: blue;
@@ -438,13 +438,24 @@ dom.importCssString(`
     background: #25282c;
     color: #c1c1c1;
 }
-.ace_autocomplete_right .ace_text-layer  {
+.ace_autocomplete .ace_text-layer  {
     width: calc(100% - 8px);
 }
-.ace_autocomplete_right .ace_line {
+.ace_autocomplete .ace_line {
     display: flex;
+    align-items: center;
 }
-.ace_autocomplete_right .ace_completion-spacer {
+.ace_autocomplete .ace_line > * {
+    min-width: 0;
+    flex: 0 0 auto;
+}
+.ace_autocomplete .ace_line .ace_ {
+    flex: 0 1 auto;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.ace_autocomplete .ace_completion-spacer {
     flex: 1;
 }
 `, "autocompletion.css", false);
