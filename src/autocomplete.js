@@ -665,6 +665,7 @@ class CompletionProvider {
         var prefix = util.getCompletionPrefix(editor);
     
         var matches = [];
+        this.completers = editor.completers;
         var total = editor.completers.length;
         editor.completers.forEach(function(completer, i) {
             completer.getCompletions(editor, session, pos, prefix, function(err, results) {
@@ -742,6 +743,11 @@ class CompletionProvider {
 
     detach() {
         this.active = false;
+        this.completers && this.completers.forEach(function(completer) {
+            if (typeof completer.cancel === "function") {
+                completer.cancel();
+            }
+        });
     }
 }
 

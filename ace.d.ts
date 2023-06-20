@@ -221,9 +221,11 @@ export namespace Ace {
     behavioursEnabled: boolean;
     wrapBehavioursEnabled: boolean;
     enableAutoIndent: boolean;
-    enableBasicAutocompletion: boolean | Completer[],
-    enableLiveAutocompletion: boolean | Completer[],
-    enableSnippets: boolean,
+    enableBasicAutocompletion: boolean | Completer[];
+    enableLiveAutocompletion: boolean | Completer[];
+    liveAutocompletionDelay: number;
+    liveAutocompletionThreshold: number;
+    enableSnippets: boolean;
     autoScrollEditorIntoView: boolean;
     keyboardHandler: string | null;
     placeholder: string;
@@ -1008,6 +1010,7 @@ export namespace Ace {
       prefix: string,
       callback: CompleterCallback): void;
     getDocTooltip?(item: Completion): undefined | string | Completion;
+    cancel?(): void;
     id?: string;
     triggerCharacters?: string[]
   }

@@ -13,8 +13,14 @@ var Range = require("./range").Range;
 require("./ext/language_tools");
 var Autocomplete = require("./autocomplete").Autocomplete;
 
+var editor;
 function initEditor(value) {
-    var editor = ace.edit(null, {
+    if (editor) {
+        editor.destroy();
+        editor.container.remove();
+        editor = null;
+    }
+    editor = ace.edit(null, {
         value: value,
         maxLines: 10,
         enableBasicAutocompletion: true,
@@ -23,12 +29,17 @@ function initEditor(value) {
     document.body.appendChild(editor.container);
     editor.focus();
 
-    // workaround for autocomplete using non-relative path
-    editor.renderer.$themeId = "./theme/textmate";
     return editor;
 }
 
 module.exports = {
+    tearDown: function() {
+        if (editor) {
+            editor.destroy();
+            editor.container.remove();
+            editor = null;
+        }
+    },
     "test: highlighting in the popup": function (done) {
         var editor = initEditor("\narraysort alooooooooooooooooooooooooooooong_word");
         //   editor.container.style.width = "500px";
@@ -306,6 +317,49 @@ module.exports = {
         assert.equal(editor.completer.popup.isOpen, false);
 
         done();
+    },
+    "test: liveAutocompleteDelay": function(done) {
+        var editor = initEditor("hello world ");
+        editor.setOptions({
+            liveAutocompletionDelay: 10,
+            liveAutocompletionThreshold: 2
+        });
+        
+        editor.completers = [{
+                getCompletions: function(editor, session, pos, prefix, callback) {
+                    callback(null,[{
+                        value: "test"
+                    }]);
+                }
+            },
+            {
+                getCompletions: function(editor, session, pos, prefix, callback) {
+                    this.timeout = setTimeout(() => {
+                        callback(null,[{
+                            value: "slow test"
+                        }]);
+                    }, 50);
+                },
+                cancel: function() {
+                    clearTimeout(this.timeout);
+                    this.timeout = null;
+                }
+            }
+        ];
+        
+        user.type("t");
+        user.type("e");
+        assert.ok(!editor.completer || !editor.completer.popup.isOpen);
+        setTimeout(function() {
+            assert.ok(editor.completer.popup.isOpen);
+            assert.ok(editor.completers[1].timeout);
+            user.type("Home");
+            setTimeout(function() {
+                assert.ok(!editor.completer.popup.isOpen);
+                assert.ok(!editor.completers[1].timeout);
+                done();
+            }, 0);
+        }, 11);
     },
     "test: scroll and resize": function() {
         var editor = initEditor("hello world\n");

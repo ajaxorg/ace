@@ -141,16 +141,32 @@ var doLiveAutocomplete = function(e) {
         if (hasCompleter && !util.getCompletionPrefix(editor))
             editor.completer.detach();
     }
-    else if (e.command.name === "insertstring") {
-        var prefix = util.getCompletionPrefix(editor);
-        // Only autocomplete if there's a prefix that can be matched or previous char is trigger character 
-        var triggerAutocomplete = util.triggerAutocomplete(editor);
-        if ((prefix || triggerAutocomplete) && !hasCompleter) {
-            var completer = Autocomplete.for(editor);
-            // Set a flag for auto shown
-            completer.autoShown = true;
-            completer.showPopup(editor);
+    else if (e.command.name === "insertstring" && !hasCompleter) {
+        lastExecEvent = e;
+        var delay = e.editor.$liveAutocompletionDelay;
+        if (delay) {
+            liveAutocompleteTimer.delay(delay);
+        } else {
+            showLiveAutocomplete(e);
         }
+    }
+};
+
+var lastExecEvent;
+var liveAutocompleteTimer = lang.delayedCall(function () {
+    showLiveAutocomplete(lastExecEvent);
+}, 0);
+
+var showLiveAutocomplete = function(e) {
+    var editor = e.editor;
+    var prefix = util.getCompletionPrefix(editor);
+    // Only autocomplete if there's a prefix that can be matched or previous char is trigger character 
+    var triggerAutocomplete = util.triggerAutocomplete(editor);
+    if ((prefix || triggerAutocomplete) && prefix.length >= editor.$liveAutocompletionThreshold) {
+        var completer = Autocomplete.for(editor);
+        // Set a flag for auto shown
+        completer.autoShown = true;
+        completer.showPopup(editor);
     }
 };
 
@@ -182,10 +198,16 @@ require("../config").defineOptions(Editor.prototype, "editor", {
                 // On each change automatically trigger the autocomplete
                 this.commands.on('afterExec', doLiveAutocomplete);
             } else {
-                this.commands.removeListener('afterExec', doLiveAutocomplete);
+                this.commands.off('afterExec', doLiveAutocomplete);
             }
         },
         value: false
+    },
+    liveAutocompletionDelay: {
+        initialValue: 0
+    },
+    liveAutocompletionThreshold: {
+        initialValue: 0
     },
     enableSnippets: {
         set: function(val) {
