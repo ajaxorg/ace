@@ -2,7 +2,6 @@
 
 var event = require("../lib/event");
 var UA = require("../lib/useragent");
-var net = require("../lib/net");
 var ace = require("../ace");
 
 module.exports = exports = ace;
@@ -231,16 +230,7 @@ exports.transformTextarea = function(element, options) {
     return editor;
 };
 
-function load(url, module, callback) {
-    net.loadScript(url, function() {
-        require([module], callback);
-    });
-}
-
 function setupApi(editor, editorDiv, settingDiv, ace, options) {
-    var session = editor.getSession();
-    var renderer = editor.renderer;
-
     function toBool(value) {
         return value === "true" || value == true;
     }

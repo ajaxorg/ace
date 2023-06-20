@@ -77,15 +77,26 @@ exports.setModuleUrl = function(name, subst) {
 var loader = function(moduleName, cb) {
     if (moduleName === "ace/theme/textmate" || moduleName === "./theme/textmate")
         return cb(null, require("./theme/textmate"));
-    return console.error("loader is not configured");
+    if (typeof module.require == "function") {
+        // backwards compatibility for node
+        try {
+            var req = "require";
+            return cb(null, module[req](moduleName));
+        } catch (e) {
+        }
+    }
+    if (customLoader)
+        return customLoader(moduleName, cb);
+    console.error("loader is not configured");
 };
-
+var customLoader;
 exports.setLoader = function(cb) {
-    loader = cb;
+    customLoader = cb;
 };
 
 exports.dynamicModules = Object.create(null);
 exports.$loading = {};
+exports.$loaded = {};
 exports.loadModule = function(moduleName, onLoad) {
     var module, moduleType;
     if (Array.isArray(moduleName)) {
@@ -105,6 +116,7 @@ exports.loadModule = function(moduleName, onLoad) {
 
         var afterLoad = function() {
             loader(moduleName, function(err, module) {
+                if (module) exports.$loaded[moduleName] = module;
                 exports._emit("load.module", {name: moduleName, module: module});
                 var listeners = exports.$loading[moduleName];
                 exports.$loading[moduleName] = null;
@@ -130,10 +142,7 @@ exports.loadModule = function(moduleName, onLoad) {
             }
         });
     } else {
-        try {
-            module = require(moduleName);
-        } catch (e) {}
-        load(module);
+        load(module || exports.$loaded[moduleName]);
     }
 };
 
