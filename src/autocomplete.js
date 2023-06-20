@@ -66,6 +66,7 @@ class Autocomplete {
         this.changeListener = this.changeListener.bind(this);
         this.mousedownListener = this.mousedownListener.bind(this);
         this.mousewheelListener = this.mousewheelListener.bind(this);
+        this.onLayoutChange = this.onLayoutChange.bind(this);
 
         this.changeTimer = lang.delayedCall(function() {
             this.updateCompletions(true);
@@ -116,6 +117,34 @@ class Autocomplete {
             this.$updatePopupPosition();
         }
         this.tooltipTimer.call(null, null);
+    }
+
+    observeLayoutChanges() {
+        if (this.$elements || !this.editor) return;
+        window.addEventListener("resize", this.onLayoutChange, {passive: true});
+        window.addEventListener("wheel", this.mousewheelListener);
+
+        var el = this.editor.container.parentNode;
+        var elements = [];
+        while (el) {
+            elements.push(el);
+            el.addEventListener("scroll", this.onLayoutChange, {passive: true});
+            el = el.parentNode;
+        }
+        this.$elements = elements;
+    }
+    unObserveLayoutChanges() {
+        window.removeEventListener("resize", this.onLayoutChange, {passive: true});
+        window.removeEventListener("wheel", this.mousewheelListener);
+        this.$elements && this.$elements.forEach((el) => {
+            el.removeEventListener("scroll", this.onLayoutChange, {passive: true});
+        });
+        this.$elements = null;
+    }
+    onLayoutChange() {
+        if (!this.popup.isOpen) return this.unObserveLayoutChanges();
+        this.$updatePopupPosition();
+        this.updateDocTooltip();
     }
 
     $updatePopupPosition() {
@@ -186,6 +215,7 @@ class Autocomplete {
             this.detach();
         }
         this.changeTimer.cancel();
+        this.observeLayoutChanges();
     }
 
     /**
@@ -213,6 +243,7 @@ class Autocomplete {
             this.base.detach();
         this.activated = false;
         this.completionProvider = this.completions = this.base = null;
+        this.unObserveLayoutChanges();
     }
 
     changeListener(e) {
