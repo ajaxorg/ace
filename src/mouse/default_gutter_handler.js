@@ -203,11 +203,11 @@ class GutterTooltip extends Tooltip {
         var tooltipContent = [].concat(annotationMessages.error, annotationMessages.warning, annotationMessages.info).join("<br>");
  
         this.setHtml(tooltipContent);
-        this.setClassName("ace_gutter-tooltip");
         this.$element.setAttribute("aria-live", "polite");
         
         if (!this.isOpen) {
             this.setTheme(this.editor.renderer.theme);
+            this.setClassName("ace_gutter-tooltip");
         }
 
         this.show();
@@ -215,6 +215,7 @@ class GutterTooltip extends Tooltip {
     }
 
     hideTooltip() {
+        this.$element.removeAttribute("aria-live");
         this.hide();
         this.editor._signal("hideGutterTooltip", this);
     }
