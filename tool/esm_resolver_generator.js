@@ -8,7 +8,7 @@ function buildResolver() {
         return `ace.config.setModuleLoader('${moduleName}', () => import('./${moduleName.replace("ace", "src") + ".js"}'));`;
     }).join('\n') + "\n\nexport * as default from \"./src/ace\";";
 
-    var declaration = generateDeclaration();
+    var declaration = 'export * from "./ace"';
 
     fs.writeFileSync(__dirname + '/../esm-resolver.js', loader, "utf8");
     fs.writeFileSync(__dirname + '/../esm-resolver.d.ts', declaration, "utf8");
@@ -39,10 +39,6 @@ function getModuleNames() {
     });
     paths.push(...modeNamePaths, ...snippetsPaths, ...themesPaths, ...keyBindingsPaths, ...extPaths);
     return paths;
-}
-
-function generateDeclaration() {
-    return "export * from \"ace-code\";" 
 }
 
 buildResolver();
