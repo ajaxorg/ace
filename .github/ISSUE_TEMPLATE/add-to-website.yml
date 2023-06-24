@@ -1,0 +1,43 @@
+---
+name: "🌐 Add a project to the list of project using Ace on its website."
+description: Add a project to the list of projects using Ace, displayed on the website.
+title: "Add project (project name) to the list of projects using Ace on its website"
+labels: [website, needs-triage]
+assignees: []
+body:
+  - type: input
+    id: name
+    attributes:
+      label: Project name
+      description: A name of the project to be used on Ace website.
+    validations:
+      required: true
+  - type: input
+    id: project-link
+    attributes:
+      label: Project link
+      description: A link to the project's website.
+    validations:
+      required: true
+  - type: input
+    id: logo-link
+    attributes:
+      label: Logo link
+      description: |
+        A link to the logo image to be used on the website for the project. If not provided, only the name of the project will be displayed.
+    validations:
+      required: false
+  - type: textarea
+    id: info
+    attributes:
+      label: Additional information
+      description: Any additional information you would like to share.
+    validations:
+      required: false
+  - type: checkboxes
+    id: ack
+    attributes:
+      label: Acknowledgements
+      options:
+        - label: I may be able to implement this request.
+          required: false
