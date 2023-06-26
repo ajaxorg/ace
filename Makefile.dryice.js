@@ -190,6 +190,7 @@ function buildTypes() {
 
     var pathModules = [
         "declare module 'ace-builds/webpack-resolver';",
+        "declare module 'ace-builds/esm-resolver';",
         "declare module 'ace-builds/src-noconflict/ace';"
     ].concat(paths.map(function(path) {
         if (moduleNameRegex.test(path)) {
