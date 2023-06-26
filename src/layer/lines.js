@@ -42,6 +42,15 @@ class Lines {
     get(index) {
         return this.cells[index];
     }
+
+    getAtRow(row) {
+        for (var i = 0; i < this.getLength(); i++){
+            var cell = this.get(i);
+            if (cell.row == row)
+                return cell;
+        }
+        return null;
+    }
     
     shift() {
         this.$cacheCell(this.cells.shift());
