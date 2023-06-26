@@ -59,7 +59,7 @@ function GutterHandler(mouseHandler) {
         } else {
             var gutterCell = gutter.$lines.getAtRow(row);
             if (gutterCell) {
-                var gutterElement = gutterCell.element.childNodes[2];
+                var gutterElement = gutterCell.element.querySelector(".ace_gutter_annotation");
                 var rect = gutterElement.getBoundingClientRect();
                 var style = tooltip.getElement().style;
                 style.left = rect.right + "px";
