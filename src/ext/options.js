@@ -207,7 +207,7 @@ var optionGroups = {
         "Gutter tooltip follows mouse": {
             path: "tooltipFollowsMouse",
             defaultValue: true
-        },
+        }
     }
 };
 
