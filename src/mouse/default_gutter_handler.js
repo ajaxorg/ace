@@ -57,8 +57,9 @@ function GutterHandler(mouseHandler) {
         if (mouseHandler.$tooltipFollowsMouse) {
             moveTooltip(mouseEvent);
         } else {
-            var gutterElement = gutter.$lines.getAtRow(row).element.querySelector("[class*=ace_icon]");
-            if (gutterElement) {
+            var gutterCell = gutter.$lines.getAtRow(row);
+            if (gutterCell) {
+                var gutterElement = gutterCell.element.querySelector("[class*=ace_icon]");
                 var rect = gutterElement.getBoundingClientRect();
                 var style = tooltip.getElement().style;
                 style.left = rect.right + "px";
