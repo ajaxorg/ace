@@ -1,0 +1,51 @@
+---
+name: "🌐 Add a project to the list of project using Ace on its website."
+description: Add a project to the list of projects using Ace, displayed on the website.
+title: "Add project (project name) to the list of projects using Ace on its website"
+labels: [website, needs-triage]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        The fastest way to get your project to be displayed on the website is to create a PR. 
+        Examples: https://github.com/ajaxorg/ace/pull/5014, https://github.com/ajaxorg/ace/pull/5222.
+        If for any reason creating a PR is not an option for you, please proceed with filling out this issue. Thanks!
+  - type: input
+    id: name
+    attributes:
+      label: Project name
+      description: A name of the project to be used on Ace website.
+    validations:
+      required: true
+  - type: input
+    id: project-link
+    attributes:
+      label: Project link
+      description: A link to the project's website.
+    validations:
+      required: true
+  - type: input
+    id: logo-link
+    attributes:
+      label: Logo link
+      description: |
+        A link to the logo image to be used on the website for the project. If not provided, only the name of the project will be displayed.
+
+        By submitting this link, I confirm that you can use, modify, copy, and redistribute this contribution, under the terms of your choice.
+    validations:
+      required: false
+  - type: textarea
+    id: info
+    attributes:
+      label: Additional information
+      description: Any additional information you would like to share.
+    validations:
+      required: false
+  - type: checkboxes
+    id: ack
+    attributes:
+      label: Acknowledgements
+      options:
+        - label: I may be able to implement this request.
+          required: false
