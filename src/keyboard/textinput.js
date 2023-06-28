@@ -10,6 +10,7 @@ var BROKEN_SETDATA = useragent.isChrome < 18;
 var USE_IE_MIME_TYPE =  useragent.isIE;
 var HAS_FOCUS_ARGS = useragent.isChrome > 63;
 var MAX_LINE_LENGTH = 400;
+var NUM_EXTRA_LINES = 0;
 
 var KEYS = require("../lib/keys");
 var MODS = KEYS.KEY_MODS;
@@ -45,11 +46,16 @@ var TextInput = function(parentNode, host) {
     var lastSelectionStart = 0;
     var lastSelectionEnd = 0;
     var lastRestoreEnd = 0;
+    var rowStart = 0;
+    var rowEnd = 0;
     
     // FOCUS
     // ie9 throws error if document.activeElement is accessed too soon
     try { var isFocused = document.activeElement === text; } catch(e) {}
 
+    this.setNumExtraLines = function(number) {
+        NUM_EXTRA_LINES = number;
+    }
     this.setAriaOptions = function(options) {
         if (options.activeDescendant) {
             text.setAttribute("aria-haspopup", "true");
@@ -63,21 +69,16 @@ var TextInput = function(parentNode, host) {
         if (options.role) {
             text.setAttribute("role", options.role);
         }     
-    };
-    this.setAriaLabel = function() {
-        if(host.session && host.renderer.enableKeyboardAccessibility) {
-            var row =  host.session.selection.cursor.row;
-
+        if (options.setAriaLabel) {
             text.setAttribute("aria-roledescription", nls("editor"));
-            text.setAttribute("aria-label", nls("Cursor at row $0", [row + 1]));
-        } else {
-            text.removeAttribute("aria-roledescription");
-            text.removeAttribute("aria-label");
+            if(host.session) {
+                var row =  host.session.selection.cursor.row;
+                text.setAttribute("aria-label", nls("Cursor at row $0", [row + 1]));
+            }
         }
     };
 
-    this.setAriaOptions({role: "textbox"});
-    this.setAriaLabel();
+    this.setAriaOptions({role: "textbox"}); 
 
     event.addListener(text, "blur", function(e) {
         if (ignoreFocusEvents) return;
@@ -107,7 +108,9 @@ var TextInput = function(parentNode, host) {
     this.$focusScroll = false;
     this.focus = function() {
         // On focusing on the textarea, read active row number to assistive tech.
-        this.setAriaLabel();
+        this.setAriaOptions({
+            setAriaLabel: host.renderer.enableKeyboardAccessibility
+        });
 
         if (tempStyle || HAS_FOCUS_ARGS || this.$focusScroll == "browser")
             return text.focus({ preventScroll: true });
@@ -205,48 +208,74 @@ var TextInput = function(parentNode, host) {
             var row = selection.cursor.row;
             selectionStart = range.start.column;
             selectionEnd = range.end.column;
-            line = host.session.getLine(row);
-
-            if (range.start.row != row) {
-                var prevLine = host.session.getLine(row - 1);
-                selectionStart = range.start.row < row - 1 ? 0 : selectionStart;
-                selectionEnd += prevLine.length + 1;
-                line = prevLine + "\n" + line;
-            }
-            else if (range.end.row != row) {
-                var nextLine = host.session.getLine(row + 1);
-                selectionEnd = range.end.row > row  + 1 ? nextLine.length : selectionEnd;
-                selectionEnd += line.length + 1;
-                line = line + "\n" + nextLine;
-            }
-            else if (isMobile && row > 0) {
-                line = "\n" + line;
-                selectionEnd += 1;
-                selectionStart += 1;
-            }
-
-            if (line.length > MAX_LINE_LENGTH) {
-                if (selectionStart < MAX_LINE_LENGTH && selectionEnd < MAX_LINE_LENGTH) {
-                    line = line.slice(0, MAX_LINE_LENGTH);
+            
+            // Check whether the selection is within the lines currently in the textarea.
+            if (row >= rowStart && row <= rowEnd){
+                for (var i = 1; i <= row - rowStart; i++) {
+                    selectionStart += host.session.getLine(row - i).length + 1;
+                    selectionEnd += host.session.getLine(row - i).length + 1;
+                }
+            } else {
+                // If the new cursor position is one row above or below current rows 
+                // in textarea, move page up or down. If not, set textarea to fresh
+                // set of rows around the cursor.
+                if (row === rowEnd + 1) {
+                    rowStart = rowEnd + 1;
+                    rowEnd = rowStart + NUM_EXTRA_LINES - 1;
+                } else if (row === rowStart - 1) {
+                    rowEnd = rowStart - 1;
+                    rowStart = rowEnd - NUM_EXTRA_LINES + 1;
                 } else {
-                    line = "\n";
-                    if (selectionStart == selectionEnd) {
-                        selectionStart = selectionEnd = 0;
+                    rowStart = row > Math.floor(NUM_EXTRA_LINES / 2) ? row - Math.floor(NUM_EXTRA_LINES / 2) : 0;
+                    rowEnd = row + Math.floor(NUM_EXTRA_LINES / 2);
+                }
+                
+                var prevalue = "";
+                var value = host.session.getLine(row);
+                var postvalue = "";
+
+                for (var i = rowStart; i < row; i++) {
+                    prevalue += host.session.getLine(i) + '\n';
+                }
+                for (var i = row + 1; i <= rowEnd; i++) {
+                    postvalue += host.session.getLine(i) + '\n';
+                }
+
+                line = prevalue + value + postvalue;
+
+                for (var i = 1; i <= row - rowStart; i++) {
+                    selectionStart += host.session.getLine(row - i).length + 1;
+                    selectionEnd += host.session.getLine(row - i).length + 1;
+                }
+
+                if (isMobile && row > 0) {
+                    line = "\n" + line;
+                    selectionEnd += 1;
+                    selectionStart += 1;
+                }
+
+                if (line.length > MAX_LINE_LENGTH) {
+                    if (selectionStart < MAX_LINE_LENGTH && selectionEnd < MAX_LINE_LENGTH) {
+                        line = line.slice(0, MAX_LINE_LENGTH);
+                    } else {
+                        line = "\n";
+                        if (selectionStart == selectionEnd) {
+                            selectionStart = selectionEnd = 0;
+                        }
+                        else {
+                            selectionStart = 0;
+                            selectionEnd = 1;
+                        }
                     }
-                    else {
-                        selectionStart = 0;
-                        selectionEnd = 1;
-                    }
+                }
+            
+                var newValue = line + "\n\n";
+                if (newValue != lastValue) {
+                    text.value = lastValue = newValue;
+                    lastSelectionStart = lastSelectionEnd = newValue.length;
                 }
             }
         }
-
-        var newValue = line + "\n\n";
-        if (newValue != lastValue) {
-            text.value = lastValue = newValue;
-            lastSelectionStart = lastSelectionEnd = newValue.length;
-        }
-        
         // contextmenu on mac may change the selection
         if (afterContextMenu) {
             lastSelectionStart = text.selectionStart;
