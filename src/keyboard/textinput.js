@@ -10,7 +10,7 @@ var BROKEN_SETDATA = useragent.isChrome < 18;
 var USE_IE_MIME_TYPE =  useragent.isIE;
 var HAS_FOCUS_ARGS = useragent.isChrome > 63;
 var MAX_LINE_LENGTH = 400;
-var NUM_EXTRA_LINES = 0;
+var NUM_LINES = 0;
 
 var KEYS = require("../lib/keys");
 var MODS = KEYS.KEY_MODS;
@@ -53,8 +53,8 @@ var TextInput = function(parentNode, host) {
     // ie9 throws error if document.activeElement is accessed too soon
     try { var isFocused = document.activeElement === text; } catch(e) {}
 
-    this.setNumExtraLines = function(number) {
-        NUM_EXTRA_LINES = number;
+    this.setNumberLines = function(number) {
+        NUM_LINES = number;
     }
     this.setAriaOptions = function(options) {
         if (options.activeDescendant) {
@@ -208,7 +208,7 @@ var TextInput = function(parentNode, host) {
             var row = selection.cursor.row;
             selectionStart = range.start.column;
             selectionEnd = range.end.column;
-            
+
             // Check whether the selection is within the lines currently in the textarea.
             if (row >= rowStart && row <= rowEnd){
                 for (var i = 1; i <= row - rowStart; i++) {
@@ -221,17 +221,17 @@ var TextInput = function(parentNode, host) {
                 // set of rows around the cursor.
                 if (row === rowEnd + 1) {
                     rowStart = rowEnd + 1;
-                    rowEnd = rowStart + NUM_EXTRA_LINES - 1;
+                    rowEnd = rowStart + NUM_LINES - 1;
                 } else if (row === rowStart - 1) {
                     rowEnd = rowStart - 1;
-                    rowStart = rowEnd - NUM_EXTRA_LINES + 1;
+                    rowStart = rowEnd - NUM_LINES + 1;
                 } else {
-                    rowStart = row > Math.floor(NUM_EXTRA_LINES / 2) ? row - Math.floor(NUM_EXTRA_LINES / 2) : 0;
-                    rowEnd = row + Math.floor(NUM_EXTRA_LINES / 2);
+                    rowStart = row > Math.floor(NUM_LINES / 2) ? row - Math.floor(NUM_LINES / 2) : 0;
+                    rowEnd = row + Math.floor(NUM_LINES / 2);
                 }
                 
                 var prevalue = "";
-                var value = host.session.getLine(row);
+                var value = host.session.getLine(row) + '\n';
                 var postvalue = "";
 
                 for (var i = rowStart; i < row; i++) {
