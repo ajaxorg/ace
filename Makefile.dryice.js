@@ -190,6 +190,7 @@ function buildTypes() {
 
     var pathModules = [
         "declare module 'ace-builds/webpack-resolver';",
+        "declare module 'ace-builds/esm-resolver';",
         "declare module 'ace-builds/src-noconflict/ace';"
     ].concat(paths.map(function(path) {
         if (moduleNameRegex.test(path)) {
@@ -294,7 +295,7 @@ function jsFileList(path, filter) {
         filter = /_test/;
 
     return fs.readdirSync(path).map(function(x) {
-        if (x.slice(-3) == ".js" && !filter.test(x) && !/\s|BASE|(\b|_)dummy(\b|_)|\.css\.js$/.test(x))
+        if (x.slice(-3) == ".js" && !filter.test(x) && !/\s|BASE|(\b|_)dummy(\b|_)|[\-\.]css\.js$/.test(x))
             return x.slice(0, -3);
     }).filter(Boolean);
 }
