@@ -10,7 +10,6 @@ var BROKEN_SETDATA = useragent.isChrome < 18;
 var USE_IE_MIME_TYPE =  useragent.isIE;
 var HAS_FOCUS_ARGS = useragent.isChrome > 63;
 var MAX_LINE_LENGTH = 400;
-var NUM_LINES = 0;
 
 var KEYS = require("../lib/keys");
 var MODS = KEYS.KEY_MODS;
@@ -46,15 +45,21 @@ var TextInput = function(parentNode, host) {
     var lastSelectionStart = 0;
     var lastSelectionEnd = 0;
     var lastRestoreEnd = 0;
-    var rowStart = 0;
-    var rowEnd = 0;
+    var rowStart = -1;
+    var rowEnd = -1;
+    var numberOfLines = 1;
     
     // FOCUS
     // ie9 throws error if document.activeElement is accessed too soon
     try { var isFocused = document.activeElement === text; } catch(e) {}
 
+    // Set number of lines, needs to be 1 or greater and odd.
     this.setNumberLines = function(number) {
-        NUM_LINES = number;
+        console.log(`lines set to ${number}`)
+        if (number < 1 || number % 2 === 0) {
+            return;
+        }
+        numberOfLines = number;
     }
     this.setAriaOptions = function(options) {
         if (options.activeDescendant) {
@@ -210,7 +215,7 @@ var TextInput = function(parentNode, host) {
             selectionEnd = range.end.column;
 
             // Check whether the selection is within the lines currently in the textarea.
-            if (row >= rowStart && row <= rowEnd){
+            if (numberOfLines > 1 && row >= rowStart && row <= rowEnd){
                 for (var i = 1; i <= row - rowStart; i++) {
                     selectionStart += host.session.getLine(row - i).length + 1;
                     selectionEnd += host.session.getLine(row - i).length + 1;
@@ -221,17 +226,17 @@ var TextInput = function(parentNode, host) {
                 // set of rows around the cursor.
                 if (row === rowEnd + 1) {
                     rowStart = rowEnd + 1;
-                    rowEnd = rowStart + NUM_LINES - 1;
+                    rowEnd = rowStart + numberOfLines - 1;
                 } else if (row === rowStart - 1) {
                     rowEnd = rowStart - 1;
-                    rowStart = rowEnd - NUM_LINES + 1;
+                    rowStart = rowEnd - numberOfLines + 1;
                 } else {
-                    rowStart = row > Math.floor(NUM_LINES / 2) ? row - Math.floor(NUM_LINES / 2) : 0;
-                    rowEnd = row + Math.floor(NUM_LINES / 2);
+                    rowStart = row > Math.floor(numberOfLines / 2) ? row - Math.floor(numberOfLines / 2) : 0;
+                    rowEnd = row + Math.floor(numberOfLines / 2);
                 }
                 
                 var prevalue = "";
-                var value = host.session.getLine(row) + '\n';
+                var value = host.session.getLine(row);
                 var postvalue = "";
 
                 for (var i = rowStart; i < row; i++) {
@@ -241,14 +246,30 @@ var TextInput = function(parentNode, host) {
                     postvalue += host.session.getLine(i) + '\n';
                 }
 
-                line = prevalue + value + postvalue;
+                if (numberOfLines > 1) {
+                    line = prevalue + value + '\n' + postvalue;
+                } else {
+                    line = value;
+                }
 
                 for (var i = 1; i <= row - rowStart; i++) {
                     selectionStart += host.session.getLine(row - i).length + 1;
                     selectionEnd += host.session.getLine(row - i).length + 1;
                 }
 
-                if (isMobile && row > 0) {
+                if (numberOfLines === 1 && range.start.row != row) {
+                    var prevLine = host.session.getLine(row - 1);
+                    selectionStart = range.start.row < row - 1 ? 0 : selectionStart;
+                    selectionEnd += prevLine.length + 1;
+                    line = prevLine + "\n" + line;
+                }
+                else if (numberOfLines === 1 && range.end.row != row) {
+                    var nextLine = host.session.getLine(row + 1);
+                    selectionEnd = range.end.row > row  + 1 ? nextLine.length : selectionEnd;
+                    selectionEnd += line.length + 1;
+                    line = line + "\n" + nextLine;
+                }
+                else if (isMobile && row > 0) {
                     line = "\n" + line;
                     selectionEnd += 1;
                     selectionStart += 1;
