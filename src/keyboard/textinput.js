@@ -55,12 +55,11 @@ var TextInput = function(parentNode, host) {
 
     // Set number of lines, needs to be 1 or greater and odd.
     this.setNumberLines = function(number) {
-        console.log(`lines set to ${number}`)
         if (number < 1 || number % 2 === 0) {
             return;
         }
         numberOfLines = number;
-    }
+    };
     this.setAriaOptions = function(options) {
         if (options.activeDescendant) {
             text.setAttribute("aria-haspopup", "true");
