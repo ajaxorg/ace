@@ -213,8 +213,18 @@ var TextInput = function(parentNode, host) {
             selectionStart = range.start.column;
             selectionEnd = range.end.column;
 
+            var curOp = host.curOp;
+            var lineUpOrDown;
+
+            var commandArray = ["selectup", "selectdown", "golineup", "golinedown"];
+
+            if (curOp) {
+                lineUpOrDown = commandArray.includes(curOp.command.name);
+            } else   
+                lineUpOrDown = false;
+
             // Check whether the selection is within the lines currently in the textarea.
-            if (numberOfLines > 1 && row >= rowStart && row <= rowEnd){
+            if (lineUpOrDown && numberOfLines > 1 && row >= rowStart && row <= rowEnd){
                 for (var i = 1; i <= row - rowStart; i++) {
                     selectionStart += host.session.getLine(row - i).length + 1;
                     selectionEnd += host.session.getLine(row - i).length + 1;
@@ -296,6 +306,7 @@ var TextInput = function(parentNode, host) {
                 }
             }
         }
+        
         // contextmenu on mac may change the selection
         if (afterContextMenu) {
             lastSelectionStart = text.selectionStart;
