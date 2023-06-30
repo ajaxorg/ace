@@ -174,6 +174,15 @@ var TextInput = function(parentNode, host) {
         resetSelection();
     });
     
+    var positionToSelection = function(row, column) {
+        var selection = column;
+
+        for (var i = 1; i <= row - rowStart && i < numberOfLines; i++) {
+            selection += host.session.getLine(row - i).length + 1;
+        }
+        return selection;
+    }
+
     var resetSelection = isIOS
     ? function(value) {
         if (!isFocused || (copied && !value) || sendingText) return;
@@ -210,100 +219,75 @@ var TextInput = function(parentNode, host) {
             var selection = host.selection;
             var range = selection.getRange();
             var row = selection.cursor.row;
-            selectionStart = range.start.column;
-            selectionEnd = range.end.column;
 
-            var curOp = host.curOp;
-            var lineUpOrDown;
+            // If the new cursor position is one row above or below current rows 
+            // in textarea, move page up or down. If not, set textarea to fresh
+            // set of rows around the cursor.
+            if (row === rowEnd + 1) {
+                rowStart = rowEnd + 1;
+                rowEnd = rowStart + numberOfLines - 1;
+            } else if (row === rowStart - 1) {
+                rowEnd = rowStart - 1;
+                rowStart = rowEnd - numberOfLines + 1;
+            } else if (row < rowStart - 1 || row > rowEnd + 1) {
+                rowStart = row > Math.floor(numberOfLines / 2) ? row - Math.floor(numberOfLines / 2) : 0;
+                rowEnd = row + Math.floor(numberOfLines / 2);
+            }
+            
+            var lines = [];
 
-            var commandArray = ["selectup", "selectdown", "golineup", "golinedown"];
+            for (var i = rowStart; i < row; i++) {
+                lines.push(host.session.getLine(i));
+            }
 
-            if (curOp) {
-                lineUpOrDown = commandArray.includes(curOp.command.name);
-            } else   
-                lineUpOrDown = false;
+            lines.push(host.session.getLine(row));
 
-            // Check whether the selection is within the lines currently in the textarea.
-            if (lineUpOrDown && numberOfLines > 1 && row >= rowStart && row <= rowEnd){
-                for (var i = 1; i <= row - rowStart; i++) {
-                    selectionStart += host.session.getLine(row - i).length + 1;
-                    selectionEnd += host.session.getLine(row - i).length + 1;
-                }
-            } else {
-                // If the new cursor position is one row above or below current rows 
-                // in textarea, move page up or down. If not, set textarea to fresh
-                // set of rows around the cursor.
-                if (row === rowEnd + 1) {
-                    rowStart = rowEnd + 1;
-                    rowEnd = rowStart + numberOfLines - 1;
-                } else if (row === rowStart - 1) {
-                    rowEnd = rowStart - 1;
-                    rowStart = rowEnd - numberOfLines + 1;
+            for (var i = row + 1; i <= rowEnd; i++) {
+                lines.push(host.session.getLine(i));
+            }
+
+            line = lines.join('\n');
+
+            selectionStart = positionToSelection(range.start.row, range.start.column);
+            selectionEnd = positionToSelection(range.end.row, range.end.column);
+            
+            if (range.start.row < rowStart) {
+                var prevLine = host.session.getLine(rowStart - 1);
+                selectionStart = range.start.row < rowStart - 1 ? 0 : selectionStart;
+                selectionEnd += prevLine.length + 1;
+                line = prevLine + "\n" + line;
+            }
+            else if (range.end.row > rowEnd) {
+                var nextLine = host.session.getLine(rowEnd + 1);
+                selectionEnd = range.end.row > rowEnd + 1 ? nextLine.length : selectionEnd;
+                selectionEnd += line.length + 1;
+                line = line + "\n" + nextLine;
+            }
+            else if (isMobile && row > 0) {
+                line = "\n" + line;
+                selectionEnd += 1;
+                selectionStart += 1;
+            }
+
+            if (line.length > MAX_LINE_LENGTH) {
+                if (selectionStart < MAX_LINE_LENGTH && selectionEnd < MAX_LINE_LENGTH) {
+                    line = line.slice(0, MAX_LINE_LENGTH);
                 } else {
-                    rowStart = row > Math.floor(numberOfLines / 2) ? row - Math.floor(numberOfLines / 2) : 0;
-                    rowEnd = row + Math.floor(numberOfLines / 2);
-                }
-                
-                var prevalue = "";
-                var value = host.session.getLine(row);
-                var postvalue = "";
-
-                for (var i = rowStart; i < row; i++) {
-                    prevalue += host.session.getLine(i) + '\n';
-                }
-                for (var i = row + 1; i <= rowEnd; i++) {
-                    postvalue += host.session.getLine(i) + '\n';
-                }
-
-                if (numberOfLines > 1) {
-                    line = prevalue + value + '\n' + postvalue;
-                } else {
-                    line = value;
-                }
-
-                for (var i = 1; i <= row - rowStart; i++) {
-                    selectionStart += host.session.getLine(row - i).length + 1;
-                    selectionEnd += host.session.getLine(row - i).length + 1;
-                }
-
-                if (numberOfLines === 1 && range.start.row != row) {
-                    var prevLine = host.session.getLine(row - 1);
-                    selectionStart = range.start.row < row - 1 ? 0 : selectionStart;
-                    selectionEnd += prevLine.length + 1;
-                    line = prevLine + "\n" + line;
-                }
-                else if (numberOfLines === 1 && range.end.row != row) {
-                    var nextLine = host.session.getLine(row + 1);
-                    selectionEnd = range.end.row > row  + 1 ? nextLine.length : selectionEnd;
-                    selectionEnd += line.length + 1;
-                    line = line + "\n" + nextLine;
-                }
-                else if (isMobile && row > 0) {
-                    line = "\n" + line;
-                    selectionEnd += 1;
-                    selectionStart += 1;
-                }
-
-                if (line.length > MAX_LINE_LENGTH) {
-                    if (selectionStart < MAX_LINE_LENGTH && selectionEnd < MAX_LINE_LENGTH) {
-                        line = line.slice(0, MAX_LINE_LENGTH);
-                    } else {
-                        line = "\n";
-                        if (selectionStart == selectionEnd) {
-                            selectionStart = selectionEnd = 0;
-                        }
-                        else {
-                            selectionStart = 0;
-                            selectionEnd = 1;
-                        }
+                    line = "\n";
+                    if (selectionStart == selectionEnd) {
+                        selectionStart = selectionEnd = 0;
+                    }
+                    else {
+                        selectionStart = 0;
+                        selectionEnd = 1;
                     }
                 }
-            
-                var newValue = line + "\n\n";
-                if (newValue != lastValue) {
-                    text.value = lastValue = newValue;
-                    lastSelectionStart = lastSelectionEnd = newValue.length;
-                }
+            }
+        
+            var newValue = line + "\n\n";
+            if (newValue != lastValue) {
+                text.value = lastValue = newValue;
+                lastSelectionStart = lastSelectionEnd = newValue.length;
             }
         }
         
