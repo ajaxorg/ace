@@ -181,7 +181,7 @@ var TextInput = function(parentNode, host) {
             selection += host.session.getLine(row - i).length + 1;
         }
         return selection;
-    }
+    };
 
     var resetSelection = isIOS
     ? function(value) {
