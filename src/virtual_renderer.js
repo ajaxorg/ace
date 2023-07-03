@@ -462,7 +462,7 @@ class VirtualRenderer {
     getShowInvisibles() {
         return this.getOption("showInvisibles");
     }
-    getDisplayIndentGuide() {
+    getDisplayIndentGuides() {
         return this.getOption("displayIndentGuides");
     }
 
