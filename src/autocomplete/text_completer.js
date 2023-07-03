@@ -36,14 +36,33 @@ function wordDistance(doc, pos) {
     return wordScores;
 }
 
+function completionsFromMode(session, pos) {
+    var completerTokens = session.$mode.$completerTokens;
+    var lines = JSON.parse(JSON.stringify(session.bgTokenizer.lines));
+
+    lines[pos.row] = lines[pos.row].filter(el => el.start !== pos.column - el.value.length);
+
+    var wordList = lines.flat()
+        .filter(el => el && completerTokens.includes(el.type))
+        .map(el => el.value);
+
+    return [...new Set(wordList)];
+}
+
 exports.getCompletions = function (editor, session, pos, prefix, callback) {
-    var wordScore = wordDistance(session, pos);
-    var wordList = Object.keys(wordScore);
+    var wordList;
+    if (session.$mode.$completerTokens) {
+        wordList = completionsFromMode(session, pos);
+    } else {
+        var wordScore = wordDistance(session, pos);
+        wordList = Object.keys(wordScore);
+    }
+
     callback(null, wordList.map(function (word) {
         return {
             caption: word,
             value: word,
-            score: wordScore[word],
+            score: wordScore ? wordScore[word] : 0,
             meta: "local"
         };
     }));

@@ -25,6 +25,7 @@ oop.inherits(Mode, TextMode);
     this.$pairQuotesAfter = {
         "`": /\w/
     };
+    this.$completerTokens = ["identifier", "entity.name.function"];
 
     this.getNextLineIndent = function(state, line, tab) {
         var indent = this.$getIndent(line);
