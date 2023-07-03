@@ -43,7 +43,7 @@ class Lines {
         return this.cells[index];
     }
 
-    getAtRow(row) {
+    getCellAtRow(row) {
         for (var i = 0; i < this.getLength(); i++){
             var cell = this.get(i);
             if (cell.row == row)
