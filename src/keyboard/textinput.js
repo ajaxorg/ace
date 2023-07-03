@@ -45,7 +45,7 @@ var TextInput = function(parentNode, host) {
     var lastSelectionStart = 0;
     var lastSelectionEnd = 0;
     var lastRestoreEnd = 0;
-    var rowStart = -1;
+    var rowStart = Number.MAX_VALUE;
     var rowEnd = -1;
     var numberOfLines = 1;
     
@@ -58,6 +58,8 @@ var TextInput = function(parentNode, host) {
         if (number < 1 || number % 2 === 0) {
             return;
         }
+        rowStart = Number.MAX_VALUE;
+        rowEnd = -1;
         numberOfLines = number;
     };
     this.setAriaOptions = function(options) {
@@ -259,7 +261,7 @@ var TextInput = function(parentNode, host) {
             }
             else if (range.end.row > rowEnd) {
                 var nextLine = host.session.getLine(rowEnd + 1);
-                selectionEnd = range.end.row > rowEnd + 1 ? nextLine.length : selectionEnd;
+                selectionEnd = range.end.row > rowEnd + 1 ? nextLine.length : range.end.column;
                 selectionEnd += line.length + 1;
                 line = line + "\n" + nextLine;
             }
