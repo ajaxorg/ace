@@ -10,7 +10,7 @@ var NSISHighlightRules = function() {
     this.$rules = {
         start: [{
             token: "keyword.compiler.nsis",
-            regex: /^\s*!(?:include|addincludedir|addplugindir|appendfile|cd|delfile|echo|error|execute|packhdr|pragma|finalize|getdllversion|gettlbversion|system|tempfile|warning|verbose|define|undef|insertmacro|macro|macroend|makensis|searchparse|searchreplace|uninstfinalize)\b/,
+            regex: /^\s*!(?:include|addincludedir|addplugindir|appendfile|assert|cd|delfile|echo|error|execute|packhdr|pragma|finalize|getdllversion|gettlbversion|system|tempfile|warning|verbose|define|undef|insertmacro|macro|macroend|makensis|searchparse|searchreplace|uninstfinalize)\b/,
             caseInsensitive: true
         }, {
             token: "keyword.command.nsis",
