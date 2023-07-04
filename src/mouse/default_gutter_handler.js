@@ -57,7 +57,8 @@ function GutterHandler(mouseHandler) {
         if (mouseHandler.$tooltipFollowsMouse) {
             moveTooltip(mouseEvent);
         } else {
-            var gutterCell = gutter.$lines.getCellAtRow(row);
+            var gutterRow = mouseEvent.getGutterRow();
+            var gutterCell = gutter.$lines.get(gutterRow);
             if (gutterCell) {
                 var gutterElement = gutterCell.element.querySelector(".ace_gutter_annotation");
                 var rect = gutterElement.getBoundingClientRect();
