@@ -43,28 +43,6 @@ class Lines {
         return this.cells[index];
     }
 
-    getCellAtRow(row) {
-        // Use binary search to find the matching cell for the given row.
-        var lowPoint = 0;
-        var highPoint = this.getLength();
-
-        while (lowPoint <= highPoint) {
-            var midPoint = Math.floor((highPoint + lowPoint) / 2);
-            var midCell = this.get(midPoint);
-            
-            if (midCell.row === row) {
-                return midCell;
-            } else if (midCell.row > row) {
-                highPoint = midPoint - 1;
-            } else {
-                lowPoint = midPoint + 1;
-            }
-        }
-        
-        // If there is no cell matching the row, return null.
-        return null;
-    }
-    
     shift() {
         this.$cacheCell(this.cells.shift());
     }
