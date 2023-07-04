@@ -2896,7 +2896,7 @@ config.defineOptions(Editor.prototype, "editor", {
                 this.renderer.keyboardFocusClassName = "ace_keyboard-focus";
 
                 this.textInput.getElement().setAttribute("tabindex", -1);
-                this.textInput.setNumberLines(3);
+                this.textInput.setNumberOfExtraLines(1);
                 this.renderer.scroller.setAttribute("tabindex", 0);
                 this.renderer.scroller.setAttribute("role", "group");
                 this.renderer.scroller.setAttribute("aria-roledescription", nls("editor"));
@@ -2927,7 +2927,7 @@ config.defineOptions(Editor.prototype, "editor", {
                 this.renderer.enableKeyboardAccessibility = false;
 
                 this.textInput.getElement().setAttribute("tabindex", 0);
-                this.textInput.setNumberLines(1);
+                this.textInput.setNumberOfExtraLines(0);
                 this.renderer.scroller.setAttribute("tabindex", -1);
                 this.renderer.scroller.removeAttribute("role");
                 this.renderer.scroller.removeAttribute("aria-roledescription");

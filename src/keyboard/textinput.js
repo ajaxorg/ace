@@ -45,22 +45,25 @@ var TextInput = function(parentNode, host) {
     var lastSelectionStart = 0;
     var lastSelectionEnd = 0;
     var lastRestoreEnd = 0;
-    var rowStart = Number.MAX_VALUE;
-    var rowEnd = -1;
-    var numberOfLines = 1;
+    var rowStart = Number.MAX_SAFE_INTEGER;
+    var rowEnd = Number.MIN_SAFE_INTEGER;
+    var numberOfExtraLines = 0;
     
     // FOCUS
     // ie9 throws error if document.activeElement is accessed too soon
     try { var isFocused = document.activeElement === text; } catch(e) {}
 
-    // Set number of lines, needs to be 1 or greater and odd.
-    this.setNumberLines = function(number) {
-        if (number < 1 || number % 2 === 0) {
+    // Set number of extra lines..
+    this.setNumberOfExtraLines = function(number) {
+        rowStart = Number.MAX_SAFE_INTEGER;
+        rowEnd =  Number.MIN_SAFE_INTEGER;
+
+        if (number < 0) {
+            numberOfExtraLines = 0;
             return;
         }
-        rowStart = Number.MAX_VALUE;
-        rowEnd = -1;
-        numberOfLines = number;
+        
+        numberOfExtraLines = number;
     };
     this.setAriaOptions = function(options) {
         if (options.activeDescendant) {
@@ -179,7 +182,7 @@ var TextInput = function(parentNode, host) {
     var positionToSelection = function(row, column) {
         var selection = column;
 
-        for (var i = 1; i <= row - rowStart && i < numberOfLines; i++) {
+        for (var i = 1; i <= row - rowStart && i < 2*numberOfExtraLines + 1; i++) {
             selection += host.session.getLine(row - i).length + 1;
         }
         return selection;
@@ -227,13 +230,13 @@ var TextInput = function(parentNode, host) {
             // set of rows around the cursor.
             if (row === rowEnd + 1) {
                 rowStart = rowEnd + 1;
-                rowEnd = rowStart + numberOfLines - 1;
+                rowEnd = rowStart + 2*numberOfExtraLines;
             } else if (row === rowStart - 1) {
                 rowEnd = rowStart - 1;
-                rowStart = rowEnd - numberOfLines + 1;
+                rowStart = rowEnd - 2*numberOfExtraLines;
             } else if (row < rowStart - 1 || row > rowEnd + 1) {
-                rowStart = row > Math.floor(numberOfLines / 2) ? row - Math.floor(numberOfLines / 2) : 0;
-                rowEnd = row + Math.floor(numberOfLines / 2);
+                rowStart = row > numberOfExtraLines ? row - numberOfExtraLines : 0;
+                rowEnd = row > numberOfExtraLines ? row + numberOfExtraLines : 2*numberOfExtraLines;
             }
             
             var lines = [];

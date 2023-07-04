@@ -498,8 +498,8 @@ module.exports = {
         assert.equal([textarea.value.length, textarea.selectionStart, textarea.selectionEnd].join(","), "3,0,1");
     },
     
-    "test: selection synchronization 3 lines": function() {
-        editor.textInput.setNumberLines(3);
+    "test: selection synchronization with extra lines enabled": function() {
+        editor.textInput.setNumberOfExtraLines(1);
         editor.session.setValue("line1\nline2\nline3\nline4\nline5\nline6\n");
         [
             { _: "keydown", range: [1,1], value: "line1\nline2\nline3\n\n", key: { code: "ArrowRight", key: "ArrowRight", keyCode: 39}},
