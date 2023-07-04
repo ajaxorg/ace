@@ -42,7 +42,7 @@ class Lines {
     get(index) {
         return this.cells[index];
     }
-
+    
     shift() {
         this.$cacheCell(this.cells.shift());
     }
