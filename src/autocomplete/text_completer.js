@@ -1,6 +1,7 @@
 var Range = require("../range").Range;
 
 var splitRegex = /[^a-zA-Z_0-9\$\-\u00C0-\u1FFF\u2C00-\uD7FF\w]+/;
+var identifierRe = /[a-zA-Z\$_\u00a1-\uffff][a-zA-Z\\d\\$_\u00a1-\uffff]*/;
 
 function getWordIndex(doc, pos) {
     var textBefore = doc.getTextRange(Range.fromPoints({
@@ -38,31 +39,34 @@ function wordDistance(doc, pos) {
 
 function completionsFromMode(session, pos) {
     var completerTokens = session.$mode.$completerTokens;
-    var lines = JSON.parse(JSON.stringify(session.bgTokenizer.lines));
+    var lines = session.bgTokenizer.lines;
+    var exclude = lines[pos.row].find(el => el.start === pos.column - el.value.length);
+    var wordScores = Object.create(null);
 
-    lines[pos.row] = lines[pos.row].filter(el => el.start !== pos.column - el.value.length);
+    lines = lines.flat();
+    var linesLength = lines.length;
+    for (var i = 0; i < linesLength; i++) {
+        var token = lines[i];
+        if (!token || exclude && token.value === exclude.value) {
+            continue;
+        }
+        if (completerTokens.includes(token.type) && identifierRe.test(token.value)) {
+            wordScores[token.value] = 0;
+        }
+    }
 
-    var wordList = lines.flat()
-        .filter(el => el && completerTokens.includes(el.type))
-        .map(el => el.value);
-
-    return [...new Set(wordList)];
+    return wordScores;
 }
 
 exports.getCompletions = function (editor, session, pos, prefix, callback) {
-    var wordList;
-    if (session.$mode.$completerTokens) {
-        wordList = completionsFromMode(session, pos);
-    } else {
-        var wordScore = wordDistance(session, pos);
-        wordList = Object.keys(wordScore);
-    }
+    var wordScore = session.$mode.$completerTokens ? completionsFromMode(session, pos) : wordDistance(session, pos);
+    var wordList = Object.keys(wordScore);
 
     callback(null, wordList.map(function (word) {
         return {
             caption: word,
             value: word,
-            score: wordScore ? wordScore[word] : 0,
+            score: wordScore[word],
             meta: "local"
         };
     }));
