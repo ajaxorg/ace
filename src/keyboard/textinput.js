@@ -78,12 +78,15 @@ var TextInput = function(parentNode, host) {
         if (options.role) {
             text.setAttribute("role", options.role);
         }     
-        if (options.setAriaLabel) {
+        if (options.label) {
             text.setAttribute("aria-roledescription", nls("editor"));
             if(host.session) {
                 var row =  host.session.selection.cursor.row;
                 text.setAttribute("aria-label", nls("Cursor at row $0", [row + 1]));
             }
+        }
+        if (options.multiline) {
+            text.setAttribute("aria-multiline", true);
         }
     };
 
@@ -118,7 +121,8 @@ var TextInput = function(parentNode, host) {
     this.focus = function() {
         // On focusing on the textarea, read active row number to assistive tech.
         this.setAriaOptions({
-            setAriaLabel: host.renderer.enableKeyboardAccessibility
+            label: host.renderer.enableKeyboardAccessibility,
+            multiline: true
         });
 
         if (tempStyle || HAS_FOCUS_ARGS || this.$focusScroll == "browser")
