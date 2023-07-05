@@ -48,6 +48,18 @@ class MouseEvent {
         this.$pos = this.editor.renderer.screenToTextCoordinates(this.clientX, this.clientY);
         return this.$pos;
     }
+
+    /**
+     * Get the relative position within the gutter.
+     * 
+     * @return {Number} 'row' within the gutter. 
+     */
+    getGutterRow() {
+        var documentRow = this.getDocumentPosition().row;
+        var screenRow = this.editor.session.documentToScreenRow(documentRow, 0);
+        var screenTopRow = this.editor.session.documentToScreenRow(this.editor.renderer.$gutterLayer.$lines.get(0).row, 0);
+        return screenRow - screenTopRow;
+    }
     
     /**
      * Check if the mouse cursor is inside of the text selection
