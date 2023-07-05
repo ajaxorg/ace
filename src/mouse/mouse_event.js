@@ -55,7 +55,7 @@ class MouseEvent {
      * @return {Number} 'row' within the gutter. 
      */
     getGutterRow() {
-        var documentRow = this.editor.renderer.screenToTextCoordinates(this.clientX, this.clientY).row;
+        var documentRow = this.getDocumentPosition().row;
         var screenRow = this.editor.session.documentToScreenRow(documentRow, 0);
         var screenTopRow = this.editor.session.documentToScreenRow(this.editor.renderer.$gutterLayer.$lines.get(0).row, 0);
         return screenRow - screenTopRow;
