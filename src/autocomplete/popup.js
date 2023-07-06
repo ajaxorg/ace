@@ -52,6 +52,8 @@ class AcePopup {
         // Set aria attributes for the popup
         popup.renderer.container.setAttribute("role", "listbox");
         popup.renderer.container.setAttribute("aria-label", nls("Autocomplete suggestions"));
+        popup.renderer.container.setAttribute("aria-busy", "true");
+        popup.renderer.textarea.setAttribute("aria-hidden", "true");
 
         popup.setOption("displayIndentGuides", false);
         popup.setOption("dragDelay", 150);
@@ -138,7 +140,7 @@ class AcePopup {
                 selected.setAttribute("role", "option");
                 selected.setAttribute("aria-label", popup.getData(row).value);
                 selected.setAttribute("aria-setsize", popup.data.length);
-                selected.setAttribute("aria-posinset", row);
+                selected.setAttribute("aria-posinset", parseInt(row)+1);
                 selected.setAttribute("aria-describedby", "doc-tooltip");
             }
         });
