@@ -120,8 +120,7 @@ var TextInput = function(parentNode, host) {
     this.focus = function() {
         // On focusing on the textarea, read active row number to assistive tech.
         this.setAriaOptions({
-            label: host.renderer.enableKeyboardAccessibility,
-            multiline: true
+            label: host.renderer.enableKeyboardAccessibility
         });
 
         if (tempStyle || HAS_FOCUS_ARGS || this.$focusScroll == "browser")
