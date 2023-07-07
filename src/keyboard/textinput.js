@@ -182,6 +182,8 @@ var TextInput = function(parentNode, host) {
         resetSelection();
     });
     
+    // Covert from row,column position to the linear position with respect to the current
+    // block of lines in the textarea.
     var positionToSelection = function(row, column) {
         var selection = column;
 
@@ -228,9 +230,11 @@ var TextInput = function(parentNode, host) {
             var range = selection.getRange();
             var row = selection.cursor.row;
 
-            // If the new cursor position is one row above or below current rows 
-            // in textarea, move page up or down. If not, set textarea to fresh
-            // set of rows around the cursor.
+            // We keep 2*numberOfExtraLines + 1 lines in the textarea, if the new active row
+            // is within the current block of lines in the textarea we do nothing. If the new row
+            // is one row above or below the current block, move up or down to the next block of lines.
+            // If the new row is further than 1 row away from the current block grab a new block centered 
+            // around the new row.
             if (row === rowEnd + 1) {
                 rowStart = rowEnd + 1;
                 rowEnd = rowStart + 2*numberOfExtraLines;
