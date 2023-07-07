@@ -54,7 +54,8 @@ var TextInput = function(parentNode, host) {
     // ie9 throws error if document.activeElement is accessed too soon
     try { var isFocused = document.activeElement === text; } catch(e) {}
 
-    // Set number of extra lines.
+    // Set number of extra lines in textarea, some screenreaders
+    // perform better with extra lines above and below in the textarea.
     this.setNumberOfExtraLines = function(number) {
         rowStart = Number.MAX_SAFE_INTEGER;
         rowEnd =  Number.MIN_SAFE_INTEGER;
