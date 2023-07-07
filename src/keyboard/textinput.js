@@ -25,6 +25,7 @@ var TextInput = function(parentNode, host) {
     text.setAttribute("autocorrect", "off");
     text.setAttribute("autocapitalize", "off");
     text.setAttribute("spellcheck", false);
+    text.setAttribute("aria-multiline", true);
 
     text.style.opacity = "0";
     parentNode.insertBefore(text, parentNode.firstChild);
@@ -53,7 +54,7 @@ var TextInput = function(parentNode, host) {
     // ie9 throws error if document.activeElement is accessed too soon
     try { var isFocused = document.activeElement === text; } catch(e) {}
 
-    // Set number of extra lines..
+    // Set number of extra lines.
     this.setNumberOfExtraLines = function(number) {
         rowStart = Number.MAX_SAFE_INTEGER;
         rowEnd =  Number.MIN_SAFE_INTEGER;
@@ -84,9 +85,6 @@ var TextInput = function(parentNode, host) {
                 var row =  host.session.selection.cursor.row;
                 text.setAttribute("aria-label", nls("Cursor at row $0", [row + 1]));
             }
-        }
-        if (options.multiline) {
-            text.setAttribute("aria-multiline", true);
         }
     };
 
