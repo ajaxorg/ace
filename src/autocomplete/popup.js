@@ -50,8 +50,9 @@ class AcePopup {
         popup.renderer.setStyle("ace_autocomplete");
 
         // Set aria attributes for the popup
-        popup.renderer.container.setAttribute("role", "listbox");
-        popup.renderer.container.setAttribute("aria-label", nls("Autocomplete suggestions"));
+        popup.renderer.$textLayer.element.setAttribute("role", "listbox");
+        popup.renderer.$textLayer.element.setAttribute("aria-label", nls("Autocomplete suggestions"));
+        popup.renderer.textarea.setAttribute("aria-hidden", "true");
 
         popup.setOption("displayIndentGuides", false);
         popup.setOption("dragDelay", 150);
@@ -133,12 +134,12 @@ class AcePopup {
                 dom.addCssClass(selected, "ace_selected");
                 var ariaId = getAriaId(row);
                 selected.id = ariaId;
-                popup.renderer.container.setAttribute("aria-activedescendant", ariaId);
+                t.element.setAttribute("aria-activedescendant", ariaId);
                 el.setAttribute("aria-activedescendant", ariaId);
                 selected.setAttribute("role", "option");
                 selected.setAttribute("aria-label", popup.getData(row).value);
                 selected.setAttribute("aria-setsize", popup.data.length);
-                selected.setAttribute("aria-posinset", row);
+                selected.setAttribute("aria-posinset", row+1);
                 selected.setAttribute("aria-describedby", "doc-tooltip");
             }
         });
