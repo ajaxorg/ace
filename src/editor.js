@@ -2896,8 +2896,8 @@ config.defineOptions(Editor.prototype, "editor", {
                 this.renderer.keyboardFocusClassName = "ace_keyboard-focus";
 
                 this.textInput.getElement().setAttribute("tabindex", -1);
-                // VoiceOver on Mac OS works best single line in the textarea, the screen readers on Windows work best 
-                // with multiple lines in the textarea.
+                // VoiceOver on Mac OS works best with single line in the textarea, the screen readers on
+                // Windows work best with multiple lines in the textarea.
                 this.textInput.setNumberOfExtraLines(!useragent.isMac ? 3 : 0);
                 this.renderer.scroller.setAttribute("tabindex", 0);
                 this.renderer.scroller.setAttribute("role", "group");
