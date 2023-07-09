@@ -237,7 +237,7 @@ class UndoManager {
     }
     
     toJSON() {
-
+        
     }
     
     fromJSON() {
