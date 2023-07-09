@@ -7,9 +7,6 @@ var cssStringify = require("css-stringify");
 var parse = require("plist").parse;
 function parseTheme(themeXml, callback) {
     callback(parse(themeXml));
-    // parseString(themeXml, function(_, theme) {
-    //     callback(theme[0])
-    // });
 }
 
 var unsupportedScopes = { };
