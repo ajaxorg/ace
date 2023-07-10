@@ -239,11 +239,11 @@ class UndoManager {
     toJSON() {
         return {
             $redoStack: this.$redoStack,
-            $undoStack: this.$undoStack,
+            $undoStack: this.$undoStack
         };
     }
     
-    fromJSON() {
+    fromJSON(json) {
         this.reset();
         this.$undoStack = json.$undoStack;
         this.$redoStack = json.$redoStack;
