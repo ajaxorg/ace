@@ -168,6 +168,6 @@ var reportErrorIfPathIsNotConfigured = function() {
     }
 };
 
-exports.version = "1.23.2";
+exports.version = "1.23.3";
 
 
