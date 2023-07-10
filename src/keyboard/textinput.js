@@ -83,7 +83,6 @@ var TextInput = function(parentNode, host) {
         if (ignoreFocusEvents) return;
         host.onBlur(e);
         isFocused = false;
-
     }, host);
     event.addListener(text, "focus", function(e) {
         if (ignoreFocusEvents) return;
