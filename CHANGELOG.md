@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.23.3](https://github.com/ajaxorg/ace/compare/v1.23.2...v1.23.3) (2023-07-10)
+
+
+### Bug Fixes
+
+* android bug when deleting multiple lines ([#5248](https://github.com/ajaxorg/ace/issues/5248)) ([bd066ff](https://github.com/ajaxorg/ace/commit/bd066ffef88ca74f5ac32349d3e868cfa875a47b)), closes [#5087](https://github.com/ajaxorg/ace/issues/5087)
+* update jshint version to 2.13.6; change esversion to target ECMAScript 11 ([#5243](https://github.com/ajaxorg/ace/issues/5243)) ([301aee9](https://github.com/ajaxorg/ace/commit/301aee91b5974d9fb31d646466ed301c5c3b8249))
+
 ### [1.23.2](https://github.com/ajaxorg/ace/compare/v1.23.1...v1.23.2) (2023-07-07)
 
 
