@@ -57,11 +57,17 @@ function GutterHandler(mouseHandler) {
         if (mouseHandler.$tooltipFollowsMouse) {
             moveTooltip(mouseEvent);
         } else {
-            var gutterElement = gutter.$lines.cells[row].element.querySelector("[class*=ace_icon]");
-            var rect = gutterElement.getBoundingClientRect();
-            var style = tooltip.getElement().style;
-            style.left = rect.right + "px";
-            style.top = rect.bottom + "px";
+            var gutterRow = mouseEvent.getGutterRow();
+            var gutterCell = gutter.$lines.get(gutterRow);
+            if (gutterCell) {
+                var gutterElement = gutterCell.element.querySelector(".ace_gutter_annotation");
+                var rect = gutterElement.getBoundingClientRect();
+                var style = tooltip.getElement().style;
+                style.left = rect.right + "px";
+                style.top = rect.bottom + "px";
+            } else {
+                moveTooltip(mouseEvent);
+            }
         }
     }
 

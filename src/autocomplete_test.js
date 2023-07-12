@@ -32,6 +32,13 @@ function initEditor(value) {
     return editor;
 }
 
+function afterRenderCheck(popup, callback) {
+    popup.renderer.on("afterRender", function wait() {
+        popup.renderer.off("afterRender", wait);
+        callback();
+    });
+}
+
 module.exports = {
     tearDown: function() {
         if (editor) {
@@ -48,16 +55,16 @@ module.exports = {
         assert.ok(!editor.container.querySelector("style"));
 
         sendKey("a");
-        checkInnerHTML('<d "ace_line ace_selected" id="suggest-aria-id:0" role="option" aria-label="arraysort" aria-setsize="2" aria-posinset="0" aria-describedby="doc-tooltip"><s "ace_completion-highlight">a</s><s "ace_">rraysort</s><s "ace_completion-spacer"> </s><s "ace_completion-meta">local</s></d><d "ace_line"><s "ace_completion-highlight">a</s><s "ace_">looooooooooooooooooooooooooooong_word</s><s "ace_completion-spacer"> </s><s "ace_completion-meta">local</s></d>', function() {
+        checkInnerHTML('<d "ace_line ace_selected" id="suggest-aria-id:0" role="option" aria-label="arraysort" aria-setsize="2" aria-posinset="1" aria-describedby="doc-tooltip"><s "ace_completion-highlight">a</s><s "ace_">rraysort</s><s "ace_completion-spacer"> </s><s "ace_completion-meta">local</s></d><d "ace_line"><s "ace_completion-highlight">a</s><s "ace_">looooooooooooooooooooooooooooong_word</s><s "ace_completion-spacer"> </s><s "ace_completion-meta">local</s></d>', function() {
             sendKey("rr");
-            checkInnerHTML('<d "ace_line ace_selected" id="suggest-aria-id:0" role="option" aria-label="arraysort" aria-setsize="1" aria-posinset="0" aria-describedby="doc-tooltip"><s "ace_completion-highlight">arr</s><s "ace_">aysort</s><s "ace_completion-spacer"> </s><s "ace_completion-meta">local</s></d>', function() {
+            checkInnerHTML('<d "ace_line ace_selected" id="suggest-aria-id:0" role="option" aria-label="arraysort" aria-setsize="1" aria-posinset="1" aria-describedby="doc-tooltip"><s "ace_completion-highlight">arr</s><s "ace_">aysort</s><s "ace_completion-spacer"> </s><s "ace_completion-meta">local</s></d>', function() {
                 sendKey("r");
-                checkInnerHTML('<d "ace_line ace_selected" id="suggest-aria-id:0" role="option" aria-label="arraysort" aria-setsize="1" aria-posinset="0" aria-describedby="doc-tooltip"><s "ace_completion-highlight">arr</s><s "ace_">ayso</s><s "ace_completion-highlight">r</s><s "ace_">t</s><s "ace_completion-spacer"> </s><s "ace_completion-meta">local</s></d>', function() {
+                checkInnerHTML('<d "ace_line ace_selected" id="suggest-aria-id:0" role="option" aria-label="arraysort" aria-setsize="1" aria-posinset="1" aria-describedby="doc-tooltip"><s "ace_completion-highlight">arr</s><s "ace_">ayso</s><s "ace_completion-highlight">r</s><s "ace_">t</s><s "ace_completion-spacer"> </s><s "ace_completion-meta">local</s></d>', function() {
                     
                     sendKey("Return");
                     assert.equal(editor.getValue(), "arraysort\narraysort alooooooooooooooooooooooooooooong_word");
                     editor.execCommand("insertstring", " looooooooooooooooooooooooooooong_");
-                    checkInnerHTML('<d "ace_line ace_selected" id="suggest-aria-id:0" role="option" aria-label="alooooooooooooooooooooooooooooong_word" aria-setsize="1" aria-posinset="0" aria-describedby="doc-tooltip"><s "ace_">a</s><s "ace_completion-highlight">looooooooooooooooooooooooooooong_</s><s "ace_">word</s><s "ace_completion-spacer"> </s><s "ace_completion-meta">local</s></d>', function() {
+                    checkInnerHTML('<d "ace_line ace_selected" id="suggest-aria-id:0" role="option" aria-label="alooooooooooooooooooooooooooooong_word" aria-setsize="1" aria-posinset="1" aria-describedby="doc-tooltip"><s "ace_">a</s><s "ace_completion-highlight">looooooooooooooooooooooooooooong_</s><s "ace_">word</s><s "ace_completion-spacer"> </s><s "ace_completion-meta">local</s></d>', function() {
                         sendKey("Return");
                         editor.destroy();
                         editor.container.remove();
@@ -95,7 +102,7 @@ module.exports = {
                             snippet: "will: $1",
                             meta: "snippet",
                             command: "startAutocomplete",
-                            range: new Range(0, 4, 0, 6)
+                            range: new Range(0, 4, 0, 7)
                         }, {
                             caption: "here",
                             value: "-here",
@@ -110,12 +117,12 @@ module.exports = {
         editor.moveCursorTo(0, 6);
         sendKey("w");
         var popup = editor.completer.popup;
-        check(function () {
+        afterRenderCheck(popup, function () {
             assert.equal(popup.data.length, 1);
             editor.onCommandKey(null, 0, 13);
             assert.equal(popup.data.length, 2);
             assert.equal(editor.getValue(), "goodwill: ");
-            check(function () {
+            afterRenderCheck(popup, function () {
                 editor.onCommandKey(null, 0, 13);
                 assert.equal(editor.getValue(), "goodwill-here");
                 editor.destroy();
@@ -123,14 +130,37 @@ module.exports = {
                 done();
             });
         });
-
-        function check(callback) {
-            popup = editor.completer.popup;
-            popup.renderer.on("afterRender", function wait() {
-                popup.renderer.off("afterRender", wait);
-                callback();
-            });
-        }
+    },
+    "test: filterText does not trigger selection range removal when completions range is present": function (done) {
+        var editor = initEditor("{}");
+        editor.completers = [
+            {
+                getCompletions: function (editor, session, pos, prefix, callback) {
+                    var completions = [
+                        {
+                            caption: "apple",
+                            snippet: "apple: $1",
+                            meta: "snippet",
+                            range: new Range(0, 1, 0, 2)
+                        }, {
+                            caption: "pineapple",
+                            value: "pineapple",
+                            range: new Range(0, 1, 0, 2)
+                        }
+                    ];
+                    callback(null, completions);
+                }
+            }
+        ];
+        editor.moveCursorTo(0, 1);
+        sendKey("a");
+        var popup = editor.completer.popup;
+        afterRenderCheck(popup, function () {
+            assert.equal(popup.data.length, 2);
+            editor.onCommandKey(null, 0, 13);
+            assert.equal(editor.getValue(), "{apple: }");
+            done();
+        });
     },
     "test: different completers tooltips": function (done) {
         var editor = initEditor("");
