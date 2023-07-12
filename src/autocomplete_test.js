@@ -12,9 +12,11 @@ var user = require("./test/user");
 var Range = require("./range").Range;
 require("./ext/language_tools");
 var Autocomplete = require("./autocomplete").Autocomplete;
+var textCompleter = require("./autocomplete/text_completer");
+var JavaScriptMode = require("./mode/javascript").Mode;
 
 var editor;
-function initEditor(value) {
+function initEditor(value, mode) {
     if (editor) {
         editor.destroy();
         editor.container.remove();
@@ -24,7 +26,8 @@ function initEditor(value) {
         value: value,
         maxLines: 10,
         enableBasicAutocompletion: true,
-        enableLiveAutocompletion: true
+        enableLiveAutocompletion: true,
+        mode: mode
     });
     document.body.appendChild(editor.container);
     editor.focus();
@@ -160,6 +163,26 @@ module.exports = {
             editor.onCommandKey(null, 0, 13);
             assert.equal(editor.getValue(), "{apple: }");
             done();
+        });
+    },
+    "test: filter strings and comments from local completions list": function (done) {
+        var editor = initEditor("//comment here\n /**\n * doc comment\n**/'string'\nsomeIdentifier\n", new JavaScriptMode());
+        editor.completers = [textCompleter];
+        editor.moveCursorTo(3, 0);
+        editor.renderer.$loop._flush();
+        
+        sendKey("o");
+        var popup = editor.completer.popup;
+        afterRenderCheck(popup, function () {
+            assert.equal(popup.data.length, 3);
+            editor.setOption("filterStringsCompletions", true);
+            editor.onCommandKey(null, 0, 13);
+            sendKey(" ");
+            sendKey("o");
+            afterRenderCheck(popup, function () {
+                assert.equal(popup.data.length, 1); //only identifier left
+                done();
+            });
         });
     },
     "test: different completers tooltips": function (done) {

@@ -221,5 +221,8 @@ require("../config").defineOptions(Editor.prototype, "editor", {
             }
         },
         value: false
+    },
+    filterStringsCompletions: {
+        initialValue: false
     }
 });

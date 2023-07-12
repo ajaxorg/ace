@@ -37,20 +37,20 @@ function wordDistance(doc, pos) {
     return wordScores;
 }
 
-function completionsFromMode(session, pos) {
-    var completerTokens = session.$mode.$completerTokens;
+function filterStringsFromCompletions(session, pos) {
+    var filterRegExp = /string|comment|^comment\.doc.*/;
     var lines = session.bgTokenizer.lines;
-    var exclude = lines[pos.row].find(el => el.start === pos.column - el.value.length);
+    var exclude = lines[pos.row] && lines[pos.row].find(el => el.start === pos.column - el.value.length);
     var wordScores = Object.create(null);
 
-    lines = lines.flat();
-    var linesLength = lines.length;
+    var flatLines = lines.flat();
+    var linesLength = flatLines.length;
     for (var i = 0; i < linesLength; i++) {
-        var token = lines[i];
+        var token = flatLines[i];
         if (!token || exclude && token.value === exclude.value) {
             continue;
         }
-        if (completerTokens.includes(token.type) && identifierRe.test(token.value)) {
+        if (!filterRegExp.test(token.type) && identifierRe.test(token.value)) {
             wordScores[token.value] = 0;
         }
     }
@@ -59,7 +59,8 @@ function completionsFromMode(session, pos) {
 }
 
 exports.getCompletions = function (editor, session, pos, prefix, callback) {
-    var wordScore = session.$mode.$completerTokens ? completionsFromMode(session, pos) : wordDistance(session, pos);
+    var wordScore = editor.$filterStringsCompletions ? filterStringsFromCompletions(session, pos) : wordDistance(
+        session, pos);
     var wordList = Object.keys(wordScore);
 
     callback(null, wordList.map(function (word) {

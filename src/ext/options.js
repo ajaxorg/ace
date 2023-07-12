@@ -192,6 +192,9 @@ var optionGroups = {
         "Live Autocompletion": {
             path: "enableLiveAutocompletion"
         },
+        "Filter Comments and String Completions": {
+            path: "filterStringsCompletions"
+        },
         "Custom scrollbar": {
             path: "customScrollbar"
         },
