@@ -25,7 +25,6 @@ var TextInput = function(parentNode, host) {
     text.setAttribute("autocorrect", "off");
     text.setAttribute("autocapitalize", "off");
     text.setAttribute("spellcheck", false);
-    text.setAttribute("aria-multiline", true);
 
     text.style.opacity = "0";
     parentNode.insertBefore(text, parentNode.firstChild);
@@ -80,7 +79,7 @@ var TextInput = function(parentNode, host) {
         if (options.role) {
             text.setAttribute("role", options.role);
         }     
-        if (options.label) {
+        if (options.setLabel) {
             text.setAttribute("aria-roledescription", nls("editor"));
             if(host.session) {
                 var row =  host.session.selection.cursor.row;
@@ -116,7 +115,7 @@ var TextInput = function(parentNode, host) {
     this.focus = function() {
         // On focusing on the textarea, read active row number to assistive tech.
         this.setAriaOptions({
-            label: host.renderer.enableKeyboardAccessibility
+            setLabel: host.renderer.enableKeyboardAccessibility
         });
 
         if (tempStyle || HAS_FOCUS_ARGS || this.$focusScroll == "browser")
@@ -177,7 +176,7 @@ var TextInput = function(parentNode, host) {
         resetSelection();
     });
     
-    // Covert from row,column position to the linear position with respect to the current
+    // Convert from row,column position to the linear position with respect to the current
     // block of lines in the textarea.
     var positionToSelection = function(row, column) {
         var selection = column;
@@ -243,16 +242,10 @@ var TextInput = function(parentNode, host) {
             
             var lines = [];
 
-            for (var i = rowStart; i < row; i++) {
+            for (var i = rowStart; i <= rowEnd; i++) {
                 lines.push(host.session.getLine(i));
             }
-
-            lines.push(host.session.getLine(row));
-
-            for (var i = row + 1; i <= rowEnd; i++) {
-                lines.push(host.session.getLine(i));
-            }
-
+            
             line = lines.join('\n');
 
             selectionStart = positionToSelection(range.start.row, range.start.column);
