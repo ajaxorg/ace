@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.23.4](https://github.com/ajaxorg/ace/compare/v1.23.3...v1.23.4) (2023-07-12)
+
+
+### Bug Fixes
+
+* filterText triggered selection range removal when completions range was present ([#5249](https://github.com/ajaxorg/ace/issues/5249)) ([b586e4d](https://github.com/ajaxorg/ace/commit/b586e4d574bf780fc38f1ac0d034276272b36ad3))
+
 ### [1.23.3](https://github.com/ajaxorg/ace/compare/v1.23.2...v1.23.3) (2023-07-10)
 
 
