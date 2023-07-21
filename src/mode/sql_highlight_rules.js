@@ -8,7 +8,7 @@ var SqlHighlightRules = function() {
     var keywords = (
         "select|insert|update|delete|from|where|and|or|group|by|order|limit|offset|having|as|case|" +
         "when|then|else|end|type|left|right|join|on|outer|desc|asc|union|create|table|primary|key|if|" +
-        "foreign|not|references|default|null|inner|cross|natural|database|drop|grant|distinct"
+        "foreign|not|references|default|null|inner|cross|natural|database|drop|grant|distinct|is|in"
     );
 
     var builtinConstants = (
