@@ -458,6 +458,40 @@ module.exports = {
         assert.equal([textarea.value.length, textarea.selectionStart, textarea.selectionEnd].join(","), "3,0,1");
     },
     
+    "test: selection synchronization with extra lines enabled": function() {
+        editor.textInput.setNumberOfExtraLines(1);
+        editor.session.setValue("line1\nline2\nline3\nline4\nline5\nline6\n");
+        [
+            { _: "keydown", range: [1,1], value: "line1\nline2\nline3\n\n", key: { code: "ArrowRight", key: "ArrowRight", keyCode: 39}},
+            { _: "keydown", range: [2,2], value: "line1\nline2\nline3\n\n", key: { code: "ArrowRight", key: "ArrowRight", keyCode: 39}},
+            { _: "keydown", range: [2,2], value: "line1\nline2\nline3\n\n", key: { code: "ShiftLeft", key: "Shift", keyCode: 16}, modifier: "shift-"},
+            { _: "keydown", range: [2,3], value: "line1\nline2\nline3\n\n", key: { code: "ArrowRight", key: "ArrowRight", keyCode: 39}, modifier: "shift-"},
+            { _: "keydown", range: [2,4], value: "line1\nline2\nline3\n\n", key: { code: "ArrowRight", key: "ArrowRight", keyCode: 39}, modifier: "shift-"},
+            { _: "keydown", range: [2,5], value: "line1\nline2\nline3\n\n", key: { code: "ArrowRight", key: "ArrowRight", keyCode: 39}, modifier: "shift-"},
+            { _: "keydown", range: [2,6], value: "line1\nline2\nline3\n\n", key: { code: "ArrowRight", key: "ArrowRight", keyCode: 39}, modifier: "shift-"},
+            { _: "keydown", range: [2,7], value: "line1\nline2\nline3\n\n", key: { code: "ArrowRight", key: "ArrowRight", keyCode: 39}, modifier: "shift-"},
+            { _: "keydown", range: [2,8], value: "line1\nline2\nline3\n\n", key: { code: "ArrowRight", key: "ArrowRight", keyCode: 39}, modifier: "shift-"},
+            { _: "keydown", range: [2,14], value: "line1\nline2\nline3\n\n", key: { code: "ArrowDown", key: "ArrowDown", keyCode: 40}, modifier: "shift-"},
+            { _: "keydown", range: [2,2], value: "line4\nline5\nline6\n\n", key: { code: "ArrowDown", key: "ArrowDown", keyCode: 40}},
+            { _: "keydown", range: [2,2], value: "line4\nline5\nline6\n\n", key: { code: "ShiftLeft", key: "Shift", keyCode: 16}, modifier: "shift-"},
+            { _: "keydown", range: [14,20], value: "line1\nline2\nline3\nline4\n\n", key: { code: "ArrowUp", key: "ArrowUp", keyCode: 38}, modifier: "shift-"},
+            { _: "keydown", range: [8,8], value: "line1\nline2\nline3\n\n", key: { code: "ArrowUp", key: "ArrowUp", keyCode: 38}},
+            { _: "keydown", range: [14,14], value: "line1\nline2\nline3\n\n", key: { code: "ArrowDown", key: "ArrowDown", keyCode: 40}},
+            { _: "keydown", range: [2,8], value: "line3\nline4\nline5\nline6\n\n", key: { code: "ArrowDown", key: "ArrowDown", keyCode: 40}, modifier: "shift-"}
+        ].forEach(function(data) {
+            sendEvent(data._, data);
+        });
+        // test overflow
+        editor.session.setValue("0123456789".repeat(80));
+        editor.execCommand("gotoright");
+        editor.execCommand("selectright");
+        assert.equal([textarea.value.length, textarea.selectionStart, textarea.selectionEnd].join(","), "402,1,2");
+        editor.execCommand("gotolineend");
+        assert.equal([textarea.value.length, textarea.selectionStart, textarea.selectionEnd].join(","), "3,0,0");
+        editor.execCommand("selectleft");
+        assert.equal([textarea.value.length, textarea.selectionStart, textarea.selectionEnd].join(","), "3,0,1");
+    },
+    
     "test: chinese ime on ie": function() {
         editor.setOption("useTextareaForIME", false);
         [
