@@ -222,6 +222,12 @@ class Search {
         if (options.$supportsUnicodeFlag === undefined) {
             options.$supportsUnicodeFlag = lang.supportsUnicodeFlag();
         }
+
+        try {
+            new RegExp(needle, "u");
+        } catch (e) {
+            options.$supportsUnicodeFlag = false; //left for backward compatibility with previous versions for cases like /ab\{2}/gu
+        }
         
         if (!options.regExp)
             needle = lang.escapeRegExp(needle);
