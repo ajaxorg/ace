@@ -390,7 +390,7 @@ function addWordBoundary(needle, options) {
     let supportsLookbehind = lang.supportsLookbehind();
 
     function wordBoundary(c, firstChar = true) {
-        let wordRegExp = supportsLookbehind && options.$supportsUnicodeFlag ? /[\p{L}\p{N}_]/u : /\w/;
+        let wordRegExp = supportsLookbehind && options.$supportsUnicodeFlag ? new RegExp("[\\p{L}\\p{N}_]","u") : new RegExp("\\w");
 
         if (wordRegExp.test(c) || options.regExp) {
             if (supportsLookbehind && options.$supportsUnicodeFlag) {
