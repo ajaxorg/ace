@@ -1,0 +1,707 @@
+[[
+   "start",
+  ["keyword.statement.smithy","namespace"],
+  ["text"," "],
+  ["entity.name.type.namespace.smithy","example.weather"]
+],[
+   "start"
+],[
+   "start",
+  ["comment.block.documentation.smithy","/// Provides weather forecasts."]
+],[
+   "start",
+  ["punctuation.definition.annotation.smithy","@"],
+  ["storage.type.annotation.smithy","paginated"],
+  ["text","("],
+  ["support.type.property-name.smithy","inputToken"],
+  ["punctuation.separator.dictionary.pair.smithy",":"],
+  ["text"," "],
+  ["punctuation.definition.string.begin.smithy","\""],
+  ["string.quoted.double.smithy","nextToken"],
+  ["punctuation.definition.string.end.smithy","\""],
+  ["text",", "],
+  ["support.type.property-name.smithy","outputToken"],
+  ["punctuation.separator.dictionary.pair.smithy",":"],
+  ["text"," "],
+  ["punctuation.definition.string.begin.smithy","\""],
+  ["string.quoted.double.smithy","nextToken"],
+  ["punctuation.definition.string.end.smithy","\""],
+  ["text",","]
+],[
+   "start",
+  ["text","           "],
+  ["support.type.property-name.smithy","pageSize"],
+  ["punctuation.separator.dictionary.pair.smithy",":"],
+  ["text"," "],
+  ["punctuation.definition.string.begin.smithy","\""],
+  ["string.quoted.double.smithy","pageSize"],
+  ["punctuation.definition.string.end.smithy","\""],
+  ["text",")"]
+],[
+   "punctuation.definition.dictionary.begin.smithy",
+  ["keyword.statement.smithy","service"],
+  ["text"," "],
+  ["entity.name.type.smithy","Weather"],
+  ["text"," "],
+  ["punctuation.definition.dictionary.begin.smithy","{"]
+],[
+   "punctuation.definition.dictionary.begin.smithy",
+  ["meta.structure.dictionary.smithy","    "],
+  ["support.type.property-name.smithy","version"],
+  ["punctuation.separator.dictionary.key-value.smithy",":"],
+  ["meta.structure.dictionary.value.smithy"," "],
+  ["punctuation.definition.string.begin.smithy","\""],
+  ["string.quoted.double.smithy","2006-03-01"],
+  ["punctuation.definition.string.end.smithy","\""],
+  ["punctuation.separator.dictionary.pair.smithy",","]
+],[
+   "punctuation.definition.dictionary.begin.smithy",
+  ["meta.structure.dictionary.smithy","    "],
+  ["support.type.property-name.smithy","resources"],
+  ["punctuation.separator.dictionary.key-value.smithy",":"],
+  ["meta.structure.dictionary.value.smithy"," "],
+  ["punctuation.definition.array.begin.smithy","["],
+  ["storage.type.smithy","City"],
+  ["punctuation.definition.array.end.smithy","]"],
+  ["punctuation.separator.dictionary.pair.smithy",","]
+],[
+   ["punctuation.separator.dictionary.key-value.smithy","punctuation.definition.dictionary.begin.smithy"],
+  ["meta.structure.dictionary.smithy","    "],
+  ["support.type.property-name.smithy","operations"],
+  ["punctuation.separator.dictionary.key-value.smithy",":"],
+  ["meta.structure.dictionary.value.smithy"," "],
+  ["punctuation.definition.array.begin.smithy","["],
+  ["storage.type.smithy","GetCurrentTime"],
+  ["punctuation.definition.array.end.smithy","]"]
+],[
+   "start",
+  ["punctuation.definition.dictionary.end.smithy","}"]
+],[
+   "start"
+],[
+   "punctuation.definition.dictionary.begin.smithy",
+  ["keyword.statement.smithy","resource"],
+  ["text"," "],
+  ["entity.name.type.smithy","City"],
+  ["text"," "],
+  ["punctuation.definition.dictionary.begin.smithy","{"]
+],[
+   "punctuation.definition.dictionary.begin.smithy",
+  ["meta.structure.dictionary.smithy","    "],
+  ["support.type.property-name.smithy","identifiers"],
+  ["punctuation.separator.dictionary.key-value.smithy",":"],
+  ["meta.structure.dictionary.value.smithy"," "],
+  ["punctuation.definition.dictionary.begin.smithy","{"],
+  ["meta.structure.dictionary.smithy"," "],
+  ["support.type.property-name.smithy","cityId"],
+  ["punctuation.separator.dictionary.key-value.smithy",":"],
+  ["meta.structure.dictionary.value.smithy"," "],
+  ["storage.type.smithy","CityId"],
+  ["meta.structure.dictionary.value.smithy"," "],
+  ["punctuation.definition.dictionary.end.smithy","}"],
+  ["punctuation.separator.dictionary.pair.smithy",","]
+],[
+   "punctuation.definition.dictionary.begin.smithy",
+  ["meta.structure.dictionary.smithy","    "],
+  ["support.type.property-name.smithy","read"],
+  ["punctuation.separator.dictionary.key-value.smithy",":"],
+  ["meta.structure.dictionary.value.smithy"," "],
+  ["storage.type.smithy","GetCity"],
+  ["punctuation.separator.dictionary.pair.smithy",","]
+],[
+   "punctuation.definition.dictionary.begin.smithy",
+  ["meta.structure.dictionary.smithy","    "],
+  ["support.type.property-name.smithy","list"],
+  ["punctuation.separator.dictionary.key-value.smithy",":"],
+  ["meta.structure.dictionary.value.smithy"," "],
+  ["storage.type.smithy","ListCities"],
+  ["punctuation.separator.dictionary.pair.smithy",","]
+],[
+   "punctuation.definition.dictionary.begin.smithy",
+  ["meta.structure.dictionary.smithy","    "],
+  ["support.type.property-name.smithy","resources"],
+  ["punctuation.separator.dictionary.key-value.smithy",":"],
+  ["meta.structure.dictionary.value.smithy"," "],
+  ["punctuation.definition.array.begin.smithy","["],
+  ["storage.type.smithy","Forecast"],
+  ["punctuation.definition.array.end.smithy","]"],
+  ["punctuation.separator.dictionary.pair.smithy",","]
+],[
+   "start",
+  ["punctuation.definition.dictionary.end.smithy","}"]
+],[
+   "start"
+],[
+   "punctuation.definition.dictionary.begin.smithy",
+  ["keyword.statement.smithy","resource"],
+  ["text"," "],
+  ["entity.name.type.smithy","Forecast"],
+  ["text"," "],
+  ["punctuation.definition.dictionary.begin.smithy","{"]
+],[
+   "punctuation.definition.dictionary.begin.smithy",
+  ["meta.structure.dictionary.smithy","    "],
+  ["support.type.property-name.smithy","identifiers"],
+  ["punctuation.separator.dictionary.key-value.smithy",":"],
+  ["meta.structure.dictionary.value.smithy"," "],
+  ["punctuation.definition.dictionary.begin.smithy","{"],
+  ["meta.structure.dictionary.smithy"," "],
+  ["support.type.property-name.smithy","cityId"],
+  ["punctuation.separator.dictionary.key-value.smithy",":"],
+  ["meta.structure.dictionary.value.smithy"," "],
+  ["storage.type.smithy","CityId"],
+  ["meta.structure.dictionary.value.smithy"," "],
+  ["punctuation.definition.dictionary.end.smithy","}"],
+  ["punctuation.separator.dictionary.pair.smithy",","]
+],[
+   "punctuation.definition.dictionary.begin.smithy",
+  ["meta.structure.dictionary.smithy","    "],
+  ["support.type.property-name.smithy","read"],
+  ["punctuation.separator.dictionary.key-value.smithy",":"],
+  ["meta.structure.dictionary.value.smithy"," "],
+  ["storage.type.smithy","GetForecast"],
+  ["punctuation.separator.dictionary.pair.smithy",","]
+],[
+   "start",
+  ["punctuation.definition.dictionary.end.smithy","}"]
+],[
+   "start"
+],[
+   "start",
+  ["comment.line.double-slash.smithy","// \"pattern\" is a trait."]
+],[
+   "start",
+  ["punctuation.definition.annotation.smithy","@"],
+  ["storage.type.annotation.smithy","pattern"],
+  ["text","("],
+  ["punctuation.definition.string.begin.smithy","\""],
+  ["string.quoted.double.smithy","^[A-Za-z0-9 ]+$"],
+  ["punctuation.definition.string.end.smithy","\""],
+  ["text",")"]
+],[
+   "start",
+  ["keyword.statement.smithy","string"],
+  ["text"," "],
+  ["entity.name.type.smithy","CityId"]
+],[
+   "start"
+],[
+   "start",
+  ["punctuation.definition.annotation.smithy","@"],
+  ["storage.type.annotation.smithy","readonly"]
+],[
+   "punctuation.definition.dictionary.begin.smithy",
+  ["storage.type.smithy","operation"],
+  ["text"," "],
+  ["storage.type.smithy","GetCity"],
+  ["text"," "],
+  ["punctuation.definition.dictionary.begin.smithy","{"]
+],[
+   "punctuation.definition.dictionary.begin.smithy",
+  ["meta.structure.dictionary.smithy","    "],
+  ["support.type.property-name.smithy","input"],
+  ["punctuation.separator.dictionary.key-value.smithy",":"],
+  ["meta.structure.dictionary.value.smithy"," "],
+  ["storage.type.smithy","GetCityInput"],
+  ["punctuation.separator.dictionary.pair.smithy",","]
+],[
+   "punctuation.definition.dictionary.begin.smithy",
+  ["meta.structure.dictionary.smithy","    "],
+  ["support.type.property-name.smithy","output"],
+  ["punctuation.separator.dictionary.key-value.smithy",":"],
+  ["meta.structure.dictionary.value.smithy"," "],
+  ["storage.type.smithy","GetCityOutput"],
+  ["punctuation.separator.dictionary.pair.smithy",","]
+],[
+   ["punctuation.separator.dictionary.key-value.smithy","punctuation.definition.dictionary.begin.smithy"],
+  ["meta.structure.dictionary.smithy","    "],
+  ["support.type.property-name.smithy","errors"],
+  ["punctuation.separator.dictionary.key-value.smithy",":"],
+  ["meta.structure.dictionary.value.smithy"," "],
+  ["punctuation.definition.array.begin.smithy","["],
+  ["storage.type.smithy","NoSuchResource"],
+  ["punctuation.definition.array.end.smithy","]"]
+],[
+   "start",
+  ["punctuation.definition.dictionary.end.smithy","}"]
+],[
+   "start"
+],[
+   "punctuation.definition.dictionary.begin.smithy",
+  ["keyword.statement.smithy","structure"],
+  ["text"," "],
+  ["entity.name.type.smithy","GetCityInput"],
+  ["text"," "],
+  ["punctuation.definition.dictionary.begin.smithy","{"]
+],[
+   "punctuation.definition.dictionary.begin.smithy",
+  ["meta.structure.dictionary.smithy","    "],
+  ["comment.line.double-slash.smithy","// \"cityId\" provides the identifier for the resource and"]
+],[
+   "punctuation.definition.dictionary.begin.smithy",
+  ["meta.structure.dictionary.smithy","    "],
+  ["comment.line.double-slash.smithy","// has to be marked as required."]
+],[
+   "punctuation.definition.dictionary.begin.smithy",
+  ["meta.structure.dictionary.smithy","    "],
+  ["punctuation.definition.annotation.smithy","@"],
+  ["storage.type.annotation.smithy","required"]
+],[
+   ["punctuation.separator.dictionary.key-value.smithy","punctuation.definition.dictionary.begin.smithy"],
+  ["meta.structure.dictionary.smithy","    "],
+  ["support.type.property-name.smithy","cityId"],
+  ["punctuation.separator.dictionary.key-value.smithy",":"],
+  ["meta.structure.dictionary.value.smithy"," "],
+  ["storage.type.smithy","CityId"]
+],[
+   "start",
+  ["punctuation.definition.dictionary.end.smithy","}"]
+],[
+   "start"
+],[
+   "punctuation.definition.dictionary.begin.smithy",
+  ["keyword.statement.smithy","structure"],
+  ["text"," "],
+  ["entity.name.type.smithy","GetCityOutput"],
+  ["text"," "],
+  ["punctuation.definition.dictionary.begin.smithy","{"]
+],[
+   "punctuation.definition.dictionary.begin.smithy",
+  ["meta.structure.dictionary.smithy","    "],
+  ["comment.line.double-slash.smithy","// \"required\" is used on output to indicate if the service"]
+],[
+   "punctuation.definition.dictionary.begin.smithy",
+  ["meta.structure.dictionary.smithy","    "],
+  ["comment.line.double-slash.smithy","// will always provide a value for the member."]
+],[
+   "punctuation.definition.dictionary.begin.smithy",
+  ["meta.structure.dictionary.smithy","    "],
+  ["punctuation.definition.annotation.smithy","@"],
+  ["storage.type.annotation.smithy","required"]
+],[
+   "punctuation.definition.dictionary.begin.smithy",
+  ["meta.structure.dictionary.smithy","    "],
+  ["support.type.property-name.smithy","name"],
+  ["punctuation.separator.dictionary.key-value.smithy",":"],
+  ["meta.structure.dictionary.value.smithy"," "],
+  ["storage.type.smithy","String"],
+  ["punctuation.separator.dictionary.pair.smithy",","]
+],[
+   "punctuation.definition.dictionary.begin.smithy"
+],[
+   "punctuation.definition.dictionary.begin.smithy",
+  ["meta.structure.dictionary.smithy","    "],
+  ["punctuation.definition.annotation.smithy","@"],
+  ["storage.type.annotation.smithy","required"]
+],[
+   "punctuation.definition.dictionary.begin.smithy",
+  ["meta.structure.dictionary.smithy","    "],
+  ["support.type.property-name.smithy","coordinates"],
+  ["punctuation.separator.dictionary.key-value.smithy",":"],
+  ["meta.structure.dictionary.value.smithy"," "],
+  ["storage.type.smithy","CityCoordinates"],
+  ["punctuation.separator.dictionary.pair.smithy",","]
+],[
+   "start",
+  ["punctuation.definition.dictionary.end.smithy","}"]
+],[
+   "start"
+],[
+   "start",
+  ["comment.line.double-slash.smithy","// This structure is nested within GetCityOutput."]
+],[
+   "punctuation.definition.dictionary.begin.smithy",
+  ["keyword.statement.smithy","structure"],
+  ["text"," "],
+  ["entity.name.type.smithy","CityCoordinates"],
+  ["text"," "],
+  ["punctuation.definition.dictionary.begin.smithy","{"]
+],[
+   "punctuation.definition.dictionary.begin.smithy",
+  ["meta.structure.dictionary.smithy","    "],
+  ["punctuation.definition.annotation.smithy","@"],
+  ["storage.type.annotation.smithy","required"]
+],[
+   "punctuation.definition.dictionary.begin.smithy",
+  ["meta.structure.dictionary.smithy","    "],
+  ["support.type.property-name.smithy","latitude"],
+  ["punctuation.separator.dictionary.key-value.smithy",":"],
+  ["meta.structure.dictionary.value.smithy"," "],
+  ["storage.type.smithy","Float"],
+  ["punctuation.separator.dictionary.pair.smithy",","]
+],[
+   "punctuation.definition.dictionary.begin.smithy"
+],[
+   "punctuation.definition.dictionary.begin.smithy",
+  ["meta.structure.dictionary.smithy","    "],
+  ["punctuation.definition.annotation.smithy","@"],
+  ["storage.type.annotation.smithy","required"]
+],[
+   "punctuation.definition.dictionary.begin.smithy",
+  ["meta.structure.dictionary.smithy","    "],
+  ["support.type.property-name.smithy","longitude"],
+  ["punctuation.separator.dictionary.key-value.smithy",":"],
+  ["meta.structure.dictionary.value.smithy"," "],
+  ["storage.type.smithy","Float"],
+  ["punctuation.separator.dictionary.pair.smithy",","]
+],[
+   "start",
+  ["punctuation.definition.dictionary.end.smithy","}"]
+],[
+   "start"
+],[
+   "start",
+  ["comment.line.double-slash.smithy","// \"error\" is a trait that is used to specialize"]
+],[
+   "start",
+  ["comment.line.double-slash.smithy","// a structure as an error."]
+],[
+   "start",
+  ["punctuation.definition.annotation.smithy","@"],
+  ["storage.type.annotation.smithy","error"],
+  ["text","("],
+  ["punctuation.definition.string.begin.smithy","\""],
+  ["string.quoted.double.smithy","client"],
+  ["punctuation.definition.string.end.smithy","\""],
+  ["text",")"]
+],[
+   "punctuation.definition.dictionary.begin.smithy",
+  ["keyword.statement.smithy","structure"],
+  ["text"," "],
+  ["entity.name.type.smithy","NoSuchResource"],
+  ["text"," "],
+  ["punctuation.definition.dictionary.begin.smithy","{"]
+],[
+   "punctuation.definition.dictionary.begin.smithy",
+  ["meta.structure.dictionary.smithy","    "],
+  ["punctuation.definition.annotation.smithy","@"],
+  ["storage.type.annotation.smithy","required"]
+],[
+   ["punctuation.separator.dictionary.key-value.smithy","punctuation.definition.dictionary.begin.smithy"],
+  ["meta.structure.dictionary.smithy","    "],
+  ["support.type.property-name.smithy","resourceType"],
+  ["punctuation.separator.dictionary.key-value.smithy",":"],
+  ["meta.structure.dictionary.value.smithy"," "],
+  ["storage.type.smithy","String"]
+],[
+   "start",
+  ["punctuation.definition.dictionary.end.smithy","}"]
+],[
+   "start"
+],[
+   "start",
+  ["comment.line.double-slash.smithy","// The paginated trait indicates that the operation may"]
+],[
+   "start",
+  ["comment.line.double-slash.smithy","// return truncated results."]
+],[
+   "start",
+  ["punctuation.definition.annotation.smithy","@"],
+  ["storage.type.annotation.smithy","readonly"]
+],[
+   "start",
+  ["punctuation.definition.annotation.smithy","@"],
+  ["storage.type.annotation.smithy","paginated"],
+  ["text","("],
+  ["support.type.property-name.smithy","items"],
+  ["punctuation.separator.dictionary.pair.smithy",":"],
+  ["text"," "],
+  ["punctuation.definition.string.begin.smithy","\""],
+  ["string.quoted.double.smithy","items"],
+  ["punctuation.definition.string.end.smithy","\""],
+  ["text",")"]
+],[
+   "punctuation.definition.dictionary.begin.smithy",
+  ["storage.type.smithy","operation"],
+  ["text"," "],
+  ["storage.type.smithy","ListCities"],
+  ["text"," "],
+  ["punctuation.definition.dictionary.begin.smithy","{"]
+],[
+   "punctuation.definition.dictionary.begin.smithy",
+  ["meta.structure.dictionary.smithy","    "],
+  ["support.type.property-name.smithy","input"],
+  ["punctuation.separator.dictionary.key-value.smithy",":"],
+  ["meta.structure.dictionary.value.smithy"," "],
+  ["storage.type.smithy","ListCitiesInput"],
+  ["punctuation.separator.dictionary.pair.smithy",","]
+],[
+   ["punctuation.separator.dictionary.key-value.smithy","punctuation.definition.dictionary.begin.smithy"],
+  ["meta.structure.dictionary.smithy","    "],
+  ["support.type.property-name.smithy","output"],
+  ["punctuation.separator.dictionary.key-value.smithy",":"],
+  ["meta.structure.dictionary.value.smithy"," "],
+  ["storage.type.smithy","ListCitiesOutput"]
+],[
+   "start",
+  ["punctuation.definition.dictionary.end.smithy","}"]
+],[
+   "start"
+],[
+   "punctuation.definition.dictionary.begin.smithy",
+  ["keyword.statement.smithy","structure"],
+  ["text"," "],
+  ["entity.name.type.smithy","ListCitiesInput"],
+  ["text"," "],
+  ["punctuation.definition.dictionary.begin.smithy","{"]
+],[
+   "punctuation.definition.dictionary.begin.smithy",
+  ["meta.structure.dictionary.smithy","    "],
+  ["support.type.property-name.smithy","nextToken"],
+  ["punctuation.separator.dictionary.key-value.smithy",":"],
+  ["meta.structure.dictionary.value.smithy"," "],
+  ["storage.type.smithy","String"],
+  ["punctuation.separator.dictionary.pair.smithy",","]
+],[
+   ["punctuation.separator.dictionary.key-value.smithy","punctuation.definition.dictionary.begin.smithy"],
+  ["meta.structure.dictionary.smithy","    "],
+  ["support.type.property-name.smithy","pageSize"],
+  ["punctuation.separator.dictionary.key-value.smithy",":"],
+  ["meta.structure.dictionary.value.smithy"," "],
+  ["storage.type.smithy","Integer"]
+],[
+   "start",
+  ["punctuation.definition.dictionary.end.smithy","}"]
+],[
+   "start"
+],[
+   "punctuation.definition.dictionary.begin.smithy",
+  ["keyword.statement.smithy","structure"],
+  ["text"," "],
+  ["entity.name.type.smithy","ListCitiesOutput"],
+  ["text"," "],
+  ["punctuation.definition.dictionary.begin.smithy","{"]
+],[
+   "punctuation.definition.dictionary.begin.smithy",
+  ["meta.structure.dictionary.smithy","    "],
+  ["support.type.property-name.smithy","nextToken"],
+  ["punctuation.separator.dictionary.key-value.smithy",":"],
+  ["meta.structure.dictionary.value.smithy"," "],
+  ["storage.type.smithy","String"],
+  ["punctuation.separator.dictionary.pair.smithy",","]
+],[
+   "punctuation.definition.dictionary.begin.smithy"
+],[
+   "punctuation.definition.dictionary.begin.smithy",
+  ["meta.structure.dictionary.smithy","    "],
+  ["punctuation.definition.annotation.smithy","@"],
+  ["storage.type.annotation.smithy","required"]
+],[
+   "punctuation.definition.dictionary.begin.smithy",
+  ["meta.structure.dictionary.smithy","    "],
+  ["support.type.property-name.smithy","items"],
+  ["punctuation.separator.dictionary.key-value.smithy",":"],
+  ["meta.structure.dictionary.value.smithy"," "],
+  ["storage.type.smithy","CitySummaries"],
+  ["punctuation.separator.dictionary.pair.smithy",","]
+],[
+   "start",
+  ["punctuation.definition.dictionary.end.smithy","}"]
+],[
+   "start"
+],[
+   "start",
+  ["comment.line.double-slash.smithy","// CitySummaries is a list of CitySummary structures."]
+],[
+   "punctuation.definition.dictionary.begin.smithy",
+  ["keyword.statement.smithy","list"],
+  ["text"," "],
+  ["entity.name.type.smithy","CitySummaries"],
+  ["text"," "],
+  ["punctuation.definition.dictionary.begin.smithy","{"]
+],[
+   ["punctuation.separator.dictionary.key-value.smithy","punctuation.definition.dictionary.begin.smithy"],
+  ["meta.structure.dictionary.smithy","    "],
+  ["support.type.property-name.smithy","member"],
+  ["punctuation.separator.dictionary.key-value.smithy",":"],
+  ["meta.structure.dictionary.value.smithy"," "],
+  ["storage.type.smithy","CitySummary"]
+],[
+   "start",
+  ["punctuation.definition.dictionary.end.smithy","}"]
+],[
+   "start"
+],[
+   "start",
+  ["comment.line.double-slash.smithy","// CitySummary contains a reference to a City."]
+],[
+   "start",
+  ["punctuation.definition.annotation.smithy","@"],
+  ["storage.type.annotation.smithy","references"],
+  ["text","("],
+  ["punctuation.definition.array.begin.smithy","["],
+  ["punctuation.definition.dictionary.begin.smithy","{"],
+  ["support.type.property-name.smithy","resource"],
+  ["punctuation.separator.dictionary.key-value.smithy",":"],
+  ["meta.structure.dictionary.value.smithy"," "],
+  ["storage.type.smithy","City"],
+  ["punctuation.definition.dictionary.end.smithy","}"],
+  ["punctuation.definition.array.end.smithy","]"],
+  ["text",")"]
+],[
+   "punctuation.definition.dictionary.begin.smithy",
+  ["keyword.statement.smithy","structure"],
+  ["text"," "],
+  ["entity.name.type.smithy","CitySummary"],
+  ["text"," "],
+  ["punctuation.definition.dictionary.begin.smithy","{"]
+],[
+   "punctuation.definition.dictionary.begin.smithy",
+  ["meta.structure.dictionary.smithy","    "],
+  ["punctuation.definition.annotation.smithy","@"],
+  ["storage.type.annotation.smithy","required"]
+],[
+   "punctuation.definition.dictionary.begin.smithy",
+  ["meta.structure.dictionary.smithy","    "],
+  ["support.type.property-name.smithy","cityId"],
+  ["punctuation.separator.dictionary.key-value.smithy",":"],
+  ["meta.structure.dictionary.value.smithy"," "],
+  ["storage.type.smithy","CityId"],
+  ["punctuation.separator.dictionary.pair.smithy",","]
+],[
+   "punctuation.definition.dictionary.begin.smithy"
+],[
+   "punctuation.definition.dictionary.begin.smithy",
+  ["meta.structure.dictionary.smithy","    "],
+  ["punctuation.definition.annotation.smithy","@"],
+  ["storage.type.annotation.smithy","required"]
+],[
+   "punctuation.definition.dictionary.begin.smithy",
+  ["meta.structure.dictionary.smithy","    "],
+  ["support.type.property-name.smithy","name"],
+  ["punctuation.separator.dictionary.key-value.smithy",":"],
+  ["meta.structure.dictionary.value.smithy"," "],
+  ["storage.type.smithy","String"],
+  ["punctuation.separator.dictionary.pair.smithy",","]
+],[
+   "start",
+  ["punctuation.definition.dictionary.end.smithy","}"]
+],[
+   "start"
+],[
+   "start",
+  ["punctuation.definition.annotation.smithy","@"],
+  ["storage.type.annotation.smithy","readonly"]
+],[
+   "punctuation.definition.dictionary.begin.smithy",
+  ["storage.type.smithy","operation"],
+  ["text"," "],
+  ["storage.type.smithy","GetCurrentTime"],
+  ["text"," "],
+  ["punctuation.definition.dictionary.begin.smithy","{"]
+],[
+   ["punctuation.separator.dictionary.key-value.smithy","punctuation.definition.dictionary.begin.smithy"],
+  ["meta.structure.dictionary.smithy","    "],
+  ["support.type.property-name.smithy","output"],
+  ["punctuation.separator.dictionary.key-value.smithy",":"],
+  ["meta.structure.dictionary.value.smithy"," "],
+  ["storage.type.smithy","GetCurrentTimeOutput"]
+],[
+   "start",
+  ["punctuation.definition.dictionary.end.smithy","}"]
+],[
+   "start"
+],[
+   "punctuation.definition.dictionary.begin.smithy",
+  ["keyword.statement.smithy","structure"],
+  ["text"," "],
+  ["entity.name.type.smithy","GetCurrentTimeOutput"],
+  ["text"," "],
+  ["punctuation.definition.dictionary.begin.smithy","{"]
+],[
+   "punctuation.definition.dictionary.begin.smithy",
+  ["meta.structure.dictionary.smithy","    "],
+  ["punctuation.definition.annotation.smithy","@"],
+  ["storage.type.annotation.smithy","required"]
+],[
+   ["punctuation.separator.dictionary.key-value.smithy","punctuation.definition.dictionary.begin.smithy"],
+  ["meta.structure.dictionary.smithy","    "],
+  ["support.type.property-name.smithy","time"],
+  ["punctuation.separator.dictionary.key-value.smithy",":"],
+  ["meta.structure.dictionary.value.smithy"," "],
+  ["storage.type.smithy","Timestamp"]
+],[
+   "start",
+  ["punctuation.definition.dictionary.end.smithy","}"]
+],[
+   "start"
+],[
+   "start",
+  ["punctuation.definition.annotation.smithy","@"],
+  ["storage.type.annotation.smithy","readonly"]
+],[
+   "punctuation.definition.dictionary.begin.smithy",
+  ["storage.type.smithy","operation"],
+  ["text"," "],
+  ["storage.type.smithy","GetForecast"],
+  ["text"," "],
+  ["punctuation.definition.dictionary.begin.smithy","{"]
+],[
+   "punctuation.definition.dictionary.begin.smithy",
+  ["meta.structure.dictionary.smithy","    "],
+  ["support.type.property-name.smithy","input"],
+  ["punctuation.separator.dictionary.key-value.smithy",":"],
+  ["meta.structure.dictionary.value.smithy"," "],
+  ["storage.type.smithy","GetForecastInput"],
+  ["punctuation.separator.dictionary.pair.smithy",","]
+],[
+   ["punctuation.separator.dictionary.key-value.smithy","punctuation.definition.dictionary.begin.smithy"],
+  ["meta.structure.dictionary.smithy","    "],
+  ["support.type.property-name.smithy","output"],
+  ["punctuation.separator.dictionary.key-value.smithy",":"],
+  ["meta.structure.dictionary.value.smithy"," "],
+  ["storage.type.smithy","GetForecastOutput"]
+],[
+   "start",
+  ["punctuation.definition.dictionary.end.smithy","}"]
+],[
+   "start"
+],[
+   "start",
+  ["comment.line.double-slash.smithy","// \"cityId\" provides the only identifier for the resource since"]
+],[
+   "start",
+  ["comment.line.double-slash.smithy","// a Forecast doesn't have its own."]
+],[
+   "punctuation.definition.dictionary.begin.smithy",
+  ["keyword.statement.smithy","structure"],
+  ["text"," "],
+  ["entity.name.type.smithy","GetForecastInput"],
+  ["text"," "],
+  ["punctuation.definition.dictionary.begin.smithy","{"]
+],[
+   "punctuation.definition.dictionary.begin.smithy",
+  ["meta.structure.dictionary.smithy","    "],
+  ["punctuation.definition.annotation.smithy","@"],
+  ["storage.type.annotation.smithy","required"]
+],[
+   "punctuation.definition.dictionary.begin.smithy",
+  ["meta.structure.dictionary.smithy","    "],
+  ["support.type.property-name.smithy","cityId"],
+  ["punctuation.separator.dictionary.key-value.smithy",":"],
+  ["meta.structure.dictionary.value.smithy"," "],
+  ["storage.type.smithy","CityId"],
+  ["punctuation.separator.dictionary.pair.smithy",","]
+],[
+   "start",
+  ["punctuation.definition.dictionary.end.smithy","}"]
+],[
+   "start"
+],[
+   "punctuation.definition.dictionary.begin.smithy",
+  ["keyword.statement.smithy","structure"],
+  ["text"," "],
+  ["entity.name.type.smithy","GetForecastOutput"],
+  ["text"," "],
+  ["punctuation.definition.dictionary.begin.smithy","{"]
+],[
+   ["punctuation.separator.dictionary.key-value.smithy","punctuation.definition.dictionary.begin.smithy"],
+  ["meta.structure.dictionary.smithy","    "],
+  ["support.type.property-name.smithy","chanceOfRain"],
+  ["punctuation.separator.dictionary.key-value.smithy",":"],
+  ["meta.structure.dictionary.value.smithy"," "],
+  ["storage.type.smithy","Float"]
+],[
+   "start",
+  ["punctuation.definition.dictionary.end.smithy","}"]
+]]

@@ -1,0 +1,1102 @@
+[[
+   "start",
+  ["punctuation.begin","{{"],
+  ["text"," "],
+  ["variable","foo"],
+  ["punctuation","."],
+  ["variable.parameter","bar"],
+  ["text"," "],
+  ["punctuation.end","}}"]
+],[
+   "start",
+  ["punctuation.begin","{{"],
+  ["text"," "],
+  ["variable","foo"],
+  ["paren.lpar","["],
+  ["string","\"bar\""],
+  ["paren.rpar","]"],
+  ["text"," "],
+  ["punctuation.end","}}"]
+],[
+   "start",
+  ["punctuation.begin","{{"],
+  ["text"," "],
+  ["variable","foo"],
+  ["text"," "],
+  ["punctuation","|"],
+  ["text"," "],
+  ["support.other","title"],
+  ["text"," "],
+  ["punctuation.end","}}"]
+],[
+   "start",
+  ["punctuation.begin","{{"],
+  ["text"," "],
+  ["variable","foo"],
+  ["text"," "],
+  ["punctuation","|"],
+  ["text"," "],
+  ["support.other","join"],
+  ["paren.lpar","("],
+  ["string","\",\""],
+  ["paren.rpar",")"],
+  ["text"," "],
+  ["punctuation.end","}}"]
+],[
+   "start",
+  ["punctuation.begin","{{"],
+  ["text"," "],
+  ["variable","foo"],
+  ["text"," "],
+  ["punctuation","|"],
+  ["text"," "],
+  ["support.other","replace"],
+  ["paren.lpar","("],
+  ["string","\"foo\""],
+  ["punctuation",","],
+  ["text"," "],
+  ["string","\"bar\""],
+  ["paren.rpar",")"],
+  ["text"," "],
+  ["punctuation","|"],
+  ["text"," "],
+  ["support.other","capitalize"],
+  ["text"," "],
+  ["punctuation.end","}}"]
+],[
+   "start",
+  ["punctuation.begin","{%"],
+  ["text"," "],
+  ["keyword.control","block"],
+  ["text"," "],
+  ["variable","header"],
+  ["text"," "],
+  ["punctuation.end","%}"]
+],[
+   "start",
+  ["text.xml","This is the default content"]
+],[
+   "start",
+  ["punctuation.begin","{%"],
+  ["text"," "],
+  ["keyword.control","endblock"],
+  ["text"," "],
+  ["punctuation.end","%}"]
+],[
+   "start"
+],[
+   "start",
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","section"],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","class"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"left\""],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["text.xml","  "],
+  ["punctuation.begin","{%"],
+  ["text"," "],
+  ["keyword.control","block"],
+  ["text"," "],
+  ["variable","left"],
+  ["text"," "],
+  ["punctuation.end","%}"],
+  ["punctuation.begin","{%"],
+  ["text"," "],
+  ["keyword.control","endblock"],
+  ["text"," "],
+  ["punctuation.end","%}"]
+],[
+   "start",
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","section"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start"
+],[
+   "start",
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","section"],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","class"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"right\""],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["text.xml","  "],
+  ["punctuation.begin","{%"],
+  ["text"," "],
+  ["keyword.control","block"],
+  ["text"," "],
+  ["variable","right"],
+  ["text"," "],
+  ["punctuation.end","%}"]
+],[
+   "start",
+  ["text.xml","  This is more content"]
+],[
+   "start",
+  ["text.xml","  "],
+  ["punctuation.begin","{%"],
+  ["text"," "],
+  ["keyword.control","endblock"],
+  ["text"," "],
+  ["punctuation.end","%}"]
+],[
+   "start",
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","section"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["punctuation.begin","{%"],
+  ["text"," "],
+  ["keyword.control","extends"],
+  ["text"," "],
+  ["string","\"parent.html\""],
+  ["text"," "],
+  ["punctuation.end","%}"]
+],[
+   "start"
+],[
+   "start",
+  ["punctuation.begin","{%"],
+  ["text"," "],
+  ["keyword.control","block"],
+  ["text"," "],
+  ["variable","left"],
+  ["text"," "],
+  ["punctuation.end","%}"]
+],[
+   "start",
+  ["text.xml","This is the left side!"]
+],[
+   "start",
+  ["punctuation.begin","{%"],
+  ["text"," "],
+  ["keyword.control","endblock"],
+  ["text"," "],
+  ["punctuation.end","%}"]
+],[
+   "start"
+],[
+   "start",
+  ["punctuation.begin","{%"],
+  ["text"," "],
+  ["keyword.control","block"],
+  ["text"," "],
+  ["variable","right"],
+  ["text"," "],
+  ["punctuation.end","%}"]
+],[
+   "start",
+  ["text.xml","This is the right side!"]
+],[
+   "start",
+  ["punctuation.begin","{%"],
+  ["text"," "],
+  ["keyword.control","endblock"],
+  ["text"," "],
+  ["punctuation.end","%}"]
+],[
+   "start"
+],[
+   "start",
+  ["punctuation.begin","{%"],
+  ["text"," "],
+  ["keyword.control","block"],
+  ["text"," "],
+  ["variable","right"],
+  ["text"," "],
+  ["punctuation.end","%}"]
+],[
+   "start",
+  ["punctuation.begin","{{"],
+  ["text"," "],
+  ["support.function","super"],
+  ["paren.lpar","("],
+  ["paren.rpar",")"],
+  ["text"," "],
+  ["punctuation.end","}}"]
+],[
+   "start",
+  ["text.xml","Right side!"]
+],[
+   "start",
+  ["punctuation.begin","{%"],
+  ["text"," "],
+  ["keyword.control","endblock"],
+  ["text"," "],
+  ["punctuation.end","%}"]
+],[
+   "start"
+],[
+   "start",
+  ["punctuation.begin","{%"],
+  ["text"," "],
+  ["keyword.control","if"],
+  ["text"," "],
+  ["variable","variable"],
+  ["text"," "],
+  ["punctuation.end","%}"]
+],[
+   "start",
+  ["text.xml","  It is true"]
+],[
+   "start",
+  ["punctuation.begin","{%"],
+  ["text"," "],
+  ["keyword.control","endif"],
+  ["text"," "],
+  ["punctuation.end","%}"]
+],[
+   "start"
+],[
+   "start",
+  ["punctuation.begin","{%"],
+  ["text"," "],
+  ["keyword.control","if"],
+  ["text"," "],
+  ["variable","hungry"],
+  ["text"," "],
+  ["punctuation.end","%}"]
+],[
+   "start",
+  ["text.xml","  I am hungry"]
+],[
+   "start",
+  ["punctuation.begin","{%"],
+  ["text"," "],
+  ["keyword.control","elif"],
+  ["text"," "],
+  ["variable","tired"],
+  ["text"," "],
+  ["punctuation.end","%}"]
+],[
+   "start",
+  ["text.xml","  I am tired"]
+],[
+   "start",
+  ["punctuation.begin","{%"],
+  ["text"," "],
+  ["keyword.control","else"],
+  ["text"," "],
+  ["punctuation.end","%}"]
+],[
+   "start",
+  ["text.xml","  I am good!"]
+],[
+   "start",
+  ["punctuation.begin","{%"],
+  ["text"," "],
+  ["keyword.control","endif"],
+  ["text"," "],
+  ["punctuation.end","%}"]
+],[
+   "start"
+],[
+   "start",
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","h1"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["text.xml","Posts"],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","h1"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","ul"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["punctuation.begin","{%"],
+  ["text"," "],
+  ["keyword.control","for"],
+  ["text"," "],
+  ["variable","item"],
+  ["text"," "],
+  ["keyword.control","in"],
+  ["text"," "],
+  ["variable","items"],
+  ["text"," "],
+  ["punctuation.end","%}"]
+],[
+   "start",
+  ["text.xml","  "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","li"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["punctuation.begin","{{"],
+  ["text"," "],
+  ["variable","item"],
+  ["punctuation","."],
+  ["variable.parameter","title"],
+  ["text"," "],
+  ["punctuation.end","}}"],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","li"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["punctuation.begin","{%"],
+  ["text"," "],
+  ["keyword.control","else"],
+  ["text"," "],
+  ["punctuation.end","%}"]
+],[
+   "start",
+  ["text.xml","  "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","li"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["text.xml","This would display if the 'item' collection were empty"],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","li"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["punctuation.begin","{%"],
+  ["text"," "],
+  ["keyword.control","endfor"],
+  ["text"," "],
+  ["punctuation.end","%}"]
+],[
+   "start",
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","ul"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start"
+],[
+   "start",
+  ["punctuation.begin","{%"],
+  ["text"," "],
+  ["keyword.control","for"],
+  ["text"," "],
+  ["variable","ingredient"],
+  ["punctuation",","],
+  ["text"," "],
+  ["variable","amount"],
+  ["text"," "],
+  ["keyword.control","in"],
+  ["text"," "],
+  ["variable","food"],
+  ["text"," "],
+  ["punctuation.end","%}"]
+],[
+   "start",
+  ["text.xml","  Use "],
+  ["punctuation.begin","{{"],
+  ["text"," "],
+  ["variable","amount"],
+  ["text"," "],
+  ["punctuation.end","}}"],
+  ["text.xml"," of "],
+  ["punctuation.begin","{{"],
+  ["text"," "],
+  ["variable","ingredient"],
+  ["text"," "],
+  ["punctuation.end","}}"]
+],[
+   "start",
+  ["punctuation.begin","{%"],
+  ["text"," "],
+  ["keyword.control","endfor"],
+  ["text"," "],
+  ["punctuation.end","%}"]
+],[
+   "start"
+],[
+   "start",
+  ["punctuation.begin","{%"],
+  ["text"," "],
+  ["keyword.control","for"],
+  ["text"," "],
+  ["variable","fruit"],
+  ["punctuation",","],
+  ["text"," "],
+  ["variable","color"],
+  ["text"," "],
+  ["keyword.control","in"],
+  ["text"," "],
+  ["variable","fruits"],
+  ["text"," "],
+  ["punctuation.end","%}"]
+],[
+   "start",
+  ["text.xml","  Did you know that "],
+  ["punctuation.begin","{{"],
+  ["text"," "],
+  ["variable","fruit"],
+  ["text"," "],
+  ["punctuation.end","}}"],
+  ["text.xml"," is "],
+  ["punctuation.begin","{{"],
+  ["text"," "],
+  ["variable","color"],
+  ["text"," "],
+  ["punctuation.end","}}"],
+  ["text.xml","?"]
+],[
+   "start",
+  ["punctuation.begin","{%"],
+  ["text"," "],
+  ["keyword.control","endfor"],
+  ["text"," "],
+  ["punctuation.end","%}"]
+],[
+   "start"
+],[
+   "start",
+  ["punctuation.begin","{%"],
+  ["text"," "],
+  ["keyword.control","for"],
+  ["text"," "],
+  ["variable","x"],
+  ["punctuation",","],
+  ["text"," "],
+  ["variable","y"],
+  ["punctuation",","],
+  ["text"," "],
+  ["variable","z"],
+  ["text"," "],
+  ["keyword.control","in"],
+  ["text"," "],
+  ["variable","points"],
+  ["text"," "],
+  ["punctuation.end","%}"]
+],[
+   "start",
+  ["text.xml","  Point: "],
+  ["punctuation.begin","{{"],
+  ["text"," "],
+  ["variable","x"],
+  ["text"," "],
+  ["punctuation.end","}}"],
+  ["text.xml",", "],
+  ["punctuation.begin","{{"],
+  ["text"," "],
+  ["variable","y"],
+  ["text"," "],
+  ["punctuation.end","}}"],
+  ["text.xml",", "],
+  ["punctuation.begin","{{"],
+  ["text"," "],
+  ["variable","z"],
+  ["text"," "],
+  ["punctuation.end","}}"]
+],[
+   "start",
+  ["punctuation.begin","{%"],
+  ["text"," "],
+  ["keyword.control","endfor"],
+  ["text"," "],
+  ["punctuation.end","%}"]
+],[
+   "start"
+],[
+   "start",
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","h1"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["text.xml","Posts"],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","h1"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","ul"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["punctuation.begin","{%"],
+  ["text"," "],
+  ["keyword.control","asyncEach"],
+  ["text"," "],
+  ["variable","item"],
+  ["text"," "],
+  ["keyword.control","in"],
+  ["text"," "],
+  ["variable","items"],
+  ["text"," "],
+  ["punctuation.end","%}"]
+],[
+   "start",
+  ["text.xml","  "],
+  ["punctuation.begin","{%"],
+  ["text"," "],
+  ["keyword.control","include"],
+  ["text"," "],
+  ["string","\"item-template.html\""],
+  ["text"," "],
+  ["punctuation.end","%}"]
+],[
+   "start",
+  ["punctuation.begin","{%"],
+  ["text"," "],
+  ["keyword.control","endeach"],
+  ["text"," "],
+  ["punctuation.end","%}"]
+],[
+   "start",
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","ul"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start"
+],[
+   "start",
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","h1"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["text.xml","Posts"],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","h1"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","ul"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["punctuation.begin","{%"],
+  ["text"," "],
+  ["keyword.control","asyncAll"],
+  ["text"," "],
+  ["variable","item"],
+  ["text"," "],
+  ["keyword.control","in"],
+  ["text"," "],
+  ["variable","items"],
+  ["text"," "],
+  ["punctuation.end","%}"]
+],[
+   "start",
+  ["text.xml","  "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","li"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["punctuation.begin","{{"],
+  ["text"," "],
+  ["variable","item"],
+  ["punctuation","."],
+  ["variable.parameter","id"],
+  ["text"," "],
+  ["punctuation","|"],
+  ["text"," "],
+  ["support.other","lookup"],
+  ["text"," "],
+  ["punctuation.end","}}"],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","li"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["punctuation.begin","{%"],
+  ["text"," "],
+  ["keyword.control","endall"],
+  ["text"," "],
+  ["punctuation.end","%}"]
+],[
+   "start",
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","ul"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start"
+],[
+   "start",
+  ["punctuation.begin","{%"],
+  ["text"," "],
+  ["keyword.control","macro"],
+  ["text"," "],
+  ["support.function","field"],
+  ["paren.lpar","("],
+  ["variable","name"],
+  ["punctuation",","],
+  ["text"," "],
+  ["variable","value"],
+  ["text","="],
+  ["string","''"],
+  ["punctuation",","],
+  ["text"," "],
+  ["variable","type"],
+  ["text","="],
+  ["string","'text'"],
+  ["paren.rpar",")"],
+  ["text"," "],
+  ["punctuation.end","%}"]
+],[
+   "start",
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","div"],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","class"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"field\""],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "tag_stuff",
+  ["text.xml","  "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.form.tag-name.xml","input"],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","type"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\""],
+  ["punctuation.begin","{{"],
+  ["text"," "],
+  ["variable","type"],
+  ["text"," "],
+  ["punctuation.end","}}"],
+  ["string.attribute-value.xml","\""],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","name"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\""],
+  ["punctuation.begin","{{"],
+  ["text"," "],
+  ["variable","name"],
+  ["text"," "],
+  ["punctuation.end","}}"],
+  ["string.attribute-value.xml","\""]
+],[
+   "start",
+  ["text.tag-whitespace.xml","         "],
+  ["entity.other.attribute-name.xml","value"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\""],
+  ["punctuation.begin","{{"],
+  ["text"," "],
+  ["variable","value"],
+  ["text"," "],
+  ["punctuation","|"],
+  ["text"," "],
+  ["support.other","escape"],
+  ["text"," "],
+  ["punctuation.end","}}"],
+  ["string.attribute-value.xml","\""],
+  ["text.tag-whitespace.xml"," "],
+  ["meta.tag.punctuation.tag-close.xml","/>"]
+],[
+   "start",
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","div"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["punctuation.begin","{%"],
+  ["text"," "],
+  ["keyword.control","endmacro"],
+  ["text"," "],
+  ["punctuation.end","%}"]
+],[
+   "start"
+],[
+   "start",
+  ["punctuation.begin","{{"],
+  ["text"," "],
+  ["variable","username"],
+  ["text"," "],
+  ["punctuation.end","}}"]
+],[
+   "start",
+  ["punctuation.begin","{%"],
+  ["text"," "],
+  ["keyword.control","set"],
+  ["text"," "],
+  ["variable","username"],
+  ["text"," = "],
+  ["string","\"joe\""],
+  ["text"," "],
+  ["punctuation.end","%}"]
+],[
+   "start",
+  ["punctuation.begin","{{"],
+  ["text"," "],
+  ["variable","username"],
+  ["text"," "],
+  ["punctuation.end","}}"]
+],[
+   "start"
+],[
+   "start",
+  ["punctuation.begin","{%"],
+  ["text"," "],
+  ["keyword.control","set"],
+  ["text"," "],
+  ["variable","standardModal"],
+  ["text"," "],
+  ["punctuation.end","%}"]
+],[
+   "start",
+  ["text.xml","    "],
+  ["punctuation.begin","{%"],
+  ["text"," "],
+  ["keyword.control","include"],
+  ["text"," "],
+  ["string","'standardModalData.html'"],
+  ["text"," "],
+  ["punctuation.end","%}"]
+],[
+   "start",
+  ["punctuation.begin","{%"],
+  ["text"," "],
+  ["keyword.control","endset"],
+  ["text"," "],
+  ["punctuation.end","%}"]
+],[
+   "start"
+],[
+   "start",
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","div"],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","class"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"js-modal\""],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","data-modal"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\""],
+  ["punctuation.begin","{{"],
+  ["variable","standardModal"],
+  ["text"," "],
+  ["punctuation","|"],
+  ["text"," "],
+  ["support.other","e"],
+  ["punctuation.end","}}"],
+  ["string.attribute-value.xml","\""],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start"
+],[
+   "start",
+  ["punctuation.begin","{%"],
+  ["text"," "],
+  ["keyword.control","set"],
+  ["text"," "],
+  ["variable","standardModal"],
+  ["text"," "],
+  ["punctuation.end","%}"]
+],[
+   "start",
+  ["text.xml","    "],
+  ["punctuation.begin","{%"],
+  ["text"," "],
+  ["keyword.control","include"],
+  ["text"," "],
+  ["string","'standardModalData.html'"],
+  ["text"," "],
+  ["punctuation.end","%}"]
+],[
+   "start",
+  ["punctuation.begin","{%"],
+  ["text"," "],
+  ["keyword.control","endset"],
+  ["text"," "],
+  ["punctuation.end","%}"]
+],[
+   "start"
+],[
+   "start",
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","div"],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","class"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"js-modal\""],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","data-modal"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\""],
+  ["punctuation.begin","{{"],
+  ["variable","standardModal"],
+  ["text"," "],
+  ["punctuation","|"],
+  ["text"," "],
+  ["support.other","e"],
+  ["punctuation.end","}}"],
+  ["string.attribute-value.xml","\""],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start"
+],[
+   "start",
+  ["punctuation.begin","{%"],
+  ["text"," "],
+  ["keyword.control","include"],
+  ["text"," "],
+  ["string","\"missing.html\""],
+  ["text"," "],
+  ["keyword.control","ignore missing"],
+  ["text"," "],
+  ["punctuation.end","%}"]
+],[
+   "start"
+],[
+   "start",
+  ["punctuation.begin","{%"],
+  ["text"," "],
+  ["keyword.control","import"],
+  ["text"," "],
+  ["string","\"forms.html\""],
+  ["text"," "],
+  ["keyword.control","as"],
+  ["text"," "],
+  ["variable","forms"],
+  ["text"," "],
+  ["punctuation.end","%}"]
+],[
+   "start"
+],[
+   "start",
+  ["punctuation.begin","{{"],
+  ["text"," "],
+  ["variable","forms"],
+  ["punctuation","."],
+  ["support.function","label"],
+  ["paren.lpar","("],
+  ["string","'Username'"],
+  ["paren.rpar",")"],
+  ["text"," "],
+  ["punctuation.end","}}"]
+],[
+   "start",
+  ["punctuation.begin","{{"],
+  ["text"," "],
+  ["variable","forms"],
+  ["punctuation","."],
+  ["support.function","field"],
+  ["paren.lpar","("],
+  ["string","'user'"],
+  ["paren.rpar",")"],
+  ["text"," "],
+  ["punctuation.end","}}"]
+],[
+   "start",
+  ["punctuation.begin","{{"],
+  ["text"," "],
+  ["variable","forms"],
+  ["punctuation","."],
+  ["support.function","label"],
+  ["paren.lpar","("],
+  ["string","'Password'"],
+  ["paren.rpar",")"],
+  ["text"," "],
+  ["punctuation.end","}}"]
+],[
+   "start",
+  ["punctuation.begin","{{"],
+  ["text"," "],
+  ["variable","forms"],
+  ["punctuation","."],
+  ["support.function","field"],
+  ["paren.lpar","("],
+  ["string","'pass'"],
+  ["punctuation",","],
+  ["text"," "],
+  ["variable","type"],
+  ["text","="],
+  ["string","'password'"],
+  ["paren.rpar",")"],
+  ["text"," "],
+  ["punctuation.end","}}"]
+],[
+   "start"
+],[
+   "start",
+  ["punctuation.begin","{%"],
+  ["text"," "],
+  ["keyword.control","from"],
+  ["text"," "],
+  ["string","\"forms.html\""],
+  ["text"," "],
+  ["keyword.control","import"],
+  ["text"," "],
+  ["variable","field"],
+  ["punctuation",","],
+  ["text"," "],
+  ["variable","label"],
+  ["text"," "],
+  ["keyword.control","as"],
+  ["text"," "],
+  ["variable","description"],
+  ["text"," "],
+  ["punctuation.end","%}"]
+],[
+   "start"
+],[
+   "start",
+  ["punctuation.begin","{{"],
+  ["text"," "],
+  ["support.function","description"],
+  ["paren.lpar","("],
+  ["string","'Username'"],
+  ["paren.rpar",")"],
+  ["text"," "],
+  ["punctuation.end","}}"]
+],[
+   "start",
+  ["punctuation.begin","{{"],
+  ["text"," "],
+  ["support.function","field"],
+  ["paren.lpar","("],
+  ["string","'user'"],
+  ["paren.rpar",")"],
+  ["text"," "],
+  ["punctuation.end","}}"]
+],[
+   "start",
+  ["punctuation.begin","{{"],
+  ["text"," "],
+  ["support.function","description"],
+  ["paren.lpar","("],
+  ["string","'Password'"],
+  ["paren.rpar",")"],
+  ["text"," "],
+  ["punctuation.end","}}"]
+],[
+   "start",
+  ["punctuation.begin","{{"],
+  ["text"," "],
+  ["support.function","field"],
+  ["paren.lpar","("],
+  ["string","'pass'"],
+  ["punctuation",","],
+  ["text"," "],
+  ["variable","type"],
+  ["text","="],
+  ["string","'password'"],
+  ["paren.rpar",")"],
+  ["text"," "],
+  ["punctuation.end","}}"]
+],[
+   "start"
+],[
+   "start",
+  ["punctuation.begin","{{"],
+  ["text"," "],
+  ["support.function","foo"],
+  ["paren.lpar","("],
+  ["constant.numeric","1"],
+  ["punctuation",","],
+  ["text"," "],
+  ["constant.numeric","2"],
+  ["punctuation",","],
+  ["text"," "],
+  ["variable","bar"],
+  ["text","="],
+  ["constant.numeric","3"],
+  ["punctuation",","],
+  ["text"," "],
+  ["variable","baz"],
+  ["text","="],
+  ["constant.numeric","4"],
+  ["paren.rpar",")"],
+  ["text"," "],
+  ["punctuation.end","}}"]
+],[
+   "start"
+],[
+   "start",
+  ["comment.begin","{#"],
+  ["comment"," Loop through all the users "],
+  ["comment.end","#}"]
+],[
+   "start",
+  ["punctuation.begin","{%"],
+  ["text"," "],
+  ["keyword.control","for"],
+  ["text"," "],
+  ["variable","user"],
+  ["text"," "],
+  ["keyword.control","in"],
+  ["text"," "],
+  ["variable","users"],
+  ["text"," "],
+  ["punctuation.end","%}"],
+  ["text.xml","..."],
+  ["punctuation.begin","{%"],
+  ["text"," "],
+  ["keyword.control","endfor"],
+  ["text"," "],
+  ["punctuation.end","%}"]
+],[
+   "start"
+],[
+   "start"
+],[
+   "start",
+  ["punctuation.begin","{%"],
+  ["text"," "],
+  ["keyword.control","set"],
+  ["text"," "],
+  ["variable","cls"],
+  ["text"," = "],
+  ["support.function","cycler"],
+  ["paren.lpar","("],
+  ["string","\"odd\""],
+  ["punctuation",","],
+  ["text"," "],
+  ["string","\"even\""],
+  ["paren.rpar",")"],
+  ["text"," "],
+  ["punctuation.end","%}"]
+],[
+   "start",
+  ["punctuation.begin","{%"],
+  ["text"," "],
+  ["keyword.control","for"],
+  ["text"," "],
+  ["variable","row"],
+  ["text"," "],
+  ["keyword.control","in"],
+  ["text"," "],
+  ["variable","rows"],
+  ["text"," "],
+  ["punctuation.end","%}"]
+],[
+   "start",
+  ["text.xml","  "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","div"],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","class"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\""],
+  ["punctuation.begin","{{"],
+  ["text"," "],
+  ["variable","cls"],
+  ["punctuation","."],
+  ["support.function","next"],
+  ["paren.lpar","("],
+  ["paren.rpar",")"],
+  ["text"," "],
+  ["punctuation.end","}}"],
+  ["string.attribute-value.xml","\""],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["punctuation.begin","{{"],
+  ["text"," "],
+  ["variable","row"],
+  ["punctuation","."],
+  ["variable.parameter","name"],
+  ["text"," "],
+  ["punctuation.end","}}"],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","div"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["punctuation.begin","{%"],
+  ["text"," "],
+  ["keyword.control","endfor"],
+  ["text"," "],
+  ["punctuation.end","%}"]
+]]

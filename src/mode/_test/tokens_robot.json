@@ -1,0 +1,1111 @@
+[[
+   "start",
+  ["string.robot.header","*** Settings ***"]
+],[
+   "comment",
+  ["comment","Documentation     Robot Framework 4 syntax recipes cheat sheet robot."]
+],[
+   "comment",
+  ["comment","...               Demonstrates Robot Framework syntax in a concise format."]
+],[
+   "start",
+  ["keyword.control.robot","Library"],
+  ["text","           MyLibrary"]
+],[
+   "start",
+  ["keyword.control.robot","Library"],
+  ["text","           MyLibrary"],
+  ["keyword","    WITH NAME    "],
+  ["text","HelloLibrary"]
+],[
+   "start",
+  ["keyword.control.robot","Library"],
+  ["text","           MyLibrary    greeting=Howdy!"],
+  ["keyword","    WITH NAME    "],
+  ["text","HowdyLibrary"]
+],[
+   "start",
+  ["keyword.control.robot","Resource"],
+  ["text","          keywords.robot"]
+],[
+   "start",
+  ["keyword.control.robot","Suite Setup"],
+  ["text","       Log    Suite Setup!"]
+],[
+   "start",
+  ["keyword.control.robot","Suite Teardown"],
+  ["text","    Log    Suite Teardown!"]
+],[
+   "start",
+  ["keyword.control.robot","Test Setup"],
+  ["text","        Log    Test Setup!"]
+],[
+   "start",
+  ["keyword.control.robot","Test Teardown"],
+  ["text","     Log    Test Teardown!"]
+],[
+   "start",
+  ["keyword.control.robot","Test Timeout"],
+  ["text","      "],
+  ["constant.numeric.robot","2"],
+  ["text"," minutes"]
+],[
+   "start",
+  ["keyword.control.robot","Variables"],
+  ["text","         variables.py"]
+],[
+   "start"
+],[
+   "start",
+  ["string.robot.header","*** Variables ***"]
+],[
+   "start",
+  ["entity.name.variable.wrapper","${"],
+  ["entity.name.variable","STRING"],
+  ["entity.name.variable.wrapper","}="],
+  ["text","        cat"]
+],[
+   "start",
+  ["entity.name.variable.wrapper","${"],
+  ["entity.name.variable","NUMBER"],
+  ["entity.name.variable.wrapper","}="],
+  ["text","        "],
+  ["entity.name.variable.wrapper","${"],
+  ["constant.numeric.robot","1"],
+  ["entity.name.variable.wrapper","}"]
+],[
+   "start",
+  ["entity.name.variable.wrapper","@{"],
+  ["entity.name.variable","LIST"],
+  ["entity.name.variable.wrapper","}="],
+  ["text","          one    two    three"]
+],[
+   "start",
+  ["entity.name.variable.wrapper","&{"],
+  ["entity.name.variable","DICTIONARY"],
+  ["entity.name.variable.wrapper","}="],
+  ["text","    string="],
+  ["entity.name.variable.wrapper","${"],
+  ["entity.name.variable","STRING"],
+  ["entity.name.variable.wrapper","}"],
+  ["text","    number="],
+  ["entity.name.variable.wrapper","${"],
+  ["entity.name.variable","NUMBER"],
+  ["entity.name.variable.wrapper","}"],
+  ["text","    list="],
+  ["entity.name.variable.wrapper","@{"],
+  ["entity.name.variable","LIST"],
+  ["entity.name.variable.wrapper","}"]
+],[
+   "start",
+  ["entity.name.variable.wrapper","${"],
+  ["entity.name.variable","ENVIRONMENT_VARIABLE"],
+  ["entity.name.variable.wrapper","}="],
+  ["text","    "],
+  ["entity.name.variable.wrapper","%{"],
+  ["entity.name.variable","PATH=Default value"],
+  ["entity.name.variable.wrapper","}"]
+],[
+   "start"
+],[
+   "start",
+  ["string.robot.header","*** Keywords ***"]
+],[
+   "start",
+  ["keyword.control.robot","A keyword without arguments"]
+],[
+   "start",
+  ["storage.type.function","    Log"],
+  ["text","    No arguments."]
+],[
+   "start"
+],[
+   "start",
+  ["keyword.control.robot","A keyword with a required argument"]
+],[
+   "start",
+  ["text","    "],
+  ["storage.type.method.robot","[Arguments]"],
+  ["text","    "],
+  ["entity.name.variable.wrapper","${"],
+  ["entity.name.variable","argument"],
+  ["entity.name.variable.wrapper","}"]
+],[
+   "start",
+  ["storage.type.function","    Log"],
+  ["text","    Required argument: "],
+  ["entity.name.variable.wrapper","${"],
+  ["entity.name.variable","argument"],
+  ["entity.name.variable.wrapper","}"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword.control.robot","A keyword with an optional argument"]
+],[
+   "start",
+  ["text","    "],
+  ["storage.type.method.robot","[Arguments]"],
+  ["text","    "],
+  ["entity.name.variable.wrapper","${"],
+  ["entity.name.variable","argument"],
+  ["entity.name.variable.wrapper","}="],
+  ["text","Default value"]
+],[
+   "start",
+  ["storage.type.function","    Log"],
+  ["text","    Optional argument: "],
+  ["entity.name.variable.wrapper","${"],
+  ["entity.name.variable","argument"],
+  ["entity.name.variable.wrapper","}"]
+],[
+   "start",
+  ["text","    ...    Another arg"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword.control.robot","A keyword with any number of arguments"]
+],[
+   "start",
+  ["text","    "],
+  ["storage.type.method.robot","[Arguments]"],
+  ["text","    "],
+  ["entity.name.variable.wrapper","@{"],
+  ["entity.name.variable","varargs"],
+  ["entity.name.variable.wrapper","}"]
+],[
+   "start",
+  ["storage.type.function","    Log"],
+  ["text","    Any number of arguments: "],
+  ["entity.name.variable.wrapper","@{"],
+  ["entity.name.variable","varargs"],
+  ["entity.name.variable.wrapper","}"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword.control.robot","A keyword with one or more arguments"]
+],[
+   "start",
+  ["text","    "],
+  ["storage.type.method.robot","[Arguments]"],
+  ["text","    "],
+  ["entity.name.variable.wrapper","${"],
+  ["entity.name.variable","argument"],
+  ["entity.name.variable.wrapper","}"],
+  ["text","    "],
+  ["entity.name.variable.wrapper","@{"],
+  ["entity.name.variable","varargs"],
+  ["entity.name.variable.wrapper","}"]
+],[
+   "start",
+  ["storage.type.function","    Log"],
+  ["text","    One or more arguments: "],
+  ["entity.name.variable.wrapper","${"],
+  ["entity.name.variable","argument"],
+  ["entity.name.variable.wrapper","}"],
+  ["text"," "],
+  ["entity.name.variable.wrapper","@{"],
+  ["entity.name.variable","varargs"],
+  ["entity.name.variable.wrapper","}"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword.control.robot","A keyword that returns a value"]
+],[
+   "start",
+  ["text","    "],
+  ["storage.type.method.robot","[Return]"],
+  ["text","    Return value"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword.control.robot","A keyword with documentation"]
+],[
+   "comment",
+  ["comment","    [Documentation]    This is keyword documentation."]
+],[
+   "start",
+  ["storage.type.function","    No Operation"]
+],[
+   "start"
+],[
+   "start",
+  ["string.robot.header","*** Test Cases ***"]
+],[
+   "start",
+  ["keyword.control.robot","Call keywords with a varying number of arguments"]
+],[
+   "storage.type.method.robot",
+  ["text","    "],
+  ["storage.type.method.robot","[Tags]    Test    Another Tag"]
+],[
+   "start",
+  ["storage.type.function","    A keyword without arguments"]
+],[
+   "start",
+  ["storage.type.function","    A keyword with a required argument"],
+  ["text","    Argument"]
+],[
+   "start",
+  ["storage.type.function","    A keyword with a required argument"],
+  ["text","    argument=Argument"]
+],[
+   "start",
+  ["storage.type.function","    A keyword with an optional argument"]
+],[
+   "start",
+  ["storage.type.function","    A keyword with an optional argument"],
+  ["text","    Argument"]
+],[
+   "start",
+  ["storage.type.function","    A keyword with an optional argument"],
+  ["text","    argument=Argument"]
+],[
+   "start",
+  ["storage.type.function","    A keyword with any number of arguments"]
+],[
+   "start",
+  ["storage.type.function","    A keyword with any number of arguments"],
+  ["text","    arg1    arg2    arg3    arg4    arg5"]
+],[
+   "start",
+  ["storage.type.function","    A keyword with one or more arguments"],
+  ["text","    arg1"]
+],[
+   "start",
+  ["storage.type.function","    A keyword with one or more arguments"],
+  ["text","    arg1    arg2    arg3"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword.control.robot","Call a keyword that returns a value"]
+],[
+   "start",
+  ["text","    "],
+  ["entity.name.variable.wrapper","${"],
+  ["entity.name.variable","value"],
+  ["entity.name.variable.wrapper","}="],
+  ["text","    A keyword that returns a value"]
+],[
+   "start",
+  ["storage.type.function","    Log"],
+  ["text","    "],
+  ["entity.name.variable.wrapper","${"],
+  ["entity.name.variable","value"],
+  ["entity.name.variable.wrapper","}"],
+  ["comment.robot","    # Return value"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword.control.robot","Do conditional IF - ELSE IF - ELSE execution"]
+],[
+   "start",
+  ["keyword","    IF    "],
+  ["entity.name.variable.wrapper","${"],
+  ["entity.name.variable","NUMBER"],
+  ["entity.name.variable.wrapper","}"],
+  ["text"," > "],
+  ["constant.numeric.robot","1"]
+],[
+   "start",
+  ["storage.type.function","        Log"],
+  ["text","    Greater than one."]
+],[
+   "start",
+  ["keyword","    ELSE IF    "],
+  ["text","\""],
+  ["entity.name.variable.wrapper","${"],
+  ["entity.name.variable","STRING"],
+  ["entity.name.variable.wrapper","}"],
+  ["text","\" == \"dog\""]
+],[
+   "start",
+  ["storage.type.function","        Log"],
+  ["text","    It's a dog!"]
+],[
+   "start",
+  ["keyword","    ELSE"]
+],[
+   "start",
+  ["storage.type.function","        Log"],
+  ["text","    Probably a cat. 🤔"]
+],[
+   "start",
+  ["keyword","    END"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword.control.robot","Loop a list"]
+],[
+   "start",
+  ["storage.type.function","    Log"],
+  ["text","    "],
+  ["entity.name.variable.wrapper","${"],
+  ["entity.name.variable","LIST"],
+  ["entity.name.variable.wrapper","}"],
+  ["comment.robot","    # ['one', 'two', 'three']"]
+],[
+   "start",
+  ["keyword","    FOR    "],
+  ["entity.name.variable.wrapper","${"],
+  ["entity.name.variable","item"],
+  ["entity.name.variable.wrapper","}"],
+  ["keyword","    IN    "],
+  ["entity.name.variable.wrapper","@{"],
+  ["entity.name.variable","LIST"],
+  ["entity.name.variable.wrapper","}"]
+],[
+   "start",
+  ["storage.type.function","        Log"],
+  ["text","    "],
+  ["entity.name.variable.wrapper","${"],
+  ["entity.name.variable","item"],
+  ["entity.name.variable.wrapper","}"],
+  ["comment.robot","    # one, two, three"]
+],[
+   "start",
+  ["keyword","    END"]
+],[
+   "start",
+  ["keyword","    FOR    "],
+  ["entity.name.variable.wrapper","${"],
+  ["entity.name.variable","item"],
+  ["entity.name.variable.wrapper","}"],
+  ["keyword","    IN    "],
+  ["text","one    two    three"]
+],[
+   "start",
+  ["storage.type.function","        Log"],
+  ["text","    "],
+  ["entity.name.variable.wrapper","${"],
+  ["entity.name.variable","item"],
+  ["entity.name.variable.wrapper","}"],
+  ["comment.robot","    # one, two, three"]
+],[
+   "start",
+  ["keyword","    END"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword.control.robot","Loop a dictionary"]
+],[
+   "start",
+  ["storage.type.function","    Log"],
+  ["text","    "],
+  ["entity.name.variable.wrapper","${"],
+  ["entity.name.variable","DICTIONARY"],
+  ["entity.name.variable.wrapper","}"]
+],[
+   "start",
+  ["comment.robot","    # {'string': 'cat', 'number': 1, 'list': ['one', 'two', 'three']}"]
+],[
+   "start",
+  ["keyword","    FOR    "],
+  ["entity.name.variable.wrapper","${"],
+  ["entity.name.variable","key_value_tuple"],
+  ["entity.name.variable.wrapper","}"],
+  ["keyword","    IN    "],
+  ["entity.name.variable.wrapper","&{"],
+  ["entity.name.variable","DICTIONARY"],
+  ["entity.name.variable.wrapper","}"]
+],[
+   "start",
+  ["storage.type.function","        Log"],
+  ["text","    "],
+  ["entity.name.variable.wrapper","${"],
+  ["entity.name.variable","key_value_tuple"],
+  ["entity.name.variable.wrapper","}"]
+],[
+   "start",
+  ["comment.robot","        # ('string', 'cat'), ('number', 1), ('list', ['one', 'two', 'three'])"]
+],[
+   "start",
+  ["keyword","    END"]
+],[
+   "start",
+  ["keyword","    FOR    "],
+  ["entity.name.variable.wrapper","${"],
+  ["entity.name.variable","key"],
+  ["entity.name.variable.wrapper","}"],
+  ["keyword","    IN    "],
+  ["entity.name.variable.wrapper","@{"],
+  ["entity.name.variable","DICTIONARY"],
+  ["entity.name.variable.wrapper","}"]
+],[
+   "start",
+  ["storage.type.function","        Log"],
+  ["text","    "],
+  ["entity.name.variable.wrapper","${"],
+  ["entity.name.variable","key"],
+  ["entity.name.variable.wrapper","}=${"],
+  ["entity.name.variable","DICTIONARY"],
+  ["entity.name.variable.wrapper","}"],
+  ["text","["],
+  ["entity.name.variable.wrapper","${"],
+  ["entity.name.variable","key"],
+  ["entity.name.variable.wrapper","}"],
+  ["text","]"]
+],[
+   "start",
+  ["comment.robot","        # string=cat, number=1, list=['one', 'two', 'three']"]
+],[
+   "start",
+  ["keyword","    END"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword.control.robot","Loop a range from 0 to end index"]
+],[
+   "start",
+  ["keyword","    FOR    "],
+  ["entity.name.variable.wrapper","${"],
+  ["entity.name.variable","index"],
+  ["entity.name.variable.wrapper","}"],
+  ["keyword","    IN RANGE    "],
+  ["constant.numeric.robot","10"]
+],[
+   "start",
+  ["storage.type.function","        Log"],
+  ["text","    "],
+  ["entity.name.variable.wrapper","${"],
+  ["entity.name.variable","index"],
+  ["entity.name.variable.wrapper","}"],
+  ["comment.robot","    # 0-9"]
+],[
+   "start",
+  ["keyword","    END"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword.control.robot","Loop a range from start to end index"]
+],[
+   "start",
+  ["keyword","    FOR    "],
+  ["entity.name.variable.wrapper","${"],
+  ["entity.name.variable","index"],
+  ["entity.name.variable.wrapper","}"],
+  ["keyword","    IN RANGE    "],
+  ["constant.numeric.robot","1"],
+  ["text","    "],
+  ["constant.numeric.robot","10"]
+],[
+   "start",
+  ["storage.type.function","        Log"],
+  ["text","    "],
+  ["entity.name.variable.wrapper","${"],
+  ["entity.name.variable","index"],
+  ["entity.name.variable.wrapper","}"],
+  ["comment.robot","    # 1-9"]
+],[
+   "start",
+  ["keyword","    END"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword.control.robot","Loop a range from start to end index with steps"]
+],[
+   "start",
+  ["keyword","    FOR    "],
+  ["entity.name.variable.wrapper","${"],
+  ["entity.name.variable","index"],
+  ["entity.name.variable.wrapper","}"],
+  ["keyword","    IN RANGE    "],
+  ["constant.numeric.robot","0"],
+  ["text","    "],
+  ["constant.numeric.robot","10"],
+  ["text","    "],
+  ["constant.numeric.robot","2"]
+],[
+   "start",
+  ["storage.type.function","        Log"],
+  ["text","    "],
+  ["entity.name.variable.wrapper","${"],
+  ["entity.name.variable","index"],
+  ["entity.name.variable.wrapper","}"],
+  ["comment.robot","    # 0, 2, 4, 6, 8"]
+],[
+   "start",
+  ["keyword","    END"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword.control.robot","Nest loops"]
+],[
+   "start",
+  ["text","    "],
+  ["entity.name.variable.wrapper","@{"],
+  ["entity.name.variable","alphabets"],
+  ["entity.name.variable.wrapper","}="],
+  ["text","    Create List    a    b    c"]
+],[
+   "start",
+  ["storage.type.function","    Log"],
+  ["text","    "],
+  ["entity.name.variable.wrapper","${"],
+  ["entity.name.variable","alphabets"],
+  ["entity.name.variable.wrapper","}"],
+  ["comment.robot","    # ['a', 'b', 'c']"]
+],[
+   "start",
+  ["text","    "],
+  ["entity.name.variable.wrapper","@{"],
+  ["entity.name.variable","numbers"],
+  ["entity.name.variable.wrapper","}="],
+  ["text","    Create List    "],
+  ["entity.name.variable.wrapper","${"],
+  ["constant.numeric.robot","1"],
+  ["entity.name.variable.wrapper","}"],
+  ["text","    "],
+  ["entity.name.variable.wrapper","${"],
+  ["constant.numeric.robot","2"],
+  ["entity.name.variable.wrapper","}"],
+  ["text","    "],
+  ["entity.name.variable.wrapper","${"],
+  ["constant.numeric.robot","3"],
+  ["entity.name.variable.wrapper","}"]
+],[
+   "start",
+  ["storage.type.function","    Log"],
+  ["text","    "],
+  ["entity.name.variable.wrapper","${"],
+  ["entity.name.variable","numbers"],
+  ["entity.name.variable.wrapper","}"],
+  ["comment.robot","    # [1, 2, 3]"]
+],[
+   "start",
+  ["keyword","    FOR    "],
+  ["entity.name.variable.wrapper","${"],
+  ["entity.name.variable","alphabet"],
+  ["entity.name.variable.wrapper","}"],
+  ["keyword","    IN    "],
+  ["entity.name.variable.wrapper","@{"],
+  ["entity.name.variable","alphabets"],
+  ["entity.name.variable.wrapper","}"]
+],[
+   "start",
+  ["keyword","        FOR    "],
+  ["entity.name.variable.wrapper","${"],
+  ["entity.name.variable","number"],
+  ["entity.name.variable.wrapper","}"],
+  ["keyword","    IN    "],
+  ["entity.name.variable.wrapper","@{"],
+  ["entity.name.variable","numbers"],
+  ["entity.name.variable.wrapper","}"]
+],[
+   "start",
+  ["storage.type.function","            Log"],
+  ["text","    "],
+  ["entity.name.variable.wrapper","${"],
+  ["entity.name.variable","alphabet"],
+  ["entity.name.variable.wrapper","}${"],
+  ["entity.name.variable","number"],
+  ["entity.name.variable.wrapper","}"]
+],[
+   "start",
+  ["comment.robot","            # a1, a2, a3, b1, b2, b3, c1, c2, c3"]
+],[
+   "start",
+  ["keyword","        END"]
+],[
+   "start",
+  ["keyword","    END"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword.control.robot","Exit a loop on condition"]
+],[
+   "start",
+  ["keyword","    FOR    "],
+  ["entity.name.variable.wrapper","${"],
+  ["entity.name.variable","i"],
+  ["entity.name.variable.wrapper","}"],
+  ["keyword","    IN RANGE    "],
+  ["constant.numeric.robot","5"]
+],[
+   "start",
+  ["storage.type.function","        Exit For Loop If"],
+  ["text","    "],
+  ["entity.name.variable.wrapper","${"],
+  ["entity.name.variable","i"],
+  ["entity.name.variable.wrapper","} ="],
+  ["text","= "],
+  ["constant.numeric.robot","2"]
+],[
+   "start",
+  ["storage.type.function","        Log"],
+  ["text","    "],
+  ["entity.name.variable.wrapper","${"],
+  ["entity.name.variable","i"],
+  ["entity.name.variable.wrapper","}"],
+  ["comment.robot","    # 0, 1"]
+],[
+   "start",
+  ["keyword","    END"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword.control.robot","Continue a loop from the next iteration on condition"]
+],[
+   "start",
+  ["keyword","    FOR    "],
+  ["entity.name.variable.wrapper","${"],
+  ["entity.name.variable","i"],
+  ["entity.name.variable.wrapper","}"],
+  ["keyword","    IN RANGE    "],
+  ["constant.numeric.robot","3"]
+],[
+   "start",
+  ["storage.type.function","        Continue For Loop If"],
+  ["text","    "],
+  ["entity.name.variable.wrapper","${"],
+  ["entity.name.variable","i"],
+  ["entity.name.variable.wrapper","} ="],
+  ["text","= "],
+  ["constant.numeric.robot","1"]
+],[
+   "start",
+  ["storage.type.function","        Log"],
+  ["text","    "],
+  ["entity.name.variable.wrapper","${"],
+  ["entity.name.variable","i"],
+  ["entity.name.variable.wrapper","}"],
+  ["comment.robot","    # 0, 2"]
+],[
+   "start",
+  ["keyword","    END"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword.control.robot","Create a scalar variable"]
+],[
+   "start",
+  ["text","    "],
+  ["entity.name.variable.wrapper","${"],
+  ["entity.name.variable","animal"],
+  ["entity.name.variable.wrapper","}="],
+  ["text","    Set Variable    dog"]
+],[
+   "start",
+  ["storage.type.function","    Log"],
+  ["text","    "],
+  ["entity.name.variable.wrapper","${"],
+  ["entity.name.variable","animal"],
+  ["entity.name.variable.wrapper","}"],
+  ["comment.robot","    # dog"]
+],[
+   "start",
+  ["storage.type.function","    Log"],
+  ["text","    "],
+  ["entity.name.variable.wrapper","${"],
+  ["entity.name.variable","animal"],
+  ["entity.name.variable.wrapper","}"],
+  ["text","["],
+  ["constant.numeric.robot","0"],
+  ["text","]"],
+  ["comment.robot","    # d"]
+],[
+   "start",
+  ["storage.type.function","    Log"],
+  ["text","    "],
+  ["entity.name.variable.wrapper","${"],
+  ["entity.name.variable","animal"],
+  ["entity.name.variable.wrapper","}"],
+  ["text","[-"],
+  ["constant.numeric.robot","1"],
+  ["text","]"],
+  ["comment.robot","    # g"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword.control.robot","Create a number variable"]
+],[
+   "start",
+  ["text","    "],
+  ["entity.name.variable.wrapper","${"],
+  ["entity.name.variable","π"],
+  ["entity.name.variable.wrapper","}="],
+  ["text","    Set Variable    "],
+  ["entity.name.variable.wrapper","${"],
+  ["constant.numeric.robot","3.14"],
+  ["entity.name.variable.wrapper","}"]
+],[
+   "start",
+  ["storage.type.function","    Log"],
+  ["text","    "],
+  ["entity.name.variable.wrapper","${"],
+  ["entity.name.variable","π"],
+  ["entity.name.variable.wrapper","}"],
+  ["comment.robot","    # 3.14"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword.control.robot","Create a list variable"]
+],[
+   "start",
+  ["text","    "],
+  ["entity.name.variable.wrapper","@{"],
+  ["entity.name.variable","animals"],
+  ["entity.name.variable.wrapper","}="],
+  ["text","    Create List    dog    cat    bear"]
+],[
+   "start",
+  ["storage.type.function","    Log"],
+  ["text","    "],
+  ["entity.name.variable.wrapper","${"],
+  ["entity.name.variable","animals"],
+  ["entity.name.variable.wrapper","}"],
+  ["comment.robot","    # ['dog', 'cat', 'bear']"]
+],[
+   "start",
+  ["storage.type.function","    Log"],
+  ["text","    "],
+  ["entity.name.variable.wrapper","${"],
+  ["entity.name.variable","animals"],
+  ["entity.name.variable.wrapper","}"],
+  ["text","["],
+  ["constant.numeric.robot","0"],
+  ["text","]"],
+  ["comment.robot","    # dog"]
+],[
+   "start",
+  ["storage.type.function","    Log"],
+  ["text","    "],
+  ["entity.name.variable.wrapper","${"],
+  ["entity.name.variable","animals"],
+  ["entity.name.variable.wrapper","}"],
+  ["text","[-"],
+  ["constant.numeric.robot","1"],
+  ["text","]"],
+  ["comment.robot","    # bear"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword.control.robot","Create a dictionary variable"]
+],[
+   "start",
+  ["text","    "],
+  ["entity.name.variable.wrapper","&{"],
+  ["entity.name.variable","dictionary"],
+  ["entity.name.variable.wrapper","}="],
+  ["text","    Create Dictionary    key1=value1    key2=value2"]
+],[
+   "start",
+  ["storage.type.function","    Log"],
+  ["text","    "],
+  ["entity.name.variable.wrapper","${"],
+  ["entity.name.variable","dictionary"],
+  ["entity.name.variable.wrapper","}"],
+  ["comment.robot","    # {'key1': 'value1', 'key2': 'value2'}"]
+],[
+   "start",
+  ["storage.type.function","    Log"],
+  ["text","    "],
+  ["entity.name.variable.wrapper","${"],
+  ["entity.name.variable","dictionary"],
+  ["entity.name.variable.wrapper","}"],
+  ["text","[key1]"],
+  ["comment.robot","    # value1"]
+],[
+   "start",
+  ["storage.type.function","    Log"],
+  ["text","    "],
+  ["entity.name.variable.wrapper","${"],
+  ["entity.name.variable","dictionary.key2"],
+  ["entity.name.variable.wrapper","}"],
+  ["comment.robot","    # value2"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword.control.robot","Access the items in a sequence (list, string)"]
+],[
+   "start",
+  ["text","    "],
+  ["entity.name.variable.wrapper","${"],
+  ["entity.name.variable","string"],
+  ["entity.name.variable.wrapper","}="],
+  ["text","    Set Variable    Hello world!"]
+],[
+   "start",
+  ["storage.type.function","    Log"],
+  ["text","    "],
+  ["entity.name.variable.wrapper","${"],
+  ["entity.name.variable","string"],
+  ["entity.name.variable.wrapper","}"],
+  ["text","["],
+  ["constant.numeric.robot","0"],
+  ["text","]"],
+  ["comment.robot","    # H"]
+],[
+   "start",
+  ["storage.type.function","    Log"],
+  ["text","    "],
+  ["entity.name.variable.wrapper","${"],
+  ["entity.name.variable","string"],
+  ["entity.name.variable.wrapper","}"],
+  ["text","[:"],
+  ["constant.numeric.robot","5"],
+  ["text","]"],
+  ["comment.robot","    # Hello"]
+],[
+   "start",
+  ["storage.type.function","    Log"],
+  ["text","    "],
+  ["entity.name.variable.wrapper","${"],
+  ["entity.name.variable","string"],
+  ["entity.name.variable.wrapper","}"],
+  ["text","["],
+  ["constant.numeric.robot","6"],
+  ["text",":]"],
+  ["comment.robot","    # world!"]
+],[
+   "start",
+  ["storage.type.function","    Log"],
+  ["text","    "],
+  ["entity.name.variable.wrapper","${"],
+  ["entity.name.variable","string"],
+  ["entity.name.variable.wrapper","}"],
+  ["text","[-"],
+  ["constant.numeric.robot","1"],
+  ["text","]"],
+  ["comment.robot","    # !"]
+],[
+   "start",
+  ["text","    "],
+  ["entity.name.variable.wrapper","@{"],
+  ["entity.name.variable","list"],
+  ["entity.name.variable.wrapper","}="],
+  ["text","    Create List    one    two    three    four    five"]
+],[
+   "start",
+  ["storage.type.function","    Log"],
+  ["text","    "],
+  ["entity.name.variable.wrapper","${"],
+  ["entity.name.variable","list"],
+  ["entity.name.variable.wrapper","}"],
+  ["comment.robot","    # ['one', 'two', 'three', 'four', 'five']"]
+],[
+   "start",
+  ["storage.type.function","    Log"],
+  ["text","    "],
+  ["entity.name.variable.wrapper","${"],
+  ["entity.name.variable","list"],
+  ["entity.name.variable.wrapper","}"],
+  ["text","["],
+  ["constant.numeric.robot","0"],
+  ["text",":"],
+  ["constant.numeric.robot","6"],
+  ["text",":"],
+  ["constant.numeric.robot","2"],
+  ["text","]"],
+  ["comment.robot","    # ['one', 'three', 'five']"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword.control.robot","Call a custom Python library"]
+],[
+   "start",
+  ["text","    "],
+  ["entity.name.variable.wrapper","${"],
+  ["entity.name.variable","greeting"],
+  ["entity.name.variable.wrapper","}="],
+  ["text","    MyLibrary.Get Greeting"]
+],[
+   "start",
+  ["storage.type.function","    Log"],
+  ["text","    "],
+  ["entity.name.variable.wrapper","${"],
+  ["entity.name.variable","greeting"],
+  ["entity.name.variable.wrapper","}"],
+  ["comment.robot","    # Hello!"]
+],[
+   "start",
+  ["text","    "],
+  ["entity.name.variable.wrapper","${"],
+  ["entity.name.variable","greeting"],
+  ["entity.name.variable.wrapper","}="],
+  ["text","    HelloLibrary.Get Greeting"]
+],[
+   "start",
+  ["storage.type.function","    Log"],
+  ["text","    "],
+  ["entity.name.variable.wrapper","${"],
+  ["entity.name.variable","greeting"],
+  ["entity.name.variable.wrapper","}"],
+  ["comment.robot","    # Hello!"]
+],[
+   "start",
+  ["text","    "],
+  ["entity.name.variable.wrapper","${"],
+  ["entity.name.variable","greeting"],
+  ["entity.name.variable.wrapper","}="],
+  ["text","    HowdyLibrary.Get Greeting"]
+],[
+   "start",
+  ["storage.type.function","    Log"],
+  ["text","    "],
+  ["entity.name.variable.wrapper","${"],
+  ["entity.name.variable","greeting"],
+  ["entity.name.variable.wrapper","}"],
+  ["comment.robot","    # Howdy!"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword.control.robot","Call a keyword from a separate resource file"]
+],[
+   "start",
+  ["storage.type.function","    My keyword in a separate resource file"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword.control.robot","Access a variable in a separate variable file"]
+],[
+   "start",
+  ["storage.type.function","    Log"],
+  ["text","    "],
+  ["entity.name.variable.wrapper","${"],
+  ["entity.name.variable","MY_VARIABLE_FROM_A_SEPARATE_VARIABLE_FILE"],
+  ["entity.name.variable.wrapper","}"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword.control.robot","Split arguments to multiple lines"]
+],[
+   "start",
+  ["storage.type.function","    A keyword with any number of arguments"]
+],[
+   "start",
+  ["text","    ...    arg1"]
+],[
+   "start",
+  ["text","    ...    arg2"]
+],[
+   "start",
+  ["text","    ...    arg3"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword.control.robot","Log available variables"]
+],[
+   "start",
+  ["storage.type.function","    Log Variables"]
+],[
+   "start",
+  ["comment.robot","    # ${/} = /"]
+],[
+   "start",
+  ["comment.robot","    # &{DICTIONARY} = { string=cat | number=1 | list=['one', 'two', 'three'] }"]
+],[
+   "start",
+  ["comment.robot","    # ${OUTPUT_DIR} = /Users/<username>/..."]
+],[
+   "start",
+  ["comment.robot","    # ..."]
+],[
+   "start"
+],[
+   "start",
+  ["keyword.control.robot","Evaluate Python expressions"]
+],[
+   "start",
+  ["text","    "],
+  ["entity.name.variable.wrapper","${"],
+  ["entity.name.variable","path"],
+  ["entity.name.variable.wrapper","}="],
+  ["text","    Evaluate    os.environ.get(\"PATH\")"]
+],[
+   "start",
+  ["text","    "],
+  ["entity.name.variable.wrapper","${"],
+  ["entity.name.variable","path"],
+  ["entity.name.variable.wrapper","}="],
+  ["text","    Set Variable    "],
+  ["entity.name.variable.wrapper","${{"],
+  ["entity.name.variable","os.environ.get(\"PATH\")"],
+  ["entity.name.variable.wrapper","}}"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword.control.robot","Use special variables"]
+],[
+   "start",
+  ["storage.type.function","    Log"],
+  ["text","    "],
+  ["constant.language","${EMPTY}"],
+  ["comment.robot","    # Like the ${SPACE}, but without the space."]
+],[
+   "start",
+  ["storage.type.function","    Log"],
+  ["text","    "],
+  ["constant.language","${False}"],
+  ["comment.robot","    # Boolean False."]
+],[
+   "start",
+  ["storage.type.function","    Log"],
+  ["text","    "],
+  ["constant.language","${None}"],
+  ["comment.robot","    # Python None"]
+],[
+   "start",
+  ["storage.type.function","    Log"],
+  ["text","    "],
+  ["constant.language","${null}"],
+  ["comment.robot","    # Java null."]
+],[
+   "start",
+  ["storage.type.function","    Log"],
+  ["text","    "],
+  ["constant.language","${SPACE}"],
+  ["comment.robot","    # ASCII space (\\x20)."]
+],[
+   "start",
+  ["storage.type.function","    Log"],
+  ["text","    "],
+  ["constant.language","${SPACE * 4}"],
+  ["comment.robot","    # Four spaces."]
+],[
+   "start",
+  ["storage.type.function","    Log"],
+  ["text","    \""],
+  ["constant.language","${SPACE}"],
+  ["text","\""],
+  ["comment.robot","    # Quoted space (\" \")."]
+],[
+   "start",
+  ["storage.type.function","    Log"],
+  ["text","    "],
+  ["constant.language","${True}"],
+  ["comment.robot","    # Boolean True."]
+],[
+   "start",
+  ["storage.type.function","    LOG"],
+  ["text","    "],
+  ["constant.language","${CURDIR}"],
+  ["comment.robot","  # Current directory"]
+],[
+   "start"
+]]
