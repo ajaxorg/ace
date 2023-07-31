@@ -8,7 +8,7 @@ var AstroHighlightRules = function () {
   HtmlHighlightRules.call(this);
 
   var astro = {
-    token: "paren.lparen.astro",
+    token: "paren.quasi.start.astro.level3",
     regex: /{/,
     next: "inline-js-start"
   };
@@ -16,50 +16,50 @@ var AstroHighlightRules = function () {
   for (var key in this.$rules) {
     if (key.startsWith("js") || key.startsWith("css") || key.startsWith("comment")) continue;
     this.$rules[key].unshift(astro);
-  }
+  };
 
   this.$rules.start.unshift({
     token: "comment",
-    regex: /^---$/,
+    regex: "---",
     onMatch: function (value, state, stack) {
-      stack.splice(0)
-      return this.token
+      stack.splice(0);
+      return this.token;
     },
     next: "js-start"
-  })
+  });
 
   this.embedRules(JavascriptHighlightRules, "js-", [{
-    regex: /^---$/,
+    regex: "---",
     token: "comment",
     next: "start",
     onMatch: function (value, state, stack) {
       stack.splice(0);
-      return this.token
+      return this.token;
     }
   }]);
 
   this.embedRules(JavascriptHighlightRules, "inline-js-", [{
     regex: /}/,
-    token: "paren.rparen.astro",
+    token: "paren.quasi.end.astro.level3",
     onMatch: function (value, state, stack) {
       if (stack.length) {
         if (stack.includes("inline-js-start")) {
-          stack.shift()
-          this.next = stack.shift()
-          if (this.next.indexOf("string") !== -1) return "paren.quasi.end"
-          return "paren.rparen"
+          stack.shift();
+          this.next = stack.shift();
+          if (this.next.indexOf("string") !== -1) return "paren.quasi.end";
+          return "paren.rparen";
         } else {
           if (stack.includes("string.attribute-value.xml0")) {
-            this.next = "string.attribute-value.xml0"
+            this.next = "string.attribute-value.xml0";
           }
           else if (stack.includes("tag_stuff")) {
-            this.next = "tag_stuff"
+            this.next = "tag_stuff";
           }
-          return this.token
+          return this.token;
         }
       } else {
-        this.next = this.nextState
-        return this.token
+        this.next = this.nextState;
+        return this.token;
       }
     },
     nextState: "start"
@@ -84,14 +84,14 @@ var AstroHighlightRules = function () {
           }
           this.next = stack[0] || prefix + "start";
           return [{ type: this.token, value: value }];
-        }
+        };
         break;
-      }
-    }
-  }
+      };
+    };
+  };
 
-  overwriteJSXendRule.call(this, "js-")
-  overwriteJSXendRule.call(this, "inline-js-")
+  overwriteJSXendRule.call(this, "js-");
+  overwriteJSXendRule.call(this, "inline-js-");
 
   this.normalizeRules();
 };

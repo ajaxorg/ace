@@ -4,7 +4,6 @@ var oop = require("../lib/oop");
 var HtmlMode = require("./html").Mode;
 var AstroHighlightRules = require("./astro_highlight_rules").AstroHighlightRules;
 var HtmlBehaviour = require("./behaviour/html").HtmlBehaviour;
-var HtmlFoldMode = require("./folding/html").FoldMode;
 
 var Mode = function() {
   HtmlMode.call(this);
