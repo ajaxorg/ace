@@ -2,6 +2,30 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.23.4](https://github.com/ajaxorg/ace/compare/v1.23.3...v1.23.4) (2023-07-12)
+
+
+### Bug Fixes
+
+* filterText triggered selection range removal when completions range was present ([#5249](https://github.com/ajaxorg/ace/issues/5249)) ([b586e4d](https://github.com/ajaxorg/ace/commit/b586e4d574bf780fc38f1ac0d034276272b36ad3))
+
+### [1.23.3](https://github.com/ajaxorg/ace/compare/v1.23.2...v1.23.3) (2023-07-10)
+
+
+### Bug Fixes
+
+* android bug when deleting multiple lines ([#5248](https://github.com/ajaxorg/ace/issues/5248)) ([bd066ff](https://github.com/ajaxorg/ace/commit/bd066ffef88ca74f5ac32349d3e868cfa875a47b)), closes [#5087](https://github.com/ajaxorg/ace/issues/5087)
+* update jshint version to 2.13.6; change esversion to target ECMAScript 11 ([#5243](https://github.com/ajaxorg/ace/issues/5243)) ([301aee9](https://github.com/ajaxorg/ace/commit/301aee91b5974d9fb31d646466ed301c5c3b8249))
+
+### [1.23.2](https://github.com/ajaxorg/ace/compare/v1.23.1...v1.23.2) (2023-07-07)
+
+
+### Bug Fixes
+
+* **autocomplete:** fix a11y violations ([#5241](https://github.com/ajaxorg/ace/issues/5241)) ([decb615](https://github.com/ajaxorg/ace/commit/decb6154198105289170303b7434c524eaf9fda8))
+* bug in guttertooltip when `tooltipsFollowsMouse` set to false ([#5217](https://github.com/ajaxorg/ace/issues/5217)) ([67d318e](https://github.com/ajaxorg/ace/commit/67d318ed25d5b45789462850e6b96aac2931591f))
+* typo in function name ([#5229](https://github.com/ajaxorg/ace/issues/5229)) ([6e99055](https://github.com/ajaxorg/ace/commit/6e99055c46f443271161e40fe15372d1d8ae9f42))
+
 ### [1.23.1](https://github.com/ajaxorg/ace/compare/v1.23.0...v1.23.1) (2023-06-27)
 
 ## [1.23.0](https://github.com/ajaxorg/ace/compare/v1.22.1...v1.23.0) (2023-06-21)

@@ -2889,13 +2889,19 @@ config.defineOptions(Editor.prototype, "editor", {
 
             var gutterKeyboardHandler;
 
-            // Prevent focus to be captured when tabbing through the page. When focus is set to the content div, 
-            // press Enter key to give focus to Ace and press Esc to again allow to tab through the page.
+            // If keyboard a11y mode is enabled we:
+            // - Enable keyboard operability gutter.
+            // - Prevent tab-trapping.
+            // - Hide irrelevant elements from assistive technology.
+            // - On Windows, set more lines to the textarea.
             if (value){
                 this.renderer.enableKeyboardAccessibility = true;
                 this.renderer.keyboardFocusClassName = "ace_keyboard-focus";
 
                 this.textInput.getElement().setAttribute("tabindex", -1);
+                // VoiceOver on Mac OS works best with single line in the textarea, the screen readers on
+                // Windows work best with multiple lines in the textarea.
+                this.textInput.setNumberOfExtraLines(useragent.isWin ? 3 : 0);
                 this.renderer.scroller.setAttribute("tabindex", 0);
                 this.renderer.scroller.setAttribute("role", "group");
                 this.renderer.scroller.setAttribute("aria-roledescription", nls("editor"));
@@ -2926,6 +2932,7 @@ config.defineOptions(Editor.prototype, "editor", {
                 this.renderer.enableKeyboardAccessibility = false;
 
                 this.textInput.getElement().setAttribute("tabindex", 0);
+                this.textInput.setNumberOfExtraLines(0);
                 this.renderer.scroller.setAttribute("tabindex", -1);
                 this.renderer.scroller.removeAttribute("role");
                 this.renderer.scroller.removeAttribute("aria-roledescription");
