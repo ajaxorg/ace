@@ -16,7 +16,7 @@ var AstroHighlightRules = function () {
   for (var key in this.$rules) {
     if (key.startsWith("js") || key.startsWith("css") || key.startsWith("comment")) continue;
     this.$rules[key].unshift(astro);
-  };
+  }
 
   this.$rules.start.unshift({
     token: "comment",
@@ -86,8 +86,8 @@ var AstroHighlightRules = function () {
           return [{ type: this.token, value: value }];
         };
         break;
-      };
-    };
+      }
+    }
   };
 
   overwriteJSXendRule.call(this, "js-");
