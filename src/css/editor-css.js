@@ -455,6 +455,13 @@ module.exports = `
     font-weight: normal;
     letter-spacing: normal;
     pointer-events: none;
+    max-height: 150px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.ace_tooltip * {
+    text-wrap: wrap;    
 }
 
 .ace_tooltip.ace_dark {
