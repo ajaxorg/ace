@@ -330,6 +330,108 @@ module.exports = {
             });
         }
     },
+    "test: gets completions only from matching completers for trigger characters": function (done) {
+        var editor = initEditor("document");
+
+        var dotCompleterCalls = 0;
+        var twoBracketsCompleterCalls = 0;
+        var oneBracketCompleterCalls = 0;
+
+        editor.completers = [
+            {
+                getCompletions: function (editor, session, pos, prefix, callback) {
+                    dotCompleterCalls++;
+                    var completions = [
+                        {
+                            caption: "append",
+                            value: "append"
+                        }, {
+                            caption: "all",
+                            value: "all"
+                        }
+                    ];
+                    callback(null, completions);
+                },
+                triggerCharacters: ["."]
+            },
+            {
+                getCompletions: function (editor, session, pos, prefix, callback) {
+                    oneBracketCompleterCalls++;
+                    var completions = [
+                        {
+                            caption: "banana",
+                            value: "banana"
+                        }, {
+                            caption: "apple",
+                            value: "apple"
+                        }, {
+                            caption: "orange",
+                            value: "orange"
+                        }
+                    ];
+                    callback(null, completions);
+                },
+                triggerCharacters: ["{"]
+            },
+            {
+                getCompletions: function (editor, session, pos, prefix, callback) {
+                    twoBracketsCompleterCalls++;
+                    var completions = [
+                        {
+                            caption: "fruit",
+                            value: "fruit"
+                        }
+                    ];
+                    callback(null, completions);
+                },
+                triggerCharacters: ["{", "["]
+            }
+        ];
+
+        editor.moveCursorTo(0, 8);
+        sendKey(".");
+        var popup = editor.completer.popup;
+        check(function () {
+            assert.equal(popup.data.length, 2);
+            editor.onCommandKey(null, 0, 13);
+            assert.equal(editor.getValue(), "document.all");
+            assert.equal(dotCompleterCalls, 1);
+            assert.equal(twoBracketsCompleterCalls, 0);
+            assert.equal(oneBracketCompleterCalls, 0);
+
+            editor.moveCursorTo(0, 12);
+            sendKey("{");
+            check(function () {
+                assert.equal(popup.data.length, 4);
+                editor.onCommandKey(null, 0, 13);
+                assert.equal(editor.getValue(), "document.all{apple");
+                assert.equal(dotCompleterCalls, 1);
+                assert.equal(twoBracketsCompleterCalls, 1);
+                assert.equal(oneBracketCompleterCalls, 1);
+
+                editor.moveCursorTo(0, 18);
+                sendKey("[");
+                check(function () {
+                    assert.equal(popup.data.length, 1);
+                    editor.onCommandKey(null, 0, 13);
+                    assert.equal(editor.getValue(), "document.all{apple[fruit");
+                    assert.equal(dotCompleterCalls, 1);
+                    assert.equal(twoBracketsCompleterCalls, 2);
+                    assert.equal(oneBracketCompleterCalls, 1);
+
+                    done();
+                });
+            });
+        });
+
+        function check(callback) {
+            popup = editor.completer.popup;
+            popup.renderer.on("afterRender", function wait() {
+                popup.renderer.off("afterRender", wait);
+                callback();
+            });
+        }
+    },
     "test: empty message if no suggestions available": function(done) {
         var editor = initEditor("");
         var emptyMessageText = "No suggestions.";
