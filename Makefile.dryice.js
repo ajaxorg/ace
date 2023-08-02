@@ -781,7 +781,7 @@ function namespace(ns) {
 function exportAce(ns, modules, requireBase, extModules) {
     requireBase = requireBase || "window";
     return function(text) {
-        /*globals REQUIRE_NS, MODULES*/
+        /*globals REQUIRE_NS, MODULES, self*/
         var template = function() {
             (function() {
                 REQUIRE_NS.require(MODULES, function(a) {
@@ -789,13 +789,19 @@ function exportAce(ns, modules, requireBase, extModules) {
                         a.config.init(true);
                         a.define = REQUIRE_NS.define;
                     }
-                    if (!window.NS)
-                        window.NS = a;
+                    var global = (function () {
+                        return this;
+                    })();
+                    if (!global && typeof window != "undefined") global = window; // can happen in strict mode
+                    if (!global && typeof self != "undefined") global = self; // can happen in webworker
+                    
+                    if (!global.NS)
+                        global.NS = a;
                     for (var key in a) if (a.hasOwnProperty(key))
-                        window.NS[key] = a[key];
-                    window.NS["default"] = window.NS;
+                        global.NS[key] = a[key];
+                    global.NS["default"] = global.NS;
                     if (typeof module == "object" && typeof exports == "object" && module) {
-                        module.exports = window.NS;
+                        module.exports = global.NS;
                     }
                 });
             })();
