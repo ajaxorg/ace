@@ -667,7 +667,11 @@ class CompletionProvider {
         var matches = [];
         this.completers = editor.completers;
         var matchingCompleters = util.getCompletersMatchingTriggerCharacter(editor);
-        if (matchingCompleters.length === 0) matchingCompleters = editor.completers;
+        // if there are no matches or there is a prefix, and the prefix is longer than the threshold,
+        // then use all completers
+        if (matchingCompleters.length === 0 || (prefix && prefix.length >= editor.$liveAutocompletionThreshold)) {
+            matchingCompleters = editor.completers;
+        }
         var total = matchingCompleters.length;
         matchingCompleters.forEach(function(completer, i) {
             completer.getCompletions(editor, session, pos, prefix, function(err, results) {

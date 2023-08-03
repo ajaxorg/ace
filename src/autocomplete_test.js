@@ -432,6 +432,59 @@ module.exports = {
             });
         }
     },
+    "test: trigger all completers if there is a textual(A-Za-z) trigger character": function (done) {
+        var editor = initEditor("");
+        editor.setOptions({
+            liveAutocompletionThreshold: 0
+        });
+
+        editor.completers = [
+            {
+                getCompletions: function (editor, session, pos, prefix, callback) {
+                    var completions = [
+                        {
+                            caption: "agent",
+                            value: "agent"
+                        }, {
+                            caption: "alarm",
+                            value: "alarm"
+                        }
+                    ];
+                    callback(null, completions);
+                },
+                triggerCharacters: ["a"]
+            },
+            {
+                getCompletions: function (editor, session, pos, prefix, callback) {
+                    var completions = [
+                        {
+                            caption: "abbath",
+                            value: "abbath"
+                        }
+                    ];
+                    callback(null, completions);
+                }
+            }
+        ];
+        
+        editor.moveCursorTo(0, 0);
+        user.type("a");
+        var popup = editor.completer.popup;
+        check(function () {
+            assert.equal(popup.data.length, 3);
+            editor.onCommandKey(null, 0, 13);
+            assert.equal(editor.getValue(), "abbath");
+            done();
+        });
+
+        function check(callback) {
+            popup = editor.completer.popup;
+            popup.renderer.on("afterRender", function wait() {
+                popup.renderer.off("afterRender", wait);
+                callback();
+            });
+        }
+    },
     "test: empty message if no suggestions available": function(done) {
         var editor = initEditor("");
         var emptyMessageText = "No suggestions.";
