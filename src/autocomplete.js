@@ -324,9 +324,9 @@ class Autocomplete {
         this.updateCompletions(false, options);
     }
 
-    getCompletionProvider() {
+    getCompletionProvider(initialPosition) {
         if (!this.completionProvider)
-            this.completionProvider = new CompletionProvider();
+            this.completionProvider = new CompletionProvider(initialPosition);
         return this.completionProvider;
     }
 
@@ -370,7 +370,11 @@ class Autocomplete {
         this.base = session.doc.createAnchor(pos.row, pos.column - prefix.length);
         this.base.$insertRight = true;
         var completionOptions = { exactMatch: this.exactMatch };
-        this.getCompletionProvider().provideCompletions(this.editor, completionOptions, function(err, completions, finished) {
+        this.getCompletionProvider({
+            prefix,
+            base: this.base,
+            pos
+        }).provideCompletions(this.editor, completionOptions, function(err, completions, finished) {
             var filtered = completions.filtered;
             var prefix = util.getCompletionPrefix(this.editor);
 
@@ -588,8 +592,12 @@ Autocomplete.startCommand = {
  * This class is responsible for providing completions and inserting them to the editor
  */
 class CompletionProvider {
-    
-    constructor() {
+
+    /**
+     * @param {{base: Anchor, pos: Position, prefix: string}} initialPosition
+     */
+    constructor(initialPosition) {
+        this.initialPosition = initialPosition;
         this.active = true;
     }
     
@@ -611,20 +619,33 @@ class CompletionProvider {
             // TODO add support for options.deleteSuffix
             if (!this.completions)
                 return false;
-            if (this.completions.filterText) {
+            
+            var replaceBefore = this.completions.filterText.length;
+            var replaceAfter = 0;
+            if (data.range && data.range.start.row === data.range.end.row) {
+                replaceBefore -= this.initialPosition.prefix.length;
+                replaceBefore += this.initialPosition.pos.column - data.range.start.column;
+                replaceAfter += data.range.end.column - this.initialPosition.pos.column;
+            }
+
+            if (replaceBefore || replaceAfter) {
                 var ranges;
                 if (editor.selection.getAllRanges) {
                     ranges = editor.selection.getAllRanges();
-                } else {
+                }
+                else {
                     ranges = [editor.getSelectionRange()];
                 }
                 for (var i = 0, range; range = ranges[i]; i++) {
-                    range.start.column -= this.completions.filterText.length;
+                    range.start.column -= replaceBefore;
+                    range.end.column += replaceAfter;
                     editor.session.remove(range);
                 }
             }
-            if (data.snippet)
-                snippetManager.insertSnippet(editor, data.snippet, {range: data.range});
+          
+            if (data.snippet) {
+                snippetManager.insertSnippet(editor, data.snippet, {range: undefined});
+            }
             else {
                 this.$insertString(editor, data);
             }
@@ -639,23 +660,7 @@ class CompletionProvider {
 
     $insertString(editor, data) {
         var text = data.value || data;
-        if (data.range) {
-            if (editor.inVirtualSelectionMode) {
-                return editor.session.replace(data.range, text);
-            }
-            editor.forEachSelection(() => {
-                var range = editor.getSelectionRange();
-                if (data.range.compareRange(range) === 0) {
-                    editor.session.replace(data.range, text);
-                }
-                else {
-                    editor.insert(text);
-                }
-            }, null, {keepOrder: true});
-        }
-        else {
-            editor.execCommand("insertstring", text);
-        }
+        editor.execCommand("insertstring", text);
     }
 
     gatherCompletions(editor, callback) {
