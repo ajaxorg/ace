@@ -611,7 +611,7 @@ class CompletionProvider {
             // TODO add support for options.deleteSuffix
             if (!this.completions)
                 return false;
-            if (this.completions.filterText && !data.range) {
+            if (this.completions.filterText) {
                 var ranges;
                 if (editor.selection.getAllRanges) {
                     ranges = editor.selection.getAllRanges();
