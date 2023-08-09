@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.24.0](https://github.com/ajaxorg/ace/compare/v1.23.4...v1.24.0) (2023-08-09)
+
+
+### Features
+
+* Add support for Unicode boundaries ([#5265](https://github.com/ajaxorg/ace/issues/5265)) ([1e6fcf3](https://github.com/ajaxorg/ace/commit/1e6fcf349d222715429ddc9fe6a38ec1f6d72ab1))
+* Allow more lines in hidden textarea to improve screen reader experience on Windows ([#5225](https://github.com/ajaxorg/ace/issues/5225)) ([bccff5a](https://github.com/ajaxorg/ace/commit/bccff5ae21b86004c2a4ab4a86a989c61e728ebf))
+* Cuttlefish mode ([#5278](https://github.com/ajaxorg/ace/issues/5278)) ([9cddf64](https://github.com/ajaxorg/ace/commit/9cddf64ac51fc5e7c5474e7aeaa2ef8f069220db))
+
+
+### Bug Fixes
+
+* add missing SQL keywords: IS and IN ([#5263](https://github.com/ajaxorg/ace/issues/5263)) ([c731164](https://github.com/ajaxorg/ace/commit/c731164315a757a5e0380f82eeef105a17b24b03))
+* bug in lua.lua example file kitchen-sink ([#5258](https://github.com/ajaxorg/ace/issues/5258)) ([6549570](https://github.com/ajaxorg/ace/commit/6549570310983999a1fd3ce52bc5bf8b4004402f))
+* support more environments ([#5266](https://github.com/ajaxorg/ace/issues/5266)) ([b196806](https://github.com/ajaxorg/ace/commit/b196806eb2937e7ee56e42b482b7b3bd5e3c9d79))
+
 ### [1.23.4](https://github.com/ajaxorg/ace/compare/v1.23.3...v1.23.4) (2023-07-12)
 
 
