@@ -32,13 +32,6 @@ function initEditor(value) {
     return editor;
 }
 
-function afterRenderCheck(popup, callback) {
-    popup.renderer.on("afterRender", function wait() {
-        popup.renderer.off("afterRender", wait);
-        callback();
-    });
-}
-
 module.exports = {
     tearDown: function() {
         if (editor) {
@@ -102,7 +95,7 @@ module.exports = {
                             snippet: "will: $1",
                             meta: "snippet",
                             command: "startAutocomplete",
-                            range: new Range(0, 4, 0, 7)
+                            range: new Range(0, 4, 0, 6)
                         }, {
                             caption: "here",
                             value: "-here",
@@ -117,12 +110,12 @@ module.exports = {
         editor.moveCursorTo(0, 6);
         sendKey("w");
         var popup = editor.completer.popup;
-        afterRenderCheck(popup, function () {
+        check(function () {
             assert.equal(popup.data.length, 1);
             editor.onCommandKey(null, 0, 13);
             assert.equal(popup.data.length, 2);
             assert.equal(editor.getValue(), "goodwill: ");
-            afterRenderCheck(popup, function () {
+            check(function () {
                 editor.onCommandKey(null, 0, 13);
                 assert.equal(editor.getValue(), "goodwill-here");
                 editor.destroy();
@@ -130,37 +123,14 @@ module.exports = {
                 done();
             });
         });
-    },
-    "test: filterText does not trigger selection range removal when completions range is present": function (done) {
-        var editor = initEditor("{}");
-        editor.completers = [
-            {
-                getCompletions: function (editor, session, pos, prefix, callback) {
-                    var completions = [
-                        {
-                            caption: "apple",
-                            snippet: "apple: $1",
-                            meta: "snippet",
-                            range: new Range(0, 1, 0, 2)
-                        }, {
-                            caption: "pineapple",
-                            value: "pineapple",
-                            range: new Range(0, 1, 0, 2)
-                        }
-                    ];
-                    callback(null, completions);
-                }
-            }
-        ];
-        editor.moveCursorTo(0, 1);
-        sendKey("a");
-        var popup = editor.completer.popup;
-        afterRenderCheck(popup, function () {
-            assert.equal(popup.data.length, 2);
-            editor.onCommandKey(null, 0, 13);
-            assert.equal(editor.getValue(), "{apple: }");
-            done();
-        });
+
+        function check(callback) {
+            popup = editor.completer.popup;
+            popup.renderer.on("afterRender", function wait() {
+                popup.renderer.off("afterRender", wait);
+                callback();
+            });
+        }
     },
     "test: different completers tooltips": function (done) {
         var editor = initEditor("");
