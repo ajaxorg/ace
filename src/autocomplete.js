@@ -372,7 +372,6 @@ class Autocomplete {
         var completionOptions = { exactMatch: this.exactMatch };
         this.getCompletionProvider({
             prefix,
-            base: this.base,
             pos
         }).provideCompletions(this.editor, completionOptions, function(err, completions, finished) {
             var filtered = completions.filtered;
@@ -594,7 +593,7 @@ Autocomplete.startCommand = {
 class CompletionProvider {
 
     /**
-     * @param {{base: Anchor, pos: Position, prefix: string}} initialPosition
+     * @param {{pos: Position, prefix: string}} initialPosition
      */
     constructor(initialPosition) {
         this.initialPosition = initialPosition;
