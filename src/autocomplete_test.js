@@ -131,7 +131,7 @@ module.exports = {
             });
         });
     },
-    "test: correct completion replacement range when filterText has more than one letter": function (done) {
+    "test: correct completion replacement range when completion prefix has more than one letter": function (done) {
         var editor = initEditor("<");
 
         editor.completers = [
@@ -173,7 +173,7 @@ module.exports = {
             }, 10);
         }
     },
-    "test: filterText does not trigger selection range removal when completions range is present": function (done) {
+    "test: symbols after selection are not removed when replacement range is present": function (done) {
         var editor = initEditor("{}");
         editor.completers = [
             {

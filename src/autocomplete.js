@@ -644,7 +644,7 @@ class CompletionProvider {
             }
           
             if (data.snippet) {
-                snippetManager.insertSnippet(editor, data.snippet, {range: undefined});
+                snippetManager.insertSnippet(editor, data.snippet);
             }
             else {
                 this.$insertString(editor, data);
