@@ -2,14 +2,23 @@
 
 "use strict";
 /**
- * @typedef IEditSession
- * @type {EditSession & Ace.OptionsProvider<Ace.EditSessionOptions> & Ace.Folding & Ace.EventEmitter & Ace.EditSessionProperties & import("./edit_session/bracket_match").BracketMatch}
- * @export
- */
-/**
  * @typedef IDocument
  * @type {import("./document").IDocument}
  */
+/**
+ * @typedef IFolding
+ * @type {import("./edit_session/folding").Folding}
+ */
+/**
+ * @typedef UndoManager
+ * @type {import("./undomanager").UndoManager}
+ */
+/**
+ * @typedef IEditSession
+ * @type {EditSession & Ace.OptionsProvider<Ace.EditSessionOptions> & IFolding & Ace.EventEmitter & Ace.EditSessionProperties & import("./edit_session/bracket_match").BracketMatch}
+ * @export
+ */
+
 
 var oop = require("./lib/oop");
 var lang = require("./lib/lang");
@@ -125,7 +134,7 @@ var SearchHighlight = require("./search_highlight").SearchHighlight;
  */
 class EditSession {
     /**
-     * @type {Document}
+     * @type {IDocument}
      */
     doc;
     
@@ -929,6 +938,9 @@ class EditSession {
          * @type {RegExp}
          */
         this.tokenRe = mode.tokenRe;
+        /**
+         * @type {RegExp}
+         */
         this.nonTokenRe = mode.nonTokenRe;
 
         
@@ -1021,7 +1033,11 @@ class EditSession {
             return Math.max(this.getLineWidgetMaxWidth(), this.screenWidth);
         return this.screenWidth;
     }
-    
+
+    /**
+     * @return {number}
+     * @this {IEditSession}
+     */
     getLineWidgetMaxWidth() {
         if (this.lineWidgetsWidth != null) return this.lineWidgetsWidth;
         var width = 0;
@@ -2417,10 +2433,10 @@ class EditSession {
 
         return screenRows;
     }
-    
+
     /**
-     * @private
-     *
+     * @this {IEditSession}
+     * @param {import("./layer/font_metrics").FontMetrics} fm
      */
     $setFontMetrics(fm) {
         if (!this.$enableVarChar) return;
@@ -2448,7 +2464,10 @@ class EditSession {
             return [screenColumn, column];
         };
     }
-    
+
+    /**
+     * @this {IEditSession}
+     */
     destroy() {
         if (!this.destroyed) {
             this.bgTokenizer.setDocument(null);
@@ -2590,7 +2609,10 @@ config.defineOptions(EditSession.prototype, "session", {
         handlesSet: true
     },    
     wrapMethod: {
-        // code|text|auto
+        /**
+         * @this {IEditSession}
+         * @param {"code"|"text"|"auto"|boolean} val
+         */
         set: function(val) {
             val = val == "auto"
                 ? this.$mode.type != "text"
@@ -2619,6 +2641,10 @@ config.defineOptions(EditSession.prototype, "session", {
         initialValue: 1
     },
     useWorker: {
+        /**
+         * @this {IEditSession}
+         * @param {boolean} useWorker
+         */
         set: function(useWorker) {
             this.$useWorker = useWorker;
 

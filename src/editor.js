@@ -1,5 +1,11 @@
 "use strict";
 /**
+ * @typedef IEditor
+ * @type {Editor & Ace.EventEmitter & Ace.OptionsProvider<Ace.EditorOptions> & Ace.EditorProperties & Ace.EditorMultiSelectProperties}
+ * @export
+ */
+
+/**
  * 
  * @typedef IEditSession
  * @type {import("./edit_session").IEditSession}
@@ -8,10 +14,10 @@
  * @typedef IVirtualRenderer
  * @type {import("./virtual_renderer").IVirtualRenderer}
  */
+
 /**
- * @typedef IEditor
- * @type {Editor & Ace.EventEmitter & Ace.OptionsProvider<Ace.EditorOptions> & Ace.EditorProperties & Ace.EditorMultiSelectProperties}
- * @export
+ * @typedef ICommandManager
+ * @type {import("./commands/command_manager").ICommandManager}
  */
 
 var oop = require("./lib/oop");
@@ -80,7 +86,7 @@ class Editor {
          */
         this.id = "editor" + (++Editor.$uid);
         /**
-         * @type {CommandManager}
+         * @type {ICommandManager}
          */
         this.commands = new CommandManager(useragent.isMac ? "mac" : "win", defaultCommands);
         if (typeof document == "object") {
@@ -700,7 +706,9 @@ class Editor {
      */
     $updateHighlightActiveLine() {
         var session = this.getSession();
-
+        /**
+         * @type {Ace.Point|false}
+         */
         var highlight;
         if (this.$highlightActiveLine) {
             if (this.$selectionStyle != "line" || !this.selection.isMultiLine())
@@ -3014,7 +3022,9 @@ config.defineOptions(Editor.prototype, "editor", {
                     this.focus();
                 }
             };
-
+            /**
+             * @type {GutterKeyboardHandler}
+             */
             var gutterKeyboardHandler;
 
             // If keyboard a11y mode is enabled we:

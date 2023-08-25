@@ -1,9 +1,18 @@
 "use strict";
+/**
+ *
+ * @typedef IEditSession
+ * @type {import("./edit_session").IEditSession}
+ */
 
 /**
  * This object maintains the undo stack for an [[EditSession `EditSession`]].
  **/
 class UndoManager {
+    /**
+     * @type {boolean}
+     */
+    $keepRedoStack;
     
     /**
      * Resets the current undo state and creates a new `UndoManager`.
@@ -14,7 +23,11 @@ class UndoManager {
         this.$undoDepth = Infinity;
         this.reset();
     }
-    
+
+    /**
+     * 
+     * @param {IEditSession} session
+     */
     addSession(session) {
         this.$session = session;
     }
@@ -24,8 +37,9 @@ class UndoManager {
      * - `args[0]` is an array of deltas
      * - `args[1]` is the document to associate with
      *
-     * @param {Object} options Contains additional properties
-     *
+     * @param {Ace.Delta} delta
+     * @param {boolean} allowMerge
+     * @param {IEditSession} session
      **/
     add(delta, allowMerge, session) {
         if (this.$fromUndo) return;
@@ -44,7 +58,12 @@ class UndoManager {
             this.$lastDelta = delta;
         this.lastDeltas.push(delta);
     }
-    
+
+    /**
+     * 
+     * @param {string} selection
+     * @param {number} [rev]
+     */
     addSelection(selection, rev) {
         this.selections.push({
             value: selection,
@@ -56,7 +75,12 @@ class UndoManager {
         this.lastDeltas = null;
         return this.$rev;
     }
-    
+
+    /**
+     * 
+     * @param {number} from
+     * @param {number} [to]
+     */
     markIgnored(from, to) {
         if (to == null) to = this.$rev + 1;
         var stack = this.$undoStack;
@@ -69,7 +93,13 @@ class UndoManager {
         }
         this.lastDeltas = null;
     }
-    
+
+    /**
+     * 
+     * @param {number} rev
+     * @param {boolean} [after]
+     * @return {{ value: string, rev: number }}
+     */
     getSelection(rev, after) {
         var stack = this.selections;
         for (var i = stack.length; i--;) {
@@ -81,11 +111,20 @@ class UndoManager {
             }
         }
     }
-    
+
+    /**
+     * @return {number}
+     */
     getRevision() {
         return this.$rev;
     }
-    
+
+    /**
+     * 
+     * @param {number} from
+     * @param {number} [to]
+     * @return {Ace.Delta[]}
+     */
     getDeltas(from, to) {
         if (to == null) to = this.$rev + 1;
         var stack = this.$undoStack;
@@ -101,12 +140,21 @@ class UndoManager {
         }
         return stack.slice(start, end);
     }
-    
+
+    /**
+     * 
+     * @param {number} from
+     * @param {number} [to]
+     */
     getChangedRanges(from, to) {
         if (to == null) to = this.$rev + 1;
-        
     }
-    
+
+    /**
+     *
+     * @param {number} from
+     * @param {number} [to]
+     */
     getChangedLines(from, to) {
         if (to == null) to = this.$rev + 1;
         
@@ -114,10 +162,8 @@ class UndoManager {
 
     /**
      * [Perform an undo operation on the document, reverting the last change.]{: #UndoManager.undo}
-     * @param {EditSession} session
-     * @param {Boolean} dontSelect {:dontSelect}
-     *
-     * @returns {Range} The range of the undo.
+     * @param {IEditSession} session
+     * @param {Boolean} [dontSelect] {:dontSelect}
      **/
     undo(session, dontSelect) {
         this.lastDeltas = null;
@@ -149,7 +195,8 @@ class UndoManager {
     
     /**
      * [Perform a redo operation on the document, reimplementing the last change.]{: #UndoManager.redo}
-     * @param {Boolean} dontSelect {:dontSelect}
+     * @param {IEditSession} session
+     * @param {Boolean} [dontSelect] {:dontSelect}
      *
      **/
     redo(session, dontSelect) {
@@ -218,10 +265,11 @@ class UndoManager {
     canRedo() {
         return this.$redoStack.length > 0;
     }
-    
+
     /**
      * Marks the current status clean
-     **/
+     * @param {number} [rev]
+     */
     bookmark(rev) {
         if (rev == undefined)
             rev = this.$rev;
@@ -250,6 +298,7 @@ class UndoManager {
         return stringifyDelta(this.$undoStack) + "\n---\n" + stringifyDelta(this.$redoStack);
     }
 }
+
 
 UndoManager.prototype.hasUndo = UndoManager.prototype.canUndo;
 UndoManager.prototype.hasRedo = UndoManager.prototype.canRedo;
