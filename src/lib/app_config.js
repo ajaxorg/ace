@@ -66,6 +66,11 @@ function reportError(msg, data) {
 
 var messages;
 
+/**
+ * @typedef AppConfigWithAllOptions
+ * @type {AppConfig & Ace.OptionsProvider & Ace.EventEmitter & Ace.Config}
+ * @export
+ */
 class AppConfig {
     constructor() {
         this.$defaultOptions = {};

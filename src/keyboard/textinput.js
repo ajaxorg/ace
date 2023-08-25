@@ -17,6 +17,12 @@ var isIOS = useragent.isIOS;
 var valueResetRegex = isIOS ? /\s/ : /\n/;
 var isMobile = useragent.isMobile;
 
+/**
+ * @type Class<TextInput>
+ * @param parentNode
+ * @param host
+ * @constructor
+ */
 var TextInput = function(parentNode, host) {
     var text = dom.createElement("textarea");
     text.className = "ace_text-input";

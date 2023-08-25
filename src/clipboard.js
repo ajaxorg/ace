@@ -1,6 +1,10 @@
 "use strict";
 
 var $cancelT;
+/**
+ * 
+ * @type {{cancel: Function, lineMode: boolean|string, pasteCancelled: ((function(): (boolean))|*)}}
+ */
 module.exports = { 
     lineMode: false,
     pasteCancelled: function() {

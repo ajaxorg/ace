@@ -3,15 +3,24 @@
  *
  * @class Ace
  **/
-
+/**
+ *
+ * @typedef IEditSession
+ * @type {import("./edit_session").IEditSession}
+ */
+/**
+ *
+ * @typedef IEditor
+ * @type {import("./editor").IEditor}
+ */
 "use strict";
 "include loader_build";
 
 var dom = require("./lib/dom");
 
 var Range = require("./range").Range;
-var Editor = require("./editor").Editor;
 var EditSession = require("./edit_session").EditSession;
+var Editor = require("./editor").Editor;
 var UndoManager = require("./undomanager").UndoManager;
 var Renderer = require("./virtual_renderer").VirtualRenderer;
 
@@ -29,9 +38,9 @@ exports.config = require("./config");
 
 /**
  * Embeds the Ace editor into the DOM, at the element provided by `el`.
- * @param {String | Element} el Either the id of an element, or the element itself
- * @param {Object } options Options for the editor
- *
+ * @param {String | Element & {env?, value?}} el Either the id of an element, or the element itself
+ * @param {Object } [options] Options for the editor
+ * @returns {IEditor}
  **/
 exports.edit = function(el, options) {
     if (typeof el == "string") {
@@ -56,7 +65,9 @@ exports.edit = function(el, options) {
     }
 
     var doc = exports.createEditSession(value);
-
+    /**
+     * @type {IEditor}
+     */
     var editor = new Editor(new Renderer(el), doc, options);
 
     var env = {
@@ -74,11 +85,14 @@ exports.edit = function(el, options) {
 
 /**
  * Creates a new [[EditSession]], and returns the associated [[Document]].
- * @param {Document | String} text {:textParam}
- * @param {TextMode} mode {:modeParam}
+ * @param {import('./document').Document | String} text {:textParam}
+ * @param {import("./edit_session").TextMode} [mode] {:modeParam}
  *
  **/
 exports.createEditSession = function(text, mode) {
+    /**
+     * @type {IEditSession}
+     */
     var doc = new EditSession(text, mode);
     doc.setUndoManager(new UndoManager());
     return doc;

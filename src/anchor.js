@@ -1,5 +1,8 @@
 "use strict";
-
+/**
+ * @typedef IDocument
+ * @type {import("./document").Document}
+ */
 var oop = require("./lib/oop");
 var EventEmitter = require("./lib/event_emitter").EventEmitter;
 
@@ -10,15 +13,15 @@ class Anchor {
     /**
      * Creates a new `Anchor` and associates it with a document.
      *
-     * @param {Document} doc The document to associate with the anchor
-     * @param {Number} row The starting row position
-     * @param {Number} column The starting column position
+     * @param {IDocument} doc The document to associate with the anchor
+     * @param {Number|Ace.Point} row The starting row position
+     * @param {Number} [column] The starting column position
      **/
     constructor(doc, row, column) {
         this.$onChange = this.onChange.bind(this);
         this.attach(doc);
 
-        if (typeof column == "undefined")
+        if (typeof row != "number")
             this.setPosition(row.row, row.column);
         else
             this.setPosition(row, column);
@@ -35,7 +38,7 @@ class Anchor {
     /**
      *
      * Returns the current document.
-     * @returns {Document}
+     * @returns {IDocument}
      **/
     getDocument() {
         return this.document;
@@ -73,7 +76,7 @@ class Anchor {
      * Sets the anchor position to the specified row and column. If `noClip` is `true`, the position is not clipped.
      * @param {Number} row The row index to move the anchor to
      * @param {Number} column The column index to move the anchor to
-     * @param {Boolean} noClip Identifies if you want the position to be clipped
+     * @param {Boolean} [noClip] Identifies if you want the position to be clipped
      *
      **/
     setPosition(row, column, noClip) {
@@ -113,7 +116,7 @@ class Anchor {
 
     /**
      * When called, the `"change"` event listener is appended.
-     * @param {Document} doc The document to associate with
+     * @param {IDocument} doc The document to associate with
      *
      **/
     attach(doc) {

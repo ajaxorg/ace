@@ -1,5 +1,8 @@
 "use strict";
-
+/**
+ * @class EventEmitter
+ * @type {{_eventRegistry?: {}, _defaultHandlers, _emit?, _dispatchEvent?, _signal?, once?, setDefaultHandler?, removeDefaultHandler?, on?, addEventListener?, off?, removeListener?, removeEventListener?, removeAllListeners?, listeners?, getListeners?, listenerCount?, emit?, dispatchEvent?, signal?, setDefaultMaxListeners?, getMaxListeners?, defaultMaxListeners?, eventNames?, init?}}
+ */
 var EventEmitter = {};
 var stopPropagation = function() { this.propagationStopped = true; };
 var preventDefault = function() { this.defaultPrevented = true; };

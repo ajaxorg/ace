@@ -37,7 +37,7 @@ class Search {
     
     /**
      * Sets the search options via the `options` parameter.
-     * @param {SearchOptions} options An object containing all the new search properties
+     * @param {Partial<Ace.SearchOptions>} options An object containing all the new search properties
      * @returns {Search}
      * @chainable
     **/
@@ -48,7 +48,7 @@ class Search {
 
     /**
      * [Returns an object containing all the search options.]{: #Search.getOptions}
-     * @returns {SearchOptions}
+     * @returns {Partial<Ace.SearchOptions>}
     **/
     getOptions() {
         return lang.copyObject(this.$options);
@@ -66,7 +66,7 @@ class Search {
     /**
      * Searches for `options.needle`. If found, this method returns the [[Range `Range`]] where the text first occurs. If `options.backwards` is `true`, the search goes backwards in the session.
      * @param {EditSession} session The session to search with
-     * @returns {Range|boolean}
+     * @returns {Range|false}
      **/
     find(session) {
         var options = this.$options;

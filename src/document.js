@@ -1,5 +1,9 @@
 "use strict";
-
+/**
+ * @typedef IDocument
+ * @type {Document & Ace.EventEmitter}
+ * @export
+ */
 var oop = require("./lib/oop");
 var applyDelta = require("./apply_delta").applyDelta;
 var EventEmitter = require("./lib/event_emitter").EventEmitter;
@@ -17,6 +21,9 @@ class Document {
      * @param {String | String[]} textOrLines text The starting text
      **/
     constructor(textOrLines) {
+        /**
+         * @type {string[]}
+         */
         this.$lines = [""];
 
         // There has to be one line at least in the document. If you pass an empty
@@ -43,6 +50,7 @@ class Document {
 
     /**
      * Returns all the lines in the document as a single string, joined by the new line character.
+     * @returns {String}
      **/
    getValue() {
         return this.getAllLines().join(this.getNewLineCharacter());
@@ -52,12 +60,16 @@ class Document {
      * Creates a new `Anchor` to define a floating point in the document.
      * @param {Number} row The row number to use
      * @param {Number} column The column number to use
-     *
+     * @returns {Anchor}
      **/
     createAnchor(row, column) {
         return new Anchor(this, row, column);
     }
 
+    /**
+     * @param {string} text
+     * @this {IDocument}
+     */
     $detectNewLine(text) {
         var match = text.match(/^.*?(\r\n|\r|\n)/m);
         this.$autoNewLine = match ? match[1] : "\n";
@@ -84,8 +96,8 @@ class Document {
 
     /**
      * [Sets the new line mode.]{: #Document.setNewLineMode.desc}
-     * @param {String} newLineMode [The newline mode to use; can be either `windows`, `unix`, or `auto`]{: #Document.setNewLineMode.param}
-     *
+     * @param {Ace.NewLineMode} newLineMode [The newline mode to use; can be either `windows`, `unix`, or `auto`]{: #Document.setNewLineMode.param}
+     * @this {IDocument}
      **/
     setNewLineMode(newLineMode) {
         if (this.$newLineMode === newLineMode)
@@ -97,7 +109,7 @@ class Document {
 
     /**
      * [Returns the type of newlines being used; either `windows`, `unix`, or `auto`]{: #Document.getNewLineMode}
-     * @returns {String}
+     * @returns {Ace.NewLineMode}
      **/
     getNewLineMode() {
         return this.$newLineMode;
@@ -106,7 +118,7 @@ class Document {
     /**
      * Returns `true` if `text` is a newline character (either `\r\n`, `\r`, or `\n`).
      * @param {String} text The text to check
-     *
+     * @returns {boolean}
      **/
     isNewLine(text) {
         return (text == "\r\n" || text == "\r" || text == "\n");
@@ -115,7 +127,7 @@ class Document {
     /**
      * Returns a verbatim copy of the given line as it is in the document
      * @param {Number} row The row index to retrieve
-     *
+     * @returns {string}
      **/
     getLine(row) {
         return this.$lines[row] || "";
@@ -125,7 +137,7 @@ class Document {
      * Returns an array of strings of the rows between `firstRow` and `lastRow`. This function is inclusive of `lastRow`.
      * @param {Number} firstRow The first row index to retrieve
      * @param {Number} lastRow The final row index to retrieve
-     *
+     * @returns {string[]}
      **/
     getLines(firstRow, lastRow) {
         return this.$lines.slice(firstRow, lastRow + 1);
@@ -133,6 +145,7 @@ class Document {
 
     /**
      * Returns all lines in the document as string array.
+     * @returns {string[]}
      **/
     getAllLines() {
         return this.getLines(0, this.getLength());
@@ -140,6 +153,7 @@ class Document {
 
     /**
      * Returns the number of rows in the document.
+     * @returns {Number}
      **/
     getLength() {
         return this.$lines.length;
@@ -193,9 +207,9 @@ class Document {
 
     /**
      * Inserts a block of `text` at the indicated `position`.
-     * @param {Position} position The position to start inserting at; it's an object that looks like `{ row: row, column: column}`
+     * @param {Ace.Point} position The position to start inserting at; it's an object that looks like `{ row: row, column: column}`
      * @param {String} text A chunk of text to insert
-     * @returns {Object} The position ({row, column}) of the last line of `text`. If the length of `text` is 0, this function simply returns `position`. 
+     * @returns {Ace.Point} The position ({row, column}) of the last line of `text`. If the length of `text` is 0, this function simply returns `position`. 
      *
      **/
     insert(position, text) {
@@ -213,9 +227,9 @@ class Document {
      *   1. This does NOT handle newline characters (single-line text only).
      *   2. This is faster than the `insert` method for single-line text insertions.
      * 
-     * @param {Object} position The position to insert at; it's an object that looks like `{ row: row, column: column}`
+     * @param {Ace.Point} position The position to insert at; it's an object that looks like `{ row: row, column: column}`
      * @param {String} text A chunk of text
-     * @returns {Object} Returns an object containing the final row and column, like this:  
+     * @returns {Ace.Point} Returns an object containing the final row and column, like this:  
      *     ```
      *     {row: endRow, column: 0}
      *     ```
@@ -233,7 +247,13 @@ class Document {
         
         return this.clonePos(end);
     }
-    
+
+    /**
+     * 
+     * @param {number} row
+     * @param {number} column
+     * @return {Ace.Point}
+     */
     clippedPos(row, column) {
         var length = this.getLength();
         if (row === undefined) {
@@ -250,15 +270,29 @@ class Document {
         column = Math.min(Math.max(column, 0), line.length);
         return {row: row, column: column};
     }
-    
+
+    /**
+     * @param {Ace.Point} pos
+     * @return {Ace.Point}
+     */
     clonePos(pos) {
         return {row: pos.row, column: pos.column};
     }
-    
+
+    /**
+     * @param {number} row
+     * @param {number} column
+     * @return {Ace.Point}
+     */
     pos(row, column) {
         return {row: row, column: column};
     }
-    
+
+    /**
+     * @param {Ace.Point} position
+     * @return {Ace.Point}
+     * @private
+     */
     $clipPosition(position) {
         var length = this.getLength();
         if (position.row >= length) {
@@ -292,15 +326,6 @@ class Document {
      * Inserts the elements in `lines` into the document as full lines (does not merge with existing line), starting at the row index given by `row`. This method also triggers the `"change"` event.
      * @param {Number} row The index of the row to insert at
      * @param {string[]} lines An array of strings
-     * @returns {Object} Contains the final row and column, like this:  
-     *   ```
-     *   {row: endRow, column: 0}
-     *   ```  
-     *   If `lines` is empty, this function returns an object containing the current row, and column, like this:  
-     *   ``` 
-     *   {row: row, column: 0}
-     *   ```
-     *
      **/
     insertFullLines(row, lines) {
         // Clip to document.
@@ -326,9 +351,9 @@ class Document {
 
     /**
      * Inserts the elements in `lines` into the document, starting at the position index given by `row`. This method also triggers the `"change"` event.
-     * @param {Position} position
+     * @param {Ace.Position} position
      * @param {string[]} lines An array of strings
-     * @returns {Object} Contains the final row and column, like this:  
+     * @returns {Ace.Point} Contains the final row and column, like this:  
      *   ```
      *   {row: endRow, column: 0}
      *   ```  
@@ -358,8 +383,7 @@ class Document {
     /**
      * Removes the `range` from the document.
      * @param {Range} range A specified Range to remove
-     * @returns {Object} Returns the new `start` property of the range, which contains `startRow` and `startColumn`. If `range` is empty, this function returns the unmodified value of `range.start`.
-     *
+     * @returns {Ace.Point} Returns the new `start` property of the range, which contains `startRow` and `startColumn`. If `range` is empty, this function returns the unmodified value of `range.start`.
      **/
     remove(range) {
         var start = this.clippedPos(range.start.row, range.start.column);
@@ -378,7 +402,7 @@ class Document {
      * @param {Number} row The row to remove from
      * @param {Number} startColumn The column to start removing at 
      * @param {Number} endColumn The column to stop removing at
-     * @returns {Object} Returns an object containing `startRow` and `startColumn`, indicating the new row and column values.<br/>If `startColumn` is equal to `endColumn`, this function returns nothing.
+     * @returns {Ace.Point} Returns an object containing `startRow` and `startColumn`, indicating the new row and column values.<br/>If `startColumn` is equal to `endColumn`, this function returns nothing.
      *
      **/
     removeInLine(row, startColumn, endColumn) {
@@ -399,7 +423,7 @@ class Document {
      * Removes a range of full lines. This method also triggers the `"change"` event.
      * @param {Number} firstRow The first row to be removed
      * @param {Number} lastRow The last row to be removed
-     * @returns {[String]} Returns all the removed lines.
+     * @returns {String[]} Returns all the removed lines.
      *
      **/
     removeFullLines(firstRow, lastRow) {
@@ -450,9 +474,9 @@ class Document {
 
     /**
      * Replaces a range in the document with the new `text`.
-     * @param {Range} range A specified Range to replace
+     * @param {Range | {start: Ace.Point, end: Ace.Point}} range A specified Range to replace
      * @param {String} text The new text to use as a replacement
-     * @returns {Object} Returns an object containing the final row and column, like this:
+     * @returns {Ace.Point} Returns an object containing the final row and column, like this:
      *     {row: endRow, column: 0}
      * If the text and range are empty, this function returns an object containing the current `range.start` value.
      * If the text is the exact same as what currently exists, this function returns an object containing the current `range.end` value.
@@ -483,7 +507,7 @@ class Document {
 
     /**
      * Applies all changes in `deltas` to the document.
-     * @param {Delta[]} deltas An array of delta objects (can include "insert" and "remove" actions)
+     * @param {Ace.Delta[]} deltas An array of delta objects (can include "insert" and "remove" actions)
      **/
     applyDeltas(deltas) {
         for (var i=0; i<deltas.length; i++) {
@@ -493,7 +517,7 @@ class Document {
     
     /**
      * Reverts all changes in `deltas` from the document.
-     * @param {Delta[]} deltas An array of delta objects (can include "insert" and "remove" actions)
+     * @param {Ace.Delta[]} deltas An array of delta objects (can include "insert" and "remove" actions)
      **/
     revertDeltas(deltas) {
         for (var i=deltas.length-1; i>=0; i--) {
@@ -503,8 +527,9 @@ class Document {
     
     /**
      * Applies `delta` to the document.
-     * @param {Object} delta A delta object (can include "insert" and "remove" actions)
+     * @param {Ace.Delta} delta A delta object (can include "insert" and "remove" actions)
      * @param [doNotValidate]
+     * @this {IDocument}
      **/
     applyDelta(delta, doNotValidate) {
         var isInsert = delta.action == "insert";
@@ -522,7 +547,11 @@ class Document {
             this._signal("change", delta);
         }
     }
-    
+
+    /**
+     * 
+     * @param {Ace.Delta} delta
+     */
     $safeApplyDelta(delta) {
         var docLength = this.$lines.length;
         // verify that delta is in the document to prevent applyDelta from corrupting lines array 
@@ -533,7 +562,12 @@ class Document {
             this.applyDelta(delta);
         }
     }
-    
+
+    /**
+     * 
+     * @param {Ace.Delta} delta
+     * @param {number} MAX
+     */
     $splitAndapplyLargeDelta(delta, MAX) {
         // Split large insert deltas. This is necessary because:
         //    1. We need to support splicing delta lines into the document via $lines.splice.apply(...)
@@ -568,7 +602,7 @@ class Document {
     
     /**
      * Reverts `delta` from the document.
-     * @param {Object} delta A delta object (can include "insert" and "remove" actions)
+     * @param {Ace.Delta} delta A delta object (can include "insert" and "remove" actions)
      **/
     revertDelta(delta) {
         this.$safeApplyDelta({
@@ -593,7 +627,7 @@ class Document {
      *
      * @param {Number} index An index to convert
      * @param {Number} startRow=0 The row from which to start the conversion
-     * @returns {Object} A `{row, column}` object of the `index` position
+     * @returns {Ace.Point} A `{row, column}` object of the `index` position
      */
     indexToPosition(index, startRow) {
         var lines = this.$lines || this.getAllLines();
@@ -618,7 +652,7 @@ class Document {
      * 
      * Here, `y` is an index 15: 11 characters for the first row, and 5 characters until `y` in the second.
      *
-     * @param {Object} pos The `{row, column}` to convert
+     * @param {Ace.Point} pos The `{row, column}` to convert
      * @param {Number} startRow=0 The row from which to start the conversion
      * @returns {Number} The index position in the document
      */
@@ -638,7 +672,7 @@ class Document {
      *
      * @method $split
      * @param {String} text The text to work with
-     * @returns {String} A String array, with each index containing a piece of the original `text` string.
+     * @returns {String[]} A String array, with each index containing a piece of the original `text` string.
      *
      **/
     $split(text) {

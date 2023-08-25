@@ -68,7 +68,8 @@ function BracketMatch() {
      * * two Ranges if there is opening and closing brackets;
      * * one Range if there is only one bracket
      *
-     * @param {Point} pos
+     * @memberOf EditSession
+     * @param {Ace.Point} pos
      * @param {boolean} [isBackwards]
      * @returns {null|Range[]}
      */

@@ -5,12 +5,7 @@ var lang = require("./lib/lang");
 var EventEmitter = require("./lib/event_emitter").EventEmitter;
 var Range = require("./range").Range;
 
-/**
- * Contains the cursor position and the text selection of an edit session.
- *
- * The row/columns used in the selection are in document coordinates representing the coordinates as they appear in the document before applying soft wrap and folding.
- * @class Selection
- **/
+
 
 
 /**
@@ -28,6 +23,12 @@ var Range = require("./range").Range;
  * @param {EditSession} session The session to use
  *
  * @constructor
+ **/
+/**
+ * Contains the cursor position and the text selection of an edit session.
+ *
+ * The row/columns used in the selection are in document coordinates representing the coordinates as they appear in the document before applying soft wrap and folding.
+ * @type Class
  **/
 var Selection = function(session) {
     this.session = session;

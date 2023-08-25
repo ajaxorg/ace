@@ -1,13 +1,20 @@
 "use strict";
-var comparePoints = function(p1, p2) {
-    return p1.row - p2.row || p1.column - p2.column;
-};
 /**
  * This object is used in various places to indicate a region within the editor. To better visualize how this works, imagine a rectangle. Each quadrant of the rectangle is analogous to a range, as ranges contain a starting row and starting column, and an ending row, and ending column.
  * @class Range
+ * @export
  **/
+/**
+ *
+ * @typedef IEditSession
+ * @type {import("./edit_session").IEditSession}
+ */
 
 class Range {
+    /**
+     * @type {Number| undefined}
+     */
+    id;
     /**
      * Creates a new `Range` object with the given starting and ending rows and columns.
      * @param {Number} startRow The starting row
@@ -17,11 +24,16 @@ class Range {
      * @constructor
      **/
     constructor(startRow, startColumn, endRow, endColumn) {
+        /**
+         * @type {Ace.Point}
+         */
         this.start = {
             row: startRow,
             column: startColumn
         };
-
+        /**
+         * @type {Ace.Point}
+         */
         this.end = {
             row: endRow,
             column: endColumn
@@ -162,7 +174,7 @@ class Range {
     /**
      * Sets the starting row and column for the range.
      * @param {Number|Ace.Point} row A row to set
-     * @param {Number} column A column to set
+     * @param {Number} [column] A column to set
      *
      **/
     setStart(row, column) {
@@ -178,7 +190,7 @@ class Range {
     /**
      * Sets the starting row and column for the range.
      * @param {Number|Ace.Point} row A row to set
-     * @param {Number} column A column to set
+     * @param {Number} [column] A column to set
      *
      **/
     setEnd(row, column) {
@@ -412,7 +424,7 @@ class Range {
 
     /**
      * Given the current `Range`, this function converts those starting and ending [[Point]]'s into screen positions, and then returns a new `Range` object.
-     * @param {EditSession} session The `EditSession` to retrieve coordinates from
+     * @param {IEditSession} session The `EditSession` to retrieve coordinates from
      * @returns {Range}
     **/
     toScreenRange(session) {
@@ -442,14 +454,13 @@ class Range {
 
 /**
  * Creates and returns a new `Range` based on the `start` [[Point]] and `end` [[Point]] of the given parameters.
- * @param {Point} start A starting point to use
- * @param {Point} end An ending point to use
+ * @param {Ace.Point} start A starting point to use
+ * @param {Ace.Point} end An ending point to use
  * @returns {Range}
 **/
 Range.fromPoints = function(start, end) {
     return new Range(start.row, start.column, end.row, end.column);
 };
-Range.comparePoints = comparePoints;
 
 /**
  * Compares `p1` and `p2` [[Point]]'s, useful for sorting

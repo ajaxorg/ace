@@ -40,7 +40,7 @@ class AcePopup {
      */
     constructor(parentNode) {
         var el = dom.createElement("div");
-        var popup = new $singleLineEditor(el);
+        var popup = $singleLineEditor(el);
 
         if (parentNode) {
             parentNode.appendChild(el);

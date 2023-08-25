@@ -26,14 +26,14 @@ var config = require("./config");
  */
 
 /**
- * @typedef SnippetCompletion
  * @extends BaseCompletion
+ * @typedef SnippetCompletion
  * @property {string} snippet - a text snippet that would be inserted when the completion is selected
  */
 
 /**
- * @typedef ValueCompletion
  * @extends BaseCompletion
+ * @typedef ValueCompletion
  * @property {string} value - The text that would be inserted when selecting this completion.
  */
 
