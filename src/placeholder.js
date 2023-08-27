@@ -1,15 +1,22 @@
 "use strict";
-
+/**
+ * @typedef IEditSession
+ * @type {import("./edit_session").IEditSession}
+ */
+/**
+ * @typedef IPlaceHolder
+ * @type {PlaceHolder & Ace.EventEmitter}
+ */
 var Range = require("./range").Range;
 var EventEmitter = require("./lib/event_emitter").EventEmitter;
 var oop = require("./lib/oop");
 
 class PlaceHolder {
     /**
-     * @param {Document} session The document to associate with the anchor
-     * @param {Number} length The starting row position
-     * @param {Number} pos The starting column position
-     * @param {String} others
+     * @param {IEditSession} session
+     * @param {Number} length
+     * @param {Ace.Point} pos
+     * @param {any[]} others
      * @param {String} mainClass
      * @param {String} othersClass
      **/
@@ -103,8 +110,8 @@ class PlaceHolder {
      * PlaceHolder@onUpdate(e)
      * 
      * Emitted when the place holder updates.
-     *
-     **/
+     * @param {Ace.Delta} delta
+     */
     onUpdate(delta) {
         if (this.$updating)
             return this.updateAnchors(delta);
@@ -141,7 +148,10 @@ class PlaceHolder {
         this.$updating = false;
         this.updateMarkers();
     }
-    
+
+    /**
+     * @param {Ace.Delta} delta
+     */
     updateAnchors(delta) {
         this.pos.onChange(delta);
         for (var i = this.others.length; i--;)
@@ -162,14 +172,15 @@ class PlaceHolder {
         for (var i = this.others.length; i--;)
             updateMarker(this.others[i], this.othersClass);
     }
-    
+
+
     /**
      * PlaceHolder@onCursorChange(e)
      * 
      * Emitted when the cursor changes.
-     *
-     **/
-
+     * @param {any} [event]
+     * @this {IPlaceHolder}
+     */
     onCursorChange(event) {
         if (this.$updating || !this.session) return;
         var pos = this.session.selection.getCursor();

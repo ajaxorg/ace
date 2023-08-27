@@ -66,9 +66,9 @@ class Tooltip {
     }
 
     /**
-     * @param {String} text
-     * @param {Number} x
-     * @param {Number} y
+     * @param {String} [text]
+     * @param {Number} [x]
+     * @param {Number} [y]
      **/
     show(text, x, y) {
         if (text != null)

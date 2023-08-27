@@ -23,10 +23,6 @@
 var oop = require("./lib/oop");
 var lang = require("./lib/lang");
 var BidiHandler = require("./bidihandler").BidiHandler;
-/**
- * 
- * @type {import("./lib/app_config").AppConfigWithAllOptions}
- */
 var config = require("./config");
 var EventEmitter = require("./lib/event_emitter").EventEmitter;
 var Selection = require("./selection").Selection;
@@ -152,6 +148,9 @@ class EditSession {
         this.$markerId = 1;
         this.$undoSelect = true;
 
+        /**
+         * @type {FoldLine[]}
+         */
         this.$foldData = [];
         this.id = "session" + (++EditSession.$uid);
         this.$foldData.toString = function() {
@@ -216,7 +215,13 @@ class EditSession {
      **/
     $resetRowCache(docRow) {
         if (!docRow) {
+            /**
+             * @type {number[]}
+             */
             this.$docRowCache = [];
+            /**
+             * @type {number[]}
+             */
             this.$screenRowCache = [];
             return;
         }
@@ -373,8 +378,6 @@ class EditSession {
     /**
      * Sets the undo manager.
      * @param {UndoManager} undoManager The new undo manager
-     *
-     *
      **/
     setUndoManager(undoManager) {
         this.$undoManager = undoManager;
@@ -2299,7 +2302,6 @@ class EditSession {
 
         var rowEnd, row = 0;
 
-
         var rowCache = this.$docRowCache;
         var i = this.$getRowCacheIndex(rowCache, docRow);
         var l = rowCache.length;
@@ -2517,6 +2519,10 @@ EditSession.prototype.$wrapLimitRange = {
     min : null,
     max : null
 };
+/**
+ * 
+ * @type {null | Ace.LineWidget[]}
+ */
 EditSession.prototype.lineWidgets = null;
 EditSession.prototype.isFullWidth = isFullWidth;
 
@@ -2575,6 +2581,10 @@ require("./edit_session/bracket_match").BracketMatch.call(EditSession.prototype)
 
 config.defineOptions(EditSession.prototype, "session", {
     wrap: {
+        /**
+         * @this {IEditSession}
+         * @param {string | boolean | number} value
+         */
         set: function(value) {
             if (!value || value == "off")
                 value = false;
@@ -2628,6 +2638,9 @@ config.defineOptions(EditSession.prototype, "session", {
         initialValue: "auto"
     },
     indentedSoftWrap: {
+        /**
+         * @this {IEditSession}
+         */
         set: function() {
             if (this.$useWrapMode) {
                 this.$useWrapMode = false;

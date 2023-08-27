@@ -1,5 +1,20 @@
 "use strict";
-
+/**
+ * @typedef IDocument
+ * @type {import("./document").IDocument}
+ */
+/**
+ * @typedef IEditor
+ * @type {import("./editor").IEditor}
+ */
+/**
+ * @typedef ITokenizer
+ * @type {import("./tokenizer").Tokenizer}
+ */
+/**
+ * @typedef IBackgroundTokenizer
+ * @type {BackgroundTokenizer & Ace.EventEmitter}
+ */
 var oop = require("./lib/oop");
 var EventEmitter = require("./lib/event_emitter").EventEmitter;
 
@@ -13,10 +28,13 @@ class BackgroundTokenizer {
     
     /**
      * Creates a new `BackgroundTokenizer` object.
-     * @param {Tokenizer} tokenizer The tokenizer to use
-     * @param {Editor} editor The editor to associate with
+     * @param {ITokenizer} tokenizer The tokenizer to use
+     * @param {IEditor} editor The editor to associate with
      **/
     constructor(tokenizer, editor) {
+        /**
+         * @type {false|number}
+         */
         this.running = false;
         this.lines = [];
         this.states = [];
@@ -66,7 +84,7 @@ class BackgroundTokenizer {
     
     /**
      * Sets a new tokenizer for this object.
-     * @param {Tokenizer} tokenizer The new tokenizer to use
+     * @param {ITokenizer} tokenizer The new tokenizer to use
      **/
     setTokenizer(tokenizer) {
         this.tokenizer = tokenizer;
@@ -78,7 +96,7 @@ class BackgroundTokenizer {
 
     /**
      * Sets a new document to associate with this object.
-     * @param {Document} doc The new document to associate with
+     * @param {IDocument} doc The new document to associate with
      **/
     setDocument(doc) {
         this.doc = doc;
@@ -99,6 +117,7 @@ class BackgroundTokenizer {
      * Emits the `'update'` event. `firstRow` and `lastRow` are used to define the boundaries of the region to be updated.
      * @param {Number} firstRow The starting row region
      * @param {Number} lastRow The final row region
+     * @this {IBackgroundTokenizer}
      **/
     fireUpdateEvent(firstRow, lastRow) {
         var data = {
@@ -132,6 +151,9 @@ class BackgroundTokenizer {
             this.running = setTimeout(this.$worker, 700);
     }
 
+    /**
+     * @param {Ace.Delta} delta
+     */
     $updateOnChange(delta) {
         var startRow = delta.start.row;
         var len = delta.end.row - startRow;
@@ -165,7 +187,7 @@ class BackgroundTokenizer {
     /**
      * Gives list of [[Token]]'s of the row. (tokens are cached)
      * @param {Number} row The row to get tokens at
-     * @returns {Token[]}
+     * @returns {Ace.Token[]}
      **/
     getTokens(row) {
         return this.lines[row] || this.$tokenizeRow(row);
@@ -182,6 +204,9 @@ class BackgroundTokenizer {
         return this.states[row] || "start";
     }
 
+    /**
+     * @param {number} row
+     */
     $tokenizeRow(row) {
         var line = this.doc.getLine(row);
         var state = this.states[row - 1];
@@ -200,6 +225,9 @@ class BackgroundTokenizer {
         return this.lines[row] = data.tokens;
     }
 
+    /**
+     * @this {IBackgroundTokenizer}
+     */
     cleanup() {
         this.running = false;
         this.lines = [];

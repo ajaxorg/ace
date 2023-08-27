@@ -1,7 +1,68 @@
 /// <reference path="./ace-modes.d.ts" />
 
 
+
 declare namespace Ace {
+    interface AcePopupProperties {
+        setSelectOnHover?: (val: boolean) => void,
+        setRow?: (line: number) => void,
+        getRow?: () => number,
+        getHoveredRow?: () => number,
+        filterText?: string,
+        isOpen?: boolean,
+        isTopdown?: boolean,
+        autoSelect?: boolean,
+        data?: Completion[],
+        setData?: (data: Completion[], filterText: string) => void,
+        getData?: (row: number) => Completion,
+        hide?: () => void,
+        anchor?: "top" | "bottom",
+        anchorPosition?: Point,
+        tryShow?: (pos: any, lineHeight: number, anchor: "top" | "bottom" | undefined, forceShow?: boolean) => boolean,
+        $borderSize?: number,
+        show?: (pos: any, lineHeight: number, topdownOnly: boolean) => void,
+        goTo?: (where: AcePopupNavigation) => void,
+        getTextLeftOffset?: () => number,
+        $imageSize?: number,
+        anchorPos?: any
+    }
+    interface ISelection {
+        session: IEditSession;
+        doc: IDocument;
+        cursor: Anchor;
+        anchor: Anchor;
+        $silent: boolean;
+        lead: Anchor;
+        $cursorChanged?:boolean;
+        $isEmpty?:boolean;
+    }
+    interface IRange {
+        start: Point;
+        end: Point;
+    }
+    interface LineWidget {
+        el: HTMLElement;
+        rowCount: number;
+        hidden: boolean;
+        _inDocument: boolean;
+        column?: number;
+        row?: number;
+        $oldWidget?: LineWidget,
+        session: IEditSession,
+        html?: string,
+        text?: string,
+        className?: string,
+        coverGutter?: boolean,
+        pixelHeight?: number,
+        $fold?: Fold,
+        editor: IEditor,
+        coverLine?: boolean,
+        fixedWidth?: boolean,
+        fullWidth?: boolean,
+        screenWidth?: number,
+        rowsAbove?: number,
+    }
+    
     interface EditorProperties {
         $mergeUndoDeltas?: any,
         $highlightSelectedWord?: boolean,
@@ -14,6 +75,7 @@ declare namespace Ace {
         $copyWithEmptySelection?: any
         $selectionStyle?: string,
         env?: any;
+        widgetManager?: LineWidgets
     }
 
     interface EditSessionProperties {
@@ -36,6 +98,12 @@ declare namespace Ace {
             scrollTop: number
         },
         lineWidgetsWidth?: number,
+        $getWidgetScreenLength?: () => number,
+        _changedWidgets?: any,
+        $options:any,
+        $wrapMethod?: any,
+        $enableVarChar?: any,
+        $wrap?:any
     }
 
     interface EditorMultiSelectProperties {
@@ -455,39 +523,7 @@ declare namespace Ace {
                        pos: Point,
                        prefix: string): Completion[];
     }
-
-    type AfterLoadCallback = (err: Error | null, module: unknown) => void;
-    type LoaderFunction = (moduleName: string, afterLoad: AfterLoadCallback) => void;
-
-    interface Config {
-        get?(key: string): any;
-
-        set?(key: string, value: any): void;
-
-        all?(): { [key: string]: any };
-
-        moduleUrl?(name: string, component?: string): string;
-
-        setModuleUrl?(name: string, subst: string): string;
-
-        setLoader?(cb: LoaderFunction): void;
-
-        setModuleLoader?(name: string, onLoad: Function): void;
-
-        loadModule?(moduleName: string | [string, string],
-                    onLoad?: (module: any) => void): void;
-
-        init?(packaged: any): any;
-
-        defineOptions?(obj: any, path: string, options: { [key: string]: any }): Config;
-
-        resetOptions?(obj: any): void;
-
-        setDefaultValue?(path: string, name: string, value: any): void;
-
-        setDefaultValues?(path: string, optionHash: { [key: string]: any }): void;
-    }
-
+    
     interface OptionsBase {
         [key: string]: any;
     }
@@ -875,30 +911,7 @@ declare namespace Ace {
 
         setAriaOption(activeDescendant: string, role: string): void;
     }
-
-
-    class Editor {
-        once?(name: string, callback: Function): void;
-
-        setDefaultHandler?(name: string, callback: Function): void;
-
-        removeDefaultHandler?(name: string, callback: Function): void;
-
-        on(name: string, callback: Function, capturing?: boolean): void;
-
-        addEventListener?(name: string, callback: Function, capturing?: boolean): void;
-
-        off?(name: string, callback: Function): void;
-
-        removeListener?(name: string, callback: Function): void;
-
-        removeEventListener?(name: string, callback: Function): void;
-
-        removeAllListeners?(name?: string): void;
-
-        _signal?(eventName: string, e: any): void;
-    }
-
+    
     type CompleterCallback = (error: any, completions: Completion[]) => void;
 
     interface Completer {
@@ -1015,9 +1028,7 @@ declare const config: Ace.Config;
 
 declare function require(name: string): any;
 
-declare function edit(el: Element | string, options?: Partial<Ace.EditorOptions>): Ace.Editor;
 
-declare function createEditSession(text: Ace.Document | string, mode: Ace.SyntaxMode): Ace.EditSession;
 
 type InlineAutocompleteAction = "prev" | "next" | "first" | "last";
 

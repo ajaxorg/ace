@@ -1,10 +1,17 @@
 "no use strict";
+/**
+ * @typedef IAppConfig
+ * @type {import("./lib/app_config").IAppConfig}
+ */
 
 var lang = require("./lib/lang");
 var net = require("./lib/net");
 var dom = require("./lib/dom");
 var AppConfig = require("./lib/app_config").AppConfig;
 
+/**
+ * @type {IAppConfig & exports}
+ */
 module.exports = exports = new AppConfig();
 
 var options = {
@@ -20,12 +27,20 @@ var options = {
     useStrictCSP: null
 };
 
+/**
+ * @param {string} key
+ * @return {*}
+ */
 exports.get = function(key) {
     if (!options.hasOwnProperty(key))
         throw new Error("Unknown config key: " + key);
     return options[key];
 };
 
+/**
+ * @param {string} key
+ * @param value
+ */
 exports.set = function(key, value) {
     if (options.hasOwnProperty(key))
         options[key] = value;
@@ -34,14 +49,21 @@ exports.set = function(key, value) {
     if (key == "useStrictCSP")
         dom.useStrictCSP(value);
 };
-
+/**
+ * @return {{[key: string]: any}}
+ */
 exports.all = function() {
     return lang.copyObject(options);
 };
 
 exports.$modes = {};
 
-// module loading
+/**
+ * module loading
+ * @param {string} name
+ * @param {string} [component]
+ * @returns {string}
+ */
 exports.moduleUrl = function(name, component) {
     if (options.$moduleUrls[name])
         return options.$moduleUrls[name];
@@ -69,7 +91,11 @@ exports.moduleUrl = function(name, component) {
         path += "/";
     return path + component + sep + base + this.get("suffix");
 };
-
+/**
+ * @param {string} name
+ * @param {string} subst
+ * @returns {string}
+ */
 exports.setModuleUrl = function(name, subst) {
     return options.$moduleUrls[name] = subst;
 };
@@ -82,6 +108,9 @@ var loader = function(moduleName, cb) {
     console.error("loader is not configured");
 };
 var customLoader;
+/**
+ * @param {(moduleName: string, afterLoad: (err: Error | null, module: unknown) => void) => void}cb
+ */
 exports.setLoader = function(cb) {
     customLoader = cb;
 };
@@ -89,6 +118,10 @@ exports.setLoader = function(cb) {
 exports.dynamicModules = Object.create(null);
 exports.$loading = {};
 exports.$loaded = {};
+/**
+ * @param {string | [string, string]} moduleName
+ * @param {(module: any) => void} onLoad
+ */
 exports.loadModule = function(moduleName, onLoad) {
     var loadedModule, moduleType;
     if (Array.isArray(moduleName)) {

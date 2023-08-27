@@ -4,6 +4,10 @@
  * @type {Document & Ace.EventEmitter}
  * @export
  */
+/**
+ * @typedef IAnchor
+ * @type {import("./anchor").IAnchor}
+ */
 var oop = require("./lib/oop");
 var applyDelta = require("./apply_delta").applyDelta;
 var EventEmitter = require("./lib/event_emitter").EventEmitter;
@@ -60,7 +64,7 @@ class Document {
      * Creates a new `Anchor` to define a floating point in the document.
      * @param {Number} row The row number to use
      * @param {Number} column The column number to use
-     * @returns {Anchor}
+     * @returns {IAnchor}
      **/
     createAnchor(row, column) {
         return new Anchor(this, row, column);
@@ -161,7 +165,7 @@ class Document {
 
     /**
      * Returns all the text within `range` as a single string.
-     * @param {Range} range The range to work with.
+     * @param {Ace.IRange} range The range to work with.
      * 
      * @returns {String}
      **/
@@ -171,7 +175,7 @@ class Document {
     
     /**
      * Returns all the text within `range` as an array of lines.
-     * @param {Range} range The range to work with.
+     * @param {Ace.IRange} range The range to work with.
      * 
      * @returns {string[]}
      **/
@@ -382,7 +386,7 @@ class Document {
 
     /**
      * Removes the `range` from the document.
-     * @param {Range} range A specified Range to remove
+     * @param {Ace.IRange} range A specified Range to remove
      * @returns {Ace.Point} Returns the new `start` property of the range, which contains `startRow` and `startColumn`. If `range` is empty, this function returns the unmodified value of `range.start`.
      **/
     remove(range) {
@@ -474,7 +478,7 @@ class Document {
 
     /**
      * Replaces a range in the document with the new `text`.
-     * @param {Range | {start: Ace.Point, end: Ace.Point}} range A specified Range to replace
+     * @param {Range | Ace.IRange} range A specified Range to replace
      * @param {String} text The new text to use as a replacement
      * @returns {Ace.Point} Returns an object containing the final row and column, like this:
      *     {row: endRow, column: 0}

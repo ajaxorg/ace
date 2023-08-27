@@ -17,6 +17,7 @@
   "exclude": [
     "node_modules",
     "src/test",
+    "src/keyboard",
     "src/**/*_test.js",
     "./src/mode/**/*",
     "./types/**/*",

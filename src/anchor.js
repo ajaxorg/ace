@@ -3,6 +3,10 @@
  * @typedef IDocument
  * @type {import("./document").Document}
  */
+/**
+ * @typedef IAnchor
+ * @type {Anchor & Ace.EventEmitter & {markerId?: number}}
+ */
 var oop = require("./lib/oop");
 var EventEmitter = require("./lib/event_emitter").EventEmitter;
 
@@ -77,7 +81,7 @@ class Anchor {
      * @param {Number} row The row index to move the anchor to
      * @param {Number} column The column index to move the anchor to
      * @param {Boolean} [noClip] Identifies if you want the position to be clipped
-     *
+     * @this {IAnchor}
      **/
     setPosition(row, column, noClip) {
         var pos;
