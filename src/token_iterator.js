@@ -1,5 +1,9 @@
 "use strict";
-
+/**
+ *
+ * @typedef IEditSession
+ * @type {import("./edit_session").IEditSession}
+ */
 var Range = require("./range").Range;
 
 /**
@@ -8,7 +12,7 @@ var Range = require("./range").Range;
 class TokenIterator {
     /**
      * Creates a new token iterator object. The inital token index is set to the provided row and column coordinates.
-     * @param {EditSession} session The session to associate with
+     * @param {IEditSession} session The session to associate with
      * @param {Number} initialRow The row to start the tokenizing at
      * @param {Number} initialColumn The column to start the tokenizing at
      **/
@@ -23,7 +27,7 @@ class TokenIterator {
     
     /**
      * Moves iterator position to the start of previous token.
-     * @returns {Token|null}
+     * @returns {Ace.Token|null}
      **/ 
     stepBackward() {
         this.$tokenIndex -= 1;
@@ -44,7 +48,7 @@ class TokenIterator {
 
     /**
      * Moves iterator position to the start of next token.
-     * @returns {Token|null}
+     * @returns {Ace.Token|null}
      **/   
     stepForward() {
         this.$tokenIndex += 1;
@@ -68,7 +72,7 @@ class TokenIterator {
     /**
      * 
      * Returns current token.
-     * @returns {Token}
+     * @returns {Ace.Token}
      **/      
     getCurrentToken() {
         return this.$rowTokens[this.$tokenIndex];
@@ -108,7 +112,7 @@ class TokenIterator {
 
     /**
      * Return the current token position.
-     * @returns {Position}
+     * @returns {Ace.Point}
      */
     getCurrentTokenPosition() {
         return {row: this.$row, column: this.getCurrentTokenColumn()};

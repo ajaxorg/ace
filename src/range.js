@@ -12,15 +12,19 @@
 
 class Range {
     /**
-     * @type {Number| undefined}
+     * @type {Number | undefined}
      */
     id;
     /**
+     * @type {Ace.Point | undefined}
+     */
+    cursor;
+    /**
      * Creates a new `Range` object with the given starting and ending rows and columns.
-     * @param {Number} startRow The starting row
-     * @param {Number} startColumn The starting column
-     * @param {Number} endRow The ending row
-     * @param {Number} endColumn The ending column
+     * @param {Number} [startRow] The starting row
+     * @param {Number} [startColumn] The starting column
+     * @param {Number} [endRow] The ending row
+     * @param {Number} [endColumn] The ending column
      * @constructor
      **/
     constructor(startRow, startColumn, endRow, endColumn) {
@@ -42,7 +46,7 @@ class Range {
     
     /**
      * Returns `true` if and only if the starting row and column, and ending row and column, are equivalent to those given by `range`.
-     * @param {Range} range A range to check against
+     * @param {Ace.IRange} range A range to check against
      * @return {Boolean}
      **/
     isEqual(range) {
@@ -82,7 +86,7 @@ class Range {
 
     /**
      * Compares `this` range (A) with another range (B).
-     * @param {Range} range A range to compare with
+     * @param {Ace.IRange} range A range to compare with
      * @related [[Range.compare]]
      * @returns {Number} This method returns one of the following numbers:
      * * `-2`: (B) is in front of (A), and doesn't intersect with (A)
@@ -133,7 +137,7 @@ class Range {
 
     /**
      * Checks the start and end [[Point]]'s of `range` and compares them to the calling range. Returns `true` if the `range` is contained within the caller's range.
-     * @param {Range} range A range to compare with
+     * @param {Ace.IRange} range A range to compare with
      * @returns {Boolean}
      * @related [[Range.comparePoint]]
      **/
@@ -143,7 +147,7 @@ class Range {
 
     /**
      * Returns `true` if passed in `range` intersects with the one calling this method.
-     * @param {Range} range A range to compare with
+     * @param {Ace.IRange} range A range to compare with
      * @returns {Boolean}
      **/
     intersects(range) {

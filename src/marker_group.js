@@ -1,4 +1,14 @@
 "use strict";
+/**
+ *
+ * @typedef IEditSession
+ * @type {import("./edit_session").IEditSession}
+ */
+/**
+ * @typedef MarkerGroupItem
+ * @type {{range: import("./range").Range, className: string}}
+ * @export
+ */
 
 /*
 Potential improvements:
@@ -6,15 +16,22 @@ Potential improvements:
 */
 
 class MarkerGroup {
+    /**
+     * 
+     * @param {IEditSession} session
+     */
     constructor(session) {
         this.markers = [];
+        /**
+         * @type {IEditSession}
+         */
         this.session = session;
         session.addDynamicMarker(this);
     }
 
     /**
      * Finds the first marker containing pos
-     * @param {Position} pos 
+     * @param {Ace.Point} pos 
      * @returns Ace.MarkerGroupItem
      */
     getMarkerAtPosition(pos) {
@@ -26,8 +43,8 @@ class MarkerGroup {
     /**
      * Comparator for Array.sort function, which sorts marker definitions by their positions
      * 
-     * @param {Ace.MarkerGroupItem} a first marker.
-     * @param {Ace.MarkerGroupItem} b second marker.
+     * @param {MarkerGroupItem} a first marker.
+     * @param {MarkerGroupItem} b second marker.
      * @returns {number} negative number if a should be before b, positive number if b should be before a, 0 otherwise.
      */
     markersComparator(a, b) {
@@ -36,13 +53,19 @@ class MarkerGroup {
 
     /**
      * Sets marker definitions to be rendered. Limits the number of markers at MAX_MARKERS.
-     * @param {Ace.MarkerGroupItem[]} markers an array of marker definitions.
+     * @param {MarkerGroupItem[]} markers an array of marker definitions.
      */
     setMarkers(markers) {
         this.markers = markers.sort(this.markersComparator).slice(0, this.MAX_MARKERS);
         this.session._signal("changeBackMarker");
     }
 
+    /**
+     * @param {any} html
+     * @param {import("./layer/marker").Marker} markerLayer
+     * @param {IEditSession} session
+     * @param {{ firstRow: any; lastRow: any; }} config
+     */
     update(html, markerLayer, session, config) {
         if (!this.markers || !this.markers.length)
             return;

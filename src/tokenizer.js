@@ -7,7 +7,10 @@ var MAX_TOKEN_COUNT = 2000;
  * This class takes a set of highlighting rules, and creates a tokenizer out of them. For more information, see [the wiki on extending highlighters](https://github.com/ajaxorg/ace/wiki/Creating-or-Extending-an-Edit-Mode#wiki-extendingTheHighlighter).
  **/
 class Tokenizer {
-    
+    /**
+     * @type {RegExp}
+     */
+    splitRegex;
     /**
      * Constructs a new tokenizer based on the given rules and flags.
      * @param {Object} rules The highlighting rules
@@ -100,11 +103,18 @@ class Tokenizer {
             this.regExps[key] = new RegExp("(" + ruleRegExps.join(")|(") + ")|($)", flag);
         }
     }
-    
+
+    /**
+     * @param {number} m
+     */
     $setMaxTokenCount(m) {
         MAX_TOKEN_COUNT = m | 0;
     }
-    
+
+    /**
+     * @param {string} str
+     * @return {Ace.Token[]}
+     */
     $applyToken(str) {
         var values = this.splitRegex.exec(str).slice(1);
         var types = this.token.apply(this, values);
@@ -124,6 +134,10 @@ class Tokenizer {
         return tokens;
     }
 
+    /**
+     * @param {string} str
+     * @return {Ace.Token[] | string}
+     */
     $arrayTokens(str) {
         if (!str)
             return [];
@@ -142,6 +156,10 @@ class Tokenizer {
         return tokens;
     }
 
+    /**
+     * @param {string} src
+     * @returns {string}
+     */
     removeCapturingGroups(src) {
         var r = src.replace(
             /\\.|\[(?:\\.|[^\\\]])*|\(\?[:=!<]|(\()/g,
@@ -150,6 +168,10 @@ class Tokenizer {
         return r;
     }
 
+    /**
+     * @param {string} src
+     * @param {string} flag
+     */
     createSplitterRegexp(src, flag) {
         if (src.indexOf("(?=") != -1) {
             var stack = 0;
@@ -191,8 +213,10 @@ class Tokenizer {
 
     /**
      * Returns an object containing two properties: `tokens`, which contains all the tokens; and `state`, the current state.
-     * @returns {Object}
-     **/
+     * @param {string} line
+     * @param {string | string[]} startState
+     * @returns {{tokens:Ace.Token[], state: string|string[]}}
+     */
     getLineTokens(line, startState) {
         if (startState && typeof startState != "string") {
             var stack = startState.slice(0);

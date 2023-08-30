@@ -1,7 +1,7 @@
 /**
  * The main class required to set up an Ace instance in the browser.
  *
- * @class Ace
+ * @namespace Ace
  **/
 /**
  *
@@ -90,9 +90,11 @@ exports.edit = function(el, options) {
  * @returns {IEditSession}
  **/
 exports.createEditSession = function(text, mode) {
+    /**
+     * @type {any}
+     */
     var doc = new EditSession(text, mode);
     doc.setUndoManager(new UndoManager());
-    // @ts-ignore
     return doc;
 };
 exports.Range = Range;

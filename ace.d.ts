@@ -1,8 +1,20 @@
 /// <reference path="./ace-modes.d.ts" />
 
-
-
 declare namespace Ace {
+    interface FoldingProperties {
+        $foldMode: FoldMode,
+        foldWidgets: FoldWidget[],
+        getFoldWidget: FoldMode.getFoldWidget,
+        getFoldWidgetRange: FoldMode.getFoldWidgetRange,
+        $updateFoldWidgets: (delta: Delta) => void,
+        $tokenizerUpdateFoldWidgets: (e) => void,
+        addFold: (placeholder: Fold|String, range?: Range) => Fold,
+        removeFold: (fold: Fold) => void,
+        removeFolds: (folds: Fold[]) => void,
+        setFoldStyle: (style: string) => void,
+        $setFolding: (foldMode: FoldMode) => void,
+    }
+    
     interface AcePopupProperties {
         setSelectOnHover?: (val: boolean) => void,
         setRow?: (line: number) => void,
@@ -20,7 +32,7 @@ declare namespace Ace {
         anchorPosition?: Point,
         tryShow?: (pos: any, lineHeight: number, anchor: "top" | "bottom" | undefined, forceShow?: boolean) => boolean,
         $borderSize?: number,
-        show?: (pos: any, lineHeight: number, topdownOnly: boolean) => void,
+        show?: (pos: any, lineHeight: number, topdownOnly?: boolean) => void,
         goTo?: (where: AcePopupNavigation) => void,
         getTextLeftOffset?: () => number,
         $imageSize?: number,
@@ -75,7 +87,10 @@ declare namespace Ace {
         $copyWithEmptySelection?: any
         $selectionStyle?: string,
         env?: any;
-        widgetManager?: LineWidgets
+        widgetManager?: LineWidgets,
+        completer?: Autocomplete,
+        completers?: Completer[],
+        $highlightTagPending?: boolean,
     }
 
     interface EditSessionProperties {
@@ -103,7 +118,8 @@ declare namespace Ace {
         $options:any,
         $wrapMethod?: any,
         $enableVarChar?: any,
-        $wrap?:any
+        $wrap?:any,
+        $navigateWithinSoftTabs?: boolean
     }
 
     interface EditorMultiSelectProperties {
@@ -137,51 +153,10 @@ declare namespace Ace {
         $useTextareaForIME?: boolean,
         theme?: any,
         $theme?: any,
+        destroyed?: boolean,
     }
 
     type NewLineMode = 'auto' | 'unix' | 'windows';
-
-    interface FoldLine {
-        folds: Fold[];
-        range: Range;
-        start: Point;
-        end: Point;
-
-        shiftRow(shift: number): void;
-
-        addFold(fold: Fold): void;
-
-        containsRow(row: number): boolean;
-
-        walk(callback: Function, endRow?: number, endColumn?: number): void;
-
-        getNextFoldTo(row: number, column: number): null | { fold: Fold, kind: string };
-
-        addRemoveChars(row: number, column: number, len: number): void;
-
-        split(row: number, column: number): FoldLine;
-
-        merge(foldLineNext: FoldLine): void;
-
-        idxToPosition(idx: number): Point;
-    }
-
-    interface Fold {
-        range: Range;
-        start: Point;
-        end: Point;
-        foldLine?: FoldLine;
-        sameRow: boolean;
-        subFolds: Fold[];
-
-        setFoldLine(foldLine: FoldLine): void;
-
-        clone(): Fold;
-
-        addSubFold(fold: Fold): Fold;
-
-        restoreRange(range: Range): void;
-    }
     
     interface EditSessionOptions {
         wrap: "off" | "free" | "printmargin" | boolean | number;
@@ -314,7 +289,8 @@ declare namespace Ace {
         start: Point;
         end: Point;
         lines: string[];
-        id?: number
+        id?: number,
+        folds?: Fold[]
     }
 
     interface Annotation {
@@ -323,20 +299,6 @@ declare namespace Ace {
         text: string;
         type: string;
     }
-
-    interface MarkerGroupItem {
-        range: Range;
-        className: string;
-    }
-
-    class MarkerGroup {
-        constructor(session: EditSession);
-
-        setMarkers(markers: MarkerGroupItem[]): void;
-
-        getMarkerAtPosition(pos: Position): MarkerGroupItem;
-    }
-
 
     interface Command {
         name?: string;
@@ -353,11 +315,11 @@ declare namespace Ace {
 
     interface MarkerLike {
         range?: Range;
-        type: string;
+        type?: string;
         renderer?: MarkerRenderer;
-        clazz: string;
-        inFront: boolean;
-        id: number;
+        clazz?: string;
+        inFront?: boolean;
+        id?: number;
         update?: (html: string[],
                   // TODO maybe define Marker class
                   marker: any,
@@ -389,37 +351,17 @@ declare namespace Ace {
 
     interface SnippetCompletion extends BaseCompletion {
         snippet: string;
+        value?: string;
     }
 
     interface ValueCompletion extends BaseCompletion {
         value: string;
+        snippet?: string;
     }
 
     type Completion = SnippetCompletion | ValueCompletion
 
-    interface Tokenizer {
-        removeCapturingGroups(src: string): string;
 
-        createSplitterRegexp(src: string, flag?: string): RegExp;
-
-        getLineTokens(line: string, startState: string | string[]): Token[];
-    }
-
-    interface TokenIterator {
-        getCurrentToken(): Token;
-
-        getCurrentTokenColumn(): number;
-
-        getCurrentTokenRow(): number;
-
-        getCurrentTokenPosition(): Point;
-
-        getCurrentTokenRange(): Range;
-
-        stepBackward(): Token;
-
-        stepForward(): Token;
-    }
 
     type HighlightRule = { defaultToken: string } | { include: string } | { todo: string } | {
         token: string | string[] | ((value: string) => string);
@@ -447,20 +389,22 @@ declare namespace Ace {
 
         createKeywordMapper(map: Record<string, string>, defaultToken?: string, ignoreCase?: boolean, splitChar?: string): KeywordMapper;
     }
+    
+    type FoldWidget = "start" | "end" | ""
 
     interface FoldMode {
         foldingStartMarker: RegExp;
         foldingStopMarker?: RegExp;
 
-        getFoldWidget(session: EditSession, foldStyle: string, row: number): string;
+        getFoldWidget(session: IEditSession, foldStyle: string, row: number): FoldWidget;
 
-        getFoldWidgetRange(session: EditSession, foldStyle: string, row: number, forceMultiline?: boolean): Range | undefined;
+        getFoldWidgetRange(session: IEditSession, foldStyle: string, row: number): Range | undefined;
 
-        indentationBlock(session: EditSession, row: number, column?: number): Range | undefined;
+        indentationBlock(session: IEditSession, row: number, column?: number): Range | undefined;
 
-        openingBracketBlock(session: EditSession, bracket: string, row: number, column: number, typeRe?: RegExp): Range | undefined;
+        openingBracketBlock(session: IEditSession, bracket: string, row: number, column: number, typeRe?: RegExp): Range | undefined;
 
-        closingBracketBlock(session: EditSession, bracket: string, row: number, column: number, typeRe?: RegExp): Range | undefined;
+        closingBracketBlock(session: IEditSession, bracket: string, row: number, column: number, typeRe?: RegExp): Range | undefined;
     }
 
     type BehaviorAction = (state: string, action: string, editor: Editor, session: EditSession, text: string) => { text: string, selection: number[] } | Range | undefined;
@@ -507,7 +451,7 @@ declare namespace Ace {
 
         checkOutdent(state: any, line: string, input: string): boolean;
 
-        autoOutdent(state: any, doc: Document, row: number): void;
+        autoOutdent(state: any, doc: IEditSession, row: number): void;
 
         // TODO implement WorkerClient types
         createWorker(session: EditSession): any;
@@ -963,7 +907,7 @@ declare namespace Ace {
     }
 
     type CompletionCallbackFunction = (err: Error | undefined, data: GatherCompletionRecord) => void;
-    type CompletionProviderCallback = (err: Error | undefined, completions: CompletionRecord, finished: boolean) => void;
+    type CompletionProviderCallback = (this: Autocomplete, err: Error | undefined, completions: CompletionRecord, finished: boolean) => void;
 
     class CompletionProvider {
         insertByIndex(editor: Editor, index: number, options: CompletionProviderOptions): boolean;
@@ -972,34 +916,11 @@ declare namespace Ace {
 
         completions: CompletionRecord;
 
-        gatherCompletions(editor: Editor, callback: CompletionCallbackFunction): boolean;
 
-        provideCompletions(editor: Editor, options: CompletionProviderOptions, callback: CompletionProviderCallback): void;
 
         detach(): void;
     }
-
-    class Autocomplete {
-        constructor();
-
-        autoInsert?: boolean;
-        autoSelect?: boolean;
-        autoShown?: boolean;
-        exactMatch?: boolean;
-        inlineEnabled?: boolean;
-        parentNode?: HTMLElement;
-
-        emptyMessage?(prefix: String): String;
-
-        getPopup(): AcePopup;
-
-        showPopup(editor: Editor, options: CompletionOptions): void;
-
-        detach(): void;
-
-        destroy(): void;
-    }
-
+    
     type AcePopupNavigation = "up" | "down" | "start" | "end";
 
     class AcePopup {

@@ -1,5 +1,14 @@
 "use strict";
-
+/**
+ *
+ * @typedef IAcePopup
+ * @type {import("./autocomplete/popup").IAcePopup}
+ */
+/**
+ *
+ * @typedef IEditor
+ * @type {import("./editor").IEditor}
+ */
 var HashHandler = require("./keyboard/hash_handler").HashHandler;
 var AcePopup = require("./autocomplete/popup").AcePopup;
 var AceInline = require("./autocomplete/inline").AceInline;
@@ -52,6 +61,11 @@ var destroyCompleter = function(e, editor) {
  * There is an autocompletion popup, an optional inline ghost text renderer and a docuent tooltip popup inside.
  */
 class Autocomplete {
+    /**
+     * @type {IAcePopup}
+     */
+    popup;
+    
     constructor() {
         this.autoInsert = false;
         this.autoSelect = true;
@@ -76,6 +90,7 @@ class Autocomplete {
     }
 
     $init() {
+        // @ts-ignore
         this.popup = new AcePopup(this.parentNode || document.body || document.documentElement); 
         this.popup.on("click", function(e) {
             this.insertMatch();
@@ -96,6 +111,10 @@ class Autocomplete {
         return this.inlineRenderer;
     }
 
+    /**
+     * 
+     * @return {IAcePopup}
+     */
     getPopup() {
         return this.popup || this.$init();
     }
@@ -183,6 +202,11 @@ class Autocomplete {
         this.popup.show(pos, lineHeight);
     }
 
+    /**
+     * @param {IEditor} editor
+     * @param {string} prefix
+     * @param {boolean} [keepPopupPosition]
+     */
     openPopup(editor, prefix, keepPopupPosition) {
         if (!this.popup)
             this.$init();
@@ -283,6 +307,11 @@ class Autocomplete {
         this.popup.goTo(where);
     }
 
+    /**
+     * @param {Ace.Completion} data
+     * @param {undefined} [options]
+     * @return {boolean | void}
+     */
     insertMatch(data, options) {
         if (!data)
             data = this.popup.getData(this.popup.getRow());
@@ -300,8 +329,8 @@ class Autocomplete {
     
     /**
      * This is the entry point for the autocompletion class, triggers the actions which collect and display suggestions
-     * @param {Editor} editor
-     * @param {CompletionOptions} options
+     * @param {IEditor} editor
+     * @param {Ace.CompletionOptions} options
      */
     showPopup(editor, options) {
         if (this.editor)
@@ -339,6 +368,10 @@ class Autocomplete {
         return this.getCompletionProvider().gatherCompletions(editor, callback);
     }
 
+    /**
+     * @param {boolean} keepPopupPosition
+     * @param {Ace.CompletionOptions} options
+     */
     updateCompletions(keepPopupPosition, options) {
         if (keepPopupPosition && this.base && this.completions) {
             var pos = this.editor.getCursorPosition();
@@ -370,7 +403,14 @@ class Autocomplete {
         this.base = session.doc.createAnchor(pos.row, pos.column - prefix.length);
         this.base.$insertRight = true;
         var completionOptions = { exactMatch: this.exactMatch };
-        this.getCompletionProvider().provideCompletions(this.editor, completionOptions, function(err, completions, finished) {
+        
+        this.getCompletionProvider().provideCompletions(this.editor, completionOptions,
+            /**
+             * @type {(err: any, completions: Ace.Completion[], finished: boolean) => void | boolean}
+             * @this {Autocomplete}
+             */
+            function (err,
+         completions, finished) {  
             var filtered = completions.filtered;
             var prefix = util.getCompletionPrefix(this.editor);
 
@@ -588,11 +628,21 @@ Autocomplete.startCommand = {
  * This class is responsible for providing completions and inserting them to the editor
  */
 class CompletionProvider {
+    /**
+     * @type {Ace.CompletionRecord}
+     */
+    completions;
     
     constructor() {
         this.active = true;
     }
-    
+
+    /**
+     * @param {IEditor} editor
+     * @param {number} index
+     * @param {Ace.CompletionProviderOptions} [options]
+     * @returns {boolean}
+     */
     insertByIndex(editor, index, options) {
         if (!this.completions || !this.completions.filtered) {
             return false;
@@ -600,6 +650,12 @@ class CompletionProvider {
         return this.insertMatch(editor, this.completions.filtered[index], options);
     }
 
+    /**
+     * @param {IEditor} editor
+     * @param {Ace.Completion} data
+     * @param {Ace.CompletionProviderOptions} options
+     * @returns {boolean}
+     */
     insertMatch(editor, data, options) {
         if (!data)
             return false;
@@ -637,6 +693,10 @@ class CompletionProvider {
         return true;
     }
 
+    /**
+     * @param {IEditor} editor
+     * @param {Ace.Completion} data
+     */
     $insertString(editor, data) {
         var text = data.value || data;
         if (data.range) {
@@ -658,6 +718,10 @@ class CompletionProvider {
         }
     }
 
+    /**
+     * @param {IEditor} editor
+     * @param {Ace.CompletionCallbackFunction} callback
+     */
     gatherCompletions(editor, callback) {
         var session = editor.getSession();
         var pos = editor.getCursorPosition();
@@ -685,9 +749,9 @@ class CompletionProvider {
     /**
      * This is the entry point to the class, it gathers, then provides the completions asynchronously via callback.
      * The callback function may be called multiple times, the last invokation is marked with a `finished` flag
-     * @param {Editor} editor
-     * @param {CompletionProviderOptions} options
-     * @param {CompletionProviderCallback} callback
+     * @param {IEditor} editor
+     * @param {Ace.CompletionProviderOptions} options
+     * @param {(err: Error | undefined, completions: Ace.CompletionRecord, finished: boolean) => void} callback
      */
     provideCompletions(editor, options, callback) {
         var processResults = function(results) {

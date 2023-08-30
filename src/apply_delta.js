@@ -40,6 +40,12 @@ function validateDelta(docLines, delta) {
         throwDeltaError(delta, "delta.range must match delta lines");
 }
 
+/**
+ * Applies a delta to a document.
+ * @param {string[]} docLines
+ * @param {Ace.Delta} delta
+ * @param [doNotValidate]
+ */
 exports.applyDelta = function(docLines, delta, doNotValidate) {
     // disabled validation since it breaks autocompletion popup
     // if (!doNotValidate)

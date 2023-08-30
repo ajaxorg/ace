@@ -1993,6 +1993,9 @@ class VirtualRenderer {
         }
     }
 
+    /**
+     * @this {IVirtualRenderer}
+     */
     $addResizeObserver() {
         if (!window.ResizeObserver || this.$resizeObserver) return;
         var self = this;

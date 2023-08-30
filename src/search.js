@@ -1,5 +1,9 @@
 "use strict";
-
+/**
+ *
+ * @typedef IEditSession
+ * @type {import("./edit_session").IEditSession}
+ */
 var lang = require("./lib/lang");
 var oop = require("./lib/oop");
 var Range = require("./range").Range;
@@ -19,7 +23,7 @@ class Search {
      * @property {boolean} [wholeWord] - Whether the search matches only on whole words
      * @property {Range|null} [range] - The [[Range]] to search within. Set this to `null` for the whole document
      * @property {boolean} [regExp] - Whether the search is a regular expression or not
-     * @property {Range|Position} [start] - The starting [[Range]] or cursor position to begin the search
+     * @property {Range|Ace.Position} [start] - The starting [[Range]] or cursor position to begin the search
      * @property {boolean} [skipCurrent] - Whether or not to include the current line in the search
      * @property {boolean} [$isMultiLine] - true, if needle has \n or \r\n
      * @property {boolean} [preserveCase]
@@ -65,7 +69,7 @@ class Search {
 
     /**
      * Searches for `options.needle`. If found, this method returns the [[Range `Range`]] where the text first occurs. If `options.backwards` is `true`, the search goes backwards in the session.
-     * @param {EditSession} session The session to search with
+     * @param {IEditSession} session The session to search with
      * @returns {Range|false}
      **/
     find(session) {
@@ -92,7 +96,7 @@ class Search {
 
     /**
      * Searches for all occurrances `options.needle`. If found, this method returns an array of [[Range `Range`s]] where the text first occurs. If `options.backwards` is `true`, the search goes backwards in the session.
-     * @param {EditSession} session The session to search with
+     * @param {IEditSession} session The session to search with
      * @returns {Range[]}
     **/
     findAll(session) {
@@ -167,7 +171,7 @@ class Search {
     /**
      * Searches for `options.needle` in `input`, and, if found, replaces it with `replacement`.
      * @param {String} input The text to search in
-     * @param {String} replacement The replacing text
+     * @param {any} replacement The replacing text
      * + (String): If `options.regExp` is `true`, this function returns `input` with the replacement already made. Otherwise, this function just returns `replacement`.<br/>
      * If `options.needle` was not found, this function returns `null`.
      *
@@ -187,7 +191,6 @@ class Search {
         var match = re.exec(input);
         if (!match || match[0].length != input.length)
             return null;
-        
         replacement = input.replace(re, replacement);
         if (options.preserveCase) {
             replacement = replacement.split("");
@@ -207,7 +210,7 @@ class Search {
     /**
      * 
      * @param {SearchOptions} options
-     * @param $disableFakeMultiline
+     * @param {boolean} [$disableFakeMultiline]
      * @return {RegExp|boolean|*[]|*}
      */
     $assembleRegExp(options, $disableFakeMultiline) {

@@ -1,5 +1,15 @@
 "use strict";
-
+/**
+ *
+ * @typedef IEditSession
+ * @type {import("../edit_session").IEditSession}
+ */
+/**
+ * 
+ * @typedef IText
+ * @type {Text & Ace.EventEmitter}
+ * @export
+ */
 var oop = require("../lib/oop");
 var dom = require("../lib/dom");
 var lang = require("../lib/lang");
@@ -7,7 +17,13 @@ var Lines = require("./lines").Lines;
 var EventEmitter = require("../lib/event_emitter").EventEmitter;
 var nls = require("../config").nls;
 
+/**
+ * @type {IText}
+ */
 class Text {
+    /**
+     * @param {HTMLElement} parentEl
+     */
     constructor(parentEl) {
         this.dom = dom;
         this.element = this.dom.createElement("div");
@@ -27,19 +43,31 @@ class Text {
         }
     }
 
+    /**
+     * @param {string | number} padding
+     */
     setPadding(padding) {
         this.$padding = padding;
         this.element.style.margin = "0 " + padding + "px";
     }
-
+    
+    /**
+     * @returns {number}
+     */
     getLineHeight() {
         return this.$fontMetrics.$characterSize.height || 0;
     }
 
+    /**
+     * @returns {number}
+     */
     getCharacterWidth() {
         return this.$fontMetrics.$characterSize.width || 0;
     }
 
+    /**
+     * @param {any} measure
+     */
     $setFontMetrics(measure) {
         this.$fontMetrics = measure;
         this.$fontMetrics.on("changeCharacterSize", function(e) {
@@ -54,12 +82,22 @@ class Text {
     $pollSizeChanges() {
         return this.$pollSizeChangesTimer = this.$fontMetrics.$pollSizeChanges();
     }
+
+    /**
+     * @param {IEditSession} session
+     */
     setSession(session) {
+        /**
+         * @type {IEditSession}
+         */
         this.session = session;
         if (session)
             this.$computeTabString();
     }
-    
+
+    /**
+     * @param {string} showInvisibles
+     */
     setShowInvisibles(showInvisibles) {
         if (this.showInvisibles == showInvisibles)
             return false;
@@ -75,7 +113,10 @@ class Text {
         this.$computeTabString();
         return true;
     }
-    
+
+    /**
+     * @param {any} display
+     */
     setDisplayIndentGuides(display) {
         if (this.displayIndentGuides == display)
             return false;
@@ -84,7 +125,10 @@ class Text {
         this.$computeTabString();
         return true;
     }
-    
+
+    /**
+     * @param {any} highlight
+     */
     setHighlightIndentGuides(highlight) {
         if (this.$highlightIndentGuides === highlight) return false;
 
@@ -131,6 +175,11 @@ class Text {
         }
     }
 
+    /**
+     * @param {{ lastRow: number; firstRow: number; lineHeight: number; }} config
+     * @param {number} firstRow
+     * @param {number} lastRow
+     */
     updateLines(config, firstRow, lastRow) {
         // Due to wrap line changes there can be new lines if e.g.
         // the line to updated wrapped in the meantime.
@@ -644,6 +693,11 @@ class Text {
         }
     }
 
+    /**
+     * @param {any} row
+     * @param {{ walk: (arg0: (placeholder: any, row: any, column: any, lastColumn: any, isNewRow: any) => void, arg1: any, arg2: any) => void; end: { row: any; }; }} foldLine
+     * @return {Ace.Token[]}
+     */
     $getFoldLineTokens(row, foldLine) {
         var session = this.session;
         var renderTokens = [];

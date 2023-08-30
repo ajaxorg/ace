@@ -30,7 +30,9 @@ var $singleLineEditor = function (el) {
     var renderer = new Renderer(el);
 
     renderer.$maxLines = 4;
-
+    /**
+     * @type {IEditor}
+     */
     var editor = new Editor(renderer);
 
     editor.setHighlightActiveLine(false);

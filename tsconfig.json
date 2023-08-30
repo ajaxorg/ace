@@ -20,10 +20,11 @@
     "src/keyboard",
     "src/**/*_test.js",
     "./src/mode/**/*",
-    "./types/**/*",
+    "types",
   ],
   "include": [
     "./src/**/*",
-    "./ace.d.ts"
+    "./ace.d.ts",
+    "src/mode/text.js"
   ]
 }

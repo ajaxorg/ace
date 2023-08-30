@@ -1,5 +1,10 @@
 "use strict";
 
+/**
+ * @typedef IFolding
+ * @type {Folding & Ace.FoldingProperties}
+ * @export
+ */
 
 /**
  *
@@ -13,8 +18,8 @@ var TokenIterator = require("../token_iterator").TokenIterator;
 var MouseEvent = require("../mouse/mouse_event").MouseEvent;
 
 /**
- * @class Folding
  * @export
+ * @this {IEditSession}
  */
 function Folding() {
     /**
@@ -47,7 +52,6 @@ function Folding() {
 
     /**
      * Returns all folds in the given range. Note, that this will return folds
-     * @this {IEditSession}
      * @param {Range| Ace.Delta} range
      * @returns {Fold[]}
      **/
@@ -99,7 +103,6 @@ function Folding() {
      * 
      * @param {Range[]|Range}ranges
      * @returns {Fold[]}
-     * @this {IEditSession}
      */
     this.getFoldsInRangeList = function(ranges) {
         if (Array.isArray(ranges)) {
@@ -118,7 +121,6 @@ function Folding() {
     
     /**
      * Returns all folds in the document
-     * @this {IEditSession}
      * @returns {Fold[]}
      */
     this.getAllFolds = function() {
@@ -148,7 +150,6 @@ function Folding() {
      *  foo<fold>b|ar<fold>wolrd -trim=-1> "b"
      *  foo<fold>bar<fold>wol|rd -trim=+1> "rld"
      *  fo|o<fold>bar<fold>wolrd -trim=00> "foo"
-     *  @this {IEditSession}
      *  @param {number} row
      *  @param {number} column
      *  @param {number} [trim]
@@ -195,7 +196,6 @@ function Folding() {
      * @param {number} docRow
      * @param {FoldLine} [startFoldLine]
      * @returns {null|FoldLine}
-     * @this {IEditSession}
      */
     this.getFoldLine = function(docRow, startFoldLine) {
         var foldData = this.$foldData;
@@ -220,7 +220,6 @@ function Folding() {
      * @param {number} docRow
      * @param {FoldLine} [startFoldLine]
      * @returns {null|FoldLine}
-     * @this {IEditSession}
      */
     this.getNextFoldLine = function(docRow, startFoldLine) {
         var foldData = this.$foldData;
@@ -243,7 +242,6 @@ function Folding() {
      * @param {number} first
      * @param {number} last
      * @return {number}
-     * @this {IEditSession}
      */
     this.getFoldedRowCount = function(first, last) {
         var foldData = this.$foldData, rowCount = last-first+1;
@@ -273,7 +271,6 @@ function Folding() {
      * 
      * @param {FoldLine}foldLine
      * @return {FoldLine}
-     * @this {IEditSession}
      */
     this.$addFoldLine = function(foldLine) {
         this.$foldData.push(foldLine);
@@ -302,6 +299,7 @@ function Folding() {
             fold = placeholder;
         else {
             fold = new Fold(range, placeholder);
+            // @ts-ignore
             fold.collapseChildren = range.collapseChildren;
         }
         this.$clipRangeToDocument(fold.range);
@@ -462,7 +460,6 @@ function Folding() {
 
     /**
      * @param {Fold} fold
-     * @this {IEditSession}
      */
     this.expandFold = function(fold) {
         this.removeFold(fold);
@@ -490,7 +487,6 @@ function Folding() {
      * @param {number|null|Ace.Point|Range|Range[]} [location]
      * @param {boolean} [expandInner]
      * @return {Fold[]| undefined}
-     * @this {IEditSession}
      */
     this.unfold = function(location, expandInner) {
         var range, folds;
@@ -539,7 +535,6 @@ function Folding() {
      * @param {number} docRow
      * @param {FoldLine} [startFoldRow]
      * @returns {boolean}
-     * @this {IEditSession}
      **/
     this.isRowFolded = function(docRow, startFoldRow) {
         return !!this.getFoldLine(docRow, startFoldRow);
@@ -550,7 +545,6 @@ function Folding() {
      * @param {number} docRow
      * @param {FoldLine} [startFoldRow]
      * @return {number}
-     * @this {IEditSession}
      */
     this.getRowFoldEnd = function(docRow, startFoldRow) {
         var foldLine = this.getFoldLine(docRow, startFoldRow);
@@ -576,7 +570,6 @@ function Folding() {
      * @param {number | null} [startRow]
      * @param {number | null} [startColumn]
      * @return {string}
-     * @this {IEditSession}
      */
     this.getFoldDisplayLine = function(foldLine, endRow, endColumn, startRow, startColumn) {
         if (startRow == null)
@@ -618,7 +611,6 @@ function Folding() {
      * @param {number | null} startRow
      * @param {number | null} startColumn
      * @return {string}
-     * @this {IEditSession}
      */
     this.getDisplayLine = function(row, endColumn, startRow, startColumn) {
         var foldLine = this.getFoldLine(row);
@@ -635,7 +627,6 @@ function Folding() {
 
     /**
      * @return {FoldLine[]}
-     * @this {IEditSession}
      */
     this.$cloneFoldData = function() {
         var fd = [];
@@ -651,7 +642,6 @@ function Folding() {
 
     /**
      * @param {boolean} [tryToUnfold]
-     * @this {IEditSession}
      */
     this.toggleFold = function(tryToUnfold) {
         var selection = this.selection;
@@ -719,7 +709,6 @@ function Folding() {
      * @param {number} column
      * @param {number} [dir]
      * @return {Range | undefined}
-     * @this {IEditSession}
      */
     this.getCommentFoldRange = function(row, column, dir) {
         var iterator = new TokenIterator(this, row, column);
@@ -774,7 +763,6 @@ function Folding() {
      * @param {number | null} [endRow]
      * @param {number | null} [depth]
      * @param {Function} [test]
-     * @this {IEditSession}
      */
     this.foldAll = function(startRow, endRow, depth, test) {
         if (depth == undefined)
@@ -808,7 +796,6 @@ function Folding() {
     /**
      * 
      * @param {number} level
-     * @this {IEditSession}
      */
     this.foldToLevel = function(level) {
         this.foldAll();
@@ -818,7 +805,6 @@ function Folding() {
 
     /**
      *
-     * @this {IEditSession}
      */
     this.foldAllComments = function() {
         var session = this;
@@ -866,13 +852,14 @@ function Folding() {
     };
 
     /**
-     * @param {FoldMode} foldMode
+     * @param {Ace.FoldMode} foldMode
      * @this {IEditSession}
      */
     this.$setFolding = function(foldMode) {
         if (this.$foldMode == foldMode)
             return;
-            
+
+
         this.$foldMode = foldMode;
         
         this.off('change', this.$updateFoldWidgets);
@@ -896,7 +883,7 @@ function Folding() {
     /**
      * @param {number} row
      * @param {boolean} [ignoreCurrent]
-     * @return {{range: Range, firstRange: Range} | {}}
+     * @return {{range?: Range, firstRange?: Range}}
      * @this {IEditSession}
      */
     this.getParentFoldRangeData = function (row, ignoreCurrent) {

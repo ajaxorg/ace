@@ -1,7 +1,7 @@
 "use strict";
 /**
  * @typedef ICommandManager
- * @type {CommandManager & Ace.EventEmitter}
+ * @type {CommandManager & Ace.EventEmitter & {$checkCommandState?: boolean}}
  * @export
  */
 /**
@@ -100,6 +100,9 @@ class CommandManager extends MultiHashHandler{
         return this.recording = true;
     }
 
+    /**
+     * @param {IEditor} editor
+     */
     replay(editor) {
         if (this.$inReplay || !this.macro)
             return;

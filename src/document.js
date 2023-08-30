@@ -489,6 +489,7 @@ class Document {
     replace(range, text) {
         if (!(range instanceof Range))
             range = Range.fromPoints(range.start, range.end);
+        // @ts-expect-error
         if (text.length === 0 && range.isEmpty())
             return range.start;
 

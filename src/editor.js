@@ -4,7 +4,6 @@
  * @type {Editor & Ace.EventEmitter & Ace.OptionsProvider<Ace.EditorOptions> & Ace.EditorProperties & Ace.EditorMultiSelectProperties}
  * @export
  */
-
 /**
  * 
  * @typedef IEditSession
@@ -34,9 +33,6 @@ var Range = require("./range").Range;
 var EventEmitter = require("./lib/event_emitter").EventEmitter;
 var CommandManager = require("./commands/command_manager").CommandManager;
 var defaultCommands = require("./commands/default_commands").commands;
-/**
- * @type {import("./lib/app_config").AppConfigWithAllOptions}
- */
 var config = require("./config");
 var TokenIterator = require("./token_iterator").TokenIterator;
 var LineWidgets = require("./line_widgets").LineWidgets;

@@ -7,11 +7,15 @@
  */
 /**
  * @typedef IFolding
- * @type {import("./edit_session/folding").Folding}
+ * @type {import("./edit_session/folding").IFolding}
  */
 /**
  * @typedef UndoManager
  * @type {import("./undomanager").UndoManager}
+ */
+/**
+ * @typedef FoldLine
+ * @type {import("./edit_session/fold_line").FoldLine}
  */
 /**
  * @typedef IEditSession
@@ -127,6 +131,7 @@ var SearchHighlight = require("./search_highlight").SearchHighlight;
 
 /**
  * @type {IEditSession}
+ * @this {IEditSession}
  */
 class EditSession {
     /**
@@ -298,7 +303,7 @@ class EditSession {
     /**
      * Sets the session text.
      * @param {String} text The new text to place
-     *
+     * @this {IEditSession}
      **/
     setValue(text) {
         this.doc.setValue(text);
@@ -378,6 +383,7 @@ class EditSession {
     /**
      * Sets the undo manager.
      * @param {UndoManager} undoManager The new undo manager
+     * @this {IEditSession}
      **/
     setUndoManager(undoManager) {
         this.$undoManager = undoManager;
@@ -417,6 +423,7 @@ class EditSession {
     /**
      * Returns the current value for tabs. If the user is using soft tabs, this will be a series of spaces (defined by [[EditSession.getTabSize `getTabSize()`]]); otherwise it's simply `'\t'`.
      * @returns {String}
+     * @this {IEditSession}
      **/
     getTabString() {
         if (this.getUseSoftTabs()) {
@@ -480,6 +487,7 @@ class EditSession {
     /**
      * Returns `true` if keyboard navigation moves the cursor within soft tabs, `false` if it moves the cursor over soft tabs.
      * @returns {Boolean}
+     * @this {IEditSession}
      **/
     getNavigateWithinSoftTabs() {
         return this.$navigateWithinSoftTabs;
@@ -507,6 +515,7 @@ class EditSession {
 
     /**
      * Sets the value of overwrite to the opposite of whatever it currently is.
+     * @this {IEditSession}
      **/
     toggleOverwrite() {
         this.setOverwrite(!this.$overwrite);
@@ -679,6 +688,7 @@ class EditSession {
     /**
      * 
      * @param {RegExp} re
+     * @this {IEditSession}
      */
     highlight(re) {
         if (!this.$searchHighlight) {
@@ -695,6 +705,7 @@ class EditSession {
      * @param {string} clazz
      * @param {boolean} [inFront]
      * @return {Range}
+     * @this {IEditSession}
      */
     highlightLines(startRow, endRow, clazz, inFront) {
         if (typeof endRow != "number") {
@@ -738,6 +749,7 @@ class EditSession {
 
     /**
      * Clears all the annotations for this session. This function also triggers the `'changeAnnotation'` event.
+     * @this {IEditSession}
      **/
     clearAnnotations() {
         this.setAnnotations([]);
@@ -863,7 +875,7 @@ class EditSession {
      * Sets a new text mode for the `EditSession`. This method also emits the `'changeMode'` event. If a [[BackgroundTokenizer `BackgroundTokenizer`]] is set, the `'tokenizerUpdate'` event is also emitted.
      * @param {Ace.SyntaxMode} mode Set a new text mode
      * @param {() => void} [cb] optional callback
-     *
+     * @this {IEditSession}
      **/
     setMode(mode, cb) {
         if (mode && typeof mode === "object") {
@@ -1029,6 +1041,7 @@ class EditSession {
     /**
      * Returns the width of the screen.
      * @returns {Number}
+     * @this {IEditSession}
      **/
     getScreenWidth() {
         this.$computeWidth();
@@ -1051,6 +1064,10 @@ class EditSession {
         return this.lineWidgetWidth = width;
     }
 
+    /**
+     * @param {boolean} [force]
+     * @this {IEditSession}
+     */
     $computeWidth(force) {
         if (this.$modified || force) {
             this.$modified = false;
@@ -1116,7 +1133,7 @@ class EditSession {
 
     /**
      * {:Document.getTextRange.desc}
-     * @param {Range} range The range to work with
+     * @param {Ace.IRange} range The range to work with
      *
      * @returns {String}
      **/
@@ -1341,6 +1358,7 @@ class EditSession {
      * @param {Number} startRow Starting row
      * @param {Number} endRow Ending row
      * @param {String} indentString The indent token
+     * @this {IEditSession}
      **/
     indentRows(startRow, endRow, indentString) {
         indentString = indentString.replace(/\t/g, this.getTabString());
@@ -1351,7 +1369,7 @@ class EditSession {
     /**
      * Outdents all the rows defined by the `start` and `end` properties of `range`.
      * @param {Range} range A range of rows
-     *
+     * @this {IEditSession}
      **/
     outdentRows(range) {
         var rowRange = range.collapseRows();
@@ -1422,7 +1440,7 @@ class EditSession {
      * @param {Number} firstRow The starting row to move up
      * @param {Number} lastRow The final row to move up
      * @returns {Number} If `firstRow` is less-than or equal to 0, this function returns 0. Otherwise, on success, it returns -1.
-     *
+     * @this {IEditSession}
      **/
     moveLinesUp(firstRow, lastRow) {
         return this.$moveLines(firstRow, lastRow, -1);
@@ -1433,6 +1451,7 @@ class EditSession {
      * @param {Number} firstRow The starting row to move down
      * @param {Number} lastRow The final row to move down
      * @returns {Number} If `firstRow` is less-than or equal to 0, this function returns 0. Otherwise, on success, it returns -1.
+     * @this {IEditSession}
      **/
     moveLinesDown(firstRow, lastRow) {
         return this.$moveLines(firstRow, lastRow, 1);
@@ -1443,6 +1462,7 @@ class EditSession {
      * @param {Number} firstRow The starting row to duplicate
      * @param {Number} lastRow The final row to duplicate
      * @returns {Number} Returns the number of new rows added; in other words, `lastRow - firstRow + 1`.
+     * @this {IEditSession}
      **/
     duplicateLines(firstRow, lastRow) {
         return this.$moveLines(firstRow, lastRow, 0);
@@ -1630,6 +1650,7 @@ class EditSession {
      *  at a minimum of the given length minus 20 chars and at a maximum
      *  of the given number of chars.
      * @param {number} limit The maximum line length in chars, for soft wrapping lines.
+     * @this {IEditSession}
      */
     setWrapLimit(limit) {
         this.setWrapLimitRange(limit, limit);
@@ -1777,6 +1798,7 @@ class EditSession {
      *
      * @param {number} firstRow
      * @param {number} lastRow
+     * @this {IEditSession}
      */
     $updateWrapData(firstRow, lastRow) {
         var lines = this.doc.getAllLines();
@@ -1984,6 +2006,7 @@ class EditSession {
      * @param {String} str The string to check
      * @param {Number} [offset] The value to start at
      * @returns {number[]}
+     * @this {IEditSession}
      **/
     $getDisplayTokens(str, offset) {
         var arr = [];
@@ -2024,6 +2047,7 @@ class EditSession {
      * @returns {Number[]} Returns an `int[]` array with two elements:<br/>
      * The first position indicates the number of columns for `str` on screen.<br/>
      * The second value contains the position of the document column that this function read until.
+     * @this {IEditSession}
      **/
     $getStringScreenWidth(str, maxScreenColumn, screenColumn) {
         if (maxScreenColumn == 0)
@@ -2084,6 +2108,7 @@ class EditSession {
     /**
      * @param {Number} screenRow
      * @returns {Number}
+     * @this {IEditSession}
      **/
     getRowWrapIndent(screenRow) {
         if (this.$useWrapMode) {
@@ -2101,6 +2126,7 @@ class EditSession {
      * @returns {Number}
      *
      * @related EditSession.documentToScreenColumn
+     * @this {IEditSession}
      **/
     getScreenLastRowColumn(screenRow) {
         var pos = this.screenToDocumentPosition(screenRow, Number.MAX_VALUE);
@@ -2112,6 +2138,7 @@ class EditSession {
      * @param {Number} docRow
      * @param {Number} docColumn
      * @returns {number}
+     * @this {IEditSession}
      **/
     getDocumentLastRowColumn(docRow, docColumn) {
         var screenRow = this.documentToScreenRow(docRow, docColumn);
@@ -2123,6 +2150,7 @@ class EditSession {
      * @param {Number} docRow
      * @param {Number} docColumn
      * @returns {Ace.Point}
+     * @this {IEditSession}
      **/
     getDocumentLastRowColumnPosition(docRow, docColumn) {
         var screenRow = this.documentToScreenRow(docRow, docColumn);
@@ -2157,6 +2185,7 @@ class EditSession {
      * @param {number} screenRow
      * @param {number} screenColumn
      * @returns {number}
+     * @this {IEditSession}
      */
     screenToDocumentRow(screenRow, screenColumn) {
         return this.screenToDocumentPosition(screenRow, screenColumn).row;
@@ -2166,6 +2195,7 @@ class EditSession {
      * @param {number} screenRow
      * @param {number} screenColumn
      * @returns {number}
+     * @this {IEditSession}
      */
     screenToDocumentColumn(screenRow, screenColumn) {
         return this.screenToDocumentPosition(screenRow, screenColumn).column;
@@ -2378,7 +2408,7 @@ class EditSession {
      * @param {Number} row
      * @param {Number} docColumn
      * @returns {Number}
-     *
+     * @this {IEditSession}
      **/
     documentToScreenColumn(row, docColumn) {
         return this.documentToScreenPosition(row, docColumn).column;
@@ -2389,6 +2419,7 @@ class EditSession {
      * @param {Number} docRow
      * @param {Number} docColumn
      * @returns {number}
+     * @this {IEditSession}
      **/
     documentToScreenRow(docRow, docColumn) {
         return this.documentToScreenPosition(docRow, docColumn).row;

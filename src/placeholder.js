@@ -39,7 +39,7 @@ class PlaceHolder {
 
         this.$pos = pos;
         // Used for reset
-        var undoStack = session.getUndoManager().$undoStack || session.getUndoManager().$undostack || {length: -1};
+        var undoStack = session.getUndoManager().$undoStack || session.getUndoManager()["$undostack"] || {length: -1};
         this.$undoStackDepth = undoStack.length;
         this.setup();
 
@@ -218,7 +218,7 @@ class PlaceHolder {
         if (this.$undoStackDepth === -1)
             return;
         var undoManager = this.session.getUndoManager();
-        var undosRequired = (undoManager.$undoStack || undoManager.$undostack).length - this.$undoStackDepth;
+        var undosRequired = (undoManager.$undoStack || undoManager["$undostack"]).length - this.$undoStackDepth;
         for (var i = 0; i < undosRequired; i++) {
             undoManager.undo(this.session, true);
         }
