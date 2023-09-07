@@ -213,7 +213,7 @@ var supportedModes = {
     TSX:         ["tsx"],
     Turtle:      ["ttl"],
     Twig:        ["twig|swig"],
-    Typescript:  ["ts|typescript|str"],
+    Typescript:  ["ts|mts|cts|typescript|str"],
     Vala:        ["vala"],
     VBScript:    ["vbs|vb"],
     Velocity:    ["vm"],
