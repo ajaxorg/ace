@@ -356,9 +356,6 @@ class SnippetManager {
         var processedSnippet = processSnippetText.call(this, editor, snippetText, options);
         
         var range = editor.getSelectionRange();
-        if (options.range && options.range.compareRange(range) === 0) {
-            range = options.range;
-        }
         var end = editor.session.replace(range, processedSnippet.text);
 
         var tabstopManager = new TabstopManager(editor);
@@ -368,8 +365,6 @@ class SnippetManager {
     
     insertSnippet(editor, snippetText, options={}) {
         var self = this;
-        if (options.range && !(options.range instanceof Range))
-            options.range = Range.fromPoints(options.range.start, options.range.end);
         
         if (editor.inVirtualSelectionMode)
             return self.insertSnippetForSelection(editor, snippetText, options);
