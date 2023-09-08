@@ -1,0 +1,43 @@
+.ace_syntax_highlighter {
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'Source Code Pro', 'source-code-pro', 'Droid Sans Mono', monospace;
+    font-size: 14px;
+    white-space: pre-wrap
+}
+
+.ace_syntax_highlighter .ace_line code {
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'Source Code Pro', 'source-code-pro', 'Droid Sans Mono', monospace;
+    font-size: 14px;
+}
+
+.ace_syntax_highlighter .ace_gutter {
+    width: 2em;
+    text-align: right;
+    padding: 0 3px 0 0;
+    margin-right: 3px;
+    contain: none;
+}
+
+.ace_syntax_highlighter.ace_show_gutter .ace_line {
+    padding-left: 2.6em;
+}
+
+.ace_syntax_highlighter .ace_line { position: relative; }
+
+.ace_syntax_highlighter .ace_gutter_cell {
+    -moz-user-select: -moz-none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    position: absolute;
+}
+
+.ace_syntax_highlighter .ace_gutter_cell:before {
+    content: counter(ace_line, decimal);
+    counter-increment: ace_line;
+}
+.ace_syntax_highlighter {
+    counter-reset: ace_line;
+}
