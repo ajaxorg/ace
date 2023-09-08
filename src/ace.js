@@ -13,7 +13,6 @@ var Range = require("./range").Range;
 var Editor = require("./editor").Editor;
 var EditSession = require("./edit_session").EditSession;
 var UndoManager = require("./undomanager").UndoManager;
-console.log("loading virtual renderer");
 var Renderer = require("./virtual_renderer").VirtualRenderer;
 
 // The following require()s are for inclusion in the built ace file

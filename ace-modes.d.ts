@@ -862,7 +862,6 @@ declare module "ace-code/src/mode/razor_highlight_rules" {
 declare module "ace-code/src/mode/rdoc" {
   export const Mode: new () => import(".").Ace.SyntaxMode;
 }
-
 declare module "ace-code/src/mode/rdoc_highlight_rules" {
   export const RDocHighlightRules: new () => import(".").Ace.HighlightRules;
 }
