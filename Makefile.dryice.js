@@ -176,7 +176,7 @@ function ace() {
 
 function buildTypes() {
     var aceCodeModeDefinitions = '/// <reference path="./ace-modes.d.ts" />';
-    var aceCodeExtensionDefinitions = '/// <reference path="./ace-extensions.d.ts" />'
+    var aceCodeExtensionDefinitions = '/// <reference path="./ace-extensions.d.ts" />';
     // ace-builds package has different structure and can't use mode types defined for the ace-code.
     // ace-builds modes are declared along with other modules in the ace-modules.d.ts file below.
     var definitions = fs.readFileSync(ACE_HOME + '/ace.d.ts', 'utf8').replace(aceCodeModeDefinitions, '').replace(aceCodeExtensionDefinitions, '');
@@ -576,23 +576,30 @@ function extractCss(callback) {
         fileName = path;
         require(path);
     };
-    const initialRequireCache = new Set(Object.keys(require.cache));
-    function resetRequireCache() {
-        for (let path in require.cache) {
-            if (!initialRequireCache.has(path)) {
-                delete require.cache[path];
-            }
-        }
-    }
+    themes.forEach(function(name) {
+        cssImports = {};
+        loadFile("./src/theme/" + name);
+        delete require.cache[require.resolve("./src/theme/" + name)];
 
-    extractCssFromFiles(themes, "./src/theme", "theme");
-    extractCssFromFiles(keybinding, "./src/keyboard", "keyboard");
-    extractCssFromFiles(extensions, "./src/ext", "ext");
+        var themeCss = "";
+        for (var i in cssImports) {
+            themeCss += cssImports[i];
+        }
+        themeCss = extractImages(themeCss, name, "..");
+        build.writeToFile({code: themeCss}, {
+            outputFolder: BUILD_DIR + "/css/theme",
+            outputFile: name + ".css"
+        }, function() {});
+    });
 
     cssImports = {};
-    // We break backwards compatibility here, because previously we were including all keybinding and extension styling in 
-    // the main ace.css file, but now it's splitted.
     loadFile("./src/ace");
+    extensions.forEach(function(name) {
+        loadFile("./src/ext/" + name);
+    });
+    keybinding.forEach(function(name) {
+        loadFile("./src/keyboard/" + name);
+    });
 
     var css = "";
     for (var i in cssImports) {
@@ -608,34 +615,6 @@ function extractCss(callback) {
         saveImages();
         callback && callback();
     });
-
-    function extractCssFromFiles(fileList, parentFolderPath, folderName) {
-        function joinWithoutNormalising(...segments) {
-            return segments.join(path.sep);
-        }
-
-        fileList.forEach((fileName) => {
-            const filePath = joinWithoutNormalising(parentFolderPath, fileName);
-            
-            cssImports = {};
-            loadFile(filePath);
-            // We need to remove all previously loaded modules to make sure that everything gets required again, 
-            // so that all CSS values are reloaded and added to the "cssImports" cache.
-            resetRequireCache();
-
-            let combinedCss = "";
-            for (let i in cssImports) {
-                combinedCss += cssImports[i];
-            }
-            combinedCss = extractImages(combinedCss, fileName, "..");
-            if (combinedCss.length) {
-                build.writeToFile({code: combinedCss}, {
-                    outputFolder: joinWithoutNormalising(BUILD_DIR, "css", folderName),
-                    outputFile: fileName + ".css",
-                }, () => {});
-            }
-        });
-    }
     
     function extractImages(css, name, directory) {
         var imageCounter = 0;
