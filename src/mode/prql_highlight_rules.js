@@ -6,7 +6,7 @@ var oop = require("../lib/oop");
 var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;
 
 var PrqlHighlightRules = function() {
-    const builtinFunctions = "min|max|sum|average|stddev|every|any|concat_array|count|" +
+    var builtinFunctions = "min|max|sum|average|stddev|every|any|concat_array|count|" +
     "lag|lead|first|last|rank|rank_dense|row_number|" +
     "round|as|in|" +
     "tuple_every|tuple_map|tuple_zip|_eq|_is_null|" +
@@ -14,7 +14,7 @@ var PrqlHighlightRules = function() {
     "lower|upper|" +
     "read_parquet|read_csv";
 
-    const builtinTypes = [
+    var builtinTypes = [
         "bool",
         "int",
         "int8",
