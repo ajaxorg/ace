@@ -32,11 +32,12 @@ var PrqlHighlightRules = function() {
        "keyword": "let|into|case|prql|type|module|internal",
        "storage.type": "let|func",
        "support.function": builtinFunctions,
-       "support.type": builtinTypes,
+       "support.type": builtinTypes
     }, "identifier");
     
     var escapeRe = /\\(\d+|['"\\&bfnrt]|u[0-9a-fA-F]{4})/;
     var identifierRe = /[A-Za-z_][a-z_A-Z0-9]/.source;
+    var bidi = "[\\u202A\\u202B\\u202D\\u202E\\u2066\\u2067\\u2068\\u202C\\u2069]";
 
     this.$rules = {
         start: [{
@@ -65,6 +66,9 @@ var PrqlHighlightRules = function() {
             token : "keyword.operator",
             regex : /->|=>|==|!=|>=|<=|~=|&&|\|\||\?\?|\/\/|@/
         }, {
+            token: "invalid.illegal",
+            regex: bidi
+        }, {
             token : "punctuation.operator",
             regex : /[,`]/
         }, {
@@ -90,8 +94,8 @@ var PrqlHighlightRules = function() {
             next: "start"
         }, {
             token: "invalid.illegal",
-            regex: "[\\u202A\\u202B\\u202D\\u202E\\u2066\\u2067\\u2068\\u202C\\u2069]"
-        },  {
+            regex: bidi
+        }, {
             defaultToken: "string"
         }],
         stringGap: [{
