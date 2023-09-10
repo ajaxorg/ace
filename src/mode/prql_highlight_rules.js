@@ -1,3 +1,4 @@
+// https://prql-lang.org/
 // https://github.com/PRQL/prql
 
 "use strict";
@@ -26,13 +27,15 @@ var PrqlHighlightRules = function() {
         "set"].join("|");
 
     var keywordMapper = this.createKeywordMapper({
+       "constant.language": "null",
+       "constant.language.boolean": "true|false",
+       "keyword": "let|into|case|prql|type|module|internal",
+       "storage.type": "let|func",
        "support.function": builtinFunctions,
        "support.type": builtinTypes,
-       "constant.language": "true|false|null",
-       "keyword": "let|into|case|prql|type|module|internal"
     }, "identifier");
     
-    var escapeRe = /\\(\d+|['"\\&trnbvf]|u[0-9a-fA-F]{4})/;
+    var escapeRe = /\\(\d+|['"\\&bfnrt]|u[0-9a-fA-F]{4})/;
     var identifierRe = /[A-Za-z_][a-z_A-Z0-9]/.source;
 
     this.$rules = {
@@ -44,23 +47,26 @@ var PrqlHighlightRules = function() {
             token: "string.character",
             regex: "'(?:" + escapeRe.source + "|.)'?"
         }, {
-            regex: /0(?:[xX][0-9A-Fa-f]+|[oO][0-7]+)|\d+(\.\d+)?([eE][-+]?\d*)?/,
-            token: "constant.numeric"
-        }, {
-            token: "comment",
-            regex: "#.*"
-        }, {
-            token : "keyword",
-            regex : /\.\.|\||:|=|\\|"|->|<-/
-        }, {
-            token : "keyword.operator",
-            regex : /[-!#$%&*+.\/<=>?@\\^|~:]+/
-        }, {
-            token : "operator.punctuation",
-            regex : /[,`]/
-        }, {
             token : "constant.language",
             regex : "^" + identifierRe + "*"
+        }, {
+            token : "constant.numeric", // hexadecimal, octal and binary
+            regex : /0(?:[xX][0-9a-fA-F]+|[oO][0-7]+|[bB][01]+)\b/
+        }, {
+            token : "constant.numeric", // decimal integers and floats
+            regex : /(?:\d\d*(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+\b)?/
+        }, {
+            token: "comment.block",
+            regex: "#!.*"
+        }, {
+            token: "comment.line",
+            regex: "#.*"
+        }, {
+            token : "keyword.operator",
+            regex : /->|=>|==|!=|>=|<=|~=|&&|\|\||\?\?|\/\/|@/
+        }, {
+            token : "punctuation.operator",
+            regex : /[,`]/
         }, {
             token : keywordMapper,
             regex : "[\\w\\xff-\\u218e\\u2455-\\uffff]+\\b"
@@ -72,7 +78,7 @@ var PrqlHighlightRules = function() {
             regex: /[\])}]/
         } ],
         string: [{
-            token: "constant.language.escape",
+            token: "constant.character.escape",
             regex: escapeRe
         }, {
             token: "text",
@@ -83,6 +89,9 @@ var PrqlHighlightRules = function() {
             regex: '"',
             next: "start"
         }, {
+            token: "invalid.illegal",
+            regex: "[\\u202A\\u202B\\u202D\\u202E\\u2066\\u2067\\u2068\\u202C\\u2069]"
+        },  {
             defaultToken: "string"
         }],
         stringGap: [{
