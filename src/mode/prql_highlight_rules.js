@@ -40,10 +40,23 @@ var PrqlHighlightRules = function() {
     var bidi = "[\\u202A\\u202B\\u202D\\u202E\\u2066\\u2067\\u2068\\u202C\\u2069]";
 
     this.$rules = {
-        start: [{
+        start: [
+        {
             token: "string.start",
-            regex: '"',
+            regex: 's?"',
             next: "string"
+        }, {
+            token: "string.start",
+            regex: 'f"',
+            next: "fstring"
+        }, {
+            token: "string.start",
+            regex: 'r"',
+            next: "rstring"
+        }, {
+            token : "string",
+            start : "'",
+            end : "'"
         }, {
             token: "string.character",
             regex: "'(?:" + escapeRe.source + "|.)'?"
@@ -64,6 +77,10 @@ var PrqlHighlightRules = function() {
             regex: "#.*"
         }, {
             token : "keyword.operator",
+            regex : /\|\s*/,
+            next: "pipe"
+        }, {
+            token : "keyword.operator",
             regex : /->|=>|==|!=|>=|<=|~=|&&|\|\||\?\?|\/\/|@/
         }, {
             token: "invalid.illegal",
@@ -81,6 +98,15 @@ var PrqlHighlightRules = function() {
             token: "paren.rparen",
             regex: /[\])}]/
         } ],
+        pipe: [{
+            token : "constant.language",
+            regex : identifierRe + "*"
+            next: "pop"
+        },{
+            token: "error",
+            regex: "",
+            next: "pop"
+        }],
         string: [{
             token: "constant.character.escape",
             regex: escapeRe
@@ -106,6 +132,44 @@ var PrqlHighlightRules = function() {
             token: "error",
             regex: "",
             next: "start"
+        }],
+        fstring: [{
+            token: "constant.character.escape",
+            regex: escapeRe
+        }, {
+            token: "string.end",
+            regex: '"',
+            next: "start"
+        }, {
+            token: "invalid.illegal",
+            regex: bidi
+        }, {
+            token: "paren.lparen",
+            regex: "{",
+            push: "fstringParenRules"
+        }, {
+            token: "invalid.illegal",
+            regex: bidi
+        }, {
+            defaultToken: "string"
+        }],
+        fstringParenRules: [{
+            token: "constant.language",
+            regex: "^" + identifierRe + "*"
+        }, {
+            token: "paren.rparen",
+            regex: "}",
+            next: "pop"
+        }],
+        rstring: [{
+            token: "string.end",
+            regex: '"',
+            next: "start"
+        }, {
+            token: "invalid.illegal",
+            regex: bidi
+        }, {
+            defaultToken: "string"
         }]
     };
     
