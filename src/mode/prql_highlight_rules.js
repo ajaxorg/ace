@@ -54,21 +54,21 @@ var PrqlHighlightRules = function() {
             regex: 'r"',
             next: "rstring"
         }, {
-            token : "string",
-            start : "'",
-            end : "'"
+            token: "string",
+            start: "'",
+            end: "'"
         }, {
             token: "string.character",
             regex: "'(?:" + escapeRe.source + "|.)'?"
         }, {
-            token : "constant.language",
-            regex : "^" + identifierRe + "*"
+            token: "constant.language",
+            regex: "^" + identifierRe + "*"
         }, {
-            token : "constant.numeric", // hexadecimal, octal and binary
-            regex : /0(?:[xX][0-9a-fA-F]+|[oO][0-7]+|[bB][01]+)\b/
+            token: "constant.numeric", // hexadecimal, octal and binary
+            regex: /0(?:[xX][0-9a-fA-F]+|[oO][0-7]+|[bB][01]+)\b/
         }, {
-            token : "constant.numeric", // decimal integers and floats
-            regex : /(?:\d\d*(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+\b)?/
+            token: "constant.numeric", // decimal integers and floats
+            regex: /(?:\d\d*(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+\b)?/
         }, {
             token: "comment.block",
             regex: "#!.*"
@@ -76,31 +76,31 @@ var PrqlHighlightRules = function() {
             token: "comment.line",
             regex: "#.*"
         }, {
-            token : "keyword.operator",
-            regex : /\|\s*/,
+            token: "keyword.operator",
+            regex: /\|\s*/,
             next: "pipe"
         }, {
-            token : "keyword.operator",
-            regex : /->|=>|==|!=|>=|<=|~=|&&|\|\||\?\?|\/\/|@/
+            token: "keyword.operator",
+            regex: /->|=>|==|!=|>=|<=|~=|&&|\|\||\?\?|\/\/|@/
         }, {
             token: "invalid.illegal",
             regex: bidi
         }, {
-            token : "punctuation.operator",
-            regex : /[,`]/
+            token: "punctuation.operator",
+            regex: /[,`]/
         }, {
-            token : keywordMapper,
-            regex : "[\\w\\xff-\\u218e\\u2455-\\uffff]+\\b"
+            token: keywordMapper,
+            regex: "[\\w\\xff-\\u218e\\u2455-\\uffff]+\\b"
         }, {
             token: "paren.lparen",
-            regex: /[\[({]/ 
+            regex: /[\[({]/
         }, {
             token: "paren.rparen",
             regex: /[\])}]/
         } ],
         pipe: [{
-            token : "constant.language",
-            regex : identifierRe + "*"
+            token: "constant.language",
+            regex: identifierRe + "*"
             next: "pop"
         },{
             token: "error",
