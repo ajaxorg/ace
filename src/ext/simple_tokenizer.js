@@ -35,9 +35,12 @@ class SimpleTokenizer {
 }
 
 /**
- * @param {string} content 
- * @param {import("ace-code").Ace.HighlightRules} highlightRules 
+ * Parses provided content according to provided highlighting rules and return tokens. 
+ * Tokens either have the className set according to Ace themes or have no className if they are just pure text tokens.
+ * Result is a list of list of tokens, where each line from the provided content is a separate list of tokens.
  * 
+ * @param {string} content to tokenize 
+ * @param {import("ace-code").Ace.HighlightRules} highlightRules defining the language grammar 
  * @returns {import("ace-code/src/ext/syntax-highlighter").TokenizeResult} tokenization result containing a list of token for each of the lines from content
  */
 function tokenize(content, highlightRules) {
