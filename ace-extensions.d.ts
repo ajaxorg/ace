@@ -1,10 +1,7 @@
-declare module "ace-code/src/ext/syntax-highlighter" {
-    export type SyntaxHighlighterProps = {
-        content: string, 
-        highlightRules: import("./ace").Ace.HighlightRules, 
+declare module "ace-code/src/ext/simple_tokenizer" {
+    export type TokenizeResult = Array<Array<{
         className?: string,
-    }
-    
-    declare function highlight(props: SyntaxHighlighterProps): HTMLElement;
-    export default highlight;
+        value: string,
+    }>>
+    export function tokenize(content: string, highlightRules: import("./ace").Ace.HighlightRules): TokenizeResult;
 }

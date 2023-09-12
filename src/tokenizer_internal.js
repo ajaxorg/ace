@@ -5,7 +5,7 @@ var MAX_TOKEN_COUNT = 2000;
 /**
  * This class takes a set of highlighting rules, and creates a tokenizer out of them. For more information, see [the wiki on extending highlighters](https://github.com/ajaxorg/ace/wiki/Creating-or-Extending-an-Edit-Mode#wiki-extendingTheHighlighter).
  **/
-class Tokenizer {
+class TokenizerInternal {
     
     /**
      * Constructs a new tokenizer based on the given rules and flags.
@@ -329,4 +329,4 @@ class Tokenizer {
     }
 }
 
-exports.Tokenizer = Tokenizer;
+exports.TokenizerInternal = TokenizerInternal;
