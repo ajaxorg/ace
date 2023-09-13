@@ -1,5 +1,5 @@
 "use strict";
-const { TokenizerInternal } = require("../tokenizer_internal");
+const { Tokenizer } = require("../tokenizer");
 const isTextToken = require("../layer/text_util").isTextToken;
 
 class SimpleTokenizer {
@@ -44,7 +44,7 @@ class SimpleTokenizer {
  * @returns {import("ace-code/src/ext/syntax-highlighter").TokenizeResult} tokenization result containing a list of token for each of the lines from content
  */
 function tokenize(content, highlightRules) {
-    const tokenizer = new SimpleTokenizer(content, new TokenizerInternal(highlightRules.getRules()));
+    const tokenizer = new SimpleTokenizer(content, new Tokenizer(highlightRules.getRules()));
     
     let result = [];
     for (let lineIndex = 0; lineIndex < tokenizer.getLength(); lineIndex++) {
