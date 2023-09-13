@@ -100,7 +100,7 @@ var PrqlHighlightRules = function() {
         } ],
         pipe: [{
             token: "constant.language",
-            regex: identifierRe + "*"
+            regex: identifierRe + "*",
             next: "pop"
         },{
             token: "error",
