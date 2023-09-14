@@ -228,6 +228,7 @@ module.exports = {
         done();
     },
     "test: should respect hideInlinePreview": function(done) {
+        // By default, this option is set to hide.
         inline.show(editor, completions[5], "f");
         editor.renderer.$loop._flush();
         assert.equal(getAllLines(), textBase + "f");
@@ -235,6 +236,7 @@ module.exports = {
         inline.hide();
         editor.renderer.$loop._flush();
 
+        // Now it should be shown.
         completions[5].hideInlinePreview = false;
 
         inline.show(editor, completions[5], "f");
@@ -244,6 +246,7 @@ module.exports = {
         inline.hide();
         editor.renderer.$loop._flush();
 
+        // Now it should be shown.
         completions[5].hideInlinePreview = undefined;
 
         inline.show(editor, completions[5], "f");
@@ -252,6 +255,9 @@ module.exports = {
         assert.strictEqual(inline.isOpen(), true);
         inline.hide();
         editor.renderer.$loop._flush();
+
+        // Reset to state before test.
+        completions[5].hideInlinePreview = true;
 
         done();
     },
