@@ -5,7 +5,7 @@ const isTextToken = require("../layer/text_util").isTextToken;
 class SimpleTokenizer {
     /**
      * @param {string} content 
-     * @param {TokenizerInternal} tokenizer 
+     * @param {Tokenizer} tokenizer 
      */
     constructor(content, tokenizer) {
         this._lines = content.split(/\r\n|\r|\n/);
