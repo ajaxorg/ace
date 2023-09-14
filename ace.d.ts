@@ -340,6 +340,7 @@ export namespace Ace {
     docHTML?: string;
     docText?: string;
     completerId?: string;
+    hideInlinePreview?: boolean;
   }
 
   export interface SnippetCompletion extends BaseCompletion {

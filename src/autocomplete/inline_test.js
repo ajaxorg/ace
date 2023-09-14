@@ -37,7 +37,12 @@ var completions = [
     {
         snippet: "foobar2",
         score: 0
-    }
+    },
+    {
+        value: "f should not show inline",
+        score: -1,
+        hideInlinePreview: true
+    },
 ];
 
 var getAllLines = function(editorOverride) {
@@ -220,6 +225,34 @@ module.exports = {
         editor.renderer.$loop._flush();
         assert.strictEqual(inline.isOpen(), false);
         assert.strictEqual(getAllLines(), textBase + "f");
+        done();
+    },
+    "test: should respect hideInlinePreview": function(done) {
+        inline.show(editor, completions[5], "f");
+        editor.renderer.$loop._flush();
+        assert.equal(getAllLines(), textBase + "f");
+        assert.strictEqual(inline.isOpen(), false);
+        inline.hide();
+        editor.renderer.$loop._flush();
+
+        completions[5].hideInlinePreview = false;
+
+        inline.show(editor, completions[5], "f");
+        editor.renderer.$loop._flush();
+        assert.equal(getAllLines(), textBase + "f should not show inline");
+        assert.strictEqual(inline.isOpen(), true);
+        inline.hide();
+        editor.renderer.$loop._flush();
+
+        completions[5].hideInlinePreview = undefined;
+
+        inline.show(editor, completions[5], "f");
+        editor.renderer.$loop._flush();
+        assert.equal(getAllLines(), textBase + "f should not show inline");
+        assert.strictEqual(inline.isOpen(), true);
+        inline.hide();
+        editor.renderer.$loop._flush();
+
         done();
     },
     tearDown: function() {
