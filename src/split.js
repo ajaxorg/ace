@@ -3,18 +3,31 @@
 var oop = require("./lib/oop");
 var lang = require("./lib/lang");
 var EventEmitter = require("./lib/event_emitter").EventEmitter;
-
+/**
+ * @typedef {import("./edit_session").IEditSession} IEditSession
+ */
+/**
+ * @typedef {import("./editor").IEditor} IEditor
+ */
 var Editor = require("./editor").Editor;
 var Renderer = require("./virtual_renderer").VirtualRenderer;
+/**
+ * @type {any}
+ */
 var EditSession = require("./edit_session").EditSession;
 
-/** 
- * @class Split
- *
- **/
+/**
+ * @typedef ISplit
+ * @type {import("../ace").Ace.EventEmitter & {[key: string]: any}}
+ */
 
 
-var Split = function(container, theme, splits) {
+var Split;
+/**
+ * @constructor
+ * @this {ISplit}
+ */
+Split = function(container, theme, splits) {
     this.BELOW = 1;
     this.BESIDE = 0;
 
@@ -38,11 +51,18 @@ var Split = function(container, theme, splits) {
 
     oop.implement(this, EventEmitter);
 
+    /**
+     * @returns {IEditor}
+     * @this {ISplit}
+     */
     this.$createEditor = function() {
         var el = document.createElement("div");
         el.className = this.$editorCSS;
         el.style.cssText = "position: absolute; top:0px; bottom:0px";
         this.$container.appendChild(el);
+        /**
+         * @type {any}
+         */
         var editor = new Editor(new Renderer(el, this.$theme));
 
         editor.on("focus", function() {
@@ -54,6 +74,11 @@ var Split = function(container, theme, splits) {
         return editor;
     };
 
+    /**
+     * 
+     * @param splits
+     * @this {ISplit}
+     */
     this.setSplits = function(splits) {
         var editor;
         if (splits < 1) {
@@ -87,6 +112,7 @@ var Split = function(container, theme, splits) {
      * 
      * Returns the number of splits.
      * @returns {Number}
+     * @this {ISplit}
      **/
     this.getSplits = function() {
         return this.$splits;
@@ -96,7 +122,7 @@ var Split = function(container, theme, splits) {
      * @param {Number} idx The index of the editor you want
      *
      * Returns the editor identified by the index `idx`.
-     *
+     * @this {ISplit}
      **/
     this.getEditor = function(idx) {
         return this.$editors[idx];
@@ -106,6 +132,7 @@ var Split = function(container, theme, splits) {
      * 
      * Returns the current editor.
      * @returns {Editor}
+     * @this {ISplit}
      **/
     this.getCurrentEditor = function() {
         return this.$cEditor;
@@ -114,6 +141,7 @@ var Split = function(container, theme, splits) {
     /** 
      * Focuses the current editor.
      * @related Editor.focus
+     * @this {ISplit}
      **/
     this.focus = function() {
         this.$cEditor.focus();
@@ -122,6 +150,7 @@ var Split = function(container, theme, splits) {
     /** 
      * Blurs the current editor.
      * @related Editor.blur
+     * @this {ISplit}
      **/
     this.blur = function() {
         this.$cEditor.blur();
@@ -133,6 +162,7 @@ var Split = function(container, theme, splits) {
      * 
      * Sets a theme for each of the available editors.
      * @related Editor.setTheme
+     * @this {ISplit}
      **/
     this.setTheme = function(theme) {
         this.$editors.forEach(function(editor) {
@@ -146,6 +176,7 @@ var Split = function(container, theme, splits) {
      * 
      * Sets the keyboard handler for the editor.
      * @related editor.setKeyboardHandler
+     * @this {ISplit}
      **/
     this.setKeyboardHandler = function(keybinding) {
         this.$editors.forEach(function(editor) {
@@ -159,7 +190,7 @@ var Split = function(container, theme, splits) {
      * @param {String} scope The default scope for the callback
      * 
      * Executes `callback` on all of the available editors. 
-     *
+     * @this {ISplit}
      **/
     this.forEach = function(callback, scope) {
         this.$editors.forEach(callback, scope);
@@ -171,7 +202,7 @@ var Split = function(container, theme, splits) {
      * @param {Number} size The new font size
      * 
      * Sets the font size, in pixels, for all the available editors.
-     *
+     * @this {ISplit}
      **/
     this.setFontSize = function(size) {
         this.$fontSize = size;
@@ -180,7 +211,15 @@ var Split = function(container, theme, splits) {
         });
     };
 
+    /**
+     * 
+     * @param {IEditSession} session
+     * @return {IEditSession}
+     */
     this.$cloneSession = function(session) {
+        /**
+         * @type {IEditSession}
+         */
         var s = new EditSession(session.getDocument(), session.getMode());
 
         var undoManager = session.getUndoManager();
@@ -207,6 +246,7 @@ var Split = function(container, theme, splits) {
      * 
      * Sets a new [[EditSession `EditSession`]] for the indicated editor.
      * @related Editor.setSession
+     * @this {ISplit}
      **/
     this.setSession = function(session, idx) {
         var editor;
@@ -238,6 +278,7 @@ var Split = function(container, theme, splits) {
      * 
      * Returns the orientation.
      * @returns {Number}
+     * @this {ISplit}
      **/
     this.getOrientation = function() {
         return this.$orientation;
@@ -247,7 +288,7 @@ var Split = function(container, theme, splits) {
      * 
      * Sets the orientation.
      * @param {Number} orientation The new orientation value
-     *
+     * @this {ISplit}
      *
      **/
     this.setOrientation = function(orientation) {
@@ -260,6 +301,7 @@ var Split = function(container, theme, splits) {
 
    /**  
      * Resizes the editor.
+     * @this {ISplit}
      **/
     this.resize = function() {
         var width = this.$container.clientWidth;

@@ -1,13 +1,9 @@
 "use strict";
 /**
- *
- * @typedef IAcePopup
- * @type {import("./autocomplete/popup").IAcePopup}
+ * @typedef {import("./autocomplete/popup").IAcePopup} IAcePopup
  */
 /**
- *
- * @typedef IEditor
- * @type {import("./editor").IEditor}
+ * @typedef {import("./editor").IEditor} IEditor
  */
 var HashHandler = require("./keyboard/hash_handler").HashHandler;
 var AcePopup = require("./autocomplete/popup").AcePopup;
@@ -30,26 +26,33 @@ var config = require("./config");
  * @property {string} [docText] - a plain text that would be displayed as an additional popup. If `docHTML` exists,
  * it would be used instead of `docText`.
  * @property {string} [completerId] - the identifier of the completer
- * @property {Ace.Range} [range] - An object specifying the range of text to be replaced with the new completion value (experimental)
+ * @property {import("../ace").Ace.IRange} [range] - An object specifying the range of text to be replaced with the new completion value (experimental)
  * @property {string} [command] - A command to be executed after the completion is inserted (experimental)
+ * @property {string} [snippet] - a text snippet that would be inserted when the completion is selected
+ * @property {string} [value] - The text that would be inserted when selecting this completion.
+ * @property {{insertMatch:(editor: IEditor, data: Completion) => void}} [completer]
+ * @export
  */
 
 /**
- * @extends BaseCompletion
- * @typedef SnippetCompletion
- * @property {string} snippet - a text snippet that would be inserted when the completion is selected
+ * @typedef {BaseCompletion & {snippet: string}} SnippetCompletion
+ * @property {string} snippet 
+ * @property {string} [value]
+ * @export
  */
 
 /**
- * @extends BaseCompletion
- * @typedef ValueCompletion
- * @property {string} value - The text that would be inserted when selecting this completion.
+ * @typedef {BaseCompletion & {value: string}} ValueCompletion
+ * @property {string} value 
+ * @property {string} [snippet]
+ * @export
  */
 
 /**
  * Represents a suggested text snippet intended to complete a user's input
  * @typedef Completion
  * @type {SnippetCompletion|ValueCompletion}
+ * @export
  */
 
 var destroyCompleter = function(e, editor) {
@@ -308,7 +311,7 @@ class Autocomplete {
     }
 
     /**
-     * @param {Ace.Completion} data
+     * @param {Completion} data
      * @param {undefined} [options]
      * @return {boolean | void}
      */
@@ -330,7 +333,7 @@ class Autocomplete {
     /**
      * This is the entry point for the autocompletion class, triggers the actions which collect and display suggestions
      * @param {IEditor} editor
-     * @param {Ace.CompletionOptions} options
+     * @param {import("../ace").Ace.CompletionOptions} options
      */
     showPopup(editor, options) {
         if (this.editor)
@@ -370,7 +373,7 @@ class Autocomplete {
 
     /**
      * @param {boolean} keepPopupPosition
-     * @param {Ace.CompletionOptions} options
+     * @param {import("../ace").Ace.CompletionOptions} options
      */
     updateCompletions(keepPopupPosition, options) {
         if (keepPopupPosition && this.base && this.completions) {
@@ -408,42 +411,44 @@ class Autocomplete {
             pos
         }).provideCompletions(this.editor, completionOptions,
             /**
-             * @type {(err: any, completions: Ace.Completion[], finished: boolean) => void | boolean}
-             * @this {Autocomplete}
+             * @type {(err: any, completions: FilteredList, finished: boolean) => void | boolean}
+             * @this {Autocomplete & {emptyMessage}}
              */
-            function(err, completions, finished) {
-            var filtered = completions.filtered;
-            var prefix = util.getCompletionPrefix(this.editor);
+            function (err, completions, finished) {
+                var filtered = completions.filtered;
+                var prefix = util.getCompletionPrefix(this.editor);
 
-            if (finished) {
-                // No results
-                if (!filtered.length) {
-                    var emptyMessage = !this.autoShown && this.emptyMessage;
-                    if ( typeof emptyMessage == "function")
-                          emptyMessage = this.emptyMessage(prefix);
-                    if (emptyMessage) {
-                        var completionsForEmpty = [{
-                            caption: this.emptyMessage(prefix),
-                            value: ""
-                        }];
-                        this.completions = new FilteredList(completionsForEmpty);
-                        this.openPopup(this.editor, prefix, keepPopupPosition);
-                        return;
+                if (finished) {
+                    // No results
+                    if (!filtered.length) {
+                        var emptyMessage = !this.autoShown && this.emptyMessage;
+                        if (typeof emptyMessage == "function") emptyMessage = this.emptyMessage(prefix);
+                        if (emptyMessage) {
+                            var completionsForEmpty = [
+                                {
+                                    caption: this.emptyMessage(prefix),
+                                    value: ""
+                                }
+                            ];
+                            this.completions = new FilteredList(completionsForEmpty);
+                            this.openPopup(this.editor, prefix, keepPopupPosition);
+                            return;
+                        }
+                        return this.detach();
                     }
-                    return this.detach();
+
+                    // One result equals to the prefix
+                    if (filtered.length == 1 && filtered[0].value == prefix
+                        && !filtered[0].snippet) return this.detach();
+
+                    // Autoinsert if one result
+                    if (this.autoInsert && !this.autoShown && filtered.length == 1) return this.insertMatch(
+                        filtered[0]);
                 }
-
-                // One result equals to the prefix
-                if (filtered.length == 1 && filtered[0].value == prefix && !filtered[0].snippet)
-                    return this.detach();
-
-                // Autoinsert if one result
-                if (this.autoInsert && !this.autoShown && filtered.length == 1)
-                    return this.insertMatch(filtered[0]);
-            }
-            this.completions = completions;
-            this.openPopup(this.editor, prefix, keepPopupPosition);
-        }.bind(this));
+                this.completions = completions;
+                this.openPopup(this.editor, prefix, keepPopupPosition);
+            }.bind(this)
+        );
     }
 
     cancelContextMenu() {
@@ -479,7 +484,7 @@ class Autocomplete {
     showDocTooltip(item) {
         if (!this.tooltipNode) {
             this.tooltipNode = dom.createElement("div");
-            this.tooltipNode.style.margin = 0;
+            this.tooltipNode.style.margin = "0";
             this.tooltipNode.style.pointerEvents = "auto";
             this.tooltipNode.tabIndex = -1;
             this.tooltipNode.onblur = this.blurListener.bind(this);
@@ -630,12 +635,12 @@ Autocomplete.startCommand = {
  */
 class CompletionProvider {
     /**
-     * @type {Ace.CompletionRecord}
+     * @type {FilteredList}
      */
     completions;
 
     /**
-     * @param {{pos: Position, prefix: string}} initialPosition
+     * @param {{pos: import("../ace").Ace.Position, prefix: string}} initialPosition
      */
     constructor(initialPosition) {
         this.initialPosition = initialPosition;
@@ -645,7 +650,7 @@ class CompletionProvider {
     /**
      * @param {IEditor} editor
      * @param {number} index
-     * @param {Ace.CompletionProviderOptions} [options]
+     * @param {import("../ace").Ace.CompletionProviderOptions} [options]
      * @returns {boolean}
      */
     insertByIndex(editor, index, options) {
@@ -657,8 +662,8 @@ class CompletionProvider {
 
     /**
      * @param {IEditor} editor
-     * @param {Ace.Completion} data
-     * @param {Ace.CompletionProviderOptions} options
+     * @param {Completion} data
+     * @param {import("../ace").Ace.CompletionProviderOptions} [options]
      * @returns {boolean}
      */
     insertMatch(editor, data, options) {
@@ -713,7 +718,7 @@ class CompletionProvider {
 
     /**
      * @param {IEditor} editor
-     * @param {Ace.Completion} data
+     * @param {Completion} data
      */
     $insertString(editor, data) {
         var text = data.value || data;
@@ -722,7 +727,7 @@ class CompletionProvider {
 
     /**
      * @param {IEditor} editor
-     * @param {Ace.CompletionCallbackFunction} callback
+     * @param {import("../ace").Ace.CompletionCallbackFunction} callback
      */
     gatherCompletions(editor, callback) {
         var session = editor.getSession();
@@ -752,8 +757,8 @@ class CompletionProvider {
      * This is the entry point to the class, it gathers, then provides the completions asynchronously via callback.
      * The callback function may be called multiple times, the last invokation is marked with a `finished` flag
      * @param {IEditor} editor
-     * @param {Ace.CompletionProviderOptions} options
-     * @param {(err: Error | undefined, completions: Ace.CompletionRecord, finished: boolean) => void} callback
+     * @param {import("../ace").Ace.CompletionProviderOptions} options
+     * @param {(err: Error | undefined, completions: FilteredList | [], finished: boolean) => void} callback
      */
     provideCompletions(editor, options, callback) {
         var processResults = function(results) {

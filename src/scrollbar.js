@@ -33,6 +33,7 @@ class Scrollbar {
         this.setVisible(false);
         this.skipEvent = false;
 
+        // @ts-expect-error
         event.addListener(this.element, "scroll", this.onScroll.bind(this));
         event.addListener(this.element, "mousedown", event.preventDefault);
     }
@@ -77,6 +78,10 @@ class VScrollBar extends Scrollbar {
      * @event scroll
      * @param {Object} e Contains one property, `"data"`, which indicates the current scroll top position
      **/
+
+    /**
+     * @this {VScrollBar & import("../ace").Ace.EventEmitter}
+     */
     onScroll() {
         if (!this.skipEvent) {
             this.scrollTop = this.element.scrollTop;
@@ -172,6 +177,10 @@ class HScrollBar extends Scrollbar {
      * @event scroll
      * @param {Object} e Contains one property, `"data"`, which indicates the current scroll left position
      **/
+
+    /**
+     * @this {HScrollBar & import("../ace").Ace.EventEmitter}
+     */
     onScroll() {
         if (!this.skipEvent) {
             this.scrollLeft = this.element.scrollLeft;

@@ -1,22 +1,18 @@
 "use strict";
 /**
- * This object is used in various places to indicate a region within the editor. To better visualize how this works, imagine a rectangle. Each quadrant of the rectangle is analogous to a range, as ranges contain a starting row and starting column, and an ending row, and ending column.
- * @class Range
- * @export
- **/
-/**
- *
- * @typedef IEditSession
- * @type {import("./edit_session").IEditSession}
+ * @typedef {import("./edit_session").IEditSession} IEditSession
  */
 
+/**
+ * This object is used in various places to indicate a region within the editor. To better visualize how this works, imagine a rectangle. Each quadrant of the rectangle is analogous to a range, as ranges contain a starting row and starting column, and an ending row, and ending column.
+ **/
 class Range {
     /**
      * @type {Number | undefined}
      */
     id;
     /**
-     * @type {Ace.Point | undefined}
+     * @type {import("../ace").Ace.Point | undefined}
      */
     cursor;
     /**
@@ -29,14 +25,14 @@ class Range {
      **/
     constructor(startRow, startColumn, endRow, endColumn) {
         /**
-         * @type {Ace.Point}
+         * @type {import("../ace").Ace.Point}
          */
         this.start = {
             row: startRow,
             column: startColumn
         };
         /**
-         * @type {Ace.Point}
+         * @type {import("../ace").Ace.Point}
          */
         this.end = {
             row: endRow,
@@ -46,7 +42,7 @@ class Range {
     
     /**
      * Returns `true` if and only if the starting row and column, and ending row and column, are equivalent to those given by `range`.
-     * @param {Ace.IRange} range A range to check against
+     * @param {import("../ace").Ace.IRange} range A range to check against
      * @return {Boolean}
      **/
     isEqual(range) {
@@ -86,7 +82,7 @@ class Range {
 
     /**
      * Compares `this` range (A) with another range (B).
-     * @param {Ace.IRange} range A range to compare with
+     * @param {import("../ace").Ace.IRange} range A range to compare with
      * @related [[Range.compare]]
      * @returns {Number} This method returns one of the following numbers:
      * * `-2`: (B) is in front of (A), and doesn't intersect with (A)
@@ -127,7 +123,7 @@ class Range {
 
     /**
      * Compares the row and column of `p` with the starting and ending [[Point]]'s of the calling range (by calling [[Range.compare]]).
-     * @param {Ace.Point} p A point to compare with
+     * @param {import("../ace").Ace.Point} p A point to compare with
      * @related [[Range.compare]]
      * @returns {Number}
      **/
@@ -137,7 +133,7 @@ class Range {
 
     /**
      * Checks the start and end [[Point]]'s of `range` and compares them to the calling range. Returns `true` if the `range` is contained within the caller's range.
-     * @param {Ace.IRange} range A range to compare with
+     * @param {import("../ace").Ace.IRange} range A range to compare with
      * @returns {Boolean}
      * @related [[Range.comparePoint]]
      **/
@@ -147,7 +143,7 @@ class Range {
 
     /**
      * Returns `true` if passed in `range` intersects with the one calling this method.
-     * @param {Ace.IRange} range A range to compare with
+     * @param {import("../ace").Ace.IRange} range A range to compare with
      * @returns {Boolean}
      **/
     intersects(range) {
@@ -177,7 +173,7 @@ class Range {
 
     /**
      * Sets the starting row and column for the range.
-     * @param {Number|Ace.Point} row A row to set
+     * @param {Number|import("../ace").Ace.Point} row A row to set
      * @param {Number} [column] A column to set
      *
      **/
@@ -193,7 +189,7 @@ class Range {
 
     /**
      * Sets the starting row and column for the range.
-     * @param {Number|Ace.Point} row A row to set
+     * @param {Number|import("../ace").Ace.Point} row A row to set
      * @param {Number} [column] A column to set
      *
      **/
@@ -458,8 +454,8 @@ class Range {
 
 /**
  * Creates and returns a new `Range` based on the `start` [[Point]] and `end` [[Point]] of the given parameters.
- * @param {Ace.Point} start A starting point to use
- * @param {Ace.Point} end An ending point to use
+ * @param {import("../ace").Ace.Point} start A starting point to use
+ * @param {import("../ace").Ace.Point} end An ending point to use
  * @returns {Range}
 **/
 Range.fromPoints = function(start, end) {
@@ -468,8 +464,8 @@ Range.fromPoints = function(start, end) {
 
 /**
  * Compares `p1` and `p2` [[Point]]'s, useful for sorting
- * @param {Ace.Point} p1
- * @param {Ace.Point} p2
+ * @param {import("../ace").Ace.Point} p1
+ * @param {import("../ace").Ace.Point} p2
  * @returns {Number}
  */
 Range.comparePoints = function(p1, p2) {

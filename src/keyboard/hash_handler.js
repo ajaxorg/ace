@@ -1,6 +1,7 @@
 "use strict";
 
-var keyUtil = require("../lib/keys");
+
+/** @type {any} */var keyUtil = require("../lib/keys");
 var useragent = require("../lib/useragent");
 var KEY_MODS = keyUtil.KEY_MODS;
 

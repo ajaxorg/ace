@@ -1,4 +1,8 @@
 "use strict";
+/**
+ * @typedef {MouseHandler & import("./default_handlers").DefaultHandlers & import("./default_gutter_handler").GutterHandler & import("./dragdrop_handler").DragdropHandler} IMouseHandler
+ * @export
+ */
 
 var event = require("../lib/event");
 var useragent = require("../lib/useragent");
@@ -10,6 +14,15 @@ var addTouchListeners = require("./touch_handler").addTouchListeners;
 var config = require("../config");
 
 class MouseHandler {
+    /** @type {boolean} */$dragDelay;
+    /** @type {boolean} */$dragEnabled;
+    /** @type {boolean} */$mouseMoved;
+    /** @type {MouseEvent} */mouseEvent;
+    /** @type {number} */$focusTimeout;
+    /**
+     * @param {import("../editor").IEditor} editor
+     * @this {IMouseHandler}
+     */
     constructor(editor) {
         var _self = this;
         this.editor = editor;

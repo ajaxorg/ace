@@ -1,5 +1,7 @@
 "use strict";
-
+/**
+ * @typedef {import("./mouse_handler").IMouseHandler} IMouseHandler
+ */
 var dom = require("../lib/dom");
 var event = require("../lib/event");
 var useragent = require("../lib/useragent");
@@ -8,6 +10,12 @@ var AUTOSCROLL_DELAY = 200;
 var SCROLL_CURSOR_DELAY = 200;
 var SCROLL_CURSOR_HYSTERESIS = 5;
 
+/**
+ * 
+ * @param {IMouseHandler} mouseHandler
+ * @constructor
+ * @this {IMouseHandler}
+ */
 function DragdropHandler(mouseHandler) {
 
     var editor = mouseHandler.editor;
@@ -291,14 +299,23 @@ function DragdropHandler(mouseHandler) {
     }
 }
 
+/**
+ * @this {IMouseHandler}
+ */
 (function() {
 
+    /**
+     * @this {IMouseHandler & this}
+     */
     this.dragWait = function() {
         var interval = Date.now() - this.mousedownEvent.time;
         if (interval > this.editor.getDragDelay())
             this.startDrag();
     };
 
+    /**
+     * @this {IMouseHandler & this}
+     */
     this.dragWaitEnd = function() {
         var target = this.editor.container;
         target.draggable = false;
@@ -306,6 +323,9 @@ function DragdropHandler(mouseHandler) {
         this.selectEnd();
     };
 
+    /**
+     * @this {IMouseHandler & this}
+     */
     this.dragReadyEnd = function(e) {
         this.editor.$resetCursorStyle();
         this.editor.unsetStyle("ace_dragging");
@@ -313,6 +333,9 @@ function DragdropHandler(mouseHandler) {
         this.dragWaitEnd();
     };
 
+    /**
+     * @this {IMouseHandler & this}
+     */
     this.startDrag = function(){
         this.cancelDrag = false;
         var editor = this.editor;
@@ -325,6 +348,9 @@ function DragdropHandler(mouseHandler) {
         this.setState("dragReady");
     };
 
+    /**
+     * @this {IMouseHandler & this}
+     */
     this.onMouseDrag = function(e) {
         var target = this.editor.container;
         if (useragent.isIE && this.state == "dragReady") {
@@ -342,6 +368,9 @@ function DragdropHandler(mouseHandler) {
         }
     };
 
+    /**
+     * @this {IMouseHandler & this}
+     */
     this.onMouseDown = function(e) {
         if (!this.$dragEnabled)
             return;

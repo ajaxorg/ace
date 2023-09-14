@@ -5,6 +5,9 @@ var event = require("../lib/event");
 
 
 class KeyBinding {
+    /**
+     * @param {import("../editor").IEditor} editor
+     */
     constructor(editor) {
         this.$editor = editor;
         this.$data = {editor: editor};

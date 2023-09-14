@@ -59,6 +59,10 @@ function findAnnotations(session, row, dir) {
     return matched.length && matched;
 }
 
+/**
+ * @param {import("../editor").IEditor} editor
+ * @param {number} dir
+ */
 exports.showErrorMarker = function(editor, dir) {
     var session = editor.session;
     if (!session.widgetManager) {

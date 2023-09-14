@@ -6,10 +6,13 @@
  */
 /**
  * @typedef IAcePopup
- * @type {IEditor & Ace.AcePopupProperties}
+ * @type {IEditor & import("../../ace").Ace.AcePopupProperties}
  * @export
  */
 var Renderer = require("../virtual_renderer").VirtualRenderer;
+/**
+ * @type {any}
+ */
 var Editor = require("../editor").Editor;
 var Range = require("../range").Range;
 var event = require("../lib/event");
@@ -23,10 +26,13 @@ var getAriaId = function (index) {
 
 /**
  *
- * @param {HTMLElement} el
+ * @param {HTMLElement} [el]
  * @return {IEditor}
  */
 var $singleLineEditor = function (el) {
+    /**
+     * @type {Renderer & {$maxLines?: number}}}
+     */
     var renderer = new Renderer(el);
 
     renderer.$maxLines = 4;
@@ -194,7 +200,7 @@ class AcePopup {
         var bgTokenizer = popup.session.bgTokenizer;
         bgTokenizer.$tokenizeRow = function (row) {
             /**
-             * @type {Ace.Completion}
+             * @type {import("../../ace").Ace.Completion}
              */
             var data = popup.data[row];
             var tokens = [];

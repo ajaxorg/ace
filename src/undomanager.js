@@ -1,8 +1,6 @@
 "use strict";
 /**
- *
- * @typedef IEditSession
- * @type {import("./edit_session").IEditSession}
+ * @typedef {import("./edit_session").IEditSession} IEditSession
  */
 
 /**
@@ -37,9 +35,9 @@ class UndoManager {
      * - `args[0]` is an array of deltas
      * - `args[1]` is the document to associate with
      *
-     * @param {Ace.Delta} delta
+     * @param {import("../ace").Ace.Delta} delta
      * @param {boolean} allowMerge
-     * @param {IEditSession} session
+     * @param {IEditSession} [session]
      **/
     add(delta, allowMerge, session) {
         if (this.$fromUndo) return;
@@ -123,7 +121,7 @@ class UndoManager {
      * 
      * @param {number} from
      * @param {number} [to]
-     * @return {Ace.Delta[]}
+     * @return {import("../ace").Ace.Delta[]}
      */
     getDeltas(from, to) {
         if (to == null) to = this.$rev + 1;

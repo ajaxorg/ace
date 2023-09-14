@@ -5,24 +5,44 @@ var dom = require("../lib/dom");
 
 
 class Marker {
+    /**
+     * @param {HTMLElement} parentEl
+     */
     constructor(parentEl) {
         this.element = dom.createElement("div");
         this.element.className = "ace_layer ace_marker-layer";
         parentEl.appendChild(this.element);
     }
-    
+
+    /**
+     * @param {number} padding
+     */
     setPadding(padding) {
         this.$padding = padding;
     }
+
+    /**
+     * @param {import("../edit_session").IEditSession} session
+     */
     setSession(session) {
         this.session = session;
     }
-    
+
+    /**
+     * @param {{ [x: number]: import("../../ace").Ace.MarkerLike; }} markers
+     */
     setMarkers(markers) {
         this.markers = markers;
     }
-    
+
+    /**
+     * @param {string} className
+     * @param {string} css
+     */
     elt(className, css) {
+        /**
+         * @type {any}
+         */
         var x = this.i != -1 && this.element.childNodes[this.i];
         if (!x) {
             x = document.createElement("div");

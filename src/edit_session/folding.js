@@ -1,15 +1,12 @@
 "use strict";
 
 /**
- * @typedef IFolding
- * @type {Folding & Ace.FoldingProperties}
+ * @typedef {Folding & import("../../ace").Ace.FoldingProperties} IFolding
  * @export
  */
 
 /**
- *
- * @typedef IEditSession
- * @type {import("../edit_session").IEditSession}
+ * @typedef {import("../edit_session").IEditSession} IEditSession
  */
 var Range = require("../range").Range;
 var FoldLine = require("./fold_line").FoldLine;
@@ -30,6 +27,7 @@ function Folding() {
      * @param {number} column
      * @param {number} [side]
      * @return {Fold}
+     * @this {IEditSession}
      **/
     this.getFoldAt = function(row, column, side) {
         var foldLine = this.getFoldLine(row);
@@ -52,7 +50,7 @@ function Folding() {
 
     /**
      * Returns all folds in the given range. Note, that this will return folds
-     * @param {Range| Ace.Delta} range
+     * @param {Range| import("../../ace").Ace.Delta} range
      * @returns {Fold[]}
      **/
     this.getFoldsInRange = function(range) {
@@ -484,7 +482,7 @@ function Folding() {
 
     /**
      * 
-     * @param {number|null|Ace.Point|Range|Range[]} [location]
+     * @param {number|null|import("../../ace").Ace.Point|Range|Range[]} [location]
      * @param {boolean} [expandInner]
      * @return {Fold[]| undefined}
      */
@@ -852,7 +850,7 @@ function Folding() {
     };
 
     /**
-     * @param {Ace.FoldMode} foldMode
+     * @param {import("../../ace").Ace.FoldMode} foldMode
      * @this {IEditSession}
      */
     this.$setFolding = function(foldMode) {
@@ -1018,7 +1016,7 @@ function Folding() {
     };
 
     /**
-     * @param {Ace.Delta} delta
+     * @param {import("../../ace").Ace.Delta} delta
      * @this {IEditSession}
      */
     this.updateFoldWidgets = function(delta) {

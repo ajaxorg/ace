@@ -1,18 +1,12 @@
 "use strict";
 /**
- *
- * @typedef IEditSession
- * @type {import("./edit_session").IEditSession}
+ * @typedef {import("./edit_session").IEditSession} IEditSession
  */
 /**
- *
- * @typedef IEditor
- * @type {import("./editor").IEditor}
+ * @typedef {import("./editor").IEditor} IEditor
  */
 /**
- *
- * @typedef IVirtualRenderer
- * @type {import("./virtual_renderer").IVirtualRenderer}
+ * @typedef {import("./virtual_renderer").IVirtualRenderer} IVirtualRenderer
  */
 
 var dom = require("./lib/dom");
@@ -20,7 +14,7 @@ var dom = require("./lib/dom");
 
 class LineWidgets {
     /**
-     * @type {Ace.LineWidget[]}
+     * @type {import("../ace").Ace.LineWidget[]}
      */
     lineWidgets;
     /**
@@ -154,7 +148,7 @@ class LineWidgets {
 
     /**
      * 
-     * @param {Ace.Delta} delta
+     * @param {import("../ace").Ace.Delta} delta
      */
     updateOnChange(delta) {
         var lineWidgets = this.session.lineWidgets;
@@ -206,8 +200,8 @@ class LineWidgets {
 
     /**
      * 
-     * @param {Ace.LineWidget} w
-     * @return {Ace.LineWidget}
+     * @param {import("../ace").Ace.LineWidget} w
+     * @return {import("../ace").Ace.LineWidget}
      */
     $registerLineWidget(w) {
         if (!this.session.lineWidgets)
@@ -228,8 +222,8 @@ class LineWidgets {
 
     /**
      *
-     * @param {Ace.LineWidget} w
-     * @return {Ace.LineWidget}
+     * @param {import("../ace").Ace.LineWidget} w
+     * @return {import("../ace").Ace.LineWidget}
      */
     addLineWidget(w) {
         this.$registerLineWidget(w);
@@ -286,7 +280,7 @@ class LineWidgets {
     }
     
     /**
-     * @param {Ace.LineWidget} w
+     * @param {import("../ace").Ace.LineWidget} w
      */
     removeLineWidget(w) {
         w._inDocument = false;
@@ -319,7 +313,7 @@ class LineWidgets {
     /**
      * 
      * @param {number} row
-     * @return {Ace.LineWidget[]}
+     * @return {import("../ace").Ace.LineWidget[]}
      */
     getWidgetsAtRow(row) {
         var lineWidgets = this.session.lineWidgets;
@@ -333,7 +327,7 @@ class LineWidgets {
     }
 
     /**
-     * @param {Ace.LineWidget} w
+     * @param {import("../ace").Ace.LineWidget} w
      */
     onWidgetChanged(w) {
         this.session._changedWidgets.push(w);

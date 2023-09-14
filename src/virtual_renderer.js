@@ -1,7 +1,7 @@
 "use strict";
 /**
  * @typedef IVirtualRenderer
- * @type {VirtualRenderer & EventEmitter & Ace.OptionsProvider<Ace.VirtualRendererOptions> & Ace.VirtualRendererProperties}
+ * @type {VirtualRenderer & EventEmitter & import("../ace").Ace.OptionsProvider<import("../ace").Ace.VirtualRendererOptions> & import("../ace").Ace.VirtualRendererProperties}
  */
 /**
  *
@@ -42,7 +42,7 @@ class VirtualRenderer {
     session;
     /**
      * Constructs a new `VirtualRenderer` within the `container` specified, applying the given `theme`.
-     * @param {Element} container The root element of the editor
+     * @param {Element} [container] The root element of the editor
      * @param {String} [theme] The starting theme
      * @this {IVirtualRenderer}
      **/
@@ -1282,7 +1282,7 @@ class VirtualRenderer {
 
     /**
      * Sets annotations for the gutter.
-     * @param {Ace.Annotation[]} annotations An array containing annotations
+     * @param {import("../ace").Ace.Annotation[]} annotations An array containing annotations
      *
      **/
     setAnnotations(annotations) {
@@ -1316,8 +1316,8 @@ class VirtualRenderer {
 
     /**
      * 
-     * @param {Ace.Point} anchor
-     * @param {Ace.Point} lead
+     * @param {import("../ace").Ace.Point} anchor
+     * @param {import("../ace").Ace.Point} lead
      * @param {number} [offset]
      */
     scrollSelectionIntoView(anchor, lead, offset) {
@@ -1329,7 +1329,7 @@ class VirtualRenderer {
     /**
      * 
      * Scrolls the cursor into the first visibile area of the editor
-     * @param {Ace.Point} [cursor]
+     * @param {import("../ace").Ace.Point} [cursor]
      * @param {number} [offset]
      * @param {{ top: any; bottom: any; }} [$viewMargin]
      */
@@ -1430,7 +1430,7 @@ class VirtualRenderer {
 
     /**
      * 
-     * @param {Ace.Point} cursor
+     * @param {import("../ace").Ace.Point} cursor
      * @param {number} [alignment]
      * @returns {number}
      */
@@ -1616,7 +1616,7 @@ class VirtualRenderer {
      * 
      * @param {number} x
      * @param {number} y
-     * @returns {{row: number, column: number, side: 1|-1, offsetX: number}}
+     * @returns {import("../ace").Ace.ScreenCoordinates}
      * @this {IVirtualRenderer}
      */
     pixelToScreenCoordinates(x, y) {
@@ -1642,7 +1642,7 @@ class VirtualRenderer {
      * 
      * @param {number} x
      * @param {number} y
-     * @returns {Ace.Point}
+     * @returns {import("../ace").Ace.Point}
      * @this {IVirtualRenderer}
      */
     screenToTextCoordinates(x, y) {
@@ -1760,7 +1760,7 @@ class VirtualRenderer {
 
     /**
      * @param {string} text
-     * @param {Ace.Point} position
+     * @param {import("../ace").Ace.Point} [position]
      */
     setGhostText(text, position) {
         var cursor = this.session.selection.cursor;
@@ -1967,7 +1967,13 @@ class VirtualRenderer {
             delete this.$scrollDecorator;
         }
         if (val === true) {
+            /**
+             * @type {import("../ace").Ace.VScrollbar}
+             */
             this.scrollBarV = new VScrollBarCustom(this.container, this);
+            /**
+             * @type {import("../ace").Ace.HScrollbar}
+             */
             this.scrollBarH = new HScrollBarCustom(this.container, this);
             this.scrollBarV.setHeight(this.$size.scrollerHeight);
             this.scrollBarH.setWidth(this.$size.scrollerWidth);

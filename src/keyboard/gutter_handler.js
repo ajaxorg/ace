@@ -50,40 +50,42 @@ class GutterKeyboardHandler {
                 this.editor.scrollToLine(row, true, true);
 
             // After scrolling is completed, find the nearest gutter icon and set focus to it.
-            setTimeout(function() {
-                var index = this.$rowToRowIndex(this.gutterLayer.$cursorCell.row);
-                var nearestFoldIndex = this.$findNearestFoldWidget(index);
-                var nearestAnnotationIndex = this.$findNearestAnnotation(index);
+            setTimeout(
+                /** @this {GutterKeyboardHandler} */
+                function () {
+                    var index = this.$rowToRowIndex(this.gutterLayer.$cursorCell.row);
+                    var nearestFoldIndex = this.$findNearestFoldWidget(index);
+                    var nearestAnnotationIndex = this.$findNearestAnnotation(index);
 
-                if (nearestFoldIndex === null && nearestAnnotationIndex === null)
-                    return;
+                    if (nearestFoldIndex === null && nearestAnnotationIndex === null) return;
 
-                if (nearestFoldIndex === null && nearestAnnotationIndex !== null){
-                    this.activeRowIndex = nearestAnnotationIndex;
-                    this.activeLane = "annotation";
-                    this.$focusAnnotation(this.activeRowIndex);
-                    return;
-                }
+                    if (nearestFoldIndex === null && nearestAnnotationIndex !== null) {
+                        this.activeRowIndex = nearestAnnotationIndex;
+                        this.activeLane = "annotation";
+                        this.$focusAnnotation(this.activeRowIndex);
+                        return;
+                    }
 
-                if (nearestFoldIndex !== null && nearestAnnotationIndex === null){
-                    this.activeRowIndex = nearestFoldIndex;
-                    this.activeLane = "fold";
-                    this.$focusFoldWidget(this.activeRowIndex);
-                    return;
-                }
+                    if (nearestFoldIndex !== null && nearestAnnotationIndex === null) {
+                        this.activeRowIndex = nearestFoldIndex;
+                        this.activeLane = "fold";
+                        this.$focusFoldWidget(this.activeRowIndex);
+                        return;
+                    }
 
-                if (Math.abs(nearestAnnotationIndex - index) < Math.abs(nearestFoldIndex - index)){
-                    this.activeRowIndex = nearestAnnotationIndex;
-                    this.activeLane = "annotation";
-                    this.$focusAnnotation(this.activeRowIndex);
-                    return;
-                } else {
-                    this.activeRowIndex = nearestFoldIndex;
-                    this.activeLane = "fold";
-                    this.$focusFoldWidget(this.activeRowIndex);
-                    return;
-                }
-            }.bind(this), 10);
+                    if (Math.abs(nearestAnnotationIndex - index) < Math.abs(nearestFoldIndex - index)) {
+                        this.activeRowIndex = nearestAnnotationIndex;
+                        this.activeLane = "annotation";
+                        this.$focusAnnotation(this.activeRowIndex);
+                        return;
+                    }
+                    else {
+                        this.activeRowIndex = nearestFoldIndex;
+                        this.activeLane = "fold";
+                        this.$focusFoldWidget(this.activeRowIndex);
+                        return;
+                    }
+                }.bind(this), 10);
             return;
         } 
 
@@ -168,12 +170,14 @@ class GutterKeyboardHandler {
 
                         // After folding, check that the right fold widget is still in focus.
                         // If not (e.g. folding close to bottom of doc), put right widget in focus.
-                        setTimeout(function() {
-                            if (this.$rowIndexToRow(this.activeRowIndex) !== rowFoldingWidget){ 
-                                this.$blurFoldWidget(this.activeRowIndex);
-                                this.activeRowIndex = this.$rowToRowIndex(rowFoldingWidget);
-                                this.$focusFoldWidget(this.activeRowIndex);
-                            }
+                        setTimeout(
+                            /** @this {GutterKeyboardHandler} */
+                            function () {
+                                if (this.$rowIndexToRow(this.activeRowIndex) !== rowFoldingWidget) {
+                                    this.$blurFoldWidget(this.activeRowIndex);
+                                    this.activeRowIndex = this.$rowToRowIndex(rowFoldingWidget);
+                                    this.$focusFoldWidget(this.activeRowIndex);
+                                }
                         }.bind(this), 10);
 
                         break;

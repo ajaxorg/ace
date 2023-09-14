@@ -9,6 +9,12 @@ class RangeList {
         this.$bias = 1;
     }
 
+    /**
+     * @param {import("../ace").Ace.Point} pos
+     * @param {boolean} [excludeEdges]
+     * @param {number} [startIndex]
+     * @return {number}
+     */
     pointIndex(pos, excludeEdges, startIndex) {
         var list = this.ranges;
 
@@ -28,6 +34,9 @@ class RangeList {
         return -i - 1;
     }
 
+    /**
+     * @param {Range} range
+     */
     add(range) {
         var excludeEdges = !range.isEmpty();
         var startIndex = this.pointIndex(range.start, excludeEdges);
@@ -51,6 +60,9 @@ class RangeList {
         return removed;
     }
 
+    /**
+     * @param {import("../ace").Ace.Point} pos
+     */
     substractPoint(pos) {
         var i = this.pointIndex(pos);
 
@@ -94,14 +106,24 @@ class RangeList {
         return removed;
     }
 
+    /**
+     * @param {number} row
+     * @param {number} column
+     */
     contains(row, column) {
         return this.pointIndex({row: row, column: column}) >= 0;
     }
 
+    /**
+     * @param {import("../ace").Ace.Point} pos
+     */
     containsPoint(pos) {
         return this.pointIndex(pos) >= 0;
     }
 
+    /**
+     * @param {import("../ace").Ace.Point} pos
+     */
     rangeAtPoint(pos) {
         var i = this.pointIndex(pos);
         if (i >= 0)
@@ -109,6 +131,10 @@ class RangeList {
     }
 
 
+    /**
+     * @param {number} startRow
+     * @param {number} endRow
+     */
     clipRows(startRow, endRow) {
         var list = this.ranges;
         if (list[0].start.row > endRow || list[list.length - 1].start.row < startRow)
@@ -117,6 +143,7 @@ class RangeList {
         var startIndex = this.pointIndex({row: startRow, column: 0});
         if (startIndex < 0)
             startIndex = -startIndex - 1;
+        //TODO: seems mistake
         var endIndex = this.pointIndex({row: endRow, column: 0}, startIndex);
         if (endIndex < 0)
             endIndex = -endIndex - 1;
@@ -132,6 +159,9 @@ class RangeList {
         return this.ranges.splice(0, this.ranges.length);
     }
 
+    /**
+     * @param {any} session
+     */
     attach(session) {
         if (this.session)
             this.detach();
@@ -149,6 +179,9 @@ class RangeList {
         this.session = null;
     }
 
+    /**
+     * @param {import("../ace").Ace.Delta} delta
+     */
     $onChange(delta) {
         var start = delta.start;
         var end = delta.end;

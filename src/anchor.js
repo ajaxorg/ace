@@ -5,21 +5,23 @@
  */
 /**
  * @typedef IAnchor
- * @type {Anchor & Ace.EventEmitter & {markerId?: number}}
+ * @type {Anchor & import("../ace").Ace.EventEmitter & {markerId?: number}}
  */
 var oop = require("./lib/oop");
 var EventEmitter = require("./lib/event_emitter").EventEmitter;
 
 /**
  * Defines a floating pointer in the document. Whenever text is inserted or deleted before the cursor, the position of the anchor is updated.
+ * @this {IAnchor}
  **/
 class Anchor {
     /**
      * Creates a new `Anchor` and associates it with a document.
      *
      * @param {IDocument} doc The document to associate with the anchor
-     * @param {Number|Ace.Point} row The starting row position
+     * @param {Number|import("../ace").Ace.Point} row The starting row position
      * @param {Number} [column] The starting column position
+     * @this {IAnchor}
      **/
     constructor(doc, row, column) {
         this.$onChange = this.onChange.bind(this);
@@ -33,7 +35,7 @@ class Anchor {
     
     /**
      * Returns an object identifying the `row` and `column` position of the current anchor.
-     * @returns {Ace.Point}
+     * @returns {import("../ace").Ace.Point}
      **/
     getPosition() {
         return this.$clipPositionToDocument(this.row, this.column);
@@ -63,7 +65,8 @@ class Anchor {
      **/
     /**
      * Internal function called when `"change"` event fired.
-     * @param {Ace.Delta} delta
+     * @param {import("../ace").Ace.Delta} delta
+     * @this {IAnchor}
      */
     onChange(delta) {
         if (delta.start.row == delta.end.row && delta.start.row != this.row)
@@ -132,7 +135,7 @@ class Anchor {
      * Clips the anchor position to the specified row and column.
      * @param {Number} row The row index to clip the anchor to
      * @param {Number} column The column index to clip the anchor to
-     * @returns {Ace.Point}
+     * @returns {import("../ace").Ace.Point}
      *
      **/
     $clipPositionToDocument(row, column) {

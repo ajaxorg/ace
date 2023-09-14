@@ -1,8 +1,6 @@
 "use strict";
 /**
- *
- * @typedef IEditSession
- * @type {import("../edit_session").IEditSession}
+ * @typedef {import("../edit_session").IEditSession} IEditSession
  */
 
 var TokenIterator = require("../token_iterator").TokenIterator;
@@ -16,7 +14,7 @@ function BracketMatch() {
 
     /**
      * 
-     * @param {Ace.Point} position
+     * @param {import("../../ace").Ace.Point} position
      * @param {string} [chr]
      */
     this.findMatchingBracket = function(position, chr) {
@@ -36,7 +34,7 @@ function BracketMatch() {
     };
 
     /**
-     * @param {Ace.Point} pos
+     * @param {import("../../ace").Ace.Point} pos
      * @return {null|Range}
      */
     this.getBracketRange = function(pos) {
@@ -85,7 +83,7 @@ function BracketMatch() {
      * * two Ranges if there is opening and closing brackets;
      * * one Range if there is only one bracket
      *
-     * @param {Ace.Point} pos
+     * @param {import("../../ace").Ace.Point} pos
      * @param {boolean} [isBackwards]
      * @returns {null|Range[]}
      */
@@ -130,9 +128,9 @@ function BracketMatch() {
     /**
      * 
      * @param {string} bracket
-     * @param {Ace.Point} position
+     * @param {import("../../ace").Ace.Point} position
      * @param {RegExp} [typeRe]
-     * @return {Ace.Point|null}
+     * @return {import("../../ace").Ace.Point|null}
      */
     this.$findOpeningBracket = function(bracket, position, typeRe) {
         var openBracket = this.$brackets[bracket];
@@ -195,9 +193,9 @@ function BracketMatch() {
     /**
      *
      * @param {string} bracket
-     * @param {Ace.Point} position
+     * @param {import("../../ace").Ace.Point} position
      * @param {RegExp} [typeRe]
-     * @return {Ace.Point|null}
+     * @return {import("../../ace").Ace.Point|null}
      */
     this.$findClosingBracket = function(bracket, position, typeRe) {
         var closingBracket = this.$brackets[bracket];
@@ -259,7 +257,7 @@ function BracketMatch() {
 
     /**
      * Returns [[Range]]'s for matching tags and tag names, if there are any
-     * @param {Ace.Point} pos
+     * @param {import("../../ace").Ace.Point} pos
      * @returns {{closeTag: Range, closeTagName: Range, openTag: Range, openTagName: Range} | undefined}
      */
     this.getMatchingTags = function (pos) {

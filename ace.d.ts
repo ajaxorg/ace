@@ -1,20 +1,84 @@
 /// <reference path="./ace-modes.d.ts" />
 
-declare namespace Ace {
+export namespace Ace {
+    type Anchor = import("./src/anchor").IAnchor;
+    type Editor = import("./src/editor").IEditor;
+    type EditSession = import("./src/edit_session").IEditSession;
+    type Document = import("./src/document").IDocument;
+    type Folding = import("./src/edit_session/folding").IFolding;
+    type Fold = import("./src/edit_session/fold").Fold;
+    type FoldLine = import("./src/edit_session/fold_line").FoldLine;
+    type Range = import("./src/range").Range;
+    type VirtualRenderer = import("./src/virtual_renderer").IVirtualRenderer;
+    type UndoManager = import("./src/undomanager").UndoManager;
+    type Tokenizer = import("./src/tokenizer").Tokenizer;
+    type TokenIterator = import("./src/token_iterator").TokenIterator;
+    type Selection = import("./src/selection").ISelection;
+    type Autocomplete = import("./src/autocomplete").Autocomplete;
+    type CompletionProvider = import("./src/autocomplete").CompletionProvider;
+    type AcePopup = import("./src/autocomplete/popup").IAcePopup;
+    type Config = import("./src/config").IConfig;
+    
+    interface ScrollBar {
+        setVisible(visible: boolean): void;
+        [key: string]: any;
+    }
+    
+    interface HScrollbar extends ScrollBar {
+        setWidth(width: number): void;
+    }
+
+    interface VScrollbar extends ScrollBar {
+        setHeight(width: number): void;
+    }
+    
+    interface LayerConfig {
+        width : number,
+        padding : number,
+        firstRow : number,
+        firstRowScreen: number,
+        lastRow : number,
+        lineHeight : number,
+        characterWidth : number,
+        minHeight : number,
+        maxHeight : number,
+        offset : number,
+        height : number,
+        gutterOffset: number
+    }
+    interface HardWrapOptions {
+        startRow: number;
+        endRow: number;
+        allowMerge?: boolean;
+        column?: number;
+    }
+
+    interface CommandBarOptions {
+        maxElementsOnTooltip: number;
+        alwaysShow: boolean;
+        showDelay: number;
+        hideDelay: number;
+    }
+    interface ScreenCoordinates {
+        row: number,
+        column: number,
+        side: 1 | -1,
+        offsetX: number
+    }
     interface FoldingProperties {
         $foldMode: FoldMode,
         foldWidgets: FoldWidget[],
-        getFoldWidget: FoldMode.getFoldWidget,
-        getFoldWidgetRange: FoldMode.getFoldWidgetRange,
-        $updateFoldWidgets: (delta: Delta) => void,
-        $tokenizerUpdateFoldWidgets: (e) => void,
-        addFold: (placeholder: Fold|String, range?: Range) => Fold,
-        removeFold: (fold: Fold) => void,
-        removeFolds: (folds: Fold[]) => void,
-        setFoldStyle: (style: string) => void,
-        $setFolding: (foldMode: FoldMode) => void,
+        getFoldWidget: Function,
+        getFoldWidgetRange: Function,
+        $updateFoldWidgets(delta: Delta): void,
+        $tokenizerUpdateFoldWidgets(e): void,
+        addFold(placeholder: Fold|String, range?: Range): Fold,
+        removeFold(fold: Fold): void,
+        removeFolds(folds: Fold[]): void,
+        setFoldStyle(style: string): void,
+        $setFolding(foldMode: FoldMode): void,
     }
-    
+
     interface AcePopupProperties {
         setSelectOnHover?: (val: boolean) => void,
         setRow?: (line: number) => void,
@@ -39,14 +103,7 @@ declare namespace Ace {
         anchorPos?: any
     }
     interface ISelection {
-        session: IEditSession;
-        doc: IDocument;
-        cursor: Anchor;
-        anchor: Anchor;
-        $silent: boolean;
-        lead: Anchor;
-        $cursorChanged?:boolean;
-        $isEmpty?:boolean;
+        [key: string]: any;
     }
     interface IRange {
         start: Point;
@@ -60,43 +117,47 @@ declare namespace Ace {
         column?: number;
         row?: number;
         $oldWidget?: LineWidget,
-        session: IEditSession,
+        session: EditSession,
         html?: string,
         text?: string,
         className?: string,
         coverGutter?: boolean,
         pixelHeight?: number,
         $fold?: Fold,
-        editor: IEditor,
+        editor: Editor,
         coverLine?: boolean,
         fixedWidth?: boolean,
         fullWidth?: boolean,
         screenWidth?: number,
         rowsAbove?: number,
+        lenses?: any[],
     }
-    
+
     interface EditorProperties {
         $mergeUndoDeltas?: any,
         $highlightSelectedWord?: boolean,
         $updatePlaceholder?: Function,
         $cursorStyle?: string,
         $readOnly?: any,
-        searchBox?: any,
         $highlightActiveLine?: any,
         $enableAutoIndent?: any,
         $copyWithEmptySelection?: any
         $selectionStyle?: string,
         env?: any;
-        widgetManager?: LineWidgets,
-        completer?: Autocomplete,
-        completers?: Completer[],
+        widgetManager?: import("./src/line_widgets").LineWidgets,
+        completer?: import("./src/autocomplete").Autocomplete,
+        completers: Completer[],
         $highlightTagPending?: boolean,
+        showKeyboardShortcuts?: () => void,
+        showSettingsMenu?: () => void,
+        searchBox?: import("./src/ext/searchbox").SearchBox
+        [key: string]: any;
     }
 
     interface EditSessionProperties {
         $highlightLineMarker?: {
-            start: Ace.Point,
-            end: Ace.Point,
+            start: Point,
+            end: Point,
             id?: number
         }
         $useSoftTabs?: boolean,
@@ -120,12 +181,13 @@ declare namespace Ace {
         $enableVarChar?: any,
         $wrap?:any,
         $navigateWithinSoftTabs?: boolean
+        [key: string]: any;
     }
 
     interface EditorMultiSelectProperties {
         inMultiSelectMode?: boolean,
         forEachSelection?: Function,
-        exitMultiSelectMode?: Function
+        exitMultiSelectMode?: Function,
     }
 
     interface VirtualRendererProperties {
@@ -157,7 +219,7 @@ declare namespace Ace {
     }
 
     type NewLineMode = 'auto' | 'unix' | 'windows';
-    
+
     interface EditSessionOptions {
         wrap: "off" | "free" | "printmargin" | boolean | number;
         wrapMethod: 'code' | 'text' | 'auto';
@@ -188,7 +250,7 @@ declare namespace Ace {
         highlightGutterLine: boolean;
         hScrollBarAlwaysVisible: boolean;
         vScrollBarAlwaysVisible: boolean;
-        fontSize: number;
+        fontSize: string;
         fontFamily: string;
         maxLines: number;
         minLines: number;
@@ -214,7 +276,7 @@ declare namespace Ace {
     interface EditorOptions extends EditSessionOptions,
         MouseHandlerOptions,
         VirtualRendererOptions {
-        selectionStyle: string;
+        selectionStyle: "fullLine" | "screenLine" | "text" | "line";
         highlightActiveLine: boolean;
         highlightSelectedWord: boolean;
         readOnly: boolean;
@@ -237,30 +299,31 @@ declare namespace Ace {
         relativeLineNumbers: boolean;
         enableMultiselect: boolean;
         enableKeyboardAccessibility: boolean;
+        enableCodeLens: boolean;
     }
 
     class EventEmitter {
-        once?(name: string, callback: Function): void;
+        once(name: string, callback: Function): void;
 
-        setDefaultHandler?(name: string, callback: Function): void;
+        setDefaultHandler(name: string, callback: Function): void;
 
-        removeDefaultHandler?(name: string, callback: Function): void;
+        removeDefaultHandler(name: string, callback: Function): void;
 
-        on?(name: string, callback: Function, capturing?: boolean): Function;
+        on(name: string, callback: Function, capturing?: boolean): Function;
 
-        addEventListener?(name: string, callback: Function, capturing?: boolean): Function;
+        addEventListener(name: string, callback: Function, capturing?: boolean): Function;
 
-        off?(name: string, callback: Function): void;
+        off(name: string, callback: Function): void;
 
-        removeListener?(name: string, callback: Function): void;
+        removeListener(name: string, callback: Function): void;
 
-        removeEventListener?(name: string, callback: Function): void;
+        removeEventListener(name: string, callback: Function): void;
 
-        removeAllListeners?(name?: string): void;
+        removeAllListeners(name?: string): void;
 
-        _signal?(eventName: string, e: any): void;
+        _signal(eventName: string, e: any): void;
 
-        _emit?(eventName: string, e: any): void;
+        _emit(eventName: string, e: any): void;
     }
 
     interface SearchOptions {
@@ -275,6 +338,7 @@ declare namespace Ace {
         wholeWord: boolean;
         caseSensitive: boolean;
         wrap: boolean;
+        re: RegExp;
     }
 
     interface Point {
@@ -300,7 +364,19 @@ declare namespace Ace {
         type: string;
     }
 
-    interface Command {
+    export interface MarkerGroupItem {
+        range: Range;
+        className: string;
+    }
+
+    export class MarkerGroup {
+        constructor(session: EditSession);
+        setMarkers(markers: MarkerGroupItem[]): void;
+        getMarkerAtPosition(pos: Position): MarkerGroupItem;
+    }
+
+
+    export interface Command {
         name?: string;
         bindKey?: string | { mac?: string, win?: string };
         readOnly?: boolean;
@@ -313,11 +389,11 @@ declare namespace Ace {
         handleKeyboard: Function;
     }
 
-    interface MarkerLike {
+    export interface MarkerLike {
         range?: Range;
-        type?: string;
+        type: string;
         renderer?: MarkerRenderer;
-        clazz?: string;
+        clazz: string;
         inFront?: boolean;
         id?: number;
         update?: (html: string[],
@@ -325,6 +401,7 @@ declare namespace Ace {
                   marker: any,
                   session: EditSession,
                   config: any) => void;
+        [key: string]: any;
     }
 
     type MarkerRenderer = (html: string[],
@@ -340,43 +417,31 @@ declare namespace Ace {
         start?: number;
     }
 
-    interface BaseCompletion {
-        score?: number;
-        meta?: string;
-        caption?: string;
-        docHTML?: string;
-        docText?: string;
-        completerId?: string;
-    }
+    type BaseCompletion = import("./src/autocomplete").BaseCompletion;
+    type SnippetCompletion = import("./src/autocomplete").SnippetCompletion;
+    type ValueCompletion = import("./src/autocomplete").ValueCompletion;
+    type Completion = import("./src/autocomplete").Completion;
 
-    interface SnippetCompletion extends BaseCompletion {
-        snippet: string;
-        value?: string;
-    }
-
-    interface ValueCompletion extends BaseCompletion {
-        value: string;
-        snippet?: string;
-    }
-
-    type Completion = SnippetCompletion | ValueCompletion
-
-
-
-    type HighlightRule = { defaultToken: string } | { include: string } | { todo: string } | {
+    type HighlightRule = ({ defaultToken: string } | { include: string } | { todo: string } | {
         token: string | string[] | ((value: string) => string);
         regex: string | RegExp;
-        next?: string;
+        next?: string | (() => void);
         push?: string;
         comment?: string;
         caseInsensitive?: boolean;
-    }
+        nextState?: string;
+    }) & { [key: string]: any };
 
     type HighlightRulesMap = Record<string, HighlightRule[]>;
 
     type KeywordMapper = (keyword: string) => string;
 
     interface HighlightRules {
+        $rules: HighlightRulesMap;
+        $embeds: string[];
+        $keywords: any[];
+        $keywordList: string[];
+
         addRules(rules: HighlightRulesMap, prefix?: string): void;
 
         getRules(): HighlightRulesMap;
@@ -389,25 +454,25 @@ declare namespace Ace {
 
         createKeywordMapper(map: Record<string, string>, defaultToken?: string, ignoreCase?: boolean, splitChar?: string): KeywordMapper;
     }
-    
+
     type FoldWidget = "start" | "end" | ""
 
     interface FoldMode {
         foldingStartMarker: RegExp;
         foldingStopMarker?: RegExp;
 
-        getFoldWidget(session: IEditSession, foldStyle: string, row: number): FoldWidget;
+        getFoldWidget(session: EditSession, foldStyle: string, row: number): FoldWidget;
 
-        getFoldWidgetRange(session: IEditSession, foldStyle: string, row: number): Range | undefined;
+        getFoldWidgetRange(session: EditSession, foldStyle: string, row: number): Range | undefined;
 
-        indentationBlock(session: IEditSession, row: number, column?: number): Range | undefined;
+        indentationBlock(session: EditSession, row: number, column?: number): Range | undefined;
 
-        openingBracketBlock(session: IEditSession, bracket: string, row: number, column: number, typeRe?: RegExp): Range | undefined;
+        openingBracketBlock(session: EditSession, bracket: string, row: number, column: number, typeRe?: RegExp): Range | undefined;
 
-        closingBracketBlock(session: IEditSession, bracket: string, row: number, column: number, typeRe?: RegExp): Range | undefined;
+        closingBracketBlock(session: EditSession, bracket: string, row: number, column: number, typeRe?: RegExp): Range | undefined;
     }
 
-    type BehaviorAction = (state: string, action: string, editor: Editor, session: EditSession, text: string) => { text: string, selection: number[] } | Range | undefined;
+    type BehaviorAction = (state: string, action: string, editor: Editor, session: EditSession, text: string | Range) => ({ text: string, selection: number[] } | Range) & {[key: string]: any} | undefined;
     type BehaviorMap = Record<string, Record<string, BehaviorAction>>;
 
     interface Behaviour {
@@ -419,7 +484,7 @@ declare namespace Ace {
 
         inherit(mode: SyntaxMode | (new () => SyntaxMode), filter: string[]): void;
 
-        getBehaviours(filter: string[]): BehaviorMap;
+        getBehaviours(filter?: string[]): BehaviorMap;
     }
 
     interface Outdent {
@@ -429,11 +494,36 @@ declare namespace Ace {
     }
 
     interface SyntaxMode {
-        HighlightRules: HighlightRules;
+        /**
+         * quotes used by language mode
+         */
+        $quotes: {[quote: string]: string};
+        HighlightRules: HighlightRules; //TODO: fix this
         foldingRules?: FoldMode;
         $behaviour?: Behaviour;
         $defaultBehaviour?: Behaviour;
+        /**
+         * characters that indicate the start of a line comment
+         */
         lineCommentStart?: string;
+        /**
+         * characters that indicate the start and end of a block comment
+         */
+        blockComment?: {start: string, end: string}
+        tokenRe?: RegExp;
+        nonTokenRe?: RegExp;
+        /**
+         * An object containing conditions to determine whether to apply matching quote or not.
+         */
+        $pairQuotesAfter: {[quote: string]: RegExp}
+        $tokenizer: Tokenizer;
+        $highlightRules: HighlightRules;
+        $embeds?: string[];
+        $modes?: SyntaxMode[];
+        $keywordList?: string[];
+        $highlightRuleConfig?: any;
+        completionKeywords: string[];
+        transformAction: BehaviorAction;
 
         getTokenizer(): Tokenizer;
 
@@ -451,14 +541,12 @@ declare namespace Ace {
 
         checkOutdent(state: any, line: string, input: string): boolean;
 
-        autoOutdent(state: any, doc: IEditSession, row: number): void;
+        autoOutdent(state: any, doc: EditSession, row: number): void;
 
         // TODO implement WorkerClient types
         createWorker(session: EditSession): any;
 
         createModeDelegates(mapping: { [key: string]: string }): void;
-
-        transformAction: BehaviorAction;
 
         getKeywords(append?: boolean): Array<string | RegExp>;
 
@@ -466,20 +554,24 @@ declare namespace Ace {
                        session: EditSession,
                        pos: Point,
                        prefix: string): Completion[];
+
+        $getIndent(line: string): string;
+        $createKeywordList(): string[];
+
     }
-    
+
     interface OptionsBase {
         [key: string]: any;
     }
 
     class OptionsProvider<T extends OptionsBase> {
-        setOptions?(optList: Partial<T>): void;
+        setOptions(optList: Partial<T>): void;
 
-        getOptions?(optionNames?: Array<keyof T> | Partial<T>): Partial<T>;
+        getOptions(optionNames?: Array<keyof T> | Partial<T>): Partial<T>;
 
-        setOption?<K extends keyof T>(name: K, value: K[T]): void;
+        setOption<K extends keyof T>(name: K, value: T[K]): void;
 
-        getOption?<K extends keyof T>(name: K): T[K];
+        getOption<K extends keyof T>(name: K): T[K];
     }
 
 
@@ -519,22 +611,6 @@ declare namespace Ace {
 
         on(name: 'afterExec', callback: execEventHandler): Function;
 
-        once(name: string, callback: Function): void;
-
-        setDefaultHandler(name: string, callback: Function): void;
-
-        removeDefaultHandler(name: string, callback: Function): void;
-
-        on(name: string, callback: Function, capturing?: boolean): void;
-
-        addEventListener(name: string, callback: Function, capturing?: boolean): void;
-
-        off(name: string, callback: Function): void;
-
-        removeListener(name: string, callback: Function): void;
-
-        removeEventListener(name: string, callback: Function): void;
-
         exec(command: string, editor: Editor, args: any): boolean;
 
         toggleRecording(editor: Editor): void;
@@ -564,282 +640,6 @@ declare namespace Ace {
         getStatusText(editor: Editor, data: {}): string;
     }
 
-    interface VirtualRenderer extends OptionsProvider, EventEmitter {
-        readonly container: HTMLElement;
-        readonly scroller: HTMLElement;
-        readonly content: HTMLElement;
-        readonly characterWidth: number;
-        readonly lineHeight: number;
-        readonly scrollLeft: number;
-        readonly scrollTop: number;
-        readonly $padding: number;
-
-        setOption<T extends keyof VirtualRendererOptions>(name: T, value: VirtualRendererOptions[T]): void;
-
-        getOption<T extends keyof VirtualRendererOptions>(name: T): VirtualRendererOptions[T];
-
-        setSession(session: EditSession): void;
-
-        updateLines(firstRow: number, lastRow: number, force?: boolean): void;
-
-        updateText(): void;
-
-        updateFull(force?: boolean): void;
-
-        updateFontSize(): void;
-
-        adjustWrapLimit(): boolean;
-
-        setAnimatedScroll(shouldAnimate: boolean): void;
-
-        getAnimatedScroll(): boolean;
-
-        setShowInvisibles(showInvisibles: boolean): void;
-
-        getShowInvisibles(): boolean;
-
-        setDisplayIndentGuides(display: boolean): void;
-
-        getDisplayIndentGuides(): boolean;
-
-        setShowPrintMargin(showPrintMargin: boolean): void;
-
-        getShowPrintMargin(): boolean;
-
-        setPrintMarginColumn(showPrintMargin: boolean): void;
-
-        getPrintMarginColumn(): boolean;
-
-        setShowGutter(show: boolean): void;
-
-        getShowGutter(): boolean;
-
-        setFadeFoldWidgets(show: boolean): void;
-
-        getFadeFoldWidgets(): boolean;
-
-        setHighlightGutterLine(shouldHighlight: boolean): void;
-
-        getHighlightGutterLine(): boolean;
-
-        getContainerElement(): HTMLElement;
-
-        getMouseEventTarget(): HTMLElement;
-
-        getTextAreaContainer(): HTMLElement;
-
-        getFirstVisibleRow(): number;
-
-        getFirstFullyVisibleRow(): number;
-
-        getLastFullyVisibleRow(): number;
-
-        getLastVisibleRow(): number;
-
-        setPadding(padding: number): void;
-
-        setScrollMargin(top: number,
-                        bottom: number,
-                        left: number,
-                        right: number): void;
-
-        setHScrollBarAlwaysVisible(alwaysVisible: boolean): void;
-
-        getHScrollBarAlwaysVisible(): boolean;
-
-        setVScrollBarAlwaysVisible(alwaysVisible: boolean): void;
-
-        getVScrollBarAlwaysVisible(): boolean;
-
-        freeze(): void;
-
-        unfreeze(): void;
-
-        updateFrontMarkers(): void;
-
-        updateBackMarkers(): void;
-
-        updateBreakpoints(): void;
-
-        setAnnotations(annotations: Annotation[]): void;
-
-        updateCursor(): void;
-
-        hideCursor(): void;
-
-        showCursor(): void;
-
-        scrollSelectionIntoView(anchor: Position,
-                                lead: Position,
-                                offset?: number): void;
-
-        scrollCursorIntoView(cursor: Position, offset?: number): void;
-
-        getScrollTop(): number;
-
-        getScrollLeft(): number;
-
-        getScrollTopRow(): number;
-
-        getScrollBottomRow(): number;
-
-        scrollToRow(row: number): void;
-
-        alignCursor(cursor: Position | number, alignment: number): number;
-
-        scrollToLine(line: number,
-                     center: boolean,
-                     animate: boolean,
-                     callback: () => void): void;
-
-        animateScrolling(fromValue: number, callback: () => void): void;
-
-        scrollToY(scrollTop: number): void;
-
-        scrollToX(scrollLeft: number): void;
-
-        scrollTo(x: number, y: number): void;
-
-        scrollBy(deltaX: number, deltaY: number): void;
-
-        isScrollableBy(deltaX: number, deltaY: number): boolean;
-
-        textToScreenCoordinates(row: number, column: number): { pageX: number, pageY: number };
-
-        pixelToScreenCoordinates(x: number, y: number): { row: number, column: number, side: 1 | -1, offsetX: number };
-
-        visualizeFocus(): void;
-
-        visualizeBlur(): void;
-
-        showComposition(position: number): void;
-
-        setCompositionText(text: string): void;
-
-        hideComposition(): void;
-
-        setGhostText(text: string, position: Point): void;
-
-        removeGhostText(): void;
-
-        setTheme(theme: string, callback?: () => void): void;
-
-        getTheme(): string;
-
-        setStyle(style: string, include?: boolean): void;
-
-        unsetStyle(style: string): void;
-
-        setCursorStyle(style: string): void;
-
-        setMouseCursor(cursorStyle: string): void;
-
-        attachToShadowRoot(): void;
-
-        destroy(): void;
-    }
-
-
-    interface Selection extends EventEmitter {
-        moveCursorWordLeft(): void;
-
-        moveCursorWordRight(): void;
-
-        fromOrientedRange(range: Range): void;
-
-        setSelectionRange(match: any): void;
-
-        getAllRanges(): Range[];
-
-        addRange(range: Range): void;
-
-        isEmpty(): boolean;
-
-        isMultiLine(): boolean;
-
-        setCursor(row: number, column: number): void;
-
-        setAnchor(row: number, column: number): void;
-
-        getAnchor(): Position;
-
-        getCursor(): Position;
-
-        isBackwards(): boolean;
-
-        getRange(): Range;
-
-        clearSelection(): void;
-
-        selectAll(): void;
-
-        setRange(range: Range, reverse?: boolean): void;
-
-        selectTo(row: number, column: number): void;
-
-        selectToPosition(pos: any): void;
-
-        selectUp(): void;
-
-        selectDown(): void;
-
-        selectRight(): void;
-
-        selectLeft(): void;
-
-        selectLineStart(): void;
-
-        selectLineEnd(): void;
-
-        selectFileEnd(): void;
-
-        selectFileStart(): void;
-
-        selectWordRight(): void;
-
-        selectWordLeft(): void;
-
-        getWordRange(): void;
-
-        selectWord(): void;
-
-        selectAWord(): void;
-
-        selectLine(): void;
-
-        moveCursorUp(): void;
-
-        moveCursorDown(): void;
-
-        moveCursorLeft(): void;
-
-        moveCursorRight(): void;
-
-        moveCursorLineStart(): void;
-
-        moveCursorLineEnd(): void;
-
-        moveCursorFileEnd(): void;
-
-        moveCursorFileStart(): void;
-
-        moveCursorLongWordRight(): void;
-
-        moveCursorLongWordLeft(): void;
-
-        moveCursorBy(rows: number, chars: number): void;
-
-        moveCursorToPosition(position: any): void;
-
-        moveCursorTo(row: number, column: number, keepDesiredColumn?: boolean): void;
-
-        moveCursorToScreen(row: number, column: number, keepDesiredColumn: boolean): void;
-
-        toJSON(): SavedSelection | SavedSelection[];
-
-        fromJSON(selection: SavedSelection | SavedSelection[]): void;
-    }
-
     interface SavedSelection {
         start: Point;
         end: Point;
@@ -855,7 +655,7 @@ declare namespace Ace {
 
         setAriaOption(activeDescendant: string, role: string): void;
     }
-    
+
     type CompleterCallback = (error: any, completions: Completion[]) => void;
 
     interface Completer {
@@ -894,12 +694,6 @@ declare namespace Ace {
         ignoreCaption?: boolean;
     }
 
-    type CompletionRecord = {
-        all: Completion[];
-        filtered: Completion[];
-        filterText: string;
-    } | CompletionProviderOptions
-
     type GatherCompletionRecord = {
         prefix: string;
         matches: Completion[];
@@ -907,113 +701,80 @@ declare namespace Ace {
     }
 
     type CompletionCallbackFunction = (err: Error | undefined, data: GatherCompletionRecord) => void;
-    type CompletionProviderCallback = (this: Autocomplete, err: Error | undefined, completions: CompletionRecord, finished: boolean) => void;
+    type CompletionProviderCallback = (this: import("./src/autocomplete").Autocomplete, err: Error | undefined, completions: import("./src/autocomplete").FilteredList, finished: boolean) => void;
 
-    class CompletionProvider {
-        insertByIndex(editor: Editor, index: number, options: CompletionProviderOptions): boolean;
-
-        insertMatch(editor: Editor, data: Completion, options: CompletionProviderOptions): boolean;
-
-        completions: CompletionRecord;
-
-
-
-        detach(): void;
-    }
-    
     type AcePopupNavigation = "up" | "down" | "start" | "end";
 
-    class AcePopup {
-        constructor(parentNode: HTMLElement);
-
-        setData(list: Completion[], filterText: string): void;
-
-        getData(row: number): Completion;
-
-        getRow(): number;
-        getRow(line: number): void;
-
-        hide(): void;
-
-        show(pos: Point, lineHeight: number, topdownOnly: boolean): void;
-
-        tryShow(pos: Point, lineHeight: number, anchor: "top" | "bottom" | undefined, forceShow?: boolean): boolean;
-
-        goTo(where: AcePopupNavigation): void;
-    }
 }
 
 
-declare const version: string;
-declare const config: Ace.Config;
-
-declare function require(name: string): any;
-
+export const version: string;
+export const config: Ace.Config;
+export function require(name: string): any;
+export function edit(el: string | (Element & {
+    env?;
+    value?;
+}), options?: Partial<Ace.EditorOptions>): Ace.Editor;
+export function createEditSession(text: Ace.Document | string, mode: Ace.SyntaxMode): Ace.EditSession;
+export const VirtualRenderer: {
+    new(container: HTMLElement, theme?: string): Ace.VirtualRenderer;
+};
+export const EditSession: {
+    new(text: string | Ace.Document, mode?: Ace.SyntaxMode): Ace.EditSession;
+};
+export const UndoManager: {
+    new(): Ace.UndoManager;
+};
+export const Editor: {
+    new(): Ace.Editor;
+};
+export const Range: {
+    new(startRow: number, startColumn: number, endRow: number, endColumn: number): Ace.Range;
+    fromPoints(start: Ace.Point, end: Ace.Point): Ace.Range;
+    comparePoints(p1: Ace.Point, p2: Ace.Point): number;
+};
 
 
 type InlineAutocompleteAction = "prev" | "next" | "first" | "last";
 
 type TooltipCommandFunction<T> = (editor: Ace.Editor) => T;
 
-interface TooltipCommand extends Ace.Command {
+export interface TooltipCommand extends Ace.Command {
     enabled: TooltipCommandFunction<boolean> | boolean,
     getValue?: TooltipCommandFunction<any>,
     type: "button" | "text" | "checkbox"
-    iconCssClass: string,
-    cssClass: string
+    iconCssClass?: string,
+    cssClass?: string
 }
 
-declare class InlineAutocomplete {
+export class InlineAutocomplete {
     constructor();
-
     getInlineRenderer(): Ace.AceInline;
-
     getInlineTooltip(): CommandBarTooltip;
-
     getCompletionProvider(): Ace.CompletionProvider;
-
     show(editor: Ace.Editor): void;
-
     isOpen(): boolean;
-
     detach(): void;
-
     destroy(): void;
-
     goTo(action: InlineAutocompleteAction): void;
-
     tooltipEnabled: boolean;
     commands: Record<string, Ace.Command>
-
     getIndex(): number;
-
     setIndex(value: number): void;
-
     getLength(): number;
-
     getData(index?: number): Ace.Completion | undefined;
-
     updateCompletions(options: Ace.CompletionOptions): void;
 }
 
-declare class CommandBarTooltip {
+export class CommandBarTooltip {
     constructor(parentElement: HTMLElement);
-
     registerCommand(id: string, command: TooltipCommand): void;
-
     attach(editor: Ace.Editor): void;
-
     updatePosition(): void;
-
     update(): void;
-
     isShown(): boolean;
-
     getAlwaysShow(): boolean;
-
     setAlwaysShow(alwaysShow: boolean): void;
-
     detach(): void;
-
     destroy(): void;
 }

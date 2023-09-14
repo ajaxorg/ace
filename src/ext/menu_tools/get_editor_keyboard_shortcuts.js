@@ -11,14 +11,15 @@
  */
 
 "use strict";
-var keys = require("../../lib/keys");
+
+/** @type{any} */var keys = require("../../lib/keys");
 
 /**
  * Gets a map of keyboard shortcuts to command names for the current platform.
  * @author <a href="mailto:matthewkastor@gmail.com">
  *  Matthew Christopher Kastor-Inare III </a><br />
  *  ☭ Hial Atropa!! ☭
- * @param {ace.Editor} editor An editor instance.
+ * @param {import("../../editor").IEditor} editor An editor instance.
  * @returns {Array} Returns an array of objects representing the keyboard
  *  shortcuts for the given editor.
  * @example

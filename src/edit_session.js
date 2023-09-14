@@ -1,13 +1,8 @@
-/// <reference path="./test.d.ts" />
-
 "use strict";
 /**
- * @typedef IDocument
- * @type {import("./document").IDocument}
- */
-/**
- * @typedef IFolding
- * @type {import("./edit_session/folding").IFolding}
+ * @typedef IEditSession
+ * @type {EditSession & import("../ace").Ace.OptionsProvider<import("../ace").Ace.EditSessionOptions> & import("../ace").Ace.EventEmitter & import("../ace").Ace.EditSessionProperties & import("./edit_session/folding").IFolding & import("./edit_session/bracket_match").BracketMatch}
+ * @export
  */
 /**
  * @typedef UndoManager
@@ -18,22 +13,23 @@
  * @type {import("./edit_session/fold_line").FoldLine}
  */
 /**
- * @typedef IEditSession
- * @type {EditSession & Ace.OptionsProvider<Ace.EditSessionOptions> & IFolding & Ace.EventEmitter & Ace.EditSessionProperties & import("./edit_session/bracket_match").BracketMatch}
- * @export
+ * @typedef ISelection
+ * @type {import("./selection").ISelection}
  */
-
 
 var oop = require("./lib/oop");
 var lang = require("./lib/lang");
 var BidiHandler = require("./bidihandler").BidiHandler;
 var config = require("./config");
 var EventEmitter = require("./lib/event_emitter").EventEmitter;
+/**
+ * @type {any}
+ */
 var Selection = require("./selection").Selection;
 var TextMode = require("./mode/text").Mode;
 var Range = require("./range").Range;
-var Document = require("./document").Document;
-var BackgroundTokenizer = require("./background_tokenizer").BackgroundTokenizer;
+/** @type {any} */var Document = require("./document").Document;
+/** @type {any} */var BackgroundTokenizer = require("./background_tokenizer").BackgroundTokenizer;
 var SearchHighlight = require("./search_highlight").SearchHighlight;
 
 //{ events
@@ -126,23 +122,19 @@ var SearchHighlight = require("./search_highlight").SearchHighlight;
 
 /**
  * @typedef TextMode
- * @type {Ace.SyntaxMode}
+ * @type {import("../ace").Ace.SyntaxMode}
  */
 
-/**
- * @type {IEditSession}
- * @this {IEditSession}
- */
 class EditSession {
     /**
-     * @type {IDocument}
+     * @type {import("../ace").Ace.Document}
      */
     doc;
     
     /**
      * Sets up a new `EditSession` and associates it with the given `Document` and `Mode`.
-     * @param {IDocument | String} [text] [If `text` is a `Document`, it associates the `EditSession` with it. Otherwise, a new `Document` is created, with the initial text]{: #textParam}
-     * @param {Ace.SyntaxMode} [mode] [The initial language mode to use for the document]{: #modeParam}
+     * @param {import("../ace").Ace.Document | String} [text] [If `text` is a `Document`, it associates the `EditSession` with it. Otherwise, a new `Document` is created, with the initial text]{: #textParam}
+     * @param {import("../ace").Ace.SyntaxMode} [mode] [The initial language mode to use for the document]{: #modeParam}
      * @this {IEditSession}
      **/
     constructor(text, mode) {
@@ -163,6 +155,9 @@ class EditSession {
         };
 
         // Set default background tokenizer with Text mode until editor session mode is set 
+        /**
+         * @type {import("./background_tokenizer").IBackgroundTokenizer}
+         */
         this.bgTokenizer = new BackgroundTokenizer((new TextMode()).getTokenizer(), this);
 
         
@@ -178,6 +173,9 @@ class EditSession {
             text = new Document(text);
 
         this.setDocument(text);
+        /**
+         * @type {ISelection}}
+         */
         this.selection = new Selection(this);
         this.$bidiHandler = new BidiHandler(this);
 
@@ -191,7 +189,7 @@ class EditSession {
     /**
      * Sets the `EditSession` to point to a new `Document`. If a `BackgroundTokenizer` exists, it also points to `doc`.
      *
-     * @param {IDocument} doc The new `Document` to use
+     * @param {import("../ace").Ace.Document} doc The new `Document` to use
      *
      **/
     setDocument(doc) {
@@ -208,7 +206,7 @@ class EditSession {
 
     /**
      * Returns the `Document` associated with this session.
-     * @return {IDocument}
+     * @return {import("../ace").Ace.Document}
      **/
     getDocument() {
         return this.doc;
@@ -273,7 +271,7 @@ class EditSession {
 
     /**
      * 
-     * @param {Ace.Delta} delta
+     * @param {import("../ace").Ace.Delta} delta
      * @this {IEditSession}
      */
     onChange(delta) {
@@ -327,7 +325,7 @@ class EditSession {
 
     /**
      * Returns selection object.
-     * @returns {Selection}
+     * @returns {ISelection}
      **/
     getSelection() {
         return this.selection;
@@ -346,7 +344,7 @@ class EditSession {
     /**
      * Starts tokenizing at the row indicated. Returns a list of objects of the tokenized rows.
      * @param {Number} row The row to start at
-     * @returns {Ace.Token[]}
+     * @returns {import("../ace").Ace.Token[]}
      **/
     getTokens(row) {
         return this.bgTokenizer.getTokens(row);
@@ -356,7 +354,7 @@ class EditSession {
      * Returns an object indicating the token at the current row. The object has two properties: `index` and `start`.
      * @param {Number} row The row number to retrieve from
      * @param {Number} column The column number to retrieve from
-     * @returns {Ace.Token}
+     * @returns {import("../ace").Ace.Token}
      *
      **/
     getTokenAt(row, column) {
@@ -462,6 +460,7 @@ class EditSession {
     /**
      * Returns the current tab size.
      * @this {IEditSession}
+     * @return {number}
      **/
     getTabSize() {
         return this.$tabSize;
@@ -469,7 +468,7 @@ class EditSession {
 
     /**
      * Returns `true` if the character at the position is a soft tab.
-     * @param {Ace.Point} position The position to check
+     * @param {import("../ace").Ace.Point} position The position to check
      * @this {IEditSession}
      **/
     isTabStop(position) {
@@ -605,7 +604,7 @@ class EditSession {
      * Adds a new marker to the given `Range`. If `inFront` is `true`, a front marker is defined, and the `'changeFrontMarker'` event fires; otherwise, the `'changeBackMarker'` event fires.
      * @param {Range} range Define the range of the marker
      * @param {String} clazz Set the CSS class for the marker
-     * @param {Ace.MarkerRenderer | "fullLine" | "screenLine" | "text"} type Identify the renderer type of the marker. If string provided, corresponding built-in renderer is used. Supported string types are "fullLine", "screenLine", "text" or "line". If a Function is provided, that Function is used as renderer.
+     * @param {import("../ace").Ace.MarkerRenderer | "fullLine" | "screenLine" | "text" | "line"} [type] Identify the renderer type of the marker. If string provided, corresponding built-in renderer is used. Supported string types are "fullLine", "screenLine", "text" or "line". If a Function is provided, that Function is used as renderer.
      * @param {Boolean} [inFront] Set to `true` to establish a front marker
      *
      * @return {Number} The new marker id
@@ -636,10 +635,10 @@ class EditSession {
 
     /**
      * Adds a dynamic marker to the session.
-     * @param {Ace.MarkerLike} marker object with update method
+     * @param {import("../ace").Ace.MarkerLike} marker object with update method
      * @param {Boolean} [inFront] Set to `true` to establish a front marker
      *
-     * @return {Ace.MarkerLike} The added marker
+     * @return {import("../ace").Ace.MarkerLike} The added marker
      * @this {IEditSession} 
      **/
     addDynamicMarker(marker, inFront) {
@@ -679,7 +678,7 @@ class EditSession {
      * Returns an object containing all of the markers, either front or back.
      * @param {Boolean} [inFront] If `true`, indicates you only want front markers; `false` indicates only back markers
      *
-     * @returns {{[id: number]: Ace.MarkerLike}}
+     * @returns {{[id: number]: import("../ace").Ace.MarkerLike}}
      **/
     getMarkers(inFront) {
         return inFront ? this.$frontMarkers : this.$backMarkers;
@@ -731,7 +730,7 @@ class EditSession {
      */
     /**
      * Sets annotations for the `EditSession`. This functions emits the `'changeAnnotation'` event.
-     * @param {Ace.Annotation[]} annotations A list of annotations
+     * @param {import("../ace").Ace.Annotation[]} annotations A list of annotations
      * @this {IEditSession}
      **/
     setAnnotations(annotations) {
@@ -741,7 +740,7 @@ class EditSession {
 
     /**
      * Returns the annotations for the `EditSession`.
-     * @returns {Ace.Annotation[]}
+     * @returns {import("../ace").Ace.Annotation[]}
      **/
     getAnnotations() {
         return this.$annotations || [];
@@ -829,7 +828,7 @@ class EditSession {
 
     /**
      * {:Document.setNewLineMode.desc}
-     * @param {Ace.NewLineMode} newLineMode {:Document.setNewLineMode.param}
+     * @param {import("../ace").Ace.NewLineMode} newLineMode {:Document.setNewLineMode.param}
      *
      *
      * @related Document.setNewLineMode
@@ -841,7 +840,7 @@ class EditSession {
     /**
      *
      * Returns the current new line mode.
-     * @returns {Ace.NewLineMode}
+     * @returns {import("../ace").Ace.NewLineMode}
      * @related Document.getNewLineMode
      **/
     getNewLineMode() {
@@ -873,7 +872,7 @@ class EditSession {
     
     /**
      * Sets a new text mode for the `EditSession`. This method also emits the `'changeMode'` event. If a [[BackgroundTokenizer `BackgroundTokenizer`]] is set, the `'tokenizerUpdate'` event is also emitted.
-     * @param {Ace.SyntaxMode} mode Set a new text mode
+     * @param {import("../ace").Ace.SyntaxMode | string} mode Set a new text mode
      * @param {() => void} [cb] optional callback
      * @this {IEditSession}
      **/
@@ -1133,7 +1132,7 @@ class EditSession {
 
     /**
      * {:Document.getTextRange.desc}
-     * @param {Ace.IRange} range The range to work with
+     * @param {import("../ace").Ace.IRange} [range] The range to work with
      *
      * @returns {String}
      **/
@@ -1143,9 +1142,9 @@ class EditSession {
 
     /**
      * Inserts a block of `text` and the indicated `position`.
-     * @param {Ace.Point} position The position {row, column} to start inserting at
+     * @param {import("../ace").Ace.Point} position The position {row, column} to start inserting at
      * @param {String} text A chunk of text to insert
-     * @returns {Ace.Point} The position of the last line of `text`. If the length of `text` is 0, this function simply returns `position`.
+     * @returns {import("../ace").Ace.Point} The position of the last line of `text`. If the length of `text` is 0, this function simply returns `position`.
      **/
     insert(position, text) {
         return this.doc.insert(position, text);
@@ -1154,7 +1153,7 @@ class EditSession {
     /**
      * Removes the `range` from the document.
      * @param {Range} range A specified Range to remove
-     * @returns {Ace.Point} The new `start` property of the range, which contains `startRow` and `startColumn`. If `range` is empty, this function returns the unmodified value of `range.start`.
+     * @returns {import("../ace").Ace.Point} The new `start` property of the range, which contains `startRow` and `startColumn`. If `range` is empty, this function returns the unmodified value of `range.start`.
      **/
     remove(range) {
         return this.doc.remove(range);
@@ -1175,7 +1174,7 @@ class EditSession {
 
     /**
      * Reverts previous changes to your document.
-     * @param {Ace.Delta[]} deltas An array of previous changes
+     * @param {import("../ace").Ace.Delta[]} deltas An array of previous changes
      * @param {Boolean} [dontSelect] [If `true`, doesn't select the range of where the change occured]{: #dontSelect}
      * @this {IEditSession}
      **/
@@ -1203,7 +1202,7 @@ class EditSession {
 
     /**
      * Re-implements a previously undone change to your document.
-     * @param {Ace.Delta[]} deltas An array of previous changes
+     * @param {import("../ace").Ace.Delta[]} deltas An array of previous changes
      * @param {Boolean} [dontSelect] {:dontSelect}
      **/
     redoChanges(deltas, dontSelect) {
@@ -1238,7 +1237,7 @@ class EditSession {
 
     /**
      * 
-     * @param {Ace.Delta[]} deltas
+     * @param {import("../ace").Ace.Delta[]} deltas
      * @param {boolean} [isUndo]
      * @return {Range}
      */
@@ -1285,7 +1284,7 @@ class EditSession {
      *
      * @param {Range} range A specified Range to replace
      * @param {String} text The new text to use as a replacement
-     * @returns {Ace.Point} An object containing the final row and column, like this:
+     * @returns {import("../ace").Ace.Point} An object containing the final row and column, like this:
      * ```
      * {row: endRow, column: 0}
      * ```
@@ -1304,7 +1303,7 @@ class EditSession {
      *    { row: newRowLocation, column: newColumnLocation }
      *  ```
      * @param {Range} fromRange The range of text you want moved within the document
-     * @param {Ace.Point} toPosition The location (row and column) where you want to move the text to
+     * @param {import("../ace").Ace.Point} toPosition The location (row and column) where you want to move the text to
      * @param {boolean} [copy]
      * @returns {Range} The new range where the text was moved to.
      * @this {IEditSession}
@@ -1489,7 +1488,7 @@ class EditSession {
     /**
      * @param {number} row
      * @param {number} column
-     * @returns {Ace.Point}
+     * @returns {import("../ace").Ace.Point}
      */
     $clipPositionToDocument(row, column) {
         column = Math.max(0, column);
@@ -1673,7 +1672,7 @@ class EditSession {
 
     /**
      * 
-     * @param {Ace.Delta} delta
+     * @param {import("../ace").Ace.Delta} delta
      * @this {IEditSession}
      */
     $updateInternalDataOnChange(delta) {
@@ -2149,7 +2148,7 @@ class EditSession {
      * For the given document row and column, this returns the document position of the last row.
      * @param {Number} docRow
      * @param {Number} docColumn
-     * @returns {Ace.Point}
+     * @returns {import("../ace").Ace.Point}
      * @this {IEditSession}
      **/
     getDocumentLastRowColumnPosition(docRow, docColumn) {
@@ -2207,7 +2206,7 @@ class EditSession {
      * @param {Number} screenColumn The screen column to check
      * @param {Number} [offsetX] screen character x-offset [optional]
      *
-     * @returns {Ace.Point} The object returned has two properties: `row` and `column`.
+     * @returns {import("../ace").Ace.Point} The object returned has two properties: `row` and `column`.
      *
      * @related EditSession.documentToScreenPosition
      * @this {IEditSession}
@@ -2302,9 +2301,9 @@ class EditSession {
 
     /**
      * Converts document coordinates to screen coordinates. {:conversionConsiderations}
-     * @param {Number|Ace.Point} docRow The document row to check
+     * @param {Number|import("../ace").Ace.Point} docRow The document row to check
      * @param {Number|undefined} [docColumn] The document column to check
-     * @returns {Ace.Point} The object returned by this method has two properties: `row` and `column`.
+     * @returns {import("../ace").Ace.Point} The object returned by this method has two properties: `row` and `column`.
      *
      * @related EditSession.screenToDocumentPosition
      * @this {IEditSession}
@@ -2552,7 +2551,7 @@ EditSession.prototype.$wrapLimitRange = {
 };
 /**
  * 
- * @type {null | Ace.LineWidget[]}
+ * @type {null | import("../ace").Ace.LineWidget[]}
  */
 EditSession.prototype.lineWidgets = null;
 EditSession.prototype.isFullWidth = isFullWidth;

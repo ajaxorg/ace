@@ -2,6 +2,10 @@
 
 var Range = require("../range").Range;
 
+/**
+ * @param {import("../editor").IEditor} editor
+ * @param {import("../../ace").Ace.HardWrapOptions} options
+ */
 function hardWrap(editor, options) {
     var max = options.column || editor.getOption("printMarginColumn");
     var allowMerge = options.allowMerge != false;

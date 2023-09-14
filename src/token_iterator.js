@@ -27,7 +27,7 @@ class TokenIterator {
     
     /**
      * Moves iterator position to the start of previous token.
-     * @returns {Ace.Token|null}
+     * @returns {import("../ace").Ace.Token|null}
      **/ 
     stepBackward() {
         this.$tokenIndex -= 1;
@@ -48,7 +48,7 @@ class TokenIterator {
 
     /**
      * Moves iterator position to the start of next token.
-     * @returns {Ace.Token|null}
+     * @returns {import("../ace").Ace.Token|null}
      **/   
     stepForward() {
         this.$tokenIndex += 1;
@@ -72,7 +72,7 @@ class TokenIterator {
     /**
      * 
      * Returns current token.
-     * @returns {Ace.Token}
+     * @returns {import("../ace").Ace.Token}
      **/      
     getCurrentToken() {
         return this.$rowTokens[this.$tokenIndex];
@@ -112,7 +112,7 @@ class TokenIterator {
 
     /**
      * Return the current token position.
-     * @returns {Ace.Point}
+     * @returns {import("../ace").Ace.Point}
      */
     getCurrentTokenPosition() {
         return {row: this.$row, column: this.getCurrentTokenColumn()};

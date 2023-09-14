@@ -10,7 +10,11 @@ var USE_OBSERVER = typeof ResizeObserver == "function";
 var L = 200;
 
 class FontMetrics {
-    
+
+    /**
+     * @param {HTMLElement} parentEl
+     * @this {FontMetrics & import("../../ace").Ace.EventEmitter}
+     */
     constructor(parentEl) {
         this.el = dom.createElement("div");
         this.$setMeasureNodeStyles(this.el.style, true);
@@ -52,6 +56,10 @@ class FontMetrics {
         style.overflow = isRoot ? "hidden" : "visible";
     }
 
+    /**
+     * @param size
+     * @this {FontMetrics & import("../../ace").Ace.EventEmitter}
+     */
     checkForSizeChanges(size) {
         if (size === undefined)
             size = this.$measureSizes();
@@ -65,7 +73,10 @@ class FontMetrics {
             this._emit("changeCharacterSize", {data: size});
         }
     }
-    
+
+    /**
+     * @this {FontMetrics & import("../../ace").Ace.EventEmitter}
+     */
     $addObserver() {
         var self = this;
         this.$observer = new window.ResizeObserver(function(e) {
@@ -75,6 +86,10 @@ class FontMetrics {
         this.$observer.observe(this.$measureNode);
     }
 
+    /**
+     * @this {FontMetrics & import("../../ace").Ace.EventEmitter}
+     * @return {number}
+     */
     $pollSizeChanges() {
         if (this.$pollSizeChangesTimer || this.$observer)
             return this.$pollSizeChangesTimer;
@@ -85,7 +100,11 @@ class FontMetrics {
             event.onIdle(cb, 500);
         }, 500);
     }
-    
+
+    /**
+     * @param {boolean} val
+     * @this {FontMetrics & import("../../ace").Ace.EventEmitter}
+     */
     setPolling(val) {
         if (val) {
             this.$pollSizeChanges();

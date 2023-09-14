@@ -1,10 +1,18 @@
 "use strict";
-
+/**
+ *
+ * @typedef IEditor
+ * @type {import("../editor").IEditor}
+ */
 var dom = require("../lib/dom");
 var lang = require("../lib/lang");
 
 /** simple statusbar **/
 class StatusBar{
+    /**
+     * @param {IEditor} editor
+     * @param {HTMLElement} parentNode
+     */
     constructor(editor, parentNode) {
         this.element = dom.createElement("div");
         this.element.className = "ace_status-indicator";
@@ -19,7 +27,10 @@ class StatusBar{
         editor.on("changeSelection", statusUpdate);
         editor.on("keyboardActivity", statusUpdate);
     }
-    
+
+    /**
+     * @param {IEditor} editor
+     */
     updateStatus(editor) {
         var status = [];
         function add(str, separator) {

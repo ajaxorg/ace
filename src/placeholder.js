@@ -1,11 +1,9 @@
 "use strict";
 /**
- * @typedef IEditSession
- * @type {import("./edit_session").IEditSession}
+ * @typedef {import("./edit_session").IEditSession} IEditSession
  */
 /**
- * @typedef IPlaceHolder
- * @type {PlaceHolder & Ace.EventEmitter}
+ * @typedef {PlaceHolder & import("../ace").Ace.EventEmitter} IPlaceHolder
  */
 var Range = require("./range").Range;
 var EventEmitter = require("./lib/event_emitter").EventEmitter;
@@ -15,10 +13,11 @@ class PlaceHolder {
     /**
      * @param {IEditSession} session
      * @param {Number} length
-     * @param {Ace.Point} pos
+     * @param {import("../ace").Ace.Point} pos
      * @param {any[]} others
      * @param {String} mainClass
      * @param {String} othersClass
+     * @this {IPlaceHolder}
      **/
     constructor(session, length, pos, others, mainClass, othersClass) {
         var _self = this;
@@ -110,7 +109,7 @@ class PlaceHolder {
      * PlaceHolder@onUpdate(e)
      * 
      * Emitted when the place holder updates.
-     * @param {Ace.Delta} delta
+     * @param {import("../ace").Ace.Delta} delta
      */
     onUpdate(delta) {
         if (this.$updating)
@@ -150,7 +149,7 @@ class PlaceHolder {
     }
 
     /**
-     * @param {Ace.Delta} delta
+     * @param {import("../ace").Ace.Delta} delta
      */
     updateAnchors(delta) {
         this.pos.onChange(delta);

@@ -1,7 +1,7 @@
 "use strict";
 /**
  * @typedef IEditor
- * @type {Editor & Ace.EventEmitter & Ace.OptionsProvider<Ace.EditorOptions> & Ace.EditorProperties & Ace.EditorMultiSelectProperties}
+ * @type {Editor & import("../ace").Ace.EventEmitter & import("../ace").Ace.OptionsProvider<import("../ace").Ace.EditorOptions> & import("../ace").Ace.EditorProperties & import("../ace").Ace.EditorMultiSelectProperties}
  * @export
  */
 /**
@@ -31,7 +31,7 @@ var EditSession = require("./edit_session").EditSession;
 var Search = require("./search").Search;
 var Range = require("./range").Range;
 var EventEmitter = require("./lib/event_emitter").EventEmitter;
-var CommandManager = require("./commands/command_manager").CommandManager;
+/** @type {any} */var CommandManager = require("./commands/command_manager").CommandManager;
 var defaultCommands = require("./commands/default_commands").commands;
 var config = require("./config");
 var TokenIterator = require("./token_iterator").TokenIterator;
@@ -269,7 +269,7 @@ class Editor {
 
     /**
      * Sets a new key handler, such as "vim" or "windows".
-     * @param {String | Ace.KeyboardHandler | null} keyboardHandler The new key handler
+     * @param {String | import("../ace").Ace.KeyboardHandler | null} keyboardHandler The new key handler
      * @param {() => void} [cb]
      **/
     setKeyboardHandler(keyboardHandler, cb) {
@@ -290,7 +290,7 @@ class Editor {
 
     /**
      * Returns the keyboard handler, such as "vim" or "windows".
-     * @returns {string}
+     * @returns {Object}
      **/
     getKeyboardHandler() {
         return this.keyBinding.getKeyboardHandler();
@@ -650,6 +650,9 @@ class Editor {
         this._emit("blur", e);
     }
 
+    /**
+     * @this {IEditor}
+     */
     $cursorChange() {
         this.renderer.updateCursor();
         this.$highlightBrackets();
@@ -659,7 +662,7 @@ class Editor {
     /**
      * Emitted whenever the document is changed.
      * @event change
-     * @param {Ace.Delta} delta Contains a single property, `data`, which has the delta of changes
+     * @param {import("../ace").Ace.Delta} delta Contains a single property, `data`, which has the delta of changes
      * @this {IEditor}
      **/
     onDocumentChange(delta) {
@@ -703,7 +706,7 @@ class Editor {
     $updateHighlightActiveLine() {
         var session = this.getSession();
         /**
-         * @type {Ace.Point|false}
+         * @type {import("../ace").Ace.Point|false}
          */
         var highlight;
         if (this.$highlightActiveLine) {
@@ -824,6 +827,9 @@ class Editor {
     }
 
 
+    /**
+     * @this {IEditor}
+     */
     onChangeFold() {
         // Update the active line marker as due to folding changes the current
         // line range on the screen might have changed.
@@ -874,6 +880,7 @@ class Editor {
 
     /**
      * Called whenever a text "copy" happens.
+     * @this {IEditor}
      **/
     onCopy() {
         this.commands.exec("copy", this);
@@ -881,6 +888,7 @@ class Editor {
 
     /**
      * Called whenever a text "cut" happens.
+     * @this {IEditor}
      **/
     onCut() {
         this.commands.exec("cut", this);
@@ -897,7 +905,7 @@ class Editor {
      * Called whenever a text "paste" happens.
      * @param {String} text The pasted text
      * @param {any} event
-     *
+     * @this {IEditor}
      **/
     onPaste(text, event) {
         var e = {text: text, event: event};
@@ -947,9 +955,10 @@ class Editor {
 
     /**
      * 
-     * @param {string | string[]}command
+     * @param {string | string[]} command
      * @param [args]
      * @return {boolean}
+     * @this {IEditor}
      */
     execCommand(command, args) {
         return this.commands.exec(command, this, args);
@@ -1099,7 +1108,12 @@ class Editor {
             applyComposition();
         this.endOperation();
     }
-    
+
+    /**
+     * @param {string} [text]
+     * @param {any} [composition]
+     * @this {IEditor}
+     */
     applyComposition(text, composition) {
         if (composition.extendLeft || composition.extendRight) {
             var r = this.selection.getRange();
@@ -1206,7 +1220,7 @@ class Editor {
     /**
      * Returns the current selection style.
      * @this {IEditor}
-     * @returns {String}
+     * @returns {import("../ace").Ace.EditorOptions["selectionStyle"]} 
      **/
     getSelectionStyle() {
         return this.getOption("selectionStyle");
@@ -1447,7 +1461,7 @@ class Editor {
     /**
      * Removes the current selection or one character.
      * @param {'left' | 'right'} [dir] The direction of the deletion to occur, either "left" or "right"
-     *
+     * @this {IEditor}
      **/
     remove(dir) {
         if (this.selection.isEmpty()){
@@ -1533,6 +1547,7 @@ class Editor {
 
     /**
      * Splits the line at the current selection (by inserting an `'\n'`).
+     * @this {IEditor}
      **/
     splitLine() {
         if (!this.selection.isEmpty()) {
@@ -1551,7 +1566,7 @@ class Editor {
      * inline in the editor such as, for example, code completions.
      * 
      * @param {String} text Text to be inserted as "ghost" text
-     * @param {Ace.Point} position Position to insert text to
+     * @param {import("../ace").Ace.Point} [position] Position to insert text to
      */
     setGhostText(text, position) {
         if (!this.session.widgetManager) {
@@ -1631,6 +1646,7 @@ class Editor {
      * Inserts an indentation into the current cursor position or indents the selected lines.
      *
      * @related EditSession.indentRows
+     * @this {IEditor}
      **/
     indent() {
         var session = this.session;
@@ -1754,7 +1770,7 @@ class Editor {
     /**
      * If the character before the cursor is a number, this functions changes its value by `amount`.
      * @param {Number} amount The value to change the numeral by (can be negative to decrease value)
-     *
+     * @this {IEditor}
      **/
     modifyNumber(amount) {
         var row = this.selection.getCursor().row;
@@ -1799,7 +1815,10 @@ class Editor {
             this.toggleWord();
         }
     }
-    
+
+    /**
+     * @this {IEditor}
+     */
     toggleWord() {
         var row = this.selection.getCursor().row;
         var column = this.selection.getCursor().column;
@@ -1937,7 +1956,7 @@ class Editor {
      *    { row: newRowLocation, column: newColumnLocation }
      * ```
      * @param {Range} range The range of text you want moved within the document
-     * @param {Ace.Point} toPosition The location (row and column) where you want to move the text to
+     * @param {import("../ace").Ace.Point} toPosition The location (row and column) where you want to move the text to
      * @param {boolean} [copy]
      * 
      * @returns {Range} The new range where the text was moved to.
@@ -2199,7 +2218,7 @@ class Editor {
 
     /**
      * Gets the current position of the cursor.
-     * @returns {Ace.Point} An object that looks something like this:
+     * @returns {import("../ace").Ace.Point} An object that looks something like this:
      *
      * ```json
      * { row: currRow, column: currCol }
@@ -2213,7 +2232,7 @@ class Editor {
 
     /**
      * Returns the screen position of the cursor.
-     * @returns {Ace.Point}
+     * @returns {import("../ace").Ace.Point}
      * @related EditSession.documentToScreenPosition
      **/
     getCursorPositionScreen() {
@@ -2257,7 +2276,7 @@ class Editor {
 
     /**
      * Moves the cursor to the position indicated by `pos.row` and `pos.column`.
-     * @param {Ace.Point} pos An object with two properties, row and column
+     * @param {import("../ace").Ace.Point} pos An object with two properties, row and column
      * @related Selection.moveCursorToPosition
      **/
     moveCursorToPosition(pos) {
@@ -2567,7 +2586,7 @@ class Editor {
     /**
      * Replaces the first occurrence of `options.needle` with the value in `replacement`.
      * @param {String} replacement The text to replace with
-     * @param {Partial<Ace.SearchOptions>} [options] The [[Search `Search`]] options to use
+     * @param {Partial<import("../ace").Ace.SearchOptions>} [options] The [[Search `Search`]] options to use
      * @return {number}
      **/
     replace(replacement, options) {
@@ -2592,7 +2611,7 @@ class Editor {
     /**
      * Replaces all occurrences of `options.needle` with the value in `replacement`.
      * @param {String} replacement The text to replace with
-     * @param {Partial<Ace.SearchOptions>} [options] The [[Search `Search`]] options to use
+     * @param {Partial<import("../ace").Ace.SearchOptions>} [options] The [[Search `Search`]] options to use
      * @return {number}
      **/
     replaceAll(replacement, options) {
@@ -2633,7 +2652,7 @@ class Editor {
     /**
      * {:Search.getOptions} For more information on `options`, see [[Search `Search`]].
      * @related Search.getOptions
-     * @returns {Partial<Ace.SearchOptions>}
+     * @returns {Partial<import("../ace").Ace.SearchOptions>}
      **/
     getLastSearchOptions() {
         return this.$search.getOptions();
@@ -2642,7 +2661,7 @@ class Editor {
     /**
      * Attempts to find `needle` within the document. For more information on `options`, see [[Search `Search`]].
      * @param {String|RegExp|Object} needle The text to search for (optional)
-     * @param {Partial<Ace.SearchOptions>} [options] An object defining various search properties
+     * @param {Partial<import("../ace").Ace.SearchOptions>} [options] An object defining various search properties
      * @param {Boolean} [animate] If `true` animate scrolling
      * @related Search.find
      **/
@@ -2687,7 +2706,7 @@ class Editor {
 
     /**
      * Performs another search for `needle` in the document. For more information on `options`, see [[Search `Search`]].
-     * @param {Partial<Ace.SearchOptions>} [options] search options
+     * @param {Partial<import("../ace").Ace.SearchOptions>} [options] search options
      * @param {Boolean} [animate] If `true` animate scrolling
      *
      * @related Editor.find
@@ -2698,7 +2717,7 @@ class Editor {
 
     /**
      * Performs a search for `needle` backwards. For more information on `options`, see [[Search `Search`]].
-     * @param {Partial<Ace.SearchOptions>} [options] search options
+     * @param {Partial<import("../ace").Ace.SearchOptions>} [options] search options
      * @param {Boolean} [animate] If `true` animate scrolling
      *
      * @related Editor.find

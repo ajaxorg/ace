@@ -7,6 +7,9 @@ var useragent = require("../lib/useragent");
  * Custom Ace mouse event
  */
 class MouseEvent {
+    /** @type {number} */speed;
+    /** @type {number} */wheelX;
+    /** @type {number} */wheelY;
     constructor(domEvent, editor) {
         this.domEvent = domEvent;
         this.editor = editor;

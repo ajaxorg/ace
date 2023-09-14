@@ -1,4 +1,9 @@
 "use strict";
+/**
+ * @typedef IEditSession
+ * @type {import("../edit_session").IEditSession}
+ */
+
 var LineWidgets = require("../line_widgets").LineWidgets;
 var event = require("../lib/event");
 var lang = require("../lib/lang");
@@ -92,6 +97,12 @@ function clearCodeLensWidgets(session) {
     });
 }
 
+/**
+ * 
+ * @param {IEditSession} session
+ * @param lenses
+ * @return {number}
+ */
 exports.setLenses = function(session, lenses) {
     var firstRow = Number.MAX_VALUE;
 
@@ -186,12 +197,21 @@ function detachFromEditor(editor) {
         editor.container.removeEventListener("click", editor.$codeLensClickHandler);
 }
 
+/**
+ * 
+ * @param {import("../editor").IEditor} editor
+ * @param codeLensProvider
+ */
 exports.registerCodeLensProvider = function(editor, codeLensProvider) {
     editor.setOption("enableCodeLens", true);
     editor.codeLensProviders.push(codeLensProvider);
     editor.$updateLensesOnInput();
 };
 
+/**
+ * 
+ * @param {IEditSession} session
+ */
 exports.clear = function(session) {
     exports.setLenses(session, null);
 };

@@ -7,7 +7,7 @@
 /**
  * 
  * @typedef IText
- * @type {Text & Ace.EventEmitter}
+ * @type {Text & import("../../ace").Ace.EventEmitter}
  * @export
  */
 var oop = require("../lib/oop");
@@ -70,8 +70,12 @@ class Text {
      */
     $setFontMetrics(measure) {
         this.$fontMetrics = measure;
-        this.$fontMetrics.on("changeCharacterSize", function(e) {
-            this._signal("changeCharacterSize", e);
+        this.$fontMetrics.on("changeCharacterSize",
+            /**
+             * @this {IText}
+             */
+            function (e) {
+                this._signal("changeCharacterSize", e);
         }.bind(this));
         this.$pollSizeChanges();
     }
@@ -381,7 +385,7 @@ class Text {
                     span.textContent = lang.stringRepeat(self.SPACE_CHAR, simpleSpace.length);
                     valueFragment.appendChild(span);
                 } else {
-                    valueFragment.appendChild(this.com.createTextNode(simpleSpace, this.element));
+                    valueFragment.appendChild(this.dom.createTextNode(simpleSpace, this.element));
                 }
             } else if (controlCharacter) {
                 var span = this.dom.createElement("span");
@@ -696,7 +700,7 @@ class Text {
     /**
      * @param {any} row
      * @param {{ walk: (arg0: (placeholder: any, row: any, column: any, lastColumn: any, isNewRow: any) => void, arg1: any, arg2: any) => void; end: { row: any; }; }} foldLine
-     * @return {Ace.Token[]}
+     * @return {import("../../ace").Ace.Token[]}
      */
     $getFoldLineTokens(row, foldLine) {
         var session = this.session;

@@ -1,12 +1,8 @@
 "use strict";
 
 var $cancelT;
-/**
- * 
- * @type {{cancel: Function, lineMode: boolean|string, pasteCancelled: ((function(): (boolean))|*)}}
- */
 module.exports = { 
-    lineMode: false,
+    /** @type {string|false} */lineMode: false,
     pasteCancelled: function() {
         if ($cancelT && $cancelT > Date.now() - 50)
             return true;

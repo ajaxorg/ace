@@ -1,4 +1,25 @@
 "use strict";
+/**
+ * @typedef {SnippetManager & import("../ace").Ace.EventEmitter} ISnippetManager
+ */
+/**
+ * @typedef Snippet
+ * @property {string} [content]
+ * @property {string} [replaceBefore]
+ * @property {string} [replaceAfter]
+ * @property {RegExp} [startRe]
+ * @property {RegExp} [endRe]
+ * @property {RegExp} [triggerRe]
+ * @property {RegExp} [endTriggerRe]
+ * @property {string} [trigger]
+ * @property {string} [endTrigger]
+ * @property {string[]} [matchBefore]
+ * @property {string[]} [matchAfter]
+ * @property {string} [name]
+ * @property {string} [tabTrigger]
+ * @property {string} [guard]
+ * @property {string} [endGuard]
+ */
 var dom = require("./lib/dom");
 var oop = require("./lib/oop");
 var EventEmitter = require("./lib/event_emitter").EventEmitter;
@@ -94,7 +115,10 @@ class SnippetManager {
         this.variables = VARIABLES;
     }
 
-    
+
+    /**
+     * @return {Tokenizer}
+     */
     getTokenizer() {
         return SnippetManager.$tokenizer || this.createTokenizer();
     }
@@ -430,6 +454,9 @@ class SnippetManager {
         var after = line.substr(cursor.column);
 
         var snippetMap = this.snippetMap;
+        /**
+         * @type {Snippet}
+         */
         var snippet;
         this.getActiveScopes(editor).some(function(scope) {
             var snippets = snippetMap[scope];
@@ -454,6 +481,12 @@ class SnippetManager {
         return true;
     }
 
+    /**
+     * @param {Snippet[]} snippetList
+     * @param {string} before
+     * @param {string} after
+     * @return {Snippet}
+     */
     findMatchingSnippet(snippetList, before, after) {
         for (var i = snippetList.length; i--;) {
             var s = snippetList[i];
@@ -472,6 +505,12 @@ class SnippetManager {
         }
     }
 
+
+    /**
+     * @param {any[]} snippets
+     * @param {string} scope
+     * @this {ISnippetManager}
+     */
     register(snippets, scope) {
         var snippetMap = this.snippetMap;
         var snippetNameMap = this.snippetNameMap;
@@ -572,7 +611,7 @@ class SnippetManager {
     }
     parseSnippetFile(str) {
         str = str.replace(/\r/g, "");
-        var list = [], snippet = {};
+        var list = [], /**@type{Snippet}*/snippet = {};
         var re = /^#.*|^({[\s\S]*})\s*$|^(\S+) (.*)$|^((?:\n*\t.*)+)/gm;
         var m;
         while (m = re.exec(str)) {
@@ -913,6 +952,9 @@ class TabstopManager {
             
             for (var i = 0; i < ts.length; i++) {
                 var p = ts[i];
+                /**
+                 * @type {Range & {original?: Range, tabstop?: any, linked?: boolean}}}
+                 */
                 var range = Range.fromPoints(p.start, p.end || p.start);
                 movePoint(range.start, start);
                 movePoint(range.end, start);
@@ -1022,6 +1064,9 @@ dom.importCssString(`
     position: absolute;
 }`, "snippets.css", false);
 
+/**
+ * @type {any}
+ */
 exports.snippetManager = new SnippetManager();
 
 

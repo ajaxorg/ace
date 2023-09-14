@@ -211,7 +211,16 @@ var optionGroups = {
     }
 };
 
+/**
+ * @typedef IOptionPanel
+ * @type {OptionPanel & import("../../ace").Ace.EventEmitter}
+ */
 class OptionPanel {
+    /**
+     * 
+     * @param {import("../editor").IEditor} editor
+     * @param {HTMLElement} [element]
+     */
     constructor(editor, element) {
         this.editor = editor;
         this.container = element || document.createElement("div");
@@ -225,7 +234,8 @@ class OptionPanel {
         if (config.More)
             oop.mixin(optionGroups.More, config.More);
     }
-    
+
+  
     render() {
         this.container.innerHTML = "";
         buildDom(["table", {role: "presentation", id: "controls"}, 
@@ -253,7 +263,12 @@ class OptionPanel {
             return this.renderOption(item.label, item);
         }, this);
     }
-    
+
+    /**
+     * @param {string} key
+     * @param {Object} option
+     * @this {IOptionPanel}
+     */
     renderOptionControl(key, option) {
         var self = this;
         if (Array.isArray(option)) {
@@ -261,6 +276,9 @@ class OptionPanel {
                 return self.renderOptionControl(key, x);
             });
         }
+        /**
+         * @type {any}
+         */
         var control;
         
         var value = self.getOption(option);
@@ -339,7 +357,13 @@ class OptionPanel {
         }
         return control;
     }
-    
+
+    /**
+     * 
+     * @param key
+     * @param option
+     * @this {IOptionPanel}
+     */
     renderOption(key, option) {
         if (option.path && !option.onchange && !this.editor.$options[option.path])
             return;
@@ -352,7 +376,12 @@ class OptionPanel {
             ["label", {for: safeKey, id: safeId}, key]
         ], ["td", control]];
     }
-    
+
+    /**
+     * @param {string | number | Object} option
+     * @param {string | number | boolean} value
+     * @this {IOptionPanel}
+     */
     setOption(option, value) {
         if (typeof option == "string")
             option = this.options[option];

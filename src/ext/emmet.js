@@ -11,11 +11,14 @@ var emmet, emmetPath;
  */
 
 class AceEmmetEditor {
+    /**
+     * @param {import("../editor").IEditor} editor
+     */
     setupContext(editor) {
         this.ace = editor;
         this.indentation = editor.session.getTabString();
         if (!emmet)
-            emmet = window.emmet;
+            emmet = window["emmet"];
         var resources = emmet.resources || emmet.require("resources");
         resources.setVariable("indentation", this.indentation);
         this.$syntax = null;
@@ -233,6 +236,9 @@ class AceEmmetEditor {
     // tabstops as ${0}, so we have upgrade all caret tabstops with unique
     // positions but make sure that all other tabstops are not linked accidentally
     // based on https://github.com/sergeche/emmet-sublime/blob/master/editor.js#L119-L171
+    /**
+     * @param {string} value
+     */
     $updateTabstops(value) {
         var base = 1000;
         var zeroBase = 0;

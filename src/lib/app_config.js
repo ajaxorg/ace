@@ -1,7 +1,7 @@
 "no use strict";
 /**
  * @typedef IAppConfig
- * @type {AppConfig & Ace.EventEmitter}
+ * @type {AppConfig & import("../../ace").Ace.EventEmitter}
  * @export
  */
 var oop = require("./oop");
@@ -86,6 +86,7 @@ class AppConfig {
      * @param {string} path
      * @param {{ [key: string]: any }} options
      * @returns {IAppConfig}
+     * @this {IAppConfig}
      */
     defineOptions(obj, path, options) {
         if (!obj.$options)

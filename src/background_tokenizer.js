@@ -13,7 +13,7 @@
  */
 /**
  * @typedef IBackgroundTokenizer
- * @type {BackgroundTokenizer & Ace.EventEmitter}
+ * @type {BackgroundTokenizer & import("../ace").Ace.EventEmitter}
  */
 var oop = require("./lib/oop");
 var EventEmitter = require("./lib/event_emitter").EventEmitter;
@@ -30,6 +30,7 @@ class BackgroundTokenizer {
      * Creates a new `BackgroundTokenizer` object.
      * @param {ITokenizer} tokenizer The tokenizer to use
      * @param {IEditor} editor The editor to associate with
+     * @this {IBackgroundTokenizer}
      **/
     constructor(tokenizer, editor) {
         /**
@@ -152,7 +153,7 @@ class BackgroundTokenizer {
     }
 
     /**
-     * @param {Ace.Delta} delta
+     * @param {import("../ace").Ace.Delta} delta
      */
     $updateOnChange(delta) {
         var startRow = delta.start.row;
@@ -187,7 +188,7 @@ class BackgroundTokenizer {
     /**
      * Gives list of [[Token]]'s of the row. (tokens are cached)
      * @param {Number} row The row to get tokens at
-     * @returns {Ace.Token[]}
+     * @returns {import("../ace").Ace.Token[]}
      **/
     getTokens(row) {
         return this.lines[row] || this.$tokenizeRow(row);

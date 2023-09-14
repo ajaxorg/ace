@@ -1,5 +1,8 @@
 "use strict";
-
+/**
+ * @typedef IGutter
+ * @type {Gutter & import("../../ace").Ace.EventEmitter & {[key: string]: any}}}
+ */
 var dom = require("../lib/dom");
 var oop = require("../lib/oop");
 var lang = require("../lib/lang");
@@ -8,6 +11,9 @@ var Lines = require("./lines").Lines;
 var nls = require("../config").nls;
 
 class Gutter{
+    /**
+     * @param {HTMLElement} parentEl
+     */
     constructor(parentEl) {
         this.element = dom.createElement("div");
         this.element.className = "ace_layer ace_gutter-layer";
@@ -23,6 +29,9 @@ class Gutter{
         this.$lines.$offsetCoefficient = 1;
     }
 
+    /**
+     * @param {import("../edit_session").IEditSession} session
+     */
     setSession(session) {
         if (this.session)
             this.session.off("change", this.$updateAnnotations);
@@ -31,18 +40,29 @@ class Gutter{
             session.on("change", this.$updateAnnotations);
     }
 
+    /**
+     * @param {number} row
+     * @param {string} className
+     */
     addGutterDecoration(row, className) {
         if (window.console)
             console.warn && console.warn("deprecated use session.addGutterDecoration");
         this.session.addGutterDecoration(row, className);
     }
 
+    /**
+     * @param {number} row
+     * @param {string} className
+     */
     removeGutterDecoration(row, className) {
         if (window.console)
             console.warn && console.warn("deprecated use session.removeGutterDecoration");
         this.session.removeGutterDecoration(row, className);
     }
 
+    /**
+     * @param {any[]} annotations
+     */
     setAnnotations(annotations) {
         // iterate over sparse array
         this.$annotations = [];
@@ -74,6 +94,9 @@ class Gutter{
         }
     }
 
+    /**
+     * @param {import("../../ace").Ace.Delta} delta
+     */
     $updateAnnotations(delta) {
         if (!this.$annotations.length)
             return;
@@ -90,6 +113,10 @@ class Gutter{
         }
     }
 
+    /**
+     * @param {import("../../ace").Ace.LayerConfig} config
+     * @this {IGutter}
+     */
     update(config) {
         this.config = config;
         
@@ -140,6 +167,10 @@ class Gutter{
         this.$updateGutterWidth(config);
     }
 
+    /**
+     * @param {import("../../ace").Ace.LayerConfig} config
+     * @this {IGutter}
+     */
     $updateGutterWidth(config) {
         var session = this.session;
         
@@ -204,7 +235,11 @@ class Gutter{
             }
         }
     }
-    
+
+    /**
+     * @param {import("../../ace").Ace.LayerConfig} config
+     * @this {IGutter}
+     */
     scrollLines(config) {
         var oldConfig = this.config;
         this.config = config;
@@ -248,6 +283,12 @@ class Gutter{
         this.$updateGutterWidth(config);
     }
 
+    /**
+     * @param {import("../../ace").Ace.LayerConfig} config
+     * @param {number} firstRow
+     * @param {number} lastRow
+     * @this {IGutter}
+     */
     $renderLines(config, firstRow, lastRow) {
         var fragment = [];
         var row = firstRow;
@@ -271,7 +312,15 @@ class Gutter{
         }
         return fragment;
     }
-    
+
+
+    /**
+     * @param {any} cell
+     * @param {import("../../ace").Ace.LayerConfig} config
+     * @param {import("../edit_session/fold").Fold} [fold] //TODO:
+     * @param {number} row
+     * @this {IGutter}
+     */
     $renderCell(cell, config, fold, row) {
         var element = cell.element;
         
@@ -443,11 +492,17 @@ class Gutter{
         
         return cell;
     }
-    
+
+    /**
+     * @param {boolean} highlightGutterLine
+     */
     setHighlightGutterLine(highlightGutterLine) {
         this.$highlightGutterLine = highlightGutterLine;
     }
-    
+
+    /**
+     * @param {boolean} show
+     */
     setShowLineNumbers(show) {
         this.$renderer = !show && {
             getWidth: function() {return 0;},
@@ -458,7 +513,10 @@ class Gutter{
     getShowLineNumbers() {
         return this.$showLineNumbers;
     }
-    
+
+    /**
+     * @param {boolean} [show]
+     */
     setShowFoldWidgets(show) {
         if (show)
             dom.addCssClass(this.element, "ace_folding-enabled");
@@ -485,6 +543,9 @@ class Gutter{
         return this.$padding;
     }
 
+    /**
+     * @param {{ x: number; }} point
+     */
     getRegion(point) {
         var padding = this.$padding || this.$computePadding();
         var rect = this.element.getBoundingClientRect();

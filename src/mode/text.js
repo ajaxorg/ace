@@ -2,6 +2,7 @@
 var config = require("../config");
 
 var Tokenizer = require("../tokenizer").Tokenizer;
+
 var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;
 var CstyleBehaviour = require("./behaviour/cstyle").CstyleBehaviour;
 var unicode = require("../unicode");
@@ -9,22 +10,10 @@ var lang = require("../lib/lang");
 var TokenIterator = require("../token_iterator").TokenIterator;
 var Range = require("../range").Range;
 
-/**
- *
- * @constructor
- * @alias TextMode
- * @property {{[quote: string]: string}} [$quotes] - quotes used by language mode
- * @property {string} lineCommentStart - characters that indicate the start of a line comment
- * @property {{start: string, end: string}} [blockComment] - characters that indicate the start and end of a block comment
- * @property {TextHighlightRules} HighlightRules - language specific highlighters
- * @property {FoldMode} foldingRules - language specific folding rules
- * @property {MatchingBraceOutdent} $outdent
- * @property {RegExp} tokenRe
- * @property {RegExp} nonTokenRe
- * @property {{[quote: string]: RegExp}} [$pairQuotesAfter] - An object containing conditions to determine whether to apply matching quote or not.
- */
-var Mode = function() {
+var Mode; 
+Mode = function() {
     this.HighlightRules = TextHighlightRules;
+    new this.HighlightRules().getRules();
 };
 
 (function() {
@@ -34,6 +23,9 @@ var Mode = function() {
 
     this.nonTokenRe = new RegExp("^(?:[^" + unicode.wordChars + "\\$_]|\\s])+", "g");
 
+    /**
+     * @this {import("../../ace").Ace.SyntaxMode}
+     */
     this.getTokenizer = function() {
         if (!this.$tokenizer) {
             this.$highlightRules = this.$highlightRules || new this.HighlightRules(this.$highlightRuleConfig);
@@ -45,6 +37,9 @@ var Mode = function() {
     this.lineCommentStart = "";
     this.blockComment = "";
 
+    /**
+     * @this {import("../../ace").Ace.SyntaxMode}
+     */
     this.toggleCommentLines = function(state, session, startRow, endRow) {
         var doc = session.doc;
 
@@ -57,8 +52,14 @@ var Mode = function() {
         if (!this.lineCommentStart) {
             if (!this.blockComment)
                 return false;
+            /**
+             * @type {any}
+             */
             var lineCommentStart = this.blockComment.start;
             var lineCommentEnd = this.blockComment.end;
+            /**
+             * @type {any}
+             */
             var regexpStart = new RegExp("^(\\s*)(?:" + lang.escapeRegExp(lineCommentStart) + ")");
             var regexpEnd = new RegExp("(?:" + lang.escapeRegExp(lineCommentEnd) + ")\\s*$");
 
@@ -90,10 +91,19 @@ var Mode = function() {
             };
         } else {
             if (Array.isArray(this.lineCommentStart)) {
+                /**
+                 * @type {any}
+                 */
                 var regexpStart = this.lineCommentStart.map(lang.escapeRegExp).join("|");
+                /**
+                 * @type {any}
+                 */
                 var lineCommentStart = this.lineCommentStart[0];
             } else {
                 var regexpStart = lang.escapeRegExp(this.lineCommentStart);
+                /**
+                 * @type {any}
+                 */
                 var lineCommentStart = this.lineCommentStart;
             }
             regexpStart = new RegExp("^(\\s*)(?:" + regexpStart + ") ?");
@@ -168,6 +178,9 @@ var Mode = function() {
         iter(shouldRemove ? uncomment : comment);
     };
 
+    /**
+     * @this {import("../../ace").Ace.SyntaxMode}
+     */
     this.toggleBlockComment = function(state, session, range, cursor) {
         var comment = this.blockComment;
         if (!comment)
@@ -250,7 +263,7 @@ var Mode = function() {
     this.createModeDelegates = function (mapping) {
         this.$embeds = [];
         this.$modes = {};
-        for (var i in mapping) {
+        for (let i in mapping) {
             if (mapping[i]) {
                 var Mode = mapping[i];
                 var id = Mode.prototype.$id;
@@ -267,7 +280,7 @@ var Mode = function() {
         var delegations = ["toggleBlockComment", "toggleCommentLines", "getNextLineIndent", 
             "checkOutdent", "autoOutdent", "transformAction", "getCompletions"];
 
-        for (var i = 0; i < delegations.length; i++) {
+        for (let i = 0; i < delegations.length; i++) {
             (function(scope) {
               var functionName = delegations[i];
               var defaultHandler = scope[functionName];
@@ -278,6 +291,9 @@ var Mode = function() {
         }
     };
 
+    /**
+     * @this {import("../../ace").Ace.SyntaxMode}
+     */
     this.$delegator = function(method, args, defaultHandler) {
         var state = args[0] || "start";
         if (typeof state != "string") {
@@ -304,6 +320,9 @@ var Mode = function() {
         return defaultHandler ? ret : undefined;
     };
 
+    /**
+     * @this {import("../../ace").Ace.SyntaxMode}
+     */
     this.transformAction = function(state, action, editor, session, param) {
         if (this.$behaviour) {
             var behaviours = this.$behaviour.getBehaviours();
@@ -317,7 +336,10 @@ var Mode = function() {
             }
         }
     };
-    
+
+    /**
+     * @this {import("../../ace").Ace.SyntaxMode}
+     */
     this.getKeywords = function(append) {
         // this is for autocompletion to pick up regexp'ed keywords
         if (!this.completionKeywords) {
@@ -348,13 +370,19 @@ var Mode = function() {
             return this.$keywordList;
         return completionKeywords.concat(this.$keywordList || []);
     };
-    
+
+    /**
+     * @this {import("../../ace").Ace.SyntaxMode}
+     */
     this.$createKeywordList = function() {
         if (!this.$highlightRules)
             this.getTokenizer();
         return this.$keywordList = this.$highlightRules.$keywordList || [];
     };
 
+    /**
+     * @this {import("../../ace").Ace.SyntaxMode}
+     */
     this.getCompletions = function(state, session, pos, prefix) {
         var keywords = this.$keywordList || this.$createKeywordList();
         return keywords.map(function(word) {

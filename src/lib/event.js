@@ -1,6 +1,6 @@
 "use strict";
 
-var keys = require("./keys");
+/** @type {any} */var keys = require("./keys");
 var useragent = require("./useragent");
 
 var pressedKeys = null;
@@ -322,10 +322,10 @@ exports.blockIdle = function(delay) {
 };
 
 exports.nextFrame = typeof window == "object" && (window.requestAnimationFrame
-    || window.mozRequestAnimationFrame
-    || window.webkitRequestAnimationFrame
-    || window.msRequestAnimationFrame
-    || window.oRequestAnimationFrame);
+    || window["mozRequestAnimationFrame"]
+    || window["webkitRequestAnimationFrame"]
+    || window["msRequestAnimationFrame"]
+    || window["oRequestAnimationFrame"]);
 
 if (exports.nextFrame)
     exports.nextFrame = exports.nextFrame.bind(window);

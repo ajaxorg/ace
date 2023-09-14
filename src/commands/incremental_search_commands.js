@@ -139,6 +139,10 @@ oop.inherits(IncrementalSearchKeyboardHandler, HashHandler);
 
 (function() {
 
+    /**
+     * @param editor
+     * @this {IncrementalSearchKeyboardHandler & this}
+     */
     this.attach = function(editor) {
         var iSearch = this.$iSearch;
         HashHandler.call(this, exports.iSearchCommands, editor.commands.platform);

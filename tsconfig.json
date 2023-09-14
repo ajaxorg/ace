@@ -17,14 +17,16 @@
   "exclude": [
     "node_modules",
     "src/test",
-    "src/keyboard",
     "src/**/*_test.js",
-    "./src/mode/**/*",
+    "src/keyboard/vim.js",
+    "src/keyboard/emacs.js",
+    "src/keyboard/sublime.js",
+    "src/keyboard/vscode.js",
     "types",
+    "src/mode"
   ],
   "include": [
     "./src/**/*",
     "./ace.d.ts",
-    "src/mode/text.js"
   ]
 }

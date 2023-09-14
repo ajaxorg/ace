@@ -23,7 +23,7 @@ class Search {
      * @property {boolean} [wholeWord] - Whether the search matches only on whole words
      * @property {Range|null} [range] - The [[Range]] to search within. Set this to `null` for the whole document
      * @property {boolean} [regExp] - Whether the search is a regular expression or not
-     * @property {Range|Ace.Position} [start] - The starting [[Range]] or cursor position to begin the search
+     * @property {Range|import("../ace").Ace.Position} [start] - The starting [[Range]] or cursor position to begin the search
      * @property {boolean} [skipCurrent] - Whether or not to include the current line in the search
      * @property {boolean} [$isMultiLine] - true, if needle has \n or \r\n
      * @property {boolean} [preserveCase]
@@ -41,7 +41,7 @@ class Search {
     
     /**
      * Sets the search options via the `options` parameter.
-     * @param {Partial<Ace.SearchOptions>} options An object containing all the new search properties
+     * @param {Partial<import("../ace").Ace.SearchOptions>} options An object containing all the new search properties
      * @returns {Search}
      * @chainable
     **/
@@ -52,7 +52,7 @@ class Search {
 
     /**
      * [Returns an object containing all the search options.]{: #Search.getOptions}
-     * @returns {Partial<Ace.SearchOptions>}
+     * @returns {Partial<import("../ace").Ace.SearchOptions>}
     **/
     getOptions() {
         return lang.copyObject(this.$options);
@@ -249,6 +249,9 @@ class Search {
             return options.re = this.$assembleMultilineRegExp(needle, modifier);
 
         try {
+            /**
+             * @type {RegExp|false}
+             */
             var re = new RegExp(needle, modifier);
         } catch(e) {
             re = false;

@@ -216,7 +216,7 @@ exports.transformTextarea = function(element, options) {
             editor.setDisplaySettings();
             return;
         }
-        container.style.zIndex = 100000;
+        container.style.zIndex = "100000";
         var rect = container.getBoundingClientRect();
         var startX = rect.width  + rect.left - e.clientX;
         var startY = rect.height  + rect.top - e.clientY;
