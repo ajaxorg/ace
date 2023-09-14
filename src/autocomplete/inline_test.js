@@ -40,9 +40,9 @@ var completions = [
     },
     {
         value: "f should not show inline",
-        score: -1,
+        score: 0,
         hideInlinePreview: true
-    },
+    }
 ];
 
 var getAllLines = function(editorOverride) {
