@@ -2,6 +2,7 @@
 
 var oop = require("./oop");
 var EventEmitter = require("./event_emitter").EventEmitter;
+const reportError = require("./report_error").reportError;
 
 var optionsProvider = {
     setOptions: function(optList) {
@@ -56,13 +57,7 @@ function warn(message) {
         console.warn.apply(console, arguments);
 }
 
-function reportError(msg, data) {
-    var e = new Error(msg);
-    e.data = data;
-    if (typeof console == "object" && console.error)
-        console.error(e);
-    setTimeout(function() { throw e; });
-}
+
 
 var messages;
 
