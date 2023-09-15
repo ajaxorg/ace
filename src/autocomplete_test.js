@@ -469,13 +469,13 @@ module.exports = {
                     var completions = [
                         {
                             caption: "option 1",
-                            value: "one",
+                            value: "one"
                         }, {
                             caption: "option 2",
-                            value: "two",
+                            value: "two"
                         }, {
                             caption: "option 3",
-                            value: "three",
+                            value: "three"
                         }
                     ];
                     callback(null, completions);
@@ -512,13 +512,13 @@ module.exports = {
                     var completions = [
                         {
                             caption: "option 1",
-                            value: "one",
+                            value: "one"
                         }, {
                             caption: "option 2",
-                            value: "two",
+                            value: "two"
                         }, {
                             caption: "option 3",
-                            value: "three",
+                            value: "three"
                         }
                     ];
                     callback(null, completions);
