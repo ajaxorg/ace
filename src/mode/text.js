@@ -13,7 +13,6 @@ var Range = require("../range").Range;
 var Mode; 
 Mode = function() {
     this.HighlightRules = TextHighlightRules;
-    new this.HighlightRules().getRules();
 };
 
 (function() {

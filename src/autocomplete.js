@@ -643,15 +643,16 @@ Autocomplete.startCommand = {
  * This class is responsible for providing completions and inserting them to the editor
  */
 class CompletionProvider {
-    /**
-     * @type {FilteredList}
-     */
-    completions;
+    
 
     /**
      * @param {{pos: import("../ace").Ace.Position, prefix: string}} initialPosition
      */
     constructor(initialPosition) {
+        /**
+         * @type {FilteredList}
+         */
+        this.completions;
         this.initialPosition = initialPosition;
         this.active = true;
     }

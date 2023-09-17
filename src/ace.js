@@ -96,6 +96,7 @@ exports.createEditSession = function(text, mode) {
      * @type {IEditSession}
      */
     var doc = new EditSession(text, mode);
+    doc.setUndoManager(new UndoManager());
     return doc;
 };
 exports.Range = Range;
