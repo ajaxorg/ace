@@ -35,6 +35,7 @@ var testNames = [
     "ace/ext/error_marker_test",
     "ace/ext/code_lens_test",
     "ace/ext/beautify_test",
+    "ace/ext/simple_tokenizer_test",
     "ace/incremental_search_test",
     "ace/keyboard/emacs_test",
     "ace/keyboard/textinput_test",

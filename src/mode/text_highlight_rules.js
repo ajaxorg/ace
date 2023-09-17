@@ -1,6 +1,6 @@
 "use strict";
 
-var lang = require("../lib/lang");
+const deepCopy = require("../lib/deep_copy").deepCopy;
 
 /**
  * @type {(new() => Partial<import("../../ace").Ace.HighlightRules>) & {prototype: import("../../ace").Ace.HighlightRules}}
@@ -85,7 +85,7 @@ TextHighlightRules = function() {
         if (escapeRules) {
             var addRules = Array.prototype[append ? "push" : "unshift"];
             for (var i = 0; i < states.length; i++)
-                addRules.apply(this.$rules[states[i]], lang.deepCopy(escapeRules));
+                addRules.apply(this.$rules[states[i]], deepCopy(escapeRules));
         }
 
         if (!this.$embeds)

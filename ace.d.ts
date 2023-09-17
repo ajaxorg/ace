@@ -1,4 +1,5 @@
 /// <reference path="./ace-modes.d.ts" />
+/// <reference path="./ace-extensions.d.ts" />
 
 export namespace Ace {
     type Anchor = import("./src/anchor").IAnchor;

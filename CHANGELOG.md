@@ -2,6 +2,36 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.26.0](https://github.com/ajaxorg/ace/compare/v1.25.1...v1.26.0) (2023-09-15)
+
+
+### Features
+
+* Allow to set setSelectOnHover for Autocomplete ([#5317](https://github.com/ajaxorg/ace/issues/5317)) ([dccbcc2](https://github.com/ajaxorg/ace/commit/dccbcc20288a48403f10aa29b6b9b6181dc8a66f))
+
+
+### Bug Fixes
+
+* Improve PRQL syntax highlightning ([#5313](https://github.com/ajaxorg/ace/issues/5313)) ([7d677f1](https://github.com/ajaxorg/ace/commit/7d677f1019ea5c81f3d9ae36ed1e71ac7a08fb30))
+
+### [1.25.1](https://github.com/ajaxorg/ace/compare/v1.25.0...v1.25.1) (2023-09-14)
+
+## [1.25.0](https://github.com/ajaxorg/ace/compare/v1.24.2...v1.25.0) (2023-09-14)
+
+
+### Features
+
+* Add syntax highlighting for PRQL ([#5307](https://github.com/ajaxorg/ace/issues/5307)) ([24862cd](https://github.com/ajaxorg/ace/commit/24862cdc83694bbe541c6f8be6fbaaff80d44bf7))
+
+### [1.24.2](https://github.com/ajaxorg/ace/compare/v1.24.1...v1.24.2) (2023-09-08)
+
+
+### Bug Fixes
+
+* Added project details in index.html file ([#5300](https://github.com/ajaxorg/ace/issues/5300)) ([6e83505](https://github.com/ajaxorg/ace/commit/6e835059dd13e95178b15ce9b06a2f2444c2e731))
+* autocompletion threshold doesn't apply to trigger characters ([84bbc88](https://github.com/ajaxorg/ace/commit/84bbc888e1c0304c0160bb19fc46cf5539d079cf))
+* Update php_highlight_rules.js ([#5288](https://github.com/ajaxorg/ace/issues/5288)) ([caedd0c](https://github.com/ajaxorg/ace/commit/caedd0cf22d5a7644ceb418562ebcab801011c88))
+
 ### [1.24.1](https://github.com/ajaxorg/ace/compare/v1.24.0...v1.24.1) (2023-08-15)
 
 ## [1.24.0](https://github.com/ajaxorg/ace/compare/v1.23.4...v1.24.0) (2023-08-09)

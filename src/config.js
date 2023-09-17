@@ -223,6 +223,6 @@ var reportErrorIfPathIsNotConfigured = function() {
     }
 };
 
-exports.version = "1.24.1";
+exports.version = "1.26.0";
 
 
