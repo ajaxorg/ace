@@ -40,7 +40,7 @@ class SimpleTokenizer {
  * Result is a list of list of tokens, where each line from the provided content is a separate list of tokens.
  * 
  * @param {string} content to tokenize 
- * @param {import("ace-code").Ace.HighlightRules} highlightRules defining the language grammar 
+ * @param {import("../../ace").Ace.HighlightRules} highlightRules defining the language grammar 
  * @returns {import("ace-code/src/ext/simple_tokenizer").TokenizeResult} tokenization result containing a list of token for each of the lines from content
  */
 function tokenize(content, highlightRules) {

@@ -4,14 +4,10 @@
  * @namespace Ace
  **/
 /**
- *
- * @typedef IEditSession
- * @type {import("./edit_session").IEditSession}
+ * @typedef {import("./edit_session").IEditSession} IEditSession
  */
 /**
- *
- * @typedef IEditor
- * @type {import("./editor").IEditor}
+ * @typedef {import("./editor").IEditor} IEditor
  */
 "use strict";
 "include loader_build";
@@ -19,7 +15,13 @@
 var dom = require("./lib/dom");
 
 var Range = require("./range").Range;
+/**
+ * @type {any}
+ */
 var EditSession = require("./edit_session").EditSession;
+/**
+ * @type {any}
+ */
 var Editor = require("./editor").Editor;
 var UndoManager = require("./undomanager").UndoManager;
 var Renderer = require("./virtual_renderer").VirtualRenderer;
@@ -85,16 +87,15 @@ exports.edit = function(el, options) {
 
 /**
  * Creates a new [[EditSession]], and returns the associated [[Document]].
- * @param {import('./document').Document | String} text {:textParam}
- * @param {import("./edit_session").TextMode} [mode] {:modeParam}
+ * @param {import('./document').IDocument | String} text {:textParam}
+ * @param {import("../ace").Ace.SyntaxMode} [mode] {:modeParam}
  * @returns {IEditSession}
  **/
 exports.createEditSession = function(text, mode) {
     /**
-     * @type {any}
+     * @type {IEditSession}
      */
     var doc = new EditSession(text, mode);
-    doc.setUndoManager(new UndoManager());
     return doc;
 };
 exports.Range = Range;

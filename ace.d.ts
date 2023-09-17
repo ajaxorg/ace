@@ -386,7 +386,7 @@ export namespace Ace {
         name?: string;
         bindKey?: string | { mac?: string, win?: string };
         readOnly?: boolean;
-        exec?: (editor: Editor, args?: any) => void;
+        exec?: (editor?: Editor, args?: any) => void;
         isAvailable?: (editor: Editor) => boolean;
         description?: string,
         multiSelectAction?: "forEach"|"forEachLine"|Function,

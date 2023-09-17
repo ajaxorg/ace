@@ -21,7 +21,7 @@
         "eslint": "^8.20.0",
         "istanbul": "^0.4.5",
         "standard-version": "^9.3.2",
-        "typescript": "^5.3.0-dev.20230817"
+        "typescript": "^5.2.2"
     },
     "mappings": {
         "ace": "."

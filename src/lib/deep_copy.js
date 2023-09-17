@@ -4,7 +4,7 @@ exports.deepCopy = function deepCopy(obj) {
     var copy;
     if (Array.isArray(obj)) {
         copy = [];
-        for (var key = 0; key < obj.length; key++) {
+        for (let key = 0; key < obj.length; key++) {
             copy[key] = deepCopy(obj[key]);
         }
         return copy;
@@ -13,7 +13,7 @@ exports.deepCopy = function deepCopy(obj) {
         return obj;
     
     copy = {};
-    for (var key in obj)
+    for (let key in obj)
         copy[key] = deepCopy(obj[key]);
     return copy;
 };
