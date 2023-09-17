@@ -4,8 +4,8 @@ var dom = require("../lib/dom");
 
 
 class Cursor {
-    /**@type{number}*/timeoutId;
     constructor(parentEl) {
+        /**@type{number}*/this.timeoutId;
         this.element = dom.createElement("div");
         this.element.className = "ace_layer ace_cursor-layer";
         parentEl.appendChild(this.element);

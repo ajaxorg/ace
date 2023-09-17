@@ -8,14 +8,6 @@
  **/
 class Range {
     /**
-     * @type {Number | undefined}
-     */
-    id;
-    /**
-     * @type {import("../ace").Ace.Point | undefined}
-     */
-    cursor;
-    /**
      * Creates a new `Range` object with the given starting and ending rows and columns.
      * @param {Number} [startRow] The starting row
      * @param {Number} [startColumn] The starting column
@@ -24,6 +16,14 @@ class Range {
      * @constructor
      **/
     constructor(startRow, startColumn, endRow, endColumn) {
+        /**
+         * @type {Number | undefined}
+         */
+        this.id;
+        /**
+         * @type {import("../ace").Ace.Point | undefined}
+         */
+        this.cursor;
         /**
          * @type {import("../ace").Ace.Point}
          */

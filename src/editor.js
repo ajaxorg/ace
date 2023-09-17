@@ -56,11 +56,6 @@ var keys = require('./lib/keys');
  **/
 class Editor {
     /**
-     * @type {IEditSession}
-     */
-    session;
-    
-    /**
      * Creates a new `Editor` object.
      *
      * @param {IVirtualRenderer} renderer Associated `VirtualRenderer` that draws everything
@@ -69,6 +64,10 @@ class Editor {
      * @this {IEditor}
      **/
     constructor(renderer, session, options) {
+        /**
+         * @type {IEditSession}
+         */
+        this.session;
         this.$toDestroy = [];
         
         var container = renderer.getContainerElement();

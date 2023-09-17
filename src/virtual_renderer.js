@@ -36,16 +36,16 @@ dom.importCssString(editorCss, "ace_editor.css", false);
  **/
 class VirtualRenderer {
     /**
-     * @type {IEditSession}
-     */
-    session;
-    /**
      * Constructs a new `VirtualRenderer` within the `container` specified, applying the given `theme`.
      * @param {Element} [container] The root element of the editor
      * @param {String} [theme] The starting theme
      * @this {IVirtualRenderer}
      **/
     constructor(container, theme) {
+        /**
+         * @type {IEditSession}
+         */
+        this.session;
         var _self = this;
         /**
          * @type {HTMLElement}

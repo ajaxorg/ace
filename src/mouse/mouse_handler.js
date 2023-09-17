@@ -14,16 +14,16 @@ var addTouchListeners = require("./touch_handler").addTouchListeners;
 var config = require("../config");
 
 class MouseHandler {
-    /** @type {boolean} */$dragDelay;
-    /** @type {boolean} */$dragEnabled;
-    /** @type {boolean} */$mouseMoved;
-    /** @type {MouseEvent} */mouseEvent;
-    /** @type {number} */$focusTimeout;
     /**
      * @param {import("../editor").IEditor} editor
      * @this {IMouseHandler}
      */
     constructor(editor) {
+        /** @type {boolean} */this.$dragDelay;
+        /** @type {boolean} */this.$dragEnabled;
+        /** @type {boolean} */this.$mouseMoved;
+        /** @type {MouseEvent} */this.mouseEvent;
+        /** @type {number} */this.$focusTimeout;
         var _self = this;
         this.editor = editor;
 

@@ -16,13 +16,16 @@ var MAX_COUNT = 999;
 dom.importCssString(searchboxCss, "ace_searchbox", false);
 
 class SearchBox {
-    activeInput;
     /**
      * @param {IEditor} editor
      * @param {undefined} [range]
      * @param {undefined} [showReplaceForm]
      */
     constructor(editor, range, showReplaceForm) {
+        /**
+         * @type {any}
+         */
+        this.activeInput;
         var div = dom.createElement("div");
         dom.buildDom(["div", {class:"ace_search right"},
             ["span", {action: "hide", class: "ace_searchbtn_close"}],

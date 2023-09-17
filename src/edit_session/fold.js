@@ -13,16 +13,17 @@ var RangeList = require("../range_list").RangeList;
  * Simple fold-data struct.
  **/
 class Fold extends RangeList {
-    /**
-     * @type {number}
-     */
-    collapseChildren;
+
     /**
      * @param {Range} range
      * @param {any} placeholder
      */
     constructor(range, placeholder) {
         super();
+        /**
+         * @type {number}
+         */
+        this.collapseChildren;
         this.foldLine = null;
         this.placeholder = placeholder;
         this.range = range;

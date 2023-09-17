@@ -8,14 +8,13 @@
  **/
 class UndoManager {
     /**
-     * @type {boolean}
-     */
-    $keepRedoStack;
-    
-    /**
      * Resets the current undo state and creates a new `UndoManager`.
      **/
     constructor() {
+        /**
+         * @type {boolean}
+         */
+        this.$keepRedoStack;
         this.$maxRev = 0;
         this.$fromUndo = false;
         this.$undoDepth = Infinity;

@@ -64,12 +64,13 @@ var destroyCompleter = function(e, editor) {
  * There is an autocompletion popup, an optional inline ghost text renderer and a docuent tooltip popup inside.
  */
 class Autocomplete {
-    /**
-     * @type {IAcePopup}
-     */
-    popup;
+    
     
     constructor() {
+        /**
+         * @type {IAcePopup}
+         */
+        this.popup;
         this.autoInsert = false;
         this.autoSelect = true;
         this.autoShown = false;

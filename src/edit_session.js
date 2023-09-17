@@ -131,10 +131,7 @@ var SearchHighlight = require("./search_highlight").SearchHighlight;
  **/
 
 class EditSession {
-    /**
-     * @type {IDocument}
-     */
-    doc;
+
     
     /**
      * Sets up a new `EditSession` and associates it with the given `Document` and `Mode`.

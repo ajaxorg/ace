@@ -11,8 +11,8 @@ var dom = require("../lib/dom");
 var escapeHTML = require("../lib/lang").escapeHTML;
 
 class Element {
-    /** @type{string} */className;
     constructor(type) {
+        /** @type{string} */this.className;
         this.type = type;
         this.style = {};
         this.textContent = "";

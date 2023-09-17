@@ -167,12 +167,12 @@ exports.Tooltip = Tooltip;
 
 
 class HoverTooltip extends Tooltip {
-    /**
-     * @type {number}
-     */
-    row
     constructor(parentNode=document.body) {
         super(parentNode);
+        /**
+         * @type {number?}
+         */
+        this.row;
         
         this.timeout = undefined;
         this.lastT = 0;

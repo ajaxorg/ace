@@ -21,7 +21,7 @@ var isIOS = useragent.isIOS;
 var valueResetRegex = isIOS ? /\s/ : /\n/;
 var isMobile = useragent.isMobile;
 
-var TextInput
+var TextInput;
 TextInput= function(parentNode, host) {
     /**
      * @type {HTMLTextAreaElement & {msGetInputContext?: () => {compositionStartOffset: number}, getInputContext?: () => {compositionStartOffset: number}}}

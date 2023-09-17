@@ -8,14 +8,14 @@ var MAX_TOKEN_COUNT = 2000;
  **/
 class Tokenizer {
     /**
-     * @type {RegExp}
-     */
-    splitRegex;
-    /**
      * Constructs a new tokenizer based on the given rules and flags.
      * @param {Object} rules The highlighting rules
      **/
     constructor(rules) {
+        /**
+         * @type {RegExp}
+         */
+        this.splitRegex;
         this.states = rules;
 
         this.regExps = {};

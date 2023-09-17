@@ -14,20 +14,18 @@ var dom = require("./lib/dom");
 
 class LineWidgets {
     /**
-     * @type {import("../ace").Ace.LineWidget[]}
-     */
-    lineWidgets;
-    /**
-     * @type {IEditor}
-     */
-    editor;
-    $useWrapMode;
-    $wrapData;
-
-    /**
      * @param {IEditSession} session
      */
     constructor(session) {
+        /**
+         * @type {import("../ace").Ace.LineWidget[]}
+         */
+        this.lineWidgets;
+        /**
+         * @type {IEditor}
+         */
+        this.editor;
+        
         this.session = session;
         this.session.widgetManager = this;
         this.session.getRowLength = this.getRowLength;
@@ -53,10 +51,10 @@ class LineWidgets {
             h = this.lineWidgets[row] && this.lineWidgets[row].rowCount || 0;
         else 
             h = 0;
-        if (!this.$useWrapMode || !this.$wrapData[row]) {
+        if (!this["$useWrapMode"] || !this["$wrapData"][row]) {
             return 1 + h;
         } else {
-            return this.$wrapData[row].length + 1 + h;
+            return this["$wrapData"][row].length + 1 + h;
         }
     }
 
