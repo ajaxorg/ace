@@ -190,7 +190,7 @@ class Gutter{
         gutterWidth += padding.left + padding.right;
         if (gutterWidth !== this.gutterWidth && !isNaN(gutterWidth)) {
             this.gutterWidth = gutterWidth;
-            this.element.parentNode.style.width = 
+            /**@type{any}*/(this.element.parentNode).style.width = 
             this.element.style.width = Math.ceil(this.gutterWidth) + "px";
             this._signal("changeGutterWidth", gutterWidth);
         }
@@ -317,7 +317,7 @@ class Gutter{
     /**
      * @param {any} cell
      * @param {import("../../ace").Ace.LayerConfig} config
-     * @param {import("../edit_session/fold").Fold} [fold] //TODO:
+     * @param {import("../../ace").Ace.IRange | undefined} fold
      * @param {number} row
      * @this {IGutter}
      */
@@ -534,7 +534,7 @@ class Gutter{
     $computePadding() {
         if (!this.element.firstChild)
             return {left: 0, right: 0};
-        var style = dom.computedStyle(this.element.firstChild);
+        var style = dom.computedStyle(/**@type{Element}*/(this.element.firstChild));
         this.$padding = {};
         this.$padding.left = (parseInt(style.borderLeftWidth) || 0)
             + (parseInt(style.paddingLeft) || 0) + 1;

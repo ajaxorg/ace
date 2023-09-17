@@ -143,7 +143,7 @@ class RangeList {
         var startIndex = this.pointIndex({row: startRow, column: 0});
         if (startIndex < 0)
             startIndex = -startIndex - 1;
-        //TODO: seems mistake
+        //@ts-expect-error TODO: potential wrong argument
         var endIndex = this.pointIndex({row: endRow, column: 0}, startIndex);
         if (endIndex < 0)
             endIndex = -endIndex - 1;

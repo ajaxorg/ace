@@ -36,7 +36,7 @@ class StatusBar{
         function add(str, separator) {
             str && status.push(str, separator || "|");
         }
-
+        // @ts-expect-error TODO: potential wrong argument
         add(editor.keyBinding.getStatusText(editor));
         if (editor.commands.recording)
             add("REC");

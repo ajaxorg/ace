@@ -323,7 +323,7 @@ exports.scrollbarWidth = function(doc) {
 };
 
 /**
- * @param {HTMLElement} element
+ * @param {Element} element
  * @param [style]
  * @returns {Partial<CSSStyleDeclaration>}
  */

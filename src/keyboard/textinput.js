@@ -153,7 +153,7 @@ TextInput= function(parentNode, host) {
                 ancestors.push(t);
                 t.setAttribute("ace_nocontext", "true");
                 if (!t.parentElement && t.getRootNode)
-                    t = t.getRootNode().host;
+                    t = t.getRootNode()["host"];
                 else
                     t = t.parentElement;
             }

@@ -5,16 +5,19 @@
  * @export
  */
 /**
- * @typedef UndoManager
- * @type {import("./undomanager").UndoManager}
+ * @typedef {import("./undomanager").UndoManager} UndoManager
  */
 /**
- * @typedef FoldLine
- * @type {import("./edit_session/fold_line").FoldLine}
+ * @typedef {import("./edit_session/fold_line").FoldLine} FoldLine
  */
 /**
- * @typedef ISelection
- * @type {import("./selection").ISelection}
+ * @typedef {import("./selection").ISelection} ISelection
+ */
+/**
+ * @typedef {import("./document").IDocument} IDocument
+ */
+/**
+ * @typedef {import("../ace").Ace.Point} Point
  */
 
 var oop = require("./lib/oop");
@@ -115,25 +118,27 @@ var SearchHighlight = require("./search_highlight").SearchHighlight;
 //}
 
 /**
+ * @typedef TextMode
+ * @type {import("../ace").Ace.SyntaxMode}
+ */
+
+
+
+/**
  * Stores all the data about [[Editor `Editor`]] state providing easy way to change editors state.
  *
  * `EditSession` can be attached to only one [[Document `Document`]]. Same `Document` can be attached to several `EditSession`s.
  **/
 
-/**
- * @typedef TextMode
- * @type {import("../ace").Ace.SyntaxMode}
- */
-
 class EditSession {
     /**
-     * @type {import("../ace").Ace.Document}
+     * @type {IDocument}
      */
     doc;
     
     /**
      * Sets up a new `EditSession` and associates it with the given `Document` and `Mode`.
-     * @param {import("../ace").Ace.Document | String} [text] [If `text` is a `Document`, it associates the `EditSession` with it. Otherwise, a new `Document` is created, with the initial text]{: #textParam}
+     * @param {IDocument | String} [text] [If `text` is a `Document`, it associates the `EditSession` with it. Otherwise, a new `Document` is created, with the initial text]{: #textParam}
      * @param {import("../ace").Ace.SyntaxMode} [mode] [The initial language mode to use for the document]{: #modeParam}
      * @this {IEditSession}
      **/
@@ -172,7 +177,7 @@ class EditSession {
         if (typeof text != "object" || !text.getLine)
             text = new Document(text);
 
-        this.setDocument(text);
+        this.setDocument(/**@type{IDocument}*/(text));
         /**
          * @type {ISelection}}
          */
@@ -189,7 +194,7 @@ class EditSession {
     /**
      * Sets the `EditSession` to point to a new `Document`. If a `BackgroundTokenizer` exists, it also points to `doc`.
      *
-     * @param {import("../ace").Ace.Document} doc The new `Document` to use
+     * @param {IDocument} doc The new `Document` to use
      *
      **/
     setDocument(doc) {
@@ -206,7 +211,7 @@ class EditSession {
 
     /**
      * Returns the `Document` associated with this session.
-     * @return {import("../ace").Ace.Document}
+     * @return {IDocument}
      **/
     getDocument() {
         return this.doc;
@@ -283,6 +288,7 @@ class EditSession {
         if (!this.$fromUndo && this.$undoManager) {
             if (removedFolds && removedFolds.length) {
                 this.$undoManager.add({
+                    // @ts-expect-error TODO: this action type is missing in the types
                     action: "removeFolds",
                     folds:  removedFolds
                 }, this.mergeUndoDeltas);
@@ -415,6 +421,7 @@ class EditSession {
      * @returns {UndoManager}
      **/
     getUndoManager() {
+        // @ts-ignore
         return this.$undoManager || this.$defaultUndoManager;
     }
 
@@ -468,7 +475,7 @@ class EditSession {
 
     /**
      * Returns `true` if the character at the position is a soft tab.
-     * @param {import("../ace").Ace.Point} position The position to check
+     * @param {Point} position The position to check
      * @this {IEditSession}
      **/
     isTabStop(position) {
@@ -883,7 +890,7 @@ class EditSession {
             var options = mode;
             var path = options.path;
         } else {
-            path = mode || "ace/mode/text";
+            path = /**@type{string}*/(mode) || "ace/mode/text";
         }
 
         // this is needed if ace isn't on require path (e.g tests in node)
@@ -1142,9 +1149,9 @@ class EditSession {
 
     /**
      * Inserts a block of `text` and the indicated `position`.
-     * @param {import("../ace").Ace.Point} position The position {row, column} to start inserting at
+     * @param {Point} position The position {row, column} to start inserting at
      * @param {String} text A chunk of text to insert
-     * @returns {import("../ace").Ace.Point} The position of the last line of `text`. If the length of `text` is 0, this function simply returns `position`.
+     * @returns {Point} The position of the last line of `text`. If the length of `text` is 0, this function simply returns `position`.
      **/
     insert(position, text) {
         return this.doc.insert(position, text);
@@ -1152,8 +1159,8 @@ class EditSession {
 
     /**
      * Removes the `range` from the document.
-     * @param {Range} range A specified Range to remove
-     * @returns {import("../ace").Ace.Point} The new `start` property of the range, which contains `startRow` and `startColumn`. If `range` is empty, this function returns the unmodified value of `range.start`.
+     * @param {import("../ace").Ace.IRange} range A specified Range to remove
+     * @returns {Point} The new `start` property of the range, which contains `startRow` and `startColumn`. If `range` is empty, this function returns the unmodified value of `range.start`.
      **/
     remove(range) {
         return this.doc.remove(range);
@@ -1192,7 +1199,9 @@ class EditSession {
             }
         }
         if (!dontSelect && this.$undoSelect) {
+            //@ts-expect-error TODO: potential wrong property
             if (deltas.selectionBefore)
+                //@ts-expect-error TODO: potential wrong property
                 this.selection.fromJSON(deltas.selectionBefore);
             else
                 this.selection.setRange(this.$getUndoSelection(deltas, true));
@@ -1218,7 +1227,9 @@ class EditSession {
         }
 
         if (!dontSelect && this.$undoSelect) {
+            //@ts-expect-error TODO: potential wrong property
             if (deltas.selectionAfter)
+                //@ts-expect-error TODO: potential wrong property
                 this.selection.fromJSON(deltas.selectionAfter);
             else
                 this.selection.setRange(this.$getUndoSelection(deltas, false));
@@ -1282,9 +1293,9 @@ class EditSession {
     /**
      * Replaces a range in the document with the new `text`.
      *
-     * @param {Range} range A specified Range to replace
+     * @param {import("../ace").Ace.IRange} range A specified Range to replace
      * @param {String} text The new text to use as a replacement
-     * @returns {import("../ace").Ace.Point} An object containing the final row and column, like this:
+     * @returns {Point} An object containing the final row and column, like this:
      * ```
      * {row: endRow, column: 0}
      * ```
@@ -1303,7 +1314,7 @@ class EditSession {
      *    { row: newRowLocation, column: newColumnLocation }
      *  ```
      * @param {Range} fromRange The range of text you want moved within the document
-     * @param {import("../ace").Ace.Point} toPosition The location (row and column) where you want to move the text to
+     * @param {Point} toPosition The location (row and column) where you want to move the text to
      * @param {boolean} [copy]
      * @returns {Range} The new range where the text was moved to.
      * @this {IEditSession}
@@ -1488,7 +1499,7 @@ class EditSession {
     /**
      * @param {number} row
      * @param {number} column
-     * @returns {import("../ace").Ace.Point}
+     * @returns {Point}
      */
     $clipPositionToDocument(row, column) {
         column = Math.max(0, column);
@@ -1898,6 +1909,7 @@ class EditSession {
 
             if (!splits.length) {
                 indent = getWrapIndent();
+                //@ts-expect-error TODO: potential wrong property
                 splits.indent = indent;
             }
             lastDocSplit += len;
@@ -2148,7 +2160,7 @@ class EditSession {
      * For the given document row and column, this returns the document position of the last row.
      * @param {Number} docRow
      * @param {Number} docColumn
-     * @returns {import("../ace").Ace.Point}
+     * @returns {Point}
      * @this {IEditSession}
      **/
     getDocumentLastRowColumnPosition(docRow, docColumn) {
@@ -2206,7 +2218,7 @@ class EditSession {
      * @param {Number} screenColumn The screen column to check
      * @param {Number} [offsetX] screen character x-offset [optional]
      *
-     * @returns {import("../ace").Ace.Point} The object returned has two properties: `row` and `column`.
+     * @returns {Point} The object returned has two properties: `row` and `column`.
      *
      * @related EditSession.documentToScreenPosition
      * @this {IEditSession}
@@ -2301,9 +2313,9 @@ class EditSession {
 
     /**
      * Converts document coordinates to screen coordinates. {:conversionConsiderations}
-     * @param {Number|import("../ace").Ace.Point} docRow The document row to check
+     * @param {Number|Point} docRow The document row to check
      * @param {Number|undefined} [docColumn] The document column to check
-     * @returns {import("../ace").Ace.Point} The object returned by this method has two properties: `row` and `column`.
+     * @returns {Point} The object returned by this method has two properties: `row` and `column`.
      *
      * @related EditSession.screenToDocumentPosition
      * @this {IEditSession}
@@ -2311,9 +2323,9 @@ class EditSession {
     documentToScreenPosition(docRow, docColumn) {
         // Normalize the passed in arguments.
         if (typeof docColumn === "undefined")
-            var pos = this.$clipPositionToDocument(docRow.row, docRow.column);
+            var pos = this.$clipPositionToDocument(/**@type{Point}*/(docRow).row, /**@type{Point}*/(docRow).column);
         else
-            pos = this.$clipPositionToDocument(docRow, docColumn);
+            pos = this.$clipPositionToDocument(/**@type{number}*/(docRow), docColumn);
 
         docRow = pos.row;
         docColumn = pos.column;
@@ -2431,6 +2443,9 @@ class EditSession {
      **/
     getScreenLength() {
         var screenRows = 0;
+        /**
+         * @type {FoldLine}
+         */
         var fold = null;
         if (!this.$useWrapMode) {
             screenRows = this.getLength();

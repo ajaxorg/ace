@@ -52,6 +52,7 @@ class FoldLine {
      */
     addFold(fold) {
         if (fold.sameRow) {
+            // @ts-expect-error TODO: startRow, endRow are missing in Fold and FoldLine
             if (fold.start.row < this.startRow || fold.endRow > this.endRow) {
                 throw new Error("Can't add a fold to this FoldLine as it has no connection");
             }

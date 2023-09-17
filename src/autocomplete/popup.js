@@ -98,6 +98,7 @@ class AcePopup {
 
         popup.setHighlightActiveLine(false);
         // set default highlight color
+        // @ts-ignore
         popup.session.highlight("");
         popup.session.$searchHighlight.clazz = "ace_highlight-marker";
 
@@ -200,7 +201,7 @@ class AcePopup {
         var bgTokenizer = popup.session.bgTokenizer;
         bgTokenizer.$tokenizeRow = function (row) {
             /**
-             * @type {import("../../ace").Ace.Completion}
+             * @type {import("../../ace").Ace.Completion &{name?, className?, matchMask?, message?}}
              */
             var data = popup.data[row];
             var tokens = [];

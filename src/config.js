@@ -1,16 +1,38 @@
 "no use strict";
 /**
- * @typedef IAppConfig
- * @type {import("./lib/app_config").IAppConfig}
+ * @typedef {import("./lib/app_config").IAppConfig} IAppConfig
+ */
+/**
+ * @typedef {IAppConfig & Config} IConfig
+ * @export
+ */
+
+/**
+ * @typedef Config
+ * @property {(key: string) => any} get
+ * @property {(key: string, value: any) => void} set
+ * @property {() => {[key: string]: any}} all
+ * @property {(name: string, component?: string) => string} moduleUrl
+ * @property {(name: string, subst: string) => string} setModuleUrl
+ * @property {(moduleName: string | [string, string], cb: (module: any) => void) => void} loadModule
+ * @property {(cb: (moduleName: string, afterLoad: (err: Error | null, module: unknown) => void) => void) => void} setLoader
+ * @property {(moduleName: string, onLoad: (module: any) => void) => void} setModuleLoader
+ * @property {string} version
+ * @property {any} $modes
+ * @property {any} $loading
+ * @property {any} $loaded
+ * @property {any} dynamicModules
+ * @property {any} $require
  */
 
 var lang = require("./lib/lang");
 var net = require("./lib/net");
 var dom = require("./lib/dom");
-var AppConfig = require("./lib/app_config").AppConfig;
+/**@type{any}*/var AppConfig = require("./lib/app_config").AppConfig;
 
 /**
- * @type {IAppConfig & exports}
+ * 
+ * @type {IConfig}
  */
 module.exports = exports = new AppConfig();
 
@@ -128,23 +150,23 @@ exports.loadModule = function(moduleName, onLoad) {
         moduleType = moduleName[0];
         moduleName = moduleName[1];
     }
-
+    
     var load = function (module) {
         // require(moduleName) can return empty object if called after require([moduleName], callback)
-        if (module && !exports.$loading[moduleName]) return onLoad && onLoad(module);
+        if (module && !exports.$loading[/**@type {string}*/(moduleName)]) return onLoad && onLoad(module);
 
-        if (!exports.$loading[moduleName]) exports.$loading[moduleName] = [];
+        if (!exports.$loading[/**@type {string}*/(moduleName)]) exports.$loading[/**@type {string}*/(moduleName)] = [];
 
-        exports.$loading[moduleName].push(onLoad);
+        exports.$loading[/**@type {string}*/(moduleName)].push(onLoad);
 
-        if (exports.$loading[moduleName].length > 1) return;
+        if (exports.$loading[/**@type {string}*/(moduleName)].length > 1) return;
 
         var afterLoad = function() {
             loader(moduleName, function(err, module) {
-                if (module) exports.$loaded[moduleName] = module;
+                if (module) exports.$loaded[/**@type {string}*/(moduleName)] = module;
                 exports._emit("load.module", {name: moduleName, module: module});
-                var listeners = exports.$loading[moduleName];
-                exports.$loading[moduleName] = null;
+                var listeners = exports.$loading[/**@type {string}*/(moduleName)];
+                exports.$loading[/**@type {string}*/(moduleName)] = null;
                 listeners.forEach(function(onLoad) {
                     onLoad && onLoad(module);
                 });
@@ -153,7 +175,7 @@ exports.loadModule = function(moduleName, onLoad) {
 
         if (!exports.get("packaged")) return afterLoad();
 
-        net.loadScript(exports.moduleUrl(moduleName, moduleType), afterLoad);
+        net.loadScript(exports.moduleUrl(/**@type {string}*/(moduleName), moduleType), afterLoad);
         reportErrorIfPathIsNotConfigured();
     };
 
@@ -176,7 +198,7 @@ exports.loadModule = function(moduleName, onLoad) {
 };
 
 exports.$require = function(moduleName) {
-    if (typeof module.require == "function") {
+    if (typeof module["require"] == "function") {
         var req = "require";
         return module[req](moduleName);
     }

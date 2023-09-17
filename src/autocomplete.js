@@ -6,7 +6,7 @@
  * @typedef {import("./editor").IEditor} IEditor
  */
 var HashHandler = require("./keyboard/hash_handler").HashHandler;
-var AcePopup = require("./autocomplete/popup").AcePopup;
+/**@type{any}*/var AcePopup = require("./autocomplete/popup").AcePopup;
 var AceInline = require("./autocomplete/inline").AceInline;
 var getAriaId = require("./autocomplete/popup").getAriaId;
 var util = require("./autocomplete/util");
@@ -93,7 +93,9 @@ class Autocomplete {
     }
 
     $init() {
-        // @ts-ignore
+        /**
+         * @type {IAcePopup}
+         */
         this.popup = new AcePopup(this.parentNode || document.body || document.documentElement); 
         this.popup.on("click", function(e) {
             this.insertMatch();
@@ -138,6 +140,7 @@ class Autocomplete {
             }
             this.$updatePopupPosition();
         }
+        // @ts-expect-error TODO: potential wrong arguments
         this.tooltipTimer.call(null, null);
     }
 
@@ -156,9 +159,11 @@ class Autocomplete {
         this.$elements = elements;
     }
     unObserveLayoutChanges() {
+        // @ts-expect-error This is expected for some browsers
         window.removeEventListener("resize", this.onLayoutChange, {passive: true});
         window.removeEventListener("wheel", this.mousewheelListener);
         this.$elements && this.$elements.forEach((el) => {
+            // @ts-expect-error This is expected for some browsers
             el.removeEventListener("scroll", this.onLayoutChange, {passive: true});
         });
         this.$elements = null;
@@ -323,6 +328,7 @@ class Autocomplete {
         if (data.value === "") // Explicitly given nothing to insert, e.g. "No suggestion state"
             return this.detach();
         var completions = this.completions;
+        // @ts-expect-error TODO: potential wrong arguments
         var result = this.getCompletionProvider().insertMatch(this.editor, data, completions.filterText, options);
         // detach only if new popup was not opened while inserting match
         if (this.completions == completions)
@@ -606,9 +612,9 @@ Autocomplete.for = function(editor) {
         editor.completer = null;
     }
     if (config.get("sharedPopups")) {
-        if (!Autocomplete.$sharedInstance)
-            Autocomplete.$sharedInstance = new Autocomplete();
-        editor.completer = Autocomplete.$sharedInstance;
+        if (!Autocomplete["$sharedInstance"])
+            Autocomplete["$sharedInstance"] = new Autocomplete();
+        editor.completer = Autocomplete["$sharedInstance"];
     } else {
         editor.completer = new Autocomplete();
         editor.once("destroy", destroyCompleter);

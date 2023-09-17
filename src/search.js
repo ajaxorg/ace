@@ -81,8 +81,8 @@ class Search {
         var firstRange = null;
         iterator.forEach(function(sr, sc, er, ec) {
             firstRange = new Range(sr, sc, er, ec);
-            if (sc == ec && options.start && options.start.start
-                && options.skipCurrent != false && firstRange.isEqual(options.start)
+            if (sc == ec && options.start && /**@type{Range}*/(options.start).start
+                && options.skipCurrent != false && firstRange.isEqual(/**@type{Range}*/(options.start))
             ) {
                 firstRange = null;
                 return false;

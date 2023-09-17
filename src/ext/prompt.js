@@ -45,12 +45,13 @@ var openPrompt;
  * Prompt plugin is used for getting input from user.
  *
  * @param {IEditor} editor                   Ouside editor related to this prompt. Will be blurred when prompt is open.
- * @param {String} message                  Predefined value of prompt input box.
+ * @param {String | Partial<PromptOptions>} message                  Predefined value of prompt input box.
  * @param {Partial<PromptOptions>} options                  Cusomizable options for this prompt.
  * @param {Function} [callback]               Function called after done.
  * */
 function prompt(editor, message, options, callback) {
     if (typeof message == "object") {
+        // @ts-ignore
         return prompt(editor, "", message, options);
     }
     if (openPrompt) {
@@ -66,6 +67,9 @@ function prompt(editor, message, options, callback) {
     var cmdLine = $singleLineEditor();
     cmdLine.session.setUndoManager(new UndoManager());
 
+    /**
+     * @type {any}
+     */
     var el = dom.buildDom(["div", {class: "ace_prompt_container" + (options.hasDescription ? " input-box-with-description" : "")}]);
     var overlay = overlayPage(editor, el, done);
     el.appendChild(cmdLine.container);
@@ -100,8 +104,8 @@ function prompt(editor, message, options, callback) {
         popup.setRow(-1);
         popup.on("click", function(e) {
             var data = popup.getData(popup.getRow());
-            if (!data.error) {
-                cmdLine.setValue(data.value || data.name || data);
+            if (!data["error"]) {
+                cmdLine.setValue(data.value || data["name"] || data);
                 accept();
                 e.stop();
             }
@@ -120,6 +124,9 @@ function prompt(editor, message, options, callback) {
     }
 
     if (options.hasDescription) {
+        /**
+         * @type {any}
+         */
         var promptTextContainer = dom.buildDom(["div", {class: "ace_prompt_text_container"}]);
         dom.buildDom(options.prompt || "Press 'Enter' to confirm or 'Escape' to cancel", promptTextContainer);
         el.appendChild(promptTextContainer);
@@ -135,7 +142,7 @@ function prompt(editor, message, options, callback) {
             val = cmdLine.getValue();
         }
         var curData = popup ? popup.getData(popup.getRow()) : val;
-        if (curData && !curData.error) {
+        if (curData && !curData["error"]) {
             done();
             options.onAccept && options.onAccept({
                 value: val,
@@ -194,7 +201,7 @@ function prompt(editor, message, options, callback) {
 
     function valueFromRecentList() {
         var current = popup.getData(popup.getRow());
-        if (current && !current.error)
+        if (current && !current["error"])
             return current.value || current.caption || current;
     }
 
@@ -241,9 +248,9 @@ prompt.gotoLine = function(editor, callback) {
         selection: [1, Number.MAX_VALUE],
         onAccept: function(data) {
             var value = data.value;
-            var _history = prompt.gotoLine._history;
+            var _history = prompt.gotoLine["_history"];
             if (!_history)
-                prompt.gotoLine._history = _history = [];
+                prompt.gotoLine["_history"] = _history = [];
             if (_history.indexOf(value) != -1)
                 _history.splice(_history.indexOf(value), 1);
             _history.unshift(value);
@@ -298,9 +305,9 @@ prompt.gotoLine = function(editor, callback) {
             editor.renderer.animateScrolling(scrollTop);
         },
         history: function() {
-            if (!prompt.gotoLine._history)
+            if (!prompt.gotoLine["_history"])
                 return [];
-            return prompt.gotoLine._history;
+            return prompt.gotoLine["_history"];
 
         },
         getCompletions: function(cmdLine) {
@@ -340,8 +347,8 @@ prompt.commands = function(editor, callback) {
         var commandsByName = [];
         var commandMap = {};
         editor.keyBinding.$handlers.forEach(function(handler) {
-            var platform = handler.platform;
-            var cbn = handler.byName;
+            var platform = handler["platform"];
+            var cbn = handler["byName"];
             for (var i in cbn) {
                 var key = cbn[i].bindKey;
                 if (typeof key !== "string") {
@@ -401,10 +408,10 @@ prompt.commands = function(editor, callback) {
             if (this.maxHistoryCount > 0 && history.length > this.maxHistoryCount) {
                 history.splice(history.length - 1, 1);
             }
-            prompt.commands.history = history;
+            prompt.commands["history"] = history;
         },
         history: function() {
-            return prompt.commands.history || [];
+            return prompt.commands["history"] || [];
         },
         getPrefix: function(cmdLine) {
             var currentPos = cmdLine.getCursorPosition();
@@ -464,6 +471,9 @@ prompt.commands = function(editor, callback) {
  * @param {Function} [callback]
  */
 prompt.modes = function(editor, callback) {
+    /**
+     * @type {any[]}
+     */
     var modesArray = modelist.modes;
     modesArray = modesArray.map(function(item) {
         return {value: item.caption, mode: item.name};

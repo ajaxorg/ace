@@ -35,7 +35,7 @@ module.exports.getEditorKeybordShortcuts = function(editor) {
     var keybindings = [];
     var commandMap = {};
     editor.keyBinding.$handlers.forEach(function(handler) {
-        var ckb = handler.commandKeyBinding;
+        var ckb = handler["commandKeyBinding"];
         for (var i in ckb) {
             var key = i.replace(/(^|-)\w/g, function(x) { return x.toUpperCase(); });
             var commands = ckb[i];

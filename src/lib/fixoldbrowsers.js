@@ -12,4 +12,5 @@
 
 "use strict";
 
+// @ts-ignore
 require("./es6-shim");

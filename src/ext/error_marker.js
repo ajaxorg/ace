@@ -131,6 +131,7 @@ exports.showErrorMarker = function(editor, dir) {
     w.destroy = function() {
         if (editor.$mouseHandler.isMousePressed)
             return;
+        // @ts-ignore
         editor.keyBinding.removeKeyboardHandler(kb);
         session.widgetManager.removeLineWidget(w);
         editor.off("changeSelection", w.destroy);
@@ -138,7 +139,8 @@ exports.showErrorMarker = function(editor, dir) {
         editor.off("mouseup", w.destroy);
         editor.off("change", w.destroy);
     };
-    
+
+    // @ts-ignore
     editor.keyBinding.addKeyboardHandler(kb);
     editor.on("changeSelection", w.destroy);
     editor.on("changeSession", w.destroy);

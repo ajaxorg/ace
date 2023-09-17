@@ -29,7 +29,7 @@ class BackgroundTokenizer {
     /**
      * Creates a new `BackgroundTokenizer` object.
      * @param {ITokenizer} tokenizer The tokenizer to use
-     * @param {IEditor} editor The editor to associate with
+     * @param {IEditor} [editor] The editor to associate with
      * @this {IBackgroundTokenizer}
      **/
     constructor(tokenizer, editor) {
@@ -68,6 +68,7 @@ class BackgroundTokenizer {
 
                 // only check every 5 lines
                 processedLines ++;
+                // @ts-ignore
                 if ((processedLines % 5 === 0) && (new Date() - workerStart) > 20) {
                     self.running = setTimeout(self.$worker, 20);
                     break;
@@ -211,7 +212,7 @@ class BackgroundTokenizer {
     $tokenizeRow(row) {
         var line = this.doc.getLine(row);
         var state = this.states[row - 1];
-
+        // @ts-expect-error TODO: potential wrong argument
         var data = this.tokenizer.getLineTokens(line, state, row);
 
         if (this.states[row] + "" !== data.state + "") {

@@ -47,6 +47,9 @@ class SearchBox {
                 ["span", {action: "searchInSelection", class: "ace_button", title: nls("Search In Selection")}, "S"]
             ]
         ], div);
+        /**
+         * @type {any}
+         */
         this.element = div.firstChild;
 
         this.setSession = this.setSession.bind(this);
@@ -62,6 +65,9 @@ class SearchBox {
     setEditor(editor) {
         editor.searchBox = this;
         editor.renderer.scroller.appendChild(this.element);
+        /**
+         * @type {IEditor}
+         */
         this.editor = editor;
     }
     
@@ -134,6 +140,7 @@ class SearchBox {
             if (action && _this[action])
                 _this[action]();
             else if (_this.$searchBarKb.commands[action])
+                // @ts-expect-error this could be different command type
                 _this.$searchBarKb.commands[action].exec(_this);
             event.stopPropagation(e);
         });
@@ -142,6 +149,7 @@ class SearchBox {
             var keyString = keyUtil.keyCodeToString(keyCode);
             var command = _this.$searchBarKb.findKeyCommand(hashId, keyString);
             if (command && command.exec) {
+                // @ts-expect-error this could be different command type
                 command.exec(_this);
                 event.stopEvent(e);
             }
@@ -214,6 +222,9 @@ class SearchBox {
             preventScroll: preventScroll,
             range: this.searchRange
         });
+        /**
+         * @type {any}
+         */
         var noMatch = !range && this.searchInput.value;
         dom.setCssClass(this.searchBox, "ace_nomatch", noMatch);
         this.editor._emit("findSearchBox", { match: !noMatch });
@@ -264,6 +275,9 @@ class SearchBox {
             caseSensitive: this.caseSensitiveOption.checked,
             wholeWord: this.wholeWordOption.checked
         });
+        /**
+         * @type {any}
+         */
         var noMatch = !range && this.searchInput.value;
         dom.setCssClass(this.searchBox, "ace_nomatch", noMatch);
         this.editor._emit("findSearchBox", { match: !noMatch });

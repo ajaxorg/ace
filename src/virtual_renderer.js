@@ -33,7 +33,6 @@ dom.importCssString(editorCss, "ace_editor.css", false);
 /**
  * The class that is responsible for drawing everything you see on the screen!
  * @related editor.renderer 
- * @type {IVirtualRenderer}
  **/
 class VirtualRenderer {
     /**
@@ -196,7 +195,9 @@ class VirtualRenderer {
     // };
 
     updateCharacterSize() {
+        // @ts-expect-error TODO: missing property initialization anywhere in codebase
         if (this.$textLayer.allowBoldFonts != this.$allowBoldFonts) {
+            // @ts-expect-error TODO: missing property initialization anywhere in codebase
             this.$allowBoldFonts = this.$textLayer.allowBoldFonts;
             this.setStyle("ace_nobold", !this.$allowBoldFonts);
         }
@@ -1839,12 +1840,15 @@ class VirtualRenderer {
 
     /**
      * [Sets a new theme for the editor. `theme` should exist, and be a directory path, like `ace/theme/textmate`.]{: #VirtualRenderer.setTheme}
-     * @param {String} [theme] The path to a theme
+     * @param {String | import("../ace").Ace.Theme} [theme] The path to a theme
      * @param {() => void} [cb] optional callback
      * @this {IVirtualRenderer}
      **/
     setTheme(theme, cb) {
         var _self = this;
+        /**
+         * @type {string}
+         */
         this.$themeId = theme;
         _self._dispatchEvent('themeChange',{theme:theme});
 
@@ -1855,6 +1859,9 @@ class VirtualRenderer {
             afterLoad(theme);
         }
 
+        /**
+         * @param {import("../ace").Ace.Theme} module
+         */
         function afterLoad(module) {
             if (_self.$themeId != theme)
                 return cb && cb();

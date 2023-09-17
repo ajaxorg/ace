@@ -759,7 +759,7 @@ var Editor = require("./editor").Editor;
         for (var i = all.length; i--; ) {
             var range = all[i];
             if (range.isEmpty()) {
-                var tmp = session.getWordRange(range.start.row, range.start.column);
+                let tmp = session.getWordRange(range.start.row, range.start.column);
                 range.start.row = tmp.start.row;
                 range.start.column = tmp.start.column;
                 range.end.row = tmp.end.row;

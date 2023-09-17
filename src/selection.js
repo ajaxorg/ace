@@ -32,9 +32,6 @@ var Range = require("./range").Range;
  *
  *  @event changeSelection
  **/
-/**
- * @type {ISelection}
- */
 class Selection {
     /**
      * Creates a new `Selection` object.
@@ -189,7 +186,7 @@ class Selection {
 
     /**
      * Sets the selection to the provided range.
-     * @param {Range} range The range of text to select
+     * @param {import("../ace").Ace.IRange} range The range of text to select
      * @param {Boolean} [reverse] Indicates if the range should go backwards (`true`) or not
      * @this {ISelection}
      **/
@@ -359,6 +356,7 @@ class Selection {
 
     /**
      * Selects an entire word boundary.
+     * @this {ISelection}
      **/
     selectWord() {
         this.setSelectionRange(this.getWordRange());
@@ -367,6 +365,7 @@ class Selection {
     /**
      * Selects a word, including its right whitespace.
      * @related EditSession.getAWordRange
+     * @this {ISelection}
      **/
     selectAWord() {
         var cursor = this.getCursor();
@@ -393,6 +392,7 @@ class Selection {
 
     /**
      * Selects the entire line.
+     * @this {ISelection}
      **/
     selectLine() {
         this.setSelectionRange(this.getLineRange());
@@ -869,6 +869,7 @@ class Selection {
 
     /**
      * @param {Range & {desiredColumn?: number}} range
+     * @this {ISelection}
      */
     fromOrientedRange(range) {
         this.setSelectionRange(range, range.cursor == range.start);

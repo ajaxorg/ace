@@ -33,6 +33,7 @@ function showSettingsMenu(editor) {
         options.render();
         options.container.id = "ace_settingsmenu";
         overlayPage(editor, options.container);
+        // @ts-ignore
         options.container.querySelector("select,input,button,checkbox").focus();
     }
 }

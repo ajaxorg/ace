@@ -36,7 +36,7 @@ class CommandManager extends MultiHashHandler{
 
     /**
      * 
-     * @param command
+     * @param {string | string[] | import("../../ace").Ace.Command} command
      * @param {IEditor} editor
      * @param {any} args
      * @returns {boolean}

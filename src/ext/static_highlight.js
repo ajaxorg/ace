@@ -96,6 +96,9 @@ var highlight = function(el, opts, callback) {
     if (el.firstElementChild) {
         var textLen = 0;
         for (var i = 0; i < el.childNodes.length; i++) {
+            /**
+             * @type {any}
+             */
             var ch = el.childNodes[i];
             if (ch.nodeType == 3) {
                 textLen += ch.data.length;
@@ -113,6 +116,10 @@ var highlight = function(el, opts, callback) {
     highlight.render(data, mode, theme, opts.firstLineNumber, !opts.showGutter, function (highlighted) {
         dom.importCssString(highlighted.css, "ace_highlight");
         el.innerHTML = highlighted.html;
+        /** 
+         * TODO: check if child exists
+         * @type {any} 
+         */
         var container = el.firstChild.firstChild;
         for (var i = 0; i < nodes.length; i += 2) {
             var pos = highlighted.session.doc.indexToPosition(nodes[i]);

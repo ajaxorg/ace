@@ -17,7 +17,6 @@ Potential improvements:
 
 class MarkerGroup {
     /**
-     * 
      * @param {IEditSession} session
      */
     constructor(session) {
@@ -26,6 +25,7 @@ class MarkerGroup {
          * @type {IEditSession}
          */
         this.session = session;
+        // @ts-expect-error TODO: could potential error here, or most likely missing checks in other places
         session.addDynamicMarker(this);
     }
 

@@ -1,5 +1,4 @@
 "use strict";
-
 var oop = require("../../lib/oop");
 var Behaviour = require("../behaviour").Behaviour;
 var TokenIterator = require("../../token_iterator").TokenIterator;
@@ -53,7 +52,8 @@ var getWrapped = function(selection, selected, opening, closing) {
  * @param {boolean} [options.braces] - Whether to force braces auto-pairing.
  * @param {boolean} [options.closeDocComment] - enables automatic insertion of closing tags for documentation comments.
  */
-var CstyleBehaviour = function(options) {
+var CstyleBehaviour;
+CstyleBehaviour = function(options) {
     options = options || {};
     this.add("braces", "insertion", function(state, action, editor, session, text) {
         var cursor = editor.getCursorPosition();
@@ -337,7 +337,10 @@ var CstyleBehaviour = function(options) {
     }
 };
 
-    
+/**
+ * @this {CstyleBehaviour}
+ */
+// @ts-ignore
 CstyleBehaviour.isSaneInsertion = function(editor, session) {
     var cursor = editor.getCursorPosition();
     var iterator = new TokenIterator(session, cursor.row, cursor.column);
@@ -357,26 +360,25 @@ CstyleBehaviour.isSaneInsertion = function(editor, session) {
     return iterator.getCurrentTokenRow() !== cursor.row ||
         this.$matchTokenType(iterator.getCurrentToken() || "text", SAFE_INSERT_BEFORE_TOKENS);
 };
-
-CstyleBehaviour.$matchTokenType = function(token, types) {
+CstyleBehaviour["$matchTokenType"] = function(token, types) {
     return types.indexOf(token.type || token) > -1;
 };
 
-CstyleBehaviour.recordAutoInsert = function(editor, session, bracket) {
+CstyleBehaviour["recordAutoInsert"] = function(editor, session, bracket) {
     var cursor = editor.getCursorPosition();
     var line = session.doc.getLine(cursor.row);
     // Reset previous state if text or context changed too much
-    if (!this.isAutoInsertedClosing(cursor, line, context.autoInsertedLineEnd[0]))
+    if (!this["isAutoInsertedClosing"](cursor, line, context.autoInsertedLineEnd[0]))
         context.autoInsertedBrackets = 0;
     context.autoInsertedRow = cursor.row;
     context.autoInsertedLineEnd = bracket + line.substr(cursor.column);
     context.autoInsertedBrackets++;
 };
 
-CstyleBehaviour.recordMaybeInsert = function(editor, session, bracket) {
+CstyleBehaviour["recordMaybeInsert"] = function(editor, session, bracket) {
     var cursor = editor.getCursorPosition();
     var line = session.doc.getLine(cursor.row);
-    if (!this.isMaybeInsertedClosing(cursor, line))
+    if (!this["isMaybeInsertedClosing"](cursor, line))
         context.maybeInsertedBrackets = 0;
     context.maybeInsertedRow = cursor.row;
     context.maybeInsertedLineStart = line.substr(0, cursor.column) + bracket;
@@ -384,26 +386,26 @@ CstyleBehaviour.recordMaybeInsert = function(editor, session, bracket) {
     context.maybeInsertedBrackets++;
 };
 
-CstyleBehaviour.isAutoInsertedClosing = function(cursor, line, bracket) {
+CstyleBehaviour["isAutoInsertedClosing"] = function(cursor, line, bracket) {
     return context.autoInsertedBrackets > 0 &&
         cursor.row === context.autoInsertedRow &&
         bracket === context.autoInsertedLineEnd[0] &&
         line.substr(cursor.column) === context.autoInsertedLineEnd;
 };
 
-CstyleBehaviour.isMaybeInsertedClosing = function(cursor, line) {
+CstyleBehaviour["isMaybeInsertedClosing"] = function(cursor, line) {
     return context.maybeInsertedBrackets > 0 &&
         cursor.row === context.maybeInsertedRow &&
         line.substr(cursor.column) === context.maybeInsertedLineEnd &&
         line.substr(0, cursor.column) == context.maybeInsertedLineStart;
 };
 
-CstyleBehaviour.popAutoInsertedClosing = function() {
+CstyleBehaviour["popAutoInsertedClosing"] = function() {
     context.autoInsertedLineEnd = context.autoInsertedLineEnd.substr(1);
     context.autoInsertedBrackets--;
 };
 
-CstyleBehaviour.clearMaybeInsertedClosing = function() {
+CstyleBehaviour["clearMaybeInsertedClosing"] = function() {
     if (context) {
         context.maybeInsertedBrackets = 0;
         context.maybeInsertedRow = -1;

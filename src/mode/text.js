@@ -80,6 +80,9 @@ Mode = function() {
                     doc.removeInLine(i, m[1].length, m[0].length);
             };
 
+            /**
+             * @type {any}
+             */
             var testRemove = function(line, row) {
                 if (regexpStart.test(line))
                     return true;
@@ -127,6 +130,9 @@ Mode = function() {
                         doc.insertInLine({row: i, column: minIndent}, lineCommentStart);
                 }
             };
+            /**
+             * @type {any}
+             */
             var testRemove = function(line, i) {
                 return regexpStart.test(line);
             };
@@ -284,9 +290,11 @@ Mode = function() {
             (function(scope) {
               var functionName = delegations[i];
               var defaultHandler = scope[functionName];
-              scope[delegations[i]] = function() {
-                  return this.$delegator(functionName, arguments, defaultHandler);
-              };
+              scope[delegations[i]] = 
+                  /** @this {import("../../ace").Ace.SyntaxMode} */
+                  function () {
+                      return this.$delegator(functionName, arguments, defaultHandler);
+                  };
             }(this));
         }
     };
@@ -343,7 +351,7 @@ Mode = function() {
     this.getKeywords = function(append) {
         // this is for autocompletion to pick up regexp'ed keywords
         if (!this.completionKeywords) {
-            var rules = this.$tokenizer.rules;
+            var rules = this.$tokenizer["rules"];
             var completionKeywords = [];
             for (var rule in rules) {
                 var ruleItr = rules[rule];

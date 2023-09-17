@@ -117,6 +117,7 @@ class Tokenizer {
      */
     $applyToken(str) {
         var values = this.splitRegex.exec(str).slice(1);
+        //@ts-ignore
         var types = this.token.apply(this, values);
 
         // required for compatibility with old modes
@@ -145,6 +146,7 @@ class Tokenizer {
         if (!values)
             return "text";
         var tokens = [];
+        //@ts-ignore
         var types = this.tokenArray;
         for (var i = 0, l = types.length; i < l; i++) {
             if (values[i + 1])
@@ -219,6 +221,9 @@ class Tokenizer {
      */
     getLineTokens(line, startState) {
         if (startState && typeof startState != "string") {
+            /**
+             * @type {any[]}
+             */
             var stack = startState.slice(0);
             startState = stack[0];
             if (startState === "#tmp") {
@@ -228,7 +233,7 @@ class Tokenizer {
         } else
             var stack = [];
 
-        var currentState = startState || "start";
+        var currentState = /**@type{string}*/(startState) || "start";
         var state = this.states[currentState];
         if (!state) {
             currentState = "start";

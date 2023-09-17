@@ -138,10 +138,9 @@ function IncrementalSearchKeyboardHandler(iSearch) {
 oop.inherits(IncrementalSearchKeyboardHandler, HashHandler);
 
 (function() {
-
     /**
      * @param editor
-     * @this {IncrementalSearchKeyboardHandler & this}
+     * @this {IncrementalSearchKeyboardHandler & this & {$commandExecHandler}}
      */
     this.attach = function(editor) {
         var iSearch = this.$iSearch;
@@ -159,6 +158,10 @@ oop.inherits(IncrementalSearchKeyboardHandler, HashHandler);
         });
     };
 
+    /**
+     * @this {IncrementalSearchKeyboardHandler & this & {$commandExecHandler}}
+     * @param editor
+     */
     this.detach = function(editor) {
         if (!this.$commandExecHandler) return;
         editor.commands.off('exec', this.$commandExecHandler);
@@ -166,9 +169,18 @@ oop.inherits(IncrementalSearchKeyboardHandler, HashHandler);
     };
 
     var handleKeyboard$super = this.handleKeyboard;
+    /**
+     * 
+     * @param data
+     * @param hashId
+     * @param key
+     * @param keyCode
+     * @this {IncrementalSearchKeyboardHandler & import("../keyboard/hash_handler").HashHandler}
+     */
     this.handleKeyboard = function(data, hashId, key, keyCode) {
         if (((hashId === 1/*ctrl*/ || hashId === 8/*command*/) && key === 'v')
          || (hashId === 1/*ctrl*/ && key === 'y')) return null;
+        // @ts-ignore
         var cmd = handleKeyboard$super.call(this, data, hashId, key, keyCode);
         if (cmd && cmd.command) { return cmd; }
         if (hashId == -1) {

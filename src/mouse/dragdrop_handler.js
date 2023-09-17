@@ -357,6 +357,7 @@ function DragdropHandler(mouseHandler) {
             // IE does not handle [draggable] attribute set after mousedown
             var distance = calcDistance(this.mousedownEvent.x, this.mousedownEvent.y, this.x, this.y);
             if (distance > 3)
+                // @ts-ignore
                 target.dragDrop();
         }
         if (this.state === "dragWait") {

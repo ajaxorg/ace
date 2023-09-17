@@ -18,12 +18,20 @@ export namespace Ace {
     type CompletionProvider = import("./src/autocomplete").CompletionProvider;
     type AcePopup = import("./src/autocomplete/popup").IAcePopup;
     type Config = import("./src/config").IConfig;
-    
+    type AceInline = import("./src/autocomplete/inline").AceInline;
+
+    interface Theme {
+        cssClass?: string;
+        cssText?: string;
+        $id?: string;
+        padding?: number | string;
+        isDark?: boolean;
+    }
     interface ScrollBar {
         setVisible(visible: boolean): void;
         [key: string]: any;
     }
-    
+
     interface HScrollbar extends ScrollBar {
         setWidth(width: number): void;
     }
@@ -31,7 +39,7 @@ export namespace Ace {
     interface VScrollbar extends ScrollBar {
         setHeight(width: number): void;
     }
-    
+
     interface LayerConfig {
         width : number,
         padding : number,
@@ -145,7 +153,7 @@ export namespace Ace {
         $selectionStyle?: string,
         env?: any;
         widgetManager?: import("./src/line_widgets").LineWidgets,
-        completer?: import("./src/autocomplete").Autocomplete,
+        completer?: import("./src/autocomplete").Autocomplete | import("./src/ext/inline_autocomplete").InlineAutocomplete,
         completers: Completer[],
         $highlightTagPending?: boolean,
         showKeyboardShortcuts?: () => void,
@@ -171,7 +179,8 @@ export namespace Ace {
         curOp?: {
             command: {},
             args: string,
-            scrollTop: number
+            scrollTop: number,
+            [key: string]: any;
         },
         lineWidgetsWidth?: number,
         $getWidgetScreenLength?: () => number,
@@ -369,24 +378,30 @@ export namespace Ace {
         className: string;
     }
 
-    export class MarkerGroup {
-        constructor(session: EditSession);
-        setMarkers(markers: MarkerGroupItem[]): void;
-        getMarkerAtPosition(pos: Position): MarkerGroupItem;
-    }
+    type MarkerGroup = import("./src/marker_group").MarkerGroup;
 
 
     export interface Command {
         name?: string;
         bindKey?: string | { mac?: string, win?: string };
         readOnly?: boolean;
-        exec: (editor: Editor, args?: any) => void;
+        exec?: (editor: Editor, args?: any) => void;
+        isAvailable?: (editor: Editor) => boolean;
+        description?: string,
+        multiSelectAction?: "forEach"|"forEachLine"|Function,
+        scrollIntoView?: true|"cursor"|"center"|"selectionPart"|"animate"|"selection"|"none",
+        aceCommandGroup?: string,
+        passEvent?: boolean,
+        level?: number,
+        action?: string,
     }
 
     type CommandLike = Command | ((editor: Editor) => void);
-
-    interface KeyboardHandler {
-        handleKeyboard: Function;
+    
+    type KeyboardHandler = import("./src/keyboard/hash_handler").HashHandler & {
+        attach?: (editor: Editor) => void;
+        detach?: (editor: Editor) => void;
+        getStatusText?: (editor?: any, data?) => string;
     }
 
     export interface MarkerLike {
@@ -498,7 +513,9 @@ export namespace Ace {
          * quotes used by language mode
          */
         $quotes: {[quote: string]: string};
-        HighlightRules: HighlightRules; //TODO: fix this
+        HighlightRules: {
+            new(config: any): HighlightRules
+        }; //TODO: fix this
         foldingRules?: FoldMode;
         $behaviour?: Behaviour;
         $defaultBehaviour?: Behaviour;
@@ -524,6 +541,7 @@ export namespace Ace {
         $highlightRuleConfig?: any;
         completionKeywords: string[];
         transformAction: BehaviorAction;
+        path?: string;
 
         getTokenizer(): Tokenizer;
 
@@ -557,6 +575,7 @@ export namespace Ace {
 
         $getIndent(line: string): string;
         $createKeywordList(): string[];
+        $delegator(method: string, args: IArguments, defaultHandler): any;
 
     }
 
@@ -574,25 +593,7 @@ export namespace Ace {
         getOption<K extends keyof T>(name: K): T[K];
     }
 
-
-    interface KeyBinding {
-        setDefaultHandler(handler: KeyboardHandler): void;
-
-        setKeyboardHandler(handler: KeyboardHandler): void;
-
-        addKeyboardHandler(handler: KeyboardHandler, pos?: number): void;
-
-        removeKeyboardHandler(handler: KeyboardHandler): boolean;
-
-        getKeyboardHandler(): KeyboardHandler;
-
-        getStatusText(): string;
-
-        onCommandKey(e: any, hashId: number, keyCode: number): boolean;
-
-        onTextInput(text: string): boolean;
-    }
-
+    type KeyBinding = import("./src/keyboard/keybinding").KeyBinding;
     interface CommandMap {
         [name: string]: Command;
     }
@@ -603,42 +604,12 @@ export namespace Ace {
         args: any[]
     }) => void;
 
-    interface CommandManager extends EventEmitter {
-        byName: CommandMap,
-        commands: CommandMap,
-
+    interface CommandManagerEvents {
         on(name: 'exec', callback: execEventHandler): Function;
-
         on(name: 'afterExec', callback: execEventHandler): Function;
-
-        exec(command: string, editor: Editor, args: any): boolean;
-
-        toggleRecording(editor: Editor): void;
-
-        replay(editor: Editor): void;
-
-        addCommand(command: Command): void;
-
-        addCommands(command: Command[]): void;
-
-        removeCommand(command: Command | string, keepCommand?: boolean): void;
-
-        removeCommands(command: Command[]): void;
-
-        bindKey(key: string | { mac?: string, win?: string },
-                command: CommandLike,
-                position?: number): void;
-
-        bindKeys(keys: { [s: string]: Function }): void;
-
-        parseKeys(keyPart: string): { key: string, hashId: number };
-
-        findKeyCommand(hashId: number, keyString: string): string | undefined;
-
-        handleKeyboard(data: {}, hashId: number, keyString: string, keyCode: string | number): void | { command: string };
-
-        getStatusText(editor: Editor, data: {}): string;
     }
+    type CommandManager = import("./src/commands/command_manager").ICommandManager & CommandManagerEvents;
+
 
     interface SavedSelection {
         start: Point;
@@ -653,7 +624,7 @@ export namespace Ace {
     interface TextInput {
         resetSelection(): void;
 
-        setAriaOption(activeDescendant: string, role: string): void;
+        setAriaOption(options?: {activeDescendant: string, role: string, setLabel}): void;
     }
 
     type CompleterCallback = (error: any, completions: Completion[]) => void;
@@ -667,22 +638,12 @@ export namespace Ace {
                        prefix: string,
                        callback: CompleterCallback): void;
 
-        getDocTooltip?(item: Completion): undefined | string | Completion;
+        getDocTooltip?(item: Completion): void | string | Completion;
 
         cancel?(): void;
 
         id?: string;
         triggerCharacters?: string[]
-    }
-
-    class AceInline {
-        show(editor: Editor, completion: Completion, prefix: string): void;
-
-        isOpen(): void;
-
-        hide(): void;
-
-        destroy(): void;
     }
 
     interface CompletionOptions {
@@ -747,34 +708,5 @@ export interface TooltipCommand extends Ace.Command {
     cssClass?: string
 }
 
-export class InlineAutocomplete {
-    constructor();
-    getInlineRenderer(): Ace.AceInline;
-    getInlineTooltip(): CommandBarTooltip;
-    getCompletionProvider(): Ace.CompletionProvider;
-    show(editor: Ace.Editor): void;
-    isOpen(): boolean;
-    detach(): void;
-    destroy(): void;
-    goTo(action: InlineAutocompleteAction): void;
-    tooltipEnabled: boolean;
-    commands: Record<string, Ace.Command>
-    getIndex(): number;
-    setIndex(value: number): void;
-    getLength(): number;
-    getData(index?: number): Ace.Completion | undefined;
-    updateCompletions(options: Ace.CompletionOptions): void;
-}
-
-export class CommandBarTooltip {
-    constructor(parentElement: HTMLElement);
-    registerCommand(id: string, command: TooltipCommand): void;
-    attach(editor: Ace.Editor): void;
-    updatePosition(): void;
-    update(): void;
-    isShown(): boolean;
-    getAlwaysShow(): boolean;
-    setAlwaysShow(alwaysShow: boolean): void;
-    detach(): void;
-    destroy(): void;
-}
+export type InlineAutocomplete = import("./src/ext/inline_autocomplete").InlineAutocomplete;
+export type CommandBarTooltip = import("./src/ext/command_bar").CommandBarTooltip;

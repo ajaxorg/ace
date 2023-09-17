@@ -167,6 +167,10 @@ exports.Tooltip = Tooltip;
 
 
 class HoverTooltip extends Tooltip {
+    /**
+     * @type {number}
+     */
+    row
     constructor(parentNode=document.body) {
         super(parentNode);
         

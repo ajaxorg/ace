@@ -13,6 +13,10 @@
  * @typedef IVirtualRenderer
  * @type {import("./virtual_renderer").IVirtualRenderer}
  */
+/**
+ * @typedef ISelection
+ * @type {import("./selection").ISelection}
+ */
 
 /**
  * @typedef ICommandManager
@@ -49,7 +53,6 @@ var keys = require('./lib/keys');
  * The `Editor` manages the [[EditSession]] (which manages [[Document]]s), as well as the [[VirtualRenderer]], which draws everything to the screen.
  *
  * Event sessions dealing with the mouse and keyboard are bubbled up from `Document` to the `Editor`, which decides what to do with them.
- * @type {IEditor}
  **/
 class Editor {
     /**
@@ -167,6 +170,9 @@ class Editor {
         }
 
         this.$opResetTimer.schedule();
+        /**
+         * @type {{[key: string]: any;}}
+         */
         this.curOp = this.session.curOp = {
             command: commandEvent.command || {},
             args: commandEvent.args,
@@ -283,6 +289,7 @@ class Editor {
             });
         } else {
             this.$keybindingId = null;
+            // @ts-ignore
             this.keyBinding.setKeyboardHandler(keyboardHandler);
             cb && cb();
         }
@@ -463,7 +470,7 @@ class Editor {
     /**
      *
      * Returns the currently highlighted selection.
-     * @returns {Selection} The selection object
+     * @returns {ISelection} The selection object
      **/
     getSelection() {
         return this.selection;
@@ -480,7 +487,7 @@ class Editor {
 
     /**
      * {:VirtualRenderer.setTheme}
-     * @param {String} theme The path to a theme
+     * @param {string | import("../ace").Ace.Theme} theme The path to a theme
      * @param {() => void} [cb] optional callback called when theme is loaded
      **/
     setTheme(theme, cb) {
@@ -1210,7 +1217,7 @@ class Editor {
      **/
     /**
      * Draw selection markers spanning whole line, or only over selected text. Default value is "line"
-     * @param {String} val The new selection style "line"|"text"
+     * @param {"fullLine" | "screenLine" | "text" | "line"} val The new selection style "line"|"text"
      * @this {IEditor}
      **/
     setSelectionStyle(val) {
@@ -1470,7 +1477,7 @@ class Editor {
             else
                 this.selection.selectRight();
         }
-
+        
         var range = this.getSelectionRange();
         if (this.getBehavioursEnabled()) {
             var session = this.session;
@@ -1487,6 +1494,7 @@ class Editor {
                 }
             }
             if (new_range)
+                // @ts-expect-error TODO: possible bug, new_range could be not a Range
                 range = new_range;
         }
 
@@ -1781,6 +1789,7 @@ class Editor {
 
         var c = this.session.getTextRange(charRange);
         // if the char is a digit
+        // @ts-ignore
         if (!isNaN(parseFloat(c)) && isFinite(c)) {
             // get the whole number the digit is part of
             var nr = this.getNumberAt(row, column);
@@ -2285,8 +2294,8 @@ class Editor {
 
     /**
      * Moves the cursor's row and column to the next matching bracket or HTML tag.
-     * @param {boolean} select
-     * @param {boolean} expand
+     * @param {boolean} [select]
+     * @param {boolean} [expand]
      */
     jumpToMatching(select, expand) {
         var cursor = this.getCursorPosition();
@@ -2436,8 +2445,8 @@ class Editor {
     /**
      * Moves the cursor to the specified line number, and also into the indicated column.
      * @param {Number} lineNumber The line number to go to
-     * @param {Number} column A column number to go to
-     * @param {Boolean} animate If `true` animates scolling
+     * @param {Number} [column] A column number to go to
+     * @param {Boolean} [animate] If `true` animates scolling
      * @this {IEditor}
      **/
     gotoLine(lineNumber, column, animate) {
@@ -2585,7 +2594,7 @@ class Editor {
 
     /**
      * Replaces the first occurrence of `options.needle` with the value in `replacement`.
-     * @param {String} replacement The text to replace with
+     * @param {String} [replacement] The text to replace with
      * @param {Partial<import("../ace").Ace.SearchOptions>} [options] The [[Search `Search`]] options to use
      * @return {number}
      **/
@@ -2610,7 +2619,7 @@ class Editor {
 
     /**
      * Replaces all occurrences of `options.needle` with the value in `replacement`.
-     * @param {String} replacement The text to replace with
+     * @param {String} [replacement] The text to replace with
      * @param {Partial<import("../ace").Ace.SearchOptions>} [options] The [[Search `Search`]] options to use
      * @return {number}
      **/
@@ -2638,6 +2647,10 @@ class Editor {
         return replaced;
     }
 
+    /**
+     * @param {import("../ace").Ace.IRange} range
+     * @param {string} [replacement]
+     */
     $tryReplace(range, replacement) {
         var input = this.session.getTextRange(range);
         replacement = this.$search.replace(input, replacement);

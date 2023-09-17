@@ -229,6 +229,7 @@ Split = function(container, theme, splits) {
         s.setTabSize(session.getTabSize());
         s.setUseSoftTabs(session.getUseSoftTabs());
         s.setOverwrite(session.getOverwrite());
+        // @ts-expect-error TODO: string[] != number[]
         s.setBreakpoints(session.getBreakpoints());
         s.setUseWrapMode(session.getUseWrapMode());
         s.setUseWorker(session.getUseWorker());

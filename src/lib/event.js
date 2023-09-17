@@ -13,6 +13,7 @@ function detectListenerOptionsSupport() {
         document.createComment("").addEventListener("test", function() {}, { 
             get passive() { 
                 activeListenerOptions = {passive: false};
+                return true;
             }
         });
     } catch(e) {}
@@ -235,6 +236,7 @@ function normalizeCommandKeys(callback, e, keyCode) {
 
 
 exports.addCommandKeyListener = function(el, callback, destroyer) {
+    // @ts-expect-error TODO: property is missing in useragent
     if (useragent.isOldGecko || (useragent.isOpera && !("KeyboardEvent" in window))) {
         // Old versions of Gecko aka. Firefox < 4.0 didn't repeat the keydown
         // event if the user pressed the key for a longer time. Instead, the

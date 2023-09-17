@@ -59,7 +59,7 @@ class UndoManager {
 
     /**
      * 
-     * @param {string} selection
+     * @param {any} selection
      * @param {number} [rev]
      */
     addSelection(selection, rev) {

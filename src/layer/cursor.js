@@ -4,6 +4,7 @@ var dom = require("../lib/dom");
 
 
 class Cursor {
+    /**@type{number}*/timeoutId;
     constructor(parentEl) {
         this.element = dom.createElement("div");
         this.element.className = "ace_layer ace_cursor-layer";
@@ -133,7 +134,7 @@ class Cursor {
         if (dom.HAS_CSS_ANIMATION) {
             this.$startCssAnimation();
         } else {
-            var blink = function(){
+            var blink = /**@this{Cursor}*/function(){
                 this.timeoutId = setTimeout(function() {
                     update(false);
                 }, 0.6 * this.blinkInterval);

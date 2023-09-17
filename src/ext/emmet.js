@@ -166,6 +166,9 @@ class AceEmmetEditor {
         var syntax = this.ace.session.$modeId.split("/").pop();
         if (syntax == "html" || syntax == "php") {
             var cursor = this.ace.getCursorPosition();
+            /**
+             * @type {string | string[]}
+             */
             var state = this.ace.session.getState(cursor.row);
             if (typeof state != "string")
                 state = state[0];

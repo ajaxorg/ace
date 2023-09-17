@@ -1,6 +1,6 @@
 "use strict";
 /**
- * @typedef {MouseHandler & import("./default_handlers").DefaultHandlers & import("./default_gutter_handler").GutterHandler & import("./dragdrop_handler").DragdropHandler} IMouseHandler
+ * @typedef {MouseHandler & import("./default_handlers").DefaultHandlers & import("./default_gutter_handler").GutterHandler & import("./dragdrop_handler").DragdropHandler & {cancelDrag?}} IMouseHandler
  * @export
  */
 
@@ -83,7 +83,9 @@ class MouseHandler {
             } else {
                 renderer.setCursorStyle("");
             }
-        }, editor);
+            
+        }, //@ts-expect-error TODO: seems mistyping - should be boolean
+            editor);
     }
 
     onMouseEvent(name, e) {
@@ -102,6 +104,7 @@ class MouseHandler {
 
     onMouseWheel(name, e) {
         var mouseEvent = new MouseEvent(e, this.editor);
+        //@ts-expect-error TODO: couldn't find this property init in the ace codebase
         mouseEvent.speed = this.$scrollSpeed * 2;
         mouseEvent.wheelX = e.wheelX;
         mouseEvent.wheelY = e.wheelY;

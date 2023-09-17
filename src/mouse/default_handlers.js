@@ -28,8 +28,8 @@ class DefaultHandlers {
             mouseHandler[x] = this[x];
         }, this);
 
-        mouseHandler.selectByLines = this.extendSelectionBy.bind(mouseHandler, "getLineRange");
-        mouseHandler.selectByWords = this.extendSelectionBy.bind(mouseHandler, "getWordRange");
+        mouseHandler["selectByLines"] = this.extendSelectionBy.bind(mouseHandler, "getLineRange");
+        mouseHandler["selectByWords"] = this.extendSelectionBy.bind(mouseHandler, "getWordRange");
     }
 
     /**

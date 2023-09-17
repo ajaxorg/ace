@@ -161,7 +161,7 @@ class AppConfig {
 
     /**
      * @param {string} string
-     * @param {{ [x: string]: any; }} params
+     * @param {{ [x: string]: any; }} [params]
      */
     nls(string, params) {
         if (messages && !messages[string])  {

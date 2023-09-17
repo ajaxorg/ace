@@ -60,6 +60,7 @@ exports.applyDelta = function(docLines, delta, doNotValidate) {
             if (lines.length === 1) {
                 docLines[row] = line.substring(0, startColumn) + delta.lines[0] + line.substring(startColumn);
             } else {
+                // @ts-ignore
                 var args = [row, 1].concat(delta.lines);
                 docLines.splice.apply(docLines, args);
                 docLines[row] = line.substring(0, startColumn) + docLines[row];

@@ -16,6 +16,9 @@ class Tokenizer extends BaseTokenizer {
      **/
     getLineTokens(line, startState) {
         if (startState && typeof startState != "string") {
+            /**
+             * @type {any[]}
+             */
             var stack = startState.slice(0);
             startState = stack[0];
         } else
@@ -40,7 +43,10 @@ class Tokenizer extends BaseTokenizer {
             stateTransitions = [];
             onStateChange();
         }
-        
+
+        /**
+         * @type {any}
+         */
         var token = {
             type: null,
             value: "",

@@ -120,7 +120,7 @@ class SnippetManager {
      * @return {Tokenizer}
      */
     getTokenizer() {
-        return SnippetManager.$tokenizer || this.createTokenizer();
+        return SnippetManager["$tokenizer"] || this.createTokenizer();
     }
     
     createTokenizer() {
@@ -145,7 +145,7 @@ class SnippetManager {
             next: "formatString"
         };
         
-        SnippetManager.$tokenizer = new Tokenizer({
+        SnippetManager["$tokenizer"] = new Tokenizer({
             start: [
                 {regex: /\\./, onMatch: function(val, state, stack) {
                     var ch = val[1];
@@ -241,7 +241,7 @@ class SnippetManager {
                 {regex: "([^:}\\\\]|\\\\.)*:?", token: "", next: "formatString"}
             ]
         });
-        return SnippetManager.$tokenizer;
+        return SnippetManager["$tokenizer"];
     }
 
     tokenizeTmSnippet(str, startState) {
@@ -384,6 +384,7 @@ class SnippetManager {
 
         var tabstopManager = new TabstopManager(editor);
         var selectionId = editor.inVirtualSelectionMode && editor.selection.index;
+        //@ts-expect-error TODO: potential wrong arguments
         tabstopManager.addTabstops(processedSnippet.tabstops, range.start, end, selectionId);
     }
     
