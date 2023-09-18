@@ -675,8 +675,12 @@ class CompletionProvider {
         var total = editor.completers.length;
         editor.completers.forEach(function(completer, i) {
             completer.getCompletions(editor, session, pos, prefix, function(err, results) {
+                if (completer.hideInlinePreview)
+                    results = results.map((result) => ({...result, hideInlinePreview: completer.hideFromInlinePreview}))
+
                 if (!err && results)
                     matches = matches.concat(results);
+
                 // Fetch prefix again, because they may have changed by now
                 callback(null, {
                     prefix: util.getCompletionPrefix(editor),

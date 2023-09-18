@@ -1014,7 +1014,8 @@ export namespace Ace {
     getDocTooltip?(item: Completion): undefined | string | Completion;
     cancel?(): void;
     id?: string;
-    triggerCharacters?: string[]
+    triggerCharacters?: string[];
+    hideInlinePreview?: boolean;
   }
 
   export class AceInline {
