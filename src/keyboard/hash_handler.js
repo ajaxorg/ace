@@ -6,10 +6,19 @@ var useragent = require("../lib/useragent");
 var KEY_MODS = keyUtil.KEY_MODS;
 
 class MultiHashHandler {
+    /**
+     * @param {Record<string, import("../../ace").Ace.CommandLike> | import("../../ace").Ace.Command[]} [config]
+     * @param {string} [platform]
+     */
     constructor(config, platform) {
         this.$init(config, platform, false);
     }
 
+    /**
+     * @param {Record<string, import("../../ace").Ace.CommandLike> | import("../../ace").Ace.Command[]} config
+     * @param {string} [platform]
+     * @param {boolean} [$singleCommand]
+     */
     $init(config, platform, $singleCommand) {
         this.platform = platform || (useragent.isMac ? "mac" : "win");
         /**
@@ -131,7 +140,7 @@ class MultiHashHandler {
     }
 
     /**
-     * @param {Record<string, import("../../ace").Ace.CommandLike> | import("../../ace").Ace.Command[]} commands
+     * @param {Record<string, import("../../ace").Ace.CommandLike> | import("../../ace").Ace.Command[]} [commands]
      */
     addCommands(commands) {
         commands && Object.keys(commands).forEach(function(name) {
@@ -268,6 +277,10 @@ function getPosition(command) {
 }
 
 class HashHandler extends MultiHashHandler {
+    /**
+     * @param {Record<string, import("../../ace").Ace.CommandLike> | import("../../ace").Ace.Command[]} [config]
+     * @param {string} [platform]
+     */
     constructor(config, platform) {
         super(config, platform);
         this.$singleCommand = true;

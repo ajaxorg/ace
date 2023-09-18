@@ -35,7 +35,7 @@ EventListener.prototype.destroy = function() {
     this.elem = this.type = this.callback = undefined;
 };
 
-var addListener = exports.addListener = function(elem, type, callback, destroyer) {
+var addListener = exports.addListener = function(elem, type, callback, /**@type{any?}*/destroyer) {
     elem.addEventListener(type, callback, getListenerOptions());
     if (destroyer)
         destroyer.$toDestroy.push(new EventListener(elem, type, callback));
@@ -95,6 +95,12 @@ exports.capture = function(el, eventHandler, releaseCaptureHandler) {
     return onMouseUp;
 };
 
+/**
+ * 
+ * @param el
+ * @param callback
+ * @param [destroyer]
+ */
 exports.addMouseWheelListener = function(el, callback, destroyer) {
     addListener(el, "wheel",  function(e) {
         var factor = 0.15;
@@ -121,6 +127,14 @@ exports.addMouseWheelListener = function(el, callback, destroyer) {
     }, destroyer);
 };
 
+/**
+ * 
+ * @param elements
+ * @param timeouts
+ * @param eventHandler
+ * @param callbackName
+ * @param [destroyer]
+ */
 exports.addMultiMouseDownListener = function(elements, timeouts, eventHandler, callbackName, destroyer) {
     var clicks = 0;
     var startX, startY, timer; 
@@ -234,7 +248,12 @@ function normalizeCommandKeys(callback, e, keyCode) {
     return callback(e, hashId, keyCode);
 }
 
-
+/**
+ * 
+ * @param el
+ * @param callback
+ * @param [destroyer]
+ */
 exports.addCommandKeyListener = function(el, callback, destroyer) {
     // @ts-expect-error TODO: property is missing in useragent
     if (useragent.isOldGecko || (useragent.isOpera && !("KeyboardEvent" in window))) {
