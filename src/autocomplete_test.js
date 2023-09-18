@@ -13,6 +13,17 @@ var Range = require("./range").Range;
 require("./ext/language_tools");
 var Autocomplete = require("./autocomplete").Autocomplete;
 
+var MouseEvent = function(type, opts){
+    var e = document.createEvent("MouseEvents");
+    e.initMouseEvent(/click|wheel/.test(type) ? type : "mouse" + type,
+        true, true, window,
+        opts.detail,
+        opts.x, opts.y, opts.x, opts.y,
+        opts.ctrl, opts.alt, opts.shift, opts.meta,
+        opts.button || 0, opts.relatedTarget);
+    return e;
+};
+
 var editor;
 function initEditor(value) {
     if (editor) {
@@ -448,6 +459,92 @@ module.exports = {
         
         editor.destroy();
         editor.container.remove();
+    },
+    "test: selection should follow hovermarker if setSelectOnHover true": function(done) {
+        var editor = initEditor("hello world\n");
+        
+        editor.completers = [
+            {
+                getCompletions: function (editor, session, pos, prefix, callback) {
+                    var completions = [
+                        {
+                            caption: "option 1",
+                            value: "one"
+                        }, {
+                            caption: "option 2",
+                            value: "two"
+                        }, {
+                            caption: "option 3",
+                            value: "three"
+                        }
+                    ];
+                    callback(null, completions);
+                }
+            }
+        ];
+        
+        var completer = Autocomplete.for(editor);
+        completer.setSelectOnHover = true;
+        user.type("Ctrl-Space");
+        assert.equal(editor.completer.popup.isOpen, true);     
+        assert.equal(completer.popup.getRow(), 0);
+        
+        var text = completer.popup.renderer.content.childNodes[2];
+        var rect = text.getBoundingClientRect();
+
+        // We need two mouse events to trigger the updating of the hover marker.
+        text.dispatchEvent(new MouseEvent("move", {x: rect.left, y: rect.top}));
+        // Hover over the second row.
+        text.dispatchEvent(new MouseEvent("move", {x: rect.left + 1, y: rect.top + 20}));
+
+        // Selected row should follow mouse.
+        editor.completer.popup.renderer.$loop._flush();
+        assert.equal(completer.popup.getRow(), 2);
+
+        done();
+    }, 
+    "test: selection should not follow hovermarker if setSelectOnHover not set": function(done) {
+        var editor = initEditor("hello world\n");
+
+        editor.completers = [
+            {
+                getCompletions: function (editor, session, pos, prefix, callback) {
+                    var completions = [
+                        {
+                            caption: "option 1",
+                            value: "one"
+                        }, {
+                            caption: "option 2",
+                            value: "two"
+                        }, {
+                            caption: "option 3",
+                            value: "three"
+                        }
+                    ];
+                    callback(null, completions);
+                }
+            }
+        ];
+
+        var completer = Autocomplete.for(editor);
+ 
+        user.type("Ctrl-Space");
+        assert.equal(editor.completer.popup.isOpen, true);     
+        assert.equal(completer.popup.getRow(), 0);
+        
+        var text = completer.popup.renderer.content.childNodes[2];
+        var rect = text.getBoundingClientRect();
+
+        // We need two mouse events to trigger the updating of the hover marker.
+        text.dispatchEvent(new MouseEvent("move", {x: rect.left, y: rect.top}));
+        // Hover over the second row.
+        text.dispatchEvent(new MouseEvent("move", {x: rect.left + 1, y: rect.top + 20}));
+
+        // Selected row should not follow mouse.
+        editor.completer.popup.renderer.$loop._flush();
+        assert.equal(completer.popup.getRow(), 0);
+
+        done();
     }
 };
 
