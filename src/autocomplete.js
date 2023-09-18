@@ -677,7 +677,7 @@ class CompletionProvider {
             completer.getCompletions(editor, session, pos, prefix, function(err, results) {
                 if (completer.hideInlinePreview)
                     results = results.map((result) =>  {
-                        return {...result, hideInlinePreview: completer.hideFromInlinePreview}
+                        return Object.assign(result, {hideInlinePreview: completer.hideInlinePreview});
                     });
 
                 if (!err && results)
