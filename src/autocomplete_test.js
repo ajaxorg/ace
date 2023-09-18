@@ -584,7 +584,7 @@ module.exports = {
                         }
                     ];
                     callback(null, completions);
-                },
+                }
             }
         ];
         
@@ -600,7 +600,6 @@ module.exports = {
         assert.equal(completer.popup.getRow(), 0);
         assert.strictEqual(inline.isOpen(), false);
 
-        console.log(completer.inlineRenderer)
         sendKey("Down");
 
         // Row 1, should show inline preview.
