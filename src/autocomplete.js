@@ -76,9 +76,7 @@ class Autocomplete {
         this.tooltipTimer = lang.delayedCall(this.updateDocTooltip.bind(this), 50);
 
         this.keepSelectedRowTimer = lang.delayedCall(function() {
-            console.log("timer trig");
             this.keepSelectedRow = true;
-            console.log(this.keepSelectedRow);
         }.bind(this), 500);
     }
 
@@ -112,7 +110,6 @@ class Autocomplete {
             this.inlineRenderer.hide();
         }
         this.hideDocTooltip();
-        console.log("hide popup")
         this.keepSelectedRowTimer.cancel();
         this.keepSelectedRow = false;
     }
@@ -227,9 +224,6 @@ class Autocomplete {
             this.popup.setRow(this.autoSelect ? newRow : -1);
         else
             this.popup.setRow(this.autoSelect ? 0 : -1);
-
-        console.log(this.keepSelectedRow)
-        console.log(this.popup.getRow())
 
         if (!keepPopupPosition) {
             this.popup.setTheme(editor.getTheme());

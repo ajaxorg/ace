@@ -665,9 +665,6 @@ module.exports = {
         setTimeout(() => {
             completer.popup.renderer.$loop._flush();
             assert.equal(completer.popup.data.length, 4);
-            console.log(completer.popup.getData(0))
-            console.log(completer.popup.getData(1))
-            console.log(completer.popup.getData(2))
             assert.equal(completer.popup.getRow(), 1);
      
             done();
