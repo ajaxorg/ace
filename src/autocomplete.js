@@ -74,6 +74,12 @@ class Autocomplete {
         }.bind(this));
 
         this.tooltipTimer = lang.delayedCall(this.updateDocTooltip.bind(this), 50);
+
+        this.keepSelectedRowTimer = lang.delayedCall(function() {
+            console.log("timer trig");
+            this.keepSelectedRow = true;
+            console.log(this.keepSelectedRow);
+        }.bind(this), 500);
     }
 
     $init() {
@@ -83,7 +89,7 @@ class Autocomplete {
             e.stop();
         }.bind(this));
         this.popup.focus = this.editor.focus.bind(this.editor);
-        this.popup.on("show", this.$onPopupChange.bind(this));
+        this.popup.on("show", this.$onPopupShow.bind(this));
         this.popup.on("hide", this.$onHidePopup.bind(this));
         this.popup.on("select", this.$onPopupChange.bind(this));
         this.popup.on("changeHoverMarker", this.tooltipTimer.bind(null, null));
@@ -106,6 +112,9 @@ class Autocomplete {
             this.inlineRenderer.hide();
         }
         this.hideDocTooltip();
+        console.log("hide popup")
+        this.keepSelectedRowTimer.cancel();
+        this.keepSelectedRow = false;
     }
 
     $onPopupChange(hide) {
@@ -118,6 +127,12 @@ class Autocomplete {
             this.$updatePopupPosition();
         }
         this.tooltipTimer.call(null, null);
+    }
+
+    $onPopupShow(hide) {
+        this.$onPopupChange(hide);
+        this.keepSelectedRow = false;
+        this.keepSelectedRowTimer.schedule();
     }
 
     observeLayoutChanges() {
@@ -194,6 +209,8 @@ class Autocomplete {
         this.popup.autoSelect = this.autoSelect;
         this.popup.setSelectOnHover(this.setSelectOnHover);
 
+        var previousSelectedItem = this.popup.data[this.popup.getRow()];
+
         this.popup.setData(this.completions.filtered, this.completions.filterText);
         if (this.editor.textInput.setAriaOptions) {
             this.editor.textInput.setAriaOptions({
@@ -204,7 +221,16 @@ class Autocomplete {
 
         editor.keyBinding.addKeyboardHandler(this.keyboardHandler);
         
-        this.popup.setRow(this.autoSelect ? 0 : -1);
+        var newRow = this.popup.data.indexOf(previousSelectedItem);
+
+        if (newRow && this.keepSelectedRow)
+            this.popup.setRow(this.autoSelect ? newRow : -1);
+        else
+            this.popup.setRow(this.autoSelect ? 0 : -1);
+
+        console.log(this.keepSelectedRow)
+        console.log(this.popup.getRow())
+
         if (!keepPopupPosition) {
             this.popup.setTheme(editor.getTheme());
             this.popup.setFontSize(editor.getFontSize());
@@ -675,6 +701,11 @@ class CompletionProvider {
         var total = editor.completers.length;
         editor.completers.forEach(function(completer, i) {
             completer.getCompletions(editor, session, pos, prefix, function(err, results) {
+                if (completer.hideInlinePreview)
+                    results = results.map((result) =>  {
+                        return Object.assign(result, {hideInlinePreview: completer.hideInlinePreview});
+                    });
+
                 if (!err && results)
                     matches = matches.concat(results);
                 // Fetch prefix again, because they may have changed by now
