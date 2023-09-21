@@ -282,28 +282,16 @@ class HoverTooltip extends Tooltip {
         element.style.display = "block";
         
         var position = renderer.textToScreenCoordinates(range.start.row, range.start.column);
-        var cursorPos = editor.getCursorPosition();
         
         var labelHeight = element.clientHeight;
         var rect = renderer.scroller.getBoundingClientRect();
 
-        var isTopdown = true;
-        if (this.row > cursorPos.row) {
-            // don't obscure cursor
-            isTopdown = true; 
-        } else if (this.row < cursorPos.row) {
-            // don't obscure cursor
-            isTopdown = false;
-        }
-        
+        var isAbove = true;
         if (position.pageY - labelHeight + renderer.lineHeight < rect.top) {
             // not enough space above us
-            isTopdown = true; 
-        } else if (position.pageY + labelHeight > rect.bottom) {
-            isTopdown = false;
+            isAbove = false;
         }
-
-        if (!isTopdown) {
+        if (isAbove) {
             position.pageY -= labelHeight; 
         } else {
             position.pageY += renderer.lineHeight;
