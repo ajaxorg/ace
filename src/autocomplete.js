@@ -75,8 +75,8 @@ class Autocomplete {
 
         this.tooltipTimer = lang.delayedCall(this.updateDocTooltip.bind(this), 50);
 
-        this.keepSelectedRowTimer = lang.delayedCall(function() {
-            this.keepSelectedRow = true;
+        this.keepPreviouslySelectedRowTimer = lang.delayedCall(function() {
+            this.keepPreviouslySelectedRow = true;
         }.bind(this), 500);
     }
 
@@ -110,8 +110,8 @@ class Autocomplete {
             this.inlineRenderer.hide();
         }
         this.hideDocTooltip();
-        this.keepSelectedRowTimer.cancel();
-        this.keepSelectedRow = false;
+        this.keepPreviouslySelectedRowTimer.cancel();
+        this.keepPreviouslySelectedRow = false;
     }
 
     $onPopupChange(hide) {
@@ -128,8 +128,8 @@ class Autocomplete {
 
     $onPopupShow(hide) {
         this.$onPopupChange(hide);
-        this.keepSelectedRow = false;
-        this.keepSelectedRowTimer.schedule();
+        this.keepPreviouslySelectedRow = false;
+        this.keepPreviouslySelectedRowTimer.schedule();
     }
 
     observeLayoutChanges() {
@@ -220,7 +220,7 @@ class Autocomplete {
         
         var newRow = this.popup.data.indexOf(previousSelectedItem);
 
-        if (newRow && this.keepSelectedRow)
+        if (newRow && this.keepPreviouslySelectedRow)
             this.popup.setRow(this.autoSelect ? newRow : -1);
         else
             this.popup.setRow(this.autoSelect ? 0 : -1);
