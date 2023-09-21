@@ -286,13 +286,13 @@ class HoverTooltip extends Tooltip {
         var labelHeight = element.clientHeight;
         var rect = renderer.scroller.getBoundingClientRect();
 
-        var isAbove = true;
-        if (position.pageY - labelHeight + renderer.lineHeight < rect.top) {
-            // not enough space above us
+        let isAbove = true;
+        if (position.pageY - labelHeight < 0) {
+            // does not fit in window
             isAbove = false;
         }
         if (isAbove) {
-            position.pageY -= labelHeight; 
+            position.pageY -= labelHeight;
         } else {
             position.pageY += renderer.lineHeight;
         }
