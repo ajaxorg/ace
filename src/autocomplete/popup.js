@@ -6,7 +6,7 @@
  */
 /**
  * @typedef IAcePopup
- * @type {IEditor & import("../../ace").Ace.AcePopupProperties}
+ * @type {IEditor & import("../../ace").Ace.AcePopupProperties & import("../../ace").Ace.EventEmitter<import("../../ace").Ace.AcePopupEvents>}
  * @export
  */
 var Renderer = require("../virtual_renderer").VirtualRenderer;
@@ -91,7 +91,7 @@ class AcePopup {
         popup.$isFocused = true;
 
         popup.renderer.$cursorLayer.restartTimer = noop;
-        popup.renderer.$cursorLayer.element.style.opacity = 0;
+        popup.renderer.$cursorLayer.element.style.opacity = "0";
 
         popup.renderer.$maxLines = 8;
         popup.renderer.$keepTextAreaAtCursor = false;
@@ -149,6 +149,9 @@ class AcePopup {
         });
         popup.renderer.on("afterRender", function () {
             var row = popup.getRow();
+            /**
+             * @type {any}
+             */
             var t = popup.renderer.$textLayer;
             var selected = t.element.childNodes[row - t.config.firstRow];
             var el = document.activeElement; // Active element is textarea of main editor

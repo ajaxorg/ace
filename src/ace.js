@@ -40,7 +40,7 @@ exports.config = require("./config");
 
 /**
  * Embeds the Ace editor into the DOM, at the element provided by `el`.
- * @param {String | Element & {env?, value?}} el Either the id of an element, or the element itself
+ * @param {String | HTMLElement & {env?, value?}} el Either the id of an element, or the element itself
  * @param {Object } [options] Options for the editor
  * @returns {IEditor}
  **/

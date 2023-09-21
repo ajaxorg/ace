@@ -13,7 +13,7 @@
  */
 /**
  * @typedef IBackgroundTokenizer
- * @type {BackgroundTokenizer & import("../ace").Ace.EventEmitter}
+ * @type {BackgroundTokenizer & import("../ace").Ace.EventEmitter<import("../ace").Ace.BackgroundTokenizerEvents>}
  */
 var oop = require("./lib/oop");
 var EventEmitter = require("./lib/event_emitter").EventEmitter;

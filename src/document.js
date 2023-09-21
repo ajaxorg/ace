@@ -1,6 +1,6 @@
 "use strict";
 /**
- * @typedef {Document & import("../ace").Ace.EventEmitter} IDocument
+ * @typedef {Document & import("../ace").Ace.EventEmitter<import("../ace").Ace.DocumentEvents>} IDocument
  * @export
  */
 /**

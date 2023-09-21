@@ -1,7 +1,7 @@
 "use strict";
 /**
  * @typedef IEditor
- * @type {Editor & import("../ace").Ace.EventEmitter & import("../ace").Ace.OptionsProvider<import("../ace").Ace.EditorOptions> & import("../ace").Ace.EditorProperties & import("../ace").Ace.EditorMultiSelectProperties}
+ * @type {Editor & import("../ace").Ace.EventEmitter<import("../ace").Ace.EditorEvents> & import("../ace").Ace.OptionsProvider<import("../ace").Ace.EditorOptions> & import("../ace").Ace.EditorProperties & import("../ace").Ace.EditorMultiSelectProperties}
  * @export
  */
 /**
@@ -17,7 +17,6 @@
  * @typedef ISelection
  * @type {import("./selection").ISelection}
  */
-
 /**
  * @typedef ICommandManager
  * @type {import("./commands/command_manager").ICommandManager}
@@ -3020,6 +3019,7 @@ config.defineOptions(Editor.prototype, "editor", {
                         this.renderer.placeholderNode.textContent = this.$placeholder || "";
                     }
                 }.bind(this);
+                // @ts-ignore
                 this.on("input", this.$updatePlaceholder);
             }
             this.$updatePlaceholder();
@@ -3196,5 +3196,4 @@ var relativeNumberRenderer = {
         this.update(null, editor);
     }
 };
-
 exports.Editor = Editor;

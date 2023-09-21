@@ -6,7 +6,7 @@ var EventEmitter = require("./lib/event_emitter").EventEmitter;
 var Range = require("./range").Range;
 /**
  * @typedef ISelection
- * @type {Selection & import("../ace").Ace.ISelection & import("../ace").Ace.EventEmitter}
+ * @type {Selection & import("../ace").Ace.ISelection & import("../ace").Ace.EventEmitter<import("../ace").Ace.SelectionEvents>}
  * @export
  */
 /**

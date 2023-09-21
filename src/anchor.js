@@ -5,7 +5,7 @@
  */
 /**
  * @typedef IAnchor
- * @type {Anchor & import("../ace").Ace.EventEmitter & {markerId?: number}}
+ * @type {Anchor & import("../ace").Ace.EventEmitter<import("../ace").Ace.AnchorEvents> & {markerId?: number}}
  */
 var oop = require("./lib/oop");
 var EventEmitter = require("./lib/event_emitter").EventEmitter;

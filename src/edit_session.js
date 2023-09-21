@@ -1,7 +1,7 @@
 "use strict";
 /**
  * @typedef IEditSession
- * @type {EditSession & import("../ace").Ace.OptionsProvider<import("../ace").Ace.EditSessionOptions> & import("../ace").Ace.EventEmitter & import("../ace").Ace.EditSessionProperties & import("./edit_session/folding").IFolding & import("./edit_session/bracket_match").BracketMatch}
+ * @type {EditSession & import("../ace").Ace.OptionsProvider<import("../ace").Ace.EditSessionOptions> & import("../ace").Ace.EventEmitter<import("../ace").Ace.EditSessionEvents> & import("../ace").Ace.EditSessionProperties & import("./edit_session/folding").IFolding & import("./edit_session/bracket_match").BracketMatch}
  * @export
  */
 /**
@@ -35,101 +35,16 @@ var Range = require("./range").Range;
 /** @type {any} */var BackgroundTokenizer = require("./background_tokenizer").BackgroundTokenizer;
 var SearchHighlight = require("./search_highlight").SearchHighlight;
 
-//{ events
-/**
- *
- * Emitted when the document changes.
- * @event change
- * @param {Object} e An object containing a `delta` of information about the change.
- **/
-/**
- * Emitted when the tab size changes, via [[EditSession.setTabSize]].
- *
- * @event changeTabSize
- **/
-/**
- * Emitted when the ability to overwrite text changes, via [[EditSession.setOverwrite]].
- *
- * @event changeOverwrite
- **/
-/**
- * Emitted when the gutter changes, either by setting or removing breakpoints, or when the gutter decorations change.
- *
- * @event changeBreakpoint
- **/
-/**
- * Emitted when a front marker changes.
- *
- * @event changeFrontMarker
- **/
-/**
- * Emitted when a back marker changes.
- *
- * @event changeBackMarker
- **/
-/**
- * Emitted when an annotation changes, like through [[EditSession.setAnnotations]].
- *
- * @event changeAnnotation
- **/
-/**
- * Emitted when a background tokenizer asynchronously processes new rows.
- * @event tokenizerUpdate
- *
- * @param {Object} e An object containing one property, `"data"`, that contains information about the changing rows
- *
- **/
-/**
- * Emitted when the current mode changes.
- *
- * @event changeMode
- *
- **/
-/**
- * Emitted when the wrap mode changes.
- *
- * @event changeWrapMode
- *
- **/
-/**
- * Emitted when the wrapping limit changes.
- *
- * @event changeWrapLimit
- *
- **/
-/**
- * Emitted when a code fold is added or removed.
- *
- * @event changeFold
- *
- **/
- /**
- * Emitted when the scroll top changes.
- * @event changeScrollTop
- *
- * @param {Number} scrollTop The new scroll top value
- **/
-/**
- * Emitted when the scroll left changes.
- * @event changeScrollLeft
- *
- * @param {Number} scrollLeft The new scroll left value
- **/
-//}
-
 /**
  * @typedef TextMode
  * @type {import("../ace").Ace.SyntaxMode}
  */
-
-
 
 /**
  * Stores all the data about [[Editor `Editor`]] state providing easy way to change editors state.
  *
  * `EditSession` can be attached to only one [[Document `Document`]]. Same `Document` can be attached to several `EditSession`s.
  **/
-
 class EditSession {
 
     
@@ -1607,7 +1522,6 @@ class EditSession {
      * @param [$printMargin]
      * @returns {Boolean}
      * @this {IEditSession}
-     * @private
      **/
     adjustWrapLimit(desiredLimit, $printMargin) {
         var limits = this.$wrapLimitRange;

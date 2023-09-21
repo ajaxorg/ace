@@ -7,7 +7,7 @@
 /**
  * 
  * @typedef IText
- * @type {Text & import("../../ace").Ace.EventEmitter}
+ * @type {Text & import("../../ace").Ace.EventEmitter<import("../../ace").Ace.TextEvents>}
  * @export
  */
 var oop = require("../lib/oop");
@@ -45,7 +45,7 @@ class Text {
     }
 
     /**
-     * @param {string | number} padding
+     * @param {number} padding
      */
     setPadding(padding) {
         this.$padding = padding;

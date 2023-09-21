@@ -1,7 +1,7 @@
 "use strict";
 /**
  * @typedef IGutter
- * @type {Gutter & import("../../ace").Ace.EventEmitter & {[key: string]: any}}}
+ * @type {Gutter & import("../../ace").Ace.EventEmitter<import("../../ace").Ace.GutterEvents> & {[key: string]: any}}}
  */
 var dom = require("../lib/dom");
 var oop = require("../lib/oop");

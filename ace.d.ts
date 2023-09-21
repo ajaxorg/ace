@@ -20,6 +20,7 @@ export namespace Ace {
     type AcePopup = import("./src/autocomplete/popup").IAcePopup;
     type Config = import("./src/config").IConfig;
     type AceInline = import("./src/autocomplete/inline").AceInline;
+    type MouseEvent = import("./src/mouse/mouse_event").MouseEvent;
 
     interface Theme {
         cssClass?: string;
@@ -311,29 +312,168 @@ export namespace Ace {
         enableKeyboardAccessibility: boolean;
         enableCodeLens: boolean;
     }
+    
+    interface EventsBase {
+        [key: string]: any;
+    }
+    
+    interface EditSessionEvents {
+        /**
+         * Emitted when the document changes.
+         * @param delta
+         */
+        "change": (delta: Delta) => void;
+        /**
+         * Emitted when the tab size changes, via [[EditSession.setTabSize]].
+         * @param tabSize
+         */
+        "changeTabSize": (tabSize: number) => void;
+        /**
+         * Emitted when the ability to overwrite text changes, via [[EditSession.setOverwrite]].
+         * @param overwrite
+         */
+        "changeOverwrite": (overwrite: boolean) => void;
+        /**
+         * Emitted when the gutter changes, either by setting or removing breakpoints, or when the gutter decorations change.
+         * @param e
+         */
+        "changeBreakpoint": (e: { row: number, breakpoint: boolean }) => void;
+        /**
+         * Emitted when a front marker changes.
+         * @param e
+         */
+        "changeFrontMarker": (e: { row: number, marker: boolean }) => void;
+        /**
+         * Emitted when a back marker changes.
+         * @param e
+         */
+        "changeBackMarker": (e: { row: number, marker: boolean }) => void;
+        /**
+         * Emitted when an annotation changes, like through [[EditSession.setAnnotations]].
+         * @param e
+         */
+        "changeAnnotation": (e: { row: number, lines: string[] }) => void;
+        /**
+         * Emitted when a background tokenizer asynchronously processes new rows.
+         */
+        "tokenizerUpdate": (e: {data: { first: string, last: string }}) => void;
+        /**
+         * Emitted when the current mode changes.
+         * @param e
+         */
+        "changeMode": (e) => void;
+        /**
+         * Emitted when the wrap mode changes.
+         * @param e
+         */
+        "changeWrapMode": (e) => void;
+        /**
+         * Emitted when the wrapping limit changes.
+         * @param e
+         */
+        "changeWrapLimit": (e) => void;
+        /**
+         * Emitted when a code fold is added or removed.
+         * @param e
+         */
+        "changeFold": (e, session: EditSession) => void;
+        /**
+         * Emitted when the scroll top changes.
+         * @param {Number} scrollTop The new scroll top value
+         **/
+        "changeScrollTop": (scrollTop: number) => void;
+        /**
+         * Emitted when the scroll left changes.
+         * @param {Number} scrollLeft The new scroll left value
+         **/
+        "changeScrollLeft": (scrollLeft: number) => void;
+        "changeEditor": (e: { editor: Editor }) => void;
+    }
+    
+    interface EditorEvents {
+        "change": () => void;
+        "changeSelection": () => void;
+        "input": () => void;
+        "changeSession": () => void;
+        "blur": () => void;
+        "mousedown": (e: MouseEvent) => void;
+        "mousemove": (e: MouseEvent & {scrollTop?}) => void;
+        "changeStatus": () => void;
+        "keyboardActivity": () => void;
+        "mousewheel": (e: MouseEvent) => void;
+        "mouseup": (e: MouseEvent) => void;
+        "beforeEndOperation": (e) => void;
+        "nativecontextmenu": (e) => void;
+        "destroy": () => void;
+        "focus": () => void;
+    }
+    
+    interface AcePopupEvents extends EditorEvents {
+        "click": (e: MouseEvent) => void;
+        "show": () => void;
+        "hide": () => void;
+        "select": (hide: boolean) => void;
+        "changeHoverMarker": (e) => void;
+    }
+    
+    interface DocumentEvents {
+        "change": (e: Delta) => void;
+        "changeNewLineMode": () => void;
+    }
 
-    class EventEmitter {
-        once(name: string, callback: Function): void;
+    interface AnchorEvents {
+        "change": (e: { old, value }) => void;
+    }
+    
+    interface BackgroundTokenizerEvents {
+        "update": (e) => void;    
+    }
+    
+    interface SelectionEvents {
+        "changeCursor": () => void;
+        "changeSelection": () => void;
+    }
+    
+    interface PlaceHolderEvents {
+        
+    }
+    
+    interface GutterEvents {
+        "changeGutterWidth": (width: number) => void;
+    }
+    
+    interface TextEvents {
+        "changeCharacterSize": (e) => void;
+    }
+
+    interface VirtualRendererEvents {
+        "afterRender": (e, renderer: VirtualRenderer) => void;
+        "beforeRender": (e, renderer: VirtualRenderer) => void;
+    }
+
+    class EventEmitter<T extends EventsBase> {
+        once<K extends keyof T>(name: K, callback: T[K]): void;
 
         setDefaultHandler(name: string, callback: Function): void;
 
         removeDefaultHandler(name: string, callback: Function): void;
 
-        on(name: string, callback: Function, capturing?: boolean): Function;
+        on<K extends keyof T>(name: K, callback: T[K], capturing?: boolean): T[K];
 
-        addEventListener(name: string, callback: Function, capturing?: boolean): Function;
+        addEventListener<K extends keyof T>(name: K, callback: T[K], capturing?: boolean): T[K];
 
-        off(name: string, callback: Function): void;
+        off<K extends keyof T>(name: K, callback: T[K]): void;
 
-        removeListener(name: string, callback: Function): void;
+        removeListener<K extends keyof T>(name: K, callback: T[K]): void;
 
-        removeEventListener(name: string, callback: Function): void;
+        removeEventListener<K extends keyof T>(name: K, callback: T[K]): void;
 
         removeAllListeners(name?: string): void;
 
         _signal(eventName: string, e: any): void;
 
         _emit(eventName: string, e: any): void;
+        _dispatchEvent(eventName: string, e: any): void;
     }
 
     interface SearchOptions {

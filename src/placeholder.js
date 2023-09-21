@@ -3,13 +3,13 @@
  * @typedef {import("./edit_session").IEditSession} IEditSession
  */
 /**
- * @typedef {PlaceHolder & import("../ace").Ace.EventEmitter} IPlaceHolder
+ * @typedef {PlaceHolder & import("../ace").Ace.EventEmitter<import("../ace").Ace.PlaceHolderEvents>} IPlaceHolder
  */
 var Range = require("./range").Range;
 var EventEmitter = require("./lib/event_emitter").EventEmitter;
 var oop = require("./lib/oop");
 
-class PlaceHolder {
+class PlaceHolder { 
     /**
      * @param {IEditSession} session
      * @param {Number} length

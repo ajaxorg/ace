@@ -9,18 +9,14 @@ var EventEmitter = require("./lib/event_emitter").EventEmitter;
 /**
  * @typedef {import("./editor").IEditor} IEditor
  */
-var Editor = require("./editor").Editor;
+/**@type{any}*/var Editor = require("./editor").Editor;
 var Renderer = require("./virtual_renderer").VirtualRenderer;
-/**
- * @type {any}
- */
-var EditSession = require("./edit_session").EditSession;
+/**@type{any}*/var EditSession = require("./edit_session").EditSession;
 
 /**
  * @typedef ISplit
  * @type {import("../ace").Ace.EventEmitter & {[key: string]: any}}
  */
-
 
 var Split;
 /**
@@ -61,7 +57,7 @@ Split = function(container, theme, splits) {
         el.style.cssText = "position: absolute; top:0px; bottom:0px";
         this.$container.appendChild(el);
         /**
-         * @type {any}
+         * @type {IEditor}
          */
         var editor = new Editor(new Renderer(el, this.$theme));
 

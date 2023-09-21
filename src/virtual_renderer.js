@@ -1,7 +1,7 @@
 "use strict";
 /**
  * @typedef IVirtualRenderer
- * @type {VirtualRenderer & EventEmitter & import("../ace").Ace.OptionsProvider<import("../ace").Ace.VirtualRendererOptions> & import("../ace").Ace.VirtualRendererProperties}
+ * @type {VirtualRenderer & import("../ace").Ace.EventEmitter<import("../ace").Ace.VirtualRendererEvents> & import("../ace").Ace.OptionsProvider<import("../ace").Ace.VirtualRendererOptions> & import("../ace").Ace.VirtualRendererProperties}
  */
 /**
  *
@@ -12,9 +12,9 @@ var oop = require("./lib/oop");
 var dom = require("./lib/dom");
 var lang = require("./lib/lang");
 var config = require("./config");
-var GutterLayer = require("./layer/gutter").Gutter;
+/**@type{any}*/var GutterLayer = require("./layer/gutter").Gutter;
 var MarkerLayer = require("./layer/marker").Marker;
-var TextLayer = require("./layer/text").Text;
+/**@type{any}*/var TextLayer = require("./layer/text").Text;
 var CursorLayer = require("./layer/cursor").Cursor;
 var HScrollBar = require("./scrollbar").HScrollBar;
 var VScrollBar = require("./scrollbar").VScrollBar;
@@ -37,7 +37,7 @@ dom.importCssString(editorCss, "ace_editor.css", false);
 class VirtualRenderer {
     /**
      * Constructs a new `VirtualRenderer` within the `container` specified, applying the given `theme`.
-     * @param {Element} [container] The root element of the editor
+     * @param {HTMLElement} [container] The root element of the editor
      * @param {String} [theme] The starting theme
      * @this {IVirtualRenderer}
      **/
@@ -47,9 +47,6 @@ class VirtualRenderer {
          */
         this.session;
         var _self = this;
-        /**
-         * @type {HTMLElement}
-         */
         this.container = container || dom.createElement("div");
 
         dom.addCssClass(this.container, "ace_editor");
@@ -62,7 +59,7 @@ class VirtualRenderer {
         this.$gutter = dom.createElement("div");
         this.$gutter.className = "ace_gutter";
         this.container.appendChild(this.$gutter);
-        this.$gutter.setAttribute("aria-hidden", true);
+        this.$gutter.setAttribute("aria-hidden", "true");
         /**
          * @type {HTMLElement}
          */
@@ -77,11 +74,16 @@ class VirtualRenderer {
         this.content.className = "ace_content";
         this.scroller.appendChild(this.content);
 
+        /**
+         * @type {import("./layer/gutter").IGutter}
+         */
         this.$gutterLayer = new GutterLayer(this.$gutter);
         this.$gutterLayer.on("changeGutterWidth", this.onGutterResize.bind(this));
 
         this.$markerBack = new MarkerLayer(this.content);
-
+        /**
+         * @type {import("./layer/text").IText}
+         */
         var textLayer = this.$textLayer = new TextLayer(this.content);
         this.canvas = textLayer.element;
 
@@ -194,6 +196,9 @@ class VirtualRenderer {
     //     console.log(a.trim())
     // };
 
+    /**
+     * @this {IVirtualRenderer}
+     */
     updateCharacterSize() {
         // @ts-expect-error TODO: missing property initialization anywhere in codebase
         if (this.$textLayer.allowBoldFonts != this.$allowBoldFonts) {
@@ -301,6 +306,7 @@ class VirtualRenderer {
     /**
      * Triggers a full update of all the layers, for all the rows.
      * @param {Boolean} [force] If `true`, forces the changes through
+     * @this {IVirtualRenderer}
      **/
     updateFull(force) {
         if (force)
@@ -316,6 +322,9 @@ class VirtualRenderer {
         this.$textLayer.checkForSizeChanges();
     }
 
+    /**
+     * @this {IVirtualRenderer}
+     */
     $updateSizeAsync() {
         if (this.$loop.pending)
             this.$size.$dirty = true;
@@ -552,11 +561,11 @@ class VirtualRenderer {
     }
     /**
      * Identifies whether you want to show the print margin column or not.
-     * @param {Boolean} showPrintMargin Set to `true` to show the print margin column
+     * @param {number} printMarginColumn Set to `true` to show the print margin column
      * @this {IVirtualRenderer}
      **/
-    setPrintMarginColumn(showPrintMargin) {
-        this.setOption("printMarginColumn", showPrintMargin);
+    setPrintMarginColumn(printMarginColumn) {
+        this.setOption("printMarginColumn", printMarginColumn);
     }
 
     /**
@@ -768,7 +777,7 @@ class VirtualRenderer {
     /**
      * Sets the padding for all the layers.
      * @param {Number} padding A new padding value (in pixels)
-     *
+     * @this {IVirtualRenderer}
      **/
     setPadding(padding) {
         this.$padding = padding;
@@ -786,6 +795,7 @@ class VirtualRenderer {
      * @param {number} [bottom]
      * @param {number} [left]
      * @param {number} [right]
+     * @this {IVirtualRenderer}
      */
     setScrollMargin(top, bottom, left, right) {
         var sm = this.scrollMargin;
@@ -806,6 +816,7 @@ class VirtualRenderer {
      * @param {number} [bottom]
      * @param {number} [left]
      * @param {number} [right]
+     * @this {IVirtualRenderer}
      */
     setMargin(top, bottom, left, right) {
         var sm = this.margin;
@@ -1027,6 +1038,7 @@ class VirtualRenderer {
         }
         else if (changes & this.CHANGE_CURSOR) {
             if (this.$highlightGutterLine)
+                // @ts-expect-error TODO: potential wrong param
                 this.$gutterLayer.updateLineHighlight(config);
             if (this.$customScrollbar) {
                 this.$scrollDecorator.$updateDecorators(config);
@@ -1332,7 +1344,7 @@ class VirtualRenderer {
      * Scrolls the cursor into the first visibile area of the editor
      * @param {import("../ace").Ace.Point} [cursor]
      * @param {number} [offset]
-     * @param {{ top: any; bottom: any; }} [$viewMargin]
+     * @param {{ top?: any; bottom?: any; }} [$viewMargin]
      */
     scrollCursorIntoView(cursor, offset, $viewMargin) {
         // the editor is not visible
@@ -1474,7 +1486,7 @@ class VirtualRenderer {
      * @param {Boolean} center If `true`, centers the editor the to indicated line
      * @param {Boolean} animate If `true` animates scrolling
      * @param {() => void} [callback] Function to be called after the animation has finished
-     *
+     * @this {IVirtualRenderer}
      **/
     scrollToLine(line, center, animate, callback) {
         var pos = this.$cursorLayer.getPixelPosition({row: line, column: 0});
@@ -1522,6 +1534,7 @@ class VirtualRenderer {
         _self.session.$scrollTop = toValue;
         
         function endAnimation() {
+            // @ts-ignore
             _self.$timer = clearInterval(_self.$timer);
             _self.$scrollAnimation = null;
             _self.$stopAnimation = false;
@@ -1732,6 +1745,7 @@ class VirtualRenderer {
      * @param {String} text A string of text to use
      *
      * Sets the inner text of the current composition to `text`.
+     * @this {IVirtualRenderer}
      **/
     setCompositionText(text) {
         var cursor = this.session.selection.cursor;
@@ -1847,12 +1861,13 @@ class VirtualRenderer {
     setTheme(theme, cb) {
         var _self = this;
         /**
-         * @type {string}
+         * @type {any}
          */
         this.$themeId = theme;
         _self._dispatchEvent('themeChange',{theme:theme});
 
         if (!theme || typeof theme == "string") {
+            // @ts-ignore
             var moduleName = theme || this.$options.theme.initialValue;
             config.loadModule(["theme", moduleName], afterLoad);
         } else {
@@ -1876,7 +1891,9 @@ class VirtualRenderer {
             );
             if (_self.theme)
                 dom.removeCssClass(_self.container, _self.theme.cssClass);
-
+            /**
+             * @type {any}
+             */
             var padding = "padding" in module ? module.padding 
                 : "padding" in (_self.theme || {}) ? 4 : _self.$padding;
             if (_self.$padding && padding != _self.$padding)
