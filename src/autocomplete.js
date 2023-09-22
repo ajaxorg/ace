@@ -130,7 +130,7 @@ class Autocomplete {
     $onPopupShow(hide) {
         this.$onPopupChange(hide);
         this.stickySelection = false;
-        if (this.stickySelectionDelay > 0)
+        if (this.stickySelectionDelay >= 0)
             this.stickySelectionTimer.schedule(this.stickySelectionDelay);
     }
 
