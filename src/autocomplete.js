@@ -62,6 +62,12 @@ class Autocomplete {
         this.keyboardHandler.bindKeys(this.commands);
         this.parentNode = null;
         this.setSelectOnHover = false;
+
+        /**
+         *  @property {number} stickySelectionDelay - a numerical value that determines after how many ms the popup selection will become 'sticky'.
+         *  Normally, when new elements are added to an open popup, the selection is reset to the first row of the popup. If sticky, the focus will remain
+         *  on the currently selected item when new items are added to the popup. Set to a negative value to disable this feature and never set selection to sticky.
+         */
         this.stickySelectionDelay = 500;
 
         this.blurListener = this.blurListener.bind(this);
