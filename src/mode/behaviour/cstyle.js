@@ -311,7 +311,8 @@ var CstyleBehaviour = function(options) {
                 var line = session.doc.getLine(cursor.row);
                 var nextLine = session.doc.getLine(cursor.row + 1);
                 var indent = this.$getIndent(line);
-                if (/\s*\*/.test(nextLine)) {
+                const beforeCursor = line.substring(0, cursor.column);
+                if (/\s*\*/.test(nextLine) && /\*/.test(beforeCursor)) {
                     if (/^\s*\*/.test(line)) {
                         return {
                             text: text + indent + "* ",
