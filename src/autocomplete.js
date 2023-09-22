@@ -62,6 +62,7 @@ class Autocomplete {
         this.keyboardHandler.bindKeys(this.commands);
         this.parentNode = null;
         this.setSelectOnHover = false;
+        this.stickySelectionDelay = 500;
 
         this.blurListener = this.blurListener.bind(this);
         this.changeListener = this.changeListener.bind(this);
@@ -75,9 +76,9 @@ class Autocomplete {
 
         this.tooltipTimer = lang.delayedCall(this.updateDocTooltip.bind(this), 50);
 
-        this.keepPreviouslySelectedRowTimer = lang.delayedCall(function() {
-            this.keepPreviouslySelectedRow = true;
-        }.bind(this), 500);
+        this.stickySelectionTimer = lang.delayedCall(function() {
+            this.stickySelection = true;
+        }.bind(this), this.stickySelectionDelay);
     }
 
     $init() {
@@ -110,8 +111,8 @@ class Autocomplete {
             this.inlineRenderer.hide();
         }
         this.hideDocTooltip();
-        this.keepPreviouslySelectedRowTimer.cancel();
-        this.keepPreviouslySelectedRow = false;
+        this.stickySelectionTimer.cancel();
+        this.stickySelection = false;
     }
 
     $onPopupChange(hide) {
@@ -128,8 +129,8 @@ class Autocomplete {
 
     $onPopupShow(hide) {
         this.$onPopupChange(hide);
-        this.keepPreviouslySelectedRow = false;
-        this.keepPreviouslySelectedRowTimer.schedule();
+        this.stickySelection = false;
+        this.stickySelectionTimer.schedule(this.stickySelectionDelay);
     }
 
     observeLayoutChanges() {
@@ -220,7 +221,7 @@ class Autocomplete {
         
         var newRow = this.popup.data.indexOf(previousSelectedItem);
 
-        if (newRow && this.keepPreviouslySelectedRow)
+        if (newRow && this.stickySelection)
             this.popup.setRow(this.autoSelect ? newRow : -1);
         else
             this.popup.setRow(this.autoSelect ? 0 : -1);

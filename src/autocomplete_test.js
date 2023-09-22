@@ -633,7 +633,7 @@ module.exports = {
                 ];
                 setTimeout(() => {
                     callback(null,  completions);
-                }, 1000);
+                }, 200);
             }
         };
 
@@ -657,6 +657,7 @@ module.exports = {
         editor.completers = [fastCompleter, slowCompleter];
         
         var completer = Autocomplete.for(editor);
+        completer.stickySelectionDelay = 100;
         user.type("Ctrl-Space");
         assert.equal(completer.popup.isOpen, true);    
         assert.equal(completer.popup.data.length, 2); 
@@ -668,7 +669,7 @@ module.exports = {
             assert.equal(completer.popup.getRow(), 1);
      
             done();
-        }, 2000);    
+        }, 500);    
     }
 };
 
