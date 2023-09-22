@@ -629,10 +629,10 @@ module.exports = {
                         caption: "slow option 2",
                         value: "s2",
                         score: 0
-                    }, 
+                    }
                 ];
                 setTimeout(() => {
-                    callback(null,  completions)
+                    callback(null,  completions);
                 }, 1000);
             }
         };
@@ -648,7 +648,7 @@ module.exports = {
                         caption: "fast option 2",
                         value: "f2",
                         score: 1
-                    }, 
+                    }
                 ];
                 callback(null, completions);
             }
@@ -668,7 +668,7 @@ module.exports = {
             assert.equal(completer.popup.getRow(), 1);
      
             done();
-        }, 2000)    
+        }, 2000);    
     }
 };
 
