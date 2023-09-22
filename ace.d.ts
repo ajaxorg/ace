@@ -90,27 +90,27 @@ export namespace Ace {
     }
 
     interface AcePopupProperties {
-        setSelectOnHover?: (val: boolean) => void,
-        setRow?: (line: number) => void,
-        getRow?: () => number,
-        getHoveredRow?: () => number,
-        filterText?: string,
-        isOpen?: boolean,
-        isTopdown?: boolean,
-        autoSelect?: boolean,
-        data?: Completion[],
-        setData?: (data: Completion[], filterText: string) => void,
-        getData?: (row: number) => Completion,
-        hide?: () => void,
-        anchor?: "top" | "bottom",
-        anchorPosition?: Point,
-        tryShow?: (pos: any, lineHeight: number, anchor: "top" | "bottom" | undefined, forceShow?: boolean) => boolean,
-        $borderSize?: number,
-        show?: (pos: any, lineHeight: number, topdownOnly?: boolean) => void,
-        goTo?: (where: AcePopupNavigation) => void,
-        getTextLeftOffset?: () => number,
-        $imageSize?: number,
-        anchorPos?: any
+        setSelectOnHover: (val: boolean) => void,
+        setRow: (line: number) => void,
+        getRow: () => number,
+        getHoveredRow: () => number,
+        filterText: string,
+        isOpen: boolean,
+        isTopdown: boolean,
+        autoSelect: boolean,
+        data: Completion[],
+        setData: (data: Completion[], filterText: string) => void,
+        getData: (row: number) => Completion,
+        hide: () => void,
+        anchor: "top" | "bottom",
+        anchorPosition: Point,
+        tryShow: (pos: any, lineHeight: number, anchor: "top" | "bottom" | undefined, forceShow?: boolean) => boolean,
+        $borderSize: number,
+        show: (pos: any, lineHeight: number, topdownOnly?: boolean) => void,
+        goTo: (where: AcePopupNavigation) => void,
+        getTextLeftOffset: () => number,
+        $imageSize: number,
+        anchorPos: any
     }
     interface ISelection {
         [key: string]: any;
@@ -165,6 +165,7 @@ export namespace Ace {
     }
 
     interface EditSessionProperties {
+        doc: Document,
         $highlightLineMarker?: {
             start: Point,
             end: Point,
@@ -212,7 +213,7 @@ export namespace Ace {
         textarea?: HTMLTextAreaElement,
         $hScrollBarAlwaysVisible?: boolean,
         $vScrollBarAlwaysVisible?: boolean
-        $maxLines?: number,
+        $maxLines?: number | null,
         $scrollPastEnd?: number,
         enableKeyboardAccessibility?: boolean,
         keyboardFocusClassName?: string,
@@ -379,23 +380,27 @@ export namespace Ace {
         "changeFold": (e, session: EditSession) => void;
         /**
          * Emitted when the scroll top changes.
-         * @param {Number} scrollTop The new scroll top value
+         * @param scrollTop The new scroll top value
          **/
         "changeScrollTop": (scrollTop: number) => void;
         /**
          * Emitted when the scroll left changes.
-         * @param {Number} scrollLeft The new scroll left value
+         * @param scrollLeft The new scroll left value
          **/
         "changeScrollLeft": (scrollLeft: number) => void;
         "changeEditor": (e: { editor: Editor }) => void;
     }
     
     interface EditorEvents {
-        "change": () => void;
+        "change": (delta: Delta) => void;
         "changeSelection": () => void;
         "input": () => void;
-        "changeSession": () => void;
-        "blur": () => void;
+        /**
+         * Emitted whenever the [[EditSession]] changes.
+         * @param e An object with two properties, `oldSession` and `session`, that represent the old and new [[EditSession]]s.
+         **/
+        "changeSession": (e: {oldSession: EditSession, session: EditSession}) => void;
+        "blur": (e) => void;
         "mousedown": (e: MouseEvent) => void;
         "mousemove": (e: MouseEvent & {scrollTop?}) => void;
         "changeStatus": () => void;
@@ -406,6 +411,20 @@ export namespace Ace {
         "nativecontextmenu": (e) => void;
         "destroy": () => void;
         "focus": () => void;
+        /**
+         * Emitted when text is copied.
+         * @param text The copied text
+         **/
+        "copy": (text: string) => void;
+        /**
+         * Emitted when text is pasted.
+         **/
+        "paste": (text: string, event) => void;
+        /**
+         * Emitted when the selection style changes, via [[Editor.setSelectionStyle]].
+         * @param data Contains one property, `data`, which indicates the new selection style
+         **/
+        "changeSelectionStyle": (data: "fullLine" | "screenLine" | "text" | "line") => void;
     }
     
     interface AcePopupEvents extends EditorEvents {
@@ -417,20 +436,49 @@ export namespace Ace {
     }
     
     interface DocumentEvents {
+        /**
+         * Fires whenever the document changes.
+         * Several methods trigger different `"change"` events. Below is a list of each action type, followed by each property that's also available:
+         *  * `"insert"`
+         *    * `range`: the [[Range]] of the change within the document
+         *    * `lines`: the lines being added
+         *  * `"remove"`
+         *    * `range`: the [[Range]] of the change within the document
+         *    * `lines`: the lines being removed
+         *
+         **/
         "change": (e: Delta) => void;
         "changeNewLineMode": () => void;
     }
 
     interface AnchorEvents {
-        "change": (e: { old, value }) => void;
+        /**
+         * Fires whenever the anchor position changes.
+         * Both of these objects have a `row` and `column` property corresponding to the position.
+         * Events that can trigger this function include [[Anchor.setPosition `setPosition()`]].
+         * @param {Object} e  An object containing information about the anchor position. It has two properties:
+         *  - `old`: An object describing the old Anchor position
+         *  - `value`: An object describing the new Anchor position
+         **/
+        "change": (e: { old: Point, value: Point }) => void;
     }
     
     interface BackgroundTokenizerEvents {
-        "update": (e) => void;    
+        /**
+         * Fires whenever the background tokeniziers between a range of rows are going to be updated.
+         * @param {Object} e An object containing two properties, `first` and `last`, which indicate the rows of the region being updated.
+         **/
+        "update": (e: {first:number, last:number}) => void;    
     }
     
     interface SelectionEvents {
+        /**
+         * Emitted when the cursor position changes.
+         **/
         "changeCursor": () => void;
+        /**
+         * Emitted when the cursor selection changes.
+         **/
         "changeSelection": () => void;
     }
     
@@ -526,7 +574,7 @@ export namespace Ace {
         name?: string;
         bindKey?: string | { mac?: string, win?: string };
         readOnly?: boolean;
-        exec?: (editor?: Editor, args?: any) => void;
+        exec?: (editor: Editor, args?: any) => void;
         isAvailable?: (editor: Editor) => boolean;
         description?: string,
         multiSelectAction?: "forEach"|"forEachLine"|Function,

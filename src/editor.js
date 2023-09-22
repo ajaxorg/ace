@@ -302,12 +302,7 @@ class Editor {
     }
 
 
-    /**
-     * Emitted whenever the [[EditSession]] changes.
-     * @event changeSession
-     * @param {Object} e An object with two properties, `oldSession` and `session`, that represent the old and new [[EditSession]]s.
-     *
-     **/
+   
     /**
      * Sets a new editsession to use. This method also emits the `'changeSession'` event.
      * @param {IEditSession} [session] The new session to use
@@ -629,7 +624,6 @@ class Editor {
 
     /**
      * Emitted once the editor comes into focus.
-     * @event focus
      * @this {IEditor}
      **/
     onFocus(e) {
@@ -643,7 +637,6 @@ class Editor {
 
     /**
      * Emitted once the editor has been blurred.
-     * @event blur
      * @this {IEditor}
      **/
     onBlur(e) {
@@ -666,7 +659,6 @@ class Editor {
 
     /**
      * Emitted whenever the document is changed.
-     * @event change
      * @param {import("../ace").Ace.Delta} delta Contains a single property, `data`, which has the delta of changes
      * @this {IEditor}
      **/
@@ -852,12 +844,7 @@ class Editor {
         return this.session.getTextRange(this.getSelectionRange());
     }
     
-    /**
-     * Emitted when text is copied.
-     * @event copy
-     * @param {String} text The copied text
-     *
-     **/
+  
     /**
      * Returns the string of text currently highlighted.
      * @this {IEditor}
@@ -899,13 +886,7 @@ class Editor {
         this.commands.exec("cut", this);
     }
 
-    /**
-     * Emitted when text is pasted.
-     * @event paste
-     * @param {Object} an object which contains one property, `text`, that represents the text to be pasted. Editing this property will alter the text that is pasted.
-     *
-     *
-     **/
+
     /**
      * Called whenever a text "paste" happens.
      * @param {String} text The pasted text
@@ -1208,11 +1189,7 @@ class Editor {
         return this.getOption("dragDelay");
     }
 
-    /**
-     * Emitted when the selection style changes, via [[Editor.setSelectionStyle]].
-     * @event changeSelectionStyle
-     * @param {Object} data Contains one property, `data`, which indicates the new selection style
-     **/
+
     /**
      * Draw selection markers spanning whole line, or only over selected text. Default value is "line"
      * @param {"fullLine" | "screenLine" | "text" | "line"} val The new selection style "line"|"text"

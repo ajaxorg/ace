@@ -64,9 +64,9 @@ class AcePopup {
     constructor(parentNode) {
         var el = dom.createElement("div");
         /**
-         *
          * @type {IAcePopup}
          */
+        // @ts-ignore
         var popup = $singleLineEditor(el);
 
         if (parentNode) {

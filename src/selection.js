@@ -22,16 +22,6 @@ var Range = require("./range").Range;
  * @type {import("./anchor").IAnchor}
  */
 
-/**
- * Emitted when the cursor position changes.
- * @event changeCursor
- *
- **/
-/**
- * Emitted when the cursor selection changes.
- *
- *  @event changeSelection
- **/
 class Selection {
     /**
      * Creates a new `Selection` object.

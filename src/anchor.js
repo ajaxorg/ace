@@ -51,19 +51,6 @@ class Anchor {
     }
     
     /**
-     * Fires whenever the anchor position changes.
-     *
-     * Both of these objects have a `row` and `column` property corresponding to the position.
-     *
-     * Events that can trigger this function include [[Anchor.setPosition `setPosition()`]].
-     *
-     * @event change
-     * @param {Object} e  An object containing information about the anchor position. It has two properties:
-     *  - `old`: An object describing the old Anchor position
-     *  - `value`: An object describing the new Anchor position
-     *
-     **/
-    /**
      * Internal function called when `"change"` event fired.
      * @param {import("../ace").Ace.Delta} delta
      * @this {IAnchor}

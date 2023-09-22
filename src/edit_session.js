@@ -112,7 +112,6 @@ class EditSession {
     setDocument(doc) {
         if (this.doc)
             this.doc.off("change", this.$onChange);
-        
         this.doc = doc;
         doc.on("change", this.$onChange, true);
 

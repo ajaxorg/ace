@@ -108,13 +108,7 @@ class BackgroundTokenizer {
         this.stop();
     }
 
-     /**
-     * Fires whenever the background tokeniziers between a range of rows are going to be updated.
-     * 
-     * @event update
-     * @param {Object} e An object containing two properties, `first` and `last`, which indicate the rows of the region being updated.
-     *
-     **/
+
     /**
      * Emits the `'update'` event. `firstRow` and `lastRow` are used to define the boundaries of the region to be updated.
      * @param {Number} firstRow The starting row region

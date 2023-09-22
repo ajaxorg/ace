@@ -334,23 +334,6 @@ class Document {
         }
         return position;
     }
-
-    /**
-     * Fires whenever the document changes.
-     *
-     * Several methods trigger different `"change"` events. Below is a list of each action type, followed by each property that's also available:
-     *
-     *  * `"insert"`
-     *    * `range`: the [[Range]] of the change within the document
-     *    * `lines`: the lines being added
-     *  * `"remove"`
-     *    * `range`: the [[Range]] of the change within the document
-     *    * `lines`: the lines being removed
-     *
-     * @event change
-     * @param {Object} e Contains at least one property called `"action"`. `"action"` indicates the action that triggered the change. Each action also has a set of additional properties.
-     *
-     **/
     
     /**
      * Inserts the elements in `lines` into the document as full lines (does not merge with existing line), starting at the row index given by `row`. This method also triggers the `"change"` event.
