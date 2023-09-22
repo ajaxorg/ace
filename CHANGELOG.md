@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.28.0](https://github.com/ajaxorg/ace/compare/v1.27.0...v1.28.0) (2023-09-22)
+
+
+### Features
+
+* Keep focus on same item in completion popup when slow completer delivers results. ([#5322](https://github.com/ajaxorg/ace/issues/5322)) ([0983134](https://github.com/ajaxorg/ace/commit/09831343ccd450326cffb4b0f26ce3a8b830c7fb))
+
 ## [1.27.0](https://github.com/ajaxorg/ace/compare/v1.26.0...v1.27.0) (2023-09-19)
 
 
