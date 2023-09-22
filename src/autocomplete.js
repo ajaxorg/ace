@@ -63,6 +63,13 @@ class Autocomplete {
         this.parentNode = null;
         this.setSelectOnHover = false;
 
+        /**
+         *  @property {number} stickySelectionDelay - a numerical value that determines after how many ms the popup selection will become 'sticky'.
+         *  Normally, when new elements are added to an open popup, the selection is reset to the first row of the popup. If sticky, the focus will remain
+         *  on the currently selected item when new items are added to the popup. Set to a negative value to disable this feature and never set selection to sticky.
+         */
+        this.stickySelectionDelay = 500;
+
         this.blurListener = this.blurListener.bind(this);
         this.changeListener = this.changeListener.bind(this);
         this.mousedownListener = this.mousedownListener.bind(this);
@@ -74,6 +81,10 @@ class Autocomplete {
         }.bind(this));
 
         this.tooltipTimer = lang.delayedCall(this.updateDocTooltip.bind(this), 50);
+
+        this.stickySelectionTimer = lang.delayedCall(function() {
+            this.stickySelection = true;
+        }.bind(this), this.stickySelectionDelay);
     }
 
     $init() {
@@ -83,7 +94,7 @@ class Autocomplete {
             e.stop();
         }.bind(this));
         this.popup.focus = this.editor.focus.bind(this.editor);
-        this.popup.on("show", this.$onPopupChange.bind(this));
+        this.popup.on("show", this.$onPopupShow.bind(this));
         this.popup.on("hide", this.$onHidePopup.bind(this));
         this.popup.on("select", this.$onPopupChange.bind(this));
         this.popup.on("changeHoverMarker", this.tooltipTimer.bind(null, null));
@@ -106,6 +117,8 @@ class Autocomplete {
             this.inlineRenderer.hide();
         }
         this.hideDocTooltip();
+        this.stickySelectionTimer.cancel();
+        this.stickySelection = false;
     }
 
     $onPopupChange(hide) {
@@ -118,6 +131,13 @@ class Autocomplete {
             this.$updatePopupPosition();
         }
         this.tooltipTimer.call(null, null);
+    }
+
+    $onPopupShow(hide) {
+        this.$onPopupChange(hide);
+        this.stickySelection = false;
+        if (this.stickySelectionDelay >= 0)
+            this.stickySelectionTimer.schedule(this.stickySelectionDelay);
     }
 
     observeLayoutChanges() {
@@ -194,6 +214,8 @@ class Autocomplete {
         this.popup.autoSelect = this.autoSelect;
         this.popup.setSelectOnHover(this.setSelectOnHover);
 
+        var previousSelectedItem = this.popup.data[this.popup.getRow()];
+
         this.popup.setData(this.completions.filtered, this.completions.filterText);
         if (this.editor.textInput.setAriaOptions) {
             this.editor.textInput.setAriaOptions({
@@ -204,7 +226,13 @@ class Autocomplete {
 
         editor.keyBinding.addKeyboardHandler(this.keyboardHandler);
         
-        this.popup.setRow(this.autoSelect ? 0 : -1);
+        var newRow = this.popup.data.indexOf(previousSelectedItem);
+
+        if (newRow && this.stickySelection)
+            this.popup.setRow(this.autoSelect ? newRow : -1);
+        else
+            this.popup.setRow(this.autoSelect ? 0 : -1);
+
         if (!keepPopupPosition) {
             this.popup.setTheme(editor.getTheme());
             this.popup.setFontSize(editor.getFontSize());

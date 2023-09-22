@@ -614,6 +614,118 @@ module.exports = {
 
 
         done();
+    },
+    "test: should maintain selection on fast completer item when slow completer results come in": function(done) {
+        var editor = initEditor("hello world\n");
+        
+        var slowCompleter = {
+            getCompletions: function (editor, session, pos, prefix, callback) {
+                var completions = [
+                    {
+                        caption: "slow option 1",
+                        value: "s1",
+                        score: 3
+                    }, {
+                        caption: "slow option 2",
+                        value: "s2",
+                        score: 0
+                    }
+                ];
+                setTimeout(() => {
+                    callback(null,  completions);
+                }, 200);
+            }
+        };
+
+        var fastCompleter = {
+            getCompletions: function (editor, session, pos, prefix, callback) {
+                var completions = [
+                    {
+                        caption: "fast option 1",
+                        value: "f1",
+                        score: 2
+                    }, {
+                        caption: "fast option 2",
+                        value: "f2",
+                        score: 1
+                    }
+                ];
+                callback(null, completions);
+            }
+        };
+
+        editor.completers = [fastCompleter, slowCompleter];
+        
+        var completer = Autocomplete.for(editor);
+        completer.stickySelectionDelay = 100;
+        user.type("Ctrl-Space");
+        assert.equal(completer.popup.isOpen, true);    
+        assert.equal(completer.popup.data.length, 2); 
+        assert.equal(completer.popup.getRow(), 0);
+
+        setTimeout(() => {
+            completer.popup.renderer.$loop._flush();
+            assert.equal(completer.popup.data.length, 4);
+            assert.equal(completer.popup.getRow(), 1);
+     
+            done();
+        }, 500);    
+    },
+    "test: should not maintain selection on fast completer item when slow completer results come in when stickySelectionDelay negative": function(done) {
+        var editor = initEditor("hello world\n");
+        
+        var slowCompleter = {
+            getCompletions: function (editor, session, pos, prefix, callback) {
+                var completions = [
+                    {
+                        caption: "slow option 1",
+                        value: "s1",
+                        score: 3
+                    }, {
+                        caption: "slow option 2",
+                        value: "s2",
+                        score: 0
+                    }
+                ];
+                setTimeout(() => {
+                    callback(null,  completions);
+                }, 200);
+            }
+        };
+
+        var fastCompleter = {
+            getCompletions: function (editor, session, pos, prefix, callback) {
+                var completions = [
+                    {
+                        caption: "fast option 1",
+                        value: "f1",
+                        score: 2
+                    }, {
+                        caption: "fast option 2",
+                        value: "f2",
+                        score: 1
+                    }
+                ];
+                callback(null, completions);
+            }
+        };
+
+        editor.completers = [fastCompleter, slowCompleter];
+        
+        var completer = Autocomplete.for(editor);
+        completer.stickySelectionDelay = -1;
+        user.type("Ctrl-Space");
+        assert.equal(completer.popup.isOpen, true);    
+        assert.equal(completer.popup.data.length, 2); 
+        assert.equal(completer.popup.getRow(), 0);
+
+        setTimeout(() => {
+            completer.popup.renderer.$loop._flush();
+            assert.equal(completer.popup.data.length, 4);
+            assert.equal(completer.popup.getRow(), 0);
+     
+            done();
+        }, 500);    
     }
 };
 
