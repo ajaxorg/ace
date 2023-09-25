@@ -259,7 +259,32 @@ class EditSession {
         this.setUndoManager(this.$undoManager);
         this.getUndoManager().reset();
     }
-    
+
+    /**
+     * Returns the current edit session as a JSON string.
+     * @private
+     * @method toJSON
+     * @returns {String}
+     */
+    toJSON() {
+        return {
+            annotations: this.$annotations,
+            breakpoints: this.$breakpoints,
+            folds: this.getAllFolds().map(function(fold) {
+                return fold.range;
+            }),
+            history: {
+                undo: this.getUndoManager().$undoStack,
+                redo: this.getUndoManager().$redoStack
+            },
+            mode: this.$mode.$id,
+            scrollLeft: this.$scrollLeft,
+            scrollTop: this.$scrollTop,
+            selection: this.selection.toJSON(),
+            value: this.doc.getValue()
+        };
+    };
+ 
     /**
      * Returns the current [[Document `Document`]] as a string.
      * @method toString
