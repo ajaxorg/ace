@@ -399,7 +399,10 @@ class Autocomplete {
         var prefix = util.getCompletionPrefix(this.editor);
         this.base = session.doc.createAnchor(pos.row, pos.column - prefix.length);
         this.base.$insertRight = true;
-        var completionOptions = { exactMatch: this.exactMatch };
+        var completionOptions = {
+            exactMatch: this.exactMatch,
+            ignoreCaption: this.ignoreCaption
+        };
         this.getCompletionProvider({
             prefix,
             pos
