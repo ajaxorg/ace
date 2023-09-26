@@ -899,3 +899,16 @@ export interface TooltipCommand extends Ace.Command {
 
 export type InlineAutocomplete = import("./src/ext/inline_autocomplete").InlineAutocomplete;
 export type CommandBarTooltip = import("./src/ext/command_bar").CommandBarTooltip;
+
+
+declare module "./src/editor" {
+   export interface Editor extends
+     Ace.EventEmitter<Ace.EditorEvents>,
+     Ace.OptionsProvider<Ace.EditorOptions>,
+     Ace.EditorProperties,
+     Ace.EditorMultiSelectProperties
+   {
+     
+   } 
+   export type IEditor = Editor
+}

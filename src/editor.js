@@ -1,9 +1,5 @@
 "use strict";
-/**
- * @typedef IEditor
- * @type {Editor & import("../ace").Ace.EventEmitter<import("../ace").Ace.EditorEvents> & import("../ace").Ace.OptionsProvider<import("../ace").Ace.EditorOptions> & import("../ace").Ace.EditorProperties & import("../ace").Ace.EditorMultiSelectProperties}
- * @export
- */
+
 /**
  * 
  * @typedef IEditSession
@@ -60,7 +56,6 @@ class Editor {
      * @param {IVirtualRenderer} renderer Associated `VirtualRenderer` that draws everything
      * @param {IEditSession} [session] The `EditSession` to refer to
      * @param {Object} [options] The default options
-     * @this {IEditor}
      **/
     constructor(renderer, session, options) {
         /**
@@ -129,9 +124,6 @@ class Editor {
         config._signal("editor", this);
     }
 
-    /**
-     * @this {IEditor}
-     */
     $initOperationListeners() {
         this.commands.on("exec", this.startOperation.bind(this), true);
         this.commands.on("afterExec", this.endOperation.bind(this), true);
@@ -179,10 +171,8 @@ class Editor {
         this.curOp.selectionBefore = this.selection.toJSON();
     }
 
-    /**
-     * 
-     * @param e
-     * @this {IEditor}
+    /** 
+     * @arg e
      */
     endOperation(e) {
         if (this.curOp && this.session) {
@@ -230,10 +220,8 @@ class Editor {
         }
     }
 
-    /**
-     * 
+    /** 
      * @param e
-     * @this {IEditor}
      */
     $historyTracker(e) {
         if (!this.$mergeUndoDeltas)
@@ -306,7 +294,6 @@ class Editor {
     /**
      * Sets a new editsession to use. This method also emits the `'changeSession'` event.
      * @param {IEditSession} [session] The new session to use
-     * @this {IEditor}
      **/
     setSession(session) {
         if (this.session == session)
@@ -517,7 +504,6 @@ class Editor {
 
     /**
      * Gets the current font size of the editor text.
-     * @this {IEditor}
      * @return {string}
      */
     getFontSize() {
@@ -528,7 +514,6 @@ class Editor {
     /**
      * Set a new font size (in pixels) for the editor text.
      * @param {String} size A font size ( _e.g._ "12px")
-     * @this {IEditor}
      **/
     setFontSize(size) {
         this.setOption("fontSize", size);
@@ -624,7 +609,6 @@ class Editor {
 
     /**
      * Emitted once the editor comes into focus.
-     * @this {IEditor}
      **/
     onFocus(e) {
         if (this.$isFocused)
@@ -637,7 +621,6 @@ class Editor {
 
     /**
      * Emitted once the editor has been blurred.
-     * @this {IEditor}
      **/
     onBlur(e) {
         if (!this.$isFocused)
@@ -649,7 +632,6 @@ class Editor {
     }
 
     /**
-     * @this {IEditor}
      */
     $cursorChange() {
         this.renderer.updateCursor();
@@ -660,7 +642,6 @@ class Editor {
     /**
      * Emitted whenever the document is changed.
      * @param {import("../ace").Ace.Delta} delta Contains a single property, `data`, which has the delta of changes
-     * @this {IEditor}
      **/
     onDocumentChange(delta) {
         // Rerender and emit "change" event.
@@ -690,7 +671,6 @@ class Editor {
 
     /**
      * Emitted when the selection changes.
-     * @this {IEditor}
      **/
     onCursorChange() {
         this.$cursorChange();
@@ -698,7 +678,6 @@ class Editor {
     }
 
     /**
-     * @this {IEditor}
      */
     $updateHighlightActiveLine() {
         var session = this.getSession();
@@ -733,7 +712,6 @@ class Editor {
     /**
      * 
      * @param e
-     * @this {IEditor}
      */
     onSelectionChange(e) {
         var session = this.session;
@@ -806,7 +784,6 @@ class Editor {
     }
 
     /**
-     * @this {IEditor}
      * @param e
      */
     onChangeMode (e) {
@@ -825,7 +802,6 @@ class Editor {
 
 
     /**
-     * @this {IEditor}
      */
     onChangeFold() {
         // Update the active line marker as due to folding changes the current
@@ -847,7 +823,6 @@ class Editor {
   
     /**
      * Returns the string of text currently highlighted.
-     * @this {IEditor}
      * @returns {String}
      **/
     getCopyText () {
@@ -872,7 +847,6 @@ class Editor {
 
     /**
      * Called whenever a text "copy" happens.
-     * @this {IEditor}
      **/
     onCopy() {
         this.commands.exec("copy", this);
@@ -880,7 +854,6 @@ class Editor {
 
     /**
      * Called whenever a text "cut" happens.
-     * @this {IEditor}
      **/
     onCut() {
         this.commands.exec("cut", this);
@@ -891,7 +864,6 @@ class Editor {
      * Called whenever a text "paste" happens.
      * @param {String} text The pasted text
      * @param {any} event
-     * @this {IEditor}
      **/
     onPaste(text, event) {
         var e = {text: text, event: event};
@@ -901,7 +873,6 @@ class Editor {
     /**
      * 
      * @param e
-     * @this {IEditor}
      * @returns {boolean}
      */
     $handlePaste(e) {
@@ -944,7 +915,6 @@ class Editor {
      * @param {string | string[]} command
      * @param [args]
      * @return {boolean}
-     * @this {IEditor}
      */
     execCommand(command, args) {
         return this.commands.exec(command, this, args);
@@ -954,7 +924,6 @@ class Editor {
      * Inserts `text` into wherever the cursor is pointing.
      * @param {String} text The new text to add
      * @param {boolean} [pasted]
-     * @this {IEditor}
      **/
     insert(text, pasted) {
         var session = this.session;
@@ -1079,7 +1048,6 @@ class Editor {
      * 
      * @param text
      * @param composition
-     * @this {IEditor}
      * @returns {*}
      */
     onTextInput(text, composition) {
@@ -1098,7 +1066,6 @@ class Editor {
     /**
      * @param {string} [text]
      * @param {any} [composition]
-     * @this {IEditor}
      */
     applyComposition(text, composition) {
         if (composition.extendLeft || composition.extendRight) {
@@ -1156,7 +1123,6 @@ class Editor {
     /**
      * Sets how fast the mouse scrolling should do.
      * @param {Number} speed A value indicating the new speed (in milliseconds)
-     * @this {IEditor}
      **/
     setScrollSpeed(speed) {
         this.setOption("scrollSpeed", speed);
@@ -1164,7 +1130,6 @@ class Editor {
 
     /**
      * Returns the value indicating how fast the mouse scroll speed is (in milliseconds).
-     * @this {IEditor}
      * @returns {Number}
      **/
     getScrollSpeed() {
@@ -1173,7 +1138,6 @@ class Editor {
 
     /**
      * Sets the delay (in milliseconds) of the mouse drag.
-     * @this {IEditor}
      * @param {Number} dragDelay A value indicating the new delay
      **/
     setDragDelay(dragDelay) {
@@ -1182,7 +1146,6 @@ class Editor {
 
     /**
      * Returns the current mouse drag delay.
-     * @this {IEditor}
      * @returns {Number}
      **/
     getDragDelay() {
@@ -1193,7 +1156,6 @@ class Editor {
     /**
      * Draw selection markers spanning whole line, or only over selected text. Default value is "line"
      * @param {"fullLine" | "screenLine" | "text" | "line"} val The new selection style "line"|"text"
-     * @this {IEditor}
      **/
     setSelectionStyle(val) {
         this.setOption("selectionStyle", val);
@@ -1201,7 +1163,6 @@ class Editor {
 
     /**
      * Returns the current selection style.
-     * @this {IEditor}
      * @returns {import("../ace").Ace.EditorOptions["selectionStyle"]} 
      **/
     getSelectionStyle() {
@@ -1211,14 +1172,12 @@ class Editor {
     /**
      * Determines whether or not the current line should be highlighted.
      * @param {Boolean} shouldHighlight Set to `true` to highlight the current line
-     * @this {IEditor}
      **/
     setHighlightActiveLine(shouldHighlight) {
         this.setOption("highlightActiveLine", shouldHighlight);
     }
     /**
      * Returns `true` if current lines are always highlighted.
-     * @this {IEditor}
      * @return {Boolean}
      **/
     getHighlightActiveLine() {
@@ -1226,7 +1185,6 @@ class Editor {
     }
 
     /**
-     * @this {IEditor}
      * @param {boolean} shouldHighlight
      */
     setHighlightGutterLine(shouldHighlight) {
@@ -1234,7 +1192,6 @@ class Editor {
     }
 
     /**
-     * @this {IEditor}
      * @returns {Boolean}
      */
     getHighlightGutterLine() {
@@ -1244,7 +1201,6 @@ class Editor {
     /**
      * Determines if the currently selected word should be highlighted.
      * @param {Boolean} shouldHighlight Set to `true` to highlight the currently selected word
-     * @this {IEditor}
      **/
     setHighlightSelectedWord(shouldHighlight) {
         this.setOption("highlightSelectedWord", shouldHighlight);
@@ -1252,7 +1208,6 @@ class Editor {
 
     /**
      * Returns `true` if currently highlighted words are to be highlighted.
-     * @this {IEditor}
      * @returns {Boolean}
      **/
     getHighlightSelectedWord() {
@@ -1354,7 +1309,6 @@ class Editor {
     /**
      * If `readOnly` is true, then the editor is set to read-only mode, and none of the content can change.
      * @param {Boolean} readOnly Specifies whether the editor can be modified or not
-     * @this {IEditor}
      **/
     setReadOnly(readOnly) {
         this.setOption("readOnly", readOnly);
@@ -1362,7 +1316,6 @@ class Editor {
 
     /**
      * Returns `true` if the editor is set to read-only mode.
-     * @this {IEditor}
      * @returns {Boolean}
      **/
     getReadOnly() {
@@ -1372,7 +1325,6 @@ class Editor {
     /**
      * Specifies whether to use behaviors or not. ["Behaviors" in this case is the auto-pairing of special characters, like quotation marks, parenthesis, or brackets.]{: #BehaviorsDef}
      * @param {Boolean} enabled Enables or disables behaviors
-     * @this {IEditor}
      **/
     setBehavioursEnabled(enabled) {
         this.setOption("behavioursEnabled", enabled);
@@ -1380,7 +1332,6 @@ class Editor {
 
     /**
      * Returns `true` if the behaviors are currently enabled. {:BehaviorsDef}
-     * @this {IEditor}
      * @returns {Boolean}
      **/
     getBehavioursEnabled() {
@@ -1391,7 +1342,6 @@ class Editor {
      * Specifies whether to use wrapping behaviors or not, i.e. automatically wrapping the selection with characters such as brackets
      * when such a character is typed in.
      * @param {Boolean} enabled Enables or disables wrapping behaviors
-     * @this {IEditor}
      **/
     setWrapBehavioursEnabled(enabled) {
         this.setOption("wrapBehavioursEnabled", enabled);
@@ -1399,7 +1349,6 @@ class Editor {
 
     /**
      * Returns `true` if the wrapping behaviors are currently enabled.
-     * @this {IEditor}
      * @returns {boolean}
      **/
     getWrapBehavioursEnabled() {
@@ -1409,7 +1358,6 @@ class Editor {
     /**
      * Indicates whether the fold widgets should be shown or not.
      * @param {Boolean} show Specifies whether the fold widgets are shown
-     * @this {IEditor}
      **/
     setShowFoldWidgets(show) {
         this.setOption("showFoldWidgets", show);
@@ -1417,7 +1365,6 @@ class Editor {
     }
     /**
      * Returns `true` if the fold widgets are shown.
-     * @this {IEditor}
      * @return {Boolean}
      **/
     getShowFoldWidgets() {
@@ -1425,7 +1372,6 @@ class Editor {
     }
 
     /**
-     * @this {IEditor}
      * @param {boolean} fade
      */
     setFadeFoldWidgets(fade) {
@@ -1433,7 +1379,6 @@ class Editor {
     }
 
     /**
-     * @this {IEditor}
      * @returns {boolean}
      */
     getFadeFoldWidgets() {
@@ -1443,7 +1388,6 @@ class Editor {
     /**
      * Removes the current selection or one character.
      * @param {'left' | 'right'} [dir] The direction of the deletion to occur, either "left" or "right"
-     * @this {IEditor}
      **/
     remove(dir) {
         if (this.selection.isEmpty()){
@@ -1530,7 +1474,6 @@ class Editor {
 
     /**
      * Splits the line at the current selection (by inserting an `'\n'`).
-     * @this {IEditor}
      **/
     splitLine() {
         if (!this.selection.isEmpty()) {
@@ -1629,7 +1572,6 @@ class Editor {
      * Inserts an indentation into the current cursor position or indents the selected lines.
      *
      * @related EditSession.indentRows
-     * @this {IEditor}
      **/
     indent() {
         var session = this.session;
@@ -1753,7 +1695,6 @@ class Editor {
     /**
      * If the character before the cursor is a number, this functions changes its value by `amount`.
      * @param {Number} amount The value to change the numeral by (can be negative to decrease value)
-     * @this {IEditor}
      **/
     modifyNumber(amount) {
         var row = this.selection.getCursor().row;
@@ -1801,7 +1742,6 @@ class Editor {
     }
 
     /**
-     * @this {IEditor}
      */
     toggleWord() {
         var row = this.selection.getCursor().row;
@@ -2422,7 +2362,6 @@ class Editor {
      * @param {Number} lineNumber The line number to go to
      * @param {Number} [column] A column number to go to
      * @param {Boolean} [animate] If `true` animates scolling
-     * @this {IEditor}
      **/
     gotoLine(lineNumber, column, animate) {
         this.selection.clearSelection();
@@ -2750,7 +2689,6 @@ class Editor {
     /**
      *
      * Cleans up the entire editor.
-     * @this {IEditor}
      **/
     destroy() {
         if (this.$toDestroy) {
@@ -2773,7 +2711,6 @@ class Editor {
     /**
      * Enables automatic scrolling of the cursor into view when editor itself is inside scrollable element
      * @param {Boolean} enable default true
-     * @this {IEditor}
      **/
     setAutoScrollEditorIntoView(enable) {
         if (!enable)
@@ -2829,9 +2766,6 @@ class Editor {
         };
     }
 
-    /**
-     * @this {IEditor}
-     */
     $resetCursorStyle() {
         var style = this.$cursorStyle || "ace";
         var cursorLayer = this.renderer.$cursorLayer;
@@ -2971,7 +2905,6 @@ config.defineOptions(Editor.prototype, "editor", {
     },
     placeholder: {
         /**
-         * @this {IEditor}
          * @param message
          */
         set: function(message) {

@@ -7,7 +7,7 @@
  * @typedef {import("./edit_session").IEditSession} IEditSession
  */
 /**
- * @typedef {import("./editor").IEditor} IEditor
+ * @typedef {import("./editor").Editor} IEditor
  */
 "use strict";
 "include loader_build";
