@@ -35,7 +35,7 @@ var PrqlHighlightRules = function() {
        "support.type": builtinTypes
     }, "identifier");
     
-    var escapeRe = /\\(\d+|['"\\&bfnrt]|u[0-9a-fA-F]{4})/;
+    var escapeRe = /\\(\d+|['"\\&bfnrt]|U[0-9a-fA-F]{8}|u[0-9a-fA-F]{4}|x[0-9a-fA-F]{2})/;
     var identifierRe = /[A-Za-z_][a-z_A-Z0-9]/.source;
     var numRe = /(?:\d\d*(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+\b)?/.source;
     var bidi = "[\\u202A\\u202B\\u202D\\u202E\\u2066\\u2067\\u2068\\u202C\\u2069]";
