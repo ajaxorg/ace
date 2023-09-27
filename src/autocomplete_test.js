@@ -735,7 +735,7 @@ module.exports = {
                 var completions = [
                     {
                         caption: "caption",
-                        value: "value",
+                        value: "value"
                     }
                 ];
                 callback(null,  completions);
@@ -759,7 +759,7 @@ module.exports = {
                 var completions = [
                     {
                         caption: "caption",
-                        value: "value",
+                        value: "value"
                     }
                 ];
                 callback(null,  completions);
