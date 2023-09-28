@@ -1,7 +1,6 @@
 "use strict";
 /**
- * @typedef Document
- * @type {import("./document").Document}
+ * @typedef {import("./document").Document} Document
  */
 var oop = require("./lib/oop");
 var EventEmitter = require("./lib/event_emitter").EventEmitter;

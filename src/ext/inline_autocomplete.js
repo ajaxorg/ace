@@ -408,9 +408,7 @@ require("../config").defineOptions(Editor.prototype, "editor", {
  * @returns {CommandBarTooltip}   The command bar tooltip for inline autocomplete
  */
 InlineAutocomplete.createInlineTooltip = function(parentEl) {
-    /**
-     * @type {CommandBarTooltip}
-     */
+    /**@type {CommandBarTooltip}*/
     var inlineTooltip = new CommandBarTooltip(parentEl);
     inlineTooltip.registerCommand("Previous",
         // @ts-expect-error

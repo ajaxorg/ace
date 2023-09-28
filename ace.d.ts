@@ -936,8 +936,7 @@ declare module "./src/anchor" {
 declare module "./src/autocomplete" {
     export interface Autocomplete {
         popup: Ace.AcePopup;
-        setSelectOnHover: boolean;
-        stickySelectionDelay: number;
+        emptyMessage?: Function
     }
     
     export interface CompletionProvider {
@@ -1333,5 +1332,11 @@ declare module "./src/ext/options" {
 
 declare module "./src/layer/font_metrics" {
     export interface FontMetrics extends Ace.EventEmitter<any> {
+    }
+}
+
+declare module "./src/tooltip" {
+    export interface HoverTooltip {
+        row: number;
     }
 }

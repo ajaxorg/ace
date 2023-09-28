@@ -43,9 +43,7 @@ class AcePopup {
      */
     constructor(parentNode) {
         var el = dom.createElement("div");
-        /**
-         * @type {AcePopup}
-         */
+        /**@type {AcePopup}*/
         // @ts-ignore
         var popup = $singleLineEditor(el);
 
@@ -129,9 +127,7 @@ class AcePopup {
         });
         popup.renderer.on("afterRender", function () {
             var row = popup.getRow();
-            /**
-             * @type {any}
-             */
+            /**@type {any}*/
             var t = popup.renderer.$textLayer;
             var selected = t.element.childNodes[row - t.config.firstRow];
             var el = document.activeElement; // Active element is textarea of main editor
@@ -183,9 +179,7 @@ class AcePopup {
 
         var bgTokenizer = popup.session.bgTokenizer;
         bgTokenizer.$tokenizeRow = function (row) {
-            /**
-             * @type {import("../../ace").Ace.Completion &{name?, className?, matchMask?, message?}}
-             */
+            /**@type {import("../../ace").Ace.Completion &{name?, className?, matchMask?, message?}}*/
             var data = popup.data[row];
             var tokens = [];
             if (!data) return tokens;

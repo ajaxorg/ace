@@ -73,9 +73,7 @@ class Occur extends Search {
         this.$originalSession = editor.session;
         var found = this.matchingLines(editor.session, options);
         var lines = found.map(function(foundLine) { return foundLine.content; });
-        /**
-         * @type {EditSession}
-         */
+        /**@type {EditSession}*/
         var occurSession = new EditSession(lines.join('\n'));
         occurSession.$occur = this;
         occurSession.$occurMatchingLines = found;

@@ -12,9 +12,7 @@ class Tokenizer {
      * @param {Object} rules The highlighting rules
      **/
     constructor(rules) {
-        /**
-         * @type {RegExp}
-         */
+        /**@type {RegExp}*/
         this.splitRegex;
         this.states = rules;
 
@@ -221,9 +219,7 @@ class Tokenizer {
      */
     getLineTokens(line, startState) {
         if (startState && typeof startState != "string") {
-            /**
-             * @type {any[]}
-             */
+            /**@type {any[]}*/
             var stack = startState.slice(0);
             startState = stack[0];
             if (startState === "#tmp") {

@@ -84,9 +84,7 @@ Selection.prototype.addRange = function(range, $blockChangeEvents) {
     this.ranges = null;
 
     // automatically sorted list of ranges
-    /**
-     * @type {RangeList | null}
-     */
+    /**@type {RangeList | null} */
     this.rangeList = null;
 
     /** 
@@ -544,9 +542,7 @@ var Editor = require("./editor").Editor;
         
         var reg = selection._eventRegistry;
         selection._eventRegistry = {};
-        /**
-         * @type {Selection}
-         */
+        /**@type {Selection}*/
         var tmpSel = new Selection(session);
         this.inVirtualSelectionMode = true;
         for (var i = ranges.length; i--;) {
@@ -699,15 +695,11 @@ var Editor = require("./editor").Editor;
         }
 
         if (isBackwards) {
-            /**
-             * @type {Range & {desiredColumn?: number}}
-             */
+            /**@type {Range & {desiredColumn?: number}}*/
             var newRange = Range.fromPoints(lead, anchor);
             newRange.cursor = newRange.start;
         } else {
-            /**
-             * @type {Range & {desiredColumn?: number}}
-             */
+            /**@type {Range & {desiredColumn?: number}}*/
             var newRange = Range.fromPoints(anchor, lead);
             newRange.cursor = newRange.end;
         }

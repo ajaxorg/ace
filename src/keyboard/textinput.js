@@ -23,9 +23,7 @@ var isMobile = useragent.isMobile;
 
 var TextInput;
 TextInput= function(parentNode, host) {
-    /**
-     * @type {HTMLTextAreaElement & {msGetInputContext?: () => {compositionStartOffset: number}, getInputContext?: () => {compositionStartOffset: number}}}
-     */
+    /**@type {HTMLTextAreaElement & {msGetInputContext?: () => {compositionStartOffset: number}, getInputContext?: () => {compositionStartOffset: number}}}*/
     var text = dom.createElement("textarea");
     text.className = "ace_text-input";
 
@@ -39,10 +37,7 @@ TextInput= function(parentNode, host) {
 
     var copied = false;
     var pasted = false;
-    /**
-     * 
-     * @type {false | {[key: string]: any}}}
-     */
+    /**@type {false | {[key: string]: any}}} */
     var inComposition = false;
     var sendingText = false;
     var tempStyle = '';

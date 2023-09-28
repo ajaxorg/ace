@@ -63,9 +63,7 @@ function prompt(editor, message, options, callback) {
     var cmdLine = $singleLineEditor();
     cmdLine.session.setUndoManager(new UndoManager());
 
-    /**
-     * @type {any}
-     */
+    /**@type {any}*/
     var el = dom.buildDom(["div", {class: "ace_prompt_container" + (options.hasDescription ? " input-box-with-description" : "")}]);
     var overlay = overlayPage(editor, el, done);
     el.appendChild(cmdLine.container);
@@ -117,9 +115,7 @@ function prompt(editor, message, options, callback) {
     }
 
     if (options.hasDescription) {
-        /**
-         * @type {any}
-         */
+        /**@type {any}*/
         var promptTextContainer = dom.buildDom(["div", {class: "ace_prompt_text_container"}]);
         dom.buildDom(options.prompt || "Press 'Enter' to confirm or 'Escape' to cancel", promptTextContainer);
         el.appendChild(promptTextContainer);
@@ -464,9 +460,7 @@ prompt.commands = function(editor, callback) {
  * @param {Function} [callback]
  */
 prompt.modes = function(editor, callback) {
-    /**
-     * @type {any[]}
-     */
+    /**@type {any[]}*/
     var modesArray = modelist.modes;
     modesArray = modesArray.map(function(item) {
         return {value: item.caption, mode: item.name};

@@ -46,9 +46,7 @@ class EditSession {
         this.$markerId = 1;
         this.$undoSelect = true;
 
-        /**
-         * @type {FoldLine[]}
-         */
+        /** @type {FoldLine[]} */
         this.$foldData = [];
         this.id = "session" + (++EditSession.$uid);
         this.$foldData.toString = function() {
@@ -112,13 +110,9 @@ class EditSession {
      **/
     $resetRowCache(docRow) {
         if (!docRow) {
-            /**
-             * @type {number[]}
-             */
+            /** @type {number[]} */
             this.$docRowCache = [];
-            /**
-             * @type {number[]}
-             */
+            /** @type {number[]} */
             this.$screenRowCache = [];
             return;
         }
@@ -813,13 +807,9 @@ class EditSession {
         this.bgTokenizer.setTokenizer(tokenizer);
         this.bgTokenizer.setDocument(this.getDocument());
 
-        /**
-         * @type {RegExp}
-         */
+        /**@type {RegExp}*/
         this.tokenRe = mode.tokenRe;
-        /**
-         * @type {RegExp}
-         */
+        /**@type {RegExp}*/
         this.nonTokenRe = mode.nonTokenRe;
 
         
@@ -2266,9 +2256,7 @@ class EditSession {
      **/
     getScreenLength() {
         var screenRows = 0;
-        /**
-         * @type {FoldLine}
-         */
+        /**@type {FoldLine}*/
         var fold = null;
         if (!this.$useWrapMode) {
             screenRows = this.getLength();

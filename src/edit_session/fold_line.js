@@ -13,9 +13,7 @@ class FoldLine {
     constructor(foldData, folds) {
         this.foldData = foldData;
         if (Array.isArray(folds)) {
-            /**
-             * @type {Fold[]}
-             */
+            /**@type {Fold[]} */
             this.folds = folds;
         } else {
             folds = this.folds = [ folds ];

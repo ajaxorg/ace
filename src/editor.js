@@ -1,8 +1,7 @@
 "use strict";
 
 /**
- * @typedef VirtualRenderer
- * @type {import("./virtual_renderer").VirtualRenderer}
+ * @typedef {import("./virtual_renderer").VirtualRenderer} VirtualRenderer
  */
 /**
  * @typedef {import("./selection").Selection} Selection
@@ -53,36 +52,24 @@ class Editor {
         this.$toDestroy = [];
         
         var container = renderer.getContainerElement();
-        /**
-         * @type {HTMLElement & {env?, value?}}
-         */
+        /**@type {HTMLElement & {env?, value?}}*/
         this.container = container;
-        /**
-         * @type {VirtualRenderer}
-         */
+        /**@type {VirtualRenderer}*/
         this.renderer = renderer;
-        /**
-         * @type {string}
-         */
+        /**@type {string}*/
         this.id = "editor" + (++Editor.$uid);
         this.commands = new CommandManager(useragent.isMac ? "mac" : "win", defaultCommands);
         if (typeof document == "object") {
             this.textInput = new TextInput(renderer.getTextAreaContainer(), this);
             this.renderer.textarea = this.textInput.getElement();
             // TODO detect touch event support
-            /**
-             * @type {MouseHandler}
-             */
+            /**@type {MouseHandler}*/
             this.$mouseHandler = new MouseHandler(this);
             new FoldHandler(this);
         }
-        /**
-         * @type {KeyBinding}
-         */
+        /**@type {KeyBinding}*/
         this.keyBinding = new KeyBinding(this);
-        /**
-         * @type {Search}
-         */
+        /**@type {Search}*/
         this.$search = new Search().set({
             wrap: true
         });
@@ -666,9 +653,7 @@ class Editor {
      */
     $updateHighlightActiveLine() {
         var session = this.getSession();
-        /**
-         * @type {import("../ace").Ace.Point|false}
-         */
+        /**@type {import("../ace").Ace.Point|false}*/
         var highlight;
         if (this.$highlightActiveLine) {
             if (this.$selectionStyle != "line" || !this.selection.isMultiLine())
@@ -2945,9 +2930,7 @@ config.defineOptions(Editor.prototype, "editor", {
                     this.focus();
                 }
             };
-            /**
-             * @type {GutterKeyboardHandler}
-             */
+            /**@type {GutterKeyboardHandler}*/
             var gutterKeyboardHandler;
 
             // If keyboard a11y mode is enabled we:

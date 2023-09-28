@@ -51,16 +51,12 @@ class VirtualRenderer {
         this.$gutter.className = "ace_gutter";
         this.container.appendChild(this.$gutter);
         this.$gutter.setAttribute("aria-hidden", "true");
-        /**
-         * @type {HTMLElement}
-         */
+        /**@type {HTMLElement}*/
         this.scroller = dom.createElement("div");
         this.scroller.className = "ace_scroller";
 
         this.container.appendChild(this.scroller);
-        /**
-         * @type {HTMLElement}
-         */
+        /**@type {HTMLElement}*/
         this.content = dom.createElement("div");
         this.content.className = "ace_content";
         this.scroller.appendChild(this.content);
@@ -1838,9 +1834,7 @@ class VirtualRenderer {
      **/
     setTheme(theme, cb) {
         var _self = this;
-        /**
-         * @type {any}
-         */
+        /**@type {any}*/
         this.$themeId = theme;
         _self._dispatchEvent('themeChange',{theme:theme});
 
@@ -1869,9 +1863,7 @@ class VirtualRenderer {
             );
             if (_self.theme)
                 dom.removeCssClass(_self.container, _self.theme.cssClass);
-            /**
-             * @type {any}
-             */
+            /**@type {any}*/
             var padding = "padding" in module ? module.padding 
                 : "padding" in (_self.theme || {}) ? 4 : _self.$padding;
             if (_self.$padding && padding != _self.$padding)
@@ -1969,13 +1961,9 @@ class VirtualRenderer {
             delete this.$scrollDecorator;
         }
         if (val === true) {
-            /**
-             * @type {import("../ace").Ace.VScrollbar}
-             */
+            /**@type {import("../ace").Ace.VScrollbar}*/
             this.scrollBarV = new VScrollBarCustom(this.container, this);
-            /**
-             * @type {import("../ace").Ace.HScrollbar}
-             */
+            /**@type {import("../ace").Ace.HScrollbar}*/
             this.scrollBarH = new HScrollBarCustom(this.container, this);
             this.scrollBarV.setHeight(this.$size.scrollerHeight);
             this.scrollBarH.setWidth(this.$size.scrollerWidth);

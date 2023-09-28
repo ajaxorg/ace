@@ -2,9 +2,7 @@
 
 const deepCopy = require("../lib/deep_copy").deepCopy;
 
-/**
- * @type {(new() => Partial<import("../../ace").Ace.HighlightRules>) & {prototype: import("../../ace").Ace.HighlightRules}}
- */
+/**@type {(new() => Partial<import("../../ace").Ace.HighlightRules>) & {prototype: import("../../ace").Ace.HighlightRules}}*/
 var TextHighlightRules;
 TextHighlightRules = function() {
 

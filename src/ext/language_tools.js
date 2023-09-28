@@ -7,9 +7,7 @@ var lang = require("../lib/lang");
 var util = require("../autocomplete/util");
 
 var textCompleter = require("../autocomplete/text_completer");
-/**
- * @type {import("../../ace").Ace.Completer}
- */
+/**@type {import("../../ace").Ace.Completer}*/
 var keyWordCompleter = {
     getCompletions: function(editor, session, pos, prefix, callback) {
         if (session.$mode.completer) {
@@ -34,9 +32,7 @@ var transformSnippetTooltip = function(str) {
         return record[p1];
     });
 };
-/**
- * @type {import("../../ace").Ace.Completer}
- */
+/**@type {import("../../ace").Ace.Completer} */
 var snippetCompleter = {
     getCompletions: function(editor, session, pos, prefix, callback) {
         var scopes = [];

@@ -100,9 +100,7 @@ class Autocomplete {
     }
 
     $init() {
-        /**
-         * @type {AcePopup}
-         */
+        /**@type {AcePopup}**/
         this.popup = new AcePopup(this.parentNode || document.body || document.documentElement); 
         this.popup.on("click", function(e) {
             this.insertMatch();
@@ -124,7 +122,6 @@ class Autocomplete {
     }
 
     /**
-     * 
      * @return {AcePopup}
      */
     getPopup() {
@@ -443,7 +440,7 @@ class Autocomplete {
         }).provideCompletions(this.editor, completionOptions,
             /**
              * @type {(err: any, completions: FilteredList, finished: boolean) => void | boolean}
-             * @this {Autocomplete & {emptyMessage}}
+             * @this {Autocomplete}
              */
             function (err, completions, finished) {
                 var filtered = completions.filtered;

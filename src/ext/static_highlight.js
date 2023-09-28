@@ -64,9 +64,7 @@ var simpleDom = {
 };
 
 
-/**
- * @type {any}
- */
+/**@type {any}*/
 var SimpleTextLayer = function() {
     this.config = {};
     this.dom = simpleDom;
@@ -93,9 +91,7 @@ var highlight = function(el, opts, callback) {
     if (el.firstElementChild) {
         var textLen = 0;
         for (var i = 0; i < el.childNodes.length; i++) {
-            /**
-             * @type {any}
-             */
+            /**@type {any}*/
             var ch = el.childNodes[i];
             if (ch.nodeType == 3) {
                 textLen += ch.data.length;
@@ -200,9 +196,7 @@ highlight.renderSync = function(input, mode, theme, lineStart, disableGutter) {
     session.setUseWorker(false);
     session.setMode(mode);
 
-    /**
-     * @type {TextLayer}
-     */
+    /**@type {TextLayer}*/
     var textLayer = new SimpleTextLayer();
     textLayer.setSession(session);
     Object.keys(textLayer.$tabStrings).forEach(function(k) {

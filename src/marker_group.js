@@ -1,12 +1,9 @@
 "use strict";
 /**
- *
  * @typedef {import("./edit_session").EditSession} EditSession
  */
 /**
- * @typedef MarkerGroupItem
- * @type {{range: import("./range").Range, className: string}}
- * @export
+ * @typedef {{range: import("./range").Range, className: string}} MarkerGroupItem
  */
 
 /*
@@ -20,9 +17,7 @@ class MarkerGroup {
      */
     constructor(session) {
         this.markers = [];
-        /**
-         * @type {EditSession}
-         */
+        /**@type {EditSession}*/
         this.session = session;
         // @ts-expect-error TODO: could potential error here, or most likely missing checks in other places
         session.addDynamicMarker(this);

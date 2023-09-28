@@ -311,9 +311,7 @@ class CommandBarTooltip {
             });
         }
 
-        /**
-         * @type {any[]}
-         */
+        /**@type {any[]} */
         var buttonNode;
         if (forMainTooltip && command.iconCssClass) {
             //Only support icon button for main tooltip, otherwise fall back to text button

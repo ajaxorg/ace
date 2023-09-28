@@ -271,9 +271,7 @@ class OptionPanel {
                 return self.renderOptionControl(key, x);
             });
         }
-        /**
-         * @type {any}
-         */
+        /**@type {any}*/
         var control;
         
         var value = self.getOption(option);

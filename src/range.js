@@ -12,16 +12,12 @@ class Range {
      * @constructor
      **/
     constructor(startRow, startColumn, endRow, endColumn) {
-        /**
-         * @type {import("../ace").Ace.Point}
-         */
+        /**@type {import("../ace").Ace.Point}*/
         this.start = {
             row: startRow,
             column: startColumn
         };
-        /**
-         * @type {import("../ace").Ace.Point}
-         */
+        /**@type {import("../ace").Ace.Point}*/
         this.end = {
             row: endRow,
             column: endColumn

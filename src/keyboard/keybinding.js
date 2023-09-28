@@ -11,9 +11,7 @@ class KeyBinding {
     constructor(editor) {
         this.$editor = editor;
         this.$data = {editor: editor};
-        /**
-         * @type {(import("../../ace").Ace.KeyboardHandler)[]}
-         */
+        /**@type {(import("../../ace").Ace.KeyboardHandler)[]}*/
         this.$handlers = [];
         this.setDefaultHandler(editor.commands);
     }

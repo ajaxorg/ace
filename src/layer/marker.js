@@ -40,9 +40,7 @@ class Marker {
      * @param {string} css
      */
     elt(className, css) {
-        /**
-         * @type {any}
-         */
+        /**@type {any}*/
         var x = this.i != -1 && this.element.childNodes[this.i];
         if (!x) {
             x = document.createElement("div");

@@ -31,9 +31,7 @@ class Search {
      **/
     
     constructor() {
-        /** 
-         * @type {SearchOptions}
-         */
+        /**@type {SearchOptions}*/
         this.$options = {};
     }
     
@@ -247,9 +245,7 @@ class Search {
             return options.re = this.$assembleMultilineRegExp(needle, modifier);
 
         try {
-            /**
-             * @type {RegExp|false}
-             */
+            /**@type {RegExp|false}*/
             var re = new RegExp(needle, modifier);
         } catch(e) {
             re = false;

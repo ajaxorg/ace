@@ -21,9 +21,7 @@ class MultiHashHandler {
      */
     $init(config, platform, $singleCommand) {
         this.platform = platform || (useragent.isMac ? "mac" : "win");
-        /**
-         * @type {Record<string, import("../../ace").Ace.Command>}
-         */
+        /**@type {Record<string, import("../../ace").Ace.Command>}*/
         this.commands = {};
         this.commandKeyBinding = {};
         this.addCommands(config);

@@ -18,23 +18,15 @@ class Selection {
      * @constructor
      **/
     constructor(session) {
-        /**
-         * @type {EditSession}
-         */
+        /**@type {EditSession}*/
         this.session = session;
-        /**
-         * @type {import("./document").Document}
-         */
+        /**@type {import("./document").Document}*/
         this.doc = session.getDocument();
     
         this.clearSelection();
-        /**
-         * @type {Anchor}
-         */
+        /**@type {Anchor}*/
         this.cursor = this.lead = this.doc.createAnchor(0, 0);
-        /**
-         * @type {Anchor}
-         */
+        /**@type {Anchor}*/
         this.anchor = this.doc.createAnchor(0, 0);
         this.$silent = false;
     

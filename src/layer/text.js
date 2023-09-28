@@ -82,9 +82,7 @@ class Text {
      * @param {EditSession} session
      */
     setSession(session) {
-        /**
-         * @type {EditSession}
-         */
+        /**@type {EditSession}*/
         this.session = session;
         if (session)
             this.$computeTabString();
@@ -449,9 +447,7 @@ class Text {
 
     $highlightIndentGuide() {
         if (!this.$highlightIndentGuides || !this.displayIndentGuides) return;
-        /**
-         * @type {{ indentLevel?: number; start?: number; end?: number; dir?: number; }}
-         **/
+        /**@type {{ indentLevel?: number; start?: number; end?: number; dir?: number; }}*/
         this.$highlightIndentGuideMarker = {
             indentLevel: undefined,
             start: undefined,

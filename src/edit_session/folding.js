@@ -8,8 +8,7 @@ var TokenIterator = require("../token_iterator").TokenIterator;
 var MouseEvent = require("../mouse/mouse_event").MouseEvent;
 
 /**
- * @typedef IFolding
- * @type {import("../edit_session").EditSession & import("../../ace").Ace.Folding}
+ * @typedef {import("../edit_session").EditSession & import("../../ace").Ace.Folding} IFolding
  */
 
 /**
@@ -101,9 +100,7 @@ function Folding() {
      */
     this.getFoldsInRangeList = function(ranges) {
         if (Array.isArray(ranges)) {
-            /**
-             * @type {Fold[]}
-             */
+            /**@type {Fold[]} */
             var folds = [];
             ranges.forEach(function(range) {
                 folds = folds.concat(this.getFoldsInRange(range));
@@ -288,9 +285,7 @@ function Folding() {
     this.addFold = function(placeholder, range) {
         var foldData = this.$foldData;
         var added = false;
-        /**
-         * @type {Fold}
-         */
+        /**@type {Fold}*/
         var fold;
         
         if (placeholder instanceof Fold)

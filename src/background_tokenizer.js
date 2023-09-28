@@ -21,9 +21,7 @@ class BackgroundTokenizer {
      * @param {any} [editor] The editor to associate with
      **/
     constructor(tokenizer, editor) {
-        /**
-         * @type {false|number}
-         */
+        /**@type {false|number}*/
         this.running = false;
         this.lines = [];
         this.states = [];

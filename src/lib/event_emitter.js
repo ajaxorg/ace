@@ -1,7 +1,5 @@
 "use strict";
-/**
- * @type {any}
- */
+/**@type {any}*/
 var EventEmitter = {};
 var stopPropagation = function() { this.propagationStopped = true; };
 var preventDefault = function() { this.defaultPrevented = true; };
@@ -63,9 +61,7 @@ EventEmitter.once = function(eventName, callback) {
 
 
 EventEmitter.setDefaultHandler = function(eventName, callback) {
-    /**
-     * @type {any}
-     */
+    /**@type {any}*/
     var handlers = this._defaultHandlers;
     if (!handlers)
         handlers = this._defaultHandlers = {_disabled_: {}};

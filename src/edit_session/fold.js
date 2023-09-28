@@ -25,9 +25,7 @@ class Fold extends RangeList {
         this.end = range.end;
 
         this.sameRow = range.start.row == range.end.row;
-        /**
-         * @type {Fold[]}
-         */
+        /**@type {Fold[]}*/
         this.subFolds = this.ranges = [];
     }
     

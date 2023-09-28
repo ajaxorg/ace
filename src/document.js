@@ -16,9 +16,7 @@ class Document {
      * @param {String | String[]} textOrLines text The starting text
      **/
     constructor(textOrLines) {
-        /**
-         * @type {string[]}
-         */
+        /**@type {string[]}*/
         this.$lines = [""];
 
         // There has to be one line at least in the document. If you pass an empty

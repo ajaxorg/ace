@@ -452,9 +452,7 @@ class SnippetManager {
         var after = line.substr(cursor.column);
 
         var snippetMap = this.snippetMap;
-        /**
-         * @type {Snippet}
-         */
+        /**@type {Snippet}*/
         var snippet;
         this.getActiveScopes(editor).some(function(scope) {
             var snippets = snippetMap[scope];
@@ -950,9 +948,7 @@ class TabstopManager {
             
             for (var i = 0; i < ts.length; i++) {
                 var p = ts[i];
-                /**
-                 * @type {Range & {original?: Range, tabstop?: any, linked?: boolean}}}
-                 */
+                /**@type {Range & {original?: Range, tabstop?: any, linked?: boolean}}}*/
                 var range = Range.fromPoints(p.start, p.end || p.start);
                 movePoint(range.start, start);
                 movePoint(range.end, start);
@@ -1062,9 +1058,7 @@ dom.importCssString(`
     position: absolute;
 }`, "snippets.css", false);
 
-/**
- * @type {any}
- */
+/**@type {any}*/
 exports.snippetManager = new SnippetManager();
 
 

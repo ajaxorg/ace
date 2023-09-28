@@ -51,14 +51,10 @@ Mode = function() {
         if (!this.lineCommentStart) {
             if (!this.blockComment)
                 return false;
-            /**
-             * @type {any}
-             */
+            /**@type {any}*/
             var lineCommentStart = this.blockComment.start;
             var lineCommentEnd = this.blockComment.end;
-            /**
-             * @type {any}
-             */
+            /**@type {any}*/
             var regexpStart = new RegExp("^(\\s*)(?:" + lang.escapeRegExp(lineCommentStart) + ")");
             var regexpEnd = new RegExp("(?:" + lang.escapeRegExp(lineCommentEnd) + ")\\s*$");
 
@@ -79,9 +75,7 @@ Mode = function() {
                     doc.removeInLine(i, m[1].length, m[0].length);
             };
 
-            /**
-             * @type {any}
-             */
+            /**@type {any}*/
             var testRemove = function(line, row) {
                 if (regexpStart.test(line))
                     return true;
@@ -93,19 +87,13 @@ Mode = function() {
             };
         } else {
             if (Array.isArray(this.lineCommentStart)) {
-                /**
-                 * @type {any}
-                 */
+                /**@type {any}*/
                 var regexpStart = this.lineCommentStart.map(lang.escapeRegExp).join("|");
-                /**
-                 * @type {any}
-                 */
+                /**@type {any}*/
                 var lineCommentStart = this.lineCommentStart[0];
             } else {
                 var regexpStart = lang.escapeRegExp(this.lineCommentStart);
-                /**
-                 * @type {any}
-                 */
+                /**@type {any}*/
                 var lineCommentStart = this.lineCommentStart;
             }
             regexpStart = new RegExp("^(\\s*)(?:" + regexpStart + ") ?");
@@ -129,9 +117,7 @@ Mode = function() {
                         doc.insertInLine({row: i, column: minIndent}, lineCommentStart);
                 }
             };
-            /**
-             * @type {any}
-             */
+            /**@type {any}*/
             var testRemove = function(line, i) {
                 return regexpStart.test(line);
             };
