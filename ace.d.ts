@@ -875,35 +875,6 @@ export namespace Ace {
     }
 
     type CompletionCallbackFunction = (err: Error | undefined, data: GatherCompletionRecord) => void;
-  type CompletionProviderCallback = (err: Error | undefined, completions: CompletionRecord, finished: boolean) => void;
-
-  export class CompletionProvider {
-    insertByIndex(editor: Editor, index: number, options: CompletionProviderOptions): boolean;
-    insertMatch(editor: Editor, data: Completion, options: CompletionProviderOptions): boolean;
-    completions: CompletionRecord;
-    gatherCompletions(editor: Editor, callback: CompletionCallbackFunction): boolean;
-    provideCompletions(editor: Editor, options: CompletionProviderOptions, callback: CompletionProviderCallback): void;
-    detach(): void;
-  }
-
-  export class Autocomplete {
-    constructor();
-    autoInsert?: boolean;
-    autoSelect?: boolean;
-    autoShown?: boolean;
-    exactMatch?: boolean;
-      setSelectOnHover?: Boolean;
-      stickySelectionDelay?: Number;
-    inlineEnabled?: boolean;
-    parentNode?: HTMLElement;
-    setSelectOnHover?: Boolean;
-    stickySelectionDelay?: Number;
-    emptyMessage?(prefix: String): String;
-    getPopup(): AcePopup;
-    showPopup(editor: Editor, options: CompletionOptions): void;
-    detach(): void;
-    destroy(): void;
-  }
     type CompletionProviderCallback = (this: import("./src/autocomplete").Autocomplete, err: Error | undefined, completions: import("./src/autocomplete").FilteredList, finished: boolean) => void;
 
     type AcePopupNavigation = "up" | "down" | "start" | "end";
@@ -964,7 +935,9 @@ declare module "./src/anchor" {
 
 declare module "./src/autocomplete" {
     export interface Autocomplete {
-        popup: Ace.AcePopup    
+        popup: Ace.AcePopup;
+        setSelectOnHover: boolean;
+        stickySelectionDelay: number;
     }
     
     export interface CompletionProvider {
