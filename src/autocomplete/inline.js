@@ -30,7 +30,7 @@ class AceInline {
             return false;
         }
         var displayText = completion.snippet ? snippetManager.getDisplayTextForSnippet(editor, completion.snippet) : completion.value;
-        if (!displayText || !displayText.startsWith(prefix)) {
+        if (completion.hideInlinePreview || !displayText || !displayText.startsWith(prefix)) {
             return false;
         }
         this.editor = editor;
