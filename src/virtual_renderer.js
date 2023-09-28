@@ -1,20 +1,15 @@
 "use strict";
 /**
- * @typedef IVirtualRenderer
- * @type {VirtualRenderer & import("../ace").Ace.EventEmitter<import("../ace").Ace.VirtualRendererEvents> & import("../ace").Ace.OptionsProvider<import("../ace").Ace.VirtualRendererOptions> & import("../ace").Ace.VirtualRendererProperties}
- */
-/**
  *
- * @typedef IEditSession
- * @type {import("./edit_session").IEditSession}
+ * @typedef {import("./edit_session").EditSession} EditSession
  */
 var oop = require("./lib/oop");
 var dom = require("./lib/dom");
 var lang = require("./lib/lang");
 var config = require("./config");
-/**@type{any}*/var GutterLayer = require("./layer/gutter").Gutter;
+var GutterLayer = require("./layer/gutter").Gutter;
 var MarkerLayer = require("./layer/marker").Marker;
-/**@type{any}*/var TextLayer = require("./layer/text").Text;
+var TextLayer = require("./layer/text").Text;
 var CursorLayer = require("./layer/cursor").Cursor;
 var HScrollBar = require("./scrollbar").HScrollBar;
 var VScrollBar = require("./scrollbar").VScrollBar;
@@ -37,15 +32,11 @@ dom.importCssString(editorCss, "ace_editor.css", false);
 class VirtualRenderer {
     /**
      * Constructs a new `VirtualRenderer` within the `container` specified, applying the given `theme`.
-     * @param {HTMLElement} [container] The root element of the editor
+     * @param {HTMLElement | null} [container] The root element of the editor
      * @param {String} [theme] The starting theme
-     * @this {IVirtualRenderer}
+     
      **/
     constructor(container, theme) {
-        /**
-         * @type {IEditSession}
-         */
-        this.session;
         var _self = this;
         this.container = container || dom.createElement("div");
 
@@ -74,16 +65,10 @@ class VirtualRenderer {
         this.content.className = "ace_content";
         this.scroller.appendChild(this.content);
 
-        /**
-         * @type {import("./layer/gutter").IGutter}
-         */
         this.$gutterLayer = new GutterLayer(this.$gutter);
         this.$gutterLayer.on("changeGutterWidth", this.onGutterResize.bind(this));
 
         this.$markerBack = new MarkerLayer(this.content);
-        /**
-         * @type {import("./layer/text").IText}
-         */
         var textLayer = this.$textLayer = new TextLayer(this.content);
         this.canvas = textLayer.element;
 
@@ -196,9 +181,6 @@ class VirtualRenderer {
     //     console.log(a.trim())
     // };
 
-    /**
-     * @this {IVirtualRenderer}
-     */
     updateCharacterSize() {
         // @ts-expect-error TODO: missing property initialization anywhere in codebase
         if (this.$textLayer.allowBoldFonts != this.$allowBoldFonts) {
@@ -219,7 +201,7 @@ class VirtualRenderer {
     /**
      *
      * Associates the renderer with an [[EditSession `EditSession`]].
-     * @param {IEditSession} session The session to associate with
+     * @param {EditSession} session The session to associate with
      **/
     setSession(session) {
         if (this.session)
@@ -306,7 +288,7 @@ class VirtualRenderer {
     /**
      * Triggers a full update of all the layers, for all the rows.
      * @param {Boolean} [force] If `true`, forces the changes through
-     * @this {IVirtualRenderer}
+     
      **/
     updateFull(force) {
         if (force)
@@ -322,9 +304,6 @@ class VirtualRenderer {
         this.$textLayer.checkForSizeChanges();
     }
 
-    /**
-     * @this {IVirtualRenderer}
-     */
     $updateSizeAsync() {
         if (this.$loop.pending)
             this.$size.$dirty = true;
@@ -337,7 +316,7 @@ class VirtualRenderer {
      * @param {Number} [gutterWidth] The width of the gutter in pixels
      * @param {Number} [width] The width of the editor in pixels
      * @param {Number} [height] The hiehgt of the editor, in pixels
-     * @this {IVirtualRenderer}
+     
      **/
     onResize(force, gutterWidth, width, height) {
         if (this.resizing > 2)
@@ -384,7 +363,7 @@ class VirtualRenderer {
      * @param [width]
      * @param [height]
      * @return {number}
-     * @this {IVirtualRenderer}
+     
      */
     $updateCachedSize(force, gutterWidth, width, height) {
         height -= (this.$extraHeight || 0);
@@ -447,7 +426,7 @@ class VirtualRenderer {
     /**
      * 
      * @param {number} width
-     * @this {IVirtualRenderer}
+     
      */
     onGutterResize(width) {
         var gutterWidth = this.$showGutter ? width : 0;
@@ -465,7 +444,7 @@ class VirtualRenderer {
 
     /**
      * Adjusts the wrap limit, which is the number of characters that can fit within the width of the edit area on screen.
-     * @this {IVirtualRenderer}
+     
      **/
     adjustWrapLimit() {
         var availableWidth = this.$size.scrollerWidth - this.$padding * 2;
@@ -476,7 +455,7 @@ class VirtualRenderer {
     /**
      * Identifies whether you want to have an animated scroll or not.
      * @param {Boolean} shouldAnimate Set to `true` to show animated scrolls
-     * @this {IVirtualRenderer}
+     
      **/
     setAnimatedScroll(shouldAnimate){
         this.setOption("animatedScroll", shouldAnimate);
@@ -485,7 +464,7 @@ class VirtualRenderer {
     /**
      * Returns whether an animated scroll happens or not.
      * @returns {Boolean}
-     * @this {IVirtualRenderer}
+     
      **/
     getAnimatedScroll() {
         return this.$animatedScroll;
@@ -494,7 +473,7 @@ class VirtualRenderer {
     /**
      * Identifies whether you want to show invisible characters or not.
      * @param {Boolean} showInvisibles Set to `true` to show invisibles
-     * @this {IVirtualRenderer}
+     
      **/
     setShowInvisibles(showInvisibles) {
         this.setOption("showInvisibles", showInvisibles);
@@ -504,7 +483,7 @@ class VirtualRenderer {
     /**
      * Returns whether invisible characters are being shown or not.
      * @returns {Boolean}
-     * @this {IVirtualRenderer}
+     
      **/
     getShowInvisibles() {
         return this.getOption("showInvisibles");
@@ -512,7 +491,7 @@ class VirtualRenderer {
 
     /**
      * @return {boolean}
-     * @this {IVirtualRenderer}
+     
      */
     getDisplayIndentGuides() {
         return this.getOption("displayIndentGuides");
@@ -520,14 +499,14 @@ class VirtualRenderer {
 
     /**
      * @param {boolean} display
-     * @this {IVirtualRenderer}
+     
      */
     setDisplayIndentGuides(display) {
         this.setOption("displayIndentGuides", display);
     }
 
     /**
-     * @this {IVirtualRenderer}
+     
      * @return {boolean}
      */
     getHighlightIndentGuides() {
@@ -535,7 +514,7 @@ class VirtualRenderer {
     }
 
     /**
-     * @this {IVirtualRenderer}
+     
      * @param {boolean} highlight
      */
     setHighlightIndentGuides(highlight) {
@@ -545,7 +524,7 @@ class VirtualRenderer {
     /**
      * Identifies whether you want to show the print margin or not.
      * @param {Boolean} showPrintMargin Set to `true` to show the print margin
-     * @this {IVirtualRenderer}
+     
      **/
     setShowPrintMargin(showPrintMargin) {
         this.setOption("showPrintMargin", showPrintMargin);
@@ -554,7 +533,7 @@ class VirtualRenderer {
     /**
      * Returns whether the print margin is being shown or not.
      * @returns {Boolean}
-     * @this {IVirtualRenderer}
+     
      **/
     getShowPrintMargin() {
         return this.getOption("showPrintMargin");
@@ -562,7 +541,7 @@ class VirtualRenderer {
     /**
      * Identifies whether you want to show the print margin column or not.
      * @param {number} printMarginColumn Set to `true` to show the print margin column
-     * @this {IVirtualRenderer}
+     
      **/
     setPrintMarginColumn(printMarginColumn) {
         this.setOption("printMarginColumn", printMarginColumn);
@@ -571,7 +550,7 @@ class VirtualRenderer {
     /**
      * Returns whether the print margin column is being shown or not.
      * @returns {number}
-     * @this {IVirtualRenderer}
+     
      **/
     getPrintMarginColumn() {
         return this.getOption("printMarginColumn");
@@ -580,7 +559,7 @@ class VirtualRenderer {
     /**
      * Returns `true` if the gutter is being shown.
      * @returns {Boolean}
-     * @this {IVirtualRenderer}
+     
      **/
     getShowGutter(){
         return this.getOption("showGutter");
@@ -589,14 +568,14 @@ class VirtualRenderer {
     /**
      * Identifies whether you want to show the gutter or not.
      * @param {Boolean} show Set to `true` to show the gutter
-     * @this {IVirtualRenderer}
+     
      **/
     setShowGutter(show){
         return this.setOption("showGutter", show);
     }
 
     /**
-     * @this {IVirtualRenderer}
+     
      * @returns {boolean}
      */
     getFadeFoldWidgets(){
@@ -604,7 +583,7 @@ class VirtualRenderer {
     }
 
     /**
-     * @this {IVirtualRenderer}
+     
      * @param {boolean} show
      */
     setFadeFoldWidgets(show) {
@@ -612,7 +591,7 @@ class VirtualRenderer {
     }
 
     /**
-     * @this {IVirtualRenderer} *
+      *
      * @param {boolean} shouldHighlight
      */
     setHighlightGutterLine(shouldHighlight) {
@@ -620,7 +599,7 @@ class VirtualRenderer {
     }
 
     /**
-     * @this {IVirtualRenderer}
+     
      * @returns {boolean}
      */
     getHighlightGutterLine() {
@@ -628,7 +607,7 @@ class VirtualRenderer {
     }
 
     /**
-     * @this {IVirtualRenderer}
+     
      */
     $updatePrintMargin() {
         if (!this.$showPrintMargin && !this.$printMarginEl)
@@ -681,7 +660,7 @@ class VirtualRenderer {
     // move text input over the cursor
     // this is required for IME
     /**
-     * @this {IVirtualRenderer}
+     
      */
     $moveTextAreaToCursor() {
         if (this.$isMousePressed) return;
@@ -777,7 +756,7 @@ class VirtualRenderer {
     /**
      * Sets the padding for all the layers.
      * @param {Number} padding A new padding value (in pixels)
-     * @this {IVirtualRenderer}
+     
      **/
     setPadding(padding) {
         this.$padding = padding;
@@ -795,7 +774,7 @@ class VirtualRenderer {
      * @param {number} [bottom]
      * @param {number} [left]
      * @param {number} [right]
-     * @this {IVirtualRenderer}
+     
      */
     setScrollMargin(top, bottom, left, right) {
         var sm = this.scrollMargin;
@@ -816,7 +795,7 @@ class VirtualRenderer {
      * @param {number} [bottom]
      * @param {number} [left]
      * @param {number} [right]
-     * @this {IVirtualRenderer}
+     
      */
     setMargin(top, bottom, left, right) {
         var sm = this.margin;
@@ -833,7 +812,7 @@ class VirtualRenderer {
     /**
      * Returns whether the horizontal scrollbar is set to be always visible.
      * @returns {Boolean}
-     * @this {IVirtualRenderer}
+     
      **/
     getHScrollBarAlwaysVisible() {
         return this.$hScrollBarAlwaysVisible;
@@ -842,7 +821,7 @@ class VirtualRenderer {
     /**
      * Identifies whether you want to show the horizontal scrollbar or not.
      * @param {Boolean} alwaysVisible Set to `true` to make the horizontal scroll bar visible
-     * @this {IVirtualRenderer}
+     
      **/
     setHScrollBarAlwaysVisible(alwaysVisible) {
         this.setOption("hScrollBarAlwaysVisible", alwaysVisible);
@@ -850,7 +829,7 @@ class VirtualRenderer {
     /**
      * Returns whether the horizontal scrollbar is set to be always visible.
      * @returns {Boolean}
-     * @this {IVirtualRenderer}
+     
      **/
     getVScrollBarAlwaysVisible() {
         return this.$vScrollBarAlwaysVisible;
@@ -859,14 +838,13 @@ class VirtualRenderer {
     /**
      * Identifies whether you want to show the horizontal scrollbar or not.
      * @param {Boolean} alwaysVisible Set to `true` to make the horizontal scroll bar visible
-     @this {IVirtualRenderer}
      **/
     setVScrollBarAlwaysVisible(alwaysVisible) {
         this.setOption("vScrollBarAlwaysVisible", alwaysVisible);
     }
 
     /**
-     * @this {IVirtualRenderer}
+     
      */
     $updateScrollBarV() {
         var scrollHeight = this.layerConfig.maxHeight;
@@ -899,7 +877,7 @@ class VirtualRenderer {
      * @param {number} changes
      * @param {boolean} [force]
      * @returns {number}
-     * @this {IVirtualRenderer}
+     
      */
     $renderChanges(changes, force) {
         if (this.$changes) {
@@ -1062,7 +1040,7 @@ class VirtualRenderer {
     }
 
     /**
-     * @this {IVirtualRenderer}
+     
      */
     $autosize() {
         var height = this.session.getScreenLength() * this.lineHeight;
@@ -1096,7 +1074,7 @@ class VirtualRenderer {
     }
 
     /**
-     * @this {IVirtualRenderer}
+     
      * @returns {number}
      */
     $computeLayerConfig() {
@@ -1207,7 +1185,7 @@ class VirtualRenderer {
 
     /**
      * @returns {boolean | undefined}
-     * @this {IVirtualRenderer}
+     
      */
     $updateLines() {
         if (!this.$changedLines) return;
@@ -1236,7 +1214,7 @@ class VirtualRenderer {
     /**
      * 
      * @returns {number}
-     * @this {IVirtualRenderer}
+     
      */
     $getLongestLine() {
         var charCount = this.session.getScreenWidth();
@@ -1486,7 +1464,7 @@ class VirtualRenderer {
      * @param {Boolean} center If `true`, centers the editor the to indicated line
      * @param {Boolean} animate If `true` animates scrolling
      * @param {() => void} [callback] Function to be called after the animation has finished
-     * @this {IVirtualRenderer}
+     
      **/
     scrollToLine(line, center, animate, callback) {
         var pos = this.$cursorLayer.getPixelPosition({row: line, column: 0});
@@ -1504,7 +1482,7 @@ class VirtualRenderer {
      * 
      * @param fromValue
      * @param [callback]
-     * @this {IVirtualRenderer}
+     
      */
     animateScrolling(fromValue, callback) {
         var toValue = this.scrollTop;
@@ -1631,7 +1609,7 @@ class VirtualRenderer {
      * @param {number} x
      * @param {number} y
      * @returns {import("../ace").Ace.ScreenCoordinates}
-     * @this {IVirtualRenderer}
+     
      */
     pixelToScreenCoordinates(x, y) {
         var canvasPos;
@@ -1657,7 +1635,7 @@ class VirtualRenderer {
      * @param {number} x
      * @param {number} y
      * @returns {import("../ace").Ace.Point}
-     * @this {IVirtualRenderer}
+     
      */
     screenToTextCoordinates(x, y) {
         var canvasPos;
@@ -1720,7 +1698,7 @@ class VirtualRenderer {
 
     /**
      * @param {Object} composition
-     * @this {IVirtualRenderer}
+     
      **/
     showComposition(composition) {
         this.$composition = composition;
@@ -1745,7 +1723,7 @@ class VirtualRenderer {
      * @param {String} text A string of text to use
      *
      * Sets the inner text of the current composition to `text`.
-     * @this {IVirtualRenderer}
+     
      **/
     setCompositionText(text) {
         var cursor = this.session.selection.cursor;
@@ -1756,7 +1734,7 @@ class VirtualRenderer {
     /**
      *
      * Hides the current composition.
-     * @this {IVirtualRenderer}
+     
      **/
     hideComposition() {
         if (!this.$composition)
@@ -1856,7 +1834,7 @@ class VirtualRenderer {
      * [Sets a new theme for the editor. `theme` should exist, and be a directory path, like `ace/theme/textmate`.]{: #VirtualRenderer.setTheme}
      * @param {String | import("../ace").Ace.Theme} [theme] The path to a theme
      * @param {() => void} [cb] optional callback
-     * @this {IVirtualRenderer}
+     
      **/
     setTheme(theme, cb) {
         var _self = this;
@@ -1967,7 +1945,7 @@ class VirtualRenderer {
 
     /**
      * Destroys the text and cursor layers for this renderer.
-     * @this {IVirtualRenderer}
+     
      **/
     destroy() {
         this.freeze();
@@ -2024,7 +2002,7 @@ class VirtualRenderer {
     }
 
     /**
-     * @this {IVirtualRenderer}
+     
      */
     $addResizeObserver() {
         if (!window.ResizeObserver || this.$resizeObserver) return;
@@ -2071,7 +2049,7 @@ config.defineOptions(VirtualRenderer.prototype, "renderer", {
     useResizeObserver: {
         /**
          * @param value
-         * @this {IVirtualRenderer}
+         
          */
         set: function(value) {
             if (!value && this.$resizeObserver) {
@@ -2102,7 +2080,7 @@ config.defineOptions(VirtualRenderer.prototype, "renderer", {
     printMargin: {
         /**
          * @param val
-         * @this {IVirtualRenderer}
+         
          */
         set: function(val) {
             if (typeof val == "number")
@@ -2209,7 +2187,7 @@ config.defineOptions(VirtualRenderer.prototype, "renderer", {
     minLines: {
         /**
          * @param val
-         * @this {IVirtualRenderer}
+         
          */
         set: function(val) {
             if (!(this.$minLines < 0x1ffffffffffff))
@@ -2226,7 +2204,7 @@ config.defineOptions(VirtualRenderer.prototype, "renderer", {
     scrollPastEnd: {
         /**
          * @param val
-         * @this {IVirtualRenderer}
+         
          */
         set: function(val) {
             val = +val || 0;

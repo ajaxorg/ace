@@ -1,21 +1,11 @@
 "use strict";
 
 /**
- * 
- * @typedef IEditSession
- * @type {import("./edit_session").IEditSession}
+ * @typedef VirtualRenderer
+ * @type {import("./virtual_renderer").VirtualRenderer}
  */
 /**
- * @typedef IVirtualRenderer
- * @type {import("./virtual_renderer").IVirtualRenderer}
- */
-/**
- * @typedef ISelection
- * @type {import("./selection").ISelection}
- */
-/**
- * @typedef ICommandManager
- * @type {import("./commands/command_manager").ICommandManager}
+ * @typedef {import("./selection").Selection} Selection
  */
 
 var oop = require("./lib/oop");
@@ -30,7 +20,7 @@ var EditSession = require("./edit_session").EditSession;
 var Search = require("./search").Search;
 var Range = require("./range").Range;
 var EventEmitter = require("./lib/event_emitter").EventEmitter;
-/** @type {any} */var CommandManager = require("./commands/command_manager").CommandManager;
+var CommandManager = require("./commands/command_manager").CommandManager;
 var defaultCommands = require("./commands/default_commands").commands;
 var config = require("./config");
 var TokenIterator = require("./token_iterator").TokenIterator;
@@ -53,15 +43,13 @@ class Editor {
     /**
      * Creates a new `Editor` object.
      *
-     * @param {IVirtualRenderer} renderer Associated `VirtualRenderer` that draws everything
-     * @param {IEditSession} [session] The `EditSession` to refer to
+     * @param {VirtualRenderer} renderer Associated `VirtualRenderer` that draws everything
+     * @param {EditSession} [session] The `EditSession` to refer to
      * @param {Object} [options] The default options
      **/
     constructor(renderer, session, options) {
-        /**
-         * @type {IEditSession}
-         */
-        this.session;
+        /**@type{EditSession}*/this.session;
+        
         this.$toDestroy = [];
         
         var container = renderer.getContainerElement();
@@ -70,16 +58,13 @@ class Editor {
          */
         this.container = container;
         /**
-         * @type {IVirtualRenderer}
+         * @type {VirtualRenderer}
          */
         this.renderer = renderer;
         /**
          * @type {string}
          */
         this.id = "editor" + (++Editor.$uid);
-        /**
-         * @type {ICommandManager}
-         */
         this.commands = new CommandManager(useragent.isMac ? "mac" : "win", defaultCommands);
         if (typeof document == "object") {
             this.textInput = new TextInput(renderer.getTextAreaContainer(), this);
@@ -293,7 +278,7 @@ class Editor {
    
     /**
      * Sets a new editsession to use. This method also emits the `'changeSession'` event.
-     * @param {IEditSession} [session] The new session to use
+     * @param {EditSession} [session] The new session to use
      **/
     setSession(session) {
         if (this.session == session)
@@ -410,7 +395,7 @@ class Editor {
 
     /**
      * Returns the current session being used.
-     * @returns {IEditSession}
+     * @returns {EditSession}
      **/
     getSession() {
         return this.session;
@@ -450,7 +435,7 @@ class Editor {
     /**
      *
      * Returns the currently highlighted selection.
-     * @returns {ISelection} The selection object
+     * @returns {Selection} The selection object
      **/
     getSelection() {
         return this.selection;
@@ -1924,6 +1909,7 @@ class Editor {
             selection.fromOrientedRange(range);
         } else {
             var ranges = selection.rangeList.ranges;
+            // @ts-expect-error TODO: possible bug, no args in parameters
             selection.rangeList.detach(this.session);
             this.inVirtualSelectionMode = true;
             

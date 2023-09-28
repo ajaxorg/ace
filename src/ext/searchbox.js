@@ -1,7 +1,6 @@
 "use strict";
 /**
- * @typedef IEditor
- * @type {import("../editor").IEditor}
+ * @typedef {import("../editor").Editor} Editor
  */
 var dom = require("../lib/dom");
 var lang = require("../lib/lang");
@@ -17,7 +16,7 @@ dom.importCssString(searchboxCss, "ace_searchbox", false);
 
 class SearchBox {
     /**
-     * @param {IEditor} editor
+     * @param {Editor} editor
      * @param {undefined} [range]
      * @param {undefined} [showReplaceForm]
      */
@@ -63,13 +62,13 @@ class SearchBox {
     }
 
     /**
-     * @param {IEditor} editor
+     * @param {Editor} editor
      */
     setEditor(editor) {
         editor.searchBox = this;
         editor.renderer.scroller.appendChild(this.element);
         /**
-         * @type {IEditor}
+         * @type {Editor}
          */
         this.editor = editor;
     }
@@ -143,7 +142,6 @@ class SearchBox {
             if (action && _this[action])
                 _this[action]();
             else if (_this.$searchBarKb.commands[action])
-                // @ts-expect-error this could be different command type
                 _this.$searchBarKb.commands[action].exec(_this);
             event.stopPropagation(e);
         });
@@ -152,7 +150,6 @@ class SearchBox {
             var keyString = keyUtil.keyCodeToString(keyCode);
             var command = _this.$searchBarKb.findKeyCommand(hashId, keyString);
             if (command && command.exec) {
-                // @ts-expect-error this could be different command type
                 command.exec(_this);
                 event.stopEvent(e);
             }
@@ -437,7 +434,7 @@ exports.SearchBox = SearchBox;
 
 /**
  * 
- * @param {IEditor} editor
+ * @param {Editor} editor
  * @param {boolean} [isReplace]
  */
 exports.Search = function(editor, isReplace) {

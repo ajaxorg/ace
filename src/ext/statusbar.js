@@ -1,8 +1,7 @@
 "use strict";
 /**
  *
- * @typedef IEditor
- * @type {import("../editor").IEditor}
+ * @typedef {import("../editor").Editor} Editor
  */
 var dom = require("../lib/dom");
 var lang = require("../lib/lang");
@@ -10,7 +9,7 @@ var lang = require("../lib/lang");
 /** simple statusbar **/
 class StatusBar{
     /**
-     * @param {IEditor} editor
+     * @param {Editor} editor
      * @param {HTMLElement} parentNode
      */
     constructor(editor, parentNode) {
@@ -29,7 +28,7 @@ class StatusBar{
     }
 
     /**
-     * @param {IEditor} editor
+     * @param {Editor} editor
      */
     updateStatus(editor) {
         var status = [];

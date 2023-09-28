@@ -211,14 +211,10 @@ var optionGroups = {
     }
 };
 
-/**
- * @typedef IOptionPanel
- * @type {OptionPanel & import("../../ace").Ace.EventEmitter}
- */
 class OptionPanel {
     /**
      * 
-     * @param {import("../editor").IEditor} editor
+     * @param {import("../editor").Editor} editor
      * @param {HTMLElement} [element]
      */
     constructor(editor, element) {
@@ -267,7 +263,6 @@ class OptionPanel {
     /**
      * @param {string} key
      * @param {Object} option
-     * @this {IOptionPanel}
      */
     renderOptionControl(key, option) {
         var self = this;
@@ -362,7 +357,6 @@ class OptionPanel {
      * 
      * @param key
      * @param option
-     * @this {IOptionPanel}
      */
     renderOption(key, option) {
         if (option.path && !option.onchange && !this.editor.$options[option.path])
@@ -380,7 +374,6 @@ class OptionPanel {
     /**
      * @param {string | number | Object} option
      * @param {string | number | boolean} value
-     * @this {IOptionPanel}
      */
     setOption(option, value) {
         if (typeof option == "string")

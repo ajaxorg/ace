@@ -5,47 +5,35 @@ var lang = require("./lib/lang");
 var EventEmitter = require("./lib/event_emitter").EventEmitter;
 var Range = require("./range").Range;
 /**
- * @typedef ISelection
- * @type {Selection & import("../ace").Ace.ISelection & import("../ace").Ace.EventEmitter<import("../ace").Ace.SelectionEvents>}
- * @export
+ * @typedef {import("./edit_session").EditSession} EditSession
  */
 /**
- * @typedef IEditSession
- * @type {import("./edit_session").IEditSession}
- */
-/**
- * @typedef IDocument
- * @type {import("./document").IDocument}
- */
-/**
- * @typedef IAnchor
- * @type {import("./anchor").IAnchor}
+ * @typedef {import("./anchor").Anchor} Anchor
  */
 
 class Selection {
     /**
      * Creates a new `Selection` object.
-     * @param {IEditSession} session The session to use
-     * @this {ISelection}
+     * @param {EditSession} session The session to use
      * @constructor
      **/
     constructor(session) {
         /**
-         * @type {IEditSession}
+         * @type {EditSession}
          */
         this.session = session;
         /**
-         * @type {IDocument}
+         * @type {import("./document").Document}
          */
         this.doc = session.getDocument();
     
         this.clearSelection();
         /**
-         * @type {IAnchor}
+         * @type {Anchor}
          */
         this.cursor = this.lead = this.doc.createAnchor(0, 0);
         /**
-         * @type {IAnchor}
+         * @type {Anchor}
          */
         this.anchor = this.doc.createAnchor(0, 0);
         this.$silent = false;
@@ -157,7 +145,6 @@ class Selection {
 
     /**
      * [Empties the selection (by de-selecting it). This function also emits the `'changeSelection'` event.]{: #Selection.clearSelection}
-     * @this {ISelection}
      **/
     clearSelection() {
         if (!this.$isEmpty) {
@@ -168,7 +155,6 @@ class Selection {
 
     /**
      * Selects all the text in the document.
-     * @this {ISelection}
      **/
     selectAll() {
         this.$setSelection(0, 0, Number.MAX_VALUE, Number.MAX_VALUE);
@@ -178,7 +164,6 @@ class Selection {
      * Sets the selection to the provided range.
      * @param {import("../ace").Ace.IRange} range The range of text to select
      * @param {Boolean} [reverse] Indicates if the range should go backwards (`true`) or not
-     * @this {ISelection}
      **/
     setRange(range, reverse) {
         var start = reverse ? range.end : range.start;
@@ -191,7 +176,6 @@ class Selection {
      * @param {number} anchorColumn
      * @param {number} cursorRow
      * @param {number} cursorColumn
-     * @this {ISelection}
      */
     $setSelection(anchorRow, anchorColumn, cursorRow, cursorColumn) {
         if (this.$silent)
@@ -243,7 +227,6 @@ class Selection {
      * Moves the selection cursor to the indicated row and column.
      * @param {Number} row The row to select to
      * @param {Number} column The column to select to
-     * @this {ISelection}
      **/
     moveTo(row, column) {
         this.clearSelection();
@@ -253,7 +236,6 @@ class Selection {
     /**
      * Moves the selection cursor to the row and column indicated by `pos`.
      * @param {Object} pos An object containing the row and column
-     * @this {ISelection}
      **/
     moveToPosition(pos) {
         this.clearSelection();
@@ -346,7 +328,6 @@ class Selection {
 
     /**
      * Selects an entire word boundary.
-     * @this {ISelection}
      **/
     selectWord() {
         this.setSelectionRange(this.getWordRange());
@@ -355,7 +336,6 @@ class Selection {
     /**
      * Selects a word, including its right whitespace.
      * @related EditSession.getAWordRange
-     * @this {ISelection}
      **/
     selectAWord() {
         var cursor = this.getCursor();
@@ -382,7 +362,6 @@ class Selection {
 
     /**
      * Selects the entire line.
-     * @this {ISelection}
      **/
     selectLine() {
         this.setSelectionRange(this.getLineRange());
@@ -390,7 +369,6 @@ class Selection {
 
     /**
      * Moves the cursor up one row.
-     * @this {ISelection}
      **/
     moveCursorUp() {
         this.moveCursorBy(-1, 0);
@@ -398,7 +376,6 @@ class Selection {
 
     /**
      * Moves the cursor down one row.
-     * @this {ISelection}
      **/
     moveCursorDown() {
         this.moveCursorBy(1, 0);
@@ -424,7 +401,6 @@ class Selection {
 
     /**
      * Moves the cursor left one column.
-     * @this {ISelection}
      **/
     moveCursorLeft() {
         var cursor = this.lead.getPosition(),
@@ -450,7 +426,6 @@ class Selection {
 
     /**
      * Moves the cursor right one column.
-     * @this {ISelection}
      **/
     moveCursorRight() {
         var cursor = this.lead.getPosition(),
@@ -479,7 +454,6 @@ class Selection {
 
     /**
      * Moves the cursor to the start of the line.
-     * @this {ISelection}
      **/
     moveCursorLineStart() {
         var row = this.lead.row;
@@ -504,7 +478,6 @@ class Selection {
 
     /**
      * Moves the cursor to the end of the line.
-     * @this {ISelection}
      **/
     moveCursorLineEnd() {
         var lead = this.lead;
@@ -523,7 +496,6 @@ class Selection {
 
     /**
      * Moves the cursor to the end of the file.
-     * @this {ISelection}
      **/
     moveCursorFileEnd() {
         var row = this.doc.getLength() - 1;
@@ -533,7 +505,6 @@ class Selection {
 
     /**
      * Moves the cursor to the start of the file.
-     * @this {ISelection}
      **/
     moveCursorFileStart() {
         this.moveCursorTo(0, 0);
@@ -541,7 +512,6 @@ class Selection {
 
     /**
      * Moves the cursor to the word on the right.
-     * @this {ISelection}
      **/
     moveCursorLongWordRight() {
         var row = this.lead.row;
@@ -587,7 +557,6 @@ class Selection {
     /**
     *
     * Moves the cursor to the word on the left.
-     * @this {ISelection}
     **/
     moveCursorLongWordLeft() {
         var row = this.lead.row;
@@ -670,9 +639,6 @@ class Selection {
         return index;
     }
 
-    /**
-     * @this {ISelection}
-     */
     moveCursorShortWordRight() {
         var row = this.lead.row;
         var column = this.lead.column;
@@ -700,9 +666,6 @@ class Selection {
         this.moveCursorTo(row, column + index);
     }
 
-    /**
-     * @this {ISelection}
-     */
     moveCursorShortWordLeft() {
         var row = this.lead.row;
         var column = this.lead.column;
@@ -729,9 +692,6 @@ class Selection {
         return this.moveCursorTo(row, column - index);
     }
 
-    /**
-     * @this {ISelection}
-     */
     moveCursorWordRight() {
         if (this.session.$selectLongWords)
             this.moveCursorLongWordRight();
@@ -739,9 +699,6 @@ class Selection {
             this.moveCursorShortWordRight();
     }
 
-    /**
-     * @this {ISelection}
-     */
     moveCursorWordLeft() {
         if (this.session.$selectLongWords)
             this.moveCursorLongWordLeft();
@@ -755,7 +712,6 @@ class Selection {
      * @param {Number} chars The number of characters to move by
      *
      * @related EditSession.documentToScreenPosition
-     * @this {ISelection}
      **/
     moveCursorBy(rows, chars) {
         var screenPos = this.session.documentToScreenPosition(
@@ -802,7 +758,6 @@ class Selection {
     /**
      * Moves the selection to the position indicated by its `row` and `column`.
      * @param {import("../ace").Ace.Point} position The position to move to
-     * @this {ISelection}
      **/
     moveCursorToPosition(position) {
         this.moveCursorTo(position.row, position.column);
@@ -813,7 +768,6 @@ class Selection {
      * @param {Number} row The row to move to
      * @param {Number} column The column to move to
      * @param {Boolean} [keepDesiredColumn] [If `true`, the cursor move does not respect the previous column]{: #preventUpdateBool}
-     * @this {ISelection}
      **/
     moveCursorTo(row, column, keepDesiredColumn) {
         // Ensure the row/column is not inside of a fold.
@@ -844,7 +798,6 @@ class Selection {
      * @param {Number} row The row to move to
      * @param {Number} column The column to move to
      * @param {Boolean} keepDesiredColumn {:preventUpdateBool}
-     * @this {ISelection}
      **/
     moveCursorToScreen(row, column, keepDesiredColumn) {
         var pos = this.session.screenToDocumentPosition(row, column);
@@ -859,7 +812,6 @@ class Selection {
 
     /**
      * @param {Range & {desiredColumn?: number}} range
-     * @this {ISelection}
      */
     fromOrientedRange(range) {
         this.setSelectionRange(range, range.cursor == range.start);
@@ -891,7 +843,6 @@ class Selection {
      * Will reset the cursor position.
      * @param {Function} func The callback that should change the cursor position
      * @returns {Range}
-     * @this {ISelection}
      **/
     getRangeOfMovements(func) {
         var start = this.getCursor();
@@ -909,18 +860,16 @@ class Selection {
     /**
      * 
      * @returns {Range|Range[]}
-     * @this {ISelection}
      */
     toJSON() {
         if (this.rangeCount) {
-            var data = this.ranges.map(function(r) {
+            /**@type{Range|Range[]}*/var data = this.ranges.map(function(r) {
                 var r1 = r.clone();
                 r1.isBackwards = r.cursor == r.start;
                 return r1;
             });
         } else {
-            // @ts-ignore
-            var data = this.getRange();
+            /**@type{Range|Range[]}*/var data = this.getRange();
             data.isBackwards = this.isBackwards();
         }
         return data;
@@ -929,7 +878,6 @@ class Selection {
     /**
      * 
      * @param data
-     * @this {ISelection}
      */
     fromJSON(data) {
         if (data.start == undefined) {
@@ -955,7 +903,6 @@ class Selection {
      * 
      * @param data
      * @return {Boolean|boolean|*|boolean}
-     * @this {ISelection}
      */
     isEqual(data) {
         if ((data.length || this.rangeCount) && data.length != this.rangeCount)

@@ -1,9 +1,4 @@
 "no use strict";
-/**
- * @typedef IAppConfig
- * @type {AppConfig & import("../../ace").Ace.EventEmitter}
- * @export
- */
 var oop = require("./oop");
 var EventEmitter = require("./event_emitter").EventEmitter;
 const reportError = require("./report_error").reportError;
@@ -63,9 +58,6 @@ function warn(message) {
 
 var messages;
 
-/**
- * @type {IAppConfig}
- */
 class AppConfig {
     constructor() {
         this.$defaultOptions = {};
@@ -75,8 +67,7 @@ class AppConfig {
      * @param {Object} obj
      * @param {string} path
      * @param {{ [key: string]: any }} options
-     * @returns {IAppConfig}
-     * @this {IAppConfig}
+     * @returns {AppConfig}
      */
     defineOptions(obj, path, options) {
         if (!obj.$options)

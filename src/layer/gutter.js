@@ -1,8 +1,4 @@
 "use strict";
-/**
- * @typedef IGutter
- * @type {Gutter & import("../../ace").Ace.EventEmitter<import("../../ace").Ace.GutterEvents> & {[key: string]: any}}}
- */
 var dom = require("../lib/dom");
 var oop = require("../lib/oop");
 var lang = require("../lib/lang");
@@ -30,7 +26,7 @@ class Gutter{
     }
 
     /**
-     * @param {import("../edit_session").IEditSession} session
+     * @param {import("../edit_session").EditSession} session
      */
     setSession(session) {
         if (this.session)
@@ -115,7 +111,6 @@ class Gutter{
 
     /**
      * @param {import("../../ace").Ace.LayerConfig} config
-     * @this {IGutter}
      */
     update(config) {
         this.config = config;
@@ -169,7 +164,6 @@ class Gutter{
 
     /**
      * @param {import("../../ace").Ace.LayerConfig} config
-     * @this {IGutter}
      */
     $updateGutterWidth(config) {
         var session = this.session;
@@ -238,7 +232,6 @@ class Gutter{
 
     /**
      * @param {import("../../ace").Ace.LayerConfig} config
-     * @this {IGutter}
      */
     scrollLines(config) {
         var oldConfig = this.config;
@@ -287,7 +280,6 @@ class Gutter{
      * @param {import("../../ace").Ace.LayerConfig} config
      * @param {number} firstRow
      * @param {number} lastRow
-     * @this {IGutter}
      */
     $renderLines(config, firstRow, lastRow) {
         var fragment = [];
@@ -319,7 +311,6 @@ class Gutter{
      * @param {import("../../ace").Ace.LayerConfig} config
      * @param {import("../../ace").Ace.IRange | undefined} fold
      * @param {number} row
-     * @this {IGutter}
      */
     $renderCell(cell, config, fold, row) {
         var element = cell.element;

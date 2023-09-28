@@ -2,7 +2,7 @@
 
 class ElasticTabstopsLite {
     /**
-     * @param {import("../editor").IEditor} editor
+     * @param {import("../editor").Editor} editor
      */
     constructor(editor) {
         this.$editor = editor;
@@ -310,7 +310,7 @@ require("../config").defineOptions(Editor.prototype, "editor", {
     useElasticTabstops: {
         /**
          * @param {boolean} val
-         * @this {import("../editor").IEditor}
+         * @this {import("../editor").Editor}
          */
         set: function(val) {
             if (val) {

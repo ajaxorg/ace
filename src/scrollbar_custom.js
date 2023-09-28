@@ -105,7 +105,6 @@ class VScrollBar extends ScrollBar {
     
     /**
      * Emitted when the scroll thumb dragged or scrollbar canvas clicked.
-     * @this {VScrollBar & import("../ace").Ace.EventEmitter}
      **/
     onMouseDown(eType, e) {
         if (eType !== "mousedown") return;
@@ -176,7 +175,6 @@ class VScrollBar extends ScrollBar {
     /**
      * Sets the height of the scroll bar, in pixels.
      * @param {Number} height The new height
-     * @this {VScrollBar & import("../ace").Ace.EventEmitter}
      **/
     setHeight(height) {
         this.height = Math.max(0, height);
@@ -191,7 +189,6 @@ class VScrollBar extends ScrollBar {
      * @param {Number} height The new inner height
      *
      * @param {boolean} force Forcely update height
-     * @this {VScrollBar & import("../ace").Ace.EventEmitter}
      **/
     setScrollHeight(height, force) {
         if (this.pageHeight === height && !force) return;
@@ -244,7 +241,6 @@ class HScrollBar extends ScrollBar {
     
     /**
      * Emitted when the scroll thumb dragged or scrollbar canvas clicked.
-     * @this {HScrollBar & import("../ace").Ace.EventEmitter}
      **/
     onMouseDown(eType, e) {
         if (eType !== "mousedown") return;
@@ -313,7 +309,6 @@ class HScrollBar extends ScrollBar {
     /**
      * Sets the width of the scroll bar, in pixels.
      * @param {Number} width The new width
-     * @this {HScrollBar & import("../ace").Ace.EventEmitter}
      **/
     setWidth(width) {
         this.width = Math.max(0, width);
@@ -328,7 +323,6 @@ class HScrollBar extends ScrollBar {
      * Sets the inner and scroll width of the scroll bar, in pixels.
      * @param {Number} width The new inner width
      * @param {boolean} force Forcely update width
-     * @this {HScrollBar & import("../ace").Ace.EventEmitter}
      **/
      setScrollWidth(width, force) {
         if (this.pageWidth === width && !force) return;

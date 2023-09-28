@@ -1,12 +1,12 @@
 "use strict";
 /**
- * @typedef {import("./edit_session").IEditSession} IEditSession
+ * @typedef {import("./edit_session").EditSession} EditSession
  */
 /**
- * @typedef {import("./editor").IEditor} IEditor
+ * @typedef {import("./editor").Editor} Editor
  */
 /**
- * @typedef {import("./virtual_renderer").IVirtualRenderer} IVirtualRenderer
+ * @typedef {import("./virtual_renderer").VirtualRenderer} VirtualRenderer
  */
 
 var dom = require("./lib/dom");
@@ -14,18 +14,9 @@ var dom = require("./lib/dom");
 
 class LineWidgets {
     /**
-     * @param {IEditSession} session
+     * @param {EditSession} session
      */
     constructor(session) {
-        /**
-         * @type {import("../ace").Ace.LineWidget[]}
-         */
-        this.lineWidgets;
-        /**
-         * @type {IEditor}
-         */
-        this.editor;
-        
         this.session = session;
         this.session.widgetManager = this;
         this.session.getRowLength = this.getRowLength;
@@ -76,7 +67,7 @@ class LineWidgets {
 
     /**
      * 
-     * @param {IEditor} editor
+     * @param {Editor} editor
      */
     attach(editor) {
         if (editor  && editor.widgetManager && editor.widgetManager != this)
@@ -116,7 +107,7 @@ class LineWidgets {
     /**
      * 
      * @param e
-     * @param {IEditSession} session
+     * @param {EditSession} session
      */
     updateOnFold(e, session) {
         var lineWidgets = session.lineWidgets;
@@ -334,7 +325,7 @@ class LineWidgets {
 
     /**
      * @param {any} e
-     * @param {IVirtualRenderer} renderer
+     * @param {VirtualRenderer} renderer
      */
     measureWidgets(e, renderer) {
         var changedWidgets = this.session._changedWidgets;
@@ -381,7 +372,7 @@ class LineWidgets {
 
     /**
      * @param {any} e
-     * @param {IVirtualRenderer} renderer
+     * @param {VirtualRenderer} renderer
      */
     renderWidgets(e, renderer) {
         var config = renderer.layerConfig;

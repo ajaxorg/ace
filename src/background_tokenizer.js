@@ -1,23 +1,12 @@
 "use strict";
 /**
- * @typedef IDocument
- * @type {import("./document").IDocument}
+ * @typedef {import("./document").Document} Document
  */
 /**
- * @typedef IEditor
- * @type {import("./editor").IEditor}
- */
-/**
- * @typedef ITokenizer
- * @type {import("./tokenizer").Tokenizer}
- */
-/**
- * @typedef IBackgroundTokenizer
- * @type {BackgroundTokenizer & import("../ace").Ace.EventEmitter<import("../ace").Ace.BackgroundTokenizerEvents>}
+ * @typedef {import("./editor").Editor} Editor
  */
 var oop = require("./lib/oop");
 var EventEmitter = require("./lib/event_emitter").EventEmitter;
-
 
 /**
  * Tokenizes the current [[Document `Document`]] in the background, and caches the tokenized rows for future use. 
@@ -28,9 +17,8 @@ class BackgroundTokenizer {
     
     /**
      * Creates a new `BackgroundTokenizer` object.
-     * @param {ITokenizer} tokenizer The tokenizer to use
-     * @param {IEditor} [editor] The editor to associate with
-     * @this {IBackgroundTokenizer}
+     * @param {import("./tokenizer").Tokenizer} tokenizer The tokenizer to use
+     * @param {any} [editor] The editor to associate with
      **/
     constructor(tokenizer, editor) {
         /**
@@ -86,7 +74,7 @@ class BackgroundTokenizer {
     
     /**
      * Sets a new tokenizer for this object.
-     * @param {ITokenizer} tokenizer The new tokenizer to use
+     * @param {import("./tokenizer").Tokenizer} tokenizer The new tokenizer to use
      **/
     setTokenizer(tokenizer) {
         this.tokenizer = tokenizer;
@@ -98,7 +86,7 @@ class BackgroundTokenizer {
 
     /**
      * Sets a new document to associate with this object.
-     * @param {IDocument} doc The new document to associate with
+     * @param {Document} doc The new document to associate with
      **/
     setDocument(doc) {
         this.doc = doc;
@@ -113,7 +101,6 @@ class BackgroundTokenizer {
      * Emits the `'update'` event. `firstRow` and `lastRow` are used to define the boundaries of the region to be updated.
      * @param {Number} firstRow The starting row region
      * @param {Number} lastRow The final row region
-     * @this {IBackgroundTokenizer}
      **/
     fireUpdateEvent(firstRow, lastRow) {
         var data = {
@@ -221,9 +208,6 @@ class BackgroundTokenizer {
         return this.lines[row] = data.tokens;
     }
 
-    /**
-     * @this {IBackgroundTokenizer}
-     */
     cleanup() {
         this.running = false;
         this.lines = [];

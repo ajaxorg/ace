@@ -1,6 +1,6 @@
 "use strict";
 /**
- * @typedef {import("./mouse_handler").IMouseHandler} IMouseHandler
+ * @typedef {import("./mouse_handler").MouseHandler} MouseHandler
  */
 var dom = require("../lib/dom");
 var event = require("../lib/event");
@@ -12,9 +12,9 @@ var SCROLL_CURSOR_HYSTERESIS = 5;
 
 /**
  * 
- * @param {IMouseHandler} mouseHandler
+ * @param {MouseHandler} mouseHandler
  * @constructor
- * @this {IMouseHandler}
+ * @this {MouseHandler}
  */
 function DragdropHandler(mouseHandler) {
 
@@ -300,12 +300,12 @@ function DragdropHandler(mouseHandler) {
 }
 
 /**
- * @this {IMouseHandler}
+ * @this {MouseHandler}
  */
 (function() {
 
     /**
-     * @this {IMouseHandler & this}
+     * @this {MouseHandler & this}
      */
     this.dragWait = function() {
         var interval = Date.now() - this.mousedownEvent.time;
@@ -314,7 +314,7 @@ function DragdropHandler(mouseHandler) {
     };
 
     /**
-     * @this {IMouseHandler & this}
+     * @this {MouseHandler & this}
      */
     this.dragWaitEnd = function() {
         var target = this.editor.container;
@@ -324,7 +324,7 @@ function DragdropHandler(mouseHandler) {
     };
 
     /**
-     * @this {IMouseHandler & this}
+     * @this {MouseHandler & this}
      */
     this.dragReadyEnd = function(e) {
         this.editor.$resetCursorStyle();
@@ -334,7 +334,7 @@ function DragdropHandler(mouseHandler) {
     };
 
     /**
-     * @this {IMouseHandler & this}
+     * @this {MouseHandler & this}
      */
     this.startDrag = function(){
         this.cancelDrag = false;
@@ -349,7 +349,7 @@ function DragdropHandler(mouseHandler) {
     };
 
     /**
-     * @this {IMouseHandler & this}
+     * @this {MouseHandler & this}
      */
     this.onMouseDrag = function(e) {
         var target = this.editor.container;
@@ -370,7 +370,7 @@ function DragdropHandler(mouseHandler) {
     };
 
     /**
-     * @this {IMouseHandler & this}
+     * @this {MouseHandler & this}
      */
     this.onMouseDown = function(e) {
         if (!this.$dragEnabled)

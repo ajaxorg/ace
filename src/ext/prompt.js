@@ -1,6 +1,5 @@
 /**
- * @typedef IEditor
- * @type {import("../editor").IEditor}
+ * @typedef {import("../editor").Editor} Editor
  */
 
 
@@ -10,9 +9,6 @@ var nls = require("../config").nls;
 var Range = require("../range").Range;
 var dom = require("../lib/dom");
 var FilteredList= require("../autocomplete").FilteredList;
-/**
- * @type {any}
- */
 var AcePopup = require('../autocomplete/popup').AcePopup;
 var $singleLineEditor = require('../autocomplete/popup').$singleLineEditor;
 var UndoManager = require("../undomanager").UndoManager;
@@ -44,7 +40,7 @@ var openPrompt;
 /**
  * Prompt plugin is used for getting input from user.
  *
- * @param {IEditor} editor                   Ouside editor related to this prompt. Will be blurred when prompt is open.
+ * @param {Editor} editor                   Ouside editor related to this prompt. Will be blurred when prompt is open.
  * @param {String | Partial<PromptOptions>} message                  Predefined value of prompt input box.
  * @param {Partial<PromptOptions>} options                  Cusomizable options for this prompt.
  * @param {Function} [callback]               Function called after done.
@@ -89,9 +85,6 @@ function prompt(editor, message, options, callback) {
     }
 
     if (options.getCompletions) {
-        /**
-         * @type {import("../autocomplete/popup").IAcePopup}
-         */
         var popup = new AcePopup();
         popup.renderer.setStyle("ace_autocomplete_inline");
         popup.container.style.display = "block";
@@ -220,7 +213,7 @@ function prompt(editor, message, options, callback) {
 
 /**
  * 
- * @param {IEditor} editor
+ * @param {Editor} editor
  * @param {Function} [callback]
  */
 prompt.gotoLine = function(editor, callback) {
@@ -332,7 +325,7 @@ prompt.gotoLine = function(editor, callback) {
 
 /**
  * 
- * @param {IEditor} editor
+ * @param {Editor} editor
  * @param {Function} [callback]
  */
 prompt.commands = function(editor, callback) {
@@ -467,7 +460,7 @@ prompt.commands = function(editor, callback) {
 
 /**
  *
- * @param {IEditor} editor
+ * @param {Editor} editor
  * @param {Function} [callback]
  */
 prompt.modes = function(editor, callback) {

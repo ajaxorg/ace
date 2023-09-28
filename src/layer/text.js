@@ -1,14 +1,7 @@
 "use strict";
 /**
  *
- * @typedef IEditSession
- * @type {import("../edit_session").IEditSession}
- */
-/**
- * 
- * @typedef IText
- * @type {Text & import("../../ace").Ace.EventEmitter<import("../../ace").Ace.TextEvents>}
- * @export
+ * @typedef {import("../edit_session").EditSession} EditSession
  */
 var oop = require("../lib/oop");
 var dom = require("../lib/dom");
@@ -18,9 +11,6 @@ var EventEmitter = require("../lib/event_emitter").EventEmitter;
 var nls = require("../config").nls;
 const isTextToken = require("./text_util").isTextToken;
 
-/**
- * @type {IText}
- */
 class Text {
     /**
      * @param {HTMLElement} parentEl
@@ -73,7 +63,7 @@ class Text {
         this.$fontMetrics = measure;
         this.$fontMetrics.on("changeCharacterSize",
             /**
-             * @this {IText}
+             * @this {Text}
              */
             function (e) {
                 this._signal("changeCharacterSize", e);
@@ -89,11 +79,11 @@ class Text {
     }
 
     /**
-     * @param {IEditSession} session
+     * @param {EditSession} session
      */
     setSession(session) {
         /**
-         * @type {IEditSession}
+         * @type {EditSession}
          */
         this.session = session;
         if (session)
@@ -144,7 +134,7 @@ class Text {
     $computeTabString() {
         var tabSize = this.session.getTabSize();
         this.tabSize = tabSize;
-        var tabStr = this.$tabStrings = [0];
+        /**@type{any}*/var tabStr = this.$tabStrings = [0];
         for (var i = 1; i < tabSize + 1; i++) {
             if (this.showTabs) {
                 var span = this.dom.createElement("span");
@@ -228,7 +218,7 @@ class Text {
             if (row > last)
                 break;
 
-            var lineElement = lineElements[lineElementsIdx++];
+            /**@type{any}*/var lineElement = lineElements[lineElementsIdx++];
             if (lineElement) {
                 this.dom.removeChildren(lineElement);
                 this.$renderLine(
@@ -459,7 +449,9 @@ class Text {
 
     $highlightIndentGuide() {
         if (!this.$highlightIndentGuides || !this.displayIndentGuides) return;
-
+        /**
+         * @type {{ indentLevel?: number; start?: number; end?: number; dir?: number; }}
+         **/
         this.$highlightIndentGuideMarker = {
             indentLevel: undefined,
             start: undefined,

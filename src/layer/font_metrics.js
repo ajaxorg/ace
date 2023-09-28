@@ -13,7 +13,6 @@ class FontMetrics {
 
     /**
      * @param {HTMLElement} parentEl
-     * @this {FontMetrics & import("../../ace").Ace.EventEmitter}
      */
     constructor(parentEl) {
         this.el = dom.createElement("div");
@@ -58,7 +57,6 @@ class FontMetrics {
 
     /**
      * @param size
-     * @this {FontMetrics & import("../../ace").Ace.EventEmitter}
      */
     checkForSizeChanges(size) {
         if (size === undefined)
@@ -74,9 +72,6 @@ class FontMetrics {
         }
     }
 
-    /**
-     * @this {FontMetrics & import("../../ace").Ace.EventEmitter}
-     */
     $addObserver() {
         var self = this;
         this.$observer = new window.ResizeObserver(function(e) {
@@ -87,7 +82,6 @@ class FontMetrics {
     }
 
     /**
-     * @this {FontMetrics & import("../../ace").Ace.EventEmitter}
      * @return {number}
      */
     $pollSizeChanges() {
@@ -103,7 +97,6 @@ class FontMetrics {
 
     /**
      * @param {boolean} val
-     * @this {FontMetrics & import("../../ace").Ace.EventEmitter}
      */
     setPolling(val) {
         if (val) {

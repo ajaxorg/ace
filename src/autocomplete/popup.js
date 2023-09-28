@@ -1,18 +1,5 @@
 "use strict";
-/**
- *
- * @typedef IEditor
- * @type {import("../editor").IEditor}
- */
-/**
- * @typedef IAcePopup
- * @type {IEditor & import("../../ace").Ace.AcePopupProperties & import("../../ace").Ace.EventEmitter<import("../../ace").Ace.AcePopupEvents>}
- * @export
- */
 var Renderer = require("../virtual_renderer").VirtualRenderer;
-/**
- * @type {any}
- */
 var Editor = require("../editor").Editor;
 var Range = require("../range").Range;
 var event = require("../lib/event");
@@ -27,18 +14,12 @@ var getAriaId = function (index) {
 /**
  *
  * @param {HTMLElement} [el]
- * @return {IEditor}
+ * @return {Editor}
  */
 var $singleLineEditor = function (el) {
-    /**
-     * @type {Renderer & {$maxLines?: number}}}
-     */
     var renderer = new Renderer(el);
 
     renderer.$maxLines = 4;
-    /**
-     * @type {IEditor}
-     */
     var editor = new Editor(renderer);
 
     editor.setHighlightActiveLine(false);
@@ -54,7 +35,6 @@ var $singleLineEditor = function (el) {
 
 /**
  * This object is used in some places where needed to show popups - like prompt; autocomplete etc.
- * @type {IAcePopup}
  */
 class AcePopup {
     /**
@@ -64,7 +44,7 @@ class AcePopup {
     constructor(parentNode) {
         var el = dom.createElement("div");
         /**
-         * @type {IAcePopup}
+         * @type {AcePopup}
          */
         // @ts-ignore
         var popup = $singleLineEditor(el);

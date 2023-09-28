@@ -1,6 +1,6 @@
 "use strict";
 /**
- * @typedef {import("./mouse_handler").IMouseHandler} IMouseHandler
+ * @typedef {import("./mouse_handler").MouseHandler} MouseHandler
  */
 var useragent = require("../lib/useragent");
 
@@ -9,7 +9,7 @@ var SCROLL_COOLDOWN_T = 550; // milliseconds
 
 class DefaultHandlers {
     /**
-     * @param {IMouseHandler} mouseHandler
+     * @param {MouseHandler} mouseHandler
      */
     constructor(mouseHandler) {
         mouseHandler.$clickSelection = null;
@@ -34,7 +34,7 @@ class DefaultHandlers {
 
     /**
      * @param ev
-     * @this {IMouseHandler}
+     * @this {MouseHandler}
      */
     onMouseDown(ev) {
         var inSelection = ev.inSelection();
@@ -80,7 +80,7 @@ class DefaultHandlers {
      * 
      * @param {import("../../ace").Ace.Position} [pos]
      * @param {boolean} [waitForClickSelection]
-     * @this {IMouseHandler}
+     * @this {MouseHandler}
      */
     startSelect(pos, waitForClickSelection) {
         pos = pos || this.editor.renderer.screenToTextCoordinates(this.x, this.y);
@@ -98,7 +98,7 @@ class DefaultHandlers {
     }
 
     /**
-     * @this {IMouseHandler}
+     * @this {MouseHandler}
      */
     select() {
         var anchor, editor = this.editor;
@@ -123,7 +123,7 @@ class DefaultHandlers {
 
     /**
      * @param {string | number} unitName
-     * @this {IMouseHandler}
+     * @this {MouseHandler}
      */
     extendSelectionBy(unitName) {
         var anchor, editor = this.editor;
@@ -156,7 +156,7 @@ class DefaultHandlers {
     }
 
     /**
-     * @this {IMouseHandler}
+     * @this {MouseHandler}
      */
     selectByLinesEnd() {
         this.$clickSelection = null;
@@ -164,7 +164,7 @@ class DefaultHandlers {
     }
 
     /**
-     * @this {IMouseHandler}
+     * @this {MouseHandler}
      */
     focusWait() {
         var distance = calcDistance(this.mousedownEvent.x, this.mousedownEvent.y, this.x, this.y);
@@ -176,7 +176,7 @@ class DefaultHandlers {
     
     /**
      * @param {import("./mouse_event").MouseEvent} ev
-     * @this {IMouseHandler}
+     * @this {MouseHandler}
      */
     onDoubleClick(ev) {
         var pos = ev.getDocumentPosition();
@@ -200,7 +200,7 @@ class DefaultHandlers {
 
     /**
      * @param {import("./mouse_event").MouseEvent} ev
-     * @this {IMouseHandler}
+     * @this {MouseHandler}
      */
     onTripleClick(ev) {
         var pos = ev.getDocumentPosition();
@@ -219,7 +219,7 @@ class DefaultHandlers {
 
     /**
      * @param {import("./mouse_event").MouseEvent} ev
-     * @this {IMouseHandler}
+     * @this {MouseHandler}
      */
     onQuadClick(ev) {
         var editor = this.editor;
@@ -231,7 +231,7 @@ class DefaultHandlers {
 
     /**
      * @param {import("./mouse_event").MouseEvent} ev
-     * @this {IMouseHandler}
+     * @this {MouseHandler}
      */
     onMouseWheel(ev) {
         if (ev.getAccelKey())

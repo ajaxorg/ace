@@ -11,19 +11,15 @@
  */
 
 "use strict";
-/**
- * @typedef IEditor
- * @type {import("../editor").IEditor}
- */
 
-/** @type {any} */var Editor = require("../editor").Editor;
+var Editor = require("../editor").Editor;
 
 /**
  * Generates a menu which displays the keyboard shortcuts.
  * @author <a href="mailto:matthewkastor@gmail.com">
  *  Matthew Christopher Kastor-Inare III </a><br />
  *  ☭ Hial Atropa!! ☭
- * @param {IEditor} editor An instance of the ace editor.
+ * @param {Editor} editor An instance of the ace editor.
  */
 function showKeyboardShortcuts(editor) {
     // make sure the menu isn't open already.
@@ -45,7 +41,7 @@ function showKeyboardShortcuts(editor) {
 }
 
 /**
- * @param {IEditor} editor
+ * @param {Editor} editor
  */
 module.exports.init = function (editor) {
     Editor.prototype.showKeyboardShortcuts = function () {
@@ -60,7 +56,7 @@ module.exports.init = function (editor) {
         exec:
             /**
              * 
-             * @param {IEditor} editor
+             * @param {Editor} editor
              * @param [line]
              */
             function (editor, line) {

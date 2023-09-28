@@ -23,7 +23,7 @@ exports.formatOptions = {
 
 /**
  * 
- * @param {import("../edit_session").IEditSession} session
+ * @param {import("../edit_session").EditSession} session
  */
 exports.beautify = function(session) {
     var iterator = new TokenIterator(session, 0, 0);

@@ -1,13 +1,6 @@
+// @ts-nocheck
 "use strict";
 
-/**
- * @typedef {Folding & import("../../ace").Ace.FoldingProperties} IFolding
- * @export
- */
-
-/**
- * @typedef {import("../edit_session").IEditSession} IEditSession
- */
 var Range = require("../range").Range;
 var FoldLine = require("./fold_line").FoldLine;
 var Fold = require("./fold").Fold;
@@ -15,8 +8,13 @@ var TokenIterator = require("../token_iterator").TokenIterator;
 var MouseEvent = require("../mouse/mouse_event").MouseEvent;
 
 /**
- * @export
- * @this {IEditSession}
+ * @typedef IFolding
+ * @type {import("../edit_session").EditSession & import("../../ace").Ace.Folding}
+ */
+
+/**
+ * @this {IFolding}
+ * @type {IFolding}
  */
 function Folding() {
     /**
@@ -27,7 +25,6 @@ function Folding() {
      * @param {number} column
      * @param {number} [side]
      * @return {Fold}
-     * @this {IEditSession}
      **/
     this.getFoldAt = function(row, column, side) {
         var foldLine = this.getFoldLine(row);
@@ -281,16 +278,19 @@ function Folding() {
     /**
      * Adds a new fold.
      *
-     * @param {Fold|String} placeholder
+     * @param {Fold|string} placeholder
      * @param {Range} [range]
      * @returns {Fold}
      *      The new created Fold object or an existing fold object in case the
      *      passed in range fits an existing fold exactly.
-     * @this {IEditSession}     
+     * @this {IFolding}
      */
     this.addFold = function(placeholder, range) {
         var foldData = this.$foldData;
         var added = false;
+        /**
+         * @type {Fold}
+         */
         var fold;
         
         if (placeholder instanceof Fold)
@@ -382,7 +382,6 @@ function Folding() {
     /**
      * 
      * @param {Fold} fold
-     * @this {IEditSession}
      */
     this.removeFold = function(fold) {
         var foldLine = fold.foldLine;
@@ -829,7 +828,6 @@ function Folding() {
     
     /**
      * @param {string} style
-     * @this {IEditSession}
      */
     this.setFoldStyle = function(style) {
         if (!this.$foldStyles[style])
@@ -851,7 +849,6 @@ function Folding() {
 
     /**
      * @param {import("../../ace").Ace.FoldMode} foldMode
-     * @this {IEditSession}
      */
     this.$setFolding = function(foldMode) {
         if (this.$foldMode == foldMode)
@@ -882,7 +879,6 @@ function Folding() {
      * @param {number} row
      * @param {boolean} [ignoreCurrent]
      * @return {{range?: Range, firstRange?: Range}}
-     * @this {IEditSession}
      */
     this.getParentFoldRangeData = function (row, ignoreCurrent) {
         var fw = this.foldWidgets;
@@ -939,7 +935,6 @@ function Folding() {
      * @param {number} row
      * @param options
      * @return {Fold|*}
-     * @this {IEditSession}
      */
     this.$toggleFoldWidget = function(row, options) {
         if (!this.getFoldWidget)
@@ -990,7 +985,6 @@ function Folding() {
     /**
      * 
      * @param {boolean} [toggleParent]
-     * @this {IEditSession}
      */
     this.toggleFoldWidget = function(toggleParent) {
         var row = this.selection.getCursor().row;
@@ -1017,7 +1011,6 @@ function Folding() {
 
     /**
      * @param {import("../../ace").Ace.Delta} delta
-     * @this {IEditSession}
      */
     this.updateFoldWidgets = function(delta) {
         var firstRow = delta.start.row;
@@ -1035,7 +1028,6 @@ function Folding() {
     };
     /**
      * @param e
-     * @this {IEditSession}
      */
     this.tokenizerUpdateFoldWidgets = function(e) {
         var rows = e.data;

@@ -22,7 +22,7 @@ class Marker {
     }
 
     /**
-     * @param {import("../edit_session").IEditSession} session
+     * @param {import("../edit_session").EditSession} session
      */
     setSession(session) {
         this.session = session;
@@ -55,6 +55,9 @@ class Marker {
         x.className = className;
     }
 
+    /**
+     * @param {import("../../ace").Ace.LayerConfig} config
+     */
     update(config) {
         if (!config) return;
 
@@ -97,6 +100,10 @@ class Marker {
         }
     }
 
+    /**
+     * @param {number} row
+     * @param {import("../../ace").Ace.LayerConfig} layerConfig
+     */
     $getTop(row, layerConfig) {
         return (row - layerConfig.firstRowScreen) * layerConfig.lineHeight;
     }

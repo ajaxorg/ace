@@ -76,12 +76,8 @@ class VScrollBar extends Scrollbar {
     /**
      * Emitted when the scroll bar, well, scrolls.
      * @event scroll
-     * @param {Object} e Contains one property, `"data"`, which indicates the current scroll top position
      **/
 
-    /**
-     * @this {VScrollBar & import("../ace").Ace.EventEmitter}
-     */
     onScroll() {
         if (!this.skipEvent) {
             this.scrollTop = this.element.scrollTop;
@@ -175,12 +171,7 @@ class HScrollBar extends Scrollbar {
     /**
      * Emitted when the scroll bar, well, scrolls.
      * @event scroll
-     * @param {Object} e Contains one property, `"data"`, which indicates the current scroll left position
      **/
-
-    /**
-     * @this {HScrollBar & import("../ace").Ace.EventEmitter}
-     */
     onScroll() {
         if (!this.skipEvent) {
             this.scrollLeft = this.element.scrollLeft;

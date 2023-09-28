@@ -1,8 +1,5 @@
 "use strict";
 
-/**
- * @type {any}
- */
 var EditSession = require("../edit_session").EditSession;
 var TextLayer = require("../layer/text").Text;
 var baseStyles = require("./static-css");
@@ -199,9 +196,6 @@ highlight.render = function(input, mode, theme, lineStart, disableGutter, callba
 highlight.renderSync = function(input, mode, theme, lineStart, disableGutter) {
     lineStart = parseInt(lineStart || 1, 10);
 
-    /**
-     * @type {import("../edit_session").IEditSession}
-     */
     var session = new EditSession("");
     session.setUseWorker(false);
     session.setMode(mode);

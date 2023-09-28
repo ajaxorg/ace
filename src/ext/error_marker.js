@@ -60,7 +60,7 @@ function findAnnotations(session, row, dir) {
 }
 
 /**
- * @param {import("../editor").IEditor} editor
+ * @param {import("../editor").Editor} editor
  * @param {number} dir
  */
 exports.showErrorMarker = function(editor, dir) {

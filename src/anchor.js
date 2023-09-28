@@ -1,27 +1,21 @@
 "use strict";
 /**
- * @typedef IDocument
+ * @typedef Document
  * @type {import("./document").Document}
- */
-/**
- * @typedef IAnchor
- * @type {Anchor & import("../ace").Ace.EventEmitter<import("../ace").Ace.AnchorEvents> & {markerId?: number}}
  */
 var oop = require("./lib/oop");
 var EventEmitter = require("./lib/event_emitter").EventEmitter;
 
 /**
  * Defines a floating pointer in the document. Whenever text is inserted or deleted before the cursor, the position of the anchor is updated.
- * @this {IAnchor}
  **/
 class Anchor {
     /**
      * Creates a new `Anchor` and associates it with a document.
      *
-     * @param {IDocument} doc The document to associate with the anchor
+     * @param {Document} doc The document to associate with the anchor
      * @param {Number|import("../ace").Ace.Point} row The starting row position
      * @param {Number} [column] The starting column position
-     * @this {IAnchor}
      **/
     constructor(doc, row, column) {
         this.$onChange = this.onChange.bind(this);
@@ -44,7 +38,7 @@ class Anchor {
     /**
      *
      * Returns the current document.
-     * @returns {IDocument}
+     * @returns {Document}
      **/
     getDocument() {
         return this.document;
@@ -53,7 +47,6 @@ class Anchor {
     /**
      * Internal function called when `"change"` event fired.
      * @param {import("../ace").Ace.Delta} delta
-     * @this {IAnchor}
      */
     onChange(delta) {
         if (delta.start.row == delta.end.row && delta.start.row != this.row)
@@ -71,7 +64,6 @@ class Anchor {
      * @param {Number} row The row index to move the anchor to
      * @param {Number} column The column index to move the anchor to
      * @param {Boolean} [noClip] Identifies if you want the position to be clipped
-     * @this {IAnchor}
      **/
     setPosition(row, column, noClip) {
         var pos;
@@ -110,7 +102,7 @@ class Anchor {
 
     /**
      * When called, the `"change"` event listener is appended.
-     * @param {IDocument} doc The document to associate with
+     * @param {Document} doc The document to associate with
      *
      **/
     attach(doc) {

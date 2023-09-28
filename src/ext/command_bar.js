@@ -1,13 +1,3 @@
-/**
- * @typedef ICommandBarTooltip
- * @type {CommandBarTooltip & import("../../ace").Ace.EventEmitter & {[key: string]: any}}
- */
-
-/**
- * @typedef IEditor
- * @type {import("../editor").IEditor}
- */
-
 var Tooltip = require("../tooltip").Tooltip;
 var EventEmitter = require("../lib/event_emitter").EventEmitter;
 var lang = require("../lib/lang");
@@ -56,12 +46,9 @@ var keyDisplayMap = {
  * When attached to an editor, it is either always shown or only when the active line is hovered
  * with mouse, depending on the alwaysShow property.
  */
-/**
- * @type {ICommandBarTooltip}
- */
 class CommandBarTooltip {
     /**
-     * @param {Element} parentNode
+     * @param {HTMLElement} parentNode
      * @param {Partial<import("../../ace").Ace.CommandBarOptions>} [options]
      */
     constructor(parentNode, options) {
@@ -101,7 +88,6 @@ class CommandBarTooltip {
      * 
      * @param {string} id      
      * @param {import("../../ace").TooltipCommand} command
-     * @this {ICommandBarTooltip}
      */
     registerCommand(id, command) {
         var registerForMainTooltip = Object.keys(this.commands).length < this.maxElementsOnTooltip;
@@ -110,7 +96,7 @@ class CommandBarTooltip {
                 name: "···",
                 exec: 
                 /**
-                 * @this {ICommandBarTooltip}
+                 * @this {CommandBarTooltip}
                  */
                 function() {
                     this.$shouldHideMoreOptions = false;
@@ -148,7 +134,6 @@ class CommandBarTooltip {
      * When false, the tooltip is displayed only when the mouse hovers over the active editor line.
      * 
      * @param {boolean} alwaysShow
-     * @this {ICommandBarTooltip}
      */
     setAlwaysShow(alwaysShow) {
         this.$alwaysShow = alwaysShow;
@@ -162,8 +147,7 @@ class CommandBarTooltip {
      * Depending on the alwaysShow parameter it either displays the tooltip immediately,
      * or subscribes to the necessary events to display the tooltip on hover.
      * 
-     * @param {IEditor} editor
-     * @this {ICommandBarTooltip}
+     * @param {import("../editor").Editor} editor
      */
     attach(editor) {
         if (!editor || (this.isShown() && this.editor === editor)) {
@@ -188,7 +172,6 @@ class CommandBarTooltip {
 
     /**
      * Updates the position of the command bar tooltip. It aligns itself above the active line in the editor.
-     * @this {ICommandBarTooltip}
      */
     updatePosition() {
         if (!this.editor) {
@@ -359,12 +342,13 @@ class CommandBarTooltip {
             }
         }
 
+        // @ts-ignore
         dom.buildDom(['div', { class: [BUTTON_CLASS_NAME, command.cssClass || ""].join(" "), ref: id }, buttonNode], parentEl, this.elements);
         this.commands[id] = command;
         
         var eventListener =
             /**
-             * @this {ICommandBarTooltip}
+             * @this {CommandBarTooltip}
              */
             function(e) {
             if (this.editor) {
@@ -388,7 +372,6 @@ class CommandBarTooltip {
 
     /**
      * @param {boolean} visible
-     * @this {ICommandBarTooltip}
      */
     $setMoreOptionsVisibility(visible) {
         if (visible) {
@@ -493,9 +476,6 @@ class CommandBarTooltip {
         }
     }
 
-    /**
-     * @this {ICommandBarTooltip}
-     */
     $showTooltip() {
         if (this.isShown()) {
             return;
@@ -507,9 +487,6 @@ class CommandBarTooltip {
         this.updatePosition();
         this._signal("show");
     }
-    /**
-     * @this {ICommandBarTooltip}
-     */
     $hideTooltip() {
         this.$mouseInTooltip = false;
         if (!this.isShown()) {

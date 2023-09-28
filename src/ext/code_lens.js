@@ -1,7 +1,6 @@
 "use strict";
 /**
- * @typedef IEditSession
- * @type {import("../edit_session").IEditSession}
+ * @typedef {import("../edit_session").EditSession} EditSession
  */
 
 var LineWidgets = require("../line_widgets").LineWidgets;
@@ -99,7 +98,7 @@ function clearCodeLensWidgets(session) {
 
 /**
  * 
- * @param {IEditSession} session
+ * @param {EditSession} session
  * @param lenses
  * @return {number}
  */
@@ -199,7 +198,7 @@ function detachFromEditor(editor) {
 
 /**
  * 
- * @param {import("../editor").IEditor} editor
+ * @param {import("../editor").Editor} editor
  * @param codeLensProvider
  */
 exports.registerCodeLensProvider = function(editor, codeLensProvider) {
@@ -209,8 +208,7 @@ exports.registerCodeLensProvider = function(editor, codeLensProvider) {
 };
 
 /**
- * 
- * @param {IEditSession} session
+ * @param {EditSession} session
  */
 exports.clear = function(session) {
     exports.setLenses(session, null);

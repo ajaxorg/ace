@@ -1,8 +1,6 @@
 "use strict";
 /**
- *
- * @typedef IEditSession
- * @type {import("./edit_session").IEditSession}
+ * @typedef {import("./edit_session").EditSession} EditSession
  */
 var lang = require("./lib/lang");
 var oop = require("./lib/oop");
@@ -69,7 +67,7 @@ class Search {
 
     /**
      * Searches for `options.needle`. If found, this method returns the [[Range `Range`]] where the text first occurs. If `options.backwards` is `true`, the search goes backwards in the session.
-     * @param {IEditSession} session The session to search with
+     * @param {EditSession} session The session to search with
      * @returns {Range|false}
      **/
     find(session) {
@@ -96,7 +94,7 @@ class Search {
 
     /**
      * Searches for all occurrances `options.needle`. If found, this method returns an array of [[Range `Range`s]] where the text first occurs. If `options.backwards` is `true`, the search goes backwards in the session.
-     * @param {IEditSession} session The session to search with
+     * @param {EditSession} session The session to search with
      * @returns {Range[]}
     **/
     findAll(session) {

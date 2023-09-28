@@ -1,9 +1,9 @@
 "no use strict";
 /**
- * @typedef {import("./lib/app_config").IAppConfig} IAppConfig
+ * @typedef {import("./lib/app_config").AppConfig} AppConfig
  */
 /**
- * @typedef {IAppConfig & Config} IConfig
+ * @typedef {AppConfig & Config} IConfig
  * @export
  */
 

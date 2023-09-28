@@ -1,11 +1,9 @@
 "use strict";
 /**
- * @typedef FoldLine
- * @type {import("./fold_line").FoldLine}
+ * @typedef {import("./fold_line").FoldLine} FoldLine
  */
 /**
- * @typedef Range
- * @type {import("../range").Range}
+ * @typedef {import("../range").Range} Range
  */
 var RangeList = require("../range_list").RangeList;
 
@@ -20,10 +18,6 @@ class Fold extends RangeList {
      */
     constructor(range, placeholder) {
         super();
-        /**
-         * @type {number}
-         */
-        this.collapseChildren;
         this.foldLine = null;
         this.placeholder = placeholder;
         this.range = range;

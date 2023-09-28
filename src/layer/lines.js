@@ -3,6 +3,10 @@
 var dom = require("../lib/dom");
 
 class Lines {
+    /**
+     * @param {HTMLElement} element
+     * @param {number} [canvasHeight]
+     */
     constructor(element, canvasHeight) {
         this.element = element;
         this.canvasHeight = canvasHeight || 500000;
@@ -12,25 +16,42 @@ class Lines {
         this.cellCache = [];
         this.$offsetCoefficient = 0;
     }
-    
+
+    /**
+     * @param {import("../../ace").Ace.LayerConfig} config
+     */
     moveContainer(config) {
         dom.translate(this.element, 0, -((config.firstRowScreen * config.lineHeight) % this.canvasHeight) - config.offset * this.$offsetCoefficient);
-    }    
-    
+    }
+
+    /**
+     * @param {import("../../ace").Ace.LayerConfig} oldConfig
+     * @param {import("../../ace").Ace.LayerConfig} newConfig
+     */
     pageChanged(oldConfig, newConfig) {
         return (
             Math.floor((oldConfig.firstRowScreen * oldConfig.lineHeight) / this.canvasHeight) !==
             Math.floor((newConfig.firstRowScreen * newConfig.lineHeight) / this.canvasHeight)
         );
     }
-    
+
+    /**
+     * @param {number} row
+     * @param {Partial<import("../../ace").Ace.LayerConfig>} config
+     * @param {import("../edit_session").EditSession} session
+     */
     computeLineTop(row, config, session) {
         var screenTop = config.firstRowScreen * config.lineHeight;
         var screenPage = Math.floor(screenTop / this.canvasHeight);
         var lineTop = session.documentToScreenRow(row, 0) * config.lineHeight;
         return lineTop - (screenPage * this.canvasHeight);
     }
-    
+
+    /**
+     * @param {number} row
+     * @param {import("../../ace").Ace.LayerConfig} config
+     * @param {import("../edit_session").EditSession} session
+     */
     computeLineHeight(row, config, session) {
         return config.lineHeight * session.getRowLineCount(row);
     }
@@ -38,7 +59,10 @@ class Lines {
     getLength() {
         return this.cells.length;
     }
-    
+
+    /**
+     * @param {number} index
+     */
     get(index) {
         return this.cells[index];
     }

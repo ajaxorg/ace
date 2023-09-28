@@ -1,8 +1,7 @@
 "use strict";
 /**
  *
- * @typedef IEditSession
- * @type {import("./edit_session").IEditSession}
+ * @typedef {import("./edit_session").EditSession} EditSession
  */
 /**
  * @typedef MarkerGroupItem
@@ -17,12 +16,12 @@ Potential improvements:
 
 class MarkerGroup {
     /**
-     * @param {IEditSession} session
+     * @param {EditSession} session
      */
     constructor(session) {
         this.markers = [];
         /**
-         * @type {IEditSession}
+         * @type {EditSession}
          */
         this.session = session;
         // @ts-expect-error TODO: could potential error here, or most likely missing checks in other places
@@ -63,7 +62,7 @@ class MarkerGroup {
     /**
      * @param {any} html
      * @param {import("./layer/marker").Marker} markerLayer
-     * @param {IEditSession} session
+     * @param {EditSession} session
      * @param {{ firstRow: any; lastRow: any; }} config
      */
     update(html, markerLayer, session, config) {

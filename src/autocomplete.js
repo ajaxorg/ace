@@ -1,12 +1,9 @@
 "use strict";
 /**
- * @typedef {import("./autocomplete/popup").IAcePopup} IAcePopup
- */
-/**
- * @typedef {import("./editor").IEditor} IEditor
+ * @typedef {import("./editor").Editor} Editor
  */
 var HashHandler = require("./keyboard/hash_handler").HashHandler;
-/**@type{any}*/var AcePopup = require("./autocomplete/popup").AcePopup;
+var AcePopup = require("./autocomplete/popup").AcePopup;
 var AceInline = require("./autocomplete/inline").AceInline;
 var getAriaId = require("./autocomplete/popup").getAriaId;
 var util = require("./autocomplete/util");
@@ -30,7 +27,7 @@ var config = require("./config");
  * @property {string} [command] - A command to be executed after the completion is inserted (experimental)
  * @property {string} [snippet] - a text snippet that would be inserted when the completion is selected
  * @property {string} [value] - The text that would be inserted when selecting this completion.
- * @property {{insertMatch:(editor: IEditor, data: Completion) => void}} [completer]
+ * @property {{insertMatch:(editor: Editor, data: Completion) => void}} [completer]
  * @export
  */
 
@@ -67,10 +64,6 @@ class Autocomplete {
     
     
     constructor() {
-        /**
-         * @type {IAcePopup}
-         */
-        this.popup;
         this.autoInsert = false;
         this.autoSelect = true;
         this.autoShown = false;
@@ -96,7 +89,7 @@ class Autocomplete {
 
     $init() {
         /**
-         * @type {IAcePopup}
+         * @type {AcePopup}
          */
         this.popup = new AcePopup(this.parentNode || document.body || document.documentElement); 
         this.popup.on("click", function(e) {
@@ -120,7 +113,7 @@ class Autocomplete {
 
     /**
      * 
-     * @return {IAcePopup}
+     * @return {AcePopup}
      */
     getPopup() {
         return this.popup || this.$init();
@@ -213,7 +206,7 @@ class Autocomplete {
     }
 
     /**
-     * @param {IEditor} editor
+     * @param {Editor} editor
      * @param {string} prefix
      * @param {boolean} [keepPopupPosition]
      */
@@ -341,7 +334,7 @@ class Autocomplete {
     
     /**
      * This is the entry point for the autocompletion class, triggers the actions which collect and display suggestions
-     * @param {IEditor} editor
+     * @param {Editor} editor
      * @param {import("../ace").Ace.CompletionOptions} options
      */
     showPopup(editor, options) {
@@ -649,16 +642,12 @@ class CompletionProvider {
      * @param {{pos: import("../ace").Ace.Position, prefix: string}} initialPosition
      */
     constructor(initialPosition) {
-        /**
-         * @type {FilteredList}
-         */
-        this.completions;
         this.initialPosition = initialPosition;
         this.active = true;
     }
 
     /**
-     * @param {IEditor} editor
+     * @param {Editor} editor
      * @param {number} index
      * @param {import("../ace").Ace.CompletionProviderOptions} [options]
      * @returns {boolean}
@@ -671,7 +660,7 @@ class CompletionProvider {
     }
 
     /**
-     * @param {IEditor} editor
+     * @param {Editor} editor
      * @param {Completion} data
      * @param {import("../ace").Ace.CompletionProviderOptions} [options]
      * @returns {boolean}
@@ -727,7 +716,7 @@ class CompletionProvider {
     }
 
     /**
-     * @param {IEditor} editor
+     * @param {Editor} editor
      * @param {Completion} data
      */
     $insertString(editor, data) {
@@ -736,7 +725,7 @@ class CompletionProvider {
     }
 
     /**
-     * @param {IEditor} editor
+     * @param {Editor} editor
      * @param {import("../ace").Ace.CompletionCallbackFunction} callback
      */
     gatherCompletions(editor, callback) {
@@ -766,7 +755,7 @@ class CompletionProvider {
     /**
      * This is the entry point to the class, it gathers, then provides the completions asynchronously via callback.
      * The callback function may be called multiple times, the last invokation is marked with a `finished` flag
-     * @param {IEditor} editor
+     * @param {Editor} editor
      * @param {import("../ace").Ace.CompletionProviderOptions} options
      * @param {(err: Error | undefined, completions: FilteredList | [], finished: boolean) => void} callback
      */

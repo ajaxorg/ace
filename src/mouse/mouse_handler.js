@@ -1,9 +1,4 @@
 "use strict";
-/**
- * @typedef {MouseHandler & import("./default_handlers").DefaultHandlers & import("./default_gutter_handler").GutterHandler & import("./dragdrop_handler").DragdropHandler & {cancelDrag?}} IMouseHandler
- * @export
- */
-
 var event = require("../lib/event");
 var useragent = require("../lib/useragent");
 var DefaultHandlers = require("./default_handlers").DefaultHandlers;
@@ -15,8 +10,7 @@ var config = require("../config");
 
 class MouseHandler {
     /**
-     * @param {import("../editor").IEditor} editor
-     * @this {IMouseHandler}
+     * @param {import("../editor").Editor} editor
      */
     constructor(editor) {
         /** @type {boolean} */this.$dragDelay;

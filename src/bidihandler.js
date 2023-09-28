@@ -1,8 +1,4 @@
 "use strict";
-/**
- * @typedef IEditSession
- * @type {import("./edit_session").IEditSession}
- */
 var bidiUtil = require("./lib/bidiutil");
 var lang = require("./lib/lang");
 var bidiRE = /[\u0590-\u05f4\u0600-\u06ff\u0700-\u08ac\u202B]/;
@@ -14,7 +10,7 @@ var bidiRE = /[\u0590-\u05f4\u0600-\u06ff\u0700-\u08ac\u202B]/;
 class BidiHandler {
     /**
      * Creates a new `BidiHandler` object
-     * @param {IEditSession} session The session to use
+     * @param {import("./edit_session").EditSession} session The session to use
      **/
     constructor(session) {
         this.session = session;

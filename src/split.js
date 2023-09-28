@@ -3,15 +3,9 @@
 var oop = require("./lib/oop");
 var lang = require("./lib/lang");
 var EventEmitter = require("./lib/event_emitter").EventEmitter;
-/**
- * @typedef {import("./edit_session").IEditSession} IEditSession
- */
-/**
- * @typedef {import("./editor").IEditor} IEditor
- */
-/**@type{any}*/var Editor = require("./editor").Editor;
+var Editor = require("./editor").Editor;
 var Renderer = require("./virtual_renderer").VirtualRenderer;
-/**@type{any}*/var EditSession = require("./edit_session").EditSession;
+var EditSession = require("./edit_session").EditSession;
 
 /**
  * @typedef ISplit
@@ -48,7 +42,7 @@ Split = function(container, theme, splits) {
     oop.implement(this, EventEmitter);
 
     /**
-     * @returns {IEditor}
+     * @returns {Editor}
      * @this {ISplit}
      */
     this.$createEditor = function() {
@@ -56,9 +50,6 @@ Split = function(container, theme, splits) {
         el.className = this.$editorCSS;
         el.style.cssText = "position: absolute; top:0px; bottom:0px";
         this.$container.appendChild(el);
-        /**
-         * @type {IEditor}
-         */
         var editor = new Editor(new Renderer(el, this.$theme));
 
         editor.on("focus", function() {
@@ -209,13 +200,10 @@ Split = function(container, theme, splits) {
 
     /**
      * 
-     * @param {IEditSession} session
-     * @return {IEditSession}
+     * @param {EditSession} session
+     * @return {EditSession}
      */
     this.$cloneSession = function(session) {
-        /**
-         * @type {IEditSession}
-         */
         var s = new EditSession(session.getDocument(), session.getMode());
 
         var undoManager = session.getUndoManager();

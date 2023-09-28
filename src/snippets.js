@@ -1,8 +1,5 @@
 "use strict";
 /**
- * @typedef {SnippetManager & import("../ace").Ace.EventEmitter} ISnippetManager
- */
-/**
  * @typedef Snippet
  * @property {string} [content]
  * @property {string} [replaceBefore]
@@ -510,7 +507,6 @@ class SnippetManager {
     /**
      * @param {any[]} snippets
      * @param {string} scope
-     * @this {ISnippetManager}
      */
     register(snippets, scope) {
         var snippetMap = this.snippetMap;
@@ -588,7 +584,8 @@ class SnippetManager {
                 addSnippet(snippets[key]);
             });
         }
-        
+
+        // @ts-ignore
         this._signal("registerSnippets", {scope: scope});
     }
     unregister(snippets, scope) {

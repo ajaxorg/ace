@@ -1,16 +1,10 @@
 "use strict";
 /**
- * @typedef {import("./editor").IEditor} IEditor
- */
-/**
- * @typedef {import("./edit_session").IEditSession} IEditSession
+ * @typedef {import("./editor").Editor} Editor
  */
 
 var oop = require("./lib/oop");
 var Search = require("./search").Search;
-/**
- * @type {any}
- */
 var EditSession = require("./edit_session").EditSession;
 var SearchHighlight = require("./search_highlight").SearchHighlight;
 
@@ -27,7 +21,7 @@ class Occur extends Search {
      * and these are then used as the content of a new [[Document
      * `Document`]]. The current cursor position of editor will be translated
      * so that the cursor is on the matching row/column as it was before.
-     * @param {IEditor} editor
+     * @param {Editor} editor
      * @param {Object} options options.needle should be a String
      * @return {Boolean} Whether occur activation was successful
      *
@@ -45,7 +39,7 @@ class Occur extends Search {
      * Disables occur mode. Resets the [[Sessions `EditSession`]] [[Document
      * `Document`]] back to the original doc. If options.translatePosition is
      * truthy also maps the [[Editors `Editor`]] cursor position accordingly.
-     * @param {IEditor} editor
+     * @param {Editor} editor
      * @param {Object} options options.translatePosition
      * @return {Boolean} Whether occur deactivation was successful
      *
@@ -60,7 +54,7 @@ class Occur extends Search {
     }
 
     /**
-     * @param {IEditSession} sess
+     * @param {EditSession} sess
      * @param {RegExp} regexp
      */
     highlight(sess, regexp) {
@@ -71,7 +65,7 @@ class Occur extends Search {
     }
 
     /**
-     * @param {IEditor} editor
+     * @param {Editor} editor
      * @param {Partial<import("../ace").Ace.SearchOptions>} options
      */
     displayOccurContent(editor, options) {
@@ -80,7 +74,7 @@ class Occur extends Search {
         var found = this.matchingLines(editor.session, options);
         var lines = found.map(function(foundLine) { return foundLine.content; });
         /**
-         * @type {IEditSession}
+         * @type {EditSession}
          */
         var occurSession = new EditSession(lines.join('\n'));
         occurSession.$occur = this;
@@ -93,7 +87,7 @@ class Occur extends Search {
     }
 
     /**
-     * @param {IEditor} editor
+     * @param {Editor} editor
      */
     displayOriginalContent(editor) {
         editor.setSession(this.$originalSession);
@@ -104,7 +98,7 @@ class Occur extends Search {
     * Translates the position from the original document to the occur lines in
     * the document or the beginning if the doc {row: 0, column: 0} if not
     * found.
-    * @param {IEditSession} session The occur session
+    * @param {EditSession} session The occur session
     * @param {import("../ace").Ace.Point} pos The position in the original document
     * @return {import("../ace").Ace.Point} position in occur doc
     **/
@@ -122,7 +116,7 @@ class Occur extends Search {
     /**
     * Translates the position from the occur document to the original document
     * or `pos` if not found.
-    * @param {IEditSession} session The occur session
+    * @param {EditSession} session The occur session
     * @param {import("../ace").Ace.Point} pos The position in the occur session document
     * @return {import("../ace").Ace.Point} position
     **/
@@ -134,7 +128,7 @@ class Occur extends Search {
     }
 
     /**
-     * @param {IEditSession} session
+     * @param {EditSession} session
      * @param {Partial<import("../ace").Ace.SearchOptions>} options
      */
     matchingLines(session, options) {

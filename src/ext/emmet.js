@@ -12,7 +12,7 @@ var emmet, emmetPath;
 
 class AceEmmetEditor {
     /**
-     * @param {import("../editor").IEditor} editor
+     * @param {Editor} editor
      */
     setupContext(editor) {
         this.ace = editor;

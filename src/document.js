@@ -1,18 +1,8 @@
 "use strict";
-/**
- * @typedef {Document & import("../ace").Ace.EventEmitter<import("../ace").Ace.DocumentEvents>} IDocument
- * @export
- */
-/**
- * @typedef {import("./anchor").IAnchor} IAnchor
- */
 var oop = require("./lib/oop");
 var applyDelta = require("./apply_delta").applyDelta;
 var EventEmitter = require("./lib/event_emitter").EventEmitter;
 var Range = require("./range").Range;
-/**
- * @type {any}
- */
 var Anchor = require("./anchor").Anchor;
 
 /**
@@ -24,7 +14,6 @@ class Document {
      *
      * Creates a new `Document`. If `text` is included, the `Document` contains those strings; otherwise, it's empty.
      * @param {String | String[]} textOrLines text The starting text
-     * @this {IDocument}
      **/
     constructor(textOrLines) {
         /**
@@ -47,7 +36,7 @@ class Document {
      * Replaces all the lines in the current `Document` with the value of `text`.
      *
      * @param {String} text The text to use
-     * @this {IDocument}
+     
      **/
     setValue(text) {
         var len = this.getLength() - 1;
@@ -67,7 +56,7 @@ class Document {
      * Creates a new `Anchor` to define a floating point in the document.
      * @param {Number} row The row number to use
      * @param {Number} column The column number to use
-     * @returns {IAnchor}
+     * @returns {Anchor}
      **/
     createAnchor(row, column) {
         return new Anchor(this, row, column);
@@ -75,7 +64,7 @@ class Document {
 
     /**
      * @param {string} text
-     * @this {IDocument}
+     
      */
     $detectNewLine(text) {
         var match = text.match(/^.*?(\r\n|\r|\n)/m);
@@ -104,7 +93,7 @@ class Document {
     /**
      * [Sets the new line mode.]{: #Document.setNewLineMode.desc}
      * @param {import("../ace").Ace.NewLineMode} newLineMode [The newline mode to use; can be either `windows`, `unix`, or `auto`]{: #Document.setNewLineMode.param}
-     * @this {IDocument}
+     
      **/
     setNewLineMode(newLineMode) {
         if (this.$newLineMode === newLineMode)
@@ -202,7 +191,7 @@ class Document {
     /**
      * @param row
      * @param lines
-     * @this {IDocument}
+     
      * @deprecated
      */
     insertLines(row, lines) {
@@ -215,7 +204,7 @@ class Document {
      * @param firstRow
      * @param lastRow
      * @returns {String[]}
-     * @this {IDocument}
+     
      * @deprecated
      */
     removeLines(firstRow, lastRow) {
@@ -226,7 +215,7 @@ class Document {
     /**
      * @param position
      * @returns {import("../ace").Ace.Point}
-     * @this {IDocument}
+     
      * @deprecated
      */
     insertNewLine(position) {
@@ -239,7 +228,7 @@ class Document {
      * @param {import("../ace").Ace.Point} position The position to start inserting at; it's an object that looks like `{ row: row, column: column}`
      * @param {String} text A chunk of text to insert
      * @returns {import("../ace").Ace.Point} The position ({row, column}) of the last line of `text`. If the length of `text` is 0, this function simply returns `position`. 
-     * @this {IDocument}
+     
      **/
     insert(position, text) {
         // Only detect new lines if the document has no line break yet.
@@ -262,7 +251,7 @@ class Document {
      *     ```
      *     {row: endRow, column: 0}
      *     ```
-     * @this {IDocument}    
+         
      **/
     insertInLine(position, text) {
         var start = this.clippedPos(position.row, position.column);
@@ -339,7 +328,7 @@ class Document {
      * Inserts the elements in `lines` into the document as full lines (does not merge with existing line), starting at the row index given by `row`. This method also triggers the `"change"` event.
      * @param {Number} row The index of the row to insert at
      * @param {string[]} lines An array of strings
-     * @this {IDocument}
+     
      **/
     insertFullLines(row, lines) {
         // Clip to document.
@@ -375,7 +364,7 @@ class Document {
      *   ``` 
      *   {row: row, column: 0}
      *   ```
-     * @this {IDocument}
+     
      **/    
     insertMergedLines(position, lines) {
         var start = this.clippedPos(position.row, position.column);
@@ -398,7 +387,7 @@ class Document {
      * Removes the `range` from the document.
      * @param {import("../ace").Ace.IRange} range A specified Range to remove
      * @returns {import("../ace").Ace.Point} Returns the new `start` property of the range, which contains `startRow` and `startColumn`. If `range` is empty, this function returns the unmodified value of `range.start`.
-     * @this {IDocument}
+     
      **/
     remove(range) {
         var start = this.clippedPos(range.start.row, range.start.column);
@@ -418,7 +407,7 @@ class Document {
      * @param {Number} startColumn The column to start removing at 
      * @param {Number} endColumn The column to stop removing at
      * @returns {import("../ace").Ace.Point} Returns an object containing `startRow` and `startColumn`, indicating the new row and column values.<br/>If `startColumn` is equal to `endColumn`, this function returns nothing.
-     * @this {IDocument}
+     
      **/
     removeInLine(row, startColumn, endColumn) {
         var start = this.clippedPos(row, startColumn);
@@ -439,7 +428,7 @@ class Document {
      * @param {Number} firstRow The first row to be removed
      * @param {Number} lastRow The last row to be removed
      * @returns {String[]} Returns all the removed lines.
-     * @this {IDocument}
+     
      **/
     removeFullLines(firstRow, lastRow) {
         // Clip to document.
@@ -474,7 +463,7 @@ class Document {
     /**
      * Removes the new line between `row` and the row immediately following it. This method also triggers the `"change"` event.
      * @param {Number} row The row to check
-     * @this {IDocument}
+     
      **/
     removeNewLine(row) {
         if (row < this.getLength() - 1 && row >= 0) {
@@ -495,7 +484,7 @@ class Document {
      *     {row: endRow, column: 0}
      * If the text and range are empty, this function returns an object containing the current `range.start` value.
      * If the text is the exact same as what currently exists, this function returns an object containing the current `range.end` value.
-     * @this {IDocument}
+     
      **/
     replace(range, text) {
         if (!(range instanceof Range))
@@ -524,7 +513,7 @@ class Document {
     /**
      * Applies all changes in `deltas` to the document.
      * @param {import("../ace").Ace.Delta[]} deltas An array of delta objects (can include "insert" and "remove" actions)
-     * @this {IDocument}
+     
      **/
     applyDeltas(deltas) {
         for (var i=0; i<deltas.length; i++) {
@@ -535,7 +524,7 @@ class Document {
     /**
      * Reverts all changes in `deltas` from the document.
      * @param {import("../ace").Ace.Delta[]} deltas An array of delta objects (can include "insert" and "remove" actions)
-     * @this {IDocument}
+     
      **/
     revertDeltas(deltas) {
         for (var i=deltas.length-1; i>=0; i--) {
@@ -547,7 +536,7 @@ class Document {
      * Applies `delta` to the document.
      * @param {import("../ace").Ace.Delta} delta A delta object (can include "insert" and "remove" actions)
      * @param {boolean} [doNotValidate]
-     * @this {IDocument}
+     
      **/
     applyDelta(delta, doNotValidate) {
         var isInsert = delta.action == "insert";
@@ -568,7 +557,7 @@ class Document {
 
     /**
      * @param {import("../ace").Ace.Delta} delta
-     * @this {IDocument}
+     
      */
     $safeApplyDelta(delta) {
         var docLength = this.$lines.length;
@@ -585,7 +574,7 @@ class Document {
      * 
      * @param {import("../ace").Ace.Delta} delta
      * @param {number} MAX
-     * @this {IDocument}
+     
      */
     $splitAndapplyLargeDelta(delta, MAX) {
         // Split large insert deltas. This is necessary because:
@@ -622,7 +611,7 @@ class Document {
     /**
      * Reverts `delta` from the document.
      * @param {import("../ace").Ace.Delta} delta A delta object (can include "insert" and "remove" actions)
-     * @this {IDocument}
+     
      **/
     revertDelta(delta) {
         this.$safeApplyDelta({

@@ -1,21 +1,17 @@
 "use strict";
 /**
- * @typedef {import("../edit_session").IEditSession} IEditSession
+ * @typedef {import("../edit_session").EditSession} EditSession
  */
-
 var TokenIterator = require("../token_iterator").TokenIterator;
 var Range = require("../range").Range;
 
-/**
- * @export
- * @this {IEditSession}
- */
 function BracketMatch() {
 
     /**
      * 
      * @param {import("../../ace").Ace.Point} position
      * @param {string} [chr]
+     * @this {EditSession}
      */
     this.findMatchingBracket = function(position, chr) {
         if (position.column == 0) return null;
@@ -36,6 +32,7 @@ function BracketMatch() {
     /**
      * @param {import("../../ace").Ace.Point} pos
      * @return {null|Range}
+     * @this {EditSession}
      */
     this.getBracketRange = function(pos) {
         var line = this.getLine(pos.row);
@@ -86,6 +83,7 @@ function BracketMatch() {
      * @param {import("../../ace").Ace.Point} pos
      * @param {boolean} [isBackwards]
      * @returns {null|Range[]}
+     * @this {EditSession}
      */
     this.getMatchingBracketRanges = function(pos, isBackwards) {
         var line = this.getLine(pos.row);
@@ -131,6 +129,7 @@ function BracketMatch() {
      * @param {import("../../ace").Ace.Point} position
      * @param {RegExp} [typeRe]
      * @return {import("../../ace").Ace.Point|null}
+     * @this {EditSession}
      */
     this.$findOpeningBracket = function(bracket, position, typeRe) {
         var openBracket = this.$brackets[bracket];
@@ -196,6 +195,7 @@ function BracketMatch() {
      * @param {import("../../ace").Ace.Point} position
      * @param {RegExp} [typeRe]
      * @return {import("../../ace").Ace.Point|null}
+     * @this {EditSession}
      */
     this.$findClosingBracket = function(bracket, position, typeRe) {
         var closingBracket = this.$brackets[bracket];
@@ -259,6 +259,7 @@ function BracketMatch() {
      * Returns [[Range]]'s for matching tags and tag names, if there are any
      * @param {import("../../ace").Ace.Point} pos
      * @returns {{closeTag: Range, closeTagName: Range, openTag: Range, openTagName: Range} | undefined}
+     * @this {EditSession}
      */
     this.getMatchingTags = function (pos) {
         var iterator = new TokenIterator(this, pos.row, pos.column);

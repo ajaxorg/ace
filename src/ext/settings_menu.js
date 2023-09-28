@@ -16,15 +16,11 @@ var OptionPanel = require("./options").OptionPanel;
 var overlayPage = require('./menu_tools/overlay_page').overlayPage;
 
 /**
- * @typedef IEditor
- * @type {import("../editor").IEditor}
- */
-/**
  * This displays the settings menu if it is not already being shown.
  * @author <a href="mailto:matthewkastor@gmail.com">
  *  Matthew Christopher Kastor-Inare III </a><br />
  *  ☭ Hial Atropa!! ☭
- * @param {IEditor} editor An instance of the ace editor.
+ * @param {import("../editor").Editor} editor An instance of the ace editor.
  */
 function showSettingsMenu(editor) {
     // show if the menu isn't open already.
@@ -44,9 +40,6 @@ function showSettingsMenu(editor) {
  *  to the editor with appropriate keyboard shortcuts.
  */
 module.exports.init = function() {
-    /**
-     * @type {any}
-     */
     var Editor = require("../editor").Editor;
     Editor.prototype.showSettingsMenu = function() {
         showSettingsMenu(this);

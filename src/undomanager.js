@@ -1,6 +1,6 @@
 "use strict";
 /**
- * @typedef {import("./edit_session").IEditSession} IEditSession
+ * @typedef {import("./edit_session").EditSession} EditSession
  */
 
 /**
@@ -23,7 +23,7 @@ class UndoManager {
 
     /**
      * 
-     * @param {IEditSession} session
+     * @param {EditSession} session
      */
     addSession(session) {
         this.$session = session;
@@ -36,7 +36,7 @@ class UndoManager {
      *
      * @param {import("../ace").Ace.Delta} delta
      * @param {boolean} allowMerge
-     * @param {IEditSession} [session]
+     * @param {EditSession} [session]
      **/
     add(delta, allowMerge, session) {
         if (this.$fromUndo) return;
@@ -159,7 +159,7 @@ class UndoManager {
 
     /**
      * [Perform an undo operation on the document, reverting the last change.]{: #UndoManager.undo}
-     * @param {IEditSession} session
+     * @param {EditSession} session
      * @param {Boolean} [dontSelect] {:dontSelect}
      **/
     undo(session, dontSelect) {
@@ -192,7 +192,7 @@ class UndoManager {
     
     /**
      * [Perform a redo operation on the document, reimplementing the last change.]{: #UndoManager.redo}
-     * @param {IEditSession} session
+     * @param {EditSession} session
      * @param {Boolean} [dontSelect] {:dontSelect}
      *
      **/

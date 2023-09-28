@@ -28,5 +28,6 @@
   "include": [
     "./src/**/*",
     "./ace.d.ts",
+    "./ace-extensions.d.ts"
   ]
 }

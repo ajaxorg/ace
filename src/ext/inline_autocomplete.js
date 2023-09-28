@@ -1,7 +1,5 @@
 "use strict";
-/**
- * @typedef {import("./command_bar").ICommandBarTooltip} ICommandBarTooltip
- */
+
 var HashHandler = require("../keyboard/hash_handler").HashHandler;
 var AceInline = require("../autocomplete/inline").AceInline;
 var FilteredList = require("../autocomplete").FilteredList;
@@ -10,7 +8,7 @@ var Editor = require("../editor").Editor;
 var util = require("../autocomplete/util");
 var dom = require("../lib/dom");
 var lang = require("../lib/lang");
-/**@type{any}*/var CommandBarTooltip = require("./command_bar").CommandBarTooltip;
+var CommandBarTooltip = require("./command_bar").CommandBarTooltip;
 var BUTTON_CLASS_NAME = require("./command_bar").BUTTON_CLASS_NAME;
 
 var snippetCompleter = require("./language_tools").snippetCompleter;
@@ -28,7 +26,7 @@ var destroyCompleter = function(e, editor) {
  */
 class InlineAutocomplete {
     /**
-     * @param {import("../editor").IEditor} editor
+     * @param {Editor} editor
      */
     constructor(editor) {
         this.editor = editor;
@@ -55,8 +53,7 @@ class InlineAutocomplete {
     }
 
     /**
-     * 
-     * @return {ICommandBarTooltip}
+     * @return {CommandBarTooltip}
      */
     getInlineTooltip() {
         if (!this.inlineTooltip) {
@@ -408,11 +405,11 @@ require("../config").defineOptions(Editor.prototype, "editor", {
  * Factory method to create a command bar tooltip for inline autocomplete.
  * 
  * @param {HTMLElement} parentEl  The parent element where the tooltip HTML elements will be added.
- * @returns {ICommandBarTooltip}   The command bar tooltip for inline autocomplete
+ * @returns {CommandBarTooltip}   The command bar tooltip for inline autocomplete
  */
 InlineAutocomplete.createInlineTooltip = function(parentEl) {
     /**
-     * @type {ICommandBarTooltip}
+     * @type {CommandBarTooltip}
      */
     var inlineTooltip = new CommandBarTooltip(parentEl);
     inlineTooltip.registerCommand("Previous",

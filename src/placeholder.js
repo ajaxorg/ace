@@ -1,23 +1,16 @@
 "use strict";
-/**
- * @typedef {import("./edit_session").IEditSession} IEditSession
- */
-/**
- * @typedef {PlaceHolder & import("../ace").Ace.EventEmitter<import("../ace").Ace.PlaceHolderEvents>} IPlaceHolder
- */
 var Range = require("./range").Range;
 var EventEmitter = require("./lib/event_emitter").EventEmitter;
 var oop = require("./lib/oop");
 
 class PlaceHolder { 
     /**
-     * @param {IEditSession} session
+     * @param {import("./edit_session").EditSession} session
      * @param {Number} length
      * @param {import("../ace").Ace.Point} pos
      * @param {any[]} others
      * @param {String} mainClass
      * @param {String} othersClass
-     * @this {IPlaceHolder}
      **/
     constructor(session, length, pos, others, mainClass, othersClass) {
         var _self = this;
@@ -178,7 +171,6 @@ class PlaceHolder {
      * 
      * Emitted when the cursor changes.
      * @param {any} [event]
-     * @this {IPlaceHolder}
      */
     onCursorChange(event) {
         if (this.$updating || !this.session) return;

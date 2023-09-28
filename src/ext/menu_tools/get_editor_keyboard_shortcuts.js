@@ -19,7 +19,7 @@
  * @author <a href="mailto:matthewkastor@gmail.com">
  *  Matthew Christopher Kastor-Inare III </a><br />
  *  ☭ Hial Atropa!! ☭
- * @param {import("../../editor").IEditor} editor An editor instance.
+ * @param {import("../../editor").Editor} editor An editor instance.
  * @returns {Array} Returns an array of objects representing the keyboard
  *  shortcuts for the given editor.
  * @example

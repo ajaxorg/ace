@@ -2,26 +2,26 @@
 /// <reference path="./ace-extensions.d.ts" />
 
 export namespace Ace {
-    type Anchor = import("./src/anchor").IAnchor;
-    type Editor = import("./src/editor").IEditor;
-    type EditSession = import("./src/edit_session").IEditSession;
-    type Document = import("./src/document").IDocument;
-    type Folding = import("./src/edit_session/folding").IFolding;
+    type Anchor = import("./src/anchor").Anchor;
+    type Editor = import("./src/editor").Editor;
+    type EditSession = import("./src/edit_session").EditSession;
+    type Document = import("./src/document").Document;
     type Fold = import("./src/edit_session/fold").Fold;
     type FoldLine = import("./src/edit_session/fold_line").FoldLine;
     type Range = import("./src/range").Range;
-    type VirtualRenderer = import("./src/virtual_renderer").IVirtualRenderer;
+    type VirtualRenderer = import("./src/virtual_renderer").VirtualRenderer;
     type UndoManager = import("./src/undomanager").UndoManager;
     type Tokenizer = import("./src/tokenizer").Tokenizer;
     type TokenIterator = import("./src/token_iterator").TokenIterator;
-    type Selection = import("./src/selection").ISelection;
+    type Selection = import("./src/selection").Selection;
     type Autocomplete = import("./src/autocomplete").Autocomplete;
     type CompletionProvider = import("./src/autocomplete").CompletionProvider;
-    type AcePopup = import("./src/autocomplete/popup").IAcePopup;
-    type Config = import("./src/config").IConfig;
+    type AcePopup = import("./src/autocomplete/popup").AcePopup;
+    type Config = import("./src/config").Config;
     type AceInline = import("./src/autocomplete/inline").AceInline;
     type MouseEvent = import("./src/mouse/mouse_event").MouseEvent;
-
+    type RangeList = import("./src/range_list").RangeList;
+    type FilteredList = import("./src/autocomplete").FilteredList;
     interface Theme {
         cssClass?: string;
         cssText?: string;
@@ -72,48 +72,155 @@ export namespace Ace {
     interface ScreenCoordinates {
         row: number,
         column: number,
-        side: 1 | -1,
-        offsetX: number
-    }
-    interface FoldingProperties {
-        $foldMode: FoldMode,
-        foldWidgets: FoldWidget[],
-        getFoldWidget: Function,
-        getFoldWidgetRange: Function,
-        $updateFoldWidgets(delta: Delta): void,
-        $tokenizerUpdateFoldWidgets(e): void,
-        addFold(placeholder: Fold|String, range?: Range): Fold,
-        removeFold(fold: Fold): void,
-        removeFolds(folds: Fold[]): void,
-        setFoldStyle(style: string): void,
-        $setFolding(foldMode: FoldMode): void,
+        side?: 1 | -1,
+        offsetX?: number
     }
 
-    interface AcePopupProperties {
-        setSelectOnHover: (val: boolean) => void,
-        setRow: (line: number) => void,
-        getRow: () => number,
-        getHoveredRow: () => number,
-        filterText: string,
-        isOpen: boolean,
-        isTopdown: boolean,
-        autoSelect: boolean,
-        data: Completion[],
-        setData: (data: Completion[], filterText: string) => void,
-        getData: (row: number) => Completion,
-        hide: () => void,
-        anchor: "top" | "bottom",
-        anchorPosition: Point,
-        tryShow: (pos: any, lineHeight: number, anchor: "top" | "bottom" | undefined, forceShow?: boolean) => boolean,
-        $borderSize: number,
-        show: (pos: any, lineHeight: number, topdownOnly?: boolean) => void,
-        goTo: (where: AcePopupNavigation) => void,
-        getTextLeftOffset: () => number,
-        $imageSize: number,
-        anchorPos: any
+    interface Folding {
+        $foldData: FoldLine[];
+        /**
+         * Looks up a fold at a given row/column. Possible values for side:
+         *   -1: ignore a fold if fold.start = row/column
+         *   +1: ignore a fold if fold.end = row/column
+         **/
+        getFoldAt(row: number, column: number, side?: number): Ace.Fold;
+        /**
+         * Returns all folds in the given range. Note, that this will return folds
+         **/
+        getFoldsInRange(range: Ace.Range | Ace.Delta): Ace.Fold[];
+        getFoldsInRangeList(ranges: Ace.Range[] | Ace.Range): Ace.Fold[];
+        /**
+         * Returns all folds in the document
+         */
+        getAllFolds(): Ace.Fold[];
+        /**
+         * Returns the string between folds at the given position.
+         * E.g.
+         *  foo<fold>b|ar<fold>wolrd -> "bar"
+         *  foo<fold>bar<fold>wol|rd -> "world"
+         *  foo<fold>bar<fo|ld>wolrd -> <null>
+         *
+         * where | means the position of row/column
+         *
+         * The trim option determs if the return string should be trimed according
+         * to the "side" passed with the trim value:
+         *
+         * E.g.
+         *  foo<fold>b|ar<fold>wolrd -trim=-1> "b"
+         *  foo<fold>bar<fold>wol|rd -trim=+1> "rld"
+         *  fo|o<fold>bar<fold>wolrd -trim=00> "foo"
+         */
+        getFoldStringAt(row: number, column: number, trim?: number, foldLine?: Ace.FoldLine): string | null;
+        getFoldLine(docRow: number, startFoldLine?: Ace.FoldLine): null | Ace.FoldLine;
+        /**
+         * Returns the fold which starts after or contains docRow
+         */
+        getNextFoldLine(docRow: number, startFoldLine?: Ace.FoldLine): null | Ace.FoldLine;
+        getFoldedRowCount(first: number, last: number): number;
+        $addFoldLine(foldLine: FoldLine): Ace.FoldLine;
+        /**
+         * Adds a new fold.
+         * @returns {Ace.Fold}
+         *      The new created Fold object or an existing fold object in case the
+         *      passed in range fits an existing fold exactly.
+         */
+        addFold(placeholder: Ace.Fold | string, range?: Ace.Range): Ace.Fold;
+        $modified: boolean;
+        addFolds(folds: Ace.Fold[]): void;
+        removeFold(fold: Ace.Fold): void;
+        removeFolds(folds: Ace.Fold[]): void;
+        expandFold(fold: Ace.Fold): void;
+        expandFolds(folds: Ace.Fold[]): void;
+        unfold(location?: number | null | Ace.Point | Ace.Range | Ace.Range[], expandInner?: boolean): Ace.Fold[] | undefined;
+        /**
+         * Checks if a given documentRow is folded. This is true if there are some
+         * folded parts such that some parts of the line is still visible.
+         **/
+        isRowFolded(docRow: number, startFoldRow?: Ace.FoldLine): boolean;
+        getRowFoldEnd(docRow: number, startFoldRow?: Ace.FoldLine): number;
+        getRowFoldStart(docRow: number, startFoldRow?: Ace.FoldLine): number;
+        getFoldDisplayLine(foldLine: Ace.FoldLine, endRow?: number | null, endColumn?: number | null, startRow?: number | null, startColumn?: number | null): string;
+        getDisplayLine(row: number, endColumn: number | null, startRow: number | null, startColumn: number | null): string;
+        $cloneFoldData(): Ace.FoldLine[];
+        toggleFold(tryToUnfold?: boolean): void;
+        getCommentFoldRange(row: number, column: number, dir?: number): Ace.Range | undefined;
+        foldAll(startRow?: number | null, endRow?: number | null, depth?: number | null, test?: Function): void;
+        foldToLevel(level: number): void;
+        foldAllComments(): void;
+        $foldStyles: {
+            manual: number;
+            markbegin: number;
+            markbeginend: number;
+        };
+        $foldStyle: string;
+        setFoldStyle(style: string): void;
+        $setFolding(foldMode: Ace.FoldMode): void;
+        $foldMode: any;
+        foldWidgets: any[];
+        getFoldWidget: any;
+        getFoldWidgetRange: any;
+        $updateFoldWidgets: any;
+        $tokenizerUpdateFoldWidgets: any;
+        getParentFoldRangeData(row: number, ignoreCurrent?: boolean): {
+            range?: Ace.Range;
+            firstRange?: Ace.Range;
+        };
+        onFoldWidgetClick(row: number, e: any): void;
+        $toggleFoldWidget(row: number, options: any): Fold | any;
+        /**
+         *
+         * @param {boolean} [toggleParent]
+         */
+        toggleFoldWidget(toggleParent?: boolean): void;
+        updateFoldWidgets(delta: Ace.Delta): void;
+        tokenizerUpdateFoldWidgets(e: any): void;
     }
-    interface ISelection {
-        [key: string]: any;
+
+    interface BracketMatch {
+        findMatchingBracket: (position: Point, chr?: string) => Point;
+
+        getBracketRange: (pos: Point) => null | Range;
+        /**
+         * Returns:
+         * * null if there is no any bracket at `pos`;
+         * * two Ranges if there is opening and closing brackets;
+         * * one Range if there is only one bracket
+         */
+        getMatchingBracketRanges: (pos: Point, isBackwards?: boolean) => null | Range[];
+        $brackets: {
+            ")": string;
+            "(": string;
+            "]": string;
+            "[": string;
+            "{": string;
+            "}": string;
+            "<": string;
+            ">": string;
+        };
+        $findOpeningBracket: (bracket: string, position: Point, typeRe?: RegExp) => Point | null;
+        $findClosingBracket: (bracket: string, position: Point, typeRe?: RegExp) => Point | null;
+        /**
+         * Returns [[Range]]'s for matching tags and tag names, if there are any
+         */
+        getMatchingTags: (pos: Point) => {
+            closeTag: Range;
+            closeTagName: Range;
+            openTag: Range;
+            openTagName: Range;
+        };
+        $findTagName: (iterator: any) => any;
+        $findClosingTag: (iterator: any, token: any) => {
+            openTag: Range;
+            closeTag: Range;
+            openTagName: Range;
+            closeTagName: Range;
+        };
+        $findOpeningTag: (iterator: any, token: any) => {
+            openTag: Range;
+            closeTag: Range;
+            openTagName: Range;
+            closeTagName: Range;
+        };
     }
     interface IRange {
         start: Point;
@@ -141,93 +248,6 @@ export namespace Ace {
         screenWidth?: number,
         rowsAbove?: number,
         lenses?: any[],
-    }
-
-    interface EditorProperties {
-        $mergeUndoDeltas?: any,
-        $highlightSelectedWord?: boolean,
-        $updatePlaceholder?: Function,
-        $cursorStyle?: string,
-        $readOnly?: any,
-        $highlightActiveLine?: any,
-        $enableAutoIndent?: any,
-        $copyWithEmptySelection?: any
-        $selectionStyle?: string,
-        env?: any;
-        widgetManager?: import("./src/line_widgets").LineWidgets,
-        completer?: import("./src/autocomplete").Autocomplete | import("./src/ext/inline_autocomplete").InlineAutocomplete,
-        completers: Completer[],
-        $highlightTagPending?: boolean,
-        showKeyboardShortcuts?: () => void,
-        showSettingsMenu?: () => void,
-        searchBox?: import("./src/ext/searchbox").SearchBox
-        [key: string]: any;
-    }
-
-    interface EditSessionProperties {
-        doc: Document,
-        $highlightLineMarker?: {
-            start: Point,
-            end: Point,
-            id?: number
-        }
-        $useSoftTabs?: boolean,
-        $tabSize?: number,
-        $useWorker?: boolean,
-        $wrapAsCode?: boolean,
-        $indentedSoftWrap?: boolean,
-        widgetManager?: any,
-        $bracketHighlight?: any,
-        $selectionMarker?: number,
-        curOp?: {
-            command: {},
-            args: string,
-            scrollTop: number,
-            [key: string]: any;
-        },
-        lineWidgetsWidth?: number,
-        $getWidgetScreenLength?: () => number,
-        _changedWidgets?: any,
-        $options:any,
-        $wrapMethod?: any,
-        $enableVarChar?: any,
-        $wrap?:any,
-        $navigateWithinSoftTabs?: boolean
-        [key: string]: any;
-    }
-
-    interface EditorMultiSelectProperties {
-        inMultiSelectMode?: boolean,
-        forEachSelection?: Function,
-        exitMultiSelectMode?: Function,
-    }
-
-    interface VirtualRendererProperties {
-        $customScrollbar?: boolean,
-        $extraHeight?: number,
-        $showGutter?: boolean,
-        $showPrintMargin?: boolean,
-        $printMarginColumn?: number,
-        $animatedScroll?: boolean,
-        $isMousePressed?: boolean,
-        textarea?: HTMLTextAreaElement,
-        $hScrollBarAlwaysVisible?: boolean,
-        $vScrollBarAlwaysVisible?: boolean
-        $maxLines?: number | null,
-        $scrollPastEnd?: number,
-        enableKeyboardAccessibility?: boolean,
-        keyboardFocusClassName?: string,
-        $highlightGutterLine?: boolean,
-        $minLines?: number,
-        $maxPixelHeight?: number,
-        $gutterWidth?: number,
-        showInvisibles?: boolean,
-        $hasCssTransforms?: boolean,
-        $blockCursor?: boolean,
-        $useTextareaForIME?: boolean,
-        theme?: any,
-        $theme?: any,
-        destroyed?: boolean,
     }
 
     type NewLineMode = 'auto' | 'unix' | 'windows';
@@ -313,11 +333,11 @@ export namespace Ace {
         enableKeyboardAccessibility: boolean;
         enableCodeLens: boolean;
     }
-    
+
     interface EventsBase {
         [key: string]: any;
     }
-    
+
     interface EditSessionEvents {
         /**
          * Emitted when the document changes.
@@ -390,8 +410,8 @@ export namespace Ace {
         "changeScrollLeft": (scrollLeft: number) => void;
         "changeEditor": (e: { editor: Editor }) => void;
     }
-    
-    interface EditorEvents {
+
+    interface EditorEvents{
         "change": (delta: Delta) => void;
         "changeSelection": () => void;
         "input": () => void;
@@ -426,15 +446,18 @@ export namespace Ace {
          **/
         "changeSelectionStyle": (data: "fullLine" | "screenLine" | "text" | "line") => void;
     }
-    
-    interface AcePopupEvents extends EditorEvents {
+
+    interface AcePopupEvents{
         "click": (e: MouseEvent) => void;
+        "dblclick": (e: MouseEvent) => void;
+        "tripleclick": (e: MouseEvent) => void;
+        "quadclick": (e: MouseEvent) => void;
         "show": () => void;
         "hide": () => void;
         "select": (hide: boolean) => void;
         "changeHoverMarker": (e) => void;
     }
-    
+
     interface DocumentEvents {
         /**
          * Fires whenever the document changes.
@@ -462,15 +485,15 @@ export namespace Ace {
          **/
         "change": (e: { old: Point, value: Point }) => void;
     }
-    
+
     interface BackgroundTokenizerEvents {
         /**
          * Fires whenever the background tokeniziers between a range of rows are going to be updated.
          * @param {Object} e An object containing two properties, `first` and `last`, which indicate the rows of the region being updated.
          **/
-        "update": (e: {first:number, last:number}) => void;    
+        "update": (e: {first:number, last:number}) => void;
     }
-    
+
     interface SelectionEvents {
         /**
          * Emitted when the cursor position changes.
@@ -481,15 +504,15 @@ export namespace Ace {
          **/
         "changeSelection": () => void;
     }
-    
+
     interface PlaceHolderEvents {
-        
+
     }
-    
+
     interface GutterEvents {
         "changeGutterWidth": (width: number) => void;
     }
-    
+
     interface TextEvents {
         "changeCharacterSize": (e) => void;
     }
@@ -574,7 +597,7 @@ export namespace Ace {
         name?: string;
         bindKey?: string | { mac?: string, win?: string };
         readOnly?: boolean;
-        exec?: (editor: Editor, args?: any) => void;
+        exec?: (editor?: Editor | any, args?: any) => void;
         isAvailable?: (editor: Editor) => boolean;
         description?: string,
         multiSelectAction?: "forEach"|"forEachLine"|Function,
@@ -586,7 +609,7 @@ export namespace Ace {
     }
 
     type CommandLike = Command | ((editor: Editor) => void);
-    
+
     type KeyboardHandler = import("./src/keyboard/hash_handler").HashHandler & {
         attach?: (editor: Editor) => void;
         detach?: (editor: Editor) => void;
@@ -797,7 +820,7 @@ export namespace Ace {
         on(name: 'exec', callback: execEventHandler): Function;
         on(name: 'afterExec', callback: execEventHandler): Function;
     }
-    type CommandManager = import("./src/commands/command_manager").ICommandManager & CommandManagerEvents;
+    type CommandManager = import("./src/commands/command_manager").CommandManager;
 
 
     interface SavedSelection {
@@ -901,14 +924,411 @@ export type InlineAutocomplete = import("./src/ext/inline_autocomplete").InlineA
 export type CommandBarTooltip = import("./src/ext/command_bar").CommandBarTooltip;
 
 
+declare module "./src/anchor" {
+    export interface Anchor extends Ace.EventEmitter<Ace.AnchorEvents> {
+        markerId?: number;
+    }
+    
+
+}
+
+declare module "./src/autocomplete" {
+    export interface Autocomplete {
+        popup: Ace.AcePopup    
+    }
+    
+    export interface CompletionProvider {
+        completions: Ace.FilteredList;
+    }
+}
+
+
+declare module "./src/background_tokenizer" {
+    export interface BackgroundTokenizer extends Ace.EventEmitter<Ace.BackgroundTokenizerEvents> {
+
+    }
+}
+
+declare module "./src/document" {
+    export interface Document extends
+        Ace.EventEmitter<Ace.DocumentEvents> {
+
+    }
+
+}
+
 declare module "./src/editor" {
-   export interface Editor extends
-     Ace.EventEmitter<Ace.EditorEvents>,
-     Ace.OptionsProvider<Ace.EditorOptions>,
-     Ace.EditorProperties,
-     Ace.EditorMultiSelectProperties
-   {
-     
-   } 
-   export type IEditor = Editor
+    export interface Editor extends
+        Ace.EventEmitter<Ace.EditorEvents>,
+        Ace.OptionsProvider<Ace.EditorOptions>,
+        EditorMultiSelectProperties
+    {
+        session: Ace.EditSession;
+        $mergeUndoDeltas?: any,
+        $highlightSelectedWord?: boolean,
+        $updatePlaceholder?: Function,
+        $cursorStyle?: string,
+        $readOnly?: any,
+        $highlightActiveLine?: any,
+        $enableAutoIndent?: any,
+        $copyWithEmptySelection?: any
+        $selectionStyle?: string,
+        env?: any;
+        widgetManager?: import("./src/line_widgets").LineWidgets,
+        completer?: import("./src/autocomplete").Autocomplete | import("./src/ext/inline_autocomplete").InlineAutocomplete,
+        completers: Ace.Completer[],
+        $highlightTagPending?: boolean,
+        showKeyboardShortcuts?: () => void,
+        showSettingsMenu?: () => void,
+        searchBox?: import("./src/ext/searchbox").SearchBox,
+        [key: string]: any;
+    }
+
+    interface EditorMultiSelectProperties {
+        inMultiSelectMode?: boolean,
+        /**
+         * Updates the cursor and marker layers.
+         **/
+        updateSelectionMarkers: () => void,
+        /**
+         * Adds the selection and cursor.
+         * @param orientedRange A range containing a cursor
+         **/
+        addSelectionMarker: (orientedRange: Ace.Range & {marker?}) => Ace.Range & {marker?},
+        /**
+         * Removes the selection marker.
+         * @param range The selection range added with [[Editor.addSelectionMarker `addSelectionMarker()`]].
+         **/
+        removeSelectionMarker: (range: Ace.Range & {marker?}) => void,
+        removeSelectionMarkers: (ranges: (Ace.Range & {marker?})[]) => void,
+        $onAddRange: (e) => void,
+        $onRemoveRange: (e) => void,
+        $onMultiSelect: (e) => void,
+        $onSingleSelect: (e) => void,
+        $onMultiSelectExec: (e) => void,
+        /**
+         * Executes a command for each selection range.
+         * @param cmd The command to execute
+         * @param [args] Any arguments for the command
+         **/
+        forEachSelection: (cmd: Object, args?: string, options?: Object) => void,
+        /**
+         * Removes all the selections except the last added one.
+         **/
+        exitMultiSelectMode: () => void,
+        getSelectedText: () => string,
+        $checkMultiselectChange: (e, anchor: Ace.Anchor) => void,
+        /**
+         * Finds and selects all the occurrences of `needle`.
+         * @param needle The text to find
+         * @param options The search options
+         * @param additive keeps
+         * @returns {Number} The cumulative count of all found matches
+         **/
+        findAll: (needle?: string, options?: Partial<Ace.SearchOptions>, additive?: boolean) => number,
+        /**
+         * Adds a cursor above or below the active cursor.
+         * @param dir The direction of lines to select: -1 for up, 1 for down
+         * @param [skip] If `true`, removes the active selection range
+         */
+        selectMoreLines: (dir: number, skip?: boolean) => void,
+        /**
+         * Transposes the selected ranges.
+         * @param {Number} dir The direction to rotate selections
+         **/
+        transposeSelections: (dir: number) => void,
+        /**
+         * Finds the next occurrence of text in an active selection and adds it to the selections.
+         * @param {Number} dir The direction of lines to select: -1 for up, 1 for down
+         * @param {Boolean} [skip] If `true`, removes the active selection range
+         * @param {Boolean} [stopAtFirst]
+         **/
+        selectMore: (dir: number, skip?: boolean, stopAtFirst?: boolean) => void,
+        /**
+         * Aligns the cursors or selected text.
+         **/
+        alignCursors: () => void,
+        $reAlignText: (lines: string[], forceLeft: boolean) => string[],
+    }
+}
+
+declare module "./src/edit_session" {
+    export interface EditSession extends
+        Ace.EventEmitter<Ace.EditSessionEvents>,
+        Ace.OptionsProvider<Ace.EditSessionOptions>,
+        Ace.Folding, Ace.BracketMatch
+    {
+        doc: Ace.Document,
+        $highlightLineMarker?: {
+            start: Ace.Point,
+            end: Ace.Point,
+            id?: number
+        }
+        $useSoftTabs?: boolean,
+        $tabSize?: number,
+        $useWorker?: boolean,
+        $wrapAsCode?: boolean,
+        $indentedSoftWrap?: boolean,
+        widgetManager?: any,
+        $bracketHighlight?: any,
+        $selectionMarker?: number,
+        curOp?: {
+            command: {},
+            args: string,
+            scrollTop: number,
+            [key: string]: any;
+        },
+        lineWidgetsWidth?: number,
+        $getWidgetScreenLength?: () => number,
+        _changedWidgets?: any,
+        $options:any,
+
+        $wrapMethod?: any,
+        $enableVarChar?: any,
+        $wrap?:any,
+        $navigateWithinSoftTabs?: boolean,
+        getSelectionMarkers(): any[],
+        [key: string]: any;
+    }
+}
+
+declare module "./src/edit_session/fold" {
+    export interface Fold {
+        collapseChildren?: number;    
+    }   
+}
+
+// @ts-expect-error
+declare module "./src/placeholder" {
+    export interface PlaceHolder extends Ace.EventEmitter<Ace.PlaceHolderEvents> {
+    }
+}
+
+declare module "./src/scrollbar" {
+    export interface Scrollbar extends Ace.EventEmitter<any> {
+    }
+    export interface VScrollBar extends Scrollbar {
+    }
+    export interface HScrollBar extends Scrollbar {
+    }
+}
+
+declare module "./src/scrollbar_custom" {
+    export interface Scrollbar extends Ace.EventEmitter<any> {
+    }
+    export interface VScrollBar extends Scrollbar {
+    }
+    export interface HScrollBar extends Scrollbar {
+    }
+}
+
+declare module "./src/line_widgets" {
+    export interface LineWidgets {
+        lineWidgets: Ace.LineWidget[];
+        editor: Ace.Editor;
+    }
+}
+
+declare module "./src/selection" {
+    export interface Selection extends Ace.EventEmitter<Ace.SelectionEvents>, MultiSelectProperties {
+    }
+
+    interface MultiSelectProperties {
+        ranges: Ace.Range[] | null;
+        rangeList: Ace.RangeList | null;
+        /**
+         * Adds a range to a selection by entering multiselect mode, if necessary.
+         * @param {Ace.Range} range The new range to add
+         * @param {Boolean} [$blockChangeEvents] Whether or not to block changing events
+         **/
+        addRange(range: Ace.Range, $blockChangeEvents?: boolean): any;
+        inMultiSelectMode: boolean;
+        /**
+         * @param {Ace.Range} [range]
+         **/
+        toSingleRange(range?: Ace.Range): void;
+        /**
+         * Removes a Range containing pos (if it exists).
+         * @param {Ace.Point} pos The position to remove, as a `{row, column}` object
+         **/
+        substractPoint(pos: Ace.Point): any;
+        /**
+         * Merges overlapping ranges ensuring consistency after changes
+         **/
+        mergeOverlappingRanges(): void;
+        /**
+         * @param {Ace.Range} range
+         */
+        $onAddRange(range: Ace.Range): void;
+        rangeCount: number;
+        /**
+         *
+         * @param {Ace.Range[]} removed
+         */
+        $onRemoveRange(removed: Ace.Range[]): void;
+        /**
+         * adds multicursor support to selection
+         */
+        $initRangeList(): void;
+        /**
+         * Returns a concatenation of all the ranges.
+         * @returns {Ace.Range[]}
+         **/
+        getAllRanges(): Ace.Range[];
+        /**
+         * Splits all the ranges into lines.
+         **/
+        splitIntoLines(): void;
+        /**
+         */
+        joinSelections(): void;
+        /**
+         **/
+        toggleBlockSelection(): void;
+        /**
+         *
+         * Gets list of ranges composing rectangular block on the screen
+         *
+         * @param {Ace.ScreenCoordinates} screenCursor The cursor to use
+         * @param {Ace.ScreenCoordinates} screenAnchor The anchor to use
+         * @param {Boolean} [includeEmptyLines] If true, this includes ranges inside the block which are empty due to clipping
+         * @returns {Ace.Range[]}
+         **/
+        rectangularRangeBlock(screenCursor: Ace.ScreenCoordinates, screenAnchor: Ace.ScreenCoordinates, includeEmptyLines?: boolean): Ace.Range[];
+
+        _eventRegistry?: any;
+        index?: number;
+    }
+}
+
+declare module "./src/range" {
+    export interface Range {
+        id?: number;
+        cursor?: Ace.Point;
+        isBackwards?: boolean;
+    }   
+}
+
+declare module "./src/virtual_renderer" {
+    export interface VirtualRenderer extends
+        Ace.EventEmitter<Ace.VirtualRendererEvents>, Ace.OptionsProvider<Ace.VirtualRendererOptions> {
+        $customScrollbar?: boolean,
+        $extraHeight?: number,
+        $showGutter?: boolean,
+        $showPrintMargin?: boolean,
+        $printMarginColumn?: number,
+        $animatedScroll?: boolean,
+        $isMousePressed?: boolean,
+        textarea?: HTMLTextAreaElement,
+        $hScrollBarAlwaysVisible?: boolean,
+        $vScrollBarAlwaysVisible?: boolean
+        $maxLines?: number | null,
+        $scrollPastEnd?: number,
+        enableKeyboardAccessibility?: boolean,
+        keyboardFocusClassName?: string,
+        $highlightGutterLine?: boolean,
+        $minLines?: number,
+        $maxPixelHeight?: number,
+        $gutterWidth?: number,
+        showInvisibles?: boolean,
+        $hasCssTransforms?: boolean,
+        $blockCursor?: boolean,
+        $useTextareaForIME?: boolean,
+        theme?: any,
+        $theme?: any,
+        destroyed?: boolean,
+        session: Ace.EditSession,
+    }
+
+}
+
+declare module "./src/snippets" {
+    export interface SnippetManager extends Ace.EventEmitter<any> {
+    }
+}
+
+declare module "./src/ext/command_bar" {
+    export interface CommandBarTooltip extends Ace.EventEmitter<any> {
+        $shouldHideMoreOptions?: boolean,
+    }
+}
+
+declare module "./src/commands/command_manager" {
+    export interface CommandManager extends Ace.EventEmitter<any> {
+        $checkCommandState?: boolean
+    }
+}
+
+declare module "./src/autocomplete/popup" {
+    type AcePopupEventsCombined = Ace.EditorEvents & Ace.AcePopupEvents;
+    type AcePopupWithEditor = Ace.EventEmitter<AcePopupEventsCombined> & Ace.Editor;
+    export interface AcePopup extends AcePopupWithEditor  {
+        setSelectOnHover: (val: boolean) => void,
+        setRow: (line: number) => void,
+        getRow: () => number,
+        getHoveredRow: () => number,
+        filterText: string,
+        isOpen: boolean,
+        isTopdown: boolean,
+        autoSelect: boolean,
+        data: Ace.Completion[],
+        setData: (data: Ace.Completion[], filterText: string) => void,
+        getData: (row: number) => Ace.Completion,
+        hide: () => void,
+        anchor: "top" | "bottom",
+        anchorPosition: Ace.Point,
+        tryShow: (pos: any, lineHeight: number, anchor: "top" | "bottom" | undefined, forceShow?: boolean) => boolean,
+        $borderSize: number,
+        show: (pos: any, lineHeight: number, topdownOnly?: boolean) => void,
+        goTo: (where: Ace.AcePopupNavigation) => void,
+        getTextLeftOffset: () => number,
+        $imageSize: number,
+        anchorPos: any
+    }
+}
+
+declare module "./src/layer/cursor" {
+    export interface Cursor {
+        timeoutId?: number;
+    }
+}
+
+declare module "./src/layer/gutter" {
+    export interface Gutter extends Ace.EventEmitter<Ace.GutterEvents> {
+        $useSvgGutterIcons?: boolean,
+        $showFoldedAnnotations?: boolean,
+    }
+}
+
+declare module "./src/layer/text" {
+    export interface Text extends Ace.EventEmitter<Ace.TextEvents> {
+    }
+}
+
+declare module "./src/lib/app_config" {
+    export interface AppConfig extends Ace.EventEmitter<any> {
+    }
+}
+
+declare module "./src/mouse/mouse_handler" {
+    type DefaultHandlers = import("./src/mouse/default_handlers").DefaultHandlers;
+    //@ts-ignore
+    type GutterHandler = import("./src/mouse/default_gutter_handler").GutterHandler;
+    type DragdropHandler = import("./src/mouse/dragdrop_handler").DragdropHandler;
+
+    export interface MouseHandler extends DefaultHandlers, GutterHandler, DragdropHandler {
+        $tooltipFollowsMouse?: boolean,
+        cancelDrag?: boolean
+    }
+}
+
+// @ts-expect-error
+declare module "./src/ext/options" {
+    export interface OptionPanel extends Ace.EventEmitter<any> {
+    }
+}
+
+declare module "./src/layer/font_metrics" {
+    export interface FontMetrics extends Ace.EventEmitter<any> {
+    }
 }

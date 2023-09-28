@@ -3,7 +3,7 @@
 var Range = require("../range").Range;
 
 /**
- * @param {import("../editor").IEditor} editor
+ * @param {import("../editor").Editor} editor
  * @param {import("../../ace").Ace.HardWrapOptions} options
  */
 function hardWrap(editor, options) {

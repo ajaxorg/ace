@@ -2,8 +2,7 @@
 
 /**
  *
- * @typedef IEditSession
- * @type {import("../edit_session").IEditSession}
+ * @typedef {import("../edit_session").EditSession} EditSession
  */
 
 var lang = require("../lib/lang");
@@ -87,7 +86,7 @@ exports.$detectIndentation = function(lines, fallback) {
 };
 
 /**
- * @param {IEditSession} session
+ * @param {EditSession} session
  * @returns {{ch?: string, length?: number}|{}}
  */
 exports.detectIndentation = function(session) {
@@ -103,7 +102,7 @@ exports.detectIndentation = function(session) {
 };
 
 /**
- * @param {IEditSession} session
+ * @param {EditSession} session
  * @param {Object} options
  * @param {boolean} [options.trimEmpty] trim empty lines too
  * @param {boolean} [options.keepCursorPosition] do not trim whitespace before the cursor
@@ -146,7 +145,7 @@ exports.trimTrailingSpace = function(session, options) {
 };
 
 /**
- * @param {IEditSession} session
+ * @param {EditSession} session
  * @param {string} ch
  * @param {number} len
  */

@@ -4,6 +4,9 @@ var event = require("../lib/event");
 var Tooltip = require("../tooltip").Tooltip;
 var nls = require("../config").nls;
 
+/**
+ * @param {import("../mouse/mouse_handler").MouseHandler} mouseHandler
+ */
 function GutterHandler(mouseHandler) {
     var editor = mouseHandler.editor;
     var gutter = editor.renderer.$gutterLayer;

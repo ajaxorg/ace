@@ -1,7 +1,6 @@
 "use strict";
 /**
- * @typedef Fold
- * @type {import("./fold").Fold}
+ * @typedef {import("./fold").Fold} Fold
  */
 var Range = require("../range").Range;
 
