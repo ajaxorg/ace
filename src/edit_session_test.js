@@ -1137,7 +1137,7 @@ module.exports = {
         session.destroy();
         assert.equal(session.destroyed, true);
         assert.notEqual(session.bgTokenizer, null);
-    }
+    },
 
     "test: JSON serialization": function() {
         var session = new EditSession(["Hello world!"]);
