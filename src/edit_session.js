@@ -283,7 +283,7 @@ class EditSession {
             selection: this.selection.toJSON(),
             value: this.doc.getValue()
         };
-    };
+    }
  
     /**
      * Returns the current [[Document `Document`]] as a string.
