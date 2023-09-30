@@ -266,7 +266,7 @@ class EditSession {
      * @param {String} session The EditSession state.
      * @returns {EditSession}
      */
-     fromJSON(session) {
+     static fromJSON(session) {
         session = JSON.parse(session);
         const undoManager = new UndoManager();
         undoManager.$undoStack = session.history.undo;
