@@ -4,6 +4,7 @@ var oop = require("../lib/oop");
 var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;
 
 var PowershellHighlightRules = function() {
+    var identifierRe = "[a-zA-Z\\?_\u00a1-\uffff][a-zA-Z\\d\\?_\u00a1-\uffff]*";
 
     // Help Reference: about_Language_Keywords
     // https://technet.microsoft.com/en-us/library/hh847744.aspx
@@ -334,45 +335,46 @@ var PowershellHighlightRules = function() {
                 regex : "<#",
                 next : "comment"
             }, {
-                token : "string", // single line
-                regex : '["](?:(?:\\\\.)|(?:[^"\\\\]))*?["]'
+                token : "string", // multi line
+                regex : /@'$/,
+                push: [
+                    {
+                        token: "string",
+                        regex: /^'@/,
+                        next: "pop"
+                    },
+                    {
+                        defaultToken: "string"
+                    }
+                ]
             }, {
-                token : "string", // single line
-                regex : "['](?:(?:\\\\.)|(?:[^'\\\\]))*?[']"
-            }, {
-                token : "constant.numeric", // hex
-                regex : "0[xX][0-9a-fA-F]+\\b"
-            }, {
-                token : "constant.numeric", // float
-                regex : "[+-]?\\d+(?:(?:\\.\\d*)?(?:[eE][+-]?\\d+)?)?\\b"
-            }, {
-                token : "constant.language.boolean",
-                regex : "[$](?:[Tt]rue|[Ff]alse)\\b"
-            }, {
-                token : "constant.language",
-                regex : "[$][Nn]ull\\b"
-            }, {
-                token : "variable.instance",
-                regex : "[$][a-zA-Z][a-zA-Z0-9_]*\\b"
-            }, {
-                token : keywordMapper,
-                // TODO: Unicode escape sequences
-                // TODO: Unicode identifiers
-                regex : "[a-zA-Z_$][a-zA-Z0-9_$\\-]*\\b"
-            }, {
-                token : "keyword.operator",
-                regex : "\\-(?:" + binaryOperatorsRe + ")"
-            }, {
-                // Arithmetic, Assignment, Redirection, Call, Not & Pipeline Operators
-                token : "keyword.operator",
-                regex : "&|\\+|\\-|\\*|\\/|\\%|\\=|\\>|\\&|\\!|\\|"
-            }, {
+                token : "string", // multi line
+                regex : /@"$/,
+                push: [
+                    {
+                        token: "string",
+                        regex: /^"@/,
+                        next: "pop"
+                    },
+                    {include: "expressions"},
+                    {include: "expandable-strings"},
+                    {
+                        defaultToken: "string"
+                    }
+                ]
+            },
+            {include: "strings"},
+            {include: "variables"},
+            {include: "statements"},
+            {include: "expressions"},
+            {
                 token : "lparen",
                 regex : "[[({]"
             }, {
                 token : "rparen",
                 regex : "[\\])}]"
-            }, {
+            },
+            {
                 token : "text",
                 regex : "\\s+"
             }
@@ -388,8 +390,147 @@ var PowershellHighlightRules = function() {
             }, {
                 defaultToken : "comment"
             }
+        ],
+        "expandable-strings" : [
+            {
+                token: "constant.language.escape",
+                regex: /`./
+            },
+            {include: "variables"}
+        ],
+        "variables": [
+            {
+                token : "variable.instance",
+                regex : "[$]"+identifierRe+"\\b"
+            },
+            {
+                token : "variable.braced",
+                regex: /\$\{/,
+                push: [
+                    {
+                        token: "variable.braced",
+                        regex: /\}/,
+                        next: "pop"
+                    },
+                    {
+                        token: "constant.language.escape",
+                        regex: /`./
+                    },
+                    {defaultToken: "variable.braced"}
+                    ]
+            }
+        ],
+        "statements" : [
+            {
+                token : "punctuation",
+                regex: ";"
+            },
+            {
+                token : "keyword.operator",
+                regex : "\\-(?:" + binaryOperatorsRe + ")"
+            }, {
+                // Arithmetic, Assignment, Redirection, Call, Not & Pipeline Operators
+                token : "keyword.operator",
+                regex : "&|\\+|\\-|\\*|\\/|\\%|\\=|\\>|\\&|\\!|\\|"
+            },
+            {include: "constants"},
+            {
+                token : keywordMapper,
+                // TODO: Unicode escape sequences
+                // TODO: Unicode identifiers
+                regex : "[a-zA-Z_$][a-zA-Z0-9_$\\-]*\\b"
+            }
+        ],
+        "constants": [
+            {
+                token : "constant.numeric", // hex
+                regex : "0[xX][0-9a-fA-F]+\\b"
+            }, {
+                token : "constant.numeric", // float
+                regex : "[+-]?\\d+(?:(?:\\.\\d*)?(?:[eE][+-]?\\d+)?)?\\b"
+            }, {
+                token : "constant.language.boolean",
+                regex : "[$](?:[Tt]rue|[Ff]alse)\\b"
+            }, {
+                token : "constant.language",
+                regex : "[$][Nn]ull\\b"
+            }
+        ],
+        "strings": [
+            {
+                token : "string", // single line
+                regex : "['][^']*[']"
+            },
+            {
+                token : "string", // single line
+                regex : /"/,
+                push: [
+                    {
+                        token: "string",
+                        regex: /"|$/,
+                        next: "pop"
+                    },
+                    {include: "expressions"},
+                    {include: "expandable-strings"},
+                    {
+                        defaultToken: "string"
+                    }
+                ]
+            }
+        ],
+        "expressions": [
+            {
+                token: "keyword.operator",
+                regex: /[$@]\(/,
+                push: [
+                    {
+                        token: "keyword.operator",
+                        regex: /\)/,
+                        next: "pop"
+                    },
+                    {include: "parens-block"},
+                    {include: "expressions"},
+                    {include: "strings"},
+                    {include: "variables"},
+                    {include: "statements"}
+                ]
+            },
+            {//hash literal expressions
+                token: "keyword.operator",
+                regex: /@\{/,
+                push: [
+                    {
+                        token: "keyword.operator",
+                        regex: /\}/,
+                        next: "pop"
+                    },
+                    {include: "parens-block"},
+                    {include: "strings"},
+                    {include: "variables"},
+                    {include: "statements"}
+                ]
+            }
+        ],
+        "parens-block": [
+            {
+                token: "paren.lparen",
+                regex: /\(/,
+                push: [
+                    {
+                        token: "paren.rparen",
+                        regex: /\)/,
+                        next: "pop"
+                    },
+                    {include: "parens-block"},
+                    {include: "strings"},
+                    {include: "variables"},
+                    {include: "statements"}
+                ]
+            }
         ]
     };
+    
+    this.normalizeRules();
 };
 
 oop.inherits(PowershellHighlightRules, TextHighlightRules);
