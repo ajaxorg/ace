@@ -1143,13 +1143,14 @@ module.exports = {
         var session = new EditSession(["Hello world!"]);
         session.setAnnotations([{row: 0, column: 0, text: "error test", type: "error"}]);
         session.setMode("ace/mode/javascript");
-        var json = JSON.parse(JSON.stringify(session));
-        assert.equal(json.annotations.length, 1);
-        assert.equal(json.folds.length, 0);
-        assert.equal(json.mode, "ace/mode/javascript");
-        assert.equal(json.scrollLeft, 0);
-        assert.equal(json.scrollTop, 0);
-        assert.equal(json.value, "Hello world!");
+        session = EditSession.fromJSON(JSON.stringify(session));
+        
+        assert.equal(session.getAnnotations().length, 1);
+        assert.equal(session.getFolds().length, 0);
+        assert.equal(session.getMode(), "ace/mode/javascript");
+        assert.equal(session.getScrollLeft(), 0);
+        assert.equal(session.getScrollTop(), 0);
+        assert.equal(session.getValue(), "Hello world!");
     }
 };
 
