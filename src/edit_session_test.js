@@ -1146,8 +1146,8 @@ module.exports = {
         var json = JSON.parse(JSON.stringify(session));
         assert.equal(json.annotations.length, 1);
         assert.equal(json.mode, "ace/mode/javascript");
-        assert.equal(json.scrollLeft, 0)
-        assert.equal(json.scrollTop, 0)
+        assert.equal(json.scrollLeft, 0);
+        assert.equal(json.scrollTop, 0);
         assert.equal(json.value, "Hello world!");
     }
 };
