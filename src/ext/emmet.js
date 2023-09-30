@@ -322,6 +322,10 @@ var keymap = {
 
 var editorProxy = new AceEmmetEditor();
 exports.commands = new HashHandler();
+/**
+ * @param {Editor} editor
+ * @return {number|boolean}
+ */
 exports.runEmmetCommand = function runEmmetCommand(editor) {
     if (this.action == "expand_abbreviation_with_tab") {
         if (!editor.selection.isEmpty())
@@ -367,6 +371,10 @@ for (var command in keymap) {
     });
 }
 
+/**
+ * @param {Editor} editor
+ * @param {boolean} [enabled]
+ */
 exports.updateCommands = function(editor, enabled) {
     if (enabled) {
         editor.keyBinding.addKeyboardHandler(exports.commands);
@@ -382,6 +390,11 @@ exports.isSupportedMode = function(mode) {
     return /css|less|scss|sass|stylus|html|php|twig|ejs|handlebars/.test(id);
 };
 
+/**
+ * @param {Editor} editor
+ * @param {string} command
+ * @return {boolean}
+ */
 exports.isAvailable = function(editor, command) {
     if (/(evaluate_math_expression|expand_abbreviation)$/.test(command))
         return true;

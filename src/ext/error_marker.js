@@ -23,6 +23,11 @@ function binarySearch(array, needle, comparator) {
     return -(first + 1);
 }
 
+/**
+ * @param {import("../edit_session").EditSession} session
+ * @param {number} row
+ * @param {number} dir
+ */
 function findAnnotations(session, row, dir) {
     var annotations = session.getAnnotations().sort(Range.comparePoints);
     if (!annotations.length)

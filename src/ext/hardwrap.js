@@ -45,6 +45,11 @@ function hardWrap(editor, options) {
         row++;
     }
 
+    /**
+     * @param {string} line
+     * @param {number} max
+     * @param {number} min
+     */
     function findSpace(line, max, min) {
         if (line.length < max)
             return;

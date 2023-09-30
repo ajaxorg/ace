@@ -8,6 +8,9 @@ var dom = require("../lib/dom");
 var escapeHTML = require("../lib/lang").escapeHTML;
 
 class Element {
+    /**
+     * @param {string} type
+     */
     constructor(type) {
         /** @type{string} */this.className;
         this.type = type;
@@ -52,10 +55,10 @@ class Element {
 
 
 var simpleDom = {
-    createTextNode: function(textContent, element) {
+    createTextNode: function(/** @type {string} */ textContent, /** @type {any} */ element) {
         return escapeHTML(textContent);
     },
-    createElement: function(type) {
+    createElement: function(/** @type {string} */ type) {
         return new Element(type);
     },
     createFragment: function() {

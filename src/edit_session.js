@@ -2232,8 +2232,8 @@ class EditSession {
 
     /**
      * For the given document row and column, returns the screen column.
-     * @param {Number} row
-     * @param {Number} docColumn
+     * @param {Number|Point} row
+     * @param {Number} [docColumn]
      * @returns {Number}
      **/
     documentToScreenColumn(row, docColumn) {
@@ -2242,8 +2242,8 @@ class EditSession {
 
     /**
      * For the given document row and column, returns the screen row.
-     * @param {Number} docRow
-     * @param {Number} docColumn
+     * @param {Number|Point} docRow
+     * @param {Number} [docColumn]
      * @returns {number}
      **/
     documentToScreenRow(docRow, docColumn) {

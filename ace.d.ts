@@ -579,8 +579,8 @@ export namespace Ace {
     }
 
     interface Annotation {
-        row?: number;
-        column?: number;
+        row: number;
+        column: number;
         text: string;
         type: string;
     }

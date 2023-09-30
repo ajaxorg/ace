@@ -20,6 +20,11 @@ function getModeForPath(path) {
 }
 
 class Mode {
+    /**
+     * @param {string} name
+     * @param {string} caption
+     * @param {string} extensions
+     */
     constructor(name, caption, extensions) {
         this.name = name;
         this.caption = caption;
@@ -38,6 +43,9 @@ class Mode {
         this.extRe = new RegExp(re, "gi");
     }
 
+    /**
+     * @param {string} filename
+     */
     supportsFile(filename) {
         return filename.match(this.extRe);
     }
