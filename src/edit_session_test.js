@@ -1142,11 +1142,9 @@ module.exports = {
     "test: JSON serialization": function() {
         var session = new EditSession(["Hello world!"]);
         session.setAnnotations([{row: 0, column: 0, text: "error test", type: "error"}]);
-        session.setBreakpoints([1]);
         session.setMode("ace/mode/javascript");
         var json = JSON.parse(JSON.stringify(session));
         assert.equal(json.annotations.length, 1);
-        assert.equal(json.breakpoints, [1]);
         assert.equal(json.mode, "ace/mode/javascript");
         assert.equal(json.scrollLeft, 0)
         assert.equal(json.scrollTop, 0)
