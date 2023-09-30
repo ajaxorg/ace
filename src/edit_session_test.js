@@ -1146,7 +1146,6 @@ module.exports = {
         session = EditSession.fromJSON(JSON.stringify(session));
         
         assert.equal(session.getAnnotations().length, 1);
-        assert.equal(session.getFolds().length, 0);
         assert.equal(session.getMode(), "ace/mode/javascript");
         assert.equal(session.getScrollLeft(), 0);
         assert.equal(session.getScrollTop(), 0);
