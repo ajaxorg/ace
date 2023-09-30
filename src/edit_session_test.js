@@ -1145,7 +1145,7 @@ module.exports = {
         session.setMode("ace/mode/javascript");
         var json = JSON.parse(JSON.stringify(session));
         assert.equal(json.annotations.length, 1);
-        assert.equal(json.folds, []);
+        assert.equal(json.folds.length, 0);
         assert.equal(json.mode, "ace/mode/javascript");
         assert.equal(json.scrollLeft, 0);
         assert.equal(json.scrollTop, 0);
