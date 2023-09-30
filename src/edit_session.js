@@ -260,9 +260,35 @@ class EditSession {
         this.getUndoManager().reset();
     }
 
+     /**
+     * Returns a new instance of EditSession with state from JSON.
+     * @method fromJSON
+     * @returns {EditSession}
+     */
+     fromJSON(session) {
+        const undoManager = new ace.UndoManager();
+        undoManager.$undoStack = session.history.undo;
+        undoManager.$redoStack = session.history.redo;
+        undoManager.mark = session.history.mark;
+        undoManager.$rev = session.history.rev;
+    
+        const editSession = new ace.EditSession(session.value);
+        session.folds.forEach(function(fold) {
+          editSession.addFold("...", ace.Range.fromPoints(fold.start, fold.end));
+        });
+        editSession.setAnnotations(session.annotations);
+        editSession.setBreakpoints(session.breakpoints);
+        editSession.setMode(session.mode);
+        editSession.setScrollLeft(session.scrollLeft);
+        editSession.setScrollTop(session.scrollTop);
+        editSession.setUndoManager(undoManager);
+        editSession.selection.fromJSON(session.selection);
+    
+        return editSession;
+    }
+ 
     /**
      * Returns the current edit session as a JSON string.
-     * @private
      * @method toJSON
      * @returns {String}
      */
