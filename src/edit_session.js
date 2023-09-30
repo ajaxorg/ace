@@ -263,9 +263,11 @@ class EditSession {
      /**
      * Returns a new instance of EditSession with state from JSON.
      * @method fromJSON
+     * @param {String} session The EditSession state.
      * @returns {EditSession}
      */
      fromJSON(session) {
+        session = JSON.parse(session);
         const undoManager = new ace.UndoManager();
         undoManager.$undoStack = session.history.undo;
         undoManager.$redoStack = session.history.redo;
