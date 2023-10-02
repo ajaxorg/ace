@@ -726,6 +726,58 @@ module.exports = {
      
             done();
         }, 500);    
+    },
+    "test: should filter using caption if ignoreCaption false": function() {
+        var editor = initEditor("hello world\n");
+        
+        var completer = {
+            getCompletions: function (editor, session, pos, prefix, callback) {
+                var completions = [
+                    {
+                        caption: "caption",
+                        value: "value"
+                    }
+                ];
+                callback(null,  completions);
+            }
+        };
+
+        editor.completers = [completer];
+        
+        var completer = Autocomplete.for(editor);
+
+        // Should filter using the caption if set to false.
+        completer.ignoreCaption = false;
+        user.type("cap");
+        assert.equal(completer.popup.isOpen, true);   
+    },
+    "test: should filter using value if ignoreCaption true": function() {
+        var editor = initEditor("hello world\n");
+        
+        var completer = {
+            getCompletions: function (editor, session, pos, prefix, callback) {
+                var completions = [
+                    {
+                        caption: "caption",
+                        value: "value"
+                    }
+                ];
+                callback(null,  completions);
+            }
+        };
+
+        editor.completers = [completer];
+        
+        var completer = Autocomplete.for(editor);
+
+        // Should not filter using the caption if set to true.
+        completer.ignoreCaption = true;
+        user.type("cap");
+        assert.equal(completer.popup, undefined);   
+
+        // Should filter using the value instead.
+        user.type(" value");
+        assert.equal(completer.popup.isOpen, true);   
     }
 };
 
