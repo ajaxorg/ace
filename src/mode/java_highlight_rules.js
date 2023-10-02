@@ -18,7 +18,7 @@ var JavaHighlightRules = function() {
     "char|final|interface|static|void|" +
     "class|finally|long|strictfp|volatile|" +
     "const|float|native|super|while|" +
-    "var"
+    "var|record|yield|sealed"
     );
 
     var buildinConstants = ("null|Infinity|NaN|undefined");
