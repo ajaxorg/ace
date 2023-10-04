@@ -422,7 +422,7 @@ export namespace Ace {
         "changeSession": (e: {oldSession: EditSession, session: EditSession}) => void;
         "blur": (e) => void;
         "mousedown": (e: MouseEvent) => void;
-        "mousemove": (e: MouseEvent & {scrollTop?}) => void;
+        "mousemove": (e: MouseEvent & {scrollTop?}, editor?: Editor) => void;
         "changeStatus": () => void;
         "keyboardActivity": () => void;
         "mousewheel": (e: MouseEvent) => void;
@@ -610,7 +610,7 @@ export namespace Ace {
 
     type CommandLike = Command | ((editor: Editor) => void);
 
-    type KeyboardHandler = import("./src/keyboard/hash_handler").HashHandler & {
+    type KeyboardHandler = Partial<import("./src/keyboard/hash_handler").HashHandler> & {
         attach?: (editor: Editor) => void;
         detach?: (editor: Editor) => void;
         getStatusText?: (editor?: any, data?) => string;

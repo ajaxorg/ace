@@ -3050,25 +3050,25 @@ config.defineOptions(Editor.prototype, "editor", {
 
 
 var relativeNumberRenderer = {
-    getText: function(session, row) {
+    getText: function(/**@type{EditSession}*/session, /**@type{number}*/row) {
         return (Math.abs(session.selection.lead.row - row) || (row + 1 + (row < 9 ? "\xb7" : ""))) + "";
     },
-    getWidth: function(session, lastLineNumber, config) {
+    getWidth: function(session, /**@type{number}*/lastLineNumber, config) {
         return Math.max(
             lastLineNumber.toString().length,
             (config.lastRow + 1).toString().length,
             2
         ) * config.characterWidth;
     },
-    update: function(e, editor) {
+    update: function(e, /**@type{Editor}*/editor) {
         editor.renderer.$loop.schedule(editor.renderer.CHANGE_GUTTER);
     },
-    attach: function(editor) {
+    attach: function(/**@type{Editor}*/editor) {
         editor.renderer.$gutterLayer.$renderer = this;
         editor.on("changeSelection", this.update);
         this.update(null, editor);
     },
-    detach: function(editor) {
+    detach: function(/**@type{Editor}*/editor) {
         if (editor.renderer.$gutterLayer.$renderer == this)
             editor.renderer.$gutterLayer.$renderer = null;
         editor.off("changeSelection", this.update);

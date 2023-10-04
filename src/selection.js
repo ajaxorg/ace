@@ -894,7 +894,7 @@ class Selection {
     /**
      * 
      * @param data
-     * @return {Boolean|boolean|*|boolean}
+     * @return {boolean}
      */
     isEqual(data) {
         if ((data.length || this.rangeCount) && data.length != this.rangeCount)

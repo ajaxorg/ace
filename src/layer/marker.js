@@ -100,7 +100,7 @@ class Marker {
 
     /**
      * @param {number} row
-     * @param {import("../../ace").Ace.LayerConfig} layerConfig
+     * @param {Partial<import("../../ace").Ace.LayerConfig>} layerConfig
      */
     $getTop(row, layerConfig) {
         return (row - layerConfig.firstRowScreen) * layerConfig.lineHeight;
@@ -108,6 +108,13 @@ class Marker {
 
 
     // Draws a marker, which spans a range of text on multiple lines 
+    /**
+     * @param {undefined} stringBuilder
+     * @param {Range} range
+     * @param {string} clazz
+     * @param {Partial<import("../../ace").Ace.LayerConfig>} layerConfig
+     * @param {string} [extraStyle]
+     */
     drawTextMarker(stringBuilder, range, clazz, layerConfig, extraStyle) {
         var session = this.session;
         var start = range.start.row;
@@ -132,6 +139,13 @@ class Marker {
     }
 
     // Draws a multi line marker, where lines span the full width
+    /**
+     * @param {undefined} stringBuilder
+     * @param {Range} range
+     * @param {string} clazz
+     * @param {import("../../ace").Ace.LayerConfig} config
+     * @param {string} [extraStyle]
+     */
     drawMultiLineMarker(stringBuilder, range, clazz, config, extraStyle) {
         // from selection start to the end of the line
         var padding = this.$padding;
@@ -187,6 +201,14 @@ class Marker {
     }
 
     // Draws a marker which covers part or whole width of a single screen line
+    /**
+     * @param {undefined} stringBuilder
+     * @param {Range} range
+     * @param {string} clazz
+     * @param {Partial<import("../../ace").Ace.LayerConfig>} config
+     * @param {number} [extraLength]
+     * @param {string} [extraStyle]
+     */
     drawSingleLineMarker(stringBuilder, range, clazz, config, extraLength, extraStyle) {
         if (this.session.$bidiHandler.isBidiRow(range.start.row))
             return this.drawBidiSingleLineMarker(stringBuilder, range, clazz, config, extraLength, extraStyle);
@@ -206,6 +228,14 @@ class Marker {
     }
 
     // Draws Bidi marker which covers part or whole width of a single screen line
+    /**
+     * @param {undefined} stringBuilder
+     * @param {Range} range
+     * @param {string} clazz
+     * @param {Partial<import("../../ace").Ace.LayerConfig>} config
+     * @param {number} extraLength
+     * @param {string} extraStyle
+     */
     drawBidiSingleLineMarker(stringBuilder, range, clazz, config, extraLength, extraStyle) {
         var height = config.lineHeight, top = this.$getTop(range.start.row, config), padding = this.$padding;
         var selections = this.session.$bidiHandler.getSelections(range.start.column, range.end.column);
@@ -221,6 +251,13 @@ class Marker {
         }, this);
     }
 
+    /**
+     * @param {undefined} stringBuilder
+     * @param {Range} range
+     * @param {string} clazz
+     * @param {Partial<import("../../ace").Ace.LayerConfig>} config
+     * @param {undefined} [extraStyle]
+     */
     drawFullLineMarker(stringBuilder, range, clazz, config, extraStyle) {
         var top = this.$getTop(range.start.row, config);
         var height = config.lineHeight;
@@ -234,7 +271,14 @@ class Marker {
             "left:0;right:0;"+ (extraStyle || "")
         );
     }
-    
+
+    /**
+     * @param {undefined} stringBuilder
+     * @param {Range} range
+     * @param {string} clazz
+     * @param {Partial<import("../../ace").Ace.LayerConfig>} config
+     * @param {undefined} [extraStyle]
+     */
     drawScreenLineMarker(stringBuilder, range, clazz, config, extraStyle) {
         var top = this.$getTop(range.start.row, config);
         var height = config.lineHeight;

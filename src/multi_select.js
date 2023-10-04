@@ -15,6 +15,11 @@ exports.commands = commands.defaultCommands.concat(commands.multiSelectCommands)
 var Search = require("./search").Search;
 var search = new Search();
 
+/**
+ * @param {EditSession} session
+ * @param {string | RegExp} needle
+ * @param {number} dir
+ */
 function find(session, needle, dir) {
     search.$options.wrap = true;
     search.$options.needle = needle;

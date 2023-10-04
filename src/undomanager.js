@@ -4,6 +4,14 @@
  */
 
 /**
+ * @typedef {import("../ace").Ace.Delta} Delta
+ */
+
+/**
+ * @typedef {import("../ace").Ace.Point} Point
+ */
+
+/**
  * This object maintains the undo stack for an [[EditSession `EditSession`]].
  **/
 class UndoManager {
@@ -287,7 +295,10 @@ class UndoManager {
         
     }
 
-    
+
+    /**
+     * @param {Delta} delta
+     */
     $prettyPrint(delta) {
         if (delta) return stringifyDelta(delta);
         return stringifyDelta(this.$undoStack) + "\n---\n" + stringifyDelta(this.$redoStack);
@@ -300,6 +311,10 @@ UndoManager.prototype.hasRedo = UndoManager.prototype.canRedo;
 UndoManager.prototype.isClean = UndoManager.prototype.isAtBookmark;
 UndoManager.prototype.markClean = UndoManager.prototype.bookmark;
 
+/**
+ * @param {any[]} stack
+ * @param {number} pos
+ */
 function rearrangeUndoStack(stack, pos) {
     for (var i = pos; i--; ) {
         var deltaSet = stack[i];
@@ -319,6 +334,9 @@ var Range = require("./range").Range;
 var cmp = Range.comparePoints;
 var comparePoints = Range.comparePoints;
 
+/**
+ * @param {Delta} delta
+ */
 function $updateMarkers(delta) {
     var isInsert = delta.action == "insert";
     var start = delta.start;
@@ -359,9 +377,16 @@ function $updateMarkers(delta) {
     }
 }
 
+/**
+ * @param {Point} pos
+ */
 function clonePos(pos) {
     return {row: pos.row,column: pos.column};
 }
+
+/**
+ * @param {Delta} d
+ */
 function cloneDelta(d) {
     return {
         start: clonePos(d.start),
@@ -394,6 +419,11 @@ function stringifyDelta(d) {
     }
     return type;
 }
+
+/**
+ * @param {Range} r
+ * @return {string}
+ */
 function stringifyRange(r) {
     return r.start.row + ":" + r.start.column 
         + "=>" + r.end.row + ":" + r.end.column;
@@ -420,6 +450,10 @@ function stringifyRange(r) {
  *       d2.s < d1.s < d2.e // can split
  */
 
+/**
+ * @param {Delta} d1
+ * @param {Delta} d2
+ */
 function swap(d1, d2) {
     var i1 = d1.action == "insert";
     var i2 = d2.action == "insert";
@@ -487,6 +521,11 @@ function swapGroups(ds1, ds2) {
     o<---o
       c1
 */
+/**
+ * 
+ * @param {Delta} d1
+ * @param {Delta} c1
+ */
 function xform(d1, c1) {
     var i1 = d1.action == "insert";
     var i2 = c1.action == "insert";
@@ -543,17 +582,38 @@ function xform(d1, c1) {
     }
     return [c1, d1];
 }
-    
+
+/**
+ * 
+ * @param {import("../ace").Ace.IRange} d1
+ * @param {import("../ace").Ace.IRange} d2
+ * @param {number} dir
+ */
 function shift(d1, d2, dir) {
     shiftPos(d1.start, d2.start, d2.end, dir);
     shiftPos(d1.end, d2.start, d2.end, dir);
 }
+
+/**
+ * 
+ * @param {Point} pos
+ * @param {Point} start
+ * @param {Point} end
+ * @param {number} dir
+ */
 function shiftPos(pos, start, end, dir) {
     if (pos.row == (dir == 1 ? start : end).row) {
         pos.column += dir * (end.column - start.column);
     }
     pos.row += dir * (end.row - start.row);
 }
+
+/**
+ * 
+ * @param {Delta} c
+ * @param {Point} pos
+ * @return {Delta}
+ */
 function splitDelta(c, pos) {
     var lines = c.lines;
     var end = c.end;
@@ -573,6 +633,10 @@ function splitDelta(c, pos) {
     return rest;
 }
 
+/**
+ * @param {any[]} redoStack
+ * @param {Delta} d
+ */
 function moveDeltasByOne(redoStack, d) {
     d = cloneDelta(d);
     for (var j = redoStack.length; j--;) {
@@ -597,6 +661,7 @@ function moveDeltasByOne(redoStack, d) {
     }
     return redoStack;
 }
+
 function rebaseRedoStack(redoStack, deltaSets) {
     for (var i = 0; i < deltaSets.length; i++) {
         var deltas = deltaSets[i];

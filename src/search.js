@@ -253,6 +253,10 @@ class Search {
         return options.re = re;
     }
 
+    /**
+     * @param {string} needle
+     * @param {string} modifier
+     */
     $assembleMultilineRegExp(needle, modifier) {
         var parts = needle.replace(/\r\n|\r|\n/g, "$\n^").split("\n");
         var re = [];
@@ -264,6 +268,9 @@ class Search {
         return re;
     }
 
+    /**
+     * @param {import("./edit_session").EditSession} session
+     */
     $matchIterator(session, options) {
         var re = this.$assembleRegExp(options);
         if (!re)

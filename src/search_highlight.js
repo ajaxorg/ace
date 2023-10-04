@@ -4,6 +4,10 @@ var lang = require("./lib/lang");
 var Range = require("./range").Range;
 
 class SearchHighlight {
+    /**
+     * @param {any} regExp
+     * @param {string} clazz
+     */
     constructor(regExp, clazz, type = "text") {
         this.setRegexp(regExp);
         this.clazz = clazz;
@@ -17,6 +21,12 @@ class SearchHighlight {
         this.cache = [];
     }
 
+    /**
+     * @param {any} html
+     * @param {import("./layer/marker").Marker} markerLayer
+     * @param {import("./edit_session").EditSession} session
+     * @param {Partial<import("../ace").Ace.LayerConfig>} config
+     */
     update(html, markerLayer, session, config) {
         if (!this.regExp)
             return;

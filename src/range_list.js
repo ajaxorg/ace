@@ -52,6 +52,9 @@ class RangeList {
         return this.ranges.splice(startIndex, endIndex - startIndex, range);
     }
 
+    /**
+     * @param {Range[]} list
+     */
     addList(list) {
         var removed = [];
         for (var i = list.length; i--; ) {
@@ -160,7 +163,7 @@ class RangeList {
     }
 
     /**
-     * @param {any} session
+     * @param {import("./edit_session").EditSession} session
      */
     attach(session) {
         if (this.session)
