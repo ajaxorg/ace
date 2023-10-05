@@ -16,7 +16,9 @@
   ["text","  "],
   ["identifier","Write-host"],
   ["text"," "],
-  ["string","\"Hello $name\""]
+  ["string","\"Hello "],
+  ["variable.instance","$name"],
+  ["string","\""]
 ],[
    "start",
   ["rparen","}"]
@@ -68,7 +70,7 @@
   ["text"," "],
   ["keyword.operator","-eq"],
   ["text"," "],
-  ["constant.language","$null"],
+  ["variable.instance","$null"],
   ["text"," "],
   ["keyword.operator","-and"],
   ["text"," "],
@@ -120,7 +122,7 @@
   ["keyword.operator","+"],
   ["text"," "],
   ["constant.numeric","2"],
-  ["text",";"]
+  ["punctuation",";"]
 ],[
    "start",
   ["variable.instance","$number"],
@@ -147,27 +149,27 @@
   ["variable.instance","$an_array"],
   ["text"," "],
   ["keyword.operator","="],
-  ["text"," @"],
-  ["lparen","("],
+  ["text"," "],
+  ["keyword.operator","@("],
   ["constant.numeric","1"],
   ["text",", "],
   ["constant.numeric","2"],
   ["text",", "],
   ["constant.numeric","3"],
-  ["rparen",")"]
+  ["keyword.operator",")"]
 ],[
    "start",
   ["variable.instance","$a_hash"],
   ["text"," "],
   ["keyword.operator","="],
-  ["text"," @"],
-  ["lparen","{"],
+  ["text"," "],
+  ["keyword.operator","@{"],
   ["string","\"something\""],
   ["text"," "],
   ["keyword.operator","="],
   ["text"," "],
   ["string","\"something else\""],
-  ["rparen","}"]
+  ["keyword.operator","}"]
 ],[
    "start"
 ],[
@@ -179,6 +181,405 @@
   ["identifier","readme"],
   ["text","."],
   ["identifier","md"]
+],[
+   "start"
+],[
+   "start",
+  ["variable.instance","$h1"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["keyword.operator","@{"],
+  ["text"," "],
+  ["identifier","FirstName"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["string","\"James\""],
+  ["punctuation",";"],
+  ["text"," "],
+  ["identifier","LastName"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["string","\"Anderson\""],
+  ["punctuation",";"],
+  ["text"," "],
+  ["identifier","IDNum"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","123"],
+  ["text"," "],
+  ["keyword.operator","}"]
+],[
+   "start",
+  ["variable.instance","$last"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["string","\"Anderson\""],
+  ["punctuation",";"],
+  ["text"," "],
+  ["variable.instance","$IDNum"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","120"]
+],[
+   "start",
+  ["variable.instance","$h2"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["keyword.operator","@{"],
+  ["text"," "],
+  ["identifier","FirstName"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["string","\"James\""],
+  ["punctuation",";"],
+  ["text"," "],
+  ["identifier","LastName"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["variable.instance","$last"],
+  ["punctuation",";"],
+  ["text"," "],
+  ["identifier","IDNum"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["variable.instance","$IDNum"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["constant.numeric","3"],
+  ["text"," "],
+  ["keyword.operator","}"]
+],[
+   "start",
+  ["variable.instance","$h3"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["keyword.operator","@{"],
+  ["text"," "],
+  ["keyword.operator","}"]
+],[
+   "start",
+  ["variable.instance","$h4"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["keyword.operator","@{"],
+  ["text"," "],
+  ["constant.numeric","10"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["string","\"James\""],
+  ["punctuation",";"],
+  ["text"," "],
+  ["constant.numeric","20.5"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["string","\"Anderson\""],
+  ["punctuation",";"],
+  ["text"," "],
+  ["variable.instance","$true"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","123"],
+  ["text"," "],
+  ["keyword.operator","}"]
+],[
+   "start"
+],[
+   "start",
+  ["variable.braced","${Maximum_Count_26}"]
+],[
+   "start",
+  ["variable.braced","${Name with"],
+  ["constant.language.escape","`t"],
+  ["variable.braced","white space and "],
+  ["constant.language.escape","`{"],
+  ["variable.braced","punctuation"],
+  ["constant.language.escape","`}"],
+  ["variable.braced","}"]
+],[
+   "start",
+  ["variable.braced","${E:\\\\File.txt}"]
+],[
+   "start"
+],[
+   "start",
+  ["string","\"C:\\Temp\\\""],
+  ["text"," "],
+  ["lparen","{"],
+  ["identifier","mkdir"],
+  ["text"," "],
+  ["string","\"C:\\Temp\\\""],
+  ["rparen","}"]
+],[
+   "start",
+  ["string","\"C:\\Temp\\\""]
+],[
+   "start"
+],[
+   "string0",
+  ["string","@\""]
+],[
+   "string0",
+  ["string","This is a here string"]
+],[
+   "string0",
+  ["variable.instance","$h1"],
+  ["string"," = "],
+  ["keyword.operator","@{"],
+  ["text"," "],
+  ["identifier","FirstName"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["string","\"James\""],
+  ["punctuation",";"],
+  ["text"," "],
+  ["identifier","LastName"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["string","\"Anderson\""],
+  ["punctuation",";"],
+  ["text"," "],
+  ["identifier","IDNum"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","123"],
+  ["text"," "],
+  ["keyword.operator","}"]
+],[
+   "string0",
+  ["variable.instance","$last"],
+  ["string"," = \"Anderson\"; "],
+  ["variable.instance","$IDNum"],
+  ["string"," = 120"]
+],[
+   "string0",
+  ["variable.instance","$h2"],
+  ["string"," = "],
+  ["keyword.operator","@{"],
+  ["text"," "],
+  ["identifier","FirstName"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["string","\"James\""],
+  ["punctuation",";"],
+  ["text"," "],
+  ["identifier","LastName"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["variable.instance","$last"],
+  ["punctuation",";"],
+  ["text"," "],
+  ["identifier","IDNum"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["variable.instance","$IDNum"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["constant.numeric","3"],
+  ["text"," "],
+  ["keyword.operator","}"]
+],[
+   "string0",
+  ["variable.instance","$h3"],
+  ["string"," = "],
+  ["keyword.operator","@{"],
+  ["text"," "],
+  ["keyword.operator","}"]
+],[
+   "string0",
+  ["variable.instance","$h4"],
+  ["string"," = "],
+  ["keyword.operator","@{"],
+  ["text"," "],
+  ["constant.numeric","10"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["string","\"James\""],
+  ["punctuation",";"],
+  ["text"," "],
+  ["constant.numeric","20.5"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["string","\"Anderson\""],
+  ["punctuation",";"],
+  ["text"," "],
+  ["variable.instance","$true"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","123"],
+  ["text"," "],
+  ["keyword.operator","}"]
+],[
+   "string0",
+  ["variable.instance","$j"],
+  ["string"," = 20"]
+],[
+   "string0"
+],[
+   "string0",
+  ["string","still string"]
+],[
+   "string0",
+  ["keyword.operator","$("],
+  ["variable.instance","$i"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","10"],
+  ["keyword.operator",")"],
+  ["string"," # pipeline gets nothing"]
+],[
+   "string0",
+  ["keyword.operator","$("],
+  ["paren.lparen","("],
+  ["variable.instance","$i"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","10"],
+  ["paren.rparen",")"],
+  ["keyword.operator",")"],
+  ["string"," # pipeline gets int 10"]
+],[
+   "string0",
+  ["keyword.operator","$("],
+  ["variable.instance","$i"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","10"],
+  ["punctuation",";"],
+  ["text"," "],
+  ["variable.instance","$j"],
+  ["keyword.operator",")"],
+  ["string"," # pipeline gets int 20"]
+],[
+   "string0",
+  ["keyword.operator","$("],
+  ["paren.lparen","("],
+  ["variable.instance","$i"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","10"],
+  ["paren.rparen",")"],
+  ["punctuation",";"],
+  ["text"," "],
+  ["variable.instance","$j"],
+  ["keyword.operator",")"],
+  ["string"," # pipeline gets [object[]](10,20)"]
+],[
+   "string0",
+  ["keyword.operator","$("],
+  ["paren.lparen","("],
+  ["variable.instance","$i"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","10"],
+  ["paren.rparen",")"],
+  ["punctuation",";"],
+  ["text"," "],
+  ["keyword.operator","++"],
+  ["variable.instance","$j"],
+  ["keyword.operator",")"],
+  ["string"," # pipeline gets int 10"]
+],[
+   "string0",
+  ["keyword.operator","$("],
+  ["paren.lparen","("],
+  ["variable.instance","$i"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","10"],
+  ["paren.rparen",")"],
+  ["punctuation",";"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["keyword.operator","++"],
+  ["variable.instance","$j"],
+  ["paren.rparen",")"],
+  ["keyword.operator",")"],
+  ["string"," # pipeline gets [object[]](10,22)"]
+],[
+   "string0",
+  ["keyword.operator","$("],
+  ["variable.instance","$i"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","10"],
+  ["punctuation",";"],
+  ["text"," "],
+  ["keyword.operator","++"],
+  ["variable.instance","$j"],
+  ["keyword.operator",")"],
+  ["string"," # pipeline gets nothing"]
+],[
+   "string0",
+  ["keyword.operator","$("],
+  ["constant.numeric","2"],
+  ["text",","],
+  ["constant.numeric","4"],
+  ["text",","],
+  ["constant.numeric","6"],
+  ["keyword.operator",")"],
+  ["string"," # pipeline gets [object[]](2,4,6)"]
+],[
+   "start",
+  ["string","\"@"]
+],[
+   "start"
+],[
+   "string",
+  ["string","@'"]
+],[
+   "string",
+  ["string","Expressions inside should be recognised as string"]
+],[
+   "string",
+  ["string","$h1 = @{ FirstName = \"James\"; LastName = \"Anderson\"; IDNum = 123 }"]
+],[
+   "string",
+  ["string","$last = \"Anderson\"; $IDNum = 120"]
+],[
+   "string",
+  ["string","$h2 = @{ FirstName = \"James\"; LastName = $last; IDNum = $IDNum + 3 }"]
+],[
+   "string",
+  ["string","$h3 = @{ }"]
+],[
+   "string",
+  ["string","$h4 = @{ 10 = \"James\"; 20.5 = \"Anderson\"; $true = 123 }"]
+],[
+   "start",
+  ["string","'@"]
 ],[
    "start"
 ]]
