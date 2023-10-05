@@ -19,12 +19,12 @@ class AceInlineScreenReader {
                 if (selected) {
                     let idString = "";
                     for (let lineIndex = 0; lineIndex < this._lines.length; lineIndex++) {
-                        idString += `ace-inline-screenreader-line-${lineIndex} `
+                        idString += `ace-inline-screenreader-line-${lineIndex} `;
                     }
                     selected.setAttribute("aria-details", idString);      
-                };
+                }
             }.bind(this));
-        };
+        }
 
         // TODO: Path for when special inline completion popup is used.
 
@@ -60,7 +60,7 @@ class AceInlineScreenReader {
         }
 
         return container;
-    };
+    }
     
 }
 
