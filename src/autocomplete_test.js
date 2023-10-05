@@ -788,12 +788,12 @@ module.exports = {
                     var completions = [
                         {
                             caption: "function",
-                            value: "function\nthat does something\ncool",
+                            value: "function\nthat does something\ncool"
                         }
                     ];
                     callback(null, completions);
-                },
-            }, 
+                }
+            }
         ];
         
         var completer = Autocomplete.for(editor);
