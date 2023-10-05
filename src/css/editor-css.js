@@ -653,7 +653,7 @@ module.exports = `
     white-space: pre;
 }
 
-.ace_screenreader_only {
+.ace_screenreader-only {
     position:absolute;
     left:-10000px;
     top:auto;

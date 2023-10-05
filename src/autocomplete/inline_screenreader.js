@@ -3,7 +3,7 @@ class AceInlineScreenReader {
         this.editor = editor;
 
         this.screenReaderDiv = document.createElement("div");
-        this.screenReaderDiv.classList.add("ace_screenreader_only");
+        this.screenReaderDiv.classList.add("ace_screenreader-only");
         this.editor.container.appendChild(this.screenReaderDiv);
     }
 
