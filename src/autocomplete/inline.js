@@ -22,9 +22,6 @@ class AceInline {
      * @returns {boolean} True if the completion could be rendered to the editor, false otherwise
      */
     show(editor, completion, prefix) {
-        if (!this.inlineScreenReader)
-            this.inlineScreenReader = new AceInlineScreenReader(editor);
-
         prefix = prefix || "";
         if (editor && this.editor && this.editor !== editor) {
             this.hide();
@@ -33,6 +30,9 @@ class AceInline {
         }
         if (!editor || !completion) {
             return false;
+        }
+        if (!this.inlineScreenReader) {
+            this.inlineScreenReader = new AceInlineScreenReader(editor);
         }
         var displayText = completion.snippet ? snippetManager.getDisplayTextForSnippet(editor, completion.snippet) : completion.value;
         if (completion.hideInlinePreview || !displayText || !displayText.startsWith(prefix)) {
@@ -69,8 +69,10 @@ class AceInline {
     destroy() {
         this.hide();
         this.editor = null;
-        this.inlineScreenReader.destroy();
-        this.inlineScreenReader = null;
+        if (this.inlineScreenReader) {
+            this.inlineScreenReader.destroy();
+            this.inlineScreenReader = null;
+        }
     }
 }
 

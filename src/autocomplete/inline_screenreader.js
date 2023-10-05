@@ -8,7 +8,8 @@ class AceInlineScreenReader {
     }
 
     setScreenReaderContent(content) {
-        if (!this.popup) {
+        // Path for when inline preview is used with 'normal' completion popup.
+        if (!this.popup && this.editor.completer && this.editor.completer.popup) {
             this.popup = this.editor.completer.popup;
 
             this.popup.renderer.on("afterRender", function() {
@@ -24,6 +25,8 @@ class AceInlineScreenReader {
                 };
             }.bind(this));
         };
+
+        // TODO: Path for when special inline completion popup is used.
 
         // Remove all children of the div
         while (this.screenReaderDiv.firstChild) {
