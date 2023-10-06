@@ -6,6 +6,7 @@
 class AceInlineScreenReader {
     /**
      * Creates the off-screen div in which the ghost text content in redered and which the screen reader reads.
+     * @param {import("../editor").Editor} editor
      */
     constructor(editor) {
         this.editor = editor;
