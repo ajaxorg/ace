@@ -51,11 +51,6 @@ class AceInlineScreenReader {
     }
 
     destroy() {
-        // Remove all children of the div
-        while (this.screenReaderDiv.firstChild) {
-            this.screenReaderDiv.removeChild(this.screenReaderDiv.firstChild);
-        }
-
         this.screenReaderDiv.remove();
     }
 
