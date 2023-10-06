@@ -1,4 +1,12 @@
+"use strict";
+
+/**
+ * This object is used to communicate inline code completions rendered into an editor with ghost text to screen reader users.
+ */
 class AceInlineScreenReader {
+    /**
+     * Creates the off-screen div in which the ghost text content in redered and which the screen reader reads.
+     */
     constructor(editor) {
         this.editor = editor;
 
@@ -7,6 +15,10 @@ class AceInlineScreenReader {
         this.editor.container.appendChild(this.screenReaderDiv);
     }
 
+    /**
+     * Set the ghost text content to the screen reader div
+     * @param {string} content
+     */
     setScreenReaderContent(content) {
         // Path for when inline preview is used with 'normal' completion popup.
         if (!this.popup && this.editor.completer && this.editor.completer.popup) {
@@ -46,6 +58,9 @@ class AceInlineScreenReader {
         this.screenReaderDiv.remove();
     }
 
+    /**
+     * Take this._lines, render it as <code> blocks and add those to the screen reader div.
+     */
     createCodeBlock() {
         const container = document.createElement("pre");
         container.setAttribute("id", "ace-inline-screenreader");
@@ -61,7 +76,6 @@ class AceInlineScreenReader {
 
         return container;
     }
-    
 }
 
 exports.AceInlineScreenReader = AceInlineScreenReader;
