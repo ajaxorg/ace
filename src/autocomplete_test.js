@@ -779,7 +779,7 @@ module.exports = {
         user.type(" value");
         assert.equal(completer.popup.isOpen, true);   
     },
-    "test: should set inline preview content as aria-details": function(done) {
+    "test: should add inline preview content to aria-describedby": function(done) {
         var editor = initEditor("fun");
         
         editor.completers = [
@@ -812,7 +812,7 @@ module.exports = {
         var popupTextLayer = completer.popup.renderer.$textLayer;
 
         // aria-details of selected popup item should have aria-details set to the offscreen inline screen reader div.
-        assert.strictEqual(popupTextLayer.selectedNode.getAttribute("aria-details"), "ace-inline-screenreader-line-0 ace-inline-screenreader-line-1 ace-inline-screenreader-line-2 ");
+        assert.strictEqual(popupTextLayer.selectedNode.getAttribute("aria-describedby"), "doc-tooltip ace-inline-screenreader-line-0 ace-inline-screenreader-line-1 ace-inline-screenreader-line-2 ");
 
         // The elements with these IDs should have the correct content.
         assert.strictEqual(document.getElementById("ace-inline-screenreader-line-0").textContent,"function");

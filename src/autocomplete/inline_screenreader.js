@@ -30,11 +30,11 @@ class AceInlineScreenReader {
                 let t = this.popup.renderer.$textLayer;
                 let selected = t.element.childNodes[row - t.config.firstRow];
                 if (selected) {
-                    let idString = "";
+                    let idString = "doc-tooltip ";
                     for (let lineIndex = 0; lineIndex < this._lines.length; lineIndex++) {
                         idString += `ace-inline-screenreader-line-${lineIndex} `;
                     }
-                    selected.setAttribute("aria-details", idString);      
+                    selected.setAttribute("aria-describedby", idString);      
                 }
             }.bind(this));
         }
