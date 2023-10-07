@@ -1,11 +1,14 @@
 "use strict";
+/**
+ * @typedef {import("./edit_session").EditSession} EditSession
+ */
 var Range = require("./range").Range;
 var EventEmitter = require("./lib/event_emitter").EventEmitter;
 var oop = require("./lib/oop");
 
 class PlaceHolder { 
     /**
-     * @param {import("./edit_session").EditSession} session
+     * @param {EditSession} session
      * @param {Number} length
      * @param {import("../ace").Ace.Point} pos
      * @param {any[]} others

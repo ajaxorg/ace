@@ -5,6 +5,9 @@
 /**
  * @typedef {{range: import("./range").Range, className: string}} MarkerGroupItem
  */
+/**
+ * @typedef {import("./layer/marker").Marker} Marker
+ */
 
 /*
 Potential improvements:
@@ -56,7 +59,7 @@ class MarkerGroup {
 
     /**
      * @param {any} html
-     * @param {import("./layer/marker").Marker} markerLayer
+     * @param {Marker} markerLayer
      * @param {EditSession} session
      * @param {{ firstRow: any; lastRow: any; }} config
      */

@@ -1,5 +1,7 @@
 "use strict";
-
+/**
+ * @typedef {import("../edit_session").EditSession} EditSession
+ */
 var Range = require("../range").Range;
 var dom = require("../lib/dom");
 
@@ -22,7 +24,7 @@ class Marker {
     }
 
     /**
-     * @param {import("../edit_session").EditSession} session
+     * @param {EditSession} session
      */
     setSession(session) {
         this.session = session;

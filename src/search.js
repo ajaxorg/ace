@@ -269,7 +269,7 @@ class Search {
     }
 
     /**
-     * @param {import("./edit_session").EditSession} session
+     * @param {EditSession} session
      */
     $matchIterator(session, options) {
         var re = this.$assembleRegExp(options);

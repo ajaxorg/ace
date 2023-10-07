@@ -1,4 +1,8 @@
 "use strict";
+/**
+ * @typedef {import("./edit_session").EditSession} EditSession
+ */
+
 var Range = require("./range").Range;
 
 /**
@@ -7,7 +11,7 @@ var Range = require("./range").Range;
 class TokenIterator {
     /**
      * Creates a new token iterator object. The inital token index is set to the provided row and column coordinates.
-     * @param {import("./edit_session").EditSession} session The session to associate with
+     * @param {EditSession} session The session to associate with
      * @param {Number} initialRow The row to start the tokenizing at
      * @param {Number} initialColumn The column to start the tokenizing at
      **/

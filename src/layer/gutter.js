@@ -1,4 +1,7 @@
 "use strict";
+/**
+ * @typedef {import("../edit_session").EditSession} EditSession
+ */
 var dom = require("../lib/dom");
 var oop = require("../lib/oop");
 var lang = require("../lib/lang");
@@ -26,7 +29,7 @@ class Gutter{
     }
 
     /**
-     * @param {import("../edit_session").EditSession} session
+     * @param {EditSession} session
      */
     setSession(session) {
         if (this.session)

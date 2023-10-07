@@ -1,4 +1,7 @@
 "use strict";
+/**
+ * @typedef {import("../editor").Editor} Editor
+ */
 
 require("./menu_tools/overlay_page");
 
@@ -214,7 +217,7 @@ var optionGroups = {
 class OptionPanel {
     /**
      * 
-     * @param {import("../editor").Editor} editor
+     * @param {Editor} editor
      * @param {HTMLElement} [element]
      */
     constructor(editor, element) {

@@ -1,3 +1,6 @@
+/**
+ * @typedef {import("../editor").Editor} Editor
+ */
 var Tooltip = require("../tooltip").Tooltip;
 var EventEmitter = require("../lib/event_emitter").EventEmitter;
 var lang = require("../lib/lang");
@@ -147,7 +150,7 @@ class CommandBarTooltip {
      * Depending on the alwaysShow parameter it either displays the tooltip immediately,
      * or subscribes to the necessary events to display the tooltip on hover.
      * 
-     * @param {import("../editor").Editor} editor
+     * @param {Editor} editor
      */
     attach(editor) {
         if (!editor || (this.isShown() && this.editor === editor)) {

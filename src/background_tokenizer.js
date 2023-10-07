@@ -5,6 +5,9 @@
 /**
  * @typedef {import("./editor").Editor} Editor
  */
+/**
+ * @typedef {import("./tokenizer").Tokenizer} Tokenizer
+ */
 var oop = require("./lib/oop");
 var EventEmitter = require("./lib/event_emitter").EventEmitter;
 
@@ -17,7 +20,7 @@ class BackgroundTokenizer {
     
     /**
      * Creates a new `BackgroundTokenizer` object.
-     * @param {import("./tokenizer").Tokenizer} tokenizer The tokenizer to use
+     * @param {Tokenizer} tokenizer The tokenizer to use
      * @param {any} [editor] The editor to associate with
      **/
     constructor(tokenizer, editor) {
@@ -72,7 +75,7 @@ class BackgroundTokenizer {
     
     /**
      * Sets a new tokenizer for this object.
-     * @param {import("./tokenizer").Tokenizer} tokenizer The new tokenizer to use
+     * @param {Tokenizer} tokenizer The new tokenizer to use
      **/
     setTokenizer(tokenizer) {
         this.tokenizer = tokenizer;

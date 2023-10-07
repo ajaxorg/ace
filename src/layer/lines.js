@@ -1,5 +1,7 @@
 "use strict";
-
+/**
+ * @typedef {import("../edit_session").EditSession} EditSession
+ */
 var dom = require("../lib/dom");
 
 class Lines {
@@ -38,7 +40,7 @@ class Lines {
     /**
      * @param {number} row
      * @param {Partial<import("../../ace").Ace.LayerConfig>} config
-     * @param {import("../edit_session").EditSession} session
+     * @param {EditSession} session
      */
     computeLineTop(row, config, session) {
         var screenTop = config.firstRowScreen * config.lineHeight;
@@ -50,7 +52,7 @@ class Lines {
     /**
      * @param {number} row
      * @param {import("../../ace").Ace.LayerConfig} config
-     * @param {import("../edit_session").EditSession} session
+     * @param {EditSession} session
      */
     computeLineHeight(row, config, session) {
         return config.lineHeight * session.getRowLineCount(row);

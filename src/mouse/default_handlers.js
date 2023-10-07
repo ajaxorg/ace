@@ -2,6 +2,9 @@
 /**
  * @typedef {import("./mouse_handler").MouseHandler} MouseHandler
  */
+/**
+ * @typedef {import("./mouse_event").MouseEvent} MouseEvent
+ */
 var useragent = require("../lib/useragent");
 
 var DRAG_OFFSET = 0; // pixels
@@ -175,7 +178,7 @@ class DefaultHandlers {
     }
     
     /**
-     * @param {import("./mouse_event").MouseEvent} ev
+     * @param {MouseEvent} ev
      * @this {MouseHandler}
      */
     onDoubleClick(ev) {
@@ -199,7 +202,7 @@ class DefaultHandlers {
     }
 
     /**
-     * @param {import("./mouse_event").MouseEvent} ev
+     * @param {MouseEvent} ev
      * @this {MouseHandler}
      */
     onTripleClick(ev) {
@@ -218,7 +221,7 @@ class DefaultHandlers {
     }
 
     /**
-     * @param {import("./mouse_event").MouseEvent} ev
+     * @param {MouseEvent} ev
      * @this {MouseHandler}
      */
     onQuadClick(ev) {
@@ -230,7 +233,7 @@ class DefaultHandlers {
     }
 
     /**
-     * @param {import("./mouse_event").MouseEvent} ev
+     * @param {MouseEvent} ev
      * @this {MouseHandler}
      */
     onMouseWheel(ev) {

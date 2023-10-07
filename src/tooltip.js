@@ -5,6 +5,9 @@
 /**
  * @typedef {import("./mouse/mouse_event").MouseEvent} MouseEvent
  */
+/**
+ * @typedef {import("./edit_session").EditSession} EditSession
+ */
 
 var dom = require("./lib/dom");
 var Range = require("./range").Range;
@@ -90,7 +93,7 @@ class Tooltip {
         }
     }
 
-    hide() {
+    hide(e) {
         if (this.isOpen) {
             this.getElement().style.display = "none";
             this.getElement().className = CLASSNAME;
@@ -348,7 +351,7 @@ class HoverTooltip extends Tooltip {
 
     /**
      * @param {Range} range
-     * @param {import("./edit_session").EditSession} [session]
+     * @param {EditSession} [session]
      */
     addMarker(range, session) {
         if (this.marker) {

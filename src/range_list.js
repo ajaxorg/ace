@@ -1,4 +1,7 @@
 "use strict";
+/**
+ * @typedef {import("./edit_session").EditSession} EditSession
+ */
 var Range = require("./range").Range;
 var comparePoints = Range.comparePoints;
 
@@ -163,7 +166,7 @@ class RangeList {
     }
 
     /**
-     * @param {import("./edit_session").EditSession} session
+     * @param {EditSession} session
      */
     attach(session) {
         if (this.session)

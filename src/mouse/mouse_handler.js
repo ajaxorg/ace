@@ -1,4 +1,7 @@
 "use strict";
+/**
+ * @typedef {import("../editor").Editor} Editor
+ */
 var event = require("../lib/event");
 var useragent = require("../lib/useragent");
 var DefaultHandlers = require("./default_handlers").DefaultHandlers;
@@ -10,7 +13,7 @@ var config = require("../config");
 
 class MouseHandler {
     /**
-     * @param {import("../editor").Editor} editor
+     * @param {Editor} editor
      */
     constructor(editor) {
         /** @type {boolean} */this.$dragDelay;

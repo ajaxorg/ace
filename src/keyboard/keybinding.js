@@ -1,12 +1,14 @@
 "use strict";
-
+/**
+ * @typedef {import("../editor").Editor} Editor
+ */
 var keyUtil  = require("../lib/keys");
 var event = require("../lib/event");
 
 
 class KeyBinding {
     /**
-     * @param {import("../editor").Editor} editor
+     * @param {Editor} editor
      */
     constructor(editor) {
         this.$editor = editor;

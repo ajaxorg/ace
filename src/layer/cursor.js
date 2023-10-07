@@ -1,5 +1,7 @@
 "use strict";
-
+/**
+ * @typedef {import("../edit_session").EditSession} EditSession
+ */
 var dom = require("../lib/dom");
 
 
@@ -58,7 +60,7 @@ class Cursor {
     }
 
     /**
-     * @param {import("../edit_session").EditSession} session
+     * @param {EditSession} session
      */
     setSession(session) {
         this.session = session;

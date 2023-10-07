@@ -1,4 +1,8 @@
 "use strict";
+
+/**
+ * @typedef {import("./edit_session").EditSession} EditSession
+ */
 /**
  * This object is used in various places to indicate a region within the editor. To better visualize how this works, imagine a rectangle. Each quadrant of the rectangle is analogous to a range, as ranges contain a starting row and starting column, and an ending row, and ending column.
  **/
@@ -408,7 +412,7 @@ class Range {
 
     /**
      * Given the current `Range`, this function converts those starting and ending [[Point]]'s into screen positions, and then returns a new `Range` object.
-     * @param {import("./edit_session").EditSession} session The `EditSession` to retrieve coordinates from
+     * @param {EditSession} session The `EditSession` to retrieve coordinates from
      * @returns {Range}
     **/
     toScreenRange(session) {

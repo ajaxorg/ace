@@ -8,6 +8,9 @@
 /**
  * @typedef {import("../ace").Ace.Point} Point
  */
+/**
+ * @typedef {import("./layer/font_metrics").FontMetrics} FontMetrics
+ */
 
 var oop = require("./lib/oop");
 var lang = require("./lib/lang");
@@ -2293,7 +2296,7 @@ class EditSession {
     }
 
     /**
-     * @param {import("./layer/font_metrics").FontMetrics} fm
+     * @param {FontMetrics} fm
      */
     $setFontMetrics(fm) {
         if (!this.$enableVarChar) return;
