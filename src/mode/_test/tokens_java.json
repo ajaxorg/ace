@@ -136,7 +136,10 @@
   ["text"," "],
   ["keyword.operator","="],
   ["text"," "],
-  ["string","STR.\"My name is "],
+  ["identifier","STR"],
+  ["punctuation","."],
+  ["string","\""],
+  ["string","My name is "],
   ["lparen","\\{"],
   ["identifier","name"],
   ["rparen","}"],
@@ -146,7 +149,10 @@
    "start"
 ],[
    "start",
-  ["string","STR.\"Today's weather is "],
+  ["identifier","STR"],
+  ["punctuation","."],
+  ["string","\""],
+  ["string","Today's weather is "],
   ["lparen","\\{"],
   ["text"," "],
   ["entity.name.function","getFeelsLike"],
@@ -184,30 +190,34 @@
   ["text"," "],
   ["lparen","{"]
 ],[
-   "string",
+   "punctuation",
   ["text","    "],
   ["keyword","return"],
   ["text"," "],
-  ["string","STR.\"\"\""]
+  ["identifier","STR"],
+  ["punctuation","."],
+  ["string","\"\"\""]
 ],[
-   "string",
+   "punctuation",
   ["string","        {"]
 ],[
-   "string",
+   "punctuation",
   ["string","            \"outerKey1\": \"outerValue1\","]
 ],[
-   ["lparen","string"],
+   ["lparen","punctuation"],
   ["string","            \"nestedTemplate\": \""],
   ["lparen","\\{"]
 ],[
-   ["string","lparen","lparen","string"],
+   ["punctuation","lparen","lparen","punctuation"],
   ["text","                "],
-  ["string","STR.\"\"\""]
+  ["identifier","STR"],
+  ["punctuation","."],
+  ["string","\"\"\""]
 ],[
-   ["string","lparen","lparen","string"],
+   ["punctuation","lparen","lparen","punctuation"],
   ["string","                {"]
 ],[
-   ["string","lparen","lparen","string"],
+   ["punctuation","lparen","lparen","punctuation"],
   ["string","                    \"innerKey\": \""],
   ["lparen","\\{"],
   ["identifier","innerValue"],
@@ -217,21 +227,21 @@
   ["rparen",")}"],
   ["string","\""]
 ],[
-   ["string","lparen","lparen","string"],
+   ["punctuation","lparen","lparen","punctuation"],
   ["string","                }"]
 ],[
-   ["lparen","string"],
+   ["lparen","punctuation"],
   ["string","                \"\"\""]
 ],[
-   "string",
+   "punctuation",
   ["text","            "],
   ["rparen","}"],
   ["string","\","]
 ],[
-   "string",
+   "punctuation",
   ["string","            \"outerKey2\": \"outerValue2\""]
 ],[
-   "string",
+   "punctuation",
   ["string","        }"]
 ],[
    "start",

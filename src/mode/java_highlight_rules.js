@@ -124,8 +124,8 @@ var JavaHighlightRules = function() {
         ],
         "strings": [
             {
-                token: "string",
-                regex: /(?:STR|FMT)\."/,
+                token: ["punctuation", "string"],
+                regex: /(\.)(")/,
                 push: [
                     {
                         token: "lparen",
@@ -165,8 +165,8 @@ var JavaHighlightRules = function() {
         ],
         "multiline-strings": [
             {
-                token: "string",
-                regex: /(?:STR|FMT)\."""/,
+                token: ["punctuation", "string"],
+                regex: /(\.)(""")/,
                 push: [
                     {
                         token: "string",
