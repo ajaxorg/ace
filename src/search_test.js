@@ -138,6 +138,40 @@ module.exports = {
         assert.position(range.end, 1, 12);
     },
 
+    "test: fallback to nonUnicode mode on edge cases": function() {
+        var session = new EditSession([
+            /* eslint-disable no-octal-escape*/
+            "string with \251 symbol",  // test octal escape sequence
+            "bracket ab{2}"  // test lone quantifier brackets
+        ]);
+
+        var search = new Search().set({
+            needle: "\\251",
+            regExp: true
+        });
+        var range = search.find(session);
+        assert.position(range.start, 0, 12);
+        assert.position(range.end, 0, 13);
+        
+        search.set({ needle: "ab\\{2}" });
+        range = search.find(session);
+        assert.position(range.start, 1, 8);
+        assert.position(range.end, 1, 13);
+    },
+
+    "test: whole word search should not match inside of words with unicode": function() {
+        var session = new EditSession(["𝓗ello𝓦orld", "𝓗ello 𝓦orld 123", "456"]);
+
+        var search = new Search().set({
+            needle: "𝓗ello",
+            wholeWord: true
+        });
+
+        var range = search.find(session);
+        assert.position(range.start, 1, 0);
+        assert.position(range.end, 1, 6);
+    },
+
     "test: find backwards": function() {
         var session = new EditSession(["juhu juhu juhu juhu"]);
         session.getSelection().moveCursorTo(0, 10);

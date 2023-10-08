@@ -1,4 +1,5 @@
 /// <reference path="./ace-modes.d.ts" />
+/// <reference path="./ace-extensions.d.ts" />
 
 export namespace Ace {
   export type NewLineMode = 'auto' | 'unix' | 'windows';
@@ -1012,7 +1013,8 @@ export namespace Ace {
     getDocTooltip?(item: Completion): undefined | string | Completion;
     cancel?(): void;
     id?: string;
-    triggerCharacters?: string[]
+    triggerCharacters?: string[];
+    hideInlinePreview?: boolean;
   }
 
   export class AceInline {
@@ -1063,6 +1065,9 @@ export namespace Ace {
     exactMatch?: boolean;
     inlineEnabled?: boolean;
     parentNode?: HTMLElement;
+    setSelectOnHover?: Boolean;
+    stickySelectionDelay?: Number;
+    ignoreCaption?: Boolean;
     emptyMessage?(prefix: String): String;
     getPopup(): AcePopup;
     showPopup(editor: Editor, options: CompletionOptions): void;
