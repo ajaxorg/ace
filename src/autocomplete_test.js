@@ -811,7 +811,7 @@ module.exports = {
         editor.completer.popup.renderer.$loop._flush();
         var popupTextLayer = completer.popup.renderer.$textLayer;
 
-        // aria-details of selected popup item should have aria-details set to the offscreen inline screen reader div.
+        // aria-describedby of selected popup item should have aria-describedby set to the offscreen inline screen reader div and doc-tooltip.
         assert.strictEqual(popupTextLayer.selectedNode.getAttribute("aria-describedby"), "doc-tooltip ace-inline-screenreader-line-0 ace-inline-screenreader-line-1 ace-inline-screenreader-line-2 ");
 
         // The elements with these IDs should have the correct content.
