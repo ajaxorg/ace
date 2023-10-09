@@ -40,6 +40,7 @@ class AceInlineScreenReader {
         }
 
         // TODO: Path for when special inline completion popup is used.
+        // https://github.com/ajaxorg/ace/issues/5348
 
         // Remove all children of the div
         while (this.screenReaderDiv.firstChild) {
