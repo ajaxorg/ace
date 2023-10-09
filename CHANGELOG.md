@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.29.0](https://github.com/ajaxorg/ace/compare/v1.28.0...v1.29.0) (2023-10-09)
+
+
+### Features
+
+* allow setting completion.ignoreCaption ([5618046](https://github.com/ajaxorg/ace/commit/56180467e12c300850da89cc13c1c8648fb5e342))
+
 ## [1.28.0](https://github.com/ajaxorg/ace/compare/v1.27.0...v1.28.0) (2023-09-22)
 
 
