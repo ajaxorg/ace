@@ -778,6 +778,48 @@ module.exports = {
         // Should filter using the value instead.
         user.type(" value");
         assert.equal(completer.popup.isOpen, true);   
+    },
+    "test: should add inline preview content to aria-describedby": function(done) {
+        var editor = initEditor("fun");
+        
+        editor.completers = [
+            {
+                getCompletions: function (editor, session, pos, prefix, callback) {
+                    var completions = [
+                        {
+                            caption: "function",
+                            value: "function\nthat does something\ncool"
+                        }
+                    ];
+                    callback(null, completions);
+                }
+            }
+        ];
+        
+        var completer = Autocomplete.for(editor);
+        completer.inlineEnabled = true;
+
+        user.type("Ctrl-Space");
+        var inline = completer.inlineRenderer;
+
+        // Popup should be open, with inline text renderered.
+        assert.equal(editor.completer.popup.isOpen, true);  
+        assert.equal(completer.popup.getRow(), 0);
+        assert.strictEqual(inline.isOpen(), true);
+        assert.strictEqual(editor.renderer.$ghostText.text, "function\nthat does something\ncool");
+
+        editor.completer.popup.renderer.$loop._flush();
+        var popupTextLayer = completer.popup.renderer.$textLayer;
+
+        // aria-describedby of selected popup item should have aria-describedby set to the offscreen inline screen reader div and doc-tooltip.
+        assert.strictEqual(popupTextLayer.selectedNode.getAttribute("aria-describedby"), "doc-tooltip ace-inline-screenreader-line-0 ace-inline-screenreader-line-1 ace-inline-screenreader-line-2 ");
+
+        // The elements with these IDs should have the correct content.
+        assert.strictEqual(document.getElementById("ace-inline-screenreader-line-0").textContent,"function");
+        assert.strictEqual(document.getElementById("ace-inline-screenreader-line-1").textContent,"that does something");
+        assert.strictEqual(document.getElementById("ace-inline-screenreader-line-2").textContent,"cool");
+
+        done();
     }
 };
 
