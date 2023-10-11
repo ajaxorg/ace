@@ -158,8 +158,8 @@ class AcePopup {
         };
 
         event.addListener(popup.container, "mouseout", function() {
-            hideHoverMarker();
             popup.isMouseOver = false;
+            hideHoverMarker();
         });
         popup.on("hide", hideHoverMarker);
         popup.on("changeSelection", hideHoverMarker);
