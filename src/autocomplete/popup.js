@@ -161,10 +161,7 @@ class AcePopup {
             hideHoverMarker();
             popup.isMouseOver = false;
         });
-        popup.on("hide", function() {
-            hideHoverMarker();
-            popup.isMouseOver = false;
-        });
+        popup.on("hide", hideHoverMarker);
         popup.on("changeSelection", hideHoverMarker);
 
         popup.session.doc.getLength = function() {
