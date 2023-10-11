@@ -320,6 +320,7 @@ class Autocomplete {
 
     mouseOutListener(e) {
         this.$updatePopupPosition();
+        this.tooltipTimer.call(null, null);
     }
 
    goTo(where) {
