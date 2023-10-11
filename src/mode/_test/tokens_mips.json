@@ -1,0 +1,97 @@
+[[
+   "start",
+  ["comment.assembly","# Original source from https://eng.libretexts.org"]
+],[
+   "start",
+  ["comment.assembly","# Kann, Charles W., \"Introduction To MIPS Assembly Language Programming\" (2015). Open Textbooks. 2."]
+],[
+   "start",
+  ["comment.assembly","# https://cupola.gettysburg.edu/oer/2"]
+],[
+   "start"
+],[
+   "start",
+  ["comment.assembly","# Program File: Program2-1.asm"]
+],[
+   "start",
+  ["comment.assembly","# Author: Charles Kann"]
+],[
+   "start",
+  ["comment.assembly","# Purpose: First program, Hello World"]
+],[
+   "start",
+  ["entity.name.section.mips",".text"],
+  ["text","                   "],
+  ["comment.assembly","# Define the program instructions."]
+],[
+   "start",
+  ["entity.name.tag.mips","main:"],
+  ["text","                   "],
+  ["comment.assembly","# Label to define the main program."]
+],[
+   "start",
+  ["text","    "],
+  ["support.function.other.mips","li"],
+  ["text"," "],
+  ["variable.parameter.mips","$v0"],
+  ["text",","],
+  ["constant.numeric.mips","4"],
+  ["text","            "],
+  ["comment.assembly","# Load 4 into $v0 to indicate a print string."]
+],[
+   "start",
+  ["text","    "],
+  ["support.function.other.mips","la"],
+  ["text"," "],
+  ["variable.parameter.mips","$a0"],
+  ["text",", greeting    "],
+  ["comment.assembly","# Load the address of the greeting into $a0."]
+],[
+   "start",
+  ["text","    "],
+  ["entity.name.function.mips","syscall"],
+  ["text","             "],
+  ["comment.assembly","# Print greeting. The print is indicated by"]
+],[
+   "start",
+  ["text","                        "],
+  ["comment.assembly","# $v0 having a value of 4, and the string to"]
+],[
+   "start",
+  ["text","                        "],
+  ["comment.assembly","# print is stored at the address in $a0."]
+],[
+   "start",
+  ["text","    "],
+  ["support.function.other.mips","li"],
+  ["text"," "],
+  ["variable.parameter.mips","$v0"],
+  ["text",", "],
+  ["constant.numeric.mips","10"],
+  ["text","          "],
+  ["comment.assembly","# Load a 10 (halt) into $v0."]
+],[
+   "start",
+  ["text","    "],
+  ["entity.name.function.mips","syscall"],
+  ["text","             "],
+  ["comment.assembly","# The program ends."]
+],[
+   "start",
+  ["entity.name.section.mips",".data"],
+  ["text","                   "],
+  ["comment.assembly","# Define the program data."]
+],[
+   "start",
+  ["entity.name.tag.mips","greeting:"],
+  ["text"," "],
+  ["storage.modifier.mips",".asciiz"],
+  ["text"," "],
+  ["string.start","\""],
+  ["string","Hello World"],
+  ["string.end","\""],
+  ["text"," "],
+  ["comment.assembly","#The string to print."]
+],[
+   "start"
+]]

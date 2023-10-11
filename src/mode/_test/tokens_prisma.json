@@ -1,0 +1,2033 @@
+[[
+   "source.prisma.embedded.source1",
+  ["storage.type.config.prisma","generator"],
+  ["source.prisma.embedded.source"," "],
+  ["entity.name.type.config.prisma","photon"],
+  ["source.prisma.embedded.source"," "],
+  ["punctuation.definition.tag.prisma","{"]
+],[
+   ["text","source.prisma.embedded.source1"],
+  ["text","  "],
+  ["variable.other.assignment.prisma","provider"],
+  ["text"," "],
+  ["keyword.operator.terraform","="],
+  ["text"," "],
+  ["string.quoted.double.start.prisma","\""],
+  ["string.quoted.double.prisma","photonjs"],
+  ["string.quoted.double.end.prisma","\""]
+],[
+   "source.prisma.embedded.source1",
+  ["text","}"]
+],[
+   "source.prisma.embedded.source1"
+],[
+   "source.prisma.embedded.source1",
+  ["source.prisma.embedded.source","model User {"]
+],[
+   "source.prisma.embedded.source1",
+  ["source.prisma.embedded.source","  id                 String           @default(cuid()) @id"]
+],[
+   "source.prisma.embedded.source1",
+  ["source.prisma.embedded.source","  createdAt          DateTime         @default(now())"]
+],[
+   "source.prisma.embedded.source1",
+  ["source.prisma.embedded.source","  updatedAt          DateTime         @updatedAt"]
+],[
+   "source.prisma.embedded.source1",
+  ["source.prisma.embedded.source","  firstName          String"]
+],[
+   "source.prisma.embedded.source1",
+  ["source.prisma.embedded.source","  lastName           String"]
+],[
+   "source.prisma.embedded.source1",
+  ["source.prisma.embedded.source","  email              String           @unique"]
+],[
+   "source.prisma.embedded.source1",
+  ["source.prisma.embedded.source","  password           String"]
+],[
+   "source.prisma.embedded.source1",
+  ["source.prisma.embedded.source","  phone              String"]
+],[
+   "source.prisma.embedded.source1",
+  ["source.prisma.embedded.source","  responseRate       Float?"]
+],[
+   "source.prisma.embedded.source1",
+  ["source.prisma.embedded.source","  responseTime       Int?"]
+],[
+   "source.prisma.embedded.source1",
+  ["source.prisma.embedded.source","  ReportsTo  User?  @relation(\"EmployeeToEmployee_ReportsTo\")"]
+],[
+   "source.prisma.embedded.source1",
+  ["source.prisma.embedded.source","  employees         User[] @relation(\"EmployeeToEmployee_ReportsTo\")"]
+],[
+   "source.prisma.embedded.source1",
+  ["source.prisma.embedded.source","  isSuperHost        Boolean"]
+],[
+   "source.prisma.embedded.source1",
+  ["source.prisma.embedded.source","  ownedPlaces        Place[]"]
+],[
+   "source.prisma.embedded.source1",
+  ["source.prisma.embedded.source","  location           Location?"]
+],[
+   "source.prisma.embedded.source1",
+  ["source.prisma.embedded.source","  bookings           Booking[]"]
+],[
+   "source.prisma.embedded.source1",
+  ["source.prisma.embedded.source","  paymentAccount     PaymentAccount[]"]
+],[
+   "source.prisma.embedded.source1",
+  ["source.prisma.embedded.source","  sentMessages       Message[]        @relation(\"SentMessages\")"]
+],[
+   "source.prisma.embedded.source1",
+  ["source.prisma.embedded.source","  receivedMessages   Message[]        @relation(\"ReceivedMessages\")"]
+],[
+   "source.prisma.embedded.source1",
+  ["source.prisma.embedded.source","  notifications      Notification[]"]
+],[
+   "source.prisma.embedded.source1",
+  ["source.prisma.embedded.source","  profilePicture     Picture?"]
+],[
+   "source.prisma.embedded.source1",
+  ["source.prisma.embedded.source","  hostingExperiences Experience[]"]
+],[
+   "start",
+  ["source.prisma.embedded.source","}"]
+],[
+   "start"
+],[
+   "source.prisma.embedded.source",
+  ["storage.type.model.prisma","model"],
+  ["source.prisma.embedded.source"," "],
+  ["entity.name.type.model.prisma","Place"],
+  ["source.prisma.embedded.source"," "],
+  ["punctuation.definition.tag.prisma","{"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","id"],
+  ["text","                "],
+  ["support.type.primitive.prisma","String"],
+  ["source.prisma.embedded.source","             "],
+  ["entity.name.function.attribute.prisma","@default"],
+  ["punctuation.definition.tag.prisma","("],
+  ["support.function.functional.prisma","cuid"],
+  ["punctuation.definition.tag.prisma","("],
+  ["punctuation.definition.tag.prisma","))"],
+  ["source.prisma.embedded.source"," "],
+  ["entity.name.function.attribute.prisma","@id"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","name"],
+  ["text","              "],
+  ["support.type.primitive.prisma","String"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","size"],
+  ["text","              "],
+  ["support.type.primitive.prisma","PLACE_SIZES"],
+  ["keyword.operator.optional_type.prisma","?"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","shortDescription"],
+  ["text","  "],
+  ["support.type.primitive.prisma","String"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","description"],
+  ["text","       "],
+  ["support.type.primitive.prisma","String"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","slug"],
+  ["text","              "],
+  ["support.type.primitive.prisma","String"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","maxGuests"],
+  ["text","         "],
+  ["support.type.primitive.prisma","Int"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","numBedrooms"],
+  ["text","       "],
+  ["support.type.primitive.prisma","Int"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","numBeds"],
+  ["text","           "],
+  ["support.type.primitive.prisma","Int"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","numBaths"],
+  ["text","          "],
+  ["support.type.primitive.prisma","Int"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","reviews"],
+  ["text","           "],
+  ["support.type.primitive.prisma","Review"],
+  ["keyword.operator.list_type.prisma","[]"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","amenities"],
+  ["text","         "],
+  ["support.type.primitive.prisma","Amenities"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","host"],
+  ["text","              "],
+  ["support.type.primitive.prisma","User"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","pricing"],
+  ["text","           "],
+  ["support.type.primitive.prisma","Pricing"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","location"],
+  ["text","          "],
+  ["support.type.primitive.prisma","Location"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","views"],
+  ["text","             "],
+  ["support.type.primitive.prisma","Views"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","guestRequirements"],
+  ["text"," "],
+  ["support.type.primitive.prisma","GuestRequirements"],
+  ["keyword.operator.optional_type.prisma","?"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","policies"],
+  ["text","          "],
+  ["support.type.primitive.prisma","Policies"],
+  ["keyword.operator.optional_type.prisma","?"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","houseRules"],
+  ["text","        "],
+  ["support.type.primitive.prisma","HouseRules"],
+  ["keyword.operator.optional_type.prisma","?"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","bookings"],
+  ["text","          "],
+  ["support.type.primitive.prisma","Booking"],
+  ["keyword.operator.list_type.prisma","[]"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","pictures"],
+  ["text","          "],
+  ["support.type.primitive.prisma","Picture"],
+  ["keyword.operator.list_type.prisma","[]"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","popularity"],
+  ["text","        "],
+  ["support.type.primitive.prisma","Int"]
+],[
+   "start",
+  ["punctuation.definition.tag.prisma","}"]
+],[
+   "start"
+],[
+   "source.prisma.embedded.source",
+  ["storage.type.model.prisma","model"],
+  ["source.prisma.embedded.source"," "],
+  ["entity.name.type.model.prisma","Pricing"],
+  ["source.prisma.embedded.source"," "],
+  ["punctuation.definition.tag.prisma","{"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","id"],
+  ["text","              "],
+  ["support.type.primitive.prisma","String"],
+  ["source.prisma.embedded.source","    "],
+  ["entity.name.function.attribute.prisma","@default"],
+  ["punctuation.definition.tag.prisma","("],
+  ["support.function.functional.prisma","cuid"],
+  ["punctuation.definition.tag.prisma","("],
+  ["punctuation.definition.tag.prisma","))"],
+  ["source.prisma.embedded.source"," "],
+  ["entity.name.function.attribute.prisma","@id"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","place"],
+  ["text","           "],
+  ["support.type.primitive.prisma","Place"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","monthlyDiscount"],
+  ["text"," "],
+  ["support.type.primitive.prisma","Int"],
+  ["keyword.operator.optional_type.prisma","?"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","weeklyDiscount"],
+  ["text","  "],
+  ["support.type.primitive.prisma","Int"],
+  ["keyword.operator.optional_type.prisma","?"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","perNight"],
+  ["text","        "],
+  ["support.type.primitive.prisma","Int"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","smartPricing"],
+  ["text","    "],
+  ["support.type.primitive.prisma","Boolean"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","basePrice"],
+  ["text","       "],
+  ["support.type.primitive.prisma","Int"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","averageWeekly"],
+  ["text","   "],
+  ["support.type.primitive.prisma","Int"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","averageMonthly"],
+  ["text","  "],
+  ["support.type.primitive.prisma","Int"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","cleaningFee"],
+  ["text","     "],
+  ["support.type.primitive.prisma","Int"],
+  ["keyword.operator.optional_type.prisma","?"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","securityDeposit"],
+  ["text"," "],
+  ["support.type.primitive.prisma","Int"],
+  ["keyword.operator.optional_type.prisma","?"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","extraGuests"],
+  ["text","     "],
+  ["support.type.primitive.prisma","Int"],
+  ["keyword.operator.optional_type.prisma","?"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","weekendPricing"],
+  ["text","  "],
+  ["support.type.primitive.prisma","Int"],
+  ["keyword.operator.optional_type.prisma","?"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","currency"],
+  ["text","        "],
+  ["support.type.primitive.prisma","CURRENCY"],
+  ["keyword.operator.optional_type.prisma","?"]
+],[
+   "start",
+  ["punctuation.definition.tag.prisma","}"]
+],[
+   "start"
+],[
+   "source.prisma.embedded.source",
+  ["storage.type.model.prisma","model"],
+  ["source.prisma.embedded.source"," "],
+  ["entity.name.type.model.prisma","GuestRequirements"],
+  ["source.prisma.embedded.source"," "],
+  ["punctuation.definition.tag.prisma","{"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","id"],
+  ["text","                            "],
+  ["support.type.primitive.prisma","String"],
+  ["source.prisma.embedded.source","  "],
+  ["entity.name.function.attribute.prisma","@default"],
+  ["punctuation.definition.tag.prisma","("],
+  ["support.function.functional.prisma","cuid"],
+  ["punctuation.definition.tag.prisma","("],
+  ["punctuation.definition.tag.prisma","))"],
+  ["source.prisma.embedded.source"," "],
+  ["entity.name.function.attribute.prisma","@id"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","govIssuedId"],
+  ["text","                   "],
+  ["support.type.primitive.prisma","Boolean"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","recommendationsFromOtherHosts"],
+  ["text"," "],
+  ["support.type.primitive.prisma","Boolean"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","guestTripInformation"],
+  ["text","          "],
+  ["support.type.primitive.prisma","Boolean"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","place"],
+  ["text","                         "],
+  ["support.type.primitive.prisma","Place"]
+],[
+   "start",
+  ["punctuation.definition.tag.prisma","}"]
+],[
+   "start"
+],[
+   "source.prisma.embedded.source",
+  ["storage.type.model.prisma","model"],
+  ["source.prisma.embedded.source"," "],
+  ["entity.name.type.model.prisma","Policies"],
+  ["source.prisma.embedded.source"," "],
+  ["punctuation.definition.tag.prisma","{"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","id"],
+  ["text","               "],
+  ["support.type.primitive.prisma","String"],
+  ["source.prisma.embedded.source","   "],
+  ["entity.name.function.attribute.prisma","@default"],
+  ["punctuation.definition.tag.prisma","("],
+  ["support.function.functional.prisma","cuid"],
+  ["punctuation.definition.tag.prisma","("],
+  ["punctuation.definition.tag.prisma","))"],
+  ["source.prisma.embedded.source"," "],
+  ["entity.name.function.attribute.prisma","@id"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","createdAt"],
+  ["text","        "],
+  ["support.type.primitive.prisma","DateTime"],
+  ["source.prisma.embedded.source"," "],
+  ["entity.name.function.attribute.prisma","@default"],
+  ["punctuation.definition.tag.prisma","("],
+  ["support.function.functional.prisma","now"],
+  ["punctuation.definition.tag.prisma","("],
+  ["punctuation.definition.tag.prisma","))"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","updatedAt"],
+  ["text","        "],
+  ["support.type.primitive.prisma","DateTime"],
+  ["source.prisma.embedded.source"," "],
+  ["entity.name.function.attribute.prisma","@updatedAt"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","checkInStartTime"],
+  ["text"," "],
+  ["support.type.primitive.prisma","Float"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","checkInEndTime"],
+  ["text","   "],
+  ["support.type.primitive.prisma","Float"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","checkoutTime"],
+  ["text","     "],
+  ["support.type.primitive.prisma","Float"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","place"],
+  ["text","            "],
+  ["support.type.primitive.prisma","Place"]
+],[
+   "start",
+  ["punctuation.definition.tag.prisma","}"]
+],[
+   "start"
+],[
+   "source.prisma.embedded.source",
+  ["storage.type.model.prisma","model"],
+  ["source.prisma.embedded.source"," "],
+  ["entity.name.type.model.prisma","HouseRules"],
+  ["source.prisma.embedded.source"," "],
+  ["punctuation.definition.tag.prisma","{"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","id"],
+  ["text","                      "],
+  ["support.type.primitive.prisma","String"],
+  ["source.prisma.embedded.source","   "],
+  ["entity.name.function.attribute.prisma","@default"],
+  ["punctuation.definition.tag.prisma","("],
+  ["support.function.functional.prisma","cuid"],
+  ["punctuation.definition.tag.prisma","("],
+  ["punctuation.definition.tag.prisma","))"],
+  ["source.prisma.embedded.source"," "],
+  ["entity.name.function.attribute.prisma","@id"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","createdAt"],
+  ["text","               "],
+  ["support.type.primitive.prisma","DateTime"],
+  ["source.prisma.embedded.source"," "],
+  ["entity.name.function.attribute.prisma","@default"],
+  ["punctuation.definition.tag.prisma","("],
+  ["support.function.functional.prisma","now"],
+  ["punctuation.definition.tag.prisma","("],
+  ["punctuation.definition.tag.prisma","))"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","updatedAt"],
+  ["text","               "],
+  ["support.type.primitive.prisma","DateTime"],
+  ["source.prisma.embedded.source"," "],
+  ["entity.name.function.attribute.prisma","@updatedAt"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","suitableForChildren"],
+  ["text","     "],
+  ["support.type.primitive.prisma","Boolean"],
+  ["keyword.operator.optional_type.prisma","?"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","suitableForInfants"],
+  ["text","      "],
+  ["support.type.primitive.prisma","Boolean"],
+  ["keyword.operator.optional_type.prisma","?"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","petsAllowed"],
+  ["text","             "],
+  ["support.type.primitive.prisma","Boolean"],
+  ["keyword.operator.optional_type.prisma","?"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","smokingAllowed"],
+  ["text","          "],
+  ["support.type.primitive.prisma","Boolean"],
+  ["keyword.operator.optional_type.prisma","?"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","partiesAndEventsAllowed"],
+  ["text"," "],
+  ["support.type.primitive.prisma","Boolean"],
+  ["keyword.operator.optional_type.prisma","?"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","additionalRules"],
+  ["text","         "],
+  ["support.type.primitive.prisma","String"],
+  ["keyword.operator.optional_type.prisma","?"]
+],[
+   "start",
+  ["punctuation.definition.tag.prisma","}"]
+],[
+   "start"
+],[
+   "source.prisma.embedded.source",
+  ["storage.type.model.prisma","model"],
+  ["source.prisma.embedded.source"," "],
+  ["entity.name.type.model.prisma","Views"],
+  ["source.prisma.embedded.source"," "],
+  ["punctuation.definition.tag.prisma","{"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","id"],
+  ["text","       "],
+  ["support.type.primitive.prisma","String"],
+  ["source.prisma.embedded.source"," "],
+  ["entity.name.function.attribute.prisma","@default"],
+  ["punctuation.definition.tag.prisma","("],
+  ["support.function.functional.prisma","cuid"],
+  ["punctuation.definition.tag.prisma","("],
+  ["punctuation.definition.tag.prisma","))"],
+  ["source.prisma.embedded.source"," "],
+  ["entity.name.function.attribute.prisma","@id"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","lastWeek"],
+  ["text"," "],
+  ["support.type.primitive.prisma","Int"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","place"],
+  ["text","    "],
+  ["support.type.primitive.prisma","Place"]
+],[
+   "start",
+  ["punctuation.definition.tag.prisma","}"]
+],[
+   "start"
+],[
+   "source.prisma.embedded.source",
+  ["storage.type.model.prisma","model"],
+  ["source.prisma.embedded.source"," "],
+  ["entity.name.type.model.prisma","Location"],
+  ["source.prisma.embedded.source"," "],
+  ["punctuation.definition.tag.prisma","{"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","id"],
+  ["text","            "],
+  ["support.type.primitive.prisma","String"],
+  ["source.prisma.embedded.source","         "],
+  ["entity.name.function.attribute.prisma","@default"],
+  ["punctuation.definition.tag.prisma","("],
+  ["support.function.functional.prisma","cuid"],
+  ["punctuation.definition.tag.prisma","("],
+  ["punctuation.definition.tag.prisma","))"],
+  ["source.prisma.embedded.source"," "],
+  ["entity.name.function.attribute.prisma","@id"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","lat"],
+  ["text","           "],
+  ["support.type.primitive.prisma","Float"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","lng"],
+  ["text","           "],
+  ["support.type.primitive.prisma","Float"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","neighbourHood"],
+  ["text"," "],
+  ["support.type.primitive.prisma","Neighbourhood"],
+  ["keyword.operator.optional_type.prisma","?"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","user"],
+  ["text","          "],
+  ["support.type.primitive.prisma","User"],
+  ["keyword.operator.optional_type.prisma","?"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","place"],
+  ["text","         "],
+  ["support.type.primitive.prisma","Place"],
+  ["keyword.operator.optional_type.prisma","?"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","address"],
+  ["text","       "],
+  ["support.type.primitive.prisma","String"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","directions"],
+  ["text","    "],
+  ["support.type.primitive.prisma","String"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","experience"],
+  ["text","    "],
+  ["support.type.primitive.prisma","Experience"],
+  ["keyword.operator.optional_type.prisma","?"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","restaurant"],
+  ["text","    "],
+  ["support.type.primitive.prisma","Restaurant"],
+  ["keyword.operator.optional_type.prisma","?"]
+],[
+   "start",
+  ["punctuation.definition.tag.prisma","}"]
+],[
+   "start"
+],[
+   "source.prisma.embedded.source",
+  ["storage.type.model.prisma","model"],
+  ["source.prisma.embedded.source"," "],
+  ["entity.name.type.model.prisma","Neighbourhood"],
+  ["source.prisma.embedded.source"," "],
+  ["punctuation.definition.tag.prisma","{"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","id"],
+  ["text","          "],
+  ["support.type.primitive.prisma","String"],
+  ["source.prisma.embedded.source","     "],
+  ["entity.name.function.attribute.prisma","@default"],
+  ["punctuation.definition.tag.prisma","("],
+  ["support.function.functional.prisma","cuid"],
+  ["punctuation.definition.tag.prisma","("],
+  ["punctuation.definition.tag.prisma","))"],
+  ["source.prisma.embedded.source"," "],
+  ["entity.name.function.attribute.prisma","@id"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","locations"],
+  ["text","   "],
+  ["support.type.primitive.prisma","Location"],
+  ["keyword.operator.list_type.prisma","[]"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","name"],
+  ["text","        "],
+  ["support.type.primitive.prisma","String"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","slug"],
+  ["text","        "],
+  ["support.type.primitive.prisma","String"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","homePreview"],
+  ["text"," "],
+  ["support.type.primitive.prisma","Picture"],
+  ["keyword.operator.optional_type.prisma","?"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","city"],
+  ["text","        "],
+  ["support.type.primitive.prisma","City"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","featured"],
+  ["text","    "],
+  ["support.type.primitive.prisma","Boolean"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","popularity"],
+  ["text","  "],
+  ["support.type.primitive.prisma","Int"]
+],[
+   "start",
+  ["punctuation.definition.tag.prisma","}"]
+],[
+   "start"
+],[
+   "source.prisma.embedded.source",
+  ["storage.type.model.prisma","model"],
+  ["source.prisma.embedded.source"," "],
+  ["entity.name.type.model.prisma","City"],
+  ["source.prisma.embedded.source"," "],
+  ["punctuation.definition.tag.prisma","{"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","id"],
+  ["text","             "],
+  ["support.type.primitive.prisma","String"],
+  ["source.prisma.embedded.source","          "],
+  ["entity.name.function.attribute.prisma","@default"],
+  ["punctuation.definition.tag.prisma","("],
+  ["support.function.functional.prisma","cuid"],
+  ["punctuation.definition.tag.prisma","("],
+  ["punctuation.definition.tag.prisma","))"],
+  ["source.prisma.embedded.source"," "],
+  ["entity.name.function.attribute.prisma","@id"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","name"],
+  ["text","           "],
+  ["support.type.primitive.prisma","String"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","neighbourhoods"],
+  ["text"," "],
+  ["support.type.primitive.prisma","Neighbourhood"],
+  ["keyword.operator.list_type.prisma","[]"]
+],[
+   "start",
+  ["punctuation.definition.tag.prisma","}"]
+],[
+   "start"
+],[
+   "source.prisma.embedded.source",
+  ["storage.type.model.prisma","model"],
+  ["source.prisma.embedded.source"," "],
+  ["entity.name.type.model.prisma","Picture"],
+  ["source.prisma.embedded.source"," "],
+  ["punctuation.definition.tag.prisma","{"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","id"],
+  ["text","  "],
+  ["support.type.primitive.prisma","String"],
+  ["source.prisma.embedded.source"," "],
+  ["entity.name.function.attribute.prisma","@default"],
+  ["punctuation.definition.tag.prisma","("],
+  ["support.function.functional.prisma","cuid"],
+  ["punctuation.definition.tag.prisma","("],
+  ["punctuation.definition.tag.prisma","))"],
+  ["source.prisma.embedded.source"," "],
+  ["entity.name.function.attribute.prisma","@id"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","url"],
+  ["text"," "],
+  ["support.type.primitive.prisma","String"]
+],[
+   "start",
+  ["punctuation.definition.tag.prisma","}"]
+],[
+   "start"
+],[
+   "source.prisma.embedded.source",
+  ["storage.type.model.prisma","model"],
+  ["source.prisma.embedded.source"," "],
+  ["entity.name.type.model.prisma","Experience"],
+  ["source.prisma.embedded.source"," "],
+  ["punctuation.definition.tag.prisma","{"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","id"],
+  ["text","             "],
+  ["support.type.primitive.prisma","String"],
+  ["source.prisma.embedded.source","              "],
+  ["entity.name.function.attribute.prisma","@default"],
+  ["punctuation.definition.tag.prisma","("],
+  ["support.function.functional.prisma","cuid"],
+  ["punctuation.definition.tag.prisma","("],
+  ["punctuation.definition.tag.prisma","))"],
+  ["source.prisma.embedded.source"," "],
+  ["entity.name.function.attribute.prisma","@id"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","category"],
+  ["text","       "],
+  ["support.type.primitive.prisma","ExperienceCategory"],
+  ["keyword.operator.optional_type.prisma","?"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","title"],
+  ["text","          "],
+  ["support.type.primitive.prisma","String"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","host"],
+  ["text","           "],
+  ["support.type.primitive.prisma","User"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","location"],
+  ["text","       "],
+  ["support.type.primitive.prisma","Location"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","pricePerPerson"],
+  ["text"," "],
+  ["support.type.primitive.prisma","Int"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","reviews"],
+  ["text","        "],
+  ["support.type.primitive.prisma","Review"],
+  ["keyword.operator.list_type.prisma","[]"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","preview"],
+  ["text","        "],
+  ["support.type.primitive.prisma","Picture"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","popularity"],
+  ["text","     "],
+  ["support.type.primitive.prisma","Int"]
+],[
+   "start",
+  ["punctuation.definition.tag.prisma","}"]
+],[
+   "start"
+],[
+   "source.prisma.embedded.source",
+  ["storage.type.model.prisma","model"],
+  ["source.prisma.embedded.source"," "],
+  ["entity.name.type.model.prisma","ExperienceCategory"],
+  ["source.prisma.embedded.source"," "],
+  ["punctuation.definition.tag.prisma","{"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","id"],
+  ["text","         "],
+  ["support.type.primitive.prisma","String"],
+  ["source.prisma.embedded.source","      "],
+  ["entity.name.function.attribute.prisma","@default"],
+  ["punctuation.definition.tag.prisma","("],
+  ["support.function.functional.prisma","cuid"],
+  ["punctuation.definition.tag.prisma","("],
+  ["punctuation.definition.tag.prisma","))"],
+  ["source.prisma.embedded.source"," "],
+  ["entity.name.function.attribute.prisma","@id"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","mainColor"],
+  ["text","  "],
+  ["support.type.primitive.prisma","String"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","name"],
+  ["text","       "],
+  ["support.type.primitive.prisma","String"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","experience"],
+  ["text"," "],
+  ["support.type.primitive.prisma","Experience"],
+  ["keyword.operator.optional_type.prisma","?"]
+],[
+   "start",
+  ["punctuation.definition.tag.prisma","}"]
+],[
+   "start"
+],[
+   "source.prisma.embedded.source",
+  ["storage.type.model.prisma","model"],
+  ["source.prisma.embedded.source"," "],
+  ["entity.name.type.model.prisma","Amenities"],
+  ["source.prisma.embedded.source"," "],
+  ["punctuation.definition.tag.prisma","{"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","id"],
+  ["text","                        "],
+  ["support.type.primitive.prisma","String"],
+  ["source.prisma.embedded.source","  "],
+  ["entity.name.function.attribute.prisma","@default"],
+  ["punctuation.definition.tag.prisma","("],
+  ["support.function.functional.prisma","cuid"],
+  ["punctuation.definition.tag.prisma","("],
+  ["punctuation.definition.tag.prisma","))"],
+  ["source.prisma.embedded.source"," "],
+  ["entity.name.function.attribute.prisma","@id"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","place"],
+  ["text","                     "],
+  ["support.type.primitive.prisma","Place"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","elevator"],
+  ["text","                  "],
+  ["support.type.primitive.prisma","Boolean"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","petsAllowed"],
+  ["text","               "],
+  ["support.type.primitive.prisma","Boolean"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","internet"],
+  ["text","                  "],
+  ["support.type.primitive.prisma","Boolean"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","kitchen"],
+  ["text","                   "],
+  ["support.type.primitive.prisma","Boolean"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","wirelessInternet"],
+  ["text","          "],
+  ["support.type.primitive.prisma","Boolean"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","familyKidFriendly"],
+  ["text","         "],
+  ["support.type.primitive.prisma","Boolean"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","freeParkingOnPremises"],
+  ["text","     "],
+  ["support.type.primitive.prisma","Boolean"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","hotTub"],
+  ["text","                    "],
+  ["support.type.primitive.prisma","Boolean"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","pool"],
+  ["text","                      "],
+  ["support.type.primitive.prisma","Boolean"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","smokingAllowed"],
+  ["text","            "],
+  ["support.type.primitive.prisma","Boolean"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","wheelchairAccessible"],
+  ["text","      "],
+  ["support.type.primitive.prisma","Boolean"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","breakfast"],
+  ["text","                 "],
+  ["support.type.primitive.prisma","Boolean"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","cableTv"],
+  ["text","                   "],
+  ["support.type.primitive.prisma","Boolean"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","suitableForEvents"],
+  ["text","         "],
+  ["support.type.primitive.prisma","Boolean"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","dryer"],
+  ["text","                     "],
+  ["support.type.primitive.prisma","Boolean"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","washer"],
+  ["text","                    "],
+  ["support.type.primitive.prisma","Boolean"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","indoorFireplace"],
+  ["text","           "],
+  ["support.type.primitive.prisma","Boolean"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","tv"],
+  ["text","                        "],
+  ["support.type.primitive.prisma","Boolean"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","heating"],
+  ["text","                   "],
+  ["support.type.primitive.prisma","Boolean"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","hangers"],
+  ["text","                   "],
+  ["support.type.primitive.prisma","Boolean"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","iron"],
+  ["text","                      "],
+  ["support.type.primitive.prisma","Boolean"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","hairDryer"],
+  ["text","                 "],
+  ["support.type.primitive.prisma","Boolean"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","doorman"],
+  ["text","                   "],
+  ["support.type.primitive.prisma","Boolean"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","paidParkingOffPremises"],
+  ["text","    "],
+  ["support.type.primitive.prisma","Boolean"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","freeParkingOnStreet"],
+  ["text","       "],
+  ["support.type.primitive.prisma","Boolean"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","gym"],
+  ["text","                       "],
+  ["support.type.primitive.prisma","Boolean"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","airConditioning"],
+  ["text","           "],
+  ["support.type.primitive.prisma","Boolean"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","shampoo"],
+  ["text","                   "],
+  ["support.type.primitive.prisma","Boolean"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","essentials"],
+  ["text","                "],
+  ["support.type.primitive.prisma","Boolean"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","laptopFriendlyWorkspace"],
+  ["text","   "],
+  ["support.type.primitive.prisma","Boolean"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","privateEntrance"],
+  ["text","           "],
+  ["support.type.primitive.prisma","Boolean"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","buzzerWirelessIntercom"],
+  ["text","    "],
+  ["support.type.primitive.prisma","Boolean"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","babyBath"],
+  ["text","                  "],
+  ["support.type.primitive.prisma","Boolean"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","babyMonitor"],
+  ["text","               "],
+  ["support.type.primitive.prisma","Boolean"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","babysitterRecommendations"],
+  ["text"," "],
+  ["support.type.primitive.prisma","Boolean"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","bathtub"],
+  ["text","                   "],
+  ["support.type.primitive.prisma","Boolean"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","changingTable"],
+  ["text","             "],
+  ["support.type.primitive.prisma","Boolean"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","childrensBooksAndToys"],
+  ["text","     "],
+  ["support.type.primitive.prisma","Boolean"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","childrensDinnerware"],
+  ["text","       "],
+  ["support.type.primitive.prisma","Boolean"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","crib"],
+  ["text","                      "],
+  ["support.type.primitive.prisma","Boolean"]
+],[
+   "start",
+  ["punctuation.definition.tag.prisma","}"]
+],[
+   "start"
+],[
+   "source.prisma.embedded.source",
+  ["storage.type.model.prisma","model"],
+  ["source.prisma.embedded.source"," "],
+  ["entity.name.type.model.prisma","Review"],
+  ["source.prisma.embedded.source"," "],
+  ["punctuation.definition.tag.prisma","{"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","id"],
+  ["text","            "],
+  ["support.type.primitive.prisma","String"],
+  ["source.prisma.embedded.source","      "],
+  ["entity.name.function.attribute.prisma","@default"],
+  ["punctuation.definition.tag.prisma","("],
+  ["support.function.functional.prisma","cuid"],
+  ["punctuation.definition.tag.prisma","("],
+  ["punctuation.definition.tag.prisma","))"],
+  ["source.prisma.embedded.source"," "],
+  ["entity.name.function.attribute.prisma","@id"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","createdAt"],
+  ["text","     "],
+  ["support.type.primitive.prisma","DateTime"],
+  ["source.prisma.embedded.source","    "],
+  ["entity.name.function.attribute.prisma","@default"],
+  ["punctuation.definition.tag.prisma","("],
+  ["support.function.functional.prisma","now"],
+  ["punctuation.definition.tag.prisma","("],
+  ["punctuation.definition.tag.prisma","))"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","text"],
+  ["text","          "],
+  ["support.type.primitive.prisma","String"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","stars"],
+  ["text","         "],
+  ["support.type.primitive.prisma","Int"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","accuracy"],
+  ["text","      "],
+  ["support.type.primitive.prisma","Int"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","location"],
+  ["text","      "],
+  ["support.type.primitive.prisma","Int"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","checkIn"],
+  ["text","       "],
+  ["support.type.primitive.prisma","Int"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","value"],
+  ["text","         "],
+  ["support.type.primitive.prisma","Int"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","cleanliness"],
+  ["text","   "],
+  ["support.type.primitive.prisma","Int"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","communication"],
+  ["text"," "],
+  ["support.type.primitive.prisma","Int"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","place"],
+  ["text","         "],
+  ["support.type.primitive.prisma","Place"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","experience"],
+  ["text","    "],
+  ["support.type.primitive.prisma","Experience"],
+  ["keyword.operator.optional_type.prisma","?"]
+],[
+   "start",
+  ["punctuation.definition.tag.prisma","}"]
+],[
+   "start"
+],[
+   "source.prisma.embedded.source",
+  ["storage.type.model.prisma","model"],
+  ["source.prisma.embedded.source"," "],
+  ["entity.name.type.model.prisma","Booking"],
+  ["source.prisma.embedded.source"," "],
+  ["punctuation.definition.tag.prisma","{"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","id"],
+  ["text","        "],
+  ["support.type.primitive.prisma","String"],
+  ["source.prisma.embedded.source","   "],
+  ["entity.name.function.attribute.prisma","@default"],
+  ["punctuation.definition.tag.prisma","("],
+  ["support.function.functional.prisma","cuid"],
+  ["punctuation.definition.tag.prisma","("],
+  ["punctuation.definition.tag.prisma","))"],
+  ["source.prisma.embedded.source"," "],
+  ["entity.name.function.attribute.prisma","@id"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","createdAt"],
+  ["text"," "],
+  ["support.type.primitive.prisma","DateTime"],
+  ["source.prisma.embedded.source"," "],
+  ["entity.name.function.attribute.prisma","@default"],
+  ["punctuation.definition.tag.prisma","("],
+  ["support.function.functional.prisma","now"],
+  ["punctuation.definition.tag.prisma","("],
+  ["punctuation.definition.tag.prisma","))"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","bookee"],
+  ["text","    "],
+  ["support.type.primitive.prisma","User"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","place"],
+  ["text","     "],
+  ["support.type.primitive.prisma","Place"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","startDate"],
+  ["text"," "],
+  ["support.type.primitive.prisma","DateTime"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","endDate"],
+  ["text","   "],
+  ["support.type.primitive.prisma","DateTime"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","payment"],
+  ["text","   "],
+  ["support.type.primitive.prisma","Payment"],
+  ["keyword.operator.optional_type.prisma","?"]
+],[
+   "start",
+  ["punctuation.definition.tag.prisma","}"]
+],[
+   "start"
+],[
+   "source.prisma.embedded.source",
+  ["storage.type.model.prisma","model"],
+  ["source.prisma.embedded.source"," "],
+  ["entity.name.type.model.prisma","Payment"],
+  ["source.prisma.embedded.source"," "],
+  ["punctuation.definition.tag.prisma","{"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","id"],
+  ["text","            "],
+  ["support.type.primitive.prisma","String"],
+  ["source.prisma.embedded.source","         "],
+  ["entity.name.function.attribute.prisma","@default"],
+  ["punctuation.definition.tag.prisma","("],
+  ["support.function.functional.prisma","cuid"],
+  ["punctuation.definition.tag.prisma","("],
+  ["punctuation.definition.tag.prisma","))"],
+  ["source.prisma.embedded.source"," "],
+  ["entity.name.function.attribute.prisma","@id"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","createdAt"],
+  ["text","     "],
+  ["support.type.primitive.prisma","DateTime"],
+  ["source.prisma.embedded.source","       "],
+  ["entity.name.function.attribute.prisma","@default"],
+  ["punctuation.definition.tag.prisma","("],
+  ["support.function.functional.prisma","now"],
+  ["punctuation.definition.tag.prisma","("],
+  ["punctuation.definition.tag.prisma","))"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","serviceFee"],
+  ["text","    "],
+  ["support.type.primitive.prisma","Float"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","placePrice"],
+  ["text","    "],
+  ["support.type.primitive.prisma","Float"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","totalPrice"],
+  ["text","    "],
+  ["support.type.primitive.prisma","Float"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","booking"],
+  ["text","       "],
+  ["support.type.primitive.prisma","Booking"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","paymentMethod"],
+  ["text"," "],
+  ["support.type.primitive.prisma","PaymentAccount"]
+],[
+   "start",
+  ["punctuation.definition.tag.prisma","}"]
+],[
+   "start"
+],[
+   "source.prisma.embedded.source",
+  ["storage.type.model.prisma","model"],
+  ["source.prisma.embedded.source"," "],
+  ["entity.name.type.model.prisma","PaymentAccount"],
+  ["source.prisma.embedded.source"," "],
+  ["punctuation.definition.tag.prisma","{"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","id"],
+  ["text","         "],
+  ["support.type.primitive.prisma","String"],
+  ["source.prisma.embedded.source","                 "],
+  ["entity.name.function.attribute.prisma","@default"],
+  ["punctuation.definition.tag.prisma","("],
+  ["support.function.functional.prisma","cuid"],
+  ["punctuation.definition.tag.prisma","("],
+  ["punctuation.definition.tag.prisma","))"],
+  ["source.prisma.embedded.source"," "],
+  ["entity.name.function.attribute.prisma","@id"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","createdAt"],
+  ["text","  "],
+  ["support.type.primitive.prisma","DateTime"],
+  ["source.prisma.embedded.source","               "],
+  ["entity.name.function.attribute.prisma","@default"],
+  ["punctuation.definition.tag.prisma","("],
+  ["support.function.functional.prisma","now"],
+  ["punctuation.definition.tag.prisma","("],
+  ["punctuation.definition.tag.prisma","))"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","type"],
+  ["text","       "],
+  ["support.type.primitive.prisma","PAYMENT_PROVIDER"],
+  ["keyword.operator.optional_type.prisma","?"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","user"],
+  ["text","       "],
+  ["support.type.primitive.prisma","User"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","payments"],
+  ["text","   "],
+  ["support.type.primitive.prisma","Payment"],
+  ["keyword.operator.list_type.prisma","[]"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","paypal"],
+  ["text","     "],
+  ["support.type.primitive.prisma","PaypalInformation"],
+  ["keyword.operator.optional_type.prisma","?"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","creditcard"],
+  ["text"," "],
+  ["support.type.primitive.prisma","CreditCardInformation"],
+  ["keyword.operator.optional_type.prisma","?"]
+],[
+   "start",
+  ["punctuation.definition.tag.prisma","}"]
+],[
+   "start"
+],[
+   "source.prisma.embedded.source",
+  ["storage.type.model.prisma","model"],
+  ["source.prisma.embedded.source"," "],
+  ["entity.name.type.model.prisma","PaypalInformation"],
+  ["source.prisma.embedded.source"," "],
+  ["punctuation.definition.tag.prisma","{"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","id"],
+  ["text","             "],
+  ["support.type.primitive.prisma","String"],
+  ["source.prisma.embedded.source","         "],
+  ["entity.name.function.attribute.prisma","@default"],
+  ["punctuation.definition.tag.prisma","("],
+  ["support.function.functional.prisma","cuid"],
+  ["punctuation.definition.tag.prisma","("],
+  ["punctuation.definition.tag.prisma","))"],
+  ["source.prisma.embedded.source"," "],
+  ["entity.name.function.attribute.prisma","@id"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","createdAt"],
+  ["text","      "],
+  ["support.type.primitive.prisma","DateTime"],
+  ["source.prisma.embedded.source","       "],
+  ["entity.name.function.attribute.prisma","@default"],
+  ["punctuation.definition.tag.prisma","("],
+  ["support.function.functional.prisma","now"],
+  ["punctuation.definition.tag.prisma","("],
+  ["punctuation.definition.tag.prisma","))"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","email"],
+  ["text","          "],
+  ["support.type.primitive.prisma","String"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","paymentAccount"],
+  ["text"," "],
+  ["support.type.primitive.prisma","PaymentAccount"]
+],[
+   "start",
+  ["punctuation.definition.tag.prisma","}"]
+],[
+   "start"
+],[
+   "source.prisma.embedded.source",
+  ["storage.type.model.prisma","model"],
+  ["source.prisma.embedded.source"," "],
+  ["entity.name.type.model.prisma","CreditCardInformation"],
+  ["source.prisma.embedded.source"," "],
+  ["punctuation.definition.tag.prisma","{"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","id"],
+  ["text","             "],
+  ["support.type.primitive.prisma","String"],
+  ["source.prisma.embedded.source","          "],
+  ["entity.name.function.attribute.prisma","@default"],
+  ["punctuation.definition.tag.prisma","("],
+  ["support.function.functional.prisma","cuid"],
+  ["punctuation.definition.tag.prisma","("],
+  ["punctuation.definition.tag.prisma","))"],
+  ["source.prisma.embedded.source"," "],
+  ["entity.name.function.attribute.prisma","@id"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","createdAt"],
+  ["text","      "],
+  ["support.type.primitive.prisma","DateTime"],
+  ["source.prisma.embedded.source","        "],
+  ["entity.name.function.attribute.prisma","@default"],
+  ["punctuation.definition.tag.prisma","("],
+  ["support.function.functional.prisma","now"],
+  ["punctuation.definition.tag.prisma","("],
+  ["punctuation.definition.tag.prisma","))"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","cardNumber"],
+  ["text","     "],
+  ["support.type.primitive.prisma","String"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","expiresOnMonth"],
+  ["text"," "],
+  ["support.type.primitive.prisma","Int"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","expiresOnYear"],
+  ["text","  "],
+  ["support.type.primitive.prisma","Int"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","securityCode"],
+  ["text","   "],
+  ["support.type.primitive.prisma","String"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","firstName"],
+  ["text","      "],
+  ["support.type.primitive.prisma","String"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","lastName"],
+  ["text","       "],
+  ["support.type.primitive.prisma","String"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","postalCode"],
+  ["text","     "],
+  ["support.type.primitive.prisma","String"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","country"],
+  ["text","        "],
+  ["support.type.primitive.prisma","String"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","paymentAccount"],
+  ["text"," "],
+  ["support.type.primitive.prisma","PaymentAccount"],
+  ["keyword.operator.optional_type.prisma","?"]
+],[
+   "start",
+  ["punctuation.definition.tag.prisma","}"]
+],[
+   "start"
+],[
+   "source.prisma.embedded.source",
+  ["storage.type.model.prisma","model"],
+  ["source.prisma.embedded.source"," "],
+  ["entity.name.type.model.prisma","Message"],
+  ["source.prisma.embedded.source"," "],
+  ["punctuation.definition.tag.prisma","{"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","id"],
+  ["text","          "],
+  ["support.type.primitive.prisma","String"],
+  ["source.prisma.embedded.source","   "],
+  ["entity.name.function.attribute.prisma","@default"],
+  ["punctuation.definition.tag.prisma","("],
+  ["support.function.functional.prisma","cuid"],
+  ["punctuation.definition.tag.prisma","("],
+  ["punctuation.definition.tag.prisma","))"],
+  ["source.prisma.embedded.source"," "],
+  ["entity.name.function.attribute.prisma","@id"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","createdAt"],
+  ["text","   "],
+  ["support.type.primitive.prisma","DateTime"],
+  ["source.prisma.embedded.source"," "],
+  ["entity.name.function.attribute.prisma","@default"],
+  ["punctuation.definition.tag.prisma","("],
+  ["support.function.functional.prisma","now"],
+  ["punctuation.definition.tag.prisma","("],
+  ["punctuation.definition.tag.prisma","))"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","from"],
+  ["text","        "],
+  ["support.type.primitive.prisma","User"],
+  ["source.prisma.embedded.source","     "],
+  ["entity.name.function.attribute.prisma","@relation"],
+  ["punctuation.definition.tag.prisma","("],
+  ["string.quoted.double.start.prisma","\""],
+  ["string.quoted.double.prisma","SentMessages"],
+  ["string.quoted.double.end.prisma","\""],
+  ["punctuation.definition.tag.prisma",")"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","to"],
+  ["text","          "],
+  ["support.type.primitive.prisma","User"],
+  ["source.prisma.embedded.source","     "],
+  ["entity.name.function.attribute.prisma","@relation"],
+  ["punctuation.definition.tag.prisma","("],
+  ["string.quoted.double.start.prisma","\""],
+  ["string.quoted.double.prisma","ReceivedMessages"],
+  ["string.quoted.double.end.prisma","\""],
+  ["punctuation.definition.tag.prisma",")"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","deliveredAt"],
+  ["text"," "],
+  ["support.type.primitive.prisma","DateTime"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","readAt"],
+  ["text","      "],
+  ["support.type.primitive.prisma","DateTime"]
+],[
+   "start",
+  ["punctuation.definition.tag.prisma","}"]
+],[
+   "start"
+],[
+   "source.prisma.embedded.source",
+  ["storage.type.model.prisma","model"],
+  ["source.prisma.embedded.source"," "],
+  ["entity.name.type.model.prisma","Notification"],
+  ["source.prisma.embedded.source"," "],
+  ["punctuation.definition.tag.prisma","{"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","id"],
+  ["text","        "],
+  ["support.type.primitive.prisma","String"],
+  ["source.prisma.embedded.source","             "],
+  ["entity.name.function.attribute.prisma","@default"],
+  ["punctuation.definition.tag.prisma","("],
+  ["support.function.functional.prisma","cuid"],
+  ["punctuation.definition.tag.prisma","("],
+  ["punctuation.definition.tag.prisma","))"],
+  ["source.prisma.embedded.source"," "],
+  ["entity.name.function.attribute.prisma","@id"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","createdAt"],
+  ["text"," "],
+  ["support.type.primitive.prisma","DateTime"],
+  ["source.prisma.embedded.source","           "],
+  ["entity.name.function.attribute.prisma","@default"],
+  ["punctuation.definition.tag.prisma","("],
+  ["support.function.functional.prisma","now"],
+  ["punctuation.definition.tag.prisma","("],
+  ["punctuation.definition.tag.prisma","))"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","type"],
+  ["text","      "],
+  ["support.type.primitive.prisma","NOTIFICATION_TYPE"],
+  ["keyword.operator.optional_type.prisma","?"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","user"],
+  ["text","      "],
+  ["support.type.primitive.prisma","User"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","link"],
+  ["text","      "],
+  ["support.type.primitive.prisma","String"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","readDate"],
+  ["text","  "],
+  ["support.type.primitive.prisma","DateTime"]
+],[
+   "start",
+  ["punctuation.definition.tag.prisma","}"]
+],[
+   "start"
+],[
+   "source.prisma.embedded.source",
+  ["storage.type.model.prisma","model"],
+  ["source.prisma.embedded.source"," "],
+  ["entity.name.type.model.prisma","Restaurant"],
+  ["source.prisma.embedded.source"," "],
+  ["punctuation.definition.tag.prisma","{"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","id"],
+  ["text","                "],
+  ["support.type.primitive.prisma","String"],
+  ["source.prisma.embedded.source","    "],
+  ["entity.name.function.attribute.prisma","@default"],
+  ["punctuation.definition.tag.prisma","("],
+  ["support.function.functional.prisma","cuid"],
+  ["punctuation.definition.tag.prisma","("],
+  ["punctuation.definition.tag.prisma","))"],
+  ["source.prisma.embedded.source"," "],
+  ["entity.name.function.attribute.prisma","@id"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","createdAt"],
+  ["text","         "],
+  ["support.type.primitive.prisma","DateTime"],
+  ["source.prisma.embedded.source","  "],
+  ["entity.name.function.attribute.prisma","@default"],
+  ["punctuation.definition.tag.prisma","("],
+  ["support.function.functional.prisma","now"],
+  ["punctuation.definition.tag.prisma","("],
+  ["punctuation.definition.tag.prisma","))"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","title"],
+  ["text","             "],
+  ["support.type.primitive.prisma","String"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","avgPricePerPerson"],
+  ["text"," "],
+  ["support.type.primitive.prisma","Int"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","pictures"],
+  ["text","          "],
+  ["support.type.primitive.prisma","Picture"],
+  ["keyword.operator.list_type.prisma","[]"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","location"],
+  ["text","          "],
+  ["support.type.primitive.prisma","Location"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","isCurated"],
+  ["text","         "],
+  ["support.type.primitive.prisma","Boolean"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","slug"],
+  ["text","              "],
+  ["support.type.primitive.prisma","String"]
+],[
+   "source.prisma.embedded.source",
+  ["text","  "],
+  ["variable.other.assignment.prisma","popularity"],
+  ["text","        "],
+  ["support.type.primitive.prisma","Int"]
+],[
+   "start",
+  ["punctuation.definition.tag.prisma","}"]
+],[
+   "start"
+],[
+   "source.prisma.embedded.source2",
+  ["storage.type.enum.prisma","enum"],
+  ["source.prisma.embedded.source"," "],
+  ["entity.name.type.enum.prisma","CURRENCY"],
+  ["source.prisma.embedded.source"," "],
+  ["punctuation.definition.tag.prisma","{"]
+],[
+   "source.prisma.embedded.source2",
+  ["text","  "],
+  ["variable.other.assignment.prisma","CAD"]
+],[
+   "source.prisma.embedded.source2",
+  ["text","  "],
+  ["variable.other.assignment.prisma","CHF"]
+],[
+   "source.prisma.embedded.source2",
+  ["text","  "],
+  ["variable.other.assignment.prisma","EUR"]
+],[
+   "source.prisma.embedded.source2",
+  ["text","  "],
+  ["variable.other.assignment.prisma","JPY"]
+],[
+   "source.prisma.embedded.source2",
+  ["text","  "],
+  ["variable.other.assignment.prisma","USD"]
+],[
+   "source.prisma.embedded.source2",
+  ["text","  "],
+  ["variable.other.assignment.prisma","ZAR"]
+],[
+   "start",
+  ["punctuation.definition.tag.prisma","}"]
+],[
+   "start"
+],[
+   "source.prisma.embedded.source2",
+  ["storage.type.enum.prisma","enum"],
+  ["source.prisma.embedded.source"," "],
+  ["entity.name.type.enum.prisma","PLACE_SIZES"],
+  ["source.prisma.embedded.source"," "],
+  ["punctuation.definition.tag.prisma","{"]
+],[
+   "source.prisma.embedded.source2",
+  ["text","  "],
+  ["variable.other.assignment.prisma","ENTIRE_HOUSE"]
+],[
+   "source.prisma.embedded.source2",
+  ["text","  "],
+  ["variable.other.assignment.prisma","ENTIRE_APARTMENT"]
+],[
+   "source.prisma.embedded.source2",
+  ["text","  "],
+  ["variable.other.assignment.prisma","ENTIRE_EARTH_HOUSE"]
+],[
+   "source.prisma.embedded.source2",
+  ["text","  "],
+  ["variable.other.assignment.prisma","ENTIRE_CABIN"]
+],[
+   "source.prisma.embedded.source2",
+  ["text","  "],
+  ["variable.other.assignment.prisma","ENTIRE_VILLA"]
+],[
+   "source.prisma.embedded.source2",
+  ["text","  "],
+  ["variable.other.assignment.prisma","ENTIRE_PLACE"]
+],[
+   "source.prisma.embedded.source2",
+  ["text","  "],
+  ["variable.other.assignment.prisma","ENTIRE_BOAT"]
+],[
+   "source.prisma.embedded.source2",
+  ["text","  "],
+  ["variable.other.assignment.prisma","PRIVATE_ROOM"]
+],[
+   "start",
+  ["punctuation.definition.tag.prisma","}"]
+],[
+   "start"
+],[
+   "source.prisma.embedded.source2",
+  ["storage.type.enum.prisma","enum"],
+  ["source.prisma.embedded.source"," "],
+  ["entity.name.type.enum.prisma","PAYMENT_PROVIDER"],
+  ["source.prisma.embedded.source"," "],
+  ["punctuation.definition.tag.prisma","{"]
+],[
+   "source.prisma.embedded.source2",
+  ["text","  "],
+  ["variable.other.assignment.prisma","PAYPAL"]
+],[
+   "source.prisma.embedded.source2",
+  ["text","  "],
+  ["variable.other.assignment.prisma","CREDIT_CARD"]
+],[
+   "start",
+  ["punctuation.definition.tag.prisma","}"]
+],[
+   "start"
+],[
+   "source.prisma.embedded.source2",
+  ["storage.type.enum.prisma","enum"],
+  ["source.prisma.embedded.source"," "],
+  ["entity.name.type.enum.prisma","NOTIFICATION_TYPE"],
+  ["source.prisma.embedded.source"," "],
+  ["punctuation.definition.tag.prisma","{"]
+],[
+   "source.prisma.embedded.source2",
+  ["text","  "],
+  ["variable.other.assignment.prisma","OFFER"]
+],[
+   "source.prisma.embedded.source2",
+  ["text","  "],
+  ["variable.other.assignment.prisma","INSTANT_BOOK"]
+],[
+   "source.prisma.embedded.source2",
+  ["text","  "],
+  ["variable.other.assignment.prisma","RESPONSIVENESS"]
+],[
+   "source.prisma.embedded.source2",
+  ["text","  "],
+  ["variable.other.assignment.prisma","NEW_AMENITIES"]
+],[
+   "source.prisma.embedded.source2",
+  ["text","  "],
+  ["variable.other.assignment.prisma","HOUSE_RULES"]
+],[
+   "start",
+  ["punctuation.definition.tag.prisma","}"]
+]]

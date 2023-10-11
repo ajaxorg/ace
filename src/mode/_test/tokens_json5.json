@@ -1,0 +1,127 @@
+[[
+   "start",
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","  "],
+  ["variable","foo"],
+  ["text",": "],
+  ["string","'bar'"],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","  "],
+  ["variable","while"],
+  ["text",": "],
+  ["constant.language.boolean","true"],
+  ["punctuation.operator",","]
+],[
+   "start"
+],[
+   "string0",
+  ["text","  "],
+  ["variable","this"],
+  ["text",": "],
+  ["string","'is a "],
+  ["constant.language.escape","\\"]
+],[
+   "start",
+  ["string","multi-line string'"],
+  ["punctuation.operator",","]
+],[
+   "start"
+],[
+   "start",
+  ["text","  "],
+  ["comment","// this is an inline comment"]
+],[
+   "start",
+  ["text","  "],
+  ["variable","here"],
+  ["text",": "],
+  ["string","'is another'"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["comment","// inline comment"]
+],[
+   "start"
+],[
+   "comment",
+  ["text","  "],
+  ["comment.start","/*"],
+  ["comment"," this is a block comment"]
+],[
+   "start",
+  ["comment","     that continues on another line "],
+  ["comment.end","*/"]
+],[
+   "start"
+],[
+   "start",
+  ["text","  "],
+  ["variable","hex"],
+  ["text",": "],
+  ["constant.numeric","0xDEADbeef"],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","  "],
+  ["variable","half"],
+  ["text",": ."],
+  ["constant.numeric","5"],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","  "],
+  ["variable","delta"],
+  ["text",": "],
+  ["constant.numeric","+10"],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","  "],
+  ["variable","to"],
+  ["text",": "],
+  ["constant.numeric","Infinity"],
+  ["punctuation.operator",","],
+  ["text","   "],
+  ["comment","// and beyond!"]
+],[
+   "start"
+],[
+   "start",
+  ["text","  "],
+  ["variable","finally"],
+  ["text",": "],
+  ["string","'a trailing comma'"],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","  "],
+  ["variable","oh"],
+  ["text",": "],
+  ["paren.lparen","["]
+],[
+   "start",
+  ["text","    "],
+  ["string","\"we shouldn't forget\""],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","    "],
+  ["string","'arrays can have'"],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","    "],
+  ["string","'trailing commas too'"],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","  "],
+  ["paren.rparen","]"],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["paren.rparen","}"]
+]]
