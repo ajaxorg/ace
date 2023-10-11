@@ -390,6 +390,47 @@ module.exports = {
         editor.insert("c");
         assert.equal(undoManager.$undoStack[0][0].lines[0], "c");
         assert.equal(undoManager.$undoStack.length, undoManager.$undoDepth);
+    },
+    "test: export instance using toJSON": function() {
+        let state = undoManager.toJSON();
+        assert.equal(typeof state, "object");
+        assert.equal(state.$redoStack.length, 0);
+        assert.equal(state.$undoStack.length, 0);
+
+        session.insert({row: 0, column: 0}, "j");
+        undoManager.startNewGroup();
+        session.insert({row: 0, column: 0}, "s");
+        editor.undo();
+
+        state = undoManager.toJSON();
+        assert.equal(state.$undoStack, undoManager.$undoStack);
+        assert.equal(state.$redoStack, undoManager.$redoStack);
+        assert.equal(state.$redoStack.length, 1);
+        assert.equal(state.$undoStack.length, 1);
+
+    },
+    "test: import instance using fromJSON": function() {
+        const JSONwithundo = `{"$redoStack":[],"$undoStack":[[{"start":{"row":0,"column":0},"end":{"row":0,"column":1},"action":"insert","lines":["j"],"id":1}]]}`;
+        const JSONwithredo = `{"$redoStack":[[{"start":{"row":0,"column":0},"end":{"row":0,"column":1},"action":"insert","lines":["s"],"id":2}]],"$undoStack":[]}`;
+        const JSONwithboth = `{"$redoStack":[[{"start":{"row":0,"column":0},"end":{"row":0,"column":1},"action":"insert","lines":["s"],"id":2}]],"$undoStack":[[{"start":{"row":0,"column":0},"end":{"row":0,"column":1},"action":"insert","lines":["j"],"id":1}]]}`;
+        const JSONwithnone = `{"$redoStack":[],"$undoStack":[]}`;
+
+        let state = JSON.parse(JSONwithundo);
+        undoManager.fromJSON(state);
+        assert.equal(undoManager.canUndo(), true);
+        assert.equal(undoManager.canRedo(), false);
+        state = JSON.parse(JSONwithredo);
+        undoManager.fromJSON(state);
+        assert.equal(undoManager.canUndo(), false);
+        assert.equal(undoManager.canRedo(), true);
+        state = JSON.parse(JSONwithboth);
+        undoManager.fromJSON(state);
+        assert.equal(undoManager.canUndo(), true);
+        assert.equal(undoManager.canRedo(), true);
+        state = JSON.parse(JSONwithnone);
+        undoManager.fromJSON(state);
+        assert.equal(undoManager.canUndo(), false);
+        assert.equal(undoManager.canRedo(), false);
     }
 };
 

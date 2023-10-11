@@ -493,6 +493,8 @@ export namespace Ace {
     hasRedo(): boolean;
     isClean(): boolean;
     markClean(rev?: number): void;
+    toJSON(): object;
+    fromJSON(json: object): void;
   }
 
   export interface Position {
