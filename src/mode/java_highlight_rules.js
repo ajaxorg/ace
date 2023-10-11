@@ -233,6 +233,10 @@ var JavaHighlightRules = function() {
         ],
         "statements": [
             {
+                token: ["keyword", "text", "identifier"],
+                regex: "(record)(\\s+)("+identifierRe+")\\b"
+            },
+            {
                 token: "keyword",
                 regex: "(?:" + keywords + ")\\b"
             }, {//annotations
