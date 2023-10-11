@@ -98,7 +98,7 @@ class Autocomplete {
         this.popup.on("show", this.$onPopupShow.bind(this));
         this.popup.on("hide", this.$onHidePopup.bind(this));
         this.popup.on("select", this.$onPopupChange.bind(this));
-        event.addListener(this.popup.container, "mouseout", this.$updatePopupPosition.bind(this));
+        event.addListener(this.popup.container, "mouseout", this.mouseOutListener.bind(this));
         this.popup.on("changeHoverMarker", this.tooltipTimer.bind(null, null));
         return this.popup;
     }
@@ -134,10 +134,11 @@ class Autocomplete {
             // If the mouse is over the tooltip, and we're changing selection on hover don't
             // move the tooltip while hovering over the popup.
             if (this.popup.isMouseOver && this.setSelectOnHover) { 
+                this.tooltipTimer.call(null, null);
                 return;
             }
-            this.$updatePopupPosition();
         }
+        this.$updatePopupPosition();
         this.tooltipTimer.call(null, null);
     }
 
@@ -315,6 +316,10 @@ class Autocomplete {
 
     mousewheelListener(e) {
         this.detach();
+    }
+
+    mouseOutListener(e) {
+        this.$updatePopupPosition();
     }
 
    goTo(where) {
