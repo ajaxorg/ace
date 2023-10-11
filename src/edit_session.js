@@ -291,9 +291,9 @@ class EditSession {
     }
  
     /**
-     * Returns the current edit session as a JSON string.
+     * Returns the current edit session.
      * @method toJSON
-     * @returns {String}
+     * @returns {Object}
      */
     toJSON() {
         return {
@@ -302,10 +302,7 @@ class EditSession {
             folds: this.getAllFolds().map(function(fold) {
                 return fold.range;
             }),
-            history: {
-                undo: this.getUndoManager().$undoStack,
-                redo: this.getUndoManager().$redoStack
-            },
+            history: this.getUndoManager(),
             mode: this.$mode.$id,
             scrollLeft: this.$scrollLeft,
             scrollTop: this.$scrollTop,

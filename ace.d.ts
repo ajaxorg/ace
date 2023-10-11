@@ -620,7 +620,7 @@ export namespace Ace {
     documentToScreenColumn(row: number, docColumn: number): number;
     documentToScreenRow(docRow: number, docColumn: number): number;
     getScreenLength(): number;
-    toJSON(): string;
+    toJSON(): Object;
     destroy(): void;
   }
 
