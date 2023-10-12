@@ -493,6 +493,8 @@ export namespace Ace {
     hasRedo(): boolean;
     isClean(): boolean;
     markClean(rev?: number): void;
+    toJSON(): object;
+    fromJSON(json: object): void;
   }
 
   export interface Position {
@@ -620,6 +622,7 @@ export namespace Ace {
     documentToScreenColumn(row: number, docColumn: number): number;
     documentToScreenRow(docRow: number, docColumn: number): number;
     getScreenLength(): number;
+    toJSON(): Object;
     destroy(): void;
   }
 
