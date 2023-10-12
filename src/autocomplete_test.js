@@ -852,7 +852,6 @@ module.exports = {
         assert.equal(editor.completer.popup.isOpen, true);
         var called = false;
         editor.completer.$updatePopupPosition = function() {
-            console.log("function called")
             called = true;
         };
 
@@ -878,17 +877,17 @@ module.exports = {
         assert.strictEqual(editor.renderer.$ghostText.text, "function\nthat does something\ncool");
 
         // Check that position update of popup is not called.
-        assert.ok(!called)
+        assert.ok(!called);
 
         text.dispatchEvent(new MouseEvent("out", {x: rect.left, y: rect.top}));
         editor.completer.popup.renderer.$loop._flush();
 
         // Check that position update of popup is called after the mouseout.
-        assert.ok(called)
+        assert.ok(called);
 
         editor.destroy();
         editor.container.remove();
-    },
+    }
 };
 
 if (typeof module !== "undefined" && module === require.main) {
