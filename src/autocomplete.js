@@ -319,8 +319,10 @@ class Autocomplete {
     }
 
     mouseOutListener(e) {
-        this.$updatePopupPosition();
-        this.tooltipTimer.call(null, null);
+        // Check whether the popup is still open after the mouseout event,
+        // if so, attempt to move it to its desired position.
+        if (this.popup.isOpen)
+            this.$updatePopupPosition();
     }
 
    goTo(where) {

@@ -865,8 +865,6 @@ module.exports = {
         var text = completer.popup.renderer.content.childNodes[2];
         var rect = text.getBoundingClientRect();
 
-        console.log(rect)
-
         // We need two mouse events to trigger the updating of the hover marker.
         text.dispatchEvent(new MouseEvent("move", {x: rect.left, y: rect.top}));
         // Hover over the second row.
@@ -885,12 +883,8 @@ module.exports = {
         text.dispatchEvent(new MouseEvent("out", {x: rect.left, y: rect.top}));
         editor.completer.popup.renderer.$loop._flush();
 
-        console.log(rect)
-
         // Check that position update of popup is called after the mouseout.
         assert.ok(called)
-
-        //assert.ok(false)
 
         editor.destroy();
         editor.container.remove();
