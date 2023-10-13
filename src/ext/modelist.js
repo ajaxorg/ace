@@ -56,6 +56,7 @@ var supportedModes = {
     AsciiDoc:    ["asciidoc|adoc"],
     ASL:         ["dsl|asl|asl.json"],
     Assembly_x86:["asm|a"],
+    Astro:       ["astro"],
     AutoHotKey:  ["ahk"],
     BatchFile:   ["bat|cmd"],
     BibTeX:      ["bib"],
