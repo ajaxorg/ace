@@ -62,7 +62,7 @@ class Autocomplete {
         this.keyboardHandler = new HashHandler();
         this.keyboardHandler.bindKeys(this.commands);
         this.parentNode = null;
-        this.setSelectOnHover = false;
+        this.setSelectOnHover = true;
 
         /**
          *  @property {number} stickySelectionDelay - a numerical value that determines after how many ms the popup selection will become 'sticky'.
@@ -315,7 +315,8 @@ class Autocomplete {
     }
 
     mousewheelListener(e) {
-        this.detach();
+        if (!this.popup.isMouseOver)
+            this.detach();
     }
 
     mouseOutListener(e) {
