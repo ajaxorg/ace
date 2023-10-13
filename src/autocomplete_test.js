@@ -820,6 +820,73 @@ module.exports = {
         assert.strictEqual(document.getElementById("ace-inline-screenreader-line-2").textContent,"cool");
 
         done();
+    },
+    "test: update popup position only on mouse out when inline enabled and setSelectOnHover true": function() {
+        var editor = initEditor("fun");
+
+        editor.completers = [
+            {
+                getCompletions: function (editor, session, pos, prefix, callback) {
+                    var completions = [
+                        {
+                            caption: "functionshort",
+                            value: "function that does something uncool",
+                            score: 1
+                        },
+                        {
+                            caption: "functionlong",
+                            value: "function\nthat does something\ncool",
+                            score: 0
+                        }
+                    ];
+                    callback(null, completions);
+                }
+            }
+        ];
+
+        var completer = Autocomplete.for(editor);
+        completer.setSelectOnHover = true;
+        completer.inlineEnabled = true;
+
+        user.type("Ctrl-Space");
+        assert.equal(editor.completer.popup.isOpen, true);
+        var called = false;
+        editor.completer.$updatePopupPosition = function() {
+            called = true;
+        };
+
+        var inline = completer.inlineRenderer;
+
+        assert.equal(completer.popup.getRow(), 0);
+        assert.strictEqual(inline.isOpen(), true);
+        assert.strictEqual(editor.renderer.$ghostText.text, "function that does something uncool");
+ 
+        var text = completer.popup.renderer.content.childNodes[2];
+        var rect = text.getBoundingClientRect();
+
+        // We need two mouse events to trigger the updating of the hover marker.
+        text.dispatchEvent(new MouseEvent("move", {x: rect.left, y: rect.top}));
+        // Hover over the second row.
+        text.dispatchEvent(new MouseEvent("move", {x: rect.left + 1, y: rect.top + 20}));
+    
+        editor.completer.popup.renderer.$loop._flush();
+
+        // Check that the completion item changed to the longer item.
+        assert.equal(completer.popup.getRow(), 1);
+        assert.strictEqual(inline.isOpen(), true);
+        assert.strictEqual(editor.renderer.$ghostText.text, "function\nthat does something\ncool");
+
+        // Check that position update of popup is not called.
+        assert.ok(!called);
+
+        text.dispatchEvent(new MouseEvent("out", {x: rect.left, y: rect.top}));
+        editor.completer.popup.renderer.$loop._flush();
+
+        // Check that position update of popup is called after the mouseout.
+        assert.ok(called);
+
+        editor.destroy();
+        editor.container.remove();
     }
 };
 

@@ -9,6 +9,7 @@ var lang = require("./lib/lang");
 var dom = require("./lib/dom");
 var snippetManager = require("./snippets").snippetManager;
 var config = require("./config");
+var event = require("./lib/event");
 
 /**
  * @typedef BaseCompletion
@@ -97,6 +98,7 @@ class Autocomplete {
         this.popup.on("show", this.$onPopupShow.bind(this));
         this.popup.on("hide", this.$onHidePopup.bind(this));
         this.popup.on("select", this.$onPopupChange.bind(this));
+        event.addListener(this.popup.container, "mouseout", this.mouseOutListener.bind(this));
         this.popup.on("changeHoverMarker", this.tooltipTimer.bind(null, null));
         return this.popup;
     }
@@ -128,8 +130,15 @@ class Autocomplete {
             if (!this.inlineRenderer.show(this.editor, completion, prefix)) {
                 this.inlineRenderer.hide();
             }
-            this.$updatePopupPosition();
+
+            // If the mouse is over the tooltip, and we're changing selection on hover don't
+            // move the tooltip while hovering over the popup.
+            if (this.popup.isMouseOver && this.setSelectOnHover) { 
+                this.tooltipTimer.call(null, null);
+                return;
+            }
         }
+        this.$updatePopupPosition();
         this.tooltipTimer.call(null, null);
     }
 
@@ -306,7 +315,15 @@ class Autocomplete {
     }
 
     mousewheelListener(e) {
-        this.detach();
+        if (!this.popup.isMouseOver)
+            this.detach();
+    }
+
+    mouseOutListener(e) {
+        // Check whether the popup is still open after the mouseout event,
+        // if so, attempt to move it to its desired position.
+        if (this.popup.isOpen)
+            this.$updatePopupPosition();
     }
 
    goTo(where) {

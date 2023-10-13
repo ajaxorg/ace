@@ -103,6 +103,7 @@ class AcePopup {
             }
             lastMouseEvent = e;
             lastMouseEvent.scrollTop = popup.renderer.scrollTop;
+            popup.isMouseOver = true;
             var row = lastMouseEvent.getDocumentPosition().row;
             if (hoverMarker.start.row != row) {
                 if (!hoverMarker.id)
@@ -156,7 +157,10 @@ class AcePopup {
             return hoverMarker.start.row;
         };
 
-        event.addListener(popup.container, "mouseout", hideHoverMarker);
+        event.addListener(popup.container, "mouseout", function() {
+            popup.isMouseOver = false;
+            hideHoverMarker();
+        });
         popup.on("hide", hideHoverMarker);
         popup.on("changeSelection", hideHoverMarker);
 
@@ -224,6 +228,7 @@ class AcePopup {
         popup.isTopdown = false;
         popup.autoSelect = true;
         popup.filterText = "";
+        popup.isMouseOver = false;
 
         popup.data = [];
         popup.setData = function(list, filterText) {
