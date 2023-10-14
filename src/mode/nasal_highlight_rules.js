@@ -342,7 +342,7 @@ var NasalHighlightRules = function() {
             },
             comment: "function call"
         }]
-    }
+    };
     
     this.normalizeRules();
 };
@@ -351,7 +351,7 @@ NasalHighlightRules.metaData = {
     fileTypes: ["nas"],
     name: "Nasal",
     scopeName: "source.nasal"
-}
+};
 
 
 oop.inherits(NasalHighlightRules, TextHighlightRules);
