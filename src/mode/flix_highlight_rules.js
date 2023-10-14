@@ -12,7 +12,7 @@ var FlixHighlightRules = function() {
         "match|typematch|try|catch|resume|spawn|par|branch|jumpto"
     );
     var operators = "not|and|or|fix";
-    var declarations = "eff|def|law|enum|case|type|rel|lat|alias|class|instance|mod|let";
+    var declarations = "eff|def|law|enum|case|type|alias|class|instance|mod|let";
     var modifiers = "with|without|opaque|lazy|lawful|pub|override|sealed|static";
     var primitives = "Unit|Bool|Char|Float32|Float64|Int8|Int16|Int32|Int64|BigInt|String";
 
