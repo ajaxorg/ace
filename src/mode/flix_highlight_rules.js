@@ -5,7 +5,7 @@ var FlixHighlightRules = function() {
     
     var keywords = (
         "use|checked_cast|checked_ecast|unchecked_cast|masked_cast|as|discard|from|" +
-        "into|inject|project|solve|query|where|select|force|import|region|red|deref|"
+        "into|inject|project|solve|query|where|select|force|import|region|red|deref"
     );
     var controlKeywords = (
         "choose|debug|do|for|forA|forM|foreach|yield|if|else|case|" +
@@ -67,6 +67,9 @@ var FlixHighlightRules = function() {
             }, {
                 token : "storage.type",
                 regex : "@(Deprecated|Experimental|Internal|ParallelWhenPure|Parallel|LazyWhenPure|Lazy|Skip|Test)\\b"
+            }, {
+                token : "keyword", // hole
+                regex : "(\\?\\?\\?|\\?[a-zA-Z0-9]+)"
             }, {
                 token : keywordMapper,
                 regex : "[a-zA-Z_$][a-zA-Z0-9_$]*\\b"
