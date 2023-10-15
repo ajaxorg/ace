@@ -1,4 +1,6 @@
-var oop = require("ace/lib/oop");
+"use strict";
+
+var oop = require("../lib/oop");
 var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;
 
 var FlixHighlightRules = function() {
@@ -28,7 +30,7 @@ var FlixHighlightRules = function() {
     this.$rules = {
         "start" : [
             {
-                token : "comment.line.double-slash",
+                token : "comment.line",
                 regex : "\\/\\/.*$"
             }, {
                 token : "comment.block",
@@ -65,7 +67,7 @@ var FlixHighlightRules = function() {
                 token : "keyword.operator",
                 regex : "\\->|~>|<\\-|=>"
             }, {
-                token : "storage.type",
+                token : "storage.modifier",
                 regex : "@(Deprecated|Experimental|Internal|ParallelWhenPure|Parallel|LazyWhenPure|Lazy|Skip|Test)\\b"
             }, {
                 token : "keyword", // hole

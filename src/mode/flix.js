@@ -1,6 +1,6 @@
 "use strict";
 
-var oop = require("ace/lib/oop");
+var oop = require("../lib/oop");
 var TextMode = require("./text").Mode;
 var FlixHighlightRules = require("./flix_highlight_rules").FlixHighlightRules;
 
