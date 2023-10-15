@@ -11,9 +11,7 @@ var SCROLL_CURSOR_DELAY = 200;
 var SCROLL_CURSOR_HYSTERESIS = 5;
 
 /**
- * 
  * @param {MouseHandler} mouseHandler
- * @constructor
  * @this {MouseHandler}
  */
 function DragdropHandler(mouseHandler) {
