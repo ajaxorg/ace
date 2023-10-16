@@ -854,6 +854,13 @@ exports.commands = [{
     multiSelectAction: "forEach",
     scrollIntoView: "cursor"
 }, {
+    name: "openCommandPallete",
+    exec: function(editor) {
+        console.warn("This is an obsolete command. Please use `openCommandPalette` instead.");
+        editor.prompt({ $type: "commands" });
+    },
+    readOnly: true
+}, {
     name: "openCommandPalette",
     description: "Open command palette",
     bindKey: bindKey("F1", "F1"),
