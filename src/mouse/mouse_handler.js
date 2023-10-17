@@ -99,6 +99,10 @@ class MouseHandler {
         this.editor._emit(name, new MouseEvent(e, this.editor));
     }
 
+    /**
+     * @param {string} name
+     * @param {{ wheelX: number; wheelY: number; }} e
+     */
     onMouseWheel(name, e) {
         var mouseEvent = new MouseEvent(e, this.editor);
         //@ts-expect-error TODO: couldn't find this property init in the ace codebase

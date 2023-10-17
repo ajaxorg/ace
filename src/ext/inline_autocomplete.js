@@ -121,7 +121,7 @@ class InlineAutocomplete {
     }
 
     /**
-     * @param {import("../../ace").InlineAutocompleteAction} where
+     * @param {import("../../ace").Ace.InlineAutocompleteAction} where
      */
     goTo(where) {
         if (!this.completions || !this.completions.filtered) {

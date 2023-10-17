@@ -1,5 +1,3 @@
-/// <reference path="./ace-modes.d.ts" />
-/// <reference path="./ace-extensions.d.ts" />
 
 export namespace Ace {
     type Anchor = import("./src/anchor").Anchor;
@@ -18,7 +16,6 @@ export namespace Ace {
     type InlineAutocomplete = import("./src/ext/inline_autocomplete").InlineAutocomplete;
     type CompletionProvider = import("./src/autocomplete").CompletionProvider;
     type AcePopup = import("./src/autocomplete/popup").AcePopup;
-    type Config = import("./src/config").Config;
     type AceInline = import("./src/autocomplete/inline").AceInline;
     type MouseEvent = import("./src/mouse/mouse_event").MouseEvent;
     type RangeList = import("./src/range_list").RangeList;
@@ -29,7 +26,7 @@ export namespace Ace {
     type DefaultHandlers = import("./src/mouse/default_handlers").DefaultHandlers;
     type GutterHandler = import("./src/mouse/default_gutter_handler").GutterHandler;
     type DragdropHandler = import("./src/mouse/dragdrop_handler").DragdropHandler;
-    type AppConfig = import("./src/config").AppConfig;
+    type AppConfig = import("./src/lib/app_config").AppConfig;
 
     interface Theme {
         cssClass?: string;
@@ -1050,7 +1047,24 @@ export namespace Ace {
 
     type AcePopupEventsCombined = Ace.EditorEvents & Ace.AcePopupEvents;
     type AcePopupWithEditor = Ace.EventEmitter<AcePopupEventsCombined> & Ace.Editor;
-    
+    type InlineAutocompleteAction = "prev" | "next" | "first" | "last";
+
+    type TooltipCommandFunction<T> = (editor: Ace.Editor) => T;
+
+    export interface TooltipCommand extends Ace.Command {
+        enabled: TooltipCommandFunction<boolean> | boolean,
+        getValue?: TooltipCommandFunction<any>,
+        type: "button" | "text" | "checkbox"
+        iconCssClass?: string,
+        cssClass?: string
+    }
+
+    export type CommandBarTooltip = import("./src/ext/command_bar").CommandBarTooltip;
+
+    export type TokenizeResult = Array<Array<{
+        className?: string,
+        value: string,
+    }>>
 }
 
 
@@ -1080,21 +1094,9 @@ export const Range: {
     comparePoints(p1: Ace.Point, p2: Ace.Point): number;
 };
 
+export type InlineAutocomplete = Ace.InlineAutocomplete;
+export type CommandBarTooltip = Ace.CommandBarTooltip;
 
-type InlineAutocompleteAction = "prev" | "next" | "first" | "last";
-
-type TooltipCommandFunction<T> = (editor: Ace.Editor) => T;
-
-export interface TooltipCommand extends Ace.Command {
-    enabled: TooltipCommandFunction<boolean> | boolean,
-    getValue?: TooltipCommandFunction<any>,
-    type: "button" | "text" | "checkbox"
-    iconCssClass?: string,
-    cssClass?: string
-}
-
-export type InlineAutocomplete = import("./src/ext/inline_autocomplete").InlineAutocomplete;
-export type CommandBarTooltip = import("./src/ext/command_bar").CommandBarTooltip;
 
 
 
@@ -1206,6 +1208,7 @@ declare module "./src/edit_session" {
         $useEmacsStyleLineStart?: boolean,
         $selectLongWords?: boolean,
     }
+    
 }
 
 declare module "./src/edit_session/fold" {
@@ -1355,12 +1358,24 @@ declare module "./src/lib/app_config" {
     }
 }
 
+declare module "./src/mouse/mouse_event" {
+    export interface MouseEvent {
+        time?: number;
+    }
+}
 
 declare module "./src/mouse/mouse_handler" {
 
-    export interface MouseHandler extends Ace.DefaultHandlers, Ace.GutterHandler, Ace.DragdropHandler {
+    export interface MouseHandler {
         $tooltipFollowsMouse?: boolean,
         cancelDrag?: boolean
+        //from DefaultHandlers
+        $clickSelection?: null | Ace.Range,
+        mousedownEvent?: Ace.MouseEvent,
+        startSelect?: (pos?: Ace.Point, waitForClickSelection?: boolean) => void,
+        select?: () => void
+        $lastScroll?: { t: number, vx: number, vy: number, allowed: number }
+        selectEnd?: () => void
     }
 }
 
@@ -1378,5 +1393,10 @@ declare module "./src/layer/font_metrics" {
 declare module "./src/tooltip" {
     export interface HoverTooltip {
         row: number;
+    }
+}
+
+declare module "./src/mouse/default_gutter_handler" {
+    export interface GutterHandler {
     }
 }

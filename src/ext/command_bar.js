@@ -90,7 +90,7 @@ class CommandBarTooltip {
      * toolbar, the remaining elements are added to the overflow menu.
      * 
      * @param {string} id      
-     * @param {import("../../ace").TooltipCommand} command
+     * @param {import("../../ace").Ace.TooltipCommand} command
      */
     registerCommand(id, command) {
         var registerForMainTooltip = Object.keys(this.commands).length < this.maxElementsOnTooltip;
@@ -288,7 +288,7 @@ class CommandBarTooltip {
 
     /**
      * @param {string} id
-     * @param {import("../../ace").TooltipCommand} command
+     * @param {import("../../ace").Ace.TooltipCommand} command
      * @param {boolean} forMainTooltip
      */
     $createCommand(id, command, forMainTooltip) {

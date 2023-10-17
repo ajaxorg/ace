@@ -41,7 +41,7 @@ class SimpleTokenizer {
  * 
  * @param {string} content to tokenize 
  * @param {import("../../ace").Ace.HighlightRules} highlightRules defining the language grammar 
- * @returns {import("ace-code/src/ext/simple_tokenizer").TokenizeResult} tokenization result containing a list of token for each of the lines from content
+ * @returns {import("../../ace").Ace.TokenizeResult} tokenization result containing a list of token for each of the lines from content
  */
 function tokenize(content, highlightRules) {
     const tokenizer = new SimpleTokenizer(content, new Tokenizer(highlightRules.getRules()));

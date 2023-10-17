@@ -4,7 +4,7 @@ var modes = [];
 /**
  * Suggests a mode based on the file extension present in the given path
  * @param {string} path The path to the file
- * @returns {object} Returns an object containing information about the
+ * @returns {Mode} Returns an object containing information about the
  *  suggested mode.
  */
 function getModeForPath(path) {

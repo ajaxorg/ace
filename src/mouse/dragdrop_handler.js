@@ -12,7 +12,6 @@ var SCROLL_CURSOR_HYSTERESIS = 5;
 
 /**
  * @param {MouseHandler} mouseHandler
- * @this {MouseHandler}
  */
 function DragdropHandler(mouseHandler) {
 
@@ -27,6 +26,7 @@ function DragdropHandler(mouseHandler) {
     exports.forEach(function(x) {
         mouseHandler[x] = this[x];
     }, this);
+    // @ts-ignore
     editor.on("mousedown", this.onMouseDown.bind(mouseHandler));
 
     var mouseTarget = editor.container;
@@ -38,7 +38,11 @@ function DragdropHandler(mouseHandler) {
     var autoScrollStartTime;
     var cursorMovedTime;
     var cursorPointOnCaretMoved;
-
+    /**
+     * @param e
+     * @this {MouseHandler}
+     * @return {*}
+     */
     this.onDragStart = function(e) {
         // webkit workaround, see this.onMouseDown
         if (this.cancelDrag || !mouseTarget.draggable) {
@@ -66,7 +70,11 @@ function DragdropHandler(mouseHandler) {
         isInternal = true;
         this.setState("drag");
     };
-
+    /**
+     * @param e
+     * @this {MouseHandler}
+     * @return {*}
+     */
     this.onDragEnd = function(e) {
         mouseTarget.draggable = false;
         isInternal = false;
@@ -81,7 +89,11 @@ function DragdropHandler(mouseHandler) {
         this.editor.unsetStyle("ace_dragging");
         this.editor.renderer.setCursorStyle("");
     };
-
+    /**
+     * @param e
+     * @this {MouseHandler}
+     * @return {*}
+     */
     this.onDragEnter = function(e) {
         if (editor.getReadOnly() || !canAccept(e.dataTransfer))
             return;
@@ -94,7 +106,11 @@ function DragdropHandler(mouseHandler) {
         e.dataTransfer.dropEffect = dragOperation = getDropEffect(e);
         return event.preventDefault(e);
     };
-
+    /**
+     * @param e
+     * @this {MouseHandler}
+     * @return {*}
+     */
     this.onDragOver = function(e) {
         if (editor.getReadOnly() || !canAccept(e.dataTransfer))
             return;
@@ -120,7 +136,11 @@ function DragdropHandler(mouseHandler) {
             return event.preventDefault(e);
         }
     };
-
+    /**
+     * @param e
+     * @this {MouseHandler}
+     * @return {*}
+     */
     this.onDrop = function(e) {
         if (!dragCursor)
             return;
