@@ -1,31 +1,91 @@
 const ts = require('typescript');
 const fs = require("fs");
+const path = require("path");
 
-function generateInitialDeclaration() {
-    const configPath = ts.findConfigFile('./', ts.sys.fileExists, 'tsconfig.json');
-    const config = ts.readConfigFile(configPath, ts.sys.readFile).config; //TODO: emit output path?
+/**
+ * @param {string} directoryPath
+ */
+function getParsedConfigFromDirectory(directoryPath) {
+    const configPath = ts.findConfigFile(directoryPath, ts.sys.fileExists, 'tsconfig.json');
+    if (!configPath) throw new Error("Could not find tsconfig.json");
+
+    const configFile = ts.readConfigFile(configPath, ts.sys.readFile);
     const parseConfigHost = {
         fileExists: ts.sys.fileExists,
         readFile: ts.sys.readFile,
         readDirectory: ts.sys.readDirectory,
         useCaseSensitiveFileNames: true
     };
-    const parsed = ts.parseJsonConfigFileContent(config, parseConfigHost, './');
-    const program = ts.createProgram(parsed.fileNames, parsed.options);
-    program.emit();
+
+    return ts.parseJsonConfigFileContent(configFile.config, parseConfigHost, directoryPath);
 }
 
 /**
- * @param {string} declarationName
- * @param {string} aceNamespacePath
- * @param {boolean} forAceBuilds
+ * @return {string}
  */
-function fixDeclaration(declarationName, aceNamespacePath, forAceBuilds) {
-    const program = ts.createProgram([declarationName], {
+function generateInitialDeclaration() {
+    const baseDirectory = path.resolve(__dirname, '..');
+    const parsedConfig = getParsedConfigFromDirectory(baseDirectory);
+    const defaultCompilerHost = ts.createCompilerHost({});
+    let fileContent;
+
+    const customCompilerHost = {
+        ...defaultCompilerHost,
+        writeFile: function (fileName, content) {
+            fileContent = content;
+            return;
+        }
+    };
+
+    const program = ts.createProgram(parsedConfig.fileNames, parsedConfig.options, customCompilerHost);
+    program.emit();
+    return fileContent;
+}
+
+/**
+ * @param {string} fileName
+ * @param {string} content
+ */
+function createCustomCompilerHost(fileName, content) {
+    const newSourceFile = ts.createSourceFile(fileName, content, ts.ScriptTarget.Latest, false, ts.ScriptKind.TS);
+
+    const defaultCompilerHost = ts.createCompilerHost({});
+    return {
+        ...defaultCompilerHost,
+        getSourceFile: (name, languageVersion) => {
+            if (name === fileName) {
+                return newSourceFile;
+            }
+            return defaultCompilerHost.getSourceFile(name, languageVersion);
+        },
+        fileExists: (name) => {
+            if (name === fileName) {
+                return true;
+            }
+            return defaultCompilerHost.fileExists(name);
+        },
+        readFile: (name) => {
+            if (name === fileName) {
+                return content;
+            }
+            return defaultCompilerHost.readFile(name);
+        }
+    };
+}
+
+/**
+ * @param {string} content
+ * @param {string} aceNamespacePath
+ */
+function fixDeclaration(content, aceNamespacePath) {
+    const temporaryName = "temp.d.ts";
+    const customCompilerHost = createCustomCompilerHost(temporaryName, content);
+    const program = ts.createProgram([temporaryName], {
         noEmit: true
-    });
+    }, customCompilerHost);
+
     var checker = program.getTypeChecker();
-    let interfaces = collectInterfaces(aceNamespacePath, forAceBuilds);
+    let interfaces = collectInterfaces(aceNamespacePath);
 
     /**
      * @param {ts.TransformationContext} context
@@ -117,24 +177,18 @@ function fixDeclaration(declarationName, aceNamespacePath, forAceBuilds) {
         };
     }
 
-    const sourceCode = program.getSourceFile(declarationName);
+    const sourceCode = program.getSourceFile(temporaryName);
     const result = ts.transform(sourceCode, [transformer]);
 
     const printer = ts.createPrinter();
     result.transformed.forEach(transformedFile => {
         let output = printer.printFile(transformedFile);
-        if (forAceBuilds) {
-            // correct paths for ace-builds
-            output = output.replace(
-                /ace\-builds\/src\/(mode|theme|ext|keybinding|snippets)\//g, "ace-builds/src-noconflict/$1-");
-            output = output.replace(/ace\-builds\/src(?!\-noconflict)/g, "ace-builds-internal");
-        }
-        fs.writeFileSync(declarationName, output);
+        fs.writeFileSync(aceNamespacePath, output);
     });
 
     result.dispose();
 
-    checkFinalDeclaration(declarationName);
+    checkFinalDeclaration(aceNamespacePath);
 }
 
 /**
@@ -163,9 +217,8 @@ function checkFinalDeclaration(declarationName) {
 
 /**
  * @param {string} aceNamespacePath
- * @param {boolean} forAceBuilds
  */
-function collectInterfaces(aceNamespacePath, forAceBuilds) {
+function collectInterfaces(aceNamespacePath) {
     const program = ts.createProgram([aceNamespacePath], {
         noEmit: true
     });
@@ -173,9 +226,6 @@ function collectInterfaces(aceNamespacePath, forAceBuilds) {
     const result = {};
     const printer = ts.createPrinter();
     let packageName = "ace-code";
-    if (forAceBuilds) {
-        packageName = "ace-builds";
-    }
 
     function visit(node) {
         if (node && ts.isModuleDeclaration(node) && ts.isStringLiteral(node.name)) {
@@ -221,11 +271,10 @@ function collectInterfaces(aceNamespacePath, forAceBuilds) {
 }
 
 /**
- * @param {string} packageName
  * @param {string} aceNamespacePath
  * @return {string}
  */
-function cloneAceNamespace(packageName, aceNamespacePath) {
+function cloneAceNamespace(aceNamespacePath) {
     const program = ts.createProgram([aceNamespacePath], {
         noEmit: true
     });
@@ -235,7 +284,7 @@ function cloneAceNamespace(packageName, aceNamespacePath) {
         const node = sourceFile.statements[i];
         if (ts.isModuleDeclaration(node) && node.name.text == "Ace") {
             let aceModule = printer.printNode(ts.EmitHint.Unspecified, node, sourceFile);
-            aceModule = aceModule.replace(/"\.\/src/g, "\"" + packageName + "/src");
+            aceModule = aceModule.replace(/"\.\/src/g, "\"ace-code/src");
             aceModule = '\n' + aceModule + '\n';
             return aceModule;
         }
@@ -243,44 +292,44 @@ function cloneAceNamespace(packageName, aceNamespacePath) {
 }
 
 /**
- * @param {string} fileName
  * @param {string} aceNamespacePath
- * @param {boolean} [forAceBuilds]
  */
-function generateDeclaration(fileName, aceNamespacePath, forAceBuilds) {
-    generateInitialDeclaration();
+function generateDeclaration(aceNamespacePath) {
+    let data = generateInitialDeclaration();
 
-    fs.readFile(fileName, 'utf8', (err, data) => {
-        if (err) {
-            console.error('Error reading the file:', err);
-            return;
-        }
-        let packageName = "ace-code";
-        if (forAceBuilds) {
-            packageName = "ace-builds";
-        }
+    let packageName = "ace-code";
 
-        let updatedContent = data.replace(/(declare module ")/g, "$1" + packageName + "/");
-        updatedContent = updatedContent.replace(/(require\(")/g, "$1" + packageName + "/");
-        updatedContent = updatedContent.replace(/(import\(")(?!(?:\.|ace\-code))/g, "$1" + packageName + "/");
-        updatedContent = updatedContent.replace(/ace\-(?:code|builds)(\/src)?\/ace/g, packageName);
-        let aceModule = cloneAceNamespace(packageName, aceNamespacePath);
+    let updatedContent = data.replace(/(declare module ")/g, "$1" + packageName + "/");
+    updatedContent = updatedContent.replace(/(require\(")/g, "$1" + packageName + "/");
+    updatedContent = updatedContent.replace(/(import\(")(?!(?:\.|ace\-code))/g, "$1" + packageName + "/");
+    updatedContent = updatedContent.replace(/ace\-(?:code|builds)(\/src)?\/ace/g, packageName);
+    let aceModule = cloneAceNamespace(aceNamespacePath);
 
-        updatedContent = updatedContent.replace(/(declare\s+module\s+"ace-(?:code|builds)"\s+{)/, "$1" + aceModule);
-        updatedContent = updatedContent.replace(/(import\(")[./]*ace("\).Ace)/g, "$1" + packageName + "$2");
+    updatedContent = updatedContent.replace(/(declare\s+module\s+"ace-(?:code|builds)"\s+{)/, "$1" + aceModule);
+    updatedContent = updatedContent.replace(/(import\(")[./]*ace("\).Ace)/g, "$1" + packageName + "$2");
 
-        fs.writeFile(fileName, updatedContent, 'utf8', (err) => {
-            if (err) {
-                console.error('Error writing to file:', err);
-            }
-            else {
-                fixDeclaration(fileName, aceNamespacePath, forAceBuilds);
-            }
-        });
-    });
+    fixDeclaration(updatedContent, aceNamespacePath);
 }
 
-generateDeclaration('types/index.d.ts', "./ace.d.ts", true);
+/**
+ * @param {string} content
+ */
+function correctModulesForAceBuilds(content) {
+    let output = content.replace(
+        /ace\-code(?:\/src)?\/(mode|theme|ext|keybinding|snippets)\//g, "ace-builds/src-noconflict/$1-");
+    output = output.replace(/ace\-code(?:\/src)?/g, "ace-builds-internal");
+    output = output.replace(/ace\-code/g, "ace-builds");
+    output = output + '\n' + "declare module 'ace-builds/webpack-resolver';\n"
+        + "declare module 'ace-builds/esm-resolver';";
+    //TODO: modes/worker
+    return output;
+}
 
 
-
+if (!module.parent) {
+    generateDeclaration("../ace.d.ts");
+}
+else {
+    exports.generateDeclaration = generateDeclaration;
+    exports.correctModulesForAceBuilds = correctModulesForAceBuilds;
+}
