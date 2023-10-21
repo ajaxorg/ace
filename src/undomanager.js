@@ -236,12 +236,29 @@ class UndoManager {
         return this.$rev === this.mark;
     }
     
+    /**
+     * Returns an object which can be safely stringified into JSON
+     * @returns {object}
+     */
     toJSON() {
-        
+        return {
+            $redoStack: this.$redoStack,
+            $undoStack: this.$undoStack
+        };
     }
+
+    // NOTE: The above and below function require you to JSON.stringify and JSON.parse externally.
     
-    fromJSON() {
-        
+    /**
+     * Takes in an object which was returned from the toJSON method above,
+     * and resets the current undoManager instance to use the previously exported
+     * instance state.
+     * @param {object} json 
+     */
+    fromJSON(json) {
+        this.reset();
+        this.$undoStack = json.$undoStack;
+        this.$redoStack = json.$redoStack;
     }
 
     

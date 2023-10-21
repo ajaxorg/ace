@@ -1,0 +1,132 @@
+[[
+   "start",
+  ["comment","// A simple example"]
+],[
+   "start",
+  ["keyword","import"],
+  ["text"," "],
+  ["identifier","QtQuick"],
+  ["text"," "],
+  ["constant.numeric","2.7"]
+],[
+   "start",
+  ["keyword","import"],
+  ["text"," "],
+  ["identifier","QtQuick"],
+  ["text","."],
+  ["identifier","Controls"],
+  ["text"," "],
+  ["constant.numeric","2.3"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","Rectangle"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","color"],
+  ["text",": "],
+  ["string","\"red\""]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","anchors"],
+  ["text","."],
+  ["identifier","fill"],
+  ["text",": "],
+  ["keyword","parent"]
+],[
+   "start"
+],[
+   "start",
+  ["text","    "],
+  ["keyword","Text"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","        "],
+  ["identifier","text"],
+  ["text",": "],
+  ["string","\"WEEEEEEEEEE\""]
+],[
+   "start",
+  ["text","        "],
+  ["identifier","font"],
+  ["text","."],
+  ["identifier","pixelSize"],
+  ["text",": "],
+  ["constant.numeric","50"]
+],[
+   "start",
+  ["text","        "],
+  ["keyword","color"],
+  ["text",": "],
+  ["string","\"white\""]
+],[
+   "start",
+  ["text","        "],
+  ["keyword","anchors"],
+  ["text","."],
+  ["identifier","centerIn"],
+  ["text",": "],
+  ["keyword","parent"]
+],[
+   "start",
+  ["text","        "],
+  ["keyword","RotationAnimator"],
+  ["text"," "],
+  ["identifier","on"],
+  ["text"," "],
+  ["identifier","rotation"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","            "],
+  ["identifier","running"],
+  ["text",": "],
+  ["constant.language.boolean","true"]
+],[
+   "start",
+  ["text","            "],
+  ["identifier","loops"],
+  ["text",": "],
+  ["keyword","Animation"],
+  ["text","."],
+  ["identifier","Infinite"]
+],[
+   "start",
+  ["text","            "],
+  ["identifier","from"],
+  ["text",": "],
+  ["constant.numeric","0"]
+],[
+   "start",
+  ["text","            "],
+  ["identifier","to"],
+  ["text",": "],
+  ["constant.numeric","360"]
+],[
+   "start",
+  ["text","            "],
+  ["identifier","duration"],
+  ["text",": "],
+  ["constant.numeric","1500"]
+],[
+   "start",
+  ["text","        "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["text","    "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+]]

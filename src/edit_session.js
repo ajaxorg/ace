@@ -11,6 +11,7 @@ var Range = require("./range").Range;
 var Document = require("./document").Document;
 var BackgroundTokenizer = require("./background_tokenizer").BackgroundTokenizer;
 var SearchHighlight = require("./search_highlight").SearchHighlight;
+var UndoManager = require("./undomanager").UndoManager;
 
 //{ events
 /**
@@ -259,7 +260,57 @@ class EditSession {
         this.setUndoManager(this.$undoManager);
         this.getUndoManager().reset();
     }
+
+     /**
+     * Returns a new instance of EditSession with state from JSON.
+     * @method fromJSON
+     * @param {String} session The EditSession state.
+     * @returns {EditSession}
+     */
+     static fromJSON(session) {
+        session = JSON.parse(session);
+        const undoManager = new UndoManager();
+        undoManager.$undoStack = session.history.undo;
+        undoManager.$redoStack = session.history.redo;
+        undoManager.mark = session.history.mark;
+        undoManager.$rev = session.history.rev;
     
+        const editSession = new EditSession(session.value);
+        session.folds.forEach(function(fold) {
+          editSession.addFold("...", Range.fromPoints(fold.start, fold.end));
+        });
+        editSession.setAnnotations(session.annotations);
+        editSession.setBreakpoints(session.breakpoints);
+        editSession.setMode(session.mode);
+        editSession.setScrollLeft(session.scrollLeft);
+        editSession.setScrollTop(session.scrollTop);
+        editSession.setUndoManager(undoManager);
+        editSession.selection.fromJSON(session.selection);
+    
+        return editSession;
+    }
+ 
+    /**
+     * Returns the current edit session.
+     * @method toJSON
+     * @returns {Object}
+     */
+    toJSON() {
+        return {
+            annotations: this.$annotations,
+            breakpoints: this.$breakpoints,
+            folds: this.getAllFolds().map(function(fold) {
+                return fold.range;
+            }),
+            history: this.getUndoManager(),
+            mode: this.$mode.$id,
+            scrollLeft: this.$scrollLeft,
+            scrollTop: this.$scrollTop,
+            selection: this.selection.toJSON(),
+            value: this.doc.getValue()
+        };
+    }
+ 
     /**
      * Returns the current [[Document `Document`]] as a string.
      * @method toString
@@ -540,7 +591,7 @@ class EditSession {
      * Adds a new marker to the given `Range`. If `inFront` is `true`, a front marker is defined, and the `'changeFrontMarker'` event fires; otherwise, the `'changeBackMarker'` event fires.
      * @param {Range} range Define the range of the marker
      * @param {String} clazz Set the CSS class for the marker
-     * @param {Function | String} type Identify the type of the marker
+     * @param {Function | String} type Identify the renderer type of the marker. If string provided, corresponding built-in renderer is used. Supported string types are "fullLine", "screenLine", "text" or "line". If a Function is provided, that Function is used as renderer.
      * @param {Boolean} inFront Set to `true` to establish a front marker
      *
      * @return {Number} The new marker id

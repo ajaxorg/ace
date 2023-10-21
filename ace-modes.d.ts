@@ -340,6 +340,12 @@ declare module "ace-code/src/mode/erlang" {
 declare module "ace-code/src/mode/erlang_highlight_rules" {
   export const ErlangHighlightRules: new () => import(".").Ace.HighlightRules;
 }
+declare module "ace-code/src/mode/flix" {
+  export const Mode: new () => import(".").Ace.SyntaxMode;
+}
+declare module "ace-code/src/mode/flix_highlight_rules" {
+  export const FlixHighlightRules: new () => import(".").Ace.HighlightRules;
+}
 declare module "ace-code/src/mode/forth" {
   export const Mode: new () => import(".").Ace.SyntaxMode;
 }

@@ -6,6 +6,7 @@ var lang = require("../lib/lang");
 var Lines = require("./lines").Lines;
 var EventEmitter = require("../lib/event_emitter").EventEmitter;
 var nls = require("../config").nls;
+const isTextToken = require("./text_util").isTextToken;
 
 class Text {
     constructor(parentEl) {
@@ -332,7 +333,7 @@ class Text {
                     span.textContent = lang.stringRepeat(self.SPACE_CHAR, simpleSpace.length);
                     valueFragment.appendChild(span);
                 } else {
-                    valueFragment.appendChild(this.com.createTextNode(simpleSpace, this.element));
+                    valueFragment.appendChild(this.dom.createTextNode(simpleSpace, this.element));
                 }
             } else if (controlCharacter) {
                 var span = this.dom.createElement("span");
@@ -360,7 +361,7 @@ class Text {
 
         valueFragment.appendChild(this.dom.createTextNode(i ? value.slice(i) : value, this.element));
 
-        if (!this.$textToken[token.type]) {
+        if (!isTextToken(token.type)) {
             var classes = "ace_" + token.type.replace(/\./g, " ace_");
             var span = this.dom.createElement("span");
             if (token.type == "fold"){
@@ -715,11 +716,6 @@ class Text {
     }
 }
 
-Text.prototype.$textToken = {
-    "text": true,
-    "rparen": true,
-    "lparen": true
-};
 Text.prototype.EOF_CHAR = "\xB6";
 Text.prototype.EOL_CHAR_LF = "\xAC";
 Text.prototype.EOL_CHAR_CRLF = "\xa4";

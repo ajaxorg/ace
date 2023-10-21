@@ -74,9 +74,11 @@ var supportedModes = {
     Csound_Score: ["sco"],
     CSS:         ["css"],
     Curly:       ["curly"],
+    Cuttlefish:  ["conf"],
     D:           ["d|di"],
     Dart:        ["dart"],
     Diff:        ["diff|patch"],
+    Django:      ["djt|html.djt|dj.html|djhtml"],
     Dockerfile:  ["^Dockerfile"],
     Dot:         ["dot"],
     Drools:      ["drl"],
@@ -86,6 +88,7 @@ var supportedModes = {
     Elixir:      ["ex|exs"],
     Elm:         ["elm"],
     Erlang:      ["erl|hrl"],
+    Flix:        ["flix"],
     Forth:       ["frt|fs|ldr|fth|4th"],
     Fortran:     ["f|f90"],
     FSharp:      ["fsi|fs|ml|mli|fsx|fsscript"],
@@ -148,6 +151,7 @@ var supportedModes = {
     MIXAL:       ["mixal"],
     MUSHCode:    ["mc|mush"],
     MySQL:       ["mysql"],
+    Nasal:       ["nas"],
     Nginx:       ["nginx|conf"],
     Nim:         ["nim"],
     Nix:         ["nix"],
@@ -170,6 +174,7 @@ var supportedModes = {
     Prolog:      ["plg|prolog"],
     Properties:  ["properties"],
     Protobuf:    ["proto"],
+    PRQL:        ["prql"],
     Puppet:      ["epp|pp"],
     Python:      ["py"],
     QML:         ["qml"],
@@ -213,7 +218,7 @@ var supportedModes = {
     TSX:         ["tsx"],
     Turtle:      ["ttl"],
     Twig:        ["twig|swig"],
-    Typescript:  ["ts|typescript|str"],
+    Typescript:  ["ts|mts|cts|typescript|str"],
     Vala:        ["vala"],
     VBScript:    ["vbs|vb"],
     Velocity:    ["vm"],
@@ -224,9 +229,7 @@ var supportedModes = {
     XML:         ["xml|rdf|rss|wsdl|xslt|atom|mathml|mml|xul|xbl|xaml"],
     XQuery:      ["xq"],
     YAML:        ["yaml|yml"],
-    Zeek:        ["zeek|bro"],
-    // Add the missing mode "Django" to ext-modelist
-    Django:      ["html"]
+    Zeek:        ["zeek|bro"]
 };
 
 var nameOverrides = {

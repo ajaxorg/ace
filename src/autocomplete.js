@@ -9,6 +9,7 @@ var lang = require("./lib/lang");
 var dom = require("./lib/dom");
 var snippetManager = require("./snippets").snippetManager;
 var config = require("./config");
+var event = require("./lib/event");
 
 /**
  * @typedef BaseCompletion
@@ -61,6 +62,14 @@ class Autocomplete {
         this.keyboardHandler = new HashHandler();
         this.keyboardHandler.bindKeys(this.commands);
         this.parentNode = null;
+        this.setSelectOnHover = false;
+
+        /**
+         *  @property {number} stickySelectionDelay - a numerical value that determines after how many ms the popup selection will become 'sticky'.
+         *  Normally, when new elements are added to an open popup, the selection is reset to the first row of the popup. If sticky, the focus will remain
+         *  on the currently selected item when new items are added to the popup. Set to a negative value to disable this feature and never set selection to sticky.
+         */
+        this.stickySelectionDelay = 500;
 
         this.blurListener = this.blurListener.bind(this);
         this.changeListener = this.changeListener.bind(this);
@@ -73,6 +82,10 @@ class Autocomplete {
         }.bind(this));
 
         this.tooltipTimer = lang.delayedCall(this.updateDocTooltip.bind(this), 50);
+
+        this.stickySelectionTimer = lang.delayedCall(function() {
+            this.stickySelection = true;
+        }.bind(this), this.stickySelectionDelay);
     }
 
     $init() {
@@ -82,9 +95,10 @@ class Autocomplete {
             e.stop();
         }.bind(this));
         this.popup.focus = this.editor.focus.bind(this.editor);
-        this.popup.on("show", this.$onPopupChange.bind(this));
+        this.popup.on("show", this.$onPopupShow.bind(this));
         this.popup.on("hide", this.$onHidePopup.bind(this));
         this.popup.on("select", this.$onPopupChange.bind(this));
+        event.addListener(this.popup.container, "mouseout", this.mouseOutListener.bind(this));
         this.popup.on("changeHoverMarker", this.tooltipTimer.bind(null, null));
         return this.popup;
     }
@@ -105,6 +119,8 @@ class Autocomplete {
             this.inlineRenderer.hide();
         }
         this.hideDocTooltip();
+        this.stickySelectionTimer.cancel();
+        this.stickySelection = false;
     }
 
     $onPopupChange(hide) {
@@ -114,9 +130,23 @@ class Autocomplete {
             if (!this.inlineRenderer.show(this.editor, completion, prefix)) {
                 this.inlineRenderer.hide();
             }
-            this.$updatePopupPosition();
+
+            // If the mouse is over the tooltip, and we're changing selection on hover don't
+            // move the tooltip while hovering over the popup.
+            if (this.popup.isMouseOver && this.setSelectOnHover) { 
+                this.tooltipTimer.call(null, null);
+                return;
+            }
         }
+        this.$updatePopupPosition();
         this.tooltipTimer.call(null, null);
+    }
+
+    $onPopupShow(hide) {
+        this.$onPopupChange(hide);
+        this.stickySelection = false;
+        if (this.stickySelectionDelay >= 0)
+            this.stickySelectionTimer.schedule(this.stickySelectionDelay);
     }
 
     observeLayoutChanges() {
@@ -191,6 +221,9 @@ class Autocomplete {
             this.$initInline();
 
         this.popup.autoSelect = this.autoSelect;
+        this.popup.setSelectOnHover(this.setSelectOnHover);
+
+        var previousSelectedItem = this.popup.data[this.popup.getRow()];
 
         this.popup.setData(this.completions.filtered, this.completions.filterText);
         if (this.editor.textInput.setAriaOptions) {
@@ -202,7 +235,13 @@ class Autocomplete {
 
         editor.keyBinding.addKeyboardHandler(this.keyboardHandler);
         
-        this.popup.setRow(this.autoSelect ? 0 : -1);
+        var newRow = this.popup.data.indexOf(previousSelectedItem);
+
+        if (newRow && this.stickySelection)
+            this.popup.setRow(this.autoSelect ? newRow : -1);
+        else
+            this.popup.setRow(this.autoSelect ? 0 : -1);
+
         if (!keepPopupPosition) {
             this.popup.setTheme(editor.getTheme());
             this.popup.setFontSize(editor.getFontSize());
@@ -276,7 +315,15 @@ class Autocomplete {
     }
 
     mousewheelListener(e) {
-        this.detach();
+        if (!this.popup.isMouseOver)
+            this.detach();
+    }
+
+    mouseOutListener(e) {
+        // Check whether the popup is still open after the mouseout event,
+        // if so, attempt to move it to its desired position.
+        if (this.popup.isOpen)
+            this.$updatePopupPosition();
     }
 
    goTo(where) {
@@ -324,9 +371,9 @@ class Autocomplete {
         this.updateCompletions(false, options);
     }
 
-    getCompletionProvider() {
+    getCompletionProvider(initialPosition) {
         if (!this.completionProvider)
-            this.completionProvider = new CompletionProvider();
+            this.completionProvider = new CompletionProvider(initialPosition);
         return this.completionProvider;
     }
 
@@ -369,8 +416,14 @@ class Autocomplete {
         var prefix = util.getCompletionPrefix(this.editor);
         this.base = session.doc.createAnchor(pos.row, pos.column - prefix.length);
         this.base.$insertRight = true;
-        var completionOptions = { exactMatch: this.exactMatch };
-        this.getCompletionProvider().provideCompletions(this.editor, completionOptions, function(err, completions, finished) {
+        var completionOptions = {
+            exactMatch: this.exactMatch,
+            ignoreCaption: this.ignoreCaption
+        };
+        this.getCompletionProvider({
+            prefix,
+            pos
+        }).provideCompletions(this.editor, completionOptions, function(err, completions, finished) {
             var filtered = completions.filtered;
             var prefix = util.getCompletionPrefix(this.editor);
 
@@ -588,8 +641,12 @@ Autocomplete.startCommand = {
  * This class is responsible for providing completions and inserting them to the editor
  */
 class CompletionProvider {
-    
-    constructor() {
+
+    /**
+     * @param {{pos: Position, prefix: string}} initialPosition
+     */
+    constructor(initialPosition) {
+        this.initialPosition = initialPosition;
         this.active = true;
     }
     
@@ -611,20 +668,33 @@ class CompletionProvider {
             // TODO add support for options.deleteSuffix
             if (!this.completions)
                 return false;
-            if (this.completions.filterText && !data.range) {
+            
+            var replaceBefore = this.completions.filterText.length;
+            var replaceAfter = 0;
+            if (data.range && data.range.start.row === data.range.end.row) {
+                replaceBefore -= this.initialPosition.prefix.length;
+                replaceBefore += this.initialPosition.pos.column - data.range.start.column;
+                replaceAfter += data.range.end.column - this.initialPosition.pos.column;
+            }
+
+            if (replaceBefore || replaceAfter) {
                 var ranges;
                 if (editor.selection.getAllRanges) {
                     ranges = editor.selection.getAllRanges();
-                } else {
+                }
+                else {
                     ranges = [editor.getSelectionRange()];
                 }
                 for (var i = 0, range; range = ranges[i]; i++) {
-                    range.start.column -= this.completions.filterText.length;
+                    range.start.column -= replaceBefore;
+                    range.end.column += replaceAfter;
                     editor.session.remove(range);
                 }
             }
-            if (data.snippet)
-                snippetManager.insertSnippet(editor, data.snippet, {range: data.range});
+          
+            if (data.snippet) {
+                snippetManager.insertSnippet(editor, data.snippet);
+            }
             else {
                 this.$insertString(editor, data);
             }
@@ -639,23 +709,7 @@ class CompletionProvider {
 
     $insertString(editor, data) {
         var text = data.value || data;
-        if (data.range) {
-            if (editor.inVirtualSelectionMode) {
-                return editor.session.replace(data.range, text);
-            }
-            editor.forEachSelection(() => {
-                var range = editor.getSelectionRange();
-                if (data.range.compareRange(range) === 0) {
-                    editor.session.replace(data.range, text);
-                }
-                else {
-                    editor.insert(text);
-                }
-            }, null, {keepOrder: true});
-        }
-        else {
-            editor.execCommand("insertstring", text);
-        }
+        editor.execCommand("insertstring", text);
     }
 
     gatherCompletions(editor, callback) {
@@ -669,6 +723,11 @@ class CompletionProvider {
         var total = editor.completers.length;
         editor.completers.forEach(function(completer, i) {
             completer.getCompletions(editor, session, pos, prefix, function(err, results) {
+                if (completer.hideInlinePreview)
+                    results = results.map((result) =>  {
+                        return Object.assign(result, {hideInlinePreview: completer.hideInlinePreview});
+                    });
+
                 if (!err && results)
                     matches = matches.concat(results);
                 // Fetch prefix again, because they may have changed by now

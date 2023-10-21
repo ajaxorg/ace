@@ -1,4 +1,5 @@
 /// <reference path="./ace-modes.d.ts" />
+/// <reference path="./ace-extensions.d.ts" />
 
 export namespace Ace {
   export type NewLineMode = 'auto' | 'unix' | 'windows';
@@ -492,6 +493,8 @@ export namespace Ace {
     hasRedo(): boolean;
     isClean(): boolean;
     markClean(rev?: number): void;
+    toJSON(): object;
+    fromJSON(json: object): void;
   }
 
   export interface Position {
@@ -619,6 +622,7 @@ export namespace Ace {
     documentToScreenColumn(row: number, docColumn: number): number;
     documentToScreenRow(docRow: number, docColumn: number): number;
     getScreenLength(): number;
+    toJSON(): Object;
     destroy(): void;
   }
 
@@ -1012,7 +1016,8 @@ export namespace Ace {
     getDocTooltip?(item: Completion): undefined | string | Completion;
     cancel?(): void;
     id?: string;
-    triggerCharacters?: string[]
+    triggerCharacters?: string[];
+    hideInlinePreview?: boolean;
   }
 
   export class AceInline {
@@ -1063,6 +1068,9 @@ export namespace Ace {
     exactMatch?: boolean;
     inlineEnabled?: boolean;
     parentNode?: HTMLElement;
+    setSelectOnHover?: Boolean;
+    stickySelectionDelay?: Number;
+    ignoreCaption?: Boolean;
     emptyMessage?(prefix: String): String;
     getPopup(): AcePopup;
     showPopup(editor: Editor, options: CompletionOptions): void;

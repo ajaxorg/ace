@@ -162,7 +162,7 @@ var showLiveAutocomplete = function(e) {
     var prefix = util.getCompletionPrefix(editor);
     // Only autocomplete if there's a prefix that can be matched or previous char is trigger character 
     var triggerAutocomplete = util.triggerAutocomplete(editor);
-    if ((prefix || triggerAutocomplete) && prefix.length >= editor.$liveAutocompletionThreshold) {
+    if (prefix && prefix.length >= editor.$liveAutocompletionThreshold || triggerAutocomplete) {
         var completer = Autocomplete.for(editor);
         // Set a flag for auto shown
         completer.autoShown = true;

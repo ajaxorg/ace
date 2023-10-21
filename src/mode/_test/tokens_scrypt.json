@@ -1,0 +1,389 @@
+[[
+   "start",
+  ["comment","// https://github.com/sCrypt-Inc/boilerplate/blob/master/contracts/ackermann.scrypt"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","contract"],
+  ["text"," "],
+  ["identifier","Ackermann"],
+  ["text"," "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["support.function","int"],
+  ["text"," "],
+  ["identifier","a"],
+  ["text","; "],
+  ["comment","// a = 2"]
+],[
+   "start",
+  ["text","    "],
+  ["support.function","int"],
+  ["text"," "],
+  ["identifier","b"],
+  ["text","; "],
+  ["comment","// b = 1"]
+],[
+   "start"
+],[
+   "start",
+  ["text","    "],
+  ["keyword","static"],
+  ["text"," "],
+  ["keyword","const"],
+  ["text"," "],
+  ["support.function","int"],
+  ["text"," "],
+  ["identifier","LOOPCOUNT"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","14"],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start",
+  ["text","    "],
+  ["support.function","function"],
+  ["text"," "],
+  ["identifier","ackermann"],
+  ["lparen","("],
+  ["support.function","int"],
+  ["text"," "],
+  ["identifier","m"],
+  ["text",", "],
+  ["support.function","int"],
+  ["text"," "],
+  ["identifier","n"],
+  ["rparen",")"],
+  ["text"," "],
+  ["keyword.operator",":"],
+  ["text"," "],
+  ["support.function","int"],
+  ["text"," "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","        "],
+  ["support.function","bytes"],
+  ["text"," "],
+  ["identifier","stk"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["support.function.math.scrypt","num2bin"],
+  ["text","("],
+  ["identifier","m"],
+  ["text",", "],
+  ["constant.numeric","1"],
+  ["rparen",")"],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start",
+  ["text","        "],
+  ["comment","// run this function off chain to get the loop count and set it here"]
+],[
+   "start",
+  ["text","        "],
+  ["comment","// e.g., (2, 1) requires 14 loops, (3, 5) 42438"]
+],[
+   "start",
+  ["text","        "],
+  ["keyword","loop"],
+  ["text"," "],
+  ["lparen","("],
+  ["identifier","LOOPCOUNT"],
+  ["rparen",")"],
+  ["text"," "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","            "],
+  ["keyword","if"],
+  ["text"," "],
+  ["lparen","("],
+  ["support.function.math.scrypt","len"],
+  ["text","("],
+  ["identifier","stk"],
+  ["rparen",")"],
+  ["text"," "],
+  ["keyword.operator",">"],
+  ["text"," "],
+  ["constant.numeric","0"],
+  ["rparen",")"],
+  ["text"," "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","                "],
+  ["support.function","bytes"],
+  ["text"," "],
+  ["identifier","top"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["identifier","stk"],
+  ["lparen","["],
+  ["constant.numeric","0"],
+  ["text"," "],
+  ["keyword.operator",":"],
+  ["text"," "],
+  ["constant.numeric","1"],
+  ["rparen","]"],
+  ["text",";"]
+],[
+   "start",
+  ["text","                "],
+  ["identifier","m"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["support.function.math.scrypt","unpack"],
+  ["text","("],
+  ["identifier","top"],
+  ["rparen",")"],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start",
+  ["text","                "],
+  ["comment","// pop"]
+],[
+   "start",
+  ["text","                "],
+  ["identifier","stk"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["identifier","stk"],
+  ["lparen","["],
+  ["constant.numeric","1"],
+  ["text"," "],
+  ["keyword.operator",":"],
+  ["text"," "],
+  ["support.function.math.scrypt","len"],
+  ["text","("],
+  ["identifier","stk"],
+  ["rparen",")]"],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start",
+  ["text","                "],
+  ["keyword","if"],
+  ["text"," "],
+  ["lparen","("],
+  ["identifier","m"],
+  ["text"," "],
+  ["keyword.operator","=="],
+  ["text"," "],
+  ["constant.numeric","0"],
+  ["rparen",")"],
+  ["text"," "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","                    "],
+  ["identifier","n"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["identifier","n"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["identifier","m"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["constant.numeric","1"],
+  ["text",";"]
+],[
+   "start",
+  ["text","                "],
+  ["rparen","}"]
+],[
+   "start",
+  ["text","                "],
+  ["keyword","else"],
+  ["text"," "],
+  ["keyword","if"],
+  ["text"," "],
+  ["lparen","("],
+  ["identifier","n"],
+  ["text"," "],
+  ["keyword.operator","=="],
+  ["text"," "],
+  ["constant.numeric","0"],
+  ["rparen",")"],
+  ["text"," "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","                    "],
+  ["identifier","n"],
+  ["keyword.operator","++"],
+  ["text",";"]
+],[
+   "start",
+  ["text","                    "],
+  ["identifier","m"],
+  ["keyword.operator","--"],
+  ["text",";"]
+],[
+   "start",
+  ["text","                    "],
+  ["comment","// push"]
+],[
+   "start",
+  ["text","                    "],
+  ["identifier","stk"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["support.function.math.scrypt","num2bin"],
+  ["text","("],
+  ["identifier","m"],
+  ["text",", "],
+  ["constant.numeric","1"],
+  ["rparen",")"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["identifier","stk"],
+  ["text",";"]
+],[
+   "start",
+  ["text","                "],
+  ["rparen","}"]
+],[
+   "start",
+  ["text","                "],
+  ["keyword","else"],
+  ["text"," "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","                    "],
+  ["identifier","stk"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["support.function.math.scrypt","num2bin"],
+  ["text","("],
+  ["identifier","m"],
+  ["text"," "],
+  ["keyword.operator","-"],
+  ["text"," "],
+  ["constant.numeric","1"],
+  ["text",", "],
+  ["constant.numeric","1"],
+  ["rparen",")"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["identifier","stk"],
+  ["text",";"]
+],[
+   "start",
+  ["text","                    "],
+  ["identifier","stk"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["support.function.math.scrypt","num2bin"],
+  ["text","("],
+  ["identifier","m"],
+  ["text",", "],
+  ["constant.numeric","1"],
+  ["rparen",")"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["identifier","stk"],
+  ["text",";"]
+],[
+   "start",
+  ["text","                    "],
+  ["identifier","n"],
+  ["keyword.operator","--"],
+  ["text",";"]
+],[
+   "start",
+  ["text","                "],
+  ["rparen","}"]
+],[
+   "start",
+  ["text","            "],
+  ["rparen","}"]
+],[
+   "start",
+  ["text","        "],
+  ["rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["text","        "],
+  ["keyword","return"],
+  ["text"," "],
+  ["identifier","n"],
+  ["text",";"]
+],[
+   "start",
+  ["text","    "],
+  ["rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["text","    "],
+  ["comment","// y = 5"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","public"],
+  ["text"," "],
+  ["support.function","function"],
+  ["text"," "],
+  ["identifier","unlock"],
+  ["lparen","("],
+  ["support.function","int"],
+  ["text"," "],
+  ["identifier","y"],
+  ["rparen",")"],
+  ["text"," "],
+  ["lparen","{"]
+],[
+   "start",
+  ["text","        "],
+  ["keyword","require"],
+  ["lparen","("],
+  ["identifier","y"],
+  ["text"," "],
+  ["keyword.operator","=="],
+  ["text"," "],
+  ["variable.language","this"],
+  ["punctuation.separator.period.scrypt","."],
+  ["entity.name.function.scrypt","ackermann"],
+  ["punctuation.definition.parameters.begin.bracket.round.scrypt","("],
+  ["start","this.a, this.b"],
+  ["punctuation.definition.parameters.end.bracket.round.scrypt",")"],
+  ["rparen",")"],
+  ["text",";"]
+],[
+   "start",
+  ["text","    "],
+  ["rparen","}"]
+],[
+   "start",
+  ["rparen","}"]
+]]

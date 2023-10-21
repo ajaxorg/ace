@@ -165,9 +165,9 @@ class InlineAutocomplete {
         }
     }
 
-    getCompletionProvider() {
+    getCompletionProvider(initialPosition) {
         if (!this.completionProvider)
-            this.completionProvider = new CompletionProvider();
+            this.completionProvider = new CompletionProvider(initialPosition);
         return this.completionProvider;
     }
 
@@ -219,7 +219,11 @@ class InlineAutocomplete {
             exactMatch: true,
             ignoreCaption: true
         };
-        this.getCompletionProvider().provideCompletions(this.editor, options, function(err, completions, finished) {
+        this.getCompletionProvider({
+            prefix,
+            base: this.base,
+            pos
+        }).provideCompletions(this.editor, options, function(err, completions, finished) {
             var filtered = completions.filtered;
             var prefix = util.getCompletionPrefix(this.editor);
 

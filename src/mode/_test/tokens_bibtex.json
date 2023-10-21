@@ -1,0 +1,206 @@
+[[
+   "bibtexComment",
+  ["comment","@Comment{"]
+],[
+   ["bibtexComment","bibtexComment"],
+  ["comment","  @Book{tes03,"]
+],[
+   ["bibtexComment","bibtexComment"],
+  ["comment","    author =\t {John Smith},"]
+],[
+   ["bibtexComment","bibtexComment"],
+  ["comment","    title =\t {Cooking},"]
+],[
+   ["bibtexComment","bibtexComment"],
+  ["comment","    publisher =\t {Culinary Expert},"]
+],[
+   ["bibtexComment","bibtexComment"],
+  ["comment","    year =\t 1890"]
+],[
+   "bibtexComment",
+  ["comment","  }"]
+],[
+   "start",
+  ["comment","}"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","@String"],
+  ["paren.lparen","("],
+  ["variable","mar"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["string","\"march\""],
+  ["paren.rparen",")"]
+],[
+   "start"
+],[
+   "keyword3",
+  ["keyword","@Book"],
+  ["paren.lparen","{"],
+  ["support.class","sweig-42"],
+  ["punctuation",","]
+],[
+   "keyword3",
+  ["text","  "],
+  ["variable","Author"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text","\t "],
+  ["paren.lparen","{"],
+  ["string"," Stefan Sweig "],
+  ["paren.rparen","}"],
+  ["punctuation",","]
+],[
+   "keyword3",
+  ["text","  "],
+  ["variable","title"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text","\t "],
+  ["paren.lparen","{"],
+  ["string"," The impossible book "],
+  ["paren.rparen","}"],
+  ["punctuation",","]
+],[
+   "keyword3",
+  ["text","  "],
+  ["variable","publisher"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text","\t "],
+  ["paren.lparen","{"],
+  ["string"," Dead Poet Society"],
+  ["paren.rparen","}"],
+  ["punctuation",","]
+],[
+   "keyword3",
+  ["text","  "],
+  ["variable","year"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text","\t "],
+  ["constant.numeric.bibtex","1942"],
+  ["punctuation",","]
+],[
+   ["variable","keyword3"],
+  ["text","  "],
+  ["variable","month"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text","        mar"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","@String"],
+  ["text"," "],
+  ["paren.lparen","{"],
+  ["variable","firstname"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["string","\"John\""],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["keyword","@String"],
+  ["text"," "],
+  ["paren.lparen","{"],
+  ["variable","lastname"],
+  ["text","  "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["string","\"Smith\""],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["keyword","@String"],
+  ["text"," "],
+  ["paren.lparen","{"],
+  ["variable","email"],
+  ["text","      "],
+  ["keyword.operator","="],
+  ["text"," firstname "],
+  ["keyword.operator","#"],
+  ["text"," "],
+  ["string","\".\""],
+  ["text"," "],
+  ["keyword.operator","#"],
+  ["text"," lastname "],
+  ["keyword.operator","#"],
+  ["text"," "],
+  ["string","\"@imag.en\""],
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "keyword3",
+  ["keyword","@Article"],
+  ["paren.lparen","{"],
+  ["support.class","key01"],
+  ["punctuation",","]
+],[
+   ["variable","keyword3"],
+  ["text","  "],
+  ["variable","title"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["paren.lparen","{"],
+  ["string"," The history of "],
+  ["invalid.illegal","@"],
+  ["string"," sign "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["comment","Everything \" \" outside {entries} is treated as comment in BibTeX."]
+],[
+   "start"
+],[
+   "keyword3",
+  ["keyword","@Article"],
+  ["paren.lparen","{"],
+  ["support.class","key03"],
+  ["punctuation",","]
+],[
+   ["variable","keyword3"],
+  ["text","  "],
+  ["variable","title"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["string","\"A "],
+  ["paren.lparen","{"],
+  ["string","bunch "],
+  ["paren.lparen","{"],
+  ["string","of"],
+  ["paren.rparen","}"],
+  ["string"," braces "],
+  ["paren.lparen","{"],
+  ["string","in"],
+  ["paren.rparen","}}"],
+  ["string"," title\""]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","@preamble"],
+  ["text"," "],
+  ["paren.lparen","{"],
+  ["string","\"This bibliography was generated on \\today\""],
+  ["paren.rparen","}"]
+]]

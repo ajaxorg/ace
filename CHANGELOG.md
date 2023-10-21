@@ -2,6 +2,82 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.30.0](https://github.com/ajaxorg/ace/compare/v1.29.0...v1.30.0) (2023-10-13)
+
+
+### Features
+
+* Add support for time units in PRQL ([#5324](https://github.com/ajaxorg/ace/issues/5324)) ([8b9175b](https://github.com/ajaxorg/ace/commit/8b9175bc780fade64bed1570fa1cd34d022b337b))
+
+## [1.29.0](https://github.com/ajaxorg/ace/compare/v1.28.0...v1.29.0) (2023-10-09)
+
+
+### Features
+
+* allow setting completion.ignoreCaption ([5618046](https://github.com/ajaxorg/ace/commit/56180467e12c300850da89cc13c1c8648fb5e342))
+
+## [1.28.0](https://github.com/ajaxorg/ace/compare/v1.27.0...v1.28.0) (2023-09-22)
+
+
+### Features
+
+* Keep focus on same item in completion popup when slow completer delivers results. ([#5322](https://github.com/ajaxorg/ace/issues/5322)) ([0983134](https://github.com/ajaxorg/ace/commit/09831343ccd450326cffb4b0f26ce3a8b830c7fb))
+
+## [1.27.0](https://github.com/ajaxorg/ace/compare/v1.26.0...v1.27.0) (2023-09-19)
+
+
+### Features
+
+* Allow not showing inline preview for completers when `inlineEnabled` is set to `true`. ([#5315](https://github.com/ajaxorg/ace/issues/5315)) ([f3e3330](https://github.com/ajaxorg/ace/commit/f3e333041fc1a687b3ce35a44f1bf00bcc15a236))
+
+## [1.26.0](https://github.com/ajaxorg/ace/compare/v1.25.1...v1.26.0) (2023-09-15)
+
+
+### Features
+
+* Allow to set setSelectOnHover for Autocomplete ([#5317](https://github.com/ajaxorg/ace/issues/5317)) ([dccbcc2](https://github.com/ajaxorg/ace/commit/dccbcc20288a48403f10aa29b6b9b6181dc8a66f))
+
+
+### Bug Fixes
+
+* Improve PRQL syntax highlightning ([#5313](https://github.com/ajaxorg/ace/issues/5313)) ([7d677f1](https://github.com/ajaxorg/ace/commit/7d677f1019ea5c81f3d9ae36ed1e71ac7a08fb30))
+
+### [1.25.1](https://github.com/ajaxorg/ace/compare/v1.25.0...v1.25.1) (2023-09-14)
+
+## [1.25.0](https://github.com/ajaxorg/ace/compare/v1.24.2...v1.25.0) (2023-09-14)
+
+
+### Features
+
+* Add syntax highlighting for PRQL ([#5307](https://github.com/ajaxorg/ace/issues/5307)) ([24862cd](https://github.com/ajaxorg/ace/commit/24862cdc83694bbe541c6f8be6fbaaff80d44bf7))
+
+### [1.24.2](https://github.com/ajaxorg/ace/compare/v1.24.1...v1.24.2) (2023-09-08)
+
+
+### Bug Fixes
+
+* Added project details in index.html file ([#5300](https://github.com/ajaxorg/ace/issues/5300)) ([6e83505](https://github.com/ajaxorg/ace/commit/6e835059dd13e95178b15ce9b06a2f2444c2e731))
+* autocompletion threshold doesn't apply to trigger characters ([84bbc88](https://github.com/ajaxorg/ace/commit/84bbc888e1c0304c0160bb19fc46cf5539d079cf))
+* Update php_highlight_rules.js ([#5288](https://github.com/ajaxorg/ace/issues/5288)) ([caedd0c](https://github.com/ajaxorg/ace/commit/caedd0cf22d5a7644ceb418562ebcab801011c88))
+
+### [1.24.1](https://github.com/ajaxorg/ace/compare/v1.24.0...v1.24.1) (2023-08-15)
+
+## [1.24.0](https://github.com/ajaxorg/ace/compare/v1.23.4...v1.24.0) (2023-08-09)
+
+
+### Features
+
+* Add support for Unicode boundaries ([#5265](https://github.com/ajaxorg/ace/issues/5265)) ([1e6fcf3](https://github.com/ajaxorg/ace/commit/1e6fcf349d222715429ddc9fe6a38ec1f6d72ab1))
+* Allow more lines in hidden textarea to improve screen reader experience on Windows ([#5225](https://github.com/ajaxorg/ace/issues/5225)) ([bccff5a](https://github.com/ajaxorg/ace/commit/bccff5ae21b86004c2a4ab4a86a989c61e728ebf))
+* Cuttlefish mode ([#5278](https://github.com/ajaxorg/ace/issues/5278)) ([9cddf64](https://github.com/ajaxorg/ace/commit/9cddf64ac51fc5e7c5474e7aeaa2ef8f069220db))
+
+
+### Bug Fixes
+
+* add missing SQL keywords: IS and IN ([#5263](https://github.com/ajaxorg/ace/issues/5263)) ([c731164](https://github.com/ajaxorg/ace/commit/c731164315a757a5e0380f82eeef105a17b24b03))
+* bug in lua.lua example file kitchen-sink ([#5258](https://github.com/ajaxorg/ace/issues/5258)) ([6549570](https://github.com/ajaxorg/ace/commit/6549570310983999a1fd3ce52bc5bf8b4004402f))
+* support more environments ([#5266](https://github.com/ajaxorg/ace/issues/5266)) ([b196806](https://github.com/ajaxorg/ace/commit/b196806eb2937e7ee56e42b482b7b3bd5e3c9d79))
+
 ### [1.23.4](https://github.com/ajaxorg/ace/compare/v1.23.3...v1.23.4) (2023-07-12)
 
 
