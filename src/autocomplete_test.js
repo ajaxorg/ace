@@ -297,6 +297,62 @@ module.exports = {
             }, 10);
         }
     },
+    "test: completers tooltip filtering": function (done) {
+        var editor = initEditor("");
+        var firstDoc = "First tooltip";
+        var secondDoc = "Second tooltip";
+        editor.completers = [
+            {
+                getCompletions: function (editor, session, pos, prefix, callback) {
+                    var completions = [
+                        {
+                            caption: "case",
+                            value: "case",
+                        }, {
+                            caption: "catch",
+                            value: "catch",
+                        }
+                    ];
+                    callback(null, completions);
+                },
+                getDocTooltip: function (item) {
+                    console.log(item)
+                    
+                    if (item.value === 'case') {
+                        item.docHTML = firstDoc;
+                    } 
+                    if (item.value === 'catch') {
+                        item.docHTML = secondDoc;
+                    }
+                },
+            }
+        ];
+        
+        sendKey("ca");
+        var popup = editor.completer.popup;
+
+        check(function() {
+            assert.equal(popup.data.length, 2);
+            assert.equal(popup.container.lastChild.innerHTML, firstDoc);
+
+            sendKey("t");
+
+            check(function() {
+                assert.equal(popup.data.length, 1);
+                assert.equal(popup.container.lastChild.innerHTML, secondDoc);
+
+                editor.destroy();
+                editor.container.remove();
+                done();
+            })
+        })
+    
+        function check(callback) {
+            setTimeout(function wait() {
+                callback();
+            }, 10);
+        }
+    },
     "test: slow and fast completers": function(done) {
         var syncCompleter={
             getCompletions: function(editor, session, pos, prefix, callback) {
