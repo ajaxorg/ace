@@ -151,6 +151,7 @@ var Keys = (function() {
 })();
 oop.mixin(exports, Keys);
 
+/**@type{{keyCodeToString: (keyCode: string) => string}}*/
 exports.default = exports;
 
 exports.keyCodeToString = function(keyCode) {

@@ -1,5 +1,5 @@
 "use strict";
-
+/**@type{import("../snippets").snippetManager & {files?: {[key: string]: any}}}*/
 var snippetManager = require("../snippets").snippetManager;
 var Autocomplete = require("../autocomplete").Autocomplete;
 var config = require("../config");

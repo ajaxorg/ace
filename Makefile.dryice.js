@@ -35,6 +35,7 @@ var fs = require("fs");
 var path = require("path");
 var copy = require('architect-build/copy');
 var build = require('architect-build/build');
+var {updateDeclarationModuleNames, generateDeclaration} = require('./tool/ace_declaration_generator');
 
 var ACE_HOME = __dirname;
 var BUILD_DIR = ACE_HOME + "/build";
@@ -176,12 +177,9 @@ function ace() {
 
 function buildTypes() {
     var aceCodeModeDefinitions = '/// <reference path="./ace-modes.d.ts" />';
-    var aceCodeExtensionDefinitions = '/// <reference path="./ace-extensions.d.ts" />';
     // ace-builds package has different structure and can't use mode types defined for the ace-code.
     // ace-builds modes are declared along with other modules in the ace-modules.d.ts file below.
-    var definitions = fs.readFileSync(ACE_HOME + '/ace.d.ts', 'utf8').replace(aceCodeModeDefinitions, '').replace(aceCodeExtensionDefinitions, '');
     var paths = fs.readdirSync(BUILD_DIR + '/src-noconflict');
-    var moduleRef = '/// <reference path="./ace-modules.d.ts" />';
 
     fs.readdirSync(BUILD_DIR + '/src-noconflict/snippets').forEach(function(path) {
         paths.push("snippets/" + path);
@@ -189,7 +187,8 @@ function buildTypes() {
 
     var moduleNameRegex = /^(mode|theme|ext|keybinding)-|^snippets\//;
 
-    var pathModules = [
+    //TODO:
+/*    var pathModules = [
         "declare module 'ace-builds/webpack-resolver';",
         "declare module 'ace-builds/esm-resolver';",
         "declare module 'ace-builds/src-noconflict/ace';"
@@ -198,10 +197,15 @@ function buildTypes() {
             var moduleName = path.split('.')[0];
             return "declare module 'ace-builds/src-noconflict/" + moduleName + "';";
         }
-    }).filter(Boolean)).join("\n") + "\n";
+    }).filter(Boolean)).join("\n") + "\n";*/
 
-    fs.writeFileSync(BUILD_DIR + '/ace.d.ts', moduleRef + '\n' + definitions);
-    fs.writeFileSync(BUILD_DIR + '/ace-modules.d.ts', pathModules);
+    //TODO:
+    fs.copyFileSync(ACE_HOME + '/ace.d.ts', BUILD_DIR + '/ace.d.ts');
+    generateDeclaration(BUILD_DIR + '/ace.d.ts');
+    var definitions = fs.readFileSync(BUILD_DIR + '/ace.d.ts', 'utf8');
+    var newDefinitions = updateDeclarationModuleNames(definitions);
+    fs.writeFileSync(BUILD_DIR + '/ace.d.ts', newDefinitions);
+    //
     var esmUrls = [];
 
     var loader = paths.map(function(path) {

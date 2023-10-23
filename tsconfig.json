@@ -5,14 +5,11 @@
     "skipLibCheck": true,
     "module": "commonjs",
     "target": "es2019",
-    "sourceMap": true,
     "allowJs": true,
     "checkJs": true,
     "declaration": true,
-    "declarationDir": "./types",
     "emitDeclarationOnly": true,
-    "outDir": "./out",
-    "declarationMap": true,
+    "outFile": "./types/index.d.ts"
   },
   "exclude": [
     "node_modules",
@@ -22,12 +19,9 @@
     "src/keyboard/emacs.js",
     "src/keyboard/sublime.js",
     "src/keyboard/vscode.js",
-    "types",
     "src/mode"
   ],
   "include": [
     "./src/**/*",
-    "./ace.d.ts",
-    "./ace-extensions.d.ts"
   ]
 }

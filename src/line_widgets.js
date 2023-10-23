@@ -77,6 +77,7 @@ class LineWidgets {
             return;
 
         this.detach();
+        /**@type {Editor} */
         this.editor = editor;
         
         if (editor) {

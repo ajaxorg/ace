@@ -36,7 +36,7 @@ class DefaultHandlers {
     }
 
     /**
-     * @param ev
+     * @param {MouseEvent} ev
      * @this {MouseHandler}
      */
     onMouseDown(ev) {

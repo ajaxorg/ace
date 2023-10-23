@@ -1,11 +1,15 @@
 "use strict";
+/**
+ * @typedef {import("./mouse_handler").MouseHandler} MouseHandler
+ */
 var dom = require("../lib/dom");
 var event = require("../lib/event");
 var Tooltip = require("../tooltip").Tooltip;
 var nls = require("../config").nls;
 
 /**
- * @param {import("../mouse/mouse_handler").MouseHandler} mouseHandler
+ * @param {MouseHandler} mouseHandler
+ * @this {MouseHandler}
  */
 function GutterHandler(mouseHandler) {
     var editor = mouseHandler.editor;

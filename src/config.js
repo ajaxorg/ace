@@ -1,39 +1,9 @@
 "no use strict";
-/**
- * @typedef {import("./lib/app_config").AppConfig} AppConfig
- */
-/**
- * @typedef {AppConfig & Config} IConfig
- * @export
- */
-
-/**
- * @typedef Config
- * @property {(key: string) => any} get
- * @property {(key: string, value: any) => void} set
- * @property {() => {[key: string]: any}} all
- * @property {(name: string, component?: string) => string} moduleUrl
- * @property {(name: string, subst: string) => string} setModuleUrl
- * @property {(moduleName: string | [string, string], cb: (module: any) => void) => void} loadModule
- * @property {(cb: (moduleName: string, afterLoad: (err: Error | null, module: unknown) => void) => void) => void} setLoader
- * @property {(moduleName: string, onLoad: (module: any) => void) => void} setModuleLoader
- * @property {string} version
- * @property {any} $modes
- * @property {any} $loading
- * @property {any} $loaded
- * @property {any} dynamicModules
- * @property {any} $require
- */
-
 var lang = require("./lib/lang");
 var net = require("./lib/net");
 var dom = require("./lib/dom");
-/**@type{any}*/var AppConfig = require("./lib/app_config").AppConfig;
+var AppConfig = require("./lib/app_config").AppConfig;
 
-/**
- * 
- * @type {IConfig}
- */
 module.exports = exports = new AppConfig();
 
 var options = {

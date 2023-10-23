@@ -1,5 +1,3 @@
-/// <reference path="./ace-modes.d.ts" />
-/// <reference path="./ace-extensions.d.ts" />
 
 export namespace Ace {
     type Anchor = import("./src/anchor").Anchor;
@@ -15,13 +13,21 @@ export namespace Ace {
     type TokenIterator = import("./src/token_iterator").TokenIterator;
     type Selection = import("./src/selection").Selection;
     type Autocomplete = import("./src/autocomplete").Autocomplete;
+    type InlineAutocomplete = import("./src/ext/inline_autocomplete").InlineAutocomplete;
     type CompletionProvider = import("./src/autocomplete").CompletionProvider;
     type AcePopup = import("./src/autocomplete/popup").AcePopup;
-    type Config = import("./src/config").Config;
     type AceInline = import("./src/autocomplete/inline").AceInline;
     type MouseEvent = import("./src/mouse/mouse_event").MouseEvent;
     type RangeList = import("./src/range_list").RangeList;
     type FilteredList = import("./src/autocomplete").FilteredList;
+    type LineWidgets = import("./src/line_widgets").LineWidgets;
+    type SearchBox = import("./src/ext/searchbox").SearchBox;
+    type Occur = import("./src/occur").Occur;
+    type DefaultHandlers = import("./src/mouse/default_handlers").DefaultHandlers;
+    type GutterHandler = import("./src/mouse/default_gutter_handler").GutterHandler;
+    type DragdropHandler = import("./src/mouse/dragdrop_handler").DragdropHandler;
+    type AppConfig = import("./src/lib/app_config").AppConfig;
+
     interface Theme {
         cssClass?: string;
         cssText?: string;
@@ -522,7 +528,7 @@ export namespace Ace {
         "beforeRender": (e, renderer: VirtualRenderer) => void;
     }
 
-    class EventEmitter<T extends EventsBase> {
+    class EventEmitter<T> {
         once<K extends keyof T>(name: K, callback: T[K]): void;
 
         setDefaultHandler(name: string, callback: Function): void;
@@ -608,7 +614,7 @@ export namespace Ace {
         action?: string,
     }
 
-    type CommandLike = Command | ((editor: Editor) => void);
+    type CommandLike = Command | ((editor: Editor) => void) | ((sb: SearchBox) => void);
 
     type KeyboardHandler = Partial<import("./src/keyboard/hash_handler").HashHandler> & {
         attach?: (editor: Editor) => void;
@@ -879,113 +885,6 @@ export namespace Ace {
 
     type AcePopupNavigation = "up" | "down" | "start" | "end";
 
-}
-
-
-export const version: string;
-export const config: Ace.Config;
-export function require(name: string): any;
-export function edit(el: string | (Element & {
-    env?;
-    value?;
-}), options?: Partial<Ace.EditorOptions>): Ace.Editor;
-export function createEditSession(text: Ace.Document | string, mode: Ace.SyntaxMode): Ace.EditSession;
-export const VirtualRenderer: {
-    new(container: HTMLElement, theme?: string): Ace.VirtualRenderer;
-};
-export const EditSession: {
-    new(text: string | Ace.Document, mode?: Ace.SyntaxMode): Ace.EditSession;
-};
-export const UndoManager: {
-    new(): Ace.UndoManager;
-};
-export const Editor: {
-    new(): Ace.Editor;
-};
-export const Range: {
-    new(startRow: number, startColumn: number, endRow: number, endColumn: number): Ace.Range;
-    fromPoints(start: Ace.Point, end: Ace.Point): Ace.Range;
-    comparePoints(p1: Ace.Point, p2: Ace.Point): number;
-};
-
-
-type InlineAutocompleteAction = "prev" | "next" | "first" | "last";
-
-type TooltipCommandFunction<T> = (editor: Ace.Editor) => T;
-
-export interface TooltipCommand extends Ace.Command {
-    enabled: TooltipCommandFunction<boolean> | boolean,
-    getValue?: TooltipCommandFunction<any>,
-    type: "button" | "text" | "checkbox"
-    iconCssClass?: string,
-    cssClass?: string
-}
-
-export type InlineAutocomplete = import("./src/ext/inline_autocomplete").InlineAutocomplete;
-export type CommandBarTooltip = import("./src/ext/command_bar").CommandBarTooltip;
-
-
-declare module "./src/anchor" {
-    export interface Anchor extends Ace.EventEmitter<Ace.AnchorEvents> {
-        markerId?: number;
-    }
-    
-
-}
-
-declare module "./src/autocomplete" {
-    export interface Autocomplete {
-        popup: Ace.AcePopup;
-        emptyMessage?: Function
-    }
-    
-    export interface CompletionProvider {
-        completions: Ace.FilteredList;
-    }
-}
-
-
-declare module "./src/background_tokenizer" {
-    export interface BackgroundTokenizer extends Ace.EventEmitter<Ace.BackgroundTokenizerEvents> {
-
-    }
-}
-
-declare module "./src/document" {
-    export interface Document extends
-        Ace.EventEmitter<Ace.DocumentEvents> {
-
-    }
-
-}
-
-declare module "./src/editor" {
-    export interface Editor extends
-        Ace.EventEmitter<Ace.EditorEvents>,
-        Ace.OptionsProvider<Ace.EditorOptions>,
-        EditorMultiSelectProperties
-    {
-        session: Ace.EditSession;
-        $mergeUndoDeltas?: any,
-        $highlightSelectedWord?: boolean,
-        $updatePlaceholder?: Function,
-        $cursorStyle?: string,
-        $readOnly?: any,
-        $highlightActiveLine?: any,
-        $enableAutoIndent?: any,
-        $copyWithEmptySelection?: any
-        $selectionStyle?: string,
-        env?: any;
-        widgetManager?: import("./src/line_widgets").LineWidgets,
-        completer?: import("./src/autocomplete").Autocomplete | import("./src/ext/inline_autocomplete").InlineAutocomplete,
-        completers: Ace.Completer[],
-        $highlightTagPending?: boolean,
-        showKeyboardShortcuts?: () => void,
-        showSettingsMenu?: () => void,
-        searchBox?: import("./src/ext/searchbox").SearchBox,
-        [key: string]: any;
-    }
-
     interface EditorMultiSelectProperties {
         inMultiSelectMode?: boolean,
         /**
@@ -1051,88 +950,32 @@ declare module "./src/editor" {
          **/
         alignCursors: () => void,
         $reAlignText: (lines: string[], forceLeft: boolean) => string[],
+        multiSelect?: any,
+        $multiselectOnSessionChange?: any,
+        $blockSelectEnabled?: boolean,
     }
-}
+    
+    interface CodeLenseEditorExtension{
+        codeLensProviders?: any[];
+        $codeLensClickHandler?: any;
+        $updateLenses?: () => void;
+        $updateLensesOnInput?: () => void;
+    }
 
-declare module "./src/edit_session" {
-    export interface EditSession extends
-        Ace.EventEmitter<Ace.EditSessionEvents>,
-        Ace.OptionsProvider<Ace.EditSessionOptions>,
-        Ace.Folding, Ace.BracketMatch
-    {
-        doc: Ace.Document,
-        $highlightLineMarker?: {
-            start: Ace.Point,
-            end: Ace.Point,
-            id?: number
-        }
-        $useSoftTabs?: boolean,
-        $tabSize?: number,
-        $useWorker?: boolean,
-        $wrapAsCode?: boolean,
-        $indentedSoftWrap?: boolean,
-        widgetManager?: any,
-        $bracketHighlight?: any,
-        $selectionMarker?: number,
-        curOp?: {
-            command: {},
-            args: string,
-            scrollTop: number,
-            [key: string]: any;
-        },
-        lineWidgetsWidth?: number,
-        $getWidgetScreenLength?: () => number,
-        _changedWidgets?: any,
-        $options:any,
-
-        $wrapMethod?: any,
-        $enableVarChar?: any,
-        $wrap?:any,
-        $navigateWithinSoftTabs?: boolean,
-        getSelectionMarkers(): any[],
-        [key: string]: any;
+    interface ElasticTabstopsEditorExtension {
+        elasticTabstops?: import("./src/ext/elastic_tabstops_lite").ElasticTabstopsLite;
     }
-}
-
-declare module "./src/edit_session/fold" {
-    export interface Fold {
-        collapseChildren?: number;    
-    }   
-}
-
-// @ts-expect-error
-declare module "./src/placeholder" {
-    export interface PlaceHolder extends Ace.EventEmitter<Ace.PlaceHolderEvents> {
+    
+    interface TextareaEditorExtension {
+        setDisplaySettings?: (settings: any) => void;
     }
-}
-
-declare module "./src/scrollbar" {
-    export interface Scrollbar extends Ace.EventEmitter<any> {
+    
+    interface PromptEditorExtension {
+        cmdLine?: Editor;
     }
-    export interface VScrollBar extends Scrollbar {
-    }
-    export interface HScrollBar extends Scrollbar {
-    }
-}
-
-declare module "./src/scrollbar_custom" {
-    export interface Scrollbar extends Ace.EventEmitter<any> {
-    }
-    export interface VScrollBar extends Scrollbar {
-    }
-    export interface HScrollBar extends Scrollbar {
-    }
-}
-
-declare module "./src/line_widgets" {
-    export interface LineWidgets {
-        lineWidgets: Ace.LineWidget[];
-        editor: Ace.Editor;
-    }
-}
-
-declare module "./src/selection" {
-    export interface Selection extends Ace.EventEmitter<Ace.SelectionEvents>, MultiSelectProperties {
+    
+    interface OptionsEditorExtension {
+        $options?: any;
     }
 
     interface MultiSelectProperties {
@@ -1201,6 +1044,210 @@ declare module "./src/selection" {
         _eventRegistry?: any;
         index?: number;
     }
+
+    type AcePopupEventsCombined = Ace.EditorEvents & Ace.AcePopupEvents;
+    type AcePopupWithEditor = Ace.EventEmitter<AcePopupEventsCombined> & Ace.Editor;
+    type InlineAutocompleteAction = "prev" | "next" | "first" | "last";
+
+    type TooltipCommandFunction<T> = (editor: Ace.Editor) => T;
+
+    export interface TooltipCommand extends Ace.Command {
+        enabled: TooltipCommandFunction<boolean> | boolean,
+        getValue?: TooltipCommandFunction<any>,
+        type: "button" | "text" | "checkbox"
+        iconCssClass?: string,
+        cssClass?: string
+    }
+
+    export type CommandBarTooltip = import("./src/ext/command_bar").CommandBarTooltip;
+
+    export type TokenizeResult = Array<Array<{
+        className?: string,
+        value: string,
+    }>>
+}
+
+
+export const version: string;
+export const config: Ace.Config;
+export function require(name: string): any;
+export function edit(el: string | (Element & {
+    env?;
+    value?;
+}), options?: Partial<Ace.EditorOptions>): Ace.Editor;
+export function createEditSession(text: Ace.Document | string, mode: Ace.SyntaxMode): Ace.EditSession;
+export const VirtualRenderer: {
+    new(container: HTMLElement, theme?: string): Ace.VirtualRenderer;
+};
+export const EditSession: {
+    new(text: string | Ace.Document, mode?: Ace.SyntaxMode): Ace.EditSession;
+};
+export const UndoManager: {
+    new(): Ace.UndoManager;
+};
+export const Editor: {
+    new(): Ace.Editor;
+};
+export const Range: {
+    new(startRow: number, startColumn: number, endRow: number, endColumn: number): Ace.Range;
+    fromPoints(start: Ace.Point, end: Ace.Point): Ace.Range;
+    comparePoints(p1: Ace.Point, p2: Ace.Point): number;
+};
+
+export type InlineAutocomplete = Ace.InlineAutocomplete;
+export type CommandBarTooltip = Ace.CommandBarTooltip;
+
+
+
+
+declare module "./src/anchor" {
+    export interface Anchor extends Ace.EventEmitter<Ace.AnchorEvents> {
+        markerId?: number;
+        document?: Ace.Document;
+    }
+
+
+}
+
+declare module "./src/autocomplete" {
+    export interface Autocomplete {
+        popup: Ace.AcePopup;
+        emptyMessage?: Function,
+    }
+    
+    export interface CompletionProvider {
+        completions: Ace.FilteredList;
+    }
+}
+
+declare module "./src/background_tokenizer" {
+    export interface BackgroundTokenizer extends Ace.EventEmitter<Ace.BackgroundTokenizerEvents> {
+
+    }
+}
+
+declare module "./src/document" {
+    export interface Document extends
+        Ace.EventEmitter<Ace.DocumentEvents> {
+
+    }
+
+}
+
+declare module "./src/editor" {
+    export interface Editor extends Ace.EditorMultiSelectProperties, Ace.OptionsProvider<Ace.EditorOptions>, 
+        Ace.EventEmitter<Ace.EditorEvents>, Ace.CodeLenseEditorExtension, Ace.ElasticTabstopsEditorExtension, 
+        Ace.TextareaEditorExtension, Ace.PromptEditorExtension, Ace.OptionsEditorExtension
+    {
+        session: Ace.EditSession;
+        $mergeUndoDeltas?: any,
+        $highlightSelectedWord?: boolean,
+        $updatePlaceholder?: Function,
+        $cursorStyle?: string,
+        $readOnly?: any,
+        $highlightActiveLine?: any,
+        $enableAutoIndent?: any,
+        $copyWithEmptySelection?: any
+        $selectionStyle?: string,
+        env?: any;
+        widgetManager?: Ace.LineWidgets,
+        completer?: Ace.Autocomplete | Ace.InlineAutocomplete,
+        completers: Ace.Completer[],
+        $highlightTagPending?: boolean,
+        showKeyboardShortcuts?: () => void,
+        showSettingsMenu?: () => void,
+        searchBox?: Ace.SearchBox,
+        _eventRegistry?: any,
+    }
+}
+
+declare module "./src/edit_session" {
+    export interface EditSession extends
+        Ace.EventEmitter<Ace.EditSessionEvents>,
+        Ace.OptionsProvider<Ace.EditSessionOptions>,
+        Ace.Folding, Ace.BracketMatch
+    {
+        doc: Ace.Document,
+        $highlightLineMarker?: {
+            start: Ace.Point,
+            end: Ace.Point,
+            id?: number
+        }
+        $useSoftTabs?: boolean,
+        $tabSize?: number,
+        $useWorker?: boolean,
+        $wrapAsCode?: boolean,
+        $indentedSoftWrap?: boolean,
+        widgetManager?: any,
+        $bracketHighlight?: any,
+        $selectionMarker?: number,
+        curOp?: {
+            command: {},
+            args: string,
+            scrollTop: number,
+            [key: string]: any;
+        },
+        lineWidgetsWidth?: number,
+        $getWidgetScreenLength?: () => number,
+        _changedWidgets?: any,
+        $options:any,
+        $wrapMethod?: any,
+        $enableVarChar?: any,
+        $wrap?:any,
+        $navigateWithinSoftTabs?: boolean,
+        getSelectionMarkers(): any[],
+        $selectionMarkers?: any[],
+        gutterRenderer?: any,
+        $firstLineNumber?: number,
+        $emacsMark?: any,
+        selectionMarkerCount?: number,
+        multiSelect?: any,
+        $occurHighlight?: any,
+        $occur?: Ace.Occur,
+        $occurMatchingLines?: any,
+        $useEmacsStyleLineStart?: boolean,
+        $selectLongWords?: boolean,
+    }
+    
+}
+
+declare module "./src/edit_session/fold" {
+    export interface Fold {
+        collapseChildren?: number;
+    }
+}
+
+// @ts-expect-error
+declare module "./src/placeholder" {
+    export interface PlaceHolder extends Ace.EventEmitter<Ace.PlaceHolderEvents> {
+    }
+}
+
+declare module "./src/scrollbar" {
+    export interface VScrollBar extends Ace.EventEmitter<any> {
+    }
+    export interface HScrollBar extends Ace.EventEmitter<any> {
+    }
+}
+
+declare module "./src/scrollbar_custom" {
+    export interface VScrollBar extends Ace.EventEmitter<any> {
+    }
+    export interface HScrollBar extends Ace.EventEmitter<any> {
+    }
+}
+
+declare module "./src/line_widgets" {
+    export interface LineWidgets {
+        lineWidgets: Ace.LineWidget[];
+        editor: Ace.Editor;
+    }
+}
+
+declare module "./src/selection" {
+    export interface Selection extends Ace.EventEmitter<Ace.SelectionEvents>, Ace.MultiSelectProperties {
+    }
+    
 }
 
 declare module "./src/range" {
@@ -1208,7 +1255,7 @@ declare module "./src/range" {
         id?: number;
         cursor?: Ace.Point;
         isBackwards?: boolean;
-    }   
+    }
 }
 
 declare module "./src/virtual_renderer" {
@@ -1262,9 +1309,8 @@ declare module "./src/commands/command_manager" {
 }
 
 declare module "./src/autocomplete/popup" {
-    type AcePopupEventsCombined = Ace.EditorEvents & Ace.AcePopupEvents;
-    type AcePopupWithEditor = Ace.EventEmitter<AcePopupEventsCombined> & Ace.Editor;
-    export interface AcePopup extends AcePopupWithEditor  {
+    
+    export interface AcePopup extends Ace.AcePopupWithEditor  {
         setSelectOnHover: (val: boolean) => void,
         setRow: (line: number) => void,
         getRow: () => number,
@@ -1312,15 +1358,24 @@ declare module "./src/lib/app_config" {
     }
 }
 
-declare module "./src/mouse/mouse_handler" {
-    type DefaultHandlers = import("./src/mouse/default_handlers").DefaultHandlers;
-    //@ts-ignore
-    type GutterHandler = import("./src/mouse/default_gutter_handler").GutterHandler;
-    type DragdropHandler = import("./src/mouse/dragdrop_handler").DragdropHandler;
+declare module "./src/mouse/mouse_event" {
+    export interface MouseEvent {
+        time?: number;
+    }
+}
 
-    export interface MouseHandler extends DefaultHandlers, GutterHandler, DragdropHandler {
+declare module "./src/mouse/mouse_handler" {
+
+    export interface MouseHandler {
         $tooltipFollowsMouse?: boolean,
         cancelDrag?: boolean
+        //from DefaultHandlers
+        $clickSelection?: null | Ace.Range,
+        mousedownEvent?: Ace.MouseEvent,
+        startSelect?: (pos?: Ace.Point, waitForClickSelection?: boolean) => void,
+        select?: () => void
+        $lastScroll?: { t: number, vx: number, vy: number, allowed: number }
+        selectEnd?: () => void
     }
 }
 
@@ -1338,5 +1393,10 @@ declare module "./src/layer/font_metrics" {
 declare module "./src/tooltip" {
     export interface HoverTooltip {
         row: number;
+    }
+}
+
+declare module "./src/mouse/default_gutter_handler" {
+    export interface GutterHandler {
     }
 }

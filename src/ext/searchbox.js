@@ -157,7 +157,7 @@ class SearchBox {
     }
 
     /**
-     * @param {boolean} preventScroll
+     * @param {boolean} [preventScroll]
      */
     $syncOptions(preventScroll) {
         dom.setCssClass(this.replaceOption, "checked", this.searchRange);

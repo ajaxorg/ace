@@ -1058,7 +1058,6 @@ dom.importCssString(`
     position: absolute;
 }`, "snippets.css", false);
 
-/**@type {any}*/
 exports.snippetManager = new SnippetManager();
 
 

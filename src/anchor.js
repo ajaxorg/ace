@@ -105,6 +105,7 @@ class Anchor {
      *
      **/
     attach(doc) {
+        /**@type{Document}*/
         this.document = doc || this.document;
         this.document.on("change", this.$onChange);
     }
