@@ -307,24 +307,22 @@ module.exports = {
                     var completions = [
                         {
                             caption: "case",
-                            value: "case",
+                            value: "case"
                         }, {
                             caption: "catch",
-                            value: "catch",
+                            value: "catch"
                         }
                     ];
                     callback(null, completions);
                 },
                 getDocTooltip: function (item) {
-                    console.log(item)
-                    
                     if (item.value === 'case') {
                         item.docHTML = firstDoc;
                     } 
                     if (item.value === 'catch') {
                         item.docHTML = secondDoc;
                     }
-                },
+                }
             }
         ];
         
@@ -344,8 +342,8 @@ module.exports = {
                 editor.destroy();
                 editor.container.remove();
                 done();
-            })
-        })
+            });
+        });
     
         function check(callback) {
             setTimeout(function wait() {
