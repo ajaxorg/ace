@@ -37,7 +37,7 @@ function wordDistance(doc, pos) {
     return wordScores;
 }
 
-function filterStringsFromCompletions(session, pos) {
+function getWordScoresForFilteredStrings(session, pos) {
     var filterRegExp = /string|comment|^comment\.doc.*/;
     var lines = session.bgTokenizer.lines;
     var exclude = lines[pos.row] && lines[pos.row].find(el => el.start === pos.column - el.value.length);
@@ -59,7 +59,7 @@ function filterStringsFromCompletions(session, pos) {
 }
 
 exports.getCompletions = function (editor, session, pos, prefix, callback) {
-    var wordScore = editor.$filterStringsCompletions ? filterStringsFromCompletions(session, pos) : wordDistance(
+    var wordScore = editor.$filterStringsCompletions ? getWordScoresForFilteredStrings(session, pos) : wordDistance(
         session, pos);
     var wordList = Object.keys(wordScore);
 
