@@ -314,7 +314,7 @@ function generateDeclaration(aceNamespacePath) {
 /**
  * @param {string} content
  */
-function correctModulesForAceBuilds(content) {
+function updateDeclarationModuleNames(content) {
     let output = content.replace(
         /ace\-code(?:\/src)?\/(mode|theme|ext|keybinding|snippets)\//g, "ace-builds/src-noconflict/$1-");
     output = output.replace(/ace\-code(?:\/src)?/g, "ace-builds-internal");
@@ -331,5 +331,5 @@ if (!module.parent) {
 }
 else {
     exports.generateDeclaration = generateDeclaration;
-    exports.correctModulesForAceBuilds = correctModulesForAceBuilds;
+    exports.updateDeclarationModuleNames = updateDeclarationModuleNames;
 }

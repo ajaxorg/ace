@@ -35,7 +35,7 @@ var fs = require("fs");
 var path = require("path");
 var copy = require('architect-build/copy');
 var build = require('architect-build/build');
-var {correctModulesForAceBuilds, generateDeclaration} = require('./tool/ace_declaration_generator');
+var {updateDeclarationModuleNames, generateDeclaration} = require('./tool/ace_declaration_generator');
 
 var ACE_HOME = __dirname;
 var BUILD_DIR = ACE_HOME + "/build";
@@ -177,7 +177,6 @@ function ace() {
 
 function buildTypes() {
     var aceCodeModeDefinitions = '/// <reference path="./ace-modes.d.ts" />';
-    var aceCodeExtensionDefinitions = '/// <reference path="./ace-extensions.d.ts" />';
     // ace-builds package has different structure and can't use mode types defined for the ace-code.
     // ace-builds modes are declared along with other modules in the ace-modules.d.ts file below.
     var paths = fs.readdirSync(BUILD_DIR + '/src-noconflict');
@@ -204,7 +203,7 @@ function buildTypes() {
     fs.copyFileSync(ACE_HOME + '/ace.d.ts', BUILD_DIR + '/ace.d.ts');
     generateDeclaration(BUILD_DIR + '/ace.d.ts');
     var definitions = fs.readFileSync(BUILD_DIR + '/ace.d.ts', 'utf8');
-    var newDefinitions = correctModulesForAceBuilds(definitions);
+    var newDefinitions = updateDeclarationModuleNames(definitions);
     fs.writeFileSync(BUILD_DIR + '/ace.d.ts', newDefinitions);
     //
     var esmUrls = [];
