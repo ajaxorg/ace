@@ -1,0 +1,2 @@
+exclude:
+  - "demo/kitchen-sink/docs"
