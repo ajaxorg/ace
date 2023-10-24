@@ -77,7 +77,7 @@ var AstroHighlightRules = function () {
     },
     {
       regex: /{/,
-      token: "paren.rparen",
+      token: "paren.lparen",
       push: "inline-js-start"
     }
   ];
