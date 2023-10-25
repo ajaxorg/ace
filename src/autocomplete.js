@@ -478,7 +478,7 @@ class Autocomplete {
         }.bind(this));
 
         if (!this.autoShown && !(this.popup && this.popup.isOpen)) {
-            this.$firstOpenTimer.call();
+            this.$firstOpenTimer.delay(this.stickySelectionDelay/2);
         }
     }
 
