@@ -473,14 +473,20 @@ dom.importCssString(`
     width: 8%;
     background: blue;
     z-index: 100;
-	animation: ace_progress 3s infinite linear;
+    animation: ace_progress 3s infinite linear;
     animation-delay: 300ms;
     transform: translateX(-100%) scaleX(1);
 }
 @keyframes ace_progress {
-	0% { transform: translateX(-100%) scaleX(1) }
-	50% { transform: translateX(625%) scaleX(2) } 
-	100% { transform: translateX(1500%) scaleX(3) } 
+    0% { transform: translateX(-100%) scaleX(1) }
+    50% { transform: translateX(625%) scaleX(2) } 
+    100% { transform: translateX(1500%) scaleX(3) } 
+}
+@media (prefers-reduced-motion) {
+    .ace_autocomplete.ace_loading:after {
+        transform: translateX(625%) scaleX(2);
+        animation: none;
+     }
 }
 `, "autocompletion.css", false);
 
