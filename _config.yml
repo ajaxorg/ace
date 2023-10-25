@@ -1,0 +1,5 @@
+# Config file for Jekyll, which is used by GH pages to build the Ace website.
+# Some files in the docs folder can cause Jekyll to trip up so we ignore those.
+# https://docs.github.com/en/pages/setting-up-a-github-pages-site-with-jekyll/about-github-pages-and-jekyll
+exclude:
+  - "demo/kitchen-sink/docs"

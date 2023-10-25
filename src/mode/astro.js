@@ -14,7 +14,7 @@ var Mode = function() {
 oop.inherits(Mode, HtmlMode);
 
 (function() {
-    this.$id = "ace/mode/astro";
+  this.$id = "ace/mode/astro";
 }).call(Mode.prototype);
 
 exports.Mode = Mode;
