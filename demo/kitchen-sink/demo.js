@@ -81,10 +81,23 @@ var {HoverTooltip} = require("ace/tooltip");
 var MarkerGroup = require("ace/marker_group").MarkerGroup;
 var docTooltip = new HoverTooltip();
 function loadLanguageProvider(editor) {
-    require([
-        "https://mkslanc.github.io/ace-linters/build/ace-linters.js"
-    ], function(m) {
-        var languageProvider = m.LanguageProvider.fromCdn("https://mkslanc.github.io/ace-linters/build", {
+    function loadScript(cb) {
+        if (define.amd) {
+            require([
+                "https://mkslanc.github.io/ace-linters/build/ace-linters.js"
+            ], function(m) {
+                cb(m.LanguageProvider);
+            });
+        } else {
+            net.loadScript([
+                "https://mkslanc.github.io/ace-linters/build/ace-linters.js"
+            ], function() {
+                cb(window.LanguageProvider);
+            });
+        }
+    }
+    loadScript(function(LanguageProvider) {
+        var languageProvider = LanguageProvider.fromCdn("https://mkslanc.github.io/ace-linters/build", {
             functionality: {
                 hover: true,
                 completion: {
@@ -100,8 +113,8 @@ function loadLanguageProvider(editor) {
         languageProvider.registerEditor(editor);
         // hack to replace tooltip implementation from ace-linters with hover tooltip
         // can be removed when ace-linters is updated to use MarkerGroup and HoverTooltip
-        if (languageProvider.$descriptionTooltip)
-            editor.off("mousemove", languageProvider.$descriptionTooltip.onMouseMove);
+        if (languageProvider.$hoverTooltip)
+            editor.off("mousemove", languageProvider.$hoverTooltip.onMouseMove);
         languageProvider.$messageController.$worker.addEventListener("message", function(e) {
             var id = e.data.sessionId.split(".")[0];
             var session = languageProvider.$getSessionLanguageProvider({id: id})?.session;
@@ -512,7 +525,8 @@ optionsPanel.add({
                 } else if (!value) {
                     var autocomplete = Autocomplete.for(editor);
                     autocomplete.destroy();
-                    Autocomplete.startCommand.exec = originalAutocompleteCommand;
+                    if (originalAutocompleteCommand)
+                        Autocomplete.startCommand.exec = originalAutocompleteCommand;
                     originalAutocompleteCommand = null;
                 }
             },
