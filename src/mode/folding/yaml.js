@@ -12,6 +12,9 @@ oop.inherits(FoldMode, BaseFoldMode);
         var re = /\S/;
         var line = session.getLine(row);
         var startLevel = line.search(re);
+        var isCommentFold = line[startLevel] === "#";
+        var isDashFold = line[startLevel] === "-";
+        
         if (startLevel == -1)
             return;
 
@@ -20,22 +23,50 @@ oop.inherits(FoldMode, BaseFoldMode);
         var startRow = row;
         var endRow = row;
 
-        while (++row < maxRow) {
-            line = session.getLine(row);
-            var level = line.search(re);
+        // Comment folding
+        if (isCommentFold) {
+            while (++row < maxRow) {
+                line = session.getLine(row);
+                var level = line.search(re);
 
-            if (level == -1 && row !== maxRow - 1) {
-                endRow = row;
-                break;
-            }
-
-            if ((level == -1 && row !== maxRow - 1) || line[level] == "-" || level > startLevel)
-                continue;
-
-            if (level <= startLevel) {
-                var token = session.getTokenAt(row, 0);
-                if (!token || token.type !== "string")
+                if (line[level] != "#")
                     break;
+
+                endRow = row;
+            }
+        // List item folding.
+        } else if (isDashFold) {
+            while (++row < maxRow) {
+                var line = session.getLine(row);
+                var level = line.search(re);
+
+                if (level == -1)
+                    continue;
+
+                if (level <= startLevel) {
+                    var token = session.getTokenAt(row, 0);
+                    if (!token || token.type !== "string")
+                        break;
+                }
+
+                endRow = row;
+            }
+        // List folding.
+        } else {
+            while (++row < maxRow) {
+                var line = session.getLine(row);
+                var level = line.search(re);
+
+                if (level == -1)
+                    continue;
+
+                if (level <= startLevel && line[startLevel] !== '-') {
+                    var token = session.getTokenAt(row, 0);
+                    if (!token || token.type !== "string")
+                        break;
+                }
+
+                endRow = row;
             }
         }
 
@@ -48,13 +79,13 @@ oop.inherits(FoldMode, BaseFoldMode);
     // must return "" if there's no fold, to enable caching
     this.getFoldWidget = function(session, foldStyle, row) {
         var line = session.getLine(row);
-        var indent = line.search(/[^\s]/);
+        var indent = line.search(/\S/);
         var next = session.getLine(row + 1);
         var prev = session.getLine(row - 1);
-        var prevIndent = prev.search(/[^\s]/);
-        var nextIndent = next.search(/[^\s]/);
+        var prevIndent = prev.search(/\S/);
+        var nextIndent = next.search(/\S/);
 
-        var lineStartsWithDash = line.search(/^\-/) !== -1;
+        var lineStartsWithDash = line[indent] === '-';
 
         if (indent == -1) {
             session.foldWidgets[row - 1] = prevIndent!= -1 && prevIndent < nextIndent ? "start" : "";
@@ -69,17 +100,22 @@ oop.inherits(FoldMode, BaseFoldMode);
                 return "start";
             }
         } else if (prevIndent == indent && line[indent] == "#" && prev[indent] == "#") {
-            if (session.getLine(row - 2).search(/[^\s]/) == -1) {
+            if (session.getLine(row - 2).search(/\S/) == -1) {
                 session.foldWidgets[row - 1] = "start";
                 session.foldWidgets[row + 1] = "";
                 return "";
             }
         }
 
-        if (prevIndent!= -1 && (prevIndent < indent || lineStartsWithDash))
+        // Indentation fold
+        if (prevIndent!= -1 && prevIndent < indent) {
             session.foldWidgets[row - 1] = "start";
-        else
+        // Fold non-indented list
+        } else if (prevIndent!= -1 &&  (prevIndent == indent && lineStartsWithDash)) {
+            session.foldWidgets[row - 1] = "start";
+        } else {
             session.foldWidgets[row - 1] = "";
+        }
 
         if (indent < nextIndent)
             return "start";
