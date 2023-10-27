@@ -37,7 +37,7 @@ oop.inherits(FoldMode, BaseFoldMode);
             var endColumn = session.getLine(endRow).length;
             return new Range(startRow, startColumn, endRow, endColumn);
         }
-    }
+    };
 
     this.getFoldWidgetRange = function(session, foldStyle, row) {
         var range = this.indentationBlock(session, row);
