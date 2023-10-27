@@ -49,9 +49,7 @@ module.exports = {
        testFoldWidgets([
             '>,1,l,l',         ' ## indented comment',
             '',                '  # ',
-            '',                '  ',
-            '>,1,l,l',         '# plain comment',
-            '',                '# ',
+            '',                '',
             '',                '  ',
             '>,1',             'list: ',
             '',                '  -item',

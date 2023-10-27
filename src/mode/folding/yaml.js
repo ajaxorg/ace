@@ -1,11 +1,11 @@
 "use strict";
 
 var oop = require("../../lib/oop");
-var BaseFoldMode = require("./fold_mode").FoldMode;
+var CoffeeFoldMode = require("./coffee").FoldMode;
 var Range = require("../../range").Range;
 
 var FoldMode = exports.FoldMode = function() {};
-oop.inherits(FoldMode, BaseFoldMode);
+oop.inherits(FoldMode, CoffeeFoldMode);
 
 (function() {
     this.getFoldWidgetRange = function(session, foldStyle, row) {
@@ -25,33 +25,15 @@ oop.inherits(FoldMode, BaseFoldMode);
 
         // Comment folding
         if (isCommentFold) {
-            while (++row < maxRow) {
-                line = session.getLine(row);
-                var level = line.search(re);
-
-                if (line[level] != "#")
-                    break;
-
-                endRow = row;
-            }
-        // List item folding.
+            var range = this.commentBlock(session, row);
+            if (range)
+                return range;
+        // Indentation folding (used for indentations that start with a '-').
         } else if (isDashFold) {
-            while (++row < maxRow) {
-                var line = session.getLine(row);
-                var level = line.search(re);
-
-                if (level == -1)
-                    continue;
-
-                if (level <= startLevel) {
-                    var token = session.getTokenAt(row, 0);
-                    if (!token || token.type !== "string")
-                        break;
-                }
-
-                endRow = row;
-            }
-        // List folding.
+            var range = this.indentationBlock(session, row);
+            if (range)
+                return range;
+        // List folding (used for indentations that don't start with a '-')..
         } else {
             while (++row < maxRow) {
                 var line = session.getLine(row);
