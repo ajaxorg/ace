@@ -86,6 +86,19 @@ class Autocomplete {
         this.stickySelectionTimer = lang.delayedCall(function() {
             this.stickySelection = true;
         }.bind(this), this.stickySelectionDelay);
+
+        this.$firstOpenTimer = lang.delayedCall(function() {
+            var initialPosition = this.completionProvider && this.completionProvider.initialPosition;
+            if (this.autoShown || (this.popup && this.popup.isOpen) || !initialPosition) return;
+
+            var completionsForEmpty = [{
+                caption: config.nls("Loading..."),
+                value: ""
+            }];
+            this.completions = new FilteredList(completionsForEmpty);
+            this.openPopup(this.editor, initialPosition.prefix, false);
+            this.popup.renderer.setStyle("ace_loading", true);
+        }.bind(this), this.stickySelectionDelay);
     }
 
     $init() {
@@ -214,6 +227,8 @@ class Autocomplete {
     }
 
     openPopup(editor, prefix, keepPopupPosition) {
+        this.$firstOpenTimer.cancel();
+
         if (!this.popup)
             this.$init();
 
@@ -268,6 +283,8 @@ class Autocomplete {
             this.editor.off("mousedown", this.mousedownListener);
             this.editor.off("mousewheel", this.mousewheelListener);
         }
+        this.$firstOpenTimer.cancel();
+
         this.changeTimer.cancel();
         this.hideDocTooltip();
 
@@ -426,16 +443,17 @@ class Autocomplete {
         }).provideCompletions(this.editor, completionOptions, function(err, completions, finished) {
             var filtered = completions.filtered;
             var prefix = util.getCompletionPrefix(this.editor);
+            this.$firstOpenTimer.cancel();
 
             if (finished) {
                 // No results
                 if (!filtered.length) {
                     var emptyMessage = !this.autoShown && this.emptyMessage;
-                    if ( typeof emptyMessage == "function")
+                    if (typeof emptyMessage == "function")
                           emptyMessage = this.emptyMessage(prefix);
                     if (emptyMessage) {
                         var completionsForEmpty = [{
-                            caption: this.emptyMessage(prefix),
+                            caption: emptyMessage,
                             value: ""
                         }];
                         this.completions = new FilteredList(completionsForEmpty);
@@ -455,7 +473,13 @@ class Autocomplete {
             }
             this.completions = completions;
             this.openPopup(this.editor, prefix, keepPopupPosition);
+
+            this.popup.renderer.setStyle("ace_loading", !finished);
         }.bind(this));
+
+        if (!this.autoShown && !(this.popup && this.popup.isOpen)) {
+            this.$firstOpenTimer.delay(this.stickySelectionDelay/2);
+        }
     }
 
     cancelContextMenu() {

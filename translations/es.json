@@ -1,6 +1,7 @@
 {
     "$id": "es",
     "Autocomplete suggestions": "Sugerencias de autocompletar",
+    "Loading...": "Cargando...",
     "editor": "editor",
     "Editor content, press Enter to start editing, press Escape to exit": "Contenido del editor, presiona Entrar para empezar a editar, presiona Escape para salir",
     "Editor gutter, press Enter to interact with controls using arrow keys, press Escape to exit": "Canaleta de editor, presiona Entrar para por, presiona Escape para salir",
