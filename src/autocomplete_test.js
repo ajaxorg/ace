@@ -713,7 +713,7 @@ module.exports = {
         var completer = Autocomplete.for(editor);
         completer.stickySelectionDelay = 100;
         user.type("Ctrl-Space");
-        assert.equal(completer.popup.isOpen, true);    
+        assert.equal(completer.popup.isOpen, true);
         assert.equal(completer.popup.data.length, 2); 
         assert.equal(completer.popup.getRow(), 0);
 
@@ -941,6 +941,84 @@ module.exports = {
 
         editor.destroy();
         editor.container.remove();
+    },
+    "test: should display loading state": function(done) {
+        var editor = initEditor("hello world\n");
+        
+        var slowCompleter = {
+            getCompletions: function (editor, session, pos, prefix, callback) {
+                var completions = [
+                    {
+                        caption: "slow option 1",
+                        value: "s1",
+                        score: 3
+                    }, {
+                        caption: "slow option 2",
+                        value: "s2",
+                        score: 0
+                    }
+                ];
+                setTimeout(() => {
+                    callback(null,  completions);
+                }, 200);
+            }
+        };
+
+        var fastCompleter = {
+            getCompletions: function (editor, session, pos, prefix, callback) {
+                var completions = [
+                    {
+                        caption: "fast option 1",
+                        value: "f1",
+                        score: 2
+                    }, {
+                        caption: "fast option 2",
+                        value: "f2",
+                        score: 1
+                    }, {
+                        caption: "fast option 3",
+                        value: "f3",
+                        score: 1
+                    }
+                ];
+                callback(null, completions);
+            }
+        };
+
+        editor.completers = [slowCompleter];
+        
+        var completer = Autocomplete.for(editor);
+        completer.stickySelectionDelay = 100;
+        user.type("Ctrl-Space");
+        assert.ok(!(completer.popup && completer.popup.isOpen));
+
+        setTimeout(() => {
+            completer.popup.renderer.$loop._flush();
+            assert.equal(completer.popup.data.length, 1);
+            assert.ok(isLoading());
+            setTimeout(() => {
+                assert.equal(completer.popup.data.length, 2); 
+                assert.ok(!isLoading());
+                user.type("Escape");
+                assert.ok(!(completer.popup && completer.popup.isOpen));
+                
+
+                editor.completers = [fastCompleter, slowCompleter];
+                user.type("Ctrl-Space");
+                assert.equal(completer.popup.data.length, 3); 
+                assert.ok(isLoading());
+                setTimeout(() => {
+                    completer.popup.renderer.$loop._flush();
+                    assert.equal(completer.popup.data.length, 5);
+                    assert.ok(!isLoading());
+                    done();
+                }, 250);  
+            }, 150);
+        }, 100);
+        
+        function isLoading() {
+            return completer.popup.renderer.container.classList.contains("ace_loading");
+        }
     }
 };
 

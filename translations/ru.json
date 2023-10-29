@@ -1,6 +1,7 @@
 {
     "$id": "ru",
     "Autocomplete suggestions": "Предложения автозаполнения",
+    "Loading...": "Загрузка...",
     "editor": "",
     "Editor content, press Enter to start editing, press Escape to exit": "",
     "Editor gutter, press Enter to interact with controls using arrow keys, press Escape to exit": "",

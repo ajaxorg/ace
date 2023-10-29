@@ -34,7 +34,7 @@ exports.addTouchListeners = function(el, editor) {
                     clipboard && ["span", { class: "ace_mobile-button", action: "paste" }, "Paste"],
                     hasUndo && ["span", { class: "ace_mobile-button", action: "undo" }, "Undo"],
                     ["span", { class: "ace_mobile-button", action: "find" }, "Find"],
-                    ["span", { class: "ace_mobile-button", action: "openCommandPallete" }, "Palette"]
+                    ["span", { class: "ace_mobile-button", action: "openCommandPalette" }, "Palette"]
                 ] : ["span"]),
                 contextMenu.firstChild
             );
@@ -62,7 +62,7 @@ exports.addTouchListeners = function(el, editor) {
             }
             contextMenu.firstChild.style.display = "none";
             isOpen = false;
-            if (action != "openCommandPallete")
+            if (action != "openCommandPalette")
                 editor.focus();
         };
         contextMenu = dom.buildDom(["div",
