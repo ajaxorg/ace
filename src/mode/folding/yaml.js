@@ -1,18 +1,21 @@
 "use strict";
 
 var oop = require("../../lib/oop");
-var BaseFoldMode = require("./fold_mode").FoldMode;
+var CoffeeFoldMode = require("./coffee").FoldMode;
 var Range = require("../../range").Range;
 
 var FoldMode = exports.FoldMode = function() {};
-oop.inherits(FoldMode, BaseFoldMode);
+oop.inherits(FoldMode, CoffeeFoldMode);
 
 (function() {
-    this.commentBlock = function(session, row) {
+    this.getFoldWidgetRange = function(session, foldStyle, row) {
         var re = /\S/;
         var line = session.getLine(row);
         var startLevel = line.search(re);
-        if (startLevel == -1 || line[startLevel] != "#")
+        var isCommentFold = line[startLevel] === "#";
+        var isDashFold = line[startLevel] === "-";
+        
+        if (startLevel == -1)
             return;
 
         var startColumn = line.length;
@@ -20,33 +23,39 @@ oop.inherits(FoldMode, BaseFoldMode);
         var startRow = row;
         var endRow = row;
 
-        while (++row < maxRow) {
-            line = session.getLine(row);
-            var level = line.search(re);
+        // Comment folding
+        if (isCommentFold) {
+            var range = this.commentBlock(session, row);
+            if (range)
+                return range;
+        // Indentation folding (used for indentations that start with a '-').
+        } else if (isDashFold) {
+            var range = this.indentationBlock(session, row);
+            if (range)
+                return range;
+        // List folding (used for indentations that don't start with a '-')..
+        } else {
+            while (++row < maxRow) {
+                var line = session.getLine(row);
+                var level = line.search(re);
 
-            if (level == -1)
-                continue;
+                if (level == -1)
+                    continue;
 
-            if (line[level] != "#")
-                break;
+                if (level <= startLevel && line[startLevel] !== '-') {
+                    var token = session.getTokenAt(row, 0);
+                    if (!token || token.type !== "string")
+                        break;
+                }
 
-            endRow = row;
+                endRow = row;
+            }
         }
 
         if (endRow > startRow) {
             var endColumn = session.getLine(endRow).length;
             return new Range(startRow, startColumn, endRow, endColumn);
         }
-    };
-
-    this.getFoldWidgetRange = function(session, foldStyle, row) {
-        var range = this.indentationBlock(session, row);
-        if (range)
-            return range;
-
-        range = this.commentBlock(session, row);
-        if (range)
-            return range;
     };
 
     // must return "" if there's no fold, to enable caching
@@ -57,6 +66,8 @@ oop.inherits(FoldMode, BaseFoldMode);
         var prev = session.getLine(row - 1);
         var prevIndent = prev.search(/\S/);
         var nextIndent = next.search(/\S/);
+
+        var lineStartsWithDash = line[indent] === '-';
 
         if (indent == -1) {
             session.foldWidgets[row - 1] = prevIndent!= -1 && prevIndent < nextIndent ? "start" : "";
@@ -78,10 +89,15 @@ oop.inherits(FoldMode, BaseFoldMode);
             }
         }
 
-        if (prevIndent!= -1 && prevIndent < indent)
+        // Indentation fold
+        if (prevIndent!= -1 && prevIndent < indent) {
             session.foldWidgets[row - 1] = "start";
-        else
+        // Fold non-indented list
+        } else if (prevIndent!= -1 &&  (prevIndent == indent && lineStartsWithDash)) {
+            session.foldWidgets[row - 1] = "start";
+        } else {
             session.foldWidgets[row - 1] = "";
+        }
 
         if (indent < nextIndent)
             return "start";
