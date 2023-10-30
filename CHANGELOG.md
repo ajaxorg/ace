@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.31.1](https://github.com/ajaxorg/ace/compare/v1.31.0...v1.31.1) (2023-10-30)
+
+
+### Bug Fixes
+
+* improve yaml folding ([5c80e3c](https://github.com/ajaxorg/ace/commit/5c80e3cdd716b4ad26ee6958c9137278530b7816))
+
 ## [1.31.0](https://github.com/ajaxorg/ace/compare/v1.30.0...v1.31.0) (2023-10-23)
 
 
