@@ -18,7 +18,7 @@
     <script src="kitchen-sink/require.js"></script>
     <script><![CDATA[
     // setup paths
-    require.config({paths: { "ace" : "../lib/ace"}});
+    require.config({paths: { "ace" : "../src"}});
     // load ace and extensions
     require(["ace/ace", "ace/ext/language_tools"], function(ace) {
         var langagueTools = require("ace/ext/language_tools");

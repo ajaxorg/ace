@@ -25,7 +25,7 @@
 <script src="kitchen-sink/require.js"></script>
 <script>
 // setup paths
-require.config({paths: { "ace" : "../lib/ace"}});
+require.config({paths: { "ace" : "../src"}});
 require(["ace/ace"], function(ace) {
     var editor = ace.edit("editor")
     editor.setTheme("ace/theme/twilight")

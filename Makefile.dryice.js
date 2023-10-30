@@ -280,8 +280,10 @@ function demo() {
                 result.push("<script>");
                 return result.join("\n");
             });
-            if (removeRequireJS)
+            if (removeRequireJS) {
                 source = source.replace(/\s*\}\);?\s*(<\/script>)/, "\n$1");
+                source = source.replace(/( |^)require\(/gm, "$1ace.require(");
+            }
             source = source.replace(/"\.\.\/build\//g, function(e) {
                 console.log(e); return '"../';
             });
