@@ -6,7 +6,7 @@
 class AceInlineScreenReader {
     /**
      * Creates the off-screen div in which the ghost text content in redered and which the screen reader reads.
-     * @param {Editor} editor
+     * @param {import("../editor").Editor} editor
      */
     constructor(editor) {
         this.editor = editor;
@@ -22,8 +22,8 @@ class AceInlineScreenReader {
      */
     setScreenReaderContent(content) {
         // Path for when inline preview is used with 'normal' completion popup.
-        if (!this.popup && this.editor.completer && this.editor.completer.popup) {
-            this.popup = this.editor.completer.popup;
+        if (!this.popup && this.editor.completer && /**@type{import("../autocomplete").Autocomplete}*/(this.editor.completer).popup) {
+            this.popup = /**@type{import("../autocomplete").Autocomplete}*/(this.editor.completer).popup;
 
             this.popup.renderer.on("afterRender", function() {
                 let row = this.popup.getRow();

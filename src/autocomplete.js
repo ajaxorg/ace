@@ -99,7 +99,7 @@ class Autocomplete {
             this.stickySelection = true;
         }.bind(this), this.stickySelectionDelay);
 
-        this.$firstOpenTimer = lang.delayedCall(function() {
+        this.$firstOpenTimer = lang.delayedCall(/**@this{Autocomplete}*/function() {
             var initialPosition = this.completionProvider && this.completionProvider.initialPosition;
             if (this.autoShown || (this.popup && this.popup.isOpen) || !initialPosition) return;
 
@@ -162,7 +162,8 @@ class Autocomplete {
 
             // If the mouse is over the tooltip, and we're changing selection on hover don't
             // move the tooltip while hovering over the popup.
-            if (this.popup.isMouseOver && this.setSelectOnHover) { 
+            if (this.popup.isMouseOver && this.setSelectOnHover) {
+                // @ts-expect-error TODO: potential wrong arguments
                 this.tooltipTimer.call(null, null);
                 return;
             }
@@ -469,6 +470,7 @@ class Autocomplete {
         this.base.$insertRight = true;
         var completionOptions = {
             exactMatch: this.exactMatch,
+            // @ts-expect-error TODO: couldn't find initializer
             ignoreCaption: this.ignoreCaption
         };
         this.getCompletionProvider({

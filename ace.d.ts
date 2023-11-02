@@ -1429,7 +1429,8 @@ declare module "./src/autocomplete/popup" {
         goTo: (where: Ace.AcePopupNavigation) => void,
         getTextLeftOffset: () => number,
         $imageSize: number,
-        anchorPos: any
+        anchorPos: any,
+        isMouseOver?: boolean
     }
 }
 

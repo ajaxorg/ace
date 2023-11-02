@@ -1,8 +1,5 @@
 "use strict";
 /**
- * @typedef {import("./undomanager").UndoManager} UndoManager
- */
-/**
  * @typedef {import("./edit_session/fold_line").FoldLine} FoldLine
  */
 /**
@@ -206,28 +203,28 @@ class EditSession {
      /**
      * Returns a new instance of EditSession with state from JSON.
      * @method fromJSON
-     * @param {String} session The EditSession state.
+     * @param {string} session The EditSession state.
      * @returns {EditSession}
      */
      static fromJSON(session) {
         session = JSON.parse(session);
         const undoManager = new UndoManager();
-        undoManager.$undoStack = session.history.undo;
-        undoManager.$redoStack = session.history.redo;
-        undoManager.mark = session.history.mark;
-        undoManager.$rev = session.history.rev;
+        undoManager.$undoStack = /**@type{Object}*/(session).history.undo;
+        undoManager.$redoStack = /**@type{Object}*/(session).history.redo;
+        undoManager.mark = /**@type{Object}*/(session).history.mark;
+        undoManager.$rev = /**@type{Object}*/(session).history.rev;
     
-        const editSession = new EditSession(session.value);
-        session.folds.forEach(function(fold) {
+        const editSession = new EditSession(/**@type{Object}*/(session).value);
+         /**@type{Object}*/(session).folds.forEach(function(fold) {
           editSession.addFold("...", Range.fromPoints(fold.start, fold.end));
         });
-        editSession.setAnnotations(session.annotations);
-        editSession.setBreakpoints(session.breakpoints);
-        editSession.setMode(session.mode);
-        editSession.setScrollLeft(session.scrollLeft);
-        editSession.setScrollTop(session.scrollTop);
+        editSession.setAnnotations(/**@type{Object}*/(session).annotations);
+        editSession.setBreakpoints(/**@type{Object}*/(session).breakpoints);
+        editSession.setMode(/**@type{Object}*/(session).mode);
+        editSession.setScrollLeft(/**@type{Object}*/(session).scrollLeft);
+        editSession.setScrollTop(/**@type{Object}*/(session).scrollTop);
         editSession.setUndoManager(undoManager);
-        editSession.selection.fromJSON(session.selection);
+        editSession.selection.fromJSON(/**@type{Object}*/(session).selection);
     
         return editSession;
     }
