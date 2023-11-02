@@ -28,8 +28,8 @@ class MarkerGroup {
 
     /**
      * Finds the first marker containing pos
-     * @param {import("../ace").Ace.Point} pos 
-     * @returns import("../ace").Ace.MarkerGroupItem
+     * @param {import("../").Ace.Point} pos 
+     * @returns import("../").Ace.MarkerGroupItem
      */
     getMarkerAtPosition(pos) {
         return this.markers.find(function(marker) {

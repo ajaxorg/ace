@@ -136,7 +136,7 @@ class BackgroundTokenizer {
     }
 
     /**
-     * @param {import("../ace").Ace.Delta} delta
+     * @param {import("../").Ace.Delta} delta
      */
     $updateOnChange(delta) {
         var startRow = delta.start.row;
@@ -171,7 +171,7 @@ class BackgroundTokenizer {
     /**
      * Gives list of [[Token]]'s of the row. (tokens are cached)
      * @param {Number} row The row to get tokens at
-     * @returns {import("../ace").Ace.Token[]}
+     * @returns {import("../").Ace.Token[]}
      **/
     getTokens(row) {
         return this.lines[row] || this.$tokenizeRow(row);

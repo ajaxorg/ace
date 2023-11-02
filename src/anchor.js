@@ -13,7 +13,7 @@ class Anchor {
      * Creates a new `Anchor` and associates it with a document.
      *
      * @param {Document} doc The document to associate with the anchor
-     * @param {Number|import("../ace").Ace.Point} row The starting row position
+     * @param {Number|import("../").Ace.Point} row The starting row position
      * @param {Number} [column] The starting column position
      **/
     constructor(doc, row, column) {
@@ -28,7 +28,7 @@ class Anchor {
     
     /**
      * Returns an object identifying the `row` and `column` position of the current anchor.
-     * @returns {import("../ace").Ace.Point}
+     * @returns {import("../").Ace.Point}
      **/
     getPosition() {
         return this.$clipPositionToDocument(this.row, this.column);
@@ -45,7 +45,7 @@ class Anchor {
     
     /**
      * Internal function called when `"change"` event fired.
-     * @param {import("../ace").Ace.Delta} delta
+     * @param {import("../").Ace.Delta} delta
      */
     onChange(delta) {
         if (delta.start.row == delta.end.row && delta.start.row != this.row)
@@ -114,7 +114,7 @@ class Anchor {
      * Clips the anchor position to the specified row and column.
      * @param {Number} row The row index to clip the anchor to
      * @param {Number} column The column index to clip the anchor to
-     * @returns {import("../ace").Ace.Point}
+     * @returns {import("../").Ace.Point}
      *
      **/
     $clipPositionToDocument(row, column) {

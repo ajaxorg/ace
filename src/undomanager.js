@@ -4,11 +4,11 @@
  */
 
 /**
- * @typedef {import("../ace").Ace.Delta} Delta
+ * @typedef {import("../").Ace.Delta} Delta
  */
 
 /**
- * @typedef {import("../ace").Ace.Point} Point
+ * @typedef {import("../").Ace.Point} Point
  */
 
 /**
@@ -40,7 +40,7 @@ class UndoManager {
      * - `args[0]` is an array of deltas
      * - `args[1]` is the document to associate with
      *
-     * @param {import("../ace").Ace.Delta} delta
+     * @param {import("../").Ace.Delta} delta
      * @param {boolean} allowMerge
      * @param {EditSession} [session]
      **/
@@ -126,7 +126,7 @@ class UndoManager {
      * 
      * @param {number} from
      * @param {number} [to]
-     * @return {import("../ace").Ace.Delta[]}
+     * @return {import("../").Ace.Delta[]}
      */
     getDeltas(from, to) {
         if (to == null) to = this.$rev + 1;
@@ -585,8 +585,8 @@ function xform(d1, c1) {
 
 /**
  * 
- * @param {import("../ace").Ace.IRange} d1
- * @param {import("../ace").Ace.IRange} d2
+ * @param {import("../").Ace.IRange} d1
+ * @param {import("../").Ace.IRange} d2
  * @param {number} dir
  */
 function shift(d1, d2, dir) {

@@ -10,7 +10,7 @@ class PlaceHolder {
     /**
      * @param {EditSession} session
      * @param {Number} length
-     * @param {import("../ace").Ace.Point} pos
+     * @param {import("../").Ace.Point} pos
      * @param {any[]} others
      * @param {String} mainClass
      * @param {String} othersClass
@@ -105,7 +105,7 @@ class PlaceHolder {
      * PlaceHolder@onUpdate(e)
      * 
      * Emitted when the place holder updates.
-     * @param {import("../ace").Ace.Delta} delta
+     * @param {import("../").Ace.Delta} delta
      */
     onUpdate(delta) {
         if (this.$updating)
@@ -145,7 +145,7 @@ class PlaceHolder {
     }
 
     /**
-     * @param {import("../ace").Ace.Delta} delta
+     * @param {import("../").Ace.Delta} delta
      */
     updateAnchors(delta) {
         this.pos.onChange(delta);

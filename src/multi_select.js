@@ -150,7 +150,7 @@ Selection.prototype.addRange = function(range, $blockChangeEvents) {
 
     /**
      * Removes a Range containing pos (if it exists).
-     * @param {import("../ace").Ace.Point} pos The position to remove, as a `{row, column}` object
+     * @param {import("../").Ace.Point} pos The position to remove, as a `{row, column}` object
      * @this {Selection}
      **/
     this.substractPoint = function(pos) {
@@ -300,8 +300,8 @@ Selection.prototype.addRange = function(range, $blockChangeEvents) {
      * 
      * Gets list of ranges composing rectangular block on the screen
      * 
-     * @param {import("../ace").Ace.ScreenCoordinates} screenCursor The cursor to use
-     * @param {import("../ace").Ace.ScreenCoordinates} screenAnchor The anchor to use
+     * @param {import("../").Ace.ScreenCoordinates} screenCursor The cursor to use
+     * @param {import("../").Ace.ScreenCoordinates} screenAnchor The anchor to use
      * @param {Boolean} [includeEmptyLines] If true, this includes ranges inside the block which are empty due to clipping
      * @returns {Range[]}
      * @this {Selection}
@@ -638,7 +638,7 @@ var Editor = require("./editor").Editor;
     /**
      * Finds and selects all the occurrences of `needle`.
      * @param {String} [needle] The text to find
-     * @param {Partial<import("../ace").Ace.SearchOptions>} [options] The search options
+     * @param {Partial<import("../").Ace.SearchOptions>} [options] The search options
      * @param {Boolean} [additive] keeps
      *
      * @returns {Number} The cumulative count of all found matches 
@@ -940,8 +940,8 @@ var Editor = require("./editor").Editor;
 
 
 /**
- * @param {import("../ace").Ace.Point} p1
- * @param {import("../ace").Ace.Point} p2
+ * @param {import("../").Ace.Point} p1
+ * @param {import("../").Ace.Point} p2
  */
 function isSamePoint(p1, p2) {
     return p1.row == p2.row && p1.column == p2.column;

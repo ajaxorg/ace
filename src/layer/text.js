@@ -689,7 +689,7 @@ class Text {
     /**
      * @param {any} row
      * @param {{ walk: (arg0: (placeholder: any, row: any, column: any, lastColumn: any, isNewRow: any) => void, arg1: any, arg2: any) => void; end: { row: any; }; }} foldLine
-     * @return {import("../../ace").Ace.Token[]}
+     * @return {import("../../").Ace.Token[]}
      */
     $getFoldLineTokens(row, foldLine) {
         var session = this.session;

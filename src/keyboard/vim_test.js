@@ -5,7 +5,7 @@ if (typeof process !== "undefined") {
 
 
 var EditSession = require("./../edit_session").EditSession;
-var Editor = require("./../editor").Editor;
+var Editor = require("../editor").Editor;
 var UndoManager = require("./../undomanager").UndoManager;
 var MockRenderer = require("./../test/mockrenderer").MockRenderer;
 var JavaScriptMode = require("./../mode/javascript").Mode;

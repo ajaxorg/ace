@@ -20,15 +20,15 @@ class Lines {
     }
 
     /**
-     * @param {import("../../ace").Ace.LayerConfig} config
+     * @param {import("../../").Ace.LayerConfig} config
      */
     moveContainer(config) {
         dom.translate(this.element, 0, -((config.firstRowScreen * config.lineHeight) % this.canvasHeight) - config.offset * this.$offsetCoefficient);
     }
 
     /**
-     * @param {import("../../ace").Ace.LayerConfig} oldConfig
-     * @param {import("../../ace").Ace.LayerConfig} newConfig
+     * @param {import("../../").Ace.LayerConfig} oldConfig
+     * @param {import("../../").Ace.LayerConfig} newConfig
      */
     pageChanged(oldConfig, newConfig) {
         return (
@@ -39,7 +39,7 @@ class Lines {
 
     /**
      * @param {number} row
-     * @param {Partial<import("../../ace").Ace.LayerConfig>} config
+     * @param {Partial<import("../../").Ace.LayerConfig>} config
      * @param {EditSession} session
      */
     computeLineTop(row, config, session) {
@@ -51,7 +51,7 @@ class Lines {
 
     /**
      * @param {number} row
-     * @param {import("../../ace").Ace.LayerConfig} config
+     * @param {import("../../").Ace.LayerConfig} config
      * @param {EditSession} session
      */
     computeLineHeight(row, config, session) {

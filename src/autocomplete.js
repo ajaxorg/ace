@@ -23,7 +23,7 @@ var config = require("./config");
  * @property {string} [docText] - a plain text that would be displayed as an additional popup. If `docHTML` exists,
  * it would be used instead of `docText`.
  * @property {string} [completerId] - the identifier of the completer
- * @property {import("../ace").Ace.IRange} [range] - An object specifying the range of text to be replaced with the new completion value (experimental)
+ * @property {import("../").Ace.IRange} [range] - An object specifying the range of text to be replaced with the new completion value (experimental)
  * @property {string} [command] - A command to be executed after the completion is inserted (experimental)
  * @property {string} [snippet] - a text snippet that would be inserted when the completion is selected
  * @property {string} [value] - The text that would be inserted when selecting this completion.
@@ -361,7 +361,7 @@ class Autocomplete {
     /**
      * This is the entry point for the autocompletion class, triggers the actions which collect and display suggestions
      * @param {Editor} editor
-     * @param {import("../ace").Ace.CompletionOptions} options
+     * @param {import("../").Ace.CompletionOptions} options
      */
     showPopup(editor, options) {
         if (this.editor)
@@ -401,7 +401,7 @@ class Autocomplete {
 
     /**
      * @param {boolean} keepPopupPosition
-     * @param {import("../ace").Ace.CompletionOptions} options
+     * @param {import("../").Ace.CompletionOptions} options
      */
     updateCompletions(keepPopupPosition, options) {
         if (keepPopupPosition && this.base && this.completions) {
@@ -665,7 +665,7 @@ class CompletionProvider {
     
 
     /**
-     * @param {{pos: import("../ace").Ace.Position, prefix: string}} initialPosition
+     * @param {{pos: import("../").Ace.Position, prefix: string}} initialPosition
      */
     constructor(initialPosition) {
         this.initialPosition = initialPosition;
@@ -675,7 +675,7 @@ class CompletionProvider {
     /**
      * @param {Editor} editor
      * @param {number} index
-     * @param {import("../ace").Ace.CompletionProviderOptions} [options]
+     * @param {import("../").Ace.CompletionProviderOptions} [options]
      * @returns {boolean}
      */
     insertByIndex(editor, index, options) {
@@ -688,7 +688,7 @@ class CompletionProvider {
     /**
      * @param {Editor} editor
      * @param {Completion} data
-     * @param {import("../ace").Ace.CompletionProviderOptions} [options]
+     * @param {import("../").Ace.CompletionProviderOptions} [options]
      * @returns {boolean}
      */
     insertMatch(editor, data, options) {
@@ -752,7 +752,7 @@ class CompletionProvider {
 
     /**
      * @param {Editor} editor
-     * @param {import("../ace").Ace.CompletionCallbackFunction} callback
+     * @param {import("../").Ace.CompletionCallbackFunction} callback
      */
     gatherCompletions(editor, callback) {
         var session = editor.getSession();
@@ -787,7 +787,7 @@ class CompletionProvider {
      * This is the entry point to the class, it gathers, then provides the completions asynchronously via callback.
      * The callback function may be called multiple times, the last invokation is marked with a `finished` flag
      * @param {Editor} editor
-     * @param {import("../ace").Ace.CompletionProviderOptions} options
+     * @param {import("../").Ace.CompletionProviderOptions} options
      * @param {(err: Error | undefined, completions: FilteredList | [], finished: boolean) => void} callback
      */
     provideCompletions(editor, options, callback) {

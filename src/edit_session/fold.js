@@ -98,7 +98,7 @@ class Fold extends RangeList {
     }
 
     /**
-     * @param {import("../../ace").Ace.IRange} range
+     * @param {import("../../").Ace.IRange} range
      */
     restoreRange(range) {
         return restoreRange(range, this.start);
@@ -107,8 +107,8 @@ class Fold extends RangeList {
 }
 
 /**
- * @param {import("../../ace").Ace.Point} point
- * @param {import("../../ace").Ace.Point} anchor
+ * @param {import("../../").Ace.Point} point
+ * @param {import("../../").Ace.Point} anchor
  */
 function consumePoint(point, anchor) {
     point.row -= anchor.row;
@@ -116,16 +116,16 @@ function consumePoint(point, anchor) {
         point.column -= anchor.column;
 }
 /**
- * @param {import("../../ace").Ace.IRange} range
- * @param {import("../../ace").Ace.Point} anchor
+ * @param {import("../../").Ace.IRange} range
+ * @param {import("../../").Ace.Point} anchor
  */
 function consumeRange(range, anchor) {
     consumePoint(range.start, anchor);
     consumePoint(range.end, anchor);
 }
 /**
- * @param {import("../../ace").Ace.Point} point
- * @param {import("../../ace").Ace.Point} anchor
+ * @param {import("../../").Ace.Point} point
+ * @param {import("../../").Ace.Point} anchor
  */
 function restorePoint(point, anchor) {
     if (point.row == 0)
@@ -133,8 +133,8 @@ function restorePoint(point, anchor) {
     point.row += anchor.row;
 }
 /**
- * @param {import("../../ace").Ace.IRange} range
- * @param {import("../../ace").Ace.Point} anchor
+ * @param {import("../../").Ace.IRange} range
+ * @param {import("../../").Ace.Point} anchor
  */
 function restoreRange(range, anchor) {
     restorePoint(range.start, anchor);

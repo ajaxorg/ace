@@ -65,7 +65,7 @@ class InlineAutocomplete {
 
     /**
      * This function is the entry point to the class. This triggers the gathering of the autocompletion and displaying the results;
-     * @param {import("../../ace").Ace.CompletionOptions} options
+     * @param {import("../../").Ace.CompletionOptions} options
      */
     show(options) {
         this.activated = true;
@@ -121,7 +121,7 @@ class InlineAutocomplete {
     }
 
     /**
-     * @param {import("../../ace").Ace.InlineAutocompleteAction} where
+     * @param {import("../../").Ace.InlineAutocompleteAction} where
      */
     goTo(where) {
         if (!this.completions || !this.completions.filtered) {
@@ -153,7 +153,7 @@ class InlineAutocomplete {
 
     /**
      * @param {number} [index]
-     * @returns {import("../../ace").Ace.Completion | undefined}
+     * @returns {import("../../").Ace.Completion | undefined}
      */
     getData(index) {
         if (index == undefined || index === null) {
@@ -223,7 +223,7 @@ class InlineAutocomplete {
     }
 
     /**
-     * @param {import("../../ace").Ace.CompletionOptions} [options]
+     * @param {import("../../").Ace.CompletionOptions} [options]
      */
     updateCompletions(options) {
         var prefix = "";
@@ -327,7 +327,7 @@ class InlineAutocomplete {
 
 /**
  * 
- * @type {{[key: string]: import("../../ace").Ace.Command}}
+ * @type {{[key: string]: import("../../").Ace.Command}}
  */
 InlineAutocomplete.prototype.commands = {
     "Previous": {

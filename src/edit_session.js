@@ -6,7 +6,7 @@
  * @typedef {import("./edit_session/fold_line").FoldLine} FoldLine
  */
 /**
- * @typedef {import("../ace").Ace.Point} Point
+ * @typedef {import("../").Ace.Point} Point
  */
 /**
  * @typedef {import("./layer/font_metrics").FontMetrics} FontMetrics
@@ -26,7 +26,7 @@ var SearchHighlight = require("./search_highlight").SearchHighlight;
 
 /**
  * @typedef TextMode
- * @type {import("../ace").Ace.SyntaxMode}
+ * @type {import("../").Ace.SyntaxMode}
  */
 
 /**
@@ -38,7 +38,7 @@ class EditSession {
     /**
      * Sets up a new `EditSession` and associates it with the given `Document` and `Mode`.
      * @param {Document | String} [text] [If `text` is a `Document`, it associates the `EditSession` with it. Otherwise, a new `Document` is created, with the initial text]{: #textParam}
-     * @param {import("../ace").Ace.SyntaxMode} [mode] [The initial language mode to use for the document]{: #modeParam}
+     * @param {import("../").Ace.SyntaxMode} [mode] [The initial language mode to use for the document]{: #modeParam}
      **/
     constructor(text, mode) {
         /**@type {Document}*/this.doc;
@@ -162,7 +162,7 @@ class EditSession {
 
     /**
      * 
-     * @param {import("../ace").Ace.Delta} delta
+     * @param {import("../").Ace.Delta} delta
      */
     onChange(delta) {
         this.$modified = true;
@@ -234,7 +234,7 @@ class EditSession {
     /**
      * Starts tokenizing at the row indicated. Returns a list of objects of the tokenized rows.
      * @param {Number} row The row to start at
-     * @returns {import("../ace").Ace.Token[]}
+     * @returns {import("../").Ace.Token[]}
      **/
     getTokens(row) {
         return this.bgTokenizer.getTokens(row);
@@ -244,7 +244,7 @@ class EditSession {
      * Returns an object indicating the token at the current row. The object has two properties: `index` and `start`.
      * @param {Number} row The row number to retrieve from
      * @param {Number} column The column number to retrieve from
-     * @returns {import("../ace").Ace.Token}
+     * @returns {import("../").Ace.Token}
      *
      **/
     getTokenAt(row, column) {
@@ -478,7 +478,7 @@ class EditSession {
      * Adds a new marker to the given `Range`. If `inFront` is `true`, a front marker is defined, and the `'changeFrontMarker'` event fires; otherwise, the `'changeBackMarker'` event fires.
      * @param {Range} range Define the range of the marker
      * @param {String} clazz Set the CSS class for the marker
-     * @param {import("../ace").Ace.MarkerRenderer | "fullLine" | "screenLine" | "text" | "line"} [type] Identify the renderer type of the marker. If string provided, corresponding built-in renderer is used. Supported string types are "fullLine", "screenLine", "text" or "line". If a Function is provided, that Function is used as renderer.
+     * @param {import("../").Ace.MarkerRenderer | "fullLine" | "screenLine" | "text" | "line"} [type] Identify the renderer type of the marker. If string provided, corresponding built-in renderer is used. Supported string types are "fullLine", "screenLine", "text" or "line". If a Function is provided, that Function is used as renderer.
      * @param {Boolean} [inFront] Set to `true` to establish a front marker
      *
      * @return {Number} The new marker id
@@ -508,10 +508,10 @@ class EditSession {
 
     /**
      * Adds a dynamic marker to the session.
-     * @param {import("../ace").Ace.MarkerLike} marker object with update method
+     * @param {import("../").Ace.MarkerLike} marker object with update method
      * @param {Boolean} [inFront] Set to `true` to establish a front marker
      *
-     * @return {import("../ace").Ace.MarkerLike} The added marker
+     * @return {import("../").Ace.MarkerLike} The added marker
      **/
     addDynamicMarker(marker, inFront) {
         if (!marker.update)
@@ -549,7 +549,7 @@ class EditSession {
      * Returns an object containing all of the markers, either front or back.
      * @param {Boolean} [inFront] If `true`, indicates you only want front markers; `false` indicates only back markers
      *
-     * @returns {{[id: number]: import("../ace").Ace.MarkerLike}}
+     * @returns {{[id: number]: import("../").Ace.MarkerLike}}
      **/
     getMarkers(inFront) {
         return inFront ? this.$frontMarkers : this.$backMarkers;
@@ -599,7 +599,7 @@ class EditSession {
      */
     /**
      * Sets annotations for the `EditSession`. This functions emits the `'changeAnnotation'` event.
-     * @param {import("../ace").Ace.Annotation[]} annotations A list of annotations
+     * @param {import("../").Ace.Annotation[]} annotations A list of annotations
      **/
     setAnnotations(annotations) {
         this.$annotations = annotations;
@@ -608,7 +608,7 @@ class EditSession {
 
     /**
      * Returns the annotations for the `EditSession`.
-     * @returns {import("../ace").Ace.Annotation[]}
+     * @returns {import("../").Ace.Annotation[]}
      **/
     getAnnotations() {
         return this.$annotations || [];
@@ -695,7 +695,7 @@ class EditSession {
 
     /**
      * {:Document.setNewLineMode.desc}
-     * @param {import("../ace").Ace.NewLineMode} newLineMode {:Document.setNewLineMode.param}
+     * @param {import("../").Ace.NewLineMode} newLineMode {:Document.setNewLineMode.param}
      *
      *
      * @related Document.setNewLineMode
@@ -707,7 +707,7 @@ class EditSession {
     /**
      *
      * Returns the current new line mode.
-     * @returns {import("../ace").Ace.NewLineMode}
+     * @returns {import("../").Ace.NewLineMode}
      * @related Document.getNewLineMode
      **/
     getNewLineMode() {
@@ -736,7 +736,7 @@ class EditSession {
     
     /**
      * Sets a new text mode for the `EditSession`. This method also emits the `'changeMode'` event. If a [[BackgroundTokenizer `BackgroundTokenizer`]] is set, the `'tokenizerUpdate'` event is also emitted.
-     * @param {import("../ace").Ace.SyntaxMode | string} mode Set a new text mode
+     * @param {import("../").Ace.SyntaxMode | string} mode Set a new text mode
      * @param {() => void} [cb] optional callback
      **/
     setMode(mode, cb) {
@@ -985,7 +985,7 @@ class EditSession {
 
     /**
      * {:Document.getTextRange.desc}
-     * @param {import("../ace").Ace.IRange} [range] The range to work with
+     * @param {import("../").Ace.IRange} [range] The range to work with
      *
      * @returns {String}
      **/
@@ -1005,7 +1005,7 @@ class EditSession {
 
     /**
      * Removes the `range` from the document.
-     * @param {import("../ace").Ace.IRange} range A specified Range to remove
+     * @param {import("../").Ace.IRange} range A specified Range to remove
      * @returns {Point} The new `start` property of the range, which contains `startRow` and `startColumn`. If `range` is empty, this function returns the unmodified value of `range.start`.
      **/
     remove(range) {
@@ -1027,7 +1027,7 @@ class EditSession {
 
     /**
      * Reverts previous changes to your document.
-     * @param {import("../ace").Ace.Delta[]} deltas An array of previous changes
+     * @param {import("../").Ace.Delta[]} deltas An array of previous changes
      * @param {Boolean} [dontSelect] [If `true`, doesn't select the range of where the change occured]{: #dontSelect}
      **/
     undoChanges(deltas, dontSelect) {
@@ -1056,7 +1056,7 @@ class EditSession {
 
     /**
      * Re-implements a previously undone change to your document.
-     * @param {import("../ace").Ace.Delta[]} deltas An array of previous changes
+     * @param {import("../").Ace.Delta[]} deltas An array of previous changes
      * @param {Boolean} [dontSelect] {:dontSelect}
      **/
     redoChanges(deltas, dontSelect) {
@@ -1093,7 +1093,7 @@ class EditSession {
 
     /**
      * 
-     * @param {import("../ace").Ace.Delta[]} deltas
+     * @param {import("../").Ace.Delta[]} deltas
      * @param {boolean} [isUndo]
      * @return {Range}
      */
@@ -1138,7 +1138,7 @@ class EditSession {
     /**
      * Replaces a range in the document with the new `text`.
      *
-     * @param {import("../ace").Ace.IRange} range A specified Range to replace
+     * @param {import("../").Ace.IRange} range A specified Range to replace
      * @param {String} text The new text to use as a replacement
      * @returns {Point} An object containing the final row and column, like this:
      * ```
@@ -1516,7 +1516,7 @@ class EditSession {
 
     /**
      * 
-     * @param {import("../ace").Ace.Delta} delta
+     * @param {import("../").Ace.Delta} delta
      */
     $updateInternalDataOnChange(delta) {
         var useWrapMode = this.$useWrapMode;
@@ -2376,7 +2376,7 @@ EditSession.prototype.$wrapLimitRange = {
 };
 /**
  * 
- * @type {null | import("../ace").Ace.LineWidget[]}
+ * @type {null | import("../").Ace.LineWidget[]}
  */
 EditSession.prototype.lineWidgets = null;
 EditSession.prototype.isFullWidth = isFullWidth;

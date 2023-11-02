@@ -1,4 +1,3 @@
-
 export namespace Ace {
     type Anchor = import("./src/anchor").Anchor;
     type Editor = import("./src/editor").Editor;
@@ -28,6 +27,39 @@ export namespace Ace {
     type DragdropHandler = import("./src/mouse/dragdrop_handler").DragdropHandler;
     type AppConfig = import("./src/lib/app_config").AppConfig;
 
+
+    type AfterLoadCallback = (err: Error | null, module: unknown) => void;
+    type LoaderFunction = (moduleName: string, afterLoad: AfterLoadCallback) => void;
+
+    export interface Config {
+        get(key: string): any;
+
+        set(key: string, value: any): void;
+
+        all(): { [key: string]: any };
+
+        moduleUrl(name: string, component?: string): string;
+
+        setModuleUrl(name: string, subst: string): string;
+
+        setLoader(cb: LoaderFunction): void;
+
+        setModuleLoader(name: string, onLoad: Function): void;
+
+        loadModule(moduleName: string | [string, string],
+                   onLoad?: (module: any) => void): void;
+
+        init(packaged: any): any;
+
+        defineOptions(obj: any, path: string, options: { [key: string]: any }): Config;
+
+        resetOptions(obj: any): void;
+
+        setDefaultValue(path: string, name: string, value: any): void;
+
+        setDefaultValues(path: string, optionHash: { [key: string]: any }): void;
+    }
+
     interface Theme {
         cssClass?: string;
         cssText?: string;
@@ -35,8 +67,10 @@ export namespace Ace {
         padding?: number | string;
         isDark?: boolean;
     }
+
     interface ScrollBar {
         setVisible(visible: boolean): void;
+
         [key: string]: any;
     }
 
@@ -49,19 +83,20 @@ export namespace Ace {
     }
 
     interface LayerConfig {
-        width : number,
-        padding : number,
-        firstRow : number,
+        width: number,
+        padding: number,
+        firstRow: number,
         firstRowScreen: number,
-        lastRow : number,
-        lineHeight : number,
-        characterWidth : number,
-        minHeight : number,
-        maxHeight : number,
-        offset : number,
-        height : number,
+        lastRow: number,
+        lineHeight: number,
+        characterWidth: number,
+        minHeight: number,
+        maxHeight: number,
+        offset: number,
+        height: number,
         gutterOffset: number
     }
+
     interface HardWrapOptions {
         startRow: number;
         endRow: number;
@@ -75,6 +110,7 @@ export namespace Ace {
         showDelay: number;
         hideDelay: number;
     }
+
     interface ScreenCoordinates {
         row: number,
         column: number,
@@ -84,21 +120,26 @@ export namespace Ace {
 
     interface Folding {
         $foldData: FoldLine[];
+
         /**
          * Looks up a fold at a given row/column. Possible values for side:
          *   -1: ignore a fold if fold.start = row/column
          *   +1: ignore a fold if fold.end = row/column
          **/
         getFoldAt(row: number, column: number, side?: number): Ace.Fold;
+
         /**
          * Returns all folds in the given range. Note, that this will return folds
          **/
         getFoldsInRange(range: Ace.Range | Ace.Delta): Ace.Fold[];
+
         getFoldsInRangeList(ranges: Ace.Range[] | Ace.Range): Ace.Fold[];
+
         /**
          * Returns all folds in the document
          */
         getAllFolds(): Ace.Fold[];
+
         /**
          * Returns the string between folds at the given position.
          * E.g.
@@ -117,13 +158,18 @@ export namespace Ace {
          *  fo|o<fold>bar<fold>wolrd -trim=00> "foo"
          */
         getFoldStringAt(row: number, column: number, trim?: number, foldLine?: Ace.FoldLine): string | null;
+
         getFoldLine(docRow: number, startFoldLine?: Ace.FoldLine): null | Ace.FoldLine;
+
         /**
          * Returns the fold which starts after or contains docRow
          */
         getNextFoldLine(docRow: number, startFoldLine?: Ace.FoldLine): null | Ace.FoldLine;
+
         getFoldedRowCount(first: number, last: number): number;
+
         $addFoldLine(foldLine: FoldLine): Ace.FoldLine;
+
         /**
          * Adds a new fold.
          * @returns {Ace.Fold}
@@ -131,54 +177,82 @@ export namespace Ace {
          *      passed in range fits an existing fold exactly.
          */
         addFold(placeholder: Ace.Fold | string, range?: Ace.Range): Ace.Fold;
+
         $modified: boolean;
+
         addFolds(folds: Ace.Fold[]): void;
+
         removeFold(fold: Ace.Fold): void;
+
         removeFolds(folds: Ace.Fold[]): void;
+
         expandFold(fold: Ace.Fold): void;
+
         expandFolds(folds: Ace.Fold[]): void;
+
         unfold(location?: number | null | Ace.Point | Ace.Range | Ace.Range[], expandInner?: boolean): Ace.Fold[] | undefined;
+
         /**
          * Checks if a given documentRow is folded. This is true if there are some
          * folded parts such that some parts of the line is still visible.
          **/
         isRowFolded(docRow: number, startFoldRow?: Ace.FoldLine): boolean;
+
         getRowFoldEnd(docRow: number, startFoldRow?: Ace.FoldLine): number;
+
         getRowFoldStart(docRow: number, startFoldRow?: Ace.FoldLine): number;
+
         getFoldDisplayLine(foldLine: Ace.FoldLine, endRow?: number | null, endColumn?: number | null, startRow?: number | null, startColumn?: number | null): string;
+
         getDisplayLine(row: number, endColumn: number | null, startRow: number | null, startColumn: number | null): string;
+
         $cloneFoldData(): Ace.FoldLine[];
+
         toggleFold(tryToUnfold?: boolean): void;
+
         getCommentFoldRange(row: number, column: number, dir?: number): Ace.Range | undefined;
+
         foldAll(startRow?: number | null, endRow?: number | null, depth?: number | null, test?: Function): void;
+
         foldToLevel(level: number): void;
+
         foldAllComments(): void;
+
         $foldStyles: {
             manual: number;
             markbegin: number;
             markbeginend: number;
         };
         $foldStyle: string;
+
         setFoldStyle(style: string): void;
+
         $setFolding(foldMode: Ace.FoldMode): void;
+
         $foldMode: any;
         foldWidgets: any[];
         getFoldWidget: any;
         getFoldWidgetRange: any;
         $updateFoldWidgets: any;
         $tokenizerUpdateFoldWidgets: any;
+
         getParentFoldRangeData(row: number, ignoreCurrent?: boolean): {
             range?: Ace.Range;
             firstRange?: Ace.Range;
         };
+
         onFoldWidgetClick(row: number, e: any): void;
+
         $toggleFoldWidget(row: number, options: any): Fold | any;
+
         /**
          *
          * @param {boolean} [toggleParent]
          */
         toggleFoldWidget(toggleParent?: boolean): void;
+
         updateFoldWidgets(delta: Ace.Delta): void;
+
         tokenizerUpdateFoldWidgets(e: any): void;
     }
 
@@ -228,10 +302,12 @@ export namespace Ace {
             closeTagName: Range;
         };
     }
+
     interface IRange {
         start: Point;
         end: Point;
     }
+
     interface LineWidget {
         el: HTMLElement;
         rowCount: number;
@@ -383,7 +459,7 @@ export namespace Ace {
         /**
          * Emitted when a background tokenizer asynchronously processes new rows.
          */
-        "tokenizerUpdate": (e: {data: { first: string, last: string }}) => void;
+        "tokenizerUpdate": (e: { data: { first: string, last: string } }) => void;
         /**
          * Emitted when the current mode changes.
          * @param e
@@ -417,7 +493,7 @@ export namespace Ace {
         "changeEditor": (e: { editor: Editor }) => void;
     }
 
-    interface EditorEvents{
+    interface EditorEvents {
         "change": (delta: Delta) => void;
         "changeSelection": () => void;
         "input": () => void;
@@ -425,10 +501,10 @@ export namespace Ace {
          * Emitted whenever the [[EditSession]] changes.
          * @param e An object with two properties, `oldSession` and `session`, that represent the old and new [[EditSession]]s.
          **/
-        "changeSession": (e: {oldSession: EditSession, session: EditSession}) => void;
+        "changeSession": (e: { oldSession: EditSession, session: EditSession }) => void;
         "blur": (e) => void;
         "mousedown": (e: MouseEvent) => void;
-        "mousemove": (e: MouseEvent & {scrollTop?}, editor?: Editor) => void;
+        "mousemove": (e: MouseEvent & { scrollTop? }, editor?: Editor) => void;
         "changeStatus": () => void;
         "keyboardActivity": () => void;
         "mousewheel": (e: MouseEvent) => void;
@@ -453,7 +529,7 @@ export namespace Ace {
         "changeSelectionStyle": (data: "fullLine" | "screenLine" | "text" | "line") => void;
     }
 
-    interface AcePopupEvents{
+    interface AcePopupEvents {
         "click": (e: MouseEvent) => void;
         "dblclick": (e: MouseEvent) => void;
         "tripleclick": (e: MouseEvent) => void;
@@ -497,7 +573,7 @@ export namespace Ace {
          * Fires whenever the background tokeniziers between a range of rows are going to be updated.
          * @param {Object} e An object containing two properties, `first` and `last`, which indicate the rows of the region being updated.
          **/
-        "update": (e: {first:number, last:number}) => void;
+        "update": (e: { first: number, last: number }) => void;
     }
 
     interface SelectionEvents {
@@ -550,6 +626,7 @@ export namespace Ace {
         _signal(eventName: string, e: any): void;
 
         _emit(eventName: string, e: any): void;
+
         _dispatchEvent(eventName: string, e: any): void;
     }
 
@@ -606,8 +683,8 @@ export namespace Ace {
         exec?: (editor?: Editor | any, args?: any) => void;
         isAvailable?: (editor: Editor) => boolean;
         description?: string,
-        multiSelectAction?: "forEach"|"forEachLine"|Function,
-        scrollIntoView?: true|"cursor"|"center"|"selectionPart"|"animate"|"selection"|"none",
+        multiSelectAction?: "forEach" | "forEachLine" | Function,
+        scrollIntoView?: true | "cursor" | "center" | "selectionPart" | "animate" | "selection" | "none",
         aceCommandGroup?: string,
         passEvent?: boolean,
         level?: number,
@@ -634,6 +711,7 @@ export namespace Ace {
                   marker: any,
                   session: EditSession,
                   config: any) => void;
+
         [key: string]: any;
     }
 
@@ -705,7 +783,7 @@ export namespace Ace {
         closingBracketBlock(session: EditSession, bracket: string, row: number, column: number, typeRe?: RegExp): Range | undefined;
     }
 
-    type BehaviorAction = (state: string, action: string, editor: Editor, session: EditSession, text: string | Range) => ({ text: string, selection: number[] } | Range) & {[key: string]: any} | undefined;
+    type BehaviorAction = (state: string, action: string, editor: Editor, session: EditSession, text: string | Range) => ({ text: string, selection: number[] } | Range) & { [key: string]: any } | undefined;
     type BehaviorMap = Record<string, Record<string, BehaviorAction>>;
 
     interface Behaviour {
@@ -730,7 +808,7 @@ export namespace Ace {
         /**
          * quotes used by language mode
          */
-        $quotes: {[quote: string]: string};
+        $quotes: { [quote: string]: string };
         HighlightRules: {
             new(config: any): HighlightRules
         }; //TODO: fix this
@@ -744,13 +822,13 @@ export namespace Ace {
         /**
          * characters that indicate the start and end of a block comment
          */
-        blockComment?: {start: string, end: string}
+        blockComment?: { start: string, end: string }
         tokenRe?: RegExp;
         nonTokenRe?: RegExp;
         /**
          * An object containing conditions to determine whether to apply matching quote or not.
          */
-        $pairQuotesAfter: {[quote: string]: RegExp}
+        $pairQuotesAfter: { [quote: string]: RegExp }
         $tokenizer: Tokenizer;
         $highlightRules: HighlightRules;
         $embeds?: string[];
@@ -792,7 +870,9 @@ export namespace Ace {
                        prefix: string): Completion[];
 
         $getIndent(line: string): string;
+
         $createKeywordList(): string[];
+
         $delegator(method: string, args: IArguments, defaultHandler): any;
 
     }
@@ -812,6 +892,7 @@ export namespace Ace {
     }
 
     type KeyBinding = import("./src/keyboard/keybinding").KeyBinding;
+
     interface CommandMap {
         [name: string]: Command;
     }
@@ -824,8 +905,10 @@ export namespace Ace {
 
     interface CommandManagerEvents {
         on(name: 'exec', callback: execEventHandler): Function;
+
         on(name: 'afterExec', callback: execEventHandler): Function;
     }
+
     type CommandManager = import("./src/commands/command_manager").CommandManager;
 
 
@@ -842,7 +925,7 @@ export namespace Ace {
     interface TextInput {
         resetSelection(): void;
 
-        setAriaOption(options?: {activeDescendant: string, role: string, setLabel}): void;
+        setAriaOption(options?: { activeDescendant: string, role: string, setLabel }): void;
     }
 
     type CompleterCallback = (error: any, completions: Completion[]) => void;
@@ -895,13 +978,13 @@ export namespace Ace {
          * Adds the selection and cursor.
          * @param orientedRange A range containing a cursor
          **/
-        addSelectionMarker: (orientedRange: Ace.Range & {marker?}) => Ace.Range & {marker?},
+        addSelectionMarker: (orientedRange: Ace.Range & { marker? }) => Ace.Range & { marker? },
         /**
          * Removes the selection marker.
          * @param range The selection range added with [[Editor.addSelectionMarker `addSelectionMarker()`]].
          **/
-        removeSelectionMarker: (range: Ace.Range & {marker?}) => void,
-        removeSelectionMarkers: (ranges: (Ace.Range & {marker?})[]) => void,
+        removeSelectionMarker: (range: Ace.Range & { marker? }) => void,
+        removeSelectionMarkers: (ranges: (Ace.Range & { marker? })[]) => void,
         $onAddRange: (e) => void,
         $onRemoveRange: (e) => void,
         $onMultiSelect: (e) => void,
@@ -955,7 +1038,7 @@ export namespace Ace {
         $blockSelectEnabled?: boolean,
     }
 
-    interface CodeLenseEditorExtension{
+    interface CodeLenseEditorExtension {
         codeLensProviders?: any[];
         $codeLensClickHandler?: any;
         $updateLenses?: () => void;
@@ -981,55 +1064,69 @@ export namespace Ace {
     interface MultiSelectProperties {
         ranges: Ace.Range[] | null;
         rangeList: Ace.RangeList | null;
+
         /**
          * Adds a range to a selection by entering multiselect mode, if necessary.
          * @param {Ace.Range} range The new range to add
          * @param {Boolean} [$blockChangeEvents] Whether or not to block changing events
          **/
         addRange(range: Ace.Range, $blockChangeEvents?: boolean): any;
+
         inMultiSelectMode: boolean;
+
         /**
          * @param {Ace.Range} [range]
          **/
         toSingleRange(range?: Ace.Range): void;
+
         /**
          * Removes a Range containing pos (if it exists).
          * @param {Ace.Point} pos The position to remove, as a `{row, column}` object
          **/
         substractPoint(pos: Ace.Point): any;
+
         /**
          * Merges overlapping ranges ensuring consistency after changes
          **/
         mergeOverlappingRanges(): void;
+
         /**
          * @param {Ace.Range} range
          */
         $onAddRange(range: Ace.Range): void;
+
         rangeCount: number;
+
         /**
          *
          * @param {Ace.Range[]} removed
          */
         $onRemoveRange(removed: Ace.Range[]): void;
+
         /**
          * adds multicursor support to selection
          */
         $initRangeList(): void;
+
         /**
          * Returns a concatenation of all the ranges.
          * @returns {Ace.Range[]}
          **/
         getAllRanges(): Ace.Range[];
+
         /**
          * Splits all the ranges into lines.
          **/
         splitIntoLines(): void;
+
         /**
          */
         joinSelections(): void;
+
         /**
          **/
         toggleBlockSelection(): void;
+
         /**
          *
          * Gets list of ranges composing rectangular block on the screen
@@ -1070,12 +1167,16 @@ export namespace Ace {
 
 export const version: string;
 export const config: Ace.Config;
+
 export function require(name: string): any;
+
 export function edit(el: string | (Element & {
     env?;
     value?;
 }), options?: Partial<Ace.EditorOptions>): Ace.Editor;
+
 export function createEditSession(text: Ace.Document | string, mode: Ace.SyntaxMode): Ace.EditSession;
+
 export const VirtualRenderer: {
     new(container: HTMLElement, theme?: string): Ace.VirtualRenderer;
 };
@@ -1086,7 +1187,7 @@ export const UndoManager: {
     new(): Ace.UndoManager;
 };
 export const Editor: {
-    new(): Ace.Editor;
+    new(renderer: Ace.VirtualRenderer, session?: Ace.EditSession, options?: Partial<Ace.EditorOptions>): Ace.Editor;
 };
 export const Range: {
     new(startRow: number, startColumn: number, endRow: number, endColumn: number): Ace.Range;
@@ -1098,12 +1199,10 @@ export type InlineAutocomplete = Ace.InlineAutocomplete;
 export type CommandBarTooltip = Ace.CommandBarTooltip;
 
 
-
-
 declare module "./src/anchor" {
     export interface Anchor extends Ace.EventEmitter<Ace.AnchorEvents> {
         markerId?: number;
-        document?: Ace.Document;
+        document: Ace.Document;
     }
 
 
@@ -1127,8 +1226,7 @@ declare module "./src/background_tokenizer" {
 }
 
 declare module "./src/document" {
-    export interface Document extends
-        Ace.EventEmitter<Ace.DocumentEvents> {
+    export interface Document extends Ace.EventEmitter<Ace.DocumentEvents> {
 
     }
 
@@ -1137,8 +1235,7 @@ declare module "./src/document" {
 declare module "./src/editor" {
     export interface Editor extends Ace.EditorMultiSelectProperties, Ace.OptionsProvider<Ace.EditorOptions>,
         Ace.EventEmitter<Ace.EditorEvents>, Ace.CodeLenseEditorExtension, Ace.ElasticTabstopsEditorExtension,
-        Ace.TextareaEditorExtension, Ace.PromptEditorExtension, Ace.OptionsEditorExtension
-    {
+        Ace.TextareaEditorExtension, Ace.PromptEditorExtension, Ace.OptionsEditorExtension {
         session: Ace.EditSession;
         $mergeUndoDeltas?: any,
         $highlightSelectedWord?: boolean,
@@ -1162,11 +1259,9 @@ declare module "./src/editor" {
 }
 
 declare module "./src/edit_session" {
-    export interface EditSession extends
-        Ace.EventEmitter<Ace.EditSessionEvents>,
+    export interface EditSession extends Ace.EventEmitter<Ace.EditSessionEvents>,
         Ace.OptionsProvider<Ace.EditSessionOptions>,
-        Ace.Folding, Ace.BracketMatch
-    {
+        Ace.Folding, Ace.BracketMatch {
         doc: Ace.Document,
         $highlightLineMarker?: {
             start: Ace.Point,
@@ -1190,12 +1285,14 @@ declare module "./src/edit_session" {
         lineWidgetsWidth?: number,
         $getWidgetScreenLength?: () => number,
         _changedWidgets?: any,
-        $options:any,
+        $options: any,
         $wrapMethod?: any,
         $enableVarChar?: any,
-        $wrap?:any,
+        $wrap?: any,
         $navigateWithinSoftTabs?: boolean,
+
         getSelectionMarkers(): any[],
+
         $selectionMarkers?: any[],
         gutterRenderer?: any,
         $firstLineNumber?: number,
@@ -1226,6 +1323,7 @@ declare module "./src/placeholder" {
 declare module "./src/scrollbar" {
     export interface VScrollBar extends Ace.EventEmitter<any> {
     }
+
     export interface HScrollBar extends Ace.EventEmitter<any> {
     }
 }
@@ -1233,6 +1331,7 @@ declare module "./src/scrollbar" {
 declare module "./src/scrollbar_custom" {
     export interface VScrollBar extends Ace.EventEmitter<any> {
     }
+
     export interface HScrollBar extends Ace.EventEmitter<any> {
     }
 }
@@ -1259,8 +1358,7 @@ declare module "./src/range" {
 }
 
 declare module "./src/virtual_renderer" {
-    export interface VirtualRenderer extends
-        Ace.EventEmitter<Ace.VirtualRendererEvents>, Ace.OptionsProvider<Ace.VirtualRendererOptions> {
+    export interface VirtualRenderer extends Ace.EventEmitter<Ace.VirtualRendererEvents>, Ace.OptionsProvider<Ace.VirtualRendererOptions> {
         $customScrollbar?: boolean,
         $extraHeight?: number,
         $showGutter?: boolean,
@@ -1310,7 +1408,7 @@ declare module "./src/commands/command_manager" {
 
 declare module "./src/autocomplete/popup" {
 
-    export interface AcePopup extends Ace.AcePopupWithEditor  {
+    export interface AcePopup extends Ace.AcePopupWithEditor {
         setSelectOnHover: (val: boolean) => void,
         setRow: (line: number) => void,
         getRow: () => number,
@@ -1399,8 +1497,4 @@ declare module "./src/tooltip" {
 declare module "./src/mouse/default_gutter_handler" {
     export interface GutterHandler {
     }
-}
-
-declare module "./src/lib/keys" {
-    export function keyCodeToString(keyCode: string): string
 }

@@ -19,7 +19,8 @@
     "src/keyboard/emacs.js",
     "src/keyboard/sublime.js",
     "src/keyboard/vscode.js",
-    "src/mode"
+    "src/mode",
+    "./ace-internal.d.ts"
   ],
   "include": [
     "./src/**/*",

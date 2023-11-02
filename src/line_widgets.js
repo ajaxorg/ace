@@ -138,7 +138,7 @@ class LineWidgets {
 
     /**
      * 
-     * @param {import("../ace").Ace.Delta} delta
+     * @param {import("../").Ace.Delta} delta
      */
     updateOnChange(delta) {
         var lineWidgets = this.session.lineWidgets;
@@ -190,8 +190,8 @@ class LineWidgets {
 
     /**
      * 
-     * @param {import("../ace").Ace.LineWidget} w
-     * @return {import("../ace").Ace.LineWidget}
+     * @param {import("../").Ace.LineWidget} w
+     * @return {import("../").Ace.LineWidget}
      */
     $registerLineWidget(w) {
         if (!this.session.lineWidgets)
@@ -212,8 +212,8 @@ class LineWidgets {
 
     /**
      *
-     * @param {import("../ace").Ace.LineWidget} w
-     * @return {import("../ace").Ace.LineWidget}
+     * @param {import("../").Ace.LineWidget} w
+     * @return {import("../").Ace.LineWidget}
      */
     addLineWidget(w) {
         this.$registerLineWidget(w);
@@ -270,7 +270,7 @@ class LineWidgets {
     }
     
     /**
-     * @param {import("../ace").Ace.LineWidget} w
+     * @param {import("../").Ace.LineWidget} w
      */
     removeLineWidget(w) {
         w._inDocument = false;
@@ -303,7 +303,7 @@ class LineWidgets {
     /**
      * 
      * @param {number} row
-     * @return {import("../ace").Ace.LineWidget[]}
+     * @return {import("../").Ace.LineWidget[]}
      */
     getWidgetsAtRow(row) {
         var lineWidgets = this.session.lineWidgets;
@@ -317,7 +317,7 @@ class LineWidgets {
     }
 
     /**
-     * @param {import("../ace").Ace.LineWidget} w
+     * @param {import("../").Ace.LineWidget} w
      */
     onWidgetChanged(w) {
         this.session._changedWidgets.push(w);

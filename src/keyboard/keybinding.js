@@ -13,13 +13,13 @@ class KeyBinding {
     constructor(editor) {
         this.$editor = editor;
         this.$data = {editor: editor};
-        /**@type {(import("../../ace").Ace.KeyboardHandler)[]}*/
+        /**@type {(import("../../").Ace.KeyboardHandler)[]}*/
         this.$handlers = [];
         this.setDefaultHandler(editor.commands);
     }
 
     /**
-     * @param {import("../../ace").Ace.KeyboardHandler} kb
+     * @param {import("../../").Ace.KeyboardHandler} kb
      */
     setDefaultHandler(kb) {
         this.removeKeyboardHandler(this.$defaultHandler);
@@ -28,7 +28,7 @@ class KeyBinding {
     }
 
     /**
-     * @param {import("../../ace").Ace.KeyboardHandler} kb
+     * @param {import("../../").Ace.KeyboardHandler} kb
      */
     setKeyboardHandler(kb) {
         var h = this.$handlers;
@@ -42,7 +42,7 @@ class KeyBinding {
     }
 
     /**
-     * @param {import("../../ace").Ace.KeyboardHandler & {attach?: (editor: any) => void, detach?: (editor: any) => void;}} [kb]
+     * @param {import("../../").Ace.KeyboardHandler & {attach?: (editor: any) => void, detach?: (editor: any) => void;}} [kb]
      * @param {number} [pos]
      */
     addKeyboardHandler(kb, pos) {
@@ -66,7 +66,7 @@ class KeyBinding {
     }
 
     /**
-     * @param {import("../../ace").Ace.KeyboardHandler & {attach?: (editor: any) => void, detach?: (editor: any) => void;}} kb
+     * @param {import("../../").Ace.KeyboardHandler & {attach?: (editor: any) => void, detach?: (editor: any) => void;}} kb
      * @returns {boolean}
      */
     removeKeyboardHandler(kb) {
@@ -79,7 +79,7 @@ class KeyBinding {
     }
 
     /**
-     * @return {import("../../ace").Ace.KeyboardHandler}
+     * @return {import("../../").Ace.KeyboardHandler}
      */
     getKeyboardHandler() {
         return this.$handlers[this.$handlers.length - 1];

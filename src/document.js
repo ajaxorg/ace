@@ -90,7 +90,7 @@ class Document {
 
     /**
      * [Sets the new line mode.]{: #Document.setNewLineMode.desc}
-     * @param {import("../ace").Ace.NewLineMode} newLineMode [The newline mode to use; can be either `windows`, `unix`, or `auto`]{: #Document.setNewLineMode.param}
+     * @param {import("../").Ace.NewLineMode} newLineMode [The newline mode to use; can be either `windows`, `unix`, or `auto`]{: #Document.setNewLineMode.param}
      
      **/
     setNewLineMode(newLineMode) {
@@ -103,7 +103,7 @@ class Document {
 
     /**
      * [Returns the type of newlines being used; either `windows`, `unix`, or `auto`]{: #Document.getNewLineMode}
-     * @returns {import("../ace").Ace.NewLineMode}
+     * @returns {import("../").Ace.NewLineMode}
      **/
     getNewLineMode() {
         return this.$newLineMode;
@@ -155,7 +155,7 @@ class Document {
 
     /**
      * Returns all the text within `range` as a single string.
-     * @param {import("../ace").Ace.IRange} range The range to work with.
+     * @param {import("../").Ace.IRange} range The range to work with.
      * 
      * @returns {String}
      **/
@@ -165,7 +165,7 @@ class Document {
     
     /**
      * Returns all the text within `range` as an array of lines.
-     * @param {import("../ace").Ace.IRange} range The range to work with.
+     * @param {import("../").Ace.IRange} range The range to work with.
      * 
      * @returns {string[]}
      **/
@@ -212,7 +212,7 @@ class Document {
 
     /**
      * @param position
-     * @returns {import("../ace").Ace.Point}
+     * @returns {import("../").Ace.Point}
      
      * @deprecated
      */
@@ -223,9 +223,9 @@ class Document {
 
     /**
      * Inserts a block of `text` at the indicated `position`.
-     * @param {import("../ace").Ace.Point} position The position to start inserting at; it's an object that looks like `{ row: row, column: column}`
+     * @param {import("../").Ace.Point} position The position to start inserting at; it's an object that looks like `{ row: row, column: column}`
      * @param {String} text A chunk of text to insert
-     * @returns {import("../ace").Ace.Point} The position ({row, column}) of the last line of `text`. If the length of `text` is 0, this function simply returns `position`. 
+     * @returns {import("../").Ace.Point} The position ({row, column}) of the last line of `text`. If the length of `text` is 0, this function simply returns `position`. 
      
      **/
     insert(position, text) {
@@ -243,9 +243,9 @@ class Document {
      *   1. This does NOT handle newline characters (single-line text only).
      *   2. This is faster than the `insert` method for single-line text insertions.
      * 
-     * @param {import("../ace").Ace.Point} position The position to insert at; it's an object that looks like `{ row: row, column: column}`
+     * @param {import("../").Ace.Point} position The position to insert at; it's an object that looks like `{ row: row, column: column}`
      * @param {String} text A chunk of text
-     * @returns {import("../ace").Ace.Point} Returns an object containing the final row and column, like this:  
+     * @returns {import("../").Ace.Point} Returns an object containing the final row and column, like this:  
      *     ```
      *     {row: endRow, column: 0}
      *     ```
@@ -269,7 +269,7 @@ class Document {
      * 
      * @param {number} row
      * @param {number} column
-     * @return {import("../ace").Ace.Point}
+     * @return {import("../").Ace.Point}
      */
     clippedPos(row, column) {
         var length = this.getLength();
@@ -289,8 +289,8 @@ class Document {
     }
 
     /**
-     * @param {import("../ace").Ace.Point} pos
-     * @return {import("../ace").Ace.Point}
+     * @param {import("../").Ace.Point} pos
+     * @return {import("../").Ace.Point}
      */
     clonePos(pos) {
         return {row: pos.row, column: pos.column};
@@ -299,15 +299,15 @@ class Document {
     /**
      * @param {number} row
      * @param {number} column
-     * @return {import("../ace").Ace.Point}
+     * @return {import("../").Ace.Point}
      */
     pos(row, column) {
         return {row: row, column: column};
     }
 
     /**
-     * @param {import("../ace").Ace.Point} position
-     * @return {import("../ace").Ace.Point}
+     * @param {import("../").Ace.Point} position
+     * @return {import("../").Ace.Point}
      * @private
      */
     $clipPosition(position) {
@@ -352,9 +352,9 @@ class Document {
 
     /**
      * Inserts the elements in `lines` into the document, starting at the position index given by `row`. This method also triggers the `"change"` event.
-     * @param {import("../ace").Ace.Position} position
+     * @param {import("../").Ace.Position} position
      * @param {string[]} lines An array of strings
-     * @returns {import("../ace").Ace.Point} Contains the final row and column, like this:  
+     * @returns {import("../").Ace.Point} Contains the final row and column, like this:  
      *   ```
      *   {row: endRow, column: 0}
      *   ```  
@@ -383,8 +383,8 @@ class Document {
 
     /**
      * Removes the `range` from the document.
-     * @param {import("../ace").Ace.IRange} range A specified Range to remove
-     * @returns {import("../ace").Ace.Point} Returns the new `start` property of the range, which contains `startRow` and `startColumn`. If `range` is empty, this function returns the unmodified value of `range.start`.
+     * @param {import("../").Ace.IRange} range A specified Range to remove
+     * @returns {import("../").Ace.Point} Returns the new `start` property of the range, which contains `startRow` and `startColumn`. If `range` is empty, this function returns the unmodified value of `range.start`.
      
      **/
     remove(range) {
@@ -404,7 +404,7 @@ class Document {
      * @param {Number} row The row to remove from
      * @param {Number} startColumn The column to start removing at 
      * @param {Number} endColumn The column to stop removing at
-     * @returns {import("../ace").Ace.Point} Returns an object containing `startRow` and `startColumn`, indicating the new row and column values.<br/>If `startColumn` is equal to `endColumn`, this function returns nothing.
+     * @returns {import("../").Ace.Point} Returns an object containing `startRow` and `startColumn`, indicating the new row and column values.<br/>If `startColumn` is equal to `endColumn`, this function returns nothing.
      
      **/
     removeInLine(row, startColumn, endColumn) {
@@ -476,9 +476,9 @@ class Document {
 
     /**
      * Replaces a range in the document with the new `text`.
-     * @param {Range | import("../ace").Ace.IRange} range A specified Range to replace
+     * @param {Range | import("../").Ace.IRange} range A specified Range to replace
      * @param {String} text The new text to use as a replacement
-     * @returns {import("../ace").Ace.Point} Returns an object containing the final row and column, like this:
+     * @returns {import("../").Ace.Point} Returns an object containing the final row and column, like this:
      *     {row: endRow, column: 0}
      * If the text and range are empty, this function returns an object containing the current `range.start` value.
      * If the text is the exact same as what currently exists, this function returns an object containing the current `range.end` value.
@@ -510,7 +510,7 @@ class Document {
 
     /**
      * Applies all changes in `deltas` to the document.
-     * @param {import("../ace").Ace.Delta[]} deltas An array of delta objects (can include "insert" and "remove" actions)
+     * @param {import("../").Ace.Delta[]} deltas An array of delta objects (can include "insert" and "remove" actions)
      
      **/
     applyDeltas(deltas) {
@@ -521,7 +521,7 @@ class Document {
     
     /**
      * Reverts all changes in `deltas` from the document.
-     * @param {import("../ace").Ace.Delta[]} deltas An array of delta objects (can include "insert" and "remove" actions)
+     * @param {import("../").Ace.Delta[]} deltas An array of delta objects (can include "insert" and "remove" actions)
      
      **/
     revertDeltas(deltas) {
@@ -532,7 +532,7 @@ class Document {
     
     /**
      * Applies `delta` to the document.
-     * @param {import("../ace").Ace.Delta} delta A delta object (can include "insert" and "remove" actions)
+     * @param {import("../").Ace.Delta} delta A delta object (can include "insert" and "remove" actions)
      * @param {boolean} [doNotValidate]
      
      **/
@@ -554,7 +554,7 @@ class Document {
     }
 
     /**
-     * @param {import("../ace").Ace.Delta} delta
+     * @param {import("../").Ace.Delta} delta
      
      */
     $safeApplyDelta(delta) {
@@ -570,7 +570,7 @@ class Document {
 
     /**
      * 
-     * @param {import("../ace").Ace.Delta} delta
+     * @param {import("../").Ace.Delta} delta
      * @param {number} MAX
      
      */
@@ -608,7 +608,7 @@ class Document {
     
     /**
      * Reverts `delta` from the document.
-     * @param {import("../ace").Ace.Delta} delta A delta object (can include "insert" and "remove" actions)
+     * @param {import("../").Ace.Delta} delta A delta object (can include "insert" and "remove" actions)
      
      **/
     revertDelta(delta) {
@@ -634,7 +634,7 @@ class Document {
      *
      * @param {Number} index An index to convert
      * @param {Number} [startRow=0] The row from which to start the conversion
-     * @returns {import("../ace").Ace.Point} A `{row, column}` object of the `index` position
+     * @returns {import("../").Ace.Point} A `{row, column}` object of the `index` position
      */
     indexToPosition(index, startRow) {
         var lines = this.$lines || this.getAllLines();
@@ -659,7 +659,7 @@ class Document {
      * 
      * Here, `y` is an index 15: 11 characters for the first row, and 5 characters until `y` in the second.
      *
-     * @param {import("../ace").Ace.Point} pos The `{row, column}` to convert
+     * @param {import("../").Ace.Point} pos The `{row, column}` to convert
      * @param {Number} [startRow=0] The row from which to start the conversion
      * @returns {Number} The index position in the document
      */

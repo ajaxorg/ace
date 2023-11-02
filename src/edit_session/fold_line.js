@@ -244,7 +244,7 @@ class FoldLine {
 
     /**
      * @param {number} idx
-     * @return {import("../../ace").Ace.Point}
+     * @return {import("../../").Ace.Point}
      */
     idxToPosition(idx) {
         var lastFoldEndColumn = 0;

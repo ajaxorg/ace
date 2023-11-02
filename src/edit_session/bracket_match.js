@@ -9,7 +9,7 @@ function BracketMatch() {
 
     /**
      * 
-     * @param {import("../../ace").Ace.Point} position
+     * @param {import("../../").Ace.Point} position
      * @param {string} [chr]
      * @this {EditSession}
      */
@@ -30,7 +30,7 @@ function BracketMatch() {
     };
 
     /**
-     * @param {import("../../ace").Ace.Point} pos
+     * @param {import("../../").Ace.Point} pos
      * @return {null|Range}
      * @this {EditSession}
      */
@@ -80,7 +80,7 @@ function BracketMatch() {
      * * two Ranges if there is opening and closing brackets;
      * * one Range if there is only one bracket
      *
-     * @param {import("../../ace").Ace.Point} pos
+     * @param {import("../../").Ace.Point} pos
      * @param {boolean} [isBackwards]
      * @returns {null|Range[]}
      * @this {EditSession}
@@ -126,9 +126,9 @@ function BracketMatch() {
     /**
      * 
      * @param {string} bracket
-     * @param {import("../../ace").Ace.Point} position
+     * @param {import("../../").Ace.Point} position
      * @param {RegExp} [typeRe]
-     * @return {import("../../ace").Ace.Point|null}
+     * @return {import("../../").Ace.Point|null}
      * @this {EditSession}
      */
     this.$findOpeningBracket = function(bracket, position, typeRe) {
@@ -192,9 +192,9 @@ function BracketMatch() {
     /**
      *
      * @param {string} bracket
-     * @param {import("../../ace").Ace.Point} position
+     * @param {import("../../").Ace.Point} position
      * @param {RegExp} [typeRe]
-     * @return {import("../../ace").Ace.Point|null}
+     * @return {import("../../").Ace.Point|null}
      * @this {EditSession}
      */
     this.$findClosingBracket = function(bracket, position, typeRe) {
@@ -257,7 +257,7 @@ function BracketMatch() {
 
     /**
      * Returns [[Range]]'s for matching tags and tag names, if there are any
-     * @param {import("../../ace").Ace.Point} pos
+     * @param {import("../../").Ace.Point} pos
      * @returns {{closeTag: Range, closeTagName: Range, openTag: Range, openTagName: Range} | undefined}
      * @this {EditSession}
      */

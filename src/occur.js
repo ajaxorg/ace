@@ -66,7 +66,7 @@ class Occur extends Search {
 
     /**
      * @param {Editor} editor
-     * @param {Partial<import("../ace").Ace.SearchOptions>} options
+     * @param {Partial<import("../").Ace.SearchOptions>} options
      */
     displayOccurContent(editor, options) {
         // this.setSession(session || new EditSession(""))
@@ -97,8 +97,8 @@ class Occur extends Search {
     * the document or the beginning if the doc {row: 0, column: 0} if not
     * found.
     * @param {EditSession} session The occur session
-    * @param {import("../ace").Ace.Point} pos The position in the original document
-    * @return {import("../ace").Ace.Point} position in occur doc
+    * @param {import("../").Ace.Point} pos The position in the original document
+    * @return {import("../").Ace.Point} position in occur doc
     **/
     originalToOccurPosition(session, pos) {
         var lines = session.$occurMatchingLines;
@@ -115,8 +115,8 @@ class Occur extends Search {
     * Translates the position from the occur document to the original document
     * or `pos` if not found.
     * @param {EditSession} session The occur session
-    * @param {import("../ace").Ace.Point} pos The position in the occur session document
-    * @return {import("../ace").Ace.Point} position
+    * @param {import("../").Ace.Point} pos The position in the occur session document
+    * @return {import("../").Ace.Point} position
     **/
     occurToOriginalPosition(session, pos) {
         var lines = session.$occurMatchingLines;
@@ -127,7 +127,7 @@ class Occur extends Search {
 
     /**
      * @param {EditSession} session
-     * @param {Partial<import("../ace").Ace.SearchOptions>} options
+     * @param {Partial<import("../").Ace.SearchOptions>} options
      */
     matchingLines(session, options) {
         options = oop.mixin({}, options);

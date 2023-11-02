@@ -1269,7 +1269,7 @@ class VirtualRenderer {
 
     /**
      * Sets annotations for the gutter.
-     * @param {import("../ace").Ace.Annotation[]} annotations An array containing annotations
+     * @param {import("../").Ace.Annotation[]} annotations An array containing annotations
      *
      **/
     setAnnotations(annotations) {
@@ -1303,8 +1303,8 @@ class VirtualRenderer {
 
     /**
      * 
-     * @param {import("../ace").Ace.Point} anchor
-     * @param {import("../ace").Ace.Point} lead
+     * @param {import("../").Ace.Point} anchor
+     * @param {import("../").Ace.Point} lead
      * @param {number} [offset]
      */
     scrollSelectionIntoView(anchor, lead, offset) {
@@ -1316,7 +1316,7 @@ class VirtualRenderer {
     /**
      * 
      * Scrolls the cursor into the first visibile area of the editor
-     * @param {import("../ace").Ace.Point} [cursor]
+     * @param {import("../").Ace.Point} [cursor]
      * @param {number} [offset]
      * @param {{ top?: any; bottom?: any; }} [$viewMargin]
      */
@@ -1417,7 +1417,7 @@ class VirtualRenderer {
 
     /**
      * 
-     * @param {import("../ace").Ace.Point} cursor
+     * @param {import("../").Ace.Point} cursor
      * @param {number} [alignment]
      * @returns {number}
      */
@@ -1604,7 +1604,7 @@ class VirtualRenderer {
      * 
      * @param {number} x
      * @param {number} y
-     * @returns {import("../ace").Ace.ScreenCoordinates}
+     * @returns {import("../").Ace.ScreenCoordinates}
      
      */
     pixelToScreenCoordinates(x, y) {
@@ -1630,7 +1630,7 @@ class VirtualRenderer {
      * 
      * @param {number} x
      * @param {number} y
-     * @returns {import("../ace").Ace.Point}
+     * @returns {import("../").Ace.Point}
      
      */
     screenToTextCoordinates(x, y) {
@@ -1749,7 +1749,7 @@ class VirtualRenderer {
 
     /**
      * @param {string} text
-     * @param {import("../ace").Ace.Point} [position]
+     * @param {import("../").Ace.Point} [position]
      */
     setGhostText(text, position) {
         var cursor = this.session.selection.cursor;
@@ -1828,7 +1828,7 @@ class VirtualRenderer {
 
     /**
      * [Sets a new theme for the editor. `theme` should exist, and be a directory path, like `ace/theme/textmate`.]{: #VirtualRenderer.setTheme}
-     * @param {String | import("../ace").Ace.Theme} [theme] The path to a theme
+     * @param {String | import("../").Ace.Theme} [theme] The path to a theme
      * @param {() => void} [cb] optional callback
      
      **/
@@ -1847,7 +1847,7 @@ class VirtualRenderer {
         }
 
         /**
-         * @param {import("../ace").Ace.Theme} module
+         * @param {import("../").Ace.Theme} module
          */
         function afterLoad(module) {
             if (_self.$themeId != theme)
@@ -1961,9 +1961,9 @@ class VirtualRenderer {
             delete this.$scrollDecorator;
         }
         if (val === true) {
-            /**@type {import("../ace").Ace.VScrollbar}*/
+            /**@type {import("../").Ace.VScrollbar}*/
             this.scrollBarV = new VScrollBarCustom(this.container, this);
-            /**@type {import("../ace").Ace.HScrollbar}*/
+            /**@type {import("../").Ace.HScrollbar}*/
             this.scrollBarH = new HScrollBarCustom(this.container, this);
             this.scrollBarV.setHeight(this.$size.scrollerHeight);
             this.scrollBarH.setWidth(this.$size.scrollerWidth);

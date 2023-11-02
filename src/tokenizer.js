@@ -111,7 +111,7 @@ class Tokenizer {
 
     /**
      * @param {string} str
-     * @return {import("../ace").Ace.Token[]}
+     * @return {import("../").Ace.Token[]}
      */
     $applyToken(str) {
         var values = this.splitRegex.exec(str).slice(1);
@@ -135,7 +135,7 @@ class Tokenizer {
 
     /**
      * @param {string} str
-     * @return {import("../ace").Ace.Token[] | string}
+     * @return {import("../").Ace.Token[] | string}
      */
     $arrayTokens(str) {
         if (!str)
@@ -215,7 +215,7 @@ class Tokenizer {
      * Returns an object containing two properties: `tokens`, which contains all the tokens; and `state`, the current state.
      * @param {string} line
      * @param {string | string[]} startState
-     * @returns {{tokens:import("../ace").Ace.Token[], state: string|string[]}}
+     * @returns {{tokens:import("../").Ace.Token[], state: string|string[]}}
      */
     getLineTokens(line, startState) {
         if (startState && typeof startState != "string") {
