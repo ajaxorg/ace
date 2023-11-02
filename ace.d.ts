@@ -801,7 +801,7 @@ export namespace Ace {
         [key: string]: any;
     }
 
-    class OptionsProvider<T extends OptionsBase> {
+    class OptionsProvider<T> {
         setOptions(optList: Partial<T>): void;
 
         getOptions(optionNames?: Array<keyof T> | Partial<T>): Partial<T>;
@@ -861,8 +861,8 @@ export namespace Ace {
         cancel?(): void;
 
         id?: string;
-    triggerCharacters?: string[];
-    hideInlinePreview?: boolean;
+        triggerCharacters?: string[];
+        hideInlinePreview?: boolean;
     }
 
     interface CompletionOptions {
@@ -954,7 +954,7 @@ export namespace Ace {
         $multiselectOnSessionChange?: any,
         $blockSelectEnabled?: boolean,
     }
-    
+
     interface CodeLenseEditorExtension{
         codeLensProviders?: any[];
         $codeLensClickHandler?: any;
@@ -965,15 +965,15 @@ export namespace Ace {
     interface ElasticTabstopsEditorExtension {
         elasticTabstops?: import("./src/ext/elastic_tabstops_lite").ElasticTabstopsLite;
     }
-    
+
     interface TextareaEditorExtension {
         setDisplaySettings?: (settings: any) => void;
     }
-    
+
     interface PromptEditorExtension {
         cmdLine?: Editor;
     }
-    
+
     interface OptionsEditorExtension {
         $options?: any;
     }
@@ -1114,7 +1114,7 @@ declare module "./src/autocomplete" {
         popup: Ace.AcePopup;
         emptyMessage?: Function,
     }
-    
+
     export interface CompletionProvider {
         completions: Ace.FilteredList;
     }
@@ -1135,8 +1135,8 @@ declare module "./src/document" {
 }
 
 declare module "./src/editor" {
-    export interface Editor extends Ace.EditorMultiSelectProperties, Ace.OptionsProvider<Ace.EditorOptions>, 
-        Ace.EventEmitter<Ace.EditorEvents>, Ace.CodeLenseEditorExtension, Ace.ElasticTabstopsEditorExtension, 
+    export interface Editor extends Ace.EditorMultiSelectProperties, Ace.OptionsProvider<Ace.EditorOptions>,
+        Ace.EventEmitter<Ace.EditorEvents>, Ace.CodeLenseEditorExtension, Ace.ElasticTabstopsEditorExtension,
         Ace.TextareaEditorExtension, Ace.PromptEditorExtension, Ace.OptionsEditorExtension
     {
         session: Ace.EditSession;
@@ -1208,7 +1208,7 @@ declare module "./src/edit_session" {
         $useEmacsStyleLineStart?: boolean,
         $selectLongWords?: boolean,
     }
-    
+
 }
 
 declare module "./src/edit_session/fold" {
@@ -1247,7 +1247,7 @@ declare module "./src/line_widgets" {
 declare module "./src/selection" {
     export interface Selection extends Ace.EventEmitter<Ace.SelectionEvents>, Ace.MultiSelectProperties {
     }
-    
+
 }
 
 declare module "./src/range" {
@@ -1271,7 +1271,7 @@ declare module "./src/virtual_renderer" {
         textarea?: HTMLTextAreaElement,
         $hScrollBarAlwaysVisible?: boolean,
         $vScrollBarAlwaysVisible?: boolean
-        $maxLines?: number | null,
+        $maxLines?: number,
         $scrollPastEnd?: number,
         enableKeyboardAccessibility?: boolean,
         keyboardFocusClassName?: string,
@@ -1309,7 +1309,7 @@ declare module "./src/commands/command_manager" {
 }
 
 declare module "./src/autocomplete/popup" {
-    
+
     export interface AcePopup extends Ace.AcePopupWithEditor  {
         setSelectOnHover: (val: boolean) => void,
         setRow: (line: number) => void,
@@ -1325,7 +1325,7 @@ declare module "./src/autocomplete/popup" {
         hide: () => void,
         anchor: "top" | "bottom",
         anchorPosition: Ace.Point,
-        tryShow: (pos: any, lineHeight: number, anchor: "top" | "bottom" | undefined, forceShow?: boolean) => boolean,
+        tryShow: (pos: any, lineHeight: number, anchor: "top" | "bottom", forceShow?: boolean) => boolean,
         $borderSize: number,
         show: (pos: any, lineHeight: number, topdownOnly?: boolean) => void,
         goTo: (where: Ace.AcePopupNavigation) => void,
@@ -1370,7 +1370,7 @@ declare module "./src/mouse/mouse_handler" {
         $tooltipFollowsMouse?: boolean,
         cancelDrag?: boolean
         //from DefaultHandlers
-        $clickSelection?: null | Ace.Range,
+        $clickSelection?: Ace.Range,
         mousedownEvent?: Ace.MouseEvent,
         startSelect?: (pos?: Ace.Point, waitForClickSelection?: boolean) => void,
         select?: () => void
@@ -1399,4 +1399,8 @@ declare module "./src/tooltip" {
 declare module "./src/mouse/default_gutter_handler" {
     export interface GutterHandler {
     }
+}
+
+declare module "./src/lib/keys" {
+    export function keyCodeToString(keyCode: string): string
 }

@@ -154,6 +154,10 @@ oop.mixin(exports, Keys);
 /**@type{{keyCodeToString: (keyCode: string) => string}}*/
 exports.default = exports;
 
+/**
+ * @param {string} keyCode
+ * @return {string}
+ */
 exports.keyCodeToString = function(keyCode) {
     // Language-switching keystroke in Chrome/Linux emits keyCode 0.
     var keyString = Keys[keyCode];

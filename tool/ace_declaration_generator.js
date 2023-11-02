@@ -96,16 +96,26 @@ function fixDeclaration(content, aceNamespacePath) {
             function visit(node) {
                 let updatedNode = node;
                 if (ts.isModuleDeclaration(node) && ts.isStringLiteral(node.name)) {
-                    // remove wrong generated modules
+                    // replace wrong generated modules
                     if (node.name.text.endsWith("lib/keys") || node.name.text.endsWith("linking")) {
-                        const newBody = ts.factory.createModuleBlock([]);
+                        let statements = [];
+                        if (interfaces[node.name.text]) {
+                            statements = interfaces[node.name.text];
+                        }
+                        const newBody = ts.factory.createModuleBlock(statements);
                         updatedNode = ts.factory.updateModuleDeclaration(node, node.modifiers, node.name, newBody);
                     }
                     else if (interfaces[node.name.text]) {
                         // add corresponding interfaces to support mixins (EventEmitter, OptionsProvider, etc.)
                         if (node.body && ts.isModuleBlock(node.body)) {
                             const newBody = ts.factory.createModuleBlock(
-                                node.body.statements.concat(interfaces[node.name.text]));
+                                node.body.statements.concat(interfaces[node.name.text]).filter(statement => {
+                                    if (node.name.text.endsWith("autocomplete")) {
+                                        return !(ts.isModuleDeclaration(statement) && statement.name.text
+                                            === 'Autocomplete');
+                                    }
+                                    return true;
+                                }));
                             updatedNode = ts.factory.updateModuleDeclaration(node, node.modifiers, node.name, newBody);
                         }
                     }
@@ -123,10 +133,21 @@ function fixDeclaration(content, aceNamespacePath) {
 
                         }
                     }
+                    else if (node.name.text.endsWith("static_highlight")) {
+                        if (node.body && ts.isModuleBlock(node.body)) {
+                            const newBody = ts.factory.createModuleBlock(node.body.statements.filter(statement => {
+                                return !ts.isExportAssignment(statement);
+                            }));
+                            updatedNode = ts.factory.updateModuleDeclaration(node, node.modifiers, node.name, newBody);
+                        }
+                    }
                 }
                 else if (ts.isInterfaceDeclaration(node) && node.heritageClauses) {
                     for (const clause of node.heritageClauses) {
                         if (clause.token === ts.SyntaxKind.ExtendsKeyword && clause.types.length === 0) {
+                            if (node.members.length === 0) {
+                                return; // remove entire interface declaration 
+                            }
                             // Remove the extends clause if it's empty
                             return context.factory.updateInterfaceDeclaration(node, node.modifiers, node.name,
                                 node.typeParameters, [], node.members
@@ -232,7 +253,7 @@ function collectInterfaces(aceNamespacePath) {
             let nodes = [];
             if (node.body && ts.isModuleBlock(node.body)) {
                 ts.forEachChild(node.body, (child) => {
-                    if (ts.isInterfaceDeclaration(child)) nodes.push(child);
+                    if (ts.isInterfaceDeclaration(child) || ts.isFunctionDeclaration(child)) nodes.push(child);
                 });
             }
             if (nodes.length > 0) {
@@ -299,15 +320,15 @@ function generateDeclaration(aceNamespacePath) {
 
     let packageName = "ace-code";
 
-    let updatedContent = data.replace(/(declare module ")/g, "$1" + packageName + "/");
-    updatedContent = updatedContent.replace(/(require\(")/g, "$1" + packageName + "/");
-    updatedContent = updatedContent.replace(/(import\(")(?!(?:\.|ace\-code))/g, "$1" + packageName + "/");
+    let updatedContent = data.replace(/(declare module ")/g, "$1" + packageName + "/src/");
+    updatedContent = updatedContent.replace(/(require\(")/g, "$1" + packageName + "/src/");
+    updatedContent = updatedContent.replace(/(import\(")(?!(?:\.|ace\-code))/g, "$1" + packageName + "/src/");
     updatedContent = updatedContent.replace(/ace\-(?:code|builds)(\/src)?\/ace/g, packageName);
     let aceModule = cloneAceNamespace(aceNamespacePath);
 
     updatedContent = updatedContent.replace(/(declare\s+module\s+"ace-(?:code|builds)"\s+{)/, "$1" + aceModule);
     updatedContent = updatedContent.replace(/(import\(")[./]*ace("\).Ace)/g, "$1" + packageName + "$2");
-
+    updatedContent = updatedContent.replace(/(?:export)?\snamespace(?!\sAce)/g, "export namespace");
     fixDeclaration(updatedContent, aceNamespacePath);
 }
 
@@ -327,7 +348,7 @@ function updateDeclarationModuleNames(content) {
 
 
 if (!module.parent) {
-    generateDeclaration("../ace.d.ts");
+    generateDeclaration(__dirname + "../ace.d.ts");
 }
 else {
     exports.generateDeclaration = generateDeclaration;
