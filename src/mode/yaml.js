@@ -4,7 +4,7 @@ var oop = require("../lib/oop");
 var TextMode = require("./text").Mode;
 var YamlHighlightRules = require("./yaml_highlight_rules").YamlHighlightRules;
 var MatchingBraceOutdent = require("./matching_brace_outdent").MatchingBraceOutdent;
-var FoldMode = require("./folding/coffee").FoldMode;
+var FoldMode = require("./folding/yaml").FoldMode;
 var WorkerClient = require("../worker/worker_client").WorkerClient;
 
 var Mode = function() {

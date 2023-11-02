@@ -1137,6 +1137,19 @@ module.exports = {
         session.destroy();
         assert.equal(session.destroyed, true);
         assert.notEqual(session.bgTokenizer, null);
+    },
+
+    "test: JSON serialization": function() {
+        var session = new EditSession(["Hello world!"]);
+        session.setAnnotations([{row: 0, column: 0, text: "error test", type: "error"}]);
+        session.setMode("ace/mode/javascript");
+        session = EditSession.fromJSON(JSON.stringify(session));
+        
+        assert.equal(session.getAnnotations().length, 1);
+        assert.equal(session.getMode().$id, "ace/mode/javascript");
+        assert.equal(session.getScrollLeft(), 0);
+        assert.equal(session.getScrollTop(), 0);
+        assert.equal(session.getValue(), "Hello world!");
     }
 };
 

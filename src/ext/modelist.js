@@ -64,6 +64,7 @@ var supportedModes = {
     AsciiDoc:    ["asciidoc|adoc"],
     ASL:         ["dsl|asl|asl.json"],
     Assembly_x86:["asm|a"],
+    Astro:       ["astro"],
     AutoHotKey:  ["ahk"],
     BatchFile:   ["bat|cmd"],
     BibTeX:      ["bib"],
@@ -85,6 +86,7 @@ var supportedModes = {
     D:           ["d|di"],
     Dart:        ["dart"],
     Diff:        ["diff|patch"],
+    Django:      ["djt|html.djt|dj.html|djhtml"],
     Dockerfile:  ["^Dockerfile"],
     Dot:         ["dot"],
     Drools:      ["drl"],
@@ -94,6 +96,7 @@ var supportedModes = {
     Elixir:      ["ex|exs"],
     Elm:         ["elm"],
     Erlang:      ["erl|hrl"],
+    Flix:        ["flix"],
     Forth:       ["frt|fs|ldr|fth|4th"],
     Fortran:     ["f|f90"],
     FSharp:      ["fsi|fs|ml|mli|fsx|fsscript"],
@@ -156,6 +159,7 @@ var supportedModes = {
     MIXAL:       ["mixal"],
     MUSHCode:    ["mc|mush"],
     MySQL:       ["mysql"],
+    Nasal:       ["nas"],
     Nginx:       ["nginx|conf"],
     Nim:         ["nim"],
     Nix:         ["nix"],
@@ -233,9 +237,7 @@ var supportedModes = {
     XML:         ["xml|rdf|rss|wsdl|xslt|atom|mathml|mml|xul|xbl|xaml"],
     XQuery:      ["xq"],
     YAML:        ["yaml|yml"],
-    Zeek:        ["zeek|bro"],
-    // Add the missing mode "Django" to ext-modelist
-    Django:      ["html"]
+    Zeek:        ["zeek|bro"]
 };
 
 var nameOverrides = {

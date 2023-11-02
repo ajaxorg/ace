@@ -37,7 +37,7 @@
 
 <script src="kitchen-sink/require.js"></script>
 <script>
-require.config({paths: { "ace" : "../lib/ace"}});
+require.config({paths: { "ace" : "../src"}});
 require(["ace/ace"], function(ace) {
 
 var dom = require("ace/lib/dom");
@@ -119,6 +119,8 @@ window.add = function() {
 
 });
 </script>
+
+<script src="./show_own_source.js"></script>
 
 </body>
 </html>

@@ -1,5 +1,27 @@
 [[
    "start",
+  ["keyword","import"],
+  ["text"," "],
+  ["identifier","java"],
+  ["text","."],
+  ["identifier","util"],
+  ["text","."],
+  ["identifier","ArrayList"],
+  ["text",";"]
+],[
+   "start",
+  ["keyword","import"],
+  ["text"," "],
+  ["identifier","java"],
+  ["text","."],
+  ["identifier","util"],
+  ["text","."],
+  ["identifier","Vector"],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start",
   ["keyword","public"],
   ["text"," "],
   ["keyword","class"],
@@ -31,13 +53,17 @@
 ],[
    "start",
   ["text","    "],
+  ["storage.type.annotation","@Override"]
+],[
+   "start",
+  ["text","    "],
   ["keyword","public"],
   ["text"," "],
   ["keyword","static"],
   ["text"," "],
   ["keyword","void"],
   ["text"," "],
-  ["identifier","main"],
+  ["entity.name.function","main"],
   ["lparen","("],
   ["support.function","String"],
   ["lparen","["],
@@ -58,7 +84,7 @@
   ["text"," "],
   ["support.function","Double"],
   ["text","."],
-  ["identifier","parseDouble"],
+  ["entity.name.function","parseDouble"],
   ["lparen","("],
   ["string","\"2.2250738585072012e-308\""],
   ["rparen",")"],
@@ -76,7 +102,7 @@
   ["text","."],
   ["identifier","out"],
   ["text","."],
-  ["identifier","println"],
+  ["entity.name.function","println"],
   ["lparen","("],
   ["string","\"Value: \""],
   ["text"," "],
@@ -87,42 +113,143 @@
   ["text",";"]
 ],[
    "start",
-  ["text","        "],
-  ["keyword","int"],
-  ["text"," "],
-  ["identifier","exports"],
-  ["text"," "],
-  ["keyword.operator","="],
-  ["text"," "],
-  ["constant.numeric","10"],
-  ["text",";"]
-],[
-   "start",
-  ["text","        "],
-  ["keyword","int"],
-  ["text"," "],
-  ["identifier","requires"],
-  ["text"," "],
-  ["keyword.operator","="],
-  ["text"," "],
-  ["constant.numeric","20"],
-  ["text",";"]
-],[
-   "start",
-  ["text","        "],
-  ["keyword","int"],
-  ["text"," "],
-  ["identifier","open"],
-  ["text"," "],
-  ["keyword.operator","="],
-  ["text"," "],
-  ["constant.numeric","30"],
-  ["text",";"]
-],[
-   "start",
   ["text","    "],
   ["rparen","}"]
 ],[
    "start",
   ["rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["support.function","String"],
+  ["text"," "],
+  ["identifier","name"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["string","\"Joan\""],
+  ["text","; "],
+  ["support.function","String"],
+  ["text"," "],
+  ["identifier","info"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["identifier","STR"],
+  ["punctuation","."],
+  ["string","\""],
+  ["string","My name is "],
+  ["lparen","\\{"],
+  ["identifier","name"],
+  ["rparen","}"],
+  ["string","\""],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start",
+  ["identifier","STR"],
+  ["punctuation","."],
+  ["string","\""],
+  ["string","Today's weather is "],
+  ["lparen","\\{"],
+  ["text"," "],
+  ["entity.name.function","getFeelsLike"],
+  ["lparen","("],
+  ["rparen",")"],
+  ["text"," "],
+  ["rparen","}"],
+  ["string",", with a temperature of "],
+  ["lparen","\\{"],
+  ["text"," "],
+  ["entity.name.function","getTemperature"],
+  ["lparen","("],
+  ["rparen",")"],
+  ["keyword.operator","++"],
+  ["text"," "],
+  ["rparen","}"],
+  ["string"," degrees "],
+  ["lparen","\\{"],
+  ["text"," "],
+  ["entity.name.function","getUnit"],
+  ["lparen","("],
+  ["rparen",")"],
+  ["text"," "],
+  ["rparen","}"],
+  ["string","\""]
+],[
+   "start"
+],[
+   "start",
+  ["support.function","String"],
+  ["text"," "],
+  ["entity.name.function","nestedMultilineTemplates"],
+  ["lparen","("],
+  ["rparen",")"],
+  ["text"," "],
+  ["lparen","{"]
+],[
+   "punctuation",
+  ["text","    "],
+  ["keyword","return"],
+  ["text"," "],
+  ["identifier","STR"],
+  ["punctuation","."],
+  ["string","\"\"\""]
+],[
+   "punctuation",
+  ["string","        {"]
+],[
+   "punctuation",
+  ["string","            \"outerKey1\": \"outerValue1\","]
+],[
+   ["lparen","punctuation"],
+  ["string","            \"nestedTemplate\": \""],
+  ["lparen","\\{"]
+],[
+   ["punctuation","lparen","lparen","punctuation"],
+  ["text","                "],
+  ["identifier","STR"],
+  ["punctuation","."],
+  ["string","\"\"\""]
+],[
+   ["punctuation","lparen","lparen","punctuation"],
+  ["string","                {"]
+],[
+   ["punctuation","lparen","lparen","punctuation"],
+  ["string","                    \"innerKey\": \""],
+  ["lparen","\\{"],
+  ["identifier","innerValue"],
+  ["text","."],
+  ["entity.name.function","get"],
+  ["lparen","("],
+  ["rparen",")}"],
+  ["string","\""]
+],[
+   ["punctuation","lparen","lparen","punctuation"],
+  ["string","                }"]
+],[
+   ["lparen","punctuation"],
+  ["string","                \"\"\""]
+],[
+   "punctuation",
+  ["text","            "],
+  ["rparen","}"],
+  ["string","\","]
+],[
+   "punctuation",
+  ["string","            \"outerKey2\": \"outerValue2\""]
+],[
+   "punctuation",
+  ["string","        }"]
+],[
+   "start",
+  ["string","        \"\"\""],
+  ["text",";"]
+],[
+   "start",
+  ["rparen","}"]
+],[
+   "start"
 ]]

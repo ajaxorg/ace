@@ -1,6 +1,7 @@
 {
     "$id": "am",
     "Autocomplete suggestions": "Ավտոմատ լրացման առաջարկներ",
+    "Loading...": "Բեռնվում է...",
     "editor": "",
     "Editor content, press Enter to start editing, press Escape to exit": "",
     "Editor gutter, press Enter to interact with controls using arrow keys, press Escape to exit": "",

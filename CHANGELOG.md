@@ -2,6 +2,39 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.31.1](https://github.com/ajaxorg/ace/compare/v1.31.0...v1.31.1) (2023-10-30)
+
+
+### Bug Fixes
+
+* improve yaml folding ([5c80e3c](https://github.com/ajaxorg/ace/commit/5c80e3cdd716b4ad26ee6958c9137278530b7816))
+
+## [1.31.0](https://github.com/ajaxorg/ace/compare/v1.30.0...v1.31.0) (2023-10-23)
+
+
+### Features
+
+* add nasal language ([#5342](https://github.com/ajaxorg/ace/issues/5342)) ([4fff99e](https://github.com/ajaxorg/ace/commit/4fff99e320539a1472ce0512cd1fd3e5fc7f2ca6))
+
+
+### Bug Fixes
+
+* doc tooltip not filtering properly ([e5034c7](https://github.com/ajaxorg/ace/commit/e5034c7b58fb47fe57b28dbb001e72a567ef9abe))
+
+## [1.30.0](https://github.com/ajaxorg/ace/compare/v1.29.0...v1.30.0) (2023-10-13)
+
+
+### Features
+
+* Add support for time units in PRQL ([#5324](https://github.com/ajaxorg/ace/issues/5324)) ([8b9175b](https://github.com/ajaxorg/ace/commit/8b9175bc780fade64bed1570fa1cd34d022b337b))
+
+## [1.29.0](https://github.com/ajaxorg/ace/compare/v1.28.0...v1.29.0) (2023-10-09)
+
+
+### Features
+
+* allow setting completion.ignoreCaption ([5618046](https://github.com/ajaxorg/ace/commit/56180467e12c300850da89cc13c1c8648fb5e342))
+
 ## [1.28.0](https://github.com/ajaxorg/ace/compare/v1.27.0...v1.28.0) (2023-09-22)
 
 

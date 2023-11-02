@@ -1,0 +1,181 @@
+[[
+   "start",
+  ["keyword","create"],
+  ["text"," "],
+  ["keyword","table"],
+  ["text"," "],
+  ["identifier","t"],
+  ["text"," "],
+  ["paren.lparen","("]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","id"],
+  ["text"," "],
+  ["storage.type","integer"],
+  ["text",", "]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","month"],
+  ["text"," "],
+  ["identifier","varchar"],
+  ["paren.lparen","("],
+  ["constant.numeric","3"],
+  ["paren.rparen",")"],
+  ["text",", "]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","value"],
+  ["text"," "],
+  ["storage.type","integer"]
+],[
+   "start",
+  ["paren.rparen",")"],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","insert"],
+  ["text"," "],
+  ["keyword","into"],
+  ["text"," "],
+  ["identifier","t"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["identifier","month"],
+  ["text",", "],
+  ["identifier","value"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["keyword","values"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["string","'jan'"],
+  ["text",", "],
+  ["constant.numeric","1"],
+  ["paren.rparen",")"],
+  ["text",";"]
+],[
+   "start",
+  ["keyword","insert"],
+  ["text"," "],
+  ["keyword","into"],
+  ["text"," "],
+  ["identifier","t"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["identifier","month"],
+  ["text",", "],
+  ["identifier","value"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["keyword","values"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["string","'jan'"],
+  ["text",", "],
+  ["constant.numeric","1"],
+  ["paren.rparen",")"],
+  ["text",";"]
+],[
+   "start",
+  ["keyword","insert"],
+  ["text"," "],
+  ["keyword","into"],
+  ["text"," "],
+  ["identifier","t"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["identifier","month"],
+  ["text",", "],
+  ["identifier","value"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["keyword","values"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["string","'oct'"],
+  ["text",", "],
+  ["constant.numeric","3"],
+  ["paren.rparen",")"],
+  ["text",";"]
+],[
+   "start",
+  ["keyword","insert"],
+  ["text"," "],
+  ["keyword","into"],
+  ["text"," "],
+  ["identifier","t"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["identifier","month"],
+  ["text",", "],
+  ["identifier","value"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["keyword","values"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["string","'dec'"],
+  ["text",", "],
+  ["constant.numeric","96"],
+  ["paren.rparen",")"],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start"
+],[
+   "start",
+  ["keyword","select"],
+  ["text"," * "],
+  ["keyword","from"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["keyword","select"],
+  ["text"," "],
+  ["identifier","month"],
+  ["text",", "],
+  ["identifier","value"],
+  ["text"," "],
+  ["keyword","from"],
+  ["text"," "],
+  ["identifier","t"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["identifier","pivot"]
+],[
+   "start",
+  ["paren.lparen","("]
+],[
+   "start",
+  ["text","    "],
+  ["support.function","sum"],
+  ["paren.lparen","("],
+  ["identifier","value"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","for"],
+  ["text"," "],
+  ["identifier","month"],
+  ["text"," "],
+  ["keyword","in"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["string","'jan'"],
+  ["text",", "],
+  ["string","'oct'"],
+  ["text",", "],
+  ["string","'dec'"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["paren.rparen",")"],
+  ["text",";"]
+]]

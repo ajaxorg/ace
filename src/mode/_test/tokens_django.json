@@ -1,0 +1,66 @@
+[[
+   "start",
+  ["constant.language","{%"],
+  ["text"," "],
+  ["entity.name.function","extends"],
+  ["text"," "],
+  ["string","\"base.html\""],
+  ["text"," "],
+  ["constant.language","%}"]
+],[
+   "start"
+],[
+   "start",
+  ["constant.language","{%"],
+  ["text"," "],
+  ["entity.name.function","block"],
+  ["text"," "],
+  ["variable","title"],
+  ["text"," "],
+  ["constant.language","%}"],
+  ["text.xml","Ace Django Template"],
+  ["constant.language","{%"],
+  ["text"," "],
+  ["entity.name.function","endblock"],
+  ["text"," "],
+  ["constant.language","%}"]
+],[
+   "start"
+],[
+   "start",
+  ["constant.language","{%"],
+  ["text"," "],
+  ["entity.name.function","block"],
+  ["text"," "],
+  ["variable","content"],
+  ["text"," "],
+  ["constant.language","%}"]
+],[
+   "start",
+  ["text.xml","  "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","h1"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["text.xml","Hello, "],
+  ["constant.language","{{"],
+  ["text"," "],
+  ["variable","name"],
+  ["text","|"],
+  ["variable","default:"],
+  ["string","\"World\""],
+  ["text"," "],
+  ["constant.language","}}"],
+  ["text.xml","!"],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","h1"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["constant.language","{%"],
+  ["text"," "],
+  ["entity.name.function","endblock"],
+  ["text"," "],
+  ["constant.language","%}"]
+],[
+   "start"
+]]

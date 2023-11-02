@@ -651,4 +651,13 @@ module.exports = `
     opacity: 0.5;
     font-style: italic;
     white-space: pre;
+}
+
+.ace_screenreader-only {
+    position:absolute;
+    left:-10000px;
+    top:auto;
+    width:1px;
+    height:1px;
+    overflow:hidden;
 }`;

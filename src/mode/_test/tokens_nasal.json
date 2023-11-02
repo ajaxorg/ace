@@ -1,0 +1,56 @@
+[[
+   "start",
+  ["storage.type.nasal","var"],
+  ["text"," sayHello "],
+  ["keyword.operator.nasal","="],
+  ["text"," func(names, favorite) {"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword.control.nasal","foreach"],
+  ["text"," ("],
+  ["storage.type.nasal","var"],
+  ["text"," name"],
+  ["punctuation.terminator.statement.nasal",";"],
+  ["text"," names) {"]
+],[
+   "start",
+  ["text","    "],
+  ["variable.language.nasal","printf"],
+  ["text","("],
+  ["punctuation.definition.string.begin.nasal","\""],
+  ["string.quoted.double.nasal","Hello "],
+  ["constant.character.escape.nasal","%s"],
+  ["string.quoted.double.nasal",", "],
+  ["constant.character.escape.nasal","%s"],
+  ["string.quoted.double.nasal"," is the best!"],
+  ["punctuation.definition.string.end.nasal","\""],
+  ["text",", name, favorite)"],
+  ["punctuation.terminator.statement.nasal",";"]
+],[
+   "start",
+  ["text","  }"]
+],[
+   "start",
+  ["text","}"]
+],[
+   "start"
+],[
+   "start",
+  ["text","sayHello(["],
+  ["punctuation.definition.string.begin.nasal","\""],
+  ["string.quoted.double.nasal","World"],
+  ["punctuation.definition.string.end.nasal","\""],
+  ["text",", "],
+  ["punctuation.definition.string.begin.nasal","\""],
+  ["string.quoted.double.nasal","FlightGear"],
+  ["punctuation.definition.string.end.nasal","\""],
+  ["text","], "],
+  ["punctuation.definition.string.begin.nasal","\""],
+  ["string.quoted.double.nasal","Nasal"],
+  ["punctuation.definition.string.end.nasal","\""],
+  ["text",")"],
+  ["punctuation.terminator.statement.nasal",";"]
+],[
+   "start"
+]]

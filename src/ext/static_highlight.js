@@ -110,7 +110,7 @@ var highlight = function(el, opts, callback) {
     }
     
     highlight.render(data, mode, theme, opts.firstLineNumber, !opts.showGutter, function (highlighted) {
-        dom.importCssString(highlighted.css, "ace_highlight");
+        dom.importCssString(highlighted.css, "ace_highlight", true);
         el.innerHTML = highlighted.html;
         /** 
          * TODO: check if child exists

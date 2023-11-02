@@ -26,11 +26,11 @@
 <script src="kitchen-sink/require.js"></script>
 <script>
 // setup paths
-require.config({paths: { "ace" : "../lib/ace"}});
+require.config({paths: { "ace" : "../src"}});
 // load ace and extensions
 require(["ace/ace", "ace/ext/settings_menu"], function(ace) {
     var editor = ace.edit("editor");
-    ace.require('ace/ext/settings_menu').init(editor);
+    require('ace/ext/settings_menu').init(editor);
     editor.setTheme("ace/theme/twilight");
     editor.session.setMode("ace/mode/html");
 	editor.commands.addCommands([{
