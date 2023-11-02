@@ -32,6 +32,7 @@
         "styles",
         "ace.d.ts",
         "ace-modes.d.ts",
+        "ace-extensions.d.ts",
         "esm-resolver.js",
         "translations",
         "!**/*_test.js",
@@ -44,8 +45,7 @@
         "lint": "eslint \"src/**/*.js\"",
         "fix": "eslint --fix \"src/**/*.js\"",
         "changelog": "standard-version",
-        "prepack": "node tool/esm_resolver_generator.js && node tool/ace_declaration_generator.js && node Makefile.dryice.js css --target build-styles && rm -rf styles && mv build-styles/css styles",
-        "tsc": "rimraf types && tsc --project tsconfig.json"
+        "prepack": "node tool/esm_resolver_generator.js && node Makefile.dryice.js css --target build-styles && rm -rf styles && mv build-styles/css styles"
     },
     "standard-version": {
         "skip": {
