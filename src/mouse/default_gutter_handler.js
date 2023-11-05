@@ -61,6 +61,9 @@ function GutterHandler(mouseHandler) {
             var gutterCell = gutter.$lines.get(gutterRow);
             if (gutterCell) {
                 var gutterElement = gutterCell.element.querySelector(".ace_gutter_annotation");
+                if (gutterElement.style.display === "none"){
+                     return hideTooltip();
+                }
                 var rect = gutterElement.getBoundingClientRect();
                 var style = tooltip.getElement().style;
                 style.left = rect.right + "px";

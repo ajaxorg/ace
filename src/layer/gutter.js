@@ -21,6 +21,24 @@ class Gutter{
 
         this.$lines = new Lines(this.element);
         this.$lines.$offsetCoefficient = 1;
+
+        this.spinnerRow = -1;
+        this.spinner = this.createSpinner();
+    }
+
+    createSpinner() {
+        var spinner = dom.createElement("span");
+        spinner.className = "ace_spinner";
+
+        var spinnerLeft = dom.createElement("span");
+        spinnerLeft.className = "ace_spinner_left";
+        spinner.appendChild(spinnerLeft);
+
+        var spinnerRight = dom.createElement("span");
+        spinnerRight.className = "ace_spinner_right";
+        spinner.appendChild(spinnerRight);
+
+        return spinner;
     }
 
     setSession(session) {
@@ -272,6 +290,19 @@ class Gutter{
         return fragment;
     }
     
+    showSpinner(row) {
+        this.spinnerRow = row;
+        if (this.config)
+            this.update(this.config);
+    }
+
+    hideSpinner() {
+        dom.setStyle(this.spinner.style, "display", "none" );    
+        this.spinnerRow = -1;
+        if (this.config)
+            this.update(this.config);
+    }
+
     $renderCell(cell, config, fold, row) {
         var element = cell.element;
         
@@ -434,6 +465,19 @@ class Gutter{
         dom.setStyle(cell.element.style, "top", this.$lines.computeLineTop(row, config, session) + "px");
         
         cell.text = rowText;
+
+        // Override the gutter annotation with a spinner animation if needed
+        if (row === this.spinnerRow) {
+            // Hide the annotation
+            element.classList.remove("ace_info", "ace_warning", "ace_error", "ace_error_fold", "ace_warning_fold");
+            dom.setStyle(annotationNode.style, "display", "none");
+
+            // Show the spinner in the gutter
+            if (!annotationNode.contains(this.spinner)) {
+                cell.element.appendChild(this.spinner);
+            } 
+            dom.setStyle(this.spinner.style, "display", "block" );
+        }
 
         // If there are no annotations or fold widgets in the gutter cell, hide it from assistive tech.
         if (annotationNode.style.display === "none" && foldWidget.style.display === "none")

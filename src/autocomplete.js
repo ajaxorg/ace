@@ -89,7 +89,13 @@ class Autocomplete {
 
         this.$firstOpenTimer = lang.delayedCall(function() {
             var initialPosition = this.completionProvider && this.completionProvider.initialPosition;
-            if (this.autoShown || (this.popup && this.popup.isOpen) || !initialPosition) return;
+
+            if ((this.popup && this.popup.isOpen) || !initialPosition) return;
+
+            if (this.autoShown) {
+                this.editor.renderer.$gutterLayer.showSpinner(this.base.row);
+                return;
+            }
 
             var completionsForEmpty = [{
                 caption: config.nls("Loading..."),
@@ -227,6 +233,7 @@ class Autocomplete {
     }
 
     openPopup(editor, prefix, keepPopupPosition) {
+        this.editor.renderer.$gutterLayer.hideSpinner();
         this.$firstOpenTimer.cancel();
 
         if (!this.popup)
@@ -282,6 +289,7 @@ class Autocomplete {
             this.editor.off("blur", this.blurListener);
             this.editor.off("mousedown", this.mousedownListener);
             this.editor.off("mousewheel", this.mousewheelListener);
+            this.editor.renderer.$gutterLayer.hideSpinner();
         }
         this.$firstOpenTimer.cancel();
 
@@ -475,9 +483,12 @@ class Autocomplete {
             this.openPopup(this.editor, prefix, keepPopupPosition);
 
             this.popup.renderer.setStyle("ace_loading", !finished);
+            if (finished) {
+                this.editor.renderer.$gutterLayer.hideSpinner();
+            }
         }.bind(this));
 
-        if (!this.autoShown && !(this.popup && this.popup.isOpen)) {
+        if (!(this.popup && this.popup.isOpen)) {
             this.$firstOpenTimer.delay(this.stickySelectionDelay/2);
         }
     }

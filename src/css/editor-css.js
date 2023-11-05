@@ -660,4 +660,92 @@ module.exports = `
     width:1px;
     height:1px;
     overflow:hidden;
-}`;
+}
+
+.ace_spinner {
+    box-sizing: border-box;
+    display: inline;
+    line-height: 0;
+    float: left;
+    position: relative;
+    margin-left: -14px;
+    top: 50%;
+
+    margin-top: -5px;
+    width: 10px;
+    height: 10px;
+    color: black;
+
+    animation-duration: 0.7s;
+    animation-timing-function: linear;
+    animation-delay: 0s;
+    animation-iteration-count: infinite;
+    animation-direction: normal;
+    animation-fill-mode: none;
+    animation-play-state: running;
+    animation-name: ace_spinner;
+}
+
+@keyframes ace_spinner {
+    0% { transform: rotate(0deg) }
+    100% { transform: rotate(1turn) } 
+}
+
+.ace_spinner_left, .ace_spinner_right {
+    display: inline-block;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+    width: 50%;
+}
+
+.ace_spinner_left:after, .ace_spinner_right:after {
+    border-color: inherit;
+    animation: 1.5s ease-in-out infinite;
+    border-color: currentColor #0000 #0000 currentColor;
+    border-radius: 50%;
+    border-style: solid;
+    border-width: 2px;
+    box-sizing: border-box;
+    content: "";
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 200%;
+}
+
+.ace_spinner_left:after {
+    animation-name: ace_spinner_left;
+    left: 0;
+}
+
+@keyframes ace_spinner_left {
+    0% { transform: rotate(0deg) }
+    50% { transform: rotate(120deg) } 
+    100% { transform: rotate(0deg) } 
+}
+
+.ace_spinner_right:after {
+    animation-name: ace_spinner_right;
+    left: -100%;
+}
+
+@keyframes ace_spinner_right {
+    0% { transform: rotate(90deg) }
+    50% { transform: rotate(-30deg) } 
+    100% { transform: rotate(90deg) } 
+}
+
+@media (prefers-reduced-motion) {
+    .ace_spinner {
+        animation: none;
+    }
+    .ace_spinner_left:after {
+        animation: none;
+    }
+    .ace_spinner_right:after {
+        animation: none;
+    }
+}
+`;

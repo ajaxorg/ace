@@ -942,7 +942,7 @@ module.exports = {
         editor.destroy();
         editor.container.remove();
     },
-    "test: should display loading state": function(done) {
+    "test: should display loading state when keyboard invoking autocomplete": function(done) {
         var editor = initEditor("hello world\n");
         
         var slowCompleter = {
@@ -1018,6 +1018,52 @@ module.exports = {
         
         function isLoading() {
             return completer.popup.renderer.container.classList.contains("ace_loading");
+        }
+    },
+    "test: should display loading state when automatically invoking autocomplete": function(done) {
+        var editor = initEditor("");
+        
+        var slowCompleter = {
+            getCompletions: function (editor, session, pos, prefix, callback) {
+                var completions = [
+                    {
+                        caption: "slow option 1",
+                        value: "s1",
+                    }, {
+                        caption: "slow option 2",
+                        value: "s2",
+                    }
+                ];
+                setTimeout(() => {
+                    callback(null,  completions);
+                }, 200);
+            }
+        };
+
+        editor.completers = [slowCompleter];
+        
+        var completer = Autocomplete.for(editor);
+        completer.stickySelectionDelay = 100;
+        user.type("s");
+        assert.ok(!(completer.popup && completer.popup.isOpen));
+
+        setTimeout(function() {
+            assert.ok(!(completer.popup && completer.popup.isOpen));
+            assert.ok(isShowingSpinner());
+            setTimeout(function() {
+                completer.popup.renderer.$loop._flush();
+                assert.equal(completer.popup.data.length, 2); 
+                assert.ok(!isShowingSpinner());
+                done();
+            }, 150);
+        }, 100);
+        
+        function isShowingSpinner() {
+            editor.renderer.$loop._flush();
+            var spinner = editor.container.querySelector(".ace_spinner");
+
+            if (!spinner) return false;
+            return spinner.style.display !== "none";
         }
     }
 };
