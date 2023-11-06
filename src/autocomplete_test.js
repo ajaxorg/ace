@@ -942,7 +942,7 @@ module.exports = {
         editor.destroy();
         editor.container.remove();
     },
-    "test: should display loading state when keyboard invoking autocomplete": function(done) {
+    "test: should display loading state when keyboard invoking autocomplete when showLoadingState true": function(done) {
         var editor = initEditor("hello world\n");
         
         var slowCompleter = {
@@ -989,10 +989,12 @@ module.exports = {
         
         var completer = Autocomplete.for(editor);
         completer.stickySelectionDelay = 100;
+        completer.showLoadingState = true;
         user.type("Ctrl-Space");
         assert.ok(!(completer.popup && completer.popup.isOpen));
 
         setTimeout(() => {
+            assert.ok(completer.popup && completer.popup.isOpen);
             completer.popup.renderer.$loop._flush();
             assert.equal(completer.popup.data.length, 1);
             assert.ok(isLoading());
@@ -1020,7 +1022,7 @@ module.exports = {
             return completer.popup.renderer.container.classList.contains("ace_loading");
         }
     },
-    "test: should display loading state when automatically invoking autocomplete": function(done) {
+    "test: should display loading state when automatically invoking autocomplete when showLoadingState true": function(done) {
         var editor = initEditor("");
         
         var slowCompleter = {
@@ -1044,6 +1046,7 @@ module.exports = {
         
         var completer = Autocomplete.for(editor);
         completer.stickySelectionDelay = 100;
+        completer.showLoadingState = true;
         user.type("s");
         assert.ok(!(completer.popup && completer.popup.isOpen));
 

@@ -33,7 +33,7 @@ var Range = require("ace/range").Range;
 
 var whitespace = require("ace/ext/whitespace");
 
-
+var Autocomplete = require("ace/autocomplete").Autocomplete;
 
 var doclist = require("./doclist");
 var layout = require("./layout");
@@ -355,6 +355,9 @@ var fastCompleter = {
 };
 
 env.editor.completers = [slowCompleter, fastCompleter];
+
+var completer = Autocomplete.for(env.editor);
+completer.showLoadingState = true;
 
 env.editor.commands.addCommands(whitespace.commands);
 
