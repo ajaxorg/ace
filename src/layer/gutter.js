@@ -473,7 +473,7 @@ class Gutter{
             dom.setStyle(annotationNode.style, "display", "none");
 
             // Show the spinner in the gutter
-            if (!annotationNode.contains(this.spinner)) {
+            if (!element.contains(this.spinner)) {
                 cell.element.appendChild(this.spinner);
             } 
             dom.setStyle(this.spinner.style, "display", "block" );
