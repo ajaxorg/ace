@@ -1028,10 +1028,10 @@ module.exports = {
                 var completions = [
                     {
                         caption: "slow option 1",
-                        value: "s1",
+                        value: "s1"
                     }, {
                         caption: "slow option 2",
-                        value: "s2",
+                        value: "s2"
                     }
                 ];
                 setTimeout(() => {
