@@ -33,7 +33,7 @@ var Range = require("ace/range").Range;
 
 var whitespace = require("ace/ext/whitespace");
 
-var Autocomplete = require("ace/autocomplete").Autocomplete;
+
 
 var doclist = require("./doclist");
 var layout = require("./layout");
@@ -316,48 +316,6 @@ env.editor.commands.addCommands([{
     }
 }]);
 
-var slowCompleter = {
-    getCompletions: function (editor, session, pos, prefix, callback) {
-        var completions = [
-            {
-                caption: "slow option 1",
-                value: "s1",
-                score: 1
-            }, {
-                caption: "slow option 2",
-                value: "s2",
-                score: 0
-            }
-        ];
-        setTimeout(() => {
-            callback(null,  completions);
-        }, 80000);
-    }
-};
-
-var fastCompleter = {
-    getCompletions: function (editor, session, pos, prefix, callback) {
-        var completions = [
-            {
-                caption: "fast option 1",
-                value: "f1",
-                score: 3
-            }, {
-                caption: "fast option 2",
-                value: "f2",
-                score: 2
-            }
-        ];
-        setTimeout(() => {
-            callback(null,  completions);
-        }, 40000);
-    }
-};
-
-env.editor.completers = [slowCompleter, fastCompleter];
-
-var completer = Autocomplete.for(env.editor);
-completer.showLoadingState = true;
 
 env.editor.commands.addCommands(whitespace.commands);
 
