@@ -420,6 +420,14 @@ class VirtualRenderer {
     }
 
     /**
+     * Show an animated spinner in the gutter at the given row. This overrides the annotation at that row.
+     **/
+    showGutterSpinner(row) {
+        if (this.$gutterLayer)
+            this.$gutterLayer.showSpinner(row);
+    }
+
+    /**
      * Adjusts the wrap limit, which is the number of characters that can fit within the width of the edit area on screen.
      **/
     adjustWrapLimit() {

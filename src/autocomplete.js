@@ -63,6 +63,13 @@ class Autocomplete {
         this.keyboardHandler.bindKeys(this.commands);
         this.parentNode = null;
         this.setSelectOnHover = false;
+
+        /**
+         *  @property {Boolean} showLoadingState - A boolean indicating whether the loading states of the Autocompletion should be shown to the end-user. If enabled 
+         * if shows a spinner in the gutter and a loading indicator on the popup while autocomplete is loading.
+         * 
+         * Experimental: This visualisation is not yet considered stable and might change in the future.
+         */
         this.showLoadingState = false;
 
         /**
@@ -94,7 +101,7 @@ class Autocomplete {
             if ((this.popup && this.popup.isOpen) || !initialPosition) return;
 
             if (this.autoShown) {
-                this.editor.renderer.$gutterLayer.showSpinner(this.base.row);
+                this.editor.renderer.showGutterSpinner(this.base.row);
                 return;
             }
 
