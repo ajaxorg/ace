@@ -22,7 +22,7 @@ class Gutter{
         this.$lines = new Lines(this.element);
         this.$lines.$offsetCoefficient = 1;
 
-        this.spinnerRow = -1;
+        this.spinnerRow = null;
         this.spinner = this.createSpinner();
     }
 
@@ -298,7 +298,7 @@ class Gutter{
 
     hideSpinner() {
         dom.setStyle(this.spinner.style, "display", "none" );    
-        this.spinnerRow = -1;
+        this.spinnerRow = null;
         if (this.config)
             this.update(this.config);
     }
