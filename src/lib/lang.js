@@ -180,12 +180,3 @@ exports.supportsLookbehind = function () {
     }
     return true;
 };
-
-exports.supportsUnicodeFlag = function () {
-    try {
-        new RegExp('^.$', 'u');
-    } catch (error) {
-        return false;
-    }
-    return true;
-};

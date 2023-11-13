@@ -218,28 +218,22 @@ class Search {
 
         if (!options.needle)
             return options.re = false;
-        
-        if (options.$supportsUnicodeFlag === undefined) {
-            options.$supportsUnicodeFlag = lang.supportsUnicodeFlag();
-        }
 
-        try {
-            new RegExp(needle, "u");
-        } catch (e) {
-            options.$supportsUnicodeFlag = false; //left for backward compatibility with previous versions for cases like /ab\{2}/gu
-        }
-        
         if (!options.regExp)
             needle = lang.escapeRegExp(needle);
 
-        if (options.wholeWord)
-            needle = addWordBoundary(needle, options);
-
         var modifier = options.caseSensitive ? "gm" : "gmi";
 
-        if (options.$supportsUnicodeFlag) {
+        try {
+            new RegExp(needle, "u");
+            options.$supportsUnicodeFlag = true;
             modifier += "u";
+        } catch (e) {
+            options.$supportsUnicodeFlag = false; //left for backward compatibility with previous versions for cases like /ab\{2}/gu
         }
+
+        if (options.wholeWord)
+            needle = addWordBoundary(needle, options);
         
         options.$isMultiLine = !$disableFakeMultiline && /[\n\r]/.test(needle);
         if (options.$isMultiLine)
