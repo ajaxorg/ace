@@ -806,6 +806,9 @@ var MarkdownHighlightRules = function () {
                 token: "markup.list",
                 regex: /(?<=[>]\s{0,4})(?:[*+-]|\d{1,9}[.)])\s{1,4}/,
                 next: "listBlockInline"
+            }, { // HR
+                token: "constant",
+                regex: /(?<=[>])\s{0,2}(?:(?:\s?\*\s*){3,}|(?:\s?-\s*){3,}|(?:\s?_\s*){3,})\s*$/,
             }, {defaultToken: "string.blockquote"}
         ],
         "containerBlockInlinesList": [
