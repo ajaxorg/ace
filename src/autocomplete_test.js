@@ -714,9 +714,8 @@ module.exports = {
         completer.stickySelectionDelay = 100;
         user.type("Ctrl-Space");
         assert.equal(completer.popup.isOpen, true);
-        assert.equal(completer.popup.data.length, 3); 
-        sendKey("Down");
-        assert.equal(completer.popup.getRow(), 1);
+        assert.equal(completer.popup.data.length, 2); 
+        assert.equal(completer.popup.getRow(), 0);
 
         setTimeout(() => {
             completer.popup.renderer.$loop._flush();
@@ -771,7 +770,7 @@ module.exports = {
         completer.stickySelectionDelay = -1;
         user.type("Ctrl-Space");
         assert.equal(completer.popup.isOpen, true);    
-        assert.equal(completer.popup.data.length, 3); 
+        assert.equal(completer.popup.data.length, 2); 
         assert.equal(completer.popup.getRow(), 0);
 
         setTimeout(() => {
@@ -990,6 +989,7 @@ module.exports = {
         
         var completer = Autocomplete.for(editor);
         completer.stickySelectionDelay = 100;
+        completer.showLoadingState = true;
         user.type("Ctrl-Space");
         assert.ok(!(completer.popup && completer.popup.isOpen));
 
@@ -1051,6 +1051,7 @@ module.exports = {
         var completer = Autocomplete.for(editor);
         completer.stickySelectionDelay = 100;
         completer.emptyMessage = "no completions";
+        completer.showLoadingState = true;
 
         user.type("doesntmatchanything");
         user.type("Ctrl-Space");
@@ -1101,6 +1102,7 @@ module.exports = {
         var completer = Autocomplete.for(editor);
         completer.stickySelectionDelay = 100;
         completer.inlineEnabled = true;
+        completer.showLoadingState = true;
 
         user.type("Ctrl-Space");
         assert.ok(!(completer.popup && completer.popup.isOpen));

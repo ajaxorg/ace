@@ -63,6 +63,7 @@ class Autocomplete {
         this.keyboardHandler.bindKeys(this.commands);
         this.parentNode = null;
         this.setSelectOnHover = false;
+        this.showLoadingState = false;
 
         /**
          *  @property {number} stickySelectionDelay - a numerical value that determines after how many ms the popup selection will become 'sticky'.
@@ -479,18 +480,18 @@ class Autocomplete {
                 if (this.autoInsert && !this.autoShown && filtered.length == 1)
                     return this.insertMatch(filtered[0]);
             }
-            this.completions = finished ? 
-                completions : 
+            this.completions = !finished && this.showLoadingState ? 
                 new FilteredList(
                     Autocomplete.completionsForLoading.concat(filtered), completions.filterText
-                );
+                ) :
+                completions;
 
             this.openPopup(this.editor, prefix, keepPopupPosition);
 
             this.popup.renderer.setStyle("ace_loading", !finished);
         }.bind(this));
 
-        if (!this.autoShown && !(this.popup && this.popup.isOpen)) {
+        if (this.showLoadingState && !this.autoShown && !(this.popup && this.popup.isOpen)) {
             this.$firstOpenTimer.delay(this.stickySelectionDelay/2);
         }
     }
