@@ -1007,7 +1007,10 @@ module.exports = {
                 editor.completers = [fastCompleter, slowCompleter];
                 user.type("Ctrl-Space");
                 assert.equal(completer.popup.data.length, 4); 
+
+                // Should have to row saying 'Loading...' together with results.
                 assert.ok(isLoading());
+                assert.equal(completer.popup.data[0].caption, "Loading..."); 
                 setTimeout(() => {
                     completer.popup.renderer.$loop._flush();
                     assert.equal(completer.popup.data.length, 5);
