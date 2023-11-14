@@ -1008,7 +1008,7 @@ module.exports = {
                 user.type("Ctrl-Space");
                 assert.equal(completer.popup.data.length, 4); 
 
-                // Should have to row saying 'Loading...' together with results.
+                // Should have top row saying 'Loading...' together with results.
                 assert.ok(isLoading());
                 assert.equal(completer.popup.data[0].caption, "Loading..."); 
                 setTimeout(() => {
