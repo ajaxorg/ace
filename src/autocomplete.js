@@ -63,6 +63,13 @@ class Autocomplete {
         this.keyboardHandler.bindKeys(this.commands);
         this.parentNode = null;
         this.setSelectOnHover = false;
+
+        /**
+         *  @property {Boolean} showLoadingState - A boolean indicating whether the loading states of the Autocompletion should be shown to the end-user. If enabled 
+         * it shows a loading indicator on the popup while autocomplete is loading.
+         * 
+         * Experimental: This visualisation is not yet considered stable and might change in the future.
+         */
         this.showLoadingState = false;
 
         /**
@@ -480,6 +487,8 @@ class Autocomplete {
                 if (this.autoInsert && !this.autoShown && filtered.length == 1)
                     return this.insertMatch(filtered[0]);
             }
+            // If showLoadingState is true and there is still a completer loading, show 'Loading...'
+            // in the top row of the completer popup.
             this.completions = !finished && this.showLoadingState ? 
                 new FilteredList(
                     Autocomplete.completionsForLoading.concat(filtered), completions.filterText
