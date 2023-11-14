@@ -24,7 +24,6 @@ class Search {
      * @property {boolean} [$isMultiLine] - true, if needle has \n or \r\n
      * @property {boolean} [preserveCase]
      * @property {boolean} [preventScroll]
-     * @property {boolean} [$supportsUnicodeFlag] - internal property, determine if browser supports unicode flag
      * @property {any} [re]
      **/
     
@@ -226,10 +225,9 @@ class Search {
 
         try {
             new RegExp(needle, "u");
-            options.$supportsUnicodeFlag = true;
             modifier += "u";
         } catch (e) {
-            options.$supportsUnicodeFlag = false; //left for backward compatibility with previous versions for cases like /ab\{2}/gu
+            // left for backward compatibility with previous versions for cases like /ab\{2}/gu
         }
 
         if (options.wholeWord)
@@ -264,7 +262,7 @@ class Search {
             return false;
         var backwards = options.backwards == true;
         var skipCurrent = options.skipCurrent != false;
-        var supportsUnicodeFlag = options.$supportsUnicodeFlag
+        var supportsUnicodeFlag = re.unicode;
 
         var range = options.range;
         var start = options.start;

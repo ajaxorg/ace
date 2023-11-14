@@ -167,7 +167,7 @@ class SearchBox {
     updateCounter() {
         var editor = this.editor;
         var regex = editor.$search.$options.re;
-        var supportsUnicodeFlag = editor.$search.$options.$supportsUnicodeFlag;
+        var supportsUnicodeFlag = regex.unicode;
         var all = 0;
         var before = 0;
         if (regex) {
