@@ -714,8 +714,9 @@ module.exports = {
         completer.stickySelectionDelay = 100;
         user.type("Ctrl-Space");
         assert.equal(completer.popup.isOpen, true);
-        assert.equal(completer.popup.data.length, 2); 
-        assert.equal(completer.popup.getRow(), 0);
+        assert.equal(completer.popup.data.length, 3); 
+        sendKey("Down");
+        assert.equal(completer.popup.getRow(), 1);
 
         setTimeout(() => {
             completer.popup.renderer.$loop._flush();
@@ -770,7 +771,7 @@ module.exports = {
         completer.stickySelectionDelay = -1;
         user.type("Ctrl-Space");
         assert.equal(completer.popup.isOpen, true);    
-        assert.equal(completer.popup.data.length, 2); 
+        assert.equal(completer.popup.data.length, 3); 
         assert.equal(completer.popup.getRow(), 0);
 
         setTimeout(() => {
@@ -1005,7 +1006,7 @@ module.exports = {
 
                 editor.completers = [fastCompleter, slowCompleter];
                 user.type("Ctrl-Space");
-                assert.equal(completer.popup.data.length, 3); 
+                assert.equal(completer.popup.data.length, 4); 
                 assert.ok(isLoading());
                 setTimeout(() => {
                     completer.popup.renderer.$loop._flush();

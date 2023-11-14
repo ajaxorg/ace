@@ -91,15 +91,16 @@ class Autocomplete {
             var initialPosition = this.completionProvider && this.completionProvider.initialPosition;
             if (this.autoShown || (this.popup && this.popup.isOpen) || !initialPosition) return;
 
-            var completionsForEmpty = [{
-                caption: config.nls("Loading..."),
-                value: ""
-            }];
-            this.completions = new FilteredList(completionsForEmpty);
+            this.completions = new FilteredList(Autocomplete.completionsForLoading);
             this.openPopup(this.editor, initialPosition.prefix, false);
             this.popup.renderer.setStyle("ace_loading", true);
         }.bind(this), this.stickySelectionDelay);
     }
+
+    static completionsForLoading = [{
+        caption: config.nls("Loading..."),
+        value: ""
+    }];
 
     $init() {
         this.popup = new AcePopup(this.parentNode || document.body || document.documentElement); 
@@ -238,7 +239,8 @@ class Autocomplete {
         this.popup.autoSelect = this.autoSelect;
         this.popup.setSelectOnHover(this.setSelectOnHover);
 
-        var previousSelectedItem = this.popup.data[this.popup.getRow()];
+        var oldRow = this.popup.getRow();
+        var previousSelectedItem = this.popup.data[oldRow];
 
         this.popup.setData(this.completions.filtered, this.completions.filterText);
         if (this.editor.textInput.setAriaOptions) {
@@ -250,12 +252,17 @@ class Autocomplete {
 
         editor.keyBinding.addKeyboardHandler(this.keyboardHandler);
         
-        var newRow = this.popup.data.indexOf(previousSelectedItem);
-
-        if (newRow && this.stickySelection)
-            this.popup.setRow(this.autoSelect ? newRow : -1);
-        else
-            this.popup.setRow(this.autoSelect ? 0 : -1);
+        var newRow;
+        if (this.stickySelection)
+            newRow = this.popup.data.indexOf(previousSelectedItem); 
+        if (!newRow || newRow === -1) 
+            newRow = 0;
+        
+        this.popup.setRow(this.autoSelect ? newRow : -1);
+     
+        // If we stay on the same row, but the content is different, we want to update the popup.
+        if (newRow === oldRow && previousSelectedItem !== this.completions.filtered[newRow]) 
+            this.$onPopupChange();
 
         if (!keepPopupPosition) {
             this.popup.setTheme(editor.getTheme());
@@ -458,6 +465,7 @@ class Autocomplete {
                         }];
                         this.completions = new FilteredList(completionsForEmpty);
                         this.openPopup(this.editor, prefix, keepPopupPosition);
+                        this.popup.renderer.setStyle("ace_loading", false);
                         return;
                     }
                     return this.detach();
@@ -471,7 +479,12 @@ class Autocomplete {
                 if (this.autoInsert && !this.autoShown && filtered.length == 1)
                     return this.insertMatch(filtered[0]);
             }
-            this.completions = completions;
+            this.completions = finished ? 
+                completions : 
+                new FilteredList(
+                    Autocomplete.completionsForLoading.concat(filtered), completions.filterText
+                );
+
             this.openPopup(this.editor, prefix, keepPopupPosition);
 
             this.popup.renderer.setStyle("ace_loading", !finished);
