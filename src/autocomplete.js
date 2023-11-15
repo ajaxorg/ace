@@ -105,10 +105,11 @@ class Autocomplete {
         }.bind(this), this.stickySelectionDelay);
     }
 
-    static completionsForLoading = [{
-        caption: config.nls("Loading..."),
-        value: ""
-    }];
+    static get completionsForLoading() { return [{
+            caption: config.nls("Loading..."),
+            value: ""
+        }];
+    };
 
     $init() {
         this.popup = new AcePopup(this.parentNode || document.body || document.documentElement); 
