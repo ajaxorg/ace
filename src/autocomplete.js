@@ -109,7 +109,7 @@ class Autocomplete {
             caption: config.nls("Loading..."),
             value: ""
         }];
-    };
+    }
 
     $init() {
         this.popup = new AcePopup(this.parentNode || document.body || document.documentElement); 
