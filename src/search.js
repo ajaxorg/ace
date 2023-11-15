@@ -24,6 +24,7 @@ class Search {
      * @property {boolean} [$isMultiLine] - true, if needle has \n or \r\n
      * @property {boolean} [preserveCase]
      * @property {boolean} [preventScroll]
+     * @property {boolean} [$supportsUnicodeFlag] - internal property, determine if browser supports unicode flag
      * @property {any} [re]
      **/
     
@@ -225,9 +226,10 @@ class Search {
 
         try {
             new RegExp(needle, "u");
+            options.$supportsUnicodeFlag = true;
             modifier += "u";
         } catch (e) {
-            // left for backward compatibility with previous versions for cases like /ab\{2}/gu
+            options.$supportsUnicodeFlag = false; //left for backward compatibility with previous versions for cases like /ab\{2}/gu
         }
 
         if (options.wholeWord)
@@ -385,10 +387,10 @@ function addWordBoundary(needle, options) {
     let supportsLookbehind = lang.supportsLookbehind();
 
     function wordBoundary(c, firstChar = true) {
-        let wordRegExp = supportsLookbehind && options.regExp.unicode ? new RegExp("[\\p{L}\\p{N}_]","u") : new RegExp("\\w");
+        let wordRegExp = supportsLookbehind && options.$supportsUnicodeFlag ? new RegExp("[\\p{L}\\p{N}_]","u") : new RegExp("\\w");
 
         if (wordRegExp.test(c) || options.regExp) {
-            if (supportsLookbehind && options.regExp.unicode) {
+            if (supportsLookbehind && options.$supportsUnicodeFlag) {
                 if (firstChar) return "(?<=^|[^\\p{L}\\p{N}_])";
                 return "(?=[^\\p{L}\\p{N}_]|$)";
             }
