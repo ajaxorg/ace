@@ -65,6 +65,14 @@ class Autocomplete {
         this.setSelectOnHover = false;
 
         /**
+         *  @property {Boolean} showLoadingState - A boolean indicating whether the loading states of the Autocompletion should be shown to the end-user. If enabled 
+         * it shows a loading indicator on the popup while autocomplete is loading.
+         * 
+         * Experimental: This visualisation is not yet considered stable and might change in the future.
+         */
+        this.showLoadingState = false;
+
+        /**
          *  @property {number} stickySelectionDelay - a numerical value that determines after how many ms the popup selection will become 'sticky'.
          *  Normally, when new elements are added to an open popup, the selection is reset to the first row of the popup. If sticky, the focus will remain
          *  on the currently selected item when new items are added to the popup. Set to a negative value to disable this feature and never set selection to sticky.
@@ -91,14 +99,16 @@ class Autocomplete {
             var initialPosition = this.completionProvider && this.completionProvider.initialPosition;
             if (this.autoShown || (this.popup && this.popup.isOpen) || !initialPosition) return;
 
-            var completionsForEmpty = [{
-                caption: config.nls("Loading..."),
-                value: ""
-            }];
-            this.completions = new FilteredList(completionsForEmpty);
+            this.completions = new FilteredList(Autocomplete.completionsForLoading);
             this.openPopup(this.editor, initialPosition.prefix, false);
             this.popup.renderer.setStyle("ace_loading", true);
         }.bind(this), this.stickySelectionDelay);
+    }
+
+    static get completionsForLoading() { return [{
+            caption: config.nls("Loading..."),
+            value: ""
+        }];
     }
 
     $init() {
@@ -238,7 +248,8 @@ class Autocomplete {
         this.popup.autoSelect = this.autoSelect;
         this.popup.setSelectOnHover(this.setSelectOnHover);
 
-        var previousSelectedItem = this.popup.data[this.popup.getRow()];
+        var oldRow = this.popup.getRow();
+        var previousSelectedItem = this.popup.data[oldRow];
 
         this.popup.setData(this.completions.filtered, this.completions.filterText);
         if (this.editor.textInput.setAriaOptions) {
@@ -250,12 +261,17 @@ class Autocomplete {
 
         editor.keyBinding.addKeyboardHandler(this.keyboardHandler);
         
-        var newRow = this.popup.data.indexOf(previousSelectedItem);
-
-        if (newRow && this.stickySelection)
-            this.popup.setRow(this.autoSelect ? newRow : -1);
-        else
-            this.popup.setRow(this.autoSelect ? 0 : -1);
+        var newRow;
+        if (this.stickySelection)
+            newRow = this.popup.data.indexOf(previousSelectedItem); 
+        if (!newRow || newRow === -1) 
+            newRow = 0;
+        
+        this.popup.setRow(this.autoSelect ? newRow : -1);
+     
+        // If we stay on the same row, but the content is different, we want to update the popup.
+        if (newRow === oldRow && previousSelectedItem !== this.completions.filtered[newRow]) 
+            this.$onPopupChange();
 
         if (!keepPopupPosition) {
             this.popup.setTheme(editor.getTheme());
@@ -458,6 +474,7 @@ class Autocomplete {
                         }];
                         this.completions = new FilteredList(completionsForEmpty);
                         this.openPopup(this.editor, prefix, keepPopupPosition);
+                        this.popup.renderer.setStyle("ace_loading", false);
                         return;
                     }
                     return this.detach();
@@ -471,13 +488,20 @@ class Autocomplete {
                 if (this.autoInsert && !this.autoShown && filtered.length == 1)
                     return this.insertMatch(filtered[0]);
             }
-            this.completions = completions;
+            // If showLoadingState is true and there is still a completer loading, show 'Loading...'
+            // in the top row of the completer popup.
+            this.completions = !finished && this.showLoadingState ? 
+                new FilteredList(
+                    Autocomplete.completionsForLoading.concat(filtered), completions.filterText
+                ) :
+                completions;
+
             this.openPopup(this.editor, prefix, keepPopupPosition);
 
             this.popup.renderer.setStyle("ace_loading", !finished);
         }.bind(this));
 
-        if (!this.autoShown && !(this.popup && this.popup.isOpen)) {
+        if (this.showLoadingState && !this.autoShown && !(this.popup && this.popup.isOpen)) {
             this.$firstOpenTimer.delay(this.stickySelectionDelay/2);
         }
     }
