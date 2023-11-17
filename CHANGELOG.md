@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.31.2](https://github.com/ajaxorg/ace/compare/v1.31.1...v1.31.2) (2023-11-15)
+
+
+### Bug Fixes
+
+* inline preview with loading state ([05db94f](https://github.com/ajaxorg/ace/commit/05db94f53774f64318de757347f7217043744fe6))
+
 ### [1.31.1](https://github.com/ajaxorg/ace/compare/v1.31.0...v1.31.1) (2023-10-30)
 
 
