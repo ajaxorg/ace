@@ -131,6 +131,14 @@ var MarkdownHighlightRules = function () {
             }, {
                 token: "empty",
                 regex: "",
+                onMatch: function (value, scope, stack, line) {
+                  if (/^ {4,}/.test(line)) {
+                      this.next = "codeBlockInline";
+                      return "support.function";
+                  }
+                  this.next = "paragraph";
+                  return "empty";
+                },
                 next: "paragraph"
             }
         ]
@@ -451,7 +459,7 @@ var MarkdownHighlightRules = function () {
                         }
                         if (scope.parent.name === "listBlockEmpty") {
                             if (currentIndent >= scope.parent.parent.indent + 4) {
-                                return scope.get("codeBlockInline").get(this.token);
+                                return scope.get("codeBlockInline").get("support.function");
                             }
                         }
                         if (scope.parent.name === "listBlockEmpty" && (currentScope.parent.parent.indent
