@@ -47,6 +47,10 @@ function GutterHandler(mouseHandler) {
                 return hideTooltip();
         }
 
+        // Don't show the tooltip if the gutter annotation is hidden.
+        if (gutter.$hideAnnotationCursorRow && row == gutter.$cursorRow)
+            return hideTooltip();
+
         tooltip.showTooltip(row);
 
         if (!tooltip.isOpen)

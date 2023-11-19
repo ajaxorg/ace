@@ -18,6 +18,7 @@ class Gutter{
 
         this.$annotations = [];
         this.$updateAnnotations = this.$updateAnnotations.bind(this);
+        this.$hideAnnotationCursorRow = false;
 
         this.$lines = new Lines(this.element);
         this.$lines.$offsetCoefficient = 1;
@@ -434,6 +435,12 @@ class Gutter{
         dom.setStyle(cell.element.style, "top", this.$lines.computeLineTop(row, config, session) + "px");
         
         cell.text = rowText;
+
+        // hide the annotation for the cursor row if desired.
+        if (this.$hideAnnotationCursorRow && row == this.$cursorRow) {
+            element.classList.remove("ace_info", "ace_warning", "ace_error", "ace_error_fold", "ace_warning_fold");
+            dom.setStyle(annotationNode.style, "display", "none");
+        }
 
         // If there are no annotations or fold widgets in the gutter cell, hide it from assistive tech.
         if (annotationNode.style.display === "none" && foldWidget.style.display === "none")

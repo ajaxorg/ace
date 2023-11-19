@@ -71,6 +71,7 @@ class Autocomplete {
          * Experimental: This visualisation is not yet considered stable and might change in the future.
          */
         this.showLoadingState = false;
+        this.gutterLoadingClasses = [];
 
         /**
          *  @property {number} stickySelectionDelay - a numerical value that determines after how many ms the popup selection will become 'sticky'.
@@ -97,7 +98,13 @@ class Autocomplete {
 
         this.$firstOpenTimer = lang.delayedCall(function() {
             var initialPosition = this.completionProvider && this.completionProvider.initialPosition;
-            if (this.autoShown || (this.popup && this.popup.isOpen) || !initialPosition) return;
+
+            if (this.autoShown) {
+                this.setGutterLoadingClasses();
+                return;
+            }
+
+            if ((this.popup && this.popup.isOpen) || !initialPosition) return;
 
             this.completions = new FilteredList(Autocomplete.completionsForLoading);
             this.openPopup(this.editor, initialPosition.prefix, false);
@@ -109,6 +116,33 @@ class Autocomplete {
             caption: config.nls("Loading..."),
             value: ""
         }];
+    }
+
+    setGutterLoadingClasses() {
+        var cursor = this.editor.selection.lead;
+        var completers = this.completionProvider.completers;
+        
+        // If the decoration was previously added at a different row, make sure it's removed.
+        if (this.gutterLoadingRow !== cursor.row) {
+            this.removeGutterLoadingClasses();
+        }
+
+        this.gutterLoadingRow = cursor.row;
+        this.gutterLoadingClasses = [];
+
+        for (var i = 0; i < completers.length; i++) 
+            if (completers[i].loaddingClassName) 
+                this.gutterLoadingClasses.push(completers[i].loaddingClassName);
+
+        if (this.gutterLoadingClasses.length === 0) return;
+        
+        this.editor.session.addGutterDecoration(this.gutterLoadingRow, this.gutterLoadingClasses.join(" "));
+        this.editor.renderer.$gutterLayer.$hideAnnotationCursorRow = true;
+    }   
+
+    removeGutterLoadingClasses() {
+        this.editor.session.removeGutterDecoration(this.gutterLoadingRow, this.gutterLoadingClasses.join(" "));
+        this.editor.renderer.$gutterLayer.$hideAnnotationCursorRow = false;
     }
 
     $init() {
@@ -238,6 +272,7 @@ class Autocomplete {
 
     openPopup(editor, prefix, keepPopupPosition) {
         this.$firstOpenTimer.cancel();
+        this.removeGutterLoadingClasses();
 
         if (!this.popup)
             this.$init();
@@ -298,6 +333,7 @@ class Autocomplete {
             this.editor.off("blur", this.blurListener);
             this.editor.off("mousedown", this.mousedownListener);
             this.editor.off("mousewheel", this.mousewheelListener);
+            this.removeGutterLoadingClasses();
         }
         this.$firstOpenTimer.cancel();
 
@@ -462,6 +498,8 @@ class Autocomplete {
             this.$firstOpenTimer.cancel();
 
             if (finished) {
+                this.removeGutterLoadingClasses();
+
                 // No results
                 if (!filtered.length) {
                     var emptyMessage = !this.autoShown && this.emptyMessage;
@@ -501,7 +539,7 @@ class Autocomplete {
             this.popup.renderer.setStyle("ace_loading", !finished);
         }.bind(this));
 
-        if (this.showLoadingState && !this.autoShown && !(this.popup && this.popup.isOpen)) {
+        if (this.showLoadingState && !(this.popup && this.popup.isOpen)) {
             this.$firstOpenTimer.delay(this.stickySelectionDelay/2);
         }
     }
