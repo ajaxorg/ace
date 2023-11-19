@@ -275,31 +275,37 @@ class HoverTooltip extends Tooltip {
         
         this.addMarker(range, editor.session);
         this.range = Range.fromPoints(range.start, range.end);
+        var position = renderer.textToScreenCoordinates(range.start.row, range.start.column);
+        
+        var rect = renderer.scroller.getBoundingClientRect();
+        if (position.pageX < rect.left)
+            position.pageX = rect.left;
+        
+        var maxWidth = Math.min(60 * renderer.characterWidth, window.innerWidth * 0.66);
         
         var element = this.getElement();
         element.innerHTML = "";
         element.appendChild(domNode);
-        element.style.display = "block";
         
-        var position = renderer.textToScreenCoordinates(range.start.row, range.start.column);
+        element.style.maxWidth = maxWidth + "px";
+        element.style.maxHeight = "";
+        element.style.display = "block";        
         
         var labelHeight = element.clientHeight;
-        var rect = renderer.scroller.getBoundingClientRect();
+        var labelWidth = element.clientWidth;
+        var spaceBelow = window.innerHeight - position.pageY - renderer.lineHeight;
 
         let isAbove = true;
-        if (position.pageY - labelHeight < 0) {
+        if (position.pageY - labelHeight < 0 && position.pageY < spaceBelow) {
             // does not fit in window
             isAbove = false;
         }
-        if (isAbove) {
-            position.pageY -= labelHeight;
-        } else {
-            position.pageY += renderer.lineHeight;
-        }
+        
+        element.style.maxHeight = (isAbove ? position.pageY : spaceBelow) - 10 + "px";
 
-        element.style.maxWidth = rect.width - (position.pageX - rect.left) + "px";
-
-        this.setPosition(position.pageX, position.pageY);
+        element.style.left = Math.min(position.pageX, window.innerWidth - labelWidth) + "px";
+        element.style.top = isAbove ? "" : position.pageY + renderer.lineHeight + "px";
+        element.style.bottom = isAbove ?  window.innerHeight - position.pageY  + "px" : "";
     }
     
     addMarker(range, session) {
@@ -347,7 +353,7 @@ class HoverTooltip extends Tooltip {
         this.lastEvent = null;
         if (!this.isOpen) return;
 
-        if (!e.relatedTarget || e.relatedTarget == this.getElement()) return;
+        if (!e.relatedTarget || this.getElement().contains(e.relatedTarget)) return;
 
         if (e && e.currentTarget.contains(e.relatedTarget)) return;
         if (!e.relatedTarget.classList.contains("ace_content")) this.hide();

@@ -448,13 +448,17 @@ module.exports = `
     z-index: 999999;
     box-sizing: border-box;
     cursor: default;
-    white-space: pre;
+    white-space: pre-wrap;
     word-wrap: break-word;
     line-height: normal;
     font-style: normal;
     font-weight: normal;
     letter-spacing: normal;
     pointer-events: none;
+    overflow: auto;
+}
+.ace_tooltip pre {
+    white-space: pre-wrap;
 }
 
 .ace_tooltip.ace_dark {
