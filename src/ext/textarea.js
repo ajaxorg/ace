@@ -89,7 +89,7 @@ function setupContainer(element, getValue) {
 
         // Set the display property to 'inline-block'.
         style += 'display:inline-block;';
-        container.setAttribute('style', style);
+        container.style.cssText = style;
     };
     event.addListener(window, 'resize', resizeEvent);
 
