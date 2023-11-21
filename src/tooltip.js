@@ -335,13 +335,13 @@ class HoverTooltip extends Tooltip {
 
     $registerCloseEvents() {
         window.addEventListener("keydown", this.hide, true);
-        window.addEventListener("mousewheel", this.hide, true);
+        window.addEventListener("wheel", this.hide, true);
         window.addEventListener("mousedown", this.hide, true);
     }
 
     $removeCloseEvents() {
         window.removeEventListener("keydown", this.hide, true);
-        window.removeEventListener("mousewheel", this.hide, true);
+        window.removeEventListener("wheel", this.hide, true);
         window.removeEventListener("mousedown", this.hide, true);
     }
 
