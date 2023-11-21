@@ -262,6 +262,7 @@ class HoverTooltip extends Tooltip {
     }
     
     showForRange(editor, range, domNode, startingEvent) {
+        var MARGIN = 10;
         if (startingEvent && startingEvent != this.lastEvent) return;
         if (this.isOpen && document.activeElement == this.getElement()) return;
         
@@ -278,9 +279,10 @@ class HoverTooltip extends Tooltip {
         var position = renderer.textToScreenCoordinates(range.start.row, range.start.column);
         
         var rect = renderer.scroller.getBoundingClientRect();
+        // clip position to visible area of the editor
         if (position.pageX < rect.left)
             position.pageX = rect.left;
-        
+        // limit popup size to 60 characters, or to 2/3 of window width
         var maxWidth = Math.min(60 * renderer.characterWidth, window.innerWidth * 0.66);
         
         var element = this.getElement();
@@ -291,21 +293,23 @@ class HoverTooltip extends Tooltip {
         element.style.maxHeight = "";
         element.style.display = "block";        
         
+        // measure the size of tooltip, without constraints on its height
         var labelHeight = element.clientHeight;
         var labelWidth = element.clientWidth;
         var spaceBelow = window.innerHeight - position.pageY - renderer.lineHeight;
 
+        // if tooltip fits above the line, or space below the line is smaller, show tooltip above
         let isAbove = true;
         if (position.pageY - labelHeight < 0 && position.pageY < spaceBelow) {
-            // does not fit in window
             isAbove = false;
         }
         
-        element.style.maxHeight = (isAbove ? position.pageY : spaceBelow) - 10 + "px";
-
-        element.style.left = Math.min(position.pageX, window.innerWidth - labelWidth) + "px";
+        element.style.maxHeight = (isAbove ? position.pageY : spaceBelow) - MARGIN + "px";
         element.style.top = isAbove ? "" : position.pageY + renderer.lineHeight + "px";
         element.style.bottom = isAbove ?  window.innerHeight - position.pageY  + "px" : "";
+        
+        // try to align tooltip left with the range, but keep it on screen
+        element.style.left = Math.min(position.pageX, window.innerWidth - labelWidth - MARGIN) + "px";
     }
     
     addMarker(range, session) {
