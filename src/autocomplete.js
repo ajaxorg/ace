@@ -546,6 +546,8 @@ class Autocomplete {
             this.tooltipNode.onclick = this.onTooltipClick.bind(this);
             this.tooltipNode.id = "doc-tooltip";
             this.tooltipNode.setAttribute("role", "tooltip");
+            // prevent editor scroll if tooltip is inside an editor
+            this.tooltipNode.addEventListener("wheel", event.stopPropagation);
         }
         var theme = this.editor.renderer.theme;
         this.tooltipNode.className = "ace_tooltip ace_doc-tooltip " +
