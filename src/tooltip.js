@@ -282,14 +282,11 @@ class HoverTooltip extends Tooltip {
         // clip position to visible area of the editor
         if (position.pageX < rect.left)
             position.pageX = rect.left;
-        // limit popup size to 60 characters, or to 2/3 of window width
-        var maxWidth = Math.min(60 * renderer.characterWidth, window.innerWidth * 0.66);
         
         var element = this.getElement();
         element.innerHTML = "";
         element.appendChild(domNode);
         
-        element.style.maxWidth = maxWidth + "px";
         element.style.maxHeight = "";
         element.style.display = "block";        
         

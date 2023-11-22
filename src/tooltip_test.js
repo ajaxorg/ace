@@ -115,6 +115,9 @@ module.exports = {
         var h = window.innerHeight;
         editor.resize(true); 
         
+        // workaround for css styles not being applied in mockdom
+        docTooltip.$element.style.maxWidth = "300px";
+        
         // prefer showing above if possible
         editor.container.style.top = 20 + "px";
         editor.container.style.top = h / 3 + "px";
@@ -127,7 +130,7 @@ module.exports = {
         assert.ok(position.pageX < 0);
         var rect = docTooltip.$element.getBoundingClientRect();
         assert.ok(rect.left > 0);
-        assert.ok(rect.top < h / 3);     
+        assert.ok(rect.top < h / 3);
         
         // show below if height is large
         domNode.style.height = 2 * h + "px";

@@ -456,6 +456,7 @@ module.exports = `
     letter-spacing: normal;
     pointer-events: none;
     overflow: auto;
+    max-width: min(60em, 66vw);
 }
 .ace_tooltip pre {
     white-space: pre-wrap;
