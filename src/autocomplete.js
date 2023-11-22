@@ -92,7 +92,6 @@ class Autocomplete {
         this.tooltipTimer = lang.delayedCall(this.updateDocTooltip.bind(this), 50);
         this.popupTimer = lang.delayedCall(this.$updatePopupPosition.bind(this), 50);
 
-
         this.stickySelectionTimer = lang.delayedCall(function() {
             this.stickySelection = true;
         }.bind(this), this.stickySelectionDelay);
@@ -145,6 +144,7 @@ class Autocomplete {
         }
         this.hideDocTooltip();
         this.stickySelectionTimer.cancel();
+        this.popupTimer.cancel();
         this.stickySelection = false;
     }
 

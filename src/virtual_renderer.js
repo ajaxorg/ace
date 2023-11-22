@@ -1623,9 +1623,8 @@ class VirtualRenderer {
 
             // Check wether the line widget fits in the part of the screen currently in view
             var pixelPosition = this.$cursorLayer.getPixelPosition(insertPosition, true);
-            console.log(pixelPosition)
             var el = this.container;
-            var height = el.clientHeight || el.scrollHeight;
+            var height = el.clientHeight;
             var fitsY = textLines.length * this.lineHeight < height - pixelPosition.top;
 
             // If it fits, no action needed

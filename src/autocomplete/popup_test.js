@@ -32,8 +32,12 @@ var tryShowAndRender = function(pos, lineHeight, anchor, forceShow) {
 };
 
 
-var setupPopup = function() {
-    popup = new AcePopup(document.body);
+var setupPopup = function(parentNode) {
+    if (parentNode) {
+        popup = new AcePopup(parentNode);
+    } else {
+        popup = new AcePopup(document.body);
+    }
 
     // Mock the CSS behaviour
     popup.container.style.width = "300px";
@@ -207,6 +211,26 @@ module.exports = {
         assert.ok(popup.container.getBoundingClientRect().top >= 50 + lineHeight);
         popup.hide();
         assert.strictEqual(popup.container.style.display, "none");
+        done();
+    },
+    "test: should keep popup contained to parentNode if specified": function(done) {
+        document.body.style.height = 1000 + 'px';
+
+        var parentNode = document.createElement("div");
+        parentNode.style.width = "500px";
+        parentNode.style.height = "500px";
+        document.body.appendChild(parentNode);
+        
+        setupPopup(parentNode);
+
+        // below shouldn't fit 
+        var result = tryShowAndRender({ top: 450, left: 0 }, lineHeight, "bottom", false);
+        assert.strictEqual(result, false);
+
+        // above should fit 
+        var result = tryShowAndRender({ top: 450, left: 0 }, lineHeight, "top", false);
+        assert.strictEqual(result, true);
+
         done();
     },
     tearDown: tearDown
