@@ -228,7 +228,23 @@ module.exports = {
         assert.strictEqual(result, false);
 
         // above should fit 
-        var result = tryShowAndRender({ top: 450, left: 0 }, lineHeight, "top", false);
+        result = tryShowAndRender({ top: 450, left: 0 }, lineHeight, "top", false);
+        assert.strictEqual(result, true);
+
+        done();
+    },
+    "test: should not keep popup contained to container if no parentNode is specified": function(done) {
+        document.body.style.height = 1000 + 'px';
+
+        var parentNode = document.createElement("div");
+        parentNode.style.width = "500px";
+        parentNode.style.height = "500px";
+        document.body.appendChild(parentNode);
+        
+        setupPopup(undefined);
+
+        // below should fit 
+        var result = tryShowAndRender({ top: 450, left: 0 }, lineHeight, "bottom", false);
         assert.strictEqual(result, true);
 
         done();
