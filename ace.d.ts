@@ -1071,6 +1071,7 @@ export namespace Ace {
     setSelectOnHover?: Boolean;
     stickySelectionDelay?: Number;
     ignoreCaption?: Boolean;
+    showLoadingState?: Boolean;
     emptyMessage?(prefix: String): String;
     getPopup(): AcePopup;
     showPopup(editor: Editor, options: CompletionOptions): void;

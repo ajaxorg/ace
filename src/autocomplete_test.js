@@ -989,6 +989,7 @@ module.exports = {
         
         var completer = Autocomplete.for(editor);
         completer.stickySelectionDelay = 100;
+        completer.showLoadingState = true;
         user.type("Ctrl-Space");
         assert.ok(!(completer.popup && completer.popup.isOpen));
 
@@ -1005,14 +1006,117 @@ module.exports = {
 
                 editor.completers = [fastCompleter, slowCompleter];
                 user.type("Ctrl-Space");
-                assert.equal(completer.popup.data.length, 3); 
+                assert.equal(completer.popup.data.length, 4); 
+
+                // Should have top row saying 'Loading...' together with results.
                 assert.ok(isLoading());
+                assert.equal(completer.popup.data[0].caption, "Loading..."); 
                 setTimeout(() => {
                     completer.popup.renderer.$loop._flush();
                     assert.equal(completer.popup.data.length, 5);
                     assert.ok(!isLoading());
                     done();
                 }, 250);  
+            }, 150);
+        }, 100);
+        
+        function isLoading() {
+            return completer.popup.renderer.container.classList.contains("ace_loading");
+        }
+    },
+    "test: should not display loading state on no suggestion state": function(done) {
+        var editor = initEditor("hello world\n");
+        
+        var slowCompleter = {
+            getCompletions: function (editor, session, pos, prefix, callback) {
+                var completions = [
+                    {
+                        caption: "slow option 1",
+                        value: "s1",
+                        score: 3
+                    }, {
+                        caption: "slow option 2",
+                        value: "s2",
+                        score: 0
+                    }
+                ];
+                setTimeout(() => {
+                    callback(null,  completions);
+                }, 200);
+            }
+        };
+
+        editor.completers = [slowCompleter];
+        
+        var completer = Autocomplete.for(editor);
+        completer.stickySelectionDelay = 100;
+        completer.emptyMessage = "no completions";
+        completer.showLoadingState = true;
+
+        user.type("doesntmatchanything");
+        user.type("Ctrl-Space");
+        assert.ok(!(completer.popup && completer.popup.isOpen));
+
+        setTimeout(() => {
+            completer.popup.renderer.$loop._flush();
+            assert.equal(completer.popup.data.length, 1);
+            assert.ok(isLoading());
+            setTimeout(() => {
+                // Should show no suggestions state without loading indicator
+                assert.equal(completer.popup.data.length, 1); 
+                assert.equal(completer.popup.data[0].caption, "no completions");
+                assert.ok(!isLoading());
+    
+                done();
+            }, 150);
+        }, 100);
+        
+        function isLoading() {
+            return completer.popup.renderer.container.classList.contains("ace_loading");
+        }
+    },
+    "test: should display ghost text after loading state if inline preview enabled": function(done) {
+        var editor = initEditor("hello world\n");
+        
+        var slowCompleter = {
+            getCompletions: function (editor, session, pos, prefix, callback) {
+                var completions = [
+                    {
+                        caption: "slow option 1",
+                        value: "s1",
+                        score: 3
+                    }, {
+                        caption: "slow option 2",
+                        value: "s2",
+                        score: 0
+                    }
+                ];
+                setTimeout(() => {
+                    callback(null,  completions);
+                }, 200);
+            }
+        };
+
+        editor.completers = [slowCompleter];
+        
+        var completer = Autocomplete.for(editor);
+        completer.stickySelectionDelay = 100;
+        completer.inlineEnabled = true;
+        completer.showLoadingState = true;
+
+        user.type("Ctrl-Space");
+        assert.ok(!(completer.popup && completer.popup.isOpen));
+
+        setTimeout(() => {
+            completer.popup.renderer.$loop._flush();
+            assert.equal(completer.popup.data.length, 1);
+            assert.ok(isLoading());
+            setTimeout(() => {
+                assert.equal(completer.popup.data.length, 2); 
+                assert.ok(!isLoading());
+                
+                assert.strictEqual(editor.renderer.$ghostText.text, "s1");
+                done();
             }, 150);
         }, 100);
         
