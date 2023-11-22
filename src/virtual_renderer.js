@@ -1620,8 +1620,26 @@ class VirtualRenderer {
                 className: "ace_ghost_text"
             };
             this.session.widgetManager.addLineWidget(this.$ghostTextWidget);
+
+            // Check wether the line widget fits in the part of the screen currently in view
+            var pixelPosition = this.$cursorLayer.getPixelPosition(insertPosition, true);
+            console.log(pixelPosition)
+            var el = this.container;
+            var height = el.clientHeight || el.scrollHeight;
+            var fitsY = textLines.length * this.lineHeight < height - pixelPosition.top;
+
+            // If it fits, no action needed
+            if (fitsY) return;
+            
+            // If it can fully fit in the screen, scroll down until it fits on the screen
+            // if it cannot fully fit, scroll so that the cursor is at the top of the screen
+            // to fit as much as possible.
+            if (textLines.length * this.lineHeight < height) {
+                this.scrollBy(0, (textLines.length - 1) * this.lineHeight);
+            } else {
+                this.scrollBy(0, -pixelPosition.top);
+            }   
         }
-        
     }
 
     removeGhostText() {
