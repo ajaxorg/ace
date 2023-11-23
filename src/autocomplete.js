@@ -165,10 +165,11 @@ class Autocomplete {
 
             // Update the popup position after a short wait to account for potential scrolling
             this.popupTimer.schedule();
+            this.tooltipTimer.schedule();
         } else {
             this.$updatePopupPosition();
+            this.tooltipTimer.call(null, null);
         }
-        this.tooltipTimer.call(null, null);
     }
 
     $onPopupShow(hide) {
