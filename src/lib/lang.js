@@ -181,11 +181,6 @@ exports.supportsLookbehind = function () {
     return true;
 };
 
-exports.supportsUnicodeFlag = function () {
-    try {
-        new RegExp('^.$', 'u');
-    } catch (error) {
-        return false;
-    }
-    return true;
+exports.skipEmptyMatch = function(line, last, supportsUnicodeFlag) {
+    return supportsUnicodeFlag && line.codePointAt(last) > 0xffff ? 2 : 1;
 };

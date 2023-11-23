@@ -218,28 +218,22 @@ class Search {
 
         if (!options.needle)
             return options.re = false;
-        
-        if (options.$supportsUnicodeFlag === undefined) {
-            options.$supportsUnicodeFlag = lang.supportsUnicodeFlag();
-        }
 
-        try {
-            new RegExp(needle, "u");
-        } catch (e) {
-            options.$supportsUnicodeFlag = false; //left for backward compatibility with previous versions for cases like /ab\{2}/gu
-        }
-        
         if (!options.regExp)
             needle = lang.escapeRegExp(needle);
 
-        if (options.wholeWord)
-            needle = addWordBoundary(needle, options);
-
         var modifier = options.caseSensitive ? "gm" : "gmi";
 
-        if (options.$supportsUnicodeFlag) {
+        try {
+            new RegExp(needle, "u");
+            options.$supportsUnicodeFlag = true;
             modifier += "u";
+        } catch (e) {
+            options.$supportsUnicodeFlag = false; //left for backward compatibility with previous versions for cases like /ab\{2}/gu
         }
+
+        if (options.wholeWord)
+            needle = addWordBoundary(needle, options);
         
         options.$isMultiLine = !$disableFakeMultiline && /[\n\r]/.test(needle);
         if (options.$isMultiLine)
@@ -270,6 +264,7 @@ class Search {
             return false;
         var backwards = options.backwards == true;
         var skipCurrent = options.skipCurrent != false;
+        var supportsUnicodeFlag = re.unicode;
 
         var range = options.range;
         var start = options.start;
@@ -343,7 +338,7 @@ class Search {
                     last = m.index;
                     if (!length) {
                         if (last >= line.length) break;
-                        re.lastIndex = last += 1;
+                        re.lastIndex = last += lang.skipEmptyMatch(line, last, supportsUnicodeFlag);
                     }
                     if (m.index + length > endIndex)
                         break;
@@ -369,7 +364,7 @@ class Search {
                     if (callback(row, last, row,last + length))
                         return true;
                     if (!length) {
-                        re.lastIndex = last += 1;
+                        re.lastIndex = last += lang.skipEmptyMatch(line, last, supportsUnicodeFlag);
                         if (last >= line.length) return false;
                     }
                 }
