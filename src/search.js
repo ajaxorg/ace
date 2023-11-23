@@ -338,8 +338,7 @@ class Search {
                     last = m.index;
                     if (!length) {
                         if (last >= line.length) break;
-                        re.lastIndex = last +=
-                            supportsUnicodeFlag && (line.charCodeAt(last) ^ 0xd800) < 1024 ? 2 : 1;
+                        re.lastIndex = last += lang.skipEmptyMatch(line, last, supportsUnicodeFlag);
                     }
                     if (m.index + length > endIndex)
                         break;
@@ -365,8 +364,7 @@ class Search {
                     if (callback(row, last, row,last + length))
                         return true;
                     if (!length) {
-                        re.lastIndex = last +=
-                            supportsUnicodeFlag && (line.charCodeAt(last) ^ 0xd800) < 1024 ? 2 : 1;
+                        re.lastIndex = last += lang.skipEmptyMatch(line, last, supportsUnicodeFlag);
                         if (last >= line.length) return false;
                     }
                 }

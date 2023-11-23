@@ -189,8 +189,7 @@ class SearchBox {
                 if (all > MAX_COUNT)
                     break;
                 if (!m[0]) {
-                    regex.lastIndex = last +=
-                        supportsUnicodeFlag && (value.charCodeAt(last) ^ 0xd800) < 1024 ? 2 : 1;
+                    regex.lastIndex = last += lang.skipEmptyMatch(value, last, supportsUnicodeFlag);
                     if (last >= value.length)
                         break;
                 }

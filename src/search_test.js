@@ -9,6 +9,7 @@ var MockRenderer = require("./test/mockrenderer").MockRenderer;
 var Editor = require("./editor").Editor;
 var Search = require("./search").Search;
 var assert = require("./test/assertions");
+var Range = require("./range").Range;
 
 module.exports = {
     "test: configure the search object" : function() {
@@ -170,6 +171,38 @@ module.exports = {
         var range = search.find(session);
         assert.position(range.start, 1, 0);
         assert.position(range.end, 1, 6);
+    },
+
+    "test: return to unicode mode when possible": function() {
+        var session = new EditSession(["𝓕oo"]);
+
+        var search = new Search().set({
+            needle: "}",
+            regExp: true
+        });
+
+        search.find(session);
+        search.set({
+            needle: "."
+        });
+
+        var range = search.find(session);
+        assert.position(range.start, 0, 0);
+        assert.position(range.end, 0, 2);
+    },
+
+    "test: empty match before surrogate pair": function() {
+        var session = new EditSession(["𝓕oo"]);
+
+        var search = new Search().set({
+            needle: "()",
+            regExp: true,
+            start: new Range(0, 0, 0, 0)
+        });
+
+        var range = search.find(session);
+        assert.position(range.start, 0, 2);
+        assert.position(range.end, 0, 2);
     },
 
     "test: find backwards": function() {
