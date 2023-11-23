@@ -1636,7 +1636,7 @@ class VirtualRenderer {
             if (textLines.length * this.lineHeight < height) {
                 this.scrollBy(0, (textLines.length - 1) * this.lineHeight);
             } else {
-                this.scrollBy(0, -pixelPosition.top);
+                this.scrollBy(0, pixelPosition.top);
             }   
         }
     }
