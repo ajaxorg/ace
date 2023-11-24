@@ -44,7 +44,6 @@ class AcePopup {
 
         if (parentNode) {
             parentNode.appendChild(el);
-            popup.parentNode = parentNode;
         }
         el.style.display = "none";
         popup.renderer.content.style.cursor = "default";
@@ -300,13 +299,7 @@ class AcePopup {
             var maxH = renderer.$maxLines * lineHeight * 1.4;
             var dims = { top: 0, bottom: 0, left: 0 };
 
-            var spaceBelow;
-            // If the popup has a specified parent node, calculate spaceBelow w.r.t. the parent
-            if (popup.parentNode) {
-                spaceBelow = popup.parentNode.clientHeight - pos.top - 3 * this.$borderSize - lineHeight;
-            } else {
-                spaceBelow = screenHeight - pos.top - 3 * this.$borderSize - lineHeight;
-            }
+            var spaceBelow = screenHeight - pos.top - 3 * this.$borderSize - lineHeight;
             var spaceAbove = pos.top - 3 * this.$borderSize;
             if (!anchor) {
                 if (spaceAbove <= spaceBelow || spaceBelow >= maxH) {
@@ -324,17 +317,7 @@ class AcePopup {
                 dims.bottom = dims.top + maxH;
             }
 
-            var fitsX;
-            // If the popup has a specified parent node, keep the popup within the parent
-            if (popup.parentNode) {
-                fitsX = dims.top >= 0 && dims.bottom <=  popup.parentNode.clientHeight;
-            } else {
-                fitsX = dims.top >= 0 && dims.bottom <= screenHeight;
-            }
-
-            if (!forceShow && !fitsX) {
-                return false;
-            }
+            var fitsX = dims.top >= 0 && dims.bottom <= screenHeight;
 
             if (!fitsX) {
                 if (anchor === "top") {
