@@ -32,7 +32,6 @@ var tryShowAndRender = function(pos, lineHeight, anchor, forceShow) {
 };
 
 
-
 var setupPopup = function() {
     popup = new AcePopup(document.body);
 

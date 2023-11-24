@@ -319,6 +319,10 @@ class AcePopup {
 
             var fitsX = dims.top >= 0 && dims.bottom <= screenHeight;
 
+            if (!forceShow && !fitsX) {
+                return false;
+            }
+
             if (!fitsX) {
                 if (anchor === "top") {
                     renderer.$maxPixelHeight = spaceAbove;

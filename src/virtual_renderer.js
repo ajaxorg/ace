@@ -1639,6 +1639,7 @@ class VirtualRenderer {
                 this.scrollBy(0, pixelPosition.top);
             }   
         }
+        
     }
 
     removeGhostText() {
