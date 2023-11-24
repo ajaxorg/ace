@@ -1,6 +1,7 @@
 "use strict";
 
 var dom = require("./lib/dom");
+var event = require("./lib/event");
 var Range = require("./range").Range;
 
 var CLASSNAME = "ace_tooltip";
@@ -189,6 +190,8 @@ class HoverTooltip extends Tooltip {
         el.addEventListener("blur", function() {
             if (!el.contains(document.activeElement)) this.hide();
         }.bind(this));
+        
+        el.addEventListener("wheel", event.stopPropagation);
     }
     
     addToEditor(editor) {
@@ -262,6 +265,7 @@ class HoverTooltip extends Tooltip {
     }
     
     showForRange(editor, range, domNode, startingEvent) {
+        var MARGIN = 10;
         if (startingEvent && startingEvent != this.lastEvent) return;
         if (this.isOpen && document.activeElement == this.getElement()) return;
         
@@ -275,31 +279,37 @@ class HoverTooltip extends Tooltip {
         
         this.addMarker(range, editor.session);
         this.range = Range.fromPoints(range.start, range.end);
+        var position = renderer.textToScreenCoordinates(range.start.row, range.start.column);
+        
+        var rect = renderer.scroller.getBoundingClientRect();
+        // clip position to visible area of the editor
+        if (position.pageX < rect.left)
+            position.pageX = rect.left;
         
         var element = this.getElement();
         element.innerHTML = "";
         element.appendChild(domNode);
-        element.style.display = "block";
         
-        var position = renderer.textToScreenCoordinates(range.start.row, range.start.column);
+        element.style.maxHeight = "";
+        element.style.display = "block";        
         
+        // measure the size of tooltip, without constraints on its height
         var labelHeight = element.clientHeight;
-        var rect = renderer.scroller.getBoundingClientRect();
+        var labelWidth = element.clientWidth;
+        var spaceBelow = window.innerHeight - position.pageY - renderer.lineHeight;
 
+        // if tooltip fits above the line, or space below the line is smaller, show tooltip above
         let isAbove = true;
-        if (position.pageY - labelHeight < 0) {
-            // does not fit in window
+        if (position.pageY - labelHeight < 0 && position.pageY < spaceBelow) {
             isAbove = false;
         }
-        if (isAbove) {
-            position.pageY -= labelHeight;
-        } else {
-            position.pageY += renderer.lineHeight;
-        }
-
-        element.style.maxWidth = rect.width - (position.pageX - rect.left) + "px";
-
-        this.setPosition(position.pageX, position.pageY);
+        
+        element.style.maxHeight = (isAbove ? position.pageY : spaceBelow) - MARGIN + "px";
+        element.style.top = isAbove ? "" : position.pageY + renderer.lineHeight + "px";
+        element.style.bottom = isAbove ?  window.innerHeight - position.pageY  + "px" : "";
+        
+        // try to align tooltip left with the range, but keep it on screen
+        element.style.left = Math.min(position.pageX, window.innerWidth - labelWidth - MARGIN) + "px";
     }
     
     addMarker(range, session) {
@@ -329,13 +339,13 @@ class HoverTooltip extends Tooltip {
 
     $registerCloseEvents() {
         window.addEventListener("keydown", this.hide, true);
-        window.addEventListener("mousewheel", this.hide, true);
+        window.addEventListener("wheel", this.hide, true);
         window.addEventListener("mousedown", this.hide, true);
     }
 
     $removeCloseEvents() {
         window.removeEventListener("keydown", this.hide, true);
-        window.removeEventListener("mousewheel", this.hide, true);
+        window.removeEventListener("wheel", this.hide, true);
         window.removeEventListener("mousedown", this.hide, true);
     }
 
@@ -347,7 +357,7 @@ class HoverTooltip extends Tooltip {
         this.lastEvent = null;
         if (!this.isOpen) return;
 
-        if (!e.relatedTarget || e.relatedTarget == this.getElement()) return;
+        if (!e.relatedTarget || this.getElement().contains(e.relatedTarget)) return;
 
         if (e && e.currentTarget.contains(e.relatedTarget)) return;
         if (!e.relatedTarget.classList.contains("ace_content")) this.hide();

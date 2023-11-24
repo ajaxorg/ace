@@ -399,7 +399,7 @@ function Node(name) {
         if (position === "afterbegin") this.insertBefore(element, this.firstChild);
         if (position === "beforebegin") this.parentElement.insertBefore(element, this);
     };
-    this.getBoundingClientRect = function(v) {
+    this.getBoundingClientRect = function(fromChild) {
         var width = 0;
         var height = 0;
         var top = 0;
@@ -411,7 +411,7 @@ function Node(name) {
         else if (!document.contains(this) || this.style.display == "none") {
             width = height = 0;
         }
-        else if (this.style.width == "auto" || this.localName == "span") {
+        else if (this.style.width == "auto" || this.localName == "span" || /^inline/.test(this.style.display)) {
             width = this.textContent.length * CHAR_WIDTH;
             var node = this;
             while (node) {
@@ -424,7 +424,10 @@ function Node(name) {
             if (!height) height = CHAR_HEIGHT;
         }
         else if (this.parentNode) {
-            var rect = this.parentNode.getBoundingClientRect();
+            // prevent recursion by passing -1
+            var rect = fromChild == -1 
+                ? {top: 0, left: 0, width: 0, height: 0, right: 0, bottom: 0} 
+                : this.parentNode.getBoundingClientRect();
             
             left = parseCssLength(this.style.left || "0", rect.width);
             top = parseCssLength(this.style.top || "0", rect.height);
@@ -444,6 +447,16 @@ function Node(name) {
                 height = this.style.heightHint;
             else
                 height = rect.height - top - bottom;
+
+            var maxWidth = this.style.maxWidth && parseCssLength(this.style.maxWidth, rect.width);
+            var maxHeight = this.style.maxHeight && parseCssLength(this.style.maxHeight, rect.height);
+            
+            if (maxWidth >= 0) width = Math.min(width, maxWidth);
+            if (maxHeight >= 0) height = Math.min(height, maxHeight);
+            
+            if (!height && !this.style.height && this.firstChild && this.firstChild.getBoundingClientRect && !fromChild) {
+                height = this.firstChild.getBoundingClientRect(-1).height;
+            }
             
             top += rect.top;
             bottom += rect.bottom;
