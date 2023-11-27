@@ -153,12 +153,18 @@ class Autocomplete {
             if (!this.inlineRenderer.show(this.editor, completion, prefix)) {
                 this.inlineRenderer.hide();
             }
-
             // If the mouse is over the tooltip, and we're changing selection on hover don't
             // move the tooltip while hovering over the popup.
-            if (this.popup.isMouseOver && this.setSelectOnHover) { 
+            if (this.popup.isMouseOver && this.setSelectOnHover) {
                 this.tooltipTimer.call(null, null);
                 return;
+            }
+        } else if(!hide && this.completions && this.completions.filtered) {
+            for (var i = 0; i < this.completions.filtered.length; i++) {
+                var completion = this.completions.filtered[i];
+                if (completion && completion.onSeen && typeof completion.onSeen === 'function') {
+                    completion.onSeen(this.editor, completion);
+                }
             }
         }
         this.$updatePopupPosition();
@@ -748,7 +754,10 @@ class CompletionProvider {
             else {
                 this.$insertString(editor, data);
             }
-
+            if (data.onInsert && typeof data.onInsert == "function") {
+                data.onInsert(editor, data);
+            }
+            
             if (data.command && data.command === "startAutocomplete") {
                 editor.execCommand(data.command);
             }

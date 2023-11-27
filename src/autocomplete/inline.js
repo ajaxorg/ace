@@ -48,6 +48,8 @@ class AceInline {
         } else {
             editor.setGhostText(displayText);
         }
+        if (completion.onSeen && typeof completion.onSeen === 'function')
+            completion.onSeen(editor, completion);
         return true;
     }
 

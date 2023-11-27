@@ -1123,6 +1123,79 @@ module.exports = {
         function isLoading() {
             return completer.popup.renderer.container.classList.contains("ace_loading");
         }
+    },
+    "test: when completion gets inserted and call the onInsert method": function (done) {
+        var isInserted = false;
+        var editor = initEditor("hello world");
+        editor.completers = [
+            {
+                getCompletions: function (editor, session, pos, prefix, callback) {
+                    var completions = [
+                        {
+                            caption: "option 1",
+                            value: "one",
+                            onInsert: function () {
+                                isInserted = true;
+                            }
+                        }, {
+                            caption: "option 2",
+                            value: "two"
+                            
+                        }, {
+                            caption: "option 3",
+                            value: "three"
+                        }
+                    ];
+                    callback(null, completions);
+                }
+            }
+        ];
+        user.type("Ctrl-Space");
+        editor.completer.popup.renderer.$loop._flush();
+        assert.equal(editor.completer.popup.isOpen, true);     
+        assert.equal(editor.completer.popup.getRow(), 0);
+        user.type("Return");
+
+        assert.ok(isInserted);
+
+        done();
+    },
+    "test: when completions get shown, call the onSeen method": function (done) {
+        var isSeen2 = false;
+        var isSeen3 = false;
+        var editor = initEditor("hello world");
+        editor.completers = [
+            {
+                getCompletions: function (editor, session, pos, prefix, callback) {
+                    var completions = [
+                        {
+                            caption: "option 1",
+                            value: "one"
+                        }, {
+                            caption: "option 2",
+                            value: "two",
+                            onSeen: function () {
+                                isSeen2 = true;
+                            }
+                        }, {
+                            caption: "option 3",
+                            value: "three",
+                            onSeen: function () {
+                                isSeen3 = true;
+                            }
+                        }
+                    ];
+                    callback(null, completions);
+                }
+            }
+        ];
+        user.type("Ctrl-Space");
+        editor.completer.popup.renderer.$loop._flush();
+        assert.equal(editor.completer.popup.isOpen, true);     
+        assert.equal(editor.completer.popup.getRow(), 0);
+        assert.ok(isSeen2);
+        assert.ok(isSeen3);
+        done();
     }
 };
 
