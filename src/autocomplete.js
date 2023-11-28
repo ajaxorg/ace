@@ -167,7 +167,7 @@ class Autocomplete {
             this.popupTimer.schedule();
             this.tooltipTimer.schedule();
         } else {
-            this.$updatePopupPosition();
+            this.popupTimer.call(null, null);
             this.tooltipTimer.call(null, null);
         }
     }
