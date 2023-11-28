@@ -90,6 +90,7 @@ class Autocomplete {
         }.bind(this));
 
         this.tooltipTimer = lang.delayedCall(this.updateDocTooltip.bind(this), 50);
+        this.popupTimer = lang.delayedCall(this.$updatePopupPosition.bind(this), 50);
 
         this.stickySelectionTimer = lang.delayedCall(function() {
             this.stickySelection = true;
@@ -143,6 +144,7 @@ class Autocomplete {
         }
         this.hideDocTooltip();
         this.stickySelectionTimer.cancel();
+        this.popupTimer.cancel();
         this.stickySelection = false;
     }
 
@@ -160,9 +162,14 @@ class Autocomplete {
                 this.tooltipTimer.call(null, null);
                 return;
             }
+
+            // Update the popup position after a short wait to account for potential scrolling
+            this.popupTimer.schedule();
+            this.tooltipTimer.schedule();
+        } else {
+            this.popupTimer.call(null, null);
+            this.tooltipTimer.call(null, null);
         }
-        this.$updatePopupPosition();
-        this.tooltipTimer.call(null, null);
     }
 
     $onPopupShow(hide) {
