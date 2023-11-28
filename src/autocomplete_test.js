@@ -1153,16 +1153,20 @@ module.exports = {
 
         user.type("Ctrl-Space");
         assert.ok(completer.popup && completer.popup.isOpen);
-        completer.popup.renderer.$loop._flush();
 
-        // Popup should start one pixel below the bottom of the editor container
-        assert.equal(completer.popup.container.getBoundingClientRect().top, editor.container.getBoundingClientRect().bottom + 1);
+        // Wait to account for the renderer scrolling for the virtual renderer
+        setTimeout(() => {
+            completer.popup.renderer.$loop._flush();
 
-        // Reset back to initial values
-        editor.container.style.height = initialEditorHeight;
-        document.body.style.height = initialDocumentHeight;
+            // Popup should start one pixel below the bottom of the editor container
+            assert.equal(completer.popup.container.getBoundingClientRect().top, editor.container.getBoundingClientRect().bottom + 1);
 
-        done();
+            // Reset back to initial values
+            editor.container.style.height = initialEditorHeight;
+            document.body.style.height = initialDocumentHeight;
+
+            done();
+        }, 100);
     }
 };
 
