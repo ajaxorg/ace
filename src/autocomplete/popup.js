@@ -53,6 +53,7 @@ class AcePopup {
         // Set aria attributes for the popup
         popup.renderer.$textLayer.element.setAttribute("role", userAgent.isSafari ? "menu" : "listbox");
         popup.renderer.$textLayer.element.setAttribute("aria-roledescription", nls("Autocomplete suggestions"));
+        popup.renderer.$textLayer.element.setAttribute("aria-label", nls("Autocomplete suggestions"));
         popup.renderer.textarea.setAttribute("aria-hidden", "true");
 
         popup.setOption("displayIndentGuides", false);
