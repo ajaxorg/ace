@@ -1127,29 +1127,31 @@ module.exports = {
     "test: when completion gets inserted and call the onInsert method": function (done) {
         var isInserted = false;
         var editor = initEditor("hello world");
-        editor.completers = [
-            {
-                getCompletions: function (editor, session, pos, prefix, callback) {
-                    var completions = [
-                        {
-                            caption: "option 1",
-                            value: "one",
-                            onInsert: function () {
-                                isInserted = true;
-                            }
-                        }, {
-                            caption: "option 2",
-                            value: "two"
-                            
-                        }, {
-                            caption: "option 3",
-                            value: "three"
-                        }
-                    ];
-                    callback(null, completions);
-                }
+        var completer = {
+            onInsert: function (_editor, el) {
+                assert.ok(!isInserted, "should not have inserted something already");
+                isInserted = el.value === "one";
+            },
+            getCompletions: function (editor, session, pos, prefix, callback) {
+                var completions = [
+                    {
+                        caption: "option 1",
+                        value: "one",
+                        completer
+                    }, {
+                        caption: "option 2",
+                        value: "two",
+                        completer
+                    }, {
+                        caption: "option 3",
+                        value: "three",
+                        completer
+                    }
+                ];
+                callback(null, completions);
             }
-        ];
+        };
+        editor.completers = [completer];
         user.type("Ctrl-Space");
         editor.completer.popup.renderer.$loop._flush();
         assert.equal(editor.completer.popup.isOpen, true);     
@@ -1161,40 +1163,86 @@ module.exports = {
         done();
     },
     "test: when completions get shown, call the onSeen method": function (done) {
-        var isSeen2 = false;
-        var isSeen3 = false;
+        var seen = [false, false, false];
         var editor = initEditor("hello world");
-        editor.completers = [
-            {
-                getCompletions: function (editor, session, pos, prefix, callback) {
-                    var completions = [
-                        {
-                            caption: "option 1",
-                            value: "one"
-                        }, {
-                            caption: "option 2",
-                            value: "two",
-                            onSeen: function () {
-                                isSeen2 = true;
-                            }
-                        }, {
-                            caption: "option 3",
-                            value: "three",
-                            onSeen: function () {
-                                isSeen3 = true;
-                            }
-                        }
-                    ];
-                    callback(null, completions);
+        var completer = {
+            onSeen: function (_editor, el) {
+                const index = ["one", "two", "three"].indexOf(el.value);
+                if (index >= 0) {
+                    assert.ok(!seen[index], "should not be called double");
+                    seen[index] = true;
                 }
+            },
+            getCompletions: function (editor, session, pos, prefix, callback) {
+                var completions = [
+                    {
+                        caption: "option 1",
+                        value: "one",
+                        completer
+                    }, {
+                        caption: "option 2",
+                        value: "two",
+                        completer
+                    }, {
+                        caption: "option 3",
+                        value: "three",
+                        completer
+                    }
+                ];
+                callback(null, completions);
             }
+        };
+        editor.completers = [
+            completer
+        ];
+        Autocomplete.for(editor).inlineEnabled = true;
+        user.type("Ctrl-Space");
+        editor.completer.popup.renderer.$loop._flush();
+        assert.equal(editor.completer.popup.isOpen, true);     
+        assert.equal(editor.completer.popup.getRow(), 0);
+        assert.deepEqual(seen, [true, false, false]);
+        done();
+    },
+    "test: when inline completions get shown, call the onSeen method": function (done) {
+        var seen = [false, false, false];
+        var calledDouble = false;
+        var editor = initEditor("hello world");
+        var completer = {
+            onSeen: function (_editor, el) {
+                const index = ["one", "two", "three"].indexOf(el.value);
+                if (index >= 0) {
+                    if (seen[index]) calledDouble = true;
+                    seen[index] = true;
+                }
+            },
+            getCompletions: function (editor, session, pos, prefix, callback) {
+                var completions = [
+                    {
+                        caption: "option 1",
+                        value: "one",
+                        completer
+                    }, {
+                        caption: "option 2",
+                        value: "two",
+                        completer
+                    }, {
+                        caption: "option 3",
+                        value: "three",
+                        completer
+                    }
+                ];
+                callback(null, completions);
+            }
+        };
+        editor.completers = [
+            completer
         ];
         user.type("Ctrl-Space");
         editor.completer.popup.renderer.$loop._flush();
         assert.equal(editor.completer.popup.isOpen, true);     
         assert.equal(editor.completer.popup.getRow(), 0);
-        assert.ok(isSeen2);
-        assert.ok(isSeen3);
+        assert.deepEqual(seen, [true, true, true]);
+        assert.ok(!calledDouble);
         done();
     }
 };

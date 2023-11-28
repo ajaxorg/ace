@@ -341,8 +341,6 @@ export namespace Ace {
     docHTML?: string;
     docText?: string;
     completerId?: string;
-    onSeen?: (editor: Ace.Editor, completion: BaseCompletion) => void;
-    onInsert?: (editor: Ace.Editor, completion: BaseCompletion) => void;
   }
 
   export interface SnippetCompletion extends BaseCompletion {
@@ -1016,6 +1014,8 @@ export namespace Ace {
       prefix: string,
       callback: CompleterCallback): void;
     getDocTooltip?(item: Completion): undefined | string | Completion;
+    onSeen?: (editor: Ace.Editor, completion: Completion) => void;
+    onInsert?: (editor: Ace.Editor, completion: Completion) => void;
     cancel?(): void;
     id?: string;
     triggerCharacters?: string[];

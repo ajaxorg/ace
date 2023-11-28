@@ -135,19 +135,6 @@ module.exports = {
         
         done();
     },
-    "test: when user sees the inline completion call onSeen method": function (done) {
-        let isSeen = false;
-        inline.show(editor, {
-            value: "foo",
-            score: 2,
-            onSeen: function () {
-                isSeen = true;
-            }
-        }, "f");
-        editor.renderer.$loop._flush();
-        assert.strictEqual(isSeen, true);
-        done();
-    },
     "test: only renders the ghost text without the prefix": function(done) {
         inline.show(editor, completions[1], "fun");
         editor.renderer.$loop._flush();
