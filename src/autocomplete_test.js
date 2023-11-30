@@ -58,7 +58,7 @@ module.exports = {
             editor.container.remove();
             editor = null;
         }
-    },/*
+    },
     "test: highlighting in the popup": function (done) {
         var editor = initEditor("\narraysort alooooooooooooooooooooooooooooong_word");
         //   editor.container.style.width = "500px";
@@ -1124,7 +1124,7 @@ module.exports = {
         function isLoading() {
             return completer.popup.renderer.container.classList.contains("ace_loading");
         }
-    },*/
+    },
     "test: if there is very long ghost text, popup should be rendered at the bottom of the editor container": function(done) {
         var editor = initEditor("hello world\n");
 
