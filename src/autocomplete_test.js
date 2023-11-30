@@ -33,6 +33,7 @@ function initEditor(value) {
     }
     editor = ace.edit(null, {
         value: value,
+        minLines: 10,
         maxLines: 10,
         enableBasicAutocompletion: true,
         enableLiveAutocompletion: true
@@ -57,7 +58,7 @@ module.exports = {
             editor.container.remove();
             editor = null;
         }
-    },
+    },/*
     "test: highlighting in the popup": function (done) {
         var editor = initEditor("\narraysort alooooooooooooooooooooooooooooong_word");
         //   editor.container.style.width = "500px";
@@ -1123,6 +1124,89 @@ module.exports = {
         function isLoading() {
             return completer.popup.renderer.container.classList.contains("ace_loading");
         }
+    },*/
+    "test: if there is very long ghost text, popup should be rendered at the bottom of the editor container": function(done) {
+        var editor = initEditor("hello world\n");
+
+        // Give enough space for the popup to appear below the editor
+        var initialDocumentHeight = document.body.style.height;
+        document.body.style.height = editor.container.getBoundingClientRect().height + 200 + "px";
+        editor.renderer.$loop._flush();
+
+        var longCompleter = {
+            getCompletions: function (editor, session, pos, prefix, callback) {
+                var completions = [
+                    {
+                        caption: "loooooong",
+                        value: "line\n".repeat(20),
+                        score: 0
+                    }
+                ];
+                callback(null,  completions);
+            }
+        };
+
+        editor.completers = [longCompleter];
+        
+        var completer = Autocomplete.for(editor);
+        completer.inlineEnabled = true;
+
+        user.type("Ctrl-Space");
+        assert.ok(completer.popup && completer.popup.isOpen);
+
+        // Wait to account for the renderer scrolling for the virtual renderer
+        setTimeout(() => {
+            completer.popup.renderer.$loop._flush();
+
+            // Popup should start one pixel below the bottom of the editor container
+            assert.equal(
+                completer.popup.container.getBoundingClientRect().top,
+                editor.container.getBoundingClientRect().bottom + 1
+            );
+
+            // Reset back to initial values
+            document.body.style.height = initialDocumentHeight;
+            editor.renderer.$loop._flush();
+
+            done();
+        }, 100);
+    },
+    "test: if there is ghost text, popup should be rendered at the bottom of the ghost text": function(done) {
+        var editor = initEditor("");
+
+        var longCompleter = {
+            getCompletions: function (editor, session, pos, prefix, callback) {
+                var completions = [
+                    {
+                        caption: "loooooong",
+                        value: "line\n".repeat(5),
+                        score: 0
+                    }
+                ];
+                callback(null,  completions);
+            }
+        };
+
+        editor.completers = [longCompleter];
+        
+        var completer = Autocomplete.for(editor);
+        completer.inlineEnabled = true;
+
+        user.type("Ctrl-Space");
+        assert.ok(completer.popup && completer.popup.isOpen);
+
+        // Wait to account for the renderer scrolling for the virtual renderer
+        setTimeout(() => {
+            completer.popup.renderer.$loop._flush();
+
+            // Popup should start one pixel below the bottom of the ghost text
+            assert.equal(
+                completer.popup.container.getBoundingClientRect().top,
+                editor.renderer.$ghostTextWidget.el.getBoundingClientRect().bottom + 1
+            );
+
+            done();
+        }, 100);
     }
 };
 

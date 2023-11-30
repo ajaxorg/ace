@@ -231,8 +231,15 @@ class Autocomplete {
             }
         }
 
+        // posGhostText can be below the editor rendering the popup away from the editor.
+        // In this case, we want to render the popup such that the top aligns with the bottom of the editor.
+        var editorContainerBottom = editor.container.getBoundingClientRect().bottom - lineHeight;
+        var lowestPosition = editorContainerBottom < posGhostText.top ?
+            {top: editorContainerBottom, left: posGhostText.left} :
+            posGhostText;
+
         // Try to render below ghost text, then above ghost text, then over ghost text
-        if (this.popup.tryShow(posGhostText, lineHeight, "bottom")) {
+        if (this.popup.tryShow(lowestPosition, lineHeight, "bottom")) {
             return;
         }
 
