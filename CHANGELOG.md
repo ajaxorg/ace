@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.32.0](https://github.com/ajaxorg/ace/compare/v1.31.2...v1.32.0) (2023-11-30)
+
+
+### Features
+
+* adding CloudEditor theme ([#5404](https://github.com/ajaxorg/ace/issues/5404)) ([b0ee067](https://github.com/ajaxorg/ace/commit/b0ee067fadaf9593ed2207f363a402eb9ab8d57a))
+
+
+### Bug Fixes
+
+* autocomplete tests ([#5407](https://github.com/ajaxorg/ace/issues/5407)) ([cf6999d](https://github.com/ajaxorg/ace/commit/cf6999d9cb4103df16dc38a8cbfd40ab2a999e6d))
+* set completion popup role to 'menu' for safari ([6845905](https://github.com/ajaxorg/ace/commit/684590546746fa2ef090c10c140e01e43974d8f4))
+* stop rendering the completion popup disconnected from the editor for long ghost text ([#5401](https://github.com/ajaxorg/ace/issues/5401)) ([94d68a7](https://github.com/ajaxorg/ace/commit/94d68a73042c61a786d253fd0838e62cc5770a31))
+* try to scroll inline preview into view ([#5400](https://github.com/ajaxorg/ace/issues/5400)) ([95af560](https://github.com/ajaxorg/ace/commit/95af5608b655259d12cdbc4ca28cf450f9e649c7))
+
 ### [1.31.2](https://github.com/ajaxorg/ace/compare/v1.31.1...v1.31.2) (2023-11-15)
 
 
