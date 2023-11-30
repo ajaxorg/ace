@@ -63,6 +63,7 @@ class Autocomplete {
         this.keyboardHandler.bindKeys(this.commands);
         this.parentNode = null;
         this.setSelectOnHover = false;
+        this.hasSeen = new Set();
 
         /**
          *  @property {Boolean} showLoadingState - A boolean indicating whether the loading states of the Autocompletion should be shown to the end-user. If enabled 
@@ -124,8 +125,10 @@ class Autocomplete {
         this.popup.on("select", this.$onPopupChange.bind(this));
         event.addListener(this.popup.container, "mouseout", this.mouseOutListener.bind(this));
         this.popup.on("changeHoverMarker", this.tooltipTimer.bind(null, null));
+        this.popup.renderer.on("afterRender", this.$onPopupRender.bind(this));
         return this.popup;
     }
+
 
     $initInline() {
         if (!this.inlineEnabled || this.inlineRenderer)
@@ -147,18 +150,24 @@ class Autocomplete {
         this.popupTimer.cancel();
         this.stickySelection = false;
     }
-
+    $seen(completion) {
+        if (!this.hasSeen.has(completion) && completion && completion.completer && completion.completer.onSeen && typeof completion.completer.onSeen === "function") {
+            completion.completer.onSeen(this.editor, completion);
+            this.hasSeen.add(completion);
+        }
+    }
     $onPopupChange(hide) {
         if (this.inlineRenderer && this.inlineEnabled) {
             var completion = hide ? null : this.popup.getData(this.popup.getRow());
             var prefix = util.getCompletionPrefix(this.editor);
             if (!this.inlineRenderer.show(this.editor, completion, prefix)) {
                 this.inlineRenderer.hide();
+            } else {
+                this.$seen(completion);
             }
-
             // If the mouse is over the tooltip, and we're changing selection on hover don't
             // move the tooltip while hovering over the popup.
-            if (this.popup.isMouseOver && this.setSelectOnHover) { 
+            if (this.popup.isMouseOver && this.setSelectOnHover) {
                 this.tooltipTimer.call(null, null);
                 return;
             }
@@ -169,6 +178,18 @@ class Autocomplete {
         } else {
             this.popupTimer.call(null, null);
             this.tooltipTimer.call(null, null);
+        }
+    }
+
+    $onPopupRender() {
+        const inlineEnabled = this.inlineRenderer && this.inlineEnabled;
+        if (this.completions && this.completions.filtered && this.completions.filtered.length > 0) {
+            for (var i = this.popup.getFirstVisibleRow(); i <= this.popup.getLastVisibleRow(); i++) {
+                var completion = this.popup.getData(i);
+                if (completion && (!inlineEnabled || completion.hideInlinePreview)) {
+                    this.$seen(completion);
+                }
+            }
         }
     }
 
@@ -324,6 +345,10 @@ class Autocomplete {
 
         if (this.popup && this.popup.isOpen)
             this.popup.hide();
+
+        if (this.popup && this.popup.renderer) {
+            this.popup.renderer.off("afterRender", this.$onPopupRender);
+        }
 
         if (this.base)
             this.base.detach();
@@ -762,7 +787,10 @@ class CompletionProvider {
             else {
                 this.$insertString(editor, data);
             }
-
+            if (data.completer && data.completer.onInsert && typeof data.completer.onInsert == "function") {
+                data.completer.onInsert(editor, data);
+            }
+            
             if (data.command && data.command === "startAutocomplete") {
                 editor.execCommand(data.command);
             }
