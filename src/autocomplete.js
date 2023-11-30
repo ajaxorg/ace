@@ -148,7 +148,7 @@ class Autocomplete {
         this.stickySelectionTimer.cancel();
         this.stickySelection = false;
     }
-    seen(completion) {
+    $seen(completion) {
         if (!this.hasSeen.has(completion) && completion && completion.completer && completion.completer.onSeen && typeof completion.completer.onSeen === "function") {
             completion.completer.onSeen(this.editor, completion);
             this.hasSeen.add(completion);
@@ -161,7 +161,7 @@ class Autocomplete {
             if (!this.inlineRenderer.show(this.editor, completion, prefix)) {
                 this.inlineRenderer.hide();
             } else {
-                this.seen(completion);
+                this.$seen(completion);
             }
             // If the mouse is over the tooltip, and we're changing selection on hover don't
             // move the tooltip while hovering over the popup.
@@ -180,7 +180,7 @@ class Autocomplete {
             for (var i = this.popup.getFirstVisibleRow(); i <= this.popup.getLastVisibleRow(); i++) {
                 var completion = this.popup.getData(i);
                 if (completion && (!inlineEnabled || completion.hideInlinePreview)) {
-                    this.seen(completion);
+                    this.$seen(completion);
                 }
             }
         }
