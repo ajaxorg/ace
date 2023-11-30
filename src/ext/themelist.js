@@ -50,7 +50,7 @@ var themeData = [
     ["Twilight"             ,"twilight"                ,  "dark"],
     ["Vibrant Ink"          ,"vibrant_ink"             ,  "dark"],
     ["GitHub Dark"          ,"github_dark"             ,  "dark"],
-    ["CloudEditor Dark"     , "cloud_editor_dark"      ,  "dark"]
+    ["CloudEditor Dark"     ,"cloud_editor_dark"       ,  "dark"]
 ];
 
 
