@@ -24,7 +24,7 @@ var themeData = [
     ["Kuroir"],
     ["KatzenMilch"],
     ["SQL Server"           ,"sqlserver"               , "light"],
-    ["CloudEditor", "cloud_editor", "light"],
+    ["CloudEditor"          ,"cloud_editor"            , "light"],
     ["Ambiance"             ,"ambiance"                ,  "dark"],
     ["Chaos"                ,"chaos"                   ,  "dark"],
     ["Clouds Midnight"      ,"clouds_midnight"         ,  "dark"],
@@ -50,7 +50,7 @@ var themeData = [
     ["Twilight"             ,"twilight"                ,  "dark"],
     ["Vibrant Ink"          ,"vibrant_ink"             ,  "dark"],
     ["GitHub Dark"          ,"github_dark"             ,  "dark"],
-    ["CloudEditor Dark", "cloud_editor_dark", "dark"]
+    ["CloudEditor Dark"     , "cloud_editor_dark"      ,  "dark"]
 ];
 
 
