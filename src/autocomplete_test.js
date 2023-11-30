@@ -33,6 +33,7 @@ function initEditor(value) {
     }
     editor = ace.edit(null, {
         value: value,
+        minLines: 10,
         maxLines: 10,
         enableBasicAutocompletion: true,
         enableLiveAutocompletion: true
@@ -66,16 +67,16 @@ module.exports = {
         assert.ok(!editor.container.querySelector("style"));
 
         sendKey("a");
-        checkInnerHTML('<d "ace_line ace_selected" id="suggest-aria-id:0" role="option" aria-label="arraysort" aria-setsize="2" aria-posinset="1" aria-describedby="doc-tooltip"><s "ace_completion-highlight">a</s><s "ace_">rraysort</s><s "ace_completion-spacer"> </s><s "ace_completion-meta">local</s></d><d "ace_line"><s "ace_completion-highlight">a</s><s "ace_">looooooooooooooooooooooooooooong_word</s><s "ace_completion-spacer"> </s><s "ace_completion-meta">local</s></d>', function() {
+        checkInnerHTML('<d "ace_line ace_selected" id="suggest-aria-id:0" role="option" aria-roledescription="item" aria-label="arraysort" aria-setsize="2" aria-posinset="1" aria-describedby="doc-tooltip" aria-selected="true"><s "ace_completion-highlight">a</s><s "ace_">rraysort</s><s "ace_completion-spacer"> </s><s "ace_completion-meta">local</s></d><d "ace_line"><s "ace_completion-highlight">a</s><s "ace_">looooooooooooooooooooooooooooong_word</s><s "ace_completion-spacer"> </s><s "ace_completion-meta">local</s></d>', function() {
             sendKey("rr");
-            checkInnerHTML('<d "ace_line ace_selected" id="suggest-aria-id:0" role="option" aria-label="arraysort" aria-setsize="1" aria-posinset="1" aria-describedby="doc-tooltip"><s "ace_completion-highlight">arr</s><s "ace_">aysort</s><s "ace_completion-spacer"> </s><s "ace_completion-meta">local</s></d>', function() {
+            checkInnerHTML('<d "ace_line ace_selected" id="suggest-aria-id:0" role="option" aria-roledescription="item" aria-label="arraysort" aria-setsize="1" aria-posinset="1" aria-describedby="doc-tooltip" aria-selected="true"><s "ace_completion-highlight">arr</s><s "ace_">aysort</s><s "ace_completion-spacer"> </s><s "ace_completion-meta">local</s></d>', function() {
                 sendKey("r");
-                checkInnerHTML('<d "ace_line ace_selected" id="suggest-aria-id:0" role="option" aria-label="arraysort" aria-setsize="1" aria-posinset="1" aria-describedby="doc-tooltip"><s "ace_completion-highlight">arr</s><s "ace_">ayso</s><s "ace_completion-highlight">r</s><s "ace_">t</s><s "ace_completion-spacer"> </s><s "ace_completion-meta">local</s></d>', function() {
+                checkInnerHTML('<d "ace_line ace_selected" id="suggest-aria-id:0" role="option" aria-roledescription="item" aria-label="arraysort" aria-setsize="1" aria-posinset="1" aria-describedby="doc-tooltip" aria-selected="true"><s "ace_completion-highlight">arr</s><s "ace_">ayso</s><s "ace_completion-highlight">r</s><s "ace_">t</s><s "ace_completion-spacer"> </s><s "ace_completion-meta">local</s></d>', function() {
                     
                     sendKey("Return");
                     assert.equal(editor.getValue(), "arraysort\narraysort alooooooooooooooooooooooooooooong_word");
                     editor.execCommand("insertstring", " looooooooooooooooooooooooooooong_");
-                    checkInnerHTML('<d "ace_line ace_selected" id="suggest-aria-id:0" role="option" aria-label="alooooooooooooooooooooooooooooong_word" aria-setsize="1" aria-posinset="1" aria-describedby="doc-tooltip"><s "ace_">a</s><s "ace_completion-highlight">looooooooooooooooooooooooooooong_</s><s "ace_">word</s><s "ace_completion-spacer"> </s><s "ace_completion-meta">local</s></d>', function() {
+                    checkInnerHTML('<d "ace_line ace_selected" id="suggest-aria-id:0" role="option" aria-roledescription="item" aria-label="alooooooooooooooooooooooooooooong_word" aria-setsize="1" aria-posinset="1" aria-describedby="doc-tooltip" aria-selected="true"><s "ace_">a</s><s "ace_completion-highlight">looooooooooooooooooooooooooooong_</s><s "ace_">word</s><s "ace_completion-spacer"> </s><s "ace_completion-meta">local</s></d>', function() {
                         sendKey("Return");
                         editor.destroy();
                         editor.container.remove();
@@ -1244,6 +1245,89 @@ module.exports = {
         assert.deepEqual(seen, [true, true, true]);
         assert.ok(!calledDouble);
         done();
+    },
+    "test: if there is very long ghost text, popup should be rendered at the bottom of the editor container": function(done) {
+        var editor = initEditor("hello world\n");
+
+        // Give enough space for the popup to appear below the editor
+        var initialDocumentHeight = document.body.style.height;
+        document.body.style.height = editor.container.getBoundingClientRect().height + 200 + "px";
+        editor.renderer.$loop._flush();
+
+        var longCompleter = {
+            getCompletions: function (editor, session, pos, prefix, callback) {
+                var completions = [
+                    {
+                        caption: "loooooong",
+                        value: "line\n".repeat(20),
+                        score: 0
+                    }
+                ];
+                callback(null,  completions);
+            }
+        };
+
+        editor.completers = [longCompleter];
+        
+        var completer = Autocomplete.for(editor);
+        completer.inlineEnabled = true;
+
+        user.type("Ctrl-Space");
+        assert.ok(completer.popup && completer.popup.isOpen);
+
+        // Wait to account for the renderer scrolling for the virtual renderer
+        setTimeout(() => {
+            completer.popup.renderer.$loop._flush();
+
+            // Popup should start one pixel below the bottom of the editor container
+            assert.equal(
+                completer.popup.container.getBoundingClientRect().top,
+                editor.container.getBoundingClientRect().bottom + 1
+            );
+
+            // Reset back to initial values
+            document.body.style.height = initialDocumentHeight;
+            editor.renderer.$loop._flush();
+
+            done();
+        }, 100);
+    },
+    "test: if there is ghost text, popup should be rendered at the bottom of the ghost text": function(done) {
+        var editor = initEditor("");
+
+        var longCompleter = {
+            getCompletions: function (editor, session, pos, prefix, callback) {
+                var completions = [
+                    {
+                        caption: "loooooong",
+                        value: "line\n".repeat(5),
+                        score: 0
+                    }
+                ];
+                callback(null,  completions);
+            }
+        };
+
+        editor.completers = [longCompleter];
+        
+        var completer = Autocomplete.for(editor);
+        completer.inlineEnabled = true;
+
+        user.type("Ctrl-Space");
+        assert.ok(completer.popup && completer.popup.isOpen);
+
+        // Wait to account for the renderer scrolling for the virtual renderer
+        setTimeout(() => {
+            completer.popup.renderer.$loop._flush();
+
+            // Popup should start one pixel below the bottom of the ghost text
+            assert.equal(
+                completer.popup.container.getBoundingClientRect().top,
+                editor.renderer.$ghostTextWidget.el.getBoundingClientRect().bottom + 1
+            );
+
+            done();
+        }, 100);
     }
 };
 
