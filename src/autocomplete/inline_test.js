@@ -42,6 +42,14 @@ var completions = [
         value: "f should not show inline",
         score: 0,
         hideInlinePreview: true
+    },
+    {
+        value: "long\nlong\nlong\nlong\nlong\nlong",
+        score: 0
+    },
+    {
+        value: "long\nlong\nlong\nlong\nlong\nlong".repeat(100),
+        score: 0
     }
 ];
 
@@ -260,6 +268,38 @@ module.exports = {
         completions[5].hideInlinePreview = true;
 
         done();
+    },
+    "test: should scroll if inline preview outside": function(done) {
+        // Fill the editor with new lines to get the cursor to the bottom
+        // of the container
+        editor.execCommand("insertstring", "\n".repeat(200));
+
+        var deltaY;
+        var initialScrollBy = editor.renderer.scrollBy;
+        editor.renderer.scrollBy = function(varX, varY) {
+            deltaY = varY;
+        };
+
+        inline.show(editor, completions[6], "l");
+        editor.renderer.$loop._flush();
+        
+        setTimeout(() => {
+            // Should scroll 5 lines to get the inline preview into view
+            assert.strictEqual(deltaY, 50);
+
+            inline.hide();
+            editor.renderer.$loop._flush();
+
+            inline.show(editor, completions[7], "l");
+            editor.renderer.$loop._flush();
+
+            setTimeout(() => {
+                // Should scroll as much as possbile while keeping the cursor on screen
+                assert.strictEqual(deltaY, 490);
+                editor.renderer.scrollBy = initialScrollBy;
+                done();
+            }, 50); 
+        }, 50);  
     },
     tearDown: function() {
         inline.destroy();

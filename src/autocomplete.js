@@ -73,6 +73,7 @@ class Autocomplete {
         this.keyboardHandler.bindKeys(this.commands);
         this.parentNode = null;
         this.setSelectOnHover = false;
+        this.hasSeen = new Set();
 
         /**
          *  @property {Boolean} showLoadingState - A boolean indicating whether the loading states of the Autocompletion should be shown to the end-user. If enabled 
@@ -100,6 +101,7 @@ class Autocomplete {
         }.bind(this));
 
         this.tooltipTimer = lang.delayedCall(this.updateDocTooltip.bind(this), 50);
+        this.popupTimer = lang.delayedCall(this.$updatePopupPosition.bind(this), 50);
 
         this.stickySelectionTimer = lang.delayedCall(function() {
             this.stickySelection = true;
@@ -134,8 +136,10 @@ class Autocomplete {
         this.popup.on("select", this.$onPopupChange.bind(this));
         event.addListener(this.popup.container, "mouseout", this.mouseOutListener.bind(this));
         this.popup.on("changeHoverMarker", this.tooltipTimer.bind(null, null));
+        this.popup.renderer.on("afterRender", this.$onPopupRender.bind(this));
         return this.popup;
     }
+
 
     $initInline() {
         if (!this.inlineEnabled || this.inlineRenderer)
@@ -157,17 +161,24 @@ class Autocomplete {
         }
         this.hideDocTooltip();
         this.stickySelectionTimer.cancel();
+        this.popupTimer.cancel();
         this.stickySelection = false;
     }
-
+    $seen(completion) {
+        if (!this.hasSeen.has(completion) && completion && completion.completer && completion.completer.onSeen && typeof completion.completer.onSeen === "function") {
+            completion.completer.onSeen(this.editor, completion);
+            this.hasSeen.add(completion);
+        }
+    }
     $onPopupChange(hide) {
         if (this.inlineRenderer && this.inlineEnabled) {
             var completion = hide ? null : this.popup.getData(this.popup.getRow());
             var prefix = util.getCompletionPrefix(this.editor);
             if (!this.inlineRenderer.show(this.editor, completion, prefix)) {
                 this.inlineRenderer.hide();
+            } else {
+                this.$seen(completion);
             }
-
             // If the mouse is over the tooltip, and we're changing selection on hover don't
             // move the tooltip while hovering over the popup.
             if (this.popup.isMouseOver && this.setSelectOnHover) {
@@ -175,10 +186,28 @@ class Autocomplete {
                 this.tooltipTimer.call(null, null);
                 return;
             }
+
+            // Update the popup position after a short wait to account for potential scrolling
+            this.popupTimer.schedule();
+            this.tooltipTimer.schedule();
+        } else {
+            // @ts-expect-error TODO: potential wrong arguments
+            this.popupTimer.call(null, null);
+            // @ts-expect-error TODO: potential wrong arguments
+            this.tooltipTimer.call(null, null);
         }
-        this.$updatePopupPosition();
-        // @ts-expect-error TODO: potential wrong arguments
-        this.tooltipTimer.call(null, null);
+    }
+
+    $onPopupRender() {
+        const inlineEnabled = this.inlineRenderer && this.inlineEnabled;
+        if (this.completions && this.completions.filtered && this.completions.filtered.length > 0) {
+            for (var i = this.popup.getFirstVisibleRow(); i <= this.popup.getLastVisibleRow(); i++) {
+                var completion = this.popup.getData(i);
+                if (completion && (!inlineEnabled || completion.hideInlinePreview)) {
+                    this.$seen(completion);
+                }
+            }
+        }
     }
 
     $onPopupShow(hide) {
@@ -242,8 +271,15 @@ class Autocomplete {
             }
         }
 
+        // posGhostText can be below the editor rendering the popup away from the editor.
+        // In this case, we want to render the popup such that the top aligns with the bottom of the editor.
+        var editorContainerBottom = editor.container.getBoundingClientRect().bottom - lineHeight;
+        var lowestPosition = editorContainerBottom < posGhostText.top ?
+            {top: editorContainerBottom, left: posGhostText.left} :
+            posGhostText;
+
         // Try to render below ghost text, then above ghost text, then over ghost text
-        if (this.popup.tryShow(posGhostText, lineHeight, "bottom")) {
+        if (this.popup.tryShow(lowestPosition, lineHeight, "bottom")) {
             return;
         }
 
@@ -333,6 +369,10 @@ class Autocomplete {
 
         if (this.popup && this.popup.isOpen)
             this.popup.hide();
+
+        if (this.popup && this.popup.renderer) {
+            this.popup.renderer.off("afterRender", this.$onPopupRender);
+        }
 
         if (this.base)
             this.base.detach();
@@ -585,6 +625,8 @@ class Autocomplete {
             this.tooltipNode.onclick = this.onTooltipClick.bind(this);
             this.tooltipNode.id = "doc-tooltip";
             this.tooltipNode.setAttribute("role", "tooltip");
+            // prevent editor scroll if tooltip is inside an editor
+            this.tooltipNode.addEventListener("wheel", event.stopPropagation);
         }
         var theme = this.editor.renderer.theme;
         this.tooltipNode.className = "ace_tooltip ace_doc-tooltip " +
@@ -798,7 +840,10 @@ class CompletionProvider {
             else {
                 this.$insertString(editor, data);
             }
-
+            if (data.completer && data.completer.onInsert && typeof data.completer.onInsert == "function") {
+                data.completer.onInsert(editor, data);
+            }
+            
             if (data.command && data.command === "startAutocomplete") {
                 editor.execCommand(data.command);
             }

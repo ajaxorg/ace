@@ -206,6 +206,7 @@ class SearchBox {
     updateCounter() {
         var editor = this.editor;
         var regex = editor.$search.$options.re;
+        var supportsUnicodeFlag = regex.unicode;
         var all = 0;
         var before = 0;
         if (regex) {
@@ -227,7 +228,7 @@ class SearchBox {
                 if (all > MAX_COUNT)
                     break;
                 if (!m[0]) {
-                    regex.lastIndex = last += 1;
+                    regex.lastIndex = last += lang.skipEmptyMatch(value, last, supportsUnicodeFlag);
                     if (last >= value.length)
                         break;
                 }

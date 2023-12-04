@@ -62,6 +62,8 @@ exports.isWebKit = parseFloat(ua.split("WebKit/")[1]) || undefined;
 
 exports.isChrome = parseFloat(ua.split(" Chrome/")[1]) || undefined;
 
+exports.isSafari = parseFloat(ua.split(" Safari/")[1]) && !exports.isChrome || undefined;
+
 exports.isEdge = parseFloat(ua.split(" Edge/")[1]) || undefined;
 
 exports.isAIR = ua.indexOf("AdobeAIR") >= 0;

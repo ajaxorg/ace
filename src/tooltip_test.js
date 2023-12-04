@@ -8,6 +8,9 @@ if (typeof process !== "undefined") {
 var ace = require("./ace");
 var assert = require("./test/assertions");
 var HoverTooltip = require("./tooltip").HoverTooltip;
+var Range = require("./range").Range;
+var dom = require("./lib/dom");
+
 var editor, docTooltip;
 module.exports = {
     setUp: function() {
@@ -102,6 +105,50 @@ module.exports = {
                 }, 6);
             }, 6);
         }, 6);
+    },
+    "test: find best position": function() {
+        editor.resize(true); 
+        editor.setValue("very long text ".repeat(100), 1);
+        editor.renderer.scrollCursorIntoView();
+        var domNode = dom.buildDom(["div"]);
+        var w = window.innerWidth;
+        var h = window.innerHeight;
+        editor.resize(true); 
+        
+        // workaround for css styles not being applied in mockdom
+        docTooltip.$element.style.maxWidth = "300px";
+        
+        // prefer showing above if possible
+        editor.container.style.top = 20 + "px";
+        editor.container.style.top = h / 3 + "px";
+        domNode.style.width = 2 * w + "px";
+        domNode.style.height = h / 4 + "px";
+        var range = new Range(0, 0, 0, editor.session.getLine(0).length);
+        docTooltip.showForRange(editor, range, domNode);
+        
+        var position = editor.renderer.textToScreenCoordinates(range.start.row, range.start.column);
+        assert.ok(position.pageX < 0);
+        var rect = docTooltip.$element.getBoundingClientRect();
+        assert.ok(rect.left > 0);
+        assert.ok(rect.top < h / 3);
+        
+        // show below if height is large
+        domNode.style.height = 2 * h + "px";
+        docTooltip.showForRange(editor, range, domNode);
+        rect = docTooltip.$element.getBoundingClientRect();
+        assert.ok(rect.top > h / 3);
+        
+        // show above if there is more space there
+        editor.container.style.top = h / 2 + "px";
+        domNode.style.height = 2 * h + "px";
+        docTooltip.showForRange(editor, range, domNode);
+        rect = docTooltip.$element.getBoundingClientRect();
+        assert.ok(rect.top < h / 3);
+        
+        editor.container.style.left = w - 20 + "px";
+        docTooltip.showForRange(editor, range, domNode);
+        rect = docTooltip.$element.getBoundingClientRect();
+        assert.ok(rect.left < w - 100);
     },
     "test: remove listeners": function() {
         var l = editor._eventRegistry.mousemove.length;
