@@ -30,7 +30,7 @@ class SearchHighlight {
      * @param {any} html
      * @param {Marker} markerLayer
      * @param {EditSession} session
-     * @param {Partial<import("../").Ace.LayerConfig>} config
+     * @param {Partial<import("../ace-internal").Ace.LayerConfig>} config
      */
     update(html, markerLayer, session, config) {
         if (!this.regExp)

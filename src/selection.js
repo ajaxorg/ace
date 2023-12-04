@@ -69,7 +69,7 @@ class Selection {
 
     /**
      * Returns an object containing the `row` and `column` current position of the cursor.
-     * @returns {import("../").Ace.Point}
+     * @returns {import("../ace-internal").Ace.Point}
      **/
     getCursor() {
         return this.lead.getPosition();
@@ -90,7 +90,7 @@ class Selection {
     /**
      * Returns an object containing the `row` and `column` of the calling selection anchor.
      *
-     * @returns {import("../").Ace.Point}
+     * @returns {import("../ace-internal").Ace.Point}
      * @related Anchor.getPosition
      **/
     getAnchor() {
@@ -154,7 +154,7 @@ class Selection {
 
     /**
      * Sets the selection to the provided range.
-     * @param {import("../").Ace.IRange} range The range of text to select
+     * @param {import("../ace-internal").Ace.IRange} range The range of text to select
      * @param {Boolean} [reverse] Indicates if the range should go backwards (`true`) or not
      **/
     setRange(range, reverse) {
@@ -207,7 +207,7 @@ class Selection {
 
     /**
      * Moves the selection cursor to the row and column indicated by `pos`.
-     * @param {import("../").Ace.Point} pos An object containing the row and column
+     * @param {import("../ace-internal").Ace.Point} pos An object containing the row and column
      **/
     selectToPosition(pos) {
         this.$moveSelection(function() {
@@ -376,7 +376,7 @@ class Selection {
     /**
      *
      * Returns `true` if moving the character next to the cursor in the specified direction is a soft tab.
-     * @param {import("../").Ace.Point} cursor the current cursor position
+     * @param {import("../ace-internal").Ace.Point} cursor the current cursor position
      * @param {Number} tabSize the tab size
      * @param {Number} direction 1 for right, -1 for left
      */
@@ -433,7 +433,7 @@ class Selection {
         else {
             var tabSize = this.session.getTabSize();
             /**
-             * @type {import("../").Ace.Point}
+             * @type {import("../ace-internal").Ace.Point}
              */
             var cursor = this.lead;
             if (this.wouldMoveIntoSoftTab(cursor, tabSize, 1) && !this.session.getNavigateWithinSoftTabs()) {
@@ -749,7 +749,7 @@ class Selection {
 
     /**
      * Moves the selection to the position indicated by its `row` and `column`.
-     * @param {import("../").Ace.Point} position The position to move to
+     * @param {import("../ace-internal").Ace.Point} position The position to move to
      **/
     moveCursorToPosition(position) {
         this.moveCursorTo(position.row, position.column);

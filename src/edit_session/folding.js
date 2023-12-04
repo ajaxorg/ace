@@ -8,7 +8,7 @@ var TokenIterator = require("../token_iterator").TokenIterator;
 var MouseEvent = require("../mouse/mouse_event").MouseEvent;
 
 /**
- * @typedef {import("../edit_session").EditSession & import("../../").Ace.Folding} IFolding
+ * @typedef {import("../edit_session").EditSession & import("../../ace-internal").Ace.Folding} IFolding
  */
 
 /**
@@ -46,7 +46,7 @@ function Folding() {
 
     /**
      * Returns all folds in the given range. Note, that this will return folds
-     * @param {Range| import("../../").Ace.Delta} range
+     * @param {Range| import("../../ace-internal").Ace.Delta} range
      * @returns {Fold[]}
      **/
     this.getFoldsInRange = function(range) {
@@ -476,7 +476,7 @@ function Folding() {
 
     /**
      * 
-     * @param {number|null|import("../../").Ace.Point|Range|Range[]} [location]
+     * @param {number|null|import("../../ace-internal").Ace.Point|Range|Range[]} [location]
      * @param {boolean} [expandInner]
      * @return {Fold[]| undefined}
      */
@@ -843,7 +843,7 @@ function Folding() {
     };
 
     /**
-     * @param {import("../../").Ace.FoldMode} foldMode
+     * @param {import("../../ace-internal").Ace.FoldMode} foldMode
      */
     this.$setFolding = function(foldMode) {
         if (this.$foldMode == foldMode)
@@ -1005,7 +1005,7 @@ function Folding() {
     };
 
     /**
-     * @param {import("../../").Ace.Delta} delta
+     * @param {import("../../ace-internal").Ace.Delta} delta
      */
     this.updateFoldWidgets = function(delta) {
         var firstRow = delta.start.row;

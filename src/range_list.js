@@ -13,7 +13,7 @@ class RangeList {
     }
 
     /**
-     * @param {import("../").Ace.Point} pos
+     * @param {import("../ace-internal").Ace.Point} pos
      * @param {boolean} [excludeEdges]
      * @param {number} [startIndex]
      * @return {number}
@@ -67,7 +67,7 @@ class RangeList {
     }
 
     /**
-     * @param {import("../").Ace.Point} pos
+     * @param {import("../ace-internal").Ace.Point} pos
      */
     substractPoint(pos) {
         var i = this.pointIndex(pos);
@@ -121,14 +121,14 @@ class RangeList {
     }
 
     /**
-     * @param {import("../").Ace.Point} pos
+     * @param {import("../ace-internal").Ace.Point} pos
      */
     containsPoint(pos) {
         return this.pointIndex(pos) >= 0;
     }
 
     /**
-     * @param {import("../").Ace.Point} pos
+     * @param {import("../ace-internal").Ace.Point} pos
      */
     rangeAtPoint(pos) {
         var i = this.pointIndex(pos);
@@ -186,7 +186,7 @@ class RangeList {
     }
 
     /**
-     * @param {import("../").Ace.Delta} delta
+     * @param {import("../ace-internal").Ace.Delta} delta
      */
     $onChange(delta) {
         var start = delta.start;

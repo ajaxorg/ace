@@ -1269,7 +1269,7 @@ class VirtualRenderer {
 
     /**
      * Sets annotations for the gutter.
-     * @param {import("../").Ace.Annotation[]} annotations An array containing annotations
+     * @param {import("../ace-internal").Ace.Annotation[]} annotations An array containing annotations
      *
      **/
     setAnnotations(annotations) {
@@ -1303,8 +1303,8 @@ class VirtualRenderer {
 
     /**
      * 
-     * @param {import("../").Ace.Point} anchor
-     * @param {import("../").Ace.Point} lead
+     * @param {import("../ace-internal").Ace.Point} anchor
+     * @param {import("../ace-internal").Ace.Point} lead
      * @param {number} [offset]
      */
     scrollSelectionIntoView(anchor, lead, offset) {
@@ -1316,7 +1316,7 @@ class VirtualRenderer {
     /**
      * 
      * Scrolls the cursor into the first visibile area of the editor
-     * @param {import("../").Ace.Point} [cursor]
+     * @param {import("../ace-internal").Ace.Point} [cursor]
      * @param {number} [offset]
      * @param {{ top?: any; bottom?: any; }} [$viewMargin]
      */
@@ -1417,7 +1417,7 @@ class VirtualRenderer {
 
     /**
      * 
-     * @param {import("../").Ace.Point} cursor
+     * @param {import("../ace-internal").Ace.Point} cursor
      * @param {number} [alignment]
      * @returns {number}
      */
@@ -1604,7 +1604,7 @@ class VirtualRenderer {
      * 
      * @param {number} x
      * @param {number} y
-     * @returns {import("../").Ace.ScreenCoordinates}
+     * @returns {import("../ace-internal").Ace.ScreenCoordinates}
      
      */
     pixelToScreenCoordinates(x, y) {
@@ -1630,7 +1630,7 @@ class VirtualRenderer {
      * 
      * @param {number} x
      * @param {number} y
-     * @returns {import("../").Ace.Point}
+     * @returns {import("../ace-internal").Ace.Point}
      
      */
     screenToTextCoordinates(x, y) {
@@ -1749,7 +1749,7 @@ class VirtualRenderer {
 
     /**
      * @param {string} text
-     * @param {import("../").Ace.Point} [position]
+     * @param {import("../ace-internal").Ace.Point} [position]
      */
     setGhostText(text, position) {
         var cursor = this.session.selection.cursor;
@@ -1828,7 +1828,7 @@ class VirtualRenderer {
 
     /**
      * [Sets a new theme for the editor. `theme` should exist, and be a directory path, like `ace/theme/textmate`.]{: #VirtualRenderer.setTheme}
-     * @param {String | import("../").Ace.Theme} [theme] The path to a theme
+     * @param {String | import("../ace-internal").Ace.Theme} [theme] The path to a theme
      * @param {() => void} [cb] optional callback
      
      **/
@@ -1847,7 +1847,7 @@ class VirtualRenderer {
         }
 
         /**
-         * @param {import("../").Ace.Theme} module
+         * @param {import("../ace-internal").Ace.Theme} module
          */
         function afterLoad(module) {
             if (_self.$themeId != theme)
@@ -1961,9 +1961,9 @@ class VirtualRenderer {
             delete this.$scrollDecorator;
         }
         if (val === true) {
-            /**@type {import("../").Ace.VScrollbar}*/
+            /**@type {import("../ace-internal").Ace.VScrollbar}*/
             this.scrollBarV = new VScrollBarCustom(this.container, this);
-            /**@type {import("../").Ace.HScrollbar}*/
+            /**@type {import("../ace-internal").Ace.HScrollbar}*/
             this.scrollBarH = new HScrollBarCustom(this.container, this);
             this.scrollBarV.setHeight(this.$size.scrollerHeight);
             this.scrollBarH.setWidth(this.$size.scrollerWidth);
@@ -2037,7 +2037,7 @@ config.defineOptions(VirtualRenderer.prototype, "renderer", {
     useResizeObserver: {
         /**
          * @param value
-         
+         * @this{VirtualRenderer}
          */
         set: function(value) {
             if (!value && this.$resizeObserver) {
@@ -2068,7 +2068,7 @@ config.defineOptions(VirtualRenderer.prototype, "renderer", {
     printMargin: {
         /**
          * @param val
-         
+         * @this{VirtualRenderer}
          */
         set: function(val) {
             if (typeof val == "number")
@@ -2175,7 +2175,7 @@ config.defineOptions(VirtualRenderer.prototype, "renderer", {
     minLines: {
         /**
          * @param val
-         
+         * @this{VirtualRenderer}
          */
         set: function(val) {
             if (!(this.$minLines < 0x1ffffffffffff))
@@ -2192,7 +2192,7 @@ config.defineOptions(VirtualRenderer.prototype, "renderer", {
     scrollPastEnd: {
         /**
          * @param val
-         
+         * @this{VirtualRenderer}
          */
         set: function(val) {
             val = +val || 0;

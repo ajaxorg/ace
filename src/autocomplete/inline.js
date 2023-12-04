@@ -19,7 +19,7 @@ class AceInline {
     /**
      * Renders the completion as ghost text to the current cursor position
      * @param {Editor} editor
-     * @param {import("../../").Ace.Completion} completion
+     * @param {import("../../ace-internal").Ace.Completion} completion
      * @param {string} prefix
      * @returns {boolean} True if the completion could be rendered to the editor, false otherwise
      */

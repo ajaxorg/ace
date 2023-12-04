@@ -94,7 +94,7 @@ class Gutter{
     }
 
     /**
-     * @param {import("../../").Ace.Delta} delta
+     * @param {import("../../ace-internal").Ace.Delta} delta
      */
     $updateAnnotations(delta) {
         if (!this.$annotations.length)
@@ -113,7 +113,7 @@ class Gutter{
     }
 
     /**
-     * @param {import("../../").Ace.LayerConfig} config
+     * @param {import("../../ace-internal").Ace.LayerConfig} config
      */
     update(config) {
         this.config = config;
@@ -166,7 +166,7 @@ class Gutter{
     }
 
     /**
-     * @param {import("../../").Ace.LayerConfig} config
+     * @param {import("../../ace-internal").Ace.LayerConfig} config
      */
     $updateGutterWidth(config) {
         var session = this.session;
@@ -234,7 +234,7 @@ class Gutter{
     }
 
     /**
-     * @param {import("../../").Ace.LayerConfig} config
+     * @param {import("../../ace-internal").Ace.LayerConfig} config
      */
     scrollLines(config) {
         var oldConfig = this.config;
@@ -280,7 +280,7 @@ class Gutter{
     }
 
     /**
-     * @param {import("../../").Ace.LayerConfig} config
+     * @param {import("../../ace-internal").Ace.LayerConfig} config
      * @param {number} firstRow
      * @param {number} lastRow
      */
@@ -311,8 +311,8 @@ class Gutter{
 
     /**
      * @param {any} cell
-     * @param {import("../../").Ace.LayerConfig} config
-     * @param {import("../../").Ace.IRange | undefined} fold
+     * @param {import("../../ace-internal").Ace.LayerConfig} config
+     * @param {import("../../ace-internal").Ace.IRange | undefined} fold
      * @param {number} row
      */
     $renderCell(cell, config, fold, row) {

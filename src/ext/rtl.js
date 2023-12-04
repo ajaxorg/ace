@@ -93,7 +93,7 @@ function onCommandEmitted(commadEvent) {
  * Whenever the document is changed make sure that line break operatin
  * on right-to-left line (like pressing Enter or pasting multi-line text)
  * produces new right-to-left lines
- * @param {import("../../").Ace.Delta} delta
+ * @param {import("../../ace-internal").Ace.Delta} delta
  * @param {Editor} editor
  */
 function onChange(delta, editor) {

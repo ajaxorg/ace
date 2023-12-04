@@ -73,7 +73,7 @@ exports.edit = function(el, options) {
 /**
  * Creates a new [[EditSession]], and returns the associated [[Document]].
  * @param {import('./document').Document | String} text {:textParam}
- * @param {import("../").Ace.SyntaxMode} [mode] {:modeParam}
+ * @param {import("../ace-internal").Ace.SyntaxMode} [mode] {:modeParam}
  * @returns {EditSession}
  **/
 exports.createEditSession = function(text, mode) {

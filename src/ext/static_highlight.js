@@ -131,7 +131,7 @@ var highlight = function(el, opts, callback) {
  * Transforms a given input code snippet into HTML using the given mode
  *
  * @param {string} input Code snippet
- * @param {string|import("../../").Ace.SyntaxMode} mode String specifying the mode to load such as
+ * @param {string|import("../../ace-internal").Ace.SyntaxMode} mode String specifying the mode to load such as
  *  `ace/mode/javascript` or, a mode loaded from `/ace/mode`
  *  (use 'ServerSideHiglighter.getMode').
  * @param {string} theme String specifying the theme to load such as
@@ -186,7 +186,7 @@ highlight.render = function(input, mode, theme, lineStart, disableGutter, callba
 /**
  * Transforms a given input code snippet into HTML using the given mode
  * @param {string} input Code snippet
- * @param {import("../../").Ace.SyntaxMode|string} mode Mode loaded from /ace/mode (use 'ServerSideHiglighter.getMode')
+ * @param {import("../../ace-internal").Ace.SyntaxMode|string} mode Mode loaded from /ace/mode (use 'ServerSideHiglighter.getMode')
  * @param {any} theme
  * @param {any} lineStart
  * @param {boolean} disableGutter

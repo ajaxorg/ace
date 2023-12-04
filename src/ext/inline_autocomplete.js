@@ -65,7 +65,7 @@ class InlineAutocomplete {
 
     /**
      * This function is the entry point to the class. This triggers the gathering of the autocompletion and displaying the results;
-     * @param {import("../../").Ace.CompletionOptions} options
+     * @param {import("../../ace-internal").Ace.CompletionOptions} options
      */
     show(options) {
         this.activated = true;
@@ -121,7 +121,7 @@ class InlineAutocomplete {
     }
 
     /**
-     * @param {import("../../").Ace.InlineAutocompleteAction} where
+     * @param {import("../../ace-internal").Ace.InlineAutocompleteAction} where
      */
     goTo(where) {
         if (!this.completions || !this.completions.filtered) {
@@ -153,7 +153,7 @@ class InlineAutocomplete {
 
     /**
      * @param {number} [index]
-     * @returns {import("../../").Ace.Completion | undefined}
+     * @returns {import("../../ace-internal").Ace.Completion | undefined}
      */
     getData(index) {
         if (index == undefined || index === null) {
@@ -223,7 +223,7 @@ class InlineAutocomplete {
     }
 
     /**
-     * @param {import("../../").Ace.CompletionOptions} [options]
+     * @param {import("../../ace-internal").Ace.CompletionOptions} [options]
      */
     updateCompletions(options) {
         var prefix = "";
@@ -327,7 +327,7 @@ class InlineAutocomplete {
 
 /**
  * 
- * @type {{[key: string]: import("../../").Ace.Command}}
+ * @type {{[key: string]: import("../../ace-internal").Ace.Command}}
  */
 InlineAutocomplete.prototype.commands = {
     "Previous": {
@@ -388,6 +388,10 @@ var completers = [snippetCompleter, textCompleter, keyWordCompleter];
 
 require("../config").defineOptions(Editor.prototype, "editor", {
     enableInlineAutocompletion: {
+        /**
+         * @this{Editor}
+         * @param val
+         */
         set: function(val) {
             if (val) {
                 if (!this.completers)

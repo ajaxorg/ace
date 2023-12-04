@@ -171,7 +171,7 @@ class Cursor {
     }
 
     /**
-     * @param {import("../../").Ace.Point} [position]
+     * @param {import("../../ace-internal").Ace.Point} [position]
      * @param {boolean} [onScreen]
      */
     getPixelPosition(position, onScreen) {

@@ -12,7 +12,7 @@ function bindKey(win, mac) {
     multiSelectAction: "forEach"|"forEachLine"|function|undefined,
     scrollIntoView: true|"cursor"|"center"|"selectionPart"
 */
-/**@type {import("../../").Ace.Command[]} */
+/**@type {import("../../ace-internal").Ace.Command[]} */
 exports.commands = [{
     name: "showSettingsMenu",
     description: "Show settings menu",

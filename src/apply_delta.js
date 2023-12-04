@@ -43,7 +43,7 @@ function validateDelta(docLines, delta) {
 /**
  * Applies a delta to a document.
  * @param {string[]} docLines
- * @param {import("../").Ace.Delta} delta
+ * @param {import("../ace-internal").Ace.Delta} delta
  * @param [doNotValidate]
  */
 exports.applyDelta = function(docLines, delta, doNotValidate) {
