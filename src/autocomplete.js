@@ -28,7 +28,7 @@ var event = require("./lib/event");
  * @property {string} [command] - A command to be executed after the completion is inserted (experimental)
  * @property {string} [snippet] - a text snippet that would be inserted when the completion is selected
  * @property {string} [value] - The text that would be inserted when selecting this completion.
- * @property {{insertMatch:(editor: Editor, data: Completion) => void}} [completer]
+ * @property {import("../ace-internal").Ace.Completer & {insertMatch:(editor: Editor, data: Completion) => void}} [completer]
  * @property {boolean} [hideInlinePreview]
  * @export
  */

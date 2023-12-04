@@ -940,7 +940,8 @@ export namespace Ace {
                        callback: CompleterCallback): void;
 
         getDocTooltip?(item: Completion): void | string | Completion;
-
+        onSeen?: (editor: Ace.Editor, completion: Completion) => void;
+        onInsert?: (editor: Ace.Editor, completion: Completion) => void;
         cancel?(): void;
 
         id?: string;
