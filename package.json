@@ -44,6 +44,7 @@
         "cover": "istanbul cover src/test/all.js",
         "lint": "eslint \"src/**/*.js\"",
         "fix": "eslint --fix \"src/**/*.js\"",
+        "typecheck": "tsc -p tsconfig.json",
         "changelog": "standard-version",
         "prepack": "node tool/esm_resolver_generator.js && node Makefile.dryice.js css --target build-styles && rm -rf styles && mv build-styles/css styles"
     },

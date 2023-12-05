@@ -2,9 +2,9 @@
 
 /**
  * @typedef {import("./virtual_renderer").VirtualRenderer} VirtualRenderer
- */
-/**
  * @typedef {import("./selection").Selection} Selection
+ * @typedef {import("../ace-internal").Ace.Point} Point
+ * @typedef {import("../ace-internal").Ace.SearchOptions} SearchOptions
  */
 
 var oop = require("./lib/oop");
@@ -653,7 +653,7 @@ class Editor {
      */
     $updateHighlightActiveLine() {
         var session = this.getSession();
-        /**@type {import("../ace-internal").Ace.Point|false}*/
+        /**@type {Point|false}*/
         var highlight;
         if (this.$highlightActiveLine) {
             if (this.$selectionStyle != "line" || !this.selection.isMultiLine())
@@ -1462,7 +1462,7 @@ class Editor {
      * inline in the editor such as, for example, code completions.
      * 
      * @param {String} text Text to be inserted as "ghost" text
-     * @param {import("../ace-internal").Ace.Point} [position] Position to insert text to
+     * @param {Point} [position] Position to insert text to
      */
     setGhostText(text, position) {
         if (!this.session.widgetManager) {
@@ -1850,7 +1850,7 @@ class Editor {
      *    { row: newRowLocation, column: newColumnLocation }
      * ```
      * @param {Range} range The range of text you want moved within the document
-     * @param {import("../ace-internal").Ace.Point} toPosition The location (row and column) where you want to move the text to
+     * @param {Point} toPosition The location (row and column) where you want to move the text to
      * @param {boolean} [copy]
      * 
      * @returns {Range} The new range where the text was moved to.
@@ -2113,7 +2113,7 @@ class Editor {
 
     /**
      * Gets the current position of the cursor.
-     * @returns {import("../ace-internal").Ace.Point} An object that looks something like this:
+     * @returns {Point} An object that looks something like this:
      *
      * ```json
      * { row: currRow, column: currCol }
@@ -2127,7 +2127,7 @@ class Editor {
 
     /**
      * Returns the screen position of the cursor.
-     * @returns {import("../ace-internal").Ace.Point}
+     * @returns {Point}
      * @related EditSession.documentToScreenPosition
      **/
     getCursorPositionScreen() {
@@ -2171,7 +2171,7 @@ class Editor {
 
     /**
      * Moves the cursor to the position indicated by `pos.row` and `pos.column`.
-     * @param {import("../ace-internal").Ace.Point} pos An object with two properties, row and column
+     * @param {Point} pos An object with two properties, row and column
      * @related Selection.moveCursorToPosition
      **/
     moveCursorToPosition(pos) {
@@ -2480,7 +2480,7 @@ class Editor {
     /**
      * Replaces the first occurrence of `options.needle` with the value in `replacement`.
      * @param {String} [replacement] The text to replace with
-     * @param {Partial<import("../ace-internal").Ace.SearchOptions>} [options] The [[Search `Search`]] options to use
+     * @param {Partial<SearchOptions>} [options] The [[Search `Search`]] options to use
      * @return {number}
      **/
     replace(replacement, options) {
@@ -2505,7 +2505,7 @@ class Editor {
     /**
      * Replaces all occurrences of `options.needle` with the value in `replacement`.
      * @param {String} [replacement] The text to replace with
-     * @param {Partial<import("../ace-internal").Ace.SearchOptions>} [options] The [[Search `Search`]] options to use
+     * @param {Partial<SearchOptions>} [options] The [[Search `Search`]] options to use
      * @return {number}
      **/
     replaceAll(replacement, options) {
@@ -2550,7 +2550,7 @@ class Editor {
     /**
      * {:Search.getOptions} For more information on `options`, see [[Search `Search`]].
      * @related Search.getOptions
-     * @returns {Partial<import("../ace-internal").Ace.SearchOptions>}
+     * @returns {Partial<SearchOptions>}
      **/
     getLastSearchOptions() {
         return this.$search.getOptions();
@@ -2559,7 +2559,7 @@ class Editor {
     /**
      * Attempts to find `needle` within the document. For more information on `options`, see [[Search `Search`]].
      * @param {String|RegExp|Object} needle The text to search for (optional)
-     * @param {Partial<import("../ace-internal").Ace.SearchOptions>} [options] An object defining various search properties
+     * @param {Partial<SearchOptions>} [options] An object defining various search properties
      * @param {Boolean} [animate] If `true` animate scrolling
      * @related Search.find
      **/
@@ -2604,7 +2604,7 @@ class Editor {
 
     /**
      * Performs another search for `needle` in the document. For more information on `options`, see [[Search `Search`]].
-     * @param {Partial<import("../ace-internal").Ace.SearchOptions>} [options] search options
+     * @param {Partial<SearchOptions>} [options] search options
      * @param {Boolean} [animate] If `true` animate scrolling
      *
      * @related Editor.find
@@ -2615,7 +2615,7 @@ class Editor {
 
     /**
      * Performs a search for `needle` backwards. For more information on `options`, see [[Search `Search`]].
-     * @param {Partial<import("../ace-internal").Ace.SearchOptions>} [options] search options
+     * @param {Partial<SearchOptions>} [options] search options
      * @param {Boolean} [animate] If `true` animate scrolling
      *
      * @related Editor.find

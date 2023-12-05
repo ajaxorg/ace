@@ -1,8 +1,6 @@
 "use strict";
 /**
  * @typedef {import("./edit_session").EditSession} EditSession
- */
-/**
  * @typedef {{range: import("./range").Range, className: string}} MarkerGroupItem
  */
 /**

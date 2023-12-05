@@ -111,32 +111,33 @@ exports.dynamicModules = Object.create(null);
 exports.$loading = {};
 exports.$loaded = {};
 /**
- * @param {string | [string, string]} moduleName
+ * @param {string | [string, string]} moduleId
  * @param {(module: any) => void} onLoad
  */
-exports.loadModule = function(moduleName, onLoad) {
-    var loadedModule, moduleType;
-    if (Array.isArray(moduleName)) {
-        moduleType = moduleName[0];
-        moduleName = moduleName[1];
+exports.loadModule = function(moduleId, onLoad) {
+    var loadedModule;
+    if (Array.isArray(moduleId)) {
+        var moduleType = moduleId[0];
+        var moduleName = moduleId[1];
+    } else if (typeof moduleId == "string") {
+        var moduleName = moduleId;
     }
-    
     var load = function (module) {
         // require(moduleName) can return empty object if called after require([moduleName], callback)
-        if (module && !exports.$loading[/**@type {string}*/(moduleName)]) return onLoad && onLoad(module);
+        if (module && !exports.$loading[moduleName]) return onLoad && onLoad(module);
 
-        if (!exports.$loading[/**@type {string}*/(moduleName)]) exports.$loading[/**@type {string}*/(moduleName)] = [];
+        if (!exports.$loading[moduleName]) exports.$loading[moduleName] = [];
 
-        exports.$loading[/**@type {string}*/(moduleName)].push(onLoad);
+        exports.$loading[moduleName].push(onLoad);
 
-        if (exports.$loading[/**@type {string}*/(moduleName)].length > 1) return;
+        if (exports.$loading[moduleName].length > 1) return;
 
         var afterLoad = function() {
             loader(moduleName, function(err, module) {
-                if (module) exports.$loaded[/**@type {string}*/(moduleName)] = module;
+                if (module) exports.$loaded[moduleName] = module;
                 exports._emit("load.module", {name: moduleName, module: module});
-                var listeners = exports.$loading[/**@type {string}*/(moduleName)];
-                exports.$loading[/**@type {string}*/(moduleName)] = null;
+                var listeners = exports.$loading[moduleName];
+                exports.$loading[moduleName] = null;
                 listeners.forEach(function(onLoad) {
                     onLoad && onLoad(module);
                 });
@@ -145,7 +146,7 @@ exports.loadModule = function(moduleName, onLoad) {
 
         if (!exports.get("packaged")) return afterLoad();
 
-        net.loadScript(exports.moduleUrl(/**@type {string}*/(moduleName), moduleType), afterLoad);
+        net.loadScript(exports.moduleUrl(moduleName, moduleType), afterLoad);
         reportErrorIfPathIsNotConfigured();
     };
 

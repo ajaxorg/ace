@@ -1,12 +1,11 @@
 "use strict";
 /**
- * @typedef {import("./edit_session/fold_line").FoldLine} FoldLine
- */
-/**
- * @typedef {import("../ace-internal").Ace.Point} Point
- */
-/**
  * @typedef {import("./layer/font_metrics").FontMetrics} FontMetrics
+ * @typedef {import("./edit_session/fold_line").FoldLine} FoldLine
+ * @typedef {import("../ace-internal").Ace.Point} Point
+ * @typedef {import("../ace-internal").Ace.Delta} Delta
+ * @typedef {import("../ace-internal").Ace.IRange} IRange
+ * @typedef {import("../ace-internal").Ace.SyntaxMode} SyntaxMode
  */
 
 var oop = require("./lib/oop");
@@ -24,7 +23,7 @@ var UndoManager = require("./undomanager").UndoManager;
 
 /**
  * @typedef TextMode
- * @type {import("../ace-internal").Ace.SyntaxMode}
+ * @type {SyntaxMode}
  */
 
 /**
@@ -36,7 +35,7 @@ class EditSession {
     /**
      * Sets up a new `EditSession` and associates it with the given `Document` and `Mode`.
      * @param {Document | String} [text] [If `text` is a `Document`, it associates the `EditSession` with it. Otherwise, a new `Document` is created, with the initial text]{: #textParam}
-     * @param {import("../ace-internal").Ace.SyntaxMode} [mode] [The initial language mode to use for the document]{: #modeParam}
+     * @param {SyntaxMode} [mode] [The initial language mode to use for the document]{: #modeParam}
      **/
     constructor(text, mode) {
         /**@type {Document}*/this.doc;
@@ -160,7 +159,7 @@ class EditSession {
 
     /**
      * 
-     * @param {import("../ace-internal").Ace.Delta} delta
+     * @param {Delta} delta
      */
     onChange(delta) {
         this.$modified = true;
@@ -203,28 +202,29 @@ class EditSession {
      /**
      * Returns a new instance of EditSession with state from JSON.
      * @method fromJSON
-     * @param {string} session The EditSession state.
+     * @param {string|object} session The EditSession state.
      * @returns {EditSession}
      */
-     static fromJSON(session) {
-        session = JSON.parse(session);
+    static fromJSON(session) {
+        if (typeof session == "string")
+            session = JSON.parse(session);
         const undoManager = new UndoManager();
-        undoManager.$undoStack = /**@type{Object}*/(session).history.undo;
-        undoManager.$redoStack = /**@type{Object}*/(session).history.redo;
-        undoManager.mark = /**@type{Object}*/(session).history.mark;
-        undoManager.$rev = /**@type{Object}*/(session).history.rev;
+        undoManager.$undoStack = session.history.undo;
+        undoManager.$redoStack = session.history.redo;
+        undoManager.mark = session.history.mark;
+        undoManager.$rev = session.history.rev;
     
-        const editSession = new EditSession(/**@type{Object}*/(session).value);
-         /**@type{Object}*/(session).folds.forEach(function(fold) {
+        const editSession = new EditSession(session.value);
+        session.folds.forEach(function(fold) {
           editSession.addFold("...", Range.fromPoints(fold.start, fold.end));
         });
-        editSession.setAnnotations(/**@type{Object}*/(session).annotations);
-        editSession.setBreakpoints(/**@type{Object}*/(session).breakpoints);
-        editSession.setMode(/**@type{Object}*/(session).mode);
-        editSession.setScrollLeft(/**@type{Object}*/(session).scrollLeft);
-        editSession.setScrollTop(/**@type{Object}*/(session).scrollTop);
+        editSession.setAnnotations(session.annotations);
+        editSession.setBreakpoints(session.breakpoints);
+        editSession.setMode(session.mode);
+        editSession.setScrollLeft(session.scrollLeft);
+        editSession.setScrollTop(session.scrollTop);
         editSession.setUndoManager(undoManager);
-        editSession.selection.fromJSON(/**@type{Object}*/(session).selection);
+        editSession.selection.fromJSON(session.selection);
     
         return editSession;
     }
@@ -604,7 +604,6 @@ class EditSession {
     }
 
     /**
-     * 
      * @param {RegExp} re
      */
     highlight(re) {
@@ -784,7 +783,7 @@ class EditSession {
     
     /**
      * Sets a new text mode for the `EditSession`. This method also emits the `'changeMode'` event. If a [[BackgroundTokenizer `BackgroundTokenizer`]] is set, the `'tokenizerUpdate'` event is also emitted.
-     * @param {import("../ace-internal").Ace.SyntaxMode | string} mode Set a new text mode
+     * @param {SyntaxMode | string} mode Set a new text mode
      * @param {() => void} [cb] optional callback
      **/
     setMode(mode, cb) {
@@ -830,7 +829,6 @@ class EditSession {
     }
 
     /**
-     * 
      * @param mode
      * @param [$isPlaceholder]
      */
@@ -1033,7 +1031,7 @@ class EditSession {
 
     /**
      * {:Document.getTextRange.desc}
-     * @param {import("../ace-internal").Ace.IRange} [range] The range to work with
+     * @param {IRange} [range] The range to work with
      *
      * @returns {String}
      **/
@@ -1053,7 +1051,7 @@ class EditSession {
 
     /**
      * Removes the `range` from the document.
-     * @param {import("../ace-internal").Ace.IRange} range A specified Range to remove
+     * @param {IRange} range A specified Range to remove
      * @returns {Point} The new `start` property of the range, which contains `startRow` and `startColumn`. If `range` is empty, this function returns the unmodified value of `range.start`.
      **/
     remove(range) {
@@ -1075,7 +1073,7 @@ class EditSession {
 
     /**
      * Reverts previous changes to your document.
-     * @param {import("../ace-internal").Ace.Delta[]} deltas An array of previous changes
+     * @param {Delta[]} deltas An array of previous changes
      * @param {Boolean} [dontSelect] [If `true`, doesn't select the range of where the change occured]{: #dontSelect}
      **/
     undoChanges(deltas, dontSelect) {
@@ -1104,7 +1102,7 @@ class EditSession {
 
     /**
      * Re-implements a previously undone change to your document.
-     * @param {import("../ace-internal").Ace.Delta[]} deltas An array of previous changes
+     * @param {Delta[]} deltas An array of previous changes
      * @param {Boolean} [dontSelect] {:dontSelect}
      **/
     redoChanges(deltas, dontSelect) {
@@ -1141,7 +1139,7 @@ class EditSession {
 
     /**
      * 
-     * @param {import("../ace-internal").Ace.Delta[]} deltas
+     * @param {Delta[]} deltas
      * @param {boolean} [isUndo]
      * @return {Range}
      */
@@ -1186,7 +1184,7 @@ class EditSession {
     /**
      * Replaces a range in the document with the new `text`.
      *
-     * @param {import("../ace-internal").Ace.IRange} range A specified Range to replace
+     * @param {IRange} range A specified Range to replace
      * @param {String} text The new text to use as a replacement
      * @returns {Point} An object containing the final row and column, like this:
      * ```
@@ -1410,7 +1408,6 @@ class EditSession {
     }
 
     /**
-     * 
      * @param {Range} range
      * @returns {Range}
      */
@@ -1563,8 +1560,7 @@ class EditSession {
     }
 
     /**
-     * 
-     * @param {import("../ace-internal").Ace.Delta} delta
+     * @param {Delta} delta
      */
     $updateInternalDataOnChange(delta) {
         var useWrapMode = this.$useWrapMode;
@@ -1675,7 +1671,6 @@ class EditSession {
     }
 
     /**
-     * 
      * @param {number} firstRow
      * @param {number} lastRow
      */
@@ -1685,7 +1680,6 @@ class EditSession {
     }
 
     /**
-     *
      * @param {number} firstRow
      * @param {number} lastRow
      */
@@ -1734,7 +1728,6 @@ class EditSession {
     }
 
     /**
-     * 
      * @param {number[]}tokens
      * @param {number} wrapLimit
      * @param {number} tabSize

@@ -1,6 +1,7 @@
 "use strict";
 /**
  * @typedef {import("../edit_session").EditSession} EditSession
+ * @typedef {import("../../ace-internal").Ace.LayerConfig} LayerConfig
  */
 var dom = require("../lib/dom");
 
@@ -20,15 +21,15 @@ class Lines {
     }
 
     /**
-     * @param {import("../../ace-internal").Ace.LayerConfig} config
+     * @param {LayerConfig} config
      */
     moveContainer(config) {
         dom.translate(this.element, 0, -((config.firstRowScreen * config.lineHeight) % this.canvasHeight) - config.offset * this.$offsetCoefficient);
     }
 
     /**
-     * @param {import("../../ace-internal").Ace.LayerConfig} oldConfig
-     * @param {import("../../ace-internal").Ace.LayerConfig} newConfig
+     * @param {LayerConfig} oldConfig
+     * @param {LayerConfig} newConfig
      */
     pageChanged(oldConfig, newConfig) {
         return (
@@ -39,7 +40,7 @@ class Lines {
 
     /**
      * @param {number} row
-     * @param {Partial<import("../../ace-internal").Ace.LayerConfig>} config
+     * @param {Partial<LayerConfig>} config
      * @param {EditSession} session
      */
     computeLineTop(row, config, session) {
@@ -51,7 +52,7 @@ class Lines {
 
     /**
      * @param {number} row
-     * @param {import("../../ace-internal").Ace.LayerConfig} config
+     * @param {LayerConfig} config
      * @param {EditSession} session
      */
     computeLineHeight(row, config, session) {

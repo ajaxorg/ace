@@ -179,7 +179,7 @@ function buildTypes() {
     var aceCodeExtensionDefinitions = '/// <reference path="./ace-extensions.d.ts" />';
     // ace-builds package has different structure and can't use mode types defined for the ace-code.
     // ace-builds modes are declared along with other modules in the ace-modules.d.ts file below.
-    var definitions = fs.readFileSync(ACE_HOME + '/ace-internal.d.ts', 'utf8').replace(aceCodeModeDefinitions, '').replace(aceCodeExtensionDefinitions, '');
+    var definitions = fs.readFileSync(ACE_HOME + '/ace.d.ts', 'utf8').replace(aceCodeModeDefinitions, '').replace(aceCodeExtensionDefinitions, '');
     var paths = fs.readdirSync(BUILD_DIR + '/src-noconflict');
     var moduleRef = '/// <reference path="./ace-modules.d.ts" />';
 

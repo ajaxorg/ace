@@ -1,8 +1,6 @@
 "use strict";
 /**
  * @typedef {import("../edit_session").EditSession} EditSession
- */
-/**
  * @typedef {import("../virtual_renderer").VirtualRenderer & {$textLayer: import("../layer/text").Text &{$lenses}}} VirtualRenderer
  */
 

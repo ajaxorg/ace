@@ -1,6 +1,7 @@
 "use strict";
 /**
  * @typedef {import("../edit_session").EditSession} EditSession
+ * @typedef {import("../../ace-internal").Ace.LayerConfig} LayerConfig
  */
 var dom = require("../lib/dom");
 var oop = require("../lib/oop");
@@ -113,7 +114,7 @@ class Gutter{
     }
 
     /**
-     * @param {import("../../ace-internal").Ace.LayerConfig} config
+     * @param {LayerConfig} config
      */
     update(config) {
         this.config = config;
@@ -166,7 +167,7 @@ class Gutter{
     }
 
     /**
-     * @param {import("../../ace-internal").Ace.LayerConfig} config
+     * @param {LayerConfig} config
      */
     $updateGutterWidth(config) {
         var session = this.session;
@@ -234,7 +235,7 @@ class Gutter{
     }
 
     /**
-     * @param {import("../../ace-internal").Ace.LayerConfig} config
+     * @param {LayerConfig} config
      */
     scrollLines(config) {
         var oldConfig = this.config;
@@ -280,7 +281,7 @@ class Gutter{
     }
 
     /**
-     * @param {import("../../ace-internal").Ace.LayerConfig} config
+     * @param {LayerConfig} config
      * @param {number} firstRow
      * @param {number} lastRow
      */
@@ -311,7 +312,7 @@ class Gutter{
 
     /**
      * @param {any} cell
-     * @param {import("../../ace-internal").Ace.LayerConfig} config
+     * @param {LayerConfig} config
      * @param {import("../../ace-internal").Ace.IRange | undefined} fold
      * @param {number} row
      */

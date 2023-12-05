@@ -9,8 +9,8 @@
 var dom = require("./lib/dom");
 
 var Range = require("./range").Range;
-var EditSession = require("./edit_session").EditSession;
 var Editor = require("./editor").Editor;
+var EditSession = require("./edit_session").EditSession;
 var UndoManager = require("./undomanager").UndoManager;
 var Renderer = require("./virtual_renderer").VirtualRenderer;
 
@@ -86,5 +86,4 @@ exports.Editor = Editor;
 exports.EditSession = EditSession;
 exports.UndoManager = UndoManager;
 exports.VirtualRenderer = Renderer;
-let version= exports.config.version;
-exports.version = version;
+exports.version = exports.config.version;

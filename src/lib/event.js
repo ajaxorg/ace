@@ -96,7 +96,6 @@ exports.capture = function(el, eventHandler, releaseCaptureHandler) {
 };
 
 /**
- * 
  * @param el
  * @param callback
  * @param [destroyer]
@@ -128,7 +127,6 @@ exports.addMouseWheelListener = function(el, callback, destroyer) {
 };
 
 /**
- * 
  * @param elements
  * @param timeouts
  * @param eventHandler
@@ -249,52 +247,34 @@ function normalizeCommandKeys(callback, e, keyCode) {
 }
 
 /**
- * 
  * @param el
  * @param callback
  * @param [destroyer]
  */
 exports.addCommandKeyListener = function(el, callback, destroyer) {
-    // @ts-expect-error TODO: property is missing in useragent
-    if (useragent.isOldGecko || (useragent.isOpera && !("KeyboardEvent" in window))) {
-        // Old versions of Gecko aka. Firefox < 4.0 didn't repeat the keydown
-        // event if the user pressed the key for a longer time. Instead, the
-        // keydown event was fired once and later on only the keypress event.
-        // To emulate the 'right' keydown behavior, the keyCode of the initial
-        // keyDown event is stored and in the following keypress events the
-        // stores keyCode is used to emulate a keyDown event.
-        var lastKeyDownKeyCode = null;
-        addListener(el, "keydown", function(e) {
-            lastKeyDownKeyCode = e.keyCode;
-        }, destroyer);
-        addListener(el, "keypress", function(e) {
-            return normalizeCommandKeys(callback, e, lastKeyDownKeyCode);
-        }, destroyer);
-    } else {
-        var lastDefaultPrevented = null;
+    var lastDefaultPrevented = null;
 
-        addListener(el, "keydown", function(e) {
-            pressedKeys[e.keyCode] = (pressedKeys[e.keyCode] || 0) + 1;
-            var result = normalizeCommandKeys(callback, e, e.keyCode);
-            lastDefaultPrevented = e.defaultPrevented;
-            return result;
-        }, destroyer);
+    addListener(el, "keydown", function(e) {
+        pressedKeys[e.keyCode] = (pressedKeys[e.keyCode] || 0) + 1;
+        var result = normalizeCommandKeys(callback, e, e.keyCode);
+        lastDefaultPrevented = e.defaultPrevented;
+        return result;
+    }, destroyer);
 
-        addListener(el, "keypress", function(e) {
-            if (lastDefaultPrevented && (e.ctrlKey || e.altKey || e.shiftKey || e.metaKey)) {
-                exports.stopEvent(e);
-                lastDefaultPrevented = null;
-            }
-        }, destroyer);
-
-        addListener(el, "keyup", function(e) {
-            pressedKeys[e.keyCode] = null;
-        }, destroyer);
-
-        if (!pressedKeys) {
-            resetPressedKeys();
-            addListener(window, "focus", resetPressedKeys);
+    addListener(el, "keypress", function(e) {
+        if (lastDefaultPrevented && (e.ctrlKey || e.altKey || e.shiftKey || e.metaKey)) {
+            exports.stopEvent(e);
+            lastDefaultPrevented = null;
         }
+    }, destroyer);
+
+    addListener(el, "keyup", function(e) {
+        pressedKeys[e.keyCode] = null;
+    }, destroyer);
+
+    if (!pressedKeys) {
+        resetPressedKeys();
+        addListener(window, "focus", resetPressedKeys);
     }
 };
 function resetPressedKeys() {

@@ -1,12 +1,9 @@
 "use strict";
 /**
  * @typedef {import("./edit_session").EditSession} EditSession
- */
-/**
  * @typedef {import("./editor").Editor} Editor
- */
-/**
  * @typedef {import("./virtual_renderer").VirtualRenderer} VirtualRenderer
+ * @typedef {import("../ace-internal").Ace.LineWidget} LineWidget
  */
 
 var dom = require("./lib/dom");
@@ -190,8 +187,8 @@ class LineWidgets {
 
     /**
      * 
-     * @param {import("../ace-internal").Ace.LineWidget} w
-     * @return {import("../ace-internal").Ace.LineWidget}
+     * @param {LineWidget} w
+     * @return {LineWidget}
      */
     $registerLineWidget(w) {
         if (!this.session.lineWidgets)
@@ -212,8 +209,8 @@ class LineWidgets {
 
     /**
      *
-     * @param {import("../ace-internal").Ace.LineWidget} w
-     * @return {import("../ace-internal").Ace.LineWidget}
+     * @param {LineWidget} w
+     * @return {LineWidget}
      */
     addLineWidget(w) {
         this.$registerLineWidget(w);
@@ -270,7 +267,7 @@ class LineWidgets {
     }
     
     /**
-     * @param {import("../ace-internal").Ace.LineWidget} w
+     * @param {LineWidget} w
      */
     removeLineWidget(w) {
         w._inDocument = false;
@@ -303,7 +300,7 @@ class LineWidgets {
     /**
      * 
      * @param {number} row
-     * @return {import("../ace-internal").Ace.LineWidget[]}
+     * @return {LineWidget[]}
      */
     getWidgetsAtRow(row) {
         var lineWidgets = this.session.lineWidgets;
@@ -317,7 +314,7 @@ class LineWidgets {
     }
 
     /**
-     * @param {import("../ace-internal").Ace.LineWidget} w
+     * @param {LineWidget} w
      */
     onWidgetChanged(w) {
         this.session._changedWidgets.push(w);

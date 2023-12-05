@@ -1,8 +1,6 @@
 "use strict";
 /**
  * @typedef {import("./layer/marker").Marker} Marker
- */
-/**
  * @typedef {import("./edit_session").EditSession} EditSession
  */
 var lang = require("./lib/lang");

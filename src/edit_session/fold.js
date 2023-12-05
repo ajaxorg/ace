@@ -1,9 +1,9 @@
 "use strict";
 /**
  * @typedef {import("./fold_line").FoldLine} FoldLine
- */
-/**
  * @typedef {import("../range").Range} Range
+ * @typedef {import("../../ace-internal").Ace.Point} Point
+ * @typedef {import("../../ace-internal").Ace.IRange} IRange
  */
 var RangeList = require("../range_list").RangeList;
 
@@ -98,7 +98,7 @@ class Fold extends RangeList {
     }
 
     /**
-     * @param {import("../../ace-internal").Ace.IRange} range
+     * @param {IRange} range
      */
     restoreRange(range) {
         return restoreRange(range, this.start);
@@ -107,8 +107,8 @@ class Fold extends RangeList {
 }
 
 /**
- * @param {import("../../ace-internal").Ace.Point} point
- * @param {import("../../ace-internal").Ace.Point} anchor
+ * @param {Point} point
+ * @param {Point} anchor
  */
 function consumePoint(point, anchor) {
     point.row -= anchor.row;
@@ -116,16 +116,16 @@ function consumePoint(point, anchor) {
         point.column -= anchor.column;
 }
 /**
- * @param {import("../../ace-internal").Ace.IRange} range
- * @param {import("../../ace-internal").Ace.Point} anchor
+ * @param {IRange} range
+ * @param {Point} anchor
  */
 function consumeRange(range, anchor) {
     consumePoint(range.start, anchor);
     consumePoint(range.end, anchor);
 }
 /**
- * @param {import("../../ace-internal").Ace.Point} point
- * @param {import("../../ace-internal").Ace.Point} anchor
+ * @param {Point} point
+ * @param {Point} anchor
  */
 function restorePoint(point, anchor) {
     if (point.row == 0)
@@ -133,8 +133,8 @@ function restorePoint(point, anchor) {
     point.row += anchor.row;
 }
 /**
- * @param {import("../../ace-internal").Ace.IRange} range
- * @param {import("../../ace-internal").Ace.Point} anchor
+ * @param {IRange} range
+ * @param {Point} anchor
  */
 function restoreRange(range, anchor) {
     restorePoint(range.start, anchor);

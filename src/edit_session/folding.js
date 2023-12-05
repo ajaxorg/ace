@@ -9,6 +9,7 @@ var MouseEvent = require("../mouse/mouse_event").MouseEvent;
 
 /**
  * @typedef {import("../edit_session").EditSession & import("../../ace-internal").Ace.Folding} IFolding
+ * @typedef {import("../ace-internal").Ace.Delta } Delta
  */
 
 /**
@@ -46,7 +47,7 @@ function Folding() {
 
     /**
      * Returns all folds in the given range. Note, that this will return folds
-     * @param {Range| import("../../ace-internal").Ace.Delta} range
+     * @param {Range| Delta} range
      * @returns {Fold[]}
      **/
     this.getFoldsInRange = function(range) {
@@ -1005,7 +1006,7 @@ function Folding() {
     };
 
     /**
-     * @param {import("../../ace-internal").Ace.Delta} delta
+     * @param {Delta} delta
      */
     this.updateFoldWidgets = function(delta) {
         var firstRow = delta.start.row;

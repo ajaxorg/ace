@@ -170,7 +170,6 @@ oop.inherits(IncrementalSearchKeyboardHandler, HashHandler);
 
     var handleKeyboard$super = this.handleKeyboard;
     /**
-     * 
      * @param data
      * @param hashId
      * @param key

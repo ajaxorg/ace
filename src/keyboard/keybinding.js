@@ -1,6 +1,7 @@
 "use strict";
 /**
  * @typedef {import("../editor").Editor} Editor
+ * @typedef {import("../../ace-internal").Ace.KeyboardHandler} KeyboardHandler
  */
 var keyUtil  = require("../lib/keys");
 var event = require("../lib/event");
@@ -13,13 +14,13 @@ class KeyBinding {
     constructor(editor) {
         this.$editor = editor;
         this.$data = {editor: editor};
-        /**@type {(import("../../ace-internal").Ace.KeyboardHandler)[]}*/
+        /**@type {(KeyboardHandler)[]}*/
         this.$handlers = [];
         this.setDefaultHandler(editor.commands);
     }
 
     /**
-     * @param {import("../../ace-internal").Ace.KeyboardHandler} kb
+     * @param {KeyboardHandler} kb
      */
     setDefaultHandler(kb) {
         this.removeKeyboardHandler(this.$defaultHandler);
@@ -28,7 +29,7 @@ class KeyBinding {
     }
 
     /**
-     * @param {import("../../ace-internal").Ace.KeyboardHandler} kb
+     * @param {KeyboardHandler} kb
      */
     setKeyboardHandler(kb) {
         var h = this.$handlers;
@@ -42,7 +43,7 @@ class KeyBinding {
     }
 
     /**
-     * @param {import("../../ace-internal").Ace.KeyboardHandler & {attach?: (editor: any) => void, detach?: (editor: any) => void;}} [kb]
+     * @param {KeyboardHandler & {attach?: (editor: any) => void, detach?: (editor: any) => void;}} [kb]
      * @param {number} [pos]
      */
     addKeyboardHandler(kb, pos) {
@@ -66,7 +67,7 @@ class KeyBinding {
     }
 
     /**
-     * @param {import("../../ace-internal").Ace.KeyboardHandler & {attach?: (editor: any) => void, detach?: (editor: any) => void;}} kb
+     * @param {KeyboardHandler & {attach?: (editor: any) => void, detach?: (editor: any) => void;}} kb
      * @returns {boolean}
      */
     removeKeyboardHandler(kb) {
@@ -79,7 +80,7 @@ class KeyBinding {
     }
 
     /**
-     * @return {import("../../ace-internal").Ace.KeyboardHandler}
+     * @return {KeyboardHandler}
      */
     getKeyboardHandler() {
         return this.$handlers[this.$handlers.length - 1];

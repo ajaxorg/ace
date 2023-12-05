@@ -1,8 +1,6 @@
 "use strict";
 /**
  * @typedef {import("./mouse_handler").MouseHandler} MouseHandler
- */
-/**
  * @typedef {import("./mouse_event").MouseEvent} MouseEvent
  */
 var useragent = require("../lib/useragent");

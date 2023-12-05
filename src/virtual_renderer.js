@@ -1,7 +1,8 @@
 "use strict";
 /**
- *
  * @typedef {import("./edit_session").EditSession} EditSession
+ * @typedef {import("../ace-internal").Ace.Point} Point
+ * @typedef {import("../ace-internal").Ace.Theme} Theme
  */
 var oop = require("./lib/oop");
 var dom = require("./lib/dom");
@@ -1303,8 +1304,8 @@ class VirtualRenderer {
 
     /**
      * 
-     * @param {import("../ace-internal").Ace.Point} anchor
-     * @param {import("../ace-internal").Ace.Point} lead
+     * @param {Point} anchor
+     * @param {Point} lead
      * @param {number} [offset]
      */
     scrollSelectionIntoView(anchor, lead, offset) {
@@ -1316,7 +1317,7 @@ class VirtualRenderer {
     /**
      * 
      * Scrolls the cursor into the first visibile area of the editor
-     * @param {import("../ace-internal").Ace.Point} [cursor]
+     * @param {Point} [cursor]
      * @param {number} [offset]
      * @param {{ top?: any; bottom?: any; }} [$viewMargin]
      */
@@ -1417,7 +1418,7 @@ class VirtualRenderer {
 
     /**
      * 
-     * @param {import("../ace-internal").Ace.Point} cursor
+     * @param {Point} cursor
      * @param {number} [alignment]
      * @returns {number}
      */
@@ -1630,7 +1631,7 @@ class VirtualRenderer {
      * 
      * @param {number} x
      * @param {number} y
-     * @returns {import("../ace-internal").Ace.Point}
+     * @returns {Point}
      
      */
     screenToTextCoordinates(x, y) {
@@ -1749,7 +1750,7 @@ class VirtualRenderer {
 
     /**
      * @param {string} text
-     * @param {import("../ace-internal").Ace.Point} [position]
+     * @param {Point} [position]
      */
     setGhostText(text, position) {
         var cursor = this.session.selection.cursor;
@@ -1847,7 +1848,7 @@ class VirtualRenderer {
 
     /**
      * [Sets a new theme for the editor. `theme` should exist, and be a directory path, like `ace/theme/textmate`.]{: #VirtualRenderer.setTheme}
-     * @param {String | import("../ace-internal").Ace.Theme} [theme] The path to a theme
+     * @param {String | Theme} [theme] The path to a theme
      * @param {() => void} [cb] optional callback
      
      **/
@@ -1866,7 +1867,7 @@ class VirtualRenderer {
         }
 
         /**
-         * @param {import("../ace-internal").Ace.Theme} module
+         * @param {Theme} module
          */
         function afterLoad(module) {
             if (_self.$themeId != theme)

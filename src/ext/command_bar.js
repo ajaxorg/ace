@@ -1,5 +1,6 @@
 /**
  * @typedef {import("../editor").Editor} Editor
+ * @typedef {import("../../ace-internal").Ace.TooltipCommand} TooltipCommand
  */
 var Tooltip = require("../tooltip").Tooltip;
 var EventEmitter = require("../lib/event_emitter").EventEmitter;
@@ -90,7 +91,7 @@ class CommandBarTooltip {
      * toolbar, the remaining elements are added to the overflow menu.
      * 
      * @param {string} id      
-     * @param {import("../../ace-internal").Ace.TooltipCommand} command
+     * @param {TooltipCommand} command
      */
     registerCommand(id, command) {
         var registerForMainTooltip = Object.keys(this.commands).length < this.maxElementsOnTooltip;
@@ -288,7 +289,7 @@ class CommandBarTooltip {
 
     /**
      * @param {string} id
-     * @param {import("../../ace-internal").Ace.TooltipCommand} command
+     * @param {TooltipCommand} command
      * @param {boolean} forMainTooltip
      */
     $createCommand(id, command, forMainTooltip) {

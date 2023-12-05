@@ -1,5 +1,7 @@
 /**
  * @typedef {import("./anchor").Anchor} Anchor
+ * @typedef {import("../ace-internal").Ace.Point} Point
+ * @typedef {import("../ace-internal").Ace.ScreenCoordinates} ScreenCoordinates
  */
 
 var RangeList = require("./range_list").RangeList;
@@ -37,51 +39,6 @@ var EditSession = require("./edit_session").EditSession;
         return this.$selectionMarkers;
     };
 }).call(EditSession.prototype);
-
-
-
-/**
- * 
- * @type {RangeList|null}
- */
-Selection.prototype.rangeList = null;
-
-Selection.prototype.addRange = function(range, $blockChangeEvents) {
-    if (!range)
-        return;
-
-    if (!this.inMultiSelectMode && this.rangeCount === 0) {
-        var oldRange = this.toOrientedRange();
-        this.rangeList.add(oldRange);
-        this.rangeList.add(range);
-        if (this.rangeList.ranges.length != 2) {
-            this.rangeList.removeAll();
-            return $blockChangeEvents || this.fromOrientedRange(range);
-        }
-        this.rangeList.removeAll();
-        this.rangeList.add(oldRange);
-        this.$onAddRange(oldRange);
-    }
-
-    if (!range.cursor)
-        range.cursor = range.end;
-
-    var removed = this.rangeList.add(range);
-
-    this.$onAddRange(range);
-
-    if (removed.length)
-        this.$onRemoveRange(removed);
-
-    if (this.rangeCount > 1 && !this.inMultiSelectMode) {
-        this._signal("multiSelect");
-        this.inMultiSelectMode = true;
-        this.session.$undoSelect = false;
-        this.rangeList.attach(this.session);
-    }
-
-    return $blockChangeEvents || this.fromOrientedRange(range);
-};
 
 // extend Selection
 (function() {
@@ -150,7 +107,7 @@ Selection.prototype.addRange = function(range, $blockChangeEvents) {
 
     /**
      * Removes a Range containing pos (if it exists).
-     * @param {import("../ace-internal").Ace.Point} pos The position to remove, as a `{row, column}` object
+     * @param {Point} pos The position to remove, as a `{row, column}` object
      * @this {Selection}
      **/
     this.substractPoint = function(pos) {
@@ -182,7 +139,6 @@ Selection.prototype.addRange = function(range, $blockChangeEvents) {
     };
 
     /**
-     * 
      * @param {Range[]} removed
      * @this {Selection}
      */
@@ -297,11 +253,10 @@ Selection.prototype.addRange = function(range, $blockChangeEvents) {
     };
 
     /**
-     * 
      * Gets list of ranges composing rectangular block on the screen
      * 
-     * @param {import("../ace-internal").Ace.ScreenCoordinates} screenCursor The cursor to use
-     * @param {import("../ace-internal").Ace.ScreenCoordinates} screenAnchor The anchor to use
+     * @param {ScreenCoordinates} screenCursor The cursor to use
+     * @param {ScreenCoordinates} screenAnchor The anchor to use
      * @param {Boolean} [includeEmptyLines] If true, this includes ranges inside the block which are empty due to clipping
      * @returns {Range[]}
      * @this {Selection}
@@ -425,7 +380,6 @@ var Editor = require("./editor").Editor;
     };
 
     /**
-     * 
      * @param {(Range & {marker?})[]} ranges
      * @this {Editor}
      */
@@ -547,7 +501,6 @@ var Editor = require("./editor").Editor;
         
         var reg = selection._eventRegistry;
         selection._eventRegistry = {};
-        /**@type {Selection}*/
         var tmpSel = new Selection(session);
         this.inVirtualSelectionMode = true;
         for (var i = ranges.length; i--;) {
@@ -614,7 +567,6 @@ var Editor = require("./editor").Editor;
     };
 
     /**
-     * 
      * @param e
      * @param {Anchor} anchor
      * @this {Editor}
@@ -878,7 +830,6 @@ var Editor = require("./editor").Editor;
     };
 
     /**
-     * 
      * @param {string[]} lines
      * @param {boolean} [forceLeft]
      * @return {*}
@@ -939,10 +890,7 @@ var Editor = require("./editor").Editor;
 }).call(Editor.prototype);
 
 
-/**
- * @param {import("../ace-internal").Ace.Point} p1
- * @param {import("../ace-internal").Ace.Point} p2
- */
+/** @param {Point} p1  @param {Point} p2 */
 function isSamePoint(p1, p2) {
     return p1.row == p2.row && p1.column == p2.column;
 }

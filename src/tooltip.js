@@ -1,11 +1,7 @@
 "use strict";
 /**
  * @typedef {import("./editor").Editor} Editor
- */
-/**
  * @typedef {import("./mouse/mouse_event").MouseEvent} MouseEvent
- */
-/**
  * @typedef {import("./edit_session").EditSession} EditSession
  */
 

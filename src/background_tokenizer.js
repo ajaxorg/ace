@@ -1,11 +1,7 @@
 "use strict";
 /**
  * @typedef {import("./document").Document} Document
- */
-/**
- * @typedef {import("./editor").Editor} Editor
- */
-/**
+ * @typedef {import("./edit_session").EditSession} EditSession
  * @typedef {import("./tokenizer").Tokenizer} Tokenizer
  */
 var oop = require("./lib/oop");
@@ -21,9 +17,9 @@ class BackgroundTokenizer {
     /**
      * Creates a new `BackgroundTokenizer` object.
      * @param {Tokenizer} tokenizer The tokenizer to use
-     * @param {any} [editor] The editor to associate with
+     * @param {EditSession} [session] The editor session to associate with
      **/
-    constructor(tokenizer, editor) {
+    constructor(tokenizer, session) {
         /**@type {false|number}*/
         this.running = false;
         this.lines = [];

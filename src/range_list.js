@@ -1,6 +1,7 @@
 "use strict";
 /**
  * @typedef {import("./edit_session").EditSession} EditSession
+ * @typedef {import("../ace-internal").Ace.Point} Point
  */
 var Range = require("./range").Range;
 var comparePoints = Range.comparePoints;
@@ -13,7 +14,7 @@ class RangeList {
     }
 
     /**
-     * @param {import("../ace-internal").Ace.Point} pos
+     * @param {Point} pos
      * @param {boolean} [excludeEdges]
      * @param {number} [startIndex]
      * @return {number}
@@ -67,7 +68,7 @@ class RangeList {
     }
 
     /**
-     * @param {import("../ace-internal").Ace.Point} pos
+     * @param {Point} pos
      */
     substractPoint(pos) {
         var i = this.pointIndex(pos);
@@ -121,14 +122,14 @@ class RangeList {
     }
 
     /**
-     * @param {import("../ace-internal").Ace.Point} pos
+     * @param {Point} pos
      */
     containsPoint(pos) {
         return this.pointIndex(pos) >= 0;
     }
 
     /**
-     * @param {import("../ace-internal").Ace.Point} pos
+     * @param {Point} pos
      */
     rangeAtPoint(pos) {
         var i = this.pointIndex(pos);

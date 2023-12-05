@@ -1,6 +1,7 @@
 "use strict";
 /**
  * @typedef {import("../edit_session").EditSession} EditSession
+ * @typedef {import("../edit_session").Point} Point
  */
 var TokenIterator = require("../token_iterator").TokenIterator;
 var Range = require("../range").Range;
@@ -9,7 +10,7 @@ function BracketMatch() {
 
     /**
      * 
-     * @param {import("../../ace-internal").Ace.Point} position
+     * @param {Point} position
      * @param {string} [chr]
      * @this {EditSession}
      */
@@ -30,7 +31,7 @@ function BracketMatch() {
     };
 
     /**
-     * @param {import("../../ace-internal").Ace.Point} pos
+     * @param {Point} pos
      * @return {null|Range}
      * @this {EditSession}
      */
@@ -80,7 +81,7 @@ function BracketMatch() {
      * * two Ranges if there is opening and closing brackets;
      * * one Range if there is only one bracket
      *
-     * @param {import("../../ace-internal").Ace.Point} pos
+     * @param {Point} pos
      * @param {boolean} [isBackwards]
      * @returns {null|Range[]}
      * @this {EditSession}
@@ -126,9 +127,9 @@ function BracketMatch() {
     /**
      * 
      * @param {string} bracket
-     * @param {import("../../ace-internal").Ace.Point} position
+     * @param {Point} position
      * @param {RegExp} [typeRe]
-     * @return {import("../../ace-internal").Ace.Point|null}
+     * @return {Point|null}
      * @this {EditSession}
      */
     this.$findOpeningBracket = function(bracket, position, typeRe) {
@@ -192,9 +193,9 @@ function BracketMatch() {
     /**
      *
      * @param {string} bracket
-     * @param {import("../../ace-internal").Ace.Point} position
+     * @param {Point} position
      * @param {RegExp} [typeRe]
-     * @return {import("../../ace-internal").Ace.Point|null}
+     * @return {Point|null}
      * @this {EditSession}
      */
     this.$findClosingBracket = function(bracket, position, typeRe) {
@@ -257,7 +258,7 @@ function BracketMatch() {
 
     /**
      * Returns [[Range]]'s for matching tags and tag names, if there are any
-     * @param {import("../../ace-internal").Ace.Point} pos
+     * @param {Point} pos
      * @returns {{closeTag: Range, closeTagName: Range, openTag: Range, openTagName: Range} | undefined}
      * @this {EditSession}
      */

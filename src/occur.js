@@ -1,6 +1,8 @@
 "use strict";
 /**
  * @typedef {import("./editor").Editor} Editor
+ * @typedef {import("../ace-internal").Ace.Point} Point
+ * @typedef {import("../ace-internal").Ace.SearchOptions} SearchOptions
  */
 
 var oop = require("./lib/oop");
@@ -66,7 +68,7 @@ class Occur extends Search {
 
     /**
      * @param {Editor} editor
-     * @param {Partial<import("../ace-internal").Ace.SearchOptions>} options
+     * @param {Partial<SearchOptions>} options
      */
     displayOccurContent(editor, options) {
         // this.setSession(session || new EditSession(""))
@@ -97,8 +99,8 @@ class Occur extends Search {
     * the document or the beginning if the doc {row: 0, column: 0} if not
     * found.
     * @param {EditSession} session The occur session
-    * @param {import("../ace-internal").Ace.Point} pos The position in the original document
-    * @return {import("../ace-internal").Ace.Point} position in occur doc
+    * @param {Point} pos The position in the original document
+    * @return {Point} position in occur doc
     **/
     originalToOccurPosition(session, pos) {
         var lines = session.$occurMatchingLines;
@@ -115,8 +117,8 @@ class Occur extends Search {
     * Translates the position from the occur document to the original document
     * or `pos` if not found.
     * @param {EditSession} session The occur session
-    * @param {import("../ace-internal").Ace.Point} pos The position in the occur session document
-    * @return {import("../ace-internal").Ace.Point} position
+    * @param {Point} pos The position in the occur session document
+    * @return {Point} position
     **/
     occurToOriginalPosition(session, pos) {
         var lines = session.$occurMatchingLines;
@@ -127,7 +129,7 @@ class Occur extends Search {
 
     /**
      * @param {EditSession} session
-     * @param {Partial<import("../ace-internal").Ace.SearchOptions>} options
+     * @param {Partial<SearchOptions>} options
      */
     matchingLines(session, options) {
         options = oop.mixin({}, options);

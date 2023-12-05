@@ -1,6 +1,8 @@
 "use strict";
 /**
  * @typedef {import("./editor").Editor} Editor
+ * @typedef {import("../ace-internal").Ace.CompletionProviderOptions} CompletionProviderOptions
+ * @typedef {import("../ace-internal").Ace.CompletionOptions} CompletionOptions
  */
 var HashHandler = require("./keyboard/hash_handler").HashHandler;
 var AcePopup = require("./autocomplete/popup").AcePopup;
@@ -450,7 +452,7 @@ class Autocomplete {
     /**
      * This is the entry point for the autocompletion class, triggers the actions which collect and display suggestions
      * @param {Editor} editor
-     * @param {import("../ace-internal").Ace.CompletionOptions} options
+     * @param {CompletionOptions} options
      */
     showPopup(editor, options) {
         if (this.editor)
@@ -490,7 +492,7 @@ class Autocomplete {
 
     /**
      * @param {boolean} keepPopupPosition
-     * @param {import("../ace-internal").Ace.CompletionOptions} options
+     * @param {CompletionOptions} options
      */
     updateCompletions(keepPopupPosition, options) {
         if (keepPopupPosition && this.base && this.completions) {
@@ -783,7 +785,7 @@ class CompletionProvider {
     /**
      * @param {Editor} editor
      * @param {number} index
-     * @param {import("../ace-internal").Ace.CompletionProviderOptions} [options]
+     * @param {CompletionProviderOptions} [options]
      * @returns {boolean}
      */
     insertByIndex(editor, index, options) {
@@ -796,7 +798,7 @@ class CompletionProvider {
     /**
      * @param {Editor} editor
      * @param {Completion} data
-     * @param {import("../ace-internal").Ace.CompletionProviderOptions} [options]
+     * @param {CompletionProviderOptions} [options]
      * @returns {boolean}
      */
     insertMatch(editor, data, options) {
@@ -898,7 +900,7 @@ class CompletionProvider {
      * This is the entry point to the class, it gathers, then provides the completions asynchronously via callback.
      * The callback function may be called multiple times, the last invokation is marked with a `finished` flag
      * @param {Editor} editor
-     * @param {import("../ace-internal").Ace.CompletionProviderOptions} options
+     * @param {CompletionProviderOptions} options
      * @param {(err: Error | undefined, completions: FilteredList | [], finished: boolean) => void} callback
      */
     provideCompletions(editor, options, callback) {

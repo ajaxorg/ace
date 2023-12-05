@@ -1,5 +1,9 @@
 "use strict";
 
+/**
+ * @typedef {import("../../ace-internal").Ace.Command} Command
+ * @typedef {import("../../ace-internal").Ace.CommandLike} CommandLike
+*/
 
 /** @type {any} */var keyUtil = require("../lib/keys");
 var useragent = require("../lib/useragent");
@@ -7,7 +11,7 @@ var KEY_MODS = keyUtil.KEY_MODS;
 
 class MultiHashHandler {
     /**
-     * @param {Record<string, import("../../ace-internal").Ace.CommandLike> | import("../../ace-internal").Ace.Command[]} [config]
+     * @param {Record<string, CommandLike> | Command[]} [config]
      * @param {string} [platform]
      */
     constructor(config, platform) {
@@ -15,13 +19,13 @@ class MultiHashHandler {
     }
 
     /**
-     * @param {Record<string, import("../../ace-internal").Ace.CommandLike> | import("../../ace-internal").Ace.Command[]} config
+     * @param {Record<string, CommandLike> | Command[]} config
      * @param {string} [platform]
      * @param {boolean} [$singleCommand]
      */
     $init(config, platform, $singleCommand) {
         this.platform = platform || (useragent.isMac ? "mac" : "win");
-        /**@type {Record<string, import("../../ace-internal").Ace.Command>}*/
+        /**@type {Record<string, Command>}*/
         this.commands = {};
         this.commandKeyBinding = {};
         this.addCommands(config);
@@ -29,7 +33,7 @@ class MultiHashHandler {
     }
 
     /**
-     * @param {import("../../ace-internal").Ace.Command} command
+     * @param {Command} command
      */
     addCommand(command) {
         if (this.commands[command.name])
@@ -42,7 +46,7 @@ class MultiHashHandler {
     }
 
     /**
-     * @param {import("../../ace-internal").Ace.Command | string} command
+     * @param {Command | string} command
      * @param {boolean} [keepCommand]
      */
     removeCommand(command, keepCommand) {
@@ -71,7 +75,7 @@ class MultiHashHandler {
 
     /**
      * @param {string | { win?: string; mac?: string; position?:number}} key
-     * @param {import("../../ace-internal").Ace.CommandLike | string} command
+     * @param {CommandLike | string} command
      * @param {number} [position]
      */
     bindKey(key, command, position) {
@@ -138,7 +142,7 @@ class MultiHashHandler {
     }
 
     /**
-     * @param {Record<string, import("../../ace-internal").Ace.CommandLike> | import("../../ace-internal").Ace.Command[]} [commands]
+     * @param {Record<string, CommandLike> | Command[]} [commands]
      */
     addCommands(commands) {
         commands && Object.keys(commands).forEach(function(name) {
@@ -163,7 +167,7 @@ class MultiHashHandler {
     }
 
     /**
-     * @param {Record<string, import("../../ace-internal").Ace.CommandLike>} commands
+     * @param {Record<string, CommandLike>} commands
      */
     removeCommands(commands) {
         Object.keys(commands).forEach(function(name) {
@@ -172,7 +176,7 @@ class MultiHashHandler {
     }
 
     /**
-     * @param {Record<string, import("../../ace-internal").Ace.CommandLike>} keyList
+     * @param {Record<string, CommandLike>} keyList
      */
     bindKeys(keyList) {
         Object.keys(keyList).forEach(function(key) {
@@ -218,7 +222,7 @@ class MultiHashHandler {
     /**
      * @param {number} hashId
      * @param {string} keyString
-     * @returns {import("../../ace-internal").Ace.Command}
+     * @returns {Command}
      */
     findKeyCommand(hashId, keyString) {
         var key = KEY_MODS[hashId] + keyString;
@@ -276,7 +280,7 @@ function getPosition(command) {
 
 class HashHandler extends MultiHashHandler {
     /**
-     * @param {Record<string, import("../../ace-internal").Ace.CommandLike> | import("../../ace-internal").Ace.Command[]} [config]
+     * @param {Record<string, CommandLike> | Command[]} [config]
      * @param {string} [platform]
      */
     constructor(config, platform) {

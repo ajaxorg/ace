@@ -1,14 +1,9 @@
 "use strict";
 /**
  * @typedef {import("./edit_session").EditSession} EditSession
- */
-
-/**
  * @typedef {import("../ace-internal").Ace.Delta} Delta
- */
-
-/**
  * @typedef {import("../ace-internal").Ace.Point} Point
+ * @typedef {import("../ace-internal").Ace.IRange} IRange
  */
 
 /**
@@ -602,8 +597,8 @@ function xform(d1, c1) {
 
 /**
  * 
- * @param {import("../ace-internal").Ace.IRange} d1
- * @param {import("../ace-internal").Ace.IRange} d2
+ * @param {IRange} d1
+ * @param {IRange} d2
  * @param {number} dir
  */
 function shift(d1, d2, dir) {

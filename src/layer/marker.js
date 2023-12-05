@@ -1,6 +1,7 @@
 "use strict";
 /**
  * @typedef {import("../edit_session").EditSession} EditSession
+ * @typedef {import("../../ace-internal").Ace.LayerConfig} LayerConfig
  */
 var Range = require("../range").Range;
 var dom = require("../lib/dom");
@@ -56,7 +57,7 @@ class Marker {
     }
 
     /**
-     * @param {import("../../ace-internal").Ace.LayerConfig} config
+     * @param {LayerConfig} config
      */
     update(config) {
         if (!config) return;
@@ -102,7 +103,7 @@ class Marker {
 
     /**
      * @param {number} row
-     * @param {Partial<import("../../ace-internal").Ace.LayerConfig>} layerConfig
+     * @param {Partial<LayerConfig>} layerConfig
      */
     $getTop(row, layerConfig) {
         return (row - layerConfig.firstRowScreen) * layerConfig.lineHeight;
@@ -114,7 +115,7 @@ class Marker {
      * @param {undefined} stringBuilder
      * @param {Range} range
      * @param {string} clazz
-     * @param {Partial<import("../../ace-internal").Ace.LayerConfig>} layerConfig
+     * @param {Partial<LayerConfig>} layerConfig
      * @param {string} [extraStyle]
      */
     drawTextMarker(stringBuilder, range, clazz, layerConfig, extraStyle) {
@@ -145,7 +146,7 @@ class Marker {
      * @param {undefined} stringBuilder
      * @param {Range} range
      * @param {string} clazz
-     * @param {import("../../ace-internal").Ace.LayerConfig} config
+     * @param {LayerConfig} config
      * @param {string} [extraStyle]
      */
     drawMultiLineMarker(stringBuilder, range, clazz, config, extraStyle) {
@@ -207,7 +208,7 @@ class Marker {
      * @param {undefined} stringBuilder
      * @param {Range} range
      * @param {string} clazz
-     * @param {Partial<import("../../ace-internal").Ace.LayerConfig>} config
+     * @param {Partial<LayerConfig>} config
      * @param {number} [extraLength]
      * @param {string} [extraStyle]
      */
@@ -234,7 +235,7 @@ class Marker {
      * @param {undefined} stringBuilder
      * @param {Range} range
      * @param {string} clazz
-     * @param {Partial<import("../../ace-internal").Ace.LayerConfig>} config
+     * @param {Partial<LayerConfig>} config
      * @param {number} extraLength
      * @param {string} extraStyle
      */
@@ -257,7 +258,7 @@ class Marker {
      * @param {undefined} stringBuilder
      * @param {Range} range
      * @param {string} clazz
-     * @param {Partial<import("../../ace-internal").Ace.LayerConfig>} config
+     * @param {Partial<LayerConfig>} config
      * @param {undefined} [extraStyle]
      */
     drawFullLineMarker(stringBuilder, range, clazz, config, extraStyle) {
@@ -278,7 +279,7 @@ class Marker {
      * @param {undefined} stringBuilder
      * @param {Range} range
      * @param {string} clazz
-     * @param {Partial<import("../../ace-internal").Ace.LayerConfig>} config
+     * @param {Partial<LayerConfig>} config
      * @param {undefined} [extraStyle]
      */
     drawScreenLineMarker(stringBuilder, range, clazz, config, extraStyle) {

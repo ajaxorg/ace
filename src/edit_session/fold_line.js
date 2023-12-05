@@ -44,7 +44,6 @@ class FoldLine {
     }
 
     /**
-     * 
      * @param {Fold} fold
      */
     addFold(fold) {
