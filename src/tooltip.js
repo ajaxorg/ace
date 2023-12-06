@@ -197,7 +197,7 @@ class HoverTooltip extends Tooltip {
             if (!contentOverflows) {
                 event.preventDefault();
             }
-        }.bind(this));
+        });
     }
     
     addToEditor(editor) {
