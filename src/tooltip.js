@@ -190,8 +190,14 @@ class HoverTooltip extends Tooltip {
         el.addEventListener("blur", function() {
             if (!el.contains(document.activeElement)) this.hide();
         }.bind(this));
-        
-        el.addEventListener("wheel", event.stopPropagation);
+
+        el.addEventListener("wheel", function(event) {
+            event.stopPropagation();
+            var contentOverflows = el.scrollHeight > el.clientHeight;
+            if (!contentOverflows) {
+                event.preventDefault();
+            }
+        }.bind(this));
     }
     
     addToEditor(editor) {
