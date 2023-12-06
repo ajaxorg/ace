@@ -1,23 +1,36 @@
 "use strict";
-
+/**
+ * @typedef {import("../editor").Editor} Editor
+ * @typedef {import("../../ace-internal").Ace.KeyboardHandler} KeyboardHandler
+ */
 var keyUtil  = require("../lib/keys");
 var event = require("../lib/event");
 
 
 class KeyBinding {
+    /**
+     * @param {Editor} editor
+     */
     constructor(editor) {
         this.$editor = editor;
         this.$data = {editor: editor};
+        /**@type {(KeyboardHandler)[]}*/
         this.$handlers = [];
         this.setDefaultHandler(editor.commands);
     }
-    
+
+    /**
+     * @param {KeyboardHandler} kb
+     */
     setDefaultHandler(kb) {
         this.removeKeyboardHandler(this.$defaultHandler);
         this.$defaultHandler = kb;
         this.addKeyboardHandler(kb, 0);
     }
 
+    /**
+     * @param {KeyboardHandler} kb
+     */
     setKeyboardHandler(kb) {
         var h = this.$handlers;
         if (h[h.length - 1] == kb)
@@ -29,10 +42,16 @@ class KeyBinding {
         this.addKeyboardHandler(kb, 1);
     }
 
+    /**
+     * @param {KeyboardHandler & {attach?: (editor: any) => void, detach?: (editor: any) => void;}} [kb]
+     * @param {number} [pos]
+     */
     addKeyboardHandler(kb, pos) {
         if (!kb)
             return;
+        // @ts-ignore
         if (typeof kb == "function" && !kb.handleKeyboard)
+            // @ts-ignore
             kb.handleKeyboard = kb;
         var i = this.$handlers.indexOf(kb);
         if (i != -1)
@@ -47,6 +66,10 @@ class KeyBinding {
             kb.attach(this.$editor);
     }
 
+    /**
+     * @param {KeyboardHandler & {attach?: (editor: any) => void, detach?: (editor: any) => void;}} kb
+     * @returns {boolean}
+     */
     removeKeyboardHandler(kb) {
         var i = this.$handlers.indexOf(kb);
         if (i == -1)
@@ -56,6 +79,9 @@ class KeyBinding {
         return true;
     }
 
+    /**
+     * @return {KeyboardHandler}
+     */
     getKeyboardHandler() {
         return this.$handlers[this.$handlers.length - 1];
     }
@@ -75,6 +101,7 @@ class KeyBinding {
 
         for (var i = this.$handlers.length; i--;) {
             toExecute = this.$handlers[i].handleKeyboard(
+                // @ts-expect-error TODO: could be wrong arguments amount
                 this.$data, hashId, keyString, keyCode, e
             );
             if (!toExecute || !toExecute.command)
@@ -84,11 +111,12 @@ class KeyBinding {
             if (toExecute.command == "null") {
                 success = true;
             } else {
+                // @ts-expect-error //TODO: potential wrong arguments amount
                 success = commands.exec(toExecute.command, this.$editor, toExecute.args, e);
             }
             // do not stop input events to not break repeating
             if (success && e && hashId != -1 && 
-                toExecute.passEvent != true && toExecute.command.passEvent != true
+                toExecute["passEvent"] != true && toExecute.command["passEvent"] != true
             ) {
                 event.stopEvent(e);
             }
@@ -107,11 +135,21 @@ class KeyBinding {
         return success;
     }
 
+    /**
+     * @param {any} e
+     * @param {number} hashId
+     * @param {number} keyCode
+     * @return {boolean}
+     */
     onCommandKey(e, hashId, keyCode) {
         var keyString = keyUtil.keyCodeToString(keyCode);
         return this.$callKeyboardHandlers(hashId, keyString, keyCode, e);
     }
 
+    /**
+     * @param {string} text
+     * @return {boolean}
+     */
     onTextInput(text) {
         return this.$callKeyboardHandlers(-1, text);
     }

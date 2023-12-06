@@ -2,7 +2,9 @@
 
 const deepCopy = require("../lib/deep_copy").deepCopy;
 
-var TextHighlightRules = function() {
+/**@type {(new() => Partial<import("../../ace-internal").Ace.HighlightRules>) & {prototype: import("../../ace-internal").Ace.HighlightRules}}*/
+var TextHighlightRules;
+TextHighlightRules = function() {
 
     // regexp must not have capturing parentheses
     // regexps are ordered -> the first match is used
@@ -19,6 +21,11 @@ var TextHighlightRules = function() {
 
 (function() {
 
+    /**
+     * @param {import("../../ace-internal").Ace.HighlightRulesMap} rules
+     * @param {string} [prefix]
+     * @this {import("../../ace-internal").Ace.HighlightRules}
+     */
     this.addRules = function(rules, prefix) {
         if (!prefix) {
             for (var key in rules)
@@ -42,10 +49,22 @@ var TextHighlightRules = function() {
         }
     };
 
+    /**
+     * @returns {import("../../ace-internal").Ace.HighlightRulesMap}
+     * @this {import("../../ace-internal").Ace.HighlightRules}
+     */
     this.getRules = function() {
         return this.$rules;
     };
 
+    /**
+     * @param HighlightRules
+     * @param prefix
+     * @param escapeRules
+     * @param states
+     * @param append
+     * @this {import("../../ace-internal").Ace.HighlightRules}
+     */
     this.embedRules = function (HighlightRules, prefix, escapeRules, states, append) {
         var embedRules = typeof HighlightRules == "function"
             ? new HighlightRules().getRules()
@@ -72,6 +91,9 @@ var TextHighlightRules = function() {
         this.$embeds.push(prefix);
     };
 
+    /**
+     * @this {import("../../ace-internal").Ace.HighlightRules}
+     */
     this.getEmbeds = function() {
         return this.$embeds;
     };
@@ -87,17 +109,21 @@ var TextHighlightRules = function() {
         return stack.shift() || "start";
     };
 
+    /**
+     * @this {import("../../ace-internal").Ace.HighlightRules}
+     */
     this.normalizeRules = function() {
         var id = 0;
         var rules = this.$rules;
         function processState(key) {
             var state = rules[key];
-            state.processed = true;
+            state["processed"] = true;
             for (var i = 0; i < state.length; i++) {
                 var rule = state[i];
                 var toInsert = null;
                 if (Array.isArray(rule)) {
                     toInsert = rule;
+                    // @ts-ignore
                     rule = {};
                 }
                 if (!rule.regex && rule.start) {
@@ -158,6 +184,10 @@ var TextHighlightRules = function() {
                 }
 
                 if (toInsert) {
+                    /**
+                     * @type{any[]}
+                     */
+                    // @ts-ignore
                     var args = [i, 1].concat(toInsert);
                     if (rule.noEscape)
                         args = args.filter(function(x) {return !x.next;});
@@ -198,6 +228,9 @@ var TextHighlightRules = function() {
             : function(value) {return keywords[value] || defaultToken; };
     };
 
+    /**
+     * @this {import("../../ace-internal").Ace.HighlightRules}
+     */
     this.getKeywords = function() {
         return this.$keywords;
     };

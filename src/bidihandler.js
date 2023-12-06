@@ -1,4 +1,7 @@
 "use strict";
+/**
+ * @typedef {import("./edit_session").EditSession} EditSession
+ */
 
 var bidiUtil = require("./lib/bidiutil");
 var lang = require("./lib/lang");
@@ -42,8 +45,8 @@ class BidiHandler {
      * creates Bidi map to be used in operations related to selection
      * (keyboard arrays, mouse click, select)
      * @param {Number} screenRow the screen row to be checked
-     * @param {Number} docRow the document row to be checked [optional]
-     * @param {Number} splitIndex the wrapped screen line index [ optional]
+     * @param {Number} [docRow] the document row to be checked [optional]
+     * @param {Number} [splitIndex] the wrapped screen line index [ optional]
     **/
     isBidiRow(screenRow, docRow, splitIndex) {
         if (!this.seenBidi)

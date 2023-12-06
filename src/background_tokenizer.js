@@ -1,8 +1,11 @@
 "use strict";
-
+/**
+ * @typedef {import("./document").Document} Document
+ * @typedef {import("./edit_session").EditSession} EditSession
+ * @typedef {import("./tokenizer").Tokenizer} Tokenizer
+ */
 var oop = require("./lib/oop");
 var EventEmitter = require("./lib/event_emitter").EventEmitter;
-
 
 /**
  * Tokenizes the current [[Document `Document`]] in the background, and caches the tokenized rows for future use. 
@@ -14,9 +17,10 @@ class BackgroundTokenizer {
     /**
      * Creates a new `BackgroundTokenizer` object.
      * @param {Tokenizer} tokenizer The tokenizer to use
-     * @param {Editor} editor The editor to associate with
+     * @param {EditSession} [session] The editor session to associate with
      **/
-    constructor(tokenizer, editor) {
+    constructor(tokenizer, session) {
+        /**@type {false|number}*/
         this.running = false;
         this.lines = [];
         this.states = [];
@@ -49,6 +53,7 @@ class BackgroundTokenizer {
 
                 // only check every 5 lines
                 processedLines ++;
+                // @ts-ignore
                 if ((processedLines % 5 === 0) && (new Date() - workerStart) > 20) {
                     self.running = setTimeout(self.$worker, 20);
                     break;
@@ -88,13 +93,7 @@ class BackgroundTokenizer {
         this.stop();
     }
 
-     /**
-     * Fires whenever the background tokeniziers between a range of rows are going to be updated.
-     * 
-     * @event update
-     * @param {Object} e An object containing two properties, `first` and `last`, which indicate the rows of the region being updated.
-     *
-     **/
+
     /**
      * Emits the `'update'` event. `firstRow` and `lastRow` are used to define the boundaries of the region to be updated.
      * @param {Number} firstRow The starting row region
@@ -132,6 +131,9 @@ class BackgroundTokenizer {
             this.running = setTimeout(this.$worker, 700);
     }
 
+    /**
+     * @param {import("../ace-internal").Ace.Delta} delta
+     */
     $updateOnChange(delta) {
         var startRow = delta.start.row;
         var len = delta.end.row - startRow;
@@ -165,7 +167,7 @@ class BackgroundTokenizer {
     /**
      * Gives list of [[Token]]'s of the row. (tokens are cached)
      * @param {Number} row The row to get tokens at
-     * @returns {Token[]}
+     * @returns {import("../ace-internal").Ace.Token[]}
      **/
     getTokens(row) {
         return this.lines[row] || this.$tokenizeRow(row);
@@ -182,10 +184,13 @@ class BackgroundTokenizer {
         return this.states[row] || "start";
     }
 
+    /**
+     * @param {number} row
+     */
     $tokenizeRow(row) {
         var line = this.doc.getLine(row);
         var state = this.states[row - 1];
-
+        // @ts-expect-error TODO: potential wrong argument
         var data = this.tokenizer.getLineTokens(line, state, row);
 
         if (this.states[row] + "" !== data.state + "") {

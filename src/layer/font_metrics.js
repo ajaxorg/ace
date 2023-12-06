@@ -10,7 +10,10 @@ var USE_OBSERVER = typeof ResizeObserver == "function";
 var L = 200;
 
 class FontMetrics {
-    
+
+    /**
+     * @param {HTMLElement} parentEl
+     */
     constructor(parentEl) {
         this.el = dom.createElement("div");
         this.$setMeasureNodeStyles(this.el.style, true);
@@ -52,6 +55,9 @@ class FontMetrics {
         style.overflow = isRoot ? "hidden" : "visible";
     }
 
+    /**
+     * @param size
+     */
     checkForSizeChanges(size) {
         if (size === undefined)
             size = this.$measureSizes();
@@ -65,7 +71,7 @@ class FontMetrics {
             this._emit("changeCharacterSize", {data: size});
         }
     }
-    
+
     $addObserver() {
         var self = this;
         this.$observer = new window.ResizeObserver(function(e) {
@@ -75,6 +81,9 @@ class FontMetrics {
         this.$observer.observe(this.$measureNode);
     }
 
+    /**
+     * @return {number}
+     */
     $pollSizeChanges() {
         if (this.$pollSizeChangesTimer || this.$observer)
             return this.$pollSizeChangesTimer;
@@ -85,7 +94,10 @@ class FontMetrics {
             event.onIdle(cb, 500);
         }, 500);
     }
-    
+
+    /**
+     * @param {boolean} val
+     */
     setPolling(val) {
         if (val) {
             this.$pollSizeChanges();
@@ -133,7 +145,7 @@ class FontMetrics {
     
     $getZoom(element) {
         if (!element || !element.parentElement) return 1;
-        return (window.getComputedStyle(element).zoom || 1) * this.$getZoom(element.parentElement);
+        return (window.getComputedStyle(element)["zoom"] || 1) * this.$getZoom(element.parentElement);
     }
     
     $initTransformMeasureNodes() {

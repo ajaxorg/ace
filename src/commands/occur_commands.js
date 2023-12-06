@@ -54,6 +54,7 @@ oop.inherits(OccurKeyboardHandler, HashHandler);
 
     var handleKeyboard$super = this.handleKeyboard;
     this.handleKeyboard = function(data, hashId, key, keyCode) {
+        // @ts-ignore
         var cmd = handleKeyboard$super.call(this, data, hashId, key, keyCode);
         return (cmd && cmd.command) ? cmd : undefined;
     };

@@ -1,4 +1,12 @@
 "use strict";
+/**
+ * @typedef {import("./layer/font_metrics").FontMetrics} FontMetrics
+ * @typedef {import("./edit_session/fold_line").FoldLine} FoldLine
+ * @typedef {import("../ace-internal").Ace.Point} Point
+ * @typedef {import("../ace-internal").Ace.Delta} Delta
+ * @typedef {import("../ace-internal").Ace.IRange} IRange
+ * @typedef {import("../ace-internal").Ace.SyntaxMode} SyntaxMode
+ */
 
 var oop = require("./lib/oop");
 var lang = require("./lib/lang");
@@ -13,101 +21,24 @@ var BackgroundTokenizer = require("./background_tokenizer").BackgroundTokenizer;
 var SearchHighlight = require("./search_highlight").SearchHighlight;
 var UndoManager = require("./undomanager").UndoManager;
 
-//{ events
 /**
- *
- * Emitted when the document changes.
- * @event change
- * @param {Object} e An object containing a `delta` of information about the change.
- **/
-/**
- * Emitted when the tab size changes, via [[EditSession.setTabSize]].
- *
- * @event changeTabSize
- **/
-/**
- * Emitted when the ability to overwrite text changes, via [[EditSession.setOverwrite]].
- *
- * @event changeOverwrite
- **/
-/**
- * Emitted when the gutter changes, either by setting or removing breakpoints, or when the gutter decorations change.
- *
- * @event changeBreakpoint
- **/
-/**
- * Emitted when a front marker changes.
- *
- * @event changeFrontMarker
- **/
-/**
- * Emitted when a back marker changes.
- *
- * @event changeBackMarker
- **/
-/**
- * Emitted when an annotation changes, like through [[EditSession.setAnnotations]].
- *
- * @event changeAnnotation
- **/
-/**
- * Emitted when a background tokenizer asynchronously processes new rows.
- * @event tokenizerUpdate
- *
- * @param {Object} e An object containing one property, `"data"`, that contains information about the changing rows
- *
- **/
-/**
- * Emitted when the current mode changes.
- *
- * @event changeMode
- *
- **/
-/**
- * Emitted when the wrap mode changes.
- *
- * @event changeWrapMode
- *
- **/
-/**
- * Emitted when the wrapping limit changes.
- *
- * @event changeWrapLimit
- *
- **/
-/**
- * Emitted when a code fold is added or removed.
- *
- * @event changeFold
- *
- **/
- /**
- * Emitted when the scroll top changes.
- * @event changeScrollTop
- *
- * @param {Number} scrollTop The new scroll top value
- **/
-/**
- * Emitted when the scroll left changes.
- * @event changeScrollLeft
- *
- * @param {Number} scrollLeft The new scroll left value
- **/
-//}
+ * @typedef TextMode
+ * @type {SyntaxMode}
+ */
 
 /**
  * Stores all the data about [[Editor `Editor`]] state providing easy way to change editors state.
  *
  * `EditSession` can be attached to only one [[Document `Document`]]. Same `Document` can be attached to several `EditSession`s.
  **/
-
 class EditSession {
     /**
      * Sets up a new `EditSession` and associates it with the given `Document` and `Mode`.
-     * @param {Document | String} text [If `text` is a `Document`, it associates the `EditSession` with it. Otherwise, a new `Document` is created, with the initial text]{: #textParam}
-     * @param {Mode} mode [The initial language mode to use for the document]{: #modeParam}
+     * @param {Document | String} [text] [If `text` is a `Document`, it associates the `EditSession` with it. Otherwise, a new `Document` is created, with the initial text]{: #textParam}
+     * @param {SyntaxMode} [mode] [The initial language mode to use for the document]{: #modeParam}
      **/
     constructor(text, mode) {
+        /**@type {Document}*/this.doc;
         this.$breakpoints = [];
         this.$decorations = [];
         this.$frontMarkers = {};
@@ -115,6 +46,7 @@ class EditSession {
         this.$markerId = 1;
         this.$undoSelect = true;
 
+        /** @type {FoldLine[]} */
         this.$foldData = [];
         this.id = "session" + (++EditSession.$uid);
         this.$foldData.toString = function() {
@@ -124,6 +56,7 @@ class EditSession {
         // Set default background tokenizer with Text mode until editor session mode is set 
         this.bgTokenizer = new BackgroundTokenizer((new TextMode()).getTokenizer(), this);
 
+        
         var _self = this;
         this.bgTokenizer.on("update", function(e) {
             _self._signal("tokenizerUpdate", e);
@@ -133,7 +66,7 @@ class EditSession {
         this.$onChange = this.onChange.bind(this);
 
         if (typeof text != "object" || !text.getLine)
-            text = new Document(text);
+            text = new Document(/**@type{string}*/(text));
 
         this.setDocument(text);
         this.selection = new Selection(this);
@@ -155,7 +88,6 @@ class EditSession {
     setDocument(doc) {
         if (this.doc)
             this.doc.off("change", this.$onChange);
-
         this.doc = doc;
         doc.on("change", this.$onChange, true);
 
@@ -178,7 +110,9 @@ class EditSession {
      **/
     $resetRowCache(docRow) {
         if (!docRow) {
+            /** @type {number[]} */
             this.$docRowCache = [];
+            /** @type {number[]} */
             this.$screenRowCache = [];
             return;
         }
@@ -223,6 +157,10 @@ class EditSession {
         this.$resetRowCache(fold.start.row);
     }
 
+    /**
+     * 
+     * @param {Delta} delta
+     */
     onChange(delta) {
         this.$modified = true;
         this.$bidiHandler.onChange(delta);
@@ -232,6 +170,7 @@ class EditSession {
         if (!this.$fromUndo && this.$undoManager) {
             if (removedFolds && removedFolds.length) {
                 this.$undoManager.add({
+                    // @ts-expect-error TODO: this action type is missing in the types
                     action: "removeFolds",
                     folds:  removedFolds
                 }, this.mergeUndoDeltas);
@@ -250,7 +189,6 @@ class EditSession {
     /**
      * Sets the session text.
      * @param {String} text The new text to place
-     *
      **/
     setValue(text) {
         this.doc.setValue(text);
@@ -264,11 +202,12 @@ class EditSession {
      /**
      * Returns a new instance of EditSession with state from JSON.
      * @method fromJSON
-     * @param {String} session The EditSession state.
+     * @param {string|object} session The EditSession state.
      * @returns {EditSession}
      */
-     static fromJSON(session) {
-        session = JSON.parse(session);
+    static fromJSON(session) {
+        if (typeof session == "string")
+            session = JSON.parse(session);
         const undoManager = new UndoManager();
         undoManager.$undoStack = session.history.undo;
         undoManager.$redoStack = session.history.redo;
@@ -324,6 +263,7 @@ class EditSession {
 
     /**
      * Returns selection object.
+     * @returns {Selection}
      **/
     getSelection() {
         return this.selection;
@@ -332,7 +272,7 @@ class EditSession {
     /**
      * {:BackgroundTokenizer.getState}
      * @param {Number} row The row to start at
-     *
+     * @returns {string}
      * @related BackgroundTokenizer.getState
      **/
     getState(row) {
@@ -342,7 +282,7 @@ class EditSession {
     /**
      * Starts tokenizing at the row indicated. Returns a list of objects of the tokenized rows.
      * @param {Number} row The row to start at
-     * @returns {Token[]}
+     * @returns {import("../ace-internal").Ace.Token[]}
      **/
     getTokens(row) {
         return this.bgTokenizer.getTokens(row);
@@ -352,7 +292,7 @@ class EditSession {
      * Returns an object indicating the token at the current row. The object has two properties: `index` and `start`.
      * @param {Number} row The row number to retrieve from
      * @param {Number} column The column number to retrieve from
-     * @returns {Token}
+     * @returns {import("../ace-internal").Ace.Token}
      *
      **/
     getTokenAt(row, column) {
@@ -379,8 +319,6 @@ class EditSession {
     /**
      * Sets the undo manager.
      * @param {UndoManager} undoManager The new undo manager
-     *
-     *
      **/
     setUndoManager(undoManager) {
         this.$undoManager = undoManager;
@@ -411,13 +349,16 @@ class EditSession {
 
     /**
      * Returns the current undo manager.
+     * @returns {UndoManager}
      **/
     getUndoManager() {
+        // @ts-ignore
         return this.$undoManager || this.$defaultUndoManager;
     }
 
     /**
      * Returns the current value for tabs. If the user is using soft tabs, this will be a series of spaces (defined by [[EditSession.getTabSize `getTabSize()`]]); otherwise it's simply `'\t'`.
+     * @returns {String}
      **/
     getTabString() {
         if (this.getUseSoftTabs()) {
@@ -452,6 +393,7 @@ class EditSession {
     }
     /**
      * Returns the current tab size.
+     * @return {number}
      **/
     getTabSize() {
         return this.$tabSize;
@@ -459,8 +401,7 @@ class EditSession {
 
     /**
      * Returns `true` if the character at the position is a soft tab.
-     * @param {Object} position The position to check
-     *
+     * @param {Point} position The position to check
      **/
     isTabStop(position) {
         return this.$useSoftTabs && (position.column % this.$tabSize === 0);
@@ -488,7 +429,6 @@ class EditSession {
      *
      * @param {Boolean} overwrite Defines whether or not to set overwrites
      *
-     *
      **/
     setOverwrite(overwrite) {
         this.setOption("overwrite", overwrite);
@@ -512,7 +452,6 @@ class EditSession {
      * Adds `className` to the `row`, to be used for CSS stylings and whatnot.
      * @param {Number} row The row number
      * @param {String} className The class to add
-     *
      **/
     addGutterDecoration(row, className) {
         if (!this.$decorations[row])
@@ -525,7 +464,6 @@ class EditSession {
      * Removes `className` from the `row`.
      * @param {Number} row The row number
      * @param {String} className The class to add
-     *
      **/
     removeGutterDecoration(row, className) {
         this.$decorations[row] = (this.$decorations[row] || "").replace(" " + className, "");
@@ -534,7 +472,7 @@ class EditSession {
 
     /**
      * Returns an array of strings, indicating the breakpoint class (if any) applied to each row.
-     * @returns {[String]}
+     * @returns {String[]}
      **/
     getBreakpoints() {
         return this.$breakpoints;
@@ -542,8 +480,7 @@ class EditSession {
 
     /**
      * Sets a breakpoint on every row number given by `rows`. This function also emites the `'changeBreakpoint'` event.
-     * @param {Array} rows An array of row indices
-     *
+     * @param {number[]} rows An array of row indices
      **/
     setBreakpoints(rows) {
         this.$breakpoints = [];
@@ -565,7 +502,6 @@ class EditSession {
      * Sets a breakpoint on the row number given by `row`. This function also emits the `'changeBreakpoint'` event.
      * @param {Number} row A row index
      * @param {String} className Class of the breakpoint
-     *
      **/
     setBreakpoint(row, className) {
         if (className === undefined)
@@ -580,7 +516,6 @@ class EditSession {
     /**
      * Removes a breakpoint on the row number given by `row`. This function also emits the `'changeBreakpoint'` event.
      * @param {Number} row A row index
-     *
      **/
     clearBreakpoint(row) {
         delete this.$breakpoints[row];
@@ -591,8 +526,8 @@ class EditSession {
      * Adds a new marker to the given `Range`. If `inFront` is `true`, a front marker is defined, and the `'changeFrontMarker'` event fires; otherwise, the `'changeBackMarker'` event fires.
      * @param {Range} range Define the range of the marker
      * @param {String} clazz Set the CSS class for the marker
-     * @param {Function | String} type Identify the renderer type of the marker. If string provided, corresponding built-in renderer is used. Supported string types are "fullLine", "screenLine", "text" or "line". If a Function is provided, that Function is used as renderer.
-     * @param {Boolean} inFront Set to `true` to establish a front marker
+     * @param {import("../ace-internal").Ace.MarkerRenderer | "fullLine" | "screenLine" | "text" | "line"} [type] Identify the renderer type of the marker. If string provided, corresponding built-in renderer is used. Supported string types are "fullLine", "screenLine", "text" or "line". If a Function is provided, that Function is used as renderer.
+     * @param {Boolean} [inFront] Set to `true` to establish a front marker
      *
      * @return {Number} The new marker id
      **/
@@ -621,10 +556,10 @@ class EditSession {
 
     /**
      * Adds a dynamic marker to the session.
-     * @param {Object} marker object with update method
-     * @param {Boolean} inFront Set to `true` to establish a front marker
+     * @param {import("../ace-internal").Ace.MarkerLike} marker object with update method
+     * @param {Boolean} [inFront] Set to `true` to establish a front marker
      *
-     * @return {Object} The added marker
+     * @return {import("../ace-internal").Ace.MarkerLike} The added marker
      **/
     addDynamicMarker(marker, inFront) {
         if (!marker.update)
@@ -647,7 +582,6 @@ class EditSession {
     /**
      * Removes the marker with the specified ID. If this marker was in front, the `'changeFrontMarker'` event is emitted. If the marker was in the back, the `'changeBackMarker'` event is emitted.
      * @param {Number} markerId A number representing a marker
-     *
      **/
     removeMarker(markerId) {
         var marker = this.$frontMarkers[markerId] || this.$backMarkers[markerId];
@@ -661,14 +595,17 @@ class EditSession {
 
     /**
      * Returns an object containing all of the markers, either front or back.
-     * @param {Boolean} inFront If `true`, indicates you only want front markers; `false` indicates only back markers
+     * @param {Boolean} [inFront] If `true`, indicates you only want front markers; `false` indicates only back markers
      *
-     * @returns {Object}
+     * @returns {{[id: number]: import("../ace-internal").Ace.MarkerLike}}
      **/
     getMarkers(inFront) {
         return inFront ? this.$frontMarkers : this.$backMarkers;
     }
 
+    /**
+     * @param {RegExp} re
+     */
     highlight(re) {
         if (!this.$searchHighlight) {
             var highlight = new SearchHighlight(null, "ace_selected-word", "text");
@@ -677,7 +614,14 @@ class EditSession {
         this.$searchHighlight.setRegexp(re);
     }
 
-    // experimental
+    /**
+     * experimental
+     * @param {number} startRow
+     * @param {number} endRow
+     * @param {string} clazz
+     * @param {boolean} [inFront]
+     * @return {Range}
+     */
     highlightLines(startRow, endRow, clazz, inFront) {
         if (typeof endRow != "number") {
             clazz = endRow;
@@ -702,8 +646,7 @@ class EditSession {
      */
     /**
      * Sets annotations for the `EditSession`. This functions emits the `'changeAnnotation'` event.
-     * @param {Annotation[]} annotations A list of annotations
-     *
+     * @param {import("../ace-internal").Ace.Annotation[]} annotations A list of annotations
      **/
     setAnnotations(annotations) {
         this.$annotations = annotations;
@@ -712,7 +655,7 @@ class EditSession {
 
     /**
      * Returns the annotations for the `EditSession`.
-     * @returns {Annotation[]}
+     * @returns {import("../ace-internal").Ace.Annotation[]}
      **/
     getAnnotations() {
         return this.$annotations || [];
@@ -799,7 +742,7 @@ class EditSession {
 
     /**
      * {:Document.setNewLineMode.desc}
-     * @param {String} newLineMode {:Document.setNewLineMode.param}
+     * @param {import("../ace-internal").Ace.NewLineMode} newLineMode {:Document.setNewLineMode.param}
      *
      *
      * @related Document.setNewLineMode
@@ -811,7 +754,7 @@ class EditSession {
     /**
      *
      * Returns the current new line mode.
-     * @returns {String}
+     * @returns {import("../ace-internal").Ace.NewLineMode}
      * @related Document.getNewLineMode
      **/
     getNewLineMode() {
@@ -821,7 +764,6 @@ class EditSession {
     /**
      * Identifies if you want to use a worker for the `EditSession`.
      * @param {Boolean} useWorker Set to `true` to use a worker
-     *
      **/
     setUseWorker(useWorker) { this.setOption("useWorker", useWorker); }
 
@@ -841,9 +783,8 @@ class EditSession {
     
     /**
      * Sets a new text mode for the `EditSession`. This method also emits the `'changeMode'` event. If a [[BackgroundTokenizer `BackgroundTokenizer`]] is set, the `'tokenizerUpdate'` event is also emitted.
-     * @param {TextMode} mode Set a new text mode
-     * @param {Function} cb optional callback
-     *
+     * @param {SyntaxMode | string} mode Set a new text mode
+     * @param {() => void} [cb] optional callback
      **/
     setMode(mode, cb) {
         if (mode && typeof mode === "object") {
@@ -852,7 +793,7 @@ class EditSession {
             var options = mode;
             var path = options.path;
         } else {
-            path = mode || "ace/mode/text";
+            path = /**@type{string}*/(mode) || "ace/mode/text";
         }
 
         // this is needed if ace isn't on require path (e.g tests in node)
@@ -887,6 +828,10 @@ class EditSession {
             this.$onChangeMode(this.$modes["ace/mode/text"], true);
     }
 
+    /**
+     * @param mode
+     * @param [$isPlaceholder]
+     */
     $onChangeMode(mode, $isPlaceholder) {
         if (!$isPlaceholder)
             this.$modeId = mode.$id;
@@ -911,7 +856,9 @@ class EditSession {
         this.bgTokenizer.setTokenizer(tokenizer);
         this.bgTokenizer.setDocument(this.getDocument());
 
+        /**@type {RegExp}*/
         this.tokenRe = mode.tokenRe;
+        /**@type {RegExp}*/
         this.nonTokenRe = mode.nonTokenRe;
 
         
@@ -953,7 +900,6 @@ class EditSession {
     /**
      * This function sets the scroll top value. It also emits the `'changeScrollTop'` event.
      * @param {Number} scrollTop The new scroll top value
-     *
      **/
     setScrollTop(scrollTop) {
         // TODO: should we force integer lineheight instead? scrollTop = Math.round(scrollTop); 
@@ -974,7 +920,8 @@ class EditSession {
 
     /**
      * [Sets the value of the distance between the left of the editor and the leftmost part of the visible content.]{: #EditSession.setScrollLeft}
-     **/
+     * @param {number} scrollLeft
+     */
     setScrollLeft(scrollLeft) {
         // scrollLeft = Math.round(scrollLeft);
         if (this.$scrollLeft === scrollLeft || isNaN(scrollLeft))
@@ -1002,7 +949,10 @@ class EditSession {
             return Math.max(this.getLineWidgetMaxWidth(), this.screenWidth);
         return this.screenWidth;
     }
-    
+
+    /**
+     * @return {number}
+     */
     getLineWidgetMaxWidth() {
         if (this.lineWidgetsWidth != null) return this.lineWidgetsWidth;
         var width = 0;
@@ -1013,6 +963,9 @@ class EditSession {
         return this.lineWidgetWidth = width;
     }
 
+    /**
+     * @param {boolean} [force]
+     */
     $computeWidth(force) {
         if (this.$modified || force) {
             this.$modified = false;
@@ -1050,7 +1003,6 @@ class EditSession {
     /**
      * Returns a verbatim copy of the given line as it is in the document
      * @param {Number} row The row to retrieve from
-     *
      * @returns {String}
      **/
     getLine(row) {
@@ -1062,7 +1014,7 @@ class EditSession {
      * @param {Number} firstRow The first row index to retrieve
      * @param {Number} lastRow The final row index to retrieve
      *
-     * @returns {[String]}
+     * @returns {String[]}
      *
      **/
     getLines(firstRow, lastRow) {
@@ -1079,7 +1031,7 @@ class EditSession {
 
     /**
      * {:Document.getTextRange.desc}
-     * @param {Range} range The range to work with
+     * @param {IRange} [range] The range to work with
      *
      * @returns {String}
      **/
@@ -1089,11 +1041,9 @@ class EditSession {
 
     /**
      * Inserts a block of `text` and the indicated `position`.
-     * @param {Object} position The position {row, column} to start inserting at
+     * @param {Point} position The position {row, column} to start inserting at
      * @param {String} text A chunk of text to insert
-     * @returns {Object} The position of the last line of `text`. If the length of `text` is 0, this function simply returns `position`.
-     *
-     *
+     * @returns {Point} The position of the last line of `text`. If the length of `text` is 0, this function simply returns `position`.
      **/
     insert(position, text) {
         return this.doc.insert(position, text);
@@ -1101,11 +1051,8 @@ class EditSession {
 
     /**
      * Removes the `range` from the document.
-     * @param {Range} range A specified Range to remove
-     * @returns {Object} The new `start` property of the range, which contains `startRow` and `startColumn`. If `range` is empty, this function returns the unmodified value of `range.start`.
-     *
-     * @related Document.remove
-     *
+     * @param {IRange} range A specified Range to remove
+     * @returns {Point} The new `start` property of the range, which contains `startRow` and `startColumn`. If `range` is empty, this function returns the unmodified value of `range.start`.
      **/
     remove(range) {
         return this.doc.remove(range);
@@ -1115,7 +1062,7 @@ class EditSession {
      * Removes a range of full lines. This method also triggers the `'change'` event.
      * @param {Number} firstRow The first row to be removed
      * @param {Number} lastRow The last row to be removed
-     * @returns {[String]} Returns all the removed lines.
+     * @returns {String[]} Returns all the removed lines.
      *
      * @related Document.removeFullLines
      *
@@ -1127,7 +1074,7 @@ class EditSession {
     /**
      * Reverts previous changes to your document.
      * @param {Delta[]} deltas An array of previous changes
-     * @param {Boolean} dontSelect [If `true`, doesn't select the range of where the change occured]{: #dontSelect}
+     * @param {Boolean} [dontSelect] [If `true`, doesn't select the range of where the change occured]{: #dontSelect}
      **/
     undoChanges(deltas, dontSelect) {
         if (!deltas.length)
@@ -1143,7 +1090,9 @@ class EditSession {
             }
         }
         if (!dontSelect && this.$undoSelect) {
+            //@ts-expect-error TODO: potential wrong property
             if (deltas.selectionBefore)
+                //@ts-expect-error TODO: potential wrong property
                 this.selection.fromJSON(deltas.selectionBefore);
             else
                 this.selection.setRange(this.$getUndoSelection(deltas, true));
@@ -1154,7 +1103,7 @@ class EditSession {
     /**
      * Re-implements a previously undone change to your document.
      * @param {Delta[]} deltas An array of previous changes
-     * @param {Boolean} dontSelect {:dontSelect}
+     * @param {Boolean} [dontSelect] {:dontSelect}
      **/
     redoChanges(deltas, dontSelect) {
         if (!deltas.length)
@@ -1169,7 +1118,9 @@ class EditSession {
         }
 
         if (!dontSelect && this.$undoSelect) {
+            //@ts-expect-error TODO: potential wrong property
             if (deltas.selectionAfter)
+                //@ts-expect-error TODO: potential wrong property
                 this.selection.fromJSON(deltas.selectionAfter);
             else
                 this.selection.setRange(this.$getUndoSelection(deltas, false));
@@ -1186,6 +1137,12 @@ class EditSession {
         this.$undoSelect = enable;
     }
 
+    /**
+     * 
+     * @param {Delta[]} deltas
+     * @param {boolean} [isUndo]
+     * @return {Range}
+     */
     $getUndoSelection(deltas, isUndo) {
         function isInsert(delta) {
             return isUndo ? delta.action !== "insert" : delta.action === "insert";
@@ -1227,9 +1184,9 @@ class EditSession {
     /**
      * Replaces a range in the document with the new `text`.
      *
-     * @param {Range} range A specified Range to replace
+     * @param {IRange} range A specified Range to replace
      * @param {String} text The new text to use as a replacement
-     * @returns {Object} An object containing the final row and column, like this:
+     * @returns {Point} An object containing the final row and column, like this:
      * ```
      * {row: endRow, column: 0}
      * ```
@@ -1248,8 +1205,8 @@ class EditSession {
      *    { row: newRowLocation, column: newColumnLocation }
      *  ```
      * @param {Range} fromRange The range of text you want moved within the document
-     * @param {Object} toPosition The location (row and column) where you want to move the text to
-     * @param {boolean} copy
+     * @param {Point} toPosition The location (row and column) where you want to move the text to
+     * @param {boolean} [copy]
      * @returns {Range} The new range where the text was moved to.
      **/
     moveText(fromRange, toPosition, copy) {
@@ -1311,7 +1268,6 @@ class EditSession {
     /**
      * Outdents all the rows defined by the `start` and `end` properties of `range`.
      * @param {Range} range A range of rows
-     *
      **/
     outdentRows(range) {
         var rowRange = range.collapseRows();
@@ -1337,6 +1293,13 @@ class EditSession {
         }
     }
 
+    /**
+     * 
+     * @param {number} firstRow
+     * @param {number} lastRow
+     * @param [dir]
+     * @returns {number}
+     */
     $moveLines(firstRow, lastRow, dir) {
         firstRow = this.getRowFoldStart(firstRow);
         lastRow = this.getRowFoldEnd(lastRow);
@@ -1374,7 +1337,6 @@ class EditSession {
      * @param {Number} firstRow The starting row to move up
      * @param {Number} lastRow The final row to move up
      * @returns {Number} If `firstRow` is less-than or equal to 0, this function returns 0. Otherwise, on success, it returns -1.
-     *
      **/
     moveLinesUp(firstRow, lastRow) {
         return this.$moveLines(firstRow, lastRow, -1);
@@ -1400,16 +1362,29 @@ class EditSession {
         return this.$moveLines(firstRow, lastRow, 0);
     }
 
-
+    /**
+     * @param {number} row
+     * @returns {number}
+     */
     $clipRowToDocument(row) {
         return Math.max(0, Math.min(row, this.doc.getLength()-1));
     }
 
+    /**
+     * @param {number} row
+     * @param {number} column
+     * @returns {number}
+     */
     $clipColumnToRow(row, column) {
         if (column < 0) return 0;
         return Math.min(this.doc.getLine(row).length, column);
     }
-    
+
+    /**
+     * @param {number} row
+     * @param {number} column
+     * @returns {Point}
+     */
     $clipPositionToDocument(row, column) {
         column = Math.max(0, column);
 
@@ -1432,6 +1407,10 @@ class EditSession {
         };
     }
 
+    /**
+     * @param {Range} range
+     * @returns {Range}
+     */
     $clipRangeToDocument(range) {
         if (range.start.row < 0) {
             range.start.row = 0;
@@ -1459,7 +1438,6 @@ class EditSession {
     /**
      * Sets whether or not line wrapping is enabled. If `useWrapMode` is different than the current value, the `'changeWrapMode'` event is emitted.
      * @param {Boolean} useWrapMode Enable (or disable) wrap mode
-     *
      **/
     setUseWrapMode(useWrapMode) {
         if (useWrapMode != this.$useWrapMode) {
@@ -1494,7 +1472,6 @@ class EditSession {
      * Sets the boundaries of wrap. Either value can be `null` to have an unconstrained wrap, or, they can be the same number to pin the limit. If the wrap limits for `min` or `max` are different, this method also emits the `'changeWrapMode'` event.
      * @param {Number} min The minimum wrap value (the left side wrap)
      * @param {Number} max The maximum wrap value (the right side wrap)
-     *
      **/
     setWrapLimitRange(min, max) {
         if (this.$wrapLimitRange.min !== min || this.$wrapLimitRange.max !== max) {
@@ -1511,9 +1488,8 @@ class EditSession {
     /**
      * This should generally only be called by the renderer when a resize is detected.
      * @param {Number} desiredLimit The new wrap limit
+     * @param [$printMargin]
      * @returns {Boolean}
-     *
-     * @private
      **/
     adjustWrapLimit(desiredLimit, $printMargin) {
         var limits = this.$wrapLimitRange;
@@ -1533,6 +1509,13 @@ class EditSession {
         return false;
     }
 
+    /**
+     * 
+     * @param {number} wrapLimit
+     * @param {number} [min]
+     * @param {number} [max]
+     * @returns {number}
+     */
     $constrainWrapLimit(wrapLimit, min, max) {
         if (min)
             wrapLimit = Math.max(min, wrapLimit);
@@ -1566,7 +1549,7 @@ class EditSession {
      *
      *     { min: wrapLimitRange_min, max: wrapLimitRange_max }
      *
-     * @returns {Object}
+     * @returns {{ min: number, max: number }}
      **/
     getWrapLimitRange() {
         // Avoid unexpected mutation by returning a copy
@@ -1576,6 +1559,9 @@ class EditSession {
         };
     }
 
+    /**
+     * @param {Delta} delta
+     */
     $updateInternalDataOnChange(delta) {
         var useWrapMode = this.$useWrapMode;
         var action = delta.action;
@@ -1684,11 +1670,19 @@ class EditSession {
         return removedFolds;
     }
 
-    $updateRowLengthCache(firstRow, lastRow, b) {
+    /**
+     * @param {number} firstRow
+     * @param {number} lastRow
+     */
+    $updateRowLengthCache(firstRow, lastRow) {
         this.$rowLengthCache[firstRow] = null;
         this.$rowLengthCache[lastRow] = null;
     }
 
+    /**
+     * @param {number} firstRow
+     * @param {number} lastRow
+     */
     $updateWrapData(firstRow, lastRow) {
         var lines = this.doc.getAllLines();
         var tabSize = this.getTabSize();
@@ -1732,7 +1726,13 @@ class EditSession {
             }
         }
     }
-    
+
+    /**
+     * @param {number[]}tokens
+     * @param {number} wrapLimit
+     * @param {number} tabSize
+     * @returns {*[]}
+     */
     $computeWrapSplits(tokens, wrapLimit, tabSize) {
         if (tokens.length == 0) {
             return [];
@@ -1780,6 +1780,7 @@ class EditSession {
 
             if (!splits.length) {
                 indent = getWrapIndent();
+                //@ts-expect-error TODO: potential wrong property
                 splits.indent = indent;
             }
             lastDocSplit += len;
@@ -1885,7 +1886,8 @@ class EditSession {
     /**
      * Given a string, returns an array of the display characters, including tabs and spaces.
      * @param {String} str The string to check
-     * @param {Number} offset The value to start at
+     * @param {Number} [offset] The value to start at
+     * @returns {number[]}
      **/
     $getDisplayTokens(str, offset) {
         var arr = [];
@@ -1921,9 +1923,9 @@ class EditSession {
     /**
      * Calculates the width of the string `str` on the screen while assuming that the string starts at the first column on the screen.
      * @param {String} str The string to calculate the screen width of
-     * @param {Number} maxScreenColumn
-     * @param {Number} screenColumn
-     * @returns {[Number]} Returns an `int[]` array with two elements:<br/>
+     * @param {Number} [maxScreenColumn]
+     * @param {Number} [screenColumn]
+     * @returns {Number[]} Returns an `int[]` array with two elements:<br/>
      * The first position indicates the number of columns for `str` on screen.<br/>
      * The second value contains the position of the document column that this function read until.
      **/
@@ -1958,7 +1960,6 @@ class EditSession {
     /**
      * Returns number of screenrows in a wrapped line.
      * @param {Number} row The row number to check
-     *
      * @returns {Number}
      **/
     getRowLength(row) {
@@ -1971,6 +1972,11 @@ class EditSession {
         else
             return this.$wrapData[row].length + h;
     }
+    
+    /**
+     * @param {Number} row
+     * @returns {Number}
+     **/
     getRowLineCount(row) {
         if (!this.$useWrapMode || !this.$wrapData[row]) {
             return 1;
@@ -1979,6 +1985,10 @@ class EditSession {
         }
     }
 
+    /**
+     * @param {Number} screenRow
+     * @returns {Number}
+     **/
     getRowWrapIndent(screenRow) {
         if (this.$useWrapMode) {
             var pos = this.screenToDocumentPosition(screenRow, Number.MAX_VALUE);
@@ -2004,8 +2014,8 @@ class EditSession {
     /**
      * For the given document row and column, this returns the column position of the last screen row.
      * @param {Number} docRow
-     *
      * @param {Number} docColumn
+     * @returns {number}
      **/
     getDocumentLastRowColumn(docRow, docColumn) {
         var screenRow = this.documentToScreenRow(docRow, docColumn);
@@ -2016,7 +2026,7 @@ class EditSession {
      * For the given document row and column, this returns the document position of the last row.
      * @param {Number} docRow
      * @param {Number} docColumn
-     *
+     * @returns {Point}
      **/
     getDocumentLastRowColumnPosition(docRow, docColumn) {
         var screenRow = this.documentToScreenRow(docRow, docColumn);
@@ -2025,8 +2035,9 @@ class EditSession {
 
     /**
      * For the given row, this returns the split data.
-     * @returns {String}
-     **/
+     * @param {number} row
+     * @returns {String | undefined}
+     */
     getRowSplitData(row) {
         if (!this.$useWrapMode) {
             return undefined;
@@ -2045,12 +2056,20 @@ class EditSession {
         return this.$tabSize - (screenColumn % this.$tabSize | 0);
     }
 
-
+    /**
+     * @param {number} screenRow
+     * @param {number} screenColumn
+     * @returns {number}
+     */
     screenToDocumentRow(screenRow, screenColumn) {
         return this.screenToDocumentPosition(screenRow, screenColumn).row;
     }
 
-
+    /**
+     * @param {number} screenRow
+     * @param {number} screenColumn
+     * @returns {number}
+     */
     screenToDocumentColumn(screenRow, screenColumn) {
         return this.screenToDocumentPosition(screenRow, screenColumn).column;
     }
@@ -2059,9 +2078,9 @@ class EditSession {
      * Converts characters coordinates on the screen to characters coordinates within the document. [This takes into account code folding, word wrap, tab size, and any other visual modifications.]{: #conversionConsiderations}
      * @param {Number} screenRow The screen row to check
      * @param {Number} screenColumn The screen column to check
-     * @param {Number} offsetX screen character x-offset [optional]
+     * @param {Number} [offsetX] screen character x-offset [optional]
      *
-     * @returns {Object} The object returned has two properties: `row` and `column`.
+     * @returns {Point} The object returned has two properties: `row` and `column`.
      *
      * @related EditSession.documentToScreenPosition
      **/
@@ -2155,18 +2174,18 @@ class EditSession {
 
     /**
      * Converts document coordinates to screen coordinates. {:conversionConsiderations}
-     * @param {Number|Position} docRow The document row to check
+     * @param {Number|Point} docRow The document row to check
      * @param {Number|undefined} [docColumn] The document column to check
-     * @returns {Position} The object returned by this method has two properties: `row` and `column`.
+     * @returns {Point} The object returned by this method has two properties: `row` and `column`.
      *
      * @related EditSession.screenToDocumentPosition
      **/
     documentToScreenPosition(docRow, docColumn) {
         // Normalize the passed in arguments.
         if (typeof docColumn === "undefined")
-            var pos = this.$clipPositionToDocument(docRow.row, docRow.column);
+            var pos = this.$clipPositionToDocument(/**@type{Point}*/(docRow).row, /**@type{Point}*/(docRow).column);
         else
-            pos = this.$clipPositionToDocument(docRow, docColumn);
+            pos = this.$clipPositionToDocument(/**@type{number}*/(docRow), docColumn);
 
         docRow = pos.row;
         docColumn = pos.column;
@@ -2183,7 +2202,6 @@ class EditSession {
         }
 
         var rowEnd, row = 0;
-
 
         var rowCache = this.$docRowCache;
         var i = this.$getRowCacheIndex(rowCache, docRow);
@@ -2258,10 +2276,9 @@ class EditSession {
 
     /**
      * For the given document row and column, returns the screen column.
-     * @param {Number} row
-     * @param {Number} docColumn
+     * @param {Number|Point} row
+     * @param {Number} [docColumn]
      * @returns {Number}
-     *
      **/
     documentToScreenColumn(row, docColumn) {
         return this.documentToScreenPosition(row, docColumn).column;
@@ -2269,9 +2286,9 @@ class EditSession {
 
     /**
      * For the given document row and column, returns the screen row.
-     * @param {Number} docRow
-     * @param {Number} docColumn
-     *
+     * @param {Number|Point} docRow
+     * @param {Number} [docColumn]
+     * @returns {number}
      **/
     documentToScreenRow(docRow, docColumn) {
         return this.documentToScreenPosition(docRow, docColumn).row;
@@ -2283,6 +2300,7 @@ class EditSession {
      **/
     getScreenLength() {
         var screenRows = 0;
+        /**@type {FoldLine}*/
         var fold = null;
         if (!this.$useWrapMode) {
             screenRows = this.getLength();
@@ -2317,10 +2335,9 @@ class EditSession {
 
         return screenRows;
     }
-    
+
     /**
-     * @private
-     *
+     * @param {FontMetrics} fm
      */
     $setFontMetrics(fm) {
         if (!this.$enableVarChar) return;
@@ -2348,7 +2365,7 @@ class EditSession {
             return [screenColumn, column];
         };
     }
-    
+
     destroy() {
         if (!this.destroyed) {
             this.bgTokenizer.setDocument(null);
@@ -2386,10 +2403,7 @@ EditSession.prototype.$defaultUndoManager = {
     addSession: function() {}
 };
 EditSession.prototype.$overwrite = false;
-/**
- *
- * @type {TextMode|null}
- */
+
 EditSession.prototype.$mode = null;
 EditSession.prototype.$modeId = null;
 EditSession.prototype.$scrollTop = 0;
@@ -2401,6 +2415,10 @@ EditSession.prototype.$wrapLimitRange = {
     min : null,
     max : null
 };
+/**
+ * 
+ * @type {null | import("../ace-internal").Ace.LineWidget[]}
+ */
 EditSession.prototype.lineWidgets = null;
 EditSession.prototype.isFullWidth = isFullWidth;
 
@@ -2459,6 +2477,10 @@ require("./edit_session/bracket_match").BracketMatch.call(EditSession.prototype)
 
 config.defineOptions(EditSession.prototype, "session", {
     wrap: {
+        /**
+         * @param {string | boolean | number} value
+         * @this {EditSession}
+         */
         set: function(value) {
             if (!value || value == "off")
                 value = false;
@@ -2493,7 +2515,10 @@ config.defineOptions(EditSession.prototype, "session", {
         handlesSet: true
     },    
     wrapMethod: {
-        // code|text|auto
+        /**
+         * @param {"code"|"text"|"auto"|boolean} val
+         * @this{EditSession}
+         */
         set: function(val) {
             val = val == "auto"
                 ? this.$mode.type != "text"
@@ -2509,6 +2534,9 @@ config.defineOptions(EditSession.prototype, "session", {
         initialValue: "auto"
     },
     indentedSoftWrap: {
+        /**
+         * @this{EditSession}
+         */
         set: function() {
             if (this.$useWrapMode) {
                 this.$useWrapMode = false;
@@ -2522,6 +2550,10 @@ config.defineOptions(EditSession.prototype, "session", {
         initialValue: 1
     },
     useWorker: {
+        /**
+         * @param {boolean} useWorker
+         * @this{EditSession}
+         */
         set: function(useWorker) {
             this.$useWorker = useWorker;
 
@@ -2533,6 +2565,10 @@ config.defineOptions(EditSession.prototype, "session", {
     },
     useSoftTabs: {initialValue: true},
     tabSize: {
+        /**
+         * @param tabSize
+         * @this{EditSession}
+         */
         set: function(tabSize) {
             tabSize = parseInt(tabSize);
             if (tabSize > 0 && this.$tabSize !== tabSize) {
@@ -2567,3 +2603,4 @@ config.defineOptions(EditSession.prototype, "session", {
 });
 
 exports.EditSession = EditSession;
+

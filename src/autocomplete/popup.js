@@ -1,5 +1,4 @@
 "use strict";
-
 var Renderer = require("../virtual_renderer").VirtualRenderer;
 var Editor = require("../editor").Editor;
 var Range = require("../range").Range;
@@ -9,15 +8,19 @@ var dom = require("../lib/dom");
 var nls = require("../config").nls;
 var userAgent = require("./../lib/useragent");
 
-var getAriaId = function(index) {
+var getAriaId = function (index) {
     return `suggest-aria-id:${index}`;
 };
 
+/**
+ *
+ * @param {HTMLElement} [el]
+ * @return {Editor}
+ */
 var $singleLineEditor = function(el) {
     var renderer = new Renderer(el);
 
     renderer.$maxLines = 4;
-
     var editor = new Editor(renderer);
 
     editor.setHighlightActiveLine(false);
@@ -37,11 +40,13 @@ var $singleLineEditor = function(el) {
 class AcePopup {
     /**
      * Creates and renders single line editor in popup window. If `parentNode` param is isset, then attaching it to this element.
-     * @param {Element} parentNode
+     * @param {Element} [parentNode]
      */
     constructor(parentNode) {
         var el = dom.createElement("div");
-        var popup = new $singleLineEditor(el);
+        /**@type {AcePopup}*/
+        // @ts-ignore
+        var popup = $singleLineEditor(el);
 
         if (parentNode) {
             parentNode.appendChild(el);
@@ -65,13 +70,14 @@ class AcePopup {
         popup.$isFocused = true;
 
         popup.renderer.$cursorLayer.restartTimer = noop;
-        popup.renderer.$cursorLayer.element.style.opacity = 0;
+        popup.renderer.$cursorLayer.element.style.opacity = "0";
 
         popup.renderer.$maxLines = 8;
         popup.renderer.$keepTextAreaAtCursor = false;
 
         popup.setHighlightActiveLine(false);
         // set default highlight color
+        // @ts-ignore
         popup.session.highlight("");
         popup.session.$searchHighlight.clazz = "ace_highlight-marker";
 
@@ -83,10 +89,10 @@ class AcePopup {
         });
 
         var lastMouseEvent;
-        var hoverMarker = new Range(-1,0,-1,Infinity);
-        var selectionMarker = new Range(-1,0,-1,Infinity);
+        var hoverMarker = new Range(-1, 0, -1, Infinity);
+        var selectionMarker = new Range(-1, 0, -1, Infinity);
         selectionMarker.id = popup.session.addMarker(selectionMarker, "ace_active-line", "fullLine");
-        popup.setSelectOnHover = function(val) {
+        popup.setSelectOnHover = function (val) {
             if (!val) {
                 hoverMarker.id = popup.session.addMarker(hoverMarker, "ace_line-hover", "fullLine");
             } else if (hoverMarker.id) {
@@ -122,8 +128,9 @@ class AcePopup {
                 setHoverMarker(row, true);
             }
         });
-        popup.renderer.on("afterRender", function() {
+        popup.renderer.on("afterRender", function () {
             var row = popup.getRow();
+            /**@type {any}*/
             var t = popup.renderer.$textLayer;
             var selected = t.element.childNodes[row - t.config.firstRow];
             var el = document.activeElement; // Active element is textarea of main editor
@@ -144,7 +151,7 @@ class AcePopup {
                 selected.setAttribute("aria-roledescription", nls("item"));
                 selected.setAttribute("aria-label", popup.getData(row).value);
                 selected.setAttribute("aria-setsize", popup.data.length);
-                selected.setAttribute("aria-posinset", row+1);
+                selected.setAttribute("aria-posinset", row + 1);
                 selected.setAttribute("aria-describedby", "doc-tooltip");
                 selected.setAttribute("aria-selected", "true");
             }
@@ -181,6 +188,7 @@ class AcePopup {
 
         var bgTokenizer = popup.session.bgTokenizer;
         bgTokenizer.$tokenizeRow = function(row) {
+            /**@type {import("../../ace-internal").Ace.Completion &{name?, className?, matchMask?, message?}}*/
             var data = popup.data[row];
             var tokens = [];
             if (!data)
@@ -282,7 +290,7 @@ class AcePopup {
          * If the anchor is not specified it tries to align to bottom and right as much as possible.
          * If the popup does not have enough space to be rendered with the given anchors, it returns false without rendering the popup.
          * The forceShow flag can be used to render the popup in these cases, which slides the popup so it entirely fits on the screen.
-         * @param {Point} pos
+         * @param {{top: number, left: number}} pos
          * @param {number} lineHeight
          * @param {"top" | "bottom" | undefined} anchor
          * @param {boolean} forceShow
@@ -398,7 +406,7 @@ class AcePopup {
 
         return popup;
     }
-} 
+}
 
 dom.importCssString(`
 .ace_editor.ace_autocomplete .ace_marker-layer .ace_active-line {

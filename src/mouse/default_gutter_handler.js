@@ -1,9 +1,16 @@
 "use strict";
+/**
+ * @typedef {import("./mouse_handler").MouseHandler} MouseHandler
+ */
 var dom = require("../lib/dom");
 var event = require("../lib/event");
 var Tooltip = require("../tooltip").Tooltip;
 var nls = require("../config").nls;
 
+/**
+ * @param {MouseHandler} mouseHandler
+ * @this {MouseHandler}
+ */
 function GutterHandler(mouseHandler) {
     var editor = mouseHandler.editor;
     var gutter = editor.renderer.$gutterLayer;
@@ -167,7 +174,7 @@ class GutterTooltip extends Tooltip {
             var annotationsInFold = {error: [], warning: [], info: []};
             var mostSevereAnnotationInFoldType;
 
-            for (var i = row + 1; i <= fold.end.row; i++){
+            for (let i = row + 1; i <= fold.end.row; i++){
                 if (!gutter.$annotations[i])
                     continue;
 
@@ -202,7 +209,7 @@ class GutterTooltip extends Tooltip {
         var iconClassName = gutter.$useSvgGutterIcons ? "ace_icon_svg" : "ace_icon";
 
         // Construct the contents of the tooltip.
-        for (var i = 0; i < annotation.text.length; i++) {
+        for (let i = 0; i < annotation.text.length; i++) {
             var line = `<span class='ace_${annotation.type[i]} ${iconClassName}' aria-label='${GutterTooltip.annotationLabels[annotation.type[i].replace("_fold","")].singular}' role=img> </span> ${annotation.text[i]}`;
             annotationMessages[annotation.type[i].replace("_fold","")].push(line);
         }

@@ -1,8 +1,19 @@
 "use strict";
 
+/**
+ *
+ * @typedef {import("../edit_session").EditSession} EditSession
+ */
+
 var lang = require("../lib/lang");
 
 // based on http://www.freehackers.org/Indent_Finder
+/**
+ * 
+ * @param {string[]} lines
+ * @param [fallback]
+ * @returns {{ch?: string, length?: number}}
+ */
 exports.$detectIndentation = function(lines, fallback) {
     var stats = [];
     var changes = [];
@@ -74,6 +85,10 @@ exports.$detectIndentation = function(lines, fallback) {
         return {ch: " ", length: tabLength};
 };
 
+/**
+ * @param {EditSession} session
+ * @returns {{ch?: string, length?: number}|{}}
+ */
 exports.detectIndentation = function(session) {
     var lines = session.getLines(0, 1000);
     var indent = exports.$detectIndentation(lines) || {};
@@ -87,9 +102,10 @@ exports.detectIndentation = function(session) {
 };
 
 /**
- * EditSession session
- * options.trimEmpty trim empty lines too
- * options.keepCursorPosition do not trim whitespace before the cursor
+ * @param {EditSession} session
+ * @param {Object} options
+ * @param {boolean} [options.trimEmpty] trim empty lines too
+ * @param {boolean} [options.keepCursorPosition] do not trim whitespace before the cursor
  */
 exports.trimTrailingSpace = function(session, options) {
     var doc = session.getDocument();
@@ -128,6 +144,11 @@ exports.trimTrailingSpace = function(session, options) {
     }
 };
 
+/**
+ * @param {EditSession} session
+ * @param {string} ch
+ * @param {number} len
+ */
 exports.convertIndentation = function(session, ch, len) {
     var oldCh = session.getTabString()[0];
     var oldLen = session.getTabSize();
@@ -161,6 +182,11 @@ exports.convertIndentation = function(session, ch, len) {
     session.setUseSoftTabs(ch == " ");
 };
 
+/**
+ * 
+ * @param {string} text
+ * @returns {{}}
+ */
 exports.$parseStringArg = function(text) {
     var indent = {};
     if (/t/.test(text))

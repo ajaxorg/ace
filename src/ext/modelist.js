@@ -4,7 +4,7 @@ var modes = [];
 /**
  * Suggests a mode based on the file extension present in the given path
  * @param {string} path The path to the file
- * @returns {object} Returns an object containing information about the
+ * @returns {Mode} Returns an object containing information about the
  *  suggested mode.
  */
 function getModeForPath(path) {
@@ -20,6 +20,11 @@ function getModeForPath(path) {
 }
 
 class Mode {
+    /**
+     * @param {string} name
+     * @param {string} caption
+     * @param {string} extensions
+     */
     constructor(name, caption, extensions) {
         this.name = name;
         this.caption = caption;
@@ -38,6 +43,9 @@ class Mode {
         this.extRe = new RegExp(re, "gi");
     }
 
+    /**
+     * @param {string} filename
+     */
     supportsFile(filename) {
         return filename.match(this.extRe);
     }

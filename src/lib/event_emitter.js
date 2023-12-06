@@ -1,5 +1,5 @@
 "use strict";
-
+/**@type {any}*/
 var EventEmitter = {};
 var stopPropagation = function() { this.propagationStopped = true; };
 var preventDefault = function() { this.defaultPrevented = true; };
@@ -61,6 +61,7 @@ EventEmitter.once = function(eventName, callback) {
 
 
 EventEmitter.setDefaultHandler = function(eventName, callback) {
+    /**@type {any}*/
     var handlers = this._defaultHandlers;
     if (!handlers)
         handlers = this._defaultHandlers = {_disabled_: {}};
@@ -119,7 +120,9 @@ EventEmitter.removeEventListener = function(eventName, callback) {
     if (index !== -1)
         listeners.splice(index, 1);
 };
-
+/**
+ * @this {EventEmitter}
+ */
 EventEmitter.removeAllListeners = function(eventName) {
     if (!eventName) this._eventRegistry = this._defaultHandlers = undefined;
     if (this._eventRegistry) this._eventRegistry[eventName] = undefined;

@@ -8,7 +8,7 @@ if (typeof process !== "undefined") {
 require("../multi_select");
 
 var EditSession = require("./../edit_session").EditSession,
-    Editor = require("./../editor").Editor,
+    Editor = require("../editor").Editor,
     Range = require("./../range").Range,
     MockRenderer = require("./../test/mockrenderer").MockRenderer,
     emacs = require('./emacs'),

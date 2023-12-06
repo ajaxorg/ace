@@ -1,15 +1,17 @@
 "use strict";
-
+/**
+ * @typedef {import("./edit_session").EditSession} EditSession
+ */
 var Range = require("./range").Range;
 var EventEmitter = require("./lib/event_emitter").EventEmitter;
 var oop = require("./lib/oop");
 
-class PlaceHolder {
+class PlaceHolder { 
     /**
-     * @param {Document} session The document to associate with the anchor
-     * @param {Number} length The starting row position
-     * @param {Number} pos The starting column position
-     * @param {String} others
+     * @param {EditSession} session
+     * @param {Number} length
+     * @param {import("../ace-internal").Ace.Point} pos
+     * @param {any[]} others
      * @param {String} mainClass
      * @param {String} othersClass
      **/
@@ -32,7 +34,7 @@ class PlaceHolder {
 
         this.$pos = pos;
         // Used for reset
-        var undoStack = session.getUndoManager().$undoStack || session.getUndoManager().$undostack || {length: -1};
+        var undoStack = session.getUndoManager().$undoStack || session.getUndoManager()["$undostack"] || {length: -1};
         this.$undoStackDepth = undoStack.length;
         this.setup();
 
@@ -103,8 +105,8 @@ class PlaceHolder {
      * PlaceHolder@onUpdate(e)
      * 
      * Emitted when the place holder updates.
-     *
-     **/
+     * @param {import("../ace-internal").Ace.Delta} delta
+     */
     onUpdate(delta) {
         if (this.$updating)
             return this.updateAnchors(delta);
@@ -141,7 +143,10 @@ class PlaceHolder {
         this.$updating = false;
         this.updateMarkers();
     }
-    
+
+    /**
+     * @param {import("../ace-internal").Ace.Delta} delta
+     */
     updateAnchors(delta) {
         this.pos.onChange(delta);
         for (var i = this.others.length; i--;)
@@ -162,14 +167,14 @@ class PlaceHolder {
         for (var i = this.others.length; i--;)
             updateMarker(this.others[i], this.othersClass);
     }
-    
+
+
     /**
      * PlaceHolder@onCursorChange(e)
      * 
      * Emitted when the cursor changes.
-     *
-     **/
-
+     * @param {any} [event]
+     */
     onCursorChange(event) {
         if (this.$updating || !this.session) return;
         var pos = this.session.selection.getCursor();
@@ -207,7 +212,7 @@ class PlaceHolder {
         if (this.$undoStackDepth === -1)
             return;
         var undoManager = this.session.getUndoManager();
-        var undosRequired = (undoManager.$undoStack || undoManager.$undostack).length - this.$undoStackDepth;
+        var undosRequired = (undoManager.$undoStack || undoManager["$undostack"]).length - this.$undoStackDepth;
         for (var i = 0; i < undosRequired; i++) {
             undoManager.undo(this.session, true);
         }

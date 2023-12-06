@@ -298,8 +298,8 @@ exports.DOT = "\xB7";
  * Performs text reordering by implementing Unicode Bidi algorithm
  * with aim to produce logical<->visual map and Bidi levels
  * @param {String} text string to be reordered
- * @param {Array} unicode character types produced by call to 'hasBidiCharacters'
- * @param {Boolean} 'true' for right-to-left text direction, otherwise 'false'
+ * @param {Array} textCharTypes unicode character types produced by call to 'hasBidiCharacters'
+ * @param {Boolean} isRtl 'true' for right-to-left text direction, otherwise 'false'
  *
  * @return {Object} An object containing logicalFromVisual map and Bidi levels
  **/
@@ -347,7 +347,7 @@ exports.doBidiReorder = function(text, textCharTypes, isRtl) {
 /**
  * Performs character classification, to be used in Unicode Bidi algorithm.
  * @param {String} text string to be reordered
- * @param {Array} unicode character types (to be filled by this method)
+ * @param {Array} textCharTypes unicode character types (to be filled by this method)
  *
  * @return {Boolean} 'true' if text contains Bidi characters, otherwise 'false' 
  **/

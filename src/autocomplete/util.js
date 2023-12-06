@@ -40,6 +40,10 @@ exports.retrieveFollowingIdentifier = function(text, pos, regex) {
     return buf;
 };
 
+/**
+ * @param editor
+ * @return {string}
+ */
 exports.getCompletionPrefix = function (editor) {
     var pos = editor.getCursorPosition();
     var line = editor.session.getLine(pos.row);

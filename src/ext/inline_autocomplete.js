@@ -25,6 +25,9 @@ var destroyCompleter = function(e, editor) {
  * There is an inline ghost text renderer and an optional command bar tooltip inside.
  */
 class InlineAutocomplete {
+    /**
+     * @param {Editor} editor
+     */
     constructor(editor) {
         this.editor = editor;
         this.keyboardHandler = new HashHandler(this.commands);
@@ -38,13 +41,20 @@ class InlineAutocomplete {
             this.updateCompletions();
         }.bind(this));
     }
-    
+
+    /**
+     * 
+     * @return {AceInline}
+     */
     getInlineRenderer() {
         if (!this.inlineRenderer)
             this.inlineRenderer = new AceInline();
         return this.inlineRenderer;
     }
 
+    /**
+     * @return {CommandBarTooltip}
+     */
     getInlineTooltip() {
         if (!this.inlineTooltip) {
             this.inlineTooltip = InlineAutocomplete.createInlineTooltip(document.body || document.documentElement);
@@ -55,7 +65,7 @@ class InlineAutocomplete {
 
     /**
      * This function is the entry point to the class. This triggers the gathering of the autocompletion and displaying the results;
-     * @param {CompletionOptions} options
+     * @param {import("../../ace-internal").Ace.CompletionOptions} options
      */
     show(options) {
         this.activated = true;
@@ -110,6 +120,9 @@ class InlineAutocomplete {
         this.detach();
     }
 
+    /**
+     * @param {import("../../ace-internal").Ace.InlineAutocompleteAction} where
+     */
     goTo(where) {
         if (!this.completions || !this.completions.filtered) {
             return;
@@ -138,6 +151,10 @@ class InlineAutocomplete {
         return this.completions.filtered.length;
     }
 
+    /**
+     * @param {number} [index]
+     * @returns {import("../../ace-internal").Ace.Completion | undefined}
+     */
     getData(index) {
         if (index == undefined || index === null) {
             return this.completions.filtered[this.$index];
@@ -154,6 +171,9 @@ class InlineAutocomplete {
         return this.$index >= 0;
     }
 
+    /**
+     * @param {number} value
+     */
     setIndex(value) {
         if (!this.completions || !this.completions.filtered) {
             return;
@@ -165,6 +185,9 @@ class InlineAutocomplete {
         }
     }
 
+    /**
+     * @return {CompletionProvider}
+     */
     getCompletionProvider(initialPosition) {
         if (!this.completionProvider)
             this.completionProvider = new CompletionProvider(initialPosition);
@@ -181,6 +204,9 @@ class InlineAutocomplete {
         }
     }
 
+    /**
+     * @return {any}
+     */
     $updatePrefix() {
         var pos = this.editor.getCursorPosition();
         var prefix = this.editor.session.getTextRange({start: this.base, end: pos});
@@ -191,10 +217,14 @@ class InlineAutocomplete {
         && this.completions.filtered[0].value == prefix
         && !this.completions.filtered[0].snippet)
             return this.detach();
+        //@ts-expect-error TODO: potential wrong arguments
         this.$open(this.editor, prefix);
         return prefix;
     }
 
+    /**
+     * @param {import("../../ace-internal").Ace.CompletionOptions} [options]
+     */
     updateCompletions(options) {
         var prefix = "";
         
@@ -203,6 +233,7 @@ class InlineAutocomplete {
             this.base = this.editor.session.doc.createAnchor(pos.row, pos.column);
             this.base.$insertRight = true;
             this.completions = new FilteredList(options.matches);
+            //@ts-expect-error TODO: potential wrong arguments
             return this.$open(this.editor, "");
         }
 
@@ -215,6 +246,8 @@ class InlineAutocomplete {
         var prefix = util.getCompletionPrefix(this.editor);
         this.base = session.doc.createAnchor(pos.row, pos.column - prefix.length);
         this.base.$insertRight = true;
+
+        // @ts-ignore
         var options = {
             exactMatch: true,
             ignoreCaption: true
@@ -223,22 +256,28 @@ class InlineAutocomplete {
             prefix,
             base: this.base,
             pos
-        }).provideCompletions(this.editor, options, function(err, completions, finished) {
-            var filtered = completions.filtered;
-            var prefix = util.getCompletionPrefix(this.editor);
+            // @ts-ignore
+        }).provideCompletions(this.editor, options,
+            /**
+             * @this {InlineAutocomplete}
+             */
+            function(err, completions, finished) {
+                var filtered = completions.filtered;
+                var prefix = util.getCompletionPrefix(this.editor);
 
-            if (finished) {
-                // No results
-                if (!filtered.length)
-                    return this.detach();
+                if (finished) {
+                    // No results
+                    if (!filtered.length)
+                        return this.detach();
 
-                // One result equals to the prefix
-                if (filtered.length == 1 && filtered[0].value == prefix && !filtered[0].snippet)
-                    return this.detach();
-            }
-            this.completions = completions;
-            this.$open(this.editor, prefix);
-        }.bind(this));
+                    // One result equals to the prefix
+                    if (filtered.length == 1 && filtered[0].value == prefix && !filtered[0].snippet)
+                        return this.detach();
+                }
+                this.completions = completions;
+                //@ts-expect-error TODO: potential wrong arguments
+                this.$open(this.editor, prefix);
+            }.bind(this));
     }
 
     detach() {
@@ -281,8 +320,15 @@ class InlineAutocomplete {
         this.inlineTooltip = this.editor = this.inlineRenderer = null;
     }
 
+    updateDocTooltip(){
+    }
+
 }
 
+/**
+ * 
+ * @type {{[key: string]: import("../../ace-internal").Ace.Command}}
+ */
 InlineAutocomplete.prototype.commands = {
     "Previous": {
         bindKey: "Alt-[",
@@ -302,7 +348,7 @@ InlineAutocomplete.prototype.commands = {
         bindKey: { win: "Tab|Ctrl-Right", mac: "Tab|Cmd-Right" },
         name: "Accept",
         exec: function(editor) {
-            return editor.completer.insertMatch();
+            return /**@type{InlineAutocomplete}*/(editor.completer).insertMatch();
         }
     },
     "Close": {
@@ -342,6 +388,10 @@ var completers = [snippetCompleter, textCompleter, keyWordCompleter];
 
 require("../config").defineOptions(Editor.prototype, "editor", {
     enableInlineAutocompletion: {
+        /**
+         * @this{Editor}
+         * @param val
+         */
         set: function(val) {
             if (val) {
                 if (!this.completers)
@@ -362,8 +412,10 @@ require("../config").defineOptions(Editor.prototype, "editor", {
  * @returns {CommandBarTooltip}   The command bar tooltip for inline autocomplete
  */
 InlineAutocomplete.createInlineTooltip = function(parentEl) {
+    /**@type {CommandBarTooltip}*/
     var inlineTooltip = new CommandBarTooltip(parentEl);
-    inlineTooltip.registerCommand("Previous", 
+    inlineTooltip.registerCommand("Previous",
+        // @ts-expect-error
         Object.assign({}, InlineAutocomplete.prototype.commands["Previous"], {
             enabled: true,
             type: "button",
@@ -372,20 +424,24 @@ InlineAutocomplete.createInlineTooltip = function(parentEl) {
     );
     inlineTooltip.registerCommand("Position", {
         enabled: false,
-        getValue: function(editor) {
-            return editor ? [editor.completer.getIndex() + 1, editor.completer.getLength()].join("/") : "";
+        getValue: function (editor) {
+            return editor ? [/**@type{InlineAutocomplete}*/
+                (editor.completer).getIndex() + 1, /**@type{InlineAutocomplete}*/(editor.completer).getLength()
+            ].join("/") : "";
         },
         type: "text",
         cssClass: "completion_position"
     });
-    inlineTooltip.registerCommand("Next", 
+    inlineTooltip.registerCommand("Next",
+        // @ts-expect-error
         Object.assign({}, InlineAutocomplete.prototype.commands["Next"], {
             enabled: true,
             type: "button",
             iconCssClass: "ace_arrow"
         })
     );
-    inlineTooltip.registerCommand("Accept", 
+    inlineTooltip.registerCommand("Accept",
+        // @ts-expect-error
         Object.assign({}, InlineAutocomplete.prototype.commands["Accept"], {
             enabled: function(editor) {
                 return !!editor && editor.completer.getIndex() >= 0;

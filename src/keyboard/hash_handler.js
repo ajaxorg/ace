@@ -1,22 +1,40 @@
 "use strict";
 
-var keyUtil = require("../lib/keys");
+/**
+ * @typedef {import("../../ace-internal").Ace.Command} Command
+ * @typedef {import("../../ace-internal").Ace.CommandLike} CommandLike
+*/
+
+/** @type {any} */var keyUtil = require("../lib/keys");
 var useragent = require("../lib/useragent");
 var KEY_MODS = keyUtil.KEY_MODS;
 
 class MultiHashHandler {
+    /**
+     * @param {Record<string, CommandLike> | Command[]} [config]
+     * @param {string} [platform]
+     */
     constructor(config, platform) {
         this.$init(config, platform, false);
     }
 
+    /**
+     * @param {Record<string, CommandLike> | Command[]} config
+     * @param {string} [platform]
+     * @param {boolean} [$singleCommand]
+     */
     $init(config, platform, $singleCommand) {
         this.platform = platform || (useragent.isMac ? "mac" : "win");
+        /**@type {Record<string, Command>}*/
         this.commands = {};
         this.commandKeyBinding = {};
         this.addCommands(config);
         this.$singleCommand = $singleCommand;
     }
 
+    /**
+     * @param {Command} command
+     */
     addCommand(command) {
         if (this.commands[command.name])
             this.removeCommand(command);
@@ -27,6 +45,10 @@ class MultiHashHandler {
             this._buildKeyHash(command);
     }
 
+    /**
+     * @param {Command | string} command
+     * @param {boolean} [keepCommand]
+     */
     removeCommand(command, keepCommand) {
         var name = command && (typeof command === 'string' ? command : command.name);
         command = this.commands[name];
@@ -51,6 +73,11 @@ class MultiHashHandler {
         }
     }
 
+    /**
+     * @param {string | { win?: string; mac?: string; position?:number}} key
+     * @param {CommandLike | string} command
+     * @param {number} [position]
+     */
     bindKey(key, command, position) {
         if (typeof key == "object" && key) {
             if (position == undefined)
@@ -60,9 +87,9 @@ class MultiHashHandler {
         if (!key)
             return;
         if (typeof command == "function")
-            return this.addCommand({exec: command, bindKey: key, name: command.name || key});
+            return this.addCommand({exec: command, bindKey: key, name: command.name || /**@type{string}*/(key)});
         
-        key.split("|").forEach(function(keyPart) {
+        /**@type{string}*/(key).split("|").forEach(function(keyPart) {
             var chain = "";
             if (keyPart.indexOf(" ") != -1) {
                 var parts = keyPart.split(/\s+/);
@@ -80,7 +107,12 @@ class MultiHashHandler {
             this._addCommandToBinding(chain + id, command, position);
         }, this);
     }
-    
+
+    /**
+     * @param {string} keyId
+     * @param {any} command
+     * @param {number} position
+     */
     _addCommandToBinding(keyId, command, position) {
         var ckb = this.commandKeyBinding, i;
         if (!command) {
@@ -109,6 +141,9 @@ class MultiHashHandler {
         }
     }
 
+    /**
+     * @param {Record<string, CommandLike> | Command[]} [commands]
+     */
     addCommands(commands) {
         commands && Object.keys(commands).forEach(function(name) {
             var command = commands[name];
@@ -131,12 +166,18 @@ class MultiHashHandler {
         }, this);
     }
 
+    /**
+     * @param {Record<string, CommandLike>} commands
+     */
     removeCommands(commands) {
         Object.keys(commands).forEach(function(name) {
             this.removeCommand(commands[name]);
         }, this);
     }
 
+    /**
+     * @param {Record<string, CommandLike>} keyList
+     */
     bindKeys(keyList) {
         Object.keys(keyList).forEach(function(key) {
             this.bindKey(key, keyList[key]);
@@ -147,8 +188,12 @@ class MultiHashHandler {
         this.bindKey(command.bindKey, command);
     }
 
-    // accepts keys in the form ctrl+Enter or ctrl-Enter
-    // keys without modifiers or shift only 
+    /**
+     * Accepts keys in the form ctrl+Enter or ctrl-Enter
+     * keys without modifiers or shift only
+     * @param {string} keys
+     * @returns {{key: string, hashId: number} | false}
+     */
     parseKeys(keys) {
         var parts = keys.toLowerCase().split(/[\-\+]([\-\+])?/).filter(function(x){return x;});
         var key = parts.pop();
@@ -174,11 +219,23 @@ class MultiHashHandler {
         return {key: key, hashId: hashId};
     }
 
+    /**
+     * @param {number} hashId
+     * @param {string} keyString
+     * @returns {Command}
+     */
     findKeyCommand(hashId, keyString) {
         var key = KEY_MODS[hashId] + keyString;
         return this.commandKeyBinding[key];
     }
 
+    /**
+     * @param {{ $keyChain: string | any[]; }} data
+     * @param {number} hashId
+     * @param {string} keyString
+     * @param {number} keyCode
+     * @returns {{command: string} | void}
+     */
     handleKeyboard(data, hashId, keyString, keyCode) {
         if (keyCode < 0) return;
         var key = KEY_MODS[hashId] + keyString;
@@ -203,7 +260,12 @@ class MultiHashHandler {
         }
         return {command: command};
     }
-    
+
+    /**
+     * @param {any} [editor]
+     * @param {any} [data]
+     * @returns {string}
+     */
     getStatusText(editor, data) {
         return data.$keyChain || "";
     }
@@ -217,6 +279,10 @@ function getPosition(command) {
 }
 
 class HashHandler extends MultiHashHandler {
+    /**
+     * @param {Record<string, CommandLike> | Command[]} [config]
+     * @param {string} [platform]
+     */
     constructor(config, platform) {
         super(config, platform);
         this.$singleCommand = true;
