@@ -24,6 +24,7 @@ exports.get = function (url, callback) {
 
 exports.loadScript = function(path, callback) {
     var head = dom.getDocumentHead();
+    /**@type {HTMLScriptElement & {onload?: Function, onreadystatechange?: Function, readyState?: string}}*/
     var s = document.createElement('script');
 
     s.src = path;

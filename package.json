@@ -21,7 +21,7 @@
         "eslint": "^8.20.0",
         "istanbul": "^0.4.5",
         "standard-version": "^9.3.2",
-        "typescript": "^4.7.4"
+        "typescript": "^5.2.2"
     },
     "mappings": {
         "ace": "."
@@ -44,6 +44,7 @@
         "cover": "istanbul cover src/test/all.js",
         "lint": "eslint \"src/**/*.js\"",
         "fix": "eslint --fix \"src/**/*.js\"",
+        "typecheck": "tsc -p tsconfig.json",
         "changelog": "standard-version",
         "prepack": "node tool/esm_resolver_generator.js && node Makefile.dryice.js css --target build-styles && rm -rf styles && mv build-styles/css styles"
     },

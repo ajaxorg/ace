@@ -12,6 +12,9 @@ function isRegExp(obj) {
     return obj instanceof RegExp;
 }
 
+/**
+ * @param {RegExp} re
+ */
 function regExpToObject(re) {
     var string = String(re),
         start = string.indexOf('/'),
@@ -22,6 +25,11 @@ function regExpToObject(re) {
     };
 }
 
+/**
+ * @param {string} string
+ * @param {string} flags
+ * @return {RegExp|string}
+ */
 function stringToRegExp(string, flags) {
     try {
         return new RegExp(string, flags);
@@ -49,7 +57,10 @@ class IncrementalSearch extends Search {
         this.$options = {wrap: false, skipCurrent: false};
         this.$keyboardHandler = new ISearchKbd(this);
     }
-    
+
+    /**
+     * @param {boolean} backwards
+     */
     activate(editor, backwards) {
         this.$editor = editor;
         this.$startPos = this.$currentPos = editor.getCursorPosition();
@@ -64,6 +75,9 @@ class IncrementalSearch extends Search {
         this.statusMessage(true);
     }
 
+    /**
+     * @param {boolean} [reset]
+     */
     deactivate(reset) {
         this.cancelSearch(reset);
         var editor = this.$editor;
@@ -76,6 +90,9 @@ class IncrementalSearch extends Search {
         this.message('');
     }
 
+    /**
+     * @param {Editor} editor
+     */
     selectionFix(editor) {
         // Fix selection bug: When clicked inside the editor
         // editor.selection.$isEmpty is false even if the mouse click did not
@@ -87,6 +104,9 @@ class IncrementalSearch extends Search {
         }
     }
 
+    /**
+     * @param {RegExp} regexp
+     */
     highlight(regexp) {
         var sess = this.$editor.session,
             hl = sess.$isearchHighlight = sess.$isearchHighlight || sess.addDynamicMarker(
@@ -95,6 +115,9 @@ class IncrementalSearch extends Search {
         sess._emit("changeBackMarker"); // force highlight layer redraw
     }
 
+    /**
+     * @param {boolean} [reset]
+     */
     cancelSearch(reset) {
         var e = this.$editor;
         this.$prevNeedle = this.$options.needle;
@@ -109,6 +132,10 @@ class IncrementalSearch extends Search {
         return Range.fromPoints(this.$currentPos, this.$currentPos);
     }
 
+    /**
+     * @param {boolean} moveToNext
+     * @param {Function} needleUpdateFunc
+     */
     highlightAndFindWithNeedle(moveToNext, needleUpdateFunc) {
         if (!this.$editor) return null;
         var options = this.$options;
@@ -141,6 +168,9 @@ class IncrementalSearch extends Search {
         return found;
     }
 
+    /**
+     * @param {string} s
+     */
     addString(s) {
         return this.highlightAndFindWithNeedle(false, function(needle) {
             if (!isRegExp(needle))
@@ -151,6 +181,9 @@ class IncrementalSearch extends Search {
         });
     }
 
+    /**
+     * @param {any} c
+     */
     removeChar(c) {
         return this.highlightAndFindWithNeedle(false, function(needle) {
             if (!isRegExp(needle))
@@ -180,6 +213,9 @@ class IncrementalSearch extends Search {
         return true;
     }
 
+    /**
+     * @param {string} text
+     */
     onPaste(text) {
         this.addString(text);
     }

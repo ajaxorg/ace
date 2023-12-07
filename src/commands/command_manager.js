@@ -1,5 +1,8 @@
 "use strict";
-
+/**
+ *
+ * @typedef {import("../editor").Editor} Editor
+ */
 var oop = require("../lib/oop");
 var MultiHashHandler = require("../keyboard/hash_handler").MultiHashHandler;
 var EventEmitter = require("../lib/event_emitter").EventEmitter;
@@ -8,7 +11,7 @@ class CommandManager extends MultiHashHandler{
     /**
      * new CommandManager(platform, commands)
      * @param {String} platform Identifier for the platform; must be either `"mac"` or `"win"`
-     * @param {Array} commands A list of commands
+     * @param {any[]} commands A list of commands
      **/
     constructor(platform, commands) {
         super(commands, platform);
@@ -20,7 +23,14 @@ class CommandManager extends MultiHashHandler{
             return e.command.exec(e.editor, e.args, e.event, false);
         });
     }
-    
+
+    /**
+     * 
+     * @param {string | string[] | import("../../ace-internal").Ace.Command} command
+     * @param {Editor} editor
+     * @param {any} args
+     * @returns {boolean}
+     */
     exec(command, editor, args) {
         if (Array.isArray(command)) {
             for (var i = command.length; i--; ) {
@@ -48,6 +58,10 @@ class CommandManager extends MultiHashHandler{
         return e.returnValue === false ? false : true;
     }
 
+    /**
+     * @param {Editor} editor
+     * @returns {boolean}
+     */
     toggleRecording(editor) {
         if (this.$inReplay)
             return;
@@ -74,6 +88,9 @@ class CommandManager extends MultiHashHandler{
         return this.recording = true;
     }
 
+    /**
+     * @param {Editor} editor
+     */
     replay(editor) {
         if (this.$inReplay || !this.macro)
             return;

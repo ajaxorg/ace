@@ -11,11 +11,14 @@ var emmet, emmetPath;
  */
 
 class AceEmmetEditor {
+    /**
+     * @param {Editor} editor
+     */
     setupContext(editor) {
         this.ace = editor;
         this.indentation = editor.session.getTabString();
         if (!emmet)
-            emmet = window.emmet;
+            emmet = window["emmet"];
         var resources = emmet.resources || emmet.require("resources");
         resources.setVariable("indentation", this.indentation);
         this.$syntax = null;
@@ -163,6 +166,7 @@ class AceEmmetEditor {
         var syntax = this.ace.session.$modeId.split("/").pop();
         if (syntax == "html" || syntax == "php") {
             var cursor = this.ace.getCursorPosition();
+            /**@type {string | string[]} */
             var state = this.ace.session.getState(cursor.row);
             if (typeof state != "string")
                 state = state[0];
@@ -233,6 +237,9 @@ class AceEmmetEditor {
     // tabstops as ${0}, so we have upgrade all caret tabstops with unique
     // positions but make sure that all other tabstops are not linked accidentally
     // based on https://github.com/sergeche/emmet-sublime/blob/master/editor.js#L119-L171
+    /**
+     * @param {string} value
+     */
     $updateTabstops(value) {
         var base = 1000;
         var zeroBase = 0;
@@ -315,6 +322,10 @@ var keymap = {
 
 var editorProxy = new AceEmmetEditor();
 exports.commands = new HashHandler();
+/**
+ * @param {Editor} editor
+ * @return {number|boolean}
+ */
 exports.runEmmetCommand = function runEmmetCommand(editor) {
     if (this.action == "expand_abbreviation_with_tab") {
         if (!editor.selection.isEmpty())
@@ -360,6 +371,10 @@ for (var command in keymap) {
     });
 }
 
+/**
+ * @param {Editor} editor
+ * @param {boolean} [enabled]
+ */
 exports.updateCommands = function(editor, enabled) {
     if (enabled) {
         editor.keyBinding.addKeyboardHandler(exports.commands);
@@ -375,6 +390,11 @@ exports.isSupportedMode = function(mode) {
     return /css|less|scss|sass|stylus|html|php|twig|ejs|handlebars/.test(id);
 };
 
+/**
+ * @param {Editor} editor
+ * @param {string} command
+ * @return {boolean}
+ */
 exports.isAvailable = function(editor, command) {
     if (/(evaluate_math_expression|expand_abbreviation)$/.test(command))
         return true;

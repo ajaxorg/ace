@@ -7,12 +7,13 @@ var MAX_TOKEN_COUNT = 2000;
  * This class takes a set of highlighting rules, and creates a tokenizer out of them. For more information, see [the wiki on extending highlighters](https://github.com/ajaxorg/ace/wiki/Creating-or-Extending-an-Edit-Mode#wiki-extendingTheHighlighter).
  **/
 class Tokenizer {
-    
     /**
      * Constructs a new tokenizer based on the given rules and flags.
      * @param {Object} rules The highlighting rules
      **/
     constructor(rules) {
+        /**@type {RegExp}*/
+        this.splitRegex;
         this.states = rules;
 
         this.regExps = {};
@@ -100,13 +101,21 @@ class Tokenizer {
             this.regExps[key] = new RegExp("(" + ruleRegExps.join(")|(") + ")|($)", flag);
         }
     }
-    
+
+    /**
+     * @param {number} m
+     */
     $setMaxTokenCount(m) {
         MAX_TOKEN_COUNT = m | 0;
     }
-    
+
+    /**
+     * @param {string} str
+     * @return {import("../ace-internal").Ace.Token[]}
+     */
     $applyToken(str) {
         var values = this.splitRegex.exec(str).slice(1);
+        //@ts-ignore
         var types = this.token.apply(this, values);
 
         // required for compatibility with old modes
@@ -124,6 +133,10 @@ class Tokenizer {
         return tokens;
     }
 
+    /**
+     * @param {string} str
+     * @return {import("../ace-internal").Ace.Token[] | string}
+     */
     $arrayTokens(str) {
         if (!str)
             return [];
@@ -131,6 +144,7 @@ class Tokenizer {
         if (!values)
             return "text";
         var tokens = [];
+        //@ts-ignore
         var types = this.tokenArray;
         for (var i = 0, l = types.length; i < l; i++) {
             if (values[i + 1])
@@ -142,6 +156,10 @@ class Tokenizer {
         return tokens;
     }
 
+    /**
+     * @param {string} src
+     * @returns {string}
+     */
     removeCapturingGroups(src) {
         var r = src.replace(
             /\\.|\[(?:\\.|[^\\\]])*|\(\?[:=!<]|(\()/g,
@@ -150,6 +168,10 @@ class Tokenizer {
         return r;
     }
 
+    /**
+     * @param {string} src
+     * @param {string} flag
+     */
     createSplitterRegexp(src, flag) {
         if (src.indexOf("(?=") != -1) {
             var stack = 0;
@@ -191,10 +213,13 @@ class Tokenizer {
 
     /**
      * Returns an object containing two properties: `tokens`, which contains all the tokens; and `state`, the current state.
-     * @returns {Object}
-     **/
+     * @param {string} line
+     * @param {string | string[]} startState
+     * @returns {{tokens:import("../ace-internal").Ace.Token[], state: string|string[]}}
+     */
     getLineTokens(line, startState) {
         if (startState && typeof startState != "string") {
+            /**@type {any[]}*/
             var stack = startState.slice(0);
             startState = stack[0];
             if (startState === "#tmp") {
@@ -204,7 +229,7 @@ class Tokenizer {
         } else
             var stack = [];
 
-        var currentState = startState || "start";
+        var currentState = /**@type{string}*/(startState) || "start";
         var state = this.states[currentState];
         if (!state) {
             currentState = "start";

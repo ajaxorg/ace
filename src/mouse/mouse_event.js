@@ -8,6 +8,9 @@ var useragent = require("../lib/useragent");
  */
 class MouseEvent {
     constructor(domEvent, editor) {
+        /** @type {number} */this.speed;
+        /** @type {number} */this.wheelX;
+        /** @type {number} */this.wheelY;
         this.domEvent = domEvent;
         this.editor = editor;
 

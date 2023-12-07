@@ -1,5 +1,4 @@
 "no use strict";
-
 var oop = require("./oop");
 var EventEmitter = require("./event_emitter").EventEmitter;
 const reportError = require("./report_error").reportError;
@@ -29,6 +28,7 @@ var optionsProvider = {
     setOption: function(name, value) {
         if (this["$" + name] === value)
             return;
+        //@ts-ignore
         var opt = this.$options[name];
         if (!opt) {
             return warn('misspelled option "' + name + '"');
@@ -57,8 +57,6 @@ function warn(message) {
         console.warn.apply(console, arguments);
 }
 
-
-
 var messages;
 
 class AppConfig {
@@ -66,8 +64,11 @@ class AppConfig {
         this.$defaultOptions = {};
     }
     
-    /*
-     * option {name, value, initialValue, setterName, set, get }
+    /**
+     * @param {Object} obj
+     * @param {string} path
+     * @param {{ [key: string]: any }} options
+     * @returns {AppConfig}
      */
     defineOptions(obj, path, options) {
         if (!obj.$options)
@@ -90,6 +91,9 @@ class AppConfig {
         return this;
     }
 
+    /**
+     * @param {Object} obj
+     */
     resetOptions(obj) {
         Object.keys(obj.$options).forEach(function(key) {
             var opt = obj.$options[key];
@@ -98,6 +102,11 @@ class AppConfig {
         });
     }
 
+    /**
+     * @param {string} path
+     * @param {string} name
+     * @param {any} value
+     */
     setDefaultValue(path, name, value) {
         if (!path) {
             for (path in this.$defaultOptions)
@@ -115,16 +124,27 @@ class AppConfig {
         }
     }
 
+    /**
+     * @param {string} path
+     * @param {{ [key: string]: any; }} optionHash
+     */
     setDefaultValues(path, optionHash) {
         Object.keys(optionHash).forEach(function(key) {
             this.setDefaultValue(path, key, optionHash[key]);
         }, this);
     }
-    
+
+    /**
+     * @param {any} value
+     */
     setMessages(value) {
         messages = value;
     }
-    
+
+    /**
+     * @param {string} string
+     * @param {{ [x: string]: any; }} [params]
+     */
     nls(string, params) {
         if (messages && !messages[string])  {
             warn("No message found for '" + string + "' in the provided messages, falling back to default English message.");

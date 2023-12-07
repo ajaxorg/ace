@@ -1,4 +1,7 @@
 "use strict";
+/**
+ * @typedef {import("./edit_session").EditSession} EditSession
+ */
 
 var Range = require("./range").Range;
 
@@ -23,7 +26,7 @@ class TokenIterator {
     
     /**
      * Moves iterator position to the start of previous token.
-     * @returns {Token|null}
+     * @returns {import("../ace-internal").Ace.Token|null}
      **/ 
     stepBackward() {
         this.$tokenIndex -= 1;
@@ -44,7 +47,7 @@ class TokenIterator {
 
     /**
      * Moves iterator position to the start of next token.
-     * @returns {Token|null}
+     * @returns {import("../ace-internal").Ace.Token|null}
      **/   
     stepForward() {
         this.$tokenIndex += 1;
@@ -68,7 +71,7 @@ class TokenIterator {
     /**
      * 
      * Returns current token.
-     * @returns {Token}
+     * @returns {import("../ace-internal").Ace.Token}
      **/      
     getCurrentToken() {
         return this.$rowTokens[this.$tokenIndex];
@@ -108,7 +111,7 @@ class TokenIterator {
 
     /**
      * Return the current token position.
-     * @returns {Position}
+     * @returns {import("../ace-internal").Ace.Point}
      */
     getCurrentTokenPosition() {
         return {row: this.$row, column: this.getCurrentTokenColumn()};

@@ -11,14 +11,15 @@
  */
 
 "use strict";
-var keys = require("../../lib/keys");
+
+/** @type{any} */var keys = require("../../lib/keys");
 
 /**
  * Gets a map of keyboard shortcuts to command names for the current platform.
  * @author <a href="mailto:matthewkastor@gmail.com">
  *  Matthew Christopher Kastor-Inare III </a><br />
  *  ☭ Hial Atropa!! ☭
- * @param {ace.Editor} editor An editor instance.
+ * @param {import("../../editor").Editor} editor An editor instance.
  * @returns {Array} Returns an array of objects representing the keyboard
  *  shortcuts for the given editor.
  * @example
@@ -34,7 +35,7 @@ module.exports.getEditorKeybordShortcuts = function(editor) {
     var keybindings = [];
     var commandMap = {};
     editor.keyBinding.$handlers.forEach(function(handler) {
-        var ckb = handler.commandKeyBinding;
+        var ckb = handler["commandKeyBinding"];
         for (var i in ckb) {
             var key = i.replace(/(^|-)\w/g, function(x) { return x.toUpperCase(); });
             var commands = ckb[i];

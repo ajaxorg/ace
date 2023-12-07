@@ -1,5 +1,7 @@
 "use strict";
-
+/**
+ * @typedef {import("./edit_session").EditSession} EditSession
+ */
 var lang = require("./lib/lang");
 var oop = require("./lib/oop");
 var Range = require("./range").Range;
@@ -19,7 +21,7 @@ class Search {
      * @property {boolean} [wholeWord] - Whether the search matches only on whole words
      * @property {Range|null} [range] - The [[Range]] to search within. Set this to `null` for the whole document
      * @property {boolean} [regExp] - Whether the search is a regular expression or not
-     * @property {Range|Position} [start] - The starting [[Range]] or cursor position to begin the search
+     * @property {Range|import("../ace-internal").Ace.Position} [start] - The starting [[Range]] or cursor position to begin the search
      * @property {boolean} [skipCurrent] - Whether or not to include the current line in the search
      * @property {boolean} [$isMultiLine] - true, if needle has \n or \r\n
      * @property {boolean} [preserveCase]
@@ -29,15 +31,13 @@ class Search {
      **/
     
     constructor() {
-        /** 
-         * @type {SearchOptions}
-         */
+        /**@type {SearchOptions}*/
         this.$options = {};
     }
     
     /**
      * Sets the search options via the `options` parameter.
-     * @param {SearchOptions} options An object containing all the new search properties
+     * @param {Partial<import("../ace-internal").Ace.SearchOptions>} options An object containing all the new search properties
      * @returns {Search}
      * @chainable
     **/
@@ -48,7 +48,7 @@ class Search {
 
     /**
      * [Returns an object containing all the search options.]{: #Search.getOptions}
-     * @returns {SearchOptions}
+     * @returns {Partial<import("../ace-internal").Ace.SearchOptions>}
     **/
     getOptions() {
         return lang.copyObject(this.$options);
@@ -66,7 +66,7 @@ class Search {
     /**
      * Searches for `options.needle`. If found, this method returns the [[Range `Range`]] where the text first occurs. If `options.backwards` is `true`, the search goes backwards in the session.
      * @param {EditSession} session The session to search with
-     * @returns {Range|boolean}
+     * @returns {Range|false}
      **/
     find(session) {
         var options = this.$options;
@@ -77,8 +77,8 @@ class Search {
         var firstRange = null;
         iterator.forEach(function(sr, sc, er, ec) {
             firstRange = new Range(sr, sc, er, ec);
-            if (sc == ec && options.start && options.start.start
-                && options.skipCurrent != false && firstRange.isEqual(options.start)
+            if (sc == ec && options.start && /**@type{Range}*/(options.start).start
+                && options.skipCurrent != false && firstRange.isEqual(/**@type{Range}*/(options.start))
             ) {
                 firstRange = null;
                 return false;
@@ -167,7 +167,7 @@ class Search {
     /**
      * Searches for `options.needle` in `input`, and, if found, replaces it with `replacement`.
      * @param {String} input The text to search in
-     * @param {String} replacement The replacing text
+     * @param {any} replacement The replacing text
      * + (String): If `options.regExp` is `true`, this function returns `input` with the replacement already made. Otherwise, this function just returns `replacement`.<br/>
      * If `options.needle` was not found, this function returns `null`.
      *
@@ -187,7 +187,6 @@ class Search {
         var match = re.exec(input);
         if (!match || match[0].length != input.length)
             return null;
-        
         replacement = input.replace(re, replacement);
         if (options.preserveCase) {
             replacement = replacement.split("");
@@ -207,7 +206,7 @@ class Search {
     /**
      * 
      * @param {SearchOptions} options
-     * @param $disableFakeMultiline
+     * @param {boolean} [$disableFakeMultiline]
      * @return {RegExp|boolean|*[]|*}
      */
     $assembleRegExp(options, $disableFakeMultiline) {
@@ -240,6 +239,7 @@ class Search {
             return options.re = this.$assembleMultilineRegExp(needle, modifier);
 
         try {
+            /**@type {RegExp|false}*/
             var re = new RegExp(needle, modifier);
         } catch(e) {
             re = false;
@@ -247,6 +247,10 @@ class Search {
         return options.re = re;
     }
 
+    /**
+     * @param {string} needle
+     * @param {string} modifier
+     */
     $assembleMultilineRegExp(needle, modifier) {
         var parts = needle.replace(/\r\n|\r|\n/g, "$\n^").split("\n");
         var re = [];
@@ -258,6 +262,9 @@ class Search {
         return re;
     }
 
+    /**
+     * @param {EditSession} session
+     */
     $matchIterator(session, options) {
         var re = this.$assembleRegExp(options);
         if (!re)

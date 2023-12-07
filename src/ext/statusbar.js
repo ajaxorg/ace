@@ -1,10 +1,17 @@
 "use strict";
-
+/**
+ *
+ * @typedef {import("../editor").Editor} Editor
+ */
 var dom = require("../lib/dom");
 var lang = require("../lib/lang");
 
 /** simple statusbar **/
 class StatusBar{
+    /**
+     * @param {Editor} editor
+     * @param {HTMLElement} parentNode
+     */
     constructor(editor, parentNode) {
         this.element = dom.createElement("div");
         this.element.className = "ace_status-indicator";
@@ -19,13 +26,16 @@ class StatusBar{
         editor.on("changeSelection", statusUpdate);
         editor.on("keyboardActivity", statusUpdate);
     }
-    
+
+    /**
+     * @param {Editor} editor
+     */
     updateStatus(editor) {
         var status = [];
         function add(str, separator) {
             str && status.push(str, separator || "|");
         }
-
+        // @ts-expect-error TODO: potential wrong argument
         add(editor.keyBinding.getStatusText(editor));
         if (editor.commands.recording)
             add("REC");

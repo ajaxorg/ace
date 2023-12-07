@@ -1,10 +1,18 @@
 "use strict";
+/**
+ * @typedef {import("./edit_session").EditSession} EditSession
+ * @typedef {import("./editor").Editor} Editor
+ * @typedef {import("./virtual_renderer").VirtualRenderer} VirtualRenderer
+ * @typedef {import("../ace-internal").Ace.LineWidget} LineWidget
+ */
 
 var dom = require("./lib/dom");
 
 
-
 class LineWidgets {
+    /**
+     * @param {EditSession} session
+     */
     constructor(session) {
         this.session = session;
         this.session.widgetManager = this;
@@ -20,20 +28,27 @@ class LineWidgets {
         this.session.on("changeFold", this.updateOnFold);
         this.session.on("changeEditor", this.$onChangeEditor);
     }
-    
+
+    /**
+     * @param {number} row
+     * @return {number}
+     */
     getRowLength(row) {
         var h;
         if (this.lineWidgets)
             h = this.lineWidgets[row] && this.lineWidgets[row].rowCount || 0;
         else 
             h = 0;
-        if (!this.$useWrapMode || !this.$wrapData[row]) {
+        if (!this["$useWrapMode"] || !this["$wrapData"][row]) {
             return 1 + h;
         } else {
-            return this.$wrapData[row].length + 1 + h;
+            return this["$wrapData"][row].length + 1 + h;
         }
     }
 
+    /**
+     * @return {number}
+     */
     $getWidgetScreenLength() {
         var screenRows = 0;
         this.lineWidgets.forEach(function(w){
@@ -46,7 +61,11 @@ class LineWidgets {
     $onChangeEditor(e) {
         this.attach(e.editor);
     }
-    
+
+    /**
+     * 
+     * @param {Editor} editor
+     */
     attach(editor) {
         if (editor  && editor.widgetManager && editor.widgetManager != this)
             editor.widgetManager.detach();
@@ -55,6 +74,7 @@ class LineWidgets {
             return;
 
         this.detach();
+        /**@type {Editor} */
         this.editor = editor;
         
         if (editor) {
@@ -82,6 +102,11 @@ class LineWidgets {
         });
     }
 
+    /**
+     * 
+     * @param e
+     * @param {EditSession} session
+     */
     updateOnFold(e, session) {
         var lineWidgets = session.lineWidgets;
         if (!lineWidgets || !e.action)
@@ -107,7 +132,11 @@ class LineWidgets {
             }
         }
     }
-    
+
+    /**
+     * 
+     * @param {import("../ace-internal").Ace.Delta} delta
+     */
     updateOnChange(delta) {
         var lineWidgets = this.session.lineWidgets;
         if (!lineWidgets) return;
@@ -156,6 +185,11 @@ class LineWidgets {
             this.session.lineWidgets = null;
     }
 
+    /**
+     * 
+     * @param {LineWidget} w
+     * @return {LineWidget}
+     */
     $registerLineWidget(w) {
         if (!this.session.lineWidgets)
             this.session.lineWidgets = new Array(this.session.getLength());
@@ -172,7 +206,12 @@ class LineWidgets {
         this.session.lineWidgets[w.row] = w;
         return w;
     }
-    
+
+    /**
+     *
+     * @param {LineWidget} w
+     * @return {LineWidget}
+     */
     addLineWidget(w) {
         this.$registerLineWidget(w);
         w.session = this.session;
@@ -194,12 +233,12 @@ class LineWidgets {
                 dom.addCssClass(w.el, w.className);
             }
             w.el.style.position = "absolute";
-            w.el.style.zIndex = 5;
+            w.el.style.zIndex = "5";
             renderer.container.appendChild(w.el);
             w._inDocument = true;
             
             if (!w.coverGutter) {
-                w.el.style.zIndex = 3;
+                w.el.style.zIndex = "3";
             }
             if (w.pixelHeight == null) {
                 w.pixelHeight = w.el.offsetHeight;
@@ -227,6 +266,9 @@ class LineWidgets {
         return w;
     }
     
+    /**
+     * @param {LineWidget} w
+     */
     removeLineWidget(w) {
         w._inDocument = false;
         w.session = null;
@@ -254,7 +296,12 @@ class LineWidgets {
         this.session._emit("changeFold", {data:{start:{row: w.row}}});
         this.$updateRows();
     }
-    
+
+    /**
+     * 
+     * @param {number} row
+     * @return {LineWidget[]}
+     */
     getWidgetsAtRow(row) {
         var lineWidgets = this.session.lineWidgets;
         var w = lineWidgets && lineWidgets[row];
@@ -265,12 +312,19 @@ class LineWidgets {
         }
         return list;
     }
-    
+
+    /**
+     * @param {LineWidget} w
+     */
     onWidgetChanged(w) {
         this.session._changedWidgets.push(w);
         this.editor && this.editor.renderer.updateFull();
     }
-    
+
+    /**
+     * @param {any} e
+     * @param {VirtualRenderer} renderer
+     */
     measureWidgets(e, renderer) {
         var changedWidgets = this.session._changedWidgets;
         var config = renderer.layerConfig;
@@ -313,7 +367,11 @@ class LineWidgets {
         }
         this.session._changedWidgets = [];
     }
-    
+
+    /**
+     * @param {any} e
+     * @param {VirtualRenderer} renderer
+     */
     renderWidgets(e, renderer) {
         var config = renderer.layerConfig;
         var lineWidgets = this.session.lineWidgets;

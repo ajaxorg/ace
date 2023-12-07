@@ -1,5 +1,7 @@
 "use strict";
-
+/**
+ * @typedef {import("../editor").Editor} Editor
+ */
 var dom = require("../lib/dom");
 var lang = require("../lib/lang");
 var event = require("../lib/event");
@@ -13,7 +15,14 @@ var MAX_COUNT = 999;
 dom.importCssString(searchboxCss, "ace_searchbox", false);
 
 class SearchBox {
+    /**
+     * @param {Editor} editor
+     * @param {undefined} [range]
+     * @param {undefined} [showReplaceForm]
+     */
     constructor(editor, range, showReplaceForm) {
+        /**@type {any}*/
+        this.activeInput;
         var div = dom.createElement("div");
         dom.buildDom(["div", {class:"ace_search right"},
             ["span", {action: "hide", class: "ace_searchbtn_close"}],
@@ -38,6 +47,7 @@ class SearchBox {
                 ["span", {action: "searchInSelection", class: "ace_button", title: nls("Search In Selection")}, "S"]
             ]
         ], div);
+        /**@type {any}*/
         this.element = div.firstChild;
 
         this.setSession = this.setSession.bind(this);
@@ -46,10 +56,14 @@ class SearchBox {
         this.setEditor(editor);
         dom.importCssString(searchboxCss, "ace_searchbox", editor.container);
     }
-    
+
+    /**
+     * @param {Editor} editor
+     */
     setEditor(editor) {
         editor.searchBox = this;
         editor.renderer.scroller.appendChild(this.element);
+        /**@type {Editor}*/
         this.editor = editor;
     }
     
@@ -58,16 +72,29 @@ class SearchBox {
         this.$syncOptions(true);
     }
 
+    /**
+     * @param {HTMLElement} sb
+     */
     $initElements(sb) {
+        /**@type {HTMLElement}*/
         this.searchBox = sb.querySelector(".ace_search_form");
+        /**@type {HTMLElement}*/
         this.replaceBox = sb.querySelector(".ace_replace_form");
+        /**@type {HTMLInputElement}*/
         this.searchOption = sb.querySelector("[action=searchInSelection]");
+        /**@type {HTMLInputElement}*/
         this.replaceOption = sb.querySelector("[action=toggleReplace]");
+        /**@type {HTMLInputElement}*/
         this.regExpOption = sb.querySelector("[action=toggleRegexpMode]");
+        /**@type {HTMLInputElement}*/
         this.caseSensitiveOption = sb.querySelector("[action=toggleCaseSensitive]");
+        /**@type {HTMLInputElement}*/
         this.wholeWordOption = sb.querySelector("[action=toggleWholeWords]");
+        /**@type {HTMLInputElement}*/
         this.searchInput = this.searchBox.querySelector(".ace_search_field");
+        /**@type {HTMLInputElement}*/
         this.replaceInput = this.replaceBox.querySelector(".ace_search_field");
+        /**@type {HTMLElement}*/
         this.searchCounter = sb.querySelector(".ace_search_counter");
     }
     
@@ -118,7 +145,7 @@ class SearchBox {
             _this.searchInput.value && _this.highlight();
         });
     }
-    
+
     setSearchRange(range) {
         this.searchRange = range;
         if (range) {
@@ -129,6 +156,9 @@ class SearchBox {
         }
     }
 
+    /**
+     * @param {boolean} [preventScroll]
+     */
     $syncOptions(preventScroll) {
         dom.setCssClass(this.replaceOption, "checked", this.searchRange);
         dom.setCssClass(this.searchOption, "checked", this.searchOption.checked);
@@ -142,11 +172,19 @@ class SearchBox {
         this.find(false, false, preventScroll);
     }
 
+    /**
+     * @param {RegExp} [re]
+     */
     highlight(re) {
         this.editor.session.highlight(re || this.editor.$search.$options.re);
         this.editor.renderer.updateBackMarkers();
     }
-    
+
+    /**
+     * @param {boolean} skipCurrent
+     * @param {boolean} backwards
+     * @param {any} [preventScroll]
+     */
     find(skipCurrent, backwards, preventScroll) {
         var range = this.editor.find(this.searchInput.value, {
             skipCurrent: skipCurrent,
@@ -158,6 +196,7 @@ class SearchBox {
             preventScroll: preventScroll,
             range: this.searchRange
         });
+        /**@type {any}*/
         var noMatch = !range && this.searchInput.value;
         dom.setCssClass(this.searchBox, "ace_nomatch", noMatch);
         this.editor._emit("findSearchBox", { match: !noMatch });
@@ -209,6 +248,7 @@ class SearchBox {
             caseSensitive: this.caseSensitiveOption.checked,
             wholeWord: this.wholeWordOption.checked
         });
+        /**@type {any}*/
         var noMatch = !range && this.searchInput.value;
         dom.setCssClass(this.searchBox, "ace_nomatch", noMatch);
         this.editor._emit("findSearchBox", { match: !noMatch });
@@ -239,6 +279,11 @@ class SearchBox {
         this.editor.keyBinding.removeKeyboardHandler(this.$closeSearchBarKb);
         this.editor.focus();
     }
+
+    /**
+     * @param {string} value
+     * @param {boolean} [isReplace]
+     */
     show(value, isReplace) {
         this.active = true;
         this.editor.on("changeSession", this.setSession);
@@ -358,6 +403,11 @@ SearchBox.prototype.$closeSearchBarKb = $closeSearchBarKb;
 
 exports.SearchBox = SearchBox;
 
+/**
+ * 
+ * @param {Editor} editor
+ * @param {boolean} [isReplace]
+ */
 exports.Search = function(editor, isReplace) {
     var sb = editor.searchBox || new SearchBox(editor);
     sb.show(editor.session.getTextRange(), isReplace);

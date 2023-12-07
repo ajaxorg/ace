@@ -1,5 +1,7 @@
 "use strict";
-
+/**
+ * @typedef {import("./document").Document} Document
+ */
 var oop = require("./lib/oop");
 var EventEmitter = require("./lib/event_emitter").EventEmitter;
 
@@ -11,14 +13,14 @@ class Anchor {
      * Creates a new `Anchor` and associates it with a document.
      *
      * @param {Document} doc The document to associate with the anchor
-     * @param {Number} row The starting row position
-     * @param {Number} column The starting column position
+     * @param {Number|import("../ace-internal").Ace.Point} row The starting row position
+     * @param {Number} [column] The starting column position
      **/
     constructor(doc, row, column) {
         this.$onChange = this.onChange.bind(this);
         this.attach(doc);
 
-        if (typeof column == "undefined")
+        if (typeof row != "number")
             this.setPosition(row.row, row.column);
         else
             this.setPosition(row, column);
@@ -26,7 +28,7 @@ class Anchor {
     
     /**
      * Returns an object identifying the `row` and `column` position of the current anchor.
-     * @returns {Ace.Point}
+     * @returns {import("../ace-internal").Ace.Point}
      **/
     getPosition() {
         return this.$clipPositionToDocument(this.row, this.column);
@@ -42,21 +44,8 @@ class Anchor {
     }
     
     /**
-     * Fires whenever the anchor position changes.
-     *
-     * Both of these objects have a `row` and `column` property corresponding to the position.
-     *
-     * Events that can trigger this function include [[Anchor.setPosition `setPosition()`]].
-     *
-     * @event change
-     * @param {Object} e  An object containing information about the anchor position. It has two properties:
-     *  - `old`: An object describing the old Anchor position
-     *  - `value`: An object describing the new Anchor position
-     *
-     **/
-    /**
      * Internal function called when `"change"` event fired.
-     * @param {Ace.Delta} delta
+     * @param {import("../ace-internal").Ace.Delta} delta
      */
     onChange(delta) {
         if (delta.start.row == delta.end.row && delta.start.row != this.row)
@@ -73,8 +62,7 @@ class Anchor {
      * Sets the anchor position to the specified row and column. If `noClip` is `true`, the position is not clipped.
      * @param {Number} row The row index to move the anchor to
      * @param {Number} column The column index to move the anchor to
-     * @param {Boolean} noClip Identifies if you want the position to be clipped
-     *
+     * @param {Boolean} [noClip] Identifies if you want the position to be clipped
      **/
     setPosition(row, column, noClip) {
         var pos;
@@ -117,6 +105,7 @@ class Anchor {
      *
      **/
     attach(doc) {
+        /**@type{Document}*/
         this.document = doc || this.document;
         this.document.on("change", this.$onChange);
     }
@@ -125,7 +114,7 @@ class Anchor {
      * Clips the anchor position to the specified row and column.
      * @param {Number} row The row index to clip the anchor to
      * @param {Number} column The column index to clip the anchor to
-     * @returns {Ace.Point}
+     * @returns {import("../ace-internal").Ace.Point}
      *
      **/
     $clipPositionToDocument(row, column) {
