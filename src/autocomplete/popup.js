@@ -130,10 +130,7 @@ class AcePopup {
             if (selected !== t.selectedNode && t.selectedNode) {
                 dom.removeCssClass(t.selectedNode, "ace_selected");
                 el.removeAttribute("aria-activedescendant");
-                if (userAgent.isSafari)
-                    selected.removeAttribute("aria-current");
-                else 
-                    selected.removeAttribute("aria-selected");
+                selected.removeAttribute(userAgent.isSafari ? "aria-current" : "aria-selected");
                 t.selectedNode.removeAttribute("id");
             }
             t.selectedNode = selected;
@@ -149,10 +146,7 @@ class AcePopup {
                 selected.setAttribute("aria-setsize", popup.data.length);
                 selected.setAttribute("aria-posinset", row+1);
                 selected.setAttribute("aria-describedby", "doc-tooltip");
-                if (userAgent.isSafari)
-                    selected.setAttribute("aria-current", "true");
-                else 
-                    selected.setAttribute("aria-selected", "true");
+                selected.setAttribute(userAgent.isSafari ? "aria-current" : "aria-selected", "true");
             }
         });
         var hideHoverMarker = function() { setHoverMarker(-1); };
