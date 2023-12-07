@@ -1,7 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 16">
-<g stroke-width="2" stroke="darkorange" shape-rendering="geometricPrecision">
-<polygon stroke-linejoin="round" fill="none" points="8 1 15 15 1 15 8 1"/>
-<rect x="8" y="12" width="0.01" height="0.01"/>
-<line x1="8" y1="6" x2="8" y2="10"/>
-</g>
-</svg>
