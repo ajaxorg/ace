@@ -117,6 +117,9 @@ var MarkdownHighlightRules = function () {
                 token: "support.function",
                 regex: /^ {4,}/,
                 next: "codeBlockInline"
+            }, {
+                token: "support.function",
+                regex: /\s*(```[^`]*```)/
             }, { // autolink
                 token: ["text", "url", "text"],
                 regex: /(<)((?:[-.\w+]+@[-a-z0-9]+(?:\.[-a-z0-9]+)*\.[a-z]+)|(?:[a-zA-Z][a-zA-Z0-9+.-]+:[^\s><]*))(>)/
@@ -408,7 +411,7 @@ var MarkdownHighlightRules = function () {
                     return "markup.list." + scope.indent;
                 },
                 regex: /(?<=^\s*)(?:[*+-]|\d+[.)])(?:\s{1,4}|$)/
-            }, {include: "containerBlockInlinesList"}, {include: "basic"}, codeBlockStartRule, {
+            }, {include: "containerBlockInlinesList"}, codeBlockStartRule, {include: "basic"}, {
                 token: "empty",
                 regex: /(?=$)/,
                 push: "lineStart"
