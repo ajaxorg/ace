@@ -8,6 +8,7 @@
 var dom = require("./lib/dom");
 var event = require("./lib/event");
 var Range = require("./range").Range;
+var preventParentScroll = require("./lib/scroll").preventParentScroll;
 
 var CLASSNAME = "ace_tooltip";
 
@@ -211,8 +212,8 @@ class HoverTooltip extends Tooltip {
         el.addEventListener("blur", function() {
             if (!el.contains(document.activeElement)) this.hide();
         }.bind(this));
-        
-        el.addEventListener("wheel", event.stopPropagation);
+
+        el.addEventListener("wheel", preventParentScroll);
     }
 
     /**
