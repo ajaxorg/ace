@@ -457,6 +457,7 @@ module.exports = `
     pointer-events: none;
     overflow: auto;
     max-width: min(60em, 66vw);
+    overscroll-behavior: contain;
 }
 .ace_tooltip pre {
     white-space: pre-wrap;

@@ -580,6 +580,7 @@ class Autocomplete {
             this.tooltipNode = dom.createElement("div");
             this.tooltipNode.style.margin = 0;
             this.tooltipNode.style.pointerEvents = "auto";
+            this.tooltipNode.style.overscrollBehavior = "contain";
             this.tooltipNode.tabIndex = -1;
             this.tooltipNode.onblur = this.blurListener.bind(this);
             this.tooltipNode.onclick = this.onTooltipClick.bind(this);
