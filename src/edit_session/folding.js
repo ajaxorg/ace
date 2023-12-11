@@ -9,7 +9,7 @@ var MouseEvent = require("../mouse/mouse_event").MouseEvent;
 
 /**
  * @typedef {import("../edit_session").EditSession & import("../../ace-internal").Ace.Folding} IFolding
- * @typedef {import("../ace-internal").Ace.Delta } Delta
+ * @typedef {import("../../ace-internal").Ace.Delta } Delta
  */
 
 /**
