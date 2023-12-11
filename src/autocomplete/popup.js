@@ -12,6 +12,11 @@ var getAriaId = function (index) {
     return `suggest-aria-id:${index}`;
 };
 
+// Safari requires different ARIA A11Y attributes compared to other browsers
+var popupAriaRole = userAgent.isSafari ? "menu" : "listbox";
+var optionAriaRole = userAgent.isSafari ? "menuitem" : "option";
+var ariaActiveState = userAgent.isSafari ? "aria-current" : "aria-selected";
+
 /**
  *
  * @param {HTMLElement} [el]
@@ -56,7 +61,7 @@ class AcePopup {
         popup.renderer.setStyle("ace_autocomplete");
 
         // Set aria attributes for the popup
-        popup.renderer.$textLayer.element.setAttribute("role", userAgent.isSafari ? "menu" : "listbox");
+        popup.renderer.$textLayer.element.setAttribute("role", popupAriaRole);
         popup.renderer.$textLayer.element.setAttribute("aria-roledescription", nls("Autocomplete suggestions"));
         popup.renderer.$textLayer.element.setAttribute("aria-label", nls("Autocomplete suggestions"));
         popup.renderer.textarea.setAttribute("aria-hidden", "true");
@@ -137,7 +142,7 @@ class AcePopup {
             if (selected !== t.selectedNode && t.selectedNode) {
                 dom.removeCssClass(t.selectedNode, "ace_selected");
                 el.removeAttribute("aria-activedescendant");
-                selected.removeAttribute("aria-selected");
+                selected.removeAttribute(ariaActiveState);
                 t.selectedNode.removeAttribute("id");
             }
             t.selectedNode = selected;
@@ -147,13 +152,13 @@ class AcePopup {
                 selected.id = ariaId;
                 t.element.setAttribute("aria-activedescendant", ariaId);
                 el.setAttribute("aria-activedescendant", ariaId);
-                selected.setAttribute("role", userAgent.isSafari ? "menuitem" : "option");
+                selected.setAttribute("role", optionAriaRole);
                 selected.setAttribute("aria-roledescription", nls("item"));
                 selected.setAttribute("aria-label", popup.getData(row).value);
                 selected.setAttribute("aria-setsize", popup.data.length);
                 selected.setAttribute("aria-posinset", row + 1);
                 selected.setAttribute("aria-describedby", "doc-tooltip");
-                selected.setAttribute("aria-selected", "true");
+                selected.setAttribute(ariaActiveState, "true");
             }
         });
         var hideHoverMarker = function() { setHoverMarker(-1); };
