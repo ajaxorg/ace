@@ -112,7 +112,7 @@ class Autocomplete {
 
         this.$firstOpenTimer = lang.delayedCall(/**@this{Autocomplete}*/function() {
             var initialPosition = this.completionProvider && this.completionProvider.initialPosition;
-            if (this.autoShown || (this.popup && this.popup.isOpen) || !initialPosition) return;
+            if (this.autoShown || (this.popup && this.popup.isOpen) || !initialPosition || this.editor.completers.length === 0) return;
 
             this.completions = new FilteredList(Autocomplete.completionsForLoading);
             this.openPopup(this.editor, initialPosition.prefix, false);

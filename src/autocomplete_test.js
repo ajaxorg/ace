@@ -1328,6 +1328,19 @@ module.exports = {
 
             done();
         }, 100);
+    },
+    "test: should not show loading state when empty completer array is provided": function(done) {
+        var editor = initEditor("");
+        editor.completers = [];
+        var completer = Autocomplete.for(editor);
+        completer.showLoadingState = true;
+
+        user.type("Ctrl-Space");
+
+        // Tooltip should not be open
+        assert.ok(!(completer.popup && completer.popup.isOpen));
+
+        done();
     }
 };
 
