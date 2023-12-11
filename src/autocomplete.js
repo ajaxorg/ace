@@ -10,6 +10,7 @@ var dom = require("./lib/dom");
 var snippetManager = require("./snippets").snippetManager;
 var config = require("./config");
 var event = require("./lib/event");
+var preventParentScroll = require("./lib/scroll").preventParentScroll;
 
 /**
  * @typedef BaseCompletion
@@ -587,13 +588,7 @@ class Autocomplete {
             this.tooltipNode.id = "doc-tooltip";
             this.tooltipNode.setAttribute("role", "tooltip");
             // prevent editor scroll if tooltip is inside an editor
-            this.tooltipNode.addEventListener("wheel", function(event) {
-                event.stopPropagation();
-                var contentOverflows = this.tooltipNode.scrollHeight > this.tooltipNode.clientHeight;
-                if (!contentOverflows) {
-                    event.preventDefault();
-                }
-            }.bind(this));
+            this.tooltipNode.addEventListener("wheel", preventParentScroll);
         }
         var theme = this.editor.renderer.theme;
         this.tooltipNode.className = "ace_tooltip ace_doc-tooltip " +
