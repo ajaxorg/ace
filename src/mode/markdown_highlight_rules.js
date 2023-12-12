@@ -219,9 +219,12 @@ var MarkdownHighlightRules = function () {
                 regex: "(?<=[" + punctuation + "])[_](?=[^" + punctuationAndSpaces + "])|(?<=[" + punctuation
                     + "])[_](?=[^\\s]|^)|(?<=[\\s])[_](?=[^" + punctuationAndSpaces + "])|(?<=[\\s]|^)[_](?=[^\\s])",
                 push: "barEmphasisState"
+            }, { // extended autolink
+                token: "url.underline",
+                regex: /www\.[a-zA-Z0-9-_]+(\.[a-zA-Z0-9-_]+)*\.[a-zA-Z0-9-]+/
             }, { // autolink
-                token: ["text", "url", "text"],
-                regex: /(<)((?:[-.\w+]+@[-a-z0-9]+(?:\.[-a-z0-9]+)*\.[a-z]+)|(?:[a-zA-Z][a-zA-Z0-9+.-]+:[^\s><]*))(>)/
+                token: ["text", "url.underline", "text"],
+                regex: /(<)?((?:[-.\w+]+@[-a-z0-9]+(?:\.[-a-z0-9]+)*\.[a-z]+)|(?:[a-zA-Z][a-zA-Z0-9+.-]+:[^\s><]*))(>)?/
             }, {include: "tag"}, {
                 token: "comment",
                 regex: /<!--/,
