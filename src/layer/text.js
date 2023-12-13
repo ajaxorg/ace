@@ -1,6 +1,6 @@
 "use strict";
 /**
- *
+ * @typedef {import("../../ace-internal").Ace.LayerConfig} LayerConfig
  * @typedef {import("../edit_session").EditSession} EditSession
  */
 var oop = require("../lib/oop");
@@ -108,7 +108,7 @@ class Text {
     }
 
     /**
-     * @param {any} display
+     * @param {boolean} display
      */
     setDisplayIndentGuides(display) {
         if (this.displayIndentGuides == display)
@@ -120,7 +120,7 @@ class Text {
     }
 
     /**
-     * @param {any} highlight
+     * @param {boolean} highlight
      */
     setHighlightIndentGuides(highlight) {
         if (this.$highlightIndentGuides === highlight) return false;
@@ -169,7 +169,7 @@ class Text {
     }
 
     /**
-     * @param {{ lastRow: number; firstRow: number; lineHeight: number; }} config
+     * @param {LayerConfig} config
      * @param {number} firstRow
      * @param {number} lastRow
      */
@@ -242,6 +242,9 @@ class Text {
         }
     }
 
+    /**
+     * @param {LayerConfig} config
+     */
     scrollLines(config) {
         var oldConfig = this.config;
         this.config = config;
@@ -284,6 +287,11 @@ class Text {
         this.$highlightIndentGuide();
     }
 
+    /**
+     * @param {LayerConfig} config
+     * @param {number} firstRow
+     * @param {number} lastRow
+     */
     $renderLinesFragment(config, firstRow, lastRow) {
         var fragment = [];
         var row = firstRow;
@@ -322,6 +330,9 @@ class Text {
         return fragment;
     }
 
+    /**
+     * @param {LayerConfig} config
+     */
     update(config) {
         this.$lines.moveContainer(config);
 
@@ -687,8 +698,8 @@ class Text {
     }
 
     /**
-     * @param {any} row
-     * @param {{ walk: (arg0: (placeholder: any, row: any, column: any, lastColumn: any, isNewRow: any) => void, arg1: any, arg2: any) => void; end: { row: any; }; }} foldLine
+     * @param {number} row
+     * @param {import("../../ace-internal").Ace.FoldLine} foldLine
      * @return {import("../../ace-internal").Ace.Token[]}
      */
     $getFoldLineTokens(row, foldLine) {
