@@ -221,7 +221,9 @@ function fixDeclaration(content, aceNamespacePath) {
  */
 function checkFinalDeclaration(declarationName) {
     const program = ts.createProgram([declarationName], {
-        noEmit: true
+        noEmit: true,
+        target: "es2019",
+        lib: ["lib.es2019.d.ts", "lib.dom.d.ts"]
     });
     const diagnostics = ts.getPreEmitDiagnostics(program);
 
