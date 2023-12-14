@@ -1315,6 +1315,12 @@ declare module "./src/edit_session" {
 
 }
 
+
+declare module "./src/edit_session/folding" {
+    export interface Folding extends Ace.EditSession  {
+    }
+}
+
 declare module "./src/edit_session/fold" {
     export interface Fold {
         collapseChildren?: number;
