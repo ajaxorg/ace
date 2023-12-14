@@ -1,4 +1,7 @@
 "use strict";
+/**
+ * @typedef {import("../../ace-internal").Ace.SyntaxMode} SyntaxMode
+ */
 var config = require("../config");
 
 var Tokenizer = require("../tokenizer").Tokenizer;
@@ -10,6 +13,8 @@ var lang = require("../lib/lang");
 var TokenIterator = require("../token_iterator").TokenIterator;
 var Range = require("../range").Range;
 
+
+/**@type {(new() => Partial<SyntaxMode>) & {prototype: SyntaxMode}}*/
 var Mode; 
 Mode = function() {
     this.HighlightRules = TextHighlightRules;
@@ -23,7 +28,7 @@ Mode = function() {
     this.nonTokenRe = new RegExp("^(?:[^" + unicode.wordChars + "\\$_]|\\s])+", "g");
 
     /**
-     * @this {import("../../ace-internal").Ace.SyntaxMode}
+     * @this {SyntaxMode}
      */
     this.getTokenizer = function() {
         if (!this.$tokenizer) {
@@ -37,7 +42,7 @@ Mode = function() {
     this.blockComment = "";
 
     /**
-     * @this {import("../../ace-internal").Ace.SyntaxMode}
+     * @this {SyntaxMode}
      */
     this.toggleCommentLines = function(state, session, startRow, endRow) {
         var doc = session.doc;
@@ -170,7 +175,7 @@ Mode = function() {
     };
 
     /**
-     * @this {import("../../ace-internal").Ace.SyntaxMode}
+     * @this {SyntaxMode}
      */
     this.toggleBlockComment = function(state, session, range, cursor) {
         var comment = this.blockComment;
@@ -285,7 +290,7 @@ Mode = function() {
     };
 
     /**
-     * @this {import("../../ace-internal").Ace.SyntaxMode}
+     * @this {SyntaxMode}
      */
     this.$delegator = function(method, args, defaultHandler) {
         var state = args[0] || "start";
@@ -314,7 +319,7 @@ Mode = function() {
     };
 
     /**
-     * @this {import("../../ace-internal").Ace.SyntaxMode}
+     * @this {SyntaxMode}
      */
     this.transformAction = function(state, action, editor, session, param) {
         if (this.$behaviour) {
@@ -331,7 +336,7 @@ Mode = function() {
     };
 
     /**
-     * @this {import("../../ace-internal").Ace.SyntaxMode}
+     * @this {SyntaxMode}
      */
     this.getKeywords = function(append) {
         // this is for autocompletion to pick up regexp'ed keywords
@@ -365,7 +370,7 @@ Mode = function() {
     };
 
     /**
-     * @this {import("../../ace-internal").Ace.SyntaxMode}
+     * @this {SyntaxMode}
      */
     this.$createKeywordList = function() {
         if (!this.$highlightRules)
@@ -374,7 +379,7 @@ Mode = function() {
     };
 
     /**
-     * @this {import("../../ace-internal").Ace.SyntaxMode}
+     * @this {SyntaxMode}
      */
     this.getCompletions = function(state, session, pos, prefix) {
         var keywords = this.$keywordList || this.$createKeywordList();

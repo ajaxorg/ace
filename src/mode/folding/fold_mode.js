@@ -2,6 +2,7 @@
 
 var Range = require("../../range").Range;
 
+/**@type {(new() => Partial<import("../../../ace-internal").Ace.FoldMode>) & {prototype: import("../../../ace-internal").Ace.FoldMode}}*/
 var FoldMode = exports.FoldMode = function() {};
 
 (function() {
