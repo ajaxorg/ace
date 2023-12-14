@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.32.2](https://github.com/ajaxorg/ace/compare/v1.32.1...v1.32.2) (2023-12-14)
+
+
+### Bug Fixes
+
+* **themes:** changed the solarized theme primary color from `[#93](https://github.com/ajaxorg/ace/issues/93)A1A1` to `[#839496](https://github.com/ajaxorg/ace/issues/839496)`. ([#5422](https://github.com/ajaxorg/ace/issues/5422)) ([114a5c1](https://github.com/ajaxorg/ace/commit/114a5c163fd875b4fab332dadfadeeae41e4097a)), closes [#93A1A1](https://github.com/ajaxorg/ace/issues/93A1A1)
+
 ### [1.32.1](https://github.com/ajaxorg/ace/compare/v1.32.0...v1.32.1) (2023-12-11)
 
 
