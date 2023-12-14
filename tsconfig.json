@@ -21,6 +21,7 @@
     "src/keyboard/vscode.js",
     "src/mode",
     "./ace-internal.d.ts",
+    "./ace-modes.d.ts",
     "src/**/* *"
   ],
   "include": [

@@ -47,11 +47,10 @@ var getWrapped = function(selection, selected, opening, closing) {
 };
 /**
  * Creates a new Cstyle behaviour object with the specified options.
- * @constructor
  * @param {Object} [options] - The options for the Cstyle behaviour object.
  * @param {boolean} [options.braces] - Whether to force braces auto-pairing.
  * @param {boolean} [options.closeDocComment] - enables automatic insertion of closing tags for documentation comments.
- */
+ * @type {(new(options?: {braces: boolean, closeDocComment: boolean}) => Partial<import("../../../ace-internal").Ace.Behaviour>) & {prototype: import("../../../ace-internal").Ace.Behaviour}}*/
 var CstyleBehaviour;
 CstyleBehaviour = function(options) {
     options = options || {};
