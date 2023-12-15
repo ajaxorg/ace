@@ -1,9 +1,5 @@
 "use strict";
-/**
- * @typedef {import("../../ace-internal").Ace.Behaviour} AceBehaviour
- */
 
-/**@type {(new() => Partial<AceBehaviour>) & {prototype: AceBehaviour}}*/
 var Behaviour;
 Behaviour = function() {
    this.$behaviours = {};

@@ -2,6 +2,7 @@
 /**
  * @typedef {import("../../ace-internal").Ace.SyntaxMode} SyntaxMode
  */
+
 var config = require("../config");
 
 var Tokenizer = require("../tokenizer").Tokenizer;
@@ -14,7 +15,6 @@ var TokenIterator = require("../token_iterator").TokenIterator;
 var Range = require("../range").Range;
 
 
-/**@type {(new() => Partial<SyntaxMode>) & {prototype: SyntaxMode}}*/
 var Mode; 
 Mode = function() {
     this.HighlightRules = TextHighlightRules;
