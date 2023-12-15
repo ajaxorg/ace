@@ -7,6 +7,15 @@ declare module "ace-code/src/mode/matching_parens_outdent" {
 declare module "ace-code/src/mode/behaviour/css" {
   export const CssBehaviour: new () => import("ace-code").Ace.Behaviour;
 }
+
+declare module "ace-code/src/mode/behaviour/cstyle" {
+  interface CstyleBehaviourOptions {
+    braces?: boolean;
+    closeDocComment?: boolean;
+  }
+  export const CstyleBehaviour: new (options?: CstyleBehaviourOptions) => import("ace-code").Ace.Behaviour;
+}
+
 declare module "ace-code/src/mode/behaviour/html" {
   export const HtmlBehaviour: new () => import("ace-code").Ace.Behaviour;
 }

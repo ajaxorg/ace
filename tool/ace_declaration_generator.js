@@ -23,7 +23,7 @@ function getParsedConfigFromDirectory(directoryPath) {
 /**
  * @return {string}
  */
-function generateInitialDeclaration() {
+function generateInitialDeclaration(excludeDir) {
     const baseDirectory = path.resolve(__dirname, '..');
     const parsedConfig = getParsedConfigFromDirectory(baseDirectory);
     const defaultCompilerHost = ts.createCompilerHost({});
@@ -34,9 +34,15 @@ function generateInitialDeclaration() {
         writeFile: function (fileName, content) {
             fileContent = content;
             return;
+        },
+        getSourceFile: function (fileName, languageVersion, onError, shouldCreateNewSourceFile) {
+            if (fileName.includes(excludeDir)) {
+                return undefined;
+            }
+            return defaultCompilerHost.getSourceFile(fileName, languageVersion, onError, shouldCreateNewSourceFile);
         }
     };
-
+    
     const program = ts.createProgram(parsedConfig.fileNames, parsedConfig.options, customCompilerHost);
     program.emit();
     return fileContent;
@@ -307,6 +313,9 @@ function cloneAceNamespace(aceNamespacePath) {
         noEmit: true
     });
     const sourceFile = program.getSourceFile(aceNamespacePath);
+    if (!sourceFile) {
+        throw new Error("Could not find ace.d.ts");
+    }
     const printer = ts.createPrinter();
     for (let i = 0; i < sourceFile.statements.length; i++) {
         const node = sourceFile.statements[i];
@@ -323,8 +332,9 @@ function cloneAceNamespace(aceNamespacePath) {
  * @param {string} aceNamespacePath
  */
 function generateDeclaration(aceNamespacePath) {
-    aceNamespacePath = path.resolve(__dirname, aceNamespacePath);
-    let data = generateInitialDeclaration();
+    const excludeDir = "src/mode"; //TODO: remove, when modes are ES6
+
+    let data = generateInitialDeclaration(excludeDir);
     let packageName = "ace-code";
 
     let updatedContent = data.replace(/(declare module ")/g, "$1" + packageName + "/src/");
@@ -346,18 +356,15 @@ function generateDeclaration(aceNamespacePath) {
  */
 function updateDeclarationModuleNames(content) {
     let output = content.replace(
-        /ace\-code(?:\/src)?\/(mode|theme|ext|keybinding|snippets)\//g, "ace-builds/src-noconflict/$1-");
+        /ace\-code(?:\/src)?\/(mode(?!\/(?:matching_brace_outdent|matching_parens_outdent|behaviour|folding))|theme|ext|keybinding|snippets)\//g, "ace-builds/src-noconflict/$1-");
+    output = output.replace(/"ace\-code"/g, "\"ace-builds\"");
     output = output.replace(/ace\-code(?:\/src)?/g, "ace-builds-internal");
-    output = output.replace(/ace\-code/g, "ace-builds");
-    output = output + '\n' + "declare module 'ace-builds/webpack-resolver';\n"
-        + "declare module 'ace-builds/esm-resolver';";
-    //TODO: modes/worker
     return output;
 }
 
 
 if (!module.parent) {
-    generateDeclaration("../ace-internal.d.ts");
+    generateDeclaration(__dirname + "/../ace-internal.d.ts");
 }
 else {
     exports.generateDeclaration = generateDeclaration;
