@@ -237,7 +237,8 @@ var supportedModes = {
     XML:         ["xml|rdf|rss|wsdl|xslt|atom|mathml|mml|xul|xbl|xaml"],
     XQuery:      ["xq"],
     YAML:        ["yaml|yml"],
-    Zeek:        ["zeek|bro"]
+    Zeek:        ["zeek|bro"],
+    Zig:         ["zig"]
 };
 
 var nameOverrides = {
