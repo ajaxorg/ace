@@ -89,7 +89,7 @@ var ZigHighlightRules = function() {
             regex: /\b(?:null|undefined|true|false)\b/
         }, {
             token: "constant.numeric.integer.zig",
-            regex: /\b(?<!\.)-?[\d_]+(?!\.)\b/
+            regex: /\b(?<!\.)(-?[\d_]+)(?!\.)\b/
         }, {
             token: "constant.numeric.integer.hexadecimal.zig",
             regex: /\b(?<!\.)0x[a-fA-F\d_]+(?!\.)\b/
