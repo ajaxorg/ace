@@ -101,7 +101,7 @@ module.exports = `
 
 .ace-cloud_editor_dark .ace_invalid.ace_illegal {
     color: #dcdfe4;
-    background-color: #e76a71;
+    background-color: #e96a71;
 }
 
 .ace-cloud_editor_dark .ace_invalid.ace_deprecated {
@@ -124,7 +124,7 @@ module.exports = `
 }
 
 .ace-cloud_editor_dark .ace_variable {
-    color: #e76a71;
+    color: #e96a71;
 }
 
 .ace-cloud_editor_dark .ace_meta.ace_selector {
@@ -140,7 +140,7 @@ module.exports = `
 }
 
 .ace-cloud_editor_dark .ace_entity.ace_name.ace_tag {
-    color: #e76a71;
+    color: #e96a71;
 }
 .ace-cloud_editor_dark .ace_heading {
     color: #66b2f0;
@@ -150,7 +150,7 @@ module.exports = `
     color: #e5c383;
 }
 .ace-cloud_editor_dark .ace_doctype {
-    color: #e76a71;
+    color: #e96a71;
 }
 
 .ace-cloud_editor_dark .ace_entity.ace_name.ace_tag,
@@ -158,7 +158,7 @@ module.exports = `
 .ace-cloud_editor_dark .ace_meta.ace_tag,
 .ace-cloud_editor_dark .ace_string.ace_regexp,
 .ace-cloud_editor_dark .ace_variable {
-    color: #e76a71;
+    color: #e96a71;
 }
 
 .ace-cloud_editor_dark .ace_tooltip {
