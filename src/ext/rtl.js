@@ -26,12 +26,18 @@ require("../config").defineOptions(Editor.prototype, "editor", {
                 this.renderer.on("afterRender", updateLineDirection);
                 this.commands.on("exec", onCommandEmitted);
                 this.commands.addCommands(commands);
+                this.renderer.$textLayer.setControlCharacterChecker(
+                    (position, value) => {
+                        return (position === 0 && value === this.session.$bidiHandler.RLE);
+                    }
+                )
             } else {
                 this.off("change", onChange);
                 this.off("changeSelection", onChangeSelection);
                 this.renderer.off("afterRender", updateLineDirection);
                 this.commands.off("exec", onCommandEmitted);
                 this.commands.removeCommands(commands);
+                this.renderer.$textLayer.setControlCharacterChecker(null);
                 clearTextLayer(this.renderer);
             }
             this.renderer.updateFull();
