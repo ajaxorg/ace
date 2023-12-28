@@ -176,12 +176,7 @@ class Autocomplete {
     $onPopupChange(hide) {
         if (this.inlineRenderer && this.inlineEnabled) {
             var completion = hide ? null : this.popup.getData(this.popup.getRow());
-            var prefix = util.getCompletionPrefix(this.editor);
-            if (!this.inlineRenderer.show(this.editor, completion, prefix)) {
-                this.inlineRenderer.hide();
-            } else {
-                this.$seen(completion);
-            }
+            this.$updateGhostText(completion);
             // If the mouse is over the tooltip, and we're changing selection on hover don't
             // move the tooltip while hovering over the popup.
             if (this.popup.isMouseOver && this.setSelectOnHover) {
@@ -198,6 +193,15 @@ class Autocomplete {
             this.popupTimer.call(null, null);
             // @ts-expect-error TODO: potential wrong arguments
             this.tooltipTimer.call(null, null);
+        }
+    }
+
+    $updateGhostText(completion) {
+        var prefix = util.getCompletionPrefix(this.editor);
+        if (!this.inlineRenderer.show(this.editor, completion, prefix)) {
+            this.inlineRenderer.hide();
+        } else {
+            this.$seen(completion);
         }
     }
 
@@ -334,6 +338,14 @@ class Autocomplete {
         // If we stay on the same row, but the content is different, we want to update the popup.
         if (newRow === oldRow && previousSelectedItem !== this.completions.filtered[newRow]) 
             this.$onPopupChange();
+
+        // If we stay on the same line and have inlinePreview enabled, we want to make sure the
+        // ghost text remains up-to-date.
+        const inlineEnabled = this.inlineRenderer && this.inlineEnabled;
+        if (newRow === oldRow && inlineEnabled) {
+            var completion = this.popup.getData(this.popup.getRow());
+            this.$updateGhostText(completion);
+        }
 
         if (!keepPopupPosition) {
             this.popup.setTheme(editor.getTheme());

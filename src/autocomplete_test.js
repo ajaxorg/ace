@@ -1340,6 +1340,52 @@ module.exports = {
         assert.ok(!(completer.popup && completer.popup.isOpen));
 
         done();
+    },
+    "test: should update inline preview when typing when it's the only item in the popup": function(done) {
+        var editor = initEditor("");
+        
+        editor.completers = [
+            {
+                getCompletions: function (editor, session, pos, prefix, callback) {
+                    var completions = [
+                        {
+                            caption: "function",
+                            value: "function\nthat does something\ncool"
+                        }
+                    ];
+                    callback(null, completions);
+                }
+            }
+        ];
+        
+        var completer = Autocomplete.for(editor);
+        completer.inlineEnabled = true;
+
+        user.type("f");
+        var inline = completer.inlineRenderer;
+
+        // Popup should be open, with inline text renderered.
+        assert.equal(completer.popup.isOpen, true);  
+        assert.equal(completer.popup.getRow(), 0);
+        assert.strictEqual(inline.isOpen(), true);
+        assert.strictEqual(editor.renderer.$ghostText.text, "unction\nthat does something\ncool");
+
+        // when you keep typing, the ghost text should update accordingly
+        user.type("unc");
+
+        setTimeout(() => {
+            assert.strictEqual(inline.isOpen(), true);
+            assert.strictEqual(editor.renderer.$ghostText.text, "tion\nthat does something\ncool");
+
+            user.type("tio");
+
+            setTimeout(() => {
+                assert.strictEqual(inline.isOpen(), true);
+                assert.strictEqual(editor.renderer.$ghostText.text, "n\nthat does something\ncool");
+    
+                done();
+            }, 100);
+        }, 100);
     }
 };
 
