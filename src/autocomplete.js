@@ -335,10 +335,12 @@ class Autocomplete {
         
         this.popup.setRow(this.autoSelect ? newRow : -1);
      
-        // If we stay on the same row, but the content is different or we have inline preview enabled, we want to update the popup.
+        // If we stay on the same row, but the content is different, we want to update the popup.
         if (newRow === oldRow && previousSelectedItem !== this.completions.filtered[newRow]) 
             this.$onPopupChange();
 
+        // If we stay on the same line and have inlinePreview enabled, we want to make sure the
+        // ghost text remains up-to-date.
         const inlineEnabled = this.inlineRenderer && this.inlineEnabled;
         if (newRow === oldRow && inlineEnabled) {
             var completion = this.popup.getData(this.popup.getRow());
