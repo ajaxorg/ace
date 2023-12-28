@@ -331,8 +331,8 @@ class Autocomplete {
         
         this.popup.setRow(this.autoSelect ? newRow : -1);
      
-        // If we stay on the same row, but the content is different, we want to update the popup.
-        if (newRow === oldRow && previousSelectedItem !== this.completions.filtered[newRow]) 
+        // If we stay on the same row, but the content is different or we have inline preview enabled, we want to update the popup.
+        if (newRow === oldRow && (previousSelectedItem !== this.completions.filtered[newRow] || this.inlineRenderer)) 
             this.$onPopupChange();
 
         if (!keepPopupPosition) {
