@@ -30,7 +30,7 @@ require("../config").defineOptions(Editor.prototype, "editor", {
                     (position, value) => {
                         return (position === 0 && value === this.session.$bidiHandler.RLE);
                     }
-                )
+                );
             } else {
                 this.off("change", onChange);
                 this.off("changeSelection", onChangeSelection);

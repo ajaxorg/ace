@@ -403,7 +403,6 @@ class Text {
                     valueFragment.appendChild(this.dom.createTextNode(simpleSpace, this.element));
                 }
             } else if (controlCharacter && (!this.$controlCharacterChecker || !this.$controlCharacterChecker(m.index, controlCharacter))) {
-                console.log(screenColumn, value, this.$controlCharacterChecker(screenColumn, value));
                 var span = this.dom.createElement("span");
                 span.className = "ace_invisible ace_invisible_space ace_invalid";
                 span.textContent = lang.stringRepeat(self.SPACE_CHAR, controlCharacter.length);
