@@ -1387,7 +1387,7 @@ module.exports = {
             }, 100);
         }, 100);
     },
-    "test: should keep shwoing ghost text when typing ahead with whitespace": function(done) {
+    "test: should keep showing ghost text when typing ahead with whitespace": function(done) {
         var editor = initEditor("");
         
         editor.completers = [
