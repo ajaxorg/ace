@@ -1386,6 +1386,51 @@ module.exports = {
                 done();
             }, 100);
         }, 100);
+    },
+    "test: should keep showing ghost text when typing ahead with whitespace": function(done) {
+        var editor = initEditor("");
+        
+        editor.completers = [
+            {
+                getCompletions: function (editor, session, pos, prefix, callback) {
+                    var completions = [
+                        {
+                            value: "function that does something cool"
+                        }
+                    ];
+                    callback(null, completions);
+                }
+            }
+        ];
+        
+        var completer = Autocomplete.for(editor);
+        completer.inlineEnabled = true;
+
+        user.type("f");
+        var inline = completer.inlineRenderer;
+
+        // Popup should be open, with inline text renderered.
+        assert.equal(completer.popup.isOpen, true);  
+        assert.equal(completer.popup.getRow(), 0);
+        assert.strictEqual(inline.isOpen(), true);
+        assert.strictEqual(editor.renderer.$ghostText.text, "unction that does something cool");
+
+        // when you keep typing, the ghost text should update accordingly
+        user.type("unction th");
+
+        setTimeout(() => {
+            assert.strictEqual(inline.isOpen(), true);
+            assert.strictEqual(editor.renderer.$ghostText.text, "at does something cool");
+
+            user.type("at do");
+
+            setTimeout(() => {
+                assert.strictEqual(inline.isOpen(), true);
+                assert.strictEqual(editor.renderer.$ghostText.text, "es something cool");
+    
+                done();
+            }, 100);
+        }, 100);
     }
 };
 

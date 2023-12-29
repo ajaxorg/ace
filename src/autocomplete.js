@@ -197,7 +197,14 @@ class Autocomplete {
     }
 
     $updateGhostText(completion) {
-        var prefix = util.getCompletionPrefix(this.editor);
+        // Ghost text can include characters normally not part of the prefix (e.g. whitespace).
+        // When typing ahead with ghost text however, we want to simply prefix with respect to the
+        // base of the completion.
+        var row = this.base.row;
+        var column = this.base.column;
+        var cursorColumn = this.editor.getCursorPosition().column;
+        var prefix = this.editor.session.getLine(row).slice(column, cursorColumn);
+
         if (!this.inlineRenderer.show(this.editor, completion, prefix)) {
             this.inlineRenderer.hide();
         } else {
