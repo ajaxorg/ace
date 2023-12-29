@@ -35,7 +35,7 @@ var PrqlHighlightRules = function() {
        "storage.type": "let|func",
        "support.function": builtinFunctions,
        "support.type": builtinTypes,
-       "variable.language": "date|math|prql",
+       "variable.language": "date|math"
     }, "identifier");
     
     var escapeRe = /\\(\d+|['"\\&bfnrt]|u\{[0-9a-fA-F]{1,6}\}|x[0-9a-fA-F]{2})/;
