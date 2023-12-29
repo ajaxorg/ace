@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.32.3](https://github.com/ajaxorg/ace/compare/v1.32.2...v1.32.3) (2023-12-29)
+
+
+### Bug Fixes
+
+* improve prefixing for inline preview ([#5439](https://github.com/ajaxorg/ace/issues/5439)) ([51006bb](https://github.com/ajaxorg/ace/commit/51006bba9c60b97251ddb04ed74f68ba4e7f6b54))
+* update ghost text if on same line popup ([12f4664](https://github.com/ajaxorg/ace/commit/12f466460d7187cfe37593dab1fbe275403fedd3))
+* updated red color in cloud-editor dark theme ([#5432](https://github.com/ajaxorg/ace/issues/5432)) ([142b607](https://github.com/ajaxorg/ace/commit/142b607578f5d071a5026691ff6662c11e9f186b))
+
 ### [1.32.2](https://github.com/ajaxorg/ace/compare/v1.32.1...v1.32.2) (2023-12-14)
 
 
