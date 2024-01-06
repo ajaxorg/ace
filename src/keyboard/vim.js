@@ -2095,7 +2095,7 @@ domLib.importCssString(`.normal-mode .ace_cursor{
           if (langmap.remapCtrl || !name)
             key = langmap.keymap[key];
         } else if (key.charCodeAt(0) > 255) {
-          var code = e.code?.slice(-1) || "";
+          var code = e.code && e.code.slice(-1) || "";
           if (!e.shiftKey) code = code.toLowerCase();
           if (code) key = code;
         }
@@ -6154,8 +6154,10 @@ domLib.importCssString(`.normal-mode .ace_cursor{
 
         if (result.line == undefined) {
           if (cm.state.vim.visualMode) {
-            result.selectionLine = getMarkPos(cm, cm.state.vim, '<')?.line;
-            result.selectionLineEnd = getMarkPos(cm, cm.state.vim, '>')?.line;
+            var pos = getMarkPos(cm, cm.state.vim, '<');
+            result.selectionLine = pos && pos.line;
+            pos = getMarkPos(cm, cm.state.vim, '>');
+            result.selectionLineEnd = pos && pos.line;
           } else {
             result.selectionLine = cm.getCursor().line;
           }
@@ -7329,7 +7331,7 @@ domLib.importCssString(`.normal-mode .ace_cursor{
         if (langmap.remapCtrl || !name)
           key = langmap.keymap[key];
       } else if (key.charCodeAt(0) > 255) {
-        var code = e.code?.slice(-1) || "";
+        var code = e.code && e.code.slice(-1) || "";
         if (!e.shiftKey) code = code.toLowerCase();
         if (code) key = code;
       }

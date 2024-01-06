@@ -638,7 +638,7 @@ testVim('g0_g$', function(cm, vim, helpers) {
   helpers.doKeys('$', 'g', '0', 'd', 'g', '$');
   is(!/\.$/.test(cm.getValue()));
   
-},{ lineNumbers: false, lineWrapping:true, value: 'This line is long to test movement of g$ and g0 over wrapped lines.' });
+},{ lineNumbers: false, lineWrapping:true, value: 'This line is long to test movement of g$ and g0 over wrapped lines...' });
 testVim('}', function(cm, vim, helpers) {
   cm.setCursor(0, 0);
   helpers.doKeys('}');
