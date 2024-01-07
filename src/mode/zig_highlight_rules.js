@@ -89,22 +89,22 @@ var ZigHighlightRules = function() {
             regex: /\b(?:null|undefined|true|false)\b/
         }, {
             token: "constant.numeric.integer.zig",
-            regex: /\b(?<!\.)(-?[\d_]+)(?!\.)\b/
+            regex: /\b(?!\.)-?[\d_]+(?!\.)\b/
         }, {
             token: "constant.numeric.integer.hexadecimal.zig",
-            regex: /\b(?<!\.)0x[a-fA-F\d_]+(?!\.)\b/
+            regex: /\b(?!\.)0x[a-fA-F\d_]+(?!\.)\b/
         }, {
             token: "constant.numeric.integer.octal.zig",
-            regex: /\b(?<!\.)0o[0-7_]+(?!\.)\b/
+            regex: /\b(?!\.)0o[0-7_]+(?!\.)\b/
         }, {
             token: "constant.numeric.integer.binary.zig",
-            regex: /\b(?<!\.)0b[01_]+(?!\.)\b/
+            regex: /\b(?!\.)0b[01_]+(?!\.)\b/
         }, {
             token: "constant.numeric.float.zig",
-            regex: /(?<!\.)-?\b[\d_]+(?:\.[\d_]+)?(?:[eE][+-]?[\d_]+)?(?!\.)\b/
+            regex: /(?!\.)-?\b[\d_]+(?:\.[\d_]+)?(?:[eE][+-]?[\d_]+)?(?!\.)\b/
         }, {
             token: "constant.numeric.float.hexadecimal.zig",
-            regex: /(?<!\.)-?\b0x[a-fA-F\d_]+(?:\.[a-fA-F\d_]+)?[pP]?(?:[+-]?[\d_]+)?(?!\.)\b/
+            regex: /(?!\.)-?\b0x[a-fA-F\d_]+(?:\.[a-fA-F\d_]+)?[pP]?(?:[+-]?[\d_]+)?(?!\.)\b/
         }],
         "#container_decl": [{
             token: "entity.name.union.zig",
@@ -165,7 +165,7 @@ var ZigHighlightRules = function() {
         }],
         "#enum_literal": [{
             token: "constant.language.enum",
-            regex: /(?<!\w|\)|\?|\}|\]|\*)\.(?:[a-zA-Z_]\w*\b|@\"[^\"]*\")(?!\(|\s*=[^=>])/
+            regex: /(?!\w|\)|\?|\}|\]|\*|\.)\.(?:[a-zA-Z_]\w*\b|@\"[^\"]*\")(?!\(|\s*=[^=>])/
         }],
         "#field_decl": [{
             token: [
@@ -190,7 +190,7 @@ var ZigHighlightRules = function() {
         }],
         "#function_call": [{
             token: "variable.function.zig",
-            regex: /(?<!fn)\b(?:[a-zA-Z_]\w*|@\".+\")(?=\s*\()/
+            regex: /\b(?!fn)(?:[a-zA-Z_]\w*|@\".+\")(?=\s*\()/
         }],
         "#function_def": [{
             token: [
@@ -198,7 +198,7 @@ var ZigHighlightRules = function() {
                 "entity.name.function",
                 "punctuation.section.parens.begin.zig"
             ],
-            regex: /(?<=fn)(\s+)([a-zA-Z_]\w*|@\".+\")(\()/,
+            regex: /(?=fn\s+)(\s+)([a-zA-Z_]\w*|@\".+\")(\()/,
             push: [{
                 token: [
                     "text",
@@ -207,7 +207,7 @@ var ZigHighlightRules = function() {
                     "text",
                     "storage.type.zig"
                 ],
-                regex: /(?<=\)[^\)])(\s*)((?:[a-zA-Z_][\w.]*|@\".+\")?)((?:!)?)(\s*)(?:([a-zA-Z_][\w.]*|@\".+\")\b(?!\s*\())?/,
+                regex: /(\s*)((?:[a-zA-Z_][\w.]*|@\".+\")?)((?:!)?)(\s*)(?:([a-zA-Z_][\w.]*|@\".+\")\b(?!\s*\\())?)/,
                 next: "pop"
             }, {
                 include: "#label"
@@ -236,7 +236,7 @@ var ZigHighlightRules = function() {
                     "text",
                     "storage.type.zig"
                 ],
-                regex: /(?<=\)|\})(\s*)((?:[a-zA-Z_][\w.]*|@\".+\")?)(\s*)((?:!)?)(\s*)([a-zA-Z_][\w.]*|@\".+\")/,
+                regex: /(\s*)(?=\s*(?:[a-zA-Z_][\w.]*|@\".+\")?)(\s*)((?:!)?)(\s*)([a-zA-Z_][\w.]*|@\".+\")/,
                 next: "pop"
             }, {
                 include: "#label"
@@ -262,7 +262,7 @@ var ZigHighlightRules = function() {
             regex: /\b(?:if|else|switch|try|catch|orelse)\b/
         }, {
             token: "keyword.control.import.zig",
-            regex: /(?<!\w)(?:@import|@cImport|@cInclude)\b/
+            regex: /\b(?!\w)(?:@import|@cImport|@cInclude)\b/
         }, {
             token: "keyword.other.usingnamespace.zig",
             regex: /\busingnamespace\b/
@@ -340,7 +340,7 @@ var ZigHighlightRules = function() {
             regex: /\b(?:bool|void|noreturn|type|anyerror|anytype)\b/
         }, {
             token: "storage.type.integer.zig",
-            regex: /\b(?<!\.)(?:[iu]\d+|[iu]size|comptime_int)\b/
+            regex: /\b(?!\.)(?:[iu]\d+|[iu]size|comptime_int)\b/
         }, {
             token: "storage.type.float.zig",
             regex: /\b(?:f16|f32|f64|f128|comptime_float)\b/
@@ -422,7 +422,7 @@ var ZigHighlightRules = function() {
         }],
         "#support": [{
             token: "support.function.zig",
-            regex: /(?<!\w)@[^\"\d][a-zA-Z_]\w*\b/
+            regex: /\b@(?!\w|\"|[0-9])[a-zA-Z_]\w*\b/
         }],
         "#variables": [{
             token: "variable.constant.zig",
@@ -437,7 +437,7 @@ var ZigHighlightRules = function() {
             token: "variable.zig",
             regex: /\b[_a-zA-Z][_a-zA-Z0-9]*\b/
         }]
-    }
+    };
     
     this.normalizeRules();
 };
@@ -447,7 +447,7 @@ ZigHighlightRules.metaData = {
     keyEquivalent: "^~Z",
     name: "Zig",
     scopeName: "source.zig"
-}
+};
 
 
 oop.inherits(ZigHighlightRules, TextHighlightRules);
