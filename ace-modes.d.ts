@@ -553,9 +553,6 @@ declare module "ace-code/src/mode/jssm_highlight_rules" {
 declare module "ace-code/src/mode/jsx" {
   export const Mode: new () => import(".").Ace.SyntaxMode;
 }
-declare module "ace-code/src/mode/jsx_highlight_rules" {
-  export const JsxHighlightRules: new () => import(".").Ace.HighlightRules;
-}
 declare module "ace-code/src/mode/julia" {
   export const Mode: new () => import(".").Ace.SyntaxMode;
 }
