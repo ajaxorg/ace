@@ -125,7 +125,7 @@ var supportedModes = {
     Jack:        ["jack"],
     Jade:        ["jade|pug"],
     Java:        ["java"],
-    JavaScript:  ["js|jsm|jsx|cjs|mjs"],
+    JavaScript:  ["js|jsm|cjs|mjs"],
     JEXL:        ["jexl"],
     JSON:        ["json"],
     JSON5:       ["json5"],
