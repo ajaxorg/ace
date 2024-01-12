@@ -368,7 +368,7 @@ export namespace Ace {
         fontFamily: string;
         maxLines: number;
         minLines: number;
-        scrollPastEnd: boolean;
+        scrollPastEnd: number;
         fixedWidthGutter: boolean;
         customScrollbar: boolean;
         theme: string;
