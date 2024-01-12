@@ -50,34 +50,32 @@ var ZigHighlightRules = function() {
         }],
         "#comments": [{
             token: "comment.line.documentation.zig",
-            regex: /\/\/\//,
+            regex: /\/\/[!\/](?=[^\/])/,
             push: [{
                 token: "comment.line.documentation.zig",
                 regex: /$/,
                 next: "pop"
             }, {
+                include: "#commentContents"
+            }, {
                 defaultToken: "comment.line.documentation.zig"
             }]
         }, {
-            token: "comment.line.todo.zig",
-            regex: /\/\/[^\/]\s*TODO/,
+            token: "comment.line.double-slash.zig",
+            regex: /\/\//,
             push: [{
-                token: "comment.line.todo.zig",
+                token: "comment.line.double-slash.zig",
                 regex: /$/,
                 next: "pop"
             }, {
-                defaultToken: "comment.line.todo.zig"
-            }]
-        }, {
-            token: "comment.line.zig",
-            regex: /\/\/[^\/]*/,
-            push: [{
-                token: "comment.line.zig",
-                regex: /$/,
-                next: "pop"
+                include: "#commentContents"
             }, {
-                defaultToken: "comment.line.zig"
+                defaultToken: "comment.line.double-slash.zig"
             }]
+        }],
+        "#commentContents": [{
+            token: "keyword.todo.zig",
+            regex: /\b(?:TODO|FIXME|XXX|NOTE)\b:?/
         }],
         "#constants": [{
             token: "constant.language.zig",
