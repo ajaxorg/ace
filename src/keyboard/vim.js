@@ -1818,6 +1818,8 @@ domLib.importCssString(`.normal-mode .ace_cursor{
           return function() { return true; };
         } else {
           return function() {
+            if ((command.operator || command.isEdit) && cm.getOption('readOnly'))
+              return; // ace_patch
             return cm.operation(function() {
               cm.curOp.isVimOp = true;
               try {
@@ -7034,7 +7036,7 @@ domLib.importCssString(`.normal-mode .ace_cursor{
         handleExternalSelection(cm, vim);
       }
     }
-    function handleExternalSelection(cm, vim) {
+    function handleExternalSelection(cm, vim, keepHPos) {
       var anchor = cm.getCursor('anchor');
       var head = cm.getCursor('head');
       // Enter or exit visual mode to match mouse selection.
@@ -7058,7 +7060,7 @@ domLib.importCssString(`.normal-mode .ace_cursor{
         };
         updateMark(cm, vim, '<', cursorMin(head, anchor));
         updateMark(cm, vim, '>', cursorMax(head, anchor));
-      } else if (!vim.insertMode) {
+      } else if (!vim.insertMode && !keepHPos) {
         // Reset lastHPos if selection was modified by something outside of vim mode e.g. by mouse.
         vim.lastHPos = cm.getCursor().ch;
       }
