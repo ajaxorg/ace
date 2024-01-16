@@ -24,6 +24,7 @@ require("./theme/textmate");
 require("./ext/error_marker");
 
 exports.config = require("./config");
+console.log(123)
 
 
 /**
