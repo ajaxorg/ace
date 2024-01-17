@@ -124,6 +124,8 @@ var ZigHighlightRules = function() {
         }, {
             include: "#function_type"
         }, {
+            include: "#function_def"
+        }, {
             include: "#punctuation"
         }, {
             include: "#storage_modifier"
@@ -147,8 +149,6 @@ var ZigHighlightRules = function() {
             include: "#field_decl"
         }, {
             include: "#block"
-        }, {
-            include: "#function_def"
         }, {
             include: "#function_call"
         }, {
@@ -184,65 +184,6 @@ var ZigHighlightRules = function() {
         "#function_call": [{
             token: "variable.function.zig",
             regex: /\b(?!fn)(?:[a-zA-Z_]\w*|@\".+\")(?=\s*\()/
-        }],
-        "#function_def": [{
-            token: [
-                "text",
-                "entity.name.function",
-                "punctuation.section.parens.begin.zig"
-            ],
-            regex: /(?=fn\s+)(\s+)([a-zA-Z_]\w*|@\".+\")(\()/,
-            push: [{
-                token: [
-                    "text",
-                    "storage.type.zig",
-                    "keyword.operator.zig",
-                    "text",
-                    "storage.type.zig"
-                ],
-                regex: /(\s*)((?:[a-zA-Z_][\w.]*|@\".+\")?)((?:!)?)(\s*)(?:([a-zA-Z_][\w.]*|@\".+\")\b(?!\s*\\())?)/,
-                next: "pop"
-            }, {
-                include: "#label"
-            }, {
-                include: "#param_list"
-            }, {
-                token: "storage.type.zig",
-                regex: /[a-zA-Z_][\w.]*|@\".+\"/
-            }, {
-                include: "#dummy_main"
-            }]
-        }],
-        "#function_type": [{
-            token: [
-                "storage.type.function.zig",
-                "text",
-                "punctuation.section.parens.begin.zig"
-            ],
-            regex: /\b(fn)(\s*)(\()/,
-            push: [{
-                token: [
-                    "text",
-                    "storage.type.zig",
-                    "text",
-                    "keyword.operator.zig",
-                    "text",
-                    "storage.type.zig"
-                ],
-                regex: /(\s*)(?=\s*(?:[a-zA-Z_][\w.]*|@\".+\")?)(\s*)((?:!)?)(\s*)([a-zA-Z_][\w.]*|@\".+\")/,
-                next: "pop"
-            }, {
-                include: "#label"
-            }, {
-                include: "#param_list"
-            }, {
-                token: "storage.type.zig",
-                regex: /[a-zA-Z_][\w.]*|@\".+\"/
-            }, {
-                include: "#dummy_main"
-            }, {
-                defaultToken: "meta.function.parameters.zig"
-            }]
         }],
         "#keywords": [{
             token: "keyword.control.zig",
@@ -411,6 +352,65 @@ var ZigHighlightRules = function() {
                 next: "pop"
             }, {
                 defaultToken: "string.quoted.other.zig"
+            }]
+        }],  
+        "#function_type": [{
+            token: [
+                "storage.type.function.zig",
+                "text",
+                "punctuation.section.parens.begin.zig"
+            ],
+            regex: /\b(fn)(\s*)(\()/,
+            push: [{
+                token: [
+                    "text",
+                    "storage.type.zig",
+                    "text",
+                    "keyword.operator.zig",
+                    "text",
+                    "storage.type.zig"
+                ],
+                regex: /(\s*)(?:([a-zA-Z_]\w*|@\".+\"))?(\s*)((?:!)?)(\s*)([a-zA-Z_]\w*|@\".+\")/,
+                next: "pop"
+            }, {
+                include: "#label"
+            }, {
+                include: "#param_list"
+            }, {
+                token: "storage.type.zig",
+                regex: /[a-zA-Z_]\w*|@\".+\"/
+            }, {
+                include: "#dummy_main"
+            }, {
+                defaultToken: "meta.function.parameters.zig"
+            }]
+        }],
+        "#function_def": [{
+            token: [
+                "text",
+                "entity.name.function",
+                "punctuation.section.parens.begin.zig"
+            ],
+            regex: /(?=fn\s+)(\s+)([a-zA-Z_]\w*|@\".+\")(\()/,
+            push: [{
+                token: [
+                    "text",
+                    "storage.type.zig",
+                    "keyword.operator.zig",
+                    "text",
+                    "storage.type.zig"
+                ],
+                regex: /(\s*)((?:[a-zA-Z_][\w.]*|@\".+\")?)((?:!)?)(\s*)(?:([a-zA-Z_][\w.]*|@\".+\")?)/,
+                next: "pop"
+            }, {
+                include: "#label"
+            }, {
+                include: "#param_list"
+            }, {
+                token: "storage.type.zig",
+                regex: /[a-zA-Z_][\w.]*|@\".+\"/
+            }, {
+                include: "#dummy_main"
             }]
         }],
         "#support": [{
