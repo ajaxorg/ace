@@ -974,43 +974,39 @@ class Editor {
         var session = this.session;
         var mode = session.getMode();
 
-        var startRow, endRow;
-        if (this.selection.isEmpty()) {
-            startRow = 0;
-            endRow = session.doc.getLength() - 1;
-        } else {
-            var selectedRange = this.getSelectionRange();
-
-            startRow = selectedRange.start.row;
-            endRow = selectedRange.end.row;
-        }
+        var ranges = this.selection.isEmpty()
+            ? [new Range(0, 0, session.doc.getLength() - 1, 0)]
+            : this.selection.getAllRanges();
 
         var prevLineState = "";
         var prevLine = "";
         var lineIndent = "";
-        var line, currIndent, range;
         var tab = session.getTabString();
-
-        for (var row = startRow; row <= endRow; row++) {
-            if (row > 0) {
-                prevLineState = session.getState(row - 1);
-                prevLine = session.getLine(row - 1);
-                lineIndent = mode.getNextLineIndent(prevLineState, prevLine, tab);
-            }
-
-            line = session.getLine(row);
-            currIndent = mode.$getIndent(line);
-            if (lineIndent !== currIndent) {
-                if (currIndent.length > 0) {
-                    range = new Range(row, 0, row, currIndent.length);
-                    session.remove(range);
+        for (var i = 0; i < ranges.length; i++) {
+            var startRow = ranges[i].start.row;
+            var endRow = ranges[i].end.row;
+            
+            for (var row = startRow; row <= endRow; row++) {
+                if (row > 0) {
+                    prevLineState = session.getState(row - 1);
+                    prevLine = session.getLine(row - 1);
+                    lineIndent = mode.getNextLineIndent(prevLineState, prevLine, tab);
                 }
-                if (lineIndent.length > 0) {
-                    session.insert({row: row, column: 0}, lineIndent);
-                }
-            }
 
-            mode.autoOutdent(prevLineState, session, row);
+                var line = session.getLine(row);
+                var currIndent = mode.$getIndent(line);
+                if (lineIndent !== currIndent) {
+                    if (currIndent.length > 0) {
+                        var range = new Range(row, 0, row, currIndent.length);
+                        session.remove(range);
+                    }
+                    if (lineIndent.length > 0) {
+                        session.insert({row: row, column: 0}, lineIndent);
+                    }
+                }
+
+                mode.autoOutdent(prevLineState, session, row);
+            }
         }
     }
 
