@@ -430,7 +430,7 @@ dom.importCssString(`
     z-index: 1;
 }
 .ace_dark.ace_editor.ace_autocomplete .ace_line-hover {
-    border: 1px solid #d5dbdb;;
+    border: 1px solid #d5dbdb;
     background: #272A30;
 }
 .ace_completion-meta {
