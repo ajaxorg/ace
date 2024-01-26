@@ -414,53 +414,57 @@ class AcePopup {
 
 dom.importCssString(`
 .ace_editor.ace_autocomplete .ace_marker-layer .ace_active-line {
-    background-color: #CAD6FA;
-    z-index: 1;
-}
-.ace_dark.ace_editor.ace_autocomplete .ace_marker-layer .ace_active-line {
-    background-color: #3a674e;
-}
-.ace_editor.ace_autocomplete .ace_line-hover {
-    border: 1px solid #abbffe;
-    margin-top: -1px;
-    background: rgba(233,233,253,0.4);
-    position: absolute;
+    background-color: #f2f3f3;
+    border: #0F68AE 1.5px solid;
     z-index: 2;
 }
+.ace_dark.ace_editor.ace_autocomplete .ace_marker-layer .ace_active-line {
+    background-color: #272A30;
+    border-color: #299FBC;
+}
+.ace_editor.ace_autocomplete .ace_line-hover {
+    border: 1px solid #16191f;
+    margin-top: -1px;
+    background: #f2f3f3;
+    position: absolute;
+    z-index: 1;
+}
 .ace_dark.ace_editor.ace_autocomplete .ace_line-hover {
-    border: 1px solid rgba(109, 150, 13, 0.8);
-    background: rgba(58, 103, 78, 0.62);
+    border: 1px solid #d5dbdb;;
+    background: #272A30;
 }
 .ace_completion-meta {
-    opacity: 0.5;
+    color: #545b64;
     margin-left: 0.9em;
+}
+.ace_dark.ace_editor.ace_autocomplete .ace_completion-meta {
+    color: #ACB8B9;
 }
 .ace_completion-message {
     margin-left: 0.9em;
     color: blue;
 }
 .ace_editor.ace_autocomplete .ace_completion-highlight{
-    color: #2d69c7;
+    color: #0F68AE;
 }
 .ace_dark.ace_editor.ace_autocomplete .ace_completion-highlight{
-    color: #93ca12;
+    color: #2AA0BC;
 }
 .ace_editor.ace_autocomplete {
     width: 300px;
     z-index: 200000;
     border: 1px lightgray solid;
     position: fixed;
-    box-shadow: 2px 3px 5px rgba(0,0,0,.2);
-    line-height: 1.4;
-    background: #fefefe;
-    color: #111;
+    box-shadow: 0 1px 1px 0 #001c244d, 1px 1px 1px 0 #001c2426, -1px 1px 1px 0 #001c2426;
+    line-height: 1.5;
+    border: 1px solid #eaeded;
+    background: #ffffff;
+    color: #16191f;
 }
 .ace_dark.ace_editor.ace_autocomplete {
-    border: 1px #484747 solid;
-    box-shadow: 2px 3px 5px rgba(0, 0, 0, 0.51);
-    line-height: 1.4;
-    background: #25282c;
-    color: #c1c1c1;
+    border: 1px solid #2a2e33;
+    background: #050506;
+    color: #ffffff;
 }
 .ace_autocomplete .ace_text-layer  {
     width: calc(100% - 8px);
