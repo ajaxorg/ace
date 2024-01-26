@@ -181,5 +181,12 @@ module.exports = `
 .ace-cloud_editor .ace_tooltip.ace_hover-tooltip:focus > div {
     outline: 1px solid #0073bb;
 }
+.ace-cloud_editor .ace_snippet-marker {
+    background-color: #CED6E0;
+    border-top: #C0C8D2 1px solid;
+    border-bottom: #C0C8D2 1px solid;
+    border-left: 0 solid;
+    border-right: 0 solid;
+}
 
 `;
