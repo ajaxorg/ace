@@ -1431,6 +1431,24 @@ module.exports = {
                 done();
             }, 100);
         }, 100);
+    },
+    "test: passing matches from execCommand": function() {
+        var editor = initEditor("");
+        editor.execCommand('startAutocomplete', {
+            matches: [
+                { value: 'example value' }
+            ]
+        });
+        user.type("\n");
+        
+        assert.equal(editor.getValue(), "example value");
+        
+        editor.resize(true);
+        editor.insertSnippet("<$1-${1|a1,b2,c3|}>");
+        user.type("Down");
+        user.type("\n");
+        
+        assert.equal(editor.getValue(), "example value<b2-b2>");
     }
 };
 
