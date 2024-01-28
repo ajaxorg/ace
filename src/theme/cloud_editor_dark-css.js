@@ -185,4 +185,26 @@ module.exports = `
     outline: 1px solid #44b9d6;
 }
 
+.ace-cloud_editor_dark.ace_dark.ace_editor.ace_autocomplete .ace_marker-layer .ace_active-line {
+    background-color: #272A30;
+    border: #299FBC 1.5px solid;
+}
+.ace-cloud_editor_dark.ace_dark.ace_editor.ace_autocomplete .ace_line-hover {
+    border: 1px solid #d5dbdb;
+    background: #272A30;
+}
+.ace-cloud_editor_dark.ace_dark.ace_editor.ace_autocomplete .ace_completion-meta {
+    color: #ACB8B9;
+}
+.ace-cloud_editor_dark.ace_dark.ace_editor.ace_autocomplete .ace_completion-highlight{
+    color: #2AA0BC;
+}
+.ace-cloud_editor_dark.ace_dark.ace_editor.ace_autocomplete {
+    box-shadow: 0 1px 1px 0 #001c244d, 1px 1px 1px 0 #001c2426, -1px 1px 1px 0 #001c2426;
+    line-height: 1.5;
+    border: 1px solid #2a2e33;
+    background: #050506;
+    color: #ffffff;
+}
+
 `;
