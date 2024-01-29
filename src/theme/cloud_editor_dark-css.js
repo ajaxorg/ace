@@ -186,10 +186,7 @@ module.exports = `
 }
 .ace-cloud_editor_dark .ace_snippet-marker {
     background-color: #434650;
-    border-top: #4D4F5C 1px solid;
-    border-bottom: #4D4F5C 1px solid;
-    border-left: 0 solid;
-    border-right: 0 solid;
+    border: 0;
 }
 
 `;
