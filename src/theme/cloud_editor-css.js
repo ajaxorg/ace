@@ -181,6 +181,10 @@ module.exports = `
 .ace-cloud_editor .ace_tooltip.ace_hover-tooltip:focus > div {
     outline: 1px solid #0073bb;
 }
+.ace-cloud_editor .ace_snippet-marker {
+    background-color: #CED6E0;
+    border: 0;
+}
 
 .ace-cloud_editor.ace_editor.ace_autocomplete .ace_marker-layer .ace_active-line {
     background-color: #f2f3f3;
