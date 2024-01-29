@@ -142,7 +142,7 @@ if (location.search) {
     else
         selectedTests = parts[0].split(",");
 }
-var filter = location.hash.substr(1);
+var filter = decodeURIComponent(location.hash.substr(1));
 window.onhashchange = function() { location.reload(); };
 
 require(selectedTests, function() {
