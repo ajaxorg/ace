@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.32.4](https://github.com/ajaxorg/ace/compare/v1.32.3...v1.32.4) (2024-01-29)
+
+
+### Bug Fixes
+
+* Improve contrast of completion popup in CloudEditor theme ([#5473](https://github.com/ajaxorg/ace/issues/5473)) ([273c7f1](https://github.com/ajaxorg/ace/commit/273c7f159ded7dc9403266c6501e16a35e4101c6))
+* update JSX mode to reflect React JSX ([#5451](https://github.com/ajaxorg/ace/issues/5451)) ([66789a7](https://github.com/ajaxorg/ace/commit/66789a79ce1b7791c65886d8aecddd7efc0415e8))
+
 ### [1.32.3](https://github.com/ajaxorg/ace/compare/v1.32.2...v1.32.3) (2023-12-29)
 
 
