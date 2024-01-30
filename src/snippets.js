@@ -379,6 +379,9 @@ class SnippetManager {
         var range = editor.getSelectionRange();
         var end = editor.session.replace(range, processedSnippet.text);
 
+        if (editor.tabstopManager) {
+            editor.tabstopManager.detach();
+        }
         var tabstopManager = new TabstopManager(editor);
         var selectionId = editor.inVirtualSelectionMode && editor.selection.index;
         //@ts-expect-error TODO: potential wrong arguments
