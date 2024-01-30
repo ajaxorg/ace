@@ -379,18 +379,13 @@ class SnippetManager {
         var range = editor.getSelectionRange();
         var end = editor.session.replace(range, processedSnippet.text);
 
-        if (editor.tabstopManager) {
-            editor.tabstopManager.detach();
-        }
         var tabstopManager = new TabstopManager(editor);
         var selectionId = editor.inVirtualSelectionMode && editor.selection.index;
         //@ts-expect-error TODO: potential wrong arguments
         tabstopManager.addTabstops(processedSnippet.tabstops, range.start, end, selectionId);
     }
-    
     insertSnippet(editor, snippetText, options={}) {
         var self = this;
-        
         if (editor.inVirtualSelectionMode)
             return self.insertSnippetForSelection(editor, snippetText, options);
         
@@ -899,6 +894,7 @@ class TabstopManager {
         this.selectTabstop(index);
         if (index === 0)
             this.detach();
+        this.updateTabstopMarkers();
     }
     selectTabstop(index) {
         this.$openTabstops = null;
@@ -946,9 +942,10 @@ class TabstopManager {
         var i = this.index;
         var arg = [i + 1, 0];
         var ranges = this.ranges;
+        var snippetId = this.snippetId = (this.snippetId || 0) + 1;
         tabstops.forEach(function(ts, index) {
             var dest = this.$openTabstops[index] || ts;
-            
+            dest.snippetId = snippetId;
             for (var i = 0; i < ts.length; i++) {
                 var p = ts[i];
                 /**@type {Range & {original?: Range, tabstop?: any, linked?: boolean}}}*/
@@ -1001,6 +998,14 @@ class TabstopManager {
             session.removeMarker(range.markerId);
             range.markerId = null;
         });
+    }
+    updateTabstopMarkers() {
+        var currentId =  this.selectedTabstop ? this.selectedTabstop.snippetId : 0;
+        this.tabstops.forEach(function(ts) {
+            // Show the selected tabstop markers
+            if (ts.snippetId === currentId || currentId === 0) this.addTabstopMarkers(ts);
+            else this.removeTabstopMarkers(ts)
+        }, this);
     }
     removeRange(range) {
         var i = range.tabstop.indexOf(range);
