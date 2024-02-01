@@ -892,9 +892,10 @@ class TabstopManager {
         if (index == max)
             index = 0;
         this.selectTabstop(index);
-        if (index === 0)
-            this.detach();
         this.updateTabstopMarkers();
+        if (index === 0) {
+            this.detach();
+        }
     }
     selectTabstop(index) {
         this.$openTabstops = null;
@@ -1000,11 +1001,16 @@ class TabstopManager {
         });
     }
     updateTabstopMarkers() {
-        var currentId =  this.selectedTabstop ? this.selectedTabstop.snippetId : 0;
+        if (!this.selectedTabstop) return;
+        var currentSnippetId =  this.selectedTabstop.snippetId;
+        // back to the parent snippet tabstops if $0
+        if ( this.selectedTabstop.index === 0) {
+            currentSnippetId--;
+        }
         this.tabstops.forEach(function(ts) {
-            // Show the selected tabstop markers
-            if (ts.snippetId === currentId || currentId === 0) this.addTabstopMarkers(ts);
-            else this.removeTabstopMarkers(ts)
+            // show marker only for the tabstops of the currently active snippet
+            if (ts.snippetId === currentSnippetId) this.addTabstopMarkers(ts);
+            else this.removeTabstopMarkers(ts);
         }, this);
     }
     removeRange(range) {
