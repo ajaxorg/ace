@@ -324,16 +324,16 @@ module.exports = {
         editor.insertSnippet("{$1}");
 
         // check first snippet's marker
-        assert.equal(JSON.stringify(editor.session.$backMarkers[3].range.start), JSON.stringify({row: 0, column: 2}));
-        assert.equal(JSON.stringify(editor.session.$backMarkers[4].range.start), JSON.stringify({row: 0, column: 1}));
-
-        editor.insertSnippet("\"examples\": [$1]");
+        var snippetMarkers = Object.values(editor.session.$backMarkers).filter(function(i) {return i.clazz == "ace_snippet-marker";});
+        assert.jsonEquals(snippetMarkers[0].range.start, {row: 0, column: 2});
+        assert.jsonEquals(snippetMarkers[1].range.start, {row: 0, column: 1});
 
         // check markers after insertion of the second snippet
-        assert.equal(editor.session.$backMarkers[3], undefined);
-        assert.equal(editor.session.$backMarkers[4], undefined);
-        assert.equal(JSON.stringify(editor.session.$backMarkers[5].range.start), JSON.stringify({row: 0, column: 15}));
-        assert.equal(JSON.stringify(editor.session.$backMarkers[6].range.start), JSON.stringify({row: 0, column: 14}));
+        editor.insertSnippet("\"examples\": [$1]");
+        snippetMarkers = Object.values(editor.session.$backMarkers).filter(function(i) {return i.clazz == "ace_snippet-marker";});
+        assert.equal(snippetMarkers.length, 2);
+        assert.jsonEquals(snippetMarkers[0].range.start, {row: 0, column: 15});
+        assert.jsonEquals(snippetMarkers[1].range.start, {row: 0, column: 14});
     },
     "test: linking": function() {
         var editor = this.editor;
