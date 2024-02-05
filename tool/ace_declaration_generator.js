@@ -16,6 +16,9 @@ function getParsedConfigFromDirectory(directoryPath) {
         readDirectory: ts.sys.readDirectory,
         useCaseSensitiveFileNames: true
     };
+    configFile.config.compilerOptions.noEmit = false;
+    configFile.config.compilerOptions.emitDeclarationOnly = true;
+    configFile.config.compilerOptions.outFile = "./types/index.d.ts";
 
     return ts.parseJsonConfigFileContent(configFile.config, parseConfigHost, directoryPath);
 }
