@@ -135,17 +135,16 @@ class AcePopup {
         });
         popup.renderer.on("afterRender", function () {
             var row = popup.getRow();
-            /**@type {any}*/
             var t = popup.renderer.$textLayer;
-            var selected = t.element.childNodes[row - t.config.firstRow];
+            var selected = /** @type {HTMLElement|null} */(t.element.childNodes[row - t.config.firstRow]);
             var el = document.activeElement; // Active element is textarea of main editor
-            if (selected !== t.selectedNode && t.selectedNode) {
-                dom.removeCssClass(t.selectedNode, "ace_selected");
+            if (selected !== popup.selectedNode && popup.selectedNode) {
+                dom.removeCssClass(popup.selectedNode, "ace_selected");
                 el.removeAttribute("aria-activedescendant");
-                selected.removeAttribute(ariaActiveState);
-                t.selectedNode.removeAttribute("id");
+                popup.selectedNode.removeAttribute(ariaActiveState);
+                popup.selectedNode.removeAttribute("id");
             }
-            t.selectedNode = selected;
+            popup.selectedNode = selected;
             if (selected) {
                 dom.addCssClass(selected, "ace_selected");
                 var ariaId = getAriaId(row);
@@ -154,7 +153,7 @@ class AcePopup {
                 el.setAttribute("aria-activedescendant", ariaId);
                 selected.setAttribute("role", optionAriaRole);
                 selected.setAttribute("aria-roledescription", nls("item"));
-                selected.setAttribute("aria-label", popup.getData(row).value);
+                selected.setAttribute("aria-label", popup.getData(row).caption || popup.getData(row).value);
                 selected.setAttribute("aria-setsize", popup.data.length);
                 selected.setAttribute("aria-posinset", row + 1);
                 selected.setAttribute("aria-describedby", "doc-tooltip");

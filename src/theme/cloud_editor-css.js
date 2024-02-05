@@ -181,5 +181,31 @@ module.exports = `
 .ace-cloud_editor .ace_tooltip.ace_hover-tooltip:focus > div {
     outline: 1px solid #0073bb;
 }
+.ace-cloud_editor .ace_snippet-marker {
+    background-color: #CED6E0;
+    border: 0;
+}
+
+.ace-cloud_editor.ace_editor.ace_autocomplete .ace_marker-layer .ace_active-line {
+    background-color: #f2f3f3;
+    border: #0F68AE 1.5px solid;
+}
+.ace-cloud_editor.ace_editor.ace_autocomplete .ace_line-hover {
+    border: 1px solid #16191f;
+    background: #f2f3f3;
+}
+.ace-cloud_editor.ace_editor.ace_autocomplete .ace_completion-meta {
+    color: #545b64;
+}
+.ace-cloud_editor.ace_editor.ace_autocomplete .ace_completion-highlight{
+    color: #0F68AE;
+}
+.ace-cloud_editor.ace_editor.ace_autocomplete {
+    box-shadow: 0 1px 1px 0 #001c244d, 1px 1px 1px 0 #001c2426, -1px 1px 1px 0 #001c2426;
+    line-height: 1.5;
+    border: 1px solid #eaeded;
+    background: #ffffff;
+    color: #16191f;
+}
 
 `;

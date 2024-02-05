@@ -384,10 +384,8 @@ class SnippetManager {
         //@ts-expect-error TODO: potential wrong arguments
         tabstopManager.addTabstops(processedSnippet.tabstops, range.start, end, selectionId);
     }
-    
     insertSnippet(editor, snippetText, options={}) {
         var self = this;
-        
         if (editor.inVirtualSelectionMode)
             return self.insertSnippetForSelection(editor, snippetText, options);
         
@@ -894,8 +892,10 @@ class TabstopManager {
         if (index == max)
             index = 0;
         this.selectTabstop(index);
-        if (index === 0)
+        this.updateTabstopMarkers();
+        if (index === 0) {
             this.detach();
+        }
     }
     selectTabstop(index) {
         this.$openTabstops = null;
@@ -943,9 +943,10 @@ class TabstopManager {
         var i = this.index;
         var arg = [i + 1, 0];
         var ranges = this.ranges;
+        var snippetId = this.snippetId = (this.snippetId || 0) + 1;
         tabstops.forEach(function(ts, index) {
             var dest = this.$openTabstops[index] || ts;
-            
+            dest.snippetId = snippetId;
             for (var i = 0; i < ts.length; i++) {
                 var p = ts[i];
                 /**@type {Range & {original?: Range, tabstop?: any, linked?: boolean}}}*/
@@ -998,6 +999,19 @@ class TabstopManager {
             session.removeMarker(range.markerId);
             range.markerId = null;
         });
+    }
+    updateTabstopMarkers() {
+        if (!this.selectedTabstop) return;
+        var currentSnippetId =  this.selectedTabstop.snippetId;
+        // back to the parent snippet tabstops if $0
+        if ( this.selectedTabstop.index === 0) {
+            currentSnippetId--;
+        }
+        this.tabstops.forEach(function(ts) {
+            // show marker only for the tabstops of the currently active snippet
+            if (ts.snippetId === currentSnippetId) this.addTabstopMarkers(ts);
+            else this.removeTabstopMarkers(ts);
+        }, this);
     }
     removeRange(range) {
         var i = range.tabstop.indexOf(range);

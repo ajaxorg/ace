@@ -182,14 +182,24 @@ exports.addMultiMouseDownListener = function(elements, timeouts, eventHandler, c
     });
 };
 
-var getModifierHash = function(e) {
+/** @param {KeyboardEvent|MouseEvent} e */
+function getModifierHash(e) {
     return 0 | (e.ctrlKey ? 1 : 0) | (e.altKey ? 2 : 0) | (e.shiftKey ? 4 : 0) | (e.metaKey ? 8 : 0);
-};
+}
 
+/**
+ * @param {KeyboardEvent|MouseEvent} e
+ * @returns string
+ */
 exports.getModifierString = function(e) {
     return keys.KEY_MODS[getModifierHash(e)];
 };
 
+/**
+ * @param {(e: KeyboardEvent, hashId: number, keyCode: number)=> void } callback
+ * @param {KeyboardEvent} e
+ * @param {number} keyCode
+ */
 function normalizeCommandKeys(callback, e, keyCode) {
     var hashId = getModifierHash(e);
 
@@ -203,7 +213,7 @@ function normalizeCommandKeys(callback, e, keyCode) {
                 return;
         }
         if (keyCode === 18 || keyCode === 17) {
-            var location = "location" in e ? e.location : e.keyLocation;
+            var location = e.location;
             if (keyCode === 17 && location === 1) {
                 if (pressedKeys[keyCode] == 1)
                     ts = e.timeStamp;
@@ -220,8 +230,7 @@ function normalizeCommandKeys(callback, e, keyCode) {
     }
     
     if (!hashId && keyCode === 13) {
-        var location = "location" in e ? e.location : e.keyLocation;
-        if (location === 3) {
+        if (e.location === 3) {
             callback(e, hashId, -keyCode);
             if (e.defaultPrevented)
                 return;
@@ -247,8 +256,8 @@ function normalizeCommandKeys(callback, e, keyCode) {
 }
 
 /**
- * @param el
- * @param callback
+ * @param {EventTarget} el
+ * @param {(e: KeyboardEvent, hashId: number, keyCode: number)=>void} callback
  * @param [destroyer]
  */
 exports.addCommandKeyListener = function(el, callback, destroyer) {

@@ -729,7 +729,6 @@ exports.commands = [{
     description: "Auto Indent",
     bindKey: bindKey(null, null),
     exec: function(editor) { editor.autoIndent(); },
-    multiSelectAction: "forEachLine",
     scrollIntoView: "animate"
 }, {
     name: "expandtoline",

@@ -50,6 +50,7 @@ The easiest version is simply:
     var editor = ace.edit("editor");
 </script>
 ```
+*Exploring configration options [Configuring-Ace](https://github.com/ajaxorg/ace/wiki/Configuring-Ace/)*
 
 With "editor" being the id of the DOM element, which should be converted to an editor. Note that this element must be explicitly sized and positioned `absolute` or `relative` for Ace to work. e.g.
 
@@ -154,7 +155,7 @@ You can also run the tests in your browser by serving:
 
     http://localhost:8888/src/test/tests.html
 
-This makes debugging failing tests way more easier.
+This makes debugging failing tests much easier.
 
 Contributing
 -----------------------------

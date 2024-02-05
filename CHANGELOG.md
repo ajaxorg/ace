@@ -2,6 +2,32 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.32.5](https://github.com/ajaxorg/ace/compare/v1.32.4...v1.32.5) (2024-01-30)
+
+### [1.32.4](https://github.com/ajaxorg/ace/compare/v1.32.3...v1.32.4) (2024-01-29)
+
+
+### Bug Fixes
+
+* Improve contrast of completion popup in CloudEditor theme ([#5473](https://github.com/ajaxorg/ace/issues/5473)) ([273c7f1](https://github.com/ajaxorg/ace/commit/273c7f159ded7dc9403266c6501e16a35e4101c6))
+* update JSX mode to reflect React JSX ([#5451](https://github.com/ajaxorg/ace/issues/5451)) ([66789a7](https://github.com/ajaxorg/ace/commit/66789a79ce1b7791c65886d8aecddd7efc0415e8))
+
+### [1.32.3](https://github.com/ajaxorg/ace/compare/v1.32.2...v1.32.3) (2023-12-29)
+
+
+### Bug Fixes
+
+* improve prefixing for inline preview ([#5439](https://github.com/ajaxorg/ace/issues/5439)) ([51006bb](https://github.com/ajaxorg/ace/commit/51006bba9c60b97251ddb04ed74f68ba4e7f6b54))
+* update ghost text if on same line popup ([12f4664](https://github.com/ajaxorg/ace/commit/12f466460d7187cfe37593dab1fbe275403fedd3))
+* updated red color in cloud-editor dark theme ([#5432](https://github.com/ajaxorg/ace/issues/5432)) ([142b607](https://github.com/ajaxorg/ace/commit/142b607578f5d071a5026691ff6662c11e9f186b))
+
+### [1.32.2](https://github.com/ajaxorg/ace/compare/v1.32.1...v1.32.2) (2023-12-14)
+
+
+### Bug Fixes
+
+* **themes:** changed the solarized theme primary color from `[#93](https://github.com/ajaxorg/ace/issues/93)A1A1` to `[#839496](https://github.com/ajaxorg/ace/issues/839496)`. ([#5422](https://github.com/ajaxorg/ace/issues/5422)) ([114a5c1](https://github.com/ajaxorg/ace/commit/114a5c163fd875b4fab332dadfadeeae41e4097a)), closes [#93A1A1](https://github.com/ajaxorg/ace/issues/93A1A1)
+
 ### [1.32.1](https://github.com/ajaxorg/ace/compare/v1.32.0...v1.32.1) (2023-12-11)
 
 

@@ -19,8 +19,6 @@ rm -rf ./doc
 
 npm i
 export ACE_VERSION="v$(node -p 'require("../package.json").version')"
-node generateAnnotations.js ../src
-node generateNewDts.js ace.d.ts
 node generateDoc.js ./doc
 
 rm -rf ./doc-repo

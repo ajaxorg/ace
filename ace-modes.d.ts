@@ -550,9 +550,6 @@ declare module "ace-code/src/mode/jssm_highlight_rules" {
 declare module "ace-code/src/mode/jsx" {
   export const Mode: new () => import("ace-code").Ace.SyntaxMode;
 }
-declare module "ace-code/src/mode/jsx_highlight_rules" {
-  export const JsxHighlightRules: new () => import("ace-code").Ace.HighlightRules;
-}
 declare module "ace-code/src/mode/julia" {
   export const Mode: new () => import("ace-code").Ace.SyntaxMode;
 }

@@ -37,7 +37,7 @@ TextInput= function(parentNode, host) {
 
     var copied = false;
     var pasted = false;
-    /**@type {false | {[key: string]: any}}} */
+    /**@type {(boolean|Object) & {context?: any, useTextareaForIME?: boolean, selectionStart?: number, markerRange?: any}}} */
     var inComposition = false;
     var sendingText = false;
     var tempStyle = '';
@@ -223,7 +223,7 @@ TextInput= function(parentNode, host) {
         if (!isFocused && !afterContextMenu)
             return;
         // see https://github.com/ajaxorg/ace/issues/2114
-        // @ts-expect-error this prevents infinite recursion on safari 8 
+        // this prevents infinite recursion on safari 8
         inComposition = true;
         
         var selectionStart = 0;
@@ -512,7 +512,12 @@ TextInput= function(parentNode, host) {
         }
     };
 
-    event.addCommandKeyListener(text, host.onCommandKey.bind(host), host);
+    event.addCommandKeyListener(text, function(e, hashId, keyCode) {
+        // ignore command events during composition as they will 
+        // either be handled by ime itself or fired again after ime end
+        if (inComposition) return;
+        return host.onCommandKey(e, hashId, keyCode);
+    }, host);
 
     event.addListener(text, "select", onSelect, host);
     event.addListener(text, "input", onInput, host);

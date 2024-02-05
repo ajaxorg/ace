@@ -136,7 +136,7 @@ var JavaScriptHighlightRules = function(options) {
                 regex : /that\b/
             }, {
                 token : ["storage.type", "punctuation.operator", "support.function.firebug"],
-                regex : /(console)(\.)(warn|info|log|error|time|trace|timeEnd|assert)\b/
+                regex : /(console)(\.)(warn|info|log|error|debug|time|trace|timeEnd|assert)\b/
             }, {
                 token : keywordMapper,
                 regex : identifierRe

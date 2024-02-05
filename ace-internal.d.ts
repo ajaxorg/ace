@@ -370,7 +370,7 @@ export namespace Ace {
         fontFamily: string;
         maxLines: number;
         minLines: number;
-        scrollPastEnd: boolean;
+        scrollPastEnd: number;
         fixedWidthGutter: boolean;
         customScrollbar: boolean;
         theme: string;
@@ -1203,6 +1203,12 @@ export const Range: {
 export type InlineAutocomplete = Ace.InlineAutocomplete;
 export type CommandBarTooltip = Ace.CommandBarTooltip;
 
+declare global {
+    interface Element {
+        setAttribute(name: string, value: boolean): void;
+        setAttribute(name: string, value: number): void;
+    }
+}
 
 declare module "./src/anchor" {
     export interface Anchor extends Ace.EventEmitter<Ace.AnchorEvents> {
@@ -1434,7 +1440,8 @@ declare module "./src/autocomplete/popup" {
         getTextLeftOffset: () => number,
         $imageSize: number,
         anchorPos: any,
-        isMouseOver?: boolean
+        isMouseOver?: boolean,
+        selectedNode?: HTMLElement,
     }
 }
 
@@ -1453,6 +1460,7 @@ declare module "./src/layer/gutter" {
 
 declare module "./src/layer/text" {
     export interface Text extends Ace.EventEmitter<Ace.TextEvents> {
+        config?: Ace.LayerConfig
     }
 }
 

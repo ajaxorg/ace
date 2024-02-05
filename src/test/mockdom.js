@@ -78,6 +78,7 @@ var initializers = {
                 this.selectionStart = this.selectionEnd = value.length;
             }
         });
+        this.oncut = this.oncopy = this.onpaste = null;
         this.select = function() {
             this.setSelectionRange(0, Infinity);
         };
@@ -541,9 +542,10 @@ function Node(name) {
     this.focus = function() {
         if (document.activeElement == this)
             return;
-        if (document.activeElement)
-            document.activeElement.dispatchEvent({type: "blur"});
+        var oldFocused = document.activeElement;
         document.activeElement = this;
+        if (oldFocused)
+            oldFocused.dispatchEvent({type: "blur"});
         this.dispatchEvent({type: "focus"});
     };
     this.blur = function() {
