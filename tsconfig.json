@@ -8,8 +8,7 @@
     "allowJs": true,
     "checkJs": true,
     "declaration": true,
-    "emitDeclarationOnly": true,
-    "outFile": "./types/index.d.ts"
+    "noEmit": true,
   },
   "exclude": [
     "node_modules",

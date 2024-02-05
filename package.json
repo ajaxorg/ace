@@ -46,7 +46,7 @@
         "fix": "eslint --fix \"src/**/*.js\"",
         "typecheck": "tsc -p tsconfig.json",
         "changelog": "standard-version",
-        "prepack": "node tool/esm_resolver_generator.js && node Makefile.dryice.js css --target build-styles && rm -rf styles && mv build-styles/css styles"
+        "prepack": "node tool/esm_resolver_generator.js && node tool/ace_declaration_generator.js && node Makefile.dryice.js css --target build-styles && rm -rf styles && mv build-styles/css styles"
     },
     "standard-version": {
         "skip": {
