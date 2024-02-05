@@ -479,6 +479,7 @@ class Editor {
      * @return {string}
      */
     getFontSize() {
+        // @ts-expect-error
         return this.getOption("fontSize") ||
            dom.computedStyle(this.container).fontSize;
     }
