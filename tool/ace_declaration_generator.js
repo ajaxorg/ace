@@ -207,7 +207,18 @@ function fixDeclaration(content, aceNamespacePath) {
     const sourceCode = program.getSourceFile(temporaryName);
     const result = ts.transform(sourceCode, [transformer]);
 
-    const printer = ts.createPrinter();
+    const printer = ts.createPrinter({newLine: ts.NewLineKind.LineFeed}, {
+        substituteNode(hint, node) {
+            // remove all private members
+            if ((ts.isMethodDeclaration(node) || ts.isMethodSignature(node) || ts.isPropertyDeclaration(node)
+                || ts.isPropertySignature(node)) && ts.isIdentifier(node.name) && /^[$_]/.test(node.name.text)) {
+                return ts.factory.createNotEmittedStatement(node);
+            } else if (ts.isVariableStatement(node) && node.getText().indexOf("export const $") > -1) {
+                return ts.factory.createNotEmittedStatement(node);
+            }
+            return node;
+        }
+    });
     //TODO:
     const outputName = aceNamespacePath.replace("ace-internal", "ace");
 
@@ -228,7 +239,7 @@ function fixDeclaration(content, aceNamespacePath) {
 function checkFinalDeclaration(declarationName) {
     const program = ts.createProgram([declarationName], {
         noEmit: true,
-        target: "es2019",
+        target: ts.ScriptTarget.ES2019,
         lib: ["lib.es2019.d.ts", "lib.dom.d.ts"]
     });
     const diagnostics = ts.getPreEmitDiagnostics(program);
