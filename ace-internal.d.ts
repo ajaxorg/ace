@@ -48,16 +48,18 @@ export namespace Ace {
 
         loadModule(moduleName: string | [string, string],
                    onLoad?: (module: any) => void): void;
-
-        init(packaged: any): any;
-
-        defineOptions(obj: any, path: string, options: { [key: string]: any }): Config;
+        
+        defineOptions(obj: any, path: string, options: { [key: string]: any }): AppConfig;
 
         resetOptions(obj: any): void;
 
         setDefaultValue(path: string, name: string, value: any): void;
 
         setDefaultValues(path: string, optionHash: { [key: string]: any }): void;
+
+        setMessages(value: any): void;
+
+        nls(string: string, params?:{ [x: string]: any; }): string;
     }
 
     interface Theme {
@@ -364,7 +366,7 @@ export namespace Ace {
         highlightGutterLine: boolean;
         hScrollBarAlwaysVisible: boolean;
         vScrollBarAlwaysVisible: boolean;
-        fontSize: string;
+        fontSize: string | number;
         fontFamily: string;
         maxLines: number;
         minLines: number;
@@ -1236,7 +1238,6 @@ declare module "./src/background_tokenizer" {
 
 declare module "./src/document" {
     export interface Document extends Ace.EventEmitter<Ace.DocumentEvents> {
-
     }
 
 }

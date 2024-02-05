@@ -100,9 +100,6 @@ var loader = function(moduleName, cb) {
     console.error("loader is not configured");
 };
 var customLoader;
-/**
- * @param {(moduleName: string, afterLoad: (err: Error | null, module: unknown) => void) => void}cb
- */
 exports.setLoader = function(cb) {
     customLoader = cb;
 };
