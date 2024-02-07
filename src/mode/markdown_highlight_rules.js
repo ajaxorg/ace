@@ -200,6 +200,9 @@ var MarkdownHighlightRules = function () {
                 token: "support.function",
                 regex: /(`+)/,
                 onMatch: function (value, scope, stack, line) {
+                    if (scope.name === "paragraph") {
+                        scope = scope.parent.get("start");
+                    }
                     var parent = scope.get("codeSpan", value.length);
                     parent.codeNum = value.length;
                     return parent.get(this.token);
@@ -334,11 +337,15 @@ var MarkdownHighlightRules = function () {
             {
                 token: "heading",
                 regex: /(?=$)/,
-                next: "pop"
+                onMatch: function (value, scope, stack, line) {
+                    return scope.parent.parent.get("start").get(this.token);
+                }
             }, {
                 token: "empty",
                 regex: /^\s*$/,
-                next: "pop"
+                onMatch: function (value, scope, stack, line) {
+                    return scope.parent.parent.get("start").get(this.token);
+                }
             }, {
                 include: "basic"
             }, {
