@@ -36,6 +36,10 @@ var MarkdownHighlightRules = function () {
             var language = /[\w-]+|$/.exec(m[3])[0];
             // TODO lazy-load modes
             if (!modes[language]) language = "";
+            if (scope.name == "blockquote") {
+                return scope.parent.get("start").get(this.token);
+            }
+            
             var parent = scope.get("codeBlock" + language);
             parent.language = language;
             parent.indent = m[1].length;
@@ -906,7 +910,9 @@ var MarkdownHighlightRules = function () {
                     if (scope.parent.name === "markdown") {
                         return scope.parent.get("start").get(this.token);
                     }
-
+                    else if (scope.parent.name === "blockquote") {
+                        return scope.parent.parent.get("start").get(this.token);
+                    }
                     return scope.parent.get(this.token);
                 }
             }, {defaultToken: "support.function"}
