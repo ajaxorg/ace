@@ -3,7 +3,6 @@
 var oop = require("../../lib/oop");
 var Behaviour = require("../behaviour").Behaviour;
 var TokenIterator = require("../../token_iterator").TokenIterator;
-var lang = require("../../lib/lang");
 
 function is(token, type) {
     return token && token.type.lastIndexOf(type + ".xml") > -1;
@@ -11,8 +10,15 @@ function is(token, type) {
 
 var XmlBehaviour = function () {
 
-    this.add("string_dquotes", "insertion", function (state, action, editor, session, text) {
+    this.add("string_dquotes_xml", "insertion", function (state, action, editor, session, text) {
         if (text == '"' || text == "'") {
+            var cursor = editor.getCursorPosition();
+            var iterator = new TokenIterator(session, cursor.row, cursor.column);
+            var token = iterator.getCurrentToken();
+            if (!is(token, "")) {
+                return;
+            }
+            
             var quote = text;
             var selected = session.doc.getTextRange(editor.getSelectionRange());
             if (selected !== "" && selected !== "'" && selected != '"' && editor.getWrapBehavioursEnabled()) {
@@ -22,11 +28,8 @@ var XmlBehaviour = function () {
                 };
             }
 
-            var cursor = editor.getCursorPosition();
             var line = session.doc.getLine(cursor.row);
             var rightChar = line.substring(cursor.column, cursor.column + 1);
-            var iterator = new TokenIterator(session, cursor.row, cursor.column);
-            var token = iterator.getCurrentToken();
 
             if (rightChar == quote && (is(token, "attribute-value") || is(token, "string"))) {
                 // Ignore input and move right one if we're typing over the closing quote.
@@ -55,14 +58,19 @@ var XmlBehaviour = function () {
         }
     });
 
-    this.add("string_dquotes", "deletion", function(state, action, editor, session, range) {
-        var selected = session.doc.getTextRange(range);
-        if (!range.isMultiLine() && (selected == '"' || selected == "'")) {
-            var line = session.doc.getLine(range.start.row);
-            var rightChar = line.substring(range.start.column + 1, range.start.column + 2);
-            if (rightChar == selected) {
-                range.end.column++;
-                return range;
+    this.add("string_dquotes_xml", "deletion", function (state, action, editor, session, range) {
+        var cursor = editor.getCursorPosition();
+        var iterator = new TokenIterator(session, cursor.row, cursor.column);
+        var token = iterator.getCurrentToken();
+        if (is(token, "")) {
+            var selected = session.doc.getTextRange(range);
+            if (!range.isMultiLine() && (selected == '"' || selected == "'")) {
+                var line = session.doc.getLine(range.start.row);
+                var rightChar = line.substring(range.start.column + 1, range.start.column + 2);
+                if (rightChar == selected) {
+                    range.end.column++;
+                    return range;
+                }
             }
         }
     });
@@ -116,7 +124,7 @@ var XmlBehaviour = function () {
             if (tokenRow == position.row)
                 element = element.substring(0, position.column - tokenColumn);
 
-            if (this.voidElements.hasOwnProperty(element.toLowerCase()))
+            if (this.voidElements && this.voidElements.hasOwnProperty(element.toLowerCase()))
                  return;
 
             return {
@@ -133,7 +141,7 @@ var XmlBehaviour = function () {
             var iterator = new TokenIterator(session, cursor.row, cursor.column);
             var token = iterator.getCurrentToken();
 
-            if (token && token.type.indexOf("tag-close") !== -1) {
+            if (is(token, "") && token.type.indexOf("tag-close") !== -1) {
                 if (token.value == "/>")
                     return;
                 //get tag name
