@@ -10,8 +10,7 @@ Things to verify:
   <div>
     {{ foo * 10 + 'hi' }}
     <span
-        v-text="foo * 10 + 'hi'"
-        :id="foo + 'baz'"
+        v-text="foo * 10 + 'hi'" :id="foo + 'baz'"
         @click="onClick('hello')"
         @click.prevent="onClick('hello')">
       Hello
@@ -95,3 +94,12 @@ html, body
 }
 
 </style>
+
+<template lang="jade">
+  mixin article(obj, parents)
+    -var x = "0";
+
+  - var items = ["one", "two", "three"]
+  each item in items
+    li= item
+</template>
