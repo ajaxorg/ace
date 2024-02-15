@@ -10,7 +10,9 @@ var {StylusHighlightRules} = require("./stylus_highlight_rules");
 var {SassHighlightRules} = require("./sass_highlight_rules");
 var {ScssHighlightRules} = require("./scss_highlight_rules");
 var {LessHighlightRules} = require("./less_highlight_rules");
-const {Tokenizer} = require("../tokenizer");
+var {Tokenizer} = require("../tokenizer");
+var {SlimHighlightRules} = require("./slim_highlight_rules");
+var {JadeHighlightRules} = require("./jade_highlight_rules");
 
 var JavaScriptMode = require("./javascript").Mode;
 
@@ -65,26 +67,43 @@ var VueHighlightRules = function (options) {
 
     var vueRules = [
         {
+            include: "vue-interpolations"
+        }
+    ];
+
+    var VueRules = new HtmlHighlightRules().getRules();
+    VueRules.start = vueRules.concat(VueRules.start);
+    VueRules["vue-interpolations"] = [
+        {
             token: "punctuation",
             regex: /\{\{\{?/,
             next: "js-interpolation-start"
         }
     ];
 
-    var VueRules = new HtmlHighlightRules().getRules();
-    VueRules.start = vueRules.concat(VueRules.start);
     var self = this;
-    VueRules.tag_stuff.unshift({
-        token: /*"string"*/[
-            "entity.other.attribute-name.html", "punctuation.separator.key-value.html",
-            "entity.other.attribute-name.html", "entity.other.attribute-name.html", "entity.other.attribute-name.html",
-            "text", "punctuation.separator.key-value.html", "text", "lparen.paren"
-        ],
+    VueRules.tag_stuff.unshift({//vue-directives 
+        token: "string",
         regex: /(?:\b(v-)|(:|@))([a-zA-Z\-.]+)(?:\:([a-zA-Z\-]+))?(?:\.([a-zA-Z\-]+))*(\s*)(=)(\s*)(["'])/,
         onMatch: function (value, currentState, stack) {
             var quote = value[value.length - 1];
             stack.unshift(quote, currentState);
-            return this.token;
+
+            var values = new RegExp(this.regex).exec(value);
+            if (!values) return "text";
+            var tokens = [];
+            var types = [
+                "entity.other.attribute-name.xml", "punctuation.separator.key-value.xml",
+                "entity.other.attribute-name.xml", "entity.other.attribute-name.xml", "entity.other.attribute-name.xml",
+                "text", "punctuation.separator.key-value.xml", "text", "string"
+            ];
+            for (var i = 0, l = types.length; i < l; i++) {
+                if (values[i + 1]) tokens[tokens.length] = {
+                    type: types[i],
+                    value: values[i + 1]
+                };
+            }
+            return tokens;
         },
         next: [
             {
@@ -120,6 +139,34 @@ var VueHighlightRules = function (options) {
                 }
             }
         ]
+    }, {
+        token: "string",
+        regex: '"',
+        next: [
+            {
+                token: "string",
+                regex: '"|$',
+                next: "tag_stuff"
+            }, {
+                include: "vue-interpolations"
+            }, {
+                defaultToken: "string"
+            }
+        ]
+    }, {
+        token: "string",
+        regex: "'",
+        next: [
+            {
+                token: "string",
+                regex: "'|$",
+                next: "tag_stuff"
+            }, {
+                include: "vue-interpolations"
+            }, {
+                defaultToken: "string"
+            }
+        ]
     });
     this.$rules = VueRules;
 
@@ -140,7 +187,11 @@ var VueHighlightRules = function (options) {
     this.embedLangRules(TypeScriptHighlightRules, "script", "ts", "lang");
     this.embedLangRules(CoffeeHighlightRules, "script", "coffee", "lang");
     //TODO: this.embedLangRules(CoffeeHighlightRules, "script", "livescript", "lang");
-
+    this.embedLangRules(SlimHighlightRules, "template", "slm", "lang");
+    this.embedLangRules(JadeHighlightRules, "template", "jade", "lang");
+    //TODO: this.embedLangRules(Pug, "template", "pug", "lang");
+    this.embedLangRules(StylusHighlightRules, "template", "stylus", "lang");
+    
     this.normalizeRules();
 };
 
