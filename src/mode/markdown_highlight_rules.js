@@ -32,7 +32,7 @@ var MarkdownHighlightRules = function () {
         token: "support.function",
         regex: /\s*(```+[^`]*|~~~+[^~]*)/,
         onMatch: function (value, scope, stack, line) {
-            var m = line.match(/^(.*)([`~]+)(.*)/);
+            var m = line.match(/^(\s*)([`~]+)(.*)/);
             var language = /[\w-]+|$/.exec(m[3])[0];
             // TODO lazy-load modes
             if (!modes[language]) language = "";
@@ -113,6 +113,13 @@ var MarkdownHighlightRules = function () {
 
     this.$rules = {
         "start": [
+            {
+                token: function (value) {
+                    return "markup.heading." + value.match(/#/g).length;
+                },
+                regex: /^\s{0,3}#{1,6}(?=\s|$)/,
+                push: "header"
+            },
             { // HR * - _
                 token: "constant",
                 regex: /^\s{0,2}(?:(?:\s?\*\s*){3,}|(?:\s?-\s*){3,}|(?:\s?_\s*){3,})\s*$/,
@@ -165,12 +172,6 @@ var MarkdownHighlightRules = function () {
                 token: "constant",
                 regex: /^\s{0,2}(?:(?:\s?\*\s*){3,}|(?:\s?-\s*){3,}|(?:\s?_\s*){3,})\s*$/,
                 next: "start"
-            }, {
-                token: function (value) {
-                    return "markup.heading." + value.match(/#/g).length;
-                },
-                regex: /^\s{0,3}#{1,6}(?=\s|$)/,
-                push: "header"
             }, { // list start with 1. or * or -
                 token: "markup.list",
                 regex: /^\s{0,3}(?:[*+-]|1[.)])(?:\s{1,4})/,
@@ -198,7 +199,7 @@ var MarkdownHighlightRules = function () {
                 regex: escapeSymbols
             }, { // code span `
                 token: "support.function",
-                regex: /(`+)/,
+                regex: /(`{1,2})/,
                 onMatch: function (value, scope, stack, line) {
                     if (scope.name === "paragraph") {
                         scope = scope.parent.get("start");
@@ -249,7 +250,7 @@ var MarkdownHighlightRules = function () {
         "codeSpan": [
             {
                 token: "support.function",
-                regex: /(`+)/,
+                regex: /(`{1,2})/,
                 onMatch: function (value, scope, stack, line) {
                     if (scope.codeNum === value.length) {
                         return scope.parent.get(this.token);
@@ -534,7 +535,14 @@ var MarkdownHighlightRules = function () {
             }, {
                 token: "text",
                 regex: /\]/,
-                next: "pop"
+                next: "start",
+                onMatch: function (value, scope, stack, line) {
+                    var parent = scope;
+                    while (parent.name != "markdown") {
+                        parent = parent.parent;
+                    }
+                    return parent.get("start").get(this.token);
+                }
             }, {defaultToken: "constant"}
         ],
         "imageLabel": [
