@@ -63,6 +63,7 @@ var supportedModes = {
     AQL:         ["aql"],
     AsciiDoc:    ["asciidoc|adoc"],
     ASL:         ["dsl|asl|asl.json"],
+    Assembly_ARM32:["s"],
     Assembly_x86:["asm|a"],
     Astro:       ["astro"],
     AutoHotKey:  ["ahk"],
