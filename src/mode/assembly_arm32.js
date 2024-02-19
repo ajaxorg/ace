@@ -2,11 +2,11 @@
 
 var oop = require("../lib/oop");
 var TextMode = require("./text").Mode;
-var AssemblyARMHighlightRules = require("./assembly_arm_highlight_rules").AssemblyARMHighlightRules;
+var AssemblyARM32HighlightRules = require("./assembly_arm32_highlight_rules").AssemblyARM32HighlightRules;
 var FoldMode = require("./folding/coffee").FoldMode;
 
 var Mode = function() {
-    this.HighlightRules = AssemblyARMHighlightRules;
+    this.HighlightRules = AssemblyARM32HighlightRules;
     this.foldingRules = new FoldMode();
     this.$behaviour = this.$defaultBehaviour;
 };

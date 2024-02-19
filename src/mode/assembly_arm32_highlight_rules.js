@@ -3,7 +3,7 @@
 var oop = require("../lib/oop");
 var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;
 
-var AssemblyARMHighlightRules = function() {
+var AssemblyARM32HighlightRules = function() {
     // regexp must not have capturing parentheses. Use (?:) instead.
     // regexps are ordered -> the first match is used
 
@@ -16,7 +16,7 @@ var AssemblyARMHighlightRules = function() {
             },
             { 
                 token: 'variable.parameter.register.assembly',
-                regex: '\\b(?:r0|r1|r2|r3|r4|r5|r6|r7|r8|r9|r10|r11|r12|r13|r14|r15|fp|ip|sp|lr|pc|cpsr)\\b',
+                regex: '\\b(?:r0|r1|r2|r3|r4|r5|r6|r7|r8|r9|r10|r11|r12|r13|r14|r15|fp|ip|sp|lr|pc|cpsr|spsr)\\b',
                 caseInsensitive: true 
             },
             { 
@@ -38,7 +38,7 @@ var AssemblyARMHighlightRules = function() {
             },
             { 
                 token: 'support.function.directive.assembly',
-                regex: '(?:\.section|\.global|\.text|\.ascii|\.align|\.asciiz|\.byte|\.end|\.data|\.equ|\.extern|\.include)'
+                regex: '(?:\.section|\.global|\.text|\.asciz|\.asciiz|\.ascii|\.align|\.byte|\.end|\.data|\.equ|\.extern|\.include)'
             },
             { 
                 token: 'entity.name.function.assembly', 
@@ -79,11 +79,11 @@ var AssemblyARMHighlightRules = function() {
     this.normalizeRules();
 };
 
-AssemblyARMHighlightRules.metaData = { fileTypes: [ 's' ],
-      name: 'Assembly ARM',
+AssemblyARM32HighlightRules.metaData = { fileTypes: [ 's' ],
+      name: 'Assembly ARM32',
       scopeName: 'source.assembly' };
 
 
-oop.inherits(AssemblyARMHighlightRules, TextHighlightRules);
+oop.inherits(AssemblyARM32HighlightRules, TextHighlightRules);
 
-exports.AssemblyARMHighlightRules = AssemblyARMHighlightRules;
+exports.AssemblyARM32HighlightRules = AssemblyARM32HighlightRules;
