@@ -15,7 +15,7 @@ oop.inherits(Mode, TextMode);
 (function() {
     this.lineCommentStart = [";"];
 	this.blockComment = {start: "/*", end: "*/"};
-    this.$id = "ace/mode/assembly_arm";
+    this.$id = "ace/mode/assembly_arm32";
 }).call(Mode.prototype);
 
 exports.Mode = Mode;
