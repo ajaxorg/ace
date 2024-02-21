@@ -8,10 +8,21 @@ function is(token, type) {
     return token && token.type.lastIndexOf(type + ".xml") > -1;
 }
 
-var XmlBehaviour = function () {
-
+/**
+ * Creates a new XML behaviour object with the specified options.
+ * @constructor
+ * @param {Object} [options] - The options for the XML behaviour object.
+ * @param {boolean} [options.closeCurlyBraces] - enables automatic insertion of closing curly brace.
+ */
+var XmlBehaviour = function (options) {
+    options = options || {};
     this.add("string_dquotes_xml", "insertion", function (state, action, editor, session, text) {
-        if (text == '"' || text == "'") {
+        if (text == '"' || text == "'" || (options.closeCurlyBraces && text == "{")) {
+            var quotesMapping = {
+                '"': '"',
+                "'": "'",
+                "{": "}"
+            };
             var cursor = editor.getCursorPosition();
             var iterator = new TokenIterator(session, cursor.row, cursor.column);
             var token = iterator.getCurrentToken();
@@ -20,10 +31,11 @@ var XmlBehaviour = function () {
             }
             
             var quote = text;
+            var closingQuote = quotesMapping[text];
             var selected = session.doc.getTextRange(editor.getSelectionRange());
             if (selected !== "" && selected !== "'" && selected != '"' && editor.getWrapBehavioursEnabled()) {
                 return {
-                    text: quote + selected + quote,
+                    text: quote + selected + closingQuote,
                     selection: false
                 };
             }
@@ -31,7 +43,7 @@ var XmlBehaviour = function () {
             var line = session.doc.getLine(cursor.row);
             var rightChar = line.substring(cursor.column, cursor.column + 1);
 
-            if (rightChar == quote && (is(token, "attribute-value") || is(token, "string"))) {
+            if (rightChar == closingQuote && (is(token, "attribute-value") || is(token, "string"))) {
                 // Ignore input and move right one if we're typing over the closing quote.
                 return {
                     text: "",
@@ -51,7 +63,7 @@ var XmlBehaviour = function () {
             var rightSpace = !rightChar || rightChar.match(/\s/);
             if (is(token, "attribute-equals") && (rightSpace || rightChar == '>') || (is(token, "decl-attribute-equals") && (rightSpace || rightChar == '?'))) {
                 return {
-                    text: quote + quote,
+                    text: quote + closingQuote,
                     selection: [1, 1]
                 };
             }
@@ -64,7 +76,8 @@ var XmlBehaviour = function () {
         var token = iterator.getCurrentToken();
         if (is(token, "")) {
             var selected = session.doc.getTextRange(range);
-            if (!range.isMultiLine() && (selected == '"' || selected == "'")) {
+            if (!range.isMultiLine() && (selected == '"' || selected == "'" || (options.closeCurlyBraces && selected
+                == "{"))) {
                 var line = session.doc.getLine(range.start.row);
                 var rightChar = line.substring(range.start.column + 1, range.start.column + 2);
                 if (rightChar == selected) {
@@ -162,7 +175,7 @@ var XmlBehaviour = function () {
                     return;
                 }
 
-                if (this.voidElements && !this.voidElements[tag]) {
+                if (this.voidElements && !this.voidElements[tag] || !this.voidElements) {
                     var nextToken = session.getTokenAt(cursor.row, cursor.column+1);
                     var line = session.getLine(row);
                     var nextIndent = this.$getIndent(line);
