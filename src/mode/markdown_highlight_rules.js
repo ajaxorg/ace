@@ -113,19 +113,6 @@ var MarkdownHighlightRules = function () {
 
     this.$rules = {
         "start": [
-            {
-                token: function (value) {
-                    return "markup.heading." + value.match(/#/g).length;
-                },
-                regex: /^\s{0,3}#{1,6}$/
-            },
-            {
-                token: function (value) {
-                    return "markup.heading." + value.match(/#/g).length;
-                },
-                regex: /^\s{0,3}#{1,6}(?=\s|$)/,
-                push: "header"
-            },
             { // HR * - _
                 token: "constant.thematic_break",
                 regex: /^\s{0,2}(?:(?:\s?\*\s*){3,}|(?:\s?-\s*){3,}|(?:\s?_\s*){3,})\s*$/,
@@ -166,6 +153,18 @@ var MarkdownHighlightRules = function () {
 
     this.addRules({
         "paragraph": [
+            {
+                token: function (value) {
+                    return "markup.heading." + value.match(/#/g).length;
+                },
+                regex: /^\s{0,3}#{1,6}$/
+            }, {
+                token: function (value) {
+                    return "markup.heading." + value.match(/#/g).length;
+                },
+                regex: /^\s{0,3}#{1,6}(?=\s|$)/,
+                push: "header"
+            },
             blockquoteStartRule, { // h1
                 token: "markup.heading.1",
                 regex: /^\s{0,3}=+(?=\s*$)/,
