@@ -7,6 +7,26 @@ var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;
 // TODO: Unicode escape sequences
 var identifierRe = "[a-zA-Z\\$_\u00a1-\uffff][a-zA-Z\\d\\$_\u00a1-\uffff]*";
 
+/**
+ * @param {RegExp|string} regex
+ * @param {string[]} types
+ * @param {string} val
+ * @returns {string|string[]}
+ */
+function formArrayOfTokens(regex, types, val) {
+    var values = new RegExp(regex).exec(val);
+    if (!values) return "text";
+
+    var tokens = [];
+    for (var i = 0, l = types.length; i < l; i++) {
+        if (values[i + 1]) tokens[tokens.length] = {
+            type: types[i],
+            value: values[i + 1]
+        };
+    }
+    return tokens;
+}
+
 var JavaScriptHighlightRules = function(options) {
     // see: https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects
     var keywordMapper = this.createKeywordMapper({
@@ -389,8 +409,7 @@ var JavaScriptHighlightRules = function(options) {
                 else if (val == "}" && stack.length) {
                     stack.shift();
                     this.next = stack.shift();
-                    if (this.next.indexOf("string") != -1 || this.next.indexOf("jsx") != -1)
-                        return "paren.quasi.end";
+                    if (this.next.indexOf("string") != -1 || this.next.indexOf("jsx") != -1) return "paren.quasi.end.xml";
                 }
                 return val == "{" ? "paren.lparen" : "paren.rparen";
             },
@@ -474,31 +493,89 @@ function JSX() {
                     }
                 }
             }
-            return [{
-                type: "meta.tag.punctuation." + (offset == 1 ? "" : "end-") + "tag-open.xml",
-                value: val.slice(0, offset)
-            }, {
-                type: "meta.tag.tag-name.xml",
-                value: val.substr(offset)
-            }];
+            var tagName = val.substr(offset);
+            //if (tagName) {
+            return [
+                {
+                    type: "meta.tag.punctuation." + (offset == 1 ? "" : "end-") + "tag-open.xml",
+                    value: val.slice(0, offset)
+                }, {
+                    type: "meta.tag.tag-name.xml",
+                    value: tagName
+                }
+            ];
+            /* } else {
+                 return {
+                     type: "meta.tag.punctuation." + (offset == 1 ? "" : "end-") + "tag-open.xml",
+                     value: val.slice(0, offset)
+                 }
+             }*/
         },
-        regex : "</?" + tagRegex + "",
+        regex: "</?(?:" + tagRegex + "|(?=\>))",
         next: "jsxAttributes",
         nextState: "jsx"
     };
+    /* var jsxFragment = {
+         token: /!*"string"*!/["meta.tag.punctuation.tag-open.xml", "meta.tag.punctuation.tag-name.tag-close.xml"],
+         regex: /(<)(>)/,
+        /!* onMatch : function(val, state, stack) {
+             var types = ["meta.tag.punctuation.tag-open.xml", "meta.tag.punctuation.tag-name.tag-close.xml"];
+             return formArrayOfTokens(this.regex, types, val);
+         },
+         next: "jsx"*!/
+     };
+     var jsxClosingFragment = {
+         token: /!*"string"*!/["meta.tag.punctuation.end-tag-open.xml", "meta.tag.punctuation.tag-name.tag-close.xml"],
+         regex: /(<\/)(>)/,
+        /!* onMatch : function(val, state, stack) {
+                 if (stack[0] == this.nextState)
+                     stack[1]--;
+                 if (!stack[1] || stack[1] < 0) {
+                     stack.splice(0, 2);
+                 }
+             this.next = stack[0] || "start";
+             var types = ["meta.tag.punctuation.end-tag-open.xml", "meta.tag.punctuation.tag-name.tag-close.xml"];
+             return formArrayOfTokens(this.regex, types, val);
+         },
+         nextState: "jsx"*!/
+     };*/
     this.$rules.start.unshift(jsxTag);
     var jsxJsRule = {
         regex: "{",
-        token: "paren.quasi.start",
+        token: "paren.quasi.start.xml",
         push: "start"
     };
     this.$rules.jsx = [
         jsxJsRule,
-        jsxTag,
+        jsxTag, {
+            token: "meta.tag.punctuation.tag-open.xml",
+            regex: "<"
+        }, // jsxFragment,
+        // jsxClosingFragment,
         {include : "reference"},
         {defaultToken: "string"}
     ];
     this.$rules.jsxAttributes = [{
+        token: "meta.tag.punctuation.tag-name.tag-close.xml",//
+        regex: /(?<=<)\/?>/,
+        onMatch: function (value, currentState, stack) {
+            if (currentState == stack[0]) stack.shift();
+            if (value.length == 2) {
+                if (stack[0] == this.nextState) stack[1]--;
+                if (!stack[1] || stack[1] < 0) {
+                    stack.splice(0, 2);
+                }
+            }
+            this.next = stack[0] || "start";
+            return [
+                {
+                    type: this.token,
+                    value: value
+                }
+            ];
+        },
+        nextState: "jsx"
+    }, {
         token : "meta.tag.punctuation.tag-close.xml",
         regex : "/?>",
         onMatch : function(value, currentState, stack) {
