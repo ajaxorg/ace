@@ -1120,6 +1120,35 @@ var MarkdownHighlightRules = function () {
                     return scope.get(this.token);
                 }
             }
+        ],
+        "attribute_value": [
+            {
+                token: "string.attribute-value.xml",
+                regex: "'",
+                push: [
+                    {
+                        token: "string.attribute-value.xml",
+                        regex: "'",
+                        next: "pop"
+                    }, {include: "attr_reference"}, {defaultToken: "string.attribute-value.xml"}
+                ]
+            }, {
+                token: "string.attribute-value.xml",
+                regex: '"',
+                push: [
+                    {
+                        token: "string.attribute-value.xml",
+                        regex: '"',
+                        next: "pop"
+                    }, {include: "attr_reference"}, {defaultToken: "string.attribute-value.xml"}
+                ]
+            }
+        ],
+        attr_reference: [
+            {
+                token: "constant.language.escape.reference.attribute-value.xml",
+                regex: "(?:&#[0-9]+;)|(?:&#x[0-9a-fA-F]+;)|(?:&[a-zA-Z0-9_:\\.-]+;)"
+            }
         ]
     });
 
