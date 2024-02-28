@@ -12,7 +12,6 @@ declare module "ace-code/src/ext/modelist" {
         caption: string;
         mode: string;
         extensions: string;
-        extRe: RegExp;
         supportsFile(filename: string): boolean;
     }
     export function getModeForPath(path: string): Mode;
