@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.32.7](https://github.com/ajaxorg/ace/compare/v1.32.6...v1.32.7) (2024-03-01)
+
+
+### Bug Fixes
+
+* swap blue/red in cloudeditor themes to reduces usage of red ([#5492](https://github.com/ajaxorg/ace/issues/5492)) ([0e8f549](https://github.com/ajaxorg/ace/commit/0e8f549a16481f8bb7573ac9edaae377cb9e3972))
+
 ### [1.32.6](https://github.com/ajaxorg/ace/compare/v1.32.5...v1.32.6) (2024-02-07)
 
 ### [1.32.5](https://github.com/ajaxorg/ace/compare/v1.32.4...v1.32.5) (2024-01-30)
