@@ -235,6 +235,7 @@ export namespace Ace {
     relativeLineNumbers: boolean;
     enableMultiselect: boolean;
     enableKeyboardAccessibility: boolean;
+    filterStringsCompletions: boolean;
   }
 
   export interface SearchOptions {
