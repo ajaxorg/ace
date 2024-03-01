@@ -187,6 +187,10 @@ class Search {
         var match = re.exec(input);
         if (!match || match[0].length != input.length)
             return null;
+        if (!options.regExp) {
+            replacement = replacement.replace(/\$/g, "$$$$");
+        }
+        
         replacement = input.replace(re, replacement);
         if (options.preserveCase) {
             replacement = replacement.split("");
