@@ -220,16 +220,6 @@ class SearchBox {
          }*/
 
         this.execFind(options, callback);
-
-        /*var range = this.editor.find(this.searchInput.value, {
-            
-        });
-        /!**@type {any}*!/
-        var noMatch = !range && this.searchInput.value;
-        dom.setCssClass(this.searchBox, "ace_nomatch", noMatch);
-        this.editor._emit("findSearchBox", { match: !noMatch });
-        this.highlight();
-        this.updateCounter();*/
     }
 
     /**
@@ -237,6 +227,8 @@ class SearchBox {
      * @param {(arg0: import("../../ace-internal").Ace.SearchResultCallbackArgs) => void} [callback]
      */
     execFind(options, callback) {
+        var isHighlight = false; //TODO: change it somewhere 
+        
         var selectAll = (result) => {
             var indexArray = result.matches;
             var value = result.value;
@@ -269,8 +261,6 @@ class SearchBox {
             }
             this.editor.selection.fromJSON(ranges);
         };
-
-        var isHighlight = false; //TODO: change it somewhere 
 
         var range = this.editor.selection.getRange();
 
@@ -496,11 +486,6 @@ class SearchBox {
         var val = this.replaceInput.value;
         //options.preserveCase = chk.preserveCase.checked; TODO:
 
-        if (options.replaceMode == "literal") //TODO: ????
-            return function () {
-                return val;
-            };
-
         var fmtParts = [];
 
         function add(p) {
@@ -631,7 +616,7 @@ class SearchBox {
 var $searchBarKb = new HashHandler();
 $searchBarKb.bindKeys({
     "Ctrl-f|Command-f": function (/**@type{SearchBox}*/sb) {
-        var isReplace = sb.isReplace = !sb.isReplace;
+        var isReplace = sb["isReplace"] = !sb["isReplace"];
         sb.replaceBox.style.display = isReplace ? "" : "none";
         sb.replaceOption.checked = false;
         sb.$syncOptions();

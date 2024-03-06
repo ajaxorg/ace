@@ -179,6 +179,20 @@ module.exports = {
             assert.equal(editor.session.getTextRange(range), "5 Bx 5\nX 6 Bx 6\nX");
             done();
         });
+    },
+    "test: Support for regex lookaheads in search & replace #4006": function (done) {
+        createSearchBox(); //reset search box
+
+        editor.setValue("foobar\nfooqux\nfoobar1");
+
+        searchInput.value = "foo(?=bar)";
+        searchReplace.value = "baz";
+        simulateClick(searchBox.regExpOption);
+
+        searchBox.replaceAll(() => {
+            assert.equal(editor.getValue(), "bazbar\nfooqux\nbazbar1");
+            done();
+        });
     }
 };
 
