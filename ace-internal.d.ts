@@ -26,6 +26,7 @@ export namespace Ace {
     type GutterHandler = import("./src/mouse/default_gutter_handler").GutterHandler;
     type DragdropHandler = import("./src/mouse/dragdrop_handler").DragdropHandler;
     type AppConfig = import("./src/lib/app_config").AppConfig;
+    type SearchTracker = import("./src/ext/search/async_search").SearchTracker;
 
 
     type AfterLoadCallback = (err: Error | null, module: unknown) => void;
@@ -645,6 +646,14 @@ export namespace Ace {
         re: RegExp;
     }
 
+    interface ExtendedSearchOptions extends SearchOptions {
+        source: string;
+        flags: string;
+        regex?: RegExp;
+        findAll: boolean;
+        indexRange?: number[];
+    }
+
     interface Point {
         row: number;
         column: number;
@@ -783,7 +792,10 @@ export namespace Ace {
         closingBracketBlock(session: EditSession, bracket: string, row: number, column: number, typeRe?: RegExp): Range | undefined;
     }
 
-    type BehaviorAction = (state: string, action: string, editor: Editor, session: EditSession, text: string | Range) => ({ text: string, selection: number[] } | Range) & { [key: string]: any } | undefined;
+    type BehaviorAction = (state: string, action: string, editor: Editor, session: EditSession, text: string | Range) => ({
+        text: string,
+        selection: number[]
+    } | Range) & { [key: string]: any } | undefined;
     type BehaviorMap = Record<string, Record<string, BehaviorAction>>;
 
     interface Behaviour {
@@ -940,8 +952,10 @@ export namespace Ace {
                        callback: CompleterCallback): void;
 
         getDocTooltip?(item: Completion): void | string | Completion;
+
         onSeen?: (editor: Ace.Editor, completion: Completion) => void;
         onInsert?: (editor: Ace.Editor, completion: Completion) => void;
+
         cancel?(): void;
 
         id?: string;
@@ -1163,6 +1177,22 @@ export namespace Ace {
         className?: string,
         value: string,
     }>>
+
+    export type SearchResultCallbackArgs = {
+        start?: Position,
+        end?: Position,
+        total: number,
+        current: number,
+        wrapped?: boolean,
+        value?: string,
+        startIndex?: number
+    } | {
+        value: string,
+        matches: number[],
+        offset: number,
+        start?: Position,
+        end?: Position,
+    } | "waiting" | null;
 }
 
 
@@ -1202,6 +1232,7 @@ export type CommandBarTooltip = Ace.CommandBarTooltip;
 declare global {
     interface Element {
         setAttribute(name: string, value: boolean): void;
+
         setAttribute(name: string, value: number): void;
     }
 }
@@ -1311,6 +1342,7 @@ declare module "./src/edit_session" {
         $occurMatchingLines?: any,
         $useEmacsStyleLineStart?: boolean,
         $selectLongWords?: boolean,
+        searchTracker?: Ace.SearchTracker
     }
 
 }

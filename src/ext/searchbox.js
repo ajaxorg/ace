@@ -1,7 +1,7 @@
 "use strict";
-/**
- * @typedef {import("../editor").Editor} Editor
- */
+/** @typedef {import("../editor").Editor} Editor */
+/** @typedef {import("../../ace-internal").Ace.ExtendedSearchOptions} ExtendedSearchOptions */
+
 var dom = require("../lib/dom");
 var lang = require("../lib/lang");
 var event = require("../lib/event");
@@ -9,6 +9,8 @@ var searchboxCss = require("./searchbox-css");
 var HashHandler = require("../keyboard/hash_handler").HashHandler;
 var keyUtil = require("../lib/keys");
 var nls = require("../config").nls;
+var {Range} = require("../range");
+var asyncSearch = require("./search/async_search");
 
 var MAX_COUNT = 999;
 
@@ -181,60 +183,195 @@ class SearchBox {
     }
 
     /**
-     * @param {boolean} skipCurrent
-     * @param {boolean} backwards
-     * @param {any} [preventScroll]
+     *
+     * @return {Partial<ExtendedSearchOptions>}
      */
-    find(skipCurrent, backwards, preventScroll) {
-        var range = this.editor.find(this.searchInput.value, {
-            skipCurrent: skipCurrent,
-            backwards: backwards,
+    getOptions() {
+        var options = {
             wrap: true,
-            regExp: this.regExpOption.checked,
             caseSensitive: this.caseSensitiveOption.checked,
             wholeWord: this.wholeWordOption.checked,
-            preventScroll: preventScroll,
-            range: this.searchRange
+            regExp: this.regExpOption.checked,
+            range: this.searchRange,
+            needle: this.searchInput.value
+        };
+        return options;
+    }
+
+    /**
+     * @param {boolean} skipCurrent
+     * @param {boolean} backwards
+     * @param {boolean} [preventScroll]
+     * @param {(arg0: import("../../ace-internal").Ace.SearchResultCallbackArgs) => void} [callback]
+     */
+    find(skipCurrent, backwards, preventScroll, callback) {
+        var options = this.getOptions();
+        options.skipCurrent = skipCurrent;
+        options.backwards = backwards;
+        options.preventScroll = preventScroll;
+        //skipCurrent is type == true
+        //!skipCurrent   is type == false
+        //type highlight is onfocus from editor to searchbox?
+
+        /* 
+         if (options.regExp) {
+             libsearch.checkRegExp(txtFind,
+                 tooltipSearchReplace, winSearchReplace);
+         }*/
+
+        this.execFind(options, callback);
+
+        /*var range = this.editor.find(this.searchInput.value, {
+            
         });
-        /**@type {any}*/
+        /!**@type {any}*!/
         var noMatch = !range && this.searchInput.value;
         dom.setCssClass(this.searchBox, "ace_nomatch", noMatch);
         this.editor._emit("findSearchBox", { match: !noMatch });
         this.highlight();
-        this.updateCounter();
+        this.updateCounter();*/
     }
-    updateCounter() {
-        var editor = this.editor;
-        var regex = editor.$search.$options.re;
-        var supportsUnicodeFlag = regex.unicode;
-        var all = 0;
-        var before = 0;
-        if (regex) {
-            var value = this.searchRange
-                ? editor.session.getTextRange(this.searchRange)
-                : editor.getValue();
-            
-            var offset = editor.session.doc.positionToIndex(editor.selection.anchor);
-            if (this.searchRange)
-                offset -= editor.session.doc.positionToIndex(this.searchRange.start);
-                
-            var last = regex.lastIndex = 0;
-            var m;
-            while ((m = regex.exec(value))) {
-                all++;
-                last = m.index;
-                if (last <= offset)
-                    before++;
-                if (all > MAX_COUNT)
-                    break;
-                if (!m[0]) {
-                    regex.lastIndex = last += lang.skipEmptyMatch(value, last, supportsUnicodeFlag);
-                    if (last >= value.length)
-                        break;
-                }
+
+    /**
+     * @param {Partial<ExtendedSearchOptions>} options
+     * @param {(arg0: import("../../ace-internal").Ace.SearchResultCallbackArgs) => void} [callback]
+     */
+    execFind(options, callback) {
+        var selectAll = (result) => {
+            var indexArray = result.matches;
+            var value = result.value;
+            var startIndex = result.offset;
+            var re = options.re;
+            if (!indexArray.length) return;
+
+            var doc = this.editor.session.doc;
+            var ranges = [];
+            var startPos = {
+                row: 0,
+                column: 0
+            };
+            var endPos = {
+                row: 0,
+                column: 0
+            };
+            var start = 0, end = 0, offset = 0;
+            for (var i = 0; i < indexArray.length; i++) {
+                var index = indexArray[i] + startIndex;
+                re.lastIndex = index;
+                var match = re.exec(value);
+                var txt = match[0];
+                var len = txt.length;
+                startPos = doc.indexToPosition(index + offset - start + startPos.column, startPos.row);
+                start = index + offset;
+                end = index + len + offset;
+                endPos = doc.indexToPosition(end - start + startPos.column, startPos.row);
+                ranges.push(Range.fromPoints(startPos, endPos));
             }
+            this.editor.selection.fromJSON(ranges);
+        };
+
+        var isHighlight = false; //TODO: change it somewhere 
+
+        var range = this.editor.selection.getRange();
+
+        /*if (skipCurrent)
+            txtFind.ace.saveHistory();*/
+
+        if (options.skipCurrent || !this.currentRange) this.currentRange = range;
+
+        options.start = this.currentRange;
+
+        /*if (options.range && !isHighlight)
+            addFindInRangeMarker(options.range, ace.session);
+        else if (!options.range)
+            removeFindInRangeMarker();*/
+
+        var re = this.editor.$search.$assembleRegExp(options, true);
+        if (!re) {
+            this.updateCounter();
+            if (!isHighlight) {
+                var pos = options.start[options.backwards ? "end" : "start"];
+                var newRange = options.range || Range.fromPoints(pos, pos);
+                this.editor.revealRange(newRange);
+            }
+            //return callback && callback();
         }
-        this.searchCounter.textContent = nls("$0 of $1", [before , (all > MAX_COUNT ? MAX_COUNT + "+" : all)]);
+
+        if (!isHighlight) {
+            this.lastSearchOptions = options;
+        }
+
+        options.re = re;
+        options.source = re.source;
+        options.flags = re.ignoreCase ? "igm" : "gm";
+
+        this.editor.$search.set(options);
+        this.editor.$search.set({start: range});
+
+        asyncSearch.execFind(this.editor.session, options, (result) => {
+            if (result == "waiting") //TODO: seems passing any string to total doesn't do anything
+                return this.updateCounter("...");
+
+            result = result || {
+                total: 0,
+                current: 0
+            };
+            if ("total" in result) {
+                this.updateCounter(result.total, result.current, null, result.wrapped);
+            }
+            if (!result.start || !result.end) {
+                result.start = result.end = range[!options.backwards ? "start" : "end"];
+            }
+            var newRange = Range.fromPoints(result.start, result.end);
+
+            if (options.range && newRange.isEmpty()) newRange = options.range;
+            if (options.skipCurrent) this.currentRange = newRange;
+
+            if (!isHighlight) {
+                this.editor.revealRange(newRange);
+            }
+
+            if (options.preventScroll) return;
+            if (newRange) {
+                this.editor.revealRange(newRange);
+            }
+            if (options.findAll) {
+                selectAll(result);
+            }
+            else {
+                this.highlight(re);
+            }
+
+            callback && callback(result);
+        });
+    }
+
+    /**
+     * @param {string | number} [total]
+     * @param {string | number} [current]
+     * @param {string} [msg]
+     * @param {boolean} [wrapped]
+     */
+    updateCounter(total, current, msg, wrapped) {
+        msg = msg || "";
+
+        var color = wrapped ? "blue" : "";
+
+        if (typeof total == "number" && typeof current == "number") {
+            if (!total) {
+                current = 0;
+                color = "red";
+            }
+            else {
+                //current = getOptions().backwards ? total - current : current + 1; TODO:
+                current = current + 1;
+            }
+            msg = current + "/" + total + msg;
+        }
+        this.searchCounter.style.color = color;
+
+        this.searchCounter.textContent = msg;
+        //nls("$0 of $1", [before , (all > MAX_COUNT ? MAX_COUNT + "+" : all)]);
     }
     findNext() {
         this.find(true, false);
@@ -243,31 +380,214 @@ class SearchBox {
         this.find(true, true);
     }
     findAll(){
-        var range = this.editor.findAll(this.searchInput.value, {            
-            regExp: this.regExpOption.checked,
-            caseSensitive: this.caseSensitiveOption.checked,
-            wholeWord: this.wholeWordOption.checked
-        });
-        /**@type {any}*/
-        var noMatch = !range && this.searchInput.value;
-        dom.setCssClass(this.searchBox, "ace_nomatch", noMatch);
-        this.editor._emit("findSearchBox", { match: !noMatch });
-        this.highlight();
+        var options = this.getOptions();
+        options.findAll = true;
+        this.execFind(options);
         this.hide();
     }
+
     replace() {
-        if (!this.editor.getReadOnly())
-            this.editor.replace(this.replaceInput.value);
+        if (this.editor.getReadOnly()) {
+            return;
+        }
+
+        var options = this.getOptions();
+        var re = this.editor.$search.$assembleRegExp(options, true);
+        var replaceFn = this.$getReplaceFunction(options);
+        var range = this.editor.selection.getRange();
+        this.find(false, false, false, (result) => {
+            if (!this.editor.selection.getRange().isEqual(range)) return; // found new one
+            if (result && typeof result !== "string" && "total" in result) {
+                re.lastIndex = result.startIndex;
+                var match = re.exec(result.value);
+                var replacement = match && replaceFn(match);
+                if (match[0] != replacement) {
+                    range.end = this.editor.session.replace(range, replacement);
+                }
+                if (options.backwards) {
+                    range.end = range.start;
+                }
+                else {
+                    range.start = range.end;
+                }
+                this.editor.selection.setRange(range);
+            }
+        });
+
+        //txtReplace.ace.saveHistory(); TODO:
     }    
     replaceAndFindNext() {
         if (!this.editor.getReadOnly()) {
-            this.editor.replace(this.replaceInput.value);
+            this.replace();
             this.findNext();
         }
     }
-    replaceAll() {
-        if (!this.editor.getReadOnly())
-            this.editor.replaceAll(this.replaceInput.value);
+
+    /**
+     * @param {() => any} [callback]
+     */
+    replaceAll(callback) {
+        if (this.editor.getReadOnly()) return;
+        var options = this.getOptions();
+        var re = this.editor.$search.$assembleRegExp(options, true);
+        if (!re) {
+            return this.updateCounter();
+        }
+        options.re = re;
+        options.source = re.source;
+        options.flags = re.ignoreCase ? "igm" : "gm";
+        options.findAll = true;
+
+        var replaceFn = this.$getReplaceFunction(options);
+        //TODO: this.editor.$search.set({ preserveCase: chk.preserveCase.checked });
+
+        asyncSearch.execFind(this.editor.session, options, (result) => {
+            if (typeof result !== "string" && "matches" in result) {
+                var replaced = 0;
+                var indexArray = result.matches;
+                var value = result.value;
+                var startIndex = result.offset;
+                var re = options.re;
+                if (!indexArray.length) return replaced;
+
+                var doc = this.editor.session.doc;
+
+                var startPos = {
+                    row: 0,
+                    column: 0
+                };
+                var endPos = {
+                    row: 0,
+                    column: 0
+                };
+                var start = 0, end = 0, offset = 0;
+                var range = new Range();
+                for (var i = 0; i < indexArray.length; i++) {
+                    var index = indexArray[i] + startIndex;
+                    re.lastIndex = index;
+                    var match = re.exec(value);
+                    var txt = match[0];
+                    var len = txt.length;
+                    startPos = doc.indexToPosition(index + offset - start + startPos.column, startPos.row);
+                    start = index + offset;
+                    end = index + len + offset;
+                    endPos = doc.indexToPosition(end - start + startPos.column, startPos.row);
+                    range.start = startPos;
+                    range.end = endPos;
+                    var replacement = replaceFn(match);
+                    if (txt != replacement) {
+                        doc.replace(range, replacement);
+                        offset += replacement.length - txt.length;
+                    }
+                }
+
+                this.updateCounter();
+                callback && callback();
+            }
+        });
+
+        //TODO: txtReplace.ace.saveHistory();
+    }
+
+    /**
+     * @param {Partial<ExtendedSearchOptions>} options
+     */
+    $getReplaceFunction(options) {
+        var val = this.replaceInput.value;
+        //options.preserveCase = chk.preserveCase.checked; TODO:
+
+        if (options.replaceMode == "literal") //TODO: ????
+            return function () {
+                return val;
+            };
+
+        var fmtParts = [];
+
+        function add(p) {
+            var last = fmtParts.length - 1;
+            if (p && typeof p == "string" && typeof fmtParts[last] == "string") fmtParts[last] += p; else if (typeof p
+                == "number" || p) fmtParts.push(p);
+        }
+
+        var lut = {
+            n: "\n",
+            t: "\t",
+            r: "\r",
+            "&": 0,
+            U: -1,
+            L: -2,
+            E: -3,
+            u: -4,
+            l: -5
+        };
+        var re = /\$([\$&\d])|\\([\\ULulEntr\d])/g;
+        var index = 0, m;
+        while ((m = re.exec(val))) {
+            add(val.substring(index, m.index));
+            index = re.lastIndex;
+            var part = m[1] || m[2];
+            if (/\d/.test(part)) part = options.regExp ? parseInt(part, 10) : part; else if (part
+                in lut) part = lut[part];
+            add(part);
+        }
+        add(val.substr(index));
+
+        if (fmtParts.length == 1 && typeof fmtParts[0] == "string" && !options.preserveCase) return function () {
+            return fmtParts[0];
+        };
+
+        return function (match) {
+            var gChangeCase = 0;
+            var changeCase = 0;
+            var result = "";
+            for (var i = 0; i < fmtParts.length; i++) {
+                var ch = fmtParts[i];
+                if (typeof ch === "number") {
+                    if (ch < 0) {
+                        switch (ch) {
+                            case -1:
+                                gChangeCase = 1;
+                                break;
+                            case -2:
+                                gChangeCase = 2;
+                                break;
+                            case -3:
+                                gChangeCase = 0;
+                                break;
+                            case -4:
+                                changeCase = 1;
+                                break;
+                            case -5:
+                                changeCase = 2;
+                                break;
+                        }
+                        continue;
+                    }
+                    ch = match[ch] || "";
+                }
+                if (gChangeCase) ch = gChangeCase === 1 ? ch.toUpperCase() : ch.toLowerCase();
+                if (changeCase && ch) {
+                    result += changeCase === 1 ? ch[0].toUpperCase() : ch[0].toLowerCase();
+                    ch = ch.substr(1);
+                    changeCase = 0;
+                }
+
+                result += ch;
+            }
+
+            if (options.preserveCase) {
+                var input = match[0];
+                var replacement = result.split("");
+                for (var i = Math.min(input.length, replacement.length); i--;) {
+                    var ch = input[i];
+                    if (ch && ch.toLowerCase()
+                        != ch) replacement[i] = replacement[i].toUpperCase(); else replacement[i] = replacement[i].toLowerCase();
+                }
+                result = replacement.join("");
+            }
+
+            return result;
+        };
     }
 
     hide() {
@@ -310,45 +630,45 @@ class SearchBox {
 //keybinding outside of the searchbox
 var $searchBarKb = new HashHandler();
 $searchBarKb.bindKeys({
-    "Ctrl-f|Command-f": function(sb) {
+    "Ctrl-f|Command-f": function (/**@type{SearchBox}*/sb) {
         var isReplace = sb.isReplace = !sb.isReplace;
         sb.replaceBox.style.display = isReplace ? "" : "none";
         sb.replaceOption.checked = false;
         sb.$syncOptions();
         sb.searchInput.focus();
     },
-    "Ctrl-H|Command-Option-F": function(sb) {
+    "Ctrl-H|Command-Option-F": function (/**@type{SearchBox}*/sb) {
         if (sb.editor.getReadOnly())
             return;
         sb.replaceOption.checked = true;
         sb.$syncOptions();
         sb.replaceInput.focus();
     },
-    "Ctrl-G|Command-G": function(sb) {
+    "Ctrl-G|Command-G": function (/**@type{SearchBox}*/sb) {
         sb.findNext();
     },
-    "Ctrl-Shift-G|Command-Shift-G": function(sb) {
+    "Ctrl-Shift-G|Command-Shift-G": function (/**@type{SearchBox}*/sb) {
         sb.findPrev();
     },
-    "esc": function(sb) {
+    "esc": function (/**@type{SearchBox}*/sb) {
         setTimeout(function() { sb.hide();});
     },
-    "Return": function(sb) {
+    "Return": function (/**@type{SearchBox}*/sb) {
         if (sb.activeInput == sb.replaceInput)
             sb.replace();
         sb.findNext();
     },
-    "Shift-Return": function(sb) {
+    "Shift-Return": function (/**@type{SearchBox}*/sb) {
         if (sb.activeInput == sb.replaceInput)
             sb.replace();
         sb.findPrev();
     },
-    "Alt-Return": function(sb) {
+    "Alt-Return": function (/**@type{SearchBox}*/sb) {
         if (sb.activeInput == sb.replaceInput)
             sb.replaceAll();
         sb.findAll();
     },
-    "Tab": function(sb) {
+    "Tab": function (/**@type{SearchBox}*/sb) {
         (sb.activeInput == sb.replaceInput ? sb.searchInput : sb.replaceInput).focus();
     }
 });
@@ -356,33 +676,33 @@ $searchBarKb.bindKeys({
 $searchBarKb.addCommands([{
     name: "toggleRegexpMode",
     bindKey: {win: "Alt-R|Alt-/", mac: "Ctrl-Alt-R|Ctrl-Alt-/"},
-    exec: function(sb) {
+    exec: function (/**@type{SearchBox}*/sb) {
         sb.regExpOption.checked = !sb.regExpOption.checked;
         sb.$syncOptions();
     }
 }, {
     name: "toggleCaseSensitive",
     bindKey: {win: "Alt-C|Alt-I", mac: "Ctrl-Alt-R|Ctrl-Alt-I"},
-    exec: function(sb) {
+    exec: function (/**@type{SearchBox}*/sb) {
         sb.caseSensitiveOption.checked = !sb.caseSensitiveOption.checked;
         sb.$syncOptions();
     }
 }, {
     name: "toggleWholeWords",
     bindKey: {win: "Alt-B|Alt-W", mac: "Ctrl-Alt-B|Ctrl-Alt-W"},
-    exec: function(sb) {
+    exec: function (/**@type{SearchBox}*/sb) {
         sb.wholeWordOption.checked = !sb.wholeWordOption.checked;
         sb.$syncOptions();
     }
 }, {
     name: "toggleReplace",
-    exec: function(sb) {
+    exec: function (/**@type{SearchBox}*/sb) {
         sb.replaceOption.checked = !sb.replaceOption.checked;
         sb.$syncOptions();
     }
 }, {
     name: "searchInSelection",
-    exec: function(sb) {
+    exec: function (/**@type{SearchBox}*/sb) {
         sb.searchOption.checked = !sb.searchRange;
         sb.setSearchRange(sb.searchOption.checked && sb.editor.getSelectionRange());
         sb.$syncOptions();
