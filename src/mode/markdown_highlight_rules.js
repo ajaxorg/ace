@@ -1119,6 +1119,8 @@ var MarkdownHighlightRules = function () {
                     }
                     return scope.get(this.token);
                 }
+            }, {
+                include: "html"
             }
         ],
         "attribute_value": [
