@@ -7,8 +7,8 @@ var JavaScriptHighlightRules = require("./javascript_highlight_rules").JavaScrip
 var JsxHighlightRules = function () {
   JavaScriptHighlightRules.call(this, {
     jsx: true
-  })
+  });
 };
-oop.inherits(JsxHighlightRules, JavaScriptHighlightRules)
+oop.inherits(JsxHighlightRules, JavaScriptHighlightRules);
 
 exports.JsxHighlightRules = JsxHighlightRules;
