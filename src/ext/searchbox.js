@@ -11,6 +11,8 @@ var keyUtil = require("../lib/keys");
 var nls = require("../config").nls;
 var {Range} = require("../range");
 var asyncSearch = require("./search/async_search");
+var {$singleLineEditor} = require("../autocomplete/popup");
+var {UndoManager} = require("../undomanager");
 
 var MAX_COUNT = 999;
 
@@ -28,14 +30,12 @@ class SearchBox {
         var div = dom.createElement("div");
         dom.buildDom(["div", {class:"ace_search right"},
             ["span", {action: "hide", class: "ace_searchbtn_close"}],
-            ["div", {class: "ace_search_form"},
-                ["input", {class: "ace_search_field", placeholder: nls("Search for"), spellcheck: "false"}],
+            ["div", {class: "ace_search_form"}, ["div", {class: "ace_search_input_wrapper"}],
                 ["span", {action: "findPrev", class: "ace_searchbtn prev"}, "\u200b"],
                 ["span", {action: "findNext", class: "ace_searchbtn next"}, "\u200b"],
                 ["span", {action: "findAll", class: "ace_searchbtn", title: "Alt-Enter"}, nls("All")]
             ],
-            ["div", {class: "ace_replace_form"},
-                ["input", {class: "ace_search_field", placeholder: nls("Replace with"), spellcheck: "false"}],
+            ["div", {class: "ace_replace_form"}, ["div", {class: "ace_search_input_wrapper"}],
                 ["span", {action: "replaceAndFindNext", class: "ace_searchbtn"}, nls("Replace")],
                 ["span", {action: "replaceAll", class: "ace_searchbtn"}, nls("All")]
             ],
@@ -75,13 +75,40 @@ class SearchBox {
     }
 
     /**
+     * @param {Editor} editor
+     */
+    setupInput(editor) {
+        editor.setOption("customScrollbar", true);
+        editor.session.setUndoManager(new UndoManager());
+        editor.commands.removeCommands([
+            "find", "replace", "replaceall", "gotoline", "findnext", "findprevious", "expandtoline", "indent", "outdent"
+        ]);
+        editor.commands.addCommand({
+            name: "addNewLine",
+            bindKey: {
+                win: "Ctrl-Return|Alt-Return",
+                mac: "Ctrl-Return|Alt-Return"
+            },
+            exec: (/**@type{Editor}*/editor) => {
+                editor.insert(this.editor.session.doc.getNewLineCharacter());
+            }
+        });
+    }
+
+    /**
      * @param {HTMLElement} sb
      */
     $initElements(sb) {
         /**@type {HTMLElement}*/
         this.searchBox = sb.querySelector(".ace_search_form");
+        this.searchInput = $singleLineEditor();
+        this.searchBox.querySelector(".ace_search_input_wrapper").appendChild(this.searchInput.container);
+        this.setupInput(this.searchInput);
         /**@type {HTMLElement}*/
         this.replaceBox = sb.querySelector(".ace_replace_form");
+        this.replaceInput = $singleLineEditor();
+        this.replaceBox.querySelector(".ace_search_input_wrapper").appendChild(this.replaceInput.container);
+        this.setupInput(this.replaceInput);
         /**@type {HTMLInputElement}*/
         this.searchOption = sb.querySelector("[action=searchInSelection]");
         /**@type {HTMLInputElement}*/
@@ -92,10 +119,6 @@ class SearchBox {
         this.caseSensitiveOption = sb.querySelector("[action=toggleCaseSensitive]");
         /**@type {HTMLInputElement}*/
         this.wholeWordOption = sb.querySelector("[action=toggleWholeWords]");
-        /**@type {HTMLInputElement}*/
-        this.searchInput = this.searchBox.querySelector(".ace_search_field");
-        /**@type {HTMLInputElement}*/
-        this.replaceInput = this.replaceBox.querySelector(".ace_search_field");
         /**@type {HTMLElement}*/
         this.searchCounter = sb.querySelector(".ace_search_counter");
     }
@@ -140,11 +163,11 @@ class SearchBox {
         });
         event.addListener(this.searchInput, "focus", function() {
             _this.activeInput = _this.searchInput;
-            _this.searchInput.value && _this.highlight();
+            _this.searchInput.getValue() && _this.highlight();
         });
         event.addListener(this.replaceInput, "focus", function() {
             _this.activeInput = _this.replaceInput;
-            _this.searchInput.value && _this.highlight();
+            _this.searchInput.getValue() && _this.highlight();
         });
     }
 
@@ -193,7 +216,7 @@ class SearchBox {
             wholeWord: this.wholeWordOption.checked,
             regExp: this.regExpOption.checked,
             range: this.searchRange,
-            needle: this.searchInput.value
+            needle: this.searchInput.getValue()
         };
         return options;
     }
@@ -228,7 +251,7 @@ class SearchBox {
      */
     execFind(options, callback) {
         var isHighlight = false; //TODO: change it somewhere 
-        
+
         var selectAll = (result) => {
             var indexArray = result.matches;
             var value = result.value;
@@ -405,7 +428,8 @@ class SearchBox {
         });
 
         //txtReplace.ace.saveHistory(); TODO:
-    }    
+    }
+
     replaceAndFindNext() {
         if (!this.editor.getReadOnly()) {
             this.replace();
@@ -483,7 +507,7 @@ class SearchBox {
      * @param {Partial<ExtendedSearchOptions>} options
      */
     $getReplaceFunction(options) {
-        var val = this.replaceInput.value;
+        var val = this.replaceInput.getValue();
         //options.preserveCase = chk.preserveCase.checked; TODO:
 
         var fmtParts = [];
@@ -511,6 +535,7 @@ class SearchBox {
             add(val.substring(index, m.index));
             index = re.lastIndex;
             var part = m[1] || m[2];
+            // @ts-ignore
             if (/\d/.test(part)) part = options.regExp ? parseInt(part, 10) : part; else if (part
                 in lut) part = lut[part];
             add(part);
@@ -594,12 +619,11 @@ class SearchBox {
         this.editor.on("changeSession", this.setSession);
         this.element.style.display = "";
         this.replaceOption.checked = isReplace;
-        
-        if (value)
-            this.searchInput.value = value;
-        
+
+        if (value) this.searchInput.setValue(value);
+
         this.searchInput.focus();
-        this.searchInput.select();
+        //TODO: this.searchInput.select();
 
         this.editor.keyBinding.addKeyboardHandler(this.$closeSearchBarKb);
         
@@ -608,7 +632,7 @@ class SearchBox {
 
     isFocused() {
         var el = document.activeElement;
-        return el == this.searchInput || el == this.replaceInput;
+        return el == this.searchInput.container || el == this.replaceInput.container;
     }
 }
 

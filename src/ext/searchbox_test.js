@@ -11,6 +11,7 @@ var VirtualRenderer = require("../ace").VirtualRenderer;
 var assert = require("../test/assertions");
 const {SearchBox} = require("./searchbox");
 var {Range} = require("../range");
+var {terminateWorker} = require("./search/async_search");
 
 function simulateClick(node) {
     node.dispatchEvent(new window.CustomEvent("click", {bubbles: true}));
@@ -20,8 +21,8 @@ function simulateClick(node) {
 /**@type{SearchBox}*/var searchBox;
 var wrapperEl;
 var editorPx = 500;
-/**@type{HTMLInputElement}*/var searchInput;
-/**@type{HTMLInputElement}*/var searchReplace;
+/**@type{Editor}*/var searchInput;
+/**@type{Editor}*/var searchReplace;
 
 var isElementVisible = function (elem) {
     return !((elem.position !== "fixed" && elem.offsetParent === null) || window.getComputedStyle(elem).display
@@ -60,6 +61,7 @@ initTests();
 
 
 module.exports = {
+    timeout: 10000,
     "test: open/close search box": function (done) {
         searchBoxVisibilityCheck(true);
         var searchBoxCloseButton = document.querySelectorAll(".ace_searchbtn_close");
@@ -82,13 +84,13 @@ module.exports = {
 
         searchBox.show(editor.session.getTextRange(), false);
 
-        assert.equal(searchInput.value, "a");
+        assert.equal(searchInput.getValue(), "a");
         editor.focus();
 
         editor.selection.setRange(new Range(0, 4, 0, 7));
         searchBox.show(editor.session.getTextRange(), false);
 
-        assert.equal(searchInput.value, "b 0");
+        assert.equal(searchInput.getValue(), "b 0");
 
         editor.once("changeSelection", function () {
             assert.equal(editor.selection.getRange().end.row, 10);
@@ -115,7 +117,7 @@ module.exports = {
 
         assert.deepEqual(editor.selection.getRange(), new Range(10, 5, 10, 8));
 
-        searchReplace.value = "b 0";
+        searchReplace.setValue("b 0");
         searchBox.replaceAndFindNext();
         assert.deepEqual(editor.selection.getRange(), new Range(20, 5, 20, 8));
         /*findreplace.replace(true);
@@ -171,29 +173,63 @@ module.exports = {
         simulateClick(searchBox.searchOption);
         simulateClick(searchBox.regExpOption);
 
-        searchInput.value = "(a)|(b)";
-        searchReplace.value = "\\u$2x";
+        searchInput.setValue("(a)|(b)");
+        searchReplace.setValue("\\u$2x");
 
         searchBox.replaceAll(() => {
             assert.deepEqual(editor.selection.getRange(), range);
             assert.equal(editor.session.getTextRange(range), "5 Bx 5\nX 6 Bx 6\nX");
             done();
         });
+
     },
-    "test: Support for regex lookaheads in search & replace #4006": function (done) {
+    "test: Support for regex lookaheads in search & replace. Issue #4006": function (done) {
         createSearchBox(); //reset search box
 
         editor.setValue("foobar\nfooqux\nfoobar1");
 
-        searchInput.value = "foo(?=bar)";
-        searchReplace.value = "baz";
+        searchInput.setValue("foo(?=bar)");
+        searchReplace.setValue("baz");
         simulateClick(searchBox.regExpOption);
 
         searchBox.replaceAll(() => {
             assert.equal(editor.getValue(), "bazbar\nfooqux\nbazbar1");
             done();
         });
+    },
+    "test: Normalize line breaks in search & replace #yourTestCaseNumber. Issue #2869, #2059": function (done) {
+        createSearchBox(); // Reset search box
+        editor.setValue("This is a test.\n\nThis text contains\n\n\nmultiple lines and\n\nempty lines.");
+
+        // This regex matches two or more newline characters
+        searchInput.setValue("\\n{2,}");
+        searchReplace.setValue("\\n"); // Replace with a single newline character
+        simulateClick(searchBox.regExpOption);
+
+        searchBox.replaceAll(() => {
+            assert.equal(editor.getValue(), "This is a test.\nThis text contains\nmultiple lines and\nempty lines.");
+            done();
+        });
+    },
+    "test: Multiline search": function (done) {
+        createSearchBox(); // Reset search box
+        editor.setValue("First line.\n\ndifferent text\n\n\n\n\nline end.");
+
+        searchInput.setValue("First line(.|\\n)*line");
+        simulateClick(searchBox.regExpOption);
+
+
+        editor.once("changeSelection", function () {
+            assert.deepEqual(editor.selection.getRange(), new Range(0, 0, 7, 9));
+            done();
+        });
+        setTimeout(function () {
+            var next = searchBox.element.querySelector("[action=findNext]");
+            simulateClick(next);
+        }, 100);
+        
     }
+
 };
 
 if (typeof module !== "undefined" && module === require.main) {

@@ -167,7 +167,7 @@ class MultiHashHandler {
     }
 
     /**
-     * @param {Record<string, CommandLike>} commands
+     * @param {Record<string, CommandLike>|string[]} commands
      */
     removeCommands(commands) {
         Object.keys(commands).forEach(function(name) {
