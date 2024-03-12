@@ -292,13 +292,14 @@ class SearchBox {
 
         options.start = this.currentRange;
 
-        /*if (options.range && !isHighlight)
+        /*TODO: if (options.range && !isHighlight)
             addFindInRangeMarker(options.range, ace.session);
         else if (!options.range)
             removeFindInRangeMarker();*/
 
         var re = this.editor.$search.$assembleRegExp(options, true);
         if (!re) {
+            this.counterResults = null;
             this.updateCounter();
             if (!isHighlight) {
                 var pos = options.start[options.backwards ? "end" : "start"];
@@ -320,15 +321,22 @@ class SearchBox {
         this.editor.$search.set({start: range});
 
         asyncSearch.execFind(this.editor.session, options, (result) => {
-            if (result == "waiting") //TODO: seems passing any string to total doesn't do anything
-                return this.updateCounter("..."); //TODO: make without args 
+            if (result == "waiting") {
+                this.counterResults = null;
+                return this.updateCounter();
+            }
 
             result = result || {
                 total: 0,
                 current: 0
             };
             if ("total" in result) {
-                this.updateCounter(result.total, result.current, null, result.wrapped);
+                this.counterResults = {
+                    total: result.total,
+                    current: result.current,
+                    wrapped: result.wrapped
+                };
+                this.updateCounter();
             }
             if (!result.start || !result.end) {
                 result.start = result.end = range[!options.backwards ? "start" : "end"];
@@ -357,32 +365,24 @@ class SearchBox {
         });
     }
 
-    /**
-     * @param {string | number} [total]
-     * @param {string | number} [current]
-     * @param {string} [msg]
-     * @param {boolean} [wrapped]
-     */
-    updateCounter(total, current, msg, wrapped) {
-        msg = msg || "";
+    updateCounter() {
+        var msg = "";
 
-        var color = wrapped ? "blue" : "";
+        var color = this.counterResults && this.counterResults.wrapped ? "blue" : "";
 
-        if (typeof total == "number" && typeof current == "number") {
-            if (!total) {
-                current = 0;
+        if (this.counterResults && typeof this.counterResults.total == "number" && typeof this.counterResults.current
+            == "number") {
+            if (!this.counterResults.total) {
+                this.counterResults.current = 0;
                 color = "red";
             }
             else {
-                //current = getOptions().backwards ? total - current : current + 1; TODO:
-                current = current + 1;
+                this.counterResults.current = this.counterResults.current + 1;
             }
-            msg = current + "/" + total + msg;
+            msg = this.counterResults.current + "/" + this.counterResults.total + msg;
         }
         this.searchCounter.style.color = color;
-
         this.searchCounter.textContent = msg;
-        //nls("$0 of $1", [before , (all > MAX_COUNT ? MAX_COUNT + "+" : all)]);
     }
     findNext() {
         this.find(true, false);
@@ -443,6 +443,7 @@ class SearchBox {
         var options = this.getOptions();
         var re = this.editor.$search.$assembleRegExp(options, true);
         if (!re) {
+            this.counterResults = null;
             return this.updateCounter();
         }
         options.re = re;
@@ -492,7 +493,7 @@ class SearchBox {
                         offset += replacement.length - txt.length;
                     }
                 }
-
+                this.counterResults = null;
                 this.updateCounter();
                 callback && callback();
             }
