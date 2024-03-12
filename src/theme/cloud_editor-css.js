@@ -76,7 +76,7 @@ module.exports = `
 }
 
 .ace-cloud_editor .ace_meta.ace_tag {
-    color: #d1000a;
+    color: #2963d6;
 }
 
 .ace-cloud_editor .ace_constant {
@@ -92,7 +92,7 @@ module.exports = `
 }
 
 .ace-cloud_editor .ace_support.ace_function {
-    color: #2963d6;
+    color: #d1000a;
 }
 
 .ace-cloud_editor .ace_support.ace_class {
@@ -105,7 +105,7 @@ module.exports = `
 
 .ace-cloud_editor .ace_invalid.ace_illegal {
     color: #ffffff;
-    background-color: #d1000a;
+    background-color: #2963d6;
 }
 
 .ace-cloud_editor .ace_invalid.ace_deprecated {
@@ -128,7 +128,7 @@ module.exports = `
 }
 
 .ace-cloud_editor .ace_variable {
-    color: #d1000a;
+    color: #2963d6;
 }
 
 .ace-cloud_editor .ace_meta.ace_selector {
@@ -140,22 +140,22 @@ module.exports = `
 }
 
 .ace-cloud_editor .ace_entity.ace_name.ace_function {
-    color: #2963d6;
-}
-
-.ace-cloud_editor .ace_entity.ace_name.ace_tag {
     color: #d1000a;
 }
 
-.ace-cloud_editor .ace_heading {
+.ace-cloud_editor .ace_entity.ace_name.ace_tag {
     color: #2963d6;
+}
+
+.ace-cloud_editor .ace_heading {
+    color: #d1000a;
 }
 
 .ace-cloud_editor .ace_xml-pe {
     color: #a26202;
 }
 .ace-cloud_editor .ace_doctype {
-    color: #d1000a;
+    color: #2963d6;
 }
 
 .ace-cloud_editor .ace_tooltip {
