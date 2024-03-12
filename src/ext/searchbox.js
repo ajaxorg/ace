@@ -1,6 +1,7 @@
 "use strict";
-/** @typedef {import("../editor").Editor} Editor */
-/** @typedef {import("../../ace-internal").Ace.ExtendedSearchOptions} ExtendedSearchOptions */
+/** @typedef {import("../editor").Editor} Editor
+ @typedef {import("../../ace-internal").Ace.InputEditor} InputEditor
+ @typedef {import("../../ace-internal").Ace.ExtendedSearchOptions} ExtendedSearchOptions */
 
 var dom = require("../lib/dom");
 var lang = require("../lib/lang");
@@ -13,6 +14,7 @@ var {Range} = require("../range");
 var asyncSearch = require("./search/async_search");
 var {$singleLineEditor} = require("../autocomplete/popup");
 var {UndoManager} = require("../undomanager");
+var {LibSearch} = require("./search/libsearch");
 
 var MAX_COUNT = 999;
 
@@ -75,24 +77,22 @@ class SearchBox {
     }
 
     /**
-     * @param {Editor} editor
+     * @param {InputEditor} inputEditor
+     * @param {"search"|"replace"} type
      */
-    setupInput(editor) {
-        editor.setOption("customScrollbar", true);
-        editor.session.setUndoManager(new UndoManager());
-        editor.commands.removeCommands([
+    setupInput(inputEditor, type) {
+        this.libSearch.addSearchKeyboardHandler(inputEditor, type);
+        if (type === "search") {
+            this.libSearch.setRegexpMode(inputEditor, this.regExpOption.checked);
+        }
+        else {
+            this.libSearch.setReplaceFieldMode(inputEditor, "extended");
+        }
+        inputEditor.setOption("customScrollbar", true);
+        inputEditor.session.setUndoManager(new UndoManager());
+        inputEditor.commands.removeCommands([
             "find", "replace", "replaceall", "gotoline", "findnext", "findprevious", "expandtoline", "indent", "outdent"
         ]);
-        editor.commands.addCommand({
-            name: "addNewLine",
-            bindKey: {
-                win: "Ctrl-Return|Alt-Return",
-                mac: "Ctrl-Return|Alt-Return"
-            },
-            exec: (/**@type{Editor}*/editor) => {
-                editor.insert(this.editor.session.doc.getNewLineCharacter());
-            }
-        });
     }
 
     /**
@@ -101,14 +101,14 @@ class SearchBox {
     $initElements(sb) {
         /**@type {HTMLElement}*/
         this.searchBox = sb.querySelector(".ace_search_form");
+        /**@type {InputEditor}*/
         this.searchInput = $singleLineEditor();
         this.searchBox.querySelector(".ace_search_input_wrapper").appendChild(this.searchInput.container);
-        this.setupInput(this.searchInput);
         /**@type {HTMLElement}*/
         this.replaceBox = sb.querySelector(".ace_replace_form");
+        /**@type {InputEditor}*/
         this.replaceInput = $singleLineEditor();
         this.replaceBox.querySelector(".ace_search_input_wrapper").appendChild(this.replaceInput.container);
-        this.setupInput(this.replaceInput);
         /**@type {HTMLInputElement}*/
         this.searchOption = sb.querySelector("[action=searchInSelection]");
         /**@type {HTMLInputElement}*/
@@ -121,9 +121,13 @@ class SearchBox {
         this.wholeWordOption = sb.querySelector("[action=toggleWholeWords]");
         /**@type {HTMLElement}*/
         this.searchCounter = sb.querySelector(".ace_search_counter");
+        this.setupInput(this.searchInput, "search");
+        this.setupInput(this.replaceInput, "replace");
     }
     
     $init() {
+        this.libSearch = new LibSearch();
+        
         var sb = this.element;
         
         this.$initElements(sb);
@@ -171,6 +175,9 @@ class SearchBox {
         });
     }
 
+    /**
+     * @param {Range} range
+     */
     setSearchRange(range) {
         this.searchRange = range;
         if (range) {
@@ -185,7 +192,7 @@ class SearchBox {
      * @param {boolean} [preventScroll]
      */
     $syncOptions(preventScroll) {
-        dom.setCssClass(this.replaceOption, "checked", this.searchRange);
+        dom.setCssClass(this.replaceOption, "checked", this.searchRange != null);
         dom.setCssClass(this.searchOption, "checked", this.searchOption.checked);
         this.replaceOption.textContent = this.replaceOption.checked ? "-" : "+";
         dom.setCssClass(this.regExpOption, "checked", this.regExpOption.checked);
@@ -232,22 +239,14 @@ class SearchBox {
         options.skipCurrent = skipCurrent;
         options.backwards = backwards;
         options.preventScroll = preventScroll;
-        //skipCurrent is type == true
-        //!skipCurrent   is type == false
-        //type highlight is onfocus from editor to searchbox?
-
-        /* 
-         if (options.regExp) {
-             libsearch.checkRegExp(txtFind,
-                 tooltipSearchReplace, winSearchReplace);
-         }*/
-
+        //TODO: type highlight is onfocus from editor to searchbox?
+        
         this.execFind(options, callback);
     }
 
     /**
      * @param {Partial<ExtendedSearchOptions>} options
-     * @param {(arg0: import("../../ace-internal").Ace.SearchResultCallbackArgs) => void} [callback]
+     * @param {(results?: import("../../ace-internal").Ace.SearchResultCallbackArgs) => void} [callback]
      */
     execFind(options, callback) {
         var isHighlight = false; //TODO: change it somewhere 
@@ -287,8 +286,7 @@ class SearchBox {
 
         var range = this.editor.selection.getRange();
 
-        /*if (skipCurrent)
-            txtFind.ace.saveHistory();*/
+        if (options.skipCurrent) this.searchInput.saveHistory();
 
         if (options.skipCurrent || !this.currentRange) this.currentRange = range;
 
@@ -307,7 +305,7 @@ class SearchBox {
                 var newRange = options.range || Range.fromPoints(pos, pos);
                 this.editor.revealRange(newRange);
             }
-            //return callback && callback();
+            return callback && callback();
         }
 
         if (!isHighlight) {
@@ -323,7 +321,7 @@ class SearchBox {
 
         asyncSearch.execFind(this.editor.session, options, (result) => {
             if (result == "waiting") //TODO: seems passing any string to total doesn't do anything
-                return this.updateCounter("...");
+                return this.updateCounter("..."); //TODO: make without args 
 
             result = result || {
                 total: 0,
@@ -427,7 +425,7 @@ class SearchBox {
             }
         });
 
-        //txtReplace.ace.saveHistory(); TODO:
+        this.replaceInput.saveHistory();
     }
 
     replaceAndFindNext() {
@@ -500,7 +498,7 @@ class SearchBox {
             }
         });
 
-        //TODO: txtReplace.ace.saveHistory();
+        this.replaceInput.saveHistory();
     }
 
     /**
@@ -687,6 +685,7 @@ $searchBarKb.addCommands([{
     bindKey: {win: "Alt-R|Alt-/", mac: "Ctrl-Alt-R|Ctrl-Alt-/"},
     exec: function (/**@type{SearchBox}*/sb) {
         sb.regExpOption.checked = !sb.regExpOption.checked;
+        sb.libSearch.setRegexpMode(sb.searchInput, sb.regExpOption.checked);
         sb.$syncOptions();
     }
 }, {

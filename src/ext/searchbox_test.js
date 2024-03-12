@@ -57,11 +57,19 @@ function initTests() {
     createSearchBox();
 }
 
-initTests();
+
 
 
 module.exports = {
-    timeout: 10000,
+    setUp: function () {
+        initTests();
+        var str = [];
+        for (var i = 0; i < 100; i++) {
+            str.push("a " + i + " b " + (i % 10));
+        }
+        editor.focus();
+        editor.setValue(str.join("\n"));
+    },
     "test: open/close search box": function (done) {
         searchBoxVisibilityCheck(true);
         var searchBoxCloseButton = document.querySelectorAll(".ace_searchbtn_close");
@@ -73,13 +81,6 @@ module.exports = {
         done();
     },
     "test: should open searchBox and select text": function (done) {
-        var str = [];
-        for (var i = 0; i < 100; i++) {
-            str.push("a " + i + " b " + (i % 10));
-        }
-        editor.focus();
-        editor.setValue(str.join("\n"));
-
         editor.selection.setRange(new Range(0, 0, 0, 1));
 
         searchBox.show(editor.session.getTextRange(), false);
@@ -100,72 +101,71 @@ module.exports = {
             searchBox.findNext();
         }, 100);
     },
-    "test: should find again and again": function () {
+    "test: should find again and again": function (done) {
+        editor.selection.setRange(new Range(10, 5, 10, 8));
+        searchBox.show(editor.session.getTextRange(), false);
         searchBox.findNext();
-        assert.equal(editor.selection.getRange().end.row, 20);
+        editor.once("changeSelection", function () {
+            assert.equal(editor.selection.getRange().end.row, 20);
+            editor.selection.setRange(new Range(0, 0, 0, 7));
 
-        editor.selection.setRange(new Range(0, 0, 0, 7));
+            searchBox.findNext();
 
-        searchBox.findNext();
-        //assert.equal(editor.selection.getRange().start.column, 0); //TODO: ?
+            var prev = searchBox.element.querySelector("[action=findPrev]");
+            var next = searchBox.element.querySelector("[action=findNext]");
 
-        var prev = searchBox.element.querySelector("[action=findPrev]");
-        var next = searchBox.element.querySelector("[action=findNext]");
+            editor.selection.setRange(new Range(10, 5, 10, 5));
+            simulateClick(next);
 
-        editor.selection.setRange(new Range(10, 5, 10, 5));
-        simulateClick(next);
+            assert.deepEqual(editor.selection.getRange(), new Range(10, 5, 10, 8));
 
-        assert.deepEqual(editor.selection.getRange(), new Range(10, 5, 10, 8));
+            searchReplace.setValue("b 0");
+            searchBox.replaceAndFindNext();
+            assert.deepEqual(editor.selection.getRange(), new Range(20, 5, 20, 8));
 
-        searchReplace.setValue("b 0");
-        searchBox.replaceAndFindNext();
-        assert.deepEqual(editor.selection.getRange(), new Range(20, 5, 20, 8));
-        /*findreplace.replace(true);
-        expect(ace.selection.getRange()).to.deep.equal(new Range(10, 5, 10, 8));*/
+            editor.selection.setRange(new Range(10, 8, 10, 8));
+            simulateClick(prev);
+            assert.deepEqual(editor.selection.getRange(), new Range(10, 5, 10, 8));
 
-        editor.selection.setRange(new Range(10, 8, 10, 8));
-        simulateClick(prev);
-        assert.deepEqual(editor.selection.getRange(), new Range(10, 5, 10, 8));
+            editor.selection.setRange(new Range(10, 7, 10, 7));
+            simulateClick(next);
+            assert.deepEqual(editor.selection.getRange(), new Range(20, 5, 20, 8));
 
-        editor.selection.setRange(new Range(10, 7, 10, 7));
-        simulateClick(next);
-        assert.deepEqual(editor.selection.getRange(), new Range(20, 5, 20, 8));
-
-        editor.selection.setRange(new Range(20, 7, 20, 7));
-        simulateClick(prev);
-        assert.deepEqual(editor.selection.getRange(), new Range(10, 5, 10, 8));
+            editor.selection.setRange(new Range(20, 7, 20, 7));
+            simulateClick(prev);
+            assert.deepEqual(editor.selection.getRange(), new Range(10, 5, 10, 8));
+            done();
+        });
     },
-    "test: should remember replace history": function () {//TODO:
-        // reset replace textbox history
-        /*settings.setJson("state/search-history/" + txtReplace.session.listName, null);
-        txtReplace.setValue("foo");
+    "test: should remember replace history": function () {
+        searchReplace.setValue("foo");
 
-        commands.exec("replacenext");
-        txtReplace.setValue("bar");
-        commands.exec("replacenext");
+        searchBox.replace();
+        searchReplace.setValue("bar");
+        searchBox.replace();
 
-        var kb = txtReplace.keyBinding.$handlers[1].commands;
+        var kb = searchReplace.keyBinding.$handlers[1].commands;
         var prev = kb.Up;
         var next = kb.Down;
 
-        txtReplace.execCommand(prev);
-        expect(txtReplace.getValue()).equal("foo");
-        txtReplace.execCommand(prev);
-        expect(txtReplace.getValue()).equal("foo");
+        searchReplace.execCommand(prev);
+        assert.equal(searchReplace.getValue(), "foo");
+        searchReplace.execCommand(prev);
+        assert.equal(searchReplace.getValue(), "foo");
 
-        txtReplace.execCommand(next);
-        expect(txtReplace.getValue()).equal("bar");
+        searchReplace.execCommand(next);
+        assert.equal(searchReplace.getValue(), "bar");
 
-        txtReplace.execCommand(next);
-        expect(txtReplace.getValue()).equal("");
+        searchReplace.execCommand(next);
+        assert.equal(searchReplace.getValue(), "");
 
-        txtReplace.setValue("baz");
-        txtReplace.execCommand(next);
-        expect(txtReplace.getValue()).equal("");
-        txtReplace.execCommand(prev);
-        expect(txtReplace.getValue()).equal("baz");
-        txtReplace.execCommand(prev);
-        expect(txtReplace.getValue()).equal("bar");*/
+        searchReplace.setValue("baz");
+        searchReplace.execCommand(next);
+        assert.equal(searchReplace.getValue(), "");
+        searchReplace.execCommand(prev);
+        assert.equal(searchReplace.getValue(), "baz");
+        searchReplace.execCommand(prev);
+        assert.equal(searchReplace.getValue(), "bar");
     },
     "test: should replace all in selection": function (done) {
         var range = new Range(5, 2, 7, 1);
@@ -183,22 +183,7 @@ module.exports = {
         });
 
     },
-    "test: Support for regex lookaheads in search & replace. Issue #4006": function (done) {
-        createSearchBox(); //reset search box
-
-        editor.setValue("foobar\nfooqux\nfoobar1");
-
-        searchInput.setValue("foo(?=bar)");
-        searchReplace.setValue("baz");
-        simulateClick(searchBox.regExpOption);
-
-        searchBox.replaceAll(() => {
-            assert.equal(editor.getValue(), "bazbar\nfooqux\nbazbar1");
-            done();
-        });
-    },
     "test: Normalize line breaks in search & replace #yourTestCaseNumber. Issue #2869, #2059": function (done) {
-        createSearchBox(); // Reset search box
         editor.setValue("This is a test.\n\nThis text contains\n\n\nmultiple lines and\n\nempty lines.");
 
         // This regex matches two or more newline characters
@@ -211,23 +196,39 @@ module.exports = {
             done();
         });
     },
+    "test: Support for regex lookaheads in search & replace. Issue #4006": function (done) {
+
+        editor.setValue("foobar\nfooqux\nfoobar1");
+
+        searchInput.setValue("foo(?=bar)");
+        searchReplace.setValue("baz");
+        simulateClick(searchBox.regExpOption);
+
+        searchBox.replaceAll(() => {
+            assert.equal(editor.getValue(), "bazbar\nfooqux\nbazbar1");
+            done();
+        });
+    },
     "test: Multiline search": function (done) {
-        createSearchBox(); // Reset search box
         editor.setValue("First line.\n\ndifferent text\n\n\n\n\nline end.");
 
         searchInput.setValue("First line(.|\\n)*line");
         simulateClick(searchBox.regExpOption);
 
-
         editor.once("changeSelection", function () {
-            assert.deepEqual(editor.selection.getRange(), new Range(0, 0, 7, 9));
+            assert.deepEqual(editor.selection.getRange(), new Range(0, 0, 7, 4));
             done();
         });
         setTimeout(function () {
             var next = searchBox.element.querySelector("[action=findNext]");
             simulateClick(next);
         }, 100);
-        
+
+    },
+    tearDown: function () {
+        terminateWorker();
+        editor.destroy();
+        wrapperEl.parentElement.removeChild(wrapperEl);
     }
 
 };

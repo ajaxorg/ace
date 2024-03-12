@@ -3,6 +3,7 @@
 /**
  * @typedef {import("../../ace-internal").Ace.Command} Command
  * @typedef {import("../../ace-internal").Ace.CommandLike} CommandLike
+ * @typedef {import("../editor").Editor} Editor
 */
 
 /** @type {any} */var keyUtil = require("../lib/keys");
@@ -230,7 +231,7 @@ class MultiHashHandler {
     }
 
     /**
-     * @param {{ $keyChain: string | any[]; }} data
+     * @param {{ $keyChain: string | any[]; editor: Editor }} data
      * @param {number} hashId
      * @param {string} keyString
      * @param {number} keyCode

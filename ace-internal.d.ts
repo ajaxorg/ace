@@ -1193,6 +1193,16 @@ export namespace Ace {
         start?: Position,
         end?: Position,
     } | "waiting" | null;
+
+    export interface InputEditor extends Editor {
+        saveHistory?();
+
+        session: InputEditorEditSession
+    }
+
+    export interface InputEditorEditSession extends EditSession {
+        searchHistory?: string[];
+    }
 }
 
 
