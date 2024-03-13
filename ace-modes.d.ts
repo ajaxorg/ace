@@ -121,9 +121,6 @@ declare module "ace-code/src/mode/actionscript_highlight_rules" {
 declare module "ace-code/src/mode/ada" {
   export const Mode: new () => import(".").Ace.SyntaxMode;
 }
-declare module "ace-code/src/mode/ada_highlight_rules" {
-  export const AdaHighlightRules: new () => import(".").Ace.HighlightRules;
-}
 declare module "ace-code/src/mode/alda" {
   export const Mode: new () => import(".").Ace.SyntaxMode;
 }
