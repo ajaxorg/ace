@@ -1,0 +1,20 @@
+name: Comments for ensuring backward compatibility
+
+on:
+  pull_request_target:
+    paths:
+      - 'ace.d.ts'
+      - 'ace-modes.d.ts'
+      - 'ace-extensions.d.ts'
+
+jobs:
+  comment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Comment on PR
+        uses: peter-evans/create-or-update-comment@v1
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            One of the public type files has been updated, plase make sure there are no backwards incompatible changes done in the PR.
+          token: ${{ secrets.GITHUB_TOKEN }}

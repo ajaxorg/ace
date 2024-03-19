@@ -480,9 +480,9 @@ var Editor = require("./editor").Editor;
 
     /** 
      * Executes a command for each selection range.
-     * @param {Object} cmd The command to execute
+     * @param {any} cmd The command to execute
      * @param {String} [args] Any arguments for the command
-     * @param {Object} [options]
+     * @param {Object|true} [options]
      * @this {Editor}
      **/ 
     this.forEachSelection = function(cmd, args, options) {
