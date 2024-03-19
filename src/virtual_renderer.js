@@ -1781,18 +1781,18 @@ class VirtualRenderer {
             var el = this.container;
             var height = el.getBoundingClientRect().height;
             var ghostTextHeight = textLines.length * this.lineHeight;
-            var fitsY = ghostTextHeight < height - pixelPosition.top;
+            var fitsY = ghostTextHeight < (height - pixelPosition.top);
 
             // If it fits, no action needed
             if (fitsY) return;
             
             // If it can fully fit in the screen, scroll down until it fits on the screen
-            // if it cannot fully fit, scroll so that the cursor is at the top of the screen
-            // to fit as much as possible.
+            // if it cannot fully fit, scroll so that the row with the cursor
+            // is at the top of the screen.
             if (ghostTextHeight < height) {
                 this.scrollBy(0, (textLines.length - 1) * this.lineHeight);
             } else {
-                this.scrollBy(0, pixelPosition.top);
+                this.scrollToRow(insertPosition.row);
             }   
         }
         
