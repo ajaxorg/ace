@@ -1777,14 +1777,12 @@ class VirtualRenderer {
             this.session.widgetManager.addLineWidget(this.$ghostTextWidget);
 
             // Check wether the line widget fits in the part of the screen currently in view
-            var documentPixelTop = this.$cursorLayer.getPixelPosition(insertPosition, true).top;
-            var scrollTop = this.session.getScrollTop();
-            var pixelPosition = documentPixelTop - scrollTop;
+            var pixelPosition = this.$cursorLayer.getPixelPosition(insertPosition, true);
 
             var el = this.container;
             var height = el.getBoundingClientRect().height;
             var ghostTextHeight = textLines.length * this.lineHeight;
-            var fitsY = ghostTextHeight < (height - pixelPosition);
+            var fitsY = ghostTextHeight < (height - pixelPosition.top);
 
             // If it fits, no action needed
             if (fitsY) return;
