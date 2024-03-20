@@ -274,10 +274,14 @@ module.exports = {
         // of the container
         editor.execCommand("insertstring", "\n".repeat(200));
 
-        var deltaY;
+        var deltaY, row;
         var initialScrollBy = editor.renderer.scrollBy;
-        editor.renderer.scrollBy = function(varX, varY) {
+        var initialScrollToRow = editor.renderer.scrollToRow;
+        editor.renderer.scrollBy = function(_, varY) {
             deltaY = varY;
+        };
+        editor.renderer.scrollToRow = function(varRow) {
+            row = varRow;
         };
 
         inline.show(editor, completions[6], "l");
@@ -295,8 +299,9 @@ module.exports = {
 
             setTimeout(() => {
                 // Should scroll as much as possbile while keeping the cursor on screen
-                assert.strictEqual(deltaY, 490);
+                assert.strictEqual(row, 202);
                 editor.renderer.scrollBy = initialScrollBy;
+                editor.renderer.scrollToRow = initialScrollToRow;
                 done();
             }, 50); 
         }, 50);  
