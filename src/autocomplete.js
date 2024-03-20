@@ -362,7 +362,7 @@ class Autocomplete {
             if (this.tooltipNode) {
                 this.updateDocTooltip();
             }
-        } else if (keepPopupPosition && !prefix) {
+        } else if (keepPopupPosition && !prefix && !inlineEnabled) {
             this.detach();
         }
         this.changeTimer.cancel();
