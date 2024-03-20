@@ -435,6 +435,15 @@ module.exports = {
         editor.setValue("    /**", 1);
         exec("insertstring", 1, "\n");
         assert.equal(editor.getValue(), "    /**\n     * \n     */");
+
+        // Test case 4: Pressing enter before an asterisk (*)
+        editor.setValue("/**\n * \n */");
+        editor.gotoLine(1, 0);
+        exec("insertstring", 1, "\n");
+        assert.equal(editor.getValue(), "\n/**\n * \n */");
+        editor.gotoLine(3, 1);
+        exec("insertstring", 1, "\n");
+        assert.equal(editor.getValue(), "\n/**\n \n * \n */");
     }
 };
 
