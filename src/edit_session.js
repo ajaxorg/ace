@@ -2367,18 +2367,17 @@ class EditSession {
     }
 
     /**
-     * @returns {string} the last character inserted into the editor
+     * @returns {string} the last character preceding the cursor in the editor
      */
-    getPreviousChar() {
+    getPrecedingCharacter() {
         var pos = this.selection.getCursor();
 
-        if (pos.row === 0) {
-            var line = this.getLine(pos.row);
-            var column = pos.column === 0 ? 0 : pos.column - 1;
-            return line[column];
+        if (pos.column === 0) {
+            return pos.row === 0 ? "" : this.doc.getNewLineCharacter();
         }
 
-        return this.doc.getNewLineCharacter();
+        var currentLine = this.getLine(pos.row);
+        return currentLine[pos.column - 1];
     }
 
     destroy() {

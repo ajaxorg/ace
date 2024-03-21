@@ -68,7 +68,7 @@ exports.getCompletionPrefix = function (editor) {
  * @returns {boolean} whether autocomplete should be triggered
  */
 exports.triggerAutocomplete = function (editor) {
-    var previousChar = editor.session.getPreviousChar();
+    var previousChar = editor.session.getPrecedingCharacter();
     return editor.completers.some((completer) => {
         if (completer.triggerCharacters && Array.isArray(completer.triggerCharacters)) {
             return completer.triggerCharacters.includes(previousChar);
