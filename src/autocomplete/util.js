@@ -65,10 +65,13 @@ exports.getCompletionPrefix = function (editor) {
 
 /**
  * @param {Editor} editor
+ * @param {string} [previousChar] if not provided, it falls back to the preceding character in the editor
  * @returns {boolean} whether autocomplete should be triggered
  */
-exports.triggerAutocomplete = function (editor) {
-    var previousChar = editor.session.getPrecedingCharacter();
+exports.triggerAutocomplete = function (editor, previousChar) {
+    var previousChar = previousChar == null
+        ? editor.session.getPrecedingCharacter()
+        : previousChar;
     return editor.completers.some((completer) => {
         if (completer.triggerCharacters && Array.isArray(completer.triggerCharacters)) {
             return completer.triggerCharacters.includes(previousChar);
