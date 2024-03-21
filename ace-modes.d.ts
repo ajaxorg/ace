@@ -1198,7 +1198,7 @@ declare module "ace-code/src/mode/ruby_highlight_rules" {
     export const constantNumericHex: { token: string; regex: string; };
     export const constantNumericBinary: { token: string; regex: RegExp; };
     export const constantNumericDecimal: { token: string; regex: RegExp; };
-    export const constantNumericDecimal: { token: string; regex: RegExp; };
+    export const constantNumericOctal: { token: string; regex: RegExp; };
     export const constantNumericRational: { token: string; regex: RegExp; };
     export const constantNumericComplex: { token: string; regex: RegExp; };
     export const constantNumericFloat: { token: string; regex: string; };
