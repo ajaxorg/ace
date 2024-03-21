@@ -1384,6 +1384,7 @@ declare module "ace-code/src/mode/swift" {
 
 declare module "ace-code/src/mode/swift_highlight_rules" {
     export const HighlightRules: new () => import(".").Ace.HighlightRules;
+    export const SwiftHighlightRules: new () => import(".").Ace.HighlightRules;
 }
 
 declare module "ace-code/src/mode/tcl" {
