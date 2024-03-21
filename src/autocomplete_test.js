@@ -487,6 +487,7 @@ module.exports = {
             }
         ];
         
+        user.type(" ");
         user.type("t");
         user.type("e");
         assert.ok(!editor.completer || !editor.completer.popup.isOpen);
@@ -495,9 +496,16 @@ module.exports = {
             assert.ok(editor.completers[1].timeout);
             user.type("Home");
             setTimeout(function() {
-                assert.ok(!editor.completer.popup.isOpen);
-                assert.ok(!editor.completers[1].timeout);
-                done();
+                assert.ok(editor.completer.popup.isOpen);
+                assert.ok(editor.completers[1].timeout);
+
+                user.type("Left");
+
+                setTimeout(function() {
+                    assert.ok(!editor.completer.popup.isOpen);
+                    assert.ok(!editor.completers[1].timeout);
+                    done();
+                }, 0);
             }, 0);
         }, 11);
     },
