@@ -166,4 +166,5 @@ var SwiftHighlightRules = function() {
 
 oop.inherits(SwiftHighlightRules, TextHighlightRules);
 
+exports.HighlightRules = SwiftHighlightRules;
 exports.SwiftHighlightRules = SwiftHighlightRules;
