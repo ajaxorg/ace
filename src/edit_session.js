@@ -2366,6 +2366,21 @@ class EditSession {
         };
     }
 
+    /**
+     * @returns {string} the last character inserted into the editor
+     */
+    getPreviousChar() {
+        var pos = this.selection.getCursor();
+
+        if (pos.row === 0) {
+            var line = this.getLine(pos.row);
+            var column = pos.column === 0 ? 0 : pos.column - 1;
+            return line[column];
+        }
+
+        return this.doc.getNewLineCharacter();
+    }
+
     destroy() {
         if (!this.destroyed) {
             this.bgTokenizer.setDocument(null);
