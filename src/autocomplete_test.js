@@ -403,6 +403,7 @@ module.exports = {
     },
     "test: trigger autocomplete for specific characters": function (done) {
         var editor = initEditor("document");
+        var newLineCharacter = editor.session.doc.getNewLineCharacter();
 
         editor.completers = [
             {
@@ -418,18 +419,27 @@ module.exports = {
                     ];
                     callback(null, completions);
                 },
-                triggerCharacters: ["."]
+                triggerCharacters: [".", newLineCharacter]
             }
         ];
-        
+
         editor.moveCursorTo(0, 8);
-        sendKey(".");
+        user.type(".");
         var popup = editor.completer.popup;
         check(function () {
             assert.equal(popup.data.length, 2);
-            editor.onCommandKey(null, 0, 13);
+            user.type("Return");  // Accept suggestion
             assert.equal(editor.getValue(), "document.all");
-            done();
+
+            user.type(Array(4).fill("Backspace"));  // Delete '.all'
+            user.type("Return");  // Enter new line
+
+            check(function() {
+                assert.equal(popup.data.length, 2);
+                user.type("Return");  // Accept suggestion
+                assert.equal(editor.getValue(), `document${newLineCharacter}all`);
+                done();
+            });
         });
 
         function check(callback) {

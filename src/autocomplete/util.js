@@ -1,5 +1,9 @@
 "use strict";
 
+/**
+ * @typedef {import("../editor").Editor} Editor
+ */
+
 exports.parForEach = function(array, fn, callback) {
     var completed = 0;
     var arLength = array.length;
@@ -59,14 +63,18 @@ exports.getCompletionPrefix = function (editor) {
     return prefix || this.retrievePrecedingIdentifier(line, pos.column);
 };
 
-exports.triggerAutocomplete = function (editor) {
-    var pos = editor.getCursorPosition();
-    var line = editor.session.getLine(pos.row);
-    var column = (pos.column === 0) ? 0 : pos.column - 1;
-    var previousChar = line[column];
-    return editor.completers.some((el) => {
-        if (el.triggerCharacters && Array.isArray(el.triggerCharacters)) {
-            return el.triggerCharacters.includes(previousChar);
+/**
+ * @param {Editor} editor
+ * @param {string} [previousChar] if not provided, it falls back to the preceding character in the editor
+ * @returns {boolean} whether autocomplete should be triggered
+ */
+exports.triggerAutocomplete = function (editor, previousChar) {
+    var previousChar = previousChar == null
+        ? editor.session.getPrecedingCharacter()
+        : previousChar;
+    return editor.completers.some((completer) => {
+        if (completer.triggerCharacters && Array.isArray(completer.triggerCharacters)) {
+            return completer.triggerCharacters.includes(previousChar);
         }
     });
 };

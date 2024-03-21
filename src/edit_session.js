@@ -2366,6 +2366,20 @@ class EditSession {
         };
     }
 
+    /**
+     * @returns {string} the last character preceding the cursor in the editor
+     */
+    getPrecedingCharacter() {
+        var pos = this.selection.getCursor();
+
+        if (pos.column === 0) {
+            return pos.row === 0 ? "" : this.doc.getNewLineCharacter();
+        }
+
+        var currentLine = this.getLine(pos.row);
+        return currentLine[pos.column - 1];
+    }
+
     destroy() {
         if (!this.destroyed) {
             this.bgTokenizer.setDocument(null);
