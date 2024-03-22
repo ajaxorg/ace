@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.32.8](https://github.com/ajaxorg/ace/compare/v1.32.7...v1.32.8) (2024-03-22)
+
+
+### Bug Fixes
+
+* allow completers to trigger on newline characters ([#5519](https://github.com/ajaxorg/ace/issues/5519)) ([6e870fd](https://github.com/ajaxorg/ace/commit/6e870fd08e06be47f9da971743d13b25c41f99c2))
+* don't detach completion popup while typing when prefix is empty ([#5517](https://github.com/ajaxorg/ace/issues/5517)) ([7937e53](https://github.com/ajaxorg/ace/commit/7937e53babb9b327902e9dab4b18c04a907883be))
+* scroll cursor line to top editor for long inline preview ([#5514](https://github.com/ajaxorg/ace/issues/5514)) ([529473b](https://github.com/ajaxorg/ace/commit/529473b6959d5f7a70ada1d20feb0c87b432f766))
+* SwiftHighlightRules exports ([#5516](https://github.com/ajaxorg/ace/issues/5516)) ([f493ab0](https://github.com/ajaxorg/ace/commit/f493ab03bb50fe089c927b7a50a4a327c8dcec4c))
+
 ### [1.32.7](https://github.com/ajaxorg/ace/compare/v1.32.6...v1.32.7) (2024-03-01)
 
 
