@@ -749,6 +749,12 @@ Autocomplete.prototype.commands = {
         else
             return result;
     },
+    "Backspace": function(editor) {
+        editor.execCommand("backspace");
+        var prefix = util.getCompletionPrefix(editor);
+        if (!prefix && editor.completer)
+            editor.completer.detach();
+    },
 
     "PageUp": function(editor) { editor.completer.popup.gotoPageUp(); },
     "PageDown": function(editor) { editor.completer.popup.gotoPageDown(); }

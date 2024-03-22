@@ -1467,6 +1467,41 @@ module.exports = {
         user.type("\n");
         
         assert.equal(editor.getValue(), "example value<b2-b2>");
+    },
+    "test: should close popup if backspacing until input is fully deleted": function() {
+        var editor = initEditor("");
+        
+        editor.completers = [
+            {
+                getCompletions: function (editor, session, pos, prefix, callback) {
+                    var completions = [
+                        {
+                            value: "tabularhappiness"
+                        }
+                    ];
+                    callback(null, completions);
+                }
+            }
+        ];
+        
+        var completer = Autocomplete.for(editor);
+        completer.inlineEnabled = true;
+
+        user.type("tab");
+
+        // Popup should be open
+        assert.equal(completer.popup.isOpen, true);  
+
+        user.type("Backspace");
+        user.type("Backspace");
+
+        // Popup should still be open
+        assert.equal(completer.popup.isOpen, true);  
+
+        user.type("Backspace");
+
+        // Popup should be closed now
+        assert.equal(completer.popup.isOpen, false); 
     }
 };
 
