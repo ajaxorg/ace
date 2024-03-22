@@ -362,8 +362,6 @@ class Autocomplete {
             if (this.tooltipNode) {
                 this.updateDocTooltip();
             }
-        } else if (keepPopupPosition && !prefix) {
-            this.detach();
         }
         this.changeTimer.cancel();
         this.observeLayoutChanges();
@@ -750,6 +748,12 @@ Autocomplete.prototype.commands = {
             editor.completer.goTo("down");
         else
             return result;
+    },
+    "Backspace": function(editor) {
+        editor.execCommand("backspace");
+        var prefix = util.getCompletionPrefix(editor);
+        if (!prefix && editor.completer)
+            editor.completer.detach();
     },
 
     "PageUp": function(editor) { editor.completer.popup.gotoPageUp(); },
