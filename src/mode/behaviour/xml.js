@@ -8,42 +8,26 @@ function is(token, type) {
     return token && token.type.lastIndexOf(type + ".xml") > -1;
 }
 
-/**
- * Creates a new XML behaviour object with the specified options.
- * @constructor
- * @param {Object} [options] - The options for the XML behaviour object.
- * @param {boolean} [options.closeCurlyBraces] - enables automatic insertion of closing curly brace.
- */
-var XmlBehaviour = function (options) {
-    options = options || {};
-    this.add("string_dquotes_xml", "insertion", function (state, action, editor, session, text) {
-        if (text == '"' || text == "'" || (options.closeCurlyBraces && text == "{")) {
-            var quotesMapping = {
-                '"': '"',
-                "'": "'",
-                "{": "}"
-            };
-            var cursor = editor.getCursorPosition();
-            var iterator = new TokenIterator(session, cursor.row, cursor.column);
-            var token = iterator.getCurrentToken();
-            if (!is(token, "")) {
-                return;
-            }
-            
+var XmlBehaviour = function () {
+
+    this.add("string_dquotes", "insertion", function (state, action, editor, session, text) {
+        if (text == '"' || text == "'") {
             var quote = text;
-            var closingQuote = quotesMapping[text];
             var selected = session.doc.getTextRange(editor.getSelectionRange());
             if (selected !== "" && selected !== "'" && selected != '"' && editor.getWrapBehavioursEnabled()) {
                 return {
-                    text: quote + selected + closingQuote,
+                    text: quote + selected + quote,
                     selection: false
                 };
             }
 
+            var cursor = editor.getCursorPosition();
             var line = session.doc.getLine(cursor.row);
             var rightChar = line.substring(cursor.column, cursor.column + 1);
+            var iterator = new TokenIterator(session, cursor.row, cursor.column);
+            var token = iterator.getCurrentToken();
 
-            if (rightChar == closingQuote && (is(token, "attribute-value") || is(token, "string"))) {
+            if (rightChar == quote && (is(token, "attribute-value") || is(token, "string"))) {
                 // Ignore input and move right one if we're typing over the closing quote.
                 return {
                     text: "",
@@ -63,27 +47,21 @@ var XmlBehaviour = function (options) {
             var rightSpace = !rightChar || rightChar.match(/\s/);
             if (is(token, "attribute-equals") && (rightSpace || rightChar == '>') || (is(token, "decl-attribute-equals") && (rightSpace || rightChar == '?'))) {
                 return {
-                    text: quote + closingQuote,
+                    text: quote + quote,
                     selection: [1, 1]
                 };
             }
         }
     });
 
-    this.add("string_dquotes_xml", "deletion", function (state, action, editor, session, range) {
-        var cursor = editor.getCursorPosition();
-        var iterator = new TokenIterator(session, cursor.row, cursor.column);
-        var token = iterator.getCurrentToken();
-        if (is(token, "")) {
-            var selected = session.doc.getTextRange(range);
-            if (!range.isMultiLine() && (selected == '"' || selected == "'" || (options.closeCurlyBraces && selected
-                == "{"))) {
-                var line = session.doc.getLine(range.start.row);
-                var rightChar = line.substring(range.start.column + 1, range.start.column + 2);
-                if (rightChar == selected) {
-                    range.end.column++;
-                    return range;
-                }
+    this.add("string_dquotes", "deletion", function(state, action, editor, session, range) {
+        var selected = session.doc.getTextRange(range);
+        if (!range.isMultiLine() && (selected == '"' || selected == "'")) {
+            var line = session.doc.getLine(range.start.row);
+            var rightChar = line.substring(range.start.column + 1, range.start.column + 2);
+            if (rightChar == selected) {
+                range.end.column++;
+                return range;
             }
         }
     });
