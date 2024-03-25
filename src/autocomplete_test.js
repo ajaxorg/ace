@@ -485,7 +485,7 @@ module.exports = {
                         }
                     ];
                     callback(null, completions);
-                },
+                }
             }
         ];
 
