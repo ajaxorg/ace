@@ -489,7 +489,16 @@ module.exports = {
             }
         ];
 
-        user.type("app");
+        user.type("b");
+
+        // Open autocompletion via key-binding and verify empty message class
+        user.type("Ctrl-Space");
+        assert.equal(editor.completer.popup.isOpen, true);
+        assert.equal(editor.completer.popup.data[0].caption, emptyMessageText);
+        assert.ok(editor.completer.popup.renderer.container.classList.contains("ace_empty-message"));
+
+        user.type("Backspace");
+        assert.equal(editor.completer.popup.isOpen, false);
 
         // Open autocompletion via key-binding and verify no empty message class
         user.type("Ctrl-Space");
