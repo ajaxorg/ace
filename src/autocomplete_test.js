@@ -462,9 +462,49 @@ module.exports = {
         user.type("Ctrl-Space");
         assert.equal(editor.completer.popup.isOpen, true);
         assert.equal(editor.completer.popup.data[0].caption, emptyMessageText);
+        assert.ok(editor.completer.popup.renderer.container.classList.contains("ace_empty-message"));
 
         user.type("Return");
         assert.equal(editor.completer.popup.isOpen, false);
+
+        done();
+    },
+    "test: no empty message class if suggestions available": function(done) {
+        var editor = initEditor("");
+        var emptyMessageText = "No suggestions.";
+        var autocomplete = Autocomplete.for(editor);
+        autocomplete.emptyMessage = () => emptyMessageText;
+
+        editor.completers = [
+            {
+                getCompletions: function (editor, session, pos, prefix, callback) {
+                    var completions = [
+                        {
+                            caption: "append",
+                            value: "append"
+                        }
+                    ];
+                    callback(null, completions);
+                }
+            }
+        ];
+
+        user.type("b");
+
+        // Open autocompletion via key-binding and verify empty message class
+        user.type("Ctrl-Space");
+        assert.equal(editor.completer.popup.isOpen, true);
+        assert.equal(editor.completer.popup.data[0].caption, emptyMessageText);
+        assert.ok(editor.completer.popup.renderer.container.classList.contains("ace_empty-message"));
+
+        user.type("Backspace");
+        assert.equal(editor.completer.popup.isOpen, false);
+
+        // Open autocompletion via key-binding and verify no empty message class
+        user.type("Ctrl-Space");
+        assert.equal(editor.completer.popup.isOpen, true);
+        assert.equal(editor.completer.popup.data[0].caption, "append");
+        assert.ok(!editor.completer.popup.renderer.container.classList.contains("ace_empty-message"));
 
         done();
     },
