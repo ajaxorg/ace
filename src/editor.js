@@ -52,7 +52,7 @@ class Editor {
         this.$toDestroy = [];
         
         var container = renderer.getContainerElement();
-        /**@type {HTMLElement & {env?, value?}}*/
+        /**@type {HTMLElement & {env?:any, value?:any}}*/
         this.container = container;
         /**@type {VirtualRenderer}*/
         this.renderer = renderer;
@@ -479,6 +479,7 @@ class Editor {
      * @return {string}
      */
     getFontSize() {
+        // @ts-expect-error
         return this.getOption("fontSize") ||
            dom.computedStyle(this.container).fontSize;
     }
