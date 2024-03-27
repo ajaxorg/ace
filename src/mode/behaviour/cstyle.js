@@ -78,6 +78,15 @@ CstyleBehaviour = function(options) {
                         selection: [1, 1]
                     };
                 }
+            } else {
+                var token = session.getTokenAt(cursor.row, cursor.column);
+                if (token && /string\.quasi|(tag-whitespace|attribute-equals)\.xml/.test(token.type)) {
+                    CstyleBehaviour.recordAutoInsert(editor, session, "}");
+                    return {
+                        text: '{}',
+                        selection: [1, 1]
+                    };
+                }
             }
         } else if (text == '}') {
             initContext(editor);

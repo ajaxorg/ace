@@ -68,6 +68,11 @@ function is(token, type) {
                 if (!token)
                     return null;
                 tag.tagName = token.value;
+                if (token.value === "") { //skip empty tag name token for fragment
+                    token = tokens[++i];
+                    if (!token) return null;
+                    tag.tagName = token.value;
+                }
                 tag.end.column += token.value.length;
                 for (i++; i < tokens.length; i++) {
                     token = tokens[i];
@@ -94,10 +99,13 @@ function is(token, type) {
         for (var i = 0; i < tokens.length; i++) {
             var token = tokens[i];
             column += token.value.length;
-            if (column < startColumn)
+            if (column < startColumn - 1)
                 continue;
             if (is(token, "end-tag-open")) {
                 token = tokens[i + 1];
+                if (is(token, "tag-name") && token.value === "") {
+                    token = tokens[i + 2];
+                }
                 if (token && token.value == tagName)
                     return true;
             }

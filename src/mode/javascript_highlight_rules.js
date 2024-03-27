@@ -482,7 +482,7 @@ function JSX() {
                 value: val.substr(offset)
             }];
         },
-        regex : "</?" + tagRegex + "",
+        regex : "</?(?:" + tagRegex + "|(?=>))",
         next: "jsxAttributes",
         nextState: "jsx"
     };
