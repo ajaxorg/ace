@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.32.9](https://github.com/ajaxorg/ace/compare/v1.32.8...v1.32.9) (2024-03-29)
+
+
+### Bug Fixes
+
+* apply class to autocomplete popup for no suggestions state ([#5522](https://github.com/ajaxorg/ace/issues/5522)) ([a66f861](https://github.com/ajaxorg/ace/commit/a66f8619953eecd85833d97715e479d3b211c4cd))
+
 ### [1.32.8](https://github.com/ajaxorg/ace/compare/v1.32.7...v1.32.8) (2024-03-22)
 
 
