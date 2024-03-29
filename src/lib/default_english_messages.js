@@ -1,7 +1,50 @@
 var defaultEnglishMessages = {
+<<<<<<< HEAD
     "gutter.annotation.aria-label.ace_error": "Error, Read annotations row $0",
     "gutter.annotation.aria-label.ace_warning": "Warning, Read annotations row $0",
     "gutter.annotation.aria-label.ace_info": "Info, Read annotations row $0"
+=======
+    "autocomplete.popup.aria-roledescription": "Autocomplete suggestions",
+    "autocomplete.popup.aria-label": "Autocomplete suggestions",
+    "autocomplete.popup.item.aria-roledescription": "item",
+    "autocomplete.loading": "Loading...",
+    "editor.scroller.aria-roledescription": "editor",
+    "editor.scroller.aria-label": "Editor content, press Enter to start editing, press Escape to exit",
+    "editor.gutter.aria-role-description": "editor",
+    "editor.gutter.aria-label": "Editor gutter, press Enter to interact with controls using arrow keys, press Escape to exit",
+    "error-marker.good-state": "Looks good!",
+    "prompt.recently-used": "Recently used",
+    "prompt.other-commands": "Other commands",
+    "prompt.no-matching-commands": "No matching commands",
+    "search-box.search-for": "Search for",
+    "search-box.find-all": "All",
+    "search-box.replace-with": "Replace with",
+    "search-box.replace-next": "Replace",
+    "search-box.replace-all": "All",
+    "search-box.toggle-replace": "Toggle Replace mode",
+    "search-box.toggle-regexp": "RegExp Search",
+    "search-box.toggle-case": "CaseSensitive Search",
+    "search-box.toggle-whole-word": "Whole Word Search",
+    "search-box.toggle-in-selection": "Search In Selection",
+    "search-box.search-counter": "$0 of $1",
+    "text-input.aria-roledescription": "editor",
+    "text-input.aria-label": "Cursor at row $0",
+    "gutter.code-folding.fold-range.aria-label": "Toggle code folding, rows $0 through $1",
+    "gutter.code-folding.fold-end.aria-label": "Toggle code folding, rows $0 through $1",
+    "gutter.code-folding.fold-start.aria-label": "Toggle code folding, row $0",
+    "gutter.code-folding.fold-end.title": "Unfold code",
+    "gutter.code-folding.fold-start.title": "Fold code",
+    "gutter.annotation.aria-label.error": "Error, read annotations row $0",
+    "gutter.annotation.aria-label.warning": "Warning, read annotations row $0",
+    "gutter.annotation.aria-label.info": "Info, read annotations row $0",
+    "inline-fold.toggle": "Unfold code",
+    "gutter-tooltip.label.error.singular": "error",
+    "gutter-tooltip.label.error.plural": "errors",
+    "gutter-tooltip.label.warning.singular": "warning",
+    "gutter-tooltip.label.warning.plural": "warnings",
+    "gutter-tooltip.label.info.singular": "information message",
+    "gutter-tooltip.label.info.plural": "information messages"
+>>>>>>> 45213c400 (feat: make translation system key based)
 }
 
 exports.defaultEnglishMessages = defaultEnglishMessages;

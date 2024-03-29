@@ -62,9 +62,9 @@ var messages;
 
 class AppConfig {
     constructor() {
-        this.$defaultOptions = {};
-        messages = defaultEnglishMessages;
-    }
+            this.$defaultOptions = {};
+            messages = defaultEnglishMessages;
+        }
     
     /**
      * @param {Object} obj
@@ -149,13 +149,14 @@ class AppConfig {
      * @param {{ [x: string]: any; }} [params]
      */
     nls(key, defaultString, params) {
-        if (messages && !messages[key])  {
+        if (!messages[key])  {
             warn("No message found for the key '" + key + "' in the provided messages, trying to find a translation for the default string '" + defaultString + "'.");
-        } else if (messages && !messages[defaultString]) {
-            warn("No message found for the default string '" + defaultString + "' in the provided messages. Falling back to the default English message.");
-        }
+            if (!messages[defaultString]) {
+                warn("No message found for the default string '" + defaultString + "' in the provided messages. Falling back to the default English message.");
+            }
+        } 
 
-        var translated = messages && messages[key] || messages && messages[defaultString] || defaultString;
+        var translated = messages[key] || messages[defaultString] || defaultString;
         if (params) {
             translated = translated.replace(/\$(\$|[\d]+)/g, function(_, name) {
                 if (name == "$") return "$";

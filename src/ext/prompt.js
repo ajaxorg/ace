@@ -441,13 +441,13 @@ prompt.commands = function(editor, callback) {
             otherCommands = getFilteredCompletions(otherCommands, prefix);
 
             if (recentlyUsedCommands.length && otherCommands.length) {
-                recentlyUsedCommands[0].message = nls("Recently used");
-                otherCommands[0].message = nls("Other commands");
+                recentlyUsedCommands[0].message = nls("prompt.recently-used", "Recently used");
+                otherCommands[0].message = nls("prompt.other-commands", "Other commands");
             }
 
             var completions = recentlyUsedCommands.concat(otherCommands);
             return completions.length > 0 ? completions : [{
-                value: nls("No matching commands"),
+                value: nls("prompt.no-matching-commands", "No matching commands"),
                 error: 1
             }];
         }

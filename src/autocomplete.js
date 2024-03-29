@@ -121,7 +121,7 @@ class Autocomplete {
     }
 
     static get completionsForLoading() { return [{
-            caption: config.nls("Loading..."),
+            caption: config.nls("autocomplete.loading", "Loading..."),
             value: ""
         }];
     }

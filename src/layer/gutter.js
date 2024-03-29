@@ -442,7 +442,21 @@ class Gutter{
             dom.setStyle(annotationIconNode.style, "height", lineHeight);
             dom.setStyle(annotationNode.style, "display", "block");
             dom.setStyle(annotationNode.style, "height", lineHeight);
+<<<<<<< HEAD
             annotationNode.setAttribute("aria-label", nls(`gutter.annotation.aria-label.${this.$annotations[row].className.trim()}`, "Read annotations row $0", [rowText]));
+=======
+            var ariaLabel;
+            switch(foldAnnotationClass) {
+                case " ace_error_fold":
+                    ariaLabel = nls("gutter.annotation.aria-label.error", "Read annotations row $0", [rowText]);
+                    break;
+
+                case " ace_warning_fold":
+                    ariaLabel = nls("gutter.annotation.aria-label.warning", "Read annotations row $0", [rowText]);
+                    break;
+            }
+            annotationNode.setAttribute("aria-label", ariaLabel);
+>>>>>>> 45213c400 (feat: make translation system key based)
             annotationNode.setAttribute("tabindex", "-1");
             annotationNode.setAttribute("role", "button");
         }
@@ -458,7 +472,25 @@ class Gutter{
             dom.setStyle(annotationIconNode.style, "height", lineHeight);
             dom.setStyle(annotationNode.style, "display", "block");
             dom.setStyle(annotationNode.style, "height", lineHeight);
+<<<<<<< HEAD
             annotationNode.setAttribute("aria-label", nls(`gutter.annotation.aria-label.${this.$annotations[row].className.trim()}`, "Read annotations row $0", [rowText]));
+=======
+            var ariaLabel;
+            switch(this.$annotations[row].className) {
+                case " ace_error":
+                    ariaLabel = nls("gutter.annotation.aria-label.error", "Read annotations row $0", [rowText]);
+                    break;
+
+                case " ace_warning":
+                    ariaLabel = nls("gutter.annotation.aria-label.warning", "Read annotations row $0", [rowText]);
+                    break;
+
+                case " ace_info":
+                    ariaLabel = nls("gutter.annotation.aria-label.info", "Read annotations row $0", [rowText]);
+                    break;
+            }
+            annotationNode.setAttribute("aria-label", ariaLabel);
+>>>>>>> 45213c400 (feat: make translation system key based)
             annotationNode.setAttribute("tabindex", "-1");
             annotationNode.setAttribute("role", "button");
         }

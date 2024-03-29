@@ -52,13 +52,16 @@ module.exports = {
     "test: nls": function() {
         var nls = config.nls;
         config.setMessages({
-            foo: "hello world of $1"
+            foo: "hello world of $1",
+            test_key: "hello world for test key"
         });
-        assert.equal(nls("bar $1"), "bar $1");
-        assert.equal(nls("bar"), "bar");
-        assert.equal(nls("foo"), "hello world of $1");
-        assert.equal(nls("foo", {1: "goo"}), "hello world of goo");
-        assert.equal(nls("$0B is $1$$", [0.11, 22]), "0.11B is 22$");
+        assert.equal(nls("untranslated_key","bar $1"), "bar $1");
+        assert.equal(nls("untranslated_key", "bar"), "bar");
+        assert.equal(nls("untranslated_key_but_translated_default_string", "foo"), "hello world of $1");
+        assert.equal(nls("untranslated_key_but_translated_default_string", "foo", {1: "goo"}), "hello world of goo");
+        assert.equal(nls("untranslated_key", "$0B is $1$$", [0.11, 22]), "0.11B is 22$");
+        assert.equal(nls("untranslated_key_but_translated_default_string", "foo", {1: "goo"}), "hello world of goo");
+        assert.equal(nls("test_key", "this text should not appear"), "hello world for test key");
     },
     "test: define options" : function() {
         var o = {};
