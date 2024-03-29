@@ -409,21 +409,21 @@ class Gutter{
 
             // getFoldWidgetRange is optional to be implemented by fold modes, if not available we fall-back.
             if (foldRange)
-                foldWidget.setAttribute("aria-label", nls("Toggle code folding, rows $0 through $1", [foldRange.start.row + 1, foldRange.end.row + 1]));
+                foldWidget.setAttribute("aria-label", nls("gutter.code-folding.fold-range.aria-label", "Toggle code folding, rows $0 through $1", [foldRange.start.row + 1, foldRange.end.row + 1]));
             else {
                 if (fold)
-                    foldWidget.setAttribute("aria-label", nls("Toggle code folding, rows $0 through $1", [fold.start.row + 1, fold.end.row + 1]));
+                    foldWidget.setAttribute("aria-label", nls("gutter.code-folding.fold-end.aria-label", "Toggle code folding, rows $0 through $1", [fold.start.row + 1, fold.end.row + 1]));
                 else
-                    foldWidget.setAttribute("aria-label", nls("Toggle code folding, row $0", [row + 1]));
+                    foldWidget.setAttribute("aria-label", nls("gutter.code-folding.fold-start.aria-label", "Toggle code folding, row $0", [row + 1]));
             }
 
             if (isClosedFold) {
                 foldWidget.setAttribute("aria-expanded", "false");
-                foldWidget.setAttribute("title", nls("Unfold code"));
+                foldWidget.setAttribute("title", nls("gutter.code-folding.fold-end.title", "Unfold code"));
             }
             else {
                 foldWidget.setAttribute("aria-expanded", "true");
-                foldWidget.setAttribute("title", nls("Fold code"));
+                foldWidget.setAttribute("title", nls("gutter.code-folding.fold-start.title", "Fold code"));
             }
         } else {
             if (foldWidget) {
@@ -442,7 +442,7 @@ class Gutter{
             dom.setStyle(annotationIconNode.style, "height", lineHeight);
             dom.setStyle(annotationNode.style, "display", "block");
             dom.setStyle(annotationNode.style, "height", lineHeight);
-            annotationNode.setAttribute("aria-label", nls("Read annotations row $0", [rowText]));
+            annotationNode.setAttribute("aria-label", nls(`gutter.annotation.aria-label.${this.$annotations[row].className.trim()}`, "Read annotations row $0", [rowText]));
             annotationNode.setAttribute("tabindex", "-1");
             annotationNode.setAttribute("role", "button");
         }
@@ -458,7 +458,7 @@ class Gutter{
             dom.setStyle(annotationIconNode.style, "height", lineHeight);
             dom.setStyle(annotationNode.style, "display", "block");
             dom.setStyle(annotationNode.style, "height", lineHeight);
-            annotationNode.setAttribute("aria-label", nls("Read annotations row $0", [rowText]));
+            annotationNode.setAttribute("aria-label", nls(`gutter.annotation.aria-label.${this.$annotations[row].className.trim()}`, "Read annotations row $0", [rowText]));
             annotationNode.setAttribute("tabindex", "-1");
             annotationNode.setAttribute("role", "button");
         }
