@@ -442,9 +442,6 @@ class Gutter{
             dom.setStyle(annotationIconNode.style, "height", lineHeight);
             dom.setStyle(annotationNode.style, "display", "block");
             dom.setStyle(annotationNode.style, "height", lineHeight);
-<<<<<<< HEAD
-            annotationNode.setAttribute("aria-label", nls(`gutter.annotation.aria-label.${this.$annotations[row].className.trim()}`, "Read annotations row $0", [rowText]));
-=======
             var ariaLabel;
             switch(foldAnnotationClass) {
                 case " ace_error_fold":
@@ -456,7 +453,6 @@ class Gutter{
                     break;
             }
             annotationNode.setAttribute("aria-label", ariaLabel);
->>>>>>> 45213c400 (feat: make translation system key based)
             annotationNode.setAttribute("tabindex", "-1");
             annotationNode.setAttribute("role", "button");
         }
@@ -472,9 +468,6 @@ class Gutter{
             dom.setStyle(annotationIconNode.style, "height", lineHeight);
             dom.setStyle(annotationNode.style, "display", "block");
             dom.setStyle(annotationNode.style, "height", lineHeight);
-<<<<<<< HEAD
-            annotationNode.setAttribute("aria-label", nls(`gutter.annotation.aria-label.${this.$annotations[row].className.trim()}`, "Read annotations row $0", [rowText]));
-=======
             var ariaLabel;
             switch(this.$annotations[row].className) {
                 case " ace_error":
@@ -490,7 +483,6 @@ class Gutter{
                     break;
             }
             annotationNode.setAttribute("aria-label", ariaLabel);
->>>>>>> 45213c400 (feat: make translation system key based)
             annotationNode.setAttribute("tabindex", "-1");
             annotationNode.setAttribute("role", "button");
         }
