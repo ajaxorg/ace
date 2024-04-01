@@ -45,6 +45,7 @@
         "lint": "eslint \"src/**/*.js\"",
         "fix": "eslint --fix \"src/**/*.js\"",
         "typecheck": "tsc -p tsconfig.json",
+        "update-types": "node ./tool/modes-declaration-generator.js",
         "changelog": "standard-version",
         "prepack": "node tool/esm_resolver_generator.js && node Makefile.dryice.js css --target build-styles && rm -rf styles && mv build-styles/css styles"
     },

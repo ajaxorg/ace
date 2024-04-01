@@ -111,7 +111,7 @@ function generateModuleDeclarations(dirPath) {
     const program = createProgram(dirPath);
     const filePaths = program.getRootFileNames();
 
-    return filePaths.map(filePath => {
+    return filePaths.sort((a, b) => a.localeCompare(b)).map(filePath => {
         let normalizedFilePath = filePath.replace(/\\/g, "/").replace(/.*(?=src\/mode)/, "").replace(/\.js$/, "");
 
         const moduleName = moduleNamePrefix + "/" + normalizedFilePath;
