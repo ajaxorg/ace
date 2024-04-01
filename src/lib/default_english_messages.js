@@ -1,9 +1,4 @@
 var defaultEnglishMessages = {
-<<<<<<< HEAD
-    "gutter.annotation.aria-label.ace_error": "Error, Read annotations row $0",
-    "gutter.annotation.aria-label.ace_warning": "Warning, Read annotations row $0",
-    "gutter.annotation.aria-label.ace_info": "Info, Read annotations row $0"
-=======
     "autocomplete.popup.aria-roledescription": "Autocomplete suggestions",
     "autocomplete.popup.aria-label": "Autocomplete suggestions",
     "autocomplete.popup.item.aria-roledescription": "item",
@@ -44,7 +39,6 @@ var defaultEnglishMessages = {
     "gutter-tooltip.label.warning.plural": "warnings",
     "gutter-tooltip.label.info.singular": "information message",
     "gutter-tooltip.label.info.plural": "information messages"
->>>>>>> 45213c400 (feat: make translation system key based)
 }
 
 exports.defaultEnglishMessages = defaultEnglishMessages;
