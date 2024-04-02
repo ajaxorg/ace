@@ -62,8 +62,22 @@ CstyleBehaviour = function(options) {
             initContext(editor);
             var selection = editor.getSelectionRange();
             var selected = session.doc.getTextRange(selection);
+            var token = session.getTokenAt(cursor.row, cursor.column);
             if (selected !== "" && selected !== "{" && editor.getWrapBehavioursEnabled()) {
                 return getWrapped(selection, selected, '{', '}');
+            }
+            else if (token && /(?:string)\.quasi|\.xml/.test(token.type)) {
+                let excludeTokens = [
+                    /tag\-(?:open|name)/, /attribute\-name/
+                ];
+                if (excludeTokens.some((el) => el.test(token.type)) || /(string)\.quasi/.test(token.type)
+                    && token.value[cursor.column - token.start - 1] !== '$') return;
+
+                CstyleBehaviour.recordAutoInsert(editor, session, "}");
+                return {
+                    text: '{}',
+                    selection: [1, 1]
+                };
             } else if (CstyleBehaviour.isSaneInsertion(editor, session)) {
                 if (/[\]\}\)]/.test(line[cursor.column]) || editor.inMultiSelectMode || options.braces) {
                     CstyleBehaviour.recordAutoInsert(editor, session, "}");
@@ -75,15 +89,6 @@ CstyleBehaviour = function(options) {
                     CstyleBehaviour.recordMaybeInsert(editor, session, "{");
                     return {
                         text: '{',
-                        selection: [1, 1]
-                    };
-                }
-            } else {
-                var token = session.getTokenAt(cursor.row, cursor.column);
-                if (token && /string\.quasi|(tag-whitespace|attribute-equals)\.xml/.test(token.type)) {
-                    CstyleBehaviour.recordAutoInsert(editor, session, "}");
-                    return {
-                        text: '{}',
                         selection: [1, 1]
                     };
                 }

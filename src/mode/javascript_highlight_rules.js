@@ -495,8 +495,7 @@ function JSX() {
     this.$rules.jsx = [
         jsxJsRule,
         jsxTag,
-        {include : "reference"},
-        {defaultToken: "string"}
+        {include : "reference"}, {defaultToken: "string.xml"}
     ];
     this.$rules.jsxAttributes = [{
         token : "meta.tag.punctuation.tag-close.xml",
