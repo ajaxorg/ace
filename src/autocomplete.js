@@ -362,8 +362,6 @@ class Autocomplete {
             if (this.tooltipNode) {
                 this.updateDocTooltip();
             }
-        } else if (keepPopupPosition && !prefix) {
-            this.detach();
         }
         this.changeTimer.cancel();
         this.observeLayoutChanges();
@@ -576,7 +574,8 @@ class Autocomplete {
                             ];
                             this.completions = new FilteredList(completionsForEmpty);
                             this.openPopup(this.editor, prefix, keepPopupPosition);
-                        this.popup.renderer.setStyle("ace_loading", false);
+                            this.popup.renderer.setStyle("ace_loading", false);
+                            this.popup.renderer.setStyle("ace_empty-message", true);
                             return;
                         }
                         return this.detach();
@@ -600,6 +599,7 @@ class Autocomplete {
 
                 this.openPopup(this.editor, prefix, keepPopupPosition);
 
+            this.popup.renderer.setStyle("ace_empty-message", false);
             this.popup.renderer.setStyle("ace_loading", !finished);
         }.bind(this));
 
@@ -750,6 +750,12 @@ Autocomplete.prototype.commands = {
             editor.completer.goTo("down");
         else
             return result;
+    },
+    "Backspace": function(editor) {
+        editor.execCommand("backspace");
+        var prefix = util.getCompletionPrefix(editor);
+        if (!prefix && editor.completer)
+            editor.completer.detach();
     },
 
     "PageUp": function(editor) { editor.completer.popup.gotoPageUp(); },
