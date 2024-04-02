@@ -152,7 +152,7 @@ class GutterTooltip extends Tooltip {
     
     static get annotationLabels() { return {
             error: {
-                singular: nls("gutter-tooltip.label.error.singular","error"), 
+                singular: nls("gutter-tooltip.label.error.singular", "error"), 
                 plural: nls("gutter-tooltip.label.error.plural", "errors")
             },
             warning: {
