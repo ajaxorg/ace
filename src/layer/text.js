@@ -418,7 +418,7 @@ class Text {
             var span = this.dom.createElement("span");
             if (token.type == "fold"){
                 span.style.width = (token.value.length * this.config.characterWidth) + "px";
-                span.setAttribute("title", nls("Unfold code"));
+                span.setAttribute("title", nls("inline-fold.closed.title", "Unfold code"));
             }
 
             span.className = classes;

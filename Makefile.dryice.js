@@ -654,16 +654,23 @@ function extractCss(callback) {
 }
 
 function extractNls() {
-    var allMessages = {};
+    var defaultData = require(__dirname + "/src/lib/default_english_messages").defaultEnglishMessages;
+
     searchFiles(__dirname + "/src", function(path) {
         if (/_test/.test(path)) return;
         var text = fs.readFileSync(path, "utf8");
-        var matches = text.match(/nls\s*\(\s*("([^"\\]|\\.)+"|'([^'\\]|\\.)+')/g);
+        var matches = text.match(/nls\s*\(\s*("([^"\\]|\\.)+"|'([^'\\]|\\.)+'),\s*("([^"\\]|\\.)+"|'([^'\\]|\\.)+')/g);
         matches && matches.forEach(function(m) {
-            var eng = m.replace(/^nls\s*\(\s*["']|["']$/g, "");
-            allMessages[eng] = "";
+            var match = m.match(/("([^"\\]|\\.)+"|'([^'\\]|\\.)+)/g);      
+            var key = match[0].replace(/["']|["']$/g, "");
+            var defaultString = match[1].replace(/["']|["']$/g, "");
+
+            // If the key not yet in the default file, add it:
+            if (defaultData[key] !== undefined) return;
+            defaultData[key] = defaultString;
         });
     });
+    fs.writeFileSync(__dirname + "/src/lib/default_english_messages.js", "var defaultEnglishMessages = " + JSON.stringify(defaultData, null, 4) + "\n\nexports.defaultEnglishMessages = defaultEnglishMessages;", "utf8");
     
     fs.readdirSync(__dirname + "/translations").forEach(function(x) {
         if (!/\.json$/.test(x)) return;
@@ -671,11 +678,10 @@ function extractNls() {
         var existingStr = fs.readFileSync(path, "utf8");
         var existing = JSON.parse(existingStr);
         
-        var newData = {$id: existing.$id};
-        for (var i in allMessages) {
-            newData[i] = existing[i] || "";
+        for (var i in defaultData) {
+            existing[i] = existing[i] || "";
         }
-        fs.writeFileSync(path, JSON.stringify(newData, null, 4), "utf8");
+        fs.writeFileSync(path, JSON.stringify(existing, null, 4), "utf8");
         console.log("Saved " + x);
     });
 }

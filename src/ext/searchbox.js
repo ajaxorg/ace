@@ -27,24 +27,24 @@ class SearchBox {
         dom.buildDom(["div", {class:"ace_search right"},
             ["span", {action: "hide", class: "ace_searchbtn_close"}],
             ["div", {class: "ace_search_form"},
-                ["input", {class: "ace_search_field", placeholder: nls("Search for"), spellcheck: "false"}],
+                ["input", {class: "ace_search_field", placeholder: nls("search-box.find.placeholder", "Search for"), spellcheck: "false"}],
                 ["span", {action: "findPrev", class: "ace_searchbtn prev"}, "\u200b"],
                 ["span", {action: "findNext", class: "ace_searchbtn next"}, "\u200b"],
-                ["span", {action: "findAll", class: "ace_searchbtn", title: "Alt-Enter"}, nls("All")]
+                ["span", {action: "findAll", class: "ace_searchbtn", title: "Alt-Enter"}, nls("search-box.find-all.text", "All")]
             ],
             ["div", {class: "ace_replace_form"},
-                ["input", {class: "ace_search_field", placeholder: nls("Replace with"), spellcheck: "false"}],
-                ["span", {action: "replaceAndFindNext", class: "ace_searchbtn"}, nls("Replace")],
-                ["span", {action: "replaceAll", class: "ace_searchbtn"}, nls("All")]
+                ["input", {class: "ace_search_field", placeholder: nls("search-box.replace.placeholder", "Replace with"), spellcheck: "false"}],
+                ["span", {action: "replaceAndFindNext", class: "ace_searchbtn"}, nls("search-box.replace-next.text", "Replace")],
+                ["span", {action: "replaceAll", class: "ace_searchbtn"}, nls("search-box.replace-all.text", "All")]
             ],
             ["div", {class: "ace_search_options"},
-                ["span", {action: "toggleReplace", class: "ace_button", title: nls("Toggle Replace mode"),
+                ["span", {action: "toggleReplace", class: "ace_button", title: nls("search-box.toggle-replace.title", "Toggle Replace mode"),
                     style: "float:left;margin-top:-2px;padding:0 5px;"}, "+"],
                 ["span", {class: "ace_search_counter"}],
-                ["span", {action: "toggleRegexpMode", class: "ace_button", title: nls("RegExp Search")}, ".*"],
-                ["span", {action: "toggleCaseSensitive", class: "ace_button", title: nls("CaseSensitive Search")}, "Aa"],
-                ["span", {action: "toggleWholeWords", class: "ace_button", title: nls("Whole Word Search")}, "\\b"],
-                ["span", {action: "searchInSelection", class: "ace_button", title: nls("Search In Selection")}, "S"]
+                ["span", {action: "toggleRegexpMode", class: "ace_button", title: nls("search-box.toggle-regexp.title", "RegExp Search")}, ".*"],
+                ["span", {action: "toggleCaseSensitive", class: "ace_button", title: nls("search-box.toggle-case.title", "CaseSensitive Search")}, "Aa"],
+                ["span", {action: "toggleWholeWords", class: "ace_button", title: nls("search-box.toggle-whole-word.title", "Whole Word Search")}, "\\b"],
+                ["span", {action: "searchInSelection", class: "ace_button", title: nls("search-box.toggle-in-selection.title", "Search In Selection")}, "S"]
             ]
         ], div);
         /**@type {any}*/
@@ -234,7 +234,7 @@ class SearchBox {
                 }
             }
         }
-        this.searchCounter.textContent = nls("$0 of $1", [before , (all > MAX_COUNT ? MAX_COUNT + "+" : all)]);
+        this.searchCounter.textContent = nls("search-box.search-counter", "$0 of $1", [before , (all > MAX_COUNT ? MAX_COUNT + "+" : all)]);
     }
     findNext() {
         this.find(true, false);

@@ -2944,10 +2944,10 @@ config.defineOptions(Editor.prototype, "editor", {
                 this.textInput.setNumberOfExtraLines(useragent.isWin ? 3 : 0);
                 this.renderer.scroller.setAttribute("tabindex", 0);
                 this.renderer.scroller.setAttribute("role", "group");
-                this.renderer.scroller.setAttribute("aria-roledescription", nls("editor"));
+                this.renderer.scroller.setAttribute("aria-roledescription", nls("editor.scroller.aria-roledescription", "editor"));
                 this.renderer.scroller.classList.add(this.renderer.keyboardFocusClassName);
                 this.renderer.scroller.setAttribute("aria-label",
-                    nls("Editor content, press Enter to start editing, press Escape to exit")
+                    nls("editor.scroller.aria-label", "Editor content, press Enter to start editing, press Escape to exit")
                 );
 
                 this.renderer.scroller.addEventListener("keyup", focusOnEnterKeyup.bind(this));
@@ -2956,9 +2956,9 @@ config.defineOptions(Editor.prototype, "editor", {
                 this.renderer.$gutter.setAttribute("tabindex", 0);
                 this.renderer.$gutter.setAttribute("aria-hidden", false);
                 this.renderer.$gutter.setAttribute("role", "group");
-                this.renderer.$gutter.setAttribute("aria-roledescription", nls("editor"));
+                this.renderer.$gutter.setAttribute("aria-roledescription", nls("editor.gutter.aria-roledescription", "editor"));
                 this.renderer.$gutter.setAttribute("aria-label",
-                    nls("Editor gutter, press Enter to interact with controls using arrow keys, press Escape to exit")
+                    nls("editor.gutter.aria-label", "Editor gutter, press Enter to interact with controls using arrow keys, press Escape to exit")
                 );
                 this.renderer.$gutter.classList.add(this.renderer.keyboardFocusClassName);
 

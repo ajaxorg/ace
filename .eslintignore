@@ -9,6 +9,7 @@ lib/ace/mode/xml/*
 lib/ace/mode/xquery/*
 lib/ace/mode/xquery.js
 lib/ace/mode/yaml/*
+src/lib/default_english_messages.js
 **/test/asyncjs/*
 **/es5-shim.js
 **/vim*.js

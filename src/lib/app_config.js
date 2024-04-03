@@ -2,6 +2,7 @@
 var oop = require("./oop");
 var EventEmitter = require("./event_emitter").EventEmitter;
 const reportError = require("./report_error").reportError;
+const defaultEnglishMessages = require("./default_english_messages").defaultEnglishMessages;
 
 var optionsProvider = {
     setOptions: function(optList) {
@@ -61,8 +62,9 @@ var messages;
 
 class AppConfig {
     constructor() {
-        this.$defaultOptions = {};
-    }
+            this.$defaultOptions = {};
+            messages = defaultEnglishMessages;
+        }
     
     /**
      * @param {Object} obj
@@ -142,14 +144,19 @@ class AppConfig {
     }
 
     /**
-     * @param {string} string
+     * @param {string} key
+     * @param {string} defaultString
      * @param {{ [x: string]: any; }} [params]
      */
-    nls(string, params) {
-        if (messages && !messages[string])  {
-            warn("No message found for '" + string + "' in the provided messages, falling back to default English message.");
-        }
-        var translated = messages && messages[string] || string;
+    nls(key, defaultString, params) {
+        if (!messages[key])  {
+            warn("No message found for the key '" + key + "' in the provided messages, trying to find a translation for the default string '" + defaultString + "'.");
+            if (!messages[defaultString]) {
+                warn("No message found for the default string '" + defaultString + "' in the provided messages. Falling back to the default English message.");
+            }
+        } 
+
+        var translated = messages[key] || messages[defaultString] || defaultString;
         if (params) {
             translated = translated.replace(/\$(\$|[\d]+)/g, function(_, name) {
                 if (name == "$") return "$";
