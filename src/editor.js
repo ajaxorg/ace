@@ -881,8 +881,8 @@ class Editor {
     }
 
     /**
-     * 
-     * @param {string | string[]} command
+     *
+     * @param {string | string[] | import("../ace-internal").Ace.Command} command
      * @param [args]
      * @return {boolean}
      */

@@ -56,6 +56,21 @@ module.exports = `
     min-height: 1.8em;
     box-sizing: content-box;
 }
+
+.ace_search_input_wrapper {
+    float: left;
+    padding: 5px 2px 4px 2px;
+    min-width: 17em;
+    border-radius: 3px 0 0 3px;
+    background-color: white;
+    border: 1px solid #cbcbcb;
+    border-right: 0 none;
+}
+
+.ace_search .ace_scroller.ace_scroll-left:after {
+    box-shadow: none;
+}
+
 .ace_searchbtn {
     border: 1px solid #cbcbcb;
     line-height: inherit;
