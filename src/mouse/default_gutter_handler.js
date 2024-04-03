@@ -152,16 +152,16 @@ class GutterTooltip extends Tooltip {
     
     static get annotationLabels() { return {
             error: {
-                singular: nls("gutter-tooltip.label.error.singular", "error"), 
-                plural: nls("gutter-tooltip.label.error.plural", "errors")
+                singular: nls("gutter-tooltip.aria-label.error.singular", "error"), 
+                plural: nls("gutter-tooltip.aria-label.error.plural", "errors")
             },
             warning: {
-                singular: nls("gutter-tooltip.label.warning.singular", "warning"), 
-                plural: nls("gutter-tooltip.label.warning.plural", "warnings")
+                singular: nls("gutter-tooltip.aria-label.warning.singular", "warning"), 
+                plural: nls("gutter-tooltip.aria-label.warning.plural", "warnings")
             },
             info: {
-                singular: nls("gutter-tooltip.label.info.singular", "information message"), 
-                plural: nls("gutter-tooltip.label.info.plural", "information messages")
+                singular: nls("gutter-tooltip.aria-label.info.singular", "information message"), 
+                plural: nls("gutter-tooltip.aria-label.info.plural", "information messages")
             }
         };
     }
