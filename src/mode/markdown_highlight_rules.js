@@ -237,7 +237,7 @@ var MarkdownHighlightRules = function () {
                 regex: /www\.[a-zA-Z0-9-_]+(\.[a-zA-Z0-9-_]+)*\.[a-zA-Z0-9-]+/
             }, { // autolink
                 token: ["text", "url.underline", "text"],
-                regex: /(<)?((?:[-.\w+]+@[-a-z0-9]+(?:\.[-a-z0-9]+)*\.[a-z]+)|(?:[a-zA-Z][a-zA-Z0-9+.-]+:[^\s><]*))(>)?/
+                regex: /(<)?((?:[-.\w+]+@[-a-z0-9]+(?:\.[-a-z0-9]+)*\.[a-z]+)|(?:[a-zA-Z][a-zA-Z0-9+.-]+:[\w\/]+))(>)?/
             }, {include: "tag"}, {
                 token: "comment",
                 regex: /<!--/,
@@ -434,7 +434,13 @@ var MarkdownHighlightRules = function () {
             }, {include: "containerBlockInlinesList"}, codeBlockStartRule, {include: "basic"}, {
                 token: "empty",
                 regex: /(?=$)/,
-                push: "lineStart"
+                push: "lineStart",
+                onMatch: function (value, scope, stack, line) {
+                    if (/^\s*$/.test(line)) {
+                        return scope.get("listBlockEmpty").get("lineStart").get("empty");
+                    }
+                    return this.token;
+                }
             }, {defaultToken: "list"}
         ],
         "lineStart": [
