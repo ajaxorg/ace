@@ -39,7 +39,7 @@ var constantNumericDecimal = exports.constantNumericDecimal = {
     regex: /\b(0[dD](?:[1-9](?:[\d]|_(?=[\d]))*|0))\b/
 };
 
-var constantNumericOctal = exports.constantNumericDecimal = {
+var constantNumericOctal = exports.constantNumericOctal = {
     token: "constant.numeric",
     regex: /\b(0[oO]?(?:[1-7](?:[0-7]|_(?=[0-7]))*|0))\b/
 };
