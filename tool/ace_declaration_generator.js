@@ -346,6 +346,9 @@ function cloneAceNamespace(aceNamespacePath) {
  * @param {string} aceNamespacePath
  */
 function generateDeclaration(aceNamespacePath) {
+    if (!aceNamespacePath) {
+        aceNamespacePath = __dirname + "/../ace-internal.d.ts"
+    }
     const excludeDir = "src/mode"; //TODO: remove, when modes are ES6
 
     let data = generateInitialDeclaration(excludeDir);
@@ -378,7 +381,8 @@ function updateDeclarationModuleNames(content) {
 
 
 if (!module.parent) {
-    generateDeclaration(__dirname + "/../ace-internal.d.ts");
+    require("./modes-declaration-generator");
+    generateDeclaration();    
 }
 else {
     exports.generateDeclaration = generateDeclaration;
