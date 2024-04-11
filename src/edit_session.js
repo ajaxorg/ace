@@ -272,7 +272,7 @@ class EditSession {
     /**
      * {:BackgroundTokenizer.getState}
      * @param {Number} row The row to start at
-     * @returns {string}
+     * @returns {string | string[]}
      * @related BackgroundTokenizer.getState
      **/
     getState(row) {
