@@ -372,13 +372,11 @@ Tokenizer.prototype.reportError = reportError;
  *
  * @constructor
  **/
-var CustomTokenizer = function(rules, modeName) {
-    Tokenizer.call(this, rules);
-    this.rootScope = new Scope(modeName);
-}
-oop.inherits(CustomTokenizer, Tokenizer);
-
-(function() {
+class CustomTokenizer extends Tokenizer {
+    constructor(rules, modeName) {
+        super(rules);
+        this.rootScope = new Scope(modeName);
+    }
     /**
      * Returns an object containing two properties: `tokens`, which contains all the tokens; and `state`, the current state.
      * @param {String} line
@@ -386,7 +384,7 @@ oop.inherits(CustomTokenizer, Tokenizer);
      * @returns {Object}
      * @override
      **/
-    this.getLineTokens = function(line, startState) {
+    getLineTokens(line, startState) {
         var stack = [];
 
         var currentState = (startState !== undefined) ? (startState instanceof Scope) ? startState
@@ -404,7 +402,7 @@ oop.inherits(CustomTokenizer, Tokenizer);
         var lastIndex = 0;
         var matchAttempts = 0;
 
-        var token = {type: null, value: ""};
+        var token = { type: null, value: "" };
 
         while (match = re.exec(line)) {
             var type = currentState.get(mapping.defaultToken);
@@ -420,11 +418,11 @@ oop.inherits(CustomTokenizer, Tokenizer);
                 } else {
                     if (token.type)
                         tokens.push(token);
-                    token = {type: currentState.get(type), value: skipped};
+                    token = { type: currentState.get(type), value: skipped };
                 }
             }
 
-            for (var i = 0; i < match.length-2; i++) {
+            for (var i = 0; i < match.length - 2; i++) {
                 if (match[i + 1] === undefined)
                     continue;
 
@@ -491,14 +489,14 @@ oop.inherits(CustomTokenizer, Tokenizer);
                     } else {
                         if (token.type)
                             tokens.push(token);
-                        token = {type: currentState.get(type), value: value};
+                        token = { type: currentState.get(type), value: value };
                     }
                 } else if (type) {
                     if (token.type)
                         tokens.push(token);
-                    token = {type: null, value: ""};
+                    token = { type: null, value: "" };
                     for (var i = 0; i < type.length; i++) {
-                        type[i].type=currentState.get(type[i].type);
+                        type[i].type = currentState.get(type[i].type);
                         tokens.push(type[i]);
                     }
                 }
@@ -544,8 +542,9 @@ oop.inherits(CustomTokenizer, Tokenizer);
         return {
             tokens: tokens
         };
-    };
-}).call(CustomTokenizer.prototype);
+    }
+}
 
+ 
 exports.Tokenizer = Tokenizer;
 exports.CustomTokenizer = CustomTokenizer;

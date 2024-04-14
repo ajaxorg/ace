@@ -416,7 +416,7 @@ class Text {
         if (!isTextToken(token.type.toString())) {
             var classes = "ace_" + token.type.toString().replace(/\./g, " ace_");
             var span = this.dom.createElement("span");
-            if (token.type.toString() === "fold")
+            if (token.type.toString() === "fold") {
                 span.style.width = (token.value.length * this.config.characterWidth) + "px";
                 span.setAttribute("title", nls("inline-fold.closed.title", "Unfold code"));
             }
