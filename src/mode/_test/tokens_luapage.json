@@ -23,16 +23,36 @@
    ["lua-bracketedComment",2,"lua-start"],
   ["keyword","<%"],
   ["text"," "],
-  ["comment","--[[--"]
+  [
+    "comment",
+    "--[["
+  ],
+  [
+    "comment.body",
+    "--"
+  ]
 ],[
    ["lua-bracketedComment",2,"lua-start"],
-  ["comment","    index.lp from the Kepler Project's LuaDoc HTML doclet."]
+  [
+    "comment.body",
+    "    index.lp from the Kepler Project's LuaDoc HTML doclet."
+  ]
 ],[
    ["lua-bracketedComment",2,"lua-start"],
-  ["comment","    http://keplerproject.github.com/luadoc/"]
+  [
+    "comment.body",
+    "    http://keplerproject.github.com/luadoc/"
+  ]
 ],[
    "start",
-  ["comment","--]]"],
+  [
+    "comment.body",
+    "--"
+  ],
+  [
+    "comment",
+    "]]"
+  ],
   ["text"," "],
   ["keyword","%>"]
 ],[
