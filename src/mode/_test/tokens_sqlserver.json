@@ -149,10 +149,20 @@
   ["comment.doc","/**"]
 ],[
    "doc-start",
-  ["comment.doc","\t * These comments will produce a fold widget"]
+  [
+    "comment.doc.body",
+    "\t * These comments will produce a fold widget"
+  ]
 ],[
    "start",
-  ["comment.doc","\t */"]
+  [
+    "comment.doc.body",
+    "\t "
+  ],
+  [
+    "comment.doc",
+    "*/"
+  ]
 ],[
    "start",
   ["text","\t"]

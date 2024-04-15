@@ -32,14 +32,39 @@
   ["identifier","test"],
   ["punctuation.operator",":"],
   ["text"," "],
-  ["comment.doc","/**tokenize doc*/"],
+  [
+    "comment.doc",
+    "/**"
+  ],
+  [
+    "comment.doc.body",
+    "tokenize doc"
+  ],
+  [
+    "comment.doc",
+    "*/"
+  ],
   ["text"," "],
   ["identifier","comment"]
 ],[
    "no_regex",
-  ["comment.doc","/**tokenize doc comment with "],
+  [
+    "comment.doc",
+    "/**"
+  ],
+  [
+    "comment.doc.body",
+    "tokenize doc comment with "
+  ],
   ["comment.doc.tag","@tag"],
-  ["comment.doc"," {}*/"]
+  [
+    "comment.doc.body",
+    " {}"
+  ],
+  [
+    "comment.doc",
+    "*/"
+  ]
 ],[
    "no_regex",
   ["comment","//test: tokenize parens"]
@@ -333,10 +358,32 @@
 ],[
    "no_regex",
   ["text"," "],
-  ["comment.doc","/************************************/"]
+  [
+    "comment.doc",
+    "/**"
+  ],
+  [
+    "comment.doc.body",
+    "*********************************"
+  ],
+  [
+    "comment.doc",
+    "*/"
+  ]
 ],[
    "no_regex",
-  ["comment.doc","/** total mess, tricky to highlight**/"]
+  [
+    "comment.doc",
+    "/**"
+  ],
+  [
+    "comment.doc.body",
+    " total mess, tricky to highlight*"
+  ],
+  [
+    "comment.doc",
+    "*/"
+  ]
 ],[
    "no_regex"
 ],[
@@ -353,10 +400,20 @@
   ["comment.doc","/**"]
 ],[
    "doc-start",
-  ["comment.doc","\t * docComment"]
+  [
+    "comment.doc.body",
+    "\t * docComment"
+  ]
 ],[
    "no_regex",
-  ["comment.doc","\t **/"]
+  [
+    "comment.doc.body",
+    "\t *"
+  ],
+  [
+    "comment.doc",
+    "*/"
+  ]
 ],[
    "no_regex",
   ["text","\t"],
@@ -483,10 +540,20 @@
   ["comment.doc","/**"]
 ],[
    "doc-start",
-  ["comment.doc"," *doc"]
+  [
+    "comment.doc.body",
+    " *doc"
+  ]
 ],[
    "no_regex",
-  ["comment.doc"," */"]
+  [
+    "comment.doc.body",
+    " "
+  ],
+  [
+    "comment.doc",
+    "*/"
+  ]
 ],[
    "no_regex"
 ],[
