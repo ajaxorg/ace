@@ -2,7 +2,7 @@ const ts = require('typescript');
 const fs = require("fs");
 const path = require("path");
 
-const SEPARATE_MODULES = ["ext", "theme", "snippets"]; // adjust this list for more granularity
+const SEPARATE_MODULES = ["ext", "theme", "snippets", "lib"]; // adjust this list for more granularity
 
 /**
  * @param {string} directoryPath
@@ -96,7 +96,7 @@ function fixDeclaration(content, aceNamespacePath) {
     }, customCompilerHost);
 
     var checker = program.getTypeChecker();
-    let interfaces = collectInterfaces(aceNamespacePath);
+    let internalStatements = collectStatements(aceNamespacePath);
     const finalDeclarations = [];
 
     /**
@@ -111,17 +111,17 @@ function fixDeclaration(content, aceNamespacePath) {
                     // replace wrong generated modules
                     if (node.name.text.endsWith("lib/keys") || node.name.text.endsWith("linking")) {
                         let statements = [];
-                        if (interfaces[node.name.text]) {
-                            statements = interfaces[node.name.text];
+                        if (internalStatements[node.name.text]) {
+                            statements = internalStatements[node.name.text];
                         }
                         const newBody = ts.factory.createModuleBlock(statements);
                         updatedNode = ts.factory.updateModuleDeclaration(node, node.modifiers, node.name, newBody);
                     }
-                    else if (interfaces[node.name.text]) {
-                        // add corresponding interfaces to support mixins (EventEmitter, OptionsProvider, etc.)
+                    else if (internalStatements[node.name.text]) {
+                        // add corresponding internalStatements to support mixins (EventEmitter, OptionsProvider, etc.)
                         if (node.body && ts.isModuleBlock(node.body)) {
                             const newBody = ts.factory.createModuleBlock(
-                                node.body.statements.concat(interfaces[node.name.text]).filter(statement => {
+                                node.body.statements.concat(internalStatements[node.name.text]).filter(statement => {
                                     if (node.name.text.endsWith("autocomplete")) {
                                         return !(ts.isModuleDeclaration(statement) && statement.name.text
                                             === 'Autocomplete');
@@ -318,9 +318,10 @@ function checkFinalDeclaration(declarationNames) {
 }
 
 /**
+ * Collect statements (interfaces and function declarations) from the ace-internal.
  * @param {string} aceNamespacePath
  */
-function collectInterfaces(aceNamespacePath) {
+function collectStatements(aceNamespacePath) {
     const program = ts.createProgram([aceNamespacePath], {
         noEmit: true
     });

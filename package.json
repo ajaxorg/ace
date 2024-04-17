@@ -36,6 +36,7 @@
         "ace-modules.d.ts",
         "ace-snippets.d.ts",
         "ace-theme.d.ts",
+        "ace-lib.d.ts",
         "esm-resolver.js",
         "translations",
         "!**/*_test.js",

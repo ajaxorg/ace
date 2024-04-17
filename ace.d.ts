@@ -1,3 +1,4 @@
+/// <reference path="./ace-lib.d.ts" />
 /// <reference path="./ace-modules.d.ts" />
 /// <reference path="./ace-theme.d.ts" />
 /// <reference path="./ace-ext.d.ts" />

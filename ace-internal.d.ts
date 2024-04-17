@@ -1511,3 +1511,8 @@ declare module "./src/mouse/default_gutter_handler" {
     export interface GutterHandler {
     }
 }
+
+declare module "./src/lib/keys" {
+    export function keyCodeToString(keyCode: number): string;
+}
+
