@@ -35,7 +35,11 @@ var fs = require("fs");
 var path = require("path");
 var copy = require('architect-build/copy');
 var build = require('architect-build/build');
-var {updateDeclarationModuleNames, generateDeclaration} = require('./tool/ace_declaration_generator');
+var {
+    updateDeclarationModuleNames,
+    generateDeclaration,
+    SEPARATE_MODULES
+} = require('./tool/ace_declaration_generator');
 
 var ACE_HOME = __dirname;
 var BUILD_DIR = ACE_HOME + "/build";
@@ -210,6 +214,14 @@ function buildTypes() {
     fs.copyFileSync(ACE_HOME + '/ace-modes.d.ts', BUILD_DIR + '/ace-modes.d.ts');
     correctDeclarationsForBuild(BUILD_DIR + '/ace.d.ts', pathModules);
     correctDeclarationsForBuild(BUILD_DIR + '/ace-modes.d.ts');
+
+    let allModules = SEPARATE_MODULES;
+    allModules.push("modules"); // core modules
+    allModules.forEach(function (key) {
+        let fileName = '/ace-' + key + '.d.ts';
+        fs.copyFileSync(ACE_HOME + fileName, BUILD_DIR + fileName);
+        correctDeclarationsForBuild(BUILD_DIR + fileName);
+    });
     
     var esmUrls = [];
 

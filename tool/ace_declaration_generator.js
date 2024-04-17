@@ -2,6 +2,8 @@ const ts = require('typescript');
 const fs = require("fs");
 const path = require("path");
 
+const SEPARATE_MODULES = ["ext", "theme", "snippets"]; // adjust this list for more granularity
+
 /**
  * @param {string} directoryPath
  */
@@ -95,6 +97,7 @@ function fixDeclaration(content, aceNamespacePath) {
 
     var checker = program.getTypeChecker();
     let interfaces = collectInterfaces(aceNamespacePath);
+    const finalDeclarations = [];
 
     /**
      * @param {ts.TransformationContext} context
@@ -207,40 +210,92 @@ function fixDeclaration(content, aceNamespacePath) {
         };
     }
 
-    const sourceCode = program.getSourceFile(temporaryName);
-    const result = ts.transform(sourceCode, [transformer]);
+    function pathBasedTransformer(context) {
+        return (sourceFile) => {
+            const moduleOutputs = {};
 
-    const printer = ts.createPrinter({newLine: ts.NewLineKind.LineFeed}, {
-        substituteNode(hint, node) {
-            // remove all private members
-            if ((ts.isMethodDeclaration(node) || ts.isMethodSignature(node) || ts.isPropertyDeclaration(node)
-                || ts.isPropertySignature(node)) && ts.isIdentifier(node.name) && /^[$_]/.test(node.name.text)) {
-                return ts.factory.createNotEmittedStatement(node);
-            } else if (ts.isVariableStatement(node) && node.getText().indexOf("export const $") > -1) {
-                return ts.factory.createNotEmittedStatement(node);
+            function visit(node) {
+                if (ts.isModuleDeclaration(node) && ts.isStringLiteral(node.name)) {
+                    let pathKey = 'modules';
+                    if (node.name.text === "ace-code") {
+                        pathKey = "ace";
+                        if (!moduleOutputs[pathKey]) {
+                            moduleOutputs[pathKey] = [];
+                        } //TODO:
+                        moduleOutputs[pathKey].push(node);
+                    }
+                    else {
+                        SEPARATE_MODULES.some(module => {
+                            if (node.name.text.includes("/" + module + "/")) {
+                                pathKey = module;
+                                return true;
+                            }
+                        });
+                        if (!moduleOutputs[pathKey]) {
+                            moduleOutputs[pathKey] = [];
+                        }
+                        moduleOutputs[pathKey].push(node);
+                    }
+
+                    return node;
+                }
+                return ts.visitEachChild(node, visit, context);
             }
-            return node;
-        }
-    });
-    //TODO:
-    const outputName = aceNamespacePath.replace("ace-internal", "ace");
 
-    result.transformed.forEach(transformedFile => {
-        let output = printer.printFile(transformedFile);
+            ts.visitNode(sourceFile, visit);
 
-        fs.writeFileSync(outputName, output);
-    });
+            // Generate new source files for each module path
+            let modules = Object.keys(moduleOutputs);
 
+            modules.forEach(key => {
+                const newSourceFile = context.factory.updateSourceFile(sourceFile, moduleOutputs[key]);
+                const dirPath = path.dirname(aceNamespacePath.replace("ace-internal", "ace"));
+                const outputName = key === "ace" ? `${dirPath}/ace.d.ts` : `${dirPath}/ace-${key}.d.ts`;
+                finalDeclarations.push(outputName);
+
+                const printer = ts.createPrinter({newLine: ts.NewLineKind.LineFeed}, {
+                    substituteNode(hint, node) {
+                        // remove all private members
+                        if ((ts.isMethodDeclaration(node) || ts.isMethodSignature(node) || ts.isPropertyDeclaration(
+                            node) || ts.isPropertySignature(node)) && ts.isIdentifier(node.name) && /^[$_]/.test(
+                            node.name.text)) {
+                            return ts.factory.createNotEmittedStatement(node);
+                        }
+                        else if (ts.isVariableStatement(node) && node.getText().indexOf("export const $") > -1) {
+                            return ts.factory.createNotEmittedStatement(node);
+                        }
+                        return node;
+                    }
+                });
+                let output = printer.printFile(newSourceFile);
+                if (key === "ace") {
+                    let referencePaths = modules.filter((el) => el != "ace").map((el) => {
+                        return `/// <reference path="./ace-${el}.d.ts" />`;
+                    });
+                    let allReferences = referencePaths.join("\n") + "\n/// <reference path=\"./ace-modes.d.ts\" />\n";
+                    output = allReferences + output;
+                }
+                fs.writeFileSync(outputName, output);
+            });
+
+            return sourceFile;
+        };
+    }
+
+    const sourceCode = program.getSourceFile(temporaryName);
+    const result = ts.transform(sourceCode, [transformer, pathBasedTransformer]);
+    
     result.dispose();
 
-    checkFinalDeclaration(outputName);
+    checkFinalDeclaration(finalDeclarations);
 }
 
+
 /**
- * @param {string} declarationName
+ * @param {string[]} declarationNames
  */
-function checkFinalDeclaration(declarationName) {
-    const program = ts.createProgram([declarationName], {
+function checkFinalDeclaration(declarationNames) {
+    const program = ts.createProgram(declarationNames, {
         noEmit: true,
         target: ts.ScriptTarget.ES2019,
         lib: ["lib.es2019.d.ts", "lib.dom.d.ts"]
@@ -355,7 +410,6 @@ function generateDeclaration(aceNamespacePath) {
     let packageName = "ace-code";
 
     let updatedContent = data.replace(/(declare module ")/g, "$1" + packageName + "/src/");
-    updatedContent = "/// <reference path=\"./ace-modes.d.ts\" />\n" + updatedContent;
 
     updatedContent = updatedContent.replace(/(require\(")/g, "$1" + packageName + "/src/");
     updatedContent = updatedContent.replace(/(import\(")[./]*ace(?:\-internal)?("\).Ace)/g, "$1" + packageName + "$2");
@@ -387,4 +441,5 @@ if (!module.parent) {
 else {
     exports.generateDeclaration = generateDeclaration;
     exports.updateDeclarationModuleNames = updateDeclarationModuleNames;
+    exports.SEPARATE_MODULES = SEPARATE_MODULES;
 }
