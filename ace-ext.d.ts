@@ -506,6 +506,7 @@ declare module "ace-code/src/ext/modelist" {
          */
         supportsFile(filename: string): RegExpMatchArray;
     }
+
     export {};
 }
 declare module "ace-code/src/ext/themelist" {

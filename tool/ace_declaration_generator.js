@@ -4,6 +4,31 @@ const path = require("path");
 
 const SEPARATE_MODULES = ["ext", "theme", "snippets", "lib"]; // adjust this list for more granularity
 
+const defaultFormatCodeSettings = {
+    baseIndentSize: 0,
+    indentSize: 4,
+    tabSize: 4,
+    indentStyle: ts.IndentStyle.Smart,
+    newLineCharacter: "\n",
+    convertTabsToSpaces: true,
+    insertSpaceAfterCommaDelimiter: true,
+    insertSpaceAfterSemicolonInForStatements: true,
+    insertSpaceBeforeAndAfterBinaryOperators: true,
+    insertSpaceAfterConstructor: false,
+    insertSpaceAfterKeywordsInControlFlowStatements: true,
+    insertSpaceAfterFunctionKeywordForAnonymousFunctions: false,
+    insertSpaceAfterOpeningAndBeforeClosingNonemptyParenthesis: false,
+    insertSpaceAfterOpeningAndBeforeClosingNonemptyBrackets: false,
+    insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces: true,
+    insertSpaceAfterOpeningAndBeforeClosingTemplateStringBraces: false,
+    insertSpaceAfterOpeningAndBeforeClosingJsxExpressionBraces: false,
+    insertSpaceAfterTypeAssertion: false,
+    insertSpaceBeforeFunctionParenthesis: false,
+    placeOpenBraceOnNewLineForFunctions: false,
+    placeOpenBraceOnNewLineForControlBlocks: false,
+    insertSpaceBeforeTypeAnnotation: false
+};
+
 /**
  * @param {string} directoryPath
  */
@@ -47,7 +72,7 @@ function generateInitialDeclaration(excludeDir) {
             return defaultCompilerHost.getSourceFile(fileName, languageVersion, onError, shouldCreateNewSourceFile);
         }
     };
-    
+
     const program = ts.createProgram(parsedConfig.fileNames, parsedConfig.options, customCompilerHost);
     program.emit();
     return fileContent;
@@ -280,6 +305,7 @@ function fixDeclaration(content, aceNamespacePath) {
                     let allReferences = referencePaths.join("\n") + "\n/// <reference path=\"./ace-modes.d.ts\" />\n";
                     output = allReferences + output;
                 }
+                output = formatDts(outputName, output);
                 fs.writeFileSync(outputName, output);
             });
 
@@ -289,10 +315,51 @@ function fixDeclaration(content, aceNamespacePath) {
 
     const sourceCode = program.getSourceFile(temporaryName);
     const result = ts.transform(sourceCode, [transformer, pathBasedTransformer]);
-    
+
     result.dispose();
 
     checkFinalDeclaration(finalDeclarations);
+}
+
+function createMinimalLanguageServiceHost() {
+    return {
+        files: {},
+        addFile(fileName, text) {
+            this.files[fileName] = ts.ScriptSnapshot.fromString(text);
+        },
+        "getCompilationSettings": function () {
+            return ts.getDefaultCompilerOptions();
+        },
+        "getScriptFileNames": function () {
+            return Object.keys(this.files);
+        },
+        "getScriptVersion": function (_fileName) {
+            return "0";
+        },
+        "getScriptSnapshot": function (fileName) {
+            return this.files[fileName];
+        },
+        "getCurrentDirectory": function () {
+            return "";
+        }
+    };
+
+}
+
+function formatDts(filename, text) {
+    var host = createMinimalLanguageServiceHost();
+    host.addFile(filename, text);
+    const languageService = ts.createLanguageService(host);
+    let formatEdits = languageService.getFormattingEditsForDocument(filename, defaultFormatCodeSettings);
+    formatEdits
+        .sort((a, b) => a.span.start - b.span.start)
+        .reverse()
+        .forEach(edit => {
+            const head = text.slice(0, edit.span.start);
+            const tail = text.slice(edit.span.start + edit.span.length);
+            text = `${head}${edit.newText}${tail}`;
+        });
+    return text;
 }
 
 
@@ -408,7 +475,7 @@ function cloneAceNamespace(aceNamespacePath) {
  */
 function generateDeclaration(aceNamespacePath) {
     if (!aceNamespacePath) {
-        aceNamespacePath = __dirname + "/../ace-internal.d.ts"
+        aceNamespacePath = __dirname + "/../ace-internal.d.ts";
     }
     const excludeDir = "src/mode"; //TODO: remove, when modes are ES6
 
@@ -433,7 +500,9 @@ function generateDeclaration(aceNamespacePath) {
  */
 function updateDeclarationModuleNames(content) {
     let output = content.replace(
-        /ace\-code(?:\/src)?\/(mode(?!\/(?:matching_brace_outdent|matching_parens_outdent|behaviour|folding))|theme|ext|keybinding|snippets)\//g, "ace-builds/src-noconflict/$1-");
+        /ace\-code(?:\/src)?\/(mode(?!\/(?:matching_brace_outdent|matching_parens_outdent|behaviour|folding))|theme|ext|keybinding|snippets)\//g,
+        "ace-builds/src-noconflict/$1-"
+    );
     output = output.replace(/"ace\-code"/g, "\"ace-builds\"");
     output = output.replace(/ace\-code(?:\/src)?/g, "ace-builds-internal");
     return output;
@@ -442,7 +511,7 @@ function updateDeclarationModuleNames(content) {
 
 if (!module.parent) {
     require("./modes-declaration-generator");
-    generateDeclaration();    
+    generateDeclaration();
 }
 else {
     exports.generateDeclaration = generateDeclaration;

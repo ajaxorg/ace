@@ -599,9 +599,9 @@ declare module "ace-code" {
             clazz: string;
             inFront?: boolean;
             id?: number;
-            update?: (html: string[], 
-            // TODO maybe define Marker class
-            marker: any, session: EditSession, config: any) => void;
+            update?: (html: string[],
+                      // TODO maybe define Marker class
+                      marker: any, session: EditSession, config: any) => void;
             [key: string]: any;
         }
         type MarkerRenderer = (html: string[], range: Range, left: number, top: number, config: any) => void;
@@ -672,7 +672,7 @@ declare module "ace-code" {
         }
         interface SyntaxMode {
             HighlightRules: {
-                new (config: any): HighlightRules;
+                new(config: any): HighlightRules;
             }; //TODO: fix this
             foldingRules?: FoldMode;
             /**
@@ -734,7 +734,7 @@ declare module "ace-code" {
             isBackwards: boolean;
         }
         var Selection: {
-            new (session: EditSession): Selection;
+            new(session: EditSession): Selection;
         };
         interface TextInput {
             resetSelection(): void;

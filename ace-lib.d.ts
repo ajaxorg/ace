@@ -210,6 +210,7 @@ declare module "ace-code/src/lib/app_config" {
         reportError: (msg: any, data: any) => void;
     }
     function warn(message: any, ...args: any[]): void;
+
     export {};
     namespace Ace {
         type EventEmitter<T> = import("ace-code").Ace.EventEmitter<T>;

@@ -21,6 +21,7 @@ declare module "ace-code/src/layer/font_metrics" {
         els: any[] | HTMLElement | Text;
         transformCoordinates(clientPos: any, elPos: any): any[];
     }
+
     export {};
     namespace Ace {
         type EventEmitter<T> = import("ace-code").Ace.EventEmitter<T>;
@@ -2282,6 +2283,7 @@ declare module "ace-code/src/tooltip" {
          */
         doPopupsOverlap(popupA: Tooltip, popupB: Tooltip): boolean;
     }
+
     export {};
     export interface HoverTooltip {
         row: number;
@@ -6178,6 +6180,7 @@ declare module "ace-code/src/range" {
      * @returns {Number}
      */
     function comparePoints(p1: Point, p2: Point): number;
+
     export {};
     namespace Ace {
         type Point = import("ace-code").Ace.Point;
