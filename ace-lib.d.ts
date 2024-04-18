@@ -4,9 +4,7 @@ declare module "ace-code/src/lib/useragent" {
         let MAC: string;
         let WINDOWS: string;
     }
-
     export function getOS(): string;
-
     export const isWin: boolean;
     export const isMac: boolean;
     export const isLinux: boolean;
@@ -27,54 +25,32 @@ declare module "ace-code/src/lib/useragent" {
 }
 declare module "ace-code/src/lib/dom" {
     export function buildDom(arr: any, parent?: HTMLElement, refs?: any): HTMLElement | Text | any[];
-
     export function getDocumentHead(doc?: Document): HTMLHeadElement | HTMLElement;
-
     export function createElement<T extends keyof HTMLElementTagNameMap>(tag: string | T, ns?: string): HTMLElementTagNameMap[T];
-
     export function removeChildren(element: HTMLElement): void;
-
     export function createTextNode(textContent: string, element?: HTMLElement): Text;
-
     export function createFragment(element?: HTMLElement): DocumentFragment;
-
     export function hasCssClass(el: HTMLElement, name: string): boolean;
-
     export function addCssClass(el: HTMLElement, name: string): void;
-
     export function removeCssClass(el: HTMLElement, name: string): void;
-
     export function toggleCssClass(el: HTMLElement, name: string): boolean;
-
     export function setCssClass(node: HTMLElement, className: string, include: boolean): void;
-
     export function hasCssString(id: string, doc?: Document): boolean;
-
     export function removeElementById(id: string, doc?: Document): void;
-
     export function useStrictCSP(value: any): void;
-
     export function importCssStylsheet(uri: string, doc?: Document): void;
-
     export function scrollbarWidth(doc?: Document): number;
-
     export function computedStyle(element: Element, style?: any): Partial<CSSStyleDeclaration>;
-
     export function setStyle(styles: CSSStyleDeclaration, property: string, value: string): void;
-
     export const HAS_CSS_ANIMATION: boolean;
     export const HAS_CSS_TRANSFORMS: boolean;
     export const HI_DPI: boolean;
-
     export function translate(element: any, tx: any, ty: any): void;
-
     export function importCssString(cssText: any, id: any, target: any): number;
 }
 declare module "ace-code/src/lib/oop" {
     export function inherits(ctor: any, superCtor: any): void;
-
     export function mixin<T>(obj: T, mixin: any): any;
-
     export function implement<T>(proto: T, mixin: any): any;
 }
 declare module "ace-code/src/lib/deep_copy" {
@@ -82,33 +58,19 @@ declare module "ace-code/src/lib/deep_copy" {
 }
 declare module "ace-code/src/lib/lang" {
     export function last(a: any): any;
-
     export function stringReverse(string: any): any;
-
     export function stringRepeat(string: any, count: any): string;
-
     export function stringTrimLeft(string: any): any;
-
     export function stringTrimRight(string: any): any;
-
     export function copyObject(obj: any): {};
-
     export function copyArray(array: any): any[];
-
     export const deepCopy: (obj: any) => any;
-
     export function arrayToMap(arr: any): {};
-
     export function createMap(props: any): any;
-
     export function arrayRemove(array: any, value: any): void;
-
     export function escapeRegExp(str: any): any;
-
     export function escapeHTML(str: any): string;
-
     export function getMatchOffsets(string: any, regExp: any): any[];
-
     export function deferredCall(fcn: any): {
         (timeout: any): any;
         schedule: any;
@@ -116,7 +78,6 @@ declare module "ace-code/src/lib/lang" {
         cancel(): any;
         isPending(): any;
     };
-
     export function delayedCall(fcn: any, defaultTimeout: any): {
         (timeout: any): void;
         delay(timeout: any): void;
@@ -125,9 +86,7 @@ declare module "ace-code/src/lib/lang" {
         cancel(): void;
         isPending(): any;
     };
-
     export function supportsLookbehind(): boolean;
-
     export function skipEmptyMatch(line: any, last: any, supportsUnicodeFlag: any): 1 | 2;
 }
 declare module "ace-code/src/lib/keys" {
@@ -135,33 +94,19 @@ declare module "ace-code/src/lib/keys" {
 }
 declare module "ace-code/src/lib/event" {
     export function addListener(elem: any, type: any, callback: any, destroyer: any | null): void;
-
     export function removeListener(elem: any, type: any, callback: any): void;
-
     export function stopEvent(e: any): boolean;
-
     export function stopPropagation(e: any): void;
-
     export function preventDefault(e: any): void;
-
     export function getButton(e: any): any;
-
     export function capture(el: any, eventHandler: any, releaseCaptureHandler: any): (e: any) => void;
-
     export function addMouseWheelListener(el: any, callback: any, destroyer?: any): void;
-
     export function addMultiMouseDownListener(elements: any, timeouts: any, eventHandler: any, callbackName: any, destroyer?: any): void;
-
     export function getModifierString(e: KeyboardEvent | MouseEvent): any;
-
     export function addCommandKeyListener(el: EventTarget, callback: (e: KeyboardEvent, hashId: number, keyCode: number) => void, destroyer?: any): void;
-
     export function nextTick(callback: any, win: any): void;
-
     export function onIdle(cb: any, timeout: any): number;
-
     export function blockIdle(delay: any): void;
-
     export const nextFrame: any;
 }
 declare module "ace-code/src/lib/event_emitter" {
@@ -170,9 +115,7 @@ declare module "ace-code/src/lib/event_emitter" {
 }
 declare module "ace-code/src/lib/net" {
     export function get(url: any, callback: any): void;
-
     export function loadScript(path: any, callback: any): void;
-
     export function qualifyURL(url: any): string;
 }
 declare module "ace-code/src/lib/report_error" {
@@ -224,7 +167,6 @@ declare module "ace-code/src/lib/default_english_messages" {
 }
 declare module "ace-code/src/lib/app_config" {
     const AppConfig_base: undefined;
-
     export class AppConfig {
         /**
          * @param {Object} obj
@@ -235,19 +177,16 @@ declare module "ace-code/src/lib/app_config" {
         defineOptions(obj: any, path: string, options: {
             [key: string]: any;
         }): AppConfig;
-
         /**
          * @param {Object} obj
          */
         resetOptions(obj: any): void;
-
         /**
          * @param {string} path
          * @param {string} name
          * @param {any} value
          */
         setDefaultValue(path: string, name: string, value: any): boolean;
-
         /**
          * @param {string} path
          * @param {{ [key: string]: any; }} optionHash
@@ -255,12 +194,10 @@ declare module "ace-code/src/lib/app_config" {
         setDefaultValues(path: string, optionHash: {
             [key: string]: any;
         }): void;
-
         /**
          * @param {any} value
          */
         setMessages(value: any): void;
-
         /**
          * @param {string} key
          * @param {string} defaultString
@@ -269,18 +206,14 @@ declare module "ace-code/src/lib/app_config" {
         nls(key: string, defaultString: string, params?: {
             [x: string]: any;
         }): any;
-
         warn: typeof warn;
         reportError: (msg: any, data: any) => void;
     }
-
     function warn(message: any, ...args: any[]): void;
-
     export {};
     namespace Ace {
         type EventEmitter<T> = import("ace-code").Ace.EventEmitter<T>;
     }
-
     export interface AppConfig extends Ace.EventEmitter<any> {
     }
 }
@@ -294,13 +227,9 @@ declare module "ace-code/src/lib/bidiutil" {
     export const B: 6;
     export const RLE: 7;
     export const DOT: "·";
-
     export function doBidiReorder(text: string, textCharTypes: any[], isRtl: boolean): any;
-
     export function hasBidiCharacters(text: string, textCharTypes: any[]): boolean;
-
     export function getVisualFromLogicalIdx(logIdx: number, rowMap: any): number;
-
     export var L: number;
     export var R: number;
     export var EN: number;

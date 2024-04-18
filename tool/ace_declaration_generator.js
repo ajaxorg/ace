@@ -256,10 +256,15 @@ function fixDeclaration(content, aceNamespacePath) {
                 const printer = ts.createPrinter({newLine: ts.NewLineKind.LineFeed}, {
                     substituteNode(hint, node) {
                         // remove all private members
-                        if ((ts.isMethodDeclaration(node) || ts.isMethodSignature(node) || ts.isPropertyDeclaration(
-                            node) || ts.isPropertySignature(node)) && ts.isIdentifier(node.name) && /^[$_]/.test(
-                            node.name.text)) {
-                            return ts.factory.createNotEmittedStatement(node);
+                        if (ts.isMethodDeclaration(node) || ts.isMethodSignature(node) || ts.isPropertyDeclaration(node)
+                            || ts.isPropertySignature(node)) {
+                            const isPrivate = node.modifiers?.some(
+                                modifier => modifier.kind === ts.SyntaxKind.PrivateKeyword);
+                            const startsWithDollar = ts.isIdentifier(node.name) && /^[$_]/.test(node.name.text);
+
+                            if (isPrivate || startsWithDollar) {
+                                return ts.factory.createNotEmittedStatement(node);
+                            }
                         }
                         else if (ts.isVariableStatement(node) && node.getText().indexOf("export const $") > -1) {
                             return ts.factory.createNotEmittedStatement(node);

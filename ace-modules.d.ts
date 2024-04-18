@@ -4249,7 +4249,6 @@ declare module "ace-code/src/autocomplete" {
         keyboardHandler: HashHandler;
         parentNode: any;
         setSelectOnHover: boolean;
-        hasSeen: Set<any>;
         /**
          *  @property {Boolean} showLoadingState - A boolean indicating whether the loading states of the Autocompletion should be shown to the end-user. If enabled
          * it shows a loading indicator on the popup while autocomplete is loading.
@@ -4272,12 +4271,7 @@ declare module "ace-code/src/autocomplete" {
             (timeout: any): void;
             delay(timeout: any): void;
             schedule: any;
-            call(): void; /**
-             *  @property {Boolean} showLoadingState - A boolean indicating whether the loading states of the Autocompletion should be shown to the end-user. If enabled
-             * it shows a loading indicator on the popup while autocomplete is loading.
-             *
-             * Experimental: This visualisation is not yet considered stable and might change in the future.
-             */
+            call(): void;
             cancel(): void;
             isPending(): any;
         };
@@ -4285,12 +4279,7 @@ declare module "ace-code/src/autocomplete" {
             (timeout: any): void;
             delay(timeout: any): void;
             schedule: any;
-            call(): void; /**
-             *  @property {Boolean} showLoadingState - A boolean indicating whether the loading states of the Autocompletion should be shown to the end-user. If enabled
-             * it shows a loading indicator on the popup while autocomplete is loading.
-             *
-             * Experimental: This visualisation is not yet considered stable and might change in the future.
-             */
+            call(): void;
             cancel(): void;
             isPending(): any;
         };
@@ -4298,12 +4287,7 @@ declare module "ace-code/src/autocomplete" {
             (timeout: any): void;
             delay(timeout: any): void;
             schedule: any;
-            call(): void; /**
-             *  @property {Boolean} showLoadingState - A boolean indicating whether the loading states of the Autocompletion should be shown to the end-user. If enabled
-             * it shows a loading indicator on the popup while autocomplete is loading.
-             *
-             * Experimental: This visualisation is not yet considered stable and might change in the future.
-             */
+            call(): void;
             cancel(): void;
             isPending(): any;
         };
@@ -4311,12 +4295,7 @@ declare module "ace-code/src/autocomplete" {
             (timeout: any): void;
             delay(timeout: any): void;
             schedule: any;
-            call(): void; /**
-             *  @property {Boolean} showLoadingState - A boolean indicating whether the loading states of the Autocompletion should be shown to the end-user. If enabled
-             * it shows a loading indicator on the popup while autocomplete is loading.
-             *
-             * Experimental: This visualisation is not yet considered stable and might change in the future.
-             */
+            call(): void;
             cancel(): void;
             isPending(): any;
         };

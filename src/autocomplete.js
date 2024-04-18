@@ -76,6 +76,7 @@ class Autocomplete {
         this.keyboardHandler.bindKeys(this.commands);
         this.parentNode = null;
         this.setSelectOnHover = false;
+        /**@private*/
         this.hasSeen = new Set();
 
         /**
