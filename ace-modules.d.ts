@@ -2442,11 +2442,7 @@ declare module "ace-code/src/keyboard/keybinding" {
          * @param {KeyboardHandler & {attach?: (editor: any) => void, detach?: (editor: any) => void;}} [kb]
          * @param {number} [pos]
          */
-        addKeyboardHandler(kb?: Partial<import("ace-code/src/keyboard/hash_handler").HashHandler> & {
-            attach?: (editor: import("ace-code/src/editor").Editor) => void;
-            detach?: (editor: import("ace-code/src/editor").Editor) => void;
-            getStatusText?: (editor?: any, data?: any) => string;
-        } & {
+        addKeyboardHandler(kb?: KeyboardHandler & {
             attach?: (editor: any) => void;
             detach?: (editor: any) => void;
         }, pos?: number): void;
@@ -2454,11 +2450,7 @@ declare module "ace-code/src/keyboard/keybinding" {
          * @param {KeyboardHandler & {attach?: (editor: any) => void, detach?: (editor: any) => void;}} kb
          * @returns {boolean}
          */
-        removeKeyboardHandler(kb: Partial<import("ace-code/src/keyboard/hash_handler").HashHandler> & {
-            attach?: (editor: import("ace-code/src/editor").Editor) => void;
-            detach?: (editor: import("ace-code/src/editor").Editor) => void;
-            getStatusText?: (editor?: any, data?: any) => string;
-        } & {
+        removeKeyboardHandler(kb: KeyboardHandler & {
             attach?: (editor: any) => void;
             detach?: (editor: any) => void;
         }): boolean;
