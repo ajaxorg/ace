@@ -315,6 +315,12 @@ function BracketMatch() {
         var foundOpenTagEnd = false;
         do {
             prevToken = token;
+            if (prevToken.type.indexOf('tag-close') !== -1 && !foundOpenTagEnd) {
+                var openTagEnd = new Range(iterator.getCurrentTokenRow(), iterator.getCurrentTokenColumn(),
+                    iterator.getCurrentTokenRow(), iterator.getCurrentTokenColumn() + 1
+                ); //Range for `>`
+                foundOpenTagEnd = true;
+            }
             token = iterator.stepForward();
             if (token) {
                 if (token.value === '>' && !foundOpenTagEnd) {
@@ -342,7 +348,9 @@ function BracketMatch() {
                                     iterator.getCurrentTokenColumn(), iterator.getCurrentTokenRow(),
                                     iterator.getCurrentTokenColumn() + token.value.length
                                 );
-                                token = iterator.stepForward();
+                                if (token.type.indexOf('tag-close') === -1) {
+                                    token = iterator.stepForward();
+                                }
                                 if (token && token.value === '>') {
                                     var closeTagEnd = new Range(iterator.getCurrentTokenRow(),
                                         iterator.getCurrentTokenColumn(), iterator.getCurrentTokenRow(),
@@ -406,7 +414,10 @@ function BracketMatch() {
         var closeTagName = new Range(iterator.getCurrentTokenRow(), iterator.getCurrentTokenColumn(),
             iterator.getCurrentTokenRow(), iterator.getCurrentTokenColumn() + token.value.length
         );
-        token = iterator.stepForward();
+
+        if (token.type.indexOf('tag-close') === -1) {
+            token = iterator.stepForward();
+        }
         if (!token || token.value !== ">") return;
         var closeTagEnd = new Range(iterator.getCurrentTokenRow(), iterator.getCurrentTokenColumn(),
             iterator.getCurrentTokenRow(), iterator.getCurrentTokenColumn() + 1
