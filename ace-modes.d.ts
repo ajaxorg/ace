@@ -142,6 +142,10 @@ declare module "ace-code/src/mode/behaviour/html" {
     export const HtmlBehaviour: new () => import("ace-code").Ace.Behaviour;
 }
 
+declare module "ace-code/src/mode/behaviour/javascript" {
+    export const JavaScriptBehaviour: new () => import("ace-code").Ace.Behaviour;
+}
+
 declare module "ace-code/src/mode/behaviour/liquid" {
     export const LiquidBehaviour: new () => import("ace-code").Ace.Behaviour;
 }
@@ -461,6 +465,10 @@ declare module "ace-code/src/mode/folding/ini" {
 }
 
 declare module "ace-code/src/mode/folding/java" {
+    export const FoldMode: new () => import("ace-code").Ace.Folding;
+}
+
+declare module "ace-code/src/mode/folding/javascript" {
     export const FoldMode: new () => import("ace-code").Ace.Folding;
 }
 

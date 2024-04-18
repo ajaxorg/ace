@@ -210,8 +210,7 @@ declare module "ace-code/src/lib/app_config" {
         reportError: (msg: any, data: any) => void;
     }
     function warn(message: any, ...args: any[]): void;
-
-    export {};
+    export { };
     namespace Ace {
         type EventEmitter<T> = import("ace-code").Ace.EventEmitter<T>;
     }
@@ -236,5 +235,5 @@ declare module "ace-code/src/lib/bidiutil" {
     export var EN: number;
 }
 declare module "ace-code/src/lib/fixoldbrowsers" {
-    export {};
+    export { };
 }

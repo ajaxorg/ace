@@ -78,7 +78,7 @@ declare module "ace-code/src/ext/command_bar" {
     import Tooltip = Tooltip_2.Tooltip;
     export var TOOLTIP_CLASS_NAME: string;
     export var BUTTON_CLASS_NAME: string;
-    export {};
+    export { };
     namespace Ace {
         type EventEmitter<T> = import("ace-code").Ace.EventEmitter<T>;
     }
@@ -93,7 +93,7 @@ declare module "ace-code/src/ext/language_tools" {
     export var keyWordCompleter: import("ace-code").Ace.Completer;
     /**@type {import("ace-code").Ace.Completer} */
     export var snippetCompleter: import("ace-code").Ace.Completer;
-    export {textCompleter};
+    export { textCompleter };
 }
 declare module "ace-code/src/ext/inline_autocomplete" {
     /**
@@ -176,8 +176,7 @@ declare module "ace-code/src/ext/inline_autocomplete" {
     }
     export namespace InlineAutocomplete {
         function _for(editor: any): any;
-
-        export {_for as for};
+        export { _for as for };
         export namespace startCommand {
             let name: string;
             function exec(editor: any, options: any): void;
@@ -323,7 +322,8 @@ declare module "ace-code/src/ext/code_lens" {
     export function registerCodeLensProvider(editor: import("ace-code/src/editor").Editor, codeLensProvider: any): void;
     export function clear(session: EditSession): void;
     export type EditSession = import("ace-code/src/edit_session").EditSession;
-    export type VirtualRenderer = import("ace-code/src/virtual_renderer").VirtualRenderer & {};
+    export type VirtualRenderer = import("ace-code/src/virtual_renderer").VirtualRenderer & {
+    };
 }
 declare module "ace-code/src/ext/emmet" {
     export const commands: HashHandler;
@@ -477,8 +477,7 @@ declare module "ace-code/src/ext/keybinding_menu" {
     import Editor_8 = require("ace-code/src/editor");
     import Editor = Editor_8.Editor;
 }
-declare module "ace-code/src/ext/linking" {
-}
+declare module "ace-code/src/ext/linking" { }
 declare module "ace-code/src/ext/modelist" {
     /**
      * Suggests a mode based on the file extension present in the given path
@@ -506,8 +505,7 @@ declare module "ace-code/src/ext/modelist" {
          */
         supportsFile(filename: string): RegExpMatchArray;
     }
-
-    export {};
+    export { };
 }
 declare module "ace-code/src/ext/themelist" {
     export const themesByName: {};
@@ -555,7 +553,7 @@ declare module "ace-code/src/ext/options" {
         getOption(option: any): any;
     }
     export type Editor = import("ace-code/src/editor").Editor;
-    export {};
+    export { };
     namespace Ace {
         type EventEmitter<T> = import("ace-code").Ace.EventEmitter<T>;
     }
@@ -669,7 +667,7 @@ declare module "ace-code/src/ext/prompt" {
     }
 }
 declare module "ace-code/src/ext/rtl" {
-    export {};
+    export { };
 }
 declare module "ace-code/src/ext/settings_menu" {
     export function init(): void;
@@ -707,7 +705,7 @@ declare module "ace-code/src/ext/static_highlight" {
      */
     function highlight(el: HTMLElement, opts: any, callback?: any): boolean;
     export namespace highlight {
-        export {render, renderSync, highlight};
+        export { render, renderSync, highlight };
     }
     /**
      * Transforms a given input code snippet into HTML using the given mode
@@ -796,7 +794,7 @@ declare module "ace-code/src/ext/textarea" {
                 string
             ], onLoad: (module: any) => void) => void;
             setModuleLoader: (moduleName: any, onLoad: any) => void;
-            version: "1.32.9";
+            version: "1.33.0";
         };
         edit: (el: string | (HTMLElement & {
             env?: any;
@@ -808,7 +806,7 @@ declare module "ace-code/src/ext/textarea" {
         EditSession: typeof ace.EditSession;
         UndoManager: typeof ace.UndoManager;
         VirtualRenderer: typeof ace.VirtualRenderer;
-        version: "1.32.9";
+        version: "1.33.0";
         transformTextarea: (element: any, options: any) => ace.Editor;
         defaultOptions: {
             mode: string;

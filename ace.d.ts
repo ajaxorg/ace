@@ -600,8 +600,8 @@ declare module "ace-code" {
             inFront?: boolean;
             id?: number;
             update?: (html: string[],
-                      // TODO maybe define Marker class
-                      marker: any, session: EditSession, config: any) => void;
+                // TODO maybe define Marker class
+                marker: any, session: EditSession, config: any) => void;
             [key: string]: any;
         }
         type MarkerRenderer = (html: string[], range: Range, left: number, top: number, config: any) => void;
@@ -959,7 +959,7 @@ declare module "ace-code" {
             string
         ], onLoad: (module: any) => void) => void;
         setModuleLoader: (moduleName: any, onLoad: any) => void;
-        version: "1.32.9";
+        version: "1.33.0";
     };
     export function edit(el: string | (HTMLElement & {
         env?: any;
@@ -976,6 +976,6 @@ declare module "ace-code" {
     import UndoManager = UndoManager_2.UndoManager;
     import Renderer_1 = require("ace-code/src/virtual_renderer");
     import Renderer = Renderer_1.VirtualRenderer;
-    export var version: "1.32.9";
+    export var version: "1.33.0";
     export { Range, Editor, EditSession, UndoManager, Renderer as VirtualRenderer };
 }
