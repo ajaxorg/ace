@@ -18,3 +18,6 @@
     end.
  
   codeswitch(Sum) -> loop(Sum).
+  
+  % Print the data using the pretty print specifier
+  io:format("Here is the data: ~p~n", [Data]).
