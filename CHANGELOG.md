@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.33.1](https://github.com/ajaxorg/ace/compare/v1.33.0...v1.33.1) (2024-04-23)
+
+
+### Bug Fixes
+
+* account for `this.popup` being potentially undefined in completion mousewheel listener ([#5537](https://github.com/ajaxorg/ace/issues/5537)) ([6c3a9a6](https://github.com/ajaxorg/ace/commit/6c3a9a66a7a0ab0dd493ad2c281c9dd343d5301f))
+
 ## [1.33.0](https://github.com/ajaxorg/ace/compare/v1.32.9...v1.33.0) (2024-04-12)
 
 
