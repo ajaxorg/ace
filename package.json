@@ -1,7 +1,7 @@
 {
     "name": "ace-code",
     "description": "Ajax.org Code Editor is a full featured source code highlighting editor that powers the Cloud9 IDE",
-    "version": "1.32.9",
+    "version": "1.33.0",
     "homepage": "http://github.com/ajaxorg/ace",
     "engines": {
         "node": ">= 0.6.0"
@@ -45,6 +45,7 @@
         "lint": "eslint \"src/**/*.js\"",
         "fix": "eslint --fix \"src/**/*.js\"",
         "typecheck": "tsc -p tsconfig.json",
+        "update-types": "node ./tool/modes-declaration-generator.js",
         "changelog": "standard-version",
         "prepack": "node tool/esm_resolver_generator.js && node Makefile.dryice.js css --target build-styles && rm -rf styles && mv build-styles/css styles"
     },

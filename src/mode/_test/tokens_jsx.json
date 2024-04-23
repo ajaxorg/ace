@@ -44,10 +44,16 @@
   ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    ["jsx",1],
-  ["string","      Keywords here are not highlighted, for example class or instance."]
+  [
+    "string.xml",
+    "      Keywords here are not highlighted, for example class or instance."
+  ]
 ],[
    "start",
-  ["string","    "],
+  [
+    "string.xml",
+    "    "
+  ],
   ["meta.tag.punctuation.end-tag-open.xml","</"],
   ["meta.tag.tag-name.xml","div"],
   ["meta.tag.punctuation.tag-close.xml",">"]
