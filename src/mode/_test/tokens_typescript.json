@@ -115,9 +115,9 @@
   ["punctuation.operator",";"]
 ],[
    "start",
-  ["storage.type","button"],
+  ["identifier","button"],
   ["punctuation.operator","."],
-  ["entity.name.function","onclick"],
+  ["identifier","onclick"],
   ["text"," "],
   ["keyword.operator","="],
   ["text"," "],
