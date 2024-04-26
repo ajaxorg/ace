@@ -656,7 +656,14 @@ module.exports = `
 .ace_ghost_text {
     opacity: 0.5;
     font-style: italic;
-    white-space: pre;
+}
+
+.ace_ghost_text > div {
+    white-space: nowrap;
+}
+
+.ace_lineWidgetContainer.ace_ghost_text {
+    margin: 0px 4px
 }
 
 .ace_screenreader-only {

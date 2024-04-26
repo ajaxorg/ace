@@ -388,6 +388,7 @@ class LineWidgets {
 
         renderer.$cursorLayer.config = config;
         for (var i = first; i <= last; i++) {
+            /**@type{LineWidget}*/
             var w = lineWidgets[i];
             if (!w || !w.el) continue;
             if (w.hidden) {
