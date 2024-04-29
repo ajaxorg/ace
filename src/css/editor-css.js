@@ -659,7 +659,7 @@ module.exports = `
 }
 
 .ace_ghost_text > div {
-    white-space: nowrap;
+    white-space: pre;
 }
 
 .ace_lineWidgetContainer.ace_ghost_text {

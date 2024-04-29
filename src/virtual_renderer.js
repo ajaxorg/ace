@@ -1814,6 +1814,7 @@ class VirtualRenderer {
     $calculateWrappedTextChunks(text, position) {
         var availableWidth = this.$size.scrollerWidth - this.$padding * 2;
         var limit = Math.floor(availableWidth / this.characterWidth) - 1;
+        limit = limit <= 0 ? 60 : limit; // this is a hack to prevent the editor from crashing when the window is too small
 
         var textLines = text.split(/\r?\n/);
         var textChunks = [];
