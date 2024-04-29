@@ -662,6 +662,11 @@ module.exports = `
     white-space: pre;
 }
 
+.ghost_text_line_wrapped::after {
+    content: "↩";
+    position: absolute;
+}
+
 .ace_lineWidgetContainer.ace_ghost_text {
     margin: 0px 4px
 }

@@ -1759,7 +1759,7 @@ class VirtualRenderer {
         this.removeGhostText();
         
         var textChunks = this.$calculateWrappedTextChunks(text, insertPosition);
-        this.addToken(textChunks[0], "ghost_text", insertPosition.row, insertPosition.column);
+        this.addToken(textChunks[0].text, "ghost_text", insertPosition.row, insertPosition.column);
         
         this.$ghostText = {
             text: text,
@@ -1770,7 +1770,7 @@ class VirtualRenderer {
         };
         if (textChunks.length > 1) {
             var divs = textChunks.slice(1).map(el => {
-                return "<div>" + el + "</div>";
+                return `<div${el.wrapped ? ' class="ghost_text_line_wrapped"': ""}>${el.text}</div>`;
             });
             
             this.$ghostTextWidget = {
@@ -1809,11 +1809,11 @@ class VirtualRenderer {
      *
      * @param {string} text
      * @param {Point} position
-     * @return {string[]}
+     * @return {{text: string, wrapped: boolean}[]}
      */
     $calculateWrappedTextChunks(text, position) {
         var availableWidth = this.$size.scrollerWidth - this.$padding * 2;
-        var limit = Math.floor(availableWidth / this.characterWidth) - 1;
+        var limit = Math.floor(availableWidth / this.characterWidth) - 2;
         limit = limit <= 0 ? 60 : limit; // this is a hack to prevent the editor from crashing when the window is too small
 
         var textLines = text.split(/\r?\n/);
@@ -1828,12 +1828,12 @@ class VirtualRenderer {
 
                 for (var j = 0; j < wrapSplits.length; j++) {
                     let textSlice = textLines[i].slice(start, wrapSplits[j]);
-                    textChunks.push(textSlice);
+                    textChunks.push({text: textSlice, wrapped: true});
                     start = wrapSplits[j];
                 }
             }
             else {
-                textChunks.push(textLines[i]);
+                textChunks.push({text: textLines[i], wrapped: false});
             }
         }
         return textChunks;
