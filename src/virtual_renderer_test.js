@@ -338,13 +338,32 @@ module.exports = {
         editor.renderer.$loop._flush();
         assert.equal(editor.renderer.content.textContent, "abcdefGhost1");
         
-        assert.equal(editor.session.lineWidgets[0].el.textContent, "Ghost2\nGhost3");
+        assert.equal(editor.session.lineWidgets[0].el.innerHTML, "<div>Ghost2</div><div>Ghost3</div>");
 
         editor.removeGhostText();
 
         editor.renderer.$loop._flush();
         assert.equal(editor.renderer.content.textContent, "abcdef");
         
+        assert.equal(editor.session.lineWidgets, null);
+    },
+    "test long multiline ghost text": function() {
+        editor.session.setValue("abcdef");
+        editor.renderer.$loop._flush();
+
+        editor.setGhostText("This is a long test text that is longer than 30 characters\n\nGhost3", 
+            {row: 0, column: 6});
+
+        editor.renderer.$loop._flush();
+        assert.equal(editor.renderer.content.textContent, "abcdefThis is a long test text that is longer than ");
+
+        assert.equal(editor.session.lineWidgets[0].el.innerHTML, "<div class=\"ghost_text_line_wrapped\">30 characters</div><div></div><div>Ghost3</div>");
+
+        editor.removeGhostText();
+
+        editor.renderer.$loop._flush();
+        assert.equal(editor.renderer.content.textContent, "abcdef");
+
         assert.equal(editor.session.lineWidgets, null);
     },
     "test: brackets highlighting": function (done) {
