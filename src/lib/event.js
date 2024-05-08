@@ -203,6 +203,10 @@ exports.getModifierString = function(e) {
 function normalizeCommandKeys(callback, e, keyCode) {
     var hashId = getModifierHash(e);
 
+    if (!keyCode && e.code) {
+        keyCode = keys.$codeToKeyCode[e.code] || keyCode;
+    }
+
     if (!useragent.isMac && pressedKeys) {
         if (e.getModifierState && (e.getModifierState("OS") || e.getModifierState("Win")))
             hashId |= 8;

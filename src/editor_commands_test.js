@@ -564,6 +564,16 @@ module.exports = {
 
         url = editor.findLinkAt(1, 5);
         assert.equal(url, "https://www.google.com/");
+    },
+    "test handle events without deprecated keyCode property": function() {
+        var e = new CustomEvent("keydown"); 
+        e.code = "KeyA"; 
+        e.ctrlKey = true;
+        editor = new Editor(new MockRenderer());
+        editor.session.setValue("123");
+        assert.equal(editor.getSelectedText(), "");
+        editor.textInput.getElement().dispatchEvent(e);
+        assert.equal(editor.getSelectedText(), "123");
     }
 };
 
