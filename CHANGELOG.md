@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.33.2](https://github.com/ajaxorg/ace/compare/v1.33.1...v1.33.2) (2024-05-13)
+
+
+### Bug Fixes
+
+* Add soft wrap for ghost text ([#5540](https://github.com/ajaxorg/ace/issues/5540)) ([6a26b27](https://github.com/ajaxorg/ace/commit/6a26b277d0050b38cd766e00f93be4b9f3170f68))
+* generator function's determination; wrong parameter highlighting ([#5538](https://github.com/ajaxorg/ace/issues/5538)) ([ceca6f7](https://github.com/ajaxorg/ace/commit/ceca6f7b38f6b3347988f17579ae6a2e758137dd))
+* incorrect spans style ([#5539](https://github.com/ajaxorg/ace/issues/5539)) ([65a7f38](https://github.com/ajaxorg/ace/commit/65a7f38713cffb729dab530711351c0a17c5801f))
+* not determined folding widgets for html tags ([#5548](https://github.com/ajaxorg/ace/issues/5548)) ([7a51992](https://github.com/ajaxorg/ace/commit/7a5199292f55dfa1a8ea8830ea1a9d98be097161))
+* wrong token type ([#5535](https://github.com/ajaxorg/ace/issues/5535)) ([4041489](https://github.com/ajaxorg/ace/commit/4041489bb38ffe609d5f9b43b4a7637e47fc4739))
+
 ### [1.33.1](https://github.com/ajaxorg/ace/compare/v1.33.0...v1.33.1) (2024-04-23)
 
 
