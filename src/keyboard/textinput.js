@@ -1,6 +1,7 @@
 "use strict";
 
 var event = require("../lib/event");
+var nls = require("../config").nls;
 var useragent = require("../lib/useragent");
 var dom = require("../lib/dom");
 var lang = require("../lib/lang");
@@ -10,26 +11,33 @@ var USE_IE_MIME_TYPE =  useragent.isIE;
 var HAS_FOCUS_ARGS = useragent.isChrome > 63;
 var MAX_LINE_LENGTH = 400;
 
+/**
+ * 
+ * @type {{[key: string]: any}}
+ */
 var KEYS = require("../lib/keys");
 var MODS = KEYS.KEY_MODS;
 var isIOS = useragent.isIOS;
 var valueResetRegex = isIOS ? /\s/ : /\n/;
 var isMobile = useragent.isMobile;
 
-var TextInput = function(parentNode, host) {
+var TextInput;
+TextInput= function(parentNode, host) {
+    /**@type {HTMLTextAreaElement & {msGetInputContext?: () => {compositionStartOffset: number}, getInputContext?: () => {compositionStartOffset: number}}}*/
     var text = dom.createElement("textarea");
     text.className = "ace_text-input";
 
     text.setAttribute("wrap", "off");
     text.setAttribute("autocorrect", "off");
     text.setAttribute("autocapitalize", "off");
-    text.setAttribute("spellcheck", false);
+    text.setAttribute("spellcheck", "false");
 
     text.style.opacity = "0";
     parentNode.insertBefore(text, parentNode.firstChild);
 
     var copied = false;
     var pasted = false;
+    /**@type {(boolean|Object) & {context?: any, useTextareaForIME?: boolean, selectionStart?: number, markerRange?: any}}} */
     var inComposition = false;
     var sendingText = false;
     var tempStyle = '';
@@ -44,15 +52,31 @@ var TextInput = function(parentNode, host) {
     var lastSelectionStart = 0;
     var lastSelectionEnd = 0;
     var lastRestoreEnd = 0;
+    var rowStart = Number.MAX_SAFE_INTEGER;
+    var rowEnd = Number.MIN_SAFE_INTEGER;
+    var numberOfExtraLines = 0;
     
     // FOCUS
     // ie9 throws error if document.activeElement is accessed too soon
     try { var isFocused = document.activeElement === text; } catch(e) {}
 
+    // Set number of extra lines in textarea, some screenreaders
+    // perform better with extra lines above and below in the textarea.
+    this.setNumberOfExtraLines = function(number) {
+        rowStart = Number.MAX_SAFE_INTEGER;
+        rowEnd =  Number.MIN_SAFE_INTEGER;
+
+        if (number < 0) {
+            numberOfExtraLines = 0;
+            return;
+        }
+        
+        numberOfExtraLines = number;
+    };
     this.setAriaOptions = function(options) {
         if (options.activeDescendant) {
             text.setAttribute("aria-haspopup", "true");
-            text.setAttribute("aria-autocomplete", "list");
+            text.setAttribute("aria-autocomplete", options.inline ? "both" : "list");
             text.setAttribute("aria-activedescendant", options.activeDescendant);
         } else {
             text.setAttribute("aria-haspopup", "false");
@@ -61,9 +85,17 @@ var TextInput = function(parentNode, host) {
         }
         if (options.role) {
             text.setAttribute("role", options.role);
+        }     
+        if (options.setLabel) {
+            text.setAttribute("aria-roledescription", nls("text-input.aria-roledescription", "editor"));
+            if(host.session) {
+                var row =  host.session.selection.cursor.row;
+                text.setAttribute("aria-label", nls("text-input.aria-label", "Cursor at row $0", [row + 1]));
+            }
         }
     };
-    this.setAriaOptions({role: "textbox"});
+
+    this.setAriaOptions({role: "textbox"}); 
 
     event.addListener(text, "blur", function(e) {
         if (ignoreFocusEvents) return;
@@ -86,8 +118,17 @@ var TextInput = function(parentNode, host) {
         else
             resetSelection();
     }, host);
+    /**
+     * 
+     * @type {boolean | string}
+     */
     this.$focusScroll = false;
     this.focus = function() {
+        // On focusing on the textarea, read active row number to assistive tech.
+        this.setAriaOptions({
+            setLabel: host.renderer.enableKeyboardAccessibility
+        });
+
         if (tempStyle || HAS_FOCUS_ARGS || this.$focusScroll == "browser")
             return text.focus({ preventScroll: true });
 
@@ -105,9 +146,9 @@ var TextInput = function(parentNode, host) {
             var t = text.parentElement;
             while (t && t.nodeType == 1) {
                 ancestors.push(t);
-                t.setAttribute("ace_nocontext", true);
+                t.setAttribute("ace_nocontext", "true");
                 if (!t.parentElement && t.getRootNode)
-                    t = t.getRootNode().host;
+                    t = t.getRootNode()["host"];
                 else
                     t = t.parentElement;
             }
@@ -146,6 +187,17 @@ var TextInput = function(parentNode, host) {
         resetSelection();
     });
     
+    // Convert from row,column position to the linear position with respect to the current
+    // block of lines in the textarea.
+    var positionToSelection = function(row, column) {
+        var selection = column;
+
+        for (var i = 1; i <= row - rowStart && i < 2*numberOfExtraLines + 1; i++) {
+            selection += host.session.getLine(row - i).length + 1;
+        }
+        return selection;
+    };
+
     var resetSelection = isIOS
     ? function(value) {
         if (!isFocused || (copied && !value) || sendingText) return;
@@ -170,8 +222,8 @@ var TextInput = function(parentNode, host) {
         // modifying selection of blured textarea can focus it (chrome mac/linux)
         if (!isFocused && !afterContextMenu)
             return;
-        // this prevents infinite recursion on safari 8 
         // see https://github.com/ajaxorg/ace/issues/2114
+        // this prevents infinite recursion on safari 8
         inComposition = true;
         
         var selectionStart = 0;
@@ -182,19 +234,43 @@ var TextInput = function(parentNode, host) {
             var selection = host.selection;
             var range = selection.getRange();
             var row = selection.cursor.row;
-            selectionStart = range.start.column;
-            selectionEnd = range.end.column;
-            line = host.session.getLine(row);
 
-            if (range.start.row != row) {
-                var prevLine = host.session.getLine(row - 1);
-                selectionStart = range.start.row < row - 1 ? 0 : selectionStart;
+            // We keep 2*numberOfExtraLines + 1 lines in the textarea, if the new active row
+            // is within the current block of lines in the textarea we do nothing. If the new row
+            // is one row above or below the current block, move up or down to the next block of lines.
+            // If the new row is further than 1 row away from the current block grab a new block centered 
+            // around the new row.
+            if (row === rowEnd + 1) {
+                rowStart = rowEnd + 1;
+                rowEnd = rowStart + 2*numberOfExtraLines;
+            } else if (row === rowStart - 1) {
+                rowEnd = rowStart - 1;
+                rowStart = rowEnd - 2*numberOfExtraLines;
+            } else if (row < rowStart - 1 || row > rowEnd + 1) {
+                rowStart = row > numberOfExtraLines ? row - numberOfExtraLines : 0;
+                rowEnd = row > numberOfExtraLines ? row + numberOfExtraLines : 2*numberOfExtraLines;
+            }
+            
+            var lines = [];
+
+            for (var i = rowStart; i <= rowEnd; i++) {
+                lines.push(host.session.getLine(i));
+            }
+            
+            line = lines.join('\n');
+
+            selectionStart = positionToSelection(range.start.row, range.start.column);
+            selectionEnd = positionToSelection(range.end.row, range.end.column);
+            
+            if (range.start.row < rowStart) {
+                var prevLine = host.session.getLine(rowStart - 1);
+                selectionStart = range.start.row < rowStart - 1 ? 0 : selectionStart;
                 selectionEnd += prevLine.length + 1;
                 line = prevLine + "\n" + line;
             }
-            else if (range.end.row != row) {
-                var nextLine = host.session.getLine(row + 1);
-                selectionEnd = range.end.row > row  + 1 ? nextLine.length : selectionEnd;
+            else if (range.end.row > rowEnd) {
+                var nextLine = host.session.getLine(rowEnd + 1);
+                selectionEnd = range.end.row > rowEnd + 1 ? nextLine.length : range.end.column;
                 selectionEnd += line.length + 1;
                 line = line + "\n" + nextLine;
             }
@@ -218,12 +294,12 @@ var TextInput = function(parentNode, host) {
                     }
                 }
             }
-        }
-
-        var newValue = line + "\n\n";
-        if (newValue != lastValue) {
-            text.value = lastValue = newValue;
-            lastSelectionStart = lastSelectionEnd = newValue.length;
+        
+            var newValue = line + "\n\n";
+            if (newValue != lastValue) {
+                text.value = lastValue = newValue;
+                lastSelectionStart = lastSelectionEnd = newValue.length;
+            }
         }
         
         // contextmenu on mac may change the selection
@@ -269,6 +345,7 @@ var TextInput = function(parentNode, host) {
             resetSelection();
         }
     };
+
 
     var inputHandler = null;
     this.setInputHandler = function(cb) {inputHandler = cb;};
@@ -365,7 +442,7 @@ var TextInput = function(parentNode, host) {
     };
     
     var handleClipboardData = function(e, data, forceIEMime) {
-        var clipboardData = e.clipboardData || window.clipboardData;
+        var clipboardData = e.clipboardData || window["clipboardData"];
         if (!clipboardData || BROKEN_SETDATA)
             return;
         // using "Text" doesn't work on old webkit but ie needs it
@@ -435,7 +512,12 @@ var TextInput = function(parentNode, host) {
         }
     };
 
-    event.addCommandKeyListener(text, host.onCommandKey.bind(host), host);
+    event.addCommandKeyListener(text, function(e, hashId, keyCode) {
+        // ignore command events during composition as they will 
+        // either be handled by ime itself or fired again after ime end
+        if (inComposition) return;
+        return host.onCommandKey(e, hashId, keyCode);
+    }, host);
 
     event.addListener(text, "select", onSelect, host);
     event.addListener(text, "input", onInput, host);

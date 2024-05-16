@@ -1,5 +1,7 @@
 "use strict";
-
+/**
+ * @typedef {import("./mouse_handler").MouseHandler} MouseHandler
+ */
 var dom = require("../lib/dom");
 var event = require("../lib/event");
 var useragent = require("../lib/useragent");
@@ -8,6 +10,9 @@ var AUTOSCROLL_DELAY = 200;
 var SCROLL_CURSOR_DELAY = 200;
 var SCROLL_CURSOR_HYSTERESIS = 5;
 
+/**
+ * @param {MouseHandler} mouseHandler
+ */
 function DragdropHandler(mouseHandler) {
 
     var editor = mouseHandler.editor;
@@ -21,6 +26,7 @@ function DragdropHandler(mouseHandler) {
     exports.forEach(function(x) {
         mouseHandler[x] = this[x];
     }, this);
+    // @ts-ignore
     editor.on("mousedown", this.onMouseDown.bind(mouseHandler));
 
     var mouseTarget = editor.container;
@@ -32,7 +38,11 @@ function DragdropHandler(mouseHandler) {
     var autoScrollStartTime;
     var cursorMovedTime;
     var cursorPointOnCaretMoved;
-
+    /**
+     * @param e
+     * @this {MouseHandler}
+     * @return {*}
+     */
     this.onDragStart = function(e) {
         // webkit workaround, see this.onMouseDown
         if (this.cancelDrag || !mouseTarget.draggable) {
@@ -60,7 +70,11 @@ function DragdropHandler(mouseHandler) {
         isInternal = true;
         this.setState("drag");
     };
-
+    /**
+     * @param e
+     * @this {MouseHandler}
+     * @return {*}
+     */
     this.onDragEnd = function(e) {
         mouseTarget.draggable = false;
         isInternal = false;
@@ -75,7 +89,11 @@ function DragdropHandler(mouseHandler) {
         this.editor.unsetStyle("ace_dragging");
         this.editor.renderer.setCursorStyle("");
     };
-
+    /**
+     * @param e
+     * @this {MouseHandler}
+     * @return {*}
+     */
     this.onDragEnter = function(e) {
         if (editor.getReadOnly() || !canAccept(e.dataTransfer))
             return;
@@ -88,7 +106,11 @@ function DragdropHandler(mouseHandler) {
         e.dataTransfer.dropEffect = dragOperation = getDropEffect(e);
         return event.preventDefault(e);
     };
-
+    /**
+     * @param e
+     * @this {MouseHandler}
+     * @return {*}
+     */
     this.onDragOver = function(e) {
         if (editor.getReadOnly() || !canAccept(e.dataTransfer))
             return;
@@ -114,7 +136,11 @@ function DragdropHandler(mouseHandler) {
             return event.preventDefault(e);
         }
     };
-
+    /**
+     * @param e
+     * @this {MouseHandler}
+     * @return {*}
+     */
     this.onDrop = function(e) {
         if (!dragCursor)
             return;
@@ -291,14 +317,23 @@ function DragdropHandler(mouseHandler) {
     }
 }
 
+/**
+ * @this {MouseHandler}
+ */
 (function() {
 
+    /**
+     * @this {MouseHandler & this}
+     */
     this.dragWait = function() {
         var interval = Date.now() - this.mousedownEvent.time;
         if (interval > this.editor.getDragDelay())
             this.startDrag();
     };
 
+    /**
+     * @this {MouseHandler & this}
+     */
     this.dragWaitEnd = function() {
         var target = this.editor.container;
         target.draggable = false;
@@ -306,6 +341,9 @@ function DragdropHandler(mouseHandler) {
         this.selectEnd();
     };
 
+    /**
+     * @this {MouseHandler & this}
+     */
     this.dragReadyEnd = function(e) {
         this.editor.$resetCursorStyle();
         this.editor.unsetStyle("ace_dragging");
@@ -313,6 +351,9 @@ function DragdropHandler(mouseHandler) {
         this.dragWaitEnd();
     };
 
+    /**
+     * @this {MouseHandler & this}
+     */
     this.startDrag = function(){
         this.cancelDrag = false;
         var editor = this.editor;
@@ -325,12 +366,16 @@ function DragdropHandler(mouseHandler) {
         this.setState("dragReady");
     };
 
+    /**
+     * @this {MouseHandler & this}
+     */
     this.onMouseDrag = function(e) {
         var target = this.editor.container;
         if (useragent.isIE && this.state == "dragReady") {
             // IE does not handle [draggable] attribute set after mousedown
             var distance = calcDistance(this.mousedownEvent.x, this.mousedownEvent.y, this.x, this.y);
             if (distance > 3)
+                // @ts-ignore
                 target.dragDrop();
         }
         if (this.state === "dragWait") {
@@ -342,6 +387,9 @@ function DragdropHandler(mouseHandler) {
         }
     };
 
+    /**
+     * @this {MouseHandler & this}
+     */
     this.onMouseDown = function(e) {
         if (!this.$dragEnabled)
             return;

@@ -1,16 +1,25 @@
 "use strict";
+/**
+ * @typedef {import("./edit_session").EditSession} EditSession
+ * @typedef {import("../ace-internal").Ace.Point} Point
+ */
 var Range = require("./range").Range;
 var comparePoints = Range.comparePoints;
 
-var RangeList = function() {
-    this.ranges = [];
-    this.$bias = 1;
-};
+class RangeList {
+    
+    constructor() {
+        this.ranges = [];
+        this.$bias = 1;
+    }
 
-(function() {
-    this.comparePoints = comparePoints;
-
-    this.pointIndex = function(pos, excludeEdges, startIndex) {
+    /**
+     * @param {Point} pos
+     * @param {boolean} [excludeEdges]
+     * @param {number} [startIndex]
+     * @return {number}
+     */
+    pointIndex(pos, excludeEdges, startIndex) {
         var list = this.ranges;
 
         for (var i = startIndex || 0; i < list.length; i++) {
@@ -27,9 +36,12 @@ var RangeList = function() {
             return -i-1;
         }
         return -i - 1;
-    };
+    }
 
-    this.add = function(range) {
+    /**
+     * @param {Range} range
+     */
+    add(range) {
         var excludeEdges = !range.isEmpty();
         var startIndex = this.pointIndex(range.start, excludeEdges);
         if (startIndex < 0)
@@ -42,25 +54,31 @@ var RangeList = function() {
         else
             endIndex++;
         return this.ranges.splice(startIndex, endIndex - startIndex, range);
-    };
+    }
 
-    this.addList = function(list) {
+    /**
+     * @param {Range[]} list
+     */
+    addList(list) {
         var removed = [];
         for (var i = list.length; i--; ) {
             removed.push.apply(removed, this.add(list[i]));
         }
         return removed;
-    };
+    }
 
-    this.substractPoint = function(pos) {
+    /**
+     * @param {Point} pos
+     */
+    substractPoint(pos) {
         var i = this.pointIndex(pos);
 
         if (i >= 0)
             return this.ranges.splice(i, 1);
-    };
+    }
 
     // merge overlapping ranges
-    this.merge = function() {
+    merge() {
         var removed = [];
         var list = this.ranges;
         
@@ -93,24 +111,38 @@ var RangeList = function() {
         this.ranges = list;
 
         return removed;
-    };
+    }
 
-    this.contains = function(row, column) {
+    /**
+     * @param {number} row
+     * @param {number} column
+     */
+    contains(row, column) {
         return this.pointIndex({row: row, column: column}) >= 0;
-    };
+    }
 
-    this.containsPoint = function(pos) {
+    /**
+     * @param {Point} pos
+     */
+    containsPoint(pos) {
         return this.pointIndex(pos) >= 0;
-    };
+    }
 
-    this.rangeAtPoint = function(pos) {
+    /**
+     * @param {Point} pos
+     */
+    rangeAtPoint(pos) {
         var i = this.pointIndex(pos);
         if (i >= 0)
             return this.ranges[i];
-    };
+    }
 
 
-    this.clipRows = function(startRow, endRow) {
+    /**
+     * @param {number} startRow
+     * @param {number} endRow
+     */
+    clipRows(startRow, endRow) {
         var list = this.ranges;
         if (list[0].start.row > endRow || list[list.length - 1].start.row < startRow)
             return [];
@@ -118,6 +150,7 @@ var RangeList = function() {
         var startIndex = this.pointIndex({row: startRow, column: 0});
         if (startIndex < 0)
             startIndex = -startIndex - 1;
+        //@ts-expect-error TODO: potential wrong argument
         var endIndex = this.pointIndex({row: endRow, column: 0}, startIndex);
         if (endIndex < 0)
             endIndex = -endIndex - 1;
@@ -127,13 +160,16 @@ var RangeList = function() {
             clipped.push(list[i]);
         }
         return clipped;
-    };
+    }
 
-    this.removeAll = function() {
+    removeAll() {
         return this.ranges.splice(0, this.ranges.length);
-    };
+    }
 
-    this.attach = function(session) {
+    /**
+     * @param {EditSession} session
+     */
+    attach(session) {
         if (this.session)
             this.detach();
 
@@ -141,16 +177,19 @@ var RangeList = function() {
         this.onChange = this.$onChange.bind(this);
 
         this.session.on('change', this.onChange);
-    };
+    }
 
-    this.detach = function() {
+    detach() {
         if (!this.session)
             return;
         this.session.removeListener('change', this.onChange);
         this.session = null;
-    };
+    }
 
-    this.$onChange = function(delta) {
+    /**
+     * @param {import("../ace-internal").Ace.Delta} delta
+     */
+    $onChange(delta) {
         var start = delta.start;
         var end = delta.end;
         var startRow = start.row;
@@ -259,8 +298,10 @@ var RangeList = function() {
                 r.end.row += lineDif;
             }
         }
-    };
+    }
 
-}).call(RangeList.prototype);
+}
+
+RangeList.prototype.comparePoints = comparePoints;
 
 exports.RangeList = RangeList;

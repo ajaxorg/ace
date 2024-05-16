@@ -18,6 +18,7 @@ var XMLMode = require("../xml").Mode;
 var HTMLMode = require("../html").Mode;
 var CSSMode = require("../css").Mode;
 var MarkdownMode = require("../markdown").Mode;
+var PythonMode = require("../python").Mode;
 var editor;
 var exec = function(name, times, args) {
     do {
@@ -135,6 +136,31 @@ module.exports = {
         assert.equal(editor.getValue(), '`n`');
         exec("backspace", 2);
         assert.equal(editor.getValue(), '');
+
+        // multiline string interpolation test case
+        editor.setValue("");
+        exec("insertstring", 1, "var x=");
+        exec("insertstring", 1, "`");
+        assert.equal(editor.getValue(), "var x=``");
+        exec("insertstring", 1, "$");
+        exec("insertstring", 1, "{");
+        assert.equal(editor.getValue(), "var x=`${}`");
+        // Testing for the auto-pairing of curly braces inside a JSX element attribute
+        editor.setValue("");
+        exec("insertstring", 1, "var x=<a href=");
+        exec("insertstring", 1, "{");
+        assert.equal(editor.getValue(), "var x=<a href={}");
+        // Testing of excluded token types auto-pairing
+        editor.setValue("");
+        exec("insertstring", 1, "var x=<div>");
+        exec("gotoleft", 1);
+        exec("insertstring", 1, "{");
+        assert.equal(editor.getValue(), "var x=<div{>");
+        // Testing for the auto-pairing of curly braces inside a JSX element 
+        editor.setValue("");
+        exec("insertstring", 1, "var x=<div>\\n    ");
+        exec("insertstring", 1, "{");
+        assert.equal(editor.getValue(), "var x=<div>\\n    {}");
     },
     "test: xml": function() {
         editor = new Editor(new MockRenderer());
@@ -286,6 +312,16 @@ module.exports = {
         exec("insertstring", 1, '`');
         exec("insertstring", 1, 'b');
         assert.equal(editor.getValue(), "`b`");
+
+        editor.setValue("");
+        exec("insertstring", 1, 'a');
+        exec("insertstring", 1, "'");
+        assert.equal(editor.getValue(), "a'");
+
+        editor.setValue("");
+        exec("insertstring", 1, 'b');
+        exec("insertstring", 1, "`");
+        assert.equal(editor.getValue(), "b``");
     },
     "test: css": function() {
         editor.session.setMode(new CSSMode());
@@ -399,6 +435,45 @@ module.exports = {
         exec("insertstring", 1, "    ");
         assert.equal(editor.getValue(), "+ List item\n    + List item 2");
 
+    },
+    "test: python": function() {
+        editor.session.setMode(new PythonMode());
+        editor.setValue("f", 1);
+        exec("insertstring", 1, '"');
+        assert.equal(editor.getValue(), 'f""');
+
+        // there is no such prefix for python
+        editor.setValue("p", 1);
+        exec("insertstring", 1, '"');
+        assert.equal(editor.getValue(), 'p"');
+    },
+    "test: doc comment auto-closing": function() {
+        editor.session.setMode(new JavaScriptMode());
+        editor.setWrapBehavioursEnabled(true);
+
+        // Test case 1: Starting a new doc comment
+        editor.setValue("/**", 1);
+        exec("insertstring", 1, "\n");
+        assert.equal(editor.getValue(), "/**\n * \n */");
+
+        // Test case 2: Continuing an existing doc comment with asterisk on a new line
+        editor.setValue("/**\n * Test", 1);
+        editor.gotoLine(1, 5);
+        exec("insertstring", 1, "\n");
+        assert.equal(editor.getValue(), "/**\n * \n * Test");
+        
+        // Test case 3: Starting a new doc comment with 4-space indentation
+        editor.setValue("    /**", 1);
+        exec("insertstring", 1, "\n");
+        assert.equal(editor.getValue(), "    /**\n     * \n     */");
+    },
+    "test: fragment auto-closing": function () {
+        editor.setWrapBehavioursEnabled(true);
+        editor.session.setMode(new JavaScriptMode());
+        editor.setValue("");
+        exec("insertstring", 1, '<');
+        exec("insertstring", 1, '>');
+        assert.equal(editor.getValue(), '<></>');
     }
 };
 

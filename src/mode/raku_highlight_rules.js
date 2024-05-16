@@ -173,11 +173,7 @@ var RakuHighlightRules = function() {
 	// Numbers - Hexadecimal
 	var hex = {	token : "constant.numeric", regex : "0x[0-9a-fA-F]+\\b" };
 	// Numbers - Num & Rat
-	var num_rat = { token : "constant.numeric", regex : "[+-.]?\\d+(?:(?:\\.\\d*)?(?:[eE][+-]?\\d+)?)?\\b" };
-	// Numbers - With _
-	var num_with_ = { token : "constant.numeric", regex : "(?:\\d+_?\\d+)+\\b" };
-	// Numbers - Complex
-	var complex_numbers = { token : "constant.numeric", regex : "\\+?\\d+i\\b" };
+	var num_rat = { token : "constant.numeric", regex : "[+-.]?\\d[\\d_]*(?:(?:\\.\\d[\\d_]*)?(?:[eE][+-]?\\d[\\d_]*)?)?i?\\b" };
 	// Booleans
 	var booleans = { token : "constant.language.boolean", regex : "(?:True|False)\\b" };
 	// Versions
@@ -238,8 +234,6 @@ var RakuHighlightRules = function() {
 			},
 			hex,
 			num_rat,
-			num_with_,
-			complex_numbers,
 			booleans,
 			versions,
 			lang_keywords,
@@ -283,8 +277,6 @@ var RakuHighlightRules = function() {
 		"qqinterpolation" : [
 			hex,
 			num_rat,
-			num_with_,
-			complex_numbers,
 			booleans,
 			versions,
 			lang_keywords,
@@ -338,8 +330,6 @@ var RakuHighlightRules = function() {
 		"qqheredocinterpolation" : [
 			hex,
 			num_rat,
-			num_with_,
-			complex_numbers,
 			booleans,
 			versions,
 			lang_keywords,

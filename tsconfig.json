@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "strict": false,
+    "noImplicitAny": false,
+    "skipLibCheck": true,
+    "module": "commonjs",
+    "target": "es2019",
+    "allowJs": true,
+    "checkJs": true,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "outFile": "./types/index.d.ts"
+  },
+  "exclude": [
+    "node_modules",
+    "src/test",
+    "src/**/*_test.js",
+    "src/keyboard/vim.js",
+    "src/keyboard/emacs.js",
+    "src/keyboard/sublime.js",
+    "src/keyboard/vscode.js",
+    "src/mode",
+    "./ace-internal.d.ts",
+    "src/**/* *"
+  ],
+  "include": [
+    "./src/**/*",
+    "./ace.d.ts"
+  ]
+}

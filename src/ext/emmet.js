@@ -9,19 +9,21 @@ var emmet, emmetPath;
 /**
  * Implementation of {@link IEmmetEditor} interface for Ace
  */
-function AceEmmetEditor() {}
 
-AceEmmetEditor.prototype = {
-    setupContext: function(editor) {
+class AceEmmetEditor {
+    /**
+     * @param {Editor} editor
+     */
+    setupContext(editor) {
         this.ace = editor;
         this.indentation = editor.session.getTabString();
         if (!emmet)
-            emmet = window.emmet;
+            emmet = window["emmet"];
         var resources = emmet.resources || emmet.require("resources");
         resources.setVariable("indentation", this.indentation);
         this.$syntax = null;
         this.$syntax = this.getSyntax();
-    },
+    }
     /**
      * Returns character indexes of selected text: object with <code>start</code>
      * and <code>end</code> properties. If there's no selection, should return
@@ -32,7 +34,7 @@ AceEmmetEditor.prototype = {
      * var selection = editor.getSelectionRange();
      * alert(selection.start + ', ' + selection.end);
      */
-    getSelectionRange: function() {
+    getSelectionRange() {
         // TODO should start be caret position instead?
         var range = this.ace.getSelectionRange();
         var doc = this.ace.session.doc;
@@ -40,7 +42,7 @@ AceEmmetEditor.prototype = {
             start: doc.positionToIndex(range.start),
             end: doc.positionToIndex(range.end)
         };
-    },
+    }
 
     /**
      * Creates selection from <code>start</code> to <code>end</code> character
@@ -54,13 +56,13 @@ AceEmmetEditor.prototype = {
      * //move caret to 15th character
      * editor.createSelection(15);
      */
-    createSelection: function(start, end) {
+    createSelection(start, end) {
         var doc = this.ace.session.doc;
         this.ace.selection.setRange({
             start: doc.indexToPosition(start),
             end: doc.indexToPosition(end)
         });
-    },
+    }
 
     /**
      * Returns current line's start and end indexes as object with <code>start</code>
@@ -70,7 +72,7 @@ AceEmmetEditor.prototype = {
      * var range = editor.getCurrentLineRange();
      * alert(range.start + ', ' + range.end);
      */
-    getCurrentLineRange: function() {
+    getCurrentLineRange() {
         var ace = this.ace;
         var row = ace.getCursorPosition().row;
         var lineLength = ace.session.getLine(row).length;
@@ -79,34 +81,34 @@ AceEmmetEditor.prototype = {
             start: index,
             end: index + lineLength
         };
-    },
+    }
 
     /**
      * Returns current caret position
      * @return {Number|null}
      */
-    getCaretPos: function(){
+    getCaretPos(){
         var pos = this.ace.getCursorPosition();
         return this.ace.session.doc.positionToIndex(pos);
-    },
+    }
 
     /**
      * Set new caret position
      * @param {Number} index Caret position
      */
-    setCaretPos: function(index){
+    setCaretPos(index){
         var pos = this.ace.session.doc.indexToPosition(index);
         this.ace.selection.moveToPosition(pos);
-    },
+    }
 
     /**
      * Returns content of current line
      * @return {String}
      */
-    getCurrentLine: function() {
+    getCurrentLine() {
         var row = this.ace.getCursorPosition().row;
         return this.ace.session.getLine(row);
-    },
+    }
 
     /**
      * Replace editor's content or it's part (from <code>start</code> to
@@ -128,7 +130,7 @@ AceEmmetEditor.prototype = {
      * @param {Number} [end] End index of editor's content
      * @param {Boolean} [noIndent] Do not auto indent <code>value</code>
      */
-    replaceContent: function(value, start, end, noIndent) {
+    replaceContent(value, start, end, noIndent) {
         if (end == null)
             end = start == null ? this.getContent().length : start;
         if (start == null)
@@ -144,26 +146,27 @@ AceEmmetEditor.prototype = {
         
         value = this.$updateTabstops(value);
         snippetManager.insertSnippet(editor, value);
-    },
+    }
 
     /**
      * Returns editor's content
      * @return {String}
      */
-    getContent: function(){
+    getContent(){
         return this.ace.getValue();
-    },
+    }
 
     /**
      * Returns current editor's syntax mode
      * @return {String}
      */
-    getSyntax: function() {
+    getSyntax() {
         if (this.$syntax)
             return this.$syntax;
         var syntax = this.ace.session.$modeId.split("/").pop();
         if (syntax == "html" || syntax == "php") {
             var cursor = this.ace.getCursorPosition();
+            /**@type {string | string[]} */
             var state = this.ace.session.getState(cursor.row);
             if (typeof state != "string")
                 state = state[0];
@@ -176,13 +179,13 @@ AceEmmetEditor.prototype = {
             }
         }
         return syntax;
-    },
+    }
 
     /**
      * Returns current output profile name (@see emmet#setupProfile)
      * @return {String}
      */
-    getProfileName: function() {
+    getProfileName() {
         var resources = emmet.resources || emmet.require("resources");
         switch (this.getSyntax()) {
           case "css": return "css";
@@ -199,7 +202,7 @@ AceEmmetEditor.prototype = {
             var mode = this.ace.session.$mode;
             return mode.emmetConfig && mode.emmetConfig.profile || "xhtml";
         }
-    },
+    }
 
     /**
      * Ask user to enter something
@@ -207,34 +210,37 @@ AceEmmetEditor.prototype = {
      * @return {String} Entered data
      * @since 0.65
      */
-    prompt: function(title) {
+    prompt(title) {
         return prompt(title); // eslint-disable-line no-alert
-    },
+    }
 
     /**
      * Returns current selection
      * @return {String}
      * @since 0.65
      */
-    getSelection: function() {
+    getSelection() {
         return this.ace.session.getTextRange();
-    },
+    }
 
     /**
      * Returns current editor's file path
      * @return {String}
      * @since 0.65
      */
-    getFilePath: function() {
+    getFilePath() {
         return "";
-    },
+    }
     
     // update tabstops: make sure all caret placeholders are unique
     // by default, abbreviation parser generates all unlinked (un-mirrored)
     // tabstops as ${0}, so we have upgrade all caret tabstops with unique
     // positions but make sure that all other tabstops are not linked accidentally
     // based on https://github.com/sergeche/emmet-sublime/blob/master/editor.js#L119-L171
-    $updateTabstops: function(value) {
+    /**
+     * @param {string} value
+     */
+    $updateTabstops(value) {
         var base = 1000;
         var zeroBase = 0;
         var lastZero = null;
@@ -282,7 +288,7 @@ AceEmmetEditor.prototype = {
         
         return value;
     }
-};
+}
 
 
 var keymap = {
@@ -316,6 +322,10 @@ var keymap = {
 
 var editorProxy = new AceEmmetEditor();
 exports.commands = new HashHandler();
+/**
+ * @param {Editor} editor
+ * @return {number|boolean}
+ */
 exports.runEmmetCommand = function runEmmetCommand(editor) {
     if (this.action == "expand_abbreviation_with_tab") {
         if (!editor.selection.isEmpty())
@@ -361,6 +371,10 @@ for (var command in keymap) {
     });
 }
 
+/**
+ * @param {Editor} editor
+ * @param {boolean} [enabled]
+ */
 exports.updateCommands = function(editor, enabled) {
     if (enabled) {
         editor.keyBinding.addKeyboardHandler(exports.commands);
@@ -376,6 +390,11 @@ exports.isSupportedMode = function(mode) {
     return /css|less|scss|sass|stylus|html|php|twig|ejs|handlebars/.test(id);
 };
 
+/**
+ * @param {Editor} editor
+ * @param {string} command
+ * @return {boolean}
+ */
 exports.isAvailable = function(editor, command) {
     if (/(evaluate_math_expression|expand_abbreviation)$/.test(command))
         return true;

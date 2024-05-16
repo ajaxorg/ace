@@ -50,6 +50,7 @@ The easiest version is simply:
     var editor = ace.edit("editor");
 </script>
 ```
+*Exploring configuration options [Configuring-Ace](https://github.com/ajaxorg/ace/wiki/Configuring-Ace/)*
 
 With "editor" being the id of the DOM element, which should be converted to an editor. Note that this element must be explicitly sized and positioned `absolute` or `relative` for Ace to work. e.g.
 
@@ -99,11 +100,11 @@ Documentation
 
 Additional usage information, including events to listen to and extending syntax highlighters, can be found [on the main Ace website](http://ace.c9.io).
 
-You can also find API documentation at [http://ace.c9.io/#nav=api](http://ace.c9.io/#nav=api).
+You can also find API documentation at [https://ajaxorg.github.io/ace-api-docs/](https://ajaxorg.github.io/ace-api-docs/).
 
 Also check out the sample code for the kitchen sink [demo app](https://github.com/ajaxorg/ace/blob/master/demo/kitchen-sink/demo.js).
 
-If you still need help, feel free to drop a mail on the [ace mailing list](http://groups.google.com/group/ace-discuss), or at `irc.freenode.net#ace`.
+If you still need help, feel free to ask a question on our [discussions page](https://github.com/ajaxorg/ace/discussions).
 
 Running Ace
 -----------
@@ -154,7 +155,7 @@ You can also run the tests in your browser by serving:
 
     http://localhost:8888/src/test/tests.html
 
-This makes debugging failing tests way more easier.
+This makes debugging failing tests much easier.
 
 Contributing
 -----------------------------

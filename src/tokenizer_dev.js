@@ -8,15 +8,15 @@ var MAX_TOKEN_COUNT = 2000;
  * can be used for developing/testing new modes
  **/
 
-var Tokenizer = function(rules) {
-    BaseTokenizer.call(this, rules);
-
+class Tokenizer extends BaseTokenizer {
+    
     /**
      * Returns an object containing two properties: `tokens`, which contains all the tokens; and `state`, the current state.
      * @returns {Object}
      **/
-    this.getLineTokens = function(line, startState) {
+    getLineTokens(line, startState) {
         if (startState && typeof startState != "string") {
+            /**@type {any[]}*/
             var stack = startState.slice(0);
             startState = stack[0];
         } else
@@ -41,7 +41,8 @@ var Tokenizer = function(rules) {
             stateTransitions = [];
             onStateChange();
         }
-        
+
+        /**@type {any}*/
         var token = {
             type: null,
             value: "",
@@ -144,9 +145,9 @@ var Tokenizer = function(rules) {
             tokens : tokens,
             state : stack.length ? stack : currentState
         };
-    };
+    }
 
-};
+}
 
 Tokenizer.prototype = BaseTokenizer.prototype;
 

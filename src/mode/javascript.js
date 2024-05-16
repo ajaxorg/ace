@@ -5,15 +5,15 @@ var TextMode = require("./text").Mode;
 var JavaScriptHighlightRules = require("./javascript_highlight_rules").JavaScriptHighlightRules;
 var MatchingBraceOutdent = require("./matching_brace_outdent").MatchingBraceOutdent;
 var WorkerClient = require("../worker/worker_client").WorkerClient;
-var CstyleBehaviour = require("./behaviour/cstyle").CstyleBehaviour;
-var CStyleFoldMode = require("./folding/cstyle").FoldMode;
+var JavaScriptBehaviour = require("./behaviour/javascript").JavaScriptBehaviour;
+var JavaScriptFoldMode = require("./folding/javascript").FoldMode;
 
 var Mode = function() {
     this.HighlightRules = JavaScriptHighlightRules;
-    
+
     this.$outdent = new MatchingBraceOutdent();
-    this.$behaviour = new CstyleBehaviour();
-    this.foldingRules = new CStyleFoldMode();
+    this.$behaviour = new JavaScriptBehaviour();
+    this.foldingRules = new JavaScriptFoldMode();
 };
 oop.inherits(Mode, TextMode);
 
@@ -22,6 +22,9 @@ oop.inherits(Mode, TextMode);
     this.lineCommentStart = "//";
     this.blockComment = {start: "/*", end: "*/"};
     this.$quotes = {'"': '"', "'": "'", "`": "`"};
+    this.$pairQuotesAfter = {
+        "`": /\w/
+    };
 
     this.getNextLineIndent = function(state, line, tab) {
         var indent = this.$getIndent(line);

@@ -6,14 +6,13 @@ var LogiQLHighlightRules = require("./logiql_highlight_rules").LogiQLHighlightRu
 var FoldMode = require("./folding/coffee").FoldMode;
 var TokenIterator = require("../token_iterator").TokenIterator;
 var Range = require("../range").Range;
-var CstyleBehaviour = require("./behaviour/cstyle").CstyleBehaviour;
 var MatchingBraceOutdent = require("./matching_brace_outdent").MatchingBraceOutdent;
 
 var Mode = function() {
     this.HighlightRules = LogiQLHighlightRules;
     this.foldingRules = new FoldMode();
     this.$outdent = new MatchingBraceOutdent();
-    this.$behaviour = new CstyleBehaviour();
+    this.$behaviour = this.$defaultBehaviour;
 };
 oop.inherits(Mode, TextMode);
 

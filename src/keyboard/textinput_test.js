@@ -458,6 +458,40 @@ module.exports = {
         assert.equal([textarea.value.length, textarea.selectionStart, textarea.selectionEnd].join(","), "3,0,1");
     },
     
+    "test: selection synchronization with extra lines enabled": function() {
+        editor.textInput.setNumberOfExtraLines(1);
+        editor.session.setValue("line1\nline2\nline3\nline4\nline5\nline6\n");
+        [
+            { _: "keydown", range: [1,1], value: "line1\nline2\nline3\n\n", key: { code: "ArrowRight", key: "ArrowRight", keyCode: 39}},
+            { _: "keydown", range: [2,2], value: "line1\nline2\nline3\n\n", key: { code: "ArrowRight", key: "ArrowRight", keyCode: 39}},
+            { _: "keydown", range: [2,2], value: "line1\nline2\nline3\n\n", key: { code: "ShiftLeft", key: "Shift", keyCode: 16}, modifier: "shift-"},
+            { _: "keydown", range: [2,3], value: "line1\nline2\nline3\n\n", key: { code: "ArrowRight", key: "ArrowRight", keyCode: 39}, modifier: "shift-"},
+            { _: "keydown", range: [2,4], value: "line1\nline2\nline3\n\n", key: { code: "ArrowRight", key: "ArrowRight", keyCode: 39}, modifier: "shift-"},
+            { _: "keydown", range: [2,5], value: "line1\nline2\nline3\n\n", key: { code: "ArrowRight", key: "ArrowRight", keyCode: 39}, modifier: "shift-"},
+            { _: "keydown", range: [2,6], value: "line1\nline2\nline3\n\n", key: { code: "ArrowRight", key: "ArrowRight", keyCode: 39}, modifier: "shift-"},
+            { _: "keydown", range: [2,7], value: "line1\nline2\nline3\n\n", key: { code: "ArrowRight", key: "ArrowRight", keyCode: 39}, modifier: "shift-"},
+            { _: "keydown", range: [2,8], value: "line1\nline2\nline3\n\n", key: { code: "ArrowRight", key: "ArrowRight", keyCode: 39}, modifier: "shift-"},
+            { _: "keydown", range: [2,14], value: "line1\nline2\nline3\n\n", key: { code: "ArrowDown", key: "ArrowDown", keyCode: 40}, modifier: "shift-"},
+            { _: "keydown", range: [2,2], value: "line4\nline5\nline6\n\n", key: { code: "ArrowDown", key: "ArrowDown", keyCode: 40}},
+            { _: "keydown", range: [2,2], value: "line4\nline5\nline6\n\n", key: { code: "ShiftLeft", key: "Shift", keyCode: 16}, modifier: "shift-"},
+            { _: "keydown", range: [14,20], value: "line1\nline2\nline3\nline4\n\n", key: { code: "ArrowUp", key: "ArrowUp", keyCode: 38}, modifier: "shift-"},
+            { _: "keydown", range: [8,8], value: "line1\nline2\nline3\n\n", key: { code: "ArrowUp", key: "ArrowUp", keyCode: 38}},
+            { _: "keydown", range: [14,14], value: "line1\nline2\nline3\n\n", key: { code: "ArrowDown", key: "ArrowDown", keyCode: 40}},
+            { _: "keydown", range: [2,8], value: "line3\nline4\nline5\nline6\n\n", key: { code: "ArrowDown", key: "ArrowDown", keyCode: 40}, modifier: "shift-"}
+        ].forEach(function(data) {
+            sendEvent(data._, data);
+        });
+        // test overflow
+        editor.session.setValue("0123456789".repeat(80));
+        editor.execCommand("gotoright");
+        editor.execCommand("selectright");
+        assert.equal([textarea.value.length, textarea.selectionStart, textarea.selectionEnd].join(","), "402,1,2");
+        editor.execCommand("gotolineend");
+        assert.equal([textarea.value.length, textarea.selectionStart, textarea.selectionEnd].join(","), "3,0,0");
+        editor.execCommand("selectleft");
+        assert.equal([textarea.value.length, textarea.selectionStart, textarea.selectionEnd].join(","), "3,0,1");
+    },
+    
     "test: chinese ime on ie": function() {
         editor.setOption("useTextareaForIME", false);
         [
@@ -587,6 +621,64 @@ module.exports = {
         assert.equal(editor.getValue(), "开iird");
     },
     
+    "test: backspace during composition": function() {
+        editor.setValue("lxx\n", 1);
+        editor.execCommand("golineup");
+        editor.selection.moveTo(0, 1);
+        editor.setOption("useTextareaForIME", true);
+
+        [
+            { _: "keydown", range: [0,0], value: "xx\n\n", key: { code: "Backspace", key: "Backspace", keyCode: 8}},
+            function() {
+                assert.equal(editor.getValue(), "xx\n");
+            },
+            { _: "keydown", range: [0,0], value: "xx\n\n", key: { code: "KeyA", key: "a", keyCode: 65}},
+            { _: "keypress", range: [0,0], value: "xx\n\n", key: { code: "KeyA", key: "a", keyCode: 97}},
+            { _: "input", data: "a", inputType: "insertText", range: [1,1], value: "axx\n\n"},
+            { _: "keyup", range: [1,1], value: "axx\n\n", key: { code: "KeyA", key: "a", keyCode: 65}},
+            { _: "keydown", range: [1,1], value: "axx\n\n", key: { code: "KeyA", key: "a", keyCode: 65}},
+            { _: "keypress", range: [1,1], value: "axx\n\n", key: { code: "KeyA", key: "a", keyCode: 97}},
+            { _: "input", data: "a", inputType: "insertText", range: [2,2], value: "aaxx\n\n"},
+            { _: "keyup", range: [2,2], value: "aaxx\n\n", key: { code: "KeyA", key: "a", keyCode: 65}},
+            { _: "keydown", range: [2,2], value: "aaxx\n\n", key: { code: "AltRight", key: "Alt", keyCode: 18}, modifier: "alt-"},
+            { _: "keydown", range: [2,2], value: "aaxx\n\n", key: { code: "KeyI", key: "Dead", keyCode: 73}, modifier: "alt-"},
+            { _: "compositionstart", data: "", range: [0,0], value: ""},
+            function() {
+                editor.textInput.getElement().value = "ˆ";
+            },
+            { _: "compositionupdate", data: "ˆ", range: [0,0], value: ""},
+            { _: "input", data: "ˆ", inputType: "insertCompositionText", range: [1,1], value: "ˆ"},
+            { _: "keyup", range: [1,1], value: "ˆ", key: { code: "KeyI", key: "ˆ", keyCode: 73}, modifier: "alt-"},
+            { _: "keyup", range: [1,1], value: "ˆ", key: { code: "AltRight", key: "Alt", keyCode: 18}},
+            { _: "keydown", range: [1,1], value: "ˆ", key: { code: "Backspace", key: "Backspace", keyCode: 8}},
+            { _: "compositionend", data: "ˆ", range: [1,1], value: "ˆ"},
+            { _: "input", data: "ˆ", inputType: "insertCompositionText", range: [1,1], value: "ˆ"},
+            { _: "keydown", range: [2,2], value: "aaxx\n\n", key: { code: "Backspace", key: "Backspace", keyCode: 8}},
+            { _: "keyup", range: [2,2], value: "aaxx\n\n", key: { code: "Backspace", key: "Backspace", keyCode: 8}},
+            { _: "keydown", range: [2,2], value: "aaxx\n\n", key: { code: "AltRight", key: "Alt", keyCode: 18}, modifier: "alt-"},
+            { _: "keydown", range: [2,2], value: "aaxx\n\n", key: { code: "KeyI", key: "Dead", keyCode: 73}, modifier: "alt-"},
+            { _: "compositionstart", data: "", range: [0,0], value: ""},
+            { _: "compositionupdate", data: "ˆ", range: [0,0], value: ""},
+            function() {
+                editor.textInput.getElement().value = "ˆ";
+            },
+            { _: "input", data: "ˆ", inputType: "insertCompositionText", range: [1,1], value: "ˆ"},
+            { _: "keyup", range: [1,1], value: "ˆ", key: { code: "KeyI", key: "ˆ", keyCode: 73}, modifier: "alt-"},
+            { _: "keyup", range: [1,1], value: "ˆ", key: { code: "AltRight", key: "Alt", keyCode: 18}},
+            { _: "keydown", range: [1,1], value: "ˆ", key: { code: "ShiftLeft", key: "Shift", keyCode: 16}, modifier: "shift-"},
+            { _: "keyup", range: [1,1], value: "ˆ", key: { code: "ShiftLeft", key: "Shift", keyCode: 16}},
+            { _: "keydown", range: [1,1], value: "ˆ", key: { code: "Delete", key: "Delete", keyCode: 46}},
+            { _: "compositionend", data: "ˆ", range: [1,1], value: "ˆ"},
+            { _: "input", data: "ˆ", inputType: "insertCompositionText", range: [1,1], value: "ˆ"},
+            { _: "keydown", range: [3,3], value: "aaˆx\n\n", key: { code: "Delete", key: "Delete", keyCode: 46}},
+            { _: "select", range: [3,3], value: "aaˆx\n\n"},
+            { _: "keyup", range: [3,3], value: "aaˆx\n\n", key: { code: "Delete", key: "Delete", keyCode: 46}}
+        ].forEach(function(data, i) {
+            sendEvent(data._, data);
+        });
+        assert.equal(editor.getValue(), "aaˆx\n");
+    },
+
     "test: mac pressAndHold on firefox": function() {
         editor.setOption("useTextareaForIME", true);
         [

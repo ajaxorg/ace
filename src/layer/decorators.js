@@ -3,45 +3,43 @@ var dom = require("../lib/dom");
 var oop = require("../lib/oop");
 var EventEmitter = require("../lib/event_emitter").EventEmitter;
 
-var Decorator = function (parent, renderer) {
-    this.canvas = dom.createElement("canvas");
-    this.renderer = renderer;
-    this.pixelRatio = 1;
-    this.maxHeight = renderer.layerConfig.maxHeight;
-    this.lineHeight = renderer.layerConfig.lineHeight;
-    this.canvasHeight = parent.parent.scrollHeight;
-    this.heightRatio = this.canvasHeight / this.maxHeight;
-    this.canvasWidth = parent.width;
-    this.minDecorationHeight = (2 * this.pixelRatio) | 0;
-    this.halfMinDecorationHeight = (this.minDecorationHeight / 2) | 0;
+class Decorator {
+    constructor(parent, renderer) {
+        this.canvas = dom.createElement("canvas");
+        this.renderer = renderer;
+        this.pixelRatio = 1;
+        this.maxHeight = renderer.layerConfig.maxHeight;
+        this.lineHeight = renderer.layerConfig.lineHeight;
+        this.canvasHeight = parent.parent.scrollHeight;
+        this.heightRatio = this.canvasHeight / this.maxHeight;
+        this.canvasWidth = parent.width;
+        this.minDecorationHeight = (2 * this.pixelRatio) | 0;
+        this.halfMinDecorationHeight = (this.minDecorationHeight / 2) | 0;
 
-    this.canvas.width = this.canvasWidth;
-    this.canvas.height = this.canvasHeight;
-    this.canvas.style.top = 0 + "px";
-    this.canvas.style.right = 0 + "px";
-    this.canvas.style.zIndex = 7 + "px";
-    this.canvas.style.position = "absolute";
-    this.colors = {};
-    this.colors.dark = {
-        "error": "rgba(255, 18, 18, 1)",
-        "warning": "rgba(18, 136, 18, 1)",
-        "info": "rgba(18, 18, 136, 1)"
-    };
+        this.canvas.width = this.canvasWidth;
+        this.canvas.height = this.canvasHeight;
+        this.canvas.style.top = 0 + "px";
+        this.canvas.style.right = 0 + "px";
+        this.canvas.style.zIndex = 7 + "px";
+        this.canvas.style.position = "absolute";
+        this.colors = {};
+        this.colors.dark = {
+            "error": "rgba(255, 18, 18, 1)",
+            "warning": "rgba(18, 136, 18, 1)",
+            "info": "rgba(18, 18, 136, 1)"
+        };
 
-    this.colors.light = {
-        "error": "rgb(255,51,51)",
-        "warning": "rgb(32,133,72)",
-        "info": "rgb(35,68,138)"
-    };
+        this.colors.light = {
+            "error": "rgb(255,51,51)",
+            "warning": "rgb(32,133,72)",
+            "info": "rgb(35,68,138)"
+        };
 
-    parent.element.appendChild(this.canvas);
+        parent.element.appendChild(this.canvas);
 
-};
-
-(function () {
-    oop.implement(this, EventEmitter);
-
-    this.$updateDecorators = function (config) {
+    }
+    
+    $updateDecorators(config) {
         var colors = (this.renderer.theme.isDark === true) ? this.colors.dark : this.colors.light;
         if (config) {
             this.maxHeight = config.maxHeight;
@@ -108,9 +106,9 @@ var Decorator = function (parent, renderer) {
             ctx.fillRect(0, currentY, this.canvasWidth, 2);
         }
 
-    };
+    }
 
-    this.compensateFoldRows = function (row, foldData) {
+    compensateFoldRows(row, foldData) {
         let compensateFold = 0;
         if (foldData && foldData.length > 0) {
             for (let j = 0; j < foldData.length; j++) {
@@ -123,7 +121,9 @@ var Decorator = function (parent, renderer) {
             }
         }
         return compensateFold;
-    };
-}.call(Decorator.prototype));
+    }
+}
+
+oop.implement(Decorator.prototype, EventEmitter);
 
 exports.Decorator = Decorator;

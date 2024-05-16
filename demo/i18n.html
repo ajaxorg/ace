@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>ACE Editor StatusBar Demo</title>
+  <style type="text/css" media="screen">
+    body {
+        overflow: hidden;
+    }
+    
+    #editor { 
+        margin: 0;
+        position: absolute;
+        top: 2em;
+        bottom: 0;
+        left: 0;
+        right: 0;
+    }
+    #statusBar {
+        margin: 0;
+        padding: 0;
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 20px;
+        background-color: rgb(245, 245, 245);
+        color: gray;
+    }
+    .ace_status-indicator {
+        color: gray;
+        position: absolute;
+        right: 0;
+        border-left: 1px solid;
+    }
+  </style>
+</head>
+<body>
+<a href="?lang=Ru">Russian</a> &nbsp;
+<a href="?lang=Am">Armenian</a>&nbsp; 
+<a href="?lang=En">English</a>&nbsp;
+<a href="?lang=Es">Spanish</a>&nbsp;
+<pre id="editor"></pre>
+    
+<script src="kitchen-sink/require.js"></script>
+<script>
+// setup paths
+require.config({paths: { "ace" : "../src"}});
+// load ace and extensions
+require(["ace/ace", "ace/ext/searchbox", "ace/ext/language_tools"], function(ace) {
+    var messagesRussian = {
+        "$id": "ru",
+        
+        "Search for": "Найти",
+        "All": "Все",
+        "Replace with": "Заменить",
+        "Replace": "Заменить",
+        "Toggle Replace mode": "Перейти в режим поиска",
+        "RegExp Search": "Поиск по регулярному выражению",
+        "CaseSensitive Search": "",
+        "Whole Word Search": "",
+        "Search In Selection": "Искать в выделенном",
+        "$0 of $1": "$0 из $1",
+        
+        "Looks good!": "Нет ошибок",
+        
+        "Recently used": "Недавно использованные",
+        "Other commands": "Другие команды",
+        "No matching commands": "Нет подходящих команд",
+        
+        "Autocomplete suggestions": "Предложения автозаполнения",
+                
+        "Cursor at row $0": "",
+        "Toggle code folding, rows $0 through $1": "",
+        "Toggle code folding, row $0": "",
+        "Unfold code": "",
+        "Fold code": "",
+        "Read annotations row $0": "",
+        
+        "error": "ошибка",
+        "errors": "ошибки",
+        "warning": "предупреждение",
+        "warnings": "предупреждения",
+        "information message": "информационное сообщение",
+        "information messages": "информационные сообщения"
+    };
+    
+    var messagesArmenian = {
+        "$id": "am",
+        
+        "Search for": "Փնտրել",
+        "All": "Բոլորը",
+        "Replace with": "Փոխարինել",
+        "Replace": "Փոխարինել",
+        "Toggle Replace mode": "",
+        "RegExp Search": "Փնտրել ռեգեքսպով",
+        "CaseSensitive Search": "",
+        "Whole Word Search": "Ամբողջ բառեր",
+        "Search In Selection": "Փնտրել նշվածում",
+        "$0 of $1": "$1-ից $0",
+        
+        "Looks good!": "Սխալ չկա",
+        
+        "Recently used": "Վերջերս օգտագործված",
+        "Other commands": "Այլ հրամաններ",
+        "No matching commands": "Չկան համապատասխան հրամաններ",
+        
+        "Autocomplete suggestions": "Ավտոմատ լրացման առաջարկներ",
+        
+        "Cursor at row $0": "",
+        "Toggle code folding, rows $0 through $1": "",
+        "Toggle code folding, row $0": "",
+        "Unfold code": "",
+        "Fold code": "",
+        "Read annotations row $0": "",
+        
+        "error": "սխալ",
+        "errors": "սխալներ",
+        "warning": "նախազգուշացում",
+        "warnings": "նախազգուշացումներ",
+        "information message": "տեղեկատվություն",
+        "information messages": "տեղեկատվություններ"
+    };
+
+    var messagesSpanish = {
+        "$id": "es",
+        "Autocomplete suggestions": "Sugerencias de autocompletar",
+        "editor": "editor",
+        "Editor content, press Enter to start editing, press Escape to exit": "Contenido del editor, presiona Entrar para empezar a editar, presiona Escape para salir",
+        "Editor gutter, press Enter to interact with controls using arrow keys, press Escape to exit": "Canaleta de editor, presiona Entrar para por, presiona Escape para salir",
+        "Looks good!": "¡Parece bien!",
+        "Recently used": "Usado recientemente",
+        "Other commands": "Otros mandos",
+        "No matching commands": "No hay mandos que hacen juego",
+        "Search for": "Buscar",
+        "All": "Todo",
+        "Replace with": "Reemplazar con",
+        "Replace": "Reemplazar",
+        "Toggle Replace mode": "Pasar el modo de reemplazar",
+        "RegExp Search": "Búsqueda de RegExp",
+        "CaseSensitive Search": "Búsqueda sensible a mayúsculas y minúsculas",
+        "Whole Word Search": "Búsqueda de palabras enteras",
+        "Search In Selection": "Buscar en la selección",
+        "$0 of $1": "$0 de $1",
+        "Cursor at row $0": "Cursor en row $0",
+        "Unfold rows $0 to $1": "Desplegar las filas desde $0 hasta $1",
+        "Unfold code": "Desplegar el codigo",
+        "Fold at row $0": "Plegar en fila $0",
+        "Toggle code folding, rows $0 through $1": "",
+        "Toggle code folding, row $0": "",
+        "Fold code": "Plegar el codigo",
+        "Read annotations row $0": "Leer anotaciones fila $0",
+        "error": "error",
+        "errors": "errores",
+        "warning": "advertencia",
+        "warnings": "advertencias",
+        "information message": "mensaje de informacion",
+        "information messages": "mensajes de informacion"
+    }
+
+
+
+    if (/lang=ru/i.test(location.href)) {
+        ace.config.setMessages(messagesRussian);
+    } else if (/lang=en/i.test(location.href)) {
+        ace.config.setMessages();
+    } else if (/lang=es/i.test(location.href)) {
+        ace.config.setMessages(messagesSpanish)
+    } else {
+        ace.config.setMessages(messagesArmenian);
+    }
+
+    var editor = ace.edit("editor", {
+        mode: "ace/mode/html"
+    });
+    
+    editor.execCommand("find");
+    setTimeout(function() {
+        editor.execCommand("goToNextError");
+    }, 2000);
+});
+</script>
+
+<script src="./show_own_source.js"></script>
+</body>
+</html>

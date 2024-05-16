@@ -52,4 +52,4 @@ exports.handler = new HashHandler();
         bindKey = bindKey[exports.handler.platform];
     exports.handler.bindKey(bindKey, k.command);
 });
-exports.handler.$id = "ace/keyboard/textarea";
+exports.handler["$id"] = "ace/keyboard/textarea";

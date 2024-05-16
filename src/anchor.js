@@ -1,78 +1,53 @@
 "use strict";
-
+/**
+ * @typedef {import("./document").Document} Document
+ */
 var oop = require("./lib/oop");
 var EventEmitter = require("./lib/event_emitter").EventEmitter;
 
 /**
- *
  * Defines a floating pointer in the document. Whenever text is inserted or deleted before the cursor, the position of the anchor is updated.
- *
- * @class Anchor
  **/
+class Anchor {
+    /**
+     * Creates a new `Anchor` and associates it with a document.
+     *
+     * @param {Document} doc The document to associate with the anchor
+     * @param {Number|import("../ace-internal").Ace.Point} row The starting row position
+     * @param {Number} [column] The starting column position
+     **/
+    constructor(doc, row, column) {
+        this.$onChange = this.onChange.bind(this);
+        this.attach(doc);
 
-/**
- * Creates a new `Anchor` and associates it with a document.
- *
- * @param {Document} doc The document to associate with the anchor
- * @param {Number} row The starting row position
- * @param {Number} column The starting column position
- *
- * @constructor
- **/
-
-var Anchor = exports.Anchor = function(doc, row, column) {
-    this.$onChange = this.onChange.bind(this);
-    this.attach(doc);
+        if (typeof row != "number")
+            this.setPosition(row.row, row.column);
+        else
+            this.setPosition(row, column);
+    }
     
-    if (typeof column == "undefined")
-        this.setPosition(row.row, row.column);
-    else
-        this.setPosition(row, column);
-};
-
-(function() {
-
-    oop.implement(this, EventEmitter);
-
     /**
      * Returns an object identifying the `row` and `column` position of the current anchor.
-     * @returns {Ace.Point}
+     * @returns {import("../ace-internal").Ace.Point}
      **/
-    this.getPosition = function() {
+    getPosition() {
         return this.$clipPositionToDocument(this.row, this.column);
-    };
+    }
 
     /**
      *
      * Returns the current document.
      * @returns {Document}
      **/
-    this.getDocument = function() {
+    getDocument() {
         return this.document;
-    };
-
-    /**
-     * experimental: allows anchor to stick to the next on the left
-     */
-    this.$insertRight = false;
-    /**
-     * Fires whenever the anchor position changes.
-     *
-     * Both of these objects have a `row` and `column` property corresponding to the position.
-     *
-     * Events that can trigger this function include [[Anchor.setPosition `setPosition()`]].
-     *
-     * @event change
-     * @param {Object} e  An object containing information about the anchor position. It has two properties:
-     *  - `old`: An object describing the old Anchor position
-     *  - `value`: An object describing the new Anchor position
-     *
-     **/
+    }
+    
     /**
      * Internal function called when `"change"` event fired.
-     * @param {Ace.Delta} delta
+     * @param {import("../ace-internal").Ace.Delta} delta
      */
-    this.onChange = function(delta) {
+    onChange(delta) {
         if (delta.start.row == delta.end.row && delta.start.row != this.row)
             return;
 
@@ -81,54 +56,15 @@ var Anchor = exports.Anchor = function(doc, row, column) {
             
         var point = $getTransformedPoint(delta, {row: this.row, column: this.column}, this.$insertRight);
         this.setPosition(point.row, point.column, true);
-    };
-    
-    function $pointsInOrder(point1, point2, equalPointsInOrder) {
-        var bColIsAfter = equalPointsInOrder ? point1.column <= point2.column : point1.column < point2.column;
-        return (point1.row < point2.row) || (point1.row == point2.row && bColIsAfter);
-    }
-            
-    function $getTransformedPoint(delta, point, moveIfEqual) {
-        // Get delta info.
-        var deltaIsInsert = delta.action == "insert";
-        var deltaRowShift = (deltaIsInsert ? 1 : -1) * (delta.end.row    - delta.start.row);
-        var deltaColShift = (deltaIsInsert ? 1 : -1) * (delta.end.column - delta.start.column);
-        var deltaStart = delta.start;
-        var deltaEnd = deltaIsInsert ? deltaStart : delta.end; // Collapse insert range.
-        
-        // DELTA AFTER POINT: No change needed.
-        if ($pointsInOrder(point, deltaStart, moveIfEqual)) {
-            return {
-                row: point.row,
-                column: point.column
-            };
-        }
-        
-        // DELTA BEFORE POINT: Move point by delta shift.
-        if ($pointsInOrder(deltaEnd, point, !moveIfEqual)) {
-            return {
-                row: point.row + deltaRowShift,
-                column: point.column + (point.row == deltaEnd.row ? deltaColShift : 0)
-            };
-        }
-        
-        // DELTA ENVELOPS POINT (delete only): Move point to delta start.
-        // TODO warn if delta.action != "remove" ?
-        
-        return {
-            row: deltaStart.row,
-            column: deltaStart.column
-        };
     }
 
     /**
      * Sets the anchor position to the specified row and column. If `noClip` is `true`, the position is not clipped.
      * @param {Number} row The row index to move the anchor to
      * @param {Number} column The column index to move the anchor to
-     * @param {Boolean} noClip Identifies if you want the position to be clipped
-     *
+     * @param {Boolean} [noClip] Identifies if you want the position to be clipped
      **/
-    this.setPosition = function(row, column, noClip) {
+    setPosition(row, column, noClip) {
         var pos;
         if (noClip) {
             pos = {
@@ -153,34 +89,35 @@ var Anchor = exports.Anchor = function(doc, row, column) {
             old: old,
             value: pos
         });
-    };
+    }
 
     /**
      * When called, the `"change"` event listener is removed.
      *
      **/
-    this.detach = function() {
+    detach() {
         this.document.off("change", this.$onChange);
-    };
+    }
 
     /**
      * When called, the `"change"` event listener is appended.
      * @param {Document} doc The document to associate with
      *
      **/
-    this.attach = function(doc) {
+    attach(doc) {
+        /**@type{Document}*/
         this.document = doc || this.document;
         this.document.on("change", this.$onChange);
-    };
+    }
 
     /**
      * Clips the anchor position to the specified row and column.
      * @param {Number} row The row index to clip the anchor to
      * @param {Number} column The column index to clip the anchor to
-     * @returns {Ace.Point}
+     * @returns {import("../ace-internal").Ace.Point}
      *
      **/
-    this.$clipPositionToDocument = function(row, column) {
+    $clipPositionToDocument(row, column) {
         var pos = {};
 
         if (row >= this.document.getLength()) {
@@ -200,6 +137,52 @@ var Anchor = exports.Anchor = function(doc, row, column) {
             pos.column = 0;
 
         return pos;
-    };
+    }
+}
 
-}).call(Anchor.prototype);
+/**
+ * experimental: allows anchor to stick to the next on the left
+ */
+Anchor.prototype.$insertRight = false;
+
+oop.implement(Anchor.prototype, EventEmitter);
+
+function $pointsInOrder(point1, point2, equalPointsInOrder) {
+    var bColIsAfter = equalPointsInOrder ? point1.column <= point2.column : point1.column < point2.column;
+    return (point1.row < point2.row) || (point1.row == point2.row && bColIsAfter);
+}
+
+function $getTransformedPoint(delta, point, moveIfEqual) {
+    // Get delta info.
+    var deltaIsInsert = delta.action == "insert";
+    var deltaRowShift = (deltaIsInsert ? 1 : -1) * (delta.end.row    - delta.start.row);
+    var deltaColShift = (deltaIsInsert ? 1 : -1) * (delta.end.column - delta.start.column);
+    var deltaStart = delta.start;
+    var deltaEnd = deltaIsInsert ? deltaStart : delta.end; // Collapse insert range.
+
+    // DELTA AFTER POINT: No change needed.
+    if ($pointsInOrder(point, deltaStart, moveIfEqual)) {
+        return {
+            row: point.row,
+            column: point.column
+        };
+    }
+
+    // DELTA BEFORE POINT: Move point by delta shift.
+    if ($pointsInOrder(deltaEnd, point, !moveIfEqual)) {
+        return {
+            row: point.row + deltaRowShift,
+            column: point.column + (point.row == deltaEnd.row ? deltaColShift : 0)
+        };
+    }
+
+    // DELTA ENVELOPS POINT (delete only): Move point to delta start.
+    // TODO warn if delta.action != "remove" ?
+
+    return {
+        row: deltaStart.row,
+        column: deltaStart.column
+    };
+}
+
+exports.Anchor = Anchor;

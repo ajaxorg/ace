@@ -1,14 +1,12 @@
 /**
  * The main class required to set up an Ace instance in the browser.
  *
- * @class Ace
+ * @namespace Ace
  **/
-
 "use strict";
 "include loader_build";
 
 var dom = require("./lib/dom");
-var event = require("./lib/event");
 
 var Range = require("./range").Range;
 var Editor = require("./editor").Editor;
@@ -30,9 +28,9 @@ exports.config = require("./config");
 
 /**
  * Embeds the Ace editor into the DOM, at the element provided by `el`.
- * @param {String | Element} el Either the id of an element, or the element itself
- * @param {Object } options Options for the editor
- *
+ * @param {String | HTMLElement & {env?, value?}} el Either the id of an element, or the element itself
+ * @param {Object } [options] Options for the editor
+ * @returns {Editor}
  **/
 exports.edit = function(el, options) {
     if (typeof el == "string") {
@@ -57,7 +55,6 @@ exports.edit = function(el, options) {
     }
 
     var doc = exports.createEditSession(value);
-
     var editor = new Editor(new Renderer(el), doc, options);
 
     var env = {
@@ -66,9 +63,7 @@ exports.edit = function(el, options) {
         onResize: editor.resize.bind(editor, null)
     };
     if (oldNode) env.textarea = oldNode;
-    event.addListener(window, "resize", env.onResize);
     editor.on("destroy", function() {
-        event.removeListener(window, "resize", env.onResize);
         env.editor.container.env = null; // prevent memory leak on old ie
     });
     editor.container.env = editor.env = env;
@@ -77,9 +72,9 @@ exports.edit = function(el, options) {
 
 /**
  * Creates a new [[EditSession]], and returns the associated [[Document]].
- * @param {Document | String} text {:textParam}
- * @param {TextMode} mode {:modeParam}
- *
+ * @param {import('./document').Document | String} text {:textParam}
+ * @param {import("../ace-internal").Ace.SyntaxMode} [mode] {:modeParam}
+ * @returns {EditSession}
  **/
 exports.createEditSession = function(text, mode) {
     var doc = new EditSession(text, mode);

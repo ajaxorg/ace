@@ -662,18 +662,27 @@
   ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    ["jsx",1],
-  ["string","1 "],
+  [
+    "string.xml",
+    "1 "
+  ],
   ["meta.tag.punctuation.tag-open.xml","<"],
   ["meta.tag.tag-name.xml","a"],
   ["meta.tag.punctuation.tag-close.xml",">"],
-  ["string"," "],
+  [
+    "string.xml",
+    " "
+  ],
   ["paren.quasi.start","{"],
   ["text"," "],
   ["keyword.operator","++"],
   ["identifier","x"],
   ["text","  "],
   ["paren.quasi.end","}"],
-  ["string"," "],
+  [
+    "string.xml",
+    " "
+  ],
   ["meta.tag.punctuation.end-tag-open.xml","</"],
   ["meta.tag.tag-name.xml","a"],
   ["meta.tag.punctuation.tag-close.xml",">"]

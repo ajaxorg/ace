@@ -3,6 +3,13 @@
 var useragent = require("./useragent"); 
 var XHTML_NS = "http://www.w3.org/1999/xhtml";
 
+/**
+ * 
+ * @param {any} arr
+ * @param {HTMLElement} [parent]
+ * @param [refs]
+ * @returns {HTMLElement | Text | any[]} 
+ */
 exports.buildDom = function buildDom(arr, parent, refs) {
     if (typeof arr == "string" && arr) {
         var txt = document.createTextNode(arr);
@@ -53,39 +60,71 @@ exports.buildDom = function buildDom(arr, parent, refs) {
     return el;
 };
 
+/**
+ * 
+ * @param {Document} [doc]
+ * @returns {HTMLHeadElement|HTMLElement}
+ */
 exports.getDocumentHead = function(doc) {
     if (!doc)
         doc = document;
     return doc.head || doc.getElementsByTagName("head")[0] || doc.documentElement;
 };
 
+
+/**
+ * @template {keyof HTMLElementTagNameMap} T
+ * @param {T | string} tag
+ * @param {string} [ns]
+ * @returns {HTMLElementTagNameMap[T]}
+ */
 exports.createElement = function(tag, ns) {
+    // @ts-ignore
     return document.createElementNS ?
             document.createElementNS(ns || XHTML_NS, tag) :
             document.createElement(tag);
 };
 
+/**
+ * @param {HTMLElement} element
+ */
 exports.removeChildren = function(element) {
     element.innerHTML = "";
 };
 
+/**
+ * @param {string} textContent
+ * @param {HTMLElement} [element]
+ * @returns {Text}
+ */
 exports.createTextNode = function(textContent, element) {
     var doc = element ? element.ownerDocument : document;
     return doc.createTextNode(textContent);
 };
 
+/**
+ * @param {HTMLElement} [element]
+ * @returns {DocumentFragment}
+ */
 exports.createFragment = function(element) {
     var doc = element ? element.ownerDocument : document;
     return doc.createDocumentFragment();
 };
 
+/**
+ * @param {HTMLElement} el
+ * @param {string} name
+ * @returns {boolean}
+ */
 exports.hasCssClass = function(el, name) {
     var classes = (el.className + "").split(/\s+/g);
     return classes.indexOf(name) !== -1;
 };
 
-/*
-* Add a CSS class to the list of classes on the given node
+/**
+ * Add a CSS class to the list of classes on the given node
+ * @param {HTMLElement} el
+ * @param {string} name
 */
 exports.addCssClass = function(el, name) {
     if (!exports.hasCssClass(el, name)) {
@@ -93,9 +132,11 @@ exports.addCssClass = function(el, name) {
     }
 };
 
-/*
-* Remove a CSS class from the list of classes on the given node
-*/
+/**
+ * Remove a CSS class from the list of classes on the given node
+ * @param {HTMLElement} el
+ * @param {string} name
+ */
 exports.removeCssClass = function(el, name) {
     var classes = el.className.split(/\s+/g);
     while (true) {
@@ -108,6 +149,11 @@ exports.removeCssClass = function(el, name) {
     el.className = classes.join(" ");
 };
 
+/**
+ * @param {HTMLElement} el
+ * @param {string} name
+ * @returns {boolean}
+ */
 exports.toggleCssClass = function(el, name) {
     var classes = el.className.split(/\s+/g), add = true;
     while (true) {
@@ -125,11 +171,13 @@ exports.toggleCssClass = function(el, name) {
     return add;
 };
 
-
-/*
-    * Add or remove a CSS class from the list of classes on the given node
-    * depending on the value of <tt>include</tt>
-    */
+/**
+ * Add or remove a CSS class from the list of classes on the given node
+ * depending on the value of <tt>include</tt>
+ * @param {HTMLElement} node
+ * @param {string} className
+ * @param {boolean} include
+ */
 exports.setCssClass = function(node, className, include) {
     if (include) {
         exports.addCssClass(node, className);
@@ -138,6 +186,11 @@ exports.setCssClass = function(node, className, include) {
     }
 };
 
+/**
+ * @param {string} id
+ * @param {Document} [doc]
+ * @returns {boolean}
+ */
 exports.hasCssString = function(id, doc) {
     var index = 0, sheets;
     doc = doc || document;
@@ -150,6 +203,10 @@ exports.hasCssString = function(id, doc) {
     }
 };
 
+/**
+ * @param {string} id
+ * @param {Document} [doc]
+ */
 exports.removeElementById = function(id, doc) {
     doc = doc || document;
     if(doc.getElementById(id)) {
@@ -214,9 +271,18 @@ function importCssString(cssText, id, target) {
 }
 exports.importCssString = importCssString;
 
+/**
+ * @param {string} uri
+ * @param {Document} [doc]
+ */
 exports.importCssStylsheet = function(uri, doc) {
     exports.buildDom(["link", {rel: "stylesheet", href: uri}], exports.getDocumentHead(doc));
 };
+
+/**
+ * @param {Document} [doc]
+ * @returns {number}
+ */
 exports.scrollbarWidth = function(doc) {
     var inner = exports.createElement("ace_inner");
     inner.style.width = "100%";
@@ -256,10 +322,21 @@ exports.scrollbarWidth = function(doc) {
     return noScrollbar - withScrollbar;
 };
 
+/**
+ * @param {Element} element
+ * @param [style]
+ * @returns {Partial<CSSStyleDeclaration>}
+ */
 exports.computedStyle = function(element, style) {
     return window.getComputedStyle(element, "") || {};
 };
 
+/**
+ * 
+ * @param {CSSStyleDeclaration} styles
+ * @param {string} property
+ * @param {string} value
+ */
 exports.setStyle = function(styles, property, value) {
     if (styles[property] !== value) {
         //console.log("set style", property, styles[property], value);

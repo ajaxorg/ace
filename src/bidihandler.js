@@ -1,4 +1,7 @@
 "use strict";
+/**
+ * @typedef {import("./edit_session").EditSession} EditSession
+ */
 
 var bidiUtil = require("./lib/bidiutil");
 var lang = require("./lib/lang");
@@ -7,49 +10,45 @@ var bidiRE = /[\u0590-\u05f4\u0600-\u06ff\u0700-\u08ac\u202B]/;
 /**
  * This object is used to ensure Bi-Directional support (for languages with text flowing from right to left, like Arabic or Hebrew)
  * including correct caret positioning, text selection mouse and keyboard arrows functioning
- * @class BidiHandler
  **/
-
-/**
- * Creates a new `BidiHandler` object
- * @param {EditSession} session The session to use
- *
- * @constructor
- **/
-var BidiHandler = function(session) {
-    this.session = session;
-    this.bidiMap = {};
-    /* current screen row */
-    this.currentRow = null;
-    this.bidiUtil = bidiUtil;
-    /* Arabic/Hebrew character width differs from regular character width */
-    this.charWidths = [];
-    this.EOL = "\xAC";
-    this.showInvisibles = true;
-    this.isRtlDir = false;
-    this.$isRtl = false;
-    this.line = "";
-    this.wrapIndent = 0;
-    this.EOF = "\xB6";
-    this.RLE = "\u202B";
-    this.contentWidth = 0;
-    this.fontMetrics = null;
-    this.rtlLineOffset = 0;
-    this.wrapOffset = 0;
-    this.isMoveLeftOperation = false;
-    this.seenBidi = bidiRE.test(session.getValue());
-};
-
-(function() {
+class BidiHandler {
+    /**
+     * Creates a new `BidiHandler` object
+     * @param {EditSession} session The session to use
+     **/
+    constructor(session) {
+        this.session = session;
+        this.bidiMap = {};
+        /* current screen row */
+        this.currentRow = null;
+        this.bidiUtil = bidiUtil;
+        /* Arabic/Hebrew character width differs from regular character width */
+        this.charWidths = [];
+        this.EOL = "\xAC";
+        this.showInvisibles = true;
+        this.isRtlDir = false;
+        this.$isRtl = false;
+        this.line = "";
+        this.wrapIndent = 0;
+        this.EOF = "\xB6";
+        this.RLE = "\u202B";
+        this.contentWidth = 0;
+        this.fontMetrics = null;
+        this.rtlLineOffset = 0;
+        this.wrapOffset = 0;
+        this.isMoveLeftOperation = false;
+        this.seenBidi = bidiRE.test(session.getValue());
+    }
+    
     /**
      * Returns 'true' if row contains Bidi characters, in such case
      * creates Bidi map to be used in operations related to selection
      * (keyboard arrays, mouse click, select)
-     * @param {Number} the screen row to be checked
-     * @param {Number} the document row to be checked [optional]
-     * @param {Number} the wrapped screen line index [ optional]
+     * @param {Number} screenRow the screen row to be checked
+     * @param {Number} [docRow] the document row to be checked [optional]
+     * @param {Number} [splitIndex] the wrapped screen line index [ optional]
     **/
-    this.isBidiRow = function(screenRow, docRow, splitIndex) {
+    isBidiRow(screenRow, docRow, splitIndex) {
         if (!this.seenBidi)
             return false;
         if (screenRow !== this.currentRow) {
@@ -58,9 +57,9 @@ var BidiHandler = function(session) {
             this.updateBidiMap();
         }
         return this.bidiMap.bidiLevels;
-    };
+    }
 
-    this.onChange = function(delta) {
+    onChange(delta) {
         if (!this.seenBidi) {
             if (delta.action == "insert" && bidiRE.test(delta.lines.join("\n"))) {
                 this.seenBidi = true;
@@ -70,9 +69,9 @@ var BidiHandler = function(session) {
         else {
             this.currentRow = null;
         }
-    };
+    }
 
-    this.getDocumentRow = function() {
+    getDocumentRow() {
         var docRow = 0;
         var rowCache = this.session.$screenRowCache;
         if (rowCache.length) {
@@ -82,9 +81,9 @@ var BidiHandler = function(session) {
         }
 
         return docRow;
-    };
+    }
 
-    this.getSplitIndex = function() {
+    getSplitIndex() {
         var splitIndex = 0;
         var rowCache = this.session.$screenRowCache;
         if (rowCache.length) {
@@ -102,9 +101,9 @@ var BidiHandler = function(session) {
         }
 
         return splitIndex;
-    };
+    }
 
-    this.updateRowLine = function(docRow, splitIndex) {
+    updateRowLine(docRow, splitIndex) {
         if (docRow === undefined)
             docRow = this.getDocumentRow();
             
@@ -153,30 +152,30 @@ var BidiHandler = function(session) {
             this.fontMetrics.$main.textContent = (this.line.charAt(this.line.length - 1) == bidiUtil.DOT) ? this.line.substr(0, this.line.length - 1) : this.line;
             this.rtlLineOffset = this.contentWidth - this.fontMetrics.$main.getBoundingClientRect().width;
         }
-    };
+    }
     
-    this.updateBidiMap = function() {
+    updateBidiMap() {
         var textCharTypes = [];
         if (bidiUtil.hasBidiCharacters(this.line, textCharTypes) || this.isRtlDir) {
              this.bidiMap = bidiUtil.doBidiReorder(this.line, textCharTypes, this.isRtlDir);
         } else {
             this.bidiMap = {};
         }
-    };
+    }
 
     /**
      * Resets stored info related to current screen row
     **/
-    this.markAsDirty = function() {
+    markAsDirty() {
         this.currentRow = null;
-    };
+    }
 
     /**
      * Updates array of character widths
-     * @param {Object} font metrics
+     * @param {Object} fontMetrics metrics
      *
     **/
-    this.updateCharacterWidths = function(fontMetrics) {
+    updateCharacterWidths(fontMetrics) {
         if (this.characterWidth === fontMetrics.$characterSize.width)
             return;
 
@@ -190,30 +189,30 @@ var BidiHandler = function(session) {
         this.charWidths[bidiUtil.B] = this.charWidths[bidiUtil.RLE] = 0;
 
         this.currentRow = null;
-    };
+    }
 
-    this.setShowInvisibles = function(showInvisibles) {
+    setShowInvisibles(showInvisibles) {
         this.showInvisibles = showInvisibles;
         this.currentRow = null;
-    };
+    }
 
-    this.setEolChar = function(eolChar) {
+    setEolChar(eolChar) {
         this.EOL = eolChar; 
-    };
+    }
 
-    this.setContentWidth = function(width) {
+    setContentWidth(width) {
         this.contentWidth = width;
-    };
+    }
 
-    this.isRtlLine = function(row) {
+    isRtlLine(row) {
         if (this.$isRtl) return true;
         if (row != undefined)
             return (this.session.getLine(row).charAt(0) == this.RLE);
         else
             return this.isRtlDir; 
-    };
+    }
 
-    this.setRtlDirection = function(editor, isRtlDir) {
+    setRtlDirection(editor, isRtlDir) {
         var cursor = editor.getCursorPosition(); 
         for (var row = editor.selection.getSelectionAnchor().row; row <= cursor.row; row++) {
             if (!isRtlDir && editor.session.getLine(row).charAt(0) === editor.session.$bidiHandler.RLE)
@@ -221,7 +220,7 @@ var BidiHandler = function(session) {
             else if (isRtlDir && editor.session.getLine(row).charAt(0) !== editor.session.$bidiHandler.RLE)
                 editor.session.doc.insert({column: 0, row: row}, editor.session.$bidiHandler.RLE);
         }
-    };
+    }
 
 
     /**
@@ -230,7 +229,7 @@ var BidiHandler = function(session) {
      *
      * @return {Number} horizontal pixel offset of given screen column
      **/
-    this.getPosLeft = function(col) {
+    getPosLeft(col) {
         col -= this.wrapIndent;
         var leftBoundary = (this.line.charAt(0) === this.RLE) ? 1 : 0;
         var logicalIdx = (col > leftBoundary) ? (this.session.getOverwrite() ? col : col - 1) : leftBoundary;
@@ -254,7 +253,7 @@ var BidiHandler = function(session) {
             left += this.rtlLineOffset;
 
         return left;
-    };
+    }
 
     /**
      * Returns 'selections' - array of objects defining set of selection rectangles
@@ -263,7 +262,7 @@ var BidiHandler = function(session) {
      *
      * @return {Object[]} Each object contains 'left' and 'width' values defining selection rectangle.
     **/
-    this.getSelections = function(startCol, endCol) {
+    getSelections(startCol, endCol) {
         var map = this.bidiMap, levels = map.bidiLevels, level, selections = [], offset = 0,
             selColMin = Math.min(startCol, endCol) - this.wrapIndent, selColMax = Math.max(startCol, endCol) - this.wrapIndent,
                 isSelected = false, isSelectedPrev = false, selectionStart = 0;
@@ -294,7 +293,7 @@ var BidiHandler = function(session) {
             }
         }
         return selections;
-    };
+    }
 
     /**
      * Converts character coordinates on the screen to respective document column number
@@ -302,7 +301,7 @@ var BidiHandler = function(session) {
      *
      * @return {Number} screen column number corresponding to given pixel offset
     **/
-    this.offsetToCol = function(posX) {
+    offsetToCol(posX) {
         if(this.isRtlDir)
             posX -= this.rtlLineOffset;
 
@@ -352,8 +351,8 @@ var BidiHandler = function(session) {
             logicalIdx++;
 
         return (logicalIdx + this.wrapIndent);
-    };
+    }
 
-}).call(BidiHandler.prototype);
+}
 
 exports.BidiHandler = BidiHandler;

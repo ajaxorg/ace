@@ -1,30 +1,49 @@
 "use strict";
-
+/**
+ * @typedef {import("../edit_session").EditSession} EditSession
+ * @typedef {import("../../ace-internal").Ace.LayerConfig} LayerConfig
+ */
 var Range = require("../range").Range;
 var dom = require("../lib/dom");
 
-var Marker = function(parentEl) {
-    this.element = dom.createElement("div");
-    this.element.className = "ace_layer ace_marker-layer";
-    parentEl.appendChild(this.element);
-};
 
-(function() {
+class Marker {
+    /**
+     * @param {HTMLElement} parentEl
+     */
+    constructor(parentEl) {
+        this.element = dom.createElement("div");
+        this.element.className = "ace_layer ace_marker-layer";
+        parentEl.appendChild(this.element);
+    }
 
-    this.$padding = 0;
-
-    this.setPadding = function(padding) {
+    /**
+     * @param {number} padding
+     */
+    setPadding(padding) {
         this.$padding = padding;
-    };
-    this.setSession = function(session) {
+    }
+
+    /**
+     * @param {EditSession} session
+     */
+    setSession(session) {
         this.session = session;
-    };
-    
-    this.setMarkers = function(markers) {
+    }
+
+    /**
+     * @param {{ [x: number]: import("../../ace-internal").Ace.MarkerLike; }} markers
+     */
+    setMarkers(markers) {
         this.markers = markers;
-    };
-    
-    this.elt = function(className, css) {
+    }
+
+    /**
+     * @param {string} className
+     * @param {string} css
+     */
+    elt(className, css) {
+        /**@type {any}*/
         var x = this.i != -1 && this.element.childNodes[this.i];
         if (!x) {
             x = document.createElement("div");
@@ -35,9 +54,12 @@ var Marker = function(parentEl) {
         }
         x.style.cssText = css;
         x.className = className;
-    };
+    }
 
-    this.update = function(config) {
+    /**
+     * @param {LayerConfig} config
+     */
+    update(config) {
         if (!config) return;
 
         this.config = config;
@@ -77,17 +99,26 @@ var Marker = function(parentEl) {
             while (this.i < this.element.childElementCount)
                 this.element.removeChild(this.element.lastChild);
         }
-    };
-
-    this.$getTop = function(row, layerConfig) {
-        return (row - layerConfig.firstRowScreen) * layerConfig.lineHeight;
-    };
-
-    function getBorderClass(tl, tr, br, bl) {
-        return (tl ? 1 : 0) | (tr ? 2 : 0) | (br ? 4 : 0) | (bl ? 8 : 0);
     }
+
+    /**
+     * @param {number} row
+     * @param {Partial<LayerConfig>} layerConfig
+     */
+    $getTop(row, layerConfig) {
+        return (row - layerConfig.firstRowScreen) * layerConfig.lineHeight;
+    }
+
+
     // Draws a marker, which spans a range of text on multiple lines 
-    this.drawTextMarker = function(stringBuilder, range, clazz, layerConfig, extraStyle) {
+    /**
+     * @param {undefined} stringBuilder
+     * @param {Range} range
+     * @param {string} clazz
+     * @param {Partial<LayerConfig>} layerConfig
+     * @param {string} [extraStyle]
+     */
+    drawTextMarker(stringBuilder, range, clazz, layerConfig, extraStyle) {
         var session = this.session;
         var start = range.start.row;
         var end = range.end.row;
@@ -108,10 +139,17 @@ var Marker = function(parentEl) {
                     + getBorderClass(row == start || row == start + 1 && range.start.column, prev < curr, curr > next, row == end),
                 layerConfig, row == end ? 0 : 1, extraStyle);
         }
-    };
+    }
 
     // Draws a multi line marker, where lines span the full width
-    this.drawMultiLineMarker = function(stringBuilder, range, clazz, config, extraStyle) {
+    /**
+     * @param {undefined} stringBuilder
+     * @param {Range} range
+     * @param {string} clazz
+     * @param {LayerConfig} config
+     * @param {string} [extraStyle]
+     */
+    drawMultiLineMarker(stringBuilder, range, clazz, config, extraStyle) {
         // from selection start to the end of the line
         var padding = this.$padding;
         var height = config.lineHeight;
@@ -163,10 +201,18 @@ var Marker = function(parentEl) {
             "top:"+ top+ "px;"+
             "left:"+ padding+ "px;"+ (extraStyle || "")
         );
-    };
+    }
 
     // Draws a marker which covers part or whole width of a single screen line
-    this.drawSingleLineMarker = function(stringBuilder, range, clazz, config, extraLength, extraStyle) {
+    /**
+     * @param {undefined} stringBuilder
+     * @param {Range} range
+     * @param {string} clazz
+     * @param {Partial<LayerConfig>} config
+     * @param {number} [extraLength]
+     * @param {string} [extraStyle]
+     */
+    drawSingleLineMarker(stringBuilder, range, clazz, config, extraLength, extraStyle) {
         if (this.session.$bidiHandler.isBidiRow(range.start.row))
             return this.drawBidiSingleLineMarker(stringBuilder, range, clazz, config, extraLength, extraStyle);
         var height = config.lineHeight;
@@ -182,10 +228,18 @@ var Marker = function(parentEl) {
             "top:"+ top+ "px;"+
             "left:"+ left+ "px;"+ (extraStyle || "")
         );
-    };
+    }
 
     // Draws Bidi marker which covers part or whole width of a single screen line
-    this.drawBidiSingleLineMarker = function(stringBuilder, range, clazz, config, extraLength, extraStyle) {
+    /**
+     * @param {undefined} stringBuilder
+     * @param {Range} range
+     * @param {string} clazz
+     * @param {Partial<LayerConfig>} config
+     * @param {number} extraLength
+     * @param {string} extraStyle
+     */
+    drawBidiSingleLineMarker(stringBuilder, range, clazz, config, extraLength, extraStyle) {
         var height = config.lineHeight, top = this.$getTop(range.start.row, config), padding = this.$padding;
         var selections = this.session.$bidiHandler.getSelections(range.start.column, range.end.column);
 
@@ -198,9 +252,16 @@ var Marker = function(parentEl) {
                 "left:" + (padding + selection.left) + "px;" + (extraStyle || "")
             );
         }, this);
-    };
+    }
 
-    this.drawFullLineMarker = function(stringBuilder, range, clazz, config, extraStyle) {
+    /**
+     * @param {undefined} stringBuilder
+     * @param {Range} range
+     * @param {string} clazz
+     * @param {Partial<LayerConfig>} config
+     * @param {undefined} [extraStyle]
+     */
+    drawFullLineMarker(stringBuilder, range, clazz, config, extraStyle) {
         var top = this.$getTop(range.start.row, config);
         var height = config.lineHeight;
         if (range.start.row != range.end.row)
@@ -212,9 +273,16 @@ var Marker = function(parentEl) {
             "top:"+ top+ "px;"+
             "left:0;right:0;"+ (extraStyle || "")
         );
-    };
-    
-    this.drawScreenLineMarker = function(stringBuilder, range, clazz, config, extraStyle) {
+    }
+
+    /**
+     * @param {undefined} stringBuilder
+     * @param {Range} range
+     * @param {string} clazz
+     * @param {Partial<LayerConfig>} config
+     * @param {undefined} [extraStyle]
+     */
+    drawScreenLineMarker(stringBuilder, range, clazz, config, extraStyle) {
         var top = this.$getTop(range.start.row, config);
         var height = config.lineHeight;
 
@@ -224,8 +292,14 @@ var Marker = function(parentEl) {
             "top:"+ top+ "px;"+
             "left:0;right:0;"+ (extraStyle || "")
         );
-    };
+    }
 
-}).call(Marker.prototype);
+}
+
+Marker.prototype.$padding = 0;
+
+function getBorderClass(tl, tr, br, bl) {
+    return (tl ? 1 : 0) | (tr ? 2 : 0) | (br ? 4 : 0) | (bl ? 8 : 0);
+}
 
 exports.Marker = Marker;

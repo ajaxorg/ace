@@ -1,4 +1,8 @@
-// commands to enter multiselect mode
+
+/**
+ * commands to enter multiselect mode
+ * @type {import("../../ace-internal").Ace.Command[]}
+ */
 exports.defaultCommands = [{
     name: "addCursorAbove",
     description: "Add cursor above",
@@ -57,7 +61,7 @@ exports.defaultCommands = [{
     readOnly: true
 }, {
     name: "toggleSplitSelectionIntoLines",
-    description: "Split into lines",
+    description: "Split selection into lines",
     exec: function(editor) {
         if (editor.multiSelect.rangeCount > 1)
             editor.multiSelect.joinSelections();
@@ -86,7 +90,10 @@ exports.defaultCommands = [{
     readOnly: true
 }];
 
-// commands active only in multiselect mode
+/**
+ * commands active only in multiselect mode
+ * @type {import("../../ace-internal").Ace.Command[]}
+ */
 exports.multiSelectCommands = [{
     name: "singleSelection",
     description: "Single selection",

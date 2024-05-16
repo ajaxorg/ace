@@ -1,11 +1,19 @@
 "use strict";
-
+/**
+ * @typedef {import("../edit_session").EditSession} EditSession
+ * @typedef {import("../edit_session").Point} Point
+ */
 var TokenIterator = require("../token_iterator").TokenIterator;
 var Range = require("../range").Range;
 
-
 function BracketMatch() {
 
+    /**
+     * 
+     * @param {Point} position
+     * @param {string} [chr]
+     * @this {EditSession}
+     */
     this.findMatchingBracket = function(position, chr) {
         if (position.column == 0) return null;
 
@@ -21,7 +29,12 @@ function BracketMatch() {
         else
             return this.$findOpeningBracket(match[2], position);
     };
-    
+
+    /**
+     * @param {Point} pos
+     * @return {null|Range}
+     * @this {EditSession}
+     */
     this.getBracketRange = function(pos) {
         var line = this.getLine(pos.row);
         var before = true, range;
@@ -71,6 +84,7 @@ function BracketMatch() {
      * @param {Point} pos
      * @param {boolean} [isBackwards]
      * @returns {null|Range[]}
+     * @this {EditSession}
      */
     this.getMatchingBracketRanges = function(pos, isBackwards) {
         var line = this.getLine(pos.row);
@@ -110,6 +124,14 @@ function BracketMatch() {
         ">": "<"
     };
 
+    /**
+     * 
+     * @param {string} bracket
+     * @param {Point} position
+     * @param {RegExp} [typeRe]
+     * @return {Point|null}
+     * @this {EditSession}
+     */
     this.$findOpeningBracket = function(bracket, position, typeRe) {
         var openBracket = this.$brackets[bracket];
         var depth = 1;
@@ -126,6 +148,7 @@ function BracketMatch() {
                 "(\\.?" +
                 token.type.replace(".", "\\.").replace("rparen", ".paren")
                     .replace(/\b(?:end)\b/, "(?:start|begin|end)")
+                    .replace(/-close\b/, "-(close|open)")
                 + ")+"
             );
         }
@@ -167,6 +190,14 @@ function BracketMatch() {
         return null;
     };
 
+    /**
+     *
+     * @param {string} bracket
+     * @param {Point} position
+     * @param {RegExp} [typeRe]
+     * @return {Point|null}
+     * @this {EditSession}
+     */
     this.$findClosingBracket = function(bracket, position, typeRe) {
         var closingBracket = this.$brackets[bracket];
         var depth = 1;
@@ -183,6 +214,7 @@ function BracketMatch() {
                 "(\\.?" +
                 token.type.replace(".", "\\.").replace("lparen", ".paren")
                     .replace(/\b(?:start|begin)\b/, "(?:start|begin|end)")
+                    .replace(/-open\b/, "-(close|open)")
                 + ")+"
             );
         }
@@ -226,8 +258,9 @@ function BracketMatch() {
 
     /**
      * Returns [[Range]]'s for matching tags and tag names, if there are any
-     * @param {Position} pos
+     * @param {Point} pos
      * @returns {{closeTag: Range, closeTagName: Range, openTag: Range, openTagName: Range} | undefined}
+     * @this {EditSession}
      */
     this.getMatchingTags = function (pos) {
         var iterator = new TokenIterator(this, pos.row, pos.column);
@@ -282,6 +315,12 @@ function BracketMatch() {
         var foundOpenTagEnd = false;
         do {
             prevToken = token;
+            if (prevToken.type.indexOf('tag-close') !== -1 && !foundOpenTagEnd) {
+                var openTagEnd = new Range(iterator.getCurrentTokenRow(), iterator.getCurrentTokenColumn(),
+                    iterator.getCurrentTokenRow(), iterator.getCurrentTokenColumn() + 1
+                ); //Range for `>`
+                foundOpenTagEnd = true;
+            }
             token = iterator.stepForward();
             if (token) {
                 if (token.value === '>' && !foundOpenTagEnd) {
@@ -309,7 +348,9 @@ function BracketMatch() {
                                     iterator.getCurrentTokenColumn(), iterator.getCurrentTokenRow(),
                                     iterator.getCurrentTokenColumn() + token.value.length
                                 );
-                                token = iterator.stepForward();
+                                if (token.type.indexOf('tag-close') === -1) {
+                                    token = iterator.stepForward();
+                                }
                                 if (token && token.value === '>') {
                                     var closeTagEnd = new Range(iterator.getCurrentTokenRow(),
                                         iterator.getCurrentTokenColumn(), iterator.getCurrentTokenRow(),
@@ -373,7 +414,10 @@ function BracketMatch() {
         var closeTagName = new Range(iterator.getCurrentTokenRow(), iterator.getCurrentTokenColumn(),
             iterator.getCurrentTokenRow(), iterator.getCurrentTokenColumn() + token.value.length
         );
-        token = iterator.stepForward();
+
+        if (token.type.indexOf('tag-close') === -1) {
+            token = iterator.stepForward();
+        }
         if (!token || token.value !== ">") return;
         var closeTagEnd = new Range(iterator.getCurrentTokenRow(), iterator.getCurrentTokenColumn(),
             iterator.getCurrentTokenRow(), iterator.getCurrentTokenColumn() + 1

@@ -12,6 +12,7 @@ function bindKey(win, mac) {
     multiSelectAction: "forEach"|"forEachLine"|function|undefined,
     scrollIntoView: true|"cursor"|"center"|"selectionPart"
 */
+/**@type {import("../../ace-internal").Ace.Command[]} */
 exports.commands = [{
     name: "showSettingsMenu",
     description: "Show settings menu",
@@ -28,7 +29,7 @@ exports.commands = [{
     description: "Go to next error",
     bindKey: bindKey("Alt-E", "F4"),
     exec: function(editor) {
-        config.loadModule("./ext/error_marker", function(module) {
+        config.loadModule("ace/ext/error_marker", function(module) {
             module.showErrorMarker(editor, 1);
         });
     },
@@ -39,7 +40,7 @@ exports.commands = [{
     description: "Go to previous error",
     bindKey: bindKey("Alt-Shift-E", "Shift-F4"),
     exec: function(editor) {
-        config.loadModule("./ext/error_marker", function(module) {
+        config.loadModule("ace/ext/error_marker", function(module) {
             module.showErrorMarker(editor, -1);
         });
     },
@@ -728,7 +729,6 @@ exports.commands = [{
     description: "Auto Indent",
     bindKey: bindKey(null, null),
     exec: function(editor) { editor.autoIndent(); },
-    multiSelectAction: "forEachLine",
     scrollIntoView: "animate"
 }, {
     name: "expandtoline",
@@ -855,6 +855,13 @@ exports.commands = [{
     scrollIntoView: "cursor"
 }, {
     name: "openCommandPallete",
+    exec: function(editor) {
+        console.warn("This is an obsolete command. Please use `openCommandPalette` instead.");
+        editor.prompt({ $type: "commands" });
+    },
+    readOnly: true
+}, {
+    name: "openCommandPalette",
     description: "Open command palette",
     bindKey: bindKey("F1", "F1"),
     exec: function(editor) {

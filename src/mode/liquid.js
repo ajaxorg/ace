@@ -1,24 +1,40 @@
 var oop = require("../lib/oop");
 var TextMode = require("./text").Mode;
 var HtmlMode = require("./html").Mode;
-var HtmlCompletions = require("./html_completions").HtmlCompletions;
-var LiquidBehaviour = require("./behaviour/liquid").LiquidBehaviour;
+var JavascriptMode = require("./javascript").Mode;
+var JsonMode = require("./json").Mode;
+var CssMode = require("./css").Mode;
 var LiquidHighlightRules = require("./liquid_highlight_rules").LiquidHighlightRules;
 var MatchingBraceOutdent = require("./matching_brace_outdent").MatchingBraceOutdent;
 
-var Mode = function() {
-    this.HighlightRules = LiquidHighlightRules;
-    this.$outdent = new MatchingBraceOutdent();
-    this.$behaviour = new LiquidBehaviour();
-    this.$completer = new HtmlCompletions();
+/* -------------------------------------------- */
+/* FOLDS                                        */
+/* -------------------------------------------- */
+
+var FoldMode = require("./folding/cstyle").FoldMode;
+
+/* -------------------------------------------- */
+/* MODE                                         */
+/* -------------------------------------------- */
+
+var Mode = function () {
+
+  JsonMode.call(this);
+  HtmlMode.call(this);
+  CssMode.call(this);
+  JavascriptMode.call(this);
+  this.HighlightRules = LiquidHighlightRules;
+  this.foldingRules = new FoldMode();
+
 };
+
 oop.inherits(Mode, TextMode);
 
-(function() {
-    // this.blockComment = {start: "{% comment %}", end: "{% endcomment %}"};
+(function () {
+
     this.blockComment = {start: "<!--", end: "-->"};
     this.voidElements = new HtmlMode().voidElements;
-    
+
     this.getNextLineIndent = function(state, line, tab) {
         var indent = this.$getIndent(line);
 
@@ -50,6 +66,7 @@ oop.inherits(Mode, TextMode);
 
     this.$id = "ace/mode/liquid";
     this.snippetFileId = "ace/snippets/liquid";
-}).call(Mode.prototype);
+
+}.call(Mode.prototype));
 
 exports.Mode = Mode;

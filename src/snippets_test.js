@@ -5,6 +5,7 @@ if (typeof process !== "undefined") {
 
 "use strict";
 var Editor = require("./editor").Editor;
+var EditSession = require("./edit_session").EditSession;
 var MockRenderer = require("./test/mockrenderer").MockRenderer;
 var JavascriptMode = require("./mode/javascript").Mode;
 require("./multi_select");
@@ -317,6 +318,23 @@ module.exports = {
         testTabstop(tabstops[4], "[5/3]> [5/3],[2/3]> [2/3]");
         testTabstop(tabstops[5], "[6/2]> [6/5]");
     },
+    "test: insert snippet inside snippet and check markers": function() {
+        var editor = this.editor;
+        editor.session.setValue("");
+        editor.insertSnippet("{$1}");
+
+        // check first snippet's marker
+        var snippetMarkers = Object.values(editor.session.$backMarkers).filter(function(i) {return i.clazz == "ace_snippet-marker";});
+        assert.jsonEquals(snippetMarkers[0].range.start, {row: 0, column: 2});
+        assert.jsonEquals(snippetMarkers[1].range.start, {row: 0, column: 1});
+
+        // check markers after insertion of the second snippet
+        editor.insertSnippet("\"examples\": [$1]");
+        snippetMarkers = Object.values(editor.session.$backMarkers).filter(function(i) {return i.clazz == "ace_snippet-marker";});
+        assert.equal(snippetMarkers.length, 2);
+        assert.jsonEquals(snippetMarkers[0].range.start, {row: 0, column: 15});
+        assert.jsonEquals(snippetMarkers[1].range.start, {row: 0, column: 14});
+    },
     "test: linking": function() {
         var editor = this.editor;
         editor.setOption("enableMultiselect", false);
@@ -328,6 +346,57 @@ module.exports = {
         this.editor.tabstopManager.tabNext();
         editor.execCommand("insertstring", ".");
         assert.equal(editor.getValue(), "qt qt qt.");
+    },
+    "test: should work as expected with object of Range interface": function () {
+        var content = "test";
+        this.editor.setValue("replace1");
+        snippetManager.insertSnippet(this.editor, content, {
+            start: {row: 0, column: 0}, end: {row: 0, column: 8}
+        });
+        assert.equal(this.editor.getValue(), "test");
+    },
+    "test: insert snippet without extra indentation": function() {
+        var editor = this.editor;
+        const options = {
+            excludeExtraIndent: true
+        };
+        const correctlyFormattedCode = [
+            "def multiply_with_random(array):",
+            "    for i in range(len(array)):",
+            "        array[i] *= random.randint(1, 10)",
+            "    return array"
+        ].join("\n");
+
+        editor.setValue("");
+        snippetManager.insertSnippet(this.editor, "def multiply_with_random(array):\n\t");
+        snippetManager.insertSnippet(this.editor, "for i in range(len(array)):\n\t\tarray[i] *= random.randint(1, 10)\n\treturn array");
+        assert.notEqual(editor.getValue(), correctlyFormattedCode);
+
+        editor.setValue("");
+        snippetManager.insertSnippet(this.editor, "def multiply_with_random(array):\n\t", options);
+        snippetManager.insertSnippet(this.editor, "for i in range(len(array)):\n\t\tarray[i] *= random.randint(1, 10)\n\treturn array", options);
+        assert.equal(editor.getValue(), correctlyFormattedCode);
+    },
+    
+    "test: snippets without multiselct": function() {
+        var session = new EditSession([]);
+        var editor = new Editor(new MockRenderer());
+        editor.setOption("enableMultiselect", false);
+        editor.setSession(session);
+
+        editor.insertSnippet("hello $1 world $1");
+        editor.onTextInput("!");
+        assert.equal(editor.getValue(), "hello ! world !");
+    },
+
+    "test: TabstopManager does not throw unhandled errors when session becomes `undefined`": function() {
+        var editor = new Editor(new MockRenderer());
+        var session = new EditSession("dummy content");
+        editor.setSession(session);
+        snippetManager.insertSnippet(editor, "snippet $1 with $2 tabstops");
+        assert.equal(session.$backMarkers[5].clazz, "ace_snippet-marker");
+        editor.setSession(undefined);
+        assert.equal(session.$backMarkers[5], undefined);
     }
 };
 

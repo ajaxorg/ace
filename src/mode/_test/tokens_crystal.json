@@ -1,0 +1,241 @@
+[[
+   "start",
+  ["comment","# crystal comment"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","require"],
+  ["text"," "],
+  ["string.start","\""],
+  ["string","llvm"],
+  ["string.end","\""]
+],[
+   "start"
+],[
+   "start",
+  ["support.class","NUM_CELLS"],
+  ["text","          "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","30000"]
+],[
+   "start",
+  ["support.class","CELL_SIZE_IN_BYTES"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text","     "],
+  ["constant.numeric","1"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","abstract"],
+  ["text"," "],
+  ["keyword","class"],
+  ["text"," "],
+  ["support.class","Instruction"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword","abstract"],
+  ["text"," "],
+  ["keyword","def"],
+  ["text"," "],
+  ["identifier","compile"],
+  ["paren.lparen","("],
+  ["identifier","program"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["identifier","bb"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["keyword","end"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","class"],
+  ["text"," "],
+  ["support.class","Increment"],
+  ["text"," "],
+  ["keyword.operator","<"],
+  ["text"," "],
+  ["support.class","Instruction"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword","def"],
+  ["text"," "],
+  ["support.function","initialize"],
+  ["paren.lparen","("],
+  ["variable.instance","@amount"],
+  ["text"," "],
+  ["keyword.operator",":"],
+  ["text"," "],
+  ["support.class","Int32"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword","end"]
+],[
+   "start"
+],[
+   "start",
+  ["text","  "],
+  ["keyword","def"],
+  ["text"," "],
+  ["identifier","compile"],
+  ["paren.lparen","("],
+  ["identifier","program"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["identifier","bb"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","cell_val_is_zero"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["identifier","builder"],
+  ["punctuation.operator","."],
+  ["support.function","icmp"],
+  ["text"," "],
+  ["support.class","LLVM"],
+  ["text","::"],
+  ["support.class","IntPredicate"],
+  ["text","::"],
+  ["support.class","EQ"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["identifier","cell_val"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["identifier","zero"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","call_args"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["paren.lparen","["],
+  ["variable.instance","@ctx"],
+  ["punctuation.operator","."],
+  ["support.function","int32"],
+  ["punctuation.operator","."],
+  ["support.function","const_int"],
+  ["paren.lparen","("],
+  ["support.class","NUM_CELLS"],
+  ["paren.rparen",")"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["variable.instance","@ctx"],
+  ["punctuation.operator","."],
+  ["support.function","int32"],
+  ["punctuation.operator","."],
+  ["support.function","const_int"],
+  ["paren.lparen","("],
+  ["support.class","CELL_SIZE_IN_BYTES"],
+  ["paren.rparen",")]"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","builder"],
+  ["punctuation.operator","."],
+  ["support.function","cond"],
+  ["text"," "],
+  ["identifier","cell_val_is_zero"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["identifier","loop_after"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["identifier","loop_body_block"]
+],[
+   "start"
+],[
+   "start",
+  ["text","    "],
+  ["variable.instance","@body"],
+  ["punctuation.operator","."],
+  ["support.function","each"],
+  ["text"," "],
+  ["keyword","do"],
+  ["text"," "],
+  ["keyword.operator","|"],
+  ["identifier","instruction"],
+  ["keyword.operator","|"]
+],[
+   "start",
+  ["text","      "],
+  ["identifier","loop_body_block"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["identifier","instruction"],
+  ["punctuation.operator","."],
+  ["support.function","compile"],
+  ["paren.lparen","("],
+  ["identifier","program"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["identifier","loop_body_block"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","end"]
+],[
+   "start"
+],[
+   "start",
+  ["text","    "],
+  ["identifier","builder"],
+  ["punctuation.operator","."],
+  ["support.function","position_at_end"],
+  ["text"," "],
+  ["identifier","loop_body_block"]
+],[
+   "start"
+],[
+   "start",
+  ["text","    "],
+  ["keyword","unless"],
+  ["text"," "],
+  ["identifier","matching_close_index"]
+],[
+   "start",
+  ["text","      "],
+  ["identifier","error"],
+  ["text"," "],
+  ["string.start","\""],
+  ["string","Unmatched '[' at position "],
+  ["paren.start","#{"],
+  ["identifier","i"],
+  ["paren.end","}"],
+  ["string.end","\""]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","end"]
+],[
+   "start"
+],[
+   "start",
+  ["text","    "],
+  ["identifier","bb"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword","end"]
+],[
+   "start",
+  ["keyword","end"]
+],[
+   "start"
+]]

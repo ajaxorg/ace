@@ -12,6 +12,13 @@ exports.inherits = function(ctor, superCtor) {
     });
 };
 
+/**
+ * Implements mixin properties into the prototype of an object.
+ * @template T
+ * @param {T} obj - The prototype of the target object.
+ * @param {Object} mixin - The source object.
+ * @returns {T & Object} The merged prototype.
+ */
 exports.mixin = function(obj, mixin) {
     for (var key in mixin) {
         obj[key] = mixin[key];
@@ -19,6 +26,13 @@ exports.mixin = function(obj, mixin) {
     return obj;
 };
 
+/**
+ * Implements mixin properties into the prototype of an object.
+ * @template T
+ * @param {T} proto - The prototype of the target object.
+ * @param {Object} mixin - The source object.
+ * @returns {T & Object} The merged prototype.
+ */
 exports.implement = function(proto, mixin) {
     exports.mixin(proto, mixin);
 };

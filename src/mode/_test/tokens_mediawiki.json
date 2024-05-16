@@ -1,0 +1,168 @@
+[[
+   "start",
+  ["storage.type.function","{{"],
+  ["entity.name.function","Languages"],
+  ["storage.type.function","}}"]
+],[
+   "start"
+],[
+   "start",
+  ["punctuation.definition.tag.begin","'''"],
+  ["markup.bold","Ace"],
+  ["punctuation.definition.tag.end","'''"],
+  ["text"," is a standalone code editor written in "],
+  ["punctuation.definition.tag.begin","[["],
+  ["entity.name.tag","wikipedia"],
+  ["meta.tag.link.internal",":"],
+  ["string.other.link.title","JavaScript"],
+  ["punctuation.definition.tag","|"],
+  ["meta.tag.link.internal","JavaScript"],
+  ["punctuation.definition.tag.end","]]"],
+  ["text",". Our goal is to create a browser based editor that matches and extends the features, usability and performance of existing native editors such as TextMate, Vim or Eclipse. It can be "],
+  ["punctuation.definition.tag.begin","''"],
+  ["markup.italic","easily"],
+  ["punctuation.definition.tag.end","''"],
+  ["text"," embedded in any web page or JavaScript application. Ace is developed as the primary editor for "],
+  ["punctuation.definition.tag.begin","["],
+  ["meta.tag.link.external","http://www.cloud9ide.com/"],
+  ["meta.tag.link.external"," "],
+  ["string.unquoted","Cloud9 IDE"],
+  ["punctuation.definition.tag.end","]"],
+  ["text"," and the successor of the Mozilla Skywriter (Bespin) Project."]
+],[
+   "start"
+],[
+   "start",
+  ["punctuation.definition.heading","=="],
+  ["entity.name.section"," Features "],
+  ["punctuation.definition.heading","=="]
+],[
+   "start",
+  ["markup.bold","*"],
+  ["markup.list"," Syntax highlighting"]
+],[
+   "start",
+  ["markup.bold","*"],
+  ["markup.list"," Automatic indent and outdent"]
+],[
+   "start",
+  ["markup.bold","*"],
+  ["markup.list"," An optional command line"]
+],[
+   "start",
+  ["markup.bold","*"],
+  ["markup.list"," Handles huge documents (100,000 lines and more are no problem)"]
+],[
+   "start",
+  ["markup.bold","*"],
+  ["markup.list"," Fully customizable key bindings including VI and Emacs modes"]
+],[
+   "start",
+  ["markup.bold","*"],
+  ["markup.list"," Themes (TextMate themes can be imported)"]
+],[
+   "start",
+  ["markup.bold","*"],
+  ["markup.list"," Search and replace with regular expressions"]
+],[
+   "start",
+  ["markup.bold","*"],
+  ["markup.list"," Highlight matching parentheses"]
+],[
+   "start",
+  ["markup.bold","*"],
+  ["markup.list"," Toggle between soft tabs and real tabs"]
+],[
+   "start",
+  ["markup.bold","*"],
+  ["markup.list"," Displays hidden characters"]
+],[
+   "start",
+  ["markup.bold","*"],
+  ["markup.list"," Drag and drop text using the mouse"]
+],[
+   "start",
+  ["markup.bold","*"],
+  ["markup.list"," Line wrapping"]
+],[
+   "start",
+  ["markup.bold","*"],
+  ["markup.list"," Unstructured / user code folding"]
+],[
+   "start",
+  ["markup.bold","*"],
+  ["markup.list"," Live syntax checker (currently JavaScript/CoffeeScript)"]
+],[
+   "start"
+],[
+   "start",
+  ["punctuation.definition.heading","=="],
+  ["entity.name.section"," Take Ace for a spin! "],
+  ["punctuation.definition.heading","=="]
+],[
+   "start",
+  ["text","Check out the Ace live "],
+  ["punctuation.definition.tag.begin","["],
+  ["meta.tag.link.external","http://ajaxorg.github.com/ace/"],
+  ["meta.tag.link.external"," "],
+  ["string.unquoted","demo"],
+  ["punctuation.definition.tag.end","]"],
+  ["text"," or get a "],
+  ["punctuation.definition.tag.begin","["],
+  ["meta.tag.link.external","http://run.cloud9ide.com"],
+  ["meta.tag.link.external"," "],
+  ["string.unquoted","Cloud9 IDE account"],
+  ["punctuation.definition.tag.end","]"],
+  ["text"," to experience Ace while editing one of your own GitHub projects."]
+],[
+   "start"
+],[
+   "start",
+  ["text","If you want, you can use Ace as a textarea replacement thanks to the "],
+  ["punctuation.definition.tag.begin","["],
+  ["meta.tag.link.external","http://ajaxorg.github.com/ace/build/textarea/editor.html"],
+  ["meta.tag.link.external"," "],
+  ["string.unquoted","Ace Bookmarklet"],
+  ["punctuation.definition.tag.end","]"],
+  ["text","."]
+],[
+   "start"
+],[
+   "start",
+  ["punctuation.definition.heading","=="],
+  ["entity.name.section"," Documentation "],
+  ["punctuation.definition.heading","=="]
+],[
+   "start",
+  ["text","You find a lot more sample code in the "],
+  ["punctuation.definition.tag.begin","["],
+  ["meta.tag.link.external","https://github.com/ajaxorg/ace/blob/master/demo/demo.js"],
+  ["meta.tag.link.external"," "],
+  ["string.unquoted","demo app"],
+  ["punctuation.definition.tag.end","]"],
+  ["text","."]
+],[
+   "start"
+],[
+   "start",
+  ["text","There is also some documentation on the "],
+  ["punctuation.definition.tag.begin","["],
+  ["meta.tag.link.external","https://github.com/ajaxorg/ace/wiki"],
+  ["meta.tag.link.external"," "],
+  ["string.unquoted","wiki page"],
+  ["punctuation.definition.tag.end","]"],
+  ["text","."]
+],[
+   "start"
+],[
+   "start",
+  ["text","If you still need help, feel free to drop a mail on the "],
+  ["punctuation.definition.tag.begin","["],
+  ["meta.tag.link.external","http://groups.google.com/group/ace-discuss"],
+  ["meta.tag.link.external"," "],
+  ["string.unquoted","ace mailing list"],
+  ["punctuation.definition.tag.end","]"],
+  ["text","."]
+],[
+   "start"
+]]

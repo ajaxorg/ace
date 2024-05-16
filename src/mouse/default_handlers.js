@@ -1,34 +1,43 @@
 "use strict";
-
+/**
+ * @typedef {import("./mouse_handler").MouseHandler} MouseHandler
+ * @typedef {import("./mouse_event").MouseEvent} MouseEvent
+ */
 var useragent = require("../lib/useragent");
 
 var DRAG_OFFSET = 0; // pixels
 var SCROLL_COOLDOWN_T = 550; // milliseconds
 
-function DefaultHandlers(mouseHandler) {
-    mouseHandler.$clickSelection = null;
+class DefaultHandlers {
+    /**
+     * @param {MouseHandler} mouseHandler
+     */
+    constructor(mouseHandler) {
+        mouseHandler.$clickSelection = null;
 
-    var editor = mouseHandler.editor;
-    editor.setDefaultHandler("mousedown", this.onMouseDown.bind(mouseHandler));
-    editor.setDefaultHandler("dblclick", this.onDoubleClick.bind(mouseHandler));
-    editor.setDefaultHandler("tripleclick", this.onTripleClick.bind(mouseHandler));
-    editor.setDefaultHandler("quadclick", this.onQuadClick.bind(mouseHandler));
-    editor.setDefaultHandler("mousewheel", this.onMouseWheel.bind(mouseHandler));
+        var editor = mouseHandler.editor;
+        editor.setDefaultHandler("mousedown", this.onMouseDown.bind(mouseHandler));
+        editor.setDefaultHandler("dblclick", this.onDoubleClick.bind(mouseHandler));
+        editor.setDefaultHandler("tripleclick", this.onTripleClick.bind(mouseHandler));
+        editor.setDefaultHandler("quadclick", this.onQuadClick.bind(mouseHandler));
+        editor.setDefaultHandler("mousewheel", this.onMouseWheel.bind(mouseHandler));
 
-    var exports = ["select", "startSelect", "selectEnd", "selectAllEnd", "selectByWordsEnd",
-        "selectByLinesEnd", "dragWait", "dragWaitEnd", "focusWait"];
+        var exports = ["select", "startSelect", "selectEnd", "selectAllEnd", "selectByWordsEnd",
+            "selectByLinesEnd", "dragWait", "dragWaitEnd", "focusWait"];
 
-    exports.forEach(function(x) {
-        mouseHandler[x] = this[x];
-    }, this);
+        exports.forEach(function(x) {
+            mouseHandler[x] = this[x];
+        }, this);
 
-    mouseHandler.selectByLines = this.extendSelectionBy.bind(mouseHandler, "getLineRange");
-    mouseHandler.selectByWords = this.extendSelectionBy.bind(mouseHandler, "getWordRange");
-}
+        mouseHandler["selectByLines"] = this.extendSelectionBy.bind(mouseHandler, "getLineRange");
+        mouseHandler["selectByWords"] = this.extendSelectionBy.bind(mouseHandler, "getWordRange");
+    }
 
-(function() {
-
-    this.onMouseDown = function(ev) {
+    /**
+     * @param {MouseEvent} ev
+     * @this {MouseHandler}
+     */
+    onMouseDown(ev) {
         var inSelection = ev.inSelection();
         var pos = ev.getDocumentPosition();
         this.mousedownEvent = ev;
@@ -66,9 +75,15 @@ function DefaultHandlers(mouseHandler) {
         this.captureMouse(ev);
         this.startSelect(pos, ev.domEvent._clicks > 1);
         return ev.preventDefault();
-    };
+    }
 
-    this.startSelect = function(pos, waitForClickSelection) {
+    /**
+     * 
+     * @param {import("../../ace-internal").Ace.Position} [pos]
+     * @param {boolean} [waitForClickSelection]
+     * @this {MouseHandler}
+     */
+    startSelect(pos, waitForClickSelection) {
         pos = pos || this.editor.renderer.screenToTextCoordinates(this.x, this.y);
         var editor = this.editor;
         if (!this.mousedownEvent) return;
@@ -79,14 +94,14 @@ function DefaultHandlers(mouseHandler) {
             editor.selection.moveToPosition(pos);
         if (!waitForClickSelection)
             this.select();
-        if (editor.renderer.scroller.setCapture) {
-            editor.renderer.scroller.setCapture();
-        }
         editor.setStyle("ace_selecting");
         this.setState("select");
-    };
+    }
 
-    this.select = function() {
+    /**
+     * @this {MouseHandler}
+     */
+    select() {
         var anchor, editor = this.editor;
         var cursor = editor.renderer.screenToTextCoordinates(this.x, this.y);
         if (this.$clickSelection) {
@@ -105,9 +120,13 @@ function DefaultHandlers(mouseHandler) {
         }
         editor.selection.selectToPosition(cursor);
         editor.renderer.scrollCursorIntoView();
-    };
+    }
 
-    this.extendSelectionBy = function(unitName) {
+    /**
+     * @param {string | number} unitName
+     * @this {MouseHandler}
+     */
+    extendSelectionBy(unitName) {
         var anchor, editor = this.editor;
         var cursor = editor.renderer.screenToTextCoordinates(this.x, this.y);
         var range = editor.selection[unitName](cursor.row, cursor.column);
@@ -135,28 +154,32 @@ function DefaultHandlers(mouseHandler) {
         }
         editor.selection.selectToPosition(cursor);
         editor.renderer.scrollCursorIntoView();
-    };
+    }
 
-    this.selectEnd =
-    this.selectAllEnd =
-    this.selectByWordsEnd =
-    this.selectByLinesEnd = function() {
+    /**
+     * @this {MouseHandler}
+     */
+    selectByLinesEnd() {
         this.$clickSelection = null;
         this.editor.unsetStyle("ace_selecting");
-        if (this.editor.renderer.scroller.releaseCapture) {
-            this.editor.renderer.scroller.releaseCapture();
-        }
-    };
+    }
 
-    this.focusWait = function() {
+    /**
+     * @this {MouseHandler}
+     */
+    focusWait() {
         var distance = calcDistance(this.mousedownEvent.x, this.mousedownEvent.y, this.x, this.y);
         var time = Date.now();
 
         if (distance > DRAG_OFFSET || time - this.mousedownEvent.time > this.$focusTimeout)
             this.startSelect(this.mousedownEvent.getDocumentPosition());
-    };
-
-    this.onDoubleClick = function(ev) {
+    }
+    
+    /**
+     * @param {MouseEvent} ev
+     * @this {MouseHandler}
+     */
+    onDoubleClick(ev) {
         var pos = ev.getDocumentPosition();
         var editor = this.editor;
         var session = editor.session;
@@ -174,9 +197,13 @@ function DefaultHandlers(mouseHandler) {
         }
         this.$clickSelection = range;
         this.select();
-    };
+    }
 
-    this.onTripleClick = function(ev) {
+    /**
+     * @param {MouseEvent} ev
+     * @this {MouseHandler}
+     */
+    onTripleClick(ev) {
         var pos = ev.getDocumentPosition();
         var editor = this.editor;
 
@@ -189,17 +216,25 @@ function DefaultHandlers(mouseHandler) {
             this.$clickSelection = editor.selection.getLineRange(pos.row);
         }
         this.select();
-    };
+    }
 
-    this.onQuadClick = function(ev) {
+    /**
+     * @param {MouseEvent} ev
+     * @this {MouseHandler}
+     */
+    onQuadClick(ev) {
         var editor = this.editor;
 
         editor.selectAll();
         this.$clickSelection = editor.getSelectionRange();
         this.setState("selectAll");
-    };
+    }
 
-    this.onMouseWheel = function(ev) {
+    /**
+     * @param {MouseEvent} ev
+     * @this {MouseHandler}
+     */
+    onMouseWheel(ev) {
         if (ev.getAccelKey())
             return;
 
@@ -257,9 +292,12 @@ function DefaultHandlers(mouseHandler) {
             editor.renderer.scrollBy(ev.wheelX * ev.speed, ev.wheelY * ev.speed);
             return ev.stop();
         }
-    };
+    }
 
-}).call(DefaultHandlers.prototype);
+}
+DefaultHandlers.prototype.selectEnd = DefaultHandlers.prototype.selectByLinesEnd;
+DefaultHandlers.prototype.selectAllEnd = DefaultHandlers.prototype.selectByLinesEnd;
+DefaultHandlers.prototype.selectByWordsEnd = DefaultHandlers.prototype.selectByLinesEnd;
 
 exports.DefaultHandlers = DefaultHandlers;
 

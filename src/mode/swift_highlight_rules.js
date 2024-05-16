@@ -89,7 +89,7 @@ var SwiftHighlightRules = function() {
     function comments() {
         return [{
                 token : "comment",
-                regex : "\\/\\/(?=.)",
+                regex : /\/\//,
                 next : [
                     DocCommentHighlightRules.getTagRule(),
                     {token : "comment", regex : "$|^", next: "start"},
@@ -167,3 +167,4 @@ var SwiftHighlightRules = function() {
 oop.inherits(SwiftHighlightRules, TextHighlightRules);
 
 exports.HighlightRules = SwiftHighlightRules;
+exports.SwiftHighlightRules = SwiftHighlightRules;

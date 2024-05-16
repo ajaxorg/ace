@@ -6,56 +6,70 @@ var useragent = require("../lib/useragent");
 /*
  * Custom Ace mouse event
  */
-var MouseEvent = exports.MouseEvent = function(domEvent, editor) {
-    this.domEvent = domEvent;
-    this.editor = editor;
-    
-    this.x = this.clientX = domEvent.clientX;
-    this.y = this.clientY = domEvent.clientY;
+class MouseEvent {
+    constructor(domEvent, editor) {
+        /** @type {number} */this.speed;
+        /** @type {number} */this.wheelX;
+        /** @type {number} */this.wheelY;
+        this.domEvent = domEvent;
+        this.editor = editor;
 
-    this.$pos = null;
-    this.$inSelection = null;
-    
-    this.propagationStopped = false;
-    this.defaultPrevented = false;
-};
+        this.x = this.clientX = domEvent.clientX;
+        this.y = this.clientY = domEvent.clientY;
 
-(function() {  
+        this.$pos = null;
+        this.$inSelection = null;
+
+        this.propagationStopped = false;
+        this.defaultPrevented = false;
+    }
     
-    this.stopPropagation = function() {
+    stopPropagation() {
         event.stopPropagation(this.domEvent);
         this.propagationStopped = true;
-    };
+    }
     
-    this.preventDefault = function() {
+    preventDefault() {
         event.preventDefault(this.domEvent);
         this.defaultPrevented = true;
-    };
+    }
     
-    this.stop = function() {
+    stop() {
         this.stopPropagation();
         this.preventDefault();
-    };
+    }
 
-    /*
+    /**
      * Get the document position below the mouse cursor
      * 
      * @return {Object} 'row' and 'column' of the document position
      */
-    this.getDocumentPosition = function() {
+    getDocumentPosition() {
         if (this.$pos)
             return this.$pos;
         
         this.$pos = this.editor.renderer.screenToTextCoordinates(this.clientX, this.clientY);
         return this.$pos;
-    };
+    }
+
+    /**
+     * Get the relative position within the gutter.
+     * 
+     * @return {Number} 'row' within the gutter. 
+     */
+    getGutterRow() {
+        var documentRow = this.getDocumentPosition().row;
+        var screenRow = this.editor.session.documentToScreenRow(documentRow, 0);
+        var screenTopRow = this.editor.session.documentToScreenRow(this.editor.renderer.$gutterLayer.$lines.get(0).row, 0);
+        return screenRow - screenTopRow;
+    }
     
-    /*
+    /**
      * Check if the mouse cursor is inside of the text selection
      * 
      * @return {Boolean} whether the mouse cursor is inside of the selection
      */
-    this.inSelection = function() {
+    inSelection() {
         if (this.$inSelection !== null)
             return this.$inSelection;
             
@@ -71,26 +85,27 @@ var MouseEvent = exports.MouseEvent = function(domEvent, editor) {
         }
 
         return this.$inSelection;
-    };
+    }
     
-    /*
+    /**
      * Get the clicked mouse button
      * 
      * @return {Number} 0 for left button, 1 for middle button, 2 for right button
      */
-    this.getButton = function() {
+    getButton() {
         return event.getButton(this.domEvent);
-    };
+    }
     
-    /*
+    /**
      * @return {Boolean} whether the shift key was pressed when the event was emitted
      */
-    this.getShiftKey = function() {
+    getShiftKey() {
         return this.domEvent.shiftKey;
-    };
-    
-    this.getAccelKey = useragent.isMac
-        ? function() { return this.domEvent.metaKey; }
-        : function() { return this.domEvent.ctrlKey; };
-    
-}).call(MouseEvent.prototype);
+    }
+
+    getAccelKey() {
+        return useragent.isMac ? this.domEvent.metaKey : this.domEvent.ctrlKey;
+    }
+}
+
+exports.MouseEvent = MouseEvent;

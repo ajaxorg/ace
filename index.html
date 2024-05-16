@@ -5,7 +5,6 @@
         <title>Ace - The High Performance Code Editor for the Web</title>
         <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/css/bootstrap.no-icons.min.css" />
         <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/3.0/css/font-awesome.css" />
-        <link href="./api/resources/csses/ace_api.css" rel="stylesheet" type="text/css" />
         <link href="./doc/site/style.css" rel="stylesheet" type="text/css" />
         <link href="./doc/site/images/favicon.ico" rel="icon" type="image/x-icon" />
 
@@ -17,7 +16,7 @@
     </head>
     <body>
         <a href="https://github.com/ajaxorg/ace">
-        <img style="z-index: 50000; position: absolute; top: 0; right: 0; border: 0; width: 125px; height: 125px" src="https://camo.githubusercontent.com/e6bef7a091f5f3138b8cd40bc3e114258dd68ddf/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67" alt="Fork me on GitHub" />
+            <img style="z-index: 50000; position: absolute; top: 0; right: 0; border: 0; width: 125px; height: 125px" src="https://github.blog/wp-content/uploads/2008/12/forkme_right_red_aa0000.png?resize=149%2C149" alt="Fork me on GitHub">
         </a>
         <div id="wrapper">
             <div class="content">
@@ -48,13 +47,13 @@
                             <a href="#higlighter" data-toggle="tab">Syntax Highlighters</a>
                         </li>
                         <li>
-                            <a href="https://ajaxorg.github.io/ace-api-docs/index.html" target="_blank" class="external-nav">API Reference</a>
+                            <a href="https://ajaxorg.github.io/ace-api-docs/index.html" target="_blank" rel="noopener noreferrer" class="external-nav">API Reference</a>
                         </li>
                         <li>
                             <a href="#production" data-toggle="tab">Real World Users</a>
                         </li>
                         <li class="last-tab">
-                            <a href="#support" data-toggle="tab">Support</a>
+                            <a href="https://mkslanc.github.io/ace-playground/" target="_blank" rel="noopener noreferrer" class="external-nav">Try</a>
                         </li>
                     </ul>
                     <div class="tab-content">
@@ -86,7 +85,7 @@ console.log(addResult);
 </pre>
                             <p id="embed_link"><a href="#nav=embedding">Learn how to embed this in your own site</a></p>
                             <p class="highlight_note">Looking for a more full-featured demo? Check out the
-                                <a href="build/kitchen-sink.html" target="_blank"  rel="noreferer">kitchen sink</a>.
+                                <a href="build/kitchen-sink.html" target="_blank" rel="noopener noreferrer">kitchen sink</a>.
                             </p>
                             <h2>Features</h2>
                             <ul class="content-list">
@@ -137,6 +136,11 @@ console.log(addResult);
                                 <li><a href="https://github.com/rksm/paredit.js">Paredit extension for ace</a></li>
                                 <li><a href="https://github.com/cadorn/ace-extjs">Ace wrapper for ExtJS</a></li>
                                 <li><a href="https://github.com/daveho/AceGWT">Ace wrapper for GWT</a></li>
+                            </ul>
+                            <h2>Getting Help</h2>
+                            <ul class="content-list">
+                                <li><a href="https://github.com/ajaxorg/ace/issues">Report bugs</a></li>
+                                <li><a href="https://github.com/ajaxorg/ace/discussions">Discuss</a></li>
                             </ul>
                         </div>
                         <div class="tab-pane fade active in" id="embedding">
@@ -217,11 +221,13 @@ editor.getOption("optionName");
                             <h3>Changing the size of the editor</h3>
                             <p>Ace only checks for changes of the size of it's container when window is resized. If you resize the editor div in another manner, and need Ace to resize, use the following:</p>
                             <pre><code class="javascript">editor.resize()</code></pre>
-                            <p>if you want editor to change it's size based on contents, use maxLines option as shown in <a target="_blank" rel="noreferer noopener" href="https://ace.c9.io/demo/autoresize.html">https://ace.c9.io/demo/autoresize.html</a></p>
+                            <p>if you want editor to change it's size based on contents, use maxLines option as shown in <a target="_blank" rel="noopener noreferrer" href="https://ace.c9.io/demo/autoresize.html">https://ace.c9.io/demo/autoresize.html</a></p>
                             <h2>Setting Themes</h2>
                             <p>Themes are loaded on demand; all you have to do is pass the string name:</p>
                             <pre><code class="javascript">editor.setTheme("ace/theme/twilight");</code></pre>
-                            <p><span class="expand_arrow">&gt;</span> <a href="https://github.com/ajaxorg/ace/tree/master/lib/ace/theme" target="_blank" rel="noreferer noopener">See all themes</a></p>
+                            <p><span class="expand_arrow">&gt;</span> <a href="https://github.com/ajaxorg/ace/tree/master/src/theme" target="_blank" rel="noopener noreferrer">See all themes.</a>
+                            Or use <a href="https://github.com/ajaxorg/ace/blob/master/src/ext/themelist.js" target="_blank" rel="noopener noreferrer">themelist extension</a> to get the list of available themes at runtime.
+                            </p>
                             <h2>Setting the Programming Language Mode</h2>
                             <p>By default, the editor supports plain text mode. All other language modes are available as separate modules, loaded on demand like this:</p>
                             <pre><code class="javascript">editor.session.setMode("ace/mode/javascript");</code></pre>
@@ -283,7 +289,7 @@ editor.insertSnippet("x$0y");</code></pre>
 session.$undoManager.markIgnored(rev); // mark the new group as ignored</code></pre>
 
 
-                            <p>To implement undo/redo buttons see <a target="_blank" rel="noreferer noopener" href="https://ace.c9.io/demo/toolbar.html">https://ace.c9.io/demo/toolbar.html</a></p>
+                            <p>To implement undo/redo buttons see <a target="_blank" rel="noopener noreferrer" href="https://ace.c9.io/demo/toolbar.html">https://ace.c9.io/demo/toolbar.html</a></p>
 
                             <h3>Searching</h3>
                             <pre><code class="language-javascript">editor.find('needle',{
@@ -363,8 +369,10 @@ editor.replace('bar');</code></pre>
                             <pre><code class="javascript">ace.config.set("basePath", "https://url.to.a/folder/that/contains-ace-modes");</code></pre>
                             <p>Path for one module alone can be configured with:</p>
                             <pre><code class="javascript">ace.config.setModuleUrl("ace/theme/textmate", "url for textmate.js");</code></pre>
-                            <p>When using ace with webpack, it is possible to configure paths for all submodules using</p>
-                            <pre><code class="javascript">require("ace-builds/webpack-resolver");</code></pre>
+                            <p>When using ace with webpack, it is possible to configure paths for all submodules using</p>                            
+                            <pre><code class="javascript">require("ace-builds/esm-resolver"); // for new bundlers: webpack 5, rollup, vite</code></pre>
+                            For webpack 4 use
+                            <pre><code class="javascript">require("ace-builds/webpack-resolver"); </code></pre>                            
                             <p>which depends on <a href="https://github.com/webpack-contrib/file-loader">file-loader</a></p>
                         </div>
                         <div class="tab-pane fade" id="higlighter">
@@ -872,10 +880,6 @@ if (match) {
                                     <a href="http://codecombat.com">Code Combat</a>
                                 </li>
                                 <li>
-                                    <div class="text-logo" style="font-size: 18px;">ShareLaTeX</div>
-                                    <a href="https://www.sharelatex.com">ShareLaTeX</a>
-                                </li>
-                                <li>
                                     <img lazy-src="https://papeeria.com/assets/all/images/papeeria_small.png" style="width: 95px; left: 2px; top: 8px;">
                                     <a href="http://papeeria.com">Papeeria</a>
                                 </li>
@@ -883,25 +887,6 @@ if (match) {
                                     <img lazy-src="https://www.codingame.com/blog/wp-content/uploads/2016/11/logo_codingame_hud.png"
                                         style="left: -15px;top: 27px;width: 127px;background: black;" />
                                     <a href="https://www.codingame.com">CodinGame</a>
-                                </li>
-                                <li>
-                                    <img lazy-src="doc/site/images/processwire-logo.svg"
-                                        style="left: 0px; top: 25px; width: 102px" />
-                                    <a href=" http://modules.processwire.com/modules/inputfield-ace-editor/">Process<i>Wire</i></a>
-                                </li>
-                                <li>
-                                    <img lazy-src="https://getcrunch.co/wp-content/uploads/2015/07/crunch-icon_32.png"
-                                        style="left: 9px; top: -5px; width: 84px" />
-                                    <a href="http://getcrunch.co/">Crunch</a>
-                                </li>
-                                <li>
-                                    <img lazy-src="https://drivenotepad.github.io/images/icon-128.png" 
-                                        style="left: 9px; top: -5px; width: 84px">
-                                    <a href="https://drivenotepad.appspot.com/support">Drive Notepad</a>
-                                </li>
-                                <li>
-                                    <div class="text-logo">textor</div>
-                                    <a href="http://textor.houfeng.net/">Textor</a>
                                 </li>
                                 <li>
                                     <div class="text-logo">Dillinger</div>
@@ -918,10 +903,6 @@ if (match) {
                                 <li>
                                     <div class="text-logo">pixelJET</div>
                                     <a href="http://www.pixeljet.net/index.html">pixelJET</a>
-                                </li>
-                                <li>
-                                    <div class="text-logo">Orbit</div>
-                                    <a href="http://orbit.bonsaijs.org/">BonsaiJS playground</a>
                                 </li>
                                 <li>
                                     <img lazy-src="https://approximatrix.com/static/images/simplytext/logo-long-white.png"
@@ -946,11 +927,6 @@ if (match) {
                                     <a href="http://www.debuggex.com">Debuggex</a>
                                 </li>
                                 <li>
-                                    <img lazy-src="https://www.decor-tab-creator.com/_files/decor_logo_white_new.png"
-                                        style="left: -5px; width: 111px;top: 20px;">
-                                    <a href="https://www.decor-tab-creator.com">Decor</a>
-                                </li>
-                                <li>
                                     <script>
                                         ace.require("ace/lib/dom").importCssStylsheet("https://fonts.googleapis.com/css?family=Henny+Penny", document);
                                     </script>
@@ -958,35 +934,14 @@ if (match) {
                                     <a href="https://chocolatejs.org">Chocolatejs</a>
                                 </li>
                                 <li>
-                                    <img lazy-src="doc/site/images/ac-logo.png"
-                                        style="left: 4px; top: 25px;" />
-                                    <a href="http://www.applicationcraft.com/">Application Craft</a>
-                                </li>
-                                <li>
                                     <img lazy-src="https://playir.com/common/icon_playir.png"
                                         style="left: 11px; width: 96px;top: -17px;">
                                     <a href="http://playir.com">Playir</a>
                                 </li>
                                 <li>
-                                    <div class="text-logo" style="font-size: 23px;">Runnable</div>
-                                    <a href="http://runnable.com">Runnable</a>
-                                </li>
-                                <li>
                                     <img lazy-src="https://joshnuss.github.io/mruby-web-irb/images/favicon.png"
                                         style="left: 4px; width: 90px;top: -17px;">
                                     <a href="http://joshnuss.github.io/mruby-web-irb/">Mruby-web-irb</a>
-                                </li>
-                                <li>
-                                    <div class="text-logo" style="margin-left:0px;">Codiqa</div>
-                                    <a href="https://codiqa.com/">Codiqa</a>
-                                </li>
-                                <li>
-                                    <div class="text-logo" style="margin-left:0px;">Jetstrap</div>
-                                    <a href="http://jetstrap.com/">Jetstrap</a>
-                                </li>
-                                <li title="WebRTC based video chat + code editor">
-                                    <div class="text-logo" style="font-size: 18px;">(codassium);</div>
-                                    <a href="http://codassium.com/">(codassium);</a>
                                 </li>
                                 <li>
                                     <div style="font-size:50px" class="text-logo">t<span style="color:green">p<span></div>
@@ -996,11 +951,6 @@ if (match) {
                                     <div style="width: 90px; left: 10px; top: 0px;background:rgb(24,73,92);color: white;position: absolute;
                                         font-size: 68px;text-align: center;font-weight: bold;font-family: inherit;line-height: normal;">sT</div>
                                     <a href="http://sourcetalk.net/">SourceTalk</a>
-                                </li>
-                                <li>
-                                    <img lazy-src="https://jdoodle.com/static/images/jdoodle.png"
-                                        style="width: 122px; left: -3px; top: -12px;">
-                                    <a href="http://jdoodle.com/">JDoodle</a>
                                 </li>
                                 <li>
                                     <div class="text-logo" style="margin-top:4px">Run PHP Code</div>
@@ -1018,15 +968,6 @@ if (match) {
                                 <li>
                                     <div style="color:orange;font-size:50px" class="text-logo">OJ</div>
                                     <a href="http://ojjs.org/index.html">OJjs</a>
-                                </li>
-                                <li>
-                                    <div class="text-logo">Codechat</div>
-                                    <a href="http://codechat.net/">Codechat</a>
-                                </li>
-                                <li>
-                                    <img lazy-src="doc/site/images/wolf_3d_logo_trans.png"
-                                        style="left: 10px; top: -4px; width:80px" />
-                                    <a href="http://www.wolfcms.org/repository/133">Wolf CMS</a>
                                 </li>
                                 <li>
                                     <div style="color:green;font-size:50px" class="text-logo">&lt;/&gt;</div>
@@ -1047,10 +988,6 @@ if (match) {
                                         background-size: 310px 128px;background-position: 210px top;
                                     "></div>
                                     <a href="https://colorsublime.github.io/">ColorSublime</a>
-                                </li>
-                                <li>
-                                    <div class="text-logo">iMDone</div>
-                                    <a href="http://piascikj.github.io/imdone/">iMDone</a>
                                 </li>
                                 <li>
                                     <div style="
@@ -1074,11 +1011,6 @@ if (match) {
                                 <li>
                                     <div class="text-logo">ShareJS</div>
                                     <a href="http://sharejs.org/hello-ace.html">ShareJS</a>
-                                </li>
-                                <li>
-                                    <img lazy-src="https://neutron-drive.appspot.com/static/img/neutron_face_high.png"
-                                        style="width: 86px; left: 7px; top: -11px;">
-                                    <a href="https://super.neutrondrive.com/">Neutron IDE</a>
                                 </li>
                                 <li>
                                     <div style="
@@ -1113,10 +1045,6 @@ if (match) {
                                 </li>
                                 </li>
                                 <li>
-                                    <!-- <img src="https://learn-angular.org/Content/Images/LearnAngular-small.png" style="width: 275px; left: -12px; top: 7px;"> -->
-                                    <a href="http://learn-angular.org">Learn Angular</a>
-                                </li>
-                                <li>
                                     <img lazy-src="https://lh4.ggpht.com/hG5bDu1GBXwxpPnrgPcAmTNQyZK4ICBDC9aeLNmMZahEYQOz_2vYT6sBqLNGLIGPopWjdveEvPuM9NBuErUSLQ=s60" style="width: 75px; left: 12px; top: -5px;">
                                     <a href="http://bootzee.com">Bootzee</a>
                                 </li>
@@ -1133,17 +1061,8 @@ if (match) {
                                     <a href="http://webftp.selfbuild.fr">SelfBuild </a>
                                 </li>
                                 <li>
-                                   <img src="https://fnboard.herokuapp.com/logo.png"
-                                        style="left: 5px; width: 90px;top: 0px;">
-                                    <a href="http://fnboard.herokuapp.com/">Pixeladded</a>
-                                </li>
-                                <li>
                                     <!-- <img src="https://sbp.selfbuild.fr/sbp.png" style="width: 95px; left: 2px; top: -8px;"> -->
                                     <a href="http://sbp.selfbuild.fr/">SBP</a>
-                                </li>
-                                <li>
-                                    <img lazy-src="https://mycodestock.com/assets/img/mycodestock.png?v=2.1.0" style="width: 126px; left: -18px; top: -30px;">
-                                    <a href="https://mycodestock.com/">my code stock</a>
                                 </li>
                                 <li>
                                     <!-- <img src="https://eseecode.com/web/sites/eseecode.com/files/favicon.png" style="width: 100px; left: 0px; top: -20px;"> -->
@@ -1166,10 +1085,6 @@ if (match) {
                                     <a href="https://jscalc.io/">JSCalc</a>
                                 </li>
                                 <li>
-                                    <!-- <img src="https://tworld-ai.com/imgs/web-app/rob_face.png" style="width: 90px; left: 5px; top: -10px;"> -->
-                                    <a href="http://tworld-ai.com/imgs/web-app/rob_face.png">T-World</a>
-                                </li>
-                                <li>
                                     <img lazy-src="https://www.gestixi.com/assets/img/icons/gestixi-64.png" style="width: 90px; left: 5px; top: 20px;">
                                     <a href="https://www.gestixi.com/">GestiXi</a>
                                 </li>
@@ -1181,12 +1096,6 @@ if (match) {
                                 <li>
                                     <a href="http://www.wavemaker.com/">WaveMaker</a>
                                 </li>
-                                <li>
-                                    <a href="http://www.playmycode.com/">Play My Code</a>
-                                </li>
-                                <li>
-                                    <a href="http://ext.radiantcms.org/extensions/264-ace">Radiant CMS</a>
-                                </li>
                                 
                                 <li>
                                     <div class="text-logo">Semantic Ui</div>
@@ -1194,7 +1103,7 @@ if (match) {
                                 </li>
                                 <li>
                                     <div class="text-logo">tmpltr</div>
-                                    <a href="http://rocktronica.github.com/tmpltr/">tmpltr</a>
+                                    <a href="http://rocktronica.github.io/tmpltr/">tmpltr</a>
                                 </li>
                                 <li>
                                     <div class="text-logo">Git-Edit</div>
@@ -1210,42 +1119,75 @@ if (match) {
                                     <div class="text-logo">trinket</div>
                                      <a href="https://trinket.io/">trinket</a>
                                 </li>
-				 <li>
+                                <li>
                                     <a href="https://goonlinetools.com/">GoOnlineTools</a>
                                 </li>
-				<li>
+                                <li>
                                     <img lazy-src="https://sqlize.online/favicons/sqlize/android-chrome-192x192.png" style="width: 72px; left: 15px; top: 0px;">
                                     <a href="https://sqlize.online/">SQLize.online</a>
                                 </li>
-				<li>
+                                <li>
                                     <img lazy-src="https://phpize.online/favicons/phpize/android-chrome-192x192.png" style="width: 72px; left: 15px; top: 0px;">
                                     <a href="https://phpize.online/">PHPize.online</a>
                                 </li>
+                                <li>
+                                    <div class="text-logo">Domoticz</div>
+                                    <a href="https://www.domoticz.com/">Domoticz</a>
+                                </li>
+                                <li>
+                                    <img lazy-src="https://nixx.dev/static/hotlink-ok/logo-alt.png" style="width: 72px; left: 15px; top: 0px;">
+                                    <a href="https://nixx.dev">Nixx Web Tools</a>
+                                </li>
+                                <li>
+                                    <img lazy-src="https://acode.foxdebug.com/logo.svg" style="width: 72px; left: 15px; top: 10px;">
+                                    <a href="https://acode.foxdebug.com">Acode</a>
+                                </li>
+                                <li>
+                                    <img lazy-src="https://htmcolor.com/wp-content/uploads/2023/08/1692613065983.png" style="width: 72px; left: 15px; top: 10px;">
+                                    <a href="https://Htmcolor.com">Htm color</a>
+                                </li>
+                                <li>
+                                    <img lazy-src="https://tool.next2d.app/assets/img/logo.svg" style="width: 85px; left: 7px; top: -7px;">
+                                    <a href="https://next2d.app/">Next2D</a>
+                                </li>
+                                <li>
+                                    <img lazy-src="https://raw.githubusercontent.com/devlive-community/datacap/dev/core/datacap-web/public/static/images/logo.png" style="width: 85px; left: 7px; top: -7px;">
+                                    <a href="https://github.com/devlive-community/datacap">DataCap</a>
+                                </li>
+                                <li>
+                                    <img lazy-src="https://aijs.io/aijsv4.png" style="width: 85px; left: 7px; top: -7px;">
+                                    <a href="https://aijs.io/editor">AIJS</a>
+                                </li>
+                                <li>
+                                    <img lazy-src="https://k8studio.io/static/images/logo.png" style="width: 85px; left: 7px; top: -7px;">
+                                    <a href="https://k8studio.io/">K8Studio</a>
+                                </li>
+                                <li>
+                                    <img lazy-src="https://hardcoder.xyz/favicon.ico" style="width: 72px; left: 15px; top: -2px;">
+                                    <a href="https://hardcoder.xyz/?mkp=fncd">Funcdown</a>
+                                </li>
+				<li>
+                                    <img lazy-src="https://sqltest.online/favicons/android-chrome-192x192.png" style="width: 72px; left: 15px; top: 0px;">
+                                    <a href="https://sqltest.online/">SQLtest.online</a>
+                                </li>
+				<li>
+                                    <img lazy-src="https://hiren.js.org/H.png" style="width: 85px; left: 7px; top: -7px;">
+                                    <a href="https://hiren.js.org/">HirenJS Code Editor</a>
+                                </li>	    	    
                                 <li id="add_your_site">
                                     <p>+</p>
-                                    <a href="mailto:ace@c9.io?subject=Put%20me%20on%20the%20Ace%20site!&body=Please include a link to a logo hosted on your site!">Your Site Here</a>
+                                    <a href="https://github.com/ajaxorg/ace/issues/new?assignees=&labels=website%2Cneeds-triage&projects=&template=add-to-website.yml&title=Add+project+%28project+name%29+to+the+list+of+projects+using+Ace+on+its+website">Your Site Here</a>
                                 </li>
-                            </ul>
-                        </div>
-                        <div class="tab-pane fade" id="support">
-                            <h1>Support and User Resources</h1>
-                            <p>Aside from our GitHub page, here's a list of places you can find help for Ace:</p>
-                            <ul class="content-list">
-                                <li><a href="http://groups.google.com/group/ace-discuss">Ace Google Group</a></li>
-                                <li><a href="http://groups.google.com/group/ace-internals">Ace Core Google Group</a></li>
-                                <li><a href="irc://irc.freenode.net/%23ace">irc.freenode.net #ace</a></li>
                             </ul>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
         <script src="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/js/bootstrap.min.js"></script>
-        <script src="./doc/template/resources/javascripts/bbq.js"></script>
-        <script src="./api/resources/javascripts/ux.js"></script>
-        <script src="./doc/site/js/main.js"></script>
-        <script defer src="./api/resources/javascripts/clicker.js"></script>
+        <script src="./doc/template/resources/javascripts/bbq.js"></script>        
+        <script src="./doc/site/js/main.js"></script>        
         <script defer src="./doc/site/js/ga.js"></script>
     </body>
 </html>

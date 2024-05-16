@@ -1,7 +1,12 @@
 "use strict";
-
+/**
+ * @typedef {import("./edit_session").EditSession} EditSession
+ * @typedef {import("../ace-internal").Ace.Point} Point
+ * @typedef {import("../ace-internal").Ace.Theme} Theme
+ */
 var oop = require("./lib/oop");
 var dom = require("./lib/dom");
+var lang = require("./lib/lang");
 var config = require("./config");
 var GutterLayer = require("./layer/gutter").Gutter;
 var MarkerLayer = require("./layer/marker").Marker;
@@ -14,166 +19,148 @@ var VScrollBarCustom = require("./scrollbar_custom").VScrollBar;
 var RenderLoop = require("./renderloop").RenderLoop;
 var FontMetrics = require("./layer/font_metrics").FontMetrics;
 var EventEmitter = require("./lib/event_emitter").EventEmitter;
-var editorCss = require("./css/editor.css");
+var editorCss = require("./css/editor-css");
 var Decorator = require("./layer/decorators").Decorator;
 
 var useragent = require("./lib/useragent");
-var HIDE_TEXTAREA = useragent.isIE;
 
 dom.importCssString(editorCss, "ace_editor.css", false);
 
 /**
  * The class that is responsible for drawing everything you see on the screen!
  * @related editor.renderer 
- * @class VirtualRenderer
  **/
+class VirtualRenderer {
+    /**
+     * Constructs a new `VirtualRenderer` within the `container` specified, applying the given `theme`.
+     * @param {HTMLElement | null} [container] The root element of the editor
+     * @param {String} [theme] The starting theme
+     
+     **/
+    constructor(container, theme) {
+        var _self = this;
+        this.container = container || dom.createElement("div");
 
-/**
- * Constructs a new `VirtualRenderer` within the `container` specified, applying the given `theme`.
- * @param {Element} container The root element of the editor
- * @param {String} theme The starting theme
- *
- * @constructor
- **/
+        dom.addCssClass(this.container, "ace_editor");
+        if (dom.HI_DPI) dom.addCssClass(this.container, "ace_hidpi");
 
-var VirtualRenderer = function(container, theme) {
-    var _self = this;
+        this.setTheme(theme);
+        if (config.get("useStrictCSP") == null)
+            config.set("useStrictCSP", false);
 
-    this.container = container || dom.createElement("div");
+        this.$gutter = dom.createElement("div");
+        this.$gutter.className = "ace_gutter";
+        this.container.appendChild(this.$gutter);
+        this.$gutter.setAttribute("aria-hidden", "true");
+        /**@type {HTMLElement}*/
+        this.scroller = dom.createElement("div");
+        this.scroller.className = "ace_scroller";
 
-    dom.addCssClass(this.container, "ace_editor");
-    if (dom.HI_DPI) dom.addCssClass(this.container, "ace_hidpi");
+        this.container.appendChild(this.scroller);
+        /**@type {HTMLElement}*/
+        this.content = dom.createElement("div");
+        this.content.className = "ace_content";
+        this.scroller.appendChild(this.content);
 
-    this.setTheme(theme);
-    if (config.get("useStrictCSP") == null) 
-        config.set("useStrictCSP", false);
+        this.$gutterLayer = new GutterLayer(this.$gutter);
+        this.$gutterLayer.on("changeGutterWidth", this.onGutterResize.bind(this));
 
-    this.$gutter = dom.createElement("div");
-    this.$gutter.className = "ace_gutter";
-    this.container.appendChild(this.$gutter);
-    this.$gutter.setAttribute("aria-hidden", true);
+        this.$markerBack = new MarkerLayer(this.content);
+        var textLayer = this.$textLayer = new TextLayer(this.content);
+        this.canvas = textLayer.element;
 
-    this.scroller = dom.createElement("div");
-    this.scroller.className = "ace_scroller";
-    
-    this.container.appendChild(this.scroller);
+        this.$markerFront = new MarkerLayer(this.content);
 
-    this.content = dom.createElement("div");
-    this.content.className = "ace_content";
-    this.scroller.appendChild(this.content);
+        this.$cursorLayer = new CursorLayer(this.content);
 
-    this.$gutterLayer = new GutterLayer(this.$gutter);
-    this.$gutterLayer.on("changeGutterWidth", this.onGutterResize.bind(this));
+        // Indicates whether the horizontal scrollbar is visible
+        this.$horizScroll = false;
+        this.$vScroll = false;
 
-    this.$markerBack = new MarkerLayer(this.content);
+        this.scrollBar =
+            this.scrollBarV = new VScrollBar(this.container, this);
+        this.scrollBarH = new HScrollBar(this.container, this);
+        this.scrollBarV.on("scroll", function(e) {
+            if (!_self.$scrollAnimation)
+                _self.session.setScrollTop(e.data - _self.scrollMargin.top);
+        });
+        this.scrollBarH.on("scroll", function(e) {
+            if (!_self.$scrollAnimation)
+                _self.session.setScrollLeft(e.data - _self.scrollMargin.left);
+        });
 
-    var textLayer = this.$textLayer = new TextLayer(this.content);
-    this.canvas = textLayer.element;
+        this.scrollTop = 0;
+        this.scrollLeft = 0;
 
-    this.$markerFront = new MarkerLayer(this.content);
+        this.cursorPos = {
+            row : 0,
+            column : 0
+        };
 
-    this.$cursorLayer = new CursorLayer(this.content);
+        this.$fontMetrics = new FontMetrics(this.container);
+        this.$textLayer.$setFontMetrics(this.$fontMetrics);
+        this.$textLayer.on("changeCharacterSize", function(e) {
+            _self.updateCharacterSize();
+            _self.onResize(true, _self.gutterWidth, _self.$size.width, _self.$size.height);
+            _self._signal("changeCharacterSize", e);
+        });
 
-    // Indicates whether the horizontal scrollbar is visible
-    this.$horizScroll = false;
-    this.$vScroll = false;
+        this.$size = {
+            width: 0,
+            height: 0,
+            scrollerHeight: 0,
+            scrollerWidth: 0,
+            $dirty: true
+        };
 
-    this.scrollBar = 
-    this.scrollBarV = new VScrollBar(this.container, this);
-    this.scrollBarH = new HScrollBar(this.container, this);
-    this.scrollBarV.on("scroll", function(e) {
-        if (!_self.$scrollAnimation)
-            _self.session.setScrollTop(e.data - _self.scrollMargin.top);
-    });
-    this.scrollBarH.on("scroll", function(e) {
-        if (!_self.$scrollAnimation)
-            _self.session.setScrollLeft(e.data - _self.scrollMargin.left);
-    });
+        this.layerConfig = {
+            width : 1,
+            padding : 0,
+            firstRow : 0,
+            firstRowScreen: 0,
+            lastRow : 0,
+            lineHeight : 0,
+            characterWidth : 0,
+            minHeight : 1,
+            maxHeight : 1,
+            offset : 0,
+            height : 1,
+            gutterOffset: 1
+        };
 
-    this.scrollTop = 0;
-    this.scrollLeft = 0;
+        this.scrollMargin = {
+            left: 0,
+            right: 0,
+            top: 0,
+            bottom: 0,
+            v: 0,
+            h: 0
+        };
 
-    this.cursorPos = {
-        row : 0,
-        column : 0
-    };
+        this.margin = {
+            left: 0,
+            right: 0,
+            top: 0,
+            bottom: 0,
+            v: 0,
+            h: 0
+        };
 
-    this.$fontMetrics = new FontMetrics(this.container);
-    this.$textLayer.$setFontMetrics(this.$fontMetrics);
-    this.$textLayer.on("changeCharacterSize", function(e) {
-        _self.updateCharacterSize();
-        _self.onResize(true, _self.gutterWidth, _self.$size.width, _self.$size.height);
-        _self._signal("changeCharacterSize", e);
-    });
+        this.$keepTextAreaAtCursor = !useragent.isIOS;
 
-    this.$size = {
-        width: 0,
-        height: 0,
-        scrollerHeight: 0,
-        scrollerWidth: 0,
-        $dirty: true
-    };
+        this.$loop = new RenderLoop(
+            this.$renderChanges.bind(this),
+            this.container.ownerDocument.defaultView
+        );
+        this.$loop.schedule(this.CHANGE_FULL);
 
-    this.layerConfig = {
-        width : 1,
-        padding : 0,
-        firstRow : 0,
-        firstRowScreen: 0,
-        lastRow : 0,
-        lineHeight : 0,
-        characterWidth : 0,
-        minHeight : 1,
-        maxHeight : 1,
-        offset : 0,
-        height : 1,
-        gutterOffset: 1
-    };
-    
-    this.scrollMargin = {
-        left: 0,
-        right: 0,
-        top: 0,
-        bottom: 0,
-        v: 0,
-        h: 0
-    };
-    
-    this.margin = {
-        left: 0,
-        right: 0,
-        top: 0,
-        bottom: 0,
-        v: 0,
-        h: 0
-    };
-    
-    this.$keepTextAreaAtCursor = !useragent.isIOS;
+        this.updateCharacterSize();
+        this.setPadding(4);
+        this.$addResizeObserver();
+        config.resetOptions(this);
+        config._signal("renderer", this);
+    }
 
-    this.$loop = new RenderLoop(
-        this.$renderChanges.bind(this),
-        this.container.ownerDocument.defaultView
-    );
-    this.$loop.schedule(this.CHANGE_FULL);
-
-    this.updateCharacterSize();
-    this.setPadding(4);
-    config.resetOptions(this);
-    config._signal("renderer", this);
-};
-
-(function() {
-
-    this.CHANGE_CURSOR = 1;
-    this.CHANGE_MARKER = 2;
-    this.CHANGE_GUTTER = 4;
-    this.CHANGE_SCROLL = 8;
-    this.CHANGE_LINES = 16;
-    this.CHANGE_TEXT = 32;
-    this.CHANGE_SIZE = 64;
-    this.CHANGE_MARKER_BACK = 128;
-    this.CHANGE_MARKER_FRONT = 256;
-    this.CHANGE_FULL = 512;
-    this.CHANGE_H_SCROLL = 1024;
 
     // this.$logChanges = function(changes) {
     //     var a = ""
@@ -191,10 +178,10 @@ var VirtualRenderer = function(container, theme) {
     //     console.log(a.trim())
     // };
 
-    oop.implement(this, EventEmitter);
-
-    this.updateCharacterSize = function() {
+    updateCharacterSize() {
+        // @ts-expect-error TODO: missing property initialization anywhere in codebase
         if (this.$textLayer.allowBoldFonts != this.$allowBoldFonts) {
+            // @ts-expect-error TODO: missing property initialization anywhere in codebase
             this.$allowBoldFonts = this.$textLayer.allowBoldFonts;
             this.setStyle("ace_nobold", !this.$allowBoldFonts);
         }
@@ -206,13 +193,14 @@ var VirtualRenderer = function(container, theme) {
         this.$updatePrintMargin();
         // set explicit line height to avoid normal resolving to different values based on text
         dom.setStyle(this.scroller.style, "line-height", this.lineHeight + "px");
-    };
+    }
 
     /**
      *
      * Associates the renderer with an [[EditSession `EditSession`]].
+     * @param {EditSession} session The session to associate with
      **/
-    this.setSession = function(session) {
+    setSession(session) {
         if (this.session)
             this.session.doc.off("changeNewLineMode", this.onChangeNewLineMode);
             
@@ -235,15 +223,15 @@ var VirtualRenderer = function(container, theme) {
         this.onChangeNewLineMode = this.onChangeNewLineMode.bind(this);
         this.onChangeNewLineMode();
         this.session.doc.on("changeNewLineMode", this.onChangeNewLineMode);
-    };
+    }
 
     /**
      * Triggers a partial update of the text, from the range given by the two parameters.
      * @param {Number} firstRow The first row to update
      * @param {Number} lastRow The last row to update
-     *
+     * @param {boolean} [force]
      **/
-    this.updateLines = function(firstRow, lastRow, force) {
+    updateLines(firstRow, lastRow, force) {
         if (lastRow === undefined)
             lastRow = Infinity;
 
@@ -274,61 +262,60 @@ var VirtualRenderer = function(container, theme) {
         if (this.$changedLines.firstRow > this.layerConfig.lastRow)
             return;
         this.$loop.schedule(this.CHANGE_LINES);
-    };
+    }
 
-    this.onChangeNewLineMode = function() {
+    onChangeNewLineMode() {
         this.$loop.schedule(this.CHANGE_TEXT);
         this.$textLayer.$updateEolChar();
         this.session.$bidiHandler.setEolChar(this.$textLayer.EOL_CHAR);
-    };
+    }
     
-    this.onChangeTabSize = function() {
+    onChangeTabSize() {
         this.$loop.schedule(this.CHANGE_TEXT | this.CHANGE_MARKER);
         this.$textLayer.onChangeTabSize();
-    };
+    }
 
     /**
      * Triggers a full update of the text, for all the rows.
      **/
-    this.updateText = function() {
+    updateText() {
         this.$loop.schedule(this.CHANGE_TEXT);
-    };
+    }
 
     /**
      * Triggers a full update of all the layers, for all the rows.
-     * @param {Boolean} force If `true`, forces the changes through
-     *
+     * @param {Boolean} [force] If `true`, forces the changes through
+     
      **/
-    this.updateFull = function(force) {
+    updateFull(force) {
         if (force)
             this.$renderChanges(this.CHANGE_FULL, true);
         else
             this.$loop.schedule(this.CHANGE_FULL);
-    };
+    }
 
     /**
      * Updates the font size.
      **/
-    this.updateFontSize = function() {
+    updateFontSize() {
         this.$textLayer.checkForSizeChanges();
-    };
+    }
 
-    this.$changes = 0;
-    this.$updateSizeAsync = function() {
+    $updateSizeAsync() {
         if (this.$loop.pending)
             this.$size.$dirty = true;
         else
             this.onResize();
-    };
+    }
     /**
      * [Triggers a resize of the editor.]{: #VirtualRenderer.onResize}
-     * @param {Boolean} force If `true`, recomputes the size, even if the height and width haven't changed
-     * @param {Number} gutterWidth The width of the gutter in pixels
-     * @param {Number} width The width of the editor in pixels
-     * @param {Number} height The hiehgt of the editor, in pixels
-     *
+     * @param {Boolean} [force] If `true`, recomputes the size, even if the height and width haven't changed
+     * @param {Number} [gutterWidth] The width of the gutter in pixels
+     * @param {Number} [width] The width of the editor in pixels
+     * @param {Number} [height] The hiehgt of the editor, in pixels
+     
      **/
-    this.onResize = function(force, gutterWidth, width, height) {
+    onResize(force, gutterWidth, width, height) {
         if (this.resizing > 2)
             return;
         else if (this.resizing > 0)
@@ -344,6 +331,7 @@ var VirtualRenderer = function(container, theme) {
             width = el.clientWidth || el.scrollWidth;
         var changes = this.$updateCachedSize(force, gutterWidth, width, height);
 
+        if (this.$resizeTimer) this.$resizeTimer.cancel();
         
         if (!this.$size.scrollerHeight || (!width && !height))
             return this.resizing = 0;
@@ -364,9 +352,17 @@ var VirtualRenderer = function(container, theme) {
         if (this.$customScrollbar) {
             this.$updateCustomScrollbar(true);
         }
-    };
-    
-    this.$updateCachedSize = function(force, gutterWidth, width, height) {
+    }
+
+    /**
+     * @param [force]
+     * @param [gutterWidth]
+     * @param [width]
+     * @param [height]
+     * @return {number}
+     
+     */
+    $updateCachedSize(force, gutterWidth, width, height) {
         height -= (this.$extraHeight || 0);
         var changes = 0;
         var size = this.$size;
@@ -422,9 +418,14 @@ var VirtualRenderer = function(container, theme) {
             this._signal("resize", oldSize);
 
         return changes;
-    };
+    }
 
-    this.onGutterResize = function(width) {
+    /**
+     * 
+     * @param {number} width
+     
+     */
+    onGutterResize(width) {
         var gutterWidth = this.$showGutter ? width : 0;
         if (gutterWidth != this.gutterWidth)
             this.$changes |= this.$updateCachedSize(true, gutterWidth, this.$size.width, this.$size.height);
@@ -436,134 +437,176 @@ var VirtualRenderer = function(container, theme) {
         } else {
             this.$computeLayerConfig();
         }
-    };
+    }
 
     /**
      * Adjusts the wrap limit, which is the number of characters that can fit within the width of the edit area on screen.
+     
      **/
-    this.adjustWrapLimit = function() {
+    adjustWrapLimit() {
         var availableWidth = this.$size.scrollerWidth - this.$padding * 2;
         var limit = Math.floor(availableWidth / this.characterWidth);
         return this.session.adjustWrapLimit(limit, this.$showPrintMargin && this.$printMarginColumn);
-    };
+    }
 
     /**
      * Identifies whether you want to have an animated scroll or not.
      * @param {Boolean} shouldAnimate Set to `true` to show animated scrolls
-     *
+     
      **/
-    this.setAnimatedScroll = function(shouldAnimate){
+    setAnimatedScroll(shouldAnimate){
         this.setOption("animatedScroll", shouldAnimate);
-    };
+    }
 
     /**
      * Returns whether an animated scroll happens or not.
      * @returns {Boolean}
+     
      **/
-    this.getAnimatedScroll = function() {
+    getAnimatedScroll() {
         return this.$animatedScroll;
-    };
+    }
 
     /**
      * Identifies whether you want to show invisible characters or not.
      * @param {Boolean} showInvisibles Set to `true` to show invisibles
-     *
+     
      **/
-    this.setShowInvisibles = function(showInvisibles) {
+    setShowInvisibles(showInvisibles) {
         this.setOption("showInvisibles", showInvisibles);
         this.session.$bidiHandler.setShowInvisibles(showInvisibles);
-    };
+    }
 
     /**
      * Returns whether invisible characters are being shown or not.
      * @returns {Boolean}
+     
      **/
-    this.getShowInvisibles = function() {
+    getShowInvisibles() {
         return this.getOption("showInvisibles");
-    };
-    this.getDisplayIndentGuides = function() {
+    }
+
+    /**
+     * @return {boolean}
+     
+     */
+    getDisplayIndentGuides() {
         return this.getOption("displayIndentGuides");
-    };
+    }
 
-    this.setDisplayIndentGuides = function(display) {
+    /**
+     * @param {boolean} display
+     
+     */
+    setDisplayIndentGuides(display) {
         this.setOption("displayIndentGuides", display);
-    };
+    }
 
-    this.getHighlightIndentGuides = function() {
+    /**
+     
+     * @return {boolean}
+     */
+    getHighlightIndentGuides() {
         return this.getOption("highlightIndentGuides");
-    };
+    }
 
-    this.setHighlightIndentGuides = function(highlight) {
+    /**
+     
+     * @param {boolean} highlight
+     */
+    setHighlightIndentGuides(highlight) {
         this.setOption("highlightIndentGuides", highlight);
-    };
+    }
 
     /**
      * Identifies whether you want to show the print margin or not.
      * @param {Boolean} showPrintMargin Set to `true` to show the print margin
-     *
+     
      **/
-    this.setShowPrintMargin = function(showPrintMargin) {
+    setShowPrintMargin(showPrintMargin) {
         this.setOption("showPrintMargin", showPrintMargin);
-    };
+    }
 
     /**
      * Returns whether the print margin is being shown or not.
      * @returns {Boolean}
+     
      **/
-    this.getShowPrintMargin = function() {
+    getShowPrintMargin() {
         return this.getOption("showPrintMargin");
-    };
+    }
     /**
      * Identifies whether you want to show the print margin column or not.
-     * @param {Boolean} showPrintMargin Set to `true` to show the print margin column
-     *
+     * @param {number} printMarginColumn Set to `true` to show the print margin column
+     
      **/
-    this.setPrintMarginColumn = function(showPrintMargin) {
-        this.setOption("printMarginColumn", showPrintMargin);
-    };
+    setPrintMarginColumn(printMarginColumn) {
+        this.setOption("printMarginColumn", printMarginColumn);
+    }
 
     /**
      * Returns whether the print margin column is being shown or not.
-     * @returns {Boolean}
+     * @returns {number}
+     
      **/
-    this.getPrintMarginColumn = function() {
+    getPrintMarginColumn() {
         return this.getOption("printMarginColumn");
-    };
+    }
 
     /**
      * Returns `true` if the gutter is being shown.
      * @returns {Boolean}
+     
      **/
-    this.getShowGutter = function(){
+    getShowGutter(){
         return this.getOption("showGutter");
-    };
+    }
 
     /**
      * Identifies whether you want to show the gutter or not.
      * @param {Boolean} show Set to `true` to show the gutter
-     *
+     
      **/
-    this.setShowGutter = function(show){
+    setShowGutter(show){
         return this.setOption("showGutter", show);
-    };
+    }
 
-    this.getFadeFoldWidgets = function(){
+    /**
+     
+     * @returns {boolean}
+     */
+    getFadeFoldWidgets(){
         return this.getOption("fadeFoldWidgets");
-    };
+    }
 
-    this.setFadeFoldWidgets = function(show) {
+    /**
+     
+     * @param {boolean} show
+     */
+    setFadeFoldWidgets(show) {
         this.setOption("fadeFoldWidgets", show);
-    };
+    }
 
-    this.setHighlightGutterLine = function(shouldHighlight) {
+    /**
+      *
+     * @param {boolean} shouldHighlight
+     */
+    setHighlightGutterLine(shouldHighlight) {
         this.setOption("highlightGutterLine", shouldHighlight);
-    };
+    }
 
-    this.getHighlightGutterLine = function() {
+    /**
+     
+     * @returns {boolean}
+     */
+    getHighlightGutterLine() {
         return this.getOption("highlightGutterLine");
-    };
+    }
 
-    this.$updatePrintMargin = function() {
+    /**
+     
+     */
+    $updatePrintMargin() {
         if (!this.$showPrintMargin && !this.$printMarginEl)
             return;
 
@@ -582,38 +625,41 @@ var VirtualRenderer = function(container, theme) {
         
         if (this.session && this.session.$wrap == -1)
             this.adjustWrapLimit();
-    };
+    }
 
     /**
      *
      * Returns the root element containing this renderer.
-     * @returns {Element}
+     * @returns {HTMLElement}
      **/
-    this.getContainerElement = function() {
+    getContainerElement() {
         return this.container;
-    };
+    }
 
     /**
      *
      * Returns the element that the mouse events are attached to
-     * @returns {Element}
+     * @returns {HTMLElement}
      **/
-    this.getMouseEventTarget = function() {
+    getMouseEventTarget() {
         return this.scroller;
-    };
+    }
 
     /**
      *
      * Returns the element to which the hidden text area is added.
-     * @returns {Element}
+     * @returns {HTMLElement}
      **/
-    this.getTextAreaContainer = function() {
+    getTextAreaContainer() {
         return this.container;
-    };
+    }
 
     // move text input over the cursor
     // this is required for IME
-    this.$moveTextAreaToCursor = function() {
+    /**
+     
+     */
+    $moveTextAreaToCursor() {
         if (this.$isMousePressed) return;
         var style = this.textarea.style;
         var composition = this.$composition;
@@ -632,7 +678,7 @@ var VirtualRenderer = function(container, theme) {
         var posLeft = pixelPos.left;
         posTop -= config.offset;
 
-        var h = composition && composition.useTextareaForIME ? this.lineHeight : HIDE_TEXTAREA ? 0 : 1;
+        var h = composition && composition.useTextareaForIME || useragent.isMobile ? this.lineHeight : 1;
         if (posTop < 0 || posTop > config.height - h) {
             dom.translate(this.textarea, 0, 0);
             return;
@@ -662,56 +708,54 @@ var VirtualRenderer = function(container, theme) {
         dom.setStyle(style, "height", h + "px");
         dom.setStyle(style, "width", w + "px");
         dom.translate(this.textarea, Math.min(posLeft, this.$size.scrollerWidth - w), Math.min(posTop, maxTop));
-    };
+    }
 
     /**
      * [Returns the index of the first visible row.]{: #VirtualRenderer.getFirstVisibleRow}
      * @returns {Number}
      **/
-    this.getFirstVisibleRow = function() {
+    getFirstVisibleRow() {
         return this.layerConfig.firstRow;
-    };
+    }
 
     /**
      *
      * Returns the index of the first fully visible row. "Fully" here means that the characters in the row are not truncated; that the top and the bottom of the row are on the screen.
      * @returns {Number}
      **/
-    this.getFirstFullyVisibleRow = function() {
+    getFirstFullyVisibleRow() {
         return this.layerConfig.firstRow + (this.layerConfig.offset === 0 ? 0 : 1);
-    };
+    }
 
     /**
      *
      * Returns the index of the last fully visible row. "Fully" here means that the characters in the row are not truncated; that the top and the bottom of the row are on the screen.
      * @returns {Number}
      **/
-    this.getLastFullyVisibleRow = function() {
+    getLastFullyVisibleRow() {
         var config = this.layerConfig;
         var lastRow = config.lastRow;
         var top = this.session.documentToScreenRow(lastRow, 0) * config.lineHeight;
         if (top - this.session.getScrollTop() > config.height - config.lineHeight)
             return lastRow - 1;
         return lastRow;
-    };
+    }
 
     /**
      *
      * [Returns the index of the last visible row.]{: #VirtualRenderer.getLastVisibleRow}
      * @returns {Number}
      **/
-    this.getLastVisibleRow = function() {
+    getLastVisibleRow() {
         return this.layerConfig.lastRow;
-    };
-
-    this.$padding = null;
+    }
 
     /**
      * Sets the padding for all the layers.
      * @param {Number} padding A new padding value (in pixels)
-     *
+     
      **/
-    this.setPadding = function(padding) {
+    setPadding(padding) {
         this.$padding = padding;
         this.$textLayer.setPadding(padding);
         this.$cursorLayer.setPadding(padding);
@@ -719,9 +763,17 @@ var VirtualRenderer = function(container, theme) {
         this.$markerBack.setPadding(padding);
         this.$loop.schedule(this.CHANGE_FULL);
         this.$updatePrintMargin();
-    };
-    
-    this.setScrollMargin = function(top, bottom, left, right) {
+    }
+
+    /**
+     * 
+     * @param {number} [top]
+     * @param {number} [bottom]
+     * @param {number} [left]
+     * @param {number} [right]
+     
+     */
+    setScrollMargin(top, bottom, left, right) {
         var sm = this.scrollMargin;
         sm.top = top|0;
         sm.bottom = bottom|0;
@@ -732,9 +784,17 @@ var VirtualRenderer = function(container, theme) {
         if (sm.top && this.scrollTop <= 0 && this.session)
             this.session.setScrollTop(-sm.top);
         this.updateFull();
-    };
-    
-    this.setMargin = function(top, bottom, left, right) {
+    }
+
+    /**
+     *
+     * @param {number} [top]
+     * @param {number} [bottom]
+     * @param {number} [left]
+     * @param {number} [right]
+     
+     */
+    setMargin(top, bottom, left, right) {
         var sm = this.margin;
         sm.top = top|0;
         sm.bottom = bottom|0;
@@ -744,40 +804,46 @@ var VirtualRenderer = function(container, theme) {
         sm.h = sm.left + sm.right;
         this.$updateCachedSize(true, this.gutterWidth, this.$size.width, this.$size.height);
         this.updateFull();
-    };
+    }
 
     /**
      * Returns whether the horizontal scrollbar is set to be always visible.
      * @returns {Boolean}
+     
      **/
-    this.getHScrollBarAlwaysVisible = function() {
+    getHScrollBarAlwaysVisible() {
         return this.$hScrollBarAlwaysVisible;
-    };
+    }
 
     /**
      * Identifies whether you want to show the horizontal scrollbar or not.
      * @param {Boolean} alwaysVisible Set to `true` to make the horizontal scroll bar visible
+     
      **/
-    this.setHScrollBarAlwaysVisible = function(alwaysVisible) {
+    setHScrollBarAlwaysVisible(alwaysVisible) {
         this.setOption("hScrollBarAlwaysVisible", alwaysVisible);
-    };
+    }
     /**
      * Returns whether the horizontal scrollbar is set to be always visible.
      * @returns {Boolean}
+     
      **/
-    this.getVScrollBarAlwaysVisible = function() {
+    getVScrollBarAlwaysVisible() {
         return this.$vScrollBarAlwaysVisible;
-    };
+    }
 
     /**
      * Identifies whether you want to show the horizontal scrollbar or not.
      * @param {Boolean} alwaysVisible Set to `true` to make the horizontal scroll bar visible
      **/
-    this.setVScrollBarAlwaysVisible = function(alwaysVisible) {
+    setVScrollBarAlwaysVisible(alwaysVisible) {
         this.setOption("vScrollBarAlwaysVisible", alwaysVisible);
-    };
+    }
 
-    this.$updateScrollBarV = function() {
+    /**
+     
+     */
+    $updateScrollBarV() {
         var scrollHeight = this.layerConfig.maxHeight;
         var scrollerHeight = this.$size.scrollerHeight;
         if (!this.$maxLines && this.$scrollPastEnd) {
@@ -789,22 +855,28 @@ var VirtualRenderer = function(container, theme) {
         }
         this.scrollBarV.setScrollHeight(scrollHeight + this.scrollMargin.v);
         this.scrollBarV.setScrollTop(this.scrollTop + this.scrollMargin.top);
-    };
-    this.$updateScrollBarH = function() {
+    }
+    $updateScrollBarH() {
         this.scrollBarH.setScrollWidth(this.layerConfig.width + 2 * this.$padding + this.scrollMargin.h);
         this.scrollBarH.setScrollLeft(this.scrollLeft + this.scrollMargin.left);
-    };
-    
-    this.$frozen = false;
-    this.freeze = function() {
-        this.$frozen = true;
-    };
-    
-    this.unfreeze = function() {
-        this.$frozen = false;
-    };
+    }
 
-    this.$renderChanges = function(changes, force) {
+    freeze() {
+        this.$frozen = true;
+    }
+    
+    unfreeze() {
+        this.$frozen = false;
+    }
+
+    /**
+     * 
+     * @param {number} changes
+     * @param {boolean} [force]
+     * @returns {number}
+     
+     */
+    $renderChanges(changes, force) {
         if (this.$changes) {
             changes |= this.$changes;
             this.$changes = 0;
@@ -843,7 +915,7 @@ var VirtualRenderer = function(container, theme) {
             // scrollTop so that the cursor and onscreen content stays in the same place.
             // TODO: find a better way to handle this, that works non wrapped case and doesn't compute layerConfig twice
             if (config.firstRow != this.layerConfig.firstRow && config.firstRowScreen == this.layerConfig.firstRowScreen) {
-                var st = this.scrollTop + (config.firstRow - this.layerConfig.firstRow) * this.lineHeight;
+                var st = this.scrollTop + (config.firstRow - Math.max(this.layerConfig.firstRow, 0)) * this.lineHeight;
                 if (st > 0) {
                     // this check is needed as a workaround for the documentToScreenRow returning -1 if document.length == 0
                     this.scrollTop = st;
@@ -869,7 +941,9 @@ var VirtualRenderer = function(container, theme) {
         // horizontal scrolling
         if (changes & this.CHANGE_H_SCROLL) {
             dom.translate(this.content, -this.scrollLeft, -config.offset);
-            this.scroller.className = this.scrollLeft <= 0 ? "ace_scroller" : "ace_scroller ace_scroll-left";
+            this.scroller.className = this.scrollLeft <= 0 ? "ace_scroller " : "ace_scroller ace_scroll-left ";
+            if (this.enableKeyboardAccessibility)
+                this.scroller.className += this.keyboardFocusClassName;
         }
 
         // full
@@ -939,6 +1013,7 @@ var VirtualRenderer = function(container, theme) {
         }
         else if (changes & this.CHANGE_CURSOR) {
             if (this.$highlightGutterLine)
+                // @ts-expect-error TODO: potential wrong param
                 this.$gutterLayer.updateLineHighlight(config);
             if (this.$customScrollbar) {
                 this.$scrollDecorator.$updateDecorators(config);
@@ -959,10 +1034,12 @@ var VirtualRenderer = function(container, theme) {
         }
 
         this._signal("afterRender", changes);
-    };
+    }
 
-    
-    this.$autosize = function() {
+    /**
+     
+     */
+    $autosize() {
         var height = this.session.getScreenLength() * this.lineHeight;
         var maxHeight = this.$maxLines * this.lineHeight;
         var desiredHeight = Math.min(maxHeight, 
@@ -991,9 +1068,13 @@ var VirtualRenderer = function(container, theme) {
             
             this._signal("autosize");
         }
-    };
-    
-    this.$computeLayerConfig = function() {
+    }
+
+    /**
+     
+     * @returns {number}
+     */
+    $computeLayerConfig() {
         var session = this.session;
         var size = this.$size;
         
@@ -1097,9 +1178,13 @@ var VirtualRenderer = function(container, theme) {
         // console.log(JSON.stringify(this.layerConfig));
 
         return changes;
-    };
+    }
 
-    this.$updateLines = function() {
+    /**
+     * @returns {boolean | undefined}
+     
+     */
+    $updateLines() {
         if (!this.$changedLines) return;
         var firstRow = this.$changedLines.firstRow;
         var lastRow = this.$changedLines.lastRow;
@@ -1121,9 +1206,14 @@ var VirtualRenderer = function(container, theme) {
         // else update only the changed rows
         this.$textLayer.updateLines(layerConfig, firstRow, lastRow);
         return true;
-    };
+    }
 
-    this.$getLongestLine = function() {
+    /**
+     * 
+     * @returns {number}
+     
+     */
+    $getLongestLine() {
         var charCount = this.session.getScreenWidth();
         if (this.showInvisibles && !this.session.$useWrapMode)
             charCount += 1;
@@ -1132,95 +1222,106 @@ var VirtualRenderer = function(container, theme) {
             charCount = this.$textLayer.MAX_LINE_LENGTH + 30;
 
         return Math.max(this.$size.scrollerWidth - 2 * this.$padding, Math.round(charCount * this.characterWidth));
-    };
+    }
 
     /**
      * Schedules an update to all the front markers in the document.
      **/
-    this.updateFrontMarkers = function() {
+    updateFrontMarkers() {
         this.$markerFront.setMarkers(this.session.getMarkers(true));
         this.$loop.schedule(this.CHANGE_MARKER_FRONT);
-    };
+    }
 
     /**
      *
      * Schedules an update to all the back markers in the document.
      **/
-    this.updateBackMarkers = function() {
+    updateBackMarkers() {
         this.$markerBack.setMarkers(this.session.getMarkers());
         this.$loop.schedule(this.CHANGE_MARKER_BACK);
-    };
+    }
 
     /**
      *
      * Deprecated; (moved to [[EditSession]])
      * @deprecated
      **/
-    this.addGutterDecoration = function(row, className){
+    addGutterDecoration(row, className){
         this.$gutterLayer.addGutterDecoration(row, className);
-    };
+    }
 
     /**
      * Deprecated; (moved to [[EditSession]])
      * @deprecated
      **/
-    this.removeGutterDecoration = function(row, className){
+    removeGutterDecoration(row, className){
         this.$gutterLayer.removeGutterDecoration(row, className);
-    };
+    }
 
     /**
-     *
+     * 
      * Redraw breakpoints.
-     **/
-    this.updateBreakpoints = function(rows) {
+     * @param {any} [rows]
+     */
+    updateBreakpoints(rows) {
+        this._rows = rows;
         this.$loop.schedule(this.CHANGE_GUTTER);
-    };
+    }
 
     /**
      * Sets annotations for the gutter.
-     * @param {Annotation[]} annotations An array containing annotations
+     * @param {import("../ace-internal").Ace.Annotation[]} annotations An array containing annotations
      *
      **/
-    this.setAnnotations = function(annotations) {
+    setAnnotations(annotations) {
         this.$gutterLayer.setAnnotations(annotations);
         this.$loop.schedule(this.CHANGE_GUTTER);
-    };
+    }
 
     /**
      *
      * Updates the cursor icon.
      **/
-    this.updateCursor = function() {
+    updateCursor() {
         this.$loop.schedule(this.CHANGE_CURSOR);
-    };
+    }
 
     /**
      *
      * Hides the cursor icon.
      **/
-    this.hideCursor = function() {
+    hideCursor() {
         this.$cursorLayer.hideCursor();
-    };
+    }
 
     /**
      *
      * Shows the cursor icon.
      **/
-    this.showCursor = function() {
+    showCursor() {
         this.$cursorLayer.showCursor();
-    };
+    }
 
-    this.scrollSelectionIntoView = function(anchor, lead, offset) {
+    /**
+     * 
+     * @param {Point} anchor
+     * @param {Point} lead
+     * @param {number} [offset]
+     */
+    scrollSelectionIntoView(anchor, lead, offset) {
         // first scroll anchor into view then scroll lead into view
         this.scrollCursorIntoView(anchor, offset);
         this.scrollCursorIntoView(lead, offset);
-    };
+    }
 
     /**
-     *
+     * 
      * Scrolls the cursor into the first visibile area of the editor
-     **/
-    this.scrollCursorIntoView = function(cursor, offset, $viewMargin) {
+     * @param {Point} [cursor]
+     * @param {number} [offset]
+     * @param {{ top?: any; bottom?: any; }} [$viewMargin]
+     */
+    scrollCursorIntoView(cursor, offset, $viewMargin) {
         // the editor is not visible
         if (this.$size.scrollerHeight === 0)
             return;
@@ -1269,41 +1370,41 @@ var VirtualRenderer = function(container, theme) {
                 this.session.setScrollLeft(0);
             }
         }
-    };
+    }
 
     /**
      * {:EditSession.getScrollTop}
      * @related EditSession.getScrollTop
      * @returns {Number}
      **/
-    this.getScrollTop = function() {
+    getScrollTop() {
         return this.session.getScrollTop();
-    };
+    }
 
     /**
      * {:EditSession.getScrollLeft}
      * @related EditSession.getScrollLeft
      * @returns {Number}
      **/
-    this.getScrollLeft = function() {
+    getScrollLeft() {
         return this.session.getScrollLeft();
-    };
+    }
 
     /**
      * Returns the first visible row, regardless of whether it's fully visible or not.
      * @returns {Number}
      **/
-    this.getScrollTopRow = function() {
+    getScrollTopRow() {
         return this.scrollTop / this.lineHeight;
-    };
+    }
 
     /**
      * Returns the last visible row, regardless of whether it's fully visible or not.
      * @returns {Number}
      **/
-    this.getScrollBottomRow = function() {
+    getScrollBottomRow() {
         return Math.max(0, Math.floor((this.scrollTop + this.$size.scrollerHeight) / this.lineHeight) - 1);
-    };
+    }
 
     /**
      * Gracefully scrolls from the top of the editor to the row indicated.
@@ -1311,11 +1412,17 @@ var VirtualRenderer = function(container, theme) {
      *
      * @related EditSession.setScrollTop
      **/
-    this.scrollToRow = function(row) {
+    scrollToRow(row) {
         this.session.setScrollTop(row * this.lineHeight);
-    };
+    }
 
-    this.alignCursor = function(cursor, alignment) {
+    /**
+     * 
+     * @param {Point} cursor
+     * @param {number} [alignment]
+     * @returns {number}
+     */
+    alignCursor(cursor, alignment) {
         if (typeof cursor == "number")
             cursor = {row: cursor, column: 0};
 
@@ -1325,10 +1432,15 @@ var VirtualRenderer = function(container, theme) {
 
         this.session.setScrollTop(offset);
         return offset;
-    };
+    }
 
-    this.STEPS = 8;
-    this.$calcSteps = function(fromValue, toValue){
+    /**
+     * 
+     * @param {number} fromValue
+     * @param {number} toValue
+     * @returns {*[]}
+     */
+    $calcSteps(fromValue, toValue){
         var i = 0;
         var l = this.STEPS;
         var steps = [];
@@ -1341,17 +1453,17 @@ var VirtualRenderer = function(container, theme) {
             steps.push(func(i / this.STEPS, fromValue, toValue - fromValue));
 
         return steps;
-    };
+    }
 
     /**
      * Gracefully scrolls the editor to the row indicated.
      * @param {Number} line A line number
      * @param {Boolean} center If `true`, centers the editor the to indicated line
      * @param {Boolean} animate If `true` animates scrolling
-     * @param {Function} callback Function to be called after the animation has finished
-     *
+     * @param {() => void} [callback] Function to be called after the animation has finished
+     
      **/
-    this.scrollToLine = function(line, center, animate, callback) {
+    scrollToLine(line, center, animate, callback) {
         var pos = this.$cursorLayer.getPixelPosition({row: line, column: 0});
         var offset = pos.top;
         if (center)
@@ -1361,9 +1473,15 @@ var VirtualRenderer = function(container, theme) {
         this.session.setScrollTop(offset);
         if (animate !== false)
             this.animateScrolling(initialScroll, callback);
-    };
+    }
 
-    this.animateScrolling = function(fromValue, callback) {
+    /**
+     * 
+     * @param fromValue
+     * @param [callback]
+     
+     */
+    animateScrolling(fromValue, callback) {
         var toValue = this.scrollTop;
         if (!this.$animatedScroll)
             return;
@@ -1391,6 +1509,7 @@ var VirtualRenderer = function(container, theme) {
         _self.session.$scrollTop = toValue;
         
         function endAnimation() {
+            // @ts-ignore
             _self.$timer = clearInterval(_self.$timer);
             _self.$scrollAnimation = null;
             _self.$stopAnimation = false;
@@ -1417,54 +1536,50 @@ var VirtualRenderer = function(container, theme) {
                 endAnimation();
             }
         }, 10);
-    };
+    }
 
     /**
      * Scrolls the editor to the y pixel indicated.
      * @param {Number} scrollTop The position to scroll to
-     *
-     * @returns {Number}
      **/
-    this.scrollToY = function(scrollTop) {
+    scrollToY(scrollTop) {
         // after calling scrollBar.setScrollTop
         // scrollbar sends us event with same scrollTop. ignore it
         if (this.scrollTop !== scrollTop) {
             this.$loop.schedule(this.CHANGE_SCROLL);
             this.scrollTop = scrollTop;
         }
-    };
+    }
 
     /**
      * Scrolls the editor across the x-axis to the pixel indicated.
      * @param {Number} scrollLeft The position to scroll to
-     *
-     * @returns {Number}
      **/
-    this.scrollToX = function(scrollLeft) {
+    scrollToX(scrollLeft) {
         if (this.scrollLeft !== scrollLeft)
             this.scrollLeft = scrollLeft;
         this.$loop.schedule(this.CHANGE_H_SCROLL);
-    };
+    }
 
     /**
      * Scrolls the editor across both x- and y-axes.
      * @param {Number} x The x value to scroll to
      * @param {Number} y The y value to scroll to
      **/
-    this.scrollTo = function(x, y) {
+    scrollTo(x, y) {
         this.session.setScrollTop(y);
         this.session.setScrollLeft(x);
-    };
+    }
     
     /**
      * Scrolls the editor across both x- and y-axes.
      * @param {Number} deltaX The x value to scroll by
      * @param {Number} deltaY The y value to scroll by
      **/
-    this.scrollBy = function(deltaX, deltaY) {
+    scrollBy(deltaX, deltaY) {
         deltaY && this.session.setScrollTop(this.session.getScrollTop() + deltaY);
         deltaX && this.session.setScrollLeft(this.session.getScrollLeft() + deltaX);
-    };
+    }
 
     /**
      * Returns `true` if you can still scroll by either parameter; in other words, you haven't reached the end of the file or line.
@@ -1473,7 +1588,7 @@ var VirtualRenderer = function(container, theme) {
      *
      * @returns {Boolean}
      **/
-    this.isScrollableBy = function(deltaX, deltaY) {
+    isScrollableBy(deltaX, deltaY) {
         if (deltaY < 0 && this.session.getScrollTop() >= 1 - this.scrollMargin.top)
            return true;
         if (deltaY > 0 && this.session.getScrollTop() + this.$size.scrollerHeight
@@ -1484,9 +1599,16 @@ var VirtualRenderer = function(container, theme) {
         if (deltaX > 0 && this.session.getScrollLeft() + this.$size.scrollerWidth
             - this.layerConfig.width < -1 + this.scrollMargin.right)
            return true;
-    };
+    }
 
-    this.pixelToScreenCoordinates = function(x, y) {
+    /**
+     * 
+     * @param {number} x
+     * @param {number} y
+     * @returns {import("../ace-internal").Ace.ScreenCoordinates}
+     
+     */
+    pixelToScreenCoordinates(x, y) {
         var canvasPos;
         if (this.$hasCssTransforms) {
             canvasPos = {top:0, left: 0};
@@ -1503,9 +1625,16 @@ var VirtualRenderer = function(container, theme) {
         var col = this.$blockCursor ? Math.floor(offset) : Math.round(offset);
 
         return {row: row, column: col, side: offset - col > 0 ? 1 : -1, offsetX:  offsetX};
-    };
+    }
 
-    this.screenToTextCoordinates = function(x, y) {
+    /**
+     * 
+     * @param {number} x
+     * @param {number} y
+     * @returns {Point}
+     
+     */
+    screenToTextCoordinates(x, y) {
         var canvasPos;
         if (this.$hasCssTransforms) {
             canvasPos = {top:0, left: 0};
@@ -1523,16 +1652,16 @@ var VirtualRenderer = function(container, theme) {
         var row = Math.floor((y + this.scrollTop - canvasPos.top) / this.lineHeight);
 
         return this.session.screenToDocumentPosition(row, Math.max(col, 0), offsetX);
-    };
+    }
 
     /**
      * Returns an object containing the `pageX` and `pageY` coordinates of the document position.
      * @param {Number} row The document row position
      * @param {Number} column The document column position
      *
-     * @returns {Object}
+     * @returns {{ pageX: number, pageY: number}}
      **/
-    this.textToScreenCoordinates = function(row, column) {
+    textToScreenCoordinates(row, column) {
         var canvasPos = this.scroller.getBoundingClientRect();
         var pos = this.session.documentToScreenPosition(row, column);
 
@@ -1546,30 +1675,29 @@ var VirtualRenderer = function(container, theme) {
             pageX: canvasPos.left + x - this.scrollLeft,
             pageY: canvasPos.top + y - this.scrollTop
         };
-    };
+    }
 
     /**
      *
      * Focuses the current container.
      **/
-    this.visualizeFocus = function() {
+    visualizeFocus() {
         dom.addCssClass(this.container, "ace_focus");
-    };
+    }
 
     /**
      *
      * Blurs the current container.
      **/
-    this.visualizeBlur = function() {
+    visualizeBlur() {
         dom.removeCssClass(this.container, "ace_focus");
-    };
+    }
 
     /**
-     * @param {Number} position
-     *
-     * @private
+     * @param {Object} composition
+     
      **/
-    this.showComposition = function(composition) {
+    showComposition(composition) {
         this.$composition = composition;
         if (!composition.cssText) {
             composition.cssText = this.textarea.style.cssText;
@@ -1586,24 +1714,26 @@ var VirtualRenderer = function(container, theme) {
         else {
             composition.markerId = this.session.addMarker(composition.markerRange, "ace_composition_marker", "text");
         }
-    };
+    }
 
     /**
      * @param {String} text A string of text to use
      *
      * Sets the inner text of the current composition to `text`.
+     
      **/
-    this.setCompositionText = function(text) {
+    setCompositionText(text) {
         var cursor = this.session.selection.cursor;
         this.addToken(text, "composition_placeholder", cursor.row, cursor.column);
         this.$moveTextAreaToCursor();
-    };
+    }
 
     /**
      *
      * Hides the current composition.
+     
      **/
-    this.hideComposition = function() {
+    hideComposition() {
         if (!this.$composition)
             return;
         
@@ -1616,9 +1746,13 @@ var VirtualRenderer = function(container, theme) {
         this.removeExtraToken(cursor.row, cursor.column);
         this.$composition = null;
         this.$cursorLayer.element.style.display = "";
-    };
+    }
 
-    this.setGhostText = function(text, position) {
+    /**
+     * @param {string} text
+     * @param {Point} [position]
+     */
+    setGhostText(text, position) {
         var cursor = this.session.selection.cursor;
         var insertPosition = position || { row: cursor.row, column: cursor.column };
 
@@ -1641,11 +1775,30 @@ var VirtualRenderer = function(container, theme) {
                 className: "ace_ghost_text"
             };
             this.session.widgetManager.addLineWidget(this.$ghostTextWidget);
+
+            // Check wether the line widget fits in the part of the screen currently in view
+            var pixelPosition = this.$cursorLayer.getPixelPosition(insertPosition, true);
+            var el = this.container;
+            var height = el.getBoundingClientRect().height;
+            var ghostTextHeight = textLines.length * this.lineHeight;
+            var fitsY = ghostTextHeight < (height - pixelPosition.top);
+
+            // If it fits, no action needed
+            if (fitsY) return;
+            
+            // If it can fully fit in the screen, scroll down until it fits on the screen
+            // if it cannot fully fit, scroll so that the row with the cursor
+            // is at the top of the screen.
+            if (ghostTextHeight < height) {
+                this.scrollBy(0, (textLines.length - 1) * this.lineHeight);
+            } else {
+                this.scrollToRow(insertPosition.row);
+            }   
         }
         
-    };
+    }
 
-    this.removeGhostText = function() {
+    removeGhostText() {
         if (!this.$ghostText) return;
 
         var position = this.$ghostText.position;
@@ -1655,14 +1808,20 @@ var VirtualRenderer = function(container, theme) {
             this.$ghostTextWidget = null;
         }
         this.$ghostText = null;
-    };
+    }
 
-    this.addToken = function(text, type, row, column) {
+    /**
+     * @param {string} text
+     * @param {string} type
+     * @param {number} row
+     * @param {number} [column]
+     */
+    addToken(text, type, row, column) {
         var session = this.session;
         session.bgTokenizer.lines[row] = null;
         var newToken = {type: type, value: text};
         var tokens = session.getTokens(row);
-        if (column == null) {
+        if (column == null || !tokens.length) {
             tokens.push(newToken);
         } else {
             var l = 0;
@@ -1680,30 +1839,36 @@ var VirtualRenderer = function(container, theme) {
             }
         }
         this.updateLines(row, row);
-    };
+    }
 
-    this.removeExtraToken = function(row, column) {
+    removeExtraToken(row, column) {
+        this.session.bgTokenizer.lines[row] = null;
         this.updateLines(row, row);
-    };
+    }
 
     /**
      * [Sets a new theme for the editor. `theme` should exist, and be a directory path, like `ace/theme/textmate`.]{: #VirtualRenderer.setTheme}
-     * @param {String} theme The path to a theme
-     * @param {Function} cb optional callback
-     *
+     * @param {String | Theme} [theme] The path to a theme
+     * @param {() => void} [cb] optional callback
+     
      **/
-    this.setTheme = function(theme, cb) {
+    setTheme(theme, cb) {
         var _self = this;
+        /**@type {any}*/
         this.$themeId = theme;
         _self._dispatchEvent('themeChange',{theme:theme});
 
         if (!theme || typeof theme == "string") {
+            // @ts-ignore
             var moduleName = theme || this.$options.theme.initialValue;
             config.loadModule(["theme", moduleName], afterLoad);
         } else {
             afterLoad(theme);
         }
 
+        /**
+         * @param {Theme} module
+         */
         function afterLoad(module) {
             if (_self.$themeId != theme)
                 return cb && cb();
@@ -1716,10 +1881,9 @@ var VirtualRenderer = function(container, theme) {
                 module.cssClass,
                 _self.container
             );
-
             if (_self.theme)
                 dom.removeCssClass(_self.container, _self.theme.cssClass);
-
+            /**@type {any}*/
             var padding = "padding" in module ? module.padding 
                 : "padding" in (_self.theme || {}) ? 4 : _self.$padding;
             if (_self.$padding && padding != _self.$padding)
@@ -1741,15 +1905,15 @@ var VirtualRenderer = function(container, theme) {
             _self._dispatchEvent('themeLoaded', {theme:module});
             cb && cb();
         }
-    };
+    }
 
     /**
      * [Returns the path of the current theme.]{: #VirtualRenderer.getTheme}
      * @returns {String}
      **/
-    this.getTheme = function() {
+    getTheme() {
         return this.$themeId;
-    };
+    }
 
     // Methods allows to add / remove CSS classnames to the editor element.
     // This feature can be used by plug-ins to provide a visual indication of
@@ -1758,49 +1922,57 @@ var VirtualRenderer = function(container, theme) {
     /**
      * [Adds a new class, `style`, to the editor.]{: #VirtualRenderer.setStyle}
      * @param {String} style A class name
-     *
+     * @param {boolean}[include]
      **/
-    this.setStyle = function(style, include) {
+    setStyle(style, include) {
         dom.setCssClass(this.container, style, include !== false);
-    };
+    }
 
     /**
      * [Removes the class `style` from the editor.]{: #VirtualRenderer.unsetStyle}
      * @param {String} style A class name
      *
      **/
-    this.unsetStyle = function(style) {
+    unsetStyle(style) {
         dom.removeCssClass(this.container, style);
-    };
-    
-    this.setCursorStyle = function(style) {
+    }
+
+    /**
+     * @param {string} style
+     */
+    setCursorStyle(style) {
         dom.setStyle(this.scroller.style, "cursor", style);
-    };
+    }
 
     /**
      * @param {String} cursorStyle A css cursor style
-     *
      **/
-    this.setMouseCursor = function(cursorStyle) {
+    setMouseCursor(cursorStyle) {
         dom.setStyle(this.scroller.style, "cursor", cursorStyle);
-    };
+    }
     
-    this.attachToShadowRoot = function() {
+    attachToShadowRoot() {
         dom.importCssString(editorCss, "ace_editor.css", this.container);
-    };
+    }
 
     /**
      * Destroys the text and cursor layers for this renderer.
+     
      **/
-    this.destroy = function() {
+    destroy() {
         this.freeze();
         this.$fontMetrics.destroy();
         this.$cursorLayer.destroy();
         this.removeAllListeners();
         this.container.textContent = "";
-    };
+        this.setOption("useResizeObserver", false);
+    }
 
-    this.$updateCustomScrollbar = function (val) {
+    /**
+     * 
+     * @param {boolean} [val]
+     */
+    $updateCustomScrollbar(val) {
         var _self = this;
         this.$horizScroll = this.$vScroll = null;
         this.scrollBarV.element.remove();
@@ -1809,7 +1981,9 @@ var VirtualRenderer = function(container, theme) {
             delete this.$scrollDecorator;
         }
         if (val === true) {
+            /**@type {import("../ace-internal").Ace.VScrollbar}*/
             this.scrollBarV = new VScrollBarCustom(this.container, this);
+            /**@type {import("../ace-internal").Ace.HScrollbar}*/
             this.scrollBarH = new HScrollBarCustom(this.container, this);
             this.scrollBarV.setHeight(this.$size.scrollerHeight);
             this.scrollBarH.setWidth(this.$size.scrollerWidth);
@@ -1833,12 +2007,68 @@ var VirtualRenderer = function(container, theme) {
                 if (!_self.$scrollAnimation) _self.session.setScrollLeft(e.data - _self.scrollMargin.left);
             });
         }
-    };
+    }
 
-}).call(VirtualRenderer.prototype);
+    /**
+     
+     */
+    $addResizeObserver() {
+        if (!window.ResizeObserver || this.$resizeObserver) return;
+        var self = this;
+        this.$resizeTimer = lang.delayedCall(function() {
+            if (!self.destroyed)  self.onResize();
+        }, 50);
+        this.$resizeObserver = new window.ResizeObserver(function(e) {
+            var w = e[0].contentRect.width;
+            var h = e[0].contentRect.height;
+            if (
+                Math.abs(self.$size.width - w) > 1
+                || Math.abs(self.$size.height - h) > 1
+            ) {
+                self.$resizeTimer.delay();
+            } else {
+                self.$resizeTimer.cancel();
+            }
+        });
+        this.$resizeObserver.observe(this.container);
+    }
 
+}
+
+VirtualRenderer.prototype.CHANGE_CURSOR = 1;
+VirtualRenderer.prototype.CHANGE_MARKER = 2;
+VirtualRenderer.prototype.CHANGE_GUTTER = 4;
+VirtualRenderer.prototype.CHANGE_SCROLL = 8;
+VirtualRenderer.prototype.CHANGE_LINES = 16;
+VirtualRenderer.prototype.CHANGE_TEXT = 32;
+VirtualRenderer.prototype.CHANGE_SIZE = 64;
+VirtualRenderer.prototype.CHANGE_MARKER_BACK = 128;
+VirtualRenderer.prototype.CHANGE_MARKER_FRONT = 256;
+VirtualRenderer.prototype.CHANGE_FULL = 512;
+VirtualRenderer.prototype.CHANGE_H_SCROLL = 1024;
+VirtualRenderer.prototype.$changes = 0;
+VirtualRenderer.prototype.$padding = null;
+VirtualRenderer.prototype.$frozen = false;
+VirtualRenderer.prototype.STEPS = 8;
+
+oop.implement(VirtualRenderer.prototype, EventEmitter);
 
 config.defineOptions(VirtualRenderer.prototype, "renderer", {
+    useResizeObserver: {
+        /**
+         * @param value
+         * @this{VirtualRenderer}
+         */
+        set: function(value) {
+            if (!value && this.$resizeObserver) {
+                this.$resizeObserver.disconnect();
+                this.$resizeTimer.cancel();
+                this.$resizeTimer = this.$resizeObserver = null;
+            } else if (value && !this.$resizeObserver) {
+                this.$addResizeObserver();
+            }
+        }
+    },
     animatedScroll: {initialValue: false},
     showInvisibles: {
         set: function(value) {
@@ -1856,6 +2086,10 @@ config.defineOptions(VirtualRenderer.prototype, "renderer", {
         initialValue: 80
     },
     printMargin: {
+        /**
+         * @param val
+         * @this{VirtualRenderer}
+         */
         set: function(val) {
             if (typeof val == "number")
                 this.$printMarginColumn = val;
@@ -1873,6 +2107,18 @@ config.defineOptions(VirtualRenderer.prototype, "renderer", {
             this.onGutterResize();
         },
         initialValue: true
+    },
+    useSvgGutterIcons: {
+        set: function(value){
+            this.$gutterLayer.$useSvgGutterIcons = value;
+        },
+        initialValue: false
+    },
+    showFoldedAnnotations: {
+        set: function(value){
+            this.$gutterLayer.$showFoldedAnnotations = value;
+        },
+        initialValue: false
     },
     fadeFoldWidgets: {
         set: function(show) {
@@ -1947,6 +2193,10 @@ config.defineOptions(VirtualRenderer.prototype, "renderer", {
         }
     },
     minLines: {
+        /**
+         * @param val
+         * @this{VirtualRenderer}
+         */
         set: function(val) {
             if (!(this.$minLines < 0x1ffffffffffff))
                 this.$minLines = 0;
@@ -1960,6 +2210,10 @@ config.defineOptions(VirtualRenderer.prototype, "renderer", {
         initialValue: 0
     },
     scrollPastEnd: {
+        /**
+         * @param val
+         * @this{VirtualRenderer}
+         */
         set: function(val) {
             val = +val || 0;
             if (this.$scrollPastEnd == val)

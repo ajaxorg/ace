@@ -2,12 +2,11 @@
 
 var event = require("../lib/event");
 var UA = require("../lib/useragent");
-var net = require("../lib/net");
 var ace = require("../ace");
 
 module.exports = exports = ace;
 
-/*
+/**
  * Returns the CSS property of element.
  *   1) If the CSS property is on the style object of the element, use it, OR
  *   2) Compute the CSS property
@@ -15,6 +14,9 @@ module.exports = exports = ace;
  * If the property can't get computed, is 'auto' or 'intrinsic', the former
  * calculated property is used (this can happen in cases where the textarea
  * is hidden and has no dimension styles).
+ * @param {HTMLElement} element
+ * @param {HTMLElement} container
+ * @param {string} property
  */
 var getCSSProperty = function(element, container, property) {
     var ret = element.style[property];
@@ -23,6 +25,7 @@ var getCSSProperty = function(element, container, property) {
         if (window.getComputedStyle) {
             ret = window.getComputedStyle(element, '').getPropertyValue(property);
         } else {
+            // @ts-ignore
             ret = element.currentStyle[property];
         }
     }
@@ -33,6 +36,10 @@ var getCSSProperty = function(element, container, property) {
     return ret;
 };
 
+/**
+ * @param {HTMLElement} elm
+ * @param {Object} styles
+ */
 function applyStyles(elm, styles) {
     for (var style in styles) {
         elm.style[style] = styles[style];
@@ -90,7 +97,7 @@ function setupContainer(element, getValue) {
 
         // Set the display property to 'inline-block'.
         style += 'display:inline-block;';
-        container.setAttribute('style', style);
+        container.style.cssText = style;
     };
     event.addListener(window, 'resize', resizeEvent);
 
@@ -217,7 +224,7 @@ exports.transformTextarea = function(element, options) {
             editor.setDisplaySettings();
             return;
         }
-        container.style.zIndex = 100000;
+        container.style.zIndex = "100000";
         var rect = container.getBoundingClientRect();
         var startX = rect.width  + rect.left - e.clientX;
         var startY = rect.height  + rect.top - e.clientY;
@@ -231,16 +238,7 @@ exports.transformTextarea = function(element, options) {
     return editor;
 };
 
-function load(url, module, callback) {
-    net.loadScript(url, function() {
-        require([module], callback);
-    });
-}
-
 function setupApi(editor, editorDiv, settingDiv, ace, options) {
-    var session = editor.getSession();
-    var renderer = editor.renderer;
-
     function toBool(value) {
         return value === "true" || value == true;
     }

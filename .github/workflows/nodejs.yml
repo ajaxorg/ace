@@ -19,7 +19,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [12.x]
+        node-version: [16.x]
 
     steps:
     - uses: actions/checkout@v2
@@ -33,6 +33,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: npm i
     - run: npm run cover
+    # run linter
     - run: |
         set -x;
         git status;
@@ -50,10 +51,14 @@ jobs:
                 node node_modules/eslint/bin/eslint $jsChanges;
             fi
         fi
-    # - run: npm run lint
+    # check types
+    - run: npm run update-types
     - run: node_modules/.bin/tsc --noImplicitAny --strict --noUnusedLocals --noImplicitReturns --noUnusedParameters --noImplicitThis ace.d.ts
-    - uses: codecov/codecov-action@v1
+    - run: npm run typecheck
+    - run: git diff --exit-code ./ace-modes.d.ts ./ace.d.ts
+    - uses: codecov/codecov-action@v3
       with:
+        token: d8edca4b-8e97-41e5-b54e-34c7cf3b2d47
         file: ./coverage/coverage.json
         flags: unittests
         name: codecov-umbrella

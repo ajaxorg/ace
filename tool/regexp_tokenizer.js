@@ -2,7 +2,6 @@
 require("amd-loader");
 
 var Tokenizer = require("../src/tokenizer").Tokenizer;
-var Tokenizer = require("../src/tokenizer_dev").Tokenizer; // todo can't use tokenizer because of max token count
 var TextHighlightRules = require("../src/mode/text_highlight_rules").TextHighlightRules;
 
 var r = new TextHighlightRules()
@@ -102,6 +101,7 @@ r.normalizeRules()
 var tmReTokenizer = new Tokenizer(r.getRules());
 
 function tokenize(str) {
+    tmReTokenizer.$setMaxTokenCount(2 * str.length);
     return tmReTokenizer.getLineTokens(str).tokens;
 }
 

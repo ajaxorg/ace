@@ -1,44 +1,54 @@
 "use strict";
-
+/**
+ * @typedef {import("./fold").Fold} Fold
+ */
 var Range = require("../range").Range;
 
-/*
- * If an array is passed in, the folds are expected to be sorted already.
- */
-function FoldLine(foldData, folds) {
-    this.foldData = foldData;
-    if (Array.isArray(folds)) {
-        this.folds = folds;
-    } else {
-        folds = this.folds = [ folds ];
-    }
-
-    var last = folds[folds.length - 1];
-    this.range = new Range(folds[0].start.row, folds[0].start.column,
-                           last.end.row, last.end.column);
-    this.start = this.range.start;
-    this.end   = this.range.end;
-
-    this.folds.forEach(function(fold) {
-        fold.setFoldLine(this);
-    }, this);
-}
-
-(function() {
-    /*
-     * Note: This doesn't update wrapData!
+class FoldLine {
+    /**
+     * If an array is passed in, the folds are expected to be sorted already.
+     * @param {FoldLine[]} foldData
+     * @param {Fold[]|Fold} folds
      */
-    this.shiftRow = function(shift) {
+    constructor(foldData, folds) {
+        this.foldData = foldData;
+        if (Array.isArray(folds)) {
+            /**@type {Fold[]} */
+            this.folds = folds;
+        } else {
+            folds = this.folds = [ folds ];
+        }
+
+        var last = folds[folds.length - 1];
+        this.range = new Range(folds[0].start.row, folds[0].start.column,
+            last.end.row, last.end.column);
+        this.start = this.range.start;
+        this.end   = this.range.end;
+
+        this.folds.forEach(function(fold) {
+            fold.setFoldLine(this);
+        }, this);
+    }
+    
+    /**
+     * Note: This doesn't update wrapData!
+     * @param {number} shift
+     */
+    shiftRow(shift) {
         this.start.row += shift;
         this.end.row += shift;
         this.folds.forEach(function(fold) {
             fold.start.row += shift;
             fold.end.row += shift;
         });
-    };
+    }
 
-    this.addFold = function(fold) {
+    /**
+     * @param {Fold} fold
+     */
+    addFold(fold) {
         if (fold.sameRow) {
+            // @ts-expect-error TODO: startRow, endRow are missing in Fold and FoldLine
             if (fold.start.row < this.startRow || fold.endRow > this.endRow) {
                 throw new Error("Can't add a fold to this FoldLine as it has no connection");
             }
@@ -65,13 +75,21 @@ function FoldLine(foldData, folds) {
             throw new Error("Trying to add fold to FoldRow that doesn't have a matching row");
         }
         fold.foldLine = this;
-    };
+    }
 
-    this.containsRow = function(row) {
+    /**
+     * @param {number} row
+     */
+    containsRow(row) {
         return row >= this.start.row && row <= this.end.row;
-    };
+    }
 
-    this.walk = function(callback, endRow, endColumn) {
+    /**
+     * @param {Function} callback
+     * @param {number} endRow
+     * @param {number} endColumn
+     */
+    walk(callback, endRow, endColumn) {
         var lastEnd = 0,
             folds = this.folds,
             fold,
@@ -107,9 +125,14 @@ function FoldLine(foldData, folds) {
             lastEnd = fold.end.column;
         }
         callback(null, endRow, endColumn, lastEnd, isNewRow);
-    };
+    }
 
-    this.getNextFoldTo = function(row, column) {
+    /**
+     * @param {number} row
+     * @param {number} column
+     * @return {{ fold: Fold, kind: string } | null}
+     */
+    getNextFoldTo(row, column) {
         var fold, cmp;
         for (var i = 0; i < this.folds.length; i++) {
             fold = this.folds[i];
@@ -127,9 +150,14 @@ function FoldLine(foldData, folds) {
             }
         }
         return null;
-    };
+    }
 
-    this.addRemoveChars = function(row, column, len) {
+    /**
+     * @param {number} row
+     * @param {number} column
+     * @param {number} len
+     */
+    addRemoveChars(row, column, len) {
         var ret = this.getNextFoldTo(row, column),
             fold, folds;
         if (ret) {
@@ -158,9 +186,14 @@ function FoldLine(foldData, folds) {
                 this.end.column += len;
             }
         }
-    };
+    }
 
-    this.split = function(row, column) {
+    /**
+     * @param {number} row
+     * @param {number} column
+     * @return {FoldLine | null}
+     */
+    split(row, column) {
         var pos = this.getNextFoldTo(row, column);
         
         if (!pos || pos.kind == "inside")
@@ -182,9 +215,12 @@ function FoldLine(foldData, folds) {
         var newFoldLine = new FoldLine(foldData, folds);
         foldData.splice(foldData.indexOf(this) + 1, 0, newFoldLine);
         return newFoldLine;
-    };
+    }
 
-    this.merge = function(foldLineNext) {
+    /**
+     * @param {FoldLine} foldLineNext
+     */
+    merge(foldLineNext) {
         var folds = foldLineNext.folds;
         for (var i = 0; i < folds.length; i++) {
             this.addFold(folds[i]);
@@ -193,9 +229,9 @@ function FoldLine(foldData, folds) {
         // it's merged now with foldLineNext.
         var foldData = this.foldData;
         foldData.splice(foldData.indexOf(foldLineNext), 1);
-    };
+    }
 
-    this.toString = function() {
+    toString() {
         var ret = [this.range.toString() + ": [" ];
 
         this.folds.forEach(function(fold) {
@@ -203,9 +239,13 @@ function FoldLine(foldData, folds) {
         });
         ret.push("]");
         return ret.join("\n");
-    };
+    }
 
-    this.idxToPosition = function(idx) {
+    /**
+     * @param {number} idx
+     * @return {import("../../ace-internal").Ace.Point}
+     */
+    idxToPosition(idx) {
         var lastFoldEndColumn = 0;
 
         for (var i = 0; i < this.folds.length; i++) {
@@ -231,7 +271,7 @@ function FoldLine(foldData, folds) {
             row: this.end.row,
             column: this.end.column + idx
         };
-    };
-}).call(FoldLine.prototype);
+    }
+}
 
 exports.FoldLine = FoldLine;

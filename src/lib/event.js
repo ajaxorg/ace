@@ -1,6 +1,6 @@
 "use strict";
 
-var keys = require("./keys");
+/** @type {any} */var keys = require("./keys");
 var useragent = require("./useragent");
 
 var pressedKeys = null;
@@ -13,6 +13,7 @@ function detectListenerOptionsSupport() {
         document.createComment("").addEventListener("test", function() {}, { 
             get passive() { 
                 activeListenerOptions = {passive: false};
+                return true;
             }
         });
     } catch(e) {}
@@ -34,7 +35,7 @@ EventListener.prototype.destroy = function() {
     this.elem = this.type = this.callback = undefined;
 };
 
-var addListener = exports.addListener = function(elem, type, callback, destroyer) {
+var addListener = exports.addListener = function(elem, type, callback, /**@type{any?}*/destroyer) {
     elem.addEventListener(type, callback, getListenerOptions());
     if (destroyer)
         destroyer.$toDestroy.push(new EventListener(elem, type, callback));
@@ -94,6 +95,11 @@ exports.capture = function(el, eventHandler, releaseCaptureHandler) {
     return onMouseUp;
 };
 
+/**
+ * @param el
+ * @param callback
+ * @param [destroyer]
+ */
 exports.addMouseWheelListener = function(el, callback, destroyer) {
     addListener(el, "wheel",  function(e) {
         var factor = 0.15;
@@ -120,6 +126,13 @@ exports.addMouseWheelListener = function(el, callback, destroyer) {
     }, destroyer);
 };
 
+/**
+ * @param elements
+ * @param timeouts
+ * @param eventHandler
+ * @param callbackName
+ * @param [destroyer]
+ */
 exports.addMultiMouseDownListener = function(elements, timeouts, eventHandler, callbackName, destroyer) {
     var clicks = 0;
     var startX, startY, timer; 
@@ -169,14 +182,24 @@ exports.addMultiMouseDownListener = function(elements, timeouts, eventHandler, c
     });
 };
 
-var getModifierHash = function(e) {
+/** @param {KeyboardEvent|MouseEvent} e */
+function getModifierHash(e) {
     return 0 | (e.ctrlKey ? 1 : 0) | (e.altKey ? 2 : 0) | (e.shiftKey ? 4 : 0) | (e.metaKey ? 8 : 0);
-};
+}
 
+/**
+ * @param {KeyboardEvent|MouseEvent} e
+ * @returns string
+ */
 exports.getModifierString = function(e) {
     return keys.KEY_MODS[getModifierHash(e)];
 };
 
+/**
+ * @param {(e: KeyboardEvent, hashId: number, keyCode: number)=> void } callback
+ * @param {KeyboardEvent} e
+ * @param {number} keyCode
+ */
 function normalizeCommandKeys(callback, e, keyCode) {
     var hashId = getModifierHash(e);
 
@@ -190,7 +213,7 @@ function normalizeCommandKeys(callback, e, keyCode) {
                 return;
         }
         if (keyCode === 18 || keyCode === 17) {
-            var location = "location" in e ? e.location : e.keyLocation;
+            var location = e.location;
             if (keyCode === 17 && location === 1) {
                 if (pressedKeys[keyCode] == 1)
                     ts = e.timeStamp;
@@ -207,8 +230,7 @@ function normalizeCommandKeys(callback, e, keyCode) {
     }
     
     if (!hashId && keyCode === 13) {
-        var location = "location" in e ? e.location : e.keyLocation;
-        if (location === 3) {
+        if (e.location === 3) {
             callback(e, hashId, -keyCode);
             if (e.defaultPrevented)
                 return;
@@ -233,47 +255,35 @@ function normalizeCommandKeys(callback, e, keyCode) {
     return callback(e, hashId, keyCode);
 }
 
-
+/**
+ * @param {EventTarget} el
+ * @param {(e: KeyboardEvent, hashId: number, keyCode: number)=>void} callback
+ * @param [destroyer]
+ */
 exports.addCommandKeyListener = function(el, callback, destroyer) {
-    if (useragent.isOldGecko || (useragent.isOpera && !("KeyboardEvent" in window))) {
-        // Old versions of Gecko aka. Firefox < 4.0 didn't repeat the keydown
-        // event if the user pressed the key for a longer time. Instead, the
-        // keydown event was fired once and later on only the keypress event.
-        // To emulate the 'right' keydown behavior, the keyCode of the initial
-        // keyDown event is stored and in the following keypress events the
-        // stores keyCode is used to emulate a keyDown event.
-        var lastKeyDownKeyCode = null;
-        addListener(el, "keydown", function(e) {
-            lastKeyDownKeyCode = e.keyCode;
-        }, destroyer);
-        addListener(el, "keypress", function(e) {
-            return normalizeCommandKeys(callback, e, lastKeyDownKeyCode);
-        }, destroyer);
-    } else {
-        var lastDefaultPrevented = null;
+    var lastDefaultPrevented = null;
 
-        addListener(el, "keydown", function(e) {
-            pressedKeys[e.keyCode] = (pressedKeys[e.keyCode] || 0) + 1;
-            var result = normalizeCommandKeys(callback, e, e.keyCode);
-            lastDefaultPrevented = e.defaultPrevented;
-            return result;
-        }, destroyer);
+    addListener(el, "keydown", function(e) {
+        pressedKeys[e.keyCode] = (pressedKeys[e.keyCode] || 0) + 1;
+        var result = normalizeCommandKeys(callback, e, e.keyCode);
+        lastDefaultPrevented = e.defaultPrevented;
+        return result;
+    }, destroyer);
 
-        addListener(el, "keypress", function(e) {
-            if (lastDefaultPrevented && (e.ctrlKey || e.altKey || e.shiftKey || e.metaKey)) {
-                exports.stopEvent(e);
-                lastDefaultPrevented = null;
-            }
-        }, destroyer);
-
-        addListener(el, "keyup", function(e) {
-            pressedKeys[e.keyCode] = null;
-        }, destroyer);
-
-        if (!pressedKeys) {
-            resetPressedKeys();
-            addListener(window, "focus", resetPressedKeys);
+    addListener(el, "keypress", function(e) {
+        if (lastDefaultPrevented && (e.ctrlKey || e.altKey || e.shiftKey || e.metaKey)) {
+            exports.stopEvent(e);
+            lastDefaultPrevented = null;
         }
+    }, destroyer);
+
+    addListener(el, "keyup", function(e) {
+        pressedKeys[e.keyCode] = null;
+    }, destroyer);
+
+    if (!pressedKeys) {
+        resetPressedKeys();
+        addListener(window, "focus", resetPressedKeys);
     }
 };
 function resetPressedKeys() {
@@ -322,10 +332,10 @@ exports.blockIdle = function(delay) {
 };
 
 exports.nextFrame = typeof window == "object" && (window.requestAnimationFrame
-    || window.mozRequestAnimationFrame
-    || window.webkitRequestAnimationFrame
-    || window.msRequestAnimationFrame
-    || window.oRequestAnimationFrame);
+    || window["mozRequestAnimationFrame"]
+    || window["webkitRequestAnimationFrame"]
+    || window["msRequestAnimationFrame"]
+    || window["oRequestAnimationFrame"]);
 
 if (exports.nextFrame)
     exports.nextFrame = exports.nextFrame.bind(window);

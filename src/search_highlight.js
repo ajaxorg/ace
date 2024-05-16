@@ -1,27 +1,36 @@
 "use strict";
-
+/**
+ * @typedef {import("./layer/marker").Marker} Marker
+ * @typedef {import("./edit_session").EditSession} EditSession
+ */
 var lang = require("./lib/lang");
-var oop = require("./lib/oop");
 var Range = require("./range").Range;
 
-var SearchHighlight = function(regExp, clazz, type) {
-    this.setRegexp(regExp);
-    this.clazz = clazz;
-    this.type = type || "text";
-};
-
-(function() {
-    // needed to prevent long lines from freezing the browser
-    this.MAX_RANGES = 500;
+class SearchHighlight {
+    /**
+     * @param {any} regExp
+     * @param {string} clazz
+     */
+    constructor(regExp, clazz, type = "text") {
+        this.setRegexp(regExp);
+        this.clazz = clazz;
+        this.type = type;
+    }
     
-    this.setRegexp = function(regExp) {
+    setRegexp(regExp) {
         if (this.regExp+"" == regExp+"")
             return;
         this.regExp = regExp;
         this.cache = [];
-    };
+    }
 
-    this.update = function(html, markerLayer, session, config) {
+    /**
+     * @param {any} html
+     * @param {Marker} markerLayer
+     * @param {EditSession} session
+     * @param {Partial<import("../ace-internal").Ace.LayerConfig>} config
+     */
+    update(html, markerLayer, session, config) {
         if (!this.regExp)
             return;
         var start = config.firstRow, end = config.lastRow;
@@ -49,8 +58,11 @@ var SearchHighlight = function(regExp, clazz, type) {
                     html, rangeToAddMarkerTo, this.clazz, config);
             }
         }
-    };
+    }
 
-}).call(SearchHighlight.prototype);
+}
+
+// needed to prevent long lines from freezing the browser
+SearchHighlight.prototype.MAX_RANGES = 500;
 
 exports.SearchHighlight = SearchHighlight;

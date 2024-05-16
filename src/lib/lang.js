@@ -50,25 +50,7 @@ exports.copyArray = function(array){
     return copy;
 };
 
-exports.deepCopy = function deepCopy(obj) {
-    if (typeof obj !== "object" || !obj)
-        return obj;
-    var copy;
-    if (Array.isArray(obj)) {
-        copy = [];
-        for (var key = 0; key < obj.length; key++) {
-            copy[key] = deepCopy(obj[key]);
-        }
-        return copy;
-    }
-    if (Object.prototype.toString.call(obj) !== "[object Object]")
-        return obj;
-    
-    copy = {};
-    for (var key in obj)
-        copy[key] = deepCopy(obj[key]);
-    return copy;
-};
+exports.deepCopy = require("./deep_copy").deepCopy;
 
 exports.arrayToMap = function(arr) {
     var map = {};
@@ -188,4 +170,17 @@ exports.delayedCall = function(fcn, defaultTimeout) {
     };
 
     return _self;
+};
+
+exports.supportsLookbehind = function () {
+    try {
+        new RegExp('(?<=.)');
+    } catch (e) {
+        return false;
+    }
+    return true;
+};
+
+exports.skipEmptyMatch = function(line, last, supportsUnicodeFlag) {
+    return supportsUnicodeFlag && line.codePointAt(last) > 0xffff ? 2 : 1;
 };

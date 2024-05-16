@@ -1,51 +1,68 @@
 [[
-   "comment",
-  ["comment","/*EXPECTED"]
+   "start",
+  ["keyword","import"],
+  ["text"," "],
+  ["keyword.operator","*"],
+  ["text"," "],
+  ["identifier","as"],
+  ["text"," "],
+  ["identifier","React"],
+  ["text"," "],
+  ["keyword","from"],
+  ["text"," "],
+  ["string","\"react\""],
+  ["punctuation.operator",";"]
 ],[
-   "comment",
-  ["comment","hello world!"]
+   "start"
 ],[
    "start",
-  ["comment","*/"]
-],[
-   "start",
-  ["keyword","class"],
+  ["keyword","export"],
   ["text"," "],
-  ["language.support.class","Test"],
+  ["keyword","default"],
   ["text"," "],
-  ["paren.lparen","{"]
-],[
-   "start",
-  ["text","    "],
-  ["keyword","static"],
-  ["text"," "],
-  ["storage.type","function"],
-  ["text"," "],
-  ["entity.name.function","run"],
   ["paren.lparen","("],
   ["paren.rparen",")"],
   ["text"," "],
-  ["punctuation.operator",":"],
-  ["text"," "],
-  ["keyword","void"],
+  ["storage.type","=>"],
   ["text"," "],
   ["paren.lparen","{"]
 ],[
    "start",
-  ["text","        "],
-  ["comment","// console.log(\"hello world!\");"]
+  ["text","  "],
+  ["keyword","return"],
+  ["text"," "],
+  ["paren.lparen","("]
+],[
+   ["jsx",1],
+  ["text","    "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","div"],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","variant"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"p\""],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   ["jsx",1],
+  [
+    "string.xml",
+    "      Keywords here are not highlighted, for example class or instance."
+  ]
 ],[
    "start",
-  ["text","        "],
-  ["keyword","log"],
-  ["text"," "],
-  ["string","\"hello world!\""],
+  [
+    "string.xml",
+    "    "
+  ],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","div"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
+  ["text","  "],
+  ["paren.rparen",")"],
   ["punctuation.operator",";"]
 ],[
-   "start",
-  ["text","    "],
-  ["paren.rparen","}"]
-],[
-   "start",
+   "no_regex",
   ["paren.rparen","}"]
 ]]

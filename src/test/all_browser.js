@@ -4,15 +4,25 @@ require("ace/lib/fixoldbrowsers");
 var mockdom = require("../test/mockdom");
 var AsyncTest = require("asyncjs").test;
 var async = require("asyncjs");
+var buildDom = require("../lib/dom").buildDom;
+var escapeRegExp = require("ace/lib/lang").escapeRegExp;
+
+var useMockdom = location.search.indexOf("mock=1") != -1;
+var forceShow = location.search.indexOf("show=1") != -1;
 
 var passed = 0;
 var failed = 0;
 var log = document.getElementById("log");
-var el = document.createElement.bind(document);
+
+// change buildDom to use real document in mockdom 
+var createElement = document.createElement.bind(document);
+var createTextNode = document.createTextNode.bind(document);
+var buildDom = eval("(" + buildDom.toString().replace(/document\./g, "") + ")");
 
 var testNames = [
     "ace/ace_test",
     "ace/anchor_test",
+    "ace/autocomplete/popup_test",
     "ace/autocomplete_test",
     "ace/background_tokenizer_test",
     "ace/commands/command_manager_test",
@@ -24,12 +34,15 @@ var testNames = [
     "ace/editor_navigation_test",
     "ace/editor_text_edit_test",
     "ace/editor_commands_test",
+    "ace/ext/command_bar_test",
     "ace/ext/hardwrap_test",
+    "ace/ext/inline_autocomplete_test",
     "ace/ext/static_highlight_test",
     "ace/ext/whitespace_test",
     "ace/ext/error_marker_test",
     "ace/ext/code_lens_test",
     "ace/ext/beautify_test",
+    "ace/ext/simple_tokenizer_test",
     "ace/incremental_search_test",
     "ace/keyboard/emacs_test",
     "ace/keyboard/textinput_test",
@@ -37,15 +50,13 @@ var testNames = [
     "ace/keyboard/vim_test",
     "ace/keyboard/vim_ace_test",
     "ace/keyboard/sublime_test",
+    "ace/keyboard/gutter_handler_test",
     "ace/layer/text_test",
     "ace/lib/event_emitter_test",
-    "ace/mode/coffee/parser_test",
     "ace/mode/coldfusion_test",
     "ace/mode/css_test",
-    "ace/mode/css_worker",
     "ace/mode/html_test",
     "ace/mode/javascript_test",
-    "ace/mode/javascript_worker_test",
     "ace/mode/logiql_test",
     "ace/mode/python_test",
     "ace/mode/text_test",
@@ -59,6 +70,7 @@ var testNames = [
     "ace/mode/behaviour/behaviour_test",
     "ace/multi_select_test",
     "ace/mouse/mouse_handler_test",
+    "ace/mouse/default_gutter_handler_test",
     "ace/occur_test",
     "ace/placeholder_test",
     "ace/range_test",
@@ -66,27 +78,42 @@ var testNames = [
     "ace/search_test",
     "ace/selection_test",
     "ace/snippets_test",
+    "ace/marker_group_test",
+    "ace/tooltip_test",
     "ace/token_iterator_test",
     "ace/tokenizer_test",
     "ace/test/mockdom_test",
     "ace/undomanager_test",
-    "ace/virtual_renderer_test",
-    "ace/mode/yaml_worker_test"
+    "ace/virtual_renderer_test"
 ];
 
-var html = ["<a href='?'>all tests</a><br>"];
-for (var i in testNames) {
-    var href = testNames[i];
-    html.push("<a href='?", href, "'>", href.replace(/^ace\//, "") ,"</a><br>");
+var html = [
+    useMockdom
+        ? ["a", {href: normalizeHref(location.search.replace('mock=1', '')) + location.hash}, "do not use mockdom"]
+        : ["a", {href: normalizeHref(location.search + '&mock=1') + location.hash}, "use mockdom"],
+    ["br"],
+    forceShow
+        ? ["a", {href: normalizeHref(location.search.replace('show=1', '')) + location.hash}, "hide mock renderer"]
+        : ["a", {href: normalizeHref(location.search + '&show=1') + location.hash}, "show mock renderer"],
+    ["br"],
+    ["a", {href: '?runall' + (useMockdom ? "&mock=1" : "")}, "Run all tests"], ["br"],
+    ["hr"]
+];
+for (var i in testNames) {    
+    html.push(testLink(testNames[i]), ["br"]);
 }
 
-var nav = el("div");
-nav.innerHTML = html.join("");
-nav.style.cssText = "position:absolute;right:0;top:0";
-document.body.appendChild(nav);
+function testLink(name) {
+    return ["a", {href:'?' + name + (useMockdom ? "&mock=1" : "")}, name.replace(/^ace\//, "")];
+}
+function normalizeHref(str) {
+    return str.replace(/([?&])&+/g, "$1");
+}
+
+var nav = buildDom(["div", {style: "position:absolute;right:0;top:0"}, html], document.body);
 
 
-if (location.search.indexOf("show=1") != -1) {
+if (forceShow) {
     require(["ace/virtual_renderer", "ace/test/mockrenderer"], function(real, mock) {
         var VirtualRenderer = real.VirtualRenderer;
         mock.MockRenderer = function() {
@@ -103,21 +130,23 @@ if (location.search.indexOf("show=1") != -1) {
     });
 }
 
-if (location.search.indexOf("mock=1") != -1) {
+if (useMockdom) {
     mockdom.loadInBrowser(window);
 }
 
-
+var selectedTests = [];
 if (location.search) {
     var parts = location.search.split(/[&?]|\w+=\w+/).filter(Boolean);
-    if (parts[0])
-        testNames = parts[0].split(",");
+    if (parts[0] == "runall")
+        selectedTests = testNames;
+    else
+        selectedTests = parts[0].split(",");
 }
-var filter = location.hash.substr(1);
+var filter = decodeURIComponent(location.hash.substr(1));
 window.onhashchange = function() { location.reload(); };
 
-require(testNames, function() {
-    var tests = testNames.map(function(x) {
+require(selectedTests, function() {
+    var tests = selectedTests.map(function(x) {
         var module = require(x);
         module.href = x;
         return module;
@@ -137,33 +166,31 @@ require(testNames, function() {
         .each(function(test, next) {
             if (test.index == 1 && test.context.href) {
                 var href = test.context.href;
-                var node = el("div");
-                node.innerHTML = "<a href='?" + href + "'>" + href.replace(/^ace\//, "") + "</a>";
-                log.appendChild(node);
+                buildDom(["div", {}, testLink(href)], log);
             }
-            var node = el("div");
-            node.className = test.passed ? "passed" : "failed";
-
-            var name = test.name;
-            if (test.suiteName)
-                name = test.suiteName + ": " + test.name;
-
-            var msg = "[" + test.count + "/" + test.index + "] " + name + " " + (test.passed ? "OK" : "FAIL");
+            
+            var messageHeader =  "[" + test.index + "/" + test.count + "]";
+            
+            var node = buildDom(["div", {class: test.passed ? "passed" : "failed"}, 
+                ["a", {href: "#" + escapeRegExp(test.name.replace(/^test\s*/, ""))}, messageHeader],
+                " ",
+                (test.suiteName ? test.suiteName + ": " : ""),
+                test.name,
+                (test.passed ? " OK" : " FAIL")
+            ], log);
+            
             if (!test.passed) {
                 if (test.err.stack)
                     var err = test.err.stack;
                 else
                     var err = test.err;
 
-                console.error(msg);
+                console.error(node.textContent);
                 console.error(err);
-                msg += "<pre class='error'>" + err + "</pre>";
+                buildDom(["pre", {class: "error"}, err + ""], node);
             } else {
-                console.log(msg);
+                console.log(node.textContent);
             }
-
-            node.innerHTML = msg;
-            log.appendChild(node);
 
             next();
         })
@@ -174,17 +201,12 @@ require(testNames, function() {
                 failed += 1;
         })
         .end(function() {
-            log.innerHTML += [
-                "<div class='summary'>",
-                "<br>",
-                "Summary: <br>",
-                "<br>",
-                "Total number of tests: " + (passed + failed) + "<br>",
-                (passed ? "Passed tests: " + passed + "<br>" : ""),
-                (failed ? "Failed tests: " + failed + "<br>" : "")
-            ].join("");
-            console.log("Total number of tests: " + (passed + failed));
-            console.log("Passed tests: " + passed);
-            console.log("Failed tests: " + failed);
+            var node = buildDom(["div", {class: "summary"},
+                ["br"], "Summary:", ["br"], ["br"],
+                "Total number of tests: " + (passed + failed), ["br"],
+                (passed && [null, "Passed tests: " + passed, ["br"]]),
+                (failed && [null, "Failed tests: " + failed])
+            ], log);
+            console.log(node.innerText);
         });
 });

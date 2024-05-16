@@ -1,5 +1,5 @@
 "use strict";
-
+/**@type{import("../snippets").snippetManager & {files?: {[key: string]: any}}}*/
 var snippetManager = require("../snippets").snippetManager;
 var Autocomplete = require("../autocomplete").Autocomplete;
 var config = require("../config");
@@ -7,6 +7,7 @@ var lang = require("../lib/lang");
 var util = require("../autocomplete/util");
 
 var textCompleter = require("../autocomplete/text_completer");
+/**@type {import("../../ace-internal").Ace.Completer}*/
 var keyWordCompleter = {
     getCompletions: function(editor, session, pos, prefix, callback) {
         if (session.$mode.completer) {
@@ -14,8 +15,13 @@ var keyWordCompleter = {
         }
         var state = editor.session.getState(pos.row);
         var completions = session.$mode.getCompletions(state, session, pos, prefix);
+        completions = completions.map((el) => {
+            el.completerId = keyWordCompleter.id;
+            return el;
+        });
         callback(null, completions);
-    }
+    },
+    id: "keywordCompleter"
 };
 
 var transformSnippetTooltip = function(str) {
@@ -26,7 +32,7 @@ var transformSnippetTooltip = function(str) {
         return record[p1];
     });
 };
-
+/**@type {import("../../ace-internal").Ace.Completer} */
 var snippetCompleter = {
     getCompletions: function(editor, session, pos, prefix, callback) {
         var scopes = [];
@@ -51,20 +57,21 @@ var snippetCompleter = {
                     caption: caption,
                     snippet: s.content,
                     meta: s.tabTrigger && !s.name ? s.tabTrigger + "\u21E5 " : "snippet",
-                    type: "snippet"
+                    completerId: snippetCompleter.id
                 });
             }
         }, this);
         callback(null, completions);
     },
     getDocTooltip: function(item) {
-        if (item.type == "snippet" && !item.docHTML) {
+        if (item.snippet && !item.docHTML) {
             item.docHTML = [
                 "<b>", lang.escapeHTML(item.caption), "</b>", "<hr></hr>",
                 lang.escapeHTML(transformSnippetTooltip(item.snippet))
             ].join("");
         }
-    }
+    },
+    id: "snippetCompleter"
 };
 
 var completers = [snippetCompleter, textCompleter, keyWordCompleter];
@@ -135,21 +142,43 @@ var doLiveAutocomplete = function(e) {
         if (hasCompleter && !util.getCompletionPrefix(editor))
             editor.completer.detach();
     }
-    else if (e.command.name === "insertstring") {
-        var prefix = util.getCompletionPrefix(editor);
-        // Only autocomplete if there's a prefix that can be matched
-        if (prefix && !hasCompleter) {
-            var completer = Autocomplete.for(editor);
-            // Disable autoInsert
-            completer.autoInsert = false;
-            completer.showPopup(editor);
+    else if (e.command.name === "insertstring" && !hasCompleter) {
+        lastExecEvent = e;
+        var delay = e.editor.$liveAutocompletionDelay;
+        if (delay) {
+            liveAutocompleteTimer.delay(delay);
+        } else {
+            showLiveAutocomplete(e);
         }
+    }
+};
+
+var lastExecEvent;
+var liveAutocompleteTimer = lang.delayedCall(function () {
+    showLiveAutocomplete(lastExecEvent);
+}, 0);
+
+var showLiveAutocomplete = function(e) {
+    var editor = e.editor;
+    var prefix = util.getCompletionPrefix(editor);
+    // Only autocomplete if there's a prefix that can be matched or previous char is trigger character 
+    var previousChar = e.args;
+    var triggerAutocomplete = util.triggerAutocomplete(editor, previousChar);
+    if (prefix && prefix.length >= editor.$liveAutocompletionThreshold || triggerAutocomplete) {
+        var completer = Autocomplete.for(editor);
+        // Set a flag for auto shown
+        completer.autoShown = true;
+        completer.showPopup(editor);
     }
 };
 
 var Editor = require("../editor").Editor;
 require("../config").defineOptions(Editor.prototype, "editor", {
     enableBasicAutocompletion: {
+        /**
+         * @param val
+         * @this{Editor}
+         */
         set: function(val) {
             if (val) {
                 if (!this.completers)
@@ -167,6 +196,7 @@ require("../config").defineOptions(Editor.prototype, "editor", {
     enableLiveAutocompletion: {
         /**
          * @param {boolean} val
+         * @this {Editor}
          */
         set: function(val) {
             if (val) {
@@ -175,10 +205,16 @@ require("../config").defineOptions(Editor.prototype, "editor", {
                 // On each change automatically trigger the autocomplete
                 this.commands.on('afterExec', doLiveAutocomplete);
             } else {
-                this.commands.removeListener('afterExec', doLiveAutocomplete);
+                this.commands.off('afterExec', doLiveAutocomplete);
             }
         },
         value: false
+    },
+    liveAutocompletionDelay: {
+        initialValue: 0
+    },
+    liveAutocompletionThreshold: {
+        initialValue: 0
     },
     enableSnippets: {
         set: function(val) {

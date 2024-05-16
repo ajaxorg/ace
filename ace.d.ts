@@ -1,3 +1,6 @@
+/// <reference path="./ace-modes.d.ts" />
+/// <reference path="./ace-extensions.d.ts" />
+
 export namespace Ace {
   export type NewLineMode = 'auto' | 'unix' | 'windows';
 
@@ -188,12 +191,14 @@ export namespace Ace {
     fontFamily: string;
     maxLines: number;
     minLines: number;
-    scrollPastEnd: boolean;
+    scrollPastEnd: number;
     fixedWidthGutter: boolean;
     customScrollbar: boolean;
     theme: string;
     hasCssTransforms: boolean;
     maxPixelHeight: number;
+    useSvgGutterIcons: boolean;
+    showFoldedAnnotations: boolean;
   }
 
   export interface MouseHandlerOptions {
@@ -217,15 +222,19 @@ export namespace Ace {
     behavioursEnabled: boolean;
     wrapBehavioursEnabled: boolean;
     enableAutoIndent: boolean;
-    enableBasicAutocompletion: boolean | Completer[],
-    enableLiveAutocompletion: boolean | Completer[],
-    enableSnippets: boolean,
+    enableBasicAutocompletion: boolean | Completer[];
+    enableLiveAutocompletion: boolean | Completer[];
+    liveAutocompletionDelay: number;
+    liveAutocompletionThreshold: number;
+    enableSnippets: boolean;
     autoScrollEditorIntoView: boolean;
     keyboardHandler: string | null;
     placeholder: string;
     value: string;
     session: EditSession;
     relativeLineNumbers: boolean;
+    enableMultiselect: boolean;
+    enableKeyboardAccessibility: boolean;
   }
 
   export interface SearchOptions {
@@ -273,6 +282,18 @@ export namespace Ace {
     type: string;
   }
 
+  export interface MarkerGroupItem {
+    range: Range;
+    className: string;
+  }
+
+  export class MarkerGroup {
+    constructor(session: EditSession);
+    setMarkers(markers: MarkerGroupItem[]): void;
+    getMarkerAtPosition(pos: Position): MarkerGroupItem;
+  }
+
+
   export interface Command {
     name?: string;
     bindKey?: string | { mac?: string, win?: string };
@@ -313,13 +334,24 @@ export namespace Ace {
     start?: number;
   }
 
-  export interface Completion {
-    value: string;
-    score: number;
+  interface BaseCompletion {
+    score?: number;
     meta?: string;
-    name?: string;
     caption?: string;
+    docHTML?: string;
+    docText?: string;
+    completerId?: string;
   }
+
+  export interface SnippetCompletion extends BaseCompletion {
+    snippet: string;
+  }
+
+  export interface ValueCompletion extends BaseCompletion {
+    value: string;
+  }
+
+  export type Completion = SnippetCompletion | ValueCompletion
 
   export interface Tokenizer {
     removeCapturingGroups(src: string): string;
@@ -337,7 +369,60 @@ export namespace Ace {
     stepForward(): Token;
   }
 
+  export type HighlightRule = {defaultToken: string} | {include: string} | {todo: string} | {
+    token: string | string[] | ((value: string) => string);
+    regex: string | RegExp;
+    next?: string;
+    push?: string;
+    comment?: string;
+    caseInsensitive?: boolean;
+  }
+
+  export type HighlightRulesMap = Record<string, HighlightRule[]>;
+
+  export type KeywordMapper = (keyword: string) => string;
+
+  export interface HighlightRules {
+    addRules(rules: HighlightRulesMap, prefix?: string): void;
+    getRules(): HighlightRulesMap;
+    embedRules(rules: (new () => HighlightRules) | HighlightRulesMap, prefix: string, escapeRules?: boolean, append?: boolean): void;
+    getEmbeds(): string[];
+    normalizeRules(): void;
+    createKeywordMapper(map: Record<string, string>, defaultToken?: string, ignoreCase?: boolean, splitChar?: string): KeywordMapper;
+  }
+
+  export interface FoldMode {
+    foldingStartMarker: RegExp;
+    foldingStopMarker?: RegExp;
+    getFoldWidget(session: EditSession, foldStyle: string, row: number): string;
+    getFoldWidgetRange(session: EditSession, foldStyle: string, row: number, forceMultiline?: boolean): Range | undefined;
+    indentationBlock(session: EditSession, row: number, column?: number): Range | undefined;
+    openingBracketBlock(session: EditSession, bracket: string, row: number, column: number, typeRe?: RegExp): Range | undefined;
+    closingBracketBlock(session: EditSession, bracket: string, row: number, column: number, typeRe?: RegExp): Range | undefined;
+  }
+
+  type BehaviorAction = (state: string, action: string, editor: Editor, session: EditSession, text: string) => {text: string, selection: number[]} | Range | undefined;
+  type BehaviorMap = Record<string, Record<string, BehaviorAction>>;
+
+  export interface Behaviour {
+    add(name: string, action: string, callback: BehaviorAction): void;
+    addBehaviours(behaviours: BehaviorMap): void;
+    remove(name: string): void;
+    inherit(mode: SyntaxMode | (new () => SyntaxMode), filter: string[]): void;
+    getBehaviours(filter: string[]): BehaviorMap;
+  }
+
+  export interface Outdent {
+    checkOutdent(line: string, input: string): boolean;
+    autoOutdent(doc: Document, row: number): number | undefined;
+  }
+
   export interface SyntaxMode {
+    HighlightRules: new () => HighlightRules;
+    foldingRules?: FoldMode;
+    $behaviour?: Behaviour;
+    $defaultBehaviour?: Behaviour;
+    lineCommentStart?: string;
     getTokenizer(): Tokenizer;
     toggleCommentLines(state: any,
       session: EditSession,
@@ -353,11 +438,7 @@ export namespace Ace {
     // TODO implement WorkerClient types
     createWorker(session: EditSession): any;
     createModeDelegates(mapping: { [key: string]: string }): void;
-    transformAction(state: string,
-      action: string,
-      editor: Editor,
-      session: EditSession,
-      text: string): any;
+    transformAction: BehaviorAction;
     getKeywords(append?: boolean): Array<string | RegExp>;
     getCompletions(state: string,
       session: EditSession,
@@ -365,12 +446,17 @@ export namespace Ace {
       prefix: string): Completion[];
   }
 
+  type AfterLoadCallback = (err: Error | null, module: unknown) => void;
+  type LoaderFunction = (moduleName: string, afterLoad: AfterLoadCallback) => void;
+
   export interface Config {
     get(key: string): any;
     set(key: string, value: any): void;
     all(): { [key: string]: any };
     moduleUrl(name: string, component?: string): string;
     setModuleUrl(name: string, subst: string): string;
+    setLoader(cb: LoaderFunction): void;
+    setModuleLoader(name: string, onLoad: Function): void;
     loadModule(moduleName: string | [string, string],
       onLoad?: (module: any) => void): void;
     init(packaged: any): any;
@@ -407,6 +493,8 @@ export namespace Ace {
     hasRedo(): boolean;
     isClean(): boolean;
     markClean(rev?: number): void;
+    toJSON(): object;
+    fromJSON(json: object): void;
   }
 
   export interface Position {
@@ -414,7 +502,7 @@ export namespace Ace {
     column: number
   }
 
-  export interface EditSession extends EventEmitter, OptionsProvider {
+  export interface EditSession extends EventEmitter, OptionsProvider, Folding {
     selection: Selection;
 
     // TODO: define BackgroundTokenizer
@@ -426,11 +514,12 @@ export namespace Ace {
     on(name: 'tokenizerUpdate',
        callback: (obj: { data: { first: number, last: number } }) => void): Function;
     on(name: 'change', callback: () => void): Function;
+    on(name: 'changeTabSize', callback: () => void): Function;
 
 
     setOption<T extends keyof EditSessionOptions>(name: T, value: EditSessionOptions[T]): void;
     getOption<T extends keyof EditSessionOptions>(name: T): EditSessionOptions[T];
-    
+
     readonly doc: Document;
 
     setDocument(doc: Document): void;
@@ -533,6 +622,8 @@ export namespace Ace {
     documentToScreenColumn(row: number, docColumn: number): number;
     documentToScreenRow(docRow: number, docColumn: number): number;
     getScreenLength(): number;
+    getPrecedingCharacter(): string;
+    toJSON(): Object;
     destroy(): void;
   }
 
@@ -752,6 +843,7 @@ export namespace Ace {
 
   export interface TextInput {
     resetSelection(): void;
+    setAriaOption(activeDescendant: string, role: string): void;
   }
 
   export interface Editor extends OptionsProvider, EventEmitter {
@@ -777,6 +869,8 @@ export namespace Ace {
     on(name: 'mouseup', callback: (e: any) => void): void;
     on(name: 'mousewheel', callback: (e: any) => void): void;
     on(name: 'click', callback: (e: any) => void): void;
+    on(name: 'guttermousedown', callback: (e: any) => void): void;
+    on(name: 'gutterkeydown', callback: (e: any) => void): void;
 
     onPaste(text: string, event: any): void;
 
@@ -786,7 +880,7 @@ export namespace Ace {
     setKeyboardHandler(keyboardHandler: string, callback?: () => void): void;
     setKeyboardHandler(keyboardHandler: KeyboardHandler|null): void;
     getKeyboardHandler(): string;
-    setSession(session: EditSession): void;
+    setSession(session: EditSession | undefined): void;
     getSession(): EditSession;
     setValue(val: string, cursorPos?: number): string;
     getValue(): string;
@@ -797,7 +891,7 @@ export namespace Ace {
     setStyle(style: string): void;
     unsetStyle(style: string): void;
     getFontSize(): string;
-    setFontSize(size: number): void;
+    setFontSize(size: number|string): void;
     focus(): void;
     isFocused(): boolean;
     blur(): void;
@@ -920,6 +1014,86 @@ export namespace Ace {
       position: Point,
       prefix: string,
       callback: CompleterCallback): void;
+    getDocTooltip?(item: Completion): undefined | string | Completion;
+    onSeen?: (editor: Ace.Editor, completion: Completion) => void;
+    onInsert?: (editor: Ace.Editor, completion: Completion) => void;
+    cancel?(): void;
+    id?: string;
+    triggerCharacters?: string[];
+    hideInlinePreview?: boolean;
+  }
+
+  export class AceInline {
+    show(editor: Editor, completion: Completion, prefix: string): void;
+    isOpen(): void;
+    hide(): void;
+    destroy(): void;
+  }
+
+  interface CompletionOptions {
+    matches?: Completion[];
+  }
+
+  type CompletionProviderOptions = {
+    exactMatch?: boolean;
+    ignoreCaption?: boolean;
+  }
+
+  type CompletionRecord = {
+    all: Completion[];
+    filtered: Completion[];
+    filterText: string;
+  } | CompletionProviderOptions
+
+  type GatherCompletionRecord = {
+    prefix: string;
+    matches: Completion[];
+    finished: boolean;
+  }
+
+  type CompletionCallbackFunction = (err: Error | undefined, data: GatherCompletionRecord) => void;
+  type CompletionProviderCallback = (err: Error | undefined, completions: CompletionRecord, finished: boolean) => void;
+
+  export class CompletionProvider {
+    insertByIndex(editor: Editor, index: number, options: CompletionProviderOptions): boolean;
+    insertMatch(editor: Editor, data: Completion, options: CompletionProviderOptions): boolean;
+    completions: CompletionRecord;
+    gatherCompletions(editor: Editor, callback: CompletionCallbackFunction): boolean;
+    provideCompletions(editor: Editor, options: CompletionProviderOptions, callback: CompletionProviderCallback): void;
+    detach(): void;
+  }
+
+  export class Autocomplete {
+    constructor();
+    autoInsert?: boolean;
+    autoSelect?: boolean;
+    autoShown?: boolean;
+    exactMatch?: boolean;
+    inlineEnabled?: boolean;
+    parentNode?: HTMLElement;
+    setSelectOnHover?: Boolean;
+    stickySelectionDelay?: Number;
+    ignoreCaption?: Boolean;
+    showLoadingState?: Boolean;
+    emptyMessage?(prefix: String): String;
+    getPopup(): AcePopup;
+    showPopup(editor: Editor, options: CompletionOptions): void;
+    detach(): void;
+    destroy(): void;
+  }
+
+  type AcePopupNavigation = "up" | "down" | "start" | "end";
+
+  export class AcePopup {
+    constructor(parentNode: HTMLElement);
+    setData(list: Completion[], filterText: string): void;
+    getData(row: number): Completion;
+    getRow(): number;
+    getRow(line: number): void;
+    hide(): void;
+    show(pos: Point, lineHeight: number, topdownOnly: boolean): void;
+    tryShow(pos: Point, lineHeight: number, anchor: "top" | "bottom" | undefined, forceShow?: boolean): boolean;
+    goTo(where: AcePopupNavigation): void;
   }
 }
 
@@ -933,13 +1107,61 @@ export const VirtualRenderer: {
   new(container: HTMLElement, theme?: string): Ace.VirtualRenderer;
 };
 export const EditSession: {
-  new(text: string | Document, mode?: Ace.SyntaxMode): Ace.EditSession;
+  new(text: string | Ace.Document, mode?: Ace.SyntaxMode): Ace.EditSession;
 };
 export const UndoManager: {
   new(): Ace.UndoManager;
+};
+export const Editor: {
+  new(): Ace.Editor;
 };
 export const Range: {
   new(startRow: number, startColumn: number, endRow: number, endColumn: number): Ace.Range;
   fromPoints(start: Ace.Point, end: Ace.Point): Ace.Range;
   comparePoints(p1: Ace.Point, p2: Ace.Point): number;
 };
+
+
+type InlineAutocompleteAction = "prev" | "next" | "first" | "last";
+
+type TooltipCommandFunction<T> = (editor: Ace.Editor) => T;
+
+interface TooltipCommand extends Ace.Command {
+  enabled: TooltipCommandFunction<boolean> | boolean,
+  getValue?: TooltipCommandFunction<any>,
+  type: "button" | "text" | "checkbox"
+  iconCssClass: string,
+  cssClass: string
+}
+
+export class InlineAutocomplete {
+  constructor();
+  getInlineRenderer(): Ace.AceInline;
+  getInlineTooltip(): CommandBarTooltip;
+  getCompletionProvider(): Ace.CompletionProvider;
+  show(editor: Ace.Editor): void;
+  isOpen(): boolean;
+  detach(): void;
+  destroy(): void;
+  goTo(action: InlineAutocompleteAction): void;
+  tooltipEnabled: boolean;
+  commands: Record<string, Ace.Command>
+  getIndex(): number;
+  setIndex(value: number): void;
+  getLength(): number;
+  getData(index?: number): Ace.Completion | undefined;
+  updateCompletions(options: Ace.CompletionOptions): void;
+}
+
+export class CommandBarTooltip {
+  constructor(parentElement: HTMLElement);
+  registerCommand(id: string, command: TooltipCommand): void;
+  attach(editor: Ace.Editor): void;
+  updatePosition(): void;
+  update(): void;
+  isShown(): boolean;
+  getAlwaysShow(): boolean;
+  setAlwaysShow(alwaysShow: boolean): void;
+  detach(): void;
+  destroy(): void;
+}

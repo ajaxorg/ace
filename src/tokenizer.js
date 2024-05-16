@@ -1,117 +1,123 @@
 "use strict";
+const reportError = require("./lib/report_error").reportError;
 
-var config = require("./config");
 var oop = require("./lib/oop");
 var {Scope} = require("./scope");
 // tokenizing lines longer than this makes editor very slow
 var MAX_TOKEN_COUNT = 2000;
 /**
  * This class takes a set of highlighting rules, and creates a tokenizer out of them. For more information, see [the wiki on extending highlighters](https://github.com/ajaxorg/ace/wiki/Creating-or-Extending-an-Edit-Mode#wiki-extendingTheHighlighter).
- * @class Tokenizer
  **/
+class Tokenizer {
+    /**
+     * Constructs a new tokenizer based on the given rules and flags.
+     * @param {Object} rules The highlighting rules
+     **/
+    constructor(rules) {
+        /**@type {RegExp}*/
+        this.splitRegex;
+        this.states = rules;
 
-/**
- * Constructs a new tokenizer based on the given rules and flags.
- * @param {Object} rules The highlighting rules
- *
- * @constructor
- **/
-var Tokenizer = function(rules) {
-    this.states = rules;
+        this.regExps = {};
+        this.matchMappings = {};
+        for (var key in this.states) {
+            var state = this.states[key];
+            var ruleRegExps = [];
+            var matchTotal = 0;
+            var mapping = this.matchMappings[key] = {defaultToken: "text"};
+            var flag = "g";
 
-    this.regExps = {};
-    this.matchMappings = {};
-    for (var key in this.states) {
-        var state = this.states[key];
-        var ruleRegExps = [];
-        var matchTotal = 0;
-        var mapping = this.matchMappings[key] = {defaultToken: "text"};
-        var flag = "g";
+            var splitterRurles = [];
+            for (var i = 0; i < state.length; i++) {
+                var rule = state[i];
+                if (rule.defaultToken)
+                    mapping.defaultToken = rule.defaultToken;
+                if (rule.caseInsensitive && flag.indexOf("i") === -1)
+                    flag += "i";
+                if (rule.unicode && flag.indexOf("u") === -1)
+                    flag += "u";
+                if (rule.regex == null)
+                    continue;
 
-        var splitterRurles = [];
-        for (var i = 0; i < state.length; i++) {
-            var rule = state[i];
-            if (rule.defaultToken)
-                mapping.defaultToken = rule.defaultToken;
-            if (rule.caseInsensitive && flag.indexOf("i") === -1)
-                flag += "i";
-            if (rule.unicode && flag.indexOf("u") === -1)
-                flag += "u";
-            if (rule.regex == null)
-                continue;
+                if (rule.regex instanceof RegExp)
+                    rule.regex = rule.regex.toString().slice(1, -1);
 
-            if (rule.regex instanceof RegExp)
-                rule.regex = rule.regex.toString().slice(1, -1);
-
-            // Count number of matching groups. 2 extra groups from the full match
-            // And the catch-all on the end (used to force a match);
-            var adjustedregex = rule.regex;
-            var matchcount = new RegExp("(?:(" + adjustedregex + ")|(.))").exec("a").length - 2;
-            if (Array.isArray(rule.token)) {
-                if (rule.token.length == 1 || matchcount == 1) {
-                    rule.token = rule.token[0];
-                } else if (matchcount - 1 != rule.token.length) {
-                    this.reportError("number of classes and regexp groups doesn't match", { 
-                        rule: rule,
-                        groupCount: matchcount - 1
-                    });
-                    rule.token = rule.token[0];
-                } else {
-                    rule.tokenArray = rule.token;
-                    rule.token = null;
-                    rule.onMatch = this.$arrayTokens;
+                // Count number of matching groups. 2 extra groups from the full match
+                // And the catch-all on the end (used to force a match);
+                var adjustedregex = rule.regex;
+                var matchcount = new RegExp("(?:(" + adjustedregex + ")|(.))").exec("a").length - 2;
+                if (Array.isArray(rule.token)) {
+                    if (rule.token.length == 1 || matchcount == 1) {
+                        rule.token = rule.token[0];
+                    } else if (matchcount - 1 != rule.token.length) {
+                        this.reportError("number of classes and regexp groups doesn't match", {
+                            rule: rule,
+                            groupCount: matchcount - 1
+                        });
+                        rule.token = rule.token[0];
+                    } else {
+                        rule.tokenArray = rule.token;
+                        rule.token = null;
+                        rule.onMatch = this.$arrayTokens;
+                    }
+                } else if (typeof rule.token == "function" && !rule.onMatch) {
+                    if (matchcount > 1)
+                        rule.onMatch = this.$applyToken;
+                    else
+                        rule.onMatch = rule.token;
                 }
-            } else if (typeof rule.token == "function" && !rule.onMatch) {
-                if (matchcount > 1)
-                    rule.onMatch = this.$applyToken;
-                else
-                    rule.onMatch = rule.token;
+
+                if (matchcount > 1) {
+                    if (/\\\d/.test(rule.regex)) {
+                        // Replace any backreferences and offset appropriately.
+                        adjustedregex = rule.regex.replace(/\\([0-9]+)/g, function(match, digit) {
+                            return "\\" + (parseInt(digit, 10) + matchTotal + 1);
+                        });
+                    } else {
+                        matchcount = 1;
+                        adjustedregex = this.removeCapturingGroups(rule.regex);
+                    }
+                    if (!rule.splitRegex && typeof rule.token != "string")
+                        splitterRurles.push(rule); // flag will be known only at the very end
+                }
+
+                mapping[matchTotal] = i;
+                matchTotal += matchcount;
+
+                ruleRegExps.push(adjustedregex);
+
+                // makes property access faster
+                if (!rule.onMatch)
+                    rule.onMatch = null;
             }
 
-            if (matchcount > 1) {
-                if (/\\\d/.test(rule.regex)) {
-                    // Replace any backreferences and offset appropriately.
-                    adjustedregex = rule.regex.replace(/\\([0-9]+)/g, function(match, digit) {
-                        return "\\" + (parseInt(digit, 10) + matchTotal + 1);
-                    });
-                } else {
-                    matchcount = 1;
-                    adjustedregex = this.removeCapturingGroups(rule.regex);
-                }
-                if (!rule.splitRegex && typeof rule.token != "string")
-                    splitterRurles.push(rule); // flag will be known only at the very end
+            if (!ruleRegExps.length) {
+                mapping[0] = 0;
+                ruleRegExps.push("$");
             }
 
-            mapping[matchTotal] = i;
-            matchTotal += matchcount;
+            splitterRurles.forEach(function(rule) {
+                rule.splitRegex = this.createSplitterRegexp(rule.regex, flag);
+            }, this);
 
-            ruleRegExps.push(adjustedregex);
-
-            // makes property access faster
-            if (!rule.onMatch)
-                rule.onMatch = null;
+            this.regExps[key] = new RegExp("(" + ruleRegExps.join(")|(") + ")|($)", flag);
         }
-        
-        if (!ruleRegExps.length) {
-            mapping[0] = 0;
-            ruleRegExps.push("$");
-        }
-        
-        splitterRurles.forEach(function(rule) {
-            rule.splitRegex = this.createSplitterRegexp(rule.regex, flag);
-        }, this);
-
-        this.regExps[key] = new RegExp("(" + ruleRegExps.join(")|(") + ")|($)", flag);
     }
-};
 
-(function() {
-    this.$setMaxTokenCount = function(m) {
+    /**
+     * @param {number} m
+     */
+    $setMaxTokenCount(m) {
         MAX_TOKEN_COUNT = m | 0;
-    };
-    
-    this.$applyToken = function(str) {
+    }
+
+    /**
+     * @param {string} str
+     * @return {import("../ace-internal").Ace.Token[]}
+     */
+    $applyToken(str) {
         var values = this.splitRegex.exec(str).slice(1);
+        //@ts-ignore
         var types = this.token.apply(this, values);
 
         // required for compatibility with old modes
@@ -127,15 +133,20 @@ var Tokenizer = function(rules) {
                 };
         }
         return tokens;
-    };
+    }
 
-    this.$arrayTokens = function(str) {
+    /**
+     * @param {string} str
+     * @return {import("../ace-internal").Ace.Token[] | string}
+     */
+    $arrayTokens(str) {
         if (!str)
             return [];
         var values = this.splitRegex.exec(str);
         if (!values)
             return "text";
         var tokens = [];
+        //@ts-ignore
         var types = this.tokenArray;
         for (var i = 0, l = types.length; i < l; i++) {
             if (values[i + 1])
@@ -145,17 +156,25 @@ var Tokenizer = function(rules) {
                 };
         }
         return tokens;
-    };
+    }
 
-    this.removeCapturingGroups = function(src) {
+    /**
+     * @param {string} src
+     * @returns {string}
+     */
+    removeCapturingGroups(src) {
         var r = src.replace(
             /\\.|\[(?:\\.|[^\\\]])*|\(\?[:=!<]|(\()/g,
             function(x, y) {return y ? "(?:" : x;}
         );
         return r;
-    };
+    }
 
-    this.createSplitterRegexp = function(src, flag) {
+    /**
+     * @param {string} src
+     * @param {string} flag
+     */
+    createSplitterRegexp(src, flag) {
         if (src.indexOf("(?=") != -1) {
             var stack = 0;
             var inChClass = false;
@@ -192,14 +211,17 @@ var Tokenizer = function(rules) {
         if (src.charAt(src.length - 1) != "$") src += "$";
         
         return new RegExp(src, (flag||"").replace("g", ""));
-    };
+    }
 
     /**
      * Returns an object containing two properties: `tokens`, which contains all the tokens; and `state`, the current state.
-     * @returns {Object}
-     **/
-    this.getLineTokens = function(line, startState) {
+     * @param {string} line
+     * @param {string | string[]} startState
+     * @returns {{tokens:import("../ace-internal").Ace.Token[], state: string|string[]}}
+     */
+    getLineTokens(line, startState) {
         if (startState && typeof startState != "string") {
+            /**@type {any[]}*/
             var stack = startState.slice(0);
             startState = stack[0];
             if (startState === "#tmp") {
@@ -209,7 +231,7 @@ var Tokenizer = function(rules) {
         } else
             var stack = [];
 
-        var currentState = startState || "start";
+        var currentState = /**@type{string}*/(startState) || "start";
         var state = this.states[currentState];
         if (!state) {
             currentState = "start";
@@ -332,11 +354,10 @@ var Tokenizer = function(rules) {
             tokens : tokens,
             state : stack.length ? stack : currentState
         };
-    };
-    
-    this.reportError = config.reportError;
-    
-}).call(Tokenizer.prototype);
+    }
+}
+
+Tokenizer.prototype.reportError = reportError;
 
 /**
  * This class takes a set of highlighting rules, and creates a tokenizer out of them.
@@ -351,13 +372,11 @@ var Tokenizer = function(rules) {
  *
  * @constructor
  **/
-var CustomTokenizer = function(rules, modeName) {
-    Tokenizer.call(this, rules);
-    this.rootScope = new Scope(modeName);
-}
-oop.inherits(CustomTokenizer, Tokenizer);
-
-(function() {
+class CustomTokenizer extends Tokenizer {
+    constructor(rules, modeName) {
+        super(rules);
+        this.rootScope = new Scope(modeName);
+    }
     /**
      * Returns an object containing two properties: `tokens`, which contains all the tokens; and `state`, the current state.
      * @param {String} line
@@ -365,7 +384,7 @@ oop.inherits(CustomTokenizer, Tokenizer);
      * @returns {Object}
      * @override
      **/
-    this.getLineTokens = function(line, startState) {
+    getLineTokens(line, startState) {
         var stack = [];
 
         var currentState = (startState !== undefined) ? (startState instanceof Scope) ? startState
@@ -383,7 +402,7 @@ oop.inherits(CustomTokenizer, Tokenizer);
         var lastIndex = 0;
         var matchAttempts = 0;
 
-        var token = {type: null, value: ""};
+        var token = { type: null, value: "" };
 
         while (match = re.exec(line)) {
             var type = currentState.get(mapping.defaultToken);
@@ -399,11 +418,11 @@ oop.inherits(CustomTokenizer, Tokenizer);
                 } else {
                     if (token.type)
                         tokens.push(token);
-                    token = {type: currentState.get(type), value: skipped};
+                    token = { type: currentState.get(type), value: skipped };
                 }
             }
 
-            for (var i = 0; i < match.length-2; i++) {
+            for (var i = 0; i < match.length - 2; i++) {
                 if (match[i + 1] === undefined)
                     continue;
 
@@ -470,14 +489,14 @@ oop.inherits(CustomTokenizer, Tokenizer);
                     } else {
                         if (token.type)
                             tokens.push(token);
-                        token = {type: currentState.get(type), value: value};
+                        token = { type: currentState.get(type), value: value };
                     }
                 } else if (type) {
                     if (token.type)
                         tokens.push(token);
-                    token = {type: null, value: ""};
+                    token = { type: null, value: "" };
                     for (var i = 0; i < type.length; i++) {
-                        type[i].type=currentState.get(type[i].type);
+                        type[i].type = currentState.get(type[i].type);
                         tokens.push(type[i]);
                     }
                 }
@@ -523,8 +542,9 @@ oop.inherits(CustomTokenizer, Tokenizer);
         return {
             tokens: tokens
         };
-    };
-}).call(CustomTokenizer.prototype);
+    }
+}
 
+ 
 exports.Tokenizer = Tokenizer;
 exports.CustomTokenizer = CustomTokenizer;

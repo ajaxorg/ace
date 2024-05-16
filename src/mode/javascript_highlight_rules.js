@@ -1,7 +1,7 @@
 "use strict";
 
 var oop = require("../lib/oop");
-var DocCommentHighlightRules = require("./doc_comment_highlight_rules").DocCommentHighlightRules;
+var DocCommentHighlightRules = require("./jsdoc_comment_highlight_rules").JsDocCommentHighlightRules;
 var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;
 
 // TODO: Unicode escape sequences
@@ -136,7 +136,7 @@ var JavaScriptHighlightRules = function(options) {
                 regex : /that\b/
             }, {
                 token : ["storage.type", "punctuation.operator", "support.function.firebug"],
-                regex : /(console)(\.)(warn|info|log|error|time|trace|timeEnd|assert)\b/
+                regex : /(console)(\.)(warn|info|log|error|debug|time|trace|timeEnd|assert)\b/
             }, {
                 token : keywordMapper,
                 regex : identifierRe
@@ -482,7 +482,7 @@ function JSX() {
                 value: val.substr(offset)
             }];
         },
-        regex : "</?" + tagRegex + "",
+        regex : "</?(?:" + tagRegex + "|(?=>))",
         next: "jsxAttributes",
         nextState: "jsx"
     };
@@ -495,8 +495,7 @@ function JSX() {
     this.$rules.jsx = [
         jsxJsRule,
         jsxTag,
-        {include : "reference"},
-        {defaultToken: "string"}
+        {include : "reference"}, {defaultToken: "string.xml"}
     ];
     this.$rules.jsxAttributes = [{
         token : "meta.tag.punctuation.tag-close.xml",

@@ -1,34 +1,30 @@
 "use strict";
-
+/**
+ * @typedef {import("../../ace-internal").Ace.LayerConfig} LayerConfig
+ * @typedef {import("../edit_session").EditSession} EditSession
+ */
 var oop = require("../lib/oop");
 var dom = require("../lib/dom");
 var lang = require("../lib/lang");
 var Lines = require("./lines").Lines;
 var EventEmitter = require("../lib/event_emitter").EventEmitter;
+var nls = require("../config").nls;
+const isTextToken = require("./text_util").isTextToken;
 
-var Text = function(parentEl) {
-    this.dom = dom;
-    this.element = this.dom.createElement("div");
-    this.element.className = "ace_layer ace_text-layer";
-    parentEl.appendChild(this.element);
-    this.$updateEolChar = this.$updateEolChar.bind(this);
-    this.$lines = new Lines(this.element);
-};
-
-(function() {
-
-    oop.implement(this, EventEmitter);
-
-    this.EOF_CHAR = "\xB6";
-    this.EOL_CHAR_LF = "\xAC";
-    this.EOL_CHAR_CRLF = "\xa4";
-    this.EOL_CHAR = this.EOL_CHAR_LF;
-    this.TAB_CHAR = "\u2014"; //"\u21E5";
-    this.SPACE_CHAR = "\xB7";
-    this.$padding = 0;
-    this.MAX_LINE_LENGTH = 10000;
-
-    this.$updateEolChar = function() {
+class Text {
+    /**
+     * @param {HTMLElement} parentEl
+     */
+    constructor(parentEl) {
+        this.dom = dom;
+        this.element = this.dom.createElement("div");
+        this.element.className = "ace_layer ace_text-layer";
+        parentEl.appendChild(this.element);
+        this.$updateEolChar = this.$updateEolChar.bind(this);
+        this.$lines = new Lines(this.element);
+    }
+    
+    $updateEolChar() {
         var doc = this.session.doc;
         var unixMode = doc.getNewLineCharacter() == "\n" && doc.getNewLineMode() != "windows";
         var EOL_CHAR = unixMode ? this.EOL_CHAR_LF : this.EOL_CHAR_CRLF;
@@ -36,46 +32,66 @@ var Text = function(parentEl) {
             this.EOL_CHAR = EOL_CHAR;
             return true;
         }
-    };
+    }
 
-    this.setPadding = function(padding) {
+    /**
+     * @param {number} padding
+     */
+    setPadding(padding) {
         this.$padding = padding;
         this.element.style.margin = "0 " + padding + "px";
-    };
-
-    this.getLineHeight = function() {
+    }
+    
+    /**
+     * @returns {number}
+     */
+    getLineHeight() {
         return this.$fontMetrics.$characterSize.height || 0;
-    };
+    }
 
-    this.getCharacterWidth = function() {
+    /**
+     * @returns {number}
+     */
+    getCharacterWidth() {
         return this.$fontMetrics.$characterSize.width || 0;
-    };
+    }
 
-    this.$setFontMetrics = function(measure) {
+    /**
+     * @param {any} measure
+     */
+    $setFontMetrics(measure) {
         this.$fontMetrics = measure;
-        this.$fontMetrics.on("changeCharacterSize", function(e) {
-            this._signal("changeCharacterSize", e);
+        this.$fontMetrics.on("changeCharacterSize",
+            /**
+             * @this {Text}
+             */
+            function (e) {
+                this._signal("changeCharacterSize", e);
         }.bind(this));
         this.$pollSizeChanges();
-    };
+    }
 
-    this.checkForSizeChanges = function() {
+    checkForSizeChanges() {
         this.$fontMetrics.checkForSizeChanges();
-    };
-    this.$pollSizeChanges = function() {
+    }
+    $pollSizeChanges() {
         return this.$pollSizeChangesTimer = this.$fontMetrics.$pollSizeChanges();
-    };
-    this.setSession = function(session) {
+    }
+
+    /**
+     * @param {EditSession} session
+     */
+    setSession(session) {
+        /**@type {EditSession}*/
         this.session = session;
         if (session)
             this.$computeTabString();
-    };
+    }
 
-    this.showInvisibles = false;
-    this.showSpaces = false;
-    this.showTabs = false;
-    this.showEOL = false;
-    this.setShowInvisibles = function(showInvisibles) {
+    /**
+     * @param {string} showInvisibles
+     */
+    setShowInvisibles(showInvisibles) {
         if (this.showInvisibles == showInvisibles)
             return false;
 
@@ -89,32 +105,34 @@ var Text = function(parentEl) {
         }
         this.$computeTabString();
         return true;
-    };
+    }
 
-    this.displayIndentGuides = true;
-    this.setDisplayIndentGuides = function(display) {
+    /**
+     * @param {boolean} display
+     */
+    setDisplayIndentGuides(display) {
         if (this.displayIndentGuides == display)
             return false;
 
         this.displayIndentGuides = display;
         this.$computeTabString();
         return true;
-    };
+    }
 
-    this.$highlightIndentGuides = true;
-    this.setHighlightIndentGuides = function (highlight) {
+    /**
+     * @param {boolean} highlight
+     */
+    setHighlightIndentGuides(highlight) {
         if (this.$highlightIndentGuides === highlight) return false;
 
         this.$highlightIndentGuides = highlight;
         return highlight;
-    };
-
-    this.$tabStrings = [];
-    this.onChangeTabSize =
-    this.$computeTabString = function() {
+    }
+    
+    $computeTabString() {
         var tabSize = this.session.getTabSize();
         this.tabSize = tabSize;
-        var tabStr = this.$tabStrings = [0];
+        /**@type{any}*/var tabStr = this.$tabStrings = [0];
         for (var i = 1; i < tabSize + 1; i++) {
             if (this.showTabs) {
                 var span = this.dom.createElement("span");
@@ -148,9 +166,14 @@ var Text = function(parentEl) {
             span.textContent = tabContent;
             this.$tabStrings["\t"] = span;
         }
-    };
+    }
 
-    this.updateLines = function(config, firstRow, lastRow) {
+    /**
+     * @param {LayerConfig} config
+     * @param {number} firstRow
+     * @param {number} lastRow
+     */
+    updateLines(config, firstRow, lastRow) {
         // Due to wrap line changes there can be new lines if e.g.
         // the line to updated wrapped in the meantime.
         if (this.config.lastRow != config.lastRow ||
@@ -193,7 +216,7 @@ var Text = function(parentEl) {
             if (row > last)
                 break;
 
-            var lineElement = lineElements[lineElementsIdx++];
+            /**@type{any}*/var lineElement = lineElements[lineElementsIdx++];
             if (lineElement) {
                 this.dom.removeChildren(lineElement);
                 this.$renderLine(
@@ -217,9 +240,12 @@ var Text = function(parentEl) {
                 cell.element.style.top = this.$lines.computeLineTop(cell.row, config, this.session) + "px";
             }
         }
-    };
+    }
 
-    this.scrollLines = function(config) {
+    /**
+     * @param {LayerConfig} config
+     */
+    scrollLines(config) {
         var oldConfig = this.config;
         this.config = config;
 
@@ -259,9 +285,14 @@ var Text = function(parentEl) {
             this.$lines.push(this.$renderLinesFragment(config, oldConfig.lastRow + 1, config.lastRow));
         }
         this.$highlightIndentGuide();
-    };
+    }
 
-    this.$renderLinesFragment = function(config, firstRow, lastRow) {
+    /**
+     * @param {LayerConfig} config
+     * @param {number} firstRow
+     * @param {number} lastRow
+     */
+    $renderLinesFragment(config, firstRow, lastRow) {
         var fragment = [];
         var row = firstRow;
         var foldLine = this.session.getNextFoldLine(row);
@@ -297,9 +328,12 @@ var Text = function(parentEl) {
             row++;
         }
         return fragment;
-    };
+    }
 
-    this.update = function(config) {
+    /**
+     * @param {LayerConfig} config
+     */
+    update(config) {
         this.$lines.moveContainer(config);
 
         this.config = config;
@@ -312,15 +346,9 @@ var Text = function(parentEl) {
             lines.pop();
 
         lines.push(this.$renderLinesFragment(config, firstRow, lastRow));
-    };
+    }
 
-    this.$textToken = {
-        "text": true,
-        "rparen": true,
-        "lparen": true
-    };
-
-    this.$renderToken = function(parent, screenColumn, token, value) {
+    $renderToken(parent, screenColumn, token, value) {
         var self = this;
         var re = /(\t)|( +)|([\x00-\x1f\x80-\xa0\xad\u1680\u180E\u2000-\u200f\u2028\u2029\u202F\u205F\uFEFF\uFFF9-\uFFFC\u2066\u2067\u2068\u202A\u202B\u202D\u202E\u202C\u2069]+)|(\u3000)|([\u1100-\u115F\u11A3-\u11A7\u11FA-\u11FF\u2329-\u232A\u2E80-\u2E99\u2E9B-\u2EF3\u2F00-\u2FD5\u2FF0-\u2FFB\u3001-\u303E\u3041-\u3096\u3099-\u30FF\u3105-\u312D\u3131-\u318E\u3190-\u31BA\u31C0-\u31E3\u31F0-\u321E\u3220-\u3247\u3250-\u32FE\u3300-\u4DBF\u4E00-\uA48C\uA490-\uA4C6\uA960-\uA97C\uAC00-\uD7A3\uD7B0-\uD7C6\uD7CB-\uD7FB\uF900-\uFAFF\uFE10-\uFE19\uFE30-\uFE52\uFE54-\uFE66\uFE68-\uFE6B\uFF01-\uFF60\uFFE0-\uFFE6]|[\uD800-\uDBFF][\uDC00-\uDFFF])/g;
 
@@ -357,7 +385,7 @@ var Text = function(parentEl) {
                     span.textContent = lang.stringRepeat(self.SPACE_CHAR, simpleSpace.length);
                     valueFragment.appendChild(span);
                 } else {
-                    valueFragment.appendChild(this.com.createTextNode(simpleSpace, this.element));
+                    valueFragment.appendChild(this.dom.createTextNode(simpleSpace, this.element));
                 }
             } else if (controlCharacter) {
                 var span = this.dom.createElement("span");
@@ -385,11 +413,13 @@ var Text = function(parentEl) {
 
         valueFragment.appendChild(this.dom.createTextNode(i ? value.slice(i) : value, this.element));
 
-        if (!this.$textToken[token.type.toString()]) {
+        if (!isTextToken(token.type.toString())) {
             var classes = "ace_" + token.type.toString().replace(/\./g, " ace_");
             var span = this.dom.createElement("span");
-            if (token.type.toString() === "fold")
+            if (token.type.toString() === "fold") {
                 span.style.width = (token.value.length * this.config.characterWidth) + "px";
+                span.setAttribute("title", nls("inline-fold.closed.title", "Unfold code"));
+            }
 
             span.className = classes;
             span.appendChild(valueFragment);
@@ -401,9 +431,9 @@ var Text = function(parentEl) {
         }
 
         return screenColumn + value.length;
-    };
+    }
 
-    this.renderIndentGuide = function(parent, value, max) {
+    renderIndentGuide(parent, value, max) {
         var cols = value.search(this.$indentGuideRe);
         if (cols <= 0 || cols >= max)
             return value;
@@ -424,11 +454,11 @@ var Text = function(parentEl) {
         }
         this.$highlightIndentGuide();
         return value;
-    };
+    }
 
-    this.$highlightIndentGuide = function () {
+    $highlightIndentGuide() {
         if (!this.$highlightIndentGuides || !this.displayIndentGuides) return;
-
+        /**@type {{ indentLevel?: number; start?: number; end?: number; dir?: number; }}*/
         this.$highlightIndentGuideMarker = {
             indentLevel: undefined,
             start: undefined,
@@ -478,9 +508,9 @@ var Text = function(parentEl) {
         }
 
         this.$renderHighlightIndentGuide();
-    };
+    }
 
-    this.$clearActiveIndentGuide = function () {
+    $clearActiveIndentGuide() {
         var cells = this.$lines.cells;
         for (var i = 0; i < cells.length; i++) {
             var cell = cells[i];
@@ -494,9 +524,9 @@ var Text = function(parentEl) {
                 }
             }
         }
-    };
+    }
 
-    this.$setIndentGuideActive = function (cell, indentLevel) {
+    $setIndentGuideActive(cell, indentLevel) {
         var line = this.session.doc.getLine(cell.row);
         if (line !== "") {
             var childNodes = cell.element.childNodes;
@@ -506,9 +536,9 @@ var Text = function(parentEl) {
                     "ace_indent-guide-active");
             }
         }
-    };
+    }
 
-    this.$renderHighlightIndentGuide = function () {
+    $renderHighlightIndentGuide() {
         if (!this.$lines) return;
         var cells = this.$lines.cells;
         this.$clearActiveIndentGuide();
@@ -534,17 +564,17 @@ var Text = function(parentEl) {
                 }
             }
         }
-    };
+    }
 
-    this.$createLineElement = function(parent) {
+    $createLineElement(parent) {
         var lineEl = this.dom.createElement("div");
         lineEl.className = "ace_line";
         lineEl.style.height = this.config.lineHeight + "px";
 
         return lineEl;
-    };
+    }
 
-    this.$renderWrappedLine = function(parent, tokens, splits) {
+    $renderWrappedLine(parent, tokens, splits) {
         var chars = 0;
         var split = 0;
         var splitChars = splits[0];
@@ -596,9 +626,9 @@ var Text = function(parentEl) {
 
         if (splits[splits.length - 1] > this.MAX_LINE_LENGTH)
             this.$renderOverflowMessage(lineEl, screenColumn, null, "", true);
-    };
+    }
 
-    this.$renderSimpleLine = function(parent, tokens) {
+    $renderSimpleLine(parent, tokens) {
         var screenColumn = 0;
 
         for (var i = 0; i < tokens.length; i++) {
@@ -613,9 +643,9 @@ var Text = function(parentEl) {
                 return this.$renderOverflowMessage(parent, screenColumn, token, value);
             screenColumn = this.$renderToken(parent, screenColumn, token, value);
         }
-    };
+    }
 
-    this.$renderOverflowMessage = function(parent, screenColumn, token, value, hide) {
+    $renderOverflowMessage(parent, screenColumn, token, value, hide) {
         token && this.$renderToken(parent, screenColumn, token,
             value.slice(0, this.MAX_LINE_LENGTH - screenColumn));
 
@@ -624,10 +654,10 @@ var Text = function(parentEl) {
         overflowEl.textContent = hide ? "<hide>" : "<click to see more...>";
 
         parent.appendChild(overflowEl);
-    };
+    }
 
     // row is either first row of foldline or not in fold
-    this.$renderLine = function(parent, row, foldLine) {
+    $renderLine(parent, row, foldLine) {
         if (!foldLine && foldLine != false)
             foldLine = this.session.getFoldLine(row);
 
@@ -665,9 +695,14 @@ var Text = function(parentEl) {
 
             lastLineEl.appendChild(invisibleEl);
         }
-    };
+    }
 
-    this.$getFoldLineTokens = function(row, foldLine) {
+    /**
+     * @param {number} row
+     * @param {import("../../ace-internal").Ace.FoldLine} foldLine
+     * @return {import("../../ace-internal").Ace.Token[]}
+     */
+    $getFoldLineTokens(row, foldLine) {
         var session = this.session;
         var renderTokens = [];
 
@@ -726,18 +761,36 @@ var Text = function(parentEl) {
         }, foldLine.end.row, this.session.getLine(foldLine.end.row).length);
 
         return renderTokens;
-    };
+    }
 
-    this.$useLineGroups = function() {
+    $useLineGroups() {
         // For the updateLines function to work correctly, it's important that the
         // child nodes of this.element correspond on a 1-to-1 basis to rows in the
         // document (as distinct from lines on the screen). For sessions that are
         // wrapped, this means we need to add a layer to the node hierarchy (tagged
         // with the class name ace_line_group).
         return this.session.getUseWrapMode();
-    };
+    }
+}
 
-    this.destroy = function() {};
-}).call(Text.prototype);
+Text.prototype.EOF_CHAR = "\xB6";
+Text.prototype.EOL_CHAR_LF = "\xAC";
+Text.prototype.EOL_CHAR_CRLF = "\xa4";
+Text.prototype.EOL_CHAR = Text.prototype.EOL_CHAR_LF;
+Text.prototype.TAB_CHAR = "\u2014"; //"\u21E5";
+Text.prototype.SPACE_CHAR = "\xB7";
+Text.prototype.$padding = 0;
+Text.prototype.MAX_LINE_LENGTH = 10000;
+Text.prototype.showInvisibles = false;
+Text.prototype.showSpaces = false;
+Text.prototype.showTabs = false;
+Text.prototype.showEOL = false;
+Text.prototype.displayIndentGuides = true;
+Text.prototype.$highlightIndentGuides = true;
+Text.prototype.$tabStrings = [];
+Text.prototype.destroy = {};
+Text.prototype.onChangeTabSize = Text.prototype.$computeTabString;
+
+oop.implement(Text.prototype, EventEmitter);
 
 exports.Text = Text;

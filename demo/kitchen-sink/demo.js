@@ -29,6 +29,7 @@ var HashHandler = require("ace/keyboard/hash_handler").HashHandler;
 
 var Renderer = require("ace/virtual_renderer").VirtualRenderer;
 var Editor = require("ace/editor").Editor;
+var Range = require("ace/range").Range;
 
 var whitespace = require("ace/ext/whitespace");
 
@@ -39,11 +40,8 @@ var layout = require("./layout");
 var util = require("./util");
 var saveOption = util.saveOption;
 
-
-var ElasticTabstopsLite = require("ace/ext/elastic_tabstops_lite").ElasticTabstopsLite;
-
-var IncrementalSearch = require("ace/incremental_search").IncrementalSearch;
-
+require("ace/ext/elastic_tabstops_lite");
+require("ace/incremental_search");
 
 var TokenTooltip = require("./token_tooltip").TokenTooltip;
 require("ace/config").defineOptions(Editor.prototype, "editor", {
@@ -63,6 +61,149 @@ require("ace/config").defineOptions(Editor.prototype, "editor", {
         handlesSet: true
     }
 });
+
+require("ace/config").defineOptions(Editor.prototype, "editor", {
+    useAceLinters: {
+        set: function(val) {
+            if (val && !window.languageProvider) {
+                loadLanguageProvider(editor);
+            }
+            else if (val) {
+                window.languageProvider.registerEditor(this);
+            } else {
+                // todo unregister
+            }
+        }
+    }
+});
+
+var {HoverTooltip} = require("ace/tooltip");
+var MarkerGroup = require("ace/marker_group").MarkerGroup;
+var docTooltip = new HoverTooltip();
+function loadLanguageProvider(editor) {
+    function loadScript(cb) {
+        if (define.amd) {
+            require([
+                "https://mkslanc.github.io/ace-linters/build/ace-linters.js"
+            ], function(m) {
+                cb(m.LanguageProvider);
+            });
+        } else {
+            net.loadScript([
+                "https://mkslanc.github.io/ace-linters/build/ace-linters.js"
+            ], function() {
+                cb(window.LanguageProvider);
+            });
+        }
+    }
+    loadScript(function(LanguageProvider) {
+        var languageProvider = LanguageProvider.fromCdn("https://mkslanc.github.io/ace-linters/build", {
+            functionality: {
+                hover: true,
+                completion: {
+                    overwriteCompleters: true
+                },
+                completionResolve: true,
+                format: true,
+                documentHighlights: true,
+                signatureHelp: false
+            }
+        });
+        window.languageProvider = languageProvider;
+        languageProvider.registerEditor(editor);
+        // hack to replace tooltip implementation from ace-linters with hover tooltip
+        // can be removed when ace-linters is updated to use MarkerGroup and HoverTooltip
+        if (languageProvider.$hoverTooltip)
+            editor.off("mousemove", languageProvider.$hoverTooltip.onMouseMove);
+        languageProvider.$messageController.$worker.addEventListener("message", function(e) {
+            var id = e.data.sessionId.split(".")[0];
+            var session = languageProvider.$getSessionLanguageProvider({id: id})?.session;
+            if (e.data.type == 6) {
+                // annotation message
+                e.stopPropagation();
+                if (session) {
+                    showAnnotations(session, e.data.value);
+                }
+            } else if (e.data.type == 14) {
+                // highlights message
+                if (session) showOccurrenceMarkers(session, e.data.value);
+            }
+        }, true);
+        function showOccurrenceMarkers(session, positions) {
+            if (!session.state) session.state = {}
+            if (!session.state.occurrenceMarkers) {
+                session.state.occurrenceMarkers = new MarkerGroup(session);
+            }
+            session.state.occurrenceMarkers.setMarkers(positions.map(function(el) {
+                var r = el.range;
+                return {
+                    range: new Range(r.start.line, r.start.character, r.end.line, r.end.character),
+                    // https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#documentHighlightKind
+                    className: el.kind == 2
+                        ? "language_highlight_read"
+                        : el.kind == 3
+                        ? "language_highlight_write"
+                        : "language_highlight_text"
+                };
+            }));
+        }
+        function showAnnotations(session, diagnostics) {
+            session.clearAnnotations();
+            let annotations = diagnostics.map((el) => {
+                return {
+                    row: el.range.start.line,
+                    column: el.range.start.character,
+                    text: el.message,
+                    type: el.severity === 1 ? "error" : el.severity === 2 ? "warning" : "info"
+                };
+            });
+            if (annotations && annotations.length > 0) {
+                session.setAnnotations(annotations);
+            }
+            
+            if (!session.state) session.state = {}
+            if (!session.state.diagnosticMarkers) {
+                session.state.diagnosticMarkers = new MarkerGroup(session);
+            }
+            session.state.diagnosticMarkers.setMarkers(diagnostics.map(function(el) {
+                var r = el.range;
+                return {
+                    range: new Range(r.start.line, r.start.character, r.end.line, r.end.character),
+                    tooltipText: el.message,
+                    className:  "language_highlight_error"
+                };
+            }));
+        };
+        
+        docTooltip.setDataProvider(function(e, editor) {
+            let session = editor.session;
+            let docPos = e.getDocumentPosition();
+
+            languageProvider.doHover(session, docPos, function(hover) {
+                var errorMarker = session.state?.diagnosticMarkers?.getMarkerAtPosition(docPos);
+
+                if (!errorMarker && !hover?.content) return;
+
+                var range = hover?.range || errorMarker?.range;
+                range = range ? Range.fromPoints(range.start, range.end) : session.getWordRange(docPos.row, docPos.column);
+                var hoverNode = hover && dom.buildDom(["div", {}]);
+                if (hoverNode) {
+                    // todo render markdown using ace markdown mode
+                    hoverNode.innerHTML = languageProvider.getTooltipText(hover);
+                };
+                
+                var domNode = dom.buildDom(["div", {},
+                    errorMarker && ["div", {}, errorMarker.tooltipText.trim()],
+                    hoverNode
+                ]);
+                docTooltip.showForRange(editor, range, domNode, e);
+            });
+        });
+        
+        docTooltip.addToEditor(editor)
+    });
+}
+
 
 
 var workerModule = require("ace/worker/worker_client");
@@ -312,6 +453,8 @@ doclist.pickDocument = function(name) {
 var OptionPanel = require("ace/ext/options").OptionPanel;
 var optionsPanel = new OptionPanel(env.editor);
 
+var originalAutocompleteCommand = null;
+
 optionsPanel.add({
     Main: {
         Document: {
@@ -368,6 +511,34 @@ optionsPanel.add({
             path: "showTokenInfo",
             position: 2000
         },
+        "Inline preview for autocomplete": {
+            path: "inlineEnabledForAutocomplete",
+            position: 2000,
+            onchange: function(value) {
+                var Autocomplete = require("ace/autocomplete").Autocomplete;
+                if (value && !originalAutocompleteCommand) {
+                    originalAutocompleteCommand = Autocomplete.startCommand.exec;
+                    Autocomplete.startCommand.exec = function(editor) {
+                        var autocomplete = Autocomplete.for(editor);
+                        autocomplete.inlineEnabled = true;
+                        originalAutocompleteCommand(...arguments);
+                    }
+                } else if (!value) {
+                    var autocomplete = Autocomplete.for(editor);
+                    autocomplete.destroy();
+                    if (originalAutocompleteCommand)
+                        Autocomplete.startCommand.exec = originalAutocompleteCommand;
+                    originalAutocompleteCommand = null;
+                }
+            },
+            getValue: function() {
+                return !!originalAutocompleteCommand;
+            }
+        },
+        "Use Ace Linters": {
+            position: 3000,
+            path: "useAceLinters"
+        },
         "Show Textarea Position": devUtil.textPositionDebugger,
         "Text Input Debugger": devUtil.textInputDebugger,
     }
@@ -376,6 +547,7 @@ optionsPanel.add({
 var optionsPanelContainer = document.getElementById("optionsPanel");
 optionsPanel.render();
 optionsPanelContainer.insertBefore(optionsPanel.container, optionsPanelContainer.firstChild);
+optionsPanel.container.style.width = "80%";
 optionsPanel.on("setOption", function(e) {
     util.saveOption(e.name, e.value);
 });
@@ -451,7 +623,7 @@ env.editSnippets = function() {
 };
 
 optionsPanelContainer.insertBefore(
-    dom.buildDom(["div", {style: "text-align:right;margin-right: 60px"},
+    dom.buildDom(["div", {style: "text-align:right;width: 80%"},
         ["div", {}, 
             ["button", {onclick: env.editSnippets}, "Edit Snippets"]],
         ["div", {}, 
@@ -462,14 +634,83 @@ optionsPanelContainer.insertBefore(
                 env.editor.setValue(info, -1);
                 env.editor.setOption("wrap", 80);
             }}, "Show Browser Info"]],
-        devUtil.getUI()
+        devUtil.getUI(),
+        ["div", {},
+            "Open Dialog ",
+            ["button",  {onclick: openTestDialog.bind(null, false)}, "Scale"],
+            ["button",  {onclick: openTestDialog.bind(null, true)}, "Height"]
+        ]
     ]),
     optionsPanelContainer.children[1]
 );
 
+function openTestDialog(animateHeight) {
+    if (window.dialogEditor) 
+        window.dialogEditor.destroy();
+    var editor = ace.edit(null, {
+        value: "test editor", 
+        mode: "ace/mode/javascript"
+    });
+    window.dialogEditor = editor;
+
+    var dialog = dom.buildDom(["div", {
+        style: "transition: all 1s; position: fixed; z-index: 100000;"
+          + "background: darkblue; border: solid 1px black; display: flex; flex-direction: column"
+        }, 
+        ["div", {}, "test dialog"],
+        editor.container
+    ], document.body);
+    editor.container.style.flex = "1";
+    if (animateHeight) {
+        dialog.style.width = "0vw";
+        dialog.style.height = "0vh";
+        dialog.style.left = "20vw";
+        dialog.style.top = "20vh";
+        setTimeout(function() {            
+            dialog.style.width = "80vw";
+            dialog.style.height = "80vh";
+            dialog.style.left = "10vw";
+            dialog.style.top = "10vh";
+        }, 0);
+        
+    } else {
+        dialog.style.width = "80vw";
+        dialog.style.height = "80vh";
+        dialog.style.left = "10vw";
+        dialog.style.top = "10vh";
+        dialog.style.transform = "scale(0)";
+        setTimeout(function() {
+            dialog.style.transform = "scale(1)"
+        }, 0);
+    }
+    function close(e) {
+        if (!e || !dialog.contains(e.target)) {
+            if (animateHeight) {
+                dialog.style.width = "0vw";
+                dialog.style.height = "0vh";
+                dialog.style.left = "80vw";
+                dialog.style.top = "80vh";
+            } else {
+                dialog.style.transform = "scale(0)"
+            }
+            window.removeEventListener("mousedown", close);
+            dialog.addEventListener("transitionend", function() {
+                dialog.remove();
+                editor.destroy();
+            });
+        }
+    }
+    window.addEventListener("mousedown", close);
+    editor.focus()
+    editor.commands.bindKey("Esc", function() { close(); });
+}
+
+
 require("ace/ext/language_tools");
+require("ace/ext/inline_autocomplete");
 env.editor.setOptions({
     enableBasicAutocompletion: true,
+    enableInlineAutocompletion: true,
     enableSnippets: true
 });
 

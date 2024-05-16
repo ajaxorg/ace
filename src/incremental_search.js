@@ -1,37 +1,10 @@
 "use strict";
 
-var oop = require("./lib/oop");
 var Range = require("./range").Range;
 var Search = require("./search").Search;
 var SearchHighlight = require("./search_highlight").SearchHighlight;
 var iSearchCommandModule = require("./commands/incremental_search_commands");
 var ISearchKbd = iSearchCommandModule.IncrementalSearchKeyboardHandler;
-
-/**
- * @class IncrementalSearch
- *
- * Implements immediate searching while the user is typing. When incremental
- * search is activated, keystrokes into the editor will be used for composing
- * a search term. Immediately after every keystroke the search is updated:
- * - so-far-matching characters are highlighted
- * - the cursor is moved to the next match
- *
- **/
-
-
-/**
- *
- *
- * Creates a new `IncrementalSearch` object.
- *
- * @constructor
- **/
-function IncrementalSearch() {
-    this.$options = {wrap: false, skipCurrent: false};
-    this.$keyboardHandler = new ISearchKbd(this);
-}
-
-oop.inherits(IncrementalSearch, Search);
 
 // regexp handling
 
@@ -39,6 +12,9 @@ function isRegExp(obj) {
     return obj instanceof RegExp;
 }
 
+/**
+ * @param {RegExp} re
+ */
 function regExpToObject(re) {
     var string = String(re),
         start = string.indexOf('/'),
@@ -49,6 +25,11 @@ function regExpToObject(re) {
     };
 }
 
+/**
+ * @param {string} string
+ * @param {string} flags
+ * @return {RegExp|string}
+ */
 function stringToRegExp(string, flags) {
     try {
         return new RegExp(string, flags);
@@ -59,11 +40,28 @@ function objectToRegExp(obj) {
     return stringToRegExp(obj.expression, obj.flags);
 }
 
-// iSearch class
+/**
+ * Implements immediate searching while the user is typing. When incremental
+ * search is activated, keystrokes into the editor will be used for composing
+ * a search term. Immediately after every keystroke the search is updated:
+ * - so-far-matching characters are highlighted
+ * - the cursor is moved to the next match
+ *
+ **/
+class IncrementalSearch extends Search {
+    /**
+     * Creates a new `IncrementalSearch` object.
+     **/
+    constructor() {
+        super();
+        this.$options = {wrap: false, skipCurrent: false};
+        this.$keyboardHandler = new ISearchKbd(this);
+    }
 
-(function() {
-
-    this.activate = function(editor, backwards) {
+    /**
+     * @param {boolean} backwards
+     */
+    activate(editor, backwards) {
         this.$editor = editor;
         this.$startPos = this.$currentPos = editor.getCursorPosition();
         this.$options.needle = '';
@@ -75,9 +73,12 @@ function objectToRegExp(obj) {
         this.$mousedownHandler = editor.on('mousedown', this.onMouseDown.bind(this));
         this.selectionFix(editor);
         this.statusMessage(true);
-    };
+    }
 
-    this.deactivate = function(reset) {
+    /**
+     * @param {boolean} [reset]
+     */
+    deactivate(reset) {
         this.cancelSearch(reset);
         var editor = this.$editor;
         editor.keyBinding.removeKeyboardHandler(this.$keyboardHandler);
@@ -87,9 +88,12 @@ function objectToRegExp(obj) {
         }
         editor.onPaste = this.$originalEditorOnPaste;
         this.message('');
-    };
+    }
 
-    this.selectionFix = function(editor) {
+    /**
+     * @param {Editor} editor
+     */
+    selectionFix(editor) {
         // Fix selection bug: When clicked inside the editor
         // editor.selection.$isEmpty is false even if the mouse click did not
         // open a selection. This is interpreted by the move commands to
@@ -98,17 +102,23 @@ function objectToRegExp(obj) {
         if (editor.selection.isEmpty() && !editor.session.$emacsMark) {
             editor.clearSelection();
         }
-    };
+    }
 
-    this.highlight = function(regexp) {
+    /**
+     * @param {RegExp} regexp
+     */
+    highlight(regexp) {
         var sess = this.$editor.session,
             hl = sess.$isearchHighlight = sess.$isearchHighlight || sess.addDynamicMarker(
                 new SearchHighlight(null, "ace_isearch-result", "text"));
         hl.setRegexp(regexp);
         sess._emit("changeBackMarker"); // force highlight layer redraw
-    };
+    }
 
-    this.cancelSearch = function(reset) {
+    /**
+     * @param {boolean} [reset]
+     */
+    cancelSearch(reset) {
         var e = this.$editor;
         this.$prevNeedle = this.$options.needle;
         this.$options.needle = '';
@@ -120,9 +130,13 @@ function objectToRegExp(obj) {
         }
         this.highlight(null);
         return Range.fromPoints(this.$currentPos, this.$currentPos);
-    };
+    }
 
-    this.highlightAndFindWithNeedle = function(moveToNext, needleUpdateFunc) {
+    /**
+     * @param {boolean} moveToNext
+     * @param {Function} needleUpdateFunc
+     */
+    highlightAndFindWithNeedle(moveToNext, needleUpdateFunc) {
         if (!this.$editor) return null;
         var options = this.$options;
 
@@ -152,9 +166,12 @@ function objectToRegExp(obj) {
         this.statusMessage(found);
 
         return found;
-    };
+    }
 
-    this.addString = function(s) {
+    /**
+     * @param {string} s
+     */
+    addString(s) {
         return this.highlightAndFindWithNeedle(false, function(needle) {
             if (!isRegExp(needle))
               return needle + s;
@@ -162,9 +179,12 @@ function objectToRegExp(obj) {
             reObj.expression += s;
             return objectToRegExp(reObj);
         });
-    };
+    }
 
-    this.removeChar = function(c) {
+    /**
+     * @param {any} c
+     */
+    removeChar(c) {
         return this.highlightAndFindWithNeedle(false, function(needle) {
             if (!isRegExp(needle))
               return needle.substring(0, needle.length-1);
@@ -172,9 +192,9 @@ function objectToRegExp(obj) {
             reObj.expression = reObj.expression.substring(0, reObj.expression.length-1);
             return objectToRegExp(reObj);
         });
-    };
+    }
 
-    this.next = function(options) {
+    next(options) {
         // try to find the next occurrence of whatever we have searched for
         // earlier.
         // options = {[backwards: BOOL], [useCurrentOrPrevSearch: BOOL]}
@@ -185,47 +205,49 @@ function objectToRegExp(obj) {
             return options.useCurrentOrPrevSearch && needle.length === 0 ?
                 this.$prevNeedle || '' : needle;
         });
-    };
+    }
 
-    this.onMouseDown = function(evt) {
+    onMouseDown(evt) {
         // when mouse interaction happens then we quit incremental search
         this.deactivate();
         return true;
-    };
+    }
 
-    this.onPaste = function(text) {
+    /**
+     * @param {string} text
+     */
+    onPaste(text) {
         this.addString(text);
-    };
+    }
 
-    this.convertNeedleToRegExp = function() {
+    convertNeedleToRegExp() {
         return this.highlightAndFindWithNeedle(false, function(needle) {
             return isRegExp(needle) ? needle : stringToRegExp(needle, 'ig');
         });
-    };
+    }
 
-    this.convertNeedleToString = function() {
+    convertNeedleToString() {
         return this.highlightAndFindWithNeedle(false, function(needle) {
             return isRegExp(needle) ? regExpToObject(needle).expression : needle;
         });
-    };
+    }
 
-    this.statusMessage = function(found) {
+    statusMessage(found) {
         var options = this.$options, msg = '';
         msg += options.backwards ? 'reverse-' : '';
         msg += 'isearch: ' + options.needle;
         msg += found ? '' : ' (not found)';
         this.message(msg);
-    };
+    }
 
-    this.message = function(msg) {
+    message(msg) {
         if (this.$editor.showCommandLine) {
             this.$editor.showCommandLine(msg);
             this.$editor.focus();
         }
-    };
+    }
 
-}).call(IncrementalSearch.prototype);
-
+}
 
 exports.IncrementalSearch = IncrementalSearch;
 
