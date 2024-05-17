@@ -545,7 +545,7 @@ var MarkdownHighlightRules = function () {
                 next: "linkDestination"
             }, {
                 token: "text",
-                regex: /\]/,
+                regex: /\](?=$)/,
                 next: "start",
                 onMatch: function (value, scope, stack, line) {
                     var parent = scope;
@@ -554,6 +554,10 @@ var MarkdownHighlightRules = function () {
                     }
                     return parent.get("start").get(this.token);
                 }
+            }, {
+                token: "text",
+                regex: /\]/,
+                next: "pop",
             }, {defaultToken: "constant"}
         ],
         "imageLabel": [
