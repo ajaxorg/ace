@@ -30,7 +30,7 @@ var getAllLines = function() {
         return node.textContent;
     }).join("\n");
     if (editor.renderer.$ghostTextWidget) {
-        return text + "\n" + editor.renderer.$ghostTextWidget.text;
+        return text + "\n" + editor.renderer.$ghostTextWidget.html;
     }
     return text;
 };
@@ -358,7 +358,7 @@ module.exports = {
         typeAndChange("u", "n");
         editor.renderer.$loop._flush();
         assert.strictEqual(autocomplete.isOpen(), true);
-        assert.equal(getAllLines(), "function foo() {\n    console.log('test');\n}");
+        assert.equal(getAllLines(), "function foo() {\n<div>    console.log('test');</div><div>}</div>");
 
         typeAndChange("d");
         editor.renderer.$loop._flush();

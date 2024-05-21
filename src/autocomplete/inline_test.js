@@ -101,8 +101,8 @@ module.exports = {
         inline.show(editor, completions[3], "f");
         editor.renderer.$loop._flush();
         assert.strictEqual(getAllLines(), textBase + "function foo() {");
-        assert.strictEqual(editor.renderer.$ghostTextWidget.text, "        console.log('test');\n    }");
-        assert.strictEqual(editor.renderer.$ghostTextWidget.el.textContent, "        console.log('test');\n    }");
+        assert.strictEqual(editor.renderer.$ghostTextWidget.html, "<div>        console.log('test');</div><div>    }</div>");
+        assert.strictEqual(editor.renderer.$ghostTextWidget.el.innerHTML, "<div>        console.log('test');</div><div>    }</div>");
         done();
     },
     "test: boundary tests": function(done) {

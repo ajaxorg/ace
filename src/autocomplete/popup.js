@@ -476,7 +476,6 @@ dom.importCssString(`
 .ace_autocomplete .ace_line .ace_ {
     flex: 0 1 auto;
     overflow: hidden;
-    white-space: nowrap;
     text-overflow: ellipsis;
 }
 .ace_autocomplete .ace_completion-spacer {
