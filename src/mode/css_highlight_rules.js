@@ -134,6 +134,9 @@ var CssHighlightRules = function() {
             token : keywordMapper,
             regex : "\\-?[a-zA-Z_][a-zA-Z0-9_\\-]*"
         }, {
+            token: "paren.lparen",
+            regex: "\\{"
+        }, {
             caseInsensitive: true
         }],
 
