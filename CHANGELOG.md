@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.33.3](https://github.com/ajaxorg/ace/compare/v1.33.2...v1.33.3) (2024-05-21)
+
+
+### Bug Fixes
+
+* contrast completion meta contrast cloud editor themes ([#5558](https://github.com/ajaxorg/ace/issues/5558)) ([b8877f0](https://github.com/ajaxorg/ace/commit/b8877f0f725b3973961cb639127402c9f56609de))
+
 ### [1.33.2](https://github.com/ajaxorg/ace/compare/v1.33.1...v1.33.2) (2024-05-13)
 
 
