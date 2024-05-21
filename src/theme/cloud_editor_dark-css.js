@@ -198,7 +198,8 @@ module.exports = `
     background: #272A30;
 }
 .ace-cloud_editor_dark.ace_dark.ace_editor.ace_autocomplete .ace_completion-meta {
-    color: #ACB8B9;
+    color: #95a5a6;
+    opacity: 1;
 }
 .ace-cloud_editor_dark.ace_dark.ace_editor.ace_autocomplete .ace_completion-highlight{
     color: #2AA0BC;
