@@ -3002,6 +3002,10 @@ config.defineOptions(Editor.prototype, "editor", {
         },
         initialValue: false
     },
+    textInputAriaLabel: {
+        set: function(val) { this.$textInputAriaLabel = val; },
+        initialValue: ""
+    },
     customScrollbar: "renderer",
     hScrollBarAlwaysVisible: "renderer",
     vScrollBarAlwaysVisible: "renderer",
