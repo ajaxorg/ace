@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.34.0](https://github.com/ajaxorg/ace/compare/v1.33.3...v1.34.0) (2024-05-22)
+
+
+### Features
+
+* allow users to add arialabel to text input ([#5560](https://github.com/ajaxorg/ace/issues/5560)) ([8d7dfb6](https://github.com/ajaxorg/ace/commit/8d7dfb69392960aba61def982f4bea8f3a5caa70))
+
 ### [1.33.3](https://github.com/ajaxorg/ace/compare/v1.33.2...v1.33.3) (2024-05-21)
 
 
