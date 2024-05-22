@@ -753,6 +753,18 @@ module.exports = {
         assert.equal(editor.getValue(), "");
         sendEvent("input", {key: {inputType: "historyRedo"}});
         assert.equal(editor.getValue(), "x");
+    },
+
+    "test: text input aria label": function() {
+        editor.setValue("x      x", -1);
+        editor.setOption('textInputAriaLabel', "super cool editor");
+        editor.setOption('enableKeyboardAccessibility', true);
+        editor.renderer.$loop._flush();
+
+        editor.focus();
+
+        let text = editor.container.querySelector(".ace_text-input"); 
+        assert.equal(text.getAttribute("aria-label"), "super cool editor, Cursor at row 1");
     }
 };
 
