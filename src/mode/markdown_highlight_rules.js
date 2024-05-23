@@ -234,7 +234,7 @@ var MarkdownHighlightRules = function () {
                 push: "barEmphasisState"
             }, { // extended autolink
                 token: "url.underline",
-                regex: /www\.[a-zA-Z0-9-_]+(\.[a-zA-Z0-9-_]+)*\.[a-zA-Z0-9-]+/
+                regex: /(?:(?:https?:\/\/(www\.)?)|(?:www\.))[a-zA-Z0-9-_]+(\.[a-zA-Z0-9-_]+)*\.[a-zA-Z0-9-\/\?\=()&+]+/
             }, { // autolink
                 token: ["text", "url.underline", "text"],
                 regex: /(<)?((?:[-.\w+]+@[-a-z0-9]+(?:\.[-a-z0-9]+)*\.[a-z]+)|(?:[a-zA-Z][a-zA-Z0-9+.-]+:[\w\/]+))(>)?/
