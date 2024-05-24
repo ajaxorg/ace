@@ -1,15 +1,35 @@
 [[
    ["bracketedComment",2,"start"],
-  ["comment","--[[--"]
+  [
+    "comment",
+    "--[["
+  ],
+  [
+    "comment.body",
+    "--"
+  ]
 ],[
    ["bracketedComment",2,"start"],
-  ["comment","num_args takes in 5.1 byte code and extracts the number of arguments"]
+  [
+    "comment.body",
+    "num_args takes in 5.1 byte code and extracts the number of arguments"
+  ]
 ],[
    ["bracketedComment",2,"start"],
-  ["comment","from its function header."]
+  [
+    "comment.body",
+    "from its function header."
+  ]
 ],[
    "start",
-  ["comment","--]]--"]
+  [
+    "comment.body",
+    "--"
+  ],
+  [
+    "comment",
+    "]]--"
+  ]
 ],[
    "start"
 ],[
@@ -302,13 +322,30 @@
    "start"
 ],[
    ["bracketedComment",3,"start"],
-  ["comment","--[=[--"]
+  [
+    "comment",
+    "--[=["
+  ],
+  [
+    "comment.body",
+    "--"
+  ]
 ],[
    ["bracketedComment",3,"start"],
-  ["comment","table.maxn is deprecated, use # instead."]
+  [
+    "comment.body",
+    "table.maxn is deprecated, use # instead."
+  ]
 ],[
    "start",
-  ["comment","--]=]--"]
+  [
+    "comment.body",
+    "--"
+  ],
+  [
+    "comment",
+    "]=]--"
+  ]
 ],[
    "start",
   ["support.function","print"],
@@ -343,6 +380,17 @@
   ["paren.lparen","("],
   ["constant.numeric","5"],
   ["text"," "],
-  ["comment","--[[ blah ]]"],
+  [
+    "comment",
+    "--[["
+  ],
+  [
+    "comment.body",
+    " blah "
+  ],
+  [
+    "comment",
+    "]]"
+  ],
   ["paren.rparen",")"]
 ]]

@@ -23,6 +23,7 @@ class BackgroundTokenizer {
         /**@type {false|number}*/
         this.running = false;
         this.lines = [];
+        /**@type {string[]|string[][]}*/
         this.states = [];
         this.currentLine = 0;
         this.tokenizer = tokenizer;
@@ -176,7 +177,7 @@ class BackgroundTokenizer {
     /**
      * Returns the state of tokenization at the end of a row.
      * @param {Number} row The row to get state at
-     * @returns {string}
+     * @returns {string | string[]}
      **/
     getState(row) {
         if (this.currentLine == row)

@@ -983,6 +983,7 @@ class Editor {
             ? [new Range(0, 0, session.doc.getLength() - 1, 0)]
             : this.selection.getAllRanges();
 
+        /**@type{string|string[]}*/
         var prevLineState = "";
         var prevLine = "";
         var lineIndent = "";

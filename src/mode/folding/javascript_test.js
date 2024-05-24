@@ -27,8 +27,8 @@ module.exports = {
         assert.equal(session.getFoldWidget(3), "");
         assert.equal(session.getFoldWidget(4), "end");
 
-        assert.range(session.getFoldWidgetRange(0), 0, 2, 4, 0);
-        assert.range(session.getFoldWidgetRange(4), 0, 2, 4, 0);
+        assert.range(session.getFoldWidgetRange(0), 0, 3, 4, 0);
+        assert.range(session.getFoldWidgetRange(4), 0, 3, 4, 0);
     },
     "test: fold mixed js and jsx": function () {
         var session = new EditSession([
