@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.34.1](https://github.com/ajaxorg/ace/compare/v1.34.0...v1.34.1) (2024-05-24)
+
+
+### Bug Fixes
+
+* always set aria-label to text input in a11y mode ([#5563](https://github.com/ajaxorg/ace/issues/5563)) ([00346fd](https://github.com/ajaxorg/ace/commit/00346fde824beabb69f677631ad52815665eaef4))
+* Folding for comments and different modes ([#5533](https://github.com/ajaxorg/ace/issues/5533)) ([f4d0e33](https://github.com/ajaxorg/ace/commit/f4d0e33dac270ce21df09a96a39f50e16d6354db))
+
 ## [1.34.0](https://github.com/ajaxorg/ace/compare/v1.33.3...v1.34.0) (2024-05-22)
 
 
