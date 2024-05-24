@@ -11,7 +11,10 @@
   ["comment.doc","/**"]
 ],[
    "doc-start",
-  ["comment.doc","* Samples from PostgreSQL src/tutorial/basics.source"]
+  [
+    "comment.doc.body",
+    "* Samples from PostgreSQL src/tutorial/basics.source"
+  ]
 ],[
    "start",
   ["comment.doc","*/"]
@@ -294,13 +297,22 @@
   ["comment.doc","/**"]
 ],[
    "doc-start",
-  ["comment.doc","* Dollar quotes starting at the end of the line are colored as SQL unless"]
+  [
+    "comment.doc.body",
+    "* Dollar quotes starting at the end of the line are colored as SQL unless"
+  ]
 ],[
    "doc-start",
-  ["comment.doc","* a special language tag is used. Dollar quote syntax coloring is implemented"]
+  [
+    "comment.doc.body",
+    "* a special language tag is used. Dollar quote syntax coloring is implemented"
+  ]
 ],[
    "doc-start",
-  ["comment.doc","* for Perl, Python, JavaScript, and Json."]
+  [
+    "comment.doc.body",
+    "* for Perl, Python, JavaScript, and Json."
+  ]
 ],[
    "start",
   ["comment.doc","*/"]

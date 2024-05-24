@@ -196,6 +196,7 @@ module.exports = `
 }
 .ace-cloud_editor.ace_editor.ace_autocomplete .ace_completion-meta {
     color: #545b64;
+    opacity: 1;
 }
 .ace-cloud_editor.ace_editor.ace_autocomplete .ace_completion-highlight{
     color: #0F68AE;

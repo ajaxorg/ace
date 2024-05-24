@@ -753,6 +753,42 @@ module.exports = {
         assert.equal(editor.getValue(), "");
         sendEvent("input", {key: {inputType: "historyRedo"}});
         assert.equal(editor.getValue(), "x");
+    },
+
+    "test: text input aria label without extra label set": function() {
+        editor.setValue("x      x", -1);
+        editor.setOption('enableKeyboardAccessibility', true);
+        editor.renderer.$loop._flush();
+
+        let text = editor.container.querySelector(".ace_text-input"); 
+        assert.equal(text.getAttribute("aria-label"), "Cursor at row 1");
+    },
+
+    "test: text input aria label updated on focus": function() {
+        editor.setValue("x      x\ny      y", -1);
+        editor.setOption('enableKeyboardAccessibility', true);
+        editor.renderer.$loop._flush();
+
+        let text = editor.container.querySelector(".ace_text-input"); 
+        assert.equal(text.getAttribute("aria-label"), "Cursor at row 1");
+
+        editor.focus();
+        sendEvent("keydown", {key: { code: "ArrowDown", key: "ArrowDown", keyCode: 40}});
+        editor.renderer.$loop._flush();
+
+        editor.blur();
+        editor.focus();
+        assert.equal(text.getAttribute("aria-label"), "Cursor at row 2");
+    },
+
+    "test: text input aria label with extra label set": function() {
+        editor.setValue("x      x", -1);
+        editor.setOption('textInputAriaLabel', "super cool editor");
+        editor.setOption('enableKeyboardAccessibility', true);
+        editor.renderer.$loop._flush();
+
+        let text = editor.container.querySelector(".ace_text-input"); 
+        assert.equal(text.getAttribute("aria-label"), "super cool editor, Cursor at row 1");
     }
 };
 

@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.34.1](https://github.com/ajaxorg/ace/compare/v1.34.0...v1.34.1) (2024-05-24)
+
+
+### Bug Fixes
+
+* always set aria-label to text input in a11y mode ([#5563](https://github.com/ajaxorg/ace/issues/5563)) ([00346fd](https://github.com/ajaxorg/ace/commit/00346fde824beabb69f677631ad52815665eaef4))
+* Folding for comments and different modes ([#5533](https://github.com/ajaxorg/ace/issues/5533)) ([f4d0e33](https://github.com/ajaxorg/ace/commit/f4d0e33dac270ce21df09a96a39f50e16d6354db))
+
+## [1.34.0](https://github.com/ajaxorg/ace/compare/v1.33.3...v1.34.0) (2024-05-22)
+
+
+### Features
+
+* allow users to add arialabel to text input ([#5560](https://github.com/ajaxorg/ace/issues/5560)) ([8d7dfb6](https://github.com/ajaxorg/ace/commit/8d7dfb69392960aba61def982f4bea8f3a5caa70))
+
+### [1.33.3](https://github.com/ajaxorg/ace/compare/v1.33.2...v1.33.3) (2024-05-21)
+
+
+### Bug Fixes
+
+* contrast completion meta contrast cloud editor themes ([#5558](https://github.com/ajaxorg/ace/issues/5558)) ([b8877f0](https://github.com/ajaxorg/ace/commit/b8877f0f725b3973961cb639127402c9f56609de))
+
 ### [1.33.2](https://github.com/ajaxorg/ace/compare/v1.33.1...v1.33.2) (2024-05-13)
 
 
