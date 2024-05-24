@@ -100,7 +100,7 @@ TextInput= function(parentNode, host) {
         }
     };
 
-    this.setAriaOptions({role: "textbox", setLabel: host.renderer.enableKeyboardAccessibility}); 
+    this.setAriaOptions({role: "textbox"}); 
 
     event.addListener(text, "blur", function(e) {
         if (ignoreFocusEvents) return;
