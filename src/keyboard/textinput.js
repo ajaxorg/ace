@@ -88,19 +88,19 @@ TextInput= function(parentNode, host) {
         }     
         if (options.setLabel) {
             text.setAttribute("aria-roledescription", nls("text-input.aria-roledescription", "editor"));
+            var arialLabel = "";
+            if (host.$textInputAriaLabel) {
+                arialLabel += `${host.$textInputAriaLabel}, `;
+            }
             if(host.session) {
                 var row =  host.session.selection.cursor.row;
-                var arialLabel = "";
-                if (host.$textInputAriaLabel) {
-                    arialLabel += `${host.$textInputAriaLabel}, `;
-                }
                 arialLabel += nls("text-input.aria-label", "Cursor at row $0", [row + 1]);
-                text.setAttribute("aria-label", arialLabel);
             }
+            text.setAttribute("aria-label", arialLabel);
         }
     };
 
-    this.setAriaOptions({role: "textbox"}); 
+    this.setAriaOptions({role: "textbox", setLabel: host.renderer.enableKeyboardAccessibility}); 
 
     event.addListener(text, "blur", function(e) {
         if (ignoreFocusEvents) return;
