@@ -322,11 +322,19 @@ class VirtualRenderer {
             this.resizing++;
         else
             this.resizing = force ? 1 : 0;
-        // `|| el.scrollHeight` is required for outosizing editors on ie
-        // where elements with clientHeight = 0 alsoe have clientWidth = 0
+        // `|| el.scrollHeight` is required for autosizing editors on ie
+        // where elements with clientHeight = 0 also have clientWidth = 0
         var el = this.container;
         if (!height)
             height = el.clientHeight || el.scrollHeight;
+        if (!height && this.$maxLines && this.lineHeight > 1) {
+            // if we are supposed to fit to content set height at least to 1
+            // so that render does not exit early before calling $autosize
+            if (!el.style.height || el.style.height == "0px") {
+                el.style.height = "1px";
+                height = el.clientHeight || el.scrollHeight;
+            }
+        }
         if (!width)
             width = el.clientWidth || el.scrollWidth;
         var changes = this.$updateCachedSize(force, gutterWidth, width, height);

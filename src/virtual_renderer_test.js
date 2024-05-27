@@ -42,7 +42,7 @@ module.exports = {
         var renderer = new VirtualRenderer(el);
         editor = new Editor(renderer);
         editor.on("destroy", function() {
-            document.body.removeChild(el);
+            el.remove();
         });
     },
     tearDown: function() {
@@ -132,6 +132,44 @@ module.exports = {
                 done();
             }, 0);
         });
+    },
+
+    "test autosize from 0 height": function() {
+        editor.container.style.height = "0px";
+        editor.textInput.getElement().style.position = "fixed";
+        editor.container.style.lineHeight = 1;
+        editor.setOptions({
+            fontSize: 9
+        });
+
+        editor.resize(true);
+        editor.setOptions({
+            maxLines: 100
+        });
+
+        editor.resize(true);
+
+        editor.resize(true);
+        editor.renderer.$size = {};
+
+        var renderCount = 0;
+        editor.renderer.on("afterRender", function(e) {
+            renderCount++;
+        });
+        editor.setValue("1");
+        editor.renderer.$loop._flush();
+        assert.equal(editor.container.style.height, "9px");
+
+        editor.setValue("\n\n");
+        editor.renderer.$loop._flush();
+        assert.equal(editor.container.style.height, "27px");
+        
+        editor.container.remove();
+        editor.setValue("\n\n\n");
+        editor.resize(true);
+        editor.renderer.$loop._flush();
+        editor.resize(true);
+        assert.equal(renderCount, 2);
     },
     
     "test invalid valus of minLines": function() {
