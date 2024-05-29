@@ -260,9 +260,7 @@ class Editor {
     getKeyboardHandler() {
         return this.keyBinding.getKeyboardHandler();
     }
-
-
-   
+    
     /**
      * Sets a new editsession to use. This method also emits the `'changeSession'` event.
      * @param {EditSession} [session] The new session to use

@@ -792,7 +792,7 @@ declare module "ace-code/src/ext/textarea" {
                 string
             ], onLoad: (module: any) => void) => void;
             setModuleLoader: (moduleName: any, onLoad: any) => void;
-            version: "1.33.0";
+            version: "1.34.2";
         };
         edit: (el: string | (HTMLElement & {
             env?: any;
@@ -804,7 +804,7 @@ declare module "ace-code/src/ext/textarea" {
         EditSession: typeof ace.EditSession;
         UndoManager: typeof ace.UndoManager;
         VirtualRenderer: typeof ace.VirtualRenderer;
-        version: "1.33.0";
+        version: "1.34.2";
         transformTextarea: (element: any, options: any) => ace.Editor;
         defaultOptions: {
             mode: string;

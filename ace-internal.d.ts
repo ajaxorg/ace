@@ -432,6 +432,7 @@ export namespace Ace {
         enableMultiselect: boolean;
         enableKeyboardAccessibility: boolean;
         enableCodeLens: boolean;
+        textInputAriaLabel: string;
     }
 
     interface EventsBase {
@@ -1321,12 +1322,6 @@ declare module "./src/edit_session" {
         widgetManager?: any,
         $bracketHighlight?: any,
         $selectionMarker?: number,
-        curOp?: {
-            command: {},
-            args: string,
-            scrollTop: number,
-            [key: string]: any;
-        },
         lineWidgetsWidth?: number,
         $getWidgetScreenLength?: () => number,
         _changedWidgets?: any,
@@ -1335,9 +1330,6 @@ declare module "./src/edit_session" {
         $enableVarChar?: any,
         $wrap?: any,
         $navigateWithinSoftTabs?: boolean,
-
-        getSelectionMarkers(): any[],
-
         $selectionMarkers?: any[],
         gutterRenderer?: any,
         $firstLineNumber?: number,
@@ -1349,6 +1341,14 @@ declare module "./src/edit_session" {
         $occurMatchingLines?: any,
         $useEmacsStyleLineStart?: boolean,
         $selectLongWords?: boolean,
+        curOp?: {
+            command: {},
+            args: string,
+            scrollTop: number,
+            [key: string]: any;
+        },
+
+        getSelectionMarkers(): any[],
     }
 
 }
@@ -1417,7 +1417,6 @@ declare module "./src/virtual_renderer" {
         $maxLines?: number,
         $scrollPastEnd?: number,
         enableKeyboardAccessibility?: boolean,
-        keyboardFocusClassName?: string,
         $highlightGutterLine?: boolean,
         $minLines?: number,
         $maxPixelHeight?: number,
@@ -1430,6 +1429,7 @@ declare module "./src/virtual_renderer" {
         $theme?: any,
         destroyed?: boolean,
         session: Ace.EditSession,
+        keyboardFocusClassName?: string,
     }
 
 }

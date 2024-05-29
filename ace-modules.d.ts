@@ -449,7 +449,7 @@ declare module "ace-code/src/config" {
             string
         ], onLoad: (module: any) => void) => void;
         setModuleLoader: (moduleName: any, onLoad: any) => void;
-        version: "1.33.0";
+        version: "1.34.2";
     };
     export = _exports;
     import AppConfig_1 = require("ace-code/src/lib/app_config");
@@ -1687,10 +1687,10 @@ declare module "ace-code/src/virtual_renderer" {
         STEPS: number;
         textarea?: HTMLTextAreaElement;
         enableKeyboardAccessibility?: boolean;
-        keyboardFocusClassName?: string;
         showInvisibles?: boolean;
         theme?: any;
         destroyed?: boolean;
+        keyboardFocusClassName?: string;
     }
     export type EditSession = import("ace-code/src/edit_session").EditSession;
     export type Point = import("ace-code").Ace.Point;
@@ -1722,11 +1722,11 @@ declare module "ace-code/src/virtual_renderer" {
     export interface VirtualRenderer extends Ace.EventEmitter<Ace.VirtualRendererEvents>, Ace.OptionsProvider<Ace.VirtualRendererOptions> {
         textarea?: HTMLTextAreaElement;
         enableKeyboardAccessibility?: boolean;
-        keyboardFocusClassName?: string;
         showInvisibles?: boolean;
         theme?: any;
         destroyed?: boolean;
         session: Ace.EditSession;
+        keyboardFocusClassName?: string;
     }
 }
 declare module "ace-code/src/selection" {
@@ -4831,7 +4831,8 @@ declare module "ace-code/src/background_tokenizer" {
         /**@type {false|number}*/
         running: false | number;
         lines: any[];
-        states: any[];
+        /**@type {string[]|string[][]}*/
+        states: string[] | string[][];
         currentLine: number;
         tokenizer: import("ace-code/src/tokenizer").Tokenizer;
         /**
@@ -4873,9 +4874,9 @@ declare module "ace-code/src/background_tokenizer" {
         /**
          * Returns the state of tokenization at the end of a row.
          * @param {Number} row The row to get state at
-         * @returns {string}
+         * @returns {string | string[]}
          **/
-        getState(row: number): string;
+        getState(row: number): string | string[];
         cleanup(): void;
     }
     export type Document = import("ace-code/src/document").Document;
@@ -5241,10 +5242,10 @@ declare module "ace-code/src/edit_session" {
         /**
          * {:BackgroundTokenizer.getState}
          * @param {Number} row The row to start at
-         * @returns {string}
+         * @returns {string | string[]}
          * @related BackgroundTokenizer.getState
          **/
-        getState(row: number): string;
+        getState(row: number): string | string[];
         /**
          * Starts tokenizing at the row indicated. Returns a list of objects of the tokenized rows.
          * @param {Number} row The row to start at
@@ -5812,17 +5813,17 @@ declare module "ace-code/src/edit_session" {
         lineWidgets: null | import("ace-code").Ace.LineWidget[];
         isFullWidth: typeof isFullWidth;
         widgetManager?: any;
+        lineWidgetsWidth?: number;
+        gutterRenderer?: any;
+        selectionMarkerCount?: number;
+        multiSelect?: any;
         curOp?: {
             [key: string]: any;
             command: {};
             args: string;
             scrollTop: number;
         };
-        lineWidgetsWidth?: number;
         getSelectionMarkers(): any[];
-        gutterRenderer?: any;
-        selectionMarkerCount?: number;
-        multiSelect?: any;
     }
     export namespace EditSession {
         export { $uid };
@@ -5863,17 +5864,17 @@ declare module "ace-code/src/edit_session" {
     export interface EditSession extends Ace.EventEmitter<Ace.EditSessionEvents>, Ace.OptionsProvider<Ace.EditSessionOptions>, Ace.Folding, Ace.BracketMatch {
         doc: Ace.Document;
         widgetManager?: any;
+        lineWidgetsWidth?: number;
+        gutterRenderer?: any;
+        selectionMarkerCount?: number;
+        multiSelect?: any;
         curOp?: {
             command: {};
             args: string;
             scrollTop: number;
             [key: string]: any;
         };
-        lineWidgetsWidth?: number;
         getSelectionMarkers(): any[];
-        gutterRenderer?: any;
-        selectionMarkerCount?: number;
-        multiSelect?: any;
     }
 }
 declare module "ace-code/src/range" {

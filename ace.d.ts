@@ -676,7 +676,7 @@ declare module "ace-code" {
             openingBracketBlock(session: EditSession, bracket: string, row: number, column: number, typeRe?: RegExp): Range | undefined;
             closingBracketBlock(session: EditSession, bracket: string, row: number, column: number, typeRe?: RegExp): Range | undefined;
         }
-        type BehaviorAction = (state: string, action: string, editor: Editor, session: EditSession, text: string | Range) => ({
+        type BehaviorAction = (state: string | string[], action: string, editor: Editor, session: EditSession, text: string | Range) => ({
             text: string;
             selection: number[];
         } | Range) & {
@@ -716,18 +716,18 @@ declare module "ace-code" {
             transformAction: BehaviorAction;
             path?: string;
             getTokenizer(): Tokenizer;
-            toggleCommentLines(state: any, session: EditSession, startRow: number, endRow: number): void;
-            toggleBlockComment(state: any, session: EditSession, range: Range, cursor: Point): void;
-            getNextLineIndent(state: any, line: string, tab: string): string;
-            checkOutdent(state: any, line: string, input: string): boolean;
-            autoOutdent(state: any, doc: EditSession, row: number): void;
+            toggleCommentLines(state: string | string[], session: EditSession, startRow: number, endRow: number): void;
+            toggleBlockComment(state: string | string[], session: EditSession, range: Range, cursor: Point): void;
+            getNextLineIndent(state: string | string[], line: string, tab: string): string;
+            checkOutdent(state: string | string[], line: string, input: string): boolean;
+            autoOutdent(state: string | string[], doc: EditSession, row: number): void;
             // TODO implement WorkerClient types
             createWorker(session: EditSession): any;
             createModeDelegates(mapping: {
                 [key: string]: string;
             }): void;
             getKeywords(append?: boolean): Array<string | RegExp>;
-            getCompletions(state: string, session: EditSession, pos: Point, prefix: string): Completion[];
+            getCompletions(state: string | string[], session: EditSession, pos: Point, prefix: string): Completion[];
         }
         interface OptionsBase {
             [key: string]: any;
@@ -981,7 +981,7 @@ declare module "ace-code" {
             string
         ], onLoad: (module: any) => void) => void;
         setModuleLoader: (moduleName: any, onLoad: any) => void;
-        version: "1.33.0";
+        version: "1.34.2";
     };
     export function edit(el: string | (HTMLElement & {
         env?: any;
@@ -998,6 +998,6 @@ declare module "ace-code" {
     import UndoManager = UndoManager_2.UndoManager;
     import Renderer_1 = require("ace-code/src/virtual_renderer");
     import Renderer = Renderer_1.VirtualRenderer;
-    export var version: "1.33.0";
+    export var version: "1.34.2";
     export { Range, Editor, EditSession, UndoManager, Renderer as VirtualRenderer };
 }

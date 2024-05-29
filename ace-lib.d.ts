@@ -58,7 +58,7 @@ declare module "ace-code/src/lib/deep_copy" {
 }
 declare module "ace-code/src/lib/lang" {
     export function last(a: any): any;
-    export function stringReverse(string: any): any;
+    export function stringReverse(string: string): string;
     export function stringRepeat(string: any, count: any): string;
     export function stringTrimLeft(string: any): any;
     export function stringTrimRight(string: any): any;

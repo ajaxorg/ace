@@ -4,6 +4,8 @@ exports.last = function(a) {
     return a[a.length - 1];
 };
 
+
+/** @param {string} string */
 exports.stringReverse = function(string) {
     return string.split("").reverse().join("");
 };
