@@ -1,24 +1,20 @@
 "use strict";
 
 var oop = require("../../lib/oop");
-var MixedFoldMode = require("./mixed").FoldMode;
 var CstyleFoldMode = require("./cstyle").FoldMode;
 var Range = require("../../range").Range;
 var TokenIterator = require("../../token_iterator").TokenIterator;
 
 
 var FoldMode = exports.FoldMode = function () {
-    this.cstyleFoldMode = new CstyleFoldMode();
-    MixedFoldMode.call(this, this, {
-        "js-": new CstyleFoldMode(),
-        "css-": new CstyleFoldMode(),
-        "php-": this
-    });
 };
 
-oop.inherits(FoldMode, MixedFoldMode);
+oop.inherits(FoldMode, CstyleFoldMode);
 
 (function () {
+    this.getFoldWidgetRangeBase = this.getFoldWidgetRange;
+    this.getFoldWidgetBase = this.getFoldWidget;
+    
     this.indentKeywords = {
         "if": 1,
         "while": 1,
@@ -34,31 +30,31 @@ oop.inherits(FoldMode, MixedFoldMode);
         "endswitch": -1
     };
 
-    this.foldingStartMarker = /(?:\s|^)(if|else|elseif|while|for|foreach|switch).*\:/i;
-    this.foldingStopMarker = /(?:\s|^)(endif|endwhile|endfor|endforeach|endswitch)\;/i;
+    this.foldingStartMarkerPhp = /(?:\s|^)(if|else|elseif|while|for|foreach|switch).*\:/i;
+    this.foldingStopMarkerPhp = /(?:\s|^)(endif|endwhile|endfor|endforeach|endswitch)\;/i;
 
     this.getFoldWidgetRange = function (session, foldStyle, row) {
         var line = session.doc.getLine(row);
-        var match = this.foldingStartMarker.exec(line);
+        var match = this.foldingStartMarkerPhp.exec(line);
         if (match) {
             return this.phpBlock(session, row, match.index + 2);
         }
 
-        var match = this.foldingStopMarker.exec(line);
+        var match = this.foldingStopMarkerPhp.exec(line);
         if (match) {
             return this.phpBlock(session, row, match.index + 2);
         }
-        return this.cstyleFoldMode.getFoldWidgetRange(session, foldStyle, row);
+        return this.getFoldWidgetRangeBase(session, foldStyle, row);
     };
 
 
     // must return "" if there's no fold, to enable caching
     this.getFoldWidget = function (session, foldStyle, row) {
         var line = session.getLine(row);
-        var isStart = this.foldingStartMarker.test(line);
-        var isEnd = this.foldingStopMarker.test(line);
+        var isStart = this.foldingStartMarkerPhp.test(line);
+        var isEnd = this.foldingStopMarkerPhp.test(line);
         if (isStart && !isEnd) {
-            var match = this.foldingStartMarker.exec(line);
+            var match = this.foldingStartMarkerPhp.exec(line);
             var keyword = match && match[1].toLowerCase();
             if (keyword) {
                 var type = session.getTokenAt(row, match.index + 2).type;
@@ -68,7 +64,7 @@ oop.inherits(FoldMode, MixedFoldMode);
             }
         }
         if (isEnd && foldStyle === "markbeginend") {
-            var match = this.foldingStopMarker.exec(line);
+            var match = this.foldingStopMarkerPhp.exec(line);
             var keyword = match && match[1].toLowerCase();
             if (keyword) {
                 var type = session.getTokenAt(row, match.index + 2).type;
@@ -77,7 +73,7 @@ oop.inherits(FoldMode, MixedFoldMode);
                 }
             }
         }
-        return this.cstyleFoldMode.getFoldWidget(session, foldStyle, row);
+        return this.getFoldWidgetBase(session, foldStyle, row);
     };
 
     this.phpBlock = function (session, row, column, tokenRange) {

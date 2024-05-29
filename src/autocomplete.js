@@ -432,7 +432,7 @@ class Autocomplete {
     }
 
     mousewheelListener(e) {
-        if (!this.popup.isMouseOver)
+        if (this.popup && !this.popup.isMouseOver)
             this.detach();
     }
 

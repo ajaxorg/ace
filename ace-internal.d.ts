@@ -817,7 +817,10 @@ export namespace Ace {
         closingBracketBlock(session: EditSession, bracket: string, row: number, column: number, typeRe?: RegExp): Range | undefined;
     }
 
-    type BehaviorAction = (state: string, action: string, editor: Editor, session: EditSession, text: string | Range) => ({ text: string, selection: number[] } | Range) & { [key: string]: any } | undefined;
+    type BehaviorAction = (state: string | string[], action: string, editor: Editor, session: EditSession, text: string | Range) => ({
+        text: string,
+        selection: number[]
+    } | Range) & { [key: string]: any } | undefined;
     type BehaviorMap = Record<string, Record<string, BehaviorAction>>;
 
     interface Behaviour {
@@ -877,21 +880,21 @@ export namespace Ace {
 
         getTokenizer(): Tokenizer;
 
-        toggleCommentLines(state: any,
+        toggleCommentLines(state: string | string[],
                            session: EditSession,
                            startRow: number,
                            endRow: number): void;
 
-        toggleBlockComment(state: any,
+        toggleBlockComment(state: string | string[],
                            session: EditSession,
                            range: Range,
                            cursor: Point): void;
 
-        getNextLineIndent(state: any, line: string, tab: string): string;
+        getNextLineIndent(state: string | string[], line: string, tab: string): string;
 
-        checkOutdent(state: any, line: string, input: string): boolean;
+        checkOutdent(state: string | string[], line: string, input: string): boolean;
 
-        autoOutdent(state: any, doc: EditSession, row: number): void;
+        autoOutdent(state: string | string[], doc: EditSession, row: number): void;
 
         // TODO implement WorkerClient types
         createWorker(session: EditSession): any;
@@ -900,7 +903,7 @@ export namespace Ace {
 
         getKeywords(append?: boolean): Array<string | RegExp>;
 
-        getCompletions(state: string,
+        getCompletions(state: string | string[],
                        session: EditSession,
                        pos: Point,
                        prefix: string): Completion[];

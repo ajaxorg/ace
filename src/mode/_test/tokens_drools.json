@@ -206,12 +206,25 @@
   ["comment.doc","/**"]
 ],[
    "doc-start",
-  ["comment.doc"," * "],
+  [
+    "comment.doc.body",
+    " * "
+  ],
   ["comment.doc.tag","@param"],
-  ["comment.doc"," name who we'll salute?"]
+  [
+    "comment.doc.body",
+    " name who we'll salute?"
+  ]
 ],[
    "start",
-  ["comment.doc"," */"]
+  [
+    "comment.doc.body",
+    " "
+  ],
+  [
+    "comment.doc",
+    "*/"
+  ]
 ],[
    "start",
   ["keyword","function"],
@@ -419,12 +432,25 @@
   ["comment.doc","/**"]
 ],[
    "java-doc-start",
-  ["comment.doc","   * "],
+  [
+    "comment.doc.body",
+    "   * "
+  ],
   ["comment.doc.tag.storage.type","TODO"],
-  ["comment.doc"," There mus be better way"]
+  [
+    "comment.doc.body",
+    " There mus be better way"
+  ]
 ],[
    "java-start",
-  ["comment.doc","   */"]
+  [
+    "comment.doc.body",
+    "   "
+  ],
+  [
+    "comment.doc",
+    "*/"
+  ]
 ],[
    "java-start",
   ["text","  "],
@@ -751,10 +777,20 @@
   ["comment.doc","/**"]
 ],[
    "doc-start",
-  ["comment.doc"," * Go Right"]
+  [
+    "comment.doc.body",
+    " * Go Right"
+  ]
 ],[
    "start",
-  ["comment.doc"," */"]
+  [
+    "comment.doc.body",
+    " "
+  ],
+  [
+    "comment.doc",
+    "*/"
+  ]
 ],[
    "start",
   ["keyword","rule"],

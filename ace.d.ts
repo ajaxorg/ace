@@ -328,6 +328,7 @@ declare module "ace-code" {
             enableMultiselect: boolean;
             enableKeyboardAccessibility: boolean;
             enableCodeLens: boolean;
+            textInputAriaLabel: string;
         }
         interface EventsBase {
             [key: string]: any;

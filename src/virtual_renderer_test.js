@@ -42,7 +42,7 @@ module.exports = {
         var renderer = new VirtualRenderer(el);
         editor = new Editor(renderer);
         editor.on("destroy", function() {
-            document.body.removeChild(el);
+            el.remove();
         });
     },
     tearDown: function() {
@@ -132,6 +132,44 @@ module.exports = {
                 done();
             }, 0);
         });
+    },
+
+    "test autosize from 0 height": function() {
+        editor.container.style.height = "0px";
+        editor.textInput.getElement().style.position = "fixed";
+        editor.container.style.lineHeight = 1;
+        editor.setOptions({
+            fontSize: 9
+        });
+
+        editor.resize(true);
+        editor.setOptions({
+            maxLines: 100
+        });
+
+        editor.resize(true);
+
+        editor.resize(true);
+        editor.renderer.$size = {};
+
+        var renderCount = 0;
+        editor.renderer.on("afterRender", function(e) {
+            renderCount++;
+        });
+        editor.setValue("1");
+        editor.renderer.$loop._flush();
+        assert.equal(editor.container.style.height, "9px");
+
+        editor.setValue("\n\n");
+        editor.renderer.$loop._flush();
+        assert.equal(editor.container.style.height, "27px");
+        
+        editor.container.remove();
+        editor.setValue("\n\n\n");
+        editor.resize(true);
+        editor.renderer.$loop._flush();
+        editor.resize(true);
+        assert.equal(renderCount, 2);
     },
     
     "test invalid valus of minLines": function() {
@@ -338,13 +376,32 @@ module.exports = {
         editor.renderer.$loop._flush();
         assert.equal(editor.renderer.content.textContent, "abcdefGhost1");
         
-        assert.equal(editor.session.lineWidgets[0].el.textContent, "Ghost2\nGhost3");
+        assert.equal(editor.session.lineWidgets[0].el.innerHTML, "<div>Ghost2</div><div>Ghost3</div>");
 
         editor.removeGhostText();
 
         editor.renderer.$loop._flush();
         assert.equal(editor.renderer.content.textContent, "abcdef");
         
+        assert.equal(editor.session.lineWidgets, null);
+    },
+    "test long multiline ghost text": function() {
+        editor.session.setValue("abcdef");
+        editor.renderer.$loop._flush();
+
+        editor.setGhostText("This is a long test text that is longer than 30 characters\n\nGhost3", 
+            {row: 0, column: 6});
+
+        editor.renderer.$loop._flush();
+        assert.equal(editor.renderer.content.textContent, "abcdefThis is a long test text that is longer than ");
+
+        assert.equal(editor.session.lineWidgets[0].el.innerHTML, "<div class=\"ghost_text_line_wrapped\">30 characters</div><div></div><div>Ghost3</div>");
+
+        editor.removeGhostText();
+
+        editor.renderer.$loop._flush();
+        assert.equal(editor.renderer.content.textContent, "abcdef");
+
         assert.equal(editor.session.lineWidgets, null);
     },
     "test: brackets highlighting": function (done) {

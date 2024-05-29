@@ -70,7 +70,36 @@ module.exports = {
         assert.range(session.getFoldWidgetRange(1), 1, 9, 3, 19);
         assert.range(session.getFoldWidgetRange(3), 1, 9, 3, 19);
         assert.range(session.getFoldWidgetRange(4), 0, 8, 4, 0);
+    },
+    "test: fold should handle multi-line comments inside nested elements correctly": function () {
+        var session = new EditSession([
+            '<parentElement>', '  <childElement>', '    text <!--', '      This is a multi-line comment',
+            '      that spans multiple lines', '    -->', '  </childElement>', '  <anotherChildElement>',
+            '    <!-- Another comment -->', '  </anotherChildElement>', '</parentElement>'
+        ]);
+
+        var mode = new XmlMode();
+        session.setMode(mode);
+        session.setFoldStyle("markbeginend");
+
+        // Checks for the parentElement
+        assert.equal(session.getFoldWidget(0), "start");
+        assert.equal(session.getFoldWidget(10), "end");
+
+        // Checks for multi-line comment folding
+        assert.equal(session.getFoldWidget(2), "start");
+
+        // Checks for anotherChildElement folding (with single-line comment)
+        assert.equal(session.getFoldWidget(7), "start");
+        assert.equal(session.getFoldWidget(8), "");
+        assert.equal(session.getFoldWidget(9), "end");
+
+        // Verifying fold ranges
+        assert.range(session.getFoldWidgetRange(0), 0, 15, 10, 0);
+        assert.range(session.getFoldWidgetRange(2), 2, 13, 5, 4);
+        assert.equal(session.getFoldWidgetRange(8), "");
     }
+
 };
 
 

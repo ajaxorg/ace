@@ -984,6 +984,7 @@ class Editor {
             ? [new Range(0, 0, session.doc.getLength() - 1, 0)]
             : this.selection.getAllRanges();
 
+        /**@type{string|string[]}*/
         var prevLineState = "";
         var prevLine = "";
         var lineIndent = "";
@@ -2940,6 +2941,7 @@ config.defineOptions(Editor.prototype, "editor", {
             // - Prevent tab-trapping.
             // - Hide irrelevant elements from assistive technology.
             // - On Windows, set more lines to the textarea.
+            // - set aria-label to the text input.
             if (value){
                 this.renderer.enableKeyboardAccessibility = true;
                 this.renderer.keyboardFocusClassName = "ace_keyboard-focus";
@@ -2974,6 +2976,10 @@ config.defineOptions(Editor.prototype, "editor", {
                     gutterKeyboardHandler = new GutterKeyboardHandler(this);
 
                 gutterKeyboardHandler.addListener();
+
+                this.textInput.setAriaOptions({
+                    setLabel: true
+                });
             } else {
                 this.renderer.enableKeyboardAccessibility = false;
 
@@ -3002,6 +3008,10 @@ config.defineOptions(Editor.prototype, "editor", {
             }
         },
         initialValue: false
+    },
+    textInputAriaLabel: {
+        set: function(val) { this.$textInputAriaLabel = val; },
+        initialValue: ""
     },
     customScrollbar: "renderer",
     hScrollBarAlwaysVisible: "renderer",
