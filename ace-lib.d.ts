@@ -62,7 +62,7 @@ declare module "ace-code/src/lib/lang" {
     export function stringRepeat(string: any, count: any): string;
     export function stringTrimLeft(string: any): any;
     export function stringTrimRight(string: any): any;
-    export function copyObject(obj: any): {};
+    export function copyObject<T>(obj: T): T;
     export function copyArray(array: any): any[];
     export const deepCopy: (obj: any) => any;
     export function arrayToMap(arr: any): {};

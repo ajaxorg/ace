@@ -1,6 +1,7 @@
 "use strict";
 /**
  * @typedef {import("./edit_session").EditSession} EditSession
+ * @typedef {import("../ace-internal").Ace.SearchOptions} SearchOptions
  */
 var lang = require("./lib/lang");
 var oop = require("./lib/oop");
@@ -10,34 +11,15 @@ var Range = require("./range").Range;
  * A class designed to handle all sorts of text searches within a [[Document `Document`]].
  **/
 class Search {
-    /**
-     * Creates a new `Search` object. The following search options are available:
-     * @typedef SearchOptions
-     * 
-     * @property {string|RegExp} [needle] - The string or regular expression you're looking for
-     * @property {boolean} [backwards] - Whether to search backwards from where cursor currently is
-     * @property {boolean} [wrap] - Whether to wrap the search back to the beginning when it hits the end
-     * @property {boolean} [caseSensitive] - Whether the search ought to be case-sensitive
-     * @property {boolean} [wholeWord] - Whether the search matches only on whole words
-     * @property {Range|null} [range] - The [[Range]] to search within. Set this to `null` for the whole document
-     * @property {boolean} [regExp] - Whether the search is a regular expression or not
-     * @property {Range|import("../ace-internal").Ace.Position} [start] - The starting [[Range]] or cursor position to begin the search
-     * @property {boolean} [skipCurrent] - Whether or not to include the current line in the search
-     * @property {boolean} [$isMultiLine] - true, if needle has \n or \r\n
-     * @property {boolean} [preserveCase]
-     * @property {boolean} [preventScroll]
-     * @property {boolean} [$supportsUnicodeFlag] - internal property, determine if browser supports unicode flag
-     * @property {any} [re]
-     **/
     
     constructor() {
-        /**@type {SearchOptions}*/
+        /**@type {Partial<SearchOptions>}*/
         this.$options = {};
     }
     
     /**
      * Sets the search options via the `options` parameter.
-     * @param {Partial<import("../ace-internal").Ace.SearchOptions>} options An object containing all the new search properties
+     * @param {Partial<SearchOptions>} options An object containing all the new search properties
      * @returns {Search}
      * @chainable
     **/
@@ -48,7 +30,7 @@ class Search {
 
     /**
      * [Returns an object containing all the search options.]{: #Search.getOptions}
-     * @returns {Partial<import("../ace-internal").Ace.SearchOptions>}
+     * @returns {Partial<SearchOptions>}
     **/
     getOptions() {
         return lang.copyObject(this.$options);
@@ -56,7 +38,7 @@ class Search {
     
     /**
      * Sets the search options via the `options` parameter.
-     * @param {SearchOptions} options object containing all the search propertie
+     * @param {Partial<SearchOptions>} options object containing all the search propertie
      * @related Search.set
     **/
     setOptions(options) {
@@ -209,7 +191,7 @@ class Search {
 
     /**
      * 
-     * @param {SearchOptions} options
+     * @param {Partial<SearchOptions>} options
      * @param {boolean} [$disableFakeMultiline]
      * @return {RegExp|boolean|*[]|*}
      */
@@ -389,7 +371,7 @@ class Search {
 /**
  * 
  * @param {string} needle
- * @param {SearchOptions} options
+ * @param {Partial<SearchOptions>} options
  * @return {string}
  */
 function addWordBoundary(needle, options) {

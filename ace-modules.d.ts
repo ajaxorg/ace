@@ -410,21 +410,21 @@ declare module "ace-code/src/config" {
         removeEventListener<K_5 extends string | number | symbol>(name: K_5, callback: any): void;
         removeAllListeners(name?: string): void;
         /**
-         * @param {string} key
-         * @return {*}
+         * @template {keyof ConfigOptions} K
+         * @param {K} key - The key of the config option to retrieve.
+         * @returns {ConfigOptions[K]} - The value of the config option.
          */
-        get: (key: string) => any;
+        get: <K_6 extends keyof import("ace-code").Ace.ConfigOptions>(key: K_6) => import("ace-code").Ace.ConfigOptions[K_6];
         /**
-         * @param {string} key
-         * @param value
+         * @template {keyof ConfigOptions} K
+         * @param {K} key
+         * @param {ConfigOptions[K]} value
          */
-        set: (key: string, value: any) => void;
+        set: <K_7 extends keyof import("ace-code").Ace.ConfigOptions>(key: K_7, value: import("ace-code").Ace.ConfigOptions[K_7]) => void;
         /**
-         * @return {{[key: string]: any}}
+         * @return {import("ace-code").Ace.ConfigOptions}
          */
-        all: () => {
-            [key: string]: any;
-        };
+        all: () => import("ace-code").Ace.ConfigOptions;
         /**
          * module loading
          * @param {string} name
@@ -2475,71 +2475,29 @@ declare module "ace-code/src/keyboard/keybinding" {
 }
 declare module "ace-code/src/search" {
     export type EditSession = import("ace-code/src/edit_session").EditSession;
+    export type SearchOptions = import("ace-code").Ace.SearchOptions;
     /**
      * A class designed to handle all sorts of text searches within a [[Document `Document`]].
      **/
     export class Search {
         /**
          * Sets the search options via the `options` parameter.
-         * @param {Partial<import("ace-code").Ace.SearchOptions>} options An object containing all the new search properties
+         * @param {Partial<SearchOptions>} options An object containing all the new search properties
          * @returns {Search}
          * @chainable
         **/
-        set(options: Partial<import("ace-code").Ace.SearchOptions>): Search;
+        set(options: Partial<SearchOptions>): Search;
         /**
          * [Returns an object containing all the search options.]{: #Search.getOptions}
-         * @returns {Partial<import("ace-code").Ace.SearchOptions>}
+         * @returns {Partial<SearchOptions>}
         **/
-        getOptions(): Partial<import("ace-code").Ace.SearchOptions>;
+        getOptions(): Partial<SearchOptions>;
         /**
          * Sets the search options via the `options` parameter.
-         * @param {SearchOptions} options object containing all the search propertie
+         * @param {Partial<SearchOptions>} options object containing all the search propertie
          * @related Search.set
         **/
-        setOptions(options: {
-            /**
-             * - The string or regular expression you're looking for
-             */
-            needle?: string | RegExp;
-            /**
-             * - Whether to search backwards from where cursor currently is
-             */
-            backwards?: boolean;
-            /**
-             * - Whether to wrap the search back to the beginning when it hits the end
-             */
-            wrap?: boolean;
-            /**
-             * - Whether the search ought to be case-sensitive
-             */
-            caseSensitive?: boolean;
-            /**
-             * - Whether the search matches only on whole words
-             */
-            wholeWord?: boolean;
-            /**
-             * - The [[Range]] to search within. Set this to `null` for the whole document
-             */
-            range?: Range | null;
-            /**
-             * - Whether the search is a regular expression or not
-             */
-            regExp?: boolean;
-            /**
-             * - The starting [[Range]] or cursor position to begin the search
-             */
-            start?: Range | import("ace-code").Ace.Position;
-            /**
-             * - Whether or not to include the current line in the search
-             */
-            skipCurrent?: boolean;
-            preserveCase?: boolean;
-            preventScroll?: boolean;
-            /**
-             * **
-             */
-            re?: any;
-        }): void;
+        setOptions(options: Partial<SearchOptions>): void;
         /**
          * Searches for `options.needle`. If found, this method returns the [[Range `Range`]] where the text first occurs. If `options.backwards` is `true`, the search goes backwards in the session.
          * @param {EditSession} session The session to search with

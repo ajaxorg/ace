@@ -35,9 +35,23 @@ declare module "ace-code" {
         type AppConfig = import("ace-code/src/lib/app_config").AppConfig;
         type AfterLoadCallback = (err: Error | null, module: unknown) => void;
         type LoaderFunction = (moduleName: string, afterLoad: AfterLoadCallback) => void;
+        export interface ConfigOptions {
+            packaged: boolean;
+            workerPath: string | null;
+            modePath: string | null;
+            themePath: string | null;
+            basePath: string;
+            suffix: string;
+            loadWorkerFromBlob: boolean;
+            sharedPopups: boolean;
+            useStrictCSP: boolean | null;
+        }
+        //setOption<K extends keyof T>(name: K, value: T[K]): void;
+        // 
+        //         getOption<K extends keyof T>(name: K): T[K];
         export interface Config {
-            get(key: string): any;
-            set(key: string, value: any): void;
+            get<K extends keyof ConfigOptions>(key: K): ConfigOptions[K];
+            set<K extends keyof ConfigOptions>(key: K, value: ConfigOptions[K]): void;
             all(): {
                 [key: string]: any;
             };
@@ -532,18 +546,27 @@ declare module "ace-code" {
             removeAllListeners(name?: string): void;
         }
         interface SearchOptions {
+            /**The string or regular expression you're looking for*/
             needle: string | RegExp;
             preventScroll: boolean;
+            /**Whether to search backwards from where cursor currently is*/
             backwards: boolean;
+            /**The starting [[Range]] or cursor position to begin the search*/
             start: Range;
+            /**Whether or not to include the current line in the search*/
             skipCurrent: boolean;
-            range: Range;
+            /**The [[Range]] to search within. Set this to `null` for the whole document*/
+            range: Range | null;
             preserveCase: boolean;
+            /**Whether the search is a regular expression or not*/
             regExp: boolean;
+            /**Whether the search matches only on whole words*/
             wholeWord: boolean;
+            /**Whether the search ought to be case-sensitive*/
             caseSensitive: boolean;
+            /**Whether to wrap the search back to the beginning when it hits the end*/
             wrap: boolean;
-            re: RegExp;
+            re: any;
         }
         interface Point {
             row: number;
@@ -945,11 +968,9 @@ declare module "ace-code" {
         removeListener<K_4 extends string | number | symbol>(name: K_4, callback: any): void;
         removeEventListener<K_5 extends string | number | symbol>(name: K_5, callback: any): void;
         removeAllListeners(name?: string): void;
-        get: (key: string) => any;
-        set: (key: string, value: any) => void;
-        all: () => {
-            [key: string]: any;
-        };
+        get: <K_6 extends keyof import("ace-code").Ace.ConfigOptions>(key: K_6) => import("ace-code").Ace.ConfigOptions[K_6];
+        set: <K_7 extends keyof import("ace-code").Ace.ConfigOptions>(key: K_7, value: import("ace-code").Ace.ConfigOptions[K_7]) => void;
+        all: () => import("ace-code").Ace.ConfigOptions;
         moduleUrl: (name: string, component?: string) => string;
         setModuleUrl: (name: string, subst: string) => string;
         setLoader: (cb: any) => void;

@@ -780,11 +780,9 @@ declare module "ace-code/src/ext/textarea" {
             removeListener<K_4 extends string | number | symbol>(name: K_4, callback: any): void;
             removeEventListener<K_5 extends string | number | symbol>(name: K_5, callback: any): void;
             removeAllListeners(name?: string): void;
-            get: (key: string) => any;
-            set: (key: string, value: any) => void;
-            all: () => {
-                [key: string]: any;
-            };
+            get: <K_6 extends keyof import("ace-code").Ace.ConfigOptions>(key: K_6) => import("ace-code").Ace.ConfigOptions[K_6];
+            set: <K_7 extends keyof import("ace-code").Ace.ConfigOptions>(key: K_7, value: import("ace-code").Ace.ConfigOptions[K_7]) => void;
+            all: () => import("ace-code").Ace.ConfigOptions;
             moduleUrl: (name: string, component?: string) => string;
             setModuleUrl: (name: string, subst: string) => string;
             setLoader: (cb: any) => void;

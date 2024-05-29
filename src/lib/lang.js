@@ -30,8 +30,13 @@ exports.stringTrimLeft = function (string) {
 exports.stringTrimRight = function (string) {
     return string.replace(trimEndRegexp, '');
 };
-
+/**
+ * @template T
+ * @param {T} obj
+ * @return {T}
+ */
 exports.copyObject = function(obj) {
+    /** @type Object*/
     var copy = {};
     for (var key in obj) {
         copy[key] = obj[key];

@@ -31,10 +31,26 @@ export namespace Ace {
     type AfterLoadCallback = (err: Error | null, module: unknown) => void;
     type LoaderFunction = (moduleName: string, afterLoad: AfterLoadCallback) => void;
 
+    export interface ConfigOptions {
+        packaged: boolean,
+        workerPath: string | null,
+        modePath: string | null,
+        themePath: string | null,
+        basePath: string,
+        suffix: string,
+        $moduleUrls: {[url: string]: string},
+        loadWorkerFromBlob: boolean,
+        sharedPopups: boolean,
+        useStrictCSP: boolean | null
+    }
+    //setOption<K extends keyof T>(name: K, value: T[K]): void;
+    // 
+    //         getOption<K extends keyof T>(name: K): T[K];
+    
     export interface Config {
-        get(key: string): any;
+        get<K extends keyof ConfigOptions>(key: K): ConfigOptions[K];
 
-        set(key: string, value: any): void;
+        set<K extends keyof ConfigOptions>(key: K, value: ConfigOptions[K]): void;
 
         all(): { [key: string]: any };
 
@@ -633,18 +649,34 @@ export namespace Ace {
     }
 
     interface SearchOptions {
+        /**The string or regular expression you're looking for*/
         needle: string | RegExp;
         preventScroll: boolean;
+        /**Whether to search backwards from where cursor currently is*/
         backwards: boolean;
+        /**The starting [[Range]] or cursor position to begin the search*/
         start: Range;
+        /**Whether or not to include the current line in the search*/
         skipCurrent: boolean;
-        range: Range;
+        /**The [[Range]] to search within. Set this to `null` for the whole document*/
+        range: Range | null;
         preserveCase: boolean;
+        /**Whether the search is a regular expression or not*/
         regExp: boolean;
+        /**Whether the search matches only on whole words*/
         wholeWord: boolean;
+        /**Whether the search ought to be case-sensitive*/
         caseSensitive: boolean;
+        /**Whether to wrap the search back to the beginning when it hits the end*/
         wrap: boolean;
-        re: RegExp;
+        re: any;
+        /**true, if needle has \n or \r\n*/
+        $isMultiLine: boolean;
+        /**
+         * internal property, determine if browser supports unicode flag
+         * @private
+         * */
+        $supportsUnicodeFlag: boolean;
     }
 
     interface Point {

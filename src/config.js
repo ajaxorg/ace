@@ -1,4 +1,9 @@
 "no use strict";
+
+/**
+ * @typedef {import("../ace-internal").Ace.ConfigOptions} ConfigOptions
+ */
+
 var lang = require("./lib/lang");
 var net = require("./lib/net");
 var dom = require("./lib/dom");
@@ -6,6 +11,7 @@ var AppConfig = require("./lib/app_config").AppConfig;
 
 module.exports = exports = new AppConfig();
 
+/** @type {ConfigOptions} */
 var options = {
     packaged: false,
     workerPath: null,
@@ -20,8 +26,9 @@ var options = {
 };
 
 /**
- * @param {string} key
- * @return {*}
+ * @template {keyof ConfigOptions} K
+ * @param {K} key - The key of the config option to retrieve.
+ * @returns {ConfigOptions[K]} - The value of the config option.
  */
 exports.get = function(key) {
     if (!options.hasOwnProperty(key))
@@ -30,8 +37,9 @@ exports.get = function(key) {
 };
 
 /**
- * @param {string} key
- * @param value
+ * @template {keyof ConfigOptions} K
+ * @param {K} key
+ * @param {ConfigOptions[K]} value
  */
 exports.set = function(key, value) {
     if (options.hasOwnProperty(key))
@@ -42,7 +50,7 @@ exports.set = function(key, value) {
         dom.useStrictCSP(value);
 };
 /**
- * @return {{[key: string]: any}}
+ * @return {import("../ace-internal").Ace.ConfigOptions}
  */
 exports.all = function() {
     return lang.copyObject(options);
