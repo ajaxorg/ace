@@ -100,7 +100,8 @@ var defaultEnglishMessages = {
     "options.use-svg-gutter-icons": "Use SVG gutter icons",
     "options.show-folded-annotations": "Annotations for folded lines",
     "options.enable-keyboard-accessibility": "Keyboard Accessibility Mode",
-    "options.tooltip-follows-mouse": "Gutter tooltip follows mouse"
+    "options.tooltip-follows-mouse": "Gutter tooltip follows mouse",
+    "kbshortcutmenu": "Keyboard Shortcuts"
 }
 
 exports.defaultEnglishMessages = defaultEnglishMessages;
