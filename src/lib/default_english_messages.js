@@ -101,7 +101,7 @@ var defaultEnglishMessages = {
     "options.show-folded-annotations": "Annotations for folded lines",
     "options.enable-keyboard-accessibility": "Keyboard Accessibility Mode",
     "options.tooltip-follows-mouse": "Gutter tooltip follows mouse",
-    "kbshortcutmenu": "Keyboard Shortcuts"
+    "keybinding-menu.head": "Keyboard Shortcuts"
 }
 
 exports.defaultEnglishMessages = defaultEnglishMessages;

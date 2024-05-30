@@ -36,7 +36,7 @@ function showKeyboardShortcuts(editor) {
         }, '');
 
         el.id = 'kbshortcutmenu';
-        el.innerHTML = '<h1>' + nls('kbshortcutmenu', 'Keyboard Shortcuts') + '</h1>'
+        el.innerHTML = '<h1>' + nls('keybinding-menu.head', 'Keyboard Shortcuts') + '</h1>'
             + commands + '</div>';
         overlayPage(editor, el);
     }
