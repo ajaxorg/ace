@@ -1,12 +1,13 @@
 "use strict";
 var config = require("../config");
 
-var Tokenizer = require("../tokenizer").Tokenizer;
+var {Tokenizer, CustomTokenizer} = require("../tokenizer");
 
 var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;
 var CstyleBehaviour = require("./behaviour/cstyle").CstyleBehaviour;
 var unicode = require("../unicode");
 var lang = require("../lib/lang");
+var oop = require("../lib/oop");
 var TokenIterator = require("../token_iterator").TokenIterator;
 var Range = require("../range").Range;
 
@@ -391,4 +392,34 @@ Mode = function() {
     this.$id = "ace/mode/text";
 }).call(Mode.prototype);
 
+var CustomMode = function () {
+    Mode.call(this);
+};
+oop.inherits(CustomMode, Mode);
+
+(function () {
+    this.getTokenizer = function () {
+        if (!this.$tokenizer) {
+            this.$highlightRules = this.$highlightRules || new this.HighlightRules(this.$highlightRuleConfig);
+            var modeName;
+            if (this.$id) {
+                var chunks = this.$id.split('/');
+                if (chunks.length > 1) {
+                    modeName = chunks[chunks.length - 1];
+                }
+                else {
+                    modeName = chunks;
+                }
+            }
+            else {
+                modeName = "root";
+            }
+            this.$tokenizer = new CustomTokenizer(this.$highlightRules.getRules(), modeName);
+        }
+        return this.$tokenizer;
+    };
+}).call(CustomMode.prototype);
+
+
+exports.CustomMode = CustomMode;
 exports.Mode = Mode;

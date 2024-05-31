@@ -130,6 +130,7 @@ function loadLanguageProvider(editor) {
             }
         }, true);
         function showOccurrenceMarkers(session, positions) {
+            if (!session.state) session.state = {}
             if (!session.state.occurrenceMarkers) {
                 session.state.occurrenceMarkers = new MarkerGroup(session);
             }
@@ -179,7 +180,7 @@ function loadLanguageProvider(editor) {
             let docPos = e.getDocumentPosition();
 
             languageProvider.doHover(session, docPos, function(hover) {
-                var errorMarker = session.state?.diagnosticMarkers.getMarkerAtPosition(docPos);
+                var errorMarker = session.state?.diagnosticMarkers?.getMarkerAtPosition(docPos);
 
                 if (!errorMarker && !hover?.content) return;
 
