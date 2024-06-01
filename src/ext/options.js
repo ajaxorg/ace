@@ -175,15 +175,15 @@ var optionGroups = {
             type: "buttonBar",
             items: [
                 {
-                    caption: nls("options.fold-style.scroll-past-end.none", "None"),
+                    caption: nls("options.scroll-past-end.none", "None"),
                     value: 0
                 },
                 {
-                    caption: nls("options.fold-style.scroll-past-end.half", "Half"),
+                    caption: nls("options.scroll-past-end.half", "Half"),
                     value: 0.5
                 },
                 {
-                    caption: nls("options.fold-style.scroll-past-end.full", "Full"),
+                    caption: nls("options.scroll-past-end.full", "Full"),
                     value: 1
                 }
             ]
@@ -288,15 +288,15 @@ var optionGroups = {
             label: nls("options.merge-undo-deltas", "Merge Undo Deltas"),
             items: [
                 {
-                    caption: nls("options.fold-style.merge-undo-deltas.always", "Always"),
+                    caption: nls("options.merge-undo-deltas.always", "Always"),
                     value: "always"
                 },
                 {
-                    caption: nls("options.fold-style.merge-undo-deltas.never", "Never"),
+                    caption: nls("options.merge-undo-deltas.never", "Never"),
                     value: "false"
                 },
                 {
-                    caption: nls("options.fold-style.merge-undo-deltas.timed", "Timed"),
+                    caption: nls("options.merge-undo-deltas.timed", "Timed"),
                     value: "true"
                 }
             ]
