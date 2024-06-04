@@ -26,15 +26,16 @@ exports.addTouchListeners = function(el, editor) {
         var updateMenu = function() {
             var selected = editor.getCopyText();
             var hasUndo = editor.session.getUndoManager().hasUndo();
+            var commands = editor.commands.byName;
             contextMenu.replaceChild(
                 dom.buildDom(isOpen ? ["span",
-                    !selected && ["span", { class: "ace_mobile-button", action: "selectall" }, "Select All"],
-                    selected && ["span", { class: "ace_mobile-button", action: "copy" }, "Copy"],
-                    selected && ["span", { class: "ace_mobile-button", action: "cut" }, "Cut"],
-                    clipboard && ["span", { class: "ace_mobile-button", action: "paste" }, "Paste"],
-                    hasUndo && ["span", { class: "ace_mobile-button", action: "undo" }, "Undo"],
-                    ["span", { class: "ace_mobile-button", action: "find" }, "Find"],
-                    ["span", { class: "ace_mobile-button", action: "openCommandPalette" }, "Palette"]
+                    !selected && commands["selectall"] && ["span", { class: "ace_mobile-button", action: "selectall" }, "Select All"],
+                    selected && commands["copy"] && ["span", { class: "ace_mobile-button", action: "copy" }, "Copy"],
+                    selected && commands["cut"] && ["span", { class: "ace_mobile-button", action: "cut" }, "Cut"],
+                    clipboard && commands["paste"] && ["span", { class: "ace_mobile-button", action: "paste" }, "Paste"],
+                    hasUndo && commands["undo"] && ["span", { class: "ace_mobile-button", action: "undo" }, "Undo"],
+                    commands["find"] && ["span", { class: "ace_mobile-button", action: "find" }, "Find"],
+                    commands["openCommandPalette"] && ["span", { class: "ace_mobile-button", action: "openCommandPalette" }, "Palette"]
                 ] : ["span"]),
                 contextMenu.firstChild
             );
