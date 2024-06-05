@@ -158,9 +158,15 @@ class AppConfig {
 
         var translated = messages[key] || messages[defaultString] || defaultString;
         if (params) {
-            translated = translated.replace(/\$(\$|[\d]+)/g, function(_, name) {
-                if (name == "$") return "$";
-                return params[name];
+            // We support both $n or {n} as placeholder indicators in the provided translated strings
+            // Replace $n with the nth element in params
+            translated = translated.replace(/\$(\$|[\d]+)/g, function(_, dollarMatch) {
+                if (dollarMatch == "$") return "$";
+                return params[dollarMatch];
+            });
+             // Replace {n} with the nth element in params
+            translated = translated.replace(/\{([^\}]+)\}/g, function(_, curlyBracketMatch) {
+                return params[curlyBracketMatch];
             });
         }
         return translated;
