@@ -87,6 +87,12 @@ exports.addTouchListeners = function(el, editor) {
         ], editor.container);
     }
     function showContextMenu() {
+        if (!editor.getOption("enableMobileMenu")) {
+            if (contextMenu) {
+                hideContextMenu();
+            }
+            return;
+        }
         if (!contextMenu) createContextMenu();
         var cursor = editor.selection.cursor;
         var pagePos = editor.renderer.textToScreenCoordinates(cursor.row, cursor.column);

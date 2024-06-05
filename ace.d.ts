@@ -236,6 +236,7 @@ export namespace Ace {
     enableMultiselect: boolean;
     enableKeyboardAccessibility: boolean;
     textInputAriaLabel: string;
+    enableMobileMenu: boolean;
   }
 
   export interface SearchOptions {
