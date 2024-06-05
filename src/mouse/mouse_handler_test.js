@@ -178,6 +178,7 @@ module.exports = {
         value = value.repeat(10);
         editor.setValue(value, -1);
         editor.setOption("maxLines", 10);
+        editor.setOption("enableMobileMenu", false);
         editor.renderer.$loop._flush();
         window.editor = editor;
         window.sendTouchEvent = sendTouchEvent;
@@ -212,8 +213,17 @@ module.exports = {
         editor.renderer.$loop._flush();
         assert.equal(editor.getSelectedText(), "abc");
         
-        // mobile menu works
+        // there shouldn't be any mobile menu at that point
         var menu = editor.container.querySelector(".ace_mobile-menu");
+        assert.ok(menu == undefined);
+        editor.setOption("enableMobileMenu", true);
+        sendTouchEvent("end", {touches: [touchPos(3, 3)]}, editor);
+        editor.renderer.$loop._flush();
+        
+        menu = editor.container.querySelector(".ace_mobile-menu");
+        assert.ok(menu != undefined);
+        
+        // mobile menu works
         sendTouchEvent("start", {touches: [touchPos(3, 3)]}, {container: menu});
         sendTouchEvent("end", {touches: [touchPos(3, 3)]}, {container: menu});
         var button = editor.container.querySelectorAll(".ace_mobile-button")[1];
