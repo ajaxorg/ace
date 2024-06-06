@@ -26,20 +26,24 @@ exports.addTouchListeners = function(el, editor) {
         var updateMenu = function() {
             var selected = editor.getCopyText();
             var hasUndo = editor.session.getUndoManager().hasUndo();
-            var commands = editor.commands.byName;
             contextMenu.replaceChild(
                 dom.buildDom(isOpen ? ["span",
-                    !selected && commands["selectall"] && ["span", { class: "ace_mobile-button", action: "selectall" }, "Select All"],
-                    selected && commands["copy"] && ["span", { class: "ace_mobile-button", action: "copy" }, "Copy"],
-                    selected && commands["cut"] && ["span", { class: "ace_mobile-button", action: "cut" }, "Cut"],
-                    clipboard && commands["paste"] && ["span", { class: "ace_mobile-button", action: "paste" }, "Paste"],
-                    hasUndo && commands["undo"] && ["span", { class: "ace_mobile-button", action: "undo" }, "Undo"],
-                    commands["find"] && ["span", { class: "ace_mobile-button", action: "find" }, "Find"],
-                    commands["openCommandPalette"] && ["span", { class: "ace_mobile-button", action: "openCommandPalette" }, "Palette"]
+                    !selected && canExecuteCommand("selectall") && ["span", { class: "ace_mobile-button", action: "selectall" }, "Select All"],
+                    selected && canExecuteCommand("copy") && ["span", { class: "ace_mobile-button", action: "copy" }, "Copy"],
+                    selected && canExecuteCommand("cut") && ["span", { class: "ace_mobile-button", action: "cut" }, "Cut"],
+                    clipboard && canExecuteCommand("paste") && ["span", { class: "ace_mobile-button", action: "paste" }, "Paste"],
+                    hasUndo && canExecuteCommand("undo") && ["span", { class: "ace_mobile-button", action: "undo" }, "Undo"],
+                    canExecuteCommand("find") && ["span", { class: "ace_mobile-button", action: "find" }, "Find"],
+                    canExecuteCommand("openCommandPalette") && ["span", { class: "ace_mobile-button", action: "openCommandPalette" }, "Palette"]
                 ] : ["span"]),
                 contextMenu.firstChild
             );
         };
+        
+        var canExecuteCommand = function (/** @type {string} */ cmd) {
+            return editor.commands.canExecute(cmd, editor);
+        };
+        
         var handleClick = function(e) {
             var action = e.target.getAttribute("action");
 

@@ -664,7 +664,8 @@ export namespace Ace {
     removeListener(name: string, callback: Function): void;
     removeEventListener(name: string, callback: Function): void;
 
-    exec(command: string, editor: Editor, args: any): boolean;
+    exec(command: string | string[] | Command, editor: Editor, args: any): boolean;
+    canExecute(command: string | Command, editor: Editor): boolean;
     toggleRecording(editor: Editor): void;
     replay(editor: Editor): void;
     addCommand(command: Command): void;
