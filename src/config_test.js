@@ -53,7 +53,8 @@ module.exports = {
         var nls = config.nls;
         config.setMessages({
             foo: "hello world of $1",
-            test_key: "hello world for test key"
+            test_key: "hello world for test key",
+            test_with_curly_brackets: "hello world $0 of {1} and $2 to the {3} degree"
         });
         assert.equal(nls("untranslated_key","bar $1"), "bar $1");
         assert.equal(nls("untranslated_key", "bar"), "bar");
@@ -62,6 +63,7 @@ module.exports = {
         assert.equal(nls("untranslated_key", "$0B is $1$$", [0.11, 22]), "0.11B is 22$");
         assert.equal(nls("untranslated_key_but_translated_default_string", "foo", {1: "goo"}), "hello world of goo");
         assert.equal(nls("test_key", "this text should not appear"), "hello world for test key");
+        assert.equal(nls("test_with_curly_brackets", "hello world $0 of {1} and $2 to the {3} degree", ["foo", "bar", "yay", "third"]), "hello world foo of bar and yay to the third degree");
     },
     "test: define options" : function() {
         var o = {};
