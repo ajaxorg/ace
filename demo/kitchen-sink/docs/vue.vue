@@ -15,6 +15,18 @@ Things to verify:
         @click.prevent="onClick('hello')">
       Hello
     </span>
+    <router-link v-bind:to="item.url"/>
+    <!-- v-bind with dynamic key -->
+    <div v-bind:[key]="value"></div>
+
+    <!-- v-bind shorthand with dynamic key -->
+    <div :[key]="value"></div>
+
+    <!-- v-on with dynamic event -->
+    <div v-on:[event]="handler"></div>
+
+    <!-- v-on shorthand with dynamic event -->
+    <div @[event]="handler"></div>
   </div>
 </template>
 
