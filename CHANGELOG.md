@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.35.0](https://github.com/ajaxorg/ace/compare/v1.34.2...v1.35.0) (2024-06-11)
+
+
+### Features
+
+* allow '{n}' as placeholder for translated strings ([#5581](https://github.com/ajaxorg/ace/issues/5581)) ([2206024](https://github.com/ajaxorg/ace/commit/220602488b95748c74141d647e13114c7a4569fb))
+
+
+### Bug Fixes
+
+* allow setting the placeholder type for nls ([#5584](https://github.com/ajaxorg/ace/issues/5584)) ([3e2d50f](https://github.com/ajaxorg/ace/commit/3e2d50f5307e201c20825311585e1f612f1ff23c))
+* not closed generic state in case of left-shift operator ([#5572](https://github.com/ajaxorg/ace/issues/5572)) ([e5bea6f](https://github.com/ajaxorg/ace/commit/e5bea6f63290003ff3270d56dbf9610e8a3091a8))
+* wrong vue-directives regexp ([#5586](https://github.com/ajaxorg/ace/issues/5586)) ([5f89a33](https://github.com/ajaxorg/ace/commit/5f89a334e69640bb395e74ae86530217d08f141c))
+
 ### [1.34.2](https://github.com/ajaxorg/ace/compare/v1.34.1...v1.34.2) (2024-05-27)
 
 ### [1.34.1](https://github.com/ajaxorg/ace/compare/v1.34.0...v1.34.1) (2024-05-24)
