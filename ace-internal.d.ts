@@ -433,6 +433,7 @@ export namespace Ace {
         enableKeyboardAccessibility: boolean;
         enableCodeLens: boolean;
         textInputAriaLabel: string;
+        enableMobileMenu: boolean;
     }
 
     interface EventsBase {

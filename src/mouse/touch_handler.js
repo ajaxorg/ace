@@ -28,17 +28,22 @@ exports.addTouchListeners = function(el, editor) {
             var hasUndo = editor.session.getUndoManager().hasUndo();
             contextMenu.replaceChild(
                 dom.buildDom(isOpen ? ["span",
-                    !selected && ["span", { class: "ace_mobile-button", action: "selectall" }, "Select All"],
-                    selected && ["span", { class: "ace_mobile-button", action: "copy" }, "Copy"],
-                    selected && ["span", { class: "ace_mobile-button", action: "cut" }, "Cut"],
-                    clipboard && ["span", { class: "ace_mobile-button", action: "paste" }, "Paste"],
-                    hasUndo && ["span", { class: "ace_mobile-button", action: "undo" }, "Undo"],
-                    ["span", { class: "ace_mobile-button", action: "find" }, "Find"],
-                    ["span", { class: "ace_mobile-button", action: "openCommandPalette" }, "Palette"]
+                    !selected && canExecuteCommand("selectall") && ["span", { class: "ace_mobile-button", action: "selectall" }, "Select All"],
+                    selected && canExecuteCommand("copy") && ["span", { class: "ace_mobile-button", action: "copy" }, "Copy"],
+                    selected && canExecuteCommand("cut") && ["span", { class: "ace_mobile-button", action: "cut" }, "Cut"],
+                    clipboard && canExecuteCommand("paste") && ["span", { class: "ace_mobile-button", action: "paste" }, "Paste"],
+                    hasUndo && canExecuteCommand("undo") && ["span", { class: "ace_mobile-button", action: "undo" }, "Undo"],
+                    canExecuteCommand("find") && ["span", { class: "ace_mobile-button", action: "find" }, "Find"],
+                    canExecuteCommand("openCommandPalette") && ["span", { class: "ace_mobile-button", action: "openCommandPalette" }, "Palette"]
                 ] : ["span"]),
                 contextMenu.firstChild
             );
         };
+        
+        var canExecuteCommand = function (/** @type {string} */ cmd) {
+            return editor.commands.canExecute(cmd, editor);
+        };
+        
         var handleClick = function(e) {
             var action = e.target.getAttribute("action");
 
@@ -86,6 +91,12 @@ exports.addTouchListeners = function(el, editor) {
         ], editor.container);
     }
     function showContextMenu() {
+        if (!editor.getOption("enableMobileMenu")) {
+            if (contextMenu) {
+                hideContextMenu();
+            }
+            return;
+        }
         if (!contextMenu) createContextMenu();
         var cursor = editor.selection.cursor;
         var pagePos = editor.renderer.textToScreenCoordinates(cursor.row, cursor.column);

@@ -3011,6 +3011,13 @@ config.defineOptions(Editor.prototype, "editor", {
         set: function(val) { this.$textInputAriaLabel = val; },
         initialValue: ""
     },
+    enableMobileMenu: {
+        /**
+         * @param {boolean} val
+         */
+        set: function(val) { this.$enableMobileMenu = val; },
+        initialValue: true
+    },
     customScrollbar: "renderer",
     hScrollBarAlwaysVisible: "renderer",
     vScrollBarAlwaysVisible: "renderer",
