@@ -46,13 +46,6 @@ oop.inherits(Mode, TextMode);
             if (endState == "start" || endState == "no_regex") {
                 return "";
             }
-            var match = line.match(/^\s*(\/?)\*/);
-            if (match) {
-                if (match[1]) {
-                    indent += " ";
-                }
-                indent += "* ";
-            }
         }
 
         return indent;
