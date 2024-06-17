@@ -6,20 +6,23 @@ if (typeof process !== "undefined") {
 "use strict";
 
 require("../multi_select");
+var {type} = require("../test/user");
 
 var EditSession = require("./../edit_session").EditSession,
     Editor = require("../editor").Editor,
     Range = require("./../range").Range,
-    MockRenderer = require("./../test/mockrenderer").MockRenderer,
+    VirtualRenderer = require("./../virtual_renderer").VirtualRenderer,
     emacs = require('./emacs'),
     assert = require("./../test/assertions"),
     editor, sel;
 
 function initEditor(docString) {
     var doc = new EditSession(docString.split("\n"));
-    editor = new Editor(new MockRenderer(), doc);
+    editor = new Editor(new VirtualRenderer(), doc);
     editor.setKeyboardHandler(emacs.handler);
     sel = editor.selection;
+    document.body.appendChild(editor.container);
+    editor.focus();
 }
 
 function print(obj) {
@@ -31,7 +34,10 @@ function pluck(arr, what) {
 }
 
 module.exports = {
-
+    tearDown: function() {
+        editor.container.remove();
+        editor.destroy();
+    },
     "test: detach removes emacs commands from command manager": function() {
         initEditor('');
         assert.ok(!!editor.commands.byName["keyboardQuit"], 'setup error: emacs commands not installed');
@@ -42,22 +48,27 @@ module.exports = {
     "test: keyboardQuit clears selection": function() {
         initEditor('foo');
         editor.selectAll();
-        editor.execCommand('keyboardQuit');
+        type('Ctrl-g');
         assert.ok(editor.selection.isEmpty(), 'selection non-empty');
     },
 
     "test: exchangePointAndMark without mark set": function() {
         initEditor('foo');
         sel.setRange(Range.fromPoints({row: 0, column: 1}, {row: 0, column: 3}));
-        editor.execCommand('exchangePointAndMark');
+        type('Ctrl-x', 'Ctrl-x');
         assert.deepEqual({row: 0, column: 1}, editor.getCursorPosition(), print(editor.getCursorPosition()));
     },
 
     "test: exchangePointAndMark with mark set": function() {
         initEditor('foo');
-        editor.pushEmacsMark({row: 0, column: 1});
-        editor.pushEmacsMark({row: 0, column: 2});
-        editor.execCommand('exchangePointAndMark', {count: 4});
+        // push marks
+        editor.selection.moveTo(0, 1);
+        type('Ctrl-Space', 'Ctrl-Space');
+        editor.selection.moveTo(0, 2);
+        type('Ctrl-Space', 'Ctrl-Space');
+        editor.selection.moveTo(0, 0);
+        // exchange point and mark with argument
+        type('Ctrl-4', 'Ctrl-x', 'Ctrl-x');
         assert.deepEqual({row: 0, column: 2}, editor.getCursorPosition(), print(editor.getCursorPosition()));
         assert.deepEqual([{row: 0, column: 1}, {row: 0, column: 0}], editor.session.$emacsMarkRing, print(editor.session.$emacsMarkRing));
     },
@@ -116,20 +127,20 @@ module.exports = {
         initEditor("foo  \n Hello world\n  \n  123");
         sel.setRange(new Range(0, 0, 0, 2));
         editor.endOperation();
-        editor.execCommand("killLine");
+        type("Ctrl-k");
         assert.equal(editor.getValue(),"fo\n Hello world\n  \n  123");
-        editor.execCommand("killLine");
+        type("Ctrl-k");
         assert.equal(editor.getValue(),"fo Hello world\n  \n  123");
-        editor.execCommand("killLine");
+        type("Ctrl-k");
         assert.equal(editor.getValue(),"fo\n  \n  123");
-        editor.execCommand("killLine");
+        type("Ctrl-k");
         assert.equal(editor.getValue(),"fo\n  123");
-        editor.execCommand("killLine");
+        type("Ctrl-k");
         assert.equal(editor.getValue(),"fo  123");
-        editor.execCommand("killLine");
+        type("Ctrl-k");
         assert.equal(editor.getValue(),"fo");
-        editor.execCommand("killLine");
-        editor.execCommand("yank");
+        type("Ctrl-k");
+        type("Ctrl-y");
         assert.equal(editor.getValue(),"foo  \n Hello world\n  \n  123");
     }
 
