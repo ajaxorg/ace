@@ -196,8 +196,11 @@ declare module "ace-code/src/lib/app_config" {
         }): void;
         /**
          * @param {any} value
+         * @param {{placeholders?: "dollarSigns" | "curlyBrackets"}} [options]
          */
-        setMessages(value: any): void;
+        setMessages(value: any, options?: {
+            placeholders?: "dollarSigns" | "curlyBrackets";
+        }): void;
         /**
          * @param {string} key
          * @param {string} defaultString

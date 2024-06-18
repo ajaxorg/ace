@@ -256,6 +256,10 @@ class Autocomplete {
         });
         this.$elements = null;
     }
+
+    /**
+     * @internal
+     */
     onLayoutChange() {
         if (!this.popup.isOpen) return this.unObserveLayoutChanges();
         this.$updatePopupPosition();
@@ -706,7 +710,11 @@ class Autocomplete {
         if (el.parentNode)
             el.parentNode.removeChild(el);
     }
-    
+
+    /**
+     * @param e
+     * @internal
+     */
     onTooltipClick(e) {
         var a = e.target;
         while (a && a != this.tooltipNode) {

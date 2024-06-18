@@ -46,9 +46,6 @@ declare module "ace-code" {
             sharedPopups: boolean;
             useStrictCSP: boolean | null;
         }
-        //setOption<K extends keyof T>(name: K, value: T[K]): void;
-        // 
-        //         getOption<K extends keyof T>(name: K): T[K];
         export interface Config {
             get<K extends keyof ConfigOptions>(key: K): ConfigOptions[K];
             set<K extends keyof ConfigOptions>(key: K, value: ConfigOptions[K]): void;
@@ -329,6 +326,7 @@ declare module "ace-code" {
             enableKeyboardAccessibility: boolean;
             enableCodeLens: boolean;
             textInputAriaLabel: string;
+            enableMobileMenu: boolean;
         }
         interface EventsBase {
             [key: string]: any;
@@ -954,7 +952,9 @@ declare module "ace-code" {
         setDefaultValues(path: string, optionHash: {
             [key: string]: any;
         }): void;
-        setMessages(value: any): void;
+        setMessages(value: any, options?: {
+            placeholders?: "dollarSigns" | "curlyBrackets";
+        }): void;
         nls(key: string, defaultString: string, params?: {
             [x: string]: any;
         }): any;
@@ -981,7 +981,7 @@ declare module "ace-code" {
             string
         ], onLoad: (module: any) => void) => void;
         setModuleLoader: (moduleName: any, onLoad: any) => void;
-        version: "1.34.2";
+        version: "1.35.0";
     };
     export function edit(el: string | (HTMLElement & {
         env?: any;
@@ -998,6 +998,6 @@ declare module "ace-code" {
     import UndoManager = UndoManager_2.UndoManager;
     import Renderer_1 = require("ace-code/src/virtual_renderer");
     import Renderer = Renderer_1.VirtualRenderer;
-    export var version: "1.34.2";
+    export var version: "1.35.0";
     export { Range, Editor, EditSession, UndoManager, Renderer as VirtualRenderer };
 }

@@ -344,11 +344,6 @@ declare module "ace-code/src/anchor" {
          **/
         getDocument(): Document;
         /**
-         * Internal function called when `"change"` event fired.
-         * @param {import("ace-code").Ace.Delta} delta
-         */
-        onChange(delta: import("ace-code").Ace.Delta): void;
-        /**
          * Sets the anchor position to the specified row and column. If `noClip` is `true`, the position is not clipped.
          * @param {Number} row The row index to move the anchor to
          * @param {Number} column The column index to move the anchor to
@@ -394,7 +389,9 @@ declare module "ace-code/src/config" {
         setDefaultValues(path: string, optionHash: {
             [key: string]: any;
         }): void;
-        setMessages(value: any): void;
+        setMessages(value: any, options?: {
+            placeholders?: "dollarSigns" | "curlyBrackets";
+        }): void;
         nls(key: string, defaultString: string, params?: {
             [x: string]: any;
         }): any;
@@ -449,7 +446,7 @@ declare module "ace-code/src/config" {
             string
         ], onLoad: (module: any) => void) => void;
         setModuleLoader: (moduleName: any, onLoad: any) => void;
-        version: "1.34.2";
+        version: "1.35.0";
     };
     export = _exports;
     import AppConfig_1 = require("ace-code/src/lib/app_config");
@@ -833,11 +830,6 @@ declare module "ace-code/src/scrollbar" {
         scrollHeight: number;
         width: number;
         /**
-         * Emitted when the scroll bar, well, scrolls.
-         * @event scroll
-         **/
-        onScroll(): void;
-        /**
          * Returns the width of the scroll bar.
          * @returns {Number}
          **/
@@ -877,11 +869,6 @@ declare module "ace-code/src/scrollbar" {
         constructor(parent: Element, renderer: any);
         scrollLeft: number;
         height: any;
-        /**
-         * Emitted when the scroll bar, well, scrolls.
-         * @event scroll
-         **/
-        onScroll(): void;
         /**
          * Returns the height of the scroll bar.
          * @returns {Number}
@@ -955,10 +942,6 @@ declare module "ace-code/src/scrollbar_custom" {
         parent: any;
         width: number;
         renderer: any;
-        /**
-         * Emitted when the scroll thumb dragged or scrollbar canvas clicked.
-         **/
-        onMouseDown(eType: any, e: any): void;
         getHeight(): number;
         /**
          * Returns new top for scroll thumb
@@ -1011,10 +994,6 @@ declare module "ace-code/src/scrollbar_custom" {
         scrollWidth: number;
         height: number;
         renderer: any;
-        /**
-         * Emitted when the scroll thumb dragged or scrollbar canvas clicked.
-         **/
-        onMouseDown(eType: any, e: any): void;
         /**
          * Returns the height of the scroll bar.
          * @returns {Number}
@@ -1183,7 +1162,6 @@ declare module "ace-code/src/virtual_renderer" {
          **/
         setSession(session: EditSession): void;
         session: import("ace-code/src/edit_session").EditSession;
-        onChangeNewLineMode(): void;
         /**
          * Triggers a partial update of the text, from the range given by the two parameters.
          * @param {Number} firstRow The first row to update
@@ -1191,7 +1169,6 @@ declare module "ace-code/src/virtual_renderer" {
          * @param {boolean} [force]
          **/
         updateLines(firstRow: number, lastRow: number, force?: boolean): void;
-        onChangeTabSize(): void;
         /**
          * Triggers a full update of the text, for all the rows.
          **/
@@ -1206,23 +1183,8 @@ declare module "ace-code/src/virtual_renderer" {
          * Updates the font size.
          **/
         updateFontSize(): void;
-        /**
-         * [Triggers a resize of the editor.]{: #VirtualRenderer.onResize}
-         * @param {Boolean} [force] If `true`, recomputes the size, even if the height and width haven't changed
-         * @param {Number} [gutterWidth] The width of the gutter in pixels
-         * @param {Number} [width] The width of the editor in pixels
-         * @param {Number} [height] The hiehgt of the editor, in pixels
-         
-         **/
-        onResize(force?: boolean, gutterWidth?: number, width?: number, height?: number): number;
         resizing: number;
         gutterWidth: any;
-        /**
-         *
-         * @param {number} width
-         
-         */
-        onGutterResize(width: number): void;
         /**
          * Adjusts the wrap limit, which is the number of characters that can fit within the width of the edit area on screen.
          
@@ -2168,12 +2130,6 @@ declare module "ace-code/src/tooltip" {
         lastT: number;
         idleTime: number;
         lastEvent: import("ace-code/src/mouse/mouse_event").MouseEvent;
-        onMouseOut(e: any): void;
-        /**
-         * @param {MouseEvent} e
-         * @param {Editor} editor
-         */
-        onMouseMove(e: MouseEvent, editor: Editor): void;
         waitForHover(): void;
         /**
          * @param {Editor} editor
@@ -2459,18 +2415,6 @@ declare module "ace-code/src/keyboard/keybinding" {
          */
         getKeyboardHandler(): KeyboardHandler;
         getStatusText(): string;
-        /**
-         * @param {any} e
-         * @param {number} hashId
-         * @param {number} keyCode
-         * @return {boolean}
-         */
-        onCommandKey(e: any, hashId: number, keyCode: number): boolean;
-        /**
-         * @param {string} text
-         * @return {boolean}
-         */
-        onTextInput(text: string): boolean;
     }
 }
 declare module "ace-code/src/search" {
@@ -2631,6 +2575,13 @@ declare module "ace-code/src/commands/command_manager" {
          */
         exec(command: string | string[] | import("ace-code").Ace.Command, editor: Editor, args: any): boolean;
         /**
+         *
+         * @param {string | import("ace-code").Ace.Command} command
+         * @param {Editor} editor
+         * @returns {boolean}
+         */
+        canExecute(command: string | import("ace-code").Ace.Command, editor: Editor): boolean;
+        /**
          * @param {Editor} editor
          * @returns {boolean}
          */
@@ -2770,10 +2721,6 @@ declare module "ace-code/src/line_widgets" {
          * @return {LineWidget[]}
          */
         getWidgetsAtRow(row: number): LineWidget[];
-        /**
-         * @param {LineWidget} w
-         */
-        onWidgetChanged(w: LineWidget): void;
         firstRow: number;
         lastRow: number;
         lineWidgets: import("ace-code").Ace.LineWidget[];
@@ -2992,62 +2939,10 @@ declare module "ace-code/src/editor" {
          **/
         blur(): void;
         /**
-         * Emitted once the editor comes into focus.
-         **/
-        onFocus(e: any): void;
-        /**
-         * Emitted once the editor has been blurred.
-         **/
-        onBlur(e: any): void;
-        /**
-         * Emitted whenever the document is changed.
-         * @param {import("ace-code").Ace.Delta} delta Contains a single property, `data`, which has the delta of changes
-         **/
-        onDocumentChange(delta: import("ace-code").Ace.Delta): void;
-        onTokenizerUpdate(e: any): void;
-        onScrollTopChange(): void;
-        onScrollLeftChange(): void;
-        /**
-         * Emitted when the selection changes.
-         **/
-        onCursorChange(): void;
-        /**
-         *
-         * @param e
-         */
-        onSelectionChange(e: any): void;
-        onChangeFrontMarker(): void;
-        onChangeBackMarker(): void;
-        onChangeBreakpoint(): void;
-        onChangeAnnotation(): void;
-        /**
-         * @param e
-         */
-        onChangeMode(e: any): void;
-        onChangeWrapLimit(): void;
-        onChangeWrapMode(): void;
-        /**
-         */
-        onChangeFold(): void;
-        /**
          * Returns the string of text currently highlighted.
          * @returns {String}
          **/
         getCopyText(): string;
-        /**
-         * Called whenever a text "copy" happens.
-         **/
-        onCopy(): void;
-        /**
-         * Called whenever a text "cut" happens.
-         **/
-        onCut(): void;
-        /**
-         * Called whenever a text "paste" happens.
-         * @param {String} text The pasted text
-         * @param {any} event
-         **/
-        onPaste(text: string, event: any): void;
         /**
          *
          * @param {string | string[]} command
@@ -3063,18 +2958,10 @@ declare module "ace-code/src/editor" {
         insert(text: string, pasted?: boolean): void;
         autoIndent(): void;
         /**
-         *
-         * @param text
-         * @param composition
-         * @returns {*}
-         */
-        onTextInput(text: any, composition: any): any;
-        /**
          * @param {string} [text]
          * @param {any} [composition]
          */
         applyComposition(text?: string, composition?: any): void;
-        onCommandKey(e: any, hashId: any, keyCode: any): boolean;
         /**
          * Pass in `true` to enable overwrites in your session, or `false` to disable. If overwrites is enabled, any text you enter will type over any text after it. If the value of `overwrite` changes, this function also emits the `changeOverwrite` event.
          * @param {Boolean} overwrite Defines whether or not to set overwrites
@@ -3392,9 +3279,6 @@ declare module "ace-code/src/editor" {
          **/
         copyLinesDown(): void;
         inVirtualSelectionMode: boolean;
-        onCompositionStart(compositionState: any): void;
-        onCompositionUpdate(text: any): void;
-        onCompositionEnd(): void;
         /**
          * {:VirtualRenderer.getFirstVisibleRow}
          *
@@ -4215,7 +4099,6 @@ declare module "ace-code/src/autocomplete" {
         changeListener(e: any): void;
         mousedownListener(e: any): void;
         mousewheelListener(e: any): void;
-        onLayoutChange(): void;
         changeTimer: {
             (timeout: any): void;
             delay(timeout: any): void;
@@ -4304,7 +4187,6 @@ declare module "ace-code/src/autocomplete" {
         showDocTooltip(item: any): void;
         tooltipNode: HTMLDivElement;
         hideDocTooltip(): void;
-        onTooltipClick(e: any): void;
         destroy(): void;
         commands: {
             Up: (editor: any) => void;
@@ -4768,7 +4650,6 @@ declare module "ace-code/src/bidihandler" {
          * @param {Number} [splitIndex] the wrapped screen line index [ optional]
         **/
         isBidiRow(screenRow: number, docRow?: number, splitIndex?: number): any;
-        onChange(delta: any): void;
         getDocumentRow(): number;
         getSplitIndex(): number;
         updateRowLine(docRow: any, splitIndex: any): void;
@@ -5216,12 +5097,6 @@ declare module "ace-code/src/edit_session" {
          **/
         getDocument(): Document;
         resetCaches(): void;
-        onChangeFold(e: any): void;
-        /**
-         *
-         * @param {Delta} delta
-         */
-        onChange(delta: Delta): void;
         mergeUndoDeltas: boolean;
         /**
          * Sets the session text.
@@ -5467,10 +5342,6 @@ declare module "ace-code/src/edit_session" {
          * Returns `true` if workers are being used.
          **/
         getUseWorker(): boolean;
-        /**
-         * Reloads all the tokens on the current session. This function calls [[BackgroundTokenizer.start `BackgroundTokenizer.start ()`]] to all the rows; it also emits the `'tokenizerUpdate'` event.
-         **/
-        onReloadTokenizer(e: any): void;
         /**
          * Sets a new text mode for the `EditSession`. This method also emits the `'changeMode'` event. If a [[BackgroundTokenizer `BackgroundTokenizer`]] is set, the `'tokenizerUpdate'` event is also emitted.
          * @param {SyntaxMode | string} mode Set a new text mode
@@ -5817,12 +5688,7 @@ declare module "ace-code/src/edit_session" {
         gutterRenderer?: any;
         selectionMarkerCount?: number;
         multiSelect?: any;
-        curOp?: {
-            [key: string]: any;
-            command: {};
-            args: string;
-            scrollTop: number;
-        };
+        curOp?: any;
         getSelectionMarkers(): any[];
     }
     export namespace EditSession {
@@ -5868,12 +5734,7 @@ declare module "ace-code/src/edit_session" {
         gutterRenderer?: any;
         selectionMarkerCount?: number;
         multiSelect?: any;
-        curOp?: {
-            command: {};
-            args: string;
-            scrollTop: number;
-            [key: string]: any;
-        };
+        curOp?: any;
         getSelectionMarkers(): any[];
     }
 }
@@ -6185,24 +6046,10 @@ declare module "ace-code/src/placeholder" {
          **/
         hideOtherMarkers(): void;
         /**
-         * PlaceHolder@onUpdate(e)
-         *
-         * Emitted when the place holder updates.
-         * @param {import("ace-code").Ace.Delta} delta
-         */
-        onUpdate(delta: import("ace-code").Ace.Delta): void;
-        /**
          * @param {import("ace-code").Ace.Delta} delta
          */
         updateAnchors(delta: import("ace-code").Ace.Delta): void;
         updateMarkers(): void;
-        /**
-         * PlaceHolder@onCursorChange(e)
-         *
-         * Emitted when the cursor changes.
-         * @param {any} [event]
-         */
-        onCursorChange(event?: any): void;
         /**
          * PlaceHolder.detach()
          *
@@ -6339,11 +6186,6 @@ declare module "ace-code/src/incremental_search" {
          */
         removeChar(c: any): false | Range;
         next(options: any): false | Range;
-        onMouseDown(evt: any): boolean;
-        /**
-         * @param {string} text
-         */
-        onPaste(text: string): void;
         convertNeedleToRegExp(): false | Range;
         convertNeedleToString(): false | Range;
         statusMessage(found: any): void;

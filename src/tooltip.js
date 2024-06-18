@@ -241,6 +241,7 @@ class HoverTooltip extends Tooltip {
     /**
      * @param {MouseEvent} e
      * @param {Editor} editor
+     * @internal
      */
     onMouseMove(e, editor) {
         this.lastEvent = e;
@@ -397,6 +398,9 @@ class HoverTooltip extends Tooltip {
         window.removeEventListener("mousedown", this.hide, true);
     }
 
+    /**
+     * @internal
+     */
     onMouseOut(e) {
         if (this.timeout) {
             clearTimeout(this.timeout);

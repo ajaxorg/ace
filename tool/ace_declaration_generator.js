@@ -285,9 +285,10 @@ function fixDeclaration(content, aceNamespacePath) {
                             || ts.isPropertySignature(node)) {
                             const isPrivate = node.modifiers?.some(
                                 modifier => modifier.kind === ts.SyntaxKind.PrivateKeyword);
+                            
                             const startsWithDollar = ts.isIdentifier(node.name) && /^[$_]/.test(node.name.text);
 
-                            if (isPrivate || startsWithDollar) {
+                            if (isPrivate || startsWithDollar || hasInternalTag(node)) {
                                 return ts.factory.createNotEmittedStatement(node);
                             }
                         }
@@ -319,6 +320,14 @@ function fixDeclaration(content, aceNamespacePath) {
     result.dispose();
 
     checkFinalDeclaration(finalDeclarations);
+}
+
+function hasInternalTag(node) {
+    const sourceFile = node.getSourceFile();
+    if (!sourceFile) return false;
+    
+    const jsDocs = ts.getJSDocTags(node).filter(tag => tag.tagName.text === 'internal');
+    return jsDocs.length > 0;
 }
 
 function createMinimalLanguageServiceHost() {

@@ -43,9 +43,6 @@ export namespace Ace {
         sharedPopups: boolean,
         useStrictCSP: boolean | null
     }
-    //setOption<K extends keyof T>(name: K, value: T[K]): void;
-    // 
-    //         getOption<K extends keyof T>(name: K): T[K];
     
     export interface Config {
         get<K extends keyof ConfigOptions>(key: K): ConfigOptions[K];
@@ -1342,12 +1339,7 @@ declare module "./src/edit_session" {
         $occurMatchingLines?: any,
         $useEmacsStyleLineStart?: boolean,
         $selectLongWords?: boolean,
-        curOp?: {
-            command: {},
-            args: string,
-            scrollTop: number,
-            [key: string]: any;
-        },
+        curOp?: any,
 
         getSelectionMarkers(): any[],
     }

@@ -152,6 +152,10 @@ class EditSession {
             this.bgTokenizer.start(0);
     }
 
+    /**
+     * @param e
+     * @internal
+     */
     onChangeFold(e) {
         var fold = e.data;
         this.$resetRowCache(fold.start.row);
@@ -160,6 +164,7 @@ class EditSession {
     /**
      * 
      * @param {Delta} delta
+     * @internal
      */
     onChange(delta) {
         this.$modified = true;
@@ -774,6 +779,7 @@ class EditSession {
 
     /**
      * Reloads all the tokens on the current session. This function calls [[BackgroundTokenizer.start `BackgroundTokenizer.start ()`]] to all the rows; it also emits the `'tokenizerUpdate'` event.
+     * @internal
      **/
     onReloadTokenizer(e) {
         var rows = e.data;
