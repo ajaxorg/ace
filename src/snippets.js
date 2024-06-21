@@ -818,7 +818,9 @@ class TabstopManager {
         this.session = null;
         this.editor = null;
     }
-
+    /**
+     * @internal
+     */
     onChange(delta) {
         var isRemove = delta.action[0] == "r";
         var selectedTabstop = this.selectedTabstop || {};
@@ -862,10 +864,16 @@ class TabstopManager {
         }
         this.$inChange = false;
     }
+    /**
+     * @internal
+     */
     onAfterExec(e) {
         if (e.command && !e.command.readOnly)
             this.updateLinkedFields();
     }
+    /**
+     * @internal
+     */
     onChangeSelection() {
         if (!this.editor)
             return;
@@ -882,6 +890,9 @@ class TabstopManager {
         }
         this.detach();
     }
+    /**
+     * @internal
+     */
     onChangeSession() {
         this.detach();
     }

@@ -46,6 +46,7 @@ class Anchor {
     /**
      * Internal function called when `"change"` event fired.
      * @param {import("../ace-internal").Ace.Delta} delta
+     * @internal
      */
     onChange(delta) {
         if (delta.start.row == delta.end.row && delta.start.row != this.row)

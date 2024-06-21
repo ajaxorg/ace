@@ -1,7 +1,7 @@
 "use strict";
 /**
  * @typedef {import("../edit_session").EditSession} EditSession
- * @typedef {import("../virtual_renderer").VirtualRenderer & {$textLayer: import("../layer/text").Text &{$lenses}}} VirtualRenderer
+ * @typedef {import("../virtual_renderer").VirtualRenderer & {$textLayer: import("../layer/text").Text &{$lenses: any}}} VirtualRenderer
  */
 
 var LineWidgets = require("../line_widgets").LineWidgets;

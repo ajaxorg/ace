@@ -59,6 +59,10 @@ class BidiHandler {
         return this.bidiMap.bidiLevels;
     }
 
+    /**
+     * @param {import("../ace-internal").Ace.Delta} delta
+     * @internal
+     */
     onChange(delta) {
         if (!this.seenBidi) {
             if (delta.action == "insert" && bidiRE.test(delta.lines.join("\n"))) {

@@ -76,6 +76,7 @@ class VScrollBar extends Scrollbar {
     /**
      * Emitted when the scroll bar, well, scrolls.
      * @event scroll
+     * @internal
      **/
 
     onScroll() {
@@ -171,6 +172,7 @@ class HScrollBar extends Scrollbar {
     /**
      * Emitted when the scroll bar, well, scrolls.
      * @event scroll
+     * @internal
      **/
     onScroll() {
         if (!this.skipEvent) {

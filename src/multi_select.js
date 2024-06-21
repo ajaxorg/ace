@@ -900,7 +900,7 @@ function isSamePoint(p1, p2) {
  * patch
  * adds multicursor support to a session
  * @this {Editor}
- * @type {(e) => void}
+ * @type {(e: any) => void}
  */
 exports.onSessionChange = function(e) {
     var session = e.session;
