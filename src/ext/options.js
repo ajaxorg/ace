@@ -8,15 +8,16 @@ require("./menu_tools/overlay_page");
 var dom = require("../lib/dom");
 var oop = require("../lib/oop");
 var config = require("../config");
+var nls = config.nls;
 var EventEmitter = require("../lib/event_emitter").EventEmitter;
 var buildDom = dom.buildDom;
 
 var modelist = require("./modelist");
 var themelist = require("./themelist");
 
-var themes = { Bright: [], Dark: [] };
+var themes = { bright: [], dark: [] };
 themelist.themes.forEach(function(x) {
-    themes[x.isDark ? "Dark" : "Bright"].push({ caption: x.caption, value: x.theme });
+    themes[x.isDark ? "dark" : "bright"].push({ caption: x.caption, value: x.theme });
 });
 
 var modes = modelist.modes.map(function(x){ 
@@ -25,193 +26,323 @@ var modes = modelist.modes.map(function(x){
 
 
 var optionGroups = {
-    Main: {
-        Mode: {
+    main: [
+        {
             path: "mode",
+            label: nls("options.mode", "Mode"),
             type: "select",
             items: modes
         },
-        Theme: {
+        {
             path: "theme",
+            label: nls("options.theme", "Theme"),
             type: "select",
-            items: themes
-        },
-        "Keybinding": {
-            type: "buttonBar",
-            path: "keyboardHandler",
             items: [
-                { caption : "Ace", value : null },
-                { caption : "Vim", value : "ace/keyboard/vim" },
-                { caption : "Emacs", value : "ace/keyboard/emacs" },
-                { caption : "Sublime", value : "ace/keyboard/sublime" },
-                { caption : "VSCode", value : "ace/keyboard/vscode" }
+                {
+                    label: nls("options.theme.bright", "Bright"),
+                    items: themes.bright
+                },
+                {
+                    label: nls("options.theme.dark", "Dark"),
+                    items: themes.dark
+                }
             ]
         },
-        "Font Size": {
+        {
+            path: "keyboardHandler",
+            label: nls("options.keyboard-handler", "Keybinding"),
+            type: "buttonBar",
+            items: [
+                {
+                    caption: "Ace",
+                    value: null
+                },
+                {
+                    caption: "Vim",
+                    value: "ace/keyboard/vim"
+                },
+                {
+                    caption: "Emacs",
+                    value: "ace/keyboard/emacs"
+                },
+                {
+                    caption: "Sublime",
+                    value: "ace/keyboard/sublime"
+                },
+                {
+                    caption: "VSCode",
+                    value: "ace/keyboard/vscode"
+                }
+            ]
+        },
+        {
             path: "fontSize",
+            label: nls("options.font-size", "Font Size"),
             type: "number",
             defaultValue: 12,
             defaults: [
-                {caption: "12px", value: 12},
-                {caption: "24px", value: 24}
+                {
+                    caption: nls("options.font-size.px", "$0px", ["12"]),
+                    value: 12
+                },
+                {
+                    caption: nls("options.font-size.px", "$0px", ["24"]),
+                    value: 24
+                }
             ]
         },
-        "Soft Wrap": {
-            type: "buttonBar",
+        {
             path: "wrap",
-            items: [
-               { caption : "Off",  value : "off" },
-               { caption : "View", value : "free" },
-               { caption : "margin", value : "printMargin" },
-               { caption : "40",   value : "40" }
-            ]
-        },
-        "Cursor Style": {
-            path: "cursorStyle",
-            items: [
-               { caption : "Ace",    value : "ace" },
-               { caption : "Slim",   value : "slim" },
-               { caption : "Smooth", value : "smooth" },
-               { caption : "Smooth And Slim", value : "smooth slim" },
-               { caption : "Wide",   value : "wide" }
-            ]
-        },
-        "Folding": {
-            path: "foldStyle",
-            items: [
-                { caption : "Manual", value : "manual" },
-                { caption : "Mark begin", value : "markbegin" },
-                { caption : "Mark begin and end", value : "markbeginend" }
-            ]
-        },
-        "Soft Tabs": [{
-            path: "useSoftTabs"
-        }, {
-            ariaLabel: "Tab Size",
-            path: "tabSize",
-            type: "number",
-            values: [2, 3, 4, 8, 16]
-        }],
-        "Overscroll": {
+            label: nls("options.wrap", "Soft Wrap"),
             type: "buttonBar",
-            path: "scrollPastEnd",
             items: [
-               { caption : "None",  value : 0 },
-               { caption : "Half",   value : 0.5 },
-               { caption : "Full",   value : 1 }
+                {
+                    caption: nls("options.wrap.off", "Off"),
+                    value: "off"
+                },
+                {
+                    caption: nls("options.wrap.view", "View"),
+                    value: "free"
+                },
+                {
+                    caption: nls("options.wrap.margin", "margin"),
+                    value: "printMargin" },
+                {
+                    caption: "40",
+                    value: "40"
+                }
+            ]
+        },
+        {
+            path: "cursorStyle",
+            label: nls("options.cursor-style", "Cursor Style"),
+            items: [
+                {
+                    caption: "Ace",
+                    value: "ace"
+                },
+                {
+                    caption: nls("options.cursor-style.slim", "Slim"),
+                    value: "slim"
+                },
+                {
+                    caption: nls("options.cursor-style.smooth", "Smooth"),
+                    value: "smooth"
+                },
+                {
+                    caption: nls("options.cursor-style.smooth-slim", "Smooth And Slim"),
+                    value: "smooth slim"
+                },
+                {
+                    caption: nls("options.cursor-style.wide", "Wide"),
+                    value: "wide"
+                }
+            ]
+        },
+        {
+            path: "foldStyle",
+            label: nls("options.fold-style", "Folding"),
+            items: [
+                {
+                    caption: nls("options.fold-style.manual", "Manual"),
+                    value: "manual"
+                },
+                {
+                    caption: nls("options.fold-style.mark-begin", "Mark begin"),
+                    value: "markbegin"
+                },
+                {
+                    caption: nls("options.fold-style.mark-begin-end", "Mark begin and end"),
+                    value: "markbeginend"
+                }
+            ]
+        },
+        [
+            {
+                path: "useSoftTabs",
+                label: nls("options.use-soft-tabs", "Soft Tabs")
+            },
+            {
+                ariaLabel: nls("options.tab-size", "Tab Size"),
+                path: "tabSize",
+                type: "number",
+                values: [2, 3, 4, 8, 16]
+            }
+        ],
+        {
+            path: "scrollPastEnd",
+            label: nls("options.scroll-past-end", "Overscroll"),
+            type: "buttonBar",
+            items: [
+                {
+                    caption: nls("options.scroll-past-end.none", "None"),
+                    value: 0
+                },
+                {
+                    caption: nls("options.scroll-past-end.half", "Half"),
+                    value: 0.5
+                },
+                {
+                    caption: nls("options.scroll-past-end.full", "Full"),
+                    value: 1
+                }
             ]
         }
-    },
-    More: {
-        "Atomic soft tabs": {
-            path: "navigateWithinSoftTabs"
+    ],
+    more: [
+        {
+            path: "navigateWithinSoftTabs",
+            label: nls("options.navigate-within-soft-tabs", "Atomic soft tabs")
         },
-        "Enable Behaviours": {
-            path: "behavioursEnabled"
+        {
+            path: "behavioursEnabled",
+            label: nls("options.behaviours-enabled", "Enable Behaviours")
         },
-        "Wrap with quotes": {
-            path: "wrapBehavioursEnabled"
+        {
+            path: "wrapBehavioursEnabled",
+            label: nls("options.wrap-behaviours-enabled", "Wrap with quotes")
         },
-        "Enable Auto Indent": {
-            path: "enableAutoIndent"
+        {
+            path: "enableAutoIndent",
+            label: nls("options.enable-auto-indent", "Enable Auto Indent")
         },
-        "Full Line Selection": {
+        {
+            path: "selectionStyle",
+            label: nls("options.selection-style", "Full Line Selection"),
             type: "checkbox",
-            values: "text|line",
-            path: "selectionStyle"
+            values: "text|line"
         },
-        "Highlight Active Line": {
-            path: "highlightActiveLine"
+        {
+            path: "highlightActiveLine",
+            label: nls("options.highlight-active-line", "Highlight Active Line")
         },
-        "Show Invisibles": {
-            path: "showInvisibles"
+        {
+            path: "showInvisibles",
+            label: nls("options.show-invisibles", "Show Invisibles")
         },
-        "Show Indent Guides": {
-            path: "displayIndentGuides"
+        {
+            path: "displayIndentGuides",
+            label: nls("options.display-indent-guides", "Show Indent Guides")
         },
-        "Highlight Indent Guides": {
-            path: "highlightIndentGuides"
+        {
+            path: "highlightIndentGuides",
+            label: nls("options.highlight-indent-guides", "Highlight Indent Guides")
         },
-        "Persistent HScrollbar": {
-            path: "hScrollBarAlwaysVisible"
+        {
+            path: "hScrollBarAlwaysVisible",
+            label: nls("options.h-scroll-bar-always-visible", "Persistent HScrollbar")
         },
-        "Persistent VScrollbar": {
-            path: "vScrollBarAlwaysVisible"
+        {
+            path: "vScrollBarAlwaysVisible",
+            label: nls("options.v-scroll-bar-always-visible", "Persistent VScrollbar")
         },
-        "Animate scrolling": {
-            path: "animatedScroll"
+        {
+            path: "animatedScroll",
+            label: nls("options.animated-scroll", "Animate scrolling")
         },
-        "Show Gutter": {
-            path: "showGutter"
+        {
+            path: "showGutter",
+            label: nls("options.show-gutter", "Show Gutter")
         },
-        "Show Line Numbers": {
-            path: "showLineNumbers"
+        {
+            path: "showLineNumbers",
+            label: nls("options.show-line-numbers", "Show Line Numbers")
         },
-        "Relative Line Numbers": {
-            path: "relativeLineNumbers"
+        {
+            path: "relativeLineNumbers",
+            label: nls("options.relative-line-numbers", "Relative Line Numbers")
         },
-        "Fixed Gutter Width": {
-            path: "fixedWidthGutter"
+        {
+            path: "fixedWidthGutter",
+            label: nls("options.fixed-width-gutter", "Fixed Gutter Width")
         },
-        "Show Print Margin": [{
-            path: "showPrintMargin"
-        }, {
-            ariaLabel: "Print Margin",
-            type: "number",
-            path: "printMarginColumn"
-        }],
-        "Indented Soft Wrap": {
-            path: "indentedSoftWrap"
+        [
+            {
+                path: "showPrintMargin",
+                label: nls("options.show-print-margin", "Show Print Margin")
+            },
+            {
+                ariaLabel: nls("options.show-print-margin.print-margin-column", "Print Margin"),
+                type: "number",
+                path: "printMarginColumn"
+            }
+        ],
+        {
+            path: "indentedSoftWrap",
+            label: nls("options.indented-soft-wrap", "Indented Soft Wrap")
         },
-        "Highlight selected word": {
-            path: "highlightSelectedWord"
+        {
+            path: "highlightSelectedWord",
+            label: nls("options.highlight-selected-word", "Highlight selected word")
         },
-        "Fade Fold Widgets": {
-            path: "fadeFoldWidgets"
+        {
+            path: "fadeFoldWidgets",
+            label: nls("options.fade-fold-widgets", "Fade Fold Widgets")
         },
-        "Use textarea for IME": {
-            path: "useTextareaForIME"
+        {
+            path: "useTextareaForIME",
+            label: nls("options.use-textarea-for-ime", "Use textarea for IME")
         },
-        "Merge Undo Deltas": {
+        {
             path: "mergeUndoDeltas",
+            label: nls("options.merge-undo-deltas", "Merge Undo Deltas"),
             items: [
-               { caption : "Always",  value : "always" },
-               { caption : "Never",   value : "false" },
-               { caption : "Timed",   value : "true" }
+                {
+                    caption: nls("options.merge-undo-deltas.always", "Always"),
+                    value: "always"
+                },
+                {
+                    caption: nls("options.merge-undo-deltas.never", "Never"),
+                    value: "false"
+                },
+                {
+                    caption: nls("options.merge-undo-deltas.timed", "Timed"),
+                    value: "true"
+                }
             ]
         },
-        "Elastic Tabstops": {
-            path: "useElasticTabstops"
+        {
+            path: "useElasticTabstops",
+            label: nls("options.use-elastic-tabstops", "Elastic Tabstops")
         },
-        "Incremental Search": {
-            path: "useIncrementalSearch"
+        {
+            path: "useIncrementalSearch",
+            label: nls("options.use-incremental-search", "Incremental Search")
         },
-        "Read-only": {
-            path: "readOnly"
+        {
+            path: "readOnly",
+            label: nls("options.read-only", "Read-only")
         },
-        "Copy without selection": {
-            path: "copyWithEmptySelection"
+        {
+            path: "copyWithEmptySelection",
+            label: nls("options.copy-with-empty-selection", "Copy without selection")
         },
-        "Live Autocompletion": {
-            path: "enableLiveAutocompletion"
+        {
+            path: "enableLiveAutocompletion",
+            label: nls("options.enable-live-autocompletion", "Live Autocompletion")
         },
-        "Custom scrollbar": {
-            path: "customScrollbar"
+        {
+            path: "customScrollbar",
+            label: nls("options.custom-scrollbar", "Custom scrollbar")
         },
-        "Use SVG gutter icons": {
-            path: "useSvgGutterIcons"
+        {
+            path: "useSvgGutterIcons",
+            label: nls("options.use-svg-gutter-icons", "Use SVG gutter icons")
         },
-        "Annotations for folded lines": {
-            path: "showFoldedAnnotations"
+        {
+            path: "showFoldedAnnotations",
+            label: nls("options.show-folded-annotations", "Annotations for folded lines")
         },
-        "Keyboard Accessibility Mode": {
-            path: "enableKeyboardAccessibility"
+        {
+            path: "enableKeyboardAccessibility",
+            label: nls("options.enable-keyboard-accessibility", "Keyboard Accessibility Mode")
         },
-        "Gutter tooltip follows mouse": {
+        {
             path: "tooltipFollowsMouse",
+            label: nls("options.tooltip-follows-mouse", "Gutter tooltip follows mouse"),
             defaultValue: true
         }
-    }
+    ]
 };
 
 class OptionPanel {
@@ -228,20 +359,20 @@ class OptionPanel {
     }
     
     add(config) {
-        if (config.Main)
-            oop.mixin(optionGroups.Main, config.Main);
-        if (config.More)
-            oop.mixin(optionGroups.More, config.More);
+        if (config.main)
+            oop.mixin(optionGroups.main, config.main);
+        if (config.more)
+            oop.mixin(optionGroups.more, config.more);
     }
 
   
     render() {
         this.container.innerHTML = "";
         buildDom(["table", {role: "presentation", id: "controls"}, 
-            this.renderOptionGroup(optionGroups.Main),
+            this.renderOptionGroup(optionGroups.main),
             ["tr", null, ["td", {colspan: 2},
                 ["table", {role: "presentation", id: "more-controls"}, 
-                    this.renderOptionGroup(optionGroups.More)
+                    this.renderOptionGroup(optionGroups.more)
                 ]
             ]],
             ["tr", null, ["td", {colspan: 2}, "version " + config.version]]
@@ -249,17 +380,8 @@ class OptionPanel {
     }
     
     renderOptionGroup(group) {
-        return Object.keys(group).map(function(key, i) {
-            var item = group[key];
-            if (!item.position)
-                item.position = i / 10000;
-            if (!item.label)
-                item.label = key;
-            return item;
-        }).sort(function(a, b) {
-            return a.position - b.position;
-        }).map(function(item) {
-            return this.renderOption(item.label, item);
+        return group.map(function(item) {
+            return this.renderOption(item);
         }, this);
     }
 
@@ -330,11 +452,11 @@ class OptionPanel {
                 });
             };
             
-            var items = Array.isArray(option.items) 
-                ? buildItems(option.items)
-                : Object.keys(option.items).map(function(key) {
-                    return ["optgroup", {"label": key}, buildItems(option.items[key])];
-                });
+            var items = option.items[0].label
+                ? option.items.map(function(group) {
+                    return ["optgroup", {label: group.label}, buildItems(group.items)];
+                })
+                : buildItems(option.items);
             control = ["select", { id: key, value: value, onchange: function() {
                 self.setOption(option, this.value);
             } }, items];
@@ -359,16 +481,17 @@ class OptionPanel {
      * @param key
      * @param option
      */
-    renderOption(key, option) {
+    renderOption(option) {
         if (option.path && !option.onchange && !this.editor.$options[option.path])
             return;
         var path = Array.isArray(option) ? option[0].path : option.path;
+        var label = Array.isArray(option) ? option[0].label : option.label;
         this.options[path] = option;
         var safeKey = "-" + path;
         var safeId = path + "-label";
         var control = this.renderOptionControl(safeKey, option);
         return ["tr", {class: "ace_optionsMenuEntry"}, ["td",
-            ["label", {for: safeKey, id: safeId}, key]
+            ["label", {for: safeKey, id: safeId}, label]
         ], ["td", control]];
     }
 
