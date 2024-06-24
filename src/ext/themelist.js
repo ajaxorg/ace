@@ -15,7 +15,7 @@ var themeData = [
     ["Dawn"           ],
     ["Dreamweaver"    ],
     ["Eclipse"        ],
-    ["GitHub Classic" ],
+    ["GitHub Light Default" ],
     ["GitHub (Legacy)"      ,"github"                  , "light"],
     ["IPlastic"       ],
     ["Solarized Light"],
