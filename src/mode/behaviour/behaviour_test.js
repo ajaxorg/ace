@@ -460,6 +460,37 @@ module.exports = {
         editor.setValue("    /**", 1);
         exec("insertstring", 1, "\n");
         assert.equal(editor.getValue(), "    /**\n     * \n     */");
+
+        // Test case 4: Cursor between closing */ and opening /** on the same line
+        editor.setValue("/**\n * Some comment\n *//**", 1);
+        editor.gotoLine(3, 3);
+        exec("insertstring", 1, "\n");
+        assert.equal(editor.getValue(), "/**\n * Some comment\n */\n /**");
+
+        // Test case 5: Cursor at start of the line with doc comment
+        editor.setValue("/**\n * Some comment\n */", 1);
+        editor.gotoLine(1, 0);
+        exec("insertstring", 1, "\n");
+        assert.equal(editor.getValue(), "\n/**\n * Some comment\n */");
+
+        // Test case 6: Cursor at the end of the first comment
+        editor.setValue("/** comment */identifier/**", 1);
+        editor.gotoLine(1, 14);
+        exec("insertstring", 1, "\n");
+        assert.equal(editor.getValue(), "/** comment */\nidentifier/**");
+
+        // Test case 7: Cursor at the start of the second comment
+        editor.setValue("/** comment */identifier/**", 1);
+        editor.gotoLine(1, 24);
+        exec("insertstring", 1, "\n");
+        assert.equal(editor.getValue(), "/** comment */identifier\n/**");
+
+        // Test case 8: Cursor between '/' and '*' in a comment
+        editor.setValue("/** comment */", 1);
+        editor.gotoLine(1, 1);
+        exec("insertstring", 1, "\n");
+        assert.equal(editor.getValue(), "/\n** comment */");
+
     },
     "test: fragment auto-closing": function () {
         editor.setWrapBehavioursEnabled(true);

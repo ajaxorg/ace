@@ -117,6 +117,118 @@
   ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
+  ["text.xml","    "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","router-link"],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","v-"],
+  ["entity.other.attribute-name.xml","bind"],
+  ["entity.other.attribute-name.xml",":to"],
+  ["punctuation.separator.key-value.xml","="],
+  ["string","\""],
+  ["identifier","item"],
+  ["punctuation.operator","."],
+  ["identifier","url"],
+  ["string","\""],
+  ["meta.tag.punctuation.tag-close.xml","/>"]
+],[
+   "start",
+  ["text.xml","    "],
+  ["comment.start.xml","<!--"],
+  ["comment.xml"," v-bind with dynamic key "],
+  ["comment.end.xml","-->"]
+],[
+   "start",
+  ["text.xml","    "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","div"],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","v-"],
+  ["entity.other.attribute-name.xml","bind"],
+  ["entity.other.attribute-name.xml",":[key]"],
+  ["punctuation.separator.key-value.xml","="],
+  ["string","\""],
+  ["identifier","value"],
+  ["string","\""],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","div"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start"
+],[
+   "start",
+  ["text.xml","    "],
+  ["comment.start.xml","<!--"],
+  ["comment.xml"," v-bind shorthand with dynamic key "],
+  ["comment.end.xml","-->"]
+],[
+   "start",
+  ["text.xml","    "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","div"],
+  ["text.tag-whitespace.xml"," "],
+  ["punctuation.separator.key-value.xml",":"],
+  ["entity.other.attribute-name.xml","[key]"],
+  ["punctuation.separator.key-value.xml","="],
+  ["string","\""],
+  ["identifier","value"],
+  ["string","\""],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","div"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start"
+],[
+   "start",
+  ["text.xml","    "],
+  ["comment.start.xml","<!--"],
+  ["comment.xml"," v-on with dynamic event "],
+  ["comment.end.xml","-->"]
+],[
+   "start",
+  ["text.xml","    "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","div"],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","v-"],
+  ["entity.other.attribute-name.xml","on"],
+  ["entity.other.attribute-name.xml",":[event]"],
+  ["punctuation.separator.key-value.xml","="],
+  ["string","\""],
+  ["identifier","handler"],
+  ["string","\""],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","div"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start"
+],[
+   "start",
+  ["text.xml","    "],
+  ["comment.start.xml","<!--"],
+  ["comment.xml"," v-on shorthand with dynamic event "],
+  ["comment.end.xml","-->"]
+],[
+   "start",
+  ["text.xml","    "],
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","div"],
+  ["text.tag-whitespace.xml"," "],
+  ["punctuation.separator.key-value.xml","@"],
+  ["entity.other.attribute-name.xml","[event]"],
+  ["punctuation.separator.key-value.xml","="],
+  ["string","\""],
+  ["identifier","handler"],
+  ["string","\""],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","div"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start",
   ["text.xml","  "],
   ["meta.tag.punctuation.end-tag-open.xml","</"],
   ["meta.tag.tag-name.xml","div"],
@@ -586,11 +698,10 @@
   ["string","\"0\""],
   ["text",";"]
 ],[
-   "jade-start",
-  ["text","  "]
+   "jade-start"
 ],[
    "jade-start",
-  ["source.js.embedded.jade","   -"],
+  ["source.js.embedded.jade","  -"],
   ["text"," "],
   ["storage.type","var"],
   ["text"," "],
@@ -609,11 +720,11 @@
   ["text","]"]
 ],[
    "jade-start",
-  ["meta.tag.any.jade","     each"],
+  ["meta.tag.any.jade","  each"],
   ["text"," item in items"]
 ],[
    "jade-start",
-  ["meta.tag.any.jade","      li"],
+  ["meta.tag.any.jade","    li"],
   ["text","= item"]
 ],[
    "start",

@@ -414,6 +414,7 @@ export namespace Ace {
         enableMultiselect: boolean;
         enableKeyboardAccessibility: boolean;
         enableCodeLens: boolean;
+        enableMobileMenu: boolean;
     }
 
     interface EventsBase {

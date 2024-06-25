@@ -24,7 +24,7 @@ var JsDocCommentHighlightRules = function() {
                         ]
                     }, {
                         token: ["rparen.doc", "text.doc", "variable.parameter.doc", "lparen.doc", "variable.parameter.doc", "rparen.doc"],
-                        regex: /(})(\s*)(?:([\w=:\/\.]+)|(?:(\[)([\w=:\/\.]+)(\])))/,
+                        regex: /(})(\s*)(?:([\w=:\/\.]+)|(?:(\[)([\w=:\/\.\-\'\" ]+)(\])))/,
                         next: "pop"
                     }, {
                         token: "rparen.doc",

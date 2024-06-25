@@ -34,3 +34,8 @@ fn map<T, U>(vector: &[T], function: &fn(v: &T) -> U) -> ~[U] {
 
 // identifiers ending in constant.numeric
 foo1; foo1u32; foo1f32; foo0xF; foo1.0
+
+
+pub fn g<T>() -> std::mem::MaybeUninit<[T; 1 << 2]> {
+    std::mem::MaybeUninit::uninit()
+}

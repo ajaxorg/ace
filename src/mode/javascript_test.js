@@ -141,15 +141,7 @@ module.exports = {
         assert.equal("    ", this.mode.getNextLineIndent("start", "    cde", "  "));
         assert.equal("    ", this.mode.getNextLineIndent("start", "function foo(items) {", "    "));
     },
-
-    "test: special indent in doc comments" : function() {
-        assert.equal(" * ", this.mode.getNextLineIndent("doc-start", "/**", " "));
-        assert.equal("   * ", this.mode.getNextLineIndent("doc-start", "  /**", " "));
-        assert.equal(" * ", this.mode.getNextLineIndent("doc-start", " *", " "));
-        assert.equal("    * ", this.mode.getNextLineIndent("doc-start", "    *", " "));
-        assert.equal("  ", this.mode.getNextLineIndent("doc-start", "  abc", " "));
-    },
-
+    
     "test: no indent after doc comments" : function() {
         assert.equal("", this.mode.getNextLineIndent("doc-start", "   */", "  "));
     },
