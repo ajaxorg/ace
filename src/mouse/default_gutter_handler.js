@@ -219,13 +219,32 @@ class GutterTooltip extends Tooltip {
 
         // Construct the contents of the tooltip.
         for (let i = 0; i < annotation.text.length; i++) {
-            var line = `<span class='ace_${annotation.type[i]} ${iconClassName}' aria-label='${GutterTooltip.annotationLabels[annotation.type[i].replace("_fold","")].singular}' role=img> </span> ${annotation.text[i]}`;
-            annotationMessages[annotation.type[i].replace("_fold","")].push(line);
+            var lineElement = dom.createElement("span");
+
+            var iconElement = dom.createElement("span");
+            iconElement.classList.add(...[`ace_${annotation.type[i]}`, iconClassName]);
+            iconElement.setAttribute("aria-label", `${GutterTooltip.annotationLabels[annotation.type[i].replace("_fold","")].singular}`);
+            iconElement.setAttribute("role", "img");
+            // Set empty content to the img span to get it to show up
+            iconElement.appendChild(dom.createTextNode(" "));
+
+            lineElement.appendChild(iconElement);
+            lineElement.appendChild(dom.createTextNode(`${annotation.text[i]}`));
+            lineElement.appendChild(dom.createElement("br"));
+
+            annotationMessages[annotation.type[i].replace("_fold","")].push(lineElement);
         }
-        var tooltipContent = [].concat(annotationMessages.error, annotationMessages.warning, annotationMessages.info).join("<br>");
- 
-        this.setHtml(tooltipContent);
-        this.$element.setAttribute("aria-live", "polite");
+
+        // Clear the current tooltip content
+        var tooltipElement = this.getElement();
+        dom.removeChildren(tooltipElement);
+
+        // Update the tooltip content
+        annotationMessages.error.forEach(el => tooltipElement.appendChild(el));
+        annotationMessages.warning.forEach(el => tooltipElement.appendChild(el));
+        annotationMessages.info.forEach(el => tooltipElement.appendChild(el));
+
+        tooltipElement.setAttribute("aria-live", "polite");
         
         if (!this.isOpen) {
             this.setTheme(this.editor.renderer.theme);

@@ -1776,13 +1776,21 @@ class VirtualRenderer {
                 column: insertPosition. column
             }
         };
+        
+        var widgetDiv = dom.createElement("div");
         if (textChunks.length > 1) {
-            var divs = textChunks.slice(1).map(el => {
-                return `<div${el.wrapped ? ' class="ghost_text_line_wrapped"': ""}>${el.text}</div>`;
+            textChunks.slice(1).forEach(el => {
+                var chunkDiv = dom.createElement("div");
+
+                // If the line is wider than the viewport, wrap the line
+                if (el.wrapped) chunkDiv.className = "ghost_text_line_wrapped";
+
+                chunkDiv.appendChild(dom.createTextNode(el.text));
+                widgetDiv.appendChild(chunkDiv);
             });
             
             this.$ghostTextWidget = {
-                html: divs.join(""),
+                el: widgetDiv,
                 row: insertPosition.row,
                 column: insertPosition.column,
                 className: "ace_ghost_text"
