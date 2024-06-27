@@ -1781,7 +1781,10 @@ class VirtualRenderer {
         if (textChunks.length > 1) {
             textChunks.slice(1).forEach(el => {
                 var chunkDiv = dom.createElement("div");
-                chunkDiv.className = el.wrapped ? "ghost_text_line_wrapped": "";
+
+                // If the line is wider than the viewport, wrap the line
+                if (el.wrapped) chunkDiv.className = "ghost_text_line_wrapped";
+
                 chunkDiv.appendChild(dom.createTextNode(el.text));
                 widgetDiv.appendChild(chunkDiv);
             });

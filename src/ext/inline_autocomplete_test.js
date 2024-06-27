@@ -358,7 +358,7 @@ module.exports = {
         typeAndChange("u", "n");
         editor.renderer.$loop._flush();
         assert.strictEqual(autocomplete.isOpen(), true);
-        assert.equal(getAllLines(), `function foo() {\n<div class="">    console.log('test');</div><div class="">}</div>`);
+        assert.equal(getAllLines(), `function foo() {\n<div>    console.log('test');</div><div>}</div>`);
 
         typeAndChange("d");
         editor.renderer.$loop._flush();
