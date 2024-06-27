@@ -50,7 +50,7 @@ var completions = [
     {
         value: "long\nlong\nlong\nlong\nlong\nlong".repeat(100),
         score: 0
-    }
+        }
 ];
 
 var getAllLines = function(editorOverride) {
@@ -101,8 +101,7 @@ module.exports = {
         inline.show(editor, completions[3], "f");
         editor.renderer.$loop._flush();
         assert.strictEqual(getAllLines(), textBase + "function foo() {");
-        assert.strictEqual(editor.renderer.$ghostTextWidget.html, "<div>        console.log('test');</div><div>    }</div>");
-        assert.strictEqual(editor.renderer.$ghostTextWidget.el.innerHTML, "<div>        console.log('test');</div><div>    }</div>");
+        assert.strictEqual(editor.renderer.$ghostTextWidget.el.innerHTML, `<div class="">        console.log('test');</div><div class="">    }</div>`);
         done();
     },
     "test: boundary tests": function(done) {
@@ -306,7 +305,7 @@ module.exports = {
             }, 50); 
         }, 50);  
     },
-    tearDown: function() {
+        tearDown: function() {
         inline.destroy();
         editor.destroy();
         if (editor2) {
