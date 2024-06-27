@@ -1958,6 +1958,13 @@ class VirtualRenderer {
 
             _self._dispatchEvent('themeLoaded', {theme:module});
             cb && cb();
+
+            // workaround for safari not redrawing the editor
+            // https://github.com/ajaxorg/ace/issues/5569
+            if (useragent.isSafari && _self.scroller) {
+                _self.scroller.style.background = "red";
+                _self.scroller.style.background = "";
+            }
         }
     }
 

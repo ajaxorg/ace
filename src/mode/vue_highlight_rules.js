@@ -84,7 +84,7 @@ var VueHighlightRules = function (options) {
     var self = this;
     VueRules.tag_stuff.unshift({//vue-directives 
         token: "string",
-        regex: /(?:\b(v-)|(:|@))([a-zA-Z\-.]+)(?:\:([a-zA-Z\-]+))?(?:\.([a-zA-Z\-]+))*(\s*)(=)(\s*)(["'])/,
+        regex: /(?:\b(v-)|(:|@))(\[?[a-zA-Z\-.]+\]?)(?:(\:\[?[a-zA-Z\-]+\]?))?(?:(\.[a-zA-Z\-]+))*(\s*)(=)(\s*)(["'])/,
         onMatch: function (value, currentState, stack) {
             var quote = value[value.length - 1];
             stack.unshift(quote, currentState);

@@ -38,10 +38,31 @@ class CommandManager extends MultiHashHandler{
             }
             return false;
         }
-
+        
         if (typeof command === "string")
             command = this.commands[command];
 
+        if (!this.canExecute(command, editor)) {
+            return false; 
+        }
+        
+        var e = {editor: editor, command: command, args: args};
+        e.returnValue = this._emit("exec", e);
+        this._signal("afterExec", e);
+
+        return e.returnValue === false ? false : true;
+    }
+
+    /**
+     *
+     * @param {string | import("../../ace-internal").Ace.Command} command
+     * @param {Editor} editor
+     * @returns {boolean}
+     */
+    canExecute(command, editor) {
+        if (typeof command === "string")
+            command = this.commands[command];
+        
         if (!command)
             return false;
 
@@ -50,13 +71,10 @@ class CommandManager extends MultiHashHandler{
 
         if (this.$checkCommandState != false && command.isAvailable && !command.isAvailable(editor))
             return false;
-
-        var e = {editor: editor, command: command, args: args};
-        e.returnValue = this._emit("exec", e);
-        this._signal("afterExec", e);
-
-        return e.returnValue === false ? false : true;
+        
+        return true;
     }
+    
 
     /**
      * @param {Editor} editor

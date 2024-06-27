@@ -338,4 +338,49 @@
   ["constant.numeric.source.rust","0"]
 ],[
    "start"
+],[
+   "start"
+],[
+   "start",
+  ["keyword.source.rust","pub"],
+  ["text"," "],
+  ["keyword.source.rust","fn"],
+  ["text"," "],
+  ["entity.name.function.source.rust","g"],
+  ["punctuation","<"],
+  ["identifier","T"],
+  ["punctuation",">"],
+  ["paren.lparen","("],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["keyword.operator","->"],
+  ["text"," "],
+  ["support.constant","std::mem::"],
+  ["identifier","MaybeUninit"],
+  ["punctuaction","<"],
+  ["paren.lparen","["],
+  ["identifier","T"],
+  ["punctuation.operator",";"],
+  ["text"," "],
+  ["constant.numeric.source.rust","1"],
+  ["text"," "],
+  ["keyword.operator","<<"],
+  ["text"," "],
+  ["constant.numeric.source.rust","2"],
+  ["paren.rparen","]"],
+  ["punctuation",">"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["support.constant","std::mem::MaybeUninit::"],
+  ["identifier","uninit"],
+  ["paren.lparen","("],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
 ]]
