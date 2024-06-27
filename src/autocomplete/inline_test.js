@@ -50,7 +50,7 @@ var completions = [
     {
         value: "long\nlong\nlong\nlong\nlong\nlong".repeat(100),
         score: 0
-        }
+    }
 ];
 
 var getAllLines = function(editorOverride) {
@@ -305,7 +305,7 @@ module.exports = {
             }, 50); 
         }, 50);  
     },
-        tearDown: function() {
+    tearDown: function() {
         inline.destroy();
         editor.destroy();
         if (editor2) {
