@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.35.1](https://github.com/ajaxorg/ace/compare/v1.35.0...v1.35.1) (2024-06-27)
+
+
+### Bug Fixes
+
+* explicitly construct Number from window zoom attribute ([#5600](https://github.com/ajaxorg/ace/issues/5600)) ([2591c36](https://github.com/ajaxorg/ace/commit/2591c36b9e768305a9f837bf74c828c2d8d76e05))
+* use dom builder for gutter tooltip and inline widget ([#5601](https://github.com/ajaxorg/ace/issues/5601)) ([e81a299](https://github.com/ajaxorg/ace/commit/e81a299a8be39a7245a334ebc844eaeac6864bb3))
+* workaround for safari rendering bug ([#5573](https://github.com/ajaxorg/ace/issues/5573)) ([f9a152f](https://github.com/ajaxorg/ace/commit/f9a152fd925a8a16b10c65c909201100486c71e8))
+* wrong doc comment * insert behaviour ([#5571](https://github.com/ajaxorg/ace/issues/5571)) ([16c95b3](https://github.com/ajaxorg/ace/commit/16c95b32197c0ec952e52be85d21269005875940))
+
 ## [1.35.0](https://github.com/ajaxorg/ace/compare/v1.34.2...v1.35.0) (2024-06-11)
 
 
