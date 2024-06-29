@@ -6,6 +6,7 @@ var dom = require("../lib/dom");
 var event = require("../lib/event");
 var Tooltip = require("../tooltip").Tooltip;
 var nls = require("../config").nls;
+var lang = require("../lib/lang");
 
 /**
  * @param {MouseHandler} mouseHandler
@@ -229,7 +230,7 @@ class GutterTooltip extends Tooltip {
             iconElement.appendChild(dom.createTextNode(" "));
 
             lineElement.appendChild(iconElement);
-            lineElement.appendChild(dom.createTextNode(`${annotation.text[i]}`));
+            lineElement.appendChild(dom.createTextNode(lang.decodeHTML(annotation.text[i])));
             lineElement.appendChild(dom.createElement("br"));
 
             annotationMessages[annotation.type[i].replace("_fold","")].push(lineElement);
