@@ -77,6 +77,7 @@ class Gutter{
             var displayAnnoText = annotation.text;
             var annoType = annotation.type;
             annoText = annoText ? lang.escapeHTML(annoText) : annotation.html || "";
+            displayAnnoText = displayAnnoText ? displayAnnoText : annotation.html || "";
 
             if (rowInfo.text.indexOf(annoText) === -1){
                 rowInfo.text.push(annoText);
