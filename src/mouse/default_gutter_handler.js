@@ -6,6 +6,7 @@ var dom = require("../lib/dom");
 var event = require("../lib/event");
 var Tooltip = require("../tooltip").Tooltip;
 var nls = require("../config").nls;
+var lang = require("../lib/lang");
 
 /**
  * @param {MouseHandler} mouseHandler
@@ -172,9 +173,9 @@ class GutterTooltip extends Tooltip {
         var annotation;
 
         if (annotationsInRow)
-            annotation = {text: Array.from(annotationsInRow.text), type: Array.from(annotationsInRow.type)};
+            annotation = {displayText: Array.from(annotationsInRow.displayText), type: Array.from(annotationsInRow.type)};
         else
-            annotation = {text: [], type: []};
+            annotation = {displayText: [], type: []};
 
         // If the tooltip is for a row which has a closed fold, check whether there are
         // annotations in the folded lines. If so, add a summary to the list of annotations.
@@ -206,19 +207,19 @@ class GutterTooltip extends Tooltip {
             if (mostSevereAnnotationInFoldType === "error_fold" || mostSevereAnnotationInFoldType === "warning_fold"){
                 var summaryFoldedAnnotations = `${GutterTooltip.annotationsToSummaryString(annotationsInFold)} in folded code.`;
 
-                annotation.text.push(summaryFoldedAnnotations);
+                annotation.displayText.push(summaryFoldedAnnotations);
                 annotation.type.push(mostSevereAnnotationInFoldType);
             }
         }
         
-        if (annotation.text.length === 0)
+        if (annotation.displayText.length === 0)
             return this.hide();
 
         var annotationMessages = {error: [], warning: [], info: []};
         var iconClassName = gutter.$useSvgGutterIcons ? "ace_icon_svg" : "ace_icon";
 
         // Construct the contents of the tooltip.
-        for (let i = 0; i < annotation.text.length; i++) {
+        for (let i = 0; i < annotation.displayText.length; i++) {
             var lineElement = dom.createElement("span");
 
             var iconElement = dom.createElement("span");
@@ -229,7 +230,7 @@ class GutterTooltip extends Tooltip {
             iconElement.appendChild(dom.createTextNode(" "));
 
             lineElement.appendChild(iconElement);
-            lineElement.appendChild(dom.createTextNode(`${annotation.text[i]}`));
+            lineElement.appendChild(dom.createTextNode(annotation.displayText[i]));
             lineElement.appendChild(dom.createElement("br"));
 
             annotationMessages[annotation.type[i].replace("_fold","")].push(lineElement);

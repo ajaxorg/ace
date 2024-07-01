@@ -71,15 +71,18 @@ class Gutter{
             var row = annotation.row;
             var rowInfo = this.$annotations[row];
             if (!rowInfo)
-                rowInfo = this.$annotations[row] = {text: [], type: []};
+                rowInfo = this.$annotations[row] = {text: [], type: [], displayText: []};
            
             var annoText = annotation.text;
+            var displayAnnoText = annotation.text;
             var annoType = annotation.type;
             annoText = annoText ? lang.escapeHTML(annoText) : annotation.html || "";
+            displayAnnoText = displayAnnoText ? displayAnnoText : annotation.html || "";
 
             if (rowInfo.text.indexOf(annoText) === -1){
                 rowInfo.text.push(annoText);
                 rowInfo.type.push(annoType);
+                rowInfo.displayText.push(displayAnnoText);
             }
 
             var className = annotation.className;
