@@ -88,17 +88,6 @@ exports.escapeHTML = function(str) {
     return ("" + str).replace(/&/g, "&#38;").replace(/"/g, "&#34;").replace(/'/g, "&#39;").replace(/</g, "&#60;");
 };
 
-/**
- * 
- * Converts strings which are escaped by `lang.escapeHTML` back to a printable string.
- * **Warning**: the return of this function should not be directly rendered as HTML as it might contain tags.
- * @param {string} str 
- * @returns 
- */
-exports.decodeHTML = function(str) {
-    return ("" + str).replace(/&#38;/g, "&").replace(/&#34;/g, "\"").replace(/&#39;/g, "'").replace(/&#60;/g, "<");
-};
-
 exports.getMatchOffsets = function(string, regExp) {
     var matches = [];
 
