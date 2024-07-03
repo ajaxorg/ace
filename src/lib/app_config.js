@@ -59,11 +59,13 @@ function warn(message) {
 }
 
 var messages;
+var nlsPlaceholders;
 
 class AppConfig {
     constructor() {
             this.$defaultOptions = {};
             messages = defaultEnglishMessages;
+            nlsPlaceholders = "dollarSigns";
         }
     
     /**
@@ -138,9 +140,13 @@ class AppConfig {
 
     /**
      * @param {any} value
+     * @param {{placeholders?: "dollarSigns" | "curlyBrackets"}} [options]
      */
-    setMessages(value) {
+    setMessages(value, options) {
         messages = value;
+        if (options && options.placeholders) {
+            nlsPlaceholders = options.placeholders;
+        }
     }
 
     /**
@@ -158,10 +164,20 @@ class AppConfig {
 
         var translated = messages[key] || messages[defaultString] || defaultString;
         if (params) {
-            translated = translated.replace(/\$(\$|[\d]+)/g, function(_, name) {
-                if (name == "$") return "$";
-                return params[name];
-            });
+            // We support both $n or {n} as placeholder indicators in the provided translated strings
+            if (nlsPlaceholders === "dollarSigns") {
+                // Replace $n with the nth element in params
+                translated = translated.replace(/\$(\$|[\d]+)/g, function(_, dollarMatch) {
+                    if (dollarMatch == "$") return "$";
+                    return params[dollarMatch];
+                });
+            }
+            if (nlsPlaceholders === "curlyBrackets") {
+                // Replace {n} with the nth element in params
+                translated = translated.replace(/\{([^\}]+)\}/g, function(_, curlyBracketMatch) {
+                    return params[curlyBracketMatch];
+                });
+            }
         }
         return translated;
     }
