@@ -98,7 +98,7 @@ exports.showErrorMarker = function(editor, dir) {
         return;
     } else {
         gutterAnno = {
-            text: [nls("error-marker.good-state", "Looks good!")],
+            displayText: [nls("error-marker.good-state", "Looks good!")],
             className: "ace_ok"
         };
     }
@@ -122,7 +122,12 @@ exports.showErrorMarker = function(editor, dir) {
     
     w.el.className = "error_widget_wrapper";
     el.className = "error_widget " + gutterAnno.className;
-    el.innerHTML = gutterAnno.text.join("<br>");
+    gutterAnno.displayText.forEach(function (annoTextLine, i) {
+        el.appendChild(dom.createTextNode(annoTextLine));
+        if (i < gutterAnno.displayText.length - 1) {
+            el.appendChild(dom.createElement("br"));
+        }
+    });
     
     el.appendChild(dom.createElement("div"));
     
