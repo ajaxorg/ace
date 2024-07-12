@@ -217,7 +217,8 @@ module.exports = {
         // Annotation node should NOT have fold class.
         var annotation = lines.cells[0].element.children[2];
         assert.notOk(/fold/.test(annotation.className));
-    },"test: sets position correctly when tooltipFollowsMouse false" : function(done) {
+    },
+    "test: sets position correctly when tooltipFollowsMouse false" : function(done) {
         var editor = this.editor;
         var value = "";
 
@@ -242,6 +243,30 @@ module.exports = {
             assert.ok(/error test/.test(tooltip.textContent));
             assert.equal(tooltip.style.left, `${rect.right}px`);
             assert.equal(tooltip.style.top, `${rect.bottom}px`);
+            done();
+        }, 100); 
+    },
+    "test: gutter tooltip should properly display special characters (\" ' & <)" : function(done) {
+        var editor = this.editor;
+        var value = "";
+
+        editor.session.setMode(new Mode());
+        editor.setValue(value, -1);
+        editor.session.setAnnotations([{row: 0, column: 0, text: "special characters \" ' & <", type: "error"}]);
+        editor.renderer.$loop._flush();
+
+        var lines = editor.renderer.$gutterLayer.$lines;
+        var annotation = lines.cells[0].element;
+        assert.ok(/ace_error/.test(annotation.className));
+
+        var rect = annotation.getBoundingClientRect();
+        annotation.dispatchEvent(new MouseEvent("move", {x: rect.left, y: rect.top}));
+
+        // Wait for the tooltip to appear after its timeout.
+        setTimeout(function() {
+            editor.renderer.$loop._flush();
+            var tooltip = editor.container.querySelector(".ace_tooltip");
+            assert.ok(/special characters " ' & </.test(tooltip.textContent));
             done();
         }, 100); 
     },
