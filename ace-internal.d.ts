@@ -1339,7 +1339,12 @@ declare module "./src/edit_session" {
         $occurMatchingLines?: any,
         $useEmacsStyleLineStart?: boolean,
         $selectLongWords?: boolean,
-        curOp?: any,
+        curOp?: {
+            command: {},
+            args: string,
+            scrollTop: number,
+            [key: string]: any;
+        },
 
         getSelectionMarkers(): any[],
     }

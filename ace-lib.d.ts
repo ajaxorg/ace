@@ -26,7 +26,7 @@ declare module "ace-code/src/lib/useragent" {
 declare module "ace-code/src/lib/dom" {
     export function buildDom(arr: any, parent?: HTMLElement, refs?: any): HTMLElement | Text | any[];
     export function getDocumentHead(doc?: Document): HTMLHeadElement | HTMLElement;
-    export function createElement<T extends keyof HTMLElementTagNameMap>(tag: string | T, ns?: string): HTMLElementTagNameMap[T];
+    export function createElement<T extends keyof HTMLElementTagNameMap>(tag: T | string, ns?: string): HTMLElementTagNameMap[T];
     export function removeChildren(element: HTMLElement): void;
     export function createTextNode(textContent: string, element?: HTMLElement): Text;
     export function createFragment(element?: HTMLElement): DocumentFragment;
@@ -50,8 +50,8 @@ declare module "ace-code/src/lib/dom" {
 }
 declare module "ace-code/src/lib/oop" {
     export function inherits(ctor: any, superCtor: any): void;
-    export function mixin<T>(obj: T, mixin: any): any;
-    export function implement<T>(proto: T, mixin: any): any;
+    export function mixin<T>(obj: T, mixin: any): T & any;
+    export function implement<T>(proto: T, mixin: any): T & any;
 }
 declare module "ace-code/src/lib/deep_copy" {
     export function deepCopy(obj: any): any;
@@ -172,11 +172,11 @@ declare module "ace-code/src/lib/app_config" {
          * @param {Object} obj
          * @param {string} path
          * @param {{ [key: string]: any }} options
-         * @returns {AppConfig}
+         * @returns {import("ace-code").Ace.AppConfig}
          */
         defineOptions(obj: any, path: string, options: {
             [key: string]: any;
-        }): AppConfig;
+        }): import("ace-code").Ace.AppConfig;
         /**
          * @param {Object} obj
          */

@@ -946,7 +946,7 @@ declare module "ace-code" {
     export const config: {
         defineOptions(obj: any, path: string, options: {
             [key: string]: any;
-        }): import("ace-code/src/lib/app_config").AppConfig;
+        }): import("ace-code").Ace.AppConfig;
         resetOptions(obj: any): void;
         setDefaultValue(path: string, name: string, value: any): boolean;
         setDefaultValues(path: string, optionHash: {
@@ -963,14 +963,14 @@ declare module "ace-code" {
         once<K extends string | number | symbol>(name: K, callback: any): void;
         setDefaultHandler(name: string, callback: Function): void;
         removeDefaultHandler(name: string, callback: Function): void;
-        on<K_1 extends string | number | symbol>(name: K_1, callback: any, capturing?: boolean): any;
-        addEventListener<K_2 extends string | number | symbol>(name: K_2, callback: any, capturing?: boolean): any;
-        off<K_3 extends string | number | symbol>(name: K_3, callback: any): void;
-        removeListener<K_4 extends string | number | symbol>(name: K_4, callback: any): void;
-        removeEventListener<K_5 extends string | number | symbol>(name: K_5, callback: any): void;
+        on<K extends string | number | symbol>(name: K, callback: any, capturing?: boolean): any;
+        addEventListener<K extends string | number | symbol>(name: K, callback: any, capturing?: boolean): any;
+        off<K extends string | number | symbol>(name: K, callback: any): void;
+        removeListener<K extends string | number | symbol>(name: K, callback: any): void;
+        removeEventListener<K extends string | number | symbol>(name: K, callback: any): void;
         removeAllListeners(name?: string): void;
-        get: <K_6 extends keyof import("ace-code").Ace.ConfigOptions>(key: K_6) => import("ace-code").Ace.ConfigOptions[K_6];
-        set: <K_7 extends keyof import("ace-code").Ace.ConfigOptions>(key: K_7, value: import("ace-code").Ace.ConfigOptions[K_7]) => void;
+        get: <K extends keyof import("ace-code").Ace.ConfigOptions>(key: K) => import("ace-code").Ace.ConfigOptions[K];
+        set: <K extends keyof import("ace-code").Ace.ConfigOptions>(key: K, value: import("ace-code").Ace.ConfigOptions[K]) => void;
         all: () => import("ace-code").Ace.ConfigOptions;
         moduleUrl: (name: string, component?: string) => string;
         setModuleUrl: (name: string, subst: string) => string;
@@ -981,7 +981,7 @@ declare module "ace-code" {
             string
         ], onLoad: (module: any) => void) => void;
         setModuleLoader: (moduleName: any, onLoad: any) => void;
-        version: "1.35.0";
+        version: "1.35.2";
     };
     export function edit(el: string | (HTMLElement & {
         env?: any;
@@ -992,12 +992,12 @@ declare module "ace-code" {
     import Editor = Editor_5.Editor;
     import EditSession_3 = require("ace-code/src/edit_session");
     import EditSession = EditSession_3.EditSession;
-    import Range_14 = require("ace-code/src/range");
-    import Range = Range_14.Range;
+    import Range_13 = require("ace-code/src/range");
+    import Range = Range_13.Range;
     import UndoManager_2 = require("ace-code/src/undomanager");
     import UndoManager = UndoManager_2.UndoManager;
     import Renderer_1 = require("ace-code/src/virtual_renderer");
     import Renderer = Renderer_1.VirtualRenderer;
-    export var version: "1.35.0";
+    export var version: "1.35.2";
     export { Range, Editor, EditSession, UndoManager, Renderer as VirtualRenderer };
 }

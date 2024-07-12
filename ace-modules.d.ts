@@ -383,7 +383,7 @@ declare module "ace-code/src/config" {
     const _exports: {
         defineOptions(obj: any, path: string, options: {
             [key: string]: any;
-        }): AppConfig;
+        }): import("ace-code").Ace.AppConfig;
         resetOptions(obj: any): void;
         setDefaultValue(path: string, name: string, value: any): boolean;
         setDefaultValues(path: string, optionHash: {
@@ -400,24 +400,24 @@ declare module "ace-code/src/config" {
         once<K extends string | number | symbol>(name: K, callback: any): void;
         setDefaultHandler(name: string, callback: Function): void;
         removeDefaultHandler(name: string, callback: Function): void;
-        on<K_1 extends string | number | symbol>(name: K_1, callback: any, capturing?: boolean): any;
-        addEventListener<K_2 extends string | number | symbol>(name: K_2, callback: any, capturing?: boolean): any;
-        off<K_3 extends string | number | symbol>(name: K_3, callback: any): void;
-        removeListener<K_4 extends string | number | symbol>(name: K_4, callback: any): void;
-        removeEventListener<K_5 extends string | number | symbol>(name: K_5, callback: any): void;
+        on<K extends string | number | symbol>(name: K, callback: any, capturing?: boolean): any;
+        addEventListener<K extends string | number | symbol>(name: K, callback: any, capturing?: boolean): any;
+        off<K extends string | number | symbol>(name: K, callback: any): void;
+        removeListener<K extends string | number | symbol>(name: K, callback: any): void;
+        removeEventListener<K extends string | number | symbol>(name: K, callback: any): void;
         removeAllListeners(name?: string): void;
         /**
-         * @template {keyof ConfigOptions} K
+         * @template {keyof import("ace-code").Ace.ConfigOptions} K
          * @param {K} key - The key of the config option to retrieve.
-         * @returns {ConfigOptions[K]} - The value of the config option.
+         * @returns {import("ace-code").Ace.ConfigOptions[K]} - The value of the config option.
          */
-        get: <K_6 extends keyof import("ace-code").Ace.ConfigOptions>(key: K_6) => import("ace-code").Ace.ConfigOptions[K_6];
+        get: <K extends keyof import("ace-code").Ace.ConfigOptions>(key: K) => import("ace-code").Ace.ConfigOptions[K];
         /**
-         * @template {keyof ConfigOptions} K
+         * @template {keyof import("ace-code").Ace.ConfigOptions} K
          * @param {K} key
-         * @param {ConfigOptions[K]} value
+         * @param {import("ace-code").Ace.ConfigOptions[K]} value
          */
-        set: <K_7 extends keyof import("ace-code").Ace.ConfigOptions>(key: K_7, value: import("ace-code").Ace.ConfigOptions[K_7]) => void;
+        set: <K extends keyof import("ace-code").Ace.ConfigOptions>(key: K, value: import("ace-code").Ace.ConfigOptions[K]) => void;
         /**
          * @return {import("ace-code").Ace.ConfigOptions}
          */
@@ -446,11 +446,9 @@ declare module "ace-code/src/config" {
             string
         ], onLoad: (module: any) => void) => void;
         setModuleLoader: (moduleName: any, onLoad: any) => void;
-        version: "1.35.0";
+        version: "1.35.2";
     };
     export = _exports;
-    import AppConfig_1 = require("ace-code/src/lib/app_config");
-    import AppConfig = AppConfig_1.AppConfig;
 }
 declare module "ace-code/src/layer/lines" {
     export type EditSession = import("ace-code/src/edit_session").EditSession;
@@ -1161,7 +1159,7 @@ declare module "ace-code/src/virtual_renderer" {
          * @param {EditSession} session The session to associate with
          **/
         setSession(session: EditSession): void;
-        session: import("ace-code/src/edit_session").EditSession;
+        session: import("ace-code").Ace.EditSession;
         /**
          * Triggers a partial update of the text, from the range given by the two parameters.
          * @param {Number} firstRow The first row to update
@@ -2352,7 +2350,7 @@ declare module "ace-code/src/mouse/mouse_handler" {
         cancelContextMenu(): void;
         destroy(): void;
         cancelDrag?: boolean;
-        mousedownEvent?: MouseEvent;
+        mousedownEvent?: import("ace-code").Ace.MouseEvent;
         startSelect?: (pos?: import("ace-code").Ace.Point, waitForClickSelection?: boolean) => void;
         select?: () => void;
         selectEnd?: () => void;
@@ -3146,7 +3144,7 @@ declare module "ace-code/src/editor" {
          * Removes the current selection or one character.
          * @param {'left' | 'right'} [dir] The direction of the deletion to occur, either "left" or "right"
          **/
-        remove(dir?: 'left' | 'right'): void;
+        remove(dir?: "left" | "right"): void;
         /**
          * Removes the word directly to the right of the current selection.
          **/
@@ -3548,12 +3546,12 @@ declare module "ace-code/src/editor" {
          **/
         prompt(message: any, options: any, callback: any): void;
         env?: any;
-        widgetManager?: LineWidgets;
-        completer?: import("ace-code/src/autocomplete").Autocomplete | import("ace-code/src/ext/inline_autocomplete").InlineAutocomplete;
+        widgetManager?: import("ace-code").Ace.LineWidgets;
+        completer?: import("ace-code").Ace.Autocomplete | import("ace-code").Ace.InlineAutocomplete;
         completers: import("ace-code").Ace.Completer[];
         showKeyboardShortcuts?: () => void;
         showSettingsMenu?: () => void;
-        searchBox?: import("ace-code/src/ext/searchbox").SearchBox;
+        searchBox?: import("ace-code").Ace.SearchBox;
     }
     export namespace Editor {
         export { $uid };
@@ -3574,8 +3572,6 @@ declare module "ace-code/src/editor" {
     import Search = Search_1.Search;
     import Range_7 = require("ace-code/src/range");
     import Range = Range_7.Range;
-    import LineWidgets_1 = require("ace-code/src/line_widgets");
-    import LineWidgets = LineWidgets_1.LineWidgets;
     var $uid: number;
     export { };
     namespace Ace {
@@ -3799,13 +3795,13 @@ declare module "ace-code/src/autocomplete/popup" {
         isOpen: boolean;
         isTopdown: boolean;
         autoSelect: boolean;
-        data: import("ace-code/src/autocomplete").Completion[];
-        setData: (data: import("ace-code/src/autocomplete").Completion[], filterText: string) => void;
-        getData: (row: number) => import("ace-code/src/autocomplete").Completion;
+        data: import("ace-code").Ace.Completion[];
+        setData: (data: import("ace-code").Ace.Completion[], filterText: string) => void;
+        getData: (row: number) => import("ace-code").Ace.Completion;
         hide: () => void;
-        anchor: "bottom" | "top";
+        anchor: "top" | "bottom";
         anchorPosition: import("ace-code").Ace.Point;
-        tryShow: (pos: any, lineHeight: number, anchor: "bottom" | "top", forceShow?: boolean) => boolean;
+        tryShow: (pos: any, lineHeight: number, anchor: "top" | "bottom", forceShow?: boolean) => boolean;
         show: (pos: any, lineHeight: number, topdownOnly?: boolean) => void;
         goTo: (where: import("ace-code").Ace.AcePopupNavigation) => void;
         getTextLeftOffset: () => number;
@@ -3904,7 +3900,7 @@ declare module "ace-code/src/range_list" {
         session: import("ace-code/src/edit_session").EditSession;
         onChange: any;
         detach(): void;
-        comparePoints: (p1: import("ace-code").Ace.Point, p2: import("ace-code").Ace.Point) => number;
+        comparePoints: (p1: import("ace-code/src/range").Point, p2: import("ace-code/src/range").Point) => number;
     }
     import Range_8 = require("ace-code/src/range");
     import Range = Range_8.Range;
@@ -4249,7 +4245,7 @@ declare module "ace-code/src/autocomplete" {
         provideCompletions(editor: Editor, options: CompletionProviderOptions, callback: (err: Error | undefined, completions: FilteredList | [
         ], finished: boolean) => void): void;
         detach(): void;
-        completions: FilteredList;
+        completions: import("ace-code").Ace.FilteredList;
     }
     export type Editor = import("ace-code/src/editor").Editor;
     export type CompletionProviderOptions = import("ace-code").Ace.CompletionProviderOptions;
@@ -4793,24 +4789,24 @@ declare module "ace-code/src/edit_session/folding" {
          * @param {number} [side]
          * @return {Fold}
          **/
-        getFoldAt: (row: number, column: number, side?: number) => Fold;
+        getFoldAt: (row: number, column: number, side?: number) => import("ace-code").Ace.Fold;
         /**
          * Returns all folds in the given range. Note, that this will return folds
          * @param {Range| Delta} range
          * @returns {Fold[]}
          **/
-        getFoldsInRange: (range: import("ace-code").Ace.Delta | Range) => Fold[];
+        getFoldsInRange: (range: import("ace-code").Ace.Range | import("ace-code").Ace.Delta) => import("ace-code").Ace.Fold[];
         /**
          *
          * @param {Range[]|Range}ranges
          * @returns {Fold[]}
          */
-        getFoldsInRangeList: (ranges: Range | Range[]) => Fold[];
+        getFoldsInRangeList: (ranges: import("ace-code").Ace.Range[] | import("ace-code").Ace.Range) => import("ace-code").Ace.Fold[];
         /**
          * Returns all folds in the document
          * @returns {Fold[]}
          */
-        getAllFolds: () => Fold[];
+        getAllFolds: () => import("ace-code").Ace.Fold[];
         /**
          * Returns the string between folds at the given position.
          * E.g.
@@ -4833,21 +4829,21 @@ declare module "ace-code/src/edit_session/folding" {
          *  @param {FoldLine} [foldLine]
          *  @returns {string | null}
          */
-        getFoldStringAt: (row: number, column: number, trim?: number, foldLine?: FoldLine) => string;
+        getFoldStringAt: (row: number, column: number, trim?: number, foldLine?: import("ace-code").Ace.FoldLine) => string | null;
         /**
          *
          * @param {number} docRow
          * @param {FoldLine} [startFoldLine]
          * @returns {null|FoldLine}
          */
-        getFoldLine: (docRow: number, startFoldLine?: FoldLine) => FoldLine;
+        getFoldLine: (docRow: number, startFoldLine?: import("ace-code").Ace.FoldLine) => null | import("ace-code").Ace.FoldLine;
         /**
          * Returns the fold which starts after or contains docRow
          * @param {number} docRow
          * @param {FoldLine} [startFoldLine]
          * @returns {null|FoldLine}
          */
-        getNextFoldLine: (docRow: number, startFoldLine?: FoldLine) => FoldLine;
+        getNextFoldLine: (docRow: number, startFoldLine?: import("ace-code").Ace.FoldLine) => null | import("ace-code").Ace.FoldLine;
         /**
          *
          * @param {number} first
@@ -4865,36 +4861,36 @@ declare module "ace-code/src/edit_session/folding" {
          *      passed in range fits an existing fold exactly.
          * @this {IFolding}
          */
-        addFold: (placeholder: string | Fold, range?: Range) => Fold;
+        addFold: (placeholder: import("ace-code").Ace.Fold | string, range?: import("ace-code").Ace.Range) => import("ace-code").Ace.Fold;
         /**
          * @param {Fold[]} folds
          */
-        addFolds: (folds: Fold[]) => void;
+        addFolds: (folds: import("ace-code").Ace.Fold[]) => void;
         /**
          *
          * @param {Fold} fold
          */
-        removeFold: (fold: Fold) => void;
+        removeFold: (fold: import("ace-code").Ace.Fold) => void;
         /**
          *
          * @param {Fold[]} folds
          */
-        removeFolds: (folds: Fold[]) => void;
+        removeFolds: (folds: import("ace-code").Ace.Fold[]) => void;
         /**
          * @param {Fold} fold
          */
-        expandFold: (fold: Fold) => void;
+        expandFold: (fold: import("ace-code").Ace.Fold) => void;
         /**
          * @param {Fold[]}folds
          */
-        expandFolds: (folds: Fold[]) => void;
+        expandFolds: (folds: import("ace-code").Ace.Fold[]) => void;
         /**
          *
          * @param {number|null|import("ace-code").Ace.Point|Range|Range[]} [location]
          * @param {boolean} [expandInner]
          * @return {Fold[]| undefined}
          */
-        unfold: (location?: number | import("ace-code").Ace.Point | Range | Range[], expandInner?: boolean) => Fold[];
+        unfold: (location?: number | null | import("ace-code").Ace.Point | import("ace-code").Ace.Range | import("ace-code").Ace.Range[], expandInner?: boolean) => import("ace-code").Ace.Fold[] | undefined;
         /**
          * Checks if a given documentRow is folded. This is true if there are some
          * folded parts such that some parts of the line is still visible.
@@ -4902,21 +4898,21 @@ declare module "ace-code/src/edit_session/folding" {
          * @param {FoldLine} [startFoldRow]
          * @returns {boolean}
          **/
-        isRowFolded: (docRow: number, startFoldRow?: FoldLine) => boolean;
+        isRowFolded: (docRow: number, startFoldRow?: import("ace-code").Ace.FoldLine) => boolean;
         /**
          *
          * @param {number} docRow
          * @param {FoldLine} [startFoldRow]
          * @return {number}
          */
-        getRowFoldEnd: (docRow: number, startFoldRow?: FoldLine) => number;
+        getRowFoldEnd: (docRow: number, startFoldRow?: import("ace-code").Ace.FoldLine) => number;
         /**
          *
          * @param {number} docRow
          * @param {FoldLine} [startFoldRow]
          * @returns {number}
          */
-        getRowFoldStart: (docRow: number, startFoldRow?: FoldLine) => number;
+        getRowFoldStart: (docRow: number, startFoldRow?: import("ace-code").Ace.FoldLine) => number;
         /**
          *
          * @param {FoldLine} foldLine
@@ -4926,7 +4922,7 @@ declare module "ace-code/src/edit_session/folding" {
          * @param {number | null} [startColumn]
          * @return {string}
          */
-        getFoldDisplayLine: (foldLine: FoldLine, endRow?: number, endColumn?: number, startRow?: number, startColumn?: number) => string;
+        getFoldDisplayLine: (foldLine: import("ace-code").Ace.FoldLine, endRow?: number | null, endColumn?: number | null, startRow?: number | null, startColumn?: number | null) => string;
         /**
          *
          * @param {number} row
@@ -4935,7 +4931,7 @@ declare module "ace-code/src/edit_session/folding" {
          * @param {number | null} startColumn
          * @return {string}
          */
-        getDisplayLine: (row: number, endColumn: number, startRow: number, startColumn: number) => string;
+        getDisplayLine: (row: number, endColumn: number | null, startRow: number | null, startColumn: number | null) => string;
         /**
          * @param {boolean} [tryToUnfold]
          */
@@ -4947,7 +4943,7 @@ declare module "ace-code/src/edit_session/folding" {
          * @param {number} [dir]
          * @return {Range | undefined}
          */
-        getCommentFoldRange: (row: number, column: number, dir?: number) => Range;
+        getCommentFoldRange: (row: number, column: number, dir?: number) => import("ace-code").Ace.Range | undefined;
         /**
          *
          * @param {number | null} [startRow]
@@ -4955,7 +4951,7 @@ declare module "ace-code/src/edit_session/folding" {
          * @param {number | null} [depth]
          * @param {Function} [test]
          */
-        foldAll: (startRow?: number, endRow?: number, depth?: number, test?: Function) => void;
+        foldAll: (startRow?: number | null, endRow?: number | null, depth?: number | null, test?: Function) => void;
         /**
          *
          * @param {number} level
@@ -4975,8 +4971,8 @@ declare module "ace-code/src/edit_session/folding" {
          * @return {{range?: Range, firstRange?: Range}}
          */
         getParentFoldRangeData: (row: number, ignoreCurrent?: boolean) => {
-            range?: Range;
-            firstRange?: Range;
+            range?: import("ace-code").Ace.Range;
+            firstRange?: import("ace-code").Ace.Range;
         };
         /**
          *
@@ -4998,12 +4994,6 @@ declare module "ace-code/src/edit_session/folding" {
          */
         tokenizerUpdateFoldWidgets: (e: any) => void;
     }
-    import Fold_1 = require("ace-code/src/edit_session/fold");
-    import Fold = Fold_1.Fold;
-    import Range_10 = require("ace-code/src/range");
-    import Range = Range_10.Range;
-    import FoldLine_1 = require("ace-code/src/edit_session/fold_line");
-    import FoldLine = FoldLine_1.FoldLine;
 }
 declare module "ace-code/src/edit_session/bracket_match" {
     export type EditSession = import("ace-code/src/edit_session").EditSession;
@@ -5048,8 +5038,8 @@ declare module "ace-code/src/edit_session/bracket_match" {
             openTagName: Range;
         } | undefined;
     }
-    import Range_11 = require("ace-code/src/range");
-    import Range = Range_11.Range;
+    import Range_10 = require("ace-code/src/range");
+    import Range = Range_10.Range;
 }
 declare module "ace-code/src/edit_session" {
     const EditSession_base: undefined;
@@ -5688,7 +5678,12 @@ declare module "ace-code/src/edit_session" {
         gutterRenderer?: any;
         selectionMarkerCount?: number;
         multiSelect?: any;
-        curOp?: any;
+        curOp?: {
+            command: {};
+            args: string;
+            scrollTop: number;
+            [key: string]: any;
+        };
         getSelectionMarkers(): any[];
     }
     export namespace EditSession {
@@ -5711,8 +5706,8 @@ declare module "ace-code/src/edit_session" {
     import BidiHandler = BidiHandler_1.BidiHandler;
     import UndoManager_1 = require("ace-code/src/undomanager");
     import UndoManager = UndoManager_1.UndoManager;
-    import Range_12 = require("ace-code/src/range");
-    import Range = Range_12.Range;
+    import Range_11 = require("ace-code/src/range");
+    import Range = Range_11.Range;
     function isFullWidth(c: any): boolean;
     var $uid: number;
     export { };
@@ -5734,7 +5729,12 @@ declare module "ace-code/src/edit_session" {
         gutterRenderer?: any;
         selectionMarkerCount?: number;
         multiSelect?: any;
-        curOp?: any;
+        curOp?: {
+            command: {};
+            args: string;
+            scrollTop: number;
+            [key: string]: any;
+        };
         getSelectionMarkers(): any[];
     }
 }
@@ -6066,8 +6066,8 @@ declare module "ace-code/src/placeholder" {
         cancel(): void;
     }
     export type EditSession = import("ace-code/src/edit_session").EditSession;
-    import Range_13 = require("ace-code/src/range");
-    import Range = Range_13.Range;
+    import Range_12 = require("ace-code/src/range");
+    import Range = Range_12.Range;
     export { };
     namespace Ace {
         type EventEmitter<T> = import("ace-code").Ace.EventEmitter<T>;
@@ -6196,8 +6196,8 @@ declare module "ace-code/src/incremental_search" {
     import iSearchCommandModule = require("ace-code/src/commands/incremental_search_commands");
     import Editor_6 = require("ace-code/src/editor");
     import Editor = Editor_6.Editor;
-    import Range_15 = require("ace-code/src/range");
-    import Range = Range_15.Range;
+    import Range_14 = require("ace-code/src/range");
+    import Range = Range_14.Range;
 }
 declare module "ace-code/src/split" {
     export type ISplit = import("ace-code").Ace.EventEmitter<any> & {

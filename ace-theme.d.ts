@@ -169,6 +169,15 @@ declare module "ace-code/src/theme/github_dark" {
     export const cssClass: "ace-github-dark";
     export const cssText: string;
 }
+declare module "ace-code/src/theme/github_light_default-css" {
+    const _exports: string;
+    export = _exports;
+}
+declare module "ace-code/src/theme/github_light_default" {
+    export const isDark: false;
+    export const cssClass: "ace-github-light-default";
+    export const cssText: string;
+}
 declare module "ace-code/src/theme/gob-css" {
     const _exports: string;
     export = _exports;
