@@ -107,7 +107,7 @@ exports.handler.attach = function(editor) {
 
 function pushUnique(ring, mark) {
     var last = ring[ring.length - 1];
-    if (last && last.row == mark.row && last.column == mark.column) {
+    if (last && last.row === mark.row && last.column === mark.column) {
         return;
     }
     ring.push(mark);
