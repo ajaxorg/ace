@@ -106,6 +106,25 @@ module.exports = {
             assert.ok(/info test/.test(tooltip.textContent));
         }, 100); 
     },
+    "test: gutter png icons" : function() {
+        var editor = this.editor;
+        var value = "";
+
+        editor.session.setMode(new Mode());
+        editor.setOption("useSvgGutterIcons", false);
+        editor.setValue(value, -1);
+        editor.session.setAnnotations([{row: 0, column: 0, type: "error", text: "error test"}]);
+        editor.renderer.$loop._flush();
+
+        var lines = editor.renderer.$gutterLayer.$lines;
+        var line = lines.cells[0].element;
+        assert.ok(/ace_gutter-cell/.test(line.className));
+        assert.notOk(/ace_gutter-cell_svg-icons/.test(line.className));
+
+        var annotation = line.children[2].firstChild;
+        assert.ok(/ace_icon/.test(annotation.className));
+        assert.notOk(/ace_icon_svg/.test(annotation.className));
+    },
     "test: gutter svg icons" : function() {
         var editor = this.editor;
         var value = "";
