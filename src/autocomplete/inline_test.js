@@ -50,6 +50,10 @@ var completions = [
     {
         value: "long\nlong\nlong\nlong\nlong\nlong".repeat(100),
         score: 0
+    },
+    {
+        value: "foo suggestion with a\n\n\ngap",
+        score: 0
     }
 ];
 
@@ -304,6 +308,14 @@ module.exports = {
                 done();
             }, 50); 
         }, 50);  
+    },
+    "test: renders multi-line ghost text with empty lines": function(done) {
+        assert.equal(editor.renderer.$ghostTextWidget, null);
+        inline.show(editor, completions[8], "f");
+        editor.renderer.$loop._flush();
+        assert.strictEqual(getAllLines(), textBase + "foo suggestion with a");
+        assert.strictEqual(editor.renderer.$ghostTextWidget.el.innerHTML, `<div> </div><div> </div><div>gap</div>`);
+        done();
     },
     tearDown: function() {
         inline.destroy();

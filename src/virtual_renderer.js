@@ -1785,6 +1785,10 @@ class VirtualRenderer {
                 // If the line is wider than the viewport, wrap the line
                 if (el.wrapped) chunkDiv.className = "ghost_text_line_wrapped";
 
+                // If a given line doesn't have text (e.g. it's a line of whitespace), set a space as the 
+                // textcontent so that browsers render the empty line div.
+                if (el.text.length === 0) el.text = " "; 
+                
                 chunkDiv.appendChild(dom.createTextNode(el.text));
                 widgetDiv.appendChild(chunkDiv);
             });
