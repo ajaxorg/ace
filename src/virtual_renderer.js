@@ -1926,7 +1926,7 @@ class VirtualRenderer {
     hideTokensAfterPosition(row, column) {
         var tokens = this.session.getTokens(row);
         var l = 0;
-        var passedCursor = false;
+        var hasPassedCursor = false;
         var hiddenTokens = [];
         // Loop over all tokens and track at what position in the line they end.
         for (var i = 0; i < tokens.length; i++) {
@@ -1936,15 +1936,15 @@ class VirtualRenderer {
             if (token.type === "ghost_text") continue;
 
             // If we've already passed the current cursor position, mark all of them as hidden.
-            if (passedCursor) {
+            if (hasPassedCursor) {
                 hiddenTokens.push({type: token.type, value: token.value});
                 token.type = "hidden_token";
                 continue;
             }
             if (l === column) {
-                passedCursor = true;
+                hasPassedCursor = true;
             } else if (l > column) {
-                passedCursor = true;
+                hasPassedCursor = true;
                 var diff = l - column;
                 var before = token.value.slice(0, token.value.length - diff);
                 var after = token.value.slice(token.value.length - diff);

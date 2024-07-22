@@ -329,8 +329,9 @@ module.exports = {
         assert.strictEqual(getAllLines(), textBase.replaceAll(" ", "") + "foo suggestion with a hi I should be hidden");
 
         // The string to the right of the cursor should be hidden tokens now.
-        assert.strictEqual(editor.session.bgTokenizer.lines[2][2].value, " hi I should be hidden");
-        assert.strictEqual(editor.session.bgTokenizer.lines[2][2].type, "hidden_token");
+        var tokens = editor.session.getTokens(2);
+        assert.strictEqual(tokens[2].value, " hi I should be hidden");
+        assert.strictEqual(tokens[2].type, "hidden_token");
 
         // And should be added to the ghost text widget.
         assert.strictEqual(editor.renderer.$ghostTextWidget.el.textContent, "  gap hi I should be hidden");
@@ -341,8 +342,9 @@ module.exports = {
         assert.equal(editor.renderer.$ghostTextWidget, null);
 
         // Text to the right of the cursor should be tokenized normally again.
-        assert.strictEqual(editor.session.bgTokenizer.lines[2][0].value, "f hi I should be hidden");
-        assert.strictEqual(editor.session.bgTokenizer.lines[2][0].type, "text");
+        var tokens = editor.session.getTokens(2);
+        assert.strictEqual(tokens[0].value, "f hi I should be hidden");
+        assert.strictEqual(tokens[0].type, "text");
 
         done();
     },
@@ -358,8 +360,9 @@ module.exports = {
         assert.strictEqual(getAllLines(), textBase.replaceAll(" ", "") + "foo suggestion with ahi I should be hidden");
 
         // The string to the right of the cursor should be hidden tokens now.
-        assert.strictEqual(editor.session.bgTokenizer.lines[2][2].value, "hi I should be hidden");
-        assert.strictEqual(editor.session.bgTokenizer.lines[2][2].type, "hidden_token");
+        var tokens = editor.session.getTokens(2);
+        assert.strictEqual(tokens[2].value, "hi I should be hidden");
+        assert.strictEqual(tokens[2].type, "hidden_token");
 
         // And should be added to the ghost text widget.
         assert.strictEqual(editor.renderer.$ghostTextWidget.el.textContent, "  gaphi I should be hidden");
@@ -370,8 +373,9 @@ module.exports = {
         assert.equal(editor.renderer.$ghostTextWidget, null);
 
         // Text to the right of the cursor should be tokenized normally again.
-        assert.strictEqual(editor.session.bgTokenizer.lines[2][0].value, "fhi I should be hidden");
-        assert.strictEqual(editor.session.bgTokenizer.lines[2][0].type, "text");
+        var tokens = editor.session.getTokens(2);
+        assert.strictEqual(tokens[0].value, "fhi I should be hidden");
+        assert.strictEqual(tokens[0].type, "text");
 
         done();
     },
