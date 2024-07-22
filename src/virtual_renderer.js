@@ -1941,16 +1941,11 @@ class VirtualRenderer {
                 token.type = "hidden_token";
                 continue;
             }
+            // We call this method after we call addToken, so we are guaranteed a new token starts at the cursor position.
+            // Once we reached that point in the loop, flip the flag. 
             if (l === column) {
                 hasPassedCursor = true;
-            } else if (l > column) {
-                hasPassedCursor = true;
-                var diff = l - column;
-                var before = token.value.slice(0, token.value.length - diff);
-                var after = token.value.slice(token.value.length - diff);
-                tokens.splice(i, 1, {type: token.type, value: before}, {type: "hidden_token", value: after});
-                hiddenTokens.push({type: token.type, value: after});
-            }
+            } 
         }
         this.updateLines(row, row);
         return hiddenTokens;
