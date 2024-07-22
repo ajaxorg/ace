@@ -23,6 +23,7 @@ var editorCss = require("./css/editor-css");
 var Decorator = require("./layer/decorators").Decorator;
 
 var useragent = require("./lib/useragent");
+const isTextToken = require("./layer/text_util").isTextToken;
 
 dom.importCssString(editorCss, "ace_editor.css", false);
 
@@ -1779,8 +1780,14 @@ class VirtualRenderer {
         
         var widgetDiv = dom.createElement("div");
         if (textChunks.length > 1) {
+            // If there are tokens to the right of the cursor, hide those.
+            var hiddenTokens = this.hideTokensAfterPosition(insertPosition.row, insertPosition.column);
+
+            var lastLineDiv;
             textChunks.slice(1).forEach(el => {
                 var chunkDiv = dom.createElement("div");
+                var chunkSpan = dom.createElement("span");
+                chunkSpan.className = "ace_ghost_text";            
 
                 // If the line is wider than the viewport, wrap the line
                 if (el.wrapped) chunkDiv.className = "ghost_text_line_wrapped";
@@ -1789,15 +1796,28 @@ class VirtualRenderer {
                 // textcontent so that browsers render the empty line div.
                 if (el.text.length === 0) el.text = " "; 
                 
-                chunkDiv.appendChild(dom.createTextNode(el.text));
+                chunkSpan.appendChild(dom.createTextNode(el.text));
+                chunkDiv.appendChild(chunkSpan);
                 widgetDiv.appendChild(chunkDiv);
+
+                // Overwrite lastLineDiv every iteration so at the end it points to 
+                // the last added element.
+                lastLineDiv = chunkDiv;
+            });
+
+            // Add the hidden tokens to the last line of the ghost text.
+            hiddenTokens.forEach(token => {
+                var element = dom.createElement("span");
+                if (!isTextToken(token.type)) element.className = "ace_" + token.type.replace(/\./g, " ace_");
+                element.appendChild(dom.createTextNode(token.value));
+                lastLineDiv.appendChild(element);
             });
             
             this.$ghostTextWidget = {
                 el: widgetDiv,
                 row: insertPosition.row,
                 column: insertPosition.column,
-                className: "ace_ghost_text"
+                className: "ace_ghost_text_container"
             };
             this.session.widgetManager.addLineWidget(this.$ghostTextWidget);
 
@@ -1900,6 +1920,35 @@ class VirtualRenderer {
             }
         }
         this.updateLines(row, row);
+    }
+
+    // Hide all non-ghost-text tokens to the right of a given position.
+    hideTokensAfterPosition(row, column) {
+        var tokens = this.session.getTokens(row);
+        var l = 0;
+        var hasPassedCursor = false;
+        var hiddenTokens = [];
+        // Loop over all tokens and track at what position in the line they end.
+        for (var i = 0; i < tokens.length; i++) {
+            var token = tokens[i];
+            l += token.value.length;
+
+            if (token.type === "ghost_text") continue;
+
+            // If we've already passed the current cursor position, mark all of them as hidden.
+            if (hasPassedCursor) {
+                hiddenTokens.push({type: token.type, value: token.value});
+                token.type = "hidden_token";
+                continue;
+            }
+            // We call this method after we call addToken, so we are guaranteed a new token starts at the cursor position.
+            // Once we reached that point in the loop, flip the flag. 
+            if (l === column) {
+                hasPassedCursor = true;
+            } 
+        }
+        this.updateLines(row, row);
+        return hiddenTokens;
     }
 
     removeExtraToken(row, column) {

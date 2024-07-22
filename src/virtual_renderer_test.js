@@ -376,7 +376,7 @@ module.exports = {
         editor.renderer.$loop._flush();
         assert.equal(editor.renderer.content.textContent, "abcdefGhost1");
         
-        assert.equal(editor.session.lineWidgets[0].el.innerHTML, `<div>Ghost2</div><div>Ghost3</div>`);
+        assert.equal(editor.session.lineWidgets[0].el.innerHTML, `<div><span class="ace_ghost_text">Ghost2</span></div><div><span class="ace_ghost_text">Ghost3</span><span></span></div>`);
 
         editor.removeGhostText();
 
@@ -395,7 +395,7 @@ module.exports = {
         editor.renderer.$loop._flush();
         assert.equal(editor.renderer.content.textContent, "abcdefThis is a long test text that is longer than ");
 
-        assert.equal(editor.session.lineWidgets[0].el.innerHTML, `<div class="ghost_text_line_wrapped">30 characters</div><div> </div><div>Ghost3</div>`);
+        assert.equal(editor.session.lineWidgets[0].el.innerHTML, `<div class="ghost_text_line_wrapped"><span class="ace_ghost_text">30 characters</span></div><div><span class="ace_ghost_text"> </span></div><div><span class="ace_ghost_text">Ghost3</span><span></span></div>`);
 
         editor.removeGhostText();
 

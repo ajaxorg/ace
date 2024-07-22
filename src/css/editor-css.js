@@ -660,7 +660,7 @@ module.exports = `
     font-style: italic;
 }
 
-.ace_ghost_text > div {
+.ace_ghost_text_container > div {
     white-space: pre;
 }
 
@@ -680,4 +680,8 @@ module.exports = `
     width:1px;
     height:1px;
     overflow:hidden;
+}
+
+.ace_hidden_token {
+    display: none;
 }`;
