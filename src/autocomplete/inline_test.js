@@ -105,7 +105,7 @@ module.exports = {
         inline.show(editor, completions[3], "f");
         editor.renderer.$loop._flush();
         assert.strictEqual(getAllLines(), textBase + "function foo() {");
-        assert.strictEqual(editor.renderer.$ghostTextWidget.el.innerHTML, `<div><span class="ace_ghost_text">        console.log('test');</span></div><div><span class="ace_ghost_text">    }</span><span class="ace_text ace_ghost_text_offset"></span></div>`);
+        assert.strictEqual(editor.renderer.$ghostTextWidget.el.innerHTML, `<div><span class="ace_ghost_text">        console.log('test');</span></div><div><span class="ace_ghost_text">    }</span><span></span></div>`);
         done();
     },
     "test: boundary tests": function(done) {
@@ -314,7 +314,7 @@ module.exports = {
         inline.show(editor, completions[8], "f");
         editor.renderer.$loop._flush();
         assert.strictEqual(getAllLines(), textBase + "foo suggestion with a");
-        assert.strictEqual(editor.renderer.$ghostTextWidget.el.innerHTML, `<div><span class="ace_ghost_text"> </span></div><div><span class="ace_ghost_text"> </span></div><div><span class="ace_ghost_text">gap</span><span class="ace_text ace_ghost_text_offset"></span></div>`);
+        assert.strictEqual(editor.renderer.$ghostTextWidget.el.innerHTML, `<div><span class="ace_ghost_text"> </span></div><div><span class="ace_ghost_text"> </span></div><div><span class="ace_ghost_text">gap</span><span></span></div>`);
         done();
     },
     "test: moves tokens to the right of cursor to the end of ghost text for multi line ghost text": function(done) {

@@ -23,6 +23,7 @@ var editorCss = require("./css/editor-css");
 var Decorator = require("./layer/decorators").Decorator;
 
 var useragent = require("./lib/useragent");
+const isTextToken = require("./layer/text_util").isTextToken;
 
 dom.importCssString(editorCss, "ace_editor.css", false);
 
@@ -1807,7 +1808,7 @@ class VirtualRenderer {
             // Add the hidden tokens to the last line of the ghost text.
             hiddenTokens.forEach(token => {
                 var element = dom.createElement("span");
-                element.className = "ace_" + token.type.replace(/\./g, " ace_") + " ace_ghost_text_offset";
+                if (!isTextToken(token.type)) element.className = "ace_" + token.type.replace(/\./g, " ace_");
                 element.appendChild(dom.createTextNode(token.value));
                 lastLineDiv.appendChild(element);
             });

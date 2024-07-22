@@ -682,11 +682,6 @@ module.exports = `
     overflow:hidden;
 }
 
-.ace_hidden-token {
+.ace_hidden_token {
     display: none;
-}
-
-.ace_ghost_text_offset {
-    font-style: normal;
-    opacity: 1;
 }`;
