@@ -1937,7 +1937,7 @@ class VirtualRenderer {
             // If we've already passed the current cursor position, mark all of them as hidden.
             if (passedCursor) {
                 hiddenTokens.push({type: token.type, value: token.value});
-                token.type = "hidden-token";
+                token.type = "hidden_token";
                 continue;
             }
             if (l === column) {
@@ -1947,7 +1947,7 @@ class VirtualRenderer {
                 var diff = l - column;
                 var before = token.value.slice(0, token.value.length - diff);
                 var after = token.value.slice(token.value.length - diff);
-                tokens.splice(i, 1, {type: token.type, value: before}, {type: "hidden-token", value: after});
+                tokens.splice(i, 1, {type: token.type, value: before}, {type: "hidden_token", value: after});
                 hiddenTokens.push({type: token.type, value: after});
             }
         }

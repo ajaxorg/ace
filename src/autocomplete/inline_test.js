@@ -317,6 +317,64 @@ module.exports = {
         assert.strictEqual(editor.renderer.$ghostTextWidget.el.innerHTML, `<div><span class="ace_ghost_text"> </span></div><div><span class="ace_ghost_text"> </span></div><div><span class="ace_ghost_text">gap</span><span class="ace_text ace_ghost_text_offset"></span></div>`);
         done();
     },
+    "test: moves tokens to the right of cursor to the end of ghost text for multi line ghost text": function(done) {
+        editor.execCommand("removetolinestarthard");
+        editor.execCommand("insertstring", "f hi I should be hidden");
+        editor.execCommand("gotolinestart");
+        editor.execCommand("gotoright");
+        editor.renderer.$loop._flush();
+        assert.equal(editor.renderer.$ghostTextWidget, null);
+        inline.show(editor, completions[8], "f");
+        editor.renderer.$loop._flush();
+        assert.strictEqual(getAllLines(), textBase.replaceAll(" ", "") + "foo suggestion with a hi I should be hidden");
+
+        // The string to the right of the cursor should be hidden tokens now.
+        assert.strictEqual(editor.session.bgTokenizer.lines[2][2].value, " hi I should be hidden");
+        assert.strictEqual(editor.session.bgTokenizer.lines[2][2].type, "hidden_token");
+
+        // And should be added to the ghost text widget.
+        assert.strictEqual(editor.renderer.$ghostTextWidget.el.textContent, "  gap hi I should be hidden");
+
+        // Hide inline
+        inline.hide();
+        editor.renderer.$loop._flush();
+        assert.equal(editor.renderer.$ghostTextWidget, null);
+
+        // Text to the right of the cursor should be tokenized normally again.
+        assert.strictEqual(editor.session.bgTokenizer.lines[2][0].value, "f hi I should be hidden");
+        assert.strictEqual(editor.session.bgTokenizer.lines[2][0].type, "text");
+
+        done();
+    },
+    "test: moves tokens to the right of cursor to the end of ghost text for multi line ghost text when triggered inside token": function(done) {
+        editor.execCommand("removetolinestarthard");
+        editor.execCommand("insertstring", "fhi I should be hidden");
+        editor.execCommand("gotolinestart");
+        editor.execCommand("gotoright");
+        editor.renderer.$loop._flush();
+        assert.equal(editor.renderer.$ghostTextWidget, null);
+        inline.show(editor, completions[8], "f");
+        editor.renderer.$loop._flush();
+        assert.strictEqual(getAllLines(), textBase.replaceAll(" ", "") + "foo suggestion with ahi I should be hidden");
+
+        // The string to the right of the cursor should be hidden tokens now.
+        assert.strictEqual(editor.session.bgTokenizer.lines[2][2].value, "hi I should be hidden");
+        assert.strictEqual(editor.session.bgTokenizer.lines[2][2].type, "hidden_token");
+
+        // And should be added to the ghost text widget.
+        assert.strictEqual(editor.renderer.$ghostTextWidget.el.textContent, "  gaphi I should be hidden");
+
+        // Hide inline
+        inline.hide();
+        editor.renderer.$loop._flush();
+        assert.equal(editor.renderer.$ghostTextWidget, null);
+
+        // Text to the right of the cursor should be tokenized normally again.
+        assert.strictEqual(editor.session.bgTokenizer.lines[2][0].value, "fhi I should be hidden");
+        assert.strictEqual(editor.session.bgTokenizer.lines[2][0].type, "text");
+
+        done();
+    },
     tearDown: function() {
         inline.destroy();
         editor.destroy();
