@@ -31,10 +31,23 @@ export namespace Ace {
     type AfterLoadCallback = (err: Error | null, module: unknown) => void;
     type LoaderFunction = (moduleName: string, afterLoad: AfterLoadCallback) => void;
 
+    export interface ConfigOptions {
+        packaged: boolean,
+        workerPath: string | null,
+        modePath: string | null,
+        themePath: string | null,
+        basePath: string,
+        suffix: string,
+        $moduleUrls: {[url: string]: string},
+        loadWorkerFromBlob: boolean,
+        sharedPopups: boolean,
+        useStrictCSP: boolean | null
+    }
+    
     export interface Config {
-        get(key: string): any;
+        get<K extends keyof ConfigOptions>(key: K): ConfigOptions[K];
 
-        set(key: string, value: any): void;
+        set<K extends keyof ConfigOptions>(key: K, value: ConfigOptions[K]): void;
 
         all(): { [key: string]: any };
 
@@ -48,16 +61,18 @@ export namespace Ace {
 
         loadModule(moduleName: string | [string, string],
                    onLoad?: (module: any) => void): void;
-
-        init(packaged: any): any;
-
-        defineOptions(obj: any, path: string, options: { [key: string]: any }): Config;
+        
+        defineOptions(obj: any, path: string, options: { [key: string]: any }): AppConfig;
 
         resetOptions(obj: any): void;
 
         setDefaultValue(path: string, name: string, value: any): void;
 
         setDefaultValues(path: string, optionHash: { [key: string]: any }): void;
+
+        setMessages(value: any): void;
+
+        nls(string: string, params?:{ [x: string]: any; }): string;
     }
 
     interface Theme {
@@ -364,7 +379,7 @@ export namespace Ace {
         highlightGutterLine: boolean;
         hScrollBarAlwaysVisible: boolean;
         vScrollBarAlwaysVisible: boolean;
-        fontSize: string;
+        fontSize: string | number;
         fontFamily: string;
         maxLines: number;
         minLines: number;
@@ -414,6 +429,7 @@ export namespace Ace {
         enableMultiselect: boolean;
         enableKeyboardAccessibility: boolean;
         enableCodeLens: boolean;
+        textInputAriaLabel: string;
         enableMobileMenu: boolean;
     }
 
@@ -465,22 +481,22 @@ export namespace Ace {
          * Emitted when the current mode changes.
          * @param e
          */
-        "changeMode": (e) => void;
+        "changeMode": (e: any) => void;
         /**
          * Emitted when the wrap mode changes.
          * @param e
          */
-        "changeWrapMode": (e) => void;
+        "changeWrapMode": (e: any) => void;
         /**
          * Emitted when the wrapping limit changes.
          * @param e
          */
-        "changeWrapLimit": (e) => void;
+        "changeWrapLimit": (e: any) => void;
         /**
          * Emitted when a code fold is added or removed.
          * @param e
          */
-        "changeFold": (e, session: EditSession) => void;
+        "changeFold": (e: any, session: EditSession) => void;
         /**
          * Emitted when the scroll top changes.
          * @param scrollTop The new scroll top value
@@ -503,15 +519,15 @@ export namespace Ace {
          * @param e An object with two properties, `oldSession` and `session`, that represent the old and new [[EditSession]]s.
          **/
         "changeSession": (e: { oldSession: EditSession, session: EditSession }) => void;
-        "blur": (e) => void;
+        "blur": (e: any) => void;
         "mousedown": (e: MouseEvent) => void;
-        "mousemove": (e: MouseEvent & { scrollTop? }, editor?: Editor) => void;
+        "mousemove": (e: MouseEvent & { scrollTop?: any }, editor?: Editor) => void;
         "changeStatus": () => void;
         "keyboardActivity": () => void;
         "mousewheel": (e: MouseEvent) => void;
         "mouseup": (e: MouseEvent) => void;
-        "beforeEndOperation": (e) => void;
-        "nativecontextmenu": (e) => void;
+        "beforeEndOperation": (e: any) => void;
+        "nativecontextmenu": (e: any) => void;
         "destroy": () => void;
         "focus": () => void;
         /**
@@ -522,7 +538,7 @@ export namespace Ace {
         /**
          * Emitted when text is pasted.
          **/
-        "paste": (text: string, event) => void;
+        "paste": (text: string, event: any) => void;
         /**
          * Emitted when the selection style changes, via [[Editor.setSelectionStyle]].
          * @param data Contains one property, `data`, which indicates the new selection style
@@ -538,7 +554,7 @@ export namespace Ace {
         "show": () => void;
         "hide": () => void;
         "select": (hide: boolean) => void;
-        "changeHoverMarker": (e) => void;
+        "changeHoverMarker": (e: any) => void;
     }
 
     interface DocumentEvents {
@@ -597,12 +613,12 @@ export namespace Ace {
     }
 
     interface TextEvents {
-        "changeCharacterSize": (e) => void;
+        "changeCharacterSize": (e: any) => void;
     }
 
     interface VirtualRendererEvents {
-        "afterRender": (e, renderer: VirtualRenderer) => void;
-        "beforeRender": (e, renderer: VirtualRenderer) => void;
+        "afterRender": (e: any, renderer: VirtualRenderer) => void;
+        "beforeRender": (e: any, renderer: VirtualRenderer) => void;
     }
 
     class EventEmitter<T> {
@@ -632,18 +648,34 @@ export namespace Ace {
     }
 
     interface SearchOptions {
+        /**The string or regular expression you're looking for*/
         needle: string | RegExp;
         preventScroll: boolean;
+        /**Whether to search backwards from where cursor currently is*/
         backwards: boolean;
+        /**The starting [[Range]] or cursor position to begin the search*/
         start: Range;
+        /**Whether or not to include the current line in the search*/
         skipCurrent: boolean;
-        range: Range;
+        /**The [[Range]] to search within. Set this to `null` for the whole document*/
+        range: Range | null;
         preserveCase: boolean;
+        /**Whether the search is a regular expression or not*/
         regExp: boolean;
+        /**Whether the search matches only on whole words*/
         wholeWord: boolean;
+        /**Whether the search ought to be case-sensitive*/
         caseSensitive: boolean;
+        /**Whether to wrap the search back to the beginning when it hits the end*/
         wrap: boolean;
-        re: RegExp;
+        re: any;
+        /**true, if needle has \n or \r\n*/
+        $isMultiLine: boolean;
+        /**
+         * internal property, determine if browser supports unicode flag
+         * @private
+         * */
+        $supportsUnicodeFlag: boolean;
     }
 
     interface Point {
@@ -697,7 +729,7 @@ export namespace Ace {
     type KeyboardHandler = Partial<import("./src/keyboard/hash_handler").HashHandler> & {
         attach?: (editor: Editor) => void;
         detach?: (editor: Editor) => void;
-        getStatusText?: (editor?: any, data?) => string;
+        getStatusText?: (editor?: any, data?: any) => string;
     }
 
     export interface MarkerLike {
@@ -791,6 +823,8 @@ export namespace Ace {
     type BehaviorMap = Record<string, Record<string, BehaviorAction>>;
 
     interface Behaviour {
+        $behaviours: {[behaviour: string]: any}
+        
         add(name: string, action: string, callback: BehaviorAction): void;
 
         addBehaviours(behaviours: BehaviorMap): void;
@@ -877,7 +911,7 @@ export namespace Ace {
 
         $createKeywordList(): string[];
 
-        $delegator(method: string, args: IArguments, defaultHandler): any;
+        $delegator(method: string, args: IArguments, defaultHandler: any): any;
 
     }
 
@@ -929,7 +963,7 @@ export namespace Ace {
     interface TextInput {
         resetSelection(): void;
 
-        setAriaOption(options?: { activeDescendant: string, role: string, setLabel }): void;
+        setAriaOption(options?: { activeDescendant: string, role: string, setLabel: any }): void;
     }
 
     type CompleterCallback = (error: any, completions: Completion[]) => void;
@@ -983,18 +1017,18 @@ export namespace Ace {
          * Adds the selection and cursor.
          * @param orientedRange A range containing a cursor
          **/
-        addSelectionMarker: (orientedRange: Ace.Range & { marker? }) => Ace.Range & { marker? },
+        addSelectionMarker: (orientedRange: Ace.Range & { marker?: any }) => Ace.Range & { marker?: any },
         /**
          * Removes the selection marker.
          * @param range The selection range added with [[Editor.addSelectionMarker `addSelectionMarker()`]].
          **/
-        removeSelectionMarker: (range: Ace.Range & { marker? }) => void,
-        removeSelectionMarkers: (ranges: (Ace.Range & { marker? })[]) => void,
-        $onAddRange: (e) => void,
-        $onRemoveRange: (e) => void,
-        $onMultiSelect: (e) => void,
-        $onSingleSelect: (e) => void,
-        $onMultiSelectExec: (e) => void,
+        removeSelectionMarker: (range: Ace.Range & { marker?: any }) => void,
+        removeSelectionMarkers: (ranges: (Ace.Range & { marker?: any })[]) => void,
+        $onAddRange: (e: any) => void,
+        $onRemoveRange: (e: any) => void,
+        $onMultiSelect: (e: any) => void,
+        $onSingleSelect: (e: any) => void,
+        $onMultiSelectExec: (e: any) => void,
         /**
          * Executes a command for each selection range.
          * @param cmd The command to execute
@@ -1006,7 +1040,7 @@ export namespace Ace {
          **/
         exitMultiSelectMode: () => void,
         getSelectedText: () => string,
-        $checkMultiselectChange: (e, anchor: Ace.Anchor) => void,
+        $checkMultiselectChange: (e: any, anchor: Ace.Anchor) => void,
         /**
          * Finds and selects all the occurrences of `needle`.
          * @param needle The text to find
@@ -1176,8 +1210,8 @@ export const config: Ace.Config;
 export function require(name: string): any;
 
 export function edit(el: string | (Element & {
-    env?;
-    value?;
+    env?: any;
+    value?: any;
 }), options?: Partial<Ace.EditorOptions>): Ace.Editor;
 
 export function createEditSession(text: Ace.Document | string, mode: Ace.SyntaxMode): Ace.EditSession;
@@ -1238,7 +1272,6 @@ declare module "./src/background_tokenizer" {
 
 declare module "./src/document" {
     export interface Document extends Ace.EventEmitter<Ace.DocumentEvents> {
-
     }
 
 }
@@ -1287,12 +1320,6 @@ declare module "./src/edit_session" {
         widgetManager?: any,
         $bracketHighlight?: any,
         $selectionMarker?: number,
-        curOp?: {
-            command: {},
-            args: string,
-            scrollTop: number,
-            [key: string]: any;
-        },
         lineWidgetsWidth?: number,
         $getWidgetScreenLength?: () => number,
         _changedWidgets?: any,
@@ -1301,9 +1328,6 @@ declare module "./src/edit_session" {
         $enableVarChar?: any,
         $wrap?: any,
         $navigateWithinSoftTabs?: boolean,
-
-        getSelectionMarkers(): any[],
-
         $selectionMarkers?: any[],
         gutterRenderer?: any,
         $firstLineNumber?: number,
@@ -1315,6 +1339,14 @@ declare module "./src/edit_session" {
         $occurMatchingLines?: any,
         $useEmacsStyleLineStart?: boolean,
         $selectLongWords?: boolean,
+        curOp?: {
+            command: {},
+            args: string,
+            scrollTop: number,
+            [key: string]: any;
+        },
+
+        getSelectionMarkers(): any[],
     }
 
 }
@@ -1383,7 +1415,6 @@ declare module "./src/virtual_renderer" {
         $maxLines?: number,
         $scrollPastEnd?: number,
         enableKeyboardAccessibility?: boolean,
-        keyboardFocusClassName?: string,
         $highlightGutterLine?: boolean,
         $minLines?: number,
         $maxPixelHeight?: number,
@@ -1396,12 +1427,13 @@ declare module "./src/virtual_renderer" {
         $theme?: any,
         destroyed?: boolean,
         session: Ace.EditSession,
+        keyboardFocusClassName?: string,
     }
 
 }
 
 declare module "./src/snippets" {
-    export interface SnippetManager extends Ace.EventEmitter<any> {
+    interface SnippetManager extends Ace.EventEmitter<any> {
     }
 }
 
@@ -1512,3 +1544,8 @@ declare module "./src/mouse/default_gutter_handler" {
     export interface GutterHandler {
     }
 }
+
+declare module "./src/lib/keys" {
+    export function keyCodeToString(keyCode: number): string;
+}
+

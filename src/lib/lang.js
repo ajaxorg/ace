@@ -4,6 +4,8 @@ exports.last = function(a) {
     return a[a.length - 1];
 };
 
+
+/** @param {string} string */
 exports.stringReverse = function(string) {
     return string.split("").reverse().join("");
 };
@@ -30,8 +32,13 @@ exports.stringTrimLeft = function (string) {
 exports.stringTrimRight = function (string) {
     return string.replace(trimEndRegexp, '');
 };
-
+/**
+ * @template T
+ * @param {T} obj
+ * @return {T}
+ */
 exports.copyObject = function(obj) {
+    /** @type Object*/
     var copy = {};
     for (var key in obj) {
         copy[key] = obj[key];

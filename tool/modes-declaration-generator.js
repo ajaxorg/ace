@@ -100,7 +100,8 @@ function getExportType(exportName) {
         aceType = "Outdent";
     }
 
-    return ts.factory.createImportTypeNode(ts.factory.createLiteralTypeNode(ts.factory.createStringLiteral(".")),
+    return ts.factory.createImportTypeNode(
+        ts.factory.createLiteralTypeNode(ts.factory.createStringLiteral("ace-code")),
         undefined,
         ts.factory.createQualifiedName(ts.factory.createIdentifier("Ace"), ts.factory.createIdentifier(aceType)),
         undefined, false

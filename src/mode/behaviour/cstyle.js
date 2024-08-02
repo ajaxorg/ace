@@ -47,7 +47,6 @@ var getWrapped = function(selection, selected, opening, closing) {
 };
 /**
  * Creates a new Cstyle behaviour object with the specified options.
- * @constructor
  * @param {Object} [options] - The options for the Cstyle behaviour object.
  * @param {boolean} [options.braces] - Whether to force braces auto-pairing.
  * @param {boolean} [options.closeDocComment] - enables automatic insertion of closing tags for documentation comments.
