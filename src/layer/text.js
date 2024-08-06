@@ -511,25 +511,25 @@ class Text {
     }
 
     $clearActiveIndentGuide() {
-        var cells = this.$lines.cells;
-        for (var i = 0; i < cells.length; i++) {
-            var cell = cells[i];
-            var childNodes = cell.element.childNodes;
-            if (childNodes.length > 0) {
-                for (var j = 0; j < childNodes.length; j++) {
-                    if (childNodes[j].classList && childNodes[j].classList.contains("ace_indent-guide-active")) {
-                        childNodes[j].classList.remove("ace_indent-guide-active");
-                        break;
-                    }
-                }
-            }
-        }
+        var activeIndentGuides = this.element.querySelectorAll(".ace_indent-guide-active");
+        activeIndentGuides.forEach(el => {
+            el.classList.remove("ace_indent-guide-active");
+        });
     }
 
     $setIndentGuideActive(cell, indentLevel) {
         var line = this.session.doc.getLine(cell.row);
         if (line !== "") {
-            var childNodes = cell.element.childNodes;
+            let element = cell.element;
+            if (cell.element.classList && cell.element.classList.contains("ace_line_group")) {
+                if (cell.element.childNodes.length > 0) {
+                    element = cell.element.childNodes[0];
+                }
+                else {
+                    return;
+                }
+            }
+            var childNodes = element.childNodes;
             if (childNodes) {
                 let node = childNodes[indentLevel - 1];
                 if (node && node.classList && node.classList.contains("ace_indent-guide")) node.classList.add(
