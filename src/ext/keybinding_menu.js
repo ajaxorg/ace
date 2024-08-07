@@ -12,6 +12,7 @@
 
 "use strict";
 
+var nls = require("../config").nls;
 var Editor = require("../editor").Editor;
 
 /**
@@ -35,7 +36,8 @@ function showKeyboardShortcuts(editor) {
         }, '');
 
         el.id = 'kbshortcutmenu';
-        el.innerHTML = '<h1>Keyboard Shortcuts</h1>' + commands + '</div>';
+        el.innerHTML = '<h1>' + nls('keybinding-menu.head', 'Keyboard Shortcuts') + '</h1>'
+            + commands + '</div>';
         overlayPage(editor, el);
     }
 }
