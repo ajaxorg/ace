@@ -1,5 +1,7 @@
 "use strict";
-
+/**
+ * @typedef {import("../editor").Editor} Editor
+ */
 var snippetManager = require("../snippets").snippetManager;
 var AceInlineScreenReader = require("./inline_screenreader").AceInlineScreenReader;
 
@@ -17,7 +19,7 @@ class AceInline {
     /**
      * Renders the completion as ghost text to the current cursor position
      * @param {Editor} editor
-     * @param {Completion} completion
+     * @param {import("../../ace-internal").Ace.Completion} completion
      * @param {string} prefix
      * @returns {boolean} True if the completion could be rendered to the editor, false otherwise
      */

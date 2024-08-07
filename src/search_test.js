@@ -429,6 +429,30 @@ module.exports = {
         assert.equal(search.replace("ab12", "$$"), "$");
     },
 
+    "test: replace() should correctly handle $$ in the replacement string": function () {
+        var search = new Search().set({
+            needle: "example"
+        });
+
+        // Expecting $$ to be preserved in the output
+        assert.equal(search.replace("example", "$$test"), "$$test");
+
+        // Expecting $$$$ to be preserved as $$$$
+        assert.equal(search.replace("example", "$$$$test"), "$$$$test");
+        
+        search.set({
+            regExp: true,
+            needle: "(example)"
+        });
+
+        // Tests that $1 is replaced by the text that matches the capturing group.
+        assert.equal(search.replace("example", "$1test"), "exampletest");
+
+        search.set({regExp: false});
+        // Tests that without regular expression, "$1test" is treated as a literal string with $ escape.
+        assert.equal(search.replace("(example)", "$1test"), "$1test");
+    },
+
     "test: find all using regular expresion containing $" : function() {
         var session = new EditSession(["a", "     b", "c ", "d"]);
 

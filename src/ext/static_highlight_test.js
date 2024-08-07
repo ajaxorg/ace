@@ -39,17 +39,16 @@ module.exports = {
         ].join("\n");
         var mode = new JavaScriptMode();
         var result = highlighter.render(snippet, mode, theme);
-        assert.equal(result.html, "<div class='ace-tomorrow'><div class='ace_static_highlight ace_show_gutter' style='counter-reset:ace_line 0'>"
-            + "<div class='ace_line'><span class='ace_gutter ace_gutter-cell'></span><span class='ace_comment ace_doc'>/** this is a function</span>\n</div>"
-            + "<div class='ace_line'><span class='ace_gutter ace_gutter-cell'></span><span class='ace_comment ace_doc'>*</span>\n</div>"
-            + "<div class='ace_line'><span class='ace_gutter ace_gutter-cell'></span><span class='ace_comment ace_doc'>*/</span>\n</div>"
-            + "<div class='ace_line'><span class='ace_gutter ace_gutter-cell'></span>\n</div>"
-            + "<div class='ace_line'><span class='ace_gutter ace_gutter-cell'></span><span class='ace_storage ace_type'>function</span> <span class='ace_entity ace_name ace_function'>hello</span> <span class='ace_paren ace_lparen'>(</span><span class='ace_variable ace_parameter'>a</span><span class='ace_punctuation ace_operator'>,</span> <span class='ace_variable ace_parameter'>b</span><span class='ace_punctuation ace_operator'>,</span> <span class='ace_variable ace_parameter'>c</span><span class='ace_paren ace_rparen'>)</span> <span class='ace_paren ace_lparen'>{</span>\n</div>"
-            + "<div class='ace_line'><span class='ace_gutter ace_gutter-cell'></span>    <span class='ace_storage ace_type'>console</span><span class='ace_punctuation ace_operator'>.</span><span class='ace_support ace_function ace_firebug'>log</span><span class='ace_paren ace_lparen'>(</span><span class='ace_identifier'>a</span> <span class='ace_keyword ace_operator'>*</span> <span class='ace_identifier'>b</span> <span class='ace_keyword ace_operator'>+</span> <span class='ace_identifier'>c</span> <span class='ace_keyword ace_operator'>+</span> <span class='ace_string'>&#39;sup$&#39;</span><span class='ace_paren ace_rparen'>)</span><span class='ace_punctuation ace_operator'>;</span>\n</div>"
-            + "<div class='ace_line'><span class='ace_gutter ace_gutter-cell'></span><span class='ace_indent-guide'>    </span><span class='ace_indent-guide'>    </span>   <span class='ace_comment'>//</span>\n</div>"
-            + "<div class='ace_line'><span class='ace_gutter ace_gutter-cell'></span><span class='ace_indent-guide'>    </span><span class='ace_indent-guide'>    </span>    <span class='ace_comment'>//</span>\n</div>"
-            + "<div class='ace_line'><span class='ace_gutter ace_gutter-cell'></span><span class='ace_paren ace_rparen'>}</span>\n</div>"
-            + "</div></div>");
+        assert.equal(result.html, `<div class='ace-tomorrow'><div class='ace_static_highlight ace_show_gutter' style='counter-reset:ace_line 0'><div class='ace_line'><span class='ace_gutter ace_gutter-cell'></span><span class='ace_comment ace_doc'>/**</span><span class='ace_comment ace_doc ace_body'> this is a function</span>
+</div><div class='ace_line'><span class='ace_gutter ace_gutter-cell'></span><span class='ace_comment ace_doc ace_body'>*</span>
+</div><div class='ace_line'><span class='ace_gutter ace_gutter-cell'></span><span class='ace_comment ace_doc'>*/</span>
+</div><div class='ace_line'><span class='ace_gutter ace_gutter-cell'></span>
+</div><div class='ace_line'><span class='ace_gutter ace_gutter-cell'></span><span class='ace_storage ace_type'>function</span> <span class='ace_entity ace_name ace_function'>hello</span> <span class='ace_paren ace_lparen'>(</span><span class='ace_variable ace_parameter'>a</span><span class='ace_punctuation ace_operator'>,</span> <span class='ace_variable ace_parameter'>b</span><span class='ace_punctuation ace_operator'>,</span> <span class='ace_variable ace_parameter'>c</span><span class='ace_paren ace_rparen'>)</span> <span class='ace_paren ace_lparen'>{</span>
+</div><div class='ace_line'><span class='ace_gutter ace_gutter-cell'></span>    <span class='ace_storage ace_type'>console</span><span class='ace_punctuation ace_operator'>.</span><span class='ace_support ace_function ace_firebug'>log</span><span class='ace_paren ace_lparen'>(</span><span class='ace_identifier'>a</span> <span class='ace_keyword ace_operator'>*</span> <span class='ace_identifier'>b</span> <span class='ace_keyword ace_operator'>+</span> <span class='ace_identifier'>c</span> <span class='ace_keyword ace_operator'>+</span> <span class='ace_string'>&#39;sup$&#39;</span><span class='ace_paren ace_rparen'>)</span><span class='ace_punctuation ace_operator'>;</span>
+</div><div class='ace_line'><span class='ace_gutter ace_gutter-cell'></span><span class='ace_indent-guide'>    </span><span class='ace_indent-guide'>    </span>   <span class='ace_comment'>//</span>
+</div><div class='ace_line'><span class='ace_gutter ace_gutter-cell'></span><span class='ace_indent-guide'>    </span><span class='ace_indent-guide'>    </span>    <span class='ace_comment'>//</span>
+</div><div class='ace_line'><span class='ace_gutter ace_gutter-cell'></span><span class='ace_paren ace_rparen'>}</span>
+</div></div></div>`);
         assert.ok(!!result.css);
         next();
     },

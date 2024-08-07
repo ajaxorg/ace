@@ -33,6 +33,7 @@ function initEditor(value) {
     }
     editor = ace.edit(null, {
         value: value,
+        minLines: 10,
         maxLines: 10,
         enableBasicAutocompletion: true,
         enableLiveAutocompletion: true
@@ -66,16 +67,16 @@ module.exports = {
         assert.ok(!editor.container.querySelector("style"));
 
         sendKey("a");
-        checkInnerHTML('<d "ace_line ace_selected" id="suggest-aria-id:0" role="option" aria-label="arraysort" aria-setsize="2" aria-posinset="1" aria-describedby="doc-tooltip"><s "ace_completion-highlight">a</s><s "ace_">rraysort</s><s "ace_completion-spacer"> </s><s "ace_completion-meta">local</s></d><d "ace_line"><s "ace_completion-highlight">a</s><s "ace_">looooooooooooooooooooooooooooong_word</s><s "ace_completion-spacer"> </s><s "ace_completion-meta">local</s></d>', function() {
+        checkInnerHTML('<d "ace_line ace_selected" id="suggest-aria-id:0" role="option" aria-roledescription="item" aria-label="arraysort" aria-setsize="2" aria-posinset="1" aria-describedby="doc-tooltip" aria-selected="true"><s "ace_completion-highlight">a</s><s "ace_">rraysort</s><s "ace_completion-spacer"> </s><s "ace_completion-meta">local</s></d><d "ace_line"><s "ace_completion-highlight">a</s><s "ace_">looooooooooooooooooooooooooooong_word</s><s "ace_completion-spacer"> </s><s "ace_completion-meta">local</s></d>', function() {
             sendKey("rr");
-            checkInnerHTML('<d "ace_line ace_selected" id="suggest-aria-id:0" role="option" aria-label="arraysort" aria-setsize="1" aria-posinset="1" aria-describedby="doc-tooltip"><s "ace_completion-highlight">arr</s><s "ace_">aysort</s><s "ace_completion-spacer"> </s><s "ace_completion-meta">local</s></d>', function() {
+            checkInnerHTML('<d "ace_line ace_selected" id="suggest-aria-id:0" role="option" aria-roledescription="item" aria-label="arraysort" aria-setsize="1" aria-posinset="1" aria-describedby="doc-tooltip" aria-selected="true"><s "ace_completion-highlight">arr</s><s "ace_">aysort</s><s "ace_completion-spacer"> </s><s "ace_completion-meta">local</s></d>', function() {
                 sendKey("r");
-                checkInnerHTML('<d "ace_line ace_selected" id="suggest-aria-id:0" role="option" aria-label="arraysort" aria-setsize="1" aria-posinset="1" aria-describedby="doc-tooltip"><s "ace_completion-highlight">arr</s><s "ace_">ayso</s><s "ace_completion-highlight">r</s><s "ace_">t</s><s "ace_completion-spacer"> </s><s "ace_completion-meta">local</s></d>', function() {
+                checkInnerHTML('<d "ace_line ace_selected" id="suggest-aria-id:0" role="option" aria-roledescription="item" aria-label="arraysort" aria-setsize="1" aria-posinset="1" aria-describedby="doc-tooltip" aria-selected="true"><s "ace_completion-highlight">arr</s><s "ace_">ayso</s><s "ace_completion-highlight">r</s><s "ace_">t</s><s "ace_completion-spacer"> </s><s "ace_completion-meta">local</s></d>', function() {
                     
                     sendKey("Return");
                     assert.equal(editor.getValue(), "arraysort\narraysort alooooooooooooooooooooooooooooong_word");
                     editor.execCommand("insertstring", " looooooooooooooooooooooooooooong_");
-                    checkInnerHTML('<d "ace_line ace_selected" id="suggest-aria-id:0" role="option" aria-label="alooooooooooooooooooooooooooooong_word" aria-setsize="1" aria-posinset="1" aria-describedby="doc-tooltip"><s "ace_">a</s><s "ace_completion-highlight">looooooooooooooooooooooooooooong_</s><s "ace_">word</s><s "ace_completion-spacer"> </s><s "ace_completion-meta">local</s></d>', function() {
+                    checkInnerHTML('<d "ace_line ace_selected" id="suggest-aria-id:0" role="option" aria-roledescription="item" aria-label="alooooooooooooooooooooooooooooong_word" aria-setsize="1" aria-posinset="1" aria-describedby="doc-tooltip" aria-selected="true"><s "ace_">a</s><s "ace_completion-highlight">looooooooooooooooooooooooooooong_</s><s "ace_">word</s><s "ace_completion-spacer"> </s><s "ace_completion-meta">local</s></d>', function() {
                         sendKey("Return");
                         editor.destroy();
                         editor.container.remove();
@@ -402,6 +403,7 @@ module.exports = {
     },
     "test: trigger autocomplete for specific characters": function (done) {
         var editor = initEditor("document");
+        var newLineCharacter = editor.session.doc.getNewLineCharacter();
 
         editor.completers = [
             {
@@ -417,18 +419,27 @@ module.exports = {
                     ];
                     callback(null, completions);
                 },
-                triggerCharacters: ["."]
+                triggerCharacters: [".", newLineCharacter]
             }
         ];
-        
+
         editor.moveCursorTo(0, 8);
-        sendKey(".");
+        user.type(".");
         var popup = editor.completer.popup;
         check(function () {
             assert.equal(popup.data.length, 2);
-            editor.onCommandKey(null, 0, 13);
+            user.type("Return");  // Accept suggestion
             assert.equal(editor.getValue(), "document.all");
-            done();
+
+            user.type(Array(4).fill("Backspace"));  // Delete '.all'
+            user.type("Return");  // Enter new line
+
+            check(function() {
+                assert.equal(popup.data.length, 2);
+                user.type("Return");  // Accept suggestion
+                assert.equal(editor.getValue(), `document${newLineCharacter}all`);
+                done();
+            });
         });
 
         function check(callback) {
@@ -451,9 +462,49 @@ module.exports = {
         user.type("Ctrl-Space");
         assert.equal(editor.completer.popup.isOpen, true);
         assert.equal(editor.completer.popup.data[0].caption, emptyMessageText);
+        assert.ok(editor.completer.popup.renderer.container.classList.contains("ace_empty-message"));
 
         user.type("Return");
         assert.equal(editor.completer.popup.isOpen, false);
+
+        done();
+    },
+    "test: no empty message class if suggestions available": function(done) {
+        var editor = initEditor("");
+        var emptyMessageText = "No suggestions.";
+        var autocomplete = Autocomplete.for(editor);
+        autocomplete.emptyMessage = () => emptyMessageText;
+
+        editor.completers = [
+            {
+                getCompletions: function (editor, session, pos, prefix, callback) {
+                    var completions = [
+                        {
+                            caption: "append",
+                            value: "append"
+                        }
+                    ];
+                    callback(null, completions);
+                }
+            }
+        ];
+
+        user.type("b");
+
+        // Open autocompletion via key-binding and verify empty message class
+        user.type("Ctrl-Space");
+        assert.equal(editor.completer.popup.isOpen, true);
+        assert.equal(editor.completer.popup.data[0].caption, emptyMessageText);
+        assert.ok(editor.completer.popup.renderer.container.classList.contains("ace_empty-message"));
+
+        user.type("Backspace");
+        assert.equal(editor.completer.popup.isOpen, false);
+
+        // Open autocompletion via key-binding and verify no empty message class
+        user.type("Ctrl-Space");
+        assert.equal(editor.completer.popup.isOpen, true);
+        assert.equal(editor.completer.popup.data[0].caption, "append");
+        assert.ok(!editor.completer.popup.renderer.container.classList.contains("ace_empty-message"));
 
         done();
     },
@@ -486,6 +537,7 @@ module.exports = {
             }
         ];
         
+        user.type(" ");
         user.type("t");
         user.type("e");
         assert.ok(!editor.completer || !editor.completer.popup.isOpen);
@@ -494,9 +546,16 @@ module.exports = {
             assert.ok(editor.completers[1].timeout);
             user.type("Home");
             setTimeout(function() {
-                assert.ok(!editor.completer.popup.isOpen);
-                assert.ok(!editor.completers[1].timeout);
-                done();
+                assert.ok(editor.completer.popup.isOpen);
+                assert.ok(editor.completers[1].timeout);
+
+                user.type("Left");
+
+                setTimeout(function() {
+                    assert.ok(!editor.completer.popup.isOpen);
+                    assert.ok(!editor.completers[1].timeout);
+                    done();
+                }, 0);
             }, 0);
         }, 11);
     },
@@ -857,16 +916,15 @@ module.exports = {
         var inline = completer.inlineRenderer;
 
         // Popup should be open, with inline text renderered.
-        assert.equal(editor.completer.popup.isOpen, true);  
+        assert.equal(completer.popup.isOpen, true);  
         assert.equal(completer.popup.getRow(), 0);
         assert.strictEqual(inline.isOpen(), true);
         assert.strictEqual(editor.renderer.$ghostText.text, "function\nthat does something\ncool");
 
-        editor.completer.popup.renderer.$loop._flush();
-        var popupTextLayer = completer.popup.renderer.$textLayer;
+        completer.popup.renderer.$loop._flush();
 
         // aria-describedby of selected popup item should have aria-describedby set to the offscreen inline screen reader div and doc-tooltip.
-        assert.strictEqual(popupTextLayer.selectedNode.getAttribute("aria-describedby"), "doc-tooltip ace-inline-screenreader-line-0 ace-inline-screenreader-line-1 ace-inline-screenreader-line-2 ");
+        assert.strictEqual(completer.popup.selectedNode.getAttribute("aria-describedby"), "doc-tooltip ace-inline-screenreader-line-0 ace-inline-screenreader-line-1 ace-inline-screenreader-line-2 ");
 
         // The elements with these IDs should have the correct content.
         assert.strictEqual(document.getElementById("ace-inline-screenreader-line-0").textContent,"function");
@@ -989,6 +1047,7 @@ module.exports = {
         
         var completer = Autocomplete.for(editor);
         completer.stickySelectionDelay = 100;
+        completer.showLoadingState = true;
         user.type("Ctrl-Space");
         assert.ok(!(completer.popup && completer.popup.isOpen));
 
@@ -1005,8 +1064,11 @@ module.exports = {
 
                 editor.completers = [fastCompleter, slowCompleter];
                 user.type("Ctrl-Space");
-                assert.equal(completer.popup.data.length, 3); 
+                assert.equal(completer.popup.data.length, 4); 
+
+                // Should have top row saying 'Loading...' together with results.
                 assert.ok(isLoading());
+                assert.equal(completer.popup.data[0].caption, "Loading..."); 
                 setTimeout(() => {
                     completer.popup.renderer.$loop._flush();
                     assert.equal(completer.popup.data.length, 5);
@@ -1019,6 +1081,467 @@ module.exports = {
         function isLoading() {
             return completer.popup.renderer.container.classList.contains("ace_loading");
         }
+    },
+    "test: should not display loading state on no suggestion state": function(done) {
+        var editor = initEditor("hello world\n");
+        
+        var slowCompleter = {
+            getCompletions: function (editor, session, pos, prefix, callback) {
+                var completions = [
+                    {
+                        caption: "slow option 1",
+                        value: "s1",
+                        score: 3
+                    }, {
+                        caption: "slow option 2",
+                        value: "s2",
+                        score: 0
+                    }
+                ];
+                setTimeout(() => {
+                    callback(null,  completions);
+                }, 200);
+            }
+        };
+
+        editor.completers = [slowCompleter];
+        
+        var completer = Autocomplete.for(editor);
+        completer.stickySelectionDelay = 100;
+        completer.emptyMessage = "no completions";
+        completer.showLoadingState = true;
+
+        user.type("doesntmatchanything");
+        user.type("Ctrl-Space");
+        assert.ok(!(completer.popup && completer.popup.isOpen));
+
+        setTimeout(() => {
+            completer.popup.renderer.$loop._flush();
+            assert.equal(completer.popup.data.length, 1);
+            assert.ok(isLoading());
+            setTimeout(() => {
+                // Should show no suggestions state without loading indicator
+                assert.equal(completer.popup.data.length, 1); 
+                assert.equal(completer.popup.data[0].caption, "no completions");
+                assert.ok(!isLoading());
+    
+                done();
+            }, 150);
+        }, 100);
+        
+        function isLoading() {
+            return completer.popup.renderer.container.classList.contains("ace_loading");
+        }
+    },
+    "test: should display ghost text after loading state if inline preview enabled": function(done) {
+        var editor = initEditor("hello world\n");
+        
+        var slowCompleter = {
+            getCompletions: function (editor, session, pos, prefix, callback) {
+                var completions = [
+                    {
+                        caption: "slow option 1",
+                        value: "s1",
+                        score: 3
+                    }, {
+                        caption: "slow option 2",
+                        value: "s2",
+                        score: 0
+                    }
+                ];
+                setTimeout(() => {
+                    callback(null,  completions);
+                }, 200);
+            }
+        };
+
+        editor.completers = [slowCompleter];
+        
+        var completer = Autocomplete.for(editor);
+        completer.stickySelectionDelay = 100;
+        completer.inlineEnabled = true;
+        completer.showLoadingState = true;
+
+        user.type("Ctrl-Space");
+        assert.ok(!(completer.popup && completer.popup.isOpen));
+
+        setTimeout(() => {
+            completer.popup.renderer.$loop._flush();
+            assert.equal(completer.popup.data.length, 1);
+            assert.ok(isLoading());
+            setTimeout(() => {
+                assert.equal(completer.popup.data.length, 2); 
+                assert.ok(!isLoading());
+                
+                assert.strictEqual(editor.renderer.$ghostText.text, "s1");
+                done();
+            }, 150);
+        }, 100);
+        
+        function isLoading() {
+            return completer.popup.renderer.container.classList.contains("ace_loading");
+        }
+    },
+    "test: when completion gets inserted and call the onInsert method": function (done) {
+        var isInserted = false;
+        var editor = initEditor("hello world");
+        var completer = {
+            onInsert: function (_editor, el) {
+                assert.ok(!isInserted, "should not have inserted something already");
+                isInserted = el.value === "one";
+            },
+            getCompletions: function (editor, session, pos, prefix, callback) {
+                var completions = [
+                    {
+                        caption: "option 1",
+                        value: "one",
+                        completer
+                    }, {
+                        caption: "option 2",
+                        value: "two",
+                        completer
+                    }, {
+                        caption: "option 3",
+                        value: "three",
+                        completer
+                    }
+                ];
+                callback(null, completions);
+            }
+        };
+        editor.completers = [completer];
+        user.type("Ctrl-Space");
+        editor.completer.popup.renderer.$loop._flush();
+        assert.equal(editor.completer.popup.isOpen, true);     
+        assert.equal(editor.completer.popup.getRow(), 0);
+        user.type("Return");
+
+        assert.ok(isInserted);
+
+        done();
+    },
+    "test: when completions get shown, call the onSeen method": function (done) {
+        var seen = [false, false, false];
+        var editor = initEditor("hello world");
+        var completer = {
+            onSeen: function (_editor, el) {
+                const index = ["one", "two", "three"].indexOf(el.value);
+                if (index >= 0) {
+                    assert.ok(!seen[index], "should not be called double");
+                    seen[index] = true;
+                }
+            },
+            getCompletions: function (editor, session, pos, prefix, callback) {
+                var completions = [
+                    {
+                        caption: "option 1",
+                        value: "one",
+                        completer
+                    }, {
+                        caption: "option 2",
+                        value: "two",
+                        completer
+                    }, {
+                        caption: "option 3",
+                        value: "three",
+                        completer
+                    }
+                ];
+                callback(null, completions);
+            }
+        };
+        editor.completers = [
+            completer
+        ];
+        Autocomplete.for(editor).inlineEnabled = true;
+        user.type("Ctrl-Space");
+        editor.completer.popup.renderer.$loop._flush();
+        assert.equal(editor.completer.popup.isOpen, true);     
+        assert.equal(editor.completer.popup.getRow(), 0);
+        assert.deepEqual(seen, [true, false, false]);
+        done();
+    },
+    "test: when inline completions get shown, call the onSeen method": function (done) {
+        var seen = [false, false, false];
+        var calledDouble = false;
+        var editor = initEditor("hello world");
+        var completer = {
+            onSeen: function (_editor, el) {
+                const index = ["one", "two", "three"].indexOf(el.value);
+                if (index >= 0) {
+                    if (seen[index]) calledDouble = true;
+                    seen[index] = true;
+                }
+            },
+            getCompletions: function (editor, session, pos, prefix, callback) {
+                var completions = [
+                    {
+                        caption: "option 1",
+                        value: "one",
+                        completer
+                    }, {
+                        caption: "option 2",
+                        value: "two",
+                        completer
+                    }, {
+                        caption: "option 3",
+                        value: "three",
+                        completer
+                    }
+                ];
+                callback(null, completions);
+            }
+        };
+        editor.completers = [
+            completer
+        ];
+        user.type("Ctrl-Space");
+        editor.completer.popup.renderer.$loop._flush();
+        assert.equal(editor.completer.popup.isOpen, true);     
+        assert.equal(editor.completer.popup.getRow(), 0);
+        assert.deepEqual(seen, [true, true, true]);
+        assert.ok(!calledDouble);
+        done();
+    },
+    "test: if there is very long ghost text, popup should be rendered at the bottom of the editor container": function(done) {
+        var editor = initEditor("hello world\n");
+
+        // Give enough space for the popup to appear below the editor
+        var initialDocumentHeight = document.body.style.height;
+        document.body.style.height = editor.container.getBoundingClientRect().height + 200 + "px";
+        editor.renderer.$loop._flush();
+
+        var longCompleter = {
+            getCompletions: function (editor, session, pos, prefix, callback) {
+                var completions = [
+                    {
+                        caption: "loooooong",
+                        value: "line\n".repeat(20),
+                        score: 0
+                    }
+                ];
+                callback(null,  completions);
+            }
+        };
+
+        editor.completers = [longCompleter];
+        
+        var completer = Autocomplete.for(editor);
+        completer.inlineEnabled = true;
+
+        user.type("Ctrl-Space");
+        assert.ok(completer.popup && completer.popup.isOpen);
+
+        // Wait to account for the renderer scrolling for the virtual renderer
+        setTimeout(() => {
+            completer.popup.renderer.$loop._flush();
+
+            // Popup should start one pixel below the bottom of the editor container
+            assert.equal(
+                completer.popup.container.getBoundingClientRect().top,
+                editor.container.getBoundingClientRect().bottom + 1
+            );
+
+            // Reset back to initial values
+            document.body.style.height = initialDocumentHeight;
+            editor.renderer.$loop._flush();
+
+            done();
+        }, 100);
+    },
+    "test: if there is ghost text, popup should be rendered at the bottom of the ghost text": function(done) {
+        var editor = initEditor("");
+
+        var longCompleter = {
+            getCompletions: function (editor, session, pos, prefix, callback) {
+                var completions = [
+                    {
+                        caption: "loooooong",
+                        value: "line\n".repeat(5),
+                        score: 0
+                    }
+                ];
+                callback(null,  completions);
+            }
+        };
+
+        editor.completers = [longCompleter];
+        
+        var completer = Autocomplete.for(editor);
+        completer.inlineEnabled = true;
+
+        user.type("Ctrl-Space");
+        assert.ok(completer.popup && completer.popup.isOpen);
+
+        // Wait to account for the renderer scrolling for the virtual renderer
+        setTimeout(() => {
+            completer.popup.renderer.$loop._flush();
+
+            // Popup should start one pixel below the bottom of the ghost text
+            assert.equal(
+                completer.popup.container.getBoundingClientRect().top,
+                editor.renderer.$ghostTextWidget.el.getBoundingClientRect().bottom + 1
+            );
+
+            done();
+        }, 100);
+    },
+    "test: should not show loading state when empty completer array is provided": function(done) {
+        var editor = initEditor("");
+        editor.completers = [];
+        var completer = Autocomplete.for(editor);
+        completer.showLoadingState = true;
+
+        user.type("Ctrl-Space");
+
+        // Tooltip should not be open
+        assert.ok(!(completer.popup && completer.popup.isOpen));
+
+        done();
+    },
+    "test: should update inline preview when typing when it's the only item in the popup": function(done) {
+        var editor = initEditor("");
+        
+        editor.completers = [
+            {
+                getCompletions: function (editor, session, pos, prefix, callback) {
+                    var completions = [
+                        {
+                            caption: "function",
+                            value: "function\nthat does something\ncool"
+                        }
+                    ];
+                    callback(null, completions);
+                }
+            }
+        ];
+        
+        var completer = Autocomplete.for(editor);
+        completer.inlineEnabled = true;
+
+        user.type("f");
+        var inline = completer.inlineRenderer;
+
+        // Popup should be open, with inline text renderered.
+        assert.equal(completer.popup.isOpen, true);  
+        assert.equal(completer.popup.getRow(), 0);
+        assert.strictEqual(inline.isOpen(), true);
+        assert.strictEqual(editor.renderer.$ghostText.text, "unction\nthat does something\ncool");
+
+        // when you keep typing, the ghost text should update accordingly
+        user.type("unc");
+
+        setTimeout(() => {
+            assert.strictEqual(inline.isOpen(), true);
+            assert.strictEqual(editor.renderer.$ghostText.text, "tion\nthat does something\ncool");
+
+            user.type("tio");
+
+            setTimeout(() => {
+                assert.strictEqual(inline.isOpen(), true);
+                assert.strictEqual(editor.renderer.$ghostText.text, "n\nthat does something\ncool");
+    
+                done();
+            }, 100);
+        }, 100);
+    },
+    "test: should keep showing ghost text when typing ahead with whitespace": function(done) {
+        var editor = initEditor("");
+        
+        editor.completers = [
+            {
+                getCompletions: function (editor, session, pos, prefix, callback) {
+                    var completions = [
+                        {
+                            value: "function that does something cool"
+                        }
+                    ];
+                    callback(null, completions);
+                }
+            }
+        ];
+        
+        var completer = Autocomplete.for(editor);
+        completer.inlineEnabled = true;
+
+        user.type("f");
+        var inline = completer.inlineRenderer;
+
+        // Popup should be open, with inline text renderered.
+        assert.equal(completer.popup.isOpen, true);  
+        assert.equal(completer.popup.getRow(), 0);
+        assert.strictEqual(inline.isOpen(), true);
+        assert.strictEqual(editor.renderer.$ghostText.text, "unction that does something cool");
+
+        // when you keep typing, the ghost text should update accordingly
+        user.type("unction th");
+
+        setTimeout(() => {
+            assert.strictEqual(inline.isOpen(), true);
+            assert.strictEqual(editor.renderer.$ghostText.text, "at does something cool");
+
+            user.type("at do");
+
+            setTimeout(() => {
+                assert.strictEqual(inline.isOpen(), true);
+                assert.strictEqual(editor.renderer.$ghostText.text, "es something cool");
+    
+                done();
+            }, 100);
+        }, 100);
+    },
+    "test: passing matches from execCommand": function() {
+        var editor = initEditor("");
+        editor.execCommand('startAutocomplete', {
+            matches: [
+                { value: 'example value' }
+            ]
+        });
+        user.type("\n");
+        
+        assert.equal(editor.getValue(), "example value");
+        
+        editor.resize(true);
+        editor.insertSnippet("<$1-${1|a1,b2,c3|}>");
+        user.type("Down");
+        user.type("\n");
+        
+        assert.equal(editor.getValue(), "example value<b2-b2>");
+    },
+    "test: should close popup if backspacing until input is fully deleted": function() {
+        var editor = initEditor("");
+        
+        editor.completers = [
+            {
+                getCompletions: function (editor, session, pos, prefix, callback) {
+                    var completions = [
+                        {
+                            value: "tabularhappiness"
+                        }
+                    ];
+                    callback(null, completions);
+                }
+            }
+        ];
+        
+        var completer = Autocomplete.for(editor);
+        completer.inlineEnabled = true;
+
+        user.type("tab");
+
+        // Popup should be open
+        assert.equal(completer.popup.isOpen, true);  
+
+        user.type("Backspace");
+        user.type("Backspace");
+
+        // Popup should still be open
+        assert.equal(completer.popup.isOpen, true);  
+
+        user.type("Backspace");
+
+        // Popup should be closed now
+        assert.equal(completer.popup.isOpen, false); 
     }
 };
 

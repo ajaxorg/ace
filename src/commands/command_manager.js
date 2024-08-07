@@ -1,5 +1,8 @@
 "use strict";
-
+/**
+ *
+ * @typedef {import("../editor").Editor} Editor
+ */
 var oop = require("../lib/oop");
 var MultiHashHandler = require("../keyboard/hash_handler").MultiHashHandler;
 var EventEmitter = require("../lib/event_emitter").EventEmitter;
@@ -8,7 +11,7 @@ class CommandManager extends MultiHashHandler{
     /**
      * new CommandManager(platform, commands)
      * @param {String} platform Identifier for the platform; must be either `"mac"` or `"win"`
-     * @param {Array} commands A list of commands
+     * @param {any[]} commands A list of commands
      **/
     constructor(platform, commands) {
         super(commands, platform);
@@ -20,7 +23,14 @@ class CommandManager extends MultiHashHandler{
             return e.command.exec(e.editor, e.args, e.event, false);
         });
     }
-    
+
+    /**
+     * 
+     * @param {string | string[] | import("../../ace-internal").Ace.Command} command
+     * @param {Editor} editor
+     * @param {any} args
+     * @returns {boolean}
+     */
     exec(command, editor, args) {
         if (Array.isArray(command)) {
             for (var i = command.length; i--; ) {
@@ -28,10 +38,31 @@ class CommandManager extends MultiHashHandler{
             }
             return false;
         }
-
+        
         if (typeof command === "string")
             command = this.commands[command];
 
+        if (!this.canExecute(command, editor)) {
+            return false; 
+        }
+        
+        var e = {editor: editor, command: command, args: args};
+        e.returnValue = this._emit("exec", e);
+        this._signal("afterExec", e);
+
+        return e.returnValue === false ? false : true;
+    }
+
+    /**
+     *
+     * @param {string | import("../../ace-internal").Ace.Command} command
+     * @param {Editor} editor
+     * @returns {boolean}
+     */
+    canExecute(command, editor) {
+        if (typeof command === "string")
+            command = this.commands[command];
+        
         if (!command)
             return false;
 
@@ -40,14 +71,15 @@ class CommandManager extends MultiHashHandler{
 
         if (this.$checkCommandState != false && command.isAvailable && !command.isAvailable(editor))
             return false;
-
-        var e = {editor: editor, command: command, args: args};
-        e.returnValue = this._emit("exec", e);
-        this._signal("afterExec", e);
-
-        return e.returnValue === false ? false : true;
+        
+        return true;
     }
+    
 
+    /**
+     * @param {Editor} editor
+     * @returns {boolean}
+     */
     toggleRecording(editor) {
         if (this.$inReplay)
             return;
@@ -74,6 +106,9 @@ class CommandManager extends MultiHashHandler{
         return this.recording = true;
     }
 
+    /**
+     * @param {Editor} editor
+     */
     replay(editor) {
         if (this.$inReplay || !this.macro)
             return;

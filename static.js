@@ -31,6 +31,13 @@ if (allowSave)
 
 http.createServer(function(req, res) {
     var uri = unescape(url.parse(req.url).pathname);
+    
+    // We don't allow for relative URIs, such as ../../X, to prevent directory traversal in case the server is shared with other actors.
+    // See more at https://cwe.mitre.org/data/definitions/22.html
+    if (path.normalize(uri) !== uri) {
+        return error(res, 400, "400 Bad request: Directory traversal is not allowed.");
+    }
+    
     var filename = path.join(process.cwd(), uri);
 
     if (req.method == "OPTIONS") {

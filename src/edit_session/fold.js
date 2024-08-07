@@ -1,11 +1,21 @@
 "use strict";
-
+/**
+ * @typedef {import("./fold_line").FoldLine} FoldLine
+ * @typedef {import("../range").Range} Range
+ * @typedef {import("../../ace-internal").Ace.Point} Point
+ * @typedef {import("../../ace-internal").Ace.IRange} IRange
+ */
 var RangeList = require("../range_list").RangeList;
 
 /*
  * Simple fold-data struct.
  **/
 class Fold extends RangeList {
+
+    /**
+     * @param {Range} range
+     * @param {any} placeholder
+     */
     constructor(range, placeholder) {
         super();
         this.foldLine = null;
@@ -15,6 +25,7 @@ class Fold extends RangeList {
         this.end = range.end;
 
         this.sameRow = range.start.row == range.end.row;
+        /**@type {Fold[]}*/
         this.subFolds = this.ranges = [];
     }
     
@@ -22,6 +33,9 @@ class Fold extends RangeList {
         return '"' + this.placeholder + '" ' + this.range.toString();
     }
 
+    /**
+     * @param {FoldLine} foldLine
+     */
     setFoldLine(foldLine) {
         this.foldLine = foldLine;
         this.subFolds.forEach(function(fold) {
@@ -39,6 +53,9 @@ class Fold extends RangeList {
         return fold;
     }
 
+    /**
+     * @param {Fold} fold
+     */
     addSubFold(fold) {
         if (this.range.isEqual(fold))
             return;
@@ -79,27 +96,46 @@ class Fold extends RangeList {
 
         return fold;
     }
-    
+
+    /**
+     * @param {IRange} range
+     */
     restoreRange(range) {
         return restoreRange(range, this.start);
     }
 
 }
 
+/**
+ * @param {Point} point
+ * @param {Point} anchor
+ */
 function consumePoint(point, anchor) {
     point.row -= anchor.row;
     if (point.row == 0)
         point.column -= anchor.column;
 }
+/**
+ * @param {IRange} range
+ * @param {Point} anchor
+ */
 function consumeRange(range, anchor) {
     consumePoint(range.start, anchor);
     consumePoint(range.end, anchor);
 }
+/**
+ * @param {Point} point
+ * @param {Point} anchor
+ */
 function restorePoint(point, anchor) {
     if (point.row == 0)
         point.column += anchor.column;
     point.row += anchor.row;
 }
+/**
+ * @param {IRange} range
+ * @param {Point} anchor
+ */
 function restoreRange(range, anchor) {
     restorePoint(range.start, anchor);
     restorePoint(range.end, anchor);

@@ -1,5 +1,8 @@
 "use strict";
-
+/**
+ * @typedef {import("../edit_session").EditSession} EditSession
+ * @typedef {import("../../ace-internal").Ace.LayerConfig} LayerConfig
+ */
 var dom = require("../lib/dom");
 var oop = require("../lib/oop");
 var lang = require("../lib/lang");
@@ -8,6 +11,9 @@ var Lines = require("./lines").Lines;
 var nls = require("../config").nls;
 
 class Gutter{
+    /**
+     * @param {HTMLElement} parentEl
+     */
     constructor(parentEl) {
         this.element = dom.createElement("div");
         this.element.className = "ace_layer ace_gutter-layer";
@@ -23,6 +29,9 @@ class Gutter{
         this.$lines.$offsetCoefficient = 1;
     }
 
+    /**
+     * @param {EditSession} session
+     */
     setSession(session) {
         if (this.session)
             this.session.off("change", this.$updateAnnotations);
@@ -31,18 +40,29 @@ class Gutter{
             session.on("change", this.$updateAnnotations);
     }
 
+    /**
+     * @param {number} row
+     * @param {string} className
+     */
     addGutterDecoration(row, className) {
         if (window.console)
             console.warn && console.warn("deprecated use session.addGutterDecoration");
         this.session.addGutterDecoration(row, className);
     }
 
+    /**
+     * @param {number} row
+     * @param {string} className
+     */
     removeGutterDecoration(row, className) {
         if (window.console)
             console.warn && console.warn("deprecated use session.removeGutterDecoration");
         this.session.removeGutterDecoration(row, className);
     }
 
+    /**
+     * @param {any[]} annotations
+     */
     setAnnotations(annotations) {
         // iterate over sparse array
         this.$annotations = [];
@@ -51,15 +71,18 @@ class Gutter{
             var row = annotation.row;
             var rowInfo = this.$annotations[row];
             if (!rowInfo)
-                rowInfo = this.$annotations[row] = {text: [], type: []};
+                rowInfo = this.$annotations[row] = {text: [], type: [], displayText: []};
            
             var annoText = annotation.text;
+            var displayAnnoText = annotation.text;
             var annoType = annotation.type;
             annoText = annoText ? lang.escapeHTML(annoText) : annotation.html || "";
+            displayAnnoText = displayAnnoText ? displayAnnoText : annotation.html || "";
 
             if (rowInfo.text.indexOf(annoText) === -1){
                 rowInfo.text.push(annoText);
                 rowInfo.type.push(annoType);
+                rowInfo.displayText.push(displayAnnoText);
             }
 
             var className = annotation.className;
@@ -74,6 +97,9 @@ class Gutter{
         }
     }
 
+    /**
+     * @param {import("../../ace-internal").Ace.Delta} delta
+     */
     $updateAnnotations(delta) {
         if (!this.$annotations.length)
             return;
@@ -90,6 +116,9 @@ class Gutter{
         }
     }
 
+    /**
+     * @param {LayerConfig} config
+     */
     update(config) {
         this.config = config;
         
@@ -140,6 +169,9 @@ class Gutter{
         this.$updateGutterWidth(config);
     }
 
+    /**
+     * @param {LayerConfig} config
+     */
     $updateGutterWidth(config) {
         var session = this.session;
         
@@ -159,7 +191,7 @@ class Gutter{
         gutterWidth += padding.left + padding.right;
         if (gutterWidth !== this.gutterWidth && !isNaN(gutterWidth)) {
             this.gutterWidth = gutterWidth;
-            this.element.parentNode.style.width = 
+            /**@type{any}*/(this.element.parentNode).style.width = 
             this.element.style.width = Math.ceil(this.gutterWidth) + "px";
             this._signal("changeGutterWidth", gutterWidth);
         }
@@ -204,7 +236,10 @@ class Gutter{
             }
         }
     }
-    
+
+    /**
+     * @param {LayerConfig} config
+     */
     scrollLines(config) {
         var oldConfig = this.config;
         this.config = config;
@@ -248,6 +283,11 @@ class Gutter{
         this.$updateGutterWidth(config);
     }
 
+    /**
+     * @param {LayerConfig} config
+     * @param {number} firstRow
+     * @param {number} lastRow
+     */
     $renderLines(config, firstRow, lastRow) {
         var fragment = [];
         var row = firstRow;
@@ -271,7 +311,14 @@ class Gutter{
         }
         return fragment;
     }
-    
+
+
+    /**
+     * @param {any} cell
+     * @param {LayerConfig} config
+     * @param {import("../../ace-internal").Ace.IRange | undefined} fold
+     * @param {number} row
+     */
     $renderCell(cell, config, fold, row) {
         var element = cell.element;
         
@@ -365,21 +412,21 @@ class Gutter{
 
             // getFoldWidgetRange is optional to be implemented by fold modes, if not available we fall-back.
             if (foldRange)
-                foldWidget.setAttribute("aria-label", nls("Toggle code folding, rows $0 through $1", [foldRange.start.row + 1, foldRange.end.row + 1]));
+                foldWidget.setAttribute("aria-label", nls("gutter.code-folding.range.aria-label", "Toggle code folding, rows $0 through $1", [foldRange.start.row + 1, foldRange.end.row + 1]));
             else {
                 if (fold)
-                    foldWidget.setAttribute("aria-label", nls("Toggle code folding, rows $0 through $1", [fold.start.row + 1, fold.end.row + 1]));
+                    foldWidget.setAttribute("aria-label", nls("gutter.code-folding.closed.aria-label", "Toggle code folding, rows $0 through $1", [fold.start.row + 1, fold.end.row + 1]));
                 else
-                    foldWidget.setAttribute("aria-label", nls("Toggle code folding, row $0", [row + 1]));
+                    foldWidget.setAttribute("aria-label", nls("gutter.code-folding.open.aria-label", "Toggle code folding, row $0", [row + 1]));
             }
 
             if (isClosedFold) {
                 foldWidget.setAttribute("aria-expanded", "false");
-                foldWidget.setAttribute("title", nls("Unfold code"));
+                foldWidget.setAttribute("title", nls("gutter.code-folding.closed.title", "Unfold code"));
             }
             else {
                 foldWidget.setAttribute("aria-expanded", "true");
-                foldWidget.setAttribute("title", nls("Fold code"));
+                foldWidget.setAttribute("title", nls("gutter.code-folding.open.title", "Fold code"));
             }
         } else {
             if (foldWidget) {
@@ -398,7 +445,17 @@ class Gutter{
             dom.setStyle(annotationIconNode.style, "height", lineHeight);
             dom.setStyle(annotationNode.style, "display", "block");
             dom.setStyle(annotationNode.style, "height", lineHeight);
-            annotationNode.setAttribute("aria-label", nls("Read annotations row $0", [rowText]));
+            var ariaLabel;
+            switch(foldAnnotationClass) {
+                case " ace_error_fold":
+                    ariaLabel = nls("gutter.annotation.aria-label.error", "Read annotations row $0", [rowText]);
+                    break;
+
+                case " ace_warning_fold":
+                    ariaLabel = nls("gutter.annotation.aria-label.warning", "Read annotations row $0", [rowText]);
+                    break;
+            }
+            annotationNode.setAttribute("aria-label", ariaLabel);
             annotationNode.setAttribute("tabindex", "-1");
             annotationNode.setAttribute("role", "button");
         }
@@ -414,7 +471,21 @@ class Gutter{
             dom.setStyle(annotationIconNode.style, "height", lineHeight);
             dom.setStyle(annotationNode.style, "display", "block");
             dom.setStyle(annotationNode.style, "height", lineHeight);
-            annotationNode.setAttribute("aria-label", nls("Read annotations row $0", [rowText]));
+            var ariaLabel;
+            switch(this.$annotations[row].className) {
+                case " ace_error":
+                    ariaLabel = nls("gutter.annotation.aria-label.error", "Read annotations row $0", [rowText]);
+                    break;
+
+                case " ace_warning":
+                    ariaLabel = nls("gutter.annotation.aria-label.warning", "Read annotations row $0", [rowText]);
+                    break;
+
+                case " ace_info":
+                    ariaLabel = nls("gutter.annotation.aria-label.info", "Read annotations row $0", [rowText]);
+                    break;
+            }
+            annotationNode.setAttribute("aria-label", ariaLabel);
             annotationNode.setAttribute("tabindex", "-1");
             annotationNode.setAttribute("role", "button");
         }
@@ -443,11 +514,17 @@ class Gutter{
         
         return cell;
     }
-    
+
+    /**
+     * @param {boolean} highlightGutterLine
+     */
     setHighlightGutterLine(highlightGutterLine) {
         this.$highlightGutterLine = highlightGutterLine;
     }
-    
+
+    /**
+     * @param {boolean} show
+     */
     setShowLineNumbers(show) {
         this.$renderer = !show && {
             getWidth: function() {return 0;},
@@ -458,7 +535,10 @@ class Gutter{
     getShowLineNumbers() {
         return this.$showLineNumbers;
     }
-    
+
+    /**
+     * @param {boolean} [show]
+     */
     setShowFoldWidgets(show) {
         if (show)
             dom.addCssClass(this.element, "ace_folding-enabled");
@@ -476,7 +556,7 @@ class Gutter{
     $computePadding() {
         if (!this.element.firstChild)
             return {left: 0, right: 0};
-        var style = dom.computedStyle(this.element.firstChild);
+        var style = dom.computedStyle(/**@type{Element}*/(this.element.firstChild));
         this.$padding = {};
         this.$padding.left = (parseInt(style.borderLeftWidth) || 0)
             + (parseInt(style.paddingLeft) || 0) + 1;
@@ -485,6 +565,9 @@ class Gutter{
         return this.$padding;
     }
 
+    /**
+     * @param {{ x: number; }} point
+     */
     getRegion(point) {
         var padding = this.$padding || this.$computePadding();
         var rect = this.element.getBoundingClientRect();

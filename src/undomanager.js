@@ -1,20 +1,31 @@
 "use strict";
+/**
+ * @typedef {import("./edit_session").EditSession} EditSession
+ * @typedef {import("../ace-internal").Ace.Delta} Delta
+ * @typedef {import("../ace-internal").Ace.Point} Point
+ * @typedef {import("../ace-internal").Ace.IRange} IRange
+ */
 
 /**
  * This object maintains the undo stack for an [[EditSession `EditSession`]].
  **/
 class UndoManager {
-    
     /**
      * Resets the current undo state and creates a new `UndoManager`.
      **/
     constructor() {
+        /**@type {boolean}*/
+        this.$keepRedoStack;
         this.$maxRev = 0;
         this.$fromUndo = false;
         this.$undoDepth = Infinity;
         this.reset();
     }
-    
+
+    /**
+     * 
+     * @param {EditSession} session
+     */
     addSession(session) {
         this.$session = session;
     }
@@ -24,8 +35,9 @@ class UndoManager {
      * - `args[0]` is an array of deltas
      * - `args[1]` is the document to associate with
      *
-     * @param {Object} options Contains additional properties
-     *
+     * @param {import("../ace-internal").Ace.Delta} delta
+     * @param {boolean} allowMerge
+     * @param {EditSession} [session]
      **/
     add(delta, allowMerge, session) {
         if (this.$fromUndo) return;
@@ -44,7 +56,12 @@ class UndoManager {
             this.$lastDelta = delta;
         this.lastDeltas.push(delta);
     }
-    
+
+    /**
+     * 
+     * @param {any} selection
+     * @param {number} [rev]
+     */
     addSelection(selection, rev) {
         this.selections.push({
             value: selection,
@@ -56,7 +73,12 @@ class UndoManager {
         this.lastDeltas = null;
         return this.$rev;
     }
-    
+
+    /**
+     * 
+     * @param {number} from
+     * @param {number} [to]
+     */
     markIgnored(from, to) {
         if (to == null) to = this.$rev + 1;
         var stack = this.$undoStack;
@@ -69,7 +91,13 @@ class UndoManager {
         }
         this.lastDeltas = null;
     }
-    
+
+    /**
+     * 
+     * @param {number} rev
+     * @param {boolean} [after]
+     * @return {{ value: string, rev: number }}
+     */
     getSelection(rev, after) {
         var stack = this.selections;
         for (var i = stack.length; i--;) {
@@ -81,11 +109,20 @@ class UndoManager {
             }
         }
     }
-    
+
+    /**
+     * @return {number}
+     */
     getRevision() {
         return this.$rev;
     }
-    
+
+    /**
+     * 
+     * @param {number} from
+     * @param {number} [to]
+     * @return {import("../ace-internal").Ace.Delta[]}
+     */
     getDeltas(from, to) {
         if (to == null) to = this.$rev + 1;
         var stack = this.$undoStack;
@@ -101,12 +138,21 @@ class UndoManager {
         }
         return stack.slice(start, end);
     }
-    
+
+    /**
+     * 
+     * @param {number} from
+     * @param {number} [to]
+     */
     getChangedRanges(from, to) {
         if (to == null) to = this.$rev + 1;
-        
     }
-    
+
+    /**
+     *
+     * @param {number} from
+     * @param {number} [to]
+     */
     getChangedLines(from, to) {
         if (to == null) to = this.$rev + 1;
         
@@ -115,9 +161,7 @@ class UndoManager {
     /**
      * [Perform an undo operation on the document, reverting the last change.]{: #UndoManager.undo}
      * @param {EditSession} session
-     * @param {Boolean} dontSelect {:dontSelect}
-     *
-     * @returns {Range} The range of the undo.
+     * @param {Boolean} [dontSelect] {:dontSelect}
      **/
     undo(session, dontSelect) {
         this.lastDeltas = null;
@@ -149,7 +193,8 @@ class UndoManager {
     
     /**
      * [Perform a redo operation on the document, reimplementing the last change.]{: #UndoManager.redo}
-     * @param {Boolean} dontSelect {:dontSelect}
+     * @param {EditSession} session
+     * @param {Boolean} [dontSelect] {:dontSelect}
      *
      **/
     redo(session, dontSelect) {
@@ -218,10 +263,11 @@ class UndoManager {
     canRedo() {
         return this.$redoStack.length > 0;
     }
-    
+
     /**
      * Marks the current status clean
-     **/
+     * @param {number} [rev]
+     */
     bookmark(rev) {
         if (rev == undefined)
             rev = this.$rev;
@@ -261,18 +307,26 @@ class UndoManager {
         this.$redoStack = json.$redoStack;
     }
 
-    
+
+    /**
+     * @param {Delta} delta
+     */
     $prettyPrint(delta) {
         if (delta) return stringifyDelta(delta);
         return stringifyDelta(this.$undoStack) + "\n---\n" + stringifyDelta(this.$redoStack);
     }
 }
 
+
 UndoManager.prototype.hasUndo = UndoManager.prototype.canUndo;
 UndoManager.prototype.hasRedo = UndoManager.prototype.canRedo;
 UndoManager.prototype.isClean = UndoManager.prototype.isAtBookmark;
 UndoManager.prototype.markClean = UndoManager.prototype.bookmark;
 
+/**
+ * @param {any[]} stack
+ * @param {number} pos
+ */
 function rearrangeUndoStack(stack, pos) {
     for (var i = pos; i--; ) {
         var deltaSet = stack[i];
@@ -292,6 +346,9 @@ var Range = require("./range").Range;
 var cmp = Range.comparePoints;
 var comparePoints = Range.comparePoints;
 
+/**
+ * @param {Delta} delta
+ */
 function $updateMarkers(delta) {
     var isInsert = delta.action == "insert";
     var start = delta.start;
@@ -332,9 +389,16 @@ function $updateMarkers(delta) {
     }
 }
 
+/**
+ * @param {Point} pos
+ */
 function clonePos(pos) {
     return {row: pos.row,column: pos.column};
 }
+
+/**
+ * @param {Delta} d
+ */
 function cloneDelta(d) {
     return {
         start: clonePos(d.start),
@@ -367,6 +431,11 @@ function stringifyDelta(d) {
     }
     return type;
 }
+
+/**
+ * @param {Range} r
+ * @return {string}
+ */
 function stringifyRange(r) {
     return r.start.row + ":" + r.start.column 
         + "=>" + r.end.row + ":" + r.end.column;
@@ -393,6 +462,10 @@ function stringifyRange(r) {
  *       d2.s < d1.s < d2.e // can split
  */
 
+/**
+ * @param {Delta} d1
+ * @param {Delta} d2
+ */
 function swap(d1, d2) {
     var i1 = d1.action == "insert";
     var i2 = d2.action == "insert";
@@ -460,6 +533,11 @@ function swapGroups(ds1, ds2) {
     o<---o
       c1
 */
+/**
+ * 
+ * @param {Delta} d1
+ * @param {Delta} c1
+ */
 function xform(d1, c1) {
     var i1 = d1.action == "insert";
     var i2 = c1.action == "insert";
@@ -516,17 +594,38 @@ function xform(d1, c1) {
     }
     return [c1, d1];
 }
-    
+
+/**
+ * 
+ * @param {IRange} d1
+ * @param {IRange} d2
+ * @param {number} dir
+ */
 function shift(d1, d2, dir) {
     shiftPos(d1.start, d2.start, d2.end, dir);
     shiftPos(d1.end, d2.start, d2.end, dir);
 }
+
+/**
+ * 
+ * @param {Point} pos
+ * @param {Point} start
+ * @param {Point} end
+ * @param {number} dir
+ */
 function shiftPos(pos, start, end, dir) {
     if (pos.row == (dir == 1 ? start : end).row) {
         pos.column += dir * (end.column - start.column);
     }
     pos.row += dir * (end.row - start.row);
 }
+
+/**
+ * 
+ * @param {Delta} c
+ * @param {Point} pos
+ * @return {Delta}
+ */
 function splitDelta(c, pos) {
     var lines = c.lines;
     var end = c.end;
@@ -546,6 +645,10 @@ function splitDelta(c, pos) {
     return rest;
 }
 
+/**
+ * @param {any[]} redoStack
+ * @param {Delta} d
+ */
 function moveDeltasByOne(redoStack, d) {
     d = cloneDelta(d);
     for (var j = redoStack.length; j--;) {
@@ -570,6 +673,7 @@ function moveDeltasByOne(redoStack, d) {
     }
     return redoStack;
 }
+
 function rebaseRedoStack(redoStack, deltaSets) {
     for (var i = 0; i < deltaSets.length; i++) {
         var deltas = deltaSets[i];

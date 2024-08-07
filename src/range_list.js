@@ -1,4 +1,8 @@
 "use strict";
+/**
+ * @typedef {import("./edit_session").EditSession} EditSession
+ * @typedef {import("../ace-internal").Ace.Point} Point
+ */
 var Range = require("./range").Range;
 var comparePoints = Range.comparePoints;
 
@@ -9,6 +13,12 @@ class RangeList {
         this.$bias = 1;
     }
 
+    /**
+     * @param {Point} pos
+     * @param {boolean} [excludeEdges]
+     * @param {number} [startIndex]
+     * @return {number}
+     */
     pointIndex(pos, excludeEdges, startIndex) {
         var list = this.ranges;
 
@@ -28,6 +38,9 @@ class RangeList {
         return -i - 1;
     }
 
+    /**
+     * @param {Range} range
+     */
     add(range) {
         var excludeEdges = !range.isEmpty();
         var startIndex = this.pointIndex(range.start, excludeEdges);
@@ -43,6 +56,9 @@ class RangeList {
         return this.ranges.splice(startIndex, endIndex - startIndex, range);
     }
 
+    /**
+     * @param {Range[]} list
+     */
     addList(list) {
         var removed = [];
         for (var i = list.length; i--; ) {
@@ -51,6 +67,9 @@ class RangeList {
         return removed;
     }
 
+    /**
+     * @param {Point} pos
+     */
     substractPoint(pos) {
         var i = this.pointIndex(pos);
 
@@ -94,14 +113,24 @@ class RangeList {
         return removed;
     }
 
+    /**
+     * @param {number} row
+     * @param {number} column
+     */
     contains(row, column) {
         return this.pointIndex({row: row, column: column}) >= 0;
     }
 
+    /**
+     * @param {Point} pos
+     */
     containsPoint(pos) {
         return this.pointIndex(pos) >= 0;
     }
 
+    /**
+     * @param {Point} pos
+     */
     rangeAtPoint(pos) {
         var i = this.pointIndex(pos);
         if (i >= 0)
@@ -109,6 +138,10 @@ class RangeList {
     }
 
 
+    /**
+     * @param {number} startRow
+     * @param {number} endRow
+     */
     clipRows(startRow, endRow) {
         var list = this.ranges;
         if (list[0].start.row > endRow || list[list.length - 1].start.row < startRow)
@@ -117,6 +150,7 @@ class RangeList {
         var startIndex = this.pointIndex({row: startRow, column: 0});
         if (startIndex < 0)
             startIndex = -startIndex - 1;
+        //@ts-expect-error TODO: potential wrong argument
         var endIndex = this.pointIndex({row: endRow, column: 0}, startIndex);
         if (endIndex < 0)
             endIndex = -endIndex - 1;
@@ -132,6 +166,9 @@ class RangeList {
         return this.ranges.splice(0, this.ranges.length);
     }
 
+    /**
+     * @param {EditSession} session
+     */
     attach(session) {
         if (this.session)
             this.detach();
@@ -149,6 +186,9 @@ class RangeList {
         this.session = null;
     }
 
+    /**
+     * @param {import("../ace-internal").Ace.Delta} delta
+     */
     $onChange(delta) {
         var start = delta.start;
         var end = delta.end;

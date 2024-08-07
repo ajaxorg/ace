@@ -318,6 +318,23 @@ module.exports = {
         testTabstop(tabstops[4], "[5/3]> [5/3],[2/3]> [2/3]");
         testTabstop(tabstops[5], "[6/2]> [6/5]");
     },
+    "test: insert snippet inside snippet and check markers": function() {
+        var editor = this.editor;
+        editor.session.setValue("");
+        editor.insertSnippet("{$1}");
+
+        // check first snippet's marker
+        var snippetMarkers = Object.values(editor.session.$backMarkers).filter(function(i) {return i.clazz == "ace_snippet-marker";});
+        assert.jsonEquals(snippetMarkers[0].range.start, {row: 0, column: 2});
+        assert.jsonEquals(snippetMarkers[1].range.start, {row: 0, column: 1});
+
+        // check markers after insertion of the second snippet
+        editor.insertSnippet("\"examples\": [$1]");
+        snippetMarkers = Object.values(editor.session.$backMarkers).filter(function(i) {return i.clazz == "ace_snippet-marker";});
+        assert.equal(snippetMarkers.length, 2);
+        assert.jsonEquals(snippetMarkers[0].range.start, {row: 0, column: 15});
+        assert.jsonEquals(snippetMarkers[1].range.start, {row: 0, column: 14});
+    },
     "test: linking": function() {
         var editor = this.editor;
         editor.setOption("enableMultiselect", false);

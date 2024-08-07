@@ -23,6 +23,11 @@ function binarySearch(array, needle, comparator) {
     return -(first + 1);
 }
 
+/**
+ * @param {import("../edit_session").EditSession} session
+ * @param {number} row
+ * @param {number} dir
+ */
 function findAnnotations(session, row, dir) {
     var annotations = session.getAnnotations().sort(Range.comparePoints);
     if (!annotations.length)
@@ -59,6 +64,10 @@ function findAnnotations(session, row, dir) {
     return matched.length && matched;
 }
 
+/**
+ * @param {import("../editor").Editor} editor
+ * @param {number} dir
+ */
 exports.showErrorMarker = function(editor, dir) {
     var session = editor.session;
     if (!session.widgetManager) {
@@ -89,7 +98,7 @@ exports.showErrorMarker = function(editor, dir) {
         return;
     } else {
         gutterAnno = {
-            text: [nls("Looks good!")],
+            displayText: [nls("error-marker.good-state", "Looks good!")],
             className: "ace_ok"
         };
     }
@@ -113,7 +122,12 @@ exports.showErrorMarker = function(editor, dir) {
     
     w.el.className = "error_widget_wrapper";
     el.className = "error_widget " + gutterAnno.className;
-    el.innerHTML = gutterAnno.text.join("<br>");
+    gutterAnno.displayText.forEach(function (annoTextLine, i) {
+        el.appendChild(dom.createTextNode(annoTextLine));
+        if (i < gutterAnno.displayText.length - 1) {
+            el.appendChild(dom.createElement("br"));
+        }
+    });
     
     el.appendChild(dom.createElement("div"));
     
@@ -127,6 +141,7 @@ exports.showErrorMarker = function(editor, dir) {
     w.destroy = function() {
         if (editor.$mouseHandler.isMousePressed)
             return;
+        // @ts-ignore
         editor.keyBinding.removeKeyboardHandler(kb);
         session.widgetManager.removeLineWidget(w);
         editor.off("changeSelection", w.destroy);
@@ -134,7 +149,8 @@ exports.showErrorMarker = function(editor, dir) {
         editor.off("mouseup", w.destroy);
         editor.off("change", w.destroy);
     };
-    
+
+    // @ts-ignore
     editor.keyBinding.addKeyboardHandler(kb);
     editor.on("changeSelection", w.destroy);
     editor.on("changeSession", w.destroy);

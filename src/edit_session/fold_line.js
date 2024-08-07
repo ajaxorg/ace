@@ -1,14 +1,19 @@
 "use strict";
-
+/**
+ * @typedef {import("./fold").Fold} Fold
+ */
 var Range = require("../range").Range;
 
 class FoldLine {
     /**
      * If an array is passed in, the folds are expected to be sorted already.
+     * @param {FoldLine[]} foldData
+     * @param {Fold[]|Fold} folds
      */
     constructor(foldData, folds) {
         this.foldData = foldData;
         if (Array.isArray(folds)) {
+            /**@type {Fold[]} */
             this.folds = folds;
         } else {
             folds = this.folds = [ folds ];
@@ -24,8 +29,10 @@ class FoldLine {
             fold.setFoldLine(this);
         }, this);
     }
-    /*
+    
+    /**
      * Note: This doesn't update wrapData!
+     * @param {number} shift
      */
     shiftRow(shift) {
         this.start.row += shift;
@@ -36,8 +43,12 @@ class FoldLine {
         });
     }
 
+    /**
+     * @param {Fold} fold
+     */
     addFold(fold) {
         if (fold.sameRow) {
+            // @ts-expect-error TODO: startRow, endRow are missing in Fold and FoldLine
             if (fold.start.row < this.startRow || fold.endRow > this.endRow) {
                 throw new Error("Can't add a fold to this FoldLine as it has no connection");
             }
@@ -66,10 +77,18 @@ class FoldLine {
         fold.foldLine = this;
     }
 
+    /**
+     * @param {number} row
+     */
     containsRow(row) {
         return row >= this.start.row && row <= this.end.row;
     }
 
+    /**
+     * @param {Function} callback
+     * @param {number} endRow
+     * @param {number} endColumn
+     */
     walk(callback, endRow, endColumn) {
         var lastEnd = 0,
             folds = this.folds,
@@ -108,6 +127,11 @@ class FoldLine {
         callback(null, endRow, endColumn, lastEnd, isNewRow);
     }
 
+    /**
+     * @param {number} row
+     * @param {number} column
+     * @return {{ fold: Fold, kind: string } | null}
+     */
     getNextFoldTo(row, column) {
         var fold, cmp;
         for (var i = 0; i < this.folds.length; i++) {
@@ -128,6 +152,11 @@ class FoldLine {
         return null;
     }
 
+    /**
+     * @param {number} row
+     * @param {number} column
+     * @param {number} len
+     */
     addRemoveChars(row, column, len) {
         var ret = this.getNextFoldTo(row, column),
             fold, folds;
@@ -159,6 +188,11 @@ class FoldLine {
         }
     }
 
+    /**
+     * @param {number} row
+     * @param {number} column
+     * @return {FoldLine | null}
+     */
     split(row, column) {
         var pos = this.getNextFoldTo(row, column);
         
@@ -183,6 +217,9 @@ class FoldLine {
         return newFoldLine;
     }
 
+    /**
+     * @param {FoldLine} foldLineNext
+     */
     merge(foldLineNext) {
         var folds = foldLineNext.folds;
         for (var i = 0; i < folds.length; i++) {
@@ -204,6 +241,10 @@ class FoldLine {
         return ret.join("\n");
     }
 
+    /**
+     * @param {number} idx
+     * @return {import("../../ace-internal").Ace.Point}
+     */
     idxToPosition(idx) {
         var lastFoldEndColumn = 0;
 

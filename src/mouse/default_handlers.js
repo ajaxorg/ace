@@ -1,11 +1,17 @@
 "use strict";
-
+/**
+ * @typedef {import("./mouse_handler").MouseHandler} MouseHandler
+ * @typedef {import("./mouse_event").MouseEvent} MouseEvent
+ */
 var useragent = require("../lib/useragent");
 
 var DRAG_OFFSET = 0; // pixels
 var SCROLL_COOLDOWN_T = 550; // milliseconds
 
 class DefaultHandlers {
+    /**
+     * @param {MouseHandler} mouseHandler
+     */
     constructor(mouseHandler) {
         mouseHandler.$clickSelection = null;
 
@@ -23,10 +29,14 @@ class DefaultHandlers {
             mouseHandler[x] = this[x];
         }, this);
 
-        mouseHandler.selectByLines = this.extendSelectionBy.bind(mouseHandler, "getLineRange");
-        mouseHandler.selectByWords = this.extendSelectionBy.bind(mouseHandler, "getWordRange");
+        mouseHandler["selectByLines"] = this.extendSelectionBy.bind(mouseHandler, "getLineRange");
+        mouseHandler["selectByWords"] = this.extendSelectionBy.bind(mouseHandler, "getWordRange");
     }
 
+    /**
+     * @param {MouseEvent} ev
+     * @this {MouseHandler}
+     */
     onMouseDown(ev) {
         var inSelection = ev.inSelection();
         var pos = ev.getDocumentPosition();
@@ -67,6 +77,12 @@ class DefaultHandlers {
         return ev.preventDefault();
     }
 
+    /**
+     * 
+     * @param {import("../../ace-internal").Ace.Position} [pos]
+     * @param {boolean} [waitForClickSelection]
+     * @this {MouseHandler}
+     */
     startSelect(pos, waitForClickSelection) {
         pos = pos || this.editor.renderer.screenToTextCoordinates(this.x, this.y);
         var editor = this.editor;
@@ -82,6 +98,9 @@ class DefaultHandlers {
         this.setState("select");
     }
 
+    /**
+     * @this {MouseHandler}
+     */
     select() {
         var anchor, editor = this.editor;
         var cursor = editor.renderer.screenToTextCoordinates(this.x, this.y);
@@ -103,6 +122,10 @@ class DefaultHandlers {
         editor.renderer.scrollCursorIntoView();
     }
 
+    /**
+     * @param {string | number} unitName
+     * @this {MouseHandler}
+     */
     extendSelectionBy(unitName) {
         var anchor, editor = this.editor;
         var cursor = editor.renderer.screenToTextCoordinates(this.x, this.y);
@@ -132,12 +155,18 @@ class DefaultHandlers {
         editor.selection.selectToPosition(cursor);
         editor.renderer.scrollCursorIntoView();
     }
-    
+
+    /**
+     * @this {MouseHandler}
+     */
     selectByLinesEnd() {
         this.$clickSelection = null;
         this.editor.unsetStyle("ace_selecting");
     }
 
+    /**
+     * @this {MouseHandler}
+     */
     focusWait() {
         var distance = calcDistance(this.mousedownEvent.x, this.mousedownEvent.y, this.x, this.y);
         var time = Date.now();
@@ -145,7 +174,11 @@ class DefaultHandlers {
         if (distance > DRAG_OFFSET || time - this.mousedownEvent.time > this.$focusTimeout)
             this.startSelect(this.mousedownEvent.getDocumentPosition());
     }
-
+    
+    /**
+     * @param {MouseEvent} ev
+     * @this {MouseHandler}
+     */
     onDoubleClick(ev) {
         var pos = ev.getDocumentPosition();
         var editor = this.editor;
@@ -166,6 +199,10 @@ class DefaultHandlers {
         this.select();
     }
 
+    /**
+     * @param {MouseEvent} ev
+     * @this {MouseHandler}
+     */
     onTripleClick(ev) {
         var pos = ev.getDocumentPosition();
         var editor = this.editor;
@@ -181,6 +218,10 @@ class DefaultHandlers {
         this.select();
     }
 
+    /**
+     * @param {MouseEvent} ev
+     * @this {MouseHandler}
+     */
     onQuadClick(ev) {
         var editor = this.editor;
 
@@ -189,6 +230,10 @@ class DefaultHandlers {
         this.setState("selectAll");
     }
 
+    /**
+     * @param {MouseEvent} ev
+     * @this {MouseHandler}
+     */
     onMouseWheel(ev) {
         if (ev.getAccelKey())
             return;

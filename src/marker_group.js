@@ -1,4 +1,11 @@
 "use strict";
+/**
+ * @typedef {import("./edit_session").EditSession} EditSession
+ * @typedef {{range: import("./range").Range, className: string}} MarkerGroupItem
+ */
+/**
+ * @typedef {import("./layer/marker").Marker} Marker
+ */
 
 /*
 Potential improvements:
@@ -6,16 +13,21 @@ Potential improvements:
 */
 
 class MarkerGroup {
+    /**
+     * @param {EditSession} session
+     */
     constructor(session) {
         this.markers = [];
+        /**@type {EditSession}*/
         this.session = session;
+        // @ts-expect-error TODO: could potential error here, or most likely missing checks in other places
         session.addDynamicMarker(this);
     }
 
     /**
      * Finds the first marker containing pos
-     * @param {Position} pos 
-     * @returns Ace.MarkerGroupItem
+     * @param {import("../ace-internal").Ace.Point} pos 
+     * @returns import("../ace-internal").Ace.MarkerGroupItem
      */
     getMarkerAtPosition(pos) {
         return this.markers.find(function(marker) {
@@ -26,8 +38,8 @@ class MarkerGroup {
     /**
      * Comparator for Array.sort function, which sorts marker definitions by their positions
      * 
-     * @param {Ace.MarkerGroupItem} a first marker.
-     * @param {Ace.MarkerGroupItem} b second marker.
+     * @param {MarkerGroupItem} a first marker.
+     * @param {MarkerGroupItem} b second marker.
      * @returns {number} negative number if a should be before b, positive number if b should be before a, 0 otherwise.
      */
     markersComparator(a, b) {
@@ -36,13 +48,19 @@ class MarkerGroup {
 
     /**
      * Sets marker definitions to be rendered. Limits the number of markers at MAX_MARKERS.
-     * @param {Ace.MarkerGroupItem[]} markers an array of marker definitions.
+     * @param {MarkerGroupItem[]} markers an array of marker definitions.
      */
     setMarkers(markers) {
         this.markers = markers.sort(this.markersComparator).slice(0, this.MAX_MARKERS);
         this.session._signal("changeBackMarker");
     }
 
+    /**
+     * @param {any} html
+     * @param {Marker} markerLayer
+     * @param {EditSession} session
+     * @param {{ firstRow: any; lastRow: any; }} config
+     */
     update(html, markerLayer, session, config) {
         if (!this.markers || !this.markers.length)
             return;

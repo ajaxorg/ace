@@ -1,8 +1,8 @@
 "no use strict";
-
 var oop = require("./oop");
 var EventEmitter = require("./event_emitter").EventEmitter;
 const reportError = require("./report_error").reportError;
+const defaultEnglishMessages = require("./default_english_messages").defaultEnglishMessages;
 
 var optionsProvider = {
     setOptions: function(optList) {
@@ -29,6 +29,7 @@ var optionsProvider = {
     setOption: function(name, value) {
         if (this["$" + name] === value)
             return;
+        //@ts-ignore
         var opt = this.$options[name];
         if (!opt) {
             return warn('misspelled option "' + name + '"');
@@ -57,17 +58,21 @@ function warn(message) {
         console.warn.apply(console, arguments);
 }
 
-
-
 var messages;
+var nlsPlaceholders;
 
 class AppConfig {
     constructor() {
-        this.$defaultOptions = {};
-    }
+            this.$defaultOptions = {};
+            messages = defaultEnglishMessages;
+            nlsPlaceholders = "dollarSigns";
+        }
     
-    /*
-     * option {name, value, initialValue, setterName, set, get }
+    /**
+     * @param {Object} obj
+     * @param {string} path
+     * @param {{ [key: string]: any }} options
+     * @returns {AppConfig}
      */
     defineOptions(obj, path, options) {
         if (!obj.$options)
@@ -90,6 +95,9 @@ class AppConfig {
         return this;
     }
 
+    /**
+     * @param {Object} obj
+     */
     resetOptions(obj) {
         Object.keys(obj.$options).forEach(function(key) {
             var opt = obj.$options[key];
@@ -98,6 +106,11 @@ class AppConfig {
         });
     }
 
+    /**
+     * @param {string} path
+     * @param {string} name
+     * @param {any} value
+     */
     setDefaultValue(path, name, value) {
         if (!path) {
             for (path in this.$defaultOptions)
@@ -115,26 +128,56 @@ class AppConfig {
         }
     }
 
+    /**
+     * @param {string} path
+     * @param {{ [key: string]: any; }} optionHash
+     */
     setDefaultValues(path, optionHash) {
         Object.keys(optionHash).forEach(function(key) {
             this.setDefaultValue(path, key, optionHash[key]);
         }, this);
     }
-    
-    setMessages(value) {
+
+    /**
+     * @param {any} value
+     * @param {{placeholders?: "dollarSigns" | "curlyBrackets"}} [options]
+     */
+    setMessages(value, options) {
         messages = value;
-    }
-    
-    nls(string, params) {
-        if (messages && !messages[string])  {
-            warn("No message found for '" + string + "' in the provided messages, falling back to default English message.");
+        if (options && options.placeholders) {
+            nlsPlaceholders = options.placeholders;
         }
-        var translated = messages && messages[string] || string;
+    }
+
+    /**
+     * @param {string} key
+     * @param {string} defaultString
+     * @param {{ [x: string]: any; }} [params]
+     */
+    nls(key, defaultString, params) {
+        if (!messages[key])  {
+            warn("No message found for the key '" + key + "' in the provided messages, trying to find a translation for the default string '" + defaultString + "'.");
+            if (!messages[defaultString]) {
+                warn("No message found for the default string '" + defaultString + "' in the provided messages. Falling back to the default English message.");
+            }
+        } 
+
+        var translated = messages[key] || messages[defaultString] || defaultString;
         if (params) {
-            translated = translated.replace(/\$(\$|[\d]+)/g, function(_, name) {
-                if (name == "$") return "$";
-                return params[name];
-            });
+            // We support both $n or {n} as placeholder indicators in the provided translated strings
+            if (nlsPlaceholders === "dollarSigns") {
+                // Replace $n with the nth element in params
+                translated = translated.replace(/\$(\$|[\d]+)/g, function(_, dollarMatch) {
+                    if (dollarMatch == "$") return "$";
+                    return params[dollarMatch];
+                });
+            }
+            if (nlsPlaceholders === "curlyBrackets") {
+                // Replace {n} with the nth element in params
+                translated = translated.replace(/\{([^\}]+)\}/g, function(_, curlyBracketMatch) {
+                    return params[curlyBracketMatch];
+                });
+            }
         }
         return translated;
     }

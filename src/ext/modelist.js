@@ -4,7 +4,7 @@ var modes = [];
 /**
  * Suggests a mode based on the file extension present in the given path
  * @param {string} path The path to the file
- * @returns {object} Returns an object containing information about the
+ * @returns {Mode} Returns an object containing information about the
  *  suggested mode.
  */
 function getModeForPath(path) {
@@ -20,6 +20,11 @@ function getModeForPath(path) {
 }
 
 class Mode {
+    /**
+     * @param {string} name
+     * @param {string} caption
+     * @param {string} extensions
+     */
     constructor(name, caption, extensions) {
         this.name = name;
         this.caption = caption;
@@ -38,6 +43,9 @@ class Mode {
         this.extRe = new RegExp(re, "gi");
     }
 
+    /**
+     * @param {string} filename
+     */
     supportsFile(filename) {
         return filename.match(this.extRe);
     }
@@ -55,6 +63,7 @@ var supportedModes = {
     AQL:         ["aql"],
     AsciiDoc:    ["asciidoc|adoc"],
     ASL:         ["dsl|asl|asl.json"],
+    Assembly_ARM32:["s"],
     Assembly_x86:["asm|a"],
     Astro:       ["astro"],
     AutoHotKey:  ["ahk"],
@@ -108,7 +117,7 @@ var supportedModes = {
     Haskell_Cabal: ["cabal"],
     haXe:        ["hx"],
     Hjson:       ["hjson"],
-    HTML:        ["html|htm|xhtml|vue|we|wpy"],
+    HTML: ["html|htm|xhtml|we|wpy"],
     HTML_Elixir: ["eex|html.eex"],
     HTML_Ruby:   ["erb|rhtml|html.erb"],
     INI:         ["ini|conf|cfg|prefs"],
@@ -117,7 +126,7 @@ var supportedModes = {
     Jack:        ["jack"],
     Jade:        ["jade|pug"],
     Java:        ["java"],
-    JavaScript:  ["js|jsm|jsx|cjs|mjs"],
+    JavaScript:  ["js|jsm|cjs|mjs"],
     JEXL:        ["jexl"],
     JSON:        ["json"],
     JSON5:       ["json5"],
@@ -225,11 +234,13 @@ var supportedModes = {
     Verilog:     ["v|vh|sv|svh"],
     VHDL:        ["vhd|vhdl"],
     Visualforce: ["vfp|component|page"],
+    Vue: ["vue"],
     Wollok:      ["wlk|wpgm|wtest"],
     XML:         ["xml|rdf|rss|wsdl|xslt|atom|mathml|mml|xul|xbl|xaml"],
     XQuery:      ["xq"],
     YAML:        ["yaml|yml"],
-    Zeek:        ["zeek|bro"]
+    Zeek:        ["zeek|bro"],
+    Zig:         ["zig"]
 };
 
 var nameOverrides = {

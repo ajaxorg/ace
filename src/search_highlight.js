@@ -1,9 +1,16 @@
 "use strict";
-
+/**
+ * @typedef {import("./layer/marker").Marker} Marker
+ * @typedef {import("./edit_session").EditSession} EditSession
+ */
 var lang = require("./lib/lang");
 var Range = require("./range").Range;
 
 class SearchHighlight {
+    /**
+     * @param {any} regExp
+     * @param {string} clazz
+     */
     constructor(regExp, clazz, type = "text") {
         this.setRegexp(regExp);
         this.clazz = clazz;
@@ -17,6 +24,12 @@ class SearchHighlight {
         this.cache = [];
     }
 
+    /**
+     * @param {any} html
+     * @param {Marker} markerLayer
+     * @param {EditSession} session
+     * @param {Partial<import("../ace-internal").Ace.LayerConfig>} config
+     */
     update(html, markerLayer, session, config) {
         if (!this.regExp)
             return;

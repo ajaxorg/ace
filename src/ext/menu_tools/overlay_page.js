@@ -22,10 +22,11 @@ dom.importCssString(cssText, "settings_menu.css", false);
  * @author <a href="mailto:matthewkastor@gmail.com">
  *  Matthew Christopher Kastor-Inare III </a><br />
  *  ☭ Hial Atropa!! ☭
- * @param {Element} contentElement Any element which may be presented inside
+ * @param editor
+ * @param {HTMLElement} contentElement Any element which may be presented inside
  *  a div.
+ * @param [callback]
  */
-
 module.exports.overlayPage = function overlayPage(editor, contentElement, callback) {
     var closer = document.createElement('div');
     var ignoreFocusOut = false;

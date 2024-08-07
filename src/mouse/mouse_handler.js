@@ -1,5 +1,7 @@
 "use strict";
-
+/**
+ * @typedef {import("../editor").Editor} Editor
+ */
 var event = require("../lib/event");
 var useragent = require("../lib/useragent");
 var DefaultHandlers = require("./default_handlers").DefaultHandlers;
@@ -10,7 +12,15 @@ var addTouchListeners = require("./touch_handler").addTouchListeners;
 var config = require("../config");
 
 class MouseHandler {
+    /**
+     * @param {Editor} editor
+     */
     constructor(editor) {
+        /** @type {boolean} */this.$dragDelay;
+        /** @type {boolean} */this.$dragEnabled;
+        /** @type {boolean} */this.$mouseMoved;
+        /** @type {MouseEvent} */this.mouseEvent;
+        /** @type {number} */this.$focusTimeout;
         var _self = this;
         this.editor = editor;
 
@@ -70,7 +80,9 @@ class MouseHandler {
             } else {
                 renderer.setCursorStyle("");
             }
-        }, editor);
+            
+        }, //@ts-expect-error TODO: seems mistyping - should be boolean
+            editor);
     }
 
     onMouseEvent(name, e) {
@@ -87,8 +99,13 @@ class MouseHandler {
         this.editor._emit(name, new MouseEvent(e, this.editor));
     }
 
+    /**
+     * @param {string} name
+     * @param {{ wheelX: number; wheelY: number; }} e
+     */
     onMouseWheel(name, e) {
         var mouseEvent = new MouseEvent(e, this.editor);
+        //@ts-expect-error TODO: couldn't find this property init in the ace codebase
         mouseEvent.speed = this.$scrollSpeed * 2;
         mouseEvent.wheelX = e.wheelX;
         mouseEvent.wheelY = e.wheelY;

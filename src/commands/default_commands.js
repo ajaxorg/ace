@@ -12,6 +12,7 @@ function bindKey(win, mac) {
     multiSelectAction: "forEach"|"forEachLine"|function|undefined,
     scrollIntoView: true|"cursor"|"center"|"selectionPart"
 */
+/**@type {import("../../ace-internal").Ace.Command[]} */
 exports.commands = [{
     name: "showSettingsMenu",
     description: "Show settings menu",
@@ -728,7 +729,6 @@ exports.commands = [{
     description: "Auto Indent",
     bindKey: bindKey(null, null),
     exec: function(editor) { editor.autoIndent(); },
-    multiSelectAction: "forEachLine",
     scrollIntoView: "animate"
 }, {
     name: "expandtoline",

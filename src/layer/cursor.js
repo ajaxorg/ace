@@ -1,9 +1,14 @@
 "use strict";
-
+/**
+ * @typedef {import("../edit_session").EditSession} EditSession
+ */
 var dom = require("../lib/dom");
 
 
 class Cursor {
+    /**
+     * @param {HTMLElement} parentEl
+     */
     constructor(parentEl) {
         this.element = dom.createElement("div");
         this.element.className = "ace_layer ace_cursor-layer";
@@ -19,7 +24,10 @@ class Cursor {
         dom.addCssClass(this.element, "ace_hidden-cursors");
         this.$updateCursors = this.$updateOpacity.bind(this);
     }
-    
+
+    /**
+     * @param {boolean} [val]
+     */
     $updateOpacity(val) {
         var cursors = this.cursors;
         for (var i = cursors.length; i--; )
@@ -43,15 +51,24 @@ class Cursor {
         this.$isAnimating = false;
         dom.removeCssClass(this.element, "ace_animate-blinking");
     }
-    
+
+    /**
+     * @param {number} padding
+     */
     setPadding(padding) {
         this.$padding = padding;
     }
 
+    /**
+     * @param {EditSession} session
+     */
     setSession(session) {
         this.session = session;
     }
 
+    /**
+     * @param {boolean} blinking
+     */
     setBlinking(blinking) {
         if (blinking != this.isBlinking) {
             this.isBlinking = blinking;
@@ -59,6 +76,9 @@ class Cursor {
         }
     }
 
+    /**
+     * @param {number} blinkInterval
+     */
     setBlinkInterval(blinkInterval) {
         if (blinkInterval != this.blinkInterval) {
             this.blinkInterval = blinkInterval;
@@ -66,6 +86,9 @@ class Cursor {
         }
     }
 
+    /**
+     * @param {boolean} smoothBlinking
+     */
     setSmoothBlinking(smoothBlinking) {
         if (smoothBlinking != this.smoothBlinking) {
             this.smoothBlinking = smoothBlinking;
@@ -133,7 +156,7 @@ class Cursor {
         if (dom.HAS_CSS_ANIMATION) {
             this.$startCssAnimation();
         } else {
-            var blink = function(){
+            var blink = /**@this{Cursor}*/function(){
                 this.timeoutId = setTimeout(function() {
                     update(false);
                 }, 0.6 * this.blinkInterval);
@@ -147,6 +170,10 @@ class Cursor {
         }
     }
 
+    /**
+     * @param {import("../../ace-internal").Ace.Point} [position]
+     * @param {boolean} [onScreen]
+     */
     getPixelPosition(position, onScreen) {
         if (!this.config || !this.session)
             return {left : 0, top : 0};
@@ -212,6 +239,9 @@ class Cursor {
         this.restartTimer();
     }
 
+    /**
+     * @param {boolean} overwrite
+     */
     $setOverwrite(overwrite) {
         if (overwrite != this.overwrite) {
             this.overwrite = overwrite;

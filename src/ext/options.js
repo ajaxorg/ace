@@ -1,4 +1,7 @@
 "use strict";
+/**
+ * @typedef {import("../editor").Editor} Editor
+ */
 
 require("./menu_tools/overlay_page");
 
@@ -212,6 +215,11 @@ var optionGroups = {
 };
 
 class OptionPanel {
+    /**
+     * 
+     * @param {Editor} editor
+     * @param {HTMLElement} [element]
+     */
     constructor(editor, element) {
         this.editor = editor;
         this.container = element || document.createElement("div");
@@ -225,7 +233,8 @@ class OptionPanel {
         if (config.More)
             oop.mixin(optionGroups.More, config.More);
     }
-    
+
+  
     render() {
         this.container.innerHTML = "";
         buildDom(["table", {role: "presentation", id: "controls"}, 
@@ -253,7 +262,11 @@ class OptionPanel {
             return this.renderOption(item.label, item);
         }, this);
     }
-    
+
+    /**
+     * @param {string} key
+     * @param {Object} option
+     */
     renderOptionControl(key, option) {
         var self = this;
         if (Array.isArray(option)) {
@@ -261,6 +274,7 @@ class OptionPanel {
                 return self.renderOptionControl(key, x);
             });
         }
+        /**@type {any}*/
         var control;
         
         var value = self.getOption(option);
@@ -339,7 +353,12 @@ class OptionPanel {
         }
         return control;
     }
-    
+
+    /**
+     * 
+     * @param key
+     * @param option
+     */
     renderOption(key, option) {
         if (option.path && !option.onchange && !this.editor.$options[option.path])
             return;
@@ -352,7 +371,11 @@ class OptionPanel {
             ["label", {for: safeKey, id: safeId}, key]
         ], ["td", control]];
     }
-    
+
+    /**
+     * @param {string | number | Object} option
+     * @param {string | number | boolean} value
+     */
     setOption(option, value) {
         if (typeof option == "string")
             option = this.options[option];

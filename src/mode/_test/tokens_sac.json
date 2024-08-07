@@ -1,42 +1,89 @@
 [[
    "doc-start",
-  ["comment.doc","/*****************************************************************************"]
+  [
+    "comment.doc",
+    "/**"
+  ],
+  [
+    "comment.doc.body",
+    "***************************************************************************"
+  ]
 ],[
    "doc-start",
-  ["comment.doc"," *"]
+  [
+    "comment.doc.body",
+    " *"
+  ]
 ],[
    "doc-start",
-  ["comment.doc"," *   SAC demo program"]
+  [
+    "comment.doc.body",
+    " *   SAC demo program"
+  ]
 ],[
    "doc-start",
-  ["comment.doc"," *"]
+  [
+    "comment.doc.body",
+    " *"
+  ]
 ],[
    "doc-start",
-  ["comment.doc"," *   This SAC demo program implements 2-dimensional relaxation on double"]
+  [
+    "comment.doc.body",
+    " *   This SAC demo program implements 2-dimensional relaxation on double"
+  ]
 ],[
    "doc-start",
-  ["comment.doc"," *   precision floating point numbers applying a 4-point stencil and fixed"]
+  [
+    "comment.doc.body",
+    " *   precision floating point numbers applying a 4-point stencil and fixed"
+  ]
 ],[
    "doc-start",
-  ["comment.doc"," *   boundary conditions."]
+  [
+    "comment.doc.body",
+    " *   boundary conditions."
+  ]
 ],[
    "doc-start",
-  ["comment.doc"," *"]
+  [
+    "comment.doc.body",
+    " *"
+  ]
 ],[
    "doc-start",
-  ["comment.doc"," *   The vertical (SIZE1) and the horizontal (SIZE2) array size as well as"]
+  [
+    "comment.doc.body",
+    " *   The vertical (SIZE1) and the horizontal (SIZE2) array size as well as"
+  ]
 ],[
    "doc-start",
-  ["comment.doc"," *   the number of iterations to be performed (LOOP) may be set at compile"]
+  [
+    "comment.doc.body",
+    " *   the number of iterations to be performed (LOOP) may be set at compile"
+  ]
 ],[
    "doc-start",
-  ["comment.doc"," *   time."]
+  [
+    "comment.doc.body",
+    " *   time."
+  ]
 ],[
    "doc-start",
-  ["comment.doc"," *"]
+  [
+    "comment.doc.body",
+    " *"
+  ]
 ],[
    "start",
-  ["comment.doc"," *****************************************************************************/"]
+  [
+    "comment.doc.body",
+    " ****************************************************************************"
+  ],
+  [
+    "comment.doc",
+    "*/"
+  ]
 ],[
    "start"
 ],[

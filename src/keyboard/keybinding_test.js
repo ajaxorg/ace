@@ -5,7 +5,7 @@ if (typeof process !== "undefined") {
 "use strict";
 
 var EditSession = require("./../edit_session").EditSession,
-    Editor = require("./../editor").Editor,
+    Editor = require("../editor").Editor,
     MockRenderer = require("./../test/mockrenderer").MockRenderer,
     assert = require("./../test/assertions"),
     HashHandler = require('./hash_handler').HashHandler,
