@@ -31,13 +31,16 @@ if (allowSave)
 
 http.createServer(function(req, res) {
     var uri = unescape(url.parse(req.url).pathname);
-    
+
     // We don't allow for relative URIs, such as ../../X, to prevent directory traversal in case the server is shared with other actors.
+    // In windows, `path.normalize` converts `/` in the URI to `\\`, so we enforce POSIX path separators during the check.
     // See more at https://cwe.mitre.org/data/definitions/22.html
-    if (path.normalize(uri) !== uri) {
+    var posixUri = uri.replaceAll(path.sep, path.posix.sep);
+    var normalizedPosixUri = path.normalize(uri).replaceAll(path.sep, path.posix.sep);
+    if (normalizedPosixUri !== posixUri) {
         return error(res, 400, "400 Bad request: Directory traversal is not allowed.");
     }
-    
+
     var filename = path.join(process.cwd(), uri);
 
     if (req.method == "OPTIONS") {
@@ -47,7 +50,7 @@ http.createServer(function(req, res) {
     
     if (req.method == "PUT") {
         if (!allowSave)
-            return error(res, 404, "Saving not allowed pass --allow-save to enable");
+            return error(res, 404, "Saving not allowed (pass --allow-save to enable)");
         return save(req, res, filename);
     }
 
