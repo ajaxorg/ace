@@ -35,6 +35,7 @@ module.exports = `
     direction: ltr;
     text-align: left;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    forced-color-adjust: none;
 }
 
 .ace_scroller {
