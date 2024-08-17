@@ -1029,7 +1029,6 @@ class FilteredList {
     
     filterCompletions(items, needle) {
         var results = [];
-        var upper = needle.toUpperCase();
         var lower = needle.toLowerCase();
         loop: for (var i = 0, item; item = items[i]; i++) {
             var caption = (!this.ignoreCaption && item.caption) || item.value || item.snippet;
@@ -1043,23 +1042,32 @@ class FilteredList {
                 if (needle !== caption.substr(0, needle.length))
                     continue loop;
             } else {
+                var captionLower = caption.toLowerCase();
                 /**
                  * It is for situation then, for example, we find some like 'tab' in item.value="Check the table"
                  * and want to see "Check the TABle" but see "Check The tABle".
                  */
-                var fullMatchIndex = caption.toLowerCase().indexOf(lower);
+                var fullMatchIndex = captionLower.indexOf(lower);
                 if (fullMatchIndex > -1) {
                     penalty = fullMatchIndex;
+                    for (var j = 0; j < needle.length; j++) {
+                        index = fullMatchIndex + j
+                        // Adding a penalty on case mismatch
+                        if ((lower[j] == needle[j]) != (captionLower[index] == caption[index])) {
+                            penalty += 3;
+                        }
+                    }
                 } else {
                     // caption char iteration is faster in Chrome but slower in Firefox, so lets use indexOf
                     for (var j = 0; j < needle.length; j++) {
-                        // TODO add penalty on case mismatch
-                        var i1 = caption.indexOf(lower[j], lastIndex + 1);
-                        var i2 = caption.indexOf(upper[j], lastIndex + 1);
-                        index = (i1 >= 0) ? ((i2 < 0 || i1 < i2) ? i1 : i2) : i2;
+                        index = captionLower.indexOf(lower[j], lastIndex + 1);
                         if (index < 0)
                             continue loop;
                         distance = index - lastIndex - 1;
+                        // Adding a penalty on case mismatch
+                        if ((lower[j] == needle[j]) != (captionLower[index] == caption[index])) {
+                            penalty += 3;
+                        }
                         if (distance > 0) {
                             // first char mismatch should be more sensitive
                             if (lastIndex === -1)
