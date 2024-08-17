@@ -1051,7 +1051,7 @@ class FilteredList {
                 if (fullMatchIndex > -1) {
                     penalty = fullMatchIndex;
                     for (var j = 0; j < needle.length; j++) {
-                        index = fullMatchIndex + j
+                        index = fullMatchIndex + j;
                         // Adding a penalty on case mismatch
                         if ((lower[j] == needle[j]) != (captionLower[index] == caption[index])) {
                             penalty += 3;
