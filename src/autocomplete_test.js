@@ -1585,7 +1585,7 @@ module.exports = {
                 callback();
             }, 10);
         }
-    },
+    }
 };
 
 if (typeof module !== "undefined" && module === require.main) {
