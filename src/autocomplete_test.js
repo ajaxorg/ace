@@ -1542,7 +1542,50 @@ module.exports = {
 
         // Popup should be closed now
         assert.equal(completer.popup.isOpen, false); 
-    }
+    },
+    "test: penalty on case mismatch": function (done) {
+        var editor = initEditor("");
+        editor.completers = [
+            {
+                getCompletions: function (editor, session, pos, prefix, callback) {
+                    var completions = [
+                        {
+                            caption: "array",
+                            value: "array"
+                        }, {
+                            caption: "aRray",
+                            value: "aRray"
+                        }
+                    ];
+                    callback(null, completions);
+                }
+            }
+        ];
+        
+        sendKey("R");
+        var popup = editor.completer.popup;
+
+        check(function() {
+            assert.equal(popup.data.length, 2);
+            assert.equal(popup.container.querySelector(".ace_selected").textContent.trim(), "aRray");
+
+            sendKey("y");
+
+            check(function() {
+                assert.equal(popup.container.querySelector(".ace_selected").textContent.trim(), "aRray");
+
+                editor.destroy();
+                editor.container.remove();
+                done();
+            });
+        });
+    
+        function check(callback) {
+            setTimeout(function wait() {
+                callback();
+            }, 10);
+        }
+    },
 };
 
 if (typeof module !== "undefined" && module === require.main) {
