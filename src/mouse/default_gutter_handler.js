@@ -155,24 +155,24 @@ class GutterTooltip extends Tooltip {
         return {
             error: {
                 singular: nls("gutter-tooltip.aria-label.error.singular", "error"),
-                plural: nls("gutter-tooltip.aria-label.error.plural", "errors"),
+                plural: nls("gutter-tooltip.aria-label.error.plural", "errors")
             },
             security: {
                 singular: nls("gutter-tooltip.aria-label.security.singular", "security finding"),
-                plural: nls("gutter-tooltip.aria-label.security.plural", "security findings"),
+                plural: nls("gutter-tooltip.aria-label.security.plural", "security findings")
             },
             warning: {
                 singular: nls("gutter-tooltip.aria-label.warning.singular", "warning"),
-                plural: nls("gutter-tooltip.aria-label.warning.plural", "warnings"),
+                plural: nls("gutter-tooltip.aria-label.warning.plural", "warnings")
             },
             info: {
                 singular: nls("gutter-tooltip.aria-label.info.singular", "information message"),
-                plural: nls("gutter-tooltip.aria-label.info.plural", "information messages"),
+                plural: nls("gutter-tooltip.aria-label.info.plural", "information messages")
             },
             hint: {
                 singular: nls("gutter-tooltip.aria-label.hint.singular", "suggestion"),
-                plural: nls("gutter-tooltip.aria-label.hint.plural", "suggestions"),
-            },
+                plural: nls("gutter-tooltip.aria-label.hint.plural", "suggestions")
+            }
         };
     }
 
@@ -184,7 +184,7 @@ class GutterTooltip extends Tooltip {
         if (annotationsInRow)
             annotation = {
                 displayText: Array.from(annotationsInRow.displayText),
-                type: Array.from(annotationsInRow.type),
+                type: Array.from(annotationsInRow.type)
             };
         else annotation = {displayText: [], type: []};
 

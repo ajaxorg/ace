@@ -426,7 +426,7 @@ class Gutter{
                     "aria-label",
                     nls("gutter.code-folding.range.aria-label", "Toggle code folding, rows $0 through $1", [
                         foldRange.start.row + 1,
-                        foldRange.end.row + 1,
+                        foldRange.end.row + 1
                     ])
                 );
             else {
@@ -435,7 +435,7 @@ class Gutter{
                         "aria-label",
                         nls("gutter.code-folding.closed.aria-label", "Toggle code folding, rows $0 through $1", [
                             fold.start.row + 1,
-                            fold.end.row + 1,
+                            fold.end.row + 1
                         ])
                     );
                 else
