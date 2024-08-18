@@ -151,19 +151,28 @@ class GutterTooltip extends Tooltip {
         Tooltip.prototype.setPosition.call(this, x, y);
     }
     
-    static get annotationLabels() { return {
+    static get annotationLabels() {
+        return {
             error: {
-                singular: nls("gutter-tooltip.aria-label.error.singular", "error"), 
-                plural: nls("gutter-tooltip.aria-label.error.plural", "errors")
+                singular: nls("gutter-tooltip.aria-label.error.singular", "error"),
+                plural: nls("gutter-tooltip.aria-label.error.plural", "errors"),
+            },
+            security: {
+                singular: nls("gutter-tooltip.aria-label.security.singular", "security finding"),
+                plural: nls("gutter-tooltip.aria-label.security.plural", "security findings"),
             },
             warning: {
-                singular: nls("gutter-tooltip.aria-label.warning.singular", "warning"), 
-                plural: nls("gutter-tooltip.aria-label.warning.plural", "warnings")
+                singular: nls("gutter-tooltip.aria-label.warning.singular", "warning"),
+                plural: nls("gutter-tooltip.aria-label.warning.plural", "warnings"),
             },
             info: {
-                singular: nls("gutter-tooltip.aria-label.info.singular", "information message"), 
-                plural: nls("gutter-tooltip.aria-label.info.plural", "information messages")
-            }
+                singular: nls("gutter-tooltip.aria-label.info.singular", "information message"),
+                plural: nls("gutter-tooltip.aria-label.info.plural", "information messages"),
+            },
+            hint: {
+                singular: nls("gutter-tooltip.aria-label.hint.singular", "suggestion"),
+                plural: nls("gutter-tooltip.aria-label.hint.plural", "suggestions"),
+            },
         };
     }
 
@@ -173,49 +182,49 @@ class GutterTooltip extends Tooltip {
         var annotation;
 
         if (annotationsInRow)
-            annotation = {displayText: Array.from(annotationsInRow.displayText), type: Array.from(annotationsInRow.type)};
-        else
-            annotation = {displayText: [], type: []};
+            annotation = {
+                displayText: Array.from(annotationsInRow.displayText),
+                type: Array.from(annotationsInRow.type),
+            };
+        else annotation = {displayText: [], type: []};
 
         // If the tooltip is for a row which has a closed fold, check whether there are
         // annotations in the folded lines. If so, add a summary to the list of annotations.
         var fold = gutter.session.getFoldLine(row);
-        if (fold && gutter.$showFoldedAnnotations){
-            var annotationsInFold = {error: [], warning: [], info: []};
-            var mostSevereAnnotationInFoldType;
+        if (fold && gutter.$showFoldedAnnotations) {
+            var annotationsInFold = {error: [], security: [], warning: [], info: [], hint: []};
+            var severityRank = {error: 1, security: 2, warning: 3, info: 4, hint: 5};
+            var mostSevereAnnotationTypeInFold;
 
-            for (let i = row + 1; i <= fold.end.row; i++){
-                if (!gutter.$annotations[i])
-                    continue;
+            for (let i = row + 1; i <= fold.end.row; i++) {
+                if (!gutter.$annotations[i]) continue;
 
                 for (var j = 0; j < gutter.$annotations[i].text.length; j++) {
                     var annotationType = gutter.$annotations[i].type[j];
                     annotationsInFold[annotationType].push(gutter.$annotations[i].text[j]);
 
-                    if (annotationType === "error"){
-                        mostSevereAnnotationInFoldType = "error_fold";
-                        continue;
-                    }
-
-                    if (annotationType === "warning"){
-                        mostSevereAnnotationInFoldType = "warning_fold";
-                        continue;
+                    if (
+                        !mostSevereAnnotationTypeInFold ||
+                        severityRank[annotationType] < severityRank[mostSevereAnnotationTypeInFold]
+                    ) {
+                        mostSevereAnnotationTypeInFold = annotationType;
                     }
                 }
             }
-           
-            if (mostSevereAnnotationInFoldType === "error_fold" || mostSevereAnnotationInFoldType === "warning_fold"){
-                var summaryFoldedAnnotations = `${GutterTooltip.annotationsToSummaryString(annotationsInFold)} in folded code.`;
+
+            if (["error", "security", "warning"].includes(mostSevereAnnotationTypeInFold)) {
+                var summaryFoldedAnnotations = `${GutterTooltip.annotationsToSummaryString(
+                    annotationsInFold
+                )} in folded code.`;
 
                 annotation.displayText.push(summaryFoldedAnnotations);
-                annotation.type.push(mostSevereAnnotationInFoldType);
+                annotation.type.push(mostSevereAnnotationTypeInFold + "_fold");
             }
         }
-        
-        if (annotation.displayText.length === 0)
-            return this.hide();
 
-        var annotationMessages = {error: [], warning: [], info: []};
+        if (annotation.displayText.length === 0) return this.hide();
+
+        var annotationMessages = {error: [], security: [], warning: [], info: [], hint: []};
         var iconClassName = gutter.$useSvgGutterIcons ? "ace_icon_svg" : "ace_icon";
 
         // Construct the contents of the tooltip.
@@ -224,7 +233,10 @@ class GutterTooltip extends Tooltip {
 
             var iconElement = dom.createElement("span");
             iconElement.classList.add(...[`ace_${annotation.type[i]}`, iconClassName]);
-            iconElement.setAttribute("aria-label", `${GutterTooltip.annotationLabels[annotation.type[i].replace("_fold","")].singular}`);
+            iconElement.setAttribute(
+                "aria-label",
+                `${GutterTooltip.annotationLabels[annotation.type[i].replace("_fold", "")].singular}`
+            );
             iconElement.setAttribute("role", "img");
             // Set empty content to the img span to get it to show up
             iconElement.appendChild(dom.createTextNode(" "));
@@ -233,7 +245,7 @@ class GutterTooltip extends Tooltip {
             lineElement.appendChild(dom.createTextNode(annotation.displayText[i]));
             lineElement.appendChild(dom.createElement("br"));
 
-            annotationMessages[annotation.type[i].replace("_fold","")].push(lineElement);
+            annotationMessages[annotation.type[i].replace("_fold", "")].push(lineElement);
         }
 
         // Clear the current tooltip content
@@ -241,12 +253,14 @@ class GutterTooltip extends Tooltip {
         dom.removeChildren(tooltipElement);
 
         // Update the tooltip content
-        annotationMessages.error.forEach(el => tooltipElement.appendChild(el));
-        annotationMessages.warning.forEach(el => tooltipElement.appendChild(el));
-        annotationMessages.info.forEach(el => tooltipElement.appendChild(el));
+        annotationMessages.error.forEach((el) => tooltipElement.appendChild(el));
+        annotationMessages.security.forEach((el) => tooltipElement.appendChild(el));
+        annotationMessages.warning.forEach((el) => tooltipElement.appendChild(el));
+        annotationMessages.info.forEach((el) => tooltipElement.appendChild(el));
+        annotationMessages.hint.forEach((el) => tooltipElement.appendChild(el));
 
         tooltipElement.setAttribute("aria-live", "polite");
-        
+
         if (!this.isOpen) {
             this.setTheme(this.editor.renderer.theme);
             this.setClassName("ace_gutter-tooltip");
@@ -264,7 +278,7 @@ class GutterTooltip extends Tooltip {
 
     static annotationsToSummaryString(annotations) {
         const summary = [];
-        const annotationTypes = ['error', 'warning', 'info'];
+        const annotationTypes = ["error", "security", "warning", "info", "hint"];
         for (const annotationType of annotationTypes) {
             if (!annotations[annotationType].length) continue;
             const label = annotations[annotationType].length === 1 ? GutterTooltip.annotationLabels[annotationType].singular : GutterTooltip.annotationLabels[annotationType].plural;
