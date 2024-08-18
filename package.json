@@ -61,7 +61,7 @@
         "useTabs": false,
         "semi": true,
         "singleQuote": false,
-        "trailingComma": "es5",
+        "trailingComma": "none",
         "bracketSpacing": false,
         "arrowParens": "always",
         "requirePragma": false,
