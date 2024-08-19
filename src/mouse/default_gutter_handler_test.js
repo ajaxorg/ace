@@ -182,10 +182,10 @@ module.exports = {
         // Fold the line containing the annotation.
         var lines = editor.renderer.$gutterLayer.$lines;
         assert.equal(lines.cells[1].element.textContent, "2");
-        var toggler = lines.cells[0].element.children[1];
+        var toggler = lines.cells[0].element.querySelector(".ace_fold-widget");
         var rect = toggler.getBoundingClientRect();
         if (!rect.left) rect.left = 100; // for mockdom
-        toggler.dispatchEvent(MouseEvent("click", {x: rect.left, y: rect.top}));
+        toggler.dispatchEvent(new MouseEvent("click", {x: rect.left, y: rect.top}));
         editor.renderer.$loop._flush();
         assert.ok(/ace_closed/.test(toggler.className));
         assert.equal(lines.cells[1].element.textContent, "51");
@@ -217,10 +217,10 @@ module.exports = {
         // Fold the line containing the annotation.
         var lines = editor.renderer.$gutterLayer.$lines;
         assert.equal(lines.cells[1].element.textContent, "2");
-        var toggler = lines.cells[0].element.children[1];
+        var toggler = lines.cells[0].element.querySelector(".ace_fold-widget");
         var rect = toggler.getBoundingClientRect();
         if (!rect.left) rect.left = 100; // for mockdom
-        toggler.dispatchEvent(MouseEvent("click", {x: rect.left, y: rect.top}));
+        toggler.dispatchEvent(new MouseEvent("click", {x: rect.left, y: rect.top}));
         editor.renderer.$loop._flush();
         assert.ok(/ace_closed/.test(toggler.className));
         assert.equal(lines.cells[1].element.textContent, "51");
@@ -252,10 +252,10 @@ module.exports = {
         // Fold the line containing the annotation.
         var lines = editor.renderer.$gutterLayer.$lines;
         assert.equal(lines.cells[1].element.textContent, "2");
-        var toggler = lines.cells[0].element.children[1];
+        var toggler = lines.cells[0].element.querySelector(".ace_fold-widget");
         var rect = toggler.getBoundingClientRect();
         if (!rect.left) rect.left = 100; // for mockdom
-        toggler.dispatchEvent(MouseEvent("click", {x: rect.left, y: rect.top}));
+        toggler.dispatchEvent(new MouseEvent("click", {x: rect.left, y: rect.top}));
         editor.renderer.$loop._flush();
         assert.ok(/ace_closed/.test(toggler.className));
         assert.equal(lines.cells[1].element.textContent, "51");
@@ -287,10 +287,10 @@ module.exports = {
         // Fold the line containing the annotation.
         var lines = editor.renderer.$gutterLayer.$lines;
         assert.equal(lines.cells[1].element.textContent, "2");
-        var toggler = lines.cells[0].element.children[1];
+        var toggler = lines.cells[0].element.querySelector(".ace_fold-widget");
         var rect = toggler.getBoundingClientRect();
         if (!rect.left) rect.left = 100; // for mockdom
-        toggler.dispatchEvent(MouseEvent("click", {x: rect.left, y: rect.top}));
+        toggler.dispatchEvent(new MouseEvent("click", {x: rect.left, y: rect.top}));
         editor.renderer.$loop._flush();
         assert.ok(/ace_closed/.test(toggler.className));
         assert.equal(lines.cells[1].element.textContent, "51");
@@ -312,10 +312,10 @@ module.exports = {
         // Fold the line containing the annotation.
         var lines = editor.renderer.$gutterLayer.$lines;
         assert.equal(lines.cells[1].element.textContent, "2");
-        var toggler = lines.cells[0].element.children[1];
+        var toggler = lines.cells[0].element.querySelector(".ace_fold-widget");
         var rect = toggler.getBoundingClientRect();
         if (!rect.left) rect.left = 100; // for mockdom
-        toggler.dispatchEvent(MouseEvent("click", {x: rect.left, y: rect.top}));
+        toggler.dispatchEvent(new MouseEvent("click", {x: rect.left, y: rect.top}));
         editor.renderer.$loop._flush();
         assert.ok(/ace_closed/.test(toggler.className));
         assert.equal(lines.cells[1].element.textContent, "51");
@@ -323,6 +323,57 @@ module.exports = {
         // Annotation node should NOT have fold class.
         var annotation = lines.cells[0].element.children[2];
         assert.notOk(/fold/.test(annotation.className));
+    },
+    "test: severities are correctly ordered/ranked when folding": function() {
+        var editor = this.editor;
+        var value = "x {" + "\n".repeat(50) + "}";
+        value = value.repeat(50);
+        editor.session.setMode(new Mode());
+        editor.setOption("showFoldedAnnotations", true);
+        editor.setValue(value, -1);
+        // Rank is: Error > Security > Warning
+        editor.session.setAnnotations([
+            {row: 1, column: 0, type: "warning", text: "warning test"},
+            {row: 1, column: 0, type: "security", text: "security finding test"},
+            {row: 1, column: 0, type: "error", text: "error test"}
+        ]);
+        editor.renderer.$loop._flush();
+
+        // Fold the line containing the annotation.
+        var lines = editor.renderer.$gutterLayer.$lines;
+        assert.equal(lines.cells[1].element.textContent, "2");
+        var firstLineGutterElement = lines.cells[0].element;
+        var toggler = firstLineGutterElement.querySelector(".ace_fold-widget");
+        var rect = toggler.getBoundingClientRect();
+        if (!rect.left) rect.left = 100; // for mockdom
+        toggler.dispatchEvent(new MouseEvent("click", {x: rect.left, y: rect.top}));
+        editor.renderer.$loop._flush();
+        assert.ok(/ace_closed/.test(toggler.className));
+        assert.equal(lines.cells[1].element.textContent, "51");
+
+        // Annotation node should have Error fold class
+        assert.ok(/ace_error_fold/.test(firstLineGutterElement.className));
+        assert.notOk(/ace_security_fold/.test(firstLineGutterElement.className));
+        assert.notOk(/ace_warning_fold/.test(firstLineGutterElement.className));
+
+        // Annotation node should have Security fold class
+        editor.session.setAnnotations([
+            {row: 1, column: 0, type: "security", text: "security finding test"},
+            {row: 1, column: 0, type: "warning", text: "warning test"}
+        ]);
+        editor.renderer.$loop._flush();
+        assert.notOk(/ace_error_fold/.test(firstLineGutterElement.className));
+        assert.ok(/ace_security_fold/.test(firstLineGutterElement.className));
+        assert.notOk(/ace_warning_fold/.test(firstLineGutterElement.className));
+
+        // Annotation node should have Warning fold class
+        editor.session.setAnnotations([
+            {row: 1, column: 0, type: "warning", text: "warning test"}
+        ]);
+        editor.renderer.$loop._flush();
+        assert.notOk(/ace_error_fold/.test(firstLineGutterElement.className));
+        assert.notOk(/ace_security_fold/.test(firstLineGutterElement.className));
+        assert.ok(/ace_warning_fold/.test(firstLineGutterElement.className));
     },
     "test: sets position correctly when tooltipFollowsMouse false" : function(done) {
         var editor = this.editor;
