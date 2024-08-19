@@ -8,7 +8,7 @@ module.exports = `
     background-color: #ff5d64;
 }
 .ace-cloud_editor_dark.ace_dark .ace_tooltip-marker-security.ace_tooltip-marker {
-    background-color: #e0ca57;
+    background-color: #ff5d64;
 }
 .ace-cloud_editor_dark.ace_dark .ace_tooltip-marker-warning.ace_tooltip-marker {
     background-color: #e0ca57;
@@ -175,7 +175,7 @@ module.exports = `
 }
 .ace-cloud_editor_dark .ace_icon_svg.ace_security,
 .ace-cloud_editor_dark .ace_icon_svg.ace_security_fold {
-    background-color: #e0ca57;
+    background-color: #ff5d64;
 }
 .ace-cloud_editor_dark .ace_icon_svg.ace_warning,
 .ace-cloud_editor_dark .ace_icon_svg.ace_warning_fold {
