@@ -472,15 +472,15 @@ class Gutter{
             var ariaLabel;
             switch(foldAnnotationClass) {
                 case " ace_error_fold":
-                    ariaLabel = nls("gutter.annotation.aria-label.error", "Read annotations row $0", [rowText]);
+                    ariaLabel = nls("gutter.annotation.aria-label.error", "Error, read annotations row $0", [rowText]);
                     break;
 
                 case " ace_security_fold":
-                    ariaLabel = nls("gutter.annotation.aria-label.security", "Read annotations row $0", [rowText]);
+                    ariaLabel = nls("gutter.annotation.aria-label.security", "Security finding, read annotations row $0", [rowText]);
                     break;
 
                 case " ace_warning_fold":
-                    ariaLabel = nls("gutter.annotation.aria-label.warning", "Read annotations row $0", [rowText]);
+                    ariaLabel = nls("gutter.annotation.aria-label.warning", "Warning, read annotations row $0", [rowText]);
                     break;
             }
             annotationNode.setAttribute("aria-label", ariaLabel);
@@ -502,23 +502,23 @@ class Gutter{
             var ariaLabel;
             switch(this.$annotations[row].className) {
                 case " ace_error":
-                    ariaLabel = nls("gutter.annotation.aria-label.error", "Read annotations row $0", [rowText]);
+                    ariaLabel = nls("gutter.annotation.aria-label.error", "Error, read annotations row $0", [rowText]);
                     break;
 
                 case " ace_security":
-                    ariaLabel = nls("gutter.annotation.aria-label.security", "Read annotations row $0", [rowText]);
+                    ariaLabel = nls("gutter.annotation.aria-label.security", "Security finding, read annotations row $0", [rowText]);
                     break;
 
                 case " ace_warning":
-                    ariaLabel = nls("gutter.annotation.aria-label.warning", "Read annotations row $0", [rowText]);
+                    ariaLabel = nls("gutter.annotation.aria-label.warning", "Warning, read annotations row $0", [rowText]);
                     break;
 
                 case " ace_info":
-                    ariaLabel = nls("gutter.annotation.aria-label.info", "Read annotations row $0", [rowText]);
+                    ariaLabel = nls("gutter.annotation.aria-label.info", "Info, read annotations row $0", [rowText]);
                     break;
 
                 case " ace_hint":
-                    ariaLabel = nls("gutter.annotation.aria-label.hint", "Read annotations row $0", [rowText]);
+                    ariaLabel = nls("gutter.annotation.aria-label.hint", "Suggestion, read annotations row $0", [rowText]);
                     break;
             }
             annotationNode.setAttribute("aria-label", ariaLabel);
