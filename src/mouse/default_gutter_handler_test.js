@@ -60,6 +60,29 @@ module.exports = {
             assert.ok(/error test/.test(tooltip.textContent));
         }, 100); 
     },
+    "test: gutter security tooltip" : function() {
+        var editor = this.editor;
+        var value = "";
+
+        editor.session.setMode(new Mode());
+        editor.setValue(value, -1);
+        editor.session.setAnnotations([{row: 0, column: 0, text: "security finding test", type: "security"}]);
+        editor.renderer.$loop._flush();
+
+        var lines = editor.renderer.$gutterLayer.$lines;
+        var annotation = lines.cells[0].element;
+        assert.ok(/ace_security/.test(annotation.className));
+
+        var rect = annotation.getBoundingClientRect();
+        annotation.dispatchEvent(new MouseEvent("move", {x: rect.left, y: rect.top}));
+
+        // Wait for the tooltip to appear after its timeout.
+        setTimeout(function() {
+            editor.renderer.$loop._flush();
+            var tooltip = editor.container.querySelector(".ace_tooltip");
+            assert.ok(/security finding test/.test(tooltip.textContent));
+        }, 100); 
+    },
     "test: gutter warning tooltip" : function() {
         var editor = this.editor;
         var value = "";
@@ -104,6 +127,29 @@ module.exports = {
             editor.renderer.$loop._flush();
             var tooltip = editor.container.querySelector(".ace_tooltip");
             assert.ok(/info test/.test(tooltip.textContent));
+        }, 100); 
+    },
+    "test: gutter hint tooltip" : function() {
+        var editor = this.editor;
+        var value = "";
+
+        editor.session.setMode(new Mode());
+        editor.setValue(value, -1);
+        editor.session.setAnnotations([{row: 0, column: 0, text: "suggestion test", type: "hint"}]);
+        editor.renderer.$loop._flush();
+
+        var lines = editor.renderer.$gutterLayer.$lines;
+        var annotation = lines.cells[0].element;
+        assert.ok(/ace_hint/.test(annotation.className));
+
+        var rect = annotation.getBoundingClientRect();
+        annotation.dispatchEvent(new MouseEvent("move", {x: rect.left, y: rect.top}));
+
+        // Wait for the tooltip to appear after its timeout.
+        setTimeout(function() {
+            editor.renderer.$loop._flush();
+            var tooltip = editor.container.querySelector(".ace_tooltip");
+            assert.ok(/suggestion test/.test(tooltip.textContent));
         }, 100); 
     },
     "test: gutter svg icons" : function() {
@@ -158,6 +204,41 @@ module.exports = {
             assert.ok(/error in folded/.test(tooltip.textContent));
         }, 100); 
     },
+    "test: security show up in fold" : function() {
+        var editor = this.editor;
+        var value = "x {" + "\n".repeat(50) + "}";
+        value = value.repeat(50);
+        editor.session.setMode(new Mode());
+        editor.setOption("showFoldedAnnotations", true);
+        editor.setValue(value, -1);
+        editor.session.setAnnotations([{row: 1, column: 0, type: "security", text: "security finding test"}]);
+        editor.renderer.$loop._flush();
+
+        // Fold the line containing the annotation.
+        var lines = editor.renderer.$gutterLayer.$lines;
+        assert.equal(lines.cells[1].element.textContent, "2");
+        var toggler = lines.cells[0].element.children[1];
+        var rect = toggler.getBoundingClientRect();
+        if (!rect.left) rect.left = 100; // for mockdom
+        toggler.dispatchEvent(MouseEvent("click", {x: rect.left, y: rect.top}));
+        editor.renderer.$loop._flush();
+        assert.ok(/ace_closed/.test(toggler.className));
+        assert.equal(lines.cells[1].element.textContent, "51");
+
+        // Annotation node should have fold class.
+        var annotation = lines.cells[0].element.children[2].firstChild;
+        assert.ok(/ace_security_fold/.test(annotation.className));
+
+        var rect = annotation.getBoundingClientRect();
+        annotation.dispatchEvent(new MouseEvent("move", {x: rect.left, y: rect.top}));
+
+        // Wait for the tooltip to appear after its timeout.
+        setTimeout(function() {
+            editor.renderer.$loop._flush();
+            var tooltip = editor.container.querySelector(".ace_tooltip");
+            assert.ok(/security finding in folded/.test(tooltip.textContent));
+        }, 100); 
+    },
     "test: warning show up in fold" : function() {
         var editor = this.editor;
         var value = "x {" + "\n".repeat(50) + "}";
@@ -201,6 +282,31 @@ module.exports = {
         editor.setOption("showFoldedAnnotations", true);
         editor.setValue(value, -1);
         editor.session.setAnnotations([{row: 1, column: 0, type: "info", text: "info test"}]);
+        editor.renderer.$loop._flush();
+
+        // Fold the line containing the annotation.
+        var lines = editor.renderer.$gutterLayer.$lines;
+        assert.equal(lines.cells[1].element.textContent, "2");
+        var toggler = lines.cells[0].element.children[1];
+        var rect = toggler.getBoundingClientRect();
+        if (!rect.left) rect.left = 100; // for mockdom
+        toggler.dispatchEvent(MouseEvent("click", {x: rect.left, y: rect.top}));
+        editor.renderer.$loop._flush();
+        assert.ok(/ace_closed/.test(toggler.className));
+        assert.equal(lines.cells[1].element.textContent, "51");
+
+        // Annotation node should NOT have fold class.
+        var annotation = lines.cells[0].element.children[2];
+        assert.notOk(/fold/.test(annotation.className));
+    },
+    "test: hint not show up in fold" : function() {
+        var editor = this.editor;
+        var value = "x {" + "\n".repeat(50) + "}";
+        value = value.repeat(50);
+        editor.session.setMode(new Mode());
+        editor.setOption("showFoldedAnnotations", true);
+        editor.setValue(value, -1);
+        editor.session.setAnnotations([{row: 1, column: 0, type: "hint", text: "suggestion test"}]);
         editor.renderer.$loop._flush();
 
         // Fold the line containing the annotation.
