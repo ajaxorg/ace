@@ -32,7 +32,20 @@ Mode = function() {
     this.getTokenizer = function() {
         if (!this.$tokenizer) {
             this.$highlightRules = this.$highlightRules || new this.HighlightRules(this.$highlightRuleConfig);
-            this.$tokenizer = new Tokenizer(this.$highlightRules.getRules());
+            var modeName;
+            if (this.$id) {
+                var chunks = this.$id.split('/');
+                if (chunks.length > 1) {
+                    modeName = chunks[chunks.length - 1];
+                }
+                else {
+                    modeName = chunks;
+                }
+            }
+            else {
+                modeName = "root";
+            }
+            this.$tokenizer = new Tokenizer(this.$highlightRules.getRules(), modeName);
         }
         return this.$tokenizer;
     };

@@ -56,8 +56,8 @@ class Tooltip {
      * @param {Number} y
      **/
     setPosition(x, y) {
-        this.getElement().style.left = x + "px";
-        this.getElement().style.top = y + "px";
+        this.getElement().style.left = Math.round(x) + "px";
+        this.getElement().style.top = Math.round(y) + "px";
     }
 
     /**

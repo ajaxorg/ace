@@ -710,7 +710,7 @@ function Folding() {
         if (token && /^comment|string/.test(type)) {
             type = type.match(/comment|string/)[0];
             if (type == "comment")
-                type += "|doc-start|\\.doc";
+                type += "|doc-start|\\.doc|empty";
             var re = new RegExp(type);
             var range = new Range();
             if (dir != 1) {

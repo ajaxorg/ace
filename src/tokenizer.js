@@ -1,6 +1,7 @@
 "use strict";
 const reportError = require("./lib/report_error").reportError;
 
+var {Scope} = require("./scope");
 // tokenizing lines longer than this makes editor very slow
 var MAX_TOKEN_COUNT = 2000;
 /**
@@ -10,11 +11,13 @@ class Tokenizer {
     /**
      * Constructs a new tokenizer based on the given rules and flags.
      * @param {Object} rules The highlighting rules
-     **/
-    constructor(rules) {
+     * @param {string} [modeName]
+     */
+    constructor(rules, modeName) {
         /**@type {RegExp}*/
         this.splitRegex;
         this.states = rules;
+        this.rootScope = new Scope(modeName || "root");
 
         this.regExps = {};
         this.matchMappings = {};
@@ -203,36 +206,40 @@ class Tokenizer {
             if (lastCapture.end != null && /^\)*$/.test(src.substr(lastCapture.end)))
                 src = src.substring(0, lastCapture.start) + src.substr(lastCapture.end);
         }
-        
+
         // this is needed for regexps that can match in multiple ways
         if (src.charAt(0) != "^") src = "^" + src;
         if (src.charAt(src.length - 1) != "$") src += "$";
-        
+
         return new RegExp(src, (flag||"").replace("g", ""));
     }
 
     /**
      * Returns an object containing two properties: `tokens`, which contains all the tokens; and `state`, the current state.
-     * @param {string} line
-     * @param {string | string[]} startState
-     * @returns {{tokens:import("../ace-internal").Ace.Token[], state: string|string[]}}
-     */
+     * @param {String} line
+     * @param {String|Scope} [startState]
+     * @returns {Object}
+     **/
     getLineTokens(line, startState) {
-        if (startState && typeof startState != "string") {
-            /**@type {any[]}*/
-            var stack = startState.slice(0);
-            startState = stack[0];
-            if (startState === "#tmp") {
-                stack.shift();
-                startState = stack.shift();
-            }
-        } else
-            var stack = [];
+        if (startState && startState["getAllScopeNames"]) {
+            var stack = /**@type{Scope}*/(startState).toStack();
+            stack.pop(); //drop the root scope name
 
-        var currentState = /**@type{string}*/(startState) || "start";
+            if (/**@type{Scope}*/(startState).data === "#tmp") {
+                stack.shift();
+            }
+            if (stack.length === 1) {
+                stack = [];
+            }
+        }
+        else {
+            var stack = [];
+        }
+        var currentState = (startState !== undefined) ? (startState["getAllScopeNames"]) ? /**@type{Scope}*/(startState) : this.rootScope.get(
+            startState) : this.rootScope.get("start");
         var state = this.states[currentState];
         if (!state) {
-            currentState = "start";
+            currentState = this.rootScope.get("start");
             state = this.states[currentState];
         }
         var mapping = this.matchMappings[currentState];
@@ -243,47 +250,74 @@ class Tokenizer {
         var lastIndex = 0;
         var matchAttempts = 0;
 
-        var token = {type: null, value: ""};
+        var token = {
+            type: null,
+            value: ""
+        };
 
         while (match = re.exec(line)) {
             var type = mapping.defaultToken;
             var rule = null;
+            var rememberedState = undefined;
             var value = match[0];
             var index = re.lastIndex;
 
             if (index - value.length > lastIndex) {
                 var skipped = line.substring(lastIndex, index - value.length);
-                if (token.type == type) {
+                if (token.type && token.type === type) {
                     token.value += skipped;
-                } else {
-                    if (token.type)
-                        tokens.push(token);
-                    token = {type: type, value: skipped};
+                }
+                else {
+                    if (token.type) tokens.push(token);
+                    token = {
+                        type: currentState.get(type),
+                        value: skipped
+                    };
                 }
             }
 
-            for (var i = 0; i < match.length-2; i++) {
-                if (match[i + 1] === undefined)
-                    continue;
+            for (var i = 0; i < match.length - 2; i++) {
+                if (match[i + 1] === undefined) continue;
 
                 rule = state[mapping[i]];
 
-                if (rule.onMatch)
-                    type = rule.onMatch(value, currentState, stack, line);
-                else
-                    type = rule.token;
-
-                if (rule.next) {
-                    if (typeof rule.next == "string") {
-                        currentState = rule.next;
-                    } else {
-                        currentState = rule.next(currentState, stack);
+                if (rule.onMatch || rule.onMatch2) {
+                    if (rule.onMatch) {
+                        type = rule.onMatch(value, currentState.toString(), stack, line);
                     }
-                    
+                    else {
+                        type = rule.onMatch2(value, currentState, line);
+                        rememberedState = (Array.isArray(type)) ? type[0].type.parent : type.parent;
+                    }
+
+                }
+                else {
+                    if (rule.token) type = rule.token;
+                }
+
+                if (rule.next || rule.next2 || rememberedState) {
+                    if (!rememberedState) {
+                        if (typeof rule.next !== 'function') {
+                            currentState = currentState.parent.get(rule.next);
+                        }
+                        else {
+                            if (rule.next) {
+                                currentState = rule.next(currentState.toString(), stack);
+                                currentState = this.fromStack(stack, currentState);
+                            }
+                            else {
+                                currentState = rule.next2(currentState, stack);
+                            }
+                        }
+                    }
+                    else {
+                        currentState = rememberedState;
+                    }
+
                     state = this.states[currentState];
                     if (!state) {
                         this.reportError("state doesn't exist", currentState);
-                        currentState = "start";
+                        currentState = this.rootScope.get("start");
                         state = this.states[currentState];
                     }
                     mapping = this.matchMappings[currentState];
@@ -291,31 +325,41 @@ class Tokenizer {
                     re = this.regExps[currentState];
                     re.lastIndex = index;
                 }
-                if (rule.consumeLineEnd)
-                    lastIndex = index;
+                if (rule.consumeLineEnd) lastIndex = index;
                 break;
             }
 
             if (value) {
-                if (typeof type === "string") {
+                if (type && !type["getAllScopeNames"]) {
+                    currentState = this.fromStack(stack, currentState.toString());
+                }
+
+                if (!Array.isArray(type)) {
                     if ((!rule || rule.merge !== false) && token.type === type) {
                         token.value += value;
-                    } else {
-                        if (token.type)
-                            tokens.push(token);
-                        token = {type: type, value: value};
                     }
-                } else if (type) {
-                    if (token.type)
-                        tokens.push(token);
-                    token = {type: null, value: ""};
-                    for (var i = 0; i < type.length; i++)
+                    else {
+                        if (token.type) tokens.push(token);
+                        token = {
+                            type: currentState.get(type),
+                            value: value
+                        };
+                    }
+                }
+                else if (type) {
+                    if (token.type) tokens.push(token);
+                    token = {
+                        type: null,
+                        value: ""
+                    };
+                    for (var i = 0; i < type.length; i++) {
+                        type[i].type = currentState.get(type[i].type);
                         tokens.push(type[i]);
+                    }
                 }
             }
 
-            if (lastIndex == line.length)
-                break;
+            if (lastIndex === line.length) break;
 
             lastIndex = index;
 
@@ -328,30 +372,54 @@ class Tokenizer {
                 }
                 // chrome doens't show contents of text nodes with very long text
                 while (lastIndex < line.length) {
-                    if (token.type)
-                        tokens.push(token);
+                    if (token.type) tokens.push(token);
                     token = {
                         value: line.substring(lastIndex, lastIndex += 500),
-                        type: "overflow"
+                        type: currentState.get("overflow")
                     };
                 }
-                currentState = "start";
+                currentState = this.rootScope.get("start");
                 stack = [];
                 break;
             }
         }
 
-        if (token.type)
+        if (token.type) tokens.push(token);
+
+        if (!tokens.length || tokens[tokens.length - 1].type.parent !== currentState) {
+            token = {
+                value: "",
+                type: currentState.get("empty")
+            };
             tokens.push(token);
-        
-        if (stack.length > 1) {
-            if (stack[0] !== currentState)
-                stack.unshift("#tmp", currentState);
         }
+
         return {
-            tokens : tokens,
-            state : stack.length ? stack : currentState
+            tokens: tokens,
+            state: currentState
         };
+    }
+
+    /**
+     * Retrieves the scope for the given stack and current state.
+     *
+     * @param {string[]} stack - The stack of scopes.
+     * @param {string} currentState - The current state.
+     * @returns {Scope} The scope for the given stack and current state.
+     */
+    fromStack(stack, currentState) {
+        let scope = this.rootScope;
+        if (stack.length === 0) {
+            return scope.get(currentState); //the start state
+        }
+        for (var i = stack.length - 1; i >= 0; i--) {
+            scope = scope.get(stack[i]);
+        }
+        if (stack[0] !== currentState) {
+            scope = scope.get(currentState, "#tmp");
+        }
+
+        return scope;
     }
 }
 

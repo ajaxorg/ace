@@ -99,12 +99,16 @@ TextHighlightRules = function() {
     };
 
     var pushState = function(currentState, stack) {
-        if (currentState != "start" || stack.length)
-            stack.unshift(this.nextState, currentState);
+        if (typeof currentState.get == "function") {
+            return currentState.get(this.nextState);
+        }
+        if (currentState !== "start" || stack.length) stack.unshift(this.nextState, currentState);
         return this.nextState;
     };
     var popState = function(currentState, stack) {
-        // if (stack[0] === currentState)
+        if (typeof currentState.get == "function") {
+            return (currentState.parent.parent) ? currentState.parent : currentState.get("start");
+        }
         stack.shift();
         return stack.shift() || "start";
     };

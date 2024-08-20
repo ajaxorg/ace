@@ -1217,7 +1217,7 @@ export namespace Ace {
         trim?: boolean,
         firstLineNumber?: number,
         showGutter?: boolean
-    }
+}
 }
 
 
@@ -1554,6 +1554,27 @@ declare module "./src/mouse/default_gutter_handler" {
     }
 }
 
+declare module "./src/scope" {
+
+    export interface Scope extends String {
+        name: string;
+        children: { [name: string]: Scope };
+        parent?: Scope;
+        data: any;
+
+        get(name: any, extraId: string): Scope;
+
+        find(states): Scope | undefined;
+
+        hasParent(states): boolean;
+
+        count(): number;
+
+        getAllScopeNames(): string[];
+
+        toStack(): any[];
+    }
+}
 declare module "./src/lib/keys" {
     export function keyCodeToString(keyCode: number): string;
 }
