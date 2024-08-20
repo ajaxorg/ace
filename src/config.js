@@ -194,6 +194,6 @@ var reportErrorIfPathIsNotConfigured = function() {
     }
 };
 
-exports.version = "1.35.4";
+exports.version = "1.35.5";
 
 
