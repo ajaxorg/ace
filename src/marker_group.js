@@ -120,7 +120,7 @@ class MarkerGroup {
                 else
                     markerLayer.drawTextMarker(html, screenRange, marker.className, config);
             } else {
-                markerLayer.drawSingleLineMarker(html, screenRange, marker.className + " ace_start" + " ace_br15", config);
+                markerLayer.drawSingleLineMarker(html, screenRange, marker.className + " ace_br15", config);
             }
         }
     }
