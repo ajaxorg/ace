@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.36.0](https://github.com/ajaxorg/ace/compare/v1.35.5...v1.36.0) (2024-08-21)
+
+
+### Features
+
+* allow setting marker type for MarkerGroups ([#5630](https://github.com/ajaxorg/ace/issues/5630)) ([214df9c](https://github.com/ajaxorg/ace/commit/214df9cea8d729f3071f9c02889cba2b2e7051b3))
+* **forced-color:** do not adjust the forced colors for the editor ([#5624](https://github.com/ajaxorg/ace/issues/5624)) ([c8f9df8](https://github.com/ajaxorg/ace/commit/c8f9df84e70ee29e8e989966985bcea95a9bef9b))
+
 ### [1.35.5](https://github.com/ajaxorg/ace/compare/v1.35.4...v1.35.5) (2024-08-20)
 
 ### [1.35.4](https://github.com/ajaxorg/ace/compare/v1.35.3...v1.35.4) (2024-07-22)
