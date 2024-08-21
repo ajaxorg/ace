@@ -319,9 +319,9 @@ class Text {
             this.$renderLine(lineEl, row, row == foldStart ? foldLine : false);
 
             if (this.$useLineGroups()) {
-                lineEl.className = "ace_line_group";
+                lineEl.classList.add("ace_line_group");
             } else {
-                lineEl.className = "ace_line";
+                lineEl.classList.add("ace_line");
             }
             fragment.push(line);
 
