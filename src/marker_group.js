@@ -2,6 +2,7 @@
 /**
  * @typedef {import("./edit_session").EditSession} EditSession
  * @typedef {{range: import("./range").Range, className: string}} MarkerGroupItem
+ * @typedef {import("../ace-internal").Ace.LayerConfig} LayerConfig
  */
 /**
  * @typedef {import("./layer/marker").Marker} Marker
@@ -15,8 +16,12 @@ Potential improvements:
 class MarkerGroup {
     /**
      * @param {EditSession} session
+     * @param {{markerType: "fullLine" | "line"}} options
      */
-    constructor(session) {
+    constructor(session, options) {
+        if (options)
+            this.markerType = options.markerType;
+
         this.markers = [];
         /**@type {EditSession}*/
         this.session = session;
@@ -59,12 +64,12 @@ class MarkerGroup {
      * @param {any} html
      * @param {Marker} markerLayer
      * @param {EditSession} session
-     * @param {{ firstRow: any; lastRow: any; }} config
+     * @param {LayerConfig} config
      */
     update(html, markerLayer, session, config) {
         if (!this.markers || !this.markers.length)
             return;
-        var visibleRangeStartRow = config.firstRow, visibleRangeEndRow = config.lastRow;
+        var visibleRangeStartRow = config.firstRow, visibleRangeEndRow = 100;
         var foldLine;
         var markersOnOneLine = 0;
         var lastRow = 0;
@@ -103,10 +108,15 @@ class MarkerGroup {
                 continue;
             }
 
-            if (screenRange.isMultiLine()) {
-                markerLayer.drawTextMarker(html, screenRange, marker.className, config);
+            if (this.markerType === "fullLine") {
+                markerLayer.drawFullLineMarker(html, screenRange, marker.className, config);
+            } else if (screenRange.isMultiLine()) {
+                if (this.markerType === "line")
+                    markerLayer.drawMultiLineMarker(html, screenRange, marker.className, config);
+                else
+                    markerLayer.drawTextMarker(html, screenRange, marker.className, config);
             } else {
-                markerLayer.drawSingleLineMarker(html, screenRange, marker.className, config);
+                markerLayer.drawSingleLineMarker(html, screenRange, marker.className + " ace_start" + " ace_br15", config);
             }
         }
     }
