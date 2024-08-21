@@ -69,7 +69,7 @@ class MarkerGroup {
     update(html, markerLayer, session, config) {
         if (!this.markers || !this.markers.length)
             return;
-        var visibleRangeStartRow = config.firstRow, visibleRangeEndRow = 100;
+        var visibleRangeStartRow = config.firstRow, visibleRangeEndRow = config.lastRow;
         var foldLine;
         var markersOnOneLine = 0;
         var lastRow = 0;
