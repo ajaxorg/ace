@@ -16,7 +16,7 @@ Potential improvements:
 class MarkerGroup {
     /**
      * @param {EditSession} session
-     * @param {{markerType: "fullLine" | "line"}} options
+     * @param {{markerType: "fullLine" | "line" | undefined}} [options]
      */
     constructor(session, options) {
         if (options)

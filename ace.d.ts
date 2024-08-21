@@ -290,7 +290,7 @@ export namespace Ace {
   }
 
   export class MarkerGroup {
-    constructor(session: EditSession);
+    constructor(session: EditSession, options?: {markerType?: "fullLine" | "line"});
     setMarkers(markers: MarkerGroupItem[]): void;
     getMarkerAtPosition(pos: Position): MarkerGroupItem;
   }
