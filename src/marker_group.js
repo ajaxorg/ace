@@ -16,7 +16,11 @@ Potential improvements:
 class MarkerGroup {
     /**
      * @param {EditSession} session
-     * @param {{markerType: "fullLine" | "line" | undefined}} [options]
+     * @param {{markerType: "fullLine" | "line" | undefined}} [options] Options controlling the behvaiour of the marker.
+     * User `markerType` to control how the markers which are part of this group will be rendered:
+     * - `undefined`: uses `text` type markers where only text characters within the range will be highlighted.
+     * - `fullLine`: will fully highlight all the rows within the range, including the characters before and after the range on the respective rows.
+     * - `line`: will fully highlight the lines within the range but will only cover the characters between the start and end of the range.
      */
     constructor(session, options) {
         if (options)
