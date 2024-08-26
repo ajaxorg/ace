@@ -70,7 +70,7 @@ module.exports = `
 }
 
 .ace-cloud_editor .ace_fold {
-    background-color: #2963d6;
+    background-color: #0E45B4;
     border-color: #3a3a42;
 }
 
@@ -79,27 +79,27 @@ module.exports = `
 }
 
 .ace-cloud_editor .ace_meta.ace_tag {
-    color: #2963d6;
+    color: #0E45B4;
 }
 
 .ace-cloud_editor .ace_constant {
-    color: #a26202;
+    color: #A16101;
 }
 
 .ace-cloud_editor .ace_constant.ace_numeric {
-    color: #a26202;
+    color: #A16101;
 }
 
 .ace-cloud_editor .ace_constant.ace_character.ace_escape {
-    color: #d91792;
+    color: #BD1880;
 }
 
 .ace-cloud_editor .ace_support.ace_function {
-    color: #d1000a;
+    color: #A81700;
 }
 
 .ace-cloud_editor .ace_support.ace_class {
-    color: #a26202;
+    color: #A16101;
 }
 
 .ace-cloud_editor .ace_storage {
@@ -108,20 +108,20 @@ module.exports = `
 
 .ace-cloud_editor .ace_invalid.ace_illegal {
     color: #ffffff;
-    background-color: #2963d6;
+    background-color: #0E45B4;
 }
 
 .ace-cloud_editor .ace_invalid.ace_deprecated {
     color: #ffffff;
-    background-color: #a26202;
+    background-color: #A16101;
 }
 
 .ace-cloud_editor .ace_string {
-    color: #218000;
+    color: #207A7F;
 }
 
 .ace-cloud_editor .ace_string.ace_regexp {
-    color: #218000;
+    color: #207A7F;
 }
 
 .ace-cloud_editor .ace_comment,
@@ -131,7 +131,7 @@ module.exports = `
 }
 
 .ace-cloud_editor .ace_variable {
-    color: #2963d6;
+    color: #0E45B4;
 }
 
 .ace-cloud_editor .ace_meta.ace_selector {
@@ -139,26 +139,26 @@ module.exports = `
 }
 
 .ace-cloud_editor .ace_entity.ace_other.ace_attribute-name {
-    color: #a26202;
+    color: #A16101;
 }
 
 .ace-cloud_editor .ace_entity.ace_name.ace_function {
-    color: #d1000a;
+    color: #A81700;
 }
 
 .ace-cloud_editor .ace_entity.ace_name.ace_tag {
-    color: #2963d6;
+    color: #0E45B4;
 }
 
 .ace-cloud_editor .ace_heading {
-    color: #d1000a;
+    color: #A81700;
 }
 
 .ace-cloud_editor .ace_xml-pe {
-    color: #a26202;
+    color: #A16101;
 }
 .ace-cloud_editor .ace_doctype {
-    color: #2963d6;
+    color: #0E45B4;
 }
 
 .ace-cloud_editor .ace_tooltip {
@@ -186,7 +186,7 @@ module.exports = `
 }
 .ace-cloud_editor .ace_highlight-marker {
     background: none;
-    border: #2963d6 1px solid;
+    border: #0E45B4 1px solid;
 }
 .ace-cloud_editor .ace_tooltip.ace_hover-tooltip:focus > div {
     outline: 1px solid #0073bb;
