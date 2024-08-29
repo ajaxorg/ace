@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.36.1](https://github.com/ajaxorg/ace/compare/v1.36.0...v1.36.1) (2024-08-29)
+
+
+### Bug Fixes
+
+* improve type getMarkerAtPosition markergroup ([#5631](https://github.com/ajaxorg/ace/issues/5631)) ([89bd40a](https://github.com/ajaxorg/ace/commit/89bd40a66a2f06fb8806f174e5559021540a5b1e))
+* update cloudeditor light colours ([#5633](https://github.com/ajaxorg/ace/issues/5633)) ([0e2813e](https://github.com/ajaxorg/ace/commit/0e2813ed9e858d9359c2a79f2a9255d675308ad1))
+
 ## [1.36.0](https://github.com/ajaxorg/ace/compare/v1.35.5...v1.36.0) (2024-08-21)
 
 
