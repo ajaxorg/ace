@@ -165,7 +165,7 @@ class Marker {
         } else {
             this.elt(
                 clazz + " ace_br1 ace_start",
-                "height:"+ height+ "px;"+ "right:0;"+ "top:"+top+ "px;left:"+ left+ "px;" + (extraStyle || "")
+                "height:"+ height+ "px;"+ "right:" + padding + "px;"+ "top:"+top+ "px;left:"+ left+ "px;" + (extraStyle || "")
             );
         }
         // from start of the last line to the selection end
@@ -197,7 +197,7 @@ class Marker {
         this.elt(
             clazz + (radiusClass ? " ace_br" + radiusClass : ""),
             "height:"+ height+ "px;"+
-            "right:0;"+
+            "right:" + padding + "px;"+
             "top:"+ top+ "px;"+
             "left:"+ padding+ "px;"+ (extraStyle || "")
         );

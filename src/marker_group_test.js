@@ -114,8 +114,8 @@ module.exports = {
         assert.equal(markerSize.height, lineHeight);
         // Should start at the 13th character (including 4px offset)
         assert.equal(markerSize.left, 12 * characterWidth + 4);
-        // Shoud be as wide as the marker layer - 12 characters and the offset.
-        assert.equal(markerSize.width, editor.renderer.$markerBack.element.getBoundingClientRect().width - 12 * characterWidth - 4);
+        // Shoud be as wide as the marker layer - 12 characters and the offset on both sides.
+        assert.equal(markerSize.width, editor.renderer.$markerBack.element.getBoundingClientRect().width - 12 * characterWidth - 4 - 4);
     },
     "test: should default to markers of text type": function() {
         editor.resize(true);
