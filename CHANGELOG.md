@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.36.2](https://github.com/ajaxorg/ace/compare/v1.36.1...v1.36.2) (2024-08-30)
+
+
+### Bug Fixes
+
+* apply padding to right side multi-line markers ([#5636](https://github.com/ajaxorg/ace/issues/5636)) ([c7549aa](https://github.com/ajaxorg/ace/commit/c7549aa5d53fb62f134b31a44d09029ceee3c800))
+
 ### [1.36.1](https://github.com/ajaxorg/ace/compare/v1.36.0...v1.36.1) (2024-08-29)
 
 
