@@ -235,7 +235,7 @@ class Tokenizer {
         else {
             var stack = [];
         }
-        var currentState = (startState !== undefined) ? (startState["getAllScopeNames"]) ? /**@type{Scope}*/(startState) : this.rootScope.get(
+        var currentState = (startState != undefined) ? (startState["getAllScopeNames"]) ? /**@type{Scope}*/(startState) : this.rootScope.get(
             startState) : this.rootScope.get("start");
         var state = this.states[currentState];
         if (!state) {
@@ -268,7 +268,7 @@ class Tokenizer {
                     token.value += skipped;
                 }
                 else {
-                    if (token.type) tokens.push(token);
+                    if (token.type && token.type != "") tokens.push(token);
                     token = {
                         type: currentState.get(type),
                         value: skipped
@@ -292,7 +292,7 @@ class Tokenizer {
 
                 }
                 else {
-                    if (rule.token) type = rule.token;
+                    if (rule.token != undefined) type = rule.token;
                 }
 
                 if (rule.next || rule.next2 || rememberedState) {
@@ -334,7 +334,7 @@ class Tokenizer {
                     currentState = this.fromStack(stack, currentState.toString());
                 }
 
-                if (!Array.isArray(type)) {
+                if (type && !Array.isArray(type) && type != "") {
                     if ((!rule || rule.merge !== false) && token.type === type) {
                         token.value += value;
                     }
@@ -353,7 +353,9 @@ class Tokenizer {
                         value: ""
                     };
                     for (var i = 0; i < type.length; i++) {
+                        if (type[i].type) {
                         type[i].type = currentState.get(type[i].type);
+                        }
                         tokens.push(type[i]);
                     }
                 }
@@ -386,7 +388,7 @@ class Tokenizer {
 
         if (token.type) tokens.push(token);
 
-        if (!tokens.length || tokens[tokens.length - 1].type.parent !== currentState) {
+        if (!tokens.length || tokens[tokens.length - 1].type && tokens[tokens.length - 1].type.parent !== currentState) {
             token = {
                 value: "",
                 type: currentState.get("empty")
