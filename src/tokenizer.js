@@ -303,7 +303,7 @@ class Tokenizer {
                         else {
                             if (rule.next) {
                                 currentState = rule.next(currentState.toString(), stack);
-                                currentState = this.fromStack(stack, currentState);
+                                currentState = this.rootScope.fromStack(stack, currentState);
                             }
                             else {
                                 currentState = rule.next2(currentState, stack);
@@ -331,7 +331,7 @@ class Tokenizer {
 
             if (value) {
                 if (type && !type["getAllScopeNames"]) {
-                    currentState = this.fromStack(stack, currentState.toString());
+                    currentState = this.rootScope.fromStack(stack, currentState);
                 }
 
                 if (type && !Array.isArray(type) && type != "") {
@@ -402,27 +402,7 @@ class Tokenizer {
         };
     }
 
-    /**
-     * Retrieves the scope for the given stack and current state.
-     *
-     * @param {string[]} stack - The stack of scopes.
-     * @param {string} currentState - The current state.
-     * @returns {Scope} The scope for the given stack and current state.
-     */
-    fromStack(stack, currentState) {
-        let scope = this.rootScope;
-        if (stack.length === 0) {
-            return scope.get(currentState); //the start state
-        }
-        for (var i = stack.length - 1; i >= 0; i--) {
-            scope = scope.get(stack[i]);
-        }
-        if (stack[0] !== currentState) {
-            scope = scope.get(currentState, "#tmp");
-        }
 
-        return scope;
-    }
 }
 
 Tokenizer.prototype.reportError = reportError;

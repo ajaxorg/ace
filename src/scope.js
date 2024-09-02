@@ -21,6 +21,7 @@ class Scope {
         stringObj.count = this.count;
         stringObj.getAllScopeNames = this.getAllScopeNames;
         stringObj.toStack = this.toStack;
+        stringObj.fromStack = this.fromStack;
         
         return stringObj;
     }
@@ -87,6 +88,33 @@ class Scope {
             stack.push(self.data);
         } while (self = self.parent);
         return stack;
+    }
+
+    /**
+     * Retrieves the scope for the given stack and current state.
+     *
+     * @param {string[]} stack - The stack of scopes.
+     * @param {string | Scope} currentState - The current state.
+     * @returns {Scope} The scope for the given stack and current state.
+     */
+    fromStack(stack, currentState) {
+        /**@type{Scope}*/
+        let scope = this;
+        while (scope.parent) {
+            scope = scope.parent;
+        }
+
+        if (stack.length === 0) {
+            return scope.get(currentState); //the start state
+        }
+        for (var i = stack.length - 1; i >= 0; i--) {
+            scope = scope.get(stack[i]);
+        }
+        if (stack[0] !== currentState) {
+            scope = scope.get(currentState, "#tmp");
+        }
+
+        return scope;
     }
 }
 

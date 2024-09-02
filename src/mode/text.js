@@ -34,13 +34,7 @@ Mode = function() {
             this.$highlightRules = this.$highlightRules || new this.HighlightRules(this.$highlightRuleConfig);
             var modeName;
             if (this.$id) {
-                var chunks = this.$id.split('/');
-                if (chunks.length > 1) {
-                    modeName = chunks[chunks.length - 1];
-                }
-                else {
-                    modeName = chunks;
-                }
+                modeName = this.$id.split('/').pop();
             }
             else {
                 modeName = "root";

@@ -81,7 +81,7 @@ var LuaHighlightRules = function() {
                     },
                     regex : /\]=*\]/,
                 }, {
-                    defaultToken : "comment"
+                    defaultToken : "comment.body"
                 }
             ]
         },
