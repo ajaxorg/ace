@@ -104,9 +104,9 @@ function checkModes() {
         var str = blockComment.start + " " + blockComment.end;
         str = blockComment.start + str;
         if (blockComment.nestable)
-            str += blockComment.end;     
+            str += blockComment.end;
         var data = tokenizer.getLineTokens(str, "start");
-        var isBroken = data.tokens.some(function(t) { return !/comment/.test(t.type); });
+        var isBroken = data.tokens.some(function(t) { return !/comment|empty/.test(t.type); });
         if (isBroken) {
             die("broken blockComment in " + modeName, data);
         }
@@ -224,7 +224,9 @@ function generateTestData(names, force) {
             var tokenizedLine = "";
             data.tokens.forEach(function(x) {
                 tokenizedLine += x.value;
-                tmp.push(JSON.stringify([x.type, x.value]));
+                if (x.type != "empty") {
+                    tmp.push(JSON.stringify([x.type, x.value]));
+                }
             });
             if (tokenizedLine != line)
                 tmp.push(JSON.stringify(line));
@@ -278,6 +280,7 @@ function testMode(modeName, i) {
             line = lineData.values.join("");
 
         var tokens = tokenizer.getLineTokens(line, state);
+        tokens.tokens = tokens.tokens.filter((el) => el.type != "empty");
         var values = tokens.tokens.map(function(x) {return x.value;});
         var types = tokens.tokens.map(function(x) {return x.type;});
 
