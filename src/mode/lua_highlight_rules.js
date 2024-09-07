@@ -65,16 +65,14 @@ var LuaHighlightRules = function() {
         "start" : [{
             stateName: "bracketedComment",
             onMatch2 : function(value, scope){
-                var parent = scope.get("bracketedComment" + (value.length - 2))
-                parent.meta = (value.length - 2);
-                return parent.get(this.next).get("comment");
+                return scope.get(this.next, value.length - 2).get("comment");
             },
             regex : /\-\-\[=*\[/,
             next  : [
                 {
                     onMatch2 : function(value, scope) {
-                        if (scope.parent && value.length == scope.parent.meta) {
-                            return scope.parent.parent.get("comment");
+                        if (scope == "bracketedComment" && value.length == scope.data) {
+                            return scope.parent.get("comment");
                         } else {
                             return scope.get("comment");
                         }
@@ -93,16 +91,14 @@ var LuaHighlightRules = function() {
         {
             stateName: "bracketedString",
             onMatch2 : function(value, scope){
-                var parent = scope.get("bracketedString" + value.length);
-                parent.meta = value.length;
-                return parent.get(this.next).get("string.start");
+                return scope.get(this.next, value.length - 2).get("string.start");
             },
             regex : /\[=*\[/,
             next  : [
                 {
                     onMatch2 : function(value, scope) {
-                        if (scope.parent && value.length == scope.parent.meta) {
-                            return scope.parent.parent.get("string.end");
+                        if (scope == "bracketedString" && value.length == scope.data) {
+                            return scope.parent.get("string.end");
                         } else {
                             return scope.get("string.end");
                         }

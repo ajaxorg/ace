@@ -264,7 +264,7 @@ class Tokenizer {
 
             if (index - value.length > lastIndex) {
                 var skipped = line.substring(lastIndex, index - value.length);
-                if (token.type && token.type === type) {
+                if (token.type && token.type == type) {
                     token.value += skipped;
                 }
                 else {
@@ -297,7 +297,7 @@ class Tokenizer {
 
                 if (rule.next || rule.next2 || rememberedState) {
                     if (!rememberedState) {
-                        if (typeof rule.next !== 'function') {
+                        if (rule.next && typeof rule.next !== 'function') {
                             currentState = currentState.parent.get(rule.next);
                         }
                         else {
@@ -306,7 +306,7 @@ class Tokenizer {
                                 currentState = this.rootScope.fromStack(stack, currentState);
                             }
                             else {
-                                currentState = rule.next2(currentState, stack);
+                                currentState = rule.next2(currentState);
                             }
                         }
                     }
@@ -335,7 +335,7 @@ class Tokenizer {
                 }
 
                 if (type && !Array.isArray(type) && type != "") {
-                    if ((!rule || rule.merge !== false) && token.type === type) {
+                    if ((!rule || rule.merge !== false) && token.type == type) {
                         token.value += value;
                     }
                     else {

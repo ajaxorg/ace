@@ -344,7 +344,7 @@ module.exports = {
         // Text to the right of the cursor should be tokenized normally again.
         var tokens = editor.session.getTokens(2);
         assert.strictEqual(tokens[0].value, "f hi I should be hidden");
-        assert.strictEqual(tokens[0].type, "text");
+        assert.equal(tokens[0].type, "text");
 
         done();
     },
@@ -375,7 +375,7 @@ module.exports = {
         // Text to the right of the cursor should be tokenized normally again.
         var tokens = editor.session.getTokens(2);
         assert.strictEqual(tokens[0].value, "fhi I should be hidden");
-        assert.strictEqual(tokens[0].type, "text");
+        assert.equal(tokens[0].type, "text");
 
         done();
     },
