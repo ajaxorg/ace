@@ -5,6 +5,7 @@ var HtmlMode = require("./html").Mode;
 var NunjucksHighlightRules = require("./nunjucks_highlight_rules").NunjucksHighlightRules;
 
 var Mode = function() {
+    HtmlMode.call(this);
     this.HighlightRules = NunjucksHighlightRules;
 };
 
