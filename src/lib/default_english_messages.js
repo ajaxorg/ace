@@ -38,7 +38,13 @@ var defaultEnglishMessages = {
     "gutter-tooltip.aria-label.warning.singular": "warning",
     "gutter-tooltip.aria-label.warning.plural": "warnings",
     "gutter-tooltip.aria-label.info.singular": "information message",
-    "gutter-tooltip.aria-label.info.plural": "information messages"
+    "gutter-tooltip.aria-label.info.plural": "information messages",
+    "gutter.annotation.aria-label.security": "Security finding, read annotations row $0",
+    "gutter.annotation.aria-label.hint": "Suggestion, read annotations row $0",
+    "gutter-tooltip.aria-label.security.singular": "security finding",
+    "gutter-tooltip.aria-label.security.plural": "security findings",
+    "gutter-tooltip.aria-label.hint.singular": "suggestion",
+    "gutter-tooltip.aria-label.hint.plural": "suggestions"
 }
 
 exports.defaultEnglishMessages = defaultEnglishMessages;
