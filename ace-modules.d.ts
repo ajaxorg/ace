@@ -446,7 +446,7 @@ declare module "ace-code/src/config" {
             string
         ], onLoad: (module: any) => void) => void;
         setModuleLoader: (moduleName: any, onLoad: any) => void;
-        version: "1.35.2";
+        version: "1.36.2";
     };
     export = _exports;
 }
@@ -1594,6 +1594,10 @@ declare module "ace-code/src/virtual_renderer" {
          * @param {number} [column]
          */
         addToken(text: string, type: string, row: number, column?: number): void;
+        hideTokensAfterPosition(row: any, column: any): {
+            type: string;
+            value: string;
+        }[];
         removeExtraToken(row: any, column: any): void;
         /**
          * [Sets a new theme for the editor. `theme` should exist, and be a directory path, like `ace/theme/textmate`.]{: #VirtualRenderer.setTheme}
@@ -2254,11 +2258,19 @@ declare module "ace-code/src/mouse/default_gutter_handler" {
                 singular: any;
                 plural: any;
             };
+            security: {
+                singular: any;
+                plural: any;
+            };
             warning: {
                 singular: any;
                 plural: any;
             };
             info: {
+                singular: any;
+                plural: any;
+            };
+            hint: {
                 singular: any;
                 plural: any;
             };
@@ -4450,10 +4462,12 @@ declare module "ace-code/src/marker_group" {
         range: import("ace-code/src/range").Range;
         className: string;
     };
+    export type LayerConfig = import("ace-code").Ace.LayerConfig;
     export type Marker = import("ace-code/src/layer/marker").Marker;
     /**
      * @typedef {import("ace-code/src/edit_session").EditSession} EditSession
      * @typedef {{range: import("ace-code/src/range").Range, className: string}} MarkerGroupItem
+     * @typedef {import("ace-code").Ace.LayerConfig} LayerConfig
      */
     /**
      * @typedef {import("ace-code/src/layer/marker").Marker} Marker
@@ -4461,17 +4475,25 @@ declare module "ace-code/src/marker_group" {
     export class MarkerGroup {
         /**
          * @param {EditSession} session
+         * @param {{markerType: "fullLine" | "line" | undefined}} [options] Options controlling the behvaiour of the marker.
+         * User `markerType` to control how the markers which are part of this group will be rendered:
+         * - `undefined`: uses `text` type markers where only text characters within the range will be highlighted.
+         * - `fullLine`: will fully highlight all the rows within the range, including the characters before and after the range on the respective rows.
+         * - `line`: will fully highlight the lines within the range but will only cover the characters between the start and end of the range.
          */
-        constructor(session: EditSession);
+        constructor(session: EditSession, options?: {
+            markerType: "fullLine" | "line" | undefined;
+        });
+        markerType: "line" | "fullLine";
         markers: any[];
         /**@type {EditSession}*/
         session: EditSession;
         /**
          * Finds the first marker containing pos
          * @param {import("ace-code").Ace.Point} pos
-         * @returns import("ace-code").Ace.MarkerGroupItem
+         * @returns {import("ace-code").Ace.MarkerGroupItem | undefined}
          */
-        getMarkerAtPosition(pos: import("ace-code").Ace.Point): any;
+        getMarkerAtPosition(pos: import("ace-code").Ace.Point): import("ace-code").Ace.MarkerGroupItem | undefined;
         /**
          * Comparator for Array.sort function, which sorts marker definitions by their positions
          *
@@ -4489,12 +4511,9 @@ declare module "ace-code/src/marker_group" {
          * @param {any} html
          * @param {Marker} markerLayer
          * @param {EditSession} session
-         * @param {{ firstRow: any; lastRow: any; }} config
+         * @param {LayerConfig} config
          */
-        update(html: any, markerLayer: Marker, session: EditSession, config: {
-            firstRow: any;
-            lastRow: any;
-        }): void;
+        update(html: any, markerLayer: Marker, session: EditSession, config: LayerConfig): void;
         MAX_MARKERS: number;
     }
 }
