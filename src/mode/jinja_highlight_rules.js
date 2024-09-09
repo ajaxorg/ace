@@ -173,9 +173,6 @@ var JinjaHighlightRules = function() {
                 "variable.other.jinja.test"
             ],
             regex: /(\s*\b)(is)(\s+)([a-zA-Z_][a-zA-Z0-9_]*)\b/
-        // }, {
-        //     token: ["text", "keyword.control.jinja"],
-        //     regex: /(?<=\{\%-|\{\%)(\s*\b)([a-zA-Z_][a-zA-Z0-9_]*)\b(?!\s*[,=])/
         }, {
             token: "keyword.control.jinja",
             regex: /\b(?:and|else|if|in|import|not|or|recursive|with(?:out)?\s+context)\b/
@@ -200,9 +197,6 @@ var JinjaHighlightRules = function() {
                 "variable.other.jinja.attribute"
             ],
             regex: /(\.)([a-zA-Z_][a-zA-Z0-9_]*)/
-        }, {
-            token: "variable.other.jinja",
-            regex: /[a-zA-Z_][a-zA-Z0-9_]*/
         }, {
             token: "punctuation.other.jinja",
             regex: /\[/,
