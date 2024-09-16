@@ -38,7 +38,7 @@
     "rules": {
         curly: 0,
         eqeqeq: 0,
-        comma-dangle: 2,
+        //comma-dangle: 2,
         no-dupe-args: 2,
         no-dupe-keys: 2,
         no-duplicate-case: 2,
@@ -56,7 +56,7 @@
         no-unexpected-multiline: 2,
         use-isnan: 2,
         valid-typeof: 2,
-        
+
         accessor-pairs: 2,
         complexity: 0,
         dot-location: [2, "property"],
@@ -80,11 +80,11 @@
         no-sequences: 2,
         no-useless-call: 2,
         yoda: 2,
-                
+
         no-undef: 2,
         no-redeclare: 0,
         no-unused-vars: [1, {"args": "none", "vars": "all"}],
-        
+
         no-debugger: 2,
 
         //////////////////////////////////////////////////////////////////
@@ -108,17 +108,17 @@
         // no-else-return: 2,
         // no-unused-expressions: 2,
         // no-use-before-define: [2, { "functions": false, "classes": false, "variables": false }],
-        
+
         // array-bracket-spacing: 2, // enforce spacing inside array brackets (fixable)
         // block-spacing: 2, // disallow or enforce spaces inside of single line blocks (fixable)
-        // brace-style: 2, // enforce one true brace style        
+        // brace-style: 2, // enforce one true brace style
         // camelcase: 2, // require camel case names
         // comma-spacing: 2, // enforce spacing before and after comma (fixable)
         // comma-style: 2, // enforce one true comma style
         computed-property-spacing: 2, // require or disallow padding inside computed properties (fixable)
-        // consistent-this: 2, // enforce consistent naming when capturing the current execution context        
+        // consistent-this: 2, // enforce consistent naming when capturing the current execution context
         linebreak-style: 2, // disallow mixed 'LF' and 'CRLF' as linebreaks
-        // indent: ["error", 4, { "outerIIFEBody": 0 }], // specify tab or space width for your code (fixable)        
+        // indent: ["error", 4, { "outerIIFEBody": 0 }], // specify tab or space width for your code (fixable)
         // key-spacing: 2, // enforce spacing between keys and values in object literal properties
         // new-cap: 2, // require a capital letter for constructors
         // new-parens: 2, // disallow the omission of parentheses when invoking a constructor with no arguments
@@ -151,6 +151,6 @@
         // space-infix-ops: 2, // require spaces around operators (fixable)
         // space-unary-ops: 2, // require or disallow spaces before/after unary operators (fixable)
         // spaced-comment: [2, "always", { markers: ["-", "*", "/", "{", "}", "#"], exceptions: ["}"] }]
-        
+
     }
 }
