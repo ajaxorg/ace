@@ -127,7 +127,7 @@ exports.beautify = function(session) {
             }
 
             // line break before }
-            if (!inTag && !rowsToAdd && token.type === "paren.rparen" && token.value.substr(0, 1) === "}") {
+            if (!inTag && !rowsToAdd && token.type == "paren.rparen" && token.value.substr(0, 1) === "}") {
                 rowsToAdd++;
             }
 
@@ -153,7 +153,7 @@ exports.beautify = function(session) {
 
             if (value) {
                 // whitespace
-                if (token.type === "keyword" && value.match(/^(if|else|elseif|for|foreach|while|switch)$/)) {
+                if (token.type == "keyword" && value.match(/^(if|else|elseif|for|foreach|while|switch)$/)) {
                     parents[depth] = value;
 
                     trimNext();
@@ -167,7 +167,7 @@ exports.beautify = function(session) {
                         }
                     }
                 // trim value after opening paren
-                } else if (token.type === "paren.lparen") {
+                } else if (token.type == "paren.lparen") {
                     trimNext();
 
                     // whitespace after {
@@ -194,7 +194,7 @@ exports.beautify = function(session) {
                         }
                     }
                 // remove space before closing paren
-                } else if (token.type === "paren.rparen") {
+                } else if (token.type == "paren.rparen") {
                     unindent = 1;
 
                     // ensure curly brace is preceeded by whitespace
@@ -232,13 +232,13 @@ exports.beautify = function(session) {
 
                     trimLine();
                 // add spaces around conditional operators
-                } else if ((token.type === "keyword.operator" || token.type === "keyword") && value.match(/^(=|==|===|!=|!==|&&|\|\||and|or|xor|\+=|.=|>|>=|<|<=|=>)$/)) {
+                } else if ((token.type == "keyword.operator" || token.type == "keyword") && value.match(/^(=|==|===|!=|!==|&&|\|\||and|or|xor|\+=|.=|>|>=|<|<=|=>)$/)) {
                     trimCode();
                     trimNext();
                     spaceBefore = true;
                     spaceAfter = true;
                 // remove space before semicolon
-                } else if (token.type === "punctuation.operator" && value === ';') {
+                } else if (token.type == "punctuation.operator" && value === ';') {
                     trimCode();
                     trimNext();
                     spaceAfter = true;
@@ -246,7 +246,7 @@ exports.beautify = function(session) {
                     if (inCSS)
                         rowsToAdd++;
                 // space after colon or comma
-                } else if (token.type === "punctuation.operator" && value.match(/^(:|,)$/)) {
+                } else if (token.type == "punctuation.operator" && value.match(/^(:|,)$/)) {
                     trimCode();
                     trimNext();
 
@@ -258,7 +258,7 @@ exports.beautify = function(session) {
                         breakBefore = false;
                     }
                 // ensure space before php closing tag
-                } else if (token.type === "support.php_tag" && value === "?>" && !breakBefore) {
+                } else if (token.type == "support.php_tag" && value === "?>" && !breakBefore) {
                     trimCode();
                     spaceBefore = true;
                 // remove excess space before HTML attribute
@@ -273,7 +273,7 @@ exports.beautify = function(session) {
                     trimLine();
                     if(value === "/>")
                         spaceBefore = true;
-                } else if (token.type === "keyword" && value.match(/^(case|default)$/)) {
+                } else if (token.type == "keyword" && value.match(/^(case|default)$/)) {
                     if (caseBody)
                         unindent = 1;
                 }
@@ -306,13 +306,13 @@ exports.beautify = function(session) {
                         code += tabString;
                 }
 
-                if (token.type === "keyword" && value.match(/^(case|default)$/)) {
+                if (token.type == "keyword" && value.match(/^(case|default)$/)) {
                     if (caseBody === false) {
                         parents[depth] = value;
                         depth++;
                         caseBody = true;
                     }
-                } else if (token.type === "keyword" && value.match(/^(break)$/)) {
+                } else if (token.type == "keyword" && value.match(/^(break)$/)) {
                     if(parents[depth-1] && parents[depth-1].match(/^(case|default)$/)) {
                         depth--;
                         caseBody = false;
@@ -320,19 +320,19 @@ exports.beautify = function(session) {
                 }
 
                 // indent one line after if or else
-                if (token.type === "paren.lparen") {
+                if (token.type == "paren.lparen") {
                     roundDepth += (value.match(/\(/g) || []).length;
                     curlyDepth += (value.match(/\{/g) || []).length;
                     depth += value.length;
                 }
 
-                if (token.type === "keyword" && value.match(/^(if|else|elseif|for|while)$/)) {
+                if (token.type == "keyword" && value.match(/^(if|else|elseif|for|while)$/)) {
                     indentNextLine = true;
                     roundDepth = 0;
                 } else if (!roundDepth && value.trim() && token.type !== "comment")
                     indentNextLine = false;
 
-                if (token.type === "paren.rparen") {
+                if (token.type == "paren.rparen") {
                     roundDepth -= (value.match(/\)/g) || []).length;
                     curlyDepth -= (value.match(/\}/g) || []).length;
 

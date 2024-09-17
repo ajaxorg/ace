@@ -1512,3 +1512,25 @@ declare module "./src/mouse/default_gutter_handler" {
     export interface GutterHandler {
     }
 }
+
+declare module "./src/scope" {
+
+    export interface Scope extends String {
+        name: string;
+        children: { [name: string]: Scope };
+        parent?: Scope;
+        data: any;
+
+        get(name: any, extraId: string): Scope;
+
+        find(states): Scope | undefined;
+
+        hasParent(states): boolean;
+
+        count(): number;
+
+        getAllScopeNames(): string[];
+
+        toStack(): any[];
+    }
+}
