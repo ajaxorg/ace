@@ -124,9 +124,28 @@ function generateModuleDeclarations(dirPath) {
     });
 }
 
+function getAllFiles(dirPath) {
+    let files = [];
+
+    const entries = fs.readdirSync(dirPath);
+
+    entries.sort().forEach(entry => {
+        const fullPath = path.join(dirPath, entry);
+        const stat = fs.statSync(fullPath);
+
+        if (stat.isDirectory()) {
+            files = files.concat(getAllFiles(fullPath));
+        }
+        else if (stat.isFile()) {
+            files.push(fullPath);
+        }
+    });
+
+    return files;
+}
+
 function createProgram(dirPath) {
-    const fileNames = fs.readdirSync(dirPath, {recursive: true}).map(file => path.join(dirPath, file)).filter(
-        file => /\.js$/.test(file) && !/test\.js$/.test(file));
+    const fileNames = getAllFiles(dirPath).filter(file => /\.js$/.test(file) && !/test\.js$/.test(file));
 
     const program = ts.createProgram(fileNames, {
         target: ts.ScriptTarget.ES5,
