@@ -243,6 +243,7 @@ module.exports = {
         editor.session.setValue(
             "function Test() {\n" + "    function Inner() {\n" + "        \n" + "        \n" + "    }\n" + "}");
         editor.setOption("highlightIndentGuides", false);
+        editor.setOption("wrap", 10); // to make sure higlight works with wrapped lines
         editor.session.selection.$setSelection(1, 22, 1, 22);
         editor.resize(true);
 
