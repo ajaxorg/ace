@@ -260,15 +260,38 @@ function importCssString(cssText, id, target) {
     if (id)
         cssText += "\n/*# sourceURL=ace/css/" + id + " */";
     
+    if (!USE_STYLE_TAG) {
+        try {
+            var stylesheet = styles[id];
+            if (!stylesheet) {
+                stylesheet = styles[id] = new CSSStyleSheet();
+                stylesheet.replaceSync(cssText);
+            }
+            container.adoptedStyleSheets.push(stylesheet);
+            USE_STYLE_TAG = false;
+            return;
+        } catch(e) {
+            if (USE_STYLE_TAG === null) {
+                USE_STYLE_TAG = true;
+            } else {
+                setTimeout(function() {
+                    throw e;
+                });
+            }
+        }
+    }
+    
     var style = exports.createElement("style");
     style.appendChild(doc.createTextNode(cssText));
     if (id)
         style.id = id;
-
     if (container == doc)
         container = exports.getDocumentHead(doc);
     container.insertBefore(style, container.firstChild);
 }
+var USE_STYLE_TAG = null;
+var styles = Object.create(null);
+
 exports.importCssString = importCssString;
 
 /**
