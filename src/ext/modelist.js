@@ -68,6 +68,7 @@ var supportedModes = {
     Astro:       ["astro"],
     AutoHotKey:  ["ahk"],
     BatchFile:   ["bat|cmd"],
+    Basic:       ["bas|bak"],
     BibTeX:      ["bib"],
     C_Cpp:       ["cpp|c|cc|cxx|h|hh|hpp|ino"],
     C9Search:    ["c9search_results"],
