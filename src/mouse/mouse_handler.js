@@ -80,7 +80,7 @@ class MouseHandler {
             } else {
                 renderer.setCursorStyle("");
             }
-            
+
         }, //@ts-expect-error TODO: seems mistyping - should be boolean
             editor);
     }
@@ -100,7 +100,7 @@ class MouseHandler {
     }
 
     /**
-     * @param {string} name
+     * @param {any} name
      * @param {{ wheelX: number; wheelY: number; }} e
      */
     onMouseWheel(name, e) {
@@ -112,7 +112,7 @@ class MouseHandler {
 
         this.editor._emit(name, mouseEvent);
     }
-    
+
     setState(state) {
         this.state = state;
     }
@@ -168,7 +168,7 @@ class MouseHandler {
 
         var onOperationEnd = function(e) {
             if (!self.releaseMouse) return;
-            // some touchpads fire mouseup event after a slight delay, 
+            // some touchpads fire mouseup event after a slight delay,
             // which can cause problems if user presses a keyboard shortcut quickly
             if (editor.curOp.command.name && editor.curOp.selectionChanged) {
                 self[self.state + "End"] && self[self.state + "End"]();

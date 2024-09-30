@@ -33,6 +33,7 @@ declare module "ace-code" {
         type GutterHandler = import("ace-code/src/mouse/default_gutter_handler").GutterHandler;
         type DragdropHandler = import("ace-code/src/mouse/dragdrop_handler").DragdropHandler;
         type AppConfig = import("ace-code/src/lib/app_config").AppConfig;
+        type Config = typeof import("ace-code/src/config");
         type AfterLoadCallback = (err: Error | null, module: unknown) => void;
         type LoaderFunction = (moduleName: string, afterLoad: AfterLoadCallback) => void;
         export interface ConfigOptions {
@@ -45,33 +46,6 @@ declare module "ace-code" {
             loadWorkerFromBlob: boolean;
             sharedPopups: boolean;
             useStrictCSP: boolean | null;
-        }
-        export interface Config {
-            get<K extends keyof ConfigOptions>(key: K): ConfigOptions[K];
-            set<K extends keyof ConfigOptions>(key: K, value: ConfigOptions[K]): void;
-            all(): {
-                [key: string]: any;
-            };
-            moduleUrl(name: string, component?: string): string;
-            setModuleUrl(name: string, subst: string): string;
-            setLoader(cb: LoaderFunction): void;
-            setModuleLoader(name: string, onLoad: Function): void;
-            loadModule(moduleName: string | [
-                string,
-                string
-            ], onLoad?: (module: any) => void): void;
-            defineOptions(obj: any, path: string, options: {
-                [key: string]: any;
-            }): AppConfig;
-            resetOptions(obj: any): void;
-            setDefaultValue(path: string, name: string, value: any): void;
-            setDefaultValues(path: string, optionHash: {
-                [key: string]: any;
-            }): void;
-            setMessages(value: any): void;
-            nls(string: string, params?: {
-                [x: string]: any;
-            }): string;
         }
         interface Theme {
             cssClass?: string;
@@ -339,9 +313,8 @@ declare module "ace-code" {
             "change": (delta: Delta) => void;
             /**
              * Emitted when the tab size changes, via [[EditSession.setTabSize]].
-             * @param tabSize
              */
-            "changeTabSize": (tabSize: number) => void;
+            "changeTabSize": () => void;
             /**
              * Emitted when the ability to overwrite text changes, via [[EditSession.setOverwrite]].
              * @param overwrite
@@ -351,41 +324,29 @@ declare module "ace-code" {
              * Emitted when the gutter changes, either by setting or removing breakpoints, or when the gutter decorations change.
              * @param e
              */
-            "changeBreakpoint": (e: {
-                row: number;
-                breakpoint: boolean;
+            "changeBreakpoint": (e?: {
+                row?: number;
+                breakpoint?: boolean;
             }) => void;
             /**
              * Emitted when a front marker changes.
-             * @param e
              */
-            "changeFrontMarker": (e: {
-                row: number;
-                marker: boolean;
-            }) => void;
+            "changeFrontMarker": () => void;
             /**
              * Emitted when a back marker changes.
-             * @param e
              */
-            "changeBackMarker": (e: {
-                row: number;
-                marker: boolean;
-            }) => void;
+            "changeBackMarker": () => void;
             /**
              * Emitted when an annotation changes, like through [[EditSession.setAnnotations]].
-             * @param e
              */
-            "changeAnnotation": (e: {
-                row: number;
-                lines: string[];
-            }) => void;
+            "changeAnnotation": (e: {}) => void;
             /**
              * Emitted when a background tokenizer asynchronously processes new rows.
              */
             "tokenizerUpdate": (e: {
                 data: {
-                    first: string;
-                    last: string;
+                    first: number;
+                    last: number;
                 };
             }) => void;
             /**
@@ -407,7 +368,7 @@ declare module "ace-code" {
              * Emitted when a code fold is added or removed.
              * @param e
              */
-            "changeFold": (e: any, session: EditSession) => void;
+            "changeFold": (e: any, session?: EditSession) => void;
             /**
              * Emitted when the scroll top changes.
              * @param scrollTop The new scroll top value
@@ -419,7 +380,8 @@ declare module "ace-code" {
              **/
             "changeScrollLeft": (scrollLeft: number) => void;
             "changeEditor": (e: {
-                editor: Editor;
+                editor?: Editor;
+                oldEditor?: Editor;
             }) => void;
         }
         interface EditorEvents {
@@ -439,19 +401,21 @@ declare module "ace-code" {
             "mousemove": (e: MouseEvent & {
                 scrollTop?: any;
             }, editor?: Editor) => void;
-            "changeStatus": () => void;
-            "keyboardActivity": () => void;
+            "changeStatus": (e: any) => void;
+            "keyboardActivity": (e: any) => void;
             "mousewheel": (e: MouseEvent) => void;
             "mouseup": (e: MouseEvent) => void;
             "beforeEndOperation": (e: any) => void;
             "nativecontextmenu": (e: any) => void;
-            "destroy": () => void;
-            "focus": () => void;
+            "destroy": (e: any) => void;
+            "focus": (e?: any) => void;
             /**
              * Emitted when text is copied.
              * @param text The copied text
              **/
-            "copy": (text: string) => void;
+            "copy": (e: {
+                text: string;
+            }) => void;
             /**
              * Emitted when text is pasted.
              **/
@@ -461,6 +425,17 @@ declare module "ace-code" {
              * @param data Contains one property, `data`, which indicates the new selection style
              **/
             "changeSelectionStyle": (data: "fullLine" | "screenLine" | "text" | "line") => void;
+            "changeMode": (e: {
+                mode?: Ace.SyntaxMode;
+                oldMode?: Ace.SyntaxMode;
+            }) => void;
+            //from searchbox extension
+            "findSearchBox": (e: {
+                match: boolean;
+            }) => void;
+            //from code_lens extension
+            "codeLensClick": (e: any) => void;
+            "select": () => void;
         }
         interface AcePopupEvents {
             "click": (e: MouseEvent) => void;
@@ -504,11 +479,13 @@ declare module "ace-code" {
         interface BackgroundTokenizerEvents {
             /**
              * Fires whenever the background tokeniziers between a range of rows are going to be updated.
-             * @param {Object} e An object containing two properties, `first` and `last`, which indicate the rows of the region being updated.
+             * @param e An object containing two properties, `first` and `last`, which indicate the rows of the region being updated.
              **/
             "update": (e: {
-                first: number;
-                last: number;
+                data: {
+                    first: number;
+                    last: number;
+                };
             }) => void;
         }
         interface SelectionEvents {
@@ -521,17 +498,40 @@ declare module "ace-code" {
              **/
             "changeSelection": () => void;
         }
+        interface MultiSelectionEvents extends SelectionEvents {
+            "multiSelect": () => void;
+            "addRange": (e: {
+                range: Range;
+            }) => void;
+            "removeRange": (e: {
+                ranges: Range[];
+            }) => void;
+            "singleSelect": () => void;
+        }
         interface PlaceHolderEvents {
+            "cursorEnter": (e: any) => void;
+            "cursorLeave": (e: any) => void;
         }
         interface GutterEvents {
             "changeGutterWidth": (width: number) => void;
+            "afterRender": () => void;
         }
         interface TextEvents {
             "changeCharacterSize": (e: any) => void;
         }
         interface VirtualRendererEvents {
-            "afterRender": (e: any, renderer: VirtualRenderer) => void;
-            "beforeRender": (e: any, renderer: VirtualRenderer) => void;
+            "afterRender": (e?: any, renderer?: VirtualRenderer) => void;
+            "beforeRender": (e: any, renderer?: VirtualRenderer) => void;
+            "themeLoaded": (e: {
+                theme: string | Theme;
+            }) => void;
+            "themeChange": (e: {
+                theme: string | Theme;
+            }) => void;
+            "scrollbarVisibilityChanged": () => void;
+            "changeCharacterSize": (e: any) => void;
+            "resize": (e?: any) => void;
+            "autosize": () => void;
         }
         class EventEmitter<T> {
             once<K extends keyof T>(name: K, callback: T[K]): void;

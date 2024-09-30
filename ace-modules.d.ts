@@ -1995,10 +1995,10 @@ declare module "ace-code/src/selection" {
     export { };
     namespace Ace {
         type EventEmitter<T> = import("ace-code").Ace.EventEmitter<T>;
-        type SelectionEvents = import("ace-code").Ace.SelectionEvents;
+        type MultiSelectionEvents = import("ace-code").Ace.MultiSelectionEvents;
         type MultiSelectProperties = import("ace-code").Ace.MultiSelectProperties;
     }
-    export interface Selection extends Ace.EventEmitter<Ace.SelectionEvents>, Ace.MultiSelectProperties {
+    export interface Selection extends Ace.EventEmitter<Ace.MultiSelectionEvents>, Ace.MultiSelectProperties {
     }
 }
 declare module "ace-code/src/clipboard" {
@@ -2345,10 +2345,10 @@ declare module "ace-code/src/mouse/mouse_handler" {
         onMouseEvent(name: any, e: any): void;
         onMouseMove(name: any, e: any): void;
         /**
-         * @param {string} name
+         * @param {any} name
          * @param {{ wheelX: number; wheelY: number; }} e
          */
-        onMouseWheel(name: string, e: {
+        onMouseWheel(name: any, e: {
             wheelX: number;
             wheelY: number;
         }): void;
