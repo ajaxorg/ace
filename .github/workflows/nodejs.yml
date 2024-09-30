@@ -59,6 +59,9 @@ jobs:
         git diff --color --exit-code ./ace*d.ts;
         npm run typecheck;
         node_modules/.bin/tsc --noImplicitAny --strict --noUnusedLocals --noImplicitReturns --noUnusedParameters --noImplicitThis ace.d.ts;
+    - run: |
+        set -x;
+        ./tool/test-npm-package.sh
     # upload to codecov
     - uses: codecov/codecov-action@v3
       with:
