@@ -105,6 +105,7 @@ class VScrollBar extends ScrollBar {
     
     /**
      * Emitted when the scroll thumb dragged or scrollbar canvas clicked.
+     * @internal
      **/
     onMouseDown(eType, e) {
         if (eType !== "mousedown") return;
@@ -241,6 +242,7 @@ class HScrollBar extends ScrollBar {
     
     /**
      * Emitted when the scroll thumb dragged or scrollbar canvas clicked.
+     * @internal
      **/
     onMouseDown(eType, e) {
         if (eType !== "mousedown") return;

@@ -52,10 +52,17 @@ jobs:
             fi
         fi
     # check types
-    - run: npm run update-types
-    - run: node_modules/.bin/tsc --noImplicitAny --strict --noUnusedLocals --noImplicitReturns --noUnusedParameters --noImplicitThis ace.d.ts
-    - run: npm run typecheck
-    - run: git diff --exit-code ./ace-modes.d.ts ./ace.d.ts
+    - run: |
+        set -x;
+        npx tsc -v;
+        npm run update-types;
+        git diff --color --exit-code ./ace*d.ts;
+        npm run typecheck;
+        node_modules/.bin/tsc --noImplicitAny --strict --noUnusedLocals --noImplicitReturns --noUnusedParameters --noImplicitThis ace.d.ts;
+    - run: |
+        set -x;
+        ./tool/test-npm-package.sh
+    # upload to codecov
     - uses: codecov/codecov-action@v3
       with:
         token: d8edca4b-8e97-41e5-b54e-34c7cf3b2d47

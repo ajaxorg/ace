@@ -106,6 +106,7 @@ class PlaceHolder {
      * 
      * Emitted when the place holder updates.
      * @param {import("../ace-internal").Ace.Delta} delta
+     * @internal
      */
     onUpdate(delta) {
         if (this.$updating)
@@ -174,6 +175,7 @@ class PlaceHolder {
      * 
      * Emitted when the cursor changes.
      * @param {any} [event]
+     * @internal
      */
     onCursorChange(event) {
         if (this.$updating || !this.session) return;

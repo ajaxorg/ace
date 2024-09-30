@@ -76,6 +76,7 @@ class Autocomplete {
         this.keyboardHandler.bindKeys(this.commands);
         this.parentNode = null;
         this.setSelectOnHover = false;
+        /**@private*/
         this.hasSeen = new Set();
 
         /**
@@ -255,6 +256,10 @@ class Autocomplete {
         });
         this.$elements = null;
     }
+
+    /**
+     * @internal
+     */
     onLayoutChange() {
         if (!this.popup.isOpen) return this.unObserveLayoutChanges();
         this.$updatePopupPosition();
@@ -470,7 +475,7 @@ class Autocomplete {
     /**
      * This is the entry point for the autocompletion class, triggers the actions which collect and display suggestions
      * @param {Editor} editor
-     * @param {CompletionOptions} options
+     * @param {CompletionOptions} [options]
      */
     showPopup(editor, options) {
         if (this.editor)
@@ -510,7 +515,7 @@ class Autocomplete {
 
     /**
      * @param {boolean} keepPopupPosition
-     * @param {CompletionOptions} options
+     * @param {CompletionOptions} [options]
      */
     updateCompletions(keepPopupPosition, options) {
         if (keepPopupPosition && this.base && this.completions) {
@@ -705,7 +710,11 @@ class Autocomplete {
         if (el.parentNode)
             el.parentNode.removeChild(el);
     }
-    
+
+    /**
+     * @param e
+     * @internal
+     */
     onTooltipClick(e) {
         var a = e.target;
         while (a && a != this.tooltipNode) {
@@ -731,6 +740,30 @@ class Autocomplete {
             this.editor.completer = null;
         }
         this.inlineRenderer = this.popup = this.editor = null;
+    }
+
+    /**
+     * @param {Editor} editor
+     * @return {Autocomplete}
+     */
+    static for(editor) {
+        if (editor.completer instanceof Autocomplete) {
+            return editor.completer;
+        }
+        if (editor.completer) {
+            editor.completer.destroy();
+            editor.completer = null;
+        }
+        if (config.get("sharedPopups")) {
+            if (!Autocomplete["$sharedInstance"])
+                Autocomplete["$sharedInstance"] = new Autocomplete();
+            editor.completer = Autocomplete["$sharedInstance"];
+        } else {
+            editor.completer = new Autocomplete();
+            editor.once("destroy", destroyCompleter);
+        }
+        // @ts-expect-error
+        return editor.completer;
     }
 
 }
@@ -760,26 +793,6 @@ Autocomplete.prototype.commands = {
 
     "PageUp": function(editor) { editor.completer.popup.gotoPageUp(); },
     "PageDown": function(editor) { editor.completer.popup.gotoPageDown(); }
-};
-
-
-Autocomplete.for = function(editor) {
-    if (editor.completer instanceof Autocomplete) {
-        return editor.completer;
-    }
-    if (editor.completer) {
-        editor.completer.destroy();
-        editor.completer = null;
-    }
-    if (config.get("sharedPopups")) {
-        if (!Autocomplete["$sharedInstance"])
-            Autocomplete["$sharedInstance"] = new Autocomplete();
-        editor.completer = Autocomplete["$sharedInstance"];
-    } else {
-        editor.completer = new Autocomplete();
-        editor.once("destroy", destroyCompleter);
-    }
-    return editor.completer;
 };
 
 Autocomplete.startCommand = {

@@ -52,7 +52,7 @@ class Editor {
         this.$toDestroy = [];
         
         var container = renderer.getContainerElement();
-        /**@type {HTMLElement & {env?, value?}}*/
+        /**@type {HTMLElement & {env?:any, value?:any}}*/
         this.container = container;
         /**@type {VirtualRenderer}*/
         this.renderer = renderer;
@@ -260,9 +260,7 @@ class Editor {
     getKeyboardHandler() {
         return this.keyBinding.getKeyboardHandler();
     }
-
-
-   
+    
     /**
      * Sets a new editsession to use. This method also emits the `'changeSession'` event.
      * @param {EditSession} [session] The new session to use
@@ -479,6 +477,7 @@ class Editor {
      * @return {string}
      */
     getFontSize() {
+        // @ts-expect-error
         return this.getOption("fontSize") ||
            dom.computedStyle(this.container).fontSize;
     }
@@ -586,6 +585,7 @@ class Editor {
 
     /**
      * Emitted once the editor comes into focus.
+     * @internal
      **/
     onFocus(e) {
         if (this.$isFocused)
@@ -598,6 +598,7 @@ class Editor {
 
     /**
      * Emitted once the editor has been blurred.
+     * @internal
      **/
     onBlur(e) {
         if (!this.$isFocused)
@@ -619,6 +620,7 @@ class Editor {
     /**
      * Emitted whenever the document is changed.
      * @param {import("../ace-internal").Ace.Delta} delta Contains a single property, `data`, which has the delta of changes
+     * @internal
      **/
     onDocumentChange(delta) {
         // Rerender and emit "change" event.
@@ -632,22 +634,31 @@ class Editor {
         this.$cursorChange();
     }
 
+    /**
+     * @internal
+     */
     onTokenizerUpdate(e) {
         var rows = e.data;
         this.renderer.updateLines(rows.first, rows.last);
     }
 
-
+    /**
+     * @internal
+     */
     onScrollTopChange() {
         this.renderer.scrollToY(this.session.getScrollTop());
     }
 
+    /**
+     * @internal
+     */
     onScrollLeftChange() {
         this.renderer.scrollToX(this.session.getScrollLeft());
     }
 
     /**
      * Emitted when the selection changes.
+     * @internal
      **/
     onCursorChange() {
         this.$cursorChange();
@@ -685,8 +696,8 @@ class Editor {
     }
 
     /**
-     * 
      * @param e
+     * @internal
      */
     onSelectionChange(e) {
         var session = this.session;
@@ -740,43 +751,60 @@ class Editor {
         return re;
     }
 
-
+    /**
+     * @internal
+     */
     onChangeFrontMarker() {
         this.renderer.updateFrontMarkers();
     }
 
+    /**
+     * @internal
+     */
     onChangeBackMarker() {
         this.renderer.updateBackMarkers();
     }
-
-
+    
+    /**
+     * @internal
+     */
     onChangeBreakpoint() {
         this.renderer.updateBreakpoints();
     }
 
+    /**
+     * @internal
+     */
     onChangeAnnotation() {
         this.renderer.setAnnotations(this.session.getAnnotations());
     }
 
     /**
      * @param e
+     * @internal
      */
     onChangeMode (e) {
         this.renderer.updateText();
         this._emit("changeMode", e);
     }
 
-
+    /**
+     * @internal
+     */
     onChangeWrapLimit() {
         this.renderer.updateFull();
     }
 
+    /**
+     * @internal
+     */
     onChangeWrapMode() {
         this.renderer.onResize(true);
     }
 
 
     /**
+     * @internal
      */
     onChangeFold() {
         // Update the active line marker as due to folding changes the current
@@ -822,6 +850,7 @@ class Editor {
 
     /**
      * Called whenever a text "copy" happens.
+     * @internal
      **/
     onCopy() {
         this.commands.exec("copy", this);
@@ -829,6 +858,7 @@ class Editor {
 
     /**
      * Called whenever a text "cut" happens.
+     * @internal
      **/
     onCut() {
         this.commands.exec("cut", this);
@@ -839,6 +869,7 @@ class Editor {
      * Called whenever a text "paste" happens.
      * @param {String} text The pasted text
      * @param {any} event
+     * @internal
      **/
     onPaste(text, event) {
         var e = {text: text, event: event};
@@ -1021,6 +1052,7 @@ class Editor {
      * @param text
      * @param composition
      * @returns {*}
+     * @internal
      */
     onTextInput(text, composition) {
         if (!composition)
@@ -1062,6 +1094,9 @@ class Editor {
         }
     }
 
+    /**
+     * @internal
+     */
     onCommandKey(e, hashId, keyCode) {
         return this.keyBinding.onCommandKey(e, hashId, keyCode);
     }
@@ -1953,14 +1988,23 @@ class Editor {
         };
     }
 
+    /**
+     * @internal
+     */
     onCompositionStart(compositionState) {
         this.renderer.showComposition(compositionState);
     }
 
+    /**
+     * @internal
+     */
     onCompositionUpdate(text) {
         this.renderer.setCompositionText(text);
     }
 
+    /**
+     * @internal
+     */
     onCompositionEnd() {
         this.renderer.hideComposition();
     }

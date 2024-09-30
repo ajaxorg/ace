@@ -140,6 +140,7 @@ class KeyBinding {
      * @param {number} hashId
      * @param {number} keyCode
      * @return {boolean}
+     * @internal
      */
     onCommandKey(e, hashId, keyCode) {
         var keyString = keyUtil.keyCodeToString(keyCode);
@@ -149,6 +150,7 @@ class KeyBinding {
     /**
      * @param {string} text
      * @return {boolean}
+     * @internal
      */
     onTextInput(text) {
         return this.$callKeyboardHandlers(-1, text);

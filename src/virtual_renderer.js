@@ -265,12 +265,18 @@ class VirtualRenderer {
         this.$loop.schedule(this.CHANGE_LINES);
     }
 
+    /**
+     * @internal
+     */
     onChangeNewLineMode() {
         this.$loop.schedule(this.CHANGE_TEXT);
         this.$textLayer.$updateEolChar();
         this.session.$bidiHandler.setEolChar(this.$textLayer.EOL_CHAR);
     }
-    
+
+    /**
+     * @internal
+     */
     onChangeTabSize() {
         this.$loop.schedule(this.CHANGE_TEXT | this.CHANGE_MARKER);
         this.$textLayer.onChangeTabSize();
@@ -314,7 +320,7 @@ class VirtualRenderer {
      * @param {Number} [gutterWidth] The width of the gutter in pixels
      * @param {Number} [width] The width of the editor in pixels
      * @param {Number} [height] The hiehgt of the editor, in pixels
-     
+     * @internal
      **/
     onResize(force, gutterWidth, width, height) {
         if (this.resizing > 2)
@@ -432,7 +438,7 @@ class VirtualRenderer {
     /**
      * 
      * @param {number} width
-     
+     * @internal
      */
     onGutterResize(width) {
         var gutterWidth = this.$showGutter ? width : 0;

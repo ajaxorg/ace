@@ -12,6 +12,7 @@ var user = require("./test/user");
 var Range = require("./range").Range;
 require("./ext/language_tools");
 var Autocomplete = require("./autocomplete").Autocomplete;
+var config = require("./config");
 
 var MouseEvent = function(type, opts){
     var e = document.createEvent("MouseEvents");
@@ -1542,6 +1543,13 @@ module.exports = {
 
         // Popup should be closed now
         assert.equal(completer.popup.isOpen, false); 
+    },
+    "test: should set create shared Autocomplete with sharedPopups on": function() {
+        assert.equal(Autocomplete.$sharedInstance == undefined, true);
+        config.set("sharedPopups", true);
+        var editor = initEditor("");
+        var completer = Autocomplete.for(editor);
+        assert.equal(Autocomplete.$sharedInstance == undefined, false);
     }
 };
 
