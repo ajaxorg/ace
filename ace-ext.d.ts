@@ -216,10 +216,10 @@ declare module "ace-code/src/ext/searchbox" {
     export class SearchBox {
         /**
          * @param {Editor} editor
-         * @param {undefined} [range]
-         * @param {undefined} [showReplaceForm]
+         * @param {never} [range]
+         * @param {never} [showReplaceForm]
          */
-        constructor(editor: Editor, range?: undefined, showReplaceForm?: undefined);
+        constructor(editor: Editor, range?: never, showReplaceForm?: never);
         /**@type {any}*/
         activeInput: any;
         /**@type {any}*/
@@ -318,8 +318,8 @@ declare module "ace-code/src/ext/beautify" {
     }[];
 }
 declare module "ace-code/src/ext/code_lens" {
-    export function setLenses(session: EditSession, lenses: any): number;
-    export function registerCodeLensProvider(editor: import("ace-code/src/editor").Editor, codeLensProvider: any): void;
+    export function setLenses(session: EditSession, lenses: import("ace-code").Ace.CodeLense[]): number;
+    export function registerCodeLensProvider(editor: import("ace-code/src/editor").Editor, codeLensProvider: import("ace-code").Ace.CodeLenseProvider): void;
     export function clear(session: EditSession): void;
     export type EditSession = import("ace-code/src/edit_session").EditSession;
     export type VirtualRenderer = import("ace-code/src/virtual_renderer").VirtualRenderer & {
@@ -703,22 +703,22 @@ declare module "ace-code/src/ext/static_highlight" {
     /**
      *
      * @param {HTMLElement} el
-     * @param opts
+     * @param {import("ace-code").Ace.StaticHighlightOptions} opts
      * @param [callback]
      * @returns {boolean}
      */
-    function highlight(el: HTMLElement, opts: any, callback?: any): boolean;
+    function highlight(el: HTMLElement, opts: import("ace-code").Ace.StaticHighlightOptions, callback?: any): boolean;
     export namespace highlight {
-        export { render, renderSync, highlight };
+        export { render, renderSync, highlight, SyntaxMode, Theme };
     }
     /**
      * Transforms a given input code snippet into HTML using the given mode
      *
      * @param {string} input Code snippet
-     * @param {string|import("ace-code").Ace.SyntaxMode} mode String specifying the mode to load such as
+     * @param {string | SyntaxMode} mode String specifying the mode to load such as
      *  `ace/mode/javascript` or, a mode loaded from `/ace/mode`
      *  (use 'ServerSideHiglighter.getMode').
-     * @param {string} theme String specifying the theme to load such as
+     * @param {string | Theme} theme String specifying the theme to load such as
      *  `ace/theme/twilight` or, a theme loaded from `/ace/theme`.
      * @param {number} lineStart A number indicating the first line number. Defaults
      *  to 1.
@@ -730,17 +730,19 @@ declare module "ace-code/src/ext/static_highlight" {
      *  and `css`.
      * @returns {object} An object containing the properties `html` and `css`.
      */
-    function render(input: string, mode: string | import("ace-code").Ace.SyntaxMode, theme: string, lineStart: number, disableGutter: boolean, callback?: Function): object;
+    function render(input: string, mode: string | SyntaxMode, theme: string | Theme, lineStart: number, disableGutter: boolean, callback?: Function): object;
     /**
      * Transforms a given input code snippet into HTML using the given mode
      * @param {string} input Code snippet
-     * @param {import("ace-code").Ace.SyntaxMode|string} mode Mode loaded from /ace/mode (use 'ServerSideHiglighter.getMode')
-     * @param {any} theme
+     * @param {SyntaxMode | string} mode Mode loaded from /ace/mode (use 'ServerSideHiglighter.getMode')
+     * @param {Theme} theme
      * @param {any} lineStart
      * @param {boolean} disableGutter
      * @returns {object} An object containing: html, css
      */
-    function renderSync(input: string, mode: import("ace-code").Ace.SyntaxMode | string, theme: any, lineStart: any, disableGutter: boolean): object;
+    function renderSync(input: string, mode: SyntaxMode | string, theme: Theme, lineStart: any, disableGutter: boolean): object;
+    type SyntaxMode = import("ace-code").Ace.SyntaxMode;
+    type Theme = import("ace-code").Ace.Theme;
 }
 declare module "ace-code/src/ext/statusbar" {
     export type Editor = import("ace-code/src/editor").Editor;
@@ -800,10 +802,10 @@ declare module "ace-code/src/ext/textarea" {
             setModuleLoader: (moduleName: any, onLoad: any) => void;
             version: "1.36.2";
         };
-        edit: (el: string | (HTMLElement & {
+        edit: (el?: string | (HTMLElement & {
             env?: any;
             value?: any;
-        }), options?: any) => ace.Editor;
+        }) | null, options?: any) => ace.Editor;
         createEditSession: (text: import("ace-code/src/document").Document | string, mode?: import("ace-code").Ace.SyntaxMode) => ace.EditSession;
         Range: typeof ace.Range;
         Editor: typeof ace.Editor;

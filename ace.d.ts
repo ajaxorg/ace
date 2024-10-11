@@ -777,6 +777,7 @@ declare module "ace-code" {
             id?: string;
             triggerCharacters?: string[];
             hideInlinePreview?: boolean;
+            insertMatch?: (editor: Editor, data: Completion) => void;
         }
         interface CompletionOptions {
             matches?: Completion[];
@@ -861,8 +862,15 @@ declare module "ace-code" {
             alignCursors: () => void;
             multiSelect?: any;
         }
+        interface CodeLenseProvider {
+            provideCodeLenses: (session: EditSession, callback: (err: any, payload: CodeLense[]) => void) => void;
+        }
+        interface CodeLense {
+            start: Point;
+            command: any;
+        }
         interface CodeLenseEditorExtension {
-            codeLensProviders?: any[];
+            codeLensProviders?: CodeLenseProvider[];
         }
         interface ElasticTabstopsEditorExtension {
             elasticTabstops?: import("ace-code/src/ext/elastic_tabstops_lite").ElasticTabstopsLite;
@@ -931,7 +939,7 @@ declare module "ace-code" {
         type InlineAutocompleteAction = "prev" | "next" | "first" | "last";
         type TooltipCommandFunction<T> = (editor: Ace.Editor) => T;
         export interface TooltipCommand extends Ace.Command {
-            enabled: TooltipCommandFunction<boolean> | boolean;
+            enabled?: TooltipCommandFunction<boolean> | boolean;
             getValue?: TooltipCommandFunction<any>;
             type: "button" | "text" | "checkbox";
             iconCssClass?: string;
@@ -942,6 +950,13 @@ declare module "ace-code" {
             className?: string;
             value: string;
         }>>;
+        export interface StaticHighlightOptions {
+            mode?: string | SyntaxMode;
+            theme?: string | Theme;
+            trim?: boolean;
+            firstLineNumber?: number;
+            showGutter?: boolean;
+        }
     }
     export const config: {
         defineOptions(obj: any, path: string, options: {
@@ -983,10 +998,10 @@ declare module "ace-code" {
         setModuleLoader: (moduleName: any, onLoad: any) => void;
         version: "1.36.2";
     };
-    export function edit(el: string | (HTMLElement & {
+    export function edit(el?: string | (HTMLElement & {
         env?: any;
         value?: any;
-    }), options?: any): Editor;
+    }) | null, options?: any): Editor;
     export function createEditSession(text: import("ace-code/src/document").Document | string, mode?: import("ace-code").Ace.SyntaxMode): EditSession;
     import Editor_5 = require("ace-code/src/editor");
     import Editor = Editor_5.Editor;

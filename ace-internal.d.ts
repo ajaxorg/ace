@@ -38,7 +38,7 @@ export namespace Ace {
         themePath: string | null,
         basePath: string,
         suffix: string,
-        $moduleUrls: {[url: string]: string},
+        $moduleUrls: { [url: string]: string },
         loadWorkerFromBlob: boolean,
         sharedPopups: boolean,
         useStrictCSP: boolean | null
@@ -499,7 +499,7 @@ export namespace Ace {
          * Emitted when text is copied.
          * @param text The copied text
          **/
-        "copy": (e: {text: string}) => void;
+        "copy": (e: { text: string }) => void;
         /**
          * Emitted when text is pasted.
          **/
@@ -509,7 +509,7 @@ export namespace Ace {
          * @param data Contains one property, `data`, which indicates the new selection style
          **/
         "changeSelectionStyle": (data: "fullLine" | "screenLine" | "text" | "line") => void;
-        "changeMode": (e: {mode?: Ace.SyntaxMode, oldMode?: Ace.SyntaxMode}) => void;
+        "changeMode": (e: { mode?: Ace.SyntaxMode, oldMode?: Ace.SyntaxMode }) => void;
 
         //from searchbox extension
         "findSearchBox": (e: { match: boolean }) => void;
@@ -517,7 +517,7 @@ export namespace Ace {
         //from code_lens extension
         "codeLensClick": (e: any) => void;
 
-        "select" : () => void;
+        "select": () => void;
     }
 
     interface AcePopupEvents {
@@ -582,8 +582,8 @@ export namespace Ace {
 
     interface MultiSelectionEvents extends SelectionEvents {
         "multiSelect": () => void;
-        "addRange": (e: {range: Range}) => void;
-        "removeRange": (e: {ranges: Range[]}) => void;
+        "addRange": (e: { range: Range }) => void;
+        "removeRange": (e: { ranges: Range[] }) => void;
         "singleSelect": () => void;
     }
 
@@ -814,7 +814,7 @@ export namespace Ace {
     type BehaviorMap = Record<string, Record<string, BehaviorAction>>;
 
     interface Behaviour {
-        $behaviours: {[behaviour: string]: any}
+        $behaviours: { [behaviour: string]: any }
 
         add(name: string, action: string, callback: BehaviorAction): void;
 
@@ -969,13 +969,16 @@ export namespace Ace {
                        callback: CompleterCallback): void;
 
         getDocTooltip?(item: Completion): void | string | Completion;
+
         onSeen?: (editor: Ace.Editor, completion: Completion) => void;
         onInsert?: (editor: Ace.Editor, completion: Completion) => void;
+
         cancel?(): void;
 
         id?: string;
         triggerCharacters?: string[];
         hideInlinePreview?: boolean;
+        insertMatch?: (editor: Editor, data: Completion) => void;
     }
 
     interface CompletionOptions {
@@ -1068,8 +1071,17 @@ export namespace Ace {
         $blockSelectEnabled?: boolean,
     }
 
+    interface CodeLenseProvider {
+        provideCodeLenses: (session: EditSession, callback: (err: any, payload: CodeLense[]) => void) => void;
+    }
+
+    interface CodeLense {
+        start: Point,
+        command: any
+    }
+
     interface CodeLenseEditorExtension {
-        codeLensProviders?: any[];
+        codeLensProviders?: CodeLenseProvider[];
         $codeLensClickHandler?: any;
         $updateLenses?: () => void;
         $updateLensesOnInput?: () => void;
@@ -1179,7 +1191,7 @@ export namespace Ace {
     type TooltipCommandFunction<T> = (editor: Ace.Editor) => T;
 
     export interface TooltipCommand extends Ace.Command {
-        enabled: TooltipCommandFunction<boolean> | boolean,
+        enabled?: TooltipCommandFunction<boolean> | boolean,
         getValue?: TooltipCommandFunction<any>,
         type: "button" | "text" | "checkbox"
         iconCssClass?: string,
@@ -1192,6 +1204,14 @@ export namespace Ace {
         className?: string,
         value: string,
     }>>
+
+    export interface StaticHighlightOptions {
+        mode?: string | SyntaxMode,
+        theme?: string | Theme,
+        trim?: boolean,
+        firstLineNumber?: number,
+        showGutter?: boolean
+    }
 }
 
 
@@ -1200,10 +1220,10 @@ export const config: Ace.Config;
 
 export function require(name: string): any;
 
-export function edit(el: string | (Element & {
+export function edit(el?: string | (Element & {
     env?: any;
     value?: any;
-}), options?: Partial<Ace.EditorOptions>): Ace.Editor;
+}) | null, options?: Partial<Ace.EditorOptions>): Ace.Editor;
 
 export function createEditSession(text: Ace.Document | string, mode: Ace.SyntaxMode): Ace.EditSession;
 
@@ -1231,6 +1251,7 @@ export type CommandBarTooltip = Ace.CommandBarTooltip;
 declare global {
     interface Element {
         setAttribute(name: string, value: boolean): void;
+
         setAttribute(name: string, value: number): void;
     }
 }

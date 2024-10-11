@@ -19,6 +19,11 @@ mv "$PACKAGE_FILE" ace-code-latest.tgz
 # npm install "../../$PACKAGE_FILE"
 
 cd demo/test_package
+
+# Clean up previous installation
+rm -rf node_modules/ace-code
+rm -f package-lock.json
+
 # Install TypeScript
 npm install
 

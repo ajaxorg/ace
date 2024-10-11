@@ -3,6 +3,7 @@
  * @typedef {import("./editor").Editor} Editor
  * @typedef {import("../ace-internal").Ace.CompletionProviderOptions} CompletionProviderOptions
  * @typedef {import("../ace-internal").Ace.CompletionOptions} CompletionOptions
+ * @typedef {import("../ace-internal").Ace.Position} Position
  */
 var HashHandler = require("./keyboard/hash_handler").HashHandler;
 var AcePopup = require("./autocomplete/popup").AcePopup;
@@ -31,21 +32,21 @@ var preventParentScroll = require("./lib/scroll").preventParentScroll;
  * @property {string} [command] - A command to be executed after the completion is inserted (experimental)
  * @property {string} [snippet] - a text snippet that would be inserted when the completion is selected
  * @property {string} [value] - The text that would be inserted when selecting this completion.
- * @property {import("../ace-internal").Ace.Completer & {insertMatch:(editor: Editor, data: Completion) => void}} [completer]
+ * @property {import("../ace-internal").Ace.Completer} [completer]
  * @property {boolean} [hideInlinePreview]
  * @export
  */
 
 /**
  * @typedef {BaseCompletion & {snippet: string}} SnippetCompletion
- * @property {string} snippet 
+ * @property {string} snippet
  * @property {string} [value]
  * @export
  */
 
 /**
  * @typedef {BaseCompletion & {value: string}} ValueCompletion
- * @property {string} value 
+ * @property {string} value
  * @property {string} [snippet]
  * @export
  */
@@ -80,9 +81,9 @@ class Autocomplete {
         this.hasSeen = new Set();
 
         /**
-         *  @property {Boolean} showLoadingState - A boolean indicating whether the loading states of the Autocompletion should be shown to the end-user. If enabled 
+         *  @property {Boolean} showLoadingState - A boolean indicating whether the loading states of the Autocompletion should be shown to the end-user. If enabled
          * it shows a loading indicator on the popup while autocomplete is loading.
-         * 
+         *
          * Experimental: This visualisation is not yet considered stable and might change in the future.
          */
         this.showLoadingState = false;
@@ -129,7 +130,7 @@ class Autocomplete {
 
     $init() {
         /**@type {AcePopup}**/
-        this.popup = new AcePopup(this.parentNode || document.body || document.documentElement); 
+        this.popup = new AcePopup(this.parentNode || document.body || document.documentElement);
         this.popup.on("click", function(e) {
             this.insertMatch();
             e.stop();
@@ -305,7 +306,7 @@ class Autocomplete {
         if (this.popup.tryShow(pos, lineHeight, "top")) {
             return;
         }
-        
+
         this.popup.show(pos, lineHeight);
     }
 
@@ -338,17 +339,17 @@ class Autocomplete {
         }
 
         editor.keyBinding.addKeyboardHandler(this.keyboardHandler);
-        
+
         var newRow;
         if (this.stickySelection)
-            newRow = this.popup.data.indexOf(previousSelectedItem); 
-        if (!newRow || newRow === -1) 
+            newRow = this.popup.data.indexOf(previousSelectedItem);
+        if (!newRow || newRow === -1)
             newRow = 0;
-        
+
         this.popup.setRow(this.autoSelect ? newRow : -1);
-     
+
         // If we stay on the same row, but the content is different, we want to update the popup.
-        if (newRow === oldRow && previousSelectedItem !== this.completions.filtered[newRow]) 
+        if (newRow === oldRow && previousSelectedItem !== this.completions.filtered[newRow])
             this.$onPopupChange();
 
         // If we stay on the same line and have inlinePreview enabled, we want to make sure the
@@ -471,7 +472,7 @@ class Autocomplete {
             this.detach();
         return result;
     }
-    
+
     /**
      * This is the entry point for the autocompletion class, triggers the actions which collect and display suggestions
      * @param {Editor} editor
@@ -498,6 +499,11 @@ class Autocomplete {
         this.updateCompletions(false, options);
     }
 
+    /**
+     *
+     * @param {{pos: Position, prefix: string}} [initialPosition]
+     * @return {CompletionProvider}
+     */
     getCompletionProvider(initialPosition) {
         if (!this.completionProvider)
             this.completionProvider = new CompletionProvider(initialPosition);
@@ -533,7 +539,7 @@ class Autocomplete {
             this.openPopup(this.editor, prefix, keepPopupPosition);
             return;
         }
-        
+
         if (options && options.matches) {
             var pos = this.editor.getSelectionRange().start;
             this.base = this.editor.session.doc.createAnchor(pos.row, pos.column);
@@ -596,7 +602,7 @@ class Autocomplete {
                 }
             // If showLoadingState is true and there is still a completer loading, show 'Loading...'
             // in the top row of the completer popup.
-            this.completions = !finished && this.showLoadingState ? 
+            this.completions = !finished && this.showLoadingState ?
                 new FilteredList(
                     Autocomplete.completionsForLoading.concat(filtered), completions.filterText
                 ) :
@@ -624,7 +630,7 @@ class Autocomplete {
         var doc = null;
         if (!selected || !this.editor || !this.popup.isOpen)
             return this.hideDocTooltip();
-        
+
         var completersLength = this.editor.completers.length;
         for (var i = 0; i < completersLength; i++) {
             var completer = this.editor.completers[i];
@@ -813,10 +819,10 @@ Autocomplete.startCommand = {
  * This class is responsible for providing completions and inserting them to the editor
  */
 class CompletionProvider {
-    
+
 
     /**
-     * @param {{pos: import("../ace-internal").Ace.Position, prefix: string}} initialPosition
+     * @param {{pos: Position, prefix: string}} [initialPosition]
      */
     constructor(initialPosition) {
         this.initialPosition = initialPosition;
@@ -853,7 +859,7 @@ class CompletionProvider {
             // TODO add support for options.deleteSuffix
             if (!this.completions)
                 return false;
-            
+
             var replaceBefore = this.completions.filterText.length;
             var replaceAfter = 0;
             if (data.range && data.range.start.row === data.range.end.row) {
@@ -876,7 +882,7 @@ class CompletionProvider {
                     editor.session.remove(range);
                 }
             }
-          
+
             if (data.snippet) {
                 snippetManager.insertSnippet(editor, data.snippet);
             }
@@ -886,7 +892,7 @@ class CompletionProvider {
             if (data.completer && data.completer.onInsert && typeof data.completer.onInsert == "function") {
                 data.completer.onInsert(editor, data);
             }
-            
+
             if (data.command && data.command === "startAutocomplete") {
                 editor.execCommand(data.command);
             }
@@ -911,9 +917,9 @@ class CompletionProvider {
     gatherCompletions(editor, callback) {
         var session = editor.getSession();
         var pos = editor.getCursorPosition();
-    
+
         var prefix = util.getCompletionPrefix(editor);
-    
+
         var matches = [];
         this.completers = editor.completers;
         var total = editor.completers.length;
@@ -987,7 +993,7 @@ class CompletionProvider {
 
             processResults(results);
         }.bind(this));
-        
+
         isImmediate = false;
         if (immediateResults) {
             var results = immediateResults;
@@ -1014,7 +1020,7 @@ class FilteredList {
         this.exactMatch = false;
         this.ignoreCaption = false;
     }
-    
+
     setFilter(str) {
         if (str.length > this.filterText && str.lastIndexOf(this.filterText, 0) === 0)
             var matches = this.filtered;
@@ -1024,7 +1030,7 @@ class FilteredList {
         this.filterText = str;
         matches = this.filterCompletions(matches, this.filterText);
         matches = matches.sort(function(a, b) {
-            return b.exactMatch - a.exactMatch || b.$score - a.$score 
+            return b.exactMatch - a.exactMatch || b.$score - a.$score
                 || (a.caption || a.value).localeCompare(b.caption || b.value);
         });
 
@@ -1039,7 +1045,7 @@ class FilteredList {
 
         this.filtered = matches;
     }
-    
+
     filterCompletions(items, needle) {
         var results = [];
         var upper = needle.toUpperCase();

@@ -11,6 +11,6 @@
     "ace-code": "file:../../ace-code-latest.tgz"
   },
   "devDependencies": {
-    "typescript": "^4.5.5"
+    "typescript": "^5.6.2"
   }
 }

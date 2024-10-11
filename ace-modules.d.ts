@@ -2146,16 +2146,16 @@ declare module "ace-code/src/tooltip" {
          */
         isOutsideOfText(e: MouseEvent): boolean;
         /**
-         * @param {any} value
+         * @param {(event: MouseEvent, editor: Editor) => void} value
          */
-        setDataProvider(value: any): void;
+        setDataProvider(value: (event: MouseEvent, editor: Editor) => void): void;
         /**
          * @param {Editor} editor
          * @param {Range} range
-         * @param {any} domNode
+         * @param {HTMLElement} domNode
          * @param {MouseEvent} startingEvent
          */
-        showForRange(editor: Editor, range: Range, domNode: any, startingEvent: MouseEvent): void;
+        showForRange(editor: Editor, range: Range, domNode: HTMLElement, startingEvent: MouseEvent): void;
         range: Range;
         /**
          * @param {Range} range
@@ -4178,7 +4178,15 @@ declare module "ace-code/src/autocomplete" {
          */
         showPopup(editor: Editor, options?: CompletionOptions): void;
         editor: import("ace-code/src/editor").Editor;
-        getCompletionProvider(initialPosition: any): CompletionProvider;
+        /**
+         *
+         * @param {{pos: Position, prefix: string}} [initialPosition]
+         * @return {CompletionProvider}
+         */
+        getCompletionProvider(initialPosition?: {
+            pos: Position;
+            prefix: string;
+        }): CompletionProvider;
         /**
          * This method is deprecated, it is only kept for backwards compatibility.
          * Use the same method include CompletionProvider instead for the same functionality.
@@ -4216,14 +4224,14 @@ declare module "ace-code/src/autocomplete" {
      */
     export class CompletionProvider {
         /**
-         * @param {{pos: import("ace-code").Ace.Position, prefix: string}} initialPosition
+         * @param {{pos: Position, prefix: string}} [initialPosition]
          */
-        constructor(initialPosition: {
-            pos: import("ace-code").Ace.Position;
+        constructor(initialPosition?: {
+            pos: Position;
             prefix: string;
         });
         initialPosition: {
-            pos: import("ace-code").Ace.Position;
+            pos: Position;
             prefix: string;
         };
         active: boolean;
@@ -4262,6 +4270,7 @@ declare module "ace-code/src/autocomplete" {
     export type Editor = import("ace-code/src/editor").Editor;
     export type CompletionProviderOptions = import("ace-code").Ace.CompletionProviderOptions;
     export type CompletionOptions = import("ace-code").Ace.CompletionOptions;
+    export type Position = import("ace-code").Ace.Position;
     export type BaseCompletion = {
         /**
          * - a numerical value that determines the order in which completions would be displayed.
@@ -4306,9 +4315,7 @@ declare module "ace-code/src/autocomplete" {
          * - The text that would be inserted when selecting this completion.
          */
         value?: string;
-        completer?: import("ace-code").Ace.Completer & {
-            insertMatch: (editor: Editor, data: Completion) => void;
-        };
+        completer?: import("ace-code").Ace.Completer;
         hideInlinePreview?: boolean;
     };
     export type SnippetCompletion = BaseCompletion & {
@@ -4485,7 +4492,8 @@ declare module "ace-code/src/marker_group" {
             markerType: "fullLine" | "line" | undefined;
         });
         markerType: "line" | "fullLine";
-        markers: any[];
+        /**@type {import("ace-code").Ace.MarkerGroupItem[]}*/
+        markers: import("ace-code").Ace.MarkerGroupItem[];
         /**@type {EditSession}*/
         session: EditSession;
         /**
