@@ -1150,7 +1150,82 @@ module.exports = {
         assert.equal(session.getScrollLeft(), 0);
         assert.equal(session.getScrollTop(), 0);
         assert.equal(session.getValue(), "Hello world!");
-    }
+    },
+
+    "test: operation handling : when session it not attached to an editor": function(done) {
+        const session = new EditSession("Hello world!");
+        const beforeEndOperationSpy = [];
+        session.on("beforeEndOperation", () => {
+            beforeEndOperationSpy.push(session.curOp);
+        });
+
+        // When both start and end operation are invoked by the consumer
+        session.startOperation({command: {name: "inserting-both"}});
+        session.insert({row: 0, column : 0}, "both");
+        session.endOperation();
+        assert.equal(beforeEndOperationSpy.length, 1);
+        assert.deepEqual(beforeEndOperationSpy[0], {command: {name: "inserting-both"}, docChanged: true, selectionChanged: true});
+
+        // When only start operation is invoked
+        session.startOperation({command: {name: "inserting-start"}});
+        session.insert({row: 0, column : 0}, "start");
+        setTimeout(() => {
+            assert.equal(beforeEndOperationSpy.length, 2);
+            assert.deepEqual(beforeEndOperationSpy[1], {command: {name: "inserting-start"}, docChanged: true, selectionChanged: true});
+            
+            // When only end operation is invoked
+            session.insert({row: 0, column : 0}, "end");
+            session.endOperation();
+            assert.equal(beforeEndOperationSpy.length, 3);
+            assert.deepEqual(beforeEndOperationSpy[2], {command: {}, docChanged: true, selectionChanged: true});
+
+            // When nothing is invoked
+            session.insert({row: 0, column : 0}, "none");
+            setTimeout(() => {
+                assert.equal(beforeEndOperationSpy.length, 4);
+                assert.deepEqual(beforeEndOperationSpy[3], {command: {}, docChanged: true, selectionChanged: true});
+                
+                done();
+            }, 10);
+        }, 10);
+    },
+
+    "test: operation handling : when session is attached to an editor": function() {
+        const session = new EditSession("Hello world!");
+        const editor = new Editor(new MockRenderer(), session);
+        const beforeEndOperationSpy = [];
+        session.on("beforeEndOperation", () => {
+            beforeEndOperationSpy.push(session.curOp);
+        });
+
+        // Imperative update 
+        editor.startOperation({command: {name: "imperative-update"}})
+        editor.insert("update");
+        editor.endOperation();
+        assert.equal(beforeEndOperationSpy.length, 1);
+        console.log(beforeEndOperationSpy);
+        assert.equal(beforeEndOperationSpy[0].command.name, "imperative-update");
+        assert.equal(beforeEndOperationSpy[0].docChanged, true);
+        assert.equal(beforeEndOperationSpy[0].selectionChanged, true);
+        assert.equal(!!beforeEndOperationSpy[0].selectionBefore, true);
+
+        // Command update
+        editor.execCommand(editor.commands.byName.indent);
+        assert.equal(beforeEndOperationSpy.length, 2);
+        assert.equal(beforeEndOperationSpy[1].command.name, "indent");
+        assert.equal(beforeEndOperationSpy[0].docChanged, true);
+        assert.equal(beforeEndOperationSpy[0].selectionChanged, true);
+        assert.equal(!!beforeEndOperationSpy[0].selectionBefore, true);
+
+
+        // console.log(beforeEndOperationSpy);
+        // assert.equal(beforeEndOperationSpy[0].command.name, "imperative-update");
+        // assert.equal(beforeEndOperationSpy[0].docChanged, true);
+        // assert.equal(beforeEndOperationSpy[0].selectionChanged, true);
+        // assert.equal(!!beforeEndOperationSpy[0].selectionBefore, true);
+
+
+    },
 };
 
 if (typeof module !== "undefined" && module === require.main) {

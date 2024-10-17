@@ -48,7 +48,6 @@ class Editor {
      **/
     constructor(renderer, session, options) {
         /**@type{EditSession}*/this.session;
-        
         this.$toDestroy = [];
         
         var container = renderer.getContainerElement();
@@ -131,12 +130,13 @@ class Editor {
             commandEvent = {};
         }
 
+        this.session.startOperation(commandEvent);
         this.$opResetTimer.schedule();
         /**
          * @type {{[key: string]: any;}}
          */
         this.curOp = this.session.curOp = {
-            command: commandEvent.command || {},
+            command: commandEvent.command || (this.session.curOp && this.session.curOp.command) || {},
             args: commandEvent.args,
             scrollTop: this.renderer.scrollTop
         };
@@ -148,10 +148,10 @@ class Editor {
      */
     endOperation(e) {
         if (this.curOp && this.session) {
-            if (e && e.returnValue === false || !this.session)
-                return (this.curOp = null);
-            if (e == true && this.curOp.command && this.curOp.command.name == "mouse")
-                return;
+            if (e && e.returnValue === false) return (this.curOp = this.session.curOp = null);
+            if (e == true && this.curOp.command && this.curOp.command.name == "mouse") return;
+
+            this.session.endOperation();
             this._signal("beforeEndOperation");
             if (!this.curOp) return;
             var command = this.curOp.command;

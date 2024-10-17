@@ -69,7 +69,12 @@ class EditSession {
             text = new Document(/**@type{string}*/(text));
 
         this.setDocument(text);
+
         this.selection = new Selection(this);
+        this.$onSelectionChange = this.onSelectionChange.bind(this);
+        this.selection.on("changeSelection", this.$onSelectionChange);
+        this.selection.on("changeCursor", this.$onSelectionChange);
+
         this.$bidiHandler = new BidiHandler(this);
 
         config.resetOptions(this);
@@ -77,6 +82,61 @@ class EditSession {
         config._signal("session", this);
 
         this.destroyed = false;
+        this.$initOperationListeners();
+    }
+
+    $initOperationListeners() {
+        this.on("change", () => {
+            if (!this.curOp) {
+                this.startOperation();
+            }
+            this.curOp.docChanged = true;
+        });
+        this.on("changeSelection", () => {
+            if (!this.curOp) {
+                this.startOperation();
+            }
+            this.curOp.selectionChanged = true;
+        });
+
+        // Fallback mechanism in case current operation doesn't finish more explicitly.
+        // Triggered, for example, when a consumer makes programmatic changes without invoking endOperation afterwards.
+        this.$operationResetTimer = lang.delayedCall(() => {
+            if (this.curOp && this.curOp.command && this.curOp.command.name === "mouse") {
+                // When current operation is mousedown, we wait for the mouseup to end the operation.
+                // So during a user selection, we would only emit operation finished when the final selection is known.
+                return;
+            }
+            this.endOperation();
+        });
+    }
+
+    startOperation(commandEvent) {
+        if (this.curOp) {
+            if (!commandEvent || this.curOp.command) {
+                return;
+            }
+        }
+        if (!commandEvent) {
+            commandEvent = {};
+        }
+
+        this.$operationResetTimer.schedule();
+        this.curOp = {
+            command: commandEvent.command || {}
+        };
+    }
+
+    endOperation() {
+        this.$operationResetTimer.cancel();
+        if (this.curOp) {
+            this._signal("beforeEndOperation");
+        }
+        this.curOp = null;
+    }
+
+    onSelectionChange() {
+        this._signal("changeSelection");
     }
 
     /**

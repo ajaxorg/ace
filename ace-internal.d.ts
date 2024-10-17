@@ -428,6 +428,10 @@ export namespace Ace {
          */
         "change": (delta: Delta) => void;
         /**
+         * Emitted when the selection changes.
+         */
+        "changeSelection": () => void;
+        /**
          * Emitted when the tab size changes, via [[EditSession.setTabSize]].
          * @param tabSize
          */
