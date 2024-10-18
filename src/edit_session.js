@@ -45,7 +45,6 @@ class EditSession {
         this.$backMarkers = {};
         this.$markerId = 1;
         this.$undoSelect = true;
-        this.curOp = null;
         this.prevOp = {};
 
         /** @type {FoldLine[]} */
@@ -88,6 +87,7 @@ class EditSession {
     }
 
     $initOperationListeners() {
+        this.curOp = null;
         this.on("change", () => {
             if (!this.curOp) {
                 this.startOperation();
