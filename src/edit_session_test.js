@@ -1213,18 +1213,9 @@ module.exports = {
         editor.execCommand(editor.commands.byName.indent);
         assert.equal(beforeEndOperationSpy.length, 2);
         assert.equal(beforeEndOperationSpy[1].command.name, "indent");
-        assert.equal(beforeEndOperationSpy[0].docChanged, true);
-        assert.equal(beforeEndOperationSpy[0].selectionChanged, true);
-        assert.equal(!!beforeEndOperationSpy[0].selectionBefore, true);
-
-
-        // console.log(beforeEndOperationSpy);
-        // assert.equal(beforeEndOperationSpy[0].command.name, "imperative-update");
-        // assert.equal(beforeEndOperationSpy[0].docChanged, true);
-        // assert.equal(beforeEndOperationSpy[0].selectionChanged, true);
-        // assert.equal(!!beforeEndOperationSpy[0].selectionBefore, true);
-
-
+        assert.equal(beforeEndOperationSpy[1].docChanged, true);
+        assert.equal(beforeEndOperationSpy[1].selectionChanged, true);
+        assert.equal(!!beforeEndOperationSpy[1].selectionBefore, true);
     },
 };
 

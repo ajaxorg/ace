@@ -148,9 +148,10 @@ class Editor {
      */
     endOperation(e) {
         if (this.curOp && this.session) {
-            if (e && e.returnValue === false) return (this.curOp = this.session.curOp = null);
-            if (e == true && this.curOp.command && this.curOp.command.name == "mouse") return;
-
+            if (e && e.returnValue === false || !this.session)
+                return (this.curOp = this.session.curOp = null);
+            if (e == true && this.curOp.command && this.curOp.command.name == "mouse")
+                return;
             this.session.endOperation();
             this._signal("beforeEndOperation");
             if (!this.curOp) return;

@@ -71,9 +71,11 @@ class EditSession {
         this.setDocument(text);
 
         this.selection = new Selection(this);
-        this.$onSelectionChange = this.onSelectionChange.bind(this);
-        this.selection.on("changeSelection", this.$onSelectionChange);
-        this.selection.on("changeCursor", this.$onSelectionChange);
+        const onSelectionChange = () => {
+            this._signal("changeSelection");
+        };
+        this.selection.on("changeSelection", onSelectionChange);
+        this.selection.on("changeCursor", onSelectionChange);
 
         this.$bidiHandler = new BidiHandler(this);
 
@@ -87,15 +89,11 @@ class EditSession {
 
     $initOperationListeners() {
         this.on("change", () => {
-            if (!this.curOp) {
-                this.startOperation();
-            }
+            this.startOperation();
             this.curOp.docChanged = true;
         });
         this.on("changeSelection", () => {
-            if (!this.curOp) {
-                this.startOperation();
-            }
+            this.startOperation();
             this.curOp.selectionChanged = true;
         });
 
@@ -104,13 +102,17 @@ class EditSession {
         this.$operationResetTimer = lang.delayedCall(() => {
             if (this.curOp && this.curOp.command && this.curOp.command.name === "mouse") {
                 // When current operation is mousedown, we wait for the mouseup to end the operation.
-                // So during a user selection, we would only emit operation finished when the final selection is known.
+                // So during a user selection, we would only end the operation when the final selection is known.
                 return;
             }
             this.endOperation();
         });
     }
 
+    /**
+     * Start an Ace operation, which will then batch all the subsequent changes (to either content or selection) under a single atomic operation.
+     * @param {{command?: {name?: string}}|undefined} [commandEvent] Optional name for the operation
+     */
     startOperation(commandEvent) {
         if (this.curOp) {
             if (!commandEvent || this.curOp.command) {
@@ -127,16 +129,16 @@ class EditSession {
         };
     }
 
+    /**
+     * End the current Ace operation.
+     * Emits "beforeEndOperation" event just before clearing everything, where the current operation can be accessed through `curOp` property.
+     */
     endOperation() {
         this.$operationResetTimer.cancel();
         if (this.curOp) {
             this._signal("beforeEndOperation");
         }
         this.curOp = null;
-    }
-
-    onSelectionChange() {
-        this._signal("changeSelection");
     }
 
     /**
