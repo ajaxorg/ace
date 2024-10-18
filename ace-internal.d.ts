@@ -496,6 +496,16 @@ export namespace Ace {
          **/
         "changeScrollLeft": (scrollLeft: number) => void;
         "changeEditor": (e: { editor: Editor }) => void;
+        /**
+         * Emitted after operation starts.
+         * @param commandEvent event causing the operation
+         */
+        "startOperation": (commandEvent) => void;
+        /**
+         * Emitted after operation finishes.
+         * @param e event causing the finish
+         */
+        "endOperation": (e) => void;
     }
 
     interface EditorEvents {

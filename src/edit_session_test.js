@@ -1164,26 +1164,34 @@ module.exports = {
         session.insert({row: 0, column : 0}, "both");
         session.endOperation();
         assert.equal(beforeEndOperationSpy.length, 1);
-        assert.deepEqual(beforeEndOperationSpy[0], {command: {name: "inserting-both"}, docChanged: true, selectionChanged: true});
+        assert.equal(beforeEndOperationSpy[0].command.name, "inserting-both");
+        assert.equal(beforeEndOperationSpy[0].docChanged, true);
+        assert.equal(beforeEndOperationSpy[0].selectionChanged, true);
 
         // When only start operation is invoked
         session.startOperation({command: {name: "inserting-start"}});
         session.insert({row: 0, column : 0}, "start");
         setTimeout(() => {
             assert.equal(beforeEndOperationSpy.length, 2);
-            assert.deepEqual(beforeEndOperationSpy[1], {command: {name: "inserting-start"}, docChanged: true, selectionChanged: true});
+            assert.equal(beforeEndOperationSpy[1].command.name, "inserting-start");
+            assert.equal(beforeEndOperationSpy[1].docChanged, true);
+            assert.equal(beforeEndOperationSpy[1].selectionChanged, true);
             
             // When only end operation is invoked
             session.insert({row: 0, column : 0}, "end");
             session.endOperation();
             assert.equal(beforeEndOperationSpy.length, 3);
-            assert.deepEqual(beforeEndOperationSpy[2], {command: {}, docChanged: true, selectionChanged: true});
+            assert.deepEqual(beforeEndOperationSpy[2].command, {});
+            assert.equal(beforeEndOperationSpy[2].docChanged, true);
+            assert.equal(beforeEndOperationSpy[2].selectionChanged, true);
 
             // When nothing is invoked
             session.insert({row: 0, column : 0}, "none");
             setTimeout(() => {
                 assert.equal(beforeEndOperationSpy.length, 4);
-                assert.deepEqual(beforeEndOperationSpy[3], {command: {}, docChanged: true, selectionChanged: true});
+                assert.deepEqual(beforeEndOperationSpy[3].command, {});
+                assert.equal(beforeEndOperationSpy[3].docChanged, true);
+                assert.equal(beforeEndOperationSpy[3].selectionChanged, true);
                 
                 done();
             }, 10);

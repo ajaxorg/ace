@@ -98,63 +98,45 @@ class Editor {
     $initOperationListeners() {
         this.commands.on("exec", this.startOperation.bind(this), true);
         this.commands.on("afterExec", this.endOperation.bind(this), true);
-
-        this.$opResetTimer = lang.delayedCall(this.endOperation.bind(this, true));
-        
-        // todo: add before change events?
-        this.on("change", function() {
-            if (!this.curOp) {
-                this.startOperation();
-                this.curOp.selectionBefore = this.$lastSel;
-            }
-            this.curOp.docChanged = true;
-        }.bind(this), true);
-        
-        this.on("changeSelection", function() {
-            if (!this.curOp) {
-                this.startOperation();
-                this.curOp.selectionBefore = this.$lastSel;
-            }
-            this.curOp.selectionChanged = true;
-        }.bind(this), true);
     }
 
     startOperation(commandEvent) {
-        if (this.curOp) {
-            if (!commandEvent || this.curOp.command)
-                return;
-            this.prevOp = this.curOp;
-        }
-        if (!commandEvent) {
-            this.previousCommand = null;
-            commandEvent = {};
-        }
-
         this.session.startOperation(commandEvent);
-        this.$opResetTimer.schedule();
-        /**
-         * @type {{[key: string]: any;}}
-         */
-        this.curOp = this.session.curOp = {
-            command: commandEvent.command || (this.session.curOp && this.session.curOp.command) || {},
-            args: commandEvent.args,
-            scrollTop: this.renderer.scrollTop
-        };
-        this.curOp.selectionBefore = this.selection.toJSON();
     }
 
     /** 
      * @arg e
      */
     endOperation(e) {
-        if (this.curOp && this.session) {
-            if (e && e.returnValue === false || !this.session)
-                return (this.curOp = this.session.curOp = null);
-            if (e == true && this.curOp.command && this.curOp.command.name == "mouse")
+        this.session.endOperation(e);
+    }
+
+    onStartOperation(commandEvent) {
+        this.curOp = this.session.curOp = {
+            ...this.session.curOp,
+            // scrollTop is kept inside of EditSession only for backwards compatibility reasons
+            scrollTop: this.renderer.scrollTop
+        }
+        this.prevOp = this.session.prevOp;
+
+        if (!commandEvent) {
+            this.previousCommand = null;
+        }
+    }
+
+    /** 
+     * @arg e
+     */
+    onEndOperation(e) {
+        if (this.curOp) {
+            if (e && e.returnValue === false) {
+                this.curOp = null;
                 return;
-            this.session.endOperation();
+            }
+
             this._signal("beforeEndOperation");
             if (!this.curOp) return;
+
             var command = this.curOp.command;
             var scrollIntoView = command && command.scrollIntoView;
             if (scrollIntoView) {
@@ -182,12 +164,8 @@ class Editor {
                 if (scrollIntoView == "animate")
                     this.renderer.animateScrolling(this.curOp.scrollTop);
             }
-            var sel = this.selection.toJSON();
-            this.curOp.selectionAfter = sel;
-            this.$lastSel = this.selection.toJSON();
-            
-            // console.log(this.$lastSel+"  endOP")
-            this.session.getUndoManager().addSelection(sel);
+
+            this.$lastSel = this.session.selection.toJSON();
             this.prevOp = this.curOp;
             this.curOp = null;
         }
@@ -292,6 +270,8 @@ class Editor {
             this.session.off("changeOverwrite", this.$onCursorChange);
             this.session.off("changeScrollTop", this.$onScrollTopChange);
             this.session.off("changeScrollLeft", this.$onScrollLeftChange);
+            this.session.off("startOperation", this.$onStartOperation);
+            this.session.off("endOperation", this.$onEndOperation);
 
             var selection = this.session.getSelection();
             selection.off("changeCursor", this.$onCursorChange);
@@ -348,6 +328,11 @@ class Editor {
     
             this.$onSelectionChange = this.onSelectionChange.bind(this);
             this.selection.on("changeSelection", this.$onSelectionChange);
+
+            this.$onStartOperation = this.onStartOperation.bind(this);
+            this.session.on("startOperation", this.$onStartOperation);
+            this.$onEndOperation = this.onEndOperation.bind(this);
+            this.session.on("endOperation", this.$onEndOperation);
     
             this.onChangeMode();
     
