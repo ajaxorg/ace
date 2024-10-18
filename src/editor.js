@@ -112,11 +112,9 @@ class Editor {
     }
 
     onStartOperation(commandEvent) {
-        this.curOp = this.session.curOp = {
-            ...this.session.curOp,
-            // scrollTop is kept inside of EditSession only for backwards compatibility reasons
-            scrollTop: this.renderer.scrollTop
-        }
+        // scrollTop is kept inside of session.curOp only for backwards compatibility reasons
+        this.session.curOp.scrollTop = this.renderer.scrollTop;
+        this.curOp = this.session.curOp;
         this.prevOp = this.session.prevOp;
 
         if (!commandEvent) {
@@ -128,7 +126,7 @@ class Editor {
      * @arg e
      */
     onEndOperation(e) {
-        if (this.curOp) {
+        if (this.curOp && this.session) {
             if (e && e.returnValue === false) {
                 this.curOp = null;
                 return;
@@ -2665,6 +2663,7 @@ class Editor {
         if (this._$emitInputEvent)
             this._$emitInputEvent.cancel();
         this.removeAllListeners();
+
     }
 
     /**

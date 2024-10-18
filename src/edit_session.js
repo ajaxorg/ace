@@ -126,7 +126,7 @@ class EditSession {
         this.$operationResetTimer.schedule();
         this.curOp = {
             command: commandEvent.command || {},
-            args: commandEvent.args,
+            args: commandEvent.args
         };
         this.curOp.selectionBefore = this.selection.toJSON();
         this._signal("startOperation", commandEvent);
