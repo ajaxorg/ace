@@ -1199,7 +1199,7 @@ module.exports = {
         });
 
         // Imperative update 
-        editor.startOperation({command: {name: "imperative-update"}})
+        editor.startOperation({command: {name: "imperative-update"}});
         editor.insert("update");
         editor.endOperation();
         assert.equal(beforeEndOperationSpy.length, 1);
@@ -1216,7 +1216,7 @@ module.exports = {
         assert.equal(beforeEndOperationSpy[1].docChanged, true);
         assert.equal(beforeEndOperationSpy[1].selectionChanged, true);
         assert.equal(!!beforeEndOperationSpy[1].selectionBefore, true);
-    },
+    }
 };
 
 if (typeof module !== "undefined" && module === require.main) {
