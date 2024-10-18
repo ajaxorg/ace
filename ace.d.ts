@@ -524,7 +524,7 @@ export namespace Ace {
        callback: (obj: { data: { first: number, last: number } }) => void): Function;
     on(name: 'change', callback: () => void): Function;
     on(name: 'changeTabSize', callback: () => void): Function;
-    on(name: "beforeEndOperation", callback: () => void);
+    on(name: "beforeEndOperation", callback: () => void): Function;
 
     setOption<T extends keyof EditSessionOptions>(name: T, value: EditSessionOptions[T]): void;
     getOption<T extends keyof EditSessionOptions>(name: T): EditSessionOptions[T];
