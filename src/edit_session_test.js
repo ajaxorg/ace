@@ -1203,7 +1203,6 @@ module.exports = {
         editor.insert("update");
         editor.endOperation();
         assert.equal(beforeEndOperationSpy.length, 1);
-        console.log(beforeEndOperationSpy);
         assert.equal(beforeEndOperationSpy[0].command.name, "imperative-update");
         assert.equal(beforeEndOperationSpy[0].docChanged, true);
         assert.equal(beforeEndOperationSpy[0].selectionChanged, true);
