@@ -1198,31 +1198,71 @@ module.exports = {
         }, 10);
     },
 
-    "test: operation handling : when session is attached to an editor": function() {
+    "test: operation handling : when session is attached to an editor": function(done) {
         const session = new EditSession("Hello world!");
         const editor = new Editor(new MockRenderer(), session);
-        const beforeEndOperationSpy = [];
+        const beforeEndOperationSpySession = [];
         session.on("beforeEndOperation", () => {
-            beforeEndOperationSpy.push(session.curOp);
+            beforeEndOperationSpySession.push(session.curOp);
+        });
+        const beforeEndOperationSpyEditor = [];
+        editor.on("beforeEndOperation", () => {
+            beforeEndOperationSpyEditor.push(editor.curOp);
         });
 
-        // Imperative update 
+        // Imperative update from editor
         editor.startOperation({command: {name: "imperative-update"}});
         editor.insert("update");
         editor.endOperation();
-        assert.equal(beforeEndOperationSpy.length, 1);
-        assert.equal(beforeEndOperationSpy[0].command.name, "imperative-update");
-        assert.equal(beforeEndOperationSpy[0].docChanged, true);
-        assert.equal(beforeEndOperationSpy[0].selectionChanged, true);
-        assert.equal(!!beforeEndOperationSpy[0].selectionBefore, true);
+        for (const beforeEndOperationSpy of [beforeEndOperationSpySession, beforeEndOperationSpyEditor ]) {
+            assert.equal(beforeEndOperationSpy.length, 1);
+            assert.equal(beforeEndOperationSpy[0].command.name, "imperative-update");
+            assert.equal(beforeEndOperationSpy[0].docChanged, true);
+            assert.equal(beforeEndOperationSpy[0].selectionChanged, true);
+            assert.equal(!!beforeEndOperationSpy[0].selectionBefore, true);
+        }
+
+        // Imperative update from session
+        session.startOperation({command: {name: "session-update"}});
+        session.insert({row: 0, column : 0},"update");
+        session.endOperation();
+        for (const beforeEndOperationSpy of [beforeEndOperationSpySession, beforeEndOperationSpyEditor ]) {
+            assert.equal(beforeEndOperationSpy.length, 2);
+            assert.equal(beforeEndOperationSpy[1].command.name, "session-update");
+            assert.equal(beforeEndOperationSpy[1].docChanged, true);
+            assert.equal(beforeEndOperationSpy[1].selectionChanged, true);
+            assert.equal(!!beforeEndOperationSpy[1].selectionBefore, true);
+        }
 
         // Command update
         editor.execCommand(editor.commands.byName.indent);
-        assert.equal(beforeEndOperationSpy.length, 2);
-        assert.equal(beforeEndOperationSpy[1].command.name, "indent");
-        assert.equal(beforeEndOperationSpy[1].docChanged, true);
-        assert.equal(beforeEndOperationSpy[1].selectionChanged, true);
-        assert.equal(!!beforeEndOperationSpy[1].selectionBefore, true);
+        for (const beforeEndOperationSpy of [beforeEndOperationSpySession, beforeEndOperationSpyEditor ]) {
+            assert.equal(beforeEndOperationSpy.length, 3);
+            assert.equal(beforeEndOperationSpy[2].command.name, "indent");
+            assert.equal(beforeEndOperationSpy[2].docChanged, true);
+            assert.equal(beforeEndOperationSpy[2].selectionChanged, true);
+            assert.equal(!!beforeEndOperationSpy[2].selectionBefore, true);
+        }
+
+        // Session cleanup logic
+        const newSession = new EditSession("Hello again!");
+        editor.setSession(newSession);
+        const beforeEndOperationSpyNewSession = [];
+        newSession.on("beforeEndOperation", () => {
+            beforeEndOperationSpyNewSession.push(newSession.curOp);
+        });
+        editor.execCommand(editor.commands.byName.indent);
+        assert.equal(beforeEndOperationSpyEditor.length, 4);
+        assert.equal(beforeEndOperationSpyNewSession.length, 1);
+        assert.equal(beforeEndOperationSpySession.length, 3);
+
+        // Imperative implicit update from editor
+        editor.insert("update");
+        setTimeout(() => {
+            assert.equal(beforeEndOperationSpyEditor.length, 5);
+            assert.equal(beforeEndOperationSpyNewSession.length, 2);
+            done();
+        }, 10);
     }
 };
 
