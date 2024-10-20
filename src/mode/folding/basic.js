@@ -17,7 +17,7 @@ oop.inherits(FoldMode, BaseFoldMode);
         "for": 1,
         "troff": -1,
         "wend": -1,
-        "next": -1,
+        "next": -1
     };
 
     this.foldingStartMarker = /(?:\s|^)(tron|while|for)\b/i;
