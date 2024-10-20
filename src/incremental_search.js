@@ -207,6 +207,9 @@ class IncrementalSearch extends Search {
         });
     }
 
+    /**
+     * @internal
+     */
     onMouseDown(evt) {
         // when mouse interaction happens then we quit incremental search
         this.deactivate();
@@ -215,6 +218,7 @@ class IncrementalSearch extends Search {
 
     /**
      * @param {string} text
+     * @internal
      */
     onPaste(text) {
         this.addString(text);

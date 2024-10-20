@@ -315,6 +315,7 @@ class LineWidgets {
 
     /**
      * @param {LineWidget} w
+     * @internal
      */
     onWidgetChanged(w) {
         this.session._changedWidgets.push(w);

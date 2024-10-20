@@ -25,7 +25,7 @@ class MarkerGroup {
     constructor(session, options) {
         if (options)
             this.markerType = options.markerType;
-
+        /**@type {import("../ace-internal").Ace.MarkerGroupItem[]}*/
         this.markers = [];
         /**@type {EditSession}*/
         this.session = session;
@@ -35,8 +35,8 @@ class MarkerGroup {
 
     /**
      * Finds the first marker containing pos
-     * @param {import("../ace-internal").Ace.Point} pos 
-     * @returns {import("../ace-internal").Ace.MarkerGroupItem | undefined} 
+     * @param {import("../ace-internal").Ace.Point} pos
+     * @returns {import("../ace-internal").Ace.MarkerGroupItem | undefined}
      */
     getMarkerAtPosition(pos) {
         return this.markers.find(function(marker) {
@@ -46,7 +46,7 @@ class MarkerGroup {
 
     /**
      * Comparator for Array.sort function, which sorts marker definitions by their positions
-     * 
+     *
      * @param {MarkerGroupItem} a first marker.
      * @param {MarkerGroupItem} b second marker.
      * @returns {number} negative number if a should be before b, positive number if b should be before a, 0 otherwise.

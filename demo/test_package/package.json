@@ -1,0 +1,16 @@
+{
+  "name": "ace-test-package",
+  "version": "1.0.0",
+  "description": "Test package for Ace",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "node index.js"
+  },
+  "dependencies": {
+    "ace-code": "file:../../ace-code-latest.tgz"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.2"
+  }
+}

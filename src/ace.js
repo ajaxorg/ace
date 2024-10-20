@@ -28,7 +28,7 @@ exports.config = require("./config");
 
 /**
  * Embeds the Ace editor into the DOM, at the element provided by `el`.
- * @param {String | HTMLElement & {env?, value?}} el Either the id of an element, or the element itself
+ * @param {String | HTMLElement & {env?: any, value?: any} | null} [el] Either the id of an element, or the element itself
  * @param {Object } [options] Options for the editor
  * @returns {Editor}
  **/
@@ -86,4 +86,5 @@ exports.Editor = Editor;
 exports.EditSession = EditSession;
 exports.UndoManager = UndoManager;
 exports.VirtualRenderer = Renderer;
-exports.version = exports.config.version;
+var version = exports.config.version;
+exports.version = version;
