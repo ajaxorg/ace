@@ -45,6 +45,7 @@ class EditSession {
         this.$backMarkers = {};
         this.$markerId = 1;
         this.$undoSelect = true;
+        this.prevOp = {};
 
         /** @type {FoldLine[]} */
         this.$foldData = [];
@@ -69,7 +70,12 @@ class EditSession {
             text = new Document(/**@type{string}*/(text));
 
         this.setDocument(text);
+
         this.selection = new Selection(this);
+        this.$onSelectionChange = this.onSelectionChange.bind(this);
+        this.selection.on("changeSelection", this.$onSelectionChange);
+        this.selection.on("changeCursor", this.$onSelectionChange);
+
         this.$bidiHandler = new BidiHandler(this);
 
         config.resetOptions(this);
@@ -77,6 +83,83 @@ class EditSession {
         config._signal("session", this);
 
         this.destroyed = false;
+        this.$initOperationListeners();
+    }
+
+    $initOperationListeners() {
+        this.curOp = null;
+        this.on("change", () => {
+            if (!this.curOp) {
+                this.startOperation();
+                this.curOp.selectionBefore = this.$lastSel;
+            }
+            this.curOp.docChanged = true;
+        }, true);
+        this.on("changeSelection", () => {
+            if (!this.curOp) {
+                this.startOperation();
+                this.curOp.selectionBefore = this.$lastSel;
+            }
+            this.curOp.selectionChanged = true;
+        }, true);
+
+        // Fallback mechanism in case current operation doesn't finish more explicitly.
+        // Triggered, for example, when a consumer makes programmatic changes without invoking endOperation afterwards.
+        this.$operationResetTimer = lang.delayedCall(this.endOperation.bind(this, true));
+    }
+
+    /**
+     * Start an Ace operation, which will then batch all the subsequent changes (to either content or selection) under a single atomic operation.
+     * @param {{command?: {name?: string}, args?: any}|undefined} [commandEvent] Optional name for the operation
+     */
+    startOperation(commandEvent) {
+        if (this.curOp) {
+            if (!commandEvent || this.curOp.command) {
+                return;
+            }
+            this.prevOp = this.curOp;
+        }
+        if (!commandEvent) {
+            commandEvent = {};
+        }
+
+        this.$operationResetTimer.schedule();
+        this.curOp = {
+            command: commandEvent.command || {},
+            args: commandEvent.args
+        };
+        this.curOp.selectionBefore = this.selection.toJSON();
+        this._signal("startOperation", commandEvent);
+    }
+
+    /**
+     * End current Ace operation.
+     * Emits "beforeEndOperation" event just before clearing everything, where the current operation can be accessed through `curOp` property.
+     * @param {any} e 
+     */
+    endOperation(e) {
+        if (this.curOp) {
+            if (e && e.returnValue === false) {
+                this.curOp = null;
+                this._signal("endOperation", e);
+                return;
+            }
+            if (e == true && this.curOp.command && this.curOp.command.name == "mouse") {
+                // When current operation is mousedown, we wait for the mouseup to end the operation.
+                // So during a user selection, we would only end the operation when the final selection is known.
+                return;
+            }
+
+            const currentSelection = this.selection.toJSON();
+            this.curOp.selectionAfter = currentSelection;
+            this.$lastSel = this.selection.toJSON();
+            this.getUndoManager().addSelection(currentSelection);
+
+            this._signal("beforeEndOperation");
+            this.prevOp = this.curOp;
+            this.curOp = null;
+            this._signal("endOperation", e);
+        }
     }
 
     /**
@@ -184,6 +267,10 @@ class EditSession {
 
         this.bgTokenizer.$updateOnChange(delta);
         this._signal("change", delta);
+    }
+
+    onSelectionChange() {
+        this._signal("changeSelection");
     }
 
     /**
@@ -2386,10 +2473,15 @@ class EditSession {
             this.bgTokenizer.cleanup();
             this.destroyed = true;
         }
+        this.endOperation();
         this.$stopWorker();
         this.removeAllListeners();
         if (this.doc) {
             this.doc.off("change", this.$onChange);
+        }
+        if (this.selection) {
+            this.selection.off("changeCursor", this.$onSelectionChange);
+            this.selection.off("changeSelection", this.$onSelectionChange);
         }
         this.selection.detach();
     }
