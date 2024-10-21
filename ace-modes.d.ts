@@ -118,6 +118,14 @@ declare module "ace-code/src/mode/autohotkey" {
     export const Mode: new () => import(".").Ace.SyntaxMode;
 }
 
+declare module "ace-code/src/mode/basic_highlight_rules" {
+    export const BasicHighlightRules: new () => import(".").Ace.HighlightRules;
+}
+
+declare module "ace-code/src/mode/basic" {
+    export const Mode: new () => import(".").Ace.SyntaxMode;
+}
+
 declare module "ace-code/src/mode/batchfile_highlight_rules" {
     export const BatchFileHighlightRules: new () => import(".").Ace.HighlightRules;
 }
@@ -421,6 +429,10 @@ declare module "ace-code/src/mode/flix" {
 }
 
 declare module "ace-code/src/mode/folding/asciidoc" {
+    export const FoldMode: new () => import(".").Ace.Folding;
+}
+
+declare module "ace-code/src/mode/folding/basic" {
     export const FoldMode: new () => import(".").Ace.Folding;
 }
 
