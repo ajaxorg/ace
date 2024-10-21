@@ -428,6 +428,10 @@ export namespace Ace {
          */
         "change": (delta: Delta) => void;
         /**
+         * Emitted when the selection changes.
+         */
+        "changeSelection": () => void;
+        /**
          * Emitted when the tab size changes, via [[EditSession.setTabSize]].
          * @param tabSize
          */
@@ -492,6 +496,16 @@ export namespace Ace {
          **/
         "changeScrollLeft": (scrollLeft: number) => void;
         "changeEditor": (e: { editor: Editor }) => void;
+        /**
+         * Emitted after operation starts.
+         * @param commandEvent event causing the operation
+         */
+        "startOperation": (commandEvent) => void;
+        /**
+         * Emitted after operation finishes.
+         * @param e event causing the finish
+         */
+        "endOperation": (e) => void;
     }
 
     interface EditorEvents {
