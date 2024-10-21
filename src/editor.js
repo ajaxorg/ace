@@ -112,9 +112,8 @@ class Editor {
     }
 
     onStartOperation(commandEvent) {
-        // scrollTop is kept inside of session.curOp only for backwards compatibility reasons
-        this.session.curOp.scrollTop = this.renderer.scrollTop;
         this.curOp = this.session.curOp;
+        this.curOp.scrollTop = this.renderer.scrollTop;
         this.prevOp = this.session.prevOp;
 
         if (!commandEvent) {
