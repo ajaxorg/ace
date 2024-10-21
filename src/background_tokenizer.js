@@ -193,8 +193,8 @@ class BackgroundTokenizer {
         var state = this.states[row - 1];
         // @ts-expect-error TODO: potential wrong argument
         var data = this.tokenizer.getLineTokens(line, state, row);
-
-        if (this.states[row] + "" !== data.state + "") {
+        
+        if (this.states[row] !== data.state) {
             this.states[row] = data.state;
             this.lines[row + 1] = null;
             if (this.currentLine > row + 1)
