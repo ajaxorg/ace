@@ -1,9 +1,5 @@
 "use strict";
-/**
- * @typedef {Behaviour & {[key: string]: any}} IBehaviour
- */
 
-/**@type {any}*/
 var Behaviour;
 Behaviour = function() {
    this.$behaviours = {};
@@ -57,7 +53,7 @@ Behaviour = function() {
     };
 
     /**
-     * 
+     *
      * @param [filter]
      * @returns {{}|*}
      * @this {Behaviour & this}
