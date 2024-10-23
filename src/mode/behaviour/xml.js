@@ -8,6 +8,7 @@ function is(token, type) {
     return token && token.type.lastIndexOf(type + ".xml") > -1;
 }
 
+/**@type {(new() => Partial<import("../../../ace-internal").Ace.Behaviour>)}*/
 var XmlBehaviour = function () {
 
     this.add("string_dquotes", "insertion", function (state, action, editor, session, text) {
@@ -91,7 +92,7 @@ var XmlBehaviour = function () {
                     iterator.stepBackward();
                 }
             }
-            
+
             if (/^\s*>/.test(session.getLine(position.row).slice(position.column)))
                 return;
 

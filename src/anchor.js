@@ -25,7 +25,7 @@ class Anchor {
         else
             this.setPosition(row, column);
     }
-    
+
     /**
      * Returns an object identifying the `row` and `column` position of the current anchor.
      * @returns {import("../ace-internal").Ace.Point}
@@ -42,10 +42,11 @@ class Anchor {
     getDocument() {
         return this.document;
     }
-    
+
     /**
      * Internal function called when `"change"` event fired.
      * @param {import("../ace-internal").Ace.Delta} delta
+     * @internal
      */
     onChange(delta) {
         if (delta.start.row == delta.end.row && delta.start.row != this.row)
@@ -53,7 +54,7 @@ class Anchor {
 
         if (delta.start.row > this.row)
             return;
-            
+
         var point = $getTransformedPoint(delta, {row: this.row, column: this.column}, this.$insertRight);
         this.setPosition(point.row, point.column, true);
     }

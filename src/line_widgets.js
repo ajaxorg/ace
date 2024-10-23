@@ -37,7 +37,7 @@ class LineWidgets {
         var h;
         if (this.lineWidgets)
             h = this.lineWidgets[row] && this.lineWidgets[row].rowCount || 0;
-        else 
+        else
             h = 0;
         if (!this["$useWrapMode"] || !this["$wrapData"][row]) {
             return 1 + h;
@@ -56,14 +56,14 @@ class LineWidgets {
                 screenRows += w.rowCount;
         });
         return screenRows;
-    }    
-    
+    }
+
     $onChangeEditor(e) {
         this.attach(e.editor);
     }
 
     /**
-     * 
+     *
      * @param {Editor} editor
      */
     attach(editor) {
@@ -76,7 +76,7 @@ class LineWidgets {
         this.detach();
         /**@type {Editor} */
         this.editor = editor;
-        
+
         if (editor) {
             editor.widgetManager = this;
             editor.renderer.on("beforeRender", this.measureWidgets);
@@ -87,10 +87,10 @@ class LineWidgets {
         var editor = this.editor;
         if (!editor)
             return;
-        
+
         this.editor = null;
         editor.widgetManager = null;
-        
+
         editor.renderer.off("beforeRender", this.measureWidgets);
         editor.renderer.off("afterRender", this.renderWidgets);
         var lineWidgets = this.session.lineWidgets;
@@ -103,7 +103,7 @@ class LineWidgets {
     }
 
     /**
-     * 
+     *
      * @param e
      * @param {EditSession} session
      */
@@ -134,13 +134,13 @@ class LineWidgets {
     }
 
     /**
-     * 
+     *
      * @param {import("../ace-internal").Ace.Delta} delta
      */
     updateOnChange(delta) {
         var lineWidgets = this.session.lineWidgets;
         if (!lineWidgets) return;
-        
+
         var startRow = delta.start.row;
         var len = delta.end.row - startRow;
 
@@ -166,7 +166,7 @@ class LineWidgets {
             this.$updateRows();
         }
     }
-    
+
     $updateRows() {
         var lineWidgets = this.session.lineWidgets;
         if (!lineWidgets) return;
@@ -186,14 +186,14 @@ class LineWidgets {
     }
 
     /**
-     * 
+     *
      * @param {LineWidget} w
      * @return {LineWidget}
      */
     $registerLineWidget(w) {
         if (!this.session.lineWidgets)
             this.session.lineWidgets = new Array(this.session.getLength());
-        
+
         var old = this.session.lineWidgets[w.row];
         if (old) {
             w.$oldWidget = old;
@@ -202,7 +202,7 @@ class LineWidgets {
                 old._inDocument = false;
             }
         }
-            
+
         this.session.lineWidgets[w.row] = w;
         return w;
     }
@@ -215,9 +215,9 @@ class LineWidgets {
     addLineWidget(w) {
         this.$registerLineWidget(w);
         w.session = this.session;
-        
+
         if (!this.editor) return w;
-        
+
         var renderer = this.editor.renderer;
         if (w.html && !w.el) {
             w.el = dom.createElement("div");
@@ -236,7 +236,7 @@ class LineWidgets {
             w.el.style.zIndex = "5";
             renderer.container.appendChild(w.el);
             w._inDocument = true;
-            
+
             if (!w.coverGutter) {
                 w.el.style.zIndex = "3";
             }
@@ -247,7 +247,7 @@ class LineWidgets {
         if (w.rowCount == null) {
             w.rowCount = w.pixelHeight / renderer.layerConfig.lineHeight;
         }
-        
+
         var fold = this.session.getFoldAt(w.row, 0);
         w.$fold = fold;
         if (fold) {
@@ -257,15 +257,15 @@ class LineWidgets {
             else
                 w.hidden = true;
         }
-            
+
         this.session._emit("changeFold", {data:{start:{row: w.row}}});
-        
+
         this.$updateRows();
         this.renderWidgets(null, renderer);
         this.onWidgetChanged(w);
         return w;
     }
-    
+
     /**
      * @param {LineWidget} w
      */
@@ -298,7 +298,7 @@ class LineWidgets {
     }
 
     /**
-     * 
+     *
      * @param {number} row
      * @return {LineWidget[]}
      */
@@ -315,6 +315,7 @@ class LineWidgets {
 
     /**
      * @param {LineWidget} w
+     * @internal
      */
     onWidgetChanged(w) {
         this.session._changedWidgets.push(w);
@@ -328,7 +329,7 @@ class LineWidgets {
     measureWidgets(e, renderer) {
         var changedWidgets = this.session._changedWidgets;
         var config = renderer.layerConfig;
-        
+
         if (!changedWidgets || !changedWidgets.length) return;
         var min = Infinity;
         for (var i = 0; i < changedWidgets.length; i++) {
@@ -341,14 +342,14 @@ class LineWidgets {
                 w._inDocument = true;
                 renderer.container.appendChild(w.el);
             }
-            
+
             w.h = w.el.offsetHeight;
-            
+
             if (!w.fixedWidth) {
                 w.w = w.el.offsetWidth;
                 w.screenWidth = Math.ceil(w.w / config.characterWidth);
             }
-            
+
             var rowCount = w.h / config.lineHeight;
             if (w.coverLine) {
                 rowCount -= this.session.getRowLineCount(w.row);
@@ -379,10 +380,10 @@ class LineWidgets {
             return;
         var first = Math.min(this.firstRow, config.firstRow);
         var last = Math.max(this.lastRow, config.lastRow, lineWidgets.length);
-        
+
         while (first > 0 && !lineWidgets[first])
             first--;
-        
+
         this.firstRow = config.firstRow;
         this.lastRow = config.lastRow;
 
@@ -403,16 +404,16 @@ class LineWidgets {
             if (!w.coverLine)
                 top += config.lineHeight * this.session.getRowLineCount(w.row);
             w.el.style.top = top - config.offset + "px";
-            
+
             var left = w.coverGutter ? 0 : renderer.gutterWidth;
             if (!w.fixedWidth)
                 left -= renderer.scrollLeft;
             w.el.style.left = left + "px";
-            
+
             if (w.fullWidth && w.screenWidth) {
                 w.el.style.minWidth = config.width + 2 * config.padding + "px";
             }
-            
+
             if (w.fixedWidth) {
                 w.el.style.right = renderer.scrollBar.getWidth() + "px";
             } else {
@@ -420,7 +421,7 @@ class LineWidgets {
             }
         }
     }
-    
+
 }
 
 

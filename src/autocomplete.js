@@ -3,6 +3,7 @@
  * @typedef {import("./editor").Editor} Editor
  * @typedef {import("../ace-internal").Ace.CompletionProviderOptions} CompletionProviderOptions
  * @typedef {import("../ace-internal").Ace.CompletionOptions} CompletionOptions
+ * @typedef {import("../ace-internal").Ace.Position} Position
  */
 var HashHandler = require("./keyboard/hash_handler").HashHandler;
 var AcePopup = require("./autocomplete/popup").AcePopup;
@@ -31,7 +32,7 @@ var preventParentScroll = require("./lib/scroll").preventParentScroll;
  * @property {string} [command] - A command to be executed after the completion is inserted (experimental)
  * @property {string} [snippet] - a text snippet that would be inserted when the completion is selected
  * @property {string} [value] - The text that would be inserted when selecting this completion.
- * @property {import("../ace-internal").Ace.Completer & {insertMatch:(editor: Editor, data: Completion) => void}} [completer]
+ * @property {import("../ace-internal").Ace.Completer} [completer]
  * @property {boolean} [hideInlinePreview]
  * @export
  */
@@ -76,10 +77,11 @@ class Autocomplete {
         this.keyboardHandler.bindKeys(this.commands);
         this.parentNode = null;
         this.setSelectOnHover = false;
+        /**@private*/
         this.hasSeen = new Set();
 
         /**
-         *  @property {Boolean} showLoadingState - A boolean indicating whether the loading states of the Autocompletion should be shown to the end-user. If enabled 
+         *  @property {Boolean} showLoadingState - A boolean indicating whether the loading states of the Autocompletion should be shown to the end-user. If enabled
          * it shows a loading indicator on the popup while autocomplete is loading.
          * 
          * Experimental: This visualisation is not yet considered stable and might change in the future.
@@ -255,6 +257,10 @@ class Autocomplete {
         });
         this.$elements = null;
     }
+
+    /**
+     * @internal
+     */
     onLayoutChange() {
         if (!this.popup.isOpen) return this.unObserveLayoutChanges();
         this.$updatePopupPosition();
@@ -470,7 +476,7 @@ class Autocomplete {
     /**
      * This is the entry point for the autocompletion class, triggers the actions which collect and display suggestions
      * @param {Editor} editor
-     * @param {CompletionOptions} options
+     * @param {CompletionOptions} [options]
      */
     showPopup(editor, options) {
         if (this.editor)
@@ -493,6 +499,11 @@ class Autocomplete {
         this.updateCompletions(false, options);
     }
 
+    /**
+     *
+     * @param {{pos: Position, prefix: string}} [initialPosition]
+     * @return {CompletionProvider}
+     */
     getCompletionProvider(initialPosition) {
         if (!this.completionProvider)
             this.completionProvider = new CompletionProvider(initialPosition);
@@ -510,7 +521,7 @@ class Autocomplete {
 
     /**
      * @param {boolean} keepPopupPosition
-     * @param {CompletionOptions} options
+     * @param {CompletionOptions} [options]
      */
     updateCompletions(keepPopupPosition, options) {
         if (keepPopupPosition && this.base && this.completions) {
@@ -705,7 +716,11 @@ class Autocomplete {
         if (el.parentNode)
             el.parentNode.removeChild(el);
     }
-    
+
+    /**
+     * @param e
+     * @internal
+     */
     onTooltipClick(e) {
         var a = e.target;
         while (a && a != this.tooltipNode) {
@@ -731,6 +746,30 @@ class Autocomplete {
             this.editor.completer = null;
         }
         this.inlineRenderer = this.popup = this.editor = null;
+    }
+
+    /**
+     * @param {Editor} editor
+     * @return {Autocomplete}
+     */
+    static for(editor) {
+        if (editor.completer instanceof Autocomplete) {
+            return editor.completer;
+        }
+        if (editor.completer) {
+            editor.completer.destroy();
+            editor.completer = null;
+        }
+        if (config.get("sharedPopups")) {
+            if (!Autocomplete["$sharedInstance"])
+                Autocomplete["$sharedInstance"] = new Autocomplete();
+            editor.completer = Autocomplete["$sharedInstance"];
+        } else {
+            editor.completer = new Autocomplete();
+            editor.once("destroy", destroyCompleter);
+        }
+        // @ts-expect-error
+        return editor.completer;
     }
 
 }
@@ -762,26 +801,6 @@ Autocomplete.prototype.commands = {
     "PageDown": function(editor) { editor.completer.popup.gotoPageDown(); }
 };
 
-
-Autocomplete.for = function(editor) {
-    if (editor.completer instanceof Autocomplete) {
-        return editor.completer;
-    }
-    if (editor.completer) {
-        editor.completer.destroy();
-        editor.completer = null;
-    }
-    if (config.get("sharedPopups")) {
-        if (!Autocomplete["$sharedInstance"])
-            Autocomplete["$sharedInstance"] = new Autocomplete();
-        editor.completer = Autocomplete["$sharedInstance"];
-    } else {
-        editor.completer = new Autocomplete();
-        editor.once("destroy", destroyCompleter);
-    }
-    return editor.completer;
-};
-
 Autocomplete.startCommand = {
     name: "startAutocomplete",
     exec: function(editor, options) {
@@ -803,7 +822,7 @@ class CompletionProvider {
     
 
     /**
-     * @param {{pos: import("../ace-internal").Ace.Position, prefix: string}} initialPosition
+     * @param {{pos: Position, prefix: string}} [initialPosition]
      */
     constructor(initialPosition) {
         this.initialPosition = initialPosition;

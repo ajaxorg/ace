@@ -91,7 +91,7 @@ oop.implement(ScrollBar.prototype, EventEmitter);
  * @constructor
  **/
 class VScrollBar extends ScrollBar {
-    
+
     constructor(parent, renderer) {
         super(parent, '-v');
         this.scrollTop = 0;
@@ -102,9 +102,10 @@ class VScrollBar extends ScrollBar {
         this.inner.style.width = this.element.style.width = (this.width || 15) + "px";
         this.$minWidth = 0;
     }
-    
+
     /**
      * Emitted when the scroll thumb dragged or scrollbar canvas clicked.
+     * @internal
      **/
     onMouseDown(eType, e) {
         if (eType !== "mousedown") return;
@@ -238,9 +239,10 @@ class HScrollBar extends ScrollBar {
         this.inner.style.height = this.element.style.height = (this.height || 12) + "px";
         this.renderer = renderer;
     }
-    
+
     /**
      * Emitted when the scroll thumb dragged or scrollbar canvas clicked.
+     * @internal
      **/
     onMouseDown(eType, e) {
         if (eType !== "mousedown") return;

@@ -68,7 +68,7 @@ class IncrementalSearch extends Search {
         this.$options.backwards = backwards;
         editor.keyBinding.addKeyboardHandler(this.$keyboardHandler);
         // we need to completely intercept paste, just registering an event handler does not work
-        this.$originalEditorOnPaste = editor.onPaste; 
+        this.$originalEditorOnPaste = editor.onPaste;
         editor.onPaste = this.onPaste.bind(this);
         this.$mousedownHandler = editor.on('mousedown', this.onMouseDown.bind(this));
         this.selectionFix(editor);
@@ -207,6 +207,9 @@ class IncrementalSearch extends Search {
         });
     }
 
+    /**
+     * @internal
+     */
     onMouseDown(evt) {
         // when mouse interaction happens then we quit incremental search
         this.deactivate();
@@ -215,6 +218,7 @@ class IncrementalSearch extends Search {
 
     /**
      * @param {string} text
+     * @internal
      */
     onPaste(text) {
         this.addString(text);

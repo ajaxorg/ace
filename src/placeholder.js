@@ -6,7 +6,7 @@ var Range = require("./range").Range;
 var EventEmitter = require("./lib/event_emitter").EventEmitter;
 var oop = require("./lib/oop");
 
-class PlaceHolder { 
+class PlaceHolder {
     /**
      * @param {EditSession} session
      * @param {Number} length
@@ -51,7 +51,7 @@ class PlaceHolder {
         var _self = this;
         var doc = this.doc;
         var session = this.session;
-        
+
         this.selectionBefore = session.selection.toJSON();
         if (session.selection.inMultiSelectMode)
             session.selection.toSingleRange();
@@ -70,7 +70,7 @@ class PlaceHolder {
         });
         session.setUndoSelect(false);
     }
-    
+
     /**
      * PlaceHolder.showOtherMarkers()
      *
@@ -86,7 +86,7 @@ class PlaceHolder {
             anchor.markerId = session.addMarker(new Range(anchor.row, anchor.column, anchor.row, anchor.column+_self.length), _self.othersClass, null, false);
         });
     }
-    
+
     /**
      * PlaceHolder.hideOtherMarkers()
      *
@@ -103,14 +103,15 @@ class PlaceHolder {
 
     /**
      * PlaceHolder@onUpdate(e)
-     * 
+     *
      * Emitted when the place holder updates.
      * @param {import("../ace-internal").Ace.Delta} delta
+     * @internal
      */
     onUpdate(delta) {
         if (this.$updating)
             return this.updateAnchors(delta);
-            
+
         var range = delta;
         if (range.start.row !== range.end.row) return;
         if (range.start.row !== this.pos.row) return;
@@ -118,9 +119,9 @@ class PlaceHolder {
         var lengthDiff = delta.action === "insert" ? range.end.column - range.start.column : range.start.column - range.end.column;
         var inMainRange = range.start.column >= this.pos.column && range.start.column <= this.pos.column + this.length + 1;
         var distanceFromStart = range.start.column - this.pos.column;
-        
+
         this.updateAnchors(delta);
-        
+
         if (inMainRange)
             this.length += lengthDiff;
 
@@ -139,7 +140,7 @@ class PlaceHolder {
                 }
             }
         }
-        
+
         this.$updating = false;
         this.updateMarkers();
     }
@@ -153,7 +154,7 @@ class PlaceHolder {
             this.others[i].onChange(delta);
         this.updateMarkers();
     }
-    
+
     updateMarkers() {
         if (this.$updating)
             return;
@@ -171,9 +172,10 @@ class PlaceHolder {
 
     /**
      * PlaceHolder@onCursorChange(e)
-     * 
+     *
      * Emitted when the cursor changes.
      * @param {any} [event]
+     * @internal
      */
     onCursorChange(event) {
         if (this.$updating || !this.session) return;
@@ -186,13 +188,13 @@ class PlaceHolder {
             this._emit("cursorLeave", event);
         }
     }
-    
+
     /**
      * PlaceHolder.detach()
-     * 
+     *
      * TODO
      *
-     **/    
+     **/
     detach() {
         this.session.removeMarker(this.pos && this.pos.markerId);
         this.hideOtherMarkers();
@@ -201,10 +203,10 @@ class PlaceHolder {
         this.session.setUndoSelect(true);
         this.session = null;
     }
-    
+
     /**
      * PlaceHolder.cancel()
-     * 
+     *
      * TODO
      *
      **/
