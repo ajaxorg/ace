@@ -10,6 +10,7 @@
         return token && token.type.lastIndexOf(type + ".xml") > -1;
     }
 
+/**@type {(new() => Partial<import("../../../ace-internal").Ace.Behaviour>)}*/
     var LiquidBehaviour = function () {
         XmlBehaviour.call(this);
         this.add("autoBraceTagClosing","insertion", function (state, action, editor, session, text) {

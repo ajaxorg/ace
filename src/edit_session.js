@@ -54,10 +54,10 @@ class EditSession {
             return this.join("\n");
         };
 
-        // Set default background tokenizer with Text mode until editor session mode is set 
+        // Set default background tokenizer with Text mode until editor session mode is set
         this.bgTokenizer = new BackgroundTokenizer((new TextMode()).getTokenizer(), this);
 
-        
+
         var _self = this;
         this.bgTokenizer.on("update", function(e) {
             _self._signal("tokenizerUpdate", e);
@@ -135,7 +135,7 @@ class EditSession {
     /**
      * End current Ace operation.
      * Emits "beforeEndOperation" event just before clearing everything, where the current operation can be accessed through `curOp` property.
-     * @param {any} e 
+     * @param {any} e
      */
     endOperation(e) {
         if (this.curOp) {
@@ -235,14 +235,19 @@ class EditSession {
             this.bgTokenizer.start(0);
     }
 
+    /**
+     * @param e
+     * @internal
+     */
     onChangeFold(e) {
         var fold = e.data;
         this.$resetRowCache(fold.start.row);
     }
 
     /**
-     * 
+     *
      * @param {Delta} delta
+     * @internal
      */
     onChange(delta) {
         this.$modified = true;
@@ -261,7 +266,7 @@ class EditSession {
             }
             this.$undoManager.add(delta, this.mergeUndoDeltas);
             this.mergeUndoDeltas = true;
-            
+
             this.$informUndoManager.schedule();
         }
 
@@ -300,7 +305,7 @@ class EditSession {
         undoManager.$redoStack = session.history.redo;
         undoManager.mark = session.history.mark;
         undoManager.$rev = session.history.rev;
-    
+
         const editSession = new EditSession(session.value);
         session.folds.forEach(function(fold) {
           editSession.addFold("...", Range.fromPoints(fold.start, fold.end));
@@ -312,10 +317,10 @@ class EditSession {
         editSession.setScrollTop(session.scrollTop);
         editSession.setUndoManager(undoManager);
         editSession.selection.fromJSON(session.selection);
-    
+
         return editSession;
     }
- 
+
     /**
      * Returns the current edit session.
      * @method toJSON
@@ -336,7 +341,7 @@ class EditSession {
             value: this.doc.getValue()
         };
     }
- 
+
     /**
      * Returns the current [[Document `Document`]] as a string.
      * @method toString
@@ -409,10 +414,10 @@ class EditSession {
      **/
     setUndoManager(undoManager) {
         this.$undoManager = undoManager;
-        
+
         if (this.$informUndoManager)
             this.$informUndoManager.cancel();
-        
+
         if (undoManager) {
             var self = this;
             undoManager.addSession(this);
@@ -462,7 +467,7 @@ class EditSession {
     setUseSoftTabs(val) {
         this.setOption("useSoftTabs", val);
     }
-    
+
     /**
      * Returns `true` if soft tabs are being used, `false` otherwise.
      * @returns {Boolean}
@@ -861,13 +866,14 @@ class EditSession {
 
     /**
      * Reloads all the tokens on the current session. This function calls [[BackgroundTokenizer.start `BackgroundTokenizer.start ()`]] to all the rows; it also emits the `'tokenizerUpdate'` event.
+     * @internal
      **/
     onReloadTokenizer(e) {
         var rows = e.data;
         this.bgTokenizer.start(rows.first);
         this._signal("tokenizerUpdate", e);
     }
-    
+
     /**
      * Sets a new text mode for the `EditSession`. This method also emits the `'changeMode'` event. If a [[BackgroundTokenizer `BackgroundTokenizer`]] is set, the `'tokenizerUpdate'` event is also emitted.
      * @param {SyntaxMode | string} mode Set a new text mode
@@ -922,9 +928,9 @@ class EditSession {
     $onChangeMode(mode, $isPlaceholder) {
         if (!$isPlaceholder)
             this.$modeId = mode.$id;
-        if (this.$mode === mode) 
+        if (this.$mode === mode)
             return;
-            
+
         var oldMode = this.$mode;
         this.$mode = mode;
 
@@ -948,7 +954,7 @@ class EditSession {
         /**@type {RegExp}*/
         this.nonTokenRe = mode.nonTokenRe;
 
-        
+
         if (!$isPlaceholder) {
             // experimental method, used by c9 findiniles
             if (mode.attachToSession)
@@ -989,7 +995,7 @@ class EditSession {
      * @param {Number} scrollTop The new scroll top value
      **/
     setScrollTop(scrollTop) {
-        // TODO: should we force integer lineheight instead? scrollTop = Math.round(scrollTop); 
+        // TODO: should we force integer lineheight instead? scrollTop = Math.round(scrollTop);
         if (this.$scrollTop === scrollTop || isNaN(scrollTop))
             return;
 
@@ -1032,7 +1038,7 @@ class EditSession {
      **/
     getScreenWidth() {
         this.$computeWidth();
-        if (this.lineWidgets) 
+        if (this.lineWidgets)
             return Math.max(this.getLineWidgetMaxWidth(), this.screenWidth);
         return this.screenWidth;
     }
@@ -1144,7 +1150,7 @@ class EditSession {
     remove(range) {
         return this.doc.remove(range);
     }
-    
+
     /**
      * Removes a range of full lines. This method also triggers the `'change'` event.
      * @param {Number} firstRow The first row to be removed
@@ -1218,14 +1224,14 @@ class EditSession {
     /**
      * Enables or disables highlighting of the range where an undo occurred.
      * @param {Boolean} enable If `true`, selects the range of the reinserted change
-     *      
+     *
      **/
     setUndoSelect(enable) {
         this.$undoSelect = enable;
     }
 
     /**
-     * 
+     *
      * @param {Delta[]} deltas
      * @param {boolean} [isUndo]
      * @return {Range}
@@ -1248,7 +1254,7 @@ class EditSession {
                 }
                 continue;
             }
-            
+
             if (isInsert(delta)) {
                 point = delta.start;
                 if (range.compare(point.row, point.column) == -1) {
@@ -1381,7 +1387,7 @@ class EditSession {
     }
 
     /**
-     * 
+     *
      * @param {number} firstRow
      * @param {number} lastRow
      * @param [dir]
@@ -1411,7 +1417,7 @@ class EditSession {
             x.end.row += diff;
             return x;
         });
-        
+
         var lines = dir == 0
             ? this.doc.getLines(firstRow, lastRow)
             : this.doc.removeFullLines(firstRow, lastRow);
@@ -1521,7 +1527,7 @@ class EditSession {
         }
         return range;
     }
-    
+
     /**
      * Sets whether or not line wrapping is enabled. If `useWrapMode` is different than the current value, the `'changeWrapMode'` event is emitted.
      * @param {Boolean} useWrapMode Enable (or disable) wrap mode
@@ -1597,7 +1603,7 @@ class EditSession {
     }
 
     /**
-     * 
+     *
      * @param {number} wrapLimit
      * @param {number} [min]
      * @param {number} [max]
@@ -1620,7 +1626,7 @@ class EditSession {
     getWrapLimit() {
         return this.$wrapLimit;
     }
-    
+
     /**
      * Sets the line length for soft wrap in the editor. Lines will break
      *  at a minimum of the given length minus 20 chars and at a maximum
@@ -1630,7 +1636,7 @@ class EditSession {
     setWrapLimit(limit) {
         this.setWrapLimitRange(limit, limit);
     }
-    
+
     /**
      * Returns an object that defines the minimum and maximum of the wrap limit; it looks something like this:
      *
@@ -1658,7 +1664,7 @@ class EditSession {
         var lastRow = end.row;
         var len = lastRow - firstRow;
         var removedFolds = null;
-        
+
         this.$updating = true;
         if (len != 0) {
             if (action === "remove") {
@@ -2053,13 +2059,13 @@ class EditSession {
         var h = 1;
         if (this.lineWidgets)
             h += this.lineWidgets[row] && this.lineWidgets[row].rowCount || 0;
-        
+
         if (!this.$useWrapMode || !this.$wrapData[row])
             return h;
         else
             return this.$wrapData[row].length + h;
     }
-    
+
     /**
      * @param {Number} row
      * @returns {Number}
@@ -2351,7 +2357,7 @@ class EditSession {
                 wrapIndent = screenRowOffset > 0 ? wrapRow.indent : 0;
             }
         }
-        
+
         if (this.lineWidgets && this.lineWidgets[row] && this.lineWidgets[row].rowsAbove)
             screenRow += this.lineWidgets[row].rowsAbove;
 
@@ -2434,7 +2440,7 @@ class EditSession {
             if (!maxScreenColumn)
                 maxScreenColumn = Infinity;
             screenColumn = screenColumn || 0;
-            
+
             var c, column;
             for (column = 0; column < str.length; column++) {
                 c = str.charAt(column);
@@ -2448,7 +2454,7 @@ class EditSession {
                     break;
                 }
             }
-            
+
             return [screenColumn, column];
         };
     }
@@ -2522,7 +2528,7 @@ EditSession.prototype.$wrapLimitRange = {
     max : null
 };
 /**
- * 
+ *
  * @type {null | import("../ace-internal").Ace.LineWidget[]}
  */
 EditSession.prototype.lineWidgets = null;
@@ -2619,7 +2625,7 @@ config.defineOptions(EditSession.prototype, "session", {
             return "off";
         },
         handlesSet: true
-    },    
+    },
     wrapMethod: {
         /**
          * @param {"code"|"text"|"auto"|boolean} val
@@ -2649,7 +2655,7 @@ config.defineOptions(EditSession.prototype, "session", {
                 this.setUseWrapMode(true);
             }
         },
-        initialValue: true 
+        initialValue: true
     },
     firstLineNumber: {
         set: function() {this._signal("changeBreakpoint");},

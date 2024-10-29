@@ -4,6 +4,8 @@ exports.last = function(a) {
     return a[a.length - 1];
 };
 
+
+/** @param {string} string */
 exports.stringReverse = function(string) {
     return string.split("").reverse().join("");
 };
@@ -30,8 +32,13 @@ exports.stringTrimLeft = function (string) {
 exports.stringTrimRight = function (string) {
     return string.replace(trimEndRegexp, '');
 };
-
+/**
+ * @template T
+ * @param {T} obj
+ * @return {T}
+ */
 exports.copyObject = function(obj) {
+    /** @type Object*/
     var copy = {};
     for (var key in obj) {
         copy[key] = obj[key];
@@ -44,7 +51,7 @@ exports.copyArray = function(array){
     for (var i=0, l=array.length; i<l; i++) {
         if (array[i] && typeof array[i] == "object")
             copy[i] = this.copyObject(array[i]);
-        else 
+        else
             copy[i] = array[i];
     }
     return copy;
@@ -128,7 +135,7 @@ exports.deferredCall = function(fcn) {
         timer = null;
         return deferred;
     };
-    
+
     deferred.isPending = function() {
         return timer;
     };
