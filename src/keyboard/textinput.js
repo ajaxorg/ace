@@ -73,6 +73,19 @@ TextInput= function(parentNode, host) {
         
         numberOfExtraLines = number;
     };
+
+    this.setAriaLabel = function() {
+        var ariaLabel = "";
+        if (host.$textInputAriaLabel) {
+            ariaLabel += `${host.$textInputAriaLabel}, `;
+        }
+        if(host.session) {
+            var row = host.session.selection.cursor.row;
+            ariaLabel += nls("text-input.aria-label", "Cursor at row $0", [row + 1]);
+        }
+        text.setAttribute("aria-label", ariaLabel);
+    };
+
     this.setAriaOptions = function(options) {
         if (options.activeDescendant) {
             text.setAttribute("aria-haspopup", "true");
@@ -88,19 +101,11 @@ TextInput= function(parentNode, host) {
         }     
         if (options.setLabel) {
             text.setAttribute("aria-roledescription", nls("text-input.aria-roledescription", "editor"));
-            var arialLabel = "";
-            if (host.$textInputAriaLabel) {
-                arialLabel += `${host.$textInputAriaLabel}, `;
-            }
-            if(host.session) {
-                var row =  host.session.selection.cursor.row;
-                arialLabel += nls("text-input.aria-label", "Cursor at row $0", [row + 1]);
-            }
-            text.setAttribute("aria-label", arialLabel);
+            this.setAriaLabel();
         }
     };
 
-    this.setAriaOptions({role: "textbox"}); 
+    this.setAriaOptions({role: "textbox"});
 
     event.addListener(text, "blur", function(e) {
         if (ignoreFocusEvents) return;
@@ -191,6 +196,9 @@ TextInput= function(parentNode, host) {
         // sync value of textarea
         resetSelection();
     });
+
+    // if cursor changes position, we need to update the label with the correct row
+    host.on("changeSelection", this.setAriaLabel);
     
     // Convert from row,column position to the linear position with respect to the current
     // block of lines in the textarea.
