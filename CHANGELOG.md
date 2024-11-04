@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.36.4](https://github.com/ajaxorg/ace/compare/v1.36.3...v1.36.4) (2024-11-04)
+
+
+### Bug Fixes
+
+* **a11y:** update aria-label of textinput on cursor move ([#5665](https://github.com/ajaxorg/ace/issues/5665)) ([6ff93a8](https://github.com/ajaxorg/ace/commit/6ff93a86fe8c4855789ee7e7c156f7b376c0f935))
+
 ### [1.36.3](https://github.com/ajaxorg/ace/compare/v1.36.2...v1.36.3) (2024-10-21)
 
 
