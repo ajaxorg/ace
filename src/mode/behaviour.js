@@ -53,7 +53,7 @@ Behaviour = function() {
     };
 
     /**
-     * 
+     *
      * @param [filter]
      * @returns {{}|*}
      * @this {Behaviour & this}

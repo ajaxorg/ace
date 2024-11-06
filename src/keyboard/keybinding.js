@@ -85,7 +85,7 @@ class KeyBinding {
     getKeyboardHandler() {
         return this.$handlers[this.$handlers.length - 1];
     }
-    
+
     getStatusText() {
         var data = this.$data;
         var editor = data.editor;
@@ -106,7 +106,7 @@ class KeyBinding {
             );
             if (!toExecute || !toExecute.command)
                 continue;
-            
+
             // allow keyboardHandler to consume keys
             if (toExecute.command == "null") {
                 success = true;
@@ -115,7 +115,7 @@ class KeyBinding {
                 success = commands.exec(toExecute.command, this.$editor, toExecute.args, e);
             }
             // do not stop input events to not break repeating
-            if (success && e && hashId != -1 && 
+            if (success && e && hashId != -1 &&
                 toExecute["passEvent"] != true && toExecute.command["passEvent"] != true
             ) {
                 event.stopEvent(e);
@@ -123,15 +123,15 @@ class KeyBinding {
             if (success)
                 break;
         }
-        
+
         if (!success && hashId == -1) {
             toExecute = {command: "insertstring"};
             success = commands.exec("insertstring", this.$editor, keyString);
         }
-        
+
         if (success && this.$editor._signal)
             this.$editor._signal("keyboardActivity", toExecute);
-        
+
         return success;
     }
 

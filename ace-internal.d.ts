@@ -473,6 +473,10 @@ export namespace Ace {
          **/
         "changeScrollLeft": (scrollLeft: number) => void;
         "changeEditor": (e: { editor?: Editor, oldEditor?: Editor }) => void;
+        "changeSelection": () => void;
+        "startOperation": (op?: { command?: { name?: string }, args?: any }) => void;
+        "endOperation": (op?: any) => void;
+        "beforeEndOperation": () => void;
     }
 
     interface EditorEvents {

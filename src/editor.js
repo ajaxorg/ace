@@ -48,9 +48,8 @@ class Editor {
      **/
     constructor(renderer, session, options) {
         /**@type{EditSession}*/this.session;
-        
         this.$toDestroy = [];
-        
+
         var container = renderer.getContainerElement();
         /**@type {HTMLElement & {env?:any, value?:any}}*/
         this.container = container;
@@ -99,61 +98,42 @@ class Editor {
     $initOperationListeners() {
         this.commands.on("exec", this.startOperation.bind(this), true);
         this.commands.on("afterExec", this.endOperation.bind(this), true);
-
-        this.$opResetTimer = lang.delayedCall(this.endOperation.bind(this, true));
-        
-        // todo: add before change events?
-        this.on("change", function() {
-            if (!this.curOp) {
-                this.startOperation();
-                this.curOp.selectionBefore = this.$lastSel;
-            }
-            this.curOp.docChanged = true;
-        }.bind(this), true);
-        
-        this.on("changeSelection", function() {
-            if (!this.curOp) {
-                this.startOperation();
-                this.curOp.selectionBefore = this.$lastSel;
-            }
-            this.curOp.selectionChanged = true;
-        }.bind(this), true);
     }
 
     startOperation(commandEvent) {
-        if (this.curOp) {
-            if (!commandEvent || this.curOp.command)
-                return;
-            this.prevOp = this.curOp;
-        }
-        if (!commandEvent) {
-            this.previousCommand = null;
-            commandEvent = {};
-        }
-
-        this.$opResetTimer.schedule();
-        /**
-         * @type {{[key: string]: any;}}
-         */
-        this.curOp = this.session.curOp = {
-            command: commandEvent.command || {},
-            args: commandEvent.args,
-            scrollTop: this.renderer.scrollTop
-        };
-        this.curOp.selectionBefore = this.selection.toJSON();
+        this.session.startOperation(commandEvent);
     }
 
-    /** 
+    /**
      * @arg e
      */
     endOperation(e) {
+        this.session.endOperation(e);
+    }
+
+    onStartOperation(commandEvent) {
+        this.curOp = this.session.curOp;
+        this.curOp.scrollTop = this.renderer.scrollTop;
+        this.prevOp = this.session.prevOp;
+
+        if (!commandEvent) {
+            this.previousCommand = null;
+        }
+    }
+
+    /**
+     * @arg e
+     */
+    onEndOperation(e) {
         if (this.curOp && this.session) {
-            if (e && e.returnValue === false || !this.session)
-                return (this.curOp = null);
-            if (e == true && this.curOp.command && this.curOp.command.name == "mouse")
+            if (e && e.returnValue === false) {
+                this.curOp = null;
                 return;
+            }
+
             this._signal("beforeEndOperation");
             if (!this.curOp) return;
+
             var command = this.curOp.command;
             var scrollIntoView = command && command.scrollIntoView;
             if (scrollIntoView) {
@@ -181,18 +161,14 @@ class Editor {
                 if (scrollIntoView == "animate")
                     this.renderer.animateScrolling(this.curOp.scrollTop);
             }
-            var sel = this.selection.toJSON();
-            this.curOp.selectionAfter = sel;
-            this.$lastSel = this.selection.toJSON();
-            
-            // console.log(this.$lastSel+"  endOP")
-            this.session.getUndoManager().addSelection(sel);
+
+            this.$lastSel = this.session.selection.toJSON();
             this.prevOp = this.curOp;
             this.curOp = null;
         }
     }
 
-    /** 
+    /**
      * @param e
      */
     $historyTracker(e) {
@@ -260,7 +236,9 @@ class Editor {
     getKeyboardHandler() {
         return this.keyBinding.getKeyboardHandler();
     }
-    
+
+
+
     /**
      * Sets a new editsession to use. This method also emits the `'changeSession'` event.
      * @param {EditSession} [session] The new session to use
@@ -268,7 +246,7 @@ class Editor {
     setSession(session) {
         if (this.session == session)
             return;
-        
+
         // make sure operationEnd events are not emitted to wrong session
         if (this.curOp) this.endOperation();
         this.curOp = {};
@@ -289,6 +267,8 @@ class Editor {
             this.session.off("changeOverwrite", this.$onCursorChange);
             this.session.off("changeScrollTop", this.$onScrollTopChange);
             this.session.off("changeScrollLeft", this.$onScrollLeftChange);
+            this.session.off("startOperation", this.$onStartOperation);
+            this.session.off("endOperation", this.$onEndOperation);
 
             var selection = this.session.getSelection();
             selection.off("changeCursor", this.$onCursorChange);
@@ -300,56 +280,61 @@ class Editor {
             this.$onDocumentChange = this.onDocumentChange.bind(this);
             session.on("change", this.$onDocumentChange);
             this.renderer.setSession(session);
-    
+
             this.$onChangeMode = this.onChangeMode.bind(this);
             session.on("changeMode", this.$onChangeMode);
-    
+
             this.$onTokenizerUpdate = this.onTokenizerUpdate.bind(this);
             session.on("tokenizerUpdate", this.$onTokenizerUpdate);
-    
+
             this.$onChangeTabSize = this.renderer.onChangeTabSize.bind(this.renderer);
             session.on("changeTabSize", this.$onChangeTabSize);
-    
+
             this.$onChangeWrapLimit = this.onChangeWrapLimit.bind(this);
             session.on("changeWrapLimit", this.$onChangeWrapLimit);
-    
+
             this.$onChangeWrapMode = this.onChangeWrapMode.bind(this);
             session.on("changeWrapMode", this.$onChangeWrapMode);
-    
+
             this.$onChangeFold = this.onChangeFold.bind(this);
             session.on("changeFold", this.$onChangeFold);
-    
+
             this.$onChangeFrontMarker = this.onChangeFrontMarker.bind(this);
             this.session.on("changeFrontMarker", this.$onChangeFrontMarker);
-    
+
             this.$onChangeBackMarker = this.onChangeBackMarker.bind(this);
             this.session.on("changeBackMarker", this.$onChangeBackMarker);
-    
+
             this.$onChangeBreakpoint = this.onChangeBreakpoint.bind(this);
             this.session.on("changeBreakpoint", this.$onChangeBreakpoint);
-    
+
             this.$onChangeAnnotation = this.onChangeAnnotation.bind(this);
             this.session.on("changeAnnotation", this.$onChangeAnnotation);
-    
+
             this.$onCursorChange = this.onCursorChange.bind(this);
             this.session.on("changeOverwrite", this.$onCursorChange);
-    
+
             this.$onScrollTopChange = this.onScrollTopChange.bind(this);
             this.session.on("changeScrollTop", this.$onScrollTopChange);
-    
+
             this.$onScrollLeftChange = this.onScrollLeftChange.bind(this);
             this.session.on("changeScrollLeft", this.$onScrollLeftChange);
-    
+
             this.selection = session.getSelection();
             this.selection.on("changeCursor", this.$onCursorChange);
-    
+
             this.$onSelectionChange = this.onSelectionChange.bind(this);
             this.selection.on("changeSelection", this.$onSelectionChange);
-    
+
+            this.$onStartOperation = this.onStartOperation.bind(this);
+            this.session.on("startOperation", this.$onStartOperation);
+            this.$onEndOperation = this.onEndOperation.bind(this);
+            this.session.on("endOperation", this.$onEndOperation);
+
             this.onChangeMode();
-    
+
             this.onCursorChange();
-    
+
             this.onScrollTopChange();
             this.onScrollLeftChange();
             this.onSelectionChange();
@@ -368,12 +353,12 @@ class Editor {
             session: session,
             oldSession: oldSession
         });
-        
+
         this.curOp = null;
-        
+
         oldSession && oldSession._signal("changeEditor", {oldEditor: this});
         session && session._signal("changeEditor", {editor: this});
-        
+
         if (session && !session.destroyed)
             session.bgTokenizer.scheduleStart();
     }
@@ -474,17 +459,16 @@ class Editor {
 
     /**
      * Gets the current font size of the editor text.
-     * @return {string}
+     * @return {string | number}
      */
     getFontSize() {
-        // @ts-expect-error
         return this.getOption("fontSize") ||
            dom.computedStyle(this.container).fontSize;
     }
 
     /**
      * Set a new font size (in pixels) for the editor text.
-     * @param {String} size A font size ( _e.g._ "12px")
+     * @param {String | number} size A font size ( _e.g._ "12px")
      **/
     setFontSize(size) {
         this.setOption("fontSize", size);
@@ -629,7 +613,7 @@ class Editor {
         this.renderer.updateLines(delta.start.row, lastRow, wrap);
 
         this._signal("change", delta);
-        
+
         // Update cursor because tab characters can influence the cursor position.
         this.$cursorChange();
     }
@@ -731,9 +715,9 @@ class Editor {
         var startColumn = selection.start.column;
         var endColumn = selection.end.column;
         var line = session.getLine(selection.start.row);
-        
+
         var needle = line.substring(startColumn, endColumn);
-        // maximum allowed size for regular expressions in 32000, 
+        // maximum allowed size for regular expressions in 32000,
         // but getting close to it has significant impact on the performance
         if (needle.length > 5000 || !/[\w\d]/.test(needle))
             return;
@@ -743,11 +727,11 @@ class Editor {
             caseSensitive: true,
             needle: needle
         });
-        
+
         var wordWithBoundary = line.substring(startColumn - 1, endColumn + 1);
         if (!re.test(wordWithBoundary))
             return;
-        
+
         return re;
     }
 
@@ -764,7 +748,7 @@ class Editor {
     onChangeBackMarker() {
         this.renderer.updateBackMarkers();
     }
-    
+
     /**
      * @internal
      */
@@ -814,7 +798,7 @@ class Editor {
         this.renderer.updateFull();
     }
 
-    
+
     /**
      * Returns the string of text currently highlighted.
      * @returns {String}
@@ -822,8 +806,8 @@ class Editor {
     getSelectedText() {
         return this.session.getTextRange(this.getSelectionRange());
     }
-    
-  
+
+
     /**
      * Returns the string of text currently highlighted.
      * @returns {String}
@@ -877,12 +861,12 @@ class Editor {
     }
 
     /**
-     * 
+     *
      * @param e
      * @returns {boolean}
      */
     $handlePaste(e) {
-        if (typeof e == "string") 
+        if (typeof e == "string")
             e = {text: e};
         this._signal("paste", e);
         var text = e.text;
@@ -901,23 +885,23 @@ class Editor {
         } else {
             var lines = text.split(/\r\n|\r|\n/);
             var ranges = this.selection.rangeList.ranges;
-    
+
             var isFullLine = lines.length == 2 && (!lines[0] || !lines[1]);
             if (lines.length != ranges.length || isFullLine)
                 return this.commands.exec("insertstring", this, text);
-    
+
             for (var i = ranges.length; i--;) {
                 var range = ranges[i];
                 if (!range.isEmpty())
                     session.remove(range);
-    
+
                 session.insert(range.start, lines[i]);
             }
         }
     }
 
     /**
-     * 
+     *
      * @param {string | string[]} command
      * @param [args]
      * @return {boolean}
@@ -951,7 +935,7 @@ class Editor {
 
             }
         }
-        
+
         if (text == "\t")
             text = this.session.getTabString();
 
@@ -1022,7 +1006,7 @@ class Editor {
         for (var i = 0; i < ranges.length; i++) {
             var startRow = ranges[i].start.row;
             var endRow = ranges[i].end.row;
-            
+
             for (var row = startRow; row <= endRow; row++) {
                 if (row > 0) {
                     prevLineState = session.getState(row - 1);
@@ -1048,7 +1032,7 @@ class Editor {
     }
 
     /**
-     * 
+     *
      * @param text
      * @param composition
      * @returns {*}
@@ -1057,7 +1041,7 @@ class Editor {
     onTextInput(text, composition) {
         if (!composition)
             return this.keyBinding.onTextInput(text);
-        
+
         this.startOperation({command: { name: "insertstring" }});
         var applyComposition = this.applyComposition.bind(this, text, composition);
         if (this.selection.rangeCount)
@@ -1170,7 +1154,7 @@ class Editor {
 
     /**
      * Returns the current selection style.
-     * @returns {import("../ace-internal").Ace.EditorOptions["selectionStyle"]} 
+     * @returns {import("../ace-internal").Ace.EditorOptions["selectionStyle"]}
      **/
     getSelectionStyle() {
         return this.getOption("selectionStyle");
@@ -1403,7 +1387,7 @@ class Editor {
             else
                 this.selection.selectRight();
         }
-        
+
         var range = this.getSelectionRange();
         if (this.getBehavioursEnabled()) {
             var session = this.session;
@@ -1497,7 +1481,7 @@ class Editor {
      * Set the "ghost" text in provided position. "Ghost" text is a kind of
      * preview text inside the editor which can be used to preview some code
      * inline in the editor such as, for example, code completions.
-     * 
+     *
      * @param {String} text Text to be inserted as "ghost" text
      * @param {Point} [position] Position to insert text to
      */
@@ -1596,7 +1580,7 @@ class Editor {
                 return;
             }
         }
-        
+
         var line = session.getLine(range.start.row);
         var position = range.start;
         var size = session.getTabSize();
@@ -1889,7 +1873,7 @@ class Editor {
      * @param {Range} range The range of text you want moved within the document
      * @param {Point} toPosition The location (row and column) where you want to move the text to
      * @param {boolean} [copy]
-     * 
+     *
      * @returns {Range} The new range where the text was moved to.
      * @related EditSession.moveText
      **/
@@ -1934,7 +1918,7 @@ class Editor {
             // @ts-expect-error TODO: possible bug, no args in parameters
             selection.rangeList.detach(this.session);
             this.inVirtualSelectionMode = true;
-            
+
             var diff = 0;
             var totalDiff = 0;
             var l = ranges.length;
@@ -1963,7 +1947,7 @@ class Editor {
                 if (!copy) diff = 0;
                 totalDiff += diff;
             }
-            
+
             selection.fromOrientedRange(selection.ranges[0]);
             selection.rangeList.attach(this.session);
             this.inVirtualSelectionMode = false;
@@ -2188,7 +2172,7 @@ class Editor {
     getSelectionRange() {
         return this.selection.getRange();
     }
-    
+
     /**
      * Selects all the text in editor.
      * @related Selection.selectAll
@@ -2671,7 +2655,7 @@ class Editor {
     }
 
     /**
-     * 
+     *
      * @param {Range} range
      * @param {boolean} [animate]
      */
@@ -2723,6 +2707,7 @@ class Editor {
         if (this._$emitInputEvent)
             this._$emitInputEvent.cancel();
         this.removeAllListeners();
+
     }
 
     /**
@@ -2858,7 +2843,7 @@ config.defineOptions(Editor.prototype, "editor", {
     readOnly: {
         set: function(readOnly) {
             this.textInput.setReadOnly(readOnly);
-            this.$resetCursorStyle(); 
+            this.$resetCursorStyle();
         },
         initialValue: false
     },
@@ -2900,7 +2885,7 @@ config.defineOptions(Editor.prototype, "editor", {
         handlesSet: true,
         hidden: true
     },
-    
+
     showLineNumbers: {
         set: function(show) {
             this.renderer.$gutterLayer.setShowLineNumbers(show);
@@ -2969,10 +2954,10 @@ config.defineOptions(Editor.prototype, "editor", {
                 if (e.target == this.renderer.scroller && e.keyCode === keys['enter']){
                     e.preventDefault();
                     var row = this.getCursorPosition().row;
-                    
+
                     if (!this.isRowVisible(row))
                         this.scrollToLine(row, true, true);
-    
+
                     this.focus();
                 }
             };
@@ -3033,7 +3018,7 @@ config.defineOptions(Editor.prototype, "editor", {
                 this.renderer.scroller.removeAttribute("aria-roledescription");
                 this.renderer.scroller.classList.remove(this.renderer.keyboardFocusClassName);
                 this.renderer.scroller.removeAttribute("aria-label");
-            
+
                 this.renderer.scroller.removeEventListener("keyup", focusOnEnterKeyup.bind(this));
                 this.commands.removeCommand(blurCommand);
 

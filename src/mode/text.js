@@ -14,8 +14,7 @@ var lang = require("../lib/lang");
 var TokenIterator = require("../token_iterator").TokenIterator;
 var Range = require("../range").Range;
 
-
-var Mode; 
+var Mode;
 Mode = function() {
     this.HighlightRules = TextHighlightRules;
 };
@@ -102,7 +101,7 @@ Mode = function() {
                 var lineCommentStart = this.lineCommentStart;
             }
             regexpStart = new RegExp("^(\\s*)(?:" + regexpStart + ") ?");
-            
+
             insertAtTabStop = session.getUseSoftTabs();
 
             var uncomment = function(line, i) {
@@ -126,7 +125,7 @@ Mode = function() {
             var testRemove = function(line, i) {
                 return regexpStart.test(line);
             };
-            
+
             var shouldInsertSpace = function(line, before, after) {
                 var spaces = 0;
                 while (before-- && line.charAt(before) == " ")
@@ -273,14 +272,14 @@ Mode = function() {
             }
         }
 
-        var delegations = ["toggleBlockComment", "toggleCommentLines", "getNextLineIndent", 
+        var delegations = ["toggleBlockComment", "toggleCommentLines", "getNextLineIndent",
             "checkOutdent", "autoOutdent", "transformAction", "getCompletions"];
 
         for (let i = 0; i < delegations.length; i++) {
             (function(scope) {
               var functionName = delegations[i];
               var defaultHandler = scope[functionName];
-              scope[delegations[i]] = 
+              scope[delegations[i]] =
                   /** @this {import("../../ace-internal").Ace.SyntaxMode} */
                   function () {
                       return this.$delegator(functionName, arguments, defaultHandler);
@@ -303,7 +302,7 @@ Mode = function() {
             }
             state = state[0] || "start";
         }
-            
+
         for (var i = 0; i < this.$embeds.length; i++) {
             if (!this.$modes[this.$embeds[i]]) continue;
 
@@ -351,7 +350,7 @@ Mode = function() {
                             completionKeywords.push(ruleItr[r].regex);
                     }
                     else if (typeof ruleItr[r].token === "object") {
-                        for (var a = 0, aLength = ruleItr[r].token.length; a < aLength; a++) {    
+                        for (var a = 0, aLength = ruleItr[r].token.length; a < aLength; a++) {
                             if (/keyword|support|storage/.test(ruleItr[r].token[a])) {
                                 // drop surrounding parens
                                 var rule = ruleItr[r].regex.match(/\(.+?\)/g)[a];

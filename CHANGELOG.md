@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.36.4](https://github.com/ajaxorg/ace/compare/v1.36.3...v1.36.4) (2024-11-04)
+
+
+### Bug Fixes
+
+* **a11y:** update aria-label of textinput on cursor move ([#5665](https://github.com/ajaxorg/ace/issues/5665)) ([6ff93a8](https://github.com/ajaxorg/ace/commit/6ff93a86fe8c4855789ee7e7c156f7b376c0f935))
+
+### [1.36.3](https://github.com/ajaxorg/ace/compare/v1.36.2...v1.36.3) (2024-10-21)
+
+
+### Bug Fixes
+
+* `readdirSync` options `recursive: true` was added only in NodeJs v20.1.0 ([#5645](https://github.com/ajaxorg/ace/issues/5645)) ([2953f72](https://github.com/ajaxorg/ace/commit/2953f72877a90691432373cfe9182e60ea9b2d8f))
+
 ### [1.36.2](https://github.com/ajaxorg/ace/compare/v1.36.1...v1.36.2) (2024-08-30)
 
 

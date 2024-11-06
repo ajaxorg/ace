@@ -67,7 +67,7 @@ class AppConfig {
             messages = defaultEnglishMessages;
             nlsPlaceholders = "dollarSigns";
         }
-    
+
     /**
      * @param {Object} obj
      * @param {string} path
@@ -160,7 +160,7 @@ class AppConfig {
             if (!messages[defaultString]) {
                 warn("No message found for the default string '" + defaultString + "' in the provided messages. Falling back to the default English message.");
             }
-        } 
+        }
 
         var translated = messages[key] || messages[defaultString] || defaultString;
         if (params) {

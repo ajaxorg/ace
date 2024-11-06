@@ -11,12 +11,12 @@ var Range = require("./range").Range;
  * A class designed to handle all sorts of text searches within a [[Document `Document`]].
  **/
 class Search {
-    
+
     constructor() {
         /**@type {Partial<SearchOptions>}*/
         this.$options = {};
     }
-    
+
     /**
      * Sets the search options via the `options` parameter.
      * @param {Partial<SearchOptions>} options An object containing all the new search properties
@@ -35,7 +35,7 @@ class Search {
     getOptions() {
         return lang.copyObject(this.$options);
     }
-    
+
     /**
      * Sets the search options via the `options` parameter.
      * @param {Partial<SearchOptions>} options object containing all the search propertie
@@ -65,7 +65,7 @@ class Search {
                 firstRange = null;
                 return false;
             }
-            
+
             return true;
         });
 
@@ -98,12 +98,12 @@ class Search {
                 for (var j = 0; j < len; j++)
                     if (lines[row + j].search(re[j]) == -1)
                         continue outer;
-                
+
                 var startLine = lines[row];
                 var line = lines[row + len - 1];
                 var startIndex = startLine.length - startLine.match(re[0])[0].length;
                 var endIndex = line.match(re[len - 1])[0].length;
-                
+
                 if (prevRange && prevRange.end.row === row &&
                     prevRange.end.column > startIndex
                 ) {
@@ -135,7 +135,7 @@ class Search {
             var endRow = range.end.row - range.start.row;
             while (i < j && ranges[j].end.column > endColumn && ranges[j].end.row == endRow)
                 j--;
-            
+
             ranges = ranges.slice(i, j + 1);
             for (i = 0, j = ranges.length; i < j; i++) {
                 ranges[i].start.row += range.start.row;
@@ -153,7 +153,7 @@ class Search {
      * + (String): If `options.regExp` is `true`, this function returns `input` with the replacement already made. Otherwise, this function just returns `replacement`.<br/>
      * If `options.needle` was not found, this function returns `null`.
      *
-     * 
+     *
      * @returns {String}
     **/
     replace(input, replacement) {
@@ -172,7 +172,7 @@ class Search {
         if (!options.regExp) {
             replacement = replacement.replace(/\$/g, "$$$$");
         }
-        
+
         replacement = input.replace(re, replacement);
         if (options.preserveCase) {
             replacement = replacement.split("");
@@ -185,12 +185,12 @@ class Search {
             }
             replacement = replacement.join("");
         }
-        
+
         return replacement;
     }
 
     /**
-     * 
+     *
      * @param {Partial<SearchOptions>} options
      * @param {boolean} [$disableFakeMultiline]
      * @return {RegExp|boolean|*[]|*}
@@ -198,7 +198,7 @@ class Search {
     $assembleRegExp(options, $disableFakeMultiline) {
         if (options.needle instanceof RegExp)
             return options.re = options.needle;
-        
+
         var needle = options.needle;
 
         if (!options.needle)
@@ -219,7 +219,7 @@ class Search {
 
         if (options.wholeWord)
             needle = addWordBoundary(needle, options);
-        
+
         options.$isMultiLine = !$disableFakeMultiline && /[\n\r]/.test(needle);
         if (options.$isMultiLine)
             return options.re = this.$assembleMultilineRegExp(needle, modifier);
@@ -263,13 +263,13 @@ class Search {
         var start = options.start;
         if (!start)
             start = range ? range[backwards ? "end" : "start"] : session.selection.getRange();
-         
+
         if (start.start)
             start = start[skipCurrent != backwards ? "end" : "start"];
 
         var firstRow = range ? range.start.row : 0;
         var lastRow = range ? range.end.row : session.getLength() - 1;
-        
+
         if (backwards) {
             var forEach = function(callback) {
                 var row = start.row;
@@ -300,7 +300,7 @@ class Search {
                         return;
             };
         }
-        
+
         if (options.$isMultiLine) {
             var len = re.length;
             var forEachInLine = function(row, offset, callback) {
@@ -369,7 +369,7 @@ class Search {
 }
 
 /**
- * 
+ *
  * @param {string} needle
  * @param {Partial<SearchOptions>} options
  * @return {string}

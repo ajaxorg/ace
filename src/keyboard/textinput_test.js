@@ -789,7 +789,24 @@ module.exports = {
 
         let text = editor.container.querySelector(".ace_text-input"); 
         assert.equal(text.getAttribute("aria-label"), "super cool editor, Cursor at row 1");
-    }
+    },
+
+    "test: text input aria label updated on cursor move": function() {
+        editor.setValue("line1\nline2\nline3", -1);
+        editor.setOption('enableKeyboardAccessibility', true);
+        editor.renderer.$loop._flush();
+
+        let text = editor.container.querySelector(".ace_text-input");
+        assert.equal(text.getAttribute("aria-label"), "Cursor at row 1");
+
+        editor.focus();
+        sendEvent("keydown", {key: { code: "ArrowDown", key: "ArrowDown", keyCode: 40}});
+        sendEvent("keydown", {key: { code: "ArrowDown", key: "ArrowDown", keyCode: 40}});
+        sendEvent("keydown", {key: { code: "ArrowRight", key: "ArrowRight", keyCode: 39}});
+        editor.renderer.$loop._flush();
+
+        assert.equal(text.getAttribute("aria-label"), "Cursor at row 3");
+    },
 };
 
 
