@@ -446,7 +446,7 @@ declare module "ace-code/src/config" {
             string
         ], onLoad: (module: any) => void) => void;
         setModuleLoader: (moduleName: any, onLoad: any) => void;
-        version: "1.36.2";
+        version: "1.36.4";
     };
     export = _exports;
 }
@@ -1102,7 +1102,7 @@ declare module "ace-code/src/virtual_renderer" {
          * Constructs a new `VirtualRenderer` within the `container` specified, applying the given `theme`.
          * @param {HTMLElement | null} [container] The root element of the editor
          * @param {String} [theme] The starting theme
-         
+    
          **/
         constructor(container?: HTMLElement | null, theme?: string);
         container: HTMLElement;
@@ -1174,7 +1174,7 @@ declare module "ace-code/src/virtual_renderer" {
         /**
          * Triggers a full update of all the layers, for all the rows.
          * @param {Boolean} [force] If `true`, forces the changes through
-         
+    
          **/
         updateFull(force?: boolean): void;
         /**
@@ -1185,96 +1185,96 @@ declare module "ace-code/src/virtual_renderer" {
         gutterWidth: any;
         /**
          * Adjusts the wrap limit, which is the number of characters that can fit within the width of the edit area on screen.
-         
+    
          **/
         adjustWrapLimit(): boolean;
         /**
          * Identifies whether you want to have an animated scroll or not.
          * @param {Boolean} shouldAnimate Set to `true` to show animated scrolls
-         
+    
          **/
         setAnimatedScroll(shouldAnimate: boolean): void;
         /**
          * Returns whether an animated scroll happens or not.
          * @returns {Boolean}
-         
+    
          **/
         getAnimatedScroll(): boolean;
         /**
          * Identifies whether you want to show invisible characters or not.
          * @param {Boolean} showInvisibles Set to `true` to show invisibles
-         
+    
          **/
         setShowInvisibles(showInvisibles: boolean): void;
         /**
          * Returns whether invisible characters are being shown or not.
          * @returns {Boolean}
-         
+    
          **/
         getShowInvisibles(): boolean;
         /**
          * @return {boolean}
-         
+    
          */
         getDisplayIndentGuides(): boolean;
         /**
          * @param {boolean} display
-         
+    
          */
         setDisplayIndentGuides(display: boolean): void;
         /**
-         
+    
          * @return {boolean}
          */
         getHighlightIndentGuides(): boolean;
         /**
-         
+    
          * @param {boolean} highlight
          */
         setHighlightIndentGuides(highlight: boolean): void;
         /**
          * Identifies whether you want to show the print margin or not.
          * @param {Boolean} showPrintMargin Set to `true` to show the print margin
-         
+    
          **/
         setShowPrintMargin(showPrintMargin: boolean): void;
         /**
          * Returns whether the print margin is being shown or not.
          * @returns {Boolean}
-         
+    
          **/
         getShowPrintMargin(): boolean;
         /**
          * Identifies whether you want to show the print margin column or not.
          * @param {number} printMarginColumn Set to `true` to show the print margin column
-         
+    
          **/
         setPrintMarginColumn(printMarginColumn: number): void;
         /**
          * Returns whether the print margin column is being shown or not.
          * @returns {number}
-         
+    
          **/
         getPrintMarginColumn(): number;
         /**
          * Returns `true` if the gutter is being shown.
          * @returns {Boolean}
-         
+    
          **/
         getShowGutter(): boolean;
         /**
          * Identifies whether you want to show the gutter or not.
          * @param {Boolean} show Set to `true` to show the gutter
-         
+    
          **/
         setShowGutter(show: boolean): void;
         /**
-         
+    
          * @returns {boolean}
          */
         getFadeFoldWidgets(): boolean;
         /**
-         
+    
          * @param {boolean} show
          */
         setFadeFoldWidgets(show: boolean): void;
@@ -1284,7 +1284,7 @@ declare module "ace-code/src/virtual_renderer" {
          */
         setHighlightGutterLine(shouldHighlight: boolean): void;
         /**
-         
+    
          * @returns {boolean}
          */
         getHighlightGutterLine(): boolean;
@@ -1332,7 +1332,7 @@ declare module "ace-code/src/virtual_renderer" {
         /**
          * Sets the padding for all the layers.
          * @param {Number} padding A new padding value (in pixels)
-         
+    
          **/
         setPadding(padding: number): void;
         /**
@@ -1341,7 +1341,7 @@ declare module "ace-code/src/virtual_renderer" {
          * @param {number} [bottom]
          * @param {number} [left]
          * @param {number} [right]
-         
+    
          */
         setScrollMargin(top?: number, bottom?: number, left?: number, right?: number): void;
         /**
@@ -1350,25 +1350,25 @@ declare module "ace-code/src/virtual_renderer" {
          * @param {number} [bottom]
          * @param {number} [left]
          * @param {number} [right]
-         
+    
          */
         setMargin(top?: number, bottom?: number, left?: number, right?: number): void;
         /**
          * Returns whether the horizontal scrollbar is set to be always visible.
          * @returns {Boolean}
-         
+    
          **/
         getHScrollBarAlwaysVisible(): boolean;
         /**
          * Identifies whether you want to show the horizontal scrollbar or not.
          * @param {Boolean} alwaysVisible Set to `true` to make the horizontal scroll bar visible
-         
+    
          **/
         setHScrollBarAlwaysVisible(alwaysVisible: boolean): void;
         /**
          * Returns whether the horizontal scrollbar is set to be always visible.
          * @returns {Boolean}
-         
+    
          **/
         getVScrollBarAlwaysVisible(): boolean;
         /**
@@ -1486,14 +1486,14 @@ declare module "ace-code/src/virtual_renderer" {
          * @param {Boolean} center If `true`, centers the editor the to indicated line
          * @param {Boolean} animate If `true` animates scrolling
          * @param {() => void} [callback] Function to be called after the animation has finished
-         
+    
          **/
         scrollToLine(line: number, center: boolean, animate: boolean, callback?: () => void): void;
         /**
          *
          * @param fromValue
          * @param [callback]
-         
+    
          */
         animateScrolling(fromValue: any, callback?: any): void;
         /**
@@ -1531,7 +1531,7 @@ declare module "ace-code/src/virtual_renderer" {
          * @param {number} x
          * @param {number} y
          * @returns {import("ace-code").Ace.ScreenCoordinates}
-         
+    
          */
         pixelToScreenCoordinates(x: number, y: number): import("ace-code").Ace.ScreenCoordinates;
         /**
@@ -1539,7 +1539,7 @@ declare module "ace-code/src/virtual_renderer" {
          * @param {number} x
          * @param {number} y
          * @returns {Point}
-         
+    
          */
         screenToTextCoordinates(x: number, y: number): Point;
         /**
@@ -1565,20 +1565,20 @@ declare module "ace-code/src/virtual_renderer" {
         visualizeBlur(): void;
         /**
          * @param {Object} composition
-         
+    
          **/
         showComposition(composition: any): void;
         /**
          * @param {String} text A string of text to use
          *
          * Sets the inner text of the current composition to `text`.
-         
+    
          **/
         setCompositionText(text: string): void;
         /**
          *
          * Hides the current composition.
-         
+    
          **/
         hideComposition(): void;
         /**
@@ -1603,7 +1603,7 @@ declare module "ace-code/src/virtual_renderer" {
          * [Sets a new theme for the editor. `theme` should exist, and be a directory path, like `ace/theme/textmate`.]{: #VirtualRenderer.setTheme}
          * @param {String | Theme} [theme] The path to a theme
          * @param {() => void} [cb] optional callback
-         
+    
          **/
         setTheme(theme?: string | Theme, cb?: () => void): void;
         /**
@@ -1634,7 +1634,7 @@ declare module "ace-code/src/virtual_renderer" {
         attachToShadowRoot(): void;
         /**
          * Destroys the text and cursor layers for this renderer.
-         
+    
          **/
         destroy(): void;
         CHANGE_CURSOR: number;
@@ -2834,18 +2834,18 @@ declare module "ace-code/src/editor" {
         /**@type {KeyBinding}*/
         keyBinding: KeyBinding;
         startOperation(commandEvent: any): void;
-        prevOp: {};
-        previousCommand: any;
-        /**
-         * @type {{[key: string]: any;}}
-         */
-        curOp: {
-            [key: string]: any;
-        };
         /**
          * @arg e
          */
-        endOperation(e: any): any;
+        endOperation(e: any): void;
+        onStartOperation(commandEvent: any): void;
+        curOp: {};
+        prevOp: {};
+        previousCommand: any;
+        /**
+         * @arg e
+         */
+        onEndOperation(e: any): void;
         mergeNextCommand: boolean;
         sequenceStartTime: number;
         /**
@@ -2925,14 +2925,14 @@ declare module "ace-code/src/editor" {
         unsetStyle(style: string): void;
         /**
          * Gets the current font size of the editor text.
-         * @return {string}
+         * @return {string | number}
          */
-        getFontSize(): string;
+        getFontSize(): string | number;
         /**
          * Set a new font size (in pixels) for the editor text.
-         * @param {String} size A font size ( _e.g._ "12px")
+         * @param {String | number} size A font size ( _e.g._ "12px")
          **/
-        setFontSize(size: string): void;
+        setFontSize(size: string | number): void;
         /**
          *
          * Brings the current `textInput` into focus.
@@ -5097,10 +5097,33 @@ declare module "ace-code/src/edit_session" {
          **/
         constructor(text?: Document | string, mode?: SyntaxMode);
         /**@type {Document}*/ doc: Document;
+        prevOp: {};
         id: string;
         bgTokenizer: BackgroundTokenizer;
         selection: Selection;
         destroyed: boolean;
+        curOp: {
+            command: {
+                name?: string;
+            };
+            args: any;
+        };
+        /**
+         * Start an Ace operation, which will then batch all the subsequent changes (to either content or selection) under a single atomic operation.
+         * @param {{command?: {name?: string}, args?: any}|undefined} [commandEvent] Optional name for the operation
+         */
+        startOperation(commandEvent?: {
+            command?: {
+                name?: string;
+            };
+            args?: any;
+        } | undefined): void;
+        /**
+         * End current Ace operation.
+         * Emits "beforeEndOperation" event just before clearing everything, where the current operation can be accessed through `curOp` property.
+         * @param {any} e
+         */
+        endOperation(e: any): void;
         /**
          * Sets the `EditSession` to point to a new `Document`. If a `BackgroundTokenizer` exists, it also points to `doc`.
          *
@@ -5115,6 +5138,7 @@ declare module "ace-code/src/edit_session" {
         getDocument(): Document;
         resetCaches(): void;
         mergeUndoDeltas: boolean;
+        onSelectionChange(): void;
         /**
          * Sets the session text.
          * @param {String} text The new text to place
@@ -5705,12 +5729,6 @@ declare module "ace-code/src/edit_session" {
         gutterRenderer?: any;
         selectionMarkerCount?: number;
         multiSelect?: any;
-        curOp?: {
-            command: {};
-            args: string;
-            scrollTop: number;
-            [key: string]: any;
-        };
         getSelectionMarkers(): any[];
     }
     export namespace EditSession {
@@ -5731,10 +5749,10 @@ declare module "ace-code/src/edit_session" {
     import Selection = Selection_1.Selection;
     import BidiHandler_1 = require("ace-code/src/bidihandler");
     import BidiHandler = BidiHandler_1.BidiHandler;
-    import UndoManager_1 = require("ace-code/src/undomanager");
-    import UndoManager = UndoManager_1.UndoManager;
     import Range_11 = require("ace-code/src/range");
     import Range = Range_11.Range;
+    import UndoManager_1 = require("ace-code/src/undomanager");
+    import UndoManager = UndoManager_1.UndoManager;
     function isFullWidth(c: any): boolean;
     var $uid: number;
     export { };
@@ -5756,12 +5774,6 @@ declare module "ace-code/src/edit_session" {
         gutterRenderer?: any;
         selectionMarkerCount?: number;
         multiSelect?: any;
-        curOp?: {
-            command: {};
-            args: string;
-            scrollTop: number;
-            [key: string]: any;
-        };
         getSelectionMarkers(): any[];
     }
 }

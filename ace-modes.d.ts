@@ -119,11 +119,11 @@ declare module "ace-code/src/mode/autohotkey" {
 }
 
 declare module "ace-code/src/mode/basic_highlight_rules" {
-    export const BasicHighlightRules: new () => import(".").Ace.HighlightRules;
+    export const BasicHighlightRules: new () => import("ace-code").Ace.HighlightRules;
 }
 
 declare module "ace-code/src/mode/basic" {
-    export const Mode: new () => import(".").Ace.SyntaxMode;
+    export const Mode: new () => import("ace-code").Ace.SyntaxMode;
 }
 
 declare module "ace-code/src/mode/batchfile_highlight_rules" {
@@ -139,31 +139,31 @@ declare module "ace-code/src/mode/behaviour" {
 }
 
 declare module "ace-code/src/mode/behaviour/css" {
-    export const CssBehaviour: new () => import(".").Ace.Behaviour;
+    export const CssBehaviour: new () => import("ace-code").Ace.Behaviour;
 }
 
 declare module "ace-code/src/mode/behaviour/cstyle" {
-    export const CstyleBehaviour: new () => import(".").Ace.Behaviour;
+    export const CstyleBehaviour: new () => import("ace-code").Ace.Behaviour;
 }
 
 declare module "ace-code/src/mode/behaviour/html" {
-    export const HtmlBehaviour: new () => import(".").Ace.Behaviour;
+    export const HtmlBehaviour: new () => import("ace-code").Ace.Behaviour;
 }
 
 declare module "ace-code/src/mode/behaviour/javascript" {
-    export const JavaScriptBehaviour: new () => import(".").Ace.Behaviour;
+    export const JavaScriptBehaviour: new () => import("ace-code").Ace.Behaviour;
 }
 
 declare module "ace-code/src/mode/behaviour/liquid" {
-    export const LiquidBehaviour: new () => import(".").Ace.Behaviour;
+    export const LiquidBehaviour: new () => import("ace-code").Ace.Behaviour;
 }
 
 declare module "ace-code/src/mode/behaviour/xml" {
-    export const XmlBehaviour: new () => import(".").Ace.Behaviour;
+    export const XmlBehaviour: new () => import("ace-code").Ace.Behaviour;
 }
 
 declare module "ace-code/src/mode/behaviour/xquery" {
-    export const XQueryBehaviour: new () => import(".").Ace.Behaviour;
+    export const XQueryBehaviour: new () => import("ace-code").Ace.Behaviour;
 }
 
 declare module "ace-code/src/mode/bibtex_highlight_rules" {
@@ -429,111 +429,111 @@ declare module "ace-code/src/mode/flix" {
 }
 
 declare module "ace-code/src/mode/folding/asciidoc" {
-    export const FoldMode: new () => import(".").Ace.Folding;
+    export const FoldMode: new () => import("ace-code").Ace.Folding;
 }
 
 declare module "ace-code/src/mode/folding/basic" {
-    export const FoldMode: new () => import(".").Ace.Folding;
+    export const FoldMode: new () => import("ace-code").Ace.Folding;
 }
 
 declare module "ace-code/src/mode/folding/c9search" {
-    export const FoldMode: new () => import(".").Ace.Folding;
+    export const FoldMode: new () => import("ace-code").Ace.Folding;
 }
 
 declare module "ace-code/src/mode/folding/coffee" {
-    export const FoldMode: new () => import(".").Ace.Folding;
+    export const FoldMode: new () => import("ace-code").Ace.Folding;
 }
 
 declare module "ace-code/src/mode/folding/csharp" {
-    export const FoldMode: new () => import(".").Ace.Folding;
+    export const FoldMode: new () => import("ace-code").Ace.Folding;
 }
 
 declare module "ace-code/src/mode/folding/cstyle" {
-    export const FoldMode: new () => import(".").Ace.Folding;
+    export const FoldMode: new () => import("ace-code").Ace.Folding;
 }
 
 declare module "ace-code/src/mode/folding/diff" {
-    export const FoldMode: new () => import(".").Ace.Folding;
+    export const FoldMode: new () => import("ace-code").Ace.Folding;
 }
 
 declare module "ace-code/src/mode/folding/drools" {
-    export const FoldMode: new () => import(".").Ace.Folding;
+    export const FoldMode: new () => import("ace-code").Ace.Folding;
 }
 
 declare module "ace-code/src/mode/folding/fold_mode" {
-    export const FoldMode: new () => import(".").Ace.Folding;
+    export const FoldMode: new () => import("ace-code").Ace.Folding;
 }
 
 declare module "ace-code/src/mode/folding/haskell_cabal" {
-    export const FoldMode: new () => import(".").Ace.Folding;
+    export const FoldMode: new () => import("ace-code").Ace.Folding;
 }
 
 declare module "ace-code/src/mode/folding/html" {
-    export const FoldMode: new () => import(".").Ace.Folding;
+    export const FoldMode: new () => import("ace-code").Ace.Folding;
 }
 
 declare module "ace-code/src/mode/folding/ini" {
-    export const FoldMode: new () => import(".").Ace.Folding;
+    export const FoldMode: new () => import("ace-code").Ace.Folding;
 }
 
 declare module "ace-code/src/mode/folding/java" {
-    export const FoldMode: new () => import(".").Ace.Folding;
+    export const FoldMode: new () => import("ace-code").Ace.Folding;
 }
 
 declare module "ace-code/src/mode/folding/javascript" {
-    export const FoldMode: new () => import(".").Ace.Folding;
+    export const FoldMode: new () => import("ace-code").Ace.Folding;
 }
 
 declare module "ace-code/src/mode/folding/latex" {
-    export const FoldMode: new () => import(".").Ace.Folding;
+    export const FoldMode: new () => import("ace-code").Ace.Folding;
 }
 
 declare module "ace-code/src/mode/folding/lua" {
-    export const FoldMode: new () => import(".").Ace.Folding;
+    export const FoldMode: new () => import("ace-code").Ace.Folding;
 }
 
 declare module "ace-code/src/mode/folding/markdown" {
-    export const FoldMode: new () => import(".").Ace.Folding;
+    export const FoldMode: new () => import("ace-code").Ace.Folding;
 }
 
 declare module "ace-code/src/mode/folding/mixed" {
-    export const FoldMode: new () => import(".").Ace.Folding;
+    export const FoldMode: new () => import("ace-code").Ace.Folding;
 }
 
 declare module "ace-code/src/mode/folding/php" {
-    export const FoldMode: new () => import(".").Ace.Folding;
+    export const FoldMode: new () => import("ace-code").Ace.Folding;
 }
 
 declare module "ace-code/src/mode/folding/pythonic" {
-    export const FoldMode: new () => import(".").Ace.Folding;
+    export const FoldMode: new () => import("ace-code").Ace.Folding;
 }
 
 declare module "ace-code/src/mode/folding/ruby" {
-    export const FoldMode: new () => import(".").Ace.Folding;
+    export const FoldMode: new () => import("ace-code").Ace.Folding;
 }
 
 declare module "ace-code/src/mode/folding/sql" {
-    export const FoldMode: new () => import(".").Ace.Folding;
+    export const FoldMode: new () => import("ace-code").Ace.Folding;
 }
 
 declare module "ace-code/src/mode/folding/sqlserver" {
-    export const FoldMode: new () => import(".").Ace.Folding;
+    export const FoldMode: new () => import("ace-code").Ace.Folding;
 }
 
 declare module "ace-code/src/mode/folding/vbscript" {
-    export const FoldMode: new () => import(".").Ace.Folding;
+    export const FoldMode: new () => import("ace-code").Ace.Folding;
 }
 
 declare module "ace-code/src/mode/folding/velocity" {
-    export const FoldMode: new () => import(".").Ace.Folding;
+    export const FoldMode: new () => import("ace-code").Ace.Folding;
 }
 
 declare module "ace-code/src/mode/folding/xml" {
-    export const FoldMode: new () => import(".").Ace.Folding;
+    export const FoldMode: new () => import("ace-code").Ace.Folding;
 }
 
 declare module "ace-code/src/mode/folding/yaml" {
-    export const FoldMode: new () => import(".").Ace.Folding;
+    export const FoldMode: new () => import("ace-code").Ace.Folding;
 }
 
 declare module "ace-code/src/mode/forth_highlight_rules" {
