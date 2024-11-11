@@ -46,7 +46,12 @@ declare module "ace-code/src/lib/dom" {
     export const HAS_CSS_TRANSFORMS: boolean;
     export const HI_DPI: boolean;
     export function translate(element: any, tx: any, ty: any): void;
-    export function importCssString(cssText: any, id: any, target: any): number;
+    /**
+     * @param {string} cssText
+     * @param {string} [id]
+     * @param {any} [target]
+     */
+    export function importCssString(cssText: string, id?: string, target?: any): number;
 }
 declare module "ace-code/src/lib/oop" {
     export function inherits(ctor: any, superCtor: any): void;
@@ -93,7 +98,7 @@ declare module "ace-code/src/lib/keys" {
     export function keyCodeToString(keyCode: number): string;
 }
 declare module "ace-code/src/lib/event" {
-    export function addListener(elem: any, type: any, callback: any, destroyer: any | null): void;
+    export function addListener(elem: any, type: string, callback: any, destroyer?: any): void;
     export function removeListener(elem: any, type: any, callback: any): void;
     export function stopEvent(e: any): boolean;
     export function stopPropagation(e: any): void;
