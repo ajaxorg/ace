@@ -793,7 +793,7 @@ declare module "ace-code/src/ext/textarea" {
             all: () => import("ace-code").Ace.ConfigOptions;
             moduleUrl: (name: string, component?: string) => string;
             setModuleUrl: (name: string, subst: string) => string;
-            setLoader: (cb: any) => void;
+            setLoader: (cb: (name: string, callback: (error: any, module: any) => void) => void) => void;
             dynamicModules: any;
             loadModule: (moduleId: string | [
                 string,

@@ -104,6 +104,8 @@ var loader = function(moduleName, cb) {
     console.error("loader is not configured");
 };
 var customLoader;
+
+/** @arg {(name: string, callback: (error: any, module: any) => void) => void} cb */
 exports.setLoader = function(cb) {
     customLoader = cb;
 };

@@ -435,7 +435,8 @@ declare module "ace-code/src/config" {
          * @returns {string}
          */
         setModuleUrl: (name: string, subst: string) => string;
-        setLoader: (cb: any) => void;
+        /** @arg {(name: string, callback: (error: any, module: any) => void) => void} cb */
+        setLoader: (cb: (name: string, callback: (error: any, module: any) => void) => void) => void;
         dynamicModules: any;
         /**
          * @param {string | [string, string]} moduleId

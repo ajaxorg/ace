@@ -16,6 +16,15 @@ import {tokenize} from "ace-code/src/ext/simple_tokenizer";
 import {JavaScriptHighlightRules} from "ace-code/src/mode/javascript_highlight_rules";
 import {highlight} from "ace-code/src/ext/static_highlight";
 
+// TODO this does not work in node
+// import "ace-code/esm-resolver";
+import { config } from "ace-code";
+config.setLoader(async function(moduleName, cb) {
+    moduleName = moduleName.replace("ace/", "ace-code/src/")
+    let module = await import(moduleName);
+    cb(null, module);
+});
+
 const editor = ace.edit(null); // should not be an error
 editor.setTheme("ace/theme/monokai");
 editor.session.setMode("ace/mode/javascript");
@@ -96,6 +105,10 @@ searchBox.show("Test", true);
 
 tokenize("some content", new JavaScriptHighlightRules());
 highlight(editor.container, {
-    mode: "ace/mode/some",
+    mode: "ace/mode/abap",
     showGutter: true
 })
+
+setTimeout(function() {
+    editor.destroy();
+}, 20)
