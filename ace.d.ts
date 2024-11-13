@@ -513,7 +513,7 @@ export namespace Ace {
           name?: string;
       };
   };
-
+    widgetManager:WidgetManager;
     // TODO: define BackgroundTokenizer
 
     on(name: 'changeFold',
@@ -1106,6 +1106,28 @@ export namespace Ace {
     show(pos: Point, lineHeight: number, topdownOnly: boolean): void;
     tryShow(pos: Point, lineHeight: number, anchor: "top" | "bottom" | undefined, forceShow?: boolean): boolean;
     goTo(where: AcePopupNavigation): void;
+  }
+
+  export interface LineWidget {
+    el: HTMLElement; 
+    row: number; 
+    rowCount?: number; 
+    hidden: boolean;
+    editor: Editor, 
+    session: EditSession, 
+    column?: number; 
+    className?: string,
+    coverGutter?: boolean, 
+    pixelHeight?: number, 
+    fixedWidth?: boolean, 
+    fullWidth?: boolean,
+    screenWidth?: number,
+  }
+  
+  export class WidgetManager {
+    constructor(session: EditSession);
+    addLineWidget(w: LineWidget): LineWidget;
+    removeLineWidget(w: LineWidget): void;
   }
 }
 

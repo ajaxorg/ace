@@ -6,6 +6,7 @@
  * @typedef {import("../ace-internal").Ace.Delta} Delta
  * @typedef {import("../ace-internal").Ace.IRange} IRange
  * @typedef {import("../ace-internal").Ace.SyntaxMode} SyntaxMode
+ * @typedef {import("../ace-internal").Ace.LineWidget} LineWidget
  */
 
 var oop = require("./lib/oop");
@@ -16,6 +17,7 @@ var EventEmitter = require("./lib/event_emitter").EventEmitter;
 var Selection = require("./selection").Selection;
 var TextMode = require("./mode/text").Mode;
 var Range = require("./range").Range;
+var LineWidgets = require("./line_widgets").LineWidgets;
 var Document = require("./document").Document;
 var BackgroundTokenizer = require("./background_tokenizer").BackgroundTokenizer;
 var SearchHighlight = require("./search_highlight").SearchHighlight;
@@ -45,7 +47,9 @@ class EditSession {
         this.$backMarkers = {};
         this.$markerId = 1;
         this.$undoSelect = true;
+        this.$editor = null;
         this.prevOp = {};
+        this.$widgetManager = null;
 
         /** @type {FoldLine[]} */
         this.$foldData = [];
@@ -187,6 +191,35 @@ class EditSession {
         return this.doc;
     }
 
+    /**
+     * Get "widgetManager" from EditSession
+     * 
+     * @returns {LineWidgets} object
+     */
+    get widgetManager() {
+        if(!this.$widgetManager) {
+        this.$widgetManager = new LineWidgets(this);
+        
+            if (this.$editor)
+                this.$widgetManager.attach(this.$editor);
+            }
+       return this.$widgetManager;
+    }
+
+    /**
+     * Set "widgetManager" in EditSession
+     * 
+     * @returns void
+     */
+    set widgetManager(value) {
+        Object.defineProperty(this, "widgetManager", {
+            writable: true, 
+            enumerable: true,
+            configurable: true,
+            value: value,
+        });
+        this.$widgetManager = value;
+    }
     /**
      * @param {Number} docRow The row to work with
      *
