@@ -79,8 +79,10 @@ function generateInitialDeclaration(excludeDir) {
 }
 
 /**
- * @param {string} fileName
- * @param {string} content
+ * Creates a custom TypeScript compiler host that uses the provided source file content instead of reading from the file system.
+ * @param {string} fileName - The name of the source file.
+ * @param {string} content - The content of the source file.
+ * @returns {ts.CompilerHost} - A custom compiler host that uses the provided source file content.
  */
 function createCustomCompilerHost(fileName, content) {
     const newSourceFile = ts.createSourceFile(fileName, content, ts.ScriptTarget.Latest, false, ts.ScriptKind.TS);
@@ -109,6 +111,142 @@ function createCustomCompilerHost(fileName, content) {
     };
 }
 
+function updateMainAceModule(node) {
+    if (node.body && ts.isModuleBlock(node.body)) {
+        const updatedStatements = node.body.statements.map(statement => {
+            //create type alias for config
+            if (ts.isVariableStatement(statement) && statement.declarationList.declarations[0]?.name?.text
+                === "config") {
+
+                const originalDeclaration = statement.declarationList.declarations[0];
+
+                const importTypeNode = ts.factory.createImportTypeNode(
+                    ts.factory.createLiteralTypeNode(ts.factory.createStringLiteral('ace-code/src/config')), undefined,
+                    undefined, false
+                );
+
+                const typeOfImportTypeNode = ts.factory.createTypeOperatorNode(
+                    ts.SyntaxKind.TypeOfKeyword, importTypeNode);
+
+                return ts.factory.updateVariableStatement(statement, statement.modifiers,
+                    ts.factory.updateVariableDeclarationList(statement.declarationList, [
+                        ts.factory.updateVariableDeclaration(originalDeclaration, originalDeclaration.name,
+                            originalDeclaration.exclamationToken, typeOfImportTypeNode, undefined
+                        )
+                    ])
+                );
+            }
+            return statement;
+        });
+
+        return ts.factory.updateModuleDeclaration(node, node.modifiers, node.name,
+            ts.factory.createModuleBlock(updatedStatements)
+        );
+    }
+}
+
+/**
+ * Updates the module declaration for the "keys" and "linking" modules by adding the corresponding internal statements
+ * to support mixins (EventEmitter, OptionsProvider, etc.).
+ *
+ * @param {ts.ModuleDeclaration} node - The module declaration node to update.
+ * @param {Object<string, ts.Statement[]>} internalStatements - An object containing the internal statements to add to the module.
+ * @returns {ts.ModuleDeclaration} - The updated module declaration.
+ */
+function updateKeysAndLinksStatements(node, internalStatements) {
+    let statements = [];
+    if (internalStatements[node.name.text]) {
+        statements = internalStatements[node.name.text];
+    }
+    const newBody = ts.factory.createModuleBlock(statements);
+    return ts.factory.updateModuleDeclaration(node, node.modifiers, node.name, newBody);
+}
+
+/**
+ * Updates a module declaration by adding internal statements to support mixins (EventEmitter, OptionsProvider, etc.).
+ *
+ * @param {ts.ModuleDeclaration} node - The module declaration node to update.
+ * @param {Object<string, ts.Statement[]>} internalStatements - An object containing the internal statements to add to the module.
+ * @returns {ts.ModuleDeclaration} - The updated module declaration.
+ */
+function updateModuleWithInternalStatements(node, internalStatements) {
+    const newBody = ts.factory.createModuleBlock(
+        node.body.statements.concat(internalStatements[node.name.text]).filter(statement => {
+            if (node.name.text.endsWith("autocomplete")) {
+                return !(ts.isModuleDeclaration(statement) && statement.name.text === 'Autocomplete');
+            }
+            return true;
+        }));
+    return ts.factory.updateModuleDeclaration(node, node.modifiers, node.name, newBody);
+}
+
+/**
+ * Fixes interfaces with empty extends clauses by either removing the entire interface declaration if it has no members,
+ * or by removing the empty extends clause.
+ *
+ * @param {ts.InterfaceDeclaration} node - The interface declaration node to fix.
+ * @param {ts.TransformationContext} context - The transformation context.
+ * @returns {ts.InterfaceDeclaration} - The updated interface declaration.
+ */
+function fixWrongInterfaces(node, context) {
+    for (const clause of node.heritageClauses) {
+        if (clause.token === ts.SyntaxKind.ExtendsKeyword && clause.types.length === 0) {
+            if (node.members.length === 0) {
+                return; // remove entire interface declaration
+            }
+            // Remove the extends clause if it's empty
+            return context.factory.updateInterfaceDeclaration(node, node.modifiers, node.name, node.typeParameters, [],
+                node.members
+            );
+        }
+    }
+    return node;
+}
+
+/**
+ * Fixes heritage clauses in class declarations by removing any inheritance from undefined types.
+ *
+ * @param {ts.ClassDeclaration} node - The class declaration node to fix.
+ * @param {ts.TransformationContext} context - The transformation context.
+ * @param {ts.TypeChecker} checker - The TypeScript type checker.
+ * @returns {ts.ClassDeclaration} - The updated class declaration with fixed heritage clauses.
+ */
+function fixWrongHeritageClauses(node, context, checker) {
+    let updatedHeritageClauses = [];
+    // remove inheritances from undefined types
+    for (let i = 0; i < node.heritageClauses.length; i++) {
+        let clause = node.heritageClauses[i];
+        if (clause.token === ts.SyntaxKind.ExtendsKeyword) {
+            const updatedTypes = clause.types.filter(type => {
+                const symbol = checker.getSymbolAtLocation(type.expression);
+                if (symbol) {
+                    const declaredType = checker.getDeclaredTypeOfSymbol(symbol);
+
+                    return declaredType.flags !== ts.TypeFlags.Undefined && declaredType["intrinsicName"] !== "error";
+                }
+                return true;  // keep the type if the symbol can't be resolved
+            });
+            if (updatedTypes.length === 0) {
+                continue;
+            }
+            var updatedHeritageClause = clause;
+            if (updatedTypes.length !== clause.types.length) {
+                updatedHeritageClause = context.factory.createHeritageClause(
+                    ts.SyntaxKind.ExtendsKeyword, updatedTypes);
+            }
+        }
+        if (updatedHeritageClause) {
+            updatedHeritageClauses.push(updatedHeritageClause);
+        }
+        else {
+            updatedHeritageClauses.push(clause);
+        }
+    }
+    return context.factory.updateClassDeclaration(node, node.modifiers, node.name, node.typeParameters,
+        updatedHeritageClauses, node.members
+    );
+}
+
 /**
  * @param {string} content
  * @param {string} aceNamespacePath
@@ -125,52 +263,24 @@ function fixDeclaration(content, aceNamespacePath) {
     const finalDeclarations = [];
 
     /**
-     * @param {ts.TransformationContext} context
-     * @return {function(*): *}
+     * Transforms the source file by updating certain module declarations and interface/class heritage clauses.
+     *
+     * @param {ts.TransformationContext} context - The transformation context.
+     * @returns {function(ts.SourceFile): ts.SourceFile} - A function that transforms the source file.
      */
     function transformer(context) {
         return (sourceFile) => {
             function visit(node) {
                 let updatedNode = node;
+                // Update module declarations for certain module names
                 if (ts.isModuleDeclaration(node) && ts.isStringLiteral(node.name)) {
-                    // replace wrong generated modules
-                    if (node.name.text.endsWith("lib/keys") || node.name.text.endsWith("linking")) {
-                        let statements = [];
-                        if (internalStatements[node.name.text]) {
-                            statements = internalStatements[node.name.text];
-                        }
-                        const newBody = ts.factory.createModuleBlock(statements);
-                        updatedNode = ts.factory.updateModuleDeclaration(node, node.modifiers, node.name, newBody);
-                    }
-                    else if (internalStatements[node.name.text]) {
-                        // add corresponding internalStatements to support mixins (EventEmitter, OptionsProvider, etc.)
-                        if (node.body && ts.isModuleBlock(node.body)) {
-                            const newBody = ts.factory.createModuleBlock(
-                                node.body.statements.concat(internalStatements[node.name.text]).filter(statement => {
-                                    if (node.name.text.endsWith("autocomplete")) {
-                                        return !(ts.isModuleDeclaration(statement) && statement.name.text
-                                            === 'Autocomplete');
-                                    }
-                                    return true;
-                                }));
-                            updatedNode = ts.factory.updateModuleDeclaration(node, node.modifiers, node.name, newBody);
-                        }
-                    }
-                    else if (node.name.text.endsWith("/config") || node.name.text.endsWith("textarea")) {
-                        //TODO: should be better way to do this
-                        //correct mixed exports (export function + export = _exports)
-                        if (node.body && ts.isModuleBlock(node.body)) {
-                            const newBody = ts.factory.createModuleBlock(node.body.statements.filter(statement => {
-                                const exportsStatement = ts.isVariableStatement(statement)
-                                    && statement.declarationList.declarations[0].name.getText() == "_exports";
-                                return exportsStatement || ts.isExportAssignment(statement)
-                                    || ts.isImportEqualsDeclaration(statement);
-                            }));
-                            updatedNode = ts.factory.updateModuleDeclaration(node, node.modifiers, node.name, newBody);
-
-                        }
-                    }
-                    else if (node.name.text.endsWith("static_highlight")) {
+                    if (node.name.text === "ace-code") {
+                        return updateMainAceModule(node);
+                    } else if (node.name.text.endsWith("lib/keys") || node.name.text.endsWith("linking")) {
+                        updatedNode = updateKeysAndLinksStatements(node, internalStatements);
+                    } else if (internalStatements[node.name.text]) {
+                        updatedNode = updateModuleWithInternalStatements(node, internalStatements);
+                    } else if (node.name.text.endsWith("static_highlight")) {
                         if (node.body && ts.isModuleBlock(node.body)) {
                             const newBody = ts.factory.createModuleBlock(node.body.statements.filter(statement => {
                                 return !ts.isExportAssignment(statement);
@@ -179,57 +289,14 @@ function fixDeclaration(content, aceNamespacePath) {
                         }
                     }
                 }
+                // Fix wrong interface and class heritage clauses
                 else if (ts.isInterfaceDeclaration(node) && node.heritageClauses) {
-                    for (const clause of node.heritageClauses) {
-                        if (clause.token === ts.SyntaxKind.ExtendsKeyword && clause.types.length === 0) {
-                            if (node.members.length === 0) {
-                                return; // remove entire interface declaration 
-                            }
-                            // Remove the extends clause if it's empty
-                            return context.factory.updateInterfaceDeclaration(node, node.modifiers, node.name,
-                                node.typeParameters, [], node.members
-                            );
-                        }
-                    }
-                }
-                else if (ts.isClassDeclaration(node) && node.heritageClauses) {
-                    let updatedHeritageClauses = [];
-                    // remove inheritances from undefined types
-                    for (let i = 0; i < node.heritageClauses.length; i++) {
-                        let clause = node.heritageClauses[i];
-                        if (clause.token === ts.SyntaxKind.ExtendsKeyword) {
-                            const updatedTypes = clause.types.filter(type => {
-                                const symbol = checker.getSymbolAtLocation(type.expression);
-                                if (symbol) {
-                                    const declaredType = checker.getDeclaredTypeOfSymbol(symbol);
-
-                                    return declaredType.flags !== ts.TypeFlags.Undefined
-                                        && declaredType["intrinsicName"] !== "error";
-                                }
-                                return true;  // keep the type if the symbol can't be resolved
-                            });
-                            if (updatedTypes.length === 0) {
-                                continue;
-                            }
-                            var updatedHeritageClause = clause;
-                            if (updatedTypes.length !== clause.types.length) {
-                                updatedHeritageClause = context.factory.createHeritageClause(
-                                    ts.SyntaxKind.ExtendsKeyword, updatedTypes);
-                            }
-                        }
-                        if (updatedHeritageClause) {
-                            updatedHeritageClauses.push(updatedHeritageClause);
-                        }
-                        else {
-                            updatedHeritageClauses.push(clause);
-                        }
-                    }
-                    return context.factory.updateClassDeclaration(node, node.modifiers, node.name, node.typeParameters,
-                        updatedHeritageClauses, node.members
-                    );
+                    return fixWrongInterfaces(node, context);
+                } else if (ts.isClassDeclaration(node) && node.heritageClauses) {
+                    return fixWrongHeritageClauses(node, context, checker);
                 }
                 return ts.visitEachChild(updatedNode, visit, context);
-            }
+            };
 
             return ts.visitNode(sourceFile, visit);
         };
@@ -280,22 +347,50 @@ function fixDeclaration(content, aceNamespacePath) {
 
                 const printer = ts.createPrinter({newLine: ts.NewLineKind.LineFeed}, {
                     substituteNode(hint, node) {
+                        if (ts.isModuleDeclaration(node) && ts.isStringLiteral(node.name) && node.name.text === "ace-code/src/ext/textarea") {
+                            return ts.factory.createNotEmittedStatement(node);
+                        } else
                         // remove all private members
                         if (ts.isMethodDeclaration(node) || ts.isMethodSignature(node) || ts.isPropertyDeclaration(node)
                             || ts.isPropertySignature(node)) {
                             const isPrivate = node.modifiers?.some(
                                 modifier => modifier.kind === ts.SyntaxKind.PrivateKeyword);
-                            
+
                             const startsWithDollar = ts.isIdentifier(node.name) && /^[$_]/.test(node.name.text);
 
                             if (isPrivate || startsWithDollar || hasInternalTag(node)) {
                                 return ts.factory.createNotEmittedStatement(node);
                             }
                         }
-                        else if (ts.isVariableStatement(node) && node.getText().indexOf("export const $") > -1) {
+                        else if (ts.isVariableStatement(node)) {
+                            if (node.text && node.getText().indexOf("export const $") > -1) {
+                                return ts.factory.createNotEmittedStatement(node);
+                            }
+                            // Remove variable statements like 'const {any_identifier}_base: undefined;'
+                            const declarations = node.declarationList.declarations;
+
+                            // Filter out declarations that match the pattern
+                            const filteredDeclarations = declarations.filter(declaration => {
+                                if (ts.isIdentifier(declaration.name) && /_base\w*$/.test(declaration.name.text)
+                                    && /:\s*undefined$/.test(declaration.getText())) {
+                                    return false;
+                                }
+                                return true;
+                            });
+
+                            if (filteredDeclarations.length === 0) {
+                                return ts.factory.createNotEmittedStatement(node);
+                            }
+                            else if (filteredDeclarations.length < declarations.length) {
+                                return ts.factory.updateVariableStatement(node, node.modifiers,
+                                    ts.factory.updateVariableDeclarationList(node.declarationList, filteredDeclarations)
+                                );
+                            }
+                        }
+                        //remove empty exports
+                        else if (ts.isExportDeclaration(node) && /export\s*{\s*}/.test(node.getText())) {
                             return ts.factory.createNotEmittedStatement(node);
                         }
-                        return node;
                     }
                 });
                 let output = printer.printFile(newSourceFile);
@@ -325,7 +420,7 @@ function fixDeclaration(content, aceNamespacePath) {
 function hasInternalTag(node) {
     const sourceFile = node.getSourceFile();
     if (!sourceFile) return false;
-    
+
     const jsDocs = ts.getJSDocTags(node).filter(tag => tag.tagName.text === 'internal');
     return jsDocs.length > 0;
 }
@@ -480,7 +575,7 @@ function cloneAceNamespace(aceNamespacePath) {
 }
 
 /**
- * @param {string} aceNamespacePath
+ * @param {string} [aceNamespacePath]
  */
 function generateDeclaration(aceNamespacePath) {
     if (!aceNamespacePath) {
@@ -505,7 +600,11 @@ function generateDeclaration(aceNamespacePath) {
 }
 
 /**
- * @param {string} content
+ * Updates the declaration module names in the provided content.
+ * This function replaces references to "ace-code" with "ace-builds" and "ace-builds-internal" as appropriate.
+ *
+ * @param {string} content - The content to update.
+ * @returns {string} The updated content with the module names replaced.
  */
 function updateDeclarationModuleNames(content) {
     let output = content.replace(

@@ -967,46 +967,7 @@ declare module "ace-code" {
             showGutter?: boolean;
         }
     }
-    export const config: {
-        defineOptions(obj: any, path: string, options: {
-            [key: string]: any;
-        }): import("ace-code").Ace.AppConfig;
-        resetOptions(obj: any): void;
-        setDefaultValue(path: string, name: string, value: any): boolean;
-        setDefaultValues(path: string, optionHash: {
-            [key: string]: any;
-        }): void;
-        setMessages(value: any, options?: {
-            placeholders?: "dollarSigns" | "curlyBrackets";
-        }): void;
-        nls(key: string, defaultString: string, params?: {
-            [x: string]: any;
-        }): any;
-        warn: (message: any, ...args: any[]) => void;
-        reportError: (msg: any, data: any) => void;
-        once<K extends string | number | symbol>(name: K, callback: any): void;
-        setDefaultHandler(name: string, callback: Function): void;
-        removeDefaultHandler(name: string, callback: Function): void;
-        on<K extends string | number | symbol>(name: K, callback: any, capturing?: boolean): any;
-        addEventListener<K extends string | number | symbol>(name: K, callback: any, capturing?: boolean): any;
-        off<K extends string | number | symbol>(name: K, callback: any): void;
-        removeListener<K extends string | number | symbol>(name: K, callback: any): void;
-        removeEventListener<K extends string | number | symbol>(name: K, callback: any): void;
-        removeAllListeners(name?: string): void;
-        get: <K extends keyof import("ace-code").Ace.ConfigOptions>(key: K) => import("ace-code").Ace.ConfigOptions[K];
-        set: <K extends keyof import("ace-code").Ace.ConfigOptions>(key: K, value: import("ace-code").Ace.ConfigOptions[K]) => void;
-        all: () => import("ace-code").Ace.ConfigOptions;
-        moduleUrl: (name: string, component?: string) => string;
-        setModuleUrl: (name: string, subst: string) => string;
-        setLoader: (cb: (name: string, callback: (error: any, module: any) => void) => void) => void;
-        dynamicModules: any;
-        loadModule: (moduleId: string | [
-            string,
-            string
-        ], onLoad: (module: any) => void) => void;
-        setModuleLoader: (moduleName: any, onLoad: any) => void;
-        version: "1.36.4";
-    };
+    export const config: typeof import("ace-code/src/config");
     export function edit(el?: string | (HTMLElement & {
         env?: any;
         value?: any;

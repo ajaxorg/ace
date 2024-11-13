@@ -1,5 +1,4 @@
 declare module "ace-code/src/ext/command_bar" {
-    const CommandBarTooltip_base: undefined;
     /**
      * Displays a command tooltip above the currently active line selection, with clickable elements.
      *
@@ -78,7 +77,6 @@ declare module "ace-code/src/ext/command_bar" {
     import Tooltip = Tooltip_2.Tooltip;
     export var TOOLTIP_CLASS_NAME: string;
     export var BUTTON_CLASS_NAME: string;
-    export { };
     namespace Ace {
         type EventEmitter<T> = import("ace-code").Ace.EventEmitter<T>;
     }
@@ -111,8 +109,8 @@ declare module "ace-code/src/ext/inline_autocomplete" {
         blurListener(e: any): void;
         changeListener(e: any): void;
         changeTimer: {
-            (timeout: any): void;
-            delay(timeout: any): void;
+            (timeout?: number): void;
+            delay(timeout?: number): void;
             schedule: any;
             call(): void;
             cancel(): void;
@@ -509,7 +507,6 @@ declare module "ace-code/src/ext/modelist" {
          */
         supportsFile(filename: string): RegExpMatchArray;
     }
-    export { };
 }
 declare module "ace-code/src/ext/themelist" {
     export const themesByName: {};
@@ -521,7 +518,6 @@ declare module "ace-code/src/ext/themelist" {
     }[];
 }
 declare module "ace-code/src/ext/options" {
-    const OptionPanel_base: undefined;
     export class OptionPanel {
         /**
          *
@@ -557,7 +553,6 @@ declare module "ace-code/src/ext/options" {
         getOption(option: any): any;
     }
     export type Editor = import("ace-code/src/editor").Editor;
-    export { };
     namespace Ace {
         type EventEmitter<T> = import("ace-code").Ace.EventEmitter<T>;
     }
@@ -671,7 +666,6 @@ declare module "ace-code/src/ext/prompt" {
     }
 }
 declare module "ace-code/src/ext/rtl" {
-    export { };
 }
 declare module "ace-code/src/ext/settings_menu" {
     export function init(): void;
@@ -759,75 +753,6 @@ declare module "ace-code/src/ext/statusbar" {
          */
         updateStatus(editor: Editor): void;
     }
-}
-declare module "ace-code/src/ext/textarea" {
-    const _exports: {
-        config: {
-            defineOptions(obj: any, path: string, options: {
-                [key: string]: any;
-            }): import("ace-code").Ace.AppConfig;
-            resetOptions(obj: any): void;
-            setDefaultValue(path: string, name: string, value: any): boolean;
-            setDefaultValues(path: string, optionHash: {
-                [key: string]: any;
-            }): void;
-            setMessages(value: any, options?: {
-                placeholders?: "dollarSigns" | "curlyBrackets";
-            }): void;
-            nls(key: string, defaultString: string, params?: {
-                [x: string]: any;
-            }): any;
-            warn: (message: any, ...args: any[]) => void;
-            reportError: (msg: any, data: any) => void;
-            once<K extends string | number | symbol>(name: K, callback: any): void;
-            setDefaultHandler(name: string, callback: Function): void;
-            removeDefaultHandler(name: string, callback: Function): void;
-            on<K extends string | number | symbol>(name: K, callback: any, capturing?: boolean): any;
-            addEventListener<K extends string | number | symbol>(name: K, callback: any, capturing?: boolean): any;
-            off<K extends string | number | symbol>(name: K, callback: any): void;
-            removeListener<K extends string | number | symbol>(name: K, callback: any): void;
-            removeEventListener<K extends string | number | symbol>(name: K, callback: any): void;
-            removeAllListeners(name?: string): void;
-            get: <K extends keyof import("ace-code").Ace.ConfigOptions>(key: K) => import("ace-code").Ace.ConfigOptions[K];
-            set: <K extends keyof import("ace-code").Ace.ConfigOptions>(key: K, value: import("ace-code").Ace.ConfigOptions[K]) => void;
-            all: () => import("ace-code").Ace.ConfigOptions;
-            moduleUrl: (name: string, component?: string) => string;
-            setModuleUrl: (name: string, subst: string) => string;
-            setLoader: (cb: (name: string, callback: (error: any, module: any) => void) => void) => void;
-            dynamicModules: any;
-            loadModule: (moduleId: string | [
-                string,
-                string
-            ], onLoad: (module: any) => void) => void;
-            setModuleLoader: (moduleName: any, onLoad: any) => void;
-            version: "1.36.4";
-        };
-        edit: (el?: string | (HTMLElement & {
-            env?: any;
-            value?: any;
-        }) | null, options?: any) => ace.Editor;
-        createEditSession: (text: import("ace-code/src/document").Document | string, mode?: import("ace-code").Ace.SyntaxMode) => ace.EditSession;
-        Range: typeof ace.Range;
-        Editor: typeof ace.Editor;
-        EditSession: typeof ace.EditSession;
-        UndoManager: typeof ace.UndoManager;
-        VirtualRenderer: typeof ace.VirtualRenderer;
-        version: "1.36.4";
-        transformTextarea: (element: any, options: any) => ace.Editor;
-        defaultOptions: {
-            mode: string;
-            theme: string;
-            wrap: string;
-            fontSize: string;
-            showGutter: string;
-            keybindings: string;
-            showPrintMargin: string;
-            useSoftTabs: string;
-            showInvisibles: string;
-        };
-    };
-    export = _exports;
-    import ace = require("ace-code");
 }
 declare module "ace-code/src/ext/whitespace" {
     export function $detectIndentation(lines: string[], fallback?: any): {

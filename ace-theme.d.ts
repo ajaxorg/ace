@@ -6,6 +6,7 @@ declare module "ace-code/src/theme/textmate" {
     export const isDark: false;
     export const cssClass: "ace-tm";
     export const cssText: string;
+    export const $id: "ace/theme/textmate";
 }
 declare module "ace-code/src/theme/ambiance-css" {
     const _exports: string;
@@ -132,6 +133,7 @@ declare module "ace-code/src/theme/dracula" {
     export const isDark: true;
     export const cssClass: "ace-dracula";
     export const cssText: string;
+    export const $selectionColorConflict: true;
 }
 declare module "ace-code/src/theme/dreamweaver-css" {
     const _exports: string;
@@ -303,6 +305,7 @@ declare module "ace-code/src/theme/nord_dark" {
     export const isDark: true;
     export const cssClass: "ace-nord-dark";
     export const cssText: string;
+    export const $selectionColorConflict: true;
 }
 declare module "ace-code/src/theme/one_dark-css" {
     const _exports: string;

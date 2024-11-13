@@ -83,9 +83,12 @@ declare module "ace-code/src/lib/lang" {
         cancel(): any;
         isPending(): any;
     };
-    export function delayedCall(fcn: any, defaultTimeout: any): {
-        (timeout: any): void;
-        delay(timeout: any): void;
+    export function delayedCall(fcn: any, defaultTimeout?: number): {
+        (timeout?: number): void;
+        /**
+         * @param {number} [timeout]
+         */
+        delay(timeout?: number): void;
         schedule: any;
         call(): void;
         cancel(): void;
@@ -110,7 +113,9 @@ declare module "ace-code/src/lib/event" {
     export function getModifierString(e: KeyboardEvent | MouseEvent): any;
     export function addCommandKeyListener(el: EventTarget, callback: (e: KeyboardEvent, hashId: number, keyCode: number) => void, destroyer?: any): void;
     export function nextTick(callback: any, win: any): void;
+    export const $idleBlocked: boolean;
     export function onIdle(cb: any, timeout: any): number;
+    export const $idleBlockId: number;
     export function blockIdle(delay: any): void;
     export const nextFrame: any;
 }
@@ -177,7 +182,6 @@ declare module "ace-code/src/lib/default_english_messages" {
     };
 }
 declare module "ace-code/src/lib/app_config" {
-    const AppConfig_base: undefined;
     export class AppConfig {
         /**
          * @param {Object} obj
@@ -224,7 +228,6 @@ declare module "ace-code/src/lib/app_config" {
         reportError: (msg: any, data: any) => void;
     }
     function warn(message: any, ...args: any[]): void;
-    export { };
     namespace Ace {
         type EventEmitter<T> = import("ace-code").Ace.EventEmitter<T>;
     }
@@ -249,5 +252,4 @@ declare module "ace-code/src/lib/bidiutil" {
     export var EN: number;
 }
 declare module "ace-code/src/lib/fixoldbrowsers" {
-    export { };
 }
