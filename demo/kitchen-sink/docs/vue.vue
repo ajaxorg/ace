@@ -115,3 +115,5 @@ html, body
   each item in items
     li= item
 </template>
+
+<template v-slot:item.parentkey.subkey.subkey.subkey.subkey.subkey="{ value }"></template>

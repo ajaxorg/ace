@@ -733,4 +733,27 @@
   ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start"
+],[
+   "start",
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","template"],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","v-"],
+  ["entity.other.attribute-name.xml","slot"],
+  ["entity.other.attribute-name.xml",":item"],
+  ["entity.other.attribute-name.xml",".parentkey.subkey.subkey.subkey.subkey.subkey"],
+  ["punctuation.separator.key-value.xml","="],
+  ["string","\""],
+  ["paren.lparen","{"],
+  ["text"," "],
+  ["identifier","value"],
+  ["text"," "],
+  ["paren.rparen","}"],
+  ["string","\""],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","template"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start"
 ]]
