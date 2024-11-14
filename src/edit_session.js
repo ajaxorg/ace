@@ -196,14 +196,15 @@ class EditSession {
      * @returns {LineWidgets} object
      */
     get widgetManager() {
-        const widgetManager = new LineWidgets(this);
-        // todo remove the widgetManger assignement from lineWidgets constructor when introducing breaking changes
-        this.widgetManager = widgetManager;
+        if (!this.widgetManager) {
+            const widgetManager = new LineWidgets(this);
+            // todo remove the widgetManger assignement from lineWidgets constructor when introducing breaking changes
+            this.widgetManager = widgetManager;
 
-        if (this.$editor)
-            widgetManager.attach(this.$editor);
-        
-        return widgetManager;
+            if (this.$editor)
+                widgetManager.attach(this.$editor);
+        }      
+        return this.widgetManager;
     }
 
     /**
