@@ -4,7 +4,6 @@
  * @typedef {import("../virtual_renderer").VirtualRenderer & {$textLayer: import("../layer/text").Text &{$lenses: any}}} VirtualRenderer
  */
 
-var LineWidgets = require("../line_widgets").LineWidgets;
 var event = require("../lib/event");
 var lang = require("../lib/lang");
 var dom = require("../lib/dom");
@@ -156,11 +155,6 @@ function attachToEditor(editor) {
     editor.$updateLenses = function() {
         var session = editor.session;
         if (!session) return;
-
-        if (!session.widgetManager) {
-            session.widgetManager = new LineWidgets(session);
-            session.widgetManager.attach(editor);
-        }
 
         var providersToWaitNum = editor.codeLensProviders.length;
         var lenses = [];

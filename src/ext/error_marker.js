@@ -1,5 +1,4 @@
 "use strict";
-var LineWidgets = require("../line_widgets").LineWidgets;
 var dom = require("../lib/dom");
 var Range = require("../range").Range;
 var nls = require("../config").nls;
@@ -70,11 +69,6 @@ function findAnnotations(session, row, dir) {
  */
 exports.showErrorMarker = function(editor, dir) {
     var session = editor.session;
-    if (!session.widgetManager) {
-        session.widgetManager = new LineWidgets(session);
-        session.widgetManager.attach(editor);
-    }
-    
     var pos = editor.getCursorPosition();
     var row = pos.row;
     var oldWidget = session.widgetManager.getWidgetsAtRow(row).filter(function(w) {

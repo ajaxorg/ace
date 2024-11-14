@@ -293,21 +293,23 @@ export namespace Ace {
     }
 
     interface LineWidget {
-        el: HTMLElement;
-        rowCount: number;
-        hidden: boolean;
-        _inDocument: boolean;
+        editor?: Editor,
+        el?: HTMLElement;
+        rowCount?: number;
+        hidden?: boolean;
+        _inDocument?: boolean;
         column?: number;
-        row?: number;
+        row: number;
         $oldWidget?: LineWidget,
-        session: EditSession,
+        session?: EditSession,
         html?: string,
         text?: string,
         className?: string,
         coverGutter?: boolean,
         pixelHeight?: number,
         $fold?: Fold,
-        editor: Editor,
+        type?:any,
+        destroy?:()=>void;
         coverLine?: boolean,
         fixedWidth?: boolean,
         fullWidth?: boolean,
