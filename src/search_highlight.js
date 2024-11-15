@@ -16,7 +16,7 @@ class SearchHighlight {
         this.clazz = clazz;
         this.type = type;
     }
-    
+
     setRegexp(regExp) {
         if (this.regExp+"" == regExp+"")
             return;
@@ -35,16 +35,27 @@ class SearchHighlight {
             return;
         var start = config.firstRow, end = config.lastRow;
         var renderedMarkerRanges = {};
+        var _search = session.$editor.$search;
+        var multiline = _search.$isMultilineSearch(session.$editor.getLastSearchOptions());
 
         for (var i = start; i <= end; i++) {
             var ranges = this.cache[i];
             if (ranges == null) {
-                ranges = lang.getMatchOffsets(session.getLine(i), this.regExp);
-                if (ranges.length > this.MAX_RANGES)
-                    ranges = ranges.slice(0, this.MAX_RANGES);
-                ranges = ranges.map(function(match) {
-                    return new Range(i, match.offset, i, match.offset + match.length);
-                });
+                if (multiline) {
+                    ranges = [];
+                    var matches = _search.$multiLineForward(session, this.regExp, i, end, true);
+                    if (matches) ranges.push(new Range(matches.startRow, matches.startCol, matches.endRow, matches.endCol));
+                    if (ranges.length > this.MAX_RANGES)
+                        ranges = ranges.slice(0, this.MAX_RANGES);
+                }
+                else {
+                    ranges = lang.getMatchOffsets(session.getLine(i), this.regExp);
+                    if (ranges.length > this.MAX_RANGES)
+                        ranges = ranges.slice(0, this.MAX_RANGES);
+                    ranges = ranges.map(function(match) {
+                        return new Range(i, match.offset, i, match.offset + match.length);
+                    });
+                }
                 this.cache[i] = ranges.length ? ranges : "";
             }
 
@@ -59,7 +70,6 @@ class SearchHighlight {
             }
         }
     }
-
 }
 
 // needed to prevent long lines from freezing the browser

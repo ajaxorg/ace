@@ -192,7 +192,7 @@ class EditSession {
 
     /**
      * Get "widgetManager" from EditSession
-     * 
+     *
      * @returns {LineWidgets} object
      */
     get widgetManager() {
@@ -202,18 +202,18 @@ class EditSession {
 
         if (this.$editor)
             widgetManager.attach(this.$editor);
-        
+
         return widgetManager;
     }
 
     /**
      * Set "widgetManager" in EditSession
-     * 
+     *
      * @returns void
      */
     set widgetManager(value) {
         Object.defineProperty(this, "widgetManager", {
-            writable: true, 
+            writable: true,
             enumerable: true,
             configurable: true,
             value: value,
@@ -2747,4 +2747,3 @@ config.defineOptions(EditSession.prototype, "session", {
 });
 
 exports.EditSession = EditSession;
-

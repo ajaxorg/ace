@@ -116,11 +116,17 @@ class Search {
                     row = row + len - 2;
             }
         } else {
-            for (var i = 0; i < lines.length; i++) {
-                var matches = lang.getMatchOffsets(lines[i], re);
-                for (var j = 0; j < matches.length; j++) {
-                    var match = matches[j];
-                    ranges.push(new Range(i, match.offset, i, match.offset + match.length));
+            for (var matches, i = 0; i < lines.length; i++) {
+                if (this.$isMultilineSearch(options)) {
+                    matches = this.$multiLineForward(session, re, i, lines.length);
+                    ranges.push(new Range(matches.startRow, matches.startCol, matches.endRow, matches.endCol));
+                }
+                else {
+                    matches = lang.getMatchOffsets(lines[i], re);
+                    for (var j = 0; j < matches.length; j++) {
+                        var match = matches[j];
+                        ranges.push(new Range(i, match.offset, i, match.offset + match.length));
+                    }
                 }
             }
         }
@@ -165,6 +171,9 @@ class Search {
 
         if (!re)
             return;
+
+        if (this.$isMultilineSearch(options))
+            input = input.replace(/\r\n|\r|\n/g, "\n");
 
         var match = re.exec(input);
         if (!match || match[0].length != input.length)
@@ -248,6 +257,76 @@ class Search {
         return re;
     }
 
+    $isMultilineSearch(options) {
+        var regexp = typeof options.regExp === 'undefined' ? false : options.regExp;
+        return /\\r\\n|\\r|\\n/.test(options.re.source) && regexp && !options.$isMultiLine;
+    }
+
+    $multiLineForward(session, re, start, last) {
+        var line,
+            chunk = 1;
+
+        for (var row = start; row <= last;) {
+            for (var i = 0; i < chunk; i++) {
+                if (row > last)
+                    break;
+                var next = session.getLine(row++);
+                line = line == null ? next : line + "\n" + next;
+            }
+            chunk = chunk * 2;
+
+            var match = re.exec(line);
+            if (match) {
+                var before = line.slice(0, match.index).split("\n");
+                var inside = match[0].split("\n");
+                var startRow = start + before.length - 1;
+                var startCol = before[before.length - 1].length;
+                var endRow = startRow + inside.length - 1;
+                var endCol = inside.length == 1 ? startCol + inside[0].length : inside[inside.length - 1].length;
+
+                return {
+                    startRow: startRow,
+                    startCol: startCol,
+                    endRow: endRow,
+                    endCol: endCol
+                };
+            }
+        }
+        return false;
+    }
+
+    $multiLineBackward(session, re, endIndex, start, first) {
+        var line,
+            chunk = 1,
+            endMargin = session.getLine(start).length - endIndex;
+
+        for (var row = start; row >= first;) {
+            for (var i = 0; i < chunk && row >= first; i++) {
+                var next = session.getLine(row--);
+                line = line == null ? next : next + "\n" + line;
+            }
+            chunk = chunk * 2;
+
+            var match = multiLineBackwardMatch(line, re, endMargin);
+            if (match) {
+                var before = line.slice(0, match.index).split("\n");
+                var inside = match[0].split("\n");
+                var startRow = row + before.length;
+                var startCol = before[before.length - 1].length;
+                var endRow = startRow + inside.length - 1;
+                var endCol = inside.length == 1 ? startCol + inside[0].length : inside[inside.length - 1].length;
+
+                return {
+                    startRow: startRow,
+                    startCol: startCol,
+                    endRow: endRow,
+                    endCol: endCol
+                };
+            }
+        }
+        return false;
+    }
+
     /**
      * @param {EditSession} session
      */
@@ -255,6 +334,11 @@ class Search {
         var re = this.$assembleRegExp(options);
         if (!re)
             return false;
+
+        var multiline = this.$isMultilineSearch(options);
+        var mtForward = this.$multiLineForward;
+        var mtBackward = this.$multiLineBackward;
+
         var backwards = options.backwards == true;
         var skipCurrent = options.skipCurrent != false;
         var supportsUnicodeFlag = re.unicode;
@@ -322,43 +406,61 @@ class Search {
         }
         else if (backwards) {
             var forEachInLine = function(row, endIndex, callback) {
-                var line = session.getLine(row);
-                var matches = [];
-                var m, last = 0;
-                re.lastIndex = 0;
-                while((m = re.exec(line))) {
-                    var length = m[0].length;
-                    last = m.index;
-                    if (!length) {
-                        if (last >= line.length) break;
-                        re.lastIndex = last += lang.skipEmptyMatch(line, last, supportsUnicodeFlag);
-                    }
-                    if (m.index + length > endIndex)
-                        break;
-                    matches.push(m.index, length);
-                }
-                for (var i = matches.length - 1; i >= 0; i -= 2) {
-                    var column = matches[i - 1];
-                    var length = matches[i];
-                    if (callback(row, column, row, column + length))
+                if (multiline) {
+                    var pos = mtBackward(session, re, endIndex, row, firstRow);
+                    if (!pos)
+                        return false;
+                    if (callback(pos.startRow, pos.startCol, pos.endRow, pos.endCol))
                         return true;
+                }
+                else {
+                    var line = session.getLine(row);
+                    var matches = [];
+                    var m, last = 0;
+                    re.lastIndex = 0;
+                    while((m = re.exec(line))) {
+                        var length = m[0].length;
+                        last = m.index;
+                        if (!length) {
+                            if (last >= line.length) break;
+                            re.lastIndex = last += lang.skipEmptyMatch(line, last, supportsUnicodeFlag);
+                        }
+                        if (m.index + length > endIndex)
+                            break;
+                        matches.push(m.index, length);
+                    }
+                    for (var i = matches.length - 1; i >= 0; i -= 2) {
+                        var column = matches[i - 1];
+                        var length = matches[i];
+                        if (callback(row, column, row, column + length))
+                            return true;
+                    }
                 }
             };
         }
         else {
             var forEachInLine = function(row, startIndex, callback) {
-                var line = session.getLine(row);
-                var last;
-                var m;
                 re.lastIndex = startIndex;
-                while((m = re.exec(line))) {
-                    var length = m[0].length;
-                    last = m.index;
-                    if (callback(row, last, row,last + length))
+                if (multiline) {
+                    var pos = mtForward(session, re, row, lastRow);
+                    if (!pos)
+                        return false;
+                    if (callback(pos.startRow, pos.startCol, pos.endRow, pos.endCol))
                         return true;
-                    if (!length) {
-                        re.lastIndex = last += lang.skipEmptyMatch(line, last, supportsUnicodeFlag);
-                        if (last >= line.length) return false;
+                }
+                else {
+                    var line = session.getLine(row);
+                    var last;
+                    var m;
+                    while((m = re.exec(line))) {
+                        var length = m[0].length;
+                        last = m.index;
+                        if (callback(row, last, row,last + length))
+                            return true;
+                        if (!length) {
+                            re.lastIndex = last += lang.skipEmptyMatch(line, last, supportsUnicodeFlag);
+                            if (last >= line.length) return false;
+                        }
                     }
                 }
             };
@@ -395,6 +497,24 @@ function addWordBoundary(needle, options) {
     let lastChar = needleArray[needleArray.length - 1];
 
     return wordBoundary(firstChar) + needle + wordBoundary(lastChar, false);
+}
+
+function multiLineBackwardMatch(line, re, endMargin) {
+    var match,
+        from = 0;
+    while (from <= line.length) {
+        re.lastIndex = from;
+        var newMatch = re.exec(line);
+        if (!newMatch)
+            break;
+        var end = newMatch.index + newMatch[0].length;
+        if (end > line.length - endMargin)
+            break;
+        if (!match || end > match.index + match[0].length)
+            match = newMatch;
+        from = newMatch.index + 1;
+    }
+    return match;
 }
 
 exports.Search = Search;
