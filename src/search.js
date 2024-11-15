@@ -264,7 +264,7 @@ class Search {
 
     $multiLineForward(session, re, start, last) {
         var line,
-            chunk = 1;
+            chunk = chunkEnd(session, start);
 
         for (var row = start; row <= last;) {
             for (var i = 0; i < chunk; i++) {
@@ -273,9 +273,9 @@ class Search {
                 var next = session.getLine(row++);
                 line = line == null ? next : line + "\n" + next;
             }
-            chunk = chunk * 2;
 
             var match = re.exec(line);
+            re.lastIndex = 0;
             if (match) {
                 var before = line.slice(0, match.index).split("\n");
                 var inside = match[0].split("\n");
@@ -297,7 +297,7 @@ class Search {
 
     $multiLineBackward(session, re, endIndex, start, first) {
         var line,
-            chunk = 1,
+            chunk = chunkEnd(session, start),
             endMargin = session.getLine(start).length - endIndex;
 
         for (var row = start; row >= first;) {
@@ -305,7 +305,6 @@ class Search {
                 var next = session.getLine(row--);
                 line = line == null ? next : next + "\n" + line;
             }
-            chunk = chunk * 2;
 
             var match = multiLineBackwardMatch(line, re, endMargin);
             if (match) {
@@ -515,6 +514,16 @@ function multiLineBackwardMatch(line, re, endMargin) {
         from = newMatch.index + 1;
     }
     return match;
+}
+
+function chunkEnd(session, start) {
+    var base = 5000,
+        startPosition = { row: start, column: 0 },
+        startIndex = session.doc.positionToIndex(startPosition),
+        targetIndex = startIndex + base,
+        targetPosition = session.doc.indexToPosition(targetIndex),
+        targetLine = targetPosition.row;
+    return targetLine + 1;
 }
 
 exports.Search = Search;
