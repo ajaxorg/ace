@@ -152,6 +152,74 @@ class Search {
         return ranges;
     }
 
+    parseReplaceString(input, replaceString) {
+        var CharCode = {
+            DollarSign: 36,
+            Ampersand: 38,
+            Digit0: 48,
+            Digit1: 49,
+            Digit9: 57,
+            Backslash: 92,
+            n: 110,
+            t: 116
+        };
+
+        var replacement = '';
+        for (var i = 0, len = replaceString.length; i < len; i++) {
+            var chCode = replaceString.charCodeAt(i);
+            if (chCode === CharCode.Backslash) {
+                // move to next char
+                i++;
+                if (i >= len) {
+                    // string ends with a \
+                    break;
+                }
+                var nextChCode = replaceString.charCodeAt(i);
+                switch (nextChCode) {
+                    case CharCode.Backslash:
+                        // \\ => inserts a "\"
+                        replacement = '\\';
+                        break;
+                    case CharCode.n:
+                        // \n => inserts a LF
+                        replacement= '\n';
+                        break;
+                    case CharCode.t:
+                        // \t => inserts a TAB
+                        replacement = '\t';
+                        break;
+                }
+                continue;
+            }
+
+            if (chCode === CharCode.DollarSign) {
+                // move to next char
+                i++;
+                if (i >= len) {
+                    // string ends with a $
+                    break;
+                }
+                const nextChCode = replaceString.charCodeAt(i);
+                if (nextChCode === CharCode.DollarSign) {
+                    // $$ => inserts a "$"
+                    replacement = '$';
+                    continue;
+                }
+                if (nextChCode === CharCode.Digit0 || nextChCode === CharCode.Ampersand) {
+                    // $& and $0 => inserts the matched substring.
+                    replacement = input;
+                    continue;
+                }
+                if (CharCode.Digit1 <= nextChCode && nextChCode <= CharCode.Digit9) {
+                    // $n
+                    replacement = replaceString;
+                    continue;
+                }
+            }
+        }
+        return replacement;
+    }
+
     /**
      * Searches for `options.needle` in `input`, and, if found, replaces it with `replacement`.
      * @param {String} input The text to search in
@@ -176,10 +244,11 @@ class Search {
             input = input.replace(/\r\n|\r|\n/g, "\n");
 
         var match = re.exec(input);
-        if (!match || match[0].length != input.length)
+        if (!match || (!this.$isMultilineSearch(options) && match[0].length != input.length))
             return null;
-        if (!options.regExp) {
-            replacement = replacement.replace(/\$/g, "$$$$");
+
+        if (options.regExp) {
+            replacement = this.parseReplaceString(input, replacement);
         }
 
         replacement = input.replace(re, replacement);
@@ -258,8 +327,7 @@ class Search {
     }
 
     $isMultilineSearch(options) {
-        var regexp = typeof options.regExp === 'undefined' ? false : options.regExp;
-        return /\\r\\n|\\r|\\n/.test(options.re.source) && regexp && !options.$isMultiLine;
+        return options.re && /\\r\\n|\\r|\\n/.test(options.re.source) && options.regExp && !options.$isMultiLine;
     }
 
     $multiLineForward(session, re, start, last) {

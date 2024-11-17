@@ -214,7 +214,7 @@ class SearchBox {
                 ? editor.session.getTextRange(this.searchRange)
                 : editor.getValue();
 
-            if (editor.$search.$isMultilineSearch(editor.$search.$options))
+            if (editor.$search.$isMultilineSearch(editor.getLastSearchOptions()))
                 value = value.replace(/\r\n|\r|\n/g, "\n");
 
             var offset = editor.session.doc.positionToIndex(editor.selection.anchor);
