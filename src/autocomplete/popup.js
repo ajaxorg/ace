@@ -32,10 +32,12 @@ var $singleLineEditor = function(el) {
     editor.setShowPrintMargin(false);
     editor.renderer.setShowGutter(false);
     editor.renderer.setHighlightGutterLine(false);
+    editor.setOption("cursorStyle", "slim");
 
     editor.$mouseHandler.$focusTimeout = 0;
     editor.$highlightTagPending = true;
 
+    editor.renderer.setStyle("ace_singleLine", true);
     return editor;
 };
 

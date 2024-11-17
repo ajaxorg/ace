@@ -46,7 +46,6 @@ module.exports = `
     border: 1px solid #cbcbcb;
     border-right: 0 none;
     outline: 0;
-    padding: 0;
     font-size: inherit;
     margin: 0;
     line-height: inherit;
@@ -59,7 +58,6 @@ module.exports = `
 
 .ace_search_input_wrapper {
     float: left;
-    padding: 5px 2px 4px 2px;
     min-width: 17em;
     border-radius: 3px 0 0 3px;
     background-color: white;

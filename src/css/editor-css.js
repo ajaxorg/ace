@@ -340,7 +340,8 @@ module.exports = `
     opacity: 0.2;
 }
 
-.ace_hasPlaceholder .ace_hidden-cursors .ace_cursor {
+.ace_hasPlaceholder .ace_hidden-cursors .ace_cursor,
+.ace_singleLine .ace_hidden-cursors .ace_cursor {
     opacity: 0;
 }
 

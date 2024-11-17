@@ -69,6 +69,7 @@ function DragdropHandler(mouseHandler) {
 
         isInternal = true;
         this.setState("drag");
+        e.stopPropagation();
     };
     /**
      * @param e
@@ -88,6 +89,7 @@ function DragdropHandler(mouseHandler) {
         }
         this.editor.unsetStyle("ace_dragging");
         this.editor.renderer.setCursorStyle("");
+        e.stopPropagation();
     };
     /**
      * @param e
@@ -125,6 +127,7 @@ function DragdropHandler(mouseHandler) {
             onMouseMoveTimer = null;
 
         e.dataTransfer.dropEffect = dragOperation = getDropEffect(e);
+        e.stopPropagation();
         return event.preventDefault(e);
     };
 
