@@ -71,26 +71,34 @@ class Gutter{
             var row = annotation.row;
             var rowInfo = this.$annotations[row];
             if (!rowInfo)
-                rowInfo = this.$annotations[row] = {text: [], type: []};
+                rowInfo = this.$annotations[row] = {text: [], type: [], displayText: []};
            
             var annoText = annotation.text;
+            var displayAnnoText = annotation.text;
             var annoType = annotation.type;
             annoText = annoText ? lang.escapeHTML(annoText) : annotation.html || "";
+            displayAnnoText = displayAnnoText ? displayAnnoText : annotation.html || "";
 
             if (rowInfo.text.indexOf(annoText) === -1){
                 rowInfo.text.push(annoText);
                 rowInfo.type.push(annoType);
+                rowInfo.displayText.push(displayAnnoText);
             }
 
             var className = annotation.className;
-            if (className) 
+            if (className) {
                 rowInfo.className = className;
-            else if (annoType == "error")
+            } else if (annoType === "error") {
                 rowInfo.className = " ace_error";
-            else if (annoType == "warning" && rowInfo.className != " ace_error")
+            } else if (annoType === "security" && !/\bace_error\b/.test(rowInfo.className)) {
+                rowInfo.className = " ace_security";
+            } else if (annoType === "warning" && !/\bace_(error|security)\b/.test(rowInfo.className)) {
                 rowInfo.className = " ace_warning";
-            else if (annoType == "info" && (!rowInfo.className))
+            } else if (annoType === "info" && !rowInfo.className) {
                 rowInfo.className = " ace_info";
+            } else if (annoType === "hint" && !rowInfo.className) {
+                rowInfo.className = " ace_hint";
+            }
         }
     }
 
@@ -371,24 +379,29 @@ class Gutter{
         if (c) {
             var foldClass = "ace_fold-widget ace_" + c;
             var isClosedFold = c == "start" && row == foldStart && row < fold.end.row;
-            if (isClosedFold){
+            if (isClosedFold) {
                 foldClass += " ace_closed";
-                var foldAnnotationClass = '';
+                var foldAnnotationClass = "";
                 var annotationInFold = false;
 
-                for (var i = row + 1; i <= fold.end.row; i++){
-                    if (!this.$annotations[i])
-                        continue;
+                for (var i = row + 1; i <= fold.end.row; i++) {
+                    if (!this.$annotations[i]) continue;
 
-                    if (this.$annotations[i].className === " ace_error"){
+                    if (this.$annotations[i].className === " ace_error") {
                         annotationInFold = true;
                         foldAnnotationClass = " ace_error_fold";
                         break;
-                    } 
-                    if (this.$annotations[i].className === " ace_warning"){
+                    }
+
+                    if (this.$annotations[i].className === " ace_security") {
+                        annotationInFold = true;
+                        foldAnnotationClass = " ace_security_fold";
+                    } else if (
+                        this.$annotations[i].className === " ace_warning" &&
+                        foldAnnotationClass !== " ace_security_fold"
+                    ) {
                         annotationInFold = true;
                         foldAnnotationClass = " ace_warning_fold";
-                        continue;
                     }
                 }
 
@@ -401,7 +414,7 @@ class Gutter{
 
             dom.setStyle(foldWidget.style, "height", lineHeight);
             dom.setStyle(foldWidget.style, "display", "inline-block");
-            
+
             // Set a11y properties.
             foldWidget.setAttribute("role", "button");
             foldWidget.setAttribute("tabindex", "-1");
@@ -409,21 +422,35 @@ class Gutter{
 
             // getFoldWidgetRange is optional to be implemented by fold modes, if not available we fall-back.
             if (foldRange)
-                foldWidget.setAttribute("aria-label", nls("Toggle code folding, rows $0 through $1", [foldRange.start.row + 1, foldRange.end.row + 1]));
+                foldWidget.setAttribute(
+                    "aria-label",
+                    nls("gutter.code-folding.range.aria-label", "Toggle code folding, rows $0 through $1", [
+                        foldRange.start.row + 1,
+                        foldRange.end.row + 1
+                    ])
+                );
             else {
                 if (fold)
-                    foldWidget.setAttribute("aria-label", nls("Toggle code folding, rows $0 through $1", [fold.start.row + 1, fold.end.row + 1]));
+                    foldWidget.setAttribute(
+                        "aria-label",
+                        nls("gutter.code-folding.closed.aria-label", "Toggle code folding, rows $0 through $1", [
+                            fold.start.row + 1,
+                            fold.end.row + 1
+                        ])
+                    );
                 else
-                    foldWidget.setAttribute("aria-label", nls("Toggle code folding, row $0", [row + 1]));
+                    foldWidget.setAttribute(
+                        "aria-label",
+                        nls("gutter.code-folding.open.aria-label", "Toggle code folding, row $0", [row + 1])
+                    );
             }
 
             if (isClosedFold) {
                 foldWidget.setAttribute("aria-expanded", "false");
-                foldWidget.setAttribute("title", nls("Unfold code"));
-            }
-            else {
+                foldWidget.setAttribute("title", nls("gutter.code-folding.closed.title", "Unfold code"));
+            } else {
                 foldWidget.setAttribute("aria-expanded", "true");
-                foldWidget.setAttribute("title", nls("Fold code"));
+                foldWidget.setAttribute("title", nls("gutter.code-folding.open.title", "Fold code"));
             }
         } else {
             if (foldWidget) {
@@ -442,7 +469,21 @@ class Gutter{
             dom.setStyle(annotationIconNode.style, "height", lineHeight);
             dom.setStyle(annotationNode.style, "display", "block");
             dom.setStyle(annotationNode.style, "height", lineHeight);
-            annotationNode.setAttribute("aria-label", nls("Read annotations row $0", [rowText]));
+            var ariaLabel;
+            switch(foldAnnotationClass) {
+                case " ace_error_fold":
+                    ariaLabel = nls("gutter.annotation.aria-label.error", "Error, read annotations row $0", [rowText]);
+                    break;
+
+                case " ace_security_fold":
+                    ariaLabel = nls("gutter.annotation.aria-label.security", "Security finding, read annotations row $0", [rowText]);
+                    break;
+
+                case " ace_warning_fold":
+                    ariaLabel = nls("gutter.annotation.aria-label.warning", "Warning, read annotations row $0", [rowText]);
+                    break;
+            }
+            annotationNode.setAttribute("aria-label", ariaLabel);
             annotationNode.setAttribute("tabindex", "-1");
             annotationNode.setAttribute("role", "button");
         }
@@ -458,7 +499,29 @@ class Gutter{
             dom.setStyle(annotationIconNode.style, "height", lineHeight);
             dom.setStyle(annotationNode.style, "display", "block");
             dom.setStyle(annotationNode.style, "height", lineHeight);
-            annotationNode.setAttribute("aria-label", nls("Read annotations row $0", [rowText]));
+            var ariaLabel;
+            switch(this.$annotations[row].className) {
+                case " ace_error":
+                    ariaLabel = nls("gutter.annotation.aria-label.error", "Error, read annotations row $0", [rowText]);
+                    break;
+
+                case " ace_security":
+                    ariaLabel = nls("gutter.annotation.aria-label.security", "Security finding, read annotations row $0", [rowText]);
+                    break;
+
+                case " ace_warning":
+                    ariaLabel = nls("gutter.annotation.aria-label.warning", "Warning, read annotations row $0", [rowText]);
+                    break;
+
+                case " ace_info":
+                    ariaLabel = nls("gutter.annotation.aria-label.info", "Info, read annotations row $0", [rowText]);
+                    break;
+
+                case " ace_hint":
+                    ariaLabel = nls("gutter.annotation.aria-label.hint", "Suggestion, read annotations row $0", [rowText]);
+                    break;
+            }
+            annotationNode.setAttribute("aria-label", ariaLabel);
             annotationNode.setAttribute("tabindex", "-1");
             annotationNode.setAttribute("role", "button");
         }

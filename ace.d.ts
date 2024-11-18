@@ -235,6 +235,8 @@ export namespace Ace {
     relativeLineNumbers: boolean;
     enableMultiselect: boolean;
     enableKeyboardAccessibility: boolean;
+    textInputAriaLabel: string;
+    enableMobileMenu: boolean;
   }
 
   export interface SearchOptions {
@@ -288,9 +290,9 @@ export namespace Ace {
   }
 
   export class MarkerGroup {
-    constructor(session: EditSession);
+    constructor(session: EditSession, options?: {markerType?: "fullLine" | "line"});
     setMarkers(markers: MarkerGroupItem[]): void;
-    getMarkerAtPosition(pos: Position): MarkerGroupItem;
+    getMarkerAtPosition(pos: Position): MarkerGroupItem | undefined;
   }
 
 
@@ -504,7 +506,14 @@ export namespace Ace {
 
   export interface EditSession extends EventEmitter, OptionsProvider, Folding {
     selection: Selection;
-
+    curOp?: {
+      docChanged?: boolean;
+      selectionChanged?: boolean;
+      command?: {
+          name?: string;
+      };
+  };
+    widgetManager:WidgetManager;
     // TODO: define BackgroundTokenizer
 
     on(name: 'changeFold',
@@ -515,7 +524,7 @@ export namespace Ace {
        callback: (obj: { data: { first: number, last: number } }) => void): Function;
     on(name: 'change', callback: () => void): Function;
     on(name: 'changeTabSize', callback: () => void): Function;
-
+    on(name: "beforeEndOperation", callback: () => void): Function;
 
     setOption<T extends keyof EditSessionOptions>(name: T, value: EditSessionOptions[T]): void;
     getOption<T extends keyof EditSessionOptions>(name: T): EditSessionOptions[T];
@@ -622,6 +631,9 @@ export namespace Ace {
     documentToScreenColumn(row: number, docColumn: number): number;
     documentToScreenRow(docRow: number, docColumn: number): number;
     getScreenLength(): number;
+    getPrecedingCharacter(): string;
+    startOperation(commandEvent: {command: {name: string}}): void;
+    endOperation(): void;
     toJSON(): Object;
     destroy(): void;
   }
@@ -661,7 +673,8 @@ export namespace Ace {
     removeListener(name: string, callback: Function): void;
     removeEventListener(name: string, callback: Function): void;
 
-    exec(command: string, editor: Editor, args: any): boolean;
+    exec(command: string | string[] | Command, editor: Editor, args: any): boolean;
+    canExecute(command: string | Command, editor: Editor): boolean;
     toggleRecording(editor: Editor): void;
     replay(editor: Editor): void;
     addCommand(command: Command): void;
@@ -1093,6 +1106,28 @@ export namespace Ace {
     show(pos: Point, lineHeight: number, topdownOnly: boolean): void;
     tryShow(pos: Point, lineHeight: number, anchor: "top" | "bottom" | undefined, forceShow?: boolean): boolean;
     goTo(where: AcePopupNavigation): void;
+  }
+
+  export interface LineWidget {
+    el: HTMLElement; 
+    row: number; 
+    rowCount?: number; 
+    hidden: boolean;
+    editor: Editor, 
+    session: EditSession, 
+    column?: number; 
+    className?: string,
+    coverGutter?: boolean, 
+    pixelHeight?: number, 
+    fixedWidth?: boolean, 
+    fullWidth?: boolean,
+    screenWidth?: number,
+  }
+  
+  export class WidgetManager {
+    constructor(session: EditSession);
+    addLineWidget(w: LineWidget): LineWidget;
+    removeLineWidget(w: LineWidget): void;
   }
 }
 

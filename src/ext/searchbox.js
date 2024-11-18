@@ -23,8 +23,8 @@ dom.importCssString(searchboxCss, "ace_searchbox", false);
 class SearchBox {
     /**
      * @param {Editor} editor
-     * @param {undefined} [range]
-     * @param {undefined} [showReplaceForm]
+     * @param {never} [range]
+     * @param {never} [showReplaceForm]
      */
     constructor(editor, range, showReplaceForm) {
         /**@type {any}*/
@@ -32,23 +32,25 @@ class SearchBox {
         var div = dom.createElement("div");
         dom.buildDom(["div", {class:"ace_search right"},
             ["span", {action: "hide", class: "ace_searchbtn_close"}],
-            ["div", {class: "ace_search_form"}, ["div", {class: "ace_search_input_wrapper"}],
+            ["div", {class: "ace_search_form"},
+                ["div", {class: "ace_search_input_wrapper"}],
                 ["span", {action: "findPrev", class: "ace_searchbtn prev"}, "\u200b"],
                 ["span", {action: "findNext", class: "ace_searchbtn next"}, "\u200b"],
-                ["span", {action: "findAll", class: "ace_searchbtn", title: "Alt-Enter"}, nls("All")]
+                ["span", {action: "findAll", class: "ace_searchbtn", title: "Alt-Enter"}, nls("search-box.find-all.text", "All")]
             ],
-            ["div", {class: "ace_replace_form"}, ["div", {class: "ace_search_input_wrapper"}],
-                ["span", {action: "replaceAndFindNext", class: "ace_searchbtn"}, nls("Replace")],
-                ["span", {action: "replaceAll", class: "ace_searchbtn"}, nls("All")]
+            ["div", {class: "ace_replace_form"},
+                ["div", {class: "ace_search_input_wrapper"}],
+                ["span", {action: "replaceAndFindNext", class: "ace_searchbtn"}, nls("search-box.replace-next.text", "Replace")],
+                ["span", {action: "replaceAll", class: "ace_searchbtn"}, nls("search-box.replace-all.text", "All")]
             ],
             ["div", {class: "ace_search_options"},
-                ["span", {action: "toggleReplace", class: "ace_button", title: nls("Toggle Replace mode"),
+                ["span", {action: "toggleReplace", class: "ace_button", title: nls("search-box.toggle-replace.title", "Toggle Replace mode"),
                     style: "float:left;margin-top:-2px;padding:0 5px;"}, "+"],
                 ["span", {class: "ace_search_counter"}],
-                ["span", {action: "toggleRegexpMode", class: "ace_button", title: nls("RegExp Search")}, ".*"],
-                ["span", {action: "toggleCaseSensitive", class: "ace_button", title: nls("CaseSensitive Search")}, "Aa"],
-                ["span", {action: "toggleWholeWords", class: "ace_button", title: nls("Whole Word Search")}, "\\b"],
-                ["span", {action: "searchInSelection", class: "ace_button", title: nls("Search In Selection")}, "S"]
+                ["span", {action: "toggleRegexpMode", class: "ace_button", title: nls("search-box.toggle-regexp.title", "RegExp Search")}, ".*"],
+                ["span", {action: "toggleCaseSensitive", class: "ace_button", title: nls("search-box.toggle-case.title", "CaseSensitive Search")}, "Aa"],
+                ["span", {action: "toggleWholeWords", class: "ace_button", title: nls("search-box.toggle-whole-word.title", "Whole Word Search")}, "\\b"],
+                ["span", {action: "searchInSelection", class: "ace_button", title: nls("search-box.toggle-in-selection.title", "Search In Selection")}, "S"]
             ]
         ], div);
         /**@type {any}*/
@@ -70,7 +72,7 @@ class SearchBox {
         /**@type {Editor}*/
         this.editor = editor;
     }
-    
+
     setSession(e) {
         this.searchRange = null;
         this.$syncOptions(true);
@@ -127,14 +129,14 @@ class SearchBox {
         this.setupInput(this.searchInput, "search");
         this.setupInput(this.replaceInput, "replace");
     }
-    
+
     $init() {
         this.libSearch = new LibSearch();
         
         var sb = this.element;
-        
+
         this.$initElements(sb);
-        
+
         var _this = this;
         event.addListener(sb, "mousedown", function(e) {
             setTimeout(function(){
@@ -606,7 +608,7 @@ class SearchBox {
         this.active = false;
         this.setSearchRange(null);
         this.editor.off("changeSession", this.setSession);
-        
+
         this.element.style.display = "none";
         this.editor.keyBinding.removeKeyboardHandler(this.$closeSearchBarKb);
         this.editor.focus();
@@ -628,7 +630,7 @@ class SearchBox {
         //TODO: this.searchInput.select();
 
         this.editor.keyBinding.addKeyboardHandler(this.$closeSearchBarKb);
-        
+
         this.$syncOptions(true);
     }
 
@@ -736,7 +738,7 @@ SearchBox.prototype.$closeSearchBarKb = $closeSearchBarKb;
 exports.SearchBox = SearchBox;
 
 /**
- * 
+ *
  * @param {Editor} editor
  * @param {boolean} [isReplace]
  */

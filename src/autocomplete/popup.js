@@ -64,8 +64,8 @@ class AcePopup {
 
         // Set aria attributes for the popup
         popup.renderer.$textLayer.element.setAttribute("role", popupAriaRole);
-        popup.renderer.$textLayer.element.setAttribute("aria-roledescription", nls("Autocomplete suggestions"));
-        popup.renderer.$textLayer.element.setAttribute("aria-label", nls("Autocomplete suggestions"));
+        popup.renderer.$textLayer.element.setAttribute("aria-roledescription", nls("autocomplete.popup.aria-roledescription", "Autocomplete suggestions"));
+        popup.renderer.$textLayer.element.setAttribute("aria-label", nls("autocomplete.popup.aria-label", "Autocomplete suggestions"));
         popup.renderer.textarea.setAttribute("aria-hidden", "true");
 
         popup.setOption("displayIndentGuides", false);
@@ -154,7 +154,7 @@ class AcePopup {
                 t.element.setAttribute("aria-activedescendant", ariaId);
                 el.setAttribute("aria-activedescendant", ariaId);
                 selected.setAttribute("role", optionAriaRole);
-                selected.setAttribute("aria-roledescription", nls("item"));
+                selected.setAttribute("aria-roledescription", nls("autocomplete.popup.item.aria-roledescription", "item"));
                 selected.setAttribute("aria-label", popup.getData(row).caption || popup.getData(row).value);
                 selected.setAttribute("aria-setsize", popup.data.length);
                 selected.setAttribute("aria-posinset", row + 1);
@@ -478,7 +478,6 @@ dom.importCssString(`
 .ace_autocomplete .ace_line .ace_ {
     flex: 0 1 auto;
     overflow: hidden;
-    white-space: nowrap;
     text-overflow: ellipsis;
 }
 .ace_autocomplete .ace_completion-spacer {

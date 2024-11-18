@@ -5,6 +5,7 @@ var Behaviour = require("../behaviour").Behaviour;
 var CstyleBehaviour = require("./cstyle").CstyleBehaviour;
 var TokenIterator = require("../../token_iterator").TokenIterator;
 
+/**@type {(new() => Partial<import("../../../ace-internal").Ace.Behaviour>)}*/
 var CssBehaviour = function () {
 
     this.inherit(CstyleBehaviour);

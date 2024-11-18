@@ -7,6 +7,9 @@ module.exports = `
 .ace-cloud_editor_dark.ace_dark .ace_tooltip-marker-error.ace_tooltip-marker {
     background-color: #ff5d64;
 }
+.ace-cloud_editor_dark.ace_dark .ace_tooltip-marker-security.ace_tooltip-marker {
+    background-color: #ff5d64;
+}
 .ace-cloud_editor_dark.ace_dark .ace_tooltip-marker-warning.ace_tooltip-marker {
     background-color: #e0ca57;
 }
@@ -26,7 +29,7 @@ module.exports = `
 }
 
 .ace-cloud_editor_dark .ace_marker-layer .ace_selection {
-    background: #213a70;
+    background: #4376bd;
 }
 
 .ace-cloud_editor_dark.ace_multiselect .ace_selection.ace_start {
@@ -63,7 +66,7 @@ module.exports = `
 }
 
 .ace-cloud_editor_dark .ace_marker-layer .ace_selected-word {
-    border: 1px solid #282c34;
+    border: 1px solid #9bd0f7;
 }
 
 .ace-cloud_editor_dark .ace_fold {
@@ -170,11 +173,18 @@ module.exports = `
 .ace-cloud_editor_dark .ace_icon_svg.ace_error_fold {
     background-color: #ff5d64;
 }
+.ace-cloud_editor_dark .ace_icon_svg.ace_security,
+.ace-cloud_editor_dark .ace_icon_svg.ace_security_fold {
+    background-color: #ff5d64;
+}
 .ace-cloud_editor_dark .ace_icon_svg.ace_warning,
 .ace-cloud_editor_dark .ace_icon_svg.ace_warning_fold {
     background-color: #e0ca57;
 }
 .ace-cloud_editor_dark .ace_icon_svg.ace_info {
+    background-color: #44b9d6;
+}
+.ace-cloud_editor_dark .ace_icon_svg.ace_hint {
     background-color: #44b9d6;
 }
 .ace-cloud_editor_dark .ace_highlight-marker {
@@ -198,7 +208,8 @@ module.exports = `
     background: #272A30;
 }
 .ace-cloud_editor_dark.ace_dark.ace_editor.ace_autocomplete .ace_completion-meta {
-    color: #ACB8B9;
+    color: #95a5a6;
+    opacity: 1;
 }
 .ace-cloud_editor_dark.ace_dark.ace_editor.ace_autocomplete .ace_completion-highlight{
     color: #2AA0BC;

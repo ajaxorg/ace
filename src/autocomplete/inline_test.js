@@ -50,6 +50,10 @@ var completions = [
     {
         value: "long\nlong\nlong\nlong\nlong\nlong".repeat(100),
         score: 0
+    },
+    {
+        value: "foo suggestion with a\n\n\ngap",
+        score: 0
     }
 ];
 
@@ -101,8 +105,7 @@ module.exports = {
         inline.show(editor, completions[3], "f");
         editor.renderer.$loop._flush();
         assert.strictEqual(getAllLines(), textBase + "function foo() {");
-        assert.strictEqual(editor.renderer.$ghostTextWidget.text, "        console.log('test');\n    }");
-        assert.strictEqual(editor.renderer.$ghostTextWidget.el.textContent, "        console.log('test');\n    }");
+        assert.strictEqual(editor.renderer.$ghostTextWidget.el.innerHTML, `<div><span class="ace_ghost_text">        console.log('test');</span></div><div><span class="ace_ghost_text">    }</span><span></span></div>`);
         done();
     },
     "test: boundary tests": function(done) {
@@ -274,10 +277,14 @@ module.exports = {
         // of the container
         editor.execCommand("insertstring", "\n".repeat(200));
 
-        var deltaY;
+        var deltaY, row;
         var initialScrollBy = editor.renderer.scrollBy;
-        editor.renderer.scrollBy = function(varX, varY) {
+        var initialScrollToRow = editor.renderer.scrollToRow;
+        editor.renderer.scrollBy = function(_, varY) {
             deltaY = varY;
+        };
+        editor.renderer.scrollToRow = function(varRow) {
+            row = varRow;
         };
 
         inline.show(editor, completions[6], "l");
@@ -295,11 +302,82 @@ module.exports = {
 
             setTimeout(() => {
                 // Should scroll as much as possbile while keeping the cursor on screen
-                assert.strictEqual(deltaY, 490);
+                assert.strictEqual(row, 202);
                 editor.renderer.scrollBy = initialScrollBy;
+                editor.renderer.scrollToRow = initialScrollToRow;
                 done();
             }, 50); 
         }, 50);  
+    },
+    "test: renders multi-line ghost text with empty lines": function(done) {
+        assert.equal(editor.renderer.$ghostTextWidget, null);
+        inline.show(editor, completions[8], "f");
+        editor.renderer.$loop._flush();
+        assert.strictEqual(getAllLines(), textBase + "foo suggestion with a");
+        assert.strictEqual(editor.renderer.$ghostTextWidget.el.innerHTML, `<div><span class="ace_ghost_text"> </span></div><div><span class="ace_ghost_text"> </span></div><div><span class="ace_ghost_text">gap</span><span></span></div>`);
+        done();
+    },
+    "test: moves tokens to the right of cursor to the end of ghost text for multi line ghost text": function(done) {
+        editor.execCommand("removetolinestarthard");
+        editor.execCommand("insertstring", "f hi I should be hidden");
+        editor.execCommand("gotolinestart");
+        editor.execCommand("gotoright");
+        editor.renderer.$loop._flush();
+        assert.equal(editor.renderer.$ghostTextWidget, null);
+        inline.show(editor, completions[8], "f");
+        editor.renderer.$loop._flush();
+        assert.strictEqual(getAllLines(), textBase.replaceAll(" ", "") + "foo suggestion with a hi I should be hidden");
+
+        // The string to the right of the cursor should be hidden tokens now.
+        var tokens = editor.session.getTokens(2);
+        assert.strictEqual(tokens[2].value, " hi I should be hidden");
+        assert.strictEqual(tokens[2].type, "hidden_token");
+
+        // And should be added to the ghost text widget.
+        assert.strictEqual(editor.renderer.$ghostTextWidget.el.textContent, "  gap hi I should be hidden");
+
+        // Hide inline
+        inline.hide();
+        editor.renderer.$loop._flush();
+        assert.equal(editor.renderer.$ghostTextWidget, null);
+
+        // Text to the right of the cursor should be tokenized normally again.
+        var tokens = editor.session.getTokens(2);
+        assert.strictEqual(tokens[0].value, "f hi I should be hidden");
+        assert.strictEqual(tokens[0].type, "text");
+
+        done();
+    },
+    "test: moves tokens to the right of cursor to the end of ghost text for multi line ghost text when triggered inside token": function(done) {
+        editor.execCommand("removetolinestarthard");
+        editor.execCommand("insertstring", "fhi I should be hidden");
+        editor.execCommand("gotolinestart");
+        editor.execCommand("gotoright");
+        editor.renderer.$loop._flush();
+        assert.equal(editor.renderer.$ghostTextWidget, null);
+        inline.show(editor, completions[8], "f");
+        editor.renderer.$loop._flush();
+        assert.strictEqual(getAllLines(), textBase.replaceAll(" ", "") + "foo suggestion with ahi I should be hidden");
+
+        // The string to the right of the cursor should be hidden tokens now.
+        var tokens = editor.session.getTokens(2);
+        assert.strictEqual(tokens[2].value, "hi I should be hidden");
+        assert.strictEqual(tokens[2].type, "hidden_token");
+
+        // And should be added to the ghost text widget.
+        assert.strictEqual(editor.renderer.$ghostTextWidget.el.textContent, "  gaphi I should be hidden");
+
+        // Hide inline
+        inline.hide();
+        editor.renderer.$loop._flush();
+        assert.equal(editor.renderer.$ghostTextWidget, null);
+
+        // Text to the right of the cursor should be tokenized normally again.
+        var tokens = editor.session.getTokens(2);
+        assert.strictEqual(tokens[0].value, "fhi I should be hidden");
+        assert.strictEqual(tokens[0].type, "text");
+
+        done();
     },
     tearDown: function() {
         inline.destroy();

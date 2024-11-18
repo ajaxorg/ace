@@ -2,6 +2,7 @@
 /**
  * @typedef {import("./edit_session").EditSession} EditSession
  * @typedef {{range: import("./range").Range, className: string}} MarkerGroupItem
+ * @typedef {import("../ace-internal").Ace.LayerConfig} LayerConfig
  */
 /**
  * @typedef {import("./layer/marker").Marker} Marker
@@ -15,8 +16,16 @@ Potential improvements:
 class MarkerGroup {
     /**
      * @param {EditSession} session
+     * @param {{markerType: "fullLine" | "line" | undefined}} [options] Options controlling the behvaiour of the marker.
+     * User `markerType` to control how the markers which are part of this group will be rendered:
+     * - `undefined`: uses `text` type markers where only text characters within the range will be highlighted.
+     * - `fullLine`: will fully highlight all the rows within the range, including the characters before and after the range on the respective rows.
+     * - `line`: will fully highlight the lines within the range but will only cover the characters between the start and end of the range.
      */
-    constructor(session) {
+    constructor(session, options) {
+        if (options)
+            this.markerType = options.markerType;
+        /**@type {import("../ace-internal").Ace.MarkerGroupItem[]}*/
         this.markers = [];
         /**@type {EditSession}*/
         this.session = session;
@@ -26,8 +35,8 @@ class MarkerGroup {
 
     /**
      * Finds the first marker containing pos
-     * @param {import("../ace-internal").Ace.Point} pos 
-     * @returns import("../ace-internal").Ace.MarkerGroupItem
+     * @param {import("../ace-internal").Ace.Point} pos
+     * @returns {import("../ace-internal").Ace.MarkerGroupItem | undefined}
      */
     getMarkerAtPosition(pos) {
         return this.markers.find(function(marker) {
@@ -37,7 +46,7 @@ class MarkerGroup {
 
     /**
      * Comparator for Array.sort function, which sorts marker definitions by their positions
-     * 
+     *
      * @param {MarkerGroupItem} a first marker.
      * @param {MarkerGroupItem} b second marker.
      * @returns {number} negative number if a should be before b, positive number if b should be before a, 0 otherwise.
@@ -59,7 +68,7 @@ class MarkerGroup {
      * @param {any} html
      * @param {Marker} markerLayer
      * @param {EditSession} session
-     * @param {{ firstRow: any; lastRow: any; }} config
+     * @param {LayerConfig} config
      */
     update(html, markerLayer, session, config) {
         if (!this.markers || !this.markers.length)
@@ -103,10 +112,15 @@ class MarkerGroup {
                 continue;
             }
 
-            if (screenRange.isMultiLine()) {
-                markerLayer.drawTextMarker(html, screenRange, marker.className, config);
+            if (this.markerType === "fullLine") {
+                markerLayer.drawFullLineMarker(html, screenRange, marker.className, config);
+            } else if (screenRange.isMultiLine()) {
+                if (this.markerType === "line")
+                    markerLayer.drawMultiLineMarker(html, screenRange, marker.className, config);
+                else
+                    markerLayer.drawTextMarker(html, screenRange, marker.className, config);
             } else {
-                markerLayer.drawSingleLineMarker(html, screenRange, marker.className, config);
+                markerLayer.drawSingleLineMarker(html, screenRange, marker.className + " ace_br15", config);
             }
         }
     }

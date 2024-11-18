@@ -145,7 +145,7 @@ class FontMetrics {
     
     $getZoom(element) {
         if (!element || !element.parentElement) return 1;
-        return (window.getComputedStyle(element)["zoom"] || 1) * this.$getZoom(element.parentElement);
+        return (Number(window.getComputedStyle(element)["zoom"]) || 1) * this.$getZoom(element.parentElement);
     }
     
     $initTransformMeasureNodes() {

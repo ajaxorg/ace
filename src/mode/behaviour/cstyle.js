@@ -47,7 +47,6 @@ var getWrapped = function(selection, selected, opening, closing) {
 };
 /**
  * Creates a new Cstyle behaviour object with the specified options.
- * @constructor
  * @param {Object} [options] - The options for the Cstyle behaviour object.
  * @param {boolean} [options.braces] - Whether to force braces auto-pairing.
  * @param {boolean} [options.closeDocComment] - enables automatic insertion of closing tags for documentation comments.
@@ -62,8 +61,22 @@ CstyleBehaviour = function(options) {
             initContext(editor);
             var selection = editor.getSelectionRange();
             var selected = session.doc.getTextRange(selection);
+            var token = session.getTokenAt(cursor.row, cursor.column);
             if (selected !== "" && selected !== "{" && editor.getWrapBehavioursEnabled()) {
                 return getWrapped(selection, selected, '{', '}');
+            }
+            else if (token && /(?:string)\.quasi|\.xml/.test(token.type)) {
+                let excludeTokens = [
+                    /tag\-(?:open|name)/, /attribute\-name/
+                ];
+                if (excludeTokens.some((el) => el.test(token.type)) || /(string)\.quasi/.test(token.type)
+                    && token.value[cursor.column - token.start - 1] !== '$') return;
+
+                CstyleBehaviour.recordAutoInsert(editor, session, "}");
+                return {
+                    text: '{}',
+                    selection: [1, 1]
+                };
             } else if (CstyleBehaviour.isSaneInsertion(editor, session)) {
                 if (/[\]\}\)]/.test(line[cursor.column]) || editor.inMultiSelectMode || options.braces) {
                     CstyleBehaviour.recordAutoInsert(editor, session, "}");
@@ -230,7 +243,7 @@ CstyleBehaviour = function(options) {
     this.add("string_dquotes", "insertion", function(state, action, editor, session, text) {
         var quotes = session.$mode.$quotes || defaultQuotes;
         if (text.length == 1 && quotes[text]) {
-            if (this.lineCommentStart && this.lineCommentStart.indexOf(text) != -1) 
+            if (this.lineCommentStart && this.lineCommentStart.indexOf(text) != -1)
                 return;
             initContext(editor);
             var quote = text;
@@ -243,16 +256,16 @@ CstyleBehaviour = function(options) {
                 var line = session.doc.getLine(cursor.row);
                 var leftChar = line.substring(cursor.column-1, cursor.column);
                 var rightChar = line.substring(cursor.column, cursor.column + 1);
-                
+
                 var token = session.getTokenAt(cursor.row, cursor.column);
                 var rightToken = session.getTokenAt(cursor.row, cursor.column + 1);
                 // We're escaped.
                 if (leftChar == "\\" && token && /escape/.test(token.type))
                     return null;
-                
+
                 var stringBefore = token && /string|escape/.test(token.type);
                 var stringAfter = !rightToken || /string|escape/.test(rightToken.type);
-                
+
                 var pair;
                 if (rightChar == quote) {
                     pair = stringBefore !== stringAfter;
@@ -271,7 +284,7 @@ CstyleBehaviour = function(options) {
 
                     var pairQuotesAfter = session.$mode.$pairQuotesAfter;
                     var shouldPairQuotes = pairQuotesAfter && pairQuotesAfter[quote] && pairQuotesAfter[quote].test(leftChar);
-                    
+
                     if ((!shouldPairQuotes && isWordBefore) || isWordAfter)
                         return null; // before or after alphanumeric
                     if (rightChar && !/[\s;,.})\]\\]/.test(rightChar))
@@ -303,19 +316,55 @@ CstyleBehaviour = function(options) {
             }
         }
     });
-    
+
     if (options.closeDocComment !== false) {
         this.add("doc comment end", "insertion", function (state, action, editor, session, text) {
             if (state === "doc-start" && (text === "\n" || text === "\r\n") && editor.selection.isEmpty()) {
                 var cursor = editor.getCursorPosition();
+                if (cursor.column === 0) {
+                    return;
+                }
                 var line = session.doc.getLine(cursor.row);
                 var nextLine = session.doc.getLine(cursor.row + 1);
+                var tokens = session.getTokens(cursor.row);
+                var index = 0;
+                for (var i = 0; i < tokens.length; i++) {
+                    index += tokens[i].value.length;
+                    var currentToken = tokens[i];
+                    if (index >= cursor.column) {
+                        if (index === cursor.column) {
+                            if (!/\.doc/.test(currentToken.type)) {
+                                return;
+                            }
+                            if (/\*\//.test(currentToken.value)) {
+                                var nextToken = tokens[i + 1];
+                                if (!nextToken || !/\.doc/.test(nextToken.type)) {
+                                    return;
+                                }
+                            }
+                        }
+                        var cursorPosInToken = cursor.column - (index - currentToken.value.length);
+
+                        // Check for the pattern `*/` followed by `/**` within the token
+                        var closeDocPos = currentToken.value.indexOf("*/");
+                        var openDocPos = currentToken.value.indexOf("/**", closeDocPos > - 1 ? closeDocPos + 2 : 0);
+
+                        if (openDocPos !== -1 && cursorPosInToken > openDocPos && cursorPosInToken < openDocPos + 3) {
+                            return;
+                        }
+                        if (closeDocPos !== -1 && openDocPos !== -1 && cursorPosInToken >= closeDocPos
+                            && cursorPosInToken <= openDocPos || !/\.doc/.test(currentToken.type)) {
+                            return;
+                        }
+                        break;
+                    }
+                }
                 var indent = this.$getIndent(line);
                 if (/\s*\*/.test(nextLine)) {
                     if (/^\s*\*/.test(line)) {
                         return {
                             text: text + indent + "* ",
-                            selection: [1, 3 + indent.length, 1, 3 + indent.length]
+                            selection: [1, 2 + indent.length, 1, 2 + indent.length]
                         };
                     }
                     else {
@@ -344,7 +393,7 @@ CstyleBehaviour = function(options) {
 CstyleBehaviour.isSaneInsertion = function(editor, session) {
     var cursor = editor.getCursorPosition();
     var iterator = new TokenIterator(session, cursor.row, cursor.column);
-    
+
     // Don't insert in the middle of a keyword/identifier/lexical
     if (!this.$matchTokenType(iterator.getCurrentToken() || "text", SAFE_INSERT_IN_TOKENS)) {
         if (/[)}\]]/.test(editor.session.getLine(cursor.row)[cursor.column]))
@@ -354,7 +403,7 @@ CstyleBehaviour.isSaneInsertion = function(editor, session) {
         if (!this.$matchTokenType(iterator2.getCurrentToken() || "text", SAFE_INSERT_IN_TOKENS))
             return false;
     }
-    
+
     // Only insert in front of whitespace/comments
     iterator.stepForward();
     return iterator.getCurrentTokenRow() !== cursor.row ||

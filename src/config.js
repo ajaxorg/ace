@@ -6,6 +6,7 @@ var AppConfig = require("./lib/app_config").AppConfig;
 
 module.exports = exports = new AppConfig();
 
+/** @type {import("../ace-internal").Ace.ConfigOptions} */
 var options = {
     packaged: false,
     workerPath: null,
@@ -20,8 +21,9 @@ var options = {
 };
 
 /**
- * @param {string} key
- * @return {*}
+ * @template {keyof import("../ace-internal").Ace.ConfigOptions} K
+ * @param {K} key - The key of the config option to retrieve.
+ * @returns {import("../ace-internal").Ace.ConfigOptions[K]} - The value of the config option.
  */
 exports.get = function(key) {
     if (!options.hasOwnProperty(key))
@@ -30,8 +32,9 @@ exports.get = function(key) {
 };
 
 /**
- * @param {string} key
- * @param value
+ * @template {keyof import("../ace-internal").Ace.ConfigOptions} K
+ * @param {K} key
+ * @param {import("../ace-internal").Ace.ConfigOptions[K]} value
  */
 exports.set = function(key, value) {
     if (options.hasOwnProperty(key))
@@ -42,7 +45,7 @@ exports.set = function(key, value) {
         dom.useStrictCSP(value);
 };
 /**
- * @return {{[key: string]: any}}
+ * @return {import("../ace-internal").Ace.ConfigOptions}
  */
 exports.all = function() {
     return lang.copyObject(options);
@@ -100,9 +103,6 @@ var loader = function(moduleName, cb) {
     console.error("loader is not configured");
 };
 var customLoader;
-/**
- * @param {(moduleName: string, afterLoad: (err: Error | null, module: unknown) => void) => void}cb
- */
 exports.setLoader = function(cb) {
     customLoader = cb;
 };
@@ -194,6 +194,6 @@ var reportErrorIfPathIsNotConfigured = function() {
     }
 };
 
-exports.version = "1.32.7";
+exports.version = "1.36.5";
 
 

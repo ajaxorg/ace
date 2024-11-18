@@ -403,6 +403,7 @@ module.exports = {
     },
     "test: trigger autocomplete for specific characters": function (done) {
         var editor = initEditor("document");
+        var newLineCharacter = editor.session.doc.getNewLineCharacter();
 
         editor.completers = [
             {
@@ -418,18 +419,27 @@ module.exports = {
                     ];
                     callback(null, completions);
                 },
-                triggerCharacters: ["."]
+                triggerCharacters: [".", newLineCharacter]
             }
         ];
-        
+
         editor.moveCursorTo(0, 8);
-        sendKey(".");
+        user.type(".");
         var popup = editor.completer.popup;
         check(function () {
             assert.equal(popup.data.length, 2);
-            editor.onCommandKey(null, 0, 13);
+            user.type("Return");  // Accept suggestion
             assert.equal(editor.getValue(), "document.all");
-            done();
+
+            user.type(Array(4).fill("Backspace"));  // Delete '.all'
+            user.type("Return");  // Enter new line
+
+            check(function() {
+                assert.equal(popup.data.length, 2);
+                user.type("Return");  // Accept suggestion
+                assert.equal(editor.getValue(), `document${newLineCharacter}all`);
+                done();
+            });
         });
 
         function check(callback) {
@@ -452,9 +462,49 @@ module.exports = {
         user.type("Ctrl-Space");
         assert.equal(editor.completer.popup.isOpen, true);
         assert.equal(editor.completer.popup.data[0].caption, emptyMessageText);
+        assert.ok(editor.completer.popup.renderer.container.classList.contains("ace_empty-message"));
 
         user.type("Return");
         assert.equal(editor.completer.popup.isOpen, false);
+
+        done();
+    },
+    "test: no empty message class if suggestions available": function(done) {
+        var editor = initEditor("");
+        var emptyMessageText = "No suggestions.";
+        var autocomplete = Autocomplete.for(editor);
+        autocomplete.emptyMessage = () => emptyMessageText;
+
+        editor.completers = [
+            {
+                getCompletions: function (editor, session, pos, prefix, callback) {
+                    var completions = [
+                        {
+                            caption: "append",
+                            value: "append"
+                        }
+                    ];
+                    callback(null, completions);
+                }
+            }
+        ];
+
+        user.type("b");
+
+        // Open autocompletion via key-binding and verify empty message class
+        user.type("Ctrl-Space");
+        assert.equal(editor.completer.popup.isOpen, true);
+        assert.equal(editor.completer.popup.data[0].caption, emptyMessageText);
+        assert.ok(editor.completer.popup.renderer.container.classList.contains("ace_empty-message"));
+
+        user.type("Backspace");
+        assert.equal(editor.completer.popup.isOpen, false);
+
+        // Open autocompletion via key-binding and verify no empty message class
+        user.type("Ctrl-Space");
+        assert.equal(editor.completer.popup.isOpen, true);
+        assert.equal(editor.completer.popup.data[0].caption, "append");
+        assert.ok(!editor.completer.popup.renderer.container.classList.contains("ace_empty-message"));
 
         done();
     },
@@ -487,6 +537,7 @@ module.exports = {
             }
         ];
         
+        user.type(" ");
         user.type("t");
         user.type("e");
         assert.ok(!editor.completer || !editor.completer.popup.isOpen);
@@ -495,9 +546,16 @@ module.exports = {
             assert.ok(editor.completers[1].timeout);
             user.type("Home");
             setTimeout(function() {
-                assert.ok(!editor.completer.popup.isOpen);
-                assert.ok(!editor.completers[1].timeout);
-                done();
+                assert.ok(editor.completer.popup.isOpen);
+                assert.ok(editor.completers[1].timeout);
+
+                user.type("Left");
+
+                setTimeout(function() {
+                    assert.ok(!editor.completer.popup.isOpen);
+                    assert.ok(!editor.completers[1].timeout);
+                    done();
+                }, 0);
             }, 0);
         }, 11);
     },
@@ -1449,6 +1507,41 @@ module.exports = {
         user.type("\n");
         
         assert.equal(editor.getValue(), "example value<b2-b2>");
+    },
+    "test: should close popup if backspacing until input is fully deleted": function() {
+        var editor = initEditor("");
+        
+        editor.completers = [
+            {
+                getCompletions: function (editor, session, pos, prefix, callback) {
+                    var completions = [
+                        {
+                            value: "tabularhappiness"
+                        }
+                    ];
+                    callback(null, completions);
+                }
+            }
+        ];
+        
+        var completer = Autocomplete.for(editor);
+        completer.inlineEnabled = true;
+
+        user.type("tab");
+
+        // Popup should be open
+        assert.equal(completer.popup.isOpen, true);  
+
+        user.type("Backspace");
+        user.type("Backspace");
+
+        // Popup should still be open
+        assert.equal(completer.popup.isOpen, true);  
+
+        user.type("Backspace");
+
+        // Popup should be closed now
+        assert.equal(completer.popup.isOpen, false); 
     }
 };
 

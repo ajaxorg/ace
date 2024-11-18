@@ -37,7 +37,7 @@ class Scrollbar {
         event.addListener(this.element, "scroll", this.onScroll.bind(this));
         event.addListener(this.element, "mousedown", event.preventDefault);
     }
-    
+
     setVisible(isVisible) {
         this.element.style.display = isVisible ? "" : "none";
         this.isVisible = isVisible;
@@ -64,18 +64,19 @@ class VScrollBar extends Scrollbar {
         // element to show the scrollbar but still pretend that the scrollbar has a width
         // of 0px
         // in Firefox 6+ scrollbar is hidden if element has the same width as scrollbar
-        // make element a little bit wider to retain scrollbar when page is zoomed 
+        // make element a little bit wider to retain scrollbar when page is zoomed
         renderer.$scrollbarWidth =
             this.width = dom.scrollbarWidth(parent.ownerDocument);
         this.inner.style.width =
             this.element.style.width = (this.width || 15) + 5 + "px";
         this.$minWidth = 0;
     }
-    
+
 
     /**
      * Emitted when the scroll bar, well, scrolls.
      * @event scroll
+     * @internal
      **/
 
     onScroll() {
@@ -105,7 +106,7 @@ class VScrollBar extends Scrollbar {
     setHeight(height) {
         this.element.style.height = height + "px";
     }
-    
+
     /**
      * Sets the scroll height of the scroll bar, in pixels.
      * @param {Number} height The new scroll height
@@ -162,15 +163,16 @@ class HScrollBar extends Scrollbar {
         // element to show the scrollbar but still pretend that the scrollbar has a width
         // of 0px
         // in Firefox 6+ scrollbar is hidden if element has the same width as scrollbar
-        // make element a little bit wider to retain scrollbar when page is zoomed 
+        // make element a little bit wider to retain scrollbar when page is zoomed
         this.height = renderer.$scrollbarWidth;
         this.inner.style.height =
             this.element.style.height = (this.height || 15) + 5 + "px";
     }
-    
+
     /**
      * Emitted when the scroll bar, well, scrolls.
      * @event scroll
+     * @internal
      **/
     onScroll() {
         if (!this.skipEvent) {

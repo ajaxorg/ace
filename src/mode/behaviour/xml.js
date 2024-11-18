@@ -3,12 +3,12 @@
 var oop = require("../../lib/oop");
 var Behaviour = require("../behaviour").Behaviour;
 var TokenIterator = require("../../token_iterator").TokenIterator;
-var lang = require("../../lib/lang");
 
 function is(token, type) {
     return token && token.type.lastIndexOf(type + ".xml") > -1;
 }
 
+/**@type {(new() => Partial<import("../../../ace-internal").Ace.Behaviour>)}*/
 var XmlBehaviour = function () {
 
     this.add("string_dquotes", "insertion", function (state, action, editor, session, text) {
@@ -92,7 +92,7 @@ var XmlBehaviour = function () {
                     iterator.stepBackward();
                 }
             }
-            
+
             if (/^\s*>/.test(session.getLine(position.row).slice(position.column)))
                 return;
 
@@ -116,7 +116,7 @@ var XmlBehaviour = function () {
             if (tokenRow == position.row)
                 element = element.substring(0, position.column - tokenColumn);
 
-            if (this.voidElements.hasOwnProperty(element.toLowerCase()))
+            if (this.voidElements && this.voidElements.hasOwnProperty(element.toLowerCase()))
                  return;
 
             return {
@@ -133,7 +133,7 @@ var XmlBehaviour = function () {
             var iterator = new TokenIterator(session, cursor.row, cursor.column);
             var token = iterator.getCurrentToken();
 
-            if (token && token.type.indexOf("tag-close") !== -1) {
+            if (is(token, "") && token.type.indexOf("tag-close") !== -1) {
                 if (token.value == "/>")
                     return;
                 //get tag name
@@ -154,7 +154,7 @@ var XmlBehaviour = function () {
                     return;
                 }
 
-                if (this.voidElements && !this.voidElements[tag]) {
+                if (this.voidElements && !this.voidElements[tag] || !this.voidElements) {
                     var nextToken = session.getTokenAt(cursor.row, cursor.column+1);
                     var line = session.getLine(row);
                     var nextIndent = this.$getIndent(line);

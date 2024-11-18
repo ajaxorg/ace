@@ -1,10 +1,9 @@
 "use strict";
 /**
  * @typedef {import("../edit_session").EditSession} EditSession
- * @typedef {import("../virtual_renderer").VirtualRenderer & {$textLayer: import("../layer/text").Text &{$lenses}}} VirtualRenderer
+ * @typedef {import("../virtual_renderer").VirtualRenderer & {$textLayer: import("../layer/text").Text &{$lenses: any}}} VirtualRenderer
  */
 
-var LineWidgets = require("../line_widgets").LineWidgets;
 var event = require("../lib/event");
 var lang = require("../lib/lang");
 var dom = require("../lib/dom");
@@ -108,9 +107,9 @@ function clearCodeLensWidgets(session) {
 }
 
 /**
- * 
+ *
  * @param {EditSession} session
- * @param lenses
+ * @param {import("../../ace-internal").Ace.CodeLense[]} lenses
  * @return {number}
  */
 exports.setLenses = function(session, lenses) {
@@ -157,11 +156,6 @@ function attachToEditor(editor) {
         var session = editor.session;
         if (!session) return;
 
-        if (!session.widgetManager) {
-            session.widgetManager = new LineWidgets(session);
-            session.widgetManager.attach(editor);
-        }
-
         var providersToWaitNum = editor.codeLensProviders.length;
         var lenses = [];
         editor.codeLensProviders.forEach(function(provider) {
@@ -189,7 +183,7 @@ function attachToEditor(editor) {
             var row = session.documentToScreenRow(cursor);
             var lineHeight = editor.renderer.layerConfig.lineHeight;
             var top = session.getScrollTop() + (row - oldRow) * lineHeight;
-            // special case for the lens on line 0, because it can't be scrolled into view with keyboard 
+            // special case for the lens on line 0, because it can't be scrolled into view with keyboard
             if (firstRow == 0 && scrollTop < lineHeight /4 && scrollTop > -lineHeight/4) {
                 top = -lineHeight;
             }
@@ -215,7 +209,7 @@ function detachFromEditor(editor) {
 
 /**
  * @param {import("../editor").Editor} editor
- * @param codeLensProvider
+ * @param {import("../../ace-internal").Ace.CodeLenseProvider} codeLensProvider
  */
 exports.registerCodeLensProvider = function(editor, codeLensProvider) {
     editor.setOption("enableCodeLens", true);

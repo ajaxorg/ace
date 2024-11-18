@@ -24,7 +24,7 @@ var JsDocCommentHighlightRules = function() {
                         ]
                     }, {
                         token: ["rparen.doc", "text.doc", "variable.parameter.doc", "lparen.doc", "variable.parameter.doc", "rparen.doc"],
-                        regex: /(})(\s*)(?:([\w=:\/\.]+)|(?:(\[)([\w=:\/\.]+)(\])))/,
+                        regex: /(})(\s*)(?:([\w=:\/\.]+)|(?:(\[)([\w=:\/\.\-\'\" ]+)(\])))/,
                         next: "pop"
                     }, {
                         token: "rparen.doc",
@@ -84,7 +84,7 @@ var JsDocCommentHighlightRules = function() {
             },
             JsDocCommentHighlightRules.getTagRule(),
         {
-            defaultToken : "comment.doc",
+            defaultToken: "comment.doc.body",
             caseInsensitive: true
         }],
         "doc-syntax": [{
@@ -110,7 +110,7 @@ JsDocCommentHighlightRules.getTagRule = function(start) {
 JsDocCommentHighlightRules.getStartRule = function(start) {
     return {
         token : "comment.doc", // doc comment
-        regex : "\\/\\*(?=\\*)",
+        regex: /\/\*\*(?!\/)/,
         next  : start
     };
 };
