@@ -293,6 +293,9 @@ class SearchBox {
         this.element.style.display = "";
         this.replaceOption.checked = isReplace;
 
+        if (this.editor.$search.$options.regExp)
+            value = lang.escapeRegExp(value);
+
         if (value)
             this.searchInput.value = value;
 
