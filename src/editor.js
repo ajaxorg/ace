@@ -23,7 +23,6 @@ var CommandManager = require("./commands/command_manager").CommandManager;
 var defaultCommands = require("./commands/default_commands").commands;
 var config = require("./config");
 var TokenIterator = require("./token_iterator").TokenIterator;
-var LineWidgets = require("./line_widgets").LineWidgets;
 var GutterKeyboardHandler = require("./keyboard/gutter_handler").GutterKeyboardHandler;
 var nls = require("./config").nls;
 
@@ -357,7 +356,9 @@ class Editor {
         this.curOp = null;
 
         oldSession && oldSession._signal("changeEditor", {oldEditor: this});
+        if (oldSession) oldSession.$editor = null;
         session && session._signal("changeEditor", {editor: this});
+        if (session) session.$editor = this;
 
         if (session && !session.destroyed)
             session.bgTokenizer.scheduleStart();
@@ -1486,10 +1487,6 @@ class Editor {
      * @param {Point} [position] Position to insert text to
      */
     setGhostText(text, position) {
-        if (!this.session.widgetManager) {
-            this.session.widgetManager = new LineWidgets(this.session);
-            this.session.widgetManager.attach(this);
-        }
         this.renderer.setGhostText(text, position);
     }
 
@@ -1497,8 +1494,6 @@ class Editor {
      * Removes "ghost" text currently displayed in the editor.
      */
     removeGhostText() {
-        if (!this.session.widgetManager) return;
-
         this.renderer.removeGhostText();
     }
 

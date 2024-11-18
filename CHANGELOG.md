@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.36.5](https://github.com/ajaxorg/ace/compare/v1.36.4...v1.36.5) (2024-11-14)
+
+
+### Features
+
+* exposing getter setter for widget manager created using line widgets ([#5673](https://github.com/ajaxorg/ace/issues/5673)) ([f5d0c19](https://github.com/ajaxorg/ace/commit/f5d0c196c69d06a9dda1bdeb379fa20ecbf75590))
+
+
+### Bug Fixes
+
+* vue-directives regex bug ([#5671](https://github.com/ajaxorg/ace/issues/5671)) ([5e1e524](https://github.com/ajaxorg/ace/commit/5e1e524d7ef04e13291b5a979fb4166e973e61f0))
+
 ### [1.36.4](https://github.com/ajaxorg/ace/compare/v1.36.3...v1.36.4) (2024-11-04)
 
 
