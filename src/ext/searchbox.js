@@ -106,13 +106,13 @@ class SearchBox {
         this.searchBox = sb.querySelector(".ace_search_form");
         /**@type {InputEditor}*/
         this.searchInput = $singleLineEditor();
-        this.searchInput.setOption("placeholder", nls("Search for"));
+        this.searchInput.setOption("placeholder", nls("search-box.search-for.text", "Search for"));
         this.searchBox.querySelector(".ace_search_input_wrapper").appendChild(this.searchInput.container);
         /**@type {HTMLElement}*/
         this.replaceBox = sb.querySelector(".ace_replace_form");
         /**@type {InputEditor}*/
         this.replaceInput = $singleLineEditor();
-        this.replaceInput.setOption("placeholder", nls("Replace with"));
+        this.replaceInput.setOption("placeholder", nls("search-box.replace-with.text", "Replace with"));
         this.replaceBox.querySelector(".ace_search_input_wrapper").appendChild(this.replaceInput.container);
         /**@type {HTMLInputElement}*/
         this.searchOption = sb.querySelector("[action=searchInSelection]");
