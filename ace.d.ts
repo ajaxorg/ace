@@ -204,18 +204,20 @@ declare module "ace-code" {
             end: Point;
         }
         interface LineWidget {
-            el: HTMLElement;
-            rowCount: number;
-            hidden: boolean;
+            editor?: Editor;
+            el?: HTMLElement;
+            rowCount?: number;
+            hidden?: boolean;
             column?: number;
-            row?: number;
-            session: EditSession;
+            row: number;
+            session?: EditSession;
             html?: string;
             text?: string;
             className?: string;
             coverGutter?: boolean;
             pixelHeight?: number;
-            editor: Editor;
+            type?: any;
+            destroy?: () => void;
             coverLine?: boolean;
             fixedWidth?: boolean;
             fullWidth?: boolean;
@@ -983,6 +985,6 @@ declare module "ace-code" {
     import UndoManager = UndoManager_2.UndoManager;
     import Renderer_1 = require("ace-code/src/virtual_renderer");
     import Renderer = Renderer_1.VirtualRenderer;
-    export var version: "1.36.4";
+    export var version: "1.36.5";
     export { Range, Editor, EditSession, UndoManager, Renderer as VirtualRenderer };
 }

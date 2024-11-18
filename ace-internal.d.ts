@@ -1335,7 +1335,6 @@ declare module "./src/edit_session" {
         $useWorker?: boolean,
         $wrapAsCode?: boolean,
         $indentedSoftWrap?: boolean,
-        widgetManager?: any,
         $bracketHighlight?: any,
         $selectionMarker?: number,
         lineWidgetsWidth?: number,

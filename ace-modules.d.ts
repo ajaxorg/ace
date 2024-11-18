@@ -441,7 +441,7 @@ declare module "ace-code/src/config" {
             string
         ], onLoad: (module: any) => void) => void;
         setModuleLoader: (moduleName: any, onLoad: any) => void;
-        version: "1.36.4";
+        version: "1.36.5";
     };
     export = _exports;
 }
@@ -2656,80 +2656,6 @@ declare module "ace-code/src/token_iterator" {
     import Range_6 = require("ace-code/src/range");
     import Range = Range_6.Range;
 }
-declare module "ace-code/src/line_widgets" {
-    export class LineWidgets {
-        /**
-         * @param {EditSession} session
-         */
-        constructor(session: EditSession);
-        session: import("ace-code/src/edit_session").EditSession;
-        /**
-         *
-         * @param {import("ace-code").Ace.Delta} delta
-         */
-        updateOnChange(delta: import("ace-code").Ace.Delta): void;
-        /**
-         * @param {any} e
-         * @param {VirtualRenderer} renderer
-         */
-        renderWidgets(e: any, renderer: VirtualRenderer): void;
-        /**
-         * @param {any} e
-         * @param {VirtualRenderer} renderer
-         */
-        measureWidgets(e: any, renderer: VirtualRenderer): void;
-        /**
-         * @param {number} row
-         * @return {number}
-         */
-        getRowLength(row: number): number;
-        /**
-         *
-         * @param {Editor} editor
-         */
-        attach(editor: Editor): void;
-        /**@type {Editor} */
-        editor: Editor;
-        detach(e: any): void;
-        /**
-         *
-         * @param e
-         * @param {EditSession} session
-         */
-        updateOnFold(e: any, session: EditSession): void;
-        /**
-         *
-         * @param {LineWidget} w
-         * @return {LineWidget}
-         */
-        addLineWidget(w: LineWidget): LineWidget;
-        /**
-         * @param {LineWidget} w
-         */
-        removeLineWidget(w: LineWidget): void;
-        /**
-         *
-         * @param {number} row
-         * @return {LineWidget[]}
-         */
-        getWidgetsAtRow(row: number): LineWidget[];
-        firstRow: number;
-        lastRow: number;
-        lineWidgets: import("ace-code").Ace.LineWidget[];
-    }
-    export type EditSession = import("ace-code/src/edit_session").EditSession;
-    export type Editor = import("ace-code/src/editor").Editor;
-    export type VirtualRenderer = import("ace-code/src/virtual_renderer").VirtualRenderer;
-    export type LineWidget = import("ace-code").Ace.LineWidget;
-    namespace Ace {
-        type LineWidget = import("ace-code").Ace.LineWidget;
-        type Editor = import("ace-code").Ace.Editor;
-    }
-    export interface LineWidgets {
-        lineWidgets: Ace.LineWidget[];
-        editor: Ace.Editor;
-    }
-}
 declare module "ace-code/src/keyboard/gutter_handler" {
     export class GutterKeyboardHandler {
         constructor(editor: any);
@@ -4334,6 +4260,80 @@ declare module "ace-code/src/autocomplete" {
 declare module "ace-code/src/autocomplete/text_completer" {
     export function getCompletions(editor: any, session: any, pos: any, prefix: any, callback: any): void;
 }
+declare module "ace-code/src/line_widgets" {
+    export class LineWidgets {
+        /**
+         * @param {EditSession} session
+         */
+        constructor(session: EditSession);
+        session: import("ace-code/src/edit_session").EditSession;
+        /**
+         *
+         * @param {import("ace-code").Ace.Delta} delta
+         */
+        updateOnChange(delta: import("ace-code").Ace.Delta): void;
+        /**
+         * @param {any} e
+         * @param {VirtualRenderer} renderer
+         */
+        renderWidgets(e: any, renderer: VirtualRenderer): void;
+        /**
+         * @param {any} e
+         * @param {VirtualRenderer} renderer
+         */
+        measureWidgets(e: any, renderer: VirtualRenderer): void;
+        /**
+         * @param {number} row
+         * @return {number}
+         */
+        getRowLength(row: number): number;
+        /**
+         *
+         * @param {Editor} editor
+         */
+        attach(editor: Editor): void;
+        /**@type {Editor} */
+        editor: Editor;
+        detach(e: any): void;
+        /**
+         *
+         * @param e
+         * @param {EditSession} session
+         */
+        updateOnFold(e: any, session: EditSession): void;
+        /**
+         *
+         * @param {LineWidget} w
+         * @return {LineWidget}
+         */
+        addLineWidget(w: LineWidget): LineWidget;
+        /**
+         * @param {LineWidget} w
+         */
+        removeLineWidget(w: LineWidget): void;
+        /**
+         *
+         * @param {number} row
+         * @return {LineWidget[]}
+         */
+        getWidgetsAtRow(row: number): LineWidget[];
+        firstRow: number;
+        lastRow: number;
+        lineWidgets: import("ace-code").Ace.LineWidget[];
+    }
+    export type EditSession = import("ace-code/src/edit_session").EditSession;
+    export type Editor = import("ace-code/src/editor").Editor;
+    export type VirtualRenderer = import("ace-code/src/virtual_renderer").VirtualRenderer;
+    export type LineWidget = import("ace-code").Ace.LineWidget;
+    namespace Ace {
+        type LineWidget = import("ace-code").Ace.LineWidget;
+        type Editor = import("ace-code").Ace.Editor;
+    }
+    export interface LineWidgets {
+        lineWidgets: Ace.LineWidget[];
+        editor: Ace.Editor;
+    }
+}
 declare module "ace-code/src/search_highlight" {
     export type Marker = import("ace-code/src/layer/marker").Marker;
     export type EditSession = import("ace-code/src/edit_session").EditSession;
@@ -5099,6 +5099,18 @@ declare module "ace-code/src/edit_session" {
          * @return {Document}
          **/
         getDocument(): Document;
+        /**
+         * Set "widgetManager" in EditSession
+         *
+         * @returns void
+         */
+        set widgetManager(value: LineWidgets);
+        /**
+         * Get "widgetManager" from EditSession
+         *
+         * @returns {LineWidgets} object
+         */
+        get widgetManager(): LineWidgets;
         resetCaches(): void;
         mergeUndoDeltas: boolean;
         onSelectionChange(): void;
@@ -5687,7 +5699,6 @@ declare module "ace-code/src/edit_session" {
          */
         lineWidgets: null | import("ace-code").Ace.LineWidget[];
         isFullWidth: typeof isFullWidth;
-        widgetManager?: any;
         lineWidgetsWidth?: number;
         gutterRenderer?: any;
         selectionMarkerCount?: number;
@@ -5703,6 +5714,7 @@ declare module "ace-code/src/edit_session" {
     export type Delta = import("ace-code").Ace.Delta;
     export type IRange = import("ace-code").Ace.IRange;
     export type SyntaxMode = import("ace-code").Ace.SyntaxMode;
+    export type LineWidget = import("ace-code").Ace.LineWidget;
     export type TextMode = SyntaxMode;
     import Document_1 = require("ace-code/src/document");
     import Document = Document_1.Document;
@@ -5714,6 +5726,8 @@ declare module "ace-code/src/edit_session" {
     import BidiHandler = BidiHandler_1.BidiHandler;
     import Range_11 = require("ace-code/src/range");
     import Range = Range_11.Range;
+    import LineWidgets_1 = require("ace-code/src/line_widgets");
+    import LineWidgets = LineWidgets_1.LineWidgets;
     import UndoManager_1 = require("ace-code/src/undomanager");
     import UndoManager = UndoManager_1.UndoManager;
     function isFullWidth(c: any): boolean;
@@ -5731,7 +5745,6 @@ declare module "ace-code/src/edit_session" {
     }
     export interface EditSession extends Ace.EventEmitter<Ace.EditSessionEvents>, Ace.OptionsProvider<Ace.EditSessionOptions>, Ace.Folding, Ace.BracketMatch {
         doc: Ace.Document;
-        widgetManager?: any;
         lineWidgetsWidth?: number;
         gutterRenderer?: any;
         selectionMarkerCount?: number;
