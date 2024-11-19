@@ -342,7 +342,7 @@ function fixDeclaration(content, aceNamespacePath) {
             modules.forEach(key => {
                 const newSourceFile = context.factory.updateSourceFile(sourceFile, moduleOutputs[key]);
                 const dirPath = path.dirname(aceNamespacePath.replace("ace-internal", "ace"));
-                const outputName = key === "ace" ? `${dirPath}/ace.d.ts` : `${dirPath}/ace-${key}.d.ts`;
+                const outputName = key === "ace" ? `${dirPath}/ace.d.ts` : `${dirPath}/types/ace-${key}.d.ts`;
                 finalDeclarations.push(outputName);
 
                 const printer = ts.createPrinter({newLine: ts.NewLineKind.LineFeed}, {
@@ -396,11 +396,12 @@ function fixDeclaration(content, aceNamespacePath) {
                 let output = printer.printFile(newSourceFile);
                 if (key === "ace") {
                     let referencePaths = modules.filter((el) => el != "ace").map((el) => {
-                        return `/// <reference path="./ace-${el}.d.ts" />`;
+                        return `/// <reference path="./types/ace-${el}.d.ts" />`;
                     });
                     let allReferences = referencePaths.join("\n") + "\n/// <reference path=\"./ace-modes.d.ts\" />\n";
                     output = allReferences + output;
                 }
+                output = cleanComments(output);
                 output = formatDts(outputName, output);
                 fs.writeFileSync(outputName, output);
             });
@@ -415,6 +416,15 @@ function fixDeclaration(content, aceNamespacePath) {
     result.dispose();
 
     checkFinalDeclaration(finalDeclarations);
+}
+
+function cleanComments(text) {
+    text = text.replace(/^\s*\*\s*@(param|template|returns?|this|typedef)\s*({.+})?(\s*\[?[$\w]+\]?)?\s*$/gm, '');
+    text = text.replace(/@type\s*({.+})/g, '');
+    text = text.replace(/\/\*(\s|\*)*\*\//g, '');
+    text = text.replace(/^\s*[\r\n]/gm, '');
+
+    return text;
 }
 
 function hasInternalTag(node) {

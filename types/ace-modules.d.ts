@@ -1,19 +1,10 @@
 declare module "ace-code/src/layer/font_metrics" {
     export class FontMetrics {
-        /**
-         * @param {HTMLElement} parentEl
-         */
         constructor(parentEl: HTMLElement);
         el: HTMLDivElement;
-        /**
-         * @param size
-         */
         checkForSizeChanges(size: any): void;
         charSizes: any;
         allowBoldFonts: boolean;
-        /**
-         * @param {boolean} val
-         */
         setPolling(val: boolean): void;
         getCharacterWidth(ch: any): any;
         destroy(): void;
@@ -49,14 +40,12 @@ declare module "ace-code/src/document" {
         setValue(text: string): void;
         /**
          * Returns all the lines in the document as a single string, joined by the new line character.
-         * @returns {String}
          **/
         getValue(): string;
         /**
          * Creates a new `Anchor` to define a floating point in the document.
          * @param {Number} row The row number to use
          * @param {Number} column The column number to use
-         * @returns {Anchor}
          **/
         createAnchor(row: number, column: number): Anchor;
         /**
@@ -69,77 +58,58 @@ declare module "ace-code/src/document" {
         getNewLineCharacter(): string;
         /**
          * [Sets the new line mode.]{: #Document.setNewLineMode.desc}
-         * @param {NewLineMode} newLineMode [The newline mode to use; can be either `windows`, `unix`, or `auto`]{: #Document.setNewLineMode.param}
-         
+         * @param {NewLineMode} newLineMode [The newline mode to use; can be either `windows`, `unix`, or `auto`]
          **/
         setNewLineMode(newLineMode: NewLineMode): void;
         /**
-         * [Returns the type of newlines being used; either `windows`, `unix`, or `auto`]{: #Document.getNewLineMode}
-         * @returns {NewLineMode}
+         * Returns the type of newlines being used; either `windows`, `unix`, or `auto`
          **/
         getNewLineMode(): NewLineMode;
         /**
          * Returns `true` if `text` is a newline character (either `\r\n`, `\r`, or `\n`).
          * @param {String} text The text to check
-         * @returns {boolean}
          **/
         isNewLine(text: string): boolean;
         /**
          * Returns a verbatim copy of the given line as it is in the document
          * @param {Number} row The row index to retrieve
-         * @returns {string}
          **/
         getLine(row: number): string;
         /**
          * Returns an array of strings of the rows between `firstRow` and `lastRow`. This function is inclusive of `lastRow`.
          * @param {Number} firstRow The first row index to retrieve
          * @param {Number} lastRow The final row index to retrieve
-         * @returns {string[]}
          **/
         getLines(firstRow: number, lastRow: number): string[];
         /**
          * Returns all lines in the document as string array.
-         * @returns {string[]}
          **/
         getAllLines(): string[];
         /**
          * Returns the number of rows in the document.
-         * @returns {Number}
          **/
         getLength(): number;
         /**
          * Returns all the text within `range` as a single string.
          * @param {IRange} range The range to work with.
          *
-         * @returns {String}
          **/
         getTextRange(range: IRange): string;
         /**
          * Returns all the text within `range` as an array of lines.
          * @param {IRange} range The range to work with.
          *
-         * @returns {string[]}
          **/
         getLinesForRange(range: IRange): string[];
         /**
-         * @param row
-         * @param lines
-         
          * @deprecated
          */
         insertLines(row: any, lines: any): void;
         /**
-         * @param firstRow
-         * @param lastRow
-         * @returns {String[]}
-         
          * @deprecated
          */
         removeLines(firstRow: any, lastRow: any): string[];
         /**
-         * @param position
-         * @returns {Point}
-         
          * @deprecated
          */
         insertNewLine(position: any): Point;
@@ -148,7 +118,6 @@ declare module "ace-code/src/document" {
          * @param {Point} position The position to start inserting at; it's an object that looks like `{ row: row, column: column}`
          * @param {String} text A chunk of text to insert
          * @returns {Point} The position ({row, column}) of the last line of `text`. If the length of `text` is 0, this function simply returns `position`.
-         
          **/
         insert(position: Point, text: string): Point;
         /**
@@ -163,34 +132,17 @@ declare module "ace-code/src/document" {
          * @returns {Point} Returns the position of the end of the inserted text
          **/
         insertInLine(position: Point, text: string): Point;
-        /**
-         *
-         * @param {number} row
-         * @param {number} column
-         * @return {Point}
-         */
         clippedPos(row: number, column: number): Point;
-        /**
-         * @param {Point} pos
-         * @return {Point}
-         */
         clonePos(pos: Point): Point;
-        /**
-         * @param {number} row
-         * @param {number} column
-         * @return {Point}
-         */
         pos(row: number, column: number): Point;
         /**
          * Inserts the elements in `lines` into the document as full lines (does not merge with existing line), starting at the row index given by `row`. This method also triggers the `"change"` event.
          * @param {Number} row The index of the row to insert at
          * @param {string[]} lines An array of strings
-         
          **/
         insertFullLines(row: number, lines: string[]): void;
         /**
          * Inserts the elements in `lines` into the document, starting at the position index given by `row`. This method also triggers the `"change"` event.
-         * @param {Point} position
          * @param {string[]} lines An array of strings
          * @returns {Point} Contains the final row and column, like this:
          *   ```
@@ -206,7 +158,6 @@ declare module "ace-code/src/document" {
          * Removes the `range` from the document.
          * @param {IRange} range A specified Range to remove
          * @returns {Point} Returns the new `start` property of the range, which contains `startRow` and `startColumn`. If `range` is empty, this function returns the unmodified value of `range.start`.
-         
          **/
         remove(range: IRange): Point;
         /**
@@ -215,7 +166,6 @@ declare module "ace-code/src/document" {
          * @param {Number} startColumn The column to start removing at
          * @param {Number} endColumn The column to stop removing at
          * @returns {Point} Returns an object containing `startRow` and `startColumn`, indicating the new row and column values.<br/>If `startColumn` is equal to `endColumn`, this function returns nothing.
-         
          **/
         removeInLine(row: number, startColumn: number, endColumn: number): Point;
         /**
@@ -223,7 +173,6 @@ declare module "ace-code/src/document" {
          * @param {Number} firstRow The first row to be removed
          * @param {Number} lastRow The last row to be removed
          * @returns {String[]} Returns all the removed lines.
-         
          **/
         removeFullLines(firstRow: number, lastRow: number): string[];
         /**
@@ -256,7 +205,6 @@ declare module "ace-code/src/document" {
         /**
          * Applies `delta` to the document.
          * @param {Delta} delta A delta object (can include "insert" and "remove" actions)
-         * @param {boolean} [doNotValidate]
          **/
         applyDelta(delta: Delta, doNotValidate?: boolean): void;
         /**
@@ -329,13 +277,11 @@ declare module "ace-code/src/anchor" {
         constructor(doc: Document, row: number | import("ace-code").Ace.Point, column?: number);
         /**
          * Returns an object identifying the `row` and `column` position of the current anchor.
-         * @returns {import("ace-code").Ace.Point}
          **/
         getPosition(): import("ace-code").Ace.Point;
         /**
          *
          * Returns the current document.
-         * @returns {Document}
          **/
         getDocument(): Document;
         /**
@@ -358,7 +304,6 @@ declare module "ace-code/src/anchor" {
          *
          **/
         attach(doc: Document): void;
-        /**@type{Document}*/
         document: Document;
         markerId?: number;
     }
@@ -401,41 +346,20 @@ declare module "ace-code/src/config" {
         removeEventListener<K extends string | number | symbol>(name: K, callback: any): void;
         removeAllListeners(name?: string): void;
         /**
-         * @template {keyof import("ace-code").Ace.ConfigOptions} K
          * @param {K} key - The key of the config option to retrieve.
          * @returns {import("ace-code").Ace.ConfigOptions[K]} - The value of the config option.
          */
         get: <K extends keyof import("ace-code").Ace.ConfigOptions>(key: K) => import("ace-code").Ace.ConfigOptions[K];
-        /**
-         * @template {keyof import("ace-code").Ace.ConfigOptions} K
-         * @param {K} key
-         * @param {import("ace-code").Ace.ConfigOptions[K]} value
-         */
         set: <K extends keyof import("ace-code").Ace.ConfigOptions>(key: K, value: import("ace-code").Ace.ConfigOptions[K]) => void;
-        /**
-         * @return {import("ace-code").Ace.ConfigOptions}
-         */
         all: () => import("ace-code").Ace.ConfigOptions;
         /**
          * module loading
-         * @param {string} name
-         * @param {string} [component]
-         * @returns {string}
          */
         moduleUrl: (name: string, component?: string) => string;
-        /**
-         * @param {string} name
-         * @param {string} subst
-         * @returns {string}
-         */
         setModuleUrl: (name: string, subst: string) => string;
         /** @arg {(name: string, callback: (error: any, module: any) => void) => void} cb */
         setLoader: (cb: (name: string, callback: (error: any, module: any) => void) => void) => void;
         dynamicModules: any;
-        /**
-         * @param {string | [string, string]} moduleId
-         * @param {(module: any) => void} onLoad
-         */
         loadModule: (moduleId: string | [
             string,
             string
@@ -449,40 +373,16 @@ declare module "ace-code/src/layer/lines" {
     export type EditSession = import("ace-code/src/edit_session").EditSession;
     export type LayerConfig = import("ace-code").Ace.LayerConfig;
     export class Lines {
-        /**
-         * @param {HTMLElement} element
-         * @param {number} [canvasHeight]
-         */
         constructor(element: HTMLElement, canvasHeight?: number);
         element: HTMLElement;
         canvasHeight: number;
         cells: any[];
         cellCache: any[];
-        /**
-         * @param {LayerConfig} config
-         */
         moveContainer(config: LayerConfig): void;
-        /**
-         * @param {LayerConfig} oldConfig
-         * @param {LayerConfig} newConfig
-         */
         pageChanged(oldConfig: LayerConfig, newConfig: LayerConfig): boolean;
-        /**
-         * @param {number} row
-         * @param {Partial<LayerConfig>} config
-         * @param {EditSession} session
-         */
         computeLineTop(row: number, config: Partial<LayerConfig>, session: EditSession): number;
-        /**
-         * @param {number} row
-         * @param {LayerConfig} config
-         * @param {EditSession} session
-         */
         computeLineHeight(row: number, config: LayerConfig, session: EditSession): number;
         getLength(): number;
-        /**
-         * @param {number} index
-         */
         get(index: number): any;
         shift(): void;
         pop(): void;
@@ -494,59 +394,24 @@ declare module "ace-code/src/layer/lines" {
 }
 declare module "ace-code/src/layer/gutter" {
     export class Gutter {
-        /**
-         * @param {HTMLElement} parentEl
-         */
         constructor(parentEl: HTMLElement);
         element: HTMLDivElement;
         gutterWidth: number;
-        /**
-         * @param {EditSession} session
-         */
         setSession(session: EditSession): void;
         session: import("ace-code/src/edit_session").EditSession;
-        /**
-         * @param {number} row
-         * @param {string} className
-         */
         addGutterDecoration(row: number, className: string): void;
-        /**
-         * @param {number} row
-         * @param {string} className
-         */
         removeGutterDecoration(row: number, className: string): void;
-        /**
-         * @param {any[]} annotations
-         */
         setAnnotations(annotations: any[]): void;
-        /**
-         * @param {LayerConfig} config
-         */
         update(config: LayerConfig): void;
         config: import("ace-code").Ace.LayerConfig;
         oldLastRow: number;
         updateLineHighlight(): void;
-        /**
-         * @param {LayerConfig} config
-         */
         scrollLines(config: LayerConfig): void;
-        /**
-         * @param {boolean} highlightGutterLine
-         */
         setHighlightGutterLine(highlightGutterLine: boolean): void;
-        /**
-         * @param {boolean} show
-         */
         setShowLineNumbers(show: boolean): void;
         getShowLineNumbers(): boolean;
-        /**
-         * @param {boolean} [show]
-         */
         setShowFoldWidgets(show?: boolean): void;
         getShowFoldWidgets(): boolean;
-        /**
-         * @param {{ x: number; }} point
-         */
         getRegion(point: {
             x: number;
         }): "markers" | "foldWidgets";
@@ -566,89 +431,26 @@ declare module "ace-code/src/layer/marker" {
     export type EditSession = import("ace-code/src/edit_session").EditSession;
     export type LayerConfig = import("ace-code").Ace.LayerConfig;
     export class Marker {
-        /**
-         * @param {HTMLElement} parentEl
-         */
         constructor(parentEl: HTMLElement);
         element: HTMLDivElement;
-        /**
-         * @param {number} padding
-         */
         setPadding(padding: number): void;
-        /**
-         * @param {EditSession} session
-         */
         setSession(session: EditSession): void;
         session: import("ace-code/src/edit_session").EditSession;
-        /**
-         * @param {{ [x: number]: import("ace-code").Ace.MarkerLike; }} markers
-         */
         setMarkers(markers: {
             [x: number]: import("ace-code").Ace.MarkerLike;
         }): void;
         markers: {
             [x: number]: import("ace-code").Ace.MarkerLike;
         };
-        /**
-         * @param {string} className
-         * @param {string} css
-         */
         elt(className: string, css: string): void;
         i: number;
-        /**
-         * @param {LayerConfig} config
-         */
         update(config: LayerConfig): void;
         config: import("ace-code").Ace.LayerConfig;
-        /**
-         * @param {undefined} stringBuilder
-         * @param {Range} range
-         * @param {string} clazz
-         * @param {Partial<LayerConfig>} layerConfig
-         * @param {string} [extraStyle]
-         */
         drawTextMarker(stringBuilder: undefined, range: Range, clazz: string, layerConfig: Partial<LayerConfig>, extraStyle?: string): void;
-        /**
-         * @param {undefined} stringBuilder
-         * @param {Range} range
-         * @param {string} clazz
-         * @param {LayerConfig} config
-         * @param {string} [extraStyle]
-         */
         drawMultiLineMarker(stringBuilder: undefined, range: Range, clazz: string, config: LayerConfig, extraStyle?: string): void;
-        /**
-         * @param {undefined} stringBuilder
-         * @param {Range} range
-         * @param {string} clazz
-         * @param {Partial<LayerConfig>} config
-         * @param {number} [extraLength]
-         * @param {string} [extraStyle]
-         */
         drawSingleLineMarker(stringBuilder: undefined, range: Range, clazz: string, config: Partial<LayerConfig>, extraLength?: number, extraStyle?: string): void;
-        /**
-         * @param {undefined} stringBuilder
-         * @param {Range} range
-         * @param {string} clazz
-         * @param {Partial<LayerConfig>} config
-         * @param {number} extraLength
-         * @param {string} extraStyle
-         */
         drawBidiSingleLineMarker(stringBuilder: undefined, range: Range, clazz: string, config: Partial<LayerConfig>, extraLength: number, extraStyle: string): void;
-        /**
-         * @param {undefined} stringBuilder
-         * @param {Range} range
-         * @param {string} clazz
-         * @param {Partial<LayerConfig>} config
-         * @param {undefined} [extraStyle]
-         */
         drawFullLineMarker(stringBuilder: undefined, range: Range, clazz: string, config: Partial<LayerConfig>, extraStyle?: undefined): void;
-        /**
-         * @param {undefined} stringBuilder
-         * @param {Range} range
-         * @param {string} clazz
-         * @param {Partial<LayerConfig>} config
-         * @param {undefined} [extraStyle]
-         */
         drawScreenLineMarker(stringBuilder: undefined, range: Range, clazz: string, config: Partial<LayerConfig>, extraStyle?: undefined): void;
     }
     import Range_2 = require("ace-code/src/range");
@@ -659,64 +461,28 @@ declare module "ace-code/src/layer/text_util" {
 }
 declare module "ace-code/src/layer/text" {
     export class Text {
-        /**
-         * @param {HTMLElement} parentEl
-         */
         constructor(parentEl: HTMLElement);
         dom: typeof dom;
         element: HTMLDivElement;
         EOL_CHAR: any;
-        /**
-         * @param {number} padding
-         */
         setPadding(padding: number): void;
-        /**
-         * @returns {number}
-         */
         getLineHeight(): number;
-        /**
-         * @returns {number}
-         */
         getCharacterWidth(): number;
         checkForSizeChanges(): void;
-        /**
-         * @param {EditSession} session
-         */
         setSession(session: EditSession): void;
-        /**@type {EditSession}*/
         session: EditSession;
-        /**
-         * @param {string} showInvisibles
-         */
         setShowInvisibles(showInvisibles: string): boolean;
         showInvisibles: any;
         showSpaces: boolean;
         showTabs: boolean;
         showEOL: boolean;
-        /**
-         * @param {boolean} display
-         */
         setDisplayIndentGuides(display: boolean): boolean;
         displayIndentGuides: any;
-        /**
-         * @param {boolean} highlight
-         */
         setHighlightIndentGuides(highlight: boolean): boolean;
         tabSize: number;
-        /**
-         * @param {LayerConfig} config
-         * @param {number} firstRow
-         * @param {number} lastRow
-         */
         updateLines(config: LayerConfig, firstRow: number, lastRow: number): void;
         config?: import("ace-code").Ace.LayerConfig;
-        /**
-         * @param {LayerConfig} config
-         */
         scrollLines(config: LayerConfig): void;
-        /**
-         * @param {LayerConfig} config
-         */
         update(config: LayerConfig): void;
         renderIndentGuide(parent: any, value: any, max: any): any;
         EOF_CHAR: string;
@@ -744,9 +510,6 @@ declare module "ace-code/src/layer/text" {
 }
 declare module "ace-code/src/layer/cursor" {
     export class Cursor {
-        /**
-         * @param {HTMLElement} parentEl
-         */
         constructor(parentEl: HTMLElement);
         element: HTMLDivElement;
         isVisible: boolean;
@@ -755,26 +518,11 @@ declare module "ace-code/src/layer/cursor" {
         smoothBlinking: boolean;
         cursors: any[];
         cursor: HTMLDivElement;
-        /**
-         * @param {number} padding
-         */
         setPadding(padding: number): void;
-        /**
-         * @param {EditSession} session
-         */
         setSession(session: EditSession): void;
         session: import("ace-code/src/edit_session").EditSession;
-        /**
-         * @param {boolean} blinking
-         */
         setBlinking(blinking: boolean): void;
-        /**
-         * @param {number} blinkInterval
-         */
         setBlinkInterval(blinkInterval: number): void;
-        /**
-         * @param {boolean} smoothBlinking
-         */
         setSmoothBlinking(smoothBlinking: boolean): void;
         addCursor(): HTMLDivElement;
         removeCursor(): any;
@@ -782,10 +530,6 @@ declare module "ace-code/src/layer/cursor" {
         showCursor(): void;
         restartTimer(): void;
         intervalId: number;
-        /**
-         * @param {import("ace-code").Ace.Point} [position]
-         * @param {boolean} [onScreen]
-         */
         getPixelPosition(position?: import("ace-code").Ace.Point, onScreen?: boolean): {
             left: number;
             top: number;
@@ -820,7 +564,6 @@ declare module "ace-code/src/scrollbar" {
         width: number;
         /**
          * Returns the width of the scroll bar.
-         * @returns {Number}
          **/
         getWidth(): number;
         /**
@@ -860,7 +603,6 @@ declare module "ace-code/src/scrollbar" {
         height: any;
         /**
          * Returns the height of the scroll bar.
-         * @returns {Number}
          **/
         getHeight(): number;
         /**
@@ -892,7 +634,6 @@ declare module "ace-code/src/scrollbar" {
         /**
          * Creates a new `ScrollBar`. `parent` is the owner of the scroll bar.
          * @param {Element} parent A DOM element
-         * @param {string} classSuffix
          **/
         constructor(parent: Element, classSuffix: string);
         element: HTMLDivElement;
@@ -934,13 +675,10 @@ declare module "ace-code/src/scrollbar_custom" {
         getHeight(): number;
         /**
          * Returns new top for scroll thumb
-         * @param {Number}thumbTop
-         * @returns {Number}
          **/
         scrollTopFromThumbTop(thumbTop: number): number;
         /**
          * Returns the width of the scroll bar.
-         * @returns {Number}
          **/
         getWidth(): number;
         /**
@@ -985,13 +723,10 @@ declare module "ace-code/src/scrollbar_custom" {
         renderer: any;
         /**
          * Returns the height of the scroll bar.
-         * @returns {Number}
          **/
         getHeight(): number;
         /**
          * Returns new left for scroll thumb
-         * @param {Number} thumbLeft
-         * @returns {Number}
          **/
         scrollLeftFromThumbLeft(thumbLeft: number): number;
         /**
@@ -1025,7 +760,6 @@ declare module "ace-code/src/scrollbar_custom" {
         /**
          * Creates a new `ScrollBar`. `parent` is the owner of the scroll bar.
          * @param {Element} parent A DOM element
-         * @param {string} classSuffix
          **/
         constructor(parent: Element, classSuffix: string);
         element: HTMLDivElement;
@@ -1091,13 +825,10 @@ declare module "ace-code/src/virtual_renderer" {
          * Constructs a new `VirtualRenderer` within the `container` specified, applying the given `theme`.
          * @param {HTMLElement | null} [container] The root element of the editor
          * @param {String} [theme] The starting theme
-    
          **/
         constructor(container?: HTMLElement | null, theme?: string);
         container: HTMLElement;
-        /**@type {HTMLElement}*/
         scroller: HTMLElement;
-        /**@type {HTMLElement}*/
         content: HTMLElement;
         canvas: HTMLDivElement;
         scrollBar: VScrollBar;
@@ -1153,7 +884,6 @@ declare module "ace-code/src/virtual_renderer" {
          * Triggers a partial update of the text, from the range given by the two parameters.
          * @param {Number} firstRow The first row to update
          * @param {Number} lastRow The last row to update
-         * @param {boolean} [force]
          **/
         updateLines(firstRow: number, lastRow: number, force?: boolean): void;
         /**
@@ -1163,7 +893,6 @@ declare module "ace-code/src/virtual_renderer" {
         /**
          * Triggers a full update of all the layers, for all the rows.
          * @param {Boolean} [force] If `true`, forces the changes through
-    
          **/
         updateFull(force?: boolean): void;
         /**
@@ -1174,190 +903,113 @@ declare module "ace-code/src/virtual_renderer" {
         gutterWidth: any;
         /**
          * Adjusts the wrap limit, which is the number of characters that can fit within the width of the edit area on screen.
-    
          **/
         adjustWrapLimit(): boolean;
         /**
          * Identifies whether you want to have an animated scroll or not.
          * @param {Boolean} shouldAnimate Set to `true` to show animated scrolls
-    
          **/
         setAnimatedScroll(shouldAnimate: boolean): void;
         /**
          * Returns whether an animated scroll happens or not.
-         * @returns {Boolean}
-    
          **/
         getAnimatedScroll(): boolean;
         /**
          * Identifies whether you want to show invisible characters or not.
          * @param {Boolean} showInvisibles Set to `true` to show invisibles
-    
          **/
         setShowInvisibles(showInvisibles: boolean): void;
         /**
          * Returns whether invisible characters are being shown or not.
-         * @returns {Boolean}
-    
          **/
         getShowInvisibles(): boolean;
-        /**
-         * @return {boolean}
-    
-         */
         getDisplayIndentGuides(): boolean;
-        /**
-         * @param {boolean} display
-    
-         */
         setDisplayIndentGuides(display: boolean): void;
-        /**
-    
-         * @return {boolean}
-         */
         getHighlightIndentGuides(): boolean;
-        /**
-    
-         * @param {boolean} highlight
-         */
         setHighlightIndentGuides(highlight: boolean): void;
         /**
          * Identifies whether you want to show the print margin or not.
          * @param {Boolean} showPrintMargin Set to `true` to show the print margin
-    
          **/
         setShowPrintMargin(showPrintMargin: boolean): void;
         /**
          * Returns whether the print margin is being shown or not.
-         * @returns {Boolean}
-    
          **/
         getShowPrintMargin(): boolean;
         /**
          * Identifies whether you want to show the print margin column or not.
          * @param {number} printMarginColumn Set to `true` to show the print margin column
-    
          **/
         setPrintMarginColumn(printMarginColumn: number): void;
         /**
          * Returns whether the print margin column is being shown or not.
-         * @returns {number}
-    
          **/
         getPrintMarginColumn(): number;
         /**
          * Returns `true` if the gutter is being shown.
-         * @returns {Boolean}
-    
          **/
         getShowGutter(): boolean;
         /**
          * Identifies whether you want to show the gutter or not.
          * @param {Boolean} show Set to `true` to show the gutter
-    
          **/
         setShowGutter(show: boolean): void;
-        /**
-    
-         * @returns {boolean}
-         */
         getFadeFoldWidgets(): boolean;
-        /**
-    
-         * @param {boolean} show
-         */
         setFadeFoldWidgets(show: boolean): void;
-        /**
-          *
-         * @param {boolean} shouldHighlight
-         */
         setHighlightGutterLine(shouldHighlight: boolean): void;
-        /**
-    
-         * @returns {boolean}
-         */
         getHighlightGutterLine(): boolean;
         /**
          *
          * Returns the root element containing this renderer.
-         * @returns {HTMLElement}
          **/
         getContainerElement(): HTMLElement;
         /**
          *
          * Returns the element that the mouse events are attached to
-         * @returns {HTMLElement}
          **/
         getMouseEventTarget(): HTMLElement;
         /**
          *
          * Returns the element to which the hidden text area is added.
-         * @returns {HTMLElement}
          **/
         getTextAreaContainer(): HTMLElement;
         /**
          * [Returns the index of the first visible row.]{: #VirtualRenderer.getFirstVisibleRow}
-         * @returns {Number}
          **/
         getFirstVisibleRow(): number;
         /**
          *
          * Returns the index of the first fully visible row. "Fully" here means that the characters in the row are not truncated; that the top and the bottom of the row are on the screen.
-         * @returns {Number}
          **/
         getFirstFullyVisibleRow(): number;
         /**
          *
          * Returns the index of the last fully visible row. "Fully" here means that the characters in the row are not truncated; that the top and the bottom of the row are on the screen.
-         * @returns {Number}
          **/
         getLastFullyVisibleRow(): number;
         /**
          *
          * [Returns the index of the last visible row.]{: #VirtualRenderer.getLastVisibleRow}
-         * @returns {Number}
          **/
         getLastVisibleRow(): number;
         /**
          * Sets the padding for all the layers.
          * @param {Number} padding A new padding value (in pixels)
-    
          **/
         setPadding(padding: number): void;
-        /**
-         *
-         * @param {number} [top]
-         * @param {number} [bottom]
-         * @param {number} [left]
-         * @param {number} [right]
-    
-         */
         setScrollMargin(top?: number, bottom?: number, left?: number, right?: number): void;
-        /**
-         *
-         * @param {number} [top]
-         * @param {number} [bottom]
-         * @param {number} [left]
-         * @param {number} [right]
-    
-         */
         setMargin(top?: number, bottom?: number, left?: number, right?: number): void;
         /**
          * Returns whether the horizontal scrollbar is set to be always visible.
-         * @returns {Boolean}
-    
          **/
         getHScrollBarAlwaysVisible(): boolean;
         /**
          * Identifies whether you want to show the horizontal scrollbar or not.
          * @param {Boolean} alwaysVisible Set to `true` to make the horizontal scroll bar visible
-    
          **/
         setHScrollBarAlwaysVisible(alwaysVisible: boolean): void;
         /**
          * Returns whether the horizontal scrollbar is set to be always visible.
-         * @returns {Boolean}
-    
          **/
         getVScrollBarAlwaysVisible(): boolean;
         /**
@@ -1391,7 +1043,6 @@ declare module "ace-code/src/virtual_renderer" {
         /**
          *
          * Redraw breakpoints.
-         * @param {any} [rows]
          */
         updateBreakpoints(rows?: any): void;
         /**
@@ -1415,19 +1066,10 @@ declare module "ace-code/src/virtual_renderer" {
          * Shows the cursor icon.
          **/
         showCursor(): void;
-        /**
-         *
-         * @param {Point} anchor
-         * @param {Point} lead
-         * @param {number} [offset]
-         */
         scrollSelectionIntoView(anchor: Point, lead: Point, offset?: number): void;
         /**
          *
          * Scrolls the cursor into the first visibile area of the editor
-         * @param {Point} [cursor]
-         * @param {number} [offset]
-         * @param {{ top?: any; bottom?: any; }} [$viewMargin]
          */
         scrollCursorIntoView(cursor?: Point, offset?: number, $viewMargin?: {
             top?: any;
@@ -1436,23 +1078,19 @@ declare module "ace-code/src/virtual_renderer" {
         /**
          * {:EditSession.getScrollTop}
          * @related EditSession.getScrollTop
-         * @returns {Number}
          **/
         getScrollTop(): number;
         /**
          * {:EditSession.getScrollLeft}
          * @related EditSession.getScrollLeft
-         * @returns {Number}
          **/
         getScrollLeft(): number;
         /**
          * Returns the first visible row, regardless of whether it's fully visible or not.
-         * @returns {Number}
          **/
         getScrollTopRow(): number;
         /**
          * Returns the last visible row, regardless of whether it's fully visible or not.
-         * @returns {Number}
          **/
         getScrollBottomRow(): number;
         /**
@@ -1462,12 +1100,6 @@ declare module "ace-code/src/virtual_renderer" {
          * @related EditSession.setScrollTop
          **/
         scrollToRow(row: number): void;
-        /**
-         *
-         * @param {Point} cursor
-         * @param {number} [alignment]
-         * @returns {number}
-         */
         alignCursor(cursor: Point, alignment?: number): number;
         /**
          * Gracefully scrolls the editor to the row indicated.
@@ -1475,15 +1107,8 @@ declare module "ace-code/src/virtual_renderer" {
          * @param {Boolean} center If `true`, centers the editor the to indicated line
          * @param {Boolean} animate If `true` animates scrolling
          * @param {() => void} [callback] Function to be called after the animation has finished
-    
          **/
         scrollToLine(line: number, center: boolean, animate: boolean, callback?: () => void): void;
-        /**
-         *
-         * @param fromValue
-         * @param [callback]
-    
-         */
         animateScrolling(fromValue: any, callback?: any): void;
         /**
          * Scrolls the editor to the y pixel indicated.
@@ -1512,31 +1137,15 @@ declare module "ace-code/src/virtual_renderer" {
          * @param {Number} deltaX The x value to scroll by
          * @param {Number} deltaY The y value to scroll by
          *
-         * @returns {Boolean}
          **/
         isScrollableBy(deltaX: number, deltaY: number): boolean;
-        /**
-         *
-         * @param {number} x
-         * @param {number} y
-         * @returns {import("ace-code").Ace.ScreenCoordinates}
-    
-         */
         pixelToScreenCoordinates(x: number, y: number): import("ace-code").Ace.ScreenCoordinates;
-        /**
-         *
-         * @param {number} x
-         * @param {number} y
-         * @returns {Point}
-    
-         */
         screenToTextCoordinates(x: number, y: number): Point;
         /**
          * Returns an object containing the `pageX` and `pageY` coordinates of the document position.
          * @param {Number} row The document row position
          * @param {Number} column The document column position
          *
-         * @returns {{ pageX: number, pageY: number}}
          **/
         textToScreenCoordinates(row: number, column: number): {
             pageX: number;
@@ -1552,36 +1161,20 @@ declare module "ace-code/src/virtual_renderer" {
          * Blurs the current container.
          **/
         visualizeBlur(): void;
-        /**
-         * @param {Object} composition
-    
-         **/
         showComposition(composition: any): void;
         /**
          * @param {String} text A string of text to use
          *
          * Sets the inner text of the current composition to `text`.
-    
          **/
         setCompositionText(text: string): void;
         /**
          *
          * Hides the current composition.
-    
          **/
         hideComposition(): void;
-        /**
-         * @param {string} text
-         * @param {Point} [position]
-         */
         setGhostText(text: string, position?: Point): void;
         removeGhostText(): void;
-        /**
-         * @param {string} text
-         * @param {string} type
-         * @param {number} row
-         * @param {number} [column]
-         */
         addToken(text: string, type: string, row: number, column?: number): void;
         hideTokensAfterPosition(row: any, column: any): {
             type: string;
@@ -1592,18 +1185,15 @@ declare module "ace-code/src/virtual_renderer" {
          * [Sets a new theme for the editor. `theme` should exist, and be a directory path, like `ace/theme/textmate`.]{: #VirtualRenderer.setTheme}
          * @param {String | Theme} [theme] The path to a theme
          * @param {() => void} [cb] optional callback
-    
          **/
         setTheme(theme?: string | Theme, cb?: () => void): void;
         /**
          * [Returns the path of the current theme.]{: #VirtualRenderer.getTheme}
-         * @returns {String}
          **/
         getTheme(): string;
         /**
          * [Adds a new class, `style`, to the editor.]{: #VirtualRenderer.setStyle}
          * @param {String} style A class name
-         * @param {boolean}[include]
          **/
         setStyle(style: string, include?: boolean): void;
         /**
@@ -1612,9 +1202,6 @@ declare module "ace-code/src/virtual_renderer" {
          *
          **/
         unsetStyle(style: string): void;
-        /**
-         * @param {string} style
-         */
         setCursorStyle(style: string): void;
         /**
          * @param {String} cursorStyle A css cursor style
@@ -1623,7 +1210,6 @@ declare module "ace-code/src/virtual_renderer" {
         attachToShadowRoot(): void;
         /**
          * Destroys the text and cursor layers for this renderer.
-    
          **/
         destroy(): void;
         CHANGE_CURSOR: number;
@@ -1682,11 +1268,6 @@ declare module "ace-code/src/virtual_renderer" {
     }
 }
 declare module "ace-code/src/selection" {
-    /**
-     * @typedef {import("ace-code/src/edit_session").EditSession} EditSession
-     * @typedef {import("ace-code/src/anchor").Anchor} Anchor
-     * @typedef {import("ace-code").Ace.Point} Point
-     */
     export class Selection {
         /**
          * Creates a new `Selection` object.
@@ -1694,28 +1275,21 @@ declare module "ace-code/src/selection" {
          * @constructor
          **/
         constructor(session: EditSession);
-        /**@type {EditSession}*/
         session: EditSession;
-        /**@type {import("ace-code/src/document").Document}*/
         doc: import("ace-code/src/document").Document;
-        /**@type {Anchor}*/
         cursor: Anchor;
         lead: Anchor;
-        /**@type {Anchor}*/
         anchor: Anchor;
         /**
          * Returns `true` if the selection is empty.
-         * @returns {Boolean}
          **/
         isEmpty(): boolean;
         /**
          * Returns `true` if the selection is a multi-line.
-         * @returns {Boolean}
          **/
         isMultiLine(): boolean;
         /**
          * Returns an object containing the `row` and `column` current position of the cursor.
-         * @returns {Point}
          **/
         getCursor(): Point;
         /**
@@ -1728,23 +1302,19 @@ declare module "ace-code/src/selection" {
         /**
          * Returns an object containing the `row` and `column` of the calling selection anchor.
          *
-         * @returns {Point}
          * @related Anchor.getPosition
          **/
         getAnchor(): Point;
         /**
          * Returns an object containing the `row` and `column` of the calling selection lead.
-         * @returns {Object}
          **/
         getSelectionLead(): any;
         /**
          * Returns `true` if the selection is going backwards in the document.
-         * @returns {Boolean}
          **/
         isBackwards(): boolean;
         /**
          * [Returns the [[Range]] for the selected text.]{: #Selection.getRange}
-         * @returns {Range}
          **/
         getRange(): Range;
         /**
@@ -1912,26 +1482,18 @@ declare module "ace-code/src/selection" {
          * Moves the cursor to the row and column provided. [If `preventUpdateDesiredColumn` is `true`, then the cursor stays in the same column position as its original point.]{: #preventUpdateBoolDesc}
          * @param {Number} row The row to move to
          * @param {Number} column The column to move to
-         * @param {Boolean} [keepDesiredColumn] [If `true`, the cursor move does not respect the previous column]{: #preventUpdateBool}
          **/
         moveCursorTo(row: number, column: number, keepDesiredColumn?: boolean): void;
         /**
          * Moves the cursor to the screen position indicated by row and column. {:preventUpdateBoolDesc}
          * @param {Number} row The row to move to
          * @param {Number} column The column to move to
-         * @param {Boolean} keepDesiredColumn {:preventUpdateBool}
          **/
         moveCursorToScreen(row: number, column: number, keepDesiredColumn: boolean): void;
         detach(): void;
-        /**
-         * @param {Range & {desiredColumn?: number}} range
-         */
         fromOrientedRange(range: Range & {
             desiredColumn?: number;
         }): void;
-        /**
-         * @param {Range & {desiredColumn?: number}} [range]
-         */
         toOrientedRange(range?: Range & {
             desiredColumn?: number;
         }): Range & {
@@ -1942,24 +1504,10 @@ declare module "ace-code/src/selection" {
          * postion. The result is the range of the starting and eventual cursor position.
          * Will reset the cursor position.
          * @param {Function} func The callback that should change the cursor position
-         * @returns {Range}
          **/
         getRangeOfMovements(func: Function): Range;
-        /**
-         *
-         * @returns {Range|Range[]}
-         */
         toJSON(): Range | Range[];
-        /**
-         *
-         * @param data
-         */
         fromJSON(data: any): void;
-        /**
-         *
-         * @param data
-         * @return {boolean}
-         */
         isEqual(data: any): boolean;
         /**
          * Left for backward compatibility
@@ -1998,9 +1546,9 @@ declare module "ace-code/src/keyboard/textinput" {
 declare module "ace-code/src/mouse/mouse_event" {
     export class MouseEvent {
         constructor(domEvent: any, editor: any);
-        /** @type {number} */ speed: number;
-        /** @type {number} */ wheelX: number;
-        /** @type {number} */ wheelY: number;
+        speed: number;
+        wheelX: number;
+        wheelY: number;
         domEvent: any;
         editor: any;
         x: any;
@@ -2051,59 +1599,17 @@ declare module "ace-code/src/mouse/default_handlers" {
     export type MouseHandler = import("ace-code/src/mouse/mouse_handler").MouseHandler;
     export type MouseEvent = import("ace-code/src/mouse/mouse_event").MouseEvent;
     export class DefaultHandlers {
-        /**
-         * @param {MouseHandler} mouseHandler
-         */
         constructor(mouseHandler: MouseHandler);
-        /**
-         * @param {MouseEvent} ev
-         * @this {MouseHandler}
-         */
         onMouseDown(this: import("ace-code/src/mouse/mouse_handler").MouseHandler, ev: MouseEvent): void;
         mousedownEvent: import("ace-code/src/mouse/mouse_event").MouseEvent;
-        /**
-         *
-         * @param {import("ace-code").Ace.Position} [pos]
-         * @param {boolean} [waitForClickSelection]
-         * @this {MouseHandler}
-         */
         startSelect(this: import("ace-code/src/mouse/mouse_handler").MouseHandler, pos?: import("ace-code").Ace.Position, waitForClickSelection?: boolean): void;
-        /**
-         * @this {MouseHandler}
-         */
         select(this: import("ace-code/src/mouse/mouse_handler").MouseHandler): void;
-        /**
-         * @param {string | number} unitName
-         * @this {MouseHandler}
-         */
         extendSelectionBy(this: import("ace-code/src/mouse/mouse_handler").MouseHandler, unitName: string | number): void;
-        /**
-         * @this {MouseHandler}
-         */
         selectByLinesEnd(this: import("ace-code/src/mouse/mouse_handler").MouseHandler): void;
-        /**
-         * @this {MouseHandler}
-         */
         focusWait(this: import("ace-code/src/mouse/mouse_handler").MouseHandler): void;
-        /**
-         * @param {MouseEvent} ev
-         * @this {MouseHandler}
-         */
         onDoubleClick(this: import("ace-code/src/mouse/mouse_handler").MouseHandler, ev: MouseEvent): void;
-        /**
-         * @param {MouseEvent} ev
-         * @this {MouseHandler}
-         */
         onTripleClick(this: import("ace-code/src/mouse/mouse_handler").MouseHandler, ev: MouseEvent): void;
-        /**
-         * @param {MouseEvent} ev
-         * @this {MouseHandler}
-         */
         onQuadClick(this: import("ace-code/src/mouse/mouse_handler").MouseHandler, ev: MouseEvent): void;
-        /**
-         * @param {MouseEvent} ev
-         * @this {MouseHandler}
-         */
         onMouseWheel(this: import("ace-code/src/mouse/mouse_handler").MouseHandler, ev: MouseEvent): void;
         selectEnd: (this: import("ace-code/src/mouse/mouse_handler").MouseHandler) => void;
         selectAllEnd: (this: import("ace-code/src/mouse/mouse_handler").MouseHandler) => void;
@@ -2118,34 +1624,12 @@ declare module "ace-code/src/tooltip" {
         idleTime: number;
         lastEvent: import("ace-code/src/mouse/mouse_event").MouseEvent;
         waitForHover(): void;
-        /**
-         * @param {Editor} editor
-         */
         addToEditor(editor: Editor): void;
-        /**
-         * @param {Editor} editor
-         */
         removeFromEditor(editor: Editor): void;
-        /**
-         * @param {MouseEvent} e
-         */
         isOutsideOfText(e: MouseEvent): boolean;
-        /**
-         * @param {(event: MouseEvent, editor: Editor) => void} value
-         */
         setDataProvider(value: (event: MouseEvent, editor: Editor) => void): void;
-        /**
-         * @param {Editor} editor
-         * @param {Range} range
-         * @param {HTMLElement} domNode
-         * @param {MouseEvent} startingEvent
-         */
         showForRange(editor: Editor, range: Range, domNode: HTMLElement, startingEvent: MouseEvent): void;
         range: Range;
-        /**
-         * @param {Range} range
-         * @param {EditSession} [session]
-         */
         addMarker(range: Range, session?: EditSession): void;
         marker: number;
         row: number;
@@ -2155,72 +1639,27 @@ declare module "ace-code/src/tooltip" {
     export type EditSession = import("ace-code/src/edit_session").EditSession;
     export var popupManager: PopupManager;
     export class Tooltip {
-        /**
-         * @param {Element} parentNode
-         **/
         constructor(parentNode: Element);
         isOpen: boolean;
-        /**
-         * @returns {HTMLElement}
-         **/
         getElement(): HTMLElement;
-        /**
-         * @param {String} text
-         **/
         setText(text: string): void;
-        /**
-         * @param {String} html
-         **/
         setHtml(html: string): void;
-        /**
-         * @param {Number} x
-         * @param {Number} y
-         **/
         setPosition(x: number, y: number): void;
-        /**
-         * @param {String} className
-         **/
         setClassName(className: string): void;
-        /**
-         * @param {import("ace-code").Ace.Theme} theme
-         */
         setTheme(theme: import("ace-code").Ace.Theme): void;
-        /**
-         * @param {String} [text]
-         * @param {Number} [x]
-         * @param {Number} [y]
-         **/
         show(text?: string, x?: number, y?: number): void;
         hide(e: any): void;
-        /**
-         * @returns {Number}
-         **/
         getHeight(): number;
-        /**
-         * @returns {Number}
-         **/
         getWidth(): number;
         destroy(): void;
     }
     import Range_4 = require("ace-code/src/range");
     import Range = Range_4.Range;
     class PopupManager {
-        /**@type{Tooltip[]} */
         popups: Tooltip[];
-        /**
-         * @param {Tooltip} popup
-         */
         addPopup(popup: Tooltip): void;
-        /**
-         * @param {Tooltip} popup
-         */
         removePopup(popup: Tooltip): void;
         updatePopups(): void;
-        /**
-         * @param {Tooltip} popupA
-         * @param {Tooltip} popupB
-         * @return {boolean}
-         */
         doPopupsOverlap(popupA: Tooltip, popupB: Tooltip): boolean;
     }
     export interface HoverTooltip {
@@ -2228,10 +1667,6 @@ declare module "ace-code/src/tooltip" {
     }
 }
 declare module "ace-code/src/mouse/default_gutter_handler" {
-    /**
-     * @param {MouseHandler} mouseHandler
-     * @this {MouseHandler}
-     */
     export function GutterHandler(this: import("ace-code/src/mouse/mouse_handler").MouseHandler, mouseHandler: MouseHandler): void;
     export interface GutterHandler {
     }
@@ -2273,45 +1708,14 @@ declare module "ace-code/src/mouse/default_gutter_handler" {
 }
 declare module "ace-code/src/mouse/dragdrop_handler" {
     export type MouseHandler = import("ace-code/src/mouse/mouse_handler").MouseHandler;
-    /**
-     * @param {MouseHandler} mouseHandler
-     */
     export function DragdropHandler(mouseHandler: MouseHandler): void;
     export class DragdropHandler {
-        /**
-         * @param {MouseHandler} mouseHandler
-         */
         constructor(mouseHandler: MouseHandler);
-        /**
-         * @param e
-         * @this {MouseHandler}
-         * @return {*}
-         */
         onDragStart: (this: import("ace-code/src/mouse/mouse_handler").MouseHandler, e: any) => any;
-        /**
-         * @param e
-         * @this {MouseHandler}
-         * @return {*}
-         */
         onDragEnd: (this: import("ace-code/src/mouse/mouse_handler").MouseHandler, e: any) => any;
-        /**
-         * @param e
-         * @this {MouseHandler}
-         * @return {*}
-         */
         onDragEnter: (this: import("ace-code/src/mouse/mouse_handler").MouseHandler, e: any) => any;
-        /**
-         * @param e
-         * @this {MouseHandler}
-         * @return {*}
-         */
         onDragOver: (this: import("ace-code/src/mouse/mouse_handler").MouseHandler, e: any) => any;
         onDragLeave: (e: any) => void;
-        /**
-         * @param e
-         * @this {MouseHandler}
-         * @return {*}
-         */
         onDrop: (this: import("ace-code/src/mouse/mouse_handler").MouseHandler, e: any) => any;
     }
 }
@@ -2320,18 +1724,11 @@ declare module "ace-code/src/mouse/touch_handler" {
 }
 declare module "ace-code/src/mouse/mouse_handler" {
     export class MouseHandler {
-        /**
-         * @param {Editor} editor
-         */
         constructor(editor: Editor);
-        /** @type {MouseEvent} */ mouseEvent: MouseEvent;
+        mouseEvent: MouseEvent;
         editor: import("ace-code/src/editor").Editor;
         onMouseEvent(name: any, e: any): void;
         onMouseMove(name: any, e: any): void;
-        /**
-         * @param {any} name
-         * @param {{ wheelX: number; wheelY: number; }} e
-         */
         onMouseWheel(name: any, e: {
             wheelX: number;
             wheelY: number;
@@ -2376,37 +1773,17 @@ declare module "ace-code/src/keyboard/keybinding" {
     export type Editor = import("ace-code/src/editor").Editor;
     export type KeyboardHandler = import("ace-code").Ace.KeyboardHandler;
     export class KeyBinding {
-        /**
-         * @param {Editor} editor
-         */
         constructor(editor: Editor);
-        /**
-         * @param {KeyboardHandler} kb
-         */
         setDefaultHandler(kb: KeyboardHandler): void;
-        /**
-         * @param {KeyboardHandler} kb
-         */
         setKeyboardHandler(kb: KeyboardHandler): void;
-        /**
-         * @param {KeyboardHandler & {attach?: (editor: any) => void, detach?: (editor: any) => void;}} [kb]
-         * @param {number} [pos]
-         */
         addKeyboardHandler(kb?: KeyboardHandler & {
             attach?: (editor: any) => void;
             detach?: (editor: any) => void;
         }, pos?: number): void;
-        /**
-         * @param {KeyboardHandler & {attach?: (editor: any) => void, detach?: (editor: any) => void;}} kb
-         * @returns {boolean}
-         */
         removeKeyboardHandler(kb: KeyboardHandler & {
             attach?: (editor: any) => void;
             detach?: (editor: any) => void;
         }): boolean;
-        /**
-         * @return {KeyboardHandler}
-         */
         getKeyboardHandler(): KeyboardHandler;
         getStatusText(): string;
     }
@@ -2421,13 +1798,11 @@ declare module "ace-code/src/search" {
         /**
          * Sets the search options via the `options` parameter.
          * @param {Partial<SearchOptions>} options An object containing all the new search properties
-         * @returns {Search}
          * @chainable
         **/
         set(options: Partial<SearchOptions>): Search;
         /**
          * [Returns an object containing all the search options.]{: #Search.getOptions}
-         * @returns {Partial<SearchOptions>}
         **/
         getOptions(): Partial<SearchOptions>;
         /**
@@ -2439,13 +1814,11 @@ declare module "ace-code/src/search" {
         /**
          * Searches for `options.needle`. If found, this method returns the [[Range `Range`]] where the text first occurs. If `options.backwards` is `true`, the search goes backwards in the session.
          * @param {EditSession} session The session to search with
-         * @returns {Range|false}
          **/
         find(session: EditSession): Range | false;
         /**
          * Searches for all occurrances `options.needle`. If found, this method returns an array of [[Range `Range`s]] where the text first occurs. If `options.backwards` is `true`, the search goes backwards in the session.
          * @param {EditSession} session The session to search with
-         * @returns {Range[]}
         **/
         findAll(session: EditSession): Range[];
         /**
@@ -2456,7 +1829,6 @@ declare module "ace-code/src/search" {
          * If `options.needle` was not found, this function returns `null`.
          *
          *
-         * @returns {String}
         **/
         replace(input: string, replacement: any): string;
     }
@@ -2472,77 +1844,32 @@ declare module "ace-code/src/keyboard/hash_handler" {
         function call(thisArg: any, config: any, platform: any): void;
     }
     export class MultiHashHandler {
-        /**
-         * @param {Record<string, CommandLike> | Command[]} [config]
-         * @param {string} [platform]
-         */
         constructor(config?: Record<string, CommandLike> | Command[], platform?: string);
         platform: string;
-        /**@type {Record<string, Command>}*/
         commands: Record<string, Command>;
         commandKeyBinding: {};
-        /**
-         * @param {Command} command
-         */
         addCommand(command: Command): void;
-        /**
-         * @param {Command | string} command
-         * @param {boolean} [keepCommand]
-         */
         removeCommand(command: Command | string, keepCommand?: boolean): void;
-        /**
-         * @param {string | { win?: string; mac?: string; position?:number}} key
-         * @param {CommandLike | string} command
-         * @param {number} [position]
-         */
         bindKey(key: string | {
             win?: string;
             mac?: string;
             position?: number;
         }, command: CommandLike | string, position?: number): void;
-        /**
-         * @param {Record<string, CommandLike> | Command[]} [commands]
-         */
         addCommands(commands?: Record<string, CommandLike> | Command[]): void;
-        /**
-         * @param {Record<string, CommandLike | string>} commands
-         */
         removeCommands(commands: Record<string, CommandLike | string>): void;
-        /**
-         * @param {Record<string, CommandLike | string>} keyList
-         */
         bindKeys(keyList: Record<string, CommandLike | string>): void;
         /**
          * Accepts keys in the form ctrl+Enter or ctrl-Enter
          * keys without modifiers or shift only
-         * @param {string} keys
-         * @returns {{key: string, hashId: number} | false}
          */
         parseKeys(keys: string): {
             key: string;
             hashId: number;
         } | false;
-        /**
-         * @param {number} hashId
-         * @param {string} keyString
-         * @returns {Command}
-         */
         findKeyCommand(hashId: number, keyString: string): Command;
-        /**
-         * @param {any} data
-         * @param {number} hashId
-         * @param {string} keyString
-         * @param {number} keyCode
-         * @returns {{command: string} | void}
-         */
         handleKeyboard(data: any, hashId: number, keyString: string, keyCode: number): {
             command: string;
         } | void;
-        /**
-         * @param {any} [editor]
-         * @param {any} [data]
-         * @returns {string}
-         */
         getStatusText(editor?: any, data?: any): string;
     }
     export namespace MultiHashHandler {
@@ -2559,32 +1886,12 @@ declare module "ace-code/src/commands/command_manager" {
          **/
         constructor(platform: string, commands: any[]);
         byName: Record<string, import("ace-code").Ace.Command>;
-        /**
-         *
-         * @param {string | string[] | import("ace-code").Ace.Command} command
-         * @param {Editor} editor
-         * @param {any} args
-         * @returns {boolean}
-         */
         exec(command: string | string[] | import("ace-code").Ace.Command, editor: Editor, args: any): boolean;
-        /**
-         *
-         * @param {string | import("ace-code").Ace.Command} command
-         * @param {Editor} editor
-         * @returns {boolean}
-         */
         canExecute(command: string | import("ace-code").Ace.Command, editor: Editor): boolean;
-        /**
-         * @param {Editor} editor
-         * @returns {boolean}
-         */
         toggleRecording(editor: Editor): boolean;
         macro: any;
         recording: boolean;
         oldMacro: any;
-        /**
-         * @param {Editor} editor
-         */
         replay(editor: Editor): boolean;
         trimMacro(m: any): any;
     }
@@ -2616,40 +1923,33 @@ declare module "ace-code/src/token_iterator" {
         constructor(session: EditSession, initialRow: number, initialColumn: number);
         /**
          * Moves iterator position to the start of previous token.
-         * @returns {import("ace-code").Ace.Token|null}
          **/
         stepBackward(): import("ace-code").Ace.Token | null;
         /**
          * Moves iterator position to the start of next token.
-         * @returns {import("ace-code").Ace.Token|null}
          **/
         stepForward(): import("ace-code").Ace.Token | null;
         /**
          *
          * Returns current token.
-         * @returns {import("ace-code").Ace.Token}
          **/
         getCurrentToken(): import("ace-code").Ace.Token;
         /**
          *
          * Returns the current row.
-         * @returns {Number}
          **/
         getCurrentTokenRow(): number;
         /**
          *
          * Returns the current column.
-         * @returns {Number}
          **/
         getCurrentTokenColumn(): number;
         /**
          * Return the current token position.
-         * @returns {import("ace-code").Ace.Point}
          */
         getCurrentTokenPosition(): import("ace-code").Ace.Point;
         /**
          * Return the current token range.
-         * @returns {Range}
          */
         getCurrentTokenRange(): Range;
     }
@@ -2719,19 +2019,15 @@ declare module "ace-code/src/editor" {
          * @param {Partial<import("ace-code").Ace.EditorOptions>} [options] The default options
          **/
         constructor(renderer: VirtualRenderer, session?: EditSession, options?: Partial<import("ace-code").Ace.EditorOptions>);
-        /**@type{EditSession}*/ session: EditSession;
-        /**@type {HTMLElement & {env?:any, value?:any}}*/
+        session: EditSession;
         container: HTMLElement & {
             env?: any;
             value?: any;
         };
-        /**@type {VirtualRenderer}*/
         renderer: VirtualRenderer;
-        /**@type {string}*/
         id: string;
         commands: CommandManager;
         textInput: any;
-        /**@type {KeyBinding}*/
         keyBinding: KeyBinding;
         startOperation(commandEvent: any): void;
         /**
@@ -2751,12 +2047,10 @@ declare module "ace-code/src/editor" {
         /**
          * Sets a new key handler, such as "vim" or "windows".
          * @param {String | import("ace-code").Ace.KeyboardHandler | null} keyboardHandler The new key handler
-         * @param {() => void} [cb]
          **/
         setKeyboardHandler(keyboardHandler: string | import("ace-code").Ace.KeyboardHandler | null, cb?: () => void): void;
         /**
          * Returns the keyboard handler, such as "vim" or "windows".
-         * @returns {Object}
          **/
         getKeyboardHandler(): any;
         /**
@@ -2767,7 +2061,6 @@ declare module "ace-code/src/editor" {
         selection: import("ace-code/src/selection").Selection;
         /**
          * Returns the current session being used.
-         * @returns {EditSession}
          **/
         getSession(): EditSession;
         /**
@@ -2782,7 +2075,6 @@ declare module "ace-code/src/editor" {
         /**
          * Returns the current session's content.
          *
-         * @returns {String}
          * @related EditSession.getValue
          **/
         getValue(): string;
@@ -2820,12 +2112,10 @@ declare module "ace-code/src/editor" {
         /**
          * {:VirtualRenderer.unsetStyle}
          * @related VirtualRenderer.unsetStyle
-         * @param {string} style
          */
         unsetStyle(style: string): void;
         /**
          * Gets the current font size of the editor text.
-         * @return {string | number}
          */
         getFontSize(): string | number;
         /**
@@ -2840,7 +2130,6 @@ declare module "ace-code/src/editor" {
         focus(): void;
         /**
          * Returns `true` if the current `textInput` is in focus.
-         * @return {Boolean}
          **/
         isFocused(): boolean;
         /**
@@ -2850,27 +2139,15 @@ declare module "ace-code/src/editor" {
         blur(): void;
         /**
          * Returns the string of text currently highlighted.
-         * @returns {String}
          **/
         getCopyText(): string;
-        /**
-         *
-         * @param {string | string[]} command
-         * @param [args]
-         * @return {boolean}
-         */
         execCommand(command: string | string[], args?: any): boolean;
         /**
          * Inserts `text` into wherever the cursor is pointing.
          * @param {String} text The new text to add
-         * @param {boolean} [pasted]
          **/
         insert(text: string, pasted?: boolean): void;
         autoIndent(): void;
-        /**
-         * @param {string} [text]
-         * @param {any} [composition]
-         */
         applyComposition(text?: string, composition?: any): void;
         /**
          * Pass in `true` to enable overwrites in your session, or `false` to disable. If overwrites is enabled, any text you enter will type over any text after it. If the value of `overwrite` changes, this function also emits the `changeOverwrite` event.
@@ -2880,7 +2157,6 @@ declare module "ace-code/src/editor" {
         setOverwrite(overwrite: boolean): void;
         /**
          * Returns `true` if overwrites are enabled; `false` otherwise.
-         * @returns {Boolean}
          * @related EditSession.getOverwrite
          **/
         getOverwrite(): boolean;
@@ -2896,7 +2172,6 @@ declare module "ace-code/src/editor" {
         setScrollSpeed(speed: number): void;
         /**
          * Returns the value indicating how fast the mouse scroll speed is (in milliseconds).
-         * @returns {Number}
          **/
         getScrollSpeed(): number;
         /**
@@ -2906,7 +2181,6 @@ declare module "ace-code/src/editor" {
         setDragDelay(dragDelay: number): void;
         /**
          * Returns the current mouse drag delay.
-         * @returns {Number}
          **/
         getDragDelay(): number;
         /**
@@ -2916,7 +2190,6 @@ declare module "ace-code/src/editor" {
         setSelectionStyle(val: "fullLine" | "screenLine" | "text" | "line"): void;
         /**
          * Returns the current selection style.
-         * @returns {import("ace-code").Ace.EditorOptions["selectionStyle"]}
          **/
         getSelectionStyle(): import("ace-code").Ace.EditorOptions["selectionStyle"];
         /**
@@ -2926,16 +2199,9 @@ declare module "ace-code/src/editor" {
         setHighlightActiveLine(shouldHighlight: boolean): void;
         /**
          * Returns `true` if current lines are always highlighted.
-         * @return {Boolean}
          **/
         getHighlightActiveLine(): boolean;
-        /**
-         * @param {boolean} shouldHighlight
-         */
         setHighlightGutterLine(shouldHighlight: boolean): void;
-        /**
-         * @returns {Boolean}
-         */
         getHighlightGutterLine(): boolean;
         /**
          * Determines if the currently selected word should be highlighted.
@@ -2944,16 +2210,9 @@ declare module "ace-code/src/editor" {
         setHighlightSelectedWord(shouldHighlight: boolean): void;
         /**
          * Returns `true` if currently highlighted words are to be highlighted.
-         * @returns {Boolean}
          **/
         getHighlightSelectedWord(): boolean;
-        /**
-         * @param {boolean} shouldAnimate
-         */
         setAnimatedScroll(shouldAnimate: boolean): void;
-        /**
-         * @return {boolean}
-         */
         getAnimatedScroll(): boolean;
         /**
          * If `showInvisibles` is set to `true`, invisible characters&mdash;like spaces or new lines&mdash;are show in the editor.
@@ -2962,24 +2221,11 @@ declare module "ace-code/src/editor" {
         setShowInvisibles(showInvisibles: boolean): void;
         /**
          * Returns `true` if invisible characters are being shown.
-         * @returns {Boolean}
          **/
         getShowInvisibles(): boolean;
-        /**
-         * @param {boolean} display
-         */
         setDisplayIndentGuides(display: boolean): void;
-        /**
-         * @return {boolean}
-         */
         getDisplayIndentGuides(): boolean;
-        /**
-         * @param {boolean} highlight
-         */
         setHighlightIndentGuides(highlight: boolean): void;
-        /**
-         * @return {boolean}
-         */
         getHighlightIndentGuides(): boolean;
         /**
          * If `showPrintMargin` is set to `true`, the print margin is shown in the editor.
@@ -2989,7 +2235,6 @@ declare module "ace-code/src/editor" {
         setShowPrintMargin(showPrintMargin: boolean): void;
         /**
          * Returns `true` if the print margin is being shown.
-         * @returns {Boolean}
          **/
         getShowPrintMargin(): boolean;
         /**
@@ -3000,7 +2245,6 @@ declare module "ace-code/src/editor" {
         setPrintMarginColumn(showPrintMargin: number): void;
         /**
          * Returns the column number of where the print margin is.
-         * @returns {Number}
          **/
         getPrintMarginColumn(): number;
         /**
@@ -3010,7 +2254,6 @@ declare module "ace-code/src/editor" {
         setReadOnly(readOnly: boolean): void;
         /**
          * Returns `true` if the editor is set to read-only mode.
-         * @returns {Boolean}
          **/
         getReadOnly(): boolean;
         /**
@@ -3020,7 +2263,6 @@ declare module "ace-code/src/editor" {
         setBehavioursEnabled(enabled: boolean): void;
         /**
          * Returns `true` if the behaviors are currently enabled. {:BehaviorsDef}
-         * @returns {Boolean}
          **/
         getBehavioursEnabled(): boolean;
         /**
@@ -3031,7 +2273,6 @@ declare module "ace-code/src/editor" {
         setWrapBehavioursEnabled(enabled: boolean): void;
         /**
          * Returns `true` if the wrapping behaviors are currently enabled.
-         * @returns {boolean}
          **/
         getWrapBehavioursEnabled(): boolean;
         /**
@@ -3041,16 +2282,9 @@ declare module "ace-code/src/editor" {
         setShowFoldWidgets(show: boolean): void;
         /**
          * Returns `true` if the fold widgets are shown.
-         * @return {Boolean}
          **/
         getShowFoldWidgets(): boolean;
-        /**
-         * @param {boolean} fade
-         */
         setFadeFoldWidgets(fade: boolean): void;
-        /**
-         * @returns {boolean}
-         */
         getFadeFoldWidgets(): boolean;
         /**
          * Removes the current selection or one character.
@@ -3126,7 +2360,6 @@ declare module "ace-code/src/editor" {
         toggleBlockComment(): void;
         /**
          * Works like [[EditSession.getTokenAt]], except it returns a number.
-         * @returns {any}
          **/
         getNumberAt(row: any, column: any): any;
         /**
@@ -3134,17 +2367,13 @@ declare module "ace-code/src/editor" {
          * @param {Number} amount The value to change the numeral by (can be negative to decrease value)
          **/
         modifyNumber(amount: number): void;
-        /**
-         */
         toggleWord(): void;
         /**
          * Finds link at defined {row} and {column}
-         * @returns {String}
          **/
         findLinkAt(row: any, column: any): string;
         /**
          * Open valid url under cursor in another tab
-         * @returns {Boolean}
          **/
         openLink(): boolean;
         /**
@@ -3171,7 +2400,6 @@ declare module "ace-code/src/editor" {
          * ```
          * @param {Range} range The range of text you want moved within the document
          * @param {Point} toPosition The location (row and column) where you want to move the text to
-         * @param {boolean} [copy]
          *
          * @returns {Range} The new range where the text was moved to.
          * @related EditSession.moveText
@@ -3192,14 +2420,12 @@ declare module "ace-code/src/editor" {
         /**
          * {:VirtualRenderer.getFirstVisibleRow}
          *
-         * @returns {Number}
          * @related VirtualRenderer.getFirstVisibleRow
          **/
         getFirstVisibleRow(): number;
         /**
          * {:VirtualRenderer.getLastVisibleRow}
          *
-         * @returns {Number}
          * @related VirtualRenderer.getLastVisibleRow
          **/
         getLastVisibleRow(): number;
@@ -3207,7 +2433,6 @@ declare module "ace-code/src/editor" {
          * Indicates if the row is currently visible on the screen.
          * @param {Number} row The row to check
          *
-         * @returns {Boolean}
          **/
         isRowVisible(row: number): boolean;
         /**
@@ -3215,7 +2440,6 @@ declare module "ace-code/src/editor" {
          * @param {Number} row The row to check
          *
          *
-         * @returns {Boolean}
          **/
         isRowFullyVisible(row: number): boolean;
         /**
@@ -3245,7 +2469,6 @@ declare module "ace-code/src/editor" {
         /**
          * Moves the editor to the specified row.
          * @related VirtualRenderer.scrollToRow
-         * @param {number} row
          */
         scrollToRow(row: number): void;
         /**
@@ -3275,13 +2498,11 @@ declare module "ace-code/src/editor" {
         getCursorPosition(): Point;
         /**
          * Returns the screen position of the cursor.
-         * @returns {Point}
          * @related EditSession.documentToScreenPosition
          **/
         getCursorPositionScreen(): Point;
         /**
          * {:Selection.getRange}
-         * @returns {Range}
          * @related Selection.getRange
          **/
         getSelectionRange(): Range;
@@ -3310,8 +2531,6 @@ declare module "ace-code/src/editor" {
         moveCursorToPosition(pos: Point): void;
         /**
          * Moves the cursor's row and column to the next matching bracket or HTML tag.
-         * @param {boolean} [select]
-         * @param {boolean} [expand]
          */
         jumpToMatching(select?: boolean, expand?: boolean): void;
         /**
@@ -3387,20 +2606,17 @@ declare module "ace-code/src/editor" {
          * Replaces the first occurrence of `options.needle` with the value in `replacement`.
          * @param {String} [replacement] The text to replace with
          * @param {Partial<SearchOptions>} [options] The [[Search `Search`]] options to use
-         * @return {number}
          **/
         replace(replacement?: string, options?: Partial<SearchOptions>): number;
         /**
          * Replaces all occurrences of `options.needle` with the value in `replacement`.
          * @param {String} [replacement] The text to replace with
          * @param {Partial<SearchOptions>} [options] The [[Search `Search`]] options to use
-         * @return {number}
          **/
         replaceAll(replacement?: string, options?: Partial<SearchOptions>): number;
         /**
          * {:Search.getOptions} For more information on `options`, see [[Search `Search`]].
          * @related Search.getOptions
-         * @returns {Partial<SearchOptions>}
          **/
         getLastSearchOptions(): Partial<SearchOptions>;
         /**
@@ -3427,11 +2643,6 @@ declare module "ace-code/src/editor" {
          * @related Editor.find
          **/
         findPrevious(options?: Partial<SearchOptions>, animate?: boolean): void;
-        /**
-         *
-         * @param {Range} range
-         * @param {boolean} [animate]
-         */
         revealRange(range: Range, animate?: boolean): void;
         /**
          * {:UndoManager.undo}
@@ -3520,19 +2731,9 @@ declare module "ace-code/src/undomanager" {
     export type Point = import("ace-code").Ace.Point;
     export type IRange = import("ace-code").Ace.IRange;
     /**
-     * @typedef {import("ace-code/src/edit_session").EditSession} EditSession
-     * @typedef {import("ace-code").Ace.Delta} Delta
-     * @typedef {import("ace-code").Ace.Point} Point
-     * @typedef {import("ace-code").Ace.IRange} IRange
-     */
-    /**
      * This object maintains the undo stack for an [[EditSession `EditSession`]].
      **/
     export class UndoManager {
-        /**
-         *
-         * @param {EditSession} session
-         */
         addSession(session: EditSession): void;
         /**
          * Provides a means for implementing your own undo manager. `options` has one property, `args`, an [[Array `Array`]], with two elements:
@@ -3540,68 +2741,26 @@ declare module "ace-code/src/undomanager" {
          * - `args[0]` is an array of deltas
          * - `args[1]` is the document to associate with
          *
-         * @param {import("ace-code").Ace.Delta} delta
-         * @param {boolean} allowMerge
-         * @param {EditSession} [session]
          **/
         add(delta: import("ace-code").Ace.Delta, allowMerge: boolean, session?: EditSession): void;
         lastDeltas: any[];
-        /**
-         *
-         * @param {any} selection
-         * @param {number} [rev]
-         */
         addSelection(selection: any, rev?: number): void;
         startNewGroup(): any;
-        /**
-         *
-         * @param {number} from
-         * @param {number} [to]
-         */
         markIgnored(from: number, to?: number): void;
-        /**
-         *
-         * @param {number} rev
-         * @param {boolean} [after]
-         * @return {{ value: string, rev: number }}
-         */
         getSelection(rev: number, after?: boolean): {
             value: string;
             rev: number;
         };
-        /**
-         * @return {number}
-         */
         getRevision(): number;
-        /**
-         *
-         * @param {number} from
-         * @param {number} [to]
-         * @return {import("ace-code").Ace.Delta[]}
-         */
         getDeltas(from: number, to?: number): import("ace-code").Ace.Delta[];
-        /**
-         *
-         * @param {number} from
-         * @param {number} [to]
-         */
         getChangedRanges(from: number, to?: number): void;
-        /**
-         *
-         * @param {number} from
-         * @param {number} [to]
-         */
         getChangedLines(from: number, to?: number): void;
         /**
          * [Perform an undo operation on the document, reverting the last change.]{: #UndoManager.undo}
-         * @param {EditSession} session
-         * @param {Boolean} [dontSelect] {:dontSelect}
          **/
         undo(session: EditSession, dontSelect?: boolean): void;
         /**
          * [Perform a redo operation on the document, reimplementing the last change.]{: #UndoManager.redo}
-         * @param {EditSession} session
-         * @param {Boolean} [dontSelect] {:dontSelect}
          *
          **/
         redo(session: EditSession, dontSelect?: boolean): void;
@@ -3613,34 +2772,28 @@ declare module "ace-code/src/undomanager" {
         selections: any[];
         /**
          * Returns `true` if there are undo operations left to perform.
-         * @returns {Boolean}
          **/
         canUndo(): boolean;
         /**
          * Returns `true` if there are redo operations left to perform.
-         * @returns {Boolean}
          **/
         canRedo(): boolean;
         /**
          * Marks the current status clean
-         * @param {number} [rev]
          */
         bookmark(rev?: number): void;
         /**
          * Returns if the current status is clean
-         * @returns {Boolean}
          **/
         isAtBookmark(): boolean;
         /**
          * Returns an object which can be safely stringified into JSON
-         * @returns {object}
          */
         toJSON(): object;
         /**
          * Takes in an object which was returned from the toJSON method above,
          * and resets the current undoManager instance to use the previously exported
          * instance state.
-         * @param {object} json
          */
         fromJSON(json: object): void;
         hasUndo: () => boolean;
@@ -3659,26 +2812,14 @@ declare module "ace-code/src/tokenizer" {
          * @param {Object} rules The highlighting rules
          **/
         constructor(rules: any);
-        /**@type {RegExp}*/
         splitRegex: RegExp;
         states: any;
         regExps: {};
         matchMappings: {};
-        /**
-         * @param {string} src
-         * @returns {string}
-         */
         removeCapturingGroups(src: string): string;
-        /**
-         * @param {string} src
-         * @param {string} flag
-         */
         createSplitterRegexp(src: string, flag: string): RegExp;
         /**
          * Returns an object containing two properties: `tokens`, which contains all the tokens; and `state`, the current state.
-         * @param {string} line
-         * @param {string | string[]} startState
-         * @returns {{tokens:import("ace-code").Ace.Token[], state: string|string[]}}
          */
         getLineTokens(line: string, startState: string | string[]): {
             tokens: import("ace-code").Ace.Token[];
@@ -3694,7 +2835,6 @@ declare module "ace-code/src/autocomplete/popup" {
     export class AcePopup {
         /**
          * Creates and renders single line editor in popup window. If `parentNode` param is isset, then attaching it to this element.
-         * @param {Element} [parentNode]
          */
         constructor(parentNode?: Element);
         setSelectOnHover: (val: boolean) => void;
@@ -3719,11 +2859,6 @@ declare module "ace-code/src/autocomplete/popup" {
         isMouseOver?: boolean;
         selectedNode?: HTMLElement;
     }
-    /**
-     *
-     * @param {HTMLElement} [el]
-     * @return {Editor}
-     */
     export function $singleLineEditor(el?: HTMLElement): Editor;
     export function getAriaId(index: any): string;
     import Editor_1 = require("ace-code/src/editor");
@@ -3763,48 +2898,16 @@ declare module "ace-code/src/range_list" {
     export type Point = import("ace-code").Ace.Point;
     export class RangeList {
         ranges: any[];
-        /**
-         * @param {Point} pos
-         * @param {boolean} [excludeEdges]
-         * @param {number} [startIndex]
-         * @return {number}
-         */
         pointIndex(pos: Point, excludeEdges?: boolean, startIndex?: number): number;
-        /**
-         * @param {Range} range
-         */
         add(range: Range): any[];
-        /**
-         * @param {Range[]} list
-         */
         addList(list: Range[]): any[];
-        /**
-         * @param {Point} pos
-         */
         substractPoint(pos: Point): any[];
         merge(): any[];
-        /**
-         * @param {number} row
-         * @param {number} column
-         */
         contains(row: number, column: number): boolean;
-        /**
-         * @param {Point} pos
-         */
         containsPoint(pos: Point): boolean;
-        /**
-         * @param {Point} pos
-         */
         rangeAtPoint(pos: Point): any;
-        /**
-         * @param {number} startRow
-         * @param {number} endRow
-         */
         clipRows(startRow: number, endRow: number): any[];
         removeAll(): any[];
-        /**
-         * @param {EditSession} session
-         */
         attach(session: EditSession): void;
         session: import("ace-code/src/edit_session").EditSession;
         onChange: any;
@@ -3867,9 +2970,6 @@ declare module "ace-code/src/snippets" {
             CURRENT_MINUTE: any;
             CURRENT_SECOND: any;
         };
-        /**
-         * @return {Tokenizer}
-         */
         getTokenizer(): Tokenizer;
         createTokenizer(): any;
         tokenizeTmSnippet(str: any, startState: any): (string | import("ace-code").Ace.Token)[];
@@ -3883,17 +2983,7 @@ declare module "ace-code/src/snippets" {
         getActiveScopes(editor: any): any[];
         expandWithTab(editor: any, options: any): any;
         expandSnippetForSelection(editor: any, options: any): boolean;
-        /**
-         * @param {Snippet[]} snippetList
-         * @param {string} before
-         * @param {string} after
-         * @return {Snippet}
-         */
         findMatchingSnippet(snippetList: Snippet[], before: string, after: string): Snippet;
-        /**
-         * @param {any[]} snippets
-         * @param {string} scope
-         */
         register(snippets: any[], scope: string): void;
         unregister(snippets: any, scope: any): void;
         parseSnippetFile(str: any): Snippet[];
@@ -3914,14 +3004,12 @@ declare module "ace-code/src/autocomplete/inline_screenreader" {
     export class AceInlineScreenReader {
         /**
          * Creates the off-screen div in which the ghost text content in redered and which the screen reader reads.
-         * @param {import("ace-code/src/editor").Editor} editor
          */
         constructor(editor: import("ace-code/src/editor").Editor);
         editor: import("ace-code/src/editor").Editor;
         screenReaderDiv: HTMLDivElement;
         /**
          * Set the ghost text content to the screen reader div
-         * @param {string} content
          */
         setScreenReaderContent(content: string): void;
         popup: import("ace-code/src/autocomplete/popup").AcePopup;
@@ -3941,9 +3029,6 @@ declare module "ace-code/src/autocomplete/inline" {
         editor: any;
         /**
          * Renders the completion as ghost text to the current cursor position
-         * @param {Editor} editor
-         * @param {import("ace-code").Ace.Completion} completion
-         * @param {string} prefix
          * @returns {boolean} True if the completion could be rendered to the editor, false otherwise
          */
         show(editor: Editor, completion: import("ace-code").Ace.Completion, prefix: string): boolean;
@@ -3973,10 +3058,6 @@ declare module "ace-code/src/autocomplete" {
             caption: any;
             value: string;
         }[];
-        /**
-         * @param {Editor} editor
-         * @return {Autocomplete}
-         */
         static for(editor: Editor): Autocomplete;
         autoInsert: boolean;
         autoSelect: boolean;
@@ -4035,21 +3116,12 @@ declare module "ace-code/src/autocomplete" {
             cancel(): void;
             isPending(): any;
         };
-        /**@type {AcePopup}**/
         popup: AcePopup;
         inlineRenderer: AceInline;
-        /**
-         * @return {AcePopup}
-         */
         getPopup(): AcePopup;
         stickySelection: boolean;
         observeLayoutChanges(): void;
         unObserveLayoutChanges(): void;
-        /**
-         * @param {Editor} editor
-         * @param {string} prefix
-         * @param {boolean} [keepPopupPosition]
-         */
         openPopup(editor: Editor, prefix: string, keepPopupPosition?: boolean): void;
         /**
          * Detaches all elements from the editor, and cleans up the data for the session
@@ -4061,24 +3133,12 @@ declare module "ace-code/src/autocomplete" {
         base: import("ace-code/src/anchor").Anchor;
         mouseOutListener(e: any): void;
         goTo(where: any): void;
-        /**
-         * @param {Completion} data
-         * @param {undefined} [options]
-         * @return {boolean | void}
-         */
         insertMatch(data: Completion, options?: undefined): boolean | void;
         /**
          * This is the entry point for the autocompletion class, triggers the actions which collect and display suggestions
-         * @param {Editor} editor
-         * @param {CompletionOptions} [options]
          */
         showPopup(editor: Editor, options?: CompletionOptions): void;
         editor: import("ace-code/src/editor").Editor;
-        /**
-         *
-         * @param {{pos: Position, prefix: string}} [initialPosition]
-         * @return {CompletionProvider}
-         */
         getCompletionProvider(initialPosition?: {
             pos: Position;
             prefix: string;
@@ -4089,10 +3149,6 @@ declare module "ace-code/src/autocomplete" {
          * @deprecated
          */
         gatherCompletions(editor: any, callback: any): boolean;
-        /**
-         * @param {boolean} keepPopupPosition
-         * @param {CompletionOptions} [options]
-         */
         updateCompletions(keepPopupPosition: boolean, options?: CompletionOptions): void;
         cancelContextMenu(): void;
         updateDocTooltip(): void;
@@ -4119,9 +3175,6 @@ declare module "ace-code/src/autocomplete" {
      * This class is responsible for providing completions and inserting them to the editor
      */
     export class CompletionProvider {
-        /**
-         * @param {{pos: Position, prefix: string}} [initialPosition]
-         */
         constructor(initialPosition?: {
             pos: Position;
             prefix: string;
@@ -4131,32 +3184,13 @@ declare module "ace-code/src/autocomplete" {
             prefix: string;
         };
         active: boolean;
-        /**
-         * @param {Editor} editor
-         * @param {number} index
-         * @param {CompletionProviderOptions} [options]
-         * @returns {boolean}
-         */
         insertByIndex(editor: Editor, index: number, options?: CompletionProviderOptions): boolean;
-        /**
-         * @param {Editor} editor
-         * @param {Completion} data
-         * @param {CompletionProviderOptions} [options]
-         * @returns {boolean}
-         */
         insertMatch(editor: Editor, data: Completion, options?: CompletionProviderOptions): boolean;
-        /**
-         * @param {Editor} editor
-         * @param {import("ace-code").Ace.CompletionCallbackFunction} callback
-         */
         gatherCompletions(editor: Editor, callback: import("ace-code").Ace.CompletionCallbackFunction): boolean;
         completers: import("ace-code").Ace.Completer[];
         /**
          * This is the entry point to the class, it gathers, then provides the completions asynchronously via callback.
          * The callback function may be called multiple times, the last invokation is marked with a `finished` flag
-         * @param {Editor} editor
-         * @param {CompletionProviderOptions} options
-         * @param {(err: Error | undefined, completions: FilteredList | [], finished: boolean) => void} callback
          */
         provideCompletions(editor: Editor, options: CompletionProviderOptions, callback: (err: Error | undefined, completions: FilteredList | [
         ], finished: boolean) => void): void;
@@ -4262,60 +3296,18 @@ declare module "ace-code/src/autocomplete/text_completer" {
 }
 declare module "ace-code/src/line_widgets" {
     export class LineWidgets {
-        /**
-         * @param {EditSession} session
-         */
         constructor(session: EditSession);
         session: import("ace-code/src/edit_session").EditSession;
-        /**
-         *
-         * @param {import("ace-code").Ace.Delta} delta
-         */
         updateOnChange(delta: import("ace-code").Ace.Delta): void;
-        /**
-         * @param {any} e
-         * @param {VirtualRenderer} renderer
-         */
         renderWidgets(e: any, renderer: VirtualRenderer): void;
-        /**
-         * @param {any} e
-         * @param {VirtualRenderer} renderer
-         */
         measureWidgets(e: any, renderer: VirtualRenderer): void;
-        /**
-         * @param {number} row
-         * @return {number}
-         */
         getRowLength(row: number): number;
-        /**
-         *
-         * @param {Editor} editor
-         */
         attach(editor: Editor): void;
-        /**@type {Editor} */
         editor: Editor;
         detach(e: any): void;
-        /**
-         *
-         * @param e
-         * @param {EditSession} session
-         */
         updateOnFold(e: any, session: EditSession): void;
-        /**
-         *
-         * @param {LineWidget} w
-         * @return {LineWidget}
-         */
         addLineWidget(w: LineWidget): LineWidget;
-        /**
-         * @param {LineWidget} w
-         */
         removeLineWidget(w: LineWidget): void;
-        /**
-         *
-         * @param {number} row
-         * @return {LineWidget[]}
-         */
         getWidgetsAtRow(row: number): LineWidget[];
         firstRow: number;
         lastRow: number;
@@ -4338,22 +3330,12 @@ declare module "ace-code/src/search_highlight" {
     export type Marker = import("ace-code/src/layer/marker").Marker;
     export type EditSession = import("ace-code/src/edit_session").EditSession;
     export class SearchHighlight {
-        /**
-         * @param {any} regExp
-         * @param {string} clazz
-         */
         constructor(regExp: any, clazz: string, type?: string);
         clazz: string;
         type: string;
         setRegexp(regExp: any): void;
         regExp: any;
         cache: any[];
-        /**
-         * @param {any} html
-         * @param {Marker} markerLayer
-         * @param {EditSession} session
-         * @param {Partial<import("ace-code").Ace.LayerConfig>} config
-         */
         update(html: any, markerLayer: Marker, session: EditSession, config: Partial<import("ace-code").Ace.LayerConfig>): void;
         MAX_RANGES: number;
     }
@@ -4374,7 +3356,6 @@ declare module "ace-code/src/occur" {
          * and these are then used as the content of a new [[Document
          * `Document`]]. The current cursor position of editor will be translated
          * so that the cursor is on the matching row/column as it was before.
-         * @param {Editor} editor
          * @param {Object} options options.needle should be a String
          * @return {Boolean} Whether occur activation was successful
          *
@@ -4384,25 +3365,13 @@ declare module "ace-code/src/occur" {
          * Disables occur mode. Resets the [[Sessions `EditSession`]] [[Document
          * `Document`]] back to the original doc. If options.translatePosition is
          * truthy also maps the [[Editors `Editor`]] cursor position accordingly.
-         * @param {Editor} editor
          * @param {Object} options options.translatePosition
          * @return {Boolean} Whether occur deactivation was successful
          *
          **/
         exit(editor: Editor, options: any): boolean;
-        /**
-         * @param {EditSession} sess
-         * @param {RegExp} regexp
-         */
         highlight(sess: EditSession, regexp: RegExp): void;
-        /**
-         * @param {Editor} editor
-         * @param {Partial<SearchOptions>} options
-         */
         displayOccurContent(editor: Editor, options: Partial<SearchOptions>): void;
-        /**
-         * @param {Editor} editor
-         */
         displayOriginalContent(editor: Editor): void;
         /**
         * Translates the position from the original document to the occur lines in
@@ -4418,13 +3387,8 @@ declare module "ace-code/src/occur" {
         * or `pos` if not found.
         * @param {EditSession} session The occur session
         * @param {Point} pos The position in the occur session document
-        * @return {Point} position
         **/
         occurToOriginalPosition(session: EditSession, pos: Point): Point;
-        /**
-         * @param {EditSession} session
-         * @param {Partial<SearchOptions>} options
-         */
         matchingLines(session: EditSession, options: Partial<SearchOptions>): any[];
     }
     import Search_2 = require("ace-code/src/search");
@@ -4440,17 +3404,8 @@ declare module "ace-code/src/marker_group" {
     };
     export type LayerConfig = import("ace-code").Ace.LayerConfig;
     export type Marker = import("ace-code/src/layer/marker").Marker;
-    /**
-     * @typedef {import("ace-code/src/edit_session").EditSession} EditSession
-     * @typedef {{range: import("ace-code/src/range").Range, className: string}} MarkerGroupItem
-     * @typedef {import("ace-code").Ace.LayerConfig} LayerConfig
-     */
-    /**
-     * @typedef {import("ace-code/src/layer/marker").Marker} Marker
-     */
     export class MarkerGroup {
         /**
-         * @param {EditSession} session
          * @param {{markerType: "fullLine" | "line" | undefined}} [options] Options controlling the behvaiour of the marker.
          * User `markerType` to control how the markers which are part of this group will be rendered:
          * - `undefined`: uses `text` type markers where only text characters within the range will be highlighted.
@@ -4461,14 +3416,10 @@ declare module "ace-code/src/marker_group" {
             markerType: "fullLine" | "line" | undefined;
         });
         markerType: "line" | "fullLine";
-        /**@type {import("ace-code").Ace.MarkerGroupItem[]}*/
         markers: import("ace-code").Ace.MarkerGroupItem[];
-        /**@type {EditSession}*/
         session: EditSession;
         /**
          * Finds the first marker containing pos
-         * @param {import("ace-code").Ace.Point} pos
-         * @returns {import("ace-code").Ace.MarkerGroupItem | undefined}
          */
         getMarkerAtPosition(pos: import("ace-code").Ace.Point): import("ace-code").Ace.MarkerGroupItem | undefined;
         /**
@@ -4484,22 +3435,12 @@ declare module "ace-code/src/marker_group" {
          * @param {MarkerGroupItem[]} markers an array of marker definitions.
          */
         setMarkers(markers: MarkerGroupItem[]): void;
-        /**
-         * @param {any} html
-         * @param {Marker} markerLayer
-         * @param {EditSession} session
-         * @param {LayerConfig} config
-         */
         update(html: any, markerLayer: Marker, session: EditSession, config: LayerConfig): void;
         MAX_MARKERS: number;
     }
 }
 declare module "ace-code/src/edit_session/fold" {
     export class Fold extends RangeList {
-        /**
-         * @param {Range} range
-         * @param {any} placeholder
-         */
         constructor(range: Range, placeholder: any);
         foldLine: import("ace-code/src/edit_session/fold_line").FoldLine;
         placeholder: any;
@@ -4507,20 +3448,10 @@ declare module "ace-code/src/edit_session/fold" {
         start: import("ace-code").Ace.Point;
         end: import("ace-code").Ace.Point;
         sameRow: boolean;
-        /**@type {Fold[]}*/
         subFolds: Fold[];
-        /**
-         * @param {FoldLine} foldLine
-         */
         setFoldLine(foldLine: FoldLine): void;
         clone(): Fold;
-        /**
-         * @param {Fold} fold
-         */
         addSubFold(fold: Fold): any;
-        /**
-         * @param {IRange} range
-         */
         restoreRange(range: IRange): void;
         collapseChildren?: number;
     }
@@ -4539,65 +3470,28 @@ declare module "ace-code/src/edit_session/fold_line" {
     export class FoldLine {
         /**
          * If an array is passed in, the folds are expected to be sorted already.
-         * @param {FoldLine[]} foldData
-         * @param {Fold[]|Fold} folds
          */
         constructor(foldData: FoldLine[], folds: Fold[] | Fold);
         foldData: FoldLine[];
-        /**@type {Fold[]} */
         folds: Fold[];
         range: Range;
         start: import("ace-code").Ace.Point;
         end: import("ace-code").Ace.Point;
         /**
          * Note: This doesn't update wrapData!
-         * @param {number} shift
          */
         shiftRow(shift: number): void;
-        /**
-         * @param {Fold} fold
-         */
         addFold(fold: Fold): void;
-        /**
-         * @param {number} row
-         */
         containsRow(row: number): boolean;
-        /**
-         * @param {Function} callback
-         * @param {number} endRow
-         * @param {number} endColumn
-         */
         walk(callback: Function, endRow: number, endColumn: number): void;
-        /**
-         * @param {number} row
-         * @param {number} column
-         * @return {{ fold: Fold, kind: string } | null}
-         */
         getNextFoldTo(row: number, column: number): {
             fold: Fold;
             kind: string;
         } | null;
-        /**
-         * @param {number} row
-         * @param {number} column
-         * @param {number} len
-         */
         addRemoveChars(row: number, column: number, len: number): void;
-        /**
-         * @param {number} row
-         * @param {number} column
-         * @return {FoldLine | null}
-         */
         split(row: number, column: number): FoldLine | null;
-        /**
-         * @param {FoldLine} foldLineNext
-         */
         merge(foldLineNext: FoldLine): void;
         toString(): string;
-        /**
-         * @param {number} idx
-         * @return {import("ace-code").Ace.Point}
-         */
         idxToPosition(idx: number): import("ace-code").Ace.Point;
     }
     import Range_9 = require("ace-code/src/range");
@@ -4700,10 +3594,8 @@ declare module "ace-code/src/background_tokenizer" {
          * @param {EditSession} [session] The editor session to associate with
          **/
         constructor(tokenizer: Tokenizer, session?: EditSession);
-        /**@type {false|number}*/
         running: false | number;
         lines: any[];
-        /**@type {string[]|string[][]}*/
         states: string[] | string[][];
         currentLine: number;
         tokenizer: import("ace-code/src/tokenizer").Tokenizer;
@@ -4740,13 +3632,11 @@ declare module "ace-code/src/background_tokenizer" {
         /**
          * Gives list of [[Token]]'s of the row. (tokens are cached)
          * @param {Number} row The row to get tokens at
-         * @returns {import("ace-code").Ace.Token[]}
          **/
         getTokens(row: number): import("ace-code").Ace.Token[];
         /**
          * Returns the state of tokenization at the end of a row.
          * @param {Number} row The row to get state at
-         * @returns {string | string[]}
          **/
         getState(row: number): string | string[];
         cleanup(): void;
@@ -4764,41 +3654,21 @@ declare module "ace-code/src/background_tokenizer" {
 declare module "ace-code/src/edit_session/folding" {
     export type IFolding = import("ace-code/src/edit_session").EditSession & import("ace-code").Ace.Folding;
     export type Delta = import("ace-code").Ace.Delta;
-    /**
-     * @typedef {import("ace-code/src/edit_session").EditSession & import("ace-code").Ace.Folding} IFolding
-     * @typedef {import("ace-code").Ace.Delta } Delta
-     */
-    /**
-     * @this {IFolding}
-     * @type {IFolding}
-     */
     export function Folding(this: IFolding): void;
     export class Folding {
         /**
          * Looks up a fold at a given row/column. Possible values for side:
          *   -1: ignore a fold if fold.start = row/column
          *   +1: ignore a fold if fold.end = row/column
-         * @param {number} row
-         * @param {number} column
-         * @param {number} [side]
-         * @return {Fold}
          **/
         getFoldAt: (row: number, column: number, side?: number) => import("ace-code").Ace.Fold;
         /**
          * Returns all folds in the given range. Note, that this will return folds
-         * @param {Range| Delta} range
-         * @returns {Fold[]}
          **/
         getFoldsInRange: (range: import("ace-code").Ace.Range | import("ace-code").Ace.Delta) => import("ace-code").Ace.Fold[];
-        /**
-         *
-         * @param {Range[]|Range}ranges
-         * @returns {Fold[]}
-         */
         getFoldsInRangeList: (ranges: import("ace-code").Ace.Range[] | import("ace-code").Ace.Range) => import("ace-code").Ace.Fold[];
         /**
          * Returns all folds in the document
-         * @returns {Fold[]}
          */
         getAllFolds: () => import("ace-code").Ace.Fold[];
         /**
@@ -4817,175 +3687,49 @@ declare module "ace-code/src/edit_session/folding" {
          *  foo<fold>b|ar<fold>wolrd -trim=-1> "b"
          *  foo<fold>bar<fold>wol|rd -trim=+1> "rld"
          *  fo|o<fold>bar<fold>wolrd -trim=00> "foo"
-         *  @param {number} row
-         *  @param {number} column
-         *  @param {number} [trim]
-         *  @param {FoldLine} [foldLine]
-         *  @returns {string | null}
          */
         getFoldStringAt: (row: number, column: number, trim?: number, foldLine?: import("ace-code").Ace.FoldLine) => string | null;
-        /**
-         *
-         * @param {number} docRow
-         * @param {FoldLine} [startFoldLine]
-         * @returns {null|FoldLine}
-         */
         getFoldLine: (docRow: number, startFoldLine?: import("ace-code").Ace.FoldLine) => null | import("ace-code").Ace.FoldLine;
         /**
          * Returns the fold which starts after or contains docRow
-         * @param {number} docRow
-         * @param {FoldLine} [startFoldLine]
-         * @returns {null|FoldLine}
          */
         getNextFoldLine: (docRow: number, startFoldLine?: import("ace-code").Ace.FoldLine) => null | import("ace-code").Ace.FoldLine;
-        /**
-         *
-         * @param {number} first
-         * @param {number} last
-         * @return {number}
-         */
         getFoldedRowCount: (first: number, last: number) => number;
         /**
          * Adds a new fold.
          *
-         * @param {Fold|string} placeholder
-         * @param {Range} [range]
-         * @returns {Fold}
          *      The new created Fold object or an existing fold object in case the
          *      passed in range fits an existing fold exactly.
-         * @this {IFolding}
          */
         addFold: (placeholder: import("ace-code").Ace.Fold | string, range?: import("ace-code").Ace.Range) => import("ace-code").Ace.Fold;
-        /**
-         * @param {Fold[]} folds
-         */
         addFolds: (folds: import("ace-code").Ace.Fold[]) => void;
-        /**
-         *
-         * @param {Fold} fold
-         */
         removeFold: (fold: import("ace-code").Ace.Fold) => void;
-        /**
-         *
-         * @param {Fold[]} folds
-         */
         removeFolds: (folds: import("ace-code").Ace.Fold[]) => void;
-        /**
-         * @param {Fold} fold
-         */
         expandFold: (fold: import("ace-code").Ace.Fold) => void;
-        /**
-         * @param {Fold[]}folds
-         */
         expandFolds: (folds: import("ace-code").Ace.Fold[]) => void;
-        /**
-         *
-         * @param {number|null|import("ace-code").Ace.Point|Range|Range[]} [location]
-         * @param {boolean} [expandInner]
-         * @return {Fold[]| undefined}
-         */
         unfold: (location?: number | null | import("ace-code").Ace.Point | import("ace-code").Ace.Range | import("ace-code").Ace.Range[], expandInner?: boolean) => import("ace-code").Ace.Fold[] | undefined;
         /**
          * Checks if a given documentRow is folded. This is true if there are some
          * folded parts such that some parts of the line is still visible.
-         * @param {number} docRow
-         * @param {FoldLine} [startFoldRow]
-         * @returns {boolean}
          **/
         isRowFolded: (docRow: number, startFoldRow?: import("ace-code").Ace.FoldLine) => boolean;
-        /**
-         *
-         * @param {number} docRow
-         * @param {FoldLine} [startFoldRow]
-         * @return {number}
-         */
         getRowFoldEnd: (docRow: number, startFoldRow?: import("ace-code").Ace.FoldLine) => number;
-        /**
-         *
-         * @param {number} docRow
-         * @param {FoldLine} [startFoldRow]
-         * @returns {number}
-         */
         getRowFoldStart: (docRow: number, startFoldRow?: import("ace-code").Ace.FoldLine) => number;
-        /**
-         *
-         * @param {FoldLine} foldLine
-         * @param {number | null} [endRow]
-         * @param {number | null} [endColumn]
-         * @param {number | null} [startRow]
-         * @param {number | null} [startColumn]
-         * @return {string}
-         */
         getFoldDisplayLine: (foldLine: import("ace-code").Ace.FoldLine, endRow?: number | null, endColumn?: number | null, startRow?: number | null, startColumn?: number | null) => string;
-        /**
-         *
-         * @param {number} row
-         * @param {number | null} endColumn
-         * @param {number | null} startRow
-         * @param {number | null} startColumn
-         * @return {string}
-         */
         getDisplayLine: (row: number, endColumn: number | null, startRow: number | null, startColumn: number | null) => string;
-        /**
-         * @param {boolean} [tryToUnfold]
-         */
         toggleFold: (tryToUnfold?: boolean) => void;
-        /**
-         *
-         * @param {number} row
-         * @param {number} column
-         * @param {number} [dir]
-         * @return {Range | undefined}
-         */
         getCommentFoldRange: (row: number, column: number, dir?: number) => import("ace-code").Ace.Range | undefined;
-        /**
-         *
-         * @param {number | null} [startRow]
-         * @param {number | null} [endRow]
-         * @param {number | null} [depth]
-         * @param {Function} [test]
-         */
         foldAll: (startRow?: number | null, endRow?: number | null, depth?: number | null, test?: Function) => void;
-        /**
-         *
-         * @param {number} level
-         */
         foldToLevel: (level: number) => void;
-        /**
-         *
-         */
         foldAllComments: () => void;
-        /**
-         * @param {string} style
-         */
         setFoldStyle: (style: string) => void;
-        /**
-         * @param {number} row
-         * @param {boolean} [ignoreCurrent]
-         * @return {{range?: Range, firstRange?: Range}}
-         */
         getParentFoldRangeData: (row: number, ignoreCurrent?: boolean) => {
             range?: import("ace-code").Ace.Range;
             firstRange?: import("ace-code").Ace.Range;
         };
-        /**
-         *
-         * @param {number} row
-         * @param {any} e
-         */
         onFoldWidgetClick: (row: number, e: any) => void;
-        /**
-         *
-         * @param {boolean} [toggleParent]
-         */
         toggleFoldWidget: (toggleParent?: boolean) => void;
-        /**
-         * @param {Delta} delta
-         */
         updateFoldWidgets: (delta: import("ace-code").Ace.Delta) => void;
-        /**
-         * @param e
-         */
         tokenizerUpdateFoldWidgets: (e: any) => void;
     }
 }
@@ -4994,18 +3738,7 @@ declare module "ace-code/src/edit_session/bracket_match" {
     export type Point = import("ace-code/src/edit_session").Point;
     export function BracketMatch(): void;
     export class BracketMatch {
-        /**
-         *
-         * @param {Point} position
-         * @param {string} [chr]
-         * @this {EditSession}
-         */
         findMatchingBracket: (this: import("ace-code/src/edit_session").EditSession, position: Point, chr?: string) => import("ace-code").Ace.Point;
-        /**
-         * @param {Point} pos
-         * @return {null|Range}
-         * @this {EditSession}
-         */
         getBracketRange: (this: import("ace-code/src/edit_session").EditSession, pos: Point) => null | Range;
         /**
          * Returns:
@@ -5013,17 +3746,10 @@ declare module "ace-code/src/edit_session/bracket_match" {
          * * two Ranges if there is opening and closing brackets;
          * * one Range if there is only one bracket
          *
-         * @param {Point} pos
-         * @param {boolean} [isBackwards]
-         * @returns {null|Range[]}
-         * @this {EditSession}
          */
         getMatchingBracketRanges: (this: import("ace-code/src/edit_session").EditSession, pos: Point, isBackwards?: boolean) => null | Range[];
         /**
          * Returns [[Range]]'s for matching tags and tag names, if there are any
-         * @param {Point} pos
-         * @returns {{closeTag: Range, closeTagName: Range, openTag: Range, openTagName: Range} | undefined}
-         * @this {EditSession}
          */
         getMatchingTags: (this: import("ace-code/src/edit_session").EditSession, pos: Point) => {
             closeTag: Range;
@@ -5037,10 +3763,6 @@ declare module "ace-code/src/edit_session/bracket_match" {
 }
 declare module "ace-code/src/edit_session" {
     /**
-     * @typedef TextMode
-     * @type {SyntaxMode}
-     */
-    /**
      * Stores all the data about [[Editor `Editor`]] state providing easy way to change editors state.
      *
      * `EditSession` can be attached to only one [[Document `Document`]]. Same `Document` can be attached to several `EditSession`s.
@@ -5050,16 +3772,13 @@ declare module "ace-code/src/edit_session" {
         * Returns a new instance of EditSession with state from JSON.
         * @method fromJSON
         * @param {string|object} session The EditSession state.
-        * @returns {EditSession}
         */
         static fromJSON(session: string | object): EditSession;
         /**
          * Sets up a new `EditSession` and associates it with the given `Document` and `Mode`.
-         * @param {Document | String} [text] [If `text` is a `Document`, it associates the `EditSession` with it. Otherwise, a new `Document` is created, with the initial text]{: #textParam}
-         * @param {SyntaxMode} [mode] [The initial language mode to use for the document]{: #modeParam}
          **/
         constructor(text?: Document | string, mode?: SyntaxMode);
-        /**@type {Document}*/ doc: Document;
+        doc: Document;
         prevOp: {};
         id: string;
         bgTokenizer: BackgroundTokenizer;
@@ -5084,7 +3803,6 @@ declare module "ace-code/src/edit_session" {
         /**
          * End current Ace operation.
          * Emits "beforeEndOperation" event just before clearing everything, where the current operation can be accessed through `curOp` property.
-         * @param {any} e
          */
         endOperation(e: any): void;
         /**
@@ -5096,19 +3814,16 @@ declare module "ace-code/src/edit_session" {
         setDocument(doc: Document): void;
         /**
          * Returns the `Document` associated with this session.
-         * @return {Document}
          **/
         getDocument(): Document;
         /**
          * Set "widgetManager" in EditSession
          *
-         * @returns void
          */
         set widgetManager(value: LineWidgets);
         /**
          * Get "widgetManager" from EditSession
          *
-         * @returns {LineWidgets} object
          */
         get widgetManager(): LineWidgets;
         resetCaches(): void;
@@ -5122,32 +3837,27 @@ declare module "ace-code/src/edit_session" {
         /**
          * Returns the current edit session.
          * @method toJSON
-         * @returns {Object}
          */
         toJSON(): any;
         /**
          * Returns selection object.
-         * @returns {Selection}
          **/
         getSelection(): Selection;
         /**
          * {:BackgroundTokenizer.getState}
          * @param {Number} row The row to start at
-         * @returns {string | string[]}
          * @related BackgroundTokenizer.getState
          **/
         getState(row: number): string | string[];
         /**
          * Starts tokenizing at the row indicated. Returns a list of objects of the tokenized rows.
          * @param {Number} row The row to start at
-         * @returns {import("ace-code").Ace.Token[]}
          **/
         getTokens(row: number): import("ace-code").Ace.Token[];
         /**
          * Returns an object indicating the token at the current row. The object has two properties: `index` and `start`.
          * @param {Number} row The row number to retrieve from
          * @param {Number} column The column number to retrieve from
-         * @returns {import("ace-code").Ace.Token}
          *
          **/
         getTokenAt(row: number, column: number): import("ace-code").Ace.Token;
@@ -5162,12 +3872,10 @@ declare module "ace-code/src/edit_session" {
         markUndoGroup(): void;
         /**
          * Returns the current undo manager.
-         * @returns {UndoManager}
          **/
         getUndoManager(): UndoManager;
         /**
          * Returns the current value for tabs. If the user is using soft tabs, this will be a series of spaces (defined by [[EditSession.getTabSize `getTabSize()`]]); otherwise it's simply `'\t'`.
-         * @returns {String}
          **/
         getTabString(): string;
         /**
@@ -5177,7 +3885,6 @@ declare module "ace-code/src/edit_session" {
         setUseSoftTabs(val: boolean): void;
         /**
          * Returns `true` if soft tabs are being used, `false` otherwise.
-         * @returns {Boolean}
          **/
         getUseSoftTabs(): boolean;
         /**
@@ -5187,7 +3894,6 @@ declare module "ace-code/src/edit_session" {
         setTabSize(tabSize: number): void;
         /**
          * Returns the current tab size.
-         * @return {number}
          **/
         getTabSize(): number;
         /**
@@ -5202,7 +3908,6 @@ declare module "ace-code/src/edit_session" {
         setNavigateWithinSoftTabs(navigateWithinSoftTabs: boolean): void;
         /**
          * Returns `true` if keyboard navigation moves the cursor within soft tabs, `false` if it moves the cursor over soft tabs.
-         * @returns {Boolean}
          **/
         getNavigateWithinSoftTabs(): boolean;
         /**
@@ -5236,7 +3941,6 @@ declare module "ace-code/src/edit_session" {
         removeGutterDecoration(row: number, className: string): void;
         /**
          * Returns an array of strings, indicating the breakpoint class (if any) applied to each row.
-         * @returns {String[]}
          **/
         getBreakpoints(): string[];
         /**
@@ -5286,22 +3990,13 @@ declare module "ace-code/src/edit_session" {
          * Returns an object containing all of the markers, either front or back.
          * @param {Boolean} [inFront] If `true`, indicates you only want front markers; `false` indicates only back markers
          *
-         * @returns {{[id: number]: import("ace-code").Ace.MarkerLike}}
          **/
         getMarkers(inFront?: boolean): {
             [id: number]: import("ace-code").Ace.MarkerLike;
         };
-        /**
-         * @param {RegExp} re
-         */
         highlight(re: RegExp): void;
         /**
          * experimental
-         * @param {number} startRow
-         * @param {number} endRow
-         * @param {string} clazz
-         * @param {boolean} [inFront]
-         * @return {Range}
          */
         highlightLines(startRow: number, endRow: number, clazz: string, inFront?: boolean): Range;
         /**
@@ -5311,7 +4006,6 @@ declare module "ace-code/src/edit_session" {
         setAnnotations(annotations: import("ace-code").Ace.Annotation[]): void;
         /**
          * Returns the annotations for the `EditSession`.
-         * @returns {import("ace-code").Ace.Annotation[]}
          **/
         getAnnotations(): import("ace-code").Ace.Annotation[];
         /**
@@ -5323,7 +4017,6 @@ declare module "ace-code/src/edit_session" {
          * @param {Number} row The row to start at
          * @param {Number} column The column to start at
          *
-         * @returns {Range}
          **/
         getWordRange(row: number, column: number): Range;
         /**
@@ -5331,12 +4024,10 @@ declare module "ace-code/src/edit_session" {
          * @param {Number} row The row number to start from
          * @param {Number} column The column number to start from
          *
-         * @return {Range}
          **/
         getAWordRange(row: number, column: number): Range;
         /**
          * {:Document.setNewLineMode.desc}
-         * @param {import("ace-code").Ace.NewLineMode} newLineMode {:Document.setNewLineMode.param}
          *
          *
          * @related Document.setNewLineMode
@@ -5345,7 +4036,6 @@ declare module "ace-code/src/edit_session" {
         /**
          *
          * Returns the current new line mode.
-         * @returns {import("ace-code").Ace.NewLineMode}
          * @related Document.getNewLineMode
          **/
         getNewLineMode(): import("ace-code").Ace.NewLineMode;
@@ -5364,9 +4054,7 @@ declare module "ace-code/src/edit_session" {
          * @param {() => void} [cb] optional callback
          **/
         setMode(mode: SyntaxMode | string, cb?: () => void): void;
-        /**@type {RegExp}*/
         tokenRe: RegExp;
-        /**@type {RegExp}*/
         nonTokenRe: RegExp;
         /**
          * Returns the current text mode.
@@ -5380,34 +4068,26 @@ declare module "ace-code/src/edit_session" {
         setScrollTop(scrollTop: number): void;
         /**
          * [Returns the value of the distance between the top of the editor and the topmost part of the visible content.]{: #EditSession.getScrollTop}
-         * @returns {Number}
          **/
         getScrollTop(): number;
         /**
          * [Sets the value of the distance between the left of the editor and the leftmost part of the visible content.]{: #EditSession.setScrollLeft}
-         * @param {number} scrollLeft
          */
         setScrollLeft(scrollLeft: number): void;
         /**
          * [Returns the value of the distance between the left of the editor and the leftmost part of the visible content.]{: #EditSession.getScrollLeft}
-         * @returns {Number}
          **/
         getScrollLeft(): number;
         /**
          * Returns the width of the screen.
-         * @returns {Number}
          **/
         getScreenWidth(): number;
-        /**
-         * @return {number}
-         */
         getLineWidgetMaxWidth(): number;
         lineWidgetWidth: number;
         screenWidth: any;
         /**
          * Returns a verbatim copy of the given line as it is in the document
          * @param {Number} row The row to retrieve from
-         * @returns {String}
          **/
         getLine(row: number): string;
         /**
@@ -5415,20 +4095,17 @@ declare module "ace-code/src/edit_session" {
          * @param {Number} firstRow The first row index to retrieve
          * @param {Number} lastRow The final row index to retrieve
          *
-         * @returns {String[]}
          *
          **/
         getLines(firstRow: number, lastRow: number): string[];
         /**
          * Returns the number of rows in the document.
-         * @returns {Number}
          **/
         getLength(): number;
         /**
          * {:Document.getTextRange.desc}
          * @param {IRange} [range] The range to work with
          *
-         * @returns {String}
          **/
         getTextRange(range?: IRange): string;
         /**
@@ -5457,13 +4134,12 @@ declare module "ace-code/src/edit_session" {
         /**
          * Reverts previous changes to your document.
          * @param {Delta[]} deltas An array of previous changes
-         * @param {Boolean} [dontSelect] [If `true`, doesn't select the range of where the change occured]{: #dontSelect}
+         * @param {Boolean} [dontSelect] If `true`, doesn't select the range of where the change occured
          **/
         undoChanges(deltas: Delta[], dontSelect?: boolean): void;
         /**
          * Re-implements a previously undone change to your document.
          * @param {Delta[]} deltas An array of previous changes
-         * @param {Boolean} [dontSelect] {:dontSelect}
          **/
         redoChanges(deltas: Delta[], dontSelect?: boolean): void;
         /**
@@ -5494,7 +4170,6 @@ declare module "ace-code/src/edit_session" {
          *  ```
          * @param {Range} fromRange The range of text you want moved within the document
          * @param {Point} toPosition The location (row and column) where you want to move the text to
-         * @param {boolean} [copy]
          * @returns {Range} The new range where the text was moved to.
          **/
         moveText(fromRange: Range, toPosition: Point, copy?: boolean): Range;
@@ -5540,7 +4215,6 @@ declare module "ace-code/src/edit_session" {
         setUseWrapMode(useWrapMode: boolean): void;
         /**
          * Returns `true` if wrap mode is being used; `false` otherwise.
-         * @returns {Boolean}
          **/
         getUseWrapMode(): boolean;
         /**
@@ -5552,8 +4226,6 @@ declare module "ace-code/src/edit_session" {
         /**
          * This should generally only be called by the renderer when a resize is detected.
          * @param {Number} desiredLimit The new wrap limit
-         * @param [$printMargin]
-         * @returns {Boolean}
          **/
         adjustWrapLimit(desiredLimit: number, $printMargin?: any): boolean;
         /**
@@ -5573,7 +4245,6 @@ declare module "ace-code/src/edit_session" {
          *
          *     { min: wrapLimitRange_min, max: wrapLimitRange_max }
          *
-         * @returns {{ min: number, max: number }}
          **/
         getWrapLimitRange(): {
             min: number;
@@ -5582,65 +4253,36 @@ declare module "ace-code/src/edit_session" {
         /**
          * Returns number of screenrows in a wrapped line.
          * @param {Number} row The row number to check
-         * @returns {Number}
          **/
         getRowLength(row: number): number;
-        /**
-         * @param {Number} row
-         * @returns {Number}
-         **/
         getRowLineCount(row: number): number;
-        /**
-         * @param {Number} screenRow
-         * @returns {Number}
-         **/
         getRowWrapIndent(screenRow: number): number;
         /**
          * Returns the position (on screen) for the last character in the provided screen row.
          * @param {Number} screenRow The screen row to check
-         * @returns {Number}
          *
          * @related EditSession.documentToScreenColumn
          **/
         getScreenLastRowColumn(screenRow: number): number;
         /**
          * For the given document row and column, this returns the column position of the last screen row.
-         * @param {Number} docRow
-         * @param {Number} docColumn
-         * @returns {number}
          **/
         getDocumentLastRowColumn(docRow: number, docColumn: number): number;
         /**
          * For the given document row and column, this returns the document position of the last row.
-         * @param {Number} docRow
-         * @param {Number} docColumn
-         * @returns {Point}
          **/
         getDocumentLastRowColumnPosition(docRow: number, docColumn: number): Point;
         /**
          * For the given row, this returns the split data.
-         * @param {number} row
-         * @returns {String | undefined}
          */
         getRowSplitData(row: number): string | undefined;
         /**
          * The distance to the next tab stop at the specified screen column.
          * @param {Number} screenColumn The screen column to check
          *
-         * @returns {Number}
          **/
         getScreenTabSize(screenColumn: number): number;
-        /**
-         * @param {number} screenRow
-         * @param {number} screenColumn
-         * @returns {number}
-         */
         screenToDocumentRow(screenRow: number, screenColumn: number): number;
-        /**
-         * @param {number} screenRow
-         * @param {number} screenColumn
-         * @returns {number}
-         */
         screenToDocumentColumn(screenRow: number, screenColumn: number): number;
         /**
          * Converts characters coordinates on the screen to characters coordinates within the document. [This takes into account code folding, word wrap, tab size, and any other visual modifications.]{: #conversionConsiderations}
@@ -5664,21 +4306,14 @@ declare module "ace-code/src/edit_session" {
         documentToScreenPosition(docRow: number | Point, docColumn?: number | undefined): Point;
         /**
          * For the given document row and column, returns the screen column.
-         * @param {Number|Point} row
-         * @param {Number} [docColumn]
-         * @returns {Number}
          **/
         documentToScreenColumn(row: number | Point, docColumn?: number): number;
         /**
          * For the given document row and column, returns the screen row.
-         * @param {Number|Point} docRow
-         * @param {Number} [docColumn]
-         * @returns {number}
          **/
         documentToScreenRow(docRow: number | Point, docColumn?: number): number;
         /**
          * Returns the length of the screen.
-         * @returns {Number}
          **/
         getScreenLength(): number;
         /**
@@ -5689,14 +4324,9 @@ declare module "ace-code/src/edit_session" {
         /**
          * Returns the current [[Document `Document`]] as a string.
          * @method getValue
-         * @returns {String}
          * @alias EditSession.toString
          **/
         getValue: () => string;
-        /**
-         *
-         * @type {null | import("ace-code").Ace.LineWidget[]}
-         */
         lineWidgets: null | import("ace-code").Ace.LineWidget[];
         isFullWidth: typeof isFullWidth;
         lineWidgetsWidth?: number;
@@ -5754,11 +4384,6 @@ declare module "ace-code/src/edit_session" {
 }
 declare module "ace-code/src/range" {
     /**
-     * @typedef {import("ace-code/src/edit_session").EditSession} EditSession
-     * @typedef {import("ace-code").Ace.IRange} IRange
-     * @typedef {import("ace-code").Ace.Point} Point
-     */
-    /**
      * This object is used in various places to indicate a region within the editor. To better visualize how this works, imagine a rectangle. Each quadrant of the rectangle is analogous to a range, as ranges contain a starting row and starting column, and an ending row, and ending column.
      **/
     export class Range {
@@ -5771,14 +4396,11 @@ declare module "ace-code/src/range" {
          * @constructor
          **/
         constructor(startRow?: number, startColumn?: number, endRow?: number, endColumn?: number);
-        /**@type {Point}*/
         start: Point;
-        /**@type {Point}*/
         end: Point;
         /**
          * Returns `true` if and only if the starting row and column, and ending row and column, are equivalent to those given by `range`.
          * @param {IRange} range A range to check against
-         * @return {Boolean}
          **/
         isEqual(range: IRange): boolean;
         /**
@@ -5786,7 +4408,6 @@ declare module "ace-code/src/range" {
          * ```
          *    [start.row/start.column] -> [end.row/end.column]
          * ```
-         * @return {String}
          **/
         toString(): string;
         /**
@@ -5797,7 +4418,6 @@ declare module "ace-code/src/range" {
          * ```
          * @param {Number} row A row to check for
          * @param {Number} column A column to check for
-         * @returns {Boolean}
          * @related [[Range.compare]]
          **/
         contains(row: number, column: number): boolean;
@@ -5818,34 +4438,29 @@ declare module "ace-code/src/range" {
          * Compares the row and column of `p` with the starting and ending [[Point]]'s of the calling range (by calling [[Range.compare]]).
          * @param {Point} p A point to compare with
          * @related [[Range.compare]]
-         * @returns {Number}
          **/
         comparePoint(p: Point): number;
         /**
          * Checks the start and end [[Point]]'s of `range` and compares them to the calling range. Returns `true` if the `range` is contained within the caller's range.
          * @param {IRange} range A range to compare with
-         * @returns {Boolean}
          * @related [[Range.comparePoint]]
          **/
         containsRange(range: IRange): boolean;
         /**
          * Returns `true` if passed in `range` intersects with the one calling this method.
          * @param {IRange} range A range to compare with
-         * @returns {Boolean}
          **/
         intersects(range: IRange): boolean;
         /**
          * Returns `true` if the caller's ending row is the same as `row`, and if the caller's ending column is the same as `column`.
          * @param {Number} row A row to compare with
          * @param {Number} column A column to compare with
-         * @returns {Boolean}
          **/
         isEnd(row: number, column: number): boolean;
         /**
          * Returns `true` if the caller's starting row is the same as `row`, and if the caller's starting column is the same as `column`.
          * @param {Number} row A row to compare with
          * @param {Number} column A column to compare with
-         * @returns {Boolean}
          **/
         isStart(row: number, column: number): boolean;
         /**
@@ -5866,7 +4481,6 @@ declare module "ace-code/src/range" {
          * Returns `true` if the `row` and `column` are within the given range.
          * @param {Number} row A row to compare with
          * @param {Number} column A column to compare with
-         * @returns {Boolean}
          * @related [[Range.compare]]
          **/
         inside(row: number, column: number): boolean;
@@ -5874,7 +4488,6 @@ declare module "ace-code/src/range" {
          * Returns `true` if the `row` and `column` are within the given range's starting [[Point]].
          * @param {Number} row A row to compare with
          * @param {Number} column A column to compare with
-         * @returns {Boolean}
          * @related [[Range.compare]]
          **/
         insideStart(row: number, column: number): boolean;
@@ -5882,7 +4495,6 @@ declare module "ace-code/src/range" {
          * Returns `true` if the `row` and `column` are within the given range's ending [[Point]].
          * @param {Number} row A row to compare with
          * @param {Number} column A column to compare with
-         * @returns {Boolean}
          * @related [[Range.compare]]
          *
          **/
@@ -5937,7 +4549,6 @@ declare module "ace-code/src/range" {
          * Returns the part of the current `Range` that occurs within the boundaries of `firstRow` and `lastRow` as a new `Range` object.
          * @param {Number} firstRow The starting row
          * @param {Number} lastRow The ending row
-         * @returns {Range}
         **/
         clipRows(firstRow: number, lastRow: number): Range;
         /**
@@ -5949,34 +4560,27 @@ declare module "ace-code/src/range" {
         extend(row: number, column: number): Range;
         /**
          * Returns `true` if the calling range is empty (starting [[Point]] == ending [[Point]]).
-         * @returns {Boolean}
          **/
         isEmpty(): boolean;
         /**
          * Returns `true` if the range spans across multiple lines.
-         * @returns {Boolean}
         **/
         isMultiLine(): boolean;
         /**
          * Returns a duplicate of the calling range.
-         * @returns {Range}
         **/
         clone(): Range;
         /**
          * Returns a range containing the starting and ending rows of the original range, but with a column value of `0`.
-         * @returns {Range}
         **/
         collapseRows(): Range;
         /**
          * Given the current `Range`, this function converts those starting and ending [[Point]]'s into screen positions, and then returns a new `Range` object.
          * @param {EditSession} session The `EditSession` to retrieve coordinates from
-         * @returns {Range}
         **/
         toScreenRange(session: EditSession): Range;
         /**
          * Shift the calling range by `row` and `column` values.
-         * @param {Number} row
-         * @param {Number} column
          * @experimental
          */
         moveBy(row: number, column: number): void;
@@ -5994,14 +4598,10 @@ declare module "ace-code/src/range" {
      * Creates and returns a new `Range` based on the `start` [[Point]] and `end` [[Point]] of the given parameters.
      * @param {Point} start A starting point to use
      * @param {Point} end An ending point to use
-     * @returns {Range}
     **/
     function fromPoints(start: Point, end: Point): Range;
     /**
      * Compares `p1` and `p2` [[Point]]'s, useful for sorting
-     * @param {Point} p1
-     * @param {Point} p2
-     * @returns {Number}
      */
     function comparePoints(p1: Point, p2: Point): number;
     namespace Ace {
@@ -6018,14 +4618,6 @@ declare module "ace-code/src/worker/worker_client" {
 }
 declare module "ace-code/src/placeholder" {
     export class PlaceHolder {
-        /**
-         * @param {EditSession} session
-         * @param {Number} length
-         * @param {import("ace-code").Ace.Point} pos
-         * @param {any[]} others
-         * @param {String} mainClass
-         * @param {String} othersClass
-         **/
         constructor(session: EditSession, length: number, pos: import("ace-code").Ace.Point, others: any[], mainClass: string, othersClass: string);
         length: number;
         session: import("ace-code/src/edit_session").EditSession;
@@ -6057,9 +4649,6 @@ declare module "ace-code/src/placeholder" {
          *
          **/
         hideOtherMarkers(): void;
-        /**
-         * @param {import("ace-code").Ace.Delta} delta
-         */
         updateAnchors(delta: import("ace-code").Ace.Delta): void;
         updateMarkers(): void;
         /**
@@ -6103,9 +4692,6 @@ declare module "ace-code/src/multi_select" {
     export type Anchor = import("ace-code/src/anchor").Anchor;
     export type Point = import("ace-code").Ace.Point;
     export type ScreenCoordinates = import("ace-code").Ace.ScreenCoordinates;
-    /**
-     * @param {Editor} editor
-     */
     export function MultiSelect(editor: Editor): void;
     import Editor_4 = require("ace-code/src/editor");
     import Editor = Editor_4.Editor;
@@ -6163,38 +4749,13 @@ declare module "ace-code/src/incremental_search" {
      *
      **/
     export class IncrementalSearch extends Search {
-        /**
-         * @param {boolean} backwards
-         */
         activate(editor: any, backwards: boolean): void;
-        /**
-         * @param {boolean} [reset]
-         */
         deactivate(reset?: boolean): void;
-        /**
-         * @param {Editor} editor
-         */
         selectionFix(editor: Editor): void;
-        /**
-         * @param {RegExp} regexp
-         */
         highlight(regexp: RegExp): void;
-        /**
-         * @param {boolean} [reset]
-         */
         cancelSearch(reset?: boolean): Range;
-        /**
-         * @param {boolean} moveToNext
-         * @param {Function} needleUpdateFunc
-         */
         highlightAndFindWithNeedle(moveToNext: boolean, needleUpdateFunc: Function): false | Range;
-        /**
-         * @param {string} s
-         */
         addString(s: string): false | Range;
-        /**
-         * @param {any} c
-         */
         removeChar(c: any): false | Range;
         next(options: any): false | Range;
         convertNeedleToRegExp(): false | Range;
@@ -6214,16 +4775,12 @@ declare module "ace-code/src/split" {
     export type ISplit = import("ace-code").Ace.EventEmitter<any> & {
         [key: string]: any;
     };
-    /**
-     * @typedef {import("ace-code").Ace.EventEmitter & {[key: string]: any}} ISplit
-     */
     export var Split: any;
 }
 declare module "ace-code/src/tokenizer_dev" {
     export class Tokenizer extends BaseTokenizer {
         /**
          * Returns an object containing two properties: `tokens`, which contains all the tokens; and `state`, the current state.
-         * @returns {Object}
          **/
         getLineTokens(line: any, startState: any): any;
     }

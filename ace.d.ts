@@ -1,8 +1,8 @@
-/// <reference path="./ace-lib.d.ts" />
-/// <reference path="./ace-modules.d.ts" />
-/// <reference path="./ace-theme.d.ts" />
-/// <reference path="./ace-ext.d.ts" />
-/// <reference path="./ace-snippets.d.ts" />
+/// <reference path="./types/ace-lib.d.ts" />
+/// <reference path="./types/ace-modules.d.ts" />
+/// <reference path="./types/ace-theme.d.ts" />
+/// <reference path="./types/ace-ext.d.ts" />
+/// <reference path="./types/ace-snippets.d.ts" />
 /// <reference path="./ace-modes.d.ts" />
 declare module "ace-code" {
     export namespace Ace {
@@ -137,7 +137,6 @@ declare module "ace-code" {
             getFoldedRowCount(first: number, last: number): number;
             /**
              * Adds a new fold.
-             * @returns {Ace.Fold}
              *      The new created Fold object or an existing fold object in case the
              *      passed in range fits an existing fold exactly.
              */
@@ -171,10 +170,6 @@ declare module "ace-code" {
                 firstRange?: Ace.Range;
             };
             onFoldWidgetClick(row: number, e: any): void;
-            /**
-             *
-             * @param {boolean} [toggleParent]
-             */
             toggleFoldWidget(toggleParent?: boolean): void;
             updateFoldWidgets(delta: Ace.Delta): void;
             tokenizerUpdateFoldWidgets(e: any): void;
@@ -310,7 +305,6 @@ declare module "ace-code" {
         interface EditSessionEvents {
             /**
              * Emitted when the document changes.
-             * @param delta
              */
             "change": (delta: Delta) => void;
             /**
@@ -319,12 +313,10 @@ declare module "ace-code" {
             "changeTabSize": () => void;
             /**
              * Emitted when the ability to overwrite text changes, via [[EditSession.setOverwrite]].
-             * @param overwrite
              */
             "changeOverwrite": (overwrite: boolean) => void;
             /**
              * Emitted when the gutter changes, either by setting or removing breakpoints, or when the gutter decorations change.
-             * @param e
              */
             "changeBreakpoint": (e?: {
                 row?: number;
@@ -353,22 +345,18 @@ declare module "ace-code" {
             }) => void;
             /**
              * Emitted when the current mode changes.
-             * @param e
              */
             "changeMode": (e: any) => void;
             /**
              * Emitted when the wrap mode changes.
-             * @param e
              */
             "changeWrapMode": (e: any) => void;
             /**
              * Emitted when the wrapping limit changes.
-             * @param e
              */
             "changeWrapLimit": (e: any) => void;
             /**
              * Emitted when a code fold is added or removed.
-             * @param e
              */
             "changeFold": (e: any, session?: EditSession) => void;
             /**
@@ -864,7 +852,6 @@ declare module "ace-code" {
              * Finds the next occurrence of text in an active selection and adds it to the selections.
              * @param {Number} dir The direction of lines to select: -1 for up, 1 for down
              * @param {Boolean} [skip] If `true`, removes the active selection range
-             * @param {Boolean} [stopAtFirst]
              **/
             selectMore: (dir: number, skip?: boolean, stopAtFirst?: boolean) => void;
             /**
@@ -904,9 +891,6 @@ declare module "ace-code" {
              **/
             addRange(range: Ace.Range, $blockChangeEvents?: boolean): any;
             inMultiSelectMode: boolean;
-            /**
-             * @param {Ace.Range} [range]
-             **/
             toSingleRange(range?: Ace.Range): void;
             /**
              * Removes a Range containing pos (if it exists).
@@ -920,18 +904,13 @@ declare module "ace-code" {
             rangeCount: number;
             /**
              * Returns a concatenation of all the ranges.
-             * @returns {Ace.Range[]}
              **/
             getAllRanges(): Ace.Range[];
             /**
              * Splits all the ranges into lines.
              **/
             splitIntoLines(): void;
-            /**
-             */
             joinSelections(): void;
-            /**
-             **/
             toggleBlockSelection(): void;
             /**
              *
@@ -940,7 +919,6 @@ declare module "ace-code" {
              * @param {Ace.ScreenCoordinates} screenCursor The cursor to use
              * @param {Ace.ScreenCoordinates} screenAnchor The anchor to use
              * @param {Boolean} [includeEmptyLines] If true, this includes ranges inside the block which are empty due to clipping
-             * @returns {Ace.Range[]}
              **/
             rectangularRangeBlock(screenCursor: Ace.ScreenCoordinates, screenAnchor: Ace.ScreenCoordinates, includeEmptyLines?: boolean): Ace.Range[];
             index?: number;

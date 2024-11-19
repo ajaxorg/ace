@@ -26,6 +26,6 @@
   "include": [
     "./src/**/*",
     "./ace.d.ts",
-    "./ace_*.d.ts"
+    "./types/ace_*.d.ts"
   ]
 }

@@ -9,10 +9,6 @@ declare module "ace-code/src/ext/command_bar" {
      * with mouse, depending on the alwaysShow property.
      */
     export class CommandBarTooltip {
-        /**
-         * @param {HTMLElement} parentNode
-         * @param {Partial<import("ace-code").Ace.CommandBarOptions>} [options]
-         */
         constructor(parentNode: HTMLElement, options?: Partial<import("ace-code").Ace.CommandBarOptions>);
         parentNode: HTMLElement;
         tooltip: Tooltip;
@@ -29,8 +25,6 @@ declare module "ace-code/src/ext/command_bar" {
          * The commands are added in sequential order. If there is not enough space on the main
          * toolbar, the remaining elements are added to the overflow menu.
          *
-         * @param {string} id
-         * @param {TooltipCommand} command
          */
         registerCommand(id: string, command: TooltipCommand): void;
         isShown(): boolean;
@@ -42,7 +36,6 @@ declare module "ace-code/src/ext/command_bar" {
          * When true, the tooltip is always displayed while it is attached to an editor.
          * When false, the tooltip is displayed only when the mouse hovers over the active editor line.
          *
-         * @param {boolean} alwaysShow
          */
         setAlwaysShow(alwaysShow: boolean): void;
         /**
@@ -51,7 +44,6 @@ declare module "ace-code/src/ext/command_bar" {
          * Depending on the alwaysShow parameter it either displays the tooltip immediately,
          * or subscribes to the necessary events to display the tooltip on hover.
          *
-         * @param {Editor} editor
          */
         attach(editor: Editor): void;
         editor: import("ace-code/src/editor").Editor;
@@ -87,9 +79,7 @@ declare module "ace-code/src/ext/language_tools" {
     export function setCompleters(val: any): void;
     export function addCompleter(completer: any): void;
     import textCompleter = require("ace-code/src/autocomplete/text_completer");
-    /**@type {import("ace-code").Ace.Completer}*/
     export var keyWordCompleter: import("ace-code").Ace.Completer;
-    /**@type {import("ace-code").Ace.Completer} */
     export var snippetCompleter: import("ace-code").Ace.Completer;
     export { textCompleter };
 }
@@ -100,9 +90,6 @@ declare module "ace-code/src/ext/inline_autocomplete" {
      * There is an inline ghost text renderer and an optional command bar tooltip inside.
      */
     export class InlineAutocomplete {
-        /**
-         * @param {Editor} editor
-         */
         constructor(editor: Editor);
         editor: Editor;
         keyboardHandler: HashHandler;
@@ -116,58 +103,30 @@ declare module "ace-code/src/ext/inline_autocomplete" {
             cancel(): void;
             isPending(): any;
         };
-        /**
-         *
-         * @return {AceInline}
-         */
         getInlineRenderer(): AceInline;
         inlineRenderer: AceInline;
-        /**
-         * @return {CommandBarTooltip}
-         */
         getInlineTooltip(): CommandBarTooltip;
         inlineTooltip: CommandBarTooltip;
         /**
          * This function is the entry point to the class. This triggers the gathering of the autocompletion and displaying the results;
-         * @param {import("ace-code").Ace.CompletionOptions} options
          */
         show(options: import("ace-code").Ace.CompletionOptions): void;
         activated: boolean;
         insertMatch(): boolean;
-        /**
-         * @param {import("ace-code").Ace.InlineAutocompleteAction} where
-         */
         goTo(where: import("ace-code").Ace.InlineAutocompleteAction): void;
         getLength(): any;
-        /**
-         * @param {number} [index]
-         * @returns {import("ace-code").Ace.Completion | undefined}
-         */
         getData(index?: number): import("ace-code").Ace.Completion | undefined;
         getIndex(): number;
         isOpen(): boolean;
-        /**
-         * @param {number} value
-         */
         setIndex(value: number): void;
-        /**
-         * @return {CompletionProvider}
-         */
         getCompletionProvider(initialPosition: any): CompletionProvider;
         completionProvider: CompletionProvider;
-        /**
-         * @param {import("ace-code").Ace.CompletionOptions} [options]
-         */
         updateCompletions(options?: import("ace-code").Ace.CompletionOptions): void;
         base: import("ace-code/src/anchor").Anchor;
         completions: FilteredList;
         detach(): void;
         destroy(): void;
         updateDocTooltip(): void;
-        /**
-         *
-         * @type {{[key: string]: import("ace-code").Ace.Command}}
-         */
         commands: {
             [key: string]: import("ace-code").Ace.Command;
         };
@@ -212,55 +171,26 @@ declare module "ace-code/src/ext/searchbox" {
     export function Search(editor: Editor, isReplace?: boolean): void;
     export type Editor = import("ace-code/src/editor").Editor;
     export class SearchBox {
-        /**
-         * @param {Editor} editor
-         * @param {never} [range]
-         * @param {never} [showReplaceForm]
-         */
         constructor(editor: Editor, range?: never, showReplaceForm?: never);
-        /**@type {any}*/
         activeInput: any;
-        /**@type {any}*/
         element: any;
         setSession(e: any): void;
-        /**
-         * @param {Editor} editor
-         */
         setEditor(editor: Editor): void;
-        /**@type {Editor}*/
         editor: Editor;
         searchRange: any;
-        /**@type {HTMLElement}*/
         searchBox: HTMLElement;
-        /**@type {HTMLElement}*/
         replaceBox: HTMLElement;
-        /**@type {HTMLInputElement}*/
         searchOption: HTMLInputElement;
-        /**@type {HTMLInputElement}*/
         replaceOption: HTMLInputElement;
-        /**@type {HTMLInputElement}*/
         regExpOption: HTMLInputElement;
-        /**@type {HTMLInputElement}*/
         caseSensitiveOption: HTMLInputElement;
-        /**@type {HTMLInputElement}*/
         wholeWordOption: HTMLInputElement;
-        /**@type {HTMLInputElement}*/
         searchInput: HTMLInputElement;
-        /**@type {HTMLInputElement}*/
         replaceInput: HTMLInputElement;
-        /**@type {HTMLElement}*/
         searchCounter: HTMLElement;
         setSearchRange(range: any): void;
         searchRangeMarker: number;
-        /**
-         * @param {RegExp} [re]
-         */
         highlight(re?: RegExp): void;
-        /**
-         * @param {boolean} skipCurrent
-         * @param {boolean} backwards
-         * @param {any} [preventScroll]
-         */
         find(skipCurrent: boolean, backwards: boolean, preventScroll?: any): void;
         updateCounter(): void;
         findNext(): void;
@@ -271,10 +201,6 @@ declare module "ace-code/src/ext/searchbox" {
         replaceAll(): void;
         hide(): void;
         active: boolean;
-        /**
-         * @param {string} value
-         * @param {boolean} [isReplace]
-         */
         show(value: string, isReplace?: boolean): void;
         isFocused(): boolean;
     }
@@ -283,16 +209,10 @@ declare module "ace-code/src/ext/searchbox" {
 }
 declare module "ace-code/src/ext/elastic_tabstops_lite" {
     export class ElasticTabstopsLite {
-        /**
-         * @param {Editor} editor
-         */
         constructor(editor: Editor);
         onAfterExec: () => void;
         onExec: () => void;
         onChange: (delta: any) => void;
-        /**
-         * @param {number[]} rows
-         */
         processRows(rows: number[]): void;
     }
     import Editor_3 = require("ace-code/src/editor");
@@ -341,9 +261,6 @@ declare module "ace-code/src/ext/emmet" {
      * Implementation of {@link IEmmetEditor} interface for Ace
      */
     export class AceEmmetEditor {
-        /**
-         * @param {Editor} editor
-         */
         setupContext(editor: Editor): void;
         ace: Editor;
         indentation: string;
@@ -352,7 +269,6 @@ declare module "ace-code/src/ext/emmet" {
          * and <code>end</code> properties. If there's no selection, should return
          * object with <code>start</code> and <code>end</code> properties referring
          * to current caret position
-         * @return {Object}
          * @example
          * var selection = editor.getSelectionRange();
          * alert(selection.start + ', ' + selection.end);
@@ -362,8 +278,6 @@ declare module "ace-code/src/ext/emmet" {
          * Creates selection from <code>start</code> to <code>end</code> character
          * indexes. If <code>end</code> is ommited, this method should place caret
          * and <code>start</code> index
-         * @param {Number} start
-         * @param {Number} [end]
          * @example
          * editor.createSelection(10, 40);
          *
@@ -374,7 +288,6 @@ declare module "ace-code/src/ext/emmet" {
         /**
          * Returns current line's start and end indexes as object with <code>start</code>
          * and <code>end</code> properties
-         * @return {Object}
          * @example
          * var range = editor.getCurrentLineRange();
          * alert(range.start + ', ' + range.end);
@@ -382,7 +295,6 @@ declare module "ace-code/src/ext/emmet" {
         getCurrentLineRange(): any;
         /**
          * Returns current caret position
-         * @return {Number|null}
          */
         getCaretPos(): number | null;
         /**
@@ -392,7 +304,6 @@ declare module "ace-code/src/ext/emmet" {
         setCaretPos(index: number): void;
         /**
          * Returns content of current line
-         * @return {String}
          */
         getCurrentLine(): string;
         /**
@@ -418,17 +329,14 @@ declare module "ace-code/src/ext/emmet" {
         replaceContent(value: string, start?: number, end?: number, noIndent?: boolean): void;
         /**
          * Returns editor's content
-         * @return {String}
          */
         getContent(): string;
         /**
          * Returns current editor's syntax mode
-         * @return {String}
          */
         getSyntax(): string;
         /**
          * Returns current output profile name (@see emmet#setupProfile)
-         * @return {String}
          */
         getProfileName(): string;
         /**
@@ -440,23 +348,17 @@ declare module "ace-code/src/ext/emmet" {
         prompt(title: string): string;
         /**
          * Returns current selection
-         * @return {String}
          * @since 0.65
          */
         getSelection(): string;
         /**
          * Returns current editor's file path
-         * @return {String}
          * @since 0.65
          */
         getFilePath(): string;
     }
 }
 declare module "ace-code/src/ext/hardwrap" {
-    /**
-     * @param {import("ace-code/src/editor").Editor} editor
-     * @param {import("ace-code").Ace.HardWrapOptions} options
-     */
     export function hardWrap(editor: import("ace-code/src/editor").Editor, options: import("ace-code").Ace.HardWrapOptions): void;
     import Editor_9 = require("ace-code/src/editor");
     import Editor = Editor_9.Editor;
@@ -491,20 +393,12 @@ declare module "ace-code/src/ext/modelist" {
     export var modes: any[];
     export var modesByName: {};
     class Mode {
-        /**
-         * @param {string} name
-         * @param {string} caption
-         * @param {string} extensions
-         */
         constructor(name: string, caption: string, extensions: string);
         name: string;
         caption: string;
         mode: string;
         extensions: string;
         extRe: RegExp;
-        /**
-         * @param {string} filename
-         */
         supportsFile(filename: string): RegExpMatchArray;
     }
 }
@@ -519,11 +413,6 @@ declare module "ace-code/src/ext/themelist" {
 }
 declare module "ace-code/src/ext/options" {
     export class OptionPanel {
-        /**
-         *
-         * @param {Editor} editor
-         * @param {HTMLElement} [element]
-         */
         constructor(editor: Editor, element?: HTMLElement);
         editor: import("ace-code/src/editor").Editor;
         container: HTMLElement;
@@ -532,23 +421,10 @@ declare module "ace-code/src/ext/options" {
         add(config: any): void;
         render(): void;
         renderOptionGroup(group: any): any[];
-        /**
-         * @param {string} key
-         * @param {Object} option
-         */
         renderOptionControl(key: string, option: any): any;
-        /**
-         *
-         * @param key
-         * @param option
-         */
         renderOption(key: any, option: any): (string | any[] | {
             class: string;
         })[];
-        /**
-         * @param {string | number | Object} option
-         * @param {string | number | boolean} value
-         */
         setOption(option: string | number | any, value: string | number | boolean): void;
         getOption(option: any): any;
     }
@@ -617,7 +493,6 @@ declare module "ace-code/src/ext/prompt" {
     };
     export type Editor = import("ace-code/src/editor").Editor;
     /**
-     * @typedef PromptOptions
      * @property {String} name             Prompt name.
      * @property {String} $type            Use prompt of specific type (gotoLine|commands|modes or default if empty).
      * @property {[number, number]} selection  Defines which part of the predefined value should be highlighted.
@@ -645,23 +520,8 @@ declare module "ace-code/src/ext/prompt" {
      * */
     export function prompt(editor: Editor, message: string | Partial<PromptOptions>, options: Partial<PromptOptions>, callback?: Function): any;
     export namespace prompt {
-        /**
-         *
-         * @param {Editor} editor
-         * @param {Function} [callback]
-         */
         function gotoLine(editor: Editor, callback?: Function): void;
-        /**
-         *
-         * @param {Editor} editor
-         * @param {Function} [callback]
-         */
         function commands(editor: Editor, callback?: Function): void;
-        /**
-         *
-         * @param {Editor} editor
-         * @param {Function} [callback]
-         */
         function modes(editor: Editor, callback?: Function): void;
     }
 }
@@ -694,13 +554,6 @@ declare module "ace-code/src/ext/static-css" {
     export = _exports;
 }
 declare module "ace-code/src/ext/static_highlight" {
-    /**
-     *
-     * @param {HTMLElement} el
-     * @param {import("ace-code").Ace.StaticHighlightOptions} opts
-     * @param [callback]
-     * @returns {boolean}
-     */
     function highlight(el: HTMLElement, opts: import("ace-code").Ace.StaticHighlightOptions, callback?: any): boolean;
     export namespace highlight {
         export { render, renderSync, highlight, SyntaxMode, Theme };
@@ -729,9 +582,6 @@ declare module "ace-code/src/ext/static_highlight" {
      * Transforms a given input code snippet into HTML using the given mode
      * @param {string} input Code snippet
      * @param {SyntaxMode | string} mode Mode loaded from /ace/mode (use 'ServerSideHiglighter.getMode')
-     * @param {Theme} theme
-     * @param {any} lineStart
-     * @param {boolean} disableGutter
      * @returns {object} An object containing: html, css
      */
     function renderSync(input: string, mode: SyntaxMode | string, theme: Theme, lineStart: any, disableGutter: boolean): object;
@@ -742,15 +592,8 @@ declare module "ace-code/src/ext/statusbar" {
     export type Editor = import("ace-code/src/editor").Editor;
     /** simple statusbar **/
     export class StatusBar {
-        /**
-         * @param {Editor} editor
-         * @param {HTMLElement} parentNode
-         */
         constructor(editor: Editor, parentNode: HTMLElement);
         element: HTMLDivElement;
-        /**
-         * @param {Editor} editor
-         */
         updateStatus(editor: Editor): void;
     }
 }

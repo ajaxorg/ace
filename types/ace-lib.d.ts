@@ -46,11 +46,6 @@ declare module "ace-code/src/lib/dom" {
     export const HAS_CSS_TRANSFORMS: boolean;
     export const HI_DPI: boolean;
     export function translate(element: any, tx: any, ty: any): void;
-    /**
-     * @param {string} cssText
-     * @param {string} [id]
-     * @param {any} [target]
-     */
     export function importCssString(cssText: string, id?: string, target?: any): number;
 }
 declare module "ace-code/src/lib/oop" {
@@ -85,9 +80,6 @@ declare module "ace-code/src/lib/lang" {
     };
     export function delayedCall(fcn: any, defaultTimeout?: number): {
         (timeout?: number): void;
-        /**
-         * @param {number} [timeout]
-         */
         delay(timeout?: number): void;
         schedule: any;
         call(): void;
@@ -120,7 +112,6 @@ declare module "ace-code/src/lib/event" {
     export const nextFrame: any;
 }
 declare module "ace-code/src/lib/event_emitter" {
-    /**@type {any}*/
     export var EventEmitter: any;
 }
 declare module "ace-code/src/lib/net" {
@@ -183,44 +174,17 @@ declare module "ace-code/src/lib/default_english_messages" {
 }
 declare module "ace-code/src/lib/app_config" {
     export class AppConfig {
-        /**
-         * @param {Object} obj
-         * @param {string} path
-         * @param {{ [key: string]: any }} options
-         * @returns {import("ace-code").Ace.AppConfig}
-         */
         defineOptions(obj: any, path: string, options: {
             [key: string]: any;
         }): import("ace-code").Ace.AppConfig;
-        /**
-         * @param {Object} obj
-         */
         resetOptions(obj: any): void;
-        /**
-         * @param {string} path
-         * @param {string} name
-         * @param {any} value
-         */
         setDefaultValue(path: string, name: string, value: any): boolean;
-        /**
-         * @param {string} path
-         * @param {{ [key: string]: any; }} optionHash
-         */
         setDefaultValues(path: string, optionHash: {
             [key: string]: any;
         }): void;
-        /**
-         * @param {any} value
-         * @param {{placeholders?: "dollarSigns" | "curlyBrackets"}} [options]
-         */
         setMessages(value: any, options?: {
             placeholders?: "dollarSigns" | "curlyBrackets";
         }): void;
-        /**
-         * @param {string} key
-         * @param {string} defaultString
-         * @param {{ [x: string]: any; }} [params]
-         */
         nls(key: string, defaultString: string, params?: {
             [x: string]: any;
         }): any;
