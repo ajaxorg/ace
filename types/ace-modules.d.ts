@@ -251,10 +251,8 @@ declare module "ace-code/src/document" {
     export type Point = import("ace-code").Ace.Point;
     export type IRange = import("ace-code").Ace.IRange;
     export type NewLineMode = import("ace-code").Ace.NewLineMode;
-    import Anchor_1 = require("ace-code/src/anchor");
-    import Anchor = Anchor_1.Anchor;
-    import Range_1 = require("ace-code/src/range");
-    import Range = Range_1.Range;
+    import { Anchor } from "ace-code/src/anchor";
+    import { Range } from "ace-code/src/range";
     namespace Ace {
         type EventEmitter<T> = import("ace-code").Ace.EventEmitter<T>;
         type DocumentEvents = import("ace-code").Ace.DocumentEvents;
@@ -418,8 +416,7 @@ declare module "ace-code/src/layer/gutter" {
     }
     export type EditSession = import("ace-code/src/edit_session").EditSession;
     export type LayerConfig = import("ace-code").Ace.LayerConfig;
-    import Lines_1 = require("ace-code/src/layer/lines");
-    import Lines = Lines_1.Lines;
+    import { Lines } from "ace-code/src/layer/lines";
     namespace Ace {
         type EventEmitter<T> = import("ace-code").Ace.EventEmitter<T>;
         type GutterEvents = import("ace-code").Ace.GutterEvents;
@@ -453,8 +450,7 @@ declare module "ace-code/src/layer/marker" {
         drawFullLineMarker(stringBuilder: undefined, range: Range, clazz: string, config: Partial<LayerConfig>, extraStyle?: undefined): void;
         drawScreenLineMarker(stringBuilder: undefined, range: Range, clazz: string, config: Partial<LayerConfig>, extraStyle?: undefined): void;
     }
-    import Range_2 = require("ace-code/src/range");
-    import Range = Range_2.Range;
+    import { Range } from "ace-code/src/range";
 }
 declare module "ace-code/src/layer/text_util" {
     export function isTextToken(tokenType: any): boolean;
@@ -497,8 +493,7 @@ declare module "ace-code/src/layer/text" {
     export type LayerConfig = import("ace-code").Ace.LayerConfig;
     export type EditSession = import("ace-code/src/edit_session").EditSession;
     import dom = require("ace-code/src/lib/dom");
-    import Lines_2 = require("ace-code/src/layer/lines");
-    import Lines = Lines_2.Lines;
+    import { Lines } from "ace-code/src/layer/lines";
     namespace Ace {
         type EventEmitter<T> = import("ace-code").Ace.EventEmitter<T>;
         type TextEvents = import("ace-code").Ace.TextEvents;
@@ -1234,22 +1229,14 @@ declare module "ace-code/src/virtual_renderer" {
     export type EditSession = import("ace-code/src/edit_session").EditSession;
     export type Point = import("ace-code").Ace.Point;
     export type Theme = import("ace-code").Ace.Theme;
-    import GutterLayer_1 = require("ace-code/src/layer/gutter");
-    import GutterLayer = GutterLayer_1.Gutter;
-    import MarkerLayer_1 = require("ace-code/src/layer/marker");
-    import MarkerLayer = MarkerLayer_1.Marker;
-    import TextLayer_1 = require("ace-code/src/layer/text");
-    import TextLayer = TextLayer_1.Text;
-    import CursorLayer_1 = require("ace-code/src/layer/cursor");
-    import CursorLayer = CursorLayer_1.Cursor;
-    import VScrollBar_1 = require("ace-code/src/scrollbar");
-    import VScrollBar = VScrollBar_1.VScrollBar;
-    import FontMetrics_1 = require("ace-code/src/layer/font_metrics");
-    import FontMetrics = FontMetrics_1.FontMetrics;
-    import RenderLoop_1 = require("ace-code/src/renderloop");
-    import RenderLoop = RenderLoop_1.RenderLoop;
-    import Decorator_1 = require("ace-code/src/layer/decorators");
-    import Decorator = Decorator_1.Decorator;
+    import { Gutter as GutterLayer } from "ace-code/src/layer/gutter";
+    import { Marker as MarkerLayer } from "ace-code/src/layer/marker";
+    import { Text as TextLayer } from "ace-code/src/layer/text";
+    import { Cursor as CursorLayer } from "ace-code/src/layer/cursor";
+    import { VScrollBar } from "ace-code/src/scrollbar";
+    import { FontMetrics } from "ace-code/src/layer/font_metrics";
+    import { RenderLoop } from "ace-code/src/renderloop";
+    import { Decorator } from "ace-code/src/layer/decorators";
     namespace Ace {
         type EventEmitter<T> = import("ace-code").Ace.EventEmitter<T>;
         type VirtualRendererEvents = import("ace-code").Ace.VirtualRendererEvents;
@@ -1524,8 +1511,7 @@ declare module "ace-code/src/selection" {
     export type EditSession = import("ace-code/src/edit_session").EditSession;
     export type Anchor = import("ace-code/src/anchor").Anchor;
     export type Point = import("ace-code").Ace.Point;
-    import Range_3 = require("ace-code/src/range");
-    import Range = Range_3.Range;
+    import { Range } from "ace-code/src/range";
     namespace Ace {
         type EventEmitter<T> = import("ace-code").Ace.EventEmitter<T>;
         type MultiSelectionEvents = import("ace-code").Ace.MultiSelectionEvents;
@@ -1653,8 +1639,7 @@ declare module "ace-code/src/tooltip" {
         getWidth(): number;
         destroy(): void;
     }
-    import Range_4 = require("ace-code/src/range");
-    import Range = Range_4.Range;
+    import { Range } from "ace-code/src/range";
     class PopupManager {
         popups: Tooltip[];
         addPopup(popup: Tooltip): void;
@@ -1701,8 +1686,7 @@ declare module "ace-code/src/mouse/default_gutter_handler" {
         showTooltip(row: any): void;
         hideTooltip(): void;
     }
-    import Tooltip_1 = require("ace-code/src/tooltip");
-    import Tooltip = Tooltip_1.Tooltip;
+    import { Tooltip } from "ace-code/src/tooltip";
     export interface GutterHandler {
     }
 }
@@ -1749,8 +1733,7 @@ declare module "ace-code/src/mouse/mouse_handler" {
         selectEnd?: () => void;
     }
     export type Editor = import("ace-code/src/editor").Editor;
-    import MouseEvent_1 = require("ace-code/src/mouse/mouse_event");
-    import MouseEvent = MouseEvent_1.MouseEvent;
+    import { MouseEvent } from "ace-code/src/mouse/mouse_event";
     namespace Ace {
         type Range = import("ace-code").Ace.Range;
         type MouseEvent = import("ace-code").Ace.MouseEvent;
@@ -1832,8 +1815,7 @@ declare module "ace-code/src/search" {
         **/
         replace(input: string, replacement: any): string;
     }
-    import Range_5 = require("ace-code/src/range");
-    import Range = Range_5.Range;
+    import { Range } from "ace-code/src/range";
 }
 declare module "ace-code/src/keyboard/hash_handler" {
     export type Command = import("ace-code").Ace.Command;
@@ -1896,8 +1878,7 @@ declare module "ace-code/src/commands/command_manager" {
         trimMacro(m: any): any;
     }
     export type Editor = import("ace-code/src/editor").Editor;
-    import MultiHashHandler_1 = require("ace-code/src/keyboard/hash_handler");
-    import MultiHashHandler = MultiHashHandler_1.MultiHashHandler;
+    import { MultiHashHandler } from "ace-code/src/keyboard/hash_handler";
     namespace Ace {
         type EventEmitter<T> = import("ace-code").Ace.EventEmitter<T>;
     }
@@ -1953,8 +1934,7 @@ declare module "ace-code/src/token_iterator" {
          */
         getCurrentTokenRange(): Range;
     }
-    import Range_6 = require("ace-code/src/range");
-    import Range = Range_6.Range;
+    import { Range } from "ace-code/src/range";
 }
 declare module "ace-code/src/keyboard/gutter_handler" {
     export class GutterKeyboardHandler {
@@ -1999,8 +1979,7 @@ declare module "ace-code/src/keyboard/gutter_handler" {
          */
         isInFoldLane(): boolean;
     }
-    import GutterTooltip_1 = require("ace-code/src/mouse/default_gutter_handler");
-    import GutterTooltip = GutterTooltip_1.GutterTooltip;
+    import { GutterTooltip } from "ace-code/src/mouse/default_gutter_handler";
 }
 declare module "ace-code/src/editor" {
     /**
@@ -2683,18 +2662,12 @@ declare module "ace-code/src/editor" {
     export type Selection = import("ace-code/src/selection").Selection;
     export type Point = import("ace-code").Ace.Point;
     export type SearchOptions = import("ace-code").Ace.SearchOptions;
-    import EditSession_1 = require("ace-code/src/edit_session");
-    import EditSession = EditSession_1.EditSession;
-    import CommandManager_1 = require("ace-code/src/commands/command_manager");
-    import CommandManager = CommandManager_1.CommandManager;
-    import MouseHandler_1 = require("ace-code/src/mouse/mouse_handler");
-    import MouseHandler = MouseHandler_1.MouseHandler;
-    import KeyBinding_1 = require("ace-code/src/keyboard/keybinding");
-    import KeyBinding = KeyBinding_1.KeyBinding;
-    import Search_1 = require("ace-code/src/search");
-    import Search = Search_1.Search;
-    import Range_7 = require("ace-code/src/range");
-    import Range = Range_7.Range;
+    import { EditSession } from "ace-code/src/edit_session";
+    import { CommandManager } from "ace-code/src/commands/command_manager";
+    import { MouseHandler } from "ace-code/src/mouse/mouse_handler";
+    import { KeyBinding } from "ace-code/src/keyboard/keybinding";
+    import { Search } from "ace-code/src/search";
+    import { Range } from "ace-code/src/range";
     var $uid: number;
     namespace Ace {
         type EditorMultiSelectProperties = import("ace-code").Ace.EditorMultiSelectProperties;
@@ -2861,8 +2834,7 @@ declare module "ace-code/src/autocomplete/popup" {
     }
     export function $singleLineEditor(el?: HTMLElement): Editor;
     export function getAriaId(index: any): string;
-    import Editor_1 = require("ace-code/src/editor");
-    import Editor = Editor_1.Editor;
+    import { Editor } from "ace-code/src/editor";
     namespace Ace {
         type AcePopupWithEditor = import("ace-code").Ace.AcePopupWithEditor;
         type Completion = import("ace-code").Ace.Completion;
@@ -2914,8 +2886,7 @@ declare module "ace-code/src/range_list" {
         detach(): void;
         comparePoints: (p1: import("ace-code/src/range").Point, p2: import("ace-code/src/range").Point) => number;
     }
-    import Range_8 = require("ace-code/src/range");
-    import Range = Range_8.Range;
+    import { Range } from "ace-code/src/range";
 }
 declare module "ace-code/src/snippets" {
     export const snippetManager: SnippetManager;
@@ -2989,8 +2960,7 @@ declare module "ace-code/src/snippets" {
         parseSnippetFile(str: any): Snippet[];
         getSnippetByName(name: any, editor: any): undefined;
     }
-    import Tokenizer_1 = require("ace-code/src/tokenizer");
-    import Tokenizer = Tokenizer_1.Tokenizer;
+    import { Tokenizer } from "ace-code/src/tokenizer";
     namespace Ace {
         type EventEmitter<T> = import("ace-code").Ace.EventEmitter<T>;
     }
@@ -3037,8 +3007,7 @@ declare module "ace-code/src/autocomplete/inline" {
         hide(): boolean;
         destroy(): void;
     }
-    import AceInlineScreenReader_1 = require("ace-code/src/autocomplete/inline_screenreader");
-    import AceInlineScreenReader = AceInlineScreenReader_1.AceInlineScreenReader;
+    import { AceInlineScreenReader } from "ace-code/src/autocomplete/inline_screenreader";
 }
 declare module "ace-code/src/autocomplete/util" {
     export function parForEach(array: any, fn: any, callback: any): void;
@@ -3258,12 +3227,9 @@ declare module "ace-code/src/autocomplete" {
      * Represents a suggested text snippet intended to complete a user's input
      */
     export type Completion = SnippetCompletion | ValueCompletion;
-    import HashHandler_1 = require("ace-code/src/keyboard/hash_handler");
-    import HashHandler = HashHandler_1.HashHandler;
-    import AcePopup_1 = require("ace-code/src/autocomplete/popup");
-    import AcePopup = AcePopup_1.AcePopup;
-    import AceInline_1 = require("ace-code/src/autocomplete/inline");
-    import AceInline = AceInline_1.AceInline;
+    import { HashHandler } from "ace-code/src/keyboard/hash_handler";
+    import { AcePopup } from "ace-code/src/autocomplete/popup";
+    import { AceInline } from "ace-code/src/autocomplete/inline";
     export class FilteredList {
         constructor(array: any, filterText: any);
         all: any;
@@ -3391,10 +3357,8 @@ declare module "ace-code/src/occur" {
         occurToOriginalPosition(session: EditSession, pos: Point): Point;
         matchingLines(session: EditSession, options: Partial<SearchOptions>): any[];
     }
-    import Search_2 = require("ace-code/src/search");
-    import Search = Search_2.Search;
-    import EditSession_2 = require("ace-code/src/edit_session");
-    import EditSession = EditSession_2.EditSession;
+    import { Search } from "ace-code/src/search";
+    import { EditSession } from "ace-code/src/edit_session";
 }
 declare module "ace-code/src/marker_group" {
     export type EditSession = import("ace-code/src/edit_session").EditSession;
@@ -3459,8 +3423,7 @@ declare module "ace-code/src/edit_session/fold" {
     export type Range = import("ace-code/src/range").Range;
     export type Point = import("ace-code").Ace.Point;
     export type IRange = import("ace-code").Ace.IRange;
-    import RangeList_1 = require("ace-code/src/range_list");
-    import RangeList = RangeList_1.RangeList;
+    import { RangeList } from "ace-code/src/range_list";
     export interface Fold {
         collapseChildren?: number;
     }
@@ -3494,8 +3457,7 @@ declare module "ace-code/src/edit_session/fold_line" {
         toString(): string;
         idxToPosition(idx: number): import("ace-code").Ace.Point;
     }
-    import Range_9 = require("ace-code/src/range");
-    import Range = Range_9.Range;
+    import { Range } from "ace-code/src/range";
 }
 declare module "ace-code/src/bidihandler" {
     export type EditSession = import("ace-code/src/edit_session").EditSession;
@@ -3758,8 +3720,7 @@ declare module "ace-code/src/edit_session/bracket_match" {
             openTagName: Range;
         } | undefined;
     }
-    import Range_10 = require("ace-code/src/range");
-    import Range = Range_10.Range;
+    import { Range } from "ace-code/src/range";
 }
 declare module "ace-code/src/edit_session" {
     /**
@@ -4346,20 +4307,13 @@ declare module "ace-code/src/edit_session" {
     export type SyntaxMode = import("ace-code").Ace.SyntaxMode;
     export type LineWidget = import("ace-code").Ace.LineWidget;
     export type TextMode = SyntaxMode;
-    import Document_1 = require("ace-code/src/document");
-    import Document = Document_1.Document;
-    import BackgroundTokenizer_1 = require("ace-code/src/background_tokenizer");
-    import BackgroundTokenizer = BackgroundTokenizer_1.BackgroundTokenizer;
-    import Selection_1 = require("ace-code/src/selection");
-    import Selection = Selection_1.Selection;
-    import BidiHandler_1 = require("ace-code/src/bidihandler");
-    import BidiHandler = BidiHandler_1.BidiHandler;
-    import Range_11 = require("ace-code/src/range");
-    import Range = Range_11.Range;
-    import LineWidgets_1 = require("ace-code/src/line_widgets");
-    import LineWidgets = LineWidgets_1.LineWidgets;
-    import UndoManager_1 = require("ace-code/src/undomanager");
-    import UndoManager = UndoManager_1.UndoManager;
+    import { Document } from "ace-code/src/document";
+    import { BackgroundTokenizer } from "ace-code/src/background_tokenizer";
+    import { Selection } from "ace-code/src/selection";
+    import { BidiHandler } from "ace-code/src/bidihandler";
+    import { Range } from "ace-code/src/range";
+    import { LineWidgets } from "ace-code/src/line_widgets";
+    import { UndoManager } from "ace-code/src/undomanager";
     function isFullWidth(c: any): boolean;
     var $uid: number;
     namespace Ace {
@@ -4667,8 +4621,7 @@ declare module "ace-code/src/placeholder" {
         cancel(): void;
     }
     export type EditSession = import("ace-code/src/edit_session").EditSession;
-    import Range_12 = require("ace-code/src/range");
-    import Range = Range_12.Range;
+    import { Range } from "ace-code/src/range";
     namespace Ace {
         type EventEmitter<T> = import("ace-code").Ace.EventEmitter<T>;
         type PlaceHolderEvents = import("ace-code").Ace.PlaceHolderEvents;
@@ -4683,8 +4636,7 @@ declare module "ace-code/src/commands/multi_select_commands" {
     export const defaultCommands: import("ace-code").Ace.Command[];
     export const multiSelectCommands: import("ace-code").Ace.Command[];
     export const keyboardHandler: HashHandler;
-    import HashHandler_4 = require("ace-code/src/keyboard/hash_handler");
-    import HashHandler = HashHandler_4.HashHandler;
+    import { HashHandler } from "ace-code/src/keyboard/hash_handler";
 }
 declare module "ace-code/src/multi_select" {
     export const commands: import("ace-code").Ace.Command[];
@@ -4693,8 +4645,7 @@ declare module "ace-code/src/multi_select" {
     export type Point = import("ace-code").Ace.Point;
     export type ScreenCoordinates = import("ace-code").Ace.ScreenCoordinates;
     export function MultiSelect(editor: Editor): void;
-    import Editor_4 = require("ace-code/src/editor");
-    import Editor = Editor_4.Editor;
+    import { Editor } from "ace-code/src/editor";
 }
 declare module "ace-code/src/commands/occur_commands" {
     export namespace occurStartCommand {
@@ -4763,13 +4714,10 @@ declare module "ace-code/src/incremental_search" {
         statusMessage(found: any): void;
         message(msg: any): void;
     }
-    import Search_3 = require("ace-code/src/search");
-    import Search = Search_3.Search;
+    import { Search } from "ace-code/src/search";
     import iSearchCommandModule = require("ace-code/src/commands/incremental_search_commands");
-    import Editor_6 = require("ace-code/src/editor");
-    import Editor = Editor_6.Editor;
-    import Range_14 = require("ace-code/src/range");
-    import Range = Range_14.Range;
+    import { Editor } from "ace-code/src/editor";
+    import { Range } from "ace-code/src/range";
 }
 declare module "ace-code/src/split" {
     export type ISplit = import("ace-code").Ace.EventEmitter<any> & {
@@ -4784,14 +4732,12 @@ declare module "ace-code/src/tokenizer_dev" {
          **/
         getLineTokens(line: any, startState: any): any;
     }
-    import BaseTokenizer_1 = require("ace-code/src/tokenizer");
-    import BaseTokenizer = BaseTokenizer_1.Tokenizer;
+    import { Tokenizer as BaseTokenizer } from "ace-code/src/tokenizer";
 }
 declare module "ace-code/src/unicode" {
     export const wordChars: any;
 }
 declare module "ace-code/src/keyboard/textarea" {
     export const handler: HashHandler;
-    import HashHandler_6 = require("ace-code/src/keyboard/hash_handler");
-    import HashHandler = HashHandler_6.HashHandler;
+    import { HashHandler } from "ace-code/src/keyboard/hash_handler";
 }

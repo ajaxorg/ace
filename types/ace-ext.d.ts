@@ -65,8 +65,7 @@ declare module "ace-code/src/ext/command_bar" {
     }
     export type Editor = import("ace-code/src/editor").Editor;
     export type TooltipCommand = import("ace-code").Ace.TooltipCommand;
-    import Tooltip_2 = require("ace-code/src/tooltip");
-    import Tooltip = Tooltip_2.Tooltip;
+    import { Tooltip } from "ace-code/src/tooltip";
     export var TOOLTIP_CLASS_NAME: string;
     export var BUTTON_CLASS_NAME: string;
     namespace Ace {
@@ -150,18 +149,12 @@ declare module "ace-code/src/ext/inline_autocomplete" {
          */
         export function createInlineTooltip(parentEl: HTMLElement): CommandBarTooltip;
     }
-    import Editor_2 = require("ace-code/src/editor");
-    import Editor = Editor_2.Editor;
-    import HashHandler_2 = require("ace-code/src/keyboard/hash_handler");
-    import HashHandler = HashHandler_2.HashHandler;
-    import AceInline_2 = require("ace-code/src/autocomplete/inline");
-    import AceInline = AceInline_2.AceInline;
-    import CommandBarTooltip_1 = require("ace-code/src/ext/command_bar");
-    import CommandBarTooltip = CommandBarTooltip_1.CommandBarTooltip;
-    import CompletionProvider_1 = require("ace-code/src/autocomplete");
-    import CompletionProvider = CompletionProvider_1.CompletionProvider;
-    import FilteredList_1 = require("ace-code/src/autocomplete");
-    import FilteredList = FilteredList_1.FilteredList;
+    import { Editor } from "ace-code/src/editor";
+    import { HashHandler } from "ace-code/src/keyboard/hash_handler";
+    import { AceInline } from "ace-code/src/autocomplete/inline";
+    import { CommandBarTooltip } from "ace-code/src/ext/command_bar";
+    import { CompletionProvider } from "ace-code/src/autocomplete";
+    import { FilteredList } from "ace-code/src/autocomplete";
 }
 declare module "ace-code/src/ext/searchbox-css" {
     const _exports: string;
@@ -204,8 +197,7 @@ declare module "ace-code/src/ext/searchbox" {
         show(value: string, isReplace?: boolean): void;
         isFocused(): boolean;
     }
-    import HashHandler_3 = require("ace-code/src/keyboard/hash_handler");
-    import HashHandler = HashHandler_3.HashHandler;
+    import { HashHandler } from "ace-code/src/keyboard/hash_handler";
 }
 declare module "ace-code/src/ext/elastic_tabstops_lite" {
     export class ElasticTabstopsLite {
@@ -215,8 +207,7 @@ declare module "ace-code/src/ext/elastic_tabstops_lite" {
         onChange: (delta: any) => void;
         processRows(rows: number[]): void;
     }
-    import Editor_3 = require("ace-code/src/editor");
-    import Editor = Editor_3.Editor;
+    import { Editor } from "ace-code/src/editor";
 }
 declare module "ace-code/src/ext/error_marker" {
     export function showErrorMarker(editor: import("ace-code/src/editor").Editor, dir: number): void;
@@ -242,8 +233,7 @@ declare module "ace-code/src/ext/code_lens" {
     export type EditSession = import("ace-code/src/edit_session").EditSession;
     export type VirtualRenderer = import("ace-code/src/virtual_renderer").VirtualRenderer & {
     };
-    import Editor_7 = require("ace-code/src/editor");
-    import Editor = Editor_7.Editor;
+    import { Editor } from "ace-code/src/editor";
 }
 declare module "ace-code/src/ext/emmet" {
     export const commands: HashHandler;
@@ -253,10 +243,8 @@ declare module "ace-code/src/ext/emmet" {
     export function isAvailable(editor: Editor, command: string): boolean;
     export function load(cb: any): boolean;
     export function setCore(e: any): void;
-    import HashHandler_5 = require("ace-code/src/keyboard/hash_handler");
-    import HashHandler = HashHandler_5.HashHandler;
-    import Editor_8 = require("ace-code/src/editor");
-    import Editor = Editor_8.Editor;
+    import { HashHandler } from "ace-code/src/keyboard/hash_handler";
+    import { Editor } from "ace-code/src/editor";
     /**
      * Implementation of {@link IEmmetEditor} interface for Ace
      */
@@ -360,8 +348,7 @@ declare module "ace-code/src/ext/emmet" {
 }
 declare module "ace-code/src/ext/hardwrap" {
     export function hardWrap(editor: import("ace-code/src/editor").Editor, options: import("ace-code").Ace.HardWrapOptions): void;
-    import Editor_9 = require("ace-code/src/editor");
-    import Editor = Editor_9.Editor;
+    import { Editor } from "ace-code/src/editor";
 }
 declare module "ace-code/src/ext/menu_tools/settings_menu.css" {
     const _exports: string;
@@ -378,8 +365,7 @@ declare module "ace-code/src/ext/menu_tools/get_editor_keyboard_shortcuts" {
 }
 declare module "ace-code/src/ext/keybinding_menu" {
     export function init(editor: Editor): void;
-    import Editor_10 = require("ace-code/src/editor");
-    import Editor = Editor_10.Editor;
+    import { Editor } from "ace-code/src/editor";
 }
 declare module "ace-code/src/ext/linking" { }
 declare module "ace-code/src/ext/modelist" {

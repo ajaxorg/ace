@@ -401,6 +401,7 @@ function fixDeclaration(content, aceNamespacePath) {
                     let allReferences = referencePaths.join("\n") + "\n/// <reference path=\"./ace-modes.d.ts\" />\n";
                     output = allReferences + output;
                 }
+                output = correctImportStatements(output);
                 output = cleanComments(output);
                 output = formatDts(outputName, output);
                 fs.writeFileSync(outputName, output);
@@ -416,6 +417,23 @@ function fixDeclaration(content, aceNamespacePath) {
     result.dispose();
 
     checkFinalDeclaration(finalDeclarations);
+}
+
+/**
+ * Corrects the import statements in the provided text by replacing the old-style
+ * `require()` imports with modern ES6 `import` statements.
+ */
+function correctImportStatements(text) {
+    text = text.replace(
+        /import\s*\w+_\d+\s*=\s*require\(([\w\/"-]+)\);?.\s*import\s*(\w+)\s*=\s*\w+_\d+\.(\w+);?/gs,
+        (match, path, importName, exportName) => {
+            if (importName !== exportName) {
+                return `import {${exportName} as ${importName}} from ${path};`;
+            }
+            return `import {${exportName}} from ${path};`;
+        }
+    );
+    return text;
 }
 
 function cleanComments(text) {

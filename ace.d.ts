@@ -953,16 +953,11 @@ declare module "ace-code" {
         value?: any;
     }) | null, options?: any): Editor;
     export function createEditSession(text: import("ace-code/src/document").Document | string, mode?: import("ace-code").Ace.SyntaxMode): EditSession;
-    import Editor_5 = require("ace-code/src/editor");
-    import Editor = Editor_5.Editor;
-    import EditSession_3 = require("ace-code/src/edit_session");
-    import EditSession = EditSession_3.EditSession;
-    import Range_13 = require("ace-code/src/range");
-    import Range = Range_13.Range;
-    import UndoManager_2 = require("ace-code/src/undomanager");
-    import UndoManager = UndoManager_2.UndoManager;
-    import Renderer_1 = require("ace-code/src/virtual_renderer");
-    import Renderer = Renderer_1.VirtualRenderer;
+    import { Editor } from "ace-code/src/editor";
+    import { EditSession } from "ace-code/src/edit_session";
+    import { Range } from "ace-code/src/range";
+    import { UndoManager } from "ace-code/src/undomanager";
+    import { VirtualRenderer as Renderer } from "ace-code/src/virtual_renderer";
     export var version: "1.36.5";
     export { Range, Editor, EditSession, UndoManager, Renderer as VirtualRenderer };
 }
