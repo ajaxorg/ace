@@ -192,6 +192,12 @@ function buildTypes() {
     // ace-builds package has different structure and can't use mode types defined for the ace-code.
     var paths = fs.readdirSync(BUILD_DIR + '/src-noconflict');
 
+    var typeDir = BUILD_DIR + "/types";
+
+    if (!fs.existsSync(typeDir)) {
+        fs.mkdirSync(typeDir);
+    }
+
     fs.readdirSync(BUILD_DIR + '/src-noconflict/snippets').forEach(function(path) {
         paths.push("snippets/" + path);
     });
@@ -219,8 +225,8 @@ function buildTypes() {
     allModules.push("modules"); // core modules
     allModules.forEach(function (key) {
         let fileName = '/ace-' + key + '.d.ts';
-        fs.copyFileSync(ACE_HOME + fileName, BUILD_DIR + fileName);
-        correctDeclarationsForBuild(BUILD_DIR + fileName);
+        fs.copyFileSync(ACE_HOME + '/types' + fileName, BUILD_DIR + '/types' + fileName);
+        correctDeclarationsForBuild(BUILD_DIR + '/types' + fileName);
     });
     
     var esmUrls = [];

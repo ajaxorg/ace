@@ -342,6 +342,9 @@ function fixDeclaration(content, aceNamespacePath) {
             modules.forEach(key => {
                 const newSourceFile = context.factory.updateSourceFile(sourceFile, moduleOutputs[key]);
                 const dirPath = path.dirname(aceNamespacePath.replace("ace-internal", "ace"));
+                if (!fs.existsSync(dirPath)) {
+                    fs.mkdirSync(dirPath);
+                }
                 const outputName = key === "ace" ? `${dirPath}/ace.d.ts` : `${dirPath}/types/ace-${key}.d.ts`;
                 finalDeclarations.push(outputName);
 
