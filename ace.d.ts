@@ -1112,16 +1112,16 @@ export namespace Ace {
     el: HTMLElement; 
     row: number; 
     rowCount?: number; 
-    hidden: boolean;
-    editor: Editor, 
-    session: EditSession, 
+    hidden?: boolean;
+    editor?: Editor; 
+    session?: EditSession; 
     column?: number; 
-    className?: string,
-    coverGutter?: boolean, 
-    pixelHeight?: number, 
-    fixedWidth?: boolean, 
-    fullWidth?: boolean,
-    screenWidth?: number,
+    className?: string;
+    coverGutter?: boolean; 
+    pixelHeight?: number; 
+    fixedWidth?: boolean; 
+    fullWidth?: boolean;
+    screenWidth?: number;
   }
   
   export class WidgetManager {
