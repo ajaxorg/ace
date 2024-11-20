@@ -1,3 +1,5 @@
+/* This file is generated using `npm run update-types` */
+
 /// <reference path="./types/ace-lib.d.ts" />
 /// <reference path="./types/ace-modules.d.ts" />
 /// <reference path="./types/ace-theme.d.ts" />

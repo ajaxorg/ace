@@ -1,3 +1,5 @@
+/* This file is generated using `npm run update-types` */
+
 declare module "ace-code/src/layer/font_metrics" {
     export class FontMetrics {
         constructor(parentEl: HTMLElement);

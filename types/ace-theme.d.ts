@@ -1,3 +1,5 @@
+/* This file is generated using `npm run update-types` */
+
 declare module "ace-code/src/theme/textmate-css" {
     const _exports: string;
     export = _exports;

@@ -1,3 +1,5 @@
+/* This file is generated using `npm run update-types` */
+
 declare module "ace-code/src/lib/useragent" {
     export namespace OS {
         let LINUX: string;

@@ -1,3 +1,5 @@
+/* This file is generated using `npm run update-types` */
+
 declare module "ace-code/src/ext/command_bar" {
     /**
      * Displays a command tooltip above the currently active line selection, with clickable elements.

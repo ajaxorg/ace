@@ -4,6 +4,8 @@ const path = require("path");
 
 const SEPARATE_MODULES = ["ext", "theme", "snippets", "lib"]; // adjust this list for more granularity
 
+const AUTO_GENERATED_HEADER = "/* This file is generated using `npm run update-types` */\n\n";
+
 const defaultFormatCodeSettings = {
     baseIndentSize: 0,
     indentSize: 4,
@@ -407,6 +409,7 @@ function fixDeclaration(content, aceNamespacePath) {
                 output = correctImportStatements(output);
                 output = cleanComments(output);
                 output = formatDts(outputName, output);
+                output = AUTO_GENERATED_HEADER + output;
                 fs.writeFileSync(outputName, output);
             });
 
