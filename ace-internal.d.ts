@@ -27,6 +27,8 @@ export namespace Ace {
     type DragdropHandler = import("./src/mouse/dragdrop_handler").DragdropHandler;
     type AppConfig = import("./src/lib/app_config").AppConfig;
     type Config = typeof import("./src/config");
+    type SearchTracker = import("./src/ext/search/async_search").SearchTracker;
+
 
     type AfterLoadCallback = (err: Error | null, module: unknown) => void;
     type LoaderFunction = (moduleName: string, afterLoad: AfterLoadCallback) => void;
@@ -675,6 +677,14 @@ export namespace Ace {
         $supportsUnicodeFlag: boolean;
     }
 
+    interface ExtendedSearchOptions extends SearchOptions {
+        source: string;
+        flags: string;
+        regex?: RegExp;
+        findAll: boolean;
+        indexRange?: number[];
+    }
+
     interface Point {
         row: number;
         column: number;
@@ -975,10 +985,8 @@ export namespace Ace {
                        callback: CompleterCallback): void;
 
         getDocTooltip?(item: Completion): void | string | Completion;
-
         onSeen?: (editor: Ace.Editor, completion: Completion) => void;
         onInsert?: (editor: Ace.Editor, completion: Completion) => void;
-
         cancel?(): void;
 
         id?: string;
@@ -1211,6 +1219,32 @@ export namespace Ace {
         value: string,
     }>>
 
+    export type SearchResultCallbackArgs = {
+        start?: Position,
+        end?: Position,
+        total: number,
+        current: number,
+        wrapped?: boolean,
+        value?: string,
+        startIndex?: number
+    } | {
+        value: string,
+        matches: number[],
+        offset: number,
+        start?: Position,
+        end?: Position,
+    } | "waiting" | null;
+
+    export interface InputEditor extends Editor {
+        saveHistory?();
+
+        session: InputEditorEditSession
+    }
+
+    export interface InputEditorEditSession extends EditSession {
+        searchHistory?: string[];
+    }
+
     export interface StaticHighlightOptions {
         mode?: string | SyntaxMode,
         theme?: string | Theme,
@@ -1257,7 +1291,6 @@ export type CommandBarTooltip = Ace.CommandBarTooltip;
 declare global {
     interface Element {
         setAttribute(name: string, value: boolean): void;
-
         setAttribute(name: string, value: number): void;
     }
 }
@@ -1357,6 +1390,7 @@ declare module "./src/edit_session" {
         $occurMatchingLines?: any,
         $useEmacsStyleLineStart?: boolean,
         $selectLongWords?: boolean,
+        searchTracker?: Ace.SearchTracker,
         curOp?: {
             command: {},
             args: string,
