@@ -214,6 +214,10 @@ class SearchBox {
                 ? editor.session.getTextRange(this.searchRange)
                 : editor.getValue();
 
+            /**
+             * Convert all line ending variations to Unix-style = \n
+             * Windows (\r\n), MacOS Classic (\r), and Unix (\n)
+             */
             if (editor.$search.$isMultilineSearch(editor.getLastSearchOptions()))
                 value = value.replace(/\r\n|\r|\n/g, "\n");
 

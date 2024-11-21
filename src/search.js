@@ -116,10 +116,15 @@ class Search {
                     row = row + len - 2;
             }
         } else {
-            for (var matches, i = 0; i < lines.length; i++) {
+            for (var matches, i = 0, lng = lines.length; i < lng; i++) {
                 if (this.$isMultilineSearch(options)) {
-                    matches = this.$multiLineForward(session, re, i, lines.length);
-                    ranges.push(new Range(matches.startRow, matches.startCol, matches.endRow, matches.endCol));
+                    matches = this.$multiLineForward(session, re, i, lng);
+                    if (matches) {
+                        var end_row = matches.endRow <= lng ? matches.endRow - 1 : lng;
+                        if (end_row > i)
+                            i = end_row;
+                        ranges.push(new Range(matches.startRow, matches.startCol, matches.endRow, matches.endCol));
+                    }
                 }
                 else {
                     matches = lang.getMatchOffsets(lines[i], re);
@@ -152,13 +157,11 @@ class Search {
         return ranges;
     }
 
-    parseReplaceString(input, replaceString) {
+    parseReplaceString(replaceString) {
         var CharCode = {
             DollarSign: 36,
             Ampersand: 38,
             Digit0: 48,
-            Digit1: 49,
-            Digit9: 57,
             Backslash: 92,
             n: 110,
             t: 116
@@ -205,19 +208,15 @@ class Search {
                     replacement = '$';
                     continue;
                 }
-                if (nextChCode === CharCode.Digit0 || nextChCode === CharCode.Ampersand) {
-                    // $& and $0 => inserts the matched substring.
-                    replacement = input;
-                    continue;
-                }
-                if (CharCode.Digit1 <= nextChCode && nextChCode <= CharCode.Digit9) {
-                    // $n
-                    replacement = replaceString;
+                if (nextChCode === CharCode.Digit0) {
+                    // replace $0 to $&, making it compatible with JavaScript
+                    // $0 and $& => inserts the matched substring.
+                    replaceString = replaceString.replace(/\$0/, '$$&');
                     continue;
                 }
             }
         }
-        return replacement;
+        return replacement || replaceString;
     }
 
     /**
@@ -240,16 +239,21 @@ class Search {
         if (!re)
             return;
 
-        if (this.$isMultilineSearch(options))
+        /**
+         * Convert all line ending variations to Unix-style = \n
+         * Windows (\r\n), MacOS Classic (\r), and Unix (\n)
+         */
+        var mtSearch = this.$isMultilineSearch(options);
+        if (mtSearch)
             input = input.replace(/\r\n|\r|\n/g, "\n");
 
         var match = re.exec(input);
-        if (!match || (!this.$isMultilineSearch(options) && match[0].length != input.length))
+        if (!match || (!mtSearch && match[0].length != input.length))
             return null;
 
-        if (options.regExp) {
-            replacement = this.parseReplaceString(input, replacement);
-        }
+        replacement = options.regExp
+            ? this.parseReplaceString(replacement)
+            : replacement.replace(/\$/g, "$$$$");
 
         replacement = input.replace(re, replacement);
         if (options.preserveCase) {
@@ -345,12 +349,14 @@ class Search {
             var match = re.exec(line);
             re.lastIndex = 0;
             if (match) {
-                var before = line.slice(0, match.index).split("\n");
-                var inside = match[0].split("\n");
-                var startRow = start + before.length - 1;
-                var startCol = before[before.length - 1].length;
-                var endRow = startRow + inside.length - 1;
-                var endCol = inside.length == 1 ? startCol + inside[0].length : inside[inside.length - 1].length;
+                var beforeMatch = line.slice(0, match.index).split("\n");
+                var matchedText = match[0].split("\n");
+                var startRow = start + beforeMatch.length - 1;
+                var startCol = beforeMatch[beforeMatch.length - 1].length;
+                var endRow = startRow + matchedText.length - 1;
+                var endCol = matchedText.length == 1
+                    ? startCol + matchedText[0].length
+                    : matchedText[matchedText.length - 1].length;
 
                 return {
                     startRow: startRow,
@@ -376,12 +382,14 @@ class Search {
 
             var match = multiLineBackwardMatch(line, re, endMargin);
             if (match) {
-                var before = line.slice(0, match.index).split("\n");
-                var inside = match[0].split("\n");
-                var startRow = row + before.length;
-                var startCol = before[before.length - 1].length;
-                var endRow = startRow + inside.length - 1;
-                var endCol = inside.length == 1 ? startCol + inside[0].length : inside[inside.length - 1].length;
+                var beforeMatch = line.slice(0, match.index).split("\n");
+                var matchedText = match[0].split("\n");
+                var startRow = row + beforeMatch.length;
+                var startCol = beforeMatch[beforeMatch.length - 1].length;
+                var endRow = startRow + matchedText.length - 1;
+                var endCol = matchedText.length == 1
+                    ? startCol + matchedText[0].length
+                    : matchedText[matchedText.length - 1].length;
 
                 return {
                     startRow: startRow,
@@ -402,7 +410,7 @@ class Search {
         if (!re)
             return false;
 
-        var multiline = this.$isMultilineSearch(options);
+        var mtSearch = this.$isMultilineSearch(options);
         var mtForward = this.$multiLineForward;
         var mtBackward = this.$multiLineBackward;
 
@@ -473,7 +481,7 @@ class Search {
         }
         else if (backwards) {
             var forEachInLine = function(row, endIndex, callback) {
-                if (multiline) {
+                if (mtSearch) {
                     var pos = mtBackward(session, re, endIndex, row, firstRow);
                     if (!pos)
                         return false;
@@ -508,8 +516,13 @@ class Search {
         else {
             var forEachInLine = function(row, startIndex, callback) {
                 re.lastIndex = startIndex;
-                if (multiline) {
+                if (mtSearch) {
                     var pos = mtForward(session, re, row, lastRow);
+                    if (pos) {
+                        var end_row = pos.endRow <= lastRow ? pos.endRow - 1 : lastRow;
+                        if (end_row > row)
+                            row = end_row;
+                    }
                     if (!pos)
                         return false;
                     if (callback(pos.startRow, pos.startCol, pos.endRow, pos.endCol))
@@ -522,7 +535,7 @@ class Search {
                     while((m = re.exec(line))) {
                         var length = m[0].length;
                         last = m.index;
-                        if (callback(row, last, row,last + length))
+                        if (callback(row, last, row, last + length))
                             return true;
                         if (!length) {
                             re.lastIndex = last += lang.skipEmptyMatch(line, last, supportsUnicodeFlag);

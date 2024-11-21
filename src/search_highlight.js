@@ -36,15 +36,20 @@ class SearchHighlight {
         var start = config.firstRow, end = config.lastRow;
         var renderedMarkerRanges = {};
         var _search = session.$editor.$search;
-        var multiline = _search.$isMultilineSearch(session.$editor.getLastSearchOptions());
+        var mtSearch = _search.$isMultilineSearch(session.$editor.getLastSearchOptions());
 
         for (var i = start; i <= end; i++) {
             var ranges = this.cache[i];
             if (ranges == null) {
-                if (multiline) {
+                if (mtSearch) {
                     ranges = [];
-                    var matches = _search.$multiLineForward(session, this.regExp, i, end, true);
-                    if (matches) ranges.push(new Range(matches.startRow, matches.startCol, matches.endRow, matches.endCol));
+                    var match = _search.$multiLineForward(session, this.regExp, i, end);
+                    if (match) {
+                        var end_row = match.endRow <= end ? match.endRow - 1 : end;
+                        if (end_row > i)
+                            i = end_row;
+                        ranges.push(new Range(match.startRow, match.startCol, match.endRow, match.endCol));
+                    }
                     if (ranges.length > this.MAX_RANGES)
                         ranges = ranges.slice(0, this.MAX_RANGES);
                 }
