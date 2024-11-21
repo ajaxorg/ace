@@ -1154,6 +1154,42 @@ module.exports = {
             });
         }, 0);
     },
+    "test: module loading callback is aborted when session is destroyed": function(next) {
+        // if (!require.undef) {
+        //     console.log("Skipping test: This test only runs in the browser");
+        //     next();
+        //     return;
+        // }
+        console.log("Not Skipping test: This test only runs in the browser");
+    
+        var session = new EditSession([]);
+        var onChangeModeCallCount = 0;
+        var changeModeCallbackCallCount = 0;
+        var originalOnChangeMode = session.$onChangeMode;
+        
+        // Create spy
+        session.$onChangeMode = function(...arguments) {
+            onChangeModeCallCount++;
+            originalOnChangeMode.apply(this, arguments);
+        };
+    
+        // Start setting mode
+        session.setMode("ace/mode/javascript", function(mode) {
+            changeModeCallbackCallCount++;
+        });
+    
+        // Destroy session before mode loading completes
+        session.destroy();
+    
+        // Give some time for any pending operations to complete
+        setTimeout(function() {
+            assert.equal(onChangeModeCallCount, 0, "Mode change event should not fire after destruction");
+            assert.equal(changeModeCallbackCallCount, 0, "Mode change callback should not fire after destruction");
+            assert.equal(session.destroyed, true, "Session should remain destroyed");
+            assert.equal(session.$modeid, undefined, "Mode ID should not be set after destruction");
+            next();
+        }, 50);
+    },
 
     "test: sets destroyed flag when destroy called and tokenizer is never null": function() {
         var session = new EditSession(["foo bar foo bar"]);

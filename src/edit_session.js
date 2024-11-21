@@ -933,7 +933,7 @@ class EditSession {
         // load on demand
         this.$modeId = path;
         config.loadModule(["mode", path], function(m) {
-            if(this.destroyed){
+            if (this.destroyed) {
                 return;
             }
             if (this.$modeId !== path)
