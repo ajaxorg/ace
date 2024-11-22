@@ -116,8 +116,9 @@ class Search {
                     row = row + len - 2;
             }
         } else {
-            for (var matches, i = 0, lng = lines.length; i < lng; i++) {
+            for (var matches, i = 0; i < lines.length; i++) {
                 if (this.$isMultilineSearch(options)) {
+                    var lng = lines.length - 1;
                     matches = this.$multiLineForward(session, re, i, lng);
                     if (matches) {
                         var end_row = matches.endRow <= lng ? matches.endRow - 1 : lng;
@@ -162,6 +163,8 @@ class Search {
             DollarSign: 36,
             Ampersand: 38,
             Digit0: 48,
+            Digit1: 49,
+            Digit9: 57,
             Backslash: 92,
             n: 110,
             t: 116
@@ -175,21 +178,22 @@ class Search {
                 i++;
                 if (i >= len) {
                     // string ends with a \
+                    replacement += "\\";
                     break;
                 }
                 var nextChCode = replaceString.charCodeAt(i);
                 switch (nextChCode) {
                     case CharCode.Backslash:
                         // \\ => inserts a "\"
-                        replacement = '\\';
+                        replacement += "\\";
                         break;
                     case CharCode.n:
                         // \n => inserts a LF
-                        replacement= '\n';
+                        replacement += "\n";
                         break;
                     case CharCode.t:
                         // \t => inserts a TAB
-                        replacement = '\t';
+                        replacement += "\t";
                         break;
                 }
                 continue;
@@ -200,21 +204,29 @@ class Search {
                 i++;
                 if (i >= len) {
                     // string ends with a $
+                    replacement += "$";
                     break;
                 }
                 const nextChCode = replaceString.charCodeAt(i);
                 if (nextChCode === CharCode.DollarSign) {
                     // $$ => inserts a "$"
-                    replacement = '$';
+                    replacement += "$$";
                     continue;
                 }
-                if (nextChCode === CharCode.Digit0) {
+                if (nextChCode === CharCode.Digit0 || nextChCode === CharCode.Ampersand) {
                     // replace $0 to $&, making it compatible with JavaScript
                     // $0 and $& => inserts the matched substring.
-                    replaceString = replaceString.replace(/\$0/, '$$&');
+                    replacement += "$&";
+                    continue;
+                }
+                if (CharCode.Digit1 <= nextChCode && nextChCode <= CharCode.Digit9) {
+                    // $n
+                    replacement += "$" + replaceString[i];
                     continue;
                 }
             }
+
+            replacement += replaceString[i];
         }
         return replacement || replaceString;
     }
