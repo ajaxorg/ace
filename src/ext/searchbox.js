@@ -218,8 +218,10 @@ class SearchBox {
              * Convert all line ending variations to Unix-style = \n
              * Windows (\r\n), MacOS Classic (\r), and Unix (\n)
              */
-            if (editor.$search.$isMultilineSearch(editor.getLastSearchOptions()))
+            if (editor.$search.$isMultilineSearch(editor.getLastSearchOptions())) {
                 value = value.replace(/\r\n|\r|\n/g, "\n");
+                editor.session.doc.$autoNewLine = "\n";
+            }
 
             var offset = editor.session.doc.positionToIndex(editor.selection.anchor);
             if (this.searchRange)
