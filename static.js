@@ -85,7 +85,7 @@ function writeHead(res, code, contentType) {
 
 function escapeHTML(str) {
     return ("" + str).replace(/&/g, "&#38;").replace(/"/g, "&#34;").replace(/'/g, "&#39;").replace(/</g, "&#60;");
-};
+}
 function serveDirectory(filename, uri, req, res) {
     var files = fs.readdirSync(filename);
     writeHead(res, 200, "text/html");

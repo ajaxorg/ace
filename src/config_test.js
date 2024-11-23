@@ -2,7 +2,7 @@
 
 var config = require("./config");
 var assert = require("./test/assertions");
-var {defaultEnglishMessages} = require("./lib/default_english_messages")
+var {defaultEnglishMessages} = require("./lib/default_english_messages");
 
 module.exports = {
     tearDown: function() {
