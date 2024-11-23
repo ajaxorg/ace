@@ -1,4 +1,5 @@
 "no use strict";
+
 var lang = require("./lib/lang");
 var net = require("./lib/net");
 var dom = require("./lib/dom");
@@ -103,6 +104,8 @@ var loader = function(moduleName, cb) {
     console.error("loader is not configured");
 };
 var customLoader;
+
+/** @arg {(name: string, callback: (error: any, module: any) => void) => void} cb */
 exports.setLoader = function(cb) {
     customLoader = cb;
 };

@@ -21,7 +21,7 @@
         "eslint": "^8.20.0",
         "istanbul": "^0.4.5",
         "standard-version": "^9.3.2",
-        "typescript": "^5.2.2"
+        "typescript": "^5.6.3"
     },
     "mappings": {
         "ace": "."
@@ -32,7 +32,7 @@
         "styles",
         "ace.d.ts",
         "ace-modes.d.ts",
-        "ace-extensions.d.ts",
+        "types",
         "esm-resolver.js",
         "translations",
         "!**/*_test.js",
@@ -45,9 +45,9 @@
         "lint": "eslint \"src/**/*.js\" \"*.js\"",
         "fix": "npm run lint -- --fix",
         "typecheck": "tsc -p tsconfig.json",
-        "update-types": "node ./tool/modes-declaration-generator.js",
+        "update-types": "node ./tool/ace_declaration_generator.js",
         "changelog": "standard-version",
-        "prepack": "node tool/esm_resolver_generator.js && node Makefile.dryice.js css --target build-styles && rm -rf styles && mv build-styles/css styles"
+        "prepack": "node tool/esm_resolver_generator.js && node tool/ace_declaration_generator.js && node Makefile.dryice.js css --target build-styles && rm -rf styles && mv build-styles/css styles"
     },
     "standard-version": {
         "skip": {

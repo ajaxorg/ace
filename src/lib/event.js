@@ -35,7 +35,15 @@ EventListener.prototype.destroy = function() {
     this.elem = this.type = this.callback = undefined;
 };
 
-var addListener = exports.addListener = function(elem, type, callback, /**@type{any?}*/destroyer) {
+/**
+ * Adds an event listener to the specified element.
+ *
+ * @param {any} elem - The element to add the event listener to.
+ * @param {string} type - The type of event to listen for.
+ * @param {any} callback - The callback function to be executed when the event is triggered.
+ * @param {any} [destroyer] - An optional object that will have the created EventListener instance added to its $toDestroy array, allowing it to be easily destroyed later.
+ */
+var addListener = exports.addListener = function(elem, type, callback, destroyer) {
     elem.addEventListener(type, callback, getListenerOptions());
     if (destroyer)
         destroyer.$toDestroy.push(new EventListener(elem, type, callback));

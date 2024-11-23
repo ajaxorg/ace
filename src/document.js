@@ -95,7 +95,7 @@ class Document {
 
     /**
      * [Sets the new line mode.]{: #Document.setNewLineMode.desc}
-     * @param {NewLineMode} newLineMode [The newline mode to use; can be either `windows`, `unix`, or `auto`]{: #Document.setNewLineMode.param}
+     * @param {NewLineMode} newLineMode [The newline mode to use; can be either `windows`, `unix`, or `auto`]
      
      **/
     setNewLineMode(newLineMode) {
@@ -107,7 +107,7 @@ class Document {
     }
 
     /**
-     * [Returns the type of newlines being used; either `windows`, `unix`, or `auto`]{: #Document.getNewLineMode}
+     * Returns the type of newlines being used; either `windows`, `unix`, or `auto`
      * @returns {NewLineMode}
      **/
     getNewLineMode() {

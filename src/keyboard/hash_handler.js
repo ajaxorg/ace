@@ -167,7 +167,7 @@ class MultiHashHandler {
     }
 
     /**
-     * @param {Record<string, CommandLike>} commands
+     * @param {Record<string, CommandLike | string>} commands
      */
     removeCommands(commands) {
         Object.keys(commands).forEach(function(name) {
@@ -176,7 +176,7 @@ class MultiHashHandler {
     }
 
     /**
-     * @param {Record<string, CommandLike>} keyList
+     * @param {Record<string, CommandLike | string>} keyList
      */
     bindKeys(keyList) {
         Object.keys(keyList).forEach(function(key) {
@@ -230,7 +230,7 @@ class MultiHashHandler {
     }
 
     /**
-     * @param {{ $keyChain: string | any[]; }} data
+     * @param {any} data
      * @param {number} hashId
      * @param {string} keyString
      * @param {number} keyCode

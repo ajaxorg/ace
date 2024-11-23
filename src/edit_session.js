@@ -1199,7 +1199,7 @@ class EditSession {
     /**
      * Reverts previous changes to your document.
      * @param {Delta[]} deltas An array of previous changes
-     * @param {Boolean} [dontSelect] [If `true`, doesn't select the range of where the change occured]{: #dontSelect}
+     * @param {Boolean} [dontSelect] If `true`, doesn't select the range of where the change occured
      **/
     undoChanges(deltas, dontSelect) {
         if (!deltas.length)

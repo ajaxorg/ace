@@ -35,6 +35,11 @@ var fs = require("fs");
 var path = require("path");
 var copy = require('architect-build/copy');
 var build = require('architect-build/build');
+var {
+    updateDeclarationModuleNames,
+    generateDeclaration,
+    SEPARATE_MODULES
+} = require('./tool/ace_declaration_generator');
 
 var ACE_HOME = __dirname;
 var BUILD_DIR = ACE_HOME + "/build";
@@ -174,20 +179,30 @@ function ace() {
     }
 }
 
+function correctDeclarationsForBuild(path, additionalDeclarations) {
+    var definitions = fs.readFileSync(path, 'utf8');
+    var newDefinitions = updateDeclarationModuleNames(definitions);
+    if (additionalDeclarations) {
+        newDefinitions = newDefinitions + '\n' + additionalDeclarations;
+    }
+    fs.writeFileSync(path, newDefinitions);
+}
+
 function buildTypes() {
-    var aceCodeModeDefinitions = '/// <reference path="./ace-modes.d.ts" />';
-    var aceCodeExtensionDefinitions = '/// <reference path="./ace-extensions.d.ts" />';
     // ace-builds package has different structure and can't use mode types defined for the ace-code.
-    // ace-builds modes are declared along with other modules in the ace-modules.d.ts file below.
-    var definitions = fs.readFileSync(ACE_HOME + '/ace.d.ts', 'utf8').replace(aceCodeModeDefinitions, '').replace(aceCodeExtensionDefinitions, '');
     var paths = fs.readdirSync(BUILD_DIR + '/src-noconflict');
-    var moduleRef = '/// <reference path="./ace-modules.d.ts" />';
+
+    var typeDir = BUILD_DIR + "/types";
+
+    if (!fs.existsSync(typeDir)) {
+        fs.mkdirSync(typeDir);
+    }
 
     fs.readdirSync(BUILD_DIR + '/src-noconflict/snippets').forEach(function(path) {
         paths.push("snippets/" + path);
     });
 
-    var moduleNameRegex = /^(mode|theme|ext|keybinding)-|^snippets\//;
+    var moduleNameRegex = /^(keybinding)-/;
 
     var pathModules = [
         "declare module 'ace-builds/webpack-resolver';",
@@ -199,9 +214,21 @@ function buildTypes() {
             return "declare module 'ace-builds/src-noconflict/" + moduleName + "';";
         }
     }).filter(Boolean)).join("\n") + "\n";
+    
+    fs.copyFileSync(ACE_HOME + '/ace-internal.d.ts', BUILD_DIR + '/ace.d.ts');
+    generateDeclaration(BUILD_DIR + '/ace.d.ts');
+    fs.copyFileSync(ACE_HOME + '/ace-modes.d.ts', BUILD_DIR + '/ace-modes.d.ts');
+    correctDeclarationsForBuild(BUILD_DIR + '/ace.d.ts', pathModules);
+    correctDeclarationsForBuild(BUILD_DIR + '/ace-modes.d.ts');
 
-    fs.writeFileSync(BUILD_DIR + '/ace.d.ts', moduleRef + '\n' + definitions);
-    fs.writeFileSync(BUILD_DIR + '/ace-modules.d.ts', pathModules);
+    let allModules = SEPARATE_MODULES;
+    allModules.push("modules"); // core modules
+    allModules.forEach(function (key) {
+        let fileName = '/ace-' + key + '.d.ts';
+        fs.copyFileSync(ACE_HOME + '/types' + fileName, BUILD_DIR + '/types' + fileName);
+        correctDeclarationsForBuild(BUILD_DIR + '/types' + fileName);
+    });
+    
     var esmUrls = [];
 
     var loader = paths.map(function(path) {

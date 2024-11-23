@@ -1,5 +1,4 @@
 "use strict";
-
 var oop = require("../../lib/oop");
 var Behaviour = require("../behaviour").Behaviour;
 var CstyleBehaviour = require("./cstyle").CstyleBehaviour;

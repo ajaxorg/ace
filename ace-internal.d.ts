@@ -1335,7 +1335,6 @@ declare module "./src/edit_session" {
         $useWorker?: boolean,
         $wrapAsCode?: boolean,
         $indentedSoftWrap?: boolean,
-        widgetManager?: any,
         $bracketHighlight?: any,
         $selectionMarker?: number,
         lineWidgetsWidth?: number,
@@ -1357,12 +1356,6 @@ declare module "./src/edit_session" {
         $occurMatchingLines?: any,
         $useEmacsStyleLineStart?: boolean,
         $selectLongWords?: boolean,
-        curOp?: {
-            command: {},
-            args: string,
-            scrollTop: number,
-            [key: string]: any;
-        },
 
         getSelectionMarkers(): any[],
     }
@@ -1375,7 +1368,6 @@ declare module "./src/edit_session/fold" {
     }
 }
 
-// @ts-expect-error
 declare module "./src/placeholder" {
     export interface PlaceHolder extends Ace.EventEmitter<Ace.PlaceHolderEvents> {
     }

@@ -21,7 +21,7 @@ var openPrompt;
  * @typedef PromptOptions
  * @property {String} name             Prompt name.
  * @property {String} $type            Use prompt of specific type (gotoLine|commands|modes or default if empty).
- * @property {[start: number, end: number]} selection  Defines which part of the predefined value should be highlited.
+ * @property {[number, number]} selection  Defines which part of the predefined value should be highlighted.
  * @property {Boolean} hasDescription  Set to true if prompt has description below input box.
  * @property {String} prompt           Description below input box.
  * @property {String} placeholder      Placeholder for value.
