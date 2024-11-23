@@ -2,9 +2,12 @@
 
 var config = require("./config");
 var assert = require("./test/assertions");
+var {defaultEnglishMessages} = require("./lib/default_english_messages")
 
 module.exports = {
-
+    tearDown: function() {
+        config.setMessages(defaultEnglishMessages);
+    },
     "test: path resolution" : function(done) {
         config.set("packaged", true);
         var url = config.moduleUrl("kr_theme", "theme");
