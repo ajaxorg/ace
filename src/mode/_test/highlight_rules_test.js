@@ -10,8 +10,6 @@ var editor = new Editor(new MockRenderer());
 if (!fs.existsSync)
     fs.existsSync = path.existsSync;
 
-require("amd-loader");
-
 var cwd = __dirname + "/";
 var root = path.normalize(cwd + Array(4).join("../"));
 

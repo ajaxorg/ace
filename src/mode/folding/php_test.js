@@ -1,5 +1,3 @@
-if (typeof process !== "undefined") require("amd-loader");
-
 "use strict";
 
 var PHPMode = require("../php").Mode;
