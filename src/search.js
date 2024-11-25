@@ -378,7 +378,7 @@ class Search {
                 };
             }
         }
-        return false;
+        return null;
     }
 
     $multiLineBackward(session, re, endIndex, start, first) {
@@ -411,7 +411,7 @@ class Search {
                 };
             }
         }
-        return false;
+        return null;
     }
 
     /**
