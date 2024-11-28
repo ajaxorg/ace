@@ -1106,24 +1106,50 @@ module.exports = {
     },
     
     "test: mode loading" : function(next) {
-        if (!require.undef) {
-            console.log("Skipping test: This test only runs in the browser");
-            next();
-            return;
-        }
+        delete EditSession.prototype.$modes["ace/mode/javascript"];
+        delete EditSession.prototype.$modes["ace/mode/css"];
+        delete EditSession.prototype.$modes["ace/mode/sh"];
+        require("./config").setLoader(function(name, onLoad) {
+            if (name == "ace/mode/javascript") {
+                return onLoad(null, require("./mode/javascript"));
+            }
+            if (name == "ace/mode/sh") {
+                return setTimeout(function() {
+                    return onLoad(null, require("./mode/sh"));
+                });
+            }
+            if (name == "ace/mode/css") {
+                return setTimeout(function() {
+                    return onLoad(null, require("./mode/css"));
+                });
+            }
+        });
         var session = new EditSession([]);
         session.setMode("ace/mode/javascript");
-        assert.equal(session.$modeid, "ace/mode/javascript");
-        session.on("changeMode", function() {
-            assert.equal(session.$modeid, "ace/mode/javascript");
+        assert.equal(session.$modeId, "ace/mode/javascript");
+
+        var modeChangeCallbacks = 0;
+        session.once("changeMode", function() {
+            assert.equal(session.$modeId, "ace/mode/sh");
+            modeChangeCallbacks++;
         });
-        session.setMode("ace/mode/sh", function(mode) {
-            assert.ok(!mode);
+        session.setMode("ace/mode/sh", function() {
+            assert.equal(session.$mode.$id, "ace/mode/sh");
+            modeChangeCallbacks++;
         });
+        assert.equal(session.$modeId, "ace/mode/sh");
+        assert.equal(session.$mode.$id, "ace/mode/javascript");
         setTimeout(function() {
-            session.setMode("ace/mode/javascript", function(mode) {
-                session.setMode("ace/mode/javascript");
-                assert.equal(session.$modeid, "ace/mode/javascript");
+            assert.equal(modeChangeCallbacks, 2);
+            session.setMode("ace/mode/javascript");
+            assert.equal(session.$mode.$id, "ace/mode/javascript");
+            session.setMode("ace/mode/sh");
+            assert.equal(session.$mode.$id, "ace/mode/sh");
+            session.setMode("ace/mode/css");
+            assert.equal(session.$mode.$id, "ace/mode/sh");
+            // TODO this should not error
+            // session.destroy();
+            setTimeout(function() {
                 next();
             });
         }, 0);
