@@ -592,8 +592,8 @@ function addWordBoundary(needle, options) {
 }
 
 function multiLineBackwardMatch(line, re, endMargin) {
-    var match,
-        from = 0;
+    var match = null;
+    var from = 0;
     while (from <= line.length) {
         re.lastIndex = from;
         var newMatch = re.exec(line);

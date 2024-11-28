@@ -15,6 +15,7 @@ class SearchHighlight {
         this.setRegexp(regExp);
         this.clazz = clazz;
         this.type = type;
+        this.docLen = 0;
     }
 
     setRegexp(regExp) {
@@ -33,14 +34,15 @@ class SearchHighlight {
     update(html, markerLayer, session, config) {
         if (!this.regExp)
             return;
-        var start = config.firstRow, end = config.lastRow;
+        var start = config.firstRow;
+        var end = config.lastRow;
         var renderedMarkerRanges = {};
         var _search = session.$editor.$search;
         var mtSearch = _search.$isMultilineSearch(session.$editor.getLastSearchOptions());
 
         for (var i = start; i <= end; i++) {
             var ranges = this.cache[i];
-            if (ranges == null) {
+            if (ranges == null || session.getValue().length != this.docLen) {
                 if (mtSearch) {
                     ranges = [];
                     var match = _search.$multiLineForward(session, this.regExp, i, end);
@@ -64,6 +66,8 @@ class SearchHighlight {
                 this.cache[i] = ranges.length ? ranges : "";
             }
 
+            if (ranges.length === 0) continue;
+
             for (var j = ranges.length; j --; ) {
                 var rangeToAddMarkerTo = ranges[j].toScreenRange(session);
                 var rangeAsString = rangeToAddMarkerTo.toString();
@@ -74,6 +78,7 @@ class SearchHighlight {
                     html, rangeToAddMarkerTo, this.clazz, config);
             }
         }
+        this.docLen = session.getValue().length;
     }
 }
 

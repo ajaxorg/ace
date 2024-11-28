@@ -684,8 +684,6 @@ module.exports = {
     },
 
     "test: replace with line breaks (\\n) and TAB (\\t) using regular expression" : function() {
-        var session = new EditSession('\nfunction foo(items, nada) {\n    for (var i=0; i<items.length; i++) {\n        alert(items[i] + "juhu\\n");\n    }\t/* Real Tab */\n\n\n\n\n}\n\n\n// test search/replace line break with regexp\r\n\r\n\t\t\t\t\n');
-
         var search = new Search().set({
             needle: "with",
             regExp: true,

@@ -51,6 +51,7 @@ class SearchBox {
         this.element = div.firstChild;
 
         this.setSession = this.setSession.bind(this);
+        this.$onEditorInput = this.onEditorInput.bind(this);
 
         this.$init();
         this.setEditor(editor);
@@ -70,6 +71,11 @@ class SearchBox {
     setSession(e) {
         this.searchRange = null;
         this.$syncOptions(true);
+    }
+
+    // Auto update "updateCounter" and "ace_nomatch"
+    onEditorInput() {
+        this.find(false, false, true);
     }
 
     /**
@@ -283,6 +289,7 @@ class SearchBox {
         this.active = false;
         this.setSearchRange(null);
         this.editor.off("changeSession", this.setSession);
+        this.editor.off("input", this.$onEditorInput);
 
         this.element.style.display = "none";
         this.editor.keyBinding.removeKeyboardHandler(this.$closeSearchBarKb);
@@ -296,6 +303,7 @@ class SearchBox {
     show(value, isReplace) {
         this.active = true;
         this.editor.on("changeSession", this.setSession);
+        this.editor.on("input", this.$onEditorInput);
         this.element.style.display = "";
         this.replaceOption.checked = isReplace;
 

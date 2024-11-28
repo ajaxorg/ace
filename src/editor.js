@@ -617,10 +617,6 @@ class Editor {
 
         // Update cursor because tab characters can influence the cursor position.
         this.$cursorChange();
-
-        // Updates "updateCounter" and "ace_nomatch" in the search box
-        if (this.searchBox && this.searchBox.active === true)
-            this.searchBox.find(false, false, true);
     }
 
     /**
