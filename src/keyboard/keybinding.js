@@ -1,7 +1,7 @@
 "use strict";
 /**
  * @typedef {import("../editor").Editor} Editor
- * @typedef {import("../../ace-internal").Ace.KeyboardHandler} KeyboardHandler
+ * @typedef {import("../../interfaces").KeyboardHandler} KeyboardHandler
  */
 var keyUtil  = require("../lib/keys");
 var event = require("../lib/event");

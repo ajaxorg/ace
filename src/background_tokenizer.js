@@ -133,7 +133,7 @@ class BackgroundTokenizer {
     }
 
     /**
-     * @param {import("../ace-internal").Ace.Delta} delta
+     * @param {import("../interfaces").Delta} delta
      */
     $updateOnChange(delta) {
         var startRow = delta.start.row;
@@ -168,7 +168,7 @@ class BackgroundTokenizer {
     /**
      * Gives list of [[Token]]'s of the row. (tokens are cached)
      * @param {Number} row The row to get tokens at
-     * @returns {import("../ace-internal").Ace.Token[]}
+     * @returns {import("../interfaces").Token[]}
      **/
     getTokens(row) {
         return this.lines[row] || this.$tokenizeRow(row);

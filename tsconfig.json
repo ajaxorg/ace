@@ -2,7 +2,6 @@
   "compilerOptions": {
     "strict": false,
     "noImplicitAny": false,
-    "skipLibCheck": true,
     "module": "commonjs",
     "target": "es2019",
     "allowJs": true,
@@ -19,13 +18,14 @@
     "src/keyboard/sublime.js",
     "src/keyboard/vscode.js",
     "src/mode",
-    "./ace-internal.d.ts",
     "./ace-modes.d.ts",
     "src/**/* *"
   ],
   "include": [
     "./src/**/*",
     "./ace.d.ts",
-    "./types/ace_*.d.ts"
+    "./types/ace_*.d.ts",
+    "interfaces.d.ts",
+    "./ace-internal.d.ts"
   ]
 }

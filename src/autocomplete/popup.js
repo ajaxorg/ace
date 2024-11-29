@@ -192,7 +192,7 @@ class AcePopup {
 
         var bgTokenizer = popup.session.bgTokenizer;
         bgTokenizer.$tokenizeRow = function(row) {
-            /**@type {import("../../ace-internal").Ace.Completion &{name?, className?, matchMask?, message?}}*/
+            /**@type {import("../autocomplete").Completion &{name?, className?, matchMask?, message?}}*/
             var data = popup.data[row];
             var tokens = [];
             if (!data)

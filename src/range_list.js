@@ -1,7 +1,7 @@
 "use strict";
 /**
  * @typedef {import("./edit_session").EditSession} EditSession
- * @typedef {import("../ace-internal").Ace.Point} Point
+ * @typedef {import("../interfaces").Point} Point
  */
 var Range = require("./range").Range;
 var comparePoints = Range.comparePoints;
@@ -187,7 +187,7 @@ class RangeList {
     }
 
     /**
-     * @param {import("../ace-internal").Ace.Delta} delta
+     * @param {import("../interfaces").Delta} delta
      */
     $onChange(delta) {
         var start = delta.start;

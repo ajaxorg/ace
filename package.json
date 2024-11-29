@@ -36,7 +36,8 @@
         "esm-resolver.js",
         "translations",
         "!**/*_test.js",
-        "!**/_test"
+        "!**/_test",
+        "interfaces.d.ts"
     ],
     "scripts": {
         "start": "node static.js",

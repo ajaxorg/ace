@@ -3,8 +3,8 @@
 /**
  * @typedef {import("./virtual_renderer").VirtualRenderer} VirtualRenderer
  * @typedef {import("./selection").Selection} Selection
- * @typedef {import("../ace-internal").Ace.Point} Point
- * @typedef {import("../ace-internal").Ace.SearchOptions} SearchOptions
+ * @typedef {import("../interfaces").Point} Point
+ * @typedef {import("../interfaces").SearchOptions} SearchOptions
  */
 
 var oop = require("./lib/oop");
@@ -43,7 +43,7 @@ class Editor {
      *
      * @param {VirtualRenderer} renderer Associated `VirtualRenderer` that draws everything
      * @param {EditSession} [session] The `EditSession` to refer to
-     * @param {Partial<import("../ace-internal").Ace.EditorOptions>} [options] The default options
+     * @param {Partial<import("../interfaces").EditorOptions>} [options] The default options
      **/
     constructor(renderer, session, options) {
         /**@type{EditSession}*/this.session;
@@ -208,7 +208,7 @@ class Editor {
 
     /**
      * Sets a new key handler, such as "vim" or "windows".
-     * @param {String | import("../ace-internal").Ace.KeyboardHandler | null} keyboardHandler The new key handler
+     * @param {String | import("../interfaces").KeyboardHandler | null} keyboardHandler The new key handler
      * @param {() => void} [cb]
      **/
     setKeyboardHandler(keyboardHandler, cb) {
@@ -423,7 +423,7 @@ class Editor {
 
     /**
      * {:VirtualRenderer.setTheme}
-     * @param {string | import("../ace-internal").Ace.Theme} theme The path to a theme
+     * @param {string | import("../interfaces").Theme} theme The path to a theme
      * @param {() => void} [cb] optional callback called when theme is loaded
      **/
     setTheme(theme, cb) {
@@ -604,7 +604,7 @@ class Editor {
 
     /**
      * Emitted whenever the document is changed.
-     * @param {import("../ace-internal").Ace.Delta} delta Contains a single property, `data`, which has the delta of changes
+     * @param {import("../interfaces").Delta} delta Contains a single property, `data`, which has the delta of changes
      * @internal
      **/
     onDocumentChange(delta) {
@@ -1155,7 +1155,7 @@ class Editor {
 
     /**
      * Returns the current selection style.
-     * @returns {import("../ace-internal").Ace.EditorOptions["selectionStyle"]}
+     * @returns {import("../interfaces").EditorOptions["selectionStyle"]}
      **/
     getSelectionStyle() {
         return this.getOption("selectionStyle");
@@ -2558,7 +2558,7 @@ class Editor {
     }
 
     /**
-     * @param {import("../ace-internal").Ace.IRange} range
+     * @param {import("../interfaces").IRange} range
      * @param {string} [replacement]
      */
     $tryReplace(range, replacement) {

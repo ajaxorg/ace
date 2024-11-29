@@ -60,7 +60,7 @@ class BidiHandler {
     }
 
     /**
-     * @param {import("../ace-internal").Ace.Delta} delta
+     * @param {import("../interfaces").Delta} delta
      * @internal
      */
     onChange(delta) {

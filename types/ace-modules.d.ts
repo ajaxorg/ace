@@ -14,13 +14,962 @@ declare module "ace-code/src/layer/font_metrics" {
         transformCoordinates(clientPos: any, elPos: any): any[];
     }
     namespace Ace {
-        type EventEmitter<T> = import("ace-code").Ace.EventEmitter<T>;
+        type EventEmitter<T extends {
+            [K in keyof T]: (...args: any[]) => any;
+        }> = import("ace-code").Ace.EventEmitter<T>;
     }
     export interface FontMetrics extends Ace.EventEmitter<any> {
     }
 }
+declare module "ace-code/src/config" {
+    const _exports: {
+        defineOptions(obj: any, path: string, options: {
+            [key: string]: any;
+        }): AppConfig;
+        resetOptions(obj: any): void;
+        setDefaultValue(path: string, name: string, value: any): boolean;
+        setDefaultValues(path: string, optionHash: {
+            [key: string]: any;
+        }): void;
+        setMessages(value: any, options?: {
+            placeholders?: "dollarSigns" | "curlyBrackets";
+        }): void;
+        nls(key: string, defaultString: string, params?: {
+            [x: string]: any;
+        }): any;
+        warn: (message: any, ...args: any[]) => void;
+        reportError: (msg: any, data: any) => void;
+        once<K extends string | number | symbol>(name: K, callback: any): void;
+        setDefaultHandler(name: string, callback: Function): void;
+        removeDefaultHandler(name: string, callback: Function): void;
+        on<K extends string | number | symbol>(name: K, callback: any, capturing?: boolean): any;
+        addEventListener<K extends string | number | symbol>(name: K, callback: any, capturing?: boolean): any;
+        off<K extends string | number | symbol>(name: K, callback: any): void;
+        removeListener<K extends string | number | symbol>(name: K, callback: any): void;
+        removeEventListener<K extends string | number | symbol>(name: K, callback: any): void;
+        removeAllListeners(name?: string): void;
+        /**
+         * @param {K} key - The key of the config option to retrieve.
+         * @returns {import('../interfaces').ConfigOptions[K]} - The value of the config option.
+         */
+        get: <K extends keyof import('../interfaces').ConfigOptions>(key: K) => import('../interfaces').ConfigOptions[K];
+        set: <K extends keyof import('../interfaces').ConfigOptions>(key: K, value: import('../interfaces').ConfigOptions[K]) => void;
+        all: () => import('../interfaces').ConfigOptions;
+        /**
+         * module loading
+         */
+        moduleUrl: (name: string, component?: string) => string;
+        setModuleUrl: (name: string, subst: string) => string;
+        /** @arg {(name: string, callback: (error: any, module: any) => void) => void} cb */
+        setLoader: (cb: (name: string, callback: (error: any, module: any) => void) => void) => void;
+        dynamicModules: any;
+        loadModule: (moduleId: string | [
+            string,
+            string
+        ], onLoad: (module: any) => void) => void;
+        setModuleLoader: (moduleName: any, onLoad: any) => void;
+        version: "1.36.5";
+    };
+    export = _exports;
+    import { AppConfig } from "ace-code/src/lib/app_config";
+}
+declare module "ace-code/src/layer/lines" {
+    export type EditSession = import("ace-code/src/edit_session").EditSession;
+    export type LayerConfig = import('../interfaces').LayerConfig;
+    export class Lines {
+        constructor(element: HTMLElement, canvasHeight?: number);
+        element: HTMLElement;
+        canvasHeight: number;
+        cells: any[];
+        cellCache: any[];
+        moveContainer(config: LayerConfig): void;
+        pageChanged(oldConfig: LayerConfig, newConfig: LayerConfig): boolean;
+        computeLineTop(row: number, config: Partial<LayerConfig>, session: EditSession): number;
+        computeLineHeight(row: number, config: LayerConfig, session: EditSession): number;
+        getLength(): number;
+        get(index: number): any;
+        shift(): void;
+        pop(): void;
+        push(cell: any): void;
+        unshift(cell: any): void;
+        last(): any;
+        createCell(row: any, config: any, session: any, initElement: any): any;
+    }
+}
+declare module "ace-code/src/layer/gutter" {
+    export class Gutter {
+        constructor(parentEl: HTMLElement);
+        element: HTMLDivElement;
+        gutterWidth: number;
+        setSession(session: EditSession): void;
+        session: import("ace-code/src/edit_session").EditSession;
+        addGutterDecoration(row: number, className: string): void;
+        removeGutterDecoration(row: number, className: string): void;
+        setAnnotations(annotations: any[]): void;
+        update(config: LayerConfig): void;
+        config: import('../interfaces').LayerConfig;
+        oldLastRow: number;
+        updateLineHighlight(): void;
+        scrollLines(config: LayerConfig): void;
+        setHighlightGutterLine(highlightGutterLine: boolean): void;
+        setShowLineNumbers(show: boolean): void;
+        getShowLineNumbers(): boolean;
+        setShowFoldWidgets(show?: boolean): void;
+        getShowFoldWidgets(): boolean;
+        getRegion(point: {
+            x: number;
+        }): "markers" | "foldWidgets";
+    }
+    export type EditSession = import("ace-code/src/edit_session").EditSession;
+    export type LayerConfig = import('../interfaces').LayerConfig;
+    import { Lines } from "ace-code/src/layer/lines";
+    namespace Ace {
+        type EventEmitter<T extends {
+            [K in keyof T]: (...args: any[]) => any;
+        }> = import("ace-code").Ace.EventEmitter<T>;
+        type GutterEvents = import("ace-code").Ace.GutterEvents;
+    }
+    export interface Gutter extends Ace.EventEmitter<Ace.GutterEvents> {
+    }
+}
+declare module "ace-code/src/layer/marker" {
+    export type EditSession = import("ace-code/src/edit_session").EditSession;
+    export type LayerConfig = import('../interfaces').LayerConfig;
+    export class Marker {
+        constructor(parentEl: HTMLElement);
+        element: HTMLDivElement;
+        setPadding(padding: number): void;
+        setSession(session: EditSession): void;
+        session: import("ace-code/src/edit_session").EditSession;
+        setMarkers(markers: {
+            [x: number]: import('../interfaces').MarkerLike;
+        }): void;
+        markers: {
+            [x: number]: import('../interfaces').MarkerLike;
+        };
+        elt(className: string, css: string): void;
+        i: number;
+        update(config: LayerConfig): void;
+        config: import('../interfaces').LayerConfig;
+        drawTextMarker(stringBuilder: undefined, range: Range, clazz: string, layerConfig: Partial<LayerConfig>, extraStyle?: string): void;
+        drawMultiLineMarker(stringBuilder: undefined, range: Range, clazz: string, config: LayerConfig, extraStyle?: string): void;
+        drawSingleLineMarker(stringBuilder: undefined, range: Range, clazz: string, config: Partial<LayerConfig>, extraLength?: number, extraStyle?: string): void;
+        drawBidiSingleLineMarker(stringBuilder: undefined, range: Range, clazz: string, config: Partial<LayerConfig>, extraLength: number, extraStyle: string): void;
+        drawFullLineMarker(stringBuilder: undefined, range: Range, clazz: string, config: Partial<LayerConfig>, extraStyle?: undefined): void;
+        drawScreenLineMarker(stringBuilder: undefined, range: Range, clazz: string, config: Partial<LayerConfig>, extraStyle?: undefined): void;
+    }
+    import { Range } from "ace-code/src/range";
+}
+declare module "ace-code/src/layer/text_util" {
+    export function isTextToken(tokenType: any): boolean;
+}
+declare module "ace-code/src/layer/text" {
+    export class Text {
+        constructor(parentEl: HTMLElement);
+        dom: typeof dom;
+        element: HTMLDivElement;
+        EOL_CHAR: any;
+        setPadding(padding: number): void;
+        getLineHeight(): number;
+        getCharacterWidth(): number;
+        checkForSizeChanges(): void;
+        setSession(session: EditSession): void;
+        session: EditSession;
+        setShowInvisibles(showInvisibles: string): boolean;
+        showInvisibles: any;
+        showSpaces: boolean;
+        showTabs: boolean;
+        showEOL: boolean;
+        setDisplayIndentGuides(display: boolean): boolean;
+        displayIndentGuides: any;
+        setHighlightIndentGuides(highlight: boolean): boolean;
+        tabSize: number;
+        updateLines(config: LayerConfig, firstRow: number, lastRow: number): void;
+        config: import('../interfaces').LayerConfig;
+        scrollLines(config: LayerConfig): void;
+        update(config: LayerConfig): void;
+        renderIndentGuide(parent: any, value: any, max: any): any;
+        EOF_CHAR: string;
+        EOL_CHAR_LF: string;
+        EOL_CHAR_CRLF: string;
+        TAB_CHAR: string;
+        SPACE_CHAR: string;
+        MAX_LINE_LENGTH: number;
+        destroy: {};
+        onChangeTabSize: () => void;
+    }
+    export type LayerConfig = import('../interfaces').LayerConfig;
+    export type EditSession = import("ace-code/src/edit_session").EditSession;
+    import dom = require("ace-code/src/lib/dom");
+    import { Lines } from "ace-code/src/layer/lines";
+    namespace Ace {
+        type EventEmitter<T extends {
+            [K in keyof T]: (...args: any[]) => any;
+        }> = import("ace-code").Ace.EventEmitter<T>;
+        type TextEvents = import("ace-code").Ace.TextEvents;
+    }
+    export interface Text extends Ace.EventEmitter<Ace.TextEvents> {
+    }
+}
+declare module "ace-code/src/layer/cursor" {
+    export class Cursor {
+        constructor(parentEl: HTMLElement);
+        element: HTMLDivElement;
+        isVisible: boolean;
+        isBlinking: boolean;
+        blinkInterval: number;
+        smoothBlinking: boolean;
+        cursors: any[];
+        cursor: HTMLDivElement;
+        setPadding(padding: number): void;
+        setSession(session: EditSession): void;
+        session: import("ace-code/src/edit_session").EditSession;
+        setBlinking(blinking: boolean): void;
+        setBlinkInterval(blinkInterval: number): void;
+        setSmoothBlinking(smoothBlinking: boolean): void;
+        addCursor(): HTMLDivElement;
+        removeCursor(): any;
+        hideCursor(): void;
+        showCursor(): void;
+        restartTimer(): void;
+        intervalId: number;
+        getPixelPosition(position?: import('../interfaces').Point, onScreen?: boolean): {
+            left: number;
+            top: number;
+        };
+        isCursorInView(pixelPos: any, config: any): boolean;
+        update(config: any): void;
+        config: any;
+        overwrite: any;
+        destroy(): void;
+        drawCursor: any;
+        timeoutId?: number;
+    }
+    export type EditSession = import("ace-code/src/edit_session").EditSession;
+    export interface Cursor {
+        timeoutId?: number;
+    }
+}
+declare module "ace-code/src/scrollbar" {
+    const VScrollBar_base: typeof Scrollbar;
+    /**
+     * Represents a vertical scroll bar.
+     **/
+    export class VScrollBar extends Scrollbar {
+        /**
+         * Creates a new `VScrollBar`. `parent` is the owner of the scroll bar.
+         * @param {Element} parent A DOM element
+         * @param {Object} renderer An editor renderer
+         **/
+        constructor(parent: Element, renderer: any);
+        scrollTop: number;
+        scrollHeight: number;
+        width: number;
+        /**
+         * Returns the width of the scroll bar.
+         **/
+        getWidth(): number;
+        /**
+         * Sets the height of the scroll bar, in pixels.
+         * @param {Number} height The new height
+         **/
+        setHeight(height: number): void;
+        /**
+         * Sets the scroll height of the scroll bar, in pixels.
+         * @param {Number} height The new scroll height
+         **/
+        setScrollHeight(height: number): void;
+        /**
+         * Sets the scroll top of the scroll bar.
+         * @param {Number} scrollTop The new scroll top
+         **/
+        setScrollTop(scrollTop: number): void;
+        /**
+         * Sets the inner height of the scroll bar, in pixels.
+         * @param {Number} height The new inner height
+         * @deprecated Use setScrollHeight instead
+         **/
+        setInnerHeight: (height: number) => void;
+    }
+    const HScrollBar_base: typeof Scrollbar;
+    /**
+     * Represents a horisontal scroll bar.
+     **/
+    export class HScrollBar extends Scrollbar {
+        /**
+         * Creates a new `HScrollBar`. `parent` is the owner of the scroll bar.
+         * @param {Element} parent A DOM element
+         * @param {Object} renderer An editor renderer
+         **/
+        constructor(parent: Element, renderer: any);
+        scrollLeft: number;
+        height: any;
+        /**
+         * Returns the height of the scroll bar.
+         **/
+        getHeight(): number;
+        /**
+         * Sets the width of the scroll bar, in pixels.
+         * @param {Number} width The new width
+         **/
+        setWidth(width: number): void;
+        /**
+         * Sets the inner width of the scroll bar, in pixels.
+         * @param {Number} width The new inner width
+         * @deprecated Use setScrollWidth instead
+         **/
+        setInnerWidth(width: number): void;
+        /**
+         * Sets the scroll width of the scroll bar, in pixels.
+         * @param {Number} width The new scroll width
+         **/
+        setScrollWidth(width: number): void;
+        /**
+         * Sets the scroll left of the scroll bar.
+         * @param {Number} scrollLeft The new scroll left
+         **/
+        setScrollLeft(scrollLeft: number): void;
+    }
+    /**
+     * An abstract class representing a native scrollbar control.
+     **/
+    class Scrollbar {
+        /**
+         * Creates a new `ScrollBar`. `parent` is the owner of the scroll bar.
+         * @param {Element} parent A DOM element
+         **/
+        constructor(parent: Element, classSuffix: string);
+        element: HTMLDivElement;
+        inner: HTMLDivElement;
+        skipEvent: boolean;
+        setVisible(isVisible: any): void;
+        isVisible: any;
+        coeff: number;
+    }
+    export { VScrollBar as ScrollBar, VScrollBar as ScrollBarV, HScrollBar as ScrollBarH };
+    namespace Ace {
+        type EventEmitter<T extends {
+            [K in keyof T]: (...args: any[]) => any;
+        }> = import("ace-code").Ace.EventEmitter<T>;
+    }
+    export interface VScrollBar extends Ace.EventEmitter<any> {
+    }
+    export interface HScrollBar extends Ace.EventEmitter<any> {
+    }
+}
+declare module "ace-code/src/scrollbar_custom" {
+    const VScrollBar_base: typeof ScrollBar;
+    /**
+     * Represents a vertical scroll bar.
+     * @class VScrollBar
+     **/
+    /**
+     * Creates a new `VScrollBar`. `parent` is the owner of the scroll bar.
+     * @param {Element} parent A DOM element
+     * @param {Object} renderer An editor renderer
+     *
+     * @constructor
+     **/
+    export class VScrollBar extends ScrollBar {
+        constructor(parent: any, renderer: any);
+        scrollTop: number;
+        scrollHeight: number;
+        parent: any;
+        width: number;
+        renderer: any;
+        getHeight(): number;
+        /**
+         * Returns new top for scroll thumb
+         **/
+        scrollTopFromThumbTop(thumbTop: number): number;
+        /**
+         * Returns the width of the scroll bar.
+         **/
+        getWidth(): number;
+        /**
+         * Sets the height of the scroll bar, in pixels.
+         * @param {Number} height The new height
+         **/
+        setHeight(height: number): void;
+        height: number;
+        slideHeight: number;
+        viewHeight: number;
+        /**
+         * Sets the inner and scroll height of the scroll bar, in pixels.
+         * @param {Number} height The new inner height
+         *
+         * @param {boolean} force Forcely update height
+         **/
+        setScrollHeight(height: number, force: boolean): void;
+        pageHeight: any;
+        thumbHeight: number;
+        /**
+         * Sets the scroll top of the scroll bar.
+         * @param {Number} scrollTop The new scroll top
+         **/
+        setScrollTop(scrollTop: number): void;
+        thumbTop: number;
+        setInnerHeight: (height: number, force: boolean) => void;
+    }
+    const HScrollBar_base: typeof ScrollBar;
+    /**
+     * Represents a horizontal scroll bar.
+     **/
+    export class HScrollBar extends ScrollBar {
+        /**
+         * Creates a new `HScrollBar`. `parent` is the owner of the scroll bar.
+         * @param {Element} parent A DOM element
+         * @param {Object} renderer An editor renderer
+         **/
+        constructor(parent: Element, renderer: any);
+        scrollLeft: number;
+        scrollWidth: number;
+        height: number;
+        renderer: any;
+        /**
+         * Returns the height of the scroll bar.
+         **/
+        getHeight(): number;
+        /**
+         * Returns new left for scroll thumb
+         **/
+        scrollLeftFromThumbLeft(thumbLeft: number): number;
+        /**
+         * Sets the width of the scroll bar, in pixels.
+         * @param {Number} width The new width
+         **/
+        setWidth(width: number): void;
+        width: number;
+        slideWidth: number;
+        viewWidth: number;
+        /**
+         * Sets the inner and scroll width of the scroll bar, in pixels.
+         * @param {Number} width The new inner width
+         * @param {boolean} force Forcely update width
+         **/
+        setScrollWidth(width: number, force: boolean): void;
+        pageWidth: any;
+        thumbWidth: number;
+        /**
+         * Sets the scroll left of the scroll bar.
+         * @param {Number} scrollLeft The new scroll left
+         **/
+        setScrollLeft(scrollLeft: number): void;
+        thumbLeft: number;
+        setInnerWidth: (width: number, force: boolean) => void;
+    }
+    /**
+     * An abstract class representing a native scrollbar control.
+     **/
+    class ScrollBar {
+        /**
+         * Creates a new `ScrollBar`. `parent` is the owner of the scroll bar.
+         * @param {Element} parent A DOM element
+         **/
+        constructor(parent: Element, classSuffix: string);
+        element: HTMLDivElement;
+        inner: HTMLDivElement;
+        VScrollWidth: number;
+        HScrollHeight: number;
+        skipEvent: boolean;
+        setVisible(isVisible: any): void;
+        isVisible: any;
+        coeff: number;
+    }
+    export { VScrollBar as ScrollBar, VScrollBar as ScrollBarV, HScrollBar as ScrollBarH };
+    namespace Ace {
+        type EventEmitter<T extends {
+            [K in keyof T]: (...args: any[]) => any;
+        }> = import("ace-code").Ace.EventEmitter<T>;
+    }
+    export interface VScrollBar extends Ace.EventEmitter<any> {
+    }
+    export interface HScrollBar extends Ace.EventEmitter<any> {
+    }
+}
+declare module "ace-code/src/renderloop" {
+    /**
+     * Batches changes (that force something to be redrawn) in the background.
+     **/
+    export class RenderLoop {
+        constructor(onRender: any, win: any);
+        onRender: any;
+        pending: boolean;
+        changes: number;
+        window: any;
+        schedule(change: any): void;
+        clear(change: any): number;
+    }
+}
+declare module "ace-code/src/css/editor-css" {
+    const _exports: string;
+    export = _exports;
+}
+declare module "ace-code/src/layer/decorators" {
+    export class Decorator {
+        constructor(parent: any, renderer: any);
+        canvas: HTMLCanvasElement;
+        renderer: any;
+        pixelRatio: number;
+        maxHeight: any;
+        lineHeight: any;
+        canvasHeight: any;
+        heightRatio: number;
+        canvasWidth: any;
+        minDecorationHeight: number;
+        halfMinDecorationHeight: number;
+        colors: {};
+        compensateFoldRows(row: any, foldData: any): number;
+    }
+}
+declare module "ace-code/src/virtual_renderer" {
+    /**
+     * The class that is responsible for drawing everything you see on the screen!
+     * @related editor.renderer
+     **/
+    export class VirtualRenderer {
+        /**
+         * Constructs a new `VirtualRenderer` within the `container` specified, applying the given `theme`.
+         * @param {HTMLElement | null} [container] The root element of the editor
+         * @param {String} [theme] The starting theme
+         **/
+        constructor(container?: HTMLElement | null, theme?: string);
+        container: HTMLElement;
+        scroller: HTMLElement;
+        content: HTMLElement;
+        canvas: HTMLDivElement;
+        scrollBar: VScrollBar;
+        scrollBarV: import('../interfaces').VScrollbar;
+        scrollBarH: import('../interfaces').HScrollbar;
+        scrollTop: number;
+        scrollLeft: number;
+        cursorPos: {
+            row: number;
+            column: number;
+        };
+        layerConfig: {
+            width: number;
+            padding: number;
+            firstRow: number;
+            firstRowScreen: number;
+            lastRow: number;
+            lineHeight: number;
+            characterWidth: number;
+            minHeight: number;
+            maxHeight: number;
+            offset: number;
+            height: number;
+            gutterOffset: number;
+        };
+        scrollMargin: {
+            left: number;
+            right: number;
+            top: number;
+            bottom: number;
+            v: number;
+            h: number;
+        };
+        margin: {
+            left: number;
+            right: number;
+            top: number;
+            bottom: number;
+            v: number;
+            h: number;
+        };
+        updateCharacterSize(): void;
+        characterWidth: number;
+        lineHeight: number;
+        /**
+         *
+         * Associates the renderer with an [[EditSession `EditSession`]].
+         * @param {EditSession} session The session to associate with
+         **/
+        setSession(session: EditSession): void;
+        session: import("ace-code").Ace.EditSession;
+        /**
+         * Triggers a partial update of the text, from the range given by the two parameters.
+         * @param {Number} firstRow The first row to update
+         * @param {Number} lastRow The last row to update
+         **/
+        updateLines(firstRow: number, lastRow: number, force?: boolean): void;
+        /**
+         * Triggers a full update of the text, for all the rows.
+         **/
+        updateText(): void;
+        /**
+         * Triggers a full update of all the layers, for all the rows.
+         * @param {Boolean} [force] If `true`, forces the changes through
+         **/
+        updateFull(force?: boolean): void;
+        /**
+         * Updates the font size.
+         **/
+        updateFontSize(): void;
+        resizing: number;
+        gutterWidth: any;
+        /**
+         * Adjusts the wrap limit, which is the number of characters that can fit within the width of the edit area on screen.
+         **/
+        adjustWrapLimit(): boolean;
+        /**
+         * Identifies whether you want to have an animated scroll or not.
+         * @param {Boolean} shouldAnimate Set to `true` to show animated scrolls
+         **/
+        setAnimatedScroll(shouldAnimate: boolean): void;
+        /**
+         * Returns whether an animated scroll happens or not.
+         **/
+        getAnimatedScroll(): boolean;
+        /**
+         * Identifies whether you want to show invisible characters or not.
+         * @param {Boolean} showInvisibles Set to `true` to show invisibles
+         **/
+        setShowInvisibles(showInvisibles: boolean): void;
+        /**
+         * Returns whether invisible characters are being shown or not.
+         **/
+        getShowInvisibles(): boolean;
+        getDisplayIndentGuides(): boolean;
+        setDisplayIndentGuides(display: boolean): void;
+        getHighlightIndentGuides(): boolean;
+        setHighlightIndentGuides(highlight: boolean): void;
+        /**
+         * Identifies whether you want to show the print margin or not.
+         * @param {Boolean} showPrintMargin Set to `true` to show the print margin
+         **/
+        setShowPrintMargin(showPrintMargin: boolean): void;
+        /**
+         * Returns whether the print margin is being shown or not.
+         **/
+        getShowPrintMargin(): boolean;
+        /**
+         * Identifies whether you want to show the print margin column or not.
+         * @param {number} printMarginColumn Set to `true` to show the print margin column
+         **/
+        setPrintMarginColumn(printMarginColumn: number): void;
+        /**
+         * Returns whether the print margin column is being shown or not.
+         **/
+        getPrintMarginColumn(): number;
+        /**
+         * Returns `true` if the gutter is being shown.
+         **/
+        getShowGutter(): boolean;
+        /**
+         * Identifies whether you want to show the gutter or not.
+         * @param {Boolean} show Set to `true` to show the gutter
+         **/
+        setShowGutter(show: boolean): void;
+        getFadeFoldWidgets(): boolean;
+        setFadeFoldWidgets(show: boolean): void;
+        setHighlightGutterLine(shouldHighlight: boolean): void;
+        getHighlightGutterLine(): boolean;
+        /**
+         *
+         * Returns the root element containing this renderer.
+         **/
+        getContainerElement(): HTMLElement;
+        /**
+         *
+         * Returns the element that the mouse events are attached to
+         **/
+        getMouseEventTarget(): HTMLElement;
+        /**
+         *
+         * Returns the element to which the hidden text area is added.
+         **/
+        getTextAreaContainer(): HTMLElement;
+        /**
+         * [Returns the index of the first visible row.]{: #VirtualRenderer.getFirstVisibleRow}
+         **/
+        getFirstVisibleRow(): number;
+        /**
+         *
+         * Returns the index of the first fully visible row. "Fully" here means that the characters in the row are not truncated; that the top and the bottom of the row are on the screen.
+         **/
+        getFirstFullyVisibleRow(): number;
+        /**
+         *
+         * Returns the index of the last fully visible row. "Fully" here means that the characters in the row are not truncated; that the top and the bottom of the row are on the screen.
+         **/
+        getLastFullyVisibleRow(): number;
+        /**
+         *
+         * [Returns the index of the last visible row.]{: #VirtualRenderer.getLastVisibleRow}
+         **/
+        getLastVisibleRow(): number;
+        /**
+         * Sets the padding for all the layers.
+         * @param {Number} padding A new padding value (in pixels)
+         **/
+        setPadding(padding: number): void;
+        setScrollMargin(top?: number, bottom?: number, left?: number, right?: number): void;
+        setMargin(top?: number, bottom?: number, left?: number, right?: number): void;
+        /**
+         * Returns whether the horizontal scrollbar is set to be always visible.
+         **/
+        getHScrollBarAlwaysVisible(): boolean;
+        /**
+         * Identifies whether you want to show the horizontal scrollbar or not.
+         * @param {Boolean} alwaysVisible Set to `true` to make the horizontal scroll bar visible
+         **/
+        setHScrollBarAlwaysVisible(alwaysVisible: boolean): void;
+        /**
+         * Returns whether the horizontal scrollbar is set to be always visible.
+         **/
+        getVScrollBarAlwaysVisible(): boolean;
+        /**
+         * Identifies whether you want to show the horizontal scrollbar or not.
+         * @param {Boolean} alwaysVisible Set to `true` to make the horizontal scroll bar visible
+         **/
+        setVScrollBarAlwaysVisible(alwaysVisible: boolean): void;
+        freeze(): void;
+        unfreeze(): void;
+        desiredHeight: any;
+        /**
+         * Schedules an update to all the front markers in the document.
+         **/
+        updateFrontMarkers(): void;
+        /**
+         *
+         * Schedules an update to all the back markers in the document.
+         **/
+        updateBackMarkers(): void;
+        /**
+         *
+         * Deprecated; (moved to [[EditSession]])
+         * @deprecated
+         **/
+        addGutterDecoration(row: any, className: any): void;
+        /**
+         * Deprecated; (moved to [[EditSession]])
+         * @deprecated
+         **/
+        removeGutterDecoration(row: any, className: any): void;
+        /**
+         *
+         * Redraw breakpoints.
+         */
+        updateBreakpoints(rows?: any): void;
+        /**
+         * Sets annotations for the gutter.
+         * @param {import('../interfaces').Annotation[]} annotations An array containing annotations
+         *
+         **/
+        setAnnotations(annotations: import('../interfaces').Annotation[]): void;
+        /**
+         *
+         * Updates the cursor icon.
+         **/
+        updateCursor(): void;
+        /**
+         *
+         * Hides the cursor icon.
+         **/
+        hideCursor(): void;
+        /**
+         *
+         * Shows the cursor icon.
+         **/
+        showCursor(): void;
+        scrollSelectionIntoView(anchor: Point, lead: Point, offset?: number): void;
+        /**
+         *
+         * Scrolls the cursor into the first visibile area of the editor
+         */
+        scrollCursorIntoView(cursor?: Point, offset?: number, $viewMargin?: {
+            top?: any;
+            bottom?: any;
+        }): void;
+        /**
+         * {:EditSession.getScrollTop}
+         * @related EditSession.getScrollTop
+         **/
+        getScrollTop(): number;
+        /**
+         * {:EditSession.getScrollLeft}
+         * @related EditSession.getScrollLeft
+         **/
+        getScrollLeft(): number;
+        /**
+         * Returns the first visible row, regardless of whether it's fully visible or not.
+         **/
+        getScrollTopRow(): number;
+        /**
+         * Returns the last visible row, regardless of whether it's fully visible or not.
+         **/
+        getScrollBottomRow(): number;
+        /**
+         * Gracefully scrolls from the top of the editor to the row indicated.
+         * @param {Number} row A row id
+         *
+         * @related EditSession.setScrollTop
+         **/
+        scrollToRow(row: number): void;
+        alignCursor(cursor: Point, alignment?: number): number;
+        /**
+         * Gracefully scrolls the editor to the row indicated.
+         * @param {Number} line A line number
+         * @param {Boolean} center If `true`, centers the editor the to indicated line
+         * @param {Boolean} animate If `true` animates scrolling
+         * @param {() => void} [callback] Function to be called after the animation has finished
+         **/
+        scrollToLine(line: number, center: boolean, animate: boolean, callback?: () => void): void;
+        animateScrolling(fromValue: any, callback?: any): void;
+        /**
+         * Scrolls the editor to the y pixel indicated.
+         * @param {Number} scrollTop The position to scroll to
+         **/
+        scrollToY(scrollTop: number): void;
+        /**
+         * Scrolls the editor across the x-axis to the pixel indicated.
+         * @param {Number} scrollLeft The position to scroll to
+         **/
+        scrollToX(scrollLeft: number): void;
+        /**
+         * Scrolls the editor across both x- and y-axes.
+         * @param {Number} x The x value to scroll to
+         * @param {Number} y The y value to scroll to
+         **/
+        scrollTo(x: number, y: number): void;
+        /**
+         * Scrolls the editor across both x- and y-axes.
+         * @param {Number} deltaX The x value to scroll by
+         * @param {Number} deltaY The y value to scroll by
+         **/
+        scrollBy(deltaX: number, deltaY: number): void;
+        /**
+         * Returns `true` if you can still scroll by either parameter; in other words, you haven't reached the end of the file or line.
+         * @param {Number} deltaX The x value to scroll by
+         * @param {Number} deltaY The y value to scroll by
+         *
+         **/
+        isScrollableBy(deltaX: number, deltaY: number): boolean;
+        pixelToScreenCoordinates(x: number, y: number): import('../interfaces').ScreenCoordinates;
+        screenToTextCoordinates(x: number, y: number): Point;
+        /**
+         * Returns an object containing the `pageX` and `pageY` coordinates of the document position.
+         * @param {Number} row The document row position
+         * @param {Number} column The document column position
+         *
+         **/
+        textToScreenCoordinates(row: number, column: number): {
+            pageX: number;
+            pageY: number;
+        };
+        /**
+         *
+         * Focuses the current container.
+         **/
+        visualizeFocus(): void;
+        /**
+         *
+         * Blurs the current container.
+         **/
+        visualizeBlur(): void;
+        showComposition(composition: any): void;
+        /**
+         * @param {String} text A string of text to use
+         *
+         * Sets the inner text of the current composition to `text`.
+         **/
+        setCompositionText(text: string): void;
+        /**
+         *
+         * Hides the current composition.
+         **/
+        hideComposition(): void;
+        setGhostText(text: string, position?: Point): void;
+        removeGhostText(): void;
+        addToken(text: string, type: string, row: number, column?: number): void;
+        hideTokensAfterPosition(row: any, column: any): {
+            type: string;
+            value: string;
+        }[];
+        removeExtraToken(row: any, column: any): void;
+        /**
+         * [Sets a new theme for the editor. `theme` should exist, and be a directory path, like `ace/theme/textmate`.]{: #VirtualRenderer.setTheme}
+         * @param {String | Theme} [theme] The path to a theme
+         * @param {() => void} [cb] optional callback
+         **/
+        setTheme(theme?: string | Theme, cb?: () => void): void;
+        /**
+         * [Returns the path of the current theme.]{: #VirtualRenderer.getTheme}
+         **/
+        getTheme(): string;
+        /**
+         * [Adds a new class, `style`, to the editor.]{: #VirtualRenderer.setStyle}
+         * @param {String} style A class name
+         **/
+        setStyle(style: string, include?: boolean): void;
+        /**
+         * [Removes the class `style` from the editor.]{: #VirtualRenderer.unsetStyle}
+         * @param {String} style A class name
+         *
+         **/
+        unsetStyle(style: string): void;
+        setCursorStyle(style: string): void;
+        /**
+         * @param {String} cursorStyle A css cursor style
+         **/
+        setMouseCursor(cursorStyle: string): void;
+        attachToShadowRoot(): void;
+        /**
+         * Destroys the text and cursor layers for this renderer.
+         **/
+        destroy(): void;
+        CHANGE_CURSOR: number;
+        CHANGE_MARKER: number;
+        CHANGE_GUTTER: number;
+        CHANGE_SCROLL: number;
+        CHANGE_LINES: number;
+        CHANGE_TEXT: number;
+        CHANGE_SIZE: number;
+        CHANGE_MARKER_BACK: number;
+        CHANGE_MARKER_FRONT: number;
+        CHANGE_FULL: number;
+        CHANGE_H_SCROLL: number;
+        STEPS: number;
+        textarea?: HTMLTextAreaElement;
+        enableKeyboardAccessibility?: boolean;
+        showInvisibles?: boolean;
+        theme?: any;
+        destroyed?: boolean;
+        keyboardFocusClassName?: string;
+    }
+    export type EditSession = import("ace-code/src/edit_session").EditSession;
+    export type Point = import('../interfaces').Point;
+    export type Theme = import('../interfaces').Theme;
+    import { Gutter as GutterLayer } from "ace-code/src/layer/gutter";
+    import { Marker as MarkerLayer } from "ace-code/src/layer/marker";
+    import { Text as TextLayer } from "ace-code/src/layer/text";
+    import { Cursor as CursorLayer } from "ace-code/src/layer/cursor";
+    import { VScrollBar } from "ace-code/src/scrollbar";
+    import { FontMetrics } from "ace-code/src/layer/font_metrics";
+    import { RenderLoop } from "ace-code/src/renderloop";
+    import { Decorator } from "ace-code/src/layer/decorators";
+    namespace Ace {
+        type EventEmitter<T extends {
+            [K in keyof T]: (...args: any[]) => any;
+        }> = import("ace-code").Ace.EventEmitter<T>;
+        type VirtualRendererEvents = import("ace-code").Ace.VirtualRendererEvents;
+        type OptionsProvider<T> = import("ace-code").Ace.OptionsProvider<T>;
+        type VirtualRendererOptions = import("ace-code").Ace.VirtualRendererOptions;
+        type EditSession = import("ace-code").Ace.EditSession;
+    }
+    export interface VirtualRenderer extends Ace.EventEmitter<Ace.VirtualRendererEvents>, Ace.OptionsProvider<Ace.VirtualRendererOptions> {
+        textarea?: HTMLTextAreaElement;
+        enableKeyboardAccessibility?: boolean;
+        showInvisibles?: boolean;
+        theme?: any;
+        destroyed?: boolean;
+        session: Ace.EditSession;
+        keyboardFocusClassName?: string;
+    }
+}
 declare module "ace-code/src/apply_delta" {
-    export function applyDelta(docLines: string[], delta: import("ace-code").Ace.Delta, doNotValidate?: any): void;
+    export function applyDelta(docLines: string[], delta: import('../interfaces').Delta, doNotValidate?: any): void;
 }
 declare module "ace-code/src/document" {
     /**
@@ -249,14 +1198,16 @@ declare module "ace-code/src/document" {
          */
         positionToIndex(pos: Point, startRow?: number): number;
     }
-    export type Delta = import("ace-code").Ace.Delta;
-    export type Point = import("ace-code").Ace.Point;
-    export type IRange = import("ace-code").Ace.IRange;
-    export type NewLineMode = import("ace-code").Ace.NewLineMode;
+    export type Delta = import('../interfaces').Delta;
+    export type Point = import('../interfaces').Point;
+    export type IRange = import('../interfaces').IRange;
+    export type NewLineMode = import('../interfaces').NewLineMode;
     import { Anchor } from "ace-code/src/anchor";
     import { Range } from "ace-code/src/range";
     namespace Ace {
-        type EventEmitter<T> = import("ace-code").Ace.EventEmitter<T>;
+        type EventEmitter<T extends {
+            [K in keyof T]: (...args: any[]) => any;
+        }> = import("ace-code").Ace.EventEmitter<T>;
         type DocumentEvents = import("ace-code").Ace.DocumentEvents;
     }
     export interface Document extends Ace.EventEmitter<Ace.DocumentEvents> {
@@ -270,15 +1221,15 @@ declare module "ace-code/src/anchor" {
         /**
          * Creates a new `Anchor` and associates it with a document.
          *
-         * @param {Document} doc The document to associate with the anchor
-         * @param {Number|import("ace-code").Ace.Point} row The starting row position
+         * @param {import("ace-code/src/document").Document} doc The document to associate with the anchor
+         * @param {Number|import('../interfaces').Point} row The starting row position
          * @param {Number} [column] The starting column position
          **/
-        constructor(doc: Document, row: number | import("ace-code").Ace.Point, column?: number);
+        constructor(doc: import("ace-code/src/document").Document, row: number | import('../interfaces').Point, column?: number);
         /**
          * Returns an object identifying the `row` and `column` position of the current anchor.
          **/
-        getPosition(): import("ace-code").Ace.Point;
+        getPosition(): import('../interfaces').Point;
         /**
          *
          * Returns the current document.
@@ -309,951 +1260,15 @@ declare module "ace-code/src/anchor" {
     }
     export type Document = import("ace-code/src/document").Document;
     namespace Ace {
-        type EventEmitter<T> = import("ace-code").Ace.EventEmitter<T>;
+        type EventEmitter<T extends {
+            [K in keyof T]: (...args: any[]) => any;
+        }> = import("ace-code").Ace.EventEmitter<T>;
         type AnchorEvents = import("ace-code").Ace.AnchorEvents;
         type Document = import("ace-code").Ace.Document;
     }
     export interface Anchor extends Ace.EventEmitter<Ace.AnchorEvents> {
         markerId?: number;
         document: Ace.Document;
-    }
-}
-declare module "ace-code/src/config" {
-    const _exports: {
-        defineOptions(obj: any, path: string, options: {
-            [key: string]: any;
-        }): import("ace-code").Ace.AppConfig;
-        resetOptions(obj: any): void;
-        setDefaultValue(path: string, name: string, value: any): boolean;
-        setDefaultValues(path: string, optionHash: {
-            [key: string]: any;
-        }): void;
-        setMessages(value: any, options?: {
-            placeholders?: "dollarSigns" | "curlyBrackets";
-        }): void;
-        nls(key: string, defaultString: string, params?: {
-            [x: string]: any;
-        }): any;
-        warn: (message: any, ...args: any[]) => void;
-        reportError: (msg: any, data: any) => void;
-        once<K extends string | number | symbol>(name: K, callback: any): void;
-        setDefaultHandler(name: string, callback: Function): void;
-        removeDefaultHandler(name: string, callback: Function): void;
-        on<K extends string | number | symbol>(name: K, callback: any, capturing?: boolean): any;
-        addEventListener<K extends string | number | symbol>(name: K, callback: any, capturing?: boolean): any;
-        off<K extends string | number | symbol>(name: K, callback: any): void;
-        removeListener<K extends string | number | symbol>(name: K, callback: any): void;
-        removeEventListener<K extends string | number | symbol>(name: K, callback: any): void;
-        removeAllListeners(name?: string): void;
-        /**
-         * @param {K} key - The key of the config option to retrieve.
-         * @returns {import("ace-code").Ace.ConfigOptions[K]} - The value of the config option.
-         */
-        get: <K extends keyof import("ace-code").Ace.ConfigOptions>(key: K) => import("ace-code").Ace.ConfigOptions[K];
-        set: <K extends keyof import("ace-code").Ace.ConfigOptions>(key: K, value: import("ace-code").Ace.ConfigOptions[K]) => void;
-        all: () => import("ace-code").Ace.ConfigOptions;
-        /**
-         * module loading
-         */
-        moduleUrl: (name: string, component?: string) => string;
-        setModuleUrl: (name: string, subst: string) => string;
-        /** @arg {(name: string, callback: (error: any, module: any) => void) => void} cb */
-        setLoader: (cb: (name: string, callback: (error: any, module: any) => void) => void) => void;
-        dynamicModules: any;
-        loadModule: (moduleId: string | [
-            string,
-            string
-        ], onLoad: (module: any) => void) => void;
-        setModuleLoader: (moduleName: any, onLoad: any) => void;
-        version: "1.36.5";
-    };
-    export = _exports;
-}
-declare module "ace-code/src/layer/lines" {
-    export type EditSession = import("ace-code/src/edit_session").EditSession;
-    export type LayerConfig = import("ace-code").Ace.LayerConfig;
-    export class Lines {
-        constructor(element: HTMLElement, canvasHeight?: number);
-        element: HTMLElement;
-        canvasHeight: number;
-        cells: any[];
-        cellCache: any[];
-        moveContainer(config: LayerConfig): void;
-        pageChanged(oldConfig: LayerConfig, newConfig: LayerConfig): boolean;
-        computeLineTop(row: number, config: Partial<LayerConfig>, session: EditSession): number;
-        computeLineHeight(row: number, config: LayerConfig, session: EditSession): number;
-        getLength(): number;
-        get(index: number): any;
-        shift(): void;
-        pop(): void;
-        push(cell: any): void;
-        unshift(cell: any): void;
-        last(): any;
-        createCell(row: any, config: any, session: any, initElement: any): any;
-    }
-}
-declare module "ace-code/src/layer/gutter" {
-    export class Gutter {
-        constructor(parentEl: HTMLElement);
-        element: HTMLDivElement;
-        gutterWidth: number;
-        setSession(session: EditSession): void;
-        session: import("ace-code/src/edit_session").EditSession;
-        addGutterDecoration(row: number, className: string): void;
-        removeGutterDecoration(row: number, className: string): void;
-        setAnnotations(annotations: any[]): void;
-        update(config: LayerConfig): void;
-        config: import("ace-code").Ace.LayerConfig;
-        oldLastRow: number;
-        updateLineHighlight(): void;
-        scrollLines(config: LayerConfig): void;
-        setHighlightGutterLine(highlightGutterLine: boolean): void;
-        setShowLineNumbers(show: boolean): void;
-        getShowLineNumbers(): boolean;
-        setShowFoldWidgets(show?: boolean): void;
-        getShowFoldWidgets(): boolean;
-        getRegion(point: {
-            x: number;
-        }): "markers" | "foldWidgets";
-    }
-    export type EditSession = import("ace-code/src/edit_session").EditSession;
-    export type LayerConfig = import("ace-code").Ace.LayerConfig;
-    import { Lines } from "ace-code/src/layer/lines";
-    namespace Ace {
-        type EventEmitter<T> = import("ace-code").Ace.EventEmitter<T>;
-        type GutterEvents = import("ace-code").Ace.GutterEvents;
-    }
-    export interface Gutter extends Ace.EventEmitter<Ace.GutterEvents> {
-    }
-}
-declare module "ace-code/src/layer/marker" {
-    export type EditSession = import("ace-code/src/edit_session").EditSession;
-    export type LayerConfig = import("ace-code").Ace.LayerConfig;
-    export class Marker {
-        constructor(parentEl: HTMLElement);
-        element: HTMLDivElement;
-        setPadding(padding: number): void;
-        setSession(session: EditSession): void;
-        session: import("ace-code/src/edit_session").EditSession;
-        setMarkers(markers: {
-            [x: number]: import("ace-code").Ace.MarkerLike;
-        }): void;
-        markers: {
-            [x: number]: import("ace-code").Ace.MarkerLike;
-        };
-        elt(className: string, css: string): void;
-        i: number;
-        update(config: LayerConfig): void;
-        config: import("ace-code").Ace.LayerConfig;
-        drawTextMarker(stringBuilder: undefined, range: Range, clazz: string, layerConfig: Partial<LayerConfig>, extraStyle?: string): void;
-        drawMultiLineMarker(stringBuilder: undefined, range: Range, clazz: string, config: LayerConfig, extraStyle?: string): void;
-        drawSingleLineMarker(stringBuilder: undefined, range: Range, clazz: string, config: Partial<LayerConfig>, extraLength?: number, extraStyle?: string): void;
-        drawBidiSingleLineMarker(stringBuilder: undefined, range: Range, clazz: string, config: Partial<LayerConfig>, extraLength: number, extraStyle: string): void;
-        drawFullLineMarker(stringBuilder: undefined, range: Range, clazz: string, config: Partial<LayerConfig>, extraStyle?: undefined): void;
-        drawScreenLineMarker(stringBuilder: undefined, range: Range, clazz: string, config: Partial<LayerConfig>, extraStyle?: undefined): void;
-    }
-    import { Range } from "ace-code/src/range";
-}
-declare module "ace-code/src/layer/text_util" {
-    export function isTextToken(tokenType: any): boolean;
-}
-declare module "ace-code/src/layer/text" {
-    export class Text {
-        constructor(parentEl: HTMLElement);
-        dom: typeof dom;
-        element: HTMLDivElement;
-        EOL_CHAR: any;
-        setPadding(padding: number): void;
-        getLineHeight(): number;
-        getCharacterWidth(): number;
-        checkForSizeChanges(): void;
-        setSession(session: EditSession): void;
-        session: EditSession;
-        setShowInvisibles(showInvisibles: string): boolean;
-        showInvisibles: any;
-        showSpaces: boolean;
-        showTabs: boolean;
-        showEOL: boolean;
-        setDisplayIndentGuides(display: boolean): boolean;
-        displayIndentGuides: any;
-        setHighlightIndentGuides(highlight: boolean): boolean;
-        tabSize: number;
-        updateLines(config: LayerConfig, firstRow: number, lastRow: number): void;
-        config?: import("ace-code").Ace.LayerConfig;
-        scrollLines(config: LayerConfig): void;
-        update(config: LayerConfig): void;
-        renderIndentGuide(parent: any, value: any, max: any): any;
-        EOF_CHAR: string;
-        EOL_CHAR_LF: string;
-        EOL_CHAR_CRLF: string;
-        TAB_CHAR: string;
-        SPACE_CHAR: string;
-        MAX_LINE_LENGTH: number;
-        destroy: {};
-        onChangeTabSize: () => void;
-    }
-    export type LayerConfig = import("ace-code").Ace.LayerConfig;
-    export type EditSession = import("ace-code/src/edit_session").EditSession;
-    import dom = require("ace-code/src/lib/dom");
-    import { Lines } from "ace-code/src/layer/lines";
-    namespace Ace {
-        type EventEmitter<T> = import("ace-code").Ace.EventEmitter<T>;
-        type TextEvents = import("ace-code").Ace.TextEvents;
-        type LayerConfig = import("ace-code").Ace.LayerConfig;
-    }
-    export interface Text extends Ace.EventEmitter<Ace.TextEvents> {
-        config?: Ace.LayerConfig;
-    }
-}
-declare module "ace-code/src/layer/cursor" {
-    export class Cursor {
-        constructor(parentEl: HTMLElement);
-        element: HTMLDivElement;
-        isVisible: boolean;
-        isBlinking: boolean;
-        blinkInterval: number;
-        smoothBlinking: boolean;
-        cursors: any[];
-        cursor: HTMLDivElement;
-        setPadding(padding: number): void;
-        setSession(session: EditSession): void;
-        session: import("ace-code/src/edit_session").EditSession;
-        setBlinking(blinking: boolean): void;
-        setBlinkInterval(blinkInterval: number): void;
-        setSmoothBlinking(smoothBlinking: boolean): void;
-        addCursor(): HTMLDivElement;
-        removeCursor(): any;
-        hideCursor(): void;
-        showCursor(): void;
-        restartTimer(): void;
-        intervalId: number;
-        getPixelPosition(position?: import("ace-code").Ace.Point, onScreen?: boolean): {
-            left: number;
-            top: number;
-        };
-        isCursorInView(pixelPos: any, config: any): boolean;
-        update(config: any): void;
-        config: any;
-        overwrite: any;
-        destroy(): void;
-        drawCursor: any;
-        timeoutId?: number;
-    }
-    export type EditSession = import("ace-code/src/edit_session").EditSession;
-    export interface Cursor {
-        timeoutId?: number;
-    }
-}
-declare module "ace-code/src/scrollbar" {
-    const VScrollBar_base: typeof Scrollbar;
-    /**
-     * Represents a vertical scroll bar.
-     **/
-    export class VScrollBar extends Scrollbar {
-        /**
-         * Creates a new `VScrollBar`. `parent` is the owner of the scroll bar.
-         * @param {Element} parent A DOM element
-         * @param {Object} renderer An editor renderer
-         **/
-        constructor(parent: Element, renderer: any);
-        scrollTop: number;
-        scrollHeight: number;
-        width: number;
-        /**
-         * Returns the width of the scroll bar.
-         **/
-        getWidth(): number;
-        /**
-         * Sets the height of the scroll bar, in pixels.
-         * @param {Number} height The new height
-         **/
-        setHeight(height: number): void;
-        /**
-         * Sets the scroll height of the scroll bar, in pixels.
-         * @param {Number} height The new scroll height
-         **/
-        setScrollHeight(height: number): void;
-        /**
-         * Sets the scroll top of the scroll bar.
-         * @param {Number} scrollTop The new scroll top
-         **/
-        setScrollTop(scrollTop: number): void;
-        /**
-         * Sets the inner height of the scroll bar, in pixels.
-         * @param {Number} height The new inner height
-         * @deprecated Use setScrollHeight instead
-         **/
-        setInnerHeight: (height: number) => void;
-    }
-    const HScrollBar_base: typeof Scrollbar;
-    /**
-     * Represents a horisontal scroll bar.
-     **/
-    export class HScrollBar extends Scrollbar {
-        /**
-         * Creates a new `HScrollBar`. `parent` is the owner of the scroll bar.
-         * @param {Element} parent A DOM element
-         * @param {Object} renderer An editor renderer
-         **/
-        constructor(parent: Element, renderer: any);
-        scrollLeft: number;
-        height: any;
-        /**
-         * Returns the height of the scroll bar.
-         **/
-        getHeight(): number;
-        /**
-         * Sets the width of the scroll bar, in pixels.
-         * @param {Number} width The new width
-         **/
-        setWidth(width: number): void;
-        /**
-         * Sets the inner width of the scroll bar, in pixels.
-         * @param {Number} width The new inner width
-         * @deprecated Use setScrollWidth instead
-         **/
-        setInnerWidth(width: number): void;
-        /**
-         * Sets the scroll width of the scroll bar, in pixels.
-         * @param {Number} width The new scroll width
-         **/
-        setScrollWidth(width: number): void;
-        /**
-         * Sets the scroll left of the scroll bar.
-         * @param {Number} scrollLeft The new scroll left
-         **/
-        setScrollLeft(scrollLeft: number): void;
-    }
-    /**
-     * An abstract class representing a native scrollbar control.
-     **/
-    class Scrollbar {
-        /**
-         * Creates a new `ScrollBar`. `parent` is the owner of the scroll bar.
-         * @param {Element} parent A DOM element
-         **/
-        constructor(parent: Element, classSuffix: string);
-        element: HTMLDivElement;
-        inner: HTMLDivElement;
-        skipEvent: boolean;
-        setVisible(isVisible: any): void;
-        isVisible: any;
-        coeff: number;
-    }
-    export { VScrollBar as ScrollBar, VScrollBar as ScrollBarV, HScrollBar as ScrollBarH };
-    namespace Ace {
-        type EventEmitter<T> = import("ace-code").Ace.EventEmitter<T>;
-    }
-    export interface VScrollBar extends Ace.EventEmitter<any> {
-    }
-    export interface HScrollBar extends Ace.EventEmitter<any> {
-    }
-}
-declare module "ace-code/src/scrollbar_custom" {
-    const VScrollBar_base: typeof ScrollBar;
-    /**
-     * Represents a vertical scroll bar.
-     * @class VScrollBar
-     **/
-    /**
-     * Creates a new `VScrollBar`. `parent` is the owner of the scroll bar.
-     * @param {Element} parent A DOM element
-     * @param {Object} renderer An editor renderer
-     *
-     * @constructor
-     **/
-    export class VScrollBar extends ScrollBar {
-        constructor(parent: any, renderer: any);
-        scrollTop: number;
-        scrollHeight: number;
-        parent: any;
-        width: number;
-        renderer: any;
-        getHeight(): number;
-        /**
-         * Returns new top for scroll thumb
-         **/
-        scrollTopFromThumbTop(thumbTop: number): number;
-        /**
-         * Returns the width of the scroll bar.
-         **/
-        getWidth(): number;
-        /**
-         * Sets the height of the scroll bar, in pixels.
-         * @param {Number} height The new height
-         **/
-        setHeight(height: number): void;
-        height: number;
-        slideHeight: number;
-        viewHeight: number;
-        /**
-         * Sets the inner and scroll height of the scroll bar, in pixels.
-         * @param {Number} height The new inner height
-         *
-         * @param {boolean} force Forcely update height
-         **/
-        setScrollHeight(height: number, force: boolean): void;
-        pageHeight: any;
-        thumbHeight: number;
-        /**
-         * Sets the scroll top of the scroll bar.
-         * @param {Number} scrollTop The new scroll top
-         **/
-        setScrollTop(scrollTop: number): void;
-        thumbTop: number;
-        setInnerHeight: (height: number, force: boolean) => void;
-    }
-    const HScrollBar_base: typeof ScrollBar;
-    /**
-     * Represents a horizontal scroll bar.
-     **/
-    export class HScrollBar extends ScrollBar {
-        /**
-         * Creates a new `HScrollBar`. `parent` is the owner of the scroll bar.
-         * @param {Element} parent A DOM element
-         * @param {Object} renderer An editor renderer
-         **/
-        constructor(parent: Element, renderer: any);
-        scrollLeft: number;
-        scrollWidth: number;
-        height: number;
-        renderer: any;
-        /**
-         * Returns the height of the scroll bar.
-         **/
-        getHeight(): number;
-        /**
-         * Returns new left for scroll thumb
-         **/
-        scrollLeftFromThumbLeft(thumbLeft: number): number;
-        /**
-         * Sets the width of the scroll bar, in pixels.
-         * @param {Number} width The new width
-         **/
-        setWidth(width: number): void;
-        width: number;
-        slideWidth: number;
-        viewWidth: number;
-        /**
-         * Sets the inner and scroll width of the scroll bar, in pixels.
-         * @param {Number} width The new inner width
-         * @param {boolean} force Forcely update width
-         **/
-        setScrollWidth(width: number, force: boolean): void;
-        pageWidth: any;
-        thumbWidth: number;
-        /**
-         * Sets the scroll left of the scroll bar.
-         * @param {Number} scrollLeft The new scroll left
-         **/
-        setScrollLeft(scrollLeft: number): void;
-        thumbLeft: number;
-        setInnerWidth: (width: number, force: boolean) => void;
-    }
-    /**
-     * An abstract class representing a native scrollbar control.
-     **/
-    class ScrollBar {
-        /**
-         * Creates a new `ScrollBar`. `parent` is the owner of the scroll bar.
-         * @param {Element} parent A DOM element
-         **/
-        constructor(parent: Element, classSuffix: string);
-        element: HTMLDivElement;
-        inner: HTMLDivElement;
-        VScrollWidth: number;
-        HScrollHeight: number;
-        skipEvent: boolean;
-        setVisible(isVisible: any): void;
-        isVisible: any;
-        coeff: number;
-    }
-    export { VScrollBar as ScrollBar, VScrollBar as ScrollBarV, HScrollBar as ScrollBarH };
-    namespace Ace {
-        type EventEmitter<T> = import("ace-code").Ace.EventEmitter<T>;
-    }
-    export interface VScrollBar extends Ace.EventEmitter<any> {
-    }
-    export interface HScrollBar extends Ace.EventEmitter<any> {
-    }
-}
-declare module "ace-code/src/renderloop" {
-    /**
-     * Batches changes (that force something to be redrawn) in the background.
-     **/
-    export class RenderLoop {
-        constructor(onRender: any, win: any);
-        onRender: any;
-        pending: boolean;
-        changes: number;
-        window: any;
-        schedule(change: any): void;
-        clear(change: any): number;
-    }
-}
-declare module "ace-code/src/css/editor-css" {
-    const _exports: string;
-    export = _exports;
-}
-declare module "ace-code/src/layer/decorators" {
-    export class Decorator {
-        constructor(parent: any, renderer: any);
-        canvas: HTMLCanvasElement;
-        renderer: any;
-        pixelRatio: number;
-        maxHeight: any;
-        lineHeight: any;
-        canvasHeight: any;
-        heightRatio: number;
-        canvasWidth: any;
-        minDecorationHeight: number;
-        halfMinDecorationHeight: number;
-        colors: {};
-        compensateFoldRows(row: any, foldData: any): number;
-    }
-}
-declare module "ace-code/src/virtual_renderer" {
-    /**
-     * The class that is responsible for drawing everything you see on the screen!
-     * @related editor.renderer
-     **/
-    export class VirtualRenderer {
-        /**
-         * Constructs a new `VirtualRenderer` within the `container` specified, applying the given `theme`.
-         * @param {HTMLElement | null} [container] The root element of the editor
-         * @param {String} [theme] The starting theme
-         **/
-        constructor(container?: HTMLElement | null, theme?: string);
-        container: HTMLElement;
-        scroller: HTMLElement;
-        content: HTMLElement;
-        canvas: HTMLDivElement;
-        scrollBar: VScrollBar;
-        scrollBarV: import("ace-code").Ace.VScrollbar;
-        scrollBarH: import("ace-code").Ace.HScrollbar;
-        scrollTop: number;
-        scrollLeft: number;
-        cursorPos: {
-            row: number;
-            column: number;
-        };
-        layerConfig: {
-            width: number;
-            padding: number;
-            firstRow: number;
-            firstRowScreen: number;
-            lastRow: number;
-            lineHeight: number;
-            characterWidth: number;
-            minHeight: number;
-            maxHeight: number;
-            offset: number;
-            height: number;
-            gutterOffset: number;
-        };
-        scrollMargin: {
-            left: number;
-            right: number;
-            top: number;
-            bottom: number;
-            v: number;
-            h: number;
-        };
-        margin: {
-            left: number;
-            right: number;
-            top: number;
-            bottom: number;
-            v: number;
-            h: number;
-        };
-        updateCharacterSize(): void;
-        characterWidth: number;
-        lineHeight: number;
-        /**
-         *
-         * Associates the renderer with an [[EditSession `EditSession`]].
-         * @param {EditSession} session The session to associate with
-         **/
-        setSession(session: EditSession): void;
-        session: import("ace-code").Ace.EditSession;
-        /**
-         * Triggers a partial update of the text, from the range given by the two parameters.
-         * @param {Number} firstRow The first row to update
-         * @param {Number} lastRow The last row to update
-         **/
-        updateLines(firstRow: number, lastRow: number, force?: boolean): void;
-        /**
-         * Triggers a full update of the text, for all the rows.
-         **/
-        updateText(): void;
-        /**
-         * Triggers a full update of all the layers, for all the rows.
-         * @param {Boolean} [force] If `true`, forces the changes through
-         **/
-        updateFull(force?: boolean): void;
-        /**
-         * Updates the font size.
-         **/
-        updateFontSize(): void;
-        resizing: number;
-        gutterWidth: any;
-        /**
-         * Adjusts the wrap limit, which is the number of characters that can fit within the width of the edit area on screen.
-         **/
-        adjustWrapLimit(): boolean;
-        /**
-         * Identifies whether you want to have an animated scroll or not.
-         * @param {Boolean} shouldAnimate Set to `true` to show animated scrolls
-         **/
-        setAnimatedScroll(shouldAnimate: boolean): void;
-        /**
-         * Returns whether an animated scroll happens or not.
-         **/
-        getAnimatedScroll(): boolean;
-        /**
-         * Identifies whether you want to show invisible characters or not.
-         * @param {Boolean} showInvisibles Set to `true` to show invisibles
-         **/
-        setShowInvisibles(showInvisibles: boolean): void;
-        /**
-         * Returns whether invisible characters are being shown or not.
-         **/
-        getShowInvisibles(): boolean;
-        getDisplayIndentGuides(): boolean;
-        setDisplayIndentGuides(display: boolean): void;
-        getHighlightIndentGuides(): boolean;
-        setHighlightIndentGuides(highlight: boolean): void;
-        /**
-         * Identifies whether you want to show the print margin or not.
-         * @param {Boolean} showPrintMargin Set to `true` to show the print margin
-         **/
-        setShowPrintMargin(showPrintMargin: boolean): void;
-        /**
-         * Returns whether the print margin is being shown or not.
-         **/
-        getShowPrintMargin(): boolean;
-        /**
-         * Identifies whether you want to show the print margin column or not.
-         * @param {number} printMarginColumn Set to `true` to show the print margin column
-         **/
-        setPrintMarginColumn(printMarginColumn: number): void;
-        /**
-         * Returns whether the print margin column is being shown or not.
-         **/
-        getPrintMarginColumn(): number;
-        /**
-         * Returns `true` if the gutter is being shown.
-         **/
-        getShowGutter(): boolean;
-        /**
-         * Identifies whether you want to show the gutter or not.
-         * @param {Boolean} show Set to `true` to show the gutter
-         **/
-        setShowGutter(show: boolean): void;
-        getFadeFoldWidgets(): boolean;
-        setFadeFoldWidgets(show: boolean): void;
-        setHighlightGutterLine(shouldHighlight: boolean): void;
-        getHighlightGutterLine(): boolean;
-        /**
-         *
-         * Returns the root element containing this renderer.
-         **/
-        getContainerElement(): HTMLElement;
-        /**
-         *
-         * Returns the element that the mouse events are attached to
-         **/
-        getMouseEventTarget(): HTMLElement;
-        /**
-         *
-         * Returns the element to which the hidden text area is added.
-         **/
-        getTextAreaContainer(): HTMLElement;
-        /**
-         * [Returns the index of the first visible row.]{: #VirtualRenderer.getFirstVisibleRow}
-         **/
-        getFirstVisibleRow(): number;
-        /**
-         *
-         * Returns the index of the first fully visible row. "Fully" here means that the characters in the row are not truncated; that the top and the bottom of the row are on the screen.
-         **/
-        getFirstFullyVisibleRow(): number;
-        /**
-         *
-         * Returns the index of the last fully visible row. "Fully" here means that the characters in the row are not truncated; that the top and the bottom of the row are on the screen.
-         **/
-        getLastFullyVisibleRow(): number;
-        /**
-         *
-         * [Returns the index of the last visible row.]{: #VirtualRenderer.getLastVisibleRow}
-         **/
-        getLastVisibleRow(): number;
-        /**
-         * Sets the padding for all the layers.
-         * @param {Number} padding A new padding value (in pixels)
-         **/
-        setPadding(padding: number): void;
-        setScrollMargin(top?: number, bottom?: number, left?: number, right?: number): void;
-        setMargin(top?: number, bottom?: number, left?: number, right?: number): void;
-        /**
-         * Returns whether the horizontal scrollbar is set to be always visible.
-         **/
-        getHScrollBarAlwaysVisible(): boolean;
-        /**
-         * Identifies whether you want to show the horizontal scrollbar or not.
-         * @param {Boolean} alwaysVisible Set to `true` to make the horizontal scroll bar visible
-         **/
-        setHScrollBarAlwaysVisible(alwaysVisible: boolean): void;
-        /**
-         * Returns whether the horizontal scrollbar is set to be always visible.
-         **/
-        getVScrollBarAlwaysVisible(): boolean;
-        /**
-         * Identifies whether you want to show the horizontal scrollbar or not.
-         * @param {Boolean} alwaysVisible Set to `true` to make the horizontal scroll bar visible
-         **/
-        setVScrollBarAlwaysVisible(alwaysVisible: boolean): void;
-        freeze(): void;
-        unfreeze(): void;
-        desiredHeight: any;
-        /**
-         * Schedules an update to all the front markers in the document.
-         **/
-        updateFrontMarkers(): void;
-        /**
-         *
-         * Schedules an update to all the back markers in the document.
-         **/
-        updateBackMarkers(): void;
-        /**
-         *
-         * Deprecated; (moved to [[EditSession]])
-         * @deprecated
-         **/
-        addGutterDecoration(row: any, className: any): void;
-        /**
-         * Deprecated; (moved to [[EditSession]])
-         * @deprecated
-         **/
-        removeGutterDecoration(row: any, className: any): void;
-        /**
-         *
-         * Redraw breakpoints.
-         */
-        updateBreakpoints(rows?: any): void;
-        /**
-         * Sets annotations for the gutter.
-         * @param {import("ace-code").Ace.Annotation[]} annotations An array containing annotations
-         *
-         **/
-        setAnnotations(annotations: import("ace-code").Ace.Annotation[]): void;
-        /**
-         *
-         * Updates the cursor icon.
-         **/
-        updateCursor(): void;
-        /**
-         *
-         * Hides the cursor icon.
-         **/
-        hideCursor(): void;
-        /**
-         *
-         * Shows the cursor icon.
-         **/
-        showCursor(): void;
-        scrollSelectionIntoView(anchor: Point, lead: Point, offset?: number): void;
-        /**
-         *
-         * Scrolls the cursor into the first visibile area of the editor
-         */
-        scrollCursorIntoView(cursor?: Point, offset?: number, $viewMargin?: {
-            top?: any;
-            bottom?: any;
-        }): void;
-        /**
-         * {:EditSession.getScrollTop}
-         * @related EditSession.getScrollTop
-         **/
-        getScrollTop(): number;
-        /**
-         * {:EditSession.getScrollLeft}
-         * @related EditSession.getScrollLeft
-         **/
-        getScrollLeft(): number;
-        /**
-         * Returns the first visible row, regardless of whether it's fully visible or not.
-         **/
-        getScrollTopRow(): number;
-        /**
-         * Returns the last visible row, regardless of whether it's fully visible or not.
-         **/
-        getScrollBottomRow(): number;
-        /**
-         * Gracefully scrolls from the top of the editor to the row indicated.
-         * @param {Number} row A row id
-         *
-         * @related EditSession.setScrollTop
-         **/
-        scrollToRow(row: number): void;
-        alignCursor(cursor: Point, alignment?: number): number;
-        /**
-         * Gracefully scrolls the editor to the row indicated.
-         * @param {Number} line A line number
-         * @param {Boolean} center If `true`, centers the editor the to indicated line
-         * @param {Boolean} animate If `true` animates scrolling
-         * @param {() => void} [callback] Function to be called after the animation has finished
-         **/
-        scrollToLine(line: number, center: boolean, animate: boolean, callback?: () => void): void;
-        animateScrolling(fromValue: any, callback?: any): void;
-        /**
-         * Scrolls the editor to the y pixel indicated.
-         * @param {Number} scrollTop The position to scroll to
-         **/
-        scrollToY(scrollTop: number): void;
-        /**
-         * Scrolls the editor across the x-axis to the pixel indicated.
-         * @param {Number} scrollLeft The position to scroll to
-         **/
-        scrollToX(scrollLeft: number): void;
-        /**
-         * Scrolls the editor across both x- and y-axes.
-         * @param {Number} x The x value to scroll to
-         * @param {Number} y The y value to scroll to
-         **/
-        scrollTo(x: number, y: number): void;
-        /**
-         * Scrolls the editor across both x- and y-axes.
-         * @param {Number} deltaX The x value to scroll by
-         * @param {Number} deltaY The y value to scroll by
-         **/
-        scrollBy(deltaX: number, deltaY: number): void;
-        /**
-         * Returns `true` if you can still scroll by either parameter; in other words, you haven't reached the end of the file or line.
-         * @param {Number} deltaX The x value to scroll by
-         * @param {Number} deltaY The y value to scroll by
-         *
-         **/
-        isScrollableBy(deltaX: number, deltaY: number): boolean;
-        pixelToScreenCoordinates(x: number, y: number): import("ace-code").Ace.ScreenCoordinates;
-        screenToTextCoordinates(x: number, y: number): Point;
-        /**
-         * Returns an object containing the `pageX` and `pageY` coordinates of the document position.
-         * @param {Number} row The document row position
-         * @param {Number} column The document column position
-         *
-         **/
-        textToScreenCoordinates(row: number, column: number): {
-            pageX: number;
-            pageY: number;
-        };
-        /**
-         *
-         * Focuses the current container.
-         **/
-        visualizeFocus(): void;
-        /**
-         *
-         * Blurs the current container.
-         **/
-        visualizeBlur(): void;
-        showComposition(composition: any): void;
-        /**
-         * @param {String} text A string of text to use
-         *
-         * Sets the inner text of the current composition to `text`.
-         **/
-        setCompositionText(text: string): void;
-        /**
-         *
-         * Hides the current composition.
-         **/
-        hideComposition(): void;
-        setGhostText(text: string, position?: Point): void;
-        removeGhostText(): void;
-        addToken(text: string, type: string, row: number, column?: number): void;
-        hideTokensAfterPosition(row: any, column: any): {
-            type: string;
-            value: string;
-        }[];
-        removeExtraToken(row: any, column: any): void;
-        /**
-         * [Sets a new theme for the editor. `theme` should exist, and be a directory path, like `ace/theme/textmate`.]{: #VirtualRenderer.setTheme}
-         * @param {String | Theme} [theme] The path to a theme
-         * @param {() => void} [cb] optional callback
-         **/
-        setTheme(theme?: string | Theme, cb?: () => void): void;
-        /**
-         * [Returns the path of the current theme.]{: #VirtualRenderer.getTheme}
-         **/
-        getTheme(): string;
-        /**
-         * [Adds a new class, `style`, to the editor.]{: #VirtualRenderer.setStyle}
-         * @param {String} style A class name
-         **/
-        setStyle(style: string, include?: boolean): void;
-        /**
-         * [Removes the class `style` from the editor.]{: #VirtualRenderer.unsetStyle}
-         * @param {String} style A class name
-         *
-         **/
-        unsetStyle(style: string): void;
-        setCursorStyle(style: string): void;
-        /**
-         * @param {String} cursorStyle A css cursor style
-         **/
-        setMouseCursor(cursorStyle: string): void;
-        attachToShadowRoot(): void;
-        /**
-         * Destroys the text and cursor layers for this renderer.
-         **/
-        destroy(): void;
-        CHANGE_CURSOR: number;
-        CHANGE_MARKER: number;
-        CHANGE_GUTTER: number;
-        CHANGE_SCROLL: number;
-        CHANGE_LINES: number;
-        CHANGE_TEXT: number;
-        CHANGE_SIZE: number;
-        CHANGE_MARKER_BACK: number;
-        CHANGE_MARKER_FRONT: number;
-        CHANGE_FULL: number;
-        CHANGE_H_SCROLL: number;
-        STEPS: number;
-        textarea?: HTMLTextAreaElement;
-        enableKeyboardAccessibility?: boolean;
-        showInvisibles?: boolean;
-        theme?: any;
-        destroyed?: boolean;
-        keyboardFocusClassName?: string;
-    }
-    export type EditSession = import("ace-code/src/edit_session").EditSession;
-    export type Point = import("ace-code").Ace.Point;
-    export type Theme = import("ace-code").Ace.Theme;
-    import { Gutter as GutterLayer } from "ace-code/src/layer/gutter";
-    import { Marker as MarkerLayer } from "ace-code/src/layer/marker";
-    import { Text as TextLayer } from "ace-code/src/layer/text";
-    import { Cursor as CursorLayer } from "ace-code/src/layer/cursor";
-    import { VScrollBar } from "ace-code/src/scrollbar";
-    import { FontMetrics } from "ace-code/src/layer/font_metrics";
-    import { RenderLoop } from "ace-code/src/renderloop";
-    import { Decorator } from "ace-code/src/layer/decorators";
-    namespace Ace {
-        type EventEmitter<T> = import("ace-code").Ace.EventEmitter<T>;
-        type VirtualRendererEvents = import("ace-code").Ace.VirtualRendererEvents;
-        type OptionsProvider<T> = import("ace-code").Ace.OptionsProvider<T>;
-        type VirtualRendererOptions = import("ace-code").Ace.VirtualRendererOptions;
-        type EditSession = import("ace-code").Ace.EditSession;
-    }
-    export interface VirtualRenderer extends Ace.EventEmitter<Ace.VirtualRendererEvents>, Ace.OptionsProvider<Ace.VirtualRendererOptions> {
-        textarea?: HTMLTextAreaElement;
-        enableKeyboardAccessibility?: boolean;
-        showInvisibles?: boolean;
-        theme?: any;
-        destroyed?: boolean;
-        session: Ace.EditSession;
-        keyboardFocusClassName?: string;
     }
 }
 declare module "ace-code/src/selection" {
@@ -1316,10 +1331,10 @@ declare module "ace-code/src/selection" {
         selectAll(): void;
         /**
          * Sets the selection to the provided range.
-         * @param {import("ace-code").Ace.IRange} range The range of text to select
+         * @param {import('../interfaces').IRange} range The range of text to select
          * @param {Boolean} [reverse] Indicates if the range should go backwards (`true`) or not
          **/
-        setRange(range: import("ace-code").Ace.IRange, reverse?: boolean): void;
+        setRange(range: import('../interfaces').IRange, reverse?: boolean): void;
         /**
          * Moves the selection cursor to the indicated row and column.
          * @param {Number} row The row to select to
@@ -1508,14 +1523,16 @@ declare module "ace-code/src/selection" {
          * @deprecated
          */
         getSelectionAnchor: () => Point;
-        setSelectionRange: (range: import("ace-code").Ace.IRange, reverse?: boolean) => void;
+        setSelectionRange: (range: import('../interfaces').IRange, reverse?: boolean) => void;
     }
     export type EditSession = import("ace-code/src/edit_session").EditSession;
     export type Anchor = import("ace-code/src/anchor").Anchor;
-    export type Point = import("ace-code").Ace.Point;
+    export type Point = import('../interfaces').Point;
     import { Range } from "ace-code/src/range";
     namespace Ace {
-        type EventEmitter<T> = import("ace-code").Ace.EventEmitter<T>;
+        type EventEmitter<T extends {
+            [K in keyof T]: (...args: any[]) => any;
+        }> = import("ace-code").Ace.EventEmitter<T>;
         type MultiSelectionEvents = import("ace-code").Ace.MultiSelectionEvents;
         type MultiSelectProperties = import("ace-code").Ace.MultiSelectProperties;
     }
@@ -1590,7 +1607,7 @@ declare module "ace-code/src/mouse/default_handlers" {
         constructor(mouseHandler: MouseHandler);
         onMouseDown(this: import("ace-code/src/mouse/mouse_handler").MouseHandler, ev: MouseEvent): void;
         mousedownEvent: import("ace-code/src/mouse/mouse_event").MouseEvent;
-        startSelect(this: import("ace-code/src/mouse/mouse_handler").MouseHandler, pos?: import("ace-code").Ace.Position, waitForClickSelection?: boolean): void;
+        startSelect(this: import("ace-code/src/mouse/mouse_handler").MouseHandler, pos?: import('../interfaces').Position, waitForClickSelection?: boolean): void;
         select(this: import("ace-code/src/mouse/mouse_handler").MouseHandler): void;
         extendSelectionBy(this: import("ace-code/src/mouse/mouse_handler").MouseHandler, unitName: string | number): void;
         selectByLinesEnd(this: import("ace-code/src/mouse/mouse_handler").MouseHandler): void;
@@ -1634,7 +1651,7 @@ declare module "ace-code/src/tooltip" {
         setHtml(html: string): void;
         setPosition(x: number, y: number): void;
         setClassName(className: string): void;
-        setTheme(theme: import("ace-code").Ace.Theme): void;
+        setTheme(theme: import('../interfaces').Theme): void;
         show(text?: string, x?: number, y?: number): void;
         hide(e: any): void;
         getHeight(): number;
@@ -1756,7 +1773,7 @@ declare module "ace-code/src/mouse/fold_handler" {
 }
 declare module "ace-code/src/keyboard/keybinding" {
     export type Editor = import("ace-code/src/editor").Editor;
-    export type KeyboardHandler = import("ace-code").Ace.KeyboardHandler;
+    export type KeyboardHandler = import('../interfaces').KeyboardHandler;
     export class KeyBinding {
         constructor(editor: Editor);
         setDefaultHandler(kb: KeyboardHandler): void;
@@ -1775,7 +1792,7 @@ declare module "ace-code/src/keyboard/keybinding" {
 }
 declare module "ace-code/src/search" {
     export type EditSession = import("ace-code/src/edit_session").EditSession;
-    export type SearchOptions = import("ace-code").Ace.SearchOptions;
+    export type SearchOptions = import('../interfaces').SearchOptions;
     /**
      * A class designed to handle all sorts of text searches within a [[Document `Document`]].
      **/
@@ -1820,8 +1837,8 @@ declare module "ace-code/src/search" {
     import { Range } from "ace-code/src/range";
 }
 declare module "ace-code/src/keyboard/hash_handler" {
-    export type Command = import("ace-code").Ace.Command;
-    export type CommandLike = import("ace-code").Ace.CommandLike;
+    export type Command = import('../interfaces').Command;
+    export type CommandLike = import('../interfaces').CommandLike;
     export class HashHandler extends MultiHashHandler {
     }
     export namespace HashHandler {
@@ -1869,9 +1886,9 @@ declare module "ace-code/src/commands/command_manager" {
          * @param {any[]} commands A list of commands
          **/
         constructor(platform: string, commands: any[]);
-        byName: Record<string, import("ace-code").Ace.Command>;
-        exec(command: string | string[] | import("ace-code").Ace.Command, editor: Editor, args: any): boolean;
-        canExecute(command: string | import("ace-code").Ace.Command, editor: Editor): boolean;
+        byName: Record<string, import('../interfaces').Command>;
+        exec(command: string | string[] | import('../interfaces').Command, editor: Editor, args: any): boolean;
+        canExecute(command: string | import('../interfaces').Command, editor: Editor): boolean;
         toggleRecording(editor: Editor): boolean;
         macro: any;
         recording: boolean;
@@ -1882,14 +1899,15 @@ declare module "ace-code/src/commands/command_manager" {
     export type Editor = import("ace-code/src/editor").Editor;
     import { MultiHashHandler } from "ace-code/src/keyboard/hash_handler";
     namespace Ace {
-        type EventEmitter<T> = import("ace-code").Ace.EventEmitter<T>;
+        type EventEmitter<T extends {
+            [K in keyof T]: (...args: any[]) => any;
+        }> = import("ace-code").Ace.EventEmitter<T>;
     }
-    export interface CommandManager extends Ace
-        .EventEmitter<any> {
+    export interface CommandManager extends Ace.EventEmitter<any> {
     }
 }
 declare module "ace-code/src/commands/default_commands" {
-    export const commands: import("ace-code").Ace.Command[];
+    export const commands: import('../interfaces').Command[];
 }
 declare module "ace-code/src/token_iterator" {
     export type EditSession = import("ace-code/src/edit_session").EditSession;
@@ -1907,16 +1925,16 @@ declare module "ace-code/src/token_iterator" {
         /**
          * Moves iterator position to the start of previous token.
          **/
-        stepBackward(): import("ace-code").Ace.Token | null;
+        stepBackward(): import('../interfaces').Token | null;
         /**
          * Moves iterator position to the start of next token.
          **/
-        stepForward(): import("ace-code").Ace.Token | null;
+        stepForward(): import('../interfaces').Token | null;
         /**
          *
          * Returns current token.
          **/
-        getCurrentToken(): import("ace-code").Ace.Token;
+        getCurrentToken(): import('../interfaces').Token;
         /**
          *
          * Returns the current row.
@@ -1930,7 +1948,7 @@ declare module "ace-code/src/token_iterator" {
         /**
          * Return the current token position.
          */
-        getCurrentTokenPosition(): import("ace-code").Ace.Point;
+        getCurrentTokenPosition(): import('../interfaces').Point;
         /**
          * Return the current token range.
          */
@@ -1997,9 +2015,9 @@ declare module "ace-code/src/editor" {
          *
          * @param {VirtualRenderer} renderer Associated `VirtualRenderer` that draws everything
          * @param {EditSession} [session] The `EditSession` to refer to
-         * @param {Partial<import("ace-code").Ace.EditorOptions>} [options] The default options
+         * @param {Partial<import('../interfaces').EditorOptions>} [options] The default options
          **/
-        constructor(renderer: VirtualRenderer, session?: EditSession, options?: Partial<import("ace-code").Ace.EditorOptions>);
+        constructor(renderer: VirtualRenderer, session?: EditSession, options?: Partial<import('../interfaces').EditorOptions>);
         session: EditSession;
         container: HTMLElement & {
             env?: any;
@@ -2027,9 +2045,9 @@ declare module "ace-code/src/editor" {
         sequenceStartTime: number;
         /**
          * Sets a new key handler, such as "vim" or "windows".
-         * @param {String | import("ace-code").Ace.KeyboardHandler | null} keyboardHandler The new key handler
+         * @param {String | import('../interfaces').KeyboardHandler | null} keyboardHandler The new key handler
          **/
-        setKeyboardHandler(keyboardHandler: string | import("ace-code").Ace.KeyboardHandler | null, cb?: () => void): void;
+        setKeyboardHandler(keyboardHandler: string | import('../interfaces').KeyboardHandler | null, cb?: () => void): void;
         /**
          * Returns the keyboard handler, such as "vim" or "windows".
          **/
@@ -2073,10 +2091,10 @@ declare module "ace-code/src/editor" {
         resize(force?: boolean): void;
         /**
          * {:VirtualRenderer.setTheme}
-         * @param {string | import("ace-code").Ace.Theme} theme The path to a theme
+         * @param {string | import('../interfaces').Theme} theme The path to a theme
          * @param {() => void} [cb] optional callback called when theme is loaded
          **/
-        setTheme(theme: string | import("ace-code").Ace.Theme, cb?: () => void): void;
+        setTheme(theme: string | import('../interfaces').Theme, cb?: () => void): void;
         /**
          * {:VirtualRenderer.getTheme}
          *
@@ -2172,7 +2190,7 @@ declare module "ace-code/src/editor" {
         /**
          * Returns the current selection style.
          **/
-        getSelectionStyle(): import("ace-code").Ace.EditorOptions["selectionStyle"];
+        getSelectionStyle(): import('../interfaces').EditorOptions["selectionStyle"];
         /**
          * Determines whether or not the current line should be highlighted.
          * @param {Boolean} shouldHighlight Set to `true` to highlight the current line
@@ -2662,8 +2680,8 @@ declare module "ace-code/src/editor" {
     }
     export type VirtualRenderer = import("ace-code/src/virtual_renderer").VirtualRenderer;
     export type Selection = import("ace-code/src/selection").Selection;
-    export type Point = import("ace-code").Ace.Point;
-    export type SearchOptions = import("ace-code").Ace.SearchOptions;
+    export type Point = import('../interfaces').Point;
+    export type SearchOptions = import('../interfaces').SearchOptions;
     import { EditSession } from "ace-code/src/edit_session";
     import { CommandManager } from "ace-code/src/commands/command_manager";
     import { MouseHandler } from "ace-code/src/mouse/mouse_handler";
@@ -2675,7 +2693,9 @@ declare module "ace-code/src/editor" {
         type EditorMultiSelectProperties = import("ace-code").Ace.EditorMultiSelectProperties;
         type OptionsProvider<T> = import("ace-code").Ace.OptionsProvider<T>;
         type EditorOptions = import("ace-code").Ace.EditorOptions;
-        type EventEmitter<T> = import("ace-code").Ace.EventEmitter<T>;
+        type EventEmitter<T extends {
+            [K in keyof T]: (...args: any[]) => any;
+        }> = import("ace-code").Ace.EventEmitter<T>;
         type EditorEvents = import("ace-code").Ace.EditorEvents;
         type CodeLenseEditorExtension = import("ace-code").Ace.CodeLenseEditorExtension;
         type ElasticTabstopsEditorExtension = import("ace-code").Ace.ElasticTabstopsEditorExtension;
@@ -2700,83 +2720,6 @@ declare module "ace-code/src/editor" {
         searchBox?: Ace.SearchBox;
     }
 }
-declare module "ace-code/src/undomanager" {
-    export type EditSession = import("ace-code/src/edit_session").EditSession;
-    export type Delta = import("ace-code").Ace.Delta;
-    export type Point = import("ace-code").Ace.Point;
-    export type IRange = import("ace-code").Ace.IRange;
-    /**
-     * This object maintains the undo stack for an [[EditSession `EditSession`]].
-     **/
-    export class UndoManager {
-        addSession(session: EditSession): void;
-        /**
-         * Provides a means for implementing your own undo manager. `options` has one property, `args`, an [[Array `Array`]], with two elements:
-         *
-         * - `args[0]` is an array of deltas
-         * - `args[1]` is the document to associate with
-         *
-         **/
-        add(delta: import("ace-code").Ace.Delta, allowMerge: boolean, session?: EditSession): void;
-        lastDeltas: any[];
-        addSelection(selection: any, rev?: number): void;
-        startNewGroup(): any;
-        markIgnored(from: number, to?: number): void;
-        getSelection(rev: number, after?: boolean): {
-            value: string;
-            rev: number;
-        };
-        getRevision(): number;
-        getDeltas(from: number, to?: number): import("ace-code").Ace.Delta[];
-        getChangedRanges(from: number, to?: number): void;
-        getChangedLines(from: number, to?: number): void;
-        /**
-         * [Perform an undo operation on the document, reverting the last change.]{: #UndoManager.undo}
-         **/
-        undo(session: EditSession, dontSelect?: boolean): void;
-        /**
-         * [Perform a redo operation on the document, reimplementing the last change.]{: #UndoManager.redo}
-         *
-         **/
-        redo(session: EditSession, dontSelect?: boolean): void;
-        /**
-         * Destroys the stack of undo and redo redo operations.
-         **/
-        reset(): void;
-        mark: number;
-        selections: any[];
-        /**
-         * Returns `true` if there are undo operations left to perform.
-         **/
-        canUndo(): boolean;
-        /**
-         * Returns `true` if there are redo operations left to perform.
-         **/
-        canRedo(): boolean;
-        /**
-         * Marks the current status clean
-         */
-        bookmark(rev?: number): void;
-        /**
-         * Returns if the current status is clean
-         **/
-        isAtBookmark(): boolean;
-        /**
-         * Returns an object which can be safely stringified into JSON
-         */
-        toJSON(): object;
-        /**
-         * Takes in an object which was returned from the toJSON method above,
-         * and resets the current undoManager instance to use the previously exported
-         * instance state.
-         */
-        fromJSON(json: object): void;
-        hasUndo: () => boolean;
-        hasRedo: () => boolean;
-        isClean: () => boolean;
-        markClean: (rev?: number) => void;
-    }
-}
 declare module "ace-code/src/tokenizer" {
     /**
      * This class takes a set of highlighting rules, and creates a tokenizer out of them. For more information, see [the wiki on extending highlighters](https://github.com/ajaxorg/ace/wiki/Creating-or-Extending-an-Edit-Mode#wiki-extendingTheHighlighter).
@@ -2797,7 +2740,7 @@ declare module "ace-code/src/tokenizer" {
          * Returns an object containing two properties: `tokens`, which contains all the tokens; and `state`, the current state.
          */
         getLineTokens(line: string, startState: string | string[]): {
-            tokens: import("ace-code").Ace.Token[];
+            tokens: import('../interfaces').Token[];
             state: string | string[];
         };
         reportError: (msg: any, data: any) => void;
@@ -2869,7 +2812,7 @@ declare module "ace-code/src/autocomplete/popup" {
 }
 declare module "ace-code/src/range_list" {
     export type EditSession = import("ace-code/src/edit_session").EditSession;
-    export type Point = import("ace-code").Ace.Point;
+    export type Point = import('../interfaces').Point;
     export class RangeList {
         ranges: any[];
         pointIndex(pos: Point, excludeEdges?: boolean, startIndex?: number): number;
@@ -2945,7 +2888,7 @@ declare module "ace-code/src/snippets" {
         };
         getTokenizer(): Tokenizer;
         createTokenizer(): any;
-        tokenizeTmSnippet(str: any, startState: any): (string | import("ace-code").Ace.Token)[];
+        tokenizeTmSnippet(str: any, startState: any): (string | import('../interfaces').Token)[];
         getVariableValue(editor: any, name: any, indentation: any): any;
         tmStrFormat(str: any, ch: any, editor: any): any;
         tmFormatFunction(str: any, ch: any, editor: any): any;
@@ -2964,7 +2907,9 @@ declare module "ace-code/src/snippets" {
     }
     import { Tokenizer } from "ace-code/src/tokenizer";
     namespace Ace {
-        type EventEmitter<T> = import("ace-code").Ace.EventEmitter<T>;
+        type EventEmitter<T extends {
+            [K in keyof T]: (...args: any[]) => any;
+        }> = import("ace-code").Ace.EventEmitter<T>;
     }
     interface SnippetManager extends Ace.EventEmitter<any> {
     }
@@ -3003,7 +2948,7 @@ declare module "ace-code/src/autocomplete/inline" {
          * Renders the completion as ghost text to the current cursor position
          * @returns {boolean} True if the completion could be rendered to the editor, false otherwise
          */
-        show(editor: Editor, completion: import("ace-code").Ace.Completion, prefix: string): boolean;
+        show(editor: Editor, completion: import("ace-code/src/autocomplete").Completion, prefix: string): boolean;
         inlineScreenReader: AceInlineScreenReader;
         isOpen(): boolean;
         hide(): boolean;
@@ -3157,8 +3102,8 @@ declare module "ace-code/src/autocomplete" {
         active: boolean;
         insertByIndex(editor: Editor, index: number, options?: CompletionProviderOptions): boolean;
         insertMatch(editor: Editor, data: Completion, options?: CompletionProviderOptions): boolean;
-        gatherCompletions(editor: Editor, callback: import("ace-code").Ace.CompletionCallbackFunction): boolean;
-        completers: import("ace-code").Ace.Completer[];
+        gatherCompletions(editor: Editor, callback: import('../interfaces').CompletionCallbackFunction): boolean;
+        completers: import('../interfaces').Completer[];
         /**
          * This is the entry point to the class, it gathers, then provides the completions asynchronously via callback.
          * The callback function may be called multiple times, the last invokation is marked with a `finished` flag
@@ -3169,9 +3114,9 @@ declare module "ace-code/src/autocomplete" {
         completions: import("ace-code").Ace.FilteredList;
     }
     export type Editor = import("ace-code/src/editor").Editor;
-    export type CompletionProviderOptions = import("ace-code").Ace.CompletionProviderOptions;
-    export type CompletionOptions = import("ace-code").Ace.CompletionOptions;
-    export type Position = import("ace-code").Ace.Position;
+    export type CompletionProviderOptions = import('../interfaces').CompletionProviderOptions;
+    export type CompletionOptions = import('../interfaces').CompletionOptions;
+    export type Position = import('../interfaces').Position;
     export type BaseCompletion = {
         /**
          * - a numerical value that determines the order in which completions would be displayed.
@@ -3203,7 +3148,7 @@ declare module "ace-code/src/autocomplete" {
         /**
          * - An object specifying the range of text to be replaced with the new completion value (experimental)
          */
-        range?: import("ace-code").Ace.IRange;
+        range?: import('../interfaces').IRange;
         /**
          * - A command to be executed after the completion is inserted (experimental)
          */
@@ -3216,7 +3161,7 @@ declare module "ace-code/src/autocomplete" {
          * - The text that would be inserted when selecting this completion.
          */
         value?: string;
-        completer?: import("ace-code").Ace.Completer;
+        completer?: import('../interfaces').Completer;
         hideInlinePreview?: boolean;
     };
     export type SnippetCompletion = BaseCompletion & {
@@ -3259,160 +3204,14 @@ declare module "ace-code/src/autocomplete" {
         completions: Ace.FilteredList;
     }
 }
-declare module "ace-code/src/autocomplete/text_completer" {
-    export function getCompletions(editor: any, session: any, pos: any, prefix: any, callback: any): void;
-}
-declare module "ace-code/src/line_widgets" {
-    export class LineWidgets {
-        constructor(session: EditSession);
-        session: import("ace-code/src/edit_session").EditSession;
-        updateOnChange(delta: import("ace-code").Ace.Delta): void;
-        renderWidgets(e: any, renderer: VirtualRenderer): void;
-        measureWidgets(e: any, renderer: VirtualRenderer): void;
-        getRowLength(row: number): number;
-        attach(editor: Editor): void;
-        editor: Editor;
-        detach(e: any): void;
-        updateOnFold(e: any, session: EditSession): void;
-        addLineWidget(w: LineWidget): LineWidget;
-        removeLineWidget(w: LineWidget): void;
-        getWidgetsAtRow(row: number): LineWidget[];
-        firstRow: number;
-        lastRow: number;
-        lineWidgets: import("ace-code").Ace.LineWidget[];
-    }
-    export type EditSession = import("ace-code/src/edit_session").EditSession;
-    export type Editor = import("ace-code/src/editor").Editor;
-    export type VirtualRenderer = import("ace-code/src/virtual_renderer").VirtualRenderer;
-    export type LineWidget = import("ace-code").Ace.LineWidget;
-    namespace Ace {
-        type LineWidget = import("ace-code").Ace.LineWidget;
-        type Editor = import("ace-code").Ace.Editor;
-    }
-    export interface LineWidgets {
-        lineWidgets: Ace.LineWidget[];
-        editor: Ace.Editor;
-    }
-}
-declare module "ace-code/src/search_highlight" {
-    export type Marker = import("ace-code/src/layer/marker").Marker;
-    export type EditSession = import("ace-code/src/edit_session").EditSession;
-    export class SearchHighlight {
-        constructor(regExp: any, clazz: string, type?: string);
-        clazz: string;
-        type: string;
-        setRegexp(regExp: any): void;
-        regExp: any;
-        cache: any[];
-        update(html: any, markerLayer: Marker, session: EditSession, config: Partial<import("ace-code").Ace.LayerConfig>): void;
-        MAX_RANGES: number;
-    }
-}
-declare module "ace-code/src/occur" {
-    export type Editor = import("ace-code/src/editor").Editor;
-    export type Point = import("ace-code").Ace.Point;
-    export type SearchOptions = import("ace-code").Ace.SearchOptions;
-    /**
-     * Finds all lines matching a search term in the current [[Document
-     * `Document`]] and displays them instead of the original `Document`. Keeps
-     * track of the mapping between the occur doc and the original doc.
-     **/
-    export class Occur extends Search {
-        /**
-         * Enables occur mode. expects that `options.needle` is a search term.
-         * This search term is used to filter out all the lines that include it
-         * and these are then used as the content of a new [[Document
-         * `Document`]]. The current cursor position of editor will be translated
-         * so that the cursor is on the matching row/column as it was before.
-         * @param {Object} options options.needle should be a String
-         * @return {Boolean} Whether occur activation was successful
-         *
-         **/
-        enter(editor: Editor, options: any): boolean;
-        /**
-         * Disables occur mode. Resets the [[Sessions `EditSession`]] [[Document
-         * `Document`]] back to the original doc. If options.translatePosition is
-         * truthy also maps the [[Editors `Editor`]] cursor position accordingly.
-         * @param {Object} options options.translatePosition
-         * @return {Boolean} Whether occur deactivation was successful
-         *
-         **/
-        exit(editor: Editor, options: any): boolean;
-        highlight(sess: EditSession, regexp: RegExp): void;
-        displayOccurContent(editor: Editor, options: Partial<SearchOptions>): void;
-        displayOriginalContent(editor: Editor): void;
-        /**
-        * Translates the position from the original document to the occur lines in
-        * the document or the beginning if the doc {row: 0, column: 0} if not
-        * found.
-        * @param {EditSession} session The occur session
-        * @param {Point} pos The position in the original document
-        * @return {Point} position in occur doc
-        **/
-        originalToOccurPosition(session: EditSession, pos: Point): Point;
-        /**
-        * Translates the position from the occur document to the original document
-        * or `pos` if not found.
-        * @param {EditSession} session The occur session
-        * @param {Point} pos The position in the occur session document
-        **/
-        occurToOriginalPosition(session: EditSession, pos: Point): Point;
-        matchingLines(session: EditSession, options: Partial<SearchOptions>): any[];
-    }
-    import { Search } from "ace-code/src/search";
-    import { EditSession } from "ace-code/src/edit_session";
-}
-declare module "ace-code/src/marker_group" {
-    export type EditSession = import("ace-code/src/edit_session").EditSession;
-    export type MarkerGroupItem = {
-        range: import("ace-code/src/range").Range;
-        className: string;
-    };
-    export type LayerConfig = import("ace-code").Ace.LayerConfig;
-    export type Marker = import("ace-code/src/layer/marker").Marker;
-    export class MarkerGroup {
-        /**
-         * @param {{markerType: "fullLine" | "line" | undefined}} [options] Options controlling the behvaiour of the marker.
-         * User `markerType` to control how the markers which are part of this group will be rendered:
-         * - `undefined`: uses `text` type markers where only text characters within the range will be highlighted.
-         * - `fullLine`: will fully highlight all the rows within the range, including the characters before and after the range on the respective rows.
-         * - `line`: will fully highlight the lines within the range but will only cover the characters between the start and end of the range.
-         */
-        constructor(session: EditSession, options?: {
-            markerType: "fullLine" | "line" | undefined;
-        });
-        markerType: "line" | "fullLine";
-        markers: import("ace-code").Ace.MarkerGroupItem[];
-        session: EditSession;
-        /**
-         * Finds the first marker containing pos
-         */
-        getMarkerAtPosition(pos: import("ace-code").Ace.Point): import("ace-code").Ace.MarkerGroupItem | undefined;
-        /**
-         * Comparator for Array.sort function, which sorts marker definitions by their positions
-         *
-         * @param {MarkerGroupItem} a first marker.
-         * @param {MarkerGroupItem} b second marker.
-         * @returns {number} negative number if a should be before b, positive number if b should be before a, 0 otherwise.
-         */
-        markersComparator(a: MarkerGroupItem, b: MarkerGroupItem): number;
-        /**
-         * Sets marker definitions to be rendered. Limits the number of markers at MAX_MARKERS.
-         * @param {MarkerGroupItem[]} markers an array of marker definitions.
-         */
-        setMarkers(markers: MarkerGroupItem[]): void;
-        update(html: any, markerLayer: Marker, session: EditSession, config: LayerConfig): void;
-        MAX_MARKERS: number;
-    }
-}
 declare module "ace-code/src/edit_session/fold" {
     export class Fold extends RangeList {
         constructor(range: Range, placeholder: any);
         foldLine: import("ace-code/src/edit_session/fold_line").FoldLine;
         placeholder: any;
         range: import("ace-code/src/range").Range;
-        start: import("ace-code").Ace.Point;
-        end: import("ace-code").Ace.Point;
+        start: import('../interfaces').Point;
+        end: import('../interfaces').Point;
         sameRow: boolean;
         subFolds: Fold[];
         setFoldLine(foldLine: FoldLine): void;
@@ -3423,8 +3222,8 @@ declare module "ace-code/src/edit_session/fold" {
     }
     export type FoldLine = import("ace-code/src/edit_session/fold_line").FoldLine;
     export type Range = import("ace-code/src/range").Range;
-    export type Point = import("ace-code").Ace.Point;
-    export type IRange = import("ace-code").Ace.IRange;
+    export type Point = import('../interfaces').Point;
+    export type IRange = import('../interfaces').IRange;
     import { RangeList } from "ace-code/src/range_list";
     export interface Fold {
         collapseChildren?: number;
@@ -3440,8 +3239,8 @@ declare module "ace-code/src/edit_session/fold_line" {
         foldData: FoldLine[];
         folds: Fold[];
         range: Range;
-        start: import("ace-code").Ace.Point;
-        end: import("ace-code").Ace.Point;
+        start: import('../interfaces').Point;
+        end: import('../interfaces').Point;
         /**
          * Note: This doesn't update wrapData!
          */
@@ -3457,7 +3256,7 @@ declare module "ace-code/src/edit_session/fold_line" {
         split(row: number, column: number): FoldLine | null;
         merge(foldLineNext: FoldLine): void;
         toString(): string;
-        idxToPosition(idx: number): import("ace-code").Ace.Point;
+        idxToPosition(idx: number): import('../interfaces').Point;
     }
     import { Range } from "ace-code/src/range";
 }
@@ -3545,6 +3344,38 @@ declare module "ace-code/src/bidihandler" {
     }
     import bidiUtil = require("ace-code/src/lib/bidiutil");
 }
+declare module "ace-code/src/line_widgets" {
+    export class LineWidgets {
+        constructor(session: EditSession);
+        session: import("ace-code/src/edit_session").EditSession;
+        updateOnChange(delta: import('../interfaces').Delta): void;
+        renderWidgets(e: any, renderer: VirtualRenderer): void;
+        measureWidgets(e: any, renderer: VirtualRenderer): void;
+        getRowLength(row: number): number;
+        attach(editor: Editor): void;
+        editor: Editor;
+        detach(e: any): void;
+        updateOnFold(e: any, session: EditSession): void;
+        addLineWidget(w: LineWidget): LineWidget;
+        removeLineWidget(w: LineWidget): void;
+        getWidgetsAtRow(row: number): LineWidget[];
+        firstRow: number;
+        lastRow: number;
+        lineWidgets: import("ace-code").Ace.LineWidget[];
+    }
+    export type EditSession = import("ace-code/src/edit_session").EditSession;
+    export type Editor = import("ace-code/src/editor").Editor;
+    export type VirtualRenderer = import("ace-code/src/virtual_renderer").VirtualRenderer;
+    export type LineWidget = import('../interfaces').LineWidget;
+    namespace Ace {
+        type LineWidget = import("ace-code").Ace.LineWidget;
+        type Editor = import("ace-code").Ace.Editor;
+    }
+    export interface LineWidgets {
+        lineWidgets: Ace.LineWidget[];
+        editor: Ace.Editor;
+    }
+}
 declare module "ace-code/src/background_tokenizer" {
     /**
      * Tokenizes the current [[Document `Document`]] in the background, and caches the tokenized rows for future use.
@@ -3597,7 +3428,7 @@ declare module "ace-code/src/background_tokenizer" {
          * Gives list of [[Token]]'s of the row. (tokens are cached)
          * @param {Number} row The row to get tokens at
          **/
-        getTokens(row: number): import("ace-code").Ace.Token[];
+        getTokens(row: number): import('../interfaces').Token[];
         /**
          * Returns the state of tokenization at the end of a row.
          * @param {Number} row The row to get state at
@@ -3609,15 +3440,108 @@ declare module "ace-code/src/background_tokenizer" {
     export type EditSession = import("ace-code/src/edit_session").EditSession;
     export type Tokenizer = import("ace-code/src/tokenizer").Tokenizer;
     namespace Ace {
-        type EventEmitter<T> = import("ace-code").Ace.EventEmitter<T>;
+        type EventEmitter<T extends {
+            [K in keyof T]: (...args: any[]) => any;
+        }> = import("ace-code").Ace.EventEmitter<T>;
         type BackgroundTokenizerEvents = import("ace-code").Ace.BackgroundTokenizerEvents;
     }
     export interface BackgroundTokenizer extends Ace.EventEmitter<Ace.BackgroundTokenizerEvents> {
     }
 }
+declare module "ace-code/src/search_highlight" {
+    export type Marker = import("ace-code/src/layer/marker").Marker;
+    export type EditSession = import("ace-code/src/edit_session").EditSession;
+    export class SearchHighlight {
+        constructor(regExp: any, clazz: string, type?: string);
+        clazz: string;
+        type: string;
+        setRegexp(regExp: any): void;
+        regExp: any;
+        cache: any[];
+        update(html: any, markerLayer: Marker, session: EditSession, config: Partial<import('../interfaces').LayerConfig>): void;
+        MAX_RANGES: number;
+    }
+}
+declare module "ace-code/src/undomanager" {
+    export type EditSession = import("ace-code/src/edit_session").EditSession;
+    export type Delta = import('../interfaces').Delta;
+    export type Point = import('../interfaces').Point;
+    export type IRange = import('../interfaces').IRange;
+    /**
+     * This object maintains the undo stack for an [[EditSession `EditSession`]].
+     **/
+    export class UndoManager {
+        addSession(session: EditSession): void;
+        /**
+         * Provides a means for implementing your own undo manager. `options` has one property, `args`, an [[Array `Array`]], with two elements:
+         *
+         * - `args[0]` is an array of deltas
+         * - `args[1]` is the document to associate with
+         *
+         **/
+        add(delta: import('../interfaces').Delta, allowMerge: boolean, session?: EditSession): void;
+        lastDeltas: any[];
+        addSelection(selection: any, rev?: number): void;
+        startNewGroup(): any;
+        markIgnored(from: number, to?: number): void;
+        getSelection(rev: number, after?: boolean): {
+            value: string;
+            rev: number;
+        };
+        getRevision(): number;
+        getDeltas(from: number, to?: number): import('../interfaces').Delta[];
+        getChangedRanges(from: number, to?: number): void;
+        getChangedLines(from: number, to?: number): void;
+        /**
+         * [Perform an undo operation on the document, reverting the last change.]{: #UndoManager.undo}
+         **/
+        undo(session: EditSession, dontSelect?: boolean): void;
+        /**
+         * [Perform a redo operation on the document, reimplementing the last change.]{: #UndoManager.redo}
+         *
+         **/
+        redo(session: EditSession, dontSelect?: boolean): void;
+        /**
+         * Destroys the stack of undo and redo redo operations.
+         **/
+        reset(): void;
+        mark: number;
+        selections: any[];
+        /**
+         * Returns `true` if there are undo operations left to perform.
+         **/
+        canUndo(): boolean;
+        /**
+         * Returns `true` if there are redo operations left to perform.
+         **/
+        canRedo(): boolean;
+        /**
+         * Marks the current status clean
+         */
+        bookmark(rev?: number): void;
+        /**
+         * Returns if the current status is clean
+         **/
+        isAtBookmark(): boolean;
+        /**
+         * Returns an object which can be safely stringified into JSON
+         */
+        toJSON(): object;
+        /**
+         * Takes in an object which was returned from the toJSON method above,
+         * and resets the current undoManager instance to use the previously exported
+         * instance state.
+         */
+        fromJSON(json: object): void;
+        hasUndo: () => boolean;
+        hasRedo: () => boolean;
+        isClean: () => boolean;
+        markClean: (rev?: number) => void;
+    }
+}
 declare module "ace-code/src/edit_session/folding" {
-    export type IFolding = import("ace-code/src/edit_session").EditSession & import("ace-code").Ace.Folding;
-    export type Delta = import("ace-code").Ace.Delta;
+    export type IFolding = import("ace-code/src/edit_session").EditSession & import('../interfaces').Folding;
+    export type Delta = import('../interfaces').Delta;
     export function Folding(this: IFolding): void;
     export class Folding {
         /**
@@ -3625,16 +3549,16 @@ declare module "ace-code/src/edit_session/folding" {
          *   -1: ignore a fold if fold.start = row/column
          *   +1: ignore a fold if fold.end = row/column
          **/
-        getFoldAt: (row: number, column: number, side?: number) => import("ace-code").Ace.Fold;
+        getFoldAt: (row: number, column: number, side?: number) => Fold;
         /**
          * Returns all folds in the given range. Note, that this will return folds
          **/
-        getFoldsInRange: (range: import("ace-code").Ace.Range | import("ace-code").Ace.Delta) => import("ace-code").Ace.Fold[];
-        getFoldsInRangeList: (ranges: import("ace-code").Ace.Range[] | import("ace-code").Ace.Range) => import("ace-code").Ace.Fold[];
+        getFoldsInRange: (range: Range | import('../interfaces').Delta) => Fold[];
+        getFoldsInRangeList: (ranges: Range[] | Range) => Fold[];
         /**
          * Returns all folds in the document
          */
-        getAllFolds: () => import("ace-code").Ace.Fold[];
+        getAllFolds: () => Fold[];
         /**
          * Returns the string between folds at the given position.
          * E.g.
@@ -3652,12 +3576,12 @@ declare module "ace-code/src/edit_session/folding" {
          *  foo<fold>bar<fold>wol|rd -trim=+1> "rld"
          *  fo|o<fold>bar<fold>wolrd -trim=00> "foo"
          */
-        getFoldStringAt: (row: number, column: number, trim?: number, foldLine?: import("ace-code").Ace.FoldLine) => string | null;
-        getFoldLine: (docRow: number, startFoldLine?: import("ace-code").Ace.FoldLine) => null | import("ace-code").Ace.FoldLine;
+        getFoldStringAt: (row: number, column: number, trim?: number, foldLine?: FoldLine) => string | null;
+        getFoldLine: (docRow: number, startFoldLine?: FoldLine) => null | FoldLine;
         /**
          * Returns the fold which starts after or contains docRow
          */
-        getNextFoldLine: (docRow: number, startFoldLine?: import("ace-code").Ace.FoldLine) => null | import("ace-code").Ace.FoldLine;
+        getNextFoldLine: (docRow: number, startFoldLine?: FoldLine) => null | FoldLine;
         getFoldedRowCount: (first: number, last: number) => number;
         /**
          * Adds a new fold.
@@ -3665,44 +3589,47 @@ declare module "ace-code/src/edit_session/folding" {
          *      The new created Fold object or an existing fold object in case the
          *      passed in range fits an existing fold exactly.
          */
-        addFold: (placeholder: import("ace-code").Ace.Fold | string, range?: import("ace-code").Ace.Range) => import("ace-code").Ace.Fold;
-        addFolds: (folds: import("ace-code").Ace.Fold[]) => void;
-        removeFold: (fold: import("ace-code").Ace.Fold) => void;
-        removeFolds: (folds: import("ace-code").Ace.Fold[]) => void;
-        expandFold: (fold: import("ace-code").Ace.Fold) => void;
-        expandFolds: (folds: import("ace-code").Ace.Fold[]) => void;
-        unfold: (location?: number | null | import("ace-code").Ace.Point | import("ace-code").Ace.Range | import("ace-code").Ace.Range[], expandInner?: boolean) => import("ace-code").Ace.Fold[] | undefined;
+        addFold: (placeholder: Fold | string, range?: Range) => Fold;
+        addFolds: (folds: Fold[]) => void;
+        removeFold: (fold: Fold) => void;
+        removeFolds: (folds: Fold[]) => void;
+        expandFold: (fold: Fold) => void;
+        expandFolds: (folds: Fold[]) => void;
+        unfold: (location?: number | null | import('../interfaces').Point | Range | Range[], expandInner?: boolean) => Fold[] | undefined;
         /**
          * Checks if a given documentRow is folded. This is true if there are some
          * folded parts such that some parts of the line is still visible.
          **/
-        isRowFolded: (docRow: number, startFoldRow?: import("ace-code").Ace.FoldLine) => boolean;
-        getRowFoldEnd: (docRow: number, startFoldRow?: import("ace-code").Ace.FoldLine) => number;
-        getRowFoldStart: (docRow: number, startFoldRow?: import("ace-code").Ace.FoldLine) => number;
-        getFoldDisplayLine: (foldLine: import("ace-code").Ace.FoldLine, endRow?: number | null, endColumn?: number | null, startRow?: number | null, startColumn?: number | null) => string;
+        isRowFolded: (docRow: number, startFoldRow?: FoldLine) => boolean;
+        getRowFoldEnd: (docRow: number, startFoldRow?: FoldLine) => number;
+        getRowFoldStart: (docRow: number, startFoldRow?: FoldLine) => number;
+        getFoldDisplayLine: (foldLine: FoldLine, endRow?: number | null, endColumn?: number | null, startRow?: number | null, startColumn?: number | null) => string;
         getDisplayLine: (row: number, endColumn: number | null, startRow: number | null, startColumn: number | null) => string;
         toggleFold: (tryToUnfold?: boolean) => void;
-        getCommentFoldRange: (row: number, column: number, dir?: number) => import("ace-code").Ace.Range | undefined;
+        getCommentFoldRange: (row: number, column: number, dir?: number) => Range | undefined;
         foldAll: (startRow?: number | null, endRow?: number | null, depth?: number | null, test?: Function) => void;
         foldToLevel: (level: number) => void;
         foldAllComments: () => void;
         setFoldStyle: (style: string) => void;
         getParentFoldRangeData: (row: number, ignoreCurrent?: boolean) => {
-            range?: import("ace-code").Ace.Range;
-            firstRange?: import("ace-code").Ace.Range;
+            range?: Range;
+            firstRange?: Range;
         };
         onFoldWidgetClick: (row: number, e: any) => void;
         toggleFoldWidget: (toggleParent?: boolean) => void;
-        updateFoldWidgets: (delta: import("ace-code").Ace.Delta) => void;
+        updateFoldWidgets: (delta: import('../interfaces').Delta) => void;
         tokenizerUpdateFoldWidgets: (e: any) => void;
     }
+    import { Fold } from "ace-code/src/edit_session/fold";
+    import { Range } from "ace-code/src/range";
+    import { FoldLine } from "ace-code/src/edit_session/fold_line";
 }
 declare module "ace-code/src/edit_session/bracket_match" {
     export type EditSession = import("ace-code/src/edit_session").EditSession;
     export type Point = import("ace-code/src/edit_session").Point;
     export function BracketMatch(): void;
     export class BracketMatch {
-        findMatchingBracket: (this: import("ace-code/src/edit_session").EditSession, position: Point, chr?: string) => import("ace-code").Ace.Point;
+        findMatchingBracket: (this: import("ace-code/src/edit_session").EditSession, position: Point, chr?: string) => import('../interfaces').Point;
         getBracketRange: (this: import("ace-code/src/edit_session").EditSession, pos: Point) => null | Range;
         /**
          * Returns:
@@ -3816,14 +3743,14 @@ declare module "ace-code/src/edit_session" {
          * Starts tokenizing at the row indicated. Returns a list of objects of the tokenized rows.
          * @param {Number} row The row to start at
          **/
-        getTokens(row: number): import("ace-code").Ace.Token[];
+        getTokens(row: number): import('../interfaces').Token[];
         /**
          * Returns an object indicating the token at the current row. The object has two properties: `index` and `start`.
          * @param {Number} row The row number to retrieve from
          * @param {Number} column The column number to retrieve from
          *
          **/
-        getTokenAt(row: number, column: number): import("ace-code").Ace.Token;
+        getTokenAt(row: number, column: number): import('../interfaces').Token;
         /**
          * Sets the undo manager.
          * @param {UndoManager} undoManager The new undo manager
@@ -3930,20 +3857,20 @@ declare module "ace-code/src/edit_session" {
          * Adds a new marker to the given `Range`. If `inFront` is `true`, a front marker is defined, and the `'changeFrontMarker'` event fires; otherwise, the `'changeBackMarker'` event fires.
          * @param {Range} range Define the range of the marker
          * @param {String} clazz Set the CSS class for the marker
-         * @param {import("ace-code").Ace.MarkerRenderer | "fullLine" | "screenLine" | "text" | "line"} [type] Identify the renderer type of the marker. If string provided, corresponding built-in renderer is used. Supported string types are "fullLine", "screenLine", "text" or "line". If a Function is provided, that Function is used as renderer.
+         * @param {import('../interfaces').MarkerRenderer | "fullLine" | "screenLine" | "text" | "line"} [type] Identify the renderer type of the marker. If string provided, corresponding built-in renderer is used. Supported string types are "fullLine", "screenLine", "text" or "line". If a Function is provided, that Function is used as renderer.
          * @param {Boolean} [inFront] Set to `true` to establish a front marker
          *
          * @return {Number} The new marker id
          **/
-        addMarker(range: Range, clazz: string, type?: import("ace-code").Ace.MarkerRenderer | "fullLine" | "screenLine" | "text" | "line", inFront?: boolean): number;
+        addMarker(range: Range, clazz: string, type?: import('../interfaces').MarkerRenderer | "fullLine" | "screenLine" | "text" | "line", inFront?: boolean): number;
         /**
          * Adds a dynamic marker to the session.
-         * @param {import("ace-code").Ace.MarkerLike} marker object with update method
+         * @param {import('../interfaces').MarkerLike} marker object with update method
          * @param {Boolean} [inFront] Set to `true` to establish a front marker
          *
-         * @return {import("ace-code").Ace.MarkerLike} The added marker
+         * @return {import('../interfaces').MarkerLike} The added marker
          **/
-        addDynamicMarker(marker: import("ace-code").Ace.MarkerLike, inFront?: boolean): import("ace-code").Ace.MarkerLike;
+        addDynamicMarker(marker: import('../interfaces').MarkerLike, inFront?: boolean): import('../interfaces').MarkerLike;
         /**
          * Removes the marker with the specified ID. If this marker was in front, the `'changeFrontMarker'` event is emitted. If the marker was in the back, the `'changeBackMarker'` event is emitted.
          * @param {Number} markerId A number representing a marker
@@ -3955,7 +3882,7 @@ declare module "ace-code/src/edit_session" {
          *
          **/
         getMarkers(inFront?: boolean): {
-            [id: number]: import("ace-code").Ace.MarkerLike;
+            [id: number]: import('../interfaces').MarkerLike;
         };
         highlight(re: RegExp): void;
         /**
@@ -3964,13 +3891,13 @@ declare module "ace-code/src/edit_session" {
         highlightLines(startRow: number, endRow: number, clazz: string, inFront?: boolean): Range;
         /**
          * Sets annotations for the `EditSession`. This functions emits the `'changeAnnotation'` event.
-         * @param {import("ace-code").Ace.Annotation[]} annotations A list of annotations
+         * @param {import('../interfaces').Annotation[]} annotations A list of annotations
          **/
-        setAnnotations(annotations: import("ace-code").Ace.Annotation[]): void;
+        setAnnotations(annotations: import('../interfaces').Annotation[]): void;
         /**
          * Returns the annotations for the `EditSession`.
          **/
-        getAnnotations(): import("ace-code").Ace.Annotation[];
+        getAnnotations(): import('../interfaces').Annotation[];
         /**
          * Clears all the annotations for this session. This function also triggers the `'changeAnnotation'` event.
          **/
@@ -3995,13 +3922,13 @@ declare module "ace-code/src/edit_session" {
          *
          * @related Document.setNewLineMode
          **/
-        setNewLineMode(newLineMode: import("ace-code").Ace.NewLineMode): void;
+        setNewLineMode(newLineMode: import('../interfaces').NewLineMode): void;
         /**
          *
          * Returns the current new line mode.
          * @related Document.getNewLineMode
          **/
-        getNewLineMode(): import("ace-code").Ace.NewLineMode;
+        getNewLineMode(): import('../interfaces').NewLineMode;
         /**
          * Identifies if you want to use a worker for the `EditSession`.
          * @param {Boolean} useWorker Set to `true` to use a worker
@@ -4290,7 +4217,7 @@ declare module "ace-code/src/edit_session" {
          * @alias EditSession.toString
          **/
         getValue: () => string;
-        lineWidgets: null | import("ace-code").Ace.LineWidget[];
+        lineWidgets: null | import('../interfaces').LineWidget[];
         isFullWidth: typeof isFullWidth;
         lineWidgetsWidth?: number;
         gutterRenderer?: any;
@@ -4303,11 +4230,11 @@ declare module "ace-code/src/edit_session" {
     }
     export type FontMetrics = import("ace-code/src/layer/font_metrics").FontMetrics;
     export type FoldLine = import("ace-code/src/edit_session/fold_line").FoldLine;
-    export type Point = import("ace-code").Ace.Point;
-    export type Delta = import("ace-code").Ace.Delta;
-    export type IRange = import("ace-code").Ace.IRange;
-    export type SyntaxMode = import("ace-code").Ace.SyntaxMode;
-    export type LineWidget = import("ace-code").Ace.LineWidget;
+    export type Point = import('../interfaces').Point;
+    export type Delta = import('../interfaces').Delta;
+    export type IRange = import('../interfaces').IRange;
+    export type SyntaxMode = import('../interfaces').SyntaxMode;
+    export type LineWidget = import('../interfaces').LineWidget;
     export type TextMode = SyntaxMode;
     import { Document } from "ace-code/src/document";
     import { BackgroundTokenizer } from "ace-code/src/background_tokenizer";
@@ -4319,7 +4246,9 @@ declare module "ace-code/src/edit_session" {
     function isFullWidth(c: any): boolean;
     var $uid: number;
     namespace Ace {
-        type EventEmitter<T> = import("ace-code").Ace.EventEmitter<T>;
+        type EventEmitter<T extends {
+            [K in keyof T]: (...args: any[]) => any;
+        }> = import("ace-code").Ace.EventEmitter<T>;
         type EditSessionEvents = import("ace-code").Ace.EditSessionEvents;
         type OptionsProvider<T> = import("ace-code").Ace.OptionsProvider<T>;
         type EditSessionOptions = import("ace-code").Ace.EditSessionOptions;
@@ -4548,8 +4477,8 @@ declare module "ace-code/src/range" {
         export { fromPoints, comparePoints };
     }
     export type EditSession = import("ace-code/src/edit_session").EditSession;
-    export type IRange = import("ace-code").Ace.IRange;
-    export type Point = import("ace-code").Ace.Point;
+    export type IRange = import('../interfaces').IRange;
+    export type Point = import('../interfaces').Point;
     /**
      * Creates and returns a new `Range` based on the `start` [[Point]] and `end` [[Point]] of the given parameters.
      * @param {Point} start A starting point to use
@@ -4574,7 +4503,7 @@ declare module "ace-code/src/worker/worker_client" {
 }
 declare module "ace-code/src/placeholder" {
     export class PlaceHolder {
-        constructor(session: EditSession, length: number, pos: import("ace-code").Ace.Point, others: any[], mainClass: string, othersClass: string);
+        constructor(session: EditSession, length: number, pos: import('../interfaces').Point, others: any[], mainClass: string, othersClass: string);
         length: number;
         session: import("ace-code/src/edit_session").EditSession;
         doc: import("ace-code/src/document").Document;
@@ -4605,7 +4534,7 @@ declare module "ace-code/src/placeholder" {
          *
          **/
         hideOtherMarkers(): void;
-        updateAnchors(delta: import("ace-code").Ace.Delta): void;
+        updateAnchors(delta: import('../interfaces').Delta): void;
         updateMarkers(): void;
         /**
          * PlaceHolder.detach()
@@ -4625,7 +4554,9 @@ declare module "ace-code/src/placeholder" {
     export type EditSession = import("ace-code/src/edit_session").EditSession;
     import { Range } from "ace-code/src/range";
     namespace Ace {
-        type EventEmitter<T> = import("ace-code").Ace.EventEmitter<T>;
+        type EventEmitter<T extends {
+            [K in keyof T]: (...args: any[]) => any;
+        }> = import("ace-code").Ace.EventEmitter<T>;
         type PlaceHolderEvents = import("ace-code").Ace.PlaceHolderEvents;
     }
     export interface PlaceHolder extends Ace.EventEmitter<Ace.PlaceHolderEvents> {
@@ -4635,19 +4566,73 @@ declare module "ace-code/src/mouse/multi_select_handler" {
     export function onMouseDown(e: any): any;
 }
 declare module "ace-code/src/commands/multi_select_commands" {
-    export const defaultCommands: import("ace-code").Ace.Command[];
-    export const multiSelectCommands: import("ace-code").Ace.Command[];
+    export const defaultCommands: import('../interfaces').Command[];
+    export const multiSelectCommands: import('../interfaces').Command[];
     export const keyboardHandler: HashHandler;
     import { HashHandler } from "ace-code/src/keyboard/hash_handler";
 }
 declare module "ace-code/src/multi_select" {
-    export const commands: import("ace-code").Ace.Command[];
+    export const commands: import('../interfaces').Command[];
     export const onSessionChange: (e: any) => void;
     export type Anchor = import("ace-code/src/anchor").Anchor;
-    export type Point = import("ace-code").Ace.Point;
-    export type ScreenCoordinates = import("ace-code").Ace.ScreenCoordinates;
+    export type Point = import('../interfaces').Point;
+    export type ScreenCoordinates = import('../interfaces').ScreenCoordinates;
     export function MultiSelect(editor: Editor): void;
     import { Editor } from "ace-code/src/editor";
+}
+declare module "ace-code/src/occur" {
+    export type Editor = import("ace-code/src/editor").Editor;
+    export type Point = import('../interfaces').Point;
+    export type SearchOptions = import('../interfaces').SearchOptions;
+    /**
+     * Finds all lines matching a search term in the current [[Document
+     * `Document`]] and displays them instead of the original `Document`. Keeps
+     * track of the mapping between the occur doc and the original doc.
+     **/
+    export class Occur extends Search {
+        /**
+         * Enables occur mode. expects that `options.needle` is a search term.
+         * This search term is used to filter out all the lines that include it
+         * and these are then used as the content of a new [[Document
+         * `Document`]]. The current cursor position of editor will be translated
+         * so that the cursor is on the matching row/column as it was before.
+         * @param {Object} options options.needle should be a String
+         * @return {Boolean} Whether occur activation was successful
+         *
+         **/
+        enter(editor: Editor, options: any): boolean;
+        /**
+         * Disables occur mode. Resets the [[Sessions `EditSession`]] [[Document
+         * `Document`]] back to the original doc. If options.translatePosition is
+         * truthy also maps the [[Editors `Editor`]] cursor position accordingly.
+         * @param {Object} options options.translatePosition
+         * @return {Boolean} Whether occur deactivation was successful
+         *
+         **/
+        exit(editor: Editor, options: any): boolean;
+        highlight(sess: EditSession, regexp: RegExp): void;
+        displayOccurContent(editor: Editor, options: Partial<SearchOptions>): void;
+        displayOriginalContent(editor: Editor): void;
+        /**
+        * Translates the position from the original document to the occur lines in
+        * the document or the beginning if the doc {row: 0, column: 0} if not
+        * found.
+        * @param {EditSession} session The occur session
+        * @param {Point} pos The position in the original document
+        * @return {Point} position in occur doc
+        **/
+        originalToOccurPosition(session: EditSession, pos: Point): Point;
+        /**
+        * Translates the position from the occur document to the original document
+        * or `pos` if not found.
+        * @param {EditSession} session The occur session
+        * @param {Point} pos The position in the occur session document
+        **/
+        occurToOriginalPosition(session: EditSession, pos: Point): Point;
+        matchingLines(session: EditSession, options: Partial<SearchOptions>): any[];
+    }
+    import { Search } from "ace-code/src/search";
+    import { EditSession } from "ace-code/src/edit_session";
 }
 declare module "ace-code/src/commands/occur_commands" {
     export namespace occurStartCommand {
@@ -4721,8 +4706,51 @@ declare module "ace-code/src/incremental_search" {
     import { Editor } from "ace-code/src/editor";
     import { Range } from "ace-code/src/range";
 }
+declare module "ace-code/src/marker_group" {
+    export type EditSession = import("ace-code/src/edit_session").EditSession;
+    export type MarkerGroupItem = {
+        range: import("ace-code/src/range").Range;
+        className: string;
+    };
+    export type LayerConfig = import('../interfaces').LayerConfig;
+    export type Marker = import("ace-code/src/layer/marker").Marker;
+    export class MarkerGroup {
+        /**
+         * @param {{markerType: "fullLine" | "line" | undefined}} [options] Options controlling the behvaiour of the marker.
+         * User `markerType` to control how the markers which are part of this group will be rendered:
+         * - `undefined`: uses `text` type markers where only text characters within the range will be highlighted.
+         * - `fullLine`: will fully highlight all the rows within the range, including the characters before and after the range on the respective rows.
+         * - `line`: will fully highlight the lines within the range but will only cover the characters between the start and end of the range.
+         */
+        constructor(session: EditSession, options?: {
+            markerType: "fullLine" | "line" | undefined;
+        });
+        markerType: "line" | "fullLine";
+        markers: import('../interfaces').MarkerGroupItem[];
+        session: EditSession;
+        /**
+         * Finds the first marker containing pos
+         */
+        getMarkerAtPosition(pos: import('../interfaces').Point): import('../interfaces').MarkerGroupItem | undefined;
+        /**
+         * Comparator for Array.sort function, which sorts marker definitions by their positions
+         *
+         * @param {MarkerGroupItem} a first marker.
+         * @param {MarkerGroupItem} b second marker.
+         * @returns {number} negative number if a should be before b, positive number if b should be before a, 0 otherwise.
+         */
+        markersComparator(a: MarkerGroupItem, b: MarkerGroupItem): number;
+        /**
+         * Sets marker definitions to be rendered. Limits the number of markers at MAX_MARKERS.
+         * @param {MarkerGroupItem[]} markers an array of marker definitions.
+         */
+        setMarkers(markers: MarkerGroupItem[]): void;
+        update(html: any, markerLayer: Marker, session: EditSession, config: LayerConfig): void;
+        MAX_MARKERS: number;
+    }
+}
 declare module "ace-code/src/split" {
-    export type ISplit = import("ace-code").Ace.EventEmitter<any> & {
+    export type ISplit = import('../interfaces').EventEmitter<any> & {
         [key: string]: any;
     };
     export var Split: any;
@@ -4738,6 +4766,9 @@ declare module "ace-code/src/tokenizer_dev" {
 }
 declare module "ace-code/src/unicode" {
     export const wordChars: any;
+}
+declare module "ace-code/src/autocomplete/text_completer" {
+    export function getCompletions(editor: any, session: any, pos: any, prefix: any, callback: any): void;
 }
 declare module "ace-code/src/keyboard/textarea" {
     export const handler: HashHandler;

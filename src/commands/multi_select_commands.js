@@ -1,7 +1,7 @@
 
 /**
  * commands to enter multiselect mode
- * @type {import("../../ace-internal").Ace.Command[]}
+ * @type {import("../../interfaces").Command[]}
  */
 exports.defaultCommands = [{
     name: "addCursorAbove",
@@ -92,7 +92,7 @@ exports.defaultCommands = [{
 
 /**
  * commands active only in multiselect mode
- * @type {import("../../ace-internal").Ace.Command[]}
+ * @type {import("../../interfaces").Command[]}
  */
 exports.multiSelectCommands = [{
     name: "singleSelection",

@@ -109,7 +109,7 @@ function clearCodeLensWidgets(session) {
 /**
  *
  * @param {EditSession} session
- * @param {import("../../ace-internal").Ace.CodeLense[]} lenses
+ * @param {import("../../interfaces").CodeLense[]} lenses
  * @return {number}
  */
 exports.setLenses = function(session, lenses) {
@@ -209,7 +209,7 @@ function detachFromEditor(editor) {
 
 /**
  * @param {import("../editor").Editor} editor
- * @param {import("../../ace-internal").Ace.CodeLenseProvider} codeLensProvider
+ * @param {import("../../interfaces").CodeLenseProvider} codeLensProvider
  */
 exports.registerCodeLensProvider = function(editor, codeLensProvider) {
     editor.setOption("enableCodeLens", true);

@@ -1,9 +1,9 @@
 "use strict";
 /**
  * @typedef {import("./editor").Editor} Editor
- * @typedef {import("../ace-internal").Ace.CompletionProviderOptions} CompletionProviderOptions
- * @typedef {import("../ace-internal").Ace.CompletionOptions} CompletionOptions
- * @typedef {import("../ace-internal").Ace.Position} Position
+ * @typedef {import("../interfaces").CompletionProviderOptions} CompletionProviderOptions
+ * @typedef {import("../interfaces").CompletionOptions} CompletionOptions
+ * @typedef {import("../interfaces").Position} Position
  */
 var HashHandler = require("./keyboard/hash_handler").HashHandler;
 var AcePopup = require("./autocomplete/popup").AcePopup;
@@ -28,11 +28,11 @@ var preventParentScroll = require("./lib/scroll").preventParentScroll;
  * @property {string} [docText] - a plain text that would be displayed as an additional popup. If `docHTML` exists,
  * it would be used instead of `docText`.
  * @property {string} [completerId] - the identifier of the completer
- * @property {import("../ace-internal").Ace.IRange} [range] - An object specifying the range of text to be replaced with the new completion value (experimental)
+ * @property {import("../interfaces").IRange} [range] - An object specifying the range of text to be replaced with the new completion value (experimental)
  * @property {string} [command] - A command to be executed after the completion is inserted (experimental)
  * @property {string} [snippet] - a text snippet that would be inserted when the completion is selected
  * @property {string} [value] - The text that would be inserted when selecting this completion.
- * @property {import("../ace-internal").Ace.Completer} [completer]
+ * @property {import("../interfaces").Completer} [completer]
  * @property {boolean} [hideInlinePreview]
  * @export
  */
@@ -912,7 +912,7 @@ class CompletionProvider {
 
     /**
      * @param {Editor} editor
-     * @param {import("../ace-internal").Ace.CompletionCallbackFunction} callback
+     * @param {import("../interfaces").CompletionCallbackFunction} callback
      */
     gatherCompletions(editor, callback) {
         var session = editor.getSession();

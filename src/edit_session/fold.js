@@ -2,8 +2,8 @@
 /**
  * @typedef {import("./fold_line").FoldLine} FoldLine
  * @typedef {import("../range").Range} Range
- * @typedef {import("../../ace-internal").Ace.Point} Point
- * @typedef {import("../../ace-internal").Ace.IRange} IRange
+ * @typedef {import("../../interfaces").Point} Point
+ * @typedef {import("../../interfaces").IRange} IRange
  */
 var RangeList = require("../range_list").RangeList;
 

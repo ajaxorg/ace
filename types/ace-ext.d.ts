@@ -1,163 +1,5 @@
 /* This file is generated using `npm run update-types` */
 
-declare module "ace-code/src/ext/command_bar" {
-    /**
-     * Displays a command tooltip above the currently active line selection, with clickable elements.
-     *
-     * Internally it is a composite of two tooltips, one for the main tooltip and one for the
-     * overflowing commands.
-     * The commands are added sequentially in registration order.
-     * When attached to an editor, it is either always shown or only when the active line is hovered
-     * with mouse, depending on the alwaysShow property.
-     */
-    export class CommandBarTooltip {
-        constructor(parentNode: HTMLElement, options?: Partial<import("ace-code").Ace.CommandBarOptions>);
-        parentNode: HTMLElement;
-        tooltip: Tooltip;
-        moreOptions: Tooltip;
-        maxElementsOnTooltip: number;
-        eventListeners: {};
-        elements: {};
-        commands: {};
-        tooltipEl: any[] | HTMLElement | Text;
-        moreOptionsEl: any[] | HTMLElement | Text;
-        /**
-         * Registers a command on the command bar tooltip.
-         *
-         * The commands are added in sequential order. If there is not enough space on the main
-         * toolbar, the remaining elements are added to the overflow menu.
-         *
-         */
-        registerCommand(id: string, command: TooltipCommand): void;
-        isShown(): boolean;
-        isMoreOptionsShown(): boolean;
-        getAlwaysShow(): boolean;
-        /**
-         * Sets the display mode of the tooltip
-         *
-         * When true, the tooltip is always displayed while it is attached to an editor.
-         * When false, the tooltip is displayed only when the mouse hovers over the active editor line.
-         *
-         */
-        setAlwaysShow(alwaysShow: boolean): void;
-        /**
-         * Attaches the clickable command bar tooltip to an editor
-         *
-         * Depending on the alwaysShow parameter it either displays the tooltip immediately,
-         * or subscribes to the necessary events to display the tooltip on hover.
-         *
-         */
-        attach(editor: Editor): void;
-        editor: import("ace-code/src/editor").Editor;
-        /**
-         * Updates the position of the command bar tooltip. It aligns itself above the active line in the editor.
-         */
-        updatePosition(): void;
-        /**
-         * Updates each command element in the tooltip.
-         *
-         * This is automatically called on certain events, but can be called manually as well.
-         */
-        update(): void;
-        /**
-         * Detaches the tooltip from the editor.
-         */
-        detach(): void;
-        destroy(): void;
-    }
-    export type Editor = import("ace-code/src/editor").Editor;
-    export type TooltipCommand = import("ace-code").Ace.TooltipCommand;
-    import { Tooltip } from "ace-code/src/tooltip";
-    export var TOOLTIP_CLASS_NAME: string;
-    export var BUTTON_CLASS_NAME: string;
-    namespace Ace {
-        type EventEmitter<T> = import("ace-code").Ace.EventEmitter<T>;
-    }
-    export interface CommandBarTooltip extends Ace.EventEmitter<any> {
-    }
-}
-declare module "ace-code/src/ext/language_tools" {
-    export function setCompleters(val: any): void;
-    export function addCompleter(completer: any): void;
-    import textCompleter = require("ace-code/src/autocomplete/text_completer");
-    export var keyWordCompleter: import("ace-code").Ace.Completer;
-    export var snippetCompleter: import("ace-code").Ace.Completer;
-    export { textCompleter };
-}
-declare module "ace-code/src/ext/inline_autocomplete" {
-    /**
-     * This class controls the inline-only autocompletion components and their lifecycle.
-     * This is more lightweight than the popup-based autocompletion, as it can only work with exact prefix matches.
-     * There is an inline ghost text renderer and an optional command bar tooltip inside.
-     */
-    export class InlineAutocomplete {
-        constructor(editor: Editor);
-        editor: Editor;
-        keyboardHandler: HashHandler;
-        blurListener(e: any): void;
-        changeListener(e: any): void;
-        changeTimer: {
-            (timeout?: number): void;
-            delay(timeout?: number): void;
-            schedule: any;
-            call(): void;
-            cancel(): void;
-            isPending(): any;
-        };
-        getInlineRenderer(): AceInline;
-        inlineRenderer: AceInline;
-        getInlineTooltip(): CommandBarTooltip;
-        inlineTooltip: CommandBarTooltip;
-        /**
-         * This function is the entry point to the class. This triggers the gathering of the autocompletion and displaying the results;
-         */
-        show(options: import("ace-code").Ace.CompletionOptions): void;
-        activated: boolean;
-        insertMatch(): boolean;
-        goTo(where: import("ace-code").Ace.InlineAutocompleteAction): void;
-        getLength(): any;
-        getData(index?: number): import("ace-code").Ace.Completion | undefined;
-        getIndex(): number;
-        isOpen(): boolean;
-        setIndex(value: number): void;
-        getCompletionProvider(initialPosition: any): CompletionProvider;
-        completionProvider: CompletionProvider;
-        updateCompletions(options?: import("ace-code").Ace.CompletionOptions): void;
-        base: import("ace-code/src/anchor").Anchor;
-        completions: FilteredList;
-        detach(): void;
-        destroy(): void;
-        updateDocTooltip(): void;
-        commands: {
-            [key: string]: import("ace-code").Ace.Command;
-        };
-    }
-    export namespace InlineAutocomplete {
-        function _for(editor: any): any;
-        export { _for as for };
-        export namespace startCommand {
-            let name: string;
-            function exec(editor: any, options: any): void;
-            export namespace bindKey {
-                let win: string;
-                let mac: string;
-            }
-        }
-        /**
-         * Factory method to create a command bar tooltip for inline autocomplete.
-         *
-         * @param {HTMLElement} parentEl  The parent element where the tooltip HTML elements will be added.
-         * @returns {CommandBarTooltip}   The command bar tooltip for inline autocomplete
-         */
-        export function createInlineTooltip(parentEl: HTMLElement): CommandBarTooltip;
-    }
-    import { Editor } from "ace-code/src/editor";
-    import { HashHandler } from "ace-code/src/keyboard/hash_handler";
-    import { AceInline } from "ace-code/src/autocomplete/inline";
-    import { CommandBarTooltip } from "ace-code/src/ext/command_bar";
-    import { CompletionProvider } from "ace-code/src/autocomplete";
-    import { FilteredList } from "ace-code/src/autocomplete";
-}
 declare module "ace-code/src/ext/searchbox-css" {
     const _exports: string;
     export = _exports;
@@ -229,13 +71,91 @@ declare module "ace-code/src/ext/beautify" {
     }[];
 }
 declare module "ace-code/src/ext/code_lens" {
-    export function setLenses(session: EditSession, lenses: import("ace-code").Ace.CodeLense[]): number;
-    export function registerCodeLensProvider(editor: import("ace-code/src/editor").Editor, codeLensProvider: import("ace-code").Ace.CodeLenseProvider): void;
+    export function setLenses(session: EditSession, lenses: import('../interfaces').CodeLense[]): number;
+    export function registerCodeLensProvider(editor: import("ace-code/src/editor").Editor, codeLensProvider: import('../interfaces').CodeLenseProvider): void;
     export function clear(session: EditSession): void;
     export type EditSession = import("ace-code/src/edit_session").EditSession;
     export type VirtualRenderer = import("ace-code/src/virtual_renderer").VirtualRenderer & {
     };
     import { Editor } from "ace-code/src/editor";
+}
+declare module "ace-code/src/ext/command_bar" {
+    /**
+     * Displays a command tooltip above the currently active line selection, with clickable elements.
+     *
+     * Internally it is a composite of two tooltips, one for the main tooltip and one for the
+     * overflowing commands.
+     * The commands are added sequentially in registration order.
+     * When attached to an editor, it is either always shown or only when the active line is hovered
+     * with mouse, depending on the alwaysShow property.
+     */
+    export class CommandBarTooltip {
+        constructor(parentNode: HTMLElement, options?: Partial<import('../interfaces').CommandBarOptions>);
+        parentNode: HTMLElement;
+        tooltip: Tooltip;
+        moreOptions: Tooltip;
+        maxElementsOnTooltip: number;
+        eventListeners: {};
+        elements: {};
+        commands: {};
+        tooltipEl: any[] | HTMLElement | Text;
+        moreOptionsEl: any[] | HTMLElement | Text;
+        /**
+         * Registers a command on the command bar tooltip.
+         *
+         * The commands are added in sequential order. If there is not enough space on the main
+         * toolbar, the remaining elements are added to the overflow menu.
+         *
+         */
+        registerCommand(id: string, command: TooltipCommand): void;
+        isShown(): boolean;
+        isMoreOptionsShown(): boolean;
+        getAlwaysShow(): boolean;
+        /**
+         * Sets the display mode of the tooltip
+         *
+         * When true, the tooltip is always displayed while it is attached to an editor.
+         * When false, the tooltip is displayed only when the mouse hovers over the active editor line.
+         *
+         */
+        setAlwaysShow(alwaysShow: boolean): void;
+        /**
+         * Attaches the clickable command bar tooltip to an editor
+         *
+         * Depending on the alwaysShow parameter it either displays the tooltip immediately,
+         * or subscribes to the necessary events to display the tooltip on hover.
+         *
+         */
+        attach(editor: Editor): void;
+        editor: import("ace-code/src/editor").Editor;
+        /**
+         * Updates the position of the command bar tooltip. It aligns itself above the active line in the editor.
+         */
+        updatePosition(): void;
+        /**
+         * Updates each command element in the tooltip.
+         *
+         * This is automatically called on certain events, but can be called manually as well.
+         */
+        update(): void;
+        /**
+         * Detaches the tooltip from the editor.
+         */
+        detach(): void;
+        destroy(): void;
+    }
+    export type Editor = import("ace-code/src/editor").Editor;
+    export type TooltipCommand = import('../interfaces').TooltipCommand;
+    import { Tooltip } from "ace-code/src/tooltip";
+    export var TOOLTIP_CLASS_NAME: string;
+    export var BUTTON_CLASS_NAME: string;
+    namespace Ace {
+        type EventEmitter<T extends {
+            [K in keyof T]: (...args: any[]) => any;
+        }> = import("ace-code").Ace.EventEmitter<T>;
+    }
+    export interface CommandBarTooltip extends Ace.EventEmitter<any> {
+    }
 }
 declare module "ace-code/src/ext/emmet" {
     export const commands: HashHandler;
@@ -349,8 +269,90 @@ declare module "ace-code/src/ext/emmet" {
     }
 }
 declare module "ace-code/src/ext/hardwrap" {
-    export function hardWrap(editor: import("ace-code/src/editor").Editor, options: import("ace-code").Ace.HardWrapOptions): void;
+    export function hardWrap(editor: import("ace-code/src/editor").Editor, options: import('../interfaces').HardWrapOptions): void;
     import { Editor } from "ace-code/src/editor";
+}
+declare module "ace-code/src/ext/language_tools" {
+    export function setCompleters(val: any): void;
+    export function addCompleter(completer: any): void;
+    import textCompleter = require("ace-code/src/autocomplete/text_completer");
+    export var keyWordCompleter: import('../interfaces').Completer;
+    export var snippetCompleter: import('../interfaces').Completer;
+    export { textCompleter };
+}
+declare module "ace-code/src/ext/inline_autocomplete" {
+    /**
+     * This class controls the inline-only autocompletion components and their lifecycle.
+     * This is more lightweight than the popup-based autocompletion, as it can only work with exact prefix matches.
+     * There is an inline ghost text renderer and an optional command bar tooltip inside.
+     */
+    export class InlineAutocomplete {
+        constructor(editor: Editor);
+        editor: Editor;
+        keyboardHandler: HashHandler;
+        blurListener(e: any): void;
+        changeListener(e: any): void;
+        changeTimer: {
+            (timeout?: number): void;
+            delay(timeout?: number): void;
+            schedule: any;
+            call(): void;
+            cancel(): void;
+            isPending(): any;
+        };
+        getInlineRenderer(): AceInline;
+        inlineRenderer: AceInline;
+        getInlineTooltip(): CommandBarTooltip;
+        inlineTooltip: CommandBarTooltip;
+        /**
+         * This function is the entry point to the class. This triggers the gathering of the autocompletion and displaying the results;
+         */
+        show(options: import('../interfaces').CompletionOptions): void;
+        activated: boolean;
+        insertMatch(): boolean;
+        goTo(where: import('../interfaces').InlineAutocompleteAction): void;
+        getLength(): any;
+        getData(index?: number): import("ace-code/src/autocomplete").Completion | undefined;
+        getIndex(): number;
+        isOpen(): boolean;
+        setIndex(value: number): void;
+        getCompletionProvider(initialPosition: any): CompletionProvider;
+        completionProvider: CompletionProvider;
+        updateCompletions(options?: import('../interfaces').CompletionOptions): void;
+        base: import("ace-code/src/anchor").Anchor;
+        completions: FilteredList;
+        detach(): void;
+        destroy(): void;
+        updateDocTooltip(): void;
+        commands: {
+            [key: string]: import('../interfaces').Command;
+        };
+    }
+    export namespace InlineAutocomplete {
+        function _for(editor: any): any;
+        export { _for as for };
+        export namespace startCommand {
+            let name: string;
+            function exec(editor: any, options: any): void;
+            export namespace bindKey {
+                let win: string;
+                let mac: string;
+            }
+        }
+        /**
+         * Factory method to create a command bar tooltip for inline autocomplete.
+         *
+         * @param {HTMLElement} parentEl  The parent element where the tooltip HTML elements will be added.
+         * @returns {CommandBarTooltip}   The command bar tooltip for inline autocomplete
+         */
+        export function createInlineTooltip(parentEl: HTMLElement): CommandBarTooltip;
+    }
+    import { Editor } from "ace-code/src/editor";
+    import { HashHandler } from "ace-code/src/keyboard/hash_handler";
+    import { AceInline } from "ace-code/src/autocomplete/inline";
+    import { CommandBarTooltip } from "ace-code/src/ext/command_bar";
+    import { CompletionProvider } from "ace-code/src/autocomplete";
+    import { FilteredList } from "ace-code/src/autocomplete";
 }
 declare module "ace-code/src/ext/menu_tools/settings_menu.css" {
     const _exports: string;
@@ -418,7 +420,9 @@ declare module "ace-code/src/ext/options" {
     }
     export type Editor = import("ace-code/src/editor").Editor;
     namespace Ace {
-        type EventEmitter<T> = import("ace-code").Ace.EventEmitter<T>;
+        type EventEmitter<T extends {
+            [K in keyof T]: (...args: any[]) => any;
+        }> = import("ace-code").Ace.EventEmitter<T>;
     }
     export interface OptionPanel extends Ace.EventEmitter<any> {
     }
@@ -525,10 +529,10 @@ declare module "ace-code/src/ext/simple_tokenizer" {
      * Result is a list of list of tokens, where each line from the provided content is a separate list of tokens.
      *
      * @param {string} content to tokenize
-     * @param {import("ace-code").Ace.HighlightRules} highlightRules defining the language grammar
-     * @returns {import("ace-code").Ace.TokenizeResult} tokenization result containing a list of token for each of the lines from content
+     * @param {import('../interfaces').HighlightRules} highlightRules defining the language grammar
+     * @returns {import('../interfaces').TokenizeResult} tokenization result containing a list of token for each of the lines from content
      */
-    export function tokenize(content: string, highlightRules: import("ace-code").Ace.HighlightRules): import("ace-code").Ace.TokenizeResult;
+    export function tokenize(content: string, highlightRules: import('../interfaces').HighlightRules): import('../interfaces').TokenizeResult;
 }
 declare module "ace-code/src/ext/spellcheck" {
     export function contextMenuHandler(e: any): void;
@@ -542,7 +546,7 @@ declare module "ace-code/src/ext/static-css" {
     export = _exports;
 }
 declare module "ace-code/src/ext/static_highlight" {
-    function highlight(el: HTMLElement, opts: import("ace-code").Ace.StaticHighlightOptions, callback?: any): boolean;
+    function highlight(el: HTMLElement, opts: import('../interfaces').StaticHighlightOptions, callback?: any): boolean;
     export namespace highlight {
         export { render, renderSync, highlight, SyntaxMode, Theme };
     }
@@ -573,8 +577,8 @@ declare module "ace-code/src/ext/static_highlight" {
      * @returns {object} An object containing: html, css
      */
     function renderSync(input: string, mode: SyntaxMode | string, theme: Theme, lineStart: any, disableGutter: boolean): object;
-    type SyntaxMode = import("ace-code").Ace.SyntaxMode;
-    type Theme = import("ace-code").Ace.Theme;
+    type SyntaxMode = import('../interfaces').SyntaxMode;
+    type Theme = import('../interfaces').Theme;
 }
 declare module "ace-code/src/ext/statusbar" {
     export type Editor = import("ace-code/src/editor").Editor;

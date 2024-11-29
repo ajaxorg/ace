@@ -1,7 +1,7 @@
 /**
  * @typedef {import("./anchor").Anchor} Anchor
- * @typedef {import("../ace-internal").Ace.Point} Point
- * @typedef {import("../ace-internal").Ace.ScreenCoordinates} ScreenCoordinates
+ * @typedef {import("../interfaces").Point} Point
+ * @typedef {import("../interfaces").ScreenCoordinates} ScreenCoordinates
  */
 
 var RangeList = require("./range_list").RangeList;
@@ -590,7 +590,7 @@ var Editor = require("./editor").Editor;
     /**
      * Finds and selects all the occurrences of `needle`.
      * @param {String} [needle] The text to find
-     * @param {Partial<import("../ace-internal").Ace.SearchOptions>} [options] The search options
+     * @param {Partial<import("../interfaces").SearchOptions>} [options] The search options
      * @param {Boolean} [additive] keeps
      *
      * @returns {Number} The cumulative count of all found matches

@@ -1,6 +1,6 @@
 "use strict";
 /**
- * @typedef {import("../../ace-internal").Ace.SyntaxMode} SyntaxMode
+ * @typedef {import("../../interfaces").SyntaxMode} SyntaxMode
  */
 
 var config = require("../config");
@@ -280,7 +280,7 @@ Mode = function() {
               var functionName = delegations[i];
               var defaultHandler = scope[functionName];
               scope[delegations[i]] =
-                  /** @this {import("../../ace-internal").Ace.SyntaxMode} */
+                  /** @this {import("../../interfaces").SyntaxMode} */
                   function () {
                       return this.$delegator(functionName, arguments, defaultHandler);
                   };

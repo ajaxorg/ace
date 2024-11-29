@@ -1,6 +1,6 @@
 /**
  * @typedef {import("../editor").Editor} Editor
- * @typedef {import("../../ace-internal").Ace.TooltipCommand} TooltipCommand
+ * @typedef {import("../../interfaces").TooltipCommand} TooltipCommand
  */
 var Tooltip = require("../tooltip").Tooltip;
 var EventEmitter = require("../lib/event_emitter").EventEmitter;
@@ -53,7 +53,7 @@ var keyDisplayMap = {
 class CommandBarTooltip {
     /**
      * @param {HTMLElement} parentNode
-     * @param {Partial<import("../../ace-internal").Ace.CommandBarOptions>} [options]
+     * @param {Partial<import("../../interfaces").CommandBarOptions>} [options]
      */
     constructor(parentNode, options) {
         options = options || {};

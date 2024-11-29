@@ -1,8 +1,8 @@
 "use strict";
 /**
  * @typedef {import("./editor").Editor} Editor
- * @typedef {import("../ace-internal").Ace.Point} Point
- * @typedef {import("../ace-internal").Ace.SearchOptions} SearchOptions
+ * @typedef {import("../interfaces").Point} Point
+ * @typedef {import("../interfaces").SearchOptions} SearchOptions
  */
 
 var oop = require("./lib/oop");
