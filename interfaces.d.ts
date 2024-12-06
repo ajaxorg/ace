@@ -224,7 +224,7 @@ export interface Folding {
     tokenizerUpdateFoldWidgets(e: any): void;
 }
 
-export interface BracketMatch {
+export class BracketMatch {
     findMatchingBracket: (position: Point, chr?: string) => Point;
 
     getBracketRange: (pos: Point) => null | Range;

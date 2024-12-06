@@ -1,3 +1,15 @@
+import * as i from "./interfaces";
+import {Autocomplete, Completion} from "./src/autocomplete";
+import {AcePopup} from "./src/autocomplete/popup";
+import {Document} from "./src/document";
+import {EditSession} from "./src/edit_session";
+import {SearchBox} from "./src/ext/searchbox";
+import {LineWidgets} from "./src/line_widgets";
+import {Occur} from "./src/occur";
+import {MouseEvent} from "./src/mouse/mouse_event";
+import {Editor} from "./src/editor";
+import {InlineAutocomplete} from "./src/ext/inline_autocomplete";
+
 export namespace Ace {
     type Anchor = import("./src/anchor").Anchor;
     type Editor = import("./src/editor").Editor;
@@ -213,9 +225,6 @@ export namespace Ace {
     type StaticHighlightOptions = import("./interfaces").StaticHighlightOptions;
 }
 
-export type InlineAutocomplete = Ace.InlineAutocomplete;
-export type CommandBarTooltip = Ace.CommandBarTooltip;
-
 declare global {
     interface Element {
         setAttribute(name: string, value: boolean): void;
@@ -226,41 +235,41 @@ declare global {
 
 declare module "./src/anchor" {
 
-    export interface Anchor extends Ace.EventEmitter<Ace.AnchorEvents> {
+    export interface Anchor extends i.EventEmitter<i.AnchorEvents> {
         markerId?: number;
-        document: Ace.Document;
+        document: Document;
     }
 
 }
 
 declare module "./src/autocomplete" {
     export interface Autocomplete {
-        popup: Ace.AcePopup;
+        popup: AcePopup;
         emptyMessage?: Function,
     }
 
     export interface CompletionProvider {
-        completions: Ace.FilteredList;
+        completions: FilteredList;
     }
 }
 
 declare module "./src/background_tokenizer" {
-    export interface BackgroundTokenizer extends Ace.EventEmitter<Ace.BackgroundTokenizerEvents> {
+    export interface BackgroundTokenizer extends i.EventEmitter<i.BackgroundTokenizerEvents> {
 
     }
 }
 
 declare module "./src/document" {
-    export interface Document extends Ace.EventEmitter<Ace.DocumentEvents> {
+    export interface Document extends i.EventEmitter<i.DocumentEvents> {
     }
 
 }
 
 declare module "./src/editor" {
-    export interface Editor extends Ace.EditorMultiSelectProperties, Ace.OptionsProvider<Ace.EditorOptions>,
-        Ace.EventEmitter<Ace.EditorEvents>, Ace.CodeLenseEditorExtension, Ace.ElasticTabstopsEditorExtension,
-        Ace.TextareaEditorExtension, Ace.PromptEditorExtension, Ace.OptionsEditorExtension {
-        session: Ace.EditSession;
+    export interface Editor extends i.EditorMultiSelectProperties, i.OptionsProvider<i.EditorOptions>,
+        i.EventEmitter<i.EditorEvents>, i.CodeLenseEditorExtension, i.ElasticTabstopsEditorExtension,
+        i.TextareaEditorExtension, i.PromptEditorExtension, i.OptionsEditorExtension {
+        session: EditSession;
         $mergeUndoDeltas?: any,
         $highlightSelectedWord?: boolean,
         $updatePlaceholder?: Function,
@@ -271,25 +280,25 @@ declare module "./src/editor" {
         $copyWithEmptySelection?: any
         $selectionStyle?: string,
         env?: any;
-        widgetManager?: Ace.LineWidgets,
-        completer?: Ace.Autocomplete | Ace.InlineAutocomplete,
-        completers: Ace.Completer[],
+        widgetManager?: LineWidgets,
+        completer?: Autocomplete | InlineAutocomplete,
+        completers: i.Completer[],
         $highlightTagPending?: boolean,
         showKeyboardShortcuts?: () => void,
         showSettingsMenu?: () => void,
-        searchBox?: Ace.SearchBox,
+        searchBox?: SearchBox,
         _eventRegistry?: any,
     }
 }
 
 declare module "./src/edit_session" {
-    export interface EditSession extends Ace.EventEmitter<Ace.EditSessionEvents>,
-        Ace.OptionsProvider<Ace.EditSessionOptions>,
-        Ace.Folding, Ace.BracketMatch {
-        doc: Ace.Document,
+    export interface EditSession extends i.EventEmitter<i.EditSessionEvents>,
+        i.OptionsProvider<i.EditSessionOptions>,
+        i.Folding, i.BracketMatch {
+        doc: Document,
         $highlightLineMarker?: {
-            start: Ace.Point,
-            end: Ace.Point,
+            start: i.Point,
+            end: i.Point,
             id?: number
         }
         $useSoftTabs?: boolean,
@@ -314,7 +323,7 @@ declare module "./src/edit_session" {
         selectionMarkerCount?: number,
         multiSelect?: any,
         $occurHighlight?: any,
-        $occur?: Ace.Occur,
+        $occur?: Occur,
         $occurMatchingLines?: any,
         $useEmacsStyleLineStart?: boolean,
         $selectLongWords?: boolean,
@@ -331,48 +340,48 @@ declare module "./src/edit_session/fold" {
 }
 
 declare module "./src/placeholder" {
-    export interface PlaceHolder extends Ace.EventEmitter<Ace.PlaceHolderEvents> {
+    export interface PlaceHolder extends i.EventEmitter<i.PlaceHolderEvents> {
     }
 }
 
 declare module "./src/scrollbar" {
-    export interface VScrollBar extends Ace.EventEmitter<any> {
+    export interface VScrollBar extends i.EventEmitter<any> {
     }
 
-    export interface HScrollBar extends Ace.EventEmitter<any> {
+    export interface HScrollBar extends i.EventEmitter<any> {
     }
 }
 
 declare module "./src/scrollbar_custom" {
-    export interface VScrollBar extends Ace.EventEmitter<any> {
+    export interface VScrollBar extends i.EventEmitter<any> {
     }
 
-    export interface HScrollBar extends Ace.EventEmitter<any> {
+    export interface HScrollBar extends i.EventEmitter<any> {
     }
 }
 
 declare module "./src/line_widgets" {
     export interface LineWidgets {
-        lineWidgets: Ace.LineWidget[];
-        editor: Ace.Editor;
+        lineWidgets: i.LineWidget[];
+        editor: Editor;
     }
 }
 
 declare module "./src/selection" {
-    export interface Selection extends Ace.EventEmitter<Ace.MultiSelectionEvents>, Ace.MultiSelectProperties {
+    export interface Selection extends i.EventEmitter<i.MultiSelectionEvents>, i.MultiSelectProperties {
     }
 }
 
 declare module "./src/range" {
     export interface Range {
         id?: number;
-        cursor?: Ace.Point;
+        cursor?: i.Point;
         isBackwards?: boolean;
     }
 }
 
 declare module "./src/virtual_renderer" {
-    export interface VirtualRenderer extends Ace.EventEmitter<Ace.VirtualRendererEvents>, Ace.OptionsProvider<Ace.VirtualRendererOptions> {
+    export interface VirtualRenderer extends i.EventEmitter<i.VirtualRendererEvents>, i.OptionsProvider<i.VirtualRendererOptions> {
         $customScrollbar?: boolean,
         $extraHeight?: number,
         $showGutter?: boolean,
@@ -397,32 +406,32 @@ declare module "./src/virtual_renderer" {
         theme?: any,
         $theme?: any,
         destroyed?: boolean,
-        session: Ace.EditSession,
+        session: EditSession,
         keyboardFocusClassName?: string,
     }
 
 }
 
 declare module "./src/snippets" {
-    interface SnippetManager extends Ace.EventEmitter<any> {
+    interface SnippetManager extends i.EventEmitter<any> {
     }
 }
 
 declare module "./src/ext/command_bar" {
-    export interface CommandBarTooltip extends Ace.EventEmitter<any> {
+    export interface CommandBarTooltip extends i.EventEmitter<any> {
         $shouldHideMoreOptions?: boolean,
     }
 }
 
 declare module "./src/commands/command_manager" {
-    export interface CommandManager extends Ace.EventEmitter<any> {
+    export interface CommandManager extends i.EventEmitter<any> {
         $checkCommandState?: boolean
     }
 }
 
 declare module "./src/autocomplete/popup" {
 
-    export interface AcePopup extends Ace.AcePopupWithEditor {
+    export interface AcePopup extends i.AcePopupWithEditor {
         setSelectOnHover: (val: boolean) => void,
         setRow: (line: number) => void,
         getRow: () => number,
@@ -431,16 +440,16 @@ declare module "./src/autocomplete/popup" {
         isOpen: boolean,
         isTopdown: boolean,
         autoSelect: boolean,
-        data: Ace.Completion[],
-        setData: (data: Ace.Completion[], filterText: string) => void,
-        getData: (row: number) => Ace.Completion,
+        data: Completion[],
+        setData: (data: Completion[], filterText: string) => void,
+        getData: (row: number) => Completion,
         hide: () => void,
         anchor: "top" | "bottom",
-        anchorPosition: Ace.Point,
+        anchorPosition: i.Point,
         tryShow: (pos: any, lineHeight: number, anchor: "top" | "bottom", forceShow?: boolean) => boolean,
         $borderSize: number,
         show: (pos: any, lineHeight: number, topdownOnly?: boolean) => void,
-        goTo: (where: Ace.AcePopupNavigation) => void,
+        goTo: (where: i.AcePopupNavigation) => void,
         getTextLeftOffset: () => number,
         $imageSize: number,
         anchorPos: any,
@@ -456,19 +465,19 @@ declare module "./src/layer/cursor" {
 }
 
 declare module "./src/layer/gutter" {
-    export interface Gutter extends Ace.EventEmitter<Ace.GutterEvents> {
+    export interface Gutter extends i.EventEmitter<i.GutterEvents> {
         $useSvgGutterIcons?: boolean,
         $showFoldedAnnotations?: boolean,
     }
 }
 
 declare module "./src/layer/text" {
-    export interface Text extends Ace.EventEmitter<Ace.TextEvents> {
+    export interface Text extends i.EventEmitter<i.TextEvents> {
     }
 }
 
 declare module "./src/lib/app_config" {
-    export interface AppConfig extends Ace.EventEmitter<any> {
+    export interface AppConfig extends i.EventEmitter<any> {
     }
 }
 
@@ -484,9 +493,9 @@ declare module "./src/mouse/mouse_handler" {
         $tooltipFollowsMouse?: boolean,
         cancelDrag?: boolean
         //from DefaultHandlers
-        $clickSelection?: Ace.Range,
-        mousedownEvent?: Ace.MouseEvent,
-        startSelect?: (pos?: Ace.Point, waitForClickSelection?: boolean) => void,
+        $clickSelection?: Range,
+        mousedownEvent?: MouseEvent,
+        startSelect?: (pos?: i.Point, waitForClickSelection?: boolean) => void,
         select?: () => void
         $lastScroll?: { t: number, vx: number, vy: number, allowed: number }
         selectEnd?: () => void
@@ -494,12 +503,12 @@ declare module "./src/mouse/mouse_handler" {
 }
 
 declare module "./src/ext/options" {
-    export interface OptionPanel extends Ace.EventEmitter<any> {
+    export interface OptionPanel extends i.EventEmitter<any> {
     }
 }
 
 declare module "./src/layer/font_metrics" {
-    export interface FontMetrics extends Ace.EventEmitter<any> {
+    export interface FontMetrics extends i.EventEmitter<any> {
     }
 }
 
@@ -515,6 +524,5 @@ declare module "./src/mouse/default_gutter_handler" {
 }
 
 declare module "./src/lib/keys" {
-    // export function keyCodeToString(keyCode: number): string;
 }
 

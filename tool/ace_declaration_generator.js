@@ -1,6 +1,7 @@
 const ts = require('typescript');
 const fs = require("fs");
 const path = require("path");
+var {getAllFiles} = require("./fs_utilities");
 
 const SEPARATE_MODULES = ["ext", "theme", "snippets", "lib"]; // adjust this list for more granularity
 
@@ -47,24 +48,23 @@ function getParsedConfigFromDirectory(directoryPath) {
     };
     configFile.config.compilerOptions.noEmit = false;
     configFile.config.compilerOptions.emitDeclarationOnly = true;
-    configFile.config.compilerOptions.outFile = "./types/index.d.ts";
 
     return ts.parseJsonConfigFileContent(configFile.config, parseConfigHost, directoryPath);
 }
 
 /**
- * @return {string}
+ * @return {Map<string, string>}
  */
-function generateInitialDeclaration(excludeDir) {
+function generateInitialDeclarations(excludeDir) {
     const baseDirectory = path.resolve(__dirname, '..');
     const parsedConfig = getParsedConfigFromDirectory(baseDirectory);
     const defaultCompilerHost = ts.createCompilerHost({});
-    let fileContent;
+    const fileContents = new Map();
 
     const customCompilerHost = {
         ...defaultCompilerHost,
         writeFile: function (fileName, content) {
-            fileContent = content;
+            fileContents.set(fileName.replace(/src\/src/, "src"), content);
             return;
         },
         getSourceFile: function (fileName, languageVersion, onError, shouldCreateNewSourceFile) {
@@ -77,36 +77,39 @@ function generateInitialDeclaration(excludeDir) {
 
     const program = ts.createProgram(parsedConfig.fileNames, parsedConfig.options, customCompilerHost);
     program.emit();
-    return fileContent;
+    return fileContents;
 }
 
 /**
  * Creates a custom TypeScript compiler host that uses the provided source file content instead of reading from the file system.
- * @param {string} fileName - The name of the source file.
- * @param {string} content - The content of the source file.
+ * @param {Map<string, string>} fileMap - A map of file paths to their corresponding content.
  * @returns {ts.CompilerHost} - A custom compiler host that uses the provided source file content.
  */
-function createCustomCompilerHost(fileName, content) {
-    const newSourceFile = ts.createSourceFile(fileName, content, ts.ScriptTarget.Latest, false, ts.ScriptKind.TS);
+function createCustomCompilerHost(fileMap) {
+    const sourceFiles = new Map();
+    for (const [filePath, content] of fileMap) {
+        sourceFiles.set(
+            filePath, ts.createSourceFile(filePath, content, ts.ScriptTarget.Latest, false, ts.ScriptKind.TS));
+    }
 
     const defaultCompilerHost = ts.createCompilerHost({});
     return {
         ...defaultCompilerHost,
         getSourceFile: (name, languageVersion) => {
-            if (name === fileName) {
-                return newSourceFile;
+            if (fileMap.has(name)) {
+                return sourceFiles.get(name);
             }
             return defaultCompilerHost.getSourceFile(name, languageVersion);
         },
         fileExists: (name) => {
-            if (name === fileName) {
+            if (fileMap.has(name)) {
                 return true;
             }
             return defaultCompilerHost.fileExists(name);
         },
         readFile: (name) => {
-            if (name === fileName) {
-                return content;
+            if (fileMap.has(name)) {
+                return fileMap.get(name);
             }
             return defaultCompilerHost.readFile(name);
         }
@@ -166,20 +169,26 @@ function updateKeysAndLinksStatements(node, internalStatements) {
 
 /**
  * Updates a module declaration by adding internal statements to support mixins (EventEmitter, OptionsProvider, etc.).
- *
- * @param {ts.ModuleDeclaration} node - The module declaration node to update.
- * @param {Object<string, ts.Statement[]>} internalStatements - An object containing the internal statements to add to the module.
- * @returns {ts.ModuleDeclaration} - The updated module declaration.
+ * @param {ts.SourceFile} sourceFile - The module declaration node to update.
+ * @param {ts.Statement[]} statements - An object containing the internal statements to add to the module.
+ * @param {boolean} [replace] - Replace all statements if true, otherwise append them.
+ * @returns {ts.SourceFile} - The updated module declaration.
+
  */
-function updateModuleWithInternalStatements(node, internalStatements) {
-    const newBody = ts.factory.createModuleBlock(
-        node.body.statements.concat(internalStatements[node.name.text]).filter(statement => {
-            if (node.name.text.endsWith("autocomplete")) {
-                return !(ts.isModuleDeclaration(statement) && statement.name.text === 'Autocomplete');
-            }
-            return true;
-        }));
-    return ts.factory.updateModuleDeclaration(node, node.modifiers, node.name, newBody);
+function updateModuleWithInternalStatements(sourceFile, statements, replace) {
+    let newStatements;
+    if (replace) {
+        newStatements = statements;
+    }
+    else {
+        newStatements = [...sourceFile.statements, ...statements];
+    }
+
+    sourceFile = ts.factory.updateSourceFile(sourceFile, newStatements, sourceFile.isDeclarationFile,
+        sourceFile.referencedFiles, sourceFile.typeReferenceDirectives, sourceFile.hasNoDefaultLib,
+        sourceFile.libReferenceDirectives
+    );
+    return sourceFile;
 }
 
 /**
@@ -250,13 +259,12 @@ function fixWrongHeritageClauses(node, context, checker) {
 }
 
 /**
- * @param {string} content
+ * @param {Map<string, string>} sourcesByPath
  * @param {string} aceNamespacePath
  */
-function fixDeclaration(content, aceNamespacePath) {
-    const temporaryName = "temp.d.ts";
-    const customCompilerHost = createCustomCompilerHost(temporaryName, content);
-    const program = ts.createProgram([temporaryName], {
+function fixDeclarations(sourcesByPath, aceNamespacePath) {
+    const customCompilerHost = createCustomCompilerHost(sourcesByPath);
+    const program = ts.createProgram(Array.from(sourcesByPath.keys()), {
         noEmit: true
     }, customCompilerHost);
 
@@ -275,30 +283,33 @@ function fixDeclaration(content, aceNamespacePath) {
             function visit(node) {
                 let updatedNode = node;
                 // Update module declarations for certain module names
-                if (ts.isModuleDeclaration(node) && ts.isStringLiteral(node.name)) {
+                if (ts.isModuleDeclaration(node) && ts.isStringLiteral(node.name)) { //TODO:
                     if (node.name.text === "ace-code") {
                         return updateMainAceModule(node);
-                    } else if (node.name.text.endsWith("lib/keys") || node.name.text.endsWith("linking")) {
-                        updatedNode = updateKeysAndLinksStatements(node, internalStatements);
-                    } else if (internalStatements[node.name.text]) {
-                        updatedNode = updateModuleWithInternalStatements(node, internalStatements);
-                    } else if (node.name.text.endsWith("static_highlight")) {
-                        if (node.body && ts.isModuleBlock(node.body)) {
-                            const newBody = ts.factory.createModuleBlock(node.body.statements.filter(statement => {
-                                return !ts.isExportAssignment(statement);
-                            }));
-                            updatedNode = ts.factory.updateModuleDeclaration(node, node.modifiers, node.name, newBody);
-                        }
                     }
                 }
                 // Fix wrong interface and class heritage clauses
                 else if (ts.isInterfaceDeclaration(node) && node.heritageClauses) {
                     return fixWrongInterfaces(node, context);
-                } else if (ts.isClassDeclaration(node) && node.heritageClauses) {
+                }
+                else if (ts.isClassDeclaration(node) && node.heritageClauses) {
                     return fixWrongHeritageClauses(node, context, checker);
                 }
                 return ts.visitEachChild(updatedNode, visit, context);
             };
+
+            let modulePath = sourceFile.fileName.replace(/.+(?=src\/)/, "");
+
+            if (internalStatements[modulePath]) {
+                sourceFile = updateModuleWithInternalStatements(sourceFile, internalStatements[modulePath]);
+            }
+            else if (modulePath.endsWith("static_highlight.d.ts")) {
+                sourceFile = ts.factory.updateSourceFile(sourceFile, sourceFile.statements.filter(statement => {
+                        return !ts.isExportAssignment(statement);
+                    }), sourceFile.isDeclarationFile, sourceFile.referencedFiles, sourceFile.typeReferenceDirectives,
+                    sourceFile.hasNoDefaultLib, sourceFile.libReferenceDirectives
+                );
+            }
 
             return ts.visitNode(sourceFile, visit);
         };
@@ -306,133 +317,103 @@ function fixDeclaration(content, aceNamespacePath) {
 
     function pathBasedTransformer(context) {
         return (sourceFile) => {
-            const moduleOutputs = {};
+            const printer = ts.createPrinter({newLine: ts.NewLineKind.LineFeed}, {
+                substituteNode(hint, node) {
+                    // remove all private members
+                    if (ts.isMethodDeclaration(node) || ts.isMethodSignature(node) || ts.isPropertyDeclaration(node)
+                        || ts.isPropertySignature(node)) {
+                        const isPrivate = node.modifiers?.some(
+                            modifier => modifier.kind === ts.SyntaxKind.PrivateKeyword);
 
-            function visit(node) {
-                if (ts.isModuleDeclaration(node) && ts.isStringLiteral(node.name)) {
-                    let pathKey = 'modules';
-                    if (node.name.text === "ace-code") {
-                        pathKey = "ace";
-                        if (!moduleOutputs[pathKey]) {
-                            moduleOutputs[pathKey] = [];
-                        } //TODO:
-                        moduleOutputs[pathKey].push(node);
+                        const startsWithDollar = ts.isIdentifier(node.name) && /^[$_]/.test(node.name.text);
+
+                        if (isPrivate || startsWithDollar || hasInternalTag(node)) {
+                            return ts.factory.createNotEmittedStatement(node);
+                        }
                     }
-                    else {
-                        SEPARATE_MODULES.some(module => {
-                            if (node.name.text.includes("/" + module + "/")) {
-                                pathKey = module;
-                                return true;
+                    else if (ts.isVariableStatement(node)) {
+                        if (node.text && node.getText().indexOf("declare const $") > -1) {
+                            return ts.factory.createNotEmittedStatement(node);
+                        }
+                        // Remove variable statements like 'const {any_identifier}_base: undefined;'
+                        const declarations = node.declarationList.declarations;
+
+                        // Filter out declarations that match the pattern
+                        const filteredDeclarations = declarations.filter(declaration => {
+                            if (ts.isIdentifier(declaration.name) && /_base\w*$/.test(declaration.name.text)
+                                && declaration.type.kind == ts.SyntaxKind.UndefinedKeyword) {
+                                return false;
                             }
+                            return true;
                         });
-                        if (!moduleOutputs[pathKey]) {
-                            moduleOutputs[pathKey] = [];
-                        }
-                        moduleOutputs[pathKey].push(node);
-                    }
 
-                    return node;
-                }
-                return ts.visitEachChild(node, visit, context);
-            }
-
-            ts.visitNode(sourceFile, visit);
-
-            // Generate new source files for each module path
-            let modules = Object.keys(moduleOutputs);
-
-            modules.forEach(key => {
-                const newSourceFile = context.factory.updateSourceFile(sourceFile, moduleOutputs[key]);
-                const dirPath = path.dirname(aceNamespacePath.replace("ace-internal", "ace"));
-                if (!fs.existsSync(dirPath)) {
-                    fs.mkdirSync(dirPath);
-                }
-                const outputName = key === "ace" ? `${dirPath}/ace.d.ts` : `${dirPath}/types/ace-${key}.d.ts`;
-                finalDeclarations.push(outputName);
-
-                const printer = ts.createPrinter({newLine: ts.NewLineKind.LineFeed}, {
-                    substituteNode(hint, node) {
-                        if (ts.isModuleDeclaration(node) && ts.isStringLiteral(node.name) && node.name.text === "ace-code/src/ext/textarea") {
-                            return ts.factory.createNotEmittedStatement(node);
-                        } else
-                        // remove all private members
-                        if (ts.isMethodDeclaration(node) || ts.isMethodSignature(node) || ts.isPropertyDeclaration(node)
-                            || ts.isPropertySignature(node)) {
-                            const isPrivate = node.modifiers?.some(
-                                modifier => modifier.kind === ts.SyntaxKind.PrivateKeyword);
-
-                            const startsWithDollar = ts.isIdentifier(node.name) && /^[$_]/.test(node.name.text);
-
-                            if (isPrivate || startsWithDollar || hasInternalTag(node)) {
-                                return ts.factory.createNotEmittedStatement(node);
-                            }
-                        }
-                        else if (ts.isVariableStatement(node)) {
-                            if (node.text && node.getText().indexOf("export const $") > -1) {
-                                return ts.factory.createNotEmittedStatement(node);
-                            }
-                            // Remove variable statements like 'const {any_identifier}_base: undefined;'
-                            const declarations = node.declarationList.declarations;
-
-                            // Filter out declarations that match the pattern
-                            const filteredDeclarations = declarations.filter(declaration => {
-                                if (ts.isIdentifier(declaration.name) && /_base\w*$/.test(declaration.name.text)
-                                    && /:\s*undefined$/.test(declaration.getText())) {
-                                    return false;
-                                }
-                                return true;
-                            });
-
-                            if (filteredDeclarations.length === 0) {
-                                return ts.factory.createNotEmittedStatement(node);
-                            }
-                            else if (filteredDeclarations.length < declarations.length) {
-                                return ts.factory.updateVariableStatement(node, node.modifiers,
-                                    ts.factory.updateVariableDeclarationList(node.declarationList, filteredDeclarations)
-                                );
-                            }
-                        }
-                        //remove empty exports
-                        else if (ts.isExportDeclaration(node) && /export\s*{\s*}/.test(node.getText())) {
+                        if (filteredDeclarations.length === 0) {
                             return ts.factory.createNotEmittedStatement(node);
                         }
+                        else if (filteredDeclarations.length < declarations.length) {
+                            return ts.factory.updateVariableStatement(node, node.modifiers,
+                                ts.factory.updateVariableDeclarationList(node.declarationList, filteredDeclarations)
+                            );
+                        }
                     }
-                });
-                let output = printer.printFile(newSourceFile);
-                if (key === "ace") {
-                    let referencePaths = modules.filter((el) => el != "ace").map((el) => {
-                        return `/// <reference path="./types/ace-${el}.d.ts" />`;
-                    });
-                    let allReferences = referencePaths.join("\n") + "\n/// <reference path=\"./ace-modes.d.ts\" />\n";
-                    output = allReferences + output;
+                    //remove empty exports
+                    else if (ts.isExportDeclaration(node) && node.text && /export\s*{\s*}/.test(node.getText())) {
+                        return ts.factory.createNotEmittedStatement(node);
+                    }
                 }
-                output = correctImportStatements(output);
-                output = cleanComments(output);
-                output = formatDts(outputName, output);
-                output = AUTO_GENERATED_HEADER + output;
-                fs.writeFileSync(outputName, output);
             });
-
+            if (sourceFile.fileName.includes("src/") && !sourceFile.fileName.endsWith("lib/keys.d.ts")
+                && !sourceFile.fileName.endsWith("linking.d.ts") && !sourceFile.fileName.endsWith("textarea.d.ts")) {
+                let output = printer.printFile(sourceFile);
+                output = correctImportStatements(output);
+                output = output.replace(/declare\s+(namespace|function)/g, "export $1");
+                output = cleanComments(output);
+                output = formatDts(sourceFile.fileName, output);
+                if (/\Wi\./.test(output)) {
+                    const level = countSlashesAfterSrc(sourceFile.fileName);
+                    output = `import * as i from "../${"../".repeat(level)}interfaces";\n\n ${output}`;
+                }
+                output = AUTO_GENERATED_HEADER + output;
+                fs.writeFileSync(sourceFile.fileName, output);
+                finalDeclarations.push(sourceFile.fileName);
+            }
             return sourceFile;
         };
     }
 
-    const sourceCode = program.getSourceFile(temporaryName);
-    const result = ts.transform(sourceCode, [transformer, pathBasedTransformer]);
+    const result = ts.transform(program.getSourceFiles(), [transformer, pathBasedTransformer]);
 
     result.dispose();
 
-    checkFinalDeclaration(finalDeclarations);
+    useTsQuickFix(finalDeclarations)
+    checkFinalDeclarations(finalDeclarations);
 }
+
+function countSlashesAfterSrc(filepath) {
+    const srcIndex = filepath.indexOf('src/');
+    if (srcIndex === -1) return 0;
+
+    const pathAfterSrc = filepath.slice(srcIndex + 4);
+    return (pathAfterSrc.match(/\//g) || []).length;
+}
+
 
 /**
  * Corrects the import statements in the provided text by replacing the old-style
  * `require()` imports with modern ES6 `import` statements.
  */
 function correctImportStatements(text) {
-    text = text.replace(
-        /import\s*\w+_\d+\s*=\s*require\(([\w\/"-]+)\);?.\s*import\s*(\w+)\s*=\s*\w+_\d+\.(\w+);?/gs,
+    text = text.replace(/import\s*\w+_\d+\s*=\s*require\(([\w\/"-.]+)\);?.\s*import\s*(\w+)\s*=\s*\w+_\d+\.(\w+);?/gs,
         (match, path, importName, exportName) => {
+            if (importName !== exportName) {
+                return `import {${exportName} as ${importName}} from ${path};`;
+            }
+            return `import {${exportName}} from ${path};`;
+        }
+    );
+    // replace unnecessary export types with import
+    text = text.replace(/export\s+type\s+(\w+)\s*=\s*import\(([\w\/"-.]+)\)\.(\w+);/g,
+        (match, importName, path, exportName) => {
             if (importName !== exportName) {
                 return `import {${exportName} as ${importName}} from ${path};`;
             }
@@ -444,7 +425,7 @@ function correctImportStatements(text) {
 
 function cleanComments(text) {
     text = text.replace(/^\s*\*\s*@(param|template|returns?|this|typedef)\s*({.+})?(\s*\[?[$\w]+\]?)?\s*$/gm, '');
-    text = text.replace(/@type\s*({.+})/g, '');
+    text = text.replace(/@type\s*{[^}]+}/g, '');
     text = text.replace(/\/\*(\s|\*)*\*\//g, '');
     text = text.replace(/^\s*[\r\n]/gm, '');
 
@@ -459,34 +440,42 @@ function hasInternalTag(node) {
     return jsDocs.length > 0;
 }
 
-function createMinimalLanguageServiceHost() {
+/**
+ * @return {ts.LanguageServiceHost}
+ */
+function createMinimalLanguageServiceHost(filename, text) {
+    const snapshot = ts.ScriptSnapshot.fromString(text);
+    ;
     return {
-        files: {},
-        addFile(fileName, text) {
-            this.files[fileName] = ts.ScriptSnapshot.fromString(text);
-        },
         "getCompilationSettings": function () {
             return ts.getDefaultCompilerOptions();
         },
         "getScriptFileNames": function () {
-            return Object.keys(this.files);
+            return Object.keys([filename]);
         },
         "getScriptVersion": function (_fileName) {
             return "0";
         },
         "getScriptSnapshot": function (fileName) {
-            return this.files[fileName];
+            return snapshot;
         },
         "getCurrentDirectory": function () {
             return "";
+        },
+        "fileExists": function (path) {
+            return path == filename;
+        },
+        "readFile": function (path) {
+            return text;
+        },
+        "getDefaultLibFileName": function () {
+            return "lib.d.ts";
         }
     };
-
 }
 
 function formatDts(filename, text) {
-    var host = createMinimalLanguageServiceHost();
-    host.addFile(filename, text);
+    var host = createMinimalLanguageServiceHost(filename, text);
     const languageService = ts.createLanguageService(host);
     let formatEdits = languageService.getFormattingEditsForDocument(filename, defaultFormatCodeSettings);
     formatEdits
@@ -504,7 +493,8 @@ function formatDts(filename, text) {
 /**
  * @param {string[]} declarationNames
  */
-function checkFinalDeclaration(declarationNames) {
+
+function checkFinalDeclarations(declarationNames) {
     const program = ts.createProgram(declarationNames, {
         noEmit: true,
         target: ts.ScriptTarget.ES2019,
@@ -518,12 +508,75 @@ function checkFinalDeclaration(declarationNames) {
                 line,
                 character
             } = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start);
+
             const message = ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n');
             console.log(`${diagnostic.file.fileName} (${line + 1},${character + 1}): ${message}`);
         }
         else {
             console.log(ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n'));
         }
+    });
+}
+
+function useTsQuickFix(declarationNames) {
+    const defaultCompilerHost = ts.createCompilerHost({});
+    const sourcesToFix = new Map();
+    const compilerOptions = {
+        noEmit: true,
+        target: ts.ScriptTarget.ES2019,
+        lib: ["lib.es2019.d.ts", "lib.dom.d.ts"],
+        noUnusedLocals: true
+    };
+
+    const host = {
+        ...defaultCompilerHost,
+        getCompilationSettings: () => compilerOptions,
+        getScriptFileNames: () => declarationNames,
+        getScriptVersion: () => "1",
+        getScriptSnapshot: fileName => {
+            const content = fs.readFileSync(fileName).toString();
+            return ts.ScriptSnapshot.fromString(content);
+        },
+        getCurrentDirectory: () => process.cwd(),
+        getDefaultLibFileName: options => ts.getDefaultLibFilePath(options),
+        writeFile: (fileName, content) => fs.writeFileSync(fileName, content)
+    };
+
+    const languageService = ts.createLanguageService(host);
+    const diagnostics = languageService.getProgram().getSemanticDiagnostics();
+    const suggestionDiagnostics = declarationNames.map((fileName) => {
+        return languageService.getSuggestionDiagnostics(fileName);
+    }).flat();
+
+    const allDiagnostics = [...diagnostics, ...suggestionDiagnostics];
+
+    allDiagnostics.forEach(diagnostic => {
+        if (diagnostic.file && diagnostic.start) {
+            const fixes = languageService.getCodeFixesAtPosition(diagnostic.file.fileName, diagnostic.start,
+                diagnostic.start + diagnostic.length, [diagnostic.code], defaultFormatCodeSettings, {}
+            );
+            fixes.forEach(fix => {
+                if (fix.fixId === "fixMissingImport" && fix.changes.length > 0) {
+                    const fileName = fix.changes[0].fileName;
+                    if (!sourcesToFix.has(fileName)) {
+                        sourcesToFix.set(fileName, new Set(fix.changes[0].textChanges.map(change => change.newText)));
+                    }
+                    else {
+                        const changes = sourcesToFix.get(fileName);
+                        sourcesToFix.set(fileName,
+                            new Set([...changes, ...fix.changes[0].textChanges.map(change => change.newText)])
+                        );
+                    }
+                }
+            });
+        }
+    });
+
+    const headerLength = AUTO_GENERATED_HEADER.length;
+    sourcesToFix.forEach((value, key) => {
+        let content = fs.readFileSync(key).toString();
+        content = content.slice(0, headerLength) + [...value.values()].join("") + content.slice(headerLength);
+        fs.writeFileSync(key, content);
     });
 }
 
@@ -564,7 +617,8 @@ function collectStatements(aceNamespacePath) {
                         if (typeName.includes("EventEmitter<")) {
                             typeName = typeName + "T extends { [K in keyof T]: (...args: any[]) => any }>";
                             rightSide = rightSide + "T>";
-                        } else if (typeName.includes("<")) {
+                        }
+                        else if (typeName.includes("<")) {
                             typeName = rightSide = rightSide + "T>";
                         }
                         importAlias += "type " + typeName + " = import(\"" + packageName + "\").Ace." + rightSide
@@ -577,7 +631,7 @@ function collectStatements(aceNamespacePath) {
                     'temp.d.ts', concatenatedInterfaceStrings, ts.ScriptTarget.Latest, false, ts.ScriptKind.TS);
                 nodes = newSourceFile.statements;
             }
-            result[node.name.text.replace("./", packageName + "/")] = nodes;
+            result[node.name.text.replace("./", "") + ".d.ts"] = nodes;
         }
         ts.forEachChild(node, visit);
     }
@@ -616,27 +670,29 @@ function cloneAceNamespace(aceNamespacePath) {
  * @param {string} [aceNamespacePath]
  */
 function generateDeclaration(aceNamespacePath) {
+    cleanDeclarationFiles();
+
     if (!aceNamespacePath) {
         aceNamespacePath = __dirname + "/../ace-internal.d.ts";
     }
     const excludeDir = "src/mode"; //TODO: remove, when modes are ES6
 
-    let data = generateInitialDeclaration(excludeDir);
-    let packageName = "ace-code";
+    let data = generateInitialDeclarations(excludeDir);
+    /*    let packageName = "ace-code";
 
-    let updatedContent = data.replace(/(declare module ")/g, "$1" + packageName + "/src/");
+        let updatedContent = data.replace(/(declare module ")/g, "$1" + packageName + "/src/");
 
-    updatedContent = updatedContent.replace(/(require\(")/g, "$1" + packageName + "/src/");
-    //updatedContent = updatedContent.replace(/(import\(")[./]*ace(?:\-internal)?("\).Ace)/g, "$1" + packageName + "$2");
-    updatedContent = updatedContent.replace(/"(?:\.\.\/)+interfaces"/g, "'../interfaces'");
+        updatedContent = updatedContent.replace(/(require\(")/g, "$1" + packageName + "/src/");
+        //updatedContent = updatedContent.replace(/(import\(")[./]*ace(?:\-internal)?("\).Ace)/g, "$1" + packageName + "$2");
+        updatedContent = updatedContent.replace(/"(?:\.\.\/)+interfaces"/g, "'../interfaces'");
 
-    updatedContent = updatedContent.replace(/(import\(")(?:[./]*)(?!(?:ace\-code))/g, "$1" + packageName + "/src/");
-    updatedContent = updatedContent.replace(/ace\-(?:code|builds)(\/src)?\/ace(?:\-internal)?/g, packageName);
+        updatedContent = updatedContent.replace(/(import\(")(?:[./]*)(?!(?:ace\-code))/g, "$1" + packageName + "/src/");
+        updatedContent = updatedContent.replace(/ace\-(?:code|builds)(\/src)?\/ace(?:\-internal)?/g, packageName);*/
     let aceModule = cloneAceNamespace(aceNamespacePath);
 
-    updatedContent = updatedContent.replace(/(declare\s+module\s+"ace-(?:code|builds)"\s+{)/, "$1" + aceModule);
-    updatedContent = updatedContent.replace(/(?:export)?\snamespace(?!\sAce)/g, "export namespace");
-    fixDeclaration(updatedContent, aceNamespacePath);
+    //updatedContent = updatedContent.replace(/(declare\s+module\s+"ace-(?:code|builds)"\s+{)/, "$1" + aceModule);
+    //updatedContent = updatedContent.replace(/(?:export)?\snamespace(?!\sAce)/g, "export namespace");
+    fixDeclarations(data, aceNamespacePath);
 }
 
 /**
@@ -654,6 +710,17 @@ function updateDeclarationModuleNames(content) {
     output = output.replace(/"ace\-code"/g, "\"ace-builds\"");
     output = output.replace(/ace\-code(?:\/src)?/g, "ace-builds-internal");
     return output;
+}
+
+function cleanDeclarationFiles() {
+    const baseDir = path.resolve(__dirname, '../src');
+    const files = getAllFiles(baseDir);
+
+    files.forEach(file => {
+        if (file.endsWith('.d.ts')) {
+            fs.unlinkSync(file);
+        }
+    });
 }
 
 

@@ -5,7 +5,7 @@
     "module": "commonjs",
     "target": "es2019",
     "allowJs": true,
-    "checkJs": true,
+    "checkJs": false,
     "declaration": true,
     "noEmit": true,
   },
@@ -22,9 +22,8 @@
     "src/**/* *"
   ],
   "include": [
-    "./src/**/*.js",
+    "./src/**/*",
+    //"./ace.d.ts",
     "./interfaces.d.ts",
-    "./ace-internal.d.ts",
-    "tool/ace_declaration_generator.js"
   ]
 }

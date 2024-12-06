@@ -4,6 +4,9 @@
  * @typedef {import("../interfaces").Point} Point
  */
 var Range = require("./range").Range;
+/**
+ * @type {(p1: Point, p2: Point) => number}
+ */
 var comparePoints = Range.comparePoints;
 
 class RangeList {
