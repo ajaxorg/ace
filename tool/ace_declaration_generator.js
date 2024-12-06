@@ -559,11 +559,15 @@ function collectStatements(aceNamespacePath) {
                     let importAlias = '';
                     identifiers.forEach(identifier => {
                         let typeName = identifier.replace("Ace.", "");
+                        let rightSide = typeName;
 
-                        if (typeName.includes("<")) {
-                            typeName = typeName + "T>";
+                        if (typeName.includes("EventEmitter<")) {
+                            typeName = typeName + "T extends { [K in keyof T]: (...args: any[]) => any }>";
+                            rightSide = rightSide + "T>";
+                        } else if (typeName.includes("<")) {
+                            typeName = rightSide = rightSide + "T>";
                         }
-                        importAlias += "type " + typeName + " = import(\"" + packageName + "\").Ace." + typeName
+                        importAlias += "type " + typeName + " = import(\"" + packageName + "\").Ace." + rightSide
                             + ";\n\n";
                     });
                     concatenatedInterfaceStrings = "namespace Ace {" + importAlias + "}" + concatenatedInterfaceStrings;

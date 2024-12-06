@@ -308,8 +308,8 @@ export namespace Ace {
         coverGutter?: boolean,
         pixelHeight?: number,
         $fold?: Fold,
-        type?:any,
-        destroy?:()=>void;
+        type?: any,
+        destroy?: () => void;
         coverLine?: boolean,
         fixedWidth?: boolean,
         fullWidth?: boolean,
@@ -618,7 +618,7 @@ export namespace Ace {
         "autosize": () => void;
     }
 
-    class EventEmitter<T> {
+    export class EventEmitter<T extends { [K in keyof T]: (...args: any[]) => any }> {
         once<K extends keyof T>(name: K, callback: T[K]): void;
 
         setDefaultHandler(name: string, callback: Function): void;
@@ -845,7 +845,7 @@ export namespace Ace {
          */
         $quotes: { [quote: string]: string };
         HighlightRules: {
-            new(config: any): HighlightRules
+            new(config?: any): HighlightRules
         }; //TODO: fix this
         foldingRules?: FoldMode;
         $behaviour?: Behaviour;
@@ -1218,6 +1218,17 @@ export namespace Ace {
         firstLineNumber?: number,
         showGutter?: boolean
     }
+
+    export interface Operation {
+        command: {
+            name?: string;
+        };
+        args: any;
+        selectionBefore?: Range | Range[];
+        selectionAfter?: Range | Range[];
+        docChanged?: boolean;
+        selectionChanged?: boolean;
+    }
 }
 
 
@@ -1356,6 +1367,7 @@ declare module "./src/edit_session" {
         $occurMatchingLines?: any,
         $useEmacsStyleLineStart?: boolean,
         $selectLongWords?: boolean,
+        curOp: Ace.Operation | null,
 
         getSelectionMarkers(): any[],
     }
@@ -1418,7 +1430,7 @@ declare module "./src/virtual_renderer" {
         $printMarginColumn?: number,
         $animatedScroll?: boolean,
         $isMousePressed?: boolean,
-        textarea?: HTMLTextAreaElement,
+        textarea: HTMLTextAreaElement,
         $hScrollBarAlwaysVisible?: boolean,
         $vScrollBarAlwaysVisible?: boolean
         $maxLines?: number,
@@ -1438,7 +1450,6 @@ declare module "./src/virtual_renderer" {
         session: Ace.EditSession,
         keyboardFocusClassName?: string,
     }
-
 }
 
 declare module "./src/snippets" {
@@ -1470,7 +1481,7 @@ declare module "./src/autocomplete/popup" {
         isTopdown: boolean,
         autoSelect: boolean,
         data: Ace.Completion[],
-        setData: (data: Ace.Completion[], filterText: string) => void,
+        setData: (data: Ace.Completion[], filterText?: string) => void,
         getData: (row: number) => Ace.Completion,
         hide: () => void,
         anchor: "top" | "bottom",
@@ -1502,7 +1513,7 @@ declare module "./src/layer/gutter" {
 
 declare module "./src/layer/text" {
     export interface Text extends Ace.EventEmitter<Ace.TextEvents> {
-        config?: Ace.LayerConfig
+        config: Ace.LayerConfig
     }
 }
 
@@ -1532,7 +1543,6 @@ declare module "./src/mouse/mouse_handler" {
     }
 }
 
-// @ts-expect-error
 declare module "./src/ext/options" {
     export interface OptionPanel extends Ace.EventEmitter<any> {
     }
@@ -1552,9 +1562,5 @@ declare module "./src/tooltip" {
 declare module "./src/mouse/default_gutter_handler" {
     export interface GutterHandler {
     }
-}
-
-declare module "./src/lib/keys" {
-    export function keyCodeToString(keyCode: number): string;
 }
 
