@@ -7,7 +7,7 @@
     "allowJs": true,
     "checkJs": true,
     "declaration": true,
-    "noEmit": true,
+    "noEmit": true
   },
   "exclude": [
     "node_modules",
@@ -19,7 +19,8 @@
     "src/keyboard/vscode.js",
     "src/mode",
     "./ace-modes.d.ts",
-    "src/**/* *"
+    "src/**/* *",
+    "./src/**/*.d.ts"
   ],
   "include": [
     "./src/**/*.js",

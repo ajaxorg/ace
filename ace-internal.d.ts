@@ -9,6 +9,7 @@ import {Occur} from "./src/occur";
 import {MouseEvent} from "./src/mouse/mouse_event";
 import {Editor} from "./src/editor";
 import {InlineAutocomplete} from "./src/ext/inline_autocomplete";
+import {Range} from "./src/range";
 
 export namespace Ace {
     type Anchor = import("./src/anchor").Anchor;

@@ -3,9 +3,9 @@ const fs = require("fs");
 const path = require("path");
 var {getAllFiles} = require("./fs_utilities");
 
-const SEPARATE_MODULES = ["ext", "theme", "snippets", "lib"]; // adjust this list for more granularity
-
 const AUTO_GENERATED_HEADER = "/* This file is generated using `npm run update-types` */\n\n";
+
+const MODE_REFERENCE = "/// <reference path=\"./ace-modes.d.ts\" />";
 
 const defaultFormatCodeSettings = {
     baseIndentSize: 0,
@@ -117,54 +117,29 @@ function createCustomCompilerHost(fileMap) {
 }
 
 function updateMainAceModule(node) {
-    if (node.body && ts.isModuleBlock(node.body)) {
-        const updatedStatements = node.body.statements.map(statement => {
-            //create type alias for config
-            if (ts.isVariableStatement(statement) && statement.declarationList.declarations[0]?.name?.text
-                === "config") {
+    return node.statements.map(statement => {
+        //create type alias for config
+        if (ts.isVariableStatement(statement) && statement.declarationList.declarations[0]?.name?.text === "config") {
 
-                const originalDeclaration = statement.declarationList.declarations[0];
+            const originalDeclaration = statement.declarationList.declarations[0];
 
-                const importTypeNode = ts.factory.createImportTypeNode(
-                    ts.factory.createLiteralTypeNode(ts.factory.createStringLiteral('ace-code/src/config')), undefined,
-                    undefined, false
-                );
+            const importTypeNode = ts.factory.createImportTypeNode(
+                ts.factory.createLiteralTypeNode(ts.factory.createStringLiteral('./config')), undefined,
+                undefined, false
+            );
 
-                const typeOfImportTypeNode = ts.factory.createTypeOperatorNode(
-                    ts.SyntaxKind.TypeOfKeyword, importTypeNode);
+            const typeOfImportTypeNode = ts.factory.createTypeOperatorNode(ts.SyntaxKind.TypeOfKeyword, importTypeNode);
 
-                return ts.factory.updateVariableStatement(statement, statement.modifiers,
-                    ts.factory.updateVariableDeclarationList(statement.declarationList, [
-                        ts.factory.updateVariableDeclaration(originalDeclaration, originalDeclaration.name,
-                            originalDeclaration.exclamationToken, typeOfImportTypeNode, undefined
-                        )
-                    ])
-                );
-            }
-            return statement;
-        });
-
-        return ts.factory.updateModuleDeclaration(node, node.modifiers, node.name,
-            ts.factory.createModuleBlock(updatedStatements)
-        );
-    }
-}
-
-/**
- * Updates the module declaration for the "keys" and "linking" modules by adding the corresponding internal statements
- * to support mixins (EventEmitter, OptionsProvider, etc.).
- *
- * @param {ts.ModuleDeclaration} node - The module declaration node to update.
- * @param {Object<string, ts.Statement[]>} internalStatements - An object containing the internal statements to add to the module.
- * @returns {ts.ModuleDeclaration} - The updated module declaration.
- */
-function updateKeysAndLinksStatements(node, internalStatements) {
-    let statements = [];
-    if (internalStatements[node.name.text]) {
-        statements = internalStatements[node.name.text];
-    }
-    const newBody = ts.factory.createModuleBlock(statements);
-    return ts.factory.updateModuleDeclaration(node, node.modifiers, node.name, newBody);
+            return ts.factory.updateVariableStatement(statement, statement.modifiers,
+                ts.factory.updateVariableDeclarationList(statement.declarationList, [
+                    ts.factory.updateVariableDeclaration(originalDeclaration, originalDeclaration.name,
+                        originalDeclaration.exclamationToken, typeOfImportTypeNode, undefined
+                    )
+                ])
+            );
+        }
+        return statement;
+    });
 }
 
 /**
@@ -282,14 +257,8 @@ function fixDeclarations(sourcesByPath, aceNamespacePath) {
         return (sourceFile) => {
             function visit(node) {
                 let updatedNode = node;
-                // Update module declarations for certain module names
-                if (ts.isModuleDeclaration(node) && ts.isStringLiteral(node.name)) { //TODO:
-                    if (node.name.text === "ace-code") {
-                        return updateMainAceModule(node);
-                    }
-                }
                 // Fix wrong interface and class heritage clauses
-                else if (ts.isInterfaceDeclaration(node) && node.heritageClauses) {
+                if (ts.isInterfaceDeclaration(node) && node.heritageClauses) {
                     return fixWrongInterfaces(node, context);
                 }
                 else if (ts.isClassDeclaration(node) && node.heritageClauses) {
@@ -309,6 +278,9 @@ function fixDeclarations(sourcesByPath, aceNamespacePath) {
                     }), sourceFile.isDeclarationFile, sourceFile.referencedFiles, sourceFile.typeReferenceDirectives,
                     sourceFile.hasNoDefaultLib, sourceFile.libReferenceDirectives
                 );
+            }
+            else if (modulePath.endsWith("/ace.d.ts")) {
+                sourceFile = updateModuleWithInternalStatements(sourceFile, updateMainAceModule(sourceFile), true);
             }
 
             return ts.visitNode(sourceFile, visit);
@@ -357,8 +329,11 @@ function fixDeclarations(sourcesByPath, aceNamespacePath) {
                         }
                     }
                     //remove empty exports
-                    else if (ts.isExportDeclaration(node) && node.text && /export\s*{\s*}/.test(node.getText())) {
-                        return ts.factory.createNotEmittedStatement(node);
+                    else if (ts.isExportDeclaration(node)) {
+                        if (node.exportClause && ts.isNamedExports(node.exportClause)
+                            && node.exportClause.elements.length === 0) {
+                            return ts.factory.createNotEmittedStatement(node);
+                        }
                     }
                 }
             });
@@ -366,13 +341,14 @@ function fixDeclarations(sourcesByPath, aceNamespacePath) {
                 && !sourceFile.fileName.endsWith("linking.d.ts") && !sourceFile.fileName.endsWith("textarea.d.ts")) {
                 let output = printer.printFile(sourceFile);
                 output = correctImportStatements(output);
-                output = output.replace(/declare\s+(namespace|function)/g, "export $1");
+                output = output.replace(/declare\s+(namespace)/g, "export $1");
                 output = cleanComments(output);
                 output = formatDts(sourceFile.fileName, output);
                 if (/\Wi\./.test(output)) {
                     const level = countSlashesAfterSrc(sourceFile.fileName);
                     output = `import * as i from "../${"../".repeat(level)}interfaces";\n\n ${output}`;
                 }
+                output = correctIndividualDeclaration(sourceFile, output, aceNamespacePath);
                 output = AUTO_GENERATED_HEADER + output;
                 fs.writeFileSync(sourceFile.fileName, output);
                 finalDeclarations.push(sourceFile.fileName);
@@ -389,6 +365,34 @@ function fixDeclarations(sourcesByPath, aceNamespacePath) {
     checkFinalDeclarations(finalDeclarations);
 }
 
+/**
+ * This function is responsible for handling specific cases where the generated
+ * declaration files need to be modified. It checks the file name and applies
+ * the necessary changes to the output.
+ *
+ * @param {ts.SourceFile} sourceFile The TypeScript source file being processed.
+ * @param {string} content The content of the declaration file.
+ * @param {string} aceNamespacePath The path to the Ace namespace.
+ * @returns The corrected declaration file content.
+ */
+function correctIndividualDeclaration(sourceFile, content, aceNamespacePath) {
+    let output = content;
+    // copy the ace.d.ts file to the root of the project with ACE namespace for backwards compatibility
+    if (sourceFile.fileName.endsWith("/ace.d.ts")) {
+        const ace = cloneAceNamespace(aceNamespacePath);
+        const mainDeclaration = AUTO_GENERATED_HEADER + ace + `\nexport * from "./src/ace";`;
+        fs.writeFileSync("../ace.d.ts", mainDeclaration);
+    } else
+    if (sourceFile.fileName.endsWith("/snippets.d.ts")) {
+        output = output.replace(/(interface SnippetManager)/, "declare $1");
+    } else
+    if (sourceFile.fileName.endsWith("/static_highlight.d.ts")) {
+        output = output.replace(/declare\s+(function highlight)/, "export $1");
+    }
+    return output;
+}
+
+
 function countSlashesAfterSrc(filepath) {
     const srcIndex = filepath.indexOf('src/');
     if (srcIndex === -1) return 0;
@@ -401,6 +405,7 @@ function countSlashesAfterSrc(filepath) {
 /**
  * Corrects the import statements in the provided text by replacing the old-style
  * `require()` imports with modern ES6 `import` statements.
+ * @param {string} text
  */
 function correctImportStatements(text) {
     text = text.replace(/import\s*\w+_\d+\s*=\s*require\(([\w\/"-.]+)\);?.\s*import\s*(\w+)\s*=\s*\w+_\d+\.(\w+);?/gs,
@@ -504,6 +509,9 @@ function checkFinalDeclarations(declarationNames) {
 
     diagnostics.forEach(diagnostic => {
         if (diagnostic.file) {
+            if (diagnostic.file.fileName.endsWith("ace-modes.d.ts")) {
+                return;
+            }
             const {
                 line,
                 character
@@ -646,7 +654,6 @@ function collectStatements(aceNamespacePath) {
  * @return {string}
  */
 function cloneAceNamespace(aceNamespacePath) {
-
     const program = ts.createProgram([aceNamespacePath], {
         noEmit: true
     });
@@ -659,8 +666,7 @@ function cloneAceNamespace(aceNamespacePath) {
         const node = sourceFile.statements[i];
         if (ts.isModuleDeclaration(node) && node.name.text == "Ace") {
             let aceModule = printer.printNode(ts.EmitHint.Unspecified, node, sourceFile);
-            aceModule = aceModule.replace(/"\.\/src/g, "\"ace-code/src");
-            aceModule = '\n' + aceModule + '\n';
+            aceModule = MODE_REFERENCE + '\n\n' + aceModule + '\n';
             return aceModule;
         }
     }
@@ -678,20 +684,7 @@ function generateDeclaration(aceNamespacePath) {
     const excludeDir = "src/mode"; //TODO: remove, when modes are ES6
 
     let data = generateInitialDeclarations(excludeDir);
-    /*    let packageName = "ace-code";
 
-        let updatedContent = data.replace(/(declare module ")/g, "$1" + packageName + "/src/");
-
-        updatedContent = updatedContent.replace(/(require\(")/g, "$1" + packageName + "/src/");
-        //updatedContent = updatedContent.replace(/(import\(")[./]*ace(?:\-internal)?("\).Ace)/g, "$1" + packageName + "$2");
-        updatedContent = updatedContent.replace(/"(?:\.\.\/)+interfaces"/g, "'../interfaces'");
-
-        updatedContent = updatedContent.replace(/(import\(")(?:[./]*)(?!(?:ace\-code))/g, "$1" + packageName + "/src/");
-        updatedContent = updatedContent.replace(/ace\-(?:code|builds)(\/src)?\/ace(?:\-internal)?/g, packageName);*/
-    let aceModule = cloneAceNamespace(aceNamespacePath);
-
-    //updatedContent = updatedContent.replace(/(declare\s+module\s+"ace-(?:code|builds)"\s+{)/, "$1" + aceModule);
-    //updatedContent = updatedContent.replace(/(?:export)?\snamespace(?!\sAce)/g, "export namespace");
     fixDeclarations(data, aceNamespacePath);
 }
 
@@ -731,5 +724,4 @@ if (!module.parent) {
 else {
     exports.generateDeclaration = generateDeclaration;
     exports.updateDeclarationModuleNames = updateDeclarationModuleNames;
-    exports.SEPARATE_MODULES = SEPARATE_MODULES;
 }
