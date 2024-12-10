@@ -13,7 +13,7 @@ oop.inherits(FoldMode, BaseFoldMode);
 
 
     this.$getMode = function(state) {
-        if (typeof state != "string") 
+        if (Array.isArray(state)) 
             state = state[0];
         for (var key in this.subModes) {
             if (state.indexOf(key) === 0)
