@@ -526,6 +526,10 @@ function checkFinalDeclarations(declarationNames) {
     });
 }
 
+function getChangeKey(change) {
+    return `${change.start}:${change.end}:${change.newText}`;
+}
+
 function useTsQuickFix(declarationNames) {
     const defaultCompilerHost = ts.createCompilerHost({});
     const sourcesToFix = new Map();
@@ -564,26 +568,37 @@ function useTsQuickFix(declarationNames) {
                 diagnostic.start + diagnostic.length, [diagnostic.code], defaultFormatCodeSettings, {}
             );
             fixes.forEach(fix => {
-                if (fix.fixId === "fixMissingImport" && fix.changes.length > 0) {
+                if ((fix.fixId === "fixMissingImport" || fix.fixName === "unusedIdentifier") && fix.changes.length > 0) {
                     const fileName = fix.changes[0].fileName;
-                    if (!sourcesToFix.has(fileName)) {
-                        sourcesToFix.set(fileName, new Set(fix.changes[0].textChanges.map(change => change.newText)));
-                    }
-                    else {
-                        const changes = sourcesToFix.get(fileName);
-                        sourcesToFix.set(fileName,
-                            new Set([...changes, ...fix.changes[0].textChanges.map(change => change.newText)])
-                        );
-                    }
+                    const changeMap = sourcesToFix.get(fileName) || new Map();
+
+                    fix.changes[0].textChanges.forEach(change => {
+                        const changeObj = {
+                            newText: change.newText,
+                            start: change.span.start,
+                            end: change.span.start + change.span.length
+                        };
+                        const key = getChangeKey(changeObj);
+                        changeMap.set(key, changeObj);
+                    });
+
+                    sourcesToFix.set(fileName, changeMap);
                 }
             });
+
         }
     });
 
-    const headerLength = AUTO_GENERATED_HEADER.length;
-    sourcesToFix.forEach((value, key) => {
+    sourcesToFix.forEach((changeMap, key) => {
         let content = fs.readFileSync(key).toString();
-        content = content.slice(0, headerLength) + [...value.values()].join("") + content.slice(headerLength);
+        const changes = [...changeMap.values()].sort((a, b) => b.end - a.end);
+
+        changes.forEach(change => {
+            content = content.slice(0, change.start) +
+                change.newText +
+                content.slice(change.end);
+        });
+
         fs.writeFileSync(key, content);
     });
 }
