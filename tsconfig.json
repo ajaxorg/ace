@@ -25,7 +25,6 @@
   "include": [
     "./src/**/*.js",
     "./interfaces.d.ts",
-    "./ace-internal.d.ts",
-    "tool/ace_declaration_generator.js"
+    "./ace-internal.d.ts"
   ]
 }

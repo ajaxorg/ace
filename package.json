@@ -46,7 +46,6 @@
         "lint": "eslint \"src/**/*.js\" \"*.js\"",
         "fix": "npm run lint -- --fix",
         "typecheck": "tsc -p tsconfig.json",
-        "typecheck-prod": "tsc -p tsconfig-prod.json",
         "update-types": "node ./tool/ace_declaration_generator.js",
         "changelog": "standard-version",
         "prepack": "node tool/esm_resolver_generator.js && node tool/ace_declaration_generator.js && node Makefile.dryice.js css --target build-styles && rm -rf styles && mv build-styles/css styles"

@@ -379,9 +379,9 @@ function correctIndividualDeclaration(sourceFile, content, aceNamespacePath) {
     let output = content;
     // copy the ace.d.ts file to the root of the project with ACE namespace for backwards compatibility
     if (sourceFile.fileName.endsWith("/ace.d.ts")) {
-        const ace = cloneAceNamespace(aceNamespacePath);
+        const ace = cloneAceNamespace(aceNamespacePath, true);
         const mainDeclaration = AUTO_GENERATED_HEADER + ace + `\nexport * from "./src/ace";`;
-        fs.writeFileSync("../ace.d.ts", mainDeclaration);
+        fs.writeFileSync(__dirname + "/../ace.d.ts", mainDeclaration);
     } else
     if (sourceFile.fileName.endsWith("/snippets.d.ts")) {
         output = output.replace(/(interface SnippetManager)/, "declare $1");
@@ -651,9 +651,10 @@ function collectStatements(aceNamespacePath) {
 
 /**
  * @param {string} aceNamespacePath
+ * @param {boolean} [withModeReference]
  * @return {string}
  */
-function cloneAceNamespace(aceNamespacePath) {
+function cloneAceNamespace(aceNamespacePath, withModeReference) {
     const program = ts.createProgram([aceNamespacePath], {
         noEmit: true
     });
@@ -666,7 +667,11 @@ function cloneAceNamespace(aceNamespacePath) {
         const node = sourceFile.statements[i];
         if (ts.isModuleDeclaration(node) && node.name.text == "Ace") {
             let aceModule = printer.printNode(ts.EmitHint.Unspecified, node, sourceFile);
-            aceModule = MODE_REFERENCE + '\n\n' + aceModule + '\n';
+            if (withModeReference) {
+                aceModule = MODE_REFERENCE + '\n\n' + aceModule + '\n';
+            } else {
+                aceModule = aceModule + '\n';
+            }
             return aceModule;
         }
     }
@@ -716,6 +721,71 @@ function cleanDeclarationFiles() {
     });
 }
 
+function bundleDtsFiles(buildPath) {
+    const aceNamespacePath = __dirname + "/../ace-internal.d.ts";
+    if (!buildPath) {
+        buildPath = __dirname + '/../';
+    }
+
+    const directoryPath = path.resolve(buildPath, 'src');
+    const files = getAllFiles(directoryPath);
+    const dtsFiles = files.filter(file => file.endsWith('.d.ts'));
+    dtsFiles.push(path.join(buildPath, '/interfaces.d.ts'));
+
+    let combinedDefinitions = "";
+    dtsFiles.forEach((filePath) => {
+        let content = fs.readFileSync(filePath, 'utf8');
+        const moduleParts = filePath.replace(/\\/g,"/").replace(/\.d\.ts/, "").split("src");
+
+        let moduleName;
+        if (moduleParts.length > 1) {
+            moduleName = "src" + moduleParts[1];
+            if (moduleName == "src/ace") {
+                content = cloneAceNamespace(aceNamespacePath) + content;
+            }
+
+            const partOfPath = moduleParts[1].split("/").slice(0, -1).join("/");
+            content = content.replace(/(['"])((?:\.\.?\/)+)([^'"]+)/g, (match, quote, relPath, importedFile) => {
+                const upLevels = (relPath.match(/\.\.\//g) || []).length;
+                importedFile = importedFile.replace("src/", "");
+
+                if (moduleName == "src/ext/menu_tools/get_editor_keyboard_shortcuts") {
+                    console.log(moduleName)
+                }
+
+                let dirs = partOfPath ? partOfPath.split('/') : [];
+
+                if (upLevels > 0) {
+                    dirs = dirs.slice(0, dirs.length - upLevels);
+                }
+
+                const newPath = dirs.length > 0 ? dirs.join('/') + '/' + importedFile : importedFile;
+                return `${quote}ace-code/src/${newPath}`.replace(/\/+/g, "/");
+            });
+        }
+        else {
+            moduleName = 'interfaces';
+            content = content.replace(/"\.\/src/g, "\"ace-code/src");
+        }
+
+        content = content.replace(/declare\s+/g, "");
+
+        combinedDefinitions += `declare module "ace-code/${moduleName}" {\n ${content}\n}\n`;
+
+    });
+
+    combinedDefinitions = updateDeclarationModuleNames(combinedDefinitions);
+    const regex = new RegExp(AUTO_GENERATED_HEADER.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g');
+    combinedDefinitions = combinedDefinitions.replace(regex, "");
+    combinedDefinitions = combinedDefinitions.replace(/ace\-builds\-internal\/ace/g, "ace-builds");
+
+    combinedDefinitions = formatDts("test.d.ts", combinedDefinitions);
+
+    combinedDefinitions = AUTO_GENERATED_HEADER + MODE_REFERENCE + "\n" + combinedDefinitions;
+
+    return combinedDefinitions;
+}
+
 
 if (!module.parent) {
     require("./modes-declaration-generator");
@@ -724,4 +794,5 @@ if (!module.parent) {
 else {
     exports.generateDeclaration = generateDeclaration;
     exports.updateDeclarationModuleNames = updateDeclarationModuleNames;
+    exports.bundleDtsFiles = bundleDtsFiles;
 }
