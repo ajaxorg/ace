@@ -389,8 +389,8 @@ declare module "ace-code/src/ext/modelist" {
      *  suggested mode.
      */
     export function getModeForPath(path: string): Mode;
-    export var modes: any[];
-    export var modesByName: {};
+    export var modes: Mode[];
+    export var modesByName: Record<string, Mode>;
     class Mode {
         constructor(name: string, caption: string, extensions: string);
         name: string;
