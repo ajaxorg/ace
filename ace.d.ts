@@ -695,7 +695,7 @@ declare module "ace-code" {
         }
         interface SyntaxMode {
             HighlightRules: {
-                new(config: any): HighlightRules;
+                new(config?: any): HighlightRules;
             }; //TODO: fix this
             foldingRules?: FoldMode;
             /**

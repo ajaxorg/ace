@@ -3767,7 +3767,7 @@ declare module "ace-code/src/edit_session" {
          * End current Ace operation.
          * Emits "beforeEndOperation" event just before clearing everything, where the current operation can be accessed through `curOp` property.
          */
-        endOperation(e: any): void;
+        endOperation(e?: any): void;
         /**
          * Sets the `EditSession` to point to a new `Document`. If a `BackgroundTokenizer` exists, it also points to `doc`.
          *

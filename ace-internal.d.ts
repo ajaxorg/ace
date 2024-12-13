@@ -845,7 +845,7 @@ export namespace Ace {
          */
         $quotes: { [quote: string]: string };
         HighlightRules: {
-            new(config: any): HighlightRules
+            new(config?: any): HighlightRules
         }; //TODO: fix this
         foldingRules?: FoldMode;
         $behaviour?: Behaviour;
