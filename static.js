@@ -17,7 +17,11 @@ function lookupMime(filename) {
         png: "image/png",
         jpg: "image/jpg",
         html: "text/html",
-        jpeg: "image/jpeg"
+        jpeg: "image/jpeg",
+        wasm: "application/wasm",
+        json: "application/json",
+        xml: "application/xml",
+        ttf: "font/ttf",
     }[ext];
 }
   
@@ -31,17 +35,13 @@ if (allowSave)
 
 http.createServer(function(req, res) {
     var uri = unescape(url.parse(req.url).pathname);
+    console.log("[" + req.method + "]", uri);
+    var root = process.cwd() + path.sep;
+    var filename = path.join(root, uri);
 
-    // We don't allow for relative URIs, such as ../../X, to prevent directory traversal in case the server is shared with other actors.
-    // In windows, `path.normalize` converts `/` in the URI to `\\`, so we enforce POSIX path separators during the check.
-    // See more at https://cwe.mitre.org/data/definitions/22.html
-    var posixUri = uri.replaceAll(path.sep, path.posix.sep);
-    var normalizedPosixUri = path.normalize(uri).replaceAll(path.sep, path.posix.sep);
-    if (normalizedPosixUri !== posixUri) {
+    if (filename.slice(0, root.length) !== root) {
         return error(res, 400, "400 Bad request: Directory traversal is not allowed.");
     }
-
-    var filename = path.join(process.cwd(), uri);
 
     if (req.method == "OPTIONS") {
         writeHead(res, 200);
@@ -83,11 +83,14 @@ function writeHead(res, code, contentType) {
     res.statusCode = code;
 }
 
+function escapeHTML(str) {
+    return ("" + str).replace(/&/g, "&#38;").replace(/"/g, "&#34;").replace(/'/g, "&#39;").replace(/</g, "&#60;");
+}
 function serveDirectory(filename, uri, req, res) {
     var files = fs.readdirSync(filename);
     writeHead(res, 200, "text/html");
     
-    files.push("..", ".");
+    files.push("..");
     var html = files.map(function(name) {
         try {
             var stat = fs.statSync(filename + "/" + name);
@@ -108,11 +111,13 @@ function serveDirectory(filename, uri, req, res) {
         else size = (stat.size / 1024 / 1024).toFixed(2) + "mb";
         return "<tr>"
             + "<td>&nbsp;&nbsp;" + size + "&nbsp;&nbsp;</td>"
-            + "<td><a href='" + name + "'>" + name + "</a></td>"
+            + "<td><a href='" + escapeHTML(name) + "'>" + escapeHTML(name) + "</a></td>"
         + "</tr>";
     }).join("");
     html = "<table>" + html + "</table>";
 
+    var baseUri = uri.replace(/\/?$/, "/");
+    html = "<base href='"+ escapeHTML(baseUri) + "'>" + html;
     res._hasBody && res.write(html);
     res.end();
 }

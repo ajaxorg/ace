@@ -1,7 +1,3 @@
-if (typeof process !== "undefined") {
-    require("amd-loader");
-}
-
 "use strict";
 
 var EditSession = require("./edit_session").EditSession;
@@ -142,7 +138,7 @@ module.exports = {
     "test: fallback to nonUnicode mode on edge cases": function() {
         var session = new EditSession([
             /* eslint-disable no-octal-escape*/
-            "string with \251 symbol",  // test octal escape sequence
+            "string with \xa9 symbol",  // test octal escape sequence
             "bracket ab{2}"  // test lone quantifier brackets
         ]);
 

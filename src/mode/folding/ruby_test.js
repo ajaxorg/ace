@@ -1,6 +1,3 @@
-if (typeof process !== "undefined")
-    require("amd-loader");
-
 "use strict";
 
 var RubyMode = require("../ruby").Mode;

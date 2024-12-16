@@ -185,8 +185,19 @@ declare module "ace-code/src/ext/searchbox" {
         searchInput: HTMLInputElement;
         replaceInput: HTMLInputElement;
         searchCounter: HTMLElement;
+        /**
+         * 
+         * @external
+        */
+        $onChange: {
+            schedule: (timeout?: number) => void;
+        };
         setSearchRange(range: any): void;
         searchRangeMarker: number;
+        /**
+         * @external
+         */
+        $syncOptions(preventScroll?: boolean): void;
         highlight(re?: RegExp): void;
         find(skipCurrent: boolean, backwards: boolean, preventScroll?: any): void;
         updateCounter(): void;

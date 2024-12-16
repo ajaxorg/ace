@@ -129,6 +129,10 @@ class SearchBox {
             }
         });
 
+        /**
+         * @type {{schedule: (timeout?: number) => void}}
+         * @external
+        */
         this.$onChange = lang.delayedCall(function() {
             _this.find(false, false);
         });
@@ -158,6 +162,7 @@ class SearchBox {
 
     /**
      * @param {boolean} [preventScroll]
+     * @external
      */
     $syncOptions(preventScroll) {
         dom.setCssClass(this.replaceOption, "checked", this.searchRange);

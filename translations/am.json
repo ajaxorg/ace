@@ -39,5 +39,11 @@
     "gutter-tooltip.aria-label.warning.singular": "նախազգուշացում",
     "gutter-tooltip.aria-label.warning.plural": "նախազգուշացումներ",
     "gutter-tooltip.aria-label.info.singular": "տեղեկատվություն",
-    "gutter-tooltip.aria-label.info.plural": "տեղեկատվություններ"
+    "gutter-tooltip.aria-label.info.plural": "տեղեկատվություններ",
+    "gutter.annotation.aria-label.security": "",
+    "gutter.annotation.aria-label.hint": "",
+    "gutter-tooltip.aria-label.security.singular": "",
+    "gutter-tooltip.aria-label.security.plural": "",
+    "gutter-tooltip.aria-label.hint.singular": "",
+    "gutter-tooltip.aria-label.hint.plural": ""
 }

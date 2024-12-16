@@ -1,7 +1,3 @@
-if (typeof process !== "undefined") {
-    require("amd-loader");
-}
-
 "use strict";
 
 var assert = require("./../test/assertions");
