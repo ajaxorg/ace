@@ -118,10 +118,8 @@ function createPopup() {
     const popup = new AcePopup();
 
     popup.container.style.width = "100%";
-    popup.renderer.$maxLines = 7;
     popup.renderer.textarea.setAttribute("tabindex", "-1");
     popup.setSelectOnHover(true);
-    popup.renderer.$textLayer.element.setAttribute("id", "id");
     return popup;
 }
 
