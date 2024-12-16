@@ -127,6 +127,7 @@ class EditSession {
         }
 
         this.$operationResetTimer.schedule();
+        /**@type {import("../ace-internal").Ace.Operation | null}*/
         this.curOp = {
             command: commandEvent.command || {},
             args: commandEvent.args

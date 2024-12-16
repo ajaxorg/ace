@@ -534,7 +534,9 @@ declare module "ace-code" {
             "resize": (e?: any) => void;
             "autosize": () => void;
         }
-        class EventEmitter<T> {
+        export class EventEmitter<T extends {
+            [K in keyof T]: (...args: any[]) => any;
+        }> {
             once<K extends keyof T>(name: K, callback: T[K]): void;
             setDefaultHandler(name: string, callback: Function): void;
             removeDefaultHandler(name: string, callback: Function): void;
@@ -947,6 +949,16 @@ declare module "ace-code" {
             trim?: boolean;
             firstLineNumber?: number;
             showGutter?: boolean;
+        }
+        export interface Operation {
+            command: {
+                name?: string;
+            };
+            args: any;
+            selectionBefore?: Range | Range[];
+            selectionAfter?: Range | Range[];
+            docChanged?: boolean;
+            selectionChanged?: boolean;
         }
     }
     export const config: typeof import("ace-code/src/config");

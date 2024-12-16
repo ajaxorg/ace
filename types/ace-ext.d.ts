@@ -71,7 +71,9 @@ declare module "ace-code/src/ext/command_bar" {
     export var TOOLTIP_CLASS_NAME: string;
     export var BUTTON_CLASS_NAME: string;
     namespace Ace {
-        type EventEmitter<T> = import("ace-code").Ace.EventEmitter<T>;
+        type EventEmitter<T extends {
+            [K in keyof T]: (...args: any[]) => any;
+        }> = import("ace-code").Ace.EventEmitter<T>;
     }
     export interface CommandBarTooltip extends Ace.EventEmitter<any> {
     }
@@ -429,7 +431,9 @@ declare module "ace-code/src/ext/options" {
     }
     export type Editor = import("ace-code/src/editor").Editor;
     namespace Ace {
-        type EventEmitter<T> = import("ace-code").Ace.EventEmitter<T>;
+        type EventEmitter<T extends {
+            [K in keyof T]: (...args: any[]) => any;
+        }> = import("ace-code").Ace.EventEmitter<T>;
     }
     export interface OptionPanel extends Ace.EventEmitter<any> {
     }
