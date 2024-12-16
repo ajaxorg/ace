@@ -1,5 +1,8 @@
 "use strict";
 
+/**
+ * @type {Mode[]}
+ */
 var modes = [];
 /**
  * Suggests a mode based on the file extension present in the given path
@@ -261,6 +264,9 @@ var nameOverrides = {
     AutoHotKey: "AutoHotkey / AutoIt"
 };
 
+/**
+ * @type {Record<string, Mode>}
+ */
 var modesByName = {};
 for (var name in supportedModes) {
     var data = supportedModes[name];
