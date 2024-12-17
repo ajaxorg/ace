@@ -90,6 +90,7 @@ class EditSession {
     }
 
     $initOperationListeners() {
+        /**@type {import("../interfaces").Operation | null}*/
         this.curOp = null;
         this.on("change", () => {
             if (!this.curOp) {
@@ -127,7 +128,6 @@ class EditSession {
         }
 
         this.$operationResetTimer.schedule();
-        /**@type {import("../interfaces").Operation | null}*/
         this.curOp = {
             command: commandEvent.command || {},
             args: commandEvent.args

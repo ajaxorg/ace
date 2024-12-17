@@ -124,11 +124,11 @@ function createPopup() {
 }
 
 const acePopup = createPopup();
-
 const activeCommand = acePopup.getData(acePopup.getRow());
 if (activeCommand && activeCommand.command && activeCommand.command.name) {
     acePopup.setData([]);
 }
+acePopup.destroy();
 
 const filter = new FilteredList([]);
 filter.setFilter("test");
