@@ -39,5 +39,11 @@
     "gutter-tooltip.aria-label.warning.singular": "предупреждение",
     "gutter-tooltip.aria-label.warning.plural": "предупреждения",
     "gutter-tooltip.aria-label.info.singular": "информационное сообщение",
-    "gutter-tooltip.aria-label.info.plural": "информационные сообщения"
+    "gutter-tooltip.aria-label.info.plural": "информационные сообщения",
+    "gutter.annotation.aria-label.security": "",
+    "gutter.annotation.aria-label.hint": "",
+    "gutter-tooltip.aria-label.security.singular": "",
+    "gutter-tooltip.aria-label.security.plural": "",
+    "gutter-tooltip.aria-label.hint.singular": "",
+    "gutter-tooltip.aria-label.hint.plural": ""
 }

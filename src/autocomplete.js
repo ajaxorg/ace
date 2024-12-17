@@ -1013,6 +1013,10 @@ class CompletionProvider {
 }
 
 class FilteredList {
+    /**
+     * @param {any} array
+     * @param {string} [filterText]
+     */
     constructor(array, filterText) {
         this.all = array;
         this.filtered = array;

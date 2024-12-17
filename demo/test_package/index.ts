@@ -1,6 +1,6 @@
 import * as ace from "ace-code";
 import {Range} from "ace-code";
-import {Autocomplete} from "ace-code/src/autocomplete";
+import {Autocomplete, FilteredList} from "ace-code/src/autocomplete";
 import {beautify} from "ace-code/src/ext/beautify";
 import {registerCodeLensProvider, setLenses} from "ace-code/src/ext/code_lens";
 import {CommandBarTooltip} from "ace-code/src/ext/command_bar";
@@ -19,6 +19,7 @@ import {highlight} from "ace-code/src/ext/static_highlight";
 // TODO this does not work in node
 // import "ace-code/esm-resolver";
 import { config } from "ace-code";
+import {AcePopup} from "ace-code/src/autocomplete/popup";
 config.setLoader(async function(moduleName, cb) {
     moduleName = moduleName.replace("ace/", "ace-code/src/")
     let module = await import(moduleName);
@@ -112,3 +113,25 @@ highlight(editor.container, {
 setTimeout(function() {
     editor.destroy();
 }, 20)
+
+function createPopup() {
+    const popup = new AcePopup();
+
+    popup.container.style.width = "100%";
+    popup.renderer.textarea.setAttribute("tabindex", "-1");
+    popup.setSelectOnHover(true);
+    return popup;
+}
+
+const acePopup = createPopup();
+
+const activeCommand = acePopup.getData(acePopup.getRow());
+if (activeCommand && activeCommand.command && activeCommand.command.name) {
+    acePopup.setData([]);
+}
+
+const filter = new FilteredList([]);
+filter.setFilter("test");
+
+editor.session.startOperation();
+editor.session.endOperation();

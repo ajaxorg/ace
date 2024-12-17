@@ -27,7 +27,7 @@
 <script type="text/javascript">
     require.config({
         paths: {
-            ace: "../"
+            ace: new URL("../", location).toString()
         },
         packages : [{
             name: "asyncjs",

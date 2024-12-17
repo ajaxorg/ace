@@ -155,7 +155,7 @@ class AppConfig {
      */
     nls(key, defaultString, params) {
         if (!messages[key])  {
-            warn("No message found for the key '" + key + "' in the provided messages, trying to find a translation for the default string '" + defaultString + "'.");
+            warn("No message found for the key '" + key + "' in messages with id " + messages.$id + ", trying to find a translation for the default string '" + defaultString + "'.");
             if (!messages[defaultString]) {
                 warn("No message found for the default string '" + defaultString + "' in the provided messages. Falling back to the default English message.");
             }

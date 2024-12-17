@@ -127,6 +127,7 @@ class EditSession {
         }
 
         this.$operationResetTimer.schedule();
+        /**@type {import("../ace-internal").Ace.Operation | null}*/
         this.curOp = {
             command: commandEvent.command || {},
             args: commandEvent.args
@@ -138,7 +139,7 @@ class EditSession {
     /**
      * End current Ace operation.
      * Emits "beforeEndOperation" event just before clearing everything, where the current operation can be accessed through `curOp` property.
-     * @param {any} e
+     * @param {any} [e]
      */
     endOperation(e) {
         if (this.curOp) {

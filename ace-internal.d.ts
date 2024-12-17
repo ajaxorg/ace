@@ -328,6 +328,7 @@ declare module "./src/edit_session" {
         $occurMatchingLines?: any,
         $useEmacsStyleLineStart?: boolean,
         $selectLongWords?: boolean,
+        curOp: Ace.Operation | null,
 
         getSelectionMarkers(): any[],
     }
@@ -390,7 +391,7 @@ declare module "./src/virtual_renderer" {
         $printMarginColumn?: number,
         $animatedScroll?: boolean,
         $isMousePressed?: boolean,
-        textarea?: HTMLTextAreaElement,
+        textarea: HTMLTextAreaElement,
         $hScrollBarAlwaysVisible?: boolean,
         $vScrollBarAlwaysVisible?: boolean
         $maxLines?: number,
@@ -410,7 +411,6 @@ declare module "./src/virtual_renderer" {
         session: EditSession,
         keyboardFocusClassName?: string,
     }
-
 }
 
 declare module "./src/snippets" {
@@ -442,7 +442,7 @@ declare module "./src/autocomplete/popup" {
         isTopdown: boolean,
         autoSelect: boolean,
         data: Completion[],
-        setData: (data: Completion[], filterText: string) => void,
+        setData: (data: Completion[], filterText?: string) => void,
         getData: (row: number) => Completion,
         hide: () => void,
         anchor: "top" | "bottom",
@@ -522,8 +522,5 @@ declare module "./src/tooltip" {
 declare module "./src/mouse/default_gutter_handler" {
     export interface GutterHandler {
     }
-}
-
-declare module "./src/lib/keys" {
 }
 
