@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.36.6](https://github.com/ajaxorg/ace/compare/v1.36.5...v1.36.6) (2024-12-17)
+
+
+### Bug Fixes
+
+* update contribuition guide to mandate test cases ([#5694](https://github.com/ajaxorg/ace/issues/5694)) ([e6533b3](https://github.com/ajaxorg/ace/commit/e6533b3972d5adbf5995646c44894466b3b7f40f))
+* wrong behaviour rules in modes ([#5682](https://github.com/ajaxorg/ace/issues/5682)) ([442680c](https://github.com/ajaxorg/ace/commit/442680c68e66531c2d5ac80d80444ed600262ec1))
+
 ### [1.36.5](https://github.com/ajaxorg/ace/compare/v1.36.4...v1.36.5) (2024-11-14)
 
 
