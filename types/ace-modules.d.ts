@@ -3772,7 +3772,7 @@ declare module "ace-code/src/edit_session" {
         bgTokenizer: BackgroundTokenizer;
         selection: Selection;
         destroyed: boolean;
-        curOp: import("ace-code").Ace.Operation;
+        curOp: import("ace-code").Ace.Operation | null;
         /**
          * Start an Ace operation, which will then batch all the subsequent changes (to either content or selection) under a single atomic operation.
          * @param {{command?: {name?: string}, args?: any}|undefined} [commandEvent] Optional name for the operation
