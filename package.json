@@ -39,13 +39,13 @@
         "interfaces.d.ts"
     ],
     "scripts": {
-        "clean": "rimraf src/**/*.d.ts",
+        "clean:dts": "node -e \"require('./tool/fs_utilities').cleanDeclarationFiles()\"",
         "start": "node static.js",
         "test": "node src/test/all.js",
         "cover": "istanbul cover src/test/all.js",
         "lint": "eslint \"src/**/*.js\" \"*.js\"",
         "fix": "npm run lint -- --fix",
-        "typecheck": "tsc -p tsconfig.json",
+        "typecheck": "npm run clean:dts && tsc -p tsconfig.json",
         "update-types": "node ./tool/ace_declaration_generator.js",
         "changelog": "standard-version",
         "prepack": "node tool/esm_resolver_generator.js && node tool/ace_declaration_generator.js && node Makefile.dryice.js css --target build-styles && rm -rf styles && mv build-styles/css styles"

@@ -1,7 +1,7 @@
 const ts = require('typescript');
 const fs = require("fs");
 const path = require("path");
-var {getAllFiles} = require("./fs_utilities");
+var {getAllFiles, cleanDeclarationFiles} = require("./fs_utilities");
 
 const AUTO_GENERATED_HEADER = "/* This file is generated using `npm run update-types` */\n\n";
 
@@ -731,17 +731,6 @@ function updateDeclarationModuleNames(content) {
     output = output.replace(/"ace\-code"/g, "\"ace-builds\"");
     output = output.replace(/ace\-code(?:\/src)?/g, "ace-builds-internal");
     return output;
-}
-
-function cleanDeclarationFiles() {
-    const baseDir = path.resolve(__dirname, '../src');
-    const files = getAllFiles(baseDir);
-
-    files.forEach(file => {
-        if (file.endsWith('.d.ts')) {
-            fs.unlinkSync(file);
-        }
-    });
 }
 
 function bundleDtsFiles(buildPath) {

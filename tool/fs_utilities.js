@@ -20,4 +20,16 @@ function getAllFiles(dirPath) {
     return files;
 }
 
+function cleanDeclarationFiles() {
+    const baseDir = path.resolve(__dirname, '../src');
+    const files = getAllFiles(baseDir);
+
+    files.forEach(file => {
+        if (file.endsWith('.d.ts')) {
+            fs.unlinkSync(file);
+        }
+    });
+}
+
 exports.getAllFiles = getAllFiles;
+exports.cleanDeclarationFiles = cleanDeclarationFiles;
