@@ -29,7 +29,7 @@ var preventParentScroll = require("./lib/scroll").preventParentScroll;
  * it would be used instead of `docText`.
  * @property {string} [completerId] - the identifier of the completer
  * @property {import("../interfaces").IRange} [range] - An object specifying the range of text to be replaced with the new completion value (experimental)
- * @property {string} [command] - A command to be executed after the completion is inserted (experimental)
+ * @property {any} [command] - A command to be executed after the completion is inserted (experimental)
  * @property {string} [snippet] - a text snippet that would be inserted when the completion is selected
  * @property {string} [value] - The text that would be inserted when selecting this completion.
  * @property {import("../interfaces").Completer} [completer]

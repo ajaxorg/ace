@@ -224,6 +224,7 @@ export namespace Ace {
     export type TokenizeResult = import("./interfaces").TokenizeResult;
 
     type StaticHighlightOptions = import("./interfaces").StaticHighlightOptions;
+    type Operation = import("./interfaces").Operation;
 }
 
 declare global {
@@ -328,7 +329,7 @@ declare module "./src/edit_session" {
         $occurMatchingLines?: any,
         $useEmacsStyleLineStart?: boolean,
         $selectLongWords?: boolean,
-        curOp: Ace.Operation | null,
+        curOp: i.Operation | null,
 
         getSelectionMarkers(): any[],
     }

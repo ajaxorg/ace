@@ -299,7 +299,7 @@ function fixDeclarations(sourcesByPath, aceNamespacePath) {
 
                         const startsWithDollar = ts.isIdentifier(node.name) && /^[$_]/.test(node.name.text);
 
-                        if (isPrivate || startsWithDollar || hasInternalTag(node)) {
+                        if (isPrivate || (startsWithDollar && !hasExternalTag(node)) || hasInternalTag(node)) {
                             return ts.factory.createNotEmittedStatement(node);
                         }
                     }
@@ -442,6 +442,14 @@ function hasInternalTag(node) {
     if (!sourceFile) return false;
 
     const jsDocs = ts.getJSDocTags(node).filter(tag => tag.tagName.text === 'internal');
+    return jsDocs.length > 0;
+}
+
+function hasExternalTag(node) {
+    const sourceFile = node.getSourceFile();
+    if (!sourceFile) return false;
+
+    const jsDocs = ts.getJSDocTags(node).filter(tag => tag.tagName.text === 'external');
     return jsDocs.length > 0;
 }
 

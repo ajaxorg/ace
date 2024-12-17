@@ -821,7 +821,7 @@ export interface SyntaxMode {
      */
     $quotes: { [quote: string]: string };
     HighlightRules: {
-        new(config: any): HighlightRules
+        new(config?: any): HighlightRules
     }; //TODO: fix this
     foldingRules?: FoldMode;
     $behaviour?: Behaviour;
@@ -1186,4 +1186,15 @@ export interface StaticHighlightOptions {
     trim?: boolean,
     firstLineNumber?: number,
     showGutter?: boolean
+}
+
+export interface Operation {
+    command: {
+        name?: string;
+    };
+    args: any;
+    selectionBefore?: Range | Range[];
+    selectionAfter?: Range | Range[];
+    docChanged?: boolean;
+    selectionChanged?: boolean;
 }
