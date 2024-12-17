@@ -1,6 +1,7 @@
 var ts = require("typescript");
 var fs = require("fs");
 var path = require("path");
+var {getAllFiles} = require("./fs_utilities");
 
 const modeDirPath = __dirname + "/../src/mode";
 const outputFilePath = __dirname + "/../ace-modes.d.ts";
@@ -123,26 +124,6 @@ function generateModuleDeclarations(dirPath) {
             ts.NodeFlags.ExportContext | ts.NodeFlags.JavaScriptFile | ts.NodeFlags.Ambient | ts.NodeFlags.ContextFlags
         );
     });
-}
-
-function getAllFiles(dirPath) {
-    let files = [];
-
-    const entries = fs.readdirSync(dirPath);
-
-    entries.sort().forEach(entry => {
-        const fullPath = path.join(dirPath, entry);
-        const stat = fs.statSync(fullPath);
-
-        if (stat.isDirectory()) {
-            files = files.concat(getAllFiles(fullPath));
-        }
-        else if (stat.isFile()) {
-            files.push(fullPath);
-        }
-    });
-
-    return files;
 }
 
 function createProgram(dirPath) {

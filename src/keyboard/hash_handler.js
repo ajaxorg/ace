@@ -1,8 +1,8 @@
 "use strict";
 
 /**
- * @typedef {import("../../ace-internal").Ace.Command} Command
- * @typedef {import("../../ace-internal").Ace.CommandLike} CommandLike
+ * @typedef {import("../../interfaces").Command} Command
+ * @typedef {import("../../interfaces").CommandLike} CommandLike
 */
 
 /** @type {any} */var keyUtil = require("../lib/keys");

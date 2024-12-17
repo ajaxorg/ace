@@ -2,7 +2,7 @@
 
 const deepCopy = require("../lib/deep_copy").deepCopy;
 
-/**@type {(new() => Partial<import("../../ace-internal").Ace.HighlightRules>) & {prototype: import("../../ace-internal").Ace.HighlightRules}}*/
+/**@type {(new() => Partial<import("../../interfaces").HighlightRules>) & {prototype: import("../../interfaces").HighlightRules}}*/
 var TextHighlightRules;
 TextHighlightRules = function() {
 
@@ -22,9 +22,9 @@ TextHighlightRules = function() {
 (function() {
 
     /**
-     * @param {import("../../ace-internal").Ace.HighlightRulesMap} rules
+     * @param {import("../../interfaces").HighlightRulesMap} rules
      * @param {string} [prefix]
-     * @this {import("../../ace-internal").Ace.HighlightRules}
+     * @this {import("../../interfaces").HighlightRules}
      */
     this.addRules = function(rules, prefix) {
         if (!prefix) {
@@ -50,8 +50,8 @@ TextHighlightRules = function() {
     };
 
     /**
-     * @returns {import("../../ace-internal").Ace.HighlightRulesMap}
-     * @this {import("../../ace-internal").Ace.HighlightRules}
+     * @returns {import("../../interfaces").HighlightRulesMap}
+     * @this {import("../../interfaces").HighlightRules}
      */
     this.getRules = function() {
         return this.$rules;
@@ -63,7 +63,7 @@ TextHighlightRules = function() {
      * @param escapeRules
      * @param states
      * @param append
-     * @this {import("../../ace-internal").Ace.HighlightRules}
+     * @this {import("../../interfaces").HighlightRules}
      */
     this.embedRules = function (HighlightRules, prefix, escapeRules, states, append) {
         var embedRules = typeof HighlightRules == "function"
@@ -92,7 +92,7 @@ TextHighlightRules = function() {
     };
 
     /**
-     * @this {import("../../ace-internal").Ace.HighlightRules}
+     * @this {import("../../interfaces").HighlightRules}
      */
     this.getEmbeds = function() {
         return this.$embeds;
@@ -110,7 +110,7 @@ TextHighlightRules = function() {
     };
 
     /**
-     * @this {import("../../ace-internal").Ace.HighlightRules}
+     * @this {import("../../interfaces").HighlightRules}
      */
     this.normalizeRules = function() {
         var id = 0;
@@ -229,7 +229,7 @@ TextHighlightRules = function() {
     };
 
     /**
-     * @this {import("../../ace-internal").Ace.HighlightRules}
+     * @this {import("../../interfaces").HighlightRules}
      */
     this.getKeywords = function() {
         return this.$keywords;

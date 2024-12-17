@@ -3,7 +3,7 @@
  * @typedef {import("./edit_session").EditSession} EditSession
  * @typedef {import("./editor").Editor} Editor
  * @typedef {import("./virtual_renderer").VirtualRenderer} VirtualRenderer
- * @typedef {import("../ace-internal").Ace.LineWidget} LineWidget
+ * @typedef {import("../interfaces").LineWidget} LineWidget
  */
 
 var dom = require("./lib/dom");
@@ -135,7 +135,7 @@ class LineWidgets {
 
     /**
      *
-     * @param {import("../ace-internal").Ace.Delta} delta
+     * @param {import("../interfaces").Delta} delta
      */
     updateOnChange(delta) {
         var lineWidgets = this.session.lineWidgets;

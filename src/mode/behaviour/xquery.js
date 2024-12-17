@@ -19,7 +19,7 @@ function hasType(token, type) {
     return hasType;
 }
 
-/**@type {(new() => Partial<import("../../../ace-internal").Ace.Behaviour>)}*/
+/**@type {(new() => Partial<import("../../../interfaces").Behaviour>)}*/
   var XQueryBehaviour = function () {
 
       this.inherit(CstyleBehaviour, ["braces", "parens", "string_dquotes"]); // Get string behaviour

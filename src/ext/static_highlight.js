@@ -1,7 +1,7 @@
 "use strict";
 /**
- * @typedef {import("../../ace-internal").Ace.SyntaxMode} SyntaxMode
- * @typedef {import("../../ace-internal").Ace.Theme} Theme
+ * @typedef {import("../../interfaces").SyntaxMode} SyntaxMode
+ * @typedef {import("../../interfaces").Theme} Theme
  */
 
 
@@ -82,7 +82,7 @@ SimpleTextLayer.prototype = TextLayer.prototype;
 /**
  *
  * @param {HTMLElement} el
- * @param {import("../../ace-internal").Ace.StaticHighlightOptions} opts
+ * @param {import("../../interfaces").StaticHighlightOptions} opts
  * @param [callback]
  * @returns {boolean}
  */

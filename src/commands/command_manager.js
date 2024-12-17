@@ -26,7 +26,7 @@ class CommandManager extends MultiHashHandler{
 
     /**
      * 
-     * @param {string | string[] | import("../../ace-internal").Ace.Command} command
+     * @param {string | string[] | import("../../interfaces").Command} command
      * @param {Editor} editor
      * @param {any} args
      * @returns {boolean}
@@ -55,7 +55,7 @@ class CommandManager extends MultiHashHandler{
 
     /**
      *
-     * @param {string | import("../../ace-internal").Ace.Command} command
+     * @param {string | import("../../interfaces").Command} command
      * @param {Editor} editor
      * @returns {boolean}
      */

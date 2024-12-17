@@ -7,7 +7,7 @@ var AppConfig = require("./lib/app_config").AppConfig;
 
 module.exports = exports = new AppConfig();
 
-/** @type {import("../ace-internal").Ace.ConfigOptions} */
+/** @type {import("../interfaces").ConfigOptions} */
 var options = {
     packaged: false,
     workerPath: null,
@@ -22,9 +22,9 @@ var options = {
 };
 
 /**
- * @template {keyof import("../ace-internal").Ace.ConfigOptions} K
+ * @template {keyof import("../interfaces").ConfigOptions} K
  * @param {K} key - The key of the config option to retrieve.
- * @returns {import("../ace-internal").Ace.ConfigOptions[K]} - The value of the config option.
+ * @returns {import("../interfaces").ConfigOptions[K]} - The value of the config option.
  */
 exports.get = function(key) {
     if (!options.hasOwnProperty(key))
@@ -33,9 +33,9 @@ exports.get = function(key) {
 };
 
 /**
- * @template {keyof import("../ace-internal").Ace.ConfigOptions} K
+ * @template {keyof import("../interfaces").ConfigOptions} K
  * @param {K} key
- * @param {import("../ace-internal").Ace.ConfigOptions[K]} value
+ * @param {import("../interfaces").ConfigOptions[K]} value
  */
 exports.set = function(key, value) {
     if (options.hasOwnProperty(key))
@@ -46,7 +46,7 @@ exports.set = function(key, value) {
         dom.useStrictCSP(value);
 };
 /**
- * @return {import("../ace-internal").Ace.ConfigOptions}
+ * @return {import("../interfaces").ConfigOptions}
  */
 exports.all = function() {
     return lang.copyObject(options);

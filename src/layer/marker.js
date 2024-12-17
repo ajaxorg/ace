@@ -1,7 +1,7 @@
 "use strict";
 /**
  * @typedef {import("../edit_session").EditSession} EditSession
- * @typedef {import("../../ace-internal").Ace.LayerConfig} LayerConfig
+ * @typedef {import("../../interfaces").LayerConfig} LayerConfig
  */
 var Range = require("../range").Range;
 var dom = require("../lib/dom");
@@ -32,7 +32,7 @@ class Marker {
     }
 
     /**
-     * @param {{ [x: number]: import("../../ace-internal").Ace.MarkerLike; }} markers
+     * @param {{ [x: number]: import("../../interfaces").MarkerLike; }} markers
      */
     setMarkers(markers) {
         this.markers = markers;

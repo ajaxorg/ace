@@ -8,8 +8,8 @@ var TokenIterator = require("../token_iterator").TokenIterator;
 var MouseEvent = require("../mouse/mouse_event").MouseEvent;
 
 /**
- * @typedef {import("../edit_session").EditSession & import("../../ace-internal").Ace.Folding} IFolding
- * @typedef {import("../../ace-internal").Ace.Delta } Delta
+ * @typedef {import("../edit_session").EditSession & import("../../interfaces").Folding} IFolding
+ * @typedef {import("../../interfaces").Delta } Delta
  */
 
 /**
@@ -477,7 +477,7 @@ function Folding() {
 
     /**
      * 
-     * @param {number|null|import("../../ace-internal").Ace.Point|Range|Range[]} [location]
+     * @param {number|null|import("../../interfaces").Point|Range|Range[]} [location]
      * @param {boolean} [expandInner]
      * @return {Fold[]| undefined}
      */
@@ -842,7 +842,7 @@ function Folding() {
     };
 
     /**
-     * @param {import("../../ace-internal").Ace.FoldMode} foldMode
+     * @param {import("../../interfaces").FoldMode} foldMode
      */
     this.$setFolding = function(foldMode) {
         if (this.$foldMode == foldMode)

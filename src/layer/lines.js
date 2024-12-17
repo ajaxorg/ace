@@ -1,7 +1,7 @@
 "use strict";
 /**
  * @typedef {import("../edit_session").EditSession} EditSession
- * @typedef {import("../../ace-internal").Ace.LayerConfig} LayerConfig
+ * @typedef {import("../../interfaces").LayerConfig} LayerConfig
  */
 var dom = require("../lib/dom");
 

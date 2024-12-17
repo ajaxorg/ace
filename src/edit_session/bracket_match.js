@@ -1,7 +1,7 @@
 "use strict";
 /**
  * @typedef {import("../edit_session").EditSession} EditSession
- * @typedef {import("../edit_session").Point} Point
+ * @typedef {import("../../interfaces").Point} Point
  */
 var TokenIterator = require("../token_iterator").TokenIterator;
 var Range = require("../range").Range;

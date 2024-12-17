@@ -11,7 +11,7 @@ import {hardWrap} from "ace-code/src/ext/hardwrap";
 import {SearchBox} from "ace-code/src/ext/searchbox";
 
 import("ace-code/src/ext/language_tools");
-import "../../src/test/mockdom.js";
+import "ace-code/src/test/mockdom.js";
 import {tokenize} from "ace-code/src/ext/simple_tokenizer";
 import {JavaScriptHighlightRules} from "ace-code/src/mode/javascript_highlight_rules";
 import {highlight} from "ace-code/src/ext/static_highlight";

@@ -8,7 +8,7 @@ var Renderer = require("./virtual_renderer").VirtualRenderer;
 var EditSession = require("./edit_session").EditSession;
 
 /**
- * @typedef {import("../ace-internal").Ace.EventEmitter & {[key: string]: any}} ISplit
+ * @typedef {import("../interfaces").EventEmitter & {[key: string]: any}} ISplit
  */
 
 var Split;

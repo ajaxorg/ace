@@ -1,9 +1,9 @@
 "use strict";
 /**
  * @typedef {import("./edit_session").EditSession} EditSession
- * @typedef {import("../ace-internal").Ace.Delta} Delta
- * @typedef {import("../ace-internal").Ace.Point} Point
- * @typedef {import("../ace-internal").Ace.IRange} IRange
+ * @typedef {import("../interfaces").Delta} Delta
+ * @typedef {import("../interfaces").Point} Point
+ * @typedef {import("../interfaces").IRange} IRange
  */
 
 /**
@@ -35,7 +35,7 @@ class UndoManager {
      * - `args[0]` is an array of deltas
      * - `args[1]` is the document to associate with
      *
-     * @param {import("../ace-internal").Ace.Delta} delta
+     * @param {import("../interfaces").Delta} delta
      * @param {boolean} allowMerge
      * @param {EditSession} [session]
      **/
@@ -121,7 +121,7 @@ class UndoManager {
      * 
      * @param {number} from
      * @param {number} [to]
-     * @return {import("../ace-internal").Ace.Delta[]}
+     * @return {import("../interfaces").Delta[]}
      */
     getDeltas(from, to) {
         if (to == null) to = this.$rev + 1;

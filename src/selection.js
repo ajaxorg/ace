@@ -7,7 +7,7 @@ var Range = require("./range").Range;
 /**
  * @typedef {import("./edit_session").EditSession} EditSession
  * @typedef {import("./anchor").Anchor} Anchor
- * @typedef {import("../ace-internal").Ace.Point} Point
+ * @typedef {import("../interfaces").Point} Point
  */
 
 class Selection {
@@ -153,7 +153,7 @@ class Selection {
 
     /**
      * Sets the selection to the provided range.
-     * @param {import("../ace-internal").Ace.IRange} range The range of text to select
+     * @param {import("../interfaces").IRange} range The range of text to select
      * @param {Boolean} [reverse] Indicates if the range should go backwards (`true`) or not
      **/
     setRange(range, reverse) {

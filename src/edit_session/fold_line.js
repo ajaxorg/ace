@@ -243,7 +243,7 @@ class FoldLine {
 
     /**
      * @param {number} idx
-     * @return {import("../../ace-internal").Ace.Point}
+     * @return {import("../../interfaces").Point}
      */
     idxToPosition(idx) {
         var lastFoldEndColumn = 0;
