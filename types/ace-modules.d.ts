@@ -890,7 +890,7 @@ declare module "ace-code/src/virtual_renderer" {
          * @param {EditSession} session The session to associate with
          **/
         setSession(session: EditSession): void;
-        session: import("ace-code").Ace.EditSession;
+        session: import("ace-code/src/edit_session").EditSession;
         /**
          * Triggers a partial update of the text, from the range given by the two parameters.
          * @param {Number} firstRow The first row to update
@@ -3772,7 +3772,7 @@ declare module "ace-code/src/edit_session" {
         bgTokenizer: BackgroundTokenizer;
         selection: Selection;
         destroyed: boolean;
-        curOp: import("ace-code").Ace.Operation | null;
+        curOp: import("ace-code").Ace.Operation;
         /**
          * Start an Ace operation, which will then batch all the subsequent changes (to either content or selection) under a single atomic operation.
          * @param {{command?: {name?: string}, args?: any}|undefined} [commandEvent] Optional name for the operation
