@@ -133,6 +133,8 @@ class GutterTooltip extends Tooltip {
     constructor(editor) {
         super(editor.container);
         this.editor = editor;
+        /**@type {Number | Undefined}*/
+        this.visibleTooltipRow;
     }
 
     setPosition(x, y) {
@@ -267,6 +269,7 @@ class GutterTooltip extends Tooltip {
         }
 
         this.show();
+        this.visibleTooltipRow = row;
         this.editor._signal("showGutterTooltip", this);
     }
 
@@ -276,6 +279,7 @@ class GutterTooltip extends Tooltip {
         }
         this.$element.removeAttribute("aria-live");
         this.hide();
+        this.visibleTooltipRow = undefined;
         this.editor._signal("hideGutterTooltip", this);
     }
 
