@@ -81,6 +81,8 @@ node -e "
     update('package.json');
     update('build/package.json');
     update('./src/config.js');
+    update('ace.d.ts');
+    update('./types/ace-modules.d.ts');
 "
 
 pause "versions updated to $VERSION_NUM. do you want to start build script? [y/n]"

@@ -972,6 +972,6 @@ declare module "ace-code" {
     import { Range } from "ace-code/src/range";
     import { UndoManager } from "ace-code/src/undomanager";
     import { VirtualRenderer as Renderer } from "ace-code/src/virtual_renderer";
-    export var version: "1.36.5";
+    export var version: "1.37.0";
     export { Range, Editor, EditSession, UndoManager, Renderer as VirtualRenderer };
 }
