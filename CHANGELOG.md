@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.37.1](https://github.com/ajaxorg/ace/compare/v1.37.0...v1.37.1) (2024-12-20)
+
+
+### Bug Fixes
+
+* hide gutter tooltip event missing from editor signal ([#5701](https://github.com/ajaxorg/ace/issues/5701)) ([66a6736](https://github.com/ajaxorg/ace/commit/66a673643d5d128eaf59d4fb6e5907fa6fa68773))
+
 ### [1.36.6](https://github.com/ajaxorg/ace/compare/v1.36.5...v1.36.6) (2024-12-17)
 
 
