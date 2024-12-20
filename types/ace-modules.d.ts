@@ -890,7 +890,7 @@ declare module "ace-code/src/virtual_renderer" {
          * @param {EditSession} session The session to associate with
          **/
         setSession(session: EditSession): void;
-        session: import("ace-code/src/edit_session").EditSession;
+        session: import("ace-code").Ace.EditSession;
         /**
          * Triggers a partial update of the text, from the range given by the two parameters.
          * @param {Number} firstRow The first row to update
@@ -1702,6 +1702,7 @@ declare module "ace-code/src/mouse/default_gutter_handler" {
         static annotationsToSummaryString(annotations: any): string;
         constructor(editor: any);
         editor: any;
+        visibleTooltipRow: number | undefined;
         setPosition(x: any, y: any): void;
         showTooltip(row: any): void;
         hideTooltip(): void;
