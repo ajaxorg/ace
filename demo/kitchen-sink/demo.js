@@ -490,13 +490,6 @@ function synchroniseScrolling() {
 var StatusBar = require("ace/ext/statusbar").StatusBar;
 new StatusBar(env.editor, cmdLine.container);
 
-
-var Emmet = require("ace/ext/emmet");
-net.loadScript("https://cloud9ide.github.io/emmet-core/emmet.js", function() {
-    Emmet.setCore(window.emmet);
-    env.editor.setOption("enableEmmet", true);
-});
-
 require("ace/placeholder").PlaceHolder;
 
 var snippetManager = require("ace/snippets").snippetManager;

@@ -17,13 +17,6 @@ $(function() {
             autoScrollEditorIntoView: true
         });
         
-        ace.config.loadModule("ace/ext/emmet", function() {
-            ace.require("ace/lib/net").loadScript("https://cloud9ide.github.io/emmet-core/emmet.js", function() {
-                embedded_editor.setOption("enableEmmet", true);
-                editor.setOption("enableEmmet", true);
-            });
-        });
-        
         ace.config.loadModule("ace/ext/language_tools", function() {
             embedded_editor.setOptions({
                 enableSnippets: true,
