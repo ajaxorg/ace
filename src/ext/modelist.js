@@ -48,6 +48,7 @@ class Mode {
 
     /**
      * @param {string} filename
+     * @returns {RegExpMatchArray | null}
      */
     supportsFile(filename) {
         return filename.match(this.extRe);
