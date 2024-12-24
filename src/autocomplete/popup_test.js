@@ -209,6 +209,24 @@ module.exports = {
         assert.strictEqual(popup.container.style.display, "none");
         done();
     },
+    "test: setVisibleRows shows correct number of rows": function() {
+        setupPopup();
+        tryShowAndRender({ top: 0, left: 0 }, lineHeight);
+        assert.strictEqual(popup.getDataContainer().children.length, 8);
+        
+        popup.setVisibleRows(4);
+        popup.renderer.updateFull(true);
+        // We add one more element to the DOM 
+        assert.strictEqual(popup.getDataContainer().children.length, 5);
+        assert.strictEqual(Math.floor(popup.container.clientHeight / lineHeight), 4);
+    },
+    "test: getDataContainer returns element with the popup data": function() {
+        setupPopup();
+        tryShowAndRender({ top: 0, left: 0 }, lineHeight);
+        assert.strictEqual(popup.getDataContainer().children.length, 8);
+        assert.strictEqual(popup.getDataContainer().children[0].textContent, "foo0 ");
+        assert.strictEqual(popup.getDataContainer().children[7].textContent, "foo7 ");
+    },
     tearDown: tearDown
 };
 
