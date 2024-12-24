@@ -218,7 +218,10 @@ module.exports = {
         popup.renderer.updateFull(true);
         // We add one more element to the DOM 
         assert.strictEqual(popup.getDataContainer().children.length, 5);
-        assert.strictEqual(Math.floor(popup.container.clientHeight / lineHeight), 4);
+
+        popup.setVisibleRows(1);
+        popup.renderer.updateFull(true);
+        assert.strictEqual(popup.getDataContainer().children.length, 2);
     },
     "test: getDataContainer returns element with the popup data": function() {
         setupPopup();
