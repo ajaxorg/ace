@@ -1841,14 +1841,15 @@ declare module "ace-code/src/search" {
 declare module "ace-code/src/keyboard/hash_handler" {
     export type Command = import("ace-code").Ace.Command;
     export type CommandLike = import("ace-code").Ace.CommandLike;
+    export type Platform = "win" | "mac";
     export class HashHandler extends MultiHashHandler {
     }
     export namespace HashHandler {
         function call(thisArg: any, config: any, platform: any): void;
     }
     export class MultiHashHandler {
-        constructor(config?: Record<string, CommandLike> | Command[], platform?: string);
-        platform: string;
+        constructor(config?: Record<string, CommandLike> | Command[], platform?: Platform);
+        platform: Platform;
         commands: Record<string, Command>;
         commandKeyBinding: {};
         addCommand(command: Command): void;
@@ -1884,10 +1885,10 @@ declare module "ace-code/src/commands/command_manager" {
     export class CommandManager extends MultiHashHandler {
         /**
          * new CommandManager(platform, commands)
-         * @param {String} platform Identifier for the platform; must be either `"mac"` or `"win"`
+         * @param {import("ace-code/src/keyboard/hash_handler").Platform} platform Identifier for the platform; must be either `"mac"` or `"win"`
          * @param {any[]} commands A list of commands
          **/
-        constructor(platform: string, commands: any[]);
+        constructor(platform: import("ace-code/src/keyboard/hash_handler").Platform, commands: any[]);
         byName: Record<string, import("ace-code").Ace.Command>;
         exec(command: string | string[] | import("ace-code").Ace.Command, editor: Editor, args: any): boolean;
         canExecute(command: string | import("ace-code").Ace.Command, editor: Editor): boolean;
