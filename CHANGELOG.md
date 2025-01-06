@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.37.2](https://github.com/ajaxorg/ace/compare/v1.37.1...v1.37.2) (2025-01-06)
+
+
+### Bug Fixes
+
+* fix return type of supportsFile modelist ([#5705](https://github.com/ajaxorg/ace/issues/5705)) ([de21d50](https://github.com/ajaxorg/ace/commit/de21d50656bd874e1626265b8853923cb8da7c8b))
+
 ### [1.37.1](https://github.com/ajaxorg/ace/compare/v1.37.0...v1.37.1) (2024-12-20)
 
 
