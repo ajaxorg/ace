@@ -437,6 +437,10 @@ declare module "ace-code" {
             //from code_lens extension
             "codeLensClick": (e: any) => void;
             "select": () => void;
+            "gutterkeydown": () => void;
+            "gutterclick": () => void;
+            "showGutterTooltip": () => void;
+            "hideGutterTooltip": () => void;
         }
         interface AcePopupEvents {
             "click": (e: MouseEvent) => void;
