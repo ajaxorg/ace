@@ -27,6 +27,8 @@ export namespace Ace {
     type DragdropHandler = import("./src/mouse/dragdrop_handler").DragdropHandler;
     type AppConfig = import("./src/lib/app_config").AppConfig;
     type Config = typeof import("./src/config");
+    type GutterTooltip = typeof import( "./src/mouse/default_gutter_handler").GutterTooltip;
+    type GutterKeyboardEvent = typeof import( "./src/keyboard/gutter_handler").GutterKeyboardEvent;
 
     type AfterLoadCallback = (err: Error | null, module: unknown) => void;
     type LoaderFunction = (moduleName: string, afterLoad: AfterLoadCallback) => void;
@@ -524,6 +526,10 @@ export namespace Ace {
         "codeLensClick": (e: any) => void;
 
         "select": () => void;
+        "gutterkeydown": (e: GutterKeyboardEvent) => void;
+        "gutterclick": (e: MouseEvent) => void;
+        "showGutterTooltip": (e: GutterTooltip) => void;
+        "hideGutterTooltip": (e: GutterTooltip) => void;
     }
 
     interface AcePopupEvents {
