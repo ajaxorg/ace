@@ -524,10 +524,10 @@ export namespace Ace {
         "codeLensClick": (e: any) => void;
 
         "select": () => void;
-        "gutterkeydown": () => void;
-        "gutterclick": () => void;
-        "showGutterTooltip": () => void;
-        "hideGutterTooltip": () => void;
+        "gutterkeydown": (e: any) => void;
+        "gutterclick": (e: any) => void;
+        "showGutterTooltip": (e: any) => void;
+        "hideGutterTooltip": (e: any) => void;
     }
 
     interface AcePopupEvents {
