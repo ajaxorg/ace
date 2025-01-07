@@ -36,6 +36,7 @@ declare module "ace-code" {
         type DragdropHandler = import("ace-code/src/mouse/dragdrop_handler").DragdropHandler;
         type AppConfig = import("ace-code/src/lib/app_config").AppConfig;
         type Config = typeof import("ace-code/src/config");
+        type GutterTooltip = typeof import("ace-code/src/mouse/default_gutter_handler");
         type AfterLoadCallback = (err: Error | null, module: unknown) => void;
         type LoaderFunction = (moduleName: string, afterLoad: AfterLoadCallback) => void;
         export interface ConfigOptions {
@@ -439,8 +440,8 @@ declare module "ace-code" {
             "select": () => void;
             "gutterkeydown": (e: any) => void;
             "gutterclick": (e: any) => void;
-            "showGutterTooltip": (e: any) => void;
-            "hideGutterTooltip": (e: any) => void;
+            "showGutterTooltip": (e: GutterTooltip) => void;
+            "hideGutterTooltip": (e: GutterTooltip) => void;
         }
         interface AcePopupEvents {
             "click": (e: MouseEvent) => void;
