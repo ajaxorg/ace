@@ -1090,6 +1090,9 @@ class VirtualRenderer {
      * @returns {number}
      */
     $computeLayerConfig() {
+        // autosize is needed on the top to ensure accurate size calculations before hideScrollbars
+        if (this.$maxLines && this.lineHeight > 1)
+            this.$autosize();
         var session = this.session;
         var size = this.$size;
 
@@ -1107,10 +1110,7 @@ class VirtualRenderer {
             this.$horizScroll = horizScroll;
             this.scrollBarH.setVisible(horizScroll);
         }
-        var vScrollBefore = this.$vScroll; // autosize can change vscroll value in which case we need to update longestLine
-        // autoresize only after updating hscroll to include scrollbar height in desired height
-        if (this.$maxLines && this.lineHeight > 1)
-            this.$autosize();
+        var vScrollBefore = this.$vScroll;
 
         var minHeight = size.scrollerHeight + this.lineHeight;
 
