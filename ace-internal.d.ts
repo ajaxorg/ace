@@ -27,8 +27,8 @@ export namespace Ace {
     type DragdropHandler = import("./src/mouse/dragdrop_handler").DragdropHandler;
     type AppConfig = import("./src/lib/app_config").AppConfig;
     type Config = typeof import("./src/config");
-    type GutterTooltip = typeof import( "./src/mouse/default_gutter_handler").GutterTooltip;
-    type GutterKeyboardEvent = typeof import( "./src/keyboard/gutter_handler").GutterKeyboardEvent;
+    type GutterTooltip = import( "./src/mouse/default_gutter_handler").GutterTooltip;
+    type GutterKeyboardEvent = import( "./src/keyboard/gutter_handler").GutterKeyboardEvent;
 
     type AfterLoadCallback = (err: Error | null, module: unknown) => void;
     type LoaderFunction = (moduleName: string, afterLoad: AfterLoadCallback) => void;
