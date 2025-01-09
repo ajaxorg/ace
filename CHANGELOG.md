@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.37.4](https://github.com/ajaxorg/ace/compare/v1.37.3...v1.37.4) (2025-01-09)
+
+
+### Bug Fixes
+
+* Remove unnecesary `typeof` from type imports in declarations ([#5715](https://github.com/ajaxorg/ace/issues/5715)) ([2c8bf91](https://github.com/ajaxorg/ace/commit/2c8bf916d75b086b958c205896bc2adc1747d241))
+
 ### [1.37.3](https://github.com/ajaxorg/ace/compare/v1.37.2...v1.37.3) (2025-01-07)
 
 ### [1.37.2](https://github.com/ajaxorg/ace/compare/v1.37.1...v1.37.2) (2025-01-06)
