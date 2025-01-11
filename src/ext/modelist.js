@@ -133,6 +133,7 @@ var supportedModes = {
     Java:        ["java"],
     JavaScript:  ["js|jsm|cjs|mjs"],
     JEXL:        ["jexl"],
+    jinja:       [""],
     JSON:        ["json"],
     JSON5:       ["json5"],
     JSONiq:      ["jq"],
