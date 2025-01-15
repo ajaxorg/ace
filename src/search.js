@@ -48,7 +48,7 @@ class Search {
     /**
      * Searches for `options.needle`. If found, this method returns the [[Range `Range`]] where the text first occurs. If `options.backwards` is `true`, the search goes backwards in the session.
      * @param {EditSession} session The session to search with
-     * @returns {Range|false}
+     * @returns {Range | null | false}
      **/
     find(session) {
         var options = this.$options;
