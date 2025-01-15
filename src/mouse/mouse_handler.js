@@ -129,7 +129,7 @@ class MouseHandler {
         renderer.$isMousePressed = true;
 
         var self = this;
-        var continueCapture = false;
+        var continueCapture = true;
 
         var onMouseMove = function(e) {
             if (!e) return;
@@ -192,7 +192,6 @@ class MouseHandler {
         self.$onCaptureMouseMove = onMouseMove;
         self.releaseMouse = event.capture(this.editor.container, onMouseMove, onCaptureEnd);
 
-        continueCapture = true;
         onCaptureInterval();
     }
     cancelContextMenu() {
