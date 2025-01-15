@@ -5,7 +5,7 @@ var defaultEnglishMessages = {
     "autocomplete.loading": "Loading...",
     "editor.scroller.aria-roledescription": "editor",
     "editor.scroller.aria-label": "Editor content, press Enter to start editing, press Escape to exit",
-    "editor.gutter.aria-roledescription": "editor",
+    "editor.gutter.aria-roledescription": "editor gutter",
     "editor.gutter.aria-label": "Editor gutter, press Enter to interact with controls using arrow keys, press Escape to exit",
     "error-marker.good-state": "Looks good!",
     "prompt.recently-used": "Recently used",
