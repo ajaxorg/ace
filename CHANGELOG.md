@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.37.5](https://github.com/ajaxorg/ace/compare/v1.37.4...v1.37.5) (2025-01-16)
+
+
+### Bug Fixes
+
+* update aria-roledescription gutter ([#5718](https://github.com/ajaxorg/ace/issues/5718)) ([7ae3a4c](https://github.com/ajaxorg/ace/commit/7ae3a4c5f6f6e9bd31ae491f1fcef71fc5ae62fa))
+
 ### [1.37.4](https://github.com/ajaxorg/ace/compare/v1.37.3...v1.37.4) (2025-01-09)
 
 
