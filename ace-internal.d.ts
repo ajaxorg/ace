@@ -1501,6 +1501,8 @@ declare module "./src/autocomplete/popup" {
         anchorPos: any,
         isMouseOver?: boolean,
         selectedNode?: HTMLElement,
+        getDataContainer: () => HTMLDivElement;
+        setVisibleRows: (rows: number) => void;
     }
 }
 
