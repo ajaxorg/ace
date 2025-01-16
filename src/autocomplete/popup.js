@@ -142,6 +142,7 @@ class AcePopup {
                 dom.removeCssClass(popup.selectedNode, "ace_selected");
                 el.removeAttribute("aria-activedescendant");
                 popup.selectedNode.removeAttribute(ariaActiveState);
+                popup.selectedNode.removeAttribute("aria-posinset");
                 popup.selectedNode.removeAttribute("id");
             }
             popup.selectedNode = selected;

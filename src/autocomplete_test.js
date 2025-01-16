@@ -217,6 +217,55 @@ module.exports = {
             done();
             });
     },
+    "test: should set aria labels for currently selected item": function(done) {
+        var editor = initEditor("");
+        var newLineCharacter = editor.session.doc.getNewLineCharacter();
+        editor.completers = [
+            {
+                getCompletions: function (editor, session, pos, prefix, callback) {
+                    var completions = Array(10).fill(null).map(function (i, n) { return { caption: String(n), value: String(n)};});
+                    callback(null, completions);
+                },
+                triggerCharacters: [".", newLineCharacter]
+            }
+        ];
+        sendKey('Return');
+        var popup = editor.completer.popup;
+        check(function () {
+          assert.equal(popup.data.length, 10);
+          assert.ok(checkAria('<d  id="suggest-aria-id:0" role="option" aria-roledescription="item" aria-label="0" aria-setsize="10" aria-posinset="1" aria-describedby="doc-tooltip" aria-selected="true"><s >0</s><s > </s></d><d ><s >1</s><s > </s></d><d ><s >2</s><s > </s></d><d ><s >3</s><s > </s></d><d ><s >4</s><s > </s></d><d ><s >5</s><s > </s></d><d ><s >6</s><s > </s></d><d ><s >7</s><s > </s></d><d ><s >8</s><s > </s></d>'));
+          sendKey('Down');
+          check(function () {
+            assert.ok(checkAria('<d  role="option" aria-roledescription="item" aria-label="0" aria-setsize="10" aria-describedby="doc-tooltip"><s >0</s><s > </s></d><d  id="suggest-aria-id:1" role="option" aria-roledescription="item" aria-label="1" aria-setsize="10" aria-posinset="2" aria-describedby="doc-tooltip" aria-selected="true"><s >1</s><s > </s></d><d ><s >2</s><s > </s></d><d ><s >3</s><s > </s></d><d ><s >4</s><s > </s></d><d ><s >5</s><s > </s></d><d ><s >6</s><s > </s></d><d ><s >7</s><s > </s></d><d ><s >8</s><s > </s></d>'));
+            sendKey('Down');
+            check(function () {
+              assert.ok(checkAria('<d  role="option" aria-roledescription="item" aria-label="0" aria-setsize="10" aria-describedby="doc-tooltip"><s >0</s><s > </s></d><d  role="option" aria-roledescription="item" aria-label="1" aria-setsize="10" aria-describedby="doc-tooltip"><s >1</s><s > </s></d><d  id="suggest-aria-id:2" role="option" aria-roledescription="item" aria-label="2" aria-setsize="10" aria-posinset="3" aria-describedby="doc-tooltip" aria-selected="true"><s >2</s><s > </s></d><d ><s >3</s><s > </s></d><d ><s >4</s><s > </s></d><d ><s >5</s><s > </s></d><d ><s >6</s><s > </s></d><d ><s >7</s><s > </s></d><d ><s >8</s><s > </s></d>'));
+              sendKey('Down');
+              check(function () {
+              sendKey('Down');
+                assert.ok(checkAria('<d  role="option" aria-roledescription="item" aria-label="0" aria-setsize="10" aria-describedby="doc-tooltip"><s >0</s><s > </s></d><d  role="option" aria-roledescription="item" aria-label="1" aria-setsize="10" aria-describedby="doc-tooltip"><s >1</s><s > </s></d><d  role="option" aria-roledescription="item" aria-label="2" aria-setsize="10" aria-describedby="doc-tooltip"><s >2</s><s > </s></d><d  id="suggest-aria-id:3" role="option" aria-roledescription="item" aria-label="3" aria-setsize="10" aria-posinset="4" aria-describedby="doc-tooltip" aria-selected="true"><s >3</s><s > </s></d><d ><s >4</s><s > </s></d><d ><s >5</s><s > </s></d><d ><s >6</s><s > </s></d><d ><s >7</s><s > </s></d><d ><s >8</s><s > </s></d>'));
+              check(function () {
+                assert.ok(checkAria('<d  role="option" aria-roledescription="item" aria-label="0" aria-setsize="10" aria-describedby="doc-tooltip"><s >0</s><s > </s></d><d  role="option" aria-roledescription="item" aria-label="1" aria-setsize="10" aria-describedby="doc-tooltip"><s >1</s><s > </s></d><d  role="option" aria-roledescription="item" aria-label="2" aria-setsize="10" aria-describedby="doc-tooltip"><s >2</s><s > </s></d><d  role="option" aria-roledescription="item" aria-label="3" aria-setsize="10" aria-describedby="doc-tooltip"><s >3</s><s > </s></d><d  id="suggest-aria-id:4" role="option" aria-roledescription="item" aria-label="4" aria-setsize="10" aria-posinset="5" aria-describedby="doc-tooltip" aria-selected="true"><s >4</s><s > </s></d><d ><s >5</s><s > </s></d><d ><s >6</s><s > </s></d><d ><s >7</s><s > </s></d><d ><s >8</s><s > </s></d>'));
+                done();
+              });
+              });
+            });
+          });
+        });
+        function check(callback) {
+            popup = editor.completer.popup;
+            popup.renderer.on("afterRender", function wait() {
+                popup.renderer.off("afterRender", wait);
+                callback();
+            });
+        }
+        function checkAria(expected) {
+          var popup = editor.completer.popup;
+          var innerHTML = popup.renderer.$textLayer.element.innerHTML
+          .replace(/\s*style="[^"]+"|class="[^"]+"|(d)iv|(s)pan/g, "$1$2");
+          return innerHTML === expected;
+        }
+    },
     "test: different completers tooltips": function (done) {
         var editor = initEditor("");
         var firstDoc = "<b>First</b>";
