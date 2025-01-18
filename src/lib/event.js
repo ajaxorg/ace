@@ -338,7 +338,9 @@ exports.onIdle = function(cb, timeout) {
     }, timeout);
 };
 
+/**@type {null | ReturnType<typeof setTimeout>}*/
 exports.$idleBlockId = null;
+/** @arg [delay] {null | number} */
 exports.blockIdle = function(delay) {
     if (exports.$idleBlockId)
         clearTimeout(exports.$idleBlockId);

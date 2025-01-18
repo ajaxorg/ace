@@ -22,3 +22,4 @@ api/
 **/* *
 **/node_modules
 0*
+esm-resolver.js
