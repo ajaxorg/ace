@@ -173,9 +173,15 @@ module.exports = {
         editor.setValue("\n".repeat(9) + "_".repeat(100));
         editor.resize(true);
         editor.renderer.$loop._flush(); // 6
+        assert.notOk(editor.renderer.scrollBarH.isVisible);
+        assert.ok(editor.renderer.scrollBar.isVisible);
+        editor.resize(true);
+        editor.renderer.$loop._flush(); // 7
+        // autosize changes vscroll value in which case updates longestLine
+        // this is why it renders an extra time
         assert.ok(editor.renderer.scrollBarH.isVisible);
         assert.ok(editor.renderer.scrollBar.isVisible);
-        assert.equal(renderCount, 6);
+        assert.equal(renderCount, 7);
     },
 
     "test autosize from 0 height": function() {
