@@ -57,6 +57,4 @@ function tokenize(content, highlightRules) {
     return result;
 }
 
-module.exports = {
-    tokenize
-};
+exports.tokenize = tokenize;
