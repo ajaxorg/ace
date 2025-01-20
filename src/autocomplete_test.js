@@ -1599,6 +1599,67 @@ module.exports = {
         var editor = initEditor("");
         var completer = Autocomplete.for(editor);
         assert.equal(Autocomplete.$sharedInstance == undefined, false);
+    },
+    "test: changing completion should render scrollbars correctly": function (done) {
+        var editor = initEditor("document");
+        var newLineCharacter = editor.session.doc.getNewLineCharacter();
+        var initialCompletions = [
+            {
+                caption: "small",
+                meta: "small",
+                value: "small"
+            }
+        ];
+        var longCompletions = Array(10)
+            .fill(null)
+            .map((_, i) => ({
+                caption: `this is a really long string that I want to use for testing horizontal scroll ${i}`,
+                meta: `meta ${i}`,
+                value: `value ${i}`
+            }));
+
+        var currentCompletions = initialCompletions;
+
+        editor.completers = [
+            {
+                getCompletions: function (editor, session, pos, prefix, callback) {
+                    var completions = currentCompletions;
+                    callback(null, completions);
+                },
+                triggerCharacters: [newLineCharacter]
+            }
+        ];
+
+        editor.moveCursorTo(0, 8);
+        user.type("Return"); // Accept suggestion
+        var popup = editor.completer.popup;
+        check(function () {
+            assert.equal(popup.data.length, 1);
+            assert.notOk(popup.renderer.scrollBar.isVisible);
+            user.type("Return"); // Accept suggestion
+            assert.equal(editor.getValue(), `document${newLineCharacter}small`);
+            // change completion values
+            currentCompletions = longCompletions;
+            check(function () {
+                user.type("Return"); // Enter new line
+                assert.equal(popup.renderer.layerConfig.height, popup.renderer.lineHeight * 1);
+                assert.equal(popup.data.length, 10);
+                check(function () {
+                    assert.ok(popup.renderer.scrollBar.isVisible);
+                    assert.equal(popup.renderer.layerConfig.height, popup.renderer.lineHeight * 8);
+                    user.type("Return"); // Accept suggestion
+                    assert.equal(editor.getValue(), `document${newLineCharacter}small${newLineCharacter}value 0`);
+                    done();
+                });
+            });
+        });
+        function check(callback) {
+            popup = editor.completer.popup;
+            popup.renderer.on("afterRender", function wait() {
+                popup.renderer.off("afterRender", wait);
+                callback();
+            });
+        }
     }
 };
 
