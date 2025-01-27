@@ -511,7 +511,7 @@ export namespace Ace {
         /**
          * Emitted when text is pasted.
          **/
-        "paste": (e: { text: string }) => void;
+        "paste": (e: { text: string, event?: ClipboardEvent }) => void;
         /**
          * Emitted when the selection style changes, via [[Editor.setSelectionStyle]].
          * @param data Contains one property, `data`, which indicates the new selection style

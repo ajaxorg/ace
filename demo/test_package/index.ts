@@ -137,5 +137,8 @@ editor.session.startOperation();
 editor.session.endOperation();
 
 editor.on("paste", (e) => {
-    e.text;
+    var htmlString = e.event?.clipboardData.getData("text/html")
+    if (htmlString) {
+        e.text = htmlString
+    }
 })
