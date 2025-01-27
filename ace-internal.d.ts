@@ -530,6 +530,7 @@ export namespace Ace {
         "gutterclick": (e: MouseEvent) => void;
         "showGutterTooltip": (e: GutterTooltip) => void;
         "hideGutterTooltip": (e: GutterTooltip) => void;
+        "compositionStart": () => void;
     }
 
     interface AcePopupEvents {
@@ -1334,6 +1335,7 @@ declare module "./src/editor" {
         showSettingsMenu?: () => void,
         searchBox?: Ace.SearchBox,
         _eventRegistry?: any,
+        $textInputAriaLabel?: string
     }
 }
 

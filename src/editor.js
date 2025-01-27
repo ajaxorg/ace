@@ -853,7 +853,7 @@ class Editor {
     /**
      * Called whenever a text "paste" happens.
      * @param {String} text The pasted text
-     * @param {any} event
+     * @param {ClipboardEvent} [event]
      * @internal
      **/
     onPaste(text, event) {
@@ -863,7 +863,7 @@ class Editor {
 
     /**
      *
-     * @param {string | {text: string}} e
+     * @param {string | {text: string, event?: ClipboardEvent}} e
      * @returns {boolean}
      */
     $handlePaste(e) {

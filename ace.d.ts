@@ -446,6 +446,7 @@ declare module "ace-code" {
             "gutterclick": (e: MouseEvent) => void;
             "showGutterTooltip": (e: GutterTooltip) => void;
             "hideGutterTooltip": (e: GutterTooltip) => void;
+            "compositionStart": () => void;
         }
         interface AcePopupEvents {
             "click": (e: MouseEvent) => void;
