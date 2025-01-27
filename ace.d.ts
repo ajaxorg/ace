@@ -424,6 +424,7 @@ declare module "ace-code" {
              **/
             "paste": (e: {
                 text: string;
+                event?: ClipboardEvent;
             }) => void;
             /**
              * Emitted when the selection style changes, via [[Editor.setSelectionStyle]].

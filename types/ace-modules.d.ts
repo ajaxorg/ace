@@ -890,7 +890,7 @@ declare module "ace-code/src/virtual_renderer" {
          * @param {EditSession} session The session to associate with
          **/
         setSession(session: EditSession): void;
-        session: import("ace-code").Ace.EditSession;
+        session: import("ace-code/src/edit_session").EditSession;
         /**
          * Triggers a partial update of the text, from the range given by the two parameters.
          * @param {Number} firstRow The first row to update
