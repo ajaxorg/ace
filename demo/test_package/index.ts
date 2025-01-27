@@ -135,3 +135,7 @@ filter.setFilter("test");
 
 editor.session.startOperation();
 editor.session.endOperation();
+
+editor.on("paste", (e) => {
+    e.text;
+})

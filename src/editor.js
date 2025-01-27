@@ -863,7 +863,7 @@ class Editor {
 
     /**
      *
-     * @param e
+     * @param {string | {text: string}} e
      * @returns {boolean}
      */
     $handlePaste(e) {
