@@ -322,6 +322,12 @@ if (typeof window == "object" && window.postMessage && !useragent.isOldIE) {
 }
 
 exports.$idleBlocked = false;
+/**
+ *
+ * @param {CallableFunction} cb
+ * @param {number} timeout
+ * @return {ReturnType<typeof setTimeout>}
+ */
 exports.onIdle = function(cb, timeout) {
     return setTimeout(function handler() {
         if (!exports.$idleBlocked) {

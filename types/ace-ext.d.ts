@@ -252,7 +252,7 @@ declare module "ace-code/src/ext/code_lens" {
 }
 declare module "ace-code/src/ext/emmet" {
     export const commands: HashHandler;
-    export function runEmmetCommand(editor: Editor): number | boolean;
+    export function runEmmetCommand(editor: Editor): ReturnType<typeof setTimeout> | boolean;
     export function updateCommands(editor: Editor, enabled?: boolean): void;
     export function isSupportedMode(mode: any): boolean;
     export function isAvailable(editor: Editor, command: string): boolean;

@@ -536,7 +536,7 @@ declare module "ace-code/src/layer/cursor" {
         hideCursor(): void;
         showCursor(): void;
         restartTimer(): void;
-        intervalId: number;
+        intervalId: ReturnType<typeof setInterval>;
         getPixelPosition(position?: import("ace-code").Ace.Point, onScreen?: boolean): {
             left: number;
             top: number;
@@ -1625,7 +1625,7 @@ declare module "ace-code/src/mouse/default_handlers" {
 declare module "ace-code/src/tooltip" {
     export class HoverTooltip extends Tooltip {
         constructor(parentNode?: HTMLElement);
-        timeout: number;
+        timeout: ReturnType<typeof setTimeout> | undefined;
         lastT: number;
         idleTime: number;
         lastEvent: import("ace-code/src/mouse/mouse_event").MouseEvent;
@@ -1740,7 +1740,7 @@ declare module "ace-code/src/mouse/mouse_handler" {
         }): void;
         setState(state: any): void;
         state: any;
-        captureMouse(ev: any, mouseMoveHandler: any): number;
+        captureMouse(ev: MouseEvent, mouseMoveHandler?: any): ReturnType<typeof setTimeout> | undefined;
         x: any;
         y: any;
         isMousePressed: boolean;
@@ -3582,7 +3582,7 @@ declare module "ace-code/src/background_tokenizer" {
          * @param {EditSession} [session] The editor session to associate with
          **/
         constructor(tokenizer: Tokenizer, session?: EditSession);
-        running: false | number;
+        running: false | ReturnType<typeof setTimeout>;
         lines: any[];
         states: string[] | string[][];
         currentLine: number;

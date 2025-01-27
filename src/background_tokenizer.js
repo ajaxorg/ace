@@ -20,7 +20,7 @@ class BackgroundTokenizer {
      * @param {EditSession} [session] The editor session to associate with
      **/
     constructor(tokenizer, session) {
-        /**@type {false|number}*/
+        /**@type {false | ReturnType<typeof setTimeout>}*/
         this.running = false;
         this.lines = [];
         /**@type {string[]|string[][]}*/

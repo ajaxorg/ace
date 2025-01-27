@@ -324,7 +324,7 @@ var editorProxy = new AceEmmetEditor();
 exports.commands = new HashHandler();
 /**
  * @param {Editor} editor
- * @return {number|boolean}
+ * @return {ReturnType<typeof setTimeout> | boolean}
  */
 exports.runEmmetCommand = function runEmmetCommand(editor) {
     if (this.action == "expand_abbreviation_with_tab") {
