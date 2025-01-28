@@ -106,7 +106,7 @@ declare module "ace-code/src/lib/event" {
     export function addCommandKeyListener(el: EventTarget, callback: (e: KeyboardEvent, hashId: number, keyCode: number) => void, destroyer?: any): void;
     export function nextTick(callback: any, win: any): void;
     export const $idleBlocked: boolean;
-    export function onIdle(cb: any, timeout: any): number;
+    export function onIdle(cb: CallableFunction, timeout: number): ReturnType<typeof setTimeout>;
     export const $idleBlockId: number;
     export function blockIdle(delay: any): void;
     export const nextFrame: any;

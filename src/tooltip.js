@@ -193,6 +193,7 @@ class HoverTooltip extends Tooltip {
     constructor(parentNode=document.body) {
         super(parentNode);
 
+        /**@type{ReturnType<typeof setTimeout> | undefined}*/
         this.timeout = undefined;
         this.lastT = 0;
         this.idleTime = 350;
