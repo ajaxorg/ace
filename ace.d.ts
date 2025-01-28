@@ -422,7 +422,10 @@ declare module "ace-code" {
             /**
              * Emitted when text is pasted.
              **/
-            "paste": (text: string, event: any) => void;
+            "paste": (e: {
+                text: string;
+                event?: ClipboardEvent;
+            }) => void;
             /**
              * Emitted when the selection style changes, via [[Editor.setSelectionStyle]].
              * @param data Contains one property, `data`, which indicates the new selection style
@@ -443,6 +446,7 @@ declare module "ace-code" {
             "gutterclick": (e: MouseEvent) => void;
             "showGutterTooltip": (e: GutterTooltip) => void;
             "hideGutterTooltip": (e: GutterTooltip) => void;
+            "compositionStart": () => void;
         }
         interface AcePopupEvents {
             "click": (e: MouseEvent) => void;

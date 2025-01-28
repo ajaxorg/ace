@@ -511,7 +511,7 @@ export namespace Ace {
         /**
          * Emitted when text is pasted.
          **/
-        "paste": (text: string, event: any) => void;
+        "paste": (e: { text: string, event?: ClipboardEvent }) => void;
         /**
          * Emitted when the selection style changes, via [[Editor.setSelectionStyle]].
          * @param data Contains one property, `data`, which indicates the new selection style
@@ -530,6 +530,7 @@ export namespace Ace {
         "gutterclick": (e: MouseEvent) => void;
         "showGutterTooltip": (e: GutterTooltip) => void;
         "hideGutterTooltip": (e: GutterTooltip) => void;
+        "compositionStart": () => void;
     }
 
     interface AcePopupEvents {
@@ -1334,6 +1335,7 @@ declare module "./src/editor" {
         showSettingsMenu?: () => void,
         searchBox?: Ace.SearchBox,
         _eventRegistry?: any,
+        $textInputAriaLabel?: string
     }
 }
 

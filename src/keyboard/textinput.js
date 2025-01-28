@@ -22,7 +22,7 @@ var valueResetRegex = isIOS ? /\s/ : /\n/;
 var isMobile = useragent.isMobile;
 
 var TextInput;
-TextInput= function(parentNode, host) {
+TextInput= function(/**@type{HTMLTextAreaElement} */parentNode, /**@type{import("../editor").Editor} */host) {
     /**@type {HTMLTextAreaElement & {msGetInputContext?: () => {compositionStartOffset: number}, getInputContext?: () => {compositionStartOffset: number}}}*/
     var text = dom.createElement("textarea");
     text.className = "ace_text-input";
@@ -35,7 +35,7 @@ TextInput= function(parentNode, host) {
     text.style.opacity = "0";
     parentNode.insertBefore(text, parentNode.firstChild);
 
-    var copied = false;
+    /**@type{boolean|string}*/var copied = false;
     var pasted = false;
     /**@type {(boolean|Object) & {context?: any, useTextareaForIME?: boolean, selectionStart?: number, markerRange?: any}}} */
     var inComposition = false;
@@ -62,7 +62,7 @@ TextInput= function(parentNode, host) {
 
     // Set number of extra lines in textarea, some screenreaders
     // perform better with extra lines above and below in the textarea.
-    this.setNumberOfExtraLines = function(number) {
+    this.setNumberOfExtraLines = function(/**@type{number}*/number) {
         rowStart = Number.MAX_SAFE_INTEGER;
         rowEnd =  Number.MIN_SAFE_INTEGER;
 
@@ -695,7 +695,7 @@ TextInput= function(parentNode, host) {
         var rect = host.container.getBoundingClientRect();
         var style = dom.computedStyle(host.container);
         var top = rect.top + (parseInt(style.borderTopWidth) || 0);
-        var left = rect.left + (parseInt(rect.borderLeftWidth) || 0);
+        var left = rect.left + (parseInt(style.borderLeftWidth) || 0);
         var maxTop = rect.bottom - top - text.clientHeight -2;
         var move = function(e) {
             dom.translate(text, e.clientX - left - 2, Math.min(e.clientY - top - 2, maxTop));
