@@ -8,6 +8,14 @@
 
 "use strict";
 
+/**
+ * @typedef {Object} Theme
+ * @property {string} caption - The display caption of the theme.
+ * @property {string} theme   - The path or identifier for the ACE theme.
+ * @property {boolean} isDark - Indicates whether the theme is dark or light.
+ * @property {string} name    - The normalized name used as the key.
+ */
+
 var themeData = [
     ["Chrome"         ],
     ["Clouds"         ],
@@ -54,11 +62,14 @@ var themeData = [
     ["CloudEditor Dark"     ,"cloud_editor_dark"       ,  "dark"]
 ];
 
-
+/**
+ * @type {Object<string, Theme>}
+ */
 exports.themesByName = {};
 
 /**
  * An array containing information about available themes.
+ * @type {Theme[]}
  */
 exports.themes = themeData.map(function(data) {
     var name = data[1] || data[0].replace(/ /g, "_").toLowerCase();

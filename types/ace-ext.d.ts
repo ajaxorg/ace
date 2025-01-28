@@ -404,13 +404,28 @@ declare module "ace-code/src/ext/modelist" {
     }
 }
 declare module "ace-code/src/ext/themelist" {
-    export const themesByName: {};
-    export const themes: {
+    export const themesByName: {
+        [x: string]: Theme;
+    };
+    export const themes: Theme[];
+    export type Theme = {
+        /**
+         * - The display caption of the theme.
+         */
         caption: string;
+        /**
+         * - The path or identifier for the ACE theme.
+         */
         theme: string;
+        /**
+         * - Indicates whether the theme is dark or light.
+         */
         isDark: boolean;
+        /**
+         * - The normalized name used as the key.
+         */
         name: string;
-    }[];
+    };
 }
 declare module "ace-code/src/ext/options" {
     export class OptionPanel {
