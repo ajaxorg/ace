@@ -40,7 +40,7 @@ class Mode {
             }) + "$";
         }
         else {
-            re = "^.*\\.(" + extensions + ")$";
+            re = "\\.(" + extensions + ")$";
         }
 
         this.extRe = new RegExp(re, "gi");
