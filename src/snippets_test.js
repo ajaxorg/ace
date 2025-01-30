@@ -223,7 +223,7 @@ module.exports = {
         editor.setValue("foo\nbar");
         editor.selectAll();
         var D = Date;
-        var d = new Date(0);
+        var d = new Date('1970-01-01T00:00:00');
         d.setHours(4);
         d.setMinutes(0);
         Date = function() { return d; }; // eslint-disable-line
