@@ -138,10 +138,13 @@ editor.session.startOperation();
 editor.session.endOperation();
 
 editor.on("paste", (e) => {
-    var htmlString = e.event?.clipboardData?.getData("text/html")
-    if (htmlString) {
-        e.text = htmlString
+    if (e.event && e.event.clipboardData) {
+        var htmlString = e.event.clipboardData.getData("text/html")
+        if (htmlString) {
+            e.text = htmlString
+        }
     }
 })
 
-themesByName.textmate?.theme;
+if (themesByName.textmate)
+    console.log(themesByName.textmate.theme);
