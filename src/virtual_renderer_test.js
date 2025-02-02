@@ -289,10 +289,11 @@ module.exports = {
         editor._signal("input", {});
         assert.equal(editor.renderer.content.textContent, "only visible for empty value");
     },
-    "test: highlight indent guide": function () {
+    "test: highlight indent guide": function (done) {
         editor.session.setValue(
             "function Test() {\n" + "    function Inner() {\n" + "        \n" + "        \n" + "    }\n" + "}");
         editor.setOption("highlightIndentGuides", false);
+        editor.setOption("wrap", 10); // to make sure higlight works with wrapped lines
         editor.session.selection.$setSelection(1, 22, 1, 22);
         editor.resize(true);
 
@@ -310,6 +311,14 @@ module.exports = {
         editor.session.selection.$setSelection(1, 15, 1, 15);
         editor.resize(true);
         assertIndentGuides( 0);
+
+        editor.session.selection.clearSelection();
+        editor.session.selection.$setSelection(4, 5, 4, 5);
+
+        setTimeout(() => {
+            assertIndentGuides( 2);
+            done();
+        }, 100);
     },
     "test annotation marks": function() {
         function findPointFillStyle(imageData, x, y) {
