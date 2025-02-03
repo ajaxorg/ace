@@ -329,6 +329,7 @@ function checkBacktracking(tokenizer) {
             var regex = rule.regex;
             if (regex && typeof regex != "string") regex = regex.source;
             if (!regex) return;
+            regex = "(" + regex + ")|";
             var result = require("recheck").checkSync(regex, "gmi", {
                 checker: "automaton",
                 timeout: 100000
