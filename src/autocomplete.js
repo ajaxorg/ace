@@ -650,9 +650,13 @@ class Autocomplete {
     }
 
     showDocTooltip(item) {
+        const INITIAL_TOOLTIP_HEIGHT = 200;
+        const INITIAL_TOOLTIP_WIDTH = 400;
         if (!this.tooltipNode) {
             this.tooltipNode = dom.createElement("div");
             this.tooltipNode.style.margin = "0";
+            this.tooltipNode.style.maxHeight = INITIAL_TOOLTIP_HEIGHT + "px";
+            this.tooltipNode.style.maxWidth = INITIAL_TOOLTIP_WIDTH + "px";
             this.tooltipNode.style.pointerEvents = "auto";
             this.tooltipNode.style.overscrollBehavior = "contain";
             this.tooltipNode.tabIndex = -1;
@@ -677,32 +681,118 @@ class Autocomplete {
         if (!tooltipNode.parentNode)
             this.popup.container.appendChild(this.tooltipNode);
 
+        tooltipNode.style.display = "block";
+        tooltipNode.style.left = "";
+        tooltipNode.style.top = "";
+        tooltipNode.style.right = "";
+        tooltipNode.style.bottom = "";
+        tooltipNode.style.maxHeight = INITIAL_TOOLTIP_HEIGHT + "px";
+        tooltipNode.style.maxWidth = INITIAL_TOOLTIP_WIDTH + "px";
+
         var popup = this.popup;
         var rect = popup.container.getBoundingClientRect();
-        tooltipNode.style.top = popup.container.style.top;
-        tooltipNode.style.bottom = popup.container.style.bottom;
 
-        tooltipNode.style.display = "block";
-        if (window.innerWidth - rect.right < 320) {
-            if (rect.left < 320) {
-                if(popup.isTopdown) {
-                    tooltipNode.style.top = rect.bottom + "px";
-                    tooltipNode.style.left = rect.left + "px";
-                    tooltipNode.style.right = "";
-                    tooltipNode.style.bottom = "";
-                } else {
-                    tooltipNode.style.top = popup.container.offsetTop - tooltipNode.offsetHeight + "px";
-                    tooltipNode.style.left = rect.left + "px";
-                    tooltipNode.style.right = "";
-                    tooltipNode.style.bottom = "";
-                }
-            } else {
-                tooltipNode.style.right = window.innerWidth - rect.left + "px";
-                tooltipNode.style.left = "";
+        const verticalScrollBarWidth = this.editor.renderer.scrollBarV.getWidth();
+        const horizontalScrollBarHeight = this.editor.renderer.scrollBarH.getHeight();
+
+        let spaceLeft = rect.left;
+        let spaceRight = window.innerWidth - rect.right - verticalScrollBarWidth;
+        let spaceBottom = window.innerHeight - rect.bottom - horizontalScrollBarHeight;
+        let spaceTop = rect.top;
+
+        let targetWidth = INITIAL_TOOLTIP_WIDTH;
+        let targetHeight = INITIAL_TOOLTIP_HEIGHT;
+
+        function getSideScore(side) {
+            switch (side) {
+                case "right":
+                    if (spaceRight >= targetWidth) return 10000;
+                    if (spaceRight >= targetWidth / 2) return 5000;
+                    return spaceRight;
+                case "left":
+                    if (spaceLeft >= targetWidth) return 10000;
+                    if (spaceLeft >= targetWidth / 2) return 5000;
+                    return spaceLeft;
+                case "top":
+                    if (spaceTop >= targetHeight) return 10000;
+                    if (spaceTop >= targetHeight / 2) return 5000;
+                    return spaceTop;
+                case "bottom":
+                    if (spaceBottom >= targetHeight) return 10000;
+                    if (spaceBottom >= targetHeight / 2) return 5000;
+                    return spaceBottom;
             }
-        } else {
-            tooltipNode.style.left = (rect.right + 1) + "px";
-            tooltipNode.style.right = "";
+        }
+
+        let sidesInPreference = ["right", "bottom", "top", "left"];
+        let bestSide = sidesInPreference[0];
+        let bestScore = getSideScore(bestSide);
+
+        for (let i = 1; i < sidesInPreference.length; i++) {
+            let side = sidesInPreference[i];
+            let score = getSideScore(side);
+            if (score > bestScore) {
+                bestScore = score;
+                bestSide = side;
+            }
+        }
+
+        switch (bestSide) {
+            case "right":
+                tooltipNode.style.left = rect.right + "px";
+                tooltipNode.style.top = rect.top + "px";
+                break;
+            case "left": {
+                let tRect = tooltipNode.getBoundingClientRect();
+                let newLeft = rect.left - tRect.width;
+                if (newLeft < 0) {
+                    newLeft = 0;
+                }
+                tooltipNode.style.left = newLeft + "px";
+                tooltipNode.style.top = rect.top + "px";
+
+                let availableWidth = rect.left - newLeft;
+                if (availableWidth < targetWidth) {
+                    tooltipNode.style.maxWidth = availableWidth + "px";
+                }
+                break;
+            }
+            case "top":
+                tooltipNode.style.left = rect.left + "px";
+                if (targetHeight > spaceTop) {
+                    tooltipNode.style.top = "0px";
+                    tooltipNode.style.maxHeight = spaceTop + "px";
+                    tooltipNode.style.overflowY = "auto";
+                }
+                else {
+                    tooltipNode.style.top = (rect.top - targetHeight) + "px";
+                }
+                break;
+            case "bottom":
+                tooltipNode.style.left = rect.left + "px";
+                tooltipNode.style.top = rect.bottom + "px";
+                break;
+        }
+
+        let tRect = tooltipNode.getBoundingClientRect();
+        if (tRect.top < 0) {
+            tooltipNode.style.top = "0px";
+        }
+        if (tRect.right > window.innerWidth) {
+            let availableWidth = window.innerWidth - tRect.left - verticalScrollBarWidth;
+            tooltipNode.style.maxWidth = availableWidth + "px";
+        }
+        if (tRect.bottom > window.innerHeight) {
+            let newMaxHeight = window.innerHeight - tRect.top - horizontalScrollBarHeight;
+            tooltipNode.style.maxHeight = newMaxHeight + "px";
+        }
+
+        tRect = tooltipNode.getBoundingClientRect();
+        if (tRect.height < 50) {
+            tooltipNode.style.maxHeight = "50px";
+        }
+        if (tRect.width < 50) {
+            tooltipNode.style.maxWidth = "50px";
         }
     }
 
