@@ -107,8 +107,8 @@ declare module "ace-code/src/lib/event" {
     export function nextTick(callback: any, win: any): void;
     export const $idleBlocked: boolean;
     export function onIdle(cb: CallableFunction, timeout: number): ReturnType<typeof setTimeout>;
-    export const $idleBlockId: number;
-    export function blockIdle(delay: any): void;
+    export const $idleBlockId: null | ReturnType<typeof setTimeout>;
+    export function blockIdle(delay?: null | number): void;
     export const nextFrame: any;
 }
 declare module "ace-code/src/lib/event_emitter" {

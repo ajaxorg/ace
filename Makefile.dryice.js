@@ -312,7 +312,7 @@ function demo() {
                 source = source.replace(/( |^)require\(/gm, "$1ace.require(");
             }
             source = source.replace(/"\.\.\/build\//g, function(e) {
-                console.log(e); return '"../';
+                return '"../';
             });
             return source;
         }
@@ -668,7 +668,6 @@ function extractCss(callback) {
                 else   
                     imageName = name + "-" + imageCounter + ".png";
                 images[imageName] = buffer;
-                console.log("url(\"" + directory + "/" + imageName + "\")");
                 return "url(\"" + directory + "/" + imageName + "\")";
             }
         );
