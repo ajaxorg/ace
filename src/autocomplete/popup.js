@@ -133,6 +133,20 @@ class AcePopup {
                 setHoverMarker(row, true);
             }
         });
+        // set aria attributes on all visible elements of the popup
+        popup.renderer.on("afterRender", function () {
+            var t = popup.renderer.$textLayer;
+            for (var row = t.config.firstRow, l = t.config.lastRow; row <= l; row++) {
+                const popupRowElement = /** @type {HTMLElement|null} */(t.element.childNodes[row - t.config.firstRow]);
+                const ariaLabel = `${popup.getData(row).caption || popup.getData(row).value}${popup.getData(row).meta ? `, ${popup.getData(row).meta}` : ''}`;
+                popupRowElement.setAttribute("role", optionAriaRole);
+                popupRowElement.setAttribute("aria-roledescription", nls("autocomplete.popup.item.aria-roledescription", "item"));
+                popupRowElement.setAttribute("aria-label", ariaLabel);
+                popupRowElement.setAttribute("aria-setsize", popup.data.length);
+                popupRowElement.setAttribute("aria-describedby", "doc-tooltip");
+                popupRowElement.setAttribute("aria-posinset", row + 1);
+            }
+        });
         popup.renderer.on("afterRender", function () {
             var row = popup.getRow();
             var t = popup.renderer.$textLayer;
@@ -140,24 +154,18 @@ class AcePopup {
             var el = document.activeElement; // Active element is textarea of main editor
             if (selected !== popup.selectedNode && popup.selectedNode) {
                 dom.removeCssClass(popup.selectedNode, "ace_selected");
-                el.removeAttribute("aria-activedescendant");
                 popup.selectedNode.removeAttribute(ariaActiveState);
-                popup.selectedNode.removeAttribute("aria-posinset");
                 popup.selectedNode.removeAttribute("id");
             }
+            el.removeAttribute("aria-activedescendant");
+
             popup.selectedNode = selected;
             if (selected) {
-                dom.addCssClass(selected, "ace_selected");
                 var ariaId = getAriaId(row);
+                dom.addCssClass(selected, "ace_selected");
                 selected.id = ariaId;
                 t.element.setAttribute("aria-activedescendant", ariaId);
                 el.setAttribute("aria-activedescendant", ariaId);
-                selected.setAttribute("role", optionAriaRole);
-                selected.setAttribute("aria-roledescription", nls("autocomplete.popup.item.aria-roledescription", "item"));
-                selected.setAttribute("aria-label", popup.getData(row).caption || popup.getData(row).value);
-                selected.setAttribute("aria-setsize", popup.data.length);
-                selected.setAttribute("aria-posinset", row + 1);
-                selected.setAttribute("aria-describedby", "doc-tooltip");
                 selected.setAttribute(ariaActiveState, "true");
             }
         });
@@ -442,6 +450,11 @@ dom.importCssString(`
 }
 .ace_editor.ace_autocomplete .ace_completion-highlight{
     color: #2d69c7;
+}
+.ace_editor.ace_autocomplete .ace_completion-mark {
+    background-color: transparent;
+    color: inherit;
+    padding: 0;
 }
 .ace_dark.ace_editor.ace_autocomplete .ace_completion-highlight{
     color: #93ca12;
