@@ -424,15 +424,7 @@ class Text {
             span.className = classes;
             span.appendChild(valueFragment);
 
-            if (token.type === "completion-highlight") {
-                var mark = this.dom.createElement("mark");
-                mark.className = "ace_completion-mark";
-                mark.appendChild(span);
-                parent.appendChild(mark);
-            }
-            else {
-                parent.appendChild(span);
-            }
+            parent.appendChild(span);
         }
         else {
             parent.appendChild(valueFragment);

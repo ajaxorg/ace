@@ -138,13 +138,20 @@ class AcePopup {
             var t = popup.renderer.$textLayer;
             for (var row = t.config.firstRow, l = t.config.lastRow; row <= l; row++) {
                 const popupRowElement = /** @type {HTMLElement|null} */(t.element.childNodes[row - t.config.firstRow]);
-                const ariaLabel = `${popup.getData(row).caption || popup.getData(row).value}${popup.getData(row).meta ? `, ${popup.getData(row).meta}` : ''}`;
+                const rowData = popup.getData(row);
+                const ariaLabel = `${rowData.caption || rowData.value}${rowData.meta ? `, ${rowData.meta}` : ''}`;
+
                 popupRowElement.setAttribute("role", optionAriaRole);
                 popupRowElement.setAttribute("aria-roledescription", nls("autocomplete.popup.item.aria-roledescription", "item"));
                 popupRowElement.setAttribute("aria-label", ariaLabel);
                 popupRowElement.setAttribute("aria-setsize", popup.data.length);
                 popupRowElement.setAttribute("aria-describedby", "doc-tooltip");
                 popupRowElement.setAttribute("aria-posinset", row + 1);
+
+                const highlightedSpans = popupRowElement.querySelectorAll(".ace_completion-highlight");
+                highlightedSpans.forEach(span => {
+                    span.setAttribute("role", "mark");
+                });
             }
         });
         popup.renderer.on("afterRender", function () {
@@ -450,11 +457,6 @@ dom.importCssString(`
 }
 .ace_editor.ace_autocomplete .ace_completion-highlight{
     color: #2d69c7;
-}
-.ace_editor.ace_autocomplete .ace_completion-mark {
-    background-color: transparent;
-    color: inherit;
-    padding: 0;
 }
 .ace_dark.ace_editor.ace_autocomplete .ace_completion-highlight{
     color: #93ca12;
