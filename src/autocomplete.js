@@ -28,6 +28,7 @@ var preventParentScroll = require("./lib/scroll").preventParentScroll;
  * @property {string} [docText] - a plain text that would be displayed as an additional popup. If `docHTML` exists,
  * it would be used instead of `docText`.
  * @property {string} [completerId] - the identifier of the completer
+ * @property {boolean} [skipFilter] - a boolean value to decide if the popup item is going to skip the filtering process done using prefix text.
  * @property {import("../ace-internal").Ace.IRange} [range] - An object specifying the range of text to be replaced with the new completion value (experimental)
  * @property {any} [command] - A command to be executed after the completion is inserted (experimental)
  * @property {string} [snippet] - a text snippet that would be inserted when the completion is selected
@@ -1055,6 +1056,10 @@ class FilteredList {
         var upper = needle.toUpperCase();
         var lower = needle.toLowerCase();
         loop: for (var i = 0, item; item = items[i]; i++) {
+            if (item.skipFilter) {
+                results.push(item);
+                continue;
+            }
             var caption = (!this.ignoreCaption && item.caption) || item.value || item.snippet;
             if (!caption) continue;
             var lastIndex = -1;

@@ -3225,6 +3225,10 @@ declare module "ace-code/src/autocomplete" {
          */
         completerId?: string;
         /**
+         * - a boolean value to decide if the popup item is going to skip the filtering process done using prefix text.
+         */
+        skipFilter?: boolean;
+        /**
          * - An object specifying the range of text to be replaced with the new completion value (experimental)
          */
         range?: import("ace-code").Ace.IRange;

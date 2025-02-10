@@ -944,6 +944,58 @@ module.exports = {
         user.type(" value");
         assert.equal(completer.popup.isOpen, true);   
     },
+    "test: should skip filter if skipFilter flag is set to true in completion": function() {
+        var editor = initEditor("hello world\n");
+
+        var completer = {
+            getCompletions: function (editor, session, pos, prefix, callback) {
+                var completions = [
+                    {
+                        value: "example value",
+                        skipFilter: true
+                    }
+                ];
+                callback(null, completions);
+            }
+        };
+
+        editor.completers = [completer];
+
+        var completer = Autocomplete.for(editor);
+        // should not do filter out the completion item where skipFilter is true
+        user.type("notMatchingText");
+        assert.equal(completer.popup.data.length, 1);
+        assert.equal(completer.popup.isOpen, true);
+    },
+    "test: should use filter if skipFilter flag is set to false in completion": function() {
+        var editor = initEditor("hello world\n");
+
+        var completer = {
+            getCompletions: function (editor, session, pos, prefix, callback) {
+                var completions = [
+                    {
+                        value: "example value",
+                        skipFilter: false
+                    }
+                ];
+                callback(null, completions);
+            }
+        };
+
+        editor.completers = [completer];
+
+        var completer = Autocomplete.for(editor);
+        
+        // should do filter out the completion item where skipFilter is false
+        user.type("notMatchingText");
+        assert.equal(completer.popup, undefined);
+        
+        // normal filtering mechanism should work fine
+        user.type(" ex");
+        assert.equal(completer.popup.isOpen, true);
+        assert.equal(completer.popup.data.length, 1); 
+    },
+    
     "test: should add inline preview content to aria-describedby": function(done) {
         var editor = initEditor("fun");
         
