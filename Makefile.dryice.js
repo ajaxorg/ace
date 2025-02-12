@@ -185,6 +185,10 @@ function correctDeclarationsForBuild(path, additionalDeclarations) {
     if (additionalDeclarations) {
         newDefinitions = newDefinitions + '\n' + additionalDeclarations;
     }
+    if (/ace\.d\.ts$/.test(path)) {
+        var aceRequire = "$1\n    export function require(name: string): any;";
+        newDefinitions = newDefinitions.replace(/(declare\smodule\s"ace\-builds"\s{)/, aceRequire);
+    }
     fs.writeFileSync(path, newDefinitions);
 }
 
