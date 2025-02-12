@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.38.0](https://github.com/ajaxorg/ace/compare/v1.37.5...v1.38.0) (2025-02-12)
+
+
+### Features
+
+* **popup:** add supporting skipFilter flag for popup item ([#5740](https://github.com/ajaxorg/ace/issues/5740)) ([0db7585](https://github.com/ajaxorg/ace/commit/0db7585ae0ccbd353091426f60ac3d9e53e182c4))
+
+
+### Bug Fixes
+
+* **AcePopup:** fix aria-posinset issue on google chrome ([#5719](https://github.com/ajaxorg/ace/issues/5719)) ([09a0c5a](https://github.com/ajaxorg/ace/commit/09a0c5a11106754916a4fc324a35e8daf84055ba))
+* calling setMode just before destroy causes error reading getLength ([#5727](https://github.com/ajaxorg/ace/issues/5727)) ([62b973e](https://github.com/ajaxorg/ace/commit/62b973ef2247debdd51cf6a41a3b24b97277efdb))
+* highlight indent guides with wrapped lines ([#5621](https://github.com/ajaxorg/ace/issues/5621)) ([77b9fe1](https://github.com/ajaxorg/ace/commit/77b9fe1bc0b10b4c3fb2780d65f9d256d60634ce))
+* improve aria attributes of popup elements ([#5739](https://github.com/ajaxorg/ace/issues/5739)) ([09fba2e](https://github.com/ajaxorg/ace/commit/09fba2e7347cd499c979e53ec7a8d8ee1fd48918))
+* types for setTimeout/setInterval calls ([#5726](https://github.com/ajaxorg/ace/issues/5726)) ([9a76656](https://github.com/ajaxorg/ace/commit/9a76656acc9528a4a2e92a3b72c4d6598d3a0a8c))
+* **VirtualRenderer:** fix scrollbar overlap on autocompletion ([#5713](https://github.com/ajaxorg/ace/issues/5713)) ([5acea6d](https://github.com/ajaxorg/ace/commit/5acea6d9200f4ca0c8495350cda6e41e8351913f))
+* wrong type of paste event and missing types for themelist extension ([#5725](https://github.com/ajaxorg/ace/issues/5725)) ([a4b9d2d](https://github.com/ajaxorg/ace/commit/a4b9d2d91a2be841320030d93afde46ae723c8c3))
+
 ### [1.37.5](https://github.com/ajaxorg/ace/compare/v1.37.4...v1.37.5) (2025-01-16)
 
 
