@@ -759,8 +759,8 @@ declare module "ace-code" {
             args: any[];
         }) => void;
         interface CommandManagerEvents {
-            on(name: "exec", callback: execEventHandler): Function;
-            on(name: "afterExec", callback: execEventHandler): Function;
+            "exec": execEventHandler;
+            "afterExec": execEventHandler;
         }
         type CommandManager = import("ace-code/src/commands/command_manager").CommandManager;
         interface SavedSelection {
@@ -969,6 +969,30 @@ declare module "ace-code" {
             selectionAfter?: Range | Range[];
             docChanged?: boolean;
             selectionChanged?: boolean;
+        }
+        export interface CommandBarEvents {
+            "hide": () => void;
+            "show": () => void;
+            "alwaysShow": (e: boolean) => void;
+        }
+        export interface FontMetricsEvents {
+            "changeCharacterSize": (e: {
+                data: {
+                    height: number;
+                    width: number;
+                };
+            }) => void;
+        }
+        export interface OptionPanelEvents {
+            "setOption": (e: {
+                name: string;
+                value: any;
+            }) => void;
+        }
+        export interface ScrollbarEvents {
+            "scroll": (e: {
+                data: number;
+            }) => void;
         }
     }
     export const config: typeof import("ace-code/src/config");

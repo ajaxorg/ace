@@ -148,3 +148,11 @@ editor.on("paste", (e) => {
 
 if (themesByName.textmate)
     console.log(themesByName.textmate.theme);
+
+editor.commands.on('afterExec', ({editor, command}) => {
+    console.log(editor.getValue(), command.name);
+});
+
+editor.commands.on('exec', ({editor, command}) => {
+    console.log(editor.getValue(), command.name);
+});

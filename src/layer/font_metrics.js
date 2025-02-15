@@ -56,7 +56,7 @@ class FontMetrics {
     }
 
     /**
-     * @param size
+     * @param {{height: number, width: number} | null} [size]
      */
     checkForSizeChanges(size) {
         if (size === undefined)

@@ -74,8 +74,9 @@ declare module "ace-code/src/ext/command_bar" {
         type EventEmitter<T extends {
             [K in keyof T]: (...args: any[]) => any;
         }> = import("ace-code").Ace.EventEmitter<T>;
+        type CommandBarEvents = import("ace-code").Ace.CommandBarEvents;
     }
-    export interface CommandBarTooltip extends Ace.EventEmitter<any> {
+    export interface CommandBarTooltip extends Ace.EventEmitter<Ace.CommandBarEvents> {
     }
 }
 declare module "ace-code/src/ext/language_tools" {
@@ -449,8 +450,9 @@ declare module "ace-code/src/ext/options" {
         type EventEmitter<T extends {
             [K in keyof T]: (...args: any[]) => any;
         }> = import("ace-code").Ace.EventEmitter<T>;
+        type OptionPanelEvents = import("ace-code").Ace.OptionPanelEvents;
     }
-    export interface OptionPanel extends Ace.EventEmitter<any> {
+    export interface OptionPanel extends Ace.EventEmitter<Ace.OptionPanelEvents> {
     }
 }
 declare module "ace-code/src/ext/prompt" {
