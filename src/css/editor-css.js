@@ -456,7 +456,6 @@ module.exports = `
     border-radius: 1px;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
     color: black;
-    max-width: 100%;
     padding: 3px 4px;
     position: fixed;
     z-index: 999999;
