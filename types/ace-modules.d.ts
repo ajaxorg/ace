@@ -4,7 +4,10 @@ declare module "ace-code/src/layer/font_metrics" {
     export class FontMetrics {
         constructor(parentEl: HTMLElement);
         el: HTMLDivElement;
-        checkForSizeChanges(size: any): void;
+        checkForSizeChanges(size?: {
+            height: number;
+            width: number;
+        } | null): void;
         charSizes: any;
         allowBoldFonts: boolean;
         setPolling(val: boolean): void;
@@ -17,8 +20,9 @@ declare module "ace-code/src/layer/font_metrics" {
         type EventEmitter<T extends {
             [K in keyof T]: (...args: any[]) => any;
         }> = import("ace-code").Ace.EventEmitter<T>;
+        type FontMetricsEvents = import("ace-code").Ace.FontMetricsEvents;
     }
-    export interface FontMetrics extends Ace.EventEmitter<any> {
+    export interface FontMetrics extends Ace.EventEmitter<Ace.FontMetricsEvents> {
     }
 }
 declare module "ace-code/src/apply_delta" {
@@ -655,10 +659,11 @@ declare module "ace-code/src/scrollbar" {
         type EventEmitter<T extends {
             [K in keyof T]: (...args: any[]) => any;
         }> = import("ace-code").Ace.EventEmitter<T>;
+        type ScrollbarEvents = import("ace-code").Ace.ScrollbarEvents;
     }
-    export interface VScrollBar extends Ace.EventEmitter<any> {
+    export interface VScrollBar extends Ace.EventEmitter<Ace.ScrollbarEvents> {
     }
-    export interface HScrollBar extends Ace.EventEmitter<any> {
+    export interface HScrollBar extends Ace.EventEmitter<Ace.ScrollbarEvents> {
     }
 }
 declare module "ace-code/src/scrollbar_custom" {
@@ -785,10 +790,11 @@ declare module "ace-code/src/scrollbar_custom" {
         type EventEmitter<T extends {
             [K in keyof T]: (...args: any[]) => any;
         }> = import("ace-code").Ace.EventEmitter<T>;
+        type ScrollbarEvents = import("ace-code").Ace.ScrollbarEvents;
     }
-    export interface VScrollBar extends Ace.EventEmitter<any> {
+    export interface VScrollBar extends Ace.EventEmitter<Ace.ScrollbarEvents> {
     }
-    export interface HScrollBar extends Ace.EventEmitter<any> {
+    export interface HScrollBar extends Ace.EventEmitter<Ace.ScrollbarEvents> {
     }
 }
 declare module "ace-code/src/renderloop" {
@@ -1904,8 +1910,9 @@ declare module "ace-code/src/commands/command_manager" {
         type EventEmitter<T extends {
             [K in keyof T]: (...args: any[]) => any;
         }> = import("ace-code").Ace.EventEmitter<T>;
+        type CommandManagerEvents = import("ace-code").Ace.CommandManagerEvents;
     }
-    export interface CommandManager extends Ace.EventEmitter<any> {
+    export interface CommandManager extends Ace.EventEmitter<Ace.CommandManagerEvents> {
     }
 }
 declare module "ace-code/src/commands/default_commands" {
