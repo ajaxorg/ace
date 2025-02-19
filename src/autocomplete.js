@@ -1057,6 +1057,7 @@ class FilteredList {
         var lower = needle.toLowerCase();
         loop: for (var i = 0, item; item = items[i]; i++) {
             if (item.skipFilter) {
+                item.$score = item.score;
                 results.push(item);
                 continue;
             }
