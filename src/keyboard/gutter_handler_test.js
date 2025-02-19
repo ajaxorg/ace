@@ -149,11 +149,11 @@ module.exports = {
 
             // Click annotation.
             emit(keys["enter"]);
-            
+
             setTimeout(function() {
                 // Check annotation is rendered.
                 editor.renderer.$loop._flush();
-                var tooltip = editor.container.querySelector(".ace_tooltip");
+                var tooltip = editor.container.querySelector(".ace_gutter-tooltip");
                 assert.ok(/error test/.test(tooltip.textContent));
 
                 // Press escape to dismiss the tooltip.
@@ -198,7 +198,7 @@ module.exports = {
             setTimeout(function() {
                 // Check annotation is rendered.
                 editor.renderer.$loop._flush();
-                var tooltip = editor.container.querySelector(".ace_tooltip");
+                var tooltip = editor.container.querySelector(".ace_gutter-tooltip");
                 assert.ok(/error test/.test(tooltip.textContent));
 
                 // Press escape to dismiss the tooltip.
@@ -214,7 +214,7 @@ module.exports = {
                 setTimeout(function() {
                     // Check annotation is rendered.
                     editor.renderer.$loop._flush();
-                    var tooltip = editor.container.querySelector(".ace_tooltip");
+                    var tooltip = editor.container.querySelector(".ace_gutter-tooltip");
                     assert.ok(/warning test/.test(tooltip.textContent));
 
                     // Press escape to dismiss the tooltip.
