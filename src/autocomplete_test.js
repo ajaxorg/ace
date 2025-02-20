@@ -68,16 +68,16 @@ module.exports = {
         assert.ok(!editor.container.querySelector("style"));
 
         sendKey("a");
-        checkInnerHTML('<d "ace_line ace_selected" role="option" aria-roledescription="item" aria-label="arraysort, local" aria-setsize="2" aria-describedby="doc-tooltip" aria-posinset="1" id="suggest-aria-id:0" aria-selected="true"><s "ace_completion-highlight" role="mark">a</s><s "ace_">rraysort</s><s "ace_completion-spacer"> </s><s "ace_completion-meta">local</s></d><d "ace_line" role="option" aria-roledescription="item" aria-label="alooooooooooooooooooooooooooooong_word, local" aria-setsize="2" aria-describedby="doc-tooltip" aria-posinset="2"><s "ace_completion-highlight" role="mark">a</s><s "ace_">looooooooooooooooooooooooooooong_word</s><s "ace_completion-spacer"> </s><s "ace_completion-meta">local</s></d>', function() {
+        checkInnerHTML('<d "ace_line ace_selected" role="option" aria-roledescription="item" aria-setsize="2" aria-describedby="doc-tooltip" aria-posinset="1" aria-label="arraysort, local" id="suggest-aria-id:0" aria-selected="true"><s "ace_completion-highlight" role="mark">a</s><s "ace_">rraysort</s><s "ace_completion-spacer"> </s><s "ace_completion-meta">local</s></d><d "ace_line" role="option" aria-roledescription="item" aria-setsize="2" aria-describedby="doc-tooltip" aria-posinset="2" aria-label="alooooooooooooooooooooooooooooong_word, local"><s "ace_completion-highlight" role="mark">a</s><s "ace_">looooooooooooooooooooooooooooong_word</s><s "ace_completion-spacer"> </s><s "ace_completion-meta">local</s></d>', function() {
             sendKey("rr");
-            checkInnerHTML('<d "ace_line ace_selected" role="option" aria-roledescription="item" aria-label="arraysort, local" aria-setsize="1" aria-describedby="doc-tooltip" aria-posinset="1" id="suggest-aria-id:0" aria-selected="true"><s "ace_completion-highlight" role="mark">arr</s><s "ace_">aysort</s><s "ace_completion-spacer"> </s><s "ace_completion-meta">local</s></d>', function() {
+            checkInnerHTML('<d "ace_line ace_selected" role="option" aria-roledescription="item" aria-setsize="1" aria-describedby="doc-tooltip" aria-posinset="1" aria-label="arraysort, local" id="suggest-aria-id:0" aria-selected="true"><s "ace_completion-highlight" role="mark">arr</s><s "ace_">aysort</s><s "ace_completion-spacer"> </s><s "ace_completion-meta">local</s></d>', function () {
                 sendKey("r");
-                checkInnerHTML('<d "ace_line ace_selected" role="option" aria-roledescription="item" aria-label="arraysort, local" aria-setsize="1" aria-describedby="doc-tooltip" aria-posinset="1" id="suggest-aria-id:0" aria-selected="true"><s "ace_completion-highlight" role="mark">arr</s><s "ace_">ayso</s><s "ace_completion-highlight" role="mark">r</s><s "ace_">t</s><s "ace_completion-spacer"> </s><s "ace_completion-meta">local</s></d>', function() {
-                    
+                checkInnerHTML('<d "ace_line ace_selected" role="option" aria-roledescription="item" aria-setsize="1" aria-describedby="doc-tooltip" aria-posinset="1" aria-label="arraysort, local" id="suggest-aria-id:0" aria-selected="true"><s "ace_completion-highlight" role="mark">arr</s><s "ace_">ayso</s><s "ace_completion-highlight" role="mark">r</s><s "ace_">t</s><s "ace_completion-spacer"> </s><s "ace_completion-meta">local</s></d>', function () {
+
                     sendKey("Return");
                     assert.equal(editor.getValue(), "arraysort\narraysort alooooooooooooooooooooooooooooong_word");
                     editor.execCommand("insertstring", " looooooooooooooooooooooooooooong_");
-                    checkInnerHTML('<d "ace_line ace_selected" role="option" aria-roledescription="item" aria-label="alooooooooooooooooooooooooooooong_word, local" aria-setsize="1" aria-describedby="doc-tooltip" aria-posinset="1" id="suggest-aria-id:0" aria-selected="true"><s "ace_">a</s><s "ace_completion-highlight" role="mark">looooooooooooooooooooooooooooong_</s><s "ace_">word</s><s "ace_completion-spacer"> </s><s "ace_completion-meta">local</s></d>', function() {
+                    checkInnerHTML('<d "ace_line ace_selected" role="option" aria-roledescription="item" aria-setsize="1" aria-describedby="doc-tooltip" aria-posinset="1" aria-label="alooooooooooooooooooooooooooooong_word, local" id="suggest-aria-id:0" aria-selected="true"><s "ace_">a</s><s "ace_completion-highlight" role="mark">looooooooooooooooooooooooooooong_</s><s "ace_">word</s><s "ace_completion-spacer"> </s><s "ace_completion-meta">local</s></d>', function () {
                         sendKey("Return");
                         editor.destroy();
                         editor.container.remove();
@@ -86,15 +86,15 @@ module.exports = {
                 });
             });
         });
-        
+
         var last;
         function checkInnerHTML(expected, callback) {
             var popup = editor.completer.popup;
-         
+
             popup.renderer.on("afterRender", function wait() {
                 var innerHTML = popup.renderer.$textLayer.element.innerHTML
                     .replace(/\s*style="[^"]+"|class=|(d)iv|(s)pan/g, "$1$2");
-                if (innerHTML == last) 
+                if (innerHTML == last)
                     return;
                 assert.equal(innerHTML, expected);
                 last = innerHTML;
@@ -232,29 +232,29 @@ module.exports = {
         sendKey('Return');
         var popup = editor.completer.popup;
         check(function () {
-          assert.equal(popup.data.length, 10);
-          // check that the aria attributes have been set on  all the elements of the popup and that aria selected attributes are set on the first item
-          assert.ok(checkAria(popup.renderer.$textLayer.element.innerHTML, '<d  role="option" aria-roledescription="item" aria-label="0" aria-setsize="10" aria-describedby="doc-tooltip" aria-posinset="1" id="suggest-aria-id:0" aria-selected="true"><s >0</s><s > </s></d>' +
-                                          '<d  role="option" aria-roledescription="item" aria-label="1" aria-setsize="10" aria-describedby="doc-tooltip" aria-posinset="2"><s >1</s><s > </s></d>' +
-                                          '<d  role="option" aria-roledescription="item" aria-label="2" aria-setsize="10" aria-describedby="doc-tooltip" aria-posinset="3"><s >2</s><s > </s></d>' +
-                                          '<d  role="option" aria-roledescription="item" aria-label="3" aria-setsize="10" aria-describedby="doc-tooltip" aria-posinset="4"><s >3</s><s > </s></d>' +
-                                          '<d  role="option" aria-roledescription="item" aria-label="4" aria-setsize="10" aria-describedby="doc-tooltip" aria-posinset="5"><s >4</s><s > </s></d>' +
-                                          '<d  role="option" aria-roledescription="item" aria-label="5" aria-setsize="10" aria-describedby="doc-tooltip" aria-posinset="6"><s >5</s><s > </s></d>' +
-                                          '<d  role="option" aria-roledescription="item" aria-label="6" aria-setsize="10" aria-describedby="doc-tooltip" aria-posinset="7"><s >6</s><s > </s></d>' +
-                                          '<d  role="option" aria-roledescription="item" aria-label="7" aria-setsize="10" aria-describedby="doc-tooltip" aria-posinset="8"><s >7</s><s > </s></d>' +
-                                          '<d  role="option" aria-roledescription="item" aria-label="8" aria-setsize="10" aria-describedby="doc-tooltip" aria-posinset="9"><s >8</s><s > </s></d>'));
-          const prevSelected = popup.selectedNode;
-          sendKey('Down');
-          check(function () {
-            assert.ok(checkAria(popup.selectedNode.outerHTML, '<d  role="option" aria-roledescription="item" aria-label="1" aria-setsize="10" aria-describedby="doc-tooltip" aria-posinset="2" id="suggest-aria-id:1" aria-selected="true"><s >1</s><s > </s></d>'));
-            // check that the aria selected attributes have been removed from the previously selected element
-            assert.ok(checkAria(prevSelected.outerHTML, '<d  role="option" aria-roledescription="item" aria-label="0" aria-setsize="10" aria-describedby="doc-tooltip" aria-posinset="1"><s >0</s><s > </s></d>'));
+            assert.equal(popup.data.length, 10);
+            // check that the aria attributes have been set on  all the elements of the popup and that aria selected attributes are set on the first item
+            assert.ok(checkAria(popup.renderer.$textLayer.element.innerHTML, '<d  role="option" aria-roledescription="item" aria-setsize="10" aria-describedby="doc-tooltip" aria-posinset="1" aria-label="0" id="suggest-aria-id:0" aria-selected="true"><s >0</s><s > </s></d>' +
+                            '<d  role="option" aria-roledescription="item" aria-setsize="10" aria-describedby="doc-tooltip" aria-posinset="2" aria-label="1"><s >1</s><s > </s></d>' +
+                            '<d  role="option" aria-roledescription="item" aria-setsize="10" aria-describedby="doc-tooltip" aria-posinset="3" aria-label="2"><s >2</s><s > </s></d>' +
+                            '<d  role="option" aria-roledescription="item" aria-setsize="10" aria-describedby="doc-tooltip" aria-posinset="4" aria-label="3"><s >3</s><s > </s></d>' +
+                            '<d  role="option" aria-roledescription="item" aria-setsize="10" aria-describedby="doc-tooltip" aria-posinset="5" aria-label="4"><s >4</s><s > </s></d>' +
+                            '<d  role="option" aria-roledescription="item" aria-setsize="10" aria-describedby="doc-tooltip" aria-posinset="6" aria-label="5"><s >5</s><s > </s></d>' +
+                            '<d  role="option" aria-roledescription="item" aria-setsize="10" aria-describedby="doc-tooltip" aria-posinset="7" aria-label="6"><s >6</s><s > </s></d>' +
+                            '<d  role="option" aria-roledescription="item" aria-setsize="10" aria-describedby="doc-tooltip" aria-posinset="8" aria-label="7"><s >7</s><s > </s></d>' +
+                            '<d  role="option" aria-roledescription="item" aria-setsize="10" aria-describedby="doc-tooltip" aria-posinset="9" aria-label="8"><s >8</s><s > </s></d>'));
+            const prevSelected = popup.selectedNode;
             sendKey('Down');
             check(function () {
-              assert.ok(checkAria(popup.selectedNode.outerHTML, '<d  role="option" aria-roledescription="item" aria-label="2" aria-setsize="10" aria-describedby="doc-tooltip" aria-posinset="3" id="suggest-aria-id:2" aria-selected="true"><s >2</s><s > </s></d>'));
-                done();
+                assert.ok(checkAria(popup.selectedNode.outerHTML, '<d  role="option" aria-roledescription="item" aria-setsize="10" aria-describedby="doc-tooltip" aria-posinset="2" aria-label="1" id="suggest-aria-id:1" aria-selected="true"><s >1</s><s > </s></d>'));
+                // check that the aria selected attributes have been removed from the previously selected element
+                assert.ok(checkAria(prevSelected.outerHTML, '<d  role="option" aria-roledescription="item" aria-setsize="10" aria-describedby="doc-tooltip" aria-posinset="1" aria-label="0"><s >0</s><s > </s></d>'));
+                sendKey('Down');
+                check(function () {
+                    assert.ok(checkAria(popup.selectedNode.outerHTML, '<d  role="option" aria-roledescription="item" aria-setsize="10" aria-describedby="doc-tooltip" aria-posinset="3" aria-label="2" id="suggest-aria-id:2" aria-selected="true"><s >2</s><s > </s></d>'));
+                    done();
+                });
             });
-          });
         });
         function check(callback) {
             popup = editor.completer.popup;
