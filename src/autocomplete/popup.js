@@ -138,15 +138,18 @@ class AcePopup {
             var t = popup.renderer.$textLayer;
             for (var row = t.config.firstRow, l = t.config.lastRow; row <= l; row++) {
                 const popupRowElement = /** @type {HTMLElement|null} */(t.element.childNodes[row - t.config.firstRow]);
-                const rowData = popup.getData(row);
-                const ariaLabel = `${rowData.caption || rowData.value}${rowData.meta ? `, ${rowData.meta}` : ''}`;
 
                 popupRowElement.setAttribute("role", optionAriaRole);
                 popupRowElement.setAttribute("aria-roledescription", nls("autocomplete.popup.item.aria-roledescription", "item"));
-                popupRowElement.setAttribute("aria-label", ariaLabel);
                 popupRowElement.setAttribute("aria-setsize", popup.data.length);
                 popupRowElement.setAttribute("aria-describedby", "doc-tooltip");
                 popupRowElement.setAttribute("aria-posinset", row + 1);
+
+                const rowData = popup.getData(row);
+                if (rowData) {
+                    const ariaLabel = `${rowData.caption || rowData.value}${rowData.meta ? `, ${rowData.meta}` : ''}`;
+                    popupRowElement.setAttribute("aria-label", ariaLabel);
+                }
 
                 const highlightedSpans = popupRowElement.querySelectorAll(".ace_completion-highlight");
                 highlightedSpans.forEach(span => {
