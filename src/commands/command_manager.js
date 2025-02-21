@@ -10,7 +10,7 @@ var EventEmitter = require("../lib/event_emitter").EventEmitter;
 class CommandManager extends MultiHashHandler{
     /**
      * new CommandManager(platform, commands)
-     * @param {String} platform Identifier for the platform; must be either `"mac"` or `"win"`
+     * @param {import("../keyboard/hash_handler").Platform} platform Identifier for the platform; must be either `"mac"` or `"win"`
      * @param {any[]} commands A list of commands
      **/
     constructor(platform, commands) {
