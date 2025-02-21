@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.39.0](https://github.com/ajaxorg/ace/compare/v1.38.0...v1.39.0) (2025-02-21)
+
+
+### Features
+
+* Multiline Search Support: line breaks `\n` ([#5675](https://github.com/ajaxorg/ace/issues/5675)) ([06d51b9](https://github.com/ajaxorg/ace/commit/06d51b9164dc9dc39fbd6df26b7132f4b9580a4c))
+
+
+### Bug Fixes
+
+* check if row is present when setting aria label of popup elements ([#5750](https://github.com/ajaxorg/ace/issues/5750)) ([ff16482](https://github.com/ajaxorg/ace/commit/ff16482101965fc4fce488a61a3cd0f9454d8e87))
+* gutter hover tooltip a11y improvements ([#5747](https://github.com/ajaxorg/ace/issues/5747)) ([fbe3ddc](https://github.com/ajaxorg/ace/commit/fbe3ddccb1248c9f8f4a6524d2ded7235d225b41))
+* narrowing platform to be either win or mac ([#5707](https://github.com/ajaxorg/ace/issues/5707)) ([18cc336](https://github.com/ajaxorg/ace/commit/18cc336187519107f47bb15e989008f48f0b1563))
+* set score completion item when skipfilter true ([#5749](https://github.com/ajaxorg/ace/issues/5749)) ([a27e1e8](https://github.com/ajaxorg/ace/commit/a27e1e8a5d3d912b3b554cd2b5916b58750e8e71))
+
 ## [1.38.0](https://github.com/ajaxorg/ace/compare/v1.37.5...v1.38.0) (2025-02-12)
 
 
