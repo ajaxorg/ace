@@ -679,6 +679,24 @@ module.exports = {
         assert.position(ranges[7].end, 15, 0);
     },
 
+    "test: find line breaks backwards using regex" : function() {
+        var session = new EditSession('\nfunction foo(items, nada) {\n    for (var i=0; i<items.length; i++) {\n        alert(items[i] + "juhu\\n");\n    }\t/* Real Tab */\n\n\n\n\n}\n\n\n// test search/replace line break with regexp\r\n\r\n\t\t\t\t\n');
+        session.getSelection().moveCursorTo(2, 5);
+
+        var search = new Search().set({
+            needle: "\\n",
+            regExp: true,
+            wrap: true,
+            backwards: true
+        });
+
+        var range = search.find(session);
+
+        // Should find the first newline to the left of the cursor
+        assert.position(range.start, 1, 27);
+        assert.position(range.end, 2, 0);
+    },
+
     "test: replace with line breaks (\\n) and TAB (\\t) using regular expression" : function() {
         var search = new Search().set({
             needle: "with",
