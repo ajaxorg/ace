@@ -680,30 +680,54 @@ class Autocomplete {
 
         var popup = this.popup;
         var rect = popup.container.getBoundingClientRect();
-        tooltipNode.style.top = popup.container.style.top;
-        tooltipNode.style.bottom = popup.container.style.bottom;
 
-        tooltipNode.style.display = "block";
-        if (window.innerWidth - rect.right < 320) {
-            if (rect.left < 320) {
-                if(popup.isTopdown) {
-                    tooltipNode.style.top = rect.bottom + "px";
-                    tooltipNode.style.left = rect.left + "px";
-                    tooltipNode.style.right = "";
-                    tooltipNode.style.bottom = "";
-                } else {
-                    tooltipNode.style.top = popup.container.offsetTop - tooltipNode.offsetHeight + "px";
-                    tooltipNode.style.left = rect.left + "px";
-                    tooltipNode.style.right = "";
-                    tooltipNode.style.bottom = "";
-                }
+        var targetWidth = 400;
+        var targetHeight = 300;
+        var scrollBarSize = popup.renderer.scrollBar.width || 10;
+
+        var leftSize = rect.left;
+        var rightSize = window.innerWidth - rect.right - scrollBarSize;
+        var topSize = popup.isTopdown ? rect.top : window.innerHeight - scrollBarSize - rect.bottom;
+        var scores = [
+            Math.min(rightSize / targetWidth, 1),
+            Math.min(leftSize / targetWidth, 1),
+            Math.min(topSize / targetHeight * 0.9),
+        ];
+        var max = Math.max.apply(Math, scores);
+        var tooltpStyle = tooltipNode.style;
+        tooltpStyle.display = "block";
+
+        if (max == scores[0]) {
+            tooltpStyle.left = (rect.right + 1) + "px";
+            tooltpStyle.right = "";
+            tooltpStyle.maxWidth = targetWidth * max + "px";
+            tooltpStyle.top = rect.top + "px";
+            tooltpStyle.bottom = "";
+            tooltpStyle.maxHeight = Math.min(window.innerHeight - scrollBarSize - rect.top, targetHeight) + "px";
+        } else if (max == scores[1]) {
+            tooltpStyle.right = window.innerWidth - rect.left + "px";
+            tooltpStyle.left = "";
+            tooltpStyle.maxWidth = targetWidth * max + "px";
+            tooltpStyle.top = rect.top + "px";
+            tooltpStyle.bottom = "";
+            tooltpStyle.maxHeight = Math.min(window.innerHeight - scrollBarSize - rect.top, targetHeight) + "px";
+        } else if (max == scores[2]) {
+            tooltpStyle.left = window.innerWidth - rect.left + "px";
+            tooltpStyle.maxWidth = Math.min(targetWidth, window.innerWidth) + "px";
+
+            if (popup.isTopdown) {
+                tooltpStyle.top = rect.bottom + "px";
+                tooltpStyle.left = rect.left + "px";
+                tooltpStyle.right = "";
+                tooltpStyle.bottom = "";
+                tooltpStyle.maxHeight = Math.min(window.innerHeight - scrollBarSize - rect.bottom, targetHeight) + "px";
             } else {
-                tooltipNode.style.right = window.innerWidth - rect.left + "px";
-                tooltipNode.style.left = "";
+                tooltpStyle.top = popup.container.offsetTop - tooltipNode.offsetHeight + "px";
+                tooltpStyle.left = rect.left + "px";
+                tooltpStyle.right = "";
+                tooltpStyle.bottom = "";
+                tooltpStyle.maxHeight = Math.min(popup.container.offsetTop, targetHeight) + "px";
             }
-        } else {
-            tooltipNode.style.left = (rect.right + 1) + "px";
-            tooltipNode.style.right = "";
         }
     }
 
