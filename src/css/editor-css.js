@@ -58,6 +58,9 @@ module.exports = `
     contain: style size layout;
     font-variant-ligatures: no-common-ligatures;
 }
+.ace_invisible {
+    font-variant-ligatures: none;
+}
 
 .ace_keyboard-focus:focus {
     box-shadow: inset 0 0 0 2px #5E9ED6;
