@@ -8,6 +8,7 @@ if (typeof process !== "undefined") {
 var assert = require("../test/assertions");
 var AcePopup = require("./popup").AcePopup;
 
+/**@type {AcePopup} */
 var popup;
 var lineHeight = 14;
 var renderHeight = 8 * lineHeight;
@@ -42,6 +43,7 @@ var setupPopup = function() {
 
 var tearDown = function(done) {
     if (popup) {
+        popup.destroy();
         var el = popup.container;
         if (el && el.parentNode)
             el.parentNode.removeChild(el);
@@ -82,7 +84,7 @@ module.exports = {
         var result = tryShowAndRender({ top: 0, left: notEnoughSpaceOnRight }, lineHeight, "bottom");
         assert.strictEqual(result, true);
         assert.strictEqual(popup.isOpen, true);
-        assert.strictEqual(popup.container.getBoundingClientRect().right, window.innerWidth);
+        assert.strictEqual(popup.container.getBoundingClientRect().right, window.innerWidth - (popup.renderer.scrollBar.width || 10));
         assert.strictEqual(Math.abs(popup.container.getBoundingClientRect().width - renderWidth) < 5, true);
         popup.hide();
         assert.strictEqual(popup.isOpen, false);
@@ -90,7 +92,7 @@ module.exports = {
         result = tryShowAndRender({ top: notEnoughSpaceOnBottom, left: notEnoughSpaceOnRight }, lineHeight, "top");
         assert.strictEqual(result, true);
         assert.strictEqual(popup.isOpen, true);
-        assert.strictEqual(popup.container.getBoundingClientRect().right, window.innerWidth);
+        assert.strictEqual(popup.container.getBoundingClientRect().right, window.innerWidth - (popup.renderer.scrollBar.width || 10));
         assert.strictEqual(Math.abs(popup.container.getBoundingClientRect().width - renderWidth) < 5, true);
         popup.hide();
         assert.strictEqual(popup.isOpen, false);
