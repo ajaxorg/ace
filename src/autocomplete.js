@@ -172,6 +172,7 @@ class Autocomplete {
         if (this.inlineRenderer) {
             this.inlineRenderer.hide();
         }
+        this.editor.renderer.removeGhostDiff();
         this.hideDocTooltip();
         this.stickySelectionTimer.cancel();
         this.popupTimer.cancel();
@@ -902,7 +903,8 @@ class CompletionProvider {
                 // We assume diffs are sorted, so we insert them in reverse order
                 // so that the insertion doesn't affect the other insertions.
                 data.diff.reverse().forEach(function(diff) {
-                    editor.session.replace(diff.replaceRange, diff.replaceContent);
+                    editor.session.removeFullLines(diff.replaceRange.start.row, diff.replaceRange.end.row);
+                    editor.session.doc.insertFullLines(diff.replaceRange.start.row, diff.replaceContent.split("\n"));
                 });
             } else {
                 this.$insertString(editor, data);

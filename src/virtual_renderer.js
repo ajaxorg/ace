@@ -22,7 +22,7 @@ var EventEmitter = require("./lib/event_emitter").EventEmitter;
 var editorCss = require("./css/editor-css");
 var Decorator = require("./layer/decorators").Decorator;
 var Range = require("./range").Range;
-const { MarkerGroup } = require("./marker_group");
+var { MarkerGroup } = require("./marker_group");
 
 var useragent = require("./lib/useragent");
 const isTextToken = require("./layer/text_util").isTextToken;
@@ -1867,6 +1867,8 @@ class VirtualRenderer {
         return lastLineDiv;
     }
 
+    $ghostDiffWidgets = [];
+
     /**
      * @param {[{replaceRange: import("../ace-internal").Ace.IRange, replaceContent: string}]} diffs
      */
@@ -1877,7 +1879,6 @@ class VirtualRenderer {
 
         var markers = [];
 
-        console.log("setting ghost diff")
         diffs.forEach((diff) => {
             var range = Range.fromPoints(diff.replaceRange.start, diff.replaceRange.end);
             markers.push({range, className: "ace_diff_removed"})
@@ -1886,15 +1887,26 @@ class VirtualRenderer {
 
             var widgetDiv = dom.createElement("div");
             this.createGhostTextWidget(textChunks, widgetDiv)
-            this.$ghostTextWidget = {
+            let ghostDiffWidget = {
                 el: widgetDiv,
                 row: diff.replaceRange.end.row,
                 column: 0,
                 className: "ace_diff_added_container"
             };
-            this.session.widgetManager.addLineWidget(this.$ghostTextWidget);
+            this.session.widgetManager.addLineWidget(ghostDiffWidget);
+            this.$ghostDiffWidgets.push(ghostDiffWidget)
         })
         this.diffRemovalsMarkerGroup.setMarkers(markers);
+    }
+
+    removeGhostDiff() {
+        if (this.diffRemovalsMarkerGroup) {
+            this.diffRemovalsMarkerGroup.setMarkers([]);
+        }
+        this.$ghostDiffWidgets.forEach((w) => {
+            this.session.widgetManager.removeLineWidget(w);
+        })
+        this.$ghostDiffWidgets = [];
     }
 
     /**

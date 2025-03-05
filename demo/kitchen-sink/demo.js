@@ -152,8 +152,6 @@ env.editor.showCommandLine = function(val) {
         this.cmdLine.setValue(val, 1);
 };
 
-var autocomplete = Autocomplete.for(env.editor);
-
 env.editor.completers = [
     {
         getCompletions: function (editor, session, pos, prefix, callback) {
@@ -162,17 +160,17 @@ env.editor.completers = [
                     diff: [
                         {
                         replaceRange: {
-                            start: {column: 0, row: 0},
-                            end: {column: 2, row: 2},
+                            start: {row: 15, column: 0},
+                            end: {row: 18, column: 10},
                         },
                         replaceContent: "hey"
                     },
                     {
                         replaceRange: {
-                            start: {column: 1, row: 8},
-                            end: {column: 6, row: 11},
+                            start: {row: 29, column: 0},
+                            end: {row: 36, column: 10},
                         },
-                        replaceContent: "there"
+                        replaceContent: "there\nhave\na\nnice\nday"
                     }
                     ]
                 }

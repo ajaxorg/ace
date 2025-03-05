@@ -706,6 +706,7 @@ module.exports = `
 .ace_diff_removed {
     background-color: red;
     opacity: 0.2;
+    position: absolute;
 }
 
 .ace_diff_added_container {
