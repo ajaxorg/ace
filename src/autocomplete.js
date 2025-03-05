@@ -35,6 +35,7 @@ var preventParentScroll = require("./lib/scroll").preventParentScroll;
  * @property {string} [value] - The text that would be inserted when selecting this completion.
  * @property {import("../ace-internal").Ace.Completer} [completer]
  * @property {boolean} [hideInlinePreview]
+ * @property {[{replaceRange: import("../ace-internal").Ace.IRange, replaceContent: string}]} [diff]
  * @export
  */
 
@@ -49,6 +50,12 @@ var preventParentScroll = require("./lib/scroll").preventParentScroll;
  * @typedef {BaseCompletion & {value: string}} ValueCompletion
  * @property {string} value
  * @property {string} [snippet]
+ * @export
+ */
+
+/**
+ * @typedef {BaseCompletion & {diff: [{replaceRange: import("../ace-internal").Ace.IRange, replaceContent: string}]}} DiffCompletion
+ * @property {[{replaceRange: import("../ace-internal").Ace.IRange, replaceContent: string}]} diff
  * @export
  */
 
@@ -179,7 +186,11 @@ class Autocomplete {
     $onPopupChange(hide) {
         if (this.inlineRenderer && this.inlineEnabled) {
             var completion = hide ? null : this.popup.getData(this.popup.getRow());
-            this.$updateGhostText(completion);
+            if (completion.diff) {
+                this.editor.renderer.setGhostDiff(completion.diff)
+            } else {
+                this.$updateGhostText(completion);
+            }
             // If the mouse is over the tooltip, and we're changing selection on hover don't
             // move the tooltip while hovering over the popup.
             if (this.popup.isMouseOver && this.setSelectOnHover) {
@@ -887,7 +898,13 @@ class CompletionProvider {
             if (data.snippet) {
                 snippetManager.insertSnippet(editor, data.snippet);
             }
-            else {
+            else if (data.diff) {
+                // We assume diffs are sorted, so we insert them in reverse order
+                // so that the insertion doesn't affect the other insertions.
+                data.diff.reverse().forEach(function(diff) {
+                    editor.session.replace(diff.replaceRange, diff.replaceContent);
+                });
+            } else {
                 this.$insertString(editor, data);
             }
             if (data.completer && data.completer.onInsert && typeof data.completer.onInsert == "function") {

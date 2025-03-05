@@ -3254,12 +3254,26 @@ declare module "ace-code/src/autocomplete" {
         value?: string;
         completer?: import("ace-code").Ace.Completer;
         hideInlinePreview?: boolean;
+        diff?: [
+            {
+                replaceRange: import("ace-code").Ace.IRange;
+                replaceContent: string;
+            }
+        ];
     };
     export type SnippetCompletion = BaseCompletion & {
         snippet: string;
     };
     export type ValueCompletion = BaseCompletion & {
         value: string;
+    };
+    export type DiffCompletion = BaseCompletion & {
+        diff: [
+            {
+                replaceRange: import("ace-code").Ace.IRange;
+                replaceContent: string;
+            }
+        ];
     };
     /**
      * Represents a suggested text snippet intended to complete a user's input
@@ -3337,6 +3351,7 @@ declare module "ace-code/src/search_highlight" {
         constructor(regExp: any, clazz: string, type?: string);
         clazz: string;
         type: string;
+        docLen: number;
         setRegexp(regExp: any): void;
         regExp: any;
         cache: any[];

@@ -701,4 +701,15 @@ module.exports = `
 
 .ace_hidden_token {
     display: none;
-}`;
+}
+
+.ace_diff_removed {
+    background-color: red;
+    opacity: 0.2;
+}
+
+.ace_diff_added_container {
+    background-color: green;
+}
+`;
+

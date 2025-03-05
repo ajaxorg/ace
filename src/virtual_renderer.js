@@ -21,6 +21,8 @@ var FontMetrics = require("./layer/font_metrics").FontMetrics;
 var EventEmitter = require("./lib/event_emitter").EventEmitter;
 var editorCss = require("./css/editor-css");
 var Decorator = require("./layer/decorators").Decorator;
+var Range = require("./range").Range;
+const { MarkerGroup } = require("./marker_group");
 
 var useragent = require("./lib/useragent");
 const isTextToken = require("./layer/text_util").isTextToken;
@@ -1792,27 +1794,7 @@ class VirtualRenderer {
             // If there are tokens to the right of the cursor, hide those.
             var hiddenTokens = this.hideTokensAfterPosition(insertPosition.row, insertPosition.column);
 
-            var lastLineDiv;
-            textChunks.slice(1).forEach(el => {
-                var chunkDiv = dom.createElement("div");
-                var chunkSpan = dom.createElement("span");
-                chunkSpan.className = "ace_ghost_text";
-
-                // If the line is wider than the viewport, wrap the line
-                if (el.wrapped) chunkDiv.className = "ghost_text_line_wrapped";
-
-                // If a given line doesn't have text (e.g. it's a line of whitespace), set a space as the
-                // textcontent so that browsers render the empty line div.
-                if (el.text.length === 0) el.text = " ";
-
-                chunkSpan.appendChild(dom.createTextNode(el.text));
-                chunkDiv.appendChild(chunkSpan);
-                widgetDiv.appendChild(chunkDiv);
-
-                // Overwrite lastLineDiv every iteration so at the end it points to
-                // the last added element.
-                lastLineDiv = chunkDiv;
-            });
+            var lastLineDiv = this.createGhostTextWidget(textChunks.slice(1), widgetDiv)
 
             // Add the hidden tokens to the last line of the ghost text.
             hiddenTokens.forEach(token => {
@@ -1850,6 +1832,69 @@ class VirtualRenderer {
             }
         }
 
+    }
+
+    /**
+     * Calculates and organizes text into wrapped chunks. Initially splits the text by newline characters,
+     * then further processes each line based on display tokens and session settings for tab size and wrapping limits.
+     *
+     * @param {{text: string, wrapped: boolean}[]} textChunks
+     * @param {HTMLDivElement} widgetDiv
+     * @return {HTMLDivElement}
+     */
+    createGhostTextWidget(textChunks, widgetDiv) {
+        var lastLineDiv;
+        textChunks.forEach(el => {
+            var chunkDiv = dom.createElement("div");
+            var chunkSpan = dom.createElement("span");
+            chunkSpan.className = "ace_ghost_text";
+
+            // If the line is wider than the viewport, wrap the line
+            if (el.wrapped) chunkDiv.className = "ghost_text_line_wrapped";
+
+            // If a given line doesn't have text (e.g. it's a line of whitespace), set a space as the
+            // textcontent so that browsers render the empty line div.
+            if (el.text.length === 0) el.text = " ";
+
+            chunkSpan.appendChild(dom.createTextNode(el.text));
+            chunkDiv.appendChild(chunkSpan);
+            widgetDiv.appendChild(chunkDiv);
+
+            // Overwrite lastLineDiv every iteration so at the end it points to
+            // the last added element.
+            lastLineDiv = chunkDiv;
+        });
+        return lastLineDiv;
+    }
+
+    /**
+     * @param {[{replaceRange: import("../ace-internal").Ace.IRange, replaceContent: string}]} diffs
+     */
+    setGhostDiff(diffs) {
+        if (!this.diffRemovalsMarkerGroup || this.diffRemovalsMarkerGroup.session !== this.session) {
+            this.diffRemovalsMarkerGroup = new MarkerGroup(this.session, {markerType: "fullLine"});
+        }
+
+        var markers = [];
+
+        console.log("setting ghost diff")
+        diffs.forEach((diff) => {
+            var range = Range.fromPoints(diff.replaceRange.start, diff.replaceRange.end);
+            markers.push({range, className: "ace_diff_removed"})
+
+            var textChunks = this.$calculateWrappedTextChunks(diff.replaceContent, diff.replaceRange.start);
+
+            var widgetDiv = dom.createElement("div");
+            this.createGhostTextWidget(textChunks, widgetDiv)
+            this.$ghostTextWidget = {
+                el: widgetDiv,
+                row: diff.replaceRange.end.row,
+                column: 0,
+                className: "ace_diff_added_container"
+            };
+            this.session.widgetManager.addLineWidget(this.$ghostTextWidget);
+        })
+        this.diffRemovalsMarkerGroup.setMarkers(markers);
     }
 
     /**

@@ -152,6 +152,36 @@ env.editor.showCommandLine = function(val) {
         this.cmdLine.setValue(val, 1);
 };
 
+var autocomplete = Autocomplete.for(env.editor);
+
+env.editor.completers = [
+    {
+        getCompletions: function (editor, session, pos, prefix, callback) {
+            var completions = [ {
+                    caption: "diff item",
+                    diff: [
+                        {
+                        replaceRange: {
+                            start: {column: 0, row: 0},
+                            end: {column: 2, row: 2},
+                        },
+                        replaceContent: "hey"
+                    },
+                    {
+                        replaceRange: {
+                            start: {column: 1, row: 8},
+                            end: {column: 6, row: 11},
+                        },
+                        replaceContent: "there"
+                    }
+                    ]
+                }
+            ];
+            callback(null, completions);
+        }
+    }
+];
+
 /**
  * This demonstrates how you can define commands and bind shortcuts to them.
  */
