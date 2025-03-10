@@ -512,9 +512,9 @@ class Text {
 
     $clearActiveIndentGuide() {
         var activeIndentGuides = this.element.querySelectorAll(".ace_indent-guide-active");
-        activeIndentGuides.forEach(el => {
-            el.classList.remove("ace_indent-guide-active");
-        });
+        for (var i = 0; i < activeIndentGuides.length; i++) {
+            activeIndentGuides[i].classList.remove("ace_indent-guide-active");
+        };
     }
 
     $setIndentGuideActive(cell, indentLevel) {
