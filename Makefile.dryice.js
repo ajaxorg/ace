@@ -272,6 +272,7 @@ function demo() {
         );
     }
     
+    require("rimraf").sync(BUILD_DIR + "/demo/kitchen-sink/docs/");
     copy(ACE_HOME +"/demo/kitchen-sink/docs/", BUILD_DIR + "/demo/kitchen-sink/docs/");
     
     copy.file(ACE_HOME + "/demo/kitchen-sink/logo.png", BUILD_DIR + "/demo/kitchen-sink/logo.png");
