@@ -44,7 +44,8 @@ var defaultEnglishMessages = {
     "gutter-tooltip.aria-label.security.singular": "security finding",
     "gutter-tooltip.aria-label.security.plural": "security findings",
     "gutter-tooltip.aria-label.hint.singular": "suggestion",
-    "gutter-tooltip.aria-label.hint.plural": "suggestions"
+    "gutter-tooltip.aria-label.hint.plural": "suggestions",
+    "editor.tooltip.disable-editing": "Editing is disabled"
 }
 
 exports.defaultEnglishMessages = defaultEnglishMessages;

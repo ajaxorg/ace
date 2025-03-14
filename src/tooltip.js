@@ -308,7 +308,7 @@ class HoverTooltip extends Tooltip {
      * @param {Editor} editor
      * @param {Range} range
      * @param {HTMLElement} domNode
-     * @param {MouseEvent} startingEvent
+     * @param {MouseEvent} [startingEvent]
      */
     showForRange(editor, range, domNode, startingEvent) {
         var MARGIN = 10;
