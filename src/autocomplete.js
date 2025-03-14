@@ -626,7 +626,7 @@ class Autocomplete {
 
     updateDocTooltip() {
         var popup = this.popup;
-        var all = this.completions.filtered;
+        var all = this.completions && this.completions.filtered;
         var selected = all && (all[popup.getHoveredRow()] || all[popup.getRow()]);
         var doc = null;
         if (!selected || !this.editor || !this.popup.isOpen)
