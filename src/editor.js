@@ -2846,8 +2846,8 @@ config.defineOptions(Editor.prototype, "editor", {
                     if (!this.hoverTooltip) {
                         this.hoverTooltip = new HoverTooltip();
                     }
-                    var domNode = dom.createElement("div");
-                    domNode.innerText = "Editing is disabled";
+                    const domNode = dom.createElement("div");
+                    domNode.textContent = nls("editor.tooltip.disable-editing", "Editing is disabled");
                     if (!this.hoverTooltip.isOpen) {
                         this.hoverTooltip.showForRange(this, this.getSelectionRange(), domNode);
                     }
@@ -2860,7 +2860,7 @@ config.defineOptions(Editor.prototype, "editor", {
             } else {
                 event.removeListener(textArea, "keyup", this.readOnlyCallback);
                 if (this.hoverTooltip) {
-                    this.hoverTooltip.hide();
+                    this.hoverTooltip.destroy();
                     this.hoverTooltip = null;
                 }
             }

@@ -34,6 +34,7 @@ var testNames = [
     "ace/editor_navigation_test",
     "ace/editor_text_edit_test",
     "ace/editor_commands_test",
+    "ace/editor_options_test",
     "ace/ext/command_bar_test",
     "ace/ext/hardwrap_test",
     "ace/ext/inline_autocomplete_test",
