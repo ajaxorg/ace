@@ -459,7 +459,6 @@ module.exports = `
     border-radius: 1px;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
     color: black;
-    max-width: 100%;
     padding: 3px 4px;
     position: fixed;
     z-index: 999999;
@@ -473,7 +472,7 @@ module.exports = `
     letter-spacing: normal;
     pointer-events: none;
     overflow: auto;
-    max-width: min(60em, 66vw);
+    max-width: min(33em, 66vw);
     overscroll-behavior: contain;
 }
 .ace_tooltip pre {
