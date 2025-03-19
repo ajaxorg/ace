@@ -3258,12 +3258,26 @@ declare module "ace-code/src/autocomplete" {
         value?: string;
         completer?: import("ace-code").Ace.Completer;
         hideInlinePreview?: boolean;
+        diff?: [
+            {
+                replaceRange: import("ace-code").Ace.IRange;
+                replaceContent: string;
+            }
+        ];
     };
     export type SnippetCompletion = BaseCompletion & {
         snippet: string;
     };
     export type ValueCompletion = BaseCompletion & {
         value: string;
+    };
+    export type DiffCompletion = BaseCompletion & {
+        diff: [
+            {
+                replaceRange: import("ace-code").Ace.IRange;
+                replaceContent: string;
+            }
+        ];
     };
     /**
      * Represents a suggested text snippet intended to complete a user's input
