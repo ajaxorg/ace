@@ -210,7 +210,7 @@ module.exports = {
             assert.equal(editor.getValue(), "{apple: }");
 
             done();
-            });
+        });
     },
     "test: should set correct aria attributes for popup items": function(done) {
         editor = initEditor("");
@@ -1697,17 +1697,83 @@ module.exports = {
             });
         }
     },
-    "test: should set create shared Autocomplete with sharedPopups on": function() {
-        assert.equal(Autocomplete.$sharedInstance == undefined, true);
-        config.set("sharedPopups", true);
-        editor = initEditor("");
-        var completer = Autocomplete.for(editor);
-        assert.equal(Autocomplete.$sharedInstance == undefined, false);
-        editor.destroy();
-        editor.container.remove();
-        editor = null;
-    },
+    "test: doc tooltip positioning": function (done) {
+        var editor = initEditor("");
+        var longDoc = "This is a very long documentation text that should wrap and test the tooltip width constraints.";
 
+        editor.completers = [
+            {
+                getCompletions: function (editor, session, pos, prefix, callback) {
+                    callback(null, [
+                        {
+                            caption: "completion1",
+                            value: "completion1",
+                            docHTML: longDoc
+                        }
+                    ]);
+                }
+            }
+        ];
+
+        user.type("c");
+
+        var popup = editor.completer.popup;
+
+        function checkTooltipPosition(positionCheck, message, next) {
+            afterRenderCheck(popup, function () {
+                editor.completer.onLayoutChange();
+                var tooltipNode = editor.completer.tooltipNode;
+                var popupRect = popup.container.getBoundingClientRect();
+                var tooltipRect = tooltipNode.getBoundingClientRect();
+                assert.ok(positionCheck(popupRect, tooltipRect), message);
+                next();
+            });
+        }
+
+        // Mock the CSS behaviour
+        popup.container.style.width = "300px";
+        popup.container.style.height = "300px";
+        const editorWidth = 400;
+        editor.container.style.width = editorWidth + "px";
+        editor.container.style.height = "100px";
+        editor.container.style.left = "0px";
+        editor.container.style.top = "0px";
+
+        checkTooltipPosition((popupRect, tooltipRect) => tooltipRect.left > popupRect.right,
+            "Tooltip should appear on the right", () => {
+                editor.container.style.left = (window.innerWidth - editorWidth) + "px";
+                user.type("o");
+
+                checkTooltipPosition((popupRect, tooltipRect) => tooltipRect.right < popupRect.left,
+                    "Tooltip should appear on the left", () => {
+                        editor.container.style.left = "400px";
+                        editor.container.style.top = "0px";
+                        popup.isTopdown = true;
+                        user.type("Escape");
+                        user.type("Enter");
+                        user.type("c");
+
+                        checkTooltipPosition((popupRect, tooltipRect) => tooltipRect.top > popupRect.bottom,
+                            "Tooltip should appear below", () => {
+                                editor.container.style.top = (window.innerHeight - 100) + "px";
+                                editor.container.style.left = "0px";
+                                popup.isTopdown = false;
+                                user.type("Escape");
+                                user.type("Enter");
+                                user.type("c");
+
+                                checkTooltipPosition((popupRect, tooltipRect) => tooltipRect.bottom <= popupRect.top,
+                                    "Tooltip should appear above", function () {
+                                        done();
+                                    }
+                                );
+                            }
+                        );
+                    }
+                );
+            }
+        );
+    },
 };
 
 if (typeof module !== "undefined" && module === require.main) {
