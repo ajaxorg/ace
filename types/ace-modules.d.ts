@@ -1640,7 +1640,7 @@ declare module "ace-code/src/tooltip" {
         removeFromEditor(editor: Editor): void;
         isOutsideOfText(e: MouseEvent): boolean;
         setDataProvider(value: (event: MouseEvent, editor: Editor) => void): void;
-        showForRange(editor: Editor, range: Range, domNode: HTMLElement, startingEvent: MouseEvent): void;
+        showForRange(editor: Editor, range: Range, domNode: HTMLElement, startingEvent?: MouseEvent): void;
         range: Range;
         addMarker(range: Range, session?: EditSession): void;
         marker: number;
@@ -1682,6 +1682,8 @@ declare module "ace-code/src/mouse/default_gutter_handler" {
     export interface GutterHandler {
     }
     export type MouseHandler = import("ace-code/src/mouse/mouse_handler").MouseHandler;
+    export const GUTTER_TOOLTIP_LEFT_OFFSET: 5;
+    export const GUTTER_TOOLTIP_TOP_OFFSET: 3;
     export class GutterTooltip extends Tooltip {
         static get annotationLabels(): {
             error: {
@@ -1706,9 +1708,10 @@ declare module "ace-code/src/mouse/default_gutter_handler" {
             };
         };
         static annotationsToSummaryString(annotations: any): string;
-        constructor(editor: any);
+        constructor(editor: any, isHover?: boolean);
         editor: any;
         visibleTooltipRow: number | undefined;
+        onMouseOut(e: any): void;
         setPosition(x: any, y: any): void;
         showTooltip(row: any): void;
         hideTooltip(): void;
@@ -1831,6 +1834,7 @@ declare module "ace-code/src/search" {
          * @param {EditSession} session The session to search with
         **/
         findAll(session: EditSession): Range[];
+        parseReplaceString(replaceString: any): any;
         /**
          * Searches for `options.needle` in `input`, and, if found, replaces it with `replacement`.
          * @param {String} input The text to search in
@@ -3337,6 +3341,7 @@ declare module "ace-code/src/search_highlight" {
         constructor(regExp: any, clazz: string, type?: string);
         clazz: string;
         type: string;
+        docLen: number;
         setRegexp(regExp: any): void;
         regExp: any;
         cache: any[];

@@ -176,6 +176,7 @@ declare module "ace-code/src/ext/searchbox" {
         setEditor(editor: Editor): void;
         editor: Editor;
         searchRange: any;
+        onEditorInput(): void;
         searchBox: HTMLElement;
         replaceBox: HTMLElement;
         searchOption: HTMLInputElement;

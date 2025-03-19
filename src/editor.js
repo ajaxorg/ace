@@ -29,6 +29,8 @@ var nls = require("./config").nls;
 var clipboard = require("./clipboard");
 var keys = require('./lib/keys');
 
+var event = require("./lib/event");
+var HoverTooltip = require("./tooltip").HoverTooltip;
 
 /**
  * The main entry point into the Ace functionality.
@@ -2836,9 +2838,32 @@ config.defineOptions(Editor.prototype, "editor", {
         initialValue: true
     },
     readOnly: {
-        set: function(readOnly) {
+        set: function(/**@type{boolean}*/readOnly) {
             this.textInput.setReadOnly(readOnly);
             this.$resetCursorStyle();
+            if (!this.readOnlyCallback) {
+                this.readOnlyCallback = () => {
+                    if (!this.hoverTooltip) {
+                        this.hoverTooltip = new HoverTooltip();
+                    }
+                    const domNode = dom.createElement("div");
+                    domNode.textContent = nls("editor.tooltip.disable-editing", "Editing is disabled");
+                    if (!this.hoverTooltip.isOpen) {
+                        this.hoverTooltip.showForRange(this, this.getSelectionRange(), domNode);
+                    }
+
+                };
+            }
+            const textArea = this.textInput.getElement();
+            if (readOnly) {
+                event.addListener(textArea, "keyup", this.readOnlyCallback, this);
+            } else {
+                event.removeListener(textArea, "keyup", this.readOnlyCallback);
+                if (this.hoverTooltip) {
+                    this.hoverTooltip.destroy();
+                    this.hoverTooltip = null;
+                }
+            }
         },
         initialValue: false
     },
