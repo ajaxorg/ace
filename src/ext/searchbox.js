@@ -21,10 +21,10 @@ class SearchBox {
      * @param {never} [showReplaceForm]
      */
     constructor(editor, range, showReplaceForm) {
-        /**@type {any}*/
+        /**@type {HTMLInputElement}*/
         this.activeInput;
-        var div = dom.createElement("div");
-        dom.buildDom(["div", {class:"ace_search right"},
+        /**@type {HTMLDivElement}*/
+        this.element = dom.buildDom(["div", {class:"ace_search right"},
             ["span", {action: "hide", class: "ace_searchbtn_close"}],
             ["div", {class: "ace_search_form"},
                 ["input", {class: "ace_search_field", placeholder: nls("search-box.find.placeholder", "Search for"), spellcheck: "false"}],
@@ -46,9 +46,7 @@ class SearchBox {
                 ["span", {action: "toggleWholeWords", class: "ace_button", title: nls("search-box.toggle-whole-word.title", "Whole Word Search")}, "\\b"],
                 ["span", {action: "searchInSelection", class: "ace_button", title: nls("search-box.toggle-in-selection.title", "Search In Selection")}, "S"]
             ]
-        ], div);
-        /**@type {any}*/
-        this.element = div.firstChild;
+        ]);
 
         this.setSession = this.setSession.bind(this);
         this.$onEditorInput = this.onEditorInput.bind(this);
@@ -56,6 +54,7 @@ class SearchBox {
         this.$init();
         this.setEditor(editor);
         dom.importCssString(searchboxCss, "ace_searchbox", editor.container);
+        event.addListener(this.element, "touchstart", function(e) { e.stopPropagation(); }, editor);
     }
 
     /**

@@ -19,8 +19,8 @@ declare module "ace-code/src/ext/command_bar" {
         eventListeners: {};
         elements: {};
         commands: {};
-        tooltipEl: any[] | HTMLElement | Text;
-        moreOptionsEl: any[] | HTMLElement | Text;
+        tooltipEl: HTMLDivElement;
+        moreOptionsEl: HTMLDivElement;
         /**
          * Registers a command on the command bar tooltip.
          *
@@ -170,8 +170,8 @@ declare module "ace-code/src/ext/searchbox" {
     export type Editor = import("ace-code/src/editor").Editor;
     export class SearchBox {
         constructor(editor: Editor, range?: never, showReplaceForm?: never);
-        activeInput: any;
-        element: any;
+        activeInput: HTMLInputElement;
+        element: HTMLDivElement;
         setSession(e: any): void;
         setEditor(editor: Editor): void;
         editor: Editor;
