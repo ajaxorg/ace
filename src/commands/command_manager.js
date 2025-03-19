@@ -42,11 +42,13 @@ class CommandManager extends MultiHashHandler{
         if (typeof command === "string")
             command = this.commands[command];
 
+        var e = {editor: editor, command: command, args: args};
+        
         if (!this.canExecute(command, editor)) {
+            this._signal("commandUnavailable", e);
             return false; 
         }
         
-        var e = {editor: editor, command: command, args: args};
         e.returnValue = this._emit("exec", e);
         this._signal("afterExec", e);
 

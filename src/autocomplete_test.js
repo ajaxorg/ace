@@ -1636,6 +1636,14 @@ module.exports = {
         // Popup should be closed now
         assert.equal(completer.popup.isOpen, false);
     },
+    "test: should set create shared Autocomplete with sharedPopups on": function() {
+        assert.equal(Autocomplete.$sharedInstance == undefined, true);
+        config.set("sharedPopups", true);
+        var editor = initEditor("");
+        var completer = Autocomplete.for(editor);
+        assert.equal(Autocomplete.$sharedInstance == undefined, false);
+        config.set("sharedPopups", false);
+    },
     "test: changing completion should render scrollbars correctly": function (done) {
         editor = initEditor("document");
         var newLineCharacter = editor.session.doc.getNewLineCharacter();

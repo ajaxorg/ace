@@ -761,6 +761,7 @@ declare module "ace-code" {
         interface CommandManagerEvents {
             "exec": execEventHandler;
             "afterExec": execEventHandler;
+            "commandUnavailable": execEventHandler;
         }
         type CommandManager = import("ace-code/src/commands/command_manager").CommandManager;
         interface SavedSelection {
