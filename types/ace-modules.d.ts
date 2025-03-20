@@ -1272,7 +1272,11 @@ declare module "ace-code/src/virtual_renderer" {
         textarea: HTMLTextAreaElement;
         enableKeyboardAccessibility?: boolean;
         showInvisibles?: boolean;
-        theme?: any;
+        theme /**
+         * @overload
+         */? /**
+         * @overload
+         */: any;
         destroyed?: boolean;
         session: Ace.EditSession;
         keyboardFocusClassName?: string;
@@ -2723,7 +2727,13 @@ declare module "ace-code/src/editor" {
         type Completer = import("ace-code").Ace.Completer;
         type SearchBox = import("ace-code").Ace.SearchBox;
     }
-    export interface Editor extends Ace.EditorMultiSelectProperties, Ace.OptionsProvider<Ace.EditorOptions>, Ace.EventEmitter<Ace.EditorEvents>, Ace.CodeLenseEditorExtension, Ace.ElasticTabstopsEditorExtension, Ace.TextareaEditorExtension, Ace.PromptEditorExtension, Ace.OptionsEditorExtension {
+    export interface Editor extends Ace.EditorMultiSelectProperties /**
+     * @overload
+     */, /**
+     * @overload
+     */ Ace
+            .OptionsProvider<Ace.EditorOptions>, Ace.
+                EventEmitter<Ace.EditorEvents>, Ace.CodeLenseEditorExtension, Ace.ElasticTabstopsEditorExtension, Ace.TextareaEditorExtension, Ace.PromptEditorExtension, Ace.OptionsEditorExtension {
         session: Ace.EditSession;
         env?: any;
         widgetManager?: Ace.LineWidgets;
@@ -2892,7 +2902,11 @@ declare module "ace-code/src/autocomplete/popup" {
         hide: () => void;
         anchor: "top" | "bottom";
         anchorPosition: Ace.Point;
-        tryShow: (pos: any, lineHeight: number, anchor: "top" | "bottom", forceShow?: boolean) => boolean;
+        tryShow: (pos: any, lineHeight: number,
+            /**
+             * @overload
+             */
+            anchor: "top" | "bottom", forceShow?: boolean) => boolean;
         show: (pos: any, lineHeight: number, topdownOnly?: boolean) => void;
         goTo: (where: Ace.AcePopupNavigation) => void;
         getTextLeftOffset: () => number;

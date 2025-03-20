@@ -26,6 +26,16 @@ declare module "ace-code/src/lib/useragent" {
     export const isMobile: boolean;
 }
 declare module "ace-code/src/lib/dom" {
+    /**
+     * @overload
+     */
+    export function buildDom<K extends keyof HTMLElementTagNameMap>(arr: [
+        K,
+        ...any[]
+    ], parent?: HTMLElement, refs?: Record<string, Node>): HTMLElementTagNameMap[K];
+    /**
+     * @overload
+     */
     export function buildDom(arr: any, parent?: HTMLElement, refs?: any): HTMLElement | Text | any[];
     export function getDocumentHead(doc?: Document): HTMLHeadElement | HTMLElement;
     export function createElement<T extends keyof HTMLElementTagNameMap>(tag: T | string, ns?: string): HTMLElementTagNameMap[T];
