@@ -2841,24 +2841,38 @@ config.defineOptions(Editor.prototype, "editor", {
         set: function(/**@type{boolean}*/readOnly) {
             this.textInput.setReadOnly(readOnly);
             this.$resetCursorStyle();
-            if (!this.readOnlyCallback) {
-                this.readOnlyCallback = () => {
-                    if (!this.hoverTooltip) {
-                        this.hoverTooltip = new HoverTooltip();
+            if (!this.$readOnlyCallback) {
+                this.$readOnlyCallback = (e) => {
+                    var shouldShow = false;
+                    if (e && e.type == "keydown") {
+                        shouldShow = e && e.key && e.key.length == 1 && !e.ctrlKey && !e.metaKey;
+                        if (!shouldShow) return;
+                    } else if (e && e.type !== "exec") {
+                        shouldShow = true;
                     }
-                    const domNode = dom.createElement("div");
-                    domNode.textContent = nls("editor.tooltip.disable-editing", "Editing is disabled");
-                    if (!this.hoverTooltip.isOpen) {
-                        this.hoverTooltip.showForRange(this, this.getSelectionRange(), domNode);
+                    if (shouldShow) {
+                        if (!this.hoverTooltip) {
+                            this.hoverTooltip = new HoverTooltip();
+                        }
+                        var domNode = dom.createElement("div");
+                        domNode.textContent = nls("editor.tooltip.disable-editing", "Editing is disabled");
+                        if (!this.hoverTooltip.isOpen) {
+                            this.hoverTooltip.showForRange(this, this.getSelectionRange(), domNode);
+                        }
+                    } else if (this.hoverTooltip && this.hoverTooltip.isOpen) {
+                        this.hoverTooltip.hide();
                     }
-
                 };
             }
-            const textArea = this.textInput.getElement();
+            var textArea = this.textInput.getElement();
             if (readOnly) {
-                event.addListener(textArea, "keyup", this.readOnlyCallback, this);
+                event.addListener(textArea, "keydown", this.$readOnlyCallback, this);
+                this.commands.on("exec", this.$readOnlyCallback);
+                this.commands.on("commandUnavailable", this.$readOnlyCallback);
             } else {
-                event.removeListener(textArea, "keyup", this.readOnlyCallback);
+                event.removeListener(textArea, "keydown", this.$readOnlyCallback);
+                this.commands.off("exec", this.$readOnlyCallback);
+                this.commands.off("commandUnavailable", this.$readOnlyCallback);
                 if (this.hoverTooltip) {
                     this.hoverTooltip.destroy();
                     this.hoverTooltip = null;

@@ -170,6 +170,7 @@ declare module "ace-code/src/lib/default_english_messages" {
         "gutter-tooltip.aria-label.security.plural": string;
         "gutter-tooltip.aria-label.hint.singular": string;
         "gutter-tooltip.aria-label.hint.plural": string;
+        "editor.tooltip.disable-editing": string;
     };
 }
 declare module "ace-code/src/lib/app_config" {

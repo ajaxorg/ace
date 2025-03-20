@@ -948,6 +948,7 @@ export namespace Ace {
     interface CommandManagerEvents {
         "exec": execEventHandler
         "afterExec": execEventHandler;
+        "commandUnavailable": execEventHandler;
     }
 
     type CommandManager = import("./src/commands/command_manager").CommandManager;
