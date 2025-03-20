@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.39.1](https://github.com/ajaxorg/ace/compare/v1.39.0...v1.39.1) (2025-03-20)
+
+
+### Features
+
+* Editing is disabled tooltip in readonly mode ([#5771](https://github.com/ajaxorg/ace/issues/5771)) ([1098e53](https://github.com/ajaxorg/ace/commit/1098e5306fdc02e873cdadc85d2e13228abfe80c))
+
+
+### Bug Fixes
+
+* Fix is check in xml FoldMode ([#5752](https://github.com/ajaxorg/ace/issues/5752)) ([810c465](https://github.com/ajaxorg/ace/commit/810c4650288d32b119239f7731a3b3be0c25376c))
+* replace NodeList.foreach with for loop ([#5769](https://github.com/ajaxorg/ace/issues/5769)) ([b3de3c1](https://github.com/ajaxorg/ace/commit/b3de3c1d99540bd94df122cedb7c5e3a792986a7))
+* updateDocTooltip with undefined this.completions ([#5754](https://github.com/ajaxorg/ace/issues/5754)) ([adde072](https://github.com/ajaxorg/ace/commit/adde072dd4810aa8f99bb1e16a6ab7dfc81a6e9d))
+* wrong java keywords ([#5759](https://github.com/ajaxorg/ace/issues/5759)) ([6b4c7a0](https://github.com/ajaxorg/ace/commit/6b4c7a09d844a2e16d664d3e9fbb384b543bcfcb))
+
 ## [1.39.0](https://github.com/ajaxorg/ace/compare/v1.38.0...v1.39.0) (2025-02-21)
 
 
