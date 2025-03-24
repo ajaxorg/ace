@@ -44,6 +44,12 @@ impl<T, U> GenericStruct<U> where (U, isize): HasAssocType<Ty = T> { /* ... */ }
 /*!! - Still an inner block doc (but with a bang at the beginning) */
 
 /**  - Outer block doc (exactly) 2 asterisks */
+let multiline = r##"
+    This is a raw string.
+    r#"nested string"#
+"##;
+let empty = br##""##;
+let _strings = [r"hello\", br"hello\", cr"hello\" ];
 
 macro_rules! mac_variant {
     ($vis:vis $name:ident) => {

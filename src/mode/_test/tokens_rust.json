@@ -383,4 +383,49 @@
   ["paren.rparen","}"]
 ],[
    "start"
+],[
+   "start"
+],[
+   "start"
+],[
+   ["bracketedComment",3,"start"],
+  ["keyword.source.rust","let"],
+  ["text"," "],
+  ["identifier","multiline"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["string.quoted.raw.source.rust","r##\""]
+],[
+   ["bracketedComment",3,"start"],
+  ["string.quoted.raw.source.rust","    This is a raw string."]
+],[
+   ["bracketedComment",3,"start"],
+  ["string.quoted.raw.source.rust","    r#\"nested string\"#"]
+],[
+   "start",
+  ["string.quoted.raw.source.rust","\"##"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["keyword.source.rust","let"],
+  ["text"," "],
+  ["identifier","_strings"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["paren.lparen","["],
+  ["string.quoted.raw.source.rust","br##\"\"##"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.quoted.raw.source.rust","r\"hello\\\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.quoted.raw.source.rust","br\"hello\\\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.quoted.raw.source.rust","cr\"hello\\\""],
+  ["text"," "],
+  ["paren.rparen","]"],
+  ["punctuation.operator",";"]
 ]]

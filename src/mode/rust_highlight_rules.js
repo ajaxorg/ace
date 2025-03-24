@@ -45,10 +45,11 @@ var RustHighlightRules = function() {
             }, {
                 stateName: "bracketedComment",
                 onMatch: function (value, currentState, stack) {
-                    stack.unshift(this.next, value.length - 1, currentState);
+                    var stringStart = value.replace(/^\w+/, "");
+                    stack.unshift(this.next, stringStart.length, currentState);
                     return "string.quoted.raw.source.rust";
                 },
-                regex: /r#*"/,
+                regex: /(b|c)?r#*"/,
                 next: [
                     {
                         onMatch: function (value, currentState, stack) {
