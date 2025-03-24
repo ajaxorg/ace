@@ -25,7 +25,7 @@ jobs:
 
           # These labels are required
           stale-issue-label: closing-soon
-          exempt-issue-labels: no-autoclose
+          exempt-issue-labels: no-autoclose, p1
           response-requested-label: response-requested
 
           # Don't set closed-for-staleness label to skip closing very old issues
