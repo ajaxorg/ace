@@ -9,6 +9,7 @@ import {MarkerGroup, MarkerGroupItem} from "ace-code/src/marker_group";
 import {HoverTooltip} from "ace-code/src/tooltip";
 import {hardWrap} from "ace-code/src/ext/hardwrap";
 import {SearchBox} from "ace-code/src/ext/searchbox";
+import {themesByName} from 'ace-code/src/ext/themelist';
 
 import("ace-code/src/ext/language_tools");
 import "ace-code/src/test/mockdom.js";
@@ -135,3 +136,23 @@ filter.setFilter("test");
 
 editor.session.startOperation();
 editor.session.endOperation();
+
+editor.on("paste", (e) => {
+    if (e.event && e.event.clipboardData) {
+        var htmlString = e.event.clipboardData.getData("text/html")
+        if (htmlString) {
+            e.text = htmlString
+        }
+    }
+})
+
+if (themesByName.textmate)
+    console.log(themesByName.textmate.theme);
+
+editor.commands.on('afterExec', ({editor, command}) => {
+    console.log(editor.getValue(), command.name);
+});
+
+editor.commands.on('exec', ({editor, command}) => {
+    console.log(editor.getValue(), command.name);
+});

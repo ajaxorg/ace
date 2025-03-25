@@ -182,6 +182,13 @@ function ace() {
 function correctDeclarationsForBuild(path) {
     var definitions = fs.readFileSync(path, 'utf8');
     var newDefinitions = updateDeclarationModuleNames(definitions);
+    if (additionalDeclarations) {
+        newDefinitions = newDefinitions + '\n' + additionalDeclarations;
+    }
+    if (/ace\.d\.ts$/.test(path)) {
+        var aceRequire = "$1\n    export function require(name: string): any;";
+        newDefinitions = newDefinitions.replace(/(declare\smodule\s"ace\-builds"\s{)/, aceRequire);
+    }
     fs.writeFileSync(path, newDefinitions, "utf-8");
 }
 
@@ -251,6 +258,7 @@ function demo() {
         );
     }
     
+    require("rimraf").sync(BUILD_DIR + "/demo/kitchen-sink/docs/");
     copy(ACE_HOME +"/demo/kitchen-sink/docs/", BUILD_DIR + "/demo/kitchen-sink/docs/");
     
     copy.file(ACE_HOME + "/demo/kitchen-sink/logo.png", BUILD_DIR + "/demo/kitchen-sink/logo.png");
@@ -295,7 +303,7 @@ function demo() {
                 source = source.replace(/( |^)require\(/gm, "$1ace.require(");
             }
             source = source.replace(/"\.\.\/build\//g, function(e) {
-                console.log(e); return '"../';
+                return '"../';
             });
             return source;
         }
@@ -651,7 +659,6 @@ function extractCss(callback) {
                 else   
                     imageName = name + "-" + imageCounter + ".png";
                 images[imageName] = buffer;
-                console.log("url(\"" + directory + "/" + imageName + "\")");
                 return "url(\"" + directory + "/" + imageName + "\")";
             }
         );

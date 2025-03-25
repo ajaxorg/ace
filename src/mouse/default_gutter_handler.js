@@ -6,7 +6,12 @@ var dom = require("../lib/dom");
 var event = require("../lib/event");
 var Tooltip = require("../tooltip").Tooltip;
 var nls = require("../config").nls;
-var lang = require("../lib/lang");
+
+const GUTTER_TOOLTIP_LEFT_OFFSET = 5;
+const GUTTER_TOOLTIP_TOP_OFFSET = 3;
+exports.GUTTER_TOOLTIP_LEFT_OFFSET = GUTTER_TOOLTIP_LEFT_OFFSET;
+exports.GUTTER_TOOLTIP_TOP_OFFSET = GUTTER_TOOLTIP_TOP_OFFSET;
+
 
 /**
  * @param {MouseHandler} mouseHandler
@@ -15,7 +20,7 @@ var lang = require("../lib/lang");
 function GutterHandler(mouseHandler) {
     var editor = mouseHandler.editor;
     var gutter = editor.renderer.$gutterLayer;
-    var tooltip = new GutterTooltip(editor);
+    var tooltip = new GutterTooltip(editor, true);
 
     mouseHandler.editor.setDefaultHandler("guttermousedown", function(e) {
         if (!editor.isFocused() || e.getButton() != 0)
@@ -61,6 +66,8 @@ function GutterHandler(mouseHandler) {
             return;
 
         editor.on("mousewheel", hideTooltip);
+        editor.on("changeSession", hideTooltip);
+        window.addEventListener("keydown", hideTooltip, true);
 
         if (mouseHandler.$tooltipFollowsMouse) {
             moveTooltip(mouseEvent);
@@ -71,20 +78,28 @@ function GutterHandler(mouseHandler) {
                 var gutterElement = gutterCell.element.querySelector(".ace_gutter_annotation");
                 var rect = gutterElement.getBoundingClientRect();
                 var style = tooltip.getElement().style;
-                style.left = rect.right + "px";
-                style.top = rect.bottom + "px";
+                style.left = (rect.right - GUTTER_TOOLTIP_LEFT_OFFSET) + "px";
+                style.top = (rect.bottom - GUTTER_TOOLTIP_TOP_OFFSET) + "px";
             } else {
                 moveTooltip(mouseEvent);
             }
         }
     }
 
-    function hideTooltip() {
+    function hideTooltip(e) {
+        // dont close tooltip in case the user wants to copy text from it (Ctrl/Meta + C)
+        if (e && e.type === "keydown" && (e.ctrlKey || e.metaKey))
+            return;
+        // in case mouse moved but is still on the tooltip, dont close it
+        if (e && e.type === "mouseout" && (!e.relatedTarget || tooltip.getElement().contains(e.relatedTarget)))
+            return;
         if (tooltipTimeout)
             tooltipTimeout = clearTimeout(tooltipTimeout);
         if (tooltip.isOpen) {
             tooltip.hideTooltip();
             editor.off("mousewheel", hideTooltip);
+            editor.off("changeSession", hideTooltip);
+            window.removeEventListener("keydown", hideTooltip, true);
         }
     }
 
@@ -107,32 +122,46 @@ function GutterHandler(mouseHandler) {
             tooltipTimeout = null;
             if (mouseEvent && !mouseHandler.isMousePressed)
                 showTooltip();
-            else
-                hideTooltip();
         }, 50);
     });
 
     event.addListener(editor.renderer.$gutter, "mouseout", function(e) {
         mouseEvent = null;
-        if (!tooltip.isOpen || tooltipTimeout)
+        if (!tooltip.isOpen)
             return;
 
         tooltipTimeout = setTimeout(function() {
             tooltipTimeout = null;
-            hideTooltip();
+            hideTooltip(e);
         }, 50);
     }, editor);
-    
-    editor.on("changeSession", hideTooltip);
-    editor.on("input", hideTooltip);
 }
 
 exports.GutterHandler = GutterHandler;
 
 class GutterTooltip extends Tooltip {
-    constructor(editor) {
+    constructor(editor, isHover = false) {
         super(editor.container);
         this.editor = editor;
+        /**@type {Number | Undefined}*/
+        this.visibleTooltipRow;
+        var el = this.getElement();
+        el.setAttribute("role", "tooltip");
+        el.style.pointerEvents = "auto";
+        if (isHover) {
+            this.onMouseOut = this.onMouseOut.bind(this);
+            el.addEventListener("mouseout", this.onMouseOut);
+        }
+    }
+
+    // handler needed to hide tooltip after mouse hovers from tooltip to editor
+    onMouseOut(e) {
+        if (!this.isOpen) return;
+
+        if (!e.relatedTarget || this.getElement().contains(e.relatedTarget)) return;
+
+        if (e && e.currentTarget.contains(e.relatedTarget)) return;
+        this.hideTooltip();
     }
 
     setPosition(x, y) {
@@ -222,7 +251,7 @@ class GutterTooltip extends Tooltip {
             }
         }
 
-        if (annotation.displayText.length === 0) return this.hide();
+        if (annotation.displayText.length === 0) return this.hideTooltip();
 
         var annotationMessages = {error: [], security: [], warning: [], info: [], hint: []};
         var iconClassName = gutter.$useSvgGutterIcons ? "ace_icon_svg" : "ace_icon";
@@ -267,12 +296,17 @@ class GutterTooltip extends Tooltip {
         }
 
         this.show();
+        this.visibleTooltipRow = row;
         this.editor._signal("showGutterTooltip", this);
     }
 
     hideTooltip() {
+        if(!this.isOpen){
+            return;
+        }
         this.$element.removeAttribute("aria-live");
         this.hide();
+        this.visibleTooltipRow = undefined;
         this.editor._signal("hideGutterTooltip", this);
     }
 

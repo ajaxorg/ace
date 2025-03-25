@@ -5,7 +5,7 @@ var defaultEnglishMessages = {
     "autocomplete.loading": "Loading...",
     "editor.scroller.aria-roledescription": "editor",
     "editor.scroller.aria-label": "Editor content, press Enter to start editing, press Escape to exit",
-    "editor.gutter.aria-roledescription": "editor",
+    "editor.gutter.aria-roledescription": "editor gutter",
     "editor.gutter.aria-label": "Editor gutter, press Enter to interact with controls using arrow keys, press Escape to exit",
     "error-marker.good-state": "Looks good!",
     "prompt.recently-used": "Recently used",
@@ -44,7 +44,8 @@ var defaultEnglishMessages = {
     "gutter-tooltip.aria-label.security.singular": "security finding",
     "gutter-tooltip.aria-label.security.plural": "security findings",
     "gutter-tooltip.aria-label.hint.singular": "suggestion",
-    "gutter-tooltip.aria-label.hint.plural": "suggestions"
+    "gutter-tooltip.aria-label.hint.plural": "suggestions",
+    "editor.tooltip.disable-editing": "Editing is disabled"
 }
 
 exports.defaultEnglishMessages = defaultEnglishMessages;

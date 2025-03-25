@@ -193,7 +193,7 @@ class EditSession {
 
     /**
      * Get "widgetManager" from EditSession
-     * 
+     *
      * @returns {LineWidgets} object
      */
     get widgetManager() {
@@ -203,18 +203,18 @@ class EditSession {
 
         if (this.$editor)
             widgetManager.attach(this.$editor);
-        
+
         return widgetManager;
     }
 
     /**
      * Set "widgetManager" in EditSession
-     * 
+     *
      * @returns void
      */
     set widgetManager(value) {
         Object.defineProperty(this, "widgetManager", {
-            writable: true, 
+            writable: true,
             enumerable: true,
             configurable: true,
             value: value,
@@ -934,6 +934,9 @@ class EditSession {
         // load on demand
         this.$modeId = path;
         config.loadModule(["mode", path], function(m) {
+            if (this.destroyed) {
+                return;
+            }
             if (this.$modeId !== path)
                 return cb && cb();
             if (this.$modes[path] && !options) {
@@ -2748,4 +2751,3 @@ config.defineOptions(EditSession.prototype, "session", {
 });
 
 exports.EditSession = EditSession;
-

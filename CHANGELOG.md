@@ -2,6 +2,92 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.39.1](https://github.com/ajaxorg/ace/compare/v1.39.0...v1.39.1) (2025-03-20)
+
+
+### Features
+
+* Editing is disabled tooltip in readonly mode ([#5771](https://github.com/ajaxorg/ace/issues/5771)) ([1098e53](https://github.com/ajaxorg/ace/commit/1098e5306fdc02e873cdadc85d2e13228abfe80c))
+
+
+### Bug Fixes
+
+* Fix is check in xml FoldMode ([#5752](https://github.com/ajaxorg/ace/issues/5752)) ([810c465](https://github.com/ajaxorg/ace/commit/810c4650288d32b119239f7731a3b3be0c25376c))
+* replace NodeList.foreach with for loop ([#5769](https://github.com/ajaxorg/ace/issues/5769)) ([b3de3c1](https://github.com/ajaxorg/ace/commit/b3de3c1d99540bd94df122cedb7c5e3a792986a7))
+* updateDocTooltip with undefined this.completions ([#5754](https://github.com/ajaxorg/ace/issues/5754)) ([adde072](https://github.com/ajaxorg/ace/commit/adde072dd4810aa8f99bb1e16a6ab7dfc81a6e9d))
+* wrong java keywords ([#5759](https://github.com/ajaxorg/ace/issues/5759)) ([6b4c7a0](https://github.com/ajaxorg/ace/commit/6b4c7a09d844a2e16d664d3e9fbb384b543bcfcb))
+
+## [1.39.0](https://github.com/ajaxorg/ace/compare/v1.38.0...v1.39.0) (2025-02-21)
+
+
+### Features
+
+* Multiline Search Support: line breaks `\n` ([#5675](https://github.com/ajaxorg/ace/issues/5675)) ([06d51b9](https://github.com/ajaxorg/ace/commit/06d51b9164dc9dc39fbd6df26b7132f4b9580a4c))
+
+
+### Bug Fixes
+
+* check if row is present when setting aria label of popup elements ([#5750](https://github.com/ajaxorg/ace/issues/5750)) ([ff16482](https://github.com/ajaxorg/ace/commit/ff16482101965fc4fce488a61a3cd0f9454d8e87))
+* gutter hover tooltip a11y improvements ([#5747](https://github.com/ajaxorg/ace/issues/5747)) ([fbe3ddc](https://github.com/ajaxorg/ace/commit/fbe3ddccb1248c9f8f4a6524d2ded7235d225b41))
+* narrowing platform to be either win or mac ([#5707](https://github.com/ajaxorg/ace/issues/5707)) ([18cc336](https://github.com/ajaxorg/ace/commit/18cc336187519107f47bb15e989008f48f0b1563))
+* set score completion item when skipfilter true ([#5749](https://github.com/ajaxorg/ace/issues/5749)) ([a27e1e8](https://github.com/ajaxorg/ace/commit/a27e1e8a5d3d912b3b554cd2b5916b58750e8e71))
+
+## [1.38.0](https://github.com/ajaxorg/ace/compare/v1.37.5...v1.38.0) (2025-02-12)
+
+
+### Features
+
+* **popup:** add supporting skipFilter flag for popup item ([#5740](https://github.com/ajaxorg/ace/issues/5740)) ([0db7585](https://github.com/ajaxorg/ace/commit/0db7585ae0ccbd353091426f60ac3d9e53e182c4))
+
+
+### Bug Fixes
+
+* **AcePopup:** fix aria-posinset issue on google chrome ([#5719](https://github.com/ajaxorg/ace/issues/5719)) ([09a0c5a](https://github.com/ajaxorg/ace/commit/09a0c5a11106754916a4fc324a35e8daf84055ba))
+* calling setMode just before destroy causes error reading getLength ([#5727](https://github.com/ajaxorg/ace/issues/5727)) ([62b973e](https://github.com/ajaxorg/ace/commit/62b973ef2247debdd51cf6a41a3b24b97277efdb))
+* highlight indent guides with wrapped lines ([#5621](https://github.com/ajaxorg/ace/issues/5621)) ([77b9fe1](https://github.com/ajaxorg/ace/commit/77b9fe1bc0b10b4c3fb2780d65f9d256d60634ce))
+* improve aria attributes of popup elements ([#5739](https://github.com/ajaxorg/ace/issues/5739)) ([09fba2e](https://github.com/ajaxorg/ace/commit/09fba2e7347cd499c979e53ec7a8d8ee1fd48918))
+* types for setTimeout/setInterval calls ([#5726](https://github.com/ajaxorg/ace/issues/5726)) ([9a76656](https://github.com/ajaxorg/ace/commit/9a76656acc9528a4a2e92a3b72c4d6598d3a0a8c))
+* **VirtualRenderer:** fix scrollbar overlap on autocompletion ([#5713](https://github.com/ajaxorg/ace/issues/5713)) ([5acea6d](https://github.com/ajaxorg/ace/commit/5acea6d9200f4ca0c8495350cda6e41e8351913f))
+* wrong type of paste event and missing types for themelist extension ([#5725](https://github.com/ajaxorg/ace/issues/5725)) ([a4b9d2d](https://github.com/ajaxorg/ace/commit/a4b9d2d91a2be841320030d93afde46ae723c8c3))
+
+### [1.37.5](https://github.com/ajaxorg/ace/compare/v1.37.4...v1.37.5) (2025-01-16)
+
+
+### Bug Fixes
+
+* update aria-roledescription gutter ([#5718](https://github.com/ajaxorg/ace/issues/5718)) ([7ae3a4c](https://github.com/ajaxorg/ace/commit/7ae3a4c5f6f6e9bd31ae491f1fcef71fc5ae62fa))
+
+### [1.37.4](https://github.com/ajaxorg/ace/compare/v1.37.3...v1.37.4) (2025-01-09)
+
+
+### Bug Fixes
+
+* Remove unnecesary `typeof` from type imports in declarations ([#5715](https://github.com/ajaxorg/ace/issues/5715)) ([2c8bf91](https://github.com/ajaxorg/ace/commit/2c8bf916d75b086b958c205896bc2adc1747d241))
+
+### [1.37.3](https://github.com/ajaxorg/ace/compare/v1.37.2...v1.37.3) (2025-01-07)
+
+### [1.37.2](https://github.com/ajaxorg/ace/compare/v1.37.1...v1.37.2) (2025-01-06)
+
+
+### Bug Fixes
+
+* fix return type of supportsFile modelist ([#5705](https://github.com/ajaxorg/ace/issues/5705)) ([de21d50](https://github.com/ajaxorg/ace/commit/de21d50656bd874e1626265b8853923cb8da7c8b))
+
+### [1.37.1](https://github.com/ajaxorg/ace/compare/v1.37.0...v1.37.1) (2024-12-20)
+
+
+### Bug Fixes
+
+* hide gutter tooltip event missing from editor signal ([#5701](https://github.com/ajaxorg/ace/issues/5701)) ([66a6736](https://github.com/ajaxorg/ace/commit/66a673643d5d128eaf59d4fb6e5907fa6fa68773))
+
+### [1.36.6](https://github.com/ajaxorg/ace/compare/v1.36.5...v1.36.6) (2024-12-17)
+
+
+### Bug Fixes
+
+* update contribuition guide to mandate test cases ([#5694](https://github.com/ajaxorg/ace/issues/5694)) ([e6533b3](https://github.com/ajaxorg/ace/commit/e6533b3972d5adbf5995646c44894466b3b7f40f))
+* wrong behaviour rules in modes ([#5682](https://github.com/ajaxorg/ace/issues/5682)) ([442680c](https://github.com/ajaxorg/ace/commit/442680c68e66531c2d5ac80d80444ed600262ec1))
+
 ### [1.36.5](https://github.com/ajaxorg/ace/compare/v1.36.4...v1.36.5) (2024-11-14)
 
 

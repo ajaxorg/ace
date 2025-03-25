@@ -1,8 +1,8 @@
 {
     "name": "ace-code",
     "description": "Ajax.org Code Editor is a full featured source code highlighting editor that powers the Cloud9 IDE",
-    "version": "1.36.5",
-    "homepage": "http://github.com/ajaxorg/ace",
+    "version": "1.39.1",
+    "homepage": "https://github.com/ajaxorg/ace",
     "engines": {
         "node": ">= 0.6.0"
     },
@@ -11,7 +11,7 @@
     "typings": "ace.d.ts",
     "repository": {
         "type": "git",
-        "url": "http://github.com/ajaxorg/ace.git"
+        "url": "https://github.com/ajaxorg/ace.git"
     },
     "devDependencies": {
         "amd-loader": "~0.0.4",

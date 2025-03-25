@@ -481,7 +481,7 @@ class Text {
             var ranges = this.session.$bracketHighlight.ranges;
             for (var i = 0; i < ranges.length; i++) {
                 if (cursor.row !== ranges[i].start.row) {
-                    this.$highlightIndentGuideMarker.end = ranges[i].start.row;
+                    this.$highlightIndentGuideMarker.end = ranges[i].start.row + 1;
                     if (cursor.row > ranges[i].start.row) {
                         this.$highlightIndentGuideMarker.dir = -1;
                     }
@@ -511,25 +511,25 @@ class Text {
     }
 
     $clearActiveIndentGuide() {
-        var cells = this.$lines.cells;
-        for (var i = 0; i < cells.length; i++) {
-            var cell = cells[i];
-            var childNodes = cell.element.childNodes;
-            if (childNodes.length > 0) {
-                for (var j = 0; j < childNodes.length; j++) {
-                    if (childNodes[j].classList && childNodes[j].classList.contains("ace_indent-guide-active")) {
-                        childNodes[j].classList.remove("ace_indent-guide-active");
-                        break;
-                    }
-                }
-            }
+        var activeIndentGuides = this.element.querySelectorAll(".ace_indent-guide-active");
+        for (var i = 0; i < activeIndentGuides.length; i++) {
+            activeIndentGuides[i].classList.remove("ace_indent-guide-active");
         }
     }
 
     $setIndentGuideActive(cell, indentLevel) {
         var line = this.session.doc.getLine(cell.row);
         if (line !== "") {
-            var childNodes = cell.element.childNodes;
+            let element = cell.element;
+            if (cell.element.classList && cell.element.classList.contains("ace_line_group")) {
+                if (cell.element.childNodes.length > 0) {
+                    element = cell.element.childNodes[0];
+                }
+                else {
+                    return;
+                }
+            }
+            var childNodes = element.childNodes;
             if (childNodes) {
                 let node = childNodes[indentLevel - 1];
                 if (node && node.classList && node.classList.contains("ace_indent-guide")) node.classList.add(
@@ -558,7 +558,7 @@ class Text {
                 for (var i = cells.length - 1; i >= 0; i--) {
                     var cell = cells[i];
                     if (this.$highlightIndentGuideMarker.end && cell.row < this.$highlightIndentGuideMarker.start) {
-                        if (cell.row <= this.$highlightIndentGuideMarker.end) break;
+                        if (cell.row < this.$highlightIndentGuideMarker.end) break;
                         this.$setIndentGuideActive(cell, indentLevel);
                     }
                 }

@@ -1125,7 +1125,17 @@ module.exports = {
             }
         });
         var session = new EditSession([]);
-        session.setMode("ace/mode/javascript");
+        
+        var onChangeModeCallCount = 0;
+        var originalOnChangeMode = session.$onChangeMode;
+
+        // Create spy
+        session.$onChangeMode = function(...arguments) {
+            onChangeModeCallCount++;
+            originalOnChangeMode.apply(this, arguments);
+        };
+
+        session.setMode("ace/mode/javascript");   
         assert.equal(session.$modeId, "ace/mode/javascript");
 
         var modeChangeCallbacks = 0;
@@ -1147,12 +1157,15 @@ module.exports = {
             assert.equal(session.$mode.$id, "ace/mode/sh");
             session.setMode("ace/mode/css");
             assert.equal(session.$mode.$id, "ace/mode/sh");
-            // TODO this should not error
-            // session.destroy();
+            // destory session to check if the last mode which is being loaded is aborted or not
+            session.destroy();
             setTimeout(function() {
-                next();
+            // check if last setmode is aborted due to destroy
+            assert.equal(onChangeModeCallCount, 4);
+            session.$onChangeMode = originalOnChangeMode;
+            next();
             });
-        }, 0);
+        });
     },
 
     "test: sets destroyed flag when destroy called and tokenizer is never null": function() {

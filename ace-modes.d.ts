@@ -303,6 +303,14 @@ declare module "ace-code/src/mode/css" {
     export const Mode: new () => import("ace-code").Ace.SyntaxMode;
 }
 
+declare module "ace-code/src/mode/csv_highlight_rules" {
+    export const CsvHighlightRules: new () => import("ace-code").Ace.HighlightRules;
+}
+
+declare module "ace-code/src/mode/csv" {
+    export const Mode: new () => import("ace-code").Ace.SyntaxMode;
+}
+
 declare module "ace-code/src/mode/curly_highlight_rules" {
     export const CurlyHighlightRules: new () => import("ace-code").Ace.HighlightRules;
 }
@@ -1576,6 +1584,14 @@ declare module "ace-code/src/mode/toml_highlight_rules" {
 }
 
 declare module "ace-code/src/mode/toml" {
+    export const Mode: new () => import("ace-code").Ace.SyntaxMode;
+}
+
+declare module "ace-code/src/mode/tsv_highlight_rules" {
+    export const TsvHighlightRules: new () => import("ace-code").Ace.HighlightRules;
+}
+
+declare module "ace-code/src/mode/tsv" {
     export const Mode: new () => import("ace-code").Ace.SyntaxMode;
 }
 

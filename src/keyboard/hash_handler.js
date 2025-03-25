@@ -9,10 +9,14 @@
 var useragent = require("../lib/useragent");
 var KEY_MODS = keyUtil.KEY_MODS;
 
+/**
+ * @typedef {"win" | "mac"} Platform
+ */
+
 class MultiHashHandler {
     /**
      * @param {Record<string, CommandLike> | Command[]} [config]
-     * @param {string} [platform]
+     * @param {Platform} [platform]
      */
     constructor(config, platform) {
         this.$init(config, platform, false);
@@ -20,7 +24,7 @@ class MultiHashHandler {
 
     /**
      * @param {Record<string, CommandLike> | Command[]} config
-     * @param {string} [platform]
+     * @param {Platform} [platform]
      * @param {boolean} [$singleCommand]
      */
     $init(config, platform, $singleCommand) {
@@ -281,7 +285,7 @@ function getPosition(command) {
 class HashHandler extends MultiHashHandler {
     /**
      * @param {Record<string, CommandLike> | Command[]} [config]
-     * @param {string} [platform]
+     * @param {Platform} [platform]
      */
     constructor(config, platform) {
         super(config, platform);

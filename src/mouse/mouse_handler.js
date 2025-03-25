@@ -117,6 +117,12 @@ class MouseHandler {
         this.state = state;
     }
 
+    /**
+     *
+     * @param {MouseEvent} ev
+     * @param [mouseMoveHandler]
+     * @return {ReturnType<typeof setTimeout> | undefined}
+     */
     captureMouse(ev, mouseMoveHandler) {
         this.x = ev.x;
         this.y = ev.y;

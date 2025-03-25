@@ -193,6 +193,7 @@ class HoverTooltip extends Tooltip {
     constructor(parentNode=document.body) {
         super(parentNode);
 
+        /**@type{ReturnType<typeof setTimeout> | undefined}*/
         this.timeout = undefined;
         this.lastT = 0;
         this.idleTime = 350;
@@ -307,7 +308,7 @@ class HoverTooltip extends Tooltip {
      * @param {Editor} editor
      * @param {Range} range
      * @param {HTMLElement} domNode
-     * @param {MouseEvent} startingEvent
+     * @param {MouseEvent} [startingEvent]
      */
     showForRange(editor, range, domNode, startingEvent) {
         var MARGIN = 10;

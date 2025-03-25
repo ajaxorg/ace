@@ -149,7 +149,7 @@ module.exports = {
         var range = search.find(session);
         assert.position(range.start, 0, 12);
         assert.position(range.end, 0, 13);
-        
+
         search.set({ needle: "ab\\{2}" });
         range = search.find(session);
         assert.position(range.start, 1, 8);
@@ -365,8 +365,8 @@ module.exports = {
         assert.position(ranges[1].start, 2, 1);
         assert.position(ranges[1].end, 2, 3);
     },
-    
-    
+
+
     "test: find all multiline matches" : function() {
         var session = new EditSession(["juhu", "juhu", "juhu", "juhu"]);
 
@@ -416,13 +416,17 @@ module.exports = {
 
     "test: replace with RegExp match and capture groups" : function() {
         var search = new Search().set({
-            needle: "ab(\\d\\d)",
+            needle: "ab((\\d)\\d)",
             regExp: true
         });
 
         assert.equal(search.replace("ab12", "cd$1"), "cd12");
+        assert.equal(search.replace("ab56", "pr$17$2"), "pr5675");
         assert.equal(search.replace("ab12", "-$&-"), "-ab12-");
-        assert.equal(search.replace("ab12", "$$"), "$");
+        assert.equal(search.replace("ab12", "_$0_"), "_ab12_");
+
+        search.set({ needle: "(a)(b)(c)(d)(e)(f)(g)(h)(i)(j)(k)(l)" });
+        assert.equal(search.replace("abcdefghijkl", "$2$9$7_$11$9$4_$8$9$4$5_$10$1$3$11_$6$12$1$7_$13"), "big_kid_hide_jack_flag_a3");
     },
 
     "test: replace() should correctly handle $$ in the replacement string": function () {
@@ -431,11 +435,11 @@ module.exports = {
         });
 
         // Expecting $$ to be preserved in the output
+        assert.equal(search.replace("example", "$test"), "$test");
         assert.equal(search.replace("example", "$$test"), "$$test");
-
-        // Expecting $$$$ to be preserved as $$$$
+        assert.equal(search.replace("example", "$$$test"), "$$$test");
         assert.equal(search.replace("example", "$$$$test"), "$$$$test");
-        
+
         search.set({
             regExp: true,
             needle: "(example)"
@@ -444,9 +448,38 @@ module.exports = {
         // Tests that $1 is replaced by the text that matches the capturing group.
         assert.equal(search.replace("example", "$1test"), "exampletest");
 
-        search.set({regExp: false});
+        assert.equal(search.replace("example", "$"), "$");
+        assert.equal(search.replace("example", "$$"), "$");
+        assert.equal(search.replace("example", "$$$"), "$$");
+        assert.equal(search.replace("example", "$$$$"), "$$");
+        assert.equal(search.replace("example", "$$$$$"), "$$$");
+        assert.equal(search.replace("example", "$$$$$$"), "$$$");
+        assert.equal(search.replace("example", "$$$$$$$"), "$$$$");
+
+        search.set({ regExp: false });
         // Tests that without regular expression, "$1test" is treated as a literal string with $ escape.
         assert.equal(search.replace("(example)", "$1test"), "$1test");
+    },
+
+    "test: replace() should correctly handle \\\\ in the replacement string": function () {
+        var search = new Search().set({
+            needle: "example"
+        });
+
+        // Expecting \\ to be preserved in the output
+        assert.equal(search.replace("example", "\\test"), "\\test");
+        assert.equal(search.replace("example", "\\\\test"), "\\\\test");
+        assert.equal(search.replace("example", "\\\\\\test"), "\\\\\\test");
+
+        search.set({ regExp: true });
+
+        assert.equal(search.replace("example", "\\"), "\\");
+        assert.equal(search.replace("example", "\\\\"), "\\");
+        assert.equal(search.replace("example", "\\\\\\"), "\\\\");
+        assert.equal(search.replace("example", "\\\\\\\\"), "\\\\");
+        assert.equal(search.replace("example", "\\\\\\\\\\"), "\\\\\\");
+        assert.equal(search.replace("example", "\\\\\\\\\\\\"), "\\\\\\");
+        assert.equal(search.replace("example", "\\\\\\\\\\\\\\"), "\\\\\\\\");
     },
 
     "test: find all using regular expresion containing $" : function() {
@@ -514,7 +547,7 @@ module.exports = {
     "test: find next empty range" : function() {
         var session = new EditSession("foo foobar foo");
         var editor = new Editor(new MockRenderer(), session);
-        
+
         var options = {
             needle: "o*",
             wrap: true,
@@ -522,7 +555,7 @@ module.exports = {
             backwards: false
         };
         var positions = [4, 5.2, 7, 8, 9, 10, 11, 12.2, 14, 0, 1.2, 3];
-        
+
         session.selection.moveCursorTo(0, 3);
         for (var i = 0; i < positions.length; i++) {
             editor.find(options);
@@ -541,10 +574,11 @@ module.exports = {
             assert.equal(start + 0.1 * len, positions[i]);
         }
     },
+
     "test: repeating text": function() {
         var session = new EditSession("tttttt\ntttttt\ntttttt\ntttttt\ntttttt\ntttttt");
         var editor = new Editor(new MockRenderer(), session);
-        
+
         var options = {
             needle: "^",
             wrap: true,
@@ -556,15 +590,15 @@ module.exports = {
             var range = editor.selection.getRange();
             assert.range(range, sl, sc, el, ec);
         }
-        
+
         session.selection.moveCursorTo(1, 3);
         check(2, 0, 2, 0);
-        
+
         options.needle = "tttt\ntttt";
         check(2, 2, 3, 4);
         check(4, 2, 5, 4);
         check(0, 2, 1, 4);
-        
+
         options.backwards = true;
         check(4, 2, 5, 4);
         check(2, 2, 3, 4);
@@ -597,6 +631,88 @@ module.exports = {
         assert.position(ranges[1].end, 1, 39);
         assert.position(ranges[2].start, 2, 4);
         assert.position(ranges[2].end, 2, 7);
+    },
+
+    "test: find all line breaks (\\r\\n, \\n) using regular expression" : function() {
+        var session = new EditSession('\nfunction foo(items, nada) {\n    for (var i=0; i<items.length; i++) {\n        alert(items[i] + "juhu\\n");\n    }\t/* Real Tab */\n\n\n\n\n}\n\n\n// test search/replace line break with regexp\r\n\r\n\t\t\t\t\n');
+
+        var search = new Search().set({
+            needle: "\\n",
+            regExp: true,
+            wrap: true
+        });
+
+        var ranges = search.findAll(session);
+        assert.equal(ranges.length, 15);
+
+        search.set({ needle: "\\n{2,}" });
+        ranges = search.findAll(session);
+        assert.equal(ranges.length, 3);
+
+        search.set({ needle: "\\n\\s+" });
+        ranges = search.findAll(session);
+        assert.equal(ranges.length, 6);
+
+        search.set({ needle: "\\)\\s\\{\\n\\s+" });
+        ranges = search.findAll(session);
+        assert.equal(ranges.length, 2);
+
+        search.set({ needle: "\\n+" });
+        ranges = search.findAll(session);
+
+        assert.equal(ranges.length, 8);
+        assert.position(ranges[0].start, 0, 0);
+        assert.position(ranges[0].end, 1, 0);
+        assert.position(ranges[1].start, 1, 27);
+        assert.position(ranges[1].end, 2, 0);
+        assert.position(ranges[2].start, 2, 40);
+        assert.position(ranges[2].end, 3, 0);
+        assert.position(ranges[3].start, 3, 35);
+        assert.position(ranges[3].end, 4, 0);
+        assert.position(ranges[4].start, 4, 20);
+        assert.position(ranges[4].end, 9, 0);
+        assert.position(ranges[5].start, 9, 1);
+        assert.position(ranges[5].end, 12, 0);
+        assert.position(ranges[6].start, 12, 45);
+        assert.position(ranges[6].end, 14, 0);
+        assert.position(ranges[7].start, 14, 4);
+        assert.position(ranges[7].end, 15, 0);
+    },
+
+    "test: find line breaks backwards using regex" : function() {
+        var session = new EditSession('\nfunction foo(items, nada) {\n    for (var i=0; i<items.length; i++) {\n        alert(items[i] + "juhu\\n");\n    }\t/* Real Tab */\n\n\n\n\n}\n\n\n// test search/replace line break with regexp\r\n\r\n\t\t\t\t\n');
+        session.getSelection().moveCursorTo(2, 5);
+
+        var search = new Search().set({
+            needle: "\\n",
+            regExp: true,
+            wrap: true,
+            backwards: true
+        });
+
+        var range = search.find(session);
+
+        // Should find the first newline to the left of the cursor
+        assert.position(range.start, 1, 27);
+        assert.position(range.end, 2, 0);
+    },
+
+    "test: replace with line breaks (\\n) and TAB (\\t) using regular expression" : function() {
+        var search = new Search().set({
+            needle: "with",
+            regExp: true,
+            wrap: true
+        });
+
+        assert.equal(search.replace("with", "\n// $0"), "\n// with");
+        assert.equal(search.replace("with", "\t-\t$0"), "\t-\twith");
+
+        search.set({ needle: "(\\n+)" });
+        assert.equal(search.replace("\n", ""), "");
+        assert.equal(search.replace("\n", "\t"), "\t");
+        assert.equal(search.replace("\n\n\n", "\n"), "\n");
+        assert.equal(search.replace("\n\t\n\n", "\t$1"), "\t\n\t\t\n\n");
+        assert.equal(search.replace("\r\n /* CRLF */", "\n"), "\n /* CRLF */");
     }
 };
 

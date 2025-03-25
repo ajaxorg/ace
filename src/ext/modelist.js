@@ -40,7 +40,7 @@ class Mode {
             }) + "$";
         }
         else {
-            re = "^.*\\.(" + extensions + ")$";
+            re = "\\.(" + extensions + ")$";
         }
 
         this.extRe = new RegExp(re, "gi");
@@ -48,6 +48,7 @@ class Mode {
 
     /**
      * @param {string} filename
+     * @returns {RegExpMatchArray | null}
      */
     supportsFile(filename) {
         return filename.match(this.extRe);
@@ -86,6 +87,7 @@ var supportedModes = {
     Csound_Orchestra: ["orc"],
     Csound_Score: ["sco"],
     CSS:         ["css"],
+    CSV:         ["csv"],
     Curly:       ["curly"],
     Cuttlefish:  ["conf"],
     D:           ["d|di"],
@@ -228,6 +230,7 @@ var supportedModes = {
     Text:        ["txt"],
     Textile:     ["textile"],
     Toml:        ["toml"],
+    TSV:         ["tsv"],
     TSX:         ["tsx"],
     Turtle:      ["ttl"],
     Twig:        ["twig|swig"],

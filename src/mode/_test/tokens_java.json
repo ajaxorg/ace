@@ -252,4 +252,93 @@
   ["rparen","}"]
 ],[
    "start"
+],[
+   "start",
+  ["keyword","var"],
+  ["text"," "],
+  ["identifier","to"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["string","\"working\""],
+  ["text",";"]
+],[
+   "start"
+],[
+   ["paren.lparen","keyword"],
+  ["keyword","module"],
+  ["text"," "],
+  ["identifier","com"],
+  ["punctuation.operator","."],
+  ["identifier","example"],
+  ["punctuation.operator","."],
+  ["identifier","myapp"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   ["doc-start","paren.lparen","paren.lparen","keyword"],
+  ["text","    "],
+  ["comment.doc","/**"]
+],[
+   ["doc-start","paren.lparen","paren.lparen","keyword"],
+  ["comment.doc.body","     * Test doc comment"]
+],[
+   ["doc-start","paren.lparen","paren.lparen","keyword"],
+  ["comment.doc.body","     * "],
+  ["comment.doc.tag","@property"],
+  ["comment.doc.body"," test"]
+],[
+   ["paren.lparen","keyword"],
+  ["comment.doc.body","     "],
+  ["comment.doc","*/"]
+],[
+   ["paren.lparen","keyword"],
+  ["text","    "],
+  ["keyword","requires"],
+  ["text"," "],
+  ["keyword","transitive"],
+  ["text"," java.base;"]
+],[
+   ["paren.lparen","keyword"],
+  ["text","    "],
+  ["comment","//comment"]
+],[
+   ["paren.lparen","keyword"],
+  ["text","    "],
+  ["keyword","exports"],
+  ["text"," com.example.myapp.api;"]
+],[
+   ["comment","paren.lparen","paren.lparen","keyword"],
+  ["text","    "],
+  ["comment","/*"]
+],[
+   ["comment","paren.lparen","paren.lparen","keyword"],
+  ["comment","        multiline comment"]
+],[
+   ["paren.lparen","keyword"],
+  ["comment","    */"]
+],[
+   ["paren.lparen","keyword"],
+  ["text","    "],
+  ["keyword","opens"],
+  ["text"," com.example.myapp.internal "],
+  ["keyword","to"],
+  ["text"," other.module;"]
+],[
+   ["paren.lparen","keyword"],
+  ["text","    "],
+  ["keyword","uses"],
+  ["text"," com.example.myapp.service.MyService;"]
+],[
+   ["paren.lparen","keyword"],
+  ["text","    "],
+  ["keyword","provides"],
+  ["text"," com.example.myapp.service.MyService "],
+  ["keyword","with"],
+  ["text"," com.example.myapp.impl.MyServiceImpl;"]
+],[
+   "keyword",
+  ["paren.rparen","}"]
+],[
+   "start"
 ]]

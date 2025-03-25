@@ -21,10 +21,10 @@ class SearchBox {
      * @param {never} [showReplaceForm]
      */
     constructor(editor, range, showReplaceForm) {
-        /**@type {any}*/
+        /**@type {HTMLInputElement}*/
         this.activeInput;
-        var div = dom.createElement("div");
-        dom.buildDom(["div", {class:"ace_search right"},
+        /**@type {HTMLDivElement}*/
+        this.element = dom.buildDom(["div", {class:"ace_search right"},
             ["span", {action: "hide", class: "ace_searchbtn_close"}],
             ["div", {class: "ace_search_form"},
                 ["input", {class: "ace_search_field", placeholder: nls("search-box.find.placeholder", "Search for"), spellcheck: "false"}],
@@ -46,15 +46,15 @@ class SearchBox {
                 ["span", {action: "toggleWholeWords", class: "ace_button", title: nls("search-box.toggle-whole-word.title", "Whole Word Search")}, "\\b"],
                 ["span", {action: "searchInSelection", class: "ace_button", title: nls("search-box.toggle-in-selection.title", "Search In Selection")}, "S"]
             ]
-        ], div);
-        /**@type {any}*/
-        this.element = div.firstChild;
+        ]);
 
         this.setSession = this.setSession.bind(this);
+        this.$onEditorInput = this.onEditorInput.bind(this);
 
         this.$init();
         this.setEditor(editor);
         dom.importCssString(searchboxCss, "ace_searchbox", editor.container);
+        event.addListener(this.element, "touchstart", function(e) { e.stopPropagation(); }, editor);
     }
 
     /**
@@ -70,6 +70,11 @@ class SearchBox {
     setSession(e) {
         this.searchRange = null;
         this.$syncOptions(true);
+    }
+
+    // Auto update "updateCounter" and "ace_nomatch"
+    onEditorInput() {
+        this.find(false, false, true);
     }
 
     /**
@@ -219,6 +224,15 @@ class SearchBox {
                 ? editor.session.getTextRange(this.searchRange)
                 : editor.getValue();
 
+            /**
+             * Convert all line ending variations to Unix-style = \n
+             * Windows (\r\n), MacOS Classic (\r), and Unix (\n)
+             */
+            if (editor.$search.$isMultilineSearch(editor.getLastSearchOptions())) {
+                value = value.replace(/\r\n|\r|\n/g, "\n");
+                editor.session.doc.$autoNewLine = "\n";
+            }
+
             var offset = editor.session.doc.positionToIndex(editor.selection.anchor);
             if (this.searchRange)
                 offset -= editor.session.doc.positionToIndex(this.searchRange.start);
@@ -279,6 +293,7 @@ class SearchBox {
         this.active = false;
         this.setSearchRange(null);
         this.editor.off("changeSession", this.setSession);
+        this.editor.off("input", this.$onEditorInput);
 
         this.element.style.display = "none";
         this.editor.keyBinding.removeKeyboardHandler(this.$closeSearchBarKb);
@@ -292,8 +307,12 @@ class SearchBox {
     show(value, isReplace) {
         this.active = true;
         this.editor.on("changeSession", this.setSession);
+        this.editor.on("input", this.$onEditorInput);
         this.element.style.display = "";
         this.replaceOption.checked = isReplace;
+
+        if (this.editor.$search.$options.regExp)
+            value = lang.escapeRegExp(value);
 
         if (value)
             this.searchInput.value = value;

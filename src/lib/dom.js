@@ -4,7 +4,15 @@ var useragent = require("./useragent");
 var XHTML_NS = "http://www.w3.org/1999/xhtml";
 
 /**
- * 
+ * @template {keyof HTMLElementTagNameMap} K
+ * @overload
+ * @param {[K, ...any[]]} arr
+ * @param {HTMLElement} [parent]
+ * @param {Record<string, Node>} [refs]
+ * @returns {HTMLElementTagNameMap[K]} 
+ */
+/**
+ * @overload
  * @param {any} arr
  * @param {HTMLElement} [parent]
  * @param [refs]
@@ -79,10 +87,8 @@ exports.getDocumentHead = function(doc) {
  * @returns {HTMLElementTagNameMap[T]}
  */
 exports.createElement = function(tag, ns) {
-    // @ts-ignore
-    return document.createElementNS ?
-            document.createElementNS(ns || XHTML_NS, tag) :
-            document.createElement(tag);
+    // @ts-expect-error
+    return document.createElementNS ? document.createElementNS(ns || XHTML_NS, tag) : document.createElement(tag);
 };
 
 /**

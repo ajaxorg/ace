@@ -29,6 +29,8 @@ var nls = require("./config").nls;
 var clipboard = require("./clipboard");
 var keys = require('./lib/keys');
 
+var event = require("./lib/event");
+var HoverTooltip = require("./tooltip").HoverTooltip;
 
 /**
  * The main entry point into the Ace functionality.
@@ -853,7 +855,7 @@ class Editor {
     /**
      * Called whenever a text "paste" happens.
      * @param {String} text The pasted text
-     * @param {any} event
+     * @param {ClipboardEvent} [event]
      * @internal
      **/
     onPaste(text, event) {
@@ -863,7 +865,7 @@ class Editor {
 
     /**
      *
-     * @param e
+     * @param {string | {text: string, event?: ClipboardEvent}} e
      * @returns {boolean}
      */
     $handlePaste(e) {
@@ -2836,9 +2838,46 @@ config.defineOptions(Editor.prototype, "editor", {
         initialValue: true
     },
     readOnly: {
-        set: function(readOnly) {
+        set: function(/**@type{boolean}*/readOnly) {
             this.textInput.setReadOnly(readOnly);
             this.$resetCursorStyle();
+            if (!this.$readOnlyCallback) {
+                this.$readOnlyCallback = (e) => {
+                    var shouldShow = false;
+                    if (e && e.type == "keydown") {
+                        shouldShow = e && e.key && e.key.length == 1 && !e.ctrlKey && !e.metaKey;
+                        if (!shouldShow) return;
+                    } else if (e && e.type !== "exec") {
+                        shouldShow = true;
+                    }
+                    if (shouldShow) {
+                        if (!this.hoverTooltip) {
+                            this.hoverTooltip = new HoverTooltip();
+                        }
+                        var domNode = dom.createElement("div");
+                        domNode.textContent = nls("editor.tooltip.disable-editing", "Editing is disabled");
+                        if (!this.hoverTooltip.isOpen) {
+                            this.hoverTooltip.showForRange(this, this.getSelectionRange(), domNode);
+                        }
+                    } else if (this.hoverTooltip && this.hoverTooltip.isOpen) {
+                        this.hoverTooltip.hide();
+                    }
+                };
+            }
+            var textArea = this.textInput.getElement();
+            if (readOnly) {
+                event.addListener(textArea, "keydown", this.$readOnlyCallback, this);
+                this.commands.on("exec", this.$readOnlyCallback);
+                this.commands.on("commandUnavailable", this.$readOnlyCallback);
+            } else {
+                event.removeListener(textArea, "keydown", this.$readOnlyCallback);
+                this.commands.off("exec", this.$readOnlyCallback);
+                this.commands.off("commandUnavailable", this.$readOnlyCallback);
+                if (this.hoverTooltip) {
+                    this.hoverTooltip.destroy();
+                    this.hoverTooltip = null;
+                }
+            }
         },
         initialValue: false
     },
@@ -2987,7 +3026,7 @@ config.defineOptions(Editor.prototype, "editor", {
                 this.renderer.$gutter.setAttribute("tabindex", 0);
                 this.renderer.$gutter.setAttribute("aria-hidden", false);
                 this.renderer.$gutter.setAttribute("role", "group");
-                this.renderer.$gutter.setAttribute("aria-roledescription", nls("editor.gutter.aria-roledescription", "editor"));
+                this.renderer.$gutter.setAttribute("aria-roledescription", nls("editor.gutter.aria-roledescription", "editor gutter"));
                 this.renderer.$gutter.setAttribute("aria-label",
                     nls("editor.gutter.aria-label", "Editor gutter, press Enter to interact with controls using arrow keys, press Escape to exit")
                 );

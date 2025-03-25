@@ -1109,8 +1109,11 @@ class VirtualRenderer {
         }
         var vScrollBefore = this.$vScroll; // autosize can change vscroll value in which case we need to update longestLine
         // autoresize only after updating hscroll to include scrollbar height in desired height
-        if (this.$maxLines && this.lineHeight > 1)
+        if (this.$maxLines && this.lineHeight > 1){
             this.$autosize();
+            // recalculate this after $autosize so we take vertical scroll into account when calculating width
+            hideScrollbars = size.height <= 2 * this.lineHeight;
+        }
 
         var minHeight = size.scrollerHeight + this.lineHeight;
 
