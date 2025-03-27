@@ -14,6 +14,8 @@ import type {ElasticTabstopsLite} from "./src/ext/elastic_tabstops_lite";
 import type {MouseEvent} from "./src/mouse/mouse_event";
 export type AfterLoadCallback = (err: Error | null, module: unknown) => void;
 export type LoaderFunction = (moduleName: string, afterLoad: AfterLoadCallback) => void;
+import type {GutterKeyboardEvent} from "./src/keyboard/gutter_handler";
+import type {GutterTooltip} from "./src/mouse/default_gutter_handler";
 
 export interface ConfigOptions {
     packaged: boolean,
@@ -493,7 +495,7 @@ export interface EditorEvents {
     /**
      * Emitted when text is pasted.
      **/
-    "paste": (text: string, event: any) => void;
+    "paste": (e: { text: string, event?: ClipboardEvent }) => void;
     /**
      * Emitted when the selection style changes, via [[Editor.setSelectionStyle]].
      * @param data Contains one property, `data`, which indicates the new selection style
@@ -508,6 +510,11 @@ export interface EditorEvents {
     "codeLensClick": (e: any) => void;
 
     "select": () => void;
+    "gutterkeydown": (e: GutterKeyboardEvent) => void;
+    "gutterclick": (e: MouseEvent) => void;
+    "showGutterTooltip": (e: GutterTooltip) => void;
+    "hideGutterTooltip": (e: GutterTooltip) => void;
+    "compositionStart": () => void;
 }
 
 export interface AcePopupEvents {
@@ -913,9 +920,9 @@ export type execEventHandler = (obj: {
 }) => void;
 
 export interface CommandManagerEvents {
-    on(name: 'exec', callback: execEventHandler): Function;
-
-    on(name: 'afterExec', callback: execEventHandler): Function;
+    "exec": execEventHandler
+    "afterExec": execEventHandler;
+    "commandUnavailable": execEventHandler;
 }
 
 export interface SavedSelection {
@@ -1197,4 +1204,22 @@ export interface Operation {
     selectionAfter?: Range | Range[];
     docChanged?: boolean;
     selectionChanged?: boolean;
+}
+
+export interface CommandBarEvents {
+    "hide": () => void;
+    "show": () => void;
+    "alwaysShow": (e: boolean) => void;
+}
+
+export interface FontMetricsEvents {
+    "changeCharacterSize": (e: { data: { height: number, width: number } }) => void;
+}
+
+export interface OptionPanelEvents {
+    "setOption": (e: { name: string, value: any }) => void;
+}
+
+export interface ScrollbarEvents {
+    "scroll": (e: { data: number }) => void;
 }

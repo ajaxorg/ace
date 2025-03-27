@@ -182,13 +182,6 @@ function ace() {
 function correctDeclarationsForBuild(path) {
     var definitions = fs.readFileSync(path, 'utf8');
     var newDefinitions = updateDeclarationModuleNames(definitions);
-    if (additionalDeclarations) {
-        newDefinitions = newDefinitions + '\n' + additionalDeclarations;
-    }
-    if (/ace\.d\.ts$/.test(path)) {
-        var aceRequire = "$1\n    export function require(name: string): any;";
-        newDefinitions = newDefinitions.replace(/(declare\smodule\s"ace\-builds"\s{)/, aceRequire);
-    }
     fs.writeFileSync(path, newDefinitions, "utf-8");
 }
 
@@ -212,11 +205,12 @@ function buildTypes() {
             return "declare module 'ace-builds/src-noconflict/" + moduleName + "';";
         }
     }).filter(Boolean)).join("\n") + "\n";
-    
+
     generateDeclaration();
     fs.copyFileSync(ACE_HOME + '/ace-modes.d.ts', BUILD_DIR + '/ace-modes.d.ts');
     correctDeclarationsForBuild(BUILD_DIR + '/ace-modes.d.ts');
-    const finalDeclaration = bundleDtsFiles() + "\n" + pathModules;
+    let finalDeclaration = bundleDtsFiles() + "\n" + pathModules;
+    finalDeclaration = finalDeclaration.replace(/(declare\smodule\s"ace\-builds"\s{)/, "$1\n    export function require(name: string): any;");
 
     var esmUrls = [];
 

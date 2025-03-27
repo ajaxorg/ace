@@ -40,6 +40,8 @@ export namespace Ace {
     type DragdropHandler = import("./src/mouse/dragdrop_handler").DragdropHandler;
     type AppConfig = import("./src/lib/app_config").AppConfig;
     type Config = typeof import("./src/config");
+    type GutterTooltip = import( "./src/mouse/default_gutter_handler").GutterTooltip;
+    type GutterKeyboardEvent = import( "./src/keyboard/gutter_handler").GutterKeyboardEvent;
 
     type AfterLoadCallback = import("./interfaces").AfterLoadCallback
     type LoaderFunction = import("./interfaces").LoaderFunction;
@@ -225,6 +227,11 @@ export namespace Ace {
 
     type StaticHighlightOptions = import("./interfaces").StaticHighlightOptions;
     type Operation = import("./interfaces").Operation;
+
+    type CommandBarEvents = import("./interfaces").CommandBarEvents;
+    type FontMetricsEvents = import("./interfaces").FontMetricsEvents;
+    type OptionPanelEvents = import("./interfaces").OptionPanelEvents;
+    type ScrollbarEvents = import("./interfaces").ScrollbarEvents;
 }
 
 declare global {
@@ -290,6 +297,7 @@ declare module "./src/editor" {
         showSettingsMenu?: () => void,
         searchBox?: SearchBox,
         _eventRegistry?: any,
+        $textInputAriaLabel?: string
     }
 }
 
@@ -348,18 +356,18 @@ declare module "./src/placeholder" {
 }
 
 declare module "./src/scrollbar" {
-    export interface VScrollBar extends i.EventEmitter<any> {
+    export interface VScrollBar extends i.EventEmitter<i.ScrollbarEvents> {
     }
 
-    export interface HScrollBar extends i.EventEmitter<any> {
+    export interface HScrollBar extends i.EventEmitter<i.ScrollbarEvents> {
     }
 }
 
 declare module "./src/scrollbar_custom" {
-    export interface VScrollBar extends i.EventEmitter<any> {
+    export interface VScrollBar extends i.EventEmitter<i.ScrollbarEvents> {
     }
 
-    export interface HScrollBar extends i.EventEmitter<any> {
+    export interface HScrollBar extends i.EventEmitter<i.ScrollbarEvents> {
     }
 }
 
@@ -420,13 +428,13 @@ declare module "./src/snippets" {
 }
 
 declare module "./src/ext/command_bar" {
-    export interface CommandBarTooltip extends i.EventEmitter<any> {
+    export interface CommandBarTooltip extends i.EventEmitter<i.CommandBarEvents> {
         $shouldHideMoreOptions?: boolean,
     }
 }
 
 declare module "./src/commands/command_manager" {
-    export interface CommandManager extends i.EventEmitter<any> {
+    export interface CommandManager extends i.EventEmitter<i.CommandManagerEvents> {
         $checkCommandState?: boolean
     }
 }
@@ -505,12 +513,12 @@ declare module "./src/mouse/mouse_handler" {
 }
 
 declare module "./src/ext/options" {
-    export interface OptionPanel extends i.EventEmitter<any> {
+    export interface OptionPanel extends i.EventEmitter<i.OptionPanelEvents> {
     }
 }
 
 declare module "./src/layer/font_metrics" {
-    export interface FontMetrics extends i.EventEmitter<any> {
+    export interface FontMetrics extends i.EventEmitter<i.FontMetricsEvents> {
     }
 }
 
