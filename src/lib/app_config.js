@@ -72,7 +72,6 @@ class AppConfig {
      * @param {Object} obj
      * @param {string} path
      * @param {{ [key: string]: any }} options
-     * @returns {import("../../ace-internal").Ace.AppConfig}
      */
     defineOptions(obj, path, options) {
         if (!obj.$options)

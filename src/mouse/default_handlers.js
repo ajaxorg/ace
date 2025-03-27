@@ -79,7 +79,7 @@ class DefaultHandlers {
 
     /**
      * 
-     * @param {import("../../ace-internal").Ace.Position} [pos]
+     * @param {import("../../interfaces").Position} [pos]
      * @param {boolean} [waitForClickSelection]
      * @this {MouseHandler}
      */

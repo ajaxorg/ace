@@ -18,7 +18,9 @@
     "forceConsistentCasingInFileNames": true,
     "module": "commonjs",
     "target": "es2020",
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "checkJs": true,
+    "allowJs": true
   },
   "include": ["*.ts"],
   "exclude": ["node_modules"]

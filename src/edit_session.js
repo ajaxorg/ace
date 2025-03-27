@@ -2,11 +2,11 @@
 /**
  * @typedef {import("./layer/font_metrics").FontMetrics} FontMetrics
  * @typedef {import("./edit_session/fold_line").FoldLine} FoldLine
- * @typedef {import("../ace-internal").Ace.Point} Point
- * @typedef {import("../ace-internal").Ace.Delta} Delta
- * @typedef {import("../ace-internal").Ace.IRange} IRange
- * @typedef {import("../ace-internal").Ace.SyntaxMode} SyntaxMode
- * @typedef {import("../ace-internal").Ace.LineWidget} LineWidget
+ * @typedef {import("../interfaces").Point} Point
+ * @typedef {import("../interfaces").Delta} Delta
+ * @typedef {import("../interfaces").IRange} IRange
+ * @typedef {import("../interfaces").SyntaxMode} SyntaxMode
+ * @typedef {import("../interfaces").LineWidget} LineWidget
  */
 
 var oop = require("./lib/oop");
@@ -90,7 +90,7 @@ class EditSession {
     }
 
     $initOperationListeners() {
-        /**@type {import("../ace-internal").Ace.Operation | null}*/
+        /**@type {import("../interfaces").Operation | null}*/
         this.curOp = null;
         this.on("change", () => {
             if (!this.curOp) {
@@ -407,7 +407,7 @@ class EditSession {
     /**
      * Starts tokenizing at the row indicated. Returns a list of objects of the tokenized rows.
      * @param {Number} row The row to start at
-     * @returns {import("../ace-internal").Ace.Token[]}
+     * @returns {import("../interfaces").Token[]}
      **/
     getTokens(row) {
         return this.bgTokenizer.getTokens(row);
@@ -417,7 +417,7 @@ class EditSession {
      * Returns an object indicating the token at the current row. The object has two properties: `index` and `start`.
      * @param {Number} row The row number to retrieve from
      * @param {Number} column The column number to retrieve from
-     * @returns {import("../ace-internal").Ace.Token}
+     * @returns {import("../interfaces").Token}
      *
      **/
     getTokenAt(row, column) {
@@ -651,7 +651,7 @@ class EditSession {
      * Adds a new marker to the given `Range`. If `inFront` is `true`, a front marker is defined, and the `'changeFrontMarker'` event fires; otherwise, the `'changeBackMarker'` event fires.
      * @param {Range} range Define the range of the marker
      * @param {String} clazz Set the CSS class for the marker
-     * @param {import("../ace-internal").Ace.MarkerRenderer | "fullLine" | "screenLine" | "text" | "line"} [type] Identify the renderer type of the marker. If string provided, corresponding built-in renderer is used. Supported string types are "fullLine", "screenLine", "text" or "line". If a Function is provided, that Function is used as renderer.
+     * @param {import("../interfaces").MarkerRenderer | "fullLine" | "screenLine" | "text" | "line"} [type] Identify the renderer type of the marker. If string provided, corresponding built-in renderer is used. Supported string types are "fullLine", "screenLine", "text" or "line". If a Function is provided, that Function is used as renderer.
      * @param {Boolean} [inFront] Set to `true` to establish a front marker
      *
      * @return {Number} The new marker id
@@ -681,10 +681,10 @@ class EditSession {
 
     /**
      * Adds a dynamic marker to the session.
-     * @param {import("../ace-internal").Ace.MarkerLike} marker object with update method
+     * @param {import("../interfaces").MarkerLike} marker object with update method
      * @param {Boolean} [inFront] Set to `true` to establish a front marker
      *
-     * @return {import("../ace-internal").Ace.MarkerLike} The added marker
+     * @return {import("../interfaces").MarkerLike} The added marker
      **/
     addDynamicMarker(marker, inFront) {
         if (!marker.update)
@@ -722,7 +722,7 @@ class EditSession {
      * Returns an object containing all of the markers, either front or back.
      * @param {Boolean} [inFront] If `true`, indicates you only want front markers; `false` indicates only back markers
      *
-     * @returns {{[id: number]: import("../ace-internal").Ace.MarkerLike}}
+     * @returns {{[id: number]: import("../interfaces").MarkerLike}}
      **/
     getMarkers(inFront) {
         return inFront ? this.$frontMarkers : this.$backMarkers;
@@ -771,7 +771,7 @@ class EditSession {
      */
     /**
      * Sets annotations for the `EditSession`. This functions emits the `'changeAnnotation'` event.
-     * @param {import("../ace-internal").Ace.Annotation[]} annotations A list of annotations
+     * @param {import("../interfaces").Annotation[]} annotations A list of annotations
      **/
     setAnnotations(annotations) {
         this.$annotations = annotations;
@@ -780,7 +780,7 @@ class EditSession {
 
     /**
      * Returns the annotations for the `EditSession`.
-     * @returns {import("../ace-internal").Ace.Annotation[]}
+     * @returns {import("../interfaces").Annotation[]}
      **/
     getAnnotations() {
         return this.$annotations || [];
@@ -867,7 +867,7 @@ class EditSession {
 
     /**
      * {:Document.setNewLineMode.desc}
-     * @param {import("../ace-internal").Ace.NewLineMode} newLineMode {:Document.setNewLineMode.param}
+     * @param {import("../interfaces").NewLineMode} newLineMode {:Document.setNewLineMode.param}
      *
      *
      * @related Document.setNewLineMode
@@ -879,7 +879,7 @@ class EditSession {
     /**
      *
      * Returns the current new line mode.
-     * @returns {import("../ace-internal").Ace.NewLineMode}
+     * @returns {import("../interfaces").NewLineMode}
      * @related Document.getNewLineMode
      **/
     getNewLineMode() {
@@ -2565,7 +2565,7 @@ EditSession.prototype.$wrapLimitRange = {
 };
 /**
  *
- * @type {null | import("../ace-internal").Ace.LineWidget[]}
+ * @type {null | import("../interfaces").LineWidget[]}
  */
 EditSession.prototype.lineWidgets = null;
 EditSession.prototype.isFullWidth = isFullWidth;

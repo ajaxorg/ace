@@ -1,7 +1,7 @@
 "use strict";
 /**
  * @typedef {import("./edit_session").EditSession} EditSession
- * @typedef {import("../ace-internal").Ace.SearchOptions} SearchOptions
+ * @typedef {import("../interfaces").SearchOptions} SearchOptions
  */
 var lang = require("./lib/lang");
 var oop = require("./lib/oop");

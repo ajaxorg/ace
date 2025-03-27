@@ -2,8 +2,8 @@
 
 /**
  * @typedef {import("./edit_session").EditSession} EditSession
- * @typedef {import("../ace-internal").Ace.IRange} IRange
- * @typedef {import("../ace-internal").Ace.Point} Point
+ * @typedef {import("../interfaces").IRange} IRange
+ * @typedef {import("../interfaces").Point} Point
  */
 /**
  * This object is used in various places to indicate a region within the editor. To better visualize how this works, imagine a rectangle. Each quadrant of the rectangle is analogous to a range, as ranges contain a starting row and starting column, and an ending row, and ending column.

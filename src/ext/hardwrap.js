@@ -4,7 +4,7 @@ var Range = require("../range").Range;
 
 /**
  * @param {import("../editor").Editor} editor
- * @param {import("../../ace-internal").Ace.HardWrapOptions} options
+ * @param {import("../../interfaces").HardWrapOptions} options
  */
 function hardWrap(editor, options) {
     var max = options.column || editor.getOption("printMarginColumn");

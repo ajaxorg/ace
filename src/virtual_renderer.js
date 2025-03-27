@@ -1,8 +1,8 @@
 "use strict";
 /**
  * @typedef {import("./edit_session").EditSession} EditSession
- * @typedef {import("../ace-internal").Ace.Point} Point
- * @typedef {import("../ace-internal").Ace.Theme} Theme
+ * @typedef {import("../interfaces").Point} Point
+ * @typedef {import("../interfaces").Theme} Theme
  */
 var oop = require("./lib/oop");
 var dom = require("./lib/dom");
@@ -1288,7 +1288,7 @@ class VirtualRenderer {
 
     /**
      * Sets annotations for the gutter.
-     * @param {import("../ace-internal").Ace.Annotation[]} annotations An array containing annotations
+     * @param {import("../interfaces").Annotation[]} annotations An array containing annotations
      *
      **/
     setAnnotations(annotations) {
@@ -1623,7 +1623,7 @@ class VirtualRenderer {
      *
      * @param {number} x
      * @param {number} y
-     * @returns {import("../ace-internal").Ace.ScreenCoordinates}
+     * @returns {import("../interfaces").ScreenCoordinates}
 
      */
     pixelToScreenCoordinates(x, y) {
@@ -2107,9 +2107,9 @@ class VirtualRenderer {
             delete this.$scrollDecorator;
         }
         if (val === true) {
-            /**@type {import("../ace-internal").Ace.VScrollbar}*/
+            /**@type {import("../interfaces").VScrollbar}*/
             this.scrollBarV = new VScrollBarCustom(this.container, this);
-            /**@type {import("../ace-internal").Ace.HScrollbar}*/
+            /**@type {import("../interfaces").HScrollbar}*/
             this.scrollBarH = new HScrollBarCustom(this.container, this);
             this.scrollBarV.setHeight(this.$size.scrollerHeight);
             this.scrollBarH.setWidth(this.$size.scrollerWidth);

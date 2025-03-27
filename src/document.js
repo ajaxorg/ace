@@ -1,10 +1,10 @@
 "use strict";
 
 /**
- * @typedef {import("../ace-internal").Ace.Delta} Delta
- * @typedef {import("../ace-internal").Ace.Point} Point
- * @typedef {import("../ace-internal").Ace.IRange} IRange
- * @typedef {import("../ace-internal").Ace.NewLineMode} NewLineMode
+ * @typedef {import("../interfaces").Delta} Delta
+ * @typedef {import("../interfaces").Point} Point
+ * @typedef {import("../interfaces").IRange} IRange
+ * @typedef {import("../interfaces").NewLineMode} NewLineMode
  */
 var oop = require("./lib/oop");
 var applyDelta = require("./apply_delta").applyDelta;

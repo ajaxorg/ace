@@ -68,7 +68,7 @@ class Tooltip {
     }
 
     /**
-     * @param {import("../ace-internal").Ace.Theme} theme
+     * @param {import("../interfaces").Theme} theme
      */
     setTheme(theme) {
         this.$element.className = CLASSNAME + " " +

@@ -65,7 +65,7 @@ class InlineAutocomplete {
 
     /**
      * This function is the entry point to the class. This triggers the gathering of the autocompletion and displaying the results;
-     * @param {import("../../ace-internal").Ace.CompletionOptions} options
+     * @param {import("../../interfaces").CompletionOptions} options
      */
     show(options) {
         this.activated = true;
@@ -121,7 +121,7 @@ class InlineAutocomplete {
     }
 
     /**
-     * @param {import("../../ace-internal").Ace.InlineAutocompleteAction} where
+     * @param {import("../../interfaces").InlineAutocompleteAction} where
      */
     goTo(where) {
         if (!this.completions || !this.completions.filtered) {
@@ -153,7 +153,7 @@ class InlineAutocomplete {
 
     /**
      * @param {number} [index]
-     * @returns {import("../../ace-internal").Ace.Completion | undefined}
+     * @returns {import("../autocomplete").Completion | undefined}
      */
     getData(index) {
         if (index == undefined || index === null) {
@@ -223,7 +223,7 @@ class InlineAutocomplete {
     }
 
     /**
-     * @param {import("../../ace-internal").Ace.CompletionOptions} [options]
+     * @param {import("../../interfaces").CompletionOptions} [options]
      */
     updateCompletions(options) {
         var prefix = "";
@@ -327,7 +327,7 @@ class InlineAutocomplete {
 
 /**
  * 
- * @type {{[key: string]: import("../../ace-internal").Ace.Command}}
+ * @type {{[key: string]: import("../../interfaces").Command}}
  */
 InlineAutocomplete.prototype.commands = {
     "Previous": {

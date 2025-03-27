@@ -38,7 +38,7 @@ var build = require('architect-build/build');
 var {
     updateDeclarationModuleNames,
     generateDeclaration,
-    SEPARATE_MODULES
+    bundleDtsFiles,
 } = require('./tool/ace_declaration_generator');
 
 var ACE_HOME = __dirname;
@@ -179,28 +179,15 @@ function ace() {
     }
 }
 
-function correctDeclarationsForBuild(path, additionalDeclarations) {
+function correctDeclarationsForBuild(path) {
     var definitions = fs.readFileSync(path, 'utf8');
     var newDefinitions = updateDeclarationModuleNames(definitions);
-    if (additionalDeclarations) {
-        newDefinitions = newDefinitions + '\n' + additionalDeclarations;
-    }
-    if (/ace\.d\.ts$/.test(path)) {
-        var aceRequire = "$1\n    export function require(name: string): any;";
-        newDefinitions = newDefinitions.replace(/(declare\smodule\s"ace\-builds"\s{)/, aceRequire);
-    }
-    fs.writeFileSync(path, newDefinitions);
+    fs.writeFileSync(path, newDefinitions, "utf-8");
 }
 
 function buildTypes() {
     // ace-builds package has different structure and can't use mode types defined for the ace-code.
     var paths = fs.readdirSync(BUILD_DIR + '/src-noconflict');
-
-    var typeDir = BUILD_DIR + "/types";
-
-    if (!fs.existsSync(typeDir)) {
-        fs.mkdirSync(typeDir);
-    }
 
     fs.readdirSync(BUILD_DIR + '/src-noconflict/snippets').forEach(function(path) {
         paths.push("snippets/" + path);
@@ -218,21 +205,13 @@ function buildTypes() {
             return "declare module 'ace-builds/src-noconflict/" + moduleName + "';";
         }
     }).filter(Boolean)).join("\n") + "\n";
-    
-    fs.copyFileSync(ACE_HOME + '/ace-internal.d.ts', BUILD_DIR + '/ace.d.ts');
-    generateDeclaration(BUILD_DIR + '/ace.d.ts');
-    fs.copyFileSync(ACE_HOME + '/ace-modes.d.ts', BUILD_DIR + '/ace-modes.d.ts');
-    correctDeclarationsForBuild(BUILD_DIR + '/ace.d.ts', pathModules);
-    correctDeclarationsForBuild(BUILD_DIR + '/ace-modes.d.ts');
 
-    let allModules = SEPARATE_MODULES;
-    allModules.push("modules"); // core modules
-    allModules.forEach(function (key) {
-        let fileName = '/ace-' + key + '.d.ts';
-        fs.copyFileSync(ACE_HOME + '/types' + fileName, BUILD_DIR + '/types' + fileName);
-        correctDeclarationsForBuild(BUILD_DIR + '/types' + fileName);
-    });
-    
+    generateDeclaration();
+    fs.copyFileSync(ACE_HOME + '/ace-modes.d.ts', BUILD_DIR + '/ace-modes.d.ts');
+    correctDeclarationsForBuild(BUILD_DIR + '/ace-modes.d.ts');
+    let finalDeclaration = bundleDtsFiles() + "\n" + pathModules;
+    finalDeclaration = finalDeclaration.replace(/(declare\smodule\s"ace\-builds"\s{)/, "$1\n    export function require(name: string): any;");
+
     var esmUrls = [];
 
     var loader = paths.map(function(path) {
@@ -247,6 +226,7 @@ function buildTypes() {
     }).join('\n');
     var esmLoader = esmUrls.join('\n');
 
+    fs.writeFileSync(BUILD_DIR + '/ace.d.ts', finalDeclaration, "utf8");
     fs.writeFileSync(BUILD_DIR + '/webpack-resolver.js', loader, "utf8");
     fs.writeFileSync(BUILD_DIR + '/esm-resolver.js', esmLoader, "utf8");
 }

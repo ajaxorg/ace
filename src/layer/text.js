@@ -1,6 +1,6 @@
 "use strict";
 /**
- * @typedef {import("../../ace-internal").Ace.LayerConfig} LayerConfig
+ * @typedef {import("../../interfaces").LayerConfig} LayerConfig
  * @typedef {import("../edit_session").EditSession} EditSession
  */
 var oop = require("../lib/oop");
@@ -699,8 +699,8 @@ class Text {
 
     /**
      * @param {number} row
-     * @param {import("../../ace-internal").Ace.FoldLine} foldLine
-     * @return {import("../../ace-internal").Ace.Token[]}
+     * @param {import("../edit_session/fold_line").FoldLine} foldLine
+     * @return {import("../../interfaces").Token[]}
      */
     $getFoldLineTokens(row, foldLine) {
         var session = this.session;
