@@ -29,6 +29,9 @@ export namespace Ace {
     type Config = typeof import("./src/config");
     type GutterTooltip = import( "./src/mouse/default_gutter_handler").GutterTooltip;
     type GutterKeyboardEvent = import( "./src/keyboard/gutter_handler").GutterKeyboardEvent;
+    type HoverTooltip = import("ace-code/src/tooltip").HoverTooltip;
+    type Tooltip = import("ace-code/src/tooltip").Tooltip;
+    type PopupManager = import("ace-code/src/tooltip").PopupManager;
 
     type AfterLoadCallback = (err: Error | null, module: unknown) => void;
     type LoaderFunction = (moduleName: string, afterLoad: AfterLoadCallback) => void;
