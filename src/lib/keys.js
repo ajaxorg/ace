@@ -147,12 +147,15 @@ Keys.del = Keys["delete"];
 Keys.KEY_MODS[0] = "";
 Keys.KEY_MODS[-1] = "input-";
 
-
+/**@deprecated*/
 oop.mixin(exports, Keys);
 
 exports.default = exports;
 
-// @ts-ignore
+/**
+ * @param {number} keyCode
+ * @return {string}
+ */
 exports.keyCodeToString = function(keyCode) {
     // Language-switching keystroke in Chrome/Linux emits keyCode 0.
     var keyString = Keys[keyCode];
