@@ -547,7 +547,7 @@ class Gutter{
             cell.element.setAttribute("aria-hidden", true);
         else
             cell.element.setAttribute("aria-hidden", false);
-        
+
         return cell;
     }
 
@@ -588,6 +588,21 @@ class Gutter{
     getShowFoldWidgets() {
         return this.$showFoldWidgets;
     }
+    
+    /**
+     * Hides the fold widget/icon from a specific row in the gutter
+     * @param {number} row The row number from which to hide the fold icon
+     */
+    hideFoldWidget(row) {
+        const cells = this.$lines.cells;
+        const cell = cells[row];
+        if (cell && cell.element) {
+            const foldWidget = cell.element.childNodes[1];
+            if (foldWidget) {
+                dom.setStyle(foldWidget.style, "display", "none");
+            }
+        }
+    }
 
     $computePadding() {
         if (!this.element.firstChild)
@@ -626,7 +641,7 @@ oop.implement(Gutter.prototype, EventEmitter);
 function onCreateCell(element) {
     var textNode = document.createTextNode('');
     element.appendChild(textNode);
-    
+    // foldWidget's order change also requires changes in hideFoldIcon function.
     var foldWidget = dom.createElement("span");
     element.appendChild(foldWidget);
 

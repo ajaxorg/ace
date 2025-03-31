@@ -422,6 +422,11 @@ declare module "ace-code/src/layer/gutter" {
         getShowLineNumbers(): boolean;
         setShowFoldWidgets(show?: boolean): void;
         getShowFoldWidgets(): boolean;
+        /**
+         * Hides the fold widget/icon from a specific row in the gutter
+         * @param {number} row The row number from which to hide the fold icon
+         */
+        hideFoldWidget(row: number): void;
         getRegion(point: {
             x: number;
         }): "markers" | "foldWidgets";
@@ -3948,6 +3953,11 @@ declare module "ace-code/src/edit_session" {
          * @param {String} className The class to add
          **/
         addGutterDecoration(row: number, className: string): void;
+        /**
+         * Hides the fold widget/icon from a specific row in the gutter
+         * @param {number} row The row number from which to hide the fold icon
+         */
+        hideGutterFoldWidget(row: number): void;
         /**
          * Removes `className` from the `row`.
          * @param {Number} row The row number

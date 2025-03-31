@@ -586,6 +586,14 @@ class EditSession {
     }
 
     /**
+     * Hides the fold widget/icon from a specific row in the gutter
+     * @param {number} row The row number from which to hide the fold icon
+     */
+    hideGutterFoldWidget(row) {
+        this.$editor.renderer.$gutterLayer.hideFoldWidget(row);
+    }
+
+    /**
      * Removes `className` from the `row`.
      * @param {Number} row The row number
      * @param {String} className The class to add
