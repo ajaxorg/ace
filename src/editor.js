@@ -242,7 +242,7 @@ class Editor {
 
     /**
      * Sets a new editsession to use. This method also emits the `'changeSession'` event.
-     * @param {EditSession} [session] The new session to use
+     * @param {EditSession|null} [session] The new session to use
      **/
     setSession(session) {
         if (this.session == session)
@@ -2689,11 +2689,12 @@ class Editor {
      * Cleans up the entire editor.
      **/
     destroy() {
+        this.destroyed = true;
         if (this.$toDestroy) {
             this.$toDestroy.forEach(function(el) {
                 el.destroy();
             });
-            this.$toDestroy = null;
+            this.$toDestroy = [];
         }
         if (this.$mouseHandler)
             this.$mouseHandler.destroy();
@@ -2840,12 +2841,16 @@ config.defineOptions(Editor.prototype, "editor", {
     readOnly: {
         set: function(/**@type{boolean}*/readOnly) {
             this.textInput.setReadOnly(readOnly);
+            if (this.destroyed) return;
             this.$resetCursorStyle();
             if (!this.$readOnlyCallback) {
                 this.$readOnlyCallback = (e) => {
                     var shouldShow = false;
                     if (e && e.type == "keydown") {
-                        shouldShow = e && e.key && e.key.length == 1 && !e.ctrlKey && !e.metaKey;
+                        if (e && e.key && !e.ctrlKey && !e.metaKey) {
+                            if (e.key == " ") e.preventDefault();
+                            shouldShow = e.key.length == 1;
+                        }
                         if (!shouldShow) return;
                     } else if (e && e.type !== "exec") {
                         shouldShow = true;

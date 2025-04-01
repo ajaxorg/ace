@@ -2072,9 +2072,9 @@ declare module "ace-code/src/editor" {
         getKeyboardHandler(): any;
         /**
          * Sets a new editsession to use. This method also emits the `'changeSession'` event.
-         * @param {EditSession} [session] The new session to use
+         * @param {EditSession|null} [session] The new session to use
          **/
-        setSession(session?: EditSession): void;
+        setSession(session?: EditSession | null): void;
         selection: import("ace-code/src/selection").Selection;
         /**
          * Returns the current session being used.
@@ -2676,6 +2676,10 @@ declare module "ace-code/src/editor" {
          * Cleans up the entire editor.
          **/
         destroy(): void;
+        /**
+         * true if editor is destroyed
+         */
+        destroyed: boolean;
         /**
          * Enables automatic scrolling of the cursor into view when editor itself is inside scrollable element
          * @param {Boolean} enable default true

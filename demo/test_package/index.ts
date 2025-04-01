@@ -156,3 +156,8 @@ editor.commands.on('afterExec', ({editor, command}) => {
 editor.commands.on('exec', ({editor, command}) => {
     console.log(editor.getValue(), command.name);
 });
+
+editor.setSession(null);
+console.log(editor.destroyed);
+editor.destroy();
+console.log(editor.destroyed);
