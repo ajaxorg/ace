@@ -171,3 +171,7 @@ var diffView = createDiffView({
 diffView.setProvider(new DiffProvider());
 
 diffView.destroy();
+editor.setSession(null);
+console.log(editor.destroyed);
+editor.destroy();
+console.log(editor.destroyed);
