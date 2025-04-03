@@ -663,8 +663,10 @@ class Gutter{
         const cell = cells[row];
         if (cell && cell.element) {
             const customWidget = cell.element.querySelector(".ace_custom-widget");
-            cell.element.removeChild(customWidget);
-            this.showFoldWidget(row);
+            if (customWidget) {
+                cell.element.removeChild(customWidget);
+                this.showFoldWidget(row);
+            }
         }
     }
 
