@@ -331,6 +331,7 @@ class Gutter{
         
         var textNode = element.childNodes[0];
         var foldWidget = element.childNodes[1];
+        var customWidget = element.childNodes[3];
         var annotationNode = element.childNodes[2];
         var annotationIconNode = annotationNode.firstChild;
 
@@ -418,6 +419,10 @@ class Gutter{
             // Set a11y properties.
             foldWidget.setAttribute("role", "button");
             foldWidget.setAttribute("tabindex", "-1");
+
+            if(customWidget && window.getComputedStyle(customWidget).getPropertyValue('display') !== 'none'){
+                this.hideFoldWidget(row);
+            }
             var foldRange = session.getFoldWidgetRange(row);
 
             // getFoldWidgetRange is optional to be implemented by fold modes, if not available we fall-back.
@@ -587,6 +592,80 @@ class Gutter{
     
     getShowFoldWidgets() {
         return this.$showFoldWidgets;
+    }
+    
+    /**
+     * Hides the fold widget/icon from a specific row in the gutter
+     * @param {number} row The row number from which to hide the fold icon
+     */
+    hideFoldWidget(row) {
+        const cells = this.$lines.cells;
+        const cell = cells[row];
+        if (cell && cell.element) {
+            const foldWidget = cell.element.childNodes[1];
+            if (foldWidget) {
+                dom.setStyle(foldWidget.style, "display", "none");
+            }
+        }
+    }
+
+    /**
+     * Shows the fold widget/icon from a specific row in the gutter
+     * @param {number} row The row number from which to show the fold icon
+     */
+    showFoldWidget(row) {
+        const cells = this.$lines.cells;
+        const cell = cells[row];
+        if (cell && cell.element) {
+            const foldWidget = cell.element.childNodes[1];
+            if (foldWidget) {
+                dom.setStyle(foldWidget.style, "display", "inline-block");
+            }
+        }
+    }
+
+    /**
+    * Displays a custom widget for a specific row
+    * @param {number} row - The row number where the widget will be displayed
+    * @param {Object} options - Configuration options for the widget
+    * @param {string} options.className - CSS class name for styling the widget
+    * @param {string} options.label - Text label to display in the widget
+    * @param {string} options.title - Tooltip text for the widget
+    * @returns {void}
+    */
+    addCustomWidget(row, {className, label, title}) {
+        const cells = this.$lines.cells;
+        const cell = cells[row];
+        if (cell && cell.element) {
+            this.hideFoldWidget(row);
+
+            const customWidget = dom.createElement("span");
+
+            customWidget.className = `ace_custom-widget ${className}`;
+            customWidget.setAttribute("tabindex", "-1");
+            customWidget.setAttribute("role", 'button');
+            customWidget.setAttribute("aria-label", label);
+            customWidget.setAttribute("title", title);
+            dom.setStyle(customWidget.style, "display", "inline-block");
+            dom.setStyle(customWidget.style, "height", "inherit");
+                
+            cell.element.appendChild(customWidget);
+        }
+    }
+    
+    /**
+    * Remove a custom widget for a specific row
+    * @param {number} row - The row number where the widget will be removed
+    * @returns {void}
+    */
+    removeCustomWidget(row){
+        const cells = this.$lines.cells;
+        const cell = cells[row];
+        if (cell && cell.element) {
+            const customWidget = cell.element.querySelector(".ace_custom-widget");
+            cell.element.removeChild(customWidget);
+            this.showFoldWidget(row);
+        }
     }
 
     $computePadding() {
