@@ -744,6 +744,8 @@ function Folding() {
 
             range.end.row = iterator.getCurrentTokenRow();
             range.end.column = iterator.getCurrentTokenColumn();
+            if (range.start.row == range.end.row && range.start.column > range.end.column)
+                return;
             return range;
         }
     };
