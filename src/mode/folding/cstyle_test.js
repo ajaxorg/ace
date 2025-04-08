@@ -46,12 +46,12 @@ module.exports = {
     
     "test: fold sections": function() {
         var session = new EditSession([
-            '/* section0 */',
+            '/*** section0 ***/',
             '{',
-            '    /* section1 */',
+            '    /*** section1 ***/',
             '    stuff',
             '       ',
-            '    /* section2 */',
+            '    /*** section2 ***/',
             '       ',
             '    stuff',
             '       ',
@@ -63,9 +63,9 @@ module.exports = {
         session.setFoldStyle("markbegin");
         session.setMode(mode);
         
-        assert.range(session.getFoldWidgetRange(0, true), 0, 14, 10, 3);
-        assert.range(session.getFoldWidgetRange(2, true), 2, 18, 3, 9);
-        assert.range(session.getFoldWidgetRange(5, true), 5, 18, 7, 9);
+        assert.range(session.getFoldWidgetRange(0, true), 0, 18, 10, 3);
+        assert.range(session.getFoldWidgetRange(2, true), 2, 22, 3, 9);
+        assert.range(session.getFoldWidgetRange(5, true), 5, 22, 7, 9);
     }
 };
 
