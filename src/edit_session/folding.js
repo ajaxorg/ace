@@ -649,6 +649,11 @@ function Folding() {
             if (fold) {
                 this.expandFold(fold);
                 return;
+            } else if (tryToUnfold) {
+                var foldLine = this.getFoldLine(cursor.row);
+                if (foldLine)
+                    this.expandFolds(foldLine.folds);
+                return;
             } else if (bracketPos = this.findMatchingBracket(cursor)) {
                 if (range.comparePoint(bracketPos) == 1) {
                     range.end = bracketPos;
