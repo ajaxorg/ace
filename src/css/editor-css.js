@@ -525,6 +525,10 @@ module.exports = `
     cursor: pointer;
 }
 
+.ace_custom-widget {
+    background: none;
+}
+
 .ace_folding-enabled .ace_fold-widget {
     display: inline-block;   
 }

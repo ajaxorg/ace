@@ -50,7 +50,7 @@ module.exports = {
 
         // Focus on the fold widget.
         emit(keys["enter"]);
-        editor.renderer.$gutterLayer.addCustomWidget(13, {
+        editor.renderer.$gutterLayer.$addCustomWidget(13, {
             className: "ace_users_css",
             label: "Open_label",
             title: "Open_title"
@@ -90,12 +90,12 @@ module.exports = {
 
         // Focus on the custom widget.
         emit(keys["enter"]);
-        editor.renderer.$gutterLayer.addCustomWidget(0, {
+        editor.renderer.$gutterLayer.$addCustomWidget(0, {
             className: "ace_users_css",
             label: "Open_label",
             title: "Open_title"
         });
-        editor.renderer.$gutterLayer.removeCustomWidget(0);
+        editor.renderer.$gutterLayer.$removeCustomWidget(0);
 
         setTimeout(function () {
             assert.equal(document.activeElement, lines.cells[0].element.childNodes[1]);
@@ -139,12 +139,12 @@ module.exports = {
 
             // Click the fold widget to fold the lines.
             emit(keys["enter"]);
-            editor.renderer.$gutterLayer.addCustomWidget(0, {
+            editor.renderer.$gutterLayer.$addCustomWidget(0, {
                 className: "ace_users_css",
                 label: "Open_label",
                 title: "Open_title"
             });
-            editor.renderer.$gutterLayer.removeCustomWidget(0);
+            editor.renderer.$gutterLayer.$removeCustomWidget(0);
 
             setTimeout(function () {
                 // Check that custom widget is hidden.
@@ -152,6 +152,66 @@ module.exports = {
                 assert.equal(lines.cells[0].element.children[3], undefined);
                 assert.ok(/ace_closed/.test(lines.cells[0].element.children[1].className));
 
+                // After escape focus should be back to the gutter.
+                emit(keys["escape"]);
+                assert.equal(document.activeElement, editor.renderer.$gutter);
+
+                done();
+            }, 20);
+        }, 20);
+    },
+
+    "test: onClick callback is getting called and updated when updating the custom widget": function (done) {
+        var editor = this.editor;
+        var value = "x {" + "\n".repeat(50) + "}\n";
+        value = value.repeat(50);
+        editor.session.setMode(new Mode());
+        editor.setValue(value, -1);
+        editor.setOption("enableKeyboardAccessibility", true);
+        editor.renderer.$loop._flush();
+
+        var lines = editor.renderer.$gutterLayer.$lines;
+
+        // Set focus to the gutter div.
+        editor.renderer.$gutter.focus();
+        assert.equal(document.activeElement, editor.renderer.$gutter);
+
+        // Focus on the fold widget.
+        emit(keys["enter"]);
+
+        let firstCallbackCalledCount=0;
+        const firstCallback = () =>{ 
+            firstCallbackCalledCount++;
+        };
+        let secondCallbackCalledCount=0;
+        const secondCallback = () =>{
+            secondCallbackCalledCount++;
+        };
+        editor.renderer.$gutterLayer.$addCustomWidget(0, {
+            className: "ace_users_css",
+            label: "Open_label",
+            title: "Open_title",
+            callbacks: {
+                onClick: firstCallback
+            }
+        });
+        editor.renderer.$gutterLayer.$addCustomWidget(0, {
+            className: "ace_users_css",
+            label: "Open_label",
+            title: "Open_title",
+            callbacks: {
+                onClick: secondCallback
+            }
+        });
+        // clicking the custom widget
+        lines.cells[0].element.children[3].dispatchEvent(new CustomEvent("click"));
+        setTimeout(function () {
+
+            setTimeout(function () {
+                // Check that custom widget is hidden.
+                editor.renderer.$loop._flush();
+                assert.equal(firstCallbackCalledCount,0);
+                assert.equal(secondCallbackCalledCount,1);
                 // After escape focus should be back to the gutter.
                 emit(keys["escape"]);
                 assert.equal(document.activeElement, editor.renderer.$gutter);

@@ -422,34 +422,6 @@ declare module "ace-code/src/layer/gutter" {
         getShowLineNumbers(): boolean;
         setShowFoldWidgets(show?: boolean): void;
         getShowFoldWidgets(): boolean;
-        /**
-         * Hides the fold widget/icon from a specific row in the gutter
-         * @param {number} row The row number from which to hide the fold icon
-         */
-        hideFoldWidget(row: number): void;
-        /**
-         * Shows the fold widget/icon from a specific row in the gutter
-         * @param {number} row The row number from which to show the fold icon
-         */
-        showFoldWidget(row: number): void;
-        /**
-        * Displays a custom widget for a specific row
-        * @param {number} row - The row number where the widget will be displayed
-        * @param {Object} options - Configuration options for the widget
-        * @param {string} options.className - CSS class name for styling the widget
-        * @param {string} options.label - Text label to display in the widget
-        * @param {string} options.title - Tooltip text for the widget
-        */
-        addCustomWidget(row: number, { className, label, title }: {
-            className: string;
-            label: string;
-            title: string;
-        }): void;
-        /**
-        * Remove a custom widget for a specific row
-        * @param {number} row - The row number where the widget will be removed
-        */
-        removeCustomWidget(row: number): void;
         getRegion(point: {
             x: number;
         }): "markers" | "foldWidgets";
@@ -3984,12 +3956,18 @@ declare module "ace-code/src/edit_session" {
         /**
          * Replaces the fold widget if present with the custom icon from a specific row in the gutter
          * @param {number} row - The row number where the widget will be displayed
-         * @param {Object} options - Configuration options for the widget
-         * @param {string} options.className - CSS class name for styling the widget
-         * @param {string} options.label - Text label to display in the widget
-         *  @param {string} options.title - Tooltip text for the widget
+         * @param {Object} attributes - Configuration attributes for the widget
+         * @param {string} attributes.className - CSS class name for styling the widget
+         * @param {string} attributes.label - Text label to display in the widget
+         * @param {string} attributes.title - Tooltip text for the widget
+         * @param {Object} attributes.callbacks - Event callback functions for the widget e.g onClick;
         */
-        addGutterCustomWidget(row: number, attributes: any): void;
+        addGutterCustomWidget(row: number, attributes: {
+            className: string;
+            label: string;
+            title: string;
+            callbacks: any;
+        }): void;
         /**
          * Removes `className` from the `row`.
          * @param {Number} row The row number
