@@ -586,6 +586,28 @@ class EditSession {
     }
 
     /**
+     * Replaces the custom icon with the fold widget if present from a specific row in the gutter
+     * @param {number} row The row number for which to hide the custom icon
+     */
+    removeGutterCustomWidget(row) {
+        this.$editor.renderer.$gutterLayer.$removeCustomWidget(row);
+    }
+
+    /**
+     * Replaces the fold widget if present with the custom icon from a specific row in the gutter
+     * @param {number} row - The row number where the widget will be displayed
+     * @param {Object} attributes - Configuration attributes for the widget
+     * @param {string} attributes.className - CSS class name for styling the widget
+     * @param {string} attributes.label - Text label to display in the widget
+     * @param {string} attributes.title - Tooltip text for the widget
+     * @param {Object} attributes.callbacks - Event callback functions for the widget e.g onClick; 
+     * @returns {void}
+    */
+    addGutterCustomWidget(row,attributes) {
+        this.$editor.renderer.$gutterLayer.$addCustomWidget(row,attributes);
+    }
+
+    /**
      * Removes `className` from the `row`.
      * @param {Number} row The row number
      * @param {String} className The class to add

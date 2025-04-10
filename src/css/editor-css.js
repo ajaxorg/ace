@@ -507,7 +507,7 @@ module.exports = `
     padding-right: 13px;
 }
 
-.ace_fold-widget {
+.ace_fold-widget, .ace_custom-widget {
     box-sizing: border-box;
 
     margin: 0 -12px 0 1px;
@@ -523,6 +523,10 @@ module.exports = `
     
     border: 1px solid transparent;
     cursor: pointer;
+}
+
+.ace_custom-widget {
+    background: none;
 }
 
 .ace_folding-enabled .ace_fold-widget {
