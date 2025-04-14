@@ -3951,6 +3951,7 @@ declare module "ace-code/src/edit_session" {
         /**
          * Replaces the custom icon with the fold widget if present from a specific row in the gutter
          * @param {number} row The row number for which to hide the custom icon
+         * @experimental
          */
         removeGutterCustomWidget(row: number): void;
         /**
@@ -3961,6 +3962,7 @@ declare module "ace-code/src/edit_session" {
          * @param {string} attributes.label - Text label to display in the widget
          * @param {string} attributes.title - Tooltip text for the widget
          * @param {Object} attributes.callbacks - Event callback functions for the widget e.g onClick;
+         * @experimental
         */
         addGutterCustomWidget(row: number, attributes: {
             className: string;

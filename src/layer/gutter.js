@@ -21,7 +21,6 @@ class Gutter{
         this.setShowFoldWidgets(this.$showFoldWidgets);
 
         this.gutterWidth = 0;
-        this.$customWidgets = {};
 
         this.$annotations = [];
         this.$updateAnnotations = this.$updateAnnotations.bind(this);
@@ -464,11 +463,11 @@ class Gutter{
             }
         }
         // fold logic ends here 
-        const customWidgetAttributes= this.$customWidgets[row];
-        if(customWidgetAttributes){
-            this.$addCustomWidget(row,customWidgetAttributes,cell);
+        const customWidgetAttributes = this.session.$gutterCustomWidgets[row];
+        if (customWidgetAttributes) {
+            this.$addCustomWidget(row, customWidgetAttributes,cell);
         }
-        else if(customWidget){
+        else if (customWidget){
             this.$removeCustomWidget(row,cell);
         }
 
@@ -604,6 +603,7 @@ class Gutter{
      * Hides the fold widget/icon from a specific row in the gutter
      * @param {number} row The row number from which to hide the fold icon
      * @param {any} cell - Gutter cell 
+     * @experimental
      */
     $hideFoldWidget(row, cell) {
         const rowCell = cell || this.$getGutterCell(row);
@@ -619,6 +619,7 @@ class Gutter{
      * Shows the fold widget/icon from a specific row in the gutter
      * @param {number} row The row number from which to show the fold icon
      * @param {any} cell - Gutter cell 
+     * @experimental
      */
     $showFoldWidget(row,cell) {
         const rowCell = cell || this.$getGutterCell(row);
@@ -629,13 +630,14 @@ class Gutter{
             }
         }
     }
-    
+
     /**
     * Retrieves the gutter cell element at the specified cursor row position.
     * @param {number} row - The row number in the editor where the gutter cell is located starts from 0
     * @returns {HTMLElement|null} The gutter cell element at the specified row, or null if not found
+    * @experimental
     */
-    $getGutterCell(row){
+    $getGutterCell(row) {
         // contains only visible rows
         const cells = this.$lines.cells;
         const visibileRow= this.session.documentToScreenRow(row,0);
@@ -653,9 +655,10 @@ class Gutter{
     * @param {Object} attributes.callbacks - Event callback functions for the widget e.g onClick; 
     * @param {any} cell - Gutter cell 
     * @returns {void}
+    * @experimental
     */
     $addCustomWidget(row, {className, label, title, callbacks}, cell) {
-        this.$customWidgets[row] = {className, label, title, callbacks};
+        this.session.$gutterCustomWidgets[row] = {className, label, title, callbacks};
         this.$hideFoldWidget(row,cell);
 
         // cell is required because when cached cell is used to render, $lines won't have that cell
@@ -692,9 +695,10 @@ class Gutter{
     * @param {number} row - The row number where the widget will be removed
     * @param {any} cell - Gutter cell 
     * @returns {void}
+    * @experimental
     */
-    $removeCustomWidget(row, cell){
-        delete this.$customWidgets[row];
+    $removeCustomWidget(row, cell) {
+        delete this.session.$gutterCustomWidgets[row];
         this.$showFoldWidget(row,cell);
 
         // cell is required because when cached cell is used to render, $lines won't have that cell

@@ -57,6 +57,9 @@ class EditSession {
             return this.join("\n");
         };
 
+        // @experimental
+        this.$gutterCustomWidgets = {};
+
         // Set default background tokenizer with Text mode until editor session mode is set
         this.bgTokenizer = new BackgroundTokenizer((new TextMode()).getTokenizer(), this);
 
@@ -588,6 +591,7 @@ class EditSession {
     /**
      * Replaces the custom icon with the fold widget if present from a specific row in the gutter
      * @param {number} row The row number for which to hide the custom icon
+     * @experimental
      */
     removeGutterCustomWidget(row) {
         this.$editor.renderer.$gutterLayer.$removeCustomWidget(row);
@@ -602,6 +606,7 @@ class EditSession {
      * @param {string} attributes.title - Tooltip text for the widget
      * @param {Object} attributes.callbacks - Event callback functions for the widget e.g onClick; 
      * @returns {void}
+     * @experimental
     */
     addGutterCustomWidget(row,attributes) {
         this.$editor.renderer.$gutterLayer.$addCustomWidget(row,attributes);
