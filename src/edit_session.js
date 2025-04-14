@@ -594,7 +594,9 @@ class EditSession {
      * @experimental
      */
     removeGutterCustomWidget(row) {
-        this.$editor.renderer.$gutterLayer.$removeCustomWidget(row);
+        if(this.$editor) {
+            this.$editor.renderer.$gutterLayer.$removeCustomWidget(row);
+        }
     }
 
     /**
@@ -609,7 +611,9 @@ class EditSession {
      * @experimental
     */
     addGutterCustomWidget(row,attributes) {
-        this.$editor.renderer.$gutterLayer.$addCustomWidget(row,attributes);
+        if(this.$editor) {
+            this.$editor.renderer.$gutterLayer.$addCustomWidget(row,attributes);
+        }
     }
 
     /**
