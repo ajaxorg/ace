@@ -54,24 +54,21 @@ class GutterKeyboardHandler {
                 /** @this {GutterKeyboardHandler} */
                 function () {
                     var index = this.$rowToRowIndex(this.gutterLayer.$cursorCell.row);
-                    var nearestFoldWidgetIndex = this.$findNearestFoldWidget(index);
-                    var nearestCustomWidgetIndex = this.$findNearestCustomWidget(index);
-                    var nearestFoldLaneIndex = this.$findClosestNumber(nearestFoldWidgetIndex, nearestCustomWidgetIndex, index);
+                    var nearestFoldLaneWidgetIndex = this.$findNearestFoldLaneWidget(index);
                     var nearestAnnotationIndex = this.$findNearestAnnotation(index);
 
-                    if (nearestFoldLaneIndex === null && nearestAnnotationIndex === null) return;
+                    if (nearestFoldLaneWidgetIndex === null && nearestAnnotationIndex === null) return;
 
-                    var futureActiveRowIndex = this.$findClosestNumber(nearestFoldLaneIndex, nearestAnnotationIndex, index);
+                    var futureActiveRowIndex = this.$findClosestNumber(nearestFoldLaneWidgetIndex, nearestAnnotationIndex, index);
 
-                    if (futureActiveRowIndex === nearestFoldLaneIndex) {
+                    if (futureActiveRowIndex === nearestFoldLaneWidgetIndex) {
                         this.activeLane = "fold";
-                        if (nearestFoldLaneIndex === nearestCustomWidgetIndex) {
-                            this.activeRowIndex = nearestCustomWidgetIndex;
+                        this.activeRowIndex = nearestFoldLaneWidgetIndex;
+                        if(this.$isCustomWidgetVisible(nearestFoldLaneWidgetIndex)){
                             this.$focusCustomWidget(this.activeRowIndex);
                             return;
                         }
                         else {
-                            this.activeRowIndex = nearestFoldWidgetIndex;
                             this.$focusFoldWidget(this.activeRowIndex);
                             return;
                         }
@@ -257,16 +254,25 @@ class GutterKeyboardHandler {
         return element.childNodes[2];
     }
 
-    // Given an index, find the nearest index with a foldwidget
-    $findNearestFoldWidget(index) {
+    // Given an index, find the nearest index with a widget in fold lane
+    $findNearestFoldLaneWidget(index) {
+        // If custom widget exists at index, return index
+        if (this.$isCustomWidgetVisible(index))
+            return index;
+
         // If fold widget exists at index, return index.
         if (this.$isFoldWidgetVisible(index))
             return index;
 
-        // else, find the nearest index with fold widget within viewport.
+        // else, find the nearest index with widget within viewport.
         var i = 0;
         while (index - i > 0 || index + i < this.lines.getLength() - 1){
             i++;
+            if (index - i >= 0 && this.$isCustomWidgetVisible(index - i))
+                return index - i;
+
+            if (index + i <= this.lines.getLength() - 1 && this.$isCustomWidgetVisible(index + i))
+                return index + i;
 
             if (index - i >= 0 && this.$isFoldWidgetVisible(index - i))
                 return index - i;
@@ -275,29 +281,7 @@ class GutterKeyboardHandler {
                 return index + i;
         }
 
-        // If there are no fold widgets within the viewport, return null.
-        return null;
-    }
-
-    // Given an index, find the nearest index with a customwidget
-    $findNearestCustomWidget(index) {
-        // If custom widget exists at index, return index
-        if (this.editor.session.$gutterCustomWidgets[this.$rowIndexToRow(index)])
-            return index;
-
-        // else, find the nearest index with custom widget within viewport
-        var i = 0;
-        while (index - i > 0 || index + i < this.lines.getLength() - 1) {
-            i++;
-
-            if (index - i >= 0 && this.$isCustomWidgetVisible(index - i))
-                return index - i;
-
-            if (index + i <= this.lines.getLength() - 1 && this.$isCustomWidgetVisible(index + i))
-                return index + i;
-        }
-
-        // If there are no custom widgets within the viewport, return null
+        // If there are no widgets within the viewport, return null.
         return null;
     }
 
@@ -476,25 +460,22 @@ class GutterKeyboardHandler {
                 break;
 
             case "fold": 
-                if (this.activeLane === "fold") {break;}
-                var foldWidgetIndex = this.$findNearestFoldWidget(this.activeRowIndex);
-                var customWidgetIndex = this.$findNearestCustomWidget(this.activeRowIndex);
-                if (foldWidgetIndex == null && customWidgetIndex === null) {break;}
+            if (this.activeLane === "fold") {break;}
+            var foldLaneWidgetIndex = this.$findNearestFoldLaneWidget(this.activeRowIndex);
+            if (foldLaneWidgetIndex === null) {break;}
 
-                this.activeLane = "fold";
+            this.activeLane = "fold";
 
-                this.$blurAnnotation(this.activeRowIndex);
+            this.$blurAnnotation(this.activeRowIndex);
 
-                var futureActiveRowIndex = this.$findClosestNumber(foldWidgetIndex, customWidgetIndex, this.activeRowIndex);
-                this.activeRowIndex = futureActiveRowIndex;
+            this.activeRowIndex = foldLaneWidgetIndex;
 
-                if (customWidgetIndex === futureActiveRowIndex) {
-                    this.$focusCustomWidget(this.activeRowIndex);
-                }
-                else {
-                    this.$focusFoldWidget(this.activeRowIndex);
-                }
-                
+            if (this.$isCustomWidgetVisible(foldLaneWidgetIndex)) {
+                this.$focusCustomWidget(this.activeRowIndex);
+            }
+            else {
+                this.$focusFoldWidget(this.activeRowIndex);
+            }
                 break;
         }
         return;
