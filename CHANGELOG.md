@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.40.0](https://github.com/ajaxorg/ace/compare/v1.39.1...v1.40.0) (2025-04-15)
+
+
+### Features
+
+* **gutter:** added keyboard handling for experimental feature custom widgets ([#5796](https://github.com/ajaxorg/ace/issues/5796)) ([8037400](https://github.com/ajaxorg/ace/commit/803740045ca73555b01116b582791fce940cbe00))
+
 ### [1.39.1](https://github.com/ajaxorg/ace/compare/v1.39.0...v1.39.1) (2025-03-20)
 
 
