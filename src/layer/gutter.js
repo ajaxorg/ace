@@ -553,7 +553,7 @@ class Gutter{
         cell.text = rowText;
 
         // If there are no annotations or fold widgets in the gutter cell, hide it from assistive tech.
-        if (annotationNode.style.display === "none" && foldWidget.style.display === "none")
+        if (annotationNode.style.display === "none" && foldWidget.style.display === "none" && !customWidgetAttributes)
             cell.element.setAttribute("aria-hidden", true);
         else
             cell.element.setAttribute("aria-hidden", false);

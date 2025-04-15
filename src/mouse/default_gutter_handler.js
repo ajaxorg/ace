@@ -109,7 +109,7 @@ function GutterHandler(mouseHandler) {
 
     mouseHandler.editor.setDefaultHandler("guttermousemove", function(e) {
         var target = e.domEvent.target || e.domEvent.srcElement;
-        if (dom.hasCssClass(target, "ace_fold-widget"))
+        if (dom.hasCssClass(target, "ace_fold-widget") || dom.hasCssClass(target, "ace_custom-widget"))
             return hideTooltip();
 
         if (tooltip.isOpen && mouseHandler.$tooltipFollowsMouse)
