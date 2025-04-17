@@ -101,7 +101,9 @@ declare module "ace-code/src/lib/lang" {
     export function supportsLookbehind(): boolean;
     export function skipEmptyMatch(line: any, last: any, supportsUnicodeFlag: any): 1 | 2;
 }
-declare module "ace-code/src/lib/keys" { }
+declare module "ace-code/src/lib/keys" {
+    export function keyCodeToString(keyCode: number): string;
+}
 declare module "ace-code/src/lib/event" {
     export function addListener(elem: any, type: string, callback: any, destroyer?: any): void;
     export function removeListener(elem: any, type: any, callback: any): void;
