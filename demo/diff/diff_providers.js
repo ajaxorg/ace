@@ -4,18 +4,20 @@
  */
 
 var computeDiff = require("./vscode-diff/index").computeDiff;
+var computeDiffLegacy = require("./vscode-diff-legacy/index").computeDiff;
 var {AceDiff} = require("ace/ext/diff/ace_diff");
 var Range = require("ace/range").Range;
 
 const {
     diff_match_patch
 } = require("./diff_match_patch");
+const {presentableDiff} = require("./codemirror-diff/diff");
 
 /**
- * Default wrapper around VSCode’s computeDiff
+ * VSCode’s computeDiff provider
  * @implements {DiffProvider}
  */
-class DefaultDiffProvider {
+class VscodeDiffProvider {
     /**
      * @param {string[]} originalLines
      * @param {string[]} modifiedLines
@@ -24,6 +26,26 @@ class DefaultDiffProvider {
      */
     compute(originalLines, modifiedLines, opts) {
         const chunks = computeDiff(originalLines, modifiedLines, opts) || [];
+        return chunks.map(
+            c => new AceDiff(new Range(c.origStart, 0, c.origEnd, 0), new Range(c.editStart, 0, c.editEnd, 0),
+                c.charChanges
+            ));
+    }
+}
+
+/**
+ * VSCode’s legacy computeDiff provider
+ * @implements {DiffProvider}
+ */
+class VscodeLegacyDiffProvider {
+    /**
+     * @param {string[]} originalLines
+     * @param {string[]} modifiedLines
+     * @param {{ignoreTrimWhitespace: boolean, maxComputationTimeMs: number}} opts
+     * @returns {AceDiff[]}
+     */
+    compute(originalLines, modifiedLines, opts) {
+        const chunks = computeDiffLegacy(originalLines, modifiedLines, opts) || [];
         return chunks.map(
             c => new AceDiff(new Range(c.origStart, 0, c.origEnd, 0), new Range(c.editStart, 0, c.editEnd, 0),
                 c.charChanges
@@ -195,5 +217,88 @@ class DiffMatchPatchProvider {
     }
 }
 
-exports.DefaultDiffProvider = DefaultDiffProvider;
+class CodeMirrorsDiffProvider {
+    /**
+     * @param {string[]} originalLines
+     * @param {string[]} modifiedLines
+     * @param {{ignoreTrimWhitespace: boolean, maxComputationTimeMs: number}} opts
+     * @returns {AceDiff[]}
+     */
+    compute(originalLines, modifiedLines, opts) {
+        const originalString = originalLines.join("\n");
+        const modifiedString = modifiedLines.join("\n");
+        const trimWS = Boolean(opts.ignoreTrimWhitespace);
+
+        const changes = presentableDiff(originalString, modifiedString) || []; //this is very slow on big changes
+
+        function offsetToPos(text, offset) {
+            const lines = text.slice(0, offset).split("\n");
+            return {
+                row: lines.length - 1,
+                column: lines[lines.length - 1].length
+            };
+        }
+
+        return changes.map(change => {
+            let {
+                fromA,
+                toA,
+                fromB,
+                toB
+            } = change;
+
+            if (trimWS) {
+                const blockA = originalString.slice(fromA, toA);
+                const blockB = modifiedString.slice(fromB, toB);
+                const tA = blockA.trim();
+                const leadA = blockA.indexOf(tA);
+                const trailA = blockA.length - tA.length - leadA;
+                const tB = blockB.trim();
+                const leadB = blockB.indexOf(tB);
+                const trailB = blockB.length - tB.length - leadB;
+                if (tA) {
+                    fromA += leadA;
+                    toA -= trailA;
+                }
+                if (tB) {
+                    fromB += leadB;
+                    toB -= trailB;
+                }
+            }
+
+            const startA = offsetToPos(originalString, fromA);
+            const endA = offsetToPos(originalString, toA);
+            const startB = offsetToPos(modifiedString, fromB);
+            const endB = offsetToPos(modifiedString, toB);
+
+            const subOrig = originalString.slice(fromA, toA);
+            const subMod = modifiedString.slice(fromB, toB);
+            const charDiffs = presentableDiff(subOrig, subMod, opts) || [];
+            const charChanges = charDiffs.map(cd => {
+                const oS = offsetToPos(originalString, fromA + cd.fromA);
+                const oE = offsetToPos(originalString, fromA + cd.toA);
+                const mS = offsetToPos(modifiedString, fromB + cd.fromB);
+                const mE = offsetToPos(modifiedString, fromB + cd.toB);
+                return {
+                    originalStartLineNumber: oS.row,
+                    originalStartColumn: oS.column,
+                    originalEndLineNumber: oE.row,
+                    originalEndColumn: oE.column,
+                    modifiedStartLineNumber: mS.row,
+                    modifiedStartColumn: mS.column,
+                    modifiedEndLineNumber: mE.row,
+                    modifiedEndColumn: mE.column
+                };
+            });
+
+            return new AceDiff(new Range(startA.row, startA.column, endA.row, endA.column),
+                new Range(startB.row, startB.column, endB.row, endB.column), charChanges
+            );
+        });
+    }
+}
+
+exports.VscodeDiffProvider = VscodeDiffProvider;
 exports.DiffMatchPatchProvider = DiffMatchPatchProvider;
+exports.VscodeLegacyDiffProvider = VscodeLegacyDiffProvider;
+exports.CodeMirrorsDiffProvider = CodeMirrorsDiffProvider;

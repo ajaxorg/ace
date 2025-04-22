@@ -49,7 +49,9 @@
     <button id="" onclick="setMode('off')">off</button>
     <select id="provider" onchange="changeProvider(this.value)">
         <option value="vscode">Vscode diff</option>
+        <option value="vscode-legacy">Vscode diff legacy</option>
         <option value="dmp">Diff match patch</option>
+        <option value="codemirror">Codemirror's diff (slow on big changes)</option>
     </select>
     <label>
         <input type="checkbox" id="btn-whitespace" checked onclick="trimWhitespace()"> Ignore Trim Whitespaces
@@ -200,13 +202,25 @@
 
     require(["ace/ext/diff/sidebyside_diff_view", "ace/ext/diff/inline_diff_view", "demo/kitchen-sink/util",
         "demo/kitchen-sink/layout", "diff/diff_providers"], function () {
-        var {DiffMatchPatchProvider, DefaultDiffProvider} = require("diff/diff_providers");
+        var {DiffMatchPatchProvider, VscodeDiffProvider, VscodeLegacyDiffProvider, CodeMirrorsDiffProvider} = require("diff/diff_providers");
 
         changeProvider = (value) => {
-            if (value === "vscode") {
-                diffView.setProvider(new DefaultDiffProvider());
-            } else {
-                diffView.setProvider(new DiffMatchPatchProvider(diffView.transformPosition.bind(diffView)));
+            switch (value) {
+                case "vscode":
+                    diffView.setProvider(new VscodeDiffProvider());
+                    break;
+                case "vscode-legacy":
+                    diffView.setProvider(new VscodeLegacyDiffProvider());
+                    break;
+                case "dmp":
+                    diffView.setProvider(new DiffMatchPatchProvider(diffView.transformPosition.bind(diffView)));
+                    break;
+                case "codemirror":
+                    diffView.setProvider(new CodeMirrorsDiffProvider());
+                    break;
+                default:
+                    console.warn("Unknown provider: " + value);
+                    break;
             }
             diffView.onInput();
         }
