@@ -625,7 +625,7 @@ class Gutter{
         const rowCell = cell || this.$getGutterCell(row);
         if (rowCell && rowCell.element) {
             const foldWidget = rowCell.element.childNodes[1];
-            if (foldWidget && this.session.foldWidgets[rowCell.row]) {
+            if (foldWidget && this.session.foldWidgets && this.session.foldWidgets[rowCell.row]) {
                 dom.setStyle(foldWidget.style, "display", "inline-block");
             }
         }
