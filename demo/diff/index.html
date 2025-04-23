@@ -76,6 +76,7 @@
     var shouldFoldUnchanged = localStorage["foldunchanged"] == "true";
     var provider = localStorage["provider"] || "vscode";
 
+    document.getElementById("provider").value = provider;
     document.getElementById("btn-whitespace").checked = ignoreTrimWhitespace;
     document.getElementById("btn-foldunchanged").checked = shouldFoldUnchanged;
 
@@ -205,6 +206,7 @@
         var {DiffMatchPatchProvider, VscodeDiffProvider, VscodeLegacyDiffProvider, CodeMirrorsDiffProvider} = require("diff/diff_providers");
 
         changeProvider = (value) => {
+            provider = value;
             switch (value) {
                 case "vscode":
                     diffView.setProvider(new VscodeDiffProvider());

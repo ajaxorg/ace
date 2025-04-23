@@ -62,7 +62,7 @@ class InlineDiffView extends BaseDiffView {
         var markerLayerElement = this.activeEditor.renderer.$markerBack.element;
         markerLayerElement.parentNode.insertBefore(
             this.markerLayer.element,
-            markerLayerElement
+            markerLayerElement.nextSibling
         );
 
         var gutterLayerElement = this.activeEditor.renderer.$gutterLayer.element;
@@ -74,7 +74,7 @@ class InlineDiffView extends BaseDiffView {
         this.gutterLayer.element.style.position = "absolute";
         this.gutterLayer.element.style.width = "100%";
 
-        this.gutterLayer.$updateGutterWidth = function() {}
+        this.gutterLayer.$updateGutterWidth = function() {};
 
         this.$attachEventHandlers();
     }
@@ -200,7 +200,7 @@ class InlineDiffView extends BaseDiffView {
         this.markerLayer.element.textContent = "";
         this.markerLayer.element.remove();
 
-        this.otherEditor.setSession(null)
+        this.otherEditor.setSession(null);
         this.otherEditor.destroy();
     }
 
@@ -210,13 +210,13 @@ class InlineDiffView extends BaseDiffView {
      */
     onAfterRender(changes, renderer) {
         var config = renderer.layerConfig;
-        var useOld = !this.showSideA
+        var side = this.showSideA ? "new" : "old";
 
         function filterLines(lines, chunks) {
             var i = 0;
             var nextChunkIndex = 0;
 
-            var nextChunk = chunks[nextChunkIndex]?.[useOld ? "old" : "new"];
+            var nextChunk = chunks[nextChunkIndex] && chunks[nextChunkIndex][side];
             nextChunkIndex++;
             var nextStart = nextChunk ? nextChunk.start.row : lines.length;
             var nextEnd = nextChunk ? nextChunk.end.row : lines.length;
@@ -229,7 +229,7 @@ class InlineDiffView extends BaseDiffView {
                     if (lines[i] && lines[i].length == 0) lines[i] = undefined;
                     i++;
                 }
-                nextChunk = chunks[nextChunkIndex]?.[useOld ? "old" : "new"];
+                nextChunk = chunks[nextChunkIndex] && chunks[nextChunkIndex][side];
                 nextChunkIndex++;
                 
                 nextStart = nextChunk ? nextChunk.start.row : lines.length;

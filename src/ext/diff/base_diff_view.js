@@ -93,13 +93,14 @@ class BaseDiffView {
      */
     $setupModels(diffModel) {
         const diffEditorOptions = {
-            "scrollPastEnd": 0.5,
-            "highlightActiveLine": false,
-            "highlightGutterLine": false,
-            "animatedScroll": true,
-            "customScrollbar": true,
-            "vScrollBarAlwaysVisible": true,
+            scrollPastEnd: 0.5,
+            highlightActiveLine: false,
+            highlightGutterLine: false,
+            animatedScroll: true,
+            customScrollbar: true,
+            vScrollBarAlwaysVisible: true,
             fadeFoldWidgets: true,
+            selectionStyle: "text",
         };
 
         if (!this.inlineDiffEditor || diffModel.showSideA) {

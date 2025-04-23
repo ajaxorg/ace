@@ -4,19 +4,21 @@ exports.cssText = `
  */
 .ace_diff {
     position: absolute;
+    z-index: 0;
+}
+.ace_diff.inline {
     z-index: 20;
 }
-  
 /*
  * Light Colors 
  */
-.ace_diff.insert.inline {
-    background-color: rgb(74 251 74 / 12%);/* #eaffea*/
+.ace_diff.insert {
+    background-color: #eaffea; /*rgb(74 251 74 / 12%); */
 }
-.ace_diff.delete.inline {
-    background-color: rgb(251 74 74 / 12%);
+.ace_diff.delete {
+    background-color: #ffecec; /*rgb(251 74 74 / 12%);*/
 }
-.ace_diff.aligned_diff.inline {
+.ace_diff.aligned_diff {
     background: rgba(206, 194, 191, 0.26);
     background: repeating-linear-gradient(
                 45deg,
@@ -25,6 +27,13 @@ exports.cssText = `
               #FFFFFF 5px,
               #FFFFFF 10px 
     );
+}
+
+.ace_diff.insert.inline {
+    background-color:  rgb(74 251 74 / 18%); 
+}
+.ace_diff.delete.inline {
+    background-color: rgb(251 74 74 / 15%);
 }
 
 .ace_diff.delete.inline.empty {

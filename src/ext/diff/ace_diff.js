@@ -76,8 +76,6 @@ class DiffHighlight {
         this.type = type;
     }
 
-    static MAX_RANGES = 500;
-
     update(html, markerLayer, session, config) {
         let dir, operation, opOperation;
         var diffView = this.diffView;
@@ -96,14 +94,10 @@ class DiffHighlight {
         var lineChanges = diffView.chunks;
 
         if (session.lineWidgets && !diffView.inlineDiffEditor) {
-            let ranges = session.lineWidgets.reduce((allRanges, lineWidget, row) => {
-                if (!lineWidget) {
-                    console.log("Shouldn't get here");
-                    return allRanges;
-                }
-
-                if (lineWidget.hidden)
-                    return allRanges;
+            for (var row = config.firstRow; row <= config.lastRow; row++) {
+                var lineWidget = session.lineWidgets[row];
+                if (!lineWidget || lineWidget.hidden)
+                    continue;
 
                 let start = session.documentToScreenRow(row, 0);
 
@@ -113,31 +107,29 @@ class DiffHighlight {
                     start++;
                 }
                 let end = start + lineWidget.rowCount - 1;
-
-                allRanges.push(new Range(start, 0, end, 1 << 30));
-                return allRanges;
-            }, []);
-
-            ranges.forEach((range) => {
-                markerLayer.drawFullLineMarker(html, range, "ace_diff aligned_diff inline", config);
-            })
+                var range = new Range(start, 0, end, Number.MAX_VALUE);
+                markerLayer.drawFullLineMarker(html, range, "ace_diff aligned_diff", config);
+            }
         }
 
         lineChanges.forEach((lineChange) => {
             let startRow = lineChange[dir].start.row;
             let endRow = lineChange[dir].end.row;
+            if (endRow < config.firstRow || startRow > config.lastRow)
+                return;
             let range = new Range(startRow, 0, endRow - 1, 1 << 30);
             if (startRow !== endRow) {
                 range = range.toScreenRange(session);
-                markerLayer.drawFullLineMarker(html, range, "ace_diff " + operation + " inline", config);
+
+                markerLayer.drawFullLineMarker(html, range, "ace_diff " + operation, config);
             }
 
             if (lineChange.charChanges) {
                 for (var i = 0; i < lineChange.charChanges.length; i++) {
-                    var changeRange = lineChange.charChanges[i][dir]
+                    var changeRange = lineChange.charChanges[i][dir];
                     if (changeRange.end.column == 0 && changeRange.end.row > changeRange.start.row && changeRange.end.row == lineChange[dir].end.row ) {
-                        changeRange.end.row --
-                        changeRange.end.column = Number.MAX_VALUE
+                        changeRange.end.row --;
+                        changeRange.end.column = Number.MAX_VALUE;
                     }
                         
                     if (ignoreTrimWhitespace) {
