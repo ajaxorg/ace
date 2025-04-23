@@ -250,6 +250,8 @@ declare module "ace-code/src/ext/code_lens" {
     export type EditSession = import("ace-code/src/edit_session").EditSession;
     export type VirtualRenderer = import("ace-code/src/virtual_renderer").VirtualRenderer & {
     };
+    export type CodeLenseCommand = import("ace-code").Ace.CodeLenseCommand;
+    export type CodeLense = import("ace-code").Ace.CodeLense;
     import { Editor } from "ace-code/src/editor";
 }
 declare module "ace-code/src/ext/emmet" {
