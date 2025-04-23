@@ -127,6 +127,7 @@ class InlineDiffView extends BaseDiffView {
     onSelect(e, selection) {
         var selectionRange = selection.getRange();
         this.findChunkIndex(this.chunks, selectionRange.start.row, false);
+        this.searchHighlight(selection);
     }
 
     $attachSessionsEventHandlers() {

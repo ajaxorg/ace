@@ -99,6 +99,7 @@ class SideBySideDiffView extends BaseDiffView {
     }
 
     onSelect(e, selection) {
+        this.searchHighlight(selection);
         this.syncSelect(selection);
     }
 

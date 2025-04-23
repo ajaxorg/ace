@@ -232,7 +232,6 @@ class BaseDiffView {
         var val1 = this.diffSession.sessionA.doc.getAllLines();
         var val2 = this.diffSession.sessionB.doc.getAllLines();
 
-        this.selectionSetBy = false;
         this.selectionRangeA = null;
         this.selectionRangeB = null;
 
@@ -364,6 +363,8 @@ class BaseDiffView {
         this.$removeLineWidgets(this.diffSession.sessionB);
         this.gutterDecoratorA && this.gutterDecoratorA.dispose();
         this.gutterDecoratorB && this.gutterDecoratorB.dispose();
+        this.diffSession.sessionA.selection.clearSelection();
+        this.diffSession.sessionB.selection.clearSelection();
     }
 
     $removeLineWidgets(session) {
@@ -541,6 +542,17 @@ class BaseDiffView {
         this.currentDiffIndex = i;
 
         return i - 1;
+    }
+
+    searchHighlight(selection) {
+        if (this.options.syncSelections) {
+            return;
+        }
+        let currSession = selection.session;
+        let otherSession = currSession === this.diffSession.sessionA
+            ? this.diffSession.sessionB : this.diffSession.sessionA;
+        otherSession.highlight(currSession.$searchHighlight.regExp);
+        otherSession._signal("changeBackMarker");
     }
 }
 
