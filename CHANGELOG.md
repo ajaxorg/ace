@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.40.1](https://github.com/ajaxorg/ace/compare/v1.40.0...v1.40.1) (2025-04-23)
+
+
+### Bug Fixes
+
+* **gutter:** add null check for session.foldWdigets  ([#5801](https://github.com/ajaxorg/ace/issues/5801)) ([6ca40e9](https://github.com/ajaxorg/ace/commit/6ca40e93623ed1d4d04c8ce7ffb45186092c2198))
+
 ## [1.40.0](https://github.com/ajaxorg/ace/compare/v1.39.1...v1.40.0) (2025-04-15)
 
 
