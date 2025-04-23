@@ -5,19 +5,14 @@ var EventEmitter = require("../lib/event_emitter").EventEmitter;
 
 class Decorator {
     constructor(parent, renderer) {
+        this.parentEl = parent;
         this.canvas = dom.createElement("canvas");
         this.renderer = renderer;
         this.pixelRatio = 1;
         this.maxHeight = renderer.layerConfig.maxHeight;
         this.lineHeight = renderer.layerConfig.lineHeight;
-        this.canvasHeight = parent.parent.scrollHeight;
-        this.heightRatio = this.canvasHeight / this.maxHeight;
-        this.canvasWidth = parent.width;
         this.minDecorationHeight = (2 * this.pixelRatio) | 0;
         this.halfMinDecorationHeight = (this.minDecorationHeight / 2) | 0;
-
-        this.canvas.width = this.canvasWidth;
-        this.canvas.height = this.canvasHeight;
         this.canvas.style.top = 0 + "px";
         this.canvas.style.right = 0 + "px";
         this.canvas.style.zIndex = 7 + "px";
@@ -35,24 +30,15 @@ class Decorator {
             "info": "rgb(35,68,138)"
         };
 
-        parent.element.appendChild(this.canvas);
+        this.setDimensions();
 
+        parent.element.appendChild(this.canvas);
     }
-    
+
     $updateDecorators(config) {
         var colors = (this.renderer.theme.isDark === true) ? this.colors.dark : this.colors.light;
-        if (config) {
-            this.maxHeight = config.maxHeight;
-            this.lineHeight = config.lineHeight;
-            this.canvasHeight = config.height;
-            var allLineHeight = (config.lastRow + 1) * this.lineHeight;
-            if (allLineHeight < this.canvasHeight) {
-                this.heightRatio = 1;
-            }
-            else {
-                this.heightRatio = this.canvasHeight / this.maxHeight;
-            }
-        }
+        this.setDimensions(config);
+
         var ctx = this.canvas.getContext("2d");
 
         function compare(a, b) {
@@ -73,11 +59,10 @@ class Decorator {
                 item.priority = priorities[item.type] || null;
             });
             annotations = annotations.sort(compare);
-            var foldData = this.renderer.session.$foldData;
 
             for (let i = 0; i < annotations.length; i++) {
                 let row = annotations[i].row;
-                let compensateFold = this.compensateFoldRows(row, foldData);
+                let compensateFold = this.compensateFoldRows(row);
                 let currentY = Math.round((row - compensateFold) * this.lineHeight * this.heightRatio);
                 let y1 = Math.round(((row - compensateFold) * this.lineHeight * this.heightRatio));
                 let y2 = Math.round((((row - compensateFold) * this.lineHeight + this.lineHeight) * this.heightRatio));
@@ -100,7 +85,7 @@ class Decorator {
         }
         var cursor = this.renderer.session.selection.getCursor();
         if (cursor) {
-            let compensateFold = this.compensateFoldRows(cursor.row, foldData);
+            let compensateFold = this.compensateFoldRows(cursor.row);
             let currentY = Math.round((cursor.row - compensateFold) * this.lineHeight * this.heightRatio);
             ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
             ctx.fillRect(0, currentY, this.canvasWidth, 2);
@@ -108,7 +93,8 @@ class Decorator {
 
     }
 
-    compensateFoldRows(row, foldData) {
+    compensateFoldRows(row) {
+        let foldData = this.renderer.session.$foldData;
         let compensateFold = 0;
         if (foldData && foldData.length > 0) {
             for (let j = 0; j < foldData.length; j++) {
@@ -121,6 +107,43 @@ class Decorator {
             }
         }
         return compensateFold;
+    }
+
+    compensateLineWidgets(row) {
+        const widgetManager = this.renderer.session.widgetManager;
+        if (widgetManager) {
+            let delta = 0;
+            widgetManager.lineWidgets.forEach((el, index) => {
+                if (row > index) {
+                    delta += el.rowCount || 0;
+                }
+            });
+            return delta - 1;
+        }
+        return 0;
+    }
+
+    setDimensions(config) {
+        if (config) {
+            this.maxHeight = config.maxHeight;
+            this.lineHeight = config.lineHeight;
+            this.canvasHeight = config.height;
+
+            if (this.maxHeight < this.canvasHeight) {
+                this.heightRatio = 1;
+            }
+            else {
+                this.heightRatio = this.canvasHeight / this.maxHeight;
+            }
+        }
+        else {
+            this.canvasHeight = this.parentEl.parent.scrollHeight || this.canvasHeight;
+            this.canvasWidth = this.parentEl.width || this.canvasWidth;
+            this.heightRatio = this.canvasHeight / this.maxHeight;
+
+            this.canvas.width = this.canvasWidth;
+            this.canvas.height = this.canvasHeight;
+        }
     }
 }
 
