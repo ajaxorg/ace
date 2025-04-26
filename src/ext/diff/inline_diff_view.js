@@ -101,27 +101,27 @@ class InlineDiffView extends BaseDiffView {
             session.widgetManager.lineWidgets = [];
         };
 
-        init(diffView.diffSession.sessionA);
-        init(diffView.diffSession.sessionB);
+        init(diffView.sessionA);
+        init(diffView.sessionB);
 
         diffView.chunks.forEach(function (ch) {
             var diff1 = ch.old.end.row - ch.old.start.row;
             var diff2 = ch.new.end.row - ch.new.start.row;
 
-            add(diffView.diffSession.sessionA, {
+            add(diffView.sessionA, {
                 rowCount: diff2,
                 rowsAbove: ch.old.end.row === 0 ? diff2 : 0,
                 row: ch.old.end.row === 0 ? 0 : ch.old.end.row - 1
             });
-            add(diffView.diffSession.sessionB, {
+            add(diffView.sessionB, {
                 rowCount: diff1,
                 rowsAbove: diff1,
                 row: ch.new.start.row,
             });
 
         });
-        diffView.diffSession.sessionA["_emit"]("changeFold", {data: {start: {row: 0}}});
-        diffView.diffSession.sessionB["_emit"]("changeFold", {data: {start: {row: 0}}});
+        diffView.sessionA["_emit"]("changeFold", {data: {start: {row: 0}}});
+        diffView.sessionB["_emit"]("changeFold", {data: {start: {row: 0}}});
     }
 
     onSelect(e, selection) {
@@ -133,10 +133,10 @@ class InlineDiffView extends BaseDiffView {
     $attachSessionsEventHandlers() {
         if (this.showSideA) {
             this.activeEditor = this.editorA;
-            this.otherSession = this.diffSession.sessionB;
+            this.otherSession = this.sessionB;
         } else {
             this.activeEditor = this.editorB;
-            this.otherSession = this.diffSession.sessionA;
+            this.otherSession = this.sessionA;
         }
 
         let activeMarker, dynamicMarker;

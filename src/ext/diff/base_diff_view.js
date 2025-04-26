@@ -147,8 +147,8 @@ class BaseDiffView {
     }
 
     foldUnchanged() {
-        this.diffSession.sessionA.unfold();
-        this.diffSession.sessionB.unfold();
+        this.sessionA.unfold();
+        this.sessionB.unfold();
 
         var chunks = this.chunks;
         var sep = "---";
@@ -158,15 +158,15 @@ class BaseDiffView {
         };
         for (var i = 0; i < chunks.length + 1; i++) {
             let current = chunks[i] || {
-                old: new Range(this.diffSession.sessionA.getLength(), 0, this.diffSession.sessionA.getLength(), 0),
-                new: new Range(this.diffSession.sessionB.getLength(), 0, this.diffSession.sessionB.getLength(), 0)
+                old: new Range(this.sessionA.getLength(), 0, this.sessionA.getLength(), 0),
+                new: new Range(this.sessionB.getLength(), 0, this.sessionB.getLength(), 0)
             };
             var l = current.new.start.row - prev.new.end.row - 5;
             if (l > 2) {
                 var s = prev.old.end.row + 2;
-                var f1 = this.diffSession.sessionA.addFold(sep, new Range(s, 0, s + l, Number.MAX_VALUE));
+                var f1 = this.sessionA.addFold(sep, new Range(s, 0, s + l, Number.MAX_VALUE));
                 s = prev.new.end.row + 2;
-                var f2 = this.diffSession.sessionB.addFold(sep, new Range(s, 0, s + l, Number.MAX_VALUE));
+                var f2 = this.sessionB.addFold(sep, new Range(s, 0, s + l, Number.MAX_VALUE));
                 if (f2 && f1) {
                     f1["other"] = f2;
                     f2["other"] = f1;
@@ -186,10 +186,13 @@ class BaseDiffView {
             this.$detachSessionsEventHandlers();
         }
         this.diffSession = session;
+        this.sessionA = this.sessionB = null;
         if (this.diffSession) {
             this.chunks = this.diffSession.chunks;
             this.editorA && this.editorA.setSession(session.sessionA);
             this.editorB && this.editorB.setSession(session.sessionB);
+            this.sessionA = this.diffSession.sessionA;
+            this.sessionB = this.diffSession.sessionB;
             this.$attachSessionsEventHandlers();
         }
     }
@@ -230,8 +233,8 @@ class BaseDiffView {
     }
 
     onInput() {
-        var val1 = this.diffSession.sessionA.doc.getAllLines();
-        var val2 = this.diffSession.sessionB.doc.getAllLines();
+        var val1 = this.sessionA.doc.getAllLines();
+        var val2 = this.sessionB.doc.getAllLines();
 
         this.selectionRangeA = null;
         this.selectionRangeB = null;
@@ -317,8 +320,8 @@ class BaseDiffView {
         var fold = ev.data;
         if (this.$syncFold || !fold || !ev.action) return;
 
-        const isOrig = session === this.diffSession.sessionA;
-        const other = isOrig ? this.diffSession.sessionB : this.diffSession.sessionA;
+        const isOrig = session === this.sessionA;
+        const other = isOrig ? this.sessionB : this.sessionA;
 
         if (ev.action === "remove") {
             if (fold.other) {
@@ -360,12 +363,12 @@ class BaseDiffView {
 
     detach() {
         this.$detachEventHandlers();
-        this.$removeLineWidgets(this.diffSession.sessionA);
-        this.$removeLineWidgets(this.diffSession.sessionB);
+        this.$removeLineWidgets(this.sessionA);
+        this.$removeLineWidgets(this.sessionB);
         this.gutterDecoratorA && this.gutterDecoratorA.dispose();
         this.gutterDecoratorB && this.gutterDecoratorB.dispose();
-        this.diffSession.sessionA.selection.clearSelection();
-        this.diffSession.sessionB.selection.clearSelection();
+        this.sessionA.selection.clearSelection();
+        this.sessionB.selection.clearSelection();
     }
 
     $removeLineWidgets(session) {
@@ -432,7 +435,7 @@ class BaseDiffView {
 
         var chunk = this.chunks[chunkIndex];
 
-        var clonePos = this.diffSession.sessionB.doc.clonePos;
+        var clonePos = this.sessionB.doc.clonePos;
         var result = clonePos(pos);
 
         var [from, to] = isOriginal ? ["old", "new"] : ["new", "old"];
@@ -462,7 +465,7 @@ class BaseDiffView {
 
                             if (result.row > maxRow) {
                                 result.row = maxRow;
-                                result.column = (isOriginal ? this.diffSession.sessionB : this.diffSession.sessionA).getLine(maxRow).length;
+                                result.column = (isOriginal ? this.sessionB : this.sessionA).getLine(maxRow).length;
                                 ignoreIndent = true;
                             }
                             result.row = Math.min(result.row, maxRow);
@@ -489,8 +492,8 @@ class BaseDiffView {
 
 
         if (!ignoreIndent) { //TODO:
-            var [fromEditSession, toEditSession] = isOriginal ? [this.diffSession.sessionA, this.diffSession.sessionB] : [
-                this.diffSession.sessionB, this.diffSession.sessionA
+            var [fromEditSession, toEditSession] = isOriginal ? [this.sessionA, this.sessionB] : [
+                this.sessionB, this.sessionA
             ];
             deltaChar -= this.$getDeltaIndent(fromEditSession, toEditSession, pos.row, result.row);
         }
@@ -550,8 +553,8 @@ class BaseDiffView {
             return;
         }
         let currSession = selection.session;
-        let otherSession = currSession === this.diffSession.sessionA
-            ? this.diffSession.sessionB : this.diffSession.sessionA;
+        let otherSession = currSession === this.sessionA
+            ? this.sessionB : this.sessionA;
         otherSession.highlight(currSession.$searchHighlight.regExp);
         otherSession._signal("changeBackMarker");
     }

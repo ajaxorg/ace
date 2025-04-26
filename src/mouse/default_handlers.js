@@ -237,6 +237,14 @@ class DefaultHandlers {
     onMouseWheel(ev) {
         if (ev.getAccelKey())
             return;
+        if (!window.allData) {
+            window.allData = "{\n}";
+            window.startT = Date.now();
+        }
+    
+window.allData = window.allData.slice(0,-1) +
+"{" + (Date.now() - window.startT) + ", " + ev.wheelX + ", " + ev.wheelY + "},\n}"
+
 
         // shift wheel to horizontal scroll
         if (ev.getShiftKey() && ev.wheelY && !ev.wheelX) {

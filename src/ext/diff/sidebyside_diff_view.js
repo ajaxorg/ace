@@ -105,7 +105,7 @@ class SideBySideDiffView extends BaseDiffView {
 
     syncSelect(selection) {
         if (this.$updatingSelection) return;
-        var isOrig = selection.session === this.diffSession.sessionA;
+        var isOrig = selection.session === this.sessionA;
         var selectionRange = selection.getRange();
 
         var currSelectionRange = isOrig ? this.selectionRangeA : this.selectionRangeB;
@@ -134,8 +134,8 @@ class SideBySideDiffView extends BaseDiffView {
             this.selectionRangeB = selectionRange;
         }
 
-        this.updateSelectionMarker(this.syncSelectionMarkerA, this.diffSession.sessionA, this.selectionRangeA);
-        this.updateSelectionMarker(this.syncSelectionMarkerB, this.diffSession.sessionB, this.selectionRangeB);
+        this.updateSelectionMarker(this.syncSelectionMarkerA, this.sessionA, this.selectionRangeA);
+        this.updateSelectionMarker(this.syncSelectionMarkerB, this.sessionB, this.selectionRangeB);
     }
 
     updateSelectionMarker(marker, session, range) {
@@ -144,7 +144,7 @@ class SideBySideDiffView extends BaseDiffView {
     }
 
     onScroll(e, session) {
-        this.syncScroll(this.diffSession.sessionA === session ? this.editorA.renderer : this.editorB.renderer);
+        this.syncScroll(this.sessionA === session ? this.editorA.renderer : this.editorB.renderer);
     }
 
     /**
