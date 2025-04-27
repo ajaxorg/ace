@@ -29,7 +29,6 @@ class InlineDiffView extends BaseDiffView {
     init(diffModel) {
         this.showSideA = diffModel.showSideA == undefined ? true : diffModel.showSideA;
 
-        this.onInput = this.onInput.bind(this);
         this.onSelect = this.onSelect.bind(this);
         this.onAfterRender = this.onAfterRender.bind(this);
 
@@ -90,23 +89,35 @@ class InlineDiffView extends BaseDiffView {
             }
             session.lineWidgets[w.row] = w;
             session.widgetManager.lineWidgets[w.row] = w;
+            session.$resetRowCache(w.row);
+            var fold = session.getFoldAt(w.row, 0);
+            if (fold) {
+                session.widgetManager.updateOnFold({
+                    data: fold,
+                    action: "add",
+                }, session);
+            }
         }
 
-        var init = (session) => {
+        function init(editor) {
+            var session = editor.session;
             if (!session.widgetManager) {
                 session.widgetManager = new LineWidgets(session);
-                if (session.$editor) session.widgetManager.attach(session.$editor);
+                session.widgetManager.attach(editor);
             }
-            session.lineWidgets = [];
-            session.widgetManager.lineWidgets = [];
-        };
+            editor.session.lineWidgets = [];
+            editor.session.widgetManager.lineWidgets = [];
+            editor.session.$resetRowCache(0);
+        }
 
-        init(diffView.sessionA);
-        init(diffView.sessionB);
+        init(diffView.editorA);
+        init(diffView.editorB);
 
         diffView.chunks.forEach(function (ch) {
-            var diff1 = ch.old.end.row - ch.old.start.row;
-            var diff2 = ch.new.end.row - ch.new.start.row;
+            var diff1 = diffView.sessionA.documentToScreenPosition(ch.old.end).row
+                - diffView.sessionA.documentToScreenPosition(ch.old.start).row;
+            var diff2 = diffView.sessionB.documentToScreenPosition(ch.new.end).row
+                - diffView.sessionB.documentToScreenPosition(ch.new.start).row;
 
             add(diffView.sessionA, {
                 rowCount: diff2,
@@ -152,6 +163,7 @@ class InlineDiffView extends BaseDiffView {
     }
 
     $attachSessionEventHandlers(editor, marker) {
+        editor.session.on("changeFold", this.onChangeFold);
         editor.session.addDynamicMarker(marker);
         editor.selection.on("changeCursor", this.onSelect);
         editor.selection.on("changeSelection", this.onSelect);
@@ -176,6 +188,7 @@ class InlineDiffView extends BaseDiffView {
         editor.session.removeMarker(marker.id);
         editor.selection.off("changeCursor", this.onSelect);
         editor.selection.off("changeSelection", this.onSelect);
+        editor.session.on("changeFold", this.onChangeFold);
     }
 
     $attachEventHandlers() {

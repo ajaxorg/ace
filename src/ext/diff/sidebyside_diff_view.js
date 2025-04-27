@@ -26,10 +26,8 @@ class SideBySideDiffView extends BaseDiffView {
 
     init(diffModel) {
         this.onChangeTheme = this.onChangeTheme.bind(this);
-        this.onInput = this.onInput.bind(this);
         this.onMouseWheel = this.onMouseWheel.bind(this);
         this.onScroll = this.onScroll.bind(this);
-        this.onChangeFold = this.onChangeFold.bind(this);
         this.onSelect = this.onSelect.bind(this);
 
         this.$setupModels(diffModel);
@@ -61,6 +59,14 @@ class SideBySideDiffView extends BaseDiffView {
             }
             session.lineWidgets[w.row] = w;
             session.widgetManager.lineWidgets[w.row] = w;
+            session.$resetRowCache(w.row);
+            var fold = session.getFoldAt(w.row, 0);
+            if (fold) {
+                session.widgetManager.updateOnFold({
+                    data: fold,
+                    action: "add",
+                }, session);
+            }
         }
 
         function init(editor) {
@@ -71,31 +77,50 @@ class SideBySideDiffView extends BaseDiffView {
             }
             editor.session.lineWidgets = [];
             editor.session.widgetManager.lineWidgets = [];
+            editor.session.$resetRowCache(0);
         }
 
         init(diffView.editorA);
         init(diffView.editorB);
 
         diffView.chunks.forEach(function (ch) {
-            var diff1 = ch.old.end.row - ch.old.start.row;
-            var diff2 = ch.new.end.row - ch.new.start.row;
+            var diff1 = diffView.sessionA.documentToScreenPosition(ch.old.start).row
+            var diff2 = diffView.sessionB.documentToScreenPosition(ch.new.start).row 
+
             if (diff1 < diff2) {
-                add(diffView.editorA.session, {
+                add(diffView.sessionA, {
                     rowCount: diff2 - diff1,
-                    rowsAbove: ch.old.end.row === 0 ? diff2 : 0,
+                    rowsAbove: ch.old.start.row === 0 ? diff2 - diff1 : 0,
+                    row: ch.old.start.row === 0 ? 0 : ch.old.start.row - 1
+                });
+            }
+            else if (diff1 > diff2) {
+                add(diffView.sessionB, {
+                    rowCount: diff1 - diff2,
+                    rowsAbove: ch.new.start.row === 0 ? diff1 - diff2 : 0,
+                    row: ch.new.start.row === 0 ? 0 : ch.new.start.row - 1
+                });
+            }
+
+            var diff1 = diffView.sessionA.documentToScreenPosition(ch.old.end).row
+            var diff2 = diffView.sessionB.documentToScreenPosition(ch.new.end).row 
+            if (diff1 < diff2) {
+                add(diffView.sessionA, {
+                    rowCount: diff2 - diff1,
+                    rowsAbove: ch.old.end.row === 0 ? diff2 - diff1 : 0,
                     row: ch.old.end.row === 0 ? 0 : ch.old.end.row - 1
                 });
             }
             else if (diff1 > diff2) {
-                add(diffView.editorB.session, {
+                add(diffView.sessionB, {
                     rowCount: diff1 - diff2,
-                    rowsAbove: ch.new.end.row === 0 ? diff1 : 0,
+                    rowsAbove: ch.new.end.row === 0 ? diff1 - diff2 : 0,
                     row: ch.new.end.row === 0 ? 0 : ch.new.end.row - 1
                 });
             }
         });
-        diffView.editorA.session["_emit"]("changeFold", {data: {start: {row: 0}}});
-        diffView.editorB.session["_emit"]("changeFold", {data: {start: {row: 0}}});
+        diffView.sessionA["_emit"]("changeFold", {data: {start: {row: 0}}});
+        diffView.sessionB["_emit"]("changeFold", {data: {start: {row: 0}}});
     }
 
     onSelect(e, selection) {
@@ -168,64 +193,7 @@ class SideBySideDiffView extends BaseDiffView {
         }
         var rOther = isOrig ? r2 : r1;
 
-        if (this["$alignDiffs"]) {
-            targetPos = r.session.getScrollTop();
-        }
-        else {
-            var layerConfig = r.layerConfig;
-            var chunks = this.chunks;
-            var halfScreen = 0.4 * r["$size"].scrollerHeight;
-
-            var lc = layerConfig;
-            var midY = halfScreen + r.scrollTop;
-            var mid = r.session.screenToDocumentRow(midY / lc.lineHeight, 0);
-
-            var i = this.findChunkIndex(chunks, mid, isOrig);
-            /**
-             *
-             * @type {Partial<import("./ace_diff").AceDiff>}
-             */
-            var ch = chunks[i];
-
-            if (!ch) {
-                ch = {
-                    old: new Range(0, 0, 0, 0),
-                    new: new Range(0, 0, 0, 0)
-                };
-            }
-            if (mid >= (isOrig ? ch.old.end.row : ch.new.end.row)) {
-                var next = chunks[i + 1] || {
-                    old: new Range(r1.session.getLength(), 0, r1.session.getLength(), 0),
-                    new: new Range(r2.session.getLength(), 0, r2.session.getLength(), 0)
-                };
-                ch = {
-                    old: new Range(ch.old.end.row, 0, next.old.start.row, 0),
-                    new: new Range(ch.new.end.row, 0, next.new.start.row, 0)
-                };
-            }
-            if (r == r1) {
-                var start = ch.old.start.row;
-                var end = ch.old.end.row;
-                var otherStart = ch.new.start.row;
-                var otherEnd = ch.new.end.row;
-            }
-            else {
-                otherStart = ch.old.start.row;
-                otherEnd = ch.old.end.row;
-                start = ch.new.start.row;
-                end = ch.new.end.row;
-            }
-
-            var offOtherTop = rOther.session.documentToScreenRow(otherStart, 0) * lc.lineHeight;
-            var offOtherBot = rOther.session.documentToScreenRow(otherEnd, 0) * lc.lineHeight;
-
-            var offTop = r.session.documentToScreenRow(start, 0) * lc.lineHeight;
-            var offBot = r.session.documentToScreenRow(end, 0) * lc.lineHeight;
-
-            var ratio = (midY - offTop) / (offBot - offTop || offOtherBot - offOtherTop);
-            var targetPos = offOtherTop - halfScreen + ratio * (offOtherBot - offOtherTop);
-            targetPos = Math.max(0, targetPos);
-        }
+        var targetPos = r.session.getScrollTop();
 
         this.$syncScroll = false;
 

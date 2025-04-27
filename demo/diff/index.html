@@ -60,8 +60,9 @@
         <input type="checkbox" id="btn-syncselections" onclick="syncSelections()"> Sync selections
     </label>
     <label>
-    <input type="checkbox" id="btn-foldunchanged" onclick="foldUnchanged()"> Collapse unchanged lines
+        <input type="checkbox" id="btn-wrap" onclick="setWrap()"> Wrap
     </label>
+    <button type="button" id="btn-foldunchanged" onclick="diffView.foldUnchanged()"> Collapse unchanged lines</button>
 
     <button id="btn-reset" onclick="reset()">Reset</button>
 
@@ -75,6 +76,7 @@
     var ignoreTrimWhitespace = localStorage["ignoreTrimWhitespace"] == "true";
     var shouldFoldUnchanged = localStorage["foldunchanged"] == "true";
     var provider = localStorage["provider"] || "vscode";
+    var wrapText = localStorage["wrapText"] == "true";
 
     document.getElementById("provider").value = provider;
     document.getElementById("btn-whitespace").checked = ignoreTrimWhitespace;
@@ -113,6 +115,13 @@
         var checked = document.getElementById("btn-syncselections").checked;
         diffView.options.syncSelections = checked;
         diffView.onInput();
+    };
+
+    var setWrap = () => {
+        var checked = document.getElementById("btn-wrap").checked;
+        editorA.session.setUseWrapMode(checked);
+        editorB.session.setUseWrapMode(checked);
+        localStorage.setItem("wrapText", checked);
     };
 
     var foldUnchanged = () => {
@@ -179,7 +188,6 @@
         }
         if (diffView) {
             diffView.options.ignoreTrimWhitespace = ignoreTrimWhitespace
-            diffView.options.foldUnchanged = shouldFoldUnchanged
 
             changeProvider(provider);
         }
@@ -244,11 +252,13 @@
             initialValueA = v;
             editorA.setValue(localStorage.valueA || v, -1);
             editorA.session.setMode("ace/mode/javascript");
+            diffView.onInput();
         });
         require("ace/lib/net").get("./examples/editor.40.js", function (v) {
             initialValueB = v;
             editorB.setValue(localStorage.valueB || v, -1);
             editorB.session.setMode("ace/mode/javascript");
+            diffView.onInput();
         });
 
         window.onbeforeunload = function () {

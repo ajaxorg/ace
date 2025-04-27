@@ -25,6 +25,8 @@ class VscodeDiffProvider {
      * @returns {AceDiff[]}
      */
     compute(originalLines, modifiedLines, opts) {
+        if (!opts) opts = {};
+        if (!opts.maxComputationTimeMs) opts.maxComputationTimeMs = 500;
         const chunks = computeDiff(originalLines, modifiedLines, opts) || [];
         return chunks.map(
             c => new AceDiff(new Range(c.origStart, 0, c.origEnd, 0), new Range(c.editStart, 0, c.editEnd, 0),
@@ -45,6 +47,8 @@ class VscodeLegacyDiffProvider {
      * @returns {AceDiff[]}
      */
     compute(originalLines, modifiedLines, opts) {
+        if (!opts) opts = {};
+        if (!opts.maxComputationTimeMs) opts.maxComputationTimeMs = 500;
         const chunks = computeDiffLegacy(originalLines, modifiedLines, opts) || [];
         return chunks.map(
             c => new AceDiff(new Range(c.origStart, 0, c.origEnd, 0), new Range(c.editStart, 0, c.editEnd, 0),

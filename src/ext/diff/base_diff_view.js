@@ -30,6 +30,12 @@ class BaseDiffView {
      * @param {HTMLElement} [container] - optional container element for the DiffView.
      */
     constructor(inlineDiffEditor, container) {
+        this.onChangeTheme = this.onChangeTheme.bind(this);
+        this.onInput = this.onInput.bind(this);
+        this.onChangeFold = this.onChangeFold.bind(this);
+        this.realign = this.realign.bind(this);
+        this.shouldRealign = false;
+
         /**@type{{sessionA: EditSession, sessionB: EditSession, chunks: AceDiff[]}}*/this.diffSession;
         /**@type AceDiff[]*/this.chunks;
         this.inlineDiffEditor = inlineDiffEditor || false;
@@ -151,7 +157,7 @@ class BaseDiffView {
         this.sessionB.unfold();
 
         var chunks = this.chunks;
-        var sep = "---";
+        var placeholder = "-".repeat(120);
         var prev = {
             old: new Range(0, 0, 0, 0),
             new: new Range(0, 0, 0, 0)
@@ -164,12 +170,12 @@ class BaseDiffView {
             var l = current.new.start.row - prev.new.end.row - 5;
             if (l > 2) {
                 var s = prev.old.end.row + 2;
-                var f1 = this.sessionA.addFold(sep, new Range(s, 0, s + l, Number.MAX_VALUE));
+                var fold1 = this.sessionA.addFold(placeholder, new Range(s, 0, s + l, Number.MAX_VALUE));
                 s = prev.new.end.row + 2;
-                var f2 = this.sessionB.addFold(sep, new Range(s, 0, s + l, Number.MAX_VALUE));
-                if (f2 && f1) {
-                    f1["other"] = f2;
-                    f2["other"] = f1;
+                var fold2 = this.sessionB.addFold(placeholder, new Range(s, 0, s + l, Number.MAX_VALUE));
+                if (fold2 && fold1) {
+                    fold1["other"] = fold2;
+                    fold2["other"] = fold1;
                 }
             }
 
@@ -249,7 +255,7 @@ class BaseDiffView {
             return;
         }
 
-        if (this["$alignDiffs"]) this.align();
+        this.align();
 
         this.editorA && this.editorA.renderer.updateBackMarkers();
         this.editorB && this.editorB.renderer.updateBackMarkers();
@@ -319,6 +325,11 @@ class BaseDiffView {
     onChangeFold(ev, session) {
         var fold = ev.data;
         if (this.$syncFold || !fold || !ev.action) return;
+        if (!this.shouldRealign) {
+            this.shouldRealign = true;
+            this.editorA.renderer.on("beforeRender", this.realign);
+            this.editorB.renderer.on("beforeRender", this.realign);
+        }
 
         const isOrig = session === this.sessionA;
         const other = isOrig ? this.sessionB : this.sessionA;
@@ -352,13 +363,21 @@ class BaseDiffView {
             else {
                 this.$syncFold = true;
 
-                fold.other = other.addFold("---", range);
+                fold.other = other.addFold(fold.placeholder, range);
                 fold.other.other = fold;
 
                 this.$syncFold = false;
 
             }
         }
+    }
+
+    realign() {
+        this.shouldRealign = true;
+        this.editorA.renderer.off("beforeRender", this.realign);
+        this.editorB.renderer.off("beforeRender", this.realign);
+        this.align();
+        this.shouldRealign = false;
     }
 
     detach() {
@@ -369,6 +388,9 @@ class BaseDiffView {
         this.gutterDecoratorB && this.gutterDecoratorB.dispose();
         this.sessionA.selection.clearSelection();
         this.sessionB.selection.clearSelection();
+        this.editorA.renderer.off("beforeRender", this.realign);
+        this.editorB.renderer.off("beforeRender", this.realign);
+        
     }
 
     $removeLineWidgets(session) {
@@ -446,46 +468,51 @@ class BaseDiffView {
             if (chunk[from].end.row <= pos.row) {
                 result.row -= chunk[from].end.row - chunk[to].end.row;
             }
-            else {
-                if (chunk.charChanges) {
-                    for (let i = 0; i < chunk.charChanges.length; i++) {
-                        let change = chunk.charChanges[i];
+            else if (chunk.charChanges) {
+                for (let i = 0; i < chunk.charChanges.length; i++) {
+                    let change = chunk.charChanges[i];
 
-                        let fromRange = change.getChangeRange(from);
-                        let toRange = change.getChangeRange(to);
+                    let fromRange = change.getChangeRange(from);
+                    let toRange = change.getChangeRange(to);
 
-                        if (fromRange.end.row < pos.row) continue;
+                    if (fromRange.end.row < pos.row) continue;
 
-                        if (fromRange.start.row > pos.row) break;
+                    if (fromRange.start.row > pos.row) break;
 
-                        if (fromRange.isMultiLine() && fromRange.contains(pos.row, pos.column)) {
-                            result.row = toRange.start.row + pos.row - fromRange.start.row;
-                            var maxRow = toRange.end.row;
-                            if (toRange.end.column === 0) maxRow--;
+                    if (fromRange.isMultiLine() && fromRange.contains(pos.row, pos.column)) {
+                        result.row = toRange.start.row + pos.row - fromRange.start.row;
+                        var maxRow = toRange.end.row;
+                        if (toRange.end.column === 0) maxRow--;
 
-                            if (result.row > maxRow) {
-                                result.row = maxRow;
-                                result.column = (isOriginal ? this.sessionB : this.sessionA).getLine(maxRow).length;
-                                ignoreIndent = true;
-                            }
-                            result.row = Math.min(result.row, maxRow);
+                        if (result.row > maxRow) {
+                            result.row = maxRow;
+                            result.column = (isOriginal ? this.sessionB : this.sessionA).getLine(maxRow).length;
+                            ignoreIndent = true;
+                        }
+                        result.row = Math.min(result.row, maxRow);
+                    }
+                    else {
+                        result.row = toRange.start.row;
+                        if (fromRange.start.column > pos.column) break;
+                        ignoreIndent = true;
+
+                        if (!fromRange.isEmpty() && fromRange.contains(pos.row, pos.column)) {
+                            result.column = toRange.start.column;
+                            deltaChar = pos.column - fromRange.start.column;
+                            deltaChar = Math.min(deltaChar, toRange.end.column - toRange.start.column);
                         }
                         else {
-                            result.row = toRange.start.row;
-                            if (fromRange.start.column > pos.column) break;
-                            ignoreIndent = true;
-
-                            if (!fromRange.isEmpty() && fromRange.contains(pos.row, pos.column)) {
-                                result.column = toRange.start.column;
-                                deltaChar = pos.column - fromRange.start.column;
-                                deltaChar = Math.min(deltaChar, toRange.end.column - toRange.start.column);
-                            }
-                            else {
-                                result = clonePos(toRange.end);
-                                deltaChar = pos.column - fromRange.end.column;
-                            }
+                            result = clonePos(toRange.end);
+                            deltaChar = pos.column - fromRange.end.column;
                         }
                     }
+                }
+            }
+            else if (chunk[from].start.row <= pos.row) {
+                result.row += chunk[to].start.row - chunk[from].start.row;
+                if (result.row >= chunk[to].end.row) {
+                    result.row = chunk[to].end.row - 1;
+                    result.column = (isOriginal ? this.sessionB : this.sessionA).getLine(result.row).length;
                 }
             }
         }
@@ -562,12 +589,6 @@ class BaseDiffView {
 
 /*** options ***/
 config.defineOptions(BaseDiffView.prototype, "editor", {
-    alignDiffs: {
-        set: function (val) {
-            if (val) this.align();
-        },
-        initialValue: true
-    }
 });
 
 exports.BaseDiffView = BaseDiffView;
