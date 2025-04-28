@@ -415,15 +415,20 @@ class BaseDiffView {
     }
 
     gotoNext(dir) { //TODO: wouldn't work in inline diff editor
-        var orig = false;
-        var ace = orig ? this.editorA : this.editorB;
+        var ace = this.activeEditor || this.editorA;
+        if (this.inlineDiffEditor) {
+            ace = this.editorA;
+        }
+        var sideA = ace == this.editorA;
+
         var row = ace.selection.lead.row;
-        var i = this.findChunkIndex(this.chunks, row, orig);
+        var i = this.findChunkIndex(this.chunks, row, sideA);
         var chunk = this.chunks[i + dir] || this.chunks[i];
 
         var scrollTop = ace.session.getScrollTop();
         if (chunk) {
-            var line = Math.max(chunk.new.start.row, chunk.new.end.row - 1);
+            var range = chunk[sideA ? "old" : "new"];
+            var line = Math.max(range.start.row, range.end.row - 1);
             ace.selection.setRange(new Range(line, 0, line, 0));
         }
         ace.renderer.scrollSelectionIntoView(ace.selection.lead, ace.selection.anchor, 0.5);

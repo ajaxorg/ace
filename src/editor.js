@@ -48,6 +48,8 @@ class Editor {
      * @param {Partial<import("../ace-internal").Ace.EditorOptions>} [options] The default options
      **/
     constructor(renderer, session, options) {
+        /**@type {string}*/
+        this.id = "editor" + (++Editor.$uid);
         /**@type{EditSession}*/this.session;
         this.$toDestroy = [];
 
@@ -56,8 +58,6 @@ class Editor {
         this.container = container;
         /**@type {VirtualRenderer}*/
         this.renderer = renderer;
-        /**@type {string}*/
-        this.id = "editor" + (++Editor.$uid);
         this.commands = new CommandManager(useragent.isMac ? "mac" : "win", defaultCommands);
         if (typeof document == "object") {
             this.textInput = new TextInput(renderer.getTextAreaContainer(), this);

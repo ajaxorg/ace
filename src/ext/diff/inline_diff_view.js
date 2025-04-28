@@ -72,10 +72,62 @@ class InlineDiffView extends BaseDiffView {
         gutterLayerElement.style.position = "absolute";
         this.gutterLayer.element.style.position = "absolute";
         this.gutterLayer.element.style.width = "100%";
+        this.editorA.renderer.$gutterLayer.element.style.pointerEvents = "none";
 
         this.gutterLayer.$updateGutterWidth = function() {};
+        this.initMouse();
 
         this.$attachEventHandlers();
+    }
+
+    initMouse() {
+        this.otherEditor.renderer.$loop = this.activeEditor.renderer.$loop;
+        
+        this.otherEditor.renderer.scroller = {
+            getBoundingClientRect: () => {
+                return this.activeEditor.renderer.scroller.getBoundingClientRect();
+            },
+            style: this.activeEditor.renderer.scroller.style,
+        }
+        
+        var forwardEvent = (ev) => {
+            if (!ev.domEvent) return 
+            var screenPos = ev.editor.renderer.pixelToScreenCoordinates(ev.clientX, ev.clientY)
+            var posA = this.sessionA.screenToDocumentPosition(screenPos.row, screenPos.column, screenPos.offsetX) 
+            var posB = this.sessionB.screenToDocumentPosition(screenPos.row, screenPos.column, screenPos.offsetX) 
+        
+            var posAx = this.sessionA.documentToScreenPosition(posA) 
+            var posBx = this.sessionB.documentToScreenPosition(posB) 
+        
+            if (ev.editor == this.activeEditor) {
+                if (posBx.row == screenPos.row && posAx.row != screenPos.row) {
+                    ev.propagationStopped = true;
+                    ev.defaultPrevented = true;
+                    this.otherEditor.$mouseHandler.onMouseEvent(ev.type, ev.domEvent)
+                } else {
+                    this.otherEditor.selection.clearSelection()
+                }
+            }
+        }
+        
+        
+        var events = [
+            "mousedown",
+            "click",
+            "mouseup",
+            "dblclick",
+        ];
+        events.forEach((event) => {
+            this.activeEditor.on(event, forwardEvent, true);
+            this.activeEditor.on("gutter" + event, forwardEvent, true);
+        })
+
+        this.onMouseDetach = () => {
+            events.forEach((event) => {
+                this.activeEditor.off(event, forwardEvent, true);
+                this.activeEditor.off("gutter" + event, forwardEvent, true);
+            })
+        }
     }
 
     align() {
@@ -212,6 +264,8 @@ class InlineDiffView extends BaseDiffView {
         this.gutterLayer.element.remove();
         this.markerLayer.element.textContent = "";
         this.markerLayer.element.remove();
+
+        this.onMouseDetach();
 
         this.otherEditor.setSession(null);
         this.otherEditor.destroy();
