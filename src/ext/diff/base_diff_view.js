@@ -34,7 +34,7 @@ class BaseDiffView {
         this.onInput = this.onInput.bind(this);
         this.onChangeFold = this.onChangeFold.bind(this);
         this.realign = this.realign.bind(this);
-        this.shouldRealign = false;
+        this.realignPending = false;
 
         /**@type{{sessionA: EditSession, sessionB: EditSession, chunks: AceDiff[]}}*/this.diffSession;
         /**@type AceDiff[]*/this.chunks;
@@ -98,7 +98,8 @@ class BaseDiffView {
      * @param {boolean} [diffModel.showSideA] - Whether to show the original view or modified view.
      */
     $setupModels(diffModel) {
-        const diffEditorOptions = {
+        this.showSideA = diffModel.showSideA == undefined ? true : diffModel.showSideA;
+        var diffEditorOptions = {
             scrollPastEnd: 0.5,
             highlightActiveLine: false,
             highlightGutterLine: false,
@@ -120,6 +121,16 @@ class BaseDiffView {
             this.container && this.container.appendChild(this.editorB.container);
             this.editorB.setOptions(diffEditorOptions);
             //this.editorB.renderer.setOption("decoratorType", "diff");
+        }
+        
+        if (this.inlineDiffEditor) {
+            this.activeEditor = diffModel.showSideA ? this.editorA : this.editorB;
+            this.otherEditor = new Editor(new Renderer(null), undefined, this.activeEditor.getOptions());
+            if (diffModel.showSideA) {
+                this.editorB = this.otherEditor;
+            } else {
+                diffModel.editorA = this.otherEditor;
+            }
         }
 
         this.setDiffSession({
@@ -201,6 +212,8 @@ class BaseDiffView {
             this.sessionB = this.diffSession.sessionB;
             this.$attachSessionsEventHandlers();
         }
+
+        this.otherSession = this.showSideA ? this.sessionB : this.sessionA;
     }
 
     /**
@@ -324,9 +337,9 @@ class BaseDiffView {
      */
     onChangeFold(ev, session) {
         var fold = ev.data;
-        if (this.$syncFold || !fold || !ev.action) return;
-        if (!this.shouldRealign) {
-            this.shouldRealign = true;
+        if (this.$syncingFold || !fold || !ev.action) return;
+        if (!this.realignPending) {
+            this.realignPending = true;
             this.editorA.renderer.on("beforeRender", this.realign);
             this.editorB.renderer.on("beforeRender", this.realign);
         }
@@ -361,23 +374,23 @@ class BaseDiffView {
                 }
             }
             else {
-                this.$syncFold = true;
+                this.$syncingFold = true;
 
                 fold.other = other.addFold(fold.placeholder, range);
-                fold.other.other = fold;
-
-                this.$syncFold = false;
-
+                if (fold.other) {
+                    fold.other.other = fold;
+                }
+                this.$syncingFold = false;
             }
         }
     }
 
     realign() {
-        this.shouldRealign = true;
+        this.realignPending = true;
         this.editorA.renderer.off("beforeRender", this.realign);
         this.editorB.renderer.off("beforeRender", this.realign);
         this.align();
-        this.shouldRealign = false;
+        this.realignPending = false;
     }
 
     detach() {

@@ -54,6 +54,7 @@ var testNames = [
     "ace/keyboard/textinput_test",
     "ace/keyboard/vim_ace_test",
     "ace/keyboard/vim_test",
+    "ace/layer/gutter_test",
     "ace/layer/text_test",
     "ace/lib/event_emitter_test",
     "ace/marker_group_test",

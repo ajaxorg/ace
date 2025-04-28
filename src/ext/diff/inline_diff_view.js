@@ -27,10 +27,9 @@ class InlineDiffView extends BaseDiffView {
     }
 
     init(diffModel) {
-        this.showSideA = diffModel.showSideA == undefined ? true : diffModel.showSideA;
-
         this.onSelect = this.onSelect.bind(this);
         this.onAfterRender = this.onAfterRender.bind(this);
+        
 
         this.$setupModels(diffModel);
         this.onChangeTheme();
@@ -39,12 +38,6 @@ class InlineDiffView extends BaseDiffView {
 
         var padding = this.activeEditor.renderer.$padding;
 
-        this.otherEditor = new Editor(new Renderer(null), this.otherSession, this.activeEditor.getOptions());
-        if (this.showSideA) {
-            this.editorB = this.otherEditor;
-        } else {
-            this.editorA = this.otherEditor;
-        }
         this.addGutterDecorators();
 
         this.otherEditor.renderer.setPadding(padding);
@@ -101,11 +94,14 @@ class InlineDiffView extends BaseDiffView {
         
             if (ev.editor == this.activeEditor) {
                 if (posBx.row == screenPos.row && posAx.row != screenPos.row) {
+                    if (ev.type == "mousedown") {
+                        this.activeEditor.selection.clearSelection();
+                    }
                     ev.propagationStopped = true;
                     ev.defaultPrevented = true;
                     this.otherEditor.$mouseHandler.onMouseEvent(ev.type, ev.domEvent)
-                } else {
-                    this.otherEditor.selection.clearSelection()
+                } else if (ev.type == "mousedown") {
+                    this.otherEditor.selection.clearSelection();
                 }
             }
         }
@@ -116,6 +112,8 @@ class InlineDiffView extends BaseDiffView {
             "click",
             "mouseup",
             "dblclick",
+            "tripleclick",
+            "quadclick",
         ];
         events.forEach((event) => {
             this.activeEditor.on(event, forwardEvent, true);
@@ -194,24 +192,8 @@ class InlineDiffView extends BaseDiffView {
     }
 
     $attachSessionsEventHandlers() {
-        if (this.showSideA) {
-            this.activeEditor = this.editorA;
-            this.otherSession = this.sessionB;
-        } else {
-            this.activeEditor = this.editorB;
-            this.otherSession = this.sessionA;
-        }
-
-        let activeMarker, dynamicMarker;
-        if (this.showSideA) {
-            activeMarker = this.markerA;
-            dynamicMarker = this.markerB;
-        } else {
-            activeMarker = this.markerB;
-            dynamicMarker = this.markerA;
-        }
-        this.$attachSessionEventHandlers(this.activeEditor, activeMarker);
-        this.otherSession.addDynamicMarker(dynamicMarker);
+        this.$attachSessionEventHandlers(this.editorA, this.markerA);
+        this.$attachSessionEventHandlers(this.editorB, this.markerB);
     }
 
     $attachSessionEventHandlers(editor, marker) {
@@ -240,7 +222,7 @@ class InlineDiffView extends BaseDiffView {
         editor.session.removeMarker(marker.id);
         editor.selection.off("changeCursor", this.onSelect);
         editor.selection.off("changeSelection", this.onSelect);
-        editor.session.on("changeFold", this.onChangeFold);
+        editor.session.off("changeFold", this.onChangeFold);
     }
 
     $attachEventHandlers() {
@@ -269,6 +251,7 @@ class InlineDiffView extends BaseDiffView {
 
         this.otherEditor.setSession(null);
         this.otherEditor.destroy();
+        this.otherEditor.renderer.$loop = null;
     }
 
     /**
@@ -335,7 +318,12 @@ class InlineDiffView extends BaseDiffView {
 
         newConfig.firstRowScreen = config.firstRowScreen;
 
-        this.textLayer.update(newConfig);
+        if (changes & cloneRenderer.CHANGE_LINES
+            || changes & cloneRenderer.CHANGE_FULL
+            || changes & cloneRenderer.CHANGE_SCROLL
+            || changes & cloneRenderer.CHANGE_TEXT
+        )
+            this.textLayer.update(newConfig);
 
         this.markerLayer.setMarkers(this.otherSession.getMarkers());
         this.markerLayer.update(newConfig);

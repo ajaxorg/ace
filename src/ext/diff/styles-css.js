@@ -78,11 +78,13 @@ exports.cssText = `
 .ace_mini-diff_gutter-enabled > .mini-diff-added {
     background-color: #eaffea;
     border-left: 3px solid #00FF00;
+    padding-left: 0;
 }
 
 .ace_mini-diff_gutter-enabled > .mini-diff-deleted {
     background-color: #ffecec;
     border-left: 3px solid #FF0000;
+    padding-left: 0;
 }
 
 
