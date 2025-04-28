@@ -317,7 +317,7 @@ export namespace Ace {
         fullWidth?: boolean,
         screenWidth?: number,
         rowsAbove?: number,
-        lenses?: any[],
+        lenses?: CodeLenseCommand[],
     }
 
     type NewLineMode = 'auto' | 'unix' | 'windows';
@@ -1084,13 +1084,48 @@ export namespace Ace {
         $blockSelectEnabled?: boolean,
     }
 
+    /**
+     * Provider interface for code lens functionality
+     */
     interface CodeLenseProvider {
+        /**
+         * Compute code lenses for the given edit session
+         * @param session The edit session to provide code lenses for
+         * @param callback Callback function that receives errors and code lenses
+         */
         provideCodeLenses: (session: EditSession, callback: (err: any, payload: CodeLense[]) => void) => void;
     }
 
+    /**
+     * Represents a command associated with a code lens
+     */
+    interface CodeLenseCommand {
+        /**
+         * Command identifier that will be executed
+         */
+        id?: string,
+        /**
+         * Display title for the code lens
+         */
+        title: string,
+        /**
+         * Argument(s) to pass to the command when executed
+         */
+        arguments?: any,
+    }
+
+    /**
+     * Represents a code lens - an actionable UI element displayed above a code line
+     */
     interface CodeLense {
+        /**
+         * Starting position where the code lens should be displayed
+         */
         start: Point,
-        command: any
+        /**
+         * Command to execute when the code lens is activated
+         */
+        command?: CodeLenseCommand
     }
 
     interface CodeLenseEditorExtension {
