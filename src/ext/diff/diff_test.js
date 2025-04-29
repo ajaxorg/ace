@@ -32,19 +32,21 @@ module.exports = {
         editorA.focus();
     },
     tearDownSuite: function() {
-        // if (editor) {
-        //     editor.destroy();
-        //     editor.container.remove();
-        //     editor = null;
-        // }
+        [editorA, editorB].forEach(function(editor) {
+            if (editor) {
+                editor.destroy();
+                editor.container.remove();
+                editor = null;
+            }
+        })
     },
     tearDown: function() {
-        // if (diffView) {
-        //     diffView.detach();
-        //     diffView = null;
-        // }
+        if (diffView) {
+            diffView.detach();
+            diffView = null;
+        }
     },
-    "test: go to next error": function() {
+    "test: clean detach": function() {
         var values = [
             ["a"],
             ["b"],
@@ -86,23 +88,21 @@ module.exports = {
             var eventRegistry = {};
             for (var key in object._eventRegistry) {
                 var handlers = object._eventRegistry[key];
-                eventRegistry[key] = handlers
+                eventRegistry[key] = handlers.slice(0);
             }
             saved[id] = [eventRegistry, object];
         }
         function checkEventRegistry() {
-            for (var i in saved) {
-                var object = saved[i][1];
-                var eventRegistry = saved[i][0];
-                for (var key in object._eventRegistry) {
-                    if (key == "changeEditor") {
-                        continue;
-                    }
-                    var handlers = object._eventRegistry[key];
-                    var savedHandlers = eventRegistry[key] || [];
-                    assert.equal(handlers.length, savedHandlers.length);
+            for (var id in saved) {
+                var object = saved[id][1];
+                var eventRegistry = saved[id][0];
+                for (var eventName in object._eventRegistry) {
+                    var handlers = object._eventRegistry[eventName];
+                    var savedHandlers = eventRegistry[eventName] || [];
+                    assert.notEqual(handlers, savedHandlers);
+                    assert.equal(handlers.length, savedHandlers.length, id + ":" + eventName);
                     for (var j = 0; j < handlers.length; j++) {
-                        assert.equal(handlers[j], eventRegistry[key][j]);
+                        assert.equal(handlers[j], eventRegistry[eventName][j], id + ":" + eventName);
                     }
                 }
             }
@@ -114,28 +114,29 @@ module.exports = {
         saveEventRegistry(editorA.renderer);
         saveEventRegistry(editorB.renderer);
 
-
         var diffView = new InlineDiffView({
             editorA, editorB,
             showSideA: true
         });
         editorA.session.addFold("---", new Range(0, 0, 2, 0));
         diffView.resize(true);
-        // debugger
-        // return;
-        console.log(editorA.session.$foldData.length);
-        console.log(editorB.session.$foldData.length);
-        debugger
+        
+        assert.equal(editorA.session.$foldData.length, 1);
+        assert.equal(editorB.session.$foldData.length, 1);
+        
         diffView.detach();
+        var sessionB = editorB.session;
+        sessionB.widgetManager.attach(editorB);
         checkEventRegistry();
 
         diffView = new SideBySideDiffView({editorA, editorB});
         editorB.session.addFold("---", new Range(5, 0, 7, 0));
         editorB.renderer.$loop._flush();
         editorA.renderer.$loop._flush();
-        console.log(editorA.session.$foldData.length);
-        console.log(editorB.session.$foldData.length);
-        // diffView.detach();
+        assert.equal(editorA.session.$foldData.length, 2);
+        assert.equal(editorB.session.$foldData.length, 2);
+        
+        diffView.detach();
         checkEventRegistry();
     }
 };

@@ -204,21 +204,13 @@ class InlineDiffView extends BaseDiffView {
     }
 
     $detachSessionsEventHandlers() {
-        let activeMarker, dynamicMarker;//TODO: duplicate code
-        if (this.showSideA) {
-            activeMarker = this.markerA;
-            dynamicMarker = this.markerB;
-        } else {
-            activeMarker = this.markerB;
-            dynamicMarker = this.markerA;
-        }
-        this.$detachSessionEventHandlers(this.activeEditor, activeMarker);
-        this.otherSession.removeMarker(dynamicMarker.id);
+        this.$detachSessionHandlers(this.editorA, this.markerA);
+        this.$detachSessionHandlers(this.editorB, this.markerB);
         this.otherSession.bgTokenizer.lines.fill(undefined);
         this.otherSession.bgTokenizer._signal("update", {data: {firstRow: 0, lastRow: this.otherSession.bgTokenizer.lines.length}});
     }
 
-    $detachSessionEventHandlers(editor, marker) {
+    $detachSessionHandlers(editor, marker) {
         editor.session.removeMarker(marker.id);
         editor.selection.off("changeCursor", this.onSelect);
         editor.selection.off("changeSelection", this.onSelect);

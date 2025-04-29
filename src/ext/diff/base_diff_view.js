@@ -125,11 +125,12 @@ class BaseDiffView {
         
         if (this.inlineDiffEditor) {
             this.activeEditor = diffModel.showSideA ? this.editorA : this.editorB;
+            this.otherSession = diffModel.showSideA ? this.sessionB : this.sessionA;
             this.otherEditor = new Editor(new Renderer(null), undefined, this.activeEditor.getOptions());
             if (diffModel.showSideA) {
                 this.editorB = this.otherEditor;
             } else {
-                diffModel.editorA = this.otherEditor;
+                this.editorA = this.otherEditor;
             }
         }
 
