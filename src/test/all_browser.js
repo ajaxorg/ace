@@ -39,6 +39,7 @@ var testNames = [
     "ace/ext/beautify_test",
     "ace/ext/code_lens_test",
     "ace/ext/command_bar_test",
+    "ace/ext/diff/diff_test",
     "ace/ext/emmet_test",
     "ace/ext/error_marker_test",
     "ace/ext/hardwrap_test",

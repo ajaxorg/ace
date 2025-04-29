@@ -246,9 +246,9 @@ class BaseDiffView {
         this.editorB && this.editorB.setTheme(this.getTheme());
     }
 
-    resize() {
-        this.editorA && this.editorA.resize();
-        this.editorB && this.editorB.resize();
+    resize(force) {
+        this.editorA && this.editorA.resize(force);
+        this.editorB && this.editorB.resize(force);
     }
 
     onInput() {

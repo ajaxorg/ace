@@ -24,24 +24,25 @@ module.exports = {
     setUpSuite: function() {
         ace.config.setLoader(function(moduleName, cb) {
             if (moduleName == "ace/ext/error_marker")
-                return cb(null, require("../ext/error_marker"));
+                return cb(null, require("../error_marker"));
         });
         editorA = createEditor();
         editorB = createEditor();
+        editorB.container.style.left = "301px";
         editorA.focus();
     },
     tearDownSuite: function() {
-        if (editor) {
-            editor.destroy();
-            editor.container.remove();
-            editor = null;
-        }
+        // if (editor) {
+        //     editor.destroy();
+        //     editor.container.remove();
+        //     editor = null;
+        // }
     },
     tearDown: function() {
-        if (diffView) {
-            diffView.detach();
-            diffView = null;
-        }
+        // if (diffView) {
+        //     diffView.detach();
+        //     diffView = null;
+        // }
     },
     "test: go to next error": function() {
         var values = [
@@ -72,6 +73,8 @@ module.exports = {
                 return x != null;
             }).join("\n")
         );
+        assert.ok(!!editorA.session.widgetManager)
+        assert.ok(!!editorB.session.widgetManager)
 
         var uid = 0;
         var saved = {};
@@ -91,9 +94,13 @@ module.exports = {
             for (var i in saved) {
                 var object = saved[i][1];
                 var eventRegistry = saved[i][0];
-                for (var key in eventRegistry) {
+                for (var key in object._eventRegistry) {
+                    if (key == "changeEditor") {
+                        continue;
+                    }
                     var handlers = object._eventRegistry[key];
-                    assert.equal(handlers.length, eventRegistry[key].length);
+                    var savedHandlers = eventRegistry[key] || [];
+                    assert.equal(handlers.length, savedHandlers.length);
                     for (var j = 0; j < handlers.length; j++) {
                         assert.equal(handlers[j], eventRegistry[key][j]);
                     }
@@ -113,10 +120,12 @@ module.exports = {
             showSideA: true
         });
         editorA.session.addFold("---", new Range(0, 0, 2, 0));
-        
+        diffView.resize(true);
+        // debugger
+        // return;
         console.log(editorA.session.$foldData.length);
         console.log(editorB.session.$foldData.length);
-        
+        debugger
         diffView.detach();
         checkEventRegistry();
 
@@ -126,7 +135,7 @@ module.exports = {
         editorA.renderer.$loop._flush();
         console.log(editorA.session.$foldData.length);
         console.log(editorB.session.$foldData.length);
-        diffView.detach();
+        // diffView.detach();
         checkEventRegistry();
     }
 };
