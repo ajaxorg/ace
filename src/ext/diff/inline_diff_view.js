@@ -44,6 +44,10 @@ class InlineDiffView extends BaseDiffView {
         this.textLayer = this.otherEditor.renderer.$textLayer;
         this.markerLayer = this.otherEditor.renderer.$markerBack;
         this.gutterLayer = this.otherEditor.renderer.$gutterLayer;
+        this.cursorLayer = this.otherEditor.renderer.$cursorLayer;
+
+        this.otherEditor.renderer.$updateCachedSize = function() {
+        }
 
         var textLayerElement = this.activeEditor.renderer.$textLayer.element;
         textLayerElement.parentNode.insertBefore(
@@ -66,14 +70,85 @@ class InlineDiffView extends BaseDiffView {
         this.gutterLayer.element.style.position = "absolute";
         this.gutterLayer.element.style.width = "100%";
         this.editorA.renderer.$gutterLayer.element.style.pointerEvents = "none";
+        
 
         this.gutterLayer.$updateGutterWidth = function() {};
-        this.gutterLayer.$renderer = emptyGutterRenderer;
         this.initMouse();
+        this.initTextInput();
+        this.initTextLayer();
 
         this.$attachEventHandlers();
     }
 
+    initTextLayer() {
+        var renderLine = this.textLayer.$renderLine;
+        var diffView = this;
+        this.otherEditor.renderer.$textLayer.$renderLine = function(parent, row, foldLIne) {
+            if (isVisibleRow(diffView.chunks, row)) {
+                renderLine.call(this, parent, row, foldLIne);
+            }
+        }
+        var side = this.showSideA ? "new" : "old";
+        function isVisibleRow(chunks, row) {
+            var min = 0;
+            var max = chunks.length - 1;
+            var result = -1;
+            while (min < max) {
+                var mid = Math.floor((min + max) / 2);
+                var chunkStart = chunks[mid][side].start.row;
+                if (chunkStart < row) {
+                    result = mid;
+                    min = mid + 1;
+                } else if (chunkStart > row) {
+                    max = mid - 1;
+                } else {
+                    result = mid;
+                    break;
+                }
+            }
+            if (chunks[result + 1] && chunks[result + 1][side].start.row <= row) {
+                result++;
+            }
+            var range = chunks[result] && chunks[result][side];
+            if (range && range.end.row > row) {
+                return true;
+            }
+            return false;
+        }
+    }
+
+    initTextInput(restore) {
+        if (restore) {
+            this.otherEditor.textInput = this.othertextInput;
+            this.otherEditor.container = this.otherEditorContainer;
+        } else {
+            this.othertextInput = this.otherEditor.textInput;
+            this.otherEditor.textInput = this.activeEditor.textInput;
+            this.otherEditorContainer = this.otherEditor.container;
+            this.otherEditor.container = this.activeEditor.container;
+        }
+    }
+
+    selectEditor(editor) {
+        if (editor == this.activeEditor) {
+            this.otherEditor.selection.clearSelection();
+            this.activeEditor.textInput.setHost(this.activeEditor);
+            this.activeEditor.setStyle("ace_diff_other", false);
+            this.cursorLayer.element.remove();
+            this.activeEditor.renderer.$cursorLayer.element.style.display = "block";
+        } else {
+            this.activeEditor.selection.clearSelection();
+            this.activeEditor.textInput.setHost(this.otherEditor);
+            this.activeEditor.setStyle("ace_diff_other");
+            this.activeEditor.renderer.$cursorLayer.element.parentNode.appendChild(
+                this.cursorLayer.element
+            );
+            this.activeEditor.renderer.$cursorLayer.element.style.display = "none";
+            if (this.activeEditor.$isFocused) {
+                this.otherEditor.onFocus();
+            }
+        }
+    }
     initMouse() {
         this.otherEditor.renderer.$loop = this.activeEditor.renderer.$loop;
         
@@ -96,13 +171,13 @@ class InlineDiffView extends BaseDiffView {
             if (ev.editor == this.activeEditor) {
                 if (posBx.row == screenPos.row && posAx.row != screenPos.row) {
                     if (ev.type == "mousedown") {
-                        this.activeEditor.selection.clearSelection();
+                        this.selectEditor(this.otherEditor);
                     }
                     ev.propagationStopped = true;
                     ev.defaultPrevented = true;
                     this.otherEditor.$mouseHandler.onMouseEvent(ev.type, ev.domEvent)
                 } else if (ev.type == "mousedown") {
-                    this.otherEditor.selection.clearSelection();
+                    this.selectEditor(this.activeEditor);
                 }
             }
         }
@@ -121,11 +196,22 @@ class InlineDiffView extends BaseDiffView {
             this.activeEditor.on("gutter" + event, forwardEvent, true);
         })
 
+        var onFocus = (e) => {
+            this.activeEditor.onFocus(e);
+        };
+        var onBlur = (e) => {
+            this.activeEditor.onBlur(e);
+        };
+        this.otherEditor.on("focus", onFocus);
+        this.otherEditor.on("blur", onBlur);
+
         this.onMouseDetach = () => {
             events.forEach((event) => {
                 this.activeEditor.off(event, forwardEvent, true);
                 this.activeEditor.off("gutter" + event, forwardEvent, true);
             })
+            this.otherEditor.off("focus", onFocus);
+            this.otherEditor.off("blur", onBlur);
         }
     }
 
@@ -230,9 +316,6 @@ class InlineDiffView extends BaseDiffView {
         this.activeEditor.renderer.off("afterRender", this.onAfterRender);
         this.otherSession.off("change", this.onInput);
 
-        this.activeEditor.renderer["$scrollDecorator"].zones = [];
-        this.activeEditor.renderer["$scrollDecorator"].$updateDecorators(this.activeEditor.renderer.layerConfig);
-
         this.textLayer.element.textContent = "";
         this.textLayer.element.remove();
         this.gutterLayer.element.textContent = "";
@@ -242,9 +325,12 @@ class InlineDiffView extends BaseDiffView {
 
         this.onMouseDetach();
 
+        this.selectEditor(this.activeEditor);
         this.otherEditor.setSession(null);
-        this.otherEditor.destroy();
         this.otherEditor.renderer.$loop = null;
+        this.initTextInput(true);
+
+        this.otherEditor.destroy();
     }
 
     /**
@@ -253,34 +339,6 @@ class InlineDiffView extends BaseDiffView {
      */
     onAfterRender(changes, renderer) {
         var config = renderer.layerConfig;
-        var side = this.showSideA ? "new" : "old";
-
-        function filterLines(lines, chunks) {
-            var i = 0;
-            var nextChunkIndex = 0;
-
-            var nextChunk = chunks[nextChunkIndex] && chunks[nextChunkIndex][side];
-            nextChunkIndex++;
-            var nextStart = nextChunk ? nextChunk.start.row : lines.length;
-            var nextEnd = nextChunk ? nextChunk.end.row : lines.length;
-            while (i < lines.length) {
-                while (i < nextStart) {
-                    if (lines[i] && lines[i].length) lines[i].length = 0;
-                    i++;
-                }
-                while (i < nextEnd) {
-                    if (lines[i] && lines[i].length == 0) lines[i] = undefined;
-                    i++;
-                }
-                nextChunk = chunks[nextChunkIndex] && chunks[nextChunkIndex][side];
-                nextChunkIndex++;
-                
-                nextStart = nextChunk ? nextChunk.start.row : lines.length;
-                nextEnd = nextChunk ? nextChunk.end.row : lines.length;
-            }
-        }
-
-        filterLines(this.otherSession.bgTokenizer.lines, this.chunks);
 
         var session = this.otherSession;
         var cloneRenderer = this.otherEditor.renderer;
@@ -310,6 +368,9 @@ class InlineDiffView extends BaseDiffView {
         this.gutterLayer.update(newConfig);
 
         newConfig.firstRowScreen = config.firstRowScreen;
+        
+        cloneRenderer.$cursorLayer.config = newConfig;
+        cloneRenderer.$cursorLayer.update(newConfig);
 
         if (changes & cloneRenderer.CHANGE_LINES
             || changes & cloneRenderer.CHANGE_FULL
@@ -321,36 +382,6 @@ class InlineDiffView extends BaseDiffView {
         this.markerLayer.setMarkers(this.otherSession.getMarkers());
         this.markerLayer.update(newConfig);
     }
-
 };
-
-
-
-config.defineOptions(Editor.prototype, "editor", {
-    showOtherLineNumbers: {
-        set: function(style) {
-            
-        },
-        initialValue: false
-    },
-    folding: {
-        set: function(value) {
-            this.editorA.setOption("fadeFoldWidgets", value);
-            this.editorB.setOption("fadeFoldWidgets", value);
-            this.editorA.setOption("showFoldWidgets", value);
-            this.editorB.setOption("showFoldWidgets", value);
-        }
-    }
-})
-
-var emptyGutterRenderer =  {
-    getText: function name(params) {
-        return "";
-    },
-    getWidth() {
-        return 0;
-    }
-};
-
 
 exports.InlineDiffView = InlineDiffView;

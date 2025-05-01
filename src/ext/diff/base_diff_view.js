@@ -53,7 +53,6 @@ class BaseDiffView {
         dom.importCssString(css, "diffview.css");
         this.options = {
             ignoreTrimWhitespace: true,
-            foldUnchanged: false,
             maxComputationTimeMs: 0, // time in milliseconds, 0 => no computation limit.
             syncSelections: false //experimental option
         };
@@ -117,13 +116,11 @@ class BaseDiffView {
             this.editorA = diffModel.editorA || this.$setupModel(diffModel.sessionA, diffModel.valueA);
             this.container && this.container.appendChild(this.editorA.container);
             this.editorA.setOptions(diffEditorOptions);
-            //this.editorA.renderer.setOption("decoratorType", "diff");
         }
         if (!this.inlineDiffEditor || !diffModel.showSideA) {
             this.editorB = diffModel.editorB || this.$setupModel(diffModel.sessionB, diffModel.valueB);
             this.container && this.container.appendChild(this.editorB.container);
             this.editorB.setOptions(diffEditorOptions);
-            //this.editorB.renderer.setOption("decoratorType", "diff");
         }
         
         if (this.inlineDiffEditor) {
@@ -284,31 +281,6 @@ class BaseDiffView {
         }
     }
 
-   /* updateScrollBarDecorators() {
-        if (this.editorA) {
-            this.editorA.renderer.$scrollDecorator.zones = [];
-        }
-        if (this.editorB) {
-            this.editorB.renderer.$scrollDecorator.zones = [];
-        }
-        const updateDecorators = (editor, editorChange, operation) => {
-            if (editor) {
-                let startRow = editorChange.start.row;
-                let endRow = editorChange.end.row;
-                let range = new Range(startRow, 0, endRow - 1, 1 << 30);
-                editor.renderer.$scrollDecorator.addZone(range.start.row, range.end.row, operation);
-            }
-        };
-
-        this.chunks.forEach((lineChange) => {
-            updateDecorators(this.editorA, lineChange["old"], "delete");
-            updateDecorators(this.editorB, lineChange["new"], "insert");
-        });
-
-        //TODO: hack for decorators to be forcely updated until we got new change type in VirtualRenderer
-        //editor.renderer.$scrollDecorator.$updateDecorators(config);
-    }*/
-
     /**
      *
      * @param {string[]} val1
@@ -398,6 +370,11 @@ class BaseDiffView {
     }
 
     detach() {
+        if (!this.editorA || !this.editorB) return;
+        this.editorA.setOptions(this.savedOptionsA);
+        this.editorB.setOptions(this.savedOptionsB);
+        this.editorA.renderer.off("beforeRender", this.realign);
+        this.editorB.renderer.off("beforeRender", this.realign);
         this.$detachEventHandlers();
         this.$removeLineWidgets(this.sessionA);
         this.$removeLineWidgets(this.sessionB);
@@ -405,8 +382,7 @@ class BaseDiffView {
         this.gutterDecoratorB && this.gutterDecoratorB.dispose();
         this.sessionA.selection.clearSelection();
         this.sessionB.selection.clearSelection();
-        this.editorA.renderer.off("beforeRender", this.realign);
-        this.editorB.renderer.off("beforeRender", this.realign);
+        this.editorA = this.editorB = null;
         
     }
 
@@ -610,7 +586,43 @@ class BaseDiffView {
 }
 
 /*** options ***/
-config.defineOptions(BaseDiffView.prototype, "editor", {
-});
+
+config.defineOptions(BaseDiffView.prototype, "DiffView", {
+    showOtherLineNumbers: {
+        set: function(value) {
+            if (this.gutterLayer) {
+                this.gutterLayer.$renderer = value ?  null : emptyGutterRenderer;
+            }
+        },
+        initialValue: false
+    },
+    folding: {
+        set: function(value) {
+            this.editorA.setOption("fadeFoldWidgets", value);
+            this.editorB.setOption("fadeFoldWidgets", value);
+            this.editorA.setOption("showFoldWidgets", value);
+            this.editorB.setOption("showFoldWidgets", value);
+        }
+    },
+    syncSelections: {
+        set: function(value) {
+            this.options.syncSelections = value;
+        },
+    },
+    ignoreTrimWhitespace: {
+        set: function(value) {
+            this.options.ignoreTrimWhitespace = value;
+        },
+    },
+})
+
+var emptyGutterRenderer =  {
+    getText: function name(params) {
+        return "";
+    },
+    getWidth() {
+        return 0;
+    }
+};
 
 exports.BaseDiffView = BaseDiffView;

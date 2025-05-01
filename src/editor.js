@@ -445,10 +445,11 @@ class Editor {
     /**
      * {:VirtualRenderer.setStyle}
      * @param {String} style A class name
+     * @param {boolean} [incluude] pass false to remove the class name
      * @related VirtualRenderer.setStyle
      **/
-    setStyle(style) {
-        this.renderer.setStyle(style);
+    setStyle(style, incluude) {
+        this.renderer.setStyle(style, incluude);
     }
 
     /**

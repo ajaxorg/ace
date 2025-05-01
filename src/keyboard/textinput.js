@@ -35,6 +35,10 @@ TextInput= function(/**@type{HTMLTextAreaElement} */parentNode, /**@type{import(
     text.style.opacity = "0";
     parentNode.insertBefore(text, parentNode.firstChild);
 
+    this.setHost = function(newHost) {
+        host = newHost;
+    }
+
     /**@type{boolean|string}*/var copied = false;
     var pasted = false;
     /**@type {(boolean|Object) & {context?: any, useTextareaForIME?: boolean, selectionStart?: number, markerRange?: any}}} */

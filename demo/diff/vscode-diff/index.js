@@ -2435,7 +2435,6 @@ function toLineRangeMapping(sequenceDiff) {
 function computeDiff(originalLines, modifiedLines, options) {
   let diffComputer = new DefaultLinesDiffComputer();
   var result = diffComputer.computeDiff(originalLines, modifiedLines, options);
-  console.log(result.moves);
   return result?.changes.map((changes) => {
     let originalStartLineNumber;
     let originalEndLineNumber;

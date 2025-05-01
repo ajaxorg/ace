@@ -41,8 +41,8 @@
 <body>
 
 <div class="toolbar">
-    <button id="btn-prev" onclick="goToPrevious()">Previous</button>
-    <button id="btn-next" onclick="goToNext()">Next</button>
+    <button id="btn-prev" onclick="goToPrevious()">&lt;</button>
+    <button id="btn-next" onclick="goToNext()">&gt;</button>
     <button id="" onclick="setMode('inlineA')">inlineA</button>
     <button id="" onclick="setMode('inlineB')">inlineB</button>
     <button id="" onclick="setMode('split')">split</button>
@@ -51,7 +51,7 @@
         <option value="vscode">Vscode diff</option>
         <option value="vscode-legacy">Vscode diff legacy</option>
         <option value="dmp">Diff match patch</option>
-        <option value="codemirror">Codemirror's diff (slow on big changes)</option>
+        <option value="codemirror">Codemirror</option>
     </select>
     <label>
         <input type="checkbox" id="btn-whitespace" checked onclick="trimWhitespace()"> Ignore Trim Whitespaces
@@ -107,14 +107,14 @@
     var trimWhitespace = () => {
         var checked = document.getElementById("btn-whitespace").checked;
         diffView.options.ignoreTrimWhitespace = checked;
-        diffView.onInput();
+        diffView?.onInput();
         localStorage.setItem("ignoreTrimWhitespace", checked);
     };
 
     var syncSelections = () => {
         var checked = document.getElementById("btn-syncselections").checked;
         diffView.options.syncSelections = checked;
-        diffView.onInput();
+        diffView?.onInput();
     };
 
     var setWrap = () => {
@@ -252,13 +252,13 @@
             initialValueA = v;
             editorA.setValue(localStorage.valueA || v, -1);
             editorA.session.setMode("ace/mode/javascript");
-            diffView.onInput();
+            diffView?.onInput();
         });
         require("ace/lib/net").get("./examples/editor.40.js", function (v) {
             initialValueB = v;
             editorB.setValue(localStorage.valueB || v, -1);
             editorB.session.setMode("ace/mode/javascript");
-            diffView.onInput();
+            diffView?.onInput();
         });
 
         window.onbeforeunload = function () {

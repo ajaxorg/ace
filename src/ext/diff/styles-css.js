@@ -111,4 +111,8 @@ exports.cssText = `
     display: none;
 }
 
+.ace_diff_other .ace_selection {
+    filter: drop-shadow(1px 2px 3px darkgray);
+}
+
 `;
