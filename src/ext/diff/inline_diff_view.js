@@ -68,6 +68,7 @@ class InlineDiffView extends BaseDiffView {
         this.editorA.renderer.$gutterLayer.element.style.pointerEvents = "none";
 
         this.gutterLayer.$updateGutterWidth = function() {};
+        this.gutterLayer.$renderer = emptyGutterRenderer;
         this.initMouse();
 
         this.$attachEventHandlers();
@@ -321,8 +322,35 @@ class InlineDiffView extends BaseDiffView {
         this.markerLayer.update(newConfig);
     }
 
-}
+};
 
+
+
+config.defineOptions(Editor.prototype, "editor", {
+    showOtherLineNumbers: {
+        set: function(style) {
+            
+        },
+        initialValue: false
+    },
+    folding: {
+        set: function(value) {
+            this.editorA.setOption("fadeFoldWidgets", value);
+            this.editorB.setOption("fadeFoldWidgets", value);
+            this.editorA.setOption("showFoldWidgets", value);
+            this.editorB.setOption("showFoldWidgets", value);
+        }
+    }
+})
+
+var emptyGutterRenderer =  {
+    getText: function name(params) {
+        return "";
+    },
+    getWidth() {
+        return 0;
+    }
+};
 
 
 exports.InlineDiffView = InlineDiffView;

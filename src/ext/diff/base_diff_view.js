@@ -110,6 +110,9 @@ class BaseDiffView {
             selectionStyle: "text",
         };
 
+        this.savedOptionsA = diffModel.editorA && diffModel.editorA.getOptions(diffEditorOptions);
+        this.savedOptionsB = diffModel.editorB && diffModel.editorB.getOptions(diffEditorOptions);
+
         if (!this.inlineDiffEditor || diffModel.showSideA) {
             this.editorA = diffModel.editorA || this.$setupModel(diffModel.sessionA, diffModel.valueA);
             this.container && this.container.appendChild(this.editorA.container);

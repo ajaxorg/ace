@@ -73,6 +73,7 @@ exports.cssText = `
 /* gutter changes */
 .ace_mini-diff_gutter-enabled > .ace_gutter-cell {
     background-color: #f0f0f0;
+    padding-right: 13px;
 }
 
 .ace_mini-diff_gutter-enabled > .mini-diff-added {
