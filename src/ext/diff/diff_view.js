@@ -6,7 +6,7 @@ var LineWidgets = require("../../line_widgets").LineWidgets;
 const { BaseDiffView } = require("./base_diff_view");
 const config = require("../../config");
 
-class SideBySideDiffView extends BaseDiffView {
+class DiffView extends BaseDiffView {
     /**
      * Constructs a new side by side DiffView instance.
      *
@@ -312,4 +312,4 @@ class SyncSelectionMarker {
     }
 }
 
-exports.SideBySideDiffView = SideBySideDiffView;
+exports.DiffView = DiffView;

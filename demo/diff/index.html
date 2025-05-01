@@ -174,8 +174,8 @@
                 if (!debugInline) editorA.container.style.display = "none";
                 break;
             case "split":
-                var {SideBySideDiffView} = require("ace/ext/diff/sidebyside_diff_view");
-                diffView = new SideBySideDiffView({editorA, editorB});
+                var {DiffView} = require("ace/ext/diff/diff_view");
+                diffView = new DiffView({editorA, editorB});
                 editorA.container.style.display = "";
                 editorB.container.style.display = "";
                 break;
@@ -209,7 +209,7 @@
 
 
 
-    require(["ace/ext/diff/sidebyside_diff_view", "ace/ext/diff/inline_diff_view", "demo/kitchen-sink/util",
+    require(["ace/ext/diff/diff_view", "ace/ext/diff/inline_diff_view", "demo/kitchen-sink/util",
         "demo/kitchen-sink/layout", "diff/diff_providers"], function () {
         var {DiffMatchPatchProvider, VscodeDiffProvider, VscodeLegacyDiffProvider, CodeMirrorsDiffProvider} = require("diff/diff_providers");
 
