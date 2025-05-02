@@ -794,7 +794,7 @@ declare module "ace-code/src/ext/diff/base_diff_view" {
         type: any;
         update(html: any, markerLayer: any, session: any, config: any): void;
     }
-    import { EditSession } from "edit_session";
+    import { EditSession } from "ace-code/src/edit_session";
     import { Editor } from "ace-code/src/editor";
     import { MinimalGutterDiffDecorator } from "ace-code/src/ext/diff/gutter_decorator";
     import { Range } from "ace-code/src/range";
@@ -808,7 +808,7 @@ declare module "ace-code/src/ext/diff/base_diff_view" {
     }
 }
 declare module "ace-code/src/ext/diff/diff_view" {
-    export class DiffView {
+    export class DiffView extends BaseDiffView {
         /**
          * Constructs a new side by side DiffView instance.
          *
@@ -837,10 +837,10 @@ declare module "ace-code/src/ext/diff/diff_view" {
         scrollSetBy: any;
         scrollSetAt: number;
     }
-    import { BaseDiffView } from "ext/diff/base_diff_view";
+    import { BaseDiffView } from "ace-code/src/ext/diff/base_diff_view";
 }
 declare module "ace-code/src/ext/diff/inline_diff_view" {
-    export class InlineDiffView {
+    export class InlineDiffView extends BaseDiffView {
         /**
          * Constructs a new inline DiffView instance.
          * @param {Object} [diffModel] - The model for the diff view.
@@ -876,5 +876,5 @@ declare module "ace-code/src/ext/diff/inline_diff_view" {
         initMouse(): void;
         onMouseDetach: () => void;
     }
-    import { BaseDiffView } from "ext/diff/base_diff_view";
+    import { BaseDiffView } from "ace-code/src/ext/diff/base_diff_view";
 }

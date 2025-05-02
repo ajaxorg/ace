@@ -1,9 +1,8 @@
 "use strict";
 
-var Range = require("../../range").Range;
 var LineWidgets = require("../../line_widgets").LineWidgets;
 
-var { BaseDiffView } = require("./base_diff_view");
+var BaseDiffView = require("./base_diff_view").BaseDiffView;
 var config = require("../../config");
 
 class DiffView extends BaseDiffView {

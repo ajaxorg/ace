@@ -15,7 +15,7 @@ require("../../theme/textmate");
 // enable multiselect
 require("../../multi_select");
 
-var {EditSession} = require("../../edit_session");
+var EditSession = require("../../edit_session").EditSession;
 
 var MinimalGutterDiffDecorator = require("./gutter_decorator").MinimalGutterDiffDecorator;
 

@@ -1,10 +1,8 @@
 "use strict";
 
 var LineWidgets = require("../../line_widgets").LineWidgets;
-var Editor = require("../../editor").Editor;
-var Renderer = require("../../virtual_renderer").VirtualRenderer;
 
-const {BaseDiffView} = require("./base_diff_view");
+const BaseDiffView = require("./base_diff_view").BaseDiffView;
 const config = require("../../config");
 
 class InlineDiffView extends BaseDiffView {
