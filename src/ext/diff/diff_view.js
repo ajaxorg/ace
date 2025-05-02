@@ -28,14 +28,8 @@ class DiffView extends BaseDiffView {
         this.onChangeTheme = this.onChangeTheme.bind(this);
         this.onMouseWheel = this.onMouseWheel.bind(this);
         this.onScroll = this.onScroll.bind(this);
-        this.onSelect = this.onSelect.bind(this);
 
         this.$setupModels(diffModel);
-
-        this.syncSelectionMarkerA = new SyncSelectionMarker();
-        this.syncSelectionMarkerB = new SyncSelectionMarker();
-        this.editorA.session.addDynamicMarker(this.syncSelectionMarkerA, true);
-        this.editorB.session.addDynamicMarker(this.syncSelectionMarkerB, true);
 
         this.addGutterDecorators();
 
@@ -84,8 +78,8 @@ class DiffView extends BaseDiffView {
         init(diffView.editorB);
 
         diffView.chunks.forEach(function (ch) {
-            var diff1 = diffView.sessionA.documentToScreenPosition(ch.old.start).row
-            var diff2 = diffView.sessionB.documentToScreenPosition(ch.new.start).row 
+            var diff1 = diffView.sessionA.documentToScreenPosition(ch.old.start).row;
+            var diff2 = diffView.sessionB.documentToScreenPosition(ch.new.start).row; 
 
             if (diff1 < diff2) {
                 add(diffView.sessionA, {
@@ -102,8 +96,8 @@ class DiffView extends BaseDiffView {
                 });
             }
 
-            var diff1 = diffView.sessionA.documentToScreenPosition(ch.old.end).row
-            var diff2 = diffView.sessionB.documentToScreenPosition(ch.new.end).row 
+            var diff1 = diffView.sessionA.documentToScreenPosition(ch.old.end).row;
+            var diff2 = diffView.sessionB.documentToScreenPosition(ch.new.end).row; 
             if (diff1 < diff2) {
                 add(diffView.sessionA, {
                     rowCount: diff2 - diff1,
@@ -121,51 +115,6 @@ class DiffView extends BaseDiffView {
         });
         diffView.sessionA["_emit"]("changeFold", {data: {start: {row: 0}}});
         diffView.sessionB["_emit"]("changeFold", {data: {start: {row: 0}}});
-    }
-
-    onSelect(e, selection) {
-        this.searchHighlight(selection);
-        this.syncSelect(selection);
-    }
-
-    syncSelect(selection) {
-        if (this.$updatingSelection) return;
-        var isOrig = selection.session === this.sessionA;
-        var selectionRange = selection.getRange();
-
-        var currSelectionRange = isOrig ? this.selectionRangeA : this.selectionRangeB;
-        if (currSelectionRange && selectionRange.isEqual(currSelectionRange))
-            return;
-
-        if (isOrig) {
-            this.selectionRangeA = selectionRange;
-        } else {
-            this.selectionRangeB = selectionRange;
-        }
-
-        this.$updatingSelection = true;
-        var newRange = this.transformRange(selectionRange, isOrig);
-
-        if (this.options.syncSelections) {
-            (isOrig ? this.editorB : this.editorA).session.selection.setSelectionRange(newRange);
-        }
-        this.$updatingSelection = false;
-
-        if (isOrig) {
-            this.selectionRangeA = selectionRange;
-            this.selectionRangeB = newRange;
-        } else {
-            this.selectionRangeA = newRange;
-            this.selectionRangeB = selectionRange;
-        }
-
-        this.updateSelectionMarker(this.syncSelectionMarkerA, this.sessionA, this.selectionRangeA);
-        this.updateSelectionMarker(this.syncSelectionMarkerB, this.sessionB, this.selectionRangeB);
-    }
-
-    updateSelectionMarker(marker, session, range) {
-        marker.setRange(range);
-        session._signal("changeFrontMarker");
     }
 
     onScroll(e, session) {
@@ -235,7 +184,7 @@ class DiffView extends BaseDiffView {
 
     /**
      * @param {import("../../editor").Editor} editor
-     * @param {import("./ace_diff").DiffHighlight} marker
+     * @param {import("./base_diff_view").DiffHighlight} marker
      */
     $attachSessionEventHandlers(editor, marker) {
         editor.session.on("changeScrollTop", this.onScroll);
@@ -253,7 +202,7 @@ class DiffView extends BaseDiffView {
 
     /**
      * @param {import("../../editor").Editor} editor
-     * @param {import("./ace_diff").DiffHighlight} marker
+     * @param {import("./base_diff_view").DiffHighlight} marker
      */
     $detachSessionHandlers(editor, marker) {
         editor.session.off("changeScrollTop", this.onScroll);
@@ -276,6 +225,7 @@ class DiffView extends BaseDiffView {
 
     $detachEventHandlers() {
         this.$detachSessionsEventHandlers();
+        this.clearSelectionMarkers();
         this.editorA.renderer.off("themeLoaded", this.onChangeTheme);
         this.$detachEditorEventHandlers(this.editorA);
         this.$detachEditorEventHandlers(this.editorB);
@@ -284,30 +234,8 @@ class DiffView extends BaseDiffView {
     $detachEditorEventHandlers(editor) {
         editor.off("mousewheel", this.onMouseWheel);
         editor.off("input", this.onInput);
-        editor.session.removeMarker(this.syncSelectionMarkerA.id);
-        editor.session.removeMarker(this.syncSelectionMarkerB.id);
     }
 }
 
-class SyncSelectionMarker {
-    constructor() {
-        /**@type{number}*/this.id;
-        this.type = "fullLine";
-        this.clazz = "ace_diff selection";
-    }
-
-    update(html, markerLayer, session, config) {
-    }
-
-    /**
-     * @param {Range} range
-     */
-    setRange(range) {//TODO
-        var newRange = range.clone();
-        newRange.end.column++;
-
-        this.range = newRange;
-    }
-}
 
 exports.DiffView = DiffView;

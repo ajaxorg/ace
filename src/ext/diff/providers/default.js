@@ -787,21 +787,10 @@ class TextLength {
   }
 }
 
-class AbstractText {
-  get endPositionExclusive() {
-    return this.length.addToPosition(new Position(1, 1));
-  }
-  get lineRange() {
-    return this.length.toLineRange();
-  }
-  getLineLength(lineNumber) {
-    return this.getValueOfRange(new Range(lineNumber, 1, lineNumber, Number.MAX_SAFE_INTEGER)).length;
-  }
-}
-class LineBasedText extends AbstractText {
+ 
+class LineBasedText  {
   constructor(_getLineContent, _lineCount) {
     assert(_lineCount >= 1);
-    super();
     this._getLineContent = _getLineContent;
     this._lineCount = _lineCount;
   }
@@ -2465,3 +2454,30 @@ function computeDiff(originalLines, modifiedLines, options) {
 }
 
 exports.computeDiff = computeDiff;
+
+var AceRange = require("../../../range").Range;
+
+var {DiffChunk} = require("../base_diff_view"); 
+ 
+/**
+ * VSCode’s computeDiff provider
+ */
+class DiffProvider {
+    /**
+     * @param {string[]} originalLines
+     * @param {string[]} modifiedLines
+     * @param {{ignoreTrimWhitespace?: boolean, maxComputationTimeMs?: number}} opts
+     * @returns {DiffChunk[]}
+     */
+    compute(originalLines, modifiedLines, opts) {
+        if (!opts) opts = {};
+        if (!opts.maxComputationTimeMs) opts.maxComputationTimeMs = 500;
+        const chunks = computeDiff(originalLines, modifiedLines, opts) || [];
+        return chunks.map(
+            c => new DiffChunk(new AceRange(c.origStart, 0, c.origEnd, 0), new AceRange(c.editStart, 0, c.editEnd, 0),
+                c.charChanges
+            ));
+    }
+}
+
+exports.DiffProvider = DiffProvider;

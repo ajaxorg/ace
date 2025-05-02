@@ -4,7 +4,7 @@ var assert = require("../../test/assertions");
 require("../../test/mockdom");
 
 var {InlineDiffView} = require("./inline_diff_view");
-var {SideBySideDiffView} = require("./sidebyside_diff_view");
+var {DiffView} = require("./diff_view");
 
 var ace = require("../../ace");
 var Range = require("../../range").Range;
@@ -38,7 +38,7 @@ module.exports = {
                 editor.container.remove();
                 editor = null;
             }
-        })
+        });
     },
     tearDown: function() {
         if (diffView) {
@@ -51,8 +51,8 @@ module.exports = {
             ["a"],
             ["b"],
             ["c"],
-            [, "inserted1"],
-            [, "inserted2"],
+            [null, "inserted1"],
+            [null, "inserted2"],
             ["e"],
             ["f"],
             ["g", "edited g"],
@@ -75,15 +75,15 @@ module.exports = {
                 return x != null;
             }).join("\n")
         );
-        assert.ok(!!editorA.session.widgetManager)
-        assert.ok(!!editorB.session.widgetManager)
+        assert.ok(!!editorA.session.widgetManager);
+        assert.ok(!!editorB.session.widgetManager);
 
         var uid = 0;
         var saved = {};
         function saveEventRegistry(object) {
             var id = object.id;
             if (!id) {
-                id = object.id = "unknown" + (uid++)
+                id = object.id = "unknown" + (uid++);
             }
             var eventRegistry = {};
             for (var key in object._eventRegistry) {
@@ -129,7 +129,7 @@ module.exports = {
         sessionB.widgetManager.attach(editorB);
         checkEventRegistry();
 
-        diffView = new SideBySideDiffView({editorA, editorB});
+        diffView = new DiffView({editorA, editorB});
         editorB.session.addFold("---", new Range(5, 0, 7, 0));
         editorB.renderer.$loop._flush();
         editorA.renderer.$loop._flush();

@@ -15,10 +15,6 @@ require("../../theme/textmate");
 // enable multiselect
 require("../../multi_select");
 
-var {
-    AceDiff,
-    DiffHighlight,
-} = require("./ace_diff");
 var {EditSession} = require("../../edit_session");
 
 var MinimalGutterDiffDecorator = require("./gutter_decorator").MinimalGutterDiffDecorator;
@@ -34,10 +30,11 @@ class BaseDiffView {
         this.onInput = this.onInput.bind(this);
         this.onChangeFold = this.onChangeFold.bind(this);
         this.realign = this.realign.bind(this);
+        this.onSelect = this.onSelect.bind(this);
         this.realignPending = false;
 
-        /**@type{{sessionA: EditSession, sessionB: EditSession, chunks: AceDiff[]}}*/this.diffSession;
-        /**@type AceDiff[]*/this.chunks;
+        /**@type{{sessionA: EditSession, sessionB: EditSession, chunks: DiffChunk[]}}*/this.diffSession;
+        /**@type DiffChunk[]*/this.chunks;
         this.inlineDiffEditor = inlineDiffEditor || false;
         this.currentDiffIndex = 0;
         this.diffProvider = {
@@ -57,7 +54,6 @@ class BaseDiffView {
             syncSelections: false //experimental option
         };
         oop.mixin(this.options, {
-            showDiffs: true,
             maxDiffs: 5000
         });
 
@@ -80,7 +76,6 @@ class BaseDiffView {
             syncSelections: options.syncSelections || false //experimental option
         };
         oop.mixin(this.options, {
-            showDiffs: true,
             maxDiffs: 5000
         });
         config.resetOptions(this);
@@ -98,7 +93,7 @@ class BaseDiffView {
      */
     $setupModels(diffModel) {
         this.showSideA = diffModel.showSideA == undefined ? true : diffModel.showSideA;
-        var diffEditorOptions = {
+        var diffEditorOptions = /**@type {Partial<import("../../../ace-internal").Ace.EditorOptions>}*/({
             scrollPastEnd: 0.5,
             highlightActiveLine: false,
             highlightGutterLine: false,
@@ -107,7 +102,7 @@ class BaseDiffView {
             vScrollBarAlwaysVisible: true,
             fadeFoldWidgets: true,
             selectionStyle: "text",
-        };
+        });
 
         this.savedOptionsA = diffModel.editorA && diffModel.editorA.getOptions(diffEditorOptions);
         this.savedOptionsB = diffModel.editorB && diffModel.editorB.getOptions(diffEditorOptions);
@@ -126,7 +121,10 @@ class BaseDiffView {
         if (this.inlineDiffEditor) {
             this.activeEditor = diffModel.showSideA ? this.editorA : this.editorB;
             this.otherSession = diffModel.showSideA ? this.sessionB : this.sessionA;
-            this.otherEditor = new Editor(new Renderer(null), undefined, this.activeEditor.getOptions());
+            var cloneOptions = this.activeEditor.getOptions();
+            cloneOptions.readOnly = true;
+            delete cloneOptions.mode;
+            this.otherEditor = new Editor(new Renderer(null), undefined, cloneOptions);
             if (diffModel.showSideA) {
                 this.editorB = this.otherEditor;
             } else {
@@ -197,11 +195,12 @@ class BaseDiffView {
     }
 
     /**
-     * @param {{ sessionA: any; sessionB: EditSession; chunks: AceDiff[] }} session
+     * @param {{ sessionA: any; sessionB: EditSession; chunks: DiffChunk[] }} session
      */
     setDiffSession(session) {
         if (this.diffSession) {
             this.$detachSessionsEventHandlers();
+            this.clearSelectionMarkers();
         }
         this.diffSession = session;
         this.sessionA = this.sessionB = null;
@@ -212,6 +211,7 @@ class BaseDiffView {
             this.sessionA = this.diffSession.sessionA;
             this.sessionB = this.diffSession.sessionB;
             this.$attachSessionsEventHandlers();
+            this.initSelectionMarkers();
         }
 
         this.otherSession = this.showSideA ? this.sessionB : this.sessionA;
@@ -285,7 +285,7 @@ class BaseDiffView {
      *
      * @param {string[]} val1
      * @param {string[]} val2
-     * @return {AceDiff[]}
+     * @return {DiffChunk[]}
      */
     $diffLines(val1, val2) {
         return this.diffProvider.compute(val1, val2, {
@@ -295,7 +295,7 @@ class BaseDiffView {
     }
 
     /**
-     * @param {import("../../../diff0/diff_providers").DiffProvider} provider
+     * @param {import("./providers/default").DiffProvider} provider
      */
     setProvider(provider) {
         this.diffProvider = provider;
@@ -305,6 +305,50 @@ class BaseDiffView {
      * @abstract
      **/
     align() {
+    }
+    onSelect(e, selection) {
+        this.searchHighlight(selection);
+        this.syncSelect(selection);
+    }
+
+    syncSelect(selection) {
+        if (this.$updatingSelection) return;
+        var isOld = selection.session === this.sessionA;
+        var selectionRange = selection.getRange();
+
+        var currSelectionRange = isOld ? this.selectionRangeA : this.selectionRangeB;
+        if (currSelectionRange && selectionRange.isEqual(currSelectionRange))
+            return;
+
+        if (isOld) {
+            this.selectionRangeA = selectionRange;
+        } else {
+            this.selectionRangeB = selectionRange;
+        }
+
+        this.$updatingSelection = true;
+        var newRange = this.transformRange(selectionRange, isOld);
+
+        if (this.options.syncSelections) {
+            (isOld ? this.editorB : this.editorA).session.selection.setSelectionRange(newRange);
+        }
+        this.$updatingSelection = false;
+
+        if (isOld) {
+            this.selectionRangeA = selectionRange;
+            this.selectionRangeB = newRange;
+        } else {
+            this.selectionRangeA = newRange;
+            this.selectionRangeB = selectionRange;
+        }
+
+        this.updateSelectionMarker(this.syncSelectionMarkerA, this.sessionA, this.selectionRangeA);
+        this.updateSelectionMarker(this.syncSelectionMarkerB, this.sessionB, this.selectionRangeB);
+    }
+
+    updateSelectionMarker(marker, session, range) {
+        marker.setRange(range);
+        session._signal("changeFrontMarker");
     }
 
     /**
@@ -407,7 +451,7 @@ class BaseDiffView {
         this.editorB && this.editorB.destroy();
     }
 
-    gotoNext(dir) { //TODO: wouldn't work in inline diff editor
+    gotoNext(dir) {
         var ace = this.activeEditor || this.editorA;
         if (this.inlineDiffEditor) {
             ace = this.editorA;
@@ -470,8 +514,8 @@ class BaseDiffView {
                 for (let i = 0; i < chunk.charChanges.length; i++) {
                     let change = chunk.charChanges[i];
 
-                    let fromRange = change.getChangeRange(from);
-                    let toRange = change.getChangeRange(to);
+                    let fromRange = change[from];
+                    let toRange = change[to];
 
                     if (fromRange.end.row < pos.row) continue;
 
@@ -555,7 +599,7 @@ class BaseDiffView {
 
     /**
      *
-     * @param {AceDiff[]} chunks
+     * @param {DiffChunk[]} chunks
      * @param {number} row
      * @param {boolean} isOriginal
      * @return {number}
@@ -574,7 +618,7 @@ class BaseDiffView {
     }
 
     searchHighlight(selection) {
-        if (this.options.syncSelections) {
+        if (this.options.syncSelections || this.inlineDiffEditor) {
             return;
         }
         let currSession = selection.session;
@@ -583,6 +627,18 @@ class BaseDiffView {
         otherSession.highlight(currSession.$searchHighlight.regExp);
         otherSession._signal("changeBackMarker");
     }
+
+    initSelectionMarkers() {
+        this.syncSelectionMarkerA = new SyncSelectionMarker();
+        this.syncSelectionMarkerB = new SyncSelectionMarker();
+        this.sessionA.addDynamicMarker(this.syncSelectionMarkerA, true);
+        this.sessionB.addDynamicMarker(this.syncSelectionMarkerB, true);
+    }
+    clearSelectionMarkers() {
+        this.sessionA.removeMarker(this.syncSelectionMarkerA.id);
+        this.sessionB.removeMarker(this.syncSelectionMarkerB.id);
+    }
+
 }
 
 /*** options ***/
@@ -614,7 +670,7 @@ config.defineOptions(BaseDiffView.prototype, "DiffView", {
             this.options.ignoreTrimWhitespace = value;
         },
     },
-})
+});
 
 var emptyGutterRenderer =  {
     getText: function name(params) {
@@ -626,3 +682,173 @@ var emptyGutterRenderer =  {
 };
 
 exports.BaseDiffView = BaseDiffView;
+
+
+class DiffChunk {
+    /**
+     * @param {Range} originalRange
+     * @param {Range} modifiedRange
+     * @param {{originalStartLineNumber: number, originalStartColumn: number,
+     * originalEndLineNumber: number, originalEndColumn: number, modifiedStartLineNumber: number,
+     * modifiedStartColumn: number, modifiedEndLineNumber: number, modifiedEndColumn: number}[]} [charChanges]
+     */
+    constructor(originalRange, modifiedRange, charChanges) {
+        this.old = originalRange;
+        this.new = modifiedRange;
+        this.charChanges = charChanges && charChanges.map(m => new DiffChunk(
+            new Range(m.originalStartLineNumber, m.originalStartColumn,
+                m.originalEndLineNumber, m.originalEndColumn
+            ), new Range(m.modifiedStartLineNumber, m.modifiedStartColumn,
+                m.modifiedEndLineNumber, m.modifiedEndColumn
+            )));
+    }
+}
+
+class DiffHighlight {
+    /**
+     * @param {import("./base_diff_view").BaseDiffView} diffView
+     * @param type
+     */
+    constructor(diffView, type) {
+        /**@type{number}*/this.id;
+        this.diffView = diffView;
+        this.type = type;
+    }
+
+    update(html, markerLayer, session, config) {
+        let dir, operation, opOperation;
+        var diffView = this.diffView;
+        if (this.type === -1) {// original editor
+            dir = "old";
+            operation = "delete";
+            opOperation = "insert";
+        }
+        else { //modified editor
+            dir = "new";
+            operation = "insert";
+            opOperation = "delete";
+        }
+
+        var ignoreTrimWhitespace = diffView.options.ignoreTrimWhitespace;
+        var lineChanges = diffView.chunks;
+
+        if (session.lineWidgets && !diffView.inlineDiffEditor) {
+            for (var row = config.firstRow; row <= config.lastRow; row++) {
+                var lineWidget = session.lineWidgets[row];
+                if (!lineWidget || lineWidget.hidden)
+                    continue;
+
+                let start = session.documentToScreenRow(row, 0);
+
+                if (lineWidget.rowsAbove > 0) {
+                    start -= lineWidget.rowsAbove;
+                } else {
+                    start++;
+                }
+                let end = start + lineWidget.rowCount - 1;
+                var range = new Range(start, 0, end, Number.MAX_VALUE);
+                markerLayer.drawFullLineMarker(html, range, "ace_diff aligned_diff", config);
+            }
+        }
+
+        lineChanges.forEach((lineChange) => {
+            let startRow = lineChange[dir].start.row;
+            let endRow = lineChange[dir].end.row;
+            if (endRow < config.firstRow || startRow > config.lastRow)
+                return;
+            let range = new Range(startRow, 0, endRow - 1, 1 << 30);
+            if (startRow !== endRow) {
+                range = range.toScreenRange(session);
+
+                markerLayer.drawFullLineMarker(html, range, "ace_diff " + operation, config);
+            }
+
+            if (lineChange.charChanges) {
+                for (var i = 0; i < lineChange.charChanges.length; i++) {
+                    var changeRange = lineChange.charChanges[i][dir];
+                    if (changeRange.end.column == 0 && changeRange.end.row > changeRange.start.row && changeRange.end.row == lineChange[dir].end.row ) {
+                        changeRange.end.row --;
+                        changeRange.end.column = Number.MAX_VALUE;
+                    }
+                        
+                    if (ignoreTrimWhitespace) {
+                        for (let lineNumber = changeRange.start.row;
+                             lineNumber <= changeRange.end.row; lineNumber++) {
+                            let startColumn;
+                            let endColumn;
+                            let sessionLineStart = session.getLine(lineNumber).match(/^\s*/)[0].length;
+                            let sessionLineEnd = session.getLine(lineNumber).length;
+
+                            if (lineNumber === changeRange.start.row) {
+                                startColumn = changeRange.start.column;
+                            }
+                            else {
+                                startColumn = sessionLineStart;
+                            }
+                            if (lineNumber === changeRange.end.row) {
+                                endColumn = changeRange.end.column;
+                            }
+                            else {
+                                endColumn = sessionLineEnd;
+                            }
+                            let range = new Range(lineNumber, startColumn, lineNumber, endColumn);
+                            var screenRange = range.toScreenRange(session);
+
+                            if (sessionLineStart === startColumn && sessionLineEnd === endColumn) {
+                                continue;
+                            }
+
+                            let cssClass = "inline " + operation;
+                            if (range.isEmpty() && startColumn !== 0) {
+                                cssClass = "inline " + opOperation + " empty";
+                            }
+
+                            markerLayer.drawSingleLineMarker(html, screenRange, "ace_diff " + cssClass, config);
+                        }
+                    }
+                    else {
+                        let range = new Range(changeRange.start.row, changeRange.start.column,
+                            changeRange.end.row, changeRange.end.column
+                        );
+                        var screenRange = range.toScreenRange(session);
+                        let cssClass = "inline " + operation;
+                        if (range.isEmpty() && changeRange.start.column !== 0) {
+                            cssClass = "inline empty " + opOperation;
+                        }
+
+                        if (screenRange.isMultiLine()) {
+                            markerLayer.drawTextMarker(html, screenRange, "ace_diff " + cssClass, config);
+                        }
+                        else {
+                            markerLayer.drawSingleLineMarker(html, screenRange, "ace_diff " + cssClass, config);
+                        }
+                    }
+                }
+            }
+        });
+    }
+}
+
+class SyncSelectionMarker {
+    constructor() {
+        /**@type{number}*/this.id;
+        this.type = "fullLine";
+        this.clazz = "ace_diff selection";
+    }
+
+    update(html, markerLayer, session, config) {
+    }
+
+    /**
+     * @param {Range} range
+     */
+    setRange(range) {//TODO
+        var newRange = range.clone();
+        newRange.end.column++;
+
+        this.range = newRange;
+    }
+}
+
+exports.DiffChunk = DiffChunk;
+exports.DiffHighlight = DiffHighlight;

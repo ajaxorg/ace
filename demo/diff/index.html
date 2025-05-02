@@ -47,12 +47,6 @@
     <button id="" onclick="setMode('inlineB')">inlineB</button>
     <button id="" onclick="setMode('split')">split</button>
     <button id="" onclick="setMode('off')">off</button>
-    <select id="provider" onchange="changeProvider(this.value)">
-        <option value="vscode">Vscode diff</option>
-        <option value="vscode-legacy">Vscode diff legacy</option>
-        <option value="dmp">Diff match patch</option>
-        <option value="codemirror">Codemirror</option>
-    </select>
     <label>
         <input type="checkbox" id="btn-whitespace" checked onclick="trimWhitespace()"> Ignore Trim Whitespaces
     </label>
@@ -75,10 +69,8 @@
     var debugInline = false
     var ignoreTrimWhitespace = localStorage["ignoreTrimWhitespace"] == "true";
     var shouldFoldUnchanged = localStorage["foldunchanged"] == "true";
-    var provider = localStorage["provider"] || "vscode";
     var wrapText = localStorage["wrapText"] == "true";
 
-    document.getElementById("provider").value = provider;
     document.getElementById("btn-whitespace").checked = ignoreTrimWhitespace;
     document.getElementById("btn-foldunchanged").checked = shouldFoldUnchanged;
 
@@ -189,12 +181,11 @@
         if (diffView) {
             diffView.options.ignoreTrimWhitespace = ignoreTrimWhitespace
 
-            changeProvider(provider);
+            var {DiffProvider} = require("ace/ext/diff/providers/default");
+            diffView.setProvider(new DiffProvider());
         }
         diffView?.onInput();
     }
-
-    var changeProvider;
 
 
     var paths = {
@@ -210,31 +201,8 @@
 
 
     require(["ace/ext/diff/diff_view", "ace/ext/diff/inline_diff_view", "demo/kitchen-sink/util",
-        "demo/kitchen-sink/layout", "diff/diff_providers"], function () {
-        var {DiffMatchPatchProvider, VscodeDiffProvider, VscodeLegacyDiffProvider, CodeMirrorsDiffProvider} = require("diff/diff_providers");
-
-        changeProvider = (value) => {
-            provider = value;
-            switch (value) {
-                case "vscode":
-                    diffView.setProvider(new VscodeDiffProvider());
-                    break;
-                case "vscode-legacy":
-                    diffView.setProvider(new VscodeLegacyDiffProvider());
-                    break;
-                case "dmp":
-                    diffView.setProvider(new DiffMatchPatchProvider(diffView.transformPosition.bind(diffView)));
-                    break;
-                case "codemirror":
-                    diffView.setProvider(new CodeMirrorsDiffProvider());
-                    break;
-                default:
-                    console.warn("Unknown provider: " + value);
-                    break;
-            }
-            diffView.onInput();
-        }
-
+        "demo/kitchen-sink/layout", "ace/ext/diff/providers/default"], function () {
+        
         var config = require("ace/config");
         config.setLoader(function (moduleName, cb) {
             require([moduleName], function (module) {
@@ -264,7 +232,6 @@
         window.onbeforeunload = function () {
             localStorage.valueA = editorA.getValue();
             localStorage.valueB = editorB.getValue();
-            localStorage.provider = provider;
         };
 
         editorA.on("changeSelection", updateButtonsState);

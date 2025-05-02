@@ -37,7 +37,7 @@ TextInput= function(/**@type{HTMLTextAreaElement} */parentNode, /**@type{import(
 
     this.setHost = function(newHost) {
         host = newHost;
-    }
+    };
 
     /**@type{boolean|string}*/var copied = false;
     var pasted = false;
