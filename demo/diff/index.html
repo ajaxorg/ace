@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Ace-diff - Simple Demo #1</title>
+
+    <script src="../kitchen-sink/require.js"></script>
+
+    <style type="text/css">
+        body {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .ace_diff-container {
+            overflow: hidden;
+        }
+
+        .toolbar {
+            display: flex;
+            gap: 10px;
+            padding: 10px;
+            background: #f1f1f1;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .toolbar button {
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            background: #fff;
+            cursor: pointer;
+        }
+
+        .toolbar button:hover {
+            background: #e6e6e6;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="toolbar">
+    <button id="btn-prev" onclick="goToPrevious()">&lt;</button>
+    <button id="btn-next" onclick="goToNext()">&gt;</button>
+    <button id="" onclick="setMode('inlineA')">inlineA</button>
+    <button id="" onclick="setMode('inlineB')">inlineB</button>
+    <button id="" onclick="setMode('split')">split</button>
+    <button id="" onclick="setMode('off')">off</button>
+    <label>
+        <input type="checkbox" id="btn-whitespace" checked onclick="trimWhitespace()"> Ignore Trim Whitespaces
+    </label>
+    <label>
+        <input type="checkbox" id="btn-syncselections" onclick="syncSelections()"> Sync selections
+    </label>
+    <label>
+        <input type="checkbox" id="btn-wrap" onclick="setWrap()"> Wrap
+    </label>
+    <button type="button" id="btn-foldunchanged" onclick="diffView.foldUnchanged()"> Collapse unchanged lines</button>
+
+    <button id="btn-reset" onclick="reset()">Reset</button>
+
+
+</div>
+
+<div class="ace_diff-container"></div>
+
+<script>
+    var debugInline = false
+    var ignoreTrimWhitespace = localStorage["ignoreTrimWhitespace"] == "true";
+    var shouldFoldUnchanged = localStorage["foldunchanged"] == "true";
+    var wrapText = localStorage["wrapText"] == "true";
+
+    document.getElementById("btn-whitespace").checked = ignoreTrimWhitespace;
+    document.getElementById("btn-foldunchanged").checked = shouldFoldUnchanged;
+
+    var initialValueA = "";
+    var initialValueB = "";
+
+    var diffView = null;
+    var editorA = null;
+    var editorB = null;
+    var updateButtonsState = () => {
+        if (!diffView) return;
+        document.getElementById("btn-prev").disabled = diffView.firstDiffSelected();
+        document.getElementById("btn-next").disabled = diffView.lastDiffSelected();
+    };
+
+    var goToNext = () => {
+        diffView.gotoNext(1);
+        updateButtonsState();
+    };
+
+    var goToPrevious = () => {
+        diffView.gotoNext(-1);
+        updateButtonsState();
+    };
+
+    var trimWhitespace = () => {
+        var checked = document.getElementById("btn-whitespace").checked;
+        diffView.options.ignoreTrimWhitespace = checked;
+        diffView?.onInput();
+        localStorage.setItem("ignoreTrimWhitespace", checked);
+    };
+
+    var syncSelections = () => {
+        var checked = document.getElementById("btn-syncselections").checked;
+        diffView.options.syncSelections = checked;
+        diffView?.onInput();
+    };
+
+    var setWrap = () => {
+        var checked = document.getElementById("btn-wrap").checked;
+        editorA.session.setUseWrapMode(checked);
+        editorB.session.setUseWrapMode(checked);
+        localStorage.setItem("wrapText", checked);
+    };
+
+    var foldUnchanged = () => {
+        var checked = document.getElementById("btn-foldunchanged").checked;
+        diffView.options.foldUnchanged = checked;
+        diffView.onInput();
+        if (!checked) {
+            diffView.diffSession.sessionA.unfold();
+            diffView.diffSession.sessionB.unfold();
+        }
+        localStorage.setItem("foldunchanged", checked);
+    };
+
+    function reset() {
+        editorA.setValue(initialValueA, -1);
+        editorB.setValue(initialValueB, -1);
+        
+        localStorage.removeItem("valueA");
+        localStorage.removeItem("valueB");
+    }
+
+    var diffViewMode = "off";
+    var diffVewContainer = document.querySelector(".ace_diff-container");
+    var setMode = (mode) => {
+        if (diffViewMode == mode) return;
+
+        localStorage.diffViewMode = diffViewMode = mode;
+
+        if (diffView) {
+            diffView.detach();
+        }
+        switch (mode) {
+            case "inlineA":
+                
+                var {InlineDiffView} = require("ace/ext/diff/inline_diff_view");
+                diffView = new InlineDiffView({
+                    editorA, editorB,
+                    showSideA: true
+                });
+                if (!debugInline) editorB.container.style.display = "none";
+                editorA.container.style.display = "";
+                break;
+            case "inlineB":
+                var {InlineDiffView} = require("ace/ext/diff/inline_diff_view");
+                diffView = new InlineDiffView({
+                    editorA, editorB,
+                    showSideA: false
+                });
+                editorB.container.style.display = "";
+                if (!debugInline) editorA.container.style.display = "none";
+                break;
+            case "split":
+                var {DiffView} = require("ace/ext/diff/diff_view");
+                diffView = new DiffView({editorA, editorB});
+                editorA.container.style.display = "";
+                editorB.container.style.display = "";
+                break;
+            case "off":
+                diffView.detach("off");
+                diffView = undefined;
+                editorA.container.style.display = "";
+                editorB.container.style.display = "";
+                break;
+        }
+        if (diffView) {
+            diffView.options.ignoreTrimWhitespace = ignoreTrimWhitespace
+
+            var {DiffProvider} = require("ace/ext/diff/providers/default");
+            diffView.setProvider(new DiffProvider());
+        }
+        diffView?.onInput();
+    }
+
+
+    var paths = {
+        "ace": "../../src",
+        diff: ".",
+        demo: "..",
+    };
+
+    require.config({
+        paths: paths
+    });
+
+
+
+    require(["ace/ext/diff/diff_view", "ace/ext/diff/inline_diff_view", "demo/kitchen-sink/util",
+        "demo/kitchen-sink/layout", "ace/ext/diff/providers/default"], function () {
+        
+        var config = require("ace/config");
+        config.setLoader(function (moduleName, cb) {
+            require([moduleName], function (module) {
+                cb(null, module);
+            });
+        });
+
+        var util = require("demo/kitchen-sink/util");
+        splitEditor = util.createSplitEditor(diffVewContainer);
+
+        editorA = splitEditor.editor0;
+        editorB = splitEditor.editor1; 
+
+        require("ace/lib/net").get("./examples/editor.17.js", function (v) {
+            initialValueA = v;
+            editorA.setValue(localStorage.valueA || v, -1);
+            editorA.session.setMode("ace/mode/javascript");
+            diffView?.onInput();
+        });
+        require("ace/lib/net").get("./examples/editor.40.js", function (v) {
+            initialValueB = v;
+            editorB.setValue(localStorage.valueB || v, -1);
+            editorB.session.setMode("ace/mode/javascript");
+            diffView?.onInput();
+        });
+
+        window.onbeforeunload = function () {
+            localStorage.valueA = editorA.getValue();
+            localStorage.valueB = editorB.getValue();
+        };
+
+        editorA.on("changeSelection", updateButtonsState);
+        editorB.on("changeSelection", updateButtonsState);
+
+        setMode(localStorage.diffViewMode || "split");
+    });
+
+</script>
+
+
+</body>
+</html>

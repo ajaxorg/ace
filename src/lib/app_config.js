@@ -18,8 +18,7 @@ var optionsProvider = {
                 return !options[key].hidden;
             });
         } else if (!Array.isArray(optionNames)) {
-            result = optionNames;
-            optionNames = Object.keys(result);
+            optionNames = Object.keys(optionNames);
         }
         optionNames.forEach(function(key) {
             result[key] = this.getOption(key);
