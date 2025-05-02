@@ -3,18 +3,18 @@
 var Range = require("../../range").Range;
 var LineWidgets = require("../../line_widgets").LineWidgets;
 
-const { BaseDiffView } = require("./base_diff_view");
-const config = require("../../config");
+var { BaseDiffView } = require("./base_diff_view");
+var config = require("../../config");
 
 class DiffView extends BaseDiffView {
     /**
      * Constructs a new side by side DiffView instance.
      *
      * @param {Object} [diffModel] - The model for the diff view.
-     * @param {import("ace-code").Editor} [diffModel.editorA] - The editor for the original view.
-     * @param {import("ace-code").Editor} [diffModel.editorB] - The editor for the edited view.
-     * @param {import("ace-code").EditSession} [diffModel.sessionA] - The edit session for the original view.
-     * @param {import("ace-code").EditSession} [diffModel.sessionB] - The edit session for the edited view.
+     * @param {import("../../editor").Editor} [diffModel.editorA] - The editor for the original view.
+     * @param {import("../../editor").Editor} [diffModel.editorB] - The editor for the edited view.
+     * @param {import("../../edit_session").EditSession} [diffModel.sessionA] - The edit session for the original view.
+     * @param {import("../../edit_session").EditSession} [diffModel.sessionB] - The edit session for the edited view.
      * @param {string} [diffModel.valueA] - The original content.
      * @param {string} [diffModel.valueB] - The modified content.
      */

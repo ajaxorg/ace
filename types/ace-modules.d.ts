@@ -818,18 +818,21 @@ declare module "ace-code/src/css/editor-css" {
 declare module "ace-code/src/layer/decorators" {
     export class Decorator {
         constructor(parent: any, renderer: any);
+        parentEl: any;
         canvas: HTMLCanvasElement;
         renderer: any;
         pixelRatio: number;
         maxHeight: any;
         lineHeight: any;
-        canvasHeight: any;
-        heightRatio: number;
-        canvasWidth: any;
         minDecorationHeight: number;
         halfMinDecorationHeight: number;
         colors: {};
-        compensateFoldRows(row: any, foldData: any): number;
+        compensateFoldRows(row: any): number;
+        compensateLineWidgets(row: any): number;
+        setDimensions(config: any): void;
+        canvasHeight: any;
+        heightRatio: number;
+        canvasWidth: any;
     }
 }
 declare module "ace-code/src/virtual_renderer" {
@@ -2036,13 +2039,13 @@ declare module "ace-code/src/editor" {
          * @param {Partial<import("ace-code").Ace.EditorOptions>} [options] The default options
          **/
         constructor(renderer: VirtualRenderer, session?: EditSession, options?: Partial<import("ace-code").Ace.EditorOptions>);
+        id: string;
         session: EditSession;
         container: HTMLElement & {
             env?: any;
             value?: any;
         };
         renderer: VirtualRenderer;
-        id: string;
         commands: CommandManager;
         textInput: any;
         keyBinding: KeyBinding;
@@ -2123,9 +2126,10 @@ declare module "ace-code/src/editor" {
         /**
          * {:VirtualRenderer.setStyle}
          * @param {String} style A class name
+         * @param {boolean} [incluude] pass false to remove the class name
          * @related VirtualRenderer.setStyle
          **/
-        setStyle(style: string): void;
+        setStyle(style: string, incluude?: boolean): void;
         /**
          * {:VirtualRenderer.unsetStyle}
          * @related VirtualRenderer.unsetStyle

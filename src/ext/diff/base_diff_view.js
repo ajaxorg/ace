@@ -482,7 +482,7 @@ class BaseDiffView {
     }
 
     /**
-     * @param {import("ace-code").Ace.Range} range
+     * @param {Range} range
      * @param {boolean} isOriginal
      */
     transformRange(range, isOriginal) {

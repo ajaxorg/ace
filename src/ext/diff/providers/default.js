@@ -2463,12 +2463,6 @@ var {DiffChunk} = require("../base_diff_view");
  * VSCode’s computeDiff provider
  */
 class DiffProvider {
-    /**
-     * @param {string[]} originalLines
-     * @param {string[]} modifiedLines
-     * @param {{ignoreTrimWhitespace?: boolean, maxComputationTimeMs?: number}} opts
-     * @returns {DiffChunk[]}
-     */
     compute(originalLines, modifiedLines, opts) {
         if (!opts) opts = {};
         if (!opts.maxComputationTimeMs) opts.maxComputationTimeMs = 500;
