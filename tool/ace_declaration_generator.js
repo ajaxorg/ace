@@ -157,8 +157,13 @@ function updateMainAceModule(node) {
  */
 function updateKeysAndLinksStatements(node, internalStatements) {
     let statements = [];
+    if (node.body && ts.isModuleBlock(node.body)) {
+        statements = node.body.statements.filter(statement =>
+            ts.isFunctionDeclaration(statement)
+        );
+    }
     if (internalStatements[node.name.text]) {
-        statements = internalStatements[node.name.text];
+        statements = [...internalStatements[node.name.text]];
     }
     const newBody = ts.factory.createModuleBlock(statements);
     return ts.factory.updateModuleDeclaration(node, node.modifiers, node.name, newBody);
