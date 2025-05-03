@@ -85,7 +85,8 @@ declare module "ace-code/src/ext/language_tools" {
     import textCompleter = require("ace-code/src/autocomplete/text_completer");
     export var keyWordCompleter: import("ace-code").Ace.Completer;
     export var snippetCompleter: import("ace-code").Ace.Completer;
-    export { textCompleter };
+    import { MarkerGroup } from "ace-code/src/marker_group";
+    export { textCompleter, MarkerGroup };
 }
 declare module "ace-code/src/ext/inline_autocomplete" {
     /**

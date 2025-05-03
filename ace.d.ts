@@ -38,6 +38,9 @@ declare module "ace-code" {
         type Config = typeof import("ace-code/src/config");
         type GutterTooltip = import("ace-code/src/mouse/default_gutter_handler").GutterTooltip;
         type GutterKeyboardEvent = import("ace-code/src/keyboard/gutter_handler").GutterKeyboardEvent;
+        type HoverTooltip = import("ace-code/src/tooltip").HoverTooltip;
+        type Tooltip = import("ace-code/src/tooltip").Tooltip;
+        type PopupManager = import("ace-code/src/tooltip").PopupManager;
         type AfterLoadCallback = (err: Error | null, module: unknown) => void;
         type LoaderFunction = (moduleName: string, afterLoad: AfterLoadCallback) => void;
         export interface ConfigOptions {

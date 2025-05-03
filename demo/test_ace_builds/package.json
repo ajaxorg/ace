@@ -11,6 +11,6 @@
     "ace-builds": "file:../../ace-builds-latest.tgz"
   },
   "devDependencies": {
-    "typescript": "^5.7.3"
+    "typescript": "^5.8.2"
   }
 }
