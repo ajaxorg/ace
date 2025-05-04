@@ -135,6 +135,8 @@ class MouseHandler {
         renderer.$isMousePressed = true;
 
         var self = this;
+        var continueCapture = true;
+
         var onMouseMove = function(e) {
             if (!e) return;
             // if editor is loaded inside iframe, and mouseup event is outside
@@ -151,8 +153,8 @@ class MouseHandler {
 
         var onCaptureEnd = function(e) {
             editor.off("beforeEndOperation", onOperationEnd);
-            clearInterval(timerId);
-            if (editor.session) onCaptureInterval();
+            continueCapture = false;
+            if (editor.session) onCaptureUpdate();
             self[self.state + "End"] && self[self.state + "End"](e);
             self.state = "";
             self.isMousePressed = renderer.$isMousePressed = false;
@@ -163,9 +165,16 @@ class MouseHandler {
             editor.endOperation();
         };
 
-        var onCaptureInterval = function() {
+        var onCaptureUpdate = function() {
             self[self.state] && self[self.state]();
             self.$mouseMoved = false;
+        };
+
+        var onCaptureInterval = function() {
+            if (continueCapture) {
+                onCaptureUpdate();
+                event.nextFrame(onCaptureInterval);
+            }
         };
 
         if (useragent.isOldIE && ev.domEvent.type == "dblclick") {
@@ -188,7 +197,8 @@ class MouseHandler {
 
         self.$onCaptureMouseMove = onMouseMove;
         self.releaseMouse = event.capture(this.editor.container, onMouseMove, onCaptureEnd);
-        var timerId = setInterval(onCaptureInterval, 20);
+
+        onCaptureInterval();
     }
     cancelContextMenu() {
         var stop = function(e) {
