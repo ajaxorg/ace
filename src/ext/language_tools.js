@@ -183,6 +183,8 @@ require("../config").defineOptions(Editor.prototype, "editor", {
          */
         set: function(val) {
             if (val) {
+                Autocomplete.for(this);
+
                 if (!this.completers)
                     this.completers = Array.isArray(val)? val: completers;
                 this.commands.addCommand(Autocomplete.startCommand);
