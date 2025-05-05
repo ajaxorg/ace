@@ -130,6 +130,10 @@ class BaseDiffView {
             } else {
                 this.editorA = this.otherEditor;
             }
+            this.setupScrollBar(this.activeEditor.renderer);
+        } else {
+            this.setupScrollBar(this.editorA.renderer);
+            this.setupScrollBar(this.editorB.renderer);
         }
 
         this.setDiffSession({
@@ -139,6 +143,10 @@ class BaseDiffView {
                 diffModel.valueB || "")),
             chunks: []
         });
+
+        setTimeout(() => {
+            this.updateScrollBarDecorators();
+        }, 0);
     }
 
     addGutterDecorators() { 
@@ -274,10 +282,72 @@ class BaseDiffView {
         this.editorA && this.editorA.renderer.updateBackMarkers();
         this.editorB && this.editorB.renderer.updateBackMarkers();
 
-        //this.updateScrollBarDecorators();
+        this.updateScrollBarDecorators();
 
         if (this.options.foldUnchanged) {
             this.foldUnchanged();
+        }
+    }
+
+    setupScrollBar(renderer) {
+        setTimeout(() => {
+            renderer.scrollBarV.setVisible(true);
+            renderer.scrollBarV.element.style.bottom = renderer.scrollBarH.getHeight() + "px";
+        }, 0);
+    }
+
+    updateScrollBarDecorators() {
+        if (this.inlineDiffEditor) {
+            this.activeEditor.renderer.$scrollDecorator.zones = [];
+        }
+        else {
+            this.editorA.renderer.$scrollDecorator.zones = [];
+            this.editorB.renderer.$scrollDecorator.zones = [];
+        }
+
+        const updateDecorators = (editor, change, op, isOriginal) => {
+            if (!editor) {
+                return;
+            }
+            let startRow = change.start.row;
+            let endRow = change.end.row;
+
+            if (startRow == endRow) {
+                return;
+            }
+            if (op == "insert" && isOriginal) {
+                startRow = this.transformPosition({
+                    row: startRow,
+                    column: 0
+                }, !isOriginal).row;
+                endRow = this.transformPosition({
+                    row: endRow,
+                    column: 1 << 30
+                }, !isOriginal).row;
+            } else {
+                if (op == "delete" && !isOriginal) {
+                    startRow = this.transformPosition({row: startRow, column: 1 << 30}, !isOriginal).row;
+                    endRow = this.transformPosition({
+                        row: endRow,
+                        column: 0
+                    }, !isOriginal).row;
+                }
+            }
+            editor.renderer.$scrollDecorator.addZone(startRow, endRow, op);
+        };
+
+        this.chunks && this.chunks.forEach((lineChange) => {
+            updateDecorators(this.editorA, lineChange["old"], "delete", true);
+            updateDecorators(this.editorA, lineChange["new"], "insert", true);
+            updateDecorators(this.editorB, lineChange["old"], "delete", false);
+            updateDecorators(this.editorB, lineChange["new"], "insert", false);
+        });
+
+        if (this.inlineDiffEditor) {
+            this.activeEditor.renderer.$scrollDecorator.$updateDecorators(this.activeEditor.renderer.layerConfig);
+        } else {
+            this.editorA.renderer.$scrollDecorator.$updateDecorators(this.editorA.renderer.layerConfig);
+            this.editorB.renderer.$scrollDecorator.$updateDecorators(this.editorB.renderer.layerConfig);
         }
     }
 

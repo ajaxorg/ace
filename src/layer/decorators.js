@@ -15,24 +15,39 @@ class Decorator {
         this.halfMinDecorationHeight = (this.minDecorationHeight / 2) | 0;
         this.canvas.style.top = 0 + "px";
         this.canvas.style.right = 0 + "px";
-        this.canvas.style.zIndex = 7 + "px";
+        this.canvas.style.zIndex = "7";
         this.canvas.style.position = "absolute";
         this.colors = {};
         this.colors.dark = {
             "error": "rgba(255, 18, 18, 1)",
             "warning": "rgba(18, 136, 18, 1)",
-            "info": "rgba(18, 18, 136, 1)"
+            "info": "rgba(18, 18, 136, 1)",
+            "delete": "rgba(255, 18, 18, 1)", //for diff decorators
+            "insert": "rgba(18, 136, 18, 1)" //for diff decorators
         };
 
         this.colors.light = {
             "error": "rgb(255,51,51)",
             "warning": "rgb(32,133,72)",
-            "info": "rgb(35,68,138)"
+            "info": "rgb(35,68,138)",
+            "delete": "rgb(255,51,51)", // for diff decorators
+            "insert": "rgb(32,133,72)" // for diff decorators
         };
+
+        this.zones = [];
 
         this.setDimensions();
 
         parent.element.appendChild(this.canvas);
+    }
+
+    addZone(startRow, endRow, type, logicalLines) {
+        this.zones.push({
+            startRow,
+            endRow,
+            type,
+            logicalLines
+        });
     }
 
     $updateDecorators(config) {
@@ -62,36 +77,118 @@ class Decorator {
 
             for (let i = 0; i < annotations.length; i++) {
                 let row = annotations[i].row;
-                let compensateFold = this.compensateFoldRows(row);
-                let currentY = Math.round((row - compensateFold) * this.lineHeight * this.heightRatio);
-                let y1 = Math.round(((row - compensateFold) * this.lineHeight * this.heightRatio));
-                let y2 = Math.round((((row - compensateFold) * this.lineHeight + this.lineHeight) * this.heightRatio));
-                const height = y2 - y1;
-                if (height < this.minDecorationHeight) {
-                    let yCenter = ((y1 + y2) / 2) | 0;
-                    if (yCenter < this.halfMinDecorationHeight) {
-                        yCenter = this.halfMinDecorationHeight;
-                    }
-                    else if (yCenter + this.halfMinDecorationHeight > this.canvasHeight) {
-                        yCenter = this.canvasHeight - this.halfMinDecorationHeight;
-                    }
-                    y1 = Math.round(yCenter - this.halfMinDecorationHeight);
-                    y2 = Math.round(yCenter + this.halfMinDecorationHeight);
+                const offset1 = this.getVerticalOffsetForRow(row);
+                const offset2 = offset1 + this.lineHeight;
+
+                const y1 = Math.round(this.heightRatio * offset1);
+                const y2 = Math.round(this.heightRatio * offset2);
+                let ycenter = Math.round((y1 + y2) / 2);
+                let halfHeight = (y2 - ycenter);
+
+                if (halfHeight < this.halfMinDecorationHeight) {
+                    halfHeight = this.halfMinDecorationHeight;
+                }
+                if (ycenter - halfHeight < 0) {
+                    ycenter = halfHeight;
+                }
+                if (ycenter + halfHeight > this.canvasHeight) {
+                    ycenter = this.canvasHeight - halfHeight;
                 }
 
+                const from =  ycenter - halfHeight;
+                const to = ycenter + halfHeight;
+                const zoneHeight = to - from;
+
                 ctx.fillStyle = colors[annotations[i].type] || null;
-                ctx.fillRect(0, currentY, this.canvasWidth, y2 - y1);
+                ctx.fillRect(0, from, Math.round(this.oneZoneWidth - 1), zoneHeight);
             }
+        }
+        if (this.zones.length > 0) {
+            this.$setDiffDecorators(ctx, colors);
         }
         var cursor = this.renderer.session.selection.getCursor();
         if (cursor) {
-            let compensateFold = this.compensateFoldRows(cursor.row);
-            let currentY = Math.round((cursor.row - compensateFold) * this.lineHeight * this.heightRatio);
+            let currentY = Math.round(this.getVerticalOffsetForRow(cursor.row) * this.heightRatio);
             ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
             ctx.fillRect(0, currentY, this.canvasWidth, 2);
         }
 
     }
+
+    $setDiffDecorators(ctx, colors) {
+        function compare(a, b) {
+            if (a.from === b.from) {
+                return a.to - b.to;
+            }
+            return a.from - b.from;
+        }
+
+        var zones = this.zones;
+        if (zones) {
+            var resolvedZones = [];
+
+            const deleteZones = zones.filter(z => z.type === "delete");
+            const insertZones = zones.filter(z => z.type === "insert");
+
+            [deleteZones, insertZones].forEach((typeZones, columnIndex) => {
+                typeZones.forEach((zone, i) => {
+                    const offset1 = this.getVerticalOffsetForRow(zone.startRow);
+                    const offset2 = this.getVerticalOffsetForRow(zone.endRow) + this.lineHeight;
+
+                    const y1 = Math.round(this.heightRatio * offset1);
+                    const y2 = Math.round(this.heightRatio * offset2);
+
+                    const padding = 1;
+
+                    let ycenter = Math.round((y1 + y2) / 2);
+                    let halfHeight = (y2 - ycenter);
+
+                    if (halfHeight < this.halfMinDecorationHeight) {
+                        halfHeight = this.halfMinDecorationHeight;
+                    }
+
+                    const previousZone = resolvedZones[resolvedZones.length - 1];
+
+                    if (i > 0 && previousZone && previousZone.type === zone.type && ycenter - halfHeight < previousZone.to + padding) {
+                        ycenter = resolvedZones[resolvedZones.length - 1].to + padding + halfHeight;
+                    }
+
+                    if (ycenter - halfHeight < 0) {
+                        ycenter = halfHeight;
+                    }
+                    if (ycenter + halfHeight > this.canvasHeight) {
+                        ycenter = this.canvasHeight - halfHeight;
+                    }
+
+                    resolvedZones.push({
+                        type: zone.type,
+                        from: ycenter - halfHeight,
+                        to: ycenter + halfHeight,
+                        color: colors[zone.type] || null
+                    });
+                });
+            });
+
+            resolvedZones = resolvedZones.sort(compare);
+
+            for (const zone of resolvedZones) {
+                ctx.fillStyle = zone.color || null;
+
+                const zoneFrom = zone.from;
+                const zoneTo = zone.to;
+                const zoneHeight = zoneTo - zoneFrom;
+
+                if (zone.type == "delete") {
+                    ctx.fillRect(this.oneZoneWidth, zoneFrom, this.oneZoneWidth, zoneHeight);
+                }
+                else {
+                    ctx.fillRect(2 * this.oneZoneWidth, zoneFrom, this.oneZoneWidth, zoneHeight);
+                }
+            }
+
+        }
+    }
+
 
     compensateFoldRows(row) {
         let foldData = this.renderer.session.$foldData;
@@ -111,7 +208,7 @@ class Decorator {
 
     compensateLineWidgets(row) {
         const widgetManager = this.renderer.session.widgetManager;
-        if (widgetManager) {
+        if (widgetManager && widgetManager.lineWidgets && widgetManager.lineWidgets.length > 0) {
             let delta = 0;
             widgetManager.lineWidgets.forEach((el, index) => {
                 if (row > index) {
@@ -123,26 +220,36 @@ class Decorator {
         return 0;
     }
 
-    setDimensions(config) {
-        if (config) {
-            this.maxHeight = config.maxHeight;
-            this.lineHeight = config.lineHeight;
-            this.canvasHeight = config.height;
+    getVerticalOffsetForRow(row) {
+        row = row | 0;
 
-            if (this.maxHeight < this.canvasHeight) {
-                this.heightRatio = 1;
-            }
-            else {
-                this.heightRatio = this.canvasHeight / this.maxHeight;
-            }
+        const baseHeight = this.lineHeight * row;
+        const foldComp   = this.compensateFoldRows(row);
+        const widgetComp = this.compensateLineWidgets(row);
+
+        const maxOff = this.maxHeight - this.lineHeight;
+        const rawOff = baseHeight + foldComp + widgetComp;
+        const offset = Math.min(Math.max(rawOff, 0), maxOff);
+
+        return offset;
+    }
+
+    setDimensions(config) {
+        config = config || this.renderer.layerConfig;
+        this.maxHeight = config.maxHeight;
+        this.lineHeight = config.lineHeight;
+        this.canvasHeight = config.height;
+        this.canvasWidth = this.parentEl.width || this.canvasWidth;
+        this.oneZoneWidth = Math.round(this.canvasWidth / 3);
+
+        this.canvas.width = this.canvasWidth;
+        this.canvas.height = this.canvasHeight;
+
+        if (this.maxHeight < this.canvasHeight) {
+            this.heightRatio = 1;
         }
         else {
-            this.canvasHeight = this.parentEl.parent.scrollHeight || this.canvasHeight;
-            this.canvasWidth = this.parentEl.width || this.canvasWidth;
             this.heightRatio = this.canvasHeight / this.maxHeight;
-
-            this.canvas.width = this.canvasWidth;
-            this.canvas.height = this.canvasHeight;
         }
     }
 }
