@@ -57,8 +57,8 @@ class BaseDiffView {
             maxDiffs: 5000
         });
 
-        this.markerB = new DiffHighlight(this, 1);
         this.markerA = new DiffHighlight(this, -1);
+        this.markerB = new DiffHighlight(this, 1);
     }
 
     /**
@@ -312,38 +312,25 @@ class BaseDiffView {
     }
 
     syncSelect(selection) {
-        if (this.$updatingSelection) return;
-        var isOld = selection.session === this.sessionA;
+        var isSessionA = selection.session === this.diffSession.sessionA;
         var selectionRange = selection.getRange();
 
-        var currSelectionRange = isOld ? this.selectionRangeA : this.selectionRangeB;
-        if (currSelectionRange && selectionRange.isEqual(currSelectionRange))
+        var currSelectionRange = isSessionA ? this.selectionRangeA : this.selectionRangeB;
+        if (currSelectionRange && selectionRange.isEqual(currSelectionRange)) {
             return;
-
-        if (isOld) {
-            this.selectionRangeA = selectionRange;
-        } else {
-            this.selectionRangeB = selectionRange;
         }
 
-        this.$updatingSelection = true;
-        var newRange = this.transformRange(selectionRange, isOld);
+        var newRange = this.transformRange(selectionRange, isSessionA);
+        [this.selectionRangeA, this.selectionRangeB] = isSessionA
+            ? [selectionRange, newRange]
+            : [newRange, selectionRange];
 
         if (this.options.syncSelections) {
-            (isOld ? this.editorB : this.editorA).session.selection.setSelectionRange(newRange);
-        }
-        this.$updatingSelection = false;
-
-        if (isOld) {
-            this.selectionRangeA = selectionRange;
-            this.selectionRangeB = newRange;
-        } else {
-            this.selectionRangeA = newRange;
-            this.selectionRangeB = selectionRange;
+            (isSessionA ? this.editorB : this.editorA).session.selection.setSelectionRange(newRange);
         }
 
-        this.updateSelectionMarker(this.syncSelectionMarkerA, this.sessionA, this.selectionRangeA);
-        this.updateSelectionMarker(this.syncSelectionMarkerB, this.sessionB, this.selectionRangeB);
+        this.updateSelectionMarker(this.syncSelectionMarkerA, this.diffSession.sessionA, this.selectionRangeA);
+        this.updateSelectionMarker(this.syncSelectionMarkerB, this.diffSession.sessionB, this.selectionRangeB);
     }
 
     updateSelectionMarker(marker, session, range) {
