@@ -4,6 +4,7 @@ var oop = require("../../lib/oop");
 var Range = require("../../range").Range;
 var dom = require("../../lib/dom");
 var config = require("../../config");
+var ScrollDiffDecorator = require("./scroll_diff_decorator").ScrollDiffDecorator;
 
 // @ts-ignore
 var css = require("./styles-css.js").cssText;
@@ -146,7 +147,7 @@ class BaseDiffView {
 
         setTimeout(() => {
             this.updateScrollBarDecorators();
-        }, 0);
+        }, 1);
     }
 
     addGutterDecorators() { 
@@ -282,15 +283,22 @@ class BaseDiffView {
         this.editorA && this.editorA.renderer.updateBackMarkers();
         this.editorB && this.editorB.renderer.updateBackMarkers();
 
-        this.updateScrollBarDecorators();
+        setTimeout(() => {
+            this.updateScrollBarDecorators();
+        }, 0);
 
         if (this.options.foldUnchanged) {
             this.foldUnchanged();
         }
     }
 
+    /**
+     * @param {Renderer} renderer
+     */
     setupScrollBar(renderer) {
         setTimeout(() => {
+            renderer.$scrollDecorator.destroy();
+            renderer.$scrollDecorator = new ScrollDiffDecorator(renderer.scrollBarV, renderer);
             renderer.scrollBarV.setVisible(true);
             renderer.scrollBarV.element.style.bottom = renderer.scrollBarH.getHeight() + "px";
         }, 0);
@@ -305,7 +313,13 @@ class BaseDiffView {
             this.editorB.renderer.$scrollDecorator.zones = [];
         }
 
-        const updateDecorators = (editor, change, op, isOriginal) => {
+        /**
+         * @param {Editor} editor
+         * @param {Range} change
+         * @param {"delete"|"insert"} op
+         * @param {boolean} isOriginal
+         */
+        const updateDecorators = (editor, change, op , isOriginal) => {
             if (!editor) {
                 return;
             }
@@ -315,6 +329,8 @@ class BaseDiffView {
             if (startRow == endRow) {
                 return;
             }
+            //startRow = editor.session.documentToScreenRow(startRow, 0);
+           // endRow = editor.session.documentToScreenRow(endRow, 0);
             if (op == "insert" && isOriginal) {
                 startRow = this.transformPosition({
                     row: startRow,
@@ -324,12 +340,16 @@ class BaseDiffView {
                     row: endRow,
                     column: 1 << 30
                 }, !isOriginal).row;
-            } else {
+            }
+            else {
                 if (op == "delete" && !isOriginal) {
-                    startRow = this.transformPosition({row: startRow, column: 1 << 30}, !isOriginal).row;
+                    startRow = this.transformPosition({
+                        row: startRow,
+                        column: 0
+                    }, !isOriginal).row;
                     endRow = this.transformPosition({
                         row: endRow,
-                        column: 0
+                        column: 1 << 30
                     }, !isOriginal).row;
                 }
             }
@@ -339,6 +359,7 @@ class BaseDiffView {
         this.chunks && this.chunks.forEach((lineChange) => {
             updateDecorators(this.editorA, lineChange["old"], "delete", true);
             updateDecorators(this.editorA, lineChange["new"], "insert", true);
+
             updateDecorators(this.editorB, lineChange["old"], "delete", false);
             updateDecorators(this.editorB, lineChange["new"], "insert", false);
         });
