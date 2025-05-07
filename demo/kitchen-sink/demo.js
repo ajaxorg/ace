@@ -468,6 +468,7 @@ function updateUIEditorOptions() {
 
 env.editor.on("changeSession", function() {
     for (var i in env.editor.session.$options) {
+        if (i == "mode") continue;
         var value = util.getOption(i);
         if (value != undefined) {
             env.editor.setOption(i, value);
