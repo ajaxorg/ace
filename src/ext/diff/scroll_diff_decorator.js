@@ -4,8 +4,9 @@ class ScrollDiffDecorator extends Decorator {
     /**
      * @param {import("../../../ace-internal").Ace.VScrollbar} scrollbarV
      * @param {import("../../virtual_renderer").VirtualRenderer} renderer
+     * @param {boolean} [forInlineDiff]
      */
-    constructor(scrollbarV, renderer) {
+    constructor(scrollbarV, renderer, forInlineDiff) {
         super(scrollbarV, renderer);
 
         this.colors.dark["delete"] = "rgba(255, 18, 18, 1)";
@@ -14,8 +15,14 @@ class ScrollDiffDecorator extends Decorator {
         this.colors.light["insert"] = "rgb(32,133,72)";
 
         this.zones = [];
+        this.forInlineDiff = forInlineDiff;
     }
 
+    /**
+     * @param {number} startRow
+     * @param {number} endRow
+     * @param {"delete"|"insert"} type
+     */
     addZone(startRow, endRow, type) {
         this.zones.push({
             startRow,
@@ -61,7 +68,7 @@ class ScrollDiffDecorator extends Decorator {
             const deleteZones = zones.filter(z => z.type === "delete");
             const insertZones = zones.filter(z => z.type === "insert");
 
-            [deleteZones, insertZones].forEach((typeZones, columnIndex) => {
+            [deleteZones, insertZones].forEach((typeZones) => {
                 typeZones.forEach((zone, i) => {
                     const offset1 = this.$transformPosition(zone.startRow, zone.type) * this.lineHeight;
                     let offset2 = this.$transformPosition(zone.endRow, zone.type) * this.lineHeight + this.lineHeight;
@@ -108,12 +115,15 @@ class ScrollDiffDecorator extends Decorator {
                 const zoneFrom = zone.from;
                 const zoneTo = zone.to;
                 const zoneHeight = zoneTo - zoneFrom;
-
-                if (zone.type == "delete") {
-                    ctx.fillRect(this.oneZoneWidth, zoneFrom, this.oneZoneWidth, zoneHeight);
-                }
-                else {
-                    ctx.fillRect(2 * this.oneZoneWidth, zoneFrom, this.oneZoneWidth, zoneHeight);
+                if (this.forInlineDiff) {
+                    ctx.fillRect(this.oneZoneWidth, zoneFrom, 2 * this.oneZoneWidth, zoneHeight);
+                } else {
+                    if (zone.type == "delete") {
+                        ctx.fillRect(this.oneZoneWidth, zoneFrom, this.oneZoneWidth, zoneHeight);
+                    }
+                    else {
+                        ctx.fillRect(2 * this.oneZoneWidth, zoneFrom, this.oneZoneWidth, zoneHeight);
+                    }
                 }
             }
 

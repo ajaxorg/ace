@@ -297,7 +297,7 @@ class BaseDiffView {
         const setupScrollBar = (renderer) => {
             setTimeout(() => {
                 renderer.$scrollDecorator.destroy();
-                renderer.$scrollDecorator = new ScrollDiffDecorator(renderer.scrollBarV, renderer);
+                renderer.$scrollDecorator = new ScrollDiffDecorator(renderer.scrollBarV, renderer, this.inlineDiffEditor);
                 renderer.$scrollDecorator.setSessions(this.sessionA, this.sessionB);
                 renderer.scrollBarV.setVisible(true);
                 renderer.scrollBarV.element.style.bottom = renderer.scrollBarH.getHeight() + "px";
