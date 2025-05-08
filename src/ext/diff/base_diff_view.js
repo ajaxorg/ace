@@ -131,10 +131,6 @@ class BaseDiffView {
             } else {
                 this.editorA = this.otherEditor;
             }
-            this.setupScrollBar(this.activeEditor.renderer);
-        } else {
-            this.setupScrollBar(this.editorA.renderer);
-            this.setupScrollBar(this.editorB.renderer);
         }
 
         this.setDiffSession({
@@ -144,6 +140,8 @@ class BaseDiffView {
                 diffModel.valueB || "")),
             chunks: []
         });
+
+        this.setupScrollbars();
 
         setTimeout(() => {
             this.updateScrollBarDecorators();
@@ -292,16 +290,28 @@ class BaseDiffView {
         }
     }
 
-    /**
-     * @param {Renderer} renderer
-     */
-    setupScrollBar(renderer) {
-        setTimeout(() => {
-            renderer.$scrollDecorator.destroy();
-            renderer.$scrollDecorator = new ScrollDiffDecorator(renderer.scrollBarV, renderer);
-            renderer.scrollBarV.setVisible(true);
-            renderer.scrollBarV.element.style.bottom = renderer.scrollBarH.getHeight() + "px";
-        }, 0);
+    setupScrollbars() {
+        /**
+         * @param {Renderer & {$scrollDecorator: ScrollDiffDecorator}} renderer
+         */
+        const setupScrollBar = (renderer) => {
+            setTimeout(() => {
+                renderer.$scrollDecorator.destroy();
+                renderer.$scrollDecorator = new ScrollDiffDecorator(renderer.scrollBarV, renderer);
+                renderer.$scrollDecorator.setSessions(this.sessionA, this.sessionB);
+                renderer.scrollBarV.setVisible(true);
+                renderer.scrollBarV.element.style.bottom = renderer.scrollBarH.getHeight() + "px";
+            }, 0);
+        };
+
+        if (this.inlineDiffEditor) {
+            setupScrollBar(this.activeEditor.renderer);
+        }
+        else {
+            setupScrollBar(this.editorA.renderer);
+            setupScrollBar(this.editorB.renderer);
+        }
+
     }
 
     updateScrollBarDecorators() {
@@ -314,59 +324,32 @@ class BaseDiffView {
         }
 
         /**
-         * @param {Editor} editor
-         * @param {Range} change
-         * @param {"delete"|"insert"} op
-         * @param {boolean} isOriginal
+         * @param {DiffChunk} change
          */
-        const updateDecorators = (editor, change, op , isOriginal) => {
+        const updateDecorators = (editor, change) => {
             if (!editor) {
                 return;
             }
-            let startRow = change.start.row;
-            let endRow = change.end.row;
-
-            if (startRow == endRow) {
-                return;
+            if (change.old.start.row != change.old.end.row) {
+                editor.renderer.$scrollDecorator.addZone(change.old.start.row, change.old.end.row - 1, "delete");
             }
-            //startRow = editor.session.documentToScreenRow(startRow, 0);
-           // endRow = editor.session.documentToScreenRow(endRow, 0);
-            if (op == "insert" && isOriginal) {
-                startRow = this.transformPosition({
-                    row: startRow,
-                    column: 0
-                }, !isOriginal).row;
-                endRow = this.transformPosition({
-                    row: endRow,
-                    column: 1 << 30
-                }, !isOriginal).row;
+            if (change.new.start.row != change.new.end.row) {
+                editor.renderer.$scrollDecorator.addZone(change.new.start.row, change.new.end.row - 1, "insert");
             }
-            else {
-                if (op == "delete" && !isOriginal) {
-                    startRow = this.transformPosition({
-                        row: startRow,
-                        column: 0
-                    }, !isOriginal).row;
-                    endRow = this.transformPosition({
-                        row: endRow,
-                        column: 1 << 30
-                    }, !isOriginal).row;
-                }
-            }
-            editor.renderer.$scrollDecorator.addZone(startRow, endRow, op);
         };
 
-        this.chunks && this.chunks.forEach((lineChange) => {
-            updateDecorators(this.editorA, lineChange["old"], "delete", true);
-            updateDecorators(this.editorA, lineChange["new"], "insert", true);
-
-            updateDecorators(this.editorB, lineChange["old"], "delete", false);
-            updateDecorators(this.editorB, lineChange["new"], "insert", false);
-        });
-
         if (this.inlineDiffEditor) {
+            this.chunks && this.chunks.forEach((lineChange) => {
+                updateDecorators(this.activeEditor, lineChange);
+            });
             this.activeEditor.renderer.$scrollDecorator.$updateDecorators(this.activeEditor.renderer.layerConfig);
-        } else {
+        }
+        else {
+            this.chunks && this.chunks.forEach((lineChange) => {
+                updateDecorators(this.editorA, lineChange);
+                updateDecorators(this.editorB, lineChange);
+            });
+
             this.editorA.renderer.$scrollDecorator.$updateDecorators(this.editorA.renderer.layerConfig);
             this.editorB.renderer.$scrollDecorator.$updateDecorators(this.editorB.renderer.layerConfig);
         }

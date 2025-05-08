@@ -16,13 +16,17 @@ class ScrollDiffDecorator extends Decorator {
         this.zones = [];
     }
 
-    addZone(startRow, endRow, type, logicalLines) {
+    addZone(startRow, endRow, type) {
         this.zones.push({
             startRow,
             endRow,
-            type,
-            logicalLines
+            type
         });
+    }
+
+    setSessions(sessionA, sessionB) {
+        this.sessionA = sessionA;
+        this.sessionB = sessionB;
     }
 
     $updateDecorators(config) {
@@ -31,6 +35,14 @@ class ScrollDiffDecorator extends Decorator {
             var colors = (this.renderer.theme.isDark === true) ? this.colors.dark : this.colors.light;
             var ctx = this.canvas.getContext("2d");
             this.$setDiffDecorators(ctx, colors);
+        }
+    }
+
+    $transformPosition(row, type) {
+        if (type == "delete") {
+            return this.sessionA.documentToScreenRow(row, 0);
+        } else {
+            return this.sessionB.documentToScreenRow(row, 0);
         }
     }
 
@@ -51,8 +63,8 @@ class ScrollDiffDecorator extends Decorator {
 
             [deleteZones, insertZones].forEach((typeZones, columnIndex) => {
                 typeZones.forEach((zone, i) => {
-                    const offset1 = this.getVerticalOffsetForRow(zone.startRow);
-                    const offset2 = this.getVerticalOffsetForRow(zone.endRow) + this.lineHeight;
+                    const offset1 = this.$transformPosition(zone.startRow, zone.type) * this.lineHeight;
+                    let offset2 = this.$transformPosition(zone.endRow, zone.type) * this.lineHeight + this.lineHeight;
 
                     const y1 = Math.round(this.heightRatio * offset1);
                     const y2 = Math.round(this.heightRatio * offset2);

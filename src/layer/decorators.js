@@ -60,7 +60,7 @@ class Decorator {
                 "error": 3
             };
             annotations.forEach(function (item) {
-                item.priority = priorities[item.type] || null;
+                item["priority"] = priorities[item.type] || null;
             });
             annotations = annotations.sort(compare);
 
