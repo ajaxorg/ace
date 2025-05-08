@@ -62,26 +62,6 @@ class BaseDiffView {
     }
 
     /**
-     * @param {Object} options - The configuration options for the DiffView.
-     * @param {boolean} [options.ignoreTrimWhitespace=true] - Whether to ignore whitespace changes when computing diffs.
-     * @param {boolean} [options.foldUnchanged=false] - Whether to fold unchanged regions in the diff view.
-     * @param {number} [options.maxComputationTimeMs=0] - The maximum time in milliseconds to spend computing diffs (0 means no limit).
-     * @param {boolean} [options.syncSelections=false] - Whether to synchronize selections between the original and edited views.
-     */
-    setOptions(options) {
-        this.options = {
-            ignoreTrimWhitespace: options.ignoreTrimWhitespace || true,
-            foldUnchanged: options.foldUnchanged || false,
-            maxComputationTimeMs: options.maxComputationTimeMs || 0, // time in milliseconds, 0 => no computation limit.
-            syncSelections: options.syncSelections || false //experimental option
-        };
-        oop.mixin(this.options, {
-            maxDiffs: 5000
-        });
-        config.resetOptions(this);
-    }
-
-    /**
      * @param {Object} [diffModel] - The model for the diff view.
      * @param {Editor} [diffModel.editorA] - The editor for the original view.
      * @param {Editor} [diffModel.editorB] - The editor for the edited view.
@@ -90,8 +70,12 @@ class BaseDiffView {
      * @param {string} [diffModel.valueA] - The original content.
      * @param {string} [diffModel.valueB] - The modified content.
      * @param {boolean} [diffModel.showSideA] - Whether to show the original view or modified view.
+     * @param {import("./providers/default").DiffProvider} [diffModel.diffProvider] - The diff provider to use.
      */
     $setupModels(diffModel) {
+        if (diffModel.diffProvider) {
+            this.setProvider(diffModel.diffProvider);
+        }
         this.showSideA = diffModel.showSideA == undefined ? true : diffModel.showSideA;
         var diffEditorOptions = /**@type {Partial<import("../../../ace-internal").Ace.EditorOptions>}*/({
             scrollPastEnd: 0.5,

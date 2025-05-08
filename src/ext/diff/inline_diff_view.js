@@ -311,7 +311,6 @@ class InlineDiffView extends BaseDiffView {
 
     $detachEventHandlers() {
         this.$detachSessionsEventHandlers();
-        this.clearSelectionMarkers();
         this.activeEditor.off("input", this.onInput);
         this.activeEditor.renderer.off("afterRender", this.onAfterRender);
         this.otherSession.off("change", this.onInput);
@@ -326,6 +325,7 @@ class InlineDiffView extends BaseDiffView {
         this.onMouseDetach();
 
         this.selectEditor(this.activeEditor);
+        this.clearSelectionMarkers();
         this.otherEditor.setSession(null);
         this.otherEditor.renderer.$loop = null;
         this.initTextInput(true);

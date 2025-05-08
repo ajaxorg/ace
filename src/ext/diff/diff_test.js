@@ -5,6 +5,7 @@ require("../../test/mockdom");
 
 var {InlineDiffView} = require("./inline_diff_view");
 var {DiffView} = require("./diff_view");
+var {DiffProvider} = require("./providers/default");
 
 var ace = require("../../ace");
 var Range = require("../../range").Range;
@@ -47,6 +48,7 @@ module.exports = {
         }
     },
     "test: clean detach": function() {
+        var diffProvider = new DiffProvider();
         var values = [
             ["a"],
             ["b"],
@@ -90,12 +92,15 @@ module.exports = {
                 var handlers = object._eventRegistry[key];
                 eventRegistry[key] = handlers.slice(0);
             }
-            saved[id] = [eventRegistry, object];
+            saved[id] = {eventRegistry, object};
+            if (/session/.test(id)) {
+                saved[id].$frontMarkers = Object.keys(object.$frontMarkers);
+            }
         }
         function checkEventRegistry() {
             for (var id in saved) {
-                var object = saved[id][1];
-                var eventRegistry = saved[id][0];
+                var object = saved[id].object;
+                var eventRegistry = saved[id].eventRegistry;
                 for (var eventName in object._eventRegistry) {
                     var handlers = object._eventRegistry[eventName];
                     var savedHandlers = eventRegistry[eventName] || [];
@@ -104,6 +109,10 @@ module.exports = {
                     for (var j = 0; j < handlers.length; j++) {
                         assert.equal(handlers[j], eventRegistry[eventName][j], id + ":" + eventName);
                     }
+                }
+                if (saved[id].$frontMarkers) {
+                    var frontMarkers = Object.keys(object.$frontMarkers);
+                    assert.equal(frontMarkers + "", saved[id].$frontMarkers + "", id);
                 }
             }
         }
@@ -116,7 +125,8 @@ module.exports = {
 
         var diffView = new InlineDiffView({
             editorA, editorB,
-            showSideA: true
+            showSideA: true,
+            diffProvider,
         });
         editorA.session.addFold("---", new Range(0, 0, 2, 0));
         diffView.resize(true);
@@ -129,7 +139,7 @@ module.exports = {
         sessionB.widgetManager.attach(editorB);
         checkEventRegistry();
 
-        diffView = new DiffView({editorA, editorB});
+        diffView = new DiffView({editorA, editorB, diffProvider});
         editorB.session.addFold("---", new Range(5, 0, 7, 0));
         editorB.renderer.$loop._flush();
         editorA.renderer.$loop._flush();
