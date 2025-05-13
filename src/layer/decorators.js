@@ -95,7 +95,7 @@ class Decorator {
         var cursor = this.renderer.session.selection.getCursor();
         if (cursor) {
             let currentY = Math.round(this.getVerticalOffsetForRow(cursor.row) * this.heightRatio);
-            ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
+            ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
             ctx.fillRect(0, currentY, this.canvasWidth, 2);
         }
 
