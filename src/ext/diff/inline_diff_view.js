@@ -1,6 +1,5 @@
 "use strict";
 
-var LineWidgets = require("../../line_widgets").LineWidgets;
 
 const BaseDiffView = require("./base_diff_view").BaseDiffView;
 const config = require("../../config");
@@ -27,6 +26,7 @@ class InlineDiffView extends BaseDiffView {
     init(diffModel) {
         this.onSelect = this.onSelect.bind(this);
         this.onAfterRender = this.onAfterRender.bind(this);
+        this.onChangeWrapLimit = this.onChangeWrapLimit.bind(this);
         
 
         this.$setupModels(diffModel);
@@ -223,50 +223,21 @@ class InlineDiffView extends BaseDiffView {
     align() {
         var diffView = this;
 
-        function add(session, w) {
-            let lineWidget = session.lineWidgets[w.row];
-            if (lineWidget) {
-                w.rowsAbove += lineWidget.rowsAbove > w.rowsAbove ? lineWidget.rowsAbove : w.rowsAbove;
-                w.rowCount += lineWidget.rowCount;
-            }
-            session.lineWidgets[w.row] = w;
-            session.widgetManager.lineWidgets[w.row] = w;
-            session.$resetRowCache(w.row);
-            var fold = session.getFoldAt(w.row, 0);
-            if (fold) {
-                session.widgetManager.updateOnFold({
-                    data: fold,
-                    action: "add",
-                }, session);
-            }
-        }
-
-        function init(editor) {
-            var session = editor.session;
-            if (!session.widgetManager) {
-                session.widgetManager = new LineWidgets(session);
-                session.widgetManager.attach(editor);
-            }
-            editor.session.lineWidgets = [];
-            editor.session.widgetManager.lineWidgets = [];
-            editor.session.$resetRowCache(0);
-        }
-
-        init(diffView.editorA);
-        init(diffView.editorB);
+        this.$initWidgets(diffView.editorA);
+        this.$initWidgets(diffView.editorB);
 
         diffView.chunks.forEach(function (ch) {
-            var diff1 = diffView.sessionA.documentToScreenPosition(ch.old.end).row
-                - diffView.sessionA.documentToScreenPosition(ch.old.start).row;
-            var diff2 = diffView.sessionB.documentToScreenPosition(ch.new.end).row
-                - diffView.sessionB.documentToScreenPosition(ch.new.start).row;
+            var diff1 = diffView.$screenRow(ch.old.end, diffView.sessionA)
+                - diffView.$screenRow(ch.old.start, diffView.sessionA);
+            var diff2 = diffView.$screenRow(ch.new.end, diffView.sessionB)
+                - diffView.$screenRow(ch.new.start, diffView.sessionB);
 
-            add(diffView.sessionA, {
+            diffView.$addWidget(diffView.sessionA, {
                 rowCount: diff2,
                 rowsAbove: ch.old.end.row === 0 ? diff2 : 0,
                 row: ch.old.end.row === 0 ? 0 : ch.old.end.row - 1
             });
-            add(diffView.sessionB, {
+            diffView.$addWidget(diffView.sessionB, {
                 rowCount: diff1,
                 rowsAbove: diff1,
                 row: ch.new.start.row,
@@ -277,10 +248,16 @@ class InlineDiffView extends BaseDiffView {
         diffView.sessionB["_emit"]("changeFold", {data: {start: {row: 0}}});
     }
 
+    onChangeWrapLimit() {
+        this.sessionB.adjustWrapLimit(this.sessionA.$wrapLimit);
+        this.scheduleRealign();
+    }
 
     $attachSessionsEventHandlers() {
         this.$attachSessionEventHandlers(this.editorA, this.markerA);
         this.$attachSessionEventHandlers(this.editorB, this.markerB);
+        this.sessionA.on("changeWrapLimit", this.onChangeWrapLimit);
+        this.sessionA.on("changeWrapMode", this.onChangeWrapLimit);
     }
 
     $attachSessionEventHandlers(editor, marker) {
@@ -294,6 +271,8 @@ class InlineDiffView extends BaseDiffView {
         this.$detachSessionHandlers(this.editorA, this.markerA);
         this.$detachSessionHandlers(this.editorB, this.markerB);
         this.otherSession.bgTokenizer.lines.fill(undefined);
+        this.sessionA.off("changeWrapLimit", this.onChangeWrapLimit);
+        this.sessionA.off("changeWrapMode", this.onChangeWrapLimit);
     }
 
     $detachSessionHandlers(editor, marker) {

@@ -44,68 +44,39 @@ class DiffView extends BaseDiffView {
     align() {
         var diffView = this;
 
-        function add(session, w) {
-            let lineWidget = session.lineWidgets[w.row];
-            if (lineWidget) {
-                w.rowsAbove += lineWidget.rowsAbove > w.rowsAbove ? lineWidget.rowsAbove : w.rowsAbove;
-                w.rowCount += lineWidget.rowCount;
-            }
-            session.lineWidgets[w.row] = w;
-            session.widgetManager.lineWidgets[w.row] = w;
-            session.$resetRowCache(w.row);
-            var fold = session.getFoldAt(w.row, 0);
-            if (fold) {
-                session.widgetManager.updateOnFold({
-                    data: fold,
-                    action: "add",
-                }, session);
-            }
-        }
-
-        function init(editor) {
-            var session = editor.session;
-            if (!session.widgetManager) {
-                session.widgetManager = new LineWidgets(session);
-                session.widgetManager.attach(editor);
-            }
-            editor.session.lineWidgets = [];
-            editor.session.widgetManager.lineWidgets = [];
-            editor.session.$resetRowCache(0);
-        }
-
-        init(diffView.editorA);
-        init(diffView.editorB);
+        this.$initWidgets(diffView.editorA);
+        this.$initWidgets(diffView.editorB);
 
         diffView.chunks.forEach(function (ch) {
-            var diff1 = diffView.sessionA.documentToScreenPosition(ch.old.start).row;
-            var diff2 = diffView.sessionB.documentToScreenPosition(ch.new.start).row; 
+            var diff1 = diffView.$screenRow(ch.old.start, diffView.sessionA);
+            var diff2 = diffView.$screenRow(ch.new.start, diffView.sessionB); 
 
             if (diff1 < diff2) {
-                add(diffView.sessionA, {
+                diffView.$addWidget(diffView.sessionA, {
                     rowCount: diff2 - diff1,
                     rowsAbove: ch.old.start.row === 0 ? diff2 - diff1 : 0,
                     row: ch.old.start.row === 0 ? 0 : ch.old.start.row - 1
                 });
             }
             else if (diff1 > diff2) {
-                add(diffView.sessionB, {
+                diffView.$addWidget(diffView.sessionB, {
                     rowCount: diff1 - diff2,
                     rowsAbove: ch.new.start.row === 0 ? diff1 - diff2 : 0,
                     row: ch.new.start.row === 0 ? 0 : ch.new.start.row - 1
                 });
             }
 
-            var diff1 = diffView.sessionA.documentToScreenPosition(ch.old.end).row;
-            var diff2 = diffView.sessionB.documentToScreenPosition(ch.new.end).row; 
+            var diff1 = diffView.$screenRow(ch.old.end, diffView.sessionA);
+            var diff2 = diffView.$screenRow(ch.new.end, diffView.sessionB); 
             if (diff1 < diff2) {
-                add(diffView.sessionA, {
+                diffView.$addWidget(diffView.sessionA, {
                     rowCount: diff2 - diff1,
                     rowsAbove: ch.old.end.row === 0 ? diff2 - diff1 : 0,
                     row: ch.old.end.row === 0 ? 0 : ch.old.end.row - 1
                 });
             }
             else if (diff1 > diff2) {
-                add(diffView.sessionB, {
+                diffView.$addWidget(diffView.sessionB, {
                     rowCount: diff1 - diff2,
                     rowsAbove: ch.new.end.row === 0 ? diff1 - diff2 : 0,
                     row: ch.new.end.row === 0 ? 0 : ch.new.end.row - 1

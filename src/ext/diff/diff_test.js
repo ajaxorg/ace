@@ -8,6 +8,7 @@ var {DiffView} = require("./diff_view");
 var {DiffProvider} = require("./providers/default");
 
 var ace = require("../../ace");
+const { get } = require("../../config");
 var Range = require("../../range").Range;
 var editorA, editorB, diffView;
 
@@ -19,7 +20,34 @@ function createEditor() {
     editor.container.style.position = "absolute";
     editor.container.style.outline = "solid";
     return editor;
+} 
+
+function getValueA(lines) {
+    return lines.map(function(v) {
+        return v[0]; 
+    }).filter(function(x) {
+        return x != null;
+    }).join("\n")
 }
+function getValueB(lines) {
+    return lines.map(function(v) {
+        return v.length == 2 ? v[1] : v[0]; 
+    }).filter(function(x) {
+        return x != null;
+    }).join("\n")
+}
+var simpleDiff = [
+    ["a"],
+    ["b"],
+    ["c"],
+    [null, "inserted1"],
+    [null, "inserted2"],
+    ["e"],
+    ["f"],
+    ["g", "edited g"],
+    ["h"],
+    ["i"],
+];
 
 module.exports = {
     setUpSuite: function() {
@@ -49,34 +77,10 @@ module.exports = {
     },
     "test: clean detach": function() {
         var diffProvider = new DiffProvider();
-        var values = [
-            ["a"],
-            ["b"],
-            ["c"],
-            [null, "inserted1"],
-            [null, "inserted2"],
-            ["e"],
-            ["f"],
-            ["g", "edited g"],
-            ["h"],
-            ["i"],
-        ];
 
-        editorA.session.setValue(
-            values.map(function(v) {
-                return v[0]; 
-            }).filter(function(x) {
-                return x != null;
-            }).join("\n")
-        );
+        editorA.session.setValue(getValueA(simpleDiff));
+        editorB.session.setValue(getValueB(simpleDiff));
 
-        editorB.session.setValue(
-            values.map(function(v) {
-                return v.length == 2 ? v[1] : v[0]; 
-            }).filter(function(x) {
-                return x != null;
-            }).join("\n")
-        );
         assert.ok(!!editorA.session.widgetManager);
         assert.ok(!!editorB.session.widgetManager);
 
@@ -148,7 +152,18 @@ module.exports = {
         
         diffView.detach();
         checkEventRegistry();
-    }
+
+
+        var diffView = new InlineDiffView({
+            editorB, valueA: editorA.getValue(),
+            showSideB: true,
+            diffProvider,
+        });
+
+        diffView.detach();
+        checkEventRegistry();
+        
+    },
 };
 
 
