@@ -9,18 +9,13 @@ class Decorator {
      * @param {import("../virtual_renderer").VirtualRenderer} renderer
      */
     constructor(scrollbarV, renderer) {
-        this.scrollbarV = scrollbarV;
         this.renderer = renderer;
-        this.canvas = dom.createElement("canvas");
+
         this.pixelRatio = 1;
         this.maxHeight = renderer.layerConfig.maxHeight;
         this.lineHeight = renderer.layerConfig.lineHeight;
         this.minDecorationHeight = (2 * this.pixelRatio) | 0;
         this.halfMinDecorationHeight = (this.minDecorationHeight / 2) | 0;
-        this.canvas.style.top = 0 + "px";
-        this.canvas.style.right = 0 + "px";
-        this.canvas.style.zIndex = "7";
-        this.canvas.style.position = "absolute";
         this.colors = {};
         this.colors.dark = {
             "error": "rgba(255, 18, 18, 1)",
@@ -34,9 +29,22 @@ class Decorator {
             "info": "rgb(35,68,138)",
         };
 
-        this.setDimensions();
+        this.setScrollBarV(scrollbarV);
+    }
 
+    $createCanvas() {
+        this.canvas = dom.createElement("canvas");
+        this.canvas.style.top = 0 + "px";
+        this.canvas.style.right = 0 + "px";
+        this.canvas.style.zIndex = "7";
+        this.canvas.style.position = "absolute";
+    }
+
+    setScrollBarV(scrollbarV) {
+        this.$createCanvas();
+        this.scrollbarV = scrollbarV;
         scrollbarV.element.appendChild(this.canvas);
+        this.setDimensions();
     }
 
     $updateDecorators(config) {

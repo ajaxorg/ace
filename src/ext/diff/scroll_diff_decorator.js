@@ -14,8 +14,8 @@ class ScrollDiffDecorator extends Decorator {
         this.colors.light["delete"] = "rgb(255,51,51)";
         this.colors.light["insert"] = "rgb(32,133,72)";
 
-        this.zones = [];
-        this.forInlineDiff = forInlineDiff;
+        this.$zones = [];
+        this.$forInlineDiff = forInlineDiff;
     }
 
     /**
@@ -24,13 +24,17 @@ class ScrollDiffDecorator extends Decorator {
      * @param {"delete"|"insert"} type
      */
     addZone(startRow, endRow, type) {
-        this.zones.push({
+        this.$zones.push({
             startRow,
             endRow,
             type
         });
     }
 
+    /**
+     * @param {import("../../edit_session").EditSession} sessionA
+     * @param {import("../../edit_session").EditSession} sessionB
+     */
     setSessions(sessionA, sessionB) {
         this.sessionA = sessionA;
         this.sessionB = sessionB;
@@ -38,13 +42,17 @@ class ScrollDiffDecorator extends Decorator {
 
     $updateDecorators(config) {
         super.$updateDecorators(config);
-        if (this.zones.length > 0) {
+        if (this.$zones.length > 0) {
             var colors = (this.renderer.theme.isDark === true) ? this.colors.dark : this.colors.light;
             var ctx = this.canvas.getContext("2d");
             this.$setDiffDecorators(ctx, colors);
         }
     }
 
+    /**
+     * @param {number} row
+     * @param {string} type
+     */
     $transformPosition(row, type) {
         if (type == "delete") {
             return this.sessionA.documentToScreenRow(row, 0);
@@ -61,7 +69,7 @@ class ScrollDiffDecorator extends Decorator {
             return a.from - b.from;
         }
 
-        var zones = this.zones;
+        var zones = this.$zones;
         if (zones) {
             var resolvedZones = [];
 
@@ -115,7 +123,7 @@ class ScrollDiffDecorator extends Decorator {
                 const zoneFrom = zone.from;
                 const zoneTo = zone.to;
                 const zoneHeight = zoneTo - zoneFrom;
-                if (this.forInlineDiff) {
+                if (this.$forInlineDiff) {
                     ctx.fillRect(this.oneZoneWidth, zoneFrom, 2 * this.oneZoneWidth, zoneHeight);
                 } else {
                     if (zone.type == "delete") {
