@@ -271,6 +271,48 @@ module.exports = {
         assert.equal(diffView.sessionA.$foldData.length, 20);
 
     },
+
+    "test: restore options": function() {
+        var diffProvider = new DiffProvider();
+
+        editorA.session.setValue(getValueA(simpleDiff));
+        editorB.session.setValue(getValueB(simpleDiff));
+
+        diffView = new InlineDiffView({
+            editorA, editorB,
+            showSideA: true,
+            diffProvider,
+        });
+        diffView.onInput();
+        diffView.setOptions({
+            wrap: true,
+            folding: false,
+            showOtherLineNumbers: false,
+        });
+        diffView.resize(true);
+        assert.equal(diffView.chunks.length, 2);
+        assert.equal(editorA.getOption("wrap"), "free");
+        assert.equal(diffView.editorB.getOption("wrap"), "free");
+
+        assert.equal(editorA.getOption("fadeFoldWidgets"), true);
+        assert.equal(diffView.editorB.getOption("fadeFoldWidgets"), true);
+
+        assert.equal(diffView.editorA.getOption("showFoldWidgets"), false);
+        assert.equal(diffView.editorB.getOption("showFoldWidgets"), false);
+
+        assert.ok(!!diffView.editorB.renderer.$gutterLayer.$renderer);
+
+        diffView.detach();
+
+        assert.equal(editorA.getOption("wrap"), "free");
+        assert.equal(editorA.getOption("fadeFoldWidgets"), false);
+        assert.equal(editorA.getOption("showFoldWidgets"), true);
+
+        assert.equal(editorB.getOption("wrap"), "free");
+        assert.equal(editorB.getOption("fadeFoldWidgets"), false);
+        assert.equal(editorB.getOption("showFoldWidgets"), true);
+        assert.ok(!editorB.renderer.$gutterLayer.$renderer);
+    },
 };
 
 

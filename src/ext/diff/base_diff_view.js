@@ -85,6 +85,7 @@ class BaseDiffView {
             customScrollbar: true,
             vScrollBarAlwaysVisible: true,
             fadeFoldWidgets: true,
+            showFoldWidgets: true,
             selectionStyle: "text",
         });
 
@@ -695,14 +696,15 @@ config.defineOptions(BaseDiffView.prototype, "DiffView", {
         set: function(value) {
             if (this.gutterLayer) {
                 this.gutterLayer.$renderer = value ?  null : emptyGutterRenderer;
+                this.editorA.renderer.updateFull();
             }
         },
-        initialValue: false
+        initialValue: true
     },
     folding: {
         set: function(value) {
-            this.editorA.setOption("fadeFoldWidgets", value);
-            this.editorB.setOption("fadeFoldWidgets", value);
+            this.editorA.setOption("fadeFoldWidgets", !value);
+            this.editorB.setOption("fadeFoldWidgets", !value);
             this.editorA.setOption("showFoldWidgets", value);
             this.editorB.setOption("showFoldWidgets", value);
         }
