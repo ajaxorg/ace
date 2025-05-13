@@ -71,21 +71,33 @@ exports.cssText = `
  
 
 /* gutter changes */
-.ace_mini-diff_gutter-enabled > .ace_gutter-cell {
-    background-color: #f0f0f0;
+.ace_mini-diff_gutter-enabled > .ace_gutter-cell,
+.ace_mini-diff_gutter-enabled > .ace_gutter-cell_svg-icons {
     padding-right: 13px;
 }
+
+.ace_mini-diff_gutter_other > .ace_gutter-cell,
+.ace_mini-diff_gutter_other > .ace_gutter-cell_svg-icons  {
+    display: none;
+}
+
+.ace_mini-diff_gutter_other {
+    pointer-events: none;
+}
+
 
 .ace_mini-diff_gutter-enabled > .mini-diff-added {
     background-color: #eaffea;
     border-left: 3px solid #00FF00;
-    padding-left: 0;
+    padding-left: 16px;
+    display: block;
 }
 
 .ace_mini-diff_gutter-enabled > .mini-diff-deleted {
     background-color: #ffecec;
     border-left: 3px solid #FF0000;
-    padding-left: 0;
+    padding-left: 16px;
+    display: block;
 }
 
 

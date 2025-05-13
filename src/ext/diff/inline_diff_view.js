@@ -62,12 +62,12 @@ class InlineDiffView extends BaseDiffView {
         var gutterLayerElement = this.activeEditor.renderer.$gutterLayer.element;
         gutterLayerElement.parentNode.insertBefore(
             this.gutterLayer.element,
-            gutterLayerElement
+            gutterLayerElement.nextSibling
         );
         gutterLayerElement.style.position = "absolute";
         this.gutterLayer.element.style.position = "absolute";
         this.gutterLayer.element.style.width = "100%";
-        this.editorA.renderer.$gutterLayer.element.style.pointerEvents = "none";
+        this.gutterLayer.element.classList.add("ace_mini-diff_gutter_other");
         
 
         this.gutterLayer.$updateGutterWidth = function() {};
@@ -167,12 +167,14 @@ class InlineDiffView extends BaseDiffView {
         var forwardEvent = (ev) => {
             if (!ev.domEvent) return; 
             var screenPos = ev.editor.renderer.pixelToScreenCoordinates(ev.clientX, ev.clientY);
-            var posA = this.sessionA.screenToDocumentPosition(screenPos.row, screenPos.column, screenPos.offsetX); 
-            var posB = this.sessionB.screenToDocumentPosition(screenPos.row, screenPos.column, screenPos.offsetX); 
+            var sessionA = this.activeEditor.session;
+            var sessionB = this.otherEditor.session;
+            var posA = sessionA.screenToDocumentPosition(screenPos.row, screenPos.column, screenPos.offsetX); 
+            var posB = sessionB.screenToDocumentPosition(screenPos.row, screenPos.column, screenPos.offsetX); 
         
-            var posAx = this.sessionA.documentToScreenPosition(posA); 
-            var posBx = this.sessionB.documentToScreenPosition(posB); 
-        
+            var posAx = sessionA.documentToScreenPosition(posA); 
+            var posBx = sessionB.documentToScreenPosition(posB); 
+            
             if (ev.editor == this.activeEditor) {
                 if (posBx.row == screenPos.row && posAx.row != screenPos.row) {
                     if (ev.type == "mousedown") {

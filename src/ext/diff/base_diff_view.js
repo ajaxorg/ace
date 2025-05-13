@@ -703,10 +703,20 @@ config.defineOptions(BaseDiffView.prototype, "DiffView", {
     },
     folding: {
         set: function(value) {
-            this.editorA.setOption("fadeFoldWidgets", !value);
-            this.editorB.setOption("fadeFoldWidgets", !value);
             this.editorA.setOption("showFoldWidgets", value);
             this.editorB.setOption("showFoldWidgets", value);
+            if (!value) {
+                var posA = [];
+                var posB = [];
+                if (this.chunks) {
+                    this.chunks.forEach(x=>{
+                        posA.push(x.old.start, x.old.end);
+                        posB.push(x.new.start, x.new.end);
+                     });
+                }
+                this.sessionA.unfold(posA);
+                this.sessionB.unfold(posB);
+            }
         }
     },
     syncSelections: {
