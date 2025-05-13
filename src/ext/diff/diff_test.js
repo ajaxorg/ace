@@ -27,14 +27,14 @@ function getValueA(lines) {
         return v[0]; 
     }).filter(function(x) {
         return x != null;
-    }).join("\n")
+    }).join("\n");
 }
 function getValueB(lines) {
     return lines.map(function(v) {
         return v.length == 2 ? v[1] : v[0]; 
     }).filter(function(x) {
         return x != null;
-    }).join("\n")
+    }).join("\n");
 }
 var simpleDiff = [
     ["a"],
