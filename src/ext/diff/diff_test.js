@@ -8,9 +8,10 @@ var {DiffView} = require("./diff_view");
 var {DiffProvider} = require("./providers/default");
 
 var ace = require("../../ace");
-const { get } = require("../../config");
 var Range = require("../../range").Range;
 var editorA, editorB, diffView;
+
+var DEBUG = false;
 
 function createEditor() {
     var editor = ace.edit(null);
@@ -48,6 +49,23 @@ var simpleDiff = [
     ["h"],
     ["i"],
 ];
+var diffAtEnds = [
+    [null, "only new"],
+    [null, "only new"],
+    ["a"],
+    ["b"],
+    ["c"],
+    ["d"],
+    ["e"],
+    ["f"],
+    ["g"],
+    ["h"],
+    ["i"],
+    ["j"],
+    ["k"],
+    ["only old", null],
+    ["only old2", null],
+];
 
 module.exports = {
     setUpSuite: function() {
@@ -61,6 +79,7 @@ module.exports = {
         editorA.focus();
     },
     tearDownSuite: function() {
+        if (DEBUG) return;
         [editorA, editorB].forEach(function(editor) {
             if (editor) {
                 editor.destroy();
@@ -70,6 +89,7 @@ module.exports = {
         });
     },
     tearDown: function() {
+        if (DEBUG) return;
         if (diffView) {
             diffView.detach();
             diffView = null;
@@ -133,6 +153,7 @@ module.exports = {
             diffProvider,
         });
         editorA.session.addFold("---", new Range(0, 0, 2, 0));
+        diffView.onInput();
         diffView.resize(true);
         
         assert.equal(editorA.session.$foldData.length, 1);
@@ -150,6 +171,9 @@ module.exports = {
         assert.equal(editorA.session.$foldData.length, 2);
         assert.equal(editorB.session.$foldData.length, 2);
         
+        diffView.onInput();
+        diffView.resize(true);
+
         diffView.detach();
         checkEventRegistry();
 
@@ -160,9 +184,92 @@ module.exports = {
             diffProvider,
         });
 
+        diffView.onInput();
+        diffView.resize(true);
+
         diffView.detach();
         checkEventRegistry();
         
+    },
+    "test: diff at ends": function() {
+        var diffProvider = new DiffProvider();
+
+        var valueA = getValueA(diffAtEnds);
+        var valueB = getValueB(diffAtEnds);
+
+        diffView = new InlineDiffView({
+            valueA,
+            valueB,
+            showSideA: true,
+            diffProvider,
+        }, document.body);
+        diffView.onInput();
+        diffView.resize(true);
+        assert.equal(diffView.chunks.length, 2);
+        diffView.detach();
+
+        diffView = new DiffView({
+            valueA,
+            valueB,
+            diffProvider,
+        }, document.body);
+        diffView.onInput();
+        diffView.resize(true);
+        assert.equal(diffView.chunks.length, 2);
+
+        diffView.detach();
+
+        diffView = new InlineDiffView({
+            valueA,
+            valueB,
+            showSideA: false,
+        }, document.body);
+        diffView.onInput();
+        diffView.resize(true);
+        assert.equal(diffView.chunks.length, 0);
+        diffView.detach();
+    },
+    "test scroll": function() {
+        var diffProvider = new DiffProvider();
+
+        var valueA = getValueA(diffAtEnds);
+        var valueB = getValueB(diffAtEnds);
+
+        editorA.session.setValue(valueA);
+        editorB.session.setValue(valueB);
+
+        diffView = new DiffView({
+            editorA, editorB,
+            diffProvider,
+        });
+
+
+        diffView.onInput();
+        diffView.resize(true);
+        assert.equal(diffView.chunks.length, 2);
+
+        diffView.setDiffSession({
+            sessionA: ace.createEditSession(valueA.repeat(20)),
+            sessionB: ace.createEditSession(valueB.repeat(20)),
+        });
+
+        diffView.onInput();
+        diffView.resize(true);
+        assert.equal(diffView.chunks.length, 21);
+        diffView.editorA.setOption("animatedScroll", false);
+        diffView.editorB.setOption("animatedScroll", false);
+
+        diffView.editorA.execCommand("gotoend");
+        diffView.editorB.renderer.$loop._flush();
+        diffView.editorA.renderer.$loop._flush();
+
+        assert.ok(diffView.sessionB.$scrollTop > 100);
+        assert.ok(diffView.sessionA.$scrollTop == diffView.sessionB.$scrollTop);
+
+        diffView.foldUnchanged();
+        assert.equal(diffView.sessionA.$foldData.length, 20);
+        assert.equal(diffView.sessionA.$foldData.length, 20);
+
     },
 };
 
