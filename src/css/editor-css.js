@@ -523,6 +523,7 @@ module.exports = `
     
     border: 1px solid transparent;
     cursor: pointer;
+    pointer-events: auto;
 }
 
 .ace_custom-widget {

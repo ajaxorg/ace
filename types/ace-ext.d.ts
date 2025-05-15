@@ -709,26 +709,8 @@ declare module "ace-code/src/ext/diff/base_diff_view" {
             compute: (val1: any, val2: any, options: any) => any[];
         };
         container: HTMLElement;
-        options: {
-            ignoreTrimWhitespace: boolean;
-            maxComputationTimeMs: number;
-            syncSelections: boolean;
-        };
         markerB: DiffHighlight;
         markerA: DiffHighlight;
-        /**
-         * @param {Object} options - The configuration options for the DiffView.
-         * @param {boolean} [options.ignoreTrimWhitespace=true] - Whether to ignore whitespace changes when computing diffs.
-         * @param {boolean} [options.foldUnchanged=false] - Whether to fold unchanged regions in the diff view.
-         * @param {number} [options.maxComputationTimeMs=0] - The maximum time in milliseconds to spend computing diffs (0 means no limit).
-         * @param {boolean} [options.syncSelections=false] - Whether to synchronize selections between the original and edited views.
-         */
-        setOptions(options: {
-            ignoreTrimWhitespace?: boolean;
-            foldUnchanged?: boolean;
-            maxComputationTimeMs?: number;
-            syncSelections?: boolean;
-        }): void;
         showSideA: boolean;
         savedOptionsA: Partial<import("ace-code").Ace.EditorOptions>;
         savedOptionsB: Partial<import("ace-code").Ace.EditorOptions>;
@@ -756,6 +738,7 @@ declare module "ace-code/src/ext/diff/base_diff_view" {
         setTheme(theme: any): void;
         getTheme(): any;
         resize(force: any): void;
+        scheduleOnInput(): void;
         selectionRangeA: any;
         selectionRangeB: any;
         setupScrollbars(): void;
@@ -767,6 +750,7 @@ declare module "ace-code/src/ext/diff/base_diff_view" {
         align(): void;
         syncSelect(selection: any): void;
         updateSelectionMarker(marker: any, session: any, range: any): void;
+        scheduleRealign(): void;
         detach(): void;
         destroy(): void;
         gotoNext(dir: any): void;
@@ -879,6 +863,7 @@ declare module "ace-code/src/ext/diff/inline_diff_view" {
         }, container?: HTMLElement);
         init(diffModel: any): void;
         onAfterRender(changes: number, renderer: import("ace-code").VirtualRenderer): void;
+        onChangeWrapLimit(): void;
         textLayer: any;
         markerLayer: any;
         gutterLayer: any;
