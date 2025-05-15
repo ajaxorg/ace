@@ -4,6 +4,7 @@ var oop = require("../../lib/oop");
 var Range = require("../../range").Range;
 var dom = require("../../lib/dom");
 var config = require("../../config");
+var LineWidgets = require("../../line_widgets").LineWidgets;
 
 // @ts-ignore
 var css = require("./styles-css.js").cssText;
@@ -18,6 +19,12 @@ require("../../multi_select");
 var EditSession = require("../../edit_session").EditSession;
 
 var MinimalGutterDiffDecorator = require("./gutter_decorator").MinimalGutterDiffDecorator;
+
+var dummyDiffProvider = {
+    compute: function(val1, val2, options) {
+        return [];
+    }
+};
 
 class BaseDiffView {
     /**
@@ -37,48 +44,21 @@ class BaseDiffView {
         /**@type DiffChunk[]*/this.chunks;
         this.inlineDiffEditor = inlineDiffEditor || false;
         this.currentDiffIndex = 0;
-        this.diffProvider = {
-            compute: function(val1, val2, options) {
-                return [];
-            }
-        };
+        this.diffProvider = dummyDiffProvider;
 
         if (container) {
             this.container = container;
         }
 
         dom.importCssString(css, "diffview.css");
-        this.options = {
-            ignoreTrimWhitespace: true,
-            maxComputationTimeMs: 0, // time in milliseconds, 0 => no computation limit.
-            syncSelections: false //experimental option
-        };
-        oop.mixin(this.options, {
-            maxDiffs: 5000
-        });
+        this.$ignoreTrimWhitespace = false;
+        this.$maxDiffs = 5000;
+        this.$maxComputationTimeMs = 150;
+        this.$syncSelections = false;
+        this.$foldUnchangedOnInput = false;
 
         this.markerB = new DiffHighlight(this, 1);
         this.markerA = new DiffHighlight(this, -1);
-    }
-
-    /**
-     * @param {Object} options - The configuration options for the DiffView.
-     * @param {boolean} [options.ignoreTrimWhitespace=true] - Whether to ignore whitespace changes when computing diffs.
-     * @param {boolean} [options.foldUnchanged=false] - Whether to fold unchanged regions in the diff view.
-     * @param {number} [options.maxComputationTimeMs=0] - The maximum time in milliseconds to spend computing diffs (0 means no limit).
-     * @param {boolean} [options.syncSelections=false] - Whether to synchronize selections between the original and edited views.
-     */
-    setOptions(options) {
-        this.options = {
-            ignoreTrimWhitespace: options.ignoreTrimWhitespace || true,
-            foldUnchanged: options.foldUnchanged || false,
-            maxComputationTimeMs: options.maxComputationTimeMs || 0, // time in milliseconds, 0 => no computation limit.
-            syncSelections: options.syncSelections || false //experimental option
-        };
-        oop.mixin(this.options, {
-            maxDiffs: 5000
-        });
-        config.resetOptions(this);
     }
 
     /**
@@ -90,8 +70,12 @@ class BaseDiffView {
      * @param {string} [diffModel.valueA] - The original content.
      * @param {string} [diffModel.valueB] - The modified content.
      * @param {boolean} [diffModel.showSideA] - Whether to show the original view or modified view.
+     * @param {import("./providers/default").DiffProvider} [diffModel.diffProvider] - The diff provider to use.
      */
     $setupModels(diffModel) {
+        if (diffModel.diffProvider) {
+            this.setProvider(diffModel.diffProvider);
+        }
         this.showSideA = diffModel.showSideA == undefined ? true : diffModel.showSideA;
         var diffEditorOptions = /**@type {Partial<import("../../../ace-internal").Ace.EditorOptions>}*/({
             scrollPastEnd: 0.5,
@@ -101,6 +85,7 @@ class BaseDiffView {
             customScrollbar: true,
             vScrollBarAlwaysVisible: true,
             fadeFoldWidgets: true,
+            showFoldWidgets: true,
             selectionStyle: "text",
         });
 
@@ -252,7 +237,16 @@ class BaseDiffView {
         this.editorB && this.editorB.resize(force);
     }
 
+    scheduleOnInput() {
+        if (this.$onInputTimer) return;
+        this.$onInputTimer = setTimeout(() => {
+            this.$onInputTimer = null;
+            this.onInput();
+        });
+    }
     onInput() {
+        if (this.$onInputTimer) clearTimeout(this.$onInputTimer);
+
         var val1 = this.sessionA.doc.getAllLines();
         var val2 = this.sessionB.doc.getAllLines();
 
@@ -265,7 +259,7 @@ class BaseDiffView {
         this.gutterDecoratorA && this.gutterDecoratorA.setDecorations(chunks);
         this.gutterDecoratorB && this.gutterDecoratorB.setDecorations(chunks);
         // if we"re dealing with too many chunks, fail silently
-        if (this.chunks && this.chunks.length > this.options.maxDiffs) {
+        if (this.chunks && this.chunks.length > this.$maxDiffs) {
             return;
         }
 
@@ -276,7 +270,7 @@ class BaseDiffView {
 
         //this.updateScrollBarDecorators();
 
-        if (this.options.foldUnchanged) {
+        if (this.$foldUnchangedOnInput) {
             this.foldUnchanged();
         }
     }
@@ -289,8 +283,8 @@ class BaseDiffView {
      */
     $diffLines(val1, val2) {
         return this.diffProvider.compute(val1, val2, {
-            ignoreTrimWhitespace: this.options.ignoreTrimWhitespace,
-            maxComputationTimeMs: this.options.maxComputationTimeMs
+            ignoreTrimWhitespace: this.$ignoreTrimWhitespace,
+            maxComputationTimeMs: this.$maxComputationTimeMs
         });
     }
 
@@ -299,6 +293,55 @@ class BaseDiffView {
      */
     setProvider(provider) {
         this.diffProvider = provider;
+    }
+
+    /**
+     * @param {EditSession} session
+     * @param {{ rowCount: number; rowsAbove: number; row: number; }} w
+     */
+    $addWidget(session, w) {
+        let lineWidget = session.lineWidgets[w.row];
+        if (lineWidget) {
+            w.rowsAbove += lineWidget.rowsAbove > w.rowsAbove ? lineWidget.rowsAbove : w.rowsAbove;
+            w.rowCount += lineWidget.rowCount;
+        }
+        session.lineWidgets[w.row] = w;
+        session.widgetManager.lineWidgets[w.row] = w;
+        session.$resetRowCache(w.row);
+        var fold = session.getFoldAt(w.row, 0);
+        if (fold) {
+            session.widgetManager.updateOnFold({
+                data: fold,
+                action: "add",
+            }, session);
+        }
+    }
+
+    /**
+     * @param {Editor} editor
+     */
+    $initWidgets(editor) {
+        var session = editor.session;
+        if (!session.widgetManager) {
+            session.widgetManager = new LineWidgets(session);
+            session.widgetManager.attach(editor);
+        }
+        editor.session.lineWidgets = [];
+        editor.session.widgetManager.lineWidgets = [];
+        editor.session.$resetRowCache(0);
+    }
+
+    /**
+     * @param {import("../../../ace-internal").Ace.Point} pos
+     * @param {EditSession} session
+     */
+    $screenRow(pos, session) {
+        var row = session.documentToScreenPosition(pos).row;
+        var afterEnd = pos.row - session.getLength() + 1;
+        if (afterEnd > 0) {
+            row += afterEnd;
+        }
+        return row;
     }
 
     /** scroll locking
@@ -329,7 +372,7 @@ class BaseDiffView {
         this.$updatingSelection = true;
         var newRange = this.transformRange(selectionRange, isOld);
 
-        if (this.options.syncSelections) {
+        if (this.$syncSelections) {
             (isOld ? this.editorB : this.editorA).session.selection.setSelectionRange(newRange);
         }
         this.$updatingSelection = false;
@@ -358,11 +401,7 @@ class BaseDiffView {
     onChangeFold(ev, session) {
         var fold = ev.data;
         if (this.$syncingFold || !fold || !ev.action) return;
-        if (!this.realignPending) {
-            this.realignPending = true;
-            this.editorA.renderer.on("beforeRender", this.realign);
-            this.editorB.renderer.on("beforeRender", this.realign);
-        }
+        this.scheduleRealign();
 
         const isOrig = session === this.sessionA;
         const other = isOrig ? this.sessionB : this.sessionA;
@@ -404,6 +443,14 @@ class BaseDiffView {
             }
         }
     }
+    
+    scheduleRealign() {        
+        if (!this.realignPending) {
+            this.realignPending = true;
+            this.editorA.renderer.on("beforeRender", this.realign);
+            this.editorB.renderer.on("beforeRender", this.realign);
+        }
+    }
 
     realign() {
         this.realignPending = true;
@@ -415,8 +462,10 @@ class BaseDiffView {
 
     detach() {
         if (!this.editorA || !this.editorB) return;
-        this.editorA.setOptions(this.savedOptionsA);
-        this.editorB.setOptions(this.savedOptionsB);
+        if (this.savedOptionsA)
+            this.editorA.setOptions(this.savedOptionsA);
+        if (this.savedOptionsB)
+            this.editorB.setOptions(this.savedOptionsB);
         this.editorA.renderer.off("beforeRender", this.realign);
         this.editorB.renderer.off("beforeRender", this.realign);
         this.$detachEventHandlers();
@@ -618,7 +667,7 @@ class BaseDiffView {
     }
 
     searchHighlight(selection) {
-        if (this.options.syncSelections || this.inlineDiffEditor) {
+        if (this.$syncSelections || this.inlineDiffEditor) {
             return;
         }
         let currSession = selection.session;
@@ -638,7 +687,6 @@ class BaseDiffView {
         this.sessionA.removeMarker(this.syncSelectionMarkerA.id);
         this.sessionB.removeMarker(this.syncSelectionMarkerB.id);
     }
-
 }
 
 /*** options ***/
@@ -648,29 +696,49 @@ config.defineOptions(BaseDiffView.prototype, "DiffView", {
         set: function(value) {
             if (this.gutterLayer) {
                 this.gutterLayer.$renderer = value ?  null : emptyGutterRenderer;
+                this.editorA.renderer.updateFull();
             }
         },
-        initialValue: false
+        initialValue: true
     },
     folding: {
         set: function(value) {
-            this.editorA.setOption("fadeFoldWidgets", value);
-            this.editorB.setOption("fadeFoldWidgets", value);
             this.editorA.setOption("showFoldWidgets", value);
             this.editorB.setOption("showFoldWidgets", value);
+            if (!value) {
+                var posA = [];
+                var posB = [];
+                if (this.chunks) {
+                    this.chunks.forEach(x=>{
+                        posA.push(x.old.start, x.old.end);
+                        posB.push(x.new.start, x.new.end);
+                     });
+                }
+                this.sessionA.unfold(posA);
+                this.sessionB.unfold(posB);
+            }
         }
     },
     syncSelections: {
         set: function(value) {
-            this.options.syncSelections = value;
+
         },
     },
     ignoreTrimWhitespace: {
         set: function(value) {
-            this.options.ignoreTrimWhitespace = value;
+            this.scheduleOnInput();
         },
     },
-});
+    wrap: {
+        set: function(value) {
+            this.sessionA.setOption("wrap", value);
+            this.sessionB.setOption("wrap", value);
+        }
+    },
+    maxDiffs: {
+        value: 5000,
+    },
+}); 
 
 var emptyGutterRenderer =  {
     getText: function name(params) {
@@ -729,7 +797,7 @@ class DiffHighlight {
             opOperation = "delete";
         }
 
-        var ignoreTrimWhitespace = diffView.options.ignoreTrimWhitespace;
+        var ignoreTrimWhitespace = diffView.$ignoreTrimWhitespace;
         var lineChanges = diffView.chunks;
 
         if (session.lineWidgets && !diffView.inlineDiffEditor) {
