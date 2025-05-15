@@ -567,10 +567,10 @@ class BaseDiffView {
         this.sessionA.selection.clearSelection();
         this.sessionB.selection.clearSelection();
 
-        if (this.savedOptionsA.customScrollbar) {
+        if (this.savedOptionsA && this.savedOptionsA.customScrollbar) {
             this.$resetDecorators(this.editorA.renderer);
         }
-        if (this.savedOptionsB.customScrollbar) {
+        if (this.savedOptionsB &&this.savedOptionsB.customScrollbar) {
             this.$resetDecorators(this.editorB.renderer);
         }
 

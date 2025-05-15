@@ -10,7 +10,8 @@ var {DiffProvider} = require("./providers/default");
 var ace = require("../../ace");
 var Range = require("../../range").Range;
 var editorA, editorB, diffView;
-var {DiffProvider} = require("./providers/default");
+const {Decorator} = require("../../layer/decorators");
+const {ScrollDiffDecorator} = require("./scroll_diff_decorator");
 
 
 var DEBUG = false;
@@ -279,6 +280,7 @@ module.exports = {
 
         editorA.session.setValue(getValueA(simpleDiff));
         editorB.session.setValue(getValueB(simpleDiff));
+        editorA.setOption("customScrollbar", true);
 
         diffView = new InlineDiffView({
             editorA, editorB,
@@ -304,6 +306,8 @@ module.exports = {
 
         assert.ok(!!diffView.editorB.renderer.$gutterLayer.$renderer);
 
+        assert.ok(editorA.renderer.$scrollDecorator instanceof ScrollDiffDecorator);
+
         diffView.detach();
 
         assert.equal(editorA.getOption("wrap"), "free");
@@ -314,6 +318,8 @@ module.exports = {
         assert.equal(editorB.getOption("fadeFoldWidgets"), false);
         assert.equal(editorB.getOption("showFoldWidgets"), true);
         assert.ok(!editorB.renderer.$gutterLayer.$renderer);
+
+        assert.ok(editorA.renderer.$scrollDecorator instanceof Decorator);
     },
     "test split diff scroll decorators": function(done) {
         editorA.session.setValue(["a", "b", "c"].join("\n"));
