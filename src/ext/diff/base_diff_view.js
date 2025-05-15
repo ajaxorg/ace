@@ -12,6 +12,8 @@ var css = require("./styles-css.js").cssText;
 var Editor = require("../../editor").Editor;
 var Renderer = require("../../virtual_renderer").VirtualRenderer;
 var UndoManager = require("../../undomanager").UndoManager;
+var Decorator = require("../../layer/decorators").Decorator;
+
 require("../../theme/textmate");
 // enable multiselect
 require("../../multi_select");
@@ -291,13 +293,7 @@ class BaseDiffView {
          */
         const setupScrollBar = (renderer) => {
             setTimeout(() => {
-                if (renderer.$scrollDecorator) {
-                    renderer.$scrollDecorator.destroy();
-                }
-                renderer.$scrollDecorator = new ScrollDiffDecorator(renderer.scrollBarV, renderer, this.inlineDiffEditor);
-                renderer.$scrollDecorator.setSessions(this.sessionA, this.sessionB);
-                renderer.scrollBarV.setVisible(true);
-                renderer.scrollBarV.element.style.bottom = renderer.scrollBarH.getHeight() + "px";
+                this.$setScrollBarDecorators(renderer);
                 this.updateScrollBarDecorators();
             }, 0);
         };
@@ -310,6 +306,23 @@ class BaseDiffView {
             setupScrollBar(this.editorB.renderer);
         }
 
+    }
+
+    $setScrollBarDecorators(renderer) {
+        if (renderer.$scrollDecorator) {
+            renderer.$scrollDecorator.destroy();
+        }
+        renderer.$scrollDecorator = new ScrollDiffDecorator(renderer.scrollBarV, renderer, this.inlineDiffEditor);
+        renderer.$scrollDecorator.setSessions(this.sessionA, this.sessionB);
+        renderer.scrollBarV.setVisible(true);
+        renderer.scrollBarV.element.style.bottom = renderer.scrollBarH.getHeight() + "px";
+    }
+
+    $resetDecorators(renderer) {
+        if (renderer.$scrollDecorator) {
+            renderer.$scrollDecorator.destroy();
+        }
+        renderer.$scrollDecorator = new Decorator(renderer.scrollBarV, renderer);
     }
 
     updateScrollBarDecorators() {
@@ -504,6 +517,14 @@ class BaseDiffView {
         this.gutterDecoratorB && this.gutterDecoratorB.dispose();
         this.sessionA.selection.clearSelection();
         this.sessionB.selection.clearSelection();
+
+        if (this.savedOptionsA.customScrollbar) {
+            this.$resetDecorators(this.editorA.renderer);
+        }
+        if (this.savedOptionsB.customScrollbar) {
+            this.$resetDecorators(this.editorB.renderer);
+        }
+
         this.editorA = this.editorB = null;
         
     }
