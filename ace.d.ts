@@ -41,6 +41,7 @@ declare module "ace-code" {
         type HoverTooltip = import("ace-code/src/tooltip").HoverTooltip;
         type Tooltip = import("ace-code/src/tooltip").Tooltip;
         type PopupManager = import("ace-code/src/tooltip").PopupManager;
+        type TextInput = import("ace-code/src/keyboard/textinput").TextInput;
         type AfterLoadCallback = (err: Error | null, module: unknown) => void;
         type LoaderFunction = (moduleName: string, afterLoad: AfterLoadCallback) => void;
         export interface ConfigOptions {
@@ -775,14 +776,6 @@ declare module "ace-code" {
         var Selection: {
             new(session: EditSession): Selection;
         };
-        interface TextInput {
-            resetSelection(): void;
-            setAriaOption(options?: {
-                activeDescendant: string;
-                role: string;
-                setLabel: any;
-            }): void;
-        }
         type CompleterCallback = (error: any, completions: Completion[]) => void;
         interface Completer {
             identifierRegexps?: Array<RegExp>;
@@ -1031,6 +1024,12 @@ declare module "ace-code" {
             "scroll": (e: {
                 data: number;
             }) => void;
+        }
+        export interface AriaOptions {
+            activeDescendant?: string;
+            role?: string;
+            setLabel?: boolean;
+            inline?: boolean;
         }
     }
     export const config: typeof import("ace-code/src/config");
