@@ -170,7 +170,7 @@ class DiffView extends BaseDiffView {
 
         let triangleSelectionRangeA, triangleSelectionRangeB;
 
-        if (!this.options.syncSelections) {
+        if (!this.$syncSelections) {
             isSessionA
                 ? triangleSelectionRangeB = this.selectionRangeB
                 : triangleSelectionRangeA = this.selectionRangeA;
