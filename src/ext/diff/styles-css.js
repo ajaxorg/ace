@@ -52,6 +52,28 @@ exports.cssText = `
     background: transparent;
 }
 
+.ace_diff.double-triangle::before,
+.ace_diff.double-triangle::after {
+    content: "";
+    position: absolute;
+}
+
+.ace_diff.double-triangle.ace_start::before {
+    left: 0;
+    border: solid black 3px;
+    border-bottom-color: transparent;
+    border-right-color: transparent;
+}
+
+.ace_diff.double-triangle.ace_end::after {
+    right: 0;
+    bottom: 0;
+    border: solid black 3px;
+    border-top-color: transparent;
+    border-left-color: transparent;
+}
+
+
 /*
  * Dark Colors 
  */

@@ -4,6 +4,7 @@ var LineWidgets = require("../../line_widgets").LineWidgets;
 
 var BaseDiffView = require("./base_diff_view").BaseDiffView;
 var config = require("../../config");
+var Range = require("../../range").Range;
 
 class DiffView extends BaseDiffView {
     /**
@@ -176,6 +177,38 @@ class DiffView extends BaseDiffView {
         }
     }
 
+    initSelectionMarkers() {
+        super.initSelectionMarkers();
+
+        this.syncSelectionColumnMarkerA = new SyncSelectionColumnMarker();
+        this.syncSelectionColumnMarkerB = new SyncSelectionColumnMarker();
+        this.sessionA.addDynamicMarker(this.syncSelectionColumnMarkerA, true);
+        this.sessionB.addDynamicMarker(this.syncSelectionColumnMarkerB, true);
+    }
+    clearSelectionMarkers() {
+        super.clearSelectionMarkers();
+
+        this.sessionA.removeMarker(this.syncSelectionColumnMarkerA.id);
+        this.sessionB.removeMarker(this.syncSelectionColumnMarkerB.id);
+    }
+
+    syncSelect(selection) {
+        super.syncSelect(selection);
+
+        let isSessionA = selection.session === this.diffSession.sessionA;
+
+        let triangleSelectionRangeA, triangleSelectionRangeB;
+
+        if (!this.options.syncSelections) {
+            isSessionA
+                ? triangleSelectionRangeB = this.selectionRangeB
+                : triangleSelectionRangeA = this.selectionRangeA;
+        }
+
+        this.updateSelectionMarker(this.syncSelectionColumnMarkerA, this.diffSession.sessionA, triangleSelectionRangeA);
+        this.updateSelectionMarker(this.syncSelectionColumnMarkerB, this.diffSession.sessionB, triangleSelectionRangeB);
+    }
+
     $attachSessionsEventHandlers() {
         this.$attachSessionEventHandlers(this.editorA, this.markerA);
         this.$attachSessionEventHandlers(this.editorB, this.markerB);
@@ -233,6 +266,31 @@ class DiffView extends BaseDiffView {
     $detachEditorEventHandlers(editor) {
         editor.off("mousewheel", this.onMouseWheel);
         editor.off("input", this.onInput);
+    }
+}
+
+class SyncSelectionColumnMarker {
+    constructor() {
+        /**@type{number}*/this.id;
+        this.type = "";
+        this.clazz = "ace_diff double-triangle";
+    }
+
+    update(html, markerLayer, session, config) {
+    }
+
+    /**
+     * @param {Range} range
+     */
+    setRange(range) {//TODO
+        if (!range) {
+            this.range = null;
+            return;
+        }
+        let newRange = range.clone();
+        newRange.end.column++;
+
+        this.range = newRange;
     }
 }
 
