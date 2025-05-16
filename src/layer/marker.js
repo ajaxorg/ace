@@ -92,7 +92,7 @@ class Marker {
                 else
                     this.drawMultiLineMarker(html, range, marker.clazz, config);
             } else {
-                this.drawSingleLineMarker(html, range, marker.clazz + " ace_start" + " ace_br15", config);
+                this.drawSingleLineMarker(html, range, marker.clazz + " ace_start ace_end" + " ace_br15", config);
             }
         }
         if (this.i !=-1) {
@@ -135,7 +135,7 @@ class Marker {
             curr = next;
             next = row + 1 < end ? session.getScreenLastRowColumn(row + 1) : row == end ? 0 : range.end.column;
             this.drawSingleLineMarker(stringBuilder, lineRange, 
-                clazz + (row == start  ? " ace_start" : "") + " ace_br"
+                clazz + (row == start  ? " ace_start" : row == end ? " ace_end" : "") + " ace_br"
                     + getBorderClass(row == start || row == start + 1 && range.start.column, prev < curr, curr > next, row == end),
                 layerConfig, row == end ? 0 : 1, extraStyle);
         }
@@ -179,7 +179,7 @@ class Marker {
             var width = range.end.column * config.characterWidth;
 
             this.elt(
-                clazz + " ace_br12",
+                clazz + " ace_br12 ace_end",
                 "height:"+ height+ "px;"+
                 "width:"+ width+ "px;"+
                 "top:"+ top+ "px;"+
