@@ -168,16 +168,16 @@ class DiffView extends BaseDiffView {
 
         let isSessionA = selection.session === this.diffSession.sessionA;
 
-        let triangleSelectionRangeA, triangleSelectionRangeB;
+        let columnSelectionRangeA, columnSelectionRangeB;
 
         if (!this.$syncSelections) {
             isSessionA
-                ? triangleSelectionRangeB = this.selectionRangeB
-                : triangleSelectionRangeA = this.selectionRangeA;
+                ? columnSelectionRangeB = this.selectionRangeB
+                : columnSelectionRangeA = this.selectionRangeA;
         }
 
-        this.updateSelectionMarker(this.syncSelectionColumnMarkerA, this.diffSession.sessionA, triangleSelectionRangeA);
-        this.updateSelectionMarker(this.syncSelectionColumnMarkerB, this.diffSession.sessionB, triangleSelectionRangeB);
+        this.updateSelectionMarker(this.syncSelectionColumnMarkerA, this.diffSession.sessionA, columnSelectionRangeA);
+        this.updateSelectionMarker(this.syncSelectionColumnMarkerB, this.diffSession.sessionB, columnSelectionRangeB);
     }
 
     $attachSessionsEventHandlers() {
