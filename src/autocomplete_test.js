@@ -581,7 +581,7 @@ module.exports = {
         user.type(" ");
         user.type("t");
         user.type("e");
-        assert.ok(!editor.completer || !editor.completer.popup.isOpen);
+        assert.ok(!editor.completer.popup || !editor.completer.popup.isOpen);
         setTimeout(function() {
             assert.ok(editor.completer.popup.isOpen);
             assert.ok(editor.completers[1].timeout);
