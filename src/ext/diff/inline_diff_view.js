@@ -76,6 +76,7 @@ class InlineDiffView extends BaseDiffView {
         this.initTextLayer();
 
         this.$attachEventHandlers();
+        this.selectEditor(this.activeEditor);
     }
 
     initTextLayer() {
@@ -129,6 +130,7 @@ class InlineDiffView extends BaseDiffView {
 
     selectEditor(editor) {
         if (editor == this.activeEditor) {
+            this.otherEditor.session.selection.cursor.setPosition(-1, -1, true);
             this.otherEditor.selection.clearSelection();
             this.activeEditor.textInput.setHost(this.activeEditor);
             this.activeEditor.setStyle("ace_diff_other", false);
