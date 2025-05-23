@@ -148,15 +148,13 @@ class BaseDiffView {
     }
 
     foldUnchanged() {
-        this.sessionA.unfold();
-        this.sessionB.unfold();
-
         var chunks = this.chunks;
         var placeholder = "-".repeat(120);
         var prev = {
             old: new Range(0, 0, 0, 0),
             new: new Range(0, 0, 0, 0)
         };
+        var foldsChanged = false;
         for (var i = 0; i < chunks.length + 1; i++) {
             let current = chunks[i] || {
                 old: new Range(this.sessionA.getLength(), 0, this.sessionA.getLength(), 0),
@@ -168,6 +166,7 @@ class BaseDiffView {
                 var fold1 = this.sessionA.addFold(placeholder, new Range(s, 0, s + l, Number.MAX_VALUE));
                 s = prev.new.end.row + 2;
                 var fold2 = this.sessionB.addFold(placeholder, new Range(s, 0, s + l, Number.MAX_VALUE));
+                if (fold1 || fold2) foldsChanged = true;
                 if (fold2 && fold1) {
                     fold1["other"] = fold2;
                     fold2["other"] = fold1;
@@ -176,7 +175,23 @@ class BaseDiffView {
 
             prev = current;
         }
+        return foldsChanged;
+    }
 
+    unfoldUnchanged() {
+        var folds = this.sessionA.getAllFolds();
+        for (var i = folds.length - 1; i >= 0; i--) {
+            var fold = folds[i];
+            if (fold.placeholder.length == 120) {
+                this.sessionA.removeFold(fold);
+            }
+        }
+    }
+
+    toggleFoldUnchanged() {
+        if (!this.foldUnchanged()) {
+            this.unfoldUnchanged();
+        }
     }
 
     /**
@@ -228,8 +243,14 @@ class BaseDiffView {
     }
 
     onChangeTheme() {
-        this.editorA && this.editorA.setTheme(this.getTheme());
-        this.editorB && this.editorB.setTheme(this.getTheme());
+        var theme = this.getTheme();
+
+        if (this.editorA && this.editorA.getTheme() !== theme) {
+            this.editorA.setTheme(theme);
+        }
+        if (this.editorB && this.editorB.getTheme() !== theme) {
+            this.editorB.setTheme(theme);
+        }
     }
 
     resize(force) {
@@ -738,6 +759,14 @@ config.defineOptions(BaseDiffView.prototype, "DiffView", {
     maxDiffs: {
         value: 5000,
     },
+    theme: {
+        set: function(value) {
+            this.setTheme(value);
+        },
+        get: function() {
+            return this.editorA.getTheme();
+        }
+    },
 }); 
 
 var emptyGutterRenderer =  {
@@ -901,7 +930,7 @@ class SyncSelectionMarker {
     constructor() {
         /**@type{number}*/this.id;
         this.type = "fullLine";
-        this.clazz = "ace_diff selection";
+        this.clazz = "ace_diff-active-line";
     }
 
     update(html, markerLayer, session, config) {
