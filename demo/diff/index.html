@@ -76,7 +76,7 @@
         var {InlineDiffView} = require("ace/ext/diff/inline_diff_view");
         var {DiffView} = require("ace/ext/diff/diff_view");
         var {DiffProvider} = require("ace/ext/diff/providers/default");
-        var {OptionPanel} = require("ace/ext/options")
+        var {OptionPanel, optionGroups} = require("ace/ext/options")
         var {buildDom} = require("ace/lib/dom");
 
         var tollbarButtons = {};
@@ -97,16 +97,6 @@
         var goToPrevious = () => {
             diffView.gotoNext(-1);
             updateButtonsState();
-        };
-
-        var foldUnchanged = () => {
-            var checked = document.getElementById("btn-foldunchanged").checked;
-            diffView.options.foldUnchanged = checked;
-            diffView.onInput();
-            if (!checked) {
-                diffView.diffSession.sessionA.unfold();
-                diffView.diffSession.sessionB.unfold();
-            }
         };
 
         function reset() {
@@ -170,6 +160,7 @@
             syncSelections: localStorage.syncSelections != "false",
             showOtherLineNumbers: localStorage.showOtherLineNumbers != "false",
             folding: localStorage.folding != "false",
+            theme: localStorage.theme || "ace/theme/textmate",
         }
         function drawToolbar() {
 
@@ -222,8 +213,19 @@
                     }),
                     "Wrap"
                 ],
-                ["button", {onclick: function() {diffView.foldUnchanged()}}, "Fold Unchanged"],
+                ["label", {},
+                    optionBar.renderOptionControl("", {
+                        path: "folding",
+                        type: "checkbox",
+                    }),
+                    "Folding"
+                ],
+                ["button", {onclick: function() {diffView.toggleFoldUnchanged()}}, "Fold Unchanged"],
                 ["button", {id: "btn-reset", onclick: reset}, "Reset"],
+                ["label", {},
+                    optionBar.renderOptionControl("", optionGroups.Main.Theme),
+                    "Theme"
+                ],
             ] 
             buildDom(data, toolbar, tollbarButtons);
         }

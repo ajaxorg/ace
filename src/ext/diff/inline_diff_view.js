@@ -76,6 +76,7 @@ class InlineDiffView extends BaseDiffView {
         this.initTextLayer();
 
         this.$attachEventHandlers();
+        this.selectEditor(this.activeEditor);
     }
 
     initTextLayer() {
@@ -138,6 +139,9 @@ class InlineDiffView extends BaseDiffView {
                 this.sessionA.removeMarker(this.syncSelectionMarkerA.id);
                 this.sessionA.addDynamicMarker(this.syncSelectionMarkerA, true);
             }
+            this.markerLayer.element.classList.add("ace_hidden_marker-layer");
+            this.activeEditor.renderer.$markerBack.element.classList.remove("ace_hidden_marker-layer");
+            this.removeBracketHighlight(this.otherEditor); 
         } else {
             this.activeEditor.selection.clearSelection();
             this.activeEditor.textInput.setHost(this.otherEditor);
@@ -152,8 +156,22 @@ class InlineDiffView extends BaseDiffView {
             if (this.showSideA) {
                 this.sessionA.removeMarker(this.syncSelectionMarkerA.id);
             }
+            this.markerLayer.element.classList.remove("ace_hidden_marker-layer");
+            this.activeEditor.renderer.$markerBack.element.classList.add("ace_hidden_marker-layer");
+            this.removeBracketHighlight(this.activeEditor); 
         }
     }
+
+    removeBracketHighlight(editor) {
+        var session = editor.session;
+        if (session.$bracketHighlight) {
+            session.$bracketHighlight.markerIds.forEach(function(id) {
+                session.removeMarker(id);
+            });
+            session.$bracketHighlight = null;
+        }
+    }
+
     initMouse() {
         this.otherEditor.renderer.$loop = this.activeEditor.renderer.$loop;
         
