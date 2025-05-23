@@ -401,3 +401,4 @@ class OptionPanel {
 oop.implement(OptionPanel.prototype, EventEmitter);
 
 exports.OptionPanel = OptionPanel;
+exports.optionGroups = optionGroups;
