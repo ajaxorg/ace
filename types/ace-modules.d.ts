@@ -817,22 +817,25 @@ declare module "ace-code/src/css/editor-css" {
 }
 declare module "ace-code/src/layer/decorators" {
     export class Decorator {
-        constructor(parent: any, renderer: any);
-        parentEl: any;
-        canvas: HTMLCanvasElement;
-        renderer: any;
+        constructor(scrollbarV: import("ace-code").Ace.VScrollbar, renderer: import("ace-code/src/virtual_renderer").VirtualRenderer);
+        renderer: import("ace-code/src/virtual_renderer").VirtualRenderer;
         pixelRatio: number;
-        maxHeight: any;
-        lineHeight: any;
+        maxHeight: number;
+        lineHeight: number;
         minDecorationHeight: number;
         halfMinDecorationHeight: number;
         colors: {};
-        compensateFoldRows(row: any): number;
-        compensateLineWidgets(row: any): number;
+        canvas: HTMLCanvasElement;
+        setScrollBarV(scrollbarV: any): void;
+        scrollbarV: any;
+        getVerticalOffsetForRow(row: any): number;
         setDimensions(config: any): void;
         canvasHeight: any;
-        heightRatio: number;
         canvasWidth: any;
+        heightRatio: number;
+        setZoneWidth(): void;
+        oneZoneWidth: any;
+        destroy(): void;
     }
 }
 declare module "ace-code/src/virtual_renderer" {

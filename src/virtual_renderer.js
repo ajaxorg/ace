@@ -2103,9 +2103,6 @@ class VirtualRenderer {
         this.$horizScroll = this.$vScroll = null;
         this.scrollBarV.element.remove();
         this.scrollBarH.element.remove();
-        if (this.$scrollDecorator) {
-            delete this.$scrollDecorator;
-        }
         if (val === true) {
             /**@type {import("../ace-internal").Ace.VScrollbar}*/
             this.scrollBarV = new VScrollBarCustom(this.container, this);
@@ -2120,8 +2117,13 @@ class VirtualRenderer {
             this.scrollBarH.addEventListener("scroll", function (e) {
                 if (!_self.$scrollAnimation) _self.session.setScrollLeft(e.data - _self.scrollMargin.left);
             });
-            this.$scrollDecorator = new Decorator(this.scrollBarV, this);
-            this.$scrollDecorator.$updateDecorators();
+            if (!this.$scrollDecorator) {
+                this.$scrollDecorator = new Decorator(this.scrollBarV, this);
+                this.$scrollDecorator.$updateDecorators();
+            } else {
+                this.$scrollDecorator.setScrollBarV(this.scrollBarV);
+                this.$scrollDecorator.$updateDecorators();
+            }
         }
         else {
             this.scrollBarV = new VScrollBar(this.container, this);

@@ -10,6 +10,9 @@ var {DiffProvider} = require("./providers/default");
 var ace = require("../../ace");
 var Range = require("../../range").Range;
 var editorA, editorB, diffView;
+const {Decorator} = require("../../layer/decorators");
+const {ScrollDiffDecorator} = require("./scroll_diff_decorator");
+
 
 var DEBUG = false;
 
@@ -21,18 +24,18 @@ function createEditor() {
     editor.container.style.position = "absolute";
     editor.container.style.outline = "solid";
     return editor;
-} 
+}
 
 function getValueA(lines) {
     return lines.map(function(v) {
-        return v[0]; 
+        return v[0];
     }).filter(function(x) {
         return x != null;
     }).join("\n");
 }
 function getValueB(lines) {
     return lines.map(function(v) {
-        return v.length == 2 ? v[1] : v[0]; 
+        return v.length == 2 ? v[1] : v[0];
     }).filter(function(x) {
         return x != null;
     }).join("\n");
@@ -189,7 +192,7 @@ module.exports = {
 
         diffView.detach();
         checkEventRegistry();
-        
+
     },
     "test: diff at ends": function() {
         var diffProvider = new DiffProvider();
@@ -277,6 +280,7 @@ module.exports = {
 
         editorA.session.setValue(getValueA(simpleDiff));
         editorB.session.setValue(getValueB(simpleDiff));
+        editorA.setOption("customScrollbar", true);
 
         diffView = new InlineDiffView({
             editorA, editorB,
@@ -302,6 +306,8 @@ module.exports = {
 
         assert.ok(!!diffView.editorB.renderer.$gutterLayer.$renderer);
 
+        assert.ok(editorA.renderer.$scrollDecorator instanceof ScrollDiffDecorator);
+
         diffView.detach();
 
         assert.equal(editorA.getOption("wrap"), "free");
@@ -312,9 +318,76 @@ module.exports = {
         assert.equal(editorB.getOption("fadeFoldWidgets"), false);
         assert.equal(editorB.getOption("showFoldWidgets"), true);
         assert.ok(!editorB.renderer.$gutterLayer.$renderer);
+
+        assert.ok(editorA.renderer.$scrollDecorator instanceof Decorator);
     },
+    "test split diff scroll decorators": function(done) {
+        editorA.session.setValue(["a", "b", "c"].join("\n"));
+        editorB.session.setValue(["a", "c", "X"].join("\n"));
+
+        diffView = new DiffView({ editorA, editorB });
+        diffView.setProvider(new DiffProvider());
+
+        editorA.renderer.$loop._flush();
+        editorB.renderer.$loop._flush();
+
+        editorA.renderer.once("afterRender", () => {
+            setTimeout(() => {
+                assertDecoratorsPlacement(editorA, false);
+                done();
+            }, 0);
+        });
+    },
+    "test inline diff scroll decorators": function(done) {
+        editorA.session.setValue(["a", "b", "c"].join("\n"));
+        editorB.session.setValue(["a", "c", "X"].join("\n"));
+
+        diffView = new InlineDiffView({ editorA, editorB, showSideA: true });
+        diffView.setProvider(new DiffProvider());
+
+        editorA.renderer.$loop._flush();
+
+        editorA.renderer.once("afterRender", () => {
+            setTimeout(() => {
+                assertDecoratorsPlacement(editorA, true);
+                done();
+            }, 0);
+        });
+    }
 };
 
+function findPointFillStyle(imageData, y) {
+    const data = imageData.slice(4 * y, 4 * (y + 1));
+    const a = Math.round(data[3] / 256 * 100);
+    if (a === 100) return "rgb(" + data.slice(0, 3).join(",") + ")";
+    return "rgba(" + data.slice(0, 3).join(",") + "," + (a / 100) + ")";
+}
+
+function assertDecoratorsPlacement(editor, inlineDiff) {
+    const decoA = editor.renderer.$scrollDecorator;
+    const ctxA = decoA.canvas.getContext("2d");
+    const delRow = 1;
+    const offA = decoA.sessionA.documentToScreenRow(delRow, 0) * decoA.lineHeight;
+    const centerA = offA + decoA.lineHeight / 2;
+    const yA = Math.round(decoA.heightRatio * centerA);
+    let imgA = ctxA.getImageData(decoA.oneZoneWidth, 0, 1, decoA.canvasHeight).data;
+    assert.equal(findPointFillStyle(imgA, yA), decoA.colors.light.delete);
+
+    if (inlineDiff) {
+        //make sure that in inline diff, markers fills the whole line (except error decorators part)
+        imgA = ctxA.getImageData(decoA.canvasWidth - 1, 0, 1, decoA.canvasHeight).data;
+        assert.equal(findPointFillStyle(imgA, yA), decoA.colors.light.delete);
+    }
+
+    const xB = decoA.oneZoneWidth * 2;
+    const imgB = ctxA.getImageData(xB, 0, 1, decoA.canvasHeight).data;
+
+    const insRow = 2;
+    const offB = decoA.sessionB.documentToScreenRow(insRow, 0) * decoA.lineHeight;
+    const centerB = offB + decoA.lineHeight / 2;
+    const yB = Math.round(decoA.heightRatio * centerB);
+    assert.equal(findPointFillStyle(imgB, yB), decoA.colors.light.insert);
+}
 
 if (typeof module !== "undefined" && module === require.main) {
     require("asyncjs").test.testcase(module.exports).exec();
