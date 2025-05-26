@@ -752,7 +752,7 @@ class TextInput {
     }
 
     /**
-     * @param {import("../../ace-internal").Ace.AriaOptions} options
+     * @param {import("../../ace-internal").Ace.TextInputAriaOptions} options
      */
     setAriaOptions(options) {
         if (options.activeDescendant) {

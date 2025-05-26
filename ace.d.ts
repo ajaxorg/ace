@@ -1025,7 +1025,7 @@ declare module "ace-code" {
                 data: number;
             }) => void;
         }
-        export interface AriaOptions {
+        export interface TextInputAriaOptions {
             activeDescendant?: string;
             role?: string;
             setLabel?: boolean;

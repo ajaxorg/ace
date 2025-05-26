@@ -1605,7 +1605,7 @@ declare module "ace-code/src/keyboard/textinput" {
          */
         setNumberOfExtraLines(number: number): void;
         setAriaLabel(): void;
-        setAriaOptions(options: import("ace-code").Ace.AriaOptions): void;
+        setAriaOptions(options: import("ace-code").Ace.TextInputAriaOptions): void;
         focus(): void;
         blur(): void;
         isFocused(): boolean;
