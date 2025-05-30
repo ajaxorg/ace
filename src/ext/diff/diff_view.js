@@ -183,7 +183,8 @@ class DiffView extends BaseDiffView {
     }
 
     $attachEventHandlers() {
-        this.editorA.renderer.on("themeLoaded", this.onChangeTheme);
+        this.editorA.renderer.on("themeChange", this.onChangeTheme);
+        this.editorB.renderer.on("themeChange", this.onChangeTheme);
 
         this.editorA.on("mousewheel", this.onMouseWheel);
         this.editorB.on("mousewheel", this.onMouseWheel);
@@ -196,7 +197,8 @@ class DiffView extends BaseDiffView {
     $detachEventHandlers() {
         this.$detachSessionsEventHandlers();
         this.clearSelectionMarkers();
-        this.editorA.renderer.off("themeLoaded", this.onChangeTheme);
+        this.editorA.renderer.off("themeChange", this.onChangeTheme);
+        this.editorB.renderer.off("themeChange", this.onChangeTheme);
         this.$detachEditorEventHandlers(this.editorA);
         this.$detachEditorEventHandlers(this.editorB);
     }

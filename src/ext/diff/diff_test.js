@@ -75,6 +75,8 @@ module.exports = {
         ace.config.setLoader(function(moduleName, cb) {
             if (moduleName == "ace/ext/error_marker")
                 return cb(null, require("../error_marker"));
+            if (moduleName == "ace/theme/cloud_editor")
+                return cb(null, require("../../theme/cloud_editor"));
         });
         editorA = createEditor();
         editorB = createEditor();
@@ -176,6 +178,14 @@ module.exports = {
         
         diffView.onInput();
         diffView.resize(true);
+
+        diffView.setTheme("ace/theme/cloud_editor");
+        assert.equal(diffView.editorA.getTheme(), "ace/theme/cloud_editor");
+        assert.equal(diffView.editorB.getTheme(), "ace/theme/cloud_editor"); 
+
+        diffView.editorB.setTheme("ace/theme/textmate");
+        assert.equal(diffView.editorA.getTheme(), "ace/theme/textmate");
+        assert.equal(diffView.editorB.getTheme(), "ace/theme/textmate");
 
         diffView.detach();
         checkEventRegistry();
@@ -279,9 +289,12 @@ module.exports = {
         assert.ok(diffView.sessionB.$scrollTop > 100);
         assert.ok(diffView.sessionA.$scrollTop == diffView.sessionB.$scrollTop);
 
-        diffView.foldUnchanged();
+        diffView.toggleFoldUnchanged();
         assert.equal(diffView.sessionA.$foldData.length, 20);
         assert.equal(diffView.sessionA.$foldData.length, 20);
+        diffView.toggleFoldUnchanged();
+        assert.equal(diffView.sessionA.$foldData.length, 0);
+        assert.equal(diffView.sessionA.$foldData.length, 0);
 
     },
 

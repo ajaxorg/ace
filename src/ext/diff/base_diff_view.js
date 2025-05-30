@@ -242,8 +242,8 @@ class BaseDiffView {
         return (this.editorA || this.editorB).getTheme();
     }
 
-    onChangeTheme() {
-        var theme = this.getTheme();
+    onChangeTheme(e) {
+        var theme = e && e.theme || this.getTheme();
 
         if (this.editorA && this.editorA.getTheme() !== theme) {
             this.editorA.setTheme(theme);
