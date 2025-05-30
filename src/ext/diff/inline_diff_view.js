@@ -2,6 +2,7 @@
 
 
 const BaseDiffView = require("./base_diff_view").BaseDiffView;
+const Renderer = require("../../virtual_renderer").VirtualRenderer;
 const config = require("../../config");
 
 class InlineDiffView extends BaseDiffView {
@@ -74,9 +75,25 @@ class InlineDiffView extends BaseDiffView {
         this.initMouse();
         this.initTextInput();
         this.initTextLayer();
+        this.initRenderer();
 
         this.$attachEventHandlers();
         this.selectEditor(this.activeEditor);
+    }
+
+    initRenderer(restore) {
+        if (restore) {
+            delete this.activeEditor.renderer.$getLongestLine;
+        } else {
+            this.editorA.renderer.$getLongestLine =
+            this.editorB.renderer.$getLongestLine = () => {
+                var getLongestLine = Renderer.prototype.$getLongestLine;
+                return Math.max(
+                    getLongestLine.call(this.editorA.renderer),
+                    getLongestLine.call(this.editorB.renderer)
+                );
+            };
+        }
     }
 
     initTextLayer() {
@@ -328,6 +345,7 @@ class InlineDiffView extends BaseDiffView {
         this.otherEditor.setSession(null);
         this.otherEditor.renderer.$loop = null;
         this.initTextInput(true);
+        this.initRenderer(true);
 
         this.otherEditor.destroy();
     }
