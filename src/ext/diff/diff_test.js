@@ -16,12 +16,15 @@ var DEBUG = false;
 function createEditor() {
     var editor = ace.edit(null);
     document.body.appendChild(editor.container);
+    setEditorPosition(editor);
+    return editor;
+}
+function setEditorPosition(editor) {
     editor.container.style.height = "200px";
     editor.container.style.width = "300px";
     editor.container.style.position = "absolute";
     editor.container.style.outline = "solid";
-    return editor;
-} 
+}
 
 function getValueA(lines) {
     return lines.map(function(v) {
@@ -203,9 +206,16 @@ module.exports = {
             showSideA: true,
             diffProvider,
         }, document.body);
+        setEditorPosition(diffView.editorA);
         diffView.onInput();
         diffView.resize(true);
+        var lineHeight = diffView.editorA.renderer.lineHeight;
+        assert.ok(diffView.editorA.renderer.lineHeight > 0);
         assert.equal(diffView.chunks.length, 2);
+        assert.equal(diffView.editorA.renderer.layerConfig.offset, 0);
+        diffView.sessionA.setScrollTop(lineHeight * 1.5);
+        diffView.resize(true);
+        assert.equal(diffView.editorA.renderer.layerConfig.offset, 0.5 * lineHeight);
         diffView.detach();
 
         diffView = new DiffView({
@@ -213,6 +223,8 @@ module.exports = {
             valueB,
             diffProvider,
         }, document.body);
+        setEditorPosition(diffView.editorA);
+        setEditorPosition(diffView.editorB);
         diffView.onInput();
         diffView.resize(true);
         assert.equal(diffView.chunks.length, 2);
@@ -224,6 +236,7 @@ module.exports = {
             valueB,
             showSideA: false,
         }, document.body);
+        setEditorPosition(diffView.editorB);
         diffView.onInput();
         diffView.resize(true);
         assert.equal(diffView.chunks.length, 0);
