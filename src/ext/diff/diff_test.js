@@ -69,7 +69,17 @@ var diffAtEnds = [
     ["only old", null],
     ["only old2", null],
 ];
-
+var longLinesDiff = [
+    [null, "0"],
+    ["a"],
+    ["b"],
+    ["c", "edited c ".repeat(100)],
+    ["e long ".repeat(100)],
+    ["f"],
+    ["g " + "to delete ".repeat(100), "edited g"],
+    ["h"],
+    ["i"],
+];
 module.exports = {
     setUpSuite: function() {
         ace.config.setLoader(function(moduleName, cb) {
@@ -296,6 +306,29 @@ module.exports = {
         assert.equal(diffView.sessionA.$foldData.length, 0);
         assert.equal(diffView.sessionA.$foldData.length, 0);
 
+    },
+
+    "test: toggle wrap": function() {
+        var diffProvider = new DiffProvider();
+
+        editorA.session.setValue(getValueA(longLinesDiff));
+        editorB.session.setValue(getValueB(longLinesDiff));
+
+        diffView = new DiffView({
+            editorA, editorB,
+            diffProvider,
+        });
+        diffView.onInput();
+        diffView.setOptions({
+            wrap: 20,
+            syncSelections: true,
+        });
+        diffView.resize(true);
+        diffView.gotoNext(1);
+        diffView.gotoNext(1);
+        var posA = diffView.sessionA.documentToScreenPosition(diffView.editorA.getCursorPosition());
+        var posB = diffView.sessionB.documentToScreenPosition(diffView.editorB.getCursorPosition());
+        assert.equal(posA.row, posB.row);
     },
 
     "test: restore options": function() {

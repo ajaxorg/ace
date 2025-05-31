@@ -27,7 +27,6 @@ class InlineDiffView extends BaseDiffView {
     init(diffModel) {
         this.onSelect = this.onSelect.bind(this);
         this.onAfterRender = this.onAfterRender.bind(this);
-        this.onChangeWrapLimit = this.onChangeWrapLimit.bind(this);
         
 
         this.$setupModels(diffModel);

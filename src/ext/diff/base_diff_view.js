@@ -38,6 +38,7 @@ class BaseDiffView {
         this.onChangeFold = this.onChangeFold.bind(this);
         this.realign = this.realign.bind(this);
         this.onSelect = this.onSelect.bind(this);
+        this.onChangeWrapLimit = this.onChangeWrapLimit.bind(this);
         this.realignPending = false;
 
         /**@type{{sessionA: EditSession, sessionB: EditSession, chunks: DiffChunk[]}}*/this.diffSession;
@@ -365,11 +366,14 @@ class BaseDiffView {
         return row;
     }
 
-    /** scroll locking
+    /** 
+     * scroll locking
      * @abstract
      **/
-    align() {
-    }
+    align() {}
+
+    onChangeWrapLimit(e, session) {}
+
     onSelect(e, selection) {
         this.searchHighlight(selection);
         this.syncSelect(selection);
