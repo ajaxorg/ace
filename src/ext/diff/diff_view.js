@@ -40,6 +40,10 @@ class DiffView extends BaseDiffView {
         this.$attachEventHandlers();
     }
 
+    onChangeWrapLimit() {
+        this.scheduleRealign();
+    }
+
     /*** scroll locking ***/
     align() {
         var diffView = this;
@@ -163,6 +167,9 @@ class DiffView extends BaseDiffView {
         editor.session.addDynamicMarker(marker);
         editor.selection.on("changeCursor", this.onSelect);
         editor.selection.on("changeSelection", this.onSelect);
+
+        editor.session.on("changeWrapLimit", this.onChangeWrapLimit);
+        editor.session.on("changeWrapMode", this.onChangeWrapLimit);
     }
 
     $detachSessionsEventHandlers() {
@@ -180,10 +187,14 @@ class DiffView extends BaseDiffView {
         editor.session.removeMarker(marker.id);
         editor.selection.off("changeCursor", this.onSelect);
         editor.selection.off("changeSelection", this.onSelect);
+
+        editor.session.off("changeWrapLimit", this.onChangeWrapLimit);
+        editor.session.off("changeWrapMode", this.onChangeWrapLimit);
     }
 
     $attachEventHandlers() {
-        this.editorA.renderer.on("themeLoaded", this.onChangeTheme);
+        this.editorA.renderer.on("themeChange", this.onChangeTheme);
+        this.editorB.renderer.on("themeChange", this.onChangeTheme);
 
         this.editorA.on("mousewheel", this.onMouseWheel);
         this.editorB.on("mousewheel", this.onMouseWheel);
@@ -196,7 +207,8 @@ class DiffView extends BaseDiffView {
     $detachEventHandlers() {
         this.$detachSessionsEventHandlers();
         this.clearSelectionMarkers();
-        this.editorA.renderer.off("themeLoaded", this.onChangeTheme);
+        this.editorA.renderer.off("themeChange", this.onChangeTheme);
+        this.editorB.renderer.off("themeChange", this.onChangeTheme);
         this.$detachEditorEventHandlers(this.editorA);
         this.$detachEditorEventHandlers(this.editorB);
     }
