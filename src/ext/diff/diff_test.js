@@ -307,6 +307,23 @@ module.exports = {
         assert.equal(diffView.sessionA.$foldData.length, 0);
 
     },
+    "test line widget at both sides of line": function() {
+        var diffProvider = new DiffProvider();
+
+        editorA.session.setValue("a\n");
+        editorB.session.setValue("\n\na\n\n");
+
+        diffView = new DiffView({
+            editorA, editorB,
+            diffProvider,
+        });
+        diffView.onInput();
+        diffView.resize(true);
+        var markers = diffView.editorA.renderer.$markerBack.element.childNodes;
+        assert.equal(markers[0].className, "ace_diff aligned_diff");
+        assert.equal(markers[1].className, "ace_diff aligned_diff");
+        assert.equal(markers.length, 4);
+    },
 
     "test: toggle wrap": function() {
         var diffProvider = new DiffProvider();

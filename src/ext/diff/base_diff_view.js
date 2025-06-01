@@ -842,12 +842,11 @@ class DiffHighlight {
                 let start = session.documentToScreenRow(row, 0);
 
                 if (lineWidget.rowsAbove > 0) {
-                    start -= lineWidget.rowsAbove;
-                } else {
-                    start++;
+                    var range = new Range(start - lineWidget.rowsAbove, 0, start - 1, Number.MAX_VALUE);
+                    markerLayer.drawFullLineMarker(html, range, "ace_diff aligned_diff", config);
                 }
-                let end = start + lineWidget.rowCount - 1;
-                var range = new Range(start, 0, end, Number.MAX_VALUE);
+                let end = start + lineWidget.rowCount - (lineWidget.rowsAbove || 0);
+                var range = new Range(start + 1, 0, end, Number.MAX_VALUE);
                 markerLayer.drawFullLineMarker(html, range, "ace_diff aligned_diff", config);
             }
         }
