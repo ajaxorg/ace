@@ -1163,8 +1163,8 @@ class VirtualRenderer {
 
         offset = this.scrollTop - firstRowScreen * lineHeight;
         // adjust firstRowScreen and offset in case there is a line widget above the first row
-        if (offset < 0) {
-            firstRowScreen += Math.floor(offset / lineHeight);
+        if (offset < 0 && firstRowScreen > 0) {
+            firstRowScreen = Math.max(0, firstRowScreen + Math.floor(offset / lineHeight));
             offset = this.scrollTop - firstRowScreen * lineHeight;
         }
 
