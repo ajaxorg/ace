@@ -38,6 +38,7 @@ class BaseDiffView {
         this.onChangeFold = this.onChangeFold.bind(this);
         this.realign = this.realign.bind(this);
         this.onSelect = this.onSelect.bind(this);
+        this.onChangeWrapLimit = this.onChangeWrapLimit.bind(this);
         this.realignPending = false;
 
         /**@type{{sessionA: EditSession, sessionB: EditSession, chunks: DiffChunk[]}}*/this.diffSession;
@@ -148,15 +149,13 @@ class BaseDiffView {
     }
 
     foldUnchanged() {
-        this.sessionA.unfold();
-        this.sessionB.unfold();
-
         var chunks = this.chunks;
         var placeholder = "-".repeat(120);
         var prev = {
             old: new Range(0, 0, 0, 0),
             new: new Range(0, 0, 0, 0)
         };
+        var foldsChanged = false;
         for (var i = 0; i < chunks.length + 1; i++) {
             let current = chunks[i] || {
                 old: new Range(this.sessionA.getLength(), 0, this.sessionA.getLength(), 0),
@@ -168,6 +167,7 @@ class BaseDiffView {
                 var fold1 = this.sessionA.addFold(placeholder, new Range(s, 0, s + l, Number.MAX_VALUE));
                 s = prev.new.end.row + 2;
                 var fold2 = this.sessionB.addFold(placeholder, new Range(s, 0, s + l, Number.MAX_VALUE));
+                if (fold1 || fold2) foldsChanged = true;
                 if (fold2 && fold1) {
                     fold1["other"] = fold2;
                     fold2["other"] = fold1;
@@ -176,7 +176,23 @@ class BaseDiffView {
 
             prev = current;
         }
+        return foldsChanged;
+    }
 
+    unfoldUnchanged() {
+        var folds = this.sessionA.getAllFolds();
+        for (var i = folds.length - 1; i >= 0; i--) {
+            var fold = folds[i];
+            if (fold.placeholder.length == 120) {
+                this.sessionA.removeFold(fold);
+            }
+        }
+    }
+
+    toggleFoldUnchanged() {
+        if (!this.foldUnchanged()) {
+            this.unfoldUnchanged();
+        }
     }
 
     /**
@@ -227,9 +243,15 @@ class BaseDiffView {
         return (this.editorA || this.editorB).getTheme();
     }
 
-    onChangeTheme() {
-        this.editorA && this.editorA.setTheme(this.getTheme());
-        this.editorB && this.editorB.setTheme(this.getTheme());
+    onChangeTheme(e) {
+        var theme = e && e.theme || this.getTheme();
+
+        if (this.editorA && this.editorA.getTheme() !== theme) {
+            this.editorA.setTheme(theme);
+        }
+        if (this.editorB && this.editorB.getTheme() !== theme) {
+            this.editorB.setTheme(theme);
+        }
     }
 
     resize(force) {
@@ -344,11 +366,14 @@ class BaseDiffView {
         return row;
     }
 
-    /** scroll locking
+    /** 
+     * scroll locking
      * @abstract
      **/
-    align() {
-    }
+    align() {}
+
+    onChangeWrapLimit(e, session) {}
+
     onSelect(e, selection) {
         this.searchHighlight(selection);
         this.syncSelect(selection);
@@ -738,6 +763,14 @@ config.defineOptions(BaseDiffView.prototype, "DiffView", {
     maxDiffs: {
         value: 5000,
     },
+    theme: {
+        set: function(value) {
+            this.setTheme(value);
+        },
+        get: function() {
+            return this.editorA.getTheme();
+        }
+    },
 }); 
 
 var emptyGutterRenderer =  {
@@ -809,12 +842,11 @@ class DiffHighlight {
                 let start = session.documentToScreenRow(row, 0);
 
                 if (lineWidget.rowsAbove > 0) {
-                    start -= lineWidget.rowsAbove;
-                } else {
-                    start++;
+                    var range = new Range(start - lineWidget.rowsAbove, 0, start - 1, Number.MAX_VALUE);
+                    markerLayer.drawFullLineMarker(html, range, "ace_diff aligned_diff", config);
                 }
-                let end = start + lineWidget.rowCount - 1;
-                var range = new Range(start, 0, end, Number.MAX_VALUE);
+                let end = start + lineWidget.rowCount - (lineWidget.rowsAbove || 0);
+                var range = new Range(start + 1, 0, end, Number.MAX_VALUE);
                 markerLayer.drawFullLineMarker(html, range, "ace_diff aligned_diff", config);
             }
         }
@@ -901,7 +933,7 @@ class SyncSelectionMarker {
     constructor() {
         /**@type{number}*/this.id;
         this.type = "fullLine";
-        this.clazz = "ace_diff selection";
+        this.clazz = "ace_diff-active-line";
     }
 
     update(html, markerLayer, session, config) {

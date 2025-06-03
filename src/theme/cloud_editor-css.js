@@ -60,6 +60,7 @@ module.exports = `
     width: 100%;
     left: 0;
     z-index: 1;
+    pointer-events: none;
 }
 
 .ace-cloud_editor .ace_marker-layer .ace_selected-word {
