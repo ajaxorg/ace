@@ -403,16 +403,16 @@ module.exports = {
 
         diffView = new DiffView({ editorA, editorB });
         diffView.setProvider(new DiffProvider());
+        diffView.onInput();
+
 
         editorA.renderer.$loop._flush();
         editorB.renderer.$loop._flush();
 
-        editorA.renderer.once("afterRender", () => {
-            setTimeout(() => {
-                assertDecoratorsPlacement(editorA, false);
-                done();
-            }, 0);
-        });
+        setTimeout(() => {
+            assertDecoratorsPlacement(editorA, false);
+            done();
+        }, 0);
     },
     "test inline diff scroll decorators": function(done) {
         editorA.session.setValue(["a", "b", "c"].join("\n"));
@@ -420,15 +420,14 @@ module.exports = {
 
         diffView = new InlineDiffView({ editorA, editorB, showSideA: true });
         diffView.setProvider(new DiffProvider());
+        diffView.onInput();
 
         editorA.renderer.$loop._flush();
 
-        editorA.renderer.once("afterRender", () => {
-            setTimeout(() => {
-                assertDecoratorsPlacement(editorA, true);
-                done();
-            }, 0);
-        });
+        setTimeout(() => {
+            assertDecoratorsPlacement(editorA, true);
+            done();
+        }, 0);
     }
 };
 
