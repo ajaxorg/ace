@@ -2462,6 +2462,7 @@ var {DiffChunk} = require("../base_diff_view");
 /**
  * VSCode’s computeDiff provider
  */
+
 class DiffProvider {
     compute(originalLines, modifiedLines, opts) {
         if (!opts) opts = {};

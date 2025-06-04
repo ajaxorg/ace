@@ -450,6 +450,195 @@ declare module "ace-code/src/ext/options" {
         getOption(option: any): any;
     }
     export type Editor = import("ace-code/src/editor").Editor;
+    export namespace optionGroups {
+        let Main: {
+            Mode: {
+                path: string;
+                type: string;
+                items: {
+                    caption: string;
+                    value: string;
+                }[];
+            };
+            Theme: {
+                path: string;
+                type: string;
+                items: {
+                    Bright: any[];
+                    Dark: any[];
+                };
+            };
+            Keybinding: {
+                type: string;
+                path: string;
+                items: {
+                    caption: string;
+                    value: string;
+                }[];
+            };
+            "Font Size": {
+                path: string;
+                type: string;
+                defaultValue: number;
+                defaults: {
+                    caption: string;
+                    value: number;
+                }[];
+            };
+            "Soft Wrap": {
+                type: string;
+                path: string;
+                items: {
+                    caption: string;
+                    value: string;
+                }[];
+            };
+            "Cursor Style": {
+                path: string;
+                items: {
+                    caption: string;
+                    value: string;
+                }[];
+            };
+            Folding: {
+                path: string;
+                items: {
+                    caption: string;
+                    value: string;
+                }[];
+            };
+            "Soft Tabs": ({
+                path: string;
+                ariaLabel?: undefined;
+                type?: undefined;
+                values?: undefined;
+            } | {
+                ariaLabel: string;
+                path: string;
+                type: string;
+                values: number[];
+            })[];
+            Overscroll: {
+                type: string;
+                path: string;
+                items: {
+                    caption: string;
+                    value: number;
+                }[];
+            };
+        };
+        let More: {
+            "Atomic soft tabs": {
+                path: string;
+            };
+            "Enable Behaviours": {
+                path: string;
+            };
+            "Wrap with quotes": {
+                path: string;
+            };
+            "Enable Auto Indent": {
+                path: string;
+            };
+            "Full Line Selection": {
+                type: string;
+                values: string;
+                path: string;
+            };
+            "Highlight Active Line": {
+                path: string;
+            };
+            "Show Invisibles": {
+                path: string;
+            };
+            "Show Indent Guides": {
+                path: string;
+            };
+            "Highlight Indent Guides": {
+                path: string;
+            };
+            "Persistent HScrollbar": {
+                path: string;
+            };
+            "Persistent VScrollbar": {
+                path: string;
+            };
+            "Animate scrolling": {
+                path: string;
+            };
+            "Show Gutter": {
+                path: string;
+            };
+            "Show Line Numbers": {
+                path: string;
+            };
+            "Relative Line Numbers": {
+                path: string;
+            };
+            "Fixed Gutter Width": {
+                path: string;
+            };
+            "Show Print Margin": ({
+                path: string;
+                ariaLabel?: undefined;
+                type?: undefined;
+            } | {
+                ariaLabel: string;
+                type: string;
+                path: string;
+            })[];
+            "Indented Soft Wrap": {
+                path: string;
+            };
+            "Highlight selected word": {
+                path: string;
+            };
+            "Fade Fold Widgets": {
+                path: string;
+            };
+            "Use textarea for IME": {
+                path: string;
+            };
+            "Merge Undo Deltas": {
+                path: string;
+                items: {
+                    caption: string;
+                    value: string;
+                }[];
+            };
+            "Elastic Tabstops": {
+                path: string;
+            };
+            "Incremental Search": {
+                path: string;
+            };
+            "Read-only": {
+                path: string;
+            };
+            "Copy without selection": {
+                path: string;
+            };
+            "Live Autocompletion": {
+                path: string;
+            };
+            "Custom scrollbar": {
+                path: string;
+            };
+            "Use SVG gutter icons": {
+                path: string;
+            };
+            "Annotations for folded lines": {
+                path: string;
+            };
+            "Keyboard Accessibility Mode": {
+                path: string;
+            };
+            "Gutter tooltip follows mouse": {
+                path: string;
+                defaultValue: boolean;
+            };
+        };
+    }
     namespace Ace {
         type EventEmitter<T extends {
             [K in keyof T]: (...args: any[]) => any;
@@ -644,8 +833,18 @@ declare module "ace-code/src/ext/whitespace" {
     }[];
     export type EditSession = import("ace-code/src/edit_session").EditSession;
 }
+declare module "ace-code/src/ext/diff/scroll_diff_decorator" {
+    export class ScrollDiffDecorator extends Decorator {
+        constructor(scrollbarV: import("ace-code").Ace.VScrollbar, renderer: import("ace-code/src/virtual_renderer").VirtualRenderer, forInlineDiff?: boolean);
+        addZone(startRow: number, endRow: number, type: "delete" | "insert"): void;
+        setSessions(sessionA: import("ace-code/src/edit_session").EditSession, sessionB: import("ace-code/src/edit_session").EditSession): void;
+        sessionA: import("ace-code/src/edit_session").EditSession;
+        sessionB: import("ace-code/src/edit_session").EditSession;
+    }
+    import { Decorator } from "ace-code/src/layer/decorators";
+}
 declare module "ace-code/src/ext/diff/styles-css" {
-    export const cssText: "\n/*\n * Line Markers\n */\n.ace_diff {\n    position: absolute;\n    z-index: 0;\n}\n.ace_diff.inline {\n    z-index: 20;\n}\n/*\n * Light Colors \n */\n.ace_diff.insert {\n    background-color: #eaffea; /*rgb(74 251 74 / 12%); */\n}\n.ace_diff.delete {\n    background-color: #ffecec; /*rgb(251 74 74 / 12%);*/\n}\n.ace_diff.aligned_diff {\n    background: rgba(206, 194, 191, 0.26);\n    background: repeating-linear-gradient(\n                45deg,\n              rgba(122, 111, 108, 0.26),\n              rgba(122, 111, 108, 0.26) 5px,\n              #FFFFFF 5px,\n              #FFFFFF 10px \n    );\n}\n\n.ace_diff.insert.inline {\n    background-color:  rgb(74 251 74 / 18%); \n}\n.ace_diff.delete.inline {\n    background-color: rgb(251 74 74 / 15%);\n}\n\n.ace_diff.delete.inline.empty {\n    background-color: rgba(255, 128, 79, 0.8);\n    width: 2px !important;\n}\n\n.ace_diff.insert.inline.empty {\n    background-color: rgba(49, 230, 96, 0.8);\n    width: 2px !important;\n}\n\n.ace_diff.selection {\n    border-bottom: 1px solid black;\n    border-top: 1px solid black;\n    background: transparent;\n}\n\n/*\n * Dark Colors \n */\n\n.ace_dark .ace_diff.insert.inline {\n    background-color: rgba(0, 130, 58, 0.45);\n}\n.ace_dark .ace_diff.delete.inline {\n    background-color: rgba(169, 46, 33, 0.55);\n}\n\n.ace_dark .ace_diff.selection {\n    border-bottom: 1px solid white;\n    border-top: 1px solid white;\n    background: transparent;\n}\n \n\n/* gutter changes */\n.ace_mini-diff_gutter-enabled > .ace_gutter-cell {\n    background-color: #f0f0f0;\n    padding-right: 13px;\n}\n\n.ace_mini-diff_gutter-enabled > .mini-diff-added {\n    background-color: #eaffea;\n    border-left: 3px solid #00FF00;\n    padding-left: 0;\n}\n\n.ace_mini-diff_gutter-enabled > .mini-diff-deleted {\n    background-color: #ffecec;\n    border-left: 3px solid #FF0000;\n    padding-left: 0;\n}\n\n\n.ace_mini-diff_gutter-enabled > .mini-diff-added:after {\n    position: absolute;\n    right: 2px;\n    content: \"+\";\n    color: darkgray;\n    background-color: inherit;\n}\n\n.ace_mini-diff_gutter-enabled > .mini-diff-deleted:after {\n    position: absolute;\n    right: 2px;\n    content: \"-\";\n    color: darkgray;\n    background-color: inherit;\n}\n.ace_fade-fold-widgets:hover .mini-diff-added:after {\n    display: none;\n}\n.ace_fade-fold-widgets:hover .mini-diff-deleted:after {\n    display: none;\n}\n\n.ace_diff_other .ace_selection {\n    filter: drop-shadow(1px 2px 3px darkgray);\n}\n\n";
+    export const cssText: "\n/*\n * Line Markers\n */\n.ace_diff {\n    position: absolute;\n    z-index: 0;\n}\n.ace_diff.inline {\n    z-index: 20;\n}\n/*\n * Light Colors \n */\n.ace_diff.insert {\n    background-color: #EFFFF1;\n}\n.ace_diff.delete {\n    background-color: #FFF1F1;\n}\n.ace_diff.aligned_diff {\n    background: rgba(206, 194, 191, 0.26);\n    background: repeating-linear-gradient(\n                45deg,\n              rgba(122, 111, 108, 0.26),\n              rgba(122, 111, 108, 0.26) 5px,\n              rgba(0, 0, 0, 0) 5px,\n              rgba(0, 0, 0, 0) 10px \n    );\n}\n\n.ace_diff.insert.inline {\n    background-color:  rgb(74 251 74 / 18%); \n}\n.ace_diff.delete.inline {\n    background-color: rgb(251 74 74 / 15%);\n}\n\n.ace_diff.delete.inline.empty {\n    background-color: rgba(255, 128, 79, 0.7);\n    width: 2px !important;\n}\n\n.ace_diff.insert.inline.empty {\n    background-color: rgba(49, 230, 96, 0.7);\n    width: 2px !important;\n}\n\n.ace_diff-active-line {\n    border-bottom: 1px solid;\n    border-top: 1px solid;\n    background: transparent;\n    position: absolute;\n    box-sizing: border-box;\n    border-color: #9191ac;\n}\n\n.ace_dark .ace_diff-active-line {\n    background: transparent;\n    border-color: #75777a;\n}\n \n\n/* gutter changes */\n.ace_mini-diff_gutter-enabled > .ace_gutter-cell,\n.ace_mini-diff_gutter-enabled > .ace_gutter-cell_svg-icons {\n    padding-right: 13px;\n}\n\n.ace_mini-diff_gutter_other > .ace_gutter-cell,\n.ace_mini-diff_gutter_other > .ace_gutter-cell_svg-icons  {\n    display: none;\n}\n\n.ace_mini-diff_gutter_other {\n    pointer-events: none;\n}\n\n\n.ace_mini-diff_gutter-enabled > .mini-diff-added {\n    background-color: #EFFFF1;\n    border-left: 3px solid #2BB534;\n    padding-left: 16px;\n    display: block;\n}\n\n.ace_mini-diff_gutter-enabled > .mini-diff-deleted {\n    background-color: #FFF1F1;\n    border-left: 3px solid #EA7158;\n    padding-left: 16px;\n    display: block;\n}\n\n\n.ace_mini-diff_gutter-enabled > .mini-diff-added:after {\n    position: absolute;\n    right: 2px;\n    content: \"+\";\n    color: darkgray;\n    background-color: inherit;\n}\n\n.ace_mini-diff_gutter-enabled > .mini-diff-deleted:after {\n    position: absolute;\n    right: 2px;\n    content: \"-\";\n    color: darkgray;\n    background-color: inherit;\n}\n.ace_fade-fold-widgets:hover > .ace_folding-enabled > .mini-diff-added:after,\n.ace_fade-fold-widgets:hover > .ace_folding-enabled > .mini-diff-deleted:after {\n    display: none;\n}\n\n.ace_diff_other .ace_selection {\n    filter: drop-shadow(1px 2px 3px darkgray);\n}\n\n.ace_hidden_marker-layer .ace_bracket {\n    display: none;\n}\n\n\n\n/*\n * Dark Colors \n */\n\n.ace_dark .ace_diff.insert {\n    background-color: #212E25;\n}\n.ace_dark .ace_diff.delete {\n    background-color: #3F2222;\n}\n\n.ace_dark .ace_mini-diff_gutter-enabled > .mini-diff-added {\n    background-color: #212E25;\n    border-left-color:#00802F;\n}\n\n.ace_dark .ace_mini-diff_gutter-enabled > .mini-diff-deleted {\n    background-color: #3F2222;\n    border-left-color: #9C3838;\n}\n\n";
 }
 declare module "ace-code/src/ext/diff/gutter_decorator" {
     export class MinimalGutterDiffDecorator {
@@ -681,11 +880,12 @@ declare module "ace-code/src/ext/diff/base_diff_view" {
          * @param {HTMLElement} [container] - optional container element for the DiffView.
          */
         constructor(inlineDiffEditor?: boolean, container?: HTMLElement);
-        onChangeTheme(): void;
+        onChangeTheme(e: any): void;
         onInput(): void;
         onChangeFold(ev: any, session: EditSession): void;
         realign(): void;
         onSelect(e: any, selection: any): void;
+        onChangeWrapLimit(e: any, session: any): void;
         realignPending: boolean;
         diffSession: {
             sessionA: EditSession;
@@ -712,7 +912,9 @@ declare module "ace-code/src/ext/diff/base_diff_view" {
         addGutterDecorators(): void;
         gutterDecoratorA: MinimalGutterDiffDecorator;
         gutterDecoratorB: MinimalGutterDiffDecorator;
-        foldUnchanged(): void;
+        foldUnchanged(): boolean;
+        unfoldUnchanged(): void;
+        toggleFoldUnchanged(): void;
         setDiffSession(session: {
             sessionA: any;
             sessionB: EditSession;
@@ -731,8 +933,11 @@ declare module "ace-code/src/ext/diff/base_diff_view" {
         scheduleOnInput(): void;
         selectionRangeA: any;
         selectionRangeB: any;
+        setupScrollbars(): void;
+        updateScrollBarDecorators(): void;
         setProvider(provider: import("ace-code/src/ext/diff/providers/default").DiffProvider): void;
-        /** scroll locking
+        /**
+         * scroll locking
          * @abstract
          **/
         align(): void;
@@ -818,6 +1023,7 @@ declare module "ace-code/src/ext/diff/diff_view" {
         init(diffModel: any): void;
         onMouseWheel(ev: any): any;
         onScroll(e: any, session: any): void;
+        onChangeWrapLimit(): void;
         syncScroll(renderer: import("ace-code/src/virtual_renderer").VirtualRenderer): void;
         scrollA: any;
         scrollB: any;
@@ -851,18 +1057,20 @@ declare module "ace-code/src/ext/diff/inline_diff_view" {
         }, container?: HTMLElement);
         init(diffModel: any): void;
         onAfterRender(changes: number, renderer: import("ace-code").VirtualRenderer): void;
-        onChangeWrapLimit(): void;
         textLayer: any;
         markerLayer: any;
         gutterLayer: any;
         cursorLayer: any;
+        initRenderer(restore: any): void;
         initTextLayer(): void;
         initTextInput(restore: any): void;
         othertextInput: any;
         otherEditorContainer: any;
         selectEditor(editor: any): void;
+        removeBracketHighlight(editor: any): void;
         initMouse(): void;
         onMouseDetach: () => void;
+        onChangeWrapLimit(): void;
     }
     import { BaseDiffView } from "ace-code/src/ext/diff/base_diff_view";
 }

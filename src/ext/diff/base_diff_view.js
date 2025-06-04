@@ -5,6 +5,7 @@ var Range = require("../../range").Range;
 var dom = require("../../lib/dom");
 var config = require("../../config");
 var LineWidgets = require("../../line_widgets").LineWidgets;
+var ScrollDiffDecorator = require("./scroll_diff_decorator").ScrollDiffDecorator;
 
 // @ts-ignore
 var css = require("./styles-css.js").cssText;
@@ -12,6 +13,8 @@ var css = require("./styles-css.js").cssText;
 var Editor = require("../../editor").Editor;
 var Renderer = require("../../virtual_renderer").VirtualRenderer;
 var UndoManager = require("../../undomanager").UndoManager;
+var Decorator = require("../../layer/decorators").Decorator;
+
 require("../../theme/textmate");
 // enable multiselect
 require("../../multi_select");
@@ -125,6 +128,8 @@ class BaseDiffView {
                 diffModel.valueB || "")),
             chunks: []
         });
+
+        this.setupScrollbars();
     }
 
     addGutterDecorators() { 
@@ -141,7 +146,6 @@ class BaseDiffView {
     $setupModel(session, value) {
         var editor = new Editor(new Renderer(), session);
         editor.session.setUndoManager(new UndoManager());
-        // editor.renderer.setOption("decoratorType", "diff");
         if (value) {
             editor.setValue(value, -1);
         }
@@ -290,10 +294,97 @@ class BaseDiffView {
         this.editorA && this.editorA.renderer.updateBackMarkers();
         this.editorB && this.editorB.renderer.updateBackMarkers();
 
-        //this.updateScrollBarDecorators();
+        setTimeout(() => {
+            this.updateScrollBarDecorators();
+        }, 0);
 
         if (this.$foldUnchangedOnInput) {
             this.foldUnchanged();
+        }
+    }
+
+    setupScrollbars() {
+        /**
+         * @param {Renderer & {$scrollDecorator: ScrollDiffDecorator}} renderer
+         */
+        const setupScrollBar = (renderer) => {
+            setTimeout(() => {
+                this.$setScrollBarDecorators(renderer);
+                this.updateScrollBarDecorators();
+            }, 0);
+        };
+
+        if (this.inlineDiffEditor) {
+            setupScrollBar(this.activeEditor.renderer);
+        }
+        else {
+            setupScrollBar(this.editorA.renderer);
+            setupScrollBar(this.editorB.renderer);
+        }
+
+    }
+
+    $setScrollBarDecorators(renderer) {
+        if (renderer.$scrollDecorator) {
+            renderer.$scrollDecorator.destroy();
+        }
+        renderer.$scrollDecorator = new ScrollDiffDecorator(renderer.scrollBarV, renderer, this.inlineDiffEditor);
+        renderer.$scrollDecorator.setSessions(this.sessionA, this.sessionB);
+        renderer.scrollBarV.setVisible(true);
+        renderer.scrollBarV.element.style.bottom = renderer.scrollBarH.getHeight() + "px";
+    }
+
+    $resetDecorators(renderer) {
+        if (renderer.$scrollDecorator) {
+            renderer.$scrollDecorator.destroy();
+        }
+        renderer.$scrollDecorator = new Decorator(renderer.scrollBarV, renderer);
+    }
+
+    updateScrollBarDecorators() {
+        if (this.inlineDiffEditor) {
+            if (!this.activeEditor) {
+                return;
+            }
+            this.activeEditor.renderer.$scrollDecorator.zones = [];
+        }
+        else {
+            if (!this.editorA || !this.editorB) {
+                return;
+            }
+            this.editorA.renderer.$scrollDecorator.zones = [];
+            this.editorB.renderer.$scrollDecorator.zones = [];
+        }
+
+        /**
+         * @param {DiffChunk} change
+         */
+        const updateDecorators = (editor, change) => {
+            if (!editor) {
+                return;
+            }
+            if (change.old.start.row != change.old.end.row) {
+                editor.renderer.$scrollDecorator.addZone(change.old.start.row, change.old.end.row - 1, "delete");
+            }
+            if (change.new.start.row != change.new.end.row) {
+                editor.renderer.$scrollDecorator.addZone(change.new.start.row, change.new.end.row - 1, "insert");
+            }
+        };
+
+        if (this.inlineDiffEditor) {
+            this.chunks && this.chunks.forEach((lineChange) => {
+                updateDecorators(this.activeEditor, lineChange);
+            });
+            this.activeEditor.renderer.$scrollDecorator.$updateDecorators(this.activeEditor.renderer.layerConfig);
+        }
+        else {
+            this.chunks && this.chunks.forEach((lineChange) => {
+                updateDecorators(this.editorA, lineChange);
+                updateDecorators(this.editorB, lineChange);
+            });
+
+            this.editorA.renderer.$scrollDecorator.$updateDecorators(this.editorA.renderer.layerConfig);
+            this.editorB.renderer.$scrollDecorator.$updateDecorators(this.editorB.renderer.layerConfig);
         }
     }
 
@@ -366,7 +457,7 @@ class BaseDiffView {
         return row;
     }
 
-    /** 
+    /**
      * scroll locking
      * @abstract
      **/
@@ -468,8 +559,8 @@ class BaseDiffView {
             }
         }
     }
-    
-    scheduleRealign() {        
+
+    scheduleRealign() {
         if (!this.realignPending) {
             this.realignPending = true;
             this.editorA.renderer.on("beforeRender", this.realign);
@@ -500,6 +591,14 @@ class BaseDiffView {
         this.gutterDecoratorB && this.gutterDecoratorB.dispose();
         this.sessionA.selection.clearSelection();
         this.sessionB.selection.clearSelection();
+
+        if (this.savedOptionsA && this.savedOptionsA.customScrollbar) {
+            this.$resetDecorators(this.editorA.renderer);
+        }
+        if (this.savedOptionsB &&this.savedOptionsB.customScrollbar) {
+            this.$resetDecorators(this.editorB.renderer);
+        }
+
         this.editorA = this.editorB = null;
         
     }
@@ -771,7 +870,7 @@ config.defineOptions(BaseDiffView.prototype, "DiffView", {
             return this.editorA.getTheme();
         }
     },
-}); 
+});
 
 var emptyGutterRenderer =  {
     getText: function name(params) {
