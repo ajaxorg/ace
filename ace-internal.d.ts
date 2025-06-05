@@ -32,6 +32,7 @@ export namespace Ace {
     type HoverTooltip = import("ace-code/src/tooltip").HoverTooltip;
     type Tooltip = import("ace-code/src/tooltip").Tooltip;
     type PopupManager = import("ace-code/src/tooltip").PopupManager;
+    type TextInput = import("ace-code/src/keyboard/textinput").TextInput;
 
     type AfterLoadCallback = (err: Error | null, module: unknown) => void;
     type LoaderFunction = (moduleName: string, afterLoad: AfterLoadCallback) => void;
@@ -967,12 +968,6 @@ export namespace Ace {
         new(session: EditSession): Selection;
     }
 
-    interface TextInput {
-        resetSelection(): void;
-
-        setAriaOption(options?: { activeDescendant: string, role: string, setLabel: any }): void;
-    }
-
     type CompleterCallback = (error: any, completions: Completion[]) => void;
 
     interface Completer {
@@ -1291,6 +1286,13 @@ export namespace Ace {
 
     export interface ScrollbarEvents {
         "scroll": (e: { data: number }) => void;
+    }
+
+    export interface TextInputAriaOptions {
+        activeDescendant?: string;
+        role?: string;
+        setLabel?: boolean;
+        inline?: boolean;
     }
 }
 
