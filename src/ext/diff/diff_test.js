@@ -10,29 +10,35 @@ var {DiffProvider} = require("./providers/default");
 var ace = require("../../ace");
 var Range = require("../../range").Range;
 var editorA, editorB, diffView;
+const {Decorator} = require("../../layer/decorators");
+const {ScrollDiffDecorator} = require("./scroll_diff_decorator");
+
 
 var DEBUG = false;
 
 function createEditor() {
     var editor = ace.edit(null);
     document.body.appendChild(editor.container);
+    setEditorPosition(editor);
+    return editor;
+}
+function setEditorPosition(editor) {
     editor.container.style.height = "200px";
     editor.container.style.width = "300px";
     editor.container.style.position = "absolute";
     editor.container.style.outline = "solid";
-    return editor;
-} 
+}
 
 function getValueA(lines) {
     return lines.map(function(v) {
-        return v[0]; 
+        return v[0];
     }).filter(function(x) {
         return x != null;
     }).join("\n");
 }
 function getValueB(lines) {
     return lines.map(function(v) {
-        return v.length == 2 ? v[1] : v[0]; 
+        return v.length == 2 ? v[1] : v[0];
     }).filter(function(x) {
         return x != null;
     }).join("\n");
@@ -66,12 +72,24 @@ var diffAtEnds = [
     ["only old", null],
     ["only old2", null],
 ];
-
+var longLinesDiff = [
+    [null, "0"],
+    ["a"],
+    ["b"],
+    ["c", "edited c ".repeat(100)],
+    ["e long ".repeat(100)],
+    ["f"],
+    ["g " + "to delete ".repeat(100), "edited g"],
+    ["h"],
+    ["i"],
+];
 module.exports = {
     setUpSuite: function() {
         ace.config.setLoader(function(moduleName, cb) {
             if (moduleName == "ace/ext/error_marker")
                 return cb(null, require("../error_marker"));
+            if (moduleName == "ace/theme/cloud_editor")
+                return cb(null, require("../../theme/cloud_editor"));
         });
         editorA = createEditor();
         editorB = createEditor();
@@ -174,6 +192,14 @@ module.exports = {
         diffView.onInput();
         diffView.resize(true);
 
+        diffView.setTheme("ace/theme/cloud_editor");
+        assert.equal(diffView.editorA.getTheme(), "ace/theme/cloud_editor");
+        assert.equal(diffView.editorB.getTheme(), "ace/theme/cloud_editor");
+
+        diffView.editorB.setTheme("ace/theme/textmate");
+        assert.equal(diffView.editorA.getTheme(), "ace/theme/textmate");
+        assert.equal(diffView.editorB.getTheme(), "ace/theme/textmate");
+
         diffView.detach();
         checkEventRegistry();
 
@@ -189,7 +215,7 @@ module.exports = {
 
         diffView.detach();
         checkEventRegistry();
-        
+
     },
     "test: diff at ends": function() {
         var diffProvider = new DiffProvider();
@@ -203,9 +229,16 @@ module.exports = {
             showSideA: true,
             diffProvider,
         }, document.body);
+        setEditorPosition(diffView.editorA);
         diffView.onInput();
         diffView.resize(true);
+        var lineHeight = diffView.editorA.renderer.lineHeight;
+        assert.ok(diffView.editorA.renderer.lineHeight > 0);
         assert.equal(diffView.chunks.length, 2);
+        assert.equal(diffView.editorA.renderer.layerConfig.offset, 0);
+        diffView.sessionA.setScrollTop(lineHeight * 1.5);
+        diffView.resize(true);
+        assert.equal(diffView.editorA.renderer.layerConfig.offset, 0.5 * lineHeight);
         diffView.detach();
 
         diffView = new DiffView({
@@ -213,6 +246,8 @@ module.exports = {
             valueB,
             diffProvider,
         }, document.body);
+        setEditorPosition(diffView.editorA);
+        setEditorPosition(diffView.editorB);
         diffView.onInput();
         diffView.resize(true);
         assert.equal(diffView.chunks.length, 2);
@@ -224,6 +259,7 @@ module.exports = {
             valueB,
             showSideA: false,
         }, document.body);
+        setEditorPosition(diffView.editorB);
         diffView.onInput();
         diffView.resize(true);
         assert.equal(diffView.chunks.length, 0);
@@ -266,10 +302,53 @@ module.exports = {
         assert.ok(diffView.sessionB.$scrollTop > 100);
         assert.ok(diffView.sessionA.$scrollTop == diffView.sessionB.$scrollTop);
 
-        diffView.foldUnchanged();
+        diffView.toggleFoldUnchanged();
         assert.equal(diffView.sessionA.$foldData.length, 20);
         assert.equal(diffView.sessionA.$foldData.length, 20);
+        diffView.toggleFoldUnchanged();
+        assert.equal(diffView.sessionA.$foldData.length, 0);
+        assert.equal(diffView.sessionA.$foldData.length, 0);
 
+    },
+    "test line widget at both sides of line": function() {
+        var diffProvider = new DiffProvider();
+
+        editorA.session.setValue("a\n");
+        editorB.session.setValue("\n\na\n\n");
+
+        diffView = new DiffView({
+            editorA, editorB,
+            diffProvider,
+        });
+        diffView.onInput();
+        diffView.resize(true);
+        var markers = diffView.editorA.renderer.$markerBack.element.childNodes;
+        assert.equal(markers[0].className, "ace_diff aligned_diff");
+        assert.equal(markers[1].className, "ace_diff aligned_diff");
+        assert.equal(markers.length, 4);
+    },
+
+    "test: toggle wrap": function() {
+        var diffProvider = new DiffProvider();
+
+        editorA.session.setValue(getValueA(longLinesDiff));
+        editorB.session.setValue(getValueB(longLinesDiff));
+
+        diffView = new DiffView({
+            editorA, editorB,
+            diffProvider,
+        });
+        diffView.onInput();
+        diffView.setOptions({
+            wrap: 20,
+            syncSelections: true,
+        });
+        diffView.resize(true);
+        diffView.gotoNext(1);
+        diffView.gotoNext(1);
+        var posA = diffView.sessionA.documentToScreenPosition(diffView.editorA.getCursorPosition());
+        var posB = diffView.sessionB.documentToScreenPosition(diffView.editorB.getCursorPosition());
+        assert.equal(posA.row, posB.row);
     },
 
     "test: restore options": function() {
@@ -277,6 +356,7 @@ module.exports = {
 
         editorA.session.setValue(getValueA(simpleDiff));
         editorB.session.setValue(getValueB(simpleDiff));
+        editorA.setOption("customScrollbar", true);
 
         diffView = new InlineDiffView({
             editorA, editorB,
@@ -302,6 +382,8 @@ module.exports = {
 
         assert.ok(!!diffView.editorB.renderer.$gutterLayer.$renderer);
 
+        assert.ok(editorA.renderer.$scrollDecorator instanceof ScrollDiffDecorator);
+
         diffView.detach();
 
         assert.equal(editorA.getOption("wrap"), "free");
@@ -312,9 +394,75 @@ module.exports = {
         assert.equal(editorB.getOption("fadeFoldWidgets"), false);
         assert.equal(editorB.getOption("showFoldWidgets"), true);
         assert.ok(!editorB.renderer.$gutterLayer.$renderer);
+
+        assert.ok(editorA.renderer.$scrollDecorator instanceof Decorator);
     },
+    "test split diff scroll decorators": function(done) {
+        editorA.session.setValue(["a", "b", "c"].join("\n"));
+        editorB.session.setValue(["a", "c", "X"].join("\n"));
+
+        diffView = new DiffView({ editorA, editorB });
+        diffView.setProvider(new DiffProvider());
+        diffView.onInput();
+
+
+        editorA.renderer.$loop._flush();
+        editorB.renderer.$loop._flush();
+
+        setTimeout(() => {
+            assertDecoratorsPlacement(editorA, false);
+            done();
+        }, 0);
+    },
+    "test inline diff scroll decorators": function(done) {
+        editorA.session.setValue(["a", "b", "c"].join("\n"));
+        editorB.session.setValue(["a", "c", "X"].join("\n"));
+
+        diffView = new InlineDiffView({ editorA, editorB, showSideA: true });
+        diffView.setProvider(new DiffProvider());
+        diffView.onInput();
+
+        editorA.renderer.$loop._flush();
+
+        setTimeout(() => {
+            assertDecoratorsPlacement(editorA, true);
+            done();
+        }, 0);
+    }
 };
 
+function findPointFillStyle(imageData, y) {
+    const data = imageData.slice(4 * y, 4 * (y + 1));
+    const a = Math.round(data[3] / 256 * 100);
+    if (a === 100) return "rgb(" + data.slice(0, 3).join(",") + ")";
+    return "rgba(" + data.slice(0, 3).join(",") + "," + (a / 100) + ")";
+}
+
+function assertDecoratorsPlacement(editor, inlineDiff) {
+    const decoA = editor.renderer.$scrollDecorator;
+    const ctxA = decoA.canvas.getContext("2d");
+    const delRow = 1;
+    const offA = decoA.sessionA.documentToScreenRow(delRow, 0) * decoA.lineHeight;
+    const centerA = offA + decoA.lineHeight / 2;
+    const yA = Math.round(decoA.heightRatio * centerA);
+    let imgA = ctxA.getImageData(decoA.oneZoneWidth, 0, 1, decoA.canvasHeight).data;
+    assert.equal(findPointFillStyle(imgA, yA), decoA.colors.light.delete);
+
+    if (inlineDiff) {
+        //make sure that in inline diff, markers fills the whole line (except error decorators part)
+        imgA = ctxA.getImageData(decoA.canvasWidth - 1, 0, 1, decoA.canvasHeight).data;
+        assert.equal(findPointFillStyle(imgA, yA), decoA.colors.light.delete);
+    }
+
+    const xB = decoA.oneZoneWidth * 2;
+    const imgB = ctxA.getImageData(xB, 0, 1, decoA.canvasHeight).data;
+
+    const insRow = 2;
+    const offB = decoA.sessionB.documentToScreenRow(insRow, 0) * decoA.lineHeight;
+    const centerB = offB + decoA.lineHeight / 2;
+    const yB = Math.round(decoA.heightRatio * centerB);
+    assert.equal(findPointFillStyle(imgB, yB), decoA.colors.light.insert);
+}
 
 if (typeof module !== "undefined" && module === require.main) {
     require("asyncjs").test.testcase(module.exports).exec();
