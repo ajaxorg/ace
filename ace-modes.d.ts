@@ -508,6 +508,10 @@ declare module "ace-code/src/mode/folding/mixed" {
     export const FoldMode: new () => import("ace-code").Ace.Folding;
 }
 
+declare module "ace-code/src/mode/folding/nunjucks" {
+    export const FoldMode: new () => import("ace-code").Ace.Folding;
+}
+
 declare module "ace-code/src/mode/folding/php" {
     export const FoldMode: new () => import("ace-code").Ace.Folding;
 }
