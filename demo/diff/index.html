@@ -65,17 +65,14 @@
     });
 
     require([
-        "ace/ext/diff/diff_view", 
-        "ace/ext/diff/inline_diff_view", 
+        "ace/ext/diff",
         "demo/kitchen-sink/util",
         "demo/kitchen-sink/layout", 
         "ace/ext/diff/providers/default",
         "ace/ext/options",
         "ace/ext/menu_tools/overlay_page",
     ], function () {
-        var {InlineDiffView} = require("ace/ext/diff/inline_diff_view");
-        var {DiffView} = require("ace/ext/diff/diff_view");
-        var {DiffProvider} = require("ace/ext/diff/providers/default");
+        var {createDiffView} = require("ace/ext/diff");
         var {OptionPanel, optionGroups} = require("ace/ext/options")
         var {buildDom} = require("ace/lib/dom");
 
@@ -119,23 +116,23 @@
             }
             switch (mode) {
                 case "inlineA":
-                    diffView = new InlineDiffView({
+                    diffView = createDiffView({
                         editorA, editorB,
                         showSideA: true
-                    });
+                    }, true);
                     if (!debugInline) editorB.container.style.display = "none";
                     editorA.container.style.display = "";
                     break;
                 case "inlineB":
-                    diffView = new InlineDiffView({
+                    diffView = createDiffView({
                         editorA, editorB,
                         showSideA: false
-                    });
+                    }, true);
                     editorB.container.style.display = "";
                     if (!debugInline) editorA.container.style.display = "none";
                     break;
                 case "split":
-                    diffView = new DiffView({editorA, editorB});
+                    diffView = createDiffView({editorA, editorB});
                     editorA.container.style.display = "";
                     editorB.container.style.display = "";
                     break;
@@ -148,7 +145,6 @@
             }
             if (diffView) {
                 diffView.setOptions(optionValues);
-                diffView.setProvider(new DiffProvider());
             }
             diffView?.onInput();
         }

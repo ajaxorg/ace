@@ -8,14 +8,7 @@ const config = require("../../config");
 class InlineDiffView extends BaseDiffView {
     /**
      * Constructs a new inline DiffView instance.
-     * @param {Object} [diffModel] - The model for the diff view.
-     * @param {import("ace-code").Editor} [diffModel.editorA] - The editor for the original view.
-     * @param {import("ace-code").Editor} [diffModel.editorB] - The editor for the edited view.
-     * @param {import("ace-code").EditSession} [diffModel.sessionA] - The edit session for the original view.
-     * @param {import("ace-code").EditSession} [diffModel.sessionB] - The edit session for the edited view.
-     * @param {string} [diffModel.valueA] - The original content.
-     * @param {string} [diffModel.valueB] - The modified content.
-     * @param {boolean} [diffModel.showSideA] - Whether to show the original view or modified view.
+     * @param {import("../../../ace-internal").Ace.DiffModel} [diffModel] - The model for the diff view.
      * @param {HTMLElement} [container] - optional container element for the DiffView.
      */
     constructor(diffModel, container) {

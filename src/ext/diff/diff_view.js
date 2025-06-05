@@ -9,13 +9,7 @@ class DiffView extends BaseDiffView {
     /**
      * Constructs a new side by side DiffView instance.
      *
-     * @param {Object} [diffModel] - The model for the diff view.
-     * @param {import("../../editor").Editor} [diffModel.editorA] - The editor for the original view.
-     * @param {import("../../editor").Editor} [diffModel.editorB] - The editor for the edited view.
-     * @param {import("../../edit_session").EditSession} [diffModel.sessionA] - The edit session for the original view.
-     * @param {import("../../edit_session").EditSession} [diffModel.sessionB] - The edit session for the edited view.
-     * @param {string} [diffModel.valueA] - The original content.
-     * @param {string} [diffModel.valueB] - The modified content.
+     * @param {import("../../../ace-internal").Ace.DiffModel} [diffModel] - The model for the diff view.
      */
     constructor(diffModel) {
         diffModel = diffModel || {};
