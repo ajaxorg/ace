@@ -1,7 +1,7 @@
 // [WIP]
 
 "use strict";
-var TokenIterator = require("../token_iterator").TokenIterator;
+const TokenIterator = require("../token_iterator").TokenIterator;
 
 function is(token, type) {
     return token.type.lastIndexOf(type + ".xml") > -1;
@@ -26,39 +26,37 @@ exports.formatOptions = {
  * @param {import("../edit_session").EditSession} session
  */
 exports.beautify = function(session) {
-    var iterator = new TokenIterator(session, 0, 0);
-    var token = iterator.getCurrentToken();
-    var tabString = session.getTabString();
-    var singletonTags = exports.singletonTags;
-    var blockTags = exports.blockTags;
-    var formatOptions = exports.formatOptions || {};
-    var nextToken;
-    var breakBefore = false;
-    var spaceBefore = false;
-    var spaceAfter = false;
-    var code = "";
-    var value = "";
-    var tagName = "";
-    var depth = 0;
-    var lastDepth = 0;
-    var lastIndent = 0;
-    var indent = 0;
-    var unindent = 0;
-    var roundDepth = 0;
-    var curlyDepth = 0;
-    var row;
-    var curRow = 0;
-    var rowsToAdd = 0;
-    var rowTokens = [];
-    var abort = false;
-    var i;
-    var indentNextLine = false;
-    var inTag = false;
-    var inCSS = false;
-    var inBlock = false;
-    var levels = {0: 0};
-    var parents = [];
-    var caseBody = false;
+    const iterator = new TokenIterator(session, 0, 0);
+    let token = iterator.getCurrentToken();
+    const tabString = session.getTabString();
+    const singletonTags = exports.singletonTags;
+    const blockTags = exports.blockTags;
+    const formatOptions = exports.formatOptions || {};
+    let nextToken;
+    let breakBefore = false;
+    let spaceBefore = false;
+    let spaceAfter = false;
+    let code = "";
+    let value = "";
+    let tagName = "";
+    let depth = 0;
+    let lastDepth = 0;
+    let lastIndent = 0;
+    let indent = 0;
+    let unindent = 0;
+    let roundDepth = 0;
+    let curlyDepth = 0;
+    let row;
+    let curRow = 0;
+    let rowsToAdd = 0;
+    let i;
+    let indentNextLine = false;
+    let inTag = false;
+    let inCSS = false;
+    let inBlock = false;
+    let levels = {0: 0};
+    let parents = [];
+    let caseBody = false;
 
     var trimNext = function() {
         if (nextToken && nextToken.value && nextToken.type !== 'string.regexp')
@@ -87,7 +85,6 @@ exports.beautify = function(session) {
 
     while (token !== null) {
         curRow = iterator.getCurrentTokenRow();
-        rowTokens = iterator.$rowTokens;
         nextToken = iterator.stepForward();
 
         if (typeof token !== "undefined") {
@@ -338,9 +335,8 @@ exports.beautify = function(session) {
 
                     for (i = 0; i < value.length; i++) {
                         depth--;
-                        if(value.substr(i, 1)==='}' && parents[depth]==='case') {
+                        if(value.substr(i, 1)==='}' && parents[depth]==='case')
                             depth--;
-                        }
                     }
                 }
                 
@@ -374,18 +370,14 @@ exports.beautify = function(session) {
 
                 // html indentation
                 if (nextToken && singletonTags.indexOf(nextToken.value) === -1) {
-                    if (is(token, "tag-open") && value === "</") {
+                    if (is(token, "tag-open") && value === "</")
                         depth--;
-                    } else if (is(token, "tag-open") && value === "<") {
+                    else if (is(token, "tag-open") && value === "<")
                         depth++;
-                    } else if (is(token, "tag-close") && value === "/>"){
-                        depth--;
-                    }
                 }
                 
-                if (is(token, "tag-name")) {
+                if (is(token, "tag-name"))
                     tagName = value;
-                }
 
                 row = curRow;
             }
