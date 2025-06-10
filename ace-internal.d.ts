@@ -1294,6 +1294,41 @@ export namespace Ace {
         setLabel?: boolean;
         inline?: boolean;
     }
+
+    /**
+     * Interface for the model used in the diff view.
+     */
+    export interface DiffModel {
+        /**
+         * The editor for the original view.
+         */
+        editorA?: Editor;
+
+        /**
+         * The editor for the edited view.
+         */
+        editorB?: Editor;
+
+        /**
+         * The edit session for the original view.
+         */
+        sessionA?: EditSession;
+
+        /**
+         * The edit session for the edited view.
+         */
+        sessionB?: EditSession;
+
+        /**
+         * The original content.
+         */
+        valueA?: string;
+
+        /**
+         * The modified content.
+         */
+        valueB?: string;
+    }
 }
 
 
