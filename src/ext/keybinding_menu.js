@@ -1,14 +1,17 @@
-/*jslint indent: 4, maxerr: 50, white: true, browser: true, vars: true*/
-/*global define, require */
-
 /**
- * Show Keyboard Shortcuts
- * @fileOverview Show Keyboard Shortcuts <br />
- * Generates a menu which displays the keyboard shortcuts.
+ * ## Show Keyboard Shortcuts extension
+ *
+ * Provides a keyboard shortcuts display overlay for the Ace editor. Creates an interactive menu that shows all available
+ * keyboard shortcuts with their corresponding commands, organized in a searchable and navigable format. The menu
+ * appears as an overlay page and can be triggered via keyboard shortcut (Ctrl-Alt-H/Cmd-Alt-H) or programmatically.
+ *
  * @author <a href="mailto:matthewkastor@gmail.com">
  *  Matthew Christopher Kastor-Inare III </a><br />
- *  ☭ Hial Atropa!! ☭
+ * @module
  */
+
+/*jslint indent: 4, maxerr: 50, white: true, browser: true, vars: true*/
+/*global define, require */
 
 "use strict";
 
@@ -41,7 +44,11 @@ function showKeyboardShortcuts(editor) {
 }
 
 /**
- * @param {Editor} editor
+ * Initializes keyboard shortcut functionality for the editor.
+ * Adds a method to show keyboard shortcuts and registers a command
+ * to trigger the keyboard shortcuts display.
+ *
+ * @param {Editor} editor The Ace editor instance to initialize
  */
 module.exports.init = function (editor) {
     Editor.prototype.showKeyboardShortcuts = function () {

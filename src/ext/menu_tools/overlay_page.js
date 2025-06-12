@@ -1,15 +1,27 @@
+/**
+ * ## Overlay Page utility
+ *
+ * Provides modal overlay functionality for displaying editor extension interfaces. Creates a full-screen overlay with
+ * configurable backdrop behavior, keyboard navigation (ESC to close), and focus management. Used by various extensions
+ * to display menus, settings panels, and other interactive content over the editor interface.
+ *
+ * **Usage:**
+ * ```javascript
+ * var overlayPage = require('./overlay_page').overlayPage;
+ * var contentElement = document.createElement('div');
+ * contentElement.innerHTML = '<h1>Settings</h1>';
+ *
+ * var overlay = overlayPage(editor, contentElement, function() {
+ *   console.log('Overlay closed');
+ * });
+ * ```
+ *
+ * @module
+ */
+
+
 /*jslint indent: 4, maxerr: 50, white: true, browser: true, vars: true*/
 /*global define, require */
-
-/**
- * Overlay Page
- * @fileOverview Overlay Page <br />
- * Generates an overlay for displaying menus. The overlay is an absolutely
- *  positioned div.
- * @author <a href="mailto:matthewkastor@gmail.com">
- *  Matthew Christopher Kastor-Inare III </a><br />
- *  ☭ Hial Atropa!! ☭
- */
 
 'use strict';
 var dom = require("../../lib/dom");
@@ -22,10 +34,10 @@ dom.importCssString(cssText, "settings_menu.css", false);
  * @author <a href="mailto:matthewkastor@gmail.com">
  *  Matthew Christopher Kastor-Inare III </a><br />
  *  ☭ Hial Atropa!! ☭
- * @param editor
+ * @param {import("../../editor").Editor} editor
  * @param {HTMLElement} contentElement Any element which may be presented inside
  *  a div.
- * @param [callback]
+ * @param {() => void} [callback]
  */
 module.exports.overlayPage = function overlayPage(editor, contentElement, callback) {
     var closer = document.createElement('div');

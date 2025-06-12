@@ -1,3 +1,11 @@
+/**
+ * ## Code Lens extension.
+ *
+ * Displaying contextual information and clickable commands above code lines. Supports registering custom providers,
+ * rendering lens widgets with proper positioning and styling, and handling user interactions with lens commands.
+ * @module
+ */
+
 "use strict";
 /**
  * @typedef {import("../edit_session").EditSession} EditSession

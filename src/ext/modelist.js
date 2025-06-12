@@ -1,6 +1,19 @@
+/**
+ * ## File mode detection utility
+ *
+ * Provides automatic detection of editor syntax modes based on file paths and extensions. Maps file extensions to
+ * appropriate Ace Editor syntax highlighting modes for over 100 programming languages and file formats including
+ * JavaScript, TypeScript, HTML, CSS, Python, Java, C++, and many others. Supports complex extension patterns and
+ * provides fallback mechanisms for unknown file types.
+ *
+ * @module
+ */
+
 "use strict";
 
 /**
+ * Represents an array to store various syntax modes.
+ *
  * @type {Mode[]}
  */
 var modes = [];
@@ -269,6 +282,11 @@ var nameOverrides = {
 };
 
 /**
+ * An object that serves as a mapping of mode names to their corresponding mode data.
+ * The keys of this object are mode names (as strings), and the values are expected
+ * to represent data associated with each mode.
+ *
+ * This structure can be used for quick lookups of mode information by name.
  * @type {Record<string, Mode>}
  */
 var modesByName = {};
@@ -281,8 +299,6 @@ for (var name in supportedModes) {
     modes.push(mode);
 }
 
-module.exports = {
-    getModeForPath: getModeForPath,
-    modes: modes,
-    modesByName: modesByName
-};
+exports.getModeForPath = getModeForPath;
+exports.modes = modes;
+exports.modesByName = modesByName;
