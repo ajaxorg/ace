@@ -1,3 +1,13 @@
+/**
+ * ## Error Marker extension
+ *
+ * Provides inline error display functionality for Ace editor. Creates visual error markers that appear as tooltips
+ * below editor lines containing annotations (errors, warnings, info). Enables navigation between error locations with
+ * keyboard shortcuts and displays context-sensitive messages with proper styling based on annotation severity.
+ *
+ * @module
+ */
+
 "use strict";
 var dom = require("../lib/dom");
 var Range = require("../range").Range;
@@ -45,7 +55,7 @@ function findAnnotations(session, row, dir) {
     if (!annotation || !dir)
         return;
 
-    if (annotation.row === row) {
+        if (annotation.row === row) {
         do {
             annotation = annotations[i += dir];
         } while (annotation && annotation.row === row);
@@ -64,8 +74,10 @@ function findAnnotations(session, row, dir) {
 }
 
 /**
- * @param {import("../editor").Editor} editor
- * @param {number} dir
+ * Displays an error marker widget in the editor for annotations at the current cursor position.
+ *
+ * @param {import("../editor").Editor} editor - The Ace editor instance
+ * @param {number} dir - The direction of navigation through annotations (-1 or 1)
  */
 exports.showErrorMarker = function(editor, dir) {
     var session = editor.session;

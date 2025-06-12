@@ -1,5 +1,25 @@
+/**
+ * ## Browser spellcheck integration extension for native spelling correction
+ *
+ * Provides seamless integration with browser's native spellcheck functionality through context menu interactions.
+ * Enables right-click spelling suggestions on misspelled words while preserving editor functionality and text input
+ * handling. The extension bridges browser spellcheck capabilities with the editor's text manipulation system.
+ *
+ * **Enable:** `editor.setOption("spellcheck", true)` (enabled by default)
+ * or configure it during editor initialization in the options object.
+ *
+ * @module
+ */
+
+
 "use strict";
 var event = require("../lib/event");
+
+/**
+ * Handles context menu events for spellcheck integration by setting up a hidden input field
+ * with the word at cursor position to trigger browser spellcheck suggestions.
+ * @param {any} e - The context menu event
+ */
 
 exports.contextMenuHandler = function(e){
     var host = e.target;

@@ -1,3 +1,31 @@
+/**
+ * ## Interactive search and replace UI extension for text editing
+ *
+ * Provides a floating search box interface with find/replace functionality including live search results, regex
+ * support, case sensitivity options, whole word matching, and scoped selection searching. Features keyboard shortcuts
+ * for quick access and navigation, with visual feedback for search matches and a counter showing current position
+ * in results.
+ *
+ * **Key Features:**
+ * - Real-time search with highlighted matches
+ * - Find and replace with individual or bulk operations
+ * - Advanced options: regex, case sensitivity, whole words, search in selection
+ * - Keyboard navigation and shortcuts
+ * - Visual match counter and no-match indicators
+ *
+ * **Usage:**
+ * ```javascript
+ * // Show search box
+ * require("ace/ext/searchbox").Search(editor);
+ *
+ * // Show with replace functionality
+ * require("ace/ext/searchbox").Search(editor, true);
+ * ```
+ *
+ * @module
+ */
+
+
 "use strict";
 /**
  * @typedef {import("../editor").Editor} Editor
@@ -428,9 +456,10 @@ SearchBox.prototype.$closeSearchBarKb = $closeSearchBarKb;
 exports.SearchBox = SearchBox;
 
 /**
+ * Shows the search box for the editor with optional replace functionality.
  *
- * @param {Editor} editor
- * @param {boolean} [isReplace]
+ * @param {Editor} editor - The editor instance
+ * @param {boolean} [isReplace] - Whether to show replace options
  */
 exports.Search = function(editor, isReplace) {
     var sb = editor.searchBox || new SearchBox(editor);

@@ -1,3 +1,31 @@
+/**
+ * ## Right-to-Left (RTL) text support extension
+ *
+ * Provides bidirectional text support enabling proper rendering and editing of RTL languages such as Arabic, Hebrew,
+ * and Persian. Handles text direction detection, cursor positioning, and ensures correct visual behavior for mixed
+ * LTR/RTL content. Includes keyboard shortcuts for manual text direction control and automatic
+ * RLE (Right-to-Left Embedding) marker management.
+ *
+ * **Configuration Options:**
+ * - `rtlText`: Enable automatic RTL text detection and handling
+ * - `rtl`: Force RTL direction for the entire editor
+ *
+ * **Keyboard Shortcuts:**
+ * - `Ctrl-Alt-Shift-L` (Win) / `Cmd-Alt-Shift-L` (Mac): Force left-to-right direction
+ * - `Ctrl-Alt-Shift-R` (Win) / `Cmd-Alt-Shift-R` (Mac): Force right-to-left direction
+ *
+ * **Usage:**
+ * ```javascript
+ * editor.setOptions({
+ *   rtlText: true,  // Enable automatic RTL detection
+ *   rtl: false      // Or force RTL direction
+ * });
+ * ```
+ *
+ * @module
+ */
+
+
 "use strict";
 
 var commands = [{
