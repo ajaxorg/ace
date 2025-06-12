@@ -342,7 +342,7 @@ class SearchBox {
         if (this.editor.$search.$options.regExp)
             value = lang.escapeRegExp(value);
 
-        if (value)
+        if (value != undefined)
             this.searchInput.value = value;
 
         this.searchInput.focus();
@@ -463,7 +463,9 @@ exports.SearchBox = SearchBox;
  */
 exports.Search = function(editor, isReplace) {
     var sb = editor.searchBox || new SearchBox(editor);
-    sb.show(editor.session.getTextRange(), isReplace);
+    var range = editor.session.selection.getRange();
+    var value = range.isMultiLine() ? "" : editor.session.getTextRange(range);
+    sb.show(value, isReplace);
 };
 
 
