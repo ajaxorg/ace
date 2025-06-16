@@ -27,6 +27,12 @@ export namespace Ace {
     type DragdropHandler = import("./src/mouse/dragdrop_handler").DragdropHandler;
     type AppConfig = import("./src/lib/app_config").AppConfig;
     type Config = typeof import("./src/config");
+    type GutterTooltip = import( "./src/mouse/default_gutter_handler").GutterTooltip;
+    type GutterKeyboardEvent = import( "./src/keyboard/gutter_handler").GutterKeyboardEvent;
+    type HoverTooltip = import("ace-code/src/tooltip").HoverTooltip;
+    type Tooltip = import("ace-code/src/tooltip").Tooltip;
+    type PopupManager = import("ace-code/src/tooltip").PopupManager;
+    type TextInput = import("ace-code/src/keyboard/textinput").TextInput;
 
     type AfterLoadCallback = (err: Error | null, module: unknown) => void;
     type LoaderFunction = (moduleName: string, afterLoad: AfterLoadCallback) => void;
@@ -308,14 +314,14 @@ export namespace Ace {
         coverGutter?: boolean,
         pixelHeight?: number,
         $fold?: Fold,
-        type?:any,
-        destroy?:()=>void;
+        type?: any,
+        destroy?: () => void;
         coverLine?: boolean,
         fixedWidth?: boolean,
         fullWidth?: boolean,
         screenWidth?: number,
         rowsAbove?: number,
-        lenses?: any[],
+        lenses?: CodeLenseCommand[],
     }
 
     type NewLineMode = 'auto' | 'unix' | 'windows';
@@ -509,7 +515,7 @@ export namespace Ace {
         /**
          * Emitted when text is pasted.
          **/
-        "paste": (text: string, event: any) => void;
+        "paste": (e: { text: string, event?: ClipboardEvent }) => void;
         /**
          * Emitted when the selection style changes, via [[Editor.setSelectionStyle]].
          * @param data Contains one property, `data`, which indicates the new selection style
@@ -524,6 +530,11 @@ export namespace Ace {
         "codeLensClick": (e: any) => void;
 
         "select": () => void;
+        "gutterkeydown": (e: GutterKeyboardEvent) => void;
+        "gutterclick": (e: MouseEvent) => void;
+        "showGutterTooltip": (e: GutterTooltip) => void;
+        "hideGutterTooltip": (e: GutterTooltip) => void;
+        "compositionStart": () => void;
     }
 
     interface AcePopupEvents {
@@ -618,7 +629,7 @@ export namespace Ace {
         "autosize": () => void;
     }
 
-    class EventEmitter<T> {
+    export class EventEmitter<T extends { [K in keyof T]: (...args: any[]) => any }> {
         once<K extends keyof T>(name: K, callback: T[K]): void;
 
         setDefaultHandler(name: string, callback: Function): void;
@@ -845,7 +856,7 @@ export namespace Ace {
          */
         $quotes: { [quote: string]: string };
         HighlightRules: {
-            new(config: any): HighlightRules
+            new(config?: any): HighlightRules
         }; //TODO: fix this
         foldingRules?: FoldMode;
         $behaviour?: Behaviour;
@@ -939,9 +950,9 @@ export namespace Ace {
     }) => void;
 
     interface CommandManagerEvents {
-        on(name: 'exec', callback: execEventHandler): Function;
-
-        on(name: 'afterExec', callback: execEventHandler): Function;
+        "exec": execEventHandler
+        "afterExec": execEventHandler;
+        "commandUnavailable": execEventHandler;
     }
 
     type CommandManager = import("./src/commands/command_manager").CommandManager;
@@ -955,12 +966,6 @@ export namespace Ace {
 
     var Selection: {
         new(session: EditSession): Selection;
-    }
-
-    interface TextInput {
-        resetSelection(): void;
-
-        setAriaOption(options?: { activeDescendant: string, role: string, setLabel: any }): void;
     }
 
     type CompleterCallback = (error: any, completions: Completion[]) => void;
@@ -1077,13 +1082,48 @@ export namespace Ace {
         $blockSelectEnabled?: boolean,
     }
 
+    /**
+     * Provider interface for code lens functionality
+     */
     interface CodeLenseProvider {
+        /**
+         * Compute code lenses for the given edit session
+         * @param session The edit session to provide code lenses for
+         * @param callback Callback function that receives errors and code lenses
+         */
         provideCodeLenses: (session: EditSession, callback: (err: any, payload: CodeLense[]) => void) => void;
     }
 
+    /**
+     * Represents a command associated with a code lens
+     */
+    interface CodeLenseCommand {
+        /**
+         * Command identifier that will be executed
+         */
+        id?: string,
+        /**
+         * Display title for the code lens
+         */
+        title: string,
+        /**
+         * Argument(s) to pass to the command when executed
+         */
+        arguments?: any,
+    }
+
+    /**
+     * Represents a code lens - an actionable UI element displayed above a code line
+     */
     interface CodeLense {
+        /**
+         * Starting position where the code lens should be displayed
+         */
         start: Point,
-        command: any
+        /**
+         * Command to execute when the code lens is activated
+         */
+        command?: CodeLenseCommand
     }
 
     interface CodeLenseEditorExtension {
@@ -1218,6 +1258,42 @@ export namespace Ace {
         firstLineNumber?: number,
         showGutter?: boolean
 }
+
+    export interface Operation {
+        command: {
+            name?: string;
+        };
+        args: any;
+        selectionBefore?: Range | Range[];
+        selectionAfter?: Range | Range[];
+        docChanged?: boolean;
+        selectionChanged?: boolean;
+    }
+
+    export interface CommandBarEvents {
+        "hide": () => void;
+        "show": () => void;
+        "alwaysShow": (e: boolean) => void;
+    }
+
+    export interface FontMetricsEvents {
+        "changeCharacterSize": (e: { data: { height: number, width: number } }) => void;
+    }
+
+    export interface OptionPanelEvents {
+        "setOption": (e: { name: string, value: any }) => void;
+    }
+
+    export interface ScrollbarEvents {
+        "scroll": (e: { data: number }) => void;
+    }
+
+    export interface TextInputAriaOptions {
+        activeDescendant?: string;
+        role?: string;
+        setLabel?: boolean;
+        inline?: boolean;
+    }
 }
 
 
@@ -1317,6 +1393,7 @@ declare module "./src/editor" {
         showSettingsMenu?: () => void,
         searchBox?: Ace.SearchBox,
         _eventRegistry?: any,
+        $textInputAriaLabel?: string
     }
 }
 
@@ -1356,6 +1433,7 @@ declare module "./src/edit_session" {
         $occurMatchingLines?: any,
         $useEmacsStyleLineStart?: boolean,
         $selectLongWords?: boolean,
+        curOp: Ace.Operation | null,
 
         getSelectionMarkers(): any[],
     }
@@ -1374,18 +1452,18 @@ declare module "./src/placeholder" {
 }
 
 declare module "./src/scrollbar" {
-    export interface VScrollBar extends Ace.EventEmitter<any> {
+    export interface VScrollBar extends Ace.EventEmitter<Ace.ScrollbarEvents> {
     }
 
-    export interface HScrollBar extends Ace.EventEmitter<any> {
+    export interface HScrollBar extends Ace.EventEmitter<Ace.ScrollbarEvents> {
     }
 }
 
 declare module "./src/scrollbar_custom" {
-    export interface VScrollBar extends Ace.EventEmitter<any> {
+    export interface VScrollBar extends Ace.EventEmitter<Ace.ScrollbarEvents> {
     }
 
-    export interface HScrollBar extends Ace.EventEmitter<any> {
+    export interface HScrollBar extends Ace.EventEmitter<Ace.ScrollbarEvents> {
     }
 }
 
@@ -1418,7 +1496,7 @@ declare module "./src/virtual_renderer" {
         $printMarginColumn?: number,
         $animatedScroll?: boolean,
         $isMousePressed?: boolean,
-        textarea?: HTMLTextAreaElement,
+        textarea: HTMLTextAreaElement,
         $hScrollBarAlwaysVisible?: boolean,
         $vScrollBarAlwaysVisible?: boolean
         $maxLines?: number,
@@ -1438,7 +1516,6 @@ declare module "./src/virtual_renderer" {
         session: Ace.EditSession,
         keyboardFocusClassName?: string,
     }
-
 }
 
 declare module "./src/snippets" {
@@ -1447,13 +1524,13 @@ declare module "./src/snippets" {
 }
 
 declare module "./src/ext/command_bar" {
-    export interface CommandBarTooltip extends Ace.EventEmitter<any> {
+    export interface CommandBarTooltip extends Ace.EventEmitter<Ace.CommandBarEvents> {
         $shouldHideMoreOptions?: boolean,
     }
 }
 
 declare module "./src/commands/command_manager" {
-    export interface CommandManager extends Ace.EventEmitter<any> {
+    export interface CommandManager extends Ace.EventEmitter<Ace.CommandManagerEvents> {
         $checkCommandState?: boolean
     }
 }
@@ -1470,7 +1547,7 @@ declare module "./src/autocomplete/popup" {
         isTopdown: boolean,
         autoSelect: boolean,
         data: Ace.Completion[],
-        setData: (data: Ace.Completion[], filterText: string) => void,
+        setData: (data: Ace.Completion[], filterText?: string) => void,
         getData: (row: number) => Ace.Completion,
         hide: () => void,
         anchor: "top" | "bottom",
@@ -1502,7 +1579,7 @@ declare module "./src/layer/gutter" {
 
 declare module "./src/layer/text" {
     export interface Text extends Ace.EventEmitter<Ace.TextEvents> {
-        config?: Ace.LayerConfig
+        config: Ace.LayerConfig
     }
 }
 
@@ -1532,14 +1609,13 @@ declare module "./src/mouse/mouse_handler" {
     }
 }
 
-// @ts-expect-error
 declare module "./src/ext/options" {
-    export interface OptionPanel extends Ace.EventEmitter<any> {
+    export interface OptionPanel extends Ace.EventEmitter<Ace.OptionPanelEvents> {
     }
 }
 
 declare module "./src/layer/font_metrics" {
-    export interface FontMetrics extends Ace.EventEmitter<any> {
+    export interface FontMetrics extends Ace.EventEmitter<Ace.FontMetricsEvents> {
     }
 }
 
@@ -1575,6 +1651,7 @@ declare module "./src/scope" {
         toStack(): any[];
     }
 }
+
 declare module "./src/lib/keys" {
     export function keyCodeToString(keyCode: number): string;
 }

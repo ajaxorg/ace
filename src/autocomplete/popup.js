@@ -133,6 +133,30 @@ class AcePopup {
                 setHoverMarker(row, true);
             }
         });
+        // set aria attributes on all visible elements of the popup
+        popup.renderer.on("afterRender", function () {
+            var t = popup.renderer.$textLayer;
+            for (var row = t.config.firstRow, l = t.config.lastRow; row <= l; row++) {
+                const popupRowElement = /** @type {HTMLElement|null} */(t.element.childNodes[row - t.config.firstRow]);
+
+                popupRowElement.setAttribute("role", optionAriaRole);
+                popupRowElement.setAttribute("aria-roledescription", nls("autocomplete.popup.item.aria-roledescription", "item"));
+                popupRowElement.setAttribute("aria-setsize", popup.data.length);
+                popupRowElement.setAttribute("aria-describedby", "doc-tooltip");
+                popupRowElement.setAttribute("aria-posinset", row + 1);
+
+                const rowData = popup.getData(row);
+                if (rowData) {
+                    const ariaLabel = `${rowData.caption || rowData.value}${rowData.meta ? `, ${rowData.meta}` : ''}`;
+                    popupRowElement.setAttribute("aria-label", ariaLabel);
+                }
+
+                const highlightedSpans = popupRowElement.querySelectorAll(".ace_completion-highlight");
+                highlightedSpans.forEach(span => {
+                    span.setAttribute("role", "mark");
+                });
+            }
+        });
         popup.renderer.on("afterRender", function () {
             var row = popup.getRow();
             var t = popup.renderer.$textLayer;
@@ -140,23 +164,18 @@ class AcePopup {
             var el = document.activeElement; // Active element is textarea of main editor
             if (selected !== popup.selectedNode && popup.selectedNode) {
                 dom.removeCssClass(popup.selectedNode, "ace_selected");
-                el.removeAttribute("aria-activedescendant");
                 popup.selectedNode.removeAttribute(ariaActiveState);
                 popup.selectedNode.removeAttribute("id");
             }
+            el.removeAttribute("aria-activedescendant");
+
             popup.selectedNode = selected;
             if (selected) {
-                dom.addCssClass(selected, "ace_selected");
                 var ariaId = getAriaId(row);
+                dom.addCssClass(selected, "ace_selected");
                 selected.id = ariaId;
                 t.element.setAttribute("aria-activedescendant", ariaId);
                 el.setAttribute("aria-activedescendant", ariaId);
-                selected.setAttribute("role", optionAriaRole);
-                selected.setAttribute("aria-roledescription", nls("autocomplete.popup.item.aria-roledescription", "item"));
-                selected.setAttribute("aria-label", popup.getData(row).caption || popup.getData(row).value);
-                selected.setAttribute("aria-setsize", popup.data.length);
-                selected.setAttribute("aria-posinset", row + 1);
-                selected.setAttribute("aria-describedby", "doc-tooltip");
                 selected.setAttribute(ariaActiveState, "true");
             }
         });
@@ -309,8 +328,9 @@ class AcePopup {
             }
 
             var el = this.container;
-            var screenHeight = window.innerHeight;
-            var screenWidth = window.innerWidth;
+            var scrollBarSize = this.renderer.scrollBar.width || 10;
+            var screenHeight = window.innerHeight - scrollBarSize;
+            var screenWidth = window.innerWidth - scrollBarSize;
             var renderer = this.renderer;
             // var maxLines = Math.min(renderer.$maxLines, this.session.getLength());
             var maxH = renderer.$maxLines * lineHeight * 1.4;
@@ -353,7 +373,7 @@ class AcePopup {
 
             if (anchor === "top") {
                 el.style.top = "";
-                el.style.bottom = (screenHeight - dims.bottom) + "px";
+                el.style.bottom = (screenHeight + scrollBarSize - dims.bottom) + "px";
                 popup.isTopdown = false;
             } else {
                 el.style.top = dims.top + "px";

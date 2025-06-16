@@ -19,10 +19,8 @@ var JavaHighlightRules = function() {
     "char|final|interface|static|void|" +
     "class|finally|long|strictfp|volatile|" +
     "const|float|native|super|while|" +
-    "var|exports|opens|requires|uses|yield|" +
-    "module|permits|(?:non\\-)?sealed|var|" +
-    "provides|to|when|" +
-    "open|record|transitive|with"    
+    "yield|when|record|var|" +
+    "permits|(?:non\\-)?sealed"
     );
 
     var buildinConstants = ("null|Infinity|NaN|undefined");
@@ -66,16 +64,7 @@ var JavaHighlightRules = function() {
 
     this.$rules = {
         "start" : [
-            {
-                token : "comment",
-                regex : "\\/\\/.*$"
-            },
-            DocCommentHighlightRules.getStartRule("doc-start"),
-            {
-                token : "comment", // multi line comment
-                regex : "\\/\\*",
-                next : "comment"
-            },
+            {include: "comments"},
             {include: "multiline-strings"},
             {include: "strings"},
             {include: "constants"},
@@ -85,15 +74,19 @@ var JavaHighlightRules = function() {
                 next: [{
                     regex: "{",
                     token: "paren.lparen",
-                    next: [{
-                        regex: "}",
-                        token: "paren.rparen",
-                        next: "start"
-                    }, {
-                        // From Section 3.9 of http://cr.openjdk.java.net/~mr/jigsaw/spec/java-se-9-jls-diffs.pdf
-                        regex: "\\b(requires|transitive|exports|opens|to|uses|provides|with)\\b",
-                        token: "keyword" 
-                    }]
+                    push: [
+                        {
+                            regex: "}",
+                            token: "paren.rparen",
+                            next: "pop"
+                        },
+                        {include: "comments"},
+                        {
+                            // From Section 3.9 of http://cr.openjdk.java.net/~mr/jigsaw/spec/java-se-9-jls-diffs.pdf
+                            regex: "\\b(requires|transitive|exports|opens|to|uses|provides|with)\\b",
+                            token: "keyword"
+                        }
+                    ]
                 }, {
                     token : "text",
                     regex : "\\s+"
@@ -113,14 +106,29 @@ var JavaHighlightRules = function() {
             },
             {include: "statements"}
         ],
-        "comment" : [
+        "comments" : [
             {
-                token : "comment", // closing comment
-                regex : "\\*\\/",
-                next : "start"
-            }, {
-                defaultToken : "comment"
-            }
+                token : "comment",
+                regex : "\\/\\/.*$"
+            },
+            {
+                token : "comment.doc", // doc comment
+                regex: /\/\*\*(?!\/)/,
+                push  : "doc-start"
+            },
+            {
+                token : "comment", // multi line comment
+                regex : "\\/\\*",
+                push : [
+                    {
+                        token : "comment", // closing comment
+                        regex : "\\*\\/",
+                        next : "pop"
+                    }, {
+                        defaultToken : "comment"
+                    }
+                ]
+            },
         ],
         "strings": [
             {
@@ -265,9 +273,9 @@ var JavaHighlightRules = function() {
         ]
     };
 
-    
+
     this.embedRules(DocCommentHighlightRules, "doc-",
-        [ DocCommentHighlightRules.getEndRule("start") ]);
+        [ DocCommentHighlightRules.getEndRule("pop") ]);
     this.normalizeRules();
 };
 

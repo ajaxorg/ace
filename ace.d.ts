@@ -36,6 +36,12 @@ declare module "ace-code" {
         type DragdropHandler = import("ace-code/src/mouse/dragdrop_handler").DragdropHandler;
         type AppConfig = import("ace-code/src/lib/app_config").AppConfig;
         type Config = typeof import("ace-code/src/config");
+        type GutterTooltip = import("ace-code/src/mouse/default_gutter_handler").GutterTooltip;
+        type GutterKeyboardEvent = import("ace-code/src/keyboard/gutter_handler").GutterKeyboardEvent;
+        type HoverTooltip = import("ace-code/src/tooltip").HoverTooltip;
+        type Tooltip = import("ace-code/src/tooltip").Tooltip;
+        type PopupManager = import("ace-code/src/tooltip").PopupManager;
+        type TextInput = import("ace-code/src/keyboard/textinput").TextInput;
         type AfterLoadCallback = (err: Error | null, module: unknown) => void;
         type LoaderFunction = (moduleName: string, afterLoad: AfterLoadCallback) => void;
         export interface ConfigOptions {
@@ -220,7 +226,7 @@ declare module "ace-code" {
             fullWidth?: boolean;
             screenWidth?: number;
             rowsAbove?: number;
-            lenses?: any[];
+            lenses?: CodeLenseCommand[];
         }
         type NewLineMode = "auto" | "unix" | "windows";
         interface EditSessionOptions {
@@ -420,7 +426,10 @@ declare module "ace-code" {
             /**
              * Emitted when text is pasted.
              **/
-            "paste": (text: string, event: any) => void;
+            "paste": (e: {
+                text: string;
+                event?: ClipboardEvent;
+            }) => void;
             /**
              * Emitted when the selection style changes, via [[Editor.setSelectionStyle]].
              * @param data Contains one property, `data`, which indicates the new selection style
@@ -437,6 +446,11 @@ declare module "ace-code" {
             //from code_lens extension
             "codeLensClick": (e: any) => void;
             "select": () => void;
+            "gutterkeydown": (e: GutterKeyboardEvent) => void;
+            "gutterclick": (e: MouseEvent) => void;
+            "showGutterTooltip": (e: GutterTooltip) => void;
+            "hideGutterTooltip": (e: GutterTooltip) => void;
+            "compositionStart": () => void;
         }
         interface AcePopupEvents {
             "click": (e: MouseEvent) => void;
@@ -534,7 +548,9 @@ declare module "ace-code" {
             "resize": (e?: any) => void;
             "autosize": () => void;
         }
-        class EventEmitter<T> {
+        export class EventEmitter<T extends {
+            [K in keyof T]: (...args: any[]) => any;
+        }> {
             once<K extends keyof T>(name: K, callback: T[K]): void;
             setDefaultHandler(name: string, callback: Function): void;
             removeDefaultHandler(name: string, callback: Function): void;
@@ -695,7 +711,7 @@ declare module "ace-code" {
         }
         interface SyntaxMode {
             HighlightRules: {
-                new(config: any): HighlightRules;
+                new(config?: any): HighlightRules;
             }; //TODO: fix this
             foldingRules?: FoldMode;
             /**
@@ -747,8 +763,9 @@ declare module "ace-code" {
             args: any[];
         }) => void;
         interface CommandManagerEvents {
-            on(name: "exec", callback: execEventHandler): Function;
-            on(name: "afterExec", callback: execEventHandler): Function;
+            "exec": execEventHandler;
+            "afterExec": execEventHandler;
+            "commandUnavailable": execEventHandler;
         }
         type CommandManager = import("ace-code/src/commands/command_manager").CommandManager;
         interface SavedSelection {
@@ -759,14 +776,6 @@ declare module "ace-code" {
         var Selection: {
             new(session: EditSession): Selection;
         };
-        interface TextInput {
-            resetSelection(): void;
-            setAriaOption(options?: {
-                activeDescendant: string;
-                role: string;
-                setLabel: any;
-            }): void;
-        }
         type CompleterCallback = (error: any, completions: Completion[]) => void;
         interface Completer {
             identifierRegexps?: Array<RegExp>;
@@ -862,12 +871,46 @@ declare module "ace-code" {
             alignCursors: () => void;
             multiSelect?: any;
         }
+        /**
+         * Provider interface for code lens functionality
+         */
         interface CodeLenseProvider {
+            /**
+             * Compute code lenses for the given edit session
+             * @param session The edit session to provide code lenses for
+             * @param callback Callback function that receives errors and code lenses
+             */
             provideCodeLenses: (session: EditSession, callback: (err: any, payload: CodeLense[]) => void) => void;
         }
+        /**
+         * Represents a command associated with a code lens
+         */
+        interface CodeLenseCommand {
+            /**
+             * Command identifier that will be executed
+             */
+            id?: string;
+            /**
+             * Display title for the code lens
+             */
+            title: string;
+            /**
+             * Argument(s) to pass to the command when executed
+             */
+            arguments?: any;
+        }
+        /**
+         * Represents a code lens - an actionable UI element displayed above a code line
+         */
         interface CodeLense {
+            /**
+             * Starting position where the code lens should be displayed
+             */
             start: Point;
-            command: any;
+            /**
+             * Command to execute when the code lens is activated
+             */
+            command?: CodeLenseCommand;
         }
         interface CodeLenseEditorExtension {
             codeLensProviders?: CodeLenseProvider[];
@@ -948,6 +991,46 @@ declare module "ace-code" {
             firstLineNumber?: number;
             showGutter?: boolean;
         }
+        export interface Operation {
+            command: {
+                name?: string;
+            };
+            args: any;
+            selectionBefore?: Range | Range[];
+            selectionAfter?: Range | Range[];
+            docChanged?: boolean;
+            selectionChanged?: boolean;
+        }
+        export interface CommandBarEvents {
+            "hide": () => void;
+            "show": () => void;
+            "alwaysShow": (e: boolean) => void;
+        }
+        export interface FontMetricsEvents {
+            "changeCharacterSize": (e: {
+                data: {
+                    height: number;
+                    width: number;
+                };
+            }) => void;
+        }
+        export interface OptionPanelEvents {
+            "setOption": (e: {
+                name: string;
+                value: any;
+            }) => void;
+        }
+        export interface ScrollbarEvents {
+            "scroll": (e: {
+                data: number;
+            }) => void;
+        }
+        export interface TextInputAriaOptions {
+            activeDescendant?: string;
+            role?: string;
+            setLabel?: boolean;
+            inline?: boolean;
+        }
     }
     export const config: typeof import("ace-code/src/config");
     export function edit(el?: string | (HTMLElement & {
@@ -960,6 +1043,6 @@ declare module "ace-code" {
     import { Range } from "ace-code/src/range";
     import { UndoManager } from "ace-code/src/undomanager";
     import { VirtualRenderer as Renderer } from "ace-code/src/virtual_renderer";
-    export var version: "1.36.5";
+    export var version: "1.42.0";
     export { Range, Editor, EditSession, UndoManager, Renderer as VirtualRenderer };
 }

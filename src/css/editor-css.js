@@ -58,6 +58,9 @@ module.exports = `
     contain: style size layout;
     font-variant-ligatures: no-common-ligatures;
 }
+.ace_invisible {
+    font-variant-ligatures: none;
+}
 
 .ace_keyboard-focus:focus {
     box-shadow: inset 0 0 0 2px #5E9ED6;
@@ -456,7 +459,6 @@ module.exports = `
     border-radius: 1px;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
     color: black;
-    max-width: 100%;
     padding: 3px 4px;
     position: fixed;
     z-index: 999999;
@@ -470,7 +472,7 @@ module.exports = `
     letter-spacing: normal;
     pointer-events: none;
     overflow: auto;
-    max-width: min(60em, 66vw);
+    max-width: min(33em, 66vw);
     overscroll-behavior: contain;
 }
 .ace_tooltip pre {
@@ -505,7 +507,7 @@ module.exports = `
     padding-right: 13px;
 }
 
-.ace_fold-widget {
+.ace_fold-widget, .ace_custom-widget {
     box-sizing: border-box;
 
     margin: 0 -12px 0 1px;
@@ -521,6 +523,11 @@ module.exports = `
     
     border: 1px solid transparent;
     cursor: pointer;
+    pointer-events: auto;
+}
+
+.ace_custom-widget {
+    background: none;
 }
 
 .ace_folding-enabled .ace_fold-widget {

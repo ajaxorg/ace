@@ -1,6 +1,6 @@
 import * as ace from "ace-code";
 import {Range} from "ace-code";
-import {Autocomplete} from "ace-code/src/autocomplete";
+import {Autocomplete, FilteredList} from "ace-code/src/autocomplete";
 import {beautify} from "ace-code/src/ext/beautify";
 import {registerCodeLensProvider, setLenses} from "ace-code/src/ext/code_lens";
 import {CommandBarTooltip} from "ace-code/src/ext/command_bar";
@@ -9,6 +9,7 @@ import {MarkerGroup, MarkerGroupItem} from "ace-code/src/marker_group";
 import {HoverTooltip} from "ace-code/src/tooltip";
 import {hardWrap} from "ace-code/src/ext/hardwrap";
 import {SearchBox} from "ace-code/src/ext/searchbox";
+import {themesByName} from 'ace-code/src/ext/themelist';
 
 import("ace-code/src/ext/language_tools");
 import "../../src/test/mockdom.js";
@@ -19,6 +20,7 @@ import {highlight} from "ace-code/src/ext/static_highlight";
 // TODO this does not work in node
 // import "ace-code/esm-resolver";
 import { config } from "ace-code";
+import {AcePopup} from "ace-code/src/autocomplete/popup";
 config.setLoader(async function(moduleName, cb) {
     moduleName = moduleName.replace("ace/", "ace-code/src/")
     let module = await import(moduleName);
@@ -112,3 +114,45 @@ highlight(editor.container, {
 setTimeout(function() {
     editor.destroy();
 }, 20)
+
+function createPopup() {
+    const popup = new AcePopup();
+
+    popup.container.style.width = "100%";
+    popup.renderer.textarea.setAttribute("tabindex", "-1");
+    popup.setSelectOnHover(true);
+    return popup;
+}
+
+const acePopup = createPopup();
+const activeCommand = acePopup.getData(acePopup.getRow());
+if (activeCommand && activeCommand.command && activeCommand.command.name) {
+    acePopup.setData([]);
+}
+acePopup.destroy();
+
+const filter = new FilteredList([]);
+filter.setFilter("test");
+
+editor.session.startOperation();
+editor.session.endOperation();
+
+editor.on("paste", (e) => {
+    if (e.event && e.event.clipboardData) {
+        var htmlString = e.event.clipboardData.getData("text/html")
+        if (htmlString) {
+            e.text = htmlString
+        }
+    }
+})
+
+if (themesByName.textmate)
+    console.log(themesByName.textmate.theme);
+
+editor.commands.on('afterExec', ({editor, command}) => {
+    console.log(editor.getValue(), command.name);
+});
+
+editor.commands.on('exec', ({editor, command}) => {
+    console.log(editor.getValue(), command.name);
+});

@@ -11,6 +11,8 @@ var Editor = require("../editor").Editor;
 var Mode = require("../mode/java").Mode;
 var VirtualRenderer = require("../virtual_renderer").VirtualRenderer;
 var assert = require("../test/assertions");
+var user = require("../test/user");
+const {GUTTER_TOOLTIP_LEFT_OFFSET, GUTTER_TOOLTIP_TOP_OFFSET} = require("./default_gutter_handler");
 var MouseEvent = function(type, opts){
     var e = document.createEvent("MouseEvents");
     e.initMouseEvent(/click|wheel/.test(type) ? type : "mouse" + type,
@@ -36,8 +38,7 @@ module.exports = {
         editor = this.editor;
         next();
     },
-    
-    "test: gutter error tooltip" : function() {
+    "test: gutter error tooltip" : function(done) {
         var editor = this.editor;
         var value = "";
 
@@ -56,11 +57,12 @@ module.exports = {
         // Wait for the tooltip to appear after its timeout.
         setTimeout(function() {
             editor.renderer.$loop._flush();
-            var tooltip = editor.container.querySelector(".ace_tooltip");
+            var tooltip = editor.container.querySelector(".ace_gutter-tooltip");
             assert.ok(/error test/.test(tooltip.textContent));
-        }, 100); 
+            done();
+        }, 100);
     },
-    "test: gutter security tooltip" : function() {
+    "test: gutter security tooltip" : function(done) {
         var editor = this.editor;
         var value = "";
 
@@ -79,11 +81,12 @@ module.exports = {
         // Wait for the tooltip to appear after its timeout.
         setTimeout(function() {
             editor.renderer.$loop._flush();
-            var tooltip = editor.container.querySelector(".ace_tooltip");
+            var tooltip = editor.container.querySelector(".ace_gutter-tooltip");
             assert.ok(/security finding test/.test(tooltip.textContent));
-        }, 100); 
+            done();
+        }, 100);
     },
-    "test: gutter warning tooltip" : function() {
+    "test: gutter warning tooltip" : function(done) {
         var editor = this.editor;
         var value = "";
 
@@ -102,11 +105,12 @@ module.exports = {
         // Wait for the tooltip to appear after its timeout.
         setTimeout(function() {
             editor.renderer.$loop._flush();
-            var tooltip = editor.container.querySelector(".ace_tooltip");
+            var tooltip = editor.container.querySelector(".ace_gutter-tooltip");
             assert.ok(/warning test/.test(tooltip.textContent));
-        }, 100); 
+            done();
+        }, 100);
     },
-    "test: gutter info tooltip" : function() {
+    "test: gutter info tooltip" : function(done) {
         var editor = this.editor;
         var value = "";
 
@@ -125,11 +129,12 @@ module.exports = {
         // Wait for the tooltip to appear after its timeout.
         setTimeout(function() {
             editor.renderer.$loop._flush();
-            var tooltip = editor.container.querySelector(".ace_tooltip");
+            var tooltip = editor.container.querySelector(".ace_gutter-tooltip");
             assert.ok(/info test/.test(tooltip.textContent));
-        }, 100); 
+            done();
+        }, 100);
     },
-    "test: gutter hint tooltip" : function() {
+    "test: gutter hint tooltip" : function(done) {
         var editor = this.editor;
         var value = "";
 
@@ -148,9 +153,10 @@ module.exports = {
         // Wait for the tooltip to appear after its timeout.
         setTimeout(function() {
             editor.renderer.$loop._flush();
-            var tooltip = editor.container.querySelector(".ace_tooltip");
+            var tooltip = editor.container.querySelector(".ace_gutter-tooltip");
             assert.ok(/suggestion test/.test(tooltip.textContent));
-        }, 100); 
+            done();
+        }, 100);
     },
     "test: gutter svg icons" : function() {
         var editor = this.editor;
@@ -169,7 +175,7 @@ module.exports = {
         var annotation = line.children[2].firstChild;
         assert.ok(/ace_icon_svg/.test(annotation.className));
     },
-    "test: error show up in fold" : function() {
+    "test: error show up in fold" : function(done) {
         var editor = this.editor;
         var value = "x {" + "\n".repeat(50) + "}";
         value = value.repeat(50);
@@ -200,11 +206,12 @@ module.exports = {
         // Wait for the tooltip to appear after its timeout.
         setTimeout(function() {
             editor.renderer.$loop._flush();
-            var tooltip = editor.container.querySelector(".ace_tooltip");
+            var tooltip = editor.container.querySelector(".ace_gutter-tooltip");
             assert.ok(/error in folded/.test(tooltip.textContent));
-        }, 100); 
+            done();
+        }, 50);
     },
-    "test: security show up in fold" : function() {
+    "test: security show up in fold" : function(done) {
         var editor = this.editor;
         var value = "x {" + "\n".repeat(50) + "}";
         value = value.repeat(50);
@@ -235,11 +242,12 @@ module.exports = {
         // Wait for the tooltip to appear after its timeout.
         setTimeout(function() {
             editor.renderer.$loop._flush();
-            var tooltip = editor.container.querySelector(".ace_tooltip");
+            var tooltip = editor.container.querySelector(".ace_gutter-tooltip");
             assert.ok(/security finding in folded/.test(tooltip.textContent));
-        }, 100); 
+            done();
+        }, 100);
     },
-    "test: warning show up in fold" : function() {
+    "test: warning show up in fold" : function(done) {
         var editor = this.editor;
         var value = "x {" + "\n".repeat(50) + "}";
         value = value.repeat(50);
@@ -270,9 +278,10 @@ module.exports = {
         // Wait for the tooltip to appear after its timeout.
         setTimeout(function() {
             editor.renderer.$loop._flush();
-            var tooltip = editor.container.querySelector(".ace_tooltip");
+            var tooltip = editor.container.querySelector(".ace_gutter-tooltip");
             assert.ok(/warning in folded/.test(tooltip.textContent));
-        }, 100); 
+            done();
+        }, 100);
     },
     "test: info not show up in fold" : function() {
         var editor = this.editor;
@@ -396,12 +405,12 @@ module.exports = {
         // Wait for the tooltip to appear after its timeout.
         setTimeout(function() {
             editor.renderer.$loop._flush();
-            var tooltip = editor.container.querySelector(".ace_tooltip");
+            var tooltip = editor.container.querySelector(".ace_gutter-tooltip");
             assert.ok(/error test/.test(tooltip.textContent));
-            assert.equal(tooltip.style.left, `${rect.right}px`);
-            assert.equal(tooltip.style.top, `${rect.bottom}px`);
+            assert.equal(tooltip.style.left, `${rect.right - GUTTER_TOOLTIP_LEFT_OFFSET}px`);
+            assert.equal(tooltip.style.top, `${rect.bottom - GUTTER_TOOLTIP_TOP_OFFSET}px`);
             done();
-        }, 100); 
+        }, 100);
     },
     "test: gutter tooltip should properly display special characters (\" ' & <)" : function(done) {
         var editor = this.editor;
@@ -422,12 +431,43 @@ module.exports = {
         // Wait for the tooltip to appear after its timeout.
         setTimeout(function() {
             editor.renderer.$loop._flush();
-            var tooltip = editor.container.querySelector(".ace_tooltip");
+            var tooltip = editor.container.querySelector(".ace_gutter-tooltip");
             assert.ok(/special characters " ' & </.test(tooltip.textContent));
             done();
-        }, 100); 
+        }, 100);
     },
-   
+    "test: gutter hover tooltip should remain open when pressing ctrl key combination" : function(done) {
+        var editor = this.editor;
+        var value = "";
+
+        editor.session.setMode(new Mode());
+        editor.setValue(value, -1);
+        editor.session.setAnnotations([{row: 0, column: 0, text: "error test", type: "error"}]);
+        editor.renderer.$loop._flush();
+
+        var lines = editor.renderer.$gutterLayer.$lines;
+        var annotation = lines.cells[0].element;
+        assert.ok(/ace_error/.test(annotation.className));
+
+        var rect = annotation.getBoundingClientRect();
+        annotation.dispatchEvent(new MouseEvent("move", {x: rect.left, y: rect.top}));
+
+        // Wait for the tooltip to appear after its timeout.
+        setTimeout(function () {
+            editor.renderer.$loop._flush();
+            var tooltip = editor.container.querySelector(".ace_gutter-tooltip");
+            assert.ok(/error test/.test(tooltip.textContent));
+            user.type("Ctrl-C");
+            tooltip = editor.container.querySelector(".ace_gutter-tooltip");
+            assert.ok(/error test/.test(tooltip.textContent));
+            // also verify if it closes when presses another key
+            user.type("Escape");
+            tooltip = editor.container.querySelector(".ace_gutter-tooltip");
+            assert.strictEqual(tooltip, undefined);
+            done();
+        }, 100);
+    },
+
     tearDown : function() {
         this.editor.destroy();
         document.body.removeChild(this.editor.container);

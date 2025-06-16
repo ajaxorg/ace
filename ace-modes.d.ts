@@ -207,6 +207,14 @@ declare module "ace-code/src/mode/clojure" {
     export const Mode: new () => import("ace-code").Ace.SyntaxMode;
 }
 
+declare module "ace-code/src/mode/clue_highlight_rules" {
+    export const ClueHighlightRules: new () => import("ace-code").Ace.HighlightRules;
+}
+
+declare module "ace-code/src/mode/clue" {
+    export const Mode: new () => import("ace-code").Ace.SyntaxMode;
+}
+
 declare module "ace-code/src/mode/cobol_highlight_rules" {
     export const CobolHighlightRules: new () => import("ace-code").Ace.HighlightRules;
 }
@@ -300,6 +308,14 @@ declare module "ace-code/src/mode/css_highlight_rules" {
 }
 
 declare module "ace-code/src/mode/css" {
+    export const Mode: new () => import("ace-code").Ace.SyntaxMode;
+}
+
+declare module "ace-code/src/mode/csv_highlight_rules" {
+    export const CsvHighlightRules: new () => import("ace-code").Ace.HighlightRules;
+}
+
+declare module "ace-code/src/mode/csv" {
     export const Mode: new () => import("ace-code").Ace.SyntaxMode;
 }
 
@@ -497,6 +513,10 @@ declare module "ace-code/src/mode/folding/markdown" {
 }
 
 declare module "ace-code/src/mode/folding/mixed" {
+    export const FoldMode: new () => import("ace-code").Ace.Folding;
+}
+
+declare module "ace-code/src/mode/folding/nunjucks" {
     export const FoldMode: new () => import("ace-code").Ace.Folding;
 }
 
@@ -1576,6 +1596,14 @@ declare module "ace-code/src/mode/toml_highlight_rules" {
 }
 
 declare module "ace-code/src/mode/toml" {
+    export const Mode: new () => import("ace-code").Ace.SyntaxMode;
+}
+
+declare module "ace-code/src/mode/tsv_highlight_rules" {
+    export const TsvHighlightRules: new () => import("ace-code").Ace.HighlightRules;
+}
+
+declare module "ace-code/src/mode/tsv" {
     export const Mode: new () => import("ace-code").Ace.SyntaxMode;
 }
 

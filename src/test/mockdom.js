@@ -136,7 +136,7 @@ function Context2d(w, h) {
     this.getImageData = function(sx, sy, sw, sh) {
         var data = new Uint8ClampedArray(sw * sh * 4);
         var newIndex = 0;
-        for (var i = sx; i < sw + sy; i++) {
+        for (var i = sx; i < sw + sx; i++) {
             for (var j = sy; j < sh + sy; j++) {
                 var index = (this.width * j + i) * 4;
                 for (var k = 0; k < 4; k++)

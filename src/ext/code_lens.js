@@ -1,7 +1,9 @@
 "use strict";
 /**
  * @typedef {import("../edit_session").EditSession} EditSession
- * @typedef {import("../virtual_renderer").VirtualRenderer & {$textLayer: import("../layer/text").Text &{$lenses: any}}} VirtualRenderer
+ * @typedef {import("../virtual_renderer").VirtualRenderer & {$textLayer: import("../layer/text").Text &{$lenses: HTMLElement[]}}} VirtualRenderer
+ * @typedef {import("../../ace-internal").Ace.CodeLenseCommand} CodeLenseCommand
+ * @typedef {import("../../ace-internal").Ace.CodeLense} CodeLense
  */
 
 var event = require("../lib/event");
@@ -9,10 +11,12 @@ var lang = require("../lib/lang");
 var dom = require("../lib/dom");
 
 /**
- * @param {VirtualRenderer} renderer
+ * Clears all code lens elements from the renderer
+ * @param {VirtualRenderer} renderer The renderer to clear lens elements from
  */
 function clearLensElements(renderer) {
     var textLayer = renderer.$textLayer;
+    /** @type {HTMLElement[]} */
     var lensElements = textLayer.$lenses;
     if (lensElements)
         lensElements.forEach(function(el) {el.remove(); });
@@ -20,8 +24,9 @@ function clearLensElements(renderer) {
 }
 
 /**
- * @param {number} changes
- * @param {VirtualRenderer} renderer
+ * Renders code lens widgets based on changes to the editor
+ * @param {number} changes Bitmask of change types
+ * @param {VirtualRenderer} renderer The renderer to update
  */
 function renderWidgets(changes, renderer) {
     var changed = changes & renderer.CHANGE_LINES
@@ -72,7 +77,8 @@ function renderWidgets(changes, renderer) {
                 el = dom.buildDom(["a"], lensContainer);
             }
             el.textContent = lenses[j].title;
-            el.lensCommand = lenses[j];
+            /** @type {HTMLElement & { lensCommand : CodeLenseCommand}} */
+            (el).lensCommand = lenses[j];
         }
         while (lensContainer.childNodes.length > 2 * j - 1)
             lensContainer.lastChild.remove();
@@ -95,7 +101,8 @@ function renderWidgets(changes, renderer) {
 }
 
 /**
- * @param {EditSession} session
+ * Clears all code lens widgets from the session
+ * @param {EditSession} session The session to clear code lens widgets from
  */
 function clearCodeLensWidgets(session) {
     if (!session.lineWidgets) return;
@@ -107,10 +114,10 @@ function clearCodeLensWidgets(session) {
 }
 
 /**
- *
- * @param {EditSession} session
- * @param {import("../../ace-internal").Ace.CodeLense[]} lenses
- * @return {number}
+ * Sets code lenses for the given session
+ * @param {EditSession} session The session to set code lenses for
+ * @param {import("../../ace-internal").Ace.CodeLense[]} lenses Array of code lenses to set
+ * @return {number} The row of the first code lens or Number.MAX_VALUE if no lenses
  */
 exports.setLenses = function(session, lenses) {
     var firstRow = Number.MAX_VALUE;
@@ -138,13 +145,15 @@ exports.setLenses = function(session, lenses) {
 };
 
 /**
- * @param {import("../editor").Editor} editor
+ * Attaches code lens functionality to an editor
+ * @param {import("../editor").Editor} editor The editor to attach to
  */
 function attachToEditor(editor) {
     editor.codeLensProviders = [];
     editor.renderer.on("afterRender", renderWidgets);
     if (!editor.$codeLensClickHandler) {
         editor.$codeLensClickHandler = function(e) {
+            /** @type {CodeLenseCommand} */
             var command = e.target.lensCommand;
             if (!command) return;
             editor.execCommand(command.id, command.arguments);
@@ -198,7 +207,8 @@ function attachToEditor(editor) {
 }
 
 /**
- * @param {import("../editor").Editor} editor
+ * Detaches code lens functionality from an editor
+ * @param {import("../editor").Editor} editor The editor to detach from
  */
 function detachFromEditor(editor) {
     editor.off("input", editor.$updateLensesOnInput);
@@ -208,8 +218,9 @@ function detachFromEditor(editor) {
 }
 
 /**
- * @param {import("../editor").Editor} editor
- * @param {import("../../ace-internal").Ace.CodeLenseProvider} codeLensProvider
+ * Registers a code lens provider with an editor
+ * @param {import("../editor").Editor} editor The editor to register the provider with
+ * @param {import("../../ace-internal").Ace.CodeLenseProvider} codeLensProvider The provider to register
  */
 exports.registerCodeLensProvider = function(editor, codeLensProvider) {
     editor.setOption("enableCodeLens", true);
@@ -218,7 +229,8 @@ exports.registerCodeLensProvider = function(editor, codeLensProvider) {
 };
 
 /**
- * @param {EditSession} session
+ * Clears all code lenses from the session
+ * @param {EditSession} session The session to clear code lenses from
  */
 exports.clear = function(session) {
     exports.setLenses(session, null);

@@ -22,3 +22,5 @@ api/
 **/* *
 **/node_modules
 0*
+esm-resolver.js
+src/ext/diff/providers/*

@@ -4,7 +4,10 @@ declare module "ace-code/src/layer/font_metrics" {
     export class FontMetrics {
         constructor(parentEl: HTMLElement);
         el: HTMLDivElement;
-        checkForSizeChanges(size: any): void;
+        checkForSizeChanges(size?: {
+            height: number;
+            width: number;
+        } | null): void;
         charSizes: any;
         allowBoldFonts: boolean;
         setPolling(val: boolean): void;
@@ -14,9 +17,12 @@ declare module "ace-code/src/layer/font_metrics" {
         transformCoordinates(clientPos: any, elPos: any): any[];
     }
     namespace Ace {
-        type EventEmitter<T> = import("ace-code").Ace.EventEmitter<T>;
+        type EventEmitter<T extends {
+            [K in keyof T]: (...args: any[]) => any;
+        }> = import("ace-code").Ace.EventEmitter<T>;
+        type FontMetricsEvents = import("ace-code").Ace.FontMetricsEvents;
     }
-    export interface FontMetrics extends Ace.EventEmitter<any> {
+    export interface FontMetrics extends Ace.EventEmitter<Ace.FontMetricsEvents> {
     }
 }
 declare module "ace-code/src/apply_delta" {
@@ -256,7 +262,9 @@ declare module "ace-code/src/document" {
     import { Anchor } from "ace-code/src/anchor";
     import { Range } from "ace-code/src/range";
     namespace Ace {
-        type EventEmitter<T> = import("ace-code").Ace.EventEmitter<T>;
+        type EventEmitter<T extends {
+            [K in keyof T]: (...args: any[]) => any;
+        }> = import("ace-code").Ace.EventEmitter<T>;
         type DocumentEvents = import("ace-code").Ace.DocumentEvents;
     }
     export interface Document extends Ace.EventEmitter<Ace.DocumentEvents> {
@@ -309,7 +317,9 @@ declare module "ace-code/src/anchor" {
     }
     export type Document = import("ace-code/src/document").Document;
     namespace Ace {
-        type EventEmitter<T> = import("ace-code").Ace.EventEmitter<T>;
+        type EventEmitter<T extends {
+            [K in keyof T]: (...args: any[]) => any;
+        }> = import("ace-code").Ace.EventEmitter<T>;
         type AnchorEvents = import("ace-code").Ace.AnchorEvents;
         type Document = import("ace-code").Ace.Document;
     }
@@ -365,7 +375,7 @@ declare module "ace-code/src/config" {
             string
         ], onLoad: (module: any) => void) => void;
         setModuleLoader: (moduleName: any, onLoad: any) => void;
-        version: "1.36.5";
+        version: "1.42.0";
     };
     export = _exports;
 }
@@ -420,7 +430,9 @@ declare module "ace-code/src/layer/gutter" {
     export type LayerConfig = import("ace-code").Ace.LayerConfig;
     import { Lines } from "ace-code/src/layer/lines";
     namespace Ace {
-        type EventEmitter<T> = import("ace-code").Ace.EventEmitter<T>;
+        type EventEmitter<T extends {
+            [K in keyof T]: (...args: any[]) => any;
+        }> = import("ace-code").Ace.EventEmitter<T>;
         type GutterEvents = import("ace-code").Ace.GutterEvents;
     }
     export interface Gutter extends Ace.EventEmitter<Ace.GutterEvents> {
@@ -479,7 +491,7 @@ declare module "ace-code/src/layer/text" {
         setHighlightIndentGuides(highlight: boolean): boolean;
         tabSize: number;
         updateLines(config: LayerConfig, firstRow: number, lastRow: number): void;
-        config?: import("ace-code").Ace.LayerConfig;
+        config: import("ace-code").Ace.LayerConfig;
         scrollLines(config: LayerConfig): void;
         update(config: LayerConfig): void;
         renderIndentGuide(parent: any, value: any, max: any): any;
@@ -497,12 +509,14 @@ declare module "ace-code/src/layer/text" {
     import dom = require("ace-code/src/lib/dom");
     import { Lines } from "ace-code/src/layer/lines";
     namespace Ace {
-        type EventEmitter<T> = import("ace-code").Ace.EventEmitter<T>;
+        type EventEmitter<T extends {
+            [K in keyof T]: (...args: any[]) => any;
+        }> = import("ace-code").Ace.EventEmitter<T>;
         type TextEvents = import("ace-code").Ace.TextEvents;
         type LayerConfig = import("ace-code").Ace.LayerConfig;
     }
     export interface Text extends Ace.EventEmitter<Ace.TextEvents> {
-        config?: Ace.LayerConfig;
+        config: Ace.LayerConfig;
     }
 }
 declare module "ace-code/src/layer/cursor" {
@@ -526,7 +540,7 @@ declare module "ace-code/src/layer/cursor" {
         hideCursor(): void;
         showCursor(): void;
         restartTimer(): void;
-        intervalId: number;
+        intervalId: ReturnType<typeof setInterval>;
         getPixelPosition(position?: import("ace-code").Ace.Point, onScreen?: boolean): {
             left: number;
             top: number;
@@ -642,11 +656,14 @@ declare module "ace-code/src/scrollbar" {
     }
     export { VScrollBar as ScrollBar, VScrollBar as ScrollBarV, HScrollBar as ScrollBarH };
     namespace Ace {
-        type EventEmitter<T> = import("ace-code").Ace.EventEmitter<T>;
+        type EventEmitter<T extends {
+            [K in keyof T]: (...args: any[]) => any;
+        }> = import("ace-code").Ace.EventEmitter<T>;
+        type ScrollbarEvents = import("ace-code").Ace.ScrollbarEvents;
     }
-    export interface VScrollBar extends Ace.EventEmitter<any> {
+    export interface VScrollBar extends Ace.EventEmitter<Ace.ScrollbarEvents> {
     }
-    export interface HScrollBar extends Ace.EventEmitter<any> {
+    export interface HScrollBar extends Ace.EventEmitter<Ace.ScrollbarEvents> {
     }
 }
 declare module "ace-code/src/scrollbar_custom" {
@@ -770,11 +787,14 @@ declare module "ace-code/src/scrollbar_custom" {
     }
     export { VScrollBar as ScrollBar, VScrollBar as ScrollBarV, HScrollBar as ScrollBarH };
     namespace Ace {
-        type EventEmitter<T> = import("ace-code").Ace.EventEmitter<T>;
+        type EventEmitter<T extends {
+            [K in keyof T]: (...args: any[]) => any;
+        }> = import("ace-code").Ace.EventEmitter<T>;
+        type ScrollbarEvents = import("ace-code").Ace.ScrollbarEvents;
     }
-    export interface VScrollBar extends Ace.EventEmitter<any> {
+    export interface VScrollBar extends Ace.EventEmitter<Ace.ScrollbarEvents> {
     }
-    export interface HScrollBar extends Ace.EventEmitter<any> {
+    export interface HScrollBar extends Ace.EventEmitter<Ace.ScrollbarEvents> {
     }
 }
 declare module "ace-code/src/renderloop" {
@@ -797,19 +817,25 @@ declare module "ace-code/src/css/editor-css" {
 }
 declare module "ace-code/src/layer/decorators" {
     export class Decorator {
-        constructor(parent: any, renderer: any);
-        canvas: HTMLCanvasElement;
-        renderer: any;
+        constructor(scrollbarV: import("ace-code").Ace.VScrollbar, renderer: import("ace-code/src/virtual_renderer").VirtualRenderer);
+        renderer: import("ace-code/src/virtual_renderer").VirtualRenderer;
         pixelRatio: number;
-        maxHeight: any;
-        lineHeight: any;
-        canvasHeight: any;
-        heightRatio: number;
-        canvasWidth: any;
+        maxHeight: number;
+        lineHeight: number;
         minDecorationHeight: number;
         halfMinDecorationHeight: number;
         colors: {};
-        compensateFoldRows(row: any, foldData: any): number;
+        canvas: HTMLCanvasElement;
+        setScrollBarV(scrollbarV: any): void;
+        scrollbarV: any;
+        getVerticalOffsetForRow(row: any): number;
+        setDimensions(config: any): void;
+        canvasHeight: any;
+        canvasWidth: any;
+        heightRatio: number;
+        setZoneWidth(): void;
+        oneZoneWidth: any;
+        destroy(): void;
     }
 }
 declare module "ace-code/src/virtual_renderer" {
@@ -876,7 +902,7 @@ declare module "ace-code/src/virtual_renderer" {
          * @param {EditSession} session The session to associate with
          **/
         setSession(session: EditSession): void;
-        session: import("ace-code").Ace.EditSession;
+        session: import("ace-code/src/edit_session").EditSession;
         /**
          * Triggers a partial update of the text, from the range given by the two parameters.
          * @param {Number} firstRow The first row to update
@@ -1221,7 +1247,7 @@ declare module "ace-code/src/virtual_renderer" {
         CHANGE_FULL: number;
         CHANGE_H_SCROLL: number;
         STEPS: number;
-        textarea?: HTMLTextAreaElement;
+        textarea: HTMLTextAreaElement;
         enableKeyboardAccessibility?: boolean;
         showInvisibles?: boolean;
         theme?: any;
@@ -1240,17 +1266,23 @@ declare module "ace-code/src/virtual_renderer" {
     import { RenderLoop } from "ace-code/src/renderloop";
     import { Decorator } from "ace-code/src/layer/decorators";
     namespace Ace {
-        type EventEmitter<T> = import("ace-code").Ace.EventEmitter<T>;
+        type EventEmitter<T extends {
+            [K in keyof T]: (...args: any[]) => any;
+        }> = import("ace-code").Ace.EventEmitter<T>;
         type VirtualRendererEvents = import("ace-code").Ace.VirtualRendererEvents;
         type OptionsProvider<T> = import("ace-code").Ace.OptionsProvider<T>;
         type VirtualRendererOptions = import("ace-code").Ace.VirtualRendererOptions;
         type EditSession = import("ace-code").Ace.EditSession;
     }
     export interface VirtualRenderer extends Ace.EventEmitter<Ace.VirtualRendererEvents>, Ace.OptionsProvider<Ace.VirtualRendererOptions> {
-        textarea?: HTMLTextAreaElement;
+        textarea: HTMLTextAreaElement;
         enableKeyboardAccessibility?: boolean;
         showInvisibles?: boolean;
-        theme?: any;
+        theme /**
+         * @overload
+         */? /**
+         * @overload
+         */: any;
         destroyed?: boolean;
         session: Ace.EditSession;
         keyboardFocusClassName?: string;
@@ -1515,7 +1547,9 @@ declare module "ace-code/src/selection" {
     export type Point = import("ace-code").Ace.Point;
     import { Range } from "ace-code/src/range";
     namespace Ace {
-        type EventEmitter<T> = import("ace-code").Ace.EventEmitter<T>;
+        type EventEmitter<T extends {
+            [K in keyof T]: (...args: any[]) => any;
+        }> = import("ace-code").Ace.EventEmitter<T>;
         type MultiSelectionEvents = import("ace-code").Ace.MultiSelectionEvents;
         type MultiSelectProperties = import("ace-code").Ace.MultiSelectProperties;
     }
@@ -1529,7 +1563,76 @@ declare module "ace-code/src/clipboard" {
 }
 declare module "ace-code/src/keyboard/textinput" {
     export function $setUserAgentForTests(_isMobile: any, _isIOS: any): void;
-    export var TextInput: any;
+    export class TextInput {
+        constructor(parentNode: HTMLElement, host: import("ace-code/src/editor").Editor);
+        host: import("ace-code/src/editor").Editor;
+        text: HTMLTextAreaElement & {
+            msGetInputContext?: () => {
+                compositionStartOffset: number;
+            };
+            getInputContext?: () => {
+                compositionStartOffset: number;
+            };
+        };
+        copied: boolean | string;
+        pasted: boolean;
+        inComposition: (boolean | any) & {
+            context?: any;
+            useTextareaForIME?: boolean;
+            selectionStart?: number;
+            markerRange?: any;
+        };
+        sendingText: boolean;
+        tempStyle: string;
+        commandMode: boolean;
+        ignoreFocusEvents: boolean;
+        lastValue: string;
+        lastSelectionStart: number;
+        lastSelectionEnd: number;
+        lastRestoreEnd: number;
+        rowStart: number;
+        rowEnd: number;
+        numberOfExtraLines: number;
+        resetSelection: (value: any) => void;
+        inputHandler: any;
+        afterContextMenu: boolean;
+        syncComposition: any;
+        onContextMenuClose(): void;
+        closeTimeout: number;
+        setHost(newHost: import("ace-code/src/editor").Editor): void;
+        /**
+         * Sets the number of extra lines in the textarea to improve screen reader compatibility.
+         * Extra lines can help screen readers perform better when reading text.
+         *
+         * @param {number} number - The number of extra lines to add. Must be non-negative.
+         */
+        setNumberOfExtraLines(number: number): void;
+        setAriaLabel(): void;
+        setAriaOptions(options: import("ace-code").Ace.TextInputAriaOptions): void;
+        focus(): void;
+        blur(): void;
+        isFocused(): boolean;
+        setInputHandler(cb: any): void;
+        getInputHandler(): any;
+        getElement(): HTMLTextAreaElement & {
+            msGetInputContext?: () => {
+                compositionStartOffset: number;
+            };
+            getInputContext?: () => {
+                compositionStartOffset: number;
+            };
+        };
+        /**
+         * allows to ignore composition (used by vim keyboard handler in the normal mode)
+         * this is useful on mac, where with some keyboard layouts (e.g swedish) ^ starts composition
+         */
+        setCommandMode(value: boolean): void;
+        setReadOnly(readOnly: any): void;
+        setCopyWithEmptySelection(value: any): void;
+        onContextMenu(e: any): void;
+        moveToMouse(e: any, bringToFront: boolean): void;
+        destroy(): void;
+    }
 }
 declare module "ace-code/src/mouse/mouse_event" {
     export class MouseEvent {
@@ -1607,7 +1710,7 @@ declare module "ace-code/src/mouse/default_handlers" {
 declare module "ace-code/src/tooltip" {
     export class HoverTooltip extends Tooltip {
         constructor(parentNode?: HTMLElement);
-        timeout: number;
+        timeout: ReturnType<typeof setTimeout> | undefined;
         lastT: number;
         idleTime: number;
         lastEvent: import("ace-code/src/mouse/mouse_event").MouseEvent;
@@ -1616,7 +1719,7 @@ declare module "ace-code/src/tooltip" {
         removeFromEditor(editor: Editor): void;
         isOutsideOfText(e: MouseEvent): boolean;
         setDataProvider(value: (event: MouseEvent, editor: Editor) => void): void;
-        showForRange(editor: Editor, range: Range, domNode: HTMLElement, startingEvent: MouseEvent): void;
+        showForRange(editor: Editor, range: Range, domNode: HTMLElement, startingEvent?: MouseEvent): void;
         range: Range;
         addMarker(range: Range, session?: EditSession): void;
         marker: number;
@@ -1658,6 +1761,8 @@ declare module "ace-code/src/mouse/default_gutter_handler" {
     export interface GutterHandler {
     }
     export type MouseHandler = import("ace-code/src/mouse/mouse_handler").MouseHandler;
+    export const GUTTER_TOOLTIP_LEFT_OFFSET: 5;
+    export const GUTTER_TOOLTIP_TOP_OFFSET: 3;
     export class GutterTooltip extends Tooltip {
         static get annotationLabels(): {
             error: {
@@ -1682,8 +1787,10 @@ declare module "ace-code/src/mouse/default_gutter_handler" {
             };
         };
         static annotationsToSummaryString(annotations: any): string;
-        constructor(editor: any);
+        constructor(editor: any, isHover?: boolean);
         editor: any;
+        visibleTooltipRow: number | undefined;
+        onMouseOut(e: any): void;
         setPosition(x: any, y: any): void;
         showTooltip(row: any): void;
         hideTooltip(): void;
@@ -1721,7 +1828,7 @@ declare module "ace-code/src/mouse/mouse_handler" {
         }): void;
         setState(state: any): void;
         state: any;
-        captureMouse(ev: any, mouseMoveHandler: any): number;
+        captureMouse(ev: MouseEvent, mouseMoveHandler?: any): ReturnType<typeof setTimeout> | undefined;
         x: any;
         y: any;
         isMousePressed: boolean;
@@ -1800,12 +1907,13 @@ declare module "ace-code/src/search" {
          * Searches for `options.needle`. If found, this method returns the [[Range `Range`]] where the text first occurs. If `options.backwards` is `true`, the search goes backwards in the session.
          * @param {EditSession} session The session to search with
          **/
-        find(session: EditSession): Range | false;
+        find(session: EditSession): Range | null | false;
         /**
          * Searches for all occurrances `options.needle`. If found, this method returns an array of [[Range `Range`s]] where the text first occurs. If `options.backwards` is `true`, the search goes backwards in the session.
          * @param {EditSession} session The session to search with
         **/
         findAll(session: EditSession): Range[];
+        parseReplaceString(replaceString: any): any;
         /**
          * Searches for `options.needle` in `input`, and, if found, replaces it with `replacement`.
          * @param {String} input The text to search in
@@ -1822,14 +1930,15 @@ declare module "ace-code/src/search" {
 declare module "ace-code/src/keyboard/hash_handler" {
     export type Command = import("ace-code").Ace.Command;
     export type CommandLike = import("ace-code").Ace.CommandLike;
+    export type Platform = "win" | "mac";
     export class HashHandler extends MultiHashHandler {
     }
     export namespace HashHandler {
         function call(thisArg: any, config: any, platform: any): void;
     }
     export class MultiHashHandler {
-        constructor(config?: Record<string, CommandLike> | Command[], platform?: string);
-        platform: string;
+        constructor(config?: Record<string, CommandLike> | Command[], platform?: Platform);
+        platform: Platform;
         commands: Record<string, Command>;
         commandKeyBinding: {};
         addCommand(command: Command): void;
@@ -1865,10 +1974,10 @@ declare module "ace-code/src/commands/command_manager" {
     export class CommandManager extends MultiHashHandler {
         /**
          * new CommandManager(platform, commands)
-         * @param {String} platform Identifier for the platform; must be either `"mac"` or `"win"`
+         * @param {import("ace-code/src/keyboard/hash_handler").Platform} platform Identifier for the platform; must be either `"mac"` or `"win"`
          * @param {any[]} commands A list of commands
          **/
-        constructor(platform: string, commands: any[]);
+        constructor(platform: import("ace-code/src/keyboard/hash_handler").Platform, commands: any[]);
         byName: Record<string, import("ace-code").Ace.Command>;
         exec(command: string | string[] | import("ace-code").Ace.Command, editor: Editor, args: any): boolean;
         canExecute(command: string | import("ace-code").Ace.Command, editor: Editor): boolean;
@@ -1882,10 +1991,12 @@ declare module "ace-code/src/commands/command_manager" {
     export type Editor = import("ace-code/src/editor").Editor;
     import { MultiHashHandler } from "ace-code/src/keyboard/hash_handler";
     namespace Ace {
-        type EventEmitter<T> = import("ace-code").Ace.EventEmitter<T>;
+        type EventEmitter<T extends {
+            [K in keyof T]: (...args: any[]) => any;
+        }> = import("ace-code").Ace.EventEmitter<T>;
+        type CommandManagerEvents = import("ace-code").Ace.CommandManagerEvents;
     }
-    export interface CommandManager extends Ace
-        .EventEmitter<any> {
+    export interface CommandManager extends Ace.EventEmitter<Ace.CommandManagerEvents> {
     }
 }
 declare module "ace-code/src/commands/default_commands" {
@@ -2000,15 +2111,15 @@ declare module "ace-code/src/editor" {
          * @param {Partial<import("ace-code").Ace.EditorOptions>} [options] The default options
          **/
         constructor(renderer: VirtualRenderer, session?: EditSession, options?: Partial<import("ace-code").Ace.EditorOptions>);
+        id: string;
         session: EditSession;
         container: HTMLElement & {
             env?: any;
             value?: any;
         };
         renderer: VirtualRenderer;
-        id: string;
         commands: CommandManager;
-        textInput: any;
+        textInput: TextInput;
         keyBinding: KeyBinding;
         startOperation(commandEvent: any): void;
         /**
@@ -2087,9 +2198,10 @@ declare module "ace-code/src/editor" {
         /**
          * {:VirtualRenderer.setStyle}
          * @param {String} style A class name
+         * @param {boolean} [incluude] pass false to remove the class name
          * @related VirtualRenderer.setStyle
          **/
-        setStyle(style: string): void;
+        setStyle(style: string, incluude?: boolean): void;
         /**
          * {:VirtualRenderer.unsetStyle}
          * @related VirtualRenderer.unsetStyle
@@ -2122,7 +2234,7 @@ declare module "ace-code/src/editor" {
          * Returns the string of text currently highlighted.
          **/
         getCopyText(): string;
-        execCommand(command: string | string[], args?: any): boolean;
+        execCommand(command: string | string[] | import("ace-code").Ace.Command, args?: any): boolean;
         /**
          * Inserts `text` into wherever the cursor is pointing.
          * @param {String} text The new text to add
@@ -2666,6 +2778,7 @@ declare module "ace-code/src/editor" {
     export type SearchOptions = import("ace-code").Ace.SearchOptions;
     import { EditSession } from "ace-code/src/edit_session";
     import { CommandManager } from "ace-code/src/commands/command_manager";
+    import { TextInput } from "ace-code/src/keyboard/textinput";
     import { MouseHandler } from "ace-code/src/mouse/mouse_handler";
     import { KeyBinding } from "ace-code/src/keyboard/keybinding";
     import { Search } from "ace-code/src/search";
@@ -2675,7 +2788,9 @@ declare module "ace-code/src/editor" {
         type EditorMultiSelectProperties = import("ace-code").Ace.EditorMultiSelectProperties;
         type OptionsProvider<T> = import("ace-code").Ace.OptionsProvider<T>;
         type EditorOptions = import("ace-code").Ace.EditorOptions;
-        type EventEmitter<T> = import("ace-code").Ace.EventEmitter<T>;
+        type EventEmitter<T extends {
+            [K in keyof T]: (...args: any[]) => any;
+        }> = import("ace-code").Ace.EventEmitter<T>;
         type EditorEvents = import("ace-code").Ace.EditorEvents;
         type CodeLenseEditorExtension = import("ace-code").Ace.CodeLenseEditorExtension;
         type ElasticTabstopsEditorExtension = import("ace-code").Ace.ElasticTabstopsEditorExtension;
@@ -2689,7 +2804,13 @@ declare module "ace-code/src/editor" {
         type Completer = import("ace-code").Ace.Completer;
         type SearchBox = import("ace-code").Ace.SearchBox;
     }
-    export interface Editor extends Ace.EditorMultiSelectProperties, Ace.OptionsProvider<Ace.EditorOptions>, Ace.EventEmitter<Ace.EditorEvents>, Ace.CodeLenseEditorExtension, Ace.ElasticTabstopsEditorExtension, Ace.TextareaEditorExtension, Ace.PromptEditorExtension, Ace.OptionsEditorExtension {
+    export interface Editor extends Ace.EditorMultiSelectProperties /**
+     * @overload
+     */, /**
+     * @overload
+     */ Ace
+            .OptionsProvider<Ace.EditorOptions>, Ace.
+                EventEmitter<Ace.EditorEvents>, Ace.CodeLenseEditorExtension, Ace.ElasticTabstopsEditorExtension, Ace.TextareaEditorExtension, Ace.PromptEditorExtension, Ace.OptionsEditorExtension {
         session: Ace.EditSession;
         env?: any;
         widgetManager?: Ace.LineWidgets;
@@ -2821,7 +2942,7 @@ declare module "ace-code/src/autocomplete/popup" {
         isTopdown: boolean;
         autoSelect: boolean;
         data: import("ace-code").Ace.Completion[];
-        setData: (data: import("ace-code").Ace.Completion[], filterText: string) => void;
+        setData: (data: import("ace-code").Ace.Completion[], filterText?: string) => void;
         getData: (row: number) => import("ace-code").Ace.Completion;
         hide: () => void;
         anchor: "top" | "bottom";
@@ -2853,12 +2974,16 @@ declare module "ace-code/src/autocomplete/popup" {
         isTopdown: boolean;
         autoSelect: boolean;
         data: Ace.Completion[];
-        setData: (data: Ace.Completion[], filterText: string) => void;
+        setData: (data: Ace.Completion[], filterText?: string) => void;
         getData: (row: number) => Ace.Completion;
         hide: () => void;
         anchor: "top" | "bottom";
         anchorPosition: Ace.Point;
-        tryShow: (pos: any, lineHeight: number, anchor: "top" | "bottom", forceShow?: boolean) => boolean;
+        tryShow: (pos: any, lineHeight: number,
+            /**
+             * @overload
+             */
+            anchor: "top" | "bottom", forceShow?: boolean) => boolean;
         show: (pos: any, lineHeight: number, topdownOnly?: boolean) => void;
         goTo: (where: Ace.AcePopupNavigation) => void;
         getTextLeftOffset: () => number;
@@ -2964,7 +3089,9 @@ declare module "ace-code/src/snippets" {
     }
     import { Tokenizer } from "ace-code/src/tokenizer";
     namespace Ace {
-        type EventEmitter<T> = import("ace-code").Ace.EventEmitter<T>;
+        type EventEmitter<T extends {
+            [K in keyof T]: (...args: any[]) => any;
+        }> = import("ace-code").Ace.EventEmitter<T>;
     }
     interface SnippetManager extends Ace.EventEmitter<any> {
     }
@@ -3201,13 +3328,17 @@ declare module "ace-code/src/autocomplete" {
          */
         completerId?: string;
         /**
+         * - a boolean value to decide if the popup item is going to skip the filtering process done using prefix text.
+         */
+        skipFilter?: boolean;
+        /**
          * - An object specifying the range of text to be replaced with the new completion value (experimental)
          */
         range?: import("ace-code").Ace.IRange;
         /**
          * - A command to be executed after the completion is inserted (experimental)
          */
-        command?: string;
+        command?: any;
         /**
          * - a text snippet that would be inserted when the completion is selected
          */
@@ -3233,10 +3364,10 @@ declare module "ace-code/src/autocomplete" {
     import { AcePopup } from "ace-code/src/autocomplete/popup";
     import { AceInline } from "ace-code/src/autocomplete/inline";
     export class FilteredList {
-        constructor(array: any, filterText: any);
+        constructor(array: any, filterText?: string);
         all: any;
         filtered: any;
-        filterText: any;
+        filterText: string;
         exactMatch: boolean;
         ignoreCaption: boolean;
         setFilter(str: any): void;
@@ -3257,6 +3388,49 @@ declare module "ace-code/src/autocomplete" {
     }
     export interface CompletionProvider {
         completions: Ace.FilteredList;
+    }
+}
+declare module "ace-code/src/marker_group" {
+    export type EditSession = import("ace-code/src/edit_session").EditSession;
+    export type MarkerGroupItem = {
+        range: import("ace-code/src/range").Range;
+        className: string;
+    };
+    export type LayerConfig = import("ace-code").Ace.LayerConfig;
+    export type Marker = import("ace-code/src/layer/marker").Marker;
+    export class MarkerGroup {
+        /**
+         * @param {{markerType: "fullLine" | "line" | undefined}} [options] Options controlling the behvaiour of the marker.
+         * User `markerType` to control how the markers which are part of this group will be rendered:
+         * - `undefined`: uses `text` type markers where only text characters within the range will be highlighted.
+         * - `fullLine`: will fully highlight all the rows within the range, including the characters before and after the range on the respective rows.
+         * - `line`: will fully highlight the lines within the range but will only cover the characters between the start and end of the range.
+         */
+        constructor(session: EditSession, options?: {
+            markerType: "fullLine" | "line" | undefined;
+        });
+        markerType: "line" | "fullLine";
+        markers: import("ace-code").Ace.MarkerGroupItem[];
+        session: EditSession;
+        /**
+         * Finds the first marker containing pos
+         */
+        getMarkerAtPosition(pos: import("ace-code").Ace.Point): import("ace-code").Ace.MarkerGroupItem | undefined;
+        /**
+         * Comparator for Array.sort function, which sorts marker definitions by their positions
+         *
+         * @param {MarkerGroupItem} a first marker.
+         * @param {MarkerGroupItem} b second marker.
+         * @returns {number} negative number if a should be before b, positive number if b should be before a, 0 otherwise.
+         */
+        markersComparator(a: MarkerGroupItem, b: MarkerGroupItem): number;
+        /**
+         * Sets marker definitions to be rendered. Limits the number of markers at MAX_MARKERS.
+         * @param {MarkerGroupItem[]} markers an array of marker definitions.
+         */
+        setMarkers(markers: MarkerGroupItem[]): void;
+        update(html: any, markerLayer: Marker, session: EditSession, config: LayerConfig): void;
+        MAX_MARKERS: number;
     }
 }
 declare module "ace-code/src/autocomplete/text_completer" {
@@ -3301,6 +3475,7 @@ declare module "ace-code/src/search_highlight" {
         constructor(regExp: any, clazz: string, type?: string);
         clazz: string;
         type: string;
+        docLen: number;
         setRegexp(regExp: any): void;
         regExp: any;
         cache: any[];
@@ -3361,49 +3536,6 @@ declare module "ace-code/src/occur" {
     }
     import { Search } from "ace-code/src/search";
     import { EditSession } from "ace-code/src/edit_session";
-}
-declare module "ace-code/src/marker_group" {
-    export type EditSession = import("ace-code/src/edit_session").EditSession;
-    export type MarkerGroupItem = {
-        range: import("ace-code/src/range").Range;
-        className: string;
-    };
-    export type LayerConfig = import("ace-code").Ace.LayerConfig;
-    export type Marker = import("ace-code/src/layer/marker").Marker;
-    export class MarkerGroup {
-        /**
-         * @param {{markerType: "fullLine" | "line" | undefined}} [options] Options controlling the behvaiour of the marker.
-         * User `markerType` to control how the markers which are part of this group will be rendered:
-         * - `undefined`: uses `text` type markers where only text characters within the range will be highlighted.
-         * - `fullLine`: will fully highlight all the rows within the range, including the characters before and after the range on the respective rows.
-         * - `line`: will fully highlight the lines within the range but will only cover the characters between the start and end of the range.
-         */
-        constructor(session: EditSession, options?: {
-            markerType: "fullLine" | "line" | undefined;
-        });
-        markerType: "line" | "fullLine";
-        markers: import("ace-code").Ace.MarkerGroupItem[];
-        session: EditSession;
-        /**
-         * Finds the first marker containing pos
-         */
-        getMarkerAtPosition(pos: import("ace-code").Ace.Point): import("ace-code").Ace.MarkerGroupItem | undefined;
-        /**
-         * Comparator for Array.sort function, which sorts marker definitions by their positions
-         *
-         * @param {MarkerGroupItem} a first marker.
-         * @param {MarkerGroupItem} b second marker.
-         * @returns {number} negative number if a should be before b, positive number if b should be before a, 0 otherwise.
-         */
-        markersComparator(a: MarkerGroupItem, b: MarkerGroupItem): number;
-        /**
-         * Sets marker definitions to be rendered. Limits the number of markers at MAX_MARKERS.
-         * @param {MarkerGroupItem[]} markers an array of marker definitions.
-         */
-        setMarkers(markers: MarkerGroupItem[]): void;
-        update(html: any, markerLayer: Marker, session: EditSession, config: LayerConfig): void;
-        MAX_MARKERS: number;
-    }
 }
 declare module "ace-code/src/edit_session/fold" {
     export class Fold extends RangeList {
@@ -3558,7 +3690,7 @@ declare module "ace-code/src/background_tokenizer" {
          * @param {EditSession} [session] The editor session to associate with
          **/
         constructor(tokenizer: Tokenizer, session?: EditSession);
-        running: false | number;
+        running: false | ReturnType<typeof setTimeout>;
         lines: any[];
         states: string[] | string[][];
         currentLine: number;
@@ -3609,7 +3741,9 @@ declare module "ace-code/src/background_tokenizer" {
     export type EditSession = import("ace-code/src/edit_session").EditSession;
     export type Tokenizer = import("ace-code/src/tokenizer").Tokenizer;
     namespace Ace {
-        type EventEmitter<T> = import("ace-code").Ace.EventEmitter<T>;
+        type EventEmitter<T extends {
+            [K in keyof T]: (...args: any[]) => any;
+        }> = import("ace-code").Ace.EventEmitter<T>;
         type BackgroundTokenizerEvents = import("ace-code").Ace.BackgroundTokenizerEvents;
     }
     export interface BackgroundTokenizer extends Ace.EventEmitter<Ace.BackgroundTokenizerEvents> {
@@ -3747,12 +3881,7 @@ declare module "ace-code/src/edit_session" {
         bgTokenizer: BackgroundTokenizer;
         selection: Selection;
         destroyed: boolean;
-        curOp: {
-            command: {
-                name?: string;
-            };
-            args: any;
-        };
+        curOp: import("ace-code").Ace.Operation | null;
         /**
          * Start an Ace operation, which will then batch all the subsequent changes (to either content or selection) under a single atomic operation.
          * @param {{command?: {name?: string}, args?: any}|undefined} [commandEvent] Optional name for the operation
@@ -3767,7 +3896,7 @@ declare module "ace-code/src/edit_session" {
          * End current Ace operation.
          * Emits "beforeEndOperation" event just before clearing everything, where the current operation can be accessed through `curOp` property.
          */
-        endOperation(e: any): void;
+        endOperation(e?: any): void;
         /**
          * Sets the `EditSession` to point to a new `Document`. If a `BackgroundTokenizer` exists, it also points to `doc`.
          *
@@ -3896,6 +4025,28 @@ declare module "ace-code/src/edit_session" {
          * @param {String} className The class to add
          **/
         addGutterDecoration(row: number, className: string): void;
+        /**
+         * Replaces the custom icon with the fold widget if present from a specific row in the gutter
+         * @param {number} row The row number for which to hide the custom icon
+         * @experimental
+         */
+        removeGutterCustomWidget(row: number): void;
+        /**
+         * Replaces the fold widget if present with the custom icon from a specific row in the gutter
+         * @param {number} row - The row number where the widget will be displayed
+         * @param {Object} attributes - Configuration attributes for the widget
+         * @param {string} attributes.className - CSS class name for styling the widget
+         * @param {string} attributes.label - Text label to display in the widget
+         * @param {string} attributes.title - Tooltip text for the widget
+         * @param {Object} attributes.callbacks - Event callback functions for the widget e.g onClick;
+         * @experimental
+        */
+        addGutterCustomWidget(row: number, attributes: {
+            className: string;
+            label: string;
+            title: string;
+            callbacks: any;
+        }): void;
         /**
          * Removes `className` from the `row`.
          * @param {Number} row The row number
@@ -4319,7 +4470,9 @@ declare module "ace-code/src/edit_session" {
     function isFullWidth(c: any): boolean;
     var $uid: number;
     namespace Ace {
-        type EventEmitter<T> = import("ace-code").Ace.EventEmitter<T>;
+        type EventEmitter<T extends {
+            [K in keyof T]: (...args: any[]) => any;
+        }> = import("ace-code").Ace.EventEmitter<T>;
         type EditSessionEvents = import("ace-code").Ace.EditSessionEvents;
         type OptionsProvider<T> = import("ace-code").Ace.OptionsProvider<T>;
         type EditSessionOptions = import("ace-code").Ace.EditSessionOptions;
@@ -4328,13 +4481,16 @@ declare module "ace-code/src/edit_session" {
         type Document = import("ace-code").Ace.Document;
         type Point = import("ace-code").Ace.Point;
         type Occur = import("ace-code").Ace.Occur;
+        type Operation = import("ace-code").Ace.Operation;
     }
-    export interface EditSession extends Ace.EventEmitter<Ace.EditSessionEvents>, Ace.OptionsProvider<Ace.EditSessionOptions>, Ace.Folding, Ace.BracketMatch {
+    export interface EditSession extends Ace.EventEmitter<Ace.EditSessionEvents>, Ace.OptionsProvider<Ace.EditSessionOptions>, Ace.Folding, Ace.
+        BracketMatch {
         doc: Ace.Document;
         lineWidgetsWidth?: number;
         gutterRenderer?: any;
         selectionMarkerCount?: number;
         multiSelect?: any;
+        curOp: Ace.Operation | null;
         getSelectionMarkers(): any[];
     }
 }
@@ -4625,7 +4781,9 @@ declare module "ace-code/src/placeholder" {
     export type EditSession = import("ace-code/src/edit_session").EditSession;
     import { Range } from "ace-code/src/range";
     namespace Ace {
-        type EventEmitter<T> = import("ace-code").Ace.EventEmitter<T>;
+        type EventEmitter<T extends {
+            [K in keyof T]: (...args: any[]) => any;
+        }> = import("ace-code").Ace.EventEmitter<T>;
         type PlaceHolderEvents = import("ace-code").Ace.PlaceHolderEvents;
     }
     export interface PlaceHolder extends Ace.EventEmitter<Ace.PlaceHolderEvents> {

@@ -157,8 +157,13 @@ function updateMainAceModule(node) {
  */
 function updateKeysAndLinksStatements(node, internalStatements) {
     let statements = [];
+    if (node.body && ts.isModuleBlock(node.body)) {
+        statements = node.body.statements.filter(statement =>
+            ts.isFunctionDeclaration(statement)
+        );
+    }
     if (internalStatements[node.name.text]) {
-        statements = internalStatements[node.name.text];
+        statements = [...internalStatements[node.name.text]];
     }
     const newBody = ts.factory.createModuleBlock(statements);
     return ts.factory.updateModuleDeclaration(node, node.modifiers, node.name, newBody);
@@ -344,8 +349,8 @@ function fixDeclaration(content, aceNamespacePath) {
             modules.forEach(key => {
                 const newSourceFile = context.factory.updateSourceFile(sourceFile, moduleOutputs[key]);
                 const dirPath = path.dirname(aceNamespacePath.replace("ace-internal", "ace"));
-                if (!fs.existsSync(dirPath)) {
-                    fs.mkdirSync(dirPath);
+                if (!fs.existsSync(dirPath + "/types")) {
+                    fs.mkdirSync(dirPath + "/types");
                 }
                 const outputName = key === "ace" ? `${dirPath}/ace.d.ts` : `${dirPath}/types/ace-${key}.d.ts`;
                 finalDeclarations.push(outputName);
@@ -363,7 +368,7 @@ function fixDeclaration(content, aceNamespacePath) {
 
                             const startsWithDollar = ts.isIdentifier(node.name) && /^[$_]/.test(node.name.text);
 
-                            if (isPrivate || startsWithDollar || hasInternalTag(node)) {
+                            if (isPrivate || (startsWithDollar && !hasExternalTag(node)) || hasInternalTag(node)) {
                                 return ts.factory.createNotEmittedStatement(node);
                             }
                         }
@@ -456,6 +461,14 @@ function hasInternalTag(node) {
     if (!sourceFile) return false;
 
     const jsDocs = ts.getJSDocTags(node).filter(tag => tag.tagName.text === 'internal');
+    return jsDocs.length > 0;
+}
+
+function hasExternalTag(node) {
+    const sourceFile = node.getSourceFile();
+    if (!sourceFile) return false;
+
+    const jsDocs = ts.getJSDocTags(node).filter(tag => tag.tagName.text === 'external');
     return jsDocs.length > 0;
 }
 
@@ -559,11 +572,15 @@ function collectStatements(aceNamespacePath) {
                     let importAlias = '';
                     identifiers.forEach(identifier => {
                         let typeName = identifier.replace("Ace.", "");
+                        let rightSide = typeName;
 
-                        if (typeName.includes("<")) {
-                            typeName = typeName + "T>";
+                        if (typeName.includes("EventEmitter<")) {
+                            typeName = typeName + "T extends { [K in keyof T]: (...args: any[]) => any }>";
+                            rightSide = rightSide + "T>";
+                        } else if (typeName.includes("<")) {
+                            typeName = rightSide = rightSide + "T>";
                         }
-                        importAlias += "type " + typeName + " = import(\"" + packageName + "\").Ace." + typeName
+                        importAlias += "type " + typeName + " = import(\"" + packageName + "\").Ace." + rightSide
                             + ";\n\n";
                     });
                     concatenatedInterfaceStrings = "namespace Ace {" + importAlias + "}" + concatenatedInterfaceStrings;

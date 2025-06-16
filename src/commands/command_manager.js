@@ -10,7 +10,7 @@ var EventEmitter = require("../lib/event_emitter").EventEmitter;
 class CommandManager extends MultiHashHandler{
     /**
      * new CommandManager(platform, commands)
-     * @param {String} platform Identifier for the platform; must be either `"mac"` or `"win"`
+     * @param {import("../keyboard/hash_handler").Platform} platform Identifier for the platform; must be either `"mac"` or `"win"`
      * @param {any[]} commands A list of commands
      **/
     constructor(platform, commands) {
@@ -42,11 +42,13 @@ class CommandManager extends MultiHashHandler{
         if (typeof command === "string")
             command = this.commands[command];
 
+        var e = {editor: editor, command: command, args: args};
+        
         if (!this.canExecute(command, editor)) {
+            this._signal("commandUnavailable", e);
             return false; 
         }
         
-        var e = {editor: editor, command: command, args: args};
         e.returnValue = this._emit("exec", e);
         this._signal("afterExec", e);
 

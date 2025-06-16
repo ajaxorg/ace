@@ -157,11 +157,13 @@ class Cursor {
             this.$startCssAnimation();
         } else {
             var blink = /**@this{Cursor}*/function(){
+                /**@type{ReturnType<typeof setTimeout>}*/
                 this.timeoutId = setTimeout(function() {
                     update(false);
                 }, 0.6 * this.blinkInterval);
             }.bind(this);
-    
+
+            /**@type{ReturnType<typeof setInterval>}*/
             this.intervalId = setInterval(function() {
                 update(true);
                 blink();

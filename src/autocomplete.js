@@ -28,8 +28,9 @@ var preventParentScroll = require("./lib/scroll").preventParentScroll;
  * @property {string} [docText] - a plain text that would be displayed as an additional popup. If `docHTML` exists,
  * it would be used instead of `docText`.
  * @property {string} [completerId] - the identifier of the completer
+ * @property {boolean} [skipFilter] - a boolean value to decide if the popup item is going to skip the filtering process done using prefix text.
  * @property {import("../ace-internal").Ace.IRange} [range] - An object specifying the range of text to be replaced with the new completion value (experimental)
- * @property {string} [command] - A command to be executed after the completion is inserted (experimental)
+ * @property {any} [command] - A command to be executed after the completion is inserted (experimental)
  * @property {string} [snippet] - a text snippet that would be inserted when the completion is selected
  * @property {string} [value] - The text that would be inserted when selecting this completion.
  * @property {import("../ace-internal").Ace.Completer} [completer]
@@ -625,7 +626,7 @@ class Autocomplete {
 
     updateDocTooltip() {
         var popup = this.popup;
-        var all = this.completions.filtered;
+        var all = this.completions && this.completions.filtered;
         var selected = all && (all[popup.getHoveredRow()] || all[popup.getRow()]);
         var doc = null;
         if (!selected || !this.editor || !this.popup.isOpen)
@@ -679,30 +680,54 @@ class Autocomplete {
 
         var popup = this.popup;
         var rect = popup.container.getBoundingClientRect();
-        tooltipNode.style.top = popup.container.style.top;
-        tooltipNode.style.bottom = popup.container.style.bottom;
 
-        tooltipNode.style.display = "block";
-        if (window.innerWidth - rect.right < 320) {
-            if (rect.left < 320) {
-                if(popup.isTopdown) {
-                    tooltipNode.style.top = rect.bottom + "px";
-                    tooltipNode.style.left = rect.left + "px";
-                    tooltipNode.style.right = "";
-                    tooltipNode.style.bottom = "";
-                } else {
-                    tooltipNode.style.top = popup.container.offsetTop - tooltipNode.offsetHeight + "px";
-                    tooltipNode.style.left = rect.left + "px";
-                    tooltipNode.style.right = "";
-                    tooltipNode.style.bottom = "";
-                }
+        var targetWidth = 400;
+        var targetHeight = 300;
+        var scrollBarSize = popup.renderer.scrollBar.width || 10;
+
+        var leftSize = rect.left;
+        var rightSize = window.innerWidth - rect.right - scrollBarSize;
+        var topSize = popup.isTopdown ? rect.top : window.innerHeight - scrollBarSize - rect.bottom;
+        var scores = [
+            Math.min(rightSize / targetWidth, 1),
+            Math.min(leftSize / targetWidth, 1),
+            Math.min(topSize / targetHeight * 0.9),
+        ];
+        var max = Math.max.apply(Math, scores);
+        var tooltipStyle = tooltipNode.style;
+        tooltipStyle.display = "block";
+
+        if (max == scores[0]) {
+            tooltipStyle.left = (rect.right + 1) + "px";
+            tooltipStyle.right = "";
+            tooltipStyle.maxWidth = targetWidth * max + "px";
+            tooltipStyle.top = rect.top + "px";
+            tooltipStyle.bottom = "";
+            tooltipStyle.maxHeight = Math.min(window.innerHeight - scrollBarSize - rect.top, targetHeight) + "px";
+        } else if (max == scores[1]) {
+            tooltipStyle.right = window.innerWidth - rect.left + "px";
+            tooltipStyle.left = "";
+            tooltipStyle.maxWidth = targetWidth * max + "px";
+            tooltipStyle.top = rect.top + "px";
+            tooltipStyle.bottom = "";
+            tooltipStyle.maxHeight = Math.min(window.innerHeight - scrollBarSize - rect.top, targetHeight) + "px";
+        } else if (max == scores[2]) {
+            tooltipStyle.left = window.innerWidth - rect.left + "px";
+            tooltipStyle.maxWidth = Math.min(targetWidth, window.innerWidth) + "px";
+
+            if (popup.isTopdown) {
+                tooltipStyle.top = rect.bottom + "px";
+                tooltipStyle.left = rect.left + "px";
+                tooltipStyle.right = "";
+                tooltipStyle.bottom = "";
+                tooltipStyle.maxHeight = Math.min(window.innerHeight - scrollBarSize - rect.bottom, targetHeight) + "px";
             } else {
-                tooltipNode.style.right = window.innerWidth - rect.left + "px";
-                tooltipNode.style.left = "";
+                tooltipStyle.top = popup.container.offsetTop - tooltipNode.offsetHeight + "px";
+                tooltipStyle.left = rect.left + "px";
+                tooltipStyle.right = "";
+                tooltipStyle.bottom = "";
+                tooltipStyle.maxHeight = Math.min(popup.container.offsetTop, targetHeight) + "px";
             }
-        } else {
-            tooltipNode.style.left = (rect.right + 1) + "px";
-            tooltipNode.style.right = "";
         }
     }
 
@@ -1013,6 +1038,10 @@ class CompletionProvider {
 }
 
 class FilteredList {
+    /**
+     * @param {any} array
+     * @param {string} [filterText]
+     */
     constructor(array, filterText) {
         this.all = array;
         this.filtered = array;
@@ -1051,6 +1080,11 @@ class FilteredList {
         var upper = needle.toUpperCase();
         var lower = needle.toLowerCase();
         loop: for (var i = 0, item; item = items[i]; i++) {
+            if (item.skipFilter) {
+                item.$score = item.score;
+                results.push(item);
+                continue;
+            }
             var caption = (!this.ignoreCaption && item.caption) || item.value || item.snippet;
             if (!caption) continue;
             var lastIndex = -1;

@@ -1109,8 +1109,11 @@ class VirtualRenderer {
         }
         var vScrollBefore = this.$vScroll; // autosize can change vscroll value in which case we need to update longestLine
         // autoresize only after updating hscroll to include scrollbar height in desired height
-        if (this.$maxLines && this.lineHeight > 1)
+        if (this.$maxLines && this.lineHeight > 1){
             this.$autosize();
+            // recalculate this after $autosize so we take vertical scroll into account when calculating width
+            hideScrollbars = size.height <= 2 * this.lineHeight;
+        }
 
         var minHeight = size.scrollerHeight + this.lineHeight;
 
@@ -1159,6 +1162,11 @@ class VirtualRenderer {
                                                 firstRowHeight;
 
         offset = this.scrollTop - firstRowScreen * lineHeight;
+        // adjust firstRowScreen and offset in case there is a line widget above the first row
+        if (offset < 0 && firstRowScreen > 0) {
+            firstRowScreen = Math.max(0, firstRowScreen + Math.floor(offset / lineHeight));
+            offset = this.scrollTop - firstRowScreen * lineHeight;
+        }
 
         var changes = 0;
         if (this.layerConfig.width != longestLine || hScrollChanged)
@@ -2100,9 +2108,6 @@ class VirtualRenderer {
         this.$horizScroll = this.$vScroll = null;
         this.scrollBarV.element.remove();
         this.scrollBarH.element.remove();
-        if (this.$scrollDecorator) {
-            delete this.$scrollDecorator;
-        }
         if (val === true) {
             /**@type {import("../ace-internal").Ace.VScrollbar}*/
             this.scrollBarV = new VScrollBarCustom(this.container, this);
@@ -2117,8 +2122,13 @@ class VirtualRenderer {
             this.scrollBarH.addEventListener("scroll", function (e) {
                 if (!_self.$scrollAnimation) _self.session.setScrollLeft(e.data - _self.scrollMargin.left);
             });
-            this.$scrollDecorator = new Decorator(this.scrollBarV, this);
-            this.$scrollDecorator.$updateDecorators();
+            if (!this.$scrollDecorator) {
+                this.$scrollDecorator = new Decorator(this.scrollBarV, this);
+                this.$scrollDecorator.$updateDecorators();
+            } else {
+                this.$scrollDecorator.setScrollBarV(this.scrollBarV);
+                this.$scrollDecorator.$updateDecorators();
+            }
         }
         else {
             this.scrollBarV = new VScrollBar(this.container, this);

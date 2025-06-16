@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Ace-diff - Simple Demo #1</title>
+
+    <script src="../kitchen-sink/require.js"></script>
+
+    <style type="text/css">
+        body {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .ace_diff-container {
+            overflow: hidden;
+        }
+
+        .toolbar {
+            display: flex;
+            gap: 10px;
+            padding: 10px;
+            background: #f1f1f1;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .toolbar button {
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            background: #fff;
+            cursor: pointer;
+        }
+
+        .toolbar button:hover {
+            background: #e6e6e6;
+        }
+        .toolbar > label {
+            display: inline-flex;
+            align-items: center;
+        }
+
+    </style>
+</head>
+<body>
+ 
+
+<div class="ace_diff-container"></div>
+
+<script>
+    var debugInline = false
+
+    var diffView = null;
+    var editorA = null;
+    var editorB = null;
+
+    var paths = {
+        "ace": "../../src",
+        diff: ".",
+        demo: "..",
+    };
+
+    require.config({
+        paths: paths
+    });
+
+    require([
+        "ace/ext/diff/diff_view", 
+        "ace/ext/diff/inline_diff_view", 
+        "demo/kitchen-sink/util",
+        "demo/kitchen-sink/layout", 
+        "ace/ext/diff/providers/default",
+        "ace/ext/options",
+        "ace/ext/menu_tools/overlay_page",
+    ], function () {
+        var {InlineDiffView} = require("ace/ext/diff/inline_diff_view");
+        var {DiffView} = require("ace/ext/diff/diff_view");
+        var {DiffProvider} = require("ace/ext/diff/providers/default");
+        var {OptionPanel, optionGroups} = require("ace/ext/options")
+        var {buildDom} = require("ace/lib/dom");
+
+        var tollbarButtons = {};
+
+        var initialValueA = "";
+        var initialValueB = "";
+        var updateButtonsState = () => {
+            if (!diffView) return;
+            tollbarButtons.prev.disabled = diffView.firstDiffSelected();
+            tollbarButtons.next.disabled = diffView.lastDiffSelected();
+        };
+
+        var goToNext = () => {
+            diffView.gotoNext(1);
+            updateButtonsState();
+        };
+
+        var goToPrevious = () => {
+            diffView.gotoNext(-1);
+            updateButtonsState();
+        };
+
+        function reset() {
+            editorA.setValue(initialValueA, -1);
+            editorB.setValue(initialValueB, -1);
+            
+            localStorage.removeItem("valueA");
+            localStorage.removeItem("valueB");
+        }
+
+        var diffViewMode = "off";
+        var diffVewContainer = document.querySelector(".ace_diff-container");
+        var setMode = (mode) => {
+            if (diffViewMode == mode) return;
+
+            localStorage.diffViewMode = diffViewMode = mode;
+
+            if (diffView) {
+                diffView.detach();
+            }
+            switch (mode) {
+                case "inlineA":
+                    diffView = new InlineDiffView({
+                        editorA, editorB,
+                        showSideA: true
+                    });
+                    if (!debugInline) editorB.container.style.display = "none";
+                    editorA.container.style.display = "";
+                    break;
+                case "inlineB":
+                    diffView = new InlineDiffView({
+                        editorA, editorB,
+                        showSideA: false
+                    });
+                    editorB.container.style.display = "";
+                    if (!debugInline) editorA.container.style.display = "none";
+                    break;
+                case "split":
+                    diffView = new DiffView({editorA, editorB});
+                    editorA.container.style.display = "";
+                    editorB.container.style.display = "";
+                    break;
+                case "off":
+                    diffView.detach("off");
+                    diffView = undefined;
+                    editorA.container.style.display = "";
+                    editorB.container.style.display = "";
+                    break;
+            }
+            if (diffView) {
+                diffView.setOptions(optionValues);
+                diffView.setProvider(new DiffProvider());
+            }
+            diffView?.onInput();
+        }
+
+        var optionValues = {
+            diffViewMode: localStorage.diffViewMode || "split",
+            ignoreTrimWhitespace: localStorage.ignoreTrimWhitespace == "true",
+            wrap: localStorage.wrap== "true",
+            syncSelections: localStorage.syncSelections != "false",
+            showOtherLineNumbers: localStorage.showOtherLineNumbers != "false",
+            folding: localStorage.folding != "false",
+            theme: localStorage.theme || "ace/theme/textmate",
+        }
+        function drawToolbar() {
+
+            var toolbar = document.createElement("div");
+            toolbar.className = "toolbar ace_optionsMenuEntry";
+            diffVewContainer.parentNode.insertBefore(toolbar, diffVewContainer);
+
+
+            optionBar = new OptionPanel({
+                getOption(path) {
+                    return optionValues[path];
+                },
+                setOption(path, value) {
+                    optionValues[path] = value;
+                    if (path == "diffViewMode") {
+                        setMode(value);
+                    } else if (diffView) {
+                        diffView.setOption(path, value);
+                    }
+                    localStorage.setItem(path, value);
+                }
+            });
+            var data = [
+                ["button", {ref: "prev", onclick: goToPrevious}, "<"],
+                ["button", {ref: "next", onclick: goToNext}, ">"],
+
+                optionBar.renderOptionControl("", {
+                    path: "diffViewMode",
+                    type: "buttonBar",
+                    values: ["inlineA", "inlineB", "split", "off"],
+                }),
+                ["label", {},
+                    optionBar.renderOptionControl("", {
+                        path: "ignoreTrimWhitespace",
+                        type: "checkbox",
+                    }),
+                    "Ignore Spaces"
+                ],
+                ["label", {},
+                    optionBar.renderOptionControl("", {
+                        path: "syncSelections",
+                        type: "checkbox",
+                    }),
+                    "Sync Selections"
+                ],
+                ["label", {},
+                    optionBar.renderOptionControl("", {
+                        path: "wrap",
+                        type: "checkbox",
+                    }),
+                    "Wrap"
+                ],
+                ["label", {},
+                    optionBar.renderOptionControl("", {
+                        path: "folding",
+                        type: "checkbox",
+                    }),
+                    "Folding"
+                ],
+                ["button", {onclick: function() {diffView.toggleFoldUnchanged()}}, "Fold Unchanged"],
+                ["button", {id: "btn-reset", onclick: reset}, "Reset"],
+                ["label", {},
+                    optionBar.renderOptionControl("", optionGroups.Main.Theme),
+                    "Theme"
+                ],
+            ] 
+            buildDom(data, toolbar, tollbarButtons);
+        }
+
+        var config = require("ace/config");
+        config.setLoader(function (moduleName, cb) {
+            require([moduleName], function (module) {
+                cb(null, module);
+            });
+        });
+
+        var util = require("demo/kitchen-sink/util");
+        splitEditor = util.createSplitEditor(diffVewContainer);
+
+        editorA = splitEditor.editor0;
+        editorB = splitEditor.editor1; 
+
+        require("ace/lib/net").get("./examples/editor.17.js", function (v) {
+            initialValueA = v;
+            editorA.setValue(localStorage.valueA || v, -1);
+            editorA.session.setMode("ace/mode/javascript");
+            diffView?.onInput();
+        });
+        require("ace/lib/net").get("./examples/editor.40.js", function (v) {
+            initialValueB = v;
+            editorB.setValue(localStorage.valueB || v, -1);
+            editorB.session.setMode("ace/mode/javascript");
+            diffView?.onInput();
+        });
+
+        window.onbeforeunload = function () {
+            localStorage.valueA = editorA.getValue();
+            localStorage.valueB = editorB.getValue();
+        };
+
+        editorA.on("changeSelection", updateButtonsState);
+        editorB.on("changeSelection", updateButtonsState);
+
+        drawToolbar();
+        setMode(optionValues.diffViewMode);
+    });
+
+</script>
+
+
+</body>
+</html>

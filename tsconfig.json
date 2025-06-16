@@ -2,7 +2,7 @@
   "compilerOptions": {
     "strict": false,
     "noImplicitAny": false,
-    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
     "module": "commonjs",
     "target": "es2019",
     "allowJs": true,

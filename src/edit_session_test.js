@@ -496,6 +496,31 @@ module.exports = {
         assert.equal(session.$foldData[3].range.start.row, 12);
         editor.execCommand("unfoldall");
         assert.equal(session.$foldData.length, 0);
+
+        editor.execCommand("foldall");
+        assert.equal(session.$foldData.length, 4);
+        assert.equal(session.$foldData[1].range.start.row, 3);
+
+        // fold function arguments
+        editor.selection.moveTo(3, 13);
+        editor.execCommand("fold");
+        assert.equal(editor.session.getAllFolds().length, 5);
+        assert.equal(session.$foldData[1].range.start.row, 3);
+        
+        // unfold function arguments
+        editor.execCommand("unfold");
+        assert.equal(editor.session.getAllFolds().length, 4);
+        assert.equal(session.$foldData[1].range.start.row, 3);
+        
+        // unfold function
+        editor.execCommand("unfold");
+        assert.equal(session.$foldData.length, 4);
+        assert.equal(session.$foldData[1].range.start.row, 4);
+
+        // check that calling unfold without folds does not add folds
+        editor.execCommand("unfold");
+        assert.equal(session.$foldData.length, 4);
+        assert.equal(session.$foldData[1].range.start.row, 4);
     },
 
     "test setting undefined value": function() {
@@ -1106,27 +1131,66 @@ module.exports = {
     },
     
     "test: mode loading" : function(next) {
-        if (!require.undef) {
-            console.log("Skipping test: This test only runs in the browser");
-            next();
-            return;
-        }
+        delete EditSession.prototype.$modes["ace/mode/javascript"];
+        delete EditSession.prototype.$modes["ace/mode/css"];
+        delete EditSession.prototype.$modes["ace/mode/sh"];
+        require("./config").setLoader(function(name, onLoad) {
+            if (name == "ace/mode/javascript") {
+                return onLoad(null, require("./mode/javascript"));
+            }
+            if (name == "ace/mode/sh") {
+                return setTimeout(function() {
+                    return onLoad(null, require("./mode/sh"));
+                });
+            }
+            if (name == "ace/mode/css") {
+                return setTimeout(function() {
+                    return onLoad(null, require("./mode/css"));
+                });
+            }
+        });
         var session = new EditSession([]);
-        session.setMode("ace/mode/javascript");
-        assert.equal(session.$modeid, "ace/mode/javascript");
-        session.on("changeMode", function() {
-            assert.equal(session.$modeid, "ace/mode/javascript");
+        
+        var onChangeModeCallCount = 0;
+        var originalOnChangeMode = session.$onChangeMode;
+
+        // Create spy
+        session.$onChangeMode = function(...arguments) {
+            onChangeModeCallCount++;
+            originalOnChangeMode.apply(this, arguments);
+        };
+
+        session.setMode("ace/mode/javascript");   
+        assert.equal(session.$modeId, "ace/mode/javascript");
+
+        var modeChangeCallbacks = 0;
+        session.once("changeMode", function() {
+            assert.equal(session.$modeId, "ace/mode/sh");
+            modeChangeCallbacks++;
         });
-        session.setMode("ace/mode/sh", function(mode) {
-            assert.ok(!mode);
+        session.setMode("ace/mode/sh", function() {
+            assert.equal(session.$mode.$id, "ace/mode/sh");
+            modeChangeCallbacks++;
         });
+        assert.equal(session.$modeId, "ace/mode/sh");
+        assert.equal(session.$mode.$id, "ace/mode/javascript");
         setTimeout(function() {
-            session.setMode("ace/mode/javascript", function(mode) {
-                session.setMode("ace/mode/javascript");
-                assert.equal(session.$modeid, "ace/mode/javascript");
-                next();
+            assert.equal(modeChangeCallbacks, 2);
+            session.setMode("ace/mode/javascript");
+            assert.equal(session.$mode.$id, "ace/mode/javascript");
+            session.setMode("ace/mode/sh");
+            assert.equal(session.$mode.$id, "ace/mode/sh");
+            session.setMode("ace/mode/css");
+            assert.equal(session.$mode.$id, "ace/mode/sh");
+            // destory session to check if the last mode which is being loaded is aborted or not
+            session.destroy();
+            setTimeout(function() {
+            // check if last setmode is aborted due to destroy
+            assert.equal(onChangeModeCallCount, 4);
+            session.$onChangeMode = originalOnChangeMode;
+            next();
             });
-        }, 0);
+        });
     },
 
     "test: sets destroyed flag when destroy called and tokenizer is never null": function() {

@@ -6,6 +6,8 @@ var config = require("../config");
 var lang = require("../lib/lang");
 var util = require("../autocomplete/util");
 
+var MarkerGroup = require("../marker_group").MarkerGroup;
+
 var textCompleter = require("../autocomplete/text_completer");
 /**@type {import("../../ace-internal").Ace.Completer}*/
 var keyWordCompleter = {
@@ -181,6 +183,8 @@ require("../config").defineOptions(Editor.prototype, "editor", {
          */
         set: function(val) {
             if (val) {
+                Autocomplete.for(this);
+
                 if (!this.completers)
                     this.completers = Array.isArray(val)? val: completers;
                 this.commands.addCommand(Autocomplete.startCommand);
@@ -230,3 +234,5 @@ require("../config").defineOptions(Editor.prototype, "editor", {
         value: false
     }
 });
+
+exports.MarkerGroup = MarkerGroup;
