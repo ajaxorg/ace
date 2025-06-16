@@ -40,8 +40,8 @@ declare module "ace-code" {
         type GutterKeyboardEvent = import("ace-code/src/keyboard/gutter_handler").GutterKeyboardEvent;
         type HoverTooltip = import("ace-code/src/tooltip").HoverTooltip;
         type Tooltip = import("ace-code/src/tooltip").Tooltip;
-        type PopupManager = import("ace-code/src/tooltip").PopupManager;
         type TextInput = import("ace-code/src/keyboard/textinput").TextInput;
+        type DiffChunk = import("ace-code/src/ext/diff/base_diff_view").DiffChunk;
         type AfterLoadCallback = (err: Error | null, module: unknown) => void;
         type LoaderFunction = (moduleName: string, afterLoad: AfterLoadCallback) => void;
         export interface ConfigOptions {
@@ -1032,33 +1032,50 @@ declare module "ace-code" {
             inline?: boolean;
         }
         /**
-         * Interface for the model used in the diff view.
+         * Interface representing a model for handling differences between two views or states.
          */
         export interface DiffModel {
-            /**
-             * The editor for the original view.
-             */
+            /** The editor for the original view. */
             editorA?: Editor;
-            /**
-             * The editor for the edited view.
-             */
+            /** The editor for the edited view. */
             editorB?: Editor;
-            /**
-             * The edit session for the original view.
-             */
+            /** The edit session for the original view. */
             sessionA?: EditSession;
-            /**
-             * The edit session for the edited view.
-             */
+            /** The edit session for the edited view. */
             sessionB?: EditSession;
-            /**
-             * The original content.
-             */
+            /** The original content. */
             valueA?: string;
-            /**
-             * The modified content.
-             */
+            /** The modified content. */
             valueB?: string;
+            /** Whether to show the original view("a") or modified view("b") for inline diff view */
+            inline?: "a" | "b";
+            /** Provider for computing differences between original and modified content. */
+            diffProvider?: DiffProvider;
+        }
+        export interface DiffViewOptions {
+            /**
+             * Whether to show line numbers in the other editor's gutter
+             * @default true
+             */
+            showOtherLineNumbers?: boolean;
+            /** Whether to enable code folding widgets */
+            folding?: boolean;
+            /** Whether to synchronize selections between both editors */
+            syncSelections?: boolean;
+            /** Whether to ignore trimmed whitespace when computing diffs */
+            ignoreTrimWhitespace?: boolean;
+            /** Whether to enable word wrapping in both editors */
+            wrap?: boolean;
+            /**
+             * Maximum number of diffs to compute before failing silently
+             * @default 5000
+             */
+            maxDiffs?: number;
+            /** Theme to apply to both editors */
+            theme?: string | Theme;
+        }
+        export interface DiffProvider {
+            compute(originalLines: string[], modifiedLines: string[], opts?: any): DiffChunk[];
         }
     }
     export const config: typeof import("ace-code/src/config");

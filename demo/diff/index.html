@@ -65,14 +65,17 @@
     });
 
     require([
-        "ace/ext/diff",
+        "ace/ext/diff/diff_view",
+        "ace/ext/diff/inline_diff_view",
         "demo/kitchen-sink/util",
         "demo/kitchen-sink/layout", 
         "ace/ext/diff/providers/default",
         "ace/ext/options",
         "ace/ext/menu_tools/overlay_page",
     ], function () {
-        var {createDiffView} = require("ace/ext/diff");
+        var {InlineDiffView} = require("ace/ext/diff/inline_diff_view");
+        var {DiffView} = require("ace/ext/diff/diff_view");
+        var {DiffProvider} = require("ace/ext/diff/providers/default");
         var {OptionPanel, optionGroups} = require("ace/ext/options")
         var {buildDom} = require("ace/lib/dom");
 
@@ -116,23 +119,22 @@
             }
             switch (mode) {
                 case "inlineA":
-                    diffView = createDiffView({
+                    diffView = new InlineDiffView({
                         editorA, editorB,
-                        showSideA: true
-                    }, true);
+                    });
                     if (!debugInline) editorB.container.style.display = "none";
                     editorA.container.style.display = "";
                     break;
                 case "inlineB":
-                    diffView = createDiffView({
+                    diffView = new InlineDiffView({
                         editorA, editorB,
-                        showSideA: false
-                    }, true);
+                        inline: "b"
+                    });
                     editorB.container.style.display = "";
                     if (!debugInline) editorA.container.style.display = "none";
                     break;
                 case "split":
-                    diffView = createDiffView({editorA, editorB});
+                    diffView = new DiffView({editorA, editorB});
                     editorA.container.style.display = "";
                     editorB.container.style.display = "";
                     break;
@@ -145,6 +147,7 @@
             }
             if (diffView) {
                 diffView.setOptions(optionValues);
+                diffView.setProvider(new DiffProvider());
             }
             diffView?.onInput();
         }

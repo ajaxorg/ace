@@ -217,44 +217,6 @@ declare module "ace-code/src/ext/searchbox" {
     }
     import { HashHandler } from "ace-code/src/keyboard/hash_handler";
 }
-declare module "ace-code/src/ext/elastic_tabstops_lite" {
-    export class ElasticTabstopsLite {
-        constructor(editor: Editor);
-        onAfterExec: () => void;
-        onExec: () => void;
-        onChange: (delta: any) => void;
-        processRows(rows: number[]): void;
-    }
-    import { Editor } from "ace-code/src/editor";
-}
-declare module "ace-code/src/ext/error_marker" {
-    export function showErrorMarker(editor: import("ace-code/src/editor").Editor, dir: number): void;
-}
-declare module "ace-code/src/ext/beautify" {
-    export const singletonTags: string[];
-    export const blockTags: string[];
-    export const formatOptions: {
-        lineBreaksAfterCommasInCurlyBlock?: boolean;
-    };
-    export function beautify(session: import("ace-code/src/edit_session").EditSession): void;
-    export const commands: {
-        name: string;
-        description: string;
-        exec: (editor: any) => void;
-        bindKey: string;
-    }[];
-}
-declare module "ace-code/src/ext/code_lens" {
-    export function setLenses(session: EditSession, lenses: import("ace-code").Ace.CodeLense[]): number;
-    export function registerCodeLensProvider(editor: import("ace-code/src/editor").Editor, codeLensProvider: import("ace-code").Ace.CodeLenseProvider): void;
-    export function clear(session: EditSession): void;
-    export type EditSession = import("ace-code/src/edit_session").EditSession;
-    export type VirtualRenderer = import("ace-code/src/virtual_renderer").VirtualRenderer & {
-    };
-    export type CodeLenseCommand = import("ace-code").Ace.CodeLenseCommand;
-    export type CodeLense = import("ace-code").Ace.CodeLense;
-    import { Editor } from "ace-code/src/editor";
-}
 declare module "ace-code/src/ext/diff/scroll_diff_decorator" {
     export class ScrollDiffDecorator extends Decorator {
         constructor(scrollbarV: import("ace-code").Ace.VScrollbar, renderer: import("ace-code/src/virtual_renderer").VirtualRenderer, forInlineDiff?: boolean);
@@ -381,6 +343,7 @@ declare module "ace-code/src/ext/diff/base_diff_view" {
         syncSelectionMarkerB: SyncSelectionMarker;
         clearSelectionMarkers(): void;
     }
+    import { EditSession } from "ace-code/src/edit_session";
     export class DiffChunk {
         /**
          * @param {{originalStartLineNumber: number, originalStartColumn: number,
@@ -408,9 +371,8 @@ declare module "ace-code/src/ext/diff/base_diff_view" {
         type: any;
         update(html: any, markerLayer: any, session: any, config: any): void;
     }
-    import { EditSession } from "ace-code/src/edit_session";
-    import { Editor } from "ace-code/src/editor";
     import { MinimalGutterDiffDecorator } from "ace-code/src/ext/diff/gutter_decorator";
+    import { Editor } from "ace-code/src/editor";
     import { Range } from "ace-code/src/range";
     class SyncSelectionMarker {
         id: number;
@@ -420,6 +382,50 @@ declare module "ace-code/src/ext/diff/base_diff_view" {
         setRange(range: Range): void;
         range: Range;
     }
+    namespace Ace {
+        type OptionsProvider<T> = import("ace-code").Ace.OptionsProvider<T>;
+        type DiffViewOptions = import("ace-code").Ace.DiffViewOptions;
+    }
+    export interface BaseDiffView extends Ace.OptionsProvider<Ace.DiffViewOptions> {
+    }
+}
+declare module "ace-code/src/ext/elastic_tabstops_lite" {
+    export class ElasticTabstopsLite {
+        constructor(editor: Editor);
+        onAfterExec: () => void;
+        onExec: () => void;
+        onChange: (delta: any) => void;
+        processRows(rows: number[]): void;
+    }
+    import { Editor } from "ace-code/src/editor";
+}
+declare module "ace-code/src/ext/error_marker" {
+    export function showErrorMarker(editor: import("ace-code/src/editor").Editor, dir: number): void;
+}
+declare module "ace-code/src/ext/beautify" {
+    export const singletonTags: string[];
+    export const blockTags: string[];
+    export const formatOptions: {
+        lineBreaksAfterCommasInCurlyBlock?: boolean;
+    };
+    export function beautify(session: import("ace-code/src/edit_session").EditSession): void;
+    export const commands: {
+        name: string;
+        description: string;
+        exec: (editor: any) => void;
+        bindKey: string;
+    }[];
+}
+declare module "ace-code/src/ext/code_lens" {
+    export function setLenses(session: EditSession, lenses: import("ace-code").Ace.CodeLense[]): number;
+    export function registerCodeLensProvider(editor: import("ace-code/src/editor").Editor, codeLensProvider: import("ace-code").Ace.CodeLenseProvider): void;
+    export function clear(session: EditSession): void;
+    export type EditSession = import("ace-code/src/edit_session").EditSession;
+    export type VirtualRenderer = import("ace-code/src/virtual_renderer").VirtualRenderer & {
+    };
+    export type CodeLenseCommand = import("ace-code").Ace.CodeLenseCommand;
+    export type CodeLense = import("ace-code").Ace.CodeLense;
+    import { Editor } from "ace-code/src/editor";
 }
 declare module "ace-code/src/ext/diff/inline_diff_view" {
     export class InlineDiffView extends BaseDiffView {
@@ -474,12 +480,11 @@ declare module "ace-code/src/ext/diff" {
     import { DiffProvider } from "ace-code/src/ext/diff/providers/default";
     /**
      * Creates a diff view for comparing code.
-     * @param {import("ace-code").Ace.DiffModel} [diffModel] Model for the diff view
-     * @param {boolean} [inline] Whether to use inline view instead of side-by-side
-     * @param {DiffProvider} [provider] Custom diff provider
+     * @param {import("ace-code").Ace.DiffModel} [diffModel] model for the diff view
+     * @param {import("ace-code").Ace.DiffViewOptions} [options] options for the diff view
      * @returns {InlineDiffView|DiffView} Configured diff view instance
      */
-    export function createDiffView(diffModel?: import("ace-code").Ace.DiffModel, inline?: boolean, provider?: DiffProvider): InlineDiffView | DiffView;
+    export function createDiffView(diffModel?: import("ace-code").Ace.DiffModel, options?: import("ace-code").Ace.DiffViewOptions): InlineDiffView | DiffView;
     export { InlineDiffView, DiffView, DiffProvider };
 }
 declare module "ace-code/src/ext/emmet" {

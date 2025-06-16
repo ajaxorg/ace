@@ -17,11 +17,19 @@ module.exports = {
         }
     },
     "test: diff wrapper test": function () {
-        diffView = createDiffView({}, true);
+        diffView = createDiffView({inline: "a"});
         assert.ok(diffView instanceof InlineDiffView);
         diffView.destroy();
-        diffView = createDiffView({}, false);
+        diffView = createDiffView({});
         assert.ok(diffView instanceof DiffView);
+    },
+    "test: diff setOptions": function () {
+        diffView = createDiffView({}, {
+            maxDiffs: 1000,
+            ignoreTrimWhitespace: true
+        });
+        assert.ok(diffView.getOption("maxDiffs"), 1000);
+        assert.ok(diffView.getOption("ignoreTrimWhitespace"), true);
     }
 };
 

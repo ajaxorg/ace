@@ -167,7 +167,7 @@ module.exports = {
 
         var diffView = new InlineDiffView({
             editorA, editorB,
-            showSideA: true,
+            inline: "a",
             diffProvider,
         });
         editorA.session.addFold("---", new Range(0, 0, 2, 0));
@@ -206,7 +206,7 @@ module.exports = {
 
         var diffView = new InlineDiffView({
             editorB, valueA: editorA.getValue(),
-            showSideB: true,
+            inline: "b",
             diffProvider,
         });
 
@@ -226,7 +226,7 @@ module.exports = {
         diffView = new InlineDiffView({
             valueA,
             valueB,
-            showSideA: true,
+            inline: "a",
             diffProvider,
         }, document.body);
         setEditorPosition(diffView.editorA);
@@ -257,7 +257,7 @@ module.exports = {
         diffView = new InlineDiffView({
             valueA,
             valueB,
-            showSideA: false,
+            inline: "b",
         }, document.body);
         setEditorPosition(diffView.editorB);
         diffView.onInput();
@@ -360,7 +360,7 @@ module.exports = {
 
         diffView = new InlineDiffView({
             editorA, editorB,
-            showSideA: true,
+            inline: "a",
             diffProvider,
         });
         diffView.onInput();
@@ -418,7 +418,7 @@ module.exports = {
         editorA.session.setValue(["a", "b", "c"].join("\n"));
         editorB.session.setValue(["a", "c", "X"].join("\n"));
 
-        diffView = new InlineDiffView({ editorA, editorB, showSideA: true });
+        diffView = new InlineDiffView({ editorA, editorB, inline: "a" });
         diffView.setProvider(new DiffProvider());
         diffView.onInput();
 

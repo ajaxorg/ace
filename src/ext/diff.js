@@ -4,22 +4,24 @@ var DiffProvider = require("./diff/providers/default").DiffProvider;
 
 /**
  * Creates a diff view for comparing code.
- * @param {import("../../ace-internal").Ace.DiffModel} [diffModel] Model for the diff view
- * @param {boolean} [inline] Whether to use inline view instead of side-by-side
- * @param {DiffProvider} [provider] Custom diff provider
+ * @param {import("../../ace-internal").Ace.DiffModel} [diffModel] model for the diff view
+ * @param {import("../../ace-internal").Ace.DiffViewOptions} [options] options for the diff view
  * @returns {InlineDiffView|DiffView} Configured diff view instance
  */
-function createDiffView(diffModel, inline, provider) {
-    provider = provider || new DiffProvider();
+function createDiffView(diffModel, options) {
+    diffModel = diffModel || {};
+    diffModel.diffProvider = diffModel.diffProvider || new DiffProvider(); //use default diff provider;
     let diffView;
-    if (inline) {
+    if (diffModel.inline) {
         diffView = new InlineDiffView(diffModel);
     }
     else {
         diffView = new DiffView(diffModel);
     }
+    if (options) {
+        diffView.setOptions(options);
+    }
 
-    diffView.setProvider(provider);
     return diffView;
 }
 

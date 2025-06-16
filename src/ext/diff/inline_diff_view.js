@@ -13,6 +13,7 @@ class InlineDiffView extends BaseDiffView {
      */
     constructor(diffModel, container) {
         diffModel = diffModel || {};
+        diffModel.inline = diffModel.inline || "a";
         super( true, container);
         this.init(diffModel);
     }

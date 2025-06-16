@@ -66,21 +66,13 @@ class BaseDiffView {
     }
 
     /**
-     * @param {Object} [diffModel] - The model for the diff view.
-     * @param {Editor} [diffModel.editorA] - The editor for the original view.
-     * @param {Editor} [diffModel.editorB] - The editor for the edited view.
-     * @param {EditSession} [diffModel.sessionA] - The edit session for the original view.
-     * @param {EditSession} [diffModel.sessionB] - The edit session for the edited view.
-     * @param {string} [diffModel.valueA] - The original content.
-     * @param {string} [diffModel.valueB] - The modified content.
-     * @param {boolean} [diffModel.showSideA] - Whether to show the original view or modified view.
-     * @param {import("./providers/default").DiffProvider} [diffModel.diffProvider] - The diff provider to use.
+     * @param {import("../../../ace-internal").Ace.DiffModel} [diffModel] - The model for the diff view.
      */
     $setupModels(diffModel) {
         if (diffModel.diffProvider) {
             this.setProvider(diffModel.diffProvider);
         }
-        this.showSideA = diffModel.showSideA == undefined ? true : diffModel.showSideA;
+        this.showSideA = diffModel.inline == undefined ? true : diffModel.inline === "a";
         var diffEditorOptions = /**@type {Partial<import("../../../ace-internal").Ace.EditorOptions>}*/({
             scrollPastEnd: 0.5,
             highlightActiveLine: false,
@@ -96,25 +88,25 @@ class BaseDiffView {
         this.savedOptionsA = diffModel.editorA && diffModel.editorA.getOptions(diffEditorOptions);
         this.savedOptionsB = diffModel.editorB && diffModel.editorB.getOptions(diffEditorOptions);
 
-        if (!this.inlineDiffEditor || diffModel.showSideA) {
+        if (!this.inlineDiffEditor || diffModel.inline === "a") {
             this.editorA = diffModel.editorA || this.$setupModel(diffModel.sessionA, diffModel.valueA);
             this.container && this.container.appendChild(this.editorA.container);
             this.editorA.setOptions(diffEditorOptions);
         }
-        if (!this.inlineDiffEditor || !diffModel.showSideA) {
+        if (!this.inlineDiffEditor || diffModel.inline === "b") {
             this.editorB = diffModel.editorB || this.$setupModel(diffModel.sessionB, diffModel.valueB);
             this.container && this.container.appendChild(this.editorB.container);
             this.editorB.setOptions(diffEditorOptions);
         }
         
         if (this.inlineDiffEditor) {
-            this.activeEditor = diffModel.showSideA ? this.editorA : this.editorB;
-            this.otherSession = diffModel.showSideA ? this.sessionB : this.sessionA;
+            this.activeEditor = this.showSideA ? this.editorA : this.editorB;
+            this.otherSession = this.showSideA ? this.sessionB : this.sessionA;
             var cloneOptions = this.activeEditor.getOptions();
             cloneOptions.readOnly = true;
             delete cloneOptions.mode;
             this.otherEditor = new Editor(new Renderer(null), undefined, cloneOptions);
-            if (diffModel.showSideA) {
+            if (this.showSideA) {
                 this.editorB = this.otherEditor;
             } else {
                 this.editorA = this.otherEditor;
@@ -146,7 +138,7 @@ class BaseDiffView {
     $setupModel(session, value) {
         var editor = new Editor(new Renderer(), session);
         editor.session.setUndoManager(new UndoManager());
-        if (value) {
+        if (value != undefined) {
             editor.setValue(value, -1);
         }
         return editor;
@@ -210,7 +202,7 @@ class BaseDiffView {
         this.diffSession = session;
         this.sessionA = this.sessionB = null;
         if (this.diffSession) {
-            this.chunks = this.diffSession.chunks;
+            this.chunks = this.diffSession.chunks || [];
             this.editorA && this.editorA.setSession(session.sessionA);
             this.editorB && this.editorB.setSession(session.sessionB);
             this.sessionA = this.diffSession.sessionA;
