@@ -7,13 +7,13 @@ var LuaHighlightRules = function() {
 
     var keywords = (
         "break|do|else|elseif|end|for|function|if|in|local|repeat|"+
-         "return|then|until|while|or|and|not"
+        "return|then|until|while|or|and|not"
     );
 
     var builtinConstants = ("true|false|nil|_G|_VERSION");
 
     var functions = (
-      // builtinFunctions
+        // builtinFunctions
         "string|xpcall|package|tostring|print|os|unpack|require|"+
         "getfenv|setmetatable|next|assert|tonumber|io|rawequal|"+
         "collectgarbage|getmetatable|module|rawset|math|debug|"+
@@ -34,9 +34,9 @@ var LuaHighlightRules = function() {
         "setupvalue|getlocal|getregistry|getfenv|setn|insert|getn|"+
         "foreachi|maxn|foreach|concat|sort|remove|resume|yield|"+
         "status|wrap|create|running|"+
-      // metatableMethods
+        // metatableMethods
         "__add|__sub|__mod|__unm|__concat|__lt|__index|__call|__gc|__metatable|"+
-         "__mul|__div|__pow|__len|__eq|__le|__newindex|__tostring|__mode|__tonumber"
+        "__mul|__div|__pow|__len|__eq|__le|__newindex|__tostring|__mode|__tonumber"
     );
 
     var stdLibaries = ("string|package|os|io|math|debug|table|coroutine");
@@ -64,27 +64,22 @@ var LuaHighlightRules = function() {
     this.$rules = {
         "start" : [{
             stateName: "bracketedComment",
-            onMatch : function(value, currentState, stack){
-                stack.unshift(this.next, value.length - 2, currentState);
-                return "comment";
+            onMatch2 : function(value, scope){
+                return scope.get(this.next, value.length - 2).get("comment");
             },
             regex : /\-\-\[=*\[/,
             next  : [
                 {
-                    onMatch : function(value, currentState, stack) {
-                        if (value.length == stack[1]) {
-                            stack.shift();
-                            stack.shift();
-                            this.next = stack.shift();
+                    onMatch2 : function(value, scope) {
+                        if (scope == "bracketedComment" && value.length == scope.data) {
+                            return scope.parent.get("comment");
                         } else {
-                            this.next = "";
+                            return scope.get("comment");
                         }
-                        return "comment";
                     },
                     regex : /\]=*\]/,
-                    next  : "start"
                 }, {
-                    defaultToken: "comment.body"
+                    defaultToken : "comment.body"
                 }
             ]
         },
@@ -95,26 +90,21 @@ var LuaHighlightRules = function() {
         },
         {
             stateName: "bracketedString",
-            onMatch : function(value, currentState, stack){
-                stack.unshift(this.next, value.length, currentState);
-                return "string.start";
+            onMatch2 : function(value, scope){
+                return scope.get(this.next, value.length).get("string.start");
             },
             regex : /\[=*\[/,
             next  : [
                 {
-                    onMatch : function(value, currentState, stack) {
-                        if (value.length == stack[1]) {
-                            stack.shift();
-                            stack.shift();
-                            this.next = stack.shift();
+                    onMatch2 : function(value, scope) {
+                        if (scope == "bracketedString" && value.length == scope.data) {
+                            return scope.parent.get("string.end");
                         } else {
-                            this.next = "";
+                            return scope.get("string.end");
                         }
-                        return "string.end";
                     },
-                    
+
                     regex : /\]=*\]/,
-                    next  : "start"
                 }, {
                     defaultToken : "string"
                 }
@@ -149,7 +139,7 @@ var LuaHighlightRules = function() {
             regex : "\\s+|\\w+"
         } ]
     };
-    
+
     this.normalizeRules();
 };
 
