@@ -1651,8 +1651,3 @@ declare module "./src/scope" {
         toStack(): any[];
     }
 }
-
-declare module "./src/lib/keys" {
-    export function keyCodeToString(keyCode: number): string;
-}
-

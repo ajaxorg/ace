@@ -223,14 +223,6 @@ class Tokenizer {
     getLineTokens(line, startState) {
         if (startState && startState["getAllScopeNames"]) {
             var stack = /**@type{Scope}*/(startState).toStack();
-            stack.pop(); //drop the root scope name
-
-            if (/**@type{Scope}*/(startState).data === "#tmp") {
-                stack.shift();
-            }
-            if (stack.length === 1) {
-                stack = [];
-            }
         }
         else {
             var stack = [];
@@ -307,11 +299,15 @@ class Tokenizer {
                             }
                             else {
                                 currentState = rule.next2(currentState);
+
+                                stack = currentState.toStack();
                             }
                         }
                     }
                     else {
                         currentState = rememberedState;
+
+                        stack = currentState.toStack();
                     }
 
                     state = this.states[currentState];

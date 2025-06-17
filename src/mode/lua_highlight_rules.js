@@ -91,7 +91,7 @@ var LuaHighlightRules = function() {
         {
             stateName: "bracketedString",
             onMatch2 : function(value, scope){
-                return scope.get(this.next, value.length - 2).get("string.start");
+                return scope.get(this.next, value.length).get("string.start");
             },
             regex : /\[=*\[/,
             next  : [

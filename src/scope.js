@@ -87,6 +87,16 @@ class Scope {
         do {
             stack.push(self.data);
         } while (self = self.parent);
+
+        stack.pop(); //drop the root scope name
+
+        if (this.data === "#tmp") {
+            stack.shift();
+        }
+        if (stack.length === 1) {
+            stack = [];
+        }
+
         return stack;
     }
 
@@ -110,7 +120,7 @@ class Scope {
         for (var i = stack.length - 1; i >= 0; i--) {
             scope = scope.get(stack[i]);
         }
-        if (stack[0] !== currentState) {
+        if (stack[0] != currentState) {
             scope = scope.get(currentState, "#tmp");
         }
 
