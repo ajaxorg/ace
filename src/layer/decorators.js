@@ -48,6 +48,9 @@ class Decorator {
     }
 
     $updateDecorators(config) {
+        if (typeof this.canvas.getContext !== "function") {
+            return;
+        }
         var colors = (this.renderer.theme.isDark === true) ? this.colors.dark : this.colors.light;
         this.setDimensions(config);
 
