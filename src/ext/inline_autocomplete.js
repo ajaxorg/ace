@@ -1,3 +1,14 @@
+/**
+ * ## Inline Autocomplete extension
+ *
+ * Provides lightweight, prefix-based autocompletion with inline ghost text rendering and an optional command bar tooltip.
+ * Displays completion suggestions as ghost text directly in the editor with keyboard navigation and interactive controls.
+ *
+ * **Enable:** `editor.setOption("enableInlineAutocompletion", true)`
+ * or configure it during editor initialization in the options object.
+ * @module
+ */
+
 "use strict";
 
 var HashHandler = require("../keyboard/hash_handler").HashHandler;

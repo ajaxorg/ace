@@ -1,3 +1,24 @@
+/**
+ * ## Textarea transformation extension
+ *
+ * Transforms HTML textarea elements into fully-featured Ace editor instances while maintaining form compatibility
+ * and providing an interactive settings panel. Handles automatic resizing, form submission integration, and
+ * preserves the original textarea's styling properties. Includes a visual settings interface for configuring
+ * editor options like themes, modes, keybindings, and display preferences through an overlay panel.
+ *
+ * **Usage:**
+ * ```javascript
+ * var ace = require("ace/ext/textarea");
+ * var editor = ace.transformTextarea(textareaElement, {
+ *   mode: "javascript",
+ *   theme: "monokai",
+ *   wrap: true
+ * });
+ * ```
+ *
+ * @module
+ */
+
 "use strict";
 
 var event = require("../lib/event");
@@ -129,6 +150,17 @@ function setupContainer(element, getValue) {
     return container;
 }
 
+/**
+ * Transforms a textarea element into an Ace editor instance.
+ *
+ * This function replaces the original textarea with an Ace editor,
+ * preserving the textarea's initial value and focus state. It creates
+ * a container with settings panel and provides full editor functionality.
+ *
+ * @param {HTMLTextAreaElement} element - The textarea element to transform
+ * @param {import("../../ace-internal").Ace.TextAreaOptions} [options] - Optional configuration options for the editor
+ * @returns {import("../editor").Editor} The created Ace editor instance
+ */
 exports.transformTextarea = function(element, options) {
     var isFocused = element.autofocus || document.activeElement == element;
     var session;
@@ -470,7 +502,10 @@ function setupSettingPanel(settingDiv, settingOpener, editor) {
     settingDiv.hideButton = button;
 }
 
-// Default startup options.
+/**
+ * Default startup options.
+ * @type {import("../../ace-internal").Ace.TextAreaOptions}
+ */
 exports.defaultOptions = {
     mode:               "javascript",
     theme:              "textmate",

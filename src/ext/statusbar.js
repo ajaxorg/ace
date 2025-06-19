@@ -1,3 +1,20 @@
+/**
+ * ## Status bar extension for displaying editor state information
+ *
+ * Provides a lightweight status indicator that displays real-time information about the editor state including
+ * cursor position, selection details, recording status, and keyboard binding information. The status bar
+ * automatically updates on editor events and renders as an inline element that can be embedded in any parent container.
+ *
+ * **Usage:**
+ * ```javascript
+ * var StatusBar = require("ace/ext/statusbar").StatusBar;
+ * var statusBar = new StatusBar(editor, parentElement);
+ * ```
+ *
+ * @module
+ */
+
+
 "use strict";
 /**
  *

@@ -80,8 +80,8 @@ declare module "ace-code/src/ext/command_bar" {
     }
 }
 declare module "ace-code/src/ext/language_tools" {
-    export function setCompleters(val: any): void;
-    export function addCompleter(completer: any): void;
+    export function setCompleters(val?: import("ace-code").Ace.Completer[]): void;
+    export function addCompleter(completer: import("ace-code").Ace.Completer): void;
     import textCompleter = require("ace-code/src/autocomplete/text_completer");
     export var keyWordCompleter: import("ace-code").Ace.Completer;
     export var snippetCompleter: import("ace-code").Ace.Completer;
@@ -237,12 +237,7 @@ declare module "ace-code/src/ext/beautify" {
         lineBreaksAfterCommasInCurlyBlock?: boolean;
     };
     export function beautify(session: import("ace-code/src/edit_session").EditSession): void;
-    export const commands: {
-        name: string;
-        description: string;
-        exec: (editor: any) => void;
-        bindKey: string;
-    }[];
+    export const commands: import("ace-code").Ace.Command[];
 }
 declare module "ace-code/src/ext/code_lens" {
     export function setLenses(session: EditSession, lenses: import("ace-code").Ace.CodeLense[]): number;
@@ -259,10 +254,10 @@ declare module "ace-code/src/ext/emmet" {
     export const commands: HashHandler;
     export function runEmmetCommand(editor: Editor): ReturnType<typeof setTimeout> | boolean;
     export function updateCommands(editor: Editor, enabled?: boolean): void;
-    export function isSupportedMode(mode: any): boolean;
+    export function isSupportedMode(mode: any | string): boolean;
     export function isAvailable(editor: Editor, command: string): boolean;
-    export function load(cb: any): boolean;
-    export function setCore(e: any): void;
+    export function load(cb?: Function): boolean;
+    export function setCore(e: string | any): void;
     import { HashHandler } from "ace-code/src/keyboard/hash_handler";
     import { Editor } from "ace-code/src/editor";
     /**
@@ -367,6 +362,17 @@ declare module "ace-code/src/ext/emmet" {
     }
 }
 declare module "ace-code/src/ext/hardwrap" {
+    /**
+     * Wraps lines at specified column limits and optionally merges short adjacent lines.
+     *
+     * Processes text within the specified row range, breaking lines that exceed the maximum column
+     * width at appropriate word boundaries while preserving indentation. When merge is enabled,
+     * combines short consecutive lines that can fit within the column limit. Automatically adjusts
+     * the end row when new line breaks are inserted to ensure all affected content is processed.
+     *
+     * @param {import("ace-code/src/editor").Editor} editor - The editor instance containing the text to wrap
+     * @param {import("ace-code").Ace.HardWrapOptions} options - Configuration options for wrapping behavior
+     */
     export function hardWrap(editor: import("ace-code/src/editor").Editor, options: import("ace-code").Ace.HardWrapOptions): void;
     import { Editor } from "ace-code/src/editor";
 }
@@ -375,7 +381,7 @@ declare module "ace-code/src/ext/menu_tools/settings_menu.css" {
     export = _exports;
 }
 declare module "ace-code/src/ext/menu_tools/overlay_page" {
-    export function overlayPage(editor: any, contentElement: HTMLElement, callback?: any): {
+    export function overlayPage(editor: import("ace-code/src/editor").Editor, contentElement: HTMLElement, callback?: () => void): {
         close: () => void;
         setIgnoreFocusOut: (ignore: boolean) => void;
     };
@@ -396,7 +402,20 @@ declare module "ace-code/src/ext/modelist" {
      *  suggested mode.
      */
     export function getModeForPath(path: string): Mode;
+    /**
+     * Represents an array to store various syntax modes.
+     *
+     * 
+     */
     export var modes: Mode[];
+    /**
+     * An object that serves as a mapping of mode names to their corresponding mode data.
+     * The keys of this object are mode names (as strings), and the values are expected
+     * to represent data associated with each mode.
+     *
+     * This structure can be used for quick lookups of mode information by name.
+     * 
+     */
     export var modesByName: Record<string, Mode>;
     class Mode {
         constructor(name: string, caption: string, extensions: string);
@@ -433,6 +452,10 @@ declare module "ace-code/src/ext/themelist" {
     };
 }
 declare module "ace-code/src/ext/options" {
+    /**
+     * Option panel component for configuring settings or options.
+     * The panel is designed to integrate with an editor and render various UI controls based on provided configuration.
+     */
     export class OptionPanel {
         constructor(editor: Editor, element?: HTMLElement);
         editor: import("ace-code/src/editor").Editor;
@@ -733,8 +756,26 @@ declare module "ace-code/src/ext/prompt" {
      * */
     export function prompt(editor: Editor, message: string | Partial<PromptOptions>, options: Partial<PromptOptions>, callback?: Function): any;
     export namespace prompt {
+        /**
+         * Displays a "Go to Line" prompt for navigating to specific line and column positions with selection support.
+         *
+         * @param {Editor} editor - The editor instance to navigate within
+         */
         function gotoLine(editor: Editor, callback?: Function): void;
+        /**
+         * Displays a searchable command palette for executing editor commands with keyboard shortcuts and history.
+         *
+         * @param {Editor} editor - The editor instance to execute commands on
+         */
         function commands(editor: Editor, callback?: Function): void;
+        /**
+         * Shows an interactive prompt containing all available syntax highlighting modes
+         * that can be applied to the editor session. Users can type to filter through the modes list
+         * and select one to change the editor's syntax highlighting mode. The prompt includes real-time
+         * filtering based on mode names and captions.
+         *
+         * @param {Editor} editor - The editor instance to change the language mode for
+         */
         function modes(editor: Editor, callback?: Function): void;
     }
 }
@@ -767,7 +808,19 @@ declare module "ace-code/src/ext/static-css" {
     export = _exports;
 }
 declare module "ace-code/src/ext/static_highlight" {
-    function highlight(el: HTMLElement, opts: import("ace-code").Ace.StaticHighlightOptions, callback?: any): boolean;
+    /**
+     * Applies syntax highlighting to an HTML element containing code.
+     *
+     * Automatically detects the language from CSS class names (e.g., 'lang-javascript') or uses
+     * the specified mode. Transforms the element's content into syntax-highlighted HTML with
+     * CSS styling and preserves any existing child elements by repositioning them after highlighting.
+     *
+     * @param {HTMLElement} el - The HTML element containing code to highlight
+     * @param {import("ace-code").Ace.StaticHighlightOptions} opts - Highlighting options
+     * @param {function} [callback] - Optional callback executed after highlighting is complete
+     * @returns {boolean} Returns false if no valid mode is found, otherwise true
+     */
+    function highlight(el: HTMLElement, opts: import("ace-code").Ace.StaticHighlightOptions, callback?: Function): boolean;
     export namespace highlight {
         export { render, renderSync, highlight, SyntaxMode, Theme };
     }
