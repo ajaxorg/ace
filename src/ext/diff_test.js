@@ -4,7 +4,7 @@ var assert = require("../test/assertions");
 require("../test/mockdom");
 
 var {InlineDiffView} = require("./diff/inline_diff_view");
-var {SplitDiffView} = require("./diff/diff_view");
+var {SplitDiffView} = require("./diff/split_diff_view");
 const {createDiffView} = require("./diff");
 
 var diffView;

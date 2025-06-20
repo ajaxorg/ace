@@ -24,7 +24,7 @@
  */
 
 var InlineDiffView = require("./diff/inline_diff_view").InlineDiffView;
-var SplitDiffView = require("./diff/diff_view").SplitDiffView;
+var SplitDiffView = require("./diff/split_diff_view").SplitDiffView;
 var DiffProvider = require("./diff/providers/default").DiffProvider;
 
 /**

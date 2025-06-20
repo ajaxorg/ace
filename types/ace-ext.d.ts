@@ -274,7 +274,7 @@ declare module "ace-code/src/ext/diff/inline_diff_view" {
     }
     import { BaseDiffView } from "ace-code/src/ext/diff/base_diff_view";
 }
-declare module "ace-code/src/ext/diff/diff_view" {
+declare module "ace-code/src/ext/diff/split_diff_view" {
     export class SplitDiffView extends BaseDiffView {
         /**
          * Constructs a new side by side DiffView instance.
@@ -378,7 +378,7 @@ declare module "ace-code/src/ext/diff" {
         compute: (originalLines: string[], modifiedLines: string[], opts?: any) => import("ace-code/src/ext/diff/base_diff_view").DiffChunk[];
     };
     import { InlineDiffView } from "ace-code/src/ext/diff/inline_diff_view";
-    import { SplitDiffView } from "ace-code/src/ext/diff/diff_view";
+    import { SplitDiffView } from "ace-code/src/ext/diff/split_diff_view";
     import { DiffProvider } from "ace-code/src/ext/diff/providers/default";
     /**
      * Interface representing a model for handling differences between two views or states.
