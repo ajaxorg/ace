@@ -1,15 +1,26 @@
-/*jslint indent: 4, maxerr: 50, white: true, browser: true, vars: true*/
-/*global define, require */
-
 /**
- * Show Settings Menu
- * @fileOverview Show Settings Menu <br />
- * Displays an interactive settings menu mostly generated on the fly based on
- *  the current state of the editor.
+ * ## Interactive Settings Menu Extension
+ *
+ * Provides settings interface for the Ace editor that displays dynamically generated configuration options based on
+ * the current editor state. The menu appears as an overlay panel allowing users to modify editor options, themes,
+ * modes, and other settings through an intuitive graphical interface.
+ *
+ * **Usage:**
+ * ```javascript
+ * editor.showSettingsMenu();
+ * ```
+ *
+ * The extension automatically registers the `showSettingsMenu` command and method
+ * on the editor instance when initialized.
+ *
  * @author <a href="mailto:matthewkastor@gmail.com">
  *  Matthew Christopher Kastor-Inare III </a><br />
- *  ☭ Hial Atropa!! ☭
+ *
+ * @module
  */
+
+/*jslint indent: 4, maxerr: 50, white: true, browser: true, vars: true*/
+/*global define, require */
 
 "use strict";
 var OptionPanel = require("./options").OptionPanel;

@@ -574,6 +574,18 @@ module.exports = {
         assert.equal(editor.getSelectedText(), "");
         editor.textInput.getElement().dispatchEvent(e);
         assert.equal(editor.getSelectedText(), "123");
+    },
+    "test fold": function() {
+        editor = new Editor(new MockRenderer());
+        editor.session.setMode(new JavaScriptMode);
+        editor.session.setValue('"string"');
+        editor.execCommand("fold");
+        assert.equal(editor.session.getFoldLine(0), undefined);
+        editor.session.setValue('"string\\\nsecondline"');
+        editor.execCommand("fold");
+        assert.equal(editor.session.getFoldLine(0).end.row, 1);
+        editor.execCommand("unfold");
+        assert.equal(editor.session.getFoldLine(0), undefined);
     }
 };
 

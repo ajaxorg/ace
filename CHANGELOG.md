@@ -2,6 +2,42 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.42.1](https://github.com/ajaxorg/ace/compare/v1.42.0...v1.42.1) (2025-06-20)
+
+
+### Features
+
+* Add scroll diff decorators ([#5807](https://github.com/ajaxorg/ace/issues/5807)) ([b45e94c](https://github.com/ajaxorg/ace/commit/b45e94cb92d757b5f09ee0966a764ed0d245ed70))
+
+## [1.42.0](https://github.com/ajaxorg/ace/compare/v1.41.0...v1.42.0) (2025-06-03)
+
+
+### Features
+
+* update mouse selection at user's refresh rate ([#5717](https://github.com/ajaxorg/ace/issues/5717)) ([90d72fc](https://github.com/ajaxorg/ace/commit/90d72fc95ed2a3e35725a39fa2b88c2fe6d0a44c)), closes [#5716](https://github.com/ajaxorg/ace/issues/5716)
+
+
+### Bug Fixes
+
+* editor.completer would init on `enableBasicAutocompletion` option `true` ([#5756](https://github.com/ajaxorg/ace/issues/5756)) ([25a471a](https://github.com/ajaxorg/ace/commit/25a471a3ec0a7c657646a54d034709f0d3283f19))
+* missing type aliases and MarkerGroup in `ace-builds` ([#5782](https://github.com/ajaxorg/ace/issues/5782)) ([b20be1a](https://github.com/ajaxorg/ace/commit/b20be1a4591e1c566fdb0e205a75fa580885e7c6))
+
+### [1.40.2](https://github.com/ajaxorg/ace/compare/v1.40.1...v1.40.2) (2025-05-02)
+
+### [1.40.1](https://github.com/ajaxorg/ace/compare/v1.40.0...v1.40.1) (2025-04-23)
+
+
+### Bug Fixes
+
+* **gutter:** add null check for session.foldWdigets  ([#5801](https://github.com/ajaxorg/ace/issues/5801)) ([6ca40e9](https://github.com/ajaxorg/ace/commit/6ca40e93623ed1d4d04c8ce7ffb45186092c2198))
+
+## [1.40.0](https://github.com/ajaxorg/ace/compare/v1.39.1...v1.40.0) (2025-04-15)
+
+
+### Features
+
+* **gutter:** added keyboard handling for experimental feature custom widgets ([#5796](https://github.com/ajaxorg/ace/issues/5796)) ([8037400](https://github.com/ajaxorg/ace/commit/803740045ca73555b01116b582791fce940cbe00))
+
 ### [1.39.1](https://github.com/ajaxorg/ace/compare/v1.39.0...v1.39.1) (2025-03-20)
 
 

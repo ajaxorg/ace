@@ -337,6 +337,111 @@ module.exports = {
             }, 20);
         }, 20);
     },
+    "test: switching lanes with the custom widget should work" : function(done) {
+        var editor = this.editor;
+        var value = "x {" + "\n".repeat(50) + "}\n";
+        value = value.repeat(50);
+        editor.session.setMode(new Mode());
+        editor.setOption("enableKeyboardAccessibility", true);
+        editor.setValue(value, -1);
+        editor.session.setAnnotations([
+            {row: 1, column: 0, text: "error test", type: "error"},
+            {row: 2, column: 0, text: "warning test", type: "warning"}
+        ]);
+        editor.renderer.$loop._flush();
+
+        var lines = editor.renderer.$gutterLayer.$lines;
+
+        // Set focus to the gutter div.
+        editor.renderer.$gutter.focus();
+        assert.equal(document.activeElement, editor.renderer.$gutter);
+
+        editor.renderer.$gutterLayer.$addCustomWidget(1, {
+            className: "ace_users_css",
+            label: "Open_label",
+            title: "Open_title",
+        });
+
+        // Focus on the annotation.
+        emit(keys["enter"]);
+        
+        setTimeout(function() {
+            emit(keys["left"]);
+            assert.equal(document.activeElement, lines.cells[1].element.childNodes[2]);
+
+            // Click annotation.
+            emit(keys["enter"]);
+            
+            setTimeout(function() {
+                // Check annotation is rendered.
+                editor.renderer.$loop._flush();
+                var tooltip = editor.container.querySelector(".ace_gutter-tooltip");
+                assert.ok(/error test/.test(tooltip.textContent));
+
+                // Press escape to dismiss the tooltip.
+                emit(keys["escape"]);
+
+                // Switch lane move to custom widget 
+                emit(keys["right"]);
+                assert.equal(document.activeElement, lines.cells[1].element.childNodes[3]);
+
+                // Move back to the annotations, focus should be on the annotation on line 1.
+                emit(keys["left"]);
+                assert.equal(document.activeElement, lines.cells[1].element.childNodes[2]);    
+                done();
+            }, 20);
+        }, 20);
+    }, "test: moving up and down to custom widget and checking onclick callback as well" : function(done) {
+        var editor = this.editor;
+        var value = "\n x {" + "\n".repeat(5) + "}\n";
+        value = value.repeat(50);
+        editor.session.setMode(new Mode());
+        editor.setValue(value, -1);
+        editor.setOption("enableKeyboardAccessibility", true);
+        editor.renderer.$loop._flush();
+
+        var lines = editor.renderer.$gutterLayer.$lines;
+  
+        // Set focus to the gutter div.
+        editor.renderer.$gutter.focus();
+        assert.equal(document.activeElement, editor.renderer.$gutter);
+
+        assert.equal(lines.cells[2].element.textContent, "3");
+
+        let firstCallbackCalledCount=0;
+        const firstCallback = (e) =>{ 
+            firstCallbackCalledCount++;
+            e.stopPropagation();
+        };
+
+        editor.renderer.$gutterLayer.$addCustomWidget(2, {
+            className: "ace_users_css",
+            label: "Open_label",
+            title: "Open_title",
+            callbacks: {
+                onClick: firstCallback
+            }
+        });
+
+        // Focus on the fold widgets.
+        emit(keys["enter"]);
+
+        setTimeout(function() {
+            assert.equal(document.activeElement, lines.cells[1].element.childNodes[1]);
+
+            // Move down to the custom widget.
+            emit(keys["down"]);
+            assert.equal(document.activeElement, lines.cells[2].element.childNodes[3]);
+
+            emit(keys["enter"]);
+            assert.equal(firstCallbackCalledCount,1);
+            
+            // Move up to the previous fold widget.
+            emit(keys["up"]);
+            assert.equal(document.activeElement, lines.cells[1].element.childNodes[1]);
+            done();
+        }, 20);
+    },    
     
     tearDown : function() {
         this.editor.destroy();

@@ -37,8 +37,8 @@ class SearchHighlight {
         var start = config.firstRow;
         var end = config.lastRow;
         var renderedMarkerRanges = {};
-        var _search = session.$editor.$search;
-        var mtSearch = _search.$isMultilineSearch(session.$editor.getLastSearchOptions());
+        var _search = session.$editor && session.$editor.$search;
+        var mtSearch = _search && _search.$isMultilineSearch(session.$editor.getLastSearchOptions());
 
         for (var i = start; i <= end; i++) {
             var ranges = this.cache[i];

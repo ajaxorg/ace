@@ -1,3 +1,13 @@
+/**
+ * ## Emmet extension
+ *
+ * Providing HTML/CSS abbreviation expansion, code navigation, and text editing utilities with configurable options and
+ * keyboard shortcuts for rapid web development workflow.
+ *
+ * **Enable:** `editor.setOption("enableEmmet", true)`
+ * or configure it during editor initialization in the options object.
+ * @module
+ */
 "use strict";
 var HashHandler = require("../keyboard/hash_handler").HashHandler;
 var Editor = require("../editor").Editor;
@@ -322,9 +332,12 @@ var keymap = {
 
 var editorProxy = new AceEmmetEditor();
 exports.commands = new HashHandler();
+
 /**
- * @param {Editor} editor
- * @return {ReturnType<typeof setTimeout> | boolean}
+ * Runs an Emmet command on the given editor.
+ *
+ * @param {Editor} editor - The Ace editor instance to run the Emmet command on
+ * @return {ReturnType<typeof setTimeout> | boolean} The result of the Emmet command execution
  */
 exports.runEmmetCommand = function runEmmetCommand(editor) {
     if (this.action == "expand_abbreviation_with_tab") {
@@ -372,8 +385,10 @@ for (var command in keymap) {
 }
 
 /**
- * @param {Editor} editor
- * @param {boolean} [enabled]
+ * Updates the keyboard handler for Emmet commands in the editor.
+ *
+ * @param {Editor} editor - The Ace editor instance
+ * @param {boolean} [enabled] - Whether Emmet commands should be enabled
  */
 exports.updateCommands = function(editor, enabled) {
     if (enabled) {
@@ -383,6 +398,12 @@ exports.updateCommands = function(editor, enabled) {
     }
 };
 
+/**
+ * Determines if a given editor mode is supported by Emmet.
+ *
+ * @param {Object|string} mode - The editor mode to check for Emmet support
+ * @returns {boolean} Whether the mode is supported by Emmet
+ */
 exports.isSupportedMode = function(mode) {
     if (!mode) return false;
     if (mode.emmetConfig) return true;
@@ -391,9 +412,11 @@ exports.isSupportedMode = function(mode) {
 };
 
 /**
- * @param {Editor} editor
- * @param {string} command
- * @return {boolean}
+ * Checks if an Emmet command is available for the current editor context.
+ *
+ * @param {Editor} editor - The current Ace editor instance
+ * @param {string} command - The Emmet command to check availability for
+ * @return {boolean} Whether the command is available in the current editor mode
  */
 exports.isAvailable = function(editor, command) {
     if (/(evaluate_math_expression|expand_abbreviation)$/.test(command))
@@ -423,6 +446,12 @@ var onChangeMode = function(e, target) {
     exports.updateCommands(editor, enabled);
 };
 
+/**
+ * Loads the Emmet core module dynamically.
+ *
+ * @param {Function} [cb] - Optional callback function to be executed after module loading
+ * @return {boolean} Whether the Emmet core module loading was initiated successfully
+ */
 exports.load = function(cb) {
     if (typeof emmetPath !== "string") {
         config.warn("script for emmet-core is not loaded");
@@ -446,6 +475,13 @@ config.defineOptions(Editor.prototype, "editor", {
     }
 });
 
+/**
+ * Sets the Emmet core module or path.
+ *
+ * @param {string|Object} e - Either the path to the Emmet core script or the Emmet core module itself
+ * If a string is provided, it sets the path to load the Emmet core script.
+ * If an object is provided, it directly sets the Emmet core module.
+ */
 exports.setCore = function(e) {
     if (typeof e == "string")
        emmetPath = e;

@@ -49,7 +49,9 @@ exports.createSplitEditor = function(el) {
     var split = {$container: el};
 
     split.editor0 = split[0] = new Editor(new Renderer(e0));
+    split.editor0.session.setUndoManager(new UndoManager());
     split.editor1 = split[1] = new Editor(new Renderer(e1));
+    split.editor1.session.setUndoManager(new UndoManager());
     split.splitter = s;
 
     s.ratio = 0.5;

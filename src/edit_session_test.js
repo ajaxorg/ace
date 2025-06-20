@@ -496,6 +496,31 @@ module.exports = {
         assert.equal(session.$foldData[3].range.start.row, 12);
         editor.execCommand("unfoldall");
         assert.equal(session.$foldData.length, 0);
+
+        editor.execCommand("foldall");
+        assert.equal(session.$foldData.length, 4);
+        assert.equal(session.$foldData[1].range.start.row, 3);
+
+        // fold function arguments
+        editor.selection.moveTo(3, 13);
+        editor.execCommand("fold");
+        assert.equal(editor.session.getAllFolds().length, 5);
+        assert.equal(session.$foldData[1].range.start.row, 3);
+        
+        // unfold function arguments
+        editor.execCommand("unfold");
+        assert.equal(editor.session.getAllFolds().length, 4);
+        assert.equal(session.$foldData[1].range.start.row, 3);
+        
+        // unfold function
+        editor.execCommand("unfold");
+        assert.equal(session.$foldData.length, 4);
+        assert.equal(session.$foldData[1].range.start.row, 4);
+
+        // check that calling unfold without folds does not add folds
+        editor.execCommand("unfold");
+        assert.equal(session.$foldData.length, 4);
+        assert.equal(session.$foldData[1].range.start.row, 4);
     },
 
     "test setting undefined value": function() {

@@ -207,6 +207,14 @@ declare module "ace-code/src/mode/clojure" {
     export const Mode: new () => import("ace-code").Ace.SyntaxMode;
 }
 
+declare module "ace-code/src/mode/clue_highlight_rules" {
+    export const ClueHighlightRules: new () => import("ace-code").Ace.HighlightRules;
+}
+
+declare module "ace-code/src/mode/clue" {
+    export const Mode: new () => import("ace-code").Ace.SyntaxMode;
+}
+
 declare module "ace-code/src/mode/cobol_highlight_rules" {
     export const CobolHighlightRules: new () => import("ace-code").Ace.HighlightRules;
 }
@@ -505,6 +513,10 @@ declare module "ace-code/src/mode/folding/markdown" {
 }
 
 declare module "ace-code/src/mode/folding/mixed" {
+    export const FoldMode: new () => import("ace-code").Ace.Folding;
+}
+
+declare module "ace-code/src/mode/folding/nunjucks" {
     export const FoldMode: new () => import("ace-code").Ace.Folding;
 }
 
