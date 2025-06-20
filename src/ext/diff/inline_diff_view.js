@@ -392,6 +392,11 @@ class InlineDiffView extends BaseDiffView {
         this.markerLayer.setMarkers(this.otherSession.getMarkers());
         this.markerLayer.update(newConfig);
     }
+
+    detach() {
+        super.detach();
+        this.otherEditor && this.otherEditor.destroy();
+    }
 }
 
 exports.InlineDiffView = InlineDiffView;

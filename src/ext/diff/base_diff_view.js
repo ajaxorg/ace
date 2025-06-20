@@ -355,6 +355,9 @@ class BaseDiffView {
             if (!editor) {
                 return;
             }
+            if (typeof editor.renderer.$scrollDecorator.addZone !== "function") {
+                return;
+            }
             if (change.old.start.row != change.old.end.row) {
                 editor.renderer.$scrollDecorator.addZone(change.old.start.row, change.old.end.row - 1, "delete");
             }
@@ -590,8 +593,6 @@ class BaseDiffView {
         if (this.savedOptionsB &&this.savedOptionsB.customScrollbar) {
             this.$resetDecorators(this.editorB.renderer);
         }
-
-        this.editorA = this.editorB = null;
         
     }
 
@@ -614,6 +615,7 @@ class BaseDiffView {
         this.detach();
         this.editorA && this.editorA.destroy();
         this.editorB && this.editorB.destroy();
+        this.editorA = this.editorB = null;
     }
 
     gotoNext(dir) {

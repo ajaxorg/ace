@@ -428,6 +428,12 @@ module.exports = {
             assertDecoratorsPlacement(editorA, true);
             done();
         }, 0);
+    },
+    "test: second editor destroyed on detach in inline diff view": function() {
+        diffView = new InlineDiffView({ editorA, inline: "a" });
+        assert.ok(Array.isArray(diffView.otherEditor.$toDestroy));
+        diffView.detach();
+        assert.ok(diffView.otherEditor.$toDestroy == undefined);
     }
 };
 

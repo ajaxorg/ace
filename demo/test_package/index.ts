@@ -169,3 +169,5 @@ var diffView = createDiffView({
 }, diffViewOptions);
 
 diffView.setProvider(new DiffProvider());
+
+diffView.destroy();
