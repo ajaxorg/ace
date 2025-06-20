@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.42.1](https://github.com/ajaxorg/ace/compare/v1.42.0...v1.42.1) (2025-06-20)
+
+
+### Features
+
+* Add scroll diff decorators ([#5807](https://github.com/ajaxorg/ace/issues/5807)) ([b45e94c](https://github.com/ajaxorg/ace/commit/b45e94cb92d757b5f09ee0966a764ed0d245ed70))
+
 ## [1.42.0](https://github.com/ajaxorg/ace/compare/v1.41.0...v1.42.0) (2025-06-03)
 
 
