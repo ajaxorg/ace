@@ -1,3 +1,15 @@
+/**
+ * ## Static syntax highlighting extension for code-to-HTML conversion
+ *
+ * Transforms code snippets into syntax-highlighted HTML with CSS styling without requiring a live editor instance.
+ * Uses a simplified DOM implementation to generate standalone HTML output suitable for static content generation,
+ * documentation, code export, and embedding highlighted code in web pages. Supports automatic language detection
+ * from CSS classes and custom modes/themes.
+ *
+ * @module
+ */
+
+
 "use strict";
 /**
  * @typedef {import("../../ace-internal").Ace.SyntaxMode} SyntaxMode
@@ -80,11 +92,16 @@ var SimpleTextLayer = function() {
 SimpleTextLayer.prototype = TextLayer.prototype;
 
 /**
+ * Applies syntax highlighting to an HTML element containing code.
  *
- * @param {HTMLElement} el
- * @param {import("../../ace-internal").Ace.StaticHighlightOptions} opts
- * @param [callback]
- * @returns {boolean}
+ * Automatically detects the language from CSS class names (e.g., 'lang-javascript') or uses
+ * the specified mode. Transforms the element's content into syntax-highlighted HTML with
+ * CSS styling and preserves any existing child elements by repositioning them after highlighting.
+ *
+ * @param {HTMLElement} el - The HTML element containing code to highlight
+ * @param {import("../../ace-internal").Ace.StaticHighlightOptions} opts - Highlighting options
+ * @param {function} [callback] - Optional callback executed after highlighting is complete
+ * @returns {boolean} Returns false if no valid mode is found, otherwise true
  */
 var highlight = function(el, opts, callback) {
     var m = el.className.match(/lang-(\w+)/);

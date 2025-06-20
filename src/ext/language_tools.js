@@ -1,3 +1,29 @@
+/**
+ * ## Language Tools extension for Ace Editor
+ *
+ * Provides autocompletion, snippets, and language intelligence features for the Ace code editor.
+ * This extension integrates multiple completion providers including keyword completion, snippet expansion,
+ * and text-based completion to enhance the coding experience with contextual suggestions and automated code generation.
+ *
+ * **Configuration Options:**
+ * - `enableBasicAutocompletion`: Enable/disable basic completion functionality
+ * - `enableLiveAutocompletion`: Enable/disable real-time completion suggestions
+ * - `enableSnippets`: Enable/disable snippet expansion with Tab key
+ * - `liveAutocompletionDelay`: Delay before showing live completion popup
+ * - `liveAutocompletionThreshold`: Minimum prefix length to trigger completion
+ *
+ * **Usage:**
+ * ```javascript
+ * editor.setOptions({
+ *   enableBasicAutocompletion: true,
+ *   enableLiveAutocompletion: true,
+ *   enableSnippets: true
+ * });
+ * ```
+ *
+ * @module
+ */
+
 "use strict";
 /**@type{import("../snippets").snippetManager & {files?: {[key: string]: any}}}*/
 var snippetManager = require("../snippets").snippetManager;
@@ -77,11 +103,21 @@ var snippetCompleter = {
 };
 
 var completers = [snippetCompleter, textCompleter, keyWordCompleter];
-// Modifies list of default completers
+/**
+ * Replaces the default list of completers with a new set of completers.
+ *
+ * @param {import("../../ace-internal").Ace.Completer[]} [val]
+ *
+ */
 exports.setCompleters = function(val) {
     completers.length = 0;
     if (val) completers.push.apply(completers, val);
 };
+/**
+ * Adds a new completer to the list of available completers.
+ *
+ * @param {import("../../ace-internal").Ace.Completer} completer - The completer object to be added to the completers array.
+ */
 exports.addCompleter = function(completer) {
     completers.push(completer);
 };

@@ -338,14 +338,14 @@ class BaseDiffView {
             if (!this.activeEditor) {
                 return;
             }
-            this.activeEditor.renderer.$scrollDecorator.zones = [];
+            this.activeEditor.renderer.$scrollDecorator.$zones = [];
         }
         else {
             if (!this.editorA || !this.editorB) {
                 return;
             }
-            this.editorA.renderer.$scrollDecorator.zones = [];
-            this.editorB.renderer.$scrollDecorator.zones = [];
+            this.editorA.renderer.$scrollDecorator.$zones = [];
+            this.editorB.renderer.$scrollDecorator.$zones = [];
         }
 
         /**

@@ -1,3 +1,13 @@
+/**
+ * ## Whitespace management and indentation utilities extension
+ *
+ * Provides whitespace handling capabilities including automatic indentation detection, trailing whitespace trimming,
+ * and indentation format conversion. Analyzes code patterns to determine optimal tab settings and offers commands for
+ * maintaining consistent code formatting across different indentation styles (spaces vs. tabs) and sizes.
+ *
+ * @module
+ */
+
 "use strict";
 
 /**
@@ -86,8 +96,10 @@ exports.$detectIndentation = function(lines, fallback) {
 };
 
 /**
- * @param {EditSession} session
- * @returns {{ch?: string, length?: number}|{}}
+ * Detects the indentation style of a document and configures the session accordingly.
+ *
+ * @param {EditSession} session The editing session to analyze and configure
+ * @returns {{ch?: string, length?: number}|{}} An object containing detected indentation details (character and length)
  */
 exports.detectIndentation = function(session) {
     var lines = session.getLines(0, 1000);
@@ -102,6 +114,7 @@ exports.detectIndentation = function(session) {
 };
 
 /**
+ * Removes trailing whitespace from all lines in the session.
  * @param {EditSession} session
  * @param {Object} options
  * @param {boolean} [options.trimEmpty] trim empty lines too
@@ -145,6 +158,7 @@ exports.trimTrailingSpace = function(session, options) {
 };
 
 /**
+ * Converts indentation format throughout the session to use specified character and size.
  * @param {EditSession} session
  * @param {string} ch
  * @param {number} len

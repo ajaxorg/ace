@@ -40,8 +40,8 @@ declare module "ace-code" {
         type GutterKeyboardEvent = import("ace-code/src/keyboard/gutter_handler").GutterKeyboardEvent;
         type HoverTooltip = import("ace-code/src/tooltip").HoverTooltip;
         type Tooltip = import("ace-code/src/tooltip").Tooltip;
+        type PopupManager = import("ace-code/src/tooltip").PopupManager;
         type TextInput = import("ace-code/src/keyboard/textinput").TextInput;
-        type DiffChunk = import("ace-code/src/ext/diff/base_diff_view").DiffChunk;
         type AfterLoadCallback = (err: Error | null, module: unknown) => void;
         type LoaderFunction = (moduleName: string, afterLoad: AfterLoadCallback) => void;
         export interface ConfigOptions {
@@ -86,9 +86,13 @@ declare module "ace-code" {
             gutterOffset: number;
         }
         interface HardWrapOptions {
+            /** First row of the range to process */
             startRow: number;
+            /** Last row of the range to process */
             endRow: number;
+            /** Whether to merge short adjacent lines that fit within the limit */
             allowMerge?: boolean;
+            /** Maximum column width for line wrapping (defaults to editor's print margin) */
             column?: number;
         }
         interface CommandBarOptions {
@@ -778,15 +782,25 @@ declare module "ace-code" {
         };
         type CompleterCallback = (error: any, completions: Completion[]) => void;
         interface Completer {
+            /** Regular expressions defining valid identifier characters for completion triggers */
             identifierRegexps?: Array<RegExp>;
+            /** Main completion method that provides suggestions for the given context */
             getCompletions(editor: Editor, session: EditSession, position: Point, prefix: string, callback: CompleterCallback): void;
+            /** Returns documentation tooltip for a completion item */
             getDocTooltip?(item: Completion): void | string | Completion;
+            /** Called when a completion item becomes visible */
             onSeen?: (editor: Ace.Editor, completion: Completion) => void;
+            /** Called when a completion item is inserted */
             onInsert?: (editor: Ace.Editor, completion: Completion) => void;
+            /** Cleanup method called when completion is cancelled */
             cancel?(): void;
+            /** Unique identifier for this completer */
             id?: string;
+            /** Characters that trigger autocompletion when typed */
             triggerCharacters?: string[];
+            /** Whether to hide inline preview text */
             hideInlinePreview?: boolean;
+            /** Custom insertion handler for completion items */
             insertMatch?: (editor: Editor, data: Completion) => void;
         }
         interface CompletionOptions {
@@ -985,10 +999,15 @@ declare module "ace-code" {
             value: string;
         }>>;
         export interface StaticHighlightOptions {
+            /** Syntax mode (e.g., 'ace/mode/javascript'). Auto-detected from CSS class if not provided */
             mode?: string | SyntaxMode;
+            /** Color theme (e.g., 'ace/theme/textmate'). Defaults to 'ace/theme/textmate' */
             theme?: string | Theme;
+            /** Whether to trim whitespace from code content */
             trim?: boolean;
+            /** Starting line number for display */
             firstLineNumber?: number;
+            /** Whether to show line numbers gutter */
             showGutter?: boolean;
         }
         export interface Operation {
@@ -1031,51 +1050,25 @@ declare module "ace-code" {
             setLabel?: boolean;
             inline?: boolean;
         }
-        /**
-         * Interface representing a model for handling differences between two views or states.
-         */
-        export interface DiffModel {
-            /** The editor for the original view. */
-            editorA?: Editor;
-            /** The editor for the edited view. */
-            editorB?: Editor;
-            /** The edit session for the original view. */
-            sessionA?: EditSession;
-            /** The edit session for the edited view. */
-            sessionB?: EditSession;
-            /** The original content. */
-            valueA?: string;
-            /** The modified content. */
-            valueB?: string;
-            /** Whether to show the original view("a") or modified view("b") for inline diff view */
-            inline?: "a" | "b";
-            /** Provider for computing differences between original and modified content. */
-            diffProvider?: DiffProvider;
-        }
-        export interface DiffViewOptions {
-            /**
-             * Whether to show line numbers in the other editor's gutter
-             * @default true
-             */
-            showOtherLineNumbers?: boolean;
-            /** Whether to enable code folding widgets */
-            folding?: boolean;
-            /** Whether to synchronize selections between both editors */
-            syncSelections?: boolean;
-            /** Whether to ignore trimmed whitespace when computing diffs */
-            ignoreTrimWhitespace?: boolean;
-            /** Whether to enable word wrapping in both editors */
-            wrap?: boolean;
-            /**
-             * Maximum number of diffs to compute before failing silently
-             * @default 5000
-             */
-            maxDiffs?: number;
-            /** Theme to apply to both editors */
-            theme?: string | Theme;
-        }
-        export interface DiffProvider {
-            compute(originalLines: string[], modifiedLines: string[], opts?: any): DiffChunk[];
+        export interface TextAreaOptions {
+            /** Programming language mode for syntax highlighting (e.g., "javascript", "html", "css") */
+            mode?: string;
+            /** Visual theme for the editor appearance (e.g., "textmate", "monokai", "eclipse") */
+            theme?: string;
+            /** Line wrapping behavior - "off", "free", or specific column number like "40", "80" */
+            wrap?: string | number;
+            /** Font size in CSS units (e.g., "12px", "14px", "16px") */
+            fontSize?: string;
+            /** Whether to display the line number gutter on the left side */
+            showGutter?: boolean | string;
+            /** Keyboard handler/bindings to use - "ace", "vim", or "emacs" */
+            keybindings?: string;
+            /** Whether to show the print margin indicator line */
+            showPrintMargin?: boolean | string;
+            /** Whether to use soft tabs (spaces) instead of hard tabs */
+            useSoftTabs?: boolean | string;
+            /** Whether to show invisible characters like spaces and tabs */
+            showInvisibles?: boolean | string;
         }
     }
     export const config: typeof import("ace-code/src/config");

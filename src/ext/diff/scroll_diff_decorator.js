@@ -41,6 +41,9 @@ class ScrollDiffDecorator extends Decorator {
     }
 
     $updateDecorators(config) {
+        if (typeof this.canvas.getContext !== "function") {
+            return;
+        }
         super.$updateDecorators(config);
         if (this.$zones.length > 0) {
             var colors = (this.renderer.theme.isDark === true) ? this.colors.dark : this.colors.light;
