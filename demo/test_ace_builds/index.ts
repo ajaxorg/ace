@@ -6,11 +6,14 @@ import "../../src/test/mockdom.js";
 var HoverTooltip = ace.require("ace/tooltip").HoverTooltip;
 import "ace-builds/src-noconflict/mode-javascript";
 import "ace-builds/src-noconflict/theme-monokai";
+import {DiffViewOptions } from "ace-builds/src-noconflict/ext-diff";
+import "ace-builds/src-noconflict/ext-diff";
+const diff = ace.require("ace/ext/diff");
 
 const MarkerGroup = ace.require("ace/marker_group").MarkerGroup;
 const MouseEvent = ace.require("ace/mouse/mouse_event").MouseEvent;
 var Tooltip = ace.require("ace/tooltip").Tooltip;
-var popupManager: Ace.PopupManager = ace.require("ace/tooltip").popupManager;
+var popupManager = ace.require("ace/tooltip").popupManager;
 
 const editor = ace.edit(null); // should not be an error
 editor.setTheme("ace/theme/monokai");
@@ -64,3 +67,17 @@ tooltip.show('hello');
 popupManager.addPopup(tooltip);
 
 editor.destroy && editor.destroy();
+
+const diffViewOptions: DiffViewOptions =  {
+    maxDiffs: 1000,
+    folding: true
+}
+
+var diffView = diff.createDiffView({
+    valueB: "test",
+    inline: "b"
+}, diffViewOptions);
+
+diffView.setProvider(new diff.DiffProvider());
+
+diffView.destroy();

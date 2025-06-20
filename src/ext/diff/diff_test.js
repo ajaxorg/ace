@@ -4,7 +4,7 @@ var assert = require("../../test/assertions");
 require("../../test/mockdom");
 
 var {InlineDiffView} = require("./inline_diff_view");
-var {DiffView} = require("./diff_view");
+var {SplitDiffView} = require("./split_diff_view");
 var {DiffProvider} = require("./providers/default");
 
 var ace = require("../../ace");
@@ -167,7 +167,7 @@ module.exports = {
 
         var diffView = new InlineDiffView({
             editorA, editorB,
-            showSideA: true,
+            inline: "a",
             diffProvider,
         });
         editorA.session.addFold("---", new Range(0, 0, 2, 0));
@@ -182,7 +182,7 @@ module.exports = {
         sessionB.widgetManager.attach(editorB);
         checkEventRegistry();
 
-        diffView = new DiffView({editorA, editorB, diffProvider});
+        diffView = new SplitDiffView({editorA, editorB, diffProvider});
         editorB.session.addFold("---", new Range(5, 0, 7, 0));
         editorB.renderer.$loop._flush();
         editorA.renderer.$loop._flush();
@@ -206,7 +206,7 @@ module.exports = {
 
         var diffView = new InlineDiffView({
             editorB, valueA: editorA.getValue(),
-            showSideB: true,
+            inline: "b",
             diffProvider,
         });
 
@@ -226,7 +226,7 @@ module.exports = {
         diffView = new InlineDiffView({
             valueA,
             valueB,
-            showSideA: true,
+            inline: "a",
             diffProvider,
         }, document.body);
         setEditorPosition(diffView.editorA);
@@ -241,7 +241,7 @@ module.exports = {
         assert.equal(diffView.editorA.renderer.layerConfig.offset, 0.5 * lineHeight);
         diffView.detach();
 
-        diffView = new DiffView({
+        diffView = new SplitDiffView({
             valueA,
             valueB,
             diffProvider,
@@ -257,7 +257,7 @@ module.exports = {
         diffView = new InlineDiffView({
             valueA,
             valueB,
-            showSideA: false,
+            inline: "b",
         }, document.body);
         setEditorPosition(diffView.editorB);
         diffView.onInput();
@@ -274,7 +274,7 @@ module.exports = {
         editorA.session.setValue(valueA);
         editorB.session.setValue(valueB);
 
-        diffView = new DiffView({
+        diffView = new SplitDiffView({
             editorA, editorB,
             diffProvider,
         });
@@ -316,7 +316,7 @@ module.exports = {
         editorA.session.setValue("a\n");
         editorB.session.setValue("\n\na\n\n");
 
-        diffView = new DiffView({
+        diffView = new SplitDiffView({
             editorA, editorB,
             diffProvider,
         });
@@ -334,7 +334,7 @@ module.exports = {
         editorA.session.setValue(getValueA(longLinesDiff));
         editorB.session.setValue(getValueB(longLinesDiff));
 
-        diffView = new DiffView({
+        diffView = new SplitDiffView({
             editorA, editorB,
             diffProvider,
         });
@@ -360,7 +360,7 @@ module.exports = {
 
         diffView = new InlineDiffView({
             editorA, editorB,
-            showSideA: true,
+            inline: "a",
             diffProvider,
         });
         diffView.onInput();
@@ -401,7 +401,7 @@ module.exports = {
         editorA.session.setValue(["a", "b", "c"].join("\n"));
         editorB.session.setValue(["a", "c", "X"].join("\n"));
 
-        diffView = new DiffView({ editorA, editorB });
+        diffView = new SplitDiffView({ editorA, editorB });
         diffView.setProvider(new DiffProvider());
         diffView.onInput();
 
@@ -418,7 +418,7 @@ module.exports = {
         editorA.session.setValue(["a", "b", "c"].join("\n"));
         editorB.session.setValue(["a", "c", "X"].join("\n"));
 
-        diffView = new InlineDiffView({ editorA, editorB, showSideA: true });
+        diffView = new InlineDiffView({ editorA, editorB, inline: "a" });
         diffView.setProvider(new DiffProvider());
         diffView.onInput();
 
@@ -428,6 +428,12 @@ module.exports = {
             assertDecoratorsPlacement(editorA, true);
             done();
         }, 0);
+    },
+    "test: second editor destroyed on detach in inline diff view": function() {
+        diffView = new InlineDiffView({ editorA, inline: "a" });
+        assert.ok(Array.isArray(diffView.otherEditor.$toDestroy));
+        diffView.detach();
+        assert.ok(diffView.otherEditor.$toDestroy == undefined);
     }
 };
 
