@@ -247,6 +247,53 @@ declare module "ace-code/src/ext/diff/gutter_decorator" {
         dispose(): void;
     }
 }
+declare module "ace-code/src/ext/diff/inline_diff_view" {
+    export class InlineDiffView extends BaseDiffView {
+        /**
+         * Constructs a new inline DiffView instance.
+         * @param {import("ace-code/src/diff").DiffModel} [diffModel] - The model for the diff view.
+         * @param {HTMLElement} [container] - optional container element for the DiffView.
+         */
+        constructor(diffModel?: import("ace-code/src/ext/diff").DiffModel, container?: HTMLElement);
+        init(diffModel: any): void;
+        onAfterRender(changes: number, renderer: import("ace-code").VirtualRenderer): void;
+        textLayer: any;
+        markerLayer: any;
+        gutterLayer: any;
+        cursorLayer: any;
+        initRenderer(restore: any): void;
+        initTextLayer(): void;
+        initTextInput(restore: any): void;
+        othertextInput: any;
+        otherEditorContainer: any;
+        selectEditor(editor: any): void;
+        removeBracketHighlight(editor: any): void;
+        initMouse(): void;
+        onMouseDetach: () => void;
+        onChangeWrapLimit(): void;
+    }
+    import { BaseDiffView } from "ace-code/src/ext/diff/base_diff_view";
+}
+declare module "ace-code/src/ext/diff/diff_view" {
+    export class SplitDiffView extends BaseDiffView {
+        /**
+         * Constructs a new side by side DiffView instance.
+         *
+         * @param {import("ace-code/src/diff").DiffModel} [diffModel] - The model for the diff view.
+         */
+        constructor(diffModel?: import("ace-code/src/ext/diff").DiffModel);
+        init(diffModel: any): void;
+        onMouseWheel(ev: any): any;
+        onScroll(e: any, session: any): void;
+        onChangeWrapLimit(): void;
+        syncScroll(renderer: import("ace-code/src/virtual_renderer").VirtualRenderer): void;
+        scrollA: any;
+        scrollB: any;
+        scrollSetBy: any;
+        scrollSetAt: number;
+    }
+    import { BaseDiffView } from "ace-code/src/ext/diff/base_diff_view";
+}
 declare module "ace-code/src/ext/diff/providers/default" {
     export function computeDiff(originalLines: any, modifiedLines: any, options: any): any;
     /**
@@ -255,6 +302,115 @@ declare module "ace-code/src/ext/diff/providers/default" {
     export class DiffProvider {
         compute(originalLines: any, modifiedLines: any, opts: any): any;
     }
+}
+declare module "ace-code/src/ext/diff" {
+    /**
+     * Interface representing a model for handling differences between two views or states.
+     */
+    export type DiffModel = {
+        /**
+         * - The editor for the original view.
+         */
+        editorA?: import("ace-code/src/editor").Editor;
+        /**
+         * - The editor for the edited view.
+         */
+        editorB?: import("ace-code/src/editor").Editor;
+        /**
+         * - The edit session for the original view.
+         */
+        sessionA?: import("ace-code/src/edit_session").EditSession;
+        /**
+         * - The edit session for the edited view.
+         */
+        sessionB?: import("ace-code/src/edit_session").EditSession;
+        /**
+         * - The original content.
+         */
+        valueA?: string;
+        /**
+         * - The modified content.
+         */
+        valueB?: string;
+        /**
+         * - Whether to show the original view("a") or modified view("b") for inline diff view
+         */
+        inline?: "a" | "b";
+        /**
+         * - Provider for computing differences between original and modified content.
+         */
+        diffProvider?: IDiffProvider;
+    };
+    export type DiffViewOptions = {
+        /**
+         * - Whether to show line numbers in the other editor's gutter
+         */
+        showOtherLineNumbers?: boolean;
+        /**
+         * - Whether to enable code folding widgets
+         */
+        folding?: boolean;
+        /**
+         * - Whether to synchronize selections between both editors
+         */
+        syncSelections?: boolean;
+        /**
+         * - Whether to ignore trimmed whitespace when computing diffs
+         */
+        ignoreTrimWhitespace?: boolean;
+        /**
+         * - Whether to enable word wrapping in both editors
+         */
+        wrap?: boolean;
+        /**
+         * - Maximum number of diffs to compute before failing silently
+         */
+        maxDiffs?: number;
+        /**
+         * - Theme to apply to both editors
+         */
+        theme?: string | import("ace-code").Ace.Theme;
+    };
+    export type IDiffProvider = {
+        /**
+         * - Computes differences between original and modified lines
+         */
+        compute: (originalLines: string[], modifiedLines: string[], opts?: any) => import("ace-code/src/ext/diff/base_diff_view").DiffChunk[];
+    };
+    import { InlineDiffView } from "ace-code/src/ext/diff/inline_diff_view";
+    import { SplitDiffView } from "ace-code/src/ext/diff/diff_view";
+    import { DiffProvider } from "ace-code/src/ext/diff/providers/default";
+    /**
+     * Interface representing a model for handling differences between two views or states.
+     * @property {import("ace-code/src/editor").Editor} [editorA] - The editor for the original view.
+     * @property {import("ace-code/src/editor").Editor} [editorB] - The editor for the edited view.
+     * @property {import("ace-code/src/edit_session").EditSession} [sessionA] - The edit session for the original view.
+     * @property {import("ace-code/src/edit_session").EditSession} [sessionB] - The edit session for the edited view.
+     * @property {string} [valueA] - The original content.
+     * @property {string} [valueB] - The modified content.
+     * @property {"a"|"b"} [inline] - Whether to show the original view("a") or modified view("b") for inline diff view
+     * @property {IDiffProvider} [diffProvider] - Provider for computing differences between original and modified content.
+     */
+    /**
+     * @property {boolean} [showOtherLineNumbers=true] - Whether to show line numbers in the other editor's gutter
+     * @property {boolean} [folding] - Whether to enable code folding widgets
+     * @property {boolean} [syncSelections] - Whether to synchronize selections between both editors
+     * @property {boolean} [ignoreTrimWhitespace] - Whether to ignore trimmed whitespace when computing diffs
+     * @property {boolean} [wrap] - Whether to enable word wrapping in both editors
+     * @property {number} [maxDiffs=5000] - Maximum number of diffs to compute before failing silently
+     * @property {string|import("ace-code").Ace.Theme} [theme] - Theme to apply to both editors
+     */
+    /**
+     * @property {(originalLines: string[], modifiedLines: string[], opts?: any) => import("ace-code/src/diff/base_diff_view").DiffChunk[]} compute - Computes differences between original and modified lines
+     */
+    /**
+     * Creates a diff view for comparing code.
+     * @param {DiffModel} [diffModel] model for the diff view
+     * @param {DiffViewOptions} [options] options for the diff view
+     * @returns {InlineDiffView|SplitDiffView} Configured diff view instance
+     */
+    export function createDiffView(diffModel?: DiffModel, options?: DiffViewOptions): InlineDiffView | SplitDiffView;
+    export { InlineDiffView, SplitDiffView, DiffProvider };
 }
 declare module "ace-code/src/ext/diff/base_diff_view" {
     export class BaseDiffView {
@@ -319,7 +475,7 @@ declare module "ace-code/src/ext/diff/base_diff_view" {
         selectionRangeB: any;
         setupScrollbars(): void;
         updateScrollBarDecorators(): void;
-        setProvider(provider: import("ace-code/src/ext/diff/providers/default").DiffProvider): void;
+        setProvider(provider: import("ace-code/src/ext/diff").DiffProvider): void;
         /**
          * scroll locking
          * @abstract
@@ -384,9 +540,8 @@ declare module "ace-code/src/ext/diff/base_diff_view" {
     }
     namespace Ace {
         type OptionsProvider<T> = import("ace-code").Ace.OptionsProvider<T>;
-        type DiffViewOptions = import("ace-code").Ace.DiffViewOptions;
     }
-    export interface BaseDiffView extends Ace.OptionsProvider<Ace.DiffViewOptions> {
+    export interface BaseDiffView extends Ace.OptionsProvider<import("ace-code/src/ext/diff").DiffViewOptions> {
     }
 }
 declare module "ace-code/src/ext/elastic_tabstops_lite" {
@@ -421,66 +576,6 @@ declare module "ace-code/src/ext/code_lens" {
     export type CodeLenseCommand = import("ace-code").Ace.CodeLenseCommand;
     export type CodeLense = import("ace-code").Ace.CodeLense;
     import { Editor } from "ace-code/src/editor";
-}
-declare module "ace-code/src/ext/diff/inline_diff_view" {
-    export class InlineDiffView extends BaseDiffView {
-        /**
-         * Constructs a new inline DiffView instance.
-         * @param {import("ace-code").Ace.DiffModel} [diffModel] - The model for the diff view.
-         * @param {HTMLElement} [container] - optional container element for the DiffView.
-         */
-        constructor(diffModel?: import("ace-code").Ace.DiffModel, container?: HTMLElement);
-        init(diffModel: any): void;
-        onAfterRender(changes: number, renderer: import("ace-code").VirtualRenderer): void;
-        textLayer: any;
-        markerLayer: any;
-        gutterLayer: any;
-        cursorLayer: any;
-        initRenderer(restore: any): void;
-        initTextLayer(): void;
-        initTextInput(restore: any): void;
-        othertextInput: any;
-        otherEditorContainer: any;
-        selectEditor(editor: any): void;
-        removeBracketHighlight(editor: any): void;
-        initMouse(): void;
-        onMouseDetach: () => void;
-        onChangeWrapLimit(): void;
-    }
-    import { BaseDiffView } from "ace-code/src/ext/diff/base_diff_view";
-}
-declare module "ace-code/src/ext/diff/diff_view" {
-    export class DiffView extends BaseDiffView {
-        /**
-         * Constructs a new side by side DiffView instance.
-         *
-         * @param {import("ace-code").Ace.DiffModel} [diffModel] - The model for the diff view.
-         */
-        constructor(diffModel?: import("ace-code").Ace.DiffModel);
-        init(diffModel: any): void;
-        onMouseWheel(ev: any): any;
-        onScroll(e: any, session: any): void;
-        onChangeWrapLimit(): void;
-        syncScroll(renderer: import("ace-code/src/virtual_renderer").VirtualRenderer): void;
-        scrollA: any;
-        scrollB: any;
-        scrollSetBy: any;
-        scrollSetAt: number;
-    }
-    import { BaseDiffView } from "ace-code/src/ext/diff/base_diff_view";
-}
-declare module "ace-code/src/ext/diff" {
-    import { InlineDiffView } from "ace-code/src/ext/diff/inline_diff_view";
-    import { DiffView } from "ace-code/src/ext/diff/diff_view";
-    import { DiffProvider } from "ace-code/src/ext/diff/providers/default";
-    /**
-     * Creates a diff view for comparing code.
-     * @param {import("ace-code").Ace.DiffModel} [diffModel] model for the diff view
-     * @param {import("ace-code").Ace.DiffViewOptions} [options] options for the diff view
-     * @returns {InlineDiffView|DiffView} Configured diff view instance
-     */
-    export function createDiffView(diffModel?: import("ace-code").Ace.DiffModel, options?: import("ace-code").Ace.DiffViewOptions): InlineDiffView | DiffView;
-    export { InlineDiffView, DiffView, DiffProvider };
 }
 declare module "ace-code/src/ext/emmet" {
     export const commands: HashHandler;

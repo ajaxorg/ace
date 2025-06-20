@@ -66,7 +66,7 @@ class BaseDiffView {
     }
 
     /**
-     * @param {import("../../../ace-internal").Ace.DiffModel} [diffModel] - The model for the diff view.
+     * @param {import("../diff").DiffModel} [diffModel] - The model for the diff view.
      */
     $setupModels(diffModel) {
         if (diffModel.diffProvider) {

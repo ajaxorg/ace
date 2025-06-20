@@ -28,6 +28,19 @@ var ace = require("../ace");
 module.exports = exports = ace;
 
 /**
+ * @typedef {Object} TextAreaOptions
+ * @property {string} [mode] - Programming language mode for syntax highlighting (e.g., "javascript", "html", "css")
+ * @property {string} [theme] - Visual theme for the editor appearance (e.g., "textmate", "monokai", "eclipse")
+ * @property {string|number} [wrap] - Line wrapping behavior - "off", "free", or specific column number like "40", "80"
+ * @property {string} [fontSize] - Font size in CSS units (e.g., "12px", "14px", "16px")
+ * @property {boolean|string} [showGutter] - Whether to display the line number gutter on the left side
+ * @property {string} [keybindings] - Keyboard handler/bindings to use - "ace", "vim", or "emacs"
+ * @property {boolean|string} [showPrintMargin] - Whether to show the print margin indicator line
+ * @property {boolean|string} [useSoftTabs] - Whether to use soft tabs (spaces) instead of hard tabs
+ * @property {boolean|string} [showInvisibles] - Whether to show invisible characters like spaces and tabs
+ */
+
+/**
  * Returns the CSS property of element.
  *   1) If the CSS property is on the style object of the element, use it, OR
  *   2) Compute the CSS property
@@ -158,7 +171,7 @@ function setupContainer(element, getValue) {
  * a container with settings panel and provides full editor functionality.
  *
  * @param {HTMLTextAreaElement} element - The textarea element to transform
- * @param {import("../../ace-internal").Ace.TextAreaOptions} [options] - Optional configuration options for the editor
+ * @param {TextAreaOptions} [options] - Optional configuration options for the editor
  * @returns {import("../editor").Editor} The created Ace editor instance
  */
 exports.transformTextarea = function(element, options) {
@@ -504,7 +517,7 @@ function setupSettingPanel(settingDiv, settingOpener, editor) {
 
 /**
  * Default startup options.
- * @type {import("../../ace-internal").Ace.TextAreaOptions}
+ * @type {TextAreaOptions}
  */
 exports.defaultOptions = {
     mode:               "javascript",

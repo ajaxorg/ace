@@ -74,7 +74,7 @@
         "ace/ext/menu_tools/overlay_page",
     ], function () {
         var {InlineDiffView} = require("ace/ext/diff/inline_diff_view");
-        var {DiffView} = require("ace/ext/diff/diff_view");
+        var {SplitDiffView} = require("ace/ext/diff/diff_view");
         var {DiffProvider} = require("ace/ext/diff/providers/default");
         var {OptionPanel, optionGroups} = require("ace/ext/options")
         var {buildDom} = require("ace/lib/dom");
@@ -134,7 +134,7 @@
                     if (!debugInline) editorA.container.style.display = "none";
                     break;
                 case "split":
-                    diffView = new DiffView({editorA, editorB});
+                    diffView = new SplitDiffView({editorA, editorB});
                     editorA.container.style.display = "";
                     editorB.container.style.display = "";
                     break;

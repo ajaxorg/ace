@@ -4,7 +4,7 @@ var assert = require("../test/assertions");
 require("../test/mockdom");
 
 var {InlineDiffView} = require("./diff/inline_diff_view");
-var {DiffView} = require("./diff/diff_view");
+var {SplitDiffView} = require("./diff/diff_view");
 const {createDiffView} = require("./diff");
 
 var diffView;
@@ -21,7 +21,7 @@ module.exports = {
         assert.ok(diffView instanceof InlineDiffView);
         diffView.destroy();
         diffView = createDiffView({});
-        assert.ok(diffView instanceof DiffView);
+        assert.ok(diffView instanceof SplitDiffView);
     },
     "test: diff setOptions": function () {
         diffView = createDiffView({}, {

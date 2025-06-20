@@ -1,15 +1,13 @@
 "use strict";
 
-var LineWidgets = require("../../line_widgets").LineWidgets;
-
 var BaseDiffView = require("./base_diff_view").BaseDiffView;
 var config = require("../../config");
 
-class DiffView extends BaseDiffView {
+class SplitDiffView extends BaseDiffView {
     /**
      * Constructs a new side by side DiffView instance.
      *
-     * @param {import("../../../ace-internal").Ace.DiffModel} [diffModel] - The model for the diff view.
+     * @param {import("../diff").DiffModel} [diffModel] - The model for the diff view.
      */
     constructor(diffModel) {
         diffModel = diffModel || {};
@@ -214,4 +212,4 @@ class DiffView extends BaseDiffView {
 }
 
 
-exports.DiffView = DiffView;
+exports.SplitDiffView = SplitDiffView;

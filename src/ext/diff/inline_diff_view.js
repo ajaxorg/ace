@@ -8,7 +8,7 @@ const config = require("../../config");
 class InlineDiffView extends BaseDiffView {
     /**
      * Constructs a new inline DiffView instance.
-     * @param {import("../../../ace-internal").Ace.DiffModel} [diffModel] - The model for the diff view.
+     * @param {import("../diff").DiffModel} [diffModel] - The model for the diff view.
      * @param {HTMLElement} [container] - optional container element for the DiffView.
      */
     constructor(diffModel, container) {

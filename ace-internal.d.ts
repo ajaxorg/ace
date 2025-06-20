@@ -1313,77 +1313,6 @@ export namespace Ace {
         setLabel?: boolean;
         inline?: boolean;
     }
-
-    export interface TextAreaOptions {
-        /** Programming language mode for syntax highlighting (e.g., "javascript", "html", "css") */
-        mode?: string;
-        /** Visual theme for the editor appearance (e.g., "textmate", "monokai", "eclipse") */
-        theme?: string;
-        /** Line wrapping behavior - "off", "free", or specific column number like "40", "80" */
-        wrap?: string | number;
-        /** Font size in CSS units (e.g., "12px", "14px", "16px") */
-        fontSize?: string;
-        /** Whether to display the line number gutter on the left side */
-        showGutter?: boolean | string;
-        /** Keyboard handler/bindings to use - "ace", "vim", or "emacs" */
-        keybindings?: string;
-        /** Whether to show the print margin indicator line */
-        showPrintMargin?: boolean | string;
-        /** Whether to use soft tabs (spaces) instead of hard tabs */
-        useSoftTabs?: boolean | string;
-        /** Whether to show invisible characters like spaces and tabs */
-        showInvisibles?: boolean | string;
-    }
-
-
-    /**
-     * Interface representing a model for handling differences between two views or states.
-     */
-    export interface DiffModel {
-        /** The editor for the original view. */
-        editorA?: Editor;
-        /** The editor for the edited view. */
-        editorB?: Editor;
-        /** The edit session for the original view. */
-        sessionA?: EditSession;
-        /** The edit session for the edited view. */
-        sessionB?: EditSession;
-        /** The original content. */
-        valueA?: string;
-        /** The modified content. */
-        valueB?: string;
-        /** Whether to show the original view("a") or modified view("b") for inline diff view */
-        inline?: "a" | "b";
-        /** Provider for computing differences between original and modified content. */
-        diffProvider?: DiffProvider
-    }
-
-    export interface DiffViewOptions {
-        /**
-         * Whether to show line numbers in the other editor's gutter
-         * @default true
-         */
-        showOtherLineNumbers?: boolean;
-        /** Whether to enable code folding widgets */
-        folding?: boolean;
-        /** Whether to synchronize selections between both editors */
-        syncSelections?: boolean;
-        /** Whether to ignore trimmed whitespace when computing diffs */
-        ignoreTrimWhitespace?: boolean;
-        /** Whether to enable word wrapping in both editors */
-        wrap?: boolean;
-        /**
-         * Maximum number of diffs to compute before failing silently
-         * @default 5000
-         */
-        maxDiffs?: number;
-        /** Theme to apply to both editors */
-        theme?: string | Theme;
-    }
-
-    export interface DiffProvider {
-        compute(originalLines: string[], modifiedLines: string[], opts?: any): DiffChunk[]
-    }
 }
 
 
@@ -1721,7 +1650,7 @@ declare module "./src/mouse/default_gutter_handler" {
 }
 
 declare module "./src/ext/diff/base_diff_view" {
-    export interface BaseDiffView extends Ace.OptionsProvider<Ace.DiffViewOptions> {
+    export interface BaseDiffView extends Ace.OptionsProvider<import("ace-code/src/ext/diff").DiffViewOptions> {
     }
 }
 
