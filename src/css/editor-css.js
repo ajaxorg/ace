@@ -703,6 +703,10 @@ module.exports = `
     overflow:hidden;
 }
 
+.ace_inline_selection {
+    color: red!important;
+}
+
 .ace_hidden_token {
     display: none;
 }`;

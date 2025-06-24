@@ -168,6 +168,29 @@ class Text {
         }
     }
 
+    $countLineElementsIndex(firstRow, config) {
+        var first = Math.max(firstRow, config.firstRow);
+        var lineElementsIdx = 0;
+
+        for (var row = config.firstRow; row < first; row++) {
+            var foldLine = this.session.getFoldLine(row);
+            if (foldLine) {
+                if (foldLine.containsRow(first)) {
+                    first = foldLine.start.row;
+                    break;
+                } else {
+                    row = foldLine.end.row;
+                }
+            }
+            lineElementsIdx ++;
+        }
+
+        return {
+            lineElementsIdx,
+            first
+        };
+    }
+
     /**
      * @param {LayerConfig} config
      * @param {number} firstRow
@@ -183,24 +206,12 @@ class Text {
 
         this.config = config;
 
-        var first = Math.max(firstRow, config.firstRow);
+
         var last = Math.min(lastRow, config.lastRow);
 
         var lineElements = this.element.childNodes;
-        var lineElementsIdx = 0;
 
-        for (var row = config.firstRow; row < first; row++) {
-            var foldLine = this.session.getFoldLine(row);
-            if (foldLine) {
-                if (foldLine.containsRow(first)) {
-                    first = foldLine.start.row;
-                    break;
-                } else {
-                    row = foldLine.end.row;
-                }
-            }
-            lineElementsIdx ++;
-        }
+        var {first, lineElementsIdx} = this.$countLineElementsIndex(firstRow, config);
 
         var heightChanged = false;
         var row = first;
@@ -656,6 +667,163 @@ class Text {
         parent.appendChild(overflowEl);
     }
 
+    $restoreCachedSelectionLines() {
+        if (!this.element) return;
+
+        const selectedElements = this.element.querySelectorAll('.ace_inline_selection');
+        for (let i = 0; i < selectedElements.length; i++) {
+            selectedElements[i].classList.remove('ace_inline_selection');
+        }
+    }
+
+    $applySelectionHighlighting() {
+        this.$restoreCachedSelectionLines();
+
+        var selectionsRanges = (typeof this.session.selection.getAllRanges == "function") ? this.session.selection.getAllRanges()
+            : [this.session.selection.getRange()];
+
+        if (!selectionsRanges || selectionsRanges.length === 0) return;
+
+        for (const selection of selectionsRanges) {
+            const startLineInfo = this.$countLineElementsIndex(selection.start.row, this.config);
+            const startPos = this.session.documentToScreenPosition(selection.start.row, selection.start.column);
+
+            for (let row = startLineInfo.first; row <= selection.end.row; row++) {
+                const lineElementIdx = this.$countLineElementsIndex(row, this.config).lineElementsIdx;
+                const lineElement = this.element.childNodes[lineElementIdx];
+
+                if (lineElement) {
+                    this.$modifyDomForSelections(lineElement, row, selectionsRanges);
+                }
+            }
+        }
+    }
+
+    $modifyDomForSelections(lineElement, row, selections) {
+        if (!selections || selections.length === 0) return;
+
+        const lineSelections = [];
+        for (const selection of selections) {
+            if (selection.start.row <= row && selection.end.row >= row) {
+                const startCol = selection.start.row === row ? selection.start.column : 0;
+                const endCol = selection.end.row === row ? selection.end.column : Number.MAX_VALUE;
+                lineSelections.push({ startCol, endCol });
+            }
+        }
+
+        if (lineSelections.length === 0) return;
+
+        let actualLineElement = lineElement;
+        if (lineElement.classList.contains('ace_line_group') && lineElement.childNodes.length > 0) {
+            actualLineElement = lineElement.childNodes[0];
+        }
+
+        const childNodes = Array.from(actualLineElement.childNodes);
+        let currentColumn = 0;
+
+        for (let i = 0; i < childNodes.length; i++) {
+            const node = childNodes[i];
+            const nodeText = node.textContent || '';
+            const nodeStart = currentColumn;
+            const nodeEnd = currentColumn + nodeText.length;
+
+            let nodeModified = false;
+
+            for (const selection of lineSelections) {
+                const selStart = selection.startCol;
+                const selEnd = selection.endCol;
+
+                if (nodeStart < selEnd && nodeEnd > selStart) {
+                    if (node.nodeType === Node.TEXT_NODE) {
+                        // Handle text node
+                        const beforeSelection = Math.max(0, selStart - nodeStart);
+                        const afterSelection = Math.max(0, nodeEnd - selEnd);
+                        const selectionLength = nodeText.length - beforeSelection - afterSelection;
+
+                        if (beforeSelection > 0 || afterSelection > 0) {
+                            const fragment = this.dom.createFragment(this.element);
+
+                            if (beforeSelection > 0) {
+                                fragment.appendChild(this.dom.createTextNode(
+                                    nodeText.substring(0, beforeSelection),
+                                    this.element
+                                ));
+                            }
+
+                            if (selectionLength > 0) {
+                                const selectedSpan = this.dom.createElement('span');
+                                selectedSpan.classList.add('ace_inline_selection');
+                                selectedSpan.textContent = nodeText.substring(
+                                    beforeSelection,
+                                    beforeSelection + selectionLength
+                                );
+                                fragment.appendChild(selectedSpan);
+                            }
+
+                            if (afterSelection > 0) {
+                                fragment.appendChild(this.dom.createTextNode(
+                                    nodeText.substring(beforeSelection + selectionLength),
+                                    this.element
+                                ));
+                            }
+
+                            actualLineElement.replaceChild(fragment, node);
+                        } else {
+                            const selectedSpan = this.dom.createElement('span');
+                            selectedSpan.classList.add('ace_inline_selection');
+                            selectedSpan.textContent = nodeText;
+                            actualLineElement.replaceChild(selectedSpan, node);
+                        }
+                    } else if (node.nodeType === Node.ELEMENT_NODE) {
+                        if (nodeStart >= selStart && nodeEnd <= selEnd) {
+                            node.classList.add('ace_inline_selection');
+                        } else {
+                            const beforeSelection = Math.max(0, selStart - nodeStart);
+                            const afterSelection = Math.max(0, nodeEnd - selEnd);
+                            const selectionLength = nodeText.length - beforeSelection - afterSelection;
+
+                            if (beforeSelection > 0 || afterSelection > 0) {
+                                const nodeClasses = node.className;
+                                const fragment = this.dom.createFragment(this.element);
+
+                                if (beforeSelection > 0) {
+                                    const beforeSpan = this.dom.createElement('span');
+                                    beforeSpan.className = nodeClasses;
+                                    beforeSpan.textContent = nodeText.substring(0, beforeSelection);
+                                    fragment.appendChild(beforeSpan);
+                                }
+
+                                if (selectionLength > 0) {
+                                    const selectedSpan = this.dom.createElement('span');
+                                    selectedSpan.className = nodeClasses + ' ace_inline_selection';
+                                    selectedSpan.textContent = nodeText.substring(
+                                        beforeSelection,
+                                        beforeSelection + selectionLength
+                                    );
+                                    fragment.appendChild(selectedSpan);
+                                }
+
+                                if (afterSelection > 0) {
+                                    const afterSpan = this.dom.createElement('span');
+                                    afterSpan.className = nodeClasses;
+                                    afterSpan.textContent = nodeText.substring(beforeSelection + selectionLength);
+                                    fragment.appendChild(afterSpan);
+                                }
+
+                                actualLineElement.replaceChild(fragment, node);
+                            }
+                        }
+                    }
+
+                    nodeModified = true;
+                    break;
+                }
+            }
+
+            currentColumn = nodeEnd;
+        }
+    }
+
     // row is either first row of foldline or not in fold
     $renderLine(parent, row, foldLine) {
         if (!foldLine && foldLine != false)
@@ -695,6 +863,8 @@ class Text {
 
             lastLineEl.appendChild(invisibleEl);
         }
+
+        this.$applySelectionHighlighting();  //TODO:
     }
 
     /**
