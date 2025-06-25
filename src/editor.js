@@ -94,6 +94,16 @@ class Editor {
         if (options)
             this.setOptions(options);
         config._signal("editor", this);
+
+        this.renderer.on("afterRender", this.$changeTextColor); //TODO: off
+    }
+
+    /**
+     * @param {any} e
+     * @param {VirtualRenderer} renderer
+     */
+    $changeTextColor(e, renderer) {
+        renderer.$textLayer.$applySelectionHighlighting();
     }
 
     $initOperationListeners() {

@@ -312,9 +312,6 @@ class EditSession {
 
     onSelectionChange() {
         this._signal("changeSelection");
-        const renderer = this.$editor.renderer; //TODO: just for testing
-        const textLayer = renderer.$textLayer;
-        textLayer.$applySelectionHighlighting();
     }
 
     /**

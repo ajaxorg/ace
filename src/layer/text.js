@@ -620,7 +620,9 @@ class Text {
                     lineEl = this.$createLineElement();
                     parent.appendChild(lineEl);
 
-                    lineEl.appendChild(this.dom.createTextNode(lang.stringRepeat("\xa0", splits.indent), this.element));
+                    var text = this.dom.createTextNode(lang.stringRepeat("\xa0", splits.indent), this.element);
+                    text.ignore = true;
+                    lineEl.appendChild(text);
 
                     split ++;
                     screenColumn = 0;
@@ -684,26 +686,21 @@ class Text {
 
         if (!selectionsRanges || selectionsRanges.length === 0) return;
 
-        for (const selection of selectionsRanges) {
-            const startLineInfo = this.$countLineElementsIndex(selection.start.row, this.config);
-            const startPos = this.session.documentToScreenPosition(selection.start.row, selection.start.column);
+        selectionsRanges.forEach((selectionRange) => {
+            for (let row = selectionRange.start.row; row <= selectionRange.end.row; row++) {
+                const cell = this.$lines.cells.find((el) => el.row === row);
 
-            for (let row = startLineInfo.first; row <= selection.end.row; row++) {
-                const lineElementIdx = this.$countLineElementsIndex(row, this.config).lineElementsIdx;
-                const lineElement = this.element.childNodes[lineElementIdx];
-
-                if (lineElement) {
-                    this.$modifyDomForSelections(lineElement, row, selectionsRanges);
+                if (cell) {
+                    this.$modifyDomForSelections(cell.element, row, selectionsRanges);
                 }
             }
-        }
+        });
     }
 
     $modifyDomForSelections(lineElement, row, selections) {
-        if (!selections || selections.length === 0) return;
-
         const lineSelections = [];
-        for (const selection of selections) {
+        for (let s = 0; s < selections.length; s++) {
+            var selection = selections[s];
             if (selection.start.row <= row && selection.end.row >= row) {
                 const startCol = selection.start.row === row ? selection.start.column : 0;
                 const endCol = selection.end.row === row ? selection.end.column : Number.MAX_VALUE;
@@ -713,89 +710,50 @@ class Text {
 
         if (lineSelections.length === 0) return;
 
-        let actualLineElement = lineElement;
-        if (lineElement.classList.contains('ace_line_group') && lineElement.childNodes.length > 0) {
-            actualLineElement = lineElement.childNodes[0];
+        var lineElements = [];
+        if (lineElement.classList.contains('ace_line_group')) {
+            lineElements = Array.from(lineElement.childNodes);
+        } else {
+            lineElements = [lineElement];
         }
 
-        const childNodes = Array.from(actualLineElement.childNodes);
-        let currentColumn = 0;
+        var currentColumn = 0;
+        lineElements.forEach((lineElement) => {
+            const childNodes = Array.from(lineElement.childNodes);
+            for (let i = 0; i < childNodes.length; i++) {
+                const node = childNodes[i];
+                const nodeText = node.textContent || '';
+                const nodeStart = currentColumn;
+                const nodeEnd = currentColumn + nodeText.length;
 
-        for (let i = 0; i < childNodes.length; i++) {
-            const node = childNodes[i];
-            const nodeText = node.textContent || '';
-            const nodeStart = currentColumn;
-            const nodeEnd = currentColumn + nodeText.length;
+                if (node.ignore) {
+                    continue;
+                }
 
-            let nodeModified = false;
+                for (let j = 0; j < lineSelections.length; j++) {
+                    const selection = lineSelections[j];
+                    const selStart = selection.startCol;
+                    const selEnd = selection.endCol;
 
-            for (const selection of lineSelections) {
-                const selStart = selection.startCol;
-                const selEnd = selection.endCol;
-
-                if (nodeStart < selEnd && nodeEnd > selStart) {
-                    if (node.nodeType === Node.TEXT_NODE) {
-                        // Handle text node
-                        const beforeSelection = Math.max(0, selStart - nodeStart);
-                        const afterSelection = Math.max(0, nodeEnd - selEnd);
-                        const selectionLength = nodeText.length - beforeSelection - afterSelection;
-
-                        if (beforeSelection > 0 || afterSelection > 0) {
-                            const fragment = this.dom.createFragment(this.element);
-
-                            if (beforeSelection > 0) {
-                                fragment.appendChild(this.dom.createTextNode(
-                                    nodeText.substring(0, beforeSelection),
-                                    this.element
-                                ));
-                            }
-
-                            if (selectionLength > 0) {
-                                const selectedSpan = this.dom.createElement('span');
-                                selectedSpan.classList.add('ace_inline_selection');
-                                selectedSpan.textContent = nodeText.substring(
-                                    beforeSelection,
-                                    beforeSelection + selectionLength
-                                );
-                                fragment.appendChild(selectedSpan);
-                            }
-
-                            if (afterSelection > 0) {
-                                fragment.appendChild(this.dom.createTextNode(
-                                    nodeText.substring(beforeSelection + selectionLength),
-                                    this.element
-                                ));
-                            }
-
-                            actualLineElement.replaceChild(fragment, node);
-                        } else {
-                            const selectedSpan = this.dom.createElement('span');
-                            selectedSpan.classList.add('ace_inline_selection');
-                            selectedSpan.textContent = nodeText;
-                            actualLineElement.replaceChild(selectedSpan, node);
-                        }
-                    } else if (node.nodeType === Node.ELEMENT_NODE) {
-                        if (nodeStart >= selStart && nodeEnd <= selEnd) {
-                            node.classList.add('ace_inline_selection');
-                        } else {
+                    if (nodeStart < selEnd && nodeEnd > selStart) {
+                        if (node.nodeType === Node.TEXT_NODE) {
                             const beforeSelection = Math.max(0, selStart - nodeStart);
                             const afterSelection = Math.max(0, nodeEnd - selEnd);
                             const selectionLength = nodeText.length - beforeSelection - afterSelection;
 
                             if (beforeSelection > 0 || afterSelection > 0) {
-                                const nodeClasses = node.className;
                                 const fragment = this.dom.createFragment(this.element);
 
                                 if (beforeSelection > 0) {
-                                    const beforeSpan = this.dom.createElement('span');
-                                    beforeSpan.className = nodeClasses;
-                                    beforeSpan.textContent = nodeText.substring(0, beforeSelection);
-                                    fragment.appendChild(beforeSpan);
+                                    fragment.appendChild(this.dom.createTextNode(
+                                        nodeText.substring(0, beforeSelection),
+                                        this.element
+                                    ));
                                 }
 
                                 if (selectionLength > 0) {
-                                    const selectedSpan = this.dom.createElement('span');
-                                    selectedSpan.className = nodeClasses + ' ace_inline_selection';
+                                const selectedSpan = this.dom.createElement('span');
+                                    selectedSpan.classList.add('ace_inline_selection');
                                     selectedSpan.textContent = nodeText.substring(
                                         beforeSelection,
                                         beforeSelection + selectionLength
@@ -804,25 +762,66 @@ class Text {
                                 }
 
                                 if (afterSelection > 0) {
-                                    const afterSpan = this.dom.createElement('span');
-                                    afterSpan.className = nodeClasses;
-                                    afterSpan.textContent = nodeText.substring(beforeSelection + selectionLength);
-                                    fragment.appendChild(afterSpan);
+                                    fragment.appendChild(this.dom.createTextNode(
+                                        nodeText.substring(beforeSelection + selectionLength),
+                                        this.element
+                                    ));
                                 }
 
-                                actualLineElement.replaceChild(fragment, node);
+                                lineElement.replaceChild(fragment, node);
+                            } else {
+                                const selectedSpan = this.dom.createElement('span');
+                                selectedSpan.classList.add('ace_inline_selection');
+                                selectedSpan.textContent = nodeText;
+                                lineElement.replaceChild(selectedSpan, node);
+                            }
+                        } else if (node.nodeType === Node.ELEMENT_NODE) {
+                            if (nodeStart >= selStart && nodeEnd <= selEnd) {
+                                node.classList.add('ace_inline_selection');
+                            } else {
+                            const beforeSelection = Math.max(0, selStart - nodeStart);
+                            const afterSelection = Math.max(0, nodeEnd - selEnd);
+                            const selectionLength = nodeText.length - beforeSelection - afterSelection;
+
+                                if (beforeSelection > 0 || afterSelection > 0) {
+                                const nodeClasses = node.className;
+                                const fragment = this.dom.createFragment(this.element);
+
+                                    if (beforeSelection > 0) {
+                                    const beforeSpan = this.dom.createElement('span');
+                                        beforeSpan.className = nodeClasses;
+                                        beforeSpan.textContent = nodeText.substring(0, beforeSelection);
+                                        fragment.appendChild(beforeSpan);
+                                    }
+
+                                    if (selectionLength > 0) {
+                                    const selectedSpan = this.dom.createElement('span');
+                                        selectedSpan.className = nodeClasses + ' ace_inline_selection';
+                                        selectedSpan.textContent = nodeText.substring(
+                                            beforeSelection,
+                                            beforeSelection + selectionLength
+                                        );
+                                        fragment.appendChild(selectedSpan);
+                                    }
+
+                                    if (afterSelection > 0) {
+                                    const afterSpan = this.dom.createElement('span');
+                                        afterSpan.className = nodeClasses;
+                                        afterSpan.textContent = nodeText.substring(beforeSelection + selectionLength);
+                                        fragment.appendChild(afterSpan);
+                                    }
+
+                                    lineElement.replaceChild(fragment, node);
+                                }
                             }
                         }
                     }
-
-                    nodeModified = true;
-                    break;
                 }
+                currentColumn = nodeEnd;
             }
-
-            currentColumn = nodeEnd;
-        }
+        });
     }
+
 
     // row is either first row of foldline or not in fold
     $renderLine(parent, row, foldLine) {
@@ -863,8 +862,6 @@ class Text {
 
             lastLineEl.appendChild(invisibleEl);
         }
-
-        this.$applySelectionHighlighting();  //TODO:
     }
 
     /**
