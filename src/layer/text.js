@@ -376,7 +376,9 @@ class Text {
 
             if (tab) {
                 var tabSize = self.session.getScreenTabSize(screenColumn + m.index);
-                valueFragment.appendChild(self.$tabStrings[tabSize].cloneNode(true));
+                var text = self.$tabStrings[tabSize].cloneNode(true);
+                text["charCount"] = 1;
+                valueFragment.appendChild(text);
                 screenColumn += tabSize - 1;
             } else if (simpleSpace) {
                 if (self.showSpaces) {
@@ -609,7 +611,9 @@ class Text {
                     lineEl = this.$createLineElement();
                     parent.appendChild(lineEl);
 
-                    lineEl.appendChild(this.dom.createTextNode(lang.stringRepeat("\xa0", splits.indent), this.element));
+                    var text = this.dom.createTextNode(lang.stringRepeat("\xa0", splits.indent), this.element);
+                    text["charCount"] = 0; // not to take into account when we are counting columns
+                    lineEl.appendChild(text);
 
                     split ++;
                     screenColumn = 0;
