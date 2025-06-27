@@ -29,9 +29,10 @@ export namespace Ace {
     type Config = typeof import("./src/config");
     type GutterTooltip = import( "./src/mouse/default_gutter_handler").GutterTooltip;
     type GutterKeyboardEvent = import( "./src/keyboard/gutter_handler").GutterKeyboardEvent;
-    type HoverTooltip = import("ace-code/src/tooltip").HoverTooltip;
-    type Tooltip = import("ace-code/src/tooltip").Tooltip;
-    type PopupManager = import("ace-code/src/tooltip").PopupManager;
+    type HoverTooltip = import("./src/tooltip").HoverTooltip;
+    type Tooltip = import("./src/tooltip").Tooltip;
+    type TextInput = import("./src/keyboard/textinput").TextInput;
+    type DiffChunk = import("./src/ext/diff/base_diff_view").DiffChunk;
 
     type AfterLoadCallback = (err: Error | null, module: unknown) => void;
     type LoaderFunction = (moduleName: string, afterLoad: AfterLoadCallback) => void;
@@ -87,9 +88,13 @@ export namespace Ace {
     }
 
     interface HardWrapOptions {
+        /** First row of the range to process */
         startRow: number;
+        /** Last row of the range to process */
         endRow: number;
+        /** Whether to merge short adjacent lines that fit within the limit */
         allowMerge?: boolean;
+        /** Maximum column width for line wrapping (defaults to editor's print margin) */
         column?: number;
     }
 
@@ -967,33 +972,37 @@ export namespace Ace {
         new(session: EditSession): Selection;
     }
 
-    interface TextInput {
-        resetSelection(): void;
-
-        setAriaOption(options?: { activeDescendant: string, role: string, setLabel: any }): void;
-    }
-
     type CompleterCallback = (error: any, completions: Completion[]) => void;
 
     interface Completer {
+        /** Regular expressions defining valid identifier characters for completion triggers */
         identifierRegexps?: Array<RegExp>,
 
+        /** Main completion method that provides suggestions for the given context */
         getCompletions(editor: Editor,
                        session: EditSession,
                        position: Point,
                        prefix: string,
                        callback: CompleterCallback): void;
 
+        /** Returns documentation tooltip for a completion item */
         getDocTooltip?(item: Completion): void | string | Completion;
 
+        /** Called when a completion item becomes visible */
         onSeen?: (editor: Ace.Editor, completion: Completion) => void;
+        /** Called when a completion item is inserted */
         onInsert?: (editor: Ace.Editor, completion: Completion) => void;
 
+        /** Cleanup method called when completion is cancelled */
         cancel?(): void;
 
+        /** Unique identifier for this completer */
         id?: string;
+        /** Characters that trigger autocompletion when typed */
         triggerCharacters?: string[];
+        /** Whether to hide inline preview text */
         hideInlinePreview?: boolean;
+        /** Custom insertion handler for completion items */
         insertMatch?: (editor: Editor, data: Completion) => void;
     }
 
@@ -1257,10 +1266,15 @@ export namespace Ace {
     }>>
 
     export interface StaticHighlightOptions {
+        /** Syntax mode (e.g., 'ace/mode/javascript'). Auto-detected from CSS class if not provided */
         mode?: string | SyntaxMode,
+        /** Color theme (e.g., 'ace/theme/textmate'). Defaults to 'ace/theme/textmate' */
         theme?: string | Theme,
+        /** Whether to trim whitespace from code content */
         trim?: boolean,
+        /** Starting line number for display */
         firstLineNumber?: number,
+        /** Whether to show line numbers gutter */
         showGutter?: boolean
     }
 
@@ -1291,6 +1305,13 @@ export namespace Ace {
 
     export interface ScrollbarEvents {
         "scroll": (e: { data: number }) => void;
+    }
+
+    export interface TextInputAriaOptions {
+        activeDescendant?: string;
+        role?: string;
+        setLabel?: boolean;
+        inline?: boolean;
     }
 }
 
@@ -1625,6 +1646,11 @@ declare module "./src/tooltip" {
 
 declare module "./src/mouse/default_gutter_handler" {
     export interface GutterHandler {
+    }
+}
+
+declare module "./src/ext/diff/base_diff_view" {
+    export interface BaseDiffView extends Ace.OptionsProvider<import("ace-code/src/ext/diff").DiffViewOptions> {
     }
 }
 

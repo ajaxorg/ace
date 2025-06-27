@@ -40,7 +40,8 @@ declare module "ace-code" {
         type GutterKeyboardEvent = import("ace-code/src/keyboard/gutter_handler").GutterKeyboardEvent;
         type HoverTooltip = import("ace-code/src/tooltip").HoverTooltip;
         type Tooltip = import("ace-code/src/tooltip").Tooltip;
-        type PopupManager = import("ace-code/src/tooltip").PopupManager;
+        type TextInput = import("ace-code/src/keyboard/textinput").TextInput;
+        type DiffChunk = import("ace-code/src/ext/diff/base_diff_view").DiffChunk;
         type AfterLoadCallback = (err: Error | null, module: unknown) => void;
         type LoaderFunction = (moduleName: string, afterLoad: AfterLoadCallback) => void;
         export interface ConfigOptions {
@@ -85,9 +86,13 @@ declare module "ace-code" {
             gutterOffset: number;
         }
         interface HardWrapOptions {
+            /** First row of the range to process */
             startRow: number;
+            /** Last row of the range to process */
             endRow: number;
+            /** Whether to merge short adjacent lines that fit within the limit */
             allowMerge?: boolean;
+            /** Maximum column width for line wrapping (defaults to editor's print margin) */
             column?: number;
         }
         interface CommandBarOptions {
@@ -775,25 +780,27 @@ declare module "ace-code" {
         var Selection: {
             new(session: EditSession): Selection;
         };
-        interface TextInput {
-            resetSelection(): void;
-            setAriaOption(options?: {
-                activeDescendant: string;
-                role: string;
-                setLabel: any;
-            }): void;
-        }
         type CompleterCallback = (error: any, completions: Completion[]) => void;
         interface Completer {
+            /** Regular expressions defining valid identifier characters for completion triggers */
             identifierRegexps?: Array<RegExp>;
+            /** Main completion method that provides suggestions for the given context */
             getCompletions(editor: Editor, session: EditSession, position: Point, prefix: string, callback: CompleterCallback): void;
+            /** Returns documentation tooltip for a completion item */
             getDocTooltip?(item: Completion): void | string | Completion;
+            /** Called when a completion item becomes visible */
             onSeen?: (editor: Ace.Editor, completion: Completion) => void;
+            /** Called when a completion item is inserted */
             onInsert?: (editor: Ace.Editor, completion: Completion) => void;
+            /** Cleanup method called when completion is cancelled */
             cancel?(): void;
+            /** Unique identifier for this completer */
             id?: string;
+            /** Characters that trigger autocompletion when typed */
             triggerCharacters?: string[];
+            /** Whether to hide inline preview text */
             hideInlinePreview?: boolean;
+            /** Custom insertion handler for completion items */
             insertMatch?: (editor: Editor, data: Completion) => void;
         }
         interface CompletionOptions {
@@ -992,10 +999,15 @@ declare module "ace-code" {
             value: string;
         }>>;
         export interface StaticHighlightOptions {
+            /** Syntax mode (e.g., 'ace/mode/javascript'). Auto-detected from CSS class if not provided */
             mode?: string | SyntaxMode;
+            /** Color theme (e.g., 'ace/theme/textmate'). Defaults to 'ace/theme/textmate' */
             theme?: string | Theme;
+            /** Whether to trim whitespace from code content */
             trim?: boolean;
+            /** Starting line number for display */
             firstLineNumber?: number;
+            /** Whether to show line numbers gutter */
             showGutter?: boolean;
         }
         export interface Operation {
@@ -1032,6 +1044,12 @@ declare module "ace-code" {
                 data: number;
             }) => void;
         }
+        export interface TextInputAriaOptions {
+            activeDescendant?: string;
+            role?: string;
+            setLabel?: boolean;
+            inline?: boolean;
+        }
     }
     export const config: typeof import("ace-code/src/config");
     export function edit(el?: string | (HTMLElement & {
@@ -1044,6 +1062,6 @@ declare module "ace-code" {
     import { Range } from "ace-code/src/range";
     import { UndoManager } from "ace-code/src/undomanager";
     import { VirtualRenderer as Renderer } from "ace-code/src/virtual_renderer";
-    export var version: "1.41.0";
+    export var version: "1.43.0";
     export { Range, Editor, EditSession, UndoManager, Renderer as VirtualRenderer };
 }

@@ -2,23 +2,18 @@
 
 
 const BaseDiffView = require("./base_diff_view").BaseDiffView;
+const Renderer = require("../../virtual_renderer").VirtualRenderer;
 const config = require("../../config");
 
 class InlineDiffView extends BaseDiffView {
     /**
      * Constructs a new inline DiffView instance.
-     * @param {Object} [diffModel] - The model for the diff view.
-     * @param {import("ace-code").Editor} [diffModel.editorA] - The editor for the original view.
-     * @param {import("ace-code").Editor} [diffModel.editorB] - The editor for the edited view.
-     * @param {import("ace-code").EditSession} [diffModel.sessionA] - The edit session for the original view.
-     * @param {import("ace-code").EditSession} [diffModel.sessionB] - The edit session for the edited view.
-     * @param {string} [diffModel.valueA] - The original content.
-     * @param {string} [diffModel.valueB] - The modified content.
-     * @param {boolean} [diffModel.showSideA] - Whether to show the original view or modified view.
+     * @param {import("../diff").DiffModel} [diffModel] - The model for the diff view.
      * @param {HTMLElement} [container] - optional container element for the DiffView.
      */
     constructor(diffModel, container) {
         diffModel = diffModel || {};
+        diffModel.inline = diffModel.inline || "a";
         super( true, container);
         this.init(diffModel);
     }
@@ -26,7 +21,6 @@ class InlineDiffView extends BaseDiffView {
     init(diffModel) {
         this.onSelect = this.onSelect.bind(this);
         this.onAfterRender = this.onAfterRender.bind(this);
-        this.onChangeWrapLimit = this.onChangeWrapLimit.bind(this);
         
 
         this.$setupModels(diffModel);
@@ -74,8 +68,25 @@ class InlineDiffView extends BaseDiffView {
         this.initMouse();
         this.initTextInput();
         this.initTextLayer();
+        this.initRenderer();
 
         this.$attachEventHandlers();
+        this.selectEditor(this.activeEditor);
+    }
+
+    initRenderer(restore) {
+        if (restore) {
+            delete this.activeEditor.renderer.$getLongestLine;
+        } else {
+            this.editorA.renderer.$getLongestLine =
+            this.editorB.renderer.$getLongestLine = () => {
+                var getLongestLine = Renderer.prototype.$getLongestLine;
+                return Math.max(
+                    getLongestLine.call(this.editorA.renderer),
+                    getLongestLine.call(this.editorB.renderer)
+                );
+            };
+        }
     }
 
     initTextLayer() {
@@ -138,6 +149,9 @@ class InlineDiffView extends BaseDiffView {
                 this.sessionA.removeMarker(this.syncSelectionMarkerA.id);
                 this.sessionA.addDynamicMarker(this.syncSelectionMarkerA, true);
             }
+            this.markerLayer.element.classList.add("ace_hidden_marker-layer");
+            this.activeEditor.renderer.$markerBack.element.classList.remove("ace_hidden_marker-layer");
+            this.removeBracketHighlight(this.otherEditor); 
         } else {
             this.activeEditor.selection.clearSelection();
             this.activeEditor.textInput.setHost(this.otherEditor);
@@ -152,8 +166,22 @@ class InlineDiffView extends BaseDiffView {
             if (this.showSideA) {
                 this.sessionA.removeMarker(this.syncSelectionMarkerA.id);
             }
+            this.markerLayer.element.classList.remove("ace_hidden_marker-layer");
+            this.activeEditor.renderer.$markerBack.element.classList.add("ace_hidden_marker-layer");
+            this.removeBracketHighlight(this.activeEditor); 
         }
     }
+
+    removeBracketHighlight(editor) {
+        var session = editor.session;
+        if (session.$bracketHighlight) {
+            session.$bracketHighlight.markerIds.forEach(function(id) {
+                session.removeMarker(id);
+            });
+            session.$bracketHighlight = null;
+        }
+    }
+
     initMouse() {
         this.otherEditor.renderer.$loop = this.activeEditor.renderer.$loop;
         
@@ -310,6 +338,7 @@ class InlineDiffView extends BaseDiffView {
         this.otherEditor.setSession(null);
         this.otherEditor.renderer.$loop = null;
         this.initTextInput(true);
+        this.initRenderer(true);
 
         this.otherEditor.destroy();
     }
@@ -362,6 +391,11 @@ class InlineDiffView extends BaseDiffView {
 
         this.markerLayer.setMarkers(this.otherSession.getMarkers());
         this.markerLayer.update(newConfig);
+    }
+
+    detach() {
+        super.detach();
+        this.otherEditor && this.otherEditor.destroy();
     }
 }
 

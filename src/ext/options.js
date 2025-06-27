@@ -1,3 +1,22 @@
+/**
+ * ## Settings Menu extension
+ *
+ * Provides a settings panel for configuring editor options through an interactive UI.
+ * Creates a tabular interface with grouped configuration options including themes, modes, keybindings,
+ * font settings, display preferences, and advanced editor behaviors. Supports dynamic option rendering
+ * with various input types (dropdowns, checkboxes, number inputs, button bars) and real-time updates.
+ *
+ * **Usage:**
+ * ```javascript
+ * var OptionPanel = require("ace/ext/settings_menu").OptionPanel;
+ * var panel = new OptionPanel(editor);
+ * panel.render();
+ * ```
+ *
+ * @module
+ */
+
+
 "use strict";
 /**
  * @typedef {import("../editor").Editor} Editor
@@ -24,6 +43,12 @@ var modes = modelist.modes.map(function(x){
 });
 
 
+/**
+ * Configuration object for grouping various options/settings into categorized groups.
+ *
+ * Organizes settings into two main categories: "Main" and "More",
+ * each containing settings for configurable features of an application.
+ */
 var optionGroups = {
     Main: {
         Mode: {
@@ -214,6 +239,10 @@ var optionGroups = {
     }
 };
 
+/**
+ * Option panel component for configuring settings or options.
+ * The panel is designed to integrate with an editor and render various UI controls based on provided configuration.
+ */
 class OptionPanel {
     /**
      * 
@@ -401,3 +430,4 @@ class OptionPanel {
 oop.implement(OptionPanel.prototype, EventEmitter);
 
 exports.OptionPanel = OptionPanel;
+exports.optionGroups = optionGroups;

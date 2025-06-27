@@ -375,7 +375,7 @@ declare module "ace-code/src/config" {
             string
         ], onLoad: (module: any) => void) => void;
         setModuleLoader: (moduleName: any, onLoad: any) => void;
-        version: "1.41.0";
+        version: "1.43.0";
     };
     export = _exports;
 }
@@ -817,22 +817,25 @@ declare module "ace-code/src/css/editor-css" {
 }
 declare module "ace-code/src/layer/decorators" {
     export class Decorator {
-        constructor(parent: any, renderer: any);
-        parentEl: any;
-        canvas: HTMLCanvasElement;
-        renderer: any;
+        constructor(scrollbarV: import("ace-code").Ace.VScrollbar, renderer: import("ace-code/src/virtual_renderer").VirtualRenderer);
+        renderer: import("ace-code/src/virtual_renderer").VirtualRenderer;
         pixelRatio: number;
-        maxHeight: any;
-        lineHeight: any;
+        maxHeight: number;
+        lineHeight: number;
         minDecorationHeight: number;
         halfMinDecorationHeight: number;
         colors: {};
-        compensateFoldRows(row: any): number;
-        compensateLineWidgets(row: any): number;
+        canvas: HTMLCanvasElement;
+        setScrollBarV(scrollbarV: any): void;
+        scrollbarV: any;
+        getVerticalOffsetForRow(row: any): number;
         setDimensions(config: any): void;
         canvasHeight: any;
-        heightRatio: number;
         canvasWidth: any;
+        heightRatio: number;
+        setZoneWidth(): void;
+        oneZoneWidth: any;
+        destroy(): void;
     }
 }
 declare module "ace-code/src/virtual_renderer" {
@@ -1560,7 +1563,76 @@ declare module "ace-code/src/clipboard" {
 }
 declare module "ace-code/src/keyboard/textinput" {
     export function $setUserAgentForTests(_isMobile: any, _isIOS: any): void;
-    export var TextInput: any;
+    export class TextInput {
+        constructor(parentNode: HTMLElement, host: import("ace-code/src/editor").Editor);
+        host: import("ace-code/src/editor").Editor;
+        text: HTMLTextAreaElement & {
+            msGetInputContext?: () => {
+                compositionStartOffset: number;
+            };
+            getInputContext?: () => {
+                compositionStartOffset: number;
+            };
+        };
+        copied: boolean | string;
+        pasted: boolean;
+        inComposition: (boolean | any) & {
+            context?: any;
+            useTextareaForIME?: boolean;
+            selectionStart?: number;
+            markerRange?: any;
+        };
+        sendingText: boolean;
+        tempStyle: string;
+        commandMode: boolean;
+        ignoreFocusEvents: boolean;
+        lastValue: string;
+        lastSelectionStart: number;
+        lastSelectionEnd: number;
+        lastRestoreEnd: number;
+        rowStart: number;
+        rowEnd: number;
+        numberOfExtraLines: number;
+        resetSelection: (value: any) => void;
+        inputHandler: any;
+        afterContextMenu: boolean;
+        syncComposition: any;
+        onContextMenuClose(): void;
+        closeTimeout: number;
+        setHost(newHost: import("ace-code/src/editor").Editor): void;
+        /**
+         * Sets the number of extra lines in the textarea to improve screen reader compatibility.
+         * Extra lines can help screen readers perform better when reading text.
+         *
+         * @param {number} number - The number of extra lines to add. Must be non-negative.
+         */
+        setNumberOfExtraLines(number: number): void;
+        setAriaLabel(): void;
+        setAriaOptions(options: import("ace-code").Ace.TextInputAriaOptions): void;
+        focus(): void;
+        blur(): void;
+        isFocused(): boolean;
+        setInputHandler(cb: any): void;
+        getInputHandler(): any;
+        getElement(): HTMLTextAreaElement & {
+            msGetInputContext?: () => {
+                compositionStartOffset: number;
+            };
+            getInputContext?: () => {
+                compositionStartOffset: number;
+            };
+        };
+        /**
+         * allows to ignore composition (used by vim keyboard handler in the normal mode)
+         * this is useful on mac, where with some keyboard layouts (e.g swedish) ^ starts composition
+         */
+        setCommandMode(value: boolean): void;
+        setReadOnly(readOnly: any): void;
+        setCopyWithEmptySelection(value: any): void;
+        onContextMenu(e: any): void;
+        moveToMouse(e: any, bringToFront: boolean): void;
+        destroy(): void;
+    }
 }
 declare module "ace-code/src/mouse/mouse_event" {
     export class MouseEvent {
@@ -2047,7 +2119,7 @@ declare module "ace-code/src/editor" {
         };
         renderer: VirtualRenderer;
         commands: CommandManager;
-        textInput: any;
+        textInput: TextInput;
         keyBinding: KeyBinding;
         startOperation(commandEvent: any): void;
         /**
@@ -2162,7 +2234,7 @@ declare module "ace-code/src/editor" {
          * Returns the string of text currently highlighted.
          **/
         getCopyText(): string;
-        execCommand(command: string | string[], args?: any): boolean;
+        execCommand(command: string | string[] | import("ace-code").Ace.Command, args?: any): boolean;
         /**
          * Inserts `text` into wherever the cursor is pointing.
          * @param {String} text The new text to add
@@ -2706,6 +2778,7 @@ declare module "ace-code/src/editor" {
     export type SearchOptions = import("ace-code").Ace.SearchOptions;
     import { EditSession } from "ace-code/src/edit_session";
     import { CommandManager } from "ace-code/src/commands/command_manager";
+    import { TextInput } from "ace-code/src/keyboard/textinput";
     import { MouseHandler } from "ace-code/src/mouse/mouse_handler";
     import { KeyBinding } from "ace-code/src/keyboard/keybinding";
     import { Search } from "ace-code/src/search";
@@ -3463,6 +3536,24 @@ declare module "ace-code/src/occur" {
     }
     import { Search } from "ace-code/src/search";
     import { EditSession } from "ace-code/src/edit_session";
+}
+declare module "ace-code/src/mouse/multi_select_handler" {
+    export function onMouseDown(e: any): any;
+}
+declare module "ace-code/src/commands/multi_select_commands" {
+    export const defaultCommands: import("ace-code").Ace.Command[];
+    export const multiSelectCommands: import("ace-code").Ace.Command[];
+    export const keyboardHandler: HashHandler;
+    import { HashHandler } from "ace-code/src/keyboard/hash_handler";
+}
+declare module "ace-code/src/multi_select" {
+    export const commands: import("ace-code").Ace.Command[];
+    export const onSessionChange: (e: any) => void;
+    export type Anchor = import("ace-code/src/anchor").Anchor;
+    export type Point = import("ace-code").Ace.Point;
+    export type ScreenCoordinates = import("ace-code").Ace.ScreenCoordinates;
+    export function MultiSelect(editor: Editor): void;
+    import { Editor } from "ace-code/src/editor";
 }
 declare module "ace-code/src/edit_session/fold" {
     export class Fold extends RangeList {
@@ -4715,24 +4806,6 @@ declare module "ace-code/src/placeholder" {
     }
     export interface PlaceHolder extends Ace.EventEmitter<Ace.PlaceHolderEvents> {
     }
-}
-declare module "ace-code/src/mouse/multi_select_handler" {
-    export function onMouseDown(e: any): any;
-}
-declare module "ace-code/src/commands/multi_select_commands" {
-    export const defaultCommands: import("ace-code").Ace.Command[];
-    export const multiSelectCommands: import("ace-code").Ace.Command[];
-    export const keyboardHandler: HashHandler;
-    import { HashHandler } from "ace-code/src/keyboard/hash_handler";
-}
-declare module "ace-code/src/multi_select" {
-    export const commands: import("ace-code").Ace.Command[];
-    export const onSessionChange: (e: any) => void;
-    export type Anchor = import("ace-code/src/anchor").Anchor;
-    export type Point = import("ace-code").Ace.Point;
-    export type ScreenCoordinates = import("ace-code").Ace.ScreenCoordinates;
-    export function MultiSelect(editor: Editor): void;
-    import { Editor } from "ace-code/src/editor";
 }
 declare module "ace-code/src/commands/occur_commands" {
     export namespace occurStartCommand {

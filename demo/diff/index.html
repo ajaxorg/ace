@@ -65,8 +65,8 @@
     });
 
     require([
-        "ace/ext/diff/diff_view", 
-        "ace/ext/diff/inline_diff_view", 
+        "ace/ext/diff/split_diff_view",
+        "ace/ext/diff/inline_diff_view",
         "demo/kitchen-sink/util",
         "demo/kitchen-sink/layout", 
         "ace/ext/diff/providers/default",
@@ -74,9 +74,9 @@
         "ace/ext/menu_tools/overlay_page",
     ], function () {
         var {InlineDiffView} = require("ace/ext/diff/inline_diff_view");
-        var {DiffView} = require("ace/ext/diff/diff_view");
+        var {SplitDiffView} = require("ace/ext/diff/split_diff_view");
         var {DiffProvider} = require("ace/ext/diff/providers/default");
-        var {OptionPanel} = require("ace/ext/options")
+        var {OptionPanel, optionGroups} = require("ace/ext/options")
         var {buildDom} = require("ace/lib/dom");
 
         var tollbarButtons = {};
@@ -97,16 +97,6 @@
         var goToPrevious = () => {
             diffView.gotoNext(-1);
             updateButtonsState();
-        };
-
-        var foldUnchanged = () => {
-            var checked = document.getElementById("btn-foldunchanged").checked;
-            diffView.options.foldUnchanged = checked;
-            diffView.onInput();
-            if (!checked) {
-                diffView.diffSession.sessionA.unfold();
-                diffView.diffSession.sessionB.unfold();
-            }
         };
 
         function reset() {
@@ -131,7 +121,6 @@
                 case "inlineA":
                     diffView = new InlineDiffView({
                         editorA, editorB,
-                        showSideA: true
                     });
                     if (!debugInline) editorB.container.style.display = "none";
                     editorA.container.style.display = "";
@@ -139,18 +128,17 @@
                 case "inlineB":
                     diffView = new InlineDiffView({
                         editorA, editorB,
-                        showSideA: false
+                        inline: "b"
                     });
                     editorB.container.style.display = "";
                     if (!debugInline) editorA.container.style.display = "none";
                     break;
                 case "split":
-                    diffView = new DiffView({editorA, editorB});
+                    diffView = new SplitDiffView({editorA, editorB});
                     editorA.container.style.display = "";
                     editorB.container.style.display = "";
                     break;
                 case "off":
-                    diffView.detach("off");
                     diffView = undefined;
                     editorA.container.style.display = "";
                     editorB.container.style.display = "";
@@ -170,6 +158,7 @@
             syncSelections: localStorage.syncSelections != "false",
             showOtherLineNumbers: localStorage.showOtherLineNumbers != "false",
             folding: localStorage.folding != "false",
+            theme: localStorage.theme || "ace/theme/textmate",
         }
         function drawToolbar() {
 
@@ -222,8 +211,19 @@
                     }),
                     "Wrap"
                 ],
-                ["button", {onclick: function() {diffView.foldUnchanged()}}, "Fold Unchanged"],
+                ["label", {},
+                    optionBar.renderOptionControl("", {
+                        path: "folding",
+                        type: "checkbox",
+                    }),
+                    "Folding"
+                ],
+                ["button", {onclick: function() {diffView.toggleFoldUnchanged()}}, "Fold Unchanged"],
                 ["button", {id: "btn-reset", onclick: reset}, "Reset"],
+                ["label", {},
+                    optionBar.renderOptionControl("", optionGroups.Main.Theme),
+                    "Theme"
+                ],
             ] 
             buildDom(data, toolbar, tollbarButtons);
         }

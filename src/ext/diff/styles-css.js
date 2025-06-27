@@ -13,10 +13,10 @@ exports.cssText = `
  * Light Colors 
  */
 .ace_diff.insert {
-    background-color: #eaffea; /*rgb(74 251 74 / 12%); */
+    background-color: #EFFFF1;
 }
 .ace_diff.delete {
-    background-color: #ffecec; /*rgb(251 74 74 / 12%);*/
+    background-color: #FFF1F1;
 }
 .ace_diff.aligned_diff {
     background: rgba(206, 194, 191, 0.26);
@@ -24,8 +24,8 @@ exports.cssText = `
                 45deg,
               rgba(122, 111, 108, 0.26),
               rgba(122, 111, 108, 0.26) 5px,
-              #FFFFFF 5px,
-              #FFFFFF 10px 
+              rgba(0, 0, 0, 0) 5px,
+              rgba(0, 0, 0, 0) 10px 
     );
 }
 
@@ -37,19 +37,22 @@ exports.cssText = `
 }
 
 .ace_diff.delete.inline.empty {
-    background-color: rgba(255, 128, 79, 0.8);
+    background-color: rgba(255, 128, 79, 0.7);
     width: 2px !important;
 }
 
 .ace_diff.insert.inline.empty {
-    background-color: rgba(49, 230, 96, 0.8);
+    background-color: rgba(49, 230, 96, 0.7);
     width: 2px !important;
 }
 
-.ace_diff.selection {
-    border-bottom: 1px solid black;
-    border-top: 1px solid black;
+.ace_diff-active-line {
+    border-bottom: 1px solid;
+    border-top: 1px solid;
     background: transparent;
+    position: absolute;
+    box-sizing: border-box;
+    border-color: #9191ac;
 }
 
 .ace_diff.double-triangle::before,
@@ -85,10 +88,9 @@ exports.cssText = `
     background-color: rgba(169, 46, 33, 0.55);
 }
 
-.ace_dark .ace_diff.selection {
-    border-bottom: 1px solid white;
-    border-top: 1px solid white;
+.ace_dark .ace_diff-active-line {
     background: transparent;
+    border-color: #75777a;
 }
  
 
@@ -109,15 +111,15 @@ exports.cssText = `
 
 
 .ace_mini-diff_gutter-enabled > .mini-diff-added {
-    background-color: #eaffea;
-    border-left: 3px solid #00FF00;
+    background-color: #EFFFF1;
+    border-left: 3px solid #2BB534;
     padding-left: 16px;
     display: block;
 }
 
 .ace_mini-diff_gutter-enabled > .mini-diff-deleted {
-    background-color: #ffecec;
-    border-left: 3px solid #FF0000;
+    background-color: #FFF1F1;
+    border-left: 3px solid #EA7158;
     padding-left: 16px;
     display: block;
 }
@@ -138,15 +140,40 @@ exports.cssText = `
     color: darkgray;
     background-color: inherit;
 }
-.ace_fade-fold-widgets:hover .mini-diff-added:after {
-    display: none;
-}
-.ace_fade-fold-widgets:hover .mini-diff-deleted:after {
+.ace_fade-fold-widgets:hover > .ace_folding-enabled > .mini-diff-added:after,
+.ace_fade-fold-widgets:hover > .ace_folding-enabled > .mini-diff-deleted:after {
     display: none;
 }
 
 .ace_diff_other .ace_selection {
     filter: drop-shadow(1px 2px 3px darkgray);
+}
+
+.ace_hidden_marker-layer .ace_bracket {
+    display: none;
+}
+
+
+
+/*
+ * Dark Colors 
+ */
+
+.ace_dark .ace_diff.insert {
+    background-color: #212E25;
+}
+.ace_dark .ace_diff.delete {
+    background-color: #3F2222;
+}
+
+.ace_dark .ace_mini-diff_gutter-enabled > .mini-diff-added {
+    background-color: #212E25;
+    border-left-color:#00802F;
+}
+
+.ace_dark .ace_mini-diff_gutter-enabled > .mini-diff-deleted {
+    background-color: #3F2222;
+    border-left-color: #9C3838;
 }
 
 `;

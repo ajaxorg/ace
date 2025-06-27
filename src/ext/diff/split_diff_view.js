@@ -1,22 +1,14 @@
 "use strict";
 
-var LineWidgets = require("../../line_widgets").LineWidgets;
-
 var BaseDiffView = require("./base_diff_view").BaseDiffView;
 var config = require("../../config");
 var Range = require("../../range").Range;
 
-class DiffView extends BaseDiffView {
+class SplitDiffView extends BaseDiffView {
     /**
      * Constructs a new side by side DiffView instance.
      *
-     * @param {Object} [diffModel] - The model for the diff view.
-     * @param {import("../../editor").Editor} [diffModel.editorA] - The editor for the original view.
-     * @param {import("../../editor").Editor} [diffModel.editorB] - The editor for the edited view.
-     * @param {import("../../edit_session").EditSession} [diffModel.sessionA] - The edit session for the original view.
-     * @param {import("../../edit_session").EditSession} [diffModel.sessionB] - The edit session for the edited view.
-     * @param {string} [diffModel.valueA] - The original content.
-     * @param {string} [diffModel.valueB] - The modified content.
+     * @param {import("../diff").DiffModel} [diffModel] - The model for the diff view.
      */
     constructor(diffModel) {
         diffModel = diffModel || {};
@@ -39,6 +31,10 @@ class DiffView extends BaseDiffView {
         config["_signal"]("diffView", this);
 
         this.$attachEventHandlers();
+    }
+
+    onChangeWrapLimit() {
+        this.scheduleRealign();
     }
 
     /*** scroll locking ***/
@@ -196,6 +192,9 @@ class DiffView extends BaseDiffView {
         editor.session.addDynamicMarker(marker);
         editor.selection.on("changeCursor", this.onSelect);
         editor.selection.on("changeSelection", this.onSelect);
+
+        editor.session.on("changeWrapLimit", this.onChangeWrapLimit);
+        editor.session.on("changeWrapMode", this.onChangeWrapLimit);
     }
 
     $detachSessionsEventHandlers() {
@@ -213,10 +212,14 @@ class DiffView extends BaseDiffView {
         editor.session.removeMarker(marker.id);
         editor.selection.off("changeCursor", this.onSelect);
         editor.selection.off("changeSelection", this.onSelect);
+
+        editor.session.off("changeWrapLimit", this.onChangeWrapLimit);
+        editor.session.off("changeWrapMode", this.onChangeWrapLimit);
     }
 
     $attachEventHandlers() {
-        this.editorA.renderer.on("themeLoaded", this.onChangeTheme);
+        this.editorA.renderer.on("themeChange", this.onChangeTheme);
+        this.editorB.renderer.on("themeChange", this.onChangeTheme);
 
         this.editorA.on("mousewheel", this.onMouseWheel);
         this.editorB.on("mousewheel", this.onMouseWheel);
@@ -229,7 +232,8 @@ class DiffView extends BaseDiffView {
     $detachEventHandlers() {
         this.$detachSessionsEventHandlers();
         this.clearSelectionMarkers();
-        this.editorA.renderer.off("themeLoaded", this.onChangeTheme);
+        this.editorA.renderer.off("themeChange", this.onChangeTheme);
+        this.editorB.renderer.off("themeChange", this.onChangeTheme);
         this.$detachEditorEventHandlers(this.editorA);
         this.$detachEditorEventHandlers(this.editorB);
     }
@@ -266,4 +270,4 @@ class SyncSelectionColumnMarker {
 }
 
 
-exports.DiffView = DiffView;
+exports.SplitDiffView = SplitDiffView;

@@ -1,4 +1,15 @@
 /**
+ * ## Command Bar extension.
+ *
+ * Provides an interactive command bar tooltip that displays above the editor's active line. The extension enables
+ * clickable commands with keyboard shortcuts, icons, and various button types including standard buttons, checkboxes,
+ * and text elements. Supports overflow handling with a secondary tooltip for additional commands when space is limited.
+ * The tooltip can be configured to always show or display only on mouse hover over the active line.
+ *
+ * @module
+ */
+
+/**
  * @typedef {import("../editor").Editor} Editor
  * @typedef {import("../../ace-internal").Ace.TooltipCommand} TooltipCommand
  */
