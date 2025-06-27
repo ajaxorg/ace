@@ -435,7 +435,7 @@ module.exports = {
         editorA.session.setValue(getValueA(simpleDiff));
         editorB.session.setValue(getValueB(simpleDiff));
 
-        diffView = new DiffView({
+        diffView = new SplitDiffView({
             editorA, editorB,
             diffProvider,
         });
