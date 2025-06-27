@@ -1439,9 +1439,14 @@ declare module "./src/editor" {
 }
 
 declare module "./src/edit_session" {
+    type TextMarkers = typeof import("./src/layer/text_markers").editSessionTextMarkerMixin & {
+        $textMarkers: any[];
+        $textMarkerId: number;
+    };
+
     export interface EditSession extends Ace.EventEmitter<Ace.EditSessionEvents>,
         Ace.OptionsProvider<Ace.EditSessionOptions>,
-        Ace.Folding, Ace.BracketMatch {
+        Ace.Folding, Ace.BracketMatch, TextMarkers  {
         doc: Ace.Document,
         $highlightLineMarker?: {
             start: Ace.Point,
@@ -1619,7 +1624,8 @@ declare module "./src/layer/gutter" {
 }
 
 declare module "./src/layer/text" {
-    export interface Text extends Ace.EventEmitter<Ace.TextEvents> {
+    type TextMarkersMixin = typeof import("./src/layer/text_markers").textMarkerMixin;
+    export interface Text extends Ace.EventEmitter<Ace.TextEvents>, TextMarkersMixin {
         config: Ace.LayerConfig
     }
 }

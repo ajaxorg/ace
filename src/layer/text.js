@@ -168,29 +168,6 @@ class Text {
         }
     }
 
-    $countLineElementsIndex(firstRow, config) {
-        var first = Math.max(firstRow, config.firstRow);
-        var lineElementsIdx = 0;
-
-        for (var row = config.firstRow; row < first; row++) {
-            var foldLine = this.session.getFoldLine(row);
-            if (foldLine) {
-                if (foldLine.containsRow(first)) {
-                    first = foldLine.start.row;
-                    break;
-                } else {
-                    row = foldLine.end.row;
-                }
-            }
-            lineElementsIdx ++;
-        }
-
-        return {
-            lineElementsIdx,
-            first
-        };
-    }
-
     /**
      * @param {LayerConfig} config
      * @param {number} firstRow
@@ -206,12 +183,24 @@ class Text {
 
         this.config = config;
 
-
+        var first = Math.max(firstRow, config.firstRow);
         var last = Math.min(lastRow, config.lastRow);
 
         var lineElements = this.element.childNodes;
+        var lineElementsIdx = 0;
 
-        var {first, lineElementsIdx} = this.$countLineElementsIndex(firstRow, config);
+        for (var row = config.firstRow; row < first; row++) {
+            var foldLine = this.session.getFoldLine(row);
+            if (foldLine) {
+                if (foldLine.containsRow(first)) {
+                    first = foldLine.start.row;
+                    break;
+                } else {
+                    row = foldLine.end.row;
+                }
+            }
+            lineElementsIdx ++;
+        }
 
         var heightChanged = false;
         var row = first;
@@ -387,7 +376,9 @@ class Text {
 
             if (tab) {
                 var tabSize = self.session.getScreenTabSize(screenColumn + m.index);
-                valueFragment.appendChild(self.$tabStrings[tabSize].cloneNode(true));
+                var text = self.$tabStrings[tabSize].cloneNode(true);
+                text["charCount"] = 1;
+                valueFragment.appendChild(text);
                 screenColumn += tabSize - 1;
             } else if (simpleSpace) {
                 if (self.showSpaces) {
@@ -621,7 +612,7 @@ class Text {
                     parent.appendChild(lineEl);
 
                     var text = this.dom.createTextNode(lang.stringRepeat("\xa0", splits.indent), this.element);
-                    text.ignore = true;
+                    text["charCount"] = 0; // not to take into account when we are counting columns
                     lineEl.appendChild(text);
 
                     split ++;
@@ -668,160 +659,6 @@ class Text {
 
         parent.appendChild(overflowEl);
     }
-
-    $restoreCachedSelectionLines() {
-        if (!this.element) return;
-
-        const selectedElements = this.element.querySelectorAll('.ace_inline_selection');
-        for (let i = 0; i < selectedElements.length; i++) {
-            selectedElements[i].classList.remove('ace_inline_selection');
-        }
-    }
-
-    $applySelectionHighlighting() {
-        this.$restoreCachedSelectionLines();
-
-        var selectionsRanges = (typeof this.session.selection.getAllRanges == "function") ? this.session.selection.getAllRanges()
-            : [this.session.selection.getRange()];
-
-        if (!selectionsRanges || selectionsRanges.length === 0) return;
-
-        selectionsRanges.forEach((selectionRange) => {
-            for (let row = selectionRange.start.row; row <= selectionRange.end.row; row++) {
-                const cell = this.$lines.cells.find((el) => el.row === row);
-
-                if (cell) {
-                    this.$modifyDomForSelections(cell.element, row, selectionsRanges);
-                }
-            }
-        });
-    }
-
-    $modifyDomForSelections(lineElement, row, selections) {
-        const lineSelections = [];
-        for (let s = 0; s < selections.length; s++) {
-            var selection = selections[s];
-            if (selection.start.row <= row && selection.end.row >= row) {
-                const startCol = selection.start.row === row ? selection.start.column : 0;
-                const endCol = selection.end.row === row ? selection.end.column : Number.MAX_VALUE;
-                lineSelections.push({ startCol, endCol });
-            }
-        }
-
-        if (lineSelections.length === 0) return;
-
-        var lineElements = [];
-        if (lineElement.classList.contains('ace_line_group')) {
-            lineElements = Array.from(lineElement.childNodes);
-        } else {
-            lineElements = [lineElement];
-        }
-
-        var currentColumn = 0;
-        lineElements.forEach((lineElement) => {
-            const childNodes = Array.from(lineElement.childNodes);
-            for (let i = 0; i < childNodes.length; i++) {
-                const node = childNodes[i];
-                const nodeText = node.textContent || '';
-                const nodeStart = currentColumn;
-                const nodeEnd = currentColumn + nodeText.length;
-
-                if (node.ignore) {
-                    continue;
-                }
-
-                for (let j = 0; j < lineSelections.length; j++) {
-                    const selection = lineSelections[j];
-                    const selStart = selection.startCol;
-                    const selEnd = selection.endCol;
-
-                    if (nodeStart < selEnd && nodeEnd > selStart) {
-                        if (node.nodeType === Node.TEXT_NODE) {
-                            const beforeSelection = Math.max(0, selStart - nodeStart);
-                            const afterSelection = Math.max(0, nodeEnd - selEnd);
-                            const selectionLength = nodeText.length - beforeSelection - afterSelection;
-
-                            if (beforeSelection > 0 || afterSelection > 0) {
-                                const fragment = this.dom.createFragment(this.element);
-
-                                if (beforeSelection > 0) {
-                                    fragment.appendChild(this.dom.createTextNode(
-                                        nodeText.substring(0, beforeSelection),
-                                        this.element
-                                    ));
-                                }
-
-                                if (selectionLength > 0) {
-                                const selectedSpan = this.dom.createElement('span');
-                                    selectedSpan.classList.add('ace_inline_selection');
-                                    selectedSpan.textContent = nodeText.substring(
-                                        beforeSelection,
-                                        beforeSelection + selectionLength
-                                    );
-                                    fragment.appendChild(selectedSpan);
-                                }
-
-                                if (afterSelection > 0) {
-                                    fragment.appendChild(this.dom.createTextNode(
-                                        nodeText.substring(beforeSelection + selectionLength),
-                                        this.element
-                                    ));
-                                }
-
-                                lineElement.replaceChild(fragment, node);
-                            } else {
-                                const selectedSpan = this.dom.createElement('span');
-                                selectedSpan.classList.add('ace_inline_selection');
-                                selectedSpan.textContent = nodeText;
-                                lineElement.replaceChild(selectedSpan, node);
-                            }
-                        } else if (node.nodeType === Node.ELEMENT_NODE) {
-                            if (nodeStart >= selStart && nodeEnd <= selEnd) {
-                                node.classList.add('ace_inline_selection');
-                            } else {
-                            const beforeSelection = Math.max(0, selStart - nodeStart);
-                            const afterSelection = Math.max(0, nodeEnd - selEnd);
-                            const selectionLength = nodeText.length - beforeSelection - afterSelection;
-
-                                if (beforeSelection > 0 || afterSelection > 0) {
-                                const nodeClasses = node.className;
-                                const fragment = this.dom.createFragment(this.element);
-
-                                    if (beforeSelection > 0) {
-                                    const beforeSpan = this.dom.createElement('span');
-                                        beforeSpan.className = nodeClasses;
-                                        beforeSpan.textContent = nodeText.substring(0, beforeSelection);
-                                        fragment.appendChild(beforeSpan);
-                                    }
-
-                                    if (selectionLength > 0) {
-                                    const selectedSpan = this.dom.createElement('span');
-                                        selectedSpan.className = nodeClasses + ' ace_inline_selection';
-                                        selectedSpan.textContent = nodeText.substring(
-                                            beforeSelection,
-                                            beforeSelection + selectionLength
-                                        );
-                                        fragment.appendChild(selectedSpan);
-                                    }
-
-                                    if (afterSelection > 0) {
-                                    const afterSpan = this.dom.createElement('span');
-                                        afterSpan.className = nodeClasses;
-                                        afterSpan.textContent = nodeText.substring(beforeSelection + selectionLength);
-                                        fragment.appendChild(afterSpan);
-                                    }
-
-                                    lineElement.replaceChild(fragment, node);
-                                }
-                            }
-                        }
-                    }
-                }
-                currentColumn = nodeEnd;
-            }
-        });
-    }
-
 
     // row is either first row of foldline or not in fold
     $renderLine(parent, row, foldLine) {
