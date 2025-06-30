@@ -467,6 +467,42 @@ module.exports = {
             done();
         }, 100);
     },
+    "test: gutter tooltip aria-describedby attribute": function(done) {
+        var editor = this.editor;
+        var value = "";
+
+        editor.session.setMode(new Mode());
+        editor.setValue(value, -1);
+        editor.session.setAnnotations([{row: 0, column: 0, text: "error test", type: "error"}]);
+        editor.renderer.$loop._flush();
+
+        var lines = editor.renderer.$gutterLayer.$lines;
+        var element = lines.cells[0].element;
+        var annotation = element.childNodes[2];
+        assert.ok(/ace_error/.test(element.className));
+
+        var rect = element.getBoundingClientRect();
+        element.dispatchEvent(new MouseEvent("move", {x: rect.left, y: rect.top}));
+
+        // Wait for the tooltip to appear after its timeout.
+        setTimeout(function() {
+            editor.renderer.$loop._flush();
+            var tooltip = editor.container.querySelector(".ace_gutter-tooltip");
+            assert.ok(/error test/.test(tooltip.textContent));
+
+            var ariaDescribedBy = annotation.getAttribute("aria-describedby");
+            assert.ok(ariaDescribedBy, "aria-describedby should be set when tooltip is shown");
+            assert.equal(ariaDescribedBy, tooltip.id, "aria-describedby should match tooltip id");
+
+            editor.container.dispatchEvent(new MouseEvent("wheel", {}));
+
+            setTimeout(function() {
+                editor.renderer.$loop._flush();
+                assert.equal(annotation.getAttribute("aria-describedby"), "", "aria-describedby should be removed when tooltip is hidden");
+                done();
+            }, 100);
+        }, 100);
+    },
 
     tearDown : function() {
         this.editor.destroy();

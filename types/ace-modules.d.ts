@@ -1788,12 +1788,16 @@ declare module "ace-code/src/mouse/default_gutter_handler" {
         };
         static annotationsToSummaryString(annotations: any): string;
         constructor(editor: any, isHover?: boolean);
+        id: string;
         editor: any;
         visibleTooltipRow: number | undefined;
         onMouseOut(e: any): void;
         setPosition(x: any, y: any): void;
         showTooltip(row: any): void;
         hideTooltip(): void;
+    }
+    export namespace GutterTooltip {
+        let $uid: number;
     }
     import { Tooltip } from "ace-code/src/tooltip";
     export interface GutterHandler {
