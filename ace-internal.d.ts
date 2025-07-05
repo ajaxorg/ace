@@ -976,7 +976,7 @@ export namespace Ace {
 
     interface Completer {
         /** Regular expressions defining valid identifier characters for completion triggers */
-        identifierRegexps?: Array<RegExp>,
+        identifierRegexps?: Array<RegExp> | ((editor: Editor) => Array<RegExp>),
 
         /** Main completion method that provides suggestions for the given context */
         getCompletions(editor: Editor,
@@ -999,7 +999,7 @@ export namespace Ace {
         /** Unique identifier for this completer */
         id?: string;
         /** Characters that trigger autocompletion when typed */
-        triggerCharacters?: string[];
+        triggerCharacters?: string[] | ((editor: Editor) => string[]);
         /** Whether to hide inline preview text */
         hideInlinePreview?: boolean;
         /** Custom insertion handler for completion items */
