@@ -1,5 +1,12 @@
 const Text = require("./text").Text;
 
+/**
+ * @typedef TextMarker
+ * @property {import("../../ace-internal").Ace.IRange} range
+ * @property {number} id
+ * @property {string} className
+ */
+
 const textMarkerMixin = {
     /**
      * @param {string} className
@@ -16,6 +23,14 @@ const textMarkerMixin = {
      * @this {Text}
      */
     $applyTextMarkers() {
+        if (this.session.$scheduleForRemove) {
+            this.session.$scheduleForRemove.forEach(className => {
+                this.$removeClass(className);
+            });
+
+            this.session.$scheduleForRemove = new Set();
+        }
+
         if (!this.session.$textMarkers) {
             return;
         }
@@ -34,7 +49,7 @@ const textMarkerMixin = {
                 const cell = this.$lines.cells.find((el) => el.row === row);
 
                 if (cell) {
-                    this.$modifyDomForMarkers(cell.element, row, marker.range);
+                    this.$modifyDomForMarkers(cell.element, row, marker);
                 }
             }
         });
@@ -42,11 +57,13 @@ const textMarkerMixin = {
     /**
      * @param {HTMLElement} lineElement
      * @param {number} row
-     * @param {import("../../ace-internal").Ace.IRange} range
+     * @param {TextMarker} marker
      * @this {Text}
      */
-    $modifyDomForMarkers(lineElement, row, range) {
-        let startCol = range.start.column, endCol = range.end.column;
+    $modifyDomForMarkers(lineElement, row, marker) {
+        const lineLength = this.session.getLine(row).length;
+        let startCol = row > marker.range.start.row ? 0 : marker.range.start.column;
+        let endCol = row < marker.range.end.row ? lineLength : marker.range.end.column;
 
         var lineElements = [];
         if (lineElement.classList.contains('ace_line_group')) {
@@ -93,7 +110,7 @@ const textMarkerMixin = {
 
                                 if (selectionLength > 0) {
                                     const selectedSpan = this.dom.createElement('span');
-                                    selectedSpan.classList.add('ace_inline_selection');
+                                    selectedSpan.classList.add(marker.className);
                                     selectedSpan.textContent = nodeText.substring(
                                         beforeSelection,
                                         beforeSelection + selectionLength
@@ -113,7 +130,7 @@ const textMarkerMixin = {
                             }
                             else {
                                 const selectedSpan = this.dom.createElement('span');
-                                selectedSpan.classList.add('ace_inline_selection');
+                                selectedSpan.classList.add(marker.className);
                                 selectedSpan.textContent = nodeText;
                                 selectedSpan["charCount"] = node["charCount"];
                                 parentNode.replaceChild(selectedSpan, node);
@@ -122,7 +139,7 @@ const textMarkerMixin = {
                         else if (node.nodeType === 1) { //element node
                             if (nodeStart >= startCol && nodeEnd <= endCol) {
                                 // @ts-ignore
-                                node.classList.add('ace_inline_selection');
+                                node.classList.add(marker.className);
                             }
                             else {
                                 const beforeSelection = Math.max(0, startCol - nodeStart);
@@ -213,13 +230,16 @@ const editSessionTextMarkerMixin = {
         if (!marker) {
             return;
         }
-
+        if (!this.$scheduleForRemove) {
+            this.$scheduleForRemove = new Set();
+        }
+        this.$scheduleForRemove.add(marker.className);
         delete this.$textMarkers[markerId];
     },
     /**
      * Retrieves the text markers associated with the current edit session.
      *
-     * @returns {Array} An array of text markers, or an empty array if no markers exist
+     * @returns {TextMarker[]} An array of text markers, or an empty array if no markers exist
      *
      * @this {EditSession}
      */

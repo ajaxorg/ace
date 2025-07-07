@@ -1439,9 +1439,11 @@ declare module "./src/editor" {
 }
 
 declare module "./src/edit_session" {
+    type TextMarker = import("./src/layer/text_markers").TextMarker;
     type TextMarkers = typeof import("./src/layer/text_markers").editSessionTextMarkerMixin & {
-        $textMarkers: any[];
+        $textMarkers: TextMarker[];
         $textMarkerId: number;
+        $scheduleForRemove: Set<string>;
     };
 
     export interface EditSession extends Ace.EventEmitter<Ace.EditSessionEvents>,
