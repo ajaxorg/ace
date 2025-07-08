@@ -31,12 +31,14 @@ const textMarkerMixin = {
             this.session.$scheduleForRemove = new Set();
         }
 
-        if (!this.session.$textMarkers) {
+        const textMarkers = this.session.getTextMarkers();
+
+        if (textMarkers.length === 0) {
             return;
         }
 
         const classNameGroups = new Set();
-        this.session.$textMarkers.forEach(marker => {
+        textMarkers.forEach(marker => {
             classNameGroups.add(marker.className);
         });
 
@@ -44,7 +46,7 @@ const textMarkerMixin = {
             this.$removeClass(className);
         });
 
-        this.session.$textMarkers.forEach((marker) => {
+        textMarkers.forEach((marker) => {
             for (let row = marker.range.start.row; row <= marker.range.end.row; row++) {
                 const cell = this.$lines.cells.find((el) => el.row === row);
 
@@ -79,7 +81,7 @@ const textMarkerMixin = {
             for (let i = 0; i < childNodes.length; i++) {
                 let subChildNodes = [childNodes[i]];
                 let parentNode = lineElement;
-                if (childNodes[i].childNodes.length > 0) {
+                if (childNodes[i].childNodes && childNodes[i].childNodes.length > 0) {
                     subChildNodes = Array.from(childNodes[i].childNodes);
                     parentNode = childNodes[i];
                 }
@@ -160,7 +162,7 @@ const textMarkerMixin = {
 
                                     if (selectionLength > 0) {
                                         const selectedSpan = this.dom.createElement('span');
-                                        selectedSpan.className = nodeClasses + ' ace_inline_selection';
+                                        selectedSpan.className = nodeClasses + ' ' + marker.className;
                                         selectedSpan.textContent = nodeText.substring(
                                             beforeSelection,
                                             beforeSelection + selectionLength

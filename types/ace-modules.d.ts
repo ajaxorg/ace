@@ -506,6 +506,8 @@ declare module "ace-code/src/layer/text" {
     }
     export type LayerConfig = import("ace-code").Ace.LayerConfig;
     export type EditSession = import("ace-code/src/edit_session").EditSession;
+    type TextMarkersMixin = {
+    };
     import dom = require("ace-code/src/lib/dom");
     import { Lines } from "ace-code/src/layer/lines";
     namespace Ace {
@@ -515,7 +517,7 @@ declare module "ace-code/src/layer/text" {
         type TextEvents = import("ace-code").Ace.TextEvents;
         type LayerConfig = import("ace-code").Ace.LayerConfig;
     }
-    export interface Text extends Ace.EventEmitter<Ace.TextEvents> {
+    export interface Text extends Ace.EventEmitter<Ace.TextEvents>, TextMarkersMixin {
         config: Ace.LayerConfig;
     }
 }
@@ -3537,6 +3539,45 @@ declare module "ace-code/src/occur" {
     import { Search } from "ace-code/src/search";
     import { EditSession } from "ace-code/src/edit_session";
 }
+declare module "ace-code/src/layer/text_markers" {
+    export type TextMarker = {
+        range: import("ace-code").Ace.IRange;
+        id: number;
+        className: string;
+    };
+    export namespace textMarkerMixin {
+        function $removeClass(this: Text, className: string): void;
+        function $applyTextMarkers(this: Text): void;
+        function $modifyDomForMarkers(this: Text, lineElement: HTMLElement, row: number, marker: TextMarker): void;
+    }
+    export namespace editSessionTextMarkerMixin {
+        /**
+         * Adds a text marker to the current edit session.
+         *
+         * @param {import("ace-code").Ace.IRange} range - The range to mark in the document
+         * @param {string} className - The CSS class name to apply to the marked text
+         * @returns {number} The unique identifier for the added text marker
+         *
+         */
+        function addTextMarker(this: EditSession, range: import("ace-code").Ace.IRange, className: string): number;
+        /**
+         * Removes a text marker from the current edit session.
+         *
+         * @param {number} markerId - The unique identifier of the text marker to remove
+         *
+         */
+        function removeTextMarker(this: EditSession, markerId: number): void;
+        /**
+         * Retrieves the text markers associated with the current edit session.
+         *
+         * @returns {TextMarker[]} An array of text markers, or an empty array if no markers exist
+         *
+         */
+        function getTextMarkers(this: EditSession): TextMarker[];
+    }
+    import { Text } from "ace-code/src/layer/text";
+    import { EditSession } from "ace-code/src/edit_session";
+}
 declare module "ace-code/src/edit_session/fold" {
     export class Fold extends RangeList {
         constructor(range: Range, placeholder: any);
@@ -4460,6 +4501,17 @@ declare module "ace-code/src/edit_session" {
     export type SyntaxMode = import("ace-code").Ace.SyntaxMode;
     export type LineWidget = import("ace-code").Ace.LineWidget;
     export type TextMode = SyntaxMode;
+    type TextMarker = {
+        range: IRange;
+        id: number;
+        className: string;
+    };
+    type TextMarkers = {
+        addTextMarker(this: EditSession, range: IRange, className: string): number;
+        removeTextMarker(this: EditSession, markerId: number): void;
+        getTextMarkers(this: EditSession): TextMarker[];
+    } & {
+    };
     import { Document } from "ace-code/src/document";
     import { BackgroundTokenizer } from "ace-code/src/background_tokenizer";
     import { Selection } from "ace-code/src/selection";
@@ -4484,7 +4536,7 @@ declare module "ace-code/src/edit_session" {
         type Operation = import("ace-code").Ace.Operation;
     }
     export interface EditSession extends Ace.EventEmitter<Ace.EditSessionEvents>, Ace.OptionsProvider<Ace.EditSessionOptions>, Ace.Folding, Ace.
-        BracketMatch {
+        BracketMatch, TextMarkers {
         doc: Ace.Document;
         lineWidgetsWidth?: number;
         gutterRenderer?: any;
