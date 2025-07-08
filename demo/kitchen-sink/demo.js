@@ -34,6 +34,7 @@ var Range = require("ace/range").Range;
 
 var whitespace = require("ace/ext/whitespace");
 
+var createDiffView = require("../../src/ext/diff").createDiffView;
 
 
 var doclist = require("./doclist");
@@ -324,6 +325,7 @@ window.onresize = onResize;
 onResize();
 
 /*********** options panel ***************************/
+var diffView;
 doclist.history = doclist.docs.map(function(doc) {
     return doc.name;
 });
@@ -356,6 +358,14 @@ doclist.pickDocument = function(name) {
         whitespace.detectIndentation(session);
         optionsPanel.render();
         env.editor.focus();
+        if (diffView) {
+            diffView.detach()
+            diffView = createDiffView({
+                inline: "b",
+                editorB: editor,
+                valueA: editor.getValue()
+            });
+        }
     });
 };
 
@@ -365,6 +375,7 @@ var OptionPanel = require("ace/ext/options").OptionPanel;
 var optionsPanel = env.optionsPanel = new OptionPanel(env.editor);
 
 var originalAutocompleteCommand = null;
+
 
 optionsPanel.add({
     Main: {
@@ -406,6 +417,31 @@ optionsPanel.add({
                     : sp.getOrientation() == sp.BELOW
                     ? "Below"
                     : "Beside";
+            }
+        },
+        "Show diffs": {
+            position: 0,
+            type: "buttonBar",
+            path: "diffView",
+            values: ["None", "Inline"],
+            onchange: function (value) {
+                    if (value === "Inline" && !diffView) {
+                        diffView = createDiffView({
+                            inline: "b",
+                            editorB: editor,
+                            valueA: editor.getValue()
+                        });
+                    }
+                    else if (value === "None") {
+                        if (diffView) {
+                            diffView.detach();
+                            diffView = null;
+                        }
+                    }
+            },
+            getValue: function() {
+                return !diffView ? "None"
+                    : "Inline";
             }
         }
     },

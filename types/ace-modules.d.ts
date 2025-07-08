@@ -375,7 +375,7 @@ declare module "ace-code/src/config" {
             string
         ], onLoad: (module: any) => void) => void;
         setModuleLoader: (moduleName: any, onLoad: any) => void;
-        version: "1.42.0";
+        version: "1.43.1";
     };
     export = _exports;
 }
@@ -1790,12 +1790,16 @@ declare module "ace-code/src/mouse/default_gutter_handler" {
         };
         static annotationsToSummaryString(annotations: any): string;
         constructor(editor: any, isHover?: boolean);
+        id: string;
         editor: any;
         visibleTooltipRow: number | undefined;
         onMouseOut(e: any): void;
         setPosition(x: any, y: any): void;
         showTooltip(row: any): void;
         hideTooltip(): void;
+    }
+    export namespace GutterTooltip {
+        let $uid: number;
     }
     import { Tooltip } from "ace-code/src/tooltip";
     export interface GutterHandler {
@@ -3578,6 +3582,24 @@ declare module "ace-code/src/layer/text_markers" {
     import { Text } from "ace-code/src/layer/text";
     import { EditSession } from "ace-code/src/edit_session";
 }
+declare module "ace-code/src/mouse/multi_select_handler" {
+    export function onMouseDown(e: any): any;
+}
+declare module "ace-code/src/commands/multi_select_commands" {
+    export const defaultCommands: import("ace-code").Ace.Command[];
+    export const multiSelectCommands: import("ace-code").Ace.Command[];
+    export const keyboardHandler: HashHandler;
+    import { HashHandler } from "ace-code/src/keyboard/hash_handler";
+}
+declare module "ace-code/src/multi_select" {
+    export const commands: import("ace-code").Ace.Command[];
+    export const onSessionChange: (e: any) => void;
+    export type Anchor = import("ace-code/src/anchor").Anchor;
+    export type Point = import("ace-code").Ace.Point;
+    export type ScreenCoordinates = import("ace-code").Ace.ScreenCoordinates;
+    export function MultiSelect(editor: Editor): void;
+    import { Editor } from "ace-code/src/editor";
+}
 declare module "ace-code/src/edit_session/fold" {
     export class Fold extends RangeList {
         constructor(range: Range, placeholder: any);
@@ -4840,24 +4862,6 @@ declare module "ace-code/src/placeholder" {
     }
     export interface PlaceHolder extends Ace.EventEmitter<Ace.PlaceHolderEvents> {
     }
-}
-declare module "ace-code/src/mouse/multi_select_handler" {
-    export function onMouseDown(e: any): any;
-}
-declare module "ace-code/src/commands/multi_select_commands" {
-    export const defaultCommands: import("ace-code").Ace.Command[];
-    export const multiSelectCommands: import("ace-code").Ace.Command[];
-    export const keyboardHandler: HashHandler;
-    import { HashHandler } from "ace-code/src/keyboard/hash_handler";
-}
-declare module "ace-code/src/multi_select" {
-    export const commands: import("ace-code").Ace.Command[];
-    export const onSessionChange: (e: any) => void;
-    export type Anchor = import("ace-code/src/anchor").Anchor;
-    export type Point = import("ace-code").Ace.Point;
-    export type ScreenCoordinates = import("ace-code").Ace.ScreenCoordinates;
-    export function MultiSelect(editor: Editor): void;
-    import { Editor } from "ace-code/src/editor";
 }
 declare module "ace-code/src/commands/occur_commands" {
     export namespace occurStartCommand {

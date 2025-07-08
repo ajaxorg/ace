@@ -40,8 +40,8 @@ declare module "ace-code" {
         type GutterKeyboardEvent = import("ace-code/src/keyboard/gutter_handler").GutterKeyboardEvent;
         type HoverTooltip = import("ace-code/src/tooltip").HoverTooltip;
         type Tooltip = import("ace-code/src/tooltip").Tooltip;
-        type PopupManager = import("ace-code/src/tooltip").PopupManager;
         type TextInput = import("ace-code/src/keyboard/textinput").TextInput;
+        type DiffChunk = import("ace-code/src/ext/diff/base_diff_view").DiffChunk;
         type AfterLoadCallback = (err: Error | null, module: unknown) => void;
         type LoaderFunction = (moduleName: string, afterLoad: AfterLoadCallback) => void;
         export interface ConfigOptions {
@@ -1050,26 +1050,6 @@ declare module "ace-code" {
             setLabel?: boolean;
             inline?: boolean;
         }
-        export interface TextAreaOptions {
-            /** Programming language mode for syntax highlighting (e.g., "javascript", "html", "css") */
-            mode?: string;
-            /** Visual theme for the editor appearance (e.g., "textmate", "monokai", "eclipse") */
-            theme?: string;
-            /** Line wrapping behavior - "off", "free", or specific column number like "40", "80" */
-            wrap?: string | number;
-            /** Font size in CSS units (e.g., "12px", "14px", "16px") */
-            fontSize?: string;
-            /** Whether to display the line number gutter on the left side */
-            showGutter?: boolean | string;
-            /** Keyboard handler/bindings to use - "ace", "vim", or "emacs" */
-            keybindings?: string;
-            /** Whether to show the print margin indicator line */
-            showPrintMargin?: boolean | string;
-            /** Whether to use soft tabs (spaces) instead of hard tabs */
-            useSoftTabs?: boolean | string;
-            /** Whether to show invisible characters like spaces and tabs */
-            showInvisibles?: boolean | string;
-        }
     }
     export const config: typeof import("ace-code/src/config");
     export function edit(el?: string | (HTMLElement & {
@@ -1082,6 +1062,6 @@ declare module "ace-code" {
     import { Range } from "ace-code/src/range";
     import { UndoManager } from "ace-code/src/undomanager";
     import { VirtualRenderer as Renderer } from "ace-code/src/virtual_renderer";
-    export var version: "1.42.0";
+    export var version: "1.43.1";
     export { Range, Editor, EditSession, UndoManager, Renderer as VirtualRenderer };
 }

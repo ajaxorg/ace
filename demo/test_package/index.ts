@@ -16,6 +16,7 @@ import "../../src/test/mockdom.js";
 import {tokenize} from "ace-code/src/ext/simple_tokenizer";
 import {JavaScriptHighlightRules} from "ace-code/src/mode/javascript_highlight_rules";
 import {highlight} from "ace-code/src/ext/static_highlight";
+import {createDiffView, DiffProvider, DiffViewOptions} from "ace-code/src/ext/diff";
 
 // TODO this does not work in node
 // import "ace-code/esm-resolver";
@@ -156,3 +157,17 @@ editor.commands.on('afterExec', ({editor, command}) => {
 editor.commands.on('exec', ({editor, command}) => {
     console.log(editor.getValue(), command.name);
 });
+
+const diffViewOptions: DiffViewOptions =  {
+    maxDiffs: 1000,
+    folding: true
+}
+
+var diffView = createDiffView({
+    valueB: "test",
+    inline: "b"
+}, diffViewOptions);
+
+diffView.setProvider(new DiffProvider());
+
+diffView.destroy();

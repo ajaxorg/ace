@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.43.1](https://github.com/ajaxorg/ace/compare/v1.43.0...v1.43.1) (2025-07-02)
+
+
+### Bug Fixes
+
+* **a11y:** aria-describedby to gutter elements ([#5838](https://github.com/ajaxorg/ace/issues/5838)) ([bf27c15](https://github.com/ajaxorg/ace/commit/bf27c151685ac486a991a61d67fa04adf8891c76))
+
+### [1.42.1](https://github.com/ajaxorg/ace/compare/v1.42.0...v1.42.1) (2025-06-20)
+
+
+### Features
+
+* Add scroll diff decorators ([#5807](https://github.com/ajaxorg/ace/issues/5807)) ([b45e94c](https://github.com/ajaxorg/ace/commit/b45e94cb92d757b5f09ee0966a764ed0d245ed70))
+
 ## [1.42.0](https://github.com/ajaxorg/ace/compare/v1.41.0...v1.42.0) (2025-06-03)
 
 

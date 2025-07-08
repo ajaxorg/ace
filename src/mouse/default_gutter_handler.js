@@ -142,11 +142,13 @@ exports.GutterHandler = GutterHandler;
 class GutterTooltip extends Tooltip {
     constructor(editor, isHover = false) {
         super(editor.container);
+        this.id = "gt" + (++GutterTooltip.$uid);
         this.editor = editor;
         /**@type {Number | Undefined}*/
         this.visibleTooltipRow;
         var el = this.getElement();
         el.setAttribute("role", "tooltip");
+        el.setAttribute("id", this.id);
         el.style.pointerEvents = "auto";
         if (isHover) {
             this.onMouseOut = this.onMouseOut.bind(this);
@@ -295,9 +297,28 @@ class GutterTooltip extends Tooltip {
             this.setClassName("ace_gutter-tooltip");
         }
 
+        const annotationNode = this.$findLinkedAnnotationNode(row);
+        if (annotationNode) {
+            annotationNode.setAttribute("aria-describedby", this.id);
+        }
+
         this.show();
         this.visibleTooltipRow = row;
         this.editor._signal("showGutterTooltip", this);
+    }
+
+    $findLinkedAnnotationNode(row) {
+        const cell = this.$findCellByRow(row);
+        if (cell) {
+            const element = cell.element;
+            if (element.childNodes.length > 2) {
+                return element.childNodes[2];
+            }
+        }
+    }
+
+    $findCellByRow(row) {
+        return this.editor.renderer.$gutterLayer.$lines.cells.find((el) => el.row === row);
     }
 
     hideTooltip() {
@@ -306,6 +327,14 @@ class GutterTooltip extends Tooltip {
         }
         this.$element.removeAttribute("aria-live");
         this.hide();
+
+        if (this.visibleTooltipRow != undefined) {
+            const annotationNode = this.$findLinkedAnnotationNode(this.visibleTooltipRow);
+            if (annotationNode) {
+                annotationNode.removeAttribute("aria-describedby");
+            }
+        }
+
         this.visibleTooltipRow = undefined;
         this.editor._signal("hideGutterTooltip", this);
     }
@@ -321,5 +350,7 @@ class GutterTooltip extends Tooltip {
         return summary.join(", ");
     }
 }
+
+GutterTooltip.$uid = 0;
 
 exports.GutterTooltip = GutterTooltip;
