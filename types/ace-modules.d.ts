@@ -3543,6 +3543,24 @@ declare module "ace-code/src/occur" {
     import { Search } from "ace-code/src/search";
     import { EditSession } from "ace-code/src/edit_session";
 }
+declare module "ace-code/src/mouse/multi_select_handler" {
+    export function onMouseDown(e: any): any;
+}
+declare module "ace-code/src/commands/multi_select_commands" {
+    export const defaultCommands: import("ace-code").Ace.Command[];
+    export const multiSelectCommands: import("ace-code").Ace.Command[];
+    export const keyboardHandler: HashHandler;
+    import { HashHandler } from "ace-code/src/keyboard/hash_handler";
+}
+declare module "ace-code/src/multi_select" {
+    export const commands: import("ace-code").Ace.Command[];
+    export const onSessionChange: (e: any) => void;
+    export type Anchor = import("ace-code/src/anchor").Anchor;
+    export type Point = import("ace-code").Ace.Point;
+    export type ScreenCoordinates = import("ace-code").Ace.ScreenCoordinates;
+    export function MultiSelect(editor: Editor): void;
+    import { Editor } from "ace-code/src/editor";
+}
 declare module "ace-code/src/layer/text_markers" {
     export type TextMarker = {
         range: import("ace-code").Ace.IRange;
@@ -3581,24 +3599,6 @@ declare module "ace-code/src/layer/text_markers" {
     }
     import { Text } from "ace-code/src/layer/text";
     import { EditSession } from "ace-code/src/edit_session";
-}
-declare module "ace-code/src/mouse/multi_select_handler" {
-    export function onMouseDown(e: any): any;
-}
-declare module "ace-code/src/commands/multi_select_commands" {
-    export const defaultCommands: import("ace-code").Ace.Command[];
-    export const multiSelectCommands: import("ace-code").Ace.Command[];
-    export const keyboardHandler: HashHandler;
-    import { HashHandler } from "ace-code/src/keyboard/hash_handler";
-}
-declare module "ace-code/src/multi_select" {
-    export const commands: import("ace-code").Ace.Command[];
-    export const onSessionChange: (e: any) => void;
-    export type Anchor = import("ace-code/src/anchor").Anchor;
-    export type Point = import("ace-code").Ace.Point;
-    export type ScreenCoordinates = import("ace-code").Ace.ScreenCoordinates;
-    export function MultiSelect(editor: Editor): void;
-    import { Editor } from "ace-code/src/editor";
 }
 declare module "ace-code/src/edit_session/fold" {
     export class Fold extends RangeList {
