@@ -59,7 +59,7 @@ var completions = [
 
 var getAllLines = function(editorOverride) {
     editorOverride = editorOverride || editor;
-    return editorOverride.renderer.$textLayer.element.childNodes.map(function (node) {
+    return Array.from(editorOverride.renderer.$textLayer.element.childNodes).map(function (node) {
         return node.textContent;
     }).join("\n");
 };
