@@ -117,7 +117,8 @@ function serveDirectory(filename, uri, req, res) {
     html = "<table>" + html + "</table>";
 
     var baseUri = uri.replace(/\/?$/, "/");
-    html = "<base href='"+ escapeHTML(baseUri) + "'>" + html;
+    html = "<base href='"+ escapeHTML(baseUri) + "'>" 
+        + "<meta charset='utf-8'>" + html;
     res._hasBody && res.write(html);
     res.end();
 }

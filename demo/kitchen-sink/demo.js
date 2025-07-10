@@ -33,7 +33,7 @@ var Range = require("ace/range").Range;
 
 var whitespace = require("ace/ext/whitespace");
 
-var createDiffView = require("../../src/ext/diff").createDiffView;
+var createDiffView = require("ace/ext/diff").createDiffView;
 
 
 var doclist = require("./doclist");
@@ -504,6 +504,7 @@ function updateUIEditorOptions() {
 
 env.editor.on("changeSession", function() {
     for (var i in env.editor.session.$options) {
+        if (i == "mode") continue;
         var value = util.getOption(i);
         if (value != undefined) {
             env.editor.setOption(i, value);

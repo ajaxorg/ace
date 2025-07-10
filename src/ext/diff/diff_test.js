@@ -431,9 +431,9 @@ module.exports = {
     },
     "test: second editor destroyed on detach in inline diff view": function() {
         diffView = new InlineDiffView({ editorA, inline: "a" });
-        assert.ok(Array.isArray(diffView.otherEditor.$toDestroy));
+        assert.ok(!diffView.otherEditor.destroyed);
         diffView.detach();
-        assert.ok(diffView.otherEditor.$toDestroy == undefined);
+        assert.ok(diffView.otherEditor.destroyed);
     }
 };
 
