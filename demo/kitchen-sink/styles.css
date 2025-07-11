@@ -125,3 +125,7 @@ body {
 .ace_tooltip pre {
     margin: 0;
 }
+
+.ace_inline_selection {
+    color: red!important;
+}

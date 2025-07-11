@@ -141,7 +141,7 @@ class Editor {
                 switch (scrollIntoView) {
                     case "center-animate":
                         scrollIntoView = "animate";
-                        /* fall through */
+                    /* fall through */
                     case "center":
                         this.renderer.scrollCursorIntoView(null, 0.5);
                         break;
@@ -467,7 +467,7 @@ class Editor {
      */
     getFontSize() {
         return this.getOption("fontSize") ||
-           dom.computedStyle(this.container).fontSize;
+            dom.computedStyle(this.container).fontSize;
     }
 
     /**
@@ -974,13 +974,13 @@ class Editor {
             if (transform.selection.length == 2) { // Transform relative to the current column
                 this.selection.setSelectionRange(
                     new Range(cursor.row, start + transform.selection[0],
-                              cursor.row, start + transform.selection[1]));
+                        cursor.row, start + transform.selection[1]));
             } else { // Transform relative to the current row.
                 this.selection.setSelectionRange(
                     new Range(cursor.row + transform.selection[0],
-                              transform.selection[1],
-                              cursor.row + transform.selection[2],
-                              transform.selection[3]));
+                        transform.selection[1],
+                        cursor.row + transform.selection[2],
+                        transform.selection[3]));
             }
         }
         if (this.$enableAutoIndent) {
@@ -1883,7 +1883,7 @@ class Editor {
      * Copies all the selected lines up one row.
      *
      **/
-   copyLinesUp() {
+    copyLinesUp() {
         this.$moveLines(-1, true);
     }
 
@@ -2081,7 +2081,7 @@ class Editor {
      * Shifts the document to wherever "page down" is, as well as moving the cursor position.
      **/
     gotoPageDown() {
-       this.$moveByPage(1, false);
+        this.$moveByPage(1, false);
     }
 
     /**

@@ -757,6 +757,9 @@ function TextNode(value) {
     this.__defineGetter__("nodeValue", function() {
         return this.data;
     });
+    this.__defineGetter__("textContent", function() {
+        return this.data;
+    });
 }).call(TextNode.prototype);
 
 var window = {
