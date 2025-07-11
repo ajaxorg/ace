@@ -29,6 +29,8 @@ var dummyDiffProvider = {
     }
 };
 
+dom.importCssString(css, "diffview.css");
+
 class BaseDiffView {
     /**
      * Constructs a new base DiffView instance.
@@ -54,7 +56,6 @@ class BaseDiffView {
             this.container = container;
         }
 
-        dom.importCssString(css, "diffview.css");
         this.$ignoreTrimWhitespace = false;
         this.$maxDiffs = 5000;
         this.$maxComputationTimeMs = 150;
