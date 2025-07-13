@@ -3,7 +3,6 @@
 require("ace/ext/rtl");
 
 require("ace/multi_select");
-require("ace/layer/text_markers");
 require("./inline_editor");
 var devUtil = require("./dev_util");
 require("./file_drop");
@@ -713,33 +712,3 @@ function moveFocus() {
     else
         env.editor.focus();
 }
-
-
-editor.on("findSearchBox", (e) => {
-    let textSelectionMarkerId = editor.session.$textSelectionMarkerId;
-
-    if (editor.searchBox && !editor.searchBox.searchInput.value) {
-        editor.session.removeTextMarker(textSelectionMarkerId);
-        editor.session.$textSelectionMarkerId = null;
-        return;
-    }
-
-    var currentRange = editor.selection.getRange();
-    if (currentRange) {
-        const textMarkers = editor.session.getTextMarkers();
-
-        if (!editor.session.$textSelectionMarkerId) {
-            editor.session.$textSelectionMarkerId = editor.session.addTextMarker(currentRange, "ace_inline_selection");
-        } else {
-            textMarkers[textSelectionMarkerId].range = currentRange;
-        }
-    } else {
-        editor.session.removeTextMarker(textSelectionMarkerId);
-        editor.session.$textSelectionMarkerId = null;
-    }
-})
-
-editor.on('focus', (e) => {
-    editor.session.removeTextMarker(editor.session.$textSelectionMarkerId);
-    editor.session.$textSelectionMarkerId = null;
-});
