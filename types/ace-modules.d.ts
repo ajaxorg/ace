@@ -375,7 +375,7 @@ declare module "ace-code/src/config" {
             string
         ], onLoad: (module: any) => void) => void;
         setModuleLoader: (moduleName: any, onLoad: any) => void;
-        version: "1.43.1";
+        version: "1.43.2";
     };
     export = _exports;
 }
