@@ -20,11 +20,10 @@ config.defineOptions(Editor.prototype, "editor", {
         set: function(val) {
             this.$showWhitespacesInSelection = val;
 
-            if (!this.$boundChangeSelectionForWhitespace) {
-                this.$boundChangeSelectionForWhitespace = $onChangeSelectionForWhitespace.bind(this);
-            }
-
             if (val) {
+                if (!this.$boundChangeSelectionForWhitespace) {
+                    this.$boundChangeSelectionForWhitespace = $onChangeSelectionForWhitespace.bind(this);
+                }
                 this.on("changeSelection", this.$boundChangeSelectionForWhitespace);
             } else {
                 this.off("changeSelection", this.$boundChangeSelectionForWhitespace);
@@ -33,6 +32,8 @@ config.defineOptions(Editor.prototype, "editor", {
                     this.session.removeTextMarker(this.session.$invisibleMarkerId);
                     this.session.$invisibleMarkerId = null;
                 }
+
+                this.$boundChangeSelectionForWhitespace = null;
             }
         },
         get: function() {

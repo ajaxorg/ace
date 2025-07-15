@@ -202,36 +202,6 @@ const textMarkerMixin = {
 
             parentNode.replaceChild(fragment, node);
         }
-        else if (node.nodeType === 1) { // Element node
-            const nodeText = node.textContent || '';
-            const segments = nodeText.match(/\s+|[^\s]+/g) || [];
-
-            if (segments.length > 1) {
-                // @ts-ignore
-                const nodeClasses = node.className;
-                const fragment = this.dom.createFragment(this.element);
-
-                for (let k = 0; k < segments.length; k++) {
-                    const segment = segments[k];
-
-                    if (/^\s+$/.test(segment)) {
-                        const span = this.dom.createElement("span");
-                        span.className = nodeClasses + marker.className;
-                        span.textContent = lang.stringRepeat(this.SPACE_CHAR, segment.length);
-                        span.setAttribute("data-whitespace", segment);
-                        fragment.appendChild(span);
-                    }
-                    else {
-                        const span = this.dom.createElement("span");
-                        span.className = nodeClasses;
-                        span.textContent = segment;
-                        fragment.appendChild(span);
-                    }
-                }
-
-                parentNode.replaceChild(fragment, node);
-            }
-        }
     },
 
     /**
