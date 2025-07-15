@@ -44,6 +44,8 @@ var saveOption = util.saveOption;
 require("ace/ext/elastic_tabstops_lite");
 require("ace/incremental_search");
 
+require("ace/ext/whitespaces_in_selection");
+
 var TokenTooltip = require("./token_tooltip").TokenTooltip;
 require("ace/config").defineOptions(Editor.prototype, "editor", {
     showTokenInfo: {
@@ -484,6 +486,10 @@ optionsPanel.add({
         "Use Ace Linters": {
             position: 3000,
             path: "useAceLinters"
+        },
+        "Show whitespaces in selection": {
+            position: 3100,
+            path: "showWhitespacesInSelection"
         },
         "Show Textarea Position": devUtil.textPositionDebugger,
         "Text Input Debugger": devUtil.textInputDebugger,

@@ -449,7 +449,9 @@ class Text {
             return value.substr(cols);
         } else if (value[0] == "\t") {
             for (var i=0; i<cols; i++) {
-                parent.appendChild(this.$tabStrings["\t"].cloneNode(true));
+                const tabSpan = this.$tabStrings["\t"].cloneNode(true);
+                tabSpan["charCount"] = 1;
+                parent.appendChild(tabSpan);
             }
             this.$highlightIndentGuide();
             return value.substr(cols);

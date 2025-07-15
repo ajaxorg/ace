@@ -1213,3 +1213,9 @@ declare module "ace-code/src/ext/whitespace" {
     }[];
     export type EditSession = import("ace-code/src/edit_session").EditSession;
 }
+declare module "ace-code/src/ext/whitespaces_in_selection-css" {
+    const _exports: string;
+    export = _exports;
+}
+declare module "ace-code/src/ext/whitespaces_in_selection" {
+}

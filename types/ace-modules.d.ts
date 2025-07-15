@@ -2758,9 +2758,6 @@ declare module "ace-code/src/editor" {
          * Cleans up the entire editor.
          **/
         destroy(): void;
-        /**
-         * true if editor is destroyed
-         */
         destroyed: boolean;
         /**
          * Enables automatic scrolling of the cursor into view when editor itself is inside scrollable element
@@ -3570,11 +3567,49 @@ declare module "ace-code/src/layer/text_markers" {
         range: import("ace-code").Ace.IRange;
         id: number;
         className: string;
+        type?: string;
+    };
+    export type SelectionSegment = {
+        /**
+         * - Characters before selection
+         */
+        beforeSelection: number;
+        /**
+         * - Length of selection
+         */
+        selectionLength: number;
+        /**
+         * - Characters after selection
+         */
+        afterSelection: number;
     };
     export namespace textMarkerMixin {
         function $removeClass(this: Text, className: string): void;
         function $applyTextMarkers(this: Text): void;
-        function $modifyDomForMarkers(this: Text, lineElement: HTMLElement, row: number, marker: TextMarker): void;
+        /**
+         * Modifies the DOM for marker rendering.
+         * @param {HTMLElement} lineElement - The line element to modify
+         * @param {number} row - The row being processed
+         * @param {TextMarker} marker - The marker to apply
+         */
+        function $modifyDomForMarkers(lineElement: HTMLElement, row: number, marker: TextMarker): void;
+        /**
+         * Process text nodes for invisible markers (whitespace visualization)
+         * @param {Node} node - The DOM node to process
+         * @param {Node} parentNode - The parent node
+         * @param {object} marker - The marker being applied
+         */
+        function $processInvisibleMarker(node: Node, parentNode: Node, selectionSegment: SelectionSegment, marker: object): void;
+        /**
+         * Process nodes for regular markers (not invisible whitespace)
+         * @param {Node} node - The DOM node to process
+         * @param {Node} parentNode - The parent node
+         * @param {TextMarker} marker - The marker being applied
+         * @param {number} nodeStart - Starting column of the node
+         * @param {number} startCol - Starting column of the selection
+         * @param {number} endCol - Ending column of the selection
+         */
+        function $processRegularMarker(node: Node, parentNode: Node, selectionSegment: SelectionSegment, marker: TextMarker, nodeStart: number, startCol: number, endCol: number): void;
     }
     export namespace editSessionTextMarkerMixin {
         /**
@@ -3582,10 +3617,11 @@ declare module "ace-code/src/layer/text_markers" {
          *
          * @param {import("ace-code").Ace.IRange} range - The range to mark in the document
          * @param {string} className - The CSS class name to apply to the marked text
+         * @param {string} [type] - The type of marker (e.g. "invisible" for whitespace rendering)
          * @returns {number} The unique identifier for the added text marker
          *
          */
-        function addTextMarker(this: EditSession, range: import("ace-code").Ace.IRange, className: string): number;
+        function addTextMarker(this: EditSession, range: import("ace-code").Ace.IRange, className: string, type?: string): number;
         /**
          * Removes a text marker from the current edit session.
          *
@@ -4531,9 +4567,10 @@ declare module "ace-code/src/edit_session" {
         range: IRange;
         id: number;
         className: string;
+        type?: string;
     };
     type TextMarkers = {
-        addTextMarker(this: EditSession, range: IRange, className: string): number;
+        addTextMarker(this: EditSession, range: IRange, className: string, type?: string): number;
         removeTextMarker(this: EditSession, markerId: number): void;
         getTextMarkers(this: EditSession): TextMarker[];
     } & {

@@ -187,6 +187,55 @@ module.exports = {
         markerSpans = newLine.querySelectorAll('.temp-marker');
         assert.equal(markerSpans.length, 0, "Marker should be removed");
     },
+
+    "test: invisible marker with mixed whitespace and complete cleanup verification": function() {
+        const value = "function\t  test() { //test     comment\n    var x = 1;\n}";
+        this.session.setValue(value);
+
+        this.textLayer.update(this.textLayer.config);
+
+        var markerId = this.session.addTextMarker(new Range(0, 8, 0, 30), "invisible-marker", "invisible");
+
+        this.textLayer.$applyTextMarkers();
+
+        var markerElements = this.textLayer.element.querySelectorAll('.invisible-marker');
+        assert.ok(markerElements.length > 0, "Invisible marker should be applied");
+
+        var line = this.textLayer.element.childNodes[0];
+
+        var hasTabSymbol = line.innerHTML.includes(this.textLayer.TAB_CHAR);
+        var hasSpaceSymbol = line.innerHTML.includes(this.textLayer.SPACE_CHAR);
+        assert.ok(hasTabSymbol, "Should contain TAB_CHAR symbol");
+        assert.ok(hasSpaceSymbol, "Should contain SPACE_CHAR symbol");
+
+        const result = normalize(`<span class="ace_storage ace_type">function</span>
+            <span class="invisible-marker" data-whitespace="    ">————</span>
+            <span class="invisible-marker" data-whitespace="  ">··</span>
+            <span class="ace_entity ace_name ace_function"><span>test</span></span>
+            <span class="ace_paren ace_lparen"><span>(</span></span>
+            <span class="ace_paren ace_rparen"><span>)</span></span>
+            <span class="invisible-marker" data-whitespace=" ">·</span><span class="ace_paren ace_lparen">
+            <span>{</span></span><span class="invisible-marker" data-whitespace=" ">·</span>
+            <span class="ace_comment"><span>//test</span>
+            <span class="invisible-marker" data-whitespace="    ">····</span> comment</span>`);
+        const actual = normalize(this.textLayer.element.childNodes[0].innerHTML);
+        assert.equal(actual, result);
+
+        this.session.removeTextMarker(markerId);
+        this.textLayer.$applyTextMarkers();
+
+        markerElements = this.textLayer.element.querySelectorAll('.invisible-marker');
+        assert.equal(markerElements.length, 0, "Marker class should be removed");
+
+        var finalLine = this.textLayer.element.childNodes[0];
+        assert.ok(!finalLine.innerHTML.includes(this.textLayer.TAB_CHAR),
+            "TAB_CHAR should be removed from DOM");
+        assert.ok(!finalLine.innerHTML.includes(this.textLayer.SPACE_CHAR),
+            "SPACE_CHAR should be removed from DOM");
+
+        var elementsWithWhitespace = this.textLayer.element.querySelectorAll('[data-whitespace]');
+        assert.equal(elementsWithWhitespace.length, 0, "No data-whitespace attributes should remain");
+    },
 };
 
 if (typeof module !== "undefined" && module === require.main) {
