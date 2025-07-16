@@ -2964,6 +2964,8 @@ declare module "ace-code/src/autocomplete/popup" {
         anchorPos: any;
         isMouseOver?: boolean;
         selectedNode?: HTMLElement;
+        getDataContainer: () => HTMLDivElement;
+        setVisibleRows: (rows: number) => void;
     }
     export function $singleLineEditor(el?: HTMLElement): Editor;
     export function getAriaId(index: any): string;
@@ -3000,6 +3002,8 @@ declare module "ace-code/src/autocomplete/popup" {
         anchorPos: any;
         isMouseOver?: boolean;
         selectedNode?: HTMLElement;
+        getDataContainer: () => HTMLDivElement;
+        setVisibleRows: (rows: number) => void;
     }
 }
 declare module "ace-code/src/range_list" {
