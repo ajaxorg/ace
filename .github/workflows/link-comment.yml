@@ -14,7 +14,7 @@ jobs:
       - name: Update PR description
         uses: actions/github-script@v6
         with:
-          github-token: ${{ secrets.GH_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const prNumber = context.payload.pull_request.number;
             const owner = context.payload.pull_request.head.repo.owner.login;
