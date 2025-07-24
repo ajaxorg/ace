@@ -77,10 +77,13 @@ class Marker {
             var range = marker.range.clipRows(config.firstRow, config.lastRow);
             if (range.isEmpty()) continue;
 
-            range = range.toScreenRange(this.session);
+            var docRange = range;
+            range = range.toScreenRange(this.session); //TODO: what the point in that?
+            range.start.column = docRange.start.column;
+            range.end.column = docRange.end.column;
             if (marker.renderer) {
                 var top = this.$getTop(range.start.row, config);
-                var left = this.$padding + range.start.column * config.characterWidth;
+                var left = this.$padding + config.textWidth(range.start.row, range.start.column);
                 marker.renderer(html, range, left, top, config);
             } else if (marker.type == "fullLine") {
                 this.drawFullLineMarker(html, range, marker.clazz, config);
@@ -154,7 +157,9 @@ class Marker {
         var padding = this.$padding;
         var height = config.lineHeight;
         var top = this.$getTop(range.start.row, config);
-        var left = padding + range.start.column * config.characterWidth;
+        var textWidth = config.textWidth(range.start.row, range.start.column);
+        var left = padding + textWidth;
+        var width = config.width - textWidth;
         extraStyle = extraStyle || "";
 
         if (this.session.$bidiHandler.isBidiRow(range.start.row)) {
@@ -176,7 +181,7 @@ class Marker {
            this.drawBidiSingleLineMarker(stringBuilder, range1, clazz + " ace_br12", config, null, extraStyle);
         } else {
             top = this.$getTop(range.end.row, config);
-            var width = range.end.column * config.characterWidth;
+            var width = config.textWidth(range.end.row, range.end.column);
 
             this.elt(
                 clazz + " ace_br12",
@@ -216,10 +221,11 @@ class Marker {
         if (this.session.$bidiHandler.isBidiRow(range.start.row))
             return this.drawBidiSingleLineMarker(stringBuilder, range, clazz, config, extraLength, extraStyle);
         var height = config.lineHeight;
-        var width = (range.end.column + (extraLength || 0) - range.start.column) * config.characterWidth;
+        var textWidth = config.textWidth(range.start.row, range.start.column);
+        var width = config.textWidth(range.start.row, range.end.column + (extraLength || 0)) - textWidth;
 
         var top = this.$getTop(range.start.row, config);
-        var left = this.$padding + range.start.column * config.characterWidth;
+        var left = this.$padding + textWidth;
 
         this.elt(
             clazz,
