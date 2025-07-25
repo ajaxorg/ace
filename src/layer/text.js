@@ -417,91 +417,72 @@ class Text {
         return screenColumn + value.length;
     }
 
-    $measureText(tokens, column) {
-        // build HTML for tokens
-        var parent = this.dom.createElement("span");
-        var len = 0;
-        var i = 0;
-        var screenColumn = 0;
-        while (len < column && i < tokens.length) {
-            var token = tokens[i++];
-            var value = token.value;
+    textWidth(row, column) {
+        if (column === 0) return 0;
 
-            // truncate once length is larger than 'column'
-            len += value.length;
-            if (len > column)
-                value = value.substring(0, value.length - (len - column));
-
-            screenColumn = this.$renderToken(parent, screenColumn, token, value);
+        var lineElement = this.element.children[row - this.config.firstRow];
+        if (!lineElement) {
+            // Fallback for lines not currently rendered
+            return column * this.config.characterWidth;
         }
 
-        // Create a measurement container that isolates width calculation
-        var measureContainer = document.createElement("div");
-        var containerStyle = measureContainer.style;
-        containerStyle.position = "absolute";
-        containerStyle.top = "-1000000px";
-        containerStyle.left = "-1000000px";
-        containerStyle.width = "auto";
-        containerStyle.height = "auto";
-        containerStyle.overflow = "visible";
-        containerStyle.pointerEvents = "none";
-
-        var el = document.createElement("div");
-        var style = el.style;
-        style.display = "inline-block";
-        style.width = "auto";
-        style.whiteSpace = "pre";
-        style.margin = "0";
-        style.padding = "0";
-        style.border = "none";
-
-        var computedStyle = window.getComputedStyle(this.element);
-        style.font = computedStyle.font;
-        style.fontSize = computedStyle.fontSize;
-        style.fontFamily = computedStyle.fontFamily;
-        style.fontWeight = computedStyle.fontWeight;
-        style.fontStyle = computedStyle.fontStyle;
-        style.letterSpacing = computedStyle.letterSpacing;
-        style.lineHeight = computedStyle.lineHeight;
-
-        el.className = "ace_line";
-        el.innerHTML = parent.innerHTML;
-
-        measureContainer.appendChild(el);
-        this.element.appendChild(measureContainer);
-        console.log(el)
-
-        // measure pixel length
-        var width = el.offsetWidth;
-        console.log(width)
-        this.element.removeChild(measureContainer);
-
-        return width;
+        return this.$measureLineToColumn(lineElement, column);
     }
 
-    textWidth(row, column) {
-        //return this.$characterSize.width * column;
-        var line = this.session.getTokens(row);
+    $measureLineToColumn(lineElement, column) {
+        if (!this.$scratchRange) {
+            this.$scratchRange = document.createRange();
+        }
 
-        // cache in tokens object
-        // this way the cache gets invalidated automatically when the tokens change
-      /*  if (line.widthCache && line.widthCache[column]) {
-            // invalidate if font size has changed
-            if (line.widthCache.rowHeight == this.getLineHeight()) {
-                return line.widthCache[column];
+        try {
+            var firstTextNode = this.$findFirstTextNode(lineElement);
+            if (!firstTextNode) {
+                return column * this.config.characterWidth;
             }
-            else
-                delete line.widthCache;
-        }*/
 
-        var width = this.$measureText(line, column);
+            var position = this.$findColumnPosition(lineElement, column);
+            if (!position) {
+                return column * this.config.characterWidth;
+            }
 
-        /*if (!line.widthCache)
-            line.widthCache = { rowHeight: this.getLineHeight() };
+            this.$scratchRange.setStart(firstTextNode, 0);
+            this.$scratchRange.setEnd(position.node, position.offset);
 
-        line.widthCache[column] = width;*/
+            var rect = this.$scratchRange.getBoundingClientRect();
+            return rect.width;
+        } catch (e) {
+            return column * this.config.characterWidth;
+        }
+    }
 
-        return width;
+    $findFirstTextNode(element) {
+        var walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, function (node) {
+            return node.nodeValue && node.nodeValue.length > 0 ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+        });
+        return walker.nextNode();
+    }
+
+    $findColumnPosition(lineElement, targetColumn) {
+        var walker = document.createTreeWalker(lineElement, NodeFilter.SHOW_TEXT, null);
+
+        var currentColumn = 0;
+        var node;
+
+        while (node = walker.nextNode()) {
+            var nodeText = node.nodeValue;
+            var nodeLength = nodeText.length;
+
+            if (currentColumn + nodeLength >= targetColumn) {
+                return {
+                    node: node,
+                    offset: targetColumn - currentColumn
+                };
+            }
+            currentColumn += nodeLength;
+        }
+
+        // Column is beyond the line content
+        return null;
     }
 
     renderIndentGuide(parent, value, max) {
