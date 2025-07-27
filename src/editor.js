@@ -2690,6 +2690,7 @@ class Editor {
      * Cleans up the entire editor.
      **/
     destroy() {
+        /** true if editor is destroyed */
         this.destroyed = true;
         if (this.$toDestroy) {
             this.$toDestroy.forEach(function(el) {

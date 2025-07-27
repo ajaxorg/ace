@@ -2758,9 +2758,7 @@ declare module "ace-code/src/editor" {
          * Cleans up the entire editor.
          **/
         destroy(): void;
-        /**
-         * true if editor is destroyed
-         */
+        /** true if editor is destroyed */
         destroyed: boolean;
         /**
          * Enables automatic scrolling of the cursor into view when editor itself is inside scrollable element

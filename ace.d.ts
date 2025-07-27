@@ -1055,7 +1055,7 @@ declare module "ace-code" {
     export function edit(el?: string | (HTMLElement & {
         env?: any;
         value?: any;
-    }) | null, options?: any): Editor;
+    }) | null, options?: Partial<import("ace-code").Ace.EditorOptions>): Editor;
     export function createEditSession(text: import("ace-code/src/document").Document | string, mode?: import("ace-code").Ace.SyntaxMode): EditSession;
     import { Editor } from "ace-code/src/editor";
     import { EditSession } from "ace-code/src/edit_session";
