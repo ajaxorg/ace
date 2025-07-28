@@ -276,6 +276,7 @@ function importCssString(cssText, id, target) {
             var stylesheet = styles[id];
             if (!stylesheet) {
                 stylesheet = styles[id] = new CSSStyleSheet();
+                stylesheet.$id = id;
                 stylesheet.replaceSync(cssText);
             }
             container.adoptedStyleSheets.push(stylesheet);
@@ -304,6 +305,13 @@ var USE_STYLE_TAG = null;
 var styles = Object.create(null);
 
 exports.importCssString = importCssString;
+
+exports.$resetCssModeForTests = function(useStyleTag) {
+    USE_STYLE_TAG = useStyleTag == undefined ? null : useStyleTag;
+    styles = Object.create(null);
+    strictCSP = undefined;
+    cssCache = [];
+};
 
 /**
  * @param {string} uri
