@@ -96,7 +96,6 @@ exports.cssText = `
     position: absolute;
     right: 2px;
     content: "+";
-    color: darkgray;
     background-color: inherit;
 }
 
@@ -104,7 +103,6 @@ exports.cssText = `
     position: absolute;
     right: 2px;
     content: "-";
-    color: darkgray;
     background-color: inherit;
 }
 .ace_fade-fold-widgets:hover > .ace_folding-enabled > .mini-diff-added:after,
@@ -116,7 +114,8 @@ exports.cssText = `
     filter: drop-shadow(1px 2px 3px darkgray);
 }
 
-.ace_hidden_marker-layer .ace_bracket {
+.ace_hidden_marker-layer .ace_bracket,
+.ace_hidden_marker-layer .ace_error_bracket {
     display: none;
 }
 
