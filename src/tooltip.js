@@ -56,8 +56,10 @@ class Tooltip {
      * @param {Number} y
      **/
     setPosition(x, y) {
-        this.getElement().style.left = x + "px";
-        this.getElement().style.top = y + "px";
+        var el = this.getElement();
+        var rootRect = el.offsetParent && el.offsetParent.getBoundingClientRect();
+        el.style.left = x - (rootRect ? rootRect.left : 0) + "px";
+        el.style.top = y - (rootRect ? rootRect.top : 0) + "px";
     }
 
     /**
