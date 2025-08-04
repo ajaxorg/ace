@@ -1,8 +1,18 @@
 "use strict";
 /**
  * @typedef {import("../edit_session").EditSession} EditSession
+ * @typedef {import("../editor").Editor} Editor
  * @typedef {import("../../ace-internal").Ace.LayerConfig} LayerConfig
  */
+/**
+ * @typedef {Object} GutterRenderer
+ * @property {function(EditSession, number): string} getText - Gets the text to display for a given row
+ * @property {function(EditSession, number, Object): number} getWidth - Calculates the width needed for the gutter
+ * @property {function(Event|null, Editor): void} [update] - Updates the gutter display
+ * @property {function(Editor): void} [attach] - Attaches the renderer to an editor
+ * @property {function(Editor): void} [detach] - Detaches the renderer from an editor
+ */
+
 var dom = require("../lib/dom");
 var oop = require("../lib/oop");
 var lang = require("../lib/lang");
@@ -572,6 +582,7 @@ class Gutter{
      * @param {boolean} show
      */
     setShowLineNumbers(show) {
+        /**@type{GutterRenderer | string}*/
         this.$renderer = !show && {
             getWidth: function() {return 0;},
             getText: function() {return "";}

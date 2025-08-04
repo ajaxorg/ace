@@ -427,7 +427,30 @@ declare module "ace-code/src/layer/gutter" {
         }): "markers" | "foldWidgets";
     }
     export type EditSession = import("ace-code/src/edit_session").EditSession;
+    export type Editor = import("ace-code/src/editor").Editor;
     export type LayerConfig = import("ace-code").Ace.LayerConfig;
+    export type GutterRenderer = {
+        /**
+         * - Gets the text to display for a given row
+         */
+        getText: (arg0: EditSession, arg1: number) => string;
+        /**
+         * - Calculates the width needed for the gutter
+         */
+        getWidth: (arg0: EditSession, arg1: number, arg2: any) => number;
+        /**
+         * - Updates the gutter display
+         */
+        update?: (arg0: Event | null, arg1: Editor) => void;
+        /**
+         * - Attaches the renderer to an editor
+         */
+        attach?: (arg0: Editor) => void;
+        /**
+         * - Detaches the renderer from an editor
+         */
+        detach?: (arg0: Editor) => void;
+    };
     import { Lines } from "ace-code/src/layer/lines";
     namespace Ace {
         type EventEmitter<T extends {

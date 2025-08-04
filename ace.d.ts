@@ -397,7 +397,7 @@ declare module "ace-code" {
         }
         interface EditorEvents {
             "change": (delta: Delta) => void;
-            "changeSelection": () => void;
+            "changeSelection": (...args: any) => void;
             "input": () => void;
             /**
              * Emitted whenever the [[EditSession]] changes.
@@ -515,7 +515,7 @@ declare module "ace-code" {
             /**
              * Emitted when the cursor selection changes.
              **/
-            "changeSelection": () => void;
+            "changeSelection": (...args: any) => void;
         }
         interface MultiSelectionEvents extends SelectionEvents {
             "multiSelect": () => void;
