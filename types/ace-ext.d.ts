@@ -554,155 +554,6 @@ declare module "ace-code/src/ext/elastic_tabstops_lite" {
     }
     import { Editor } from "ace-code/src/editor";
 }
-declare module "ace-code/src/ext/error_marker" {
-    export function showErrorMarker(editor: import("ace-code/src/editor").Editor, dir: number): void;
-}
-declare module "ace-code/src/ext/beautify" {
-    export const singletonTags: string[];
-    export const blockTags: string[];
-    export const formatOptions: {
-        lineBreaksAfterCommasInCurlyBlock?: boolean;
-    };
-    export function beautify(session: import("ace-code/src/edit_session").EditSession): void;
-    export const commands: import("ace-code").Ace.Command[];
-}
-declare module "ace-code/src/ext/code_lens" {
-    export function setLenses(session: EditSession, lenses: import("ace-code").Ace.CodeLense[]): number;
-    export function registerCodeLensProvider(editor: import("ace-code/src/editor").Editor, codeLensProvider: import("ace-code").Ace.CodeLenseProvider): void;
-    export function clear(session: EditSession): void;
-    export type EditSession = import("ace-code/src/edit_session").EditSession;
-    export type VirtualRenderer = import("ace-code/src/virtual_renderer").VirtualRenderer & {
-    };
-    export type CodeLenseCommand = import("ace-code").Ace.CodeLenseCommand;
-    export type CodeLense = import("ace-code").Ace.CodeLense;
-    import { Editor } from "ace-code/src/editor";
-}
-declare module "ace-code/src/ext/emmet" {
-    export const commands: HashHandler;
-    export function runEmmetCommand(editor: Editor): ReturnType<typeof setTimeout> | boolean;
-    export function updateCommands(editor: Editor, enabled?: boolean): void;
-    export function isSupportedMode(mode: any | string): boolean;
-    export function isAvailable(editor: Editor, command: string): boolean;
-    export function load(cb?: Function): boolean;
-    export function setCore(e: string | any): void;
-    import { HashHandler } from "ace-code/src/keyboard/hash_handler";
-    import { Editor } from "ace-code/src/editor";
-    /**
-     * Implementation of {@link IEmmetEditor} interface for Ace
-     */
-    export class AceEmmetEditor {
-        setupContext(editor: Editor): void;
-        ace: Editor;
-        indentation: string;
-        /**
-         * Returns character indexes of selected text: object with <code>start</code>
-         * and <code>end</code> properties. If there's no selection, should return
-         * object with <code>start</code> and <code>end</code> properties referring
-         * to current caret position
-         * @example
-         * var selection = editor.getSelectionRange();
-         * alert(selection.start + ', ' + selection.end);
-         */
-        getSelectionRange(): any;
-        /**
-         * Creates selection from <code>start</code> to <code>end</code> character
-         * indexes. If <code>end</code> is ommited, this method should place caret
-         * and <code>start</code> index
-         * @example
-         * editor.createSelection(10, 40);
-         *
-         * //move caret to 15th character
-         * editor.createSelection(15);
-         */
-        createSelection(start: number, end?: number): void;
-        /**
-         * Returns current line's start and end indexes as object with <code>start</code>
-         * and <code>end</code> properties
-         * @example
-         * var range = editor.getCurrentLineRange();
-         * alert(range.start + ', ' + range.end);
-         */
-        getCurrentLineRange(): any;
-        /**
-         * Returns current caret position
-         */
-        getCaretPos(): number | null;
-        /**
-         * Set new caret position
-         * @param {Number} index Caret position
-         */
-        setCaretPos(index: number): void;
-        /**
-         * Returns content of current line
-         */
-        getCurrentLine(): string;
-        /**
-         * Replace editor's content or it's part (from <code>start</code> to
-         * <code>end</code> index). If <code>value</code> contains
-         * <code>caret_placeholder</code>, the editor will put caret into
-         * this position. If you skip <code>start</code> and <code>end</code>
-         * arguments, the whole target's content will be replaced with
-         * <code>value</code>.
-         *
-         * If you pass <code>start</code> argument only,
-         * the <code>value</code> will be placed at <code>start</code> string
-         * index of current content.
-         *
-         * If you pass <code>start</code> and <code>end</code> arguments,
-         * the corresponding substring of current target's content will be
-         * replaced with <code>value</code>.
-         * @param {String} value Content you want to paste
-         * @param {Number} [start] Start index of editor's content
-         * @param {Number} [end] End index of editor's content
-         * @param {Boolean} [noIndent] Do not auto indent <code>value</code>
-         */
-        replaceContent(value: string, start?: number, end?: number, noIndent?: boolean): void;
-        /**
-         * Returns editor's content
-         */
-        getContent(): string;
-        /**
-         * Returns current editor's syntax mode
-         */
-        getSyntax(): string;
-        /**
-         * Returns current output profile name (@see emmet#setupProfile)
-         */
-        getProfileName(): string;
-        /**
-         * Ask user to enter something
-         * @param {String} title Dialog title
-         * @return {String} Entered data
-         * @since 0.65
-         */
-        prompt(title: string): string;
-        /**
-         * Returns current selection
-         * @since 0.65
-         */
-        getSelection(): string;
-        /**
-         * Returns current editor's file path
-         * @since 0.65
-         */
-        getFilePath(): string;
-    }
-}
-declare module "ace-code/src/ext/hardwrap" {
-    /**
-     * Wraps lines at specified column limits and optionally merges short adjacent lines.
-     *
-     * Processes text within the specified row range, breaking lines that exceed the maximum column
-     * width at appropriate word boundaries while preserving indentation. When merge is enabled,
-     * combines short consecutive lines that can fit within the column limit. Automatically adjusts
-     * the end row when new line breaks are inserted to ensure all affected content is processed.
-     *
-     * @param {import("ace-code/src/editor").Editor} editor - The editor instance containing the text to wrap
-     * @param {import("ace-code").Ace.HardWrapOptions} options - Configuration options for wrapping behavior
-     */
-    export function hardWrap(editor: import("ace-code/src/editor").Editor, options: import("ace-code").Ace.HardWrapOptions): void;
-    import { Editor } from "ace-code/src/editor";
-}
 declare module "ace-code/src/ext/menu_tools/settings_menu.css" {
     const _exports: string;
     export = _exports;
@@ -713,14 +564,6 @@ declare module "ace-code/src/ext/menu_tools/overlay_page" {
         setIgnoreFocusOut: (ignore: boolean) => void;
     };
 }
-declare module "ace-code/src/ext/menu_tools/get_editor_keyboard_shortcuts" {
-    export function getEditorKeybordShortcuts(editor: import("ace-code/src/editor").Editor): any[];
-}
-declare module "ace-code/src/ext/keybinding_menu" {
-    export function init(editor: Editor): void;
-    import { Editor } from "ace-code/src/editor";
-}
-declare module "ace-code/src/ext/linking" { }
 declare module "ace-code/src/ext/modelist" {
     /**
      * Suggests a mode based on the file extension present in the given path
@@ -998,6 +841,163 @@ declare module "ace-code/src/ext/options" {
     export interface OptionPanel extends Ace.EventEmitter<Ace.OptionPanelEvents> {
     }
 }
+declare module "ace-code/src/ext/error_marker" {
+    export function showErrorMarker(editor: import("ace-code/src/editor").Editor, dir: number): void;
+}
+declare module "ace-code/src/ext/beautify" {
+    export const singletonTags: string[];
+    export const blockTags: string[];
+    export const formatOptions: {
+        lineBreaksAfterCommasInCurlyBlock?: boolean;
+    };
+    export function beautify(session: import("ace-code/src/edit_session").EditSession): void;
+    export const commands: import("ace-code").Ace.Command[];
+}
+declare module "ace-code/src/ext/code_lens" {
+    export function setLenses(session: EditSession, lenses: import("ace-code").Ace.CodeLense[]): number;
+    export function registerCodeLensProvider(editor: import("ace-code/src/editor").Editor, codeLensProvider: import("ace-code").Ace.CodeLenseProvider): void;
+    export function clear(session: EditSession): void;
+    export type EditSession = import("ace-code/src/edit_session").EditSession;
+    export type VirtualRenderer = import("ace-code/src/virtual_renderer").VirtualRenderer & {
+    };
+    export type CodeLenseCommand = import("ace-code").Ace.CodeLenseCommand;
+    export type CodeLense = import("ace-code").Ace.CodeLense;
+    import { Editor } from "ace-code/src/editor";
+}
+declare module "ace-code/src/ext/emmet" {
+    export const commands: HashHandler;
+    export function runEmmetCommand(editor: Editor): ReturnType<typeof setTimeout> | boolean;
+    export function updateCommands(editor: Editor, enabled?: boolean): void;
+    export function isSupportedMode(mode: any | string): boolean;
+    export function isAvailable(editor: Editor, command: string): boolean;
+    export function load(cb?: Function): boolean;
+    export function setCore(e: string | any): void;
+    import { HashHandler } from "ace-code/src/keyboard/hash_handler";
+    import { Editor } from "ace-code/src/editor";
+    /**
+     * Implementation of {@link IEmmetEditor} interface for Ace
+     */
+    export class AceEmmetEditor {
+        setupContext(editor: Editor): void;
+        ace: Editor;
+        indentation: string;
+        /**
+         * Returns character indexes of selected text: object with <code>start</code>
+         * and <code>end</code> properties. If there's no selection, should return
+         * object with <code>start</code> and <code>end</code> properties referring
+         * to current caret position
+         * @example
+         * var selection = editor.getSelectionRange();
+         * alert(selection.start + ', ' + selection.end);
+         */
+        getSelectionRange(): any;
+        /**
+         * Creates selection from <code>start</code> to <code>end</code> character
+         * indexes. If <code>end</code> is ommited, this method should place caret
+         * and <code>start</code> index
+         * @example
+         * editor.createSelection(10, 40);
+         *
+         * //move caret to 15th character
+         * editor.createSelection(15);
+         */
+        createSelection(start: number, end?: number): void;
+        /**
+         * Returns current line's start and end indexes as object with <code>start</code>
+         * and <code>end</code> properties
+         * @example
+         * var range = editor.getCurrentLineRange();
+         * alert(range.start + ', ' + range.end);
+         */
+        getCurrentLineRange(): any;
+        /**
+         * Returns current caret position
+         */
+        getCaretPos(): number | null;
+        /**
+         * Set new caret position
+         * @param {Number} index Caret position
+         */
+        setCaretPos(index: number): void;
+        /**
+         * Returns content of current line
+         */
+        getCurrentLine(): string;
+        /**
+         * Replace editor's content or it's part (from <code>start</code> to
+         * <code>end</code> index). If <code>value</code> contains
+         * <code>caret_placeholder</code>, the editor will put caret into
+         * this position. If you skip <code>start</code> and <code>end</code>
+         * arguments, the whole target's content will be replaced with
+         * <code>value</code>.
+         *
+         * If you pass <code>start</code> argument only,
+         * the <code>value</code> will be placed at <code>start</code> string
+         * index of current content.
+         *
+         * If you pass <code>start</code> and <code>end</code> arguments,
+         * the corresponding substring of current target's content will be
+         * replaced with <code>value</code>.
+         * @param {String} value Content you want to paste
+         * @param {Number} [start] Start index of editor's content
+         * @param {Number} [end] End index of editor's content
+         * @param {Boolean} [noIndent] Do not auto indent <code>value</code>
+         */
+        replaceContent(value: string, start?: number, end?: number, noIndent?: boolean): void;
+        /**
+         * Returns editor's content
+         */
+        getContent(): string;
+        /**
+         * Returns current editor's syntax mode
+         */
+        getSyntax(): string;
+        /**
+         * Returns current output profile name (@see emmet#setupProfile)
+         */
+        getProfileName(): string;
+        /**
+         * Ask user to enter something
+         * @param {String} title Dialog title
+         * @return {String} Entered data
+         * @since 0.65
+         */
+        prompt(title: string): string;
+        /**
+         * Returns current selection
+         * @since 0.65
+         */
+        getSelection(): string;
+        /**
+         * Returns current editor's file path
+         * @since 0.65
+         */
+        getFilePath(): string;
+    }
+}
+declare module "ace-code/src/ext/hardwrap" {
+    /**
+     * Wraps lines at specified column limits and optionally merges short adjacent lines.
+     *
+     * Processes text within the specified row range, breaking lines that exceed the maximum column
+     * width at appropriate word boundaries while preserving indentation. When merge is enabled,
+     * combines short consecutive lines that can fit within the column limit. Automatically adjusts
+     * the end row when new line breaks are inserted to ensure all affected content is processed.
+     *
+     * @param {import("ace-code/src/editor").Editor} editor - The editor instance containing the text to wrap
+     * @param {import("ace-code").Ace.HardWrapOptions} options - Configuration options for wrapping behavior
+     */
+    export function hardWrap(editor: import("ace-code/src/editor").Editor, options: import("ace-code").Ace.HardWrapOptions): void;
+    import { Editor } from "ace-code/src/editor";
+}
+declare module "ace-code/src/ext/menu_tools/get_editor_keyboard_shortcuts" {
+    export function getEditorKeybordShortcuts(editor: import("ace-code/src/editor").Editor): any[];
+}
+declare module "ace-code/src/ext/keybinding_menu" {
+    export function init(editor: Editor): void;
+    import { Editor } from "ace-code/src/editor";
+}
+declare module "ace-code/src/ext/linking" { }
 declare module "ace-code/src/ext/prompt" {
     export type PromptOptions = {
         /**
