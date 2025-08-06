@@ -633,9 +633,10 @@ export namespace Ace {
         "autosize": (e: undefined, emitter: VirtualRenderer) => void;
     }
 
-    type EmitParameters<T extends (...args: any[]) => any> = T extends (...args: infer P) => any
-        ? { [K in keyof P]?: P[K] }
-        : never;
+    type EmitParameters<T extends (...args: any[]) => any> =
+        T extends (first: infer First, ...rest: any[]) => any
+            ? [First]
+            : [];
 
     export class EventEmitter<T extends { [K in keyof T]: (...args: any[]) => any }> {
         once<K extends keyof T>(name: K, callback: T[K]): void;
