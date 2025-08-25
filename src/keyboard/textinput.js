@@ -33,6 +33,7 @@ class TextInput {
         this.text.className = "ace_text-input";
 
         this.text.setAttribute("wrap", "off");
+        this.text.setAttribute("autocomplete", "off");
         this.text.setAttribute("autocorrect", "off");
         this.text.setAttribute("autocapitalize", "off");
         this.text.setAttribute("spellcheck", "false");
