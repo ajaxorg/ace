@@ -55,6 +55,39 @@ exports.cssText = `
     border-color: #9191ac;
 }
 
+.ace_diff.double-triangle::before,
+.ace_diff.double-triangle::after {
+    content: "";
+    position: absolute;
+}
+
+.ace_diff.double-triangle.ace_start::before {
+    left: 0;
+    border: solid black 3px;
+    border-bottom-color: transparent;
+    border-right-color: transparent;
+}
+
+.ace_diff.double-triangle.ace_end::after {
+    right: 0;
+    bottom: 0;
+    border: solid black 3px;
+    border-top-color: transparent;
+    border-left-color: transparent;
+}
+
+
+/*
+ * Dark Colors 
+ */
+
+.ace_dark .ace_diff.insert.inline {
+    background-color: rgba(0, 130, 58, 0.45);
+}
+.ace_dark .ace_diff.delete.inline {
+    background-color: rgba(169, 46, 33, 0.55);
+}
+
 .ace_dark .ace_diff-active-line {
     background: transparent;
     border-color: #75777a;
