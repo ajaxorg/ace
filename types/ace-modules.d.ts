@@ -427,7 +427,30 @@ declare module "ace-code/src/layer/gutter" {
         }): "markers" | "foldWidgets";
     }
     export type EditSession = import("ace-code/src/edit_session").EditSession;
+    export type Editor = import("ace-code/src/editor").Editor;
     export type LayerConfig = import("ace-code").Ace.LayerConfig;
+    export type GutterRenderer = {
+        /**
+         * - Gets the text to display for a given row
+         */
+        getText: (session: EditSession, row: number) => string;
+        /**
+         * - Calculates the width needed for the gutter
+         */
+        getWidth: (session: EditSession, lastLineNumber: number, config: any) => number;
+        /**
+         * - Updates the gutter display
+         */
+        update?: (e: undefined, editor: Editor) => void;
+        /**
+         * - Attaches the renderer to an editor
+         */
+        attach?: (editor: Editor) => void;
+        /**
+         * - Detaches the renderer from an editor
+         */
+        detach?: (editor: Editor) => void;
+    };
     import { Lines } from "ace-code/src/layer/lines";
     namespace Ace {
         type EventEmitter<T extends {
@@ -3563,6 +3586,139 @@ declare module "ace-code/src/multi_select" {
     export function MultiSelect(editor: Editor): void;
     import { Editor } from "ace-code/src/editor";
 }
+declare module "ace-code/src/background_tokenizer" {
+    /**
+     * Tokenizes the current [[Document `Document`]] in the background, and caches the tokenized rows for future use.
+     *
+     * If a certain row is changed, everything below that row is re-tokenized.
+     **/
+    export class BackgroundTokenizer {
+        /**
+         * Creates a new `BackgroundTokenizer` object.
+         * @param {Tokenizer} tokenizer The tokenizer to use
+         * @param {EditSession} [session] The editor session to associate with
+         **/
+        constructor(tokenizer: Tokenizer, session?: EditSession);
+        running: false | ReturnType<typeof setTimeout>;
+        lines: any[];
+        states: string[] | string[][];
+        currentLine: number;
+        tokenizer: import("ace-code/src/tokenizer").Tokenizer;
+        /**
+         * Sets a new tokenizer for this object.
+         * @param {Tokenizer} tokenizer The new tokenizer to use
+         **/
+        setTokenizer(tokenizer: Tokenizer): void;
+        /**
+         * Sets a new document to associate with this object.
+         * @param {Document} doc The new document to associate with
+         **/
+        setDocument(doc: Document): void;
+        doc: import("ace-code/src/document").Document;
+        /**
+         * Emits the `'update'` event. `firstRow` and `lastRow` are used to define the boundaries of the region to be updated.
+         * @param {Number} firstRow The starting row region
+         * @param {Number} lastRow The final row region
+         **/
+        fireUpdateEvent(firstRow: number, lastRow: number): void;
+        /**
+         * Starts tokenizing at the row indicated.
+         * @param {Number} startRow The row to start at
+         **/
+        start(startRow: number): void;
+        /**
+         * Sets pretty long delay to prevent the tokenizer from interfering with the user
+         */
+        scheduleStart(): void;
+        /**
+         * Stops tokenizing.
+         **/
+        stop(): void;
+        /**
+         * Gives list of [[Token]]'s of the row. (tokens are cached)
+         * @param {Number} row The row to get tokens at
+         **/
+        getTokens(row: number): import("ace-code").Ace.Token[];
+        /**
+         * Returns the state of tokenization at the end of a row.
+         * @param {Number} row The row to get state at
+         **/
+        getState(row: number): string | string[];
+        cleanup(): void;
+    }
+    export type Document = import("ace-code/src/document").Document;
+    export type EditSession = import("ace-code/src/edit_session").EditSession;
+    export type Tokenizer = import("ace-code/src/tokenizer").Tokenizer;
+    namespace Ace {
+        type EventEmitter<T extends {
+            [K in keyof T]: (...args: any[]) => any;
+        }> = import("ace-code").Ace.EventEmitter<T>;
+        type BackgroundTokenizerEvents = import("ace-code").Ace.BackgroundTokenizerEvents;
+    }
+    export interface BackgroundTokenizer extends Ace.EventEmitter<Ace.BackgroundTokenizerEvents> {
+    }
+}
+declare module "ace-code/src/placeholder" {
+    export class PlaceHolder {
+        constructor(session: EditSession, length: number, pos: import("ace-code").Ace.Point, others: any[], mainClass: string, othersClass: string);
+        length: number;
+        session: import("ace-code/src/edit_session").EditSession;
+        doc: import("ace-code/src/document").Document;
+        mainClass: string;
+        othersClass: string;
+        /**
+         * PlaceHolder.setup()
+         *
+         * TODO
+         *
+         **/
+        setup(): void;
+        selectionBefore: Range | Range[];
+        pos: import("ace-code/src/anchor").Anchor;
+        others: any[];
+        /**
+         * PlaceHolder.showOtherMarkers()
+         *
+         * TODO
+         *
+         **/
+        showOtherMarkers(): void;
+        othersActive: boolean;
+        /**
+         * PlaceHolder.hideOtherMarkers()
+         *
+         * Hides all over markers in the [[EditSession `EditSession`]] that are not the currently selected one.
+         *
+         **/
+        hideOtherMarkers(): void;
+        updateAnchors(delta: import("ace-code").Ace.Delta): void;
+        updateMarkers(): void;
+        /**
+         * PlaceHolder.detach()
+         *
+         * TODO
+         *
+         **/
+        detach(): void;
+        /**
+         * PlaceHolder.cancel()
+         *
+         * TODO
+         *
+         **/
+        cancel(): void;
+    }
+    export type EditSession = import("ace-code/src/edit_session").EditSession;
+    import { Range } from "ace-code/src/range";
+    namespace Ace {
+        type EventEmitter<T extends {
+            [K in keyof T]: (...args: any[]) => any;
+        }> = import("ace-code").Ace.EventEmitter<T>;
+        type PlaceHolderEvents = import("ace-code").Ace.PlaceHolderEvents;
+    }
+    export interface PlaceHolder extends Ace.EventEmitter<Ace.PlaceHolderEvents> {
+    }
+}
 declare module "ace-code/src/layer/text_markers" {
     export type TextMarker = {
         range: import("ace-code").Ace.IRange;
@@ -3741,78 +3897,6 @@ declare module "ace-code/src/bidihandler" {
         offsetToCol(posX: number): number;
     }
     import bidiUtil = require("ace-code/src/lib/bidiutil");
-}
-declare module "ace-code/src/background_tokenizer" {
-    /**
-     * Tokenizes the current [[Document `Document`]] in the background, and caches the tokenized rows for future use.
-     *
-     * If a certain row is changed, everything below that row is re-tokenized.
-     **/
-    export class BackgroundTokenizer {
-        /**
-         * Creates a new `BackgroundTokenizer` object.
-         * @param {Tokenizer} tokenizer The tokenizer to use
-         * @param {EditSession} [session] The editor session to associate with
-         **/
-        constructor(tokenizer: Tokenizer, session?: EditSession);
-        running: false | ReturnType<typeof setTimeout>;
-        lines: any[];
-        states: string[] | string[][];
-        currentLine: number;
-        tokenizer: import("ace-code/src/tokenizer").Tokenizer;
-        /**
-         * Sets a new tokenizer for this object.
-         * @param {Tokenizer} tokenizer The new tokenizer to use
-         **/
-        setTokenizer(tokenizer: Tokenizer): void;
-        /**
-         * Sets a new document to associate with this object.
-         * @param {Document} doc The new document to associate with
-         **/
-        setDocument(doc: Document): void;
-        doc: import("ace-code/src/document").Document;
-        /**
-         * Emits the `'update'` event. `firstRow` and `lastRow` are used to define the boundaries of the region to be updated.
-         * @param {Number} firstRow The starting row region
-         * @param {Number} lastRow The final row region
-         **/
-        fireUpdateEvent(firstRow: number, lastRow: number): void;
-        /**
-         * Starts tokenizing at the row indicated.
-         * @param {Number} startRow The row to start at
-         **/
-        start(startRow: number): void;
-        /**
-         * Sets pretty long delay to prevent the tokenizer from interfering with the user
-         */
-        scheduleStart(): void;
-        /**
-         * Stops tokenizing.
-         **/
-        stop(): void;
-        /**
-         * Gives list of [[Token]]'s of the row. (tokens are cached)
-         * @param {Number} row The row to get tokens at
-         **/
-        getTokens(row: number): import("ace-code").Ace.Token[];
-        /**
-         * Returns the state of tokenization at the end of a row.
-         * @param {Number} row The row to get state at
-         **/
-        getState(row: number): string | string[];
-        cleanup(): void;
-    }
-    export type Document = import("ace-code/src/document").Document;
-    export type EditSession = import("ace-code/src/edit_session").EditSession;
-    export type Tokenizer = import("ace-code/src/tokenizer").Tokenizer;
-    namespace Ace {
-        type EventEmitter<T extends {
-            [K in keyof T]: (...args: any[]) => any;
-        }> = import("ace-code").Ace.EventEmitter<T>;
-        type BackgroundTokenizerEvents = import("ace-code").Ace.BackgroundTokenizerEvents;
-    }
-    export interface BackgroundTokenizer extends Ace.EventEmitter<Ace.BackgroundTokenizerEvents> {
-    }
 }
 declare module "ace-code/src/edit_session/folding" {
     export type IFolding = import("ace-code/src/edit_session").EditSession & import("ace-code").Ace.Folding;
@@ -4803,67 +4887,6 @@ declare module "ace-code/src/range" {
 }
 declare module "ace-code/src/worker/worker_client" {
     export var WorkerClient: any;
-}
-declare module "ace-code/src/placeholder" {
-    export class PlaceHolder {
-        constructor(session: EditSession, length: number, pos: import("ace-code").Ace.Point, others: any[], mainClass: string, othersClass: string);
-        length: number;
-        session: import("ace-code/src/edit_session").EditSession;
-        doc: import("ace-code/src/document").Document;
-        mainClass: string;
-        othersClass: string;
-        /**
-         * PlaceHolder.setup()
-         *
-         * TODO
-         *
-         **/
-        setup(): void;
-        selectionBefore: Range | Range[];
-        pos: import("ace-code/src/anchor").Anchor;
-        others: any[];
-        /**
-         * PlaceHolder.showOtherMarkers()
-         *
-         * TODO
-         *
-         **/
-        showOtherMarkers(): void;
-        othersActive: boolean;
-        /**
-         * PlaceHolder.hideOtherMarkers()
-         *
-         * Hides all over markers in the [[EditSession `EditSession`]] that are not the currently selected one.
-         *
-         **/
-        hideOtherMarkers(): void;
-        updateAnchors(delta: import("ace-code").Ace.Delta): void;
-        updateMarkers(): void;
-        /**
-         * PlaceHolder.detach()
-         *
-         * TODO
-         *
-         **/
-        detach(): void;
-        /**
-         * PlaceHolder.cancel()
-         *
-         * TODO
-         *
-         **/
-        cancel(): void;
-    }
-    export type EditSession = import("ace-code/src/edit_session").EditSession;
-    import { Range } from "ace-code/src/range";
-    namespace Ace {
-        type EventEmitter<T extends {
-            [K in keyof T]: (...args: any[]) => any;
-        }> = import("ace-code").Ace.EventEmitter<T>;
-        type PlaceHolderEvents = import("ace-code").Ace.PlaceHolderEvents;
-    }
-    export interface PlaceHolder extends Ace.EventEmitter<Ace.PlaceHolderEvents> {
-    }
 }
 declare module "ace-code/src/commands/occur_commands" {
     export namespace occurStartCommand {
