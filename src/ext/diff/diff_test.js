@@ -430,7 +430,11 @@ module.exports = {
         }, 0);
     },
     "test: second editor destroyed on detach in inline diff view": function() {
+        editorA.setOption("wrap", "free");
         diffView = new InlineDiffView({ editorA, inline: "a" });
+
+        assert.equal(diffView.editorB.getOption("wrap"), "free");
+
         assert.ok(!diffView.otherEditor.destroyed);
         diffView.detach();
         assert.ok(diffView.otherEditor.destroyed);
