@@ -112,7 +112,7 @@ class DefaultHandlers {
             } else if (cmp == 1) {
                 anchor = this.$clickSelection.start;
             } else {
-                var orientedRange = calcRangeOrientation(this.$clickSelection, cursor);
+                var orientedRange = calcRangeOrientation(this.$clickSelection, cursor, editor.session);
                 cursor = orientedRange.cursor;
                 anchor = orientedRange.anchor;
             }
@@ -146,7 +146,7 @@ class DefaultHandlers {
                 cursor = range.end;
                 anchor = range.start;
             } else {
-                var orientedRange = calcRangeOrientation(this.$clickSelection, cursor);
+                var orientedRange = calcRangeOrientation(this.$clickSelection, cursor, editor.session);
                 cursor = orientedRange.cursor;
                 anchor = orientedRange.anchor;
             }
@@ -305,11 +305,11 @@ function calcDistance(ax, ay, bx, by) {
     return Math.sqrt(Math.pow(bx - ax, 2) + Math.pow(by - ay, 2));
 }
 
-function calcRangeOrientation(range, cursor) {
+function calcRangeOrientation(range, cursor, session) {
     if (range.start.row == range.end.row)
         var cmp = 2 * cursor.column - range.start.column - range.end.column;
     else if (range.start.row == range.end.row - 1 && !range.start.column && !range.end.column)
-        var cmp = cursor.column - 4;
+        var cmp = 3 * cursor.column - 2 * session.getLine(range.start.row).length;
     else
         var cmp = 2 * cursor.row - range.start.row - range.end.row;
 

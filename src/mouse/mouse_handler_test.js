@@ -10,6 +10,7 @@ require("../theme/textmate");
 var Editor = require("../editor").Editor;
 var Mode = require("../mode/java").Mode;
 var VirtualRenderer = require("../virtual_renderer").VirtualRenderer;
+const { test } = require("asyncjs");
 var assert = require("../test/assertions");
 var MouseEvent = function(type, opts){
     var e = document.createEvent("MouseEvents");
@@ -147,6 +148,29 @@ module.exports = {
         toggler.dispatchEvent(e);
         editor.renderer.$loop._flush();
         assert.ok(parseInt(lines.cells[0].element.textContent) > 1);
+    },
+    "test: gutter click on wrapped line" : function() {
+        var editor = this.editor;
+        var value = "x {\n" + "  abc".repeat(100) + "\n}";
+        value = value.repeat(10);
+        editor.setValue(value, -1);
+        editor.setOption("wrap", 40);
+        editor.renderer.$loop._flush();
+        var lines = editor.renderer.$gutterLayer.$lines;
+        var toggler = lines.cells[1].element;
+        var rect = toggler.getBoundingClientRect();
+        editor.isFocused = () => true;
+        editor.focus();
+        
+        assert.position(editor.getCursorPosition(), 0, 0);
+
+        toggler.dispatchEvent(MouseEvent("down", {x: rect.left, y: rect.top + rect.height / 2}));
+        editor.renderer.$loop._flush();         
+        assert.position(editor.getCursorPosition(), 1, 0);
+
+        toggler.dispatchEvent(MouseEvent("up", {x: rect.left, y: rect.top + rect.height}));
+        editor.renderer.$loop._flush();
+        assert.position(editor.getCursorPosition(), 2, 0);
     },
     "test: wheel" : function() {
         var editor = this.editor;
