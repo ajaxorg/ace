@@ -634,15 +634,29 @@ class Gutter{
     /**
     * Retrieves the gutter cell element at the specified cursor row position.
     * @param {number} row - The row number in the editor where the gutter cell is located starts from 0
-    * @returns {HTMLElement|null} The gutter cell element at the specified row, or null if not found
+    * @returns {HTMLElement|undefined} The gutter cell element at the specified row, or undefined if not found
     * @experimental
     */
     $getGutterCell(row) {
-        // contains only visible rows
-        const cells = this.$lines.cells;
-        const visibileRow= this.session.documentToScreenRow(row,0);
-        // subtracting the first visible screen row index and folded rows from the row number.
-        return cells[row - this.config.firstRowScreen - (row-visibileRow)];
+        var cells = this.$lines.cells;
+        var min = 0;
+        var max = cells.length - 1;
+        
+        if (row < cells[0].row || row > cells[max].row)
+            return;
+
+        while (min <= max) {
+            var mid = Math.floor((min + max) / 2);
+            var cell = cells[mid];
+            if (cell.row > row) {
+                max = mid - 1;
+            } else if (cell.row < row) {
+                min = mid + 1;
+            } else {
+                return cell;
+            }
+        }
+        return cell;
     }
 
     /**
