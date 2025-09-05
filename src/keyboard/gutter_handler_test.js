@@ -391,7 +391,8 @@ module.exports = {
                 done();
             }, 20);
         }, 20);
-    }, "test: moving up and down to custom widget and checking onclick callback as well" : function(done) {
+    }, 
+    "test: moving up and down to custom widget and checking onclick callback as well" : function(done) {
         var editor = this.editor;
         var value = "\n x {" + "\n".repeat(5) + "}\n";
         value = value.repeat(50);
