@@ -121,6 +121,10 @@ class BaseDiffView {
                 diffModel.valueB || "")),
             chunks: []
         });
+        
+        if (this.otherEditor && this.activeEditor) {
+            this.otherSession.setOption("wrap", this.activeEditor.getOption("wrap"));
+        }
 
         this.setupScrollbars();
     }
