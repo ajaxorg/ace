@@ -429,6 +429,33 @@ module.exports = {
             done();
         }, 0);
     },
+    "test: column selection": function() {
+        var diffProvider = new DiffProvider();
+
+        editorA.session.setValue(getValueA(simpleDiff));
+        editorB.session.setValue(getValueB(simpleDiff));
+
+        diffView = new SplitDiffView({
+            editorA, editorB,
+            diffProvider,
+        });
+
+        function getColumnSyncSelectionMarker(editor) {
+            return Object.values(editor.session.$frontMarkers).filter(function(i) {
+                return i.clazz === "ace_diff double-triangle";
+            })[0];
+        }
+
+        var syncSelectionMarkerB = getColumnSyncSelectionMarker(editorB);
+
+        editorA.execCommand("selectdown");
+        editorA.execCommand("selectright");
+        editorA.renderer.$loop._flush();
+        editorB.renderer.$loop._flush();
+
+        assert.jsonEquals(syncSelectionMarkerB.range.start, {row: 0, column: 0});
+        assert.jsonEquals(syncSelectionMarkerB.range.end, {row: 1, column: 2});
+    },
     "test: second editor destroyed on detach in inline diff view": function() {
         editorA.setOption("wrap", "free");
         diffView = new InlineDiffView({ editorA, inline: "a" });
