@@ -313,7 +313,6 @@ class HoverTooltip extends Tooltip {
      * @param {MouseEvent} [startingEvent]
      */
     showForRange(editor, range, domNode, startingEvent) {
-        var MARGIN = 10;
         if (startingEvent && startingEvent != this.lastEvent) return;
         if (this.isOpen && document.activeElement == this.getElement()) return;
 
@@ -324,6 +323,13 @@ class HoverTooltip extends Tooltip {
             this.setTheme(renderer.theme);
         }
         this.isOpen = true;
+
+        this.$setPosition(editor, range, domNode);
+    }
+
+    $setPosition(editor, range, domNode) {
+        var MARGIN = 10;
+        var renderer = editor.renderer;
 
         this.addMarker(range, editor.session);
         this.range = Range.fromPoints(range.start, range.end);
