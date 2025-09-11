@@ -11,7 +11,7 @@ var HoverTooltip = require("../tooltip").HoverTooltip;
 var nls = require("../config").nls;
 var Range = require("../range").Range;
 
-const GUTTER_TOOLTIP_LEFT_OFFSET = 5;
+const GUTTER_TOOLTIP_LEFT_OFFSET = 3;
 const GUTTER_TOOLTIP_TOP_OFFSET = 3;
 exports.GUTTER_TOOLTIP_LEFT_OFFSET = GUTTER_TOOLTIP_LEFT_OFFSET;
 exports.GUTTER_TOOLTIP_TOP_OFFSET = GUTTER_TOOLTIP_TOP_OFFSET;
@@ -72,6 +72,7 @@ class GutterTooltip extends HoverTooltip {
         el.setAttribute("role", "tooltip");
         el.setAttribute("id", this.id);
         el.style.pointerEvents = "auto";
+        el.style.position = "absolute";
         
         this.onDomMouseMove = this.onDomMouseMove.bind(this);
         this.onDomMouseOut = this.onDomMouseOut.bind(this);
@@ -91,12 +92,14 @@ class GutterTooltip extends HoverTooltip {
         const gutter = editor.renderer.$gutter;
         gutter.addEventListener("mousemove", this.onDomMouseMove);
         gutter.addEventListener("mouseout", this.onDomMouseOut);
+        super.addToEditor(editor);
     }
     
     removeFromEditor(editor) {
         const gutter = editor.renderer.$gutter;
         gutter.removeEventListener("mousemove", this.onDomMouseMove);
         gutter.removeEventListener("mouseout", this.onDomMouseOut);
+        super.removeFromEditor(editor);
     }
 
     static get annotationLabels() {
