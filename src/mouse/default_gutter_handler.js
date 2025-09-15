@@ -223,12 +223,6 @@ class GutterTooltip extends HoverTooltip {
         var renderer = editor.renderer;
         var element = this.getElement();
 
-        if (editor.getOption("tooltipFollowsMouse")) {
-            //TODO:
-            this.setPosition(this.lastEvent.x, this.lastEvent.y);
-            return;
-        }
-
         // measure the size of tooltip, without constraints on its height
         var labelHeight = element.clientHeight;
         var spaceBelow = window.innerHeight - position.pageY - renderer.lineHeight;
