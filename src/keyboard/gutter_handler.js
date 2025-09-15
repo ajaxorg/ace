@@ -32,10 +32,6 @@ class GutterKeyboardHandler {
         // if the tooltip is open, we only want to respond to commands to close it (like a modal)
         if (this.annotationTooltip.isOpen) {
             e.preventDefault();
-
-            if (e.keyCode === keys["escape"])
-                this.annotationTooltip.hideTooltip();
-
             return;
         }
 
@@ -213,7 +209,7 @@ class GutterKeyboardHandler {
         }
 
         if (this.annotationTooltip.isOpen)
-            this.annotationTooltip.hideTooltip();
+            this.annotationTooltip.hide();
 
         return;
     }

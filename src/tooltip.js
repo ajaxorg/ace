@@ -313,6 +313,7 @@ class HoverTooltip extends Tooltip {
      * @param {MouseEvent} [startingEvent]
      */
     showForRange(editor, range, domNode, startingEvent) {
+
         if (startingEvent && startingEvent != this.lastEvent) return;
         if (this.isOpen && document.activeElement == this.getElement()) return;
 
@@ -324,14 +325,6 @@ class HoverTooltip extends Tooltip {
         }
         this.isOpen = true;
 
-        this.$setPosition(editor, range, domNode);
-    }
-
-    $setPosition(editor, range, domNode) {
-        var MARGIN = 10;
-        var renderer = editor.renderer;
-
-        this.addMarker(range, editor.session);
         this.range = Range.fromPoints(range.start, range.end);
         var position = renderer.textToScreenCoordinates(range.start.row, range.start.column);
 
@@ -346,6 +339,22 @@ class HoverTooltip extends Tooltip {
 
         element.style.maxHeight = "";
         element.style.display = "block";
+
+        this.$setPosition(editor, position, range);
+    }
+
+    /**
+     *
+     * @param {Editor} editor
+     * @param {{ pageX: number, pageY: number}} position
+     * @param {Range} [range]
+     */
+    $setPosition(editor, position, range) {
+        var MARGIN = 10;
+        this.addMarker(range, editor.session);
+
+        var renderer = editor.renderer;
+        var element = this.getElement();
 
         // measure the size of tooltip, without constraints on its height
         var labelHeight = element.clientHeight;

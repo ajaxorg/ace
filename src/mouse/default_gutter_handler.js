@@ -3,10 +3,7 @@
  * @typedef {import("./mouse_handler").MouseHandler} MouseHandler
  */
 var dom = require("../lib/dom");
-var event = require("../lib/event");
-const popupManager = require("../tooltip").popupManager;
 const MouseEvent = require("./mouse_event").MouseEvent;
-var Tooltip = require("../tooltip").Tooltip;
 var HoverTooltip = require("../tooltip").HoverTooltip;
 var nls = require("../config").nls;
 var Range = require("../range").Range;
@@ -63,7 +60,7 @@ exports.GutterHandler = GutterHandler;
 
 class GutterTooltip extends HoverTooltip {
     constructor(editor) {
-        super(editor.container);
+        super();
         this.id = "gt" + (++GutterTooltip.$uid);
         this.editor = editor;
         /**@type {Number | Undefined}*/
@@ -173,7 +170,7 @@ class GutterTooltip extends HoverTooltip {
             }
         }
 
-        if (annotation.displayText.length === 0) return this.hideTooltip();
+        if (annotation.displayText.length === 0) return this.hide();
 
         var annotationMessages = {error: [], security: [], warning: [], info: [], hint: []};
         var iconClassName = gutter.$useSvgGutterIcons ? "ace_icon_svg" : "ace_icon";
@@ -221,31 +218,10 @@ class GutterTooltip extends HoverTooltip {
         this.editor._signal("showGutterTooltip", this);
     }
 
-    /**
-     * @param {import("../editor").Editor} editor
-     * @param {Range} range
-     * @param {HTMLElement} domNode
-     */
-    $setPosition(editor, range, domNode) {
+    $setPosition(editor, position, range) {
         var MARGIN = 10;
         var renderer = editor.renderer;
-
-        //TODO: this.addMarker(range, editor.session);
-        this.range = Range.fromPoints(range.start, range.end);
-
-        var position = renderer.textToScreenCoordinates(range.start.row, range.start.column);
-
-        var rect = renderer.$gutter.getBoundingClientRect();
-
-        if (position.pageX > rect.right)
-            position.pageX = rect.right;
-
         var element = this.getElement();
-        element.innerHTML = "";
-        element.appendChild(domNode);
-
-        element.style.maxHeight = "";
-        element.style.display = "block";
 
         if (editor.getOption("tooltipFollowsMouse")) {
             //TODO:
@@ -265,10 +241,10 @@ class GutterTooltip extends HoverTooltip {
         const gutterCell = this.$findCellByRow(range.start.row);
         if (gutterCell) {
             var gutterElement = gutterCell.element.querySelector(".ace_gutter_annotation");
-            rect = gutterElement.getBoundingClientRect();
-            element.style.left = (rect.width - GUTTER_TOOLTIP_LEFT_OFFSET) + "px";
+            const rect = gutterElement.getBoundingClientRect();
+            element.style.left = (rect.right - GUTTER_TOOLTIP_LEFT_OFFSET) + "px";
 
-            element.style.bottom = isAbove ? rect.height - GUTTER_TOOLTIP_TOP_OFFSET  + "px" : "" ;
+            element.style.bottom = isAbove ? (window.innerHeight - rect.top - GUTTER_TOOLTIP_TOP_OFFSET) + "px" : "" ;
             element.style.top = isAbove ? "" : rect.bottom - GUTTER_TOOLTIP_TOP_OFFSET + "px";
         }
         element.style.maxHeight = (isAbove ? position.pageY : spaceBelow) - MARGIN + "px";
@@ -288,12 +264,12 @@ class GutterTooltip extends HoverTooltip {
         return this.editor.renderer.$gutterLayer.$lines.cells.find((el) => el.row === row);
     }
 
-    hideTooltip() {
+    hide(e) {
+        super.hide(e);
         if(!this.isOpen){
             return;
         }
         this.$element.removeAttribute("aria-live");
-        this.hide();
 
         if (this.visibleTooltipRow != undefined) {
             const annotationNode = this.$findLinkedAnnotationNode(this.visibleTooltipRow);
@@ -301,7 +277,6 @@ class GutterTooltip extends HoverTooltip {
                 annotationNode.removeAttribute("aria-describedby");
             }
         }
-
         this.visibleTooltipRow = undefined;
         this.editor._signal("hideGutterTooltip", this);
     }
