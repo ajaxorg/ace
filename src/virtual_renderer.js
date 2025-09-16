@@ -2013,6 +2013,15 @@ class VirtualRenderer {
             if (_self.$padding && padding != _self.$padding)
                 _self.setPadding(padding);
 
+            if (_self.$gutterLayer) {
+                var showGutterCursor = module["$showGutterCursorMarker"];
+                if (showGutterCursor && !_self.$gutterLayer.$showCursorMarker) {
+                    _self.$gutterLayer.$showCursorMarker = "theme";
+                } else if (!showGutterCursor && _self.$gutterLayer.$showCursorMarker == "theme") {
+                    _self.$gutterLayer.$showCursorMarker = null;
+                }
+            }
+
             // this is kept only for backwards compatibility
             _self.$theme = module.cssClass;
 

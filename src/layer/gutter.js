@@ -15,6 +15,7 @@ class Gutter{
      * @param {HTMLElement} parentEl
      */
     constructor(parentEl) {
+        this.$showCursorMarker = null;
         this.element = dom.createElement("div");
         this.element.className = "ace_layer ace_gutter-layer";
         parentEl.appendChild(this.element);
@@ -172,6 +173,9 @@ class Gutter{
         
         this._signal("afterRender");
         this.$updateGutterWidth(config);
+        
+        if (this.$showCursorMarker)
+            this.$updateCursorMarker();
     }
 
     /**
@@ -214,6 +218,9 @@ class Gutter{
     }
     
     updateLineHighlight() {
+        if (this.$showCursorMarker)
+            this.$updateCursorMarker();
+
         if (!this.$highlightGutterLine)
             return;
         var row = this.session.selection.cursor.row;
@@ -240,6 +247,28 @@ class Gutter{
                 break;
             }
         }
+    }
+
+    $updateCursorMarker() {
+        if (!this.session)
+            return;
+        var session = this.session;
+        if (!this.$highlightElement) {
+            this.$highlightElement = dom.createElement("div");
+            this.$highlightElement.className = "ace_gutter-cursor";
+            this.element.appendChild(this.$highlightElement);
+        }
+        var pos = session.selection.cursor;
+        var config = this.config;
+        var lines = this.$lines;
+
+        var screenTop = config.firstRowScreen * config.lineHeight;
+        var screenPage = Math.floor(screenTop / lines.canvasHeight);
+        var lineTop = session.documentToScreenRow(pos) * config.lineHeight;
+        var top = lineTop - (screenPage * lines.canvasHeight);
+
+        dom.setStyle(this.$highlightElement.style, "height", config.lineHeight + "px");
+        dom.setStyle(this.$highlightElement.style, "top", top + "px");
     }
 
     /**
