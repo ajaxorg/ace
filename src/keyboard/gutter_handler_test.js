@@ -296,7 +296,8 @@ module.exports = {
         assert.equal(toggler.getAttribute("aria-label"), "Toggle code folding, row 1");
         assert.equal(toggler.getAttribute("aria-expanded"), "true");
         assert.equal(toggler.getAttribute("title"), "Fold code"); 
-    },"test: should signal keyboard event" : function(done) {
+    },
+    "test: should signal keyboard event" : function(done) {
         var editor = this.editor;
         var value = "x {" + "\n".repeat(50) + "}\n";
         value = value.repeat(50);
@@ -391,7 +392,8 @@ module.exports = {
                 done();
             }, 20);
         }, 20);
-    }, "test: moving up and down to custom widget and checking onclick callback as well" : function(done) {
+    }, 
+    "test: moving up and down to custom widget and checking onclick callback as well" : function(done) {
         var editor = this.editor;
         var value = "\n x {" + "\n".repeat(5) + "}\n";
         value = value.repeat(50);
@@ -441,7 +443,36 @@ module.exports = {
             assert.equal(document.activeElement, lines.cells[1].element.childNodes[1]);
             done();
         }, 20);
-    },    
+    },
+    "test: add several custom widgets" : function() {
+        var editor = this.editor;
+        var value = "x {" + "\n".repeat(5) + "}\n";
+        value = value.repeat(50);
+        editor.session.setMode(new Mode());
+        editor.setValue(value, -1);
+        editor.execCommand("toggleFoldWidget");
+        editor.renderer.$loop._flush();
+
+        
+        editor.renderer.$gutterLayer.$addCustomWidget(100, {
+            className: "widget1",
+        });
+        editor.renderer.$gutterLayer.$addCustomWidget(4, {
+            className: "widget2",
+        });
+        editor.renderer.$loop._flush();
+        
+        assert.ok(!editor.container.querySelector(".widget1"));
+        assert.ok(editor.container.querySelector(".widget2"));
+
+        editor.navigateTo(100, 0);
+        editor.renderer.scrollCursorIntoView();
+
+        editor.renderer.$loop._flush();
+        assert.ok(editor.container.querySelector(".widget1"));
+        assert.ok(!editor.container.querySelector(".widget2"));
+
+    },
     
     tearDown : function() {
         this.editor.destroy();
