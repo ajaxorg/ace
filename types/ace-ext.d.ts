@@ -228,7 +228,7 @@ declare module "ace-code/src/ext/diff/scroll_diff_decorator" {
     import { Decorator } from "ace-code/src/layer/decorators";
 }
 declare module "ace-code/src/ext/diff/styles-css" {
-    export const cssText: "\n/*\n * Line Markers\n */\n.ace_diff {\n    position: absolute;\n    z-index: 0;\n}\n.ace_diff.inline {\n    z-index: 20;\n}\n/*\n * Light Colors \n */\n.ace_diff.insert {\n    background-color: #EFFFF1;\n}\n.ace_diff.delete {\n    background-color: #FFF1F1;\n}\n.ace_diff.aligned_diff {\n    background: rgba(206, 194, 191, 0.26);\n    background: repeating-linear-gradient(\n                45deg,\n              rgba(122, 111, 108, 0.26),\n              rgba(122, 111, 108, 0.26) 5px,\n              rgba(0, 0, 0, 0) 5px,\n              rgba(0, 0, 0, 0) 10px \n    );\n}\n\n.ace_diff.insert.inline {\n    background-color:  rgb(74 251 74 / 18%); \n}\n.ace_diff.delete.inline {\n    background-color: rgb(251 74 74 / 15%);\n}\n\n.ace_diff.delete.inline.empty {\n    background-color: rgba(255, 128, 79, 0.7);\n    width: 2px !important;\n}\n\n.ace_diff.insert.inline.empty {\n    background-color: rgba(49, 230, 96, 0.7);\n    width: 2px !important;\n}\n\n.ace_diff-active-line {\n    border-bottom: 1px solid;\n    border-top: 1px solid;\n    background: transparent;\n    position: absolute;\n    box-sizing: border-box;\n    border-color: #9191ac;\n}\n\n.ace_dark .ace_diff-active-line {\n    background: transparent;\n    border-color: #75777a;\n}\n \n\n/* gutter changes */\n.ace_mini-diff_gutter-enabled > .ace_gutter-cell,\n.ace_mini-diff_gutter-enabled > .ace_gutter-cell_svg-icons {\n    padding-right: 13px;\n}\n\n.ace_mini-diff_gutter_other > .ace_gutter-cell,\n.ace_mini-diff_gutter_other > .ace_gutter-cell_svg-icons  {\n    display: none;\n}\n\n.ace_mini-diff_gutter_other {\n    pointer-events: none;\n}\n\n\n.ace_mini-diff_gutter-enabled > .mini-diff-added {\n    background-color: #EFFFF1;\n    border-left: 3px solid #2BB534;\n    padding-left: 16px;\n    display: block;\n}\n\n.ace_mini-diff_gutter-enabled > .mini-diff-deleted {\n    background-color: #FFF1F1;\n    border-left: 3px solid #EA7158;\n    padding-left: 16px;\n    display: block;\n}\n\n\n.ace_mini-diff_gutter-enabled > .mini-diff-added:after {\n    position: absolute;\n    right: 2px;\n    content: \"+\";\n    color: darkgray;\n    background-color: inherit;\n}\n\n.ace_mini-diff_gutter-enabled > .mini-diff-deleted:after {\n    position: absolute;\n    right: 2px;\n    content: \"-\";\n    color: darkgray;\n    background-color: inherit;\n}\n.ace_fade-fold-widgets:hover > .ace_folding-enabled > .mini-diff-added:after,\n.ace_fade-fold-widgets:hover > .ace_folding-enabled > .mini-diff-deleted:after {\n    display: none;\n}\n\n.ace_diff_other .ace_selection {\n    filter: drop-shadow(1px 2px 3px darkgray);\n}\n\n.ace_hidden_marker-layer .ace_bracket {\n    display: none;\n}\n\n\n\n/*\n * Dark Colors \n */\n\n.ace_dark .ace_diff.insert {\n    background-color: #212E25;\n}\n.ace_dark .ace_diff.delete {\n    background-color: #3F2222;\n}\n\n.ace_dark .ace_mini-diff_gutter-enabled > .mini-diff-added {\n    background-color: #212E25;\n    border-left-color:#00802F;\n}\n\n.ace_dark .ace_mini-diff_gutter-enabled > .mini-diff-deleted {\n    background-color: #3F2222;\n    border-left-color: #9C3838;\n}\n\n";
+    export const cssText: "\n/*\n * Line Markers\n */\n.ace_diff {\n    position: absolute;\n    z-index: 0;\n}\n.ace_diff.inline {\n    z-index: 20;\n}\n/*\n * Light Colors \n */\n.ace_diff.insert {\n    background-color: #EFFFF1;\n}\n.ace_diff.delete {\n    background-color: #FFF1F1;\n}\n.ace_diff.aligned_diff {\n    background: rgba(206, 194, 191, 0.26);\n    background: repeating-linear-gradient(\n                45deg,\n              rgba(122, 111, 108, 0.26),\n              rgba(122, 111, 108, 0.26) 5px,\n              rgba(0, 0, 0, 0) 5px,\n              rgba(0, 0, 0, 0) 10px \n    );\n}\n\n.ace_diff.insert.inline {\n    background-color:  rgb(74 251 74 / 18%); \n}\n.ace_diff.delete.inline {\n    background-color: rgb(251 74 74 / 15%);\n}\n\n.ace_diff.delete.inline.empty {\n    background-color: rgba(255, 128, 79, 0.7);\n    width: 2px !important;\n}\n\n.ace_diff.insert.inline.empty {\n    background-color: rgba(49, 230, 96, 0.7);\n    width: 2px !important;\n}\n\n.ace_diff-active-line {\n    border-bottom: 1px solid;\n    border-top: 1px solid;\n    background: transparent;\n    position: absolute;\n    box-sizing: border-box;\n    border-color: #9191ac;\n}\n\n.ace_dark .ace_diff-active-line {\n    background: transparent;\n    border-color: #75777a;\n}\n \n\n/* gutter changes */\n.ace_mini-diff_gutter-enabled > .ace_gutter-cell,\n.ace_mini-diff_gutter-enabled > .ace_gutter-cell_svg-icons {\n    padding-right: 13px;\n}\n\n.ace_mini-diff_gutter_other > .ace_gutter-cell,\n.ace_mini-diff_gutter_other > .ace_gutter-cell_svg-icons  {\n    display: none;\n}\n\n.ace_mini-diff_gutter_other {\n    pointer-events: none;\n}\n\n\n.ace_mini-diff_gutter-enabled > .mini-diff-added {\n    background-color: #EFFFF1;\n    border-left: 3px solid #2BB534;\n    padding-left: 16px;\n    display: block;\n}\n\n.ace_mini-diff_gutter-enabled > .mini-diff-deleted {\n    background-color: #FFF1F1;\n    border-left: 3px solid #EA7158;\n    padding-left: 16px;\n    display: block;\n}\n\n\n.ace_mini-diff_gutter-enabled > .mini-diff-added:after {\n    position: absolute;\n    right: 2px;\n    content: \"+\";\n    background-color: inherit;\n}\n\n.ace_mini-diff_gutter-enabled > .mini-diff-deleted:after {\n    position: absolute;\n    right: 2px;\n    content: \"-\";\n    background-color: inherit;\n}\n.ace_fade-fold-widgets:hover > .ace_folding-enabled > .mini-diff-added:after,\n.ace_fade-fold-widgets:hover > .ace_folding-enabled > .mini-diff-deleted:after {\n    display: none;\n}\n\n.ace_diff_other .ace_selection {\n    filter: drop-shadow(1px 2px 3px darkgray);\n}\n\n.ace_hidden_marker-layer .ace_bracket,\n.ace_hidden_marker-layer .ace_error_bracket {\n    display: none;\n}\n\n\n\n/*\n * Dark Colors \n */\n\n.ace_dark .ace_diff.insert {\n    background-color: #212E25;\n}\n.ace_dark .ace_diff.delete {\n    background-color: #3F2222;\n}\n\n.ace_dark .ace_mini-diff_gutter-enabled > .mini-diff-added {\n    background-color: #212E25;\n    border-left-color:#00802F;\n}\n\n.ace_dark .ace_mini-diff_gutter-enabled > .mini-diff-deleted {\n    background-color: #3F2222;\n    border-left-color: #9C3838;\n}\n\n";
 }
 declare module "ace-code/src/ext/diff/gutter_decorator" {
     export class MinimalGutterDiffDecorator {
@@ -554,155 +554,6 @@ declare module "ace-code/src/ext/elastic_tabstops_lite" {
     }
     import { Editor } from "ace-code/src/editor";
 }
-declare module "ace-code/src/ext/error_marker" {
-    export function showErrorMarker(editor: import("ace-code/src/editor").Editor, dir: number): void;
-}
-declare module "ace-code/src/ext/beautify" {
-    export const singletonTags: string[];
-    export const blockTags: string[];
-    export const formatOptions: {
-        lineBreaksAfterCommasInCurlyBlock?: boolean;
-    };
-    export function beautify(session: import("ace-code/src/edit_session").EditSession): void;
-    export const commands: import("ace-code").Ace.Command[];
-}
-declare module "ace-code/src/ext/code_lens" {
-    export function setLenses(session: EditSession, lenses: import("ace-code").Ace.CodeLense[]): number;
-    export function registerCodeLensProvider(editor: import("ace-code/src/editor").Editor, codeLensProvider: import("ace-code").Ace.CodeLenseProvider): void;
-    export function clear(session: EditSession): void;
-    export type EditSession = import("ace-code/src/edit_session").EditSession;
-    export type VirtualRenderer = import("ace-code/src/virtual_renderer").VirtualRenderer & {
-    };
-    export type CodeLenseCommand = import("ace-code").Ace.CodeLenseCommand;
-    export type CodeLense = import("ace-code").Ace.CodeLense;
-    import { Editor } from "ace-code/src/editor";
-}
-declare module "ace-code/src/ext/emmet" {
-    export const commands: HashHandler;
-    export function runEmmetCommand(editor: Editor): ReturnType<typeof setTimeout> | boolean;
-    export function updateCommands(editor: Editor, enabled?: boolean): void;
-    export function isSupportedMode(mode: any | string): boolean;
-    export function isAvailable(editor: Editor, command: string): boolean;
-    export function load(cb?: Function): boolean;
-    export function setCore(e: string | any): void;
-    import { HashHandler } from "ace-code/src/keyboard/hash_handler";
-    import { Editor } from "ace-code/src/editor";
-    /**
-     * Implementation of {@link IEmmetEditor} interface for Ace
-     */
-    export class AceEmmetEditor {
-        setupContext(editor: Editor): void;
-        ace: Editor;
-        indentation: string;
-        /**
-         * Returns character indexes of selected text: object with <code>start</code>
-         * and <code>end</code> properties. If there's no selection, should return
-         * object with <code>start</code> and <code>end</code> properties referring
-         * to current caret position
-         * @example
-         * var selection = editor.getSelectionRange();
-         * alert(selection.start + ', ' + selection.end);
-         */
-        getSelectionRange(): any;
-        /**
-         * Creates selection from <code>start</code> to <code>end</code> character
-         * indexes. If <code>end</code> is ommited, this method should place caret
-         * and <code>start</code> index
-         * @example
-         * editor.createSelection(10, 40);
-         *
-         * //move caret to 15th character
-         * editor.createSelection(15);
-         */
-        createSelection(start: number, end?: number): void;
-        /**
-         * Returns current line's start and end indexes as object with <code>start</code>
-         * and <code>end</code> properties
-         * @example
-         * var range = editor.getCurrentLineRange();
-         * alert(range.start + ', ' + range.end);
-         */
-        getCurrentLineRange(): any;
-        /**
-         * Returns current caret position
-         */
-        getCaretPos(): number | null;
-        /**
-         * Set new caret position
-         * @param {Number} index Caret position
-         */
-        setCaretPos(index: number): void;
-        /**
-         * Returns content of current line
-         */
-        getCurrentLine(): string;
-        /**
-         * Replace editor's content or it's part (from <code>start</code> to
-         * <code>end</code> index). If <code>value</code> contains
-         * <code>caret_placeholder</code>, the editor will put caret into
-         * this position. If you skip <code>start</code> and <code>end</code>
-         * arguments, the whole target's content will be replaced with
-         * <code>value</code>.
-         *
-         * If you pass <code>start</code> argument only,
-         * the <code>value</code> will be placed at <code>start</code> string
-         * index of current content.
-         *
-         * If you pass <code>start</code> and <code>end</code> arguments,
-         * the corresponding substring of current target's content will be
-         * replaced with <code>value</code>.
-         * @param {String} value Content you want to paste
-         * @param {Number} [start] Start index of editor's content
-         * @param {Number} [end] End index of editor's content
-         * @param {Boolean} [noIndent] Do not auto indent <code>value</code>
-         */
-        replaceContent(value: string, start?: number, end?: number, noIndent?: boolean): void;
-        /**
-         * Returns editor's content
-         */
-        getContent(): string;
-        /**
-         * Returns current editor's syntax mode
-         */
-        getSyntax(): string;
-        /**
-         * Returns current output profile name (@see emmet#setupProfile)
-         */
-        getProfileName(): string;
-        /**
-         * Ask user to enter something
-         * @param {String} title Dialog title
-         * @return {String} Entered data
-         * @since 0.65
-         */
-        prompt(title: string): string;
-        /**
-         * Returns current selection
-         * @since 0.65
-         */
-        getSelection(): string;
-        /**
-         * Returns current editor's file path
-         * @since 0.65
-         */
-        getFilePath(): string;
-    }
-}
-declare module "ace-code/src/ext/hardwrap" {
-    /**
-     * Wraps lines at specified column limits and optionally merges short adjacent lines.
-     *
-     * Processes text within the specified row range, breaking lines that exceed the maximum column
-     * width at appropriate word boundaries while preserving indentation. When merge is enabled,
-     * combines short consecutive lines that can fit within the column limit. Automatically adjusts
-     * the end row when new line breaks are inserted to ensure all affected content is processed.
-     *
-     * @param {import("ace-code/src/editor").Editor} editor - The editor instance containing the text to wrap
-     * @param {import("ace-code").Ace.HardWrapOptions} options - Configuration options for wrapping behavior
-     */
-    export function hardWrap(editor: import("ace-code/src/editor").Editor, options: import("ace-code").Ace.HardWrapOptions): void;
-    import { Editor } from "ace-code/src/editor";
-}
 declare module "ace-code/src/ext/menu_tools/settings_menu.css" {
     const _exports: string;
     export = _exports;
@@ -713,14 +564,6 @@ declare module "ace-code/src/ext/menu_tools/overlay_page" {
         setIgnoreFocusOut: (ignore: boolean) => void;
     };
 }
-declare module "ace-code/src/ext/menu_tools/get_editor_keyboard_shortcuts" {
-    export function getEditorKeybordShortcuts(editor: import("ace-code/src/editor").Editor): any[];
-}
-declare module "ace-code/src/ext/keybinding_menu" {
-    export function init(editor: Editor): void;
-    import { Editor } from "ace-code/src/editor";
-}
-declare module "ace-code/src/ext/linking" { }
 declare module "ace-code/src/ext/modelist" {
     /**
      * Suggests a mode based on the file extension present in the given path
@@ -998,6 +841,163 @@ declare module "ace-code/src/ext/options" {
     export interface OptionPanel extends Ace.EventEmitter<Ace.OptionPanelEvents> {
     }
 }
+declare module "ace-code/src/ext/error_marker" {
+    export function showErrorMarker(editor: import("ace-code/src/editor").Editor, dir: number): void;
+}
+declare module "ace-code/src/ext/beautify" {
+    export const singletonTags: string[];
+    export const blockTags: string[];
+    export const formatOptions: {
+        lineBreaksAfterCommasInCurlyBlock?: boolean;
+    };
+    export function beautify(session: import("ace-code/src/edit_session").EditSession): void;
+    export const commands: import("ace-code").Ace.Command[];
+}
+declare module "ace-code/src/ext/code_lens" {
+    export function setLenses(session: EditSession, lenses: import("ace-code").Ace.CodeLense[]): number;
+    export function registerCodeLensProvider(editor: import("ace-code/src/editor").Editor, codeLensProvider: import("ace-code").Ace.CodeLenseProvider): void;
+    export function clear(session: EditSession): void;
+    export type EditSession = import("ace-code/src/edit_session").EditSession;
+    export type VirtualRenderer = import("ace-code/src/virtual_renderer").VirtualRenderer & {
+    };
+    export type CodeLenseCommand = import("ace-code").Ace.CodeLenseCommand;
+    export type CodeLense = import("ace-code").Ace.CodeLense;
+    import { Editor } from "ace-code/src/editor";
+}
+declare module "ace-code/src/ext/emmet" {
+    export const commands: HashHandler;
+    export function runEmmetCommand(editor: Editor): ReturnType<typeof setTimeout> | boolean;
+    export function updateCommands(editor: Editor, enabled?: boolean): void;
+    export function isSupportedMode(mode: any | string): boolean;
+    export function isAvailable(editor: Editor, command: string): boolean;
+    export function load(cb?: Function): boolean;
+    export function setCore(e: string | any): void;
+    import { HashHandler } from "ace-code/src/keyboard/hash_handler";
+    import { Editor } from "ace-code/src/editor";
+    /**
+     * Implementation of {@link IEmmetEditor} interface for Ace
+     */
+    export class AceEmmetEditor {
+        setupContext(editor: Editor): void;
+        ace: Editor;
+        indentation: string;
+        /**
+         * Returns character indexes of selected text: object with <code>start</code>
+         * and <code>end</code> properties. If there's no selection, should return
+         * object with <code>start</code> and <code>end</code> properties referring
+         * to current caret position
+         * @example
+         * var selection = editor.getSelectionRange();
+         * alert(selection.start + ', ' + selection.end);
+         */
+        getSelectionRange(): any;
+        /**
+         * Creates selection from <code>start</code> to <code>end</code> character
+         * indexes. If <code>end</code> is ommited, this method should place caret
+         * and <code>start</code> index
+         * @example
+         * editor.createSelection(10, 40);
+         *
+         * //move caret to 15th character
+         * editor.createSelection(15);
+         */
+        createSelection(start: number, end?: number): void;
+        /**
+         * Returns current line's start and end indexes as object with <code>start</code>
+         * and <code>end</code> properties
+         * @example
+         * var range = editor.getCurrentLineRange();
+         * alert(range.start + ', ' + range.end);
+         */
+        getCurrentLineRange(): any;
+        /**
+         * Returns current caret position
+         */
+        getCaretPos(): number | null;
+        /**
+         * Set new caret position
+         * @param {Number} index Caret position
+         */
+        setCaretPos(index: number): void;
+        /**
+         * Returns content of current line
+         */
+        getCurrentLine(): string;
+        /**
+         * Replace editor's content or it's part (from <code>start</code> to
+         * <code>end</code> index). If <code>value</code> contains
+         * <code>caret_placeholder</code>, the editor will put caret into
+         * this position. If you skip <code>start</code> and <code>end</code>
+         * arguments, the whole target's content will be replaced with
+         * <code>value</code>.
+         *
+         * If you pass <code>start</code> argument only,
+         * the <code>value</code> will be placed at <code>start</code> string
+         * index of current content.
+         *
+         * If you pass <code>start</code> and <code>end</code> arguments,
+         * the corresponding substring of current target's content will be
+         * replaced with <code>value</code>.
+         * @param {String} value Content you want to paste
+         * @param {Number} [start] Start index of editor's content
+         * @param {Number} [end] End index of editor's content
+         * @param {Boolean} [noIndent] Do not auto indent <code>value</code>
+         */
+        replaceContent(value: string, start?: number, end?: number, noIndent?: boolean): void;
+        /**
+         * Returns editor's content
+         */
+        getContent(): string;
+        /**
+         * Returns current editor's syntax mode
+         */
+        getSyntax(): string;
+        /**
+         * Returns current output profile name (@see emmet#setupProfile)
+         */
+        getProfileName(): string;
+        /**
+         * Ask user to enter something
+         * @param {String} title Dialog title
+         * @return {String} Entered data
+         * @since 0.65
+         */
+        prompt(title: string): string;
+        /**
+         * Returns current selection
+         * @since 0.65
+         */
+        getSelection(): string;
+        /**
+         * Returns current editor's file path
+         * @since 0.65
+         */
+        getFilePath(): string;
+    }
+}
+declare module "ace-code/src/ext/hardwrap" {
+    /**
+     * Wraps lines at specified column limits and optionally merges short adjacent lines.
+     *
+     * Processes text within the specified row range, breaking lines that exceed the maximum column
+     * width at appropriate word boundaries while preserving indentation. When merge is enabled,
+     * combines short consecutive lines that can fit within the column limit. Automatically adjusts
+     * the end row when new line breaks are inserted to ensure all affected content is processed.
+     *
+     * @param {import("ace-code/src/editor").Editor} editor - The editor instance containing the text to wrap
+     * @param {import("ace-code").Ace.HardWrapOptions} options - Configuration options for wrapping behavior
+     */
+    export function hardWrap(editor: import("ace-code/src/editor").Editor, options: import("ace-code").Ace.HardWrapOptions): void;
+    import { Editor } from "ace-code/src/editor";
+}
+declare module "ace-code/src/ext/menu_tools/get_editor_keyboard_shortcuts" {
+    export function getEditorKeybordShortcuts(editor: import("ace-code/src/editor").Editor): any[];
+}
+declare module "ace-code/src/ext/keybinding_menu" {
+    export function init(editor: Editor): void;
+    import { Editor } from "ace-code/src/editor";
+}
+declare module "ace-code/src/ext/linking" { }
 declare module "ace-code/src/ext/prompt" {
     export type PromptOptions = {
         /**
