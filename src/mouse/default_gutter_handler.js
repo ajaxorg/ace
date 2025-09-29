@@ -21,12 +21,12 @@ exports.GUTTER_TOOLTIP_TOP_OFFSET = GUTTER_TOOLTIP_TOP_OFFSET;
 function GutterHandler(mouseHandler) {
     var editor = mouseHandler.editor;
     var gutter = editor.renderer.$gutterLayer;
-    var tooltip = new GutterTooltip(editor);
-    tooltip.addToEditor(editor);
+    mouseHandler.tooltip = new GutterTooltip(editor);
+    mouseHandler.tooltip.addToEditor(editor);
 
-    tooltip.setDataProvider(function(e, editor) {
+    mouseHandler.tooltip.setDataProvider(function(e, editor) {
         var row = e.getDocumentPosition().row;
-        tooltip.showTooltip(row);
+        mouseHandler.tooltip.showTooltip(row);
     });
 
     mouseHandler.editor.setDefaultHandler("guttermousedown", function(e) {
@@ -73,6 +73,8 @@ class GutterTooltip extends HoverTooltip {
         
         this.onDomMouseMove = this.onDomMouseMove.bind(this);
         this.onDomMouseOut = this.onDomMouseOut.bind(this);
+
+        this.setClassName("ace_gutter-tooltip");
     }
     
     onDomMouseMove(domEvent) {
@@ -97,6 +99,11 @@ class GutterTooltip extends HoverTooltip {
         gutter.removeEventListener("mousemove", this.onDomMouseMove);
         gutter.removeEventListener("mouseout", this.onDomMouseOut);
         super.removeFromEditor(editor);
+    }
+
+    destroy(editor) {
+        this.removeFromEditor(editor);
+        super.destroy();
     }
 
     static get annotationLabels() {
@@ -259,7 +266,6 @@ class GutterTooltip extends HoverTooltip {
     }
 
     hide(e) {
-        super.hide(e);
         if(!this.isOpen){
             return;
         }
@@ -273,6 +279,7 @@ class GutterTooltip extends HoverTooltip {
         }
         this.visibleTooltipRow = undefined;
         this.editor._signal("hideGutterTooltip", this);
+        super.hide(e);
     }
 
     static annotationsToSummaryString(annotations) {

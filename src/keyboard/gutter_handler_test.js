@@ -22,6 +22,16 @@ function emit(keyCode) {
     el.dispatchEvent(event);
 }
 
+function findVisibleTooltip() {
+    const tooltips = document.body.querySelectorAll(".ace_gutter-tooltip");
+    for (let i = 0; i < tooltips.length; i++) {
+        if (window.getComputedStyle(tooltips[i]).display === "block") {
+            return tooltips[i];
+        }
+    }
+    return null;
+}
+
 module.exports = {
     setUp : function(done) {
         this.editor = new Editor(new VirtualRenderer());
@@ -153,7 +163,7 @@ module.exports = {
             setTimeout(function() {
                 // Check annotation is rendered.
                 editor.renderer.$loop._flush();
-                var tooltip = editor.container.querySelector(".ace_gutter-tooltip");
+                var tooltip = document.body.querySelector(".ace_gutter-tooltip");
                 assert.ok(/error test/.test(tooltip.textContent));
 
                 // Press escape to dismiss the tooltip.
@@ -164,7 +174,7 @@ module.exports = {
                 assert.equal(document.activeElement, editor.renderer.$gutter);
 
                 done();
-            }, 20);
+            }, 400);
         }, 20);
     },"test: keyboard annotation: multiple annotations" : function(done) {
         var editor = this.editor;

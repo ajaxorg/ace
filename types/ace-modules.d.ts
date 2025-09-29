@@ -1786,9 +1786,9 @@ declare module "ace-code/src/mouse/default_gutter_handler" {
     export interface GutterHandler {
     }
     export type MouseHandler = import("ace-code/src/mouse/mouse_handler").MouseHandler;
-    export const GUTTER_TOOLTIP_LEFT_OFFSET: 5;
+    export const GUTTER_TOOLTIP_LEFT_OFFSET: 3;
     export const GUTTER_TOOLTIP_TOP_OFFSET: 3;
-    export class GutterTooltip extends Tooltip {
+    export class GutterTooltip extends HoverTooltip {
         static get annotationLabels(): {
             error: {
                 singular: any;
@@ -1812,19 +1812,24 @@ declare module "ace-code/src/mouse/default_gutter_handler" {
             };
         };
         static annotationsToSummaryString(annotations: any): string;
-        constructor(editor: any, isHover?: boolean);
+        constructor(editor: any);
         id: string;
         editor: any;
         visibleTooltipRow: number | undefined;
-        onMouseOut(e: any): void;
-        setPosition(x: any, y: any): void;
+        onDomMouseMove(domEvent: any): void;
+        onDomMouseOut(domEvent: any): void;
+        addToEditor(editor: any): void;
+        removeFromEditor(editor: any): void;
         showTooltip(row: any): void;
-        hideTooltip(): void;
+        /**
+         * Check if cursor is outside gutter
+         */
+        isOutsideOfText(e: any): boolean;
     }
     export namespace GutterTooltip {
         let $uid: number;
     }
-    import { Tooltip } from "ace-code/src/tooltip";
+    import { HoverTooltip } from "ace-code/src/tooltip";
     export interface GutterHandler {
     }
 }

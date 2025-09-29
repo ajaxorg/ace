@@ -213,6 +213,7 @@ class MouseHandler {
     }
     destroy() {
         if (this.releaseMouse) this.releaseMouse();
+        if (this.tooltip) this.tooltip.destroy(this.editor);
     }
 }
 
@@ -223,7 +224,6 @@ config.defineOptions(MouseHandler.prototype, "mouseHandler", {
     dragDelay: {initialValue: (useragent.isMac ? 150 : 0)},
     dragEnabled: {initialValue: true},
     focusTimeout: {initialValue: 0},
-    tooltipFollowsMouse: {initialValue: true}
 });
 
 

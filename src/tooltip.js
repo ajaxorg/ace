@@ -73,8 +73,20 @@ class Tooltip {
      * @param {import("../ace-internal").Ace.Theme} theme
      */
     setTheme(theme) {
-        this.$element.className = CLASSNAME + " " +
-            (theme.isDark? "ace_dark " : "") + (theme.cssClass || "");
+        if (this.theme) {
+            this.theme.isDark && dom.removeCssClass(this.getElement(), "ace_dark");
+            this.theme.cssClass && dom.removeCssClass(this.getElement(), this.theme.cssClass);
+        }
+        if (theme.isDark) {
+            dom.addCssClass(this.getElement(), "ace_dark");
+        }
+        if (theme.cssClass) {
+            dom.addCssClass(this.getElement(), theme.cssClass);
+        }
+        this.theme = {
+            isDark: theme.isDark,
+            cssClass: theme.cssClass
+        };
     }
 
     /**
@@ -225,7 +237,11 @@ class HoverTooltip extends Tooltip {
     addToEditor(editor) {
         editor.on("mousemove", this.onMouseMove);
         editor.on("mousedown", this.hide);
-        editor.renderer.getMouseEventTarget().addEventListener("mouseout", this.onMouseOut, true);
+        const target = editor.renderer.getMouseEventTarget();
+        if (target && typeof target.removeEventListener === "function") {
+            target.addEventListener("mouseout", this.onMouseOut, true);
+        }
+
     }
 
     /**
@@ -234,7 +250,10 @@ class HoverTooltip extends Tooltip {
     removeFromEditor(editor) {
         editor.off("mousemove", this.onMouseMove);
         editor.off("mousedown", this.hide);
-        editor.renderer.getMouseEventTarget().removeEventListener("mouseout", this.onMouseOut, true);
+        const target = editor.renderer.getMouseEventTarget();
+        if (target && typeof target.removeEventListener === "function") {
+            target.removeEventListener("mouseout", this.onMouseOut, true);
+        }
         if (this.timeout) {
             clearTimeout(this.timeout);
             this.timeout = null;
@@ -313,7 +332,6 @@ class HoverTooltip extends Tooltip {
      * @param {MouseEvent} [startingEvent]
      */
     showForRange(editor, range, domNode, startingEvent) {
-
         if (startingEvent && startingEvent != this.lastEvent) return;
         if (this.isOpen && document.activeElement == this.getElement()) return;
 

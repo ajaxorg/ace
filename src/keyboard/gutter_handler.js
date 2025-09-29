@@ -182,11 +182,6 @@ class GutterKeyboardHandler {
                     return; 
                 
                 case "annotation":
-                    var gutterElement = this.lines.cells[this.activeRowIndex].element.childNodes[2];
-                    var rect = gutterElement.getBoundingClientRect();
-                    var style = this.annotationTooltip.getElement().style;
-                    style.left = rect.right + "px";
-                    style.top = rect.bottom + "px";
                     this.annotationTooltip.showTooltip(this.$rowIndexToRow(this.activeRowIndex));                
                     break;
             }
