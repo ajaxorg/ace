@@ -59,6 +59,7 @@ module.exports = {
             assert.ok(editor.hoverTooltip != null);
 
             var nodes = document.querySelectorAll(".ace_tooltip");
+            // TODO
             assert.equal(nodes.length, 2);
             assert.equal(editor.hoverTooltip.isOpen, true);
 

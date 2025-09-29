@@ -53,7 +53,7 @@ module.exports = {
         editor.renderer.$loop._flush();
 
         var lines = editor.renderer.$gutterLayer.$lines;
-        var toggler = lines.cells[0].element.children[1];
+        var toggler = lines.cells[0].element.querySelector(".ace_fold-widget");
 
         // Set focus to the gutter div.
         editor.renderer.$gutter.focus();
@@ -163,7 +163,7 @@ module.exports = {
             setTimeout(function() {
                 // Check annotation is rendered.
                 editor.renderer.$loop._flush();
-                var tooltip = document.body.querySelector(".ace_gutter-tooltip");
+                var tooltip = findVisibleTooltip();
                 assert.ok(/error test/.test(tooltip.textContent));
 
                 // Press escape to dismiss the tooltip.
@@ -208,7 +208,7 @@ module.exports = {
             setTimeout(function() {
                 // Check annotation is rendered.
                 editor.renderer.$loop._flush();
-                var tooltip = editor.container.querySelector(".ace_gutter-tooltip");
+                var tooltip = findVisibleTooltip();
                 assert.ok(/error test/.test(tooltip.textContent));
 
                 // Press escape to dismiss the tooltip.
@@ -224,7 +224,7 @@ module.exports = {
                 setTimeout(function() {
                     // Check annotation is rendered.
                     editor.renderer.$loop._flush();
-                    var tooltip = editor.container.querySelector(".ace_gutter-tooltip");
+                    var tooltip = findVisibleTooltip();
                     assert.ok(/warning test/.test(tooltip.textContent));
 
                     // Press escape to dismiss the tooltip.
@@ -386,7 +386,7 @@ module.exports = {
             setTimeout(function() {
                 // Check annotation is rendered.
                 editor.renderer.$loop._flush();
-                var tooltip = editor.container.querySelector(".ace_gutter-tooltip");
+                var tooltip = findVisibleTooltip();
                 assert.ok(/error test/.test(tooltip.textContent));
 
                 // Press escape to dismiss the tooltip.
