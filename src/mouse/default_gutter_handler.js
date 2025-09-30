@@ -59,8 +59,11 @@ exports.GutterHandler = GutterHandler;
 
 
 class GutterTooltip extends HoverTooltip {
+    /**
+     * @param {import("../editor").Editor} editor
+     */
     constructor(editor) {
-        super();
+        super(editor.container);
         this.id = "gt" + (++GutterTooltip.$uid);
         this.editor = editor;
         /**@type {Number | Undefined}*/
@@ -70,7 +73,7 @@ class GutterTooltip extends HoverTooltip {
         el.setAttribute("id", this.id);
         el.style.pointerEvents = "auto";
         el.style.position = "absolute";
-        
+
         this.onDomMouseMove = this.onDomMouseMove.bind(this);
         this.onDomMouseOut = this.onDomMouseOut.bind(this);
 
@@ -86,14 +89,14 @@ class GutterTooltip extends HoverTooltip {
         const aceEvent = new MouseEvent(domEvent, this.editor);
         this.onMouseOut(aceEvent);
     }
-    
+
     addToEditor(editor) {
         const gutter = editor.renderer.$gutter;
         gutter.addEventListener("mousemove", this.onDomMouseMove);
         gutter.addEventListener("mouseout", this.onDomMouseOut);
         super.addToEditor(editor);
     }
-    
+
     removeFromEditor(editor) {
         const gutter = editor.renderer.$gutter;
         gutter.removeEventListener("mousemove", this.onDomMouseMove);
@@ -241,12 +244,13 @@ class GutterTooltip extends HoverTooltip {
         }
         const gutterCell = this.$findCellByRow(range.start.row);
         if (gutterCell) {
+            //TODO: isAbove display is out
             var gutterElement = gutterCell.element.querySelector(".ace_gutter_annotation");
             const rect = gutterElement.getBoundingClientRect();
-            element.style.left = (rect.right - GUTTER_TOOLTIP_LEFT_OFFSET) + "px";
-
-            element.style.bottom = isAbove ? (window.innerHeight - rect.top - GUTTER_TOOLTIP_TOP_OFFSET) + "px" : "" ;
-            element.style.top = isAbove ? "" : rect.bottom - GUTTER_TOOLTIP_TOP_OFFSET + "px";
+            var rootRect = element.offsetParent && element.offsetParent.getBoundingClientRect();
+            element.style.left = rect.right - (rootRect ? rootRect.left : 0) + "px";
+            element.style.top = isAbove ? "" : rect.bottom - (rootRect ? rootRect.top : 0) + "px";
+            element.style.bottom = isAbove ? rect.top + "px" : "" ;
         }
         element.style.maxHeight = (isAbove ? position.pageY : spaceBelow) - MARGIN + "px";
     }
