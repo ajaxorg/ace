@@ -174,7 +174,7 @@ module.exports = {
                 assert.equal(document.activeElement, editor.renderer.$gutter);
 
                 done();
-            }, 400);
+            }, 20);
         }, 20);
     },"test: keyboard annotation: multiple annotations" : function(done) {
         var editor = this.editor;

@@ -73,6 +73,7 @@ class GutterTooltip extends HoverTooltip {
         el.setAttribute("id", this.id);
         el.style.pointerEvents = "auto";
         el.style.position = "absolute";
+        this.idleTime = 150;
 
         this.onDomMouseMove = this.onDomMouseMove.bind(this);
         this.onDomMouseOut = this.onDomMouseOut.bind(this);
@@ -235,6 +236,7 @@ class GutterTooltip extends HoverTooltip {
 
         // measure the size of tooltip, without constraints on its height
         var labelHeight = element.clientHeight;
+        var labelWidth = element.clientWidth;
         var spaceBelow = window.innerHeight - position.pageY - renderer.lineHeight;
 
         // show tooltip below by default, only show above if there's no space below
@@ -243,16 +245,20 @@ class GutterTooltip extends HoverTooltip {
             isAbove = true;
         }
         const gutterCell = this.$findCellByRow(range.start.row);
-        if (gutterCell) {
-            //TODO: isAbove display is out
-            var gutterElement = gutterCell.element.querySelector(".ace_gutter_annotation");
-            const rect = gutterElement.getBoundingClientRect();
-            var rootRect = element.offsetParent && element.offsetParent.getBoundingClientRect();
-            element.style.left = rect.right - (rootRect ? rootRect.left : 0) + "px";
-            element.style.top = isAbove ? "" : rect.bottom - (rootRect ? rootRect.top : 0) + "px";
-            element.style.bottom = isAbove ? rect.top + "px" : "" ;
-        }
-        element.style.maxHeight = (isAbove ? position.pageY : spaceBelow) - MARGIN + "px";
+        if (!gutterCell) return;
+        var gutterElement = gutterCell.element.querySelector(".ace_gutter_annotation");
+        if (!gutterElement) return;
+
+        var rect = gutterElement.getBoundingClientRect();
+
+        var rootRect = element.offsetParent && element.offsetParent.getBoundingClientRect();
+
+        element.style.maxHeight = (isAbove ? rect.top : spaceBelow) - MARGIN + "px";
+        element.style.top = isAbove ? "" : rect.top + renderer.lineHeight - (rootRect ? rootRect.top : 0) + "px";
+        element.style.bottom = isAbove ? window.innerHeight - rect.top + (rootRect ? rootRect.bottom - window.innerHeight : 0) + "px" : "";
+
+        // try to align tooltip left with the range, but keep it on screen
+        element.style.left = Math.min(rect.right, window.innerWidth - labelWidth - MARGIN) - (rootRect ? rootRect.left : 0) + "px";
     }
 
     $findLinkedAnnotationNode(row) {

@@ -187,7 +187,7 @@ class GutterKeyboardHandler {
                 
                 case "annotation":
                     this.annotationTooltip.showTooltip(this.$rowIndexToRow(this.activeRowIndex));
-                    window.removeEventListener("keydown", this.annotationTooltip.hide, true);
+                    this.annotationTooltip.$fromKeyboard = true;
                     break;
             }
             return;

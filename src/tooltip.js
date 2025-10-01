@@ -385,12 +385,14 @@ class HoverTooltip extends Tooltip {
             isAbove = false;
         }
 
+        var rootRect = element.offsetParent && element.offsetParent.getBoundingClientRect();
+
         element.style.maxHeight = (isAbove ? position.pageY : spaceBelow) - MARGIN + "px";
-        element.style.top = isAbove ? "" : position.pageY + renderer.lineHeight + "px";
-        element.style.bottom = isAbove ?  window.innerHeight - position.pageY  + "px" : "";
+        element.style.top = isAbove ? "" : position.pageY + renderer.lineHeight - (rootRect ? rootRect.top : 0) + "px";
+        element.style.bottom = isAbove ? window.innerHeight - position.pageY + (rootRect ? rootRect.bottom - window.innerHeight : 0) + "px" : "";
 
         // try to align tooltip left with the range, but keep it on screen
-        element.style.left = Math.min(position.pageX, window.innerWidth - labelWidth - MARGIN) + "px";
+        element.style.left = Math.min(position.pageX, window.innerWidth - labelWidth - MARGIN) - (rootRect ? rootRect.left : 0) + "px";
     }
 
     /**
@@ -406,6 +408,14 @@ class HoverTooltip extends Tooltip {
     }
 
     hide(e) {
+        if (e && this.$fromKeyboard && e.type == "keydown") {
+            if (e.code == "Escape") {
+                e.stopPropagation();
+            } else if (/Control|Alt|Shift|Command/.test(e.code)) {
+                return;
+            }
+        }
+
         if (!e && document.activeElement == this.getElement())
             return;
         if (e && e.target && (e.type != "keydown" || e.ctrlKey || e.metaKey) && this.$element.contains(e.target))
@@ -415,6 +425,7 @@ class HoverTooltip extends Tooltip {
         this.timeout = null;
         this.addMarker(null);
         if (this.isOpen) {
+            this.$fromKeyboard = false;
             this.$removeCloseEvents();
             this.getElement().style.display = "none";
             this.isOpen = false;
