@@ -229,36 +229,26 @@ class GutterTooltip extends HoverTooltip {
         this.editor._signal("showGutterTooltip", this);
     }
 
-    $setPosition(editor, position, range) {
-        var MARGIN = 10;
-        var renderer = editor.renderer;
-        var element = this.getElement();
-
-        // measure the size of tooltip, without constraints on its height
-        var labelHeight = element.clientHeight;
-        var labelWidth = element.clientWidth;
-        var spaceBelow = window.innerHeight - position.pageY - renderer.lineHeight;
-
-        // show tooltip below by default, only show above if there's no space below
-        let isAbove = false;
-        if (spaceBelow < labelHeight) {
-            isAbove = true;
-        }
+    $setPosition(editor, _ignoredPosition, range) {
         const gutterCell = this.$findCellByRow(range.start.row);
         if (!gutterCell) return;
-        var gutterElement = gutterCell.element.querySelector(".ace_gutter_annotation");
-        if (!gutterElement) return;
+        const el = gutterCell && gutterCell.element;
+        const anchorEl = el && (el.querySelector(".ace_gutter_annotation"));
+        if (!anchorEl) return;
+        const r = anchorEl.getBoundingClientRect();
+        if (!r) return;
+        const point = {
+            pageX: r.right,
+            pageY: r.top
+        };
+        return super.$setPosition(editor, {
+            point,
+            rect: r
+        }, range);
+    }
 
-        var rect = gutterElement.getBoundingClientRect();
-
-        var rootRect = element.offsetParent && element.offsetParent.getBoundingClientRect();
-
-        element.style.maxHeight = (isAbove ? rect.top : spaceBelow) - MARGIN + "px";
-        element.style.top = isAbove ? "" : rect.top + renderer.lineHeight - (rootRect ? rootRect.top : 0) + "px";
-        element.style.bottom = isAbove ? window.innerHeight - rect.top + (rootRect ? rootRect.bottom - window.innerHeight : 0) + "px" : "";
-
-        // try to align tooltip left with the range, but keep it on screen
-        element.style.left = Math.min(rect.right, window.innerWidth - labelWidth - MARGIN) - (rootRect ? rootRect.left : 0) + "px";
+    $shouldPlaceAbove(metrics) {
+        return metrics.spaceBelow < metrics.labelHeight;
     }
 
     $findLinkedAnnotationNode(row) {

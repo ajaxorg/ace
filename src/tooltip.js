@@ -95,10 +95,8 @@ class Tooltip {
      * @param {Number} [y]
      **/
     show(text, x, y) {
-        if (text != null)
-            this.setText(text);
-        if (x != null && y != null)
-            this.setPosition(x, y);
+        if (text != null) this.setText(text);
+        if (x != null && y != null) this.setPosition(x, y);
         if (!this.isOpen) {
             this.getElement().style.display = "block";
             this.isOpen = true;
@@ -137,7 +135,7 @@ class Tooltip {
 }
 
 class PopupManager {
-    constructor () {
+    constructor() {
         /**@type{Tooltip[]} */
         this.popups = [];
     }
@@ -177,7 +175,8 @@ class PopupManager {
 
             if (shouldDisplay) {
                 visiblepopups.push(popup);
-            } else {
+            }
+            else {
                 popup.hide();
             }
         }
@@ -188,7 +187,7 @@ class PopupManager {
      * @param {Tooltip} popupB
      * @return {boolean}
      */
-    doPopupsOverlap (popupA, popupB) {
+    doPopupsOverlap(popupA, popupB) {
         const rectA = popupA.getElement().getBoundingClientRect();
         const rectB = popupB.getElement().getBoundingClientRect();
 
@@ -204,7 +203,7 @@ exports.Tooltip = Tooltip;
 
 
 class HoverTooltip extends Tooltip {
-    constructor(parentNode=document.body) {
+    constructor(parentNode = document.body) {
         super(parentNode);
 
         /**@type{ReturnType<typeof setTimeout> | undefined}*/
@@ -224,7 +223,7 @@ class HoverTooltip extends Tooltip {
         el.addEventListener("mouseout", this.onMouseOut);
         el.tabIndex = -1;
 
-        el.addEventListener("blur", function() {
+        el.addEventListener("blur", function () {
             if (!el.contains(document.activeElement)) this.hide();
         }.bind(this));
 
@@ -271,12 +270,8 @@ class HoverTooltip extends Tooltip {
         var isMousePressed = editor.$mouseHandler.isMousePressed;
         if (this.isOpen) {
             var pos = this.lastEvent && this.lastEvent.getDocumentPosition();
-            if (
-                !this.range
-                || !this.range.contains(pos.row, pos.column)
-                || isMousePressed
-                || this.isOutsideOfText(this.lastEvent)
-            ) {
+            if (!this.range || !this.range.contains(pos.row, pos.column) || isMousePressed || this.isOutsideOfText(
+                this.lastEvent)) {
                 this.hide();
             }
         }
@@ -284,6 +279,7 @@ class HoverTooltip extends Tooltip {
         this.lastEvent = e;
         this.timeout = setTimeout(this.waitForHover, this.idleTime);
     }
+
     waitForHover() {
         if (this.timeout) clearTimeout(this.timeout);
         var dt = Date.now() - this.lastT;
@@ -308,10 +304,7 @@ class HoverTooltip extends Tooltip {
         if (docPos.column == line.length) {
             var screenPos = editor.renderer.pixelToScreenCoordinates(e.clientX, e.clientY);
             var clippedPos = editor.session.documentToScreenPosition(docPos.row, docPos.column);
-            if (
-                clippedPos.column != screenPos.column
-                || clippedPos.row != screenPos.row
-            ) {
+            if (clippedPos.column != screenPos.column || clippedPos.row != screenPos.row) {
                 return true;
             }
         }
@@ -348,8 +341,7 @@ class HoverTooltip extends Tooltip {
 
         var rect = renderer.scroller.getBoundingClientRect();
         // clip position to visible area of the editor
-        if (position.pageX < rect.left)
-            position.pageX = rect.left;
+        if (position.pageX < rect.left) position.pageX = rect.left;
 
         var element = this.getElement();
         element.innerHTML = "";
@@ -358,16 +350,20 @@ class HoverTooltip extends Tooltip {
         element.style.maxHeight = "";
         element.style.display = "block";
 
-        this.$setPosition(editor, position, range);
+        this.$setPosition(editor, {point: position}, range);
     }
 
     /**
      *
      * @param {Editor} editor
-     * @param {{ pageX: number, pageY: number}} position
+     * @param {{point:{pageX:number,pageY:number},rect?:{top:number,right:number,bottom:number,left:number,width:number,height:number}}} anchor
      * @param {Range} [range]
      */
-    $setPosition(editor, position, range) {
+    $setPosition(editor, anchor, range) {
+        var position = anchor && anchor.point ? anchor.point : {
+            pageX: 0,
+            pageY: 0
+        };
         var MARGIN = 10;
         this.addMarker(range, editor.session);
 
@@ -377,22 +373,35 @@ class HoverTooltip extends Tooltip {
         // measure the size of tooltip, without constraints on its height
         var labelHeight = element.clientHeight;
         var labelWidth = element.clientWidth;
-        var spaceBelow = window.innerHeight - position.pageY - renderer.lineHeight;
+        var anchorTop = position.pageY;
+        var anchorLeft = position.pageX;
+        if (anchor && anchor.rect) {
+            anchorTop = anchor.rect.top;
+            anchorLeft = anchor.rect.right;
+        }
+        var spaceBelow = window.innerHeight - anchorTop - renderer.lineHeight;
 
         // if tooltip fits above the line, or space below the line is smaller, show tooltip above
-        let isAbove = true;
-        if (position.pageY - labelHeight < 0 && position.pageY < spaceBelow) {
-            isAbove = false;
-        }
+        const metrics = { labelHeight, anchorTop, spaceBelow};
+        const isAbove = this.$shouldPlaceAbove(metrics);
 
         var rootRect = element.offsetParent && element.offsetParent.getBoundingClientRect();
 
-        element.style.maxHeight = (isAbove ? position.pageY : spaceBelow) - MARGIN + "px";
-        element.style.top = isAbove ? "" : position.pageY + renderer.lineHeight - (rootRect ? rootRect.top : 0) + "px";
-        element.style.bottom = isAbove ? window.innerHeight - position.pageY + (rootRect ? rootRect.bottom - window.innerHeight : 0) + "px" : "";
+        element.style.maxHeight = (isAbove ? anchorTop : spaceBelow) - MARGIN + "px";
+        element.style.top = isAbove ? "" : anchorTop + renderer.lineHeight - (rootRect ? rootRect.top : 0) + "px";
+        element.style.bottom = isAbove ? window.innerHeight - anchorTop + (rootRect ? rootRect.bottom
+            - window.innerHeight : 0) + "px" : "";
 
         // try to align tooltip left with the range, but keep it on screen
-        element.style.left = Math.min(position.pageX, window.innerWidth - labelWidth - MARGIN) - (rootRect ? rootRect.left : 0) + "px";
+        element.style.left = Math.min(anchorLeft, window.innerWidth - labelWidth - MARGIN) - (rootRect
+            ? rootRect.left : 0) + "px";
+    }
+
+    /**
+     * @param {{ labelHeight: number; anchorTop: number; spaceBelow: number; }} metrics
+     */
+    $shouldPlaceAbove(metrics) {
+        return !(metrics.anchorTop - metrics.labelHeight < 0 && metrics.anchorTop < metrics.spaceBelow);
     }
 
     /**
@@ -411,15 +420,15 @@ class HoverTooltip extends Tooltip {
         if (e && this.$fromKeyboard && e.type == "keydown") {
             if (e.code == "Escape") {
                 e.stopPropagation();
-            } else if (/Control|Alt|Shift|Command/.test(e.code)) {
+            }
+            else if (/Control|Alt|Shift|Command/.test(e.code)) {
                 return;
             }
         }
 
-        if (!e && document.activeElement == this.getElement())
-            return;
-        if (e && e.target && (e.type != "keydown" || e.ctrlKey || e.metaKey) && this.$element.contains(e.target))
-            return;
+        if (!e && document.activeElement == this.getElement()) return;
+        if (e && e.target && (e.type != "keydown" || e.ctrlKey || e.metaKey) && this.$element.contains(
+            e.target)) return;
         this.lastEvent = null;
         if (this.timeout) clearTimeout(this.timeout);
         this.timeout = null;
