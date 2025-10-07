@@ -213,7 +213,7 @@ class MouseHandler {
     }
     destroy() {
         if (this.releaseMouse) this.releaseMouse();
-        if (this.tooltip) this.tooltip.destroy(this.editor);
+        if (this.tooltip) this.tooltip.destroy();
     }
 }
 

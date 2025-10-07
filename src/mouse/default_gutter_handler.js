@@ -3,7 +3,7 @@
  * @typedef {import("./mouse_handler").MouseHandler} MouseHandler
  */
 var dom = require("../lib/dom");
-const MouseEvent = require("./mouse_event").MouseEvent;
+var MouseEvent = require("./mouse_event").MouseEvent;
 var HoverTooltip = require("../tooltip").HoverTooltip;
 var nls = require("../config").nls;
 var Range = require("../range").Range;
@@ -99,8 +99,10 @@ class GutterTooltip extends HoverTooltip {
         super.removeFromEditor(editor);
     }
 
-    destroy(editor) {
-        this.removeFromEditor(editor);
+    destroy() {
+        if (this.editor) {
+            this.removeFromEditor(this.editor);
+        }
         super.destroy();
     }
 
@@ -129,6 +131,9 @@ class GutterTooltip extends HoverTooltip {
         };
     }
 
+    /**
+     * @param {number} row
+     */
     showTooltip(row) {
         var gutter = this.editor.renderer.$gutterLayer;
         var annotationsInRow = gutter.$annotations[row];
@@ -149,7 +154,7 @@ class GutterTooltip extends HoverTooltip {
             var severityRank = {error: 1, security: 2, warning: 3, info: 4, hint: 5};
             var mostSevereAnnotationTypeInFold;
 
-            for (let i = row + 1; i <= fold.end.row; i++) {
+            for (var i = row + 1; i <= fold.end.row; i++) {
                 if (!gutter.$annotations[i]) continue;
 
                 for (var j = 0; j < gutter.$annotations[i].text.length; j++) {
@@ -181,7 +186,7 @@ class GutterTooltip extends HoverTooltip {
         var iconClassName = gutter.$useSvgGutterIcons ? "ace_icon_svg" : "ace_icon";
 
         // Construct the contents of the tooltip.
-        for (let i = 0; i < annotation.displayText.length; i++) {
+        for (var i = 0; i < annotation.displayText.length; i++) {
             var lineElement = dom.createElement("span");
 
             var iconElement = dom.createElement("span");
@@ -212,26 +217,26 @@ class GutterTooltip extends HoverTooltip {
 
         tooltipElement.setAttribute("aria-live", "polite");
 
-        const annotationNode = this.$findLinkedAnnotationNode(row);
+        var annotationNode = this.$findLinkedAnnotationNode(row);
         if (annotationNode) {
             annotationNode.setAttribute("aria-describedby", this.id);
         }
 
-        const range = Range.fromPoints({row, column: 0}, {row, column: 0});
+        var range = Range.fromPoints({row, column: 0}, {row, column: 0});
         this.showForRange(this.editor, range, tooltipElement);
         this.visibleTooltipRow = row;
         this.editor._signal("showGutterTooltip", this);
     }
 
     $setPosition(editor, _ignoredPosition, range) {
-        const gutterCell = this.$findCellByRow(range.start.row);
+        var gutterCell = this.$findCellByRow(range.start.row);
         if (!gutterCell) return;
-        const el = gutterCell && gutterCell.element;
-        const anchorEl = el && (el.querySelector(".ace_gutter_annotation"));
+        var el = gutterCell && gutterCell.element;
+        var anchorEl = el && (el.querySelector(".ace_gutter_annotation"));
         if (!anchorEl) return;
-        const r = anchorEl.getBoundingClientRect();
+        var r = anchorEl.getBoundingClientRect();
         if (!r) return;
-        const point = {
+        var point = {
             pageX: r.right,
             pageY: r.top
         };
@@ -246,9 +251,9 @@ class GutterTooltip extends HoverTooltip {
     }
 
     $findLinkedAnnotationNode(row) {
-        const cell = this.$findCellByRow(row);
+        var cell = this.$findCellByRow(row);
         if (cell) {
-            const element = cell.element;
+            var element = cell.element;
             if (element.childNodes.length > 2) {
                 return element.childNodes[2];
             }
@@ -266,7 +271,7 @@ class GutterTooltip extends HoverTooltip {
         this.$element.removeAttribute("aria-live");
 
         if (this.visibleTooltipRow != undefined) {
-            const annotationNode = this.$findLinkedAnnotationNode(this.visibleTooltipRow);
+            var annotationNode = this.$findLinkedAnnotationNode(this.visibleTooltipRow);
             if (annotationNode) {
                 annotationNode.removeAttribute("aria-describedby");
             }
@@ -277,11 +282,11 @@ class GutterTooltip extends HoverTooltip {
     }
 
     static annotationsToSummaryString(annotations) {
-        const summary = [];
-        const annotationTypes = ["error", "security", "warning", "info", "hint"];
-        for (const annotationType of annotationTypes) {
+        var summary = [];
+        var annotationTypes = ["error", "security", "warning", "info", "hint"];
+        for (var annotationType of annotationTypes) {
             if (!annotations[annotationType].length) continue;
-            const label = annotations[annotationType].length === 1 ? GutterTooltip.annotationLabels[annotationType].singular : GutterTooltip.annotationLabels[annotationType].plural;
+            var label = annotations[annotationType].length === 1 ? GutterTooltip.annotationLabels[annotationType].singular : GutterTooltip.annotationLabels[annotationType].plural;
             summary.push(`${annotations[annotationType].length} ${label}`);
         }
         return summary.join(", ");

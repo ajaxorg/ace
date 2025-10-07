@@ -152,7 +152,7 @@ class PopupManager {
      * @param {Tooltip} popup
      */
     removePopup(popup) {
-        const index = this.popups.indexOf(popup);
+        var index = this.popups.indexOf(popup);
         if (index !== -1) {
             this.popups.splice(index, 1);
             this.updatePopups();
@@ -188,8 +188,8 @@ class PopupManager {
      * @return {boolean}
      */
     doPopupsOverlap(popupA, popupB) {
-        const rectA = popupA.getElement().getBoundingClientRect();
-        const rectB = popupB.getElement().getBoundingClientRect();
+        var rectA = popupA.getElement().getBoundingClientRect();
+        var rectB = popupB.getElement().getBoundingClientRect();
 
         return (rectA.left < rectB.right && rectA.right > rectB.left && rectA.top < rectB.bottom && rectA.bottom
             > rectB.top);
@@ -236,7 +236,7 @@ class HoverTooltip extends Tooltip {
     addToEditor(editor) {
         editor.on("mousemove", this.onMouseMove);
         editor.on("mousedown", this.hide);
-        const target = editor.renderer.getMouseEventTarget();
+        var target = editor.renderer.getMouseEventTarget();
         if (target && typeof target.removeEventListener === "function") {
             target.addEventListener("mouseout", this.onMouseOut, true);
         }
@@ -249,7 +249,7 @@ class HoverTooltip extends Tooltip {
     removeFromEditor(editor) {
         editor.off("mousemove", this.onMouseMove);
         editor.off("mousedown", this.hide);
-        const target = editor.renderer.getMouseEventTarget();
+        var target = editor.renderer.getMouseEventTarget();
         if (target && typeof target.removeEventListener === "function") {
             target.removeEventListener("mouseout", this.onMouseOut, true);
         }
@@ -382,8 +382,8 @@ class HoverTooltip extends Tooltip {
         var spaceBelow = window.innerHeight - anchorTop - renderer.lineHeight;
 
         // if tooltip fits above the line, or space below the line is smaller, show tooltip above
-        const metrics = { labelHeight, anchorTop, spaceBelow};
-        const isAbove = this.$shouldPlaceAbove(metrics);
+        var metrics = { labelHeight, anchorTop, spaceBelow};
+        var isAbove = this.$shouldPlaceAbove(metrics);
 
         var rootRect = element.offsetParent && element.offsetParent.getBoundingClientRect();
 
