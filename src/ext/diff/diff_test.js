@@ -438,6 +438,36 @@ module.exports = {
         assert.ok(!diffView.otherEditor.destroyed);
         diffView.detach();
         assert.ok(diffView.otherEditor.destroyed);
+    },
+    "test: wrap stays in sync": function() {
+        editorA.setOption("wrap", "off");
+        diffView = new InlineDiffView({ editorA, inline: "a" });
+
+        assert.equal(diffView.editorB.getOption("wrap"), "off");
+        assert.equal(diffView.editorA.getOption("wrap"), "off");
+
+        editorA.setOption("wrap", "free");
+        assert.equal(diffView.editorB.getOption("wrap"), "free");
+        assert.equal(diffView.editorA.getOption("wrap"), "free");
+
+        diffView.detach();
+
+
+        editorB.setOption("wrap", 40);
+        diffView = new InlineDiffView({ editorB, inline: "b" });
+
+        assert.equal(diffView.editorB.getOption("wrap"), 40);
+        assert.equal(diffView.editorA.getOption("wrap"), 40);
+
+        editorB.setOption("wrap", "free");
+        assert.equal(diffView.editorB.getOption("wrap"), "free");
+        assert.equal(diffView.editorA.getOption("wrap"), "free");
+
+        editorB.setOption("wrap", 50);
+        assert.equal(diffView.editorB.getOption("wrap"), 50);
+        assert.equal(diffView.editorA.getOption("wrap"), 50);
+
+        diffView.detach();
     }
 };
 
