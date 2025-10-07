@@ -12,7 +12,7 @@ var Mode = require("../mode/java").Mode;
 var VirtualRenderer = require("../virtual_renderer").VirtualRenderer;
 var assert = require("../test/assertions");
 var user = require("../test/user");
-const {GUTTER_TOOLTIP_LEFT_OFFSET, GUTTER_TOOLTIP_TOP_OFFSET} = require("./default_gutter_handler");
+
 var MouseEvent = function(type, opts){
     var e = document.createEvent("MouseEvents");
     e.initMouseEvent(/click|wheel/.test(type) ? type : "mouse" + type,
@@ -72,7 +72,7 @@ module.exports = {
             assert.ok(/error test/.test(tooltip.textContent));
             annotation.dispatchEvent(new MouseEvent("move", {x: 0, y: 0}));
             done();
-        }, 400);
+        }, 100);
     },
     "test: gutter security tooltip" : function(done) {
         var editor = this.editor;
@@ -96,7 +96,7 @@ module.exports = {
             var tooltip = findVisibleTooltip();
             assert.ok(/security finding test/.test(tooltip.textContent));
             done();
-        }, 400);
+        }, 100);
     },
     "test: gutter warning tooltip" : function(done) {
         var editor = this.editor;
@@ -120,7 +120,7 @@ module.exports = {
             var tooltip = findVisibleTooltip();
             assert.ok(/warning test/.test(tooltip.textContent));
             done();
-        }, 400);
+        }, 100);
     },
     "test: gutter info tooltip" : function(done) {
         var editor = this.editor;
@@ -144,7 +144,7 @@ module.exports = {
             var tooltip = findVisibleTooltip();
             assert.ok(/info test/.test(tooltip.textContent));
             done();
-        }, 400);
+        }, 100);
     },
     "test: gutter hint tooltip" : function(done) {
         var editor = this.editor;
@@ -168,7 +168,7 @@ module.exports = {
             var tooltip = findVisibleTooltip();
             assert.ok(/suggestion test/.test(tooltip.textContent));
             done();
-        }, 400);
+        }, 100);
     },
     "test: gutter svg icons" : function() {
         var editor = this.editor;
@@ -221,7 +221,7 @@ module.exports = {
             var tooltip = findVisibleTooltip();
             assert.ok(/error in folded/.test(tooltip.textContent));
             done();
-        }, 400);
+        }, 100);
     },
     "test: security show up in fold" : function(done) {
         var editor = this.editor;
@@ -257,7 +257,7 @@ module.exports = {
             var tooltip = findVisibleTooltip();
             assert.ok(/security finding in folded/.test(tooltip.textContent));
             done();
-        }, 400);
+        }, 100);
     },
     "test: warning show up in fold" : function(done) {
         var editor = this.editor;
@@ -293,7 +293,7 @@ module.exports = {
             var tooltip = findVisibleTooltip();
             assert.ok(/warning in folded/.test(tooltip.textContent));
             done();
-        }, 400);
+        }, 100);
     },
     "test: info not show up in fold" : function() {
         var editor = this.editor;
@@ -418,7 +418,7 @@ module.exports = {
             var tooltip = findVisibleTooltip();
             assert.ok(/special characters " ' & </.test(tooltip.textContent));
             done();
-        }, 400);
+        }, 100);
     },
     "test: gutter hover tooltip should remain open when pressing ctrl key combination" : function(done) {
         var editor = this.editor;
@@ -441,6 +441,7 @@ module.exports = {
             editor.renderer.$loop._flush();
             var tooltip = findVisibleTooltip();
             assert.ok(/error test/.test(tooltip.textContent));
+            tooltip.focus();
             user.type("Ctrl-C");
             tooltip = findVisibleTooltip();
             assert.ok(/error test/.test(tooltip.textContent));
@@ -449,7 +450,7 @@ module.exports = {
             tooltip = document.body.querySelector(".ace_gutter-tooltip");
             assert.strictEqual(tooltip.style.display, "none");
             done();
-        }, 400);
+        }, 100);
     },
     "test: gutter tooltip aria-describedby attribute": function(done) {
         var editor = this.editor;
@@ -485,7 +486,7 @@ module.exports = {
                 assert.equal(annotation.getAttribute("aria-describedby"), "", "aria-describedby should be removed when tooltip is hidden");
                 done();
             }, 100);
-        }, 400);
+        }, 100);
     },
 
     tearDown : function() {

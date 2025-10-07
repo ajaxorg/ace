@@ -419,11 +419,11 @@ class HoverTooltip extends Tooltip {
     hide(e) {
         if (e && this.$fromKeyboard && e.type == "keydown") {
             if (e.code == "Escape") {
-                e.stopPropagation();
-            }
-            else if (/Control|Alt|Shift|Command/.test(e.code)) {
                 return;
             }
+            // else if (/Control|Alt|Shift|Command/.test(e.code)) {
+            //     return;
+            // }
         }
 
         if (!e && document.activeElement == this.getElement()) return;
