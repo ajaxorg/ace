@@ -213,7 +213,7 @@ module.exports = {
         assert.ok(/ace_error_fold/.test(annotation.className));
 
         var row = lines.cells[0].row;
-        editor.$mouseHandler.tooltip.showTooltip(row);
+        editor.$mouseHandler.$tooltip.showTooltip(row);
 
         // Wait for the tooltip to appear after its timeout.
         setTimeout(function() {
@@ -249,7 +249,7 @@ module.exports = {
         assert.ok(/ace_security_fold/.test(annotation.className));
 
         var row = lines.cells[0].row;
-        editor.$mouseHandler.tooltip.showTooltip(row);
+        editor.$mouseHandler.$tooltip.showTooltip(row);
 
         // Wait for the tooltip to appear after its timeout.
         setTimeout(function() {
@@ -285,7 +285,7 @@ module.exports = {
         assert.ok(/ace_warning_fold/.test(annotation.className));
 
         var row = lines.cells[0].row;
-        editor.$mouseHandler.tooltip.showTooltip(row);
+        editor.$mouseHandler.$tooltip.showTooltip(row);
 
         // Wait for the tooltip to appear after its timeout.
         setTimeout(function() {

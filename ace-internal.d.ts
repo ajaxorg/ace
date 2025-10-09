@@ -1636,7 +1636,7 @@ declare module "./src/mouse/mouse_handler" {
         select?: () => void
         $lastScroll?: { t: number, vx: number, vy: number, allowed: number }
         selectEnd?: () => void
-        tooltip?: Ace.GutterTooltip
+        $tooltip?: Ace.GutterTooltip
     }
 }
 

@@ -15,12 +15,12 @@ var Range = require("../range").Range;
 function GutterHandler(mouseHandler) {
     var editor = mouseHandler.editor;
     var gutter = editor.renderer.$gutterLayer;
-    mouseHandler.tooltip = new GutterTooltip(editor);
-    mouseHandler.tooltip.addToEditor(editor);
+    mouseHandler.$tooltip = new GutterTooltip(editor);
+    mouseHandler.$tooltip.addToEditor(editor);
 
-    mouseHandler.tooltip.setDataProvider(function(e, editor) {
+    mouseHandler.$tooltip.setDataProvider(function(e, editor) {
         var row = e.getDocumentPosition().row;
-        mouseHandler.tooltip.showTooltip(row);
+        mouseHandler.$tooltip.showTooltip(row);
     });
 
     mouseHandler.editor.setDefaultHandler("guttermousedown", function(e) {

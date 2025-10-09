@@ -1876,7 +1876,6 @@ declare module "ace-code/src/mouse/mouse_handler" {
         startSelect?: (pos?: import("ace-code").Ace.Point, waitForClickSelection?: boolean) => void;
         select?: () => void;
         selectEnd?: () => void;
-        tooltip?: import("ace-code").Ace.GutterTooltip;
     }
     export type Editor = import("ace-code/src/editor").Editor;
     import { MouseEvent } from "ace-code/src/mouse/mouse_event";
@@ -1892,7 +1891,6 @@ declare module "ace-code/src/mouse/mouse_handler" {
         startSelect?: (pos?: Ace.Point, waitForClickSelection?: boolean) => void;
         select?: () => void;
         selectEnd?: () => void;
-        tooltip?: Ace.GutterTooltip;
     }
 }
 declare module "ace-code/src/mouse/fold_handler" {
@@ -2097,7 +2095,7 @@ declare module "ace-code/src/keyboard/gutter_handler" {
         lines: any;
         activeRowIndex: any;
         activeLane: string;
-        annotationTooltip: GutterTooltip;
+        annotationTooltip: any;
         addListener(): void;
         removeListener(): void;
         lane: any;
@@ -2131,7 +2129,6 @@ declare module "ace-code/src/keyboard/gutter_handler" {
          */
         isInFoldLane(): boolean;
     }
-    import { GutterTooltip } from "ace-code/src/mouse/default_gutter_handler";
 }
 declare module "ace-code/src/editor" {
     /**

@@ -1,7 +1,6 @@
 "use strict";
 
 var keys = require('../lib/keys');
-var GutterTooltip = require("../mouse/default_gutter_handler").GutterTooltip;
 
 class GutterKeyboardHandler {
     constructor(editor) {
@@ -13,7 +12,7 @@ class GutterKeyboardHandler {
         this.activeRowIndex = null;
         this.activeLane = null;
 
-        this.annotationTooltip = new GutterTooltip(this.editor);
+        this.annotationTooltip = this.editor.$mouseHandler.$tooltip;
     }
 
     addListener() {
