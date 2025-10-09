@@ -184,7 +184,7 @@ class Gutter{
         this._signal("afterRender");
         this.$updateGutterWidth(config);
         
-        if (this.$showCursorMarker)
+        if (this.$showCursorMarker && this.$highlightGutterLine)
             this.$updateCursorMarker();
     }
 
@@ -266,6 +266,7 @@ class Gutter{
         if (!this.$highlightElement) {
             this.$highlightElement = dom.createElement("div");
             this.$highlightElement.className = "ace_gutter-cursor";
+            this.$highlightElement.style.pointerEvents = "none";
             this.element.appendChild(this.$highlightElement);
         }
         var pos = session.selection.cursor;
@@ -605,6 +606,10 @@ class Gutter{
      */
     setHighlightGutterLine(highlightGutterLine) {
         this.$highlightGutterLine = highlightGutterLine;
+        if (!highlightGutterLine && this.$highlightElement) {
+            this.$highlightElement.remove();
+            this.$highlightElement = null;
+        }
     }
 
     /**
