@@ -282,6 +282,9 @@ class InlineDiffView extends BaseDiffView {
         this.otherSession.setOption("wrap", session.getOption("wrap"));
         this.otherSession.adjustWrapLimit(session.$wrapLimit);
         this.scheduleRealign();
+        // todo, this is needed because editor.onChangeWrapMode
+        // calls resize(true) instead of waiting for the renderloop
+        this.activeEditor.renderer.updateFull();
     }
 
     $attachSessionsEventHandlers() {
