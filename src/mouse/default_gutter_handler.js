@@ -67,7 +67,7 @@ class GutterTooltip extends HoverTooltip {
         el.setAttribute("id", this.id);
         el.style.pointerEvents = "auto";
         el.style.position = "absolute";
-        this.idleTime = 90;
+        this.idleTime = 50;
 
         this.onDomMouseMove = this.onDomMouseMove.bind(this);
         this.onDomMouseOut = this.onDomMouseOut.bind(this);

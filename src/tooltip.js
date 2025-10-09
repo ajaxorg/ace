@@ -421,9 +421,6 @@ class HoverTooltip extends Tooltip {
             if (e.code == "Escape") {
                 return;
             }
-            // else if (/Control|Alt|Shift|Command/.test(e.code)) {
-            //     return;
-            // }
         }
 
         if (!e && document.activeElement == this.getElement()) return;
