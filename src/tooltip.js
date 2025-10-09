@@ -73,8 +73,20 @@ class Tooltip {
      * @param {import("../ace-internal").Ace.Theme} theme
      */
     setTheme(theme) {
-        this.$element.className = CLASSNAME + " " +
-            (theme.isDark? "ace_dark " : "") + (theme.cssClass || "");
+        if (this.theme) {
+            this.theme.isDark && dom.removeCssClass(this.getElement(), "ace_dark");
+            this.theme.cssClass && dom.removeCssClass(this.getElement(), this.theme.cssClass);
+        }
+        if (theme.isDark) {
+            dom.addCssClass(this.getElement(), "ace_dark");
+        }
+        if (theme.cssClass) {
+            dom.addCssClass(this.getElement(), theme.cssClass);
+        }
+        this.theme = {
+            isDark: theme.isDark,
+            cssClass: theme.cssClass
+        };
     }
 
     /**
@@ -142,7 +154,7 @@ class PopupManager {
      * @param {Tooltip} popup
      */
     removePopup(popup) {
-        const index = this.popups.indexOf(popup);
+        var index = this.popups.indexOf(popup);
         if (index !== -1) {
             this.popups.splice(index, 1);
             this.updatePopups();
@@ -176,9 +188,9 @@ class PopupManager {
      * @param {Tooltip} popupB
      * @return {boolean}
      */
-    doPopupsOverlap (popupA, popupB) {
-        const rectA = popupA.getElement().getBoundingClientRect();
-        const rectB = popupB.getElement().getBoundingClientRect();
+    doPopupsOverlap(popupA, popupB) {
+        var rectA = popupA.getElement().getBoundingClientRect();
+        var rectB = popupB.getElement().getBoundingClientRect();
 
         return (rectA.left < rectB.right && rectA.right > rectB.left && rectA.top < rectB.bottom && rectA.bottom
             > rectB.top);
@@ -225,7 +237,11 @@ class HoverTooltip extends Tooltip {
     addToEditor(editor) {
         editor.on("mousemove", this.onMouseMove);
         editor.on("mousedown", this.hide);
-        editor.renderer.getMouseEventTarget().addEventListener("mouseout", this.onMouseOut, true);
+        var target = editor.renderer.getMouseEventTarget();
+        if (target && typeof target.removeEventListener === "function") {
+            target.addEventListener("mouseout", this.onMouseOut, true);
+        }
+
     }
 
     /**
@@ -234,7 +250,10 @@ class HoverTooltip extends Tooltip {
     removeFromEditor(editor) {
         editor.off("mousemove", this.onMouseMove);
         editor.off("mousedown", this.hide);
-        editor.renderer.getMouseEventTarget().removeEventListener("mouseout", this.onMouseOut, true);
+        var target = editor.renderer.getMouseEventTarget();
+        if (target && typeof target.removeEventListener === "function") {
+            target.removeEventListener("mouseout", this.onMouseOut, true);
+        }
         if (this.timeout) {
             clearTimeout(this.timeout);
             this.timeout = null;
@@ -313,7 +332,6 @@ class HoverTooltip extends Tooltip {
      * @param {MouseEvent} [startingEvent]
      */
     showForRange(editor, range, domNode, startingEvent) {
-        var MARGIN = 10;
         if (startingEvent && startingEvent != this.lastEvent) return;
         if (this.isOpen && document.activeElement == this.getElement()) return;
 
@@ -325,14 +343,12 @@ class HoverTooltip extends Tooltip {
         }
         this.isOpen = true;
 
-        this.addMarker(range, editor.session);
         this.range = Range.fromPoints(range.start, range.end);
         var position = renderer.textToScreenCoordinates(range.start.row, range.start.column);
 
         var rect = renderer.scroller.getBoundingClientRect();
         // clip position to visible area of the editor
-        if (position.pageX < rect.left)
-            position.pageX = rect.left;
+        if (position.pageX < rect.left) position.pageX = rect.left;
 
         var element = this.getElement();
         element.innerHTML = "";
@@ -341,23 +357,51 @@ class HoverTooltip extends Tooltip {
         element.style.maxHeight = "";
         element.style.display = "block";
 
+        this.$setPosition(editor, position, true, range);
+    }
+
+    /**
+     * @param {Editor} editor
+     * @param {{pageX: number;pageY: number;}} position
+     * @param {boolean} withMarker
+     * @param {Range} [range]
+     */
+    $setPosition(editor, position, withMarker, range) {
+        var MARGIN = 10;
+
+        withMarker && this.addMarker(range, editor.session);
+
+        var renderer = editor.renderer;
+        var element = this.getElement();
+
         // measure the size of tooltip, without constraints on its height
         var labelHeight = element.clientHeight;
         var labelWidth = element.clientWidth;
-        var spaceBelow = window.innerHeight - position.pageY - renderer.lineHeight;
+        var anchorTop = position.pageY;
+        var anchorLeft = position.pageX;
+        var spaceBelow = window.innerHeight - anchorTop - renderer.lineHeight;
 
         // if tooltip fits above the line, or space below the line is smaller, show tooltip above
-        let isAbove = true;
-        if (position.pageY - labelHeight < 0 && position.pageY < spaceBelow) {
-            isAbove = false;
-        }
+        var metrics = { labelHeight, anchorTop, spaceBelow};
+        var isAbove = this.$shouldPlaceAbove(metrics);
 
-        element.style.maxHeight = (isAbove ? position.pageY : spaceBelow) - MARGIN + "px";
-        element.style.top = isAbove ? "" : position.pageY + renderer.lineHeight + "px";
-        element.style.bottom = isAbove ?  window.innerHeight - position.pageY  + "px" : "";
+        var rootRect = element.offsetParent && element.offsetParent.getBoundingClientRect();
+
+        element.style.maxHeight = (isAbove ? anchorTop : spaceBelow) - MARGIN + "px";
+        element.style.top = isAbove ? "" : anchorTop + renderer.lineHeight - (rootRect ? rootRect.top : 0) + "px";
+        element.style.bottom = isAbove ? window.innerHeight - anchorTop + (rootRect ? rootRect.bottom
+            - window.innerHeight : 0) + "px" : "";
 
         // try to align tooltip left with the range, but keep it on screen
-        element.style.left = Math.min(position.pageX, window.innerWidth - labelWidth - MARGIN) + "px";
+        element.style.left = Math.min(anchorLeft, window.innerWidth - labelWidth - MARGIN) - (rootRect
+            ? rootRect.left : 0) + "px";
+    }
+
+    /**
+     * @param {{ labelHeight: number; anchorTop: number; spaceBelow: number; }} metrics
+     */
+    $shouldPlaceAbove(metrics) {
+        return !(metrics.anchorTop - metrics.labelHeight < 0 && metrics.anchorTop < metrics.spaceBelow);
     }
 
     /**
@@ -373,15 +417,21 @@ class HoverTooltip extends Tooltip {
     }
 
     hide(e) {
-        if (!e && document.activeElement == this.getElement())
-            return;
-        if (e && e.target && (e.type != "keydown" || e.ctrlKey || e.metaKey) && this.$element.contains(e.target))
-            return;
+        if (e && this.$fromKeyboard && e.type == "keydown") {
+            if (e.code == "Escape") {
+                return;
+            }
+        }
+
+        if (!e && document.activeElement == this.getElement()) return;
+        if (e && e.target && (e.type != "keydown" || e.ctrlKey || e.metaKey) && this.$element.contains(
+            e.target)) return;
         this.lastEvent = null;
         if (this.timeout) clearTimeout(this.timeout);
         this.timeout = null;
         this.addMarker(null);
         if (this.isOpen) {
+            this.$fromKeyboard = false;
             this.$removeCloseEvents();
             this.getElement().style.display = "none";
             this.isOpen = false;

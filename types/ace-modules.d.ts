@@ -1763,6 +1763,10 @@ declare module "ace-code/src/tooltip" {
         setPosition(x: number, y: number): void;
         setClassName(className: string): void;
         setTheme(theme: import("ace-code").Ace.Theme): void;
+        theme: {
+            isDark: boolean;
+            cssClass: string;
+        };
         show(text?: string, x?: number, y?: number): void;
         hide(e: any): void;
         getHeight(): number;
@@ -1786,9 +1790,7 @@ declare module "ace-code/src/mouse/default_gutter_handler" {
     export interface GutterHandler {
     }
     export type MouseHandler = import("ace-code/src/mouse/mouse_handler").MouseHandler;
-    export const GUTTER_TOOLTIP_LEFT_OFFSET: 5;
-    export const GUTTER_TOOLTIP_TOP_OFFSET: 3;
-    export class GutterTooltip extends Tooltip {
+    export class GutterTooltip extends HoverTooltip {
         static get annotationLabels(): {
             error: {
                 singular: any;
@@ -1812,19 +1814,24 @@ declare module "ace-code/src/mouse/default_gutter_handler" {
             };
         };
         static annotationsToSummaryString(annotations: any): string;
-        constructor(editor: any, isHover?: boolean);
+        constructor(editor: import("ace-code/src/editor").Editor);
         id: string;
-        editor: any;
+        editor: import("ace-code/src/editor").Editor;
         visibleTooltipRow: number | undefined;
-        onMouseOut(e: any): void;
-        setPosition(x: any, y: any): void;
-        showTooltip(row: any): void;
-        hideTooltip(): void;
+        onDomMouseMove(domEvent: any): void;
+        onDomMouseOut(domEvent: any): void;
+        addToEditor(editor: any): void;
+        removeFromEditor(editor: any): void;
+        showTooltip(row: number): void;
+        /**
+         * Check if cursor is outside gutter
+         */
+        isOutsideOfText(e: any): boolean;
     }
     export namespace GutterTooltip {
         let $uid: number;
     }
-    import { Tooltip } from "ace-code/src/tooltip";
+    import { HoverTooltip } from "ace-code/src/tooltip";
     export interface GutterHandler {
     }
 }
@@ -1876,6 +1883,7 @@ declare module "ace-code/src/mouse/mouse_handler" {
         type Range = import("ace-code").Ace.Range;
         type MouseEvent = import("ace-code").Ace.MouseEvent;
         type Point = import("ace-code").Ace.Point;
+        type GutterTooltip = import("ace-code").Ace.GutterTooltip;
     }
     export interface MouseHandler {
         cancelDrag?: boolean;
@@ -2087,7 +2095,7 @@ declare module "ace-code/src/keyboard/gutter_handler" {
         lines: any;
         activeRowIndex: any;
         activeLane: string;
-        annotationTooltip: GutterTooltip;
+        annotationTooltip: any;
         addListener(): void;
         removeListener(): void;
         lane: any;
@@ -2121,7 +2129,6 @@ declare module "ace-code/src/keyboard/gutter_handler" {
          */
         isInFoldLane(): boolean;
     }
-    import { GutterTooltip } from "ace-code/src/mouse/default_gutter_handler";
 }
 declare module "ace-code/src/editor" {
     /**

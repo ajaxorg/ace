@@ -380,7 +380,6 @@ export namespace Ace {
         dragDelay: number;
         dragEnabled: boolean;
         focusTimeout: number;
-        tooltipFollowsMouse: boolean;
     }
 
     interface EditorOptions extends EditSessionOptions,
@@ -1629,7 +1628,6 @@ declare module "./src/mouse/mouse_event" {
 declare module "./src/mouse/mouse_handler" {
 
     export interface MouseHandler {
-        $tooltipFollowsMouse?: boolean,
         cancelDrag?: boolean
         //from DefaultHandlers
         $clickSelection?: Ace.Range,
@@ -1638,6 +1636,7 @@ declare module "./src/mouse/mouse_handler" {
         select?: () => void
         $lastScroll?: { t: number, vx: number, vy: number, allowed: number }
         selectEnd?: () => void
+        $tooltip?: Ace.GutterTooltip
     }
 }
 
