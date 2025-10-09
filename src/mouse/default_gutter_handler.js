@@ -228,7 +228,7 @@ class GutterTooltip extends HoverTooltip {
         this.editor._signal("showGutterTooltip", this);
     }
 
-    $setPosition(editor, _ignoredPosition, range) {
+    $setPosition(editor, _ignoredPosition, _withMarker, range) {
         var gutterCell = this.$findCellByRow(range.start.row);
         if (!gutterCell) return;
         var el = gutterCell && gutterCell.element;
@@ -236,14 +236,12 @@ class GutterTooltip extends HoverTooltip {
         if (!anchorEl) return;
         var r = anchorEl.getBoundingClientRect();
         if (!r) return;
-        var point = {
+        var position = {
             pageX: r.right,
             pageY: r.top
         };
-        return super.$setPosition(editor, {
-            point,
-            rect: r
-        }, range);
+        //we don't need marker for gutter
+        return super.$setPosition(editor, position, false, range);
     }
 
     $shouldPlaceAbove(metrics) {
