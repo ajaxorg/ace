@@ -36,6 +36,8 @@ function wordDistance(doc, pos) {
     return wordScores;
 }
 
+exports.id = "textCompleter";
+
 exports.getCompletions = function (editor, session, pos, prefix, callback) {
     var wordScore = wordDistance(session, pos);
     var wordList = Object.keys(wordScore);
