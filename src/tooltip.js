@@ -56,10 +56,8 @@ class Tooltip {
      * @param {Number} y
      **/
     setPosition(x, y) {
-        var el = this.getElement();
-        var rootRect = el.offsetParent && el.offsetParent.getBoundingClientRect();
-        el.style.left = x - (rootRect ? rootRect.left : 0) + "px";
-        el.style.top = y - (rootRect ? rootRect.top : 0) + "px";
+        this.getElement().style.left = x + "px";
+        this.getElement().style.top = y + "px";
     }
 
     /**
@@ -358,6 +356,8 @@ class HoverTooltip extends Tooltip {
         element.style.display = "block";
 
         this.$setPosition(editor, position, true, range);
+        
+        dom.$fixPositionBug(element);
     }
 
     /**
@@ -375,33 +375,30 @@ class HoverTooltip extends Tooltip {
         var element = this.getElement();
 
         // measure the size of tooltip, without constraints on its height
-        var labelHeight = element.clientHeight;
-        var labelWidth = element.clientWidth;
+        var labelHeight = element.offsetHeight;
+        var labelWidth = element.offsetWidth;
         var anchorTop = position.pageY;
         var anchorLeft = position.pageX;
         var spaceBelow = window.innerHeight - anchorTop - renderer.lineHeight;
 
         // if tooltip fits above the line, or space below the line is smaller, show tooltip above
-        var metrics = { labelHeight, anchorTop, spaceBelow};
-        var isAbove = this.$shouldPlaceAbove(metrics);
-
-        var rootRect = element.offsetParent && element.offsetParent.getBoundingClientRect();
+        var isAbove = this.$shouldPlaceAbove(labelHeight, anchorTop, spaceBelow - MARGIN);
 
         element.style.maxHeight = (isAbove ? anchorTop : spaceBelow) - MARGIN + "px";
-        element.style.top = isAbove ? "" : anchorTop + renderer.lineHeight - (rootRect ? rootRect.top : 0) + "px";
-        element.style.bottom = isAbove ? window.innerHeight - anchorTop + (rootRect ? rootRect.bottom
-            - window.innerHeight : 0) + "px" : "";
+        element.style.top = isAbove ? "" : anchorTop + renderer.lineHeight + "px";
+        element.style.bottom = isAbove ? window.innerHeight - anchorTop + "px" : "";
 
         // try to align tooltip left with the range, but keep it on screen
-        element.style.left = Math.min(anchorLeft, window.innerWidth - labelWidth - MARGIN) - (rootRect
-            ? rootRect.left : 0) + "px";
+        element.style.left = Math.min(anchorLeft, window.innerWidth - labelWidth - MARGIN) + "px";
     }
 
     /**
-     * @param {{ labelHeight: number; anchorTop: number; spaceBelow: number; }} metrics
+     * @param {number} labelHeight
+     * @param {number} anchorTop
+     * @param {number} spaceBelow
      */
-    $shouldPlaceAbove(metrics) {
-        return !(metrics.anchorTop - metrics.labelHeight < 0 && metrics.anchorTop < metrics.spaceBelow);
+    $shouldPlaceAbove(labelHeight, anchorTop, spaceBelow) {
+        return !(anchorTop - labelHeight < 0 && anchorTop < spaceBelow);
     }
 
     /**

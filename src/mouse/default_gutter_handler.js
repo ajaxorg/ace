@@ -66,7 +66,6 @@ class GutterTooltip extends HoverTooltip {
         el.setAttribute("role", "tooltip");
         el.setAttribute("id", this.id);
         el.style.pointerEvents = "auto";
-        el.style.position = "absolute";
         this.idleTime = 50;
 
         this.onDomMouseMove = this.onDomMouseMove.bind(this);
@@ -244,8 +243,8 @@ class GutterTooltip extends HoverTooltip {
         return super.$setPosition(editor, position, false, range);
     }
 
-    $shouldPlaceAbove(metrics) {
-        return metrics.spaceBelow < metrics.labelHeight;
+    $shouldPlaceAbove(labelHeight, anchorTop, spaceBelow) {
+        return spaceBelow < labelHeight;
     }
 
     $findLinkedAnnotationNode(row) {
