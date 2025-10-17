@@ -1,7 +1,6 @@
 "use strict";
 
 var keys = require('../lib/keys');
-var GutterTooltip = require("../mouse/default_gutter_handler").GutterTooltip;
 
 class GutterKeyboardHandler {
     constructor(editor) {
@@ -13,7 +12,7 @@ class GutterKeyboardHandler {
         this.activeRowIndex = null;
         this.activeLane = null;
 
-        this.annotationTooltip = new GutterTooltip(this.editor);
+        this.annotationTooltip = this.editor.$mouseHandler.$tooltip;
     }
 
     addListener() {
@@ -34,7 +33,7 @@ class GutterKeyboardHandler {
             e.preventDefault();
 
             if (e.keyCode === keys["escape"])
-                this.annotationTooltip.hideTooltip();
+                this.annotationTooltip.hide();
 
             return;
         }
@@ -186,12 +185,8 @@ class GutterKeyboardHandler {
                     return; 
                 
                 case "annotation":
-                    var gutterElement = this.lines.cells[this.activeRowIndex].element.childNodes[2];
-                    var rect = gutterElement.getBoundingClientRect();
-                    var style = this.annotationTooltip.getElement().style;
-                    style.left = rect.right + "px";
-                    style.top = rect.bottom + "px";
-                    this.annotationTooltip.showTooltip(this.$rowIndexToRow(this.activeRowIndex));                
+                    this.annotationTooltip.showTooltip(this.$rowIndexToRow(this.activeRowIndex));
+                    this.annotationTooltip.$fromKeyboard = true;
                     break;
             }
             return;
@@ -213,7 +208,7 @@ class GutterKeyboardHandler {
         }
 
         if (this.annotationTooltip.isOpen)
-            this.annotationTooltip.hideTooltip();
+            this.annotationTooltip.hide();
 
         return;
     }

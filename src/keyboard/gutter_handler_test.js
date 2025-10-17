@@ -3,23 +3,24 @@ if (typeof process !== "undefined") {
     require("../test/mockdom");
 }
 
-var keys = require('../lib/keys');
-
 "use strict";
-
+ 
 require("../multi_select");
 require("../theme/textmate");
+var user = require("../test/user");
 var Editor = require("../editor").Editor;
 var Mode = require("../mode/java").Mode;
 var VirtualRenderer = require("../virtual_renderer").VirtualRenderer;
 var assert = require("../test/assertions");
 
-function emit(keyCode) {
-    var data = {bubbles: true, keyCode};
-    var event = new KeyboardEvent("keydown", data);
-
-    var el = document.activeElement;
-    el.dispatchEvent(event);
+function findVisibleTooltip() {
+    const tooltips = document.body.querySelectorAll(".ace_gutter-tooltip");
+    for (let i = 0; i < tooltips.length; i++) {
+        if (window.getComputedStyle(tooltips[i]).display === "block") {
+            return tooltips[i];
+        }
+    }
+    return null;
 }
 
 module.exports = {
@@ -43,20 +44,20 @@ module.exports = {
         editor.renderer.$loop._flush();
 
         var lines = editor.renderer.$gutterLayer.$lines;
-        var toggler = lines.cells[0].element.children[1];
+        var toggler = lines.cells[0].element.querySelector(".ace_fold-widget");
 
         // Set focus to the gutter div.
         editor.renderer.$gutter.focus();
         assert.equal(document.activeElement, editor.renderer.$gutter);
 
         // Focus on the fold widget.
-        emit(keys["enter"]);
+        user.type("Enter");
 
         setTimeout(function() {
             assert.equal(document.activeElement, lines.cells[0].element.childNodes[1]);
 
             // Click the fold widget.
-            emit(keys["enter"]);
+            user.type("Enter");
 
             setTimeout(function() {
                 // Check that code is folded.
@@ -65,7 +66,7 @@ module.exports = {
                 assert.equal(lines.cells[1].element.textContent, "52");
 
                 // After escape focus should be back to the gutter.
-                emit(keys["escape"]);
+                user.type("Escape");
                 assert.equal(document.activeElement, editor.renderer.$gutter);
 
                 done();
@@ -90,13 +91,13 @@ module.exports = {
         assert.equal(lines.cells[2].element.textContent, "3");
 
         // Focus on the fold widgets.
-        emit(keys["enter"]);
+        user.type("Enter");
 
         setTimeout(function() {
             assert.equal(document.activeElement, lines.cells[1].element.childNodes[1]);
 
             // Click the first fold widget.
-            emit(keys["enter"]);
+            user.type("Enter");
 
             setTimeout(function() {
                 // Check that code is folded.
@@ -104,19 +105,19 @@ module.exports = {
                 assert.equal(lines.cells[2].element.textContent, "8");
 
                 // Move to the next fold widget.
-                emit(keys["down"]);
+                user.type("Down");
                 assert.equal(document.activeElement, lines.cells[3].element.childNodes[1]);
                 assert.equal(lines.cells[4].element.textContent, "10");
 
                 // Click the fold widget.
-                emit(keys["enter"]);
+                user.type("Enter");
 
                 setTimeout(function() {
                     // Check that code is folded.
                     assert.equal(lines.cells[4].element.textContent, "15");
 
                     // Move back up one fold widget.
-                    emit(keys["up"]);
+                    user.type("Up");
                     assert.equal(document.activeElement, lines.cells[1].element.childNodes[1]);
 
                     done();
@@ -141,26 +142,26 @@ module.exports = {
         assert.equal(document.activeElement, editor.renderer.$gutter);
 
         // Focus on the annotation.
-        emit(keys["enter"]);
+        user.type("Enter");
         
         setTimeout(function() {
-            emit(keys["left"]);
+            user.type("Left");
             assert.equal(document.activeElement, lines.cells[0].element.childNodes[2]);
 
             // Click annotation.
-            emit(keys["enter"]);
+            user.type("Enter");
 
             setTimeout(function() {
                 // Check annotation is rendered.
                 editor.renderer.$loop._flush();
-                var tooltip = editor.container.querySelector(".ace_gutter-tooltip");
+                var tooltip = findVisibleTooltip();
                 assert.ok(/error test/.test(tooltip.textContent));
 
                 // Press escape to dismiss the tooltip.
-                emit(keys["escape"]);
+                user.type("Escape");
 
                 // After escape again focus should be back to the gutter.
-                emit(keys["escape"]);
+                user.type("Escape");
                 assert.equal(document.activeElement, editor.renderer.$gutter);
 
                 done();
@@ -186,46 +187,46 @@ module.exports = {
         assert.equal(document.activeElement, editor.renderer.$gutter);
 
         // Focus on the annotation.
-        emit(keys["enter"]);
+        user.type("Enter");
         
         setTimeout(function() {
-            emit(keys["left"]);
+            user.type("Left");
             assert.equal(document.activeElement, lines.cells[1].element.childNodes[2]);
 
             // Click annotation.
-            emit(keys["enter"]);
+            user.type("Enter");
             
             setTimeout(function() {
                 // Check annotation is rendered.
                 editor.renderer.$loop._flush();
-                var tooltip = editor.container.querySelector(".ace_gutter-tooltip");
+                var tooltip = findVisibleTooltip();
                 assert.ok(/error test/.test(tooltip.textContent));
 
                 // Press escape to dismiss the tooltip.
-                emit(keys["escape"]);
+                user.type("Escape");
 
                 // Press down to move to next annotation.
-                emit(keys["down"]);
+                user.type("Down");
                 assert.equal(document.activeElement, lines.cells[2].element.childNodes[2]);
 
                 // Click annotation.
-                emit(keys["enter"]);
+                user.type("Enter");
 
                 setTimeout(function() {
                     // Check annotation is rendered.
                     editor.renderer.$loop._flush();
-                    var tooltip = editor.container.querySelector(".ace_gutter-tooltip");
+                    var tooltip = findVisibleTooltip();
                     assert.ok(/warning test/.test(tooltip.textContent));
 
                     // Press escape to dismiss the tooltip.
-                    emit(keys["escape"]);
+                    user.type("Escape");
 
                     // Move back up one annotation.
-                    emit(keys["up"]);
+                    user.type("Up");
                     assert.equal(document.activeElement, lines.cells[1].element.childNodes[2]);
 
                     // Move back to the folds, focus should be on the fold on line 1.
-                    emit(keys["right"]);
+                    user.type("Right");
                     assert.equal(document.activeElement, lines.cells[0].element.childNodes[1]);
 
                     done();
@@ -249,14 +250,15 @@ module.exports = {
         assert.equal(document.activeElement, editor.renderer.$gutter);
 
         // Focus on gutter interaction.
-        emit(keys["enter"]);
+        user.type("Enter");
         
         setTimeout(function() {
             // Focus should be on the annotation directly.
             assert.equal(document.activeElement, lines.cells[1].element.childNodes[2]);
             done();
         }, 20);
-    },"test: aria attributes mode with getFoldWidgetRange" : function() {
+    },
+    "test: aria attributes mode with getFoldWidgetRange" : function() {
         var editor = this.editor;
         var value = "x {" + "\n".repeat(5) + "}";
         editor.session.setMode(new Mode());
@@ -265,7 +267,7 @@ module.exports = {
         editor.renderer.$loop._flush();
 
         var lines = editor.renderer.$gutterLayer.$lines;
-        var toggler = lines.cells[0].element.children[1];
+        var toggler = lines.cells[0].element.querySelector(".ace_fold-widget");
 
         assert.equal(toggler.getAttribute("aria-label"), "Toggle code folding, rows 1 through 6");
         assert.equal(toggler.getAttribute("aria-expanded"), "true");
@@ -291,7 +293,7 @@ module.exports = {
         editor.renderer.$loop._flush();
 
         var lines = editor.renderer.$gutterLayer.$lines;
-        var toggler = lines.cells[0].element.children[1];
+        var toggler = lines.cells[0].element.querySelector(".ace_fold-widget");
 
         assert.equal(toggler.getAttribute("aria-label"), "Toggle code folding, row 1");
         assert.equal(toggler.getAttribute("aria-expanded"), "true");
@@ -323,10 +325,10 @@ module.exports = {
         assert.equal(document.activeElement, editor.renderer.$gutter);
 
         // Focus on the annotation.
-        emit(keys["enter"]);
+        user.type("Enter");
         
         setTimeout(function() {
-            emit(keys["left"]);
+            user.type("Left");
             assert.equal(document.activeElement, lines.cells[0].element.childNodes[2]);
             
             setTimeout(function() {
@@ -364,30 +366,30 @@ module.exports = {
         });
 
         // Focus on the annotation.
-        emit(keys["enter"]);
+        user.type("Enter");
         
         setTimeout(function() {
-            emit(keys["left"]);
+            user.type("Left");
             assert.equal(document.activeElement, lines.cells[1].element.childNodes[2]);
 
             // Click annotation.
-            emit(keys["enter"]);
+            user.type("Enter");
             
             setTimeout(function() {
                 // Check annotation is rendered.
                 editor.renderer.$loop._flush();
-                var tooltip = editor.container.querySelector(".ace_gutter-tooltip");
+                var tooltip = findVisibleTooltip();
                 assert.ok(/error test/.test(tooltip.textContent));
 
                 // Press escape to dismiss the tooltip.
-                emit(keys["escape"]);
+                user.type("Escape");
 
                 // Switch lane move to custom widget 
-                emit(keys["right"]);
+                user.type("Right");
                 assert.equal(document.activeElement, lines.cells[1].element.childNodes[3]);
 
                 // Move back to the annotations, focus should be on the annotation on line 1.
-                emit(keys["left"]);
+                user.type("Left");
                 assert.equal(document.activeElement, lines.cells[1].element.childNodes[2]);    
                 done();
             }, 20);
@@ -426,20 +428,20 @@ module.exports = {
         });
 
         // Focus on the fold widgets.
-        emit(keys["enter"]);
+        user.type("Enter");
 
         setTimeout(function() {
             assert.equal(document.activeElement, lines.cells[1].element.childNodes[1]);
 
             // Move down to the custom widget.
-            emit(keys["down"]);
+            user.type("Down");
             assert.equal(document.activeElement, lines.cells[2].element.childNodes[3]);
 
-            emit(keys["enter"]);
+            user.type("Enter");
             assert.equal(firstCallbackCalledCount,1);
             
             // Move up to the previous fold widget.
-            emit(keys["up"]);
+            user.type("Up");
             assert.equal(document.activeElement, lines.cells[1].element.childNodes[1]);
             done();
         }, 20);

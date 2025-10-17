@@ -281,7 +281,6 @@ declare module "ace-code" {
             dragDelay: number;
             dragEnabled: boolean;
             focusTimeout: number;
-            tooltipFollowsMouse: boolean;
         }
         interface EditorOptions extends EditSessionOptions, MouseHandlerOptions, VirtualRendererOptions {
             selectionStyle: "fullLine" | "screenLine" | "text" | "line";
