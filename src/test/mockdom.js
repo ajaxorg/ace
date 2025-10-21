@@ -502,36 +502,62 @@ function Node(name) {
             throw new Error("attempting to add empty listener");
         }
         if (!this._events) this._events = {};
-        if (!this._events[name]) this._events[name] = [];
-        var i = this._events[name].indexOf(listener);
+        var id = capturing ? "__c__:" + name : name;
+        if (!this._events[id]) this._events[id] = [];
+        var i = this._events[id].indexOf(listener);
         if (i == -1)
-            this._events[name][capturing ? "unshift" : "push"](listener);
+            this._events[id].push(listener);
     };
-    this.removeEventListener = function(name, listener) {
+    this.removeEventListener = function(name, listener, capturing) {
         if (!this._events) return;
-        if (!this._events[name]) return;
-        var i = this._events[name].indexOf(listener);
+        var id = capturing ? "__c__:" + name : name;
+        if (!this._events[id]) return;
+        var i = this._events[id].indexOf(listener);
         if (i !== -1)
-            this._events[name].splice(i, 1);
+            this._events[id].splice(i, 1);
     };
     this.createEvent = function(v) {
         return new Event();
     };
     this.dispatchEvent = function(e) {
+        var parents = [];
+        var node = this.parentNode;
+        
+        while (node) {
+            parents.push(node);
+            node = node.parentNode;
+        }
+        parents.push(window);
+        
         if (!e.target) e.target = this;
         if (!e.timeStamp) e.timeStamp = Date.now();
-        e.currentTarget = this;
-        var events = this._events && this._events[e.type];
-        events && events.slice().forEach(function(listener) {
-            listener.call(this, e);
-        }, this);
-        if (this["on" + e.type])
-            this["on" + e.type](e);
-        if (!e.bubbles || e.stopped) return;
-        if (this.parentNode)
-            this.parentNode.dispatchEvent(e);
-        else if (this != window)
-            window.dispatchEvent(e);
+        
+        e.eventPhase = 1;
+        for (var i = parents.length - 1; i >= 0; i--) {
+            var node = parents[i];
+            if (call(node, true)) return;
+        }
+        e.eventPhase = 2;
+        if (call(this, true)) return;
+        if (call(this, false)) return;
+        e.eventPhase = 3;
+        for (var i = 0; i < parents.length; i++) {
+            var node = parents[i];
+            if (call(node, false)) return;
+        }
+        
+        function call(node, capturing) {
+            e.currentTarget = node;
+            if (!capturing && node["on" + e.type])
+                node["on" + e.type](e);
+            var id = capturing ? "__c__:" + e.type : e.type;
+            var events = node._events && node._events[id];
+            events && events.slice().forEach(function(listener) {
+                listener.call(node, e);
+            });
+            if (e.stopped) return true;
+            if (!capturing && !e.bubbles) return true;
+        }        
     };
     this.contains = function(node) {
         while (node) {

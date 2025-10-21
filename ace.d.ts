@@ -281,7 +281,6 @@ declare module "ace-code" {
             dragDelay: number;
             dragEnabled: boolean;
             focusTimeout: number;
-            tooltipFollowsMouse: boolean;
         }
         interface EditorOptions extends EditSessionOptions, MouseHandlerOptions, VirtualRendererOptions {
             selectionStyle: "fullLine" | "screenLine" | "text" | "line";
@@ -1066,6 +1065,6 @@ declare module "ace-code" {
     import { Range } from "ace-code/src/range";
     import { UndoManager } from "ace-code/src/undomanager";
     import { VirtualRenderer as Renderer } from "ace-code/src/virtual_renderer";
-    export var version: "1.43.3";
+    export var version: "1.43.4";
     export { Range, Editor, EditSession, UndoManager, Renderer as VirtualRenderer };
 }

@@ -460,7 +460,7 @@ module.exports = `
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
     color: black;
     padding: 3px 4px;
-    position: absolute;
+    position: fixed;
     z-index: 999999;
     box-sizing: border-box;
     cursor: default;

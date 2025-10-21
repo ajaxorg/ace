@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.43.4](https://github.com/ajaxorg/ace/compare/v1.43.3...v1.43.4) (2025-10-17)
+
+
+### Bug Fixes
+
+* Update for compliance with typescript 5.9.2 ([#5855](https://github.com/ajaxorg/ace/issues/5855)) ([6e110b0](https://github.com/ajaxorg/ace/commit/6e110b0061b56b72db7478762036a1ba39251102))
+
 ### [1.43.3](https://github.com/ajaxorg/ace/compare/v1.43.2...v1.43.3) (2025-09-02)
 
 

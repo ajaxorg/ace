@@ -826,10 +826,6 @@ declare module "ace-code/src/ext/options" {
             "Keyboard Accessibility Mode": {
                 path: string;
             };
-            "Gutter tooltip follows mouse": {
-                path: string;
-                defaultValue: boolean;
-            };
         };
     }
     namespace Ace {

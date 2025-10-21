@@ -370,27 +370,24 @@ class AcePopup {
                 renderer.$maxPixelHeight = null;
             }
 
-            el.style.display = "";
-            var rootRect = el.offsetParent && el.offsetParent.getBoundingClientRect();
-            
 
             if (anchor === "top") {
                 el.style.top = "";
-                el.style.bottom = (screenHeight + scrollBarSize - dims.bottom)
-                    - (rootRect ? screenHeight + scrollBarSize - rootRect.bottom : 0)+ "px";
+                el.style.bottom = (screenHeight + scrollBarSize - dims.bottom) + "px";
                 popup.isTopdown = false;
             } else {
-                el.style.top = (dims.top - (rootRect ? rootRect.top : 0)) + "px";
+                el.style.top = dims.top + "px";
                 el.style.bottom = "";
                 popup.isTopdown = true;
             }
 
+            el.style.display = "";
 
             var left = pos.left;
             if (left + el.offsetWidth > screenWidth)
                 left = screenWidth - el.offsetWidth;
 
-            el.style.left = (left - (rootRect ? rootRect.left : 0)) + "px";
+            el.style.left = left + "px";
             el.style.right = "";
 
             if (!popup.isOpen) {
@@ -401,6 +398,8 @@ class AcePopup {
 
             popup.anchorPos = pos;
             popup.anchor = anchor;
+            
+            dom.$fixPositionBug(el);
 
             return true;
         };
@@ -472,7 +471,7 @@ dom.importCssString(`
     width: 300px;
     z-index: 200000;
     border: 1px lightgray solid;
-    position: absolute;
+    position: fixed;
     box-shadow: 2px 3px 5px rgba(0,0,0,.2);
     line-height: 1.4;
     background: #fefefe;

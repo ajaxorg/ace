@@ -3121,7 +3121,6 @@ config.defineOptions(Editor.prototype, "editor", {
     dragDelay: "$mouseHandler",
     dragEnabled: "$mouseHandler",
     focusTimeout: "$mouseHandler",
-    tooltipFollowsMouse: "$mouseHandler",
 
     firstLineNumber: "session",
     overwrite: "session",
