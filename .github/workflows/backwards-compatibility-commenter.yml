@@ -7,6 +7,9 @@ on:
       - 'ace-modes.d.ts'
       - 'ace-extensions.d.ts'
 
+permissions:
+  pull-requests: write
+
 jobs:
   comment:
     runs-on: ubuntu-latest
