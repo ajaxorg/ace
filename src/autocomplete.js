@@ -729,6 +729,7 @@ class Autocomplete {
                 tooltipStyle.maxHeight = Math.min(popup.container.offsetTop, targetHeight) + "px";
             }
         }
+        dom.$fixPositionBug(tooltipNode);
     }
 
     hideDocTooltip() {
