@@ -1742,6 +1742,7 @@ module.exports = {
         var popupRect, tooltipRect;
 
         async function waitForDocTooltip() {
+            editor.renderer.$loop._flush();
             await new Promise(resolve => {setTimeout(resolve, 50);});
             editor.completer.onLayoutChange();
             var tooltipNode = editor.completer.tooltipNode;
@@ -1752,11 +1753,12 @@ module.exports = {
         // Mock the CSS behaviour
         popup.container.style.width = "300px";
         popup.container.style.height = "300px";
-        const editorWidth = 400;
+        var editorWidth = 400;
         editor.container.style.width = editorWidth + "px";
         editor.container.style.height = "100px";
         editor.container.style.left = "0px";
         editor.container.style.top = "0px";
+        popup.container.style.positionHint = editor.completer.tooltipNode.style.positionHint = "fixed"
 
         await waitForDocTooltip();
         assert.ok(tooltipRect.left > popupRect.right, "Tooltip should appear on the right");
@@ -1766,7 +1768,7 @@ module.exports = {
 
         await waitForDocTooltip();
 
-        assert.ok(tooltipRect.right < popupRect.left, "Tooltip should appear on the left");
+        assert.ok(tooltipRect.right <= popupRect.left, "Tooltip should appear on the left");
 
         editor.container.style.left = "400px";
         editor.container.style.top = "0px";

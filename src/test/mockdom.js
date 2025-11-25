@@ -425,11 +425,18 @@ function Node(name) {
             if (!height) height = CHAR_HEIGHT;
         }
         else if (this.parentNode) {
+            var isFixed = this.style.position == "fixed" 
+                || this.style.positionHint == "fixed"
+                || this.getAttribute("role") == "tooltip";
             // prevent recursion by passing -1
-            var rect = fromChild == -1 
+            var rect = fromChild == -1 || isFixed
                 ? {top: 0, left: 0, width: 0, height: 0, right: 0, bottom: 0} 
                 : this.parentNode.getBoundingClientRect();
-            
+            if (isFixed) {
+                rect.height = rect.bottom = WINDOW_HEIGHT;
+                rect.width = rect.right = WINDOW_WIDTH;
+            }
+
             left = parseCssLength(this.style.left || "0", rect.width);
             top = parseCssLength(this.style.top || "0", rect.height);
             var right = parseCssLength(this.style.right || "0", rect.width);
@@ -458,9 +465,13 @@ function Node(name) {
             if (!height && !this.style.height && this.firstChild && this.firstChild.getBoundingClientRect && !fromChild) {
                 height = this.firstChild.getBoundingClientRect(-1).height;
             }
-            
-            top += rect.top;
-            bottom += rect.bottom;
+
+            if (!this.style.left &&  this.style.right) {
+                left = rect.width - right - width;
+            }
+            if (!this.style.top &&  this.style.bottom) {
+                top = rect.width - bottom - height;
+            }            
         }
         return {top: top, left: left, width: width, height: height, right: left + width, bottom: top + height};
     };
