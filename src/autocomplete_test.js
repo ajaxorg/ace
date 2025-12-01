@@ -1757,7 +1757,7 @@ module.exports = {
         editor.container.style.height = "100px";
         editor.container.style.left = "0px";
         editor.container.style.top = "0px";
-        popup.container.style.positionHint = "fixed"
+        popup.container.style.positionHint = "fixed";
         
         
         user.type("c");
