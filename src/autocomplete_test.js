@@ -1719,14 +1719,14 @@ module.exports = {
                             value: "completion1",
                             docHTML: longDoc
                         },
-                        // {
-                        //     caption: "completion2",
-                        //     value: "completion2"
-                        // },
-                        // {
-                        //     caption: "completion3",
-                        //     value: "completion3"
-                        // }
+                        {
+                            caption: "completion2",
+                            value: "completion2"
+                        },
+                        {
+                            caption: "completion3",
+                            value: "completion3"
+                        }
                     ]);
                 }
             }
@@ -1735,8 +1735,7 @@ module.exports = {
 
         editor.resize();
         await editor.renderer.once("afterRender");
-
-        user.type("c");
+        editor.completer.showPopup(editor);
 
         var popup = editor.completer.popup;
         var popupRect, tooltipRect;
@@ -1758,8 +1757,10 @@ module.exports = {
         editor.container.style.height = "100px";
         editor.container.style.left = "0px";
         editor.container.style.top = "0px";
-        popup.container.style.positionHint = editor.completer.tooltipNode.style.positionHint = "fixed"
-
+        popup.container.style.positionHint = "fixed"
+        
+        
+        user.type("c");
         await waitForDocTooltip();
         assert.ok(tooltipRect.left > popupRect.right, "Tooltip should appear on the right");
 
@@ -1772,17 +1773,16 @@ module.exports = {
 
         editor.container.style.left = "400px";
         editor.container.style.top = "0px";
-        popup.isTopdown = true;
+        popup.container.style.width = (window.innerWidth - 100) + "px"; 
         user.type("Escape");
         user.type("Enter");
         user.type("c");
         
         await waitForDocTooltip();
-        assert.ok(tooltipRect.top > popupRect.bottom, "Tooltip should appear below");
+        assert.ok(tooltipRect.top >= popupRect.bottom, "Tooltip should appear below");
 
         editor.container.style.top = (window.innerHeight - 100) + "px";
         editor.container.style.left = "0px";
-        popup.isTopdown = false;
         user.type("Escape");
         user.type("Enter");
         user.type("c");

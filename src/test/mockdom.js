@@ -470,8 +470,11 @@ function Node(name) {
                 left = rect.width - right - width;
             }
             if (!this.style.top &&  this.style.bottom) {
-                top = rect.width - bottom - height;
-            }            
+                top = rect.height - bottom - height;
+            }
+            
+            top += rect.top;
+            left += rect.left;
         }
         return {top: top, left: left, width: width, height: height, right: left + width, bottom: top + height};
     };
@@ -930,7 +933,11 @@ exports.load = function() {
     loaded = true;
 };
 
-exports.loadInBrowser = function(global) {
+exports.loadInBrowser = function(global, $setSize) {
+    if ($setSize) {
+        WINDOW_HEIGHT = global.innerHeight;
+        WINDOW_WIDTH = global.innerWidth;
+    }
     delete global.ResizeObserver;
     global.__origRoot__ = global.document.documentElement;
     global.__origBody__ = global.document.body;

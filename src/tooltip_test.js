@@ -21,6 +21,7 @@ module.exports = {
         document.body.appendChild(editor.container);
         editor.container.style.height = "200px";
         editor.container.style.width = "300px";
+        editor.container.style.position = "absolute";
         
         docTooltip.setDataProvider(function(e, editor) {
             let session = editor.session;
