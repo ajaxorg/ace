@@ -614,7 +614,7 @@ module.exports = {
         editor.destroy();
         editor.container.remove();
     },
-    "test: selection should follow hovermarker if setSelectOnHover true": function(done) {
+    "test: selection should follow hovermarker if setSelectOnHover true": function() {
         editor = initEditor("hello world\n");
 
         editor.completers = [
@@ -643,19 +643,20 @@ module.exports = {
         assert.equal(editor.completer.popup.isOpen, true);
         assert.equal(completer.popup.getRow(), 0);
 
+        editor.completer.popup.renderer.$loop._flush();
+
         var text = completer.popup.renderer.content.childNodes[2];
         var rect = text.getBoundingClientRect();
 
         // We need two mouse events to trigger the updating of the hover marker.
         text.dispatchEvent(new MouseEvent("move", {x: rect.left, y: rect.top}));
         // Hover over the second row.
-        text.dispatchEvent(new MouseEvent("move", {x: rect.left + 1, y: rect.top + 20}));
+        var lineHeight = completer.popup.renderer.lineHeight;
+        text.dispatchEvent(new MouseEvent("move", {x: rect.left + 1, y: rect.top + 1.5 * lineHeight}));
 
         // Selected row should follow mouse.
         editor.completer.popup.renderer.$loop._flush();
-        assert.equal(completer.popup.getRow(), 2);
-
-        done();
+        assert.equal(completer.popup.getRow(), 1);
     },
     "test: selection should not follow hovermarker if setSelectOnHover not set": function(done) {
         editor = initEditor("hello world\n");
@@ -1705,7 +1706,7 @@ module.exports = {
             });
         }
     },
-    "test: doc tooltip positioning": function (done) {
+    "test: doc tooltip positioning": async function(done) {
         var editor = initEditor("");
         var longDoc = "This is a very long documentation text that should wrap and test the tooltip width constraints.";
 
@@ -1717,70 +1718,79 @@ module.exports = {
                             caption: "completion1",
                             value: "completion1",
                             docHTML: longDoc
+                        },
+                        {
+                            caption: "completion2",
+                            value: "completion2"
+                        },
+                        {
+                            caption: "completion3",
+                            value: "completion3"
                         }
                     ]);
                 }
             }
         ];
 
-        user.type("c");
+
+        editor.resize();
+        await editor.renderer.once("afterRender");
+        editor.completer.showPopup(editor);
 
         var popup = editor.completer.popup;
+        var popupRect, tooltipRect;
 
-        function checkTooltipPosition(positionCheck, message, next) {
-            afterRenderCheck(popup, function () {
-                editor.completer.onLayoutChange();
-                var tooltipNode = editor.completer.tooltipNode;
-                var popupRect = popup.container.getBoundingClientRect();
-                var tooltipRect = tooltipNode.getBoundingClientRect();
-                assert.ok(positionCheck(popupRect, tooltipRect), message);
-                next();
-            });
+        async function waitForDocTooltip() {
+            editor.renderer.$loop._flush();
+            await new Promise(resolve => {setTimeout(resolve, 50);});
+            editor.completer.onLayoutChange();
+            var tooltipNode = editor.completer.tooltipNode;
+            popupRect = popup.container.getBoundingClientRect();
+            tooltipRect = tooltipNode.getBoundingClientRect();
         }
 
         // Mock the CSS behaviour
         popup.container.style.width = "300px";
         popup.container.style.height = "300px";
-        const editorWidth = 400;
+        var editorWidth = 400;
         editor.container.style.width = editorWidth + "px";
         editor.container.style.height = "100px";
         editor.container.style.left = "0px";
         editor.container.style.top = "0px";
+        popup.container.style.positionHint = "fixed";
+        
+        
+        user.type("c");
+        await waitForDocTooltip();
+        assert.ok(tooltipRect.left > popupRect.right, "Tooltip should appear on the right");
 
-        checkTooltipPosition((popupRect, tooltipRect) => tooltipRect.left > popupRect.right,
-            "Tooltip should appear on the right", () => {
-                editor.container.style.left = (window.innerWidth - editorWidth) + "px";
-                user.type("o");
+        editor.container.style.left = (window.innerWidth - editorWidth) + "px";
+        user.type("o");
 
-                checkTooltipPosition((popupRect, tooltipRect) => tooltipRect.right < popupRect.left,
-                    "Tooltip should appear on the left", () => {
-                        editor.container.style.left = "400px";
-                        editor.container.style.top = "0px";
-                        popup.isTopdown = true;
-                        user.type("Escape");
-                        user.type("Enter");
-                        user.type("c");
+        await waitForDocTooltip();
 
-                        checkTooltipPosition((popupRect, tooltipRect) => tooltipRect.top > popupRect.bottom,
-                            "Tooltip should appear below", () => {
-                                editor.container.style.top = (window.innerHeight - 100) + "px";
-                                editor.container.style.left = "0px";
-                                popup.isTopdown = false;
-                                user.type("Escape");
-                                user.type("Enter");
-                                user.type("c");
+        assert.ok(tooltipRect.right <= popupRect.left, "Tooltip should appear on the left");
 
-                                checkTooltipPosition((popupRect, tooltipRect) => tooltipRect.bottom <= popupRect.top,
-                                    "Tooltip should appear above", function () {
-                                        done();
-                                    }
-                                );
-                            }
-                        );
-                    }
-                );
-            }
-        );
+        editor.container.style.left = "400px";
+        editor.container.style.top = "0px";
+        popup.container.style.width = (window.innerWidth - 100) + "px"; 
+        user.type("Escape");
+        user.type("Enter");
+        user.type("c");
+        
+        await waitForDocTooltip();
+        assert.ok(tooltipRect.top >= popupRect.bottom, "Tooltip should appear below");
+
+        editor.container.style.top = (window.innerHeight - 100) + "px";
+        editor.container.style.left = "0px";
+        user.type("Escape");
+        user.type("Enter");
+        user.type("c");
+
+        await waitForDocTooltip();
+        assert.ok(tooltipRect.bottom <= popupRect.top, "Tooltip should appear above");
+
+        done();
     },
 };
 

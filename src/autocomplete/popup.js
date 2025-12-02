@@ -389,6 +389,7 @@ class AcePopup {
 
             el.style.left = left + "px";
             el.style.right = "";
+            dom.$fixPositionBug(el);
 
             if (!popup.isOpen) {
                 popup.isOpen = true;
@@ -399,7 +400,6 @@ class AcePopup {
             popup.anchorPos = pos;
             popup.anchor = anchor;
             
-            dom.$fixPositionBug(el);
 
             return true;
         };
