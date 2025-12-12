@@ -35,6 +35,11 @@ var fs = require("fs");
 var path = require("path");
 var copy = require('architect-build/copy');
 var build = require('architect-build/build');
+var {
+    updateDeclarationModuleNames,
+    generateDeclaration,
+    SEPARATE_MODULES
+} = require('./tool/ace_declaration_generator');
 
 var ACE_HOME = __dirname;
 var BUILD_DIR = ACE_HOME + "/build";
@@ -174,20 +179,34 @@ function ace() {
     }
 }
 
+function correctDeclarationsForBuild(path, additionalDeclarations) {
+    var definitions = fs.readFileSync(path, 'utf8');
+    var newDefinitions = updateDeclarationModuleNames(definitions);
+    if (additionalDeclarations) {
+        newDefinitions = newDefinitions + '\n' + additionalDeclarations;
+    }
+    if (/ace\.d\.ts$/.test(path)) {
+        var aceRequire = "$1\n    export function require(name: string): any;";
+        newDefinitions = newDefinitions.replace(/(declare\smodule\s"ace\-builds"\s{)/, aceRequire);
+    }
+    fs.writeFileSync(path, newDefinitions);
+}
+
 function buildTypes() {
-    var aceCodeModeDefinitions = '/// <reference path="./ace-modes.d.ts" />';
-    var aceCodeExtensionDefinitions = '/// <reference path="./ace-extensions.d.ts" />';
     // ace-builds package has different structure and can't use mode types defined for the ace-code.
-    // ace-builds modes are declared along with other modules in the ace-modules.d.ts file below.
-    var definitions = fs.readFileSync(ACE_HOME + '/ace.d.ts', 'utf8').replace(aceCodeModeDefinitions, '').replace(aceCodeExtensionDefinitions, '');
     var paths = fs.readdirSync(BUILD_DIR + '/src-noconflict');
-    var moduleRef = '/// <reference path="./ace-modules.d.ts" />';
+
+    var typeDir = BUILD_DIR + "/types";
+
+    if (!fs.existsSync(typeDir)) {
+        fs.mkdirSync(typeDir);
+    }
 
     fs.readdirSync(BUILD_DIR + '/src-noconflict/snippets').forEach(function(path) {
         paths.push("snippets/" + path);
     });
 
-    var moduleNameRegex = /^(mode|theme|ext|keybinding)-|^snippets\//;
+    var moduleNameRegex = /^(keybinding)-/;
 
     var pathModules = [
         "declare module 'ace-builds/webpack-resolver';",
@@ -199,9 +218,21 @@ function buildTypes() {
             return "declare module 'ace-builds/src-noconflict/" + moduleName + "';";
         }
     }).filter(Boolean)).join("\n") + "\n";
+    
+    fs.copyFileSync(ACE_HOME + '/ace-internal.d.ts', BUILD_DIR + '/ace.d.ts');
+    generateDeclaration(BUILD_DIR + '/ace.d.ts');
+    fs.copyFileSync(ACE_HOME + '/ace-modes.d.ts', BUILD_DIR + '/ace-modes.d.ts');
+    correctDeclarationsForBuild(BUILD_DIR + '/ace.d.ts', pathModules);
+    correctDeclarationsForBuild(BUILD_DIR + '/ace-modes.d.ts');
 
-    fs.writeFileSync(BUILD_DIR + '/ace.d.ts', moduleRef + '\n' + definitions);
-    fs.writeFileSync(BUILD_DIR + '/ace-modules.d.ts', pathModules);
+    let allModules = SEPARATE_MODULES;
+    allModules.push("modules"); // core modules
+    allModules.forEach(function (key) {
+        let fileName = '/ace-' + key + '.d.ts';
+        fs.copyFileSync(ACE_HOME + '/types' + fileName, BUILD_DIR + '/types' + fileName);
+        correctDeclarationsForBuild(BUILD_DIR + '/types' + fileName);
+    });
+    
     var esmUrls = [];
 
     var loader = paths.map(function(path) {
@@ -241,6 +272,7 @@ function demo() {
         );
     }
     
+    require("rimraf").sync(BUILD_DIR + "/demo/kitchen-sink/docs/");
     copy(ACE_HOME +"/demo/kitchen-sink/docs/", BUILD_DIR + "/demo/kitchen-sink/docs/");
     
     copy.file(ACE_HOME + "/demo/kitchen-sink/logo.png", BUILD_DIR + "/demo/kitchen-sink/logo.png");
@@ -280,10 +312,12 @@ function demo() {
                 result.push("<script>");
                 return result.join("\n");
             });
-            if (removeRequireJS)
+            if (removeRequireJS) {
                 source = source.replace(/\s*\}\);?\s*(<\/script>)/, "\n$1");
+                source = source.replace(/( |^)require\(/gm, "$1ace.require(");
+            }
             source = source.replace(/"\.\.\/build\//g, function(e) {
-                console.log(e); return '"../';
+                return '"../';
             });
             return source;
         }
@@ -639,7 +673,6 @@ function extractCss(callback) {
                 else   
                     imageName = name + "-" + imageCounter + ".png";
                 images[imageName] = buffer;
-                console.log("url(\"" + directory + "/" + imageName + "\")");
                 return "url(\"" + directory + "/" + imageName + "\")";
             }
         );
@@ -652,16 +685,23 @@ function extractCss(callback) {
 }
 
 function extractNls() {
-    var allMessages = {};
+    var defaultData = require(__dirname + "/src/lib/default_english_messages").defaultEnglishMessages;
+
     searchFiles(__dirname + "/src", function(path) {
         if (/_test/.test(path)) return;
         var text = fs.readFileSync(path, "utf8");
-        var matches = text.match(/nls\s*\(\s*("([^"\\]|\\.)+"|'([^'\\]|\\.)+')/g);
+        var matches = text.match(/nls\s*\(\s*("([^"\\]|\\.)+"|'([^'\\]|\\.)+'),\s*("([^"\\]|\\.)+"|'([^'\\]|\\.)+')/g);
         matches && matches.forEach(function(m) {
-            var eng = m.replace(/^nls\s*\(\s*["']|["']$/g, "");
-            allMessages[eng] = "";
+            var match = m.match(/("([^"\\]|\\.)+"|'([^'\\]|\\.)+)/g);      
+            var key = match[0].replace(/["']|["']$/g, "");
+            var defaultString = match[1].replace(/["']|["']$/g, "");
+
+            // If the key not yet in the default file, add it:
+            if (defaultData[key] !== undefined) return;
+            defaultData[key] = defaultString;
         });
     });
+    fs.writeFileSync(__dirname + "/src/lib/default_english_messages.js", "var defaultEnglishMessages = " + JSON.stringify(defaultData, null, 4) + "\n\nexports.defaultEnglishMessages = defaultEnglishMessages;", "utf8");
     
     fs.readdirSync(__dirname + "/translations").forEach(function(x) {
         if (!/\.json$/.test(x)) return;
@@ -669,11 +709,10 @@ function extractNls() {
         var existingStr = fs.readFileSync(path, "utf8");
         var existing = JSON.parse(existingStr);
         
-        var newData = {$id: existing.$id};
-        for (var i in allMessages) {
-            newData[i] = existing[i] || "";
+        for (var i in defaultData) {
+            existing[i] = existing[i] || "";
         }
-        fs.writeFileSync(path, JSON.stringify(newData, null, 4), "utf8");
+        fs.writeFileSync(path, JSON.stringify(existing, null, 4), "utf8");
         console.log("Saved " + x);
     });
 }

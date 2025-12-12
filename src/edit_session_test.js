@@ -496,6 +496,31 @@ module.exports = {
         assert.equal(session.$foldData[3].range.start.row, 12);
         editor.execCommand("unfoldall");
         assert.equal(session.$foldData.length, 0);
+
+        editor.execCommand("foldall");
+        assert.equal(session.$foldData.length, 4);
+        assert.equal(session.$foldData[1].range.start.row, 3);
+
+        // fold function arguments
+        editor.selection.moveTo(3, 13);
+        editor.execCommand("fold");
+        assert.equal(editor.session.getAllFolds().length, 5);
+        assert.equal(session.$foldData[1].range.start.row, 3);
+        
+        // unfold function arguments
+        editor.execCommand("unfold");
+        assert.equal(editor.session.getAllFolds().length, 4);
+        assert.equal(session.$foldData[1].range.start.row, 3);
+        
+        // unfold function
+        editor.execCommand("unfold");
+        assert.equal(session.$foldData.length, 4);
+        assert.equal(session.$foldData[1].range.start.row, 4);
+
+        // check that calling unfold without folds does not add folds
+        editor.execCommand("unfold");
+        assert.equal(session.$foldData.length, 4);
+        assert.equal(session.$foldData[1].range.start.row, 4);
     },
 
     "test setting undefined value": function() {
@@ -1106,27 +1131,66 @@ module.exports = {
     },
     
     "test: mode loading" : function(next) {
-        if (!require.undef) {
-            console.log("Skipping test: This test only runs in the browser");
-            next();
-            return;
-        }
+        delete EditSession.prototype.$modes["ace/mode/javascript"];
+        delete EditSession.prototype.$modes["ace/mode/css"];
+        delete EditSession.prototype.$modes["ace/mode/sh"];
+        require("./config").setLoader(function(name, onLoad) {
+            if (name == "ace/mode/javascript") {
+                return onLoad(null, require("./mode/javascript"));
+            }
+            if (name == "ace/mode/sh") {
+                return setTimeout(function() {
+                    return onLoad(null, require("./mode/sh"));
+                });
+            }
+            if (name == "ace/mode/css") {
+                return setTimeout(function() {
+                    return onLoad(null, require("./mode/css"));
+                });
+            }
+        });
         var session = new EditSession([]);
-        session.setMode("ace/mode/javascript");
-        assert.equal(session.$modeid, "ace/mode/javascript");
-        session.on("changeMode", function() {
-            assert.equal(session.$modeid, "ace/mode/javascript");
+        
+        var onChangeModeCallCount = 0;
+        var originalOnChangeMode = session.$onChangeMode;
+
+        // Create spy
+        session.$onChangeMode = function(...arguments) {
+            onChangeModeCallCount++;
+            originalOnChangeMode.apply(this, arguments);
+        };
+
+        session.setMode("ace/mode/javascript");   
+        assert.equal(session.$modeId, "ace/mode/javascript");
+
+        var modeChangeCallbacks = 0;
+        session.once("changeMode", function() {
+            assert.equal(session.$modeId, "ace/mode/sh");
+            modeChangeCallbacks++;
         });
-        session.setMode("ace/mode/sh", function(mode) {
-            assert.ok(!mode);
+        session.setMode("ace/mode/sh", function() {
+            assert.equal(session.$mode.$id, "ace/mode/sh");
+            modeChangeCallbacks++;
         });
+        assert.equal(session.$modeId, "ace/mode/sh");
+        assert.equal(session.$mode.$id, "ace/mode/javascript");
         setTimeout(function() {
-            session.setMode("ace/mode/javascript", function(mode) {
-                session.setMode("ace/mode/javascript");
-                assert.equal(session.$modeid, "ace/mode/javascript");
-                next();
+            assert.equal(modeChangeCallbacks, 2);
+            session.setMode("ace/mode/javascript");
+            assert.equal(session.$mode.$id, "ace/mode/javascript");
+            session.setMode("ace/mode/sh");
+            assert.equal(session.$mode.$id, "ace/mode/sh");
+            session.setMode("ace/mode/css");
+            assert.equal(session.$mode.$id, "ace/mode/sh");
+            // destory session to check if the last mode which is being loaded is aborted or not
+            session.destroy();
+            setTimeout(function() {
+            // check if last setmode is aborted due to destroy
+            assert.equal(onChangeModeCallCount, 4);
+            session.$onChangeMode = originalOnChangeMode;
+            next();
             });
-        }, 0);
+        });
     },
 
     "test: sets destroyed flag when destroy called and tokenizer is never null": function() {
@@ -1137,6 +1201,132 @@ module.exports = {
         session.destroy();
         assert.equal(session.destroyed, true);
         assert.notEqual(session.bgTokenizer, null);
+    },
+
+    "test: JSON serialization": function() {
+        var session = new EditSession(["Hello world!"]);
+        session.setAnnotations([{row: 0, column: 0, text: "error test", type: "error"}]);
+        session.setMode("ace/mode/javascript");
+        session = EditSession.fromJSON(JSON.stringify(session));
+        
+        assert.equal(session.getAnnotations().length, 1);
+        assert.equal(session.getMode().$id, "ace/mode/javascript");
+        assert.equal(session.getScrollLeft(), 0);
+        assert.equal(session.getScrollTop(), 0);
+        assert.equal(session.getValue(), "Hello world!");
+    },
+
+    "test: operation handling : when session it not attached to an editor": function(done) {
+        const session = new EditSession("Hello world!");
+        const beforeEndOperationSpy = [];
+        session.on("beforeEndOperation", () => {
+            beforeEndOperationSpy.push(session.curOp);
+        });
+
+        // When both start and end operation are invoked by the consumer
+        session.startOperation({command: {name: "inserting-both"}});
+        session.insert({row: 0, column : 0}, "both");
+        session.endOperation();
+        assert.equal(beforeEndOperationSpy.length, 1);
+        assert.equal(beforeEndOperationSpy[0].command.name, "inserting-both");
+        assert.equal(beforeEndOperationSpy[0].docChanged, true);
+        assert.equal(beforeEndOperationSpy[0].selectionChanged, true);
+
+        // When only start operation is invoked
+        session.startOperation({command: {name: "inserting-start"}});
+        session.insert({row: 0, column : 0}, "start");
+        setTimeout(() => {
+            assert.equal(beforeEndOperationSpy.length, 2);
+            assert.equal(beforeEndOperationSpy[1].command.name, "inserting-start");
+            assert.equal(beforeEndOperationSpy[1].docChanged, true);
+            assert.equal(beforeEndOperationSpy[1].selectionChanged, true);
+            
+            // When only end operation is invoked
+            session.insert({row: 0, column : 0}, "end");
+            session.endOperation();
+            assert.equal(beforeEndOperationSpy.length, 3);
+            assert.deepEqual(beforeEndOperationSpy[2].command, {});
+            assert.equal(beforeEndOperationSpy[2].docChanged, true);
+            assert.equal(beforeEndOperationSpy[2].selectionChanged, true);
+
+            // When nothing is invoked
+            session.insert({row: 0, column : 0}, "none");
+            setTimeout(() => {
+                assert.equal(beforeEndOperationSpy.length, 4);
+                assert.deepEqual(beforeEndOperationSpy[3].command, {});
+                assert.equal(beforeEndOperationSpy[3].docChanged, true);
+                assert.equal(beforeEndOperationSpy[3].selectionChanged, true);
+                
+                done();
+            }, 10);
+        }, 10);
+    },
+
+    "test: operation handling : when session is attached to an editor": function(done) {
+        const session = new EditSession("Hello world!");
+        const editor = new Editor(new MockRenderer(), session);
+        const beforeEndOperationSpySession = [];
+        session.on("beforeEndOperation", () => {
+            beforeEndOperationSpySession.push(session.curOp);
+        });
+        const beforeEndOperationSpyEditor = [];
+        editor.on("beforeEndOperation", () => {
+            beforeEndOperationSpyEditor.push(editor.curOp);
+        });
+
+        // Imperative update from editor
+        editor.startOperation({command: {name: "imperative-update"}});
+        editor.insert("update");
+        editor.endOperation();
+        for (const beforeEndOperationSpy of [beforeEndOperationSpySession, beforeEndOperationSpyEditor ]) {
+            assert.equal(beforeEndOperationSpy.length, 1);
+            assert.equal(beforeEndOperationSpy[0].command.name, "imperative-update");
+            assert.equal(beforeEndOperationSpy[0].docChanged, true);
+            assert.equal(beforeEndOperationSpy[0].selectionChanged, true);
+            assert.equal(!!beforeEndOperationSpy[0].selectionBefore, true);
+        }
+
+        // Imperative update from session
+        session.startOperation({command: {name: "session-update"}});
+        session.insert({row: 0, column : 0},"update");
+        session.endOperation();
+        for (const beforeEndOperationSpy of [beforeEndOperationSpySession, beforeEndOperationSpyEditor ]) {
+            assert.equal(beforeEndOperationSpy.length, 2);
+            assert.equal(beforeEndOperationSpy[1].command.name, "session-update");
+            assert.equal(beforeEndOperationSpy[1].docChanged, true);
+            assert.equal(beforeEndOperationSpy[1].selectionChanged, true);
+            assert.equal(!!beforeEndOperationSpy[1].selectionBefore, true);
+        }
+
+        // Command update
+        editor.execCommand(editor.commands.byName.indent);
+        for (const beforeEndOperationSpy of [beforeEndOperationSpySession, beforeEndOperationSpyEditor ]) {
+            assert.equal(beforeEndOperationSpy.length, 3);
+            assert.equal(beforeEndOperationSpy[2].command.name, "indent");
+            assert.equal(beforeEndOperationSpy[2].docChanged, true);
+            assert.equal(beforeEndOperationSpy[2].selectionChanged, true);
+            assert.equal(!!beforeEndOperationSpy[2].selectionBefore, true);
+        }
+
+        // Session cleanup logic
+        const newSession = new EditSession("Hello again!");
+        editor.setSession(newSession);
+        const beforeEndOperationSpyNewSession = [];
+        newSession.on("beforeEndOperation", () => {
+            beforeEndOperationSpyNewSession.push(newSession.curOp);
+        });
+        editor.execCommand(editor.commands.byName.indent);
+        assert.equal(beforeEndOperationSpyEditor.length, 4);
+        assert.equal(beforeEndOperationSpyNewSession.length, 1);
+        assert.equal(beforeEndOperationSpySession.length, 3);
+
+        // Imperative implicit update from editor
+        editor.insert("update");
+        setTimeout(() => {
+            assert.equal(beforeEndOperationSpyEditor.length, 5);
+            assert.equal(beforeEndOperationSpyNewSession.length, 2);
+            done();
+        }, 10);
     }
 };
 

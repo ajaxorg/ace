@@ -564,6 +564,28 @@ module.exports = {
 
         url = editor.findLinkAt(1, 5);
         assert.equal(url, "https://www.google.com/");
+    },
+    "test handle events without deprecated keyCode property": function() {
+        var e = new CustomEvent("keydown"); 
+        e.code = "KeyA"; 
+        e.ctrlKey = true;
+        editor = new Editor(new MockRenderer());
+        editor.session.setValue("123");
+        assert.equal(editor.getSelectedText(), "");
+        editor.textInput.getElement().dispatchEvent(e);
+        assert.equal(editor.getSelectedText(), "123");
+    },
+    "test fold": function() {
+        editor = new Editor(new MockRenderer());
+        editor.session.setMode(new JavaScriptMode);
+        editor.session.setValue('"string"');
+        editor.execCommand("fold");
+        assert.equal(editor.session.getFoldLine(0), undefined);
+        editor.session.setValue('"string\\\nsecondline"');
+        editor.execCommand("fold");
+        assert.equal(editor.session.getFoldLine(0).end.row, 1);
+        editor.execCommand("unfold");
+        assert.equal(editor.session.getFoldLine(0), undefined);
     }
 };
 

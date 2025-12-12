@@ -10,6 +10,7 @@ require("../theme/textmate");
 var Editor = require("../editor").Editor;
 var Mode = require("../mode/java").Mode;
 var VirtualRenderer = require("../virtual_renderer").VirtualRenderer;
+const { test } = require("asyncjs");
 var assert = require("../test/assertions");
 var MouseEvent = function(type, opts){
     var e = document.createEvent("MouseEvents");
@@ -148,6 +149,29 @@ module.exports = {
         editor.renderer.$loop._flush();
         assert.ok(parseInt(lines.cells[0].element.textContent) > 1);
     },
+    "test: gutter click on wrapped line" : function() {
+        var editor = this.editor;
+        var value = "x {\n" + "  abc".repeat(100) + "\n}";
+        value = value.repeat(10);
+        editor.setValue(value, -1);
+        editor.setOption("wrap", 40);
+        editor.renderer.$loop._flush();
+        var lines = editor.renderer.$gutterLayer.$lines;
+        var toggler = lines.cells[1].element;
+        var rect = toggler.getBoundingClientRect();
+        editor.isFocused = () => true;
+        editor.focus();
+        
+        assert.position(editor.getCursorPosition(), 0, 0);
+
+        toggler.dispatchEvent(MouseEvent("down", {x: rect.left, y: rect.top + rect.height / 2}));
+        editor.renderer.$loop._flush();         
+        assert.position(editor.getCursorPosition(), 1, 0);
+
+        toggler.dispatchEvent(MouseEvent("up", {x: rect.left, y: rect.top + rect.height}));
+        editor.renderer.$loop._flush();
+        assert.position(editor.getCursorPosition(), 2, 0);
+    },
     "test: wheel" : function() {
         var editor = this.editor;
         var lines = editor.renderer.$gutterLayer.$lines;
@@ -178,6 +202,7 @@ module.exports = {
         value = value.repeat(10);
         editor.setValue(value, -1);
         editor.setOption("maxLines", 10);
+        editor.setOption("enableMobileMenu", false);
         editor.renderer.$loop._flush();
         window.editor = editor;
         window.sendTouchEvent = sendTouchEvent;
@@ -212,8 +237,17 @@ module.exports = {
         editor.renderer.$loop._flush();
         assert.equal(editor.getSelectedText(), "abc");
         
-        // mobile menu works
+        // there shouldn't be any mobile menu at that point
         var menu = editor.container.querySelector(".ace_mobile-menu");
+        assert.ok(menu == undefined);
+        editor.setOption("enableMobileMenu", true);
+        sendTouchEvent("end", {touches: [touchPos(3, 3)]}, editor);
+        editor.renderer.$loop._flush();
+        
+        menu = editor.container.querySelector(".ace_mobile-menu");
+        assert.ok(menu != undefined);
+        
+        // mobile menu works
         sendTouchEvent("start", {touches: [touchPos(3, 3)]}, {container: menu});
         sendTouchEvent("end", {touches: [touchPos(3, 3)]}, {container: menu});
         var button = editor.container.querySelectorAll(".ace_mobile-button")[1];

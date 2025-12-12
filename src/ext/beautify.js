@@ -1,21 +1,60 @@
-// [WIP]
+/**
+ * ## Code beautification and formatting extension.
+ *
+ * **This extension is considered outdated.** For better formatting support with modern language servers
+ * and advanced formatting capabilities, consider using [ace-linters](https://github.com/mkslanc/ace-linters)
+ * which provides comprehensive language support including formatting, linting, and IntelliSense features.
+ *
+ * This legacy extension provides basic formatting for HTML, CSS, JavaScript, and PHP code with support for
+ * proper indentation, whitespace management, line breaks, and bracket alignment. It handles various language
+ * constructs including HTML tags, CSS selectors, JavaScript operators, control structures, and maintains
+ * consistent code style throughout the document.
+ *
+ * @module
+ */
+
 
 "use strict";
+
 var TokenIterator = require("../token_iterator").TokenIterator;
 
 function is(token, type) {
     return token.type.lastIndexOf(type + ".xml") > -1;
 }
 
-// do not indent after singleton tags or <html>
+/**
+ * List of HTML singleton (self-closing) tags that do not require additional indentation.
+ * These tags are typically void elements that cannot have child content and are closed within themselves.
+ *
+ * @type {string[]}
+ * @exports
+ */
 exports.singletonTags = ["area", "base", "br", "col", "command", "embed", "hr", "html", "img", "input", "keygen", "link", "meta", "param", "source", "track", "wbr"];
 
-// insert a line break after block level tags
+/**
+ * List of HTML block-level tags that typically require line breaks after their opening and closing tags.
+ * These tags represent structural elements that usually contain other content and are rendered as block-level elements.
+ *
+ * @type {string[]}
+ */
 exports.blockTags = ["article", "aside", "blockquote", "body", "div", "dl", "fieldset", "footer", "form", "head", "header", "html", "nav", "ol", "p", "script", "section", "style", "table", "tbody", "tfoot", "thead", "ul"];
 
+/**
+ * Configuration options for code formatting behavior.
+ * Controls various formatting rules such as line break placement and spacing preferences.
+ *
+ * @type {{lineBreaksAfterCommasInCurlyBlock?: boolean}}
+ */
 exports.formatOptions = {
     lineBreaksAfterCommasInCurlyBlock: true
 };
+
+/**
+ * Formats and beautifies code in the editor session with intelligent indentation, whitespace management, and bracket alignment.
+ * Supports HTML, CSS, JavaScript, and PHP with configurable formatting options and language-specific rules.
+ *
+ * @param {import("../edit_session").EditSession} session - The editor session containing the code to format
+ */
 
 exports.beautify = function(session) {
     var iterator = new TokenIterator(session, 0, 0);
@@ -390,6 +429,12 @@ exports.beautify = function(session) {
     session.doc.setValue(code);
 };
 
+/**
+ * Array of command definitions for the beautify extension.
+ * Contains the main beautify command with keyboard shortcut and execution handler.
+ *
+ * @type {import("../../ace-internal").Ace.Command[]}
+ */
 exports.commands = [{
     name: "beautify",
     description: "Format selection (Beautify)",

@@ -40,6 +40,12 @@ function validateDelta(docLines, delta) {
         throwDeltaError(delta, "delta.range must match delta lines");
 }
 
+/**
+ * Applies a delta to a document.
+ * @param {string[]} docLines
+ * @param {import("../ace-internal").Ace.Delta} delta
+ * @param [doNotValidate]
+ */
 exports.applyDelta = function(docLines, delta, doNotValidate) {
     // disabled validation since it breaks autocompletion popup
     // if (!doNotValidate)
@@ -54,6 +60,7 @@ exports.applyDelta = function(docLines, delta, doNotValidate) {
             if (lines.length === 1) {
                 docLines[row] = line.substring(0, startColumn) + delta.lines[0] + line.substring(startColumn);
             } else {
+                // @ts-ignore
                 var args = [row, 1].concat(delta.lines);
                 docLines.splice.apply(docLines, args);
                 docLines[row] = line.substring(0, startColumn) + docLines[row];

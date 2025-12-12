@@ -338,4 +338,94 @@
   ["constant.numeric.source.rust","0"]
 ],[
    "start"
+],[
+   "start"
+],[
+   "start",
+  ["keyword.source.rust","pub"],
+  ["text"," "],
+  ["keyword.source.rust","fn"],
+  ["text"," "],
+  ["entity.name.function.source.rust","g"],
+  ["punctuation","<"],
+  ["identifier","T"],
+  ["punctuation",">"],
+  ["paren.lparen","("],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["keyword.operator","->"],
+  ["text"," "],
+  ["support.constant","std::mem::"],
+  ["identifier","MaybeUninit"],
+  ["punctuaction","<"],
+  ["paren.lparen","["],
+  ["identifier","T"],
+  ["punctuation.operator",";"],
+  ["text"," "],
+  ["constant.numeric.source.rust","1"],
+  ["text"," "],
+  ["keyword.operator","<<"],
+  ["text"," "],
+  ["constant.numeric.source.rust","2"],
+  ["paren.rparen","]"],
+  ["punctuation",">"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["support.constant","std::mem::MaybeUninit::"],
+  ["identifier","uninit"],
+  ["paren.lparen","("],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start"
+],[
+   "start"
+],[
+   ["bracketedComment",3,"start"],
+  ["keyword.source.rust","let"],
+  ["text"," "],
+  ["identifier","multiline"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["string.quoted.raw.source.rust","r##\""]
+],[
+   ["bracketedComment",3,"start"],
+  ["string.quoted.raw.source.rust","    This is a raw string."]
+],[
+   ["bracketedComment",3,"start"],
+  ["string.quoted.raw.source.rust","    r#\"nested string\"#"]
+],[
+   "start",
+  ["string.quoted.raw.source.rust","\"##"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["keyword.source.rust","let"],
+  ["text"," "],
+  ["identifier","_strings"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["paren.lparen","["],
+  ["string.quoted.raw.source.rust","br##\"\"##"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.quoted.raw.source.rust","r\"hello\\\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.quoted.raw.source.rust","br\"hello\\\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["string.quoted.raw.source.rust","cr\"hello\\\""],
+  ["text"," "],
+  ["paren.rparen","]"],
+  ["punctuation.operator",";"]
 ]]

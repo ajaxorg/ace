@@ -1,3 +1,31 @@
+/**
+ * ## Right-to-Left (RTL) text support extension
+ *
+ * Provides bidirectional text support enabling proper rendering and editing of RTL languages such as Arabic, Hebrew,
+ * and Persian. Handles text direction detection, cursor positioning, and ensures correct visual behavior for mixed
+ * LTR/RTL content. Includes keyboard shortcuts for manual text direction control and automatic
+ * RLE (Right-to-Left Embedding) marker management.
+ *
+ * **Configuration Options:**
+ * - `rtlText`: Enable automatic RTL text detection and handling
+ * - `rtl`: Force RTL direction for the entire editor
+ *
+ * **Keyboard Shortcuts:**
+ * - `Ctrl-Alt-Shift-L` (Win) / `Cmd-Alt-Shift-L` (Mac): Force left-to-right direction
+ * - `Ctrl-Alt-Shift-R` (Win) / `Cmd-Alt-Shift-R` (Mac): Force right-to-left direction
+ *
+ * **Usage:**
+ * ```javascript
+ * editor.setOptions({
+ *   rtlText: true,  // Enable automatic RTL detection
+ *   rtl: false      // Or force RTL direction
+ * });
+ * ```
+ *
+ * @module
+ */
+
+
 "use strict";
 
 var commands = [{
@@ -66,7 +94,9 @@ require("../config").defineOptions(Editor.prototype, "editor", {
  * - ensures RLE mark removal on line merge, when 'delete' is pressed and cursor stays 
  *   at last position of previous line and when 'backspace' is pressed and cursor  stays at
  *   first position of current line. This is achived by hacking range boundaries on 'remove' operation.
- **/
+ * @param {any} e
+ * @param {Editor} editor
+ */
 function onChangeSelection(e, editor) {
     var lead = editor.getSelection().lead;
     if (editor.session.$bidiHandler.isRtlLine(lead.row)) {
@@ -91,7 +121,9 @@ function onCommandEmitted(commadEvent) {
  * Whenever the document is changed make sure that line break operatin
  * on right-to-left line (like pressing Enter or pasting multi-line text)
  * produces new right-to-left lines
- **/
+ * @param {import("../../ace-internal").Ace.Delta} delta
+ * @param {Editor} editor
+ */
 function onChange(delta, editor) {
     var session = editor.session;
     session.$bidiHandler.currentRow = null;
@@ -103,6 +135,10 @@ function onChange(delta, editor) {
     }
 }
 
+/**
+ * @param {any} e
+ * @param {import("../virtual_renderer").VirtualRenderer} renderer
+ */
 function updateLineDirection(e, renderer) {
     var session = renderer.session;
     var $bidiHandler = session.$bidiHandler;
@@ -122,6 +158,9 @@ function updateLineDirection(e, renderer) {
     });
 }
 
+/**
+ * @param {import("../virtual_renderer").VirtualRenderer} renderer
+ */
 function clearTextLayer(renderer) {
     var lines = renderer.$textLayer.$lines;
     lines.cells.forEach(clear);

@@ -1,6 +1,9 @@
 "use strict";
-
+/**
+ * @typedef {import("../editor").Editor} Editor
+ */
 var snippetManager = require("../snippets").snippetManager;
+var AceInlineScreenReader = require("./inline_screenreader").AceInlineScreenReader;
 
 /**
  * This object is used to manage inline code completions rendered into an editor with ghost text.
@@ -16,7 +19,7 @@ class AceInline {
     /**
      * Renders the completion as ghost text to the current cursor position
      * @param {Editor} editor
-     * @param {Completion} completion
+     * @param {import("../../ace-internal").Ace.Completion} completion
      * @param {string} prefix
      * @returns {boolean} True if the completion could be rendered to the editor, false otherwise
      */
@@ -25,15 +28,22 @@ class AceInline {
         if (editor && this.editor && this.editor !== editor) {
             this.hide();
             this.editor = null;
+            this.inlineScreenReader = null;
         }
         if (!editor || !completion) {
             return false;
+        }
+        if (!this.inlineScreenReader) {
+            this.inlineScreenReader = new AceInlineScreenReader(editor);
         }
         var displayText = completion.snippet ? snippetManager.getDisplayTextForSnippet(editor, completion.snippet) : completion.value;
         if (completion.hideInlinePreview || !displayText || !displayText.startsWith(prefix)) {
             return false;
         }
         this.editor = editor;
+
+        this.inlineScreenReader.setScreenReaderContent(displayText);
+
         displayText = displayText.slice(prefix.length);
         if (displayText === "") {
             editor.removeGhostText();
@@ -61,6 +71,10 @@ class AceInline {
     destroy() {
         this.hide();
         this.editor = null;
+        if (this.inlineScreenReader) {
+            this.inlineScreenReader.destroy();
+            this.inlineScreenReader = null;
+        }
     }
 }
 

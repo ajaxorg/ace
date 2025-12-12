@@ -1,0 +1,166 @@
+[[
+   "start",
+  ["keyword","package"],
+  ["text"," "],
+  ["identifier","main"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","import"],
+  ["text"," "],
+  ["string","\"core:fmt\""]
+],[
+   "start"
+],[
+   "start",
+  ["entity.name.function","main"],
+  ["text"," "],
+  ["keyword.operator","::"],
+  ["text"," "],
+  ["keyword","proc"],
+  ["paren.lparen","("],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","\t"],
+  ["identifier","program"],
+  ["text"," "],
+  ["keyword.operator",":="],
+  ["text"," "],
+  ["string","\"+ + * 😃 - /\""]
+],[
+   "start",
+  ["text","\t"],
+  ["identifier","accumulator"],
+  ["text"," "],
+  ["keyword.operator",":="],
+  ["text"," "],
+  ["constant.numeric","0"]
+],[
+   "start"
+],[
+   "start",
+  ["text","\t"],
+  ["keyword","for"],
+  ["text"," "],
+  ["identifier","token"],
+  ["text"," "],
+  ["keyword","in"],
+  ["text"," "],
+  ["identifier","program"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","\t\t"],
+  ["keyword","switch"],
+  ["text"," "],
+  ["identifier","token"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","\t\t"],
+  ["keyword","case"],
+  ["text"," "],
+  ["constant.numeric","'+'"],
+  ["keyword.operator",":"],
+  ["text"," "],
+  ["identifier","accumulator"],
+  ["text"," "],
+  ["keyword.operator","+="],
+  ["text"," "],
+  ["constant.numeric","1"]
+],[
+   "start",
+  ["text","\t\t"],
+  ["keyword","case"],
+  ["text"," "],
+  ["constant.numeric","'-'"],
+  ["keyword.operator",":"],
+  ["text"," "],
+  ["identifier","accumulator"],
+  ["text"," "],
+  ["keyword.operator","-="],
+  ["text"," "],
+  ["constant.numeric","1"]
+],[
+   "start",
+  ["text","\t\t"],
+  ["keyword","case"],
+  ["text"," "],
+  ["constant.numeric","'*'"],
+  ["keyword.operator",":"],
+  ["text"," "],
+  ["identifier","accumulator"],
+  ["text"," "],
+  ["keyword.operator","*="],
+  ["text"," "],
+  ["constant.numeric","2"]
+],[
+   "start",
+  ["text","\t\t"],
+  ["keyword","case"],
+  ["text"," "],
+  ["constant.numeric","'/'"],
+  ["keyword.operator",":"],
+  ["text"," "],
+  ["identifier","accumulator"],
+  ["text"," "],
+  ["keyword.operator","/="],
+  ["text"," "],
+  ["constant.numeric","2"]
+],[
+   "start",
+  ["text","\t\t"],
+  ["keyword","case"],
+  ["text"," "],
+  ["constant.numeric","'😃'"],
+  ["keyword.operator",":"],
+  ["text"," "],
+  ["identifier","accumulator"],
+  ["text"," "],
+  ["keyword.operator","*="],
+  ["text"," "],
+  ["identifier","accumulator"]
+],[
+   "start",
+  ["text","\t\t"],
+  ["keyword","case"],
+  ["keyword.operator",":"],
+  ["text"," "],
+  ["comment","// Ignore everything else"]
+],[
+   "start",
+  ["text","\t\t"],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["text","\t"],
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["text","\t"],
+  ["identifier","fmt"],
+  ["punctuation.operator","."],
+  ["support.function","printf"],
+  ["paren.lparen","("],
+  ["string","\"The program \\\"%s\\\" calculates the value %d\\n\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["identifier","program"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["identifier","accumulator"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+]]

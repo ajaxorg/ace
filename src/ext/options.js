@@ -1,4 +1,26 @@
+/**
+ * ## Settings Menu extension
+ *
+ * Provides a settings panel for configuring editor options through an interactive UI.
+ * Creates a tabular interface with grouped configuration options including themes, modes, keybindings,
+ * font settings, display preferences, and advanced editor behaviors. Supports dynamic option rendering
+ * with various input types (dropdowns, checkboxes, number inputs, button bars) and real-time updates.
+ *
+ * **Usage:**
+ * ```javascript
+ * var OptionPanel = require("ace/ext/settings_menu").OptionPanel;
+ * var panel = new OptionPanel(editor);
+ * panel.render();
+ * ```
+ *
+ * @module
+ */
+
+
 "use strict";
+/**
+ * @typedef {import("../editor").Editor} Editor
+ */
 
 require("./menu_tools/overlay_page");
 
@@ -21,6 +43,12 @@ var modes = modelist.modes.map(function(x){
 });
 
 
+/**
+ * Configuration object for grouping various options/settings into categorized groups.
+ *
+ * Organizes settings into two main categories: "Main" and "More",
+ * each containing settings for configurable features of an application.
+ */
 var optionGroups = {
     Main: {
         Mode: {
@@ -203,15 +231,20 @@ var optionGroups = {
         },
         "Keyboard Accessibility Mode": {
             path: "enableKeyboardAccessibility"
-        },
-        "Gutter tooltip follows mouse": {
-            path: "tooltipFollowsMouse",
-            defaultValue: true
         }
     }
 };
 
+/**
+ * Option panel component for configuring settings or options.
+ * The panel is designed to integrate with an editor and render various UI controls based on provided configuration.
+ */
 class OptionPanel {
+    /**
+     * 
+     * @param {Editor} editor
+     * @param {HTMLElement} [element]
+     */
     constructor(editor, element) {
         this.editor = editor;
         this.container = element || document.createElement("div");
@@ -225,7 +258,8 @@ class OptionPanel {
         if (config.More)
             oop.mixin(optionGroups.More, config.More);
     }
-    
+
+  
     render() {
         this.container.innerHTML = "";
         buildDom(["table", {role: "presentation", id: "controls"}, 
@@ -253,7 +287,11 @@ class OptionPanel {
             return this.renderOption(item.label, item);
         }, this);
     }
-    
+
+    /**
+     * @param {string} key
+     * @param {Object} option
+     */
     renderOptionControl(key, option) {
         var self = this;
         if (Array.isArray(option)) {
@@ -261,6 +299,7 @@ class OptionPanel {
                 return self.renderOptionControl(key, x);
             });
         }
+        /**@type {any}*/
         var control;
         
         var value = self.getOption(option);
@@ -339,7 +378,12 @@ class OptionPanel {
         }
         return control;
     }
-    
+
+    /**
+     * 
+     * @param key
+     * @param option
+     */
     renderOption(key, option) {
         if (option.path && !option.onchange && !this.editor.$options[option.path])
             return;
@@ -352,7 +396,11 @@ class OptionPanel {
             ["label", {for: safeKey, id: safeId}, key]
         ], ["td", control]];
     }
-    
+
+    /**
+     * @param {string | number | Object} option
+     * @param {string | number | boolean} value
+     */
     setOption(option, value) {
         if (typeof option == "string")
             option = this.options[option];
@@ -378,3 +426,4 @@ class OptionPanel {
 oop.implement(OptionPanel.prototype, EventEmitter);
 
 exports.OptionPanel = OptionPanel;
+exports.optionGroups = optionGroups;

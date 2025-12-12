@@ -78,6 +78,7 @@ var initializers = {
                 this.selectionStart = this.selectionEnd = value.length;
             }
         });
+        this.oncut = this.oncopy = this.onpaste = null;
         this.select = function() {
             this.setSelectionRange(0, Infinity);
         };
@@ -135,7 +136,7 @@ function Context2d(w, h) {
     this.getImageData = function(sx, sy, sw, sh) {
         var data = new Uint8ClampedArray(sw * sh * 4);
         var newIndex = 0;
-        for (var i = sx; i < sw + sy; i++) {
+        for (var i = sx; i < sw + sx; i++) {
             for (var j = sy; j < sh + sy; j++) {
                 var index = (this.width * j + i) * 4;
                 for (var k = 0; k < 4; k++)
@@ -399,7 +400,7 @@ function Node(name) {
         if (position === "afterbegin") this.insertBefore(element, this.firstChild);
         if (position === "beforebegin") this.parentElement.insertBefore(element, this);
     };
-    this.getBoundingClientRect = function(v) {
+    this.getBoundingClientRect = function(fromChild) {
         var width = 0;
         var height = 0;
         var top = 0;
@@ -411,7 +412,7 @@ function Node(name) {
         else if (!document.contains(this) || this.style.display == "none") {
             width = height = 0;
         }
-        else if (this.style.width == "auto" || this.localName == "span") {
+        else if (this.style.width == "auto" || this.localName == "span" || /^inline/.test(this.style.display)) {
             width = this.textContent.length * CHAR_WIDTH;
             var node = this;
             while (node) {
@@ -424,8 +425,18 @@ function Node(name) {
             if (!height) height = CHAR_HEIGHT;
         }
         else if (this.parentNode) {
-            var rect = this.parentNode.getBoundingClientRect();
-            
+            var isFixed = this.style.position == "fixed" 
+                || this.style.positionHint == "fixed"
+                || this.getAttribute("role") == "tooltip";
+            // prevent recursion by passing -1
+            var rect = fromChild == -1 || isFixed
+                ? {top: 0, left: 0, width: 0, height: 0, right: 0, bottom: 0} 
+                : this.parentNode.getBoundingClientRect();
+            if (isFixed) {
+                rect.height = rect.bottom = WINDOW_HEIGHT;
+                rect.width = rect.right = WINDOW_WIDTH;
+            }
+
             left = parseCssLength(this.style.left || "0", rect.width);
             top = parseCssLength(this.style.top || "0", rect.height);
             var right = parseCssLength(this.style.right || "0", rect.width);
@@ -444,9 +455,26 @@ function Node(name) {
                 height = this.style.heightHint;
             else
                 height = rect.height - top - bottom;
+
+            var maxWidth = this.style.maxWidth && parseCssLength(this.style.maxWidth, rect.width);
+            var maxHeight = this.style.maxHeight && parseCssLength(this.style.maxHeight, rect.height);
+            
+            if (maxWidth >= 0) width = Math.min(width, maxWidth);
+            if (maxHeight >= 0) height = Math.min(height, maxHeight);
+            
+            if (!height && !this.style.height && this.firstChild && this.firstChild.getBoundingClientRect && !fromChild) {
+                height = this.firstChild.getBoundingClientRect(-1).height;
+            }
+
+            if (!this.style.left &&  this.style.right) {
+                left = rect.width - right - width;
+            }
+            if (!this.style.top &&  this.style.bottom) {
+                top = rect.height - bottom - height;
+            }
             
             top += rect.top;
-            bottom += rect.bottom;
+            left += rect.left;
         }
         return {top: top, left: left, width: width, height: height, right: left + width, bottom: top + height};
     };
@@ -488,36 +516,62 @@ function Node(name) {
             throw new Error("attempting to add empty listener");
         }
         if (!this._events) this._events = {};
-        if (!this._events[name]) this._events[name] = [];
-        var i = this._events[name].indexOf(listener);
+        var id = capturing ? "__c__:" + name : name;
+        if (!this._events[id]) this._events[id] = [];
+        var i = this._events[id].indexOf(listener);
         if (i == -1)
-            this._events[name][capturing ? "unshift" : "push"](listener);
+            this._events[id].push(listener);
     };
-    this.removeEventListener = function(name, listener) {
+    this.removeEventListener = function(name, listener, capturing) {
         if (!this._events) return;
-        if (!this._events[name]) return;
-        var i = this._events[name].indexOf(listener);
+        var id = capturing ? "__c__:" + name : name;
+        if (!this._events[id]) return;
+        var i = this._events[id].indexOf(listener);
         if (i !== -1)
-            this._events[name].splice(i, 1);
+            this._events[id].splice(i, 1);
     };
     this.createEvent = function(v) {
         return new Event();
     };
     this.dispatchEvent = function(e) {
+        var parents = [];
+        var node = this.parentNode;
+        
+        while (node) {
+            parents.push(node);
+            node = node.parentNode;
+        }
+        parents.push(window);
+        
         if (!e.target) e.target = this;
         if (!e.timeStamp) e.timeStamp = Date.now();
-        e.currentTarget = this;
-        var events = this._events && this._events[e.type];
-        events && events.slice().forEach(function(listener) {
-            listener.call(this, e);
-        }, this);
-        if (this["on" + e.type])
-            this["on" + e.type](e);
-        if (!e.bubbles || e.stopped) return;
-        if (this.parentNode)
-            this.parentNode.dispatchEvent(e);
-        else if (this != window)
-            window.dispatchEvent(e);
+        
+        e.eventPhase = 1;
+        for (var i = parents.length - 1; i >= 0; i--) {
+            var node = parents[i];
+            if (call(node, true)) return;
+        }
+        e.eventPhase = 2;
+        if (call(this, true)) return;
+        if (call(this, false)) return;
+        e.eventPhase = 3;
+        for (var i = 0; i < parents.length; i++) {
+            var node = parents[i];
+            if (call(node, false)) return;
+        }
+        
+        function call(node, capturing) {
+            e.currentTarget = node;
+            if (!capturing && node["on" + e.type])
+                node["on" + e.type](e);
+            var id = capturing ? "__c__:" + e.type : e.type;
+            var events = node._events && node._events[id];
+            events && events.slice().forEach(function(listener) {
+                listener.call(node, e);
+            });
+            if (e.stopped) return true;
+            if (!capturing && !e.bubbles) return true;
+        }        
     };
     this.contains = function(node) {
         while (node) {
@@ -528,9 +582,10 @@ function Node(name) {
     this.focus = function() {
         if (document.activeElement == this)
             return;
-        if (document.activeElement)
-            document.activeElement.dispatchEvent({type: "blur"});
+        var oldFocused = document.activeElement;
         document.activeElement = this;
+        if (oldFocused)
+            oldFocused.dispatchEvent({type: "blur"});
         this.dispatchEvent({type: "focus"});
     };
     this.blur = function() {
@@ -742,6 +797,9 @@ function TextNode(value) {
     this.__defineGetter__("nodeValue", function() {
         return this.data;
     });
+    this.__defineGetter__("textContent", function() {
+        return this.data;
+    });
 }).call(TextNode.prototype);
 
 var window = {
@@ -875,7 +933,11 @@ exports.load = function() {
     loaded = true;
 };
 
-exports.loadInBrowser = function(global) {
+exports.loadInBrowser = function(global, $setSize) {
+    if ($setSize) {
+        WINDOW_HEIGHT = global.innerHeight;
+        WINDOW_WIDTH = global.innerWidth;
+    }
     delete global.ResizeObserver;
     global.__origRoot__ = global.document.documentElement;
     global.__origBody__ = global.document.body;

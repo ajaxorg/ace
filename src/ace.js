@@ -1,9 +1,8 @@
 /**
  * The main class required to set up an Ace instance in the browser.
  *
- * @class Ace
+ * @namespace Ace
  **/
-
 "use strict";
 "include loader_build";
 
@@ -29,9 +28,9 @@ exports.config = require("./config");
 
 /**
  * Embeds the Ace editor into the DOM, at the element provided by `el`.
- * @param {String | Element} el Either the id of an element, or the element itself
- * @param {Object } options Options for the editor
- *
+ * @param {String | HTMLElement & {env?: any, value?: any} | null} [el] Either the id of an element, or the element itself
+ * @param {Partial<import("../ace-internal").Ace.EditorOptions> } [options] Options for the editor
+ * @returns {Editor}
  **/
 exports.edit = function(el, options) {
     if (typeof el == "string") {
@@ -56,7 +55,6 @@ exports.edit = function(el, options) {
     }
 
     var doc = exports.createEditSession(value);
-
     var editor = new Editor(new Renderer(el), doc, options);
 
     var env = {
@@ -74,9 +72,9 @@ exports.edit = function(el, options) {
 
 /**
  * Creates a new [[EditSession]], and returns the associated [[Document]].
- * @param {Document | String} text {:textParam}
- * @param {TextMode} mode {:modeParam}
- *
+ * @param {import('./document').Document | String} text {:textParam}
+ * @param {import("../ace-internal").Ace.SyntaxMode} [mode] {:modeParam}
+ * @returns {EditSession}
  **/
 exports.createEditSession = function(text, mode) {
     var doc = new EditSession(text, mode);
@@ -88,4 +86,5 @@ exports.Editor = Editor;
 exports.EditSession = EditSession;
 exports.UndoManager = UndoManager;
 exports.VirtualRenderer = Renderer;
-exports.version = exports.config.version;
+var version = exports.config.version;
+exports.version = version;

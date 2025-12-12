@@ -151,6 +151,7 @@ module.exports = {
                     assert.ok(editor.renderer.$resizeObserver);
                     if (window.ResizeObserver === mockObserver.$create)
                         window.ResizeObserver = undefined;
+                    editor.destroy();
                     done();
                 }, 15);
             }, 15);

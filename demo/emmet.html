@@ -23,12 +23,12 @@
 <pre id="editor"></pre>
 
 <!-- load emmet code and snippets compiled for browser -->
-<script src="https://cloud9ide.github.io/emmet-core/emmet.js"></script>
+<!-- <script src="..."></script> -->
 
 <script src="kitchen-sink/require.js"></script>
 <script>
 // setup paths
-require.config({paths: { "ace" : "../lib/ace"}});
+require.config({paths: { "ace" : "../src"}});
 // load ace and extensions
 require(["ace/ace", "ace/ext/emmet"], function(ace) {
     var editor = ace.edit("editor");

@@ -54,12 +54,15 @@ exports.isOldIE = exports.isIE && exports.isIE < 9;
 exports.isGecko = exports.isMozilla = ua.match(/ Gecko\/\d+/);
 
 // Is this Opera 
-exports.isOpera = typeof opera == "object" && Object.prototype.toString.call(window.opera) == "[object Opera]";
+// @ts-expect-error
+exports.isOpera = typeof opera == "object" && Object.prototype.toString.call(window["opera"]) == "[object Opera]";
 
 // Is the user using a browser that identifies itself as WebKit 
 exports.isWebKit = parseFloat(ua.split("WebKit/")[1]) || undefined;
 
 exports.isChrome = parseFloat(ua.split(" Chrome/")[1]) || undefined;
+
+exports.isSafari = parseFloat(ua.split(" Safari/")[1]) && !exports.isChrome || undefined;
 
 exports.isEdge = parseFloat(ua.split(" Edge/")[1]) || undefined;
 
@@ -69,7 +72,7 @@ exports.isAndroid = ua.indexOf("Android") >= 0;
 
 exports.isChromeOS = ua.indexOf(" CrOS ") >= 0;
 
-exports.isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
+exports.isIOS = /iPad|iPhone|iPod/.test(ua) && !window["MSStream"];
 
 if (exports.isIOS) exports.isMac = true;
 

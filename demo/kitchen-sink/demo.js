@@ -33,6 +33,7 @@ var Range = require("ace/range").Range;
 
 var whitespace = require("ace/ext/whitespace");
 
+var createDiffView = require("ace/ext/diff").createDiffView;
 
 
 var doclist = require("./doclist");
@@ -81,10 +82,23 @@ var {HoverTooltip} = require("ace/tooltip");
 var MarkerGroup = require("ace/marker_group").MarkerGroup;
 var docTooltip = new HoverTooltip();
 function loadLanguageProvider(editor) {
-    require([
-        "https://mkslanc.github.io/ace-linters/build/ace-linters.js"
-    ], function(m) {
-        var languageProvider = m.LanguageProvider.fromCdn("https://mkslanc.github.io/ace-linters/build", {
+    function loadScript(cb) {
+        if (define.amd) {
+            require([
+                "https://mkslanc.github.io/ace-linters/build/ace-linters.js"
+            ], function(m) {
+                cb(m.LanguageProvider);
+            });
+        } else {
+            net.loadScript([
+                "https://mkslanc.github.io/ace-linters/build/ace-linters.js"
+            ], function() {
+                cb(window.LanguageProvider);
+            });
+        }
+    }
+    loadScript(function(LanguageProvider) {
+        var languageProvider = LanguageProvider.fromCdn("https://mkslanc.github.io/ace-linters/build", {
             functionality: {
                 hover: true,
                 completion: {
@@ -98,95 +112,6 @@ function loadLanguageProvider(editor) {
         });
         window.languageProvider = languageProvider;
         languageProvider.registerEditor(editor);
-        // hack to replace tooltip implementation from ace-linters with hover tooltip
-        // can be removed when ace-linters is updated to use MarkerGroup and HoverTooltip
-        if (languageProvider.$descriptionTooltip)
-            editor.off("mousemove", languageProvider.$descriptionTooltip.onMouseMove);
-        languageProvider.$messageController.$worker.addEventListener("message", function(e) {
-            var id = e.data.sessionId.split(".")[0];
-            var session = languageProvider.$getSessionLanguageProvider({id: id})?.session;
-            if (e.data.type == 6) {
-                // annotation message
-                e.stopPropagation();
-                if (session) {
-                    showAnnotations(session, e.data.value);
-                }
-            } else if (e.data.type == 14) {
-                // highlights message
-                if (session) showOccurrenceMarkers(session, e.data.value);
-            }
-        }, true);
-        function showOccurrenceMarkers(session, positions) {
-            if (!session.state.occurrenceMarkers) {
-                session.state.occurrenceMarkers = new MarkerGroup(session);
-            }
-            session.state.occurrenceMarkers.setMarkers(positions.map(function(el) {
-                var r = el.range;
-                return {
-                    range: new Range(r.start.line, r.start.character, r.end.line, r.end.character),
-                    // https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#documentHighlightKind
-                    className: el.kind == 2
-                        ? "language_highlight_read"
-                        : el.kind == 3
-                        ? "language_highlight_write"
-                        : "language_highlight_text"
-                };
-            }));
-        }
-        function showAnnotations(session, diagnostics) {
-            session.clearAnnotations();
-            let annotations = diagnostics.map((el) => {
-                return {
-                    row: el.range.start.line,
-                    column: el.range.start.character,
-                    text: el.message,
-                    type: el.severity === 1 ? "error" : el.severity === 2 ? "warning" : "info"
-                };
-            });
-            if (annotations && annotations.length > 0) {
-                session.setAnnotations(annotations);
-            }
-            
-            if (!session.state) session.state = {}
-            if (!session.state.diagnosticMarkers) {
-                session.state.diagnosticMarkers = new MarkerGroup(session);
-            }
-            session.state.diagnosticMarkers.setMarkers(diagnostics.map(function(el) {
-                var r = el.range;
-                return {
-                    range: new Range(r.start.line, r.start.character, r.end.line, r.end.character),
-                    tooltipText: el.message,
-                    className:  "language_highlight_error"
-                };
-            }));
-        };
-        
-        docTooltip.setDataProvider(function(e, editor) {
-            let session = editor.session;
-            let docPos = e.getDocumentPosition();
-
-            languageProvider.doHover(session, docPos, function(hover) {
-                var errorMarker = session.state?.diagnosticMarkers.getMarkerAtPosition(docPos);
-
-                if (!errorMarker && !hover?.content) return;
-
-                var range = hover?.range || errorMarker?.range;
-                range = range ? Range.fromPoints(range.start, range.end) : session.getWordRange(docPos.row, docPos.column);
-                var hoverNode = hover && dom.buildDom(["div", {}]);
-                if (hoverNode) {
-                    // todo render markdown using ace markdown mode
-                    hoverNode.innerHTML = languageProvider.getTooltipText(hover);
-                };
-                
-                var domNode = dom.buildDom(["div", {},
-                    errorMarker && ["div", {}, errorMarker.tooltipText.trim()],
-                    hoverNode
-                ]);
-                docTooltip.showForRange(editor, range, domNode, e);
-            });
-        });
-        
-        docTooltip.addToEditor(editor)
     });
 }
 
@@ -399,6 +324,7 @@ window.onresize = onResize;
 onResize();
 
 /*********** options panel ***************************/
+var diffView;
 doclist.history = doclist.docs.map(function(doc) {
     return doc.name;
 });
@@ -431,15 +357,24 @@ doclist.pickDocument = function(name) {
         whitespace.detectIndentation(session);
         optionsPanel.render();
         env.editor.focus();
+        if (diffView) {
+            diffView.detach()
+            diffView = createDiffView({
+                inline: "b",
+                editorB: editor,
+                valueA: editor.getValue()
+            });
+        }
     });
 };
 
 
 
 var OptionPanel = require("ace/ext/options").OptionPanel;
-var optionsPanel = new OptionPanel(env.editor);
+var optionsPanel = env.optionsPanel = new OptionPanel(env.editor);
 
 var originalAutocompleteCommand = null;
+
 
 optionsPanel.add({
     Main: {
@@ -482,6 +417,31 @@ optionsPanel.add({
                     ? "Below"
                     : "Beside";
             }
+        },
+        "Show diffs": {
+            position: 0,
+            type: "buttonBar",
+            path: "diffView",
+            values: ["None", "Inline"],
+            onchange: function (value) {
+                    if (value === "Inline" && !diffView) {
+                        diffView = createDiffView({
+                            inline: "b",
+                            editorB: editor,
+                            valueA: editor.getValue()
+                        });
+                    }
+                    else if (value === "None") {
+                        if (diffView) {
+                            diffView.detach();
+                            diffView = null;
+                        }
+                    }
+            },
+            getValue: function() {
+                return !diffView ? "None"
+                    : "Inline";
+            }
         }
     },
     More: {
@@ -512,7 +472,8 @@ optionsPanel.add({
                 } else if (!value) {
                     var autocomplete = Autocomplete.for(editor);
                     autocomplete.destroy();
-                    Autocomplete.startCommand.exec = originalAutocompleteCommand;
+                    if (originalAutocompleteCommand)
+                        Autocomplete.startCommand.exec = originalAutocompleteCommand;
                     originalAutocompleteCommand = null;
                 }
             },
@@ -532,7 +493,6 @@ optionsPanel.add({
 var optionsPanelContainer = document.getElementById("optionsPanel");
 optionsPanel.render();
 optionsPanelContainer.insertBefore(optionsPanel.container, optionsPanelContainer.firstChild);
-optionsPanel.container.style.width = "80%";
 optionsPanel.on("setOption", function(e) {
     util.saveOption(e.name, e.value);
 });
@@ -541,6 +501,16 @@ function updateUIEditorOptions() {
     optionsPanel.editor = env.editor;
     optionsPanel.render();
 }
+
+env.editor.on("changeSession", function() {
+    for (var i in env.editor.session.$options) {
+        if (i == "mode") continue;
+        var value = util.getOption(i);
+        if (value != undefined) {
+            env.editor.setOption(i, value);
+        }
+    }
+});
 
 optionsPanel.setOption("doc", util.getOption("doc") || "JavaScript");
 for (var i in optionsPanel.options) {
@@ -564,13 +534,6 @@ function synchroniseScrolling() {
 
 var StatusBar = require("ace/ext/statusbar").StatusBar;
 new StatusBar(env.editor, cmdLine.container);
-
-
-var Emmet = require("ace/ext/emmet");
-net.loadScript("https://cloud9ide.github.io/emmet-core/emmet.js", function() {
-    Emmet.setCore(window.emmet);
-    env.editor.setOption("enableEmmet", true);
-});
 
 require("ace/placeholder").PlaceHolder;
 
@@ -634,9 +597,14 @@ function openTestDialog(animateHeight) {
         window.dialogEditor.destroy();
     var editor = ace.edit(null, {
         value: "test editor", 
-        mode: "ace/mode/javascript"
+        mode: "ace/mode/javascript",
+        enableBasicAutocompletion: true
     });
     window.dialogEditor = editor;
+
+    editor.completer.parentNode = editor.container;
+    if (window.languageProvider)
+        window.languageProvider.registerEditor(editor);
 
     var dialog = dom.buildDom(["div", {
         style: "transition: all 1s; position: fixed; z-index: 100000;"

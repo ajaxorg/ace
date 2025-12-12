@@ -1,0 +1,591 @@
+[[
+   "doc-start",
+  [
+    "comment.doc",
+    "/**"
+  ],
+  [
+    "comment.doc.body",
+    "***************************************************************************"
+  ]
+],[
+   "doc-start",
+  [
+    "comment.doc.body",
+    " *"
+  ]
+],[
+   "doc-start",
+  [
+    "comment.doc.body",
+    " *   SAC demo program"
+  ]
+],[
+   "doc-start",
+  [
+    "comment.doc.body",
+    " *"
+  ]
+],[
+   "doc-start",
+  [
+    "comment.doc.body",
+    " *   This SAC demo program implements 2-dimensional relaxation on double"
+  ]
+],[
+   "doc-start",
+  [
+    "comment.doc.body",
+    " *   precision floating point numbers applying a 4-point stencil and fixed"
+  ]
+],[
+   "doc-start",
+  [
+    "comment.doc.body",
+    " *   boundary conditions."
+  ]
+],[
+   "doc-start",
+  [
+    "comment.doc.body",
+    " *"
+  ]
+],[
+   "doc-start",
+  [
+    "comment.doc.body",
+    " *   The vertical (SIZE1) and the horizontal (SIZE2) array size as well as"
+  ]
+],[
+   "doc-start",
+  [
+    "comment.doc.body",
+    " *   the number of iterations to be performed (LOOP) may be set at compile"
+  ]
+],[
+   "doc-start",
+  [
+    "comment.doc.body",
+    " *   time."
+  ]
+],[
+   "doc-start",
+  [
+    "comment.doc.body",
+    " *"
+  ]
+],[
+   "start",
+  [
+    "comment.doc.body",
+    " ****************************************************************************"
+  ],
+  [
+    "comment.doc",
+    "*/"
+  ]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","#ifndef"],
+  ["text"," "],
+  ["identifier","LOOP"]
+],[
+   "start",
+  ["keyword","#define"],
+  ["constant.other"," LOOP 100"]
+],[
+   "start",
+  ["keyword","#endif"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","#ifndef"],
+  ["text"," "],
+  ["identifier","SIZE1"]
+],[
+   "start",
+  ["keyword","#define"],
+  ["constant.other"," SIZE1 1000"]
+],[
+   "start",
+  ["keyword","#endif"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","#ifndef"],
+  ["text"," "],
+  ["identifier","SIZE2"]
+],[
+   "start",
+  ["keyword","#define"],
+  ["constant.other"," SIZE2 1000"]
+],[
+   "start",
+  ["keyword","#endif"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword.control","use"],
+  ["text"," "],
+  ["identifier","Array"],
+  ["punctuation.operator",":"],
+  ["text"," "],
+  ["keyword.control","all"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["keyword.control","use"],
+  ["text"," "],
+  ["identifier","StdIO"],
+  ["punctuation.operator",":"],
+  ["text"," "],
+  ["keyword.control","all"],
+  ["punctuation.operator",";"]
+],[
+   "start"
+],[
+   "start",
+  ["storage.modifier","inline"]
+],[
+   "start",
+  ["storage.type","double"],
+  ["paren.lparen","["],
+  ["keyword.operator","+"],
+  ["paren.rparen","]"],
+  ["text"," "],
+  ["identifier","onestep"],
+  ["paren.lparen","("],
+  ["storage.type","double"],
+  ["paren.lparen","["],
+  ["keyword.operator","+"],
+  ["paren.rparen","]"],
+  ["text"," "],
+  ["identifier","B"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","  "],
+  ["identifier","A"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["keyword.control","with"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","        "],
+  ["paren.lparen","("],
+  ["text"," "],
+  ["punctuation.operator","."],
+  ["text"," "],
+  ["keyword.operator","<"],
+  ["text"," "],
+  ["identifier","x"],
+  ["text"," "],
+  ["keyword.operator","<"],
+  ["text"," "],
+  ["punctuation.operator","."],
+  ["text"," "],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["punctuation.operator",":"],
+  ["text"," "],
+  ["constant.numeric","0.25"],
+  ["keyword.operator","*"],
+  ["paren.lparen","("],
+  ["identifier","B"],
+  ["paren.lparen","["],
+  ["identifier","x"],
+  ["keyword.operator","+"],
+  ["paren.lparen","["],
+  ["constant.numeric","1"],
+  ["punctuation.operator",","],
+  ["constant.numeric","0"],
+  ["paren.rparen","]]"]
+],[
+   "start",
+  ["text","                              "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["identifier","B"],
+  ["paren.lparen","["],
+  ["identifier","x"],
+  ["keyword.operator","-"],
+  ["paren.lparen","["],
+  ["constant.numeric","1"],
+  ["punctuation.operator",","],
+  ["constant.numeric","0"],
+  ["paren.rparen","]]"]
+],[
+   "start",
+  ["text","                              "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["identifier","B"],
+  ["paren.lparen","["],
+  ["identifier","x"],
+  ["keyword.operator","+"],
+  ["paren.lparen","["],
+  ["constant.numeric","0"],
+  ["punctuation.operator",","],
+  ["constant.numeric","1"],
+  ["paren.rparen","]]"]
+],[
+   "start",
+  ["text","                              "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["identifier","B"],
+  ["paren.lparen","["],
+  ["identifier","x"],
+  ["keyword.operator","-"],
+  ["paren.lparen","["],
+  ["constant.numeric","0"],
+  ["punctuation.operator",","],
+  ["constant.numeric","1"],
+  ["paren.rparen","]])"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["text","      "],
+  ["paren.rparen","}"],
+  ["text"," "],
+  ["punctuation.operator",":"],
+  ["text"," "],
+  ["support.function","modarray"],
+  ["paren.lparen","("],
+  ["text"," "],
+  ["identifier","B"],
+  ["text"," "],
+  ["paren.rparen",")"],
+  ["punctuation.operator",";"]
+],[
+   "start"
+],[
+   "start",
+  ["text","  "],
+  ["keyword.control","return"],
+  ["paren.lparen","("],
+  ["identifier","A"],
+  ["paren.rparen",")"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["storage.modifier","inline"]
+],[
+   "start",
+  ["storage.type","double"],
+  ["paren.lparen","["],
+  ["keyword.operator","+"],
+  ["paren.rparen","]"],
+  ["text"," "],
+  ["identifier","relax"],
+  ["paren.lparen","("],
+  ["storage.type","double"],
+  ["paren.lparen","["],
+  ["keyword.operator","+"],
+  ["paren.rparen","]"],
+  ["text"," "],
+  ["identifier","A"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["storage.type","int"],
+  ["text"," "],
+  ["identifier","steps"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword.control","for"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["identifier","k"],
+  ["keyword.operator","="],
+  ["constant.numeric","0"],
+  ["punctuation.operator",";"],
+  ["text"," "],
+  ["identifier","k"],
+  ["keyword.operator","<"],
+  ["identifier","steps"],
+  ["punctuation.operator",";"],
+  ["text"," "],
+  ["identifier","k"],
+  ["keyword.operator","++"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","A"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["identifier","onestep"],
+  ["paren.lparen","("],
+  ["identifier","A"],
+  ["paren.rparen",")"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["text","  "],
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["text","  "],
+  ["keyword.control","return"],
+  ["paren.lparen","("],
+  ["identifier","A"],
+  ["paren.rparen",")"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start",
+  ["storage.type","int"],
+  ["text"," "],
+  ["identifier","main"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","  "],
+  ["identifier","A"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["keyword.control","with"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","        "],
+  ["paren.lparen","("],
+  ["text"," "],
+  ["punctuation.operator","."],
+  ["text"," "],
+  ["keyword.operator","<="],
+  ["text"," "],
+  ["identifier","x"],
+  ["text"," "],
+  ["keyword.operator","<="],
+  ["text"," "],
+  ["punctuation.operator","."],
+  ["text"," "],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["punctuation.operator",":"],
+  ["text"," "],
+  ["constant.numeric","0."],
+  ["text","0"],
+  ["identifier","d"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["text","      "],
+  ["paren.rparen","}"],
+  ["text"," "],
+  ["punctuation.operator",":"],
+  ["text"," "],
+  ["support.function","genarray"],
+  ["paren.lparen","("],
+  ["text"," "],
+  ["paren.lparen","["],
+  ["identifier","SIZE1"],
+  ["punctuation.operator",","],
+  ["identifier","SIZE2"],
+  ["paren.rparen","]"],
+  ["text"," "],
+  ["paren.rparen",")"],
+  ["punctuation.operator",";"]
+],[
+   "start"
+],[
+   "start",
+  ["text","  "],
+  ["identifier","A"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["support.function","modarray"],
+  ["paren.lparen","("],
+  ["identifier","A"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["paren.lparen","["],
+  ["constant.numeric","0"],
+  ["punctuation.operator",","],
+  ["constant.numeric","1"],
+  ["paren.rparen","]"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["constant.numeric","500."],
+  ["text","0"],
+  ["identifier","d"],
+  ["paren.rparen",")"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["text","  "],
+  ["identifier","A"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["identifier","relax"],
+  ["paren.lparen","("],
+  ["text"," "],
+  ["identifier","A"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["identifier","LOOP"],
+  ["paren.rparen",")"],
+  ["punctuation.operator",";"]
+],[
+   "start"
+],[
+   "start",
+  ["text","  "],
+  ["identifier","z"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["keyword.control","with"],
+  ["text"," "],
+  ["paren.lparen","{"]
+],[
+   "start",
+  ["text","        "],
+  ["paren.lparen","("],
+  ["text"," "],
+  ["constant.numeric","0"],
+  ["keyword.operator","*"],
+  ["identifier","shape"],
+  ["paren.lparen","("],
+  ["identifier","A"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["keyword.operator","<="],
+  ["text"," "],
+  ["identifier","x"],
+  ["text"," "],
+  ["keyword.operator","<"],
+  ["text"," "],
+  ["identifier","shape"],
+  ["paren.lparen","("],
+  ["identifier","A"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["punctuation.operator",":"],
+  ["text"," "],
+  ["identifier","A"],
+  ["paren.lparen","["],
+  ["identifier","x"],
+  ["paren.rparen","]"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["text","      "],
+  ["paren.rparen","}"],
+  ["text"," "],
+  ["punctuation.operator",":"],
+  ["text"," "],
+  ["support.function","fold"],
+  ["paren.lparen","("],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["punctuation.operator",","],
+  ["text"," 0"],
+  ["identifier","d"],
+  ["text"," "],
+  ["paren.rparen",")"],
+  ["punctuation.operator",";"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","#if"],
+  ["text"," "],
+  ["constant.numeric","0"]
+],[
+   "start",
+  ["text","  "],
+  ["identifier","printf"],
+  ["paren.lparen","("],
+  ["string.start","\""],
+  ["constant.language.escape","%.10g\\n"],
+  ["string.end","\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["identifier","z"],
+  ["paren.rparen",")"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword.control","return"],
+  ["paren.lparen","("],
+  ["constant.numeric","0"],
+  ["paren.rparen",")"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["keyword","#else"]
+],[
+   "start",
+  ["text","  "],
+  ["identifier","print"],
+  ["paren.lparen","("],
+  ["text"," "],
+  ["identifier","z"],
+  ["paren.rparen",")"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword.control","return"],
+  ["paren.lparen","("],
+  ["text"," "],
+  ["constant.numeric","0"],
+  ["paren.rparen",")"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["keyword","#endif"]
+],[
+   "start",
+  ["paren.rparen","}"]
+],[
+   "start"
+],[
+   "start"
+],[
+   "start"
+]]

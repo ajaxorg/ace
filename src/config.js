@@ -7,6 +7,7 @@ var AppConfig = require("./lib/app_config").AppConfig;
 
 module.exports = exports = new AppConfig();
 
+/** @type {import("../ace-internal").Ace.ConfigOptions} */
 var options = {
     packaged: false,
     workerPath: null,
@@ -20,12 +21,22 @@ var options = {
     useStrictCSP: null
 };
 
+/**
+ * @template {keyof import("../ace-internal").Ace.ConfigOptions} K
+ * @param {K} key - The key of the config option to retrieve.
+ * @returns {import("../ace-internal").Ace.ConfigOptions[K]} - The value of the config option.
+ */
 exports.get = function(key) {
     if (!options.hasOwnProperty(key))
         throw new Error("Unknown config key: " + key);
     return options[key];
 };
 
+/**
+ * @template {keyof import("../ace-internal").Ace.ConfigOptions} K
+ * @param {K} key
+ * @param {import("../ace-internal").Ace.ConfigOptions[K]} value
+ */
 exports.set = function(key, value) {
     if (options.hasOwnProperty(key))
         options[key] = value;
@@ -34,14 +45,21 @@ exports.set = function(key, value) {
     if (key == "useStrictCSP")
         dom.useStrictCSP(value);
 };
-
+/**
+ * @return {import("../ace-internal").Ace.ConfigOptions}
+ */
 exports.all = function() {
     return lang.copyObject(options);
 };
 
 exports.$modes = {};
 
-// module loading
+/**
+ * module loading
+ * @param {string} name
+ * @param {string} [component]
+ * @returns {string}
+ */
 exports.moduleUrl = function(name, component) {
     if (options.$moduleUrls[name])
         return options.$moduleUrls[name];
@@ -69,7 +87,11 @@ exports.moduleUrl = function(name, component) {
         path += "/";
     return path + component + sep + base + this.get("suffix");
 };
-
+/**
+ * @param {string} name
+ * @param {string} subst
+ * @returns {string}
+ */
 exports.setModuleUrl = function(name, subst) {
     return options.$moduleUrls[name] = subst;
 };
@@ -82,6 +104,8 @@ var loader = function(moduleName, cb) {
     console.error("loader is not configured");
 };
 var customLoader;
+
+/** @arg {(name: string, callback: (error: any, module: any) => void) => void} cb */
 exports.setLoader = function(cb) {
     customLoader = cb;
 };
@@ -89,13 +113,18 @@ exports.setLoader = function(cb) {
 exports.dynamicModules = Object.create(null);
 exports.$loading = {};
 exports.$loaded = {};
-exports.loadModule = function(moduleName, onLoad) {
-    var loadedModule, moduleType;
-    if (Array.isArray(moduleName)) {
-        moduleType = moduleName[0];
-        moduleName = moduleName[1];
+/**
+ * @param {string | [string, string]} moduleId
+ * @param {(module: any) => void} onLoad
+ */
+exports.loadModule = function(moduleId, onLoad) {
+    var loadedModule;
+    if (Array.isArray(moduleId)) {
+        var moduleType = moduleId[0];
+        var moduleName = moduleId[1];
+    } else if (typeof moduleId == "string") {
+        var moduleName = moduleId;
     }
-
     var load = function (module) {
         // require(moduleName) can return empty object if called after require([moduleName], callback)
         if (module && !exports.$loading[moduleName]) return onLoad && onLoad(module);
@@ -143,7 +172,7 @@ exports.loadModule = function(moduleName, onLoad) {
 };
 
 exports.$require = function(moduleName) {
-    if (typeof module.require == "function") {
+    if (typeof module["require"] == "function") {
         var req = "require";
         return module[req](moduleName);
     }
@@ -168,6 +197,6 @@ var reportErrorIfPathIsNotConfigured = function() {
     }
 };
 
-exports.version = "1.28.0";
+exports.version = "1.43.5";
 
 

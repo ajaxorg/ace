@@ -10,8 +10,6 @@ var editor = new Editor(new MockRenderer());
 if (!fs.existsSync)
     fs.existsSync = path.existsSync;
 
-require("amd-loader");
-
 var cwd = __dirname + "/";
 var root = path.normalize(cwd + Array(4).join("../"));
 
@@ -331,6 +329,7 @@ function checkBacktracking(tokenizer) {
             var regex = rule.regex;
             if (regex && typeof regex != "string") regex = regex.source;
             if (!regex) return;
+            regex = "(" + regex + ")|";
             var result = require("recheck").checkSync(regex, "gmi", {
                 checker: "automaton",
                 timeout: 100000

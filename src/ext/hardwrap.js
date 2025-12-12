@@ -1,6 +1,30 @@
+/**
+ * ## Text hard wrapping extension for automatic line breaking and text formatting.
+ *
+ * Provides intelligent line wrapping functionality that breaks long lines at configurable column limits while
+ * preserving indentation and optionally merging short adjacent lines. Supports both automatic wrapping during text
+ * input and manual formatting of selected text ranges.
+ *
+ * **Enable:** `editor.setOption("hardWrap", true)`
+ * or configure it during editor initialization in the options object.
+ * @module
+ */
+
 "use strict";
 
 var Range = require("../range").Range;
+
+/**
+ * Wraps lines at specified column limits and optionally merges short adjacent lines.
+ *
+ * Processes text within the specified row range, breaking lines that exceed the maximum column
+ * width at appropriate word boundaries while preserving indentation. When merge is enabled,
+ * combines short consecutive lines that can fit within the column limit. Automatically adjusts
+ * the end row when new line breaks are inserted to ensure all affected content is processed.
+ *
+ * @param {import("../editor").Editor} editor - The editor instance containing the text to wrap
+ * @param {import("../../ace-internal").Ace.HardWrapOptions} options - Configuration options for wrapping behavior
+ */
 
 function hardWrap(editor, options) {
     var max = options.column || editor.getOption("printMarginColumn");
@@ -41,6 +65,11 @@ function hardWrap(editor, options) {
         row++;
     }
 
+    /**
+     * @param {string} line
+     * @param {number} max
+     * @param {number} min
+     */
     function findSpace(line, max, min) {
         if (line.length < max)
             return;

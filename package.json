@@ -1,8 +1,8 @@
 {
     "name": "ace-code",
     "description": "Ajax.org Code Editor is a full featured source code highlighting editor that powers the Cloud9 IDE",
-    "version": "1.28.0",
-    "homepage": "http://github.com/ajaxorg/ace",
+    "version": "1.43.5",
+    "homepage": "https://github.com/ajaxorg/ace",
     "engines": {
         "node": ">= 0.6.0"
     },
@@ -11,7 +11,7 @@
     "typings": "ace.d.ts",
     "repository": {
         "type": "git",
-        "url": "http://github.com/ajaxorg/ace.git"
+        "url": "https://github.com/ajaxorg/ace.git"
     },
     "devDependencies": {
         "amd-loader": "~0.0.4",
@@ -21,7 +21,7 @@
         "eslint": "^8.20.0",
         "istanbul": "^0.4.5",
         "standard-version": "^9.3.2",
-        "typescript": "^4.7.4"
+        "typescript": "5.9.2"
     },
     "mappings": {
         "ace": "."
@@ -32,7 +32,7 @@
         "styles",
         "ace.d.ts",
         "ace-modes.d.ts",
-        "ace-extensions.d.ts",
+        "types",
         "esm-resolver.js",
         "translations",
         "!**/*_test.js",
@@ -42,15 +42,30 @@
         "start": "node static.js",
         "test": "node src/test/all.js",
         "cover": "istanbul cover src/test/all.js",
-        "lint": "eslint \"src/**/*.js\"",
-        "fix": "eslint --fix \"src/**/*.js\"",
+        "lint": "eslint \"src/**/*.js\" \"*.js\"",
+        "fix": "npm run lint -- --fix",
+        "typecheck": "tsc -p tsconfig.json",
+        "update-types": "node ./tool/ace_declaration_generator.js",
         "changelog": "standard-version",
-        "prepack": "node tool/esm_resolver_generator.js && node Makefile.dryice.js css --target build-styles && rm -rf styles && mv build-styles/css styles"
+        "prepack": "node tool/esm_resolver_generator.js && node tool/ace_declaration_generator.js && node Makefile.dryice.js css --target build-styles && rm -rf styles && mv build-styles/css styles"
     },
     "standard-version": {
         "skip": {
             "commit": true,
             "tag": true
         }
+    },
+    "prettier": {
+        "printWidth": 120,
+        "tabWidth": 4,
+        "useTabs": false,
+        "semi": true,
+        "singleQuote": false,
+        "trailingComma": "none",
+        "bracketSpacing": false,
+        "arrowParens": "always",
+        "requirePragma": false,
+        "insertPragma": false,
+        "proseWrap": "preserve"
     }
 }

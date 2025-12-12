@@ -1,7 +1,3 @@
-if (typeof process !== "undefined") {
-    require("amd-loader");
-}
-
 "use strict";
 
 require("../test/mockdom");

@@ -1,27 +1,29 @@
 "use strict";
-var comparePoints = function(p1, p2) {
-    return p1.row - p2.row || p1.column - p2.column;
-};
+
+/**
+ * @typedef {import("./edit_session").EditSession} EditSession
+ * @typedef {import("../ace-internal").Ace.IRange} IRange
+ * @typedef {import("../ace-internal").Ace.Point} Point
+ */
 /**
  * This object is used in various places to indicate a region within the editor. To better visualize how this works, imagine a rectangle. Each quadrant of the rectangle is analogous to a range, as ranges contain a starting row and starting column, and an ending row, and ending column.
- * @class Range
  **/
-
 class Range {
     /**
      * Creates a new `Range` object with the given starting and ending rows and columns.
-     * @param {Number} startRow The starting row
-     * @param {Number} startColumn The starting column
-     * @param {Number} endRow The ending row
-     * @param {Number} endColumn The ending column
+     * @param {Number} [startRow] The starting row
+     * @param {Number} [startColumn] The starting column
+     * @param {Number} [endRow] The ending row
+     * @param {Number} [endColumn] The ending column
      * @constructor
      **/
     constructor(startRow, startColumn, endRow, endColumn) {
+        /**@type {Point}*/
         this.start = {
             row: startRow,
             column: startColumn
         };
-
+        /**@type {Point}*/
         this.end = {
             row: endRow,
             column: endColumn
@@ -30,7 +32,7 @@ class Range {
     
     /**
      * Returns `true` if and only if the starting row and column, and ending row and column, are equivalent to those given by `range`.
-     * @param {Range} range A range to check against
+     * @param {IRange} range A range to check against
      * @return {Boolean}
      **/
     isEqual(range) {
@@ -70,7 +72,7 @@ class Range {
 
     /**
      * Compares `this` range (A) with another range (B).
-     * @param {Range} range A range to compare with
+     * @param {IRange} range A range to compare with
      * @related [[Range.compare]]
      * @returns {Number} This method returns one of the following numbers:
      * * `-2`: (B) is in front of (A), and doesn't intersect with (A)
@@ -111,7 +113,7 @@ class Range {
 
     /**
      * Compares the row and column of `p` with the starting and ending [[Point]]'s of the calling range (by calling [[Range.compare]]).
-     * @param {Ace.Point} p A point to compare with
+     * @param {Point} p A point to compare with
      * @related [[Range.compare]]
      * @returns {Number}
      **/
@@ -121,7 +123,7 @@ class Range {
 
     /**
      * Checks the start and end [[Point]]'s of `range` and compares them to the calling range. Returns `true` if the `range` is contained within the caller's range.
-     * @param {Range} range A range to compare with
+     * @param {IRange} range A range to compare with
      * @returns {Boolean}
      * @related [[Range.comparePoint]]
      **/
@@ -131,7 +133,7 @@ class Range {
 
     /**
      * Returns `true` if passed in `range` intersects with the one calling this method.
-     * @param {Range} range A range to compare with
+     * @param {IRange} range A range to compare with
      * @returns {Boolean}
      **/
     intersects(range) {
@@ -161,8 +163,8 @@ class Range {
 
     /**
      * Sets the starting row and column for the range.
-     * @param {Number|Ace.Point} row A row to set
-     * @param {Number} column A column to set
+     * @param {Number|Point} row A row to set
+     * @param {Number} [column] A column to set
      *
      **/
     setStart(row, column) {
@@ -177,8 +179,8 @@ class Range {
 
     /**
      * Sets the starting row and column for the range.
-     * @param {Number|Ace.Point} row A row to set
-     * @param {Number} column A column to set
+     * @param {Number|Point} row A row to set
+     * @param {Number} [column] A column to set
      *
      **/
     setEnd(row, column) {
@@ -449,12 +451,11 @@ class Range {
 Range.fromPoints = function(start, end) {
     return new Range(start.row, start.column, end.row, end.column);
 };
-Range.comparePoints = comparePoints;
 
 /**
  * Compares `p1` and `p2` [[Point]]'s, useful for sorting
- * @param {Ace.Point} p1
- * @param {Ace.Point} p2
+ * @param {Point} p1
+ * @param {Point} p2
  * @returns {Number}
  */
 Range.comparePoints = function(p1, p2) {

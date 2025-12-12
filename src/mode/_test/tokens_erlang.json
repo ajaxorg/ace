@@ -163,4 +163,34 @@
   ["variable.other.erlang","Sum"],
   ["punctuation.definition.parameters.end.erlang",")"],
   ["punctuation.terminator.function.erlang","."]
+],[
+   "start",
+  ["text","  "]
+],[
+   "start",
+  ["text","  "],
+  ["punctuation.definition.comment.erlang","% Print the data using the pretty print specifier"]
+],[
+   "start",
+  ["text","  "],
+  ["entity.name.type.class.module.erlang","io"],
+  ["punctuation.separator.module-function.erlang",":"],
+  ["entity.name.function.erlang","format"],
+  ["punctuation.definition.parameters.begin.erlang","("],
+  ["punctuation.definition.string.begin.erlang","\""],
+  ["string.quoted.double.erlang","Here is the data: "],
+  ["punctuation.definition.erlang","~"],
+  ["constant.other.erlang","p"],
+  ["punctuation.definition.erlang","~"],
+  ["constant.other.erlang","n"],
+  ["punctuation.definition.string.end.erlang","\""],
+  ["punctuation.separator.parameters.erlang",","],
+  ["text"," "],
+  ["punctuation.definition.list.begin.erlang","["],
+  ["variable.other.erlang","Data"],
+  ["punctuation.definition.list.end.erlang","]"],
+  ["punctuation.definition.parameters.end.erlang",")"],
+  ["text","."]
+],[
+   "start"
 ]]

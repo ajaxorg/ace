@@ -1,5 +1,7 @@
 "use strict";
-
+/**
+ * @typedef {import("../editor").Editor} Editor
+ */
 var event = require("../lib/event");
 var useragent = require("../lib/useragent");
 var DefaultHandlers = require("./default_handlers").DefaultHandlers;
@@ -10,7 +12,15 @@ var addTouchListeners = require("./touch_handler").addTouchListeners;
 var config = require("../config");
 
 class MouseHandler {
+    /**
+     * @param {Editor} editor
+     */
     constructor(editor) {
+        /** @type {boolean} */this.$dragDelay;
+        /** @type {boolean} */this.$dragEnabled;
+        /** @type {boolean} */this.$mouseMoved;
+        /** @type {MouseEvent} */this.mouseEvent;
+        /** @type {number} */this.$focusTimeout;
         var _self = this;
         this.editor = editor;
 
@@ -70,7 +80,9 @@ class MouseHandler {
             } else {
                 renderer.setCursorStyle("");
             }
-        }, editor);
+
+        }, //@ts-expect-error TODO: seems mistyping - should be boolean
+            editor);
     }
 
     onMouseEvent(name, e) {
@@ -87,19 +99,30 @@ class MouseHandler {
         this.editor._emit(name, new MouseEvent(e, this.editor));
     }
 
+    /**
+     * @param {any} name
+     * @param {{ wheelX: number; wheelY: number; }} e
+     */
     onMouseWheel(name, e) {
         var mouseEvent = new MouseEvent(e, this.editor);
+        //@ts-expect-error TODO: couldn't find this property init in the ace codebase
         mouseEvent.speed = this.$scrollSpeed * 2;
         mouseEvent.wheelX = e.wheelX;
         mouseEvent.wheelY = e.wheelY;
 
         this.editor._emit(name, mouseEvent);
     }
-    
+
     setState(state) {
         this.state = state;
     }
 
+    /**
+     *
+     * @param {MouseEvent} ev
+     * @param [mouseMoveHandler]
+     * @return {ReturnType<typeof setTimeout> | undefined}
+     */
     captureMouse(ev, mouseMoveHandler) {
         this.x = ev.x;
         this.y = ev.y;
@@ -112,6 +135,8 @@ class MouseHandler {
         renderer.$isMousePressed = true;
 
         var self = this;
+        var continueCapture = true;
+
         var onMouseMove = function(e) {
             if (!e) return;
             // if editor is loaded inside iframe, and mouseup event is outside
@@ -128,8 +153,8 @@ class MouseHandler {
 
         var onCaptureEnd = function(e) {
             editor.off("beforeEndOperation", onOperationEnd);
-            clearInterval(timerId);
-            if (editor.session) onCaptureInterval();
+            continueCapture = false;
+            if (editor.session) onCaptureUpdate();
             self[self.state + "End"] && self[self.state + "End"](e);
             self.state = "";
             self.isMousePressed = renderer.$isMousePressed = false;
@@ -140,9 +165,16 @@ class MouseHandler {
             editor.endOperation();
         };
 
-        var onCaptureInterval = function() {
+        var onCaptureUpdate = function() {
             self[self.state] && self[self.state]();
             self.$mouseMoved = false;
+        };
+
+        var onCaptureInterval = function() {
+            if (continueCapture) {
+                onCaptureUpdate();
+                event.nextFrame(onCaptureInterval);
+            }
         };
 
         if (useragent.isOldIE && ev.domEvent.type == "dblclick") {
@@ -151,7 +183,7 @@ class MouseHandler {
 
         var onOperationEnd = function(e) {
             if (!self.releaseMouse) return;
-            // some touchpads fire mouseup event after a slight delay, 
+            // some touchpads fire mouseup event after a slight delay,
             // which can cause problems if user presses a keyboard shortcut quickly
             if (editor.curOp.command.name && editor.curOp.selectionChanged) {
                 self[self.state + "End"] && self[self.state + "End"]();
@@ -165,7 +197,8 @@ class MouseHandler {
 
         self.$onCaptureMouseMove = onMouseMove;
         self.releaseMouse = event.capture(this.editor.container, onMouseMove, onCaptureEnd);
-        var timerId = setInterval(onCaptureInterval, 20);
+
+        onCaptureInterval();
     }
     cancelContextMenu() {
         var stop = function(e) {
@@ -180,6 +213,7 @@ class MouseHandler {
     }
     destroy() {
         if (this.releaseMouse) this.releaseMouse();
+        if (this.$tooltip) this.$tooltip.destroy();
     }
 }
 
@@ -190,7 +224,6 @@ config.defineOptions(MouseHandler.prototype, "mouseHandler", {
     dragDelay: {initialValue: (useragent.isMac ? 150 : 0)},
     dragEnabled: {initialValue: true},
     focusTimeout: {initialValue: 0},
-    tooltipFollowsMouse: {initialValue: true}
 });
 
 

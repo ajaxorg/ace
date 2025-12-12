@@ -9,18 +9,30 @@
   ["meta.tag.punctuation.tag-open.xml","<"],
   ["meta.tag.tag-name.xml","div"],
   ["meta.tag.punctuation.tag-close.xml",">"],
-  ["string"," "]
+  [
+    "string.xml",
+    " "
+  ]
 ],[
    ["jsx",1],
-  ["string","    Typescript + "],
+  [
+    "string.xml",
+    "    Typescript + "
+  ],
   ["meta.tag.punctuation.tag-open.xml","<"],
   ["meta.tag.tag-name.xml","b"],
   ["meta.tag.punctuation.tag-close.xml",">"],
-  ["string"," JSX "],
+  [
+    "string.xml",
+    " JSX "
+  ],
   ["meta.tag.punctuation.end-tag-open.xml","</"],
   ["meta.tag.tag-name.xml","b"],
   ["meta.tag.punctuation.tag-close.xml",">"],
-  ["string"," "]
+  [
+    "string.xml",
+    " "
+  ]
 ],[
    "start",
   ["meta.tag.punctuation.end-tag-open.xml","</"],

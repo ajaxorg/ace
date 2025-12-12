@@ -1,5 +1,4 @@
 "use strict";
-
 var Renderer = require("../virtual_renderer").VirtualRenderer;
 var Editor = require("../editor").Editor;
 var Range = require("../range").Range;
@@ -7,16 +6,26 @@ var event = require("../lib/event");
 var lang = require("../lib/lang");
 var dom = require("../lib/dom");
 var nls = require("../config").nls;
+var userAgent = require("./../lib/useragent");
 
-var getAriaId = function(index) {
+var getAriaId = function (index) {
     return `suggest-aria-id:${index}`;
 };
 
+// Safari requires different ARIA A11Y attributes compared to other browsers
+var popupAriaRole = userAgent.isSafari ? "menu" : "listbox";
+var optionAriaRole = userAgent.isSafari ? "menuitem" : "option";
+var ariaActiveState = userAgent.isSafari ? "aria-current" : "aria-selected";
+
+/**
+ *
+ * @param {HTMLElement} [el]
+ * @return {Editor}
+ */
 var $singleLineEditor = function(el) {
     var renderer = new Renderer(el);
 
     renderer.$maxLines = 4;
-
     var editor = new Editor(renderer);
 
     editor.setHighlightActiveLine(false);
@@ -36,11 +45,13 @@ var $singleLineEditor = function(el) {
 class AcePopup {
     /**
      * Creates and renders single line editor in popup window. If `parentNode` param is isset, then attaching it to this element.
-     * @param {Element} parentNode
+     * @param {Element} [parentNode]
      */
     constructor(parentNode) {
         var el = dom.createElement("div");
-        var popup = new $singleLineEditor(el);
+        /**@type {AcePopup}*/
+        // @ts-ignore
+        var popup = $singleLineEditor(el);
 
         if (parentNode) {
             parentNode.appendChild(el);
@@ -50,8 +61,9 @@ class AcePopup {
         popup.renderer.setStyle("ace_autocomplete");
 
         // Set aria attributes for the popup
-        popup.renderer.$textLayer.element.setAttribute("role", "listbox");
-        popup.renderer.$textLayer.element.setAttribute("aria-label", nls("Autocomplete suggestions"));
+        popup.renderer.$textLayer.element.setAttribute("role", popupAriaRole);
+        popup.renderer.$textLayer.element.setAttribute("aria-roledescription", nls("autocomplete.popup.aria-roledescription", "Autocomplete suggestions"));
+        popup.renderer.$textLayer.element.setAttribute("aria-label", nls("autocomplete.popup.aria-label", "Autocomplete suggestions"));
         popup.renderer.textarea.setAttribute("aria-hidden", "true");
 
         popup.setOption("displayIndentGuides", false);
@@ -63,13 +75,14 @@ class AcePopup {
         popup.$isFocused = true;
 
         popup.renderer.$cursorLayer.restartTimer = noop;
-        popup.renderer.$cursorLayer.element.style.opacity = 0;
+        popup.renderer.$cursorLayer.element.style.opacity = "0";
 
         popup.renderer.$maxLines = 8;
         popup.renderer.$keepTextAreaAtCursor = false;
 
         popup.setHighlightActiveLine(false);
         // set default highlight color
+        // @ts-ignore
         popup.session.highlight("");
         popup.session.$searchHighlight.clazz = "ace_highlight-marker";
 
@@ -81,10 +94,10 @@ class AcePopup {
         });
 
         var lastMouseEvent;
-        var hoverMarker = new Range(-1,0,-1,Infinity);
-        var selectionMarker = new Range(-1,0,-1,Infinity);
+        var hoverMarker = new Range(-1, 0, -1, Infinity);
+        var selectionMarker = new Range(-1, 0, -1, Infinity);
         selectionMarker.id = popup.session.addMarker(selectionMarker, "ace_active-line", "fullLine");
-        popup.setSelectOnHover = function(val) {
+        popup.setSelectOnHover = function (val) {
             if (!val) {
                 hoverMarker.id = popup.session.addMarker(hoverMarker, "ace_line-hover", "fullLine");
             } else if (hoverMarker.id) {
@@ -103,6 +116,7 @@ class AcePopup {
             }
             lastMouseEvent = e;
             lastMouseEvent.scrollTop = popup.renderer.scrollTop;
+            popup.isMouseOver = true;
             var row = lastMouseEvent.getDocumentPosition().row;
             if (hoverMarker.start.row != row) {
                 if (!hoverMarker.id)
@@ -119,28 +133,50 @@ class AcePopup {
                 setHoverMarker(row, true);
             }
         });
-        popup.renderer.on("afterRender", function() {
+        // set aria attributes on all visible elements of the popup
+        popup.renderer.on("afterRender", function () {
+            var t = popup.renderer.$textLayer;
+            for (var row = t.config.firstRow, l = t.config.lastRow; row <= l; row++) {
+                const popupRowElement = /** @type {HTMLElement|null} */(t.element.childNodes[row - t.config.firstRow]);
+
+                popupRowElement.setAttribute("role", optionAriaRole);
+                popupRowElement.setAttribute("aria-roledescription", nls("autocomplete.popup.item.aria-roledescription", "item"));
+                popupRowElement.setAttribute("aria-setsize", popup.data.length);
+                popupRowElement.setAttribute("aria-describedby", "doc-tooltip");
+                popupRowElement.setAttribute("aria-posinset", row + 1);
+
+                const rowData = popup.getData(row);
+                if (rowData) {
+                    const ariaLabel = `${rowData.caption || rowData.value}${rowData.meta ? `, ${rowData.meta}` : ''}`;
+                    popupRowElement.setAttribute("aria-label", ariaLabel);
+                }
+
+                const highlightedSpans = popupRowElement.querySelectorAll(".ace_completion-highlight");
+                highlightedSpans.forEach(span => {
+                    span.setAttribute("role", "mark");
+                });
+            }
+        });
+        popup.renderer.on("afterRender", function () {
             var row = popup.getRow();
             var t = popup.renderer.$textLayer;
-            var selected = t.element.childNodes[row - t.config.firstRow];
+            var selected = /** @type {HTMLElement|null} */(t.element.childNodes[row - t.config.firstRow]);
             var el = document.activeElement; // Active element is textarea of main editor
-            if (selected !== t.selectedNode && t.selectedNode) {
-                dom.removeCssClass(t.selectedNode, "ace_selected");
-                el.removeAttribute("aria-activedescendant");
-                t.selectedNode.removeAttribute("id");
+            if (selected !== popup.selectedNode && popup.selectedNode) {
+                dom.removeCssClass(popup.selectedNode, "ace_selected");
+                popup.selectedNode.removeAttribute(ariaActiveState);
+                popup.selectedNode.removeAttribute("id");
             }
-            t.selectedNode = selected;
+            el.removeAttribute("aria-activedescendant");
+
+            popup.selectedNode = selected;
             if (selected) {
-                dom.addCssClass(selected, "ace_selected");
                 var ariaId = getAriaId(row);
+                dom.addCssClass(selected, "ace_selected");
                 selected.id = ariaId;
                 t.element.setAttribute("aria-activedescendant", ariaId);
                 el.setAttribute("aria-activedescendant", ariaId);
-                selected.setAttribute("role", "option");
-                selected.setAttribute("aria-label", popup.getData(row).value);
-                selected.setAttribute("aria-setsize", popup.data.length);
-                selected.setAttribute("aria-posinset", row+1);
-                selected.setAttribute("aria-describedby", "doc-tooltip");
+                selected.setAttribute(ariaActiveState, "true");
             }
         });
         var hideHoverMarker = function() { setHoverMarker(-1); };
@@ -156,7 +192,10 @@ class AcePopup {
             return hoverMarker.start.row;
         };
 
-        event.addListener(popup.container, "mouseout", hideHoverMarker);
+        event.addListener(popup.container, "mouseout", function() {
+            popup.isMouseOver = false;
+            hideHoverMarker();
+        });
         popup.on("hide", hideHoverMarker);
         popup.on("changeSelection", hideHoverMarker);
 
@@ -172,6 +211,7 @@ class AcePopup {
 
         var bgTokenizer = popup.session.bgTokenizer;
         bgTokenizer.$tokenizeRow = function(row) {
+            /**@type {import("../../ace-internal").Ace.Completion &{name?, className?, matchMask?, message?}}*/
             var data = popup.data[row];
             var tokens = [];
             if (!data)
@@ -224,6 +264,7 @@ class AcePopup {
         popup.isTopdown = false;
         popup.autoSelect = true;
         popup.filterText = "";
+        popup.isMouseOver = false;
 
         popup.data = [];
         popup.setData = function(list, filterText) {
@@ -272,7 +313,7 @@ class AcePopup {
          * If the anchor is not specified it tries to align to bottom and right as much as possible.
          * If the popup does not have enough space to be rendered with the given anchors, it returns false without rendering the popup.
          * The forceShow flag can be used to render the popup in these cases, which slides the popup so it entirely fits on the screen.
-         * @param {Point} pos
+         * @param {{top: number, left: number}} pos
          * @param {number} lineHeight
          * @param {"top" | "bottom" | undefined} anchor
          * @param {boolean} forceShow
@@ -287,8 +328,9 @@ class AcePopup {
             }
 
             var el = this.container;
-            var screenHeight = window.innerHeight;
-            var screenWidth = window.innerWidth;
+            var scrollBarSize = this.renderer.scrollBar.width || 10;
+            var screenHeight = window.innerHeight - scrollBarSize;
+            var screenWidth = window.innerWidth - scrollBarSize;
             var renderer = this.renderer;
             // var maxLines = Math.min(renderer.$maxLines, this.session.getLength());
             var maxH = renderer.$maxLines * lineHeight * 1.4;
@@ -331,7 +373,7 @@ class AcePopup {
 
             if (anchor === "top") {
                 el.style.top = "";
-                el.style.bottom = (screenHeight - dims.bottom) + "px";
+                el.style.bottom = (screenHeight + scrollBarSize - dims.bottom) + "px";
                 popup.isTopdown = false;
             } else {
                 el.style.top = dims.top + "px";
@@ -347,6 +389,7 @@ class AcePopup {
 
             el.style.left = left + "px";
             el.style.right = "";
+            dom.$fixPositionBug(el);
 
             if (!popup.isOpen) {
                 popup.isOpen = true;
@@ -356,6 +399,7 @@ class AcePopup {
 
             popup.anchorPos = pos;
             popup.anchor = anchor;
+            
 
             return true;
         };
@@ -388,7 +432,7 @@ class AcePopup {
 
         return popup;
     }
-} 
+}
 
 dom.importCssString(`
 .ace_editor.ace_autocomplete .ace_marker-layer .ace_active-line {
@@ -414,6 +458,7 @@ dom.importCssString(`
     margin-left: 0.9em;
 }
 .ace_completion-message {
+    margin-left: 0.9em;
     color: blue;
 }
 .ace_editor.ace_autocomplete .ace_completion-highlight{
@@ -453,11 +498,33 @@ dom.importCssString(`
 .ace_autocomplete .ace_line .ace_ {
     flex: 0 1 auto;
     overflow: hidden;
-    white-space: nowrap;
     text-overflow: ellipsis;
 }
 .ace_autocomplete .ace_completion-spacer {
     flex: 1;
+}
+.ace_autocomplete.ace_loading:after  {
+    content: "";
+    position: absolute;
+    top: 0px;
+    height: 2px;
+    width: 8%;
+    background: blue;
+    z-index: 100;
+    animation: ace_progress 3s infinite linear;
+    animation-delay: 300ms;
+    transform: translateX(-100%) scaleX(1);
+}
+@keyframes ace_progress {
+    0% { transform: translateX(-100%) scaleX(1) }
+    50% { transform: translateX(625%) scaleX(2) } 
+    100% { transform: translateX(1500%) scaleX(3) } 
+}
+@media (prefers-reduced-motion) {
+    .ace_autocomplete.ace_loading:after {
+        transform: translateX(625%) scaleX(2);
+        animation: none;
+     }
 }
 `, "autocompletion.css", false);
 

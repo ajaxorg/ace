@@ -1,4 +1,8 @@
-// commands to enter multiselect mode
+
+/**
+ * commands to enter multiselect mode
+ * @type {import("../../ace-internal").Ace.Command[]}
+ */
 exports.defaultCommands = [{
     name: "addCursorAbove",
     description: "Add cursor above",
@@ -86,7 +90,10 @@ exports.defaultCommands = [{
     readOnly: true
 }];
 
-// commands active only in multiselect mode
+/**
+ * commands active only in multiselect mode
+ * @type {import("../../ace-internal").Ace.Command[]}
+ */
 exports.multiSelectCommands = [{
     name: "singleSelection",
     description: "Single selection",

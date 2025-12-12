@@ -1,5 +1,8 @@
 "use strict";
-
+/**
+ * @typedef {import("./edit_session").EditSession} EditSession
+ * @typedef {import("../ace-internal").Ace.SearchOptions} SearchOptions
+ */
 var lang = require("./lib/lang");
 var oop = require("./lib/oop");
 var Range = require("./range").Range;
@@ -8,36 +11,15 @@ var Range = require("./range").Range;
  * A class designed to handle all sorts of text searches within a [[Document `Document`]].
  **/
 class Search {
-    /**
-     * Creates a new `Search` object. The following search options are available:
-     * @typedef SearchOptions
-     * 
-     * @property {string|RegExp} [needle] - The string or regular expression you're looking for
-     * @property {boolean} [backwards] - Whether to search backwards from where cursor currently is
-     * @property {boolean} [wrap] - Whether to wrap the search back to the beginning when it hits the end
-     * @property {boolean} [caseSensitive] - Whether the search ought to be case-sensitive
-     * @property {boolean} [wholeWord] - Whether the search matches only on whole words
-     * @property {Range|null} [range] - The [[Range]] to search within. Set this to `null` for the whole document
-     * @property {boolean} [regExp] - Whether the search is a regular expression or not
-     * @property {Range|Position} [start] - The starting [[Range]] or cursor position to begin the search
-     * @property {boolean} [skipCurrent] - Whether or not to include the current line in the search
-     * @property {boolean} [$isMultiLine] - true, if needle has \n or \r\n
-     * @property {boolean} [preserveCase]
-     * @property {boolean} [preventScroll]
-     * @property {boolean} [$supportsUnicodeFlag] - internal property, determine if browser supports unicode flag
-     * @property {any} [re]
-     **/
-    
+
     constructor() {
-        /** 
-         * @type {SearchOptions}
-         */
+        /**@type {Partial<SearchOptions>}*/
         this.$options = {};
     }
-    
+
     /**
      * Sets the search options via the `options` parameter.
-     * @param {SearchOptions} options An object containing all the new search properties
+     * @param {Partial<SearchOptions>} options An object containing all the new search properties
      * @returns {Search}
      * @chainable
     **/
@@ -48,15 +30,15 @@ class Search {
 
     /**
      * [Returns an object containing all the search options.]{: #Search.getOptions}
-     * @returns {SearchOptions}
+     * @returns {Partial<SearchOptions>}
     **/
     getOptions() {
         return lang.copyObject(this.$options);
     }
-    
+
     /**
      * Sets the search options via the `options` parameter.
-     * @param {SearchOptions} options object containing all the search propertie
+     * @param {Partial<SearchOptions>} options object containing all the search propertie
      * @related Search.set
     **/
     setOptions(options) {
@@ -66,7 +48,7 @@ class Search {
     /**
      * Searches for `options.needle`. If found, this method returns the [[Range `Range`]] where the text first occurs. If `options.backwards` is `true`, the search goes backwards in the session.
      * @param {EditSession} session The session to search with
-     * @returns {Range|boolean}
+     * @returns {Range | null | false}
      **/
     find(session) {
         var options = this.$options;
@@ -77,13 +59,13 @@ class Search {
         var firstRange = null;
         iterator.forEach(function(sr, sc, er, ec) {
             firstRange = new Range(sr, sc, er, ec);
-            if (sc == ec && options.start && options.start.start
-                && options.skipCurrent != false && firstRange.isEqual(options.start)
+            if (sc == ec && options.start && /**@type{Range}*/(options.start).start
+                && options.skipCurrent != false && firstRange.isEqual(/**@type{Range}*/(options.start))
             ) {
                 firstRange = null;
                 return false;
             }
-            
+
             return true;
         });
 
@@ -116,12 +98,12 @@ class Search {
                 for (var j = 0; j < len; j++)
                     if (lines[row + j].search(re[j]) == -1)
                         continue outer;
-                
+
                 var startLine = lines[row];
                 var line = lines[row + len - 1];
                 var startIndex = startLine.length - startLine.match(re[0])[0].length;
                 var endIndex = line.match(re[len - 1])[0].length;
-                
+
                 if (prevRange && prevRange.end.row === row &&
                     prevRange.end.column > startIndex
                 ) {
@@ -134,11 +116,23 @@ class Search {
                     row = row + len - 2;
             }
         } else {
-            for (var i = 0; i < lines.length; i++) {
-                var matches = lang.getMatchOffsets(lines[i], re);
-                for (var j = 0; j < matches.length; j++) {
-                    var match = matches[j];
-                    ranges.push(new Range(i, match.offset, i, match.offset + match.length));
+            for (var matches, i = 0; i < lines.length; i++) {
+                if (this.$isMultilineSearch(options)) {
+                    var lng = lines.length - 1;
+                    matches = this.$multiLineForward(session, re, i, lng);
+                    if (matches) {
+                        var end_row = matches.endRow <= lng ? matches.endRow - 1 : lng;
+                        if (end_row > i)
+                            i = end_row;
+                        ranges.push(new Range(matches.startRow, matches.startCol, matches.endRow, matches.endCol));
+                    }
+                }
+                else {
+                    matches = lang.getMatchOffsets(lines[i], re);
+                    for (var j = 0; j < matches.length; j++) {
+                        var match = matches[j];
+                        ranges.push(new Range(i, match.offset, i, match.offset + match.length));
+                    }
                 }
             }
         }
@@ -153,7 +147,7 @@ class Search {
             var endRow = range.end.row - range.start.row;
             while (i < j && ranges[j].end.column > endColumn && ranges[j].end.row == endRow)
                 j--;
-            
+
             ranges = ranges.slice(i, j + 1);
             for (i = 0, j = ranges.length; i < j; i++) {
                 ranges[i].start.row += range.start.row;
@@ -164,14 +158,87 @@ class Search {
         return ranges;
     }
 
+    parseReplaceString(replaceString) {
+        var CharCode = {
+            DollarSign: 36,
+            Ampersand: 38,
+            Digit0: 48,
+            Digit1: 49,
+            Digit9: 57,
+            Backslash: 92,
+            n: 110,
+            t: 116
+        };
+
+        var replacement = '';
+        for (var i = 0, len = replaceString.length; i < len; i++) {
+            var chCode = replaceString.charCodeAt(i);
+            if (chCode === CharCode.Backslash) {
+                // move to next char
+                i++;
+                if (i >= len) {
+                    // string ends with a \
+                    replacement += "\\";
+                    break;
+                }
+                var nextChCode = replaceString.charCodeAt(i);
+                switch (nextChCode) {
+                    case CharCode.Backslash:
+                        // \\ => inserts a "\"
+                        replacement += "\\";
+                        break;
+                    case CharCode.n:
+                        // \n => inserts a LF
+                        replacement += "\n";
+                        break;
+                    case CharCode.t:
+                        // \t => inserts a TAB
+                        replacement += "\t";
+                        break;
+                }
+                continue;
+            }
+
+            if (chCode === CharCode.DollarSign) {
+                // move to next char
+                i++;
+                if (i >= len) {
+                    // string ends with a $
+                    replacement += "$";
+                    break;
+                }
+                const nextChCode = replaceString.charCodeAt(i);
+                if (nextChCode === CharCode.DollarSign) {
+                    // $$ => inserts a "$"
+                    replacement += "$$";
+                    continue;
+                }
+                if (nextChCode === CharCode.Digit0 || nextChCode === CharCode.Ampersand) {
+                    // replace $0 to $&, making it compatible with JavaScript
+                    // $0 and $& => inserts the matched substring.
+                    replacement += "$&";
+                    continue;
+                }
+                if (CharCode.Digit1 <= nextChCode && nextChCode <= CharCode.Digit9) {
+                    // $n
+                    replacement += "$" + replaceString[i];
+                    continue;
+                }
+            }
+
+            replacement += replaceString[i];
+        }
+        return replacement || replaceString;
+    }
+
     /**
      * Searches for `options.needle` in `input`, and, if found, replaces it with `replacement`.
      * @param {String} input The text to search in
-     * @param {String} replacement The replacing text
+     * @param {any} replacement The replacing text
      * + (String): If `options.regExp` is `true`, this function returns `input` with the replacement already made. Otherwise, this function just returns `replacement`.<br/>
      * If `options.needle` was not found, this function returns `null`.
      *
-     * 
+     *
      * @returns {String}
     **/
     replace(input, replacement) {
@@ -184,10 +251,22 @@ class Search {
         if (!re)
             return;
 
+        /**
+         * Convert all line ending variations to Unix-style = \n
+         * Windows (\r\n), MacOS Classic (\r), and Unix (\n)
+         */
+        var mtSearch = this.$isMultilineSearch(options);
+        if (mtSearch)
+            input = input.replace(/\r\n|\r|\n/g, "\n");
+
         var match = re.exec(input);
-        if (!match || match[0].length != input.length)
+        if (!match || (!mtSearch && match[0].length != input.length))
             return null;
-        
+
+        replacement = options.regExp
+            ? this.parseReplaceString(replacement)
+            : replacement.replace(/\$/g, "$$$$");
+
         replacement = input.replace(re, replacement);
         if (options.preserveCase) {
             replacement = replacement.split("");
@@ -200,52 +279,47 @@ class Search {
             }
             replacement = replacement.join("");
         }
-        
+
         return replacement;
     }
 
     /**
-     * 
-     * @param {SearchOptions} options
-     * @param $disableFakeMultiline
+     *
+     * @param {Partial<SearchOptions>} options
+     * @param {boolean} [$disableFakeMultiline]
      * @return {RegExp|boolean|*[]|*}
      */
     $assembleRegExp(options, $disableFakeMultiline) {
         if (options.needle instanceof RegExp)
             return options.re = options.needle;
-        
+
         var needle = options.needle;
 
         if (!options.needle)
             return options.re = false;
-        
-        if (options.$supportsUnicodeFlag === undefined) {
-            options.$supportsUnicodeFlag = lang.supportsUnicodeFlag();
-        }
+
+        if (!options.regExp)
+            needle = lang.escapeRegExp(needle);
+
+        var modifier = options.caseSensitive ? "gm" : "gmi";
 
         try {
             new RegExp(needle, "u");
+            options.$supportsUnicodeFlag = true;
+            modifier += "u";
         } catch (e) {
             options.$supportsUnicodeFlag = false; //left for backward compatibility with previous versions for cases like /ab\{2}/gu
         }
-        
-        if (!options.regExp)
-            needle = lang.escapeRegExp(needle);
 
         if (options.wholeWord)
             needle = addWordBoundary(needle, options);
 
-        var modifier = options.caseSensitive ? "gm" : "gmi";
-
-        if (options.$supportsUnicodeFlag) {
-            modifier += "u";
-        }
-        
         options.$isMultiLine = !$disableFakeMultiline && /[\n\r]/.test(needle);
         if (options.$isMultiLine)
             return options.re = this.$assembleMultilineRegExp(needle, modifier);
 
         try {
+            /**@type {RegExp|false}*/
             var re = new RegExp(needle, modifier);
         } catch(e) {
             re = false;
@@ -253,6 +327,10 @@ class Search {
         return options.re = re;
     }
 
+    /**
+     * @param {string} needle
+     * @param {string} modifier
+     */
     $assembleMultilineRegExp(needle, modifier) {
         var parts = needle.replace(/\r\n|\r|\n/g, "$\n^").split("\n");
         var re = [];
@@ -264,24 +342,105 @@ class Search {
         return re;
     }
 
+    $isMultilineSearch(options) {
+        return options.re && /\\r\\n|\\r|\\n/.test(options.re.source) && options.regExp && !options.$isMultiLine;
+    }
+
+    $multiLineForward(session, re, start, last) {
+        var line,
+            chunk = chunkEnd(session, start);
+
+        for (var row = start; row <= last;) {
+            for (var i = 0; i < chunk; i++) {
+                if (row > last)
+                    break;
+                var next = session.getLine(row++);
+                line = line == null ? next : line + "\n" + next;
+            }
+
+            var match = re.exec(line);
+            re.lastIndex = 0;
+            if (match) {
+                var beforeMatch = line.slice(0, match.index).split("\n");
+                var matchedText = match[0].split("\n");
+                var startRow = start + beforeMatch.length - 1;
+                var startCol = beforeMatch[beforeMatch.length - 1].length;
+                var endRow = startRow + matchedText.length - 1;
+                var endCol = matchedText.length == 1
+                    ? startCol + matchedText[0].length
+                    : matchedText[matchedText.length - 1].length;
+
+                return {
+                    startRow: startRow,
+                    startCol: startCol,
+                    endRow: endRow,
+                    endCol: endCol
+                };
+            }
+        }
+        return null;
+    }
+
+    $multiLineBackward(session, re, endIndex, start, first) {
+        var line,
+            chunk = chunkEnd(session, start),
+            endMargin = session.getLine(start).length - endIndex;
+
+        for (var row = start; row >= first;) {
+            for (var i = 0; i < chunk && row >= first; i++) {
+                var next = session.getLine(row--);
+                line = line == null ? next : next + "\n" + line;
+            }
+
+            var match = multiLineBackwardMatch(line, re, endMargin);
+            if (match) {
+                var beforeMatch = line.slice(0, match.index).split("\n");
+                var matchedText = match[0].split("\n");
+                var startRow = row + beforeMatch.length;
+                var startCol = beforeMatch[beforeMatch.length - 1].length;
+                var endRow = startRow + matchedText.length - 1;
+                var endCol = matchedText.length == 1
+                    ? startCol + matchedText[0].length
+                    : matchedText[matchedText.length - 1].length;
+
+                return {
+                    startRow: startRow,
+                    startCol: startCol,
+                    endRow: endRow,
+                    endCol: endCol
+                };
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @param {EditSession} session
+     */
     $matchIterator(session, options) {
         var re = this.$assembleRegExp(options);
         if (!re)
             return false;
+
+        var mtSearch = this.$isMultilineSearch(options);
+        var mtForward = this.$multiLineForward;
+        var mtBackward = this.$multiLineBackward;
+
         var backwards = options.backwards == true;
         var skipCurrent = options.skipCurrent != false;
+        var supportsUnicodeFlag = re.unicode;
 
         var range = options.range;
         var start = options.start;
         if (!start)
             start = range ? range[backwards ? "end" : "start"] : session.selection.getRange();
-         
+
         if (start.start)
             start = start[skipCurrent != backwards ? "end" : "start"];
 
         var firstRow = range ? range.start.row : 0;
         var lastRow = range ? range.end.row : session.getLength() - 1;
-        
+
         if (backwards) {
             var forEach = function(callback) {
                 var row = start.row;
@@ -312,7 +471,7 @@ class Search {
                         return;
             };
         }
-        
+
         if (options.$isMultiLine) {
             var len = re.length;
             var forEachInLine = function(row, offset, callback) {
@@ -334,43 +493,66 @@ class Search {
         }
         else if (backwards) {
             var forEachInLine = function(row, endIndex, callback) {
-                var line = session.getLine(row);
-                var matches = [];
-                var m, last = 0;
-                re.lastIndex = 0;
-                while((m = re.exec(line))) {
-                    var length = m[0].length;
-                    last = m.index;
-                    if (!length) {
-                        if (last >= line.length) break;
-                        re.lastIndex = last += 1;
-                    }
-                    if (m.index + length > endIndex)
-                        break;
-                    matches.push(m.index, length);
-                }
-                for (var i = matches.length - 1; i >= 0; i -= 2) {
-                    var column = matches[i - 1];
-                    var length = matches[i];
-                    if (callback(row, column, row, column + length))
+                if (mtSearch) {
+                    var pos = mtBackward(session, re, endIndex, row, firstRow);
+                    if (!pos)
+                        return false;
+                    if (callback(pos.startRow, pos.startCol, pos.endRow, pos.endCol))
                         return true;
+                }
+                else {
+                    var line = session.getLine(row);
+                    var matches = [];
+                    var m, last = 0;
+                    re.lastIndex = 0;
+                    while((m = re.exec(line))) {
+                        var length = m[0].length;
+                        last = m.index;
+                        if (!length) {
+                            if (last >= line.length) break;
+                            re.lastIndex = last += lang.skipEmptyMatch(line, last, supportsUnicodeFlag);
+                        }
+                        if (m.index + length > endIndex)
+                            break;
+                        matches.push(m.index, length);
+                    }
+                    for (var i = matches.length - 1; i >= 0; i -= 2) {
+                        var column = matches[i - 1];
+                        var length = matches[i];
+                        if (callback(row, column, row, column + length))
+                            return true;
+                    }
                 }
             };
         }
         else {
             var forEachInLine = function(row, startIndex, callback) {
-                var line = session.getLine(row);
-                var last;
-                var m;
                 re.lastIndex = startIndex;
-                while((m = re.exec(line))) {
-                    var length = m[0].length;
-                    last = m.index;
-                    if (callback(row, last, row,last + length))
+                if (mtSearch) {
+                    var pos = mtForward(session, re, row, lastRow);
+                    if (pos) {
+                        var end_row = pos.endRow <= lastRow ? pos.endRow - 1 : lastRow;
+                        if (end_row > row)
+                            row = end_row;
+                    }
+                    if (!pos)
+                        return false;
+                    if (callback(pos.startRow, pos.startCol, pos.endRow, pos.endCol))
                         return true;
-                    if (!length) {
-                        re.lastIndex = last += 1;
-                        if (last >= line.length) return false;
+                }
+                else {
+                    var line = session.getLine(row);
+                    var last;
+                    var m;
+                    while((m = re.exec(line))) {
+                        var length = m[0].length;
+                        last = m.index;
+                        if (callback(row, last, row, last + length))
+                            return true;
+                        if (!length) {
+                            re.lastIndex = last += lang.skipEmptyMatch(line, last, supportsUnicodeFlag);
+                            if (last >= line.length) return false;
+                        }
                     }
                 }
             };
@@ -381,9 +563,9 @@ class Search {
 }
 
 /**
- * 
+ *
  * @param {string} needle
- * @param {SearchOptions} options
+ * @param {Partial<SearchOptions>} options
  * @return {string}
  */
 function addWordBoundary(needle, options) {
@@ -407,6 +589,34 @@ function addWordBoundary(needle, options) {
     let lastChar = needleArray[needleArray.length - 1];
 
     return wordBoundary(firstChar) + needle + wordBoundary(lastChar, false);
+}
+
+function multiLineBackwardMatch(line, re, endMargin) {
+    var match = null;
+    var from = 0;
+    while (from <= line.length) {
+        re.lastIndex = from;
+        var newMatch = re.exec(line);
+        if (!newMatch)
+            break;
+        var end = newMatch.index + newMatch[0].length;
+        if (end > line.length - endMargin)
+            break;
+        if (!match || end > match.index + match[0].length)
+            match = newMatch;
+        from = newMatch.index + 1;
+    }
+    return match;
+}
+
+function chunkEnd(session, start) {
+    var base = 5000,
+        startPosition = { row: start, column: 0 },
+        startIndex = session.doc.positionToIndex(startPosition),
+        targetIndex = startIndex + base,
+        targetPosition = session.doc.indexToPosition(targetIndex),
+        targetLine = targetPosition.row;
+    return targetLine + 1;
 }
 
 exports.Search = Search;

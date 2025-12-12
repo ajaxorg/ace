@@ -1,10 +1,26 @@
+/**
+ * ## File mode detection utility
+ *
+ * Provides automatic detection of editor syntax modes based on file paths and extensions. Maps file extensions to
+ * appropriate Ace Editor syntax highlighting modes for over 100 programming languages and file formats including
+ * JavaScript, TypeScript, HTML, CSS, Python, Java, C++, and many others. Supports complex extension patterns and
+ * provides fallback mechanisms for unknown file types.
+ *
+ * @module
+ */
+
 "use strict";
 
+/**
+ * Represents an array to store various syntax modes.
+ *
+ * @type {Mode[]}
+ */
 var modes = [];
 /**
  * Suggests a mode based on the file extension present in the given path
  * @param {string} path The path to the file
- * @returns {object} Returns an object containing information about the
+ * @returns {Mode} Returns an object containing information about the
  *  suggested mode.
  */
 function getModeForPath(path) {
@@ -20,6 +36,11 @@ function getModeForPath(path) {
 }
 
 class Mode {
+    /**
+     * @param {string} name
+     * @param {string} caption
+     * @param {string} extensions
+     */
     constructor(name, caption, extensions) {
         this.name = name;
         this.caption = caption;
@@ -32,12 +53,16 @@ class Mode {
             }) + "$";
         }
         else {
-            re = "^.*\\.(" + extensions + ")$";
+            re = "\\.(" + extensions + ")$";
         }
 
         this.extRe = new RegExp(re, "gi");
     }
 
+    /**
+     * @param {string} filename
+     * @returns {RegExpMatchArray | null}
+     */
     supportsFile(filename) {
         return filename.match(this.extRe);
     }
@@ -55,14 +80,18 @@ var supportedModes = {
     AQL:         ["aql"],
     AsciiDoc:    ["asciidoc|adoc"],
     ASL:         ["dsl|asl|asl.json"],
+    Assembly_ARM32:["s"],
     Assembly_x86:["asm|a"],
+    Astro:       ["astro"],
     AutoHotKey:  ["ahk"],
+    Basic:       ["bas|bak"],
     BatchFile:   ["bat|cmd"],
     BibTeX:      ["bib"],
     C_Cpp:       ["cpp|c|cc|cxx|h|hh|hpp|ino"],
     C9Search:    ["c9search_results"],
     Cirru:       ["cirru|cr"],
     Clojure:     ["clj|cljs"],
+    Clue:        ["clue"],
     Cobol:       ["CBL|COB"],
     coffee:      ["coffee|cf|cson|^Cakefile"],
     ColdFusion:  ["cfm|cfc"],
@@ -72,11 +101,13 @@ var supportedModes = {
     Csound_Orchestra: ["orc"],
     Csound_Score: ["sco"],
     CSS:         ["css"],
+    CSV:         ["csv"],
     Curly:       ["curly"],
     Cuttlefish:  ["conf"],
     D:           ["d|di"],
     Dart:        ["dart"],
     Diff:        ["diff|patch"],
+    Django:      ["djt|html.djt|dj.html|djhtml"],
     Dockerfile:  ["^Dockerfile"],
     Dot:         ["dot"],
     Drools:      ["drl"],
@@ -86,6 +117,7 @@ var supportedModes = {
     Elixir:      ["ex|exs"],
     Elm:         ["elm"],
     Erlang:      ["erl|hrl"],
+    Flix:        ["flix"],
     Forth:       ["frt|fs|ldr|fth|4th"],
     Fortran:     ["f|f90"],
     FSharp:      ["fsi|fs|ml|mli|fsx|fsscript"],
@@ -105,7 +137,7 @@ var supportedModes = {
     Haskell_Cabal: ["cabal"],
     haXe:        ["hx"],
     Hjson:       ["hjson"],
-    HTML:        ["html|htm|xhtml|vue|we|wpy"],
+    HTML: ["html|htm|xhtml|we|wpy"],
     HTML_Elixir: ["eex|html.eex"],
     HTML_Ruby:   ["erb|rhtml|html.erb"],
     INI:         ["ini|conf|cfg|prefs"],
@@ -114,7 +146,7 @@ var supportedModes = {
     Jack:        ["jack"],
     Jade:        ["jade|pug"],
     Java:        ["java"],
-    JavaScript:  ["js|jsm|jsx|cjs|mjs"],
+    JavaScript:  ["js|jsm|cjs|mjs"],
     JEXL:        ["jexl"],
     JSON:        ["json"],
     JSON5:       ["json5"],
@@ -148,6 +180,7 @@ var supportedModes = {
     MIXAL:       ["mixal"],
     MUSHCode:    ["mc|mush"],
     MySQL:       ["mysql"],
+    Nasal:       ["nas"],
     Nginx:       ["nginx|conf"],
     Nim:         ["nim"],
     Nix:         ["nix"],
@@ -211,6 +244,7 @@ var supportedModes = {
     Text:        ["txt"],
     Textile:     ["textile"],
     Toml:        ["toml"],
+    TSV:         ["tsv"],
     TSX:         ["tsx"],
     Turtle:      ["ttl"],
     Twig:        ["twig|swig"],
@@ -221,13 +255,13 @@ var supportedModes = {
     Verilog:     ["v|vh|sv|svh"],
     VHDL:        ["vhd|vhdl"],
     Visualforce: ["vfp|component|page"],
+    Vue: ["vue"],
     Wollok:      ["wlk|wpgm|wtest"],
     XML:         ["xml|rdf|rss|wsdl|xslt|atom|mathml|mml|xul|xbl|xaml"],
     XQuery:      ["xq"],
     YAML:        ["yaml|yml"],
     Zeek:        ["zeek|bro"],
-    // Add the missing mode "Django" to ext-modelist
-    Django:      ["html"]
+    Zig:         ["zig"]
 };
 
 var nameOverrides = {
@@ -247,6 +281,14 @@ var nameOverrides = {
     AutoHotKey: "AutoHotkey / AutoIt"
 };
 
+/**
+ * An object that serves as a mapping of mode names to their corresponding mode data.
+ * The keys of this object are mode names (as strings), and the values are expected
+ * to represent data associated with each mode.
+ *
+ * This structure can be used for quick lookups of mode information by name.
+ * @type {Record<string, Mode>}
+ */
 var modesByName = {};
 for (var name in supportedModes) {
     var data = supportedModes[name];
@@ -257,8 +299,6 @@ for (var name in supportedModes) {
     modes.push(mode);
 }
 
-module.exports = {
-    getModeForPath: getModeForPath,
-    modes: modes,
-    modesByName: modesByName
-};
+exports.getModeForPath = getModeForPath;
+exports.modes = modes;
+exports.modesByName = modesByName;

@@ -1,4 +1,9 @@
 "use strict";
+/**
+ * @typedef {import("./editor").Editor} Editor
+ * @typedef {import("../ace-internal").Ace.Point} Point
+ * @typedef {import("../ace-internal").Ace.SearchOptions} SearchOptions
+ */
 
 var oop = require("./lib/oop");
 var Search = require("./search").Search;
@@ -6,12 +11,9 @@ var EditSession = require("./edit_session").EditSession;
 var SearchHighlight = require("./search_highlight").SearchHighlight;
 
 /**
- * @class Occur
- *
  * Finds all lines matching a search term in the current [[Document
  * `Document`]] and displays them instead of the original `Document`. Keeps
  * track of the mapping between the occur doc and the original doc.
- *
  **/
 class Occur extends Search {
 
@@ -53,6 +55,10 @@ class Occur extends Search {
         return true;
     }
 
+    /**
+     * @param {EditSession} sess
+     * @param {RegExp} regexp
+     */
     highlight(sess, regexp) {
         var hl = sess.$occurHighlight = sess.$occurHighlight || sess.addDynamicMarker(
                 new SearchHighlight(null, "ace_occur-highlight", "text"));
@@ -60,11 +66,16 @@ class Occur extends Search {
         sess._emit("changeBackMarker"); // force highlight layer redraw
     }
 
+    /**
+     * @param {Editor} editor
+     * @param {Partial<SearchOptions>} options
+     */
     displayOccurContent(editor, options) {
         // this.setSession(session || new EditSession(""))
         this.$originalSession = editor.session;
         var found = this.matchingLines(editor.session, options);
         var lines = found.map(function(foundLine) { return foundLine.content; });
+        /**@type {EditSession}*/
         var occurSession = new EditSession(lines.join('\n'));
         occurSession.$occur = this;
         occurSession.$occurMatchingLines = found;
@@ -75,6 +86,9 @@ class Occur extends Search {
         occurSession._emit('changeBackMarker');
     }
 
+    /**
+     * @param {Editor} editor
+     */
     displayOriginalContent(editor) {
         editor.setSession(this.$originalSession);
         this.$originalSession.$useEmacsStyleLineStart = this.$useEmacsStyleLineStart;
@@ -85,8 +99,8 @@ class Occur extends Search {
     * the document or the beginning if the doc {row: 0, column: 0} if not
     * found.
     * @param {EditSession} session The occur session
-    * @param {Object} pos The position in the original document
-    * @return {Object} position in occur doc
+    * @param {Point} pos The position in the original document
+    * @return {Point} position in occur doc
     **/
     originalToOccurPosition(session, pos) {
         var lines = session.$occurMatchingLines;
@@ -103,8 +117,8 @@ class Occur extends Search {
     * Translates the position from the occur document to the original document
     * or `pos` if not found.
     * @param {EditSession} session The occur session
-    * @param {Object} pos The position in the occur session document
-    * @return {Object} position
+    * @param {Point} pos The position in the occur session document
+    * @return {Point} position
     **/
     occurToOriginalPosition(session, pos) {
         var lines = session.$occurMatchingLines;
@@ -113,6 +127,10 @@ class Occur extends Search {
         return {row: lines[pos.row].row, column: pos.column};
     }
 
+    /**
+     * @param {EditSession} session
+     * @param {Partial<SearchOptions>} options
+     */
     matchingLines(session, options) {
         options = oop.mixin({}, options);
         if (!session || !options.needle) return [];

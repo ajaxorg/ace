@@ -1,3 +1,24 @@
+/**
+ * ## Simple tokenizer extension
+ *
+ * Provides standalone tokenization functionality that can parse code content using Ace's highlight rules without
+ * requiring a full editor instance. This is useful for generating syntax-highlighted tokens for external rendering,
+ * static code generation, or testing tokenization rules. The tokenizer processes text line by line and returns
+ * structured token data with CSS class names compatible with Ace themes.
+ *
+ * **Usage:**
+ * ```javascript
+ * const { tokenize } = require("ace/ext/simple_tokenizer");
+ * const { JsonHighlightRules } = require("ace/mode/json_highlight_rules");
+ *
+ * const content = '{"name": "value"}';
+ * const tokens = tokenize(content, new JsonHighlightRules());
+ * // Returns: [[{className: "ace_paren ace_lparen", value: "{"}, ...]]
+ * ```
+ *
+ * @module
+ */
+
 "use strict";
 const { Tokenizer } = require("../tokenizer");
 const isTextToken = require("../layer/text_util").isTextToken;
@@ -15,7 +36,7 @@ class SimpleTokenizer {
 
     /**
      * @param {number} row 
-     * @returns {import("../../ace").Ace.Token[]}
+     * @returns {import("../../ace-internal").Ace.Token[]}
      */
     getTokens(row) {
         const line = this._lines[row];
@@ -40,8 +61,8 @@ class SimpleTokenizer {
  * Result is a list of list of tokens, where each line from the provided content is a separate list of tokens.
  * 
  * @param {string} content to tokenize 
- * @param {import("ace-code").Ace.HighlightRules} highlightRules defining the language grammar 
- * @returns {import("ace-code/src/ext/simple_tokenizer").TokenizeResult} tokenization result containing a list of token for each of the lines from content
+ * @param {import("../../ace-internal").Ace.HighlightRules} highlightRules defining the language grammar 
+ * @returns {import("../../ace-internal").Ace.TokenizeResult} tokenization result containing a list of token for each of the lines from content
  */
 function tokenize(content, highlightRules) {
     const tokenizer = new SimpleTokenizer(content, new Tokenizer(highlightRules.getRules()));
@@ -57,6 +78,4 @@ function tokenize(content, highlightRules) {
     return result;
 }
 
-module.exports = {
-    tokenize
-};
+exports.tokenize = tokenize;

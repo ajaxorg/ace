@@ -1,15 +1,17 @@
 "use strict";
-
+/**
+ * @typedef {import("./edit_session").EditSession} EditSession
+ */
 var Range = require("./range").Range;
 var EventEmitter = require("./lib/event_emitter").EventEmitter;
 var oop = require("./lib/oop");
 
 class PlaceHolder {
     /**
-     * @param {Document} session The document to associate with the anchor
-     * @param {Number} length The starting row position
-     * @param {Number} pos The starting column position
-     * @param {String} others
+     * @param {EditSession} session
+     * @param {Number} length
+     * @param {import("../ace-internal").Ace.Point} pos
+     * @param {any[]} others
      * @param {String} mainClass
      * @param {String} othersClass
      **/
@@ -32,7 +34,7 @@ class PlaceHolder {
 
         this.$pos = pos;
         // Used for reset
-        var undoStack = session.getUndoManager().$undoStack || session.getUndoManager().$undostack || {length: -1};
+        var undoStack = session.getUndoManager().$undoStack || session.getUndoManager()["$undostack"] || {length: -1};
         this.$undoStackDepth = undoStack.length;
         this.setup();
 
@@ -49,7 +51,7 @@ class PlaceHolder {
         var _self = this;
         var doc = this.doc;
         var session = this.session;
-        
+
         this.selectionBefore = session.selection.toJSON();
         if (session.selection.inMultiSelectMode)
             session.selection.toSingleRange();
@@ -68,7 +70,7 @@ class PlaceHolder {
         });
         session.setUndoSelect(false);
     }
-    
+
     /**
      * PlaceHolder.showOtherMarkers()
      *
@@ -84,7 +86,7 @@ class PlaceHolder {
             anchor.markerId = session.addMarker(new Range(anchor.row, anchor.column, anchor.row, anchor.column+_self.length), _self.othersClass, null, false);
         });
     }
-    
+
     /**
      * PlaceHolder.hideOtherMarkers()
      *
@@ -101,14 +103,15 @@ class PlaceHolder {
 
     /**
      * PlaceHolder@onUpdate(e)
-     * 
-     * Emitted when the place holder updates.
      *
-     **/
+     * Emitted when the place holder updates.
+     * @param {import("../ace-internal").Ace.Delta} delta
+     * @internal
+     */
     onUpdate(delta) {
         if (this.$updating)
             return this.updateAnchors(delta);
-            
+
         var range = delta;
         if (range.start.row !== range.end.row) return;
         if (range.start.row !== this.pos.row) return;
@@ -116,9 +119,9 @@ class PlaceHolder {
         var lengthDiff = delta.action === "insert" ? range.end.column - range.start.column : range.start.column - range.end.column;
         var inMainRange = range.start.column >= this.pos.column && range.start.column <= this.pos.column + this.length + 1;
         var distanceFromStart = range.start.column - this.pos.column;
-        
+
         this.updateAnchors(delta);
-        
+
         if (inMainRange)
             this.length += lengthDiff;
 
@@ -137,18 +140,21 @@ class PlaceHolder {
                 }
             }
         }
-        
+
         this.$updating = false;
         this.updateMarkers();
     }
-    
+
+    /**
+     * @param {import("../ace-internal").Ace.Delta} delta
+     */
     updateAnchors(delta) {
         this.pos.onChange(delta);
         for (var i = this.others.length; i--;)
             this.others[i].onChange(delta);
         this.updateMarkers();
     }
-    
+
     updateMarkers() {
         if (this.$updating)
             return;
@@ -162,14 +168,15 @@ class PlaceHolder {
         for (var i = this.others.length; i--;)
             updateMarker(this.others[i], this.othersClass);
     }
-    
+
+
     /**
      * PlaceHolder@onCursorChange(e)
-     * 
-     * Emitted when the cursor changes.
      *
-     **/
-
+     * Emitted when the cursor changes.
+     * @param {any} [event]
+     * @internal
+     */
     onCursorChange(event) {
         if (this.$updating || !this.session) return;
         var pos = this.session.selection.getCursor();
@@ -181,13 +188,13 @@ class PlaceHolder {
             this._emit("cursorLeave", event);
         }
     }
-    
+
     /**
      * PlaceHolder.detach()
-     * 
+     *
      * TODO
      *
-     **/    
+     **/
     detach() {
         this.session.removeMarker(this.pos && this.pos.markerId);
         this.hideOtherMarkers();
@@ -196,10 +203,10 @@ class PlaceHolder {
         this.session.setUndoSelect(true);
         this.session = null;
     }
-    
+
     /**
      * PlaceHolder.cancel()
-     * 
+     *
      * TODO
      *
      **/
@@ -207,7 +214,7 @@ class PlaceHolder {
         if (this.$undoStackDepth === -1)
             return;
         var undoManager = this.session.getUndoManager();
-        var undosRequired = (undoManager.$undoStack || undoManager.$undostack).length - this.$undoStackDepth;
+        var undosRequired = (undoManager.$undoStack || undoManager["$undostack"]).length - this.$undoStackDepth;
         for (var i = 0; i < undosRequired; i++) {
             undoManager.undo(this.session, true);
         }

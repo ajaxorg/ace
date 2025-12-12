@@ -1,0 +1,28 @@
+[[
+   "start",
+  ["keyword","FOR"],
+  ["text"," "],
+  ["identifier","user"],
+  ["text"," "],
+  ["keyword","IN"],
+  ["text"," "],
+  ["identifier","users"]
+],[
+   "start",
+  ["text","  "],
+  ["keyword","FILTER"],
+  ["text"," "],
+  ["identifier","user"],
+  ["text","."],
+  ["identifier","username"],
+  ["text"," "],
+  ["keyword.operator","=="],
+  ["text"," "],
+  ["string","\"olivier\""]
+],[
+   "start",
+  ["text","  "],
+  ["keyword","RETURN"],
+  ["text"," "],
+  ["identifier","user"]
+]]

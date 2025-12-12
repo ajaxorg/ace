@@ -136,6 +136,31 @@ module.exports = {
         assert.equal(editor.getValue(), '`n`');
         exec("backspace", 2);
         assert.equal(editor.getValue(), '');
+
+        // multiline string interpolation test case
+        editor.setValue("");
+        exec("insertstring", 1, "var x=");
+        exec("insertstring", 1, "`");
+        assert.equal(editor.getValue(), "var x=``");
+        exec("insertstring", 1, "$");
+        exec("insertstring", 1, "{");
+        assert.equal(editor.getValue(), "var x=`${}`");
+        // Testing for the auto-pairing of curly braces inside a JSX element attribute
+        editor.setValue("");
+        exec("insertstring", 1, "var x=<a href=");
+        exec("insertstring", 1, "{");
+        assert.equal(editor.getValue(), "var x=<a href={}");
+        // Testing of excluded token types auto-pairing
+        editor.setValue("");
+        exec("insertstring", 1, "var x=<div>");
+        exec("gotoleft", 1);
+        exec("insertstring", 1, "{");
+        assert.equal(editor.getValue(), "var x=<div{>");
+        // Testing for the auto-pairing of curly braces inside a JSX element 
+        editor.setValue("");
+        exec("insertstring", 1, "var x=<div>\\n    ");
+        exec("insertstring", 1, "{");
+        assert.equal(editor.getValue(), "var x=<div>\\n    {}");
     },
     "test: xml": function() {
         editor = new Editor(new MockRenderer());
@@ -435,6 +460,45 @@ module.exports = {
         editor.setValue("    /**", 1);
         exec("insertstring", 1, "\n");
         assert.equal(editor.getValue(), "    /**\n     * \n     */");
+
+        // Test case 4: Cursor between closing */ and opening /** on the same line
+        editor.setValue("/**\n * Some comment\n *//**", 1);
+        editor.gotoLine(3, 3);
+        exec("insertstring", 1, "\n");
+        assert.equal(editor.getValue(), "/**\n * Some comment\n */\n /**");
+
+        // Test case 5: Cursor at start of the line with doc comment
+        editor.setValue("/**\n * Some comment\n */", 1);
+        editor.gotoLine(1, 0);
+        exec("insertstring", 1, "\n");
+        assert.equal(editor.getValue(), "\n/**\n * Some comment\n */");
+
+        // Test case 6: Cursor at the end of the first comment
+        editor.setValue("/** comment */identifier/**", 1);
+        editor.gotoLine(1, 14);
+        exec("insertstring", 1, "\n");
+        assert.equal(editor.getValue(), "/** comment */\nidentifier/**");
+
+        // Test case 7: Cursor at the start of the second comment
+        editor.setValue("/** comment */identifier/**", 1);
+        editor.gotoLine(1, 24);
+        exec("insertstring", 1, "\n");
+        assert.equal(editor.getValue(), "/** comment */identifier\n/**");
+
+        // Test case 8: Cursor between '/' and '*' in a comment
+        editor.setValue("/** comment */", 1);
+        editor.gotoLine(1, 1);
+        exec("insertstring", 1, "\n");
+        assert.equal(editor.getValue(), "/\n** comment */");
+
+    },
+    "test: fragment auto-closing": function () {
+        editor.setWrapBehavioursEnabled(true);
+        editor.session.setMode(new JavaScriptMode());
+        editor.setValue("");
+        exec("insertstring", 1, '<');
+        exec("insertstring", 1, '>');
+        assert.equal(editor.getValue(), '<></>');
     }
 };
 

@@ -17,7 +17,11 @@ function lookupMime(filename) {
         png: "image/png",
         jpg: "image/jpg",
         html: "text/html",
-        jpeg: "image/jpeg"
+        jpeg: "image/jpeg",
+        wasm: "application/wasm",
+        json: "application/json",
+        xml: "application/xml",
+        ttf: "font/ttf",
     }[ext];
 }
   
@@ -31,7 +35,13 @@ if (allowSave)
 
 http.createServer(function(req, res) {
     var uri = unescape(url.parse(req.url).pathname);
-    var filename = path.join(process.cwd(), uri);
+    console.log("[" + req.method + "]", uri);
+    var root = process.cwd() + path.sep;
+    var filename = path.join(root, uri);
+
+    if (filename.slice(0, root.length) !== root) {
+        return error(res, 400, "400 Bad request: Directory traversal is not allowed.");
+    }
 
     if (req.method == "OPTIONS") {
         writeHead(res, 200);
@@ -40,7 +50,7 @@ http.createServer(function(req, res) {
     
     if (req.method == "PUT") {
         if (!allowSave)
-            return error(res, 404, "Saving not allowed pass --allow-save to enable");
+            return error(res, 404, "Saving not allowed (pass --allow-save to enable)");
         return save(req, res, filename);
     }
 
@@ -73,11 +83,14 @@ function writeHead(res, code, contentType) {
     res.statusCode = code;
 }
 
+function escapeHTML(str) {
+    return ("" + str).replace(/&/g, "&#38;").replace(/"/g, "&#34;").replace(/'/g, "&#39;").replace(/</g, "&#60;");
+}
 function serveDirectory(filename, uri, req, res) {
     var files = fs.readdirSync(filename);
     writeHead(res, 200, "text/html");
     
-    files.push("..", ".");
+    files.push("..");
     var html = files.map(function(name) {
         try {
             var stat = fs.statSync(filename + "/" + name);
@@ -98,11 +111,14 @@ function serveDirectory(filename, uri, req, res) {
         else size = (stat.size / 1024 / 1024).toFixed(2) + "mb";
         return "<tr>"
             + "<td>&nbsp;&nbsp;" + size + "&nbsp;&nbsp;</td>"
-            + "<td><a href='" + name + "'>" + name + "</a></td>"
+            + "<td><a href='" + escapeHTML(name) + "'>" + escapeHTML(name) + "</a></td>"
         + "</tr>";
     }).join("");
     html = "<table>" + html + "</table>";
 
+    var baseUri = uri.replace(/\/?$/, "/");
+    html = "<base href='"+ escapeHTML(baseUri) + "'>" 
+        + "<meta charset='utf-8'>" + html;
     res._hasBody && res.write(html);
     res.end();
 }

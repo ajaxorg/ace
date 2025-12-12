@@ -1,4 +1,21 @@
+/**
+ * ## Static syntax highlighting extension for code-to-HTML conversion
+ *
+ * Transforms code snippets into syntax-highlighted HTML with CSS styling without requiring a live editor instance.
+ * Uses a simplified DOM implementation to generate standalone HTML output suitable for static content generation,
+ * documentation, code export, and embedding highlighted code in web pages. Supports automatic language detection
+ * from CSS classes and custom modes/themes.
+ *
+ * @module
+ */
+
+
 "use strict";
+/**
+ * @typedef {import("../../ace-internal").Ace.SyntaxMode} SyntaxMode
+ * @typedef {import("../../ace-internal").Ace.Theme} Theme
+ */
+
 
 var EditSession = require("../edit_session").EditSession;
 var TextLayer = require("../layer/text").Text;
@@ -8,7 +25,11 @@ var dom = require("../lib/dom");
 var escapeHTML = require("../lib/lang").escapeHTML;
 
 class Element {
+    /**
+     * @param {string} type
+     */
     constructor(type) {
+        /** @type{string} */this.className;
         this.type = type;
         this.style = {};
         this.textContent = "";
@@ -51,10 +72,10 @@ class Element {
 
 
 var simpleDom = {
-    createTextNode: function(textContent, element) {
+    createTextNode: function(/** @type {string} */ textContent, /** @type {any} */ element) {
         return escapeHTML(textContent);
     },
-    createElement: function(type) {
+    createElement: function(/** @type {string} */ type) {
         return new Element(type);
     },
     createFragment: function() {
@@ -63,25 +84,39 @@ var simpleDom = {
 };
 
 
+/**@type {any}*/
 var SimpleTextLayer = function() {
     this.config = {};
     this.dom = simpleDom;
 };
 SimpleTextLayer.prototype = TextLayer.prototype;
 
+/**
+ * Applies syntax highlighting to an HTML element containing code.
+ *
+ * Automatically detects the language from CSS class names (e.g., 'lang-javascript') or uses
+ * the specified mode. Transforms the element's content into syntax-highlighted HTML with
+ * CSS styling and preserves any existing child elements by repositioning them after highlighting.
+ *
+ * @param {HTMLElement} el - The HTML element containing code to highlight
+ * @param {import("../../ace-internal").Ace.StaticHighlightOptions} opts - Highlighting options
+ * @param {function} [callback] - Optional callback executed after highlighting is complete
+ * @returns {boolean} Returns false if no valid mode is found, otherwise true
+ */
 var highlight = function(el, opts, callback) {
     var m = el.className.match(/lang-(\w+)/);
     var mode = opts.mode || m && ("ace/mode/" + m[1]);
     if (!mode)
         return false;
     var theme = opts.theme || "ace/theme/textmate";
-    
+
     var data = "";
     var nodes = [];
 
     if (el.firstElementChild) {
         var textLen = 0;
         for (var i = 0; i < el.childNodes.length; i++) {
+            /**@type {any}*/
             var ch = el.childNodes[i];
             if (ch.nodeType == 3) {
                 textLen += ch.data.length;
@@ -95,10 +130,14 @@ var highlight = function(el, opts, callback) {
         if (opts.trim)
             data = data.trim();
     }
-    
+
     highlight.render(data, mode, theme, opts.firstLineNumber, !opts.showGutter, function (highlighted) {
-        dom.importCssString(highlighted.css, "ace_highlight");
+        dom.importCssString(highlighted.css, "ace_highlight", true);
         el.innerHTML = highlighted.html;
+        /**
+         * TODO: check if child exists
+         * @type {any}
+         */
         var container = el.firstChild.firstChild;
         for (var i = 0; i < nodes.length; i += 2) {
             var pos = highlighted.session.doc.indexToPosition(nodes[i]);
@@ -114,16 +153,16 @@ var highlight = function(el, opts, callback) {
  * Transforms a given input code snippet into HTML using the given mode
  *
  * @param {string} input Code snippet
- * @param {string|mode} mode String specifying the mode to load such as
+ * @param {string | SyntaxMode} mode String specifying the mode to load such as
  *  `ace/mode/javascript` or, a mode loaded from `/ace/mode`
  *  (use 'ServerSideHiglighter.getMode').
- * @param {string|theme} theme String specifying the theme to load such as
+ * @param {string | Theme} theme String specifying the theme to load such as
  *  `ace/theme/twilight` or, a theme loaded from `/ace/theme`.
  * @param {number} lineStart A number indicating the first line number. Defaults
  *  to 1.
  * @param {boolean} disableGutter Specifies whether or not to disable the gutter.
  *  `true` disables the gutter, `false` enables the gutter. Defaults to `false`.
- * @param {function} callback When specifying the mode or theme as a string,
+ * @param {function} [callback] When specifying the mode or theme as a string,
  *  this method has no return value and you must specify a callback function. The
  *  callback will receive the rendered object containing the properties `html`
  *  and `css`.
@@ -151,16 +190,16 @@ highlight.render = function(input, mode, theme, lineStart, disableGutter, callba
     if (typeof mode == "string") {
         waiting++;
         config.loadModule(['mode', mode], function(m) {
-            if (!modeCache[mode] || modeOptions)
-                modeCache[mode] = new m.Mode(modeOptions);
-            mode = modeCache[mode];
+            if (!modeCache[/**@type{string}*/(mode)] || modeOptions)
+                modeCache[/**@type{string}*/(mode)] = new m.Mode(modeOptions);
+            mode = modeCache[/**@type{string}*/(mode)];
             --waiting || done();
         });
     }
 
     // loads or passes the specified mode module then calls renderer
     function done() {
-        var result = highlight.renderSync(input, mode, theme, lineStart, disableGutter);
+        var result = highlight.renderSync(input, mode, /**@type{Theme}*/(theme), lineStart, disableGutter);
         return callback ? callback(result) : result;
     }
     return --waiting || done();
@@ -169,8 +208,10 @@ highlight.render = function(input, mode, theme, lineStart, disableGutter, callba
 /**
  * Transforms a given input code snippet into HTML using the given mode
  * @param {string} input Code snippet
- * @param {mode} mode Mode loaded from /ace/mode (use 'ServerSideHiglighter.getMode')
- * @param {string} r Code snippet
+ * @param {SyntaxMode | string} mode Mode loaded from /ace/mode (use 'ServerSideHiglighter.getMode')
+ * @param {Theme} theme
+ * @param {any} lineStart
+ * @param {boolean} disableGutter
  * @returns {object} An object containing: html, css
  */
 highlight.renderSync = function(input, mode, theme, lineStart, disableGutter) {
@@ -180,6 +221,7 @@ highlight.renderSync = function(input, mode, theme, lineStart, disableGutter) {
     session.setUseWorker(false);
     session.setMode(mode);
 
+    /**@type {TextLayer}*/
     var textLayer = new SimpleTextLayer();
     textLayer.setSession(session);
     Object.keys(textLayer.$tabStrings).forEach(function(k) {
@@ -192,10 +234,10 @@ highlight.renderSync = function(input, mode, theme, lineStart, disableGutter) {
 
     session.setValue(input);
     var length =  session.getLength();
-    
+
     var outerEl = simpleDom.createElement("div");
     outerEl.className = theme.cssClass;
-    
+
     var innerEl = simpleDom.createElement("div");
     innerEl.className = "ace_static_highlight" + (disableGutter ? "" : " ace_show_gutter");
     innerEl.style["counter-reset"] = "ace_line " + (lineStart - 1);
@@ -203,7 +245,7 @@ highlight.renderSync = function(input, mode, theme, lineStart, disableGutter) {
     for (var ix = 0; ix < length; ix++) {
         var lineEl = simpleDom.createElement("div");
         lineEl.className = "ace_line";
-        
+
         if (!disableGutter) {
             var gutterEl = simpleDom.createElement("span");
             gutterEl.className ="ace_gutter ace_gutter-cell";

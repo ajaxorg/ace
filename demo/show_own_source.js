@@ -21,7 +21,7 @@ if (typeof ace == "undefined" && typeof require == "undefined") {
 function setValue() {
     require("ace/lib/net").get(document.baseURI, function(text) {
         var el = document.getElementById("editor");
-        el.env.editor.session.setValue(text);
+        if (el) el.env.editor.session.setValue(text);
     });
     loadAceLinters();
 }

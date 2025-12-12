@@ -1,6 +1,20 @@
-"use strict";
+/**
+ * ## Elastic Tabstops Lite extension.
+ *
+ * Automatically adjusts tab spacing to align content in tabular format by calculating optimal column widths
+ * and maintaining consistent vertical alignment across multiple lines. Tracks content changes and dynamically
+ * reprocesses affected rows to ensure proper formatting without manual intervention.
+ *
+ * **Enable:** `editor.setOption("useElasticTabstops", true)`
+ *  or configure it during editor initialization in the options object.
+ * @module
+ */
 
+"use strict";
 class ElasticTabstopsLite {
+    /**
+     * @param {Editor} editor
+     */
     constructor(editor) {
         this.$editor = editor;
         var self = this;
@@ -23,7 +37,10 @@ class ElasticTabstopsLite {
             }
         };
     }
-    
+
+    /**
+     * @param {number[]} rows
+     */
     processRows(rows) {
         this.$inChange = true;
         var checkedRows = [];
@@ -48,6 +65,9 @@ class ElasticTabstopsLite {
         this.$inChange = false;
     }
 
+    /**
+     * @param {number} row
+     */
     $findCellWidthsForBlock(row) {
         var cellWidths = [], widths;
 
@@ -80,6 +100,10 @@ class ElasticTabstopsLite {
         return { cellWidths: cellWidths, firstRow: firstRow };
     }
 
+    /**
+     * @param {number} row
+     * @returns {number[]}
+     */
     $cellWidthsForRow(row) {
         var selectionColumns = this.$selectionColumnsForRow(row);
         // todo: support multicursor
@@ -100,6 +124,10 @@ class ElasticTabstopsLite {
         return widths;
     }
 
+    /**
+     * @param {number} row
+     * @returns {number[]}
+     */
     $selectionColumnsForRow(row) {
         var selections = [], cursor = this.$editor.getCursorPosition();
         if (this.$editor.session.getSelection().isEmpty()) {
@@ -111,6 +139,9 @@ class ElasticTabstopsLite {
         return selections;
     }
 
+    /**
+     * @param {number[][]} cellWidths
+     */
     $setBlockCellWidthsToMax(cellWidths) {
         var startingNewBlock = true, blockStartRow, blockEndRow, maxWidth;
         var columnInfo = this.$izip_longest(cellWidths);
@@ -149,6 +180,11 @@ class ElasticTabstopsLite {
         return cellWidths;
     }
 
+    /**
+     * @param {number[]} selectionColumns
+     * @param {number} cellRightEdge
+     * @returns {number}
+     */
     $rightmostSelectionInCell(selectionColumns, cellRightEdge) {
         var rightmost = 0;
 
@@ -166,6 +202,10 @@ class ElasticTabstopsLite {
         return rightmost;
     }
 
+    /**
+     * @param {number} row
+     * @returns {number[]}
+     */
     $tabsForRow(row) {
         var rowTabs = [], line = this.$editor.session.getLine(row),
             re = /\t/g, match;
@@ -177,6 +217,10 @@ class ElasticTabstopsLite {
         return rowTabs;
     }
 
+    /**
+     * @param {number} row
+     * @param {number[]} widths
+     */
     $adjustRow(row, widths) {
         var rowTabs = this.$tabsForRow(row);
 
@@ -217,7 +261,10 @@ class ElasticTabstopsLite {
         }
     }
 
-    // the is a (naive) Python port--but works for these purposes
+    /**
+     * The is a (naive) Python port--but works for these purposes
+     * @param {any[][]} iterables
+     */
     $izip_longest(iterables) {
         if (!iterables[0])
             return [];
@@ -248,7 +295,11 @@ class ElasticTabstopsLite {
         return expandedSet;
     }
 
-    // an even more (naive) Python port
+    /**
+     * an even more (naive) Python port
+     * @param {string | any[]} widths
+     * @param {string | any[]} tabs
+     */
     $izip(widths, tabs) {
         // grab the shorter size
         var size = widths.length >= tabs.length ? tabs.length : widths.length;
@@ -268,6 +319,10 @@ exports.ElasticTabstopsLite = ElasticTabstopsLite;
 var Editor = require("../editor").Editor;
 require("../config").defineOptions(Editor.prototype, "editor", {
     useElasticTabstops: {
+        /**
+         * @param {boolean} val
+         * @this {Editor}
+         */
         set: function(val) {
             if (val) {
                 if (!this.elasticTabstops)

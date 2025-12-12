@@ -1,11 +1,15 @@
 "use strict";
 
-var Behaviour = function() {
+var Behaviour;
+Behaviour = function() {
    this.$behaviours = {};
 };
 
 (function () {
 
+    /**
+     * @this {Behaviour & this}
+     */
     this.add = function (name, action, callback) {
         switch (undefined) {
           case this.$behaviours:
@@ -15,7 +19,10 @@ var Behaviour = function() {
         }
         this.$behaviours[name][action] = callback;
     };
-    
+
+    /**
+     * @this {Behaviour & this}
+     */
     this.addBehaviours = function (behaviours) {
         for (var key in behaviours) {
             for (var action in behaviours[key]) {
@@ -23,13 +30,19 @@ var Behaviour = function() {
             }
         }
     };
-    
+
+    /**
+     * @this {Behaviour & this}
+     */
     this.remove = function (name) {
         if (this.$behaviours && this.$behaviours[name]) {
             delete this.$behaviours[name];
         }
     };
-    
+
+    /**
+     * @this {Behaviour & this}
+     */
     this.inherit = function (mode, filter) {
         if (typeof mode === "function") {
             var behaviours = new mode().getBehaviours(filter);
@@ -38,7 +51,13 @@ var Behaviour = function() {
         }
         this.addBehaviours(behaviours);
     };
-    
+
+    /**
+     *
+     * @param [filter]
+     * @returns {{}|*}
+     * @this {Behaviour & this}
+     */
     this.getBehaviours = function (filter) {
         if (!filter) {
             return this.$behaviours;

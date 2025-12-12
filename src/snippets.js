@@ -1,4 +1,22 @@
 "use strict";
+/**
+ * @typedef Snippet
+ * @property {string} [content]
+ * @property {string} [replaceBefore]
+ * @property {string} [replaceAfter]
+ * @property {RegExp} [startRe]
+ * @property {RegExp} [endRe]
+ * @property {RegExp} [triggerRe]
+ * @property {RegExp} [endTriggerRe]
+ * @property {string} [trigger]
+ * @property {string} [endTrigger]
+ * @property {string[]} [matchBefore]
+ * @property {string[]} [matchAfter]
+ * @property {string} [name]
+ * @property {string} [tabTrigger]
+ * @property {string} [guard]
+ * @property {string} [endGuard]
+ */
 var dom = require("./lib/dom");
 var oop = require("./lib/oop");
 var EventEmitter = require("./lib/event_emitter").EventEmitter;
@@ -94,11 +112,14 @@ class SnippetManager {
         this.variables = VARIABLES;
     }
 
-    
+
+    /**
+     * @return {Tokenizer}
+     */
     getTokenizer() {
-        return SnippetManager.$tokenizer || this.createTokenizer();
+        return SnippetManager["$tokenizer"] || this.createTokenizer();
     }
-    
+
     createTokenizer() {
         function TabstopToken(str) {
             str = str.substr(1);
@@ -110,7 +131,7 @@ class SnippetManager {
             return "(?:[^\\\\" + ch + "]|\\\\.)";
         }
         var formatMatcher = {
-            regex: "/(" + escape("/") + "+)/", 
+            regex: "/(" + escape("/") + "+)/",
             onMatch: function(val, state, stack) {
                 var ts = stack[0];
                 ts.fmtString = true;
@@ -120,8 +141,8 @@ class SnippetManager {
             },
             next: "formatString"
         };
-        
-        SnippetManager.$tokenizer = new Tokenizer({
+
+        SnippetManager["$tokenizer"] = new Tokenizer({
             start: [
                 {regex: /\\./, onMatch: function(val, state, stack) {
                     var ch = val[1];
@@ -217,7 +238,7 @@ class SnippetManager {
                 {regex: "([^:}\\\\]|\\\\.)*:?", token: "", next: "formatString"}
             ]
         });
-        return SnippetManager.$tokenizer;
+        return SnippetManager["$tokenizer"];
     }
 
     tokenizeTmSnippet(str, startState) {
@@ -225,13 +246,13 @@ class SnippetManager {
             return x.value || x;
         });
     }
-    
+
     getVariableValue(editor, name, indentation) {
         if (/^\d+$/.test(name))
             return (this.variables.__ || {})[name] || "";
         if (/^[A-Z]\d+$/.test(name))
             return (this.variables[name[0] + "__"] || {})[name.substr(1)] || "";
-        
+
         name = name.replace(/^TM_/, "");
         if (!this.variables.hasOwnProperty(name))
             return "";
@@ -240,7 +261,7 @@ class SnippetManager {
             value = this.variables[name](editor, name, indentation);
         return value == null ? "" : value;
     }
-    
+
     // returns string formatted according to http://manual.macromates.com/en/regular_expressions#replacement_string_syntax_format_strings
     tmStrFormat(str, ch, editor) {
         if (!ch.fmt) return str;
@@ -281,7 +302,7 @@ class SnippetManager {
         });
         return formatted;
     }
-    
+
     tmFormatFunction(str, ch, editor) {
         if (ch.formatFunction == "upcase")
             return str.toUpperCase();
@@ -310,21 +331,21 @@ class SnippetManager {
             }
             if (!ch)  continue;
             afterNewLine = false;
-            
+
             if (ch.fmtString) {
                 var j = snippet.indexOf(ch, i + 1);
                 if (j == -1) j = snippet.length;
                 ch.fmt = snippet.slice(i + 1, j);
                 i = j;
             }
-            
+
             if (ch.text) {
                 var value = this.getVariableValue(editor, ch.text, indentation) + "";
                 if (ch.fmtString)
                     value = this.tmStrFormat(value, ch, editor);
                 if (ch.formatFunction)
                     value = this.tmFormatFunction(value, ch, editor);
-                
+
                 if (value && !ch.ifEnd) {
                     result.push(value);
                     gotoNext(ch);
@@ -354,25 +375,24 @@ class SnippetManager {
 
     insertSnippetForSelection(editor, snippetText, options={}) {
         var processedSnippet = processSnippetText.call(this, editor, snippetText, options);
-        
+
         var range = editor.getSelectionRange();
         var end = editor.session.replace(range, processedSnippet.text);
 
         var tabstopManager = new TabstopManager(editor);
         var selectionId = editor.inVirtualSelectionMode && editor.selection.index;
+        //@ts-expect-error TODO: potential wrong arguments
         tabstopManager.addTabstops(processedSnippet.tabstops, range.start, end, selectionId);
     }
-    
     insertSnippet(editor, snippetText, options={}) {
         var self = this;
-        
         if (editor.inVirtualSelectionMode)
             return self.insertSnippetForSelection(editor, snippetText, options);
-        
+
         editor.forEachSelection(function() {
             self.insertSnippetForSelection(editor, snippetText, options);
         }, null, {keepOrder: true});
-        
+
         if (editor.tabstopManager)
             editor.tabstopManager.tabNext();
     }
@@ -382,7 +402,7 @@ class SnippetManager {
         scope = scope.split("/").pop();
         if (scope === "html" || scope === "php") {
             // PHP is actually HTML
-            if (scope === "php" && !editor.session.$mode.inlinePhp) 
+            if (scope === "php" && !editor.session.$mode.inlinePhp)
                 scope = "html";
             var c = editor.getCursorPosition();
             var state = editor.session.getState(c.row);
@@ -398,7 +418,7 @@ class SnippetManager {
                     scope = "php";
             }
         }
-        
+
         return scope;
     }
 
@@ -422,7 +442,7 @@ class SnippetManager {
             editor.tabstopManager.tabNext();
         return result;
     }
-    
+
     expandSnippetForSelection(editor, options) {
         var cursor = editor.getCursorPosition();
         var line = editor.session.getLine(cursor.row);
@@ -430,6 +450,7 @@ class SnippetManager {
         var after = line.substr(cursor.column);
 
         var snippetMap = this.snippetMap;
+        /**@type {Snippet}*/
         var snippet;
         this.getActiveScopes(editor).some(function(scope) {
             var snippets = snippetMap[scope];
@@ -454,6 +475,12 @@ class SnippetManager {
         return true;
     }
 
+    /**
+     * @param {Snippet[]} snippetList
+     * @param {string} before
+     * @param {string} after
+     * @return {Snippet}
+     */
     findMatchingSnippet(snippetList, before, after) {
         for (var i = snippetList.length; i--;) {
             var s = snippetList[i];
@@ -472,14 +499,19 @@ class SnippetManager {
         }
     }
 
+
+    /**
+     * @param {any[]} snippets
+     * @param {string} scope
+     */
     register(snippets, scope) {
         var snippetMap = this.snippetMap;
         var snippetNameMap = this.snippetNameMap;
         var self = this;
-        
-        if (!snippets) 
+
+        if (!snippets)
             snippets = [];
-        
+
         function wrapRegexp(src) {
             if (src && !/^\^?\(.*\)\$?$|^\\b$/.test(src))
                 src = "(?:" + src + ")";
@@ -530,10 +562,10 @@ class SnippetManager {
                     s.guard = "\\b";
                 s.trigger = lang.escapeRegExp(s.tabTrigger);
             }
-            
+
             if (!s.trigger && !s.guard && !s.endTrigger && !s.endGuard)
                 return;
-            
+
             s.startRe = guardedRegexp(s.trigger, s.guard, true);
             s.triggerRe = new RegExp(s.trigger);
 
@@ -548,7 +580,8 @@ class SnippetManager {
                 addSnippet(snippets[key]);
             });
         }
-        
+
+        // @ts-ignore
         this._signal("registerSnippets", {scope: scope});
     }
     unregister(snippets, scope) {
@@ -572,7 +605,7 @@ class SnippetManager {
     }
     parseSnippetFile(str) {
         str = str.replace(/\r/g, "");
-        var list = [], snippet = {};
+        var list = [], /**@type{Snippet}*/snippet = {};
         var re = /^#.*|^({[\s\S]*})\s*$|^(\S+) (.*)$|^((?:\n*\t.*)+)/gm;
         var m;
         while (m = re.exec(str)) {
@@ -624,7 +657,7 @@ var processSnippetText = function(editor, snippetText, options={}) {
     var line = editor.session.getLine(cursor.row);
     var tabString = editor.session.getTabString();
     var indentString = line.match(/^\s*/)[0];
-    
+
     if (cursor.column < indentString.length)
         indentString = indentString.slice(0, cursor.column);
 
@@ -716,7 +749,7 @@ var processSnippetText = function(editor, snippetText, options={}) {
         if (ts.indexOf(p) === -1)
             ts.push(p);
     }
-    
+
     // convert to plain text
     var row = 0, column = 0;
     var text = "";
@@ -785,7 +818,9 @@ class TabstopManager {
         this.session = null;
         this.editor = null;
     }
-
+    /**
+     * @internal
+     */
     onChange(delta) {
         var isRemove = delta.action[0] == "r";
         var selectedTabstop = this.selectedTabstop || {};
@@ -795,7 +830,7 @@ class TabstopManager {
             var ts = tabstops[i];
             var active = ts == selectedTabstop || parents[ts.index];
             ts.rangeList.$bias = active ? 0 : 1;
-            
+
             if (delta.action == "remove" && ts !== selectedTabstop) {
                 var parentActive = ts.parents && ts.parents[selectedTabstop.index];
                 var startIndex = ts.rangeList.pointIndex(delta.start, parentActive);
@@ -829,10 +864,16 @@ class TabstopManager {
         }
         this.$inChange = false;
     }
+    /**
+     * @internal
+     */
     onAfterExec(e) {
         if (e.command && !e.command.readOnly)
             this.updateLinkedFields();
     }
+    /**
+     * @internal
+     */
     onChangeSelection() {
         if (!this.editor)
             return;
@@ -849,6 +890,9 @@ class TabstopManager {
         }
         this.detach();
     }
+    /**
+     * @internal
+     */
     onChangeSession() {
         this.detach();
     }
@@ -859,8 +903,10 @@ class TabstopManager {
         if (index == max)
             index = 0;
         this.selectTabstop(index);
-        if (index === 0)
+        this.updateTabstopMarkers();
+        if (index === 0) {
             this.detach();
+        }
     }
     selectTabstop(index) {
         this.$openTabstops = null;
@@ -871,7 +917,7 @@ class TabstopManager {
         ts = this.tabstops[this.index];
         if (!ts || !ts.length)
             return;
-        
+
         this.selectedTabstop = ts;
         var range = ts.firstNonLinked || ts;
         if (ts.choices) range.cursor = range.start;
@@ -886,14 +932,14 @@ class TabstopManager {
         } else {
             this.editor.selection.fromOrientedRange(range);
         }
-        
+
         this.editor.keyBinding.addKeyboardHandler(this.keyboardHandler);
         if (this.selectedTabstop && this.selectedTabstop.choices)
             this.editor.execCommand("startAutocomplete", {matches: this.selectedTabstop.choices});
     }
     addTabstops(tabstops, start, end) {
         var useLink = this.useLink || !this.editor.getOption("enableMultiselect");
-        
+
         if (!this.$openTabstops)
             this.$openTabstops = [];
         // add final tabstop if missing
@@ -908,11 +954,13 @@ class TabstopManager {
         var i = this.index;
         var arg = [i + 1, 0];
         var ranges = this.ranges;
+        var snippetId = this.snippetId = (this.snippetId || 0) + 1;
         tabstops.forEach(function(ts, index) {
             var dest = this.$openTabstops[index] || ts;
-            
+            dest.snippetId = snippetId;
             for (var i = 0; i < ts.length; i++) {
                 var p = ts[i];
+                /**@type {Range & {original?: Range, tabstop?: any, linked?: boolean}}}*/
                 var range = Range.fromPoints(p.start, p.end || p.start);
                 movePoint(range.start, start);
                 movePoint(range.end, start);
@@ -940,7 +988,7 @@ class TabstopManager {
             dest.rangeList.$bias = 0;
             dest.rangeList.addList(dest);
         }, this);
-        
+
         if (arg.length > 2) {
             // when adding new snippet inside existing one, make sure 0 tabstop is at the end
             if (this.tabstops.length)
@@ -962,6 +1010,19 @@ class TabstopManager {
             session.removeMarker(range.markerId);
             range.markerId = null;
         });
+    }
+    updateTabstopMarkers() {
+        if (!this.selectedTabstop) return;
+        var currentSnippetId =  this.selectedTabstop.snippetId;
+        // back to the parent snippet tabstops if $0
+        if ( this.selectedTabstop.index === 0) {
+            currentSnippetId--;
+        }
+        this.tabstops.forEach(function(ts) {
+            // show marker only for the tabstops of the currently active snippet
+            if (ts.snippetId === currentSnippetId) this.addTabstopMarkers(ts);
+            else this.removeTabstopMarkers(ts);
+        }, this);
     }
     removeRange(range) {
         var i = range.tabstop.indexOf(range);

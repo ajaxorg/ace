@@ -81,7 +81,7 @@ a = {
 
 z>>=t<<f>>r>>>s>=0b1
 
-foo.protoype.d = function(a, b,
+foo.prototype.d = function(a, b,
                           c, d)
 foo.d =function(a,     b)
 foo.d =function(a,  /*****/ d"string"
@@ -161,3 +161,18 @@ async param => expression;
 <Component onclick={param1 => {
     console.log("Test")
 }}/>
+
+//test different generator functions use cases
+function* generator() {}
+function*generator() {}
+Sound.play = function* play() {  }
+foobar: function   *   () { }
+
+//func's args shouldn't be determined as arrow function
+func (a,b,1,2,3, async () => {})
+func(a,b,innerCall(c,d), () => {})
+
+//async arrow function with default params
+async (param1, param2, ...paramN) => {
+  statements
+}

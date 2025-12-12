@@ -4,6 +4,8 @@ exports.last = function(a) {
     return a[a.length - 1];
 };
 
+
+/** @param {string} string */
 exports.stringReverse = function(string) {
     return string.split("").reverse().join("");
 };
@@ -30,8 +32,13 @@ exports.stringTrimLeft = function (string) {
 exports.stringTrimRight = function (string) {
     return string.replace(trimEndRegexp, '');
 };
-
+/**
+ * @template T
+ * @param {T} obj
+ * @return {T}
+ */
 exports.copyObject = function(obj) {
+    /** @type Object*/
     var copy = {};
     for (var key in obj) {
         copy[key] = obj[key];
@@ -44,7 +51,7 @@ exports.copyArray = function(array){
     for (var i=0, l=array.length; i<l; i++) {
         if (array[i] && typeof array[i] == "object")
             copy[i] = this.copyObject(array[i]);
-        else 
+        else
             copy[i] = array[i];
     }
     return copy;
@@ -128,7 +135,7 @@ exports.deferredCall = function(fcn) {
         timer = null;
         return deferred;
     };
-    
+
     deferred.isPending = function() {
         return timer;
     };
@@ -136,19 +143,25 @@ exports.deferredCall = function(fcn) {
     return deferred;
 };
 
-
+/**
+ * @param {number} [defaultTimeout]
+ */
 exports.delayedCall = function(fcn, defaultTimeout) {
     var timer = null;
     var callback = function() {
         timer = null;
         fcn();
     };
-
+    /**
+     * @param {number} [timeout]
+     */
     var _self = function(timeout) {
         if (timer == null)
             timer = setTimeout(callback, timeout || defaultTimeout);
     };
-
+    /**
+     * @param {number} [timeout]
+     */
     _self.delay = function(timeout) {
         timer && clearTimeout(timer);
         timer = setTimeout(callback, timeout || defaultTimeout);
@@ -181,11 +194,6 @@ exports.supportsLookbehind = function () {
     return true;
 };
 
-exports.supportsUnicodeFlag = function () {
-    try {
-        new RegExp('^.$', 'u');
-    } catch (error) {
-        return false;
-    }
-    return true;
+exports.skipEmptyMatch = function(line, last, supportsUnicodeFlag) {
+    return supportsUnicodeFlag && line.codePointAt(last) > 0xffff ? 2 : 1;
 };

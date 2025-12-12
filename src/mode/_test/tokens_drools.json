@@ -206,12 +206,13 @@
   ["comment.doc","/**"]
 ],[
    "doc-start",
-  ["comment.doc"," * "],
+  ["comment.doc.body"," * "],
   ["comment.doc.tag","@param"],
-  ["comment.doc"," name who we'll salute?"]
+  ["comment.doc.body"," name who we'll salute?"]
 ],[
    "start",
-  ["comment.doc"," */"]
+  ["comment.doc.body"," "],
+  ["comment.doc","*/"]
 ],[
    "start",
   ["keyword","function"],
@@ -414,17 +415,18 @@
    "java-start",
   ["keyword","then"]
 ],[
-   "java-doc-start",
+   ["java-doc-start","java-start"],
   ["text","  "],
   ["comment.doc","/**"]
 ],[
-   "java-doc-start",
-  ["comment.doc","   * "],
+   ["java-doc-start","java-start"],
+  ["comment.doc.body","   * "],
   ["comment.doc.tag.storage.type","TODO"],
-  ["comment.doc"," There mus be better way"]
+  ["comment.doc.body"," There mus be better way"]
 ],[
    "java-start",
-  ["comment.doc","   */"]
+  ["comment.doc.body","   "],
+  ["comment.doc","*/"]
 ],[
    "java-start",
   ["text","  "],
@@ -449,7 +451,7 @@
   ["text","  "],
   ["identifier","a"],
   ["text","."],
-  ["identifier","toString"],
+  ["entity.name.function","toString"],
   ["lparen","("],
   ["rparen",")"],
   ["text",";"]
@@ -462,7 +464,7 @@
   ["lparen","("],
   ["identifier","$s"],
   ["text","."],
-  ["identifier","trim"],
+  ["entity.name.function","trim"],
   ["lparen","("],
   ["rparen","))"],
   ["text",";"]
@@ -566,7 +568,7 @@
   ["text","."],
   ["identifier","out"],
   ["text","."],
-  ["identifier","println"],
+  ["entity.name.function","println"],
   ["lparen","("],
   ["text"," "],
   ["identifier","$s"],
@@ -681,7 +683,7 @@
   ["text","."],
   ["identifier","out"],
   ["text","."],
-  ["identifier","println"],
+  ["entity.name.function","println"],
   ["lparen","("],
   ["text"," "],
   ["string","\"office is in the house\""],
@@ -734,7 +736,7 @@
   ["text","."],
   ["identifier","out"],
   ["text","."],
-  ["identifier","println"],
+  ["entity.name.function","println"],
   ["lparen","("],
   ["text"," "],
   ["string","\"Draw in the House\""],
@@ -751,10 +753,11 @@
   ["comment.doc","/**"]
 ],[
    "doc-start",
-  ["comment.doc"," * Go Right"]
+  ["comment.doc.body"," * Go Right"]
 ],[
    "start",
-  ["comment.doc"," */"]
+  ["comment.doc.body"," "],
+  ["comment.doc","*/"]
 ],[
    "start",
   ["keyword","rule"],
@@ -884,7 +887,7 @@
   ["text","."],
   ["identifier","out"],
   ["text","."],
-  ["identifier","println"],
+  ["entity.name.function","println"],
   ["lparen","("],
   ["text"," "],
   ["string","\"monster right\""],
@@ -909,7 +912,7 @@
   ["text"," "],
   ["keyword","new"],
   ["text"," "],
-  ["identifier","Direction"],
+  ["entity.name.function","Direction"],
   ["lparen","("],
   ["identifier","$df"],
   ["text","."],

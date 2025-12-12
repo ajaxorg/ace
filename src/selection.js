@@ -4,37 +4,28 @@ var oop = require("./lib/oop");
 var lang = require("./lib/lang");
 var EventEmitter = require("./lib/event_emitter").EventEmitter;
 var Range = require("./range").Range;
-
 /**
- * Contains the cursor position and the text selection of an edit session.
- *
- * The row/columns used in the selection are in document coordinates representing the coordinates as they appear in the document before applying soft wrap and folding.
- * @class Selection
- **/
+ * @typedef {import("./edit_session").EditSession} EditSession
+ * @typedef {import("./anchor").Anchor} Anchor
+ * @typedef {import("../ace-internal").Ace.Point} Point
+ */
 
-
-/**
- * Emitted when the cursor position changes.
- * @event changeCursor
- *
- **/
-/**
- * Emitted when the cursor selection changes.
- *
- *  @event changeSelection
- **/
 class Selection {
     /**
      * Creates a new `Selection` object.
      * @param {EditSession} session The session to use
-     *
+     * @constructor
      **/
     constructor(session) {
+        /**@type {EditSession}*/
         this.session = session;
+        /**@type {import("./document").Document}*/
         this.doc = session.getDocument();
     
         this.clearSelection();
+        /**@type {Anchor}*/
         this.cursor = this.lead = this.doc.createAnchor(0, 0);
+        /**@type {Anchor}*/
         this.anchor = this.doc.createAnchor(0, 0);
         this.$silent = false;
     
@@ -77,7 +68,7 @@ class Selection {
 
     /**
      * Returns an object containing the `row` and `column` current position of the cursor.
-     * @returns {Object}
+     * @returns {Point}
      **/
     getCursor() {
         return this.lead.getPosition();
@@ -98,7 +89,7 @@ class Selection {
     /**
      * Returns an object containing the `row` and `column` of the calling selection anchor.
      *
-     * @returns {Object}
+     * @returns {Point}
      * @related Anchor.getPosition
      **/
     getAnchor() {
@@ -162,9 +153,8 @@ class Selection {
 
     /**
      * Sets the selection to the provided range.
-     * @param {Range} range The range of text to select
-     * @param {Boolean} reverse Indicates if the range should go backwards (`true`) or not
-     *
+     * @param {import("../ace-internal").Ace.IRange} range The range of text to select
+     * @param {Boolean} [reverse] Indicates if the range should go backwards (`true`) or not
      **/
     setRange(range, reverse) {
         var start = reverse ? range.end : range.start;
@@ -172,6 +162,12 @@ class Selection {
         this.$setSelection(start.row, start.column, end.row, end.column);
     }
 
+    /**
+     * @param {number} anchorRow
+     * @param {number} anchorColumn
+     * @param {number} cursorRow
+     * @param {number} cursorColumn
+     */
     $setSelection(anchorRow, anchorColumn, cursorRow, cursorColumn) {
         if (this.$silent)
             return;
@@ -210,7 +206,7 @@ class Selection {
 
     /**
      * Moves the selection cursor to the row and column indicated by `pos`.
-     * @param {Object} pos An object containing the row and column
+     * @param {Point} pos An object containing the row and column
      **/
     selectToPosition(pos) {
         this.$moveSelection(function() {
@@ -222,7 +218,6 @@ class Selection {
      * Moves the selection cursor to the indicated row and column.
      * @param {Number} row The row to select to
      * @param {Number} column The column to select to
-     *
      **/
     moveTo(row, column) {
         this.clearSelection();
@@ -380,7 +375,7 @@ class Selection {
     /**
      *
      * Returns `true` if moving the character next to the cursor in the specified direction is a soft tab.
-     * @param {Object} cursor the current cursor position
+     * @param {Point} cursor the current cursor position
      * @param {Number} tabSize the tab size
      * @param {Number} direction 1 for right, -1 for left
      */
@@ -436,6 +431,9 @@ class Selection {
         }
         else {
             var tabSize = this.session.getTabSize();
+            /**
+             * @type {Point}
+             */
             var cursor = this.lead;
             if (this.wouldMoveIntoSoftTab(cursor, tabSize, 1) && !this.session.getNavigateWithinSoftTabs()) {
                 this.moveCursorBy(0, tabSize);
@@ -750,7 +748,7 @@ class Selection {
 
     /**
      * Moves the selection to the position indicated by its `row` and `column`.
-     * @param {Object} position The position to move to
+     * @param {Point} position The position to move to
      **/
     moveCursorToPosition(position) {
         this.moveCursorTo(position.row, position.column);
@@ -760,8 +758,7 @@ class Selection {
      * Moves the cursor to the row and column provided. [If `preventUpdateDesiredColumn` is `true`, then the cursor stays in the same column position as its original point.]{: #preventUpdateBoolDesc}
      * @param {Number} row The row to move to
      * @param {Number} column The column to move to
-     * @param {Boolean} keepDesiredColumn [If `true`, the cursor move does not respect the previous column]{: #preventUpdateBool}
-     *
+     * @param {Boolean} [keepDesiredColumn] [If `true`, the cursor move does not respect the previous column]{: #preventUpdateBool}
      **/
     moveCursorTo(row, column, keepDesiredColumn) {
         // Ensure the row/column is not inside of a fold.
@@ -792,7 +789,6 @@ class Selection {
      * @param {Number} row The row to move to
      * @param {Number} column The column to move to
      * @param {Boolean} keepDesiredColumn {:preventUpdateBool}
-     *
      **/
     moveCursorToScreen(row, column, keepDesiredColumn) {
         var pos = this.session.screenToDocumentPosition(row, column);
@@ -805,11 +801,17 @@ class Selection {
         this.anchor.detach();
     }
 
+    /**
+     * @param {Range & {desiredColumn?: number}} range
+     */
     fromOrientedRange(range) {
         this.setSelectionRange(range, range.cursor == range.start);
         this.$desiredColumn = range.desiredColumn || this.$desiredColumn;
     }
 
+    /**
+     * @param {Range & {desiredColumn?: number}} [range]
+     */
     toOrientedRange(range) {
         var r = this.getRange();
         if (range) {
@@ -830,9 +832,8 @@ class Selection {
      * Saves the current cursor position and calls `func` that can change the cursor
      * postion. The result is the range of the starting and eventual cursor position.
      * Will reset the cursor position.
-     * @param {Function} The callback that should change the cursor position
+     * @param {Function} func The callback that should change the cursor position
      * @returns {Range}
-     *
      **/
     getRangeOfMovements(func) {
         var start = this.getCursor();
@@ -847,20 +848,28 @@ class Selection {
         }
     }
 
+    /**
+     * 
+     * @returns {Range|Range[]}
+     */
     toJSON() {
         if (this.rangeCount) {
-            var data = this.ranges.map(function(r) {
+            /**@type{Range|Range[]}*/var data = this.ranges.map(function(r) {
                 var r1 = r.clone();
                 r1.isBackwards = r.cursor == r.start;
                 return r1;
             });
         } else {
-            var data = this.getRange();
+            /**@type{Range|Range[]}*/var data = this.getRange();
             data.isBackwards = this.isBackwards();
         }
         return data;
     }
 
+    /**
+     * 
+     * @param data
+     */
     fromJSON(data) {
         if (data.start == undefined) {
             if (this.rangeList && data.length > 1) {
@@ -881,6 +890,11 @@ class Selection {
         this.setSelectionRange(data, data.isBackwards);
     }
 
+    /**
+     * 
+     * @param data
+     * @return {boolean}
+     */
     isEqual(data) {
         if ((data.length || this.rangeCount) && data.length != this.rangeCount)
             return false;

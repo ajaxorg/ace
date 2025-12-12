@@ -1,4 +1,12 @@
 "use strict";
+/**
+ * @typedef {import("./edit_session").EditSession} EditSession
+ * @typedef {{range: import("./range").Range, className: string}} MarkerGroupItem
+ * @typedef {import("../ace-internal").Ace.LayerConfig} LayerConfig
+ */
+/**
+ * @typedef {import("./layer/marker").Marker} Marker
+ */
 
 /*
 Potential improvements:
@@ -6,16 +14,29 @@ Potential improvements:
 */
 
 class MarkerGroup {
-    constructor(session) {
+    /**
+     * @param {EditSession} session
+     * @param {{markerType: "fullLine" | "line" | undefined}} [options] Options controlling the behvaiour of the marker.
+     * User `markerType` to control how the markers which are part of this group will be rendered:
+     * - `undefined`: uses `text` type markers where only text characters within the range will be highlighted.
+     * - `fullLine`: will fully highlight all the rows within the range, including the characters before and after the range on the respective rows.
+     * - `line`: will fully highlight the lines within the range but will only cover the characters between the start and end of the range.
+     */
+    constructor(session, options) {
+        if (options)
+            this.markerType = options.markerType;
+        /**@type {import("../ace-internal").Ace.MarkerGroupItem[]}*/
         this.markers = [];
+        /**@type {EditSession}*/
         this.session = session;
+        // @ts-expect-error TODO: could potential error here, or most likely missing checks in other places
         session.addDynamicMarker(this);
     }
 
     /**
      * Finds the first marker containing pos
-     * @param {Position} pos 
-     * @returns Ace.MarkerGroupItem
+     * @param {import("../ace-internal").Ace.Point} pos
+     * @returns {import("../ace-internal").Ace.MarkerGroupItem | undefined}
      */
     getMarkerAtPosition(pos) {
         return this.markers.find(function(marker) {
@@ -25,9 +46,9 @@ class MarkerGroup {
 
     /**
      * Comparator for Array.sort function, which sorts marker definitions by their positions
-     * 
-     * @param {Ace.MarkerGroupItem} a first marker.
-     * @param {Ace.MarkerGroupItem} b second marker.
+     *
+     * @param {MarkerGroupItem} a first marker.
+     * @param {MarkerGroupItem} b second marker.
      * @returns {number} negative number if a should be before b, positive number if b should be before a, 0 otherwise.
      */
     markersComparator(a, b) {
@@ -36,13 +57,19 @@ class MarkerGroup {
 
     /**
      * Sets marker definitions to be rendered. Limits the number of markers at MAX_MARKERS.
-     * @param {Ace.MarkerGroupItem[]} markers an array of marker definitions.
+     * @param {MarkerGroupItem[]} markers an array of marker definitions.
      */
     setMarkers(markers) {
         this.markers = markers.sort(this.markersComparator).slice(0, this.MAX_MARKERS);
         this.session._signal("changeBackMarker");
     }
 
+    /**
+     * @param {any} html
+     * @param {Marker} markerLayer
+     * @param {EditSession} session
+     * @param {LayerConfig} config
+     */
     update(html, markerLayer, session, config) {
         if (!this.markers || !this.markers.length)
             return;
@@ -85,10 +112,15 @@ class MarkerGroup {
                 continue;
             }
 
-            if (screenRange.isMultiLine()) {
-                markerLayer.drawTextMarker(html, screenRange, marker.className, config);
+            if (this.markerType === "fullLine") {
+                markerLayer.drawFullLineMarker(html, screenRange, marker.className, config);
+            } else if (screenRange.isMultiLine()) {
+                if (this.markerType === "line")
+                    markerLayer.drawMultiLineMarker(html, screenRange, marker.className, config);
+                else
+                    markerLayer.drawTextMarker(html, screenRange, marker.className, config);
             } else {
-                markerLayer.drawSingleLineMarker(html, screenRange, marker.className, config);
+                markerLayer.drawSingleLineMarker(html, screenRange, marker.className + " ace_br15", config);
             }
         }
     }

@@ -1,5 +1,3 @@
-if (typeof process !== "undefined") require("amd-loader");
-
 "use strict";
 
 var LatexMode = require("../latex").Mode;
