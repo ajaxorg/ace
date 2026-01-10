@@ -1,0 +1,22 @@
+@{
+	Layout = "~/layout"
+}
+@code{
+	private int count = 0;
+}
+@code {
+	private string name = "Test";
+}
+@functions{
+	public void DoSomething() { }
+}
+@model MyApp.Models.User
+@inject IUserService UserService
+@inherits CustomBasePage
+@implements IDisposable
+@attribute [Authorize]
+@layout MainLayout
+@namespace MyApp.Pages
+@rendermode InteractiveServer
+@using System.Collections.Generic
+@page "/counter"
