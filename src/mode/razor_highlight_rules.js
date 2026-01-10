@@ -64,7 +64,7 @@ var RazorHighlightRules = function() {
     // 'Blocks': @{}, @(), @functions{}
 
     var blockStartRule = {
-        regex: '@[({]|@functions{',
+        regex: '@[({]|@functions{|@code ?{',
         onMatch: function(value, state, stack) {
             stack.unshift(value);
             stack.unshift('razor-block-start');
@@ -76,7 +76,9 @@ var RazorHighlightRules = function() {
     var blockEndMap = {
         '@{': '}',
         '@(': ')',
-        '@functions{':'}'
+        '@functions{':'}',
+        '@code {':'}',
+        '@code{':'}'
     };
 
     var blockEndRule = {
