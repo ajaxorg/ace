@@ -138,7 +138,11 @@ var RazorHighlightRules = function() {
         },
         {
             token: ["meta.directive.razor", "text", "identifier"],
-            regex: "^(\\s*@model)(\\s+)(.+)$"
+            regex: "^(\\s*@(?:model|inject|inherits|implements|attribute|layout|namespace|rendermode|using))(\\s+)(.+)$"
+        },
+        {
+            token: ["meta.directive.razor", "text", "string"],
+            regex: "^(\\s*@page)(\\s+)(.*)$"
         },
         blockStartRule,
         //ifStartRule,
