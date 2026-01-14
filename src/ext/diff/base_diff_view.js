@@ -29,7 +29,7 @@ var dummyDiffProvider = {
     }
 };
 
-dom.importCssString(css, "diffview.css");
+dom.importCssString(css, "diffview.css", false);
 
 class BaseDiffView {
     /**
