@@ -29,41 +29,46 @@ var DjangoHighlightRules = function(){
 oop.inherits(DjangoHighlightRules, TextHighlightRules);
 
 var DjangoHtmlHighlightRules = function() {
-    this.$rules = new HtmlHighlightRules().getRules();
-
-    for (var i in this.$rules) {
-        this.$rules[i].unshift({
+    HtmlHighlightRules.call(this);
+    var startRules = [
+        {
             token: "comment.line",
             regex: "\\{#.*?#\\}"
         }, {
             token: "comment.block",
             regex: "\\{\\%\\s*comment\\s*\\%\\}",
-            merge: true,
-            next: "django-comment"
+            push: [{
+                token: "comment.block",
+                regex: "\\{\\%\\s*endcomment\\s*\\%\\}",
+                next: "pop"
+            }, {
+                defaultToken: "comment.block"
+            }]
         }, {
             token: "constant.language",
             regex: "\\{\\{",
-            next: "django-start"
+            push: "django-start"
         }, {
             token: "constant.language",
             regex: "\\{\\%",
-            next: "django-tag"
-        });
-        this.embedRules(DjangoHighlightRules, "django-", [{
-                token: "comment.block",
-                regex: "\\{\\%\\s*endcomment\\s*\\%\\}",
-                merge: true,
-                next: "start"
-            }, {
-                token: "constant.language",
-                regex: "\\%\\}",
-                next: "start"
-            }, {
-                token: "constant.language",
-                regex: "\\}\\}",
-                next: "start"
-        }]);
-    }
+            push: "django-tag"
+        }
+    ];
+    var endRules = [
+        {
+            token: "constant.language",
+            regex: "\\%\\}",
+            next: "pop"
+        }, {
+            token: "constant.language",
+            regex: "\\}\\}",
+            next: "pop"
+        }
+    ];
+    for (var key in this.$rules)
+        this.$rules[key].unshift.apply(this.$rules[key], startRules);
+    this.embedRules(DjangoHighlightRules, "django-", endRules, ["start"]);
+    this.normalizeRules();
 };
 
 oop.inherits(DjangoHtmlHighlightRules, HtmlHighlightRules);
