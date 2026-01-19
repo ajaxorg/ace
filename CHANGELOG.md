@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.43.5](https://github.com/ajaxorg/ace/compare/v1.43.4...v1.43.5) (2025-12-02)
+
 ### [1.43.4](https://github.com/ajaxorg/ace/compare/v1.43.3...v1.43.4) (2025-10-17)
 
 

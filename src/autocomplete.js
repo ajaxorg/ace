@@ -687,24 +687,24 @@ class Autocomplete {
 
         var leftSize = rect.left;
         var rightSize = window.innerWidth - rect.right - scrollBarSize;
-        var topSize = popup.isTopdown ? rect.top : window.innerHeight - scrollBarSize - rect.bottom;
+        var topSize = popup.isTopdown ?  window.innerHeight - scrollBarSize - rect.bottom : rect.top;
         var scores = [
             Math.min(rightSize / targetWidth, 1),
             Math.min(leftSize / targetWidth, 1),
-            Math.min(topSize / targetHeight * 0.9),
+            Math.min(topSize / targetHeight, 1) * 0.9,
         ];
         var max = Math.max.apply(Math, scores);
         var tooltipStyle = tooltipNode.style;
         tooltipStyle.display = "block";
 
-        if (max == scores[0]) {
+        if (max == scores[0] || scores[0] >= 1) {
             tooltipStyle.left = (rect.right + 1) + "px";
             tooltipStyle.right = "";
             tooltipStyle.maxWidth = targetWidth * max + "px";
             tooltipStyle.top = rect.top + "px";
             tooltipStyle.bottom = "";
             tooltipStyle.maxHeight = Math.min(window.innerHeight - scrollBarSize - rect.top, targetHeight) + "px";
-        } else if (max == scores[1]) {
+        } else if (max == scores[1] || scores[1] >= 1) {
             tooltipStyle.right = window.innerWidth - rect.left + "px";
             tooltipStyle.left = "";
             tooltipStyle.maxWidth = targetWidth * max + "px";
@@ -712,23 +712,21 @@ class Autocomplete {
             tooltipStyle.bottom = "";
             tooltipStyle.maxHeight = Math.min(window.innerHeight - scrollBarSize - rect.top, targetHeight) + "px";
         } else if (max == scores[2]) {
-            tooltipStyle.left = window.innerWidth - rect.left + "px";
-            tooltipStyle.maxWidth = Math.min(targetWidth, window.innerWidth) + "px";
+            tooltipStyle.left = rect.left + "px";
+            tooltipStyle.right = "";
+            tooltipStyle.maxWidth = Math.min(targetWidth, window.innerWidth - rect.left) + "px";
 
             if (popup.isTopdown) {
                 tooltipStyle.top = rect.bottom + "px";
-                tooltipStyle.left = rect.left + "px";
-                tooltipStyle.right = "";
                 tooltipStyle.bottom = "";
                 tooltipStyle.maxHeight = Math.min(window.innerHeight - scrollBarSize - rect.bottom, targetHeight) + "px";
             } else {
-                tooltipStyle.top = popup.container.offsetTop - tooltipNode.offsetHeight + "px";
-                tooltipStyle.left = rect.left + "px";
-                tooltipStyle.right = "";
-                tooltipStyle.bottom = "";
-                tooltipStyle.maxHeight = Math.min(popup.container.offsetTop, targetHeight) + "px";
+                tooltipStyle.top = "";
+                tooltipStyle.bottom = (window.innerHeight  - rect.top) + "px";
+                tooltipStyle.maxHeight = Math.min(rect.top, targetHeight) + "px";
             }
         }
+        dom.$fixPositionBug(tooltipNode);
     }
 
     hideDocTooltip() {
