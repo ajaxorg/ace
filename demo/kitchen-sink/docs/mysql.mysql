@@ -1,1 +1,161 @@
-TODO
+-- Single line comment
+
+/*
+ * Multi-line comment block
+ *
+ */
+
+# Hash-style comment (MySQL specific)
+
+-- Database and Table Operations
+CREATE DATABASE IF NOT EXISTS demo_db
+    CHARACTER SET utf8mb4
+    COLLATE utf8mb4_unicode_ci;
+
+USE demo_db;
+
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    email VARCHAR(100) NOT NULL,
+    password_hash CHAR(64),
+    balance DECIMAL(10, 2) DEFAULT 0.00,
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME ON UPDATE CURRENT_TIMESTAMP,
+    profile_data JSON,
+    INDEX idx_email (email),
+    FULLTEXT INDEX idx_username (username)
+) ENGINE=InnoDB;
+
+-- Insert Statements
+INSERT INTO users (username, email, password_hash)
+VALUES
+    ('john_doe', 'john@example.com', SHA2('password123', 256)),
+    ('jane_smith', 'jane@example.com', SHA2('secure456', 256));
+
+-- Select with Various Clauses
+SELECT
+    u.id,
+    u.username,
+    CONCAT(UPPER(LEFT(u.username, 1)), LOWER(SUBSTRING(u.username, 2))) AS formatted_name,
+    COALESCE(u.balance, 0) AS balance,
+    DATE_FORMAT(u.created_at, '%Y-%m-%d') AS join_date
+FROM users u
+WHERE u.is_active = TRUE
+    AND u.created_at >= '2024-01-01'
+    AND u.email LIKE '%@example.com'
+    AND u.id BETWEEN 1 AND 1000
+    AND u.username IN ('john_doe', 'jane_smith')
+    AND u.profile_data IS NOT NULL
+GROUP BY u.id
+HAVING COUNT(*) > 0
+ORDER BY u.created_at DESC
+LIMIT 10 OFFSET 0;
+
+-- Update Statement
+UPDATE users
+SET balance = balance + 100.50,
+    updated_at = NOW()
+WHERE username = 'john_doe';
+
+-- Delete Statement
+DELETE FROM users
+WHERE is_active = FALSE
+    AND created_at < DATE_SUB(NOW(), INTERVAL 1 YEAR);
+
+-- Join Example
+SELECT
+    u.username,
+    o.order_id,
+    o.total_amount
+FROM users u
+INNER JOIN orders o ON u.id = o.user_id
+LEFT JOIN order_items oi ON o.order_id = oi.order_id
+WHERE o.status != 'cancelled';
+
+-- Subquery and EXISTS
+SELECT * FROM users
+WHERE EXISTS (
+    SELECT 1 FROM orders
+    WHERE orders.user_id = users.id
+    AND orders.total_amount > 500
+);
+
+-- CASE Expression
+SELECT
+    username,
+    CASE
+        WHEN balance >= 1000 THEN 'Premium'
+        WHEN balance >= 100 THEN 'Standard'
+        ELSE 'Basic'
+    END AS tier
+FROM users;
+
+-- Window Functions
+SELECT
+    username,
+    balance,
+    ROW_NUMBER() OVER (ORDER BY balance DESC) AS rank,
+    SUM(balance) OVER (PARTITION BY is_active) AS total_by_status
+FROM users;
+
+-- Variables
+SET @user_count = (SELECT COUNT(*) FROM users);
+SET @tax_rate = 0.08;
+
+SELECT @user_count AS total_users;
+
+-- Stored Procedure
+DELIMITER //
+CREATE PROCEDURE GetUserByEmail(IN user_email VARCHAR(100))
+BEGIN
+    DECLARE user_exists INT DEFAULT 0;
+
+    SELECT COUNT(*) INTO user_exists
+    FROM users WHERE email = user_email;
+
+    IF user_exists > 0 THEN
+        SELECT * FROM users WHERE email = user_email;
+    ELSE
+        SELECT 'User not found' AS message;
+    END IF;
+END //
+DELIMITER ;
+
+-- Function
+CREATE FUNCTION CalculateDiscount(price DECIMAL(10,2), discount_pct INT)
+RETURNS DECIMAL(10,2)
+DETERMINISTIC
+BEGIN
+    RETURN price * (1 - discount_pct / 100);
+END;
+
+-- Trigger
+CREATE TRIGGER before_user_update
+BEFORE UPDATE ON users
+FOR EACH ROW
+BEGIN
+    SET NEW.updated_at = NOW();
+END;
+
+-- Transaction
+START TRANSACTION;
+    UPDATE users SET balance = balance - 50 WHERE id = 1;
+    UPDATE users SET balance = balance + 50 WHERE id = 2;
+COMMIT;
+
+-- Common Table Expression (CTE)
+WITH active_users AS (
+    SELECT * FROM users WHERE is_active = TRUE
+)
+SELECT * FROM active_users WHERE balance > 100;
+
+-- EXPLAIN for query analysis
+EXPLAIN SELECT * FROM users WHERE email = 'test@example.com';
+
+-- Numeric literals
+SELECT 42, 3.14159, 1e10, 0x1A2B, b'101010';
+
+-- String literals
+SELECT 'single quotes', "double quotes", `backtick identifiers`;
