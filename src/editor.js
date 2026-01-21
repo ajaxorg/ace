@@ -2906,6 +2906,7 @@ config.defineOptions(Editor.prototype, "editor", {
     behavioursEnabled: {initialValue: true},
     wrapBehavioursEnabled: {initialValue: true},
     enableAutoIndent: {initialValue: true},
+    enableDoubleFindToReplace: {initalValue: false},
     autoScrollEditorIntoView: {
         set: function(val) {this.setAutoScrollEditorIntoView(val);}
     },
