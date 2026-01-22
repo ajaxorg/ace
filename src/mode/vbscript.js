@@ -31,6 +31,24 @@ oop.inherits(Mode, TextMode);
         "wend"
     ];
 
+    function isSecondOfDoubleKeyword(tokens, i) {
+        var val = tokens[i].value.toLowerCase();
+        var prevToken = i >= 2 ? tokens[i - 2] : null;
+        if (!prevToken) return false;
+        var prevVal = prevToken.value.toLowerCase();
+
+        // Do While / Do Until / Loop While / Loop Until
+        if ((val === "while" || val === "until") && (prevVal === "do" || prevVal === "loop")) {
+            return true;
+        }
+        // Exit For / Exit Do / Exit Sub / Exit Function / Exit Property
+        if (prevVal === "exit" && (val === "for" || val === "do" || val === "sub" || val === "function" || val
+            === "property")) {
+            return true;
+        }
+        return false;
+    }
+
     function getNetIndentLevel(tokens, line, indentKeywords) {
         var level = 0;
         // Support single-line blocks by decrementing the indent level if
@@ -40,6 +58,9 @@ oop.inherits(Mode, TextMode);
             if (token.type == "keyword.control.asp" || token.type == "storage.type.function.asp") {
                 var val = token.value.toLowerCase();
                 if (val in indentKeywords) {
+                    if (isSecondOfDoubleKeyword(tokens, i)) {
+                        continue;
+                    }
                     switch (val) {
                         case "property":
                         case "sub":
@@ -119,6 +140,14 @@ oop.inherits(Mode, TextMode);
         var startToken = session.getTokenAt(row, column);
         if (startToken) {
             var val = startToken.value.toLowerCase();
+            if (/^\s+$/.test(val)) {
+                column = column + val.length;
+                startToken = session.getTokenAt(row, column);
+                if (!startToken) {
+                    return;
+                }
+                val = startToken.value.toLowerCase();
+            }
             if (val in this.indentKeywords)
                 return this.foldingRules.vbsBlock(session, row, column, tokenRange);
         }
