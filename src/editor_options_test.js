@@ -47,7 +47,7 @@ module.exports = {
     },
     "test readOnly Option": function (done) {
         let readOnly = editor.getOption("readOnly");
-        assert.equal(editor.hoverTooltip, null);
+        assert.equal(editor.$hoverTooltip, null);
         assert.equal(readOnly, false);
         editor.setOption("readOnly", true);
         readOnly = editor.getOption("readOnly");
@@ -72,7 +72,11 @@ module.exports = {
                 setTimeout(() => {
                     assert.equal(editor.getValue(), "a999");
                     var nodes = document.querySelectorAll(".ace_tooltip");
-                    assert.equal(nodes.length, 1);
+                    assert.equal(nodes.length, 2);
+                    editor.destroy();
+                    editor.container.remove();
+                    var nodes = document.querySelectorAll(".ace_tooltip");
+                    assert.equal(nodes.length, 0);
                     done();
                 }, 6);
             }, 6);
