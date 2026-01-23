@@ -1,0 +1,43 @@
+name: Update PR Description
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  update-description:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Update PR description
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const prNumber = context.payload.pull_request.number;
+            const owner = context.payload.pull_request.head.repo.owner.login;
+            const repo = context.payload.pull_request.head.repo.name;
+            const commit = context.payload.pull_request.head.sha;
+            const link = `https://raw.githack.com/${owner}/${repo}/${commit}/kitchen-sink.html`;
+
+            const { data: pullRequest } = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: prNumber,
+            });
+
+            if (!pullRequest.body.includes(link)) {
+              const updatedBody = `${pullRequest.body}\n\n[Open kitchen-sink @ ${commit}](${link})`;
+
+              await github.rest.pulls.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: prNumber,
+                body: updatedBody,
+              });
+            }
