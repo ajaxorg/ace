@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.43.6](https://github.com/ajaxorg/ace/compare/v1.43.5...v1.43.6) (2026-01-23)
+
+
+### Bug Fixes
+
+* the text completer didn't export its id ([#5847](https://github.com/ajaxorg/ace/issues/5847)) ([b256c10](https://github.com/ajaxorg/ace/commit/b256c10691e6ba9296d18dcdea15441189971d1e))
+
 ### [1.43.5](https://github.com/ajaxorg/ace/compare/v1.43.4...v1.43.5) (2025-12-02)
 
 ### [1.43.4](https://github.com/ajaxorg/ace/compare/v1.43.3...v1.43.4) (2025-10-17)
