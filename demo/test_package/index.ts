@@ -1,5 +1,5 @@
 import * as ace from "ace-code";
-import {Range} from "ace-code";
+import {EditSession, Range} from "ace-code";
 import {Autocomplete, FilteredList} from "ace-code/src/autocomplete";
 import {beautify} from "ace-code/src/ext/beautify";
 import {registerCodeLensProvider, setLenses} from "ace-code/src/ext/code_lens";
@@ -138,13 +138,20 @@ filter.setFilter("test");
 editor.session.startOperation();
 editor.session.endOperation();
 
-editor.on("paste", (e) => {
+editor.on("paste", (e, emitter) => {
     if (e.event && e.event.clipboardData) {
         var htmlString = e.event.clipboardData.getData("text/html")
         if (htmlString) {
             e.text = htmlString
         }
+        if (emitter.session) {
+            console.log("no error");
+        }
     }
+})
+
+editor.session.on("changeMode", (e, emitter) => {
+    return e && emitter instanceof EditSession
 })
 
 if (themesByName.textmate)

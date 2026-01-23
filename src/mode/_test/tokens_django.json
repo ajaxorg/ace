@@ -63,4 +63,52 @@
   ["constant.language","%}"]
 ],[
    "start"
+],[
+   "start",
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","p"],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","id"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"formatted\""],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","class"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"test-class-1 "],
+  ["constant.language","{{"],
+  ["text"," "],
+  ["variable","variable_class"],
+  ["text"," "],
+  ["constant.language","}}"],
+  ["string.attribute-value.xml"," test-class-2\""],
+  ["text.tag-whitespace.xml"," "],
+  ["entity.other.attribute-name.xml","data-attribute"],
+  ["keyword.operator.attribute-equals.xml","="],
+  ["string.attribute-value.xml","\"unformatted\""],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","p"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
+],[
+   "start"
+],[
+   "comment.block",
+  ["comment.block","{% comment %}"]
+],[
+   "comment.block",
+  ["comment.block","    This content should be green."]
+],[
+   "start",
+  ["comment.block","{% endcomment %}"]
+],[
+   "start"
+],[
+   "start",
+  ["meta.tag.punctuation.tag-open.xml","<"],
+  ["meta.tag.tag-name.xml","p"],
+  ["meta.tag.punctuation.tag-close.xml",">"],
+  ["comment.line","{#line comment#}"],
+  ["meta.tag.punctuation.end-tag-open.xml","</"],
+  ["meta.tag.tag-name.xml","p"],
+  ["meta.tag.punctuation.tag-close.xml",">"]
 ]]

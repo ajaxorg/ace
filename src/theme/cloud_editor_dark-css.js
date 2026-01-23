@@ -46,21 +46,16 @@ module.exports = `
     border: 1px solid #e8e8e8;
 }
 
-.ace-cloud_editor_dark .ace_gutter-active-line::before,
+.ace-cloud_editor_dark .ace_gutter-cursor,
 .ace-cloud_editor_dark .ace_marker-layer .ace_active-line {
     box-sizing: border-box;
     border-top: 1px solid #75777a;
     border-bottom: 1px solid #75777a;
 }
 
-.ace-cloud_editor_dark .ace_gutter-active-line::before {
-    content: "";
+.ace-cloud_editor_dark .ace_gutter-cursor {
     position: absolute;
-    height: 100%;
     width: 100%;
-    left: 0;
-    z-index: 1;
-    pointer-events: none;
 }
 
 .ace-cloud_editor_dark .ace_marker-layer .ace_selected-word {

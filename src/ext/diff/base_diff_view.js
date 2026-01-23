@@ -29,7 +29,7 @@ var dummyDiffProvider = {
     }
 };
 
-dom.importCssString(css, "diffview.css");
+dom.importCssString(css, "diffview.css", false);
 
 class BaseDiffView {
     /**
@@ -121,6 +121,10 @@ class BaseDiffView {
                 diffModel.valueB || "")),
             chunks: []
         });
+        
+        if (this.otherEditor && this.activeEditor) {
+            this.otherSession.setOption("wrap", this.activeEditor.getOption("wrap"));
+        }
 
         this.setupScrollbars();
     }

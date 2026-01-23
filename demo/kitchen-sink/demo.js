@@ -603,9 +603,14 @@ function openTestDialog(animateHeight) {
         window.dialogEditor.destroy();
     var editor = ace.edit(null, {
         value: "test editor", 
-        mode: "ace/mode/javascript"
+        mode: "ace/mode/javascript",
+        enableBasicAutocompletion: true
     });
     window.dialogEditor = editor;
+
+    editor.completer.parentNode = editor.container;
+    if (window.languageProvider)
+        window.languageProvider.registerEditor(editor);
 
     var dialog = dom.buildDom(["div", {
         style: "transition: all 1s; position: fixed; z-index: 100000;"

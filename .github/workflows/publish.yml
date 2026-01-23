@@ -8,6 +8,7 @@ on:
       - v*
   workflow_dispatch:
 permissions:
+  id-token: write  # Required for OIDC
   contents: read # to fetch code (actions/checkout)
 jobs:
   build:
@@ -17,10 +18,8 @@ jobs:
     # Setup .npmrc file to publish to npm
     - uses: actions/setup-node@v1
       with:
-        node-version: '16.x'
+        node-version: '18.x'
         registry-url: 'https://registry.npmjs.org'
     - run: npm install
     - run: npm run test
     - run: npm publish
-      env:
-        NODE_AUTH_TOKEN: ${{ secrets.NPM_SECRET }}

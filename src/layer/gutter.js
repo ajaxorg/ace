@@ -1,8 +1,18 @@
 "use strict";
 /**
  * @typedef {import("../edit_session").EditSession} EditSession
+ * @typedef {import("../editor").Editor} Editor
  * @typedef {import("../../ace-internal").Ace.LayerConfig} LayerConfig
  */
+/**
+ * @typedef {Object} GutterRenderer
+ * @property {(session: EditSession, row: number) => string} getText - Gets the text to display for a given row
+ * @property {(session: EditSession, lastLineNumber: number, config: Object) => number} getWidth - Calculates the width needed for the gutter
+ * @property {(e: undefined, editor: Editor) => void} [update] - Updates the gutter display
+ * @property {(editor: Editor) => void} [attach] - Attaches the renderer to an editor
+ * @property {(editor: Editor) => void} [detach] - Detaches the renderer from an editor
+ */
+
 var dom = require("../lib/dom");
 var oop = require("../lib/oop");
 var lang = require("../lib/lang");
@@ -15,6 +25,7 @@ class Gutter{
      * @param {HTMLElement} parentEl
      */
     constructor(parentEl) {
+        this.$showCursorMarker = null;
         this.element = dom.createElement("div");
         this.element.className = "ace_layer ace_gutter-layer";
         parentEl.appendChild(this.element);
@@ -172,6 +183,9 @@ class Gutter{
         
         this._signal("afterRender");
         this.$updateGutterWidth(config);
+        
+        if (this.$showCursorMarker && this.$highlightGutterLine)
+            this.$updateCursorMarker();
     }
 
     /**
@@ -214,6 +228,9 @@ class Gutter{
     }
     
     updateLineHighlight() {
+        if (this.$showCursorMarker)
+            this.$updateCursorMarker();
+
         if (!this.$highlightGutterLine)
             return;
         var row = this.session.selection.cursor.row;
@@ -240,6 +257,29 @@ class Gutter{
                 break;
             }
         }
+    }
+
+    $updateCursorMarker() {
+        if (!this.session)
+            return;
+        var session = this.session;
+        if (!this.$highlightElement) {
+            this.$highlightElement = dom.createElement("div");
+            this.$highlightElement.className = "ace_gutter-cursor";
+            this.$highlightElement.style.pointerEvents = "none";
+            this.element.appendChild(this.$highlightElement);
+        }
+        var pos = session.selection.cursor;
+        var config = this.config;
+        var lines = this.$lines;
+
+        var screenTop = config.firstRowScreen * config.lineHeight;
+        var screenPage = Math.floor(screenTop / lines.canvasHeight);
+        var lineTop = session.documentToScreenRow(pos) * config.lineHeight;
+        var top = lineTop - (screenPage * lines.canvasHeight);
+
+        dom.setStyle(this.$highlightElement.style, "height", config.lineHeight + "px");
+        dom.setStyle(this.$highlightElement.style, "top", top + "px");
     }
 
     /**
@@ -566,12 +606,17 @@ class Gutter{
      */
     setHighlightGutterLine(highlightGutterLine) {
         this.$highlightGutterLine = highlightGutterLine;
+        if (!highlightGutterLine && this.$highlightElement) {
+            this.$highlightElement.remove();
+            this.$highlightElement = null;
+        }
     }
 
     /**
      * @param {boolean} show
      */
     setShowLineNumbers(show) {
+        /**@type{GutterRenderer}*/
         this.$renderer = !show && {
             getWidth: function() {return 0;},
             getText: function() {return "";}
@@ -634,15 +679,29 @@ class Gutter{
     /**
     * Retrieves the gutter cell element at the specified cursor row position.
     * @param {number} row - The row number in the editor where the gutter cell is located starts from 0
-    * @returns {HTMLElement|null} The gutter cell element at the specified row, or null if not found
+    * @returns {HTMLElement|undefined} The gutter cell element at the specified row, or undefined if not found
     * @experimental
     */
     $getGutterCell(row) {
-        // contains only visible rows
-        const cells = this.$lines.cells;
-        const visibileRow= this.session.documentToScreenRow(row,0);
-        // subtracting the first visible screen row index and folded rows from the row number.
-        return cells[row - this.config.firstRowScreen - (row-visibileRow)];
+        var cells = this.$lines.cells;
+        var min = 0;
+        var max = cells.length - 1;
+        
+        if (row < cells[0].row || row > cells[max].row)
+            return;
+
+        while (min <= max) {
+            var mid = Math.floor((min + max) / 2);
+            var cell = cells[mid];
+            if (cell.row > row) {
+                max = mid - 1;
+            } else if (cell.row < row) {
+                min = mid + 1;
+            } else {
+                return cell;
+            }
+        }
+        return cell;
     }
 
     /**
@@ -739,7 +798,7 @@ class Gutter{
 
 Gutter.prototype.$fixedWidth = false;
 Gutter.prototype.$highlightGutterLine = true;
-Gutter.prototype.$renderer = "";
+Gutter.prototype.$renderer = undefined;
 Gutter.prototype.$showLineNumbers = true;
 Gutter.prototype.$showFoldWidgets = true;
 

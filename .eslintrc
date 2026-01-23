@@ -152,5 +152,19 @@
         // space-unary-ops: 2, // require or disallow spaces before/after unary operators (fixable)
         // spaced-comment: [2, "always", { markers: ["-", "*", "/", "{", "}", "#"], exceptions: ["}"] }]
 
-    }
+    },
+    
+    // allow async/await in tests only
+    overrides: [
+        {
+            files: ["**/*_test.js"],
+            parserOptions: {
+                ecmaVersion: 2022, 
+            },
+            env: {
+            },
+            rules: {
+            },
+        }
+    ]
 }

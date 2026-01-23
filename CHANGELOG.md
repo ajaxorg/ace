@@ -2,6 +2,36 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.43.6](https://github.com/ajaxorg/ace/compare/v1.43.5...v1.43.6) (2026-01-23)
+
+
+### Bug Fixes
+
+* the text completer didn't export its id ([#5847](https://github.com/ajaxorg/ace/issues/5847)) ([b256c10](https://github.com/ajaxorg/ace/commit/b256c10691e6ba9296d18dcdea15441189971d1e))
+
+### [1.43.5](https://github.com/ajaxorg/ace/compare/v1.43.4...v1.43.5) (2025-12-02)
+
+### [1.43.4](https://github.com/ajaxorg/ace/compare/v1.43.3...v1.43.4) (2025-10-17)
+
+
+### Bug Fixes
+
+* Update for compliance with typescript 5.9.2 ([#5855](https://github.com/ajaxorg/ace/issues/5855)) ([6e110b0](https://github.com/ajaxorg/ace/commit/6e110b0061b56b72db7478762036a1ba39251102))
+
+### [1.43.3](https://github.com/ajaxorg/ace/compare/v1.43.2...v1.43.3) (2025-09-02)
+
+
+### Bug Fixes
+
+* firefox textarea autocomplete corruption ([#5860](https://github.com/ajaxorg/ace/issues/5860)) ([23ac02f](https://github.com/ajaxorg/ace/commit/23ac02f7602b84cc4ea30f6ed4f889d3802affde))
+
+### [1.43.2](https://github.com/ajaxorg/ace/compare/v1.43.1...v1.43.2) (2025-07-15)
+
+
+### Features
+
+* Implement text markers ([#5835](https://github.com/ajaxorg/ace/issues/5835)) ([085730f](https://github.com/ajaxorg/ace/commit/085730fff987ec88c2350146f18b42b17532d47f))
+
 ### [1.43.1](https://github.com/ajaxorg/ace/compare/v1.43.0...v1.43.1) (2025-07-02)
 
 

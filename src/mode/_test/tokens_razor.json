@@ -14,4 +14,116 @@
 ],[
    "start",
   ["punctuation.block.razor","}"]
+],[
+   ["razor-block-start","@code{"],
+  ["punctuation.block.razor","@code{"]
+],[
+   ["razor-block-start","@code{"],
+  ["text","\t"],
+  ["keyword","private"],
+  ["text"," "],
+  ["keyword","int"],
+  ["text"," "],
+  ["identifier","count"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","0"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["punctuation.block.razor","}"]
+],[
+   ["razor-block-start","@code {"],
+  ["punctuation.block.razor","@code {"]
+],[
+   ["razor-block-start","@code {"],
+  ["text","\t"],
+  ["keyword","private"],
+  ["text"," "],
+  ["keyword","string"],
+  ["text"," "],
+  ["identifier","name"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["string.start","\""],
+  ["string","Test"],
+  ["string.end","\""],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["punctuation.block.razor","}"]
+],[
+   ["razor-block-start","@functions{"],
+  ["punctuation.block.razor","@functions{"]
+],[
+   ["razor-block-start","@functions{"],
+  ["text","\t"],
+  ["keyword","public"],
+  ["text"," "],
+  ["keyword","void"],
+  ["text"," "],
+  ["identifier","DoSomething"],
+  ["paren.lparen","("],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["paren.lparen","{"],
+  ["text"," "],
+  ["paren.rparen","}"]
+],[
+   "start",
+  ["punctuation.block.razor","}"]
+],[
+   "start",
+  ["meta.directive.razor","@model"],
+  ["text"," "],
+  ["identifier","MyApp.Models.User"]
+],[
+   "start",
+  ["meta.directive.razor","@inject"],
+  ["text"," "],
+  ["identifier","IUserService UserService"]
+],[
+   "start",
+  ["meta.directive.razor","@inherits"],
+  ["text"," "],
+  ["identifier","CustomBasePage"]
+],[
+   "start",
+  ["meta.directive.razor","@implements"],
+  ["text"," "],
+  ["identifier","IDisposable"]
+],[
+   "start",
+  ["meta.directive.razor","@attribute"],
+  ["text"," "],
+  ["identifier","[Authorize]"]
+],[
+   "start",
+  ["meta.directive.razor","@layout"],
+  ["text"," "],
+  ["identifier","MainLayout"]
+],[
+   "start",
+  ["meta.directive.razor","@namespace"],
+  ["text"," "],
+  ["identifier","MyApp.Pages"]
+],[
+   "start",
+  ["meta.directive.razor","@rendermode"],
+  ["text"," "],
+  ["identifier","InteractiveServer"]
+],[
+   "start",
+  ["meta.directive.razor","@using"],
+  ["text"," "],
+  ["identifier","System.Collections.Generic"]
+],[
+   "start",
+  ["meta.directive.razor","@page"],
+  ["text"," "],
+  ["string","\"/counter\""]
+],[
+   "start"
 ]]

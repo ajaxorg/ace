@@ -5,3 +5,11 @@
 {% block content %}
   <h1>Hello, {{ name|default:"World" }}!</h1>
 {% endblock %}
+
+<p id="formatted" class="test-class-1 {{ variable_class }} test-class-2" data-attribute="unformatted"></p>
+
+{% comment %}
+    This content should be green.
+{% endcomment %}
+
+<p>{#line comment#}</p>

@@ -3,4 +3,4 @@ exports.isDark = true;
   exports.cssText = require("./cloud9_night-css");
 
   var dom = require("../lib/dom");
-  dom.importCssString(exports.cssText, exports.cssClass);
+  dom.importCssString(exports.cssText, exports.cssClass, false);

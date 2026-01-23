@@ -33,7 +33,7 @@ dom.importCssString(`
 }
 .emacs-mode .ace_cursor-layer {
     z-index: 2
-}`, 'emacsMode'
+}`, 'emacsMode', false
 );
 var $formerLongWords;
 var $formerLineStart;

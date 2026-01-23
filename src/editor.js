@@ -2690,6 +2690,7 @@ class Editor {
      * Cleans up the entire editor.
      **/
     destroy() {
+        /** true if editor is destroyed */
         this.destroyed = true;
         if (this.$toDestroy) {
             this.$toDestroy.forEach(function(el) {
@@ -2787,6 +2788,13 @@ class Editor {
         });
     }
 
+    get hoverTooltip() {
+        return this.$hoverTooltip || (this.$hoverTooltip = new HoverTooltip(this.container));
+    }
+    set hoverTooltip(value) {
+        if (this.$hoverTooltip) this.$hoverTooltip.destroy();
+            this.$hoverTooltip = value;
+    }
 }
 
 Editor.$uid = 0;
@@ -2857,9 +2865,6 @@ config.defineOptions(Editor.prototype, "editor", {
                         shouldShow = true;
                     }
                     if (shouldShow) {
-                        if (!this.hoverTooltip) {
-                            this.hoverTooltip = new HoverTooltip();
-                        }
                         var domNode = dom.createElement("div");
                         domNode.textContent = nls("editor.tooltip.disable-editing", "Editing is disabled");
                         if (!this.hoverTooltip.isOpen) {
@@ -2879,10 +2884,6 @@ config.defineOptions(Editor.prototype, "editor", {
                 event.removeListener(textArea, "keydown", this.$readOnlyCallback);
                 this.commands.off("exec", this.$readOnlyCallback);
                 this.commands.off("commandUnavailable", this.$readOnlyCallback);
-                if (this.hoverTooltip) {
-                    this.hoverTooltip.destroy();
-                    this.hoverTooltip = null;
-                }
             }
         },
         initialValue: false
@@ -3120,7 +3121,6 @@ config.defineOptions(Editor.prototype, "editor", {
     dragDelay: "$mouseHandler",
     dragEnabled: "$mouseHandler",
     focusTimeout: "$mouseHandler",
-    tooltipFollowsMouse: "$mouseHandler",
 
     firstLineNumber: "session",
     overwrite: "session",
