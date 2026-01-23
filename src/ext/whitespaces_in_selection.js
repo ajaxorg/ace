@@ -9,11 +9,19 @@
 "use strict";
 
 require("../layer/text_markers");
-const Editor = require("../editor").Editor;
-const config = require("../config");
-const dom = require("../lib/dom");
-const whitespacesCss = require("./whitespaces_in_selection-css");
-dom.importCssString(whitespacesCss, "ace_whitespaces_in_selection", false);
+var Editor = require("../editor").Editor;
+var config = require("../config");
+var dom = require("../lib/dom");
+
+dom.importCssString(`
+.ace_whitespaces_in_selection {
+    color: rgba(0,0,0,0.29);
+}
+
+.ace_dark .ace_whitespaces_in_selection {
+    color: rgba(187, 181, 181, 0.5);
+}
+`, "ace_whitespaces_in_selection", false);
 
 config.defineOptions(Editor.prototype, "editor", {
     showWhitespacesInSelection: {

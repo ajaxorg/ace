@@ -1,4 +1,4 @@
-const Text = require("./text").Text;
+var Text = require("./text").Text;
 var lang = require("../lib/lang");
 /**
  * @typedef TextMarker
@@ -15,21 +15,21 @@ var lang = require("../lib/lang");
  * @property {number} afterSelection - Characters after selection
  */
 
-const textMarkerMixin = {
+var textMarkerMixin = {
     /**
      * @param {string} className
      * @this {Text}
      */
     $removeClass(className) {
         if (!this.element || !className) return;
-        const selectedElements = this.element.querySelectorAll('.' + className);
+        var selectedElements = this.element.querySelectorAll('.' + className);
         for (let i = 0; i < selectedElements.length; i++) {
-            const element = selectedElements[i];
+            var element = selectedElements[i];
             element.classList.remove(className);
 
             if (element.hasAttribute('data-whitespace')) {
-                const originalWhitespace = element.getAttribute('data-whitespace');
-                const textNode = this.dom.createTextNode(originalWhitespace, this.element);
+                var originalWhitespace = element.getAttribute('data-whitespace');
+                var textNode = this.dom.createTextNode(originalWhitespace, this.element);
                 textNode["charCount"] = element["charCount"];
                 element.parentNode.replaceChild(textNode, element);
             }
@@ -47,13 +47,13 @@ const textMarkerMixin = {
             this.session.$scheduleForRemove = new Set();
         }
 
-        const textMarkers = this.session.getTextMarkers();
+        var textMarkers = this.session.getTextMarkers();
 
         if (textMarkers.length === 0) {
             return;
         }
 
-        const classNameGroups = new Set();
+        var classNameGroups = new Set();
         textMarkers.forEach(marker => {
             classNameGroups.add(marker.className);
         });
@@ -64,7 +64,7 @@ const textMarkerMixin = {
 
         textMarkers.forEach((marker) => {
             for (let row = marker.range.start.row; row <= marker.range.end.row; row++) {
-                const cell = this.$lines.cells.find((el) => el.row === row);
+                var cell = this.$lines.cells.find((el) => el.row === row);
 
                 if (cell) {
                     this.$modifyDomForMarkers(cell.element, row, marker);
@@ -80,7 +80,7 @@ const textMarkerMixin = {
      * @param {TextMarker} marker - The marker to apply
      */
     $modifyDomForMarkers(lineElement, row, marker) {
-        const lineLength = this.session.getLine(row).length;
+        var lineLength = this.session.getLine(row).length;
         let startCol = row > marker.range.start.row ? 0 : marker.range.start.column;
         let endCol = row < marker.range.end.row ? lineLength : marker.range.end.column;
         if (startCol === endCol) {
@@ -97,7 +97,7 @@ const textMarkerMixin = {
 
         var currentColumn = 0;
         lineElements.forEach((lineElement) => {
-            const childNodes = Array.from(lineElement.childNodes);
+            var childNodes = Array.from(lineElement.childNodes);
             for (let i = 0; i < childNodes.length; i++) {
                 let subChildNodes = [childNodes[i]];
                 let parentNode = lineElement;
@@ -106,23 +106,23 @@ const textMarkerMixin = {
                     parentNode = childNodes[i];
                 }
                 for (let j = 0; j < subChildNodes.length; j++) {
-                    const node = subChildNodes[j];
-                    const nodeText = node.textContent || '';
+                    var node = subChildNodes[j];
+                    var nodeText = node.textContent || '';
                     if (node.parentNode["charCount"]) {
                         node["charCount"] = node.parentNode["charCount"];
                     }
-                    const contentLength = node["charCount"] || nodeText.length;
-                    const nodeStart = currentColumn;
-                    const nodeEnd = currentColumn + contentLength;
+                    var contentLength = node["charCount"] || nodeText.length;
+                    var nodeStart = currentColumn;
+                    var nodeEnd = currentColumn + contentLength;
 
                     if (node["charCount"] === 0 || contentLength === 0) {
                         continue;
                     }
 
                     if (nodeStart < endCol && nodeEnd > startCol) {
-                        const beforeSelection = Math.max(0, startCol - nodeStart);
-                        const afterSelection = Math.max(0, nodeEnd - endCol);
-                        const selectionLength = contentLength - beforeSelection - afterSelection;
+                        var beforeSelection = Math.max(0, startCol - nodeStart);
+                        var afterSelection = Math.max(0, nodeEnd - endCol);
+                        var selectionLength = contentLength - beforeSelection - afterSelection;
 
                         if (marker.type === "invisible") {
                             this.$processInvisibleMarker(node, parentNode, {
@@ -153,9 +153,9 @@ const textMarkerMixin = {
      * @param {object} marker - The marker being applied
      */
     $processInvisibleMarker(node, parentNode, selectionSegment, marker) {
-        const nodeText = node.textContent || '';
+        var nodeText = node.textContent || '';
         if (node.nodeType === 3) { // Text node
-            const fragment = this.dom.createFragment(this.element);
+            var fragment = this.dom.createFragment(this.element);
 
             if (selectionSegment.beforeSelection > 0) {
                 fragment.appendChild(
@@ -163,21 +163,21 @@ const textMarkerMixin = {
             }
 
             if (selectionSegment.selectionLength > 0) {
-                const selectedText = selectionSegment.beforeSelection === 0 && selectionSegment.afterSelection === 0
+                var selectedText = selectionSegment.beforeSelection === 0 && selectionSegment.afterSelection === 0
                     ? nodeText : nodeText.substring(
                         selectionSegment.beforeSelection,
                         selectionSegment.beforeSelection + selectionSegment.selectionLength
                     );
 
-                const segments = selectedText.match(/\s+|[^\s]+/g) || [];
+                var segments = selectedText.match(/\s+|[^\s]+/g) || [];
 
                 for (let k = 0; k < segments.length; k++) {
-                    const segment = segments[k];
+                    var segment = segments[k];
                     let span;
                     if (/^\s+$/.test(segment)) {
                         span = this.dom.createElement("span");
                         span.className = marker.className;
-                        const symbol = node["charCount"] ? this.TAB_CHAR : this.SPACE_CHAR;
+                        var symbol = node["charCount"] ? this.TAB_CHAR : this.SPACE_CHAR;
                         span.textContent = lang.stringRepeat(symbol, segment.length);
                         span.setAttribute("data-whitespace", segment);
                         fragment.appendChild(span);
@@ -215,10 +215,10 @@ const textMarkerMixin = {
      * @param {number} endCol - Ending column of the selection
      */
     $processRegularMarker(node, parentNode, selectionSegment, marker, nodeStart, startCol, endCol) {
-        const nodeText = node.textContent || '';
+        var nodeText = node.textContent || '';
         if (node.nodeType === 3) { // Text node
             if (selectionSegment.beforeSelection > 0 || selectionSegment.afterSelection > 0) {
-                const fragment = this.dom.createFragment(this.element);
+                var fragment = this.dom.createFragment(this.element);
 
                 if (selectionSegment.beforeSelection > 0) {
                     fragment.appendChild(
@@ -226,7 +226,7 @@ const textMarkerMixin = {
                 }
 
                 if (selectionSegment.selectionLength > 0) {
-                    const selectedSpan = this.dom.createElement('span');
+                    var selectedSpan = this.dom.createElement('span');
                     selectedSpan.classList.add(marker.className);
                     selectedSpan.textContent = nodeText.substring(
                         selectionSegment.beforeSelection,
@@ -245,7 +245,7 @@ const textMarkerMixin = {
                 parentNode.replaceChild(fragment, node);
             }
             else {
-                const selectedSpan = this.dom.createElement('span');
+                var selectedSpan = this.dom.createElement('span');
                 selectedSpan.classList.add(marker.className);
                 selectedSpan.textContent = nodeText;
                 selectedSpan["charCount"] = node["charCount"];
@@ -260,18 +260,18 @@ const textMarkerMixin = {
             else {
                 if (selectionSegment.beforeSelection > 0 || selectionSegment.afterSelection > 0) {
                     // @ts-ignore
-                    const nodeClasses = node.className;
-                    const fragment = this.dom.createFragment(this.element);
+                    var nodeClasses = node.className;
+                    var fragment = this.dom.createFragment(this.element);
 
                     if (selectionSegment.beforeSelection > 0) {
-                        const beforeSpan = this.dom.createElement('span');
+                        var beforeSpan = this.dom.createElement('span');
                         beforeSpan.className = nodeClasses;
                         beforeSpan.textContent = nodeText.substring(0, selectionSegment.beforeSelection);
                         fragment.appendChild(beforeSpan);
                     }
 
                     if (selectionSegment.selectionLength > 0) {
-                        const selectedSpan = this.dom.createElement('span');
+                        var selectedSpan = this.dom.createElement('span');
                         selectedSpan.className = nodeClasses + ' ' + marker.className;
                         selectedSpan.textContent = nodeText.substring(
                             selectionSegment.beforeSelection,
@@ -281,7 +281,7 @@ const textMarkerMixin = {
                     }
 
                     if (selectionSegment.afterSelection > 0) {
-                        const afterSpan = this.dom.createElement('span');
+                        var afterSpan = this.dom.createElement('span');
                         afterSpan.className = nodeClasses;
                         afterSpan.textContent = nodeText.substring(selectionSegment.beforeSelection + selectionSegment.selectionLength);
                         fragment.appendChild(afterSpan);
@@ -297,7 +297,7 @@ const textMarkerMixin = {
 Object.assign(Text.prototype, textMarkerMixin);
 
 var EditSession = require("../edit_session").EditSession;
-const editSessionTextMarkerMixin = {
+var editSessionTextMarkerMixin = {
     /**
      * Adds a text marker to the current edit session.
      *
@@ -336,7 +336,7 @@ const editSessionTextMarkerMixin = {
             return;
         }
 
-        const marker = this.$textMarkers[markerId];
+        var marker = this.$textMarkers[markerId];
         if (!marker) {
             return;
         }
@@ -360,11 +360,11 @@ const editSessionTextMarkerMixin = {
 Object.assign(EditSession.prototype, editSessionTextMarkerMixin);
 
 
-const onAfterRender = (e, renderer) => {
+var onAfterRender = (e, renderer) => {
     renderer.$textLayer.$applyTextMarkers();
 };
 
-const Editor = require("../editor").Editor;
+var Editor = require("../editor").Editor;
 require("../config").defineOptions(Editor.prototype, "editor", {
     enableTextMarkers: {
         /**

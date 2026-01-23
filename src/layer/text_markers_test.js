@@ -61,11 +61,11 @@ module.exports = {
         assert.equal(markerSpans.length, 1);
         assert.equal(getText(markerSpans), "ncti");
 
-        const result = normalize(`<span class="ace_storage ace_type">var</span>
+        var result = normalize(`<span class="ace_storage ace_type">var</span>
             <span class="ace_identifier">fu<span class=" split-token-marker">ncti</span>onName</span> <span
                 class="ace_keyword ace_operator">=</span> <span class="ace_string">"test"</span><span
                 class="ace_punctuation ace_operator">;</span>`);
-        const actual = normalize(this.textLayer.element.childNodes[0].innerHTML);
+        var actual = normalize(this.textLayer.element.childNodes[0].innerHTML);
         assert.equal(actual, result);
     },
 
@@ -81,12 +81,12 @@ module.exports = {
         var markerSpans = this.textLayer.element.querySelectorAll('.overlap-marker');
         assert.equal(getText(markerSpans), "st = 1");
 
-        const result = normalize(`<span class="ace_storage ace_type">var</span> <span class="ace_identifier">te
+        var result = normalize(`<span class="ace_storage ace_type">var</span> <span class="ace_identifier">te
     <span class=" overlap-marker">st</span></span><span class=" overlap-marker"> </span>
     <span class="ace_keyword ace_operator">
     <span class=" overlap-marker">=</span></span><span class=" overlap-marker"> </span><span class="ace_constant ace_numeric">
     <span class=" overlap-marker">1</span>23</span><span class="ace_punctuation ace_operator">;</span>`);
-        const actual = normalize(this.textLayer.element.childNodes[0].innerHTML);
+        var actual = normalize(this.textLayer.element.childNodes[0].innerHTML);
         assert.equal(actual, result);
     },
 
@@ -101,7 +101,7 @@ module.exports = {
 
         this.textLayer.$applyTextMarkers();
 
-        const line = this.textLayer.element.childNodes[0];
+        var line = this.textLayer.element.childNodes[0];
 
         // Verify all markers are applied
         assert.ok(line.querySelectorAll('.marker-1').length > 0);
@@ -110,12 +110,12 @@ module.exports = {
 
         assert.equal(line.textContent, 'var longVariableName = 42;');
 
-        const result = normalize(`<span class="ace_storage ace_type">var</span> <span class="ace_identifier">
+        var result = normalize(`<span class="ace_storage ace_type">var</span> <span class="ace_identifier">
             <span class=" marker-1">lo</span><span class=" marker-1 marker-3">ng</span>
             <span class=" marker-1 marker-2 marker-3">Vari</span><span class=" marker-2 marker-3">ab</span>
             <span class=" marker-2">le</span>Name</span> <span class="ace_keyword ace_operator">=</span> 
             <span class="ace_constant ace_numeric">42</span><span class="ace_punctuation ace_operator">;</span>`);
-        const actual = normalize(this.textLayer.element.childNodes[0].innerHTML);
+        var actual = normalize(this.textLayer.element.childNodes[0].innerHTML);
         assert.equal(actual, result);
     },
 
@@ -131,8 +131,8 @@ module.exports = {
         this.textLayer.$applyTextMarkers();
 
         //preserve whitespaces
-        const result = `<span class="ace_identifier">fun<span class=" tab-marker">c</span></span><span class=" tab-marker">    </span><span class=" tab-marker">    </span><span class="ace_identifier"><span class=" tab-marker">t</span>est</span>`;
-        const actual = this.textLayer.element.childNodes[0].innerHTML;
+        var result = `<span class="ace_identifier">fun<span class=" tab-marker">c</span></span><span class=" tab-marker">    </span><span class=" tab-marker">    </span><span class="ace_identifier"><span class=" tab-marker">t</span>est</span>`;
+        var actual = this.textLayer.element.childNodes[0].innerHTML;
         assert.equal(actual, result);
     },
 
@@ -145,7 +145,7 @@ module.exports = {
 
         this.textLayer.$applyTextMarkers();
 
-        const line = this.textLayer.element.childNodes[0];
+        var line = this.textLayer.element.childNodes[0];
         var cjkMarkers = line.querySelectorAll('.cjk-marker');
         assert.ok(cjkMarkers.length > 0, "CJK marker should be present");
 
@@ -155,11 +155,11 @@ module.exports = {
         });
         assert.equal(markedText, "试function测");
 
-        const result = normalize(`<span class="ace_identifier"><span class="ace_cjk" style="width: 20px;">测</span>
+        var result = normalize(`<span class="ace_identifier"><span class="ace_cjk" style="width: 20px;">测</span>
             <span class="ace_cjk cjk-marker" style="width: 20px;">试</span><span class=" cjk-marker">function</span>
             <span class="ace_cjk cjk-marker" style="width: 20px;">测</span>
             <span class="ace_cjk" style="width: 20px;">试</span></span>`);
-        const actual = normalize(this.textLayer.element.childNodes[0].innerHTML);
+        var actual = normalize(this.textLayer.element.childNodes[0].innerHTML);
         assert.equal(actual, result);
     },
 
@@ -172,7 +172,7 @@ module.exports = {
 
         this.textLayer.$applyTextMarkers();
 
-        const line = this.textLayer.element.childNodes[0];
+        var line = this.textLayer.element.childNodes[0];
 
         var markerSpans = line.querySelectorAll('.temp-marker');
         assert.ok(markerSpans.length > 0, "Marker should be present");
@@ -182,14 +182,14 @@ module.exports = {
         this.textLayer.update(this.textLayer.config);
         this.textLayer.$applyTextMarkers();
 
-        const newLine = this.textLayer.element.childNodes[0];
+        var newLine = this.textLayer.element.childNodes[0];
 
         markerSpans = newLine.querySelectorAll('.temp-marker');
         assert.equal(markerSpans.length, 0, "Marker should be removed");
     },
 
     "test: invisible marker with mixed whitespace and complete cleanup verification": function() {
-        const value = "function\t  test() { //test     comment\n    var x = 1;\n}";
+        var value = "function\t  test() { //test     comment\n    var x = 1;\n}";
         this.session.setValue(value);
 
         this.textLayer.update(this.textLayer.config);
@@ -208,7 +208,7 @@ module.exports = {
         assert.ok(hasTabSymbol, "Should contain TAB_CHAR symbol");
         assert.ok(hasSpaceSymbol, "Should contain SPACE_CHAR symbol");
 
-        const result = normalize(`<span class="ace_storage ace_type">function</span>
+        var result = normalize(`<span class="ace_storage ace_type">function</span>
             <span class="invisible-marker" data-whitespace="    ">————</span>
             <span class="invisible-marker" data-whitespace="  ">··</span>
             <span class="ace_entity ace_name ace_function"><span>test</span></span>
@@ -218,7 +218,7 @@ module.exports = {
             <span>{</span></span><span class="invisible-marker" data-whitespace=" ">·</span>
             <span class="ace_comment"><span>//test</span>
             <span class="invisible-marker" data-whitespace="    ">····</span> comment</span>`);
-        const actual = normalize(this.textLayer.element.childNodes[0].innerHTML);
+        var actual = normalize(this.textLayer.element.childNodes[0].innerHTML);
         assert.equal(actual, result);
 
         this.session.removeTextMarker(markerId);
