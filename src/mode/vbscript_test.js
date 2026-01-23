@@ -157,6 +157,163 @@
             ranges = this.mode.getMatching(session, 0, 3);
             assert.range(ranges[0], 0, 0, 0, 5);
             assert.range(ranges[1], 8, 0, 8, 9);
+        },
+
+        "test: Do While / Loop double keyword matching": function() {
+            var session = new EditSession([
+                'Do While condition',
+                '   some code',
+                'Loop'
+            ]);
+            session.setMode(this.mode);
+
+            var ranges = this.mode.getMatching(session, 0, 0);
+            assert.equal(ranges.length, 2);
+            assert.range(ranges[0], 0, 0, 0, 8);
+            assert.range(ranges[1], 2, 0, 2, 4);
+
+            ranges = this.mode.getMatching(session, 0, 4);
+            assert.equal(ranges.length, 2);
+            assert.range(ranges[0], 0, 0, 0, 8);
+            assert.range(ranges[1], 2, 0, 2, 4);
+
+            // Cursor on whitespace between "Do" and "While"
+            ranges = this.mode.getMatching(session, 0, 2);
+            assert.equal(ranges.length, 2);
+            assert.range(ranges[0], 0, 0, 0, 8);
+            assert.range(ranges[1], 2, 0, 2, 4);
+        },
+
+        "test: Do Until / Loop double keyword matching": function() {
+            var session = new EditSession([
+                'Do Until condition',
+                '   some code',
+                'Loop'
+            ]);
+            session.setMode(this.mode);
+
+            var ranges = this.mode.getMatching(session, 0, 0);
+            assert.equal(ranges.length, 2);
+            assert.range(ranges[0], 0, 0, 0, 8);
+            assert.range(ranges[1], 2, 0, 2, 4);
+
+            ranges = this.mode.getMatching(session, 0, 4);
+            assert.equal(ranges.length, 2);
+            assert.range(ranges[0], 0, 0, 0, 8);
+            assert.range(ranges[1], 2, 0, 2, 4);
+        },
+
+        "test: Do / Loop Until double keyword matching": function() {
+            var session = new EditSession([
+                'Do',
+                '   some code',
+                'Loop Until condition'
+            ]);
+            session.setMode(this.mode);
+
+            var ranges = this.mode.getMatching(session, 0, 0);
+            assert.equal(ranges.length, 2);
+            assert.range(ranges[0], 0, 0, 0, 2);
+            assert.range(ranges[1], 2, 0, 2, 10); // "Loop Until"
+
+            ranges = this.mode.getMatching(session, 2, 0);
+            assert.equal(ranges.length, 2);
+            assert.range(ranges[0], 2, 0, 2, 10);
+            assert.range(ranges[1], 0, 0, 0, 2);
+
+            ranges = this.mode.getMatching(session, 2, 6);
+            assert.equal(ranges.length, 2);
+            assert.range(ranges[0], 2, 0, 2, 10);
+            assert.range(ranges[1], 0, 0, 0, 2);
+        },
+
+        "test: Exit statements should not match": function() {
+            var session = new EditSession([
+                'Do While condition',
+                '   Exit Do',
+                '   some code',
+                'Loop',
+                'For i = 1 To 10',
+                '   Exit For',
+                'Next'
+            ]);
+            session.setMode(this.mode);
+
+            var ranges = this.mode.getMatching(session, 1, 4);
+            assert.equal(ranges, undefined);
+
+            // Exit Do - cursor on "Do" after "Exit"
+            ranges = this.mode.getMatching(session, 1, 8);
+            assert.equal(ranges, undefined);
+
+            // Exit For - cursor on "Exit"
+            ranges = this.mode.getMatching(session, 5, 4);
+            assert.equal(ranges, undefined);
+
+            // Exit For - cursor on "For" after "Exit"
+            ranges = this.mode.getMatching(session, 5, 8);
+            assert.equal(ranges, undefined);
+
+            // Do While should still match Loop correctly
+            ranges = this.mode.getMatching(session, 0, 0);
+            assert.equal(ranges.length, 2);
+            assert.range(ranges[0], 0, 0, 0, 8);
+            assert.range(ranges[1], 3, 0, 3, 4);
+        },
+
+        "test: getNextLineIndent with double keywords": function() {
+            // Do While/Until - one indent, not two
+            assert.equal(this.mode.getNextLineIndent("start", "Do While condition", "  "), "  ");
+            assert.equal(this.mode.getNextLineIndent("start", "Do Until condition", "  "), "  ");
+
+            // Exit statements - no indent change
+            assert.equal(this.mode.getNextLineIndent("start", "  Exit Do", "  "), "  ");
+            assert.equal(this.mode.getNextLineIndent("start", "  Exit For", "  "), "  ");
+            assert.equal(this.mode.getNextLineIndent("start", "  Exit Sub", "  "), "  ");
+            assert.equal(this.mode.getNextLineIndent("start", "  Exit Function", "  "), "  ");
+            assert.equal(this.mode.getNextLineIndent("start", "  Exit Property", "  "), "  ");
+        },
+
+        "test: nested Do loops with double keywords": function() {
+            var session = new EditSession([
+                'Do While outer',
+                '   Do Until inner',
+                '      some code',
+                '   Loop',
+                'Loop'
+            ]);
+            session.setMode(this.mode);
+
+            // Outer Do While -> outer Loop
+            var ranges = this.mode.getMatching(session, 0, 0);
+            assert.equal(ranges.length, 2);
+            assert.range(ranges[0], 0, 0, 0, 8);
+            assert.range(ranges[1], 4, 0, 4, 4);
+
+            // Inner Do Until -> inner Loop
+            ranges = this.mode.getMatching(session, 1, 4);
+            assert.equal(ranges.length, 2);
+            assert.range(ranges[0], 1, 3, 1, 11);
+            assert.range(ranges[1], 3, 3, 3, 7);
+        },
+
+        "test: plain Do / Loop without While/Until": function() {
+            var session = new EditSession([
+                'Do',
+                '   some code',
+                'Loop'
+            ]);
+            session.setMode(this.mode);
+
+            var ranges = this.mode.getMatching(session, 0, 0);
+            assert.equal(ranges.length, 2);
+            assert.range(ranges[0], 0, 0, 0, 2);
+            assert.range(ranges[1], 2, 0, 2, 4);
+
+            ranges = this.mode.getMatching(session, 2, 0);
+            assert.equal(ranges.length, 2);
+            assert.range(ranges[0], 2, 0, 2, 4);
+            assert.range(ranges[1], 0, 0, 0, 2);
         }
     };
 
