@@ -72,6 +72,7 @@ declare module "ace-code/src/theme/cloud_editor" {
     export const isDark: false;
     export const cssClass: "ace-cloud_editor";
     export const cssText: string;
+    export const $showGutterCursorMarker: true;
 }
 declare module "ace-code/src/theme/cloud_editor_dark-css" {
     const _exports: string;
@@ -81,6 +82,7 @@ declare module "ace-code/src/theme/cloud_editor_dark" {
     export const isDark: true;
     export const cssClass: "ace-cloud_editor_dark";
     export const cssText: string;
+    export const $showGutterCursorMarker: true;
 }
 declare module "ace-code/src/theme/clouds-css" {
     const _exports: string;
