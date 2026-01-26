@@ -162,7 +162,6 @@ var supportedModes = {
     Liquid:      ["liquid"],
     Lisp:        ["lisp"],
     LiveScript:  ["ls"],
-    Log:         ["log"],
     LogiQL:      ["logic|lql"],
     Logtalk:     ["lgt"],
     LSL:         ["lsl"],
