@@ -430,6 +430,22 @@ class AcePopup {
         popup.$imageSize = 0;
         popup.$borderSize = 1;
 
+        /**
+         * Get HTML element containing the popup data.
+         * @returns {HTMLDivElement} element 
+         */
+        popup.getDataContainer = function() {
+            return this.renderer.$textLayer.element;
+        };
+
+        /**
+         * Number of rows shown in the popup.
+         * @param {number} rows 
+         */
+        popup.setVisibleRows = function(rows) {
+            this.renderer.$maxLines = rows;
+        };
+
         return popup;
     }
 }
