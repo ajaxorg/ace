@@ -74,7 +74,9 @@ require("ace/config").defineOptions(Editor.prototype, "editor", {
             else if (val) {
                 window.languageProvider.registerEditor(this);
             } else {
-                // todo unregister
+                if (window.languageProvider) {
+                    window.languageProvider.unregisterEditor(editor, true);
+                }
             }
         }
     }
