@@ -51,6 +51,7 @@ declare module "ace-code/src/lib/dom" {
     export function removeElementById(id: string, doc?: Document): void;
     export function useStrictCSP(value: any): void;
     export function importCssStylsheet(uri: string, doc?: Document): void;
+    export function $fixPositionBug(el: HTMLElement): void;
     export function scrollbarWidth(doc?: Document): number;
     export function computedStyle(element: Element, style?: any): Partial<CSSStyleDeclaration>;
     export function setStyle(styles: CSSStyleDeclaration, property: string, value: string): void;

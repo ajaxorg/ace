@@ -1,22 +1,38 @@
-const Text = require("./text").Text;
-
+var Text = require("./text").Text;
+var lang = require("../lib/lang");
 /**
  * @typedef TextMarker
  * @property {import("../../ace-internal").Ace.IRange} range
  * @property {number} id
  * @property {string} className
+ * @property {string} [type]
  */
 
-const textMarkerMixin = {
+/**
+ * @typedef SelectionSegment
+ * @property {number} beforeSelection - Characters before selection
+ * @property {number} selectionLength - Length of selection
+ * @property {number} afterSelection - Characters after selection
+ */
+
+var textMarkerMixin = {
     /**
      * @param {string} className
      * @this {Text}
      */
     $removeClass(className) {
-        if (!this.element) return;
-        const selectedElements = this.element.querySelectorAll('.' + className);
+        if (!this.element || !className) return;
+        var selectedElements = this.element.querySelectorAll('.' + className);
         for (let i = 0; i < selectedElements.length; i++) {
-            selectedElements[i].classList.remove(className);
+            var element = selectedElements[i];
+            element.classList.remove(className);
+
+            if (element.hasAttribute('data-whitespace')) {
+                var originalWhitespace = element.getAttribute('data-whitespace');
+                var textNode = this.dom.createTextNode(originalWhitespace, this.element);
+                textNode["charCount"] = element["charCount"];
+                element.parentNode.replaceChild(textNode, element);
+            }
         }
     },
     /**
@@ -31,13 +47,13 @@ const textMarkerMixin = {
             this.session.$scheduleForRemove = new Set();
         }
 
-        const textMarkers = this.session.getTextMarkers();
+        var textMarkers = this.session.getTextMarkers();
 
         if (textMarkers.length === 0) {
             return;
         }
 
-        const classNameGroups = new Set();
+        var classNameGroups = new Set();
         textMarkers.forEach(marker => {
             classNameGroups.add(marker.className);
         });
@@ -48,7 +64,7 @@ const textMarkerMixin = {
 
         textMarkers.forEach((marker) => {
             for (let row = marker.range.start.row; row <= marker.range.end.row; row++) {
-                const cell = this.$lines.cells.find((el) => el.row === row);
+                var cell = this.$lines.cells.find((el) => el.row === row);
 
                 if (cell) {
                     this.$modifyDomForMarkers(cell.element, row, marker);
@@ -56,16 +72,20 @@ const textMarkerMixin = {
             }
         });
     },
+
     /**
-     * @param {HTMLElement} lineElement
-     * @param {number} row
-     * @param {TextMarker} marker
-     * @this {Text}
+     * Modifies the DOM for marker rendering.
+     * @param {HTMLElement} lineElement - The line element to modify
+     * @param {number} row - The row being processed
+     * @param {TextMarker} marker - The marker to apply
      */
     $modifyDomForMarkers(lineElement, row, marker) {
-        const lineLength = this.session.getLine(row).length;
+        var lineLength = this.session.getLine(row).length;
         let startCol = row > marker.range.start.row ? 0 : marker.range.start.column;
         let endCol = row < marker.range.end.row ? lineLength : marker.range.end.column;
+        if (startCol === endCol) {
+            return;
+        }
 
         var lineElements = [];
         if (lineElement.classList.contains('ace_line_group')) {
@@ -77,7 +97,7 @@ const textMarkerMixin = {
 
         var currentColumn = 0;
         lineElements.forEach((lineElement) => {
-            const childNodes = Array.from(lineElement.childNodes);
+            var childNodes = Array.from(lineElement.childNodes);
             for (let i = 0; i < childNodes.length; i++) {
                 let subChildNodes = [childNodes[i]];
                 let parentNode = lineElement;
@@ -86,129 +106,217 @@ const textMarkerMixin = {
                     parentNode = childNodes[i];
                 }
                 for (let j = 0; j < subChildNodes.length; j++) {
-                    const node = subChildNodes[j];
-                    const nodeText = node.textContent || '';
-                    const contentLength = node["charCount"] || node.parentNode["charCount"] || nodeText.length;
-                    const nodeStart = currentColumn;
-                    const nodeEnd = currentColumn + contentLength;
+                    var node = subChildNodes[j];
+                    var nodeText = node.textContent || '';
+                    if (node.parentNode["charCount"]) {
+                        node["charCount"] = node.parentNode["charCount"];
+                    }
+                    var contentLength = node["charCount"] || nodeText.length;
+                    var nodeStart = currentColumn;
+                    var nodeEnd = currentColumn + contentLength;
 
                     if (node["charCount"] === 0 || contentLength === 0) {
                         continue;
                     }
 
                     if (nodeStart < endCol && nodeEnd > startCol) {
-                        if (node.nodeType === 3) { //text node
-                            const beforeSelection = Math.max(0, startCol - nodeStart);
-                            const afterSelection = Math.max(0, nodeEnd - endCol);
-                            const selectionLength = contentLength - beforeSelection - afterSelection;
+                        var beforeSelection = Math.max(0, startCol - nodeStart);
+                        var afterSelection = Math.max(0, nodeEnd - endCol);
+                        var selectionLength = contentLength - beforeSelection - afterSelection;
 
-                            if (beforeSelection > 0 || afterSelection > 0) {
-                                const fragment = this.dom.createFragment(this.element);
-
-                                if (beforeSelection > 0) {
-                                    fragment.appendChild(
-                                        this.dom.createTextNode(nodeText.substring(0, beforeSelection), this.element));
-                                }
-
-                                if (selectionLength > 0) {
-                                    const selectedSpan = this.dom.createElement('span');
-                                    selectedSpan.classList.add(marker.className);
-                                    selectedSpan.textContent = nodeText.substring(
-                                        beforeSelection,
-                                        beforeSelection + selectionLength
-                                    );
-                                    fragment.appendChild(selectedSpan);
-                                }
-
-                                if (afterSelection > 0) {
-                                    fragment.appendChild(
-                                        this.dom.createTextNode(
-                                            nodeText.substring(beforeSelection + selectionLength),
-                                            this.element
-                                        ));
-                                }
-
-                                parentNode.replaceChild(fragment, node);
-                            }
-                            else {
-                                const selectedSpan = this.dom.createElement('span');
-                                selectedSpan.classList.add(marker.className);
-                                selectedSpan.textContent = nodeText;
-                                selectedSpan["charCount"] = node["charCount"];
-                                parentNode.replaceChild(selectedSpan, node);
-                            }
+                        if (marker.type === "invisible") {
+                            this.$processInvisibleMarker(node, parentNode, {
+                                beforeSelection,
+                                selectionLength,
+                                afterSelection
+                            }, marker);
                         }
-                        else if (node.nodeType === 1) { //element node
-                            if (nodeStart >= startCol && nodeEnd <= endCol) {
-                                // @ts-ignore
-                                node.classList.add(marker.className);
-                            }
-                            else {
-                                const beforeSelection = Math.max(0, startCol - nodeStart);
-                                const afterSelection = Math.max(0, nodeEnd - endCol);
-                                const selectionLength = contentLength - beforeSelection - afterSelection;
-
-                                if (beforeSelection > 0 || afterSelection > 0) {
-                                    // @ts-ignore
-                                    const nodeClasses = node.className;
-                                    const fragment = this.dom.createFragment(this.element);
-
-                                    if (beforeSelection > 0) {
-                                        const beforeSpan = this.dom.createElement('span');
-                                        beforeSpan.className = nodeClasses;
-                                        beforeSpan.textContent = nodeText.substring(0, beforeSelection);
-                                        fragment.appendChild(beforeSpan);
-                                    }
-
-                                    if (selectionLength > 0) {
-                                        const selectedSpan = this.dom.createElement('span');
-                                        selectedSpan.className = nodeClasses + ' ' + marker.className;
-                                        selectedSpan.textContent = nodeText.substring(
-                                            beforeSelection,
-                                            beforeSelection + selectionLength
-                                        );
-                                        fragment.appendChild(selectedSpan);
-                                    }
-
-                                    if (afterSelection > 0) {
-                                        const afterSpan = this.dom.createElement('span');
-                                        afterSpan.className = nodeClasses;
-                                        afterSpan.textContent = nodeText.substring(beforeSelection + selectionLength);
-                                        fragment.appendChild(afterSpan);
-                                    }
-
-                                    parentNode.replaceChild(fragment, node);
-                                }
-                            }
+                        else {
+                            this.$processRegularMarker(node, parentNode, {
+                                beforeSelection,
+                                selectionLength,
+                                afterSelection
+                            }, marker, nodeStart, startCol, endCol);
                         }
                     }
                     currentColumn = nodeEnd;
                 }
             }
         });
+    },
+
+    /**
+     * Process text nodes for invisible markers (whitespace visualization)
+     * @param {Node} node - The DOM node to process
+     * @param {Node} parentNode - The parent node
+     * @param {SelectionSegment} selectionSegment
+     * @param {object} marker - The marker being applied
+     */
+    $processInvisibleMarker(node, parentNode, selectionSegment, marker) {
+        var nodeText = node.textContent || '';
+        if (node.nodeType === 3) { // Text node
+            var fragment = this.dom.createFragment(this.element);
+
+            if (selectionSegment.beforeSelection > 0) {
+                fragment.appendChild(
+                    this.dom.createTextNode(nodeText.substring(0, selectionSegment.beforeSelection), this.element));
+            }
+
+            if (selectionSegment.selectionLength > 0) {
+                var selectedText = selectionSegment.beforeSelection === 0 && selectionSegment.afterSelection === 0
+                    ? nodeText : nodeText.substring(
+                        selectionSegment.beforeSelection,
+                        selectionSegment.beforeSelection + selectionSegment.selectionLength
+                    );
+
+                var segments = selectedText.match(/\s+|[^\s]+/g) || [];
+
+                for (let k = 0; k < segments.length; k++) {
+                    var segment = segments[k];
+                    let span;
+                    if (/^\s+$/.test(segment)) {
+                        span = this.dom.createElement("span");
+                        span.className = marker.className;
+                        var symbol = node["charCount"] ? this.TAB_CHAR : this.SPACE_CHAR;
+                        span.textContent = lang.stringRepeat(symbol, segment.length);
+                        span.setAttribute("data-whitespace", segment);
+                        fragment.appendChild(span);
+                    }
+                    else {
+                        span = this.dom.createElement("span");
+                        span.textContent = segment;
+                    }
+                    if (node["charCount"] && segments.length === 1) { //this is for real tabs
+                        span["charCount"] = node["charCount"];
+                    }
+                    fragment.appendChild(span);
+                }
+            }
+
+            if (selectionSegment.afterSelection > 0) {
+                fragment.appendChild(this.dom.createTextNode(
+                    nodeText.substring(selectionSegment.beforeSelection + selectionSegment.selectionLength),
+                    this.element
+                ));
+            }
+
+            parentNode.replaceChild(fragment, node);
+        }
+    },
+
+    /**
+     * Process nodes for regular markers (not invisible whitespace)
+     * @param {Node} node - The DOM node to process
+     * @param {Node} parentNode - The parent node
+     * @param {SelectionSegment} selectionSegment
+     * @param {TextMarker} marker - The marker being applied
+     * @param {number} nodeStart - Starting column of the node
+     * @param {number} startCol - Starting column of the selection
+     * @param {number} endCol - Ending column of the selection
+     */
+    $processRegularMarker(node, parentNode, selectionSegment, marker, nodeStart, startCol, endCol) {
+        var nodeText = node.textContent || '';
+        if (node.nodeType === 3) { // Text node
+            if (selectionSegment.beforeSelection > 0 || selectionSegment.afterSelection > 0) {
+                var fragment = this.dom.createFragment(this.element);
+
+                if (selectionSegment.beforeSelection > 0) {
+                    fragment.appendChild(
+                        this.dom.createTextNode(nodeText.substring(0, selectionSegment.beforeSelection), this.element));
+                }
+
+                if (selectionSegment.selectionLength > 0) {
+                    var selectedSpan = this.dom.createElement('span');
+                    selectedSpan.classList.add(marker.className);
+                    selectedSpan.textContent = nodeText.substring(
+                        selectionSegment.beforeSelection,
+                        selectionSegment.beforeSelection + selectionSegment.selectionLength
+                    );
+                    fragment.appendChild(selectedSpan);
+                }
+
+                if (selectionSegment.afterSelection > 0) {
+                    fragment.appendChild(this.dom.createTextNode(
+                        nodeText.substring(selectionSegment.beforeSelection + selectionSegment.selectionLength),
+                        this.element
+                    ));
+                }
+
+                parentNode.replaceChild(fragment, node);
+            }
+            else {
+                var selectedSpan = this.dom.createElement('span');
+                selectedSpan.classList.add(marker.className);
+                selectedSpan.textContent = nodeText;
+                selectedSpan["charCount"] = node["charCount"];
+                parentNode.replaceChild(selectedSpan, node);
+            }
+        }
+        else if (node.nodeType === 1) { // Element node
+            if (nodeStart >= startCol && nodeStart + (nodeText.length || 0) <= endCol) {
+                // @ts-ignore
+                node.classList.add(marker.className);
+            }
+            else {
+                if (selectionSegment.beforeSelection > 0 || selectionSegment.afterSelection > 0) {
+                    // @ts-ignore
+                    var nodeClasses = node.className;
+                    var fragment = this.dom.createFragment(this.element);
+
+                    if (selectionSegment.beforeSelection > 0) {
+                        var beforeSpan = this.dom.createElement('span');
+                        beforeSpan.className = nodeClasses;
+                        beforeSpan.textContent = nodeText.substring(0, selectionSegment.beforeSelection);
+                        fragment.appendChild(beforeSpan);
+                    }
+
+                    if (selectionSegment.selectionLength > 0) {
+                        var selectedSpan = this.dom.createElement('span');
+                        selectedSpan.className = nodeClasses + ' ' + marker.className;
+                        selectedSpan.textContent = nodeText.substring(
+                            selectionSegment.beforeSelection,
+                            selectionSegment.beforeSelection + selectionSegment.selectionLength
+                        );
+                        fragment.appendChild(selectedSpan);
+                    }
+
+                    if (selectionSegment.afterSelection > 0) {
+                        var afterSpan = this.dom.createElement('span');
+                        afterSpan.className = nodeClasses;
+                        afterSpan.textContent = nodeText.substring(selectionSegment.beforeSelection + selectionSegment.selectionLength);
+                        fragment.appendChild(afterSpan);
+                    }
+
+                    parentNode.replaceChild(fragment, node);
+                }
+            }
+        }
     }
+
 };
 Object.assign(Text.prototype, textMarkerMixin);
 
 var EditSession = require("../edit_session").EditSession;
-const editSessionTextMarkerMixin = {
+var editSessionTextMarkerMixin = {
     /**
      * Adds a text marker to the current edit session.
      *
      * @param {import("../../ace-internal").Ace.IRange} range - The range to mark in the document
      * @param {string} className - The CSS class name to apply to the marked text
+     * @param {string} [type] - The type of marker (e.g. "invisible" for whitespace rendering)
      * @returns {number} The unique identifier for the added text marker
      *
      * @this {EditSession}
      */
-    addTextMarker(range, className) {
+    addTextMarker(range, className, type) {
         /**@type{number}*/
         this.$textMarkerId = this.$textMarkerId || 0;
         this.$textMarkerId++;
         var marker = {
             range: range,
             id: this.$textMarkerId,
-            className: className
+            className: className,
+            type: type
         };
         if (!this.$textMarkers) {
             this.$textMarkers = [];
@@ -228,7 +336,7 @@ const editSessionTextMarkerMixin = {
             return;
         }
 
-        const marker = this.$textMarkers[markerId];
+        var marker = this.$textMarkers[markerId];
         if (!marker) {
             return;
         }
@@ -252,11 +360,11 @@ const editSessionTextMarkerMixin = {
 Object.assign(EditSession.prototype, editSessionTextMarkerMixin);
 
 
-const onAfterRender = (e, renderer) => {
+var onAfterRender = (e, renderer) => {
     renderer.$textLayer.$applyTextMarkers();
 };
 
-const Editor = require("../editor").Editor;
+var Editor = require("../editor").Editor;
 require("../config").defineOptions(Editor.prototype, "editor", {
     enableTextMarkers: {
         /**

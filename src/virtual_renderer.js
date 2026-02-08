@@ -1672,7 +1672,7 @@ class VirtualRenderer {
         var offset = offsetX / this.characterWidth;
         var col = this.$blockCursor ? Math.floor(offset) : Math.round(offset);
 
-        var row = Math.floor((y + this.scrollTop - canvasPos.top) / this.lineHeight);
+        var row = (y + this.scrollTop - canvasPos.top) / this.lineHeight;
 
         return this.session.screenToDocumentPosition(row, Math.max(col, 0), offsetX);
     }

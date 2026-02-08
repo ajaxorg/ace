@@ -9,7 +9,7 @@ var lang = require("../lib/lang");
 var Lines = require("./lines").Lines;
 var EventEmitter = require("../lib/event_emitter").EventEmitter;
 var nls = require("../config").nls;
-const isTextToken = require("./text_util").isTextToken;
+var isTextToken = require("./text_util").isTextToken;
 
 class Text {
     /**
@@ -449,7 +449,9 @@ class Text {
             return value.substr(cols);
         } else if (value[0] == "\t") {
             for (var i=0; i<cols; i++) {
-                parent.appendChild(this.$tabStrings["\t"].cloneNode(true));
+                var tabSpan = this.$tabStrings["\t"].cloneNode(true);
+                tabSpan["charCount"] = 1;
+                parent.appendChild(tabSpan);
             }
             this.$highlightIndentGuide();
             return value.substr(cols);

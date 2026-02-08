@@ -1,7 +1,7 @@
 name: Update PR Description
 
 on:
-  pull_request:
+  pull_request_target: # use this trigger to run on external pull requests too
     types: [opened, synchronize]
 
 jobs:
@@ -11,9 +11,6 @@ jobs:
       contents: read
       pull-requests: write
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
       - name: Update PR description
         uses: actions/github-script@v6
         with:

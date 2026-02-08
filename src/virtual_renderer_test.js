@@ -535,6 +535,33 @@ module.exports = {
             assert.equal(cell.element.className, "ace_gutter-cell ace_gutter-active-line hello");
             done();
         });
+    },
+    "test: screenToTextCoordinates with line widget offset, issue #5874": function() {
+        var renderer = editor.renderer;
+        editor.setValue("line0\nline1\nline2\nline3\nline4");
+        renderer.setPadding(0);
+        renderer.characterWidth = 10;
+        renderer.lineHeight = renderer.layerConfig.lineHeight = 13;
+
+        var widgetEl = document.createElement("div");
+        widgetEl.style.height = "40px";
+        editor.session.widgetManager.addLineWidget({
+            el: widgetEl,
+            row: 1,
+            pixelHeight: 40
+        });
+        renderer.$loop._flush();
+
+        var r = renderer.scroller.getBoundingClientRect();
+
+        // Line 2 starts at: line0(13) + line1(13) + widget(40) = 66px
+        // Clicking in top half of line 2 (y=69) should return row 2
+        var pos = renderer.screenToTextCoordinates(r.left + 5, r.top + 69);
+        assert.equal(pos.row, 2);
+
+        // Clicking bottom half of line 2 (y=75) should also return row 2
+        pos = renderer.screenToTextCoordinates(r.left + 5, r.top + 75);
+        assert.equal(pos.row, 2);
     }
 
     // change tab size after setDocument (for text layer)

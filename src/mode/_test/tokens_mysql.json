@@ -1,4 +1,1364 @@
 [[
    "start",
-  ["identifier","TODO"]
+  ["comment","-- Single line comment"]
+],[
+   "start"
+],[
+   "comment",
+  ["comment","/*"]
+],[
+   "comment",
+  ["comment"," * Multi-line comment block"]
+],[
+   "comment",
+  ["comment"," *"]
+],[
+   "start",
+  ["comment"," */"]
+],[
+   "start"
+],[
+   "start",
+  ["comment","# Hash-style comment (MySQL specific)"]
+],[
+   "start"
+],[
+   "start",
+  ["comment","-- Database and Table Operations"]
+],[
+   "start",
+  ["keyword","CREATE"],
+  ["text"," "],
+  ["keyword","DATABASE"],
+  ["text"," "],
+  ["keyword","IF"],
+  ["text"," "],
+  ["keyword","NOT"],
+  ["text"," "],
+  ["keyword","EXISTS"],
+  ["text"," "],
+  ["identifier","demo_db"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","CHARACTER"],
+  ["text"," "],
+  ["keyword","SET"],
+  ["text"," "],
+  ["identifier","utf8mb4"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","COLLATE"],
+  ["text"," "],
+  ["identifier","utf8mb4_unicode_ci"],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","USE"],
+  ["text"," "],
+  ["identifier","demo_db"],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","CREATE"],
+  ["text"," "],
+  ["keyword","TABLE"],
+  ["text"," "],
+  ["identifier","users"],
+  ["text"," "],
+  ["paren.lparen","("]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","id"],
+  ["text"," "],
+  ["storage.type","INT"],
+  ["text"," "],
+  ["keyword","AUTO_INCREMENT"],
+  ["text"," "],
+  ["keyword","PRIMARY"],
+  ["text"," "],
+  ["keyword","KEY"],
+  ["text",","]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","username"],
+  ["text"," "],
+  ["storage.type","VARCHAR"],
+  ["paren.lparen","("],
+  ["constant.numeric","50"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["keyword","NOT"],
+  ["text"," "],
+  ["constant","NULL"],
+  ["text"," "],
+  ["keyword","UNIQUE"],
+  ["text",","]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","email"],
+  ["text"," "],
+  ["storage.type","VARCHAR"],
+  ["paren.lparen","("],
+  ["constant.numeric","100"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["keyword","NOT"],
+  ["text"," "],
+  ["constant","NULL"],
+  ["text",","]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","password_hash"],
+  ["text"," "],
+  ["storage.type","CHAR"],
+  ["paren.lparen","("],
+  ["constant.numeric","64"],
+  ["paren.rparen",")"],
+  ["text",","]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","balance"],
+  ["text"," "],
+  ["storage.type","DECIMAL"],
+  ["paren.lparen","("],
+  ["constant.numeric","10"],
+  ["text",", "],
+  ["constant.numeric","2"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["keyword","DEFAULT"],
+  ["text"," "],
+  ["constant.numeric","0.00"],
+  ["text",","]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","is_active"],
+  ["text"," "],
+  ["storage.type","BOOLEAN"],
+  ["text"," "],
+  ["keyword","DEFAULT"],
+  ["text"," "],
+  ["constant","TRUE"],
+  ["text",","]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","created_at"],
+  ["text"," "],
+  ["storage.type","TIMESTAMP"],
+  ["text"," "],
+  ["keyword","DEFAULT"],
+  ["text"," "],
+  ["keyword","CURRENT_TIMESTAMP"],
+  ["text",","]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","updated_at"],
+  ["text"," "],
+  ["storage.type","DATETIME"],
+  ["text"," "],
+  ["keyword","ON"],
+  ["text"," "],
+  ["keyword","UPDATE"],
+  ["text"," "],
+  ["keyword","CURRENT_TIMESTAMP"],
+  ["text",","]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","profile_data"],
+  ["text"," "],
+  ["identifier","JSON"],
+  ["text",","]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","INDEX"],
+  ["text"," "],
+  ["identifier","idx_email"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["identifier","email"],
+  ["paren.rparen",")"],
+  ["text",","]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","FULLTEXT"],
+  ["text"," "],
+  ["keyword","INDEX"],
+  ["text"," "],
+  ["identifier","idx_username"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["identifier","username"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["keyword","ENGINE"],
+  ["keyword.operator","="],
+  ["keyword","InnoDB"],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start",
+  ["comment","-- Insert Statements"]
+],[
+   "start",
+  ["keyword","INSERT"],
+  ["text"," "],
+  ["keyword","INTO"],
+  ["text"," "],
+  ["identifier","users"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["identifier","username"],
+  ["text",", "],
+  ["identifier","email"],
+  ["text",", "],
+  ["identifier","password_hash"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["keyword","VALUES"]
+],[
+   "start",
+  ["text","    "],
+  ["paren.lparen","("],
+  ["string.start","'"],
+  ["string","john_doe"],
+  ["string.end","'"],
+  ["text",", "],
+  ["string.start","'"],
+  ["string","john@example.com"],
+  ["string.end","'"],
+  ["text",", "],
+  ["identifier","SHA2"],
+  ["paren.lparen","("],
+  ["string.start","'"],
+  ["string","password123"],
+  ["string.end","'"],
+  ["text",", "],
+  ["constant.numeric","256"],
+  ["paren.rparen","))"],
+  ["text",","]
+],[
+   "start",
+  ["text","    "],
+  ["paren.lparen","("],
+  ["string.start","'"],
+  ["string","jane_smith"],
+  ["string.end","'"],
+  ["text",", "],
+  ["string.start","'"],
+  ["string","jane@example.com"],
+  ["string.end","'"],
+  ["text",", "],
+  ["identifier","SHA2"],
+  ["paren.lparen","("],
+  ["string.start","'"],
+  ["string","secure456"],
+  ["string.end","'"],
+  ["text",", "],
+  ["constant.numeric","256"],
+  ["paren.rparen","))"],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start",
+  ["comment","-- Select with Various Clauses"]
+],[
+   "start",
+  ["keyword","SELECT"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","u"],
+  ["text","."],
+  ["identifier","id"],
+  ["text",","]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","u"],
+  ["text","."],
+  ["identifier","username"],
+  ["text",","]
+],[
+   "start",
+  ["text","    "],
+  ["support.function","CONCAT"],
+  ["paren.lparen","("],
+  ["support.function","UPPER"],
+  ["paren.lparen","("],
+  ["keyword","LEFT"],
+  ["paren.lparen","("],
+  ["identifier","u"],
+  ["text","."],
+  ["identifier","username"],
+  ["text",", "],
+  ["constant.numeric","1"],
+  ["paren.rparen","))"],
+  ["text",", "],
+  ["support.function","LOWER"],
+  ["paren.lparen","("],
+  ["support.function","SUBSTRING"],
+  ["paren.lparen","("],
+  ["identifier","u"],
+  ["text","."],
+  ["identifier","username"],
+  ["text",", "],
+  ["constant.numeric","2"],
+  ["paren.rparen",")))"],
+  ["text"," "],
+  ["keyword","AS"],
+  ["text"," "],
+  ["identifier","formatted_name"],
+  ["text",","]
+],[
+   "start",
+  ["text","    "],
+  ["support.function","COALESCE"],
+  ["paren.lparen","("],
+  ["identifier","u"],
+  ["text","."],
+  ["identifier","balance"],
+  ["text",", "],
+  ["constant.numeric","0"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["keyword","AS"],
+  ["text"," "],
+  ["identifier","balance"],
+  ["text",","]
+],[
+   "start",
+  ["text","    "],
+  ["support.function","DATE_FORMAT"],
+  ["paren.lparen","("],
+  ["identifier","u"],
+  ["text","."],
+  ["identifier","created_at"],
+  ["text",", "],
+  ["string.start","'"],
+  ["string","%Y-%m-%d"],
+  ["string.end","'"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["keyword","AS"],
+  ["text"," "],
+  ["identifier","join_date"]
+],[
+   "start",
+  ["keyword","FROM"],
+  ["text"," "],
+  ["identifier","users"],
+  ["text"," "],
+  ["identifier","u"]
+],[
+   "start",
+  ["keyword","WHERE"],
+  ["text"," "],
+  ["identifier","u"],
+  ["text","."],
+  ["identifier","is_active"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant","TRUE"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","AND"],
+  ["text"," "],
+  ["identifier","u"],
+  ["text","."],
+  ["identifier","created_at"],
+  ["text"," "],
+  ["keyword.operator",">="],
+  ["text"," "],
+  ["string.start","'"],
+  ["string","2024-01-01"],
+  ["string.end","'"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","AND"],
+  ["text"," "],
+  ["identifier","u"],
+  ["text","."],
+  ["identifier","email"],
+  ["text"," "],
+  ["keyword","LIKE"],
+  ["text"," "],
+  ["string.start","'"],
+  ["string","%@example.com"],
+  ["string.end","'"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","AND"],
+  ["text"," "],
+  ["identifier","u"],
+  ["text","."],
+  ["identifier","id"],
+  ["text"," "],
+  ["keyword","BETWEEN"],
+  ["text"," "],
+  ["constant.numeric","1"],
+  ["text"," "],
+  ["keyword","AND"],
+  ["text"," "],
+  ["constant.numeric","1000"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","AND"],
+  ["text"," "],
+  ["identifier","u"],
+  ["text","."],
+  ["identifier","username"],
+  ["text"," "],
+  ["keyword","IN"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["string.start","'"],
+  ["string","john_doe"],
+  ["string.end","'"],
+  ["text",", "],
+  ["string.start","'"],
+  ["string","jane_smith"],
+  ["string.end","'"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","AND"],
+  ["text"," "],
+  ["identifier","u"],
+  ["text","."],
+  ["identifier","profile_data"],
+  ["text"," "],
+  ["keyword","IS"],
+  ["text"," "],
+  ["keyword","NOT"],
+  ["text"," "],
+  ["constant","NULL"]
+],[
+   "start",
+  ["keyword","GROUP"],
+  ["text"," "],
+  ["keyword","BY"],
+  ["text"," "],
+  ["identifier","u"],
+  ["text","."],
+  ["identifier","id"]
+],[
+   "start",
+  ["keyword","HAVING"],
+  ["text"," "],
+  ["keyword","COUNT"],
+  ["paren.lparen","("],
+  ["text","*"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["keyword.operator",">"],
+  ["text"," "],
+  ["constant.numeric","0"]
+],[
+   "start",
+  ["keyword","ORDER"],
+  ["text"," "],
+  ["keyword","BY"],
+  ["text"," "],
+  ["identifier","u"],
+  ["text","."],
+  ["identifier","created_at"],
+  ["text"," "],
+  ["keyword","DESC"]
+],[
+   "start",
+  ["keyword","LIMIT"],
+  ["text"," "],
+  ["constant.numeric","10"],
+  ["text"," "],
+  ["keyword","OFFSET"],
+  ["text"," "],
+  ["constant.numeric","0"],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start",
+  ["comment","-- Update Statement"]
+],[
+   "start",
+  ["keyword","UPDATE"],
+  ["text"," "],
+  ["identifier","users"]
+],[
+   "start",
+  ["keyword","SET"],
+  ["text"," "],
+  ["identifier","balance"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["identifier","balance"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["constant.numeric","100.50"],
+  ["text",","]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","updated_at"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["support.function","NOW"],
+  ["paren.lparen","("],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["keyword","WHERE"],
+  ["text"," "],
+  ["identifier","username"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["string.start","'"],
+  ["string","john_doe"],
+  ["string.end","'"],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start",
+  ["comment","-- Delete Statement"]
+],[
+   "start",
+  ["keyword","DELETE"],
+  ["text"," "],
+  ["keyword","FROM"],
+  ["text"," "],
+  ["identifier","users"]
+],[
+   "start",
+  ["keyword","WHERE"],
+  ["text"," "],
+  ["identifier","is_active"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant","FALSE"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","AND"],
+  ["text"," "],
+  ["identifier","created_at"],
+  ["text"," "],
+  ["keyword.operator","<"],
+  ["text"," "],
+  ["support.function","DATE_SUB"],
+  ["paren.lparen","("],
+  ["support.function","NOW"],
+  ["paren.lparen","("],
+  ["paren.rparen",")"],
+  ["text",", "],
+  ["keyword","INTERVAL"],
+  ["text"," "],
+  ["constant.numeric","1"],
+  ["text"," "],
+  ["storage.type","YEAR"],
+  ["paren.rparen",")"],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start",
+  ["comment","-- Join Example"]
+],[
+   "start",
+  ["keyword","SELECT"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","u"],
+  ["text","."],
+  ["identifier","username"],
+  ["text",","]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","o"],
+  ["text","."],
+  ["identifier","order_id"],
+  ["text",","]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","o"],
+  ["text","."],
+  ["identifier","total_amount"]
+],[
+   "start",
+  ["keyword","FROM"],
+  ["text"," "],
+  ["identifier","users"],
+  ["text"," "],
+  ["identifier","u"]
+],[
+   "start",
+  ["keyword","INNER"],
+  ["text"," "],
+  ["keyword","JOIN"],
+  ["text"," "],
+  ["identifier","orders"],
+  ["text"," "],
+  ["identifier","o"],
+  ["text"," "],
+  ["keyword","ON"],
+  ["text"," "],
+  ["identifier","u"],
+  ["text","."],
+  ["identifier","id"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["identifier","o"],
+  ["text","."],
+  ["identifier","user_id"]
+],[
+   "start",
+  ["keyword","LEFT"],
+  ["text"," "],
+  ["keyword","JOIN"],
+  ["text"," "],
+  ["identifier","order_items"],
+  ["text"," "],
+  ["identifier","oi"],
+  ["text"," "],
+  ["keyword","ON"],
+  ["text"," "],
+  ["identifier","o"],
+  ["text","."],
+  ["identifier","order_id"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["identifier","oi"],
+  ["text","."],
+  ["identifier","order_id"]
+],[
+   "start",
+  ["keyword","WHERE"],
+  ["text"," "],
+  ["identifier","o"],
+  ["text","."],
+  ["variable.language","status"],
+  ["text"," "],
+  ["keyword.operator","!="],
+  ["text"," "],
+  ["string.start","'"],
+  ["string","cancelled"],
+  ["string.end","'"],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start",
+  ["comment","-- Subquery and EXISTS"]
+],[
+   "start",
+  ["keyword","SELECT"],
+  ["text"," * "],
+  ["keyword","FROM"],
+  ["text"," "],
+  ["identifier","users"]
+],[
+   "start",
+  ["keyword","WHERE"],
+  ["text"," "],
+  ["keyword","EXISTS"],
+  ["text"," "],
+  ["paren.lparen","("]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","SELECT"],
+  ["text"," "],
+  ["constant.numeric","1"],
+  ["text"," "],
+  ["keyword","FROM"],
+  ["text"," "],
+  ["identifier","orders"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","WHERE"],
+  ["text"," "],
+  ["identifier","orders"],
+  ["text","."],
+  ["identifier","user_id"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["identifier","users"],
+  ["text","."],
+  ["identifier","id"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","AND"],
+  ["text"," "],
+  ["identifier","orders"],
+  ["text","."],
+  ["identifier","total_amount"],
+  ["text"," "],
+  ["keyword.operator",">"],
+  ["text"," "],
+  ["constant.numeric","500"]
+],[
+   "start",
+  ["paren.rparen",")"],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start",
+  ["comment","-- CASE Expression"]
+],[
+   "start",
+  ["keyword","SELECT"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","username"],
+  ["text",","]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","CASE"]
+],[
+   "start",
+  ["text","        "],
+  ["keyword","WHEN"],
+  ["text"," "],
+  ["identifier","balance"],
+  ["text"," "],
+  ["keyword.operator",">="],
+  ["text"," "],
+  ["constant.numeric","1000"],
+  ["text"," "],
+  ["keyword","THEN"],
+  ["text"," "],
+  ["string.start","'"],
+  ["string","Premium"],
+  ["string.end","'"]
+],[
+   "start",
+  ["text","        "],
+  ["keyword","WHEN"],
+  ["text"," "],
+  ["identifier","balance"],
+  ["text"," "],
+  ["keyword.operator",">="],
+  ["text"," "],
+  ["constant.numeric","100"],
+  ["text"," "],
+  ["keyword","THEN"],
+  ["text"," "],
+  ["string.start","'"],
+  ["string","Standard"],
+  ["string.end","'"]
+],[
+   "start",
+  ["text","        "],
+  ["keyword","ELSE"],
+  ["text"," "],
+  ["string.start","'"],
+  ["string","Basic"],
+  ["string.end","'"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","END"],
+  ["text"," "],
+  ["keyword","AS"],
+  ["text"," "],
+  ["identifier","tier"]
+],[
+   "start",
+  ["keyword","FROM"],
+  ["text"," "],
+  ["identifier","users"],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start",
+  ["comment","-- Window Functions"]
+],[
+   "start",
+  ["keyword","SELECT"]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","username"],
+  ["text",","]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","balance"],
+  ["text",","]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","ROW_NUMBER"],
+  ["paren.lparen","("],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["identifier","OVER"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["keyword","ORDER"],
+  ["text"," "],
+  ["keyword","BY"],
+  ["text"," "],
+  ["identifier","balance"],
+  ["text"," "],
+  ["keyword","DESC"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["keyword","AS"],
+  ["text"," "],
+  ["support.function","rank"],
+  ["text",","]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","SUM"],
+  ["paren.lparen","("],
+  ["identifier","balance"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["identifier","OVER"],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["keyword","PARTITION"],
+  ["text"," "],
+  ["keyword","BY"],
+  ["text"," "],
+  ["identifier","is_active"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["keyword","AS"],
+  ["text"," "],
+  ["identifier","total_by_status"]
+],[
+   "start",
+  ["keyword","FROM"],
+  ["text"," "],
+  ["identifier","users"],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start",
+  ["comment","-- Variables"]
+],[
+   "start",
+  ["keyword","SET"],
+  ["text"," "],
+  ["constant.class","@user_count"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["paren.lparen","("],
+  ["keyword","SELECT"],
+  ["text"," "],
+  ["keyword","COUNT"],
+  ["paren.lparen","("],
+  ["text","*"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["keyword","FROM"],
+  ["text"," "],
+  ["identifier","users"],
+  ["paren.rparen",")"],
+  ["text",";"]
+],[
+   "start",
+  ["keyword","SET"],
+  ["text"," "],
+  ["constant.class","@tax_rate"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","0.08"],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start",
+  ["keyword","SELECT"],
+  ["text"," "],
+  ["constant.class","@user_count"],
+  ["text"," "],
+  ["keyword","AS"],
+  ["text"," "],
+  ["identifier","total_users"],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start",
+  ["comment","-- Stored Procedure"]
+],[
+   "start",
+  ["keyword","DELIMITER"],
+  ["text"," "],
+  ["keyword.operator","//"]
+],[
+   "start",
+  ["keyword","CREATE"],
+  ["text"," "],
+  ["keyword","PROCEDURE"],
+  ["text"," "],
+  ["identifier","GetUserByEmail"],
+  ["paren.lparen","("],
+  ["keyword","IN"],
+  ["text"," "],
+  ["identifier","user_email"],
+  ["text"," "],
+  ["storage.type","VARCHAR"],
+  ["paren.lparen","("],
+  ["constant.numeric","100"],
+  ["paren.rparen","))"]
+],[
+   "start",
+  ["keyword","BEGIN"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","DECLARE"],
+  ["text"," "],
+  ["identifier","user_exists"],
+  ["text"," "],
+  ["storage.type","INT"],
+  ["text"," "],
+  ["keyword","DEFAULT"],
+  ["text"," "],
+  ["constant.numeric","0"],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start",
+  ["text","    "],
+  ["keyword","SELECT"],
+  ["text"," "],
+  ["keyword","COUNT"],
+  ["paren.lparen","("],
+  ["text","*"],
+  ["paren.rparen",")"],
+  ["text"," "],
+  ["keyword","INTO"],
+  ["text"," "],
+  ["identifier","user_exists"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","FROM"],
+  ["text"," "],
+  ["identifier","users"],
+  ["text"," "],
+  ["keyword","WHERE"],
+  ["text"," "],
+  ["identifier","email"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["identifier","user_email"],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start",
+  ["text","    "],
+  ["keyword","IF"],
+  ["text"," "],
+  ["identifier","user_exists"],
+  ["text"," "],
+  ["keyword.operator",">"],
+  ["text"," "],
+  ["constant.numeric","0"],
+  ["text"," "],
+  ["keyword","THEN"]
+],[
+   "start",
+  ["text","        "],
+  ["keyword","SELECT"],
+  ["text"," * "],
+  ["keyword","FROM"],
+  ["text"," "],
+  ["identifier","users"],
+  ["text"," "],
+  ["keyword","WHERE"],
+  ["text"," "],
+  ["identifier","email"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["identifier","user_email"],
+  ["text",";"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","ELSE"]
+],[
+   "start",
+  ["text","        "],
+  ["keyword","SELECT"],
+  ["text"," "],
+  ["string.start","'"],
+  ["string","User not found"],
+  ["string.end","'"],
+  ["text"," "],
+  ["keyword","AS"],
+  ["text"," "],
+  ["identifier","message"],
+  ["text",";"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","END"],
+  ["text"," "],
+  ["keyword","IF"],
+  ["text",";"]
+],[
+   "start",
+  ["keyword","END"],
+  ["text"," "],
+  ["keyword.operator","//"]
+],[
+   "start",
+  ["keyword","DELIMITER"],
+  ["text"," ;"]
+],[
+   "start"
+],[
+   "start",
+  ["comment","-- Function"]
+],[
+   "start",
+  ["keyword","CREATE"],
+  ["text"," "],
+  ["keyword","FUNCTION"],
+  ["text"," "],
+  ["identifier","CalculateDiscount"],
+  ["paren.lparen","("],
+  ["identifier","price"],
+  ["text"," "],
+  ["storage.type","DECIMAL"],
+  ["paren.lparen","("],
+  ["constant.numeric","10"],
+  ["text",","],
+  ["constant.numeric","2"],
+  ["paren.rparen",")"],
+  ["text",", "],
+  ["identifier","discount_pct"],
+  ["text"," "],
+  ["storage.type","INT"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["keyword","RETURNS"],
+  ["text"," "],
+  ["storage.type","DECIMAL"],
+  ["paren.lparen","("],
+  ["constant.numeric","10"],
+  ["text",","],
+  ["constant.numeric","2"],
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["keyword","DETERMINISTIC"]
+],[
+   "start",
+  ["keyword","BEGIN"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","RETURN"],
+  ["text"," "],
+  ["identifier","price"],
+  ["text"," * "],
+  ["paren.lparen","("],
+  ["constant.numeric","1"],
+  ["text"," "],
+  ["keyword.operator","-"],
+  ["text"," "],
+  ["identifier","discount_pct"],
+  ["text"," "],
+  ["keyword.operator","/"],
+  ["text"," "],
+  ["constant.numeric","100"],
+  ["paren.rparen",")"],
+  ["text",";"]
+],[
+   "start",
+  ["keyword","END"],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start",
+  ["comment","-- Trigger"]
+],[
+   "start",
+  ["keyword","CREATE"],
+  ["text"," "],
+  ["keyword","TRIGGER"],
+  ["text"," "],
+  ["identifier","before_user_update"]
+],[
+   "start",
+  ["keyword","BEFORE"],
+  ["text"," "],
+  ["keyword","UPDATE"],
+  ["text"," "],
+  ["keyword","ON"],
+  ["text"," "],
+  ["identifier","users"]
+],[
+   "start",
+  ["keyword","FOR"],
+  ["text"," "],
+  ["keyword","EACH"],
+  ["text"," "],
+  ["keyword","ROW"]
+],[
+   "start",
+  ["keyword","BEGIN"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","SET"],
+  ["text"," "],
+  ["identifier","NEW"],
+  ["text","."],
+  ["identifier","updated_at"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["support.function","NOW"],
+  ["paren.lparen","("],
+  ["paren.rparen",")"],
+  ["text",";"]
+],[
+   "start",
+  ["keyword","END"],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start",
+  ["comment","-- Transaction"]
+],[
+   "start",
+  ["keyword","START"],
+  ["text"," "],
+  ["keyword","TRANSACTION"],
+  ["text",";"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","UPDATE"],
+  ["text"," "],
+  ["identifier","users"],
+  ["text"," "],
+  ["keyword","SET"],
+  ["text"," "],
+  ["identifier","balance"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["identifier","balance"],
+  ["text"," "],
+  ["keyword.operator","-"],
+  ["text"," "],
+  ["constant.numeric","50"],
+  ["text"," "],
+  ["keyword","WHERE"],
+  ["text"," "],
+  ["identifier","id"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","1"],
+  ["text",";"]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","UPDATE"],
+  ["text"," "],
+  ["identifier","users"],
+  ["text"," "],
+  ["keyword","SET"],
+  ["text"," "],
+  ["identifier","balance"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["identifier","balance"],
+  ["text"," "],
+  ["keyword.operator","+"],
+  ["text"," "],
+  ["constant.numeric","50"],
+  ["text"," "],
+  ["keyword","WHERE"],
+  ["text"," "],
+  ["identifier","id"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant.numeric","2"],
+  ["text",";"]
+],[
+   "start",
+  ["keyword","COMMIT"],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start",
+  ["comment","-- Common Table Expression (CTE)"]
+],[
+   "start",
+  ["keyword","WITH"],
+  ["text"," "],
+  ["identifier","active_users"],
+  ["text"," "],
+  ["keyword","AS"],
+  ["text"," "],
+  ["paren.lparen","("]
+],[
+   "start",
+  ["text","    "],
+  ["keyword","SELECT"],
+  ["text"," * "],
+  ["keyword","FROM"],
+  ["text"," "],
+  ["identifier","users"],
+  ["text"," "],
+  ["keyword","WHERE"],
+  ["text"," "],
+  ["identifier","is_active"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["constant","TRUE"]
+],[
+   "start",
+  ["paren.rparen",")"]
+],[
+   "start",
+  ["keyword","SELECT"],
+  ["text"," * "],
+  ["keyword","FROM"],
+  ["text"," "],
+  ["identifier","active_users"],
+  ["text"," "],
+  ["keyword","WHERE"],
+  ["text"," "],
+  ["identifier","balance"],
+  ["text"," "],
+  ["keyword.operator",">"],
+  ["text"," "],
+  ["constant.numeric","100"],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start",
+  ["comment","-- EXPLAIN for query analysis"]
+],[
+   "start",
+  ["keyword","EXPLAIN"],
+  ["text"," "],
+  ["keyword","SELECT"],
+  ["text"," * "],
+  ["keyword","FROM"],
+  ["text"," "],
+  ["identifier","users"],
+  ["text"," "],
+  ["keyword","WHERE"],
+  ["text"," "],
+  ["identifier","email"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["string.start","'"],
+  ["string","test@example.com"],
+  ["string.end","'"],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start",
+  ["comment","-- Numeric literals"]
+],[
+   "start",
+  ["keyword","SELECT"],
+  ["text"," "],
+  ["constant.numeric","42"],
+  ["text",", "],
+  ["constant.numeric","3.14159"],
+  ["text",", "],
+  ["constant.numeric","1e10"],
+  ["text",", "],
+  ["constant.numeric","0x1A2B"],
+  ["text",", "],
+  ["constant.numeric","b'101010'"],
+  ["text",";"]
+],[
+   "start"
+],[
+   "start",
+  ["comment","-- String literals"]
+],[
+   "start",
+  ["keyword","SELECT"],
+  ["text"," "],
+  ["string.start","'"],
+  ["string","single quotes"],
+  ["string.end","'"],
+  ["text",", "],
+  ["string.start","\""],
+  ["string","double quotes"],
+  ["string.end","\""],
+  ["text",", "],
+  ["constant.buildin","`backtick identifiers`"],
+  ["text",";"]
 ]]
