@@ -180,6 +180,7 @@ var supportedModes = {
     MIXAL:       ["mixal"],
     MUSHCode:    ["mc|mush"],
     MySQL:       ["mysql"],
+    Mariadb:     ["mariadb"],
     Nasal:       ["nas"],
     Nginx:       ["nginx|conf"],
     Nim:         ["nim"],
