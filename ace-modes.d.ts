@@ -964,6 +964,14 @@ declare module "ace-code/src/mode/makefile" {
     export const Mode: new () => import("ace-code").Ace.SyntaxMode;
 }
 
+declare module "ace-code/src/mode/mariadb_highlight_rules" {
+    export const MariadbHighlightRules: new () => import("ace-code").Ace.HighlightRules;
+}
+
+declare module "ace-code/src/mode/mariadb" {
+    export const Mode: new () => import("ace-code").Ace.SyntaxMode;
+}
+
 declare module "ace-code/src/mode/markdown_highlight_rules" {
     export const MarkdownHighlightRules: new () => import("ace-code").Ace.HighlightRules;
 }
