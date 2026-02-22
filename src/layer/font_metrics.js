@@ -224,11 +224,10 @@ class FontMetrics {
     }
     
     textWidth(row, column) {
-
         var textLayer = this.textLayer;
 
         var lineElement = this.$findElementForScreenRow(row);
-        if (!lineElement) {
+        if (!lineElement || !document.createRange) {
             // Fallback for lines not currently rendered
             return column * textLayer.config.characterWidth;
         }
