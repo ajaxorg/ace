@@ -401,7 +401,7 @@ class Text {
             var classes = "ace_" + token.type.replace(/\./g, " ace_");
             var span = this.dom.createElement("span");
             if (token.type == "fold"){
-                span.style.width = (value.length * this.config.characterWidth) + "px";
+                span.style.width = (token.value.length * this.config.characterWidth) + "px";
                 span.setAttribute("title", nls("inline-fold.closed.title", "Unfold code"));
             }
 
@@ -415,74 +415,6 @@ class Text {
         }
 
         return screenColumn + value.length;
-    }
-
-    textWidth(row, column) {
-        if (column === 0) return 0;
-
-        var lineElement = this.element.children[row - this.config.firstRow];
-        if (!lineElement) {
-            // Fallback for lines not currently rendered
-            return column * this.config.characterWidth;
-        }
-
-        return this.$measureLineToColumn(lineElement, column);
-    }
-
-    $measureLineToColumn(lineElement, column) {
-        if (!this.$scratchRange) {
-            this.$scratchRange = document.createRange();
-        }
-
-        try {
-            var firstTextNode = this.$findFirstTextNode(lineElement);
-            if (!firstTextNode) {
-                return column * this.config.characterWidth;
-            }
-
-            var position = this.$findColumnPosition(lineElement, column);
-            if (!position) {
-                return column * this.config.characterWidth;
-            }
-
-            this.$scratchRange.setStart(firstTextNode, 0);
-            this.$scratchRange.setEnd(position.node, position.offset);
-
-            var rect = this.$scratchRange.getBoundingClientRect();
-            return rect.width;
-        } catch (e) {
-            return column * this.config.characterWidth;
-        }
-    }
-
-    $findFirstTextNode(element) {
-        var walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, function (node) {
-            return node.nodeValue && node.nodeValue.length > 0 ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
-        });
-        return walker.nextNode();
-    }
-
-    $findColumnPosition(lineElement, targetColumn) {
-        var walker = document.createTreeWalker(lineElement, NodeFilter.SHOW_TEXT, null);
-
-        var currentColumn = 0;
-        var node;
-
-        while (node = walker.nextNode()) {
-            var nodeText = node.nodeValue;
-            var nodeLength = nodeText.length;
-
-            if (currentColumn + nodeLength >= targetColumn) {
-                return {
-                    node: node,
-                    offset: targetColumn - currentColumn
-                };
-            }
-            currentColumn += nodeLength;
-        }
-
-        // Column is beyond the line content
-        return null;
     }
 
     renderIndentGuide(parent, value, max) {
