@@ -1935,7 +1935,7 @@ class EditSession {
             var len = screenPos - lastSplit;
             for (var i = lastSplit; i < screenPos; i++) {
                 var ch = tokens[i];
-                if (ch === 12) len -= 1;
+                if (ch === 12 || ch === 2) len -= 1;
             }
 
             if (!splits.length) {
@@ -2036,8 +2036,8 @@ class EditSession {
             split = lastSplit + wrapLimit;
             // The split is inside of a CHAR or CHAR_EXT token and no space
             // around -> force a split.
-            /*if (tokens[split] == CHAR_EXT)
-                split--;*/
+            if (tokens[split] == CHAR_EXT)
+                split--;
             addSplit(split - indent);
         }
         return splits;
@@ -2070,7 +2070,10 @@ class EditSession {
             } else if((c > 39 && c < 48) || (c > 57 && c < 64)) {
                 arr.push(PUNCTUATION);
             }
-            else {
+            // full width characters
+            else if (c >= 0x1100 && isFullWidth(c)) {
+                arr.push(CHAR, CHAR_EXT);
+            } else {
                 arr.push(CHAR);
             }
         }
@@ -2099,8 +2102,9 @@ class EditSession {
             // tab
             if (c == 9) {
                 screenColumn += this.getScreenTabSize(screenColumn);
+            } else {
+                screenColumn += 1;
             }
-            screenColumn += 1;
             if (screenColumn > maxScreenColumn) {
                 break;
             }
@@ -2307,9 +2311,6 @@ class EditSession {
                 }
             }
         }
-
-        if (offsetX !== undefined && this.$bidiHandler.isBidiRow(row + splitIndex, docRow, splitIndex))
-            screenColumn = this.$bidiHandler.offsetToCol(offsetX);
 
         docColumn += this.$getStringScreenWidth(line, screenColumn - wrapIndent)[1];
 

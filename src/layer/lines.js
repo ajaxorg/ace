@@ -50,6 +50,25 @@ class Lines {
         return lineTop - (screenPage * this.canvasHeight);
     }
 
+    $getCellByScreenRow(screenRow, config) {
+        var screenTop = config.firstRowScreen * config.lineHeight;
+        var screenPage = Math.floor(screenTop / this.canvasHeight);
+        var lineTop = screenRow * config.lineHeight - (screenPage * this.canvasHeight);
+        for (var i = this.cells.length -1; i >= 0; i--) {
+            var cell = this.cells[i];
+            var top = parseInt(cell.element.style.top);
+            var height = parseInt(cell.element.style.height);
+            if (top <= lineTop) {
+                if (top + height < lineTop) {
+                    return null;
+                }
+                var offset = lineTop - top;
+                return {cell, offset};
+            }
+        }
+        return null;
+    }
+
     /**
      * @param {number} row
      * @param {LayerConfig} config
