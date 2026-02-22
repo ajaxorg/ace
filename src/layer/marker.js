@@ -64,6 +64,8 @@ class Marker {
 
         this.config = config;
 
+        this.element.style.display = "none";
+
         this.i = 0;
         var html;
         for (var key in this.markers) {
@@ -77,13 +79,10 @@ class Marker {
             var range = marker.range.clipRows(config.firstRow, config.lastRow);
             if (range.isEmpty()) continue;
 
-            var docRange = range;
-            range = range.toScreenRange(this.session); //TODO: what the point in that?
-            range.start.column = docRange.start.column;
-            range.end.column = docRange.end.column;
+            range = range.toScreenRange(this.session);
             if (marker.renderer) {
                 var top = this.$getTop(range.start.row, config);
-                var left = this.$padding + config.textWidth(range.start.row, range.start.column);
+                var left = this.$padding + config.fontMetrics.textWidth(range.start.row, range.start.column);
                 marker.renderer(html, range, left, top, config);
             } else if (marker.type == "fullLine") {
                 this.drawFullLineMarker(html, range, marker.clazz, config);
@@ -102,6 +101,8 @@ class Marker {
             while (this.i < this.element.childElementCount)
                 this.element.removeChild(this.element.lastChild);
         }
+
+        this.element.style.display = "";
     }
 
     /**
@@ -157,9 +158,7 @@ class Marker {
         var padding = this.$padding;
         var height = config.lineHeight;
         var top = this.$getTop(range.start.row, config);
-        var textWidth = config.textWidth(range.start.row, range.start.column);
-        var left = padding + textWidth;
-        var width = config.width - textWidth;
+        var left = padding + config.fontMetrics.textWidth(range.start.row, range.start.column);;
         extraStyle = extraStyle || "";
 
         if (this.session.$bidiHandler.isBidiRow(range.start.row)) {
@@ -181,7 +180,7 @@ class Marker {
            this.drawBidiSingleLineMarker(stringBuilder, range1, clazz + " ace_br12", config, null, extraStyle);
         } else {
             top = this.$getTop(range.end.row, config);
-            var width = config.textWidth(range.end.row, range.end.column);
+            var width = config.fontMetrics.textWidth(range.end.row, range.end.column);
 
             this.elt(
                 clazz + " ace_br12",
@@ -221,18 +220,17 @@ class Marker {
         if (this.session.$bidiHandler.isBidiRow(range.start.row))
             return this.drawBidiSingleLineMarker(stringBuilder, range, clazz, config, extraLength, extraStyle);
         var height = config.lineHeight;
-        var textWidth = config.textWidth(range.start.row, range.start.column);
-        var width = config.textWidth(range.start.row, range.end.column + (extraLength || 0)) - textWidth;
+        var right = config.fontMetrics.textWidth(range.start.row, (range.end.column + (extraLength || 0) ));
 
         var top = this.$getTop(range.start.row, config);
-        var left = this.$padding + textWidth;
+        var left = config.fontMetrics.textWidth(range.start.row, range.start.column);
 
         this.elt(
             clazz,
             "height:"+ height+ "px;"+
-            "width:"+ width+ "px;"+
+            "width:"+ (right-left)+ "px;"+
             "top:"+ top+ "px;"+
-            "left:"+ left+ "px;"+ (extraStyle || "")
+            "left:"+ (this.$padding + left)+ "px;"+ (extraStyle || "")
         );
     }
 
@@ -247,15 +245,14 @@ class Marker {
      */
     drawBidiSingleLineMarker(stringBuilder, range, clazz, config, extraLength, extraStyle) {
         var height = config.lineHeight, top = this.$getTop(range.start.row, config), padding = this.$padding;
-        var selections = this.session.$bidiHandler.getSelections(range.start.column, range.end.column);
-
-        selections.forEach(function(selection) {
+        var rects = this.config.fontMetrics.getRects(range.start, range.end);
+        rects.forEach(function(rect) {
             this.elt(
                 clazz,
                 "height:" + height + "px;" +
-                "width:" + (selection.width + (extraLength || 0)) + "px;" +
+                "width:" + (rect.width + (extraLength || 0)) + "px;" +
                 "top:" + top + "px;" +
-                "left:" + (padding + selection.left) + "px;" + (extraStyle || "")
+                "left:" + (padding + rect.left) + "px;" + (extraStyle || "")
             );
         }, this);
     }

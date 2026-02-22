@@ -14,7 +14,10 @@ class FontMetrics {
     /**
      * @param {HTMLElement} parentEl
      */
-    constructor(parentEl) {
+    constructor(parentEl, textLayer) {
+        this.$characterSize = {width: 0, height: 0};
+        this.textLayer = textLayer;
+
         this.el = dom.createElement("div");
         this.$setMeasureNodeStyles(this.el.style, true);
 
@@ -31,13 +34,12 @@ class FontMetrics {
 
         this.$measureNode.textContent = lang.stringRepeat("X", CHAR_COUNT);
 
-        this.$characterSize = {width: 0, height: 0};
-
-
         if (USE_OBSERVER)
             this.$addObserver();
         else
             this.checkForSizeChanges();
+
+        this.textLayer.$setFontMetrics(this);
     }
     
     $setMeasureNodeStyles(style, isRoot) {
@@ -207,8 +209,201 @@ class FontMetrics {
         return mul(L, f);
     }
     
+
+    $findElementForScreenRow(screenRow) {
+        var textLayer = this.textLayer;
+        var data = textLayer.$lines.$getCellByScreenRow(screenRow, textLayer.config);
+        var lineElement = data && data.cell.element;
+        // console.trace("cell", lineElement, screenRow);
+
+        if (lineElement && textLayer.$useLineGroups()) {
+            var index = Math.floor(data.offset / textLayer.config.lineHeight);
+            lineElement =  lineElement.children[Math.max(index, 0)];
+        }
+        return lineElement;
+    }
+    
+    textWidth(row, column) {
+
+        var textLayer = this.textLayer;
+
+        var lineElement = this.$findElementForScreenRow(row);
+        if (!lineElement) {
+            // Fallback for lines not currently rendered
+            return column * textLayer.config.characterWidth;
+        }
+
+        return this.$measureLineToColumn(lineElement, column);
+    }
+
+    $measureLineToColumn(lineElement, screenColumn) {
+        var textLayer = this.textLayer;
+        if (!this.$scratchRange) {
+            this.$scratchRange = document.createRange();
+        }
+
+        try {
+            var position = this.$findColumnPosition(lineElement, screenColumn);
+            if (!position) {
+                return screenColumn * textLayer.config.characterWidth;
+            }
+
+            this.$scratchRange.setStart(position.node, position.offset);
+            this.$scratchRange.setEnd(position.node, position.offset);
+
+            var rangeRect = this.$scratchRange.getBoundingClientRect();
+            var rect = textLayer.element.getBoundingClientRect() 
+            return rangeRect.left - rect.left;
+        } catch (e) {
+            console.error("Error measuring text width:", e);
+            return screenColumn * textLayer.config.characterWidth;
+        }
+    }
+
+    $findColumnPosition(lineElement, screenColumn) {
+        var walker = document.createTreeWalker(lineElement, NodeFilter.SHOW_TEXT, null);
+
+        var currentColumn = 0;
+        var node, lastNode;
+
+        while (node = walker.nextNode()) {
+            var nodeText = node.nodeValue;
+            var nodeLength = nodeText.length;
+
+            if (currentColumn + nodeLength >= screenColumn) {
+                return {
+                    node: node,
+                    offset: screenColumn - currentColumn
+                };
+            }
+            currentColumn += nodeLength;
+            lastNode = node;
+        }
+        
+        return lastNode && {
+            node: lastNode,
+            offset: lastNode.nodeValue.length
+        };
+    }
+
+    $pixelToColumn(screenRow, screenColumn1, x, blockCursor) {
+        var scratchRange = this.$scratchRange;
+        var lineElement = this.$findElementForScreenRow(screenRow);
+        if (!lineElement) return screenColumn1;
+
+        var screenColumn = 0;
+        function getRects(node) {
+            if (node.nodeType === Node.TEXT_NODE) {
+                scratchRange.setStart(node, 0);
+                scratchRange.setEnd(node, node.nodeValue.length);
+                return scratchRange.getClientRects();
+            } else if (node.nodeType === Node.ELEMENT_NODE) {
+                return node.getClientRects();
+            }
+            return [];
+        }
+        function search(node) {
+            if (node.nodeType === Node.TEXT_NODE) {
+                var textLength = node.nodeValue.length;
+                for (var j = 0; j < textLength; j++) {
+                    scratchRange.setStart(node, j);
+                    scratchRange.setEnd(node, j + 1);
+                    let rect = scratchRange.getBoundingClientRect();
+                    if (rect.left <= x && x <= rect.right) {
+                        screenColumn += j
+                        if (!blockCursor && x > rect.left + rect.width / 2) {
+                            screenColumn++;
+                        }
+                        return screenColumn;
+                    }
+                }
+            } else if (node.nodeType === Node.ELEMENT_NODE) {
+                var childNodes = node.childNodes;
+
+                for (var i = 0; i < childNodes.length; i++) {
+                    var child = childNodes[i];
+                    var rects = getRects(child);
+                    for (var j = 0; j < rects.length; j++) {
+                        let rect = rects[j];
+                        if (rect.left < x && x < rect.left + rect.width) {
+                            search(child);
+                            return screenColumn;
+                        }
+                    }
+                    screenColumn += child.nodeType === Node.TEXT_NODE ? child.nodeValue.length : child.textContent.length;
+                }
+            }
+        }
+        search(lineElement);
+
+        return screenColumn;
+    } 
+
+    getRects(startScreenPos, endScreenPos) {
+        var row = startScreenPos.row;
+        var textLayer = this.textLayer;
+        var lineElement = this.$findElementForScreenRow(row);
+
+        if (lineElement) {
+            try {
+                var p1 = this.$findColumnPosition(lineElement, startScreenPos.column);
+                var p2 = this.$findColumnPosition(lineElement, endScreenPos.column);
+
+                this.$scratchRange.setStart(p1.node, p1.offset);
+                this.$scratchRange.setEnd(p2.node, p2.offset);
+                var rangeRects = this.$scratchRange.getClientRects();
+                var rect = textLayer.element.getBoundingClientRect();
+                var merged = mergeTouchingRects(rangeRects).map(function(r) {
+                    return {
+                        left: r.left - rect.left,
+                        width: r.right - r.left,
+                    };
+                });
+                return merged;
+            } catch (e) {
+                console.error("Error measuring text width:", e); 
+            }
+        }
+        return [{
+            left: startScreenPos.row * textLayer.config.characterWidth,
+            width: (endScreenPos.column - startScreenPos.column) * textLayer.config.characterWidth,
+        }];
+    }
 }
-FontMetrics.prototype.$characterSize = {width: 0, height: 0};
+
+
+function mergeTouchingRects(rects) {
+    var merged = [];
+    for (var i = 0; i < rects.length; i++) {
+        var rect = rects[i];
+        var found = false;
+        for (var j = 0; j < merged.length; j++) {
+            var m = merged[j];
+            if (
+                (m.left <= rect.left && rect.left <= m.right) ||
+                (m.left <= rect.right && rect.right <= m.right) ||
+                (m.left <= rect.right && rect.right <= m.right) || 
+                (m.left <= rect.left && rect.right <= m.right) ||
+                (rect.left <= m.left && m.right <= rect.right)
+            ) {
+                m.left = Math.min(m.left, rect.left);
+                m.right = Math.max(m.right, rect.right);
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            merged.push({
+                left: rect.left,
+                right: rect.right,
+                top: rect.top,
+                height: rect.height,
+            });
+        }
+    }
+    return merged;
+} 
+ 
 
 oop.implement(FontMetrics.prototype, EventEmitter);
 
