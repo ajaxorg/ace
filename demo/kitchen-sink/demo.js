@@ -673,6 +673,16 @@ optionsPanelContainer.insertBefore(
             "Open Dialog ",
             ["button",  {onclick: openTestDialog.bind(null, false)}, "Scale"],
             ["button",  {onclick: openTestDialog.bind(null, true)}, "Height"]
+        ],
+        ["div", {},
+            ["button",  {onclick: function() {
+                editor.setOption("fontFamily", "cursive");
+                session.setValue( session.getValue() + "שלום עולם בעברית123" +"\n" + "ジャパン + 八洲", 1);
+            }}, "cursive"],
+            ["button",  {onclick: function() {
+                editor.setOption("fontFamily", "Tahoma");
+                session.setValue( session.getValue() + "שלום עולם בעברית123" +"\n" + "ジャパン + 八洲", 1);
+            }}, "Tahoma"],
         ]
     ]),
     optionsPanelContainer.children[1]
