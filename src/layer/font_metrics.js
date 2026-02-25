@@ -210,11 +210,16 @@ class FontMetrics {
     }
     
 
+    /**
+     * Finds and returns the DOM element corresponding to a given screen row.
+     *
+     * @param {number} screenRow - The screen row number for which to find the element.
+     * @returns {HTMLElement|null} The DOM element corresponding to the screen row, or null if not found.
+     */
     $findElementForScreenRow(screenRow) {
         var textLayer = this.textLayer;
         var data = textLayer.$lines.$getCellByScreenRow(screenRow, textLayer.config);
         var lineElement = data && data.cell.element;
-        // console.trace("cell", lineElement, screenRow);
 
         if (lineElement && textLayer.$useLineGroups()) {
             var index = Math.floor(data.offset / textLayer.config.lineHeight);
@@ -223,18 +228,36 @@ class FontMetrics {
         return lineElement;
     }
     
-    textWidth(row, column) {
+    /**
+     * Calculates the width of the text up to a specific scrrenColumn on a given screen row.
+     *
+     * @param {number} screenRow - The row index on the screen for which the text width is calculated.
+     * @param {number} screenColumn - The column index up to which the text width is measured.
+     * @returns {number} The width of the text in pixels up to the specified column.
+     */
+    textWidth(screenRow, screenColumn) {
         var textLayer = this.textLayer;
 
-        var lineElement = this.$findElementForScreenRow(row);
+        var lineElement = this.$findElementForScreenRow(screenRow);
         if (!lineElement || !document.createRange) {
             // Fallback for lines not currently rendered
-            return column * textLayer.config.characterWidth;
+            return screenColumn * textLayer.config.characterWidth;
         }
 
-        return this.$measureLineToColumn(lineElement, column);
+        return this.$measureLineToColumn(lineElement, screenColumn);
     }
 
+    /**
+     * Measures the horizontal position (in pixels) of a specific screen column
+     * within a given line element. This method calculates the pixel offset
+     * from the left edge of the text layer's container to the specified column.
+     *
+     * @param {HTMLElement} lineElement - The DOM element representing the line of text.
+     * @param {number} screenColumn - The screen column index to measure.
+     * @returns {number} The horizontal position (in pixels) of the specified column
+     * relative to the left edge of the text layer's container. If the position cannot
+     * be determined, it falls back to an approximation based on the character width.
+     */
     $measureLineToColumn(lineElement, screenColumn) {
         var textLayer = this.textLayer;
         if (!this.$scratchRange) {
@@ -251,7 +274,7 @@ class FontMetrics {
             this.$scratchRange.setEnd(position.node, position.offset);
 
             var rangeRect = this.$scratchRange.getBoundingClientRect();
-            var rect = textLayer.element.getBoundingClientRect() 
+            var rect = textLayer.element.getBoundingClientRect(); 
             return rangeRect.left - rect.left;
         } catch (e) {
             console.error("Error measuring text width:", e);
@@ -259,6 +282,18 @@ class FontMetrics {
         }
     }
 
+    /**
+     * Finds the position of a specific column within a line element.
+     *
+     * This method traverses the text nodes within the given line element to locate
+     * the node and offset corresponding to the specified screen column. If the
+     * column exceeds the total length of the text, it returns the last node and its length.
+     *
+     * @param {HTMLElement} lineElement - The DOM element representing the line of text.
+     * @param {number} screenColumn - The target column position within the line (0-based).
+     * @returns {{node: Node, offset: number} | null} An object containing the text node and the offset
+     * within that node corresponding to the column position, or `null` if no nodes are found.
+     */
     $findColumnPosition(lineElement, screenColumn) {
         var walker = document.createTreeWalker(lineElement, NodeFilter.SHOW_TEXT, null);
 
@@ -285,6 +320,15 @@ class FontMetrics {
         };
     }
 
+    /**
+     * Converts a pixel position (x-coordinate) to a screen column index within a given row.
+     *
+     * @param {number} screenRow - The row index on the screen.
+     * @param {number} screenColumn1 - The initial screen column index.
+     * @param {number} x - The x-coordinate (in pixels) to convert to a column index.
+     * @param {boolean} blockCursor - Whether the cursor is in block mode.
+     * @returns {number} The calculated screen column index corresponding to the x-coordinate.
+     */
     $pixelToColumn(screenRow, screenColumn1, x, blockCursor) {
         var scratchRange = this.$scratchRange;
         var lineElement = this.$findElementForScreenRow(screenRow);
@@ -309,7 +353,7 @@ class FontMetrics {
                     scratchRange.setEnd(node, j + 1);
                     let rect = scratchRange.getBoundingClientRect();
                     if (rect.left <= x && x <= rect.right) {
-                        screenColumn += j
+                        screenColumn += j;
                         if (!blockCursor && x > rect.left + rect.width / 2) {
                             screenColumn++;
                         }
@@ -338,6 +382,23 @@ class FontMetrics {
         return screenColumn;
     } 
 
+    /**
+     * Calculates and returns an array of rectangles representing the visual positions
+     * of a range of text between two screen positions within a text layer.
+     *
+     * @param {Object} startScreenPos - The starting screen position of the range.
+     * @param {number} startScreenPos.row - The row index of the starting position.
+     * @param {number} startScreenPos.column - The column index of the starting position.
+     * @param {Object} endScreenPos - The ending screen position of the range.
+     * @param {number} endScreenPos.row - The row index of the ending position.
+     * @param {number} endScreenPos.column - The column index of the ending position.
+     * @returns {Array<Object>} An array of rectangle objects representing the visual
+     * positions of the text range. Each rectangle object contains:
+     *   - `left` {number}: The left offset of the rectangle relative to the text layer.
+     *   - `width` {number}: The width of the rectangle.
+     * If an error occurs or the line element is not found, a fallback rectangle is returned
+     * based on character width and column positions.
+     */
     getRects(startScreenPos, endScreenPos) {
         var row = startScreenPos.row;
         var textLayer = this.textLayer;
@@ -347,24 +408,25 @@ class FontMetrics {
             try {
                 var p1 = this.$findColumnPosition(lineElement, startScreenPos.column);
                 var p2 = this.$findColumnPosition(lineElement, endScreenPos.column);
-
-                this.$scratchRange.setStart(p1.node, p1.offset);
-                this.$scratchRange.setEnd(p2.node, p2.offset);
-                var rangeRects = this.$scratchRange.getClientRects();
-                var rect = textLayer.element.getBoundingClientRect();
-                var merged = mergeTouchingRects(rangeRects).map(function(r) {
-                    return {
-                        left: r.left - rect.left,
-                        width: r.right - r.left,
-                    };
-                });
-                return merged;
+                if (p1 && p2) {
+                    this.$scratchRange.setStart(p1.node, p1.offset);
+                    this.$scratchRange.setEnd(p2.node, p2.offset);
+                    var rangeRects = this.$scratchRange.getClientRects();
+                    var rect = textLayer.element.getBoundingClientRect();
+                    var merged = mergeTouchingRects(rangeRects).map(function(r) {
+                        return {
+                            left: r.left - rect.left,
+                            width: r.right - r.left,
+                        };
+                    });
+                    return merged;
+                }
             } catch (e) {
                 console.error("Error measuring text width:", e); 
             }
         }
         return [{
-            left: startScreenPos.row * textLayer.config.characterWidth,
+            left: startScreenPos.column * textLayer.config.characterWidth,
             width: (endScreenPos.column - startScreenPos.column) * textLayer.config.characterWidth,
         }];
     }
@@ -381,8 +443,6 @@ function mergeTouchingRects(rects) {
             if (
                 (m.left <= rect.left && rect.left <= m.right) ||
                 (m.left <= rect.right && rect.right <= m.right) ||
-                (m.left <= rect.right && rect.right <= m.right) || 
-                (m.left <= rect.left && rect.right <= m.right) ||
                 (rect.left <= m.left && m.right <= rect.right)
             ) {
                 m.left = Math.min(m.left, rect.left);
