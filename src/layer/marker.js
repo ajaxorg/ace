@@ -158,7 +158,7 @@ class Marker {
         var padding = this.$padding;
         var height = config.lineHeight;
         var top = this.$getTop(range.start.row, config);
-        var left = padding + config.fontMetrics.textWidth(range.start.row, range.start.column);;
+        var left = padding + config.fontMetrics.textWidth(range.start.row, range.start.column);
         extraStyle = extraStyle || "";
 
         if (this.session.$bidiHandler.isBidiRow(range.start.row)) {
