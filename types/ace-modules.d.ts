@@ -4072,7 +4072,7 @@ declare module "ace-code/src/edit_session" {
         /**
          * Sets up a new `EditSession` and associates it with the given `Document` and `Mode`.
          **/
-        constructor(text?: Document | string, mode?: SyntaxMode);
+        constructor(text?: Document | string, mode?: SyntaxMode | string);
         doc: Document;
         prevOp: {};
         id: string;

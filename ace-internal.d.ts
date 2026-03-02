@@ -342,7 +342,7 @@ export namespace Ace {
         foldStyle: 'markbegin' | 'markbeginend' | 'manual';
         overwrite: boolean;
         newLineMode: NewLineMode;
-        mode: string;
+        mode: SyntaxMode | string;
     }
 
     interface VirtualRendererOptions {
@@ -1330,7 +1330,7 @@ export function edit(el?: string | (Element & {
     value?: any;
 }) | null, options?: Partial<Ace.EditorOptions>): Ace.Editor;
 
-export function createEditSession(text: Ace.Document | string, mode: Ace.SyntaxMode): Ace.EditSession;
+export function createEditSession(text: Ace.Document | string, mode?: Ace.SyntaxMode | string): Ace.EditSession;
 
 export const VirtualRenderer: {
     new(container: HTMLElement, theme?: string): Ace.VirtualRenderer;
