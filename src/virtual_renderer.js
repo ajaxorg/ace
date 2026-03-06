@@ -944,6 +944,8 @@ class VirtualRenderer {
             if (changes & this.CHANGE_H_SCROLL)
                 this.$updateScrollBarH();
 
+            this.$renderGhostText();
+
             dom.translate(this.content, -this.scrollLeft, -config.offset);
 
             var width = config.width + 2 * this.$padding + "px";
@@ -1781,9 +1783,6 @@ class VirtualRenderer {
 
         this.removeGhostText();
 
-        var textChunks = this.$calculateWrappedTextChunks(text, insertPosition);
-        this.addToken(textChunks[0].text, "ghost_text", insertPosition.row, insertPosition.column);
-
         this.$ghostText = {
             text: text,
             position: {
@@ -1791,6 +1790,18 @@ class VirtualRenderer {
                 column: insertPosition. column
             }
         };
+
+        this.$renderGhostText();
+    }
+
+    $renderGhostText() {
+        if (!this.$ghostText)
+            return;
+
+        var insertPosition = this.$ghostText.position;
+
+        var textChunks = this.$calculateWrappedTextChunks(this.$ghostText.text, insertPosition);
+        this.addToken(textChunks[0].text, "ghost_text", insertPosition.row, insertPosition.column);
 
         var widgetDiv = dom.createElement("div");
         if (textChunks.length > 1) {
@@ -1834,6 +1845,8 @@ class VirtualRenderer {
                 className: "ace_ghost_text_container"
             };
             this.session.widgetManager.addLineWidget(this.$ghostTextWidget);
+
+            widgetDiv.style.margin = "0 " + this.$padding + "px";
 
             // Check wether the line widget fits in the part of the screen currently in view
             var pixelPosition = this.$cursorLayer.getPixelPosition(insertPosition, true);
