@@ -46,6 +46,13 @@ module.exports = {
         editor = null;
     },
     "test readOnly Option": function (done) {
+        Array.from(document.querySelectorAll(".ace_editor")).forEach(function (el) {
+            if (el != editor.container)
+                el.remove();
+        });
+        var nodes = document.querySelectorAll(".ace_tooltip");
+        assert.equal(nodes.length, 1);
+
         let readOnly = editor.getOption("readOnly");
         assert.equal(editor.$hoverTooltip, null);
         assert.equal(readOnly, false);

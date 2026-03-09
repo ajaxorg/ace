@@ -40,6 +40,9 @@ editor.setOptions({
     behavioursEnabled: false,
 });
 function CodeMirror(place, opts) {
+    if (!editor.container.parentNode) {
+        document.body.appendChild(editor.container);
+    }
     var cm = editor.state && editor.state.cm;
     if (cm && cm.state.currentNotificationClose)
         cm.state.currentNotificationClose();

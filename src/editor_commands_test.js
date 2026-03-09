@@ -566,10 +566,14 @@ module.exports = {
         assert.equal(url, "https://www.google.com/");
     },
     "test handle events without deprecated keyCode property": function() {
-        var e = new CustomEvent("keydown"); 
-        e.code = "KeyA"; 
-        e.ctrlKey = true;
         editor = new Editor(new MockRenderer());
+        var e = new CustomEvent("keydown"); 
+        e.code = "KeyA";
+        if (editor.commands.platform === "mac") {
+            e.metaKey = true;
+        } else {
+            e.ctrlKey = true;
+        }
         editor.session.setValue("123");
         assert.equal(editor.getSelectedText(), "");
         editor.textInput.getElement().dispatchEvent(e);
