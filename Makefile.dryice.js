@@ -525,7 +525,6 @@ function addExternalLicenseBanners(sources) {
 
         var banner = "/*!\n"
             + " * Embedded third-party module: " + moduleId + "\n"
-            + " * License: BSD-3-Clause\n"
             + " * Source: " + EXTERNAL_LICENSE_FILES[moduleId] + "\n"
             + " *\n"
             + licenseText.split(/\r?\n/).map(function(line) { return " * " + line; }).join("\n")
