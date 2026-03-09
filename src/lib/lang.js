@@ -185,6 +185,16 @@ exports.delayedCall = function(fcn, defaultTimeout) {
     return _self;
 };
 
+/**
+ * @param {number} ms
+ * @returns {Promise<void>}
+ */
+exports.sleep = function(ms) {
+    return new Promise(function(resolve) {
+        setTimeout(resolve, ms);
+    });
+};
+
 exports.supportsLookbehind = function () {
     try {
         new RegExp('(?<=.)');

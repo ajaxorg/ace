@@ -10,6 +10,7 @@ var ace = require("./ace");
 var assert = require("./test/assertions");
 var user = require("./test/user");
 var Range = require("./range").Range;
+var lang = require("./lib/lang");
 require("./ext/language_tools");
 var Autocomplete = require("./autocomplete").Autocomplete;
 var config = require("./config");
@@ -140,7 +141,7 @@ module.exports = {
             });
         });
     },
-    "test: correct completion replacement range when completion prefix has more than one letter": function (done) {
+    "test: correct completion replacement range when completion prefix has more than one letter": async function (done) {
         editor = initEditor("<");
 
         editor.completers = [
@@ -165,20 +166,14 @@ module.exports = {
         editor.moveCursorTo(0, 1);
         sendKey("di");
         var popup = editor.completer.popup;
-        check(function () {
-            assert.equal(popup.data.length, 2);
-            editor.onCommandKey(null, 0, 13);
-            check(function () {
-                assert.equal(editor.getValue(), "<dialog");
-                done();
-            });
-        });
+        await lang.sleep(10);
 
-        function check(callback) {
-            setTimeout(function wait() {
-                callback();
-            }, 10);
-        }
+        assert.equal(popup.data.length, 2);
+        editor.onCommandKey(null, 0, 13);
+
+        await lang.sleep(10);
+        assert.equal(editor.getValue(), "<dialog");
+        done();
     },
     "test: symbols after selection are not removed when replacement range is present": function (done) {
         editor = initEditor("{}");
@@ -263,7 +258,7 @@ module.exports = {
             return actual === expected;
         }
     },
-    "test: different completers tooltips": function (done) {
+    "test: different completers tooltips": async function (done) {
         editor = initEditor("");
         var firstDoc = "<b>First</b>";
         var secondDoc = "Second";
@@ -315,33 +310,25 @@ module.exports = {
             }
         ];
 
-
-
         sendKey("c");
         var popup = editor.completer.popup;
-        check(function () {
-            assert.equal(popup.data.length, 4);
-            assert.equal(popup.container.lastChild.innerHTML, firstDoc);
-            sendKey("Down");
-            check(function () {
-                assert.equal(popup.container.lastChild.innerHTML, secondDoc);
-                sendKey("Down");
-                check(function () {
-                    assert.equal(popup.container.lastChild.innerHTML, firstDoc);
-                    sendKey("Down");
-                    check(function () {
-                        assert.equal(popup.container.lastChild.innerHTML, secondDoc);
-                        done();
-                    });
-                });
-            });
-        });
 
-        function check(callback) {
-            setTimeout(function wait() {
-                callback();
-            }, 10);
-        }
+        await lang.sleep(10);
+        assert.equal(popup.data.length, 4);
+        assert.equal(popup.container.lastChild.innerHTML, firstDoc);
+        sendKey("Down");
+
+        await lang.sleep(10);
+        assert.equal(popup.container.lastChild.innerHTML, secondDoc);
+        sendKey("Down");
+
+        await lang.sleep(10);
+        assert.equal(popup.container.lastChild.innerHTML, firstDoc);
+        sendKey("Down");
+
+        await lang.sleep(10);
+        assert.equal(popup.container.lastChild.innerHTML, secondDoc);
+        done();
     },
     "test: completers tooltip filtering": function (done) {
         editor = initEditor("");
@@ -1742,7 +1729,7 @@ module.exports = {
 
         async function waitForDocTooltip() {
             editor.renderer.$loop._flush();
-            await new Promise(resolve => {setTimeout(resolve, 50);});
+            await lang.sleep(50);
             editor.completer.onLayoutChange();
             var tooltipNode = editor.completer.tooltipNode;
             popupRect = popup.container.getBoundingClientRect();
