@@ -44,6 +44,38 @@ var {
 var ACE_HOME = __dirname;
 var BUILD_DIR = ACE_HOME + "/build";
 var CACHE = {};
+var EXTERNAL_WORKER_PACKAGES = {
+    "php-parser": "dist/php-parser.min"
+};
+var EXTERNAL_LICENSE_FILES = {
+    "php-parser": "node_modules/php-parser/LICENSE"
+};
+
+function getExternalPackagePaths() {
+    var EXTERNAL_PACKAGE_PATHS = {};
+    Object.keys(EXTERNAL_WORKER_PACKAGES).forEach(function(name) {
+        var depRoot = path.join(ACE_HOME, "node_modules", name);
+        var depPkgPath = path.join(depRoot, "package.json");
+        if (!fs.existsSync(depPkgPath))
+            return;
+
+        var depPkg = JSON.parse(fs.readFileSync(depPkgPath, "utf8"));
+        var main = EXTERNAL_WORKER_PACKAGES[name] || depPkg.main || "index.js";
+
+        if (!EXTERNAL_WORKER_PACKAGES[name] && typeof depPkg.browser == "string")
+            main = depPkg.browser;
+
+        main = main.replace(/^\.\//, "").replace(/\.js$/, "");
+
+        EXTERNAL_PACKAGE_PATHS[name] = {
+            location: depRoot,
+            main: main,
+            name: name
+        };
+    });
+
+    return EXTERNAL_PACKAGE_PATHS;
+}
 
 function generateAmdModules() {
     var root = ACE_HOME + "/";
@@ -408,6 +440,10 @@ function buildAceModuleInternal(opts, callback) {
         },
         root: ACE_HOME
     };
+
+    if (opts.projectType == "worker") {
+        extend(pathConfig.paths, getExternalPackagePaths());
+    }
         
     function write(err, result) {
         if (cache && key && !(cache.configs && cache.configs[key])) {
@@ -473,8 +509,36 @@ function buildAceModuleInternal(opts, callback) {
         withRequire: false,
         basepath: ACE_HOME,
         transforms: [wrapCJS, normalizeLineEndings, includeLoader],
-        afterRead: [optimizeTextModules]
+        afterRead: [optimizeTextModules, addExternalLicenseBanners]
     }, write);
+}
+
+function addExternalLicenseBanners(sources) {
+    Object.keys(EXTERNAL_LICENSE_FILES).forEach(function(moduleId) {
+        var licensePath = path.join(ACE_HOME, EXTERNAL_LICENSE_FILES[moduleId]);
+        if (!fs.existsSync(licensePath))
+            return;
+
+        var licenseText = fs.readFileSync(licensePath, "utf8").trim();
+        if (!licenseText)
+            return;
+
+        var banner = "/*!\n"
+            + " * Embedded third-party module: " + moduleId + "\n"
+            + " * License: BSD-3-Clause\n"
+            + " * Source: " + EXTERNAL_LICENSE_FILES[moduleId] + "\n"
+            + " *\n"
+            + licenseText.split(/\r?\n/).map(function(line) { return " * " + line; }).join("\n")
+            + "\n */\n;\n";
+
+        var pkg = sources.find(function(p) {
+            return p.id === moduleId && p.source;
+        });
+        if (pkg && pkg.source.indexOf("Embedded third-party module: " + moduleId) === -1) {
+            pkg.source = banner + pkg.source;
+        }
+    });
+    return sources;
 }
 
 function buildCore(options, extra, callback) {
