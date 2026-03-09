@@ -164,8 +164,10 @@ function getItem(i) { return this[i]; }
 function Node(name) {
     this.localName = name;
     this.value = "";
-    this.children = this.childNodes = [];
+    this.childNodes = [];
+    this.children = [];
     this.childNodes.item = getItem;
+    this.children.item = getItem;
     this.ownerDocument = window.document || this;
     this.$attributes = {};
     this.style = new Style();
@@ -195,10 +197,17 @@ function Node(name) {
         var i = this.childNodes.indexOf(node);
         if (i == -1)
             throw new Error("not a child");
+        if (node.previousSibling)
+            node.previousSibling.nextSibling = node.nextSibling;
+        if (node.nextSibling)
+            node.nextSibling.previousSibling = node.previousSibling;
         node.parentNode = node.nextSibling = node.previousSibling = null;
         this.childNodes.splice(i, 1);
         if (!document.contains(document.activeElement))
             document.activeElement = document.body;
+        i = this.children.indexOf(node);
+        if (i !== -1)
+            this.children.splice(i, 1);
     };
     this.remove = function() {
         this.parentNode && this.parentNode.removeChild(this);
@@ -227,6 +236,9 @@ function Node(name) {
             if (node.previousSibling)
                 node.previousSibling.nextSibling = node;
             node.parentNode = this;
+            i = this.children.indexOf(before);
+            if (i == -1) i = this.children.length + 1;
+            this.children.splice(i, 0, node);
         }
         
         return node;
@@ -766,6 +778,7 @@ function Event(type, options) {
         this.altKey = alt;
         this.shiftKey = shift;
         this.metaKey = meta;
+        this.which = button + 1;
     };
     this.preventDefault = function() {
         this.defaultPrevented = true;

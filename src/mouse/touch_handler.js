@@ -73,22 +73,22 @@ exports.addTouchListeners = function(el, editor) {
         contextMenu = dom.buildDom(["div",
             {
                 class: "ace_mobile-menu",
-                ontouchstart: function(e) {
-                    mode = "menu";
-                    e.stopPropagation();
-                    e.preventDefault();
-                    editor.textInput.focus();
-                },
-                ontouchend: function(e) {
-                    e.stopPropagation();
-                    e.preventDefault();
-                    handleClick(e);
-                },
                 onclick: handleClick
             },
             ["span"],
             ["span", { class: "ace_mobile-button", action: "more" }, "..."]
         ], editor.container);
+        contextMenu.addEventListener("touchstart", function(e) {
+            mode = "menu";
+            e.stopPropagation();
+            e.preventDefault();
+            editor.textInput.focus();
+        });
+        contextMenu.addEventListener("touchend", function(e) {
+            e.stopPropagation();
+            e.preventDefault();
+            handleClick(e);
+        });
     }
     function showContextMenu() {
         if (!editor.getOption("enableMobileMenu")) {
