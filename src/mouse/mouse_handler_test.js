@@ -128,7 +128,7 @@ module.exports = {
         editor.setValue(value, -1);
         editor.renderer.$loop._flush();
         var lines = editor.renderer.$gutterLayer.$lines;
-        var toggler = lines.cells[0].element.children[1];
+        var toggler = lines.cells[0].element.childNodes[1];
         var rect = toggler.getBoundingClientRect();
         if (!rect.left) rect.left = 100; // for mockdom
         toggler.dispatchEvent(MouseEvent("down", {x: rect.left, y: rect.top}));
