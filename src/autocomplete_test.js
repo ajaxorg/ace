@@ -46,12 +46,44 @@ function initEditor(value) {
     return editor;
 }
 
-function afterRenderCheck(popup, callback) {
-    popup.renderer.on("afterRender", function wait() {
-        popup.renderer.off("afterRender", wait);
-        callback();
-    });
-}
+var slowCompleter = {
+    getCompletions: async function (editor, session, pos, prefix, callback) {
+        var completions = [
+            {
+                caption: "slow option 1",
+                value: "s1",
+                score: 3
+            }, {
+                caption: "slow option 2",
+                value: "s2",
+                score: 0
+            }
+        ];
+        await lang.sleep(200);
+        callback(null, completions);
+    }
+};
+
+var fastCompleter = {
+    getCompletions: function (editor, session, pos, prefix, callback) {
+        var completions = [
+            {
+                caption: "fast option 1",
+                value: "f1",
+                score: 2
+            }, {
+                caption: "fast option 2",
+                value: "f2",
+                score: 1
+            },  {
+                caption: "fast option 3",
+                value: "f3",
+                score: 1
+            }
+        ];
+        callback(null, completions);
+    }
+};
 
 module.exports = {
     tearDown: function() {
@@ -61,48 +93,46 @@ module.exports = {
             editor = null;
         }
     },
-    "test: highlighting in the popup": function (done) {
+    "test: highlighting in the popup": async function (done) {
         editor = initEditor("\narraysort alooooooooooooooooooooooooooooong_word");
-        //   editor.container.style.width = "500px";
-        //  editor.container.style.height = "500px";
 
         assert.ok(!editor.container.querySelector("style"));
 
         sendKey("a");
-        checkInnerHTML('<d "ace_line ace_selected" role="option" aria-roledescription="item" aria-setsize="2" aria-describedby="doc-tooltip" aria-posinset="1" aria-label="arraysort, local" id="suggest-aria-id:0" aria-selected="true"><s "ace_completion-highlight" role="mark">a</s><s "ace_">rraysort</s><s "ace_completion-spacer"> </s><s "ace_completion-meta">local</s></d><d "ace_line" role="option" aria-roledescription="item" aria-setsize="2" aria-describedby="doc-tooltip" aria-posinset="2" aria-label="alooooooooooooooooooooooooooooong_word, local"><s "ace_completion-highlight" role="mark">a</s><s "ace_">looooooooooooooooooooooooooooong_word</s><s "ace_completion-spacer"> </s><s "ace_completion-meta">local</s></d>', function() {
-            sendKey("rr");
-            checkInnerHTML('<d "ace_line ace_selected" role="option" aria-roledescription="item" aria-setsize="1" aria-describedby="doc-tooltip" aria-posinset="1" aria-label="arraysort, local" id="suggest-aria-id:0" aria-selected="true"><s "ace_completion-highlight" role="mark">arr</s><s "ace_">aysort</s><s "ace_completion-spacer"> </s><s "ace_completion-meta">local</s></d>', function () {
-                sendKey("r");
-                checkInnerHTML('<d "ace_line ace_selected" role="option" aria-roledescription="item" aria-setsize="1" aria-describedby="doc-tooltip" aria-posinset="1" aria-label="arraysort, local" id="suggest-aria-id:0" aria-selected="true"><s "ace_completion-highlight" role="mark">arr</s><s "ace_">ayso</s><s "ace_completion-highlight" role="mark">r</s><s "ace_">t</s><s "ace_completion-spacer"> </s><s "ace_completion-meta">local</s></d>', function () {
+        await checkInnerHTML(
+            '<d "ace_line ace_selected" role="option" aria-roledescription="item" aria-setsize="2" aria-describedby="doc-tooltip" aria-posinset="1" aria-label="arraysort, local" id="suggest-aria-id:0" aria-selected="true"><s "ace_completion-highlight" role="mark">a</s><s "ace_">rraysort</s><s "ace_completion-spacer"> </s><s "ace_completion-meta">local</s></d><d "ace_line" role="option" aria-roledescription="item" aria-setsize="2" aria-describedby="doc-tooltip" aria-posinset="2" aria-label="alooooooooooooooooooooooooooooong_word, local"><s "ace_completion-highlight" role="mark">a</s><s "ace_">looooooooooooooooooooooooooooong_word</s><s "ace_completion-spacer"> </s><s "ace_completion-meta">local</s></d>');
+        sendKey("rr");
 
-                    sendKey("Return");
-                    assert.equal(editor.getValue(), "arraysort\narraysort alooooooooooooooooooooooooooooong_word");
-                    editor.execCommand("insertstring", " looooooooooooooooooooooooooooong_");
-                    checkInnerHTML('<d "ace_line ace_selected" role="option" aria-roledescription="item" aria-setsize="1" aria-describedby="doc-tooltip" aria-posinset="1" aria-label="alooooooooooooooooooooooooooooong_word, local" id="suggest-aria-id:0" aria-selected="true"><s "ace_">a</s><s "ace_completion-highlight" role="mark">looooooooooooooooooooooooooooong_</s><s "ace_">word</s><s "ace_completion-spacer"> </s><s "ace_completion-meta">local</s></d>', function () {
-                        sendKey("Return");
-                        done();
-                    });
-                });
-            });
-        });
+        await checkInnerHTML(
+            '<d "ace_line ace_selected" role="option" aria-roledescription="item" aria-setsize="1" aria-describedby="doc-tooltip" aria-posinset="1" aria-label="arraysort, local" id="suggest-aria-id:0" aria-selected="true"><s "ace_completion-highlight" role="mark">arr</s><s "ace_">aysort</s><s "ace_completion-spacer"> </s><s "ace_completion-meta">local</s></d>');
+        sendKey("r");
+
+        await checkInnerHTML(
+            '<d "ace_line ace_selected" role="option" aria-roledescription="item" aria-setsize="1" aria-describedby="doc-tooltip" aria-posinset="1" aria-label="arraysort, local" id="suggest-aria-id:0" aria-selected="true"><s "ace_completion-highlight" role="mark">arr</s><s "ace_">ayso</s><s "ace_completion-highlight" role="mark">r</s><s "ace_">t</s><s "ace_completion-spacer"> </s><s "ace_completion-meta">local</s></d>');
+        sendKey("Return");
+        assert.equal(editor.getValue(), "arraysort\narraysort alooooooooooooooooooooooooooooong_word");
+        editor.execCommand("insertstring", " looooooooooooooooooooooooooooong_");
+
+        await checkInnerHTML(
+            '<d "ace_line ace_selected" role="option" aria-roledescription="item" aria-setsize="1" aria-describedby="doc-tooltip" aria-posinset="1" aria-label="alooooooooooooooooooooooooooooong_word, local" id="suggest-aria-id:0" aria-selected="true"><s "ace_">a</s><s "ace_completion-highlight" role="mark">looooooooooooooooooooooooooooong_</s><s "ace_">word</s><s "ace_completion-spacer"> </s><s "ace_completion-meta">local</s></d>');
+        sendKey("Return");
 
         var last;
-        function checkInnerHTML(expected, callback) {
+
+        async function checkInnerHTML(expected) {
             var popup = editor.completer.popup;
 
-            popup.renderer.on("afterRender", function wait() {
-                var innerHTML = popup.renderer.$textLayer.element.innerHTML
-                    .replace(/\s*style="[^"]+"|class=|(d)iv|(s)pan/g, "$1$2");
-                if (innerHTML == last)
-                    return;
-                assert.equal(innerHTML, expected);
-                last = innerHTML;
-                popup.renderer.off("afterRender", wait);
-                callback();
-            });
+            await popup.renderer.once("afterRender");
+            var innerHTML = popup.renderer.$textLayer.element.innerHTML
+                .replace(/\s*style="[^"]+"|class=|(d)iv|(s)pan/g, "$1$2");
+            if (innerHTML == last) return;
+            assert.equal(innerHTML, expected);
+            last = innerHTML;
         }
+
+        done();
     },
-    "test: completions range and command properties": function (done) {
+    "test: completions range and command properties": async function (done) {
         editor = initEditor("goods ");
 
         editor.completers = [
@@ -129,17 +159,17 @@ module.exports = {
         editor.moveCursorTo(0, 6);
         sendKey("w");
         var popup = editor.completer.popup;
-        afterRenderCheck(popup, function () {
-            assert.equal(popup.data.length, 1);
-            editor.onCommandKey(null, 0, 13);
-            assert.equal(popup.data.length, 2);
-            assert.equal(editor.getValue(), "goodwill: ");
-            afterRenderCheck(popup, function () {
-                editor.onCommandKey(null, 0, 13);
-                assert.equal(editor.getValue(), "goodwill-here");
-                done();
-            });
-        });
+
+        await popup.renderer.once("afterRender");
+        assert.equal(popup.data.length, 1);
+        editor.onCommandKey(null, 0, 13);
+        assert.equal(popup.data.length, 2);
+        assert.equal(editor.getValue(), "goodwill: ");
+
+        await popup.renderer.once("afterRender");
+        editor.onCommandKey(null, 0, 13);
+        assert.equal(editor.getValue(), "goodwill-here");
+        done();
     },
     "test: correct completion replacement range when completion prefix has more than one letter": async function (done) {
         editor = initEditor("<");
@@ -175,7 +205,7 @@ module.exports = {
         assert.equal(editor.getValue(), "<dialog");
         done();
     },
-    "test: symbols after selection are not removed when replacement range is present": function (done) {
+    "test: symbols after selection are not removed when replacement range is present": async function (done) {
         editor = initEditor("{}");
         editor.completers = [
             {
@@ -199,15 +229,15 @@ module.exports = {
         editor.moveCursorTo(0, 1);
         sendKey("a");
         var popup = editor.completer.popup;
-        afterRenderCheck(popup, function () {
-            assert.equal(popup.data.length, 2);
-            editor.onCommandKey(null, 0, 13);
-            assert.equal(editor.getValue(), "{apple: }");
 
-            done();
-        });
+        await popup.renderer.once("afterRender");
+        assert.equal(popup.data.length, 2);
+        editor.onCommandKey(null, 0, 13);
+        assert.equal(editor.getValue(), "{apple: }");
+
+        done();
     },
-    "test: should set correct aria attributes for popup items": function(done) {
+    "test: should set correct aria attributes for popup items": async function(done) {
         editor = initEditor("");
         var newLineCharacter = editor.session.doc.getNewLineCharacter();
         editor.completers = [
@@ -221,42 +251,49 @@ module.exports = {
         ];
         sendKey('Return');
         var popup = editor.completer.popup;
-        check(function () {
-            assert.equal(popup.data.length, 10);
-            // check that the aria attributes have been set on  all the elements of the popup and that aria selected attributes are set on the first item
-            assert.ok(checkAria(popup.renderer.$textLayer.element.innerHTML, '<d  role="option" aria-roledescription="item" aria-setsize="10" aria-describedby="doc-tooltip" aria-posinset="1" aria-label="0" id="suggest-aria-id:0" aria-selected="true"><s >0</s><s > </s></d>' +
-                            '<d  role="option" aria-roledescription="item" aria-setsize="10" aria-describedby="doc-tooltip" aria-posinset="2" aria-label="1"><s >1</s><s > </s></d>' +
-                            '<d  role="option" aria-roledescription="item" aria-setsize="10" aria-describedby="doc-tooltip" aria-posinset="3" aria-label="2"><s >2</s><s > </s></d>' +
-                            '<d  role="option" aria-roledescription="item" aria-setsize="10" aria-describedby="doc-tooltip" aria-posinset="4" aria-label="3"><s >3</s><s > </s></d>' +
-                            '<d  role="option" aria-roledescription="item" aria-setsize="10" aria-describedby="doc-tooltip" aria-posinset="5" aria-label="4"><s >4</s><s > </s></d>' +
-                            '<d  role="option" aria-roledescription="item" aria-setsize="10" aria-describedby="doc-tooltip" aria-posinset="6" aria-label="5"><s >5</s><s > </s></d>' +
-                            '<d  role="option" aria-roledescription="item" aria-setsize="10" aria-describedby="doc-tooltip" aria-posinset="7" aria-label="6"><s >6</s><s > </s></d>' +
-                            '<d  role="option" aria-roledescription="item" aria-setsize="10" aria-describedby="doc-tooltip" aria-posinset="8" aria-label="7"><s >7</s><s > </s></d>' +
-                            '<d  role="option" aria-roledescription="item" aria-setsize="10" aria-describedby="doc-tooltip" aria-posinset="9" aria-label="8"><s >8</s><s > </s></d>'));
-            const prevSelected = popup.selectedNode;
-            sendKey('Down');
-            check(function () {
-                assert.ok(checkAria(popup.selectedNode.outerHTML, '<d  role="option" aria-roledescription="item" aria-setsize="10" aria-describedby="doc-tooltip" aria-posinset="2" aria-label="1" id="suggest-aria-id:1" aria-selected="true"><s >1</s><s > </s></d>'));
-                // check that the aria selected attributes have been removed from the previously selected element
-                assert.ok(checkAria(prevSelected.outerHTML, '<d  role="option" aria-roledescription="item" aria-setsize="10" aria-describedby="doc-tooltip" aria-posinset="1" aria-label="0"><s >0</s><s > </s></d>'));
-                sendKey('Down');
-                check(function () {
-                    assert.ok(checkAria(popup.selectedNode.outerHTML, '<d  role="option" aria-roledescription="item" aria-setsize="10" aria-describedby="doc-tooltip" aria-posinset="3" aria-label="2" id="suggest-aria-id:2" aria-selected="true"><s >2</s><s > </s></d>'));
-                    done();
-                });
-            });
-        });
-        function check(callback) {
-            popup = editor.completer.popup;
-            popup.renderer.on("afterRender", function wait() {
-                popup.renderer.off("afterRender", wait);
-                callback();
-            });
-        }
+
+        await popup.renderer.once("afterRender");
+        assert.equal(popup.data.length, 10);
+        // check that the aria attributes have been set on  all the elements of the popup and that aria selected attributes are set on the first item
+        assert.ok(checkAria(
+            popup.renderer.$textLayer.element.innerHTML,
+            '<d  role="option" aria-roledescription="item" aria-setsize="10" aria-describedby="doc-tooltip" aria-posinset="1" aria-label="0" id="suggest-aria-id:0" aria-selected="true"><s >0</s><s > </s></d>'
+            + '<d  role="option" aria-roledescription="item" aria-setsize="10" aria-describedby="doc-tooltip" aria-posinset="2" aria-label="1"><s >1</s><s > </s></d>'
+            + '<d  role="option" aria-roledescription="item" aria-setsize="10" aria-describedby="doc-tooltip" aria-posinset="3" aria-label="2"><s >2</s><s > </s></d>'
+            + '<d  role="option" aria-roledescription="item" aria-setsize="10" aria-describedby="doc-tooltip" aria-posinset="4" aria-label="3"><s >3</s><s > </s></d>'
+            + '<d  role="option" aria-roledescription="item" aria-setsize="10" aria-describedby="doc-tooltip" aria-posinset="5" aria-label="4"><s >4</s><s > </s></d>'
+            + '<d  role="option" aria-roledescription="item" aria-setsize="10" aria-describedby="doc-tooltip" aria-posinset="6" aria-label="5"><s >5</s><s > </s></d>'
+            + '<d  role="option" aria-roledescription="item" aria-setsize="10" aria-describedby="doc-tooltip" aria-posinset="7" aria-label="6"><s >6</s><s > </s></d>'
+            + '<d  role="option" aria-roledescription="item" aria-setsize="10" aria-describedby="doc-tooltip" aria-posinset="8" aria-label="7"><s >7</s><s > </s></d>'
+            + '<d  role="option" aria-roledescription="item" aria-setsize="10" aria-describedby="doc-tooltip" aria-posinset="9" aria-label="8"><s >8</s><s > </s></d>'
+        ));
+        const prevSelected = popup.selectedNode;
+        sendKey('Down');
+
+        await popup.renderer.once("afterRender");
+        assert.ok(checkAria(
+            popup.selectedNode.outerHTML,
+            '<d  role="option" aria-roledescription="item" aria-setsize="10" aria-describedby="doc-tooltip" aria-posinset="2" aria-label="1" id="suggest-aria-id:1" aria-selected="true"><s >1</s><s > </s></d>'
+        ));
+        // check that the aria selected attributes have been removed from the previously selected element
+        assert.ok(checkAria(
+            prevSelected.outerHTML,
+            '<d  role="option" aria-roledescription="item" aria-setsize="10" aria-describedby="doc-tooltip" aria-posinset="1" aria-label="0"><s >0</s><s > </s></d>'
+        ));
+        sendKey('Down');
+
+        await popup.renderer.once("afterRender");
+        assert.ok(checkAria(
+            popup.selectedNode.outerHTML,
+            '<d  role="option" aria-roledescription="item" aria-setsize="10" aria-describedby="doc-tooltip" aria-posinset="3" aria-label="2" id="suggest-aria-id:2" aria-selected="true"><s >2</s><s > </s></d>'
+        ));
+
         function checkAria(htmlElement, expected) {
             var actual = htmlElement.replace(/\s*style="[^"]+"|class="[^"]+"|(d)iv|(s)pan/g, "$1$2");
             return actual === expected;
         }
+
+        done();
     },
     "test: different completers tooltips": async function (done) {
         editor = initEditor("");
@@ -328,9 +365,10 @@ module.exports = {
 
         await lang.sleep(10);
         assert.equal(popup.container.lastChild.innerHTML, secondDoc);
+
         done();
     },
-    "test: completers tooltip filtering": function (done) {
+    "test: completers tooltip filtering": async function (done) {
         editor = initEditor("");
         var firstDoc = "First tooltip";
         var secondDoc = "Second tooltip";
@@ -362,27 +400,17 @@ module.exports = {
         sendKey("ca");
         var popup = editor.completer.popup;
 
-        check(function() {
-            assert.equal(popup.data.length, 2);
-            assert.equal(popup.container.lastChild.innerHTML, firstDoc);
+        await lang.sleep(10);
+        assert.equal(popup.data.length, 2);
+        assert.equal(popup.container.lastChild.innerHTML, firstDoc);
+        sendKey("t");
 
-            sendKey("t");
-
-            check(function() {
-                assert.equal(popup.data.length, 1);
-                assert.equal(popup.container.lastChild.innerHTML, secondDoc);
-
-                done();
-            });
-        });
-
-        function check(callback) {
-            setTimeout(function wait() {
-                callback();
-            }, 10);
-        }
+        await lang.sleep(10);
+        assert.equal(popup.data.length, 1);
+        assert.equal(popup.container.lastChild.innerHTML, secondDoc);
+        done();
     },
-    "test: slow and fast completers": function(done) {
+    "test: slow and fast completers": async function(done) {
         var syncCompleter={
             getCompletions: function(editor, session, pos, prefix, callback) {
                 callback(null,[{
@@ -393,12 +421,13 @@ module.exports = {
         };
 
         var asyncCompleter = {
-            getCompletions: function(editor, session, pos, prefix, callback) {
-                setTimeout(() => {
-                    callback(null,[{
+            getCompletions: async function(editor, session, pos, prefix, callback) {
+                await lang.sleep(10);
+                callback(null, [
+                    {
                         value: "some"
-                    }]);
-                }, 10);
+                    }
+                ]);
             },
             id: "asyncCompleter"
         };
@@ -409,27 +438,27 @@ module.exports = {
         editor.resize(true);
         editor.execCommand("insertstring", "o");
         assert.notOk(!!editor.completer.popup);
-        setTimeout(function() {
-            assert.ok(editor.completer.popup.isOpen);
-            assert.equal(editor.completer.popup.renderer.scrollTop, 0);
-            editor.completer.popup.renderer.$loop._flush();
-            assert.equal(editor.completer.popup.renderer.scrollTop, 0);
-            assert.equal(editor.completer.popup.renderer.scroller.textContent, "some ");
-            sendKey("Return");
-            assert.equal(editor.getValue(), "some");
-            sendKey(" ");
-            assert.equal(editor.completer.popup.isOpen, false);
-            sendKey("t");
-            assert.equal(editor.completer.popup.isOpen, true);
-            sendKey("Return");
-            sendKey(" ");
-            sendKey("q");
-            assert.equal(editor.completer.popup.isOpen, false);
 
-            done();
-        }, 10);
+        await lang.sleep(10);
+        assert.ok(editor.completer.popup.isOpen);
+        assert.equal(editor.completer.popup.renderer.scrollTop, 0);
+        editor.completer.popup.renderer.$loop._flush();
+        assert.equal(editor.completer.popup.renderer.scrollTop, 0);
+        assert.equal(editor.completer.popup.renderer.scroller.textContent, "some ");
+        sendKey("Return");
+        assert.equal(editor.getValue(), "some");
+        sendKey(" ");
+        assert.equal(editor.completer.popup.isOpen, false);
+        sendKey("t");
+        assert.equal(editor.completer.popup.isOpen, true);
+        sendKey("Return");
+        sendKey(" ");
+        sendKey("q");
+        assert.equal(editor.completer.popup.isOpen, false);
+
+        done();
     },
-    "test: trigger autocomplete for specific characters": function (done) {
+    "test: trigger autocomplete for specific characters": async function (done) {
         editor = initEditor("document");
         var newLineCharacter = editor.session.doc.getNewLineCharacter();
 
@@ -454,29 +483,21 @@ module.exports = {
         editor.moveCursorTo(0, 8);
         user.type(".");
         var popup = editor.completer.popup;
-        check(function () {
-            assert.equal(popup.data.length, 2);
-            user.type("Return");  // Accept suggestion
-            assert.equal(editor.getValue(), "document.all");
 
-            user.type(Array(4).fill("Backspace"));  // Delete '.all'
-            user.type("Return");  // Enter new line
+        await popup.renderer.once("afterRender");
+        assert.equal(popup.data.length, 2);
+        user.type("Return");  // Accept suggestion
+        assert.equal(editor.getValue(), "document.all");
 
-            check(function() {
-                assert.equal(popup.data.length, 2);
-                user.type("Return");  // Accept suggestion
-                assert.equal(editor.getValue(), `document${newLineCharacter}all`);
-                done();
-            });
-        });
+        user.type(Array(4).fill("Backspace"));  // Delete '.all'
+        user.type("Return");  // Enter new line
 
-        function check(callback) {
-            popup = editor.completer.popup;
-            popup.renderer.on("afterRender", function wait() {
-                popup.renderer.off("afterRender", wait);
-                callback();
-            });
-        }
+        await popup.renderer.once("afterRender");
+        assert.equal(popup.data.length, 2);
+        user.type("Return");  // Accept suggestion
+        assert.equal(editor.getValue(), `document${newLineCharacter}all`);
+
+        done();
     },
     "test: empty message if no suggestions available": function(done) {
         editor = initEditor("");
@@ -536,7 +557,7 @@ module.exports = {
 
         done();
     },
-    "test: liveAutocompleteDelay": function(done) {
+    "test: liveAutocompleteDelay": async function(done) {
         editor = initEditor("hello world ");
         editor.setOptions({
             liveAutocompletionDelay: 10,
@@ -568,24 +589,25 @@ module.exports = {
         user.type(" ");
         user.type("t");
         user.type("e");
-        assert.ok(!editor.completer.popup || !editor.completer.popup.isOpen);
-        setTimeout(function() {
-            assert.ok(editor.completer.popup.isOpen);
-            assert.ok(editor.completers[1].timeout);
-            user.type("Home");
-            setTimeout(function() {
-                assert.ok(editor.completer.popup.isOpen);
-                assert.ok(editor.completers[1].timeout);
 
-                user.type("Left");
+        var popup = editor.completer.popup;
 
-                setTimeout(function() {
-                    assert.ok(!editor.completer.popup.isOpen);
-                    assert.ok(!editor.completers[1].timeout);
-                    done();
-                }, 0);
-            }, 0);
-        }, 11);
+        assert.ok(!popup || !popup.isOpen);
+
+        await lang.sleep(11);
+        assert.ok(editor.completer.popup.isOpen);
+        assert.ok(editor.completers[1].timeout);
+        user.type("Home");
+
+        await lang.sleep(0);
+        assert.ok(editor.completer.popup.isOpen);
+        assert.ok(editor.completers[1].timeout);
+
+        user.type("Left");
+        await lang.sleep(0);
+        assert.ok(!editor.completer.popup.isOpen);
+        assert.ok(!editor.completers[1].timeout);
+        done();
     },
     "test: scroll and resize": function() {
         editor = initEditor("hello world\n");
@@ -757,44 +779,8 @@ module.exports = {
 
         done();
     },
-    "test: should maintain selection on fast completer item when slow completer results come in": function(done) {
+    "test: should maintain selection on fast completer item when slow completer results come in": async function(done) {
         editor = initEditor("hello world\n");
-
-        var slowCompleter = {
-            getCompletions: function (editor, session, pos, prefix, callback) {
-                var completions = [
-                    {
-                        caption: "slow option 1",
-                        value: "s1",
-                        score: 3
-                    }, {
-                        caption: "slow option 2",
-                        value: "s2",
-                        score: 0
-                    }
-                ];
-                setTimeout(() => {
-                    callback(null,  completions);
-                }, 200);
-            }
-        };
-
-        var fastCompleter = {
-            getCompletions: function (editor, session, pos, prefix, callback) {
-                var completions = [
-                    {
-                        caption: "fast option 1",
-                        value: "f1",
-                        score: 2
-                    }, {
-                        caption: "fast option 2",
-                        value: "f2",
-                        score: 1
-                    }
-                ];
-                callback(null, completions);
-            }
-        };
 
         editor.completers = [fastCompleter, slowCompleter];
 
@@ -802,22 +788,21 @@ module.exports = {
         completer.stickySelectionDelay = 100;
         user.type("Ctrl-Space");
         assert.equal(completer.popup.isOpen, true);
-        assert.equal(completer.popup.data.length, 2);
+        assert.equal(completer.popup.data.length, 3);
         assert.equal(completer.popup.getRow(), 0);
 
-        setTimeout(() => {
-            completer.popup.renderer.$loop._flush();
-            assert.equal(completer.popup.data.length, 4);
-            assert.equal(completer.popup.getRow(), 1);
+        await lang.sleep(300);
+        completer.popup.renderer.$loop._flush();
+        assert.equal(completer.popup.data.length, 5);
+        assert.equal(completer.popup.getRow(), 1);
 
-            done();
-        }, 500);
+        done();
     },
-    "test: should not maintain selection on fast completer item when slow completer results come in when stickySelectionDelay negative": function(done) {
+    "test: should not maintain selection on fast completer item when slow completer results come in when stickySelectionDelay negative": async function(done) {
         editor = initEditor("hello world\n");
 
         var slowCompleter = {
-            getCompletions: function (editor, session, pos, prefix, callback) {
+            getCompletions: async function (editor, session, pos, prefix, callback) {
                 var completions = [
                     {
                         caption: "slow option 1",
@@ -829,25 +814,7 @@ module.exports = {
                         score: 0
                     }
                 ];
-                setTimeout(() => {
-                    callback(null,  completions);
-                }, 200);
-            }
-        };
-
-        var fastCompleter = {
-            getCompletions: function (editor, session, pos, prefix, callback) {
-                var completions = [
-                    {
-                        caption: "fast option 1",
-                        value: "f1",
-                        score: 2
-                    }, {
-                        caption: "fast option 2",
-                        value: "f2",
-                        score: 1
-                    }
-                ];
+                await lang.sleep(200);
                 callback(null, completions);
             }
         };
@@ -858,16 +825,15 @@ module.exports = {
         completer.stickySelectionDelay = -1;
         user.type("Ctrl-Space");
         assert.equal(completer.popup.isOpen, true);
-        assert.equal(completer.popup.data.length, 2);
+        assert.equal(completer.popup.data.length, 3);
         assert.equal(completer.popup.getRow(), 0);
 
-        setTimeout(() => {
-            completer.popup.renderer.$loop._flush();
-            assert.equal(completer.popup.data.length, 4);
-            assert.equal(completer.popup.getRow(), 0);
+        await lang.sleep(300);
+        completer.popup.renderer.$loop._flush();
+        assert.equal(completer.popup.data.length, 5);
+        assert.equal(completer.popup.getRow(), 0);
 
-            done();
-        }, 500);
+        done();
     },
     "test: should filter using caption if ignoreCaption false": function() {
         editor = initEditor("hello world\n");
@@ -1081,48 +1047,8 @@ module.exports = {
         editor.destroy();
         editor.container.remove();
     },
-    "test: should display loading state": function(done) {
+    "test: should display loading state": async function(done) {
         editor = initEditor("hello world\n");
-
-        var slowCompleter = {
-            getCompletions: function (editor, session, pos, prefix, callback) {
-                var completions = [
-                    {
-                        caption: "slow option 1",
-                        value: "s1",
-                        score: 3
-                    }, {
-                        caption: "slow option 2",
-                        value: "s2",
-                        score: 0
-                    }
-                ];
-                setTimeout(() => {
-                    callback(null,  completions);
-                }, 200);
-            }
-        };
-
-        var fastCompleter = {
-            getCompletions: function (editor, session, pos, prefix, callback) {
-                var completions = [
-                    {
-                        caption: "fast option 1",
-                        value: "f1",
-                        score: 2
-                    }, {
-                        caption: "fast option 2",
-                        value: "f2",
-                        score: 1
-                    }, {
-                        caption: "fast option 3",
-                        value: "f3",
-                        score: 1
-                    }
-                ];
-                callback(null, completions);
-            }
-        };
 
         editor.completers = [slowCompleter];
 
@@ -1132,58 +1058,38 @@ module.exports = {
         user.type("Ctrl-Space");
         assert.ok(!(completer.popup && completer.popup.isOpen));
 
-        setTimeout(() => {
-            completer.popup.renderer.$loop._flush();
-            assert.equal(completer.popup.data.length, 1);
-            assert.ok(isLoading());
-            setTimeout(() => {
-                assert.equal(completer.popup.data.length, 2);
-                assert.ok(!isLoading());
-                user.type("Escape");
-                assert.ok(!(completer.popup && completer.popup.isOpen));
+        await lang.sleep(100);
+        completer.popup.renderer.$loop._flush();
+        assert.equal(completer.popup.data.length, 1);
+        assert.ok(isLoading());
+
+        await lang.sleep(150);
+        assert.equal(completer.popup.data.length, 2);
+        assert.ok(!isLoading());
+        user.type("Escape");
+        assert.ok(!(completer.popup && completer.popup.isOpen));
 
 
-                editor.completers = [fastCompleter, slowCompleter];
-                user.type("Ctrl-Space");
-                assert.equal(completer.popup.data.length, 4);
+        editor.completers = [fastCompleter, slowCompleter];
+        user.type("Ctrl-Space");
+        assert.equal(completer.popup.data.length, 4);
 
-                // Should have top row saying 'Loading...' together with results.
-                assert.ok(isLoading());
-                assert.equal(completer.popup.data[0].caption, "Loading...");
-                setTimeout(() => {
-                    completer.popup.renderer.$loop._flush();
-                    assert.equal(completer.popup.data.length, 5);
-                    assert.ok(!isLoading());
-                    done();
-                }, 250);
-            }, 150);
-        }, 100);
+        // Should have top row saying 'Loading...' together with results.
+        assert.ok(isLoading());
+        assert.equal(completer.popup.data[0].caption, "Loading...");
+
+        await lang.sleep(250);
+        completer.popup.renderer.$loop._flush();
+        assert.equal(completer.popup.data.length, 5);
+        assert.ok(!isLoading());
+        done();
 
         function isLoading() {
             return completer.popup.renderer.container.classList.contains("ace_loading");
         }
     },
-    "test: should not display loading state on no suggestion state": function(done) {
+    "test: should not display loading state on no suggestion state": async function(done) {
         editor = initEditor("hello world\n");
-
-        var slowCompleter = {
-            getCompletions: function (editor, session, pos, prefix, callback) {
-                var completions = [
-                    {
-                        caption: "slow option 1",
-                        value: "s1",
-                        score: 3
-                    }, {
-                        caption: "slow option 2",
-                        value: "s2",
-                        score: 0
-                    }
-                ];
-                setTimeout(() => {
-                    callback(null,  completions);
-                }, 200);
-            }
-        };
 
         editor.completers = [slowCompleter];
 
@@ -1196,45 +1102,25 @@ module.exports = {
         user.type("Ctrl-Space");
         assert.ok(!(completer.popup && completer.popup.isOpen));
 
-        setTimeout(() => {
-            completer.popup.renderer.$loop._flush();
-            assert.equal(completer.popup.data.length, 1);
-            assert.ok(isLoading());
-            setTimeout(() => {
-                // Should show no suggestions state without loading indicator
-                assert.equal(completer.popup.data.length, 1);
-                assert.equal(completer.popup.data[0].caption, "no completions");
-                assert.ok(!isLoading());
+        await lang.sleep(100);
+        completer.popup.renderer.$loop._flush();
+        assert.equal(completer.popup.data.length, 1);
+        assert.ok(isLoading());
 
-                done();
-            }, 150);
-        }, 100);
+        await lang.sleep(150);
+        // Should show no suggestions state without loading indicator
+        assert.equal(completer.popup.data.length, 1);
+        assert.equal(completer.popup.data[0].caption, "no completions");
+        assert.ok(!isLoading());
+
+        done();
 
         function isLoading() {
             return completer.popup.renderer.container.classList.contains("ace_loading");
         }
     },
-    "test: should display ghost text after loading state if inline preview enabled": function(done) {
+    "test: should display ghost text after loading state if inline preview enabled": async function(done) {
         editor = initEditor("hello world\n");
-
-        var slowCompleter = {
-            getCompletions: function (editor, session, pos, prefix, callback) {
-                var completions = [
-                    {
-                        caption: "slow option 1",
-                        value: "s1",
-                        score: 3
-                    }, {
-                        caption: "slow option 2",
-                        value: "s2",
-                        score: 0
-                    }
-                ];
-                setTimeout(() => {
-                    callback(null,  completions);
-                }, 200);
-            }
-        };
 
         editor.completers = [slowCompleter];
 
@@ -1246,18 +1132,17 @@ module.exports = {
         user.type("Ctrl-Space");
         assert.ok(!(completer.popup && completer.popup.isOpen));
 
-        setTimeout(() => {
-            completer.popup.renderer.$loop._flush();
-            assert.equal(completer.popup.data.length, 1);
-            assert.ok(isLoading());
-            setTimeout(() => {
-                assert.equal(completer.popup.data.length, 2);
-                assert.ok(!isLoading());
+        await lang.sleep(100);
+        completer.popup.renderer.$loop._flush();
+        assert.equal(completer.popup.data.length, 1);
+        assert.ok(isLoading());
 
-                assert.strictEqual(editor.renderer.$ghostText.text, "s1");
-                done();
-            }, 150);
-        }, 100);
+        await lang.sleep(150);
+        assert.equal(completer.popup.data.length, 2);
+        assert.ok(!isLoading());
+
+        assert.strictEqual(editor.renderer.$ghostText.text, "s1");
+        done();
 
         function isLoading() {
             return completer.popup.renderer.container.classList.contains("ace_loading");
@@ -1384,7 +1269,7 @@ module.exports = {
         assert.ok(!calledDouble);
         done();
     },
-    "test: if there is very long ghost text, popup should be rendered at the bottom of the editor container": function(done) {
+    "test: if there is very long ghost text, popup should be rendered at the bottom of the editor container": async function(done) {
         editor = initEditor("hello world\n");
 
         // Give enough space for the popup to appear below the editor
@@ -1414,23 +1299,22 @@ module.exports = {
         assert.ok(completer.popup && completer.popup.isOpen);
 
         // Wait to account for the renderer scrolling for the virtual renderer
-        setTimeout(() => {
-            completer.popup.renderer.$loop._flush();
+        await lang.sleep(100);
+        completer.popup.renderer.$loop._flush();
 
-            // Popup should start one pixel below the bottom of the editor container
-            assert.equal(
-                completer.popup.container.getBoundingClientRect().top,
-                editor.container.getBoundingClientRect().bottom + 1
-            );
+        // Popup should start one pixel below the bottom of the editor container
+        assert.equal(
+            completer.popup.container.getBoundingClientRect().top,
+            editor.container.getBoundingClientRect().bottom + 1
+        );
 
-            // Reset back to initial values
-            document.body.style.height = initialDocumentHeight;
-            editor.renderer.$loop._flush();
+        // Reset back to initial values
+        document.body.style.height = initialDocumentHeight;
+        editor.renderer.$loop._flush();
 
-            done();
-        }, 100);
+        done();
     },
-    "test: if there is ghost text, popup should be rendered at the bottom of the ghost text": function(done) {
+    "test: if there is ghost text, popup should be rendered at the bottom of the ghost text": async function(done) {
         editor = initEditor("");
 
         var longCompleter = {
@@ -1455,17 +1339,16 @@ module.exports = {
         assert.ok(completer.popup && completer.popup.isOpen);
 
         // Wait to account for the renderer scrolling for the virtual renderer
-        setTimeout(() => {
-            completer.popup.renderer.$loop._flush();
+        await lang.sleep(100);
+        completer.popup.renderer.$loop._flush();
 
-            // Popup should start one pixel below the bottom of the ghost text
-            assert.equal(
-                completer.popup.container.getBoundingClientRect().top,
-                editor.renderer.$ghostTextWidget.el.getBoundingClientRect().bottom + 1
-            );
+        // Popup should start one pixel below the bottom of the ghost text
+        assert.equal(
+            completer.popup.container.getBoundingClientRect().top,
+            editor.renderer.$ghostTextWidget.el.getBoundingClientRect().bottom + 1
+        );
 
-            done();
-        }, 100);
+        done();
     },
     "test: should not show loading state when empty completer array is provided": function(done) {
         editor = initEditor("");
@@ -1480,7 +1363,7 @@ module.exports = {
 
         done();
     },
-    "test: should update inline preview when typing when it's the only item in the popup": function(done) {
+    "test: should update inline preview when typing when it's the only item in the popup": async function(done) {
         editor = initEditor("");
 
         editor.completers = [
@@ -1512,21 +1395,19 @@ module.exports = {
         // when you keep typing, the ghost text should update accordingly
         user.type("unc");
 
-        setTimeout(() => {
-            assert.strictEqual(inline.isOpen(), true);
-            assert.strictEqual(editor.renderer.$ghostText.text, "tion\nthat does something\ncool");
+        await lang.sleep(100);
+        assert.strictEqual(inline.isOpen(), true);
+        assert.strictEqual(editor.renderer.$ghostText.text, "tion\nthat does something\ncool");
 
-            user.type("tio");
+        user.type("tio");
 
-            setTimeout(() => {
-                assert.strictEqual(inline.isOpen(), true);
-                assert.strictEqual(editor.renderer.$ghostText.text, "n\nthat does something\ncool");
+        await lang.sleep(100);
+        assert.strictEqual(inline.isOpen(), true);
+        assert.strictEqual(editor.renderer.$ghostText.text, "n\nthat does something\ncool");
 
-                done();
-            }, 100);
-        }, 100);
+        done();
     },
-    "test: should keep showing ghost text when typing ahead with whitespace": function(done) {
+    "test: should keep showing ghost text when typing ahead with whitespace": async function(done) {
         editor = initEditor("");
 
         editor.completers = [
@@ -1557,19 +1438,17 @@ module.exports = {
         // when you keep typing, the ghost text should update accordingly
         user.type("unction th");
 
-        setTimeout(() => {
-            assert.strictEqual(inline.isOpen(), true);
-            assert.strictEqual(editor.renderer.$ghostText.text, "at does something cool");
+        await lang.sleep(100);
+        assert.strictEqual(inline.isOpen(), true);
+        assert.strictEqual(editor.renderer.$ghostText.text, "at does something cool");
 
-            user.type("at do");
+        user.type("at do");
 
-            setTimeout(() => {
-                assert.strictEqual(inline.isOpen(), true);
-                assert.strictEqual(editor.renderer.$ghostText.text, "es something cool");
+        await lang.sleep(100);
+        assert.strictEqual(inline.isOpen(), true);
+        assert.strictEqual(editor.renderer.$ghostText.text, "es something cool");
 
-                done();
-            }, 100);
-        }, 100);
+        done();
     },
     "test: passing matches from execCommand": function() {
         editor = initEditor("");
@@ -1632,7 +1511,7 @@ module.exports = {
         assert.equal(Autocomplete.$sharedInstance == undefined, false);
         config.set("sharedPopups", false);
     },
-    "test: changing completion should render scrollbars correctly": function (done) {
+    "test: changing completion should render scrollbars correctly": async function (done) {
         editor = initEditor("document");
         var newLineCharacter = editor.session.doc.getNewLineCharacter();
         var initialCompletions = [
@@ -1665,33 +1544,26 @@ module.exports = {
         editor.moveCursorTo(0, 8);
         user.type("Return"); // Accept suggestion
         var popup = editor.completer.popup;
-        check(function () {
-            assert.equal(popup.data.length, 1);
-            assert.notOk(popup.renderer.scrollBar.isVisible);
-            user.type("Return"); // Accept suggestion
-            assert.equal(editor.getValue(), `document${newLineCharacter}small`);
-            // change completion values
-            currentCompletions = longCompletions;
-            check(function () {
-                user.type("Return"); // Enter new line
-                assert.equal(popup.renderer.layerConfig.height, popup.renderer.lineHeight * 1);
-                assert.equal(popup.data.length, 10);
-                check(function () {
-                    assert.ok(popup.renderer.scrollBar.isVisible);
-                    assert.equal(popup.renderer.layerConfig.height, popup.renderer.lineHeight * 8);
-                    user.type("Return"); // Accept suggestion
-                    assert.equal(editor.getValue(), `document${newLineCharacter}small${newLineCharacter}value 0`);
-                    done();
-                });
-            });
-        });
-        function check(callback) {
-            popup = editor.completer.popup;
-            popup.renderer.on("afterRender", function wait() {
-                popup.renderer.off("afterRender", wait);
-                callback();
-            });
-        }
+
+        await popup.renderer.once("afterRender");
+        assert.equal(popup.data.length, 1);
+        assert.notOk(popup.renderer.scrollBar.isVisible);
+        user.type("Return"); // Accept suggestion
+        assert.equal(editor.getValue(), `document${newLineCharacter}small`);
+        // change completion values
+        currentCompletions = longCompletions;
+
+        user.type("Return"); // Enter new line
+        assert.equal(popup.renderer.layerConfig.height, popup.renderer.lineHeight * 1);
+        assert.equal(popup.data.length, 10);
+
+        await popup.renderer.once("afterRender");
+        assert.ok(popup.renderer.scrollBar.isVisible);
+        assert.equal(popup.renderer.layerConfig.height, popup.renderer.lineHeight * 8);
+        user.type("Return"); // Accept suggestion
+        assert.equal(editor.getValue(), `document${newLineCharacter}small${newLineCharacter}value 0`);
+
+        done();
     },
     "test: doc tooltip positioning": async function(done) {
         var editor = initEditor("");
