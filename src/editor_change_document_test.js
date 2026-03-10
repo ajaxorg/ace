@@ -13,6 +13,7 @@ var CssMode = require("./mode/css").Mode;
 var HtmlMode = require("./mode/html").Mode;
 var MockRenderer = require("./test/mockrenderer").MockRenderer;
 var assert = require("./test/assertions");
+var lang = require("./lib/lang");
 
 module.exports = {
 
@@ -124,7 +125,7 @@ module.exports = {
         assert.ok(called);
     },
     
-    "test: should use stop worker of old document" : function(next) {
+    "test: should use stop worker of old document" : async function(next) {
         var self = this;
         
         // 1. Open an editor and set the session to CssMode
@@ -142,11 +143,10 @@ module.exports = {
 
         // 5. Try to type valid HTML
         self.session1.insert({row: 0, column: 0}, "<html></html>");
-        
-        setTimeout(function() {
-            assert.equal(Object.keys(self.session1.getAnnotations()).length, 0);
-            next();
-        }, 600);
+
+        await lang.sleep(600);
+        assert.equal(Object.keys(self.session1.getAnnotations()).length, 0);
+        next();
     }
 };
 

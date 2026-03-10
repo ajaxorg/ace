@@ -12,6 +12,7 @@ var Mode = require("../mode/java").Mode;
 var VirtualRenderer = require("../virtual_renderer").VirtualRenderer;
 const { test } = require("asyncjs");
 var assert = require("../test/assertions");
+var lang = require("../lib/lang");
 var MouseEvent = function(type, opts){
     var e = document.createEvent("MouseEvents");
     e.initMouseEvent(/click|wheel/.test(type) ? type : "mouse" + type,
@@ -196,7 +197,7 @@ module.exports = {
         assert.ok(parseInt(lines.cells[0].element.textContent) > 10);
     },
     
-    "test: touch" : function(done) {
+    "test: touch" : async function(done) {
         var editor = this.editor;
         var value = "x {" + "\n  abc".repeat(10) + "\n}";
         value = value.repeat(10);
@@ -258,19 +259,18 @@ module.exports = {
         // tap and drag in other places scrolls
         sendTouchEvent("start", {touches: [touchPos(8, 3)]}, editor);
         sendTouchEvent("move", {touches: [touchPos(8, 3)]}, editor);
-        setTimeout(function() {
-            sendTouchEvent("move", {touches: [touchPos(1, 3)]}, editor);
-            sendTouchEvent("end", {touches: [touchPos(1, 3)]}, editor);
-            editor.renderer.$loop._flush();
-            assert.equal(editor.renderer.getFirstFullyVisibleRow(), 7);
-            
-            // editor animates scrolling
-            setTimeout(function() {
-                assert.notOk(menu.clientHeight);
-                assert.ok(editor.renderer.getFirstFullyVisibleRow() > 7);
-                done();
-            }, 50);
-        }, 2);
+
+        await lang.sleep(2);
+        sendTouchEvent("move", {touches: [touchPos(1, 3)]}, editor);
+        sendTouchEvent("end", {touches: [touchPos(1, 3)]}, editor);
+        editor.renderer.$loop._flush();
+        assert.equal(editor.renderer.getFirstFullyVisibleRow(), 7);
+
+        // editor animates scrolling
+        await lang.sleep(50);
+        assert.notOk(menu.clientHeight);
+        assert.ok(editor.renderer.getFirstFullyVisibleRow() > 7);
+        done();
     },
     
     "test: touch selection with scrollMargin" : function() {

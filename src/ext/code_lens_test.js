@@ -10,6 +10,8 @@ if (typeof process !== "undefined") {
 var ace = require("../ace");
 var codeLens = require("./code_lens");
 var assert = require("../test/assertions");
+var lang = require("../lib/lang");
+
 require("./error_marker");
 
 function click(node) {
@@ -109,18 +111,19 @@ module.exports = {
         assert.ok(!lens);
     },
 
-    "test async code lens": function(next) {
+    "test async code lens": async function(next) {
         editor.session.setValue("a\nb\nc");
         new Promise(function(resolve) {
                 codeLens.registerCodeLensProvider(editor, {
-                    provideCodeLenses: function(session, callback) {
-                        setTimeout(function() {
-                            callback(null, [{
-                                start: { row: 1 },
-                                command: { title: "code lens" }
-                            }]);
-                            resolve();
-                        });
+                    provideCodeLenses: async function (session, callback) {
+                        await lang.sleep(0);
+                        callback(null, [
+                            {
+                                start: {row: 1},
+                                command: {title: "code lens"}
+                            }
+                        ]);
+                        resolve();
                     }
                 });
                 editor.$updateLenses();
@@ -146,14 +149,15 @@ module.exports = {
                     }
                 });
                 codeLens.registerCodeLensProvider(editor, {
-                    provideCodeLenses: function(session, callback) {
-                        setTimeout(function() {
-                            callback(null, [{
-                                start: { row: 2 },
-                                command: { title: "2" }
-                            }]);
-                            resolve();
-                        });
+                    provideCodeLenses: async function (session, callback) {
+                        await lang.sleep(0);
+                        callback(null, [
+                            {
+                                start: {row: 2},
+                                command: {title: "2"}
+                            }
+                        ]);
+                        resolve();
                     }
                 });
                 editor.$updateLenses();

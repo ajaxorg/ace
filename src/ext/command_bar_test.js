@@ -14,6 +14,7 @@ var EditSession = require("../ace").EditSession;
 var VirtualRenderer = require("../ace").VirtualRenderer;
 var assert = require("../test/assertions");
 var useragent = require("../lib/useragent");
+var lang = require("../lib/lang");
 
 function simulateClick(node) {
     node.dispatchEvent(new window.CustomEvent("click", { bubbles: true }));
@@ -169,13 +170,8 @@ module.exports = {
         assert.strictEqual(counters["testCommand2"], undefined);
         done();
     },
-    "test: tooltip is displayed on hover with the tooltip delay": function(done) {
+    "test: tooltip is displayed on hover with the tooltip delay": async function(done) {
         var delay = 10;
-        var waitFor = function(ms) {
-            return new Promise(function(resolve) { setTimeout(resolve, ms); });
-        };
-        var waitForDelay = function() { return waitFor(delay); };
-        var waitForHalfDelay = function() { return waitFor(delay / 2); };
         createTooltip({ showDelay: delay, hideDelay: delay, maxElementsOnTooltip: 1 });
         commandBarTooltip.setAlwaysShow(false);
         editor.getSelection().moveCursorTo(1, 1);
@@ -184,58 +180,74 @@ module.exports = {
         var mainTooltipEl = commandBarTooltip.tooltip.getElement();
         var moreOptionsEl = commandBarTooltip.moreOptions.getElement();
         var moveToActiveLineCursor = { clientX: activeLinePos.pageX + 1, clientY: activeLinePos.pageY + 1 };
-        var moveAway = { clientX: activeLinePos.pageX + 1, clientY: activeLinePos.pageY + 100 };
-        new Promise(function(resolve) {
-            commandBarTooltip.attach(editor);
-            simulateMouseEvent("move", moveToActiveLineCursor);
-            tooltipVisibilityCheck(false);
-            resolve();
-        }).then(waitForDelay).then(function() {
-            tooltipVisibilityCheck(true, false);
+        var moveAway = {
+            clientX: activeLinePos.pageX + 1,
+            clientY: activeLinePos.pageY + 100
+        };
+        commandBarTooltip.attach(editor);
+        simulateMouseEvent("move", moveToActiveLineCursor);
+        tooltipVisibilityCheck(false);
 
-            var buttonElements = Array.from(document.querySelectorAll("." + BUTTON_CLASS_NAME));
-            assert.strictEqual(buttonElements.length, 3);
+        await lang.sleep(delay);
+        tooltipVisibilityCheck(true, false);
 
-            var moreOptionsButton = buttonElements[1];
+        var buttonElements = Array.from(document.querySelectorAll("." + BUTTON_CLASS_NAME));
+        assert.strictEqual(buttonElements.length, 3);
 
-            var moveToMoreOptionsButton = { clientX: moreOptionsButton.left + 1, clientY: moreOptionsButton.right + 1 };
+        var moreOptionsButton = buttonElements[1];
 
-            simulateMouseEvent("move", moveToMoreOptionsButton);
-            simulateMouseEvent("enter", moveToMoreOptionsButton, mainTooltipEl);
+        var moveToMoreOptionsButton = {
+            clientX: moreOptionsButton.left + 1,
+            clientY: moreOptionsButton.right + 1
+        };
 
-            simulateClick(moreOptionsButton);
+        simulateMouseEvent("move", moveToMoreOptionsButton);
+        simulateMouseEvent("enter", moveToMoreOptionsButton, mainTooltipEl);
 
-            tooltipVisibilityCheck(true, true);
+        simulateClick(moreOptionsButton);
 
-            var leaveMainTooltip = { clientX: mainTooltipEl.right + 10, clientY: mainTooltipEl.top - 10 };
-            simulateMouseEvent("move", leaveMainTooltip);
-            simulateMouseEvent("leave", leaveMainTooltip, mainTooltipEl);
-        }).then(waitForHalfDelay).then(function() {
-            var moreOptionsRect = moreOptionsEl.getBoundingClientRect();
-            var enterMoreOptions = { clientX: moreOptionsRect.left + 1, clientY: moreOptionsRect.top + 1 };
-            simulateMouseEvent("move", enterMoreOptions);
-            simulateMouseEvent("enter", enterMoreOptions, moreOptionsEl);
-        }).then(waitForDelay).then(function() {
-            tooltipVisibilityCheck(true, true);
-            var moreOptionsRect = moreOptionsEl.getBoundingClientRect();
-            var leaveWholeTooltip = { clientX: moreOptionsRect.right + 10, clientY: moreOptionsRect.top - 10 };
-            simulateMouseEvent("move", leaveWholeTooltip);
-            simulateMouseEvent("leave", leaveWholeTooltip, mainTooltipEl);
-        }).then(waitForHalfDelay).then(function() {
-            simulateMouseEvent("move", moveToActiveLineCursor);
-        }).then(waitForDelay).then(function() {
-            tooltipVisibilityCheck(true, true);
-            simulateMouseEvent("move", moveAway);
-        }).then(waitForDelay).then(function() {
-            tooltipVisibilityCheck(false);
-            simulateMouseEvent("move", moveToActiveLineCursor);
-        }).then(waitForDelay).then(function() {
-            tooltipVisibilityCheck(true);
-            done();
-        }).catch(function(err) {
-            assert.strictEqual(err, undefined);
-            done(err);
-        });
+        tooltipVisibilityCheck(true, true);
+
+        var leaveMainTooltip = {
+            clientX: mainTooltipEl.right + 10,
+            clientY: mainTooltipEl.top - 10
+        };
+        simulateMouseEvent("move", leaveMainTooltip);
+        simulateMouseEvent("leave", leaveMainTooltip, mainTooltipEl);
+
+        await lang.sleep(delay / 2);
+        var moreOptionsRect = moreOptionsEl.getBoundingClientRect();
+        var enterMoreOptions = {
+            clientX: moreOptionsRect.left + 1,
+            clientY: moreOptionsRect.top + 1
+        };
+        simulateMouseEvent("move", enterMoreOptions);
+        simulateMouseEvent("enter", enterMoreOptions, moreOptionsEl);
+
+        await lang.sleep(delay);
+        tooltipVisibilityCheck(true, true);
+        var moreOptionsRect = moreOptionsEl.getBoundingClientRect();
+        var leaveWholeTooltip = {
+            clientX: moreOptionsRect.right + 10,
+            clientY: moreOptionsRect.top - 10
+        };
+        simulateMouseEvent("move", leaveWholeTooltip);
+        simulateMouseEvent("leave", leaveWholeTooltip, mainTooltipEl);
+
+        await lang.sleep(delay / 2);
+        simulateMouseEvent("move", moveToActiveLineCursor);
+
+        await lang.sleep(delay);
+        tooltipVisibilityCheck(true, true);
+        simulateMouseEvent("move", moveAway);
+
+        await lang.sleep(delay);
+        tooltipVisibilityCheck(false);
+        simulateMouseEvent("move", moveToActiveLineCursor);
+
+        await lang.sleep(delay);
+        tooltipVisibilityCheck(true);
+        done();
     },
     "test: tooltip supports checkbox buttons": function(done) {
         createTooltip();

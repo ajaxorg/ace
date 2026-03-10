@@ -8,6 +8,7 @@ if (typeof process !== "undefined") {
 var assert = require("./test/assertions");
 var sendKey = require("./test/user").type;
 var ace = require("./ace");
+var lang = require("./lib/lang");
 
 var editor;
 
@@ -45,7 +46,7 @@ module.exports = {
         editor.destroy();
         editor = null;
     },
-    "test readOnly Option": function (done) {
+    "test readOnly Option": async function (done) {
         let readOnly = editor.getOption("readOnly");
         assert.equal(editor.$hoverTooltip, null);
         assert.equal(readOnly, false);
@@ -54,33 +55,31 @@ module.exports = {
         assert.equal(readOnly, true);
         sendKey("a");
 
-        setTimeout(() => {
-            assert.equal(editor.getValue(), "999");
-            assert.ok(editor.hoverTooltip != null);
+        await lang.sleep(6);
+        assert.equal(editor.getValue(), "999");
+        assert.ok(editor.hoverTooltip != null);
 
-            var nodes = document.querySelectorAll(".ace_tooltip");
-            assert.equal(nodes.length, 2);
-            assert.equal(editor.hoverTooltip.isOpen, true);
+        var nodes = document.querySelectorAll(".ace_tooltip");
+        assert.equal(nodes.length, 2);
+        assert.equal(editor.hoverTooltip.isOpen, true);
 
-            mouse("down", editor.container, {button: 0});
+        mouse("down", editor.container, {button: 0});
 
-            setTimeout(() => {
-                assert.equal(editor.hoverTooltip.isOpen, false);
+        await lang.sleep(6);
+        assert.equal(editor.hoverTooltip.isOpen, false);
 
-                editor.setOption("readOnly", false);
-                sendKey("a");
-                setTimeout(() => {
-                    assert.equal(editor.getValue(), "a999");
-                    var nodes = document.querySelectorAll(".ace_tooltip");
-                    assert.equal(nodes.length, 2);
-                    editor.destroy();
-                    editor.container.remove();
-                    var nodes = document.querySelectorAll(".ace_tooltip");
-                    assert.equal(nodes.length, 0);
-                    done();
-                }, 6);
-            }, 6);
-        }, 6);
+        editor.setOption("readOnly", false);
+        sendKey("a");
+
+        await lang.sleep(6);
+        assert.equal(editor.getValue(), "a999");
+        var nodes = document.querySelectorAll(".ace_tooltip");
+        assert.equal(nodes.length, 2);
+        editor.destroy();
+        editor.container.remove();
+        var nodes = document.querySelectorAll(".ace_tooltip");
+        assert.equal(nodes.length, 0);
+        done();
     }
 };
 

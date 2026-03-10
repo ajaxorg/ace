@@ -12,6 +12,7 @@ var Editor = require("../editor").Editor;
 var Mode = require("../mode/java").Mode;
 var VirtualRenderer = require("../virtual_renderer").VirtualRenderer;
 var assert = require("../test/assertions");
+var lang = require("../lib/lang");
 
 function findVisibleTooltip() {
     const tooltips = document.body.querySelectorAll(".ace_gutter-tooltip");
@@ -34,7 +35,7 @@ module.exports = {
         document.body.appendChild(this.editor.container);
         done();
     },
-    "test: keyboard code folding: basic functionality" : function(done) {
+    "test: keyboard code folding: basic functionality" : async function(done) {
         var editor = this.editor;
         var value = "x {" + "\n".repeat(50) + "}\n";
         value = value.repeat(50);
@@ -53,27 +54,25 @@ module.exports = {
         // Focus on the fold widget.
         user.type("Enter");
 
-        setTimeout(function() {
-            assert.equal(document.activeElement, lines.cells[0].element.childNodes[1]);
+        await lang.sleep(20);
+        assert.equal(document.activeElement, lines.cells[0].element.childNodes[1]);
 
-            // Click the fold widget.
-            user.type("Enter");
+        // Click the fold widget.
+        user.type("Enter");
 
-            setTimeout(function() {
-                // Check that code is folded.
-                editor.renderer.$loop._flush();
-                assert.ok(/ace_closed/.test(toggler.className));
-                assert.equal(lines.cells[1].element.textContent, "52");
+        await lang.sleep(20);
+        // Check that code is folded.
+        editor.renderer.$loop._flush();
+        assert.ok(/ace_closed/.test(toggler.className));
+        assert.equal(lines.cells[1].element.textContent, "52");
 
-                // After escape focus should be back to the gutter.
-                user.type("Escape");
-                assert.equal(document.activeElement, editor.renderer.$gutter);
+        // After escape focus should be back to the gutter.
+        user.type("Escape");
+        assert.equal(document.activeElement, editor.renderer.$gutter);
 
-                done();
-            }, 20);
-        }, 20);
+        done();
     },
-    "test: keyboard code folding: multiple folds" : function(done) {
+    "test: keyboard code folding: multiple folds" : async function(done) {
         var editor = this.editor;
         var value = "\n x {" + "\n".repeat(5) + "}\n";
         value = value.repeat(50);
@@ -93,39 +92,36 @@ module.exports = {
         // Focus on the fold widgets.
         user.type("Enter");
 
-        setTimeout(function() {
-            assert.equal(document.activeElement, lines.cells[1].element.childNodes[1]);
+        await lang.sleep(20);
+        assert.equal(document.activeElement, lines.cells[1].element.childNodes[1]);
 
-            // Click the first fold widget.
-            user.type("Enter");
+        // Click the first fold widget.
+        user.type("Enter");
 
-            setTimeout(function() {
-                // Check that code is folded.
-                editor.renderer.$loop._flush();
-                assert.equal(lines.cells[2].element.textContent, "8");
+        await lang.sleep(20);
+        // Check that code is folded.
+        editor.renderer.$loop._flush();
+        assert.equal(lines.cells[2].element.textContent, "8");
 
-                // Move to the next fold widget.
-                user.type("Down");
-                assert.equal(document.activeElement, lines.cells[3].element.childNodes[1]);
-                assert.equal(lines.cells[4].element.textContent, "10");
+        // Move to the next fold widget.
+        user.type("Down");
+        assert.equal(document.activeElement, lines.cells[3].element.childNodes[1]);
+        assert.equal(lines.cells[4].element.textContent, "10");
 
-                // Click the fold widget.
-                user.type("Enter");
+        // Click the fold widget.
+        user.type("Enter");
 
-                setTimeout(function() {
-                    // Check that code is folded.
-                    assert.equal(lines.cells[4].element.textContent, "15");
+        await lang.sleep(20);
+        // Check that code is folded.
+        assert.equal(lines.cells[4].element.textContent, "15");
 
-                    // Move back up one fold widget.
-                    user.type("Up");
-                    assert.equal(document.activeElement, lines.cells[1].element.childNodes[1]);
+        // Move back up one fold widget.
+        user.type("Up");
+        assert.equal(document.activeElement, lines.cells[1].element.childNodes[1]);
 
-                    done();
-                }, 20);
-            }, 20);
-        }, 20);
+        done();
     },
-    "test: keyboard annotation: basic functionality" : function(done) {
+    "test: keyboard annotation: basic functionality" : async function(done) {
         var editor = this.editor;
         var value = "x {" + "\n".repeat(50) + "}\n";
         value = value.repeat(50);
@@ -143,31 +139,29 @@ module.exports = {
 
         // Focus on the annotation.
         user.type("Enter");
-        
-        setTimeout(function() {
-            user.type("Left");
-            assert.equal(document.activeElement, lines.cells[0].element.childNodes[2]);
 
-            // Click annotation.
-            user.type("Enter");
+        await lang.sleep(20);
+        user.type("Left");
+        assert.equal(document.activeElement, lines.cells[0].element.childNodes[2]);
 
-            setTimeout(function() {
-                // Check annotation is rendered.
-                editor.renderer.$loop._flush();
-                var tooltip = findVisibleTooltip();
-                assert.ok(/error test/.test(tooltip.textContent));
+        // Click annotation.
+        user.type("Enter");
 
-                // Press escape to dismiss the tooltip.
-                user.type("Escape");
+        await lang.sleep(20);
+        // Check annotation is rendered.
+        editor.renderer.$loop._flush();
+        var tooltip = findVisibleTooltip();
+        assert.ok(/error test/.test(tooltip.textContent));
 
-                // After escape again focus should be back to the gutter.
-                user.type("Escape");
-                assert.equal(document.activeElement, editor.renderer.$gutter);
+        // Press escape to dismiss the tooltip.
+        user.type("Escape");
 
-                done();
-            }, 20);
-        }, 20);
-    },"test: keyboard annotation: multiple annotations" : function(done) {
+        // After escape again focus should be back to the gutter.
+        user.type("Escape");
+        assert.equal(document.activeElement, editor.renderer.$gutter);
+
+        done();
+    },"test: keyboard annotation: multiple annotations" : async function(done) {
         var editor = this.editor;
         var value = "x {" + "\n".repeat(50) + "}\n";
         value = value.repeat(50);
@@ -188,52 +182,50 @@ module.exports = {
 
         // Focus on the annotation.
         user.type("Enter");
-        
-        setTimeout(function() {
-            user.type("Left");
-            assert.equal(document.activeElement, lines.cells[1].element.childNodes[2]);
 
-            // Click annotation.
-            user.type("Enter");
-            
-            setTimeout(function() {
-                // Check annotation is rendered.
-                editor.renderer.$loop._flush();
-                var tooltip = findVisibleTooltip();
-                assert.ok(/error test/.test(tooltip.textContent));
+        await lang.sleep(20);
+        user.type("Left");
+        assert.equal(document.activeElement, lines.cells[1].element.childNodes[2]);
 
-                // Press escape to dismiss the tooltip.
-                user.type("Escape");
+        // Click annotation.
+        user.type("Enter");
 
-                // Press down to move to next annotation.
-                user.type("Down");
-                assert.equal(document.activeElement, lines.cells[2].element.childNodes[2]);
+        await lang.sleep(20);
+        // Check annotation is rendered.
+        editor.renderer.$loop._flush();
+        var tooltip = findVisibleTooltip();
+        assert.ok(/error test/.test(tooltip.textContent));
 
-                // Click annotation.
-                user.type("Enter");
+        // Press escape to dismiss the tooltip.
+        user.type("Escape");
 
-                setTimeout(function() {
-                    // Check annotation is rendered.
-                    editor.renderer.$loop._flush();
-                    var tooltip = findVisibleTooltip();
-                    assert.ok(/warning test/.test(tooltip.textContent));
+        // Press down to move to next annotation.
+        user.type("Down");
+        assert.equal(document.activeElement, lines.cells[2].element.childNodes[2]);
 
-                    // Press escape to dismiss the tooltip.
-                    user.type("Escape");
+        // Click annotation.
+        user.type("Enter");
 
-                    // Move back up one annotation.
-                    user.type("Up");
-                    assert.equal(document.activeElement, lines.cells[1].element.childNodes[2]);
+        await lang.sleep(20);
+        // Check annotation is rendered.
+        editor.renderer.$loop._flush();
+        var tooltip = findVisibleTooltip();
+        assert.ok(/warning test/.test(tooltip.textContent));
 
-                    // Move back to the folds, focus should be on the fold on line 1.
-                    user.type("Right");
-                    assert.equal(document.activeElement, lines.cells[0].element.childNodes[1]);
+        // Press escape to dismiss the tooltip.
+        user.type("Escape");
 
-                    done();
-                }, 20);
-            }, 20);
-        }, 20);
-    },"test: keyboard annotation: no folds" : function(done) {
+        // Move back up one annotation.
+        user.type("Up");
+        assert.equal(document.activeElement, lines.cells[1].element.childNodes[2]);
+
+        // Move back to the folds, focus should be on the fold on line 1.
+        user.type("Right");
+        assert.equal(document.activeElement, lines.cells[0].element.childNodes[1]);
+
+        done();
+    },
+    "test: keyboard annotation: no folds" : async function(done) {
         var editor = this.editor;
         var value = "x\n";
         value = value.repeat(50);
@@ -251,12 +243,11 @@ module.exports = {
 
         // Focus on gutter interaction.
         user.type("Enter");
-        
-        setTimeout(function() {
-            // Focus should be on the annotation directly.
-            assert.equal(document.activeElement, lines.cells[1].element.childNodes[2]);
-            done();
-        }, 20);
+
+        await lang.sleep(20);
+        // Focus should be on the annotation directly.
+        assert.equal(document.activeElement, lines.cells[1].element.childNodes[2]);
+        done();
     },
     "test: aria attributes mode with getFoldWidgetRange" : function() {
         var editor = this.editor;
@@ -299,7 +290,7 @@ module.exports = {
         assert.equal(toggler.getAttribute("aria-expanded"), "true");
         assert.equal(toggler.getAttribute("title"), "Fold code"); 
     },
-    "test: should signal keyboard event" : function(done) {
+    "test: should signal keyboard event" : async function(done) {
         var editor = this.editor;
         var value = "x {" + "\n".repeat(50) + "}\n";
         value = value.repeat(50);
@@ -326,21 +317,19 @@ module.exports = {
 
         // Focus on the annotation.
         user.type("Enter");
-        
-        setTimeout(function() {
-            user.type("Left");
-            assert.equal(document.activeElement, lines.cells[0].element.childNodes[2]);
-            
-            setTimeout(function() {
-                assert.equal(row, 0);
-                assert.equal(isAnnotation, true);
-                assert.equal(isFold, false);
-                assert.equal(key, "left");
-                done();
-            }, 20);
-        }, 20);
+
+        await lang.sleep(20);
+        user.type("Left");
+        assert.equal(document.activeElement, lines.cells[0].element.childNodes[2]);
+
+        await lang.sleep(20);
+        assert.equal(row, 0);
+        assert.equal(isAnnotation, true);
+        assert.equal(isFold, false);
+        assert.equal(key, "left");
+        done();
     },
-    "test: switching lanes with the custom widget should work" : function(done) {
+    "test: switching lanes with the custom widget should work" : async function(done) {
         var editor = this.editor;
         var value = "x {" + "\n".repeat(50) + "}\n";
         value = value.repeat(50);
@@ -367,35 +356,32 @@ module.exports = {
 
         // Focus on the annotation.
         user.type("Enter");
-        
-        setTimeout(function() {
-            user.type("Left");
-            assert.equal(document.activeElement, lines.cells[1].element.childNodes[2]);
+        await lang.sleep(20);
+        user.type("Left");
+        assert.equal(document.activeElement, lines.cells[1].element.childNodes[2]);
 
-            // Click annotation.
-            user.type("Enter");
-            
-            setTimeout(function() {
-                // Check annotation is rendered.
-                editor.renderer.$loop._flush();
-                var tooltip = findVisibleTooltip();
-                assert.ok(/error test/.test(tooltip.textContent));
+        // Click annotation.
+        user.type("Enter");
 
-                // Press escape to dismiss the tooltip.
-                user.type("Escape");
+        await lang.sleep(20);
+        // Check annotation is rendered.
+        editor.renderer.$loop._flush();
+        var tooltip = findVisibleTooltip();
+        assert.ok(/error test/.test(tooltip.textContent));
 
-                // Switch lane move to custom widget 
-                user.type("Right");
-                assert.equal(document.activeElement, lines.cells[1].element.childNodes[3]);
+        // Press escape to dismiss the tooltip.
+        user.type("Escape");
 
-                // Move back to the annotations, focus should be on the annotation on line 1.
-                user.type("Left");
-                assert.equal(document.activeElement, lines.cells[1].element.childNodes[2]);    
-                done();
-            }, 20);
-        }, 20);
-    }, 
-    "test: moving up and down to custom widget and checking onclick callback as well" : function(done) {
+        // Switch lane move to custom widget
+        user.type("Right");
+        assert.equal(document.activeElement, lines.cells[1].element.childNodes[3]);
+
+        // Move back to the annotations, focus should be on the annotation on line 1.
+        user.type("Left");
+        assert.equal(document.activeElement, lines.cells[1].element.childNodes[2]);
+        done();
+    },
+    "test: moving up and down to custom widget and checking onclick callback as well" : async function(done) {
         var editor = this.editor;
         var value = "\n x {" + "\n".repeat(5) + "}\n";
         value = value.repeat(50);
@@ -430,21 +416,20 @@ module.exports = {
         // Focus on the fold widgets.
         user.type("Enter");
 
-        setTimeout(function() {
-            assert.equal(document.activeElement, lines.cells[1].element.childNodes[1]);
+        await lang.sleep(20);
+        assert.equal(document.activeElement, lines.cells[1].element.childNodes[1]);
 
-            // Move down to the custom widget.
-            user.type("Down");
-            assert.equal(document.activeElement, lines.cells[2].element.childNodes[3]);
+        // Move down to the custom widget.
+        user.type("Down");
+        assert.equal(document.activeElement, lines.cells[2].element.childNodes[3]);
 
-            user.type("Enter");
-            assert.equal(firstCallbackCalledCount,1);
-            
-            // Move up to the previous fold widget.
-            user.type("Up");
-            assert.equal(document.activeElement, lines.cells[1].element.childNodes[1]);
-            done();
-        }, 20);
+        user.type("Enter");
+        assert.equal(firstCallbackCalledCount, 1);
+
+        // Move up to the previous fold widget.
+        user.type("Up");
+        assert.equal(document.activeElement, lines.cells[1].element.childNodes[1]);
+        done();
     },
     "test: add several custom widgets" : function() {
         var editor = this.editor;

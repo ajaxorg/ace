@@ -13,6 +13,7 @@ var Editor = require("../editor").Editor;
 var Mode = require("../mode/java").Mode;
 var VirtualRenderer = require("../virtual_renderer").VirtualRenderer;
 var assert = require("../test/assertions");
+var lang = require("../lib/lang");
 
 function emit(keyCode) {
     var data = {bubbles: true, keyCode};
@@ -33,7 +34,7 @@ module.exports = {
         document.body.appendChild(this.editor.container);
         done();
     },
-    "test: custom icon replaces the fold icon sucessfully": function (done) {
+    "test: custom icon replaces the fold icon sucessfully": async function (done) {
         var editor = this.editor;
         var value = "x {" + "\n".repeat(50) + "}\n";
         value = value.repeat(50);
@@ -56,24 +57,21 @@ module.exports = {
             title: "Open_title"
         });
 
-        setTimeout(function () {
-            setTimeout(function () {
-                // Check that custom widget is shown
-                editor.renderer.$loop._flush();
-                console.log(lines.cells[13].element.children[2].className);
-                assert.ok(/ace_users_css/.test(lines.cells[13].element.children[3].className));
-                // fold widget is not shown
-                assert.equal(lines.cells[13].element.children[1].style.display, "none");
+        await lang.sleep(20);
+        // Check that custom widget is shown
+        editor.renderer.$loop._flush();
+        console.log(lines.cells[13].element.children[2].className);
+        assert.ok(/ace_users_css/.test(lines.cells[13].element.children[3].className));
+        // fold widget is not shown
+        assert.equal(lines.cells[13].element.children[1].style.display, "none");
 
-                // After escape focus should be back to the gutter.
-                emit(keys["escape"]);
-                assert.equal(document.activeElement, editor.renderer.$gutter);
+        // After escape focus should be back to the gutter.
+        emit(keys["escape"]);
+        assert.equal(document.activeElement, editor.renderer.$gutter);
 
-                done();
-            }, 20);
-        }, 20);
+        done();
     },
-    "test: after hiding custom icon fold icon is visible automatically": function (done) {
+    "test: after hiding custom icon fold icon is visible automatically": async function (done) {
         var editor = this.editor;
         var value = "x {" + "\n".repeat(50) + "}\n";
         value = value.repeat(50);
@@ -97,26 +95,23 @@ module.exports = {
         });
         editor.renderer.$gutterLayer.$removeCustomWidget(0);
 
-        setTimeout(function () {
-            assert.equal(document.activeElement, lines.cells[0].element.childNodes[1]);
+        await lang.sleep(20);
+        assert.equal(document.activeElement, lines.cells[0].element.childNodes[1]);
 
-            setTimeout(function () {
-                // Check that custom widget is hidden.
-                editor.renderer.$loop._flush();
-                assert.equal(lines.cells[0].element.children[3], undefined);
-                assert.equal(lines.cells[0].element.children[1].style.display, "inline-block");
-                assert.ok(/ace_open/.test(lines.cells[0].element.children[1].className));
+        await lang.sleep(20);
+        // Check that custom widget is hidden.
+        editor.renderer.$loop._flush();
+        assert.equal(lines.cells[0].element.children[3], undefined);
+        assert.equal(lines.cells[0].element.children[1].style.display, "inline-block");
+        assert.ok(/ace_open/.test(lines.cells[0].element.children[1].className));
 
-                // After escape focus should be back to the gutter.
-                emit(keys["escape"]);
-                assert.equal(document.activeElement, editor.renderer.$gutter);
+        // After escape focus should be back to the gutter.
+        emit(keys["escape"]);
+        assert.equal(document.activeElement, editor.renderer.$gutter);
 
-                done();
-            }, 20);
-        }, 20);
+        done();
     },
-
-    "test: folding is kept consistent when custom widget is shown first and then hidden": function (done) {
+    "test: folding is kept consistent when custom widget is shown first and then hidden": async function (done) {
         var editor = this.editor;
         var value = "x {" + "\n".repeat(50) + "}\n";
         value = value.repeat(50);
@@ -134,34 +129,32 @@ module.exports = {
         // Focus on the fold widget.
         emit(keys["enter"]);
 
-        setTimeout(function () {
-            assert.equal(document.activeElement, lines.cells[0].element.childNodes[1]);
+        await lang.sleep(20);
+        assert.equal(document.activeElement, lines.cells[0].element.childNodes[1]);
 
-            // Click the fold widget to fold the lines.
-            emit(keys["enter"]);
-            editor.renderer.$gutterLayer.$addCustomWidget(0, {
-                className: "ace_users_css",
-                label: "Open_label",
-                title: "Open_title"
-            });
-            editor.renderer.$gutterLayer.$removeCustomWidget(0);
+        // Click the fold widget to fold the lines.
+        emit(keys["enter"]);
+        editor.renderer.$gutterLayer.$addCustomWidget(0, {
+            className: "ace_users_css",
+            label: "Open_label",
+            title: "Open_title"
+        });
+        editor.renderer.$gutterLayer.$removeCustomWidget(0);
 
-            setTimeout(function () {
-                // Check that custom widget is hidden.
-                editor.renderer.$loop._flush();
-                assert.equal(lines.cells[0].element.children[3], undefined);
-                assert.ok(/ace_closed/.test(lines.cells[0].element.children[1].className));
+        await lang.sleep(20);
+        // Check that custom widget is hidden.
+        editor.renderer.$loop._flush();
+        assert.equal(lines.cells[0].element.children[3], undefined);
+        assert.ok(/ace_closed/.test(lines.cells[0].element.children[1].className));
 
-                // After escape focus should be back to the gutter.
-                emit(keys["escape"]);
-                assert.equal(document.activeElement, editor.renderer.$gutter);
+        // After escape focus should be back to the gutter.
+        emit(keys["escape"]);
+        assert.equal(document.activeElement, editor.renderer.$gutter);
 
-                done();
-            }, 20);
-        }, 20);
+        done();
     },
 
-    "test: onClick callback is getting called and updated when updating the custom widget": function (done) {
+    "test: onClick callback is getting called and updated when updating the custom widget": async function (done) {
         var editor = this.editor;
         var value = "x {" + "\n".repeat(50) + "}\n";
         value = value.repeat(50);
@@ -205,22 +198,18 @@ module.exports = {
         });
         // clicking the custom widget
         lines.cells[0].element.children[3].dispatchEvent(new CustomEvent("click"));
-        setTimeout(function () {
 
-            setTimeout(function () {
-                // Check that custom widget is hidden.
-                editor.renderer.$loop._flush();
-                assert.equal(firstCallbackCalledCount,0);
-                assert.equal(secondCallbackCalledCount,1);
-                // After escape focus should be back to the gutter.
-                emit(keys["escape"]);
-                assert.equal(document.activeElement, editor.renderer.$gutter);
+        await lang.sleep(20);
+        // Check that custom widget is hidden.
+        editor.renderer.$loop._flush();
+        assert.equal(firstCallbackCalledCount, 0);
+        assert.equal(secondCallbackCalledCount, 1);
+        // After escape focus should be back to the gutter.
+        emit(keys["escape"]);
+        assert.equal(document.activeElement, editor.renderer.$gutter);
 
-                done();
-            }, 20);
-        }, 20);
+        done();
     },
-
     tearDown: function () {
         this.editor.destroy();
         document.body.removeChild(this.editor.container);

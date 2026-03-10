@@ -12,16 +12,30 @@ var assert = require("./test/assertions");
 var JavaScriptMode = require("./mode/javascript").Mode;
 var PlaceHolder = require("./placeholder").PlaceHolder;
 var UndoManager = require("./undomanager").UndoManager;
+var lang = require("./lib/lang");
+
 require("./multi_select");
 
 module.exports = {
 
-   "test: simple at the end appending of text" : function() {
+    "test: simple at the end appending of text": function () {
         var session = new EditSession("var a = 10;\nconsole.log(a, a);", new JavaScriptMode());
         var editor = new Editor(new MockRenderer(), session);
-        
-        new PlaceHolder(session, 1, {row: 0, column: 4}, [{row: 1, column: 12}, {row: 1, column: 15}]);
-        
+
+        new PlaceHolder(
+            session, 1, {
+                row: 0,
+                column: 4
+            }, [
+                {
+                    row: 1,
+                    column: 12
+                }, {
+                    row: 1,
+                    column: 15
+                }
+            ]);
+
         editor.moveCursorTo(0, 5);
         editor.insert('b');
         assert.equal(session.doc.getValue(), "var ab = 10;\nconsole.log(ab, ab);");
@@ -33,41 +47,76 @@ module.exports = {
         assert.equal(session.doc.getValue(), "var a = 10;\nconsole.log(a, a);");
     },
 
-    "test: inserting text outside placeholder" : function() {
+    "test: inserting text outside placeholder": function () {
         var session = new EditSession("var a = 10;\nconsole.log(a, a);\n", new JavaScriptMode());
         var editor = new Editor(new MockRenderer(), session);
-        
-        new PlaceHolder(session, 1, {row: 0, column: 4}, [{row: 1, column: 12}, {row: 1, column: 15}]);
-        
+
+        new PlaceHolder(
+            session, 1, {
+                row: 0,
+                column: 4
+            }, [
+                {
+                    row: 1,
+                    column: 12
+                }, {
+                    row: 1,
+                    column: 15
+                }
+            ]);
+
         editor.moveCursorTo(2, 0);
         editor.insert('b');
         assert.equal(session.doc.getValue(), "var a = 10;\nconsole.log(a, a);\nb");
     },
-    
-   "test: insertion at the beginning" : function(next) {
+
+    "test: insertion at the beginning": async function (next) {
         var session = new EditSession("var a = 10;\nconsole.log(a, a);", new JavaScriptMode());
         var editor = new Editor(new MockRenderer(), session);
-        
-        var p = new PlaceHolder(session, 1, {row: 0, column: 4}, [{row: 1, column: 12}, {row: 1, column: 15}]);
-        
+
+        var p = new PlaceHolder(session, 1, {
+            row: 0,
+            column: 4
+        }, [
+            {
+                row: 1,
+                column: 12
+            }, {
+                row: 1,
+                column: 15
+            }
+        ]);
+
         editor.moveCursorTo(0, 4);
         editor.insert('$');
         assert.equal(session.doc.getValue(), "var $a = 10;\nconsole.log($a, $a);");
         editor.moveCursorTo(0, 4);
+
         // Have to put this in a setTimeout because the anchor is only fixed later.
-        setTimeout(function() {
-            editor.insert('v');
-            assert.equal(session.doc.getValue(), "var v$a = 10;\nconsole.log(v$a, v$a);");
-            next();
-        }, 20);
+        await lang.sleep(20);
+        editor.insert('v');
+        assert.equal(session.doc.getValue(), "var v$a = 10;\nconsole.log(v$a, v$a);");
+        next();
     },
 
-   "test: detaching placeholder" : function() {
+    "test: detaching placeholder": function () {
         var session = new EditSession("var a = 10;\nconsole.log(a, a);", new JavaScriptMode());
         var editor = new Editor(new MockRenderer(), session);
-        
-        var p = new PlaceHolder(session, 1, {row: 0, column: 4}, [{row: 1, column: 12}, {row: 1, column: 15}]);
-        
+
+        var p = new PlaceHolder(
+            session, 1, {
+                row: 0,
+                column: 4
+            }, [
+                {
+                    row: 1,
+                    column: 12
+                }, {
+                    row: 1,
+                    column: 15
+                }
+            ]);
+
         editor.moveCursorTo(0, 5);
         editor.insert('b');
         assert.equal(session.doc.getValue(), "var ab = 10;\nconsole.log(ab, ab);");
@@ -76,20 +125,32 @@ module.exports = {
         assert.equal(session.doc.getValue(), "var abcd = 10;\nconsole.log(ab, ab);");
     },
 
-   "test: events" : function() {
+    "test: events": function () {
         var session = new EditSession("var a = 10;\nconsole.log(a, a);", new JavaScriptMode());
         var editor = new Editor(new MockRenderer(), session);
-        
-        var p = new PlaceHolder(session, 1, {row: 0, column: 4}, [{row: 1, column: 12}, {row: 1, column: 15}]);
+
+        var p = new PlaceHolder(
+            session, 1, {
+                row: 0,
+                column: 4
+            }, [
+                {
+                    row: 1,
+                    column: 12
+                }, {
+                    row: 1,
+                    column: 15
+                }
+            ]);
         var entered = false;
         var left = false;
-        p.on("cursorEnter", function() {
+        p.on("cursorEnter", function () {
             entered = true;
         });
-        p.on("cursorLeave", function() {
+        p.on("cursorLeave", function () {
             left = true;
         });
-        
+
         editor.moveCursorTo(0, 0);
         editor.moveCursorTo(0, 4);
         p.onCursorChange(); // Have to do this by hand because moveCursorTo doesn't trigger the event
@@ -98,24 +159,36 @@ module.exports = {
         p.onCursorChange(); // Have to do this by hand because moveCursorTo doesn't trigger the event
         assert.ok(left);
     },
-    
-    "test: cancel": function(next) {
+
+    "test: cancel": async function (next) {
         var session = new EditSession("var a = 10;\nconsole.log(a, a);", new JavaScriptMode());
         session.setUndoManager(new UndoManager());
         var editor = new Editor(new MockRenderer(), session);
-        var p = new PlaceHolder(session, 1, {row: 0, column: 4}, [{row: 1, column: 12}, {row: 1, column: 15}]);
-        
+        var p = new PlaceHolder(
+            session, 1, {
+                row: 0,
+                column: 4
+            }, [
+                {
+                    row: 1,
+                    column: 12
+                }, {
+                    row: 1,
+                    column: 15
+                }
+            ]);
+
         editor.moveCursorTo(0, 5);
         editor.insert('b');
         editor.insert('cd');
         editor.remove('left');
         assert.equal(session.doc.getValue(), "var abc = 10;\nconsole.log(abc, abc);");
+
         // Wait a little for the changes to enter the undo stack
-        setTimeout(function() {
-            p.cancel();
-            assert.equal(session.doc.getValue(), "var a = 10;\nconsole.log(a, a);");
-            next();
-        }, 80);
+        await lang.sleep(80);
+        p.cancel();
+        assert.equal(session.doc.getValue(), "var a = 10;\nconsole.log(a, a);");
+        next();
     }
 };
 

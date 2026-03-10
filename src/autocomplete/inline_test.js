@@ -10,6 +10,7 @@ var AceInline = require("./inline").AceInline;
 var Editor = require("../ace").Editor;
 var EditSession = require("../ace").EditSession;
 var VirtualRenderer = require("../ace").VirtualRenderer;
+var lang = require("../lib/lang");
 
 var editor;
 var editor2;
@@ -272,7 +273,7 @@ module.exports = {
 
         done();
     },
-    "test: should scroll if inline preview outside": function(done) {
+    "test: should scroll if inline preview outside": async function(done) {
         // Fill the editor with new lines to get the cursor to the bottom
         // of the container
         editor.execCommand("insertstring", "\n".repeat(200));
@@ -289,25 +290,23 @@ module.exports = {
 
         inline.show(editor, completions[6], "l");
         editor.renderer.$loop._flush();
-        
-        setTimeout(() => {
-            // Should scroll 5 lines to get the inline preview into view
-            assert.strictEqual(deltaY, 50);
 
-            inline.hide();
-            editor.renderer.$loop._flush();
+        await lang.sleep(50);
+        // Should scroll 5 lines to get the inline preview into view
+        assert.strictEqual(deltaY, 50);
 
-            inline.show(editor, completions[7], "l");
-            editor.renderer.$loop._flush();
+        inline.hide();
+        editor.renderer.$loop._flush();
 
-            setTimeout(() => {
-                // Should scroll as much as possbile while keeping the cursor on screen
-                assert.strictEqual(row, 202);
-                editor.renderer.scrollBy = initialScrollBy;
-                editor.renderer.scrollToRow = initialScrollToRow;
-                done();
-            }, 50); 
-        }, 50);  
+        inline.show(editor, completions[7], "l");
+        editor.renderer.$loop._flush();
+
+        await lang.sleep(50);
+        // Should scroll as much as possbile while keeping the cursor on screen
+        assert.strictEqual(row, 202);
+        editor.renderer.scrollBy = initialScrollBy;
+        editor.renderer.scrollToRow = initialScrollToRow;
+        done();
     },
     "test: renders multi-line ghost text with empty lines": function(done) {
         assert.equal(editor.renderer.$ghostTextWidget, null);
