@@ -60,10 +60,10 @@ module.exports = {
         await lang.sleep(20);
         // Check that custom widget is shown
         editor.renderer.$loop._flush();
-                console.log(lines.cells[13].element.childNodes[2].className);
-                assert.ok(/ace_users_css/.test(lines.cells[13].element.childNodes[3].className));
+        console.log(lines.cells[13].element.childNodes[2].className);
+        assert.ok(/ace_users_css/.test(lines.cells[13].element.childNodes[3].className));
         // fold widget is not shown
-                assert.equal(lines.cells[13].element.childNodes[1].style.display, "none");
+        assert.equal(lines.cells[13].element.childNodes[1].style.display, "none");
 
         // After escape focus should be back to the gutter.
         emit(keys["escape"]);
@@ -101,9 +101,9 @@ module.exports = {
         await lang.sleep(20);
         // Check that custom widget is hidden.
         editor.renderer.$loop._flush();
-                assert.equal(lines.cells[0].element.childNodes[3], undefined);
-                assert.equal(lines.cells[0].element.childNodes[1].style.display, "inline-block");
-                assert.ok(/ace_open/.test(lines.cells[0].element.childNodes[1].className));
+        assert.equal(lines.cells[0].element.childNodes[3], undefined);
+        assert.equal(lines.cells[0].element.childNodes[1].style.display, "inline-block");
+        assert.ok(/ace_open/.test(lines.cells[0].element.childNodes[1].className));
 
         // After escape focus should be back to the gutter.
         emit(keys["escape"]);
@@ -144,8 +144,8 @@ module.exports = {
         await lang.sleep(20);
         // Check that custom widget is hidden.
         editor.renderer.$loop._flush();
-                assert.equal(lines.cells[0].element.childNodes[3], undefined);
-                assert.ok(/ace_closed/.test(lines.cells[0].element.childNodes[1].className));
+        assert.equal(lines.cells[0].element.childNodes[3], undefined);
+        assert.ok(/ace_closed/.test(lines.cells[0].element.childNodes[1].className));
 
         // After escape focus should be back to the gutter.
         emit(keys["escape"]);
