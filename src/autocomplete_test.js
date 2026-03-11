@@ -99,22 +99,18 @@ module.exports = {
         assert.ok(!editor.container.querySelector("style"));
 
         sendKey("a");
-        await checkInnerHTML(
-            '<d "ace_line ace_selected" role="option" aria-roledescription="item" aria-setsize="2" aria-describedby="doc-tooltip" aria-posinset="1" aria-label="arraysort, local" id="suggest-aria-id:0" aria-selected="true"><s "ace_completion-highlight" role="mark">a</s><s "ace_">rraysort</s><s "ace_completion-spacer"> </s><s "ace_completion-meta">local</s></d><d "ace_line" role="option" aria-roledescription="item" aria-setsize="2" aria-describedby="doc-tooltip" aria-posinset="2" aria-label="alooooooooooooooooooooooooooooong_word, local"><s "ace_completion-highlight" role="mark">a</s><s "ace_">looooooooooooooooooooooooooooong_word</s><s "ace_completion-spacer"> </s><s "ace_completion-meta">local</s></d>');
+        await checkInnerHTML('<d "ace_line ace_selected" role="option" aria-roledescription="item" aria-setsize="2" aria-describedby="doc-tooltip" aria-posinset="1" aria-label="arraysort, local" id="suggest-aria-id:0" aria-selected="true"><s "ace_completion-highlight" role="mark">a</s><s "ace_">rraysort</s><s "ace_completion-spacer"> </s><s "ace_completion-meta">local</s></d><d "ace_line" role="option" aria-roledescription="item" aria-setsize="2" aria-describedby="doc-tooltip" aria-posinset="2" aria-label="alooooooooooooooooooooooooooooong_word, local"><s "ace_completion-highlight" role="mark">a</s><s "ace_">looooooooooooooooooooooooooooong_word</s><s "ace_completion-spacer"> </s><s "ace_completion-meta">local</s></d>');
         sendKey("rr");
 
-        await checkInnerHTML(
-            '<d "ace_line ace_selected" role="option" aria-roledescription="item" aria-setsize="1" aria-describedby="doc-tooltip" aria-posinset="1" aria-label="arraysort, local" id="suggest-aria-id:0" aria-selected="true"><s "ace_completion-highlight" role="mark">arr</s><s "ace_">aysort</s><s "ace_completion-spacer"> </s><s "ace_completion-meta">local</s></d>');
+        await checkInnerHTML('<d "ace_line ace_selected" role="option" aria-roledescription="item" aria-setsize="1" aria-describedby="doc-tooltip" aria-posinset="1" aria-label="arraysort, local" id="suggest-aria-id:0" aria-selected="true"><s "ace_completion-highlight" role="mark">arr</s><s "ace_">aysort</s><s "ace_completion-spacer"> </s><s "ace_completion-meta">local</s></d>');
         sendKey("r");
 
-        await checkInnerHTML(
-            '<d "ace_line ace_selected" role="option" aria-roledescription="item" aria-setsize="1" aria-describedby="doc-tooltip" aria-posinset="1" aria-label="arraysort, local" id="suggest-aria-id:0" aria-selected="true"><s "ace_completion-highlight" role="mark">arr</s><s "ace_">ayso</s><s "ace_completion-highlight" role="mark">r</s><s "ace_">t</s><s "ace_completion-spacer"> </s><s "ace_completion-meta">local</s></d>');
+        await checkInnerHTML('<d "ace_line ace_selected" role="option" aria-roledescription="item" aria-setsize="1" aria-describedby="doc-tooltip" aria-posinset="1" aria-label="arraysort, local" id="suggest-aria-id:0" aria-selected="true"><s "ace_completion-highlight" role="mark">arr</s><s "ace_">ayso</s><s "ace_completion-highlight" role="mark">r</s><s "ace_">t</s><s "ace_completion-spacer"> </s><s "ace_completion-meta">local</s></d>');
         sendKey("Return");
         assert.equal(editor.getValue(), "arraysort\narraysort alooooooooooooooooooooooooooooong_word");
         editor.execCommand("insertstring", " looooooooooooooooooooooooooooong_");
 
-        await checkInnerHTML(
-            '<d "ace_line ace_selected" role="option" aria-roledescription="item" aria-setsize="1" aria-describedby="doc-tooltip" aria-posinset="1" aria-label="alooooooooooooooooooooooooooooong_word, local" id="suggest-aria-id:0" aria-selected="true"><s "ace_">a</s><s "ace_completion-highlight" role="mark">looooooooooooooooooooooooooooong_</s><s "ace_">word</s><s "ace_completion-spacer"> </s><s "ace_completion-meta">local</s></d>');
+        await checkInnerHTML('<d "ace_line ace_selected" role="option" aria-roledescription="item" aria-setsize="1" aria-describedby="doc-tooltip" aria-posinset="1" aria-label="alooooooooooooooooooooooooooooong_word, local" id="suggest-aria-id:0" aria-selected="true"><s "ace_">a</s><s "ace_completion-highlight" role="mark">looooooooooooooooooooooooooooong_</s><s "ace_">word</s><s "ace_completion-spacer"> </s><s "ace_completion-meta">local</s></d>');
         sendKey("Return");
 
         var last;
@@ -122,10 +118,11 @@ module.exports = {
         async function checkInnerHTML(expected) {
             var popup = editor.completer.popup;
 
-            await popup.renderer.once("afterRender");
-            var innerHTML = popup.renderer.$textLayer.element.innerHTML
-                .replace(/\s*style="[^"]+"|class=|(d)iv|(s)pan/g, "$1$2");
-            if (innerHTML == last) return;
+            do {
+                await popup.renderer.once("afterRender");
+                var innerHTML = popup.renderer.$textLayer.element.innerHTML
+                    .replace(/\s*style="[^"]+"|class=|(d)iv|(s)pan/g, "$1$2");
+            } while(innerHTML == last)
             assert.equal(innerHTML, expected);
             last = innerHTML;
         }
