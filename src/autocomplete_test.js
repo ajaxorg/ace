@@ -5,7 +5,6 @@ if (typeof process !== "undefined") {
 "use strict";
 
 var sendKey = require("./test/user").type;
-var {buildDom} = require("./lib/dom");
 var ace = require("./ace");
 var assert = require("./test/assertions");
 var user = require("./test/user");
@@ -122,7 +121,7 @@ module.exports = {
                 await popup.renderer.once("afterRender");
                 var innerHTML = popup.renderer.$textLayer.element.innerHTML
                     .replace(/\s*style="[^"]+"|class=|(d)iv|(s)pan/g, "$1$2");
-            } while(innerHTML == last)
+            } while(innerHTML == last);
             assert.equal(innerHTML, expected);
             last = innerHTML;
         }

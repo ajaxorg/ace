@@ -180,10 +180,7 @@ module.exports = {
         var mainTooltipEl = commandBarTooltip.tooltip.getElement();
         var moreOptionsEl = commandBarTooltip.moreOptions.getElement();
         var moveToActiveLineCursor = { clientX: activeLinePos.pageX + 1, clientY: activeLinePos.pageY + 1 };
-        var moveAway = {
-            clientX: activeLinePos.pageX + 1,
-            clientY: activeLinePos.pageY + 100
-        };
+        var moveAway = { clientX: activeLinePos.pageX + 1, clientY: activeLinePos.pageY + 100 };
         commandBarTooltip.attach(editor);
         simulateMouseEvent("move", moveToActiveLineCursor);
         tooltipVisibilityCheck(false);
@@ -196,10 +193,7 @@ module.exports = {
 
         var moreOptionsButton = buttonElements[1];
 
-        var moveToMoreOptionsButton = {
-            clientX: moreOptionsButton.left + 1,
-            clientY: moreOptionsButton.right + 1
-        };
+        var moveToMoreOptionsButton = { clientX: moreOptionsButton.left + 1, clientY: moreOptionsButton.right + 1 };
 
         simulateMouseEvent("move", moveToMoreOptionsButton);
         simulateMouseEvent("enter", moveToMoreOptionsButton, mainTooltipEl);
@@ -208,29 +202,20 @@ module.exports = {
 
         tooltipVisibilityCheck(true, true);
 
-        var leaveMainTooltip = {
-            clientX: mainTooltipEl.right + 10,
-            clientY: mainTooltipEl.top - 10
-        };
+        var leaveMainTooltip = { clientX: mainTooltipEl.right + 10, clientY: mainTooltipEl.top - 10 };
         simulateMouseEvent("move", leaveMainTooltip);
         simulateMouseEvent("leave", leaveMainTooltip, mainTooltipEl);
 
         await lang.sleep(delay / 2);
         var moreOptionsRect = moreOptionsEl.getBoundingClientRect();
-        var enterMoreOptions = {
-            clientX: moreOptionsRect.left + 1,
-            clientY: moreOptionsRect.top + 1
-        };
+        var enterMoreOptions = { clientX: moreOptionsRect.left + 1, clientY: moreOptionsRect.top + 1 };
         simulateMouseEvent("move", enterMoreOptions);
         simulateMouseEvent("enter", enterMoreOptions, moreOptionsEl);
 
         await lang.sleep(delay);
         tooltipVisibilityCheck(true, true);
         var moreOptionsRect = moreOptionsEl.getBoundingClientRect();
-        var leaveWholeTooltip = {
-            clientX: moreOptionsRect.right + 10,
-            clientY: moreOptionsRect.top - 10
-        };
+        var leaveWholeTooltip = { clientX: moreOptionsRect.right + 10, clientY: moreOptionsRect.top - 10 };
         simulateMouseEvent("move", leaveWholeTooltip);
         simulateMouseEvent("leave", leaveWholeTooltip, mainTooltipEl);
 
