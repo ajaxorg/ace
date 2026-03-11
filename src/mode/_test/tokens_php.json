@@ -184,6 +184,36 @@
   ["string","'"],
   ["punctuation.operator",";"]
 ],[
+   ["php-start","js-start"]
+],[
+   ["php-start","js-start"],
+  ["constant.numeric","1_000_000"],
+  ["punctuation.operator",";"]
+],[
+   ["php-start","js-start"],
+  ["constant.numeric","6.62_607_004e-34"],
+  ["punctuation.operator",";"]
+],[
+   ["php-start","js-start"],
+  ["constant.numeric","0.300_000_000_000_000_04"],
+  ["punctuation.operator",";"]
+],[
+   ["php-start","js-start"],
+  ["constant.numeric","0b1111_0000_1001_1111_1001_0010_1010_1001"],
+  ["punctuation.operator",";"]
+],[
+   ["php-start","js-start"],
+  ["constant.numeric","0123_7264"],
+  ["punctuation.operator",";"]
+],[
+   ["php-start","js-start"],
+  ["constant.numeric","0xBEEF_BABE"],
+  ["punctuation.operator",";"]
+],[
+   ["php-start","js-start"],
+  ["constant.numeric","0o123"],
+  ["punctuation.operator",";"]
+],[
    "js-start",
   ["support.php_tag","?>"]
 ],[

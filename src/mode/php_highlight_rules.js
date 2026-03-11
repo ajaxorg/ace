@@ -904,10 +904,16 @@ sql_regcase'.split('|')
                 next : "qstring"
             }, {
                 token : "constant.numeric", // hex
-                regex : "0[xX][0-9a-fA-F]+\\b"
+                regex : /0[xX][0-9a-fA-F]+(?:_[0-9a-fA-F]+)*\b/
+            }, {
+                token : "constant.numeric", // octal
+                regex : /0[oO]?[0-7]+(_[0-7]+)*\b/
+            }, {
+                token : "constant.numeric", // binary
+                regex : /0[bB][01]+(_[01]+)*\b/
             }, {
                 token : "constant.numeric", // float
-                regex : "[+-]?\\d+(?:(?:\\.\\d*)?(?:[eE][+-]?\\d+)?)?\\b"
+                regex : /(?:[\d]+(?:_\d+)*\.?\d*(?:_\d+)*|\.\d+(?:_\d+)*)(?:[eE][+-]?\d+(?:_\d+)*)?\b/
             }, {
                 token : "constant.language", // constants
                 regex : "\\b(?:DEFAULT_INCLUDE_PATH|E_(?:ALL|CO(?:MPILE_(?:ERROR|WARNING)|RE_(?:ERROR|WARNING))|" +
