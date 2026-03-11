@@ -53,10 +53,7 @@ module.exports = {
         assert.equal(nodes.length, 1);
         assert.equal(nodes[0].textContent, "tooltip Range: [0/0] -> [0/5]");
         assert.equal(docTooltip.$element.style.display, "block");
-        mouse("move", {
-            row: 0,
-            column: 9
-        });
+            mouse("move", {row: 0, column: 9});
         assert.equal(docTooltip.$element.style.display, "none");
 
         await lang.sleep(6);
@@ -65,44 +62,29 @@ module.exports = {
         mouse("down", docTooltip.$element, {button: 0});
         mouse("up", docTooltip.$element, {button: 0});
         assert.equal(docTooltip.$element.style.display, "block");
-        mouse("down", {
-            row: 0,
-            column: 8
-        }, {button: 0});
+        mouse("down", {row: 0, column: 8}, {button: 0});
         assert.ok(editor.$mouseHandler.isMousePressed);
         assert.equal(docTooltip.$element.style.display, "none");
 
         await lang.sleep(6);
         assert.equal(docTooltip.$element.style.display, "none");
         assert.ok(editor.$mouseHandler.isMousePressed);
-        mouse("move", {
-            row: 0,
-            column: 13
-        }, {which: 1});
+        mouse("move", {row: 0, column: 13}, {which: 1});
         assert.ok(editor.$mouseHandler.isMousePressed);
 
         await lang.sleep(6);
         assert.equal(docTooltip.$element.style.display, "none");
-        mouse("up", {
-            row: 0,
-            column: 13
-        });
+        mouse("up", {row: 0, column: 13});
         assert.ok(!editor.$mouseHandler.isMousePressed);
 
         docTooltip.idleTime = 20;
         assert.ok(!docTooltip.timeout);
-        mouse("move", {
-            row: 0,
-            column: 1
-        });
+        mouse("move", {row: 0, column: 1});
         assert.ok(docTooltip.timeout);
         docTooltip.lastT = Date.now();
         docTooltip.waitForHover();
         assert.equal(docTooltip.$element.style.display, "none");
-        mouse("move", {
-            row: 0,
-            column: 13
-        });
+        mouse("move", {row: 0, column: 13});
         docTooltip.lastT = Date.now() - docTooltip.idleTime;
         docTooltip.waitForHover();
         assert.equal(docTooltip.$element.style.display, "block");
@@ -116,10 +98,7 @@ module.exports = {
         mouse("move", editor.container);
 
         await lang.sleep(6);
-        mouse("move", {
-            row: 0,
-            column: 13
-        });
+        mouse("move", {row: 0, column: 13});
         assert.equal(docTooltip.$element.style.display, "none");
 
         await lang.sleep(6);

@@ -36,7 +36,10 @@ module.exports = {
         await lang.sleep(51);
         assert.equal(editor.$highlightPending, false);
         assert.ok(editor.session.$bracketHighlight);
-        assert.equal(editor.session.$bracketHighlight.ranges + "", "Range: [0/1] -> [0/5],Range: [0/26] -> [0/30]");
+        assert.equal(
+            editor.session.$bracketHighlight.ranges + "",
+            "Range: [0/1] -> [0/5],Range: [0/26] -> [0/30]"
+        );
         exec("gotoend", 1);
         exec("gotoleft", 3);
         assert.equal(editor.$highlightPending, true);

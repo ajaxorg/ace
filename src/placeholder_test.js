@@ -22,19 +22,7 @@ module.exports = {
         var session = new EditSession("var a = 10;\nconsole.log(a, a);", new JavaScriptMode());
         var editor = new Editor(new MockRenderer(), session);
 
-        new PlaceHolder(
-            session, 1, {
-                row: 0,
-                column: 4
-            }, [
-                {
-                    row: 1,
-                    column: 12
-                }, {
-                    row: 1,
-                    column: 15
-                }
-            ]);
+        new PlaceHolder(session, 1, {row: 0, column: 4}, [{row: 1, column: 12}, {row: 1, column: 15}]);
 
         editor.moveCursorTo(0, 5);
         editor.insert('b');
@@ -51,19 +39,7 @@ module.exports = {
         var session = new EditSession("var a = 10;\nconsole.log(a, a);\n", new JavaScriptMode());
         var editor = new Editor(new MockRenderer(), session);
 
-        new PlaceHolder(
-            session, 1, {
-                row: 0,
-                column: 4
-            }, [
-                {
-                    row: 1,
-                    column: 12
-                }, {
-                    row: 1,
-                    column: 15
-                }
-            ]);
+        new PlaceHolder(session, 1, {row: 0, column: 4}, [{row: 1, column: 12}, {row: 1, column: 15}]);
 
         editor.moveCursorTo(2, 0);
         editor.insert('b');
@@ -74,18 +50,7 @@ module.exports = {
         var session = new EditSession("var a = 10;\nconsole.log(a, a);", new JavaScriptMode());
         var editor = new Editor(new MockRenderer(), session);
 
-        var p = new PlaceHolder(session, 1, {
-            row: 0,
-            column: 4
-        }, [
-            {
-                row: 1,
-                column: 12
-            }, {
-                row: 1,
-                column: 15
-            }
-        ]);
+        var p = new PlaceHolder(session, 1, {row: 0, column: 4}, [{row: 1, column: 12}, {row: 1, column: 15}]);
 
         editor.moveCursorTo(0, 4);
         editor.insert('$');
@@ -103,19 +68,7 @@ module.exports = {
         var session = new EditSession("var a = 10;\nconsole.log(a, a);", new JavaScriptMode());
         var editor = new Editor(new MockRenderer(), session);
 
-        var p = new PlaceHolder(
-            session, 1, {
-                row: 0,
-                column: 4
-            }, [
-                {
-                    row: 1,
-                    column: 12
-                }, {
-                    row: 1,
-                    column: 15
-                }
-            ]);
+        var p = new PlaceHolder(session, 1, {row: 0, column: 4}, [{row: 1, column: 12}, {row: 1, column: 15}]);
 
         editor.moveCursorTo(0, 5);
         editor.insert('b');
@@ -129,19 +82,7 @@ module.exports = {
         var session = new EditSession("var a = 10;\nconsole.log(a, a);", new JavaScriptMode());
         var editor = new Editor(new MockRenderer(), session);
 
-        var p = new PlaceHolder(
-            session, 1, {
-                row: 0,
-                column: 4
-            }, [
-                {
-                    row: 1,
-                    column: 12
-                }, {
-                    row: 1,
-                    column: 15
-                }
-            ]);
+        var p = new PlaceHolder(session, 1, {row: 0, column: 4}, [{row: 1, column: 12}, {row: 1, column: 15}]);
         var entered = false;
         var left = false;
         p.on("cursorEnter", function () {
@@ -164,19 +105,7 @@ module.exports = {
         var session = new EditSession("var a = 10;\nconsole.log(a, a);", new JavaScriptMode());
         session.setUndoManager(new UndoManager());
         var editor = new Editor(new MockRenderer(), session);
-        var p = new PlaceHolder(
-            session, 1, {
-                row: 0,
-                column: 4
-            }, [
-                {
-                    row: 1,
-                    column: 12
-                }, {
-                    row: 1,
-                    column: 15
-                }
-            ]);
+        var p = new PlaceHolder(session, 1, {row: 0, column: 4}, [{row: 1, column: 12}, {row: 1, column: 15}]);
 
         editor.moveCursorTo(0, 5);
         editor.insert('b');

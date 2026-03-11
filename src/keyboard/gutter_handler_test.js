@@ -161,7 +161,8 @@ module.exports = {
         assert.equal(document.activeElement, editor.renderer.$gutter);
 
         done();
-    },"test: keyboard annotation: multiple annotations" : async function(done) {
+    },
+    "test: keyboard annotation: multiple annotations" : async function(done) {
         var editor = this.editor;
         var value = "x {" + "\n".repeat(50) + "}\n";
         value = value.repeat(50);

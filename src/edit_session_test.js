@@ -1270,10 +1270,7 @@ module.exports = {
         assert.equal(beforeEndOperationSpy[1].selectionChanged, true);
 
         // When only end operation is invoked
-        session.insert({
-            row: 0,
-            column: 0
-        }, "end");
+        session.insert({row: 0, column : 0}, "end");
         session.endOperation();
         assert.equal(beforeEndOperationSpy.length, 3);
         assert.deepEqual(beforeEndOperationSpy[2].command, {});
@@ -1281,10 +1278,7 @@ module.exports = {
         assert.equal(beforeEndOperationSpy[2].selectionChanged, true);
 
         // When nothing is invoked
-        session.insert({
-            row: 0,
-            column: 0
-        }, "none");
+        session.insert({row: 0, column : 0}, "none");
 
         await lang.sleep(10);
         assert.equal(beforeEndOperationSpy.length, 4);

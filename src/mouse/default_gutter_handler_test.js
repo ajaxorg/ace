@@ -71,11 +71,7 @@ module.exports = {
         var tooltip = findVisibleTooltip();
 
         assert.ok(/error test/.test(tooltip.textContent));
-        annotation.dispatchEvent(new MouseEvent(
-            "move", {
-                x: 0,
-                y: 0
-            }));
+        annotation.dispatchEvent(new MouseEvent("move", {x: 0, y: 0}));
         done();
     },
     "test: gutter security tooltip" : async function(done) {
