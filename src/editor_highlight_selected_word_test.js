@@ -42,12 +42,11 @@ function callHighlighterUpdate(session, firstRow, lastRow) {
 }
 
 module.exports = {
-    setUp: function(next) {
+    setUp: function() {
         this.session = new EditSession(lipsum);
         this.editor = new Editor(new MockRenderer(), this.session);
         this.selection = this.session.getSelection();
         this.search = this.editor.$search;
-        next();
     },
 
     "test: highlight selected words by default": function() {

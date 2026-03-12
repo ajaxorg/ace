@@ -24,7 +24,7 @@ function emit(keyCode) {
 }
 
 module.exports = {
-    setUp: function (done) {
+    setUp: function() {
         this.editor = new Editor(new VirtualRenderer());
         this.editor.container.style.position = "absolute";
         this.editor.container.style.height = "500px";
@@ -32,7 +32,6 @@ module.exports = {
         this.editor.container.style.left = "50px";
         this.editor.container.style.top = "10px";
         document.body.appendChild(this.editor.container);
-        done();
     },
     "test: custom icon replaces the fold icon sucessfully": async function (done) {
         var editor = this.editor;

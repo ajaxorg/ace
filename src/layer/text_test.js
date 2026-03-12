@@ -13,7 +13,7 @@ var dom = require("../lib/dom");
 
 module.exports = {
 
-    setUp: function(next) {
+    setUp: function() {
         this.session = new EditSession("");
         this.session.setMode(new JavaScriptMode());
         this.textLayer = new TextLayer(document.createElement("div"));
@@ -22,7 +22,6 @@ module.exports = {
             characterWidth: 10,
             lineHeight: 20
         };
-        next();
     },
 
     "test: render line with hard tabs should render the same as lines with soft tabs" : function() {

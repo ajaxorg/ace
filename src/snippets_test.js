@@ -17,9 +17,8 @@ var config = require("./config");
 var loadModule = config.loadModule;
 
 module.exports = {
-    setUp : function(next) {
+    setUp : function() {
         this.editor = new Editor(new MockRenderer());
-        next();
     },
     tearDown: function() {
         config.loadModule = loadModule;

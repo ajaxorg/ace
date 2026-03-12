@@ -12,15 +12,14 @@ var config = require("../config");
 module.exports = {
     timeout: 10000,
 
-    "test loading in node": function(next) {
+    "test loading in node": function() {
         require("../test/mockdom").unload();
         if (typeof process != "undefined")
             assert.equal(typeof window, "undefined");
         require("../ace");
-        next();
     },
 
-    "test simple snippet": function(next) {
+    "test simple snippet": function() {
         var theme = require("../theme/tomorrow");
         var snippet = [
             "/** this is a function",
@@ -46,10 +45,9 @@ module.exports = {
 </div><div class='ace_line'><span class='ace_gutter ace_gutter-cell'></span><span class='ace_paren ace_rparen'>}</span>
 </div></div></div>`);
         assert.ok(!!result.css);
-        next();
     },
 
-    "test css from theme is used": function(next) {
+    "test css from theme is used": function() {
         var theme = require("../theme/tomorrow");
         var snippet = [
             "/** this is a function",
@@ -64,11 +62,9 @@ module.exports = {
         var result = highlighter.render(snippet, mode, theme);
 
         assert.ok(result.css.indexOf(theme.cssText) !== -1);
-
-        next();
     },
 
-    "test theme classname should be in output html": function(next) {
+    "test theme classname should be in output html": function() {
         var theme = require("../theme/tomorrow");
         var snippet = [
             "/** this is a function",
@@ -82,22 +78,18 @@ module.exports = {
 
         var result = highlighter.render(snippet, mode, theme);
         assert.equal(!!result.html.match(/<div class='ace-tomorrow'>/), true);
-
-        next();
     },
     
-    "test js string replace specials": function(next) {
+    "test js string replace specials": function() {
         var theme = require("../theme/tomorrow");
         var snippet = "$'$1$2$$$&";
         var mode = new TextMode();
 
         var result = highlighter.render(snippet, mode, theme);
         assert.ok(result.html.indexOf("</span>$&#39;$1$2$$$&#38;\n</div>") != -1);
-
-        next();
     },
     
-    "test html special chars": function(next) {
+    "test html special chars": function() {
         var theme = require("../theme/tomorrow");
         var snippet = "&<>'\"";
         var mode = new TextMode();
@@ -108,8 +100,6 @@ module.exports = {
         var mode = new JavaScriptMode();
         var result = highlighter.render("/*" + snippet, mode, theme);
         assert.ok(result.html.indexOf("<span class='ace_comment'>/*&#38;&#60;>&#39;&#34;</span>") != -1);
-        
-        next();
     },
     
     "test async highlight": function(next) {

@@ -17,13 +17,11 @@ var lang = require("./lib/lang");
 
 module.exports = {
 
-    setUp : function(next) {
+    setUp : function() {
         this.session1 = new EditSession(["abc", "def"]);
         this.session2 = new EditSession(["ghi", "jkl"]);
         
-        
         this.editor = new Editor(new MockRenderer());
-        next();
     },
 
     "test: change document" : function() {

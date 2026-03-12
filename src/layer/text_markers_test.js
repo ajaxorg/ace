@@ -28,7 +28,7 @@ function getText(nodes) {
 }
 
 module.exports = {
-    setUp: function (next) {
+    setUp: function () {
         this.session = new EditSession("");
         this.session.setMode(new JavaScriptMode());
 
@@ -44,8 +44,6 @@ module.exports = {
             padding: 0,
             offset: 0
         };
-
-        next();
     },
 
     "test: marker splits single token into multiple DOM nodes": function () {

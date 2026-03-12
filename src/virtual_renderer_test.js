@@ -50,7 +50,7 @@ module.exports = {
         editor && editor.destroy();
         editor = null;
     },
-    "test: screen2text the column should be rounded to the next character edge" : function(done) {
+    "test: screen2text the column should be rounded to the next character edge" : function() {
         var renderer = editor.renderer;
 
         renderer.setPadding(0);
@@ -70,9 +70,8 @@ module.exports = {
         testPixelToText(10, 0, 0, 1);
         testPixelToText(14, 0, 0, 1);
         testPixelToText(15, 0, 0, 2);
-        done();
     },
-    "test: handle css transforms" : function(done) {
+    "test: handle css transforms" : function() {
         var renderer = editor.renderer;
         var fontMetrics = renderer.$fontMetrics;
         setScreenPosition(editor.container, [20, 30, 300, 100]);
@@ -116,8 +115,6 @@ module.exports = {
         assert.ok(pos1[0] - rects[2][0] < 10e-6);
         assert.ok(pos1[1] - rects[2][1] < 10e-6);
         editor.renderer.$loop._flush();
-        
-        done();
     },
     
     "test scrollmargin + autosize": async function(done) {
