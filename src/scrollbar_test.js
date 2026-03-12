@@ -8,6 +8,8 @@ if (typeof process !== "undefined") {
 var assert = require("./test/assertions");
 var VirtualRenderer = require("./virtual_renderer").VirtualRenderer;
 var Editor = require("./editor").Editor;
+var lang = require("./lib/lang");
+
 var MouseEvent = function (type, opts) {
     var e = document.createEvent("MouseEvents");
     e.initMouseEvent(/click|wheel/.test(type) ? type : "mouse" + type, true, true, window, opts.detail, opts.x, opts.y,
@@ -72,7 +74,7 @@ module.exports = {
         renderer.$loop._flush();
         assert.ok(renderer.scrollBarV.thumbTop > thumbTop);
     },
-    "test: dragging vertical scroll thumb": function (done) {
+    "test: dragging vertical scroll thumb": async function (done) {
         editor.setValue("a" + "\n".repeat(100) + "b" + "\nxxxxxx", -1);
         renderer.$loop._flush();
 
@@ -89,10 +91,9 @@ module.exports = {
             button: 0
         }));
 
-        setTimeout(function () {
-            assert.ok(renderer.scrollBarV.thumbTop > 0);
-            done();
-        }, 200);
+        await lang.sleep(200);
+        assert.ok(renderer.scrollBarV.thumbTop > 0);
+        done();
     },
     "test: horizontal scrolling": function () {
         assert.ok(!renderer.scrollBarH.isVisible);
@@ -109,7 +110,7 @@ module.exports = {
 
         assert.ok(renderer.scrollBarH.thumbLeft > 0);
     },
-    "test: dragging horizontal scroll thumb": function (done) {
+    "test: dragging horizontal scroll thumb": async function (done) {
         editor.setValue("a".repeat(1000), -1);
         renderer.$loop._flush();
 
@@ -126,10 +127,9 @@ module.exports = {
             button: 0
         }));
 
-        setTimeout(function () {
-            assert.ok(renderer.scrollBarH.thumbLeft > 0);
-            done();
-        }, 200);
+        await lang.sleep(200);
+        assert.ok(renderer.scrollBarH.thumbLeft > 0);
+        done();
     }
 
 };

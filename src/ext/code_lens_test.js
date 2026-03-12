@@ -1,5 +1,3 @@
-/* global Promise */
-
 if (typeof process !== "undefined") {
     require("amd-loader");
     require("../test/mockdom");
@@ -10,6 +8,8 @@ if (typeof process !== "undefined") {
 var ace = require("../ace");
 var codeLens = require("./code_lens");
 var assert = require("../test/assertions");
+var lang = require("../lib/lang");
+
 require("./error_marker");
 
 function click(node) {
@@ -109,63 +109,57 @@ module.exports = {
         assert.ok(!lens);
     },
 
-    "test async code lens": function(next) {
+    "test async code lens": async function(next) {
         editor.session.setValue("a\nb\nc");
-        new Promise(function(resolve) {
-                codeLens.registerCodeLensProvider(editor, {
-                    provideCodeLenses: function(session, callback) {
-                        setTimeout(function() {
-                            callback(null, [{
-                                start: { row: 1 },
-                                command: { title: "code lens" }
-                            }]);
-                            resolve();
-                        });
+        codeLens.registerCodeLensProvider(editor, {
+            provideCodeLenses: async function (session, callback) {
+                await lang.sleep(0);
+                callback(null, [
+                    {
+                        start: {row: 1},
+                        command: {title: "code lens"}
                     }
-                });
-                editor.$updateLenses();
-            })
-            .then(function() {
-                editor.renderer.$loop._flush();
-                var lens = editor.container.querySelector(".ace_codeLens");
-                assert.equal(lens.textContent, "code lens");
-                next();
-            })
-            .catch(next);
+                ]);
+            }
+        });
+        editor.$updateLenses();
+        await lang.sleep(0);
+        editor.renderer.$loop._flush();
+        var lens = editor.container.querySelector(".ace_codeLens");
+        assert.equal(lens.textContent, "code lens");
+        next();
     },
 
-    "test multiple code lens providers": function(next) {
+    "test multiple code lens providers": async function(next) {
         editor.session.setValue("a\nb\nc\nd");
-        new Promise(function(resolve) {
-                codeLens.registerCodeLensProvider(editor, {
-                    provideCodeLenses: function(session, callback) {
-                        callback(null, [{
-                            start: { row: 1 },
-                            command: { title: "1" }
-                        }]);
+        codeLens.registerCodeLensProvider(editor, {
+            provideCodeLenses: function (session, callback) {
+                callback(null, [
+                    {
+                        start: {row: 1},
+                        command: {title: "1"}
                     }
-                });
-                codeLens.registerCodeLensProvider(editor, {
-                    provideCodeLenses: function(session, callback) {
-                        setTimeout(function() {
-                            callback(null, [{
-                                start: { row: 2 },
-                                command: { title: "2" }
-                            }]);
-                            resolve();
-                        });
+                ]);
+            }
+        });
+        codeLens.registerCodeLensProvider(editor, {
+            provideCodeLenses: async function (session, callback) {
+                await lang.sleep(0);
+                callback(null, [
+                    {
+                        start: {row: 2},
+                        command: {title: "2"}
                     }
-                });
-                editor.$updateLenses();
-            })
-            .then(function() {
-                editor.renderer.$loop._flush();
-                var lens = editor.container.querySelectorAll(".ace_codeLens");
-                assert.equal(lens[0].textContent, "1");
-                assert.equal(lens[1].textContent, "2");
-                next();
-            })
-            .catch(next);
+                ]);
+            }
+        });
+        editor.$updateLenses();
+        await lang.sleep(0);
+        editor.renderer.$loop._flush();
+        var lens = editor.container.querySelectorAll(".ace_codeLens");
+        assert.equal(lens[0].textContent, "1");
+        assert.equal(lens[1].textContent, "2");
+        next();
     },
 
     "test multiple code lens providers on the same line": function() {

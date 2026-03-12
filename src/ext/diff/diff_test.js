@@ -12,6 +12,7 @@ var Range = require("../../range").Range;
 var editorA, editorB, diffView;
 const {Decorator} = require("../../layer/decorators");
 const {ScrollDiffDecorator} = require("./scroll_diff_decorator");
+var lang = require("../../lib/lang");
 
 
 var DEBUG = false;
@@ -397,7 +398,7 @@ module.exports = {
 
         assert.ok(editorA.renderer.$scrollDecorator instanceof Decorator);
     },
-    "test split diff scroll decorators": function(done) {
+    "test split diff scroll decorators": async function(done) {
         editorA.session.setValue(["a", "b", "c"].join("\n"));
         editorB.session.setValue(["a", "c", "X"].join("\n"));
 
@@ -409,12 +410,11 @@ module.exports = {
         editorA.renderer.$loop._flush();
         editorB.renderer.$loop._flush();
 
-        setTimeout(() => {
-            assertDecoratorsPlacement(editorA, false);
-            done();
-        }, 0);
+        await lang.sleep(0);
+        assertDecoratorsPlacement(editorA, false);
+        done();
     },
-    "test inline diff scroll decorators": function(done) {
+    "test inline diff scroll decorators": async function(done) {
         editorA.session.setValue(["a", "b", "c"].join("\n"));
         editorB.session.setValue(["a", "c", "X"].join("\n"));
 
@@ -424,10 +424,9 @@ module.exports = {
 
         editorA.renderer.$loop._flush();
 
-        setTimeout(() => {
-            assertDecoratorsPlacement(editorA, true);
-            done();
-        }, 0);
+        await lang.sleep(0);
+        assertDecoratorsPlacement(editorA, true);
+        done();
     },
     "test: second editor destroyed on detach in inline diff view": function() {
         editorA.setOption("wrap", "free");

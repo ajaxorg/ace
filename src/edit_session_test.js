@@ -13,6 +13,7 @@ var MockRenderer = require("./test/mockrenderer").MockRenderer;
 var Range = require("./range").Range;
 var assert = require("./test/assertions");
 var JavaScriptMode = require("./mode/javascript").Mode;
+var lang = require("./lib/lang");
 
 require("./multi_select");
 
@@ -1122,7 +1123,7 @@ module.exports = {
         assertArray(session.getAnnotations(), [annotation]);
     },
     
-    "test: mode loading" : function(next) {
+    "test: mode loading" : async function(next) {
         delete EditSession.prototype.$modes["ace/mode/javascript"];
         delete EditSession.prototype.$modes["ace/mode/css"];
         delete EditSession.prototype.$modes["ace/mode/sh"];
@@ -1166,23 +1167,23 @@ module.exports = {
         });
         assert.equal(session.$modeId, "ace/mode/sh");
         assert.equal(session.$mode.$id, "ace/mode/javascript");
-        setTimeout(function() {
-            assert.equal(modeChangeCallbacks, 2);
-            session.setMode("ace/mode/javascript");
-            assert.equal(session.$mode.$id, "ace/mode/javascript");
-            session.setMode("ace/mode/sh");
-            assert.equal(session.$mode.$id, "ace/mode/sh");
-            session.setMode("ace/mode/css");
-            assert.equal(session.$mode.$id, "ace/mode/sh");
-            // destory session to check if the last mode which is being loaded is aborted or not
-            session.destroy();
-            setTimeout(function() {
-            // check if last setmode is aborted due to destroy
-            assert.equal(onChangeModeCallCount, 4);
-            session.$onChangeMode = originalOnChangeMode;
-            next();
-            });
-        });
+
+        await lang.sleep(0);
+        assert.equal(modeChangeCallbacks, 2);
+        session.setMode("ace/mode/javascript");
+        assert.equal(session.$mode.$id, "ace/mode/javascript");
+        session.setMode("ace/mode/sh");
+        assert.equal(session.$mode.$id, "ace/mode/sh");
+        session.setMode("ace/mode/css");
+        assert.equal(session.$mode.$id, "ace/mode/sh");
+        // destory session to check if the last mode which is being loaded is aborted or not
+        session.destroy();
+
+        await lang.sleep(0);
+        // check if last setmode is aborted due to destroy
+        assert.equal(onChangeModeCallCount, 4);
+        session.$onChangeMode = originalOnChangeMode;
+        next();
     },
 
     "test: sets destroyed flag when destroy called and tokenizer is never null": function() {
@@ -1242,7 +1243,7 @@ module.exports = {
         assert.equal(session.getValue(), "Hello world! test1 test2");
     },
 
-    "test: operation handling : when session it not attached to an editor": function(done) {
+    "test: operation handling : when session it not attached to an editor": async function(done) {
         const session = new EditSession("Hello world!");
         const beforeEndOperationSpy = [];
         session.on("beforeEndOperation", () => {
@@ -1261,34 +1262,34 @@ module.exports = {
         // When only start operation is invoked
         session.startOperation({command: {name: "inserting-start"}});
         session.insert({row: 0, column : 0}, "start");
-        setTimeout(() => {
-            assert.equal(beforeEndOperationSpy.length, 2);
-            assert.equal(beforeEndOperationSpy[1].command.name, "inserting-start");
-            assert.equal(beforeEndOperationSpy[1].docChanged, true);
-            assert.equal(beforeEndOperationSpy[1].selectionChanged, true);
-            
-            // When only end operation is invoked
-            session.insert({row: 0, column : 0}, "end");
-            session.endOperation();
-            assert.equal(beforeEndOperationSpy.length, 3);
-            assert.deepEqual(beforeEndOperationSpy[2].command, {});
-            assert.equal(beforeEndOperationSpy[2].docChanged, true);
-            assert.equal(beforeEndOperationSpy[2].selectionChanged, true);
 
-            // When nothing is invoked
-            session.insert({row: 0, column : 0}, "none");
-            setTimeout(() => {
-                assert.equal(beforeEndOperationSpy.length, 4);
-                assert.deepEqual(beforeEndOperationSpy[3].command, {});
-                assert.equal(beforeEndOperationSpy[3].docChanged, true);
-                assert.equal(beforeEndOperationSpy[3].selectionChanged, true);
-                
-                done();
-            }, 10);
-        }, 10);
+        await lang.sleep(10);
+        assert.equal(beforeEndOperationSpy.length, 2);
+        assert.equal(beforeEndOperationSpy[1].command.name, "inserting-start");
+        assert.equal(beforeEndOperationSpy[1].docChanged, true);
+        assert.equal(beforeEndOperationSpy[1].selectionChanged, true);
+
+        // When only end operation is invoked
+        session.insert({row: 0, column : 0}, "end");
+        session.endOperation();
+        assert.equal(beforeEndOperationSpy.length, 3);
+        assert.deepEqual(beforeEndOperationSpy[2].command, {});
+        assert.equal(beforeEndOperationSpy[2].docChanged, true);
+        assert.equal(beforeEndOperationSpy[2].selectionChanged, true);
+
+        // When nothing is invoked
+        session.insert({row: 0, column : 0}, "none");
+
+        await lang.sleep(10);
+        assert.equal(beforeEndOperationSpy.length, 4);
+        assert.deepEqual(beforeEndOperationSpy[3].command, {});
+        assert.equal(beforeEndOperationSpy[3].docChanged, true);
+        assert.equal(beforeEndOperationSpy[3].selectionChanged, true);
+
+        done();
     },
 
-    "test: operation handling : when session is attached to an editor": function(done) {
+    "test: operation handling : when session is attached to an editor": async function(done) {
         const session = new EditSession("Hello world!");
         const editor = new Editor(new MockRenderer(), session);
         const beforeEndOperationSpySession = [];
@@ -1348,11 +1349,11 @@ module.exports = {
 
         // Imperative implicit update from editor
         editor.insert("update");
-        setTimeout(() => {
-            assert.equal(beforeEndOperationSpyEditor.length, 5);
-            assert.equal(beforeEndOperationSpyNewSession.length, 2);
-            done();
-        }, 10);
+
+        await lang.sleep(10);
+        assert.equal(beforeEndOperationSpyEditor.length, 5);
+        assert.equal(beforeEndOperationSpyNewSession.length, 2);
+        done();
     }
 };
 
