@@ -6,16 +6,15 @@ var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;
 var FlixHighlightRules = function() {
     
     var keywords = (
-        "use|checked_cast|checked_ecast|unchecked_cast|masked_cast|as|discard|from|" +
-        "into|inject|project|solve|query|where|select|force|import|region|red|deref"
+        "use|checked_cast|checked_ecast|unchecked_cast|as|discard|from|into|inject|" +
+        "project|solve|query|where|select|force|import|region|handler|instanceof|new|pquery|psolve|run|super"
     );
     var controlKeywords = (
-        "choose|debug|do|for|forA|forM|foreach|yield|if|else|case|" +
-        "match|typematch|try|catch|resume|spawn|par|branch|jumpto"
+        "choose|forA|forM|foreach|yield|if|else|case|match|ematch|try|catch|throw|spawn|par"
     );
     var operators = "not|and|or|fix";
-    var declarations = "eff|def|law|enum|case|type|alias|class|instance|mod|let";
-    var modifiers = "with|without|opaque|lazy|lawful|pub|override|sealed|static";
+    var declarations = "eff|def|redef|law|enum|case|type|alias|trait|instance|mod|struct|let";
+    var modifiers = "with|lazy|lawful|pub|override|sealed|static|mut|unsafe";
     var primitives = "Unit|Bool|Char|Float32|Float64|Int8|Int16|Int32|Int64|BigInt|String";
 
     var keywordMapper = this.createKeywordMapper({
