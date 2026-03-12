@@ -380,13 +380,6 @@ class InlineDiffView extends BaseDiffView {
         cloneRenderer.$computeLayerConfig();
 
         var newConfig = cloneRenderer.layerConfig;
-        
-        this.gutterLayer.update(newConfig);
-
-        newConfig.firstRowScreen = config.firstRowScreen;
-        
-        cloneRenderer.$cursorLayer.config = newConfig;
-        cloneRenderer.$cursorLayer.update(newConfig);
 
         if (changes & cloneRenderer.CHANGE_LINES
             || changes & cloneRenderer.CHANGE_FULL
@@ -394,6 +387,13 @@ class InlineDiffView extends BaseDiffView {
             || changes & cloneRenderer.CHANGE_TEXT
         )
             this.textLayer.update(newConfig);
+        
+        this.gutterLayer.update(newConfig);
+
+        newConfig.firstRowScreen = config.firstRowScreen;
+        
+        cloneRenderer.$cursorLayer.config = newConfig;
+        cloneRenderer.$cursorLayer.update(newConfig);
 
         this.markerLayer.setMarkers(this.otherSession.getMarkers());
         this.markerLayer.update(newConfig);
