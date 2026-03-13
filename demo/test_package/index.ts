@@ -17,6 +17,7 @@ import {tokenize} from "ace-code/src/ext/simple_tokenizer";
 import {JavaScriptHighlightRules} from "ace-code/src/mode/javascript_highlight_rules";
 import {highlight} from "ace-code/src/ext/static_highlight";
 import {createDiffView, DiffProvider, DiffViewOptions} from "ace-code/src/ext/diff";
+import {Mode as HtmlMode} from "ace-code/src/mode/html";
 
 // TODO this does not work in node
 // import "ace-code/esm-resolver";
@@ -28,7 +29,9 @@ config.setLoader(async function(moduleName, cb) {
     cb(null, module);
 });
 
-const editor = ace.edit(null); // should not be an error
+const editor = ace.edit(null, {
+    mode: new HtmlMode()
+}); // should not be an error
 editor.setTheme("ace/theme/monokai");
 editor.session.setMode("ace/mode/javascript");
 
