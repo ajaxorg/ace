@@ -364,11 +364,9 @@ class SearchBox {
 var $searchBarKb = new HashHandler();
 $searchBarKb.bindKeys({
     "Ctrl-f|Command-f": function(sb) {
-        var isReplace = sb.isReplace = !sb.isReplace;
-        sb.replaceBox.style.display = isReplace ? "" : "none";
-        sb.replaceOption.checked = false;
+        sb.replaceOption.checked = sb.editor.getOption('enableDoubleFindToReplace') && !sb.replaceOption.checked;
         sb.$syncOptions();
-        sb.searchInput.focus();
+        sb[sb.replaceOption.checked ? "replaceInput" : "searchInput"].focus();
     },
     "Ctrl-H|Command-Option-F": function(sb) {
         if (sb.editor.getReadOnly())
