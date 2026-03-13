@@ -89,7 +89,9 @@ module.exports = {
     "test: useStrictCSP": function() {
         ace.config.set("useStrictCSP", undefined);
         function getStyleNode() {
-            return document.getElementById("test.css");
+            return document.adoptedStyleSheets ?
+                document.adoptedStyleSheets.find(sheet => sheet.$id === "test.css") :
+                document.getElementById("test.css");
         }
         assert.ok(!getStyleNode());
         dom.importCssString("test{}", "test.css", false);
@@ -170,6 +172,26 @@ module.exports = {
         var editor = ace.edit(el);
         assert.equal(editor.container, el);
         editor.destroy();
+    },
+    "test: use adoptedStyleSheets": function() {
+        dom.$resetCssModeForTests();
+        var div = document.createElement("div");
+        div.adoptedStyleSheets = [];
+        div.getRootNode = function() {
+            return div;
+        };
+        if (!window.CSSStyleSheet) {
+            window.CSSStyleSheet = function() {
+                this.cssRules = [];
+                this.replaceSync = function() {};
+            };
+        }
+
+        var editor = ace.edit(div);
+        console.log(div.adoptedStyleSheets);
+
+        editor.destroy();
+        dom.$resetCssModeForTests();
     }
 };
 
