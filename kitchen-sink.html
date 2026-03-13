@@ -58,10 +58,12 @@
     var useLib = /lib=1/.test(location.search);
     var paths = useLib ? {
       ace: "lib/ace",
-      demo: "demo/kitchen-sink"
+      demo: "demo/kitchen-sink",
+      "php-parser": "node_modules/php-parser/dist/php-parser"
     } : {
       ace: "src",
       demo: "demo/kitchen-sink",
+      "php-parser": "node_modules/php-parser/dist/php-parser",
       "ace/worker/worker_client": "lib/ace/worker/worker_client_v2",
       "ace/worker": "lib/ace/worker",
     };
