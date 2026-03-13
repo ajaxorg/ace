@@ -456,14 +456,20 @@ var PgsqlHighlightRules = function() {
                 token : "comment", // multi-line comment
                 regex : "\\/\\*",
                 next : "comment"
-            },{
+            }, {
                 token : "keyword.statementBegin",
                 regex : "[a-zA-Z]+", // Could enumerate starting keywords but this allows things to work when new statements are added.
                 next : "statement"
-            },{
+            }, {
                 token : "support.buildin", // psql directive
                 regex : "^\\\\[\\S]+.*$"
-            }
+            }, {
+                token : "paren.lparen",
+                regex : "[\\(]"
+            }, {
+                token : "paren.rparen",
+                regex : "[\\)]"
+            }, 
         ],
 
         "statement" : [{

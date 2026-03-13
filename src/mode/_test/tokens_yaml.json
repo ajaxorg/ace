@@ -50,7 +50,8 @@
   ["keyword",":"],
   ["text","   Water Bucket "],
   ["paren.lparen","("],
-  ["text","Filled)"]
+  ["text","Filled"],
+  ["paren.rparen",")"]
 ],[
    "start",
   ["meta.tag","      price"],

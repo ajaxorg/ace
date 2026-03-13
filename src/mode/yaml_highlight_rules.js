@@ -84,7 +84,7 @@ var YamlHighlightRules = function() {
                 regex : "[\\])}]"
             }, {
                 token : "text",
-                regex : /[^\s,:\[\]\{\}]+/
+                regex : /[^\s,:\[\]\{\}()]+/
             }
         ],
         "mlStringPre" : [

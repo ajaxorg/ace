@@ -149,6 +149,11 @@ function checkModes() {
             editor.execCommand("insertstring", "(");
             if (editor.getValue() != "(())")
                 die("(()) not paired in " + modeName);
+            editor.execCommand("insertstring", "a");
+            editor.execCommand("insertstring", ")");
+            editor.execCommand("insertstring", ")");
+            if (editor.getValue() != "((a))")
+                die("Brackets not working in " + modeName, editor.getValue());
         }
     }
 
