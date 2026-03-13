@@ -32,39 +32,18 @@
   ["identifier","test"],
   ["punctuation.operator",":"],
   ["text"," "],
-  [
-    "comment.doc",
-    "/**"
-  ],
-  [
-    "comment.doc.body",
-    "tokenize doc"
-  ],
-  [
-    "comment.doc",
-    "*/"
-  ],
+  ["comment.doc","/**"],
+  ["comment.doc.body","tokenize doc"],
+  ["comment.doc","*/"],
   ["text"," "],
   ["identifier","comment"]
 ],[
    "no_regex",
-  [
-    "comment.doc",
-    "/**"
-  ],
-  [
-    "comment.doc.body",
-    "tokenize doc comment with "
-  ],
+  ["comment.doc","/**"],
+  ["comment.doc.body","tokenize doc comment with "],
   ["comment.doc.tag","@tag"],
-  [
-    "comment.doc.body",
-    " {}"
-  ],
-  [
-    "comment.doc",
-    "*/"
-  ]
+  ["comment.doc.body"," {}"],
+  ["comment.doc","*/"]
 ],[
    "no_regex",
   ["comment","//test: tokenize parens"]
@@ -358,32 +337,14 @@
 ],[
    "no_regex",
   ["text"," "],
-  [
-    "comment.doc",
-    "/**"
-  ],
-  [
-    "comment.doc.body",
-    "*********************************"
-  ],
-  [
-    "comment.doc",
-    "*/"
-  ]
+  ["comment.doc","/**"],
+  ["comment.doc.body","*********************************"],
+  ["comment.doc","*/"]
 ],[
    "no_regex",
-  [
-    "comment.doc",
-    "/**"
-  ],
-  [
-    "comment.doc.body",
-    " total mess, tricky to highlight*"
-  ],
-  [
-    "comment.doc",
-    "*/"
-  ]
+  ["comment.doc","/**"],
+  ["comment.doc.body"," total mess, tricky to highlight*"],
+  ["comment.doc","*/"]
 ],[
    "no_regex"
 ],[
@@ -400,20 +361,11 @@
   ["comment.doc","/**"]
 ],[
    "doc-start",
-  [
-    "comment.doc.body",
-    "\t * docComment"
-  ]
+  ["comment.doc.body","\t * docComment"]
 ],[
    "no_regex",
-  [
-    "comment.doc.body",
-    "\t *"
-  ],
-  [
-    "comment.doc",
-    "*/"
-  ]
+  ["comment.doc.body","\t *"],
+  ["comment.doc","*/"]
 ],[
    "no_regex",
   ["text","\t"],
@@ -540,20 +492,11 @@
   ["comment.doc","/**"]
 ],[
    "doc-start",
-  [
-    "comment.doc.body",
-    " *doc"
-  ]
+  ["comment.doc.body"," *doc"]
 ],[
    "no_regex",
-  [
-    "comment.doc.body",
-    " "
-  ],
-  [
-    "comment.doc",
-    "*/"
-  ]
+  ["comment.doc.body"," "],
+  ["comment.doc","*/"]
 ],[
    "no_regex"
 ],[
@@ -1525,4 +1468,37 @@
   ["paren.rparen","}"]
 ],[
    "no_regex"
+],[
+   "no_regex"
+],[
+   "no_regex",
+  ["comment","//all should be constant.numeric"]
+],[
+   "no_regex",
+  ["constant.numeric","1_000_000_000_000"]
+],[
+   "no_regex",
+  ["constant.numeric","1_050.95"]
+],[
+   "no_regex",
+  ["constant.numeric","0b1010_0001_1000_0101"]
+],[
+   "no_regex",
+  ["constant.numeric","0o2_2_5_6"]
+],[
+   "no_regex",
+  ["constant.numeric","0xA0_B0_C0"]
+],[
+   "no_regex",
+  ["constant.numeric","1_000_000_000_000_000_000_000"],
+  ["identifier","n"]
+],[
+   "no_regex",
+  ["constant.numeric","1.0_1322323_33"]
+],[
+   "no_regex",
+  ["constant.numeric","1."]
+],[
+   "no_regex",
+  ["constant.numeric","0.4_3223_32"]
 ]]
