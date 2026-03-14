@@ -1,10 +1,5 @@
 "use strict";
 
-const isNodeEnvironment = require("../test/util").isNodeEnvironment;
-if (!isNodeEnvironment()) {
-    require("amd-loader");
-}
-
 const assert = require("../test/assertions");
 const tokenize = require("./simple_tokenizer").tokenize;
 
