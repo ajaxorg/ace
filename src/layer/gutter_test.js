@@ -1,11 +1,10 @@
+"use strict";
+
 if (typeof process !== "undefined") {
-    require("amd-loader");
     require("../test/mockdom");
 }
 
 var keys = require("../lib/keys");
-
-("use strict");
 
 require("../multi_select");
 require("../theme/textmate");
@@ -215,6 +214,4 @@ module.exports = {
     }
 };
 
-if (typeof module !== "undefined" && module === require.main) {
-    require("asyncjs").test.testcase(module.exports).exec();
-}
+require("../test/run")(module);
