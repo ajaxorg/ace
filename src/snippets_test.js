@@ -1,5 +1,4 @@
 if (typeof process !== "undefined") {
-    require("amd-loader");
     require("./test/mockdom");
 }
 
@@ -17,9 +16,8 @@ var config = require("./config");
 var loadModule = config.loadModule;
 
 module.exports = {
-    setUp : function(next) {
+    setUp : function() {
         this.editor = new Editor(new MockRenderer());
-        next();
     },
     tearDown: function() {
         config.loadModule = loadModule;
@@ -401,6 +399,4 @@ module.exports = {
 };
 
 
-if (typeof module !== "undefined" && module === require.main) {
-    require("asyncjs").test.testcase(module.exports).exec();
-}
+require("./test/run")(module);

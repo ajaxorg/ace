@@ -14,7 +14,7 @@ var editor;
 var session1, session2;
 
 module.exports = {
-    setUp: function(next) {
+    setUp: function() {
         var value = "Hello empty world\n"
             + "This is a second line"
             + "\n".repeat(100)
@@ -28,8 +28,6 @@ module.exports = {
         editor.container.style.height = "200px";
         editor.container.style.width = "300px";
         dom.importCssString('.ace_tooltip-marker_test { position: absolute; background: rgba(255, 0, 0, 0.3); }', 'marker_group_test');
-
-        next();
     },
    "test: should show and update markers": function() {
         editor.resize(true);
@@ -153,6 +151,4 @@ module.exports = {
     }
 };
 
-if (typeof module !== "undefined" && module === require.main) {
-    require("asyncjs").test.testcase(module.exports).exec();
-}
+require("./test/run")(module);

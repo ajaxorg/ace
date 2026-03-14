@@ -1,7 +1,3 @@
-if (typeof process !== "undefined") {
-     require("amd-loader");
- }
-
 "use strict";
 
 var EditSession = require("./edit_session").EditSession;
@@ -175,6 +171,4 @@ module.exports = {
 };
 
 
-if (typeof module !== "undefined" && module === require.main) {
-    require("asyncjs").test.testcase(module.exports).exec();
-}
+require("./test/run")(module);

@@ -1,5 +1,4 @@
 if (typeof process !== "undefined") {
-    require("amd-loader");
     require("./test/mockdom");
 }
 
@@ -42,12 +41,11 @@ function callHighlighterUpdate(session, firstRow, lastRow) {
 }
 
 module.exports = {
-    setUp: function(next) {
+    setUp: function() {
         this.session = new EditSession(lipsum);
         this.editor = new Editor(new MockRenderer(), this.session);
         this.selection = this.session.getSelection();
         this.search = this.editor.$search;
-        next();
     },
 
     "test: highlight selected words by default": function() {
@@ -185,6 +183,4 @@ module.exports = {
 };
 
 
-if (typeof module !== "undefined" && module === require.main) {
-    require("asyncjs").test.testcase(module.exports).exec();
-}
+require("./test/run")(module);
