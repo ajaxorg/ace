@@ -435,13 +435,14 @@ class BaseDiffView {
      */
     $initWidgets(editor) {
         var session = editor.session;
+        if (!session) return;
         if (!session.widgetManager) {
             session.widgetManager = new LineWidgets(session);
             session.widgetManager.attach(editor);
         }
-        editor.session.lineWidgets = [];
-        editor.session.widgetManager.lineWidgets = [];
-        editor.session.$resetRowCache(0);
+        session.lineWidgets = [];
+        session.widgetManager.lineWidgets = [];
+        session.$resetRowCache(0);
     }
 
     /**
@@ -598,7 +599,7 @@ class BaseDiffView {
         if (this.savedOptionsB &&this.savedOptionsB.customScrollbar) {
             this.$resetDecorators(this.editorB.renderer);
         }
-        
+        clearTimeout(this.$onInputTimer);
     }
 
     $removeLineWidgets(session) {
