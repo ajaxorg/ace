@@ -28,7 +28,7 @@ function modeList() {
 function checkModes() {
     var snippets = {};
     modeList().forEach(function(modeName, i) {
-        console.log(padNumber(i+1, 3) + ") check: \u001b[33m" + modeName + "\u001b[0m");
+        silent || console.log(padNumber(i+1, 3) + ") check: \u001b[33m" + modeName + "\u001b[0m");
         try {
             var Mode = require("../" + modeName).Mode;
         } catch(e) {
@@ -145,7 +145,7 @@ function checkModes() {
             editor.setSession(session);
             editor.execCommand("insertstring", "(");
             if (editor.getValue() != "()")
-                return console.log("() not paired in " + modeName);
+                return silent || console.log("() not paired in " + modeName);
             editor.execCommand("insertstring", "(");
             if (editor.getValue() != "(())")
                 die("(()) not paired in " + modeName);
@@ -211,7 +211,7 @@ function generateTestData(names, force) {
             console.warn("Can't load mode :" + modeName, p, e);
             return;
         }
-        console.log(modeName);
+        silent || console.log(modeName);
         var tokenizer = new Mode().getTokenizer();
 
         var state = "start";
@@ -247,10 +247,10 @@ function test(startAt) {
     for (var i = Math.max(0, startAt||0); i < modes.length; i++)
         testMode(modes[i], i);
 
-    console.log("\u001b[32m" + "all ok" + "\u001b[0m");
+    silent || console.log("\u001b[32m" + "all ok" + "\u001b[0m");
 }
 function testMode(modeName, i) {
-    console.log(padNumber(i+1, 3) + ") testing: \u001b[33m" + modeName + "\u001b[0m");
+    silent || console.log(padNumber(i+1, 3) + ") testing: \u001b[33m" + modeName + "\u001b[0m");
 
     var text = fs.readFileSync(cwd + "tokens_" + modeName + ".json", "utf8");
     var data = JSON.parse(text);
@@ -344,9 +344,22 @@ function checkBacktracking(tokenizer) {
 }
 
 // cli
+var silent = false;
 var arg = process.argv[2];
 var RECHECK = process.argv.indexOf("--recheck") !== -1;
-if (!arg) {
+if (global.describe && global.it) {
+    silent = true;
+    global.describe("check modes", function() {
+        if (this.timeout) this.timeout(20000);
+        global.it("should check modes", function() {
+            checkModes();
+        });
+        global.it("should test modes", function() {
+            test();
+        });
+    });
+}
+else if (!arg) {
     test();
     checkModes();
 } else if (/--?g(en)?/.test(arg))

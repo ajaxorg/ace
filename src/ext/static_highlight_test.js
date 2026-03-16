@@ -12,11 +12,18 @@ var config = require("../config");
 module.exports = {
     timeout: 10000,
 
-    "test loading in node": function() {
-        require("../test/mockdom").unload();
-        if (typeof process != "undefined")
-            assert.equal(typeof window, "undefined");
-        require("../ace");
+    "test loading in node": function(done) {
+        if (typeof process === "undefined") {
+            return done();
+        }
+        var req = require;
+        req("child_process").execFile(process.execPath, ["-p", "require('../ace').version"], {
+            cwd: __dirname
+        }, function(err, stdout, stderr) {
+            assert.ok(!err, "Failed to load ace in node: " + err);
+            assert.equal(stdout.trim(), config.version);
+            done();
+        });
     },
 
     "test simple snippet": function() {
