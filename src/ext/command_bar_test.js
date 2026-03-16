@@ -585,7 +585,8 @@ module.exports = {
         tooltipVisibilityCheck(true);
         commandBarTooltip.detach();
     },
-    "test: does not display if the tooltip does not fit into the screen": function() {
+    "test: does not display if the tooltip does not fit into the screen": async function() {
+        await lang.sleep(0);
         createTooltip();
 
         var testString = "a".repeat(100) +

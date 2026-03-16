@@ -481,6 +481,8 @@ module.exports = {
         done();
     },
     "test: scroll cursor into view": function() {
+        editor.renderer.$loop._flush();
+        
         function X(n) {
             return "X".repeat(n);
         }

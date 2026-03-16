@@ -50,6 +50,8 @@ module.exports = {
         editor.setOptions({
             customScrollbar: true
         });
+        // TODO remove this when onresize doesn't recreate custom scrollbar
+        renderer.$loop._flush();
     },
     tearDown: function () {
         editor && editor.destroy();
