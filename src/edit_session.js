@@ -37,7 +37,7 @@ class EditSession {
     /**
      * Sets up a new `EditSession` and associates it with the given `Document` and `Mode`.
      * @param {Document | String} [text] [If `text` is a `Document`, it associates the `EditSession` with it. Otherwise, a new `Document` is created, with the initial text]{: #textParam}
-     * @param {SyntaxMode} [mode] [The initial language mode to use for the document]{: #modeParam}
+     * @param {SyntaxMode | string} [mode] [The initial language mode to use for the document]{: #modeParam}
      **/
     constructor(text, mode) {
         /**@type {Document}*/this.doc;

@@ -245,7 +245,7 @@ declare module "ace-code" {
             foldStyle: "markbegin" | "markbeginend" | "manual";
             overwrite: boolean;
             newLineMode: NewLineMode;
-            mode: string;
+            mode: SyntaxMode | string;
         }
         interface VirtualRendererOptions {
             animatedScroll: boolean;
