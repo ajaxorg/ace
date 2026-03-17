@@ -176,3 +176,15 @@ func(a,b,innerCall(c,d), () => {})
 async (param1, param2, ...paramN) => {
   statements
 }
+
+
+//all should be constant.numeric
+1_000_000_000_000
+1_050.95
+0b1010_0001_1000_0101
+0o2_2_5_6
+0xA0_B0_C0
+1_000_000_000_000_000_000_000n
+1.0_1322323_33
+1.
+0.4_3223_32
