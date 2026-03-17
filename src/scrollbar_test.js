@@ -1,5 +1,4 @@
 if (typeof process !== "undefined") {
-    require("amd-loader");
     require("./test/mockdom");
 }
 
@@ -51,6 +50,8 @@ module.exports = {
         editor.setOptions({
             customScrollbar: true
         });
+        // TODO remove this when onresize doesn't recreate custom scrollbar
+        renderer.$loop._flush();
     },
     tearDown: function () {
         editor && editor.destroy();
@@ -135,6 +136,4 @@ module.exports = {
 };
 
 
-if (typeof module !== "undefined" && module === require.main) {
-    require("asyncjs").test.testcase(module.exports).exec();
-}
+require("./test/run")(module);

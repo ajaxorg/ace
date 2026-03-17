@@ -503,6 +503,4 @@ function assertDecoratorsPlacement(editor, inlineDiff) {
     assert.equal(findPointFillStyle(imgB, yB), decoA.colors.light.insert);
 }
 
-if (typeof module !== "undefined" && module === require.main) {
-    require("asyncjs").test.testcase(module.exports).exec();
-}
+require("../../test/run")(module);

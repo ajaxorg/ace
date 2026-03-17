@@ -1,11 +1,10 @@
+"use strict";
+
 if (typeof process !== "undefined") {
-    require("amd-loader");
     require("../test/mockdom");
 }
 
 var keys = require("../lib/keys");
-
-("use strict");
 
 require("../multi_select");
 require("../theme/textmate");
@@ -24,7 +23,7 @@ function emit(keyCode) {
 }
 
 module.exports = {
-    setUp: function (done) {
+    setUp: function() {
         this.editor = new Editor(new VirtualRenderer());
         this.editor.container.style.position = "absolute";
         this.editor.container.style.height = "500px";
@@ -32,7 +31,6 @@ module.exports = {
         this.editor.container.style.left = "50px";
         this.editor.container.style.top = "10px";
         document.body.appendChild(this.editor.container);
-        done();
     },
     "test: custom icon replaces the fold icon sucessfully": async function (done) {
         var editor = this.editor;
@@ -216,6 +214,4 @@ module.exports = {
     }
 };
 
-if (typeof module !== "undefined" && module === require.main) {
-    require("asyncjs").test.testcase(module.exports).exec();
-}
+require("../test/run")(module);

@@ -17,6 +17,29 @@
     #log pre.error {
         color: black;
     }
+    #log  .skipped {
+        color: lightblue;
+    }
+    #sidebar {
+        height: calc(100vh - 30px);
+        overflow: auto;
+        position: absolute;
+        right: 10px;
+        top: 10px
+    }
+
+    #log {
+        height: calc(100vh - 30px);
+        overflow: auto;
+        position: absolute;
+        left:10px;
+
+        right:30em;
+        top:10px;
+    }
+    body {
+        overflow: scroll;
+    }
   </style>
 </head>
 <body>
@@ -30,16 +53,12 @@
             ace: new URL("../", location).toString()
         },
         packages : [{
-            name: "asyncjs",
-            location: "./asyncjs",
-            main: "index"
-        }, {
             name: "assert",
             location: "./asyncjs",
             main: "assert"
         }]
     });
-    define("amd-loader", {})
+    define("asyncjs", {})
     require(["ace/test/all_browser"])
 </script>
 

@@ -157,7 +157,7 @@
     // allow async/await in tests only
     overrides: [
         {
-            files: ["**/*_test.js"],
+            files: ["**/*_test.js", "src/test/*.js"],
             parserOptions: {
                 ecmaVersion: 2022, 
             },

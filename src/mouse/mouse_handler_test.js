@@ -1,5 +1,4 @@
 if (typeof process !== "undefined") {
-    require("amd-loader");
     require("../test/mockdom");
 }
 
@@ -10,7 +9,6 @@ require("../theme/textmate");
 var Editor = require("../editor").Editor;
 var Mode = require("../mode/java").Mode;
 var VirtualRenderer = require("../virtual_renderer").VirtualRenderer;
-const { test } = require("asyncjs");
 var assert = require("../test/assertions");
 var lang = require("../lib/lang");
 var MouseEvent = function(type, opts){
@@ -50,7 +48,7 @@ var editor;
 
 module.exports = {
 
-    setUp : function(next) {
+    setUp : function() {
         this.editor = new Editor(new VirtualRenderer());
         this.editor.session.setValue("Juhu kinners!");
         this.editor.container.style.position = "absolute";
@@ -60,7 +58,6 @@ module.exports = {
         this.editor.container.style.top = "10px";
         document.body.appendChild(this.editor.container);
         editor = this.editor;
-        next();
     },
 
     "test: double tap. issue #956" : function() {
@@ -311,6 +308,4 @@ module.exports = {
 };
 
 
-if (typeof module !== "undefined" && module === require.main) {
-    require("asyncjs").test.testcase(module.exports).exec();
-}
+require("../test/run")(module);

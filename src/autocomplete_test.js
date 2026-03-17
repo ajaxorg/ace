@@ -495,7 +495,7 @@ module.exports = {
 
         done();
     },
-    "test: empty message if no suggestions available": function(done) {
+    "test: empty message if no suggestions available": function() {
         editor = initEditor("");
         var emptyMessageText = "No suggestions.";
         var autocomplete = Autocomplete.for(editor);
@@ -511,10 +511,8 @@ module.exports = {
 
         user.type("Return");
         assert.equal(editor.completer.popup.isOpen, false);
-
-        done();
     },
-    "test: no empty message class if suggestions available": function(done) {
+    "test: no empty message class if suggestions available": function() {
         editor = initEditor("");
         var emptyMessageText = "No suggestions.";
         var autocomplete = Autocomplete.for(editor);
@@ -550,8 +548,6 @@ module.exports = {
         assert.equal(editor.completer.popup.isOpen, true);
         assert.equal(editor.completer.popup.data[0].caption, "append");
         assert.ok(!editor.completer.popup.renderer.container.classList.contains("ace_empty-message"));
-
-        done();
     },
     "test: liveAutocompleteDelay": async function(done) {
         editor = initEditor("hello world ");
@@ -663,7 +659,7 @@ module.exports = {
         editor.completer.popup.renderer.$loop._flush();
         assert.equal(completer.popup.getRow(), 1);
     },
-    "test: selection should not follow hovermarker if setSelectOnHover not set": function(done) {
+    "test: selection should not follow hovermarker if setSelectOnHover not set": function() {
         editor = initEditor("hello world\n");
 
         editor.completers = [
@@ -703,10 +699,8 @@ module.exports = {
         // Selected row should not follow mouse.
         editor.completer.popup.renderer.$loop._flush();
         assert.equal(completer.popup.getRow(), 0);
-
-        done();
     },
-    "test: should respect hideInlinePreview": function(done) {
+    "test: should respect hideInlinePreview": function() {
         editor = initEditor("hello world\n");
 
         editor.completers = [
@@ -771,9 +765,6 @@ module.exports = {
         // Row 2, should show inline preview.
         assert.equal(completer.popup.getRow(), 2);
         assert.strictEqual(inline.isOpen(), true);
-
-
-        done();
     },
     "test: should maintain selection on fast completer item when slow completer results come in": async function(done) {
         editor = initEditor("hello world\n");
@@ -935,7 +926,7 @@ module.exports = {
         assert.equal(completer.popup.data.length, 1);
     },
 
-    "test: should add inline preview content to aria-describedby": function(done) {
+    "test: should add inline preview content to aria-describedby": function() {
         editor = initEditor("fun");
 
         editor.completers = [
@@ -973,8 +964,6 @@ module.exports = {
         assert.strictEqual(document.getElementById("ace-inline-screenreader-line-0").textContent,"function");
         assert.strictEqual(document.getElementById("ace-inline-screenreader-line-1").textContent,"that does something");
         assert.strictEqual(document.getElementById("ace-inline-screenreader-line-2").textContent,"cool");
-
-        done();
     },
     "test: update popup position only on mouse out when inline enabled and setSelectOnHover true": function() {
         editor = initEditor("fun");
@@ -1144,7 +1133,7 @@ module.exports = {
             return completer.popup.renderer.container.classList.contains("ace_loading");
         }
     },
-    "test: when completion gets inserted and call the onInsert method": function (done) {
+    "test: when completion gets inserted and call the onInsert method": function() {
         var isInserted = false;
         editor = initEditor("hello world");
         var completer = {
@@ -1179,10 +1168,8 @@ module.exports = {
         user.type("Return");
 
         assert.ok(isInserted);
-
-        done();
     },
-    "test: when completions get shown, call the onSeen method": function (done) {
+    "test: when completions get shown, call the onSeen method": function() {
         var seen = [false, false, false];
         editor = initEditor("hello world");
         var completer = {
@@ -1221,9 +1208,8 @@ module.exports = {
         assert.equal(editor.completer.popup.isOpen, true);
         assert.equal(editor.completer.popup.getRow(), 0);
         assert.deepEqual(seen, [true, false, false]);
-        done();
     },
-    "test: when inline completions get shown, call the onSeen method": function (done) {
+    "test: when inline completions get shown, call the onSeen method": function() {
         var seen = [false, false, false];
         var calledDouble = false;
         editor = initEditor("hello world");
@@ -1263,7 +1249,6 @@ module.exports = {
         assert.equal(editor.completer.popup.getRow(), 0);
         assert.deepEqual(seen, [true, true, true]);
         assert.ok(!calledDouble);
-        done();
     },
     "test: if there is very long ghost text, popup should be rendered at the bottom of the editor container": async function(done) {
         editor = initEditor("hello world\n");
@@ -1346,7 +1331,7 @@ module.exports = {
 
         done();
     },
-    "test: should not show loading state when empty completer array is provided": function(done) {
+    "test: should not show loading state when empty completer array is provided": function() {
         editor = initEditor("");
         editor.completers = [];
         var completer = Autocomplete.for(editor);
@@ -1356,8 +1341,6 @@ module.exports = {
 
         // Tooltip should not be open
         assert.ok(!(completer.popup && completer.popup.isOpen));
-
-        done();
     },
     "test: should update inline preview when typing when it's the only item in the popup": async function(done) {
         editor = initEditor("");
@@ -1507,7 +1490,7 @@ module.exports = {
         assert.equal(Autocomplete.$sharedInstance == undefined, false);
         config.set("sharedPopups", false);
     },
-    "test: changing completion should render scrollbars correctly": async function (done) {
+    "test: changing completion should render scrollbars correctly": async function(done) {
         editor = initEditor("document");
         var newLineCharacter = editor.session.doc.getNewLineCharacter();
         var initialCompletions = [
@@ -1649,6 +1632,4 @@ module.exports = {
     },
 };
 
-if (typeof module !== "undefined" && module === require.main) {
-    require("asyncjs").test.testcase(module.exports).exec();
-}
+require("./test/run")(module);

@@ -1,5 +1,4 @@
 if (typeof process !== "undefined") {
-    require("amd-loader");
     require("./test/mockdom");
 }
 
@@ -17,13 +16,11 @@ var lang = require("./lib/lang");
 
 module.exports = {
 
-    setUp : function(next) {
+    setUp : function() {
         this.session1 = new EditSession(["abc", "def"]);
         this.session2 = new EditSession(["ghi", "jkl"]);
         
-        
         this.editor = new Editor(new MockRenderer());
-        next();
     },
 
     "test: change document" : function() {
@@ -151,6 +148,4 @@ module.exports = {
 };
 
 
-if (typeof module !== "undefined" && module === require.main) {
-    require("asyncjs").test.testcase(module.exports).exec();
-}
+require("./test/run")(module);

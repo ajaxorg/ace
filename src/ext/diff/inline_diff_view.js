@@ -140,7 +140,7 @@ class InlineDiffView extends BaseDiffView {
 
     selectEditor(editor) {
         if (editor == this.activeEditor) {
-            this.otherEditor.selection.clearSelection();
+            this.otherEditor.selection && this.otherEditor.selection.clearSelection();
             this.activeEditor.textInput.setHost(this.activeEditor);
             this.activeEditor.setStyle("ace_diff_other", false);
             this.cursorLayer.element.remove();
@@ -153,7 +153,7 @@ class InlineDiffView extends BaseDiffView {
             this.activeEditor.renderer.$markerBack.element.classList.remove("ace_hidden_marker-layer");
             this.removeBracketHighlight(this.otherEditor); 
         } else {
-            this.activeEditor.selection.clearSelection();
+            this.activeEditor.selection && this.activeEditor.selection.clearSelection();
             this.activeEditor.textInput.setHost(this.otherEditor);
             this.activeEditor.setStyle("ace_diff_other");
             this.activeEditor.renderer.$cursorLayer.element.parentNode.appendChild(
@@ -174,7 +174,7 @@ class InlineDiffView extends BaseDiffView {
 
     removeBracketHighlight(editor) {
         var session = editor.session;
-        if (session.$bracketHighlight) {
+        if (session && session.$bracketHighlight) {
             session.$bracketHighlight.markerIds.forEach(function(id) {
                 session.removeMarker(id);
             });
@@ -312,6 +312,7 @@ class InlineDiffView extends BaseDiffView {
     }
 
     $detachSessionHandlers(editor, marker) {
+        if (!editor.session) return;
         editor.session.removeMarker(marker.id);
         editor.selection.off("changeCursor", this.onSelect);
         editor.selection.off("changeSelection", this.onSelect);

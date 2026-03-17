@@ -1,115 +1,36 @@
 "use strict";
 
 require("ace/lib/fixoldbrowsers");
+
 var mockdom = require("../test/mockdom");
-var AsyncTest = require("asyncjs").test;
-var async = require("asyncjs");
 var buildDom = require("../lib/dom").buildDom;
 var escapeRegExp = require("ace/lib/lang").escapeRegExp;
 
 var useMockdom = location.search.indexOf("mock=1") != -1;
 var forceShow = location.search.indexOf("show=1") != -1;
 
-var passed = 0;
-var failed = 0;
-var log = document.getElementById("log");
+var documentElement = document.documentElement;
+var log = buildDom(["div", {id: "log"}], documentElement);
 
+var undef = window.requirejs.undef;
 // change buildDom to use real document in mockdom 
 var createElement = document.createElement.bind(document);
 var createTextNode = document.createTextNode.bind(document);
 var buildDom = eval("(" + buildDom.toString().replace(/document\./g, "") + ")");
 
-var testNames = [
-    "ace/ace_test",
-    "ace/anchor_test",
-    "ace/autocomplete/inline_test",
-    "ace/autocomplete/popup_test",
-    "ace/autocomplete_test",
-    "ace/background_tokenizer_test",
-    "ace/commands/command_manager_test",
-    "ace/config_test",
-    "ace/document_test",
-    "ace/edit_session_test",
-    "ace/editor_change_document_test",
-    "ace/editor_commands_test",
-    "ace/editor_highlight_selected_word_test",
-    "ace/editor_navigation_test",
-    "ace/editor_options_test",
-    "ace/editor_text_edit_test",
-    "ace/ext/beautify_test",
-    "ace/ext/code_lens_test",
-    "ace/ext/command_bar_test",
-    "ace/ext/diff/diff_test",
-    "ace/ext/emmet_test",
-    "ace/ext/error_marker_test",
-    "ace/ext/hardwrap_test",
-    "ace/ext/inline_autocomplete_test",
-    "ace/ext/simple_tokenizer_test",
-    "ace/ext/static_highlight_test",
-    "ace/ext/whitespace_test",
-    "ace/incremental_search_test",
-    "ace/keyboard/emacs_test",
-    "ace/keyboard/gutter_handler_test",
-    "ace/keyboard/keybinding_test",
-    "ace/keyboard/sublime_test",
-    "ace/keyboard/textinput_test",
-    "ace/keyboard/vim_ace_test",
-    "ace/keyboard/vim_test",
-    "ace/layer/gutter_test",
-    "ace/layer/text_test",
-    "ace/lib/event_emitter_test",
-    "ace/marker_group_test",
-    "ace/mode/_test/highlight_rules_test",
-    "ace/mode/ada_test",
-    "ace/mode/behaviour/behaviour_test",
-    "ace/mode/coldfusion_test",
-    "ace/mode/css_test",
-    "ace/mode/folding/basic_test",
-    "ace/mode/folding/coffee_test",
-    "ace/mode/folding/cstyle_test",
-    "ace/mode/folding/drools_test",
-    "ace/mode/folding/fold_mode_test",
-    "ace/mode/folding/html_test",
-    "ace/mode/folding/javascript_test",
-    "ace/mode/folding/latex_test",
-    "ace/mode/folding/lua_test",
-    "ace/mode/folding/php_test",
-    "ace/mode/folding/pythonic_test",
-    "ace/mode/folding/ruby_test",
-    "ace/mode/folding/vbscript_test",
-    "ace/mode/folding/xml_test",
-    "ace/mode/folding/yaml_test",
-    "ace/mode/html_test",
-    "ace/mode/javascript_test",
-    "ace/mode/logiql_test",
-    "ace/mode/odin_test",
-    "ace/mode/php_test",
-    "ace/mode/plain_text_test",
-    "ace/mode/python_test",
-    "ace/mode/ruby_test",
-    "ace/mode/text_test",
-    "ace/mode/vbscript_test",
-    "ace/mode/xml_test",
-    "ace/mouse/default_gutter_handler_test",
-    "ace/mouse/mouse_handler_test",
-    "ace/multi_select_test",
-    "ace/occur_test",
-    "ace/placeholder_test",
-    "ace/range_list_test",
-    "ace/range_test",
-    "ace/scrollbar_test",
-    "ace/search_test",
-    "ace/selection_test",
-    "ace/snippets_test",
-    "ace/test/mockdom_test",
-    "ace/token_iterator_test",
-    "ace/tokenizer_test",
-    "ace/tooltip_test",
-    "ace/undomanager_test",
-    "ace/virtual_renderer_test"
-];
+window.onerror = function name(...params) {
+};
+window.addEventListener('unhandledrejection', (event) => {
+    currentStep.error = event.reason instanceof Error ? event.reason : new Error("Unhandled promise rejection: " + event.reason);
+    if (!currentStep.running) {
+        resume();
+    }
+});
+
+var testNames = require("./test_list").filter(name => !/_test\/highlight_rules_test/.test(name));
 
 var html = [
+    ["div", {ref: "summary"}],
     useMockdom
         ? ["a", {href: normalizeHref(location.search.replace('mock=1', '')) + location.hash}, "do not use mockdom"]
         : ["a", {href: normalizeHref(location.search + '&mock=1') + location.hash}, "use mockdom"],
@@ -124,18 +45,24 @@ var html = [
 for (var i in testNames) {    
     html.push(testLink(testNames[i]), ["br"]);
 }
-
+function testHref(suiteName, name) {
+    var href = '?' + suiteName + (useMockdom ? "&mock=1" : "");
+    if (name) href += "#" + escapeRegExp(name.replace(/^test\s*/, ""));
+    return href;
+}
 function testLink(name) {
-    return ["a", {href:'?' + name + (useMockdom ? "&mock=1" : "")}, name.replace(/^ace\//, "")];
+    return ["a", {href: testHref(name)}, name.replace(/^ace\//, "") + ".js"];
 }
 function normalizeHref(str) {
     return str.replace(/([?&])&+/g, "$1");
 }
 
-var nav = buildDom(["div", {style: "position:absolute;right:0;top:0"}, html], document.body);
+var refs = {};
+var nav = buildDom(["div", {id: "sidebar"}, html], documentElement, refs);
 
 
 if (forceShow) {
+    // @ts-ignore
     require(["ace/virtual_renderer", "ace/test/mockrenderer"], function(real, mock) {
         var VirtualRenderer = real.VirtualRenderer;
         mock.MockRenderer = function() {
@@ -154,6 +81,7 @@ if (forceShow) {
 
 if (useMockdom) {
     mockdom.loadInBrowser(window);
+    undef("ace/lib/", true);
 }
 
 var selectedTests = [];
@@ -167,68 +95,194 @@ if (location.search) {
 var filter = decodeURIComponent(location.hash.substr(1));
 window.onhashchange = function() { location.reload(); };
 
-require(selectedTests, function() {
-    var tests = selectedTests.map(function(x) {
+var failed = 0;
+var passed = 0;
+var skipped = 0;
+var reporter = {
+    beforeEach: function(test) {
+        if (!test.name) return;
+        var isScrolled = log.scrollTop - (log.scrollHeight - log.clientHeight) > -1;
+        var messageHeader =  "[" + test.index + "/" + test.count + "]";
+        var node = buildDom(["div", {class: test.skip ? "skipped" : "waiting"}, 
+            ["a", {href: testHref(test.testSuite.href, test.name)}, messageHeader],
+            " ",
+            test.name,
+            ["span", (test.skip ? " SKIP" : " ...")],
+        ], log);
+        test.reportNode = node;
+        console.log(messageHeader + test.name);
+        if (isScrolled) log.scrollTop = log.scrollHeight;
+    },
+    afterEach: function(test) {
+        if (!log.parentElement) {
+            documentElement.appendChild(log);
+        }
+        if (!test.name) return;
+        if (test.skip) {
+            skipped++;
+            return;
+        } else if (test.passed) {
+            passed++;
+        } else {
+            failed++;
+        }
+        var isScrolled = log.scrollTop - (log.scrollHeight - log.clientHeight) > -1;
+        
+        test.reportNode.className = test.passed ? "passed" : "failed";
+        test.reportNode.lastChild.remove();
+        buildDom(["span", (test.passed ? " OK" : " FAIL") + "  " + test.time + "ms"], test.reportNode);
+        if (test.error && test.error != true)
+            buildDom(["pre", {class: "error"}, test.error + "\n" + test.error.stack.replace(/^\w*Error/, "")], log);
+
+        refs.summary.innerText = "Passed: " + passed + ", Failed: " + failed + ", Skipped: " + skipped;
+        if (isScrolled) log.scrollTop = log.scrollHeight;
+    },
+    before: function(testSuite) {
+        var isScrolled = log.scrollTop - (log.scrollHeight - log.clientHeight) > -1;
+        var counter = " [" + testSuite.index + "/" + testSuite.count + "]";
+        var href = testSuite.href;
+        buildDom(["div", {}, testLink(href), counter], log);
+        console.log(href, counter);
+        if (isScrolled) log.scrollTop = log.scrollHeight;
+    },
+    after: function(testSuite) {
+
+    },
+    done: function() {
+        var isScrolled = log.scrollTop - (log.scrollHeight - log.clientHeight) > -1;
+        if (!log.parentElement) {
+            documentElement.appendChild(log);
+        }
+        var node = buildDom(["div", {class: "summary"},
+            ["br"], "Summary:", ["br"], ["br"],
+            "Total number of tests: " + (passed + failed + skipped), ["br"],
+            (passed && [null, "Passed tests: " + passed, ["br"]]),
+            (passed && [null, "Passed tests: " + skipped, ["br"]]),
+            (failed && [null, "Failed tests: " + failed])
+        ], log);
+        console.log(node.innerText);
+        if (isScrolled) log.scrollTop = log.scrollHeight;
+    },
+    beforeStep: function(step) {
+        if (step.type == "before") {
+            reporter.before(step.testSuite);
+        } else  {
+            reporter.beforeEach(step);
+        }
+    },
+    afterStep: function(step) {
+        if (step.type == "after") {
+            reporter.after(step.testSuite);
+        } else if (step.type == "done") {
+            reporter.done();
+        } else  {
+            reporter.afterEach(step);
+        }
+    },
+};
+
+
+var currentStep;
+var waitForStepCallback;
+var watchdog;
+var steps = [];
+function resume() {
+    if (currentStep) {
+        var step = currentStep;
+        currentStep = null;
+        reporter.afterStep(step);
+    }
+    waitForStepCallback(); 
+}
+async function runSteps() {
+    watchdog = setInterval(() => {
+        if (!currentStep) return;
+        currentStep.interactiveTime = (currentStep.interactiveTime || 0) + 50;
+        if (currentStep.interactiveTime >= currentStep.timeout) {
+            if (currentStep.error == undefined)
+                currentStep.error = new Error("Source did not respond after " + (currentStep.timeout || 0) + "ms!");
+            resume();
+        }
+    }, 50);
+    while (currentStep = steps.shift()) {
+        currentStep.timeout = (currentStep.testSuite?.timeout || 3000);
+        var waitForStep = new Promise(resolve => { waitForStepCallback = resolve; });
+        setTimeout(runOne, 0);
+        await waitForStep;
+    }
+    clearInterval(watchdog);
+}
+async function runOne() {
+    var step = currentStep;
+    var doneCalled = false;
+    var done = function(error) {
+        if (doneCalled) return;
+        if (error) step.error = error;
+        step.passed = !step.error;
+        step.time = Date.now() - t;
+        doneCalled = true;
+        resume();
+    };
+    var t = Date.now();
+
+    step.passed = false;
+    reporter.beforeStep(step);
+
+    if (!step.fn) return done();
+    step.running = true;
+    try {
+        if (step.fn.length) {
+            await step.fn.call(step.testSuite, done);
+        } else {
+            await step.fn.call(step.testSuite);
+            done();
+        }
+    } finally {
+        step.time = Date.now() - t;
+        step.running = false;
+    }
+}
+
+// @ts-ignore
+require(selectedTests, async function() {
+    var testSuites = selectedTests.map(function(x) {
         var module = require(x);
         module.href = x;
         return module;
     });
 
-    async.list(tests)
-        .expand(function(test) {
-            if (filter) {
-                Object.keys(test).forEach(function(method) {
-                    if (method.match(/^>?test/) && !method.match(filter))
-                        test[method] = undefined;
-                });
-            }
-            return AsyncTest.testcase(test);
-        }, AsyncTest.TestGenerator)
-        .run()
-        .each(function(test, next) {
-            if (test.index == 1 && test.context.href) {
-                var href = test.context.href;
-                buildDom(["div", {}, testLink(href)], log);
-            }
-            
-            var messageHeader =  "[" + test.index + "/" + test.count + "]";
-            
-            var node = buildDom(["div", {class: test.passed ? "passed" : "failed"}, 
-                ["a", {href: "#" + escapeRegExp(test.name.replace(/^test\s*/, ""))}, messageHeader],
-                " ",
-                (test.suiteName ? test.suiteName + ": " : ""),
-                test.name,
-                (test.passed ? " OK" : " FAIL")
-            ], log);
-            
-            if (!test.passed) {
-                if (test.err.stack)
-                    var err = test.err.stack;
-                else
-                    var err = test.err;
+    steps = [];
+    for (var i = 0; i < testSuites.length; i++) {
+        var testSuite = testSuites[i];
+        testSuite.index = i + 1;
+        testSuite.count = testSuites.length;
 
-                console.error(node.textContent);
-                console.error(err);
-                buildDom(["pre", {class: "error"}, err + ""], node);
-            } else {
-                console.log(node.textContent);
+        var testArray = [];
+        Object.keys(testSuite).forEach(name => {
+            if (!name.match(/^>?test/))
+                return;
+            var test = {name, testSuite, fn: testSuite[name]};
+            if (filter && !test.name.match(filter)) {
+                test.skip = true;
             }
-
-            next();
-        })
-        .each(function(test) {
-            if (test.passed)
-                passed += 1;
-            else
-                failed += 1;
-        })
-        .end(function() {
-            var node = buildDom(["div", {class: "summary"},
-                ["br"], "Summary:", ["br"], ["br"],
-                "Total number of tests: " + (passed + failed), ["br"],
-                (passed && [null, "Passed tests: " + passed, ["br"]]),
-                (failed && [null, "Failed tests: " + failed])
-            ], log);
-            console.log(node.innerText);
+            testArray.push(test);
         });
+
+        if (!testArray.length) continue;
+
+        steps.push({type: "before", testSuite, fn: testSuite.setUpSuite});
+        for (var j = 0; j < testArray.length; j++) {
+            var test = testArray[j];
+            test.index = j + 1;
+            test.count = testArray.length;
+            steps.push({type: "beforeEach", testSuite, fn: testSuite.setUp});
+            steps.push(test);
+            steps.push({type: "afterEach", testSuite, fn: testSuite.tearDown});
+        } 
+        steps.push({type: "after", testSuite, fn: testSuite.tearDownSuite});
+    }
+
+    steps.push({type: "done"});
+
+    runSteps();
 });

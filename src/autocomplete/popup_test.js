@@ -1,5 +1,4 @@
 if (typeof process !== "undefined") {
-    require("amd-loader");
     require("../test/mockdom");
 }
 
@@ -58,7 +57,7 @@ var tearDown = function(done) {
 };
 
 module.exports = {
-    "test: verify width and height": function(done) {
+    "test: verify width and height": function() {
         setupPopup();
         tryShowAndRender({ top: 0, left: 0 }, lineHeight, "bottom");
         renderHeight = popup.container.offsetHeight;
@@ -66,9 +65,8 @@ module.exports = {
         assert.strictEqual(renderHeight > 0, true);
         popup.hide();
         assert.strictEqual(popup.isOpen, false);
-        done();
     },
-    "test: tryShow does not display popup if there is not enough space on the anchor side": function(done) {
+    "test: tryShow does not display popup if there is not enough space on the anchor side": function() {
         setupPopup();
         var result = tryShowAndRender({ top: notEnoughSpaceOnBottom, left: 0}, lineHeight, "bottom");
         assert.strictEqual(result, false);
@@ -76,9 +74,8 @@ module.exports = {
         result = tryShowAndRender({ top: 50, left: 0}, lineHeight, "top");
         assert.strictEqual(result, false);
         assert.strictEqual(popup.isOpen, false);
-        done();
     },
-    "test: tryShow slides popup on the X axis if there are not enough space on the right": function(done) {
+    "test: tryShow slides popup on the X axis if there are not enough space on the right": function() {
         setupPopup();
         
         var result = tryShowAndRender({ top: 0, left: notEnoughSpaceOnRight }, lineHeight, "bottom");
@@ -96,9 +93,8 @@ module.exports = {
         assert.strictEqual(Math.abs(popup.container.getBoundingClientRect().width - renderWidth) < 5, true);
         popup.hide();
         assert.strictEqual(popup.isOpen, false);
-        done();
     },
-    "test: tryShow called with forceShow resizes popup height to fit popup": function(done) {
+    "test: tryShow called with forceShow resizes popup height to fit popup": function() {
         setupPopup();
         
         var result = tryShowAndRender({ top: notEnoughSpaceOnBottom, left: 0 }, lineHeight, "bottom", true);
@@ -120,9 +116,8 @@ module.exports = {
         assert.strictEqual(Math.abs(popup.container.getBoundingClientRect().width - renderWidth) < 5, true);
         popup.hide();
         assert.strictEqual(popup.isOpen, false);
-        done();
     },
-    "test: show displays popup in all 4 corners correctly without topdownOnly specified": function(done) {
+    "test: show displays popup in all 4 corners correctly without topdownOnly specified": function() {
         setupPopup();
         popup.show({ top: 50, left: 0 }, lineHeight);
         popup.renderer.updateFull(true);
@@ -155,9 +150,8 @@ module.exports = {
         assert.ok(popup.container.getBoundingClientRect().bottom <= notEnoughSpaceOnBottom);
         popup.hide();
         assert.strictEqual(popup.container.style.display, "none");
-        done();
     },
-    "test: show displays popup in all 4 corners correctly with topdownOnly specified": function(done) {
+    "test: show displays popup in all 4 corners correctly with topdownOnly specified": function() {
         setupPopup();
         popup.show({ top: 50, left: 0 }, lineHeight, true);
         popup.renderer.updateFull(true);
@@ -190,9 +184,8 @@ module.exports = {
         assert.ok(popup.container.getBoundingClientRect().top >= notEnoughSpaceOnBottom + lineHeight);
         popup.hide();
         assert.strictEqual(popup.container.style.display, "none");
-        done();
     },
-    "test: resets popup size if space is available again": function(done) {
+    "test: resets popup size if space is available again": function() {
         setupPopup();
         popup.show({ top: notEnoughSpaceOnBottom, left: notEnoughSpaceOnRight }, lineHeight, true);
         popup.renderer.updateFull(true);
@@ -209,11 +202,8 @@ module.exports = {
         assert.ok(popup.container.getBoundingClientRect().top >= 50 + lineHeight);
         popup.hide();
         assert.strictEqual(popup.container.style.display, "none");
-        done();
     },
     tearDown: tearDown
 };
 
-if (typeof module !== "undefined" && module === require.main) {
-    require("asyncjs").test.testcase(module.exports).exec();
-}
+require("../test/run")(module);
