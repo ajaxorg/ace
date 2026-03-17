@@ -68,23 +68,63 @@ require("ace/config").defineOptions(Editor.prototype, "editor", {
 require("ace/config").defineOptions(Editor.prototype, "editor", {
     useAceLinters: {
         set: function(val) {
-            if (val && !window.languageProvider) {
-                loadLanguageProvider(editor);
+            var enabled = !!val;
+            if (enabled && !window.languageProvider) {
+                loadLanguageProvider(this);
             }
-            else if (val) {
+            else if (enabled) {
                 window.languageProvider.registerEditor(this);
             } else {
                 if (window.languageProvider) {
-                    window.languageProvider.unregisterEditor(editor, true);
+                    window.languageProvider.unregisterEditor(this, true);
+                    window.languageProvider = null;
+                }
+                if (this.getOption("useAceSpellCheck")) {
+                    this.setOption("useAceSpellCheck", false);
+                    saveOption("useAceSpellCheck", false);
+                    if (env.optionsPanel) {
+                        env.optionsPanel.editor = this;
+                        env.optionsPanel.render();
+                    }
                 }
             }
         }
     }
 });
 
+require("ace/config").defineOptions(Editor.prototype, "editor", {
+    useAceSpellCheck: {
+        set: function(val) {
+            var nextValue = !!val;
+            if (window.useAceSpellCheck === nextValue) return;
+            window.useAceSpellCheck = nextValue;
+            if (nextValue && !this.getOption("useAceLinters")) {
+                this.setOption("useAceLinters", true);
+                saveOption("useAceLinters", true);
+                if (env.optionsPanel) {
+                    env.optionsPanel.editor = this;
+                    env.optionsPanel.render();
+                }
+                return;
+            }
+            if (window.languageProvider && this.getOption("useAceLinters")) {
+                window.languageProvider.unregisterEditor(this, true);
+                window.languageProvider = null;
+                loadLanguageProvider(this);
+            }
+        },
+        get: function() {
+            return window.useAceSpellCheck !== false;
+        },
+        handlesSet: true
+    }
+});
+
 var {HoverTooltip} = require("ace/tooltip");
 var MarkerGroup = require("ace/marker_group").MarkerGroup;
 var docTooltip = new HoverTooltip();
+window.useAceSpellCheck = true;
+
 function loadLanguageProvider(editor) {
     function loadScript(cb) {
         if (define.amd) {
@@ -102,7 +142,22 @@ function loadLanguageProvider(editor) {
         }
     }
     loadScript(function(LanguageProvider) {
-        var languageProvider = LanguageProvider.fromCdn("https://mkslanc.github.io/ace-linters/build", {
+        var services = [];
+        if (window.useAceSpellCheck !== false) {
+            services.push({
+                name: "ace-spell-check",
+                className: "AceSpellCheck",
+                modes: "*",
+                script: "ace-spell-check.js",
+                cdnUrl: "https://unpkg.com/ace-spell-check@latest/build"
+            });
+        }
+
+        var languageProvider = LanguageProvider.fromCdn({
+            services: services,
+            serviceManagerCdn:"https://mkslanc.github.io/ace-linters/build",
+            includeDefaultLinters: true
+        }, {
             functionality: {
                 hover: true,
                 completion: {
@@ -492,6 +547,10 @@ optionsPanel.add({
             position: 3000,
             path: "useAceLinters"
         },
+        "Use Spell Checker": {
+            position: 3001,
+            path: "useAceSpellCheck"
+        },
         "Show whitespaces in selection": {
             position: 3100,
             path: "showWhitespacesInSelection"
@@ -547,6 +606,7 @@ for (var i in optionsPanel.options) {
         optionsPanel.setOption(i, value);
     }
 }
+optionsPanel.render();
 
 
 function synchroniseScrolling() {
