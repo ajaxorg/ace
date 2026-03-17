@@ -30,7 +30,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - run: npm i
-    - run: npm run cover-json
+    - run: npm run cover-json && mv ./coverage/coverage-final.json ./coverage/coverage.json
     - run: | 
         # eslint
         set -x;
@@ -65,7 +65,7 @@ jobs:
     - uses: codecov/codecov-action@v3
       with:
         token: d8edca4b-8e97-41e5-b54e-34c7cf3b2d47
-        file: ./coverage/coverage-final.json
+        file: ./coverage/coverage.json
         flags: unittests
         name: codecov-umbrella
         fail_ci_if_error: true

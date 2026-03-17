@@ -10,8 +10,6 @@ var config = require("../config");
 
 // Execution ORDER: test.setUpSuite, setUp, testFn, tearDown, test.tearDownSuite
 module.exports = {
-    timeout: 10000,
-
     "test loading in node": function(done) {
         if (typeof process === "undefined") {
             return done();
