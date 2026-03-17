@@ -1,0 +1,158 @@
+-- Simple comments (--, /* */, and # are all supported)
+
+-- S1: Database and schema setup
+CREATE DATABASE IF NOT EXISTS shipping_hub
+    CHARACTER SET utf8mb4
+    COLLATE utf8mb4_general_ci;
+USE shipping_hub;
+
+-- Warehouse inventory table with JSON metadata and generated columns
+CREATE TABLE inventory_items (
+    item_id INT AUTO_INCREMENT PRIMARY KEY,
+    sku VARCHAR(40) NOT NULL UNIQUE,
+    description VARCHAR(255),
+    quantity INT DEFAULT 0,
+    flagged BOOLEAN DEFAULT FALSE,
+    specs JSON DEFAULT '{}',
+    weight_kg DECIMAL(5,2) GENERATED ALWAYS AS (JSON_VALUE(specs, '$.weight')) STORED,
+    CHECK (weight_kg >= 0)
+) ENGINE=InnoDB;
+
+CREATE TABLE supply_routes (
+    route_id INT AUTO_INCREMENT PRIMARY KEY,
+    origin VARCHAR(100),
+    destination VARCHAR(100),
+    transit_hours INT,
+    is_active BOOLEAN DEFAULT TRUE
+);
+
+CREATE TABLE deliveries (
+    delivery_id BIGINT PRIMARY KEY,
+    item_id INT NOT NULL,
+    shipped_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    eta DATE,
+    arrival_confirmation JSON,
+    CONSTRAINT fk_delivery_item FOREIGN KEY (item_id) REFERENCES inventory_items(item_id)
+) ENGINE=InnoDB;
+
+-- Sequence object for generating delivery IDs (MariaDB 11+)
+CREATE SEQUENCE IF NOT EXISTS delivery_seq
+    START WITH 50000
+    INCREMENT BY 1
+    CACHE 100;
+
+-- Batch inserts with JSON metadata
+INSERT INTO inventory_items (sku, description, quantity, specs)
+VALUES
+    ('SHIP-001', 'Thermal blankets', 120, JSON_OBJECT('weight', 2.5, 'category','safety')),
+    ('SHIP-002', 'Portable batteries', 60, JSON_OBJECT('weight', 0.85, 'category','electronics'));
+
+-- Use INSERT ... RETURNING to capture runtime-generated values
+INSERT INTO deliveries (delivery_id, item_id, eta)
+VALUES (NEXT VALUE FOR delivery_seq, 1, CURDATE() + INTERVAL 5 DAY)
+RETURNING delivery_id, shipped_at;
+
+-- SELECT with joins and JSON functions
+SELECT
+    ii.sku,
+    ii.description,
+    COALESCE(ii.quantity, 0) AS stock_qty,
+    JSON_VALUE(ii.specs, '$.category') AS category,
+    dr.origin,
+    dr.destination
+FROM inventory_items ii
+JOIN supply_routes dr ON dr.route_id = 1
+WHERE ii.quantity > 0
+  AND JSON_EXTRACT(ii.specs, '$.weight') <= 5
+ORDER BY ii.quantity DESC;
+
+-- UPDATE combined with JSON_SET and checking metadata
+UPDATE inventory_items
+SET specs = JSON_SET(specs, '$.weight', JSON_VALUE(specs, '$.weight') + 0.5)
+WHERE sku = 'SHIP-002';
+
+-- DELETE with relational criteria
+DELETE FROM supply_routes
+WHERE is_active = FALSE AND transit_hours > 72;
+
+-- Complex window function example over deliveries aggregated per item
+SELECT
+    ii.sku,
+    ii.quantity,
+    ROW_NUMBER() OVER (PARTITION BY ii.sku ORDER BY d.shipped_at DESC) AS recent_rank,
+    TIMESTAMPDIFF(HOUR, LAG(d.shipped_at) OVER (PARTITION BY d.item_id ORDER BY d.shipped_at), d.shipped_at) AS hours_since_previous,
+    SUM(ii.quantity) OVER (ORDER BY ii.quantity DESC ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS rolling_stock
+FROM inventory_items ii
+LEFT JOIN deliveries d ON ii.item_id = d.item_id
+ORDER BY ii.quantity DESC
+LIMIT 10;
+
+-- Recursive CTE for route hierarchy
+WITH RECURSIVE route_paths (route_id, path, depth) AS (
+    SELECT route_id, CONCAT(origin, ' -> ', destination), 1
+    FROM supply_routes
+    WHERE origin = 'Los Angeles'
+  UNION ALL
+    SELECT r.route_id, CONCAT(rp.path, ' -> ', r.destination), rp.depth + 1
+    FROM supply_routes r
+    JOIN route_paths rp ON r.origin = rp.destination
+    WHERE rp.depth < 4
+)
+SELECT * FROM route_paths;
+
+-- JSON_TABLE for inspecting nested notifications
+SELECT d.delivery_id, notif.alert_type, notif.message
+FROM deliveries d
+JOIN JSON_TABLE(
+    JSON_ARRAY(JSON_OBJECT('alert_type','delay','message','Awaiting customs')),
+    '$[*]' COLUMNS (
+        alert_type VARCHAR(32) PATH '$.alert_type',
+        message TEXT PATH '$.message'
+    )
+) AS notif;
+
+-- VECTOR column example storing spatial embeddings
+ALTER TABLE inventory_items
+    ADD COLUMN location_vector VECTOR(4) DEFAULT (0, 0, 0, 0);
+
+-- Use vector functions to find nearest warehouse location sample
+INSERT INTO inventory_items (sku, description, quantity, specs, location_vector)
+VALUES ('NAV-001', 'Navigation beacon', 10, JSON_OBJECT('weight',1.2,'category','navigation'), (0.5,0.1,0.9,0.2));
+
+SELECT sku,
+       COSINE_SIMILARITY(location_vector, CAST((0.4,0.2,0.8,0.3) AS VECTOR(4))) AS similarity
+FROM inventory_items
+ORDER BY similarity DESC
+LIMIT 3;
+
+-- Temporary table and transaction demo
+CREATE TEMPORARY TABLE IF NOT EXISTS uplift_snapshot (
+    snapshot_id INT AUTO_INCREMENT PRIMARY KEY,
+    item_id INT,
+    quantity INT,
+    recorded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+START TRANSACTION;
+    INSERT INTO uplift_snapshot (item_id, quantity)
+    SELECT item_id, quantity FROM inventory_items WHERE quantity > 50;
+    UPDATE inventory_items SET quantity = quantity - 10 WHERE item_id IN (SELECT item_id FROM uplift_snapshot);
+COMMIT;
+
+-- Stored function showing JSON_SCHEMA_VALID
+CREATE FUNCTION IsValidSpecs(data JSON)
+RETURNS BOOLEAN
+DETERMINISTIC
+RETURN JSON_SCHEMA_VALID(data, '{"type":"object","properties":{"weight":{"type":"number"}}}');
+
+SELECT sku FROM inventory_items WHERE IsValidSpecs(specs);
+
+-- Role management and persisted system variable
+CREATE ROLE IF NOT EXISTS logistics_analyst;
+GRANT SELECT ON shipping_hub.inventory_items TO logistics_analyst;
+SET PERSIST tx_isolation = 'READ-COMMITTED';
+
+-- Table engine status inspection using INFORMATION_SCHEMA
+SELECT TABLE_NAME, ENGINE, ROW_FORMAT
+FROM INFORMATION_SCHEMA.TABLES
+WHERE TABLE_SCHEMA = DATABASE();
