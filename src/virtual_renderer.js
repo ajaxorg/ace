@@ -98,8 +98,7 @@ class VirtualRenderer {
             column : 0
         };
 
-        this.$fontMetrics = new FontMetrics(this.container);
-        this.$textLayer.$setFontMetrics(this.$fontMetrics);
+        this.$fontMetrics = new FontMetrics(this.container, this.$textLayer);
         this.$textLayer.on("changeCharacterSize", function(e) {
             _self.updateCharacterSize();
             _self.onResize(true, _self.gutterWidth, _self.$size.width, _self.$size.height);
@@ -122,6 +121,7 @@ class VirtualRenderer {
             lastRow : 0,
             lineHeight : 0,
             characterWidth : 0,
+            fontMetrics: this.$fontMetrics,
             minHeight : 1,
             maxHeight : 1,
             offset : 0,
@@ -1188,6 +1188,7 @@ class VirtualRenderer {
             lastRow : lastRow,
             lineHeight : lineHeight,
             characterWidth : this.characterWidth,
+            fontMetrics: this.$fontMetrics,
             minHeight : minHeight,
             maxHeight : maxHeight,
             offset : offset,
@@ -1644,8 +1645,10 @@ class VirtualRenderer {
 
         var offsetX = x + this.scrollLeft - canvasPos.left - this.$padding;
         var offset = offsetX / this.characterWidth;
-        var row = Math.floor((y + this.scrollTop - canvasPos.top) / this.lineHeight);
+        var row = (y + this.scrollTop - canvasPos.top) / this.lineHeight;
         var col = this.$blockCursor ? Math.floor(offset) : Math.round(offset);
+
+        col = this.$fontMetrics.$pixelToColumn(row, col, x, this.$blockCursor);
 
         return {row: row, column: col, side: offset - col > 0 ? 1 : -1, offsetX:  offsetX};
     }
@@ -1658,23 +1661,8 @@ class VirtualRenderer {
 
      */
     screenToTextCoordinates(x, y) {
-        var canvasPos;
-        if (this.$hasCssTransforms) {
-            canvasPos = {top:0, left: 0};
-            var p = this.$fontMetrics.transformCoordinates([x, y]);
-            x = p[1] - this.gutterWidth - this.margin.left;
-            y = p[0];
-        } else {
-            canvasPos = this.scroller.getBoundingClientRect();
-        }
-
-        var offsetX = x + this.scrollLeft - canvasPos.left - this.$padding;
-        var offset = offsetX / this.characterWidth;
-        var col = this.$blockCursor ? Math.floor(offset) : Math.round(offset);
-
-        var row = (y + this.scrollTop - canvasPos.top) / this.lineHeight;
-
-        return this.session.screenToDocumentPosition(row, Math.max(col, 0), offsetX);
+        var screenPos = this.pixelToScreenCoordinates(x, y);
+        return this.session.screenToDocumentPosition(screenPos.row, Math.max(screenPos.column, 0), screenPos.offsetX);
     }
 
     /**
