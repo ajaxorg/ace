@@ -22,7 +22,8 @@
         "eslint": "^8.20.0",
         "mocha": "^11.7.5",
         "standard-version": "^9.3.2",
-        "typescript": "5.9.2"
+        "typescript": "5.9.2",
+        "php-parser": "3.4.0"
     },
     "mappings": {
         "ace": "."
