@@ -33,7 +33,6 @@ exports.addGlobals = function() {
     window.Range = require("ace/range").Range;
     window.Editor = require("ace/editor").Editor;
     window.assert = require("ace/test/asyncjs/assert");
-    window.asyncjs = require("ace/test/asyncjs/async");
     window.UndoManager = require("ace/undomanager").UndoManager;
     window.EditSession = require("ace/edit_session").EditSession;
     window.MockRenderer = require("ace/test/mockrenderer").MockRenderer;
