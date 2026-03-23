@@ -15,6 +15,7 @@ class FontMetrics {
      * @param {HTMLElement} parentEl
      */
     constructor(parentEl, textLayer) {
+        this.config = {characterWidth: 1};
         this.$characterSize = {width: 0, height: 0};
         this.textLayer = textLayer;
 
@@ -208,7 +209,6 @@ class FontMetrics {
         var f = solve(sub(m1, mul(h[0], u)), sub(m2, mul(h[1], u)), u);
         return mul(L, f);
     }
-    
 
     /**
      * Finds and returns the DOM element corresponding to a given screen row.
@@ -218,11 +218,12 @@ class FontMetrics {
      */
     $findElementForScreenRow(screenRow) {
         var textLayer = this.textLayer;
-        var data = textLayer.$lines.$getCellByScreenRow(screenRow, textLayer.config);
+        if (!this.config) return null; // not initialized yet
+        var data = textLayer.$lines.$getCellByScreenRow(screenRow, this.config);
         var lineElement = data && data.cell.element;
 
         if (lineElement && textLayer.$useLineGroups()) {
-            var index = Math.floor(data.offset / textLayer.config.lineHeight);
+            var index = Math.floor(data.offset / this.config.lineHeight);
             lineElement =  lineElement.children[Math.max(index, 0)];
         }
         return lineElement;
@@ -236,14 +237,11 @@ class FontMetrics {
      * @returns {number} The width of the text in pixels up to the specified column.
      */
     textWidth(screenRow, screenColumn) {
-        var textLayer = this.textLayer;
-
         var lineElement = this.$findElementForScreenRow(screenRow);
         if (!lineElement || !document.createRange) {
             // Fallback for lines not currently rendered
-            return screenColumn * textLayer.config.characterWidth;
+            return screenColumn * this.config.characterWidth;
         }
-
         return this.$measureLineToColumn(lineElement, screenColumn);
     }
 
@@ -267,7 +265,7 @@ class FontMetrics {
         try {
             var position = this.$findColumnPosition(lineElement, screenColumn);
             if (!position) {
-                return screenColumn * textLayer.config.characterWidth;
+                return screenColumn * this.config.characterWidth;
             }
 
             this.$scratchRange.setStart(position.node, position.offset);
@@ -275,10 +273,10 @@ class FontMetrics {
 
             var rangeRect = this.$scratchRange.getBoundingClientRect();
             var rect = textLayer.element.getBoundingClientRect(); 
-            return rangeRect.left - rect.left;
+            return rangeRect.left - rect.left + position.overflow * this.config.characterWidth;
         } catch (e) {
             console.error("Error measuring text width:", e);
-            return screenColumn * textLayer.config.characterWidth;
+            return screenColumn * this.config.characterWidth;
         }
     }
 
@@ -291,7 +289,7 @@ class FontMetrics {
      *
      * @param {HTMLElement} lineElement - The DOM element representing the line of text.
      * @param {number} screenColumn - The target column position within the line (0-based).
-     * @returns {{node: Node, offset: number} | null} An object containing the text node and the offset
+     * @returns {{node: Node, offset: number, overflow: number} | null} An object containing the text node and the offset
      * within that node corresponding to the column position, or `null` if no nodes are found.
      */
     $findColumnPosition(lineElement, screenColumn) {
@@ -307,7 +305,8 @@ class FontMetrics {
             if (currentColumn + nodeLength >= screenColumn) {
                 return {
                     node: node,
-                    offset: screenColumn - currentColumn
+                    offset: screenColumn - currentColumn,
+                    overflow: 0
                 };
             }
             currentColumn += nodeLength;
@@ -316,7 +315,8 @@ class FontMetrics {
         
         return lastNode && {
             node: lastNode,
-            offset: lastNode.nodeValue.length
+            offset: lastNode.nodeValue.length,
+            overflow: screenColumn - currentColumn,
         };
     }
 
@@ -426,8 +426,8 @@ class FontMetrics {
             }
         }
         return [{
-            left: startScreenPos.column * textLayer.config.characterWidth,
-            width: (endScreenPos.column - startScreenPos.column) * textLayer.config.characterWidth,
+            left: startScreenPos.column * this.config.characterWidth,
+            width: (endScreenPos.column - startScreenPos.column) * this.config.characterWidth,
         }];
     }
 }
