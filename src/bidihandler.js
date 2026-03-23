@@ -174,27 +174,6 @@ class BidiHandler {
         this.currentRow = null;
     }
 
-    /**
-     * Updates array of character widths
-     * @param {Object} fontMetrics metrics
-     *
-    **/
-    updateCharacterWidths(fontMetrics) {
-        if (this.characterWidth === fontMetrics.$characterSize.width)
-            return;
-
-        this.fontMetrics = fontMetrics;
-        var characterWidth = this.characterWidth = fontMetrics.$characterSize.width;
-        var bidiCharWidth = fontMetrics.$measureCharWidth("\u05d4");
-
-        this.charWidths[bidiUtil.L] = this.charWidths[bidiUtil.EN] = this.charWidths[bidiUtil.ON_R] = characterWidth;
-        this.charWidths[bidiUtil.R] = this.charWidths[bidiUtil.AN] = bidiCharWidth;
-        this.charWidths[bidiUtil.R_H] = bidiCharWidth * 0.45;
-        this.charWidths[bidiUtil.B] = this.charWidths[bidiUtil.RLE] = 0;
-
-        this.currentRow = null;
-    }
-
     setShowInvisibles(showInvisibles) {
         this.showInvisibles = showInvisibles;
         this.currentRow = null;

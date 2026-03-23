@@ -128,6 +128,7 @@ class VirtualRenderer {
             height : 1,
             gutterOffset: 1
         };
+        this.$fontMetrics.config = this.layerConfig;
 
         this.scrollMargin = {
             left: 0,
@@ -911,9 +912,6 @@ class VirtualRenderer {
 
         this._signal("beforeRender", changes);
 
-        if (this.session && this.session.$bidiHandler)
-            this.session.$bidiHandler.updateCharacterWidths(this.$fontMetrics);
-
         var config = this.layerConfig;
         // text, scrolling and resize changes can cause the view port size to change
         if (changes & this.CHANGE_FULL ||
@@ -1195,6 +1193,7 @@ class VirtualRenderer {
             gutterOffset : lineHeight ? Math.max(0, Math.ceil((offset + size.height - size.scrollerHeight) / lineHeight)) : 0,
             height : this.$size.scrollerHeight
         };
+        this.$fontMetrics.config = this.layerConfig;
 
         if (this.session.$bidiHandler)
             this.session.$bidiHandler.setContentWidth(longestLine - this.$padding);

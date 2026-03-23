@@ -60,15 +60,12 @@ module.exports = {
             assert.position(renderer.screenToTextCoordinates(x+r.left, y+r.top), row, column);
         }
 
-        renderer.characterWidth = 10;
-        renderer.lineHeight = 15;
-
-        testPixelToText(4, 0, 0, 0);
-        testPixelToText(5, 0, 0, 1);
-        testPixelToText(9, 0, 0, 1);
-        testPixelToText(10, 0, 0, 1);
-        testPixelToText(14, 0, 0, 1);
-        testPixelToText(15, 0, 0, 2);
+        testPixelToText(renderer.characterWidth * 0.4, 0, 0, 0);
+        testPixelToText(renderer.characterWidth * 0.5, 0, 0, 1);
+        testPixelToText(renderer.characterWidth * 0.9, 0, 0, 1);
+        testPixelToText(renderer.characterWidth * 1.0, 0, 0, 1);
+        testPixelToText(renderer.characterWidth * 1.4, 0, 0, 1);
+        testPixelToText(renderer.characterWidth * 1.5, 0, 0, 2);
     },
     "test: handle css transforms" : function() {
         var renderer = editor.renderer;

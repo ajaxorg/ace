@@ -231,6 +231,9 @@ async function runOne() {
     if (!step.fn) return done();
     step.running = true;
     try {
+        if (step.skip) {
+            return done();
+        }
         if (step.fn.length) {
             await step.fn.call(step.testSuite, done);
         } else {
@@ -275,9 +278,9 @@ require(selectedTests, async function() {
             var test = testArray[j];
             test.index = j + 1;
             test.count = testArray.length;
-            steps.push({type: "beforeEach", testSuite, fn: testSuite.setUp});
+            test.skip || steps.push({type: "beforeEach", testSuite, fn: testSuite.setUp});
             steps.push(test);
-            steps.push({type: "afterEach", testSuite, fn: testSuite.tearDown});
+            test.skip || steps.push({type: "afterEach", testSuite, fn: testSuite.tearDown});
         } 
         steps.push({type: "after", testSuite, fn: testSuite.tearDownSuite});
     }
