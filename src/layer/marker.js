@@ -220,7 +220,7 @@ class Marker {
         if (this.session.$bidiHandler.isBidiRow(range.start.row))
             return this.drawBidiSingleLineMarker(stringBuilder, range, clazz, config, extraLength, extraStyle);
         var height = config.lineHeight;
-        var right = config.fontMetrics.textWidth(range.start.row, (range.end.column + (extraLength || 0) ));
+        var right = config.fontMetrics.textWidth(range.start.row, range.end.column) + (extraLength || 0) * config.characterWidth;
 
         var top = this.$getTop(range.start.row, config);
         var left = config.fontMetrics.textWidth(range.start.row, range.start.column);
