@@ -1891,9 +1891,10 @@ class EditSession {
      * @param {number[]}tokens
      * @param {number} wrapLimit
      * @param {number} tabSize
+     * @param {number} indent
      * @returns {*[]}
      */
-    $computeWrapSplits(tokens, wrapLimit, tabSize) {
+    $computeWrapSplits(tokens, wrapLimit, tabSize, indent= 0) {
         if (tokens.length == 0) {
             return [];
         }
@@ -1947,7 +1948,6 @@ class EditSession {
             splits.push(lastDocSplit);
             lastSplit = screenPos;
         }
-        var indent = 0;
         while (displayLength - lastSplit > wrapLimit - indent) {
             // This is, where the split should be.
             var split = lastSplit + wrapLimit - indent;
