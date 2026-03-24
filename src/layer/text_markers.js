@@ -177,8 +177,9 @@ var textMarkerMixin = {
                     if (/^\s+$/.test(segment)) {
                         span = this.dom.createElement("span");
                         span.className = marker.className;
-                        var symbol = node["charCount"] ? this.TAB_CHAR : this.SPACE_CHAR;
-                        span.textContent = lang.stringRepeat(symbol, segment.length);
+                        span.textContent = 
+                            node["charCount"] ? this.TAB_CHAR.repeat(segment.length) 
+                            : segment.replace(/\u3000/g, this.CJK_SPACE_CHAR).replace(/ /g, this.SPACE_CHAR);
                         span.setAttribute("data-whitespace", segment);
                         fragment.appendChild(span);
                     }
