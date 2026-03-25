@@ -137,6 +137,12 @@ class FontMetrics {
         return w;
     }
 
+    getTextWidth(text) {
+        if (!text) return 0;
+        this.$main.textContent = text;
+        return this.$main.clientWidth;
+    }
+
     destroy() {
         clearInterval(this.$pollSizeChangesTimer);
         if (this.$observer)

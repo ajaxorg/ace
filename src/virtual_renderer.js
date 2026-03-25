@@ -708,7 +708,7 @@ class VirtualRenderer {
         else {
             if (composition.useTextareaForIME) {
                 var val = this.textarea.value;
-                w = this.characterWidth * (this.session.$getStringScreenWidth(val)[0]);
+                w = this.$fontMetrics.getTextWidth(val) + 1;
             }
             else {
                 posTop += this.lineHeight + 2;
