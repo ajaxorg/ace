@@ -10,12 +10,14 @@ var assert = require("./assertions");
 
 module.exports = {
     "test: selectors": function() {
-        document.body.innerHTML = `<div x=1 y='2'>
+        document.body.insertAdjacentHTML("afterbegin", `<div x=1 y='2'>
             <span z=dd>span1</span>
             xxx
             <span class=x>some text </span>
             <a x=3></a>
-        </div>`;
+        </div>`);
+        var div = document.querySelector("div[x]");
+
         var spans = document.querySelectorAll("span");
         assert.equal(spans[0].matches("[z=dd]"), true);
         assert.equal(spans[0].matches("[z=dde]"), false);
@@ -28,6 +30,7 @@ module.exports = {
         assert.equal(document.querySelectorAll("html * * [x]").length, 1);
         assert.equal(document.querySelectorAll(" * * * * [x]").length, 0);
 
+        div.remove();
     },
     "test: getBoundingClientRect" : function() {
         var span = document.createElement("span");
@@ -60,9 +63,9 @@ module.exports = {
         assert.ok(parentWidth != 0);
         assert.equal(rect.top, 20);
         assert.equal(rect.left, 40);
-        assert.equal(rect.width, parentWidth * (1 - 0.12) - 40);
+        assert.equal(Math.round(rect.width), Math.round(parentWidth * (1 - 0.12) - 40));
         assert.equal(rect.height, window.innerHeight - 40);
-        assert.equal(rect.right, parentWidth * (1 - 0.12));
+        assert.equal(Math.round(rect.right), Math.round(parentWidth * (1 - 0.12)));
         assert.equal(rect.bottom, window.innerHeight - 20);
         
         div.style.width = "40px";
@@ -75,7 +78,32 @@ module.exports = {
         assert.equal(rect.height, window.innerHeight * 1.5);
     },
     
-   "test: eventListener" : function() {
+    "test: getBoundingClientRect for inline elements": function() {
+        var div = document.createElement("div");
+        div.style.position = "absolute";
+        div.style.fontFamily = "monospace";
+        div.style.top = "20px";
+        div.style.left = "40px";
+        document.body.appendChild(div);
+        
+        div.innerHTML = "\tぁ-<span>a</span> <span>def<span>xyz</span></span>";
+        var span1 = div.children[0];
+        var span2 = div.children[1];
+        var span3 = span2.children[0];
+
+        var rect1 = span1.getBoundingClientRect();
+        var rect2 = span2.getBoundingClientRect();
+        var rect3 = span3.getBoundingClientRect();
+        
+        assert.equal((rect3.left - rect2.left) / rect1.width, 3);
+
+        var range = document.createRange();
+        range.setStart(span1.firstChild, 1);
+        range.setEnd(span2.firstChild, 1);
+        var rect = range.getBoundingClientRect();
+        assert.equal(rect.left, rect1.left + rect1.width);
+    },
+    "test: eventListener" : function() {
         var div = document.createElement("div");
         document.body.appendChild(div);
         

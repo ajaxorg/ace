@@ -177,7 +177,7 @@ function Node(name) {
 (function() {
     this.nodeType = 1;
     this.ELEMENT_NODE = 1;
-    this.TEXT_NODE = 1;
+    this.TEXT_NODE = 3;
     this.cloneNode = function(recursive) {
         var clone = new Node(this.localName);
         for (var i in this.$attributes) {
@@ -236,9 +236,11 @@ function Node(name) {
             if (node.previousSibling)
                 node.previousSibling.nextSibling = node;
             node.parentNode = this;
-            i = this.children.indexOf(before);
-            if (i == -1) i = this.children.length + 1;
-            this.children.splice(i, 0, node);
+            if (node.nodeType == 1) {
+                i = this.children.indexOf(before);
+                if (i == -1) i = this.children.length + 1;
+                this.children.splice(i, 0, node);
+            }
         }
         
         return node;
@@ -412,6 +414,10 @@ function Node(name) {
         if (position === "afterbegin") this.insertBefore(element, this.firstChild);
         if (position === "beforebegin") this.parentElement.insertBefore(element, this);
     };
+    this.getClientRects = function() {
+        var rect = this.getBoundingClientRect();
+        return [rect];
+    };
     this.getBoundingClientRect = function(fromChild) {
         var width = 0;
         var height = 0;
@@ -421,20 +427,46 @@ function Node(name) {
             width = WINDOW_WIDTH;
             height = WINDOW_HEIGHT;
         }
-        else if (!document.contains(this) || this.style.display == "none") {
+        else if (!document.contains(this) || this.style?.display == "none") {
             width = height = 0;
         }
-        else if (this.style.width == "auto" || this.localName == "span" || /^inline/.test(this.style.display)) {
-            width = this.textContent.length * CHAR_WIDTH;
+        else if (this.nodeType == 3 || this.style?.width == "auto" || this.localName == "span" || /^inline/.test(this.style.display)) {
+            width = this.textContent.replace(/\t/g, "    ")
+                .replace(/[\u3041-\u9FBF]/g, "  ").length * CHAR_WIDTH;
             var node = this;
+            var blockParent;
             while (node) {
-                if (node.style.fontSize) {
+                if (node.style?.fontSize) {
                     height = parseInt(node.style.fontSize);
                     break;
                 }
+                if (
+                    !blockParent && node != this 
+                    && (node.style?.display == "block" || /div|body|html/.test(node.localName))
+                )
+                    blockParent = node;
                 node = node.parentNode;
             }
             if (!height) height = CHAR_HEIGHT;
+            if (this.style?.leftHint) {
+                left = this.style.leftHint;
+            } else if (blockParent && (this.localName == "span" || /^inline/.test(this.style?.display) || this.nodeType == 3)) {
+                var parentRect = blockParent.getBoundingClientRect(true);
+                top = parentRect.top;
+                node = this;
+                left = parentRect.left;
+                while (node && node != blockParent) {
+                    if (node.previousSibling) {
+                        var text = node.previousSibling.textContent
+                            .replace(/\t/g, "    ")
+                            .replace(/[\u3041-\u9FBF]/g, "  ");
+                        left += text.length * CHAR_WIDTH;
+                        node = node.previousSibling;
+                    } else {
+                        node = node.parentNode;
+                    }
+                }
+            }
         }
         else if (this.parentNode) {
             var isFixed = this.style.position == "fixed" 
@@ -451,6 +483,14 @@ function Node(name) {
 
             left = parseCssLength(this.style.left || "0", rect.width);
             top = parseCssLength(this.style.top || "0", rect.height);
+
+            var margin = this.style.margin;
+            if (margin) {
+                var parts = margin.trim().split(/\s+/);
+                left += parseCssLength(parts[3] || parts[1] || parts[0] || "0", 0);
+                top += parseCssLength(parts[0] || parts[1] || "0", 0);
+            }
+
             var right = parseCssLength(this.style.right || "0", rect.width);
             var bottom = parseCssLength(this.style.bottom || "0", rect.width);
 
@@ -609,6 +649,7 @@ function Node(name) {
             node.parentNode = null;
         });
         node.childNodes.length = 0;
+        node.children.length = 0;
         if (!document.contains(document.activeElement))
             document.activeElement = document.body;
     }
@@ -803,7 +844,7 @@ function TextNode(value) {
 (function() {
     this.nodeType = 3;
     this.ELEMENT_NODE = 1;
-    this.TEXT_NODE = 1;
+    this.TEXT_NODE = 3;
     this.cloneNode = function() {
         return new TextNode(this.data);
     };
@@ -814,6 +855,9 @@ function TextNode(value) {
         return this.data;
     });
 }).call(TextNode.prototype);
+
+Node.ELEMENT_NODE = TextNode.ELEMENT_NODE = 1;
+Node.TEXT_NODE = TextNode.TEXT_NODE = 3;
 
 var window = {
     get innerHeight() {
@@ -843,6 +887,69 @@ window.HTMLDocument = window.XMLDocument = window.Document = function() {
     };
     document.createDocumentFragment = function() {
         return new Node("#fragment");
+    };
+    document.createTreeWalker = function(root, whatToShow, filter) {
+        var nodes = [];
+        walk(root, function(node) {
+            if ((whatToShow & (1 << (node.nodeType - 1))) && (!filter || filter.acceptNode(node) == 1))
+                nodes.push(node);
+        });
+        var index = -1;
+        return {
+            nextNode: function() {
+                if (index < nodes.length - 1)
+                    return this.currentNode = nodes[++index];
+            },
+            previousNode: function() {
+                if (index > 0)
+                    return this.currentNode = nodes[--index];
+            }
+        };
+    };
+    document.createRange = function() {
+        return {
+            setStart: function(node, offset) {
+                this.startContainer = node;
+                this.startOffset = offset;
+            },
+            setEnd: function(node, offset) {
+                this.endContainer = node;
+                this.endOffset = offset;
+            },
+            getBoundingClientRect: function() {
+                var rect1 = Element.prototype.getBoundingClientRect.call(this.startContainer);
+                if (this.startContainer.nodeType == 3) {
+                    rect1.left += this.startOffset * CHAR_WIDTH;
+                } else {
+                    var child = this.startContainer.childNodes[this.startOffset];
+                    if (!child) {
+                        rect1.left = rect1.right;
+                    } else {
+                        rect1.left = Element.prototype.getBoundingClientRect.call(child).left;
+                    }
+                }
+                var rect2 = Element.prototype.getBoundingClientRect.call(this.endContainer);
+                if (this.endContainer.nodeType == 3) {
+                    rect2.right = rect2.left + this.endOffset * CHAR_WIDTH;
+                } else {
+                    var child = this.endContainer.childNodes[this.endOffset];
+                    if (child) {
+                        rect2.right = Element.prototype.getBoundingClientRect.call(child).right;
+                    }
+                }
+                return {
+                    top: rect1.top,
+                    left: rect1.left,
+                    width: rect2.right - rect1.left,
+                    height: rect2.bottom - rect1.top,
+                    right: rect2.right,
+                    bottom: rect2.bottom
+                };
+            },
+            getClientRects: function() {
+                return [this.getBoundingClientRect()];
+            },
+        };
     };
     document.hasFocus = function() {
         return true;
@@ -879,6 +986,12 @@ window.DOMParser = function() {
         }
         return document;
     };
+};
+
+window.NodeFilter = {
+    SHOW_ALL: 0xFFFFFFFF,
+    SHOW_ELEMENT: 1,
+    SHOW_TEXT: 4
 };
 
 var document = new window.Document();

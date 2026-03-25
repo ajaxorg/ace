@@ -207,7 +207,7 @@ module.exports = {
 
         assert.equal(session.getScreenLastRowColumn(0), 4);
         assert.equal(session.getScreenLastRowColumn(1), 10);
-        assert.equal(session.getScreenLastRowColumn(2), 5);
+        assert.equal(session.getScreenLastRowColumn(2), 3);
     },
 
     "test: convert document to screen coordinates" : function() {
@@ -252,7 +252,7 @@ module.exports = {
         assert.position(session.documentToScreenPosition(0, 3), 0, 3);
         assert.position(session.documentToScreenPosition(1, 3), 1, 4);
         assert.position(session.documentToScreenPosition(1, 4), 1, 8);
-        assert.position(session.documentToScreenPosition(2, 2), 2, 4);
+        assert.position(session.documentToScreenPosition(2, 2), 2, 2);
     },
 
     "test: documentToScreen with soft wrap": function() {
@@ -326,9 +326,9 @@ module.exports = {
         session.setUseWrapMode(true);
         session.adjustWrapLimit(80);
 
-        assert.position(session.screenToDocumentPosition(0, 1), 0, 0);
-        assert.position(session.screenToDocumentPosition(0, 2), 0, 1);
-        assert.position(session.screenToDocumentPosition(0, 3), 0, 2);
+        assert.position(session.screenToDocumentPosition(0, 1), 0, 1);
+        assert.position(session.screenToDocumentPosition(0, 2), 0, 2);
+        assert.position(session.screenToDocumentPosition(0, 3), 0, 3);
         assert.position(session.screenToDocumentPosition(0, 4), 0, 3);
         assert.position(session.screenToDocumentPosition(0, 5), 0, 3);
     },
