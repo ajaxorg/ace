@@ -431,7 +431,8 @@ function Node(name) {
             width = height = 0;
         }
         else if (this.nodeType == 3 || this.style?.width == "auto" || this.localName == "span" || /^inline/.test(this.style.display)) {
-            width = this.textContent.length * CHAR_WIDTH;
+            width = this.textContent.replace(/\t/g, "    ")
+                .replace(/[\u3041-\u9FBF]/g, "  ").length * CHAR_WIDTH;
             var node = this;
             var blockParent;
             while (node) {
@@ -458,7 +459,7 @@ function Node(name) {
                     if (node.previousSibling) {
                         var text = node.previousSibling.textContent
                             .replace(/\t/g, "    ")
-                            .replace(/[ぁ-ん]/g, "  ");
+                            .replace(/[\u3041-\u9FBF]/g, "  ");
                         left += text.length * CHAR_WIDTH;
                         node = node.previousSibling;
                     } else {
