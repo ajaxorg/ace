@@ -2,6 +2,7 @@
 
 require("ace/lib/fixoldbrowsers");
 
+var runner = require("./run");
 var mockdom = require("../test/mockdom");
 var buildDom = require("../lib/dom").buildDom;
 var escapeRegExp = require("ace/lib/lang").escapeRegExp;
@@ -21,9 +22,10 @@ var buildDom = eval("(" + buildDom.toString().replace(/document\./g, "") + ")");
 window.onerror = function name(...params) {
 };
 window.addEventListener('unhandledrejection', (event) => {
+    var currentStep = runner.getCurrentStep();
     currentStep.error = event.reason instanceof Error ? event.reason : new Error("Unhandled promise rejection: " + event.reason);
     if (!currentStep.running) {
-        resume();
+        runner.resume();
     }
 });
 
@@ -182,67 +184,6 @@ var reporter = {
 };
 
 
-var currentStep;
-var waitForStepCallback;
-var watchdog;
-var steps = [];
-function resume() {
-    if (currentStep) {
-        var step = currentStep;
-        currentStep = null;
-        reporter.afterStep(step);
-    }
-    waitForStepCallback(); 
-}
-async function runSteps() {
-    watchdog = setInterval(() => {
-        if (!currentStep) return;
-        currentStep.interactiveTime = (currentStep.interactiveTime || 0) + 50;
-        if (currentStep.interactiveTime >= currentStep.timeout) {
-            if (currentStep.error == undefined)
-                currentStep.error = new Error("Source did not respond after " + (currentStep.timeout || 0) + "ms!");
-            resume();
-        }
-    }, 50);
-    while (currentStep = steps.shift()) {
-        currentStep.timeout = (currentStep.testSuite?.timeout || 3000);
-        var waitForStep = new Promise(resolve => { waitForStepCallback = resolve; });
-        setTimeout(runOne, 0);
-        await waitForStep;
-    }
-    clearInterval(watchdog);
-}
-async function runOne() {
-    var step = currentStep;
-    var doneCalled = false;
-    var done = function(error) {
-        if (doneCalled) return;
-        if (error) step.error = error;
-        step.passed = !step.error;
-        step.time = Date.now() - t;
-        doneCalled = true;
-        resume();
-    };
-    var t = Date.now();
-
-    step.passed = false;
-    reporter.beforeStep(step);
-
-    if (!step.fn) return done();
-    step.running = true;
-    try {
-        if (step.fn.length) {
-            await step.fn.call(step.testSuite, done);
-        } else {
-            await step.fn.call(step.testSuite);
-            done();
-        }
-    } finally {
-        step.time = Date.now() - t;
-        step.running = false;
-    }
-}
-
 // @ts-ignore
 require(selectedTests, async function() {
     var testSuites = selectedTests.map(function(x) {
@@ -251,38 +192,7 @@ require(selectedTests, async function() {
         return module;
     });
 
-    steps = [];
-    for (var i = 0; i < testSuites.length; i++) {
-        var testSuite = testSuites[i];
-        testSuite.index = i + 1;
-        testSuite.count = testSuites.length;
-
-        var testArray = [];
-        Object.keys(testSuite).forEach(name => {
-            if (!name.match(/^>?test/))
-                return;
-            var test = {name, testSuite, fn: testSuite[name]};
-            if (filter && !test.name.match(filter)) {
-                test.skip = true;
-            }
-            testArray.push(test);
-        });
-
-        if (!testArray.length) continue;
-
-        steps.push({type: "before", testSuite, fn: testSuite.setUpSuite});
-        for (var j = 0; j < testArray.length; j++) {
-            var test = testArray[j];
-            test.index = j + 1;
-            test.count = testArray.length;
-            steps.push({type: "beforeEach", testSuite, fn: testSuite.setUp});
-            steps.push(test);
-            steps.push({type: "afterEach", testSuite, fn: testSuite.tearDown});
-        } 
-        steps.push({type: "after", testSuite, fn: testSuite.tearDownSuite});
-    }
-
-    steps.push({type: "done"});
-
-    runSteps();
+    runner.setReporter(reporter);
+    runner.prepareSteps(testSuites, filter);
+    runner.runSteps();
 });
