@@ -1891,7 +1891,7 @@ class EditSession {
      * @param {number[]}tokens
      * @param {number} wrapLimit
      * @param {number} tabSize
-     * @param {number} indent
+     * @param {number} [indent]
      * @returns {*[]}
      */
     $computeWrapSplits(tokens, wrapLimit, tabSize, indent= 0) {

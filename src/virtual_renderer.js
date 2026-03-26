@@ -1845,7 +1845,8 @@ class VirtualRenderer {
                 el: widgetDiv,
                 row: insertPosition.row,
                 column: insertPosition.column,
-                className: "ace_ghost_text_container"
+                className: "ace_ghost_text_container",
+                fixedWidth: true 
             };
             this.session.widgetManager.addLineWidget(this.$ghostTextWidget);
 

@@ -19,10 +19,12 @@ function setScreenPosition(node, rect) {
     node.style.height = rect[3] + "px";
 }
 
-function calcEditorWidth(editor, characterCount) {
+function setEditorWidth(editor, characterCount) {
+    editor.resize(true);
     var renderer = editor.renderer;
-    var chWidth = renderer.characterWidth;
-    editor.container.style.width = 2 * renderer.$padding + renderer.gutterWidth + chWidth * characterCount + "px";
+    editor.container.style.width = 2 * renderer.$padding + renderer.gutterWidth
+         + renderer.characterWidth * characterCount + 2 + "px";
+    editor.resize(true);
 }
 
 var editor = null;
@@ -442,8 +444,8 @@ module.exports = {
         
         assert.equal(editor.session.lineWidgets, null);
     },
-    "test long multiline ghost text": function() {
-        calcEditorWidth(editor, 30);
+    "test long multiline ghost text": async function(done) {
+        setEditorWidth(editor, 30);
 
         editor.session.setValue("abcdef");
         editor.resize(true);
@@ -453,6 +455,7 @@ module.exports = {
             {row: 0, column: 6});
 
         editor.renderer.$loop._flush();
+        await lang.sleep(0);
         assert.equal(editor.renderer.content.textContent, "abcdefThis is a long test text ");
 
         assert.equal(editor.session.lineWidgets[0].el.innerHTML, `<div class="ghost_text_line_wrapped"><span class="ace_ghost_text">that is longer than 30 </span></div><div class="ghost_text_line_wrapped"><span class="ace_ghost_text">characters</span></div><div><span class="ace_ghost_text"> </span></div><div><span class="ace_ghost_text">Ghost3</span><span></span></div>`);
@@ -464,14 +467,14 @@ module.exports = {
         assert.notOk(editor.renderer.scrollBarH.isVisible);
 
         assert.equal(editor.session.lineWidgets, null);
+        done();
     },
     "test ghost text wraps at end of line and does not exceed screen": function() {
         var lineText = "existing";
         var ghostText = "01234567890123456789012345678901234567890123456789";
         editor.renderer.setPadding(10);
-        editor.resize(true);
 
-        calcEditorWidth(editor, 30);
+        setEditorWidth(editor, 30);
 
         editor.session.setValue(lineText);
         editor.renderer.$loop._flush();
@@ -487,7 +490,7 @@ module.exports = {
     "test ghost text respects padding and editor resize": function() {
         editor.session.setValue("abcdef");
 
-        calcEditorWidth(editor, 25);
+        setEditorWidth(editor, 25);
 
         editor.renderer.setPadding(10);
         editor.resize(true);
