@@ -17,8 +17,7 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "module": "commonjs",
-    "target": "es2020",
-    "moduleResolution": "node"
+    "target": "es2020"
   },
   "include": ["*.ts"],
   "exclude": ["node_modules"]
