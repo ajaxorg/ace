@@ -106,12 +106,19 @@ var reporter = {
 var currentStep;
 var waitForStepCallback;
 var watchdog;
+runner.pauseOnError = false;
 var steps = [];
 function resume() {
     if (currentStep) {
         var step = currentStep;
         currentStep = null;
         reporter.afterStep(step);
+
+        if (step.error && runner.pauseOnError) {
+            clearInterval(watchdog);
+            watchdog = null;
+            return;
+        }
     }
     waitForStepCallback(); 
 }
@@ -139,6 +146,7 @@ async function runSteps() {
         await waitForStep;
     }
     clearInterval(watchdog);
+    watchdog = null;
 }
 function setImmediate(fn) {
     var resolve;
@@ -180,7 +188,7 @@ async function runOne() {
 }
 
 function prepareSteps(testSuites, filter) {
-    steps = [];
+    steps = runner.steps = [];
     for (var i = 0; i < testSuites.length; i++) {
         var testSuite = testSuites[i];
         testSuite.index = i + 1;
