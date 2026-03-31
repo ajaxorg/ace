@@ -6,11 +6,11 @@
   <title>Ace Unit Tests</title>
   <style type="text/css" media="screen">
 
-    #log .passed {
+    .passed {
         color: green;
     }
     
-    #log .failed {
+    .failed {
         color: red;
     }
     
@@ -21,11 +21,11 @@
         color: lightblue;
     }
     #sidebar {
-        height: calc(100vh - 30px);
+        height: calc(100vh - 30px - 1em);
         overflow: auto;
         position: absolute;
         right: 10px;
-        top: 10px
+        top: calc(10px + 1em)
     }
 
     #log {
@@ -39,6 +39,16 @@
     }
     body {
         overflow: scroll;
+    }
+    #nav-control {
+        position: fixed;
+        top: 0;
+        right: 0;
+        background: aliceblue;
+        padding: 4px;
+    }
+    .hide-passed div.passed {
+        display: none;
     }
   </style>
 </head>

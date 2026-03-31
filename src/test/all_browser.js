@@ -2,6 +2,7 @@
 
 require("ace/lib/fixoldbrowsers");
 
+var runner = require("./run");
 var mockdom = require("../test/mockdom");
 var buildDom = require("../lib/dom").buildDom;
 var escapeRegExp = require("ace/lib/lang").escapeRegExp;
@@ -12,6 +13,8 @@ var forceShow = location.search.indexOf("show=1") != -1;
 var documentElement = document.documentElement;
 var log = buildDom(["div", {id: "log"}], documentElement);
 
+window.runner = runner;
+
 var undef = window.requirejs.undef;
 // change buildDom to use real document in mockdom 
 var createElement = document.createElement.bind(document);
@@ -21,16 +24,19 @@ var buildDom = eval("(" + buildDom.toString().replace(/document\./g, "") + ")");
 window.onerror = function name(...params) {
 };
 window.addEventListener('unhandledrejection', (event) => {
+    var currentStep = runner.getCurrentStep();
     currentStep.error = event.reason instanceof Error ? event.reason : new Error("Unhandled promise rejection: " + event.reason);
     if (!currentStep.running) {
-        resume();
+        runner.resume();
     }
 });
 
+var hidePassed = localStorage.getItem("hidePassedTests") === "true";
+runner.pauseOnError = localStorage.getItem("pauseTestsOnError") === "true";
+log.classList.toggle("hide-passed", hidePassed);
 var testNames = require("./test_list").filter(name => !/_test\/highlight_rules_test/.test(name));
 
 var html = [
-    ["div", {ref: "summary"}],
     useMockdom
         ? ["a", {href: normalizeHref(location.search.replace('mock=1', '')) + location.hash}, "do not use mockdom"]
         : ["a", {href: normalizeHref(location.search + '&mock=1') + location.hash}, "use mockdom"],
@@ -40,10 +46,32 @@ var html = [
         : ["a", {href: normalizeHref(location.search + '&show=1') + location.hash}, "show mock renderer"],
     ["br"],
     ["a", {href: '?runall' + (useMockdom ? "&mock=1" : "")}, "Run all tests"], ["br"],
+    ["input", {type: "checkbox", id: "hide-passed", 
+        onchange: function() {
+            hidePassed = this.checked;
+            log.classList.toggle("hide-passed", hidePassed);
+            localStorage.setItem("hidePassedTests", hidePassed);
+        },
+        checked: hidePassed ? "checked" : undefined
+    }],
+    ["label", {for: "hide-passed"}, "Hide passed tests"], 
+    ["input", {type: "checkbox", id: "wait-on-error", onchange: function() {
+        runner.pauseOnError = this.checked;
+        localStorage.setItem("pauseTestsOnError", runner.pauseOnError);
+    }, checked: runner.pauseOnError ? "checked" : undefined}],
+    ["label", {for: "wait-on-error"}, "Pause on error"], ["br"],
     ["hr"]
 ];
 for (var i in testNames) {    
-    html.push(testLink(testNames[i]), ["br"]);
+    html.push(navLink(testNames[i]));
+}
+function navLink(name) {
+    var lastRun = localStorage.getItem("lastRun:" + name) || " ";
+    var lastFail = lastRun.split("/")[1];
+    return ["div", {"data-name": name},
+        ["span", {class: lastFail ? "failed" : ""}, "[" + lastRun + "]"], " ",
+        testLink(name)
+    ];
 }
 function testHref(suiteName, name) {
     var href = '?' + suiteName + (useMockdom ? "&mock=1" : "");
@@ -60,6 +88,10 @@ function normalizeHref(str) {
 var refs = {};
 var nav = buildDom(["div", {id: "sidebar"}, html], documentElement, refs);
 
+buildDom(["div", {id: "nav-control"}, 
+    ["button", {onclick: resumeOrRetry}, "Resume"], " ",
+    ["span", {ref: "summary", id: "summary"}],
+], documentElement, refs);
 
 if (forceShow) {
     // @ts-ignore
@@ -98,25 +130,30 @@ window.onhashchange = function() { location.reload(); };
 var failed = 0;
 var passed = 0;
 var skipped = 0;
+function updatesLog(fn) {
+    return function(...args) {
+        if (!log.parentElement) {
+            documentElement.appendChild(log);
+        }
+        var isScrolled = log.scrollTop - (log.scrollHeight - log.clientHeight) > -1;
+        fn.apply(this, args);
+        if (isScrolled) log.scrollTop = log.scrollHeight;
+    };
+}
 var reporter = {
     beforeEach: function(test) {
         if (!test.name) return;
-        var isScrolled = log.scrollTop - (log.scrollHeight - log.clientHeight) > -1;
         var messageHeader =  "[" + test.index + "/" + test.count + "]";
         var node = buildDom(["div", {class: test.skip ? "skipped" : "waiting"}, 
-            ["a", {href: testHref(test.testSuite.href, test.name)}, messageHeader],
+            ["a", {href: testHref(test.testSuite.name, test.name)}, messageHeader],
             " ",
             test.name,
             ["span", (test.skip ? " SKIP" : " ...")],
         ], log);
         test.reportNode = node;
         console.log(messageHeader + test.name);
-        if (isScrolled) log.scrollTop = log.scrollHeight;
     },
     afterEach: function(test) {
-        if (!log.parentElement) {
-            documentElement.appendChild(log);
-        }
         if (!test.name) return;
         if (test.skip) {
             skipped++;
@@ -126,7 +163,6 @@ var reporter = {
         } else {
             failed++;
         }
-        var isScrolled = log.scrollTop - (log.scrollHeight - log.clientHeight) > -1;
         
         test.reportNode.className = test.passed ? "passed" : "failed";
         test.reportNode.lastChild.remove();
@@ -135,42 +171,46 @@ var reporter = {
             buildDom(["pre", {class: "error"}, test.error + "\n" + test.error.stack.replace(/^\w*Error/, "")], log);
 
         refs.summary.innerText = "Passed: " + passed + ", Failed: " + failed + ", Skipped: " + skipped;
-        if (isScrolled) log.scrollTop = log.scrollHeight;
+        refs.summary.className = failed ? "failed" : "passed";
     },
     before: function(testSuite) {
-        var isScrolled = log.scrollTop - (log.scrollHeight - log.clientHeight) > -1;
         var counter = " [" + testSuite.index + "/" + testSuite.count + "]";
-        var href = testSuite.href;
+        var href = testSuite.name;
         buildDom(["div", {}, testLink(href), counter], log);
         console.log(href, counter);
-        if (isScrolled) log.scrollTop = log.scrollHeight;
+        this.passed = passed;
+        this.failed = failed;
+        this.skipped = skipped;
     },
     after: function(testSuite) {
-
+        var navNode = nav.querySelector(`[data-name='${testSuite.name}']`);
+        var suitefailed = failed - this.failed;
+        var suiteSkipped = skipped - this.skipped;
+        var suitepassed = passed - this.passed;
+        var result = (suitepassed + suitefailed + suiteSkipped) + "";
+        if (suitefailed) result += "/" + suitefailed;
+        navNode.firstChild.textContent = "[" + result + "]";
+        navNode.firstChild.className = suitefailed ? "failed" : "passed";
+        localStorage.setItem("lastRun:" + testSuite.name, result);
     },
     done: function() {
-        var isScrolled = log.scrollTop - (log.scrollHeight - log.clientHeight) > -1;
-        if (!log.parentElement) {
-            documentElement.appendChild(log);
-        }
         var node = buildDom(["div", {class: "summary"},
             ["br"], "Summary:", ["br"], ["br"],
             "Total number of tests: " + (passed + failed + skipped), ["br"],
-            (passed && [null, "Passed tests: " + passed, ["br"]]),
-            (passed && [null, "Passed tests: " + skipped, ["br"]]),
-            (failed && [null, "Failed tests: " + failed])
+            (passed && ["span", {class: "passed"}, "Passed tests: " + passed, ["br"]]),
+            (skipped && ["span", {class: "skipped"}, "Skipped tests: " + skipped, ["br"]]),
+            (failed && ["span", {class: "failed"}, "Failed tests: " + failed])
         ], log);
         console.log(node.innerText);
-        if (isScrolled) log.scrollTop = log.scrollHeight;
     },
-    beforeStep: function(step) {
+    beforeStep: updatesLog(function(step) {
         if (step.type == "before") {
             reporter.before(step.testSuite);
         } else  {
             reporter.beforeEach(step);
         }
-    },
-    afterStep: function(step) {
+    }),
+    afterStep: updatesLog(function(step) {
         if (step.type == "after") {
             reporter.after(step.testSuite);
         } else if (step.type == "done") {
@@ -178,111 +218,27 @@ var reporter = {
         } else  {
             reporter.afterEach(step);
         }
-    },
+    }),
 };
+runner.setReporter(reporter);
 
-
-var currentStep;
-var waitForStepCallback;
-var watchdog;
-var steps = [];
-function resume() {
-    if (currentStep) {
-        var step = currentStep;
-        currentStep = null;
-        reporter.afterStep(step);
-    }
-    waitForStepCallback(); 
-}
-async function runSteps() {
-    watchdog = setInterval(() => {
-        if (!currentStep) return;
-        currentStep.interactiveTime = (currentStep.interactiveTime || 0) + 50;
-        if (currentStep.interactiveTime >= currentStep.timeout) {
-            if (currentStep.error == undefined)
-                currentStep.error = new Error("Source did not respond after " + (currentStep.timeout || 0) + "ms!");
-            resume();
-        }
-    }, 50);
-    while (currentStep = steps.shift()) {
-        currentStep.timeout = (currentStep.testSuite?.timeout || 3000);
-        var waitForStep = new Promise(resolve => { waitForStepCallback = resolve; });
-        setTimeout(runOne, 0);
-        await waitForStep;
-    }
-    clearInterval(watchdog);
-}
-async function runOne() {
-    var step = currentStep;
-    var doneCalled = false;
-    var done = function(error) {
-        if (doneCalled) return;
-        if (error) step.error = error;
-        step.passed = !step.error;
-        step.time = Date.now() - t;
-        doneCalled = true;
-        resume();
-    };
-    var t = Date.now();
-
-    step.passed = false;
-    reporter.beforeStep(step);
-
-    if (!step.fn) return done();
-    step.running = true;
-    try {
-        if (step.fn.length) {
-            await step.fn.call(step.testSuite, done);
-        } else {
-            await step.fn.call(step.testSuite);
-            done();
-        }
-    } finally {
-        step.time = Date.now() - t;
-        step.running = false;
+function resumeOrRetry() {
+    if (runner.steps && runner.steps.length) {
+        runner.runSteps();
+    } else {
+        runner.prepareSteps(testSuites, filter);
+        runner.runSteps();
     }
 }
 
+var testSuites;
 // @ts-ignore
 require(selectedTests, async function() {
-    var testSuites = selectedTests.map(function(x) {
+    testSuites = selectedTests.map(function(x) {
         var module = require(x);
-        module.href = x;
+        module.name = x;
         return module;
     });
 
-    steps = [];
-    for (var i = 0; i < testSuites.length; i++) {
-        var testSuite = testSuites[i];
-        testSuite.index = i + 1;
-        testSuite.count = testSuites.length;
-
-        var testArray = [];
-        Object.keys(testSuite).forEach(name => {
-            if (!name.match(/^>?test/))
-                return;
-            var test = {name, testSuite, fn: testSuite[name]};
-            if (filter && !test.name.match(filter)) {
-                test.skip = true;
-            }
-            testArray.push(test);
-        });
-
-        if (!testArray.length) continue;
-
-        steps.push({type: "before", testSuite, fn: testSuite.setUpSuite});
-        for (var j = 0; j < testArray.length; j++) {
-            var test = testArray[j];
-            test.index = j + 1;
-            test.count = testArray.length;
-            steps.push({type: "beforeEach", testSuite, fn: testSuite.setUp});
-            steps.push(test);
-            steps.push({type: "afterEach", testSuite, fn: testSuite.tearDown});
-        } 
-        steps.push({type: "after", testSuite, fn: testSuite.tearDownSuite});
-    }
-
-    steps.push({type: "done"});
-
-    runSteps();
+    resumeOrRetry();
 });
