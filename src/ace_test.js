@@ -50,6 +50,7 @@ module.exports = {
         assert.equal(el, editor.container);
         assert.equal("h", editor.getValue());
         document.body.removeChild(el);
+        editor.destroy();
     },
     "test: destroy": async function(done) {
         var editor = ace.edit();
