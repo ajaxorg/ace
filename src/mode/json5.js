@@ -1,6 +1,7 @@
 "use strict";
 
 var oop = require("../lib/oop");
+const {WorkerClient} = require("../worker/worker_client");
 var TextMode = require("./text").Mode;
 var HighlightRules = require("./json5_highlight_rules").Json5HighlightRules;
 var MatchingBraceOutdent = require("./matching_brace_outdent").MatchingBraceOutdent;
@@ -24,6 +25,22 @@ oop.inherits(Mode, TextMode);
 
     this.autoOutdent = function(state, doc, row) {
         this.$outdent.autoOutdent(doc, row);
+    };
+
+    this.createWorker = function(session) {
+        var worker = new WorkerClient(["ace"], "ace/mode/json_worker", "JsonWorker");
+        worker.attachToDocument(session.getDocument());
+        worker.call("setOptions", [{isJson5: true}]);
+
+        worker.on("annotate", function(e) {
+            session.setAnnotations(e.data);
+        });
+
+        worker.on("terminate", function() {
+            session.clearAnnotations();
+        });
+
+        return worker;
     };
 
     this.$id = "ace/mode/json5";
