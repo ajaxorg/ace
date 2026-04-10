@@ -1,7 +1,7 @@
 "use strict";
 
 var oop = require("../lib/oop");
-const {WorkerClient} = require("../worker/worker_client");
+var WorkerClient = require("../worker/worker_client").WorkerClient;
 var TextMode = require("./text").Mode;
 var LessHighlightRules = require("./less_highlight_rules").LessHighlightRules;
 var MatchingBraceOutdent = require("./matching_brace_outdent").MatchingBraceOutdent;

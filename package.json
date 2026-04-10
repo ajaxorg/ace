@@ -23,7 +23,7 @@
         "mocha": "^11.7.5",
         "standard-version": "^9.3.2",
         "typescript": "5.9.2",
-        "ace-legacy-linters": "^1.0.0"
+        "ace-legacy-linters": "^1.0.2"
     },
     "mappings": {
         "ace": "."
