@@ -38,6 +38,7 @@ module.exports = {
         el.style.top = "30px";
         el.style.width = "300px";
         el.style.height = "100px";
+        el.style.position = "fixed";
         document.body.appendChild(el);
         var renderer = new VirtualRenderer(el);
         editor = new Editor(renderer);
@@ -68,50 +69,57 @@ module.exports = {
         testPixelToText(renderer.characterWidth * 1.5, 0, 0, 2);
     },
     "test: handle css transforms" : function() {
+        editor.setValue("hello world");
         var renderer = editor.renderer;
         var fontMetrics = renderer.$fontMetrics;
         setScreenPosition(editor.container, [20, 30, 300, 100]);
-        var measureNode = fontMetrics.$measureNode;
-        setScreenPosition(measureNode, [0, 0, 10 * measureNode.textContent.length, 15]);
-        setScreenPosition(fontMetrics.$main, [0, 0, 10 * measureNode.textContent.length, 15]);
         
-        fontMetrics.$characterSize.width = 10;
-        renderer.setPadding(0);
         renderer.onResize(true);
         
-        assert.equal(fontMetrics.getCharacterWidth(), 1);
-        
-        renderer.characterWidth = 10;
-        renderer.lineHeight = 15;
-        
-        renderer.gutterWidth = 40;
         editor.setOption("hasCssTransforms", true);
         editor.container.style.transformOrigin = "0 0";
-        editor.container.style.transform = "matrix3d(0.7, 0, 0, -0.00066, 0, 0.82, 0, -0.001, 0, 0, 1, 0, -100, -20, 10, 1)";
-        editor.container.style.zoom = 1.5;
-        var pos = renderer.pixelToScreenCoordinates(100, 200);
+        var H1 = -0.0007, H2 = -0.001;
+        var m0 = 0.7, m1 = 0.1, m2 = 0.3, m3 = 0.82;
+        var t1 = 100, t2 = 20;
+        editor.container.style.transform = `matrix3d(
+            ${m0},  ${m2},    0,   ${H1},
+            ${m1},  ${m3},    0,   ${H2}, 
+             0,      0,       1,    0, 
+            ${t1},  ${t2},    0,    1
+        )`;
         
-        var els = fontMetrics.els;
-        var rects = [
-            [0, 0],
-            [-37.60084843635559, 161.62494659423828],
-            [114.50254130363464, -6.890693664550781],
-            [98.85665202140808, 179.16063690185547]
-        ];
-        rects.forEach(function(rect, i) {
-            els[i].getBoundingClientRect = function() { 
-                return { left: rect[0], top: rect[1] };
-            };
-        });
+        var expected = [
+            m0 - H1* t1, m1 - H2* t1, 0,
+            m2 - H1* t2, m3 - H2* t2, 0,
+            H1,          H2,          1
+        ] 
+        function project(M, point) {
+            var px = point[0], py = point[1];
+            var k = 1 / (M[6] * px + M[7] * py + M[8]);
+            return [(M[0] * px + M[1] * py + M[2]) * k, (M[3] * px + M[4] * py + M[5]) * k];
+        }
+
+        project(expected, [20, 30]); 
+
+        var transform = editor.renderer.$fontMetrics.getTransform();
+
+        for (var i = 0; i < 9; i++) {
+            assert.ok(Math.abs(transform.M[i] - expected[i]) < 10e-6, `Expected M[${i}] to be approximately ${expected[i]}, but got ${transform.M[i]}`);
+        }
+
+        assert.equal(transform.t + "", [100 + 20, 20 + 30] + "");
         
-        var r0 = els[0].getBoundingClientRect();
-        pos = renderer.pixelToScreenCoordinates(r0.left + 100, r0.top + 200);
-        assert.position(pos, 10, 11);
+        var p = project(expected, [
+            renderer.gutterWidth + renderer.$padding + renderer.characterWidth * 4,
+            renderer.lineHeight / 2
+        ]);
+        p[0] += transform.t[0];
+        p[1] += transform.t[1];
+
+        var pos = renderer.pixelToScreenCoordinates(p[0], p[1]);
         
-        var pos1 = fontMetrics.transformCoordinates(null, [0, 200]);
-        assert.ok(pos1[0] - rects[2][0] < 10e-6);
-        assert.ok(pos1[1] - rects[2][1] < 10e-6);
-        editor.renderer.$loop._flush();
+        var docPos = editor.session.screenToDocumentPosition(pos.row, pos.column);
+        assert.position(docPos, 0, 4);
     },
     
     "test scrollmargin + autosize": async function(done) {
