@@ -9,6 +9,9 @@ if (typeof process !== "undefined") {
 var assert = require("./assertions");
 
 module.exports = {
+    tearDown: function() {
+        document.body.innerHTML = "";
+    },
     "test: selectors": function() {
         document.body.insertAdjacentHTML("afterbegin", `<div x=1 y='2'>
             <span z=dd>span1</span>
@@ -53,6 +56,7 @@ module.exports = {
         
         var div = document.createElement("div");
         document.body.appendChild(div);
+        div.style.background = "red";
         div.style.position = "absolute";
         div.style.top = "20px";
         div.style.left = "40px";
@@ -76,6 +80,90 @@ module.exports = {
         div.style.height = "150%";
         rect = div.getBoundingClientRect();
         assert.equal(rect.height, window.innerHeight * 1.5);
+    },
+    "test: getBoundingClientRect with transform" : function() {
+        var parent = document.createElement("div");
+        parent.style.position = "absolute";
+        parent.style.top = "50px";
+        parent.style.left = "400px";
+        parent.style.width = "200px";
+        parent.style.height = "200px";
+        parent.style.background = "yellow";
+        document.body.appendChild(parent);
+        
+        var div = document.createElement("div");
+        parent.appendChild(div);
+        div.style.transformOrigin = "0 0";
+        div.style.background = "red";
+        div.style.position = "absolute";
+        div.style.top = "30px";
+        div.style.left = "40px";
+        div.style.width = "100px";
+        div.style.height = "100px";
+        var expected = {
+            left: 440,
+            top: 80,
+            width: 100,
+            height: 100,
+        };
+        var rect = div.getBoundingClientRect();
+        assertRect(rect, expected);
+
+        div.style.transform = "matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -100, -10, 0, 1)";
+        expected.left += -100;
+        expected.top += -10;
+        rect = div.getBoundingClientRect();
+        assertRect(rect, expected);
+
+        div.style.transform = "matrix3d(0.5, 0, 0, 0, 0, 0.8, 0, 0, 0, 0, 1, 0, -100, -10, 0, 1)";
+        expected.width *= 0.5;
+        expected.height *= 0.8;
+        rect = div.getBoundingClientRect();
+        assertRect(rect, expected);
+
+        parent.style.transform = "matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -100, -10, 0, 1)";
+        parent.style.transformOrigin = "0 0";
+        expected.left += -100;
+        expected.top += -10;
+        rect = div.getBoundingClientRect();
+        assertRect(rect, expected); 
+
+        parent.style.transform = "matrix3d(0.5, 0, 0, 0, 0, 0.5, 0, 0, 0, 0, 1, 0, -100, -20, 0, 1)";
+        expected.width *= 0.5;
+        expected.height *= 0.5;
+        expected.left = (400 - 100) + (40-100) / 2;
+        expected.top = (50 - 20) + (30-10) / 2;
+        rect = div.getBoundingClientRect();
+        assertRect(rect, expected);
+
+ 
+        parent.style.transform = "";
+        div.style.transform = "matrix3d(0.7, 0.3, 0, -0.00066, 0, 0.82, 0, -0.001, 0, 0, 1, 0, -100, -10, 10, 1)";
+        expected = {
+            left: 328.8888854980469,
+            top: 70,
+            width: 78.9912109375,
+            height: 132.30215454101562,
+        };
+        rect = div.getBoundingClientRect();
+        assertRect(rect, expected);
+
+
+        parent.style.transform = "matrix3d(0.7, 0.3, 0, -0.00066, 0, 0.82, 0, -0.001, 0, 0, 1, 0, -100, -20, 10, 1)";
+        expected = {
+            left: 240.14041137695312,
+            top: 28.815221786499023,
+            width: 59.70550537109375,
+            height: 146.73687744140625,
+        };
+        rect = div.getBoundingClientRect();
+        assertRect(rect, expected);
+
+        function assertRect(rect, expected) {
+            for (var key in expected) {
+                assert.equal(Math.round(rect[key]), Math.round(expected[key]));
+            }
+        }
     },
     
     "test: getBoundingClientRect for inline elements": function() {

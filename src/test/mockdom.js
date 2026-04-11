@@ -418,7 +418,7 @@ function Node(name) {
         var rect = this.getBoundingClientRect();
         return [rect];
     };
-    this.getBoundingClientRect = function(fromChild) {
+    this.getBoundingClientRect = function(fromChild, ignoreTransforms) {
         var width = 0;
         var height = 0;
         var top = 0;
@@ -451,7 +451,7 @@ function Node(name) {
             if (this.style?.leftHint) {
                 left = this.style.leftHint;
             } else if (blockParent && (this.localName == "span" || /^inline/.test(this.style?.display) || this.nodeType == 3)) {
-                var parentRect = blockParent.getBoundingClientRect(true);
+                var parentRect = blockParent.getBoundingClientRect(true, true);
                 top = parentRect.top;
                 node = this;
                 left = parentRect.left;
@@ -475,7 +475,7 @@ function Node(name) {
             // prevent recursion by passing -1
             var rect = fromChild == -1 || isFixed
                 ? {top: 0, left: 0, width: 0, height: 0, right: 0, bottom: 0} 
-                : this.parentNode.getBoundingClientRect();
+                : this.parentNode.getBoundingClientRect(undefined, true);
             if (isFixed) {
                 rect.height = rect.bottom = WINDOW_HEIGHT;
                 rect.width = rect.right = WINDOW_WIDTH;
@@ -515,7 +515,7 @@ function Node(name) {
             if (maxHeight >= 0) height = Math.min(height, maxHeight);
             
             if (!height && !this.style.height && this.firstChild && this.firstChild.getBoundingClientRect && !fromChild) {
-                height = this.firstChild.getBoundingClientRect(-1).height;
+                height = this.firstChild.getBoundingClientRect(-1, true).height;
             }
 
             if (!this.style.left &&  this.style.right) {
@@ -528,6 +528,50 @@ function Node(name) {
             top += rect.top;
             left += rect.left;
         }
+        if (!ignoreTransforms) {
+            // Apply any CSS transforms
+            var node = this;
+            var M = [1, 0, 0, 0, 1, 0, 0, 0, 1];
+            var points;
+            while (node) {
+                if (node.style?.transform) {
+                    var match = node.style.transform.match(/matrix3d\(([^)]+)\)/)
+                    if (match) {
+                        if (!points) {
+                            points = [[left, top], [left + width, top], [left, top + height], [left + width, top + height]];
+                        }
+                        var v = match[1].split(",").map(parseFloat);
+                        M = [v[0], v[1], v[3], v[4], v[5], v[7], v[12], v[13], v[15]];
+                        var origin = node.style.transformOrigin || "50% 50%";
+                        var parts = origin.split(" ");
+                        var parentRect = node== this ? { top,left,width,height } : node.getBoundingClientRect(true, true);
+                        var ox = parseCssLength(parts[0], parentRect.width) + parentRect.left;
+                        var oy = parseCssLength(parts[1], parentRect.height) + parentRect.top;
+                        var O = [ox, oy];
+                        points = points.map(p => project(p, O));
+                    }
+                }
+                node = node.parentNode;
+            }
+            function project(p, O) {
+                var x = p[0] - O[0];
+                var y = p[1] - O[1];
+                var w = M[2] * x + M[5] * y + M[8];
+                return [
+                    (M[0] * x + M[3] * y + M[6]) / w + O[0],
+                    (M[1] * x + M[4] * y + M[7]) / w + O[1]
+                ];
+            }
+            if (points) {
+                var xs = points.map(p => p[0]);
+                var ys = points.map(p => p[1]);
+                left = Math.min.apply(null, xs);
+                top = Math.min.apply(null, ys);
+                width = Math.max.apply(null, xs) - left;
+                height = Math.max.apply(null, ys) - top;
+            }
+        }
+
         return {top: top, left: left, width: width, height: height, right: left + width, bottom: top + height};
     };
 
@@ -540,16 +584,16 @@ function Node(name) {
     }
 
     this.__defineGetter__("clientHeight", function() {
-        return this.getBoundingClientRect().height;
+        return this.getBoundingClientRect(undefined, true).height;
     });
     this.__defineGetter__("clientWidth", function() {
-        return this.getBoundingClientRect().width;
+        return this.getBoundingClientRect(undefined, true).width;
     });
     this.__defineGetter__("offsetHeight", function() {
-        return this.getBoundingClientRect().height;
+        return this.getBoundingClientRect(undefined, true).height;
     });
     this.__defineGetter__("offsetWidth", function() {
-        return this.getBoundingClientRect().width;
+        return this.getBoundingClientRect(undefined, true).width;
     });
 
     this.__defineGetter__("lastChild", function() {

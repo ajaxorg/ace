@@ -86,6 +86,7 @@ module.exports = {
         
         renderer.gutterWidth = 40;
         editor.setOption("hasCssTransforms", true);
+        editor.container.style.transformOrigin = "0 0";
         editor.container.style.transform = "matrix3d(0.7, 0, 0, -0.00066, 0, 0.82, 0, -0.001, 0, 0, 1, 0, -100, -20, 10, 1)";
         editor.container.style.zoom = 1.5;
         var pos = renderer.pixelToScreenCoordinates(100, 200);

@@ -207,6 +207,51 @@ class FontMetrics {
         ];
     }
 
+    transformCoordinates(clientPos, elPos) {
+        if (clientPos) {
+            var zoom = this.$getZoom(this.el);
+            clientPos = mul(1 / zoom, clientPos);
+        }
+        function solve(l1, l2, r) {
+            var det = l1[1] * l2[0] - l1[0] * l2[1];
+            return [
+                (-l2[1] * r[0] + l2[0] * r[1]) / det,
+                (+l1[1] * r[0] - l1[0] * r[1]) / det
+            ];
+        }
+        function sub(a, b) { return [a[0] - b[0], a[1] - b[1]]; }
+        function add(a, b) { return [a[0] + b[0], a[1] + b[1]]; }
+        function mul(a, b) { return [a * b[0], a * b[1]]; }
+
+        if (!this.els)
+            this.$initTransformMeasureNodes();
+        
+        function p(el) {
+            var r = el.getBoundingClientRect();
+            return [r.left, r.top];
+        }
+
+        var a = p(this.els[0]);
+        var b = p(this.els[1]);
+        var c = p(this.els[2]);
+        var d = p(this.els[3]);
+
+        var h = solve(sub(d, b), sub(d, c), sub(add(b, c), add(d, a)));
+
+        var m1 = mul(1 + h[0], sub(b, a));
+        var m2 = mul(1 + h[1], sub(c, a));
+        
+        if (elPos) {
+            var x = elPos;
+            var k = h[0] * x[0] / L + h[1] * x[1] / L + 1;
+            var ut = add(mul(x[0], m1), mul(x[1], m2));
+            return  add(mul(1 / k / L, ut), a);
+        }
+        var u = sub(clientPos, a);
+        var f = solve(sub(m1, mul(h[0], u)), sub(m2, mul(h[1], u)), u);
+        return mul(L, f);
+    }
+
     recoverRect(M, bbox) {
         var { left, top, width: Wt, height: Ht } = bbox;
         
