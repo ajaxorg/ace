@@ -419,6 +419,9 @@ function Node(name) {
         return [rect];
     };
     this.getBoundingClientRect = function(fromChild, ignoreTransforms) {
+        function textWidth(str) {
+            return str.replace(/\t/g, "    ").replace(/[\u3041-\u9FBF]/g, "  ").length * CHAR_WIDTH;
+        }
         var width = 0;
         var height = 0;
         var top = 0;
@@ -430,9 +433,8 @@ function Node(name) {
         else if (!document.contains(this) || this.style?.display == "none") {
             width = height = 0;
         }
-        else if (this.nodeType == 3 || this.style?.width == "auto" || this.localName == "span" || /^inline/.test(this.style.display)) {
-            width = this.textContent.replace(/\t/g, "    ")
-                .replace(/[\u3041-\u9FBF]/g, "  ").length * CHAR_WIDTH;
+        else if (this.nodeType == 3 || this.localName == "span" || /^inline/.test(this.style.display)) {
+            width = textWidth(this.textContent);
             var node = this;
             var blockParent;
             while (node) {
@@ -460,7 +462,7 @@ function Node(name) {
                         var text = node.previousSibling.textContent
                             .replace(/\t/g, "    ")
                             .replace(/[\u3041-\u9FBF]/g, "  ");
-                        left += text.length * CHAR_WIDTH;
+                        left += textWidth(text);
                         node = node.previousSibling;
                     } else {
                         node = node.parentNode;
@@ -472,6 +474,8 @@ function Node(name) {
             var isFixed = this.style.position == "fixed" 
                 || this.style.positionHint == "fixed"
                 || this.getAttribute("role") == "tooltip";
+            var isAbsolute = this.style.position == "absolute" 
+                || this.style.positionHint == "absolute";
             // prevent recursion by passing -1
             var rect = fromChild == -1 || isFixed
                 ? {top: 0, left: 0, width: 0, height: 0, right: 0, bottom: 0} 
@@ -498,15 +502,30 @@ function Node(name) {
                 width = parseCssLength(this.style.width || "100%", rect.width);
             else if (this.style.widthHint)
                 width = this.style.widthHint;
-            else
+            else if (this.style.right || !isAbsolute)
                 width = rect.width - right - left;
             
             if (this.style.height)
                 height = parseCssLength(this.style.height || "100%", rect.height);
             else if (this.style.heightHint)
                 height = this.style.heightHint;
-            else
+            else if (this.style.bottom || !isAbsolute)
                 height = rect.height - top - bottom;
+
+            if (this.style.width == "auto") { 
+                width = textWidth(this.textContent);
+                if ((!this.style.height || this.style.height == "auto") && this.textContent.trim()) {
+                    height = CHAR_HEIGHT;
+                    var node = this;
+                    while (node) {
+                        if (node.style?.fontSize) {
+                            height = parseInt(node.style.fontSize);
+                            break;
+                        }
+                        node = node.parentNode;
+                    }
+                }
+            }
 
             var maxWidth = this.style.maxWidth && parseCssLength(this.style.maxWidth, rect.width);
             var maxHeight = this.style.maxHeight && parseCssLength(this.style.maxHeight, rect.height);

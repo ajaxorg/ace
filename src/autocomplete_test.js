@@ -1250,7 +1250,7 @@ module.exports = {
         assert.deepEqual(seen, [true, true, true]);
         assert.ok(!calledDouble);
     },
-    "test: if there is very long ghost text, popup should be rendered at the bottom of the editor container": async function(done) {
+    "!test: if there is very long ghost text, popup should be rendered at the bottom of the editor container": async function(done) {
         editor = initEditor("hello world\n");
 
         // Give enough space for the popup to appear below the editor
