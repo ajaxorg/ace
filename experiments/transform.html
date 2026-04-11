@@ -1,0 +1,441 @@
+<meta charset="UTF-8">
+<style>
+    body {
+        margin: 0;
+    }
+
+    #mainCanvas {
+        width: 100vw;
+        height: 100vh;
+        position: fixed;
+        z-index: -1;
+    }
+
+    .locator {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        background: red;
+        border-radius: 50%;
+        cursor: pointer;
+    }
+
+    #parent div {
+        outline: solid;
+
+    }
+
+    #parent {
+        position: absolute;
+    }
+</style>
+<canvas id="mainCanvas"></canvas>
+<script src="../demo/kitchen-sink/require.js"></script>
+<script>
+// setup paths
+require.config({ paths: { "ace": "../src" } });
+// load ace and extensions
+require(["ace/ace", "ace/lib/dom"], function (ace, dom) {
+    var refs = {};
+    dom.buildDom(
+        ["div", { ref: "parent", id: "parent", style: "width:300px;height:300px;left:100px;top:100px;outline:solid" },
+            ["div", { ref: "inner" }],
+            ["div", { ref: "line100" }],
+            ["div", { ref: "point100" }]
+        ], document.body, refs)
+    refs.inner.style = "width:50px;height:20px;position:absolute;top:100px;left:50px;background:lightgreen"
+    refs.parent.style.transformOrigin = "0 0 0"
+
+    refs.line100.style = "width:0px;height:100px;position:absolute;top:0px;left:100px;background:red"
+    refs.point100.style = "width:0px;height:0px;position:absolute;top:100px;left:100px;background:red"
+
+
+    Minit = [
+        1, 0.1, 100,
+        0.2, 1, 100,
+        0, 0.001, 1
+    ]
+    Minit = [
+        1, 0.1, 100,
+        0.2, 1, 100,
+        0, 0, 1
+    ]
+
+    function setTransform(el, M) {
+        var matrix1 = [
+            M[0], M[3], 0, M[6],
+            M[1], M[4], 0, M[7],
+            0, 0, 1, 0,
+            M[2], M[5], 0, 1
+        ];
+        el.style.transform = "matrix3d(" + matrix1.join(",") + ")"
+        el.style.transformOrigin = "0 0 0";
+ 
+        M1 = fm.getTransform().M
+
+        updateRects()
+    }
+
+    function project(M, point) {
+        var px = point[0], py = point[1];
+        var k = 1 / (M[6] * px + M[7] * py + M[8]);
+        return [(M[0] * px + M[1] * py + M[2]) * k, (M[3] * px + M[4] * py + M[5]) * k];
+    }
+
+    window.editor = ace.edit()
+    fm = editor.renderer.$fontMetrics;
+    fm.el = refs.parent;
+    fm.els = null;
+
+    fm.config = {};
+    M = fm.getTransform().M
+    console.log(M)
+
+
+
+    setTransform(refs.parent, Minit);
+
+
+    window.setTransform = setTransform
+    window.refs = refs
+    window.updateRects = updateRects
+    window.project = project
+
+    ctx = document.querySelector("canvas").getContext("2d")
+
+
+    function showRect(rect, i, l, parent) {
+        var rectNodes = window.rectNodes || (window.rectNodes = [])
+        console.log(i, l, i / l)
+        var div = document.createElement("div")
+        rectNodes.push(div)
+        div.style.outline = "dashed 2px " + (parent === document.body ? "lime" : "red");
+        div.style.background = `hsl(${i / l}turn 100% 50% / 0.1)`;
+        div.style.position = parent == document.body ? "fixed" : "absolute"
+        div.style.left = rect.left + "px"
+        div.style.top = rect.top + "px"
+        div.style.width = rect.width + "px"
+        div.style.height = rect.height + "px"
+        parent.appendChild(div)
+    }
+
+    function showRects(rects, keep) {
+        var rectNodes = window.rectNodes || (window.rectNodes = [])
+        if (!keep) {
+            rectNodes.forEach(x => x.remove());
+            rectNodes.length = 0
+        }
+        for (var i = 0; i < rects.length; i++) {
+            var item = rects[i];
+            showRect(item.rect || item, i, rects.length, item.parent || document.body)
+        }
+    }
+
+    var textContainer;
+    function updateRects() {
+        fm.config = {};
+        var transform = fm.getTransform();
+        var M = transform.M;
+        var t = transform.t;
+        var innerRect = refs.inner.getBoundingClientRect();
+
+        var innerRectOrig = fm.recoverRect(transform, innerRect)
+
+        var outerRect = refs.parent.getBoundingClientRect();
+        var outerRectOrig = fm.recoverRect(transform, outerRect)
+
+        console.log("innerRectOrig", innerRectOrig)
+        showRects([
+            {},
+            outerRect,
+            innerRect,
+
+            { rect: innerRectOrig, parent: refs.parent },
+            { rect: outerRectOrig, parent: refs.parent },
+        ]);
+
+        function rectToString(r) {
+            return `left: ${r.left.toFixed(1)}, top: ${r.top.toFixed(1)}, width: ${r.width.toFixed(1)}, height: ${r.height.toFixed(1)}`
+        }
+        if (!textContainer) {
+            textContainer = document.createElement("pre");
+            textContainer.style.position = "fixed";
+            textContainer.style.bottom = "0px";
+            textContainer.style.right = "10px";
+            textContainer.style.background = "rgba(255, 255, 255, 0.8)";
+            textContainer.style.margin = "0px";
+            textContainer.style.zIndex = 1000;
+            document.body.appendChild(textContainer);
+        }
+
+        textContainer.textContent = `M: ${M.map(x => x.toFixed(2)).join(", ")}
+        Inner Rect: ${innerRectOrig && rectToString(innerRectOrig)}  ${innerRectOrig?.mappingIdx}
+        Outer Rect: ${outerRectOrig && rectToString(outerRectOrig)}  ${outerRectOrig?.mappingIdx}
+        `
+    }
+
+    window.showRects = showRects;
+
+
+
+    var controls = [
+        { name: "translateX", min: -200, max: 200, value: Minit[2], index: 2 },
+        { name: "translateY", min: -200, max: 200, value: Minit[5], index: 5 },
+        { name: "skewX", min: -1, max: 1, value: Minit[1], index: 1 },
+        { name: "skewY", min: -1, max: 1, value: Minit[3], index: 3 },
+        { name: "scaleX", min: 0.1, max: 3, value: Minit[0], index: 0 },
+        { name: "scaleY", min: 0.1, max: 3, value: Minit[4], index: 4 },
+    ]
+
+
+
+    function createLocator(container, point, color) {
+        let div = document.createElement('div');
+        div.className = 'locator';
+        div.style.left = 100 + point[0] * 100 - 5 + 'px';
+        div.style.top = 100 + point[1] * 100 - 5 + 'px';
+        div.style.background = color;
+        container.appendChild(div);
+        div.addEventListener('mousedown', function (e) {
+            e.preventDefault();
+            let startX = e.clientX - parseFloat(div.style.left);
+            let startY = e.clientY - parseFloat(div.style.top);
+            let onMouseMove = (e) => {
+                let dx = e.clientX - startX;
+                let dy = e.clientY - startY;
+                div.style.left = e.clientX - startX + 'px';
+                div.style.top = e.clientY - startY + 'px';
+                updateTransformFromLocators();
+            };
+            let onMouseUp = () => {
+                document.removeEventListener('mousemove', onMouseMove);
+                document.removeEventListener('mouseup', onMouseUp);
+            };
+            document.addEventListener('mousemove', onMouseMove);
+            document.addEventListener('mouseup', onMouseUp);
+        });
+        return div;
+    }
+    function updateTransformFromLocators() {
+        let positions = locators.map(div => {
+            return [
+                (parseFloat(div.style.left) + 5) / 100 * 100,
+                (parseFloat(div.style.top) + 5) / 100 * 100
+            ];
+        });
+        // Here you would implement the logic to compute the transformation matrix M
+        // that maps the original corners [0,0], [1,0], [1,1], [0,1] to the new positions.
+        // For simplicity, let's just log the new positions for now.
+        console.log("Updated corner positions:", positions);
+        function getTransformMatrix() {
+            var L = 100;
+            var a = positions[0];
+            var b = positions[1];
+            var c = positions[3];
+            var d = positions[2];
+
+            var h = solve(sub(d, b), sub(d, c), sub(add(b, c), add(d, a)));
+
+            var m1 = mul((1 + h[0]) / L, sub(b, a));
+            var m2 = mul((1 + h[1]) / L, sub(c, a));
+
+            return [
+                m1[0], m2[0], a[0],
+                m1[1], m2[1], a[1],
+                h[0] / L, h[1] / L, 1
+            ];
+        }
+
+        M = getTransformMatrix();
+        setTransform(refs.parent, M);
+        if (window.updateArrowPosition) {
+            window.updateArrowPosition();
+        }
+    }
+    var locatorContainer = document.createElement('div');
+    locatorContainer.style.position = 'absolute';
+    locatorContainer.style.right = 10 + 'px';
+    locatorContainer.style.top = 10 + 'px';
+    locatorContainer.style.width = '300px';
+    locatorContainer.style.height = '300px';
+    locatorContainer.style.border = 'solid 1px black';
+    locatorContainer.style.zIndex = 1000;
+    locatorContainer.style.background = 'rgba(255, 255, 255, 0.5)';
+    document.body.appendChild(locatorContainer);
+    var locators = [
+        createLocator(locatorContainer, [0, 0], 'red'),
+        createLocator(locatorContainer, [1, 0], 'green'),
+        createLocator(locatorContainer, [1, 1], 'blue'),
+        createLocator(locatorContainer, [0, 1], 'yellow'),
+    ];
+
+    // Create arrow control
+    function createArrowControl(container) {
+        // Get center of four points
+        function getCenter() {
+            let totalX = 0, totalY = 0;
+            locators.forEach(loc => {
+                totalX += parseFloat(loc.style.left) + 5;
+                totalY += parseFloat(loc.style.top) + 5;
+            });
+
+            return [totalX / 4, totalY / 4];
+        }
+
+        // Create arrow base (circle at center)
+        let arrowBase = document.createElement('div');
+        arrowBase.style.position = 'absolute';
+        arrowBase.style.width = '12px';
+        arrowBase.style.height = '12px';
+        arrowBase.style.background = 'white';
+        arrowBase.style.border = 'solid 2px black';
+        arrowBase.style.borderRadius = '50%';
+        arrowBase.style.cursor = 'move';
+        arrowBase.style.zIndex = 1001;
+        container.appendChild(arrowBase);
+
+        // Create arrow head (triangle at angle)
+        let arrowHead = document.createElement('div');
+        arrowHead.style.position = 'absolute';
+        arrowHead.style.width = '0';
+        arrowHead.style.height = '0';
+        arrowHead.style.borderLeft = '6px solid transparent';
+        arrowHead.style.borderRight = '6px solid transparent';
+        arrowHead.style.borderBottom = '12px solid black';
+        arrowHead.style.cursor = 'pointer';
+        arrowHead.style.zIndex = 1001;
+        container.appendChild(arrowHead);
+
+        // Create arrow shaft (line)
+        let arrowShaft = document.createElement('div');
+        arrowShaft.style.position = 'absolute';
+        arrowShaft.style.height = '2px';
+        arrowShaft.style.background = 'black';
+        arrowShaft.style.transformOrigin = '0 1px';
+        arrowShaft.style.pointerEvents = 'none';
+        container.appendChild(arrowShaft);
+
+        let angle = 0; // Initial angle in radians
+        let armLength = 50; // Distance from base to arrow head
+
+        function updateArrowPosition() {
+            let center = getCenter();
+            arrowBase.style.left = (center[0] - 6) + 'px';
+            arrowBase.style.top = (center[1] - 6) + 'px';
+
+            let headX = center[0] + armLength * Math.cos(angle);
+            let headY = center[1] + armLength * Math.sin(angle);
+
+            arrowHead.style.left = (headX - 6) + 'px';
+            arrowHead.style.top = (headY - 12) + 'px';
+            arrowHead.style.transform = 'rotate(' + (angle * 180 / Math.PI) + 'deg)';
+
+            arrowShaft.style.left = center[0] + 'px';
+            arrowShaft.style.top = center[1] + 'px';
+            arrowShaft.style.width = armLength + 'px';
+            arrowShaft.style.transform = 'rotate(' + (angle * 180 / Math.PI) + 'deg)';
+        }
+
+        // Handle base dragging (translation)
+        arrowBase.addEventListener('mousedown', function (e) {
+            e.preventDefault();
+            let startX = e.clientX;
+            let startY = e.clientY;
+            let startCenter = getCenter();
+
+            let onMouseMove = (e) => {
+                let dx = e.clientX - startX;
+                let dy = e.clientY - startY;
+
+                // Move all locators by the delta
+                locators.forEach(loc => {
+                    loc.style.left = (parseFloat(loc.style.left) + dx) + 'px';
+                    loc.style.top = (parseFloat(loc.style.top) + dy) + 'px';
+                });
+
+                startX = e.clientX;
+                startY = e.clientY;
+                updateArrowPosition();
+                updateTransformFromLocators();
+            };
+
+            let onMouseUp = () => {
+                document.removeEventListener('mousemove', onMouseMove);
+                document.removeEventListener('mouseup', onMouseUp);
+            };
+
+            document.addEventListener('mousemove', onMouseMove);
+            document.addEventListener('mouseup', onMouseUp);
+        });
+
+        // Handle arrow head dragging (rotation)
+        arrowHead.addEventListener('mousedown', function (e) {
+            e.preventDefault();
+            let center = getCenter();
+            let startAngle = Math.atan2(e.clientY - center[1], e.clientX - center[0]);
+            let angleOffset = angle - startAngle;
+
+
+            let rect = locatorContainer.getBoundingClientRect();
+
+            let onMouseMove = (e) => {
+                let currentAngle = Math.atan2(e.clientY - center[1] - rect.top, e.clientX - center[0] - rect.left);
+                let newAngle = currentAngle + angleOffset;
+
+                // Rotate all locators around their center
+                let centerPoint = getCenter();
+                let cos = Math.cos(newAngle - angle);
+                let sin = Math.sin(newAngle - angle);
+
+                locators.forEach(loc => {
+                    let locX = parseFloat(loc.style.left) + 5;
+                    let locY = parseFloat(loc.style.top) + 5;
+
+                    // Translate to origin
+                    let tx = locX - centerPoint[0];
+                    let ty = locY - centerPoint[1];
+
+                    // Rotate
+                    let rx = tx * cos - ty * sin;
+                    let ry = tx * sin + ty * cos;
+
+                    // Translate back
+                    loc.style.left = (centerPoint[0] + rx - 5) + 'px';
+                    loc.style.top = (centerPoint[1] + ry - 5) + 'px';
+                });
+
+                angle = newAngle;
+                updateArrowPosition();
+                updateTransformFromLocators();
+            };
+
+            let onMouseUp = () => {
+                document.removeEventListener('mousemove', onMouseMove);
+                document.removeEventListener('mouseup', onMouseUp);
+            };
+
+            document.addEventListener('mousemove', onMouseMove);
+            document.addEventListener('mouseup', onMouseUp);
+        });
+
+        updateArrowPosition();
+        window.updateArrowPosition = updateArrowPosition;
+
+        return { arrowBase, arrowHead, arrowShaft };
+    }
+
+    createArrowControl(locatorContainer);
+});
+
+function solve(l1, l2, r) {
+    var det = l1[1] * l2[0] - l1[0] * l2[1];
+    return [
+        (-l2[1] * r[0] + l2[0] * r[1]) / det,
+        (+l1[1] * r[0] - l1[0] * r[1]) / det
+    ];
+}
+function sub(a, b) { return [a[0] - b[0], a[1] - b[1]]; }
+function add(a, b) { return [a[0] + b[0], a[1] + b[1]]; }
+function mul(a, b) { return [a * b[0], a * b[1]]; }
+
+</script>

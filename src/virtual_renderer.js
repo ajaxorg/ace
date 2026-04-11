@@ -98,7 +98,7 @@ class VirtualRenderer {
             column : 0
         };
 
-        this.$fontMetrics = new FontMetrics(this.container, this.$textLayer);
+        this.$fontMetrics = new FontMetrics(this.container, this.$textLayer, this);
         this.$textLayer.on("changeCharacterSize", function(e) {
             _self.updateCharacterSize();
             _self.onResize(true, _self.gutterWidth, _self.$size.width, _self.$size.height);
@@ -1634,10 +1634,10 @@ class VirtualRenderer {
     pixelToScreenCoordinates(x, y) {
         var canvasPos;
         if (this.$hasCssTransforms) {
-            canvasPos = {top:0, left: 0};
+            canvasPos = {top: this.margin.top, left: this.gutterWidth + this.margin.left};
             var p = this.$fontMetrics.transformCoordinates([x, y]);
-            x = p[1] - this.gutterWidth - this.margin.left;
-            y = p[0];
+            x = p[0];
+            y = p[1];
         } else {
             canvasPos = this.scroller.getBoundingClientRect();
         }
