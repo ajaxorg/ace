@@ -56,6 +56,32 @@ var MarkdownHighlightRules = function() {
             return this.token;
         }
     }];
+    var unorderedListRule = {
+        token: "list",
+        begin: /(^|\G)([ ]{0,3})([*+-])([ \t]+)/,
+        name: "markup.list.unnumbered.markdown",
+        contentName: "meta.paragraph.markdown",
+        beginCaptures: {0: "markup.list"},
+        whileToken: "list",
+        while: /((^|\G)([ ]{2,4}|\t))|(^[ \t]*$)/,
+        patterns: [{
+            include: "basic"
+        }],
+        stateName: "listblock.unnumbered"
+    };
+    var orderedListRule = {
+        token: "list",
+        begin: /(^|\G)([ ]{0,3})([0-9]+[.)])([ \t]+)/,
+        name: "markup.list.numbered.markdown",
+        contentName: "meta.paragraph.markdown",
+        beginCaptures: {0: "markup.list"},
+        whileToken: "list",
+        while: /((^|\G)([ ]{2,4}|\t))|(^[ \t]*$)/,
+        patterns: [{
+            include: "basic"
+        }],
+        stateName: "listblock.numbered"
+    };
 
     this.$rules["start"].unshift({
         token : "empty_line",
@@ -83,10 +109,8 @@ var MarkdownHighlightRules = function() {
         token : "constant",
         regex : "^ {0,3}(?:(?:\\* ?){3,}|(?:\\- ?){3,}|(?:\\_ ?){3,})\\s*$",
         next: "allowBlock"
-    }, { // list
-        token : "markup.list",
-        regex : "^\\s{0,3}(?:[*+-]|\\d+\\.)\\s+",
-        next  : "listblock-start"
+    }, {
+        include: "lists"
     }, {
         include : "basic"
     });
@@ -143,27 +167,10 @@ var MarkdownHighlightRules = function() {
             defaultToken : "heading"
         } ],
 
-        "listblock-start" : [{
-            token : "support.variable",
-            regex : /(?:\[[ x]\])?/,
-            next  : "listblock"
-        }],
-
-        "listblock" : [ { // Lists only escape on completely blank lines.
-            token : "empty_line",
-            regex : "^$",
-            next  : "start"
-        }, { // list
-            token : "markup.list",
-            regex : "^\\s{0,3}(?:[*+-]|\\d+\\.)\\s+",
-            next  : "listblock-start"
-        }, {
-            include : "basic", noEscape: true
-        },
-        codeBlockStartRule,
-        {
-            defaultToken : "list" //do not use markup.list to allow stling leading `*` differntly
-        } ],
+        "lists": [
+            unorderedListRule,
+            orderedListRule
+        ],
 
         "blockquote" : [ { // Blockquotes only escape on blank lines.
             token : "empty_line",
@@ -183,6 +190,19 @@ var MarkdownHighlightRules = function() {
     });
 
     this.normalizeRules();
+    //TODO: y flag instead of this?
+    var nestedUnorderedListRule = {
+        token: this.$rules["lists"][0].token,
+        regex: "(?:[ ]{0,3})([*+-])([ \\t]+)",
+        tmBegin: Object.assign({}, this.$rules["lists"][0].tmBegin)
+    };
+    var nestedOrderedListRule = {
+        token: this.$rules["lists"][1].token,
+        regex: "(?:[ ]{0,3})([0-9]+[.)])([ \\t]+)",
+        tmBegin: Object.assign({}, this.$rules["lists"][1].tmBegin)
+    };
+    this.$rules["listblock.unnumbered"].unshift(nestedUnorderedListRule, nestedOrderedListRule);
+    this.$rules["listblock.numbered"].unshift(nestedUnorderedListRule, nestedOrderedListRule);
 };
 oop.inherits(MarkdownHighlightRules, TextHighlightRules);
 

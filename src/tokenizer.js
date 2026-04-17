@@ -1,5 +1,6 @@
 "use strict";
 const reportError = require("./lib/report_error").reportError;
+const Scope = require("./scope").Scope;
 
 // tokenizing lines longer than this makes editor very slow
 var MAX_TOKEN_COUNT = 2000;
@@ -10,11 +11,13 @@ class Tokenizer {
     /**
      * Constructs a new tokenizer based on the given rules and flags.
      * @param {Object} rules The highlighting rules
+     * @param {string} [modeName]
      **/
-    constructor(rules) {
+    constructor(rules, modeName) {
         /**@type {RegExp}*/
         this.splitRegex;
         this.states = rules;
+        this.rootScope = new Scope(modeName || "root");
 
         this.regExps = {};
         this.matchMappings = {};
@@ -22,14 +25,30 @@ class Tokenizer {
             var state = this.states[key];
             var ruleRegExps = [];
             var matchTotal = 0;
-            var mapping = this.matchMappings[key] = {defaultToken: "text"};
+            var mapping = this.matchMappings[key] = {defaultToken: "text", defaultScope: null};
             var flag = "g";
 
             var splitterRurles = [];
             for (var i = 0; i < state.length; i++) {
                 var rule = state[i];
-                if (rule.defaultToken)
+                if (rule.defaultToken) {
                     mapping.defaultToken = rule.defaultToken;
+                    mapping.defaultScope = rule.ruleScope || rule.defaultScope || mapping.defaultScope;
+                }
+                if (rule.tmBegin) {
+                    rule.tmBegin.beginRegex = rule.regex instanceof RegExp
+                        ? rule.regex
+                        : new RegExp("^(?:" + rule.regex + ")$", rule.tmBegin.beginFlags);
+                    rule.tmBegin.endSource = rule.tmBegin.end instanceof RegExp
+                        ? rule.tmBegin.end.source
+                        : rule.tmBegin.end;
+                    rule.tmBegin.broadEndSource = rule.tmBegin.end
+                        ? this.broadEndRegexp(rule.tmBegin.end)
+                        : null;
+                    rule.tmBegin.whileSource = rule.tmBegin.while instanceof RegExp
+                        ? rule.tmBegin.while.source
+                        : rule.tmBegin.while;
+                }
                 if (rule.caseInsensitive && flag.indexOf("i") === -1)
                     flag += "i";
                 if (rule.unicode && flag.indexOf("u") === -1)
@@ -212,6 +231,204 @@ class Tokenizer {
     }
 
     /**
+     * @param {string|RegExp} end
+     * @returns {string}
+     */
+    broadEndRegexp(end) {
+        var source = end instanceof RegExp ? end.source : end;
+        return source.replace(/\\([1-9])/g, ".*?");
+    }
+
+    /**
+     * @param {string|RegExp} end
+     * @param {string[]|undefined} captures
+     */
+    exactEndRegexp(end, captures, flags) {
+        var source = end instanceof RegExp ? end.source : end;
+        source = source.replace(/\\([1-9])/g, function(_, index) {
+            var value = captures && captures[index - 1] || "";
+            return value.replace(/[\\^$*+?.()|[\]{}]/g, "\\$&");
+        });
+        flags = flags || "";
+        if (end instanceof RegExp) {
+            if (end.ignoreCase && flags.indexOf("i") == -1) flags += "i";
+            if (end.multiline && flags.indexOf("m") == -1) flags += "m";
+            if (end.unicode && flags.indexOf("u") == -1) flags += "u";
+        }
+        return new RegExp("^(?:" + source + ")$", flags);
+    }
+
+    /**
+     * @param {string} source
+     * @param {string[]|undefined} captures
+     * @param {string} flags
+     * @param {string} line
+     * @param {number} index
+     */
+    matchTmRegexAt(source, captures, flags, line, index) {
+        if (!source)
+            return null;
+        source = source.replace(/\\([1-9])/g, function(_, captureIndex) {
+            var value = captures && captures[captureIndex - 1] || "";
+            return value.replace(/[\\^$*+?.()|[\]{}]/g, "\\$&");
+        });
+        source = source.replace(/\\G/g, "");
+        var re = new RegExp("^(?:" + source + ")", flags || "");
+        return re.exec(line.slice(index));
+    }
+
+    /**
+     * @param {any[]} stack
+     */
+    getTmFrames(stack) {
+        var frames = [];
+        for (var i = 1; i < stack.length; i++) {
+            var item = stack[i];
+            if (item && item.kind === "tm")
+                frames.push(item);
+        }
+        return frames.reverse();
+    }
+
+    /**
+     * @param {string} currentState
+     * @param {any[]} stack
+     */
+    getActiveTmFrame(currentState, stack) {
+        if (stack[0] === currentState && stack[1] && stack[1].kind === "tm")
+            return stack[1];
+        return null;
+    }
+
+    /**
+     * @param {string|undefined} currentState
+     * @param {any[]} stack
+     * @param {any} tmBegin
+     * @param {string} value
+     */
+    pushTmFrame(currentState, stack, tmBegin, value) {
+        var match = tmBegin.beginRegex.exec(value);
+        var frame = {
+            kind: "tm",
+            state: tmBegin.state,
+            outerScope: tmBegin.outerScope,
+            contentToken: tmBegin.contentToken,
+            innerScope: tmBegin.innerScope,
+            endSource: tmBegin.endSource,
+            broadEndSource: tmBegin.broadEndSource,
+            endFlags: tmBegin.endFlags,
+            endToken: tmBegin.endToken,
+            captures: match ? match.slice(1) : []
+        };
+        if (tmBegin.whileSource) {
+            frame.whileSource = tmBegin.whileSource;
+            frame.whileFlags = tmBegin.whileFlags;
+            frame.whileToken = tmBegin.whileToken;
+        }
+        stack.unshift(tmBegin.state, frame, currentState || "start");
+        return tmBegin.state;
+    }
+
+    /**
+     * @param {string} currentState
+     * @param {any[]} stack
+     */
+    popTmFrame(currentState, stack) {
+        if (stack[0] === currentState)
+            stack.shift();
+        stack.shift();
+        return stack.shift() || "start";
+    }
+
+    /**
+     * @param {string} currentState
+     * @param {any[]} stack
+     * @param {any} frame
+     */
+    popTmFramesThrough(currentState, stack, frame) {
+        while (true) {
+            var activeTmFrame = this.getActiveTmFrame(currentState, stack);
+            if (!activeTmFrame)
+                return currentState;
+            currentState = this.popTmFrame(currentState, stack);
+            if (activeTmFrame === frame)
+                return currentState;
+        }
+    }
+
+    /**
+     * @param {string} currentState
+     * @param {any[]} stack
+     */
+    getDefaultToken(currentState, stack) {
+        var frame = this.getActiveTmFrame(currentState, stack);
+        return frame ? frame.contentToken : this.matchMappings[currentState].defaultToken;
+    }
+
+    /**
+     * @param {string} type
+     * @param {any} rule
+     * @param {{defaultScope?: string|null}} mapping
+     * @returns {Scope}
+     */
+    getTokenScope(type, rule, mapping, currentState, stack) {
+        var scope = this.rootScope;
+        var tmFrames = this.getTmFrames(stack || []);
+        tmFrames.forEach(function(frame) {
+            if (frame.outerScope)
+                scope = scope.get(frame.outerScope);
+        });
+        var scopeName = rule && rule.ruleScope;
+        if (!scopeName) {
+            var frame = this.getActiveTmFrame(currentState || "", stack || []);
+            if (frame)
+                scopeName = frame.innerScope;
+        }
+        if (!scopeName)
+            scopeName = mapping.defaultScope;
+        var activeFrame = tmFrames[tmFrames.length - 1];
+        if (scopeName && (!activeFrame || activeFrame.outerScope !== scopeName))
+            scope = scope.get(scopeName);
+        return scope;
+    }
+
+    /**
+     * @param {import("../ace-internal").Ace.Token} token
+     * @param {Scope} scope
+     */
+    setTokenScope(token, scope) {
+        Object.defineProperty(token, "scope", {
+            value: scope,
+            configurable: true,
+            writable: true
+        });
+        return token;
+    }
+
+    /**
+     * @param {import("../ace-internal").Ace.Token[]} tokens
+     * @param {import("../ace-internal").Ace.Token} token
+     * @param {string} type
+     * @param {string} value
+     * @param {Scope} scope
+     * @returns {import("../ace-internal").Ace.Token}
+     */
+    appendScopedToken(tokens, token, type, value, scope) {
+        if (!value)
+            return token;
+        if (token.type === type && token.scope === scope) {
+            token.value += value;
+            return token;
+        }
+        if (token.type)
+            tokens.push(token);
+        return this.setTokenScope({
+            type: type,
+            value: value
+        }, scope);
+    }
+
+    /**
      * Returns an object containing two properties: `tokens`, which contains all the tokens; and `state`, the current state.
      * @param {string} line
      * @param {string | string[]} startState
@@ -221,6 +438,18 @@ class Tokenizer {
         if (startState && typeof startState != "string") {
             /**@type {any[]}*/
             var stack = startState.slice(0);
+            Object.getOwnPropertyNames(startState).forEach(function(name) {
+                if (name == "length" || /^\d+$/.test(name))
+                    return;
+                var value = startState[name];
+                if (Array.isArray(value))
+                    value = value.slice(0);
+                Object.defineProperty(stack, name, {
+                    value: value,
+                    configurable: true,
+                    writable: true
+                });
+            });
             startState = stack[0];
             if (startState === "#tmp") {
                 stack.shift();
@@ -245,21 +474,93 @@ class Tokenizer {
 
         var token = {type: null, value: ""};
 
-        while (match = re.exec(line)) {
-            var type = mapping.defaultToken;
+        var whileFrames = this.getTmFrames(stack);
+        var whileIndex = 0;
+        for (var frameIndex = 0; frameIndex < whileFrames.length; frameIndex++) {
+            var whileFrame = whileFrames[frameIndex];
+            if (!whileFrame.whileSource)
+                continue;
+            var whileMatch = this.matchTmRegexAt(
+                whileFrame.whileSource,
+                whileFrame.captures,
+                whileFrame.whileFlags,
+                line,
+                whileIndex
+            );
+            if (!whileMatch) {
+                currentState = this.popTmFramesThrough(currentState, stack, whileFrame);
+                state = this.states[currentState] || this.states.start;
+                mapping = this.matchMappings[currentState];
+                re = this.regExps[currentState];
+                if (whileIndex === 0) {
+                    whileFrames = this.getTmFrames(stack);
+                    frameIndex = -1;
+                }
+                break;
+            }
+            token = this.appendScopedToken(
+                tokens,
+                token,
+                whileFrame.whileToken || whileFrame.contentToken,
+                whileMatch[0],
+                this.getTokenScope(
+                    whileFrame.whileToken || whileFrame.contentToken,
+                    {scope: whileFrame.outerScope},
+                    this.matchMappings[currentState] || this.matchMappings.start,
+                    currentState,
+                    stack
+                )
+            );
+            whileIndex += whileMatch[0].length;
+        }
+        lastIndex = whileIndex;
+
+        while (lastIndex <= line.length) {
+            var activeTmFrame = this.getActiveTmFrame(currentState, stack);
+            var endMatch = null;
+            if (activeTmFrame && activeTmFrame.endSource) {
+                var endSearchRegex = new RegExp(activeTmFrame.broadEndSource, (activeTmFrame.endFlags || "") + "g");
+                endSearchRegex.lastIndex = lastIndex;
+                var candidate = endSearchRegex.exec(line);
+                if (candidate && this.exactEndRegexp(activeTmFrame.endSource, activeTmFrame.captures, activeTmFrame.endFlags).test(candidate[0])) {
+                    endMatch = {
+                        index: candidate.index,
+                        value: candidate[0]
+                    };
+                }
+            }
+
+            re.lastIndex = lastIndex;
+            match = re.exec(line);
+            if (!match)
+                break;
+            var matchIndex = match.index;
+            if (endMatch && endMatch.index < matchIndex) {
+                match = null;
+                matchIndex = endMatch.index;
+            }
+            var type = this.getDefaultToken(currentState, stack);
             var rule = null;
-            var value = match[0];
-            var index = re.lastIndex;
+            var value = match ? match[0] : endMatch.value;
+            var index = match ? re.lastIndex : endMatch.index + endMatch.value.length;
 
             if (index - value.length > lastIndex) {
                 var skipped = line.substring(lastIndex, index - value.length);
-                if (token.type == type) {
-                    token.value += skipped;
-                } else {
-                    if (token.type)
-                        tokens.push(token);
-                    token = {type: type, value: skipped};
-                }
+                var skippedScope = this.getTokenScope(type, null, mapping, currentState, stack);
+                token = this.appendScopedToken(tokens, token, type, skipped, skippedScope);
+            }
+
+            if (!match && endMatch) {
+                var endScope = this.getTokenScope(activeTmFrame.endToken, {scope: activeTmFrame.outerScope}, mapping, currentState, stack);
+                token = this.appendScopedToken(tokens, token, activeTmFrame.endToken, endMatch.value, endScope);
+                lastIndex = index;
+                currentState = this.popTmFrame(currentState, stack);
+                state = this.states[currentState] || this.states.start;
+                mapping = this.matchMappings[currentState];
+                re = this.regExps[currentState];
+                if (lastIndex >= line.length)
+                    break;
+                continue;
             }
 
             for (var i = 0; i < match.length-2; i++) {
@@ -273,7 +574,16 @@ class Tokenizer {
                 else
                     type = rule.token;
 
-                if (rule.next) {
+                if (rule.tmBegin) {
+                    currentState = this.pushTmFrame(currentState, stack, rule.tmBegin, value);
+                    state = this.states[currentState];
+                    mapping = this.matchMappings[currentState];
+                    lastIndex = index;
+                    re = this.regExps[currentState];
+                    re.lastIndex = index;
+                }
+
+                if (!rule.tmBegin && rule.next) {
                     if (typeof rule.next == "string") {
                         currentState = rule.next;
                     } else {
@@ -298,23 +608,30 @@ class Tokenizer {
 
             if (value) {
                 if (typeof type === "string") {
-                    if ((!rule || rule.merge !== false) && token.type === type) {
-                        token.value += value;
-                    } else {
+                    var ruleScope = this.getTokenScope(type, rule, mapping, currentState, stack);
+                    if ((!rule || rule.merge !== false))
+                        token = this.appendScopedToken(tokens, token, type, value, ruleScope);
+                    else {
                         if (token.type)
                             tokens.push(token);
-                        token = {type: type, value: value};
+                        token = this.setTokenScope({
+                            type: type,
+                            value: value
+                        }, ruleScope);
                     }
                 } else if (type) {
                     if (token.type)
                         tokens.push(token);
                     token = {type: null, value: ""};
-                    for (var i = 0; i < type.length; i++)
+                    for (var i = 0; i < type.length; i++) {
+                        if (type[i].type && !type[i].scope)
+                            this.setTokenScope(type[i], this.getTokenScope(type[i].type, rule, mapping, currentState, stack));
                         tokens.push(type[i]);
+                    }
                 }
             }
 
-            if (lastIndex == line.length)
+            if (lastIndex >= line.length)
                 break;
 
             lastIndex = index;
@@ -330,10 +647,10 @@ class Tokenizer {
                 while (lastIndex < line.length) {
                     if (token.type)
                         tokens.push(token);
-                    token = {
+                    token = this.setTokenScope({
                         value: line.substring(lastIndex, lastIndex += 500),
                         type: "overflow"
-                    };
+                    }, this.getTokenScope("overflow", null, mapping, currentState, stack));
                 }
                 currentState = "start";
                 stack = [];

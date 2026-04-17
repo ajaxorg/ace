@@ -7,6 +7,62 @@
 var oop = require("./lib/oop");
 var EventEmitter = require("./lib/event_emitter").EventEmitter;
 
+function statesEqual(a, b) {
+    if (a === b)
+        return true;
+    if (!a || !b)
+        return a === b;
+    if (typeof a != typeof b)
+        return false;
+    if (typeof a != "object")
+        return a === b;
+
+    var aIsArray = Array.isArray(a);
+    var bIsArray = Array.isArray(b);
+    if (aIsArray !== bIsArray)
+        return false;
+
+    if (aIsArray) {
+        if (a.length !== b.length)
+            return false;
+        for (var i = 0; i < a.length; i++) {
+            if (!statesEqual(a[i], b[i]))
+                return false;
+        }
+    }
+
+    var aNames = Object.getOwnPropertyNames(a).filter(function(name) {
+        return name != "length" && !/^\d+$/.test(name);
+    }).sort();
+    var bNames = Object.getOwnPropertyNames(b).filter(function(name) {
+        return name != "length" && !/^\d+$/.test(name);
+    }).sort();
+
+    if (aNames.length !== bNames.length)
+        return false;
+    for (var j = 0; j < aNames.length; j++) {
+        if (aNames[j] !== bNames[j])
+            return false;
+        if (!statesEqual(a[aNames[j]], b[bNames[j]]))
+            return false;
+    }
+
+    if (!aIsArray) {
+        var aKeys = Object.keys(a).sort();
+        var bKeys = Object.keys(b).sort();
+        if (aKeys.length !== bKeys.length)
+            return false;
+        for (var k = 0; k < aKeys.length; k++) {
+            if (aKeys[k] !== bKeys[k])
+                return false;
+            if (!statesEqual(a[aKeys[k]], b[bKeys[k]]))
+                return false;
+        }
+    }
+
+    return true;
+}
+
 /**
  * Tokenizes the current [[Document `Document`]] in the background, and caches the tokenized rows for future use. 
  * 
@@ -194,7 +250,7 @@ class BackgroundTokenizer {
         // @ts-expect-error TODO: potential wrong argument
         var data = this.tokenizer.getLineTokens(line, state, row);
 
-        if (this.states[row] + "" !== data.state + "") {
+        if (!statesEqual(this.states[row], data.state)) {
             this.states[row] = data.state;
             this.lines[row + 1] = null;
             if (this.currentLine > row + 1)

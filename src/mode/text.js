@@ -32,7 +32,8 @@ Mode = function() {
     this.getTokenizer = function() {
         if (!this.$tokenizer) {
             this.$highlightRules = this.$highlightRules || new this.HighlightRules(this.$highlightRuleConfig);
-            this.$tokenizer = new Tokenizer(this.$highlightRules.getRules());
+            var modeName = this.$id ? this.$id.split('/').pop() : "root";
+            this.$tokenizer = new Tokenizer(this.$highlightRules.getRules(), modeName);
         }
         return this.$tokenizer;
     };

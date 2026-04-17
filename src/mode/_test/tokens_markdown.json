@@ -62,7 +62,7 @@
   ["text",")"],
   ["heading"," #"]
 ],[
-   "listblock",
+   ["listblock.unnumbered",{"kind":"tm","state":"listblock.unnumbered","outerScope":"markup.list.unnumbered.markdown","contentToken":"list","innerScope":"meta.paragraph.markdown","broadEndSource":null,"endFlags":"","endToken":"list","captures":["","","*"," "],"whileSource":"((^|\\G)([ ]{2,4}|\\t))|(^[ \\t]*$)","whileFlags":"","whileToken":"markup.list"},"start"],
   ["markup.list","* "],
   ["text","["],
   ["string","demo"],
@@ -90,7 +90,7 @@
   ["string"," \"space\" "],
   ["text",")"]
 ],[
-   "listblock",
+   ["listblock.unnumbered",{"kind":"tm","state":"listblock.unnumbered","outerScope":"markup.list.unnumbered.markdown","contentToken":"list","innerScope":"meta.paragraph.markdown","broadEndSource":null,"endFlags":"","endToken":"list","captures":["","","*"," "],"whileSource":"((^|\\G)([ ]{2,4}|\\t))|(^[ \\t]*$)","whileFlags":"","whileToken":"markup.list"},"start"],
   ["markup.list","* "],
   ["list","usually "],
   ["string.emphasis","*work*"],
@@ -98,10 +98,19 @@
   ["string.emphasis","_em_"],
   ["list",")"]
 ],[
-   "listblock",
-  ["list","in lists"]
+   ["listblock.unnumbered",{"kind":"tm","state":"listblock.unnumbered","outerScope":"markup.list.unnumbered.markdown","contentToken":"list","innerScope":"meta.paragraph.markdown","broadEndSource":null,"endFlags":"","endToken":"list","captures":["","","*"," "],"whileSource":"((^|\\G)([ ]{2,4}|\\t))|(^[ \\t]*$)","whileFlags":"","whileToken":"markup.list"},"start"],
+  ["markup.list","* "],
+  ["list","nested "],
+  ["string.strong","**a *b* c**"],
+  ["list"," and "],
+  ["string.emphasis","*a **"],
+  ["list","b"],
+  ["string.emphasis","** c*"]
 ],[
-   "start"
+   "start",
+  ["text.xml","in lists"]
+],[
+   "allowBlock"
 ],[
    "start",
   ["text.xml","in plain text "],

@@ -1,35 +1,15 @@
 [[
-   ["bracketedComment",2,"start"],
-  [
-    "comment",
-    "--[["
-  ],
-  [
-    "comment.body",
-    "--"
-  ]
+   ["comment.block.lua.0",{"kind":"tm","state":"comment.block.lua.0","outerScope":"comment.block.lua","contentToken":"comment","innerScope":"comment.block.lua","endSource":"\\]\\1\\](?:--)?","broadEndSource":"\\].*?\\](?:--)?","endFlags":"","endToken":"comment","captures":[""]},"start"],
+  ["comment","--[[--"]
 ],[
-   ["bracketedComment",2,"start"],
-  [
-    "comment.body",
-    "num_args takes in 5.1 byte code and extracts the number of arguments"
-  ]
+   ["comment.block.lua.0",{"kind":"tm","state":"comment.block.lua.0","outerScope":"comment.block.lua","contentToken":"comment","innerScope":"comment.block.lua","endSource":"\\]\\1\\](?:--)?","broadEndSource":"\\].*?\\](?:--)?","endFlags":"","endToken":"comment","captures":[""]},"start"],
+  ["comment","num_args takes in 5.1 byte code and extracts the number of arguments"]
 ],[
-   ["bracketedComment",2,"start"],
-  [
-    "comment.body",
-    "from its function header."
-  ]
+   ["comment.block.lua.0",{"kind":"tm","state":"comment.block.lua.0","outerScope":"comment.block.lua","contentToken":"comment","innerScope":"comment.block.lua","endSource":"\\]\\1\\](?:--)?","broadEndSource":"\\].*?\\](?:--)?","endFlags":"","endToken":"comment","captures":[""]},"start"],
+  ["comment","from its function header."]
 ],[
    "start",
-  [
-    "comment.body",
-    "--"
-  ],
-  [
-    "comment",
-    "]]--"
-  ]
+  ["comment","--]]--"]
 ],[
    "start"
 ],[
@@ -300,12 +280,12 @@
 ],[
    "start"
 ],[
-   ["bracketedString",5,"start"],
+   ["string.quoted.bracket.lua.1",{"kind":"tm","state":"string.quoted.bracket.lua.1","outerScope":"string.quoted.bracket.lua","contentToken":"string","innerScope":"string.quoted.bracket.lua","endSource":"\\]\\1\\]","broadEndSource":"\\].*?\\]","endFlags":"","endToken":"string.end","captures":["==="]},"start"],
   ["support.function","print"],
   ["paren.lparen","("],
   ["string.start","[===["]
 ],[
-   ["bracketedString",5,"start"],
+   ["string.quoted.bracket.lua.1",{"kind":"tm","state":"string.quoted.bracket.lua.1","outerScope":"string.quoted.bracket.lua","contentToken":"string","innerScope":"string.quoted.bracket.lua","endSource":"\\]\\1\\]","broadEndSource":"\\].*?\\]","endFlags":"","endToken":"string.end","captures":["==="]},"start"],
   ["string","    blah blah %s, (%d %d)"]
 ],[
    "start",
@@ -321,31 +301,14 @@
 ],[
    "start"
 ],[
-   ["bracketedComment",3,"start"],
-  [
-    "comment",
-    "--[=["
-  ],
-  [
-    "comment.body",
-    "--"
-  ]
+   ["comment.block.lua.0",{"kind":"tm","state":"comment.block.lua.0","outerScope":"comment.block.lua","contentToken":"comment","innerScope":"comment.block.lua","endSource":"\\]\\1\\](?:--)?","broadEndSource":"\\].*?\\](?:--)?","endFlags":"","endToken":"comment","captures":["="]},"start"],
+  ["comment","--[=[--"]
 ],[
-   ["bracketedComment",3,"start"],
-  [
-    "comment.body",
-    "table.maxn is deprecated, use # instead."
-  ]
+   ["comment.block.lua.0",{"kind":"tm","state":"comment.block.lua.0","outerScope":"comment.block.lua","contentToken":"comment","innerScope":"comment.block.lua","endSource":"\\]\\1\\](?:--)?","broadEndSource":"\\].*?\\](?:--)?","endFlags":"","endToken":"comment","captures":["="]},"start"],
+  ["comment","table.maxn is deprecated, use # instead."]
 ],[
    "start",
-  [
-    "comment.body",
-    "--"
-  ],
-  [
-    "comment",
-    "]=]--"
-  ]
+  ["comment","--]=]--"]
 ],[
    "start",
   ["support.function","print"],
@@ -380,17 +343,6 @@
   ["paren.lparen","("],
   ["constant.numeric","5"],
   ["text"," "],
-  [
-    "comment",
-    "--[["
-  ],
-  [
-    "comment.body",
-    " blah "
-  ],
-  [
-    "comment",
-    "]]"
-  ],
+  ["comment","--[[ blah ]]"],
   ["paren.rparen",")"]
 ]]

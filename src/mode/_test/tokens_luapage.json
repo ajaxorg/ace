@@ -20,39 +20,19 @@
   ["meta.tag.tag-name.xml","html"],
   ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
-   ["lua-bracketedComment",2,"lua-start"],
+   ["lua-comment.block.lua.0",{"kind":"tm","state":"lua-comment.block.lua.0","outerScope":"comment.block.lua","contentToken":"comment","innerScope":"comment.block.lua","endSource":"\\]\\1\\](?:--)?","broadEndSource":"\\].*?\\](?:--)?","endFlags":"","endToken":"comment","captures":[""]},"lua-start"],
   ["keyword","<%"],
   ["text"," "],
-  [
-    "comment",
-    "--[["
-  ],
-  [
-    "comment.body",
-    "--"
-  ]
+  ["comment","--[[--"]
 ],[
-   ["lua-bracketedComment",2,"lua-start"],
-  [
-    "comment.body",
-    "    index.lp from the Kepler Project's LuaDoc HTML doclet."
-  ]
+   ["lua-comment.block.lua.0",{"kind":"tm","state":"lua-comment.block.lua.0","outerScope":"comment.block.lua","contentToken":"comment","innerScope":"comment.block.lua","endSource":"\\]\\1\\](?:--)?","broadEndSource":"\\].*?\\](?:--)?","endFlags":"","endToken":"comment","captures":[""]},"lua-start"],
+  ["comment","    index.lp from the Kepler Project's LuaDoc HTML doclet."]
 ],[
-   ["lua-bracketedComment",2,"lua-start"],
-  [
-    "comment.body",
-    "    http://keplerproject.github.com/luadoc/"
-  ]
+   ["lua-comment.block.lua.0",{"kind":"tm","state":"lua-comment.block.lua.0","outerScope":"comment.block.lua","contentToken":"comment","innerScope":"comment.block.lua","endSource":"\\]\\1\\](?:--)?","broadEndSource":"\\].*?\\](?:--)?","endFlags":"","endToken":"comment","captures":[""]},"lua-start"],
+  ["comment","    http://keplerproject.github.com/luadoc/"]
 ],[
    "start",
-  [
-    "comment.body",
-    "--"
-  ],
-  [
-    "comment",
-    "]]"
-  ],
+  ["comment","--]]"],
   ["text"," "],
   ["keyword","%>"]
 ],[

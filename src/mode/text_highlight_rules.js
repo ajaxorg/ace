@@ -34,6 +34,7 @@ TextHighlightRules = function() {
         }
         for (var key in rules) {
             var state = rules[key];
+            delete state.processed;
             for (var i = 0; i < state.length; i++) {
                 var rule = state[i];
                 if (rule.next || rule.onMatch) {
@@ -44,6 +45,8 @@ TextHighlightRules = function() {
                     if (rule.nextState && rule.nextState.indexOf(prefix) !== 0)
                         rule.nextState = prefix + rule.nextState;
                 }
+                if (rule.tmBegin && rule.tmBegin.state && rule.tmBegin.state.indexOf(prefix) !== 0)
+                    rule.tmBegin.state = prefix + rule.tmBegin.state;
             }
             this.$rules[prefix + key] = state;
         }
@@ -98,6 +101,18 @@ TextHighlightRules = function() {
         return this.$embeds;
     };
 
+    function regexpSource(re) {
+        return re instanceof RegExp ? re.source : re;
+    }
+    function regexpFlags(re) {
+        return re instanceof RegExp ? (re.ignoreCase ? "i" : "") + (re.multiline ? "m" : "") + (re.unicode ? "u" : "") : "";
+    }
+    function captureToken(captures, fallback) {
+        var capture = captures && (captures[0] || captures["0"]);
+        if (typeof capture == "string")
+            return capture;
+        return capture && capture.name || fallback;
+    }
     var pushState = function(currentState, stack) {
         if (currentState != "start" || stack.length)
             stack.unshift(this.nextState, currentState);
@@ -114,12 +129,68 @@ TextHighlightRules = function() {
      */
     this.normalizeRules = function() {
         var id = 0;
+        var tmLikeRuleId = 0;
         var rules = this.$rules;
+        function compileTmRule(pattern) {
+            if (!pattern || pattern.regex)
+                return pattern;
+
+            if (pattern.match) {
+                pattern.regex = pattern.match;
+                pattern.token = pattern.token || pattern.name || "text";
+                pattern.ruleScope = pattern.name;
+                delete pattern.match;
+                delete pattern.name;
+                return pattern;
+            }
+
+            if (pattern.begin && (pattern.end || pattern.while)) {
+                var outerScope = pattern.name || pattern.token;
+                var contentToken = pattern.token || outerScope || "text";
+                var beginToken = captureToken(pattern.beginCaptures, pattern.token || outerScope || "text");
+                var endToken = captureToken(pattern.endCaptures, pattern.token || outerScope || "text");
+                var whileToken = captureToken(
+                    pattern.whileCaptures || pattern.beginCaptures || pattern.captures,
+                    pattern.whileToken || pattern.token || contentToken
+                );
+                var innerScope = pattern.contentName || outerScope;
+                var tmStateName = pattern.stateName || (outerScope || "tm") + "." + tmLikeRuleId++;
+
+                rules[tmStateName] = (pattern.patterns || []).concat([{
+                    defaultToken: contentToken,
+                    ruleScope: innerScope
+                }]);
+                processState(tmStateName);
+
+                return {
+                    token: beginToken,
+                    regex: pattern.begin,
+                    tmBegin: {
+                        state: tmStateName,
+                        outerScope: outerScope,
+                        contentToken: contentToken,
+                        innerScope: innerScope,
+                        end: pattern.end,
+                        endToken: endToken,
+                        while: pattern.while,
+                        whileToken: whileToken,
+                        beginFlags: regexpFlags(pattern.begin),
+                        endFlags: regexpFlags(pattern.end),
+                        whileFlags: regexpFlags(pattern.while)
+                    }
+                };
+            }
+
+            return pattern;
+        }
         function processState(key) {
             var state = rules[key];
+            if (!state || state["processed"])
+                return;
             state["processed"] = true;
             for (var i = 0; i < state.length; i++) {
                 var rule = state[i];
+                rule = state[i] = compileTmRule(rule);
                 var toInsert = null;
                 if (Array.isArray(rule)) {
                     toInsert = rule;

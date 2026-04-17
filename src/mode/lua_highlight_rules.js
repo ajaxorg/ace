@@ -63,62 +63,22 @@ var LuaHighlightRules = function() {
 
     this.$rules = {
         "start" : [{
-            stateName: "bracketedComment",
-            onMatch : function(value, currentState, stack){
-                stack.unshift(this.next, value.length - 2, currentState);
-                return "comment";
-            },
-            regex : /\-\-\[=*\[/,
-            next  : [
-                {
-                    onMatch : function(value, currentState, stack) {
-                        if (value.length == stack[1]) {
-                            stack.shift();
-                            stack.shift();
-                            this.next = stack.shift();
-                        } else {
-                            this.next = "";
-                        }
-                        return "comment";
-                    },
-                    regex : /\]=*\]/,
-                    next  : "start"
-                }, {
-                    defaultToken: "comment.body"
-                }
-            ]
-        },
-
-        {
+            token: "comment",
+            begin: /\-\-\[(=*)\[/,
+            end: /\]\1\](?:--)?/,
+            name: "comment.block.lua",
+            beginCaptures: {0: "comment"},
+            endCaptures: {0: "comment"},
+        }, {
+            token: "string",
+            begin: /\[(=*)\[/,
+            end: /\]\1\]/,
+            name: "string.quoted.bracket.lua",
+            beginCaptures: {0: "string.start"},
+            endCaptures: {0: "string.end"},
+        }, {
             token : "comment",
             regex : "\\-\\-.*$"
-        },
-        {
-            stateName: "bracketedString",
-            onMatch : function(value, currentState, stack){
-                stack.unshift(this.next, value.length, currentState);
-                return "string.start";
-            },
-            regex : /\[=*\[/,
-            next  : [
-                {
-                    onMatch : function(value, currentState, stack) {
-                        if (value.length == stack[1]) {
-                            stack.shift();
-                            stack.shift();
-                            this.next = stack.shift();
-                        } else {
-                            this.next = "";
-                        }
-                        return "string.end";
-                    },
-                    
-                    regex : /\]=*\]/,
-                    next  : "start"
-                }, {
-                    defaultToken : "string"
-                }
-            ]
         },
         {
             token : "string",           // " string
@@ -149,7 +109,7 @@ var LuaHighlightRules = function() {
             regex : "\\s+|\\w+"
         } ]
     };
-    
+
     this.normalizeRules();
 };
 
