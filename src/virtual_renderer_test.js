@@ -19,6 +19,14 @@ function setScreenPosition(node, rect) {
     node.style.height = rect[3] + "px";
 }
 
+function setEditorWidth(editor, characterCount) {
+    editor.resize(true);
+    var renderer = editor.renderer;
+    editor.container.style.width = 2 * renderer.$padding + renderer.gutterWidth
+         + renderer.characterWidth * characterCount + 2 + "px";
+    editor.resize(true);
+}
+
 var editor = null;
 module.exports = {
     setUp: function() {
@@ -436,24 +444,75 @@ module.exports = {
         
         assert.equal(editor.session.lineWidgets, null);
     },
-    "test long multiline ghost text": function() {
+    "test long multiline ghost text": async function(done) {
+        setEditorWidth(editor, 30);
+
         editor.session.setValue("abcdef");
+        editor.resize(true);
         editor.renderer.$loop._flush();
 
         editor.setGhostText("This is a long test text that is longer than 30 characters\n\nGhost3", 
             {row: 0, column: 6});
 
         editor.renderer.$loop._flush();
-        assert.equal(editor.renderer.content.textContent, "abcdefThis is a long test text that is longer than ");
+        await lang.sleep(0);
+        assert.equal(editor.renderer.content.textContent, "abcdefThis is a long test text ");
 
-        assert.equal(editor.session.lineWidgets[0].el.innerHTML, `<div class="ghost_text_line_wrapped"><span class="ace_ghost_text">30 characters</span></div><div><span class="ace_ghost_text"> </span></div><div><span class="ace_ghost_text">Ghost3</span><span></span></div>`);
+        assert.equal(editor.session.lineWidgets[0].el.innerHTML, `<div class="ghost_text_line_wrapped"><span class="ace_ghost_text">that is longer than 30 </span></div><div class="ghost_text_line_wrapped"><span class="ace_ghost_text">characters</span></div><div><span class="ace_ghost_text"> </span></div><div><span class="ace_ghost_text">Ghost3</span><span></span></div>`);
 
         editor.removeGhostText();
 
         editor.renderer.$loop._flush();
         assert.equal(editor.renderer.content.textContent, "abcdef");
+        assert.notOk(editor.renderer.scrollBarH.isVisible);
 
         assert.equal(editor.session.lineWidgets, null);
+        done();
+    },
+    "test ghost text wraps at end of line and does not exceed screen": function() {
+        var lineText = "existing";
+        var ghostText = "01234567890123456789012345678901234567890123456789";
+        editor.renderer.setPadding(10);
+
+        setEditorWidth(editor, 30);
+
+        editor.session.setValue(lineText);
+        editor.renderer.$loop._flush();
+
+        editor.setGhostText(ghostText, {row: 0, column: lineText.length});
+        editor.renderer.$loop._flush();
+
+        var widget = editor.session.lineWidgets[0].el;
+        assert.ok(widget.querySelectorAll(".ghost_text_line_wrapped").length > 0);
+        assert.notOk(editor.renderer.scrollBarH.isVisible);
+        assert.ok(editor.renderer.content.textContent.length < (lineText + ghostText).length);
+    },
+    "test ghost text respects padding and editor resize": function() {
+        editor.session.setValue("abcdef");
+
+        setEditorWidth(editor, 25);
+
+        editor.renderer.setPadding(10);
+        editor.resize(true);
+        editor.renderer.$loop._flush();
+
+        editor.setGhostText("01234567890123456789012345678901234567890123456789", {row: 0, column: 6});
+        editor.renderer.$loop._flush();
+
+        var widget = editor.session.lineWidgets[0].el;
+        var initialWrappedLines = widget.querySelectorAll(".ghost_text_line_wrapped").length;
+        var marginH = widget.style.margin.split(" ")[1];
+        assert.equal(marginH, "10px");
+
+        editor.renderer.setPadding(30);
+        editor.resize(true);
+        editor.renderer.$loop._flush();
+
+        widget = editor.session.lineWidgets[0].el;
+        var resizedWrappedLines = widget.querySelectorAll(".ghost_text_line_wrapped").length;
+        marginH = widget.style.margin.split(" ")[1];
+        assert.equal(marginH, "30px");
+        assert.ok(resizedWrappedLines > initialWrappedLines);
     },
     "test: brackets highlighting": async function (done) {
         var renderer = editor.renderer;
@@ -482,7 +541,7 @@ module.exports = {
     },
     "test: scroll cursor into view": function() {
         editor.renderer.$loop._flush();
-        
+
         function X(n) {
             return "X".repeat(n);
         }

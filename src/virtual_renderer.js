@@ -367,6 +367,8 @@ class VirtualRenderer {
         if (this.$customScrollbar) {
             this.$updateCustomScrollbar(true);
         }
+
+        this.$renderGhostText();
     }
 
     /**
@@ -777,6 +779,7 @@ class VirtualRenderer {
         this.$markerFront.setPadding(padding);
         this.$markerBack.setPadding(padding);
         this.$loop.schedule(this.CHANGE_FULL);
+        this.$renderGhostText();
         this.$updatePrintMargin();
     }
 
@@ -1781,9 +1784,6 @@ class VirtualRenderer {
 
         this.removeGhostText();
 
-        var textChunks = this.$calculateWrappedTextChunks(text, insertPosition);
-        this.addToken(textChunks[0].text, "ghost_text", insertPosition.row, insertPosition.column);
-
         this.$ghostText = {
             text: text,
             position: {
@@ -1791,6 +1791,20 @@ class VirtualRenderer {
                 column: insertPosition. column
             }
         };
+
+        this.$renderGhostText();
+    }
+
+    $renderGhostText() {
+        if (!this.$ghostText)
+            return;
+
+        this.$removeGhostTextWidget();
+
+        var insertPosition = this.$ghostText.position;
+
+        var textChunks = this.$calculateWrappedTextChunks(this.$ghostText.text, insertPosition);
+        this.addToken(textChunks[0].text, "ghost_text", insertPosition.row, insertPosition.column);
 
         var widgetDiv = dom.createElement("div");
         if (textChunks.length > 1) {
@@ -1831,9 +1845,12 @@ class VirtualRenderer {
                 el: widgetDiv,
                 row: insertPosition.row,
                 column: insertPosition.column,
-                className: "ace_ghost_text_container"
+                className: "ace_ghost_text_container",
+                fixedWidth: true 
             };
             this.session.widgetManager.addLineWidget(this.$ghostTextWidget);
+
+            widgetDiv.style.margin = "0 " + this.$padding + "px";
 
             // Check wether the line widget fits in the part of the screen currently in view
             var pixelPosition = this.$cursorLayer.getPixelPosition(insertPosition, true);
@@ -1866,15 +1883,15 @@ class VirtualRenderer {
      * @return {{text: string, wrapped: boolean}[]}
      */
     $calculateWrappedTextChunks(text, position) {
-        var availableWidth = this.$size.scrollerWidth - this.$padding * 2;
-        var limit = Math.floor(availableWidth / this.characterWidth) - 2;
+        var availableWidth = this.$size.scrollerWidth - 2 * this.$padding;
+        var limit = Math.floor(availableWidth / this.characterWidth);
         limit = limit <= 0 ? 60 : limit; // this is a hack to prevent the editor from crashing when the window is too small
 
         var textLines = text.split(/\r?\n/);
         var textChunks = [];
         for (var i = 0; i < textLines.length; i++) {
             var displayTokens = this.session.$getDisplayTokens(textLines[i], position.column);
-            var wrapSplits = this.session.$computeWrapSplits(displayTokens, limit, this.session.$tabSize);
+            var wrapSplits = this.session.$computeWrapSplits(displayTokens, limit, this.session.$tabSize, position.column);
 
             if (wrapSplits.length > 0) {
                 var start = 0;
@@ -1894,6 +1911,12 @@ class VirtualRenderer {
     }
 
     removeGhostText() {
+        this.$removeGhostTextWidget();
+
+        this.$ghostText = null;
+    }
+
+    $removeGhostTextWidget() {
         if (!this.$ghostText) return;
 
         var position = this.$ghostText.position;
@@ -1902,7 +1925,6 @@ class VirtualRenderer {
             this.session.widgetManager.removeLineWidget(this.$ghostTextWidget);
             this.$ghostTextWidget = null;
         }
-        this.$ghostText = null;
     }
 
     /**
