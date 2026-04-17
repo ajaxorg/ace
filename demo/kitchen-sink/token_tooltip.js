@@ -61,6 +61,10 @@ class TokenTooltip extends Tooltip {
         var tokenText = token.type;
         if (token.state)
             tokenText += "|" + token.state;
+        if (token.scope && token.scope.getAllScopeNames) {
+            tokenText += "\n\nscopes:";
+            tokenText += "\n  " + token.scope.getAllScopeNames().join("\n  ");
+        }
         if (token.merge)
             tokenText += "\n  merge";
         if (token.stateTransitions)
