@@ -1,0 +1,87 @@
+// Cedar Schema Language
+// Defines the entity model for a photo sharing application
+
+namespace PhotoApp::Auth {
+    // Custom types
+    type Context = {
+        authenticated: Bool,
+        sourceIp?: String,
+        timestamp?: String,
+        riskScore?: Long,
+    };
+
+    // Entity hierarchy
+    entity User in [Group] {
+        name: String,
+        email: String,
+        department?: String,
+    };
+
+    entity Group in [Group] {
+        description?: String,
+    };
+
+    entity Photo {
+        owner: User,
+        confidential: Bool,
+        department?: String,
+        price?: String,
+    } tags Set<String>;
+
+    entity Album in [Album] {
+        name: String,
+        photos: Set<Photo>,
+    };
+
+    // Actions
+    action "viewPhoto" appliesTo {
+        principal: [User, Group],
+        resource: [Photo],
+        context: Context,
+    };
+
+    action "editPhoto" in [action "managePhoto"] appliesTo {
+        principal: [User],
+        resource: [Photo],
+        context: Context,
+    };
+
+    action "deletePhoto" in [action "managePhoto"] appliesTo {
+        principal: [User],
+        resource: [Photo],
+        context: Context,
+    };
+
+    action "managePhoto" appliesTo {
+        principal: [User, Group],
+        resource: [Photo],
+        context: Context,
+    };
+
+    action "purchase" appliesTo {
+        principal: [User],
+        resource: [Photo],
+        context: Context,
+    };
+
+    action "read" appliesTo {
+        principal: [User, Group],
+        resource: [Photo, Album],
+        context: Context,
+    };
+
+    action "delete" appliesTo {
+        principal: [User],
+        resource: [Photo, Album],
+        context: Context,
+    };
+
+    action "modify" appliesTo {
+        principal: [User],
+        resource: [Photo, Album],
+        context: Context,
+    };
+
+    // Enum type example
+    type Permission = enum ["read", "write", "admin"];
+}
