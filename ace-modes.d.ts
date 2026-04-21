@@ -676,6 +676,14 @@ declare module "ace-code/src/mode/groovy" {
     export const Mode: new () => import("ace-code").Ace.SyntaxMode;
 }
 
+declare module "ace-code/src/mode/groq_highlight_rules" {
+    export const GroqHighlightRules: new () => import("ace-code").Ace.HighlightRules;
+}
+
+declare module "ace-code/src/mode/groq" {
+    export const Mode: new () => import("ace-code").Ace.SyntaxMode;
+}
+
 declare module "ace-code/src/mode/haml_highlight_rules" {
     export const HamlHighlightRules: new () => import("ace-code").Ace.HighlightRules;
 }

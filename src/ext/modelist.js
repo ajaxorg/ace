@@ -132,6 +132,7 @@ var supportedModes = {
     Gobstones:   ["gbs"],
     golang:      ["go"],
     GraphQLSchema: ["gql"],
+    GROQ:        ["groq"],
     Groovy:      ["groovy"],
     HAML:        ["haml"],
     Handlebars:  ["hbs|handlebars|tpl|mustache"],
