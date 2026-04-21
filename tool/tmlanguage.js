@@ -9,6 +9,7 @@ var parseLanguage = lib.parsePlist;
 var tk = require("./regexp_tokenizer");
 var tokenize = tk.tokenize;
 var toStr = tk.toStr;
+var tmRulesTransform = require("./tm_rules_transform");
 
 function last(array) {return array[array.length - 1]}
 
@@ -365,7 +366,7 @@ function processPattern(p) {
         var rule = processPattern(p.patterns[0]);
     }
     else if (p.begin != null && p.end != null) {
-        convertBeginEndBackrefs(p);
+        tmRulesTransform.convertBeginEndBackrefs(p);
 
         var rule = simpleRule(p.begin, p.name, p.beginCaptures || p.captures);
 
@@ -406,7 +407,7 @@ function simpleRule(regex, name, captures) {
     var rule = {token: "", regex: ""};
 
     var origRegex = regex;
-    regex = transformRegExp(origRegex, rule);
+    regex = tmRulesTransform.transformRegExp(origRegex, rule);
     if (captures) {
         var tokenArray = [];
         Object.keys(captures).forEach(function(x){
@@ -416,7 +417,7 @@ function simpleRule(regex, name, captures) {
         if (tokenArray.length == 1) {
             name = tokenArray[0];
         } else {
-            var fixed = fixGroups(tokenArray, name, regex);
+            var fixed = tmRulesTransform.fixGroups(tokenArray, name, regex);
             name = fixed.names;
             regex = fixed.regex;
             if (name.length == 1)
@@ -425,9 +426,9 @@ function simpleRule(regex, name, captures) {
     }
 
     if (typeof name == "string")
-        regex = convertToNonCapturingGroups(regex);
+        regex = tmRulesTransform.convertToNonCapturingGroups(regex);
 
-    regex = simplifyNonCapturingGroups(regex);
+    regex = tmRulesTransform.simplifyNonCapturingGroups(regex);
 
     try {new RegExp(regex);} catch(e) {
         rule.TODO = "FIXME: regexp doesn't have js equivalent";
