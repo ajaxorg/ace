@@ -191,6 +191,22 @@ declare module "ace-code/src/mode/c9search" {
     export const Mode: new () => import("ace-code").Ace.SyntaxMode;
 }
 
+declare module "ace-code/src/mode/cedar_highlight_rules" {
+    export const CedarHighlightRules: new () => import("ace-code").Ace.HighlightRules;
+}
+
+declare module "ace-code/src/mode/cedar" {
+    export const Mode: new () => import("ace-code").Ace.SyntaxMode;
+}
+
+declare module "ace-code/src/mode/cedarschema_highlight_rules" {
+    export const CedarSchemaHighlightRules: new () => import("ace-code").Ace.HighlightRules;
+}
+
+declare module "ace-code/src/mode/cedarschema" {
+    export const Mode: new () => import("ace-code").Ace.SyntaxMode;
+}
+
 declare module "ace-code/src/mode/cirru_highlight_rules" {
     export const CirruHighlightRules: new () => import("ace-code").Ace.HighlightRules;
 }

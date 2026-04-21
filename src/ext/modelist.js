@@ -89,6 +89,8 @@ var supportedModes = {
     BibTeX:      ["bib"],
     C_Cpp:       ["cpp|c|cc|cxx|h|hh|hpp|ino"],
     C9Search:    ["c9search_results"],
+    Cedar:       ["cedar"],
+    CedarSchema: ["cedarschema"],
     Cirru:       ["cirru|cr"],
     Clojure:     ["clj|cljs"],
     Clue:        ["clue"],
