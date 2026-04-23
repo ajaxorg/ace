@@ -93,7 +93,7 @@ function removeInlineFlags(str, rule) {
     var tokens = tokenize(str);
     var caseInsensitive = false;
     tokens.forEach(function(t, i) {
-        if (t.type == "group.start" && /[imsx]/.test(t.value)) {
+        if (t.type == "group.start" && /^\(\?[imsx-]+:?$/.test(t.value)) {
             if (/i/.test(t.value))
                 caseInsensitive = true;
             t.value = t.value.replace(/[imsx\-]/g, "");
@@ -190,11 +190,11 @@ function transformNamedGroups(str, rule) {
 
     str = toStr(tokens);
     return str
-        .replace(/\\g<(\w+)>/g, function(match, name) {
+        .replace(/\\([gk])<(\w+)>/g, function(match, kind, name) {
             name = normalizeGroupName(name);
             return names[name] ? "\\k<" + names[name] + ">" : match;
         })
-        .replace(/\\g'(\w+)'/g, function(match, name) {
+        .replace(/\\([gk])'(\w+)'/g, function(match, kind, name) {
             name = normalizeGroupName(name);
             return names[name] ? "\\k'" + names[name] + "'" : match;
         });
@@ -276,10 +276,12 @@ function convertBeginEndBackrefs(rule) {
 function checkForNamedCaptures(str) {
     var tokens = tokenize(str);
     tokens.forEach(function(t) {
-        if (t.type == "group.start" && t.name && !/^ace_tm_\d+_/.test(t.name.replace(/^['<]+/, "")))
-            warn("named capture not implemented", str);
-        if (t.type == "backRef" && !/\\k(?:<ace_tm_\d+_\w+>|'ace_tm_\d+_\w+')/.test(t.value))
-            warn("backRef not implemented ", str);
+        if (t.type == "group.start" && t.name
+            && !/^ace_tm_\d+_/.test(t.name.replace(/^['<]+/, "")))
+            warn("unresolved named capture", str);
+        if (t.type == "backRef" && /^\\[gk](?:<|')/.test(t.value)
+            && !/^\\k(?:<ace_tm_\d+_[^>]+>|'ace_tm_\d+_[^']+')$/.test(t.value))
+            warn("unresolved named backRef", str);
     });
 }
 
@@ -441,7 +443,7 @@ function fixGroups(captures, defaultName, regex) {
             if (!t.hasChildren) {
                 t.tokenName = captureName
                     ? names.concat([captureName])
-                    : names.length ? names.slice() : defaultName;
+                    : t.name ? null : names.length ? names.slice() : defaultName;
                 skip(t);
             } else {
                 var hasCapture = false;
@@ -458,7 +460,7 @@ function fixGroups(captures, defaultName, regex) {
                 } else {
                     t.tokenName = captureName
                         ? names.concat([captureName])
-                        : names.length ? names.slice() : defaultName;
+                        : t.name ? null : names.length ? names.slice() : defaultName;
                     iterGroup(t.end, function(t1) {
                         if (t1.value == "(")
                             t1.value = "(?:";
@@ -482,6 +484,8 @@ function fixGroups(captures, defaultName, regex) {
     tokens.forEach(function(t) {
         if (t.value == "(" || t.value == "((?:")
             t.tokenName && names.push(t.tokenName);
+        else if (t.type == "group.start" && t.name && t.isGroup && /^\(\?['<]/.test(t.value))
+            names.push(t.tokenName || null);
     });
     return {
         names: names,

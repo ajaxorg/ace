@@ -66,6 +66,7 @@ class Tokenizer {
                     rule.regex = rule.regex.toString().slice(1, -1);
 
                 rule.$index = i;
+                rule.regex = this.makeNamedGroupsUnique(rule.regex, key, i);
                 if (/\\G/.test(rule.regex)) {
                     anchoredRules.push(rule);
                     continue;
@@ -183,6 +184,8 @@ class Tokenizer {
             if (!values[i + 1])
                 continue;
             var type = types[i];
+            if (type == null)
+                continue;
             if (type && typeof type == "object")
                 tokens[tokens.length] = Object.assign({value: values[i + 1]}, type);
             else
@@ -204,6 +207,28 @@ class Tokenizer {
             function(x, y) {return y ? "(?:" : x;}
         );
         return r;
+    }
+
+    /**
+     * Reusing a transformed TM rule in one Ace state can duplicate JS named
+     * groups inside the combined regexp. Rename them per normalized rule slot.
+     * @param {string} src
+     * @param {string} stateName
+     * @param {number} ruleIndex
+     */
+    makeNamedGroupsUnique(src, stateName, ruleIndex) {
+        if (!src || src.indexOf("(?<") === -1 && src.indexOf("\\k<") === -1)
+            return src;
+
+        var suffix = "__" + String(stateName).replace(/\W/g, "_") + "_" + ruleIndex;
+        var names = Object.create(null);
+        src = src.replace(/\(\?<([A-Za-z_]\w*)>/g, function(match, name) {
+            var unique = names[name] || (names[name] = name + suffix);
+            return "(?<" + unique + ">";
+        });
+        return src.replace(/\\k<([A-Za-z_]\w*)>/g, function(match, name) {
+            return names[name] ? "\\k<" + names[name] + ">" : match;
+        });
     }
 
     /**
@@ -943,6 +968,8 @@ class Tokenizer {
 
             for (var i = matchedRuleIndex; i < match.length-2; i++) {
                 if (i < 0 || match[i + 1] === undefined)
+                    continue;
+                if (!rule)
                     continue;
 
                 if (rule.onMatch)

@@ -8,7 +8,7 @@ var r = new TextHighlightRules()
 r.$rules = {
     start: [
         {token: "anchor", regex: /[\^\$]|\\[bBAZzG]/, merge:false},
-        {token: "backRef", regex: /\\([1-9]|k(<\w+\b[+-]?\d>|'\w+\b[+-]?\d'))/, merge:false},
+        {token: "backRef", regex: /\\(?:[1-9]|[gk](?:<\w+\b[+-]?\d*>|'\w+\b[+-]?\d*'))/, merge:false},
         {include: "charTypes", merge:false},
         {token: "charclass", regex: /\[\^?/, push: "charclass", merge:false},
         {token: "alternation", regex: /\|/, merge:false},
@@ -44,7 +44,10 @@ r.$rules = {
                     t.number = stack.groupNumber++;
                     t.isGroup = true
                 } else if (t.groupType == "'" || (t.groupType == "<" && val.slice(-1) == ">")) {
-                    t.name = val.slice(2, -1)
+                    t.name = t.groupType == "<"
+                        ? val.slice(3, -1)
+                        : val.slice(3, -1);
+                    t.number = stack.groupNumber++;
                     t.isGroup = true
                 } else if (t.groupType == ":") {
                     t.isGroup = true

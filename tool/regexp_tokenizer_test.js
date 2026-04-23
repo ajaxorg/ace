@@ -28,3 +28,17 @@ assert.equal(toStr(
     ")),
     "(?x)u"
  )
+
+var namedTokens = tokenize("((?<id>[a-z]+))\\g<id>\\k<id>");
+var groupStarts = namedTokens.filter(function(t) {
+    return t.type == "group.start";
+});
+var backRefs = namedTokens.filter(function(t) {
+    return t.type == "backRef";
+});
+
+assert.equal(groupStarts[1].name, "id");
+assert.equal(groupStarts[1].groupType, "<");
+assert.deepEqual(backRefs.map(function(t) {
+    return t.value;
+}), ["\\g<id>", "\\k<id>"]);
