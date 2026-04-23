@@ -113,21 +113,6 @@ TextHighlightRules = function() {
             return capture;
         return capture && capture.name || fallback;
     }
-    function firstNamedCapture(captures) {
-        if (!captures)
-            return null;
-        var keys = Object.keys(captures).sort(function(a, b) { return Number(a) - Number(b); });
-        for (var i = 0; i < keys.length; i++) {
-            var key = keys[i];
-            if (Number(key) <= 0)
-                continue;
-            var capture = captures[key];
-            var name = typeof capture == "string" ? capture : capture && capture.name;
-            if (name)
-                return name;
-        }
-        return null;
-    }
     function appendRuleScope(baseScope, scopeName) {
         var scopes = Array.isArray(baseScope) ? baseScope.slice() : baseScope ? [baseScope] : [];
         if (scopeName && scopes[scopes.length - 1] !== scopeName)
@@ -216,6 +201,18 @@ TextHighlightRules = function() {
             });
             position = end;
         }
+        function getLocalCaptureMatch(captureIndex, range) {
+            var local = [match[captureIndex]];
+            for (var j = 1; j < match.indices.length; j++) {
+                if (j == captureIndex)
+                    continue;
+                var childRange = match.indices[j];
+                if (!childRange || childRange[0] == null || childRange[0] < range[0] || childRange[1] > range[1])
+                    continue;
+                local.push(match[j]);
+            }
+            return local.length > 1 ? local : match;
+        }
 
         for (var i = 1; i < match.indices.length && i < captureMeta.length; i++) {
             var meta = captureMeta[i];
@@ -229,10 +226,11 @@ TextHighlightRules = function() {
             emit(range[0]);
 
             var parentMeta = currentMeta();
-            var captureScope = meta.name
-                ? appendCaptureScope(parentMeta.ruleScope, meta.name)
+            var captureName = expandScopeBackrefs(meta.name, getLocalCaptureMatch(i, range));
+            var captureScope = captureName
+                ? appendCaptureScope(parentMeta.ruleScope, captureName)
                 : parentMeta.ruleScope;
-            var captureType = meta.name || parentMeta.type || baseType;
+            var captureType = captureName || parentMeta.type || baseType;
 
             if (meta.retokenizeState) {
                 tokens.push({
@@ -244,7 +242,7 @@ TextHighlightRules = function() {
                 position = range[1];
                 continue;
             }
-            if (meta.name) {
+            if (captureName) {
                 localStack.push({
                     end: range[1],
                     type: captureType,
@@ -316,32 +314,6 @@ TextHighlightRules = function() {
             if (!pattern || pattern.regex)
                 return pattern;
 
-            if (
-                pattern.begin && pattern.end === "(?!\\G)" &&
-                pattern.patterns && pattern.patterns.length === 1 &&
-                pattern.patterns[0] && pattern.patterns[0].begin && pattern.patterns[0].end
-            ) {
-                var child = deepCopy(pattern.patterns[0]);
-                var leadingCaptureName = firstNamedCapture(pattern.beginCaptures || pattern.captures);
-                if (pattern.name) {
-                    var childOuter = child.name || child.token;
-                    child.name = appendScopeNames(pattern.name, childOuter);
-                    if (child.contentName)
-                        child.contentName = appendScopeNames(child.name, child.contentName);
-                    if (child.$beginRuleScope)
-                        child.$beginRuleScope = appendScopeNames(pattern.name, child.$beginRuleScope);
-                    if (child.$endRuleScope)
-                        child.$endRuleScope = appendScopeNames(pattern.name, child.$endRuleScope);
-                    if (child.$whileRuleScope)
-                        child.$whileRuleScope = appendScopeNames(pattern.name, child.$whileRuleScope);
-                }
-                if (leadingCaptureName) {
-                    child.$leadingToken = leadingCaptureName;
-                    child.$leadingRuleScope = [leadingCaptureName];
-                }
-                return compileTmRule(child);
-            }
-
             if (pattern.match) {
                 var dynamicScope = hasScopeBackrefs(pattern.ruleScope || pattern.name);
                 pattern.regex = pattern.match;
@@ -386,7 +358,7 @@ TextHighlightRules = function() {
                 return pattern;
             }
 
-            if (pattern.begin && (pattern.end || pattern.while)) {
+            if (pattern.begin && (pattern.end != null || pattern.while)) {
                 var outerScope = pattern.name || pattern.token;
                 var contentToken = pattern.token || outerScope || "text";
                 var beginToken = compileRetokenizeParts(
@@ -423,8 +395,6 @@ TextHighlightRules = function() {
                     token: beginToken,
                     merge: beginMerge,
                     ruleScope: beginRuleScope,
-                    leadingToken: pattern.$leadingToken,
-                    leadingRuleScope: pattern.$leadingRuleScope,
                     regex: pattern.begin,
                     consumeLineEnd: !!pattern.$beginConsumesLineEnd,
                     tmBegin: {
@@ -437,6 +407,7 @@ TextHighlightRules = function() {
                         endToken: endToken,
                         endRuleScope: endRuleScope,
                         endMerge: endMerge,
+                        beginScopeRegex: pattern.$beginScopeRegex,
                         while: pattern.while,
                         whileToken: whileToken,
                         whileRuleScope: whileRuleScope,
@@ -460,6 +431,11 @@ TextHighlightRules = function() {
             state["processed"] = true;
             for (var i = 0; i < state.length; i++) {
                 var rule = state[i];
+                if (rule && rule.disabled) {
+                    state.splice(i, 1);
+                    i--;
+                    continue;
+                }
                 rule = state[i] = compileTmRule(rule);
                 var toInsert = null;
                 if (Array.isArray(rule)) {

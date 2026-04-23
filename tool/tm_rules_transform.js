@@ -336,6 +336,19 @@ function appendScopes(scopes, extra) {
     return scopes;
 }
 
+function hasScopeBackrefs(scope) {
+    if (Array.isArray(scope))
+        return scope.some(hasScopeBackrefs);
+    return typeof scope == "string" && /\$\d+/.test(scope);
+}
+
+function hasCaptureScopeBackrefs(captures) {
+    return Object.keys(captures || {}).some(function(key) {
+        var capture = captures[key];
+        return hasScopeBackrefs(typeof capture == "string" ? capture : capture && capture.name);
+    });
+}
+
 function createCaptureTokenData(regex, captures, fallbackType, baseScopes) {
     if (!captures)
         return null;
@@ -437,7 +450,23 @@ function fixGroups(captures, defaultName, regex) {
 
     var names = [];
     iter(function(t) {
-        if (t.type == "group.start" && !t.isSpecial) {
+        if (t.type == "group.start" && t.value == "(?:" && names.length
+            && (tokens[tokens.indexOf(t.end, i) + 1] || {}).type == "quantifier") {
+            var hasNestedCapture = false;
+            iterGroup(t.end, function(t1) {
+                if (t1.type == "group.start" && captures[t1.number])
+                    hasNestedCapture = true;
+            });
+            if (!hasNestedCapture) {
+                t.value = "(";
+                t.tokenName = names.slice();
+                iterGroup(t.end, function(t1) {
+                    if (t1.value == "(")
+                        t1.value = "(?:";
+                });
+                skip(t);
+            }
+        } else if (t.type == "group.start" && !t.isSpecial) {
             var captureName = captures[t.number];
 
             if (!t.hasChildren) {
@@ -532,16 +561,21 @@ function transformTmPattern(pattern, options) {
         if (!pattern.ruleScope && pattern.name)
             pattern.ruleScope = [pattern.name];
     }
-    Object.keys(pattern.captures || {}).forEach(function(key) {
-        var capture = pattern.captures[key];
-        (capture && capture.patterns || []).forEach(function(child) {
-            transformTmPattern(child, options);
+    ["captures", "beginCaptures", "endCaptures", "whileCaptures"].forEach(function(capturesKey) {
+        Object.keys(pattern[capturesKey] || {}).forEach(function(key) {
+            var capture = pattern[capturesKey][key];
+            (capture && capture.patterns || []).forEach(function(child) {
+                transformTmPattern(child, options);
+            });
         });
     });
     var outerScope = pattern.name || pattern.token;
     var baseScopes = outerScope ? [outerScope] : [];
     if (pattern.begin) {
         pattern.begin = transformRegExp(pattern.begin, pattern, "begin");
+        if (hasScopeBackrefs(pattern.name) || hasScopeBackrefs(pattern.contentName)
+            || hasCaptureScopeBackrefs(pattern.beginCaptures || pattern.captures))
+            pattern.$beginScopeRegex = pattern.begin;
         var beginTokenData = createCaptureTokenData(
             pattern.begin,
             pattern.beginCaptures || pattern.captures,

@@ -45,10 +45,15 @@ class Tokenizer {
                     rule.tmBegin.beginRegex = rule.regex instanceof RegExp
                         ? rule.regex
                         : new RegExp("^(?:" + rule.regex + ")$", rule.tmBegin.beginFlags);
+                    if (rule.tmBegin.beginScopeRegex) {
+                        rule.tmBegin.beginScopeRegex = rule.tmBegin.beginScopeRegex instanceof RegExp
+                            ? rule.tmBegin.beginScopeRegex
+                            : new RegExp("^(?:" + rule.tmBegin.beginScopeRegex + ")", rule.tmBegin.beginFlags);
+                    }
                     rule.tmBegin.endSource = rule.tmBegin.end instanceof RegExp
                         ? rule.tmBegin.end.source
                         : rule.tmBegin.end;
-                    rule.tmBegin.broadEndSource = rule.tmBegin.end
+                    rule.tmBegin.broadEndSource = rule.tmBegin.end != null
                         ? this.broadEndRegexp(rule.tmBegin.end)
                         : null;
                     rule.tmBegin.whileSource = rule.tmBegin.while instanceof RegExp
@@ -310,7 +315,7 @@ class Tokenizer {
      * @param {number} index
      */
     matchTmRegexAt(source, captures, flags, line, index) {
-        if (!source)
+        if (source == null)
             return null;
         source = this.expandTmSource(source, captures);
         flags = (flags || "").replace(/g/g, "");
@@ -412,6 +417,18 @@ class Tokenizer {
         return true;
     }
 
+    expandScopeBackrefs(scope, captures) {
+        if (Array.isArray(scope))
+            return scope.map(function(part) {
+                return this.expandScopeBackrefs(part, captures);
+            }, this);
+        if (typeof scope != "string")
+            return scope;
+        return scope.replace(/\$(\d+)/g, function(_, index) {
+            return captures && captures[Number(index) - 1] || "";
+        });
+    }
+
     /**
      * @param {string|undefined} currentState
      * @param {any[]} stack
@@ -420,24 +437,29 @@ class Tokenizer {
      */
     pushTmFrame(currentState, stack, tmBegin, value) {
         var match = tmBegin.beginRegex.exec(value);
+        var scopeMatch = tmBegin.beginScopeRegex
+            ? tmBegin.beginScopeRegex.exec(value)
+            : match;
+        var captures = scopeMatch ? scopeMatch.slice(1) : [];
+        var endMatchCaptures = match ? match.slice(1) : [];
         var frame = {
             kind: "tm",
             state: tmBegin.state,
-            outerScope: tmBegin.outerScope,
+            outerScope: this.expandScopeBackrefs(tmBegin.outerScope, captures),
             contentToken: tmBegin.contentToken,
-            innerScope: tmBegin.innerScope,
+            innerScope: this.expandScopeBackrefs(tmBegin.innerScope, captures),
             endSource: tmBegin.endSource,
             broadEndSource: tmBegin.broadEndSource,
             endFlags: tmBegin.endFlags,
             endToken: tmBegin.endToken,
-            captures: match ? match.slice(1) : []
+            captures: endMatchCaptures
         };
         if (tmBegin.applyEndPatternLast)
             frame.applyEndPatternLast = true;
         if (tmBegin.endMerge === false)
             frame.endMerge = tmBegin.endMerge;
         if (tmBegin.endRuleScope && tmBegin.endRuleScope !== tmBegin.outerScope)
-            frame.endRuleScope = tmBegin.endRuleScope;
+            frame.endRuleScope = this.expandScopeBackrefs(tmBegin.endRuleScope, captures);
         if (tmBegin.whileSource) {
             frame.whileSource = tmBegin.whileSource;
             frame.whileFlags = tmBegin.whileFlags;
@@ -445,7 +467,7 @@ class Tokenizer {
             if (tmBegin.whileMerge === false)
                 frame.whileMerge = tmBegin.whileMerge;
             if (tmBegin.whileRuleScope && tmBegin.whileRuleScope !== tmBegin.outerScope)
-                frame.whileRuleScope = tmBegin.whileRuleScope;
+                frame.whileRuleScope = this.expandScopeBackrefs(tmBegin.whileRuleScope, captures);
         }
         stack.unshift(tmBegin.state, frame, currentState || "start");
         return tmBegin.state;
@@ -517,8 +539,12 @@ class Tokenizer {
             if (!Array.isArray(names))
                 names = names ? [names] : [];
             names.forEach(function(name) {
-                if (name)
-                    scope = scope.get(name);
+                if (!name)
+                    return;
+                String(name).split(/\s+/).forEach(function(part) {
+                    if (part)
+                        scope = scope.get(part);
+                });
             });
             return scope;
         };
@@ -679,12 +705,12 @@ class Tokenizer {
      * @param {any[]} stack
      * @param {RegExp} splitRegex
      */
-    appendCapturedTokens(tokens, token, type, value, ruleScope, mapping, currentState, stack, splitRegex, merge, excludeActiveInnerScope) {
+    appendCapturedTokens(tokens, token, type, value, ruleScope, mapping, currentState, stack, splitRegex, merge, excludeActiveInnerScope, emitGaps, isTmBegin) {
         if (!value || !type)
             return token;
 
         if (typeof type === "string") {
-            var scope = this.getTokenScope(type, {ruleScope: ruleScope}, mapping, currentState, stack, excludeActiveInnerScope);
+            var scope = this.getTokenScope(type, {ruleScope: ruleScope, tmBegin: isTmBegin}, mapping, currentState, stack, excludeActiveInnerScope);
             if (merge === false) {
                 if (token.type)
                     tokens.push(token);
@@ -700,6 +726,161 @@ class Tokenizer {
         if (!Array.isArray(type))
             type = [type];
 
+        if (emitGaps && splitRegex && HAS_INDICES) {
+            var match = splitRegex.exec(value);
+            if (match && match.indices && match.indices[0]) {
+                if (token.type)
+                    tokens.push(token);
+                token = {type: null, value: ""};
+
+                var fullRange = match.indices[0];
+                var position = fullRange[0];
+                var hasCapturedToken = false;
+                for (var capturedTokenIndex = 1; capturedTokenIndex < match.indices.length && capturedTokenIndex <= type.length; capturedTokenIndex++) {
+                    var capturedTokenRange = match.indices[capturedTokenIndex];
+                    if (capturedTokenRange && capturedTokenRange[0] != null && capturedTokenRange[0] >= 0 && capturedTokenRange[1] > capturedTokenRange[0]) {
+                        hasCapturedToken = true;
+                        break;
+                    }
+                }
+                if (!hasCapturedToken)
+                    return this.appendCapturedTokens(
+                        tokens,
+                        token,
+                        type,
+                        value,
+                        ruleScope,
+                        mapping,
+                        currentState,
+                        stack,
+                        splitRegex,
+                        merge,
+                        excludeActiveInnerScope,
+                        false,
+                        isTmBegin
+                    );
+                var gapPosition = fullRange[0];
+                var hasGap = false;
+                for (var gapCaptureIndex = 1; gapCaptureIndex < match.indices.length && gapCaptureIndex <= type.length; gapCaptureIndex++) {
+                    var gapRange = match.indices[gapCaptureIndex];
+                    if (!gapRange || gapRange[0] == null || gapRange[0] < 0 || gapRange[1] <= gapRange[0])
+                        continue;
+                    if (gapRange[0] > gapPosition) {
+                        hasGap = true;
+                        break;
+                    }
+                    if (gapRange[1] > gapPosition)
+                        gapPosition = gapRange[1];
+                }
+                if (!hasGap && fullRange[1] > gapPosition)
+                    hasGap = true;
+                if (!hasGap)
+                    return this.appendCapturedTokens(
+                        tokens,
+                        token,
+                        type,
+                        value,
+                        ruleScope,
+                        mapping,
+                        currentState,
+                        stack,
+                        splitRegex,
+                        merge,
+                        excludeActiveInnerScope,
+                        false,
+                        isTmBegin
+                    );
+                var defaultType = Array.isArray(ruleScope)
+                    ? ruleScope[ruleScope.length - 1]
+                    : ruleScope || mapping.defaultToken || "text";
+                var defaultScope = this.getTokenScope(
+                    defaultType,
+                    {ruleScope: ruleScope, tmBegin: isTmBegin},
+                    mapping,
+                    currentState,
+                    stack,
+                    excludeActiveInnerScope
+                );
+                var localStack = [];
+                var currentMeta = function() {
+                    return localStack[localStack.length - 1] || {
+                        type: defaultType,
+                        scope: defaultScope
+                    };
+                };
+                var emit = function(end) {
+                    if (end <= position)
+                        return;
+                    var meta = currentMeta();
+                    tokens.push(this.setTokenScope({
+                        type: meta.type || defaultType,
+                        value: value.slice(position, end)
+                    }, meta.scope || defaultScope));
+                    position = end;
+                }.bind(this);
+                var pushRetokenized = function(part, range) {
+                    tokens.push(part);
+                    var retokenized = this.getLineTokens(part.value, part.retokenizeState).tokens;
+                    tokens.pop();
+                    for (var j = 0; j < retokenized.length; j++) {
+                        this.setTokenScope(
+                            retokenized[j],
+                            this.mergeRetokenizedScope(part.scope, retokenized[j].scope)
+                        );
+                        tokens.push(retokenized[j]);
+                    }
+                    position = range[1];
+                }.bind(this);
+
+                for (var captureIndex = 1; captureIndex < match.indices.length && captureIndex <= type.length; captureIndex++) {
+                    var range = match.indices[captureIndex];
+                    if (!range || range[0] == null || range[0] < 0 || range[1] <= range[0])
+                        continue;
+                    while (localStack.length && localStack[localStack.length - 1].end <= range[0]) {
+                        emit(localStack[localStack.length - 1].end);
+                        localStack.pop();
+                    }
+                    emit(range[0]);
+                    var partType = type[captureIndex - 1];
+                    if (partType == null)
+                        continue;
+                    var part = typeof partType == "object"
+                        ? Object.assign({value: value.slice(range[0], range[1])}, partType)
+                        : {
+                            type: partType,
+                            value: value.slice(range[0], range[1])
+                        };
+                    if (part.type && !part.scope)
+                        this.setTokenScope(
+                            part,
+                            this.getTokenScope(
+                                part.type,
+                                {ruleScope: part.ruleScope || ruleScope, tmBegin: isTmBegin},
+                                mapping,
+                                currentState,
+                                stack,
+                                excludeActiveInnerScope
+                            )
+                        );
+                    if (part.retokenizeState) {
+                        pushRetokenized(part, range);
+                        continue;
+                    }
+                    localStack.push({
+                        end: range[1],
+                        type: part.type,
+                        scope: part.scope
+                    });
+                }
+                while (localStack.length) {
+                    emit(localStack[localStack.length - 1].end);
+                    localStack.pop();
+                }
+                emit(fullRange[1]);
+                return {type: null, value: ""};
+            }
+        }
+
         var parts = splitRegex
             ? this.$arrayTokens.call({splitRegex: splitRegex, tokenArray: type}, value)
             : type.map(function(part) {
@@ -710,9 +891,9 @@ class Tokenizer {
             return this.appendScopedToken(
                 tokens,
                 token,
-                parts,
-                value,
-                this.getTokenScope(parts, {ruleScope: ruleScope}, mapping, currentState, stack, excludeActiveInnerScope)
+                        parts,
+                        value,
+                        this.getTokenScope(parts, {ruleScope: ruleScope, tmBegin: isTmBegin}, mapping, currentState, stack, excludeActiveInnerScope)
             );
         }
 
@@ -724,7 +905,7 @@ class Tokenizer {
                     parts[i],
                     this.getTokenScope(
                         parts[i].type,
-                        {ruleScope: parts[i].ruleScope || ruleScope},
+                        {ruleScope: parts[i].ruleScope || ruleScope, tmBegin: isTmBegin},
                         mapping,
                         currentState,
                         stack,
@@ -842,8 +1023,14 @@ class Tokenizer {
                     this.matchMappings[currentState] || this.matchMappings.start,
                     currentState,
                     stack,
-                    this.createTmSplitterRegex(whileFrame.whileSource, whileFrame.captures, whileFrame.whileFlags),
-                    whileFrame.whileMerge
+                    this.createTmSplitterRegex(
+                        whileFrame.whileSource,
+                        whileFrame.captures,
+                        (whileFrame.whileFlags || "") + (HAS_INDICES && (whileFrame.whileFlags || "").indexOf("d") === -1 ? "d" : "")
+                    ),
+                    whileFrame.whileMerge,
+                    false,
+                    true
                 );
             whileIndex += whileMatch[0].length;
         }
@@ -852,7 +1039,7 @@ class Tokenizer {
         while (lastIndex <= line.length) {
             var activeTmFrame = this.getActiveTmFrame(currentState, stack);
             var endMatch = null;
-            if (activeTmFrame && activeTmFrame.endSource) {
+            if (activeTmFrame && activeTmFrame.endSource != null) {
                 var endSearchSource = /\\[1-9]/.test(activeTmFrame.endSource)
                     ? this.expandTmSource(activeTmFrame.endSource, activeTmFrame.captures)
                     : activeTmFrame.broadEndSource;
@@ -922,19 +1109,8 @@ class Tokenizer {
 
             if (index - value.length > lastIndex) {
                 var skipped = line.substring(lastIndex, index - value.length);
-                if (rule && rule.leadingToken) {
-                    var leadingScope = this.getTokenScope(
-                        rule.leadingToken,
-                        {ruleScope: rule.leadingRuleScope},
-                        mapping,
-                        currentState,
-                        stack
-                    );
-                    token = this.appendScopedToken(tokens, token, rule.leadingToken, skipped, leadingScope);
-                } else {
-                    var skippedScope = this.getTokenScope(type, null, mapping, currentState, stack);
-                    token = this.appendScopedToken(tokens, token, type, skipped, skippedScope);
-                }
+                var skippedScope = this.getTokenScope(type, null, mapping, currentState, stack);
+                token = this.appendScopedToken(tokens, token, type, skipped, skippedScope);
             }
 
             if (!match && endMatch) {
@@ -950,8 +1126,13 @@ class Tokenizer {
                     stack,
                     typeof activeTmFrame.endToken == "string"
                         ? null
-                        : this.createTmSplitterRegex(activeTmFrame.endSource, activeTmFrame.captures, activeTmFrame.endFlags),
+                        : this.createTmSplitterRegex(
+                            activeTmFrame.endSource,
+                            activeTmFrame.captures,
+                            (activeTmFrame.endFlags || "") + (HAS_INDICES && (activeTmFrame.endFlags || "").indexOf("d") === -1 ? "d" : "")
+                        ),
                     activeTmFrame.endMerge,
+                    true,
                     true
                 );
                 lastIndex = index;
@@ -972,7 +1153,9 @@ class Tokenizer {
                 if (!rule)
                     continue;
 
-                if (rule.onMatch)
+                if (rule.tmBegin && rule.tokenArray)
+                    type = rule.tokenArray;
+                else if (rule.onMatch)
                     type = rule.onMatch(value, currentState, stack, line);
                 else
                     type = rule.token;
@@ -1006,7 +1189,20 @@ class Tokenizer {
 
             if (value) {
                 if (typeof type === "string") {
-                    var ruleScope = this.getTokenScope(type, rule, mapping, currentState, stack);
+                    var scopeRule = rule;
+                    if (rule && rule.tmBegin && rule.ruleScope) {
+                        var stringBeginRegex = rule.tmBegin.beginScopeRegex || rule.tmBegin.beginRegex;
+                        var stringBeginMatch = stringBeginRegex.exec(value)
+                            || stringBeginRegex.exec(line.slice(index - value.length));
+                        scopeRule = {
+                            ruleScope: this.expandScopeBackrefs(
+                                rule.ruleScope,
+                                stringBeginMatch ? stringBeginMatch.slice(1) : []
+                            ),
+                            tmBegin: rule.tmBegin
+                        };
+                    }
+                    var ruleScope = this.getTokenScope(type, scopeRule, mapping, currentState, stack);
                     if ((!rule || rule.merge !== false))
                         token = this.appendScopedToken(tokens, token, type, value, ruleScope);
                     else {
@@ -1021,36 +1217,73 @@ class Tokenizer {
                 } else if (type) {
                     if (!Array.isArray(type))
                         type = [type];
-                    if (token.type)
-                        tokens.push(token);
-                    token = {type: null, value: ""};
-                    for (var i = 0; i < type.length; i++) {
-                        if (type[i] && type[i].value == null)
-                            type[i] = Object.assign({value: value}, type[i]);
-                        if (type[i].type && !type[i].scope)
-                            this.setTokenScope(
-                                type[i],
-                                this.getTokenScope(
-                                    type[i].type,
-                                    {
-                                        ruleScope: type[i].ruleScope || (rule && rule.ruleScope),
-                                        tmBegin: rule && rule.tmBegin
-                                    },
-                                    mapping,
-                                    currentState,
-                                    stack
-                                )
-                            );
-                        tokens.push(type[i]);
-                        if (type[i].retokenizeState) {
-                            var retokenized = this.getLineTokens(type[i].value, type[i].retokenizeState).tokens;
-                            tokens.pop();
-                            for (var j = 0; j < retokenized.length; j++) {
+                    var beginCaptures = null;
+                    if (rule && rule.tmBegin) {
+                        var arrayBeginRegex = rule.tmBegin.beginScopeRegex || rule.tmBegin.beginRegex;
+                        var arrayBeginMatch = arrayBeginRegex.exec(value)
+                            || arrayBeginRegex.exec(line.slice(index - value.length));
+                        beginCaptures = arrayBeginMatch ? arrayBeginMatch.slice(1) : [];
+                        var beginRuleScope = this.expandScopeBackrefs(rule.ruleScope, beginCaptures);
+                        var beginTypes = type.map(function(part) {
+                            if (!part || typeof part != "object")
+                                return part;
+                            part = Object.assign({}, part);
+                            part.ruleScope = this.expandScopeBackrefs(part.ruleScope || beginRuleScope, beginCaptures);
+                            return part;
+                        }, this);
+                        token = this.appendCapturedTokens(
+                            tokens,
+                            token,
+                            beginTypes,
+                            value,
+                            beginRuleScope,
+                            mapping,
+                            currentState,
+                            stack,
+                            this.createTmSplitterRegex(
+                                rule.regex,
+                                null,
+                                (rule.tmBegin.beginFlags || "") + (HAS_INDICES && (rule.tmBegin.beginFlags || "").indexOf("d") === -1 ? "d" : "")
+                            ),
+                            rule.merge,
+                            false,
+                            true,
+                            true
+                        );
+                        type = null;
+                    }
+                    if (type) {
+                        if (token.type)
+                            tokens.push(token);
+                        token = {type: null, value: ""};
+                        for (var i = 0; i < type.length; i++) {
+                            if (type[i] && type[i].value == null)
+                                type[i] = Object.assign({value: value}, type[i]);
+                            if (type[i].type && !type[i].scope)
                                 this.setTokenScope(
-                                    retokenized[j],
-                                    this.mergeRetokenizedScope(type[i].scope, retokenized[j].scope)
+                                    type[i],
+                                    this.getTokenScope(
+                                        type[i].type,
+                                        {
+                                            ruleScope: type[i].ruleScope || (rule && rule.ruleScope),
+                                            tmBegin: rule && rule.tmBegin
+                                        },
+                                        mapping,
+                                        currentState,
+                                        stack
+                                    )
                                 );
-                                tokens.push(retokenized[j]);
+                            tokens.push(type[i]);
+                            if (type[i].retokenizeState) {
+                                var retokenized = this.getLineTokens(type[i].value, type[i].retokenizeState).tokens;
+                                tokens.pop();
+                                for (var j = 0; j < retokenized.length; j++) {
+                                    this.setTokenScope(
+                                        retokenized[j],
+                                        this.mergeRetokenizedScope(type[i].scope, retokenized[j].scope)
+                                    );
+                                    tokens.push(retokenized[j]);
+                                }
                             }
                         }
                     }
@@ -1128,7 +1361,7 @@ class Tokenizer {
                 break;
             var finalFrames = this.getTmFrames(stack);
             var finalFrame = finalFrames[finalFrames.length - 1];
-            if (!finalFrame || !finalFrame.endSource)
+            if (!finalFrame || finalFrame.endSource == null)
                 break;
             if ((finalFrame.endSource + "").charAt(0) === "^" && line.length > 0)
                 break;
