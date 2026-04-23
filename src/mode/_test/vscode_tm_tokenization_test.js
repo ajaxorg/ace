@@ -9,6 +9,9 @@ var TextHighlightRules = require("../text_highlight_rules").TextHighlightRules;
 var Tokenizer = require("../../tokenizer").Tokenizer;
 var tmRulesTransform = require("../../../tool/tm_rules_transform");
 var transformTmGrammar = tmRulesTransform.transformTmGrammar;
+var uniquifyPatternRegexps = tmRulesTransform.uniquifyPatternRegexps;
+var transformTmRules = tmRulesTransform.transformTmRules;
+var expandTransformedIncludes = tmRulesTransform.expandTransformedIncludes;
 
 var REPO_ROOT = path.resolve(__dirname, "../../../");
 var VSCODE_TMLANG_ROOT = path.join(REPO_ROOT, "vscode-textmate");
@@ -79,6 +82,7 @@ function loadEligibleTests() {
 
 function transformPattern(pattern, grammarScope) {
     var result = deepClone(pattern);
+    uniquifyPatternRegexps(result);
     if (result.include) {
         if (result.include === "$self" || result.include === "$base")
             result.include = grammarScope;
@@ -140,6 +144,8 @@ function buildRules(grammarByScope, grammarScopeName) {
 
     var highlightRules = new TextHighlightRules();
     highlightRules.$rules = rules;
+    transformTmRules(highlightRules.$rules);
+    expandTransformedIncludes(highlightRules.$rules);
     highlightRules.normalizeRules();
     return highlightRules.getRules();
 }

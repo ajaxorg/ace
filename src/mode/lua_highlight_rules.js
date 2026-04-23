@@ -64,18 +64,31 @@ var LuaHighlightRules = function() {
     this.$rules = {
         "start" : [{
             token: "comment",
-            begin: /\-\-\[(=*)\[/,
-            end: /\]\1\](?:--)?/,
-            name: "comment.block.lua",
-            beginCaptures: {0: "comment"},
-            endCaptures: {0: "comment"},
+            regex: /\-\-\[(=*)\[/,
+            ruleScope: "comment.block.lua",
+            scope: {
+                type: "begin",
+                state: "comment.block.lua.0",
+                name: "comment.block.lua",
+                contentName: "comment.block.lua",
+                regex: /\]\1\](?:--)?/,
+                token: "comment",
+                ruleScope: "comment.block.lua"
+            }
         }, {
-            token: "string",
-            begin: /\[(=*)\[/,
-            end: /\]\1\]/,
-            name: "string.quoted.bracket.lua",
-            beginCaptures: {0: "string.start"},
-            endCaptures: {0: "string.end"},
+            token: "string.start",
+            regex: /\[(=*)\[/,
+            ruleScope: "string.quoted.bracket.lua",
+            scope: {
+                type: "begin",
+                state: "string.quoted.bracket.lua.1",
+                name: "string.quoted.bracket.lua",
+                contentName: "string.quoted.bracket.lua",
+                regex: /\]\1\]/,
+                token: "string.end",
+                ruleScope: "string.quoted.bracket.lua",
+                merge: false
+            }
         }, {
             token : "comment",
             regex : "\\-\\-.*$"
@@ -109,6 +122,14 @@ var LuaHighlightRules = function() {
             regex : "\\s+|\\w+"
         } ]
     };
+    this.$rules["comment.block.lua.0"] = [{
+        defaultToken: "comment",
+        ruleScope: "comment.block.lua"
+    }];
+    this.$rules["string.quoted.bracket.lua.1"] = [{
+        defaultToken: "string",
+        ruleScope: "string.quoted.bracket.lua"
+    }];
 
     this.normalizeRules();
 };

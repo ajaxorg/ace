@@ -1,11 +1,11 @@
 [[
-   ["comment.block.lua.0",{"kind":"tm","state":"comment.block.lua.0","outerScope":"comment.block.lua","contentToken":"comment","innerScope":"comment.block.lua","endSource":"\\]\\1\\](?:--)?","broadEndSource":"\\].*?\\](?:--)?","endFlags":"","endToken":"comment","captures":[""]},"start"],
+   ["comment.block.lua.0",{"kind":"scope","type":"begin","state":"comment.block.lua.0","outerScope":"comment.block.lua","contentToken":"comment","innerScope":"comment.block.lua","source":"\\]\\1\\](?:--)?","flags":"","token":"comment","captures":[""]},"start"],
   ["comment","--[[--"]
 ],[
-   ["comment.block.lua.0",{"kind":"tm","state":"comment.block.lua.0","outerScope":"comment.block.lua","contentToken":"comment","innerScope":"comment.block.lua","endSource":"\\]\\1\\](?:--)?","broadEndSource":"\\].*?\\](?:--)?","endFlags":"","endToken":"comment","captures":[""]},"start"],
+   ["comment.block.lua.0",{"kind":"scope","type":"begin","state":"comment.block.lua.0","outerScope":"comment.block.lua","contentToken":"comment","innerScope":"comment.block.lua","source":"\\]\\1\\](?:--)?","flags":"","token":"comment","captures":[""]},"start"],
   ["comment","num_args takes in 5.1 byte code and extracts the number of arguments"]
 ],[
-   ["comment.block.lua.0",{"kind":"tm","state":"comment.block.lua.0","outerScope":"comment.block.lua","contentToken":"comment","innerScope":"comment.block.lua","endSource":"\\]\\1\\](?:--)?","broadEndSource":"\\].*?\\](?:--)?","endFlags":"","endToken":"comment","captures":[""]},"start"],
+   ["comment.block.lua.0",{"kind":"scope","type":"begin","state":"comment.block.lua.0","outerScope":"comment.block.lua","contentToken":"comment","innerScope":"comment.block.lua","source":"\\]\\1\\](?:--)?","flags":"","token":"comment","captures":[""]},"start"],
   ["comment","from its function header."]
 ],[
    "start",
@@ -280,12 +280,12 @@
 ],[
    "start"
 ],[
-   ["string.quoted.bracket.lua.1",{"kind":"tm","state":"string.quoted.bracket.lua.1","outerScope":"string.quoted.bracket.lua","contentToken":"string","innerScope":"string.quoted.bracket.lua","endSource":"\\]\\1\\]","broadEndSource":"\\].*?\\]","endFlags":"","endToken":"string.end","captures":["==="]},"start"],
+   ["string.quoted.bracket.lua.1",{"kind":"scope","type":"begin","state":"string.quoted.bracket.lua.1","outerScope":"string.quoted.bracket.lua","contentToken":"string","innerScope":"string.quoted.bracket.lua","source":"\\]\\1\\]","flags":"","token":"string.end","captures":["==="],"merge":false},"start"],
   ["support.function","print"],
   ["paren.lparen","("],
   ["string.start","[===["]
 ],[
-   ["string.quoted.bracket.lua.1",{"kind":"tm","state":"string.quoted.bracket.lua.1","outerScope":"string.quoted.bracket.lua","contentToken":"string","innerScope":"string.quoted.bracket.lua","endSource":"\\]\\1\\]","broadEndSource":"\\].*?\\]","endFlags":"","endToken":"string.end","captures":["==="]},"start"],
+   ["string.quoted.bracket.lua.1",{"kind":"scope","type":"begin","state":"string.quoted.bracket.lua.1","outerScope":"string.quoted.bracket.lua","contentToken":"string","innerScope":"string.quoted.bracket.lua","source":"\\]\\1\\]","flags":"","token":"string.end","captures":["==="],"merge":false},"start"],
   ["string","    blah blah %s, (%d %d)"]
 ],[
    "start",
@@ -301,10 +301,10 @@
 ],[
    "start"
 ],[
-   ["comment.block.lua.0",{"kind":"tm","state":"comment.block.lua.0","outerScope":"comment.block.lua","contentToken":"comment","innerScope":"comment.block.lua","endSource":"\\]\\1\\](?:--)?","broadEndSource":"\\].*?\\](?:--)?","endFlags":"","endToken":"comment","captures":["="]},"start"],
+   ["comment.block.lua.0",{"kind":"scope","type":"begin","state":"comment.block.lua.0","outerScope":"comment.block.lua","contentToken":"comment","innerScope":"comment.block.lua","source":"\\]\\1\\](?:--)?","flags":"","token":"comment","captures":["="]},"start"],
   ["comment","--[=[--"]
 ],[
-   ["comment.block.lua.0",{"kind":"tm","state":"comment.block.lua.0","outerScope":"comment.block.lua","contentToken":"comment","innerScope":"comment.block.lua","endSource":"\\]\\1\\](?:--)?","broadEndSource":"\\].*?\\](?:--)?","endFlags":"","endToken":"comment","captures":["="]},"start"],
+   ["comment.block.lua.0",{"kind":"scope","type":"begin","state":"comment.block.lua.0","outerScope":"comment.block.lua","contentToken":"comment","innerScope":"comment.block.lua","source":"\\]\\1\\](?:--)?","flags":"","token":"comment","captures":["="]},"start"],
   ["comment","table.maxn is deprecated, use # instead."]
 ],[
    "start",

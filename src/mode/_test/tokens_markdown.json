@@ -62,7 +62,7 @@
   ["text",")"],
   ["heading"," #"]
 ],[
-   ["listblock.unnumbered",{"kind":"tm","state":"listblock.unnumbered","outerScope":"markup.list.unnumbered.markdown","contentToken":"list","innerScope":"meta.paragraph.markdown","broadEndSource":null,"endFlags":"","endToken":"list","captures":["","","*"," "],"whileSource":"((^|\\G)([ ]{2,4}|\\t))|(^[ \\t]*$)","whileFlags":"","whileToken":"markup.list"},"start"],
+   ["listblock.unnumbered",{"kind":"scope","type":"while","state":"listblock.unnumbered","outerScope":"markup.list.unnumbered.markdown","contentToken":"list","innerScope":"meta.paragraph.markdown","source":"((^)([ ]{2,4}|\\t))|(^[ \\t]*$)","flags":"","token":"markup.list","captures":["","","*"," "]},"start"],
   ["markup.list","* "],
   ["text","["],
   ["string","demo"],
@@ -90,7 +90,7 @@
   ["string"," \"space\" "],
   ["text",")"]
 ],[
-   ["listblock.unnumbered",{"kind":"tm","state":"listblock.unnumbered","outerScope":"markup.list.unnumbered.markdown","contentToken":"list","innerScope":"meta.paragraph.markdown","broadEndSource":null,"endFlags":"","endToken":"list","captures":["","","*"," "],"whileSource":"((^|\\G)([ ]{2,4}|\\t))|(^[ \\t]*$)","whileFlags":"","whileToken":"markup.list"},"start"],
+   ["listblock.unnumbered",{"kind":"scope","type":"while","state":"listblock.unnumbered","outerScope":"markup.list.unnumbered.markdown","contentToken":"list","innerScope":"meta.paragraph.markdown","source":"((^)([ ]{2,4}|\\t))|(^[ \\t]*$)","flags":"","token":"markup.list","captures":["","","*"," "]},"start"],
   ["markup.list","* "],
   ["list","usually "],
   ["string.emphasis","*work*"],
@@ -98,7 +98,7 @@
   ["string.emphasis","_em_"],
   ["list",")"]
 ],[
-   ["listblock.unnumbered",{"kind":"tm","state":"listblock.unnumbered","outerScope":"markup.list.unnumbered.markdown","contentToken":"list","innerScope":"meta.paragraph.markdown","broadEndSource":null,"endFlags":"","endToken":"list","captures":["","","*"," "],"whileSource":"((^|\\G)([ ]{2,4}|\\t))|(^[ \\t]*$)","whileFlags":"","whileToken":"markup.list"},"start"],
+   ["listblock.unnumbered",{"kind":"scope","type":"while","state":"listblock.unnumbered","outerScope":"markup.list.unnumbered.markdown","contentToken":"list","innerScope":"meta.paragraph.markdown","source":"((^)([ ]{2,4}|\\t))|(^[ \\t]*$)","flags":"","token":"markup.list","captures":["","","*"," "]},"start"],
   ["markup.list","* "],
   ["list","nested "],
   ["string.strong","**a *b* c**"],

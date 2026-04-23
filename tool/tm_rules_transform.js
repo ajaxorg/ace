@@ -532,6 +532,11 @@ function transformRegExp(str, rule, fieldName) {
     str = convertCharacterTypes(str);
     str = transformAtomicGroups(str, rule);
     str = transformNamedGroups(str, rule);
+    if (/\\G/.test(str)) {
+        if (rule && (fieldName == "match" || fieldName == "begin"))
+            rule.$sticky = true;
+        str = str.replace(/\\G/g, "");
+    }
     checkForNamedCaptures(str);
     return str;
 }
@@ -640,6 +645,425 @@ function transformTmGrammar(grammar) {
     return grammar;
 }
 
+function uniquifyPatternRegexps(pattern) {
+    if (!pattern || typeof pattern != "object")
+        return pattern;
+    var rule = {};
+    ["match", "begin", "end", "while"].forEach(function(field) {
+        if (typeof pattern[field] == "string"
+            && (pattern[field].indexOf("(?<") !== -1
+                || pattern[field].indexOf("(?\'") !== -1
+                || pattern[field].indexOf("\\k<") !== -1
+                || pattern[field].indexOf("\\k'") !== -1
+                || pattern[field].indexOf("\\g<") !== -1
+                || pattern[field].indexOf("\\g'") !== -1))
+            pattern[field] = transformNamedGroups(pattern[field], rule);
+    });
+    (pattern.patterns || []).forEach(uniquifyPatternRegexps);
+    Object.keys(pattern.repository || {}).forEach(function(key) {
+        uniquifyPatternRegexps(pattern.repository[key]);
+    });
+    ["captures", "beginCaptures", "endCaptures", "whileCaptures"].forEach(function(key) {
+        Object.keys(pattern[key] || {}).forEach(function(captureKey) {
+            var capture = pattern[key][captureKey];
+            (capture && capture.patterns || []).forEach(uniquifyPatternRegexps);
+        });
+    });
+    return pattern;
+}
+
+function hasNamedGroupSyntax(source) {
+    return typeof source == "string"
+        && (source.indexOf("(?<") !== -1
+            || source.indexOf("(?\'") !== -1
+            || source.indexOf("\\k<") !== -1
+            || source.indexOf("\\k'") !== -1
+            || source.indexOf("\\g<") !== -1
+            || source.indexOf("\\g'") !== -1);
+}
+
+function uniquifyAceRuleRegexps(rule) {
+    if (!rule || typeof rule != "object")
+        return rule;
+    var marker = {};
+    ["regex"].forEach(function(field) {
+        if (hasNamedGroupSyntax(rule[field]))
+            rule[field] = transformNamedGroups(rule[field], marker);
+    });
+    if (rule.scope) {
+        rule.scope = Object.assign({}, rule.scope);
+        ["regex", "nameRegex"].forEach(function(field) {
+            if (hasNamedGroupSyntax(rule.scope[field]))
+                rule.scope[field] = transformNamedGroups(rule.scope[field], marker);
+        });
+    }
+    return rule;
+}
+
+function cloneRule(rule) {
+    if (!rule || typeof rule != "object")
+        return rule;
+    var copy = Object.assign({}, rule);
+    if (copy.scope)
+        copy.scope = Object.assign({}, copy.scope);
+    return copy;
+}
+
+function expandTransformedIncludes(rules) {
+    var processing = Object.create(null);
+    var processed = Object.create(null);
+
+    function expandState(name) {
+        if (!rules[name] || processed[name] || processing[name])
+            return rules[name];
+        processing[name] = true;
+        var state = rules[name];
+        for (var i = 0; i < state.length; i++) {
+            var rule = state[i];
+            var includeName = typeof rule == "string" ? rule : rule && rule.include;
+            if (!includeName || !rules[includeName])
+                continue;
+            expandState(includeName);
+            var inserted = rules[includeName].map(function(includedRule) {
+                return uniquifyAceRuleRegexps(cloneRule(includedRule));
+            });
+            state.splice.apply(state, [i, 1].concat(inserted));
+            i += inserted.length - 1;
+        }
+        processing[name] = false;
+        processed[name] = true;
+        return state;
+    }
+
+    Object.keys(rules).forEach(expandState);
+    return rules;
+}
+
+function captureToken(captures, fallback) {
+    var capture = captures && (captures[0] || captures["0"]);
+    if (typeof capture == "string")
+        return capture;
+    return capture && capture.name || fallback;
+}
+
+function sameScopeList(a, b) {
+    if (!Array.isArray(a))
+        a = a ? [a] : [];
+    if (!Array.isArray(b))
+        b = b ? [b] : [];
+    if (a.length !== b.length)
+        return false;
+    for (var i = 0; i < a.length; i++) {
+        if (a[i] !== b[i])
+            return false;
+    }
+    return true;
+}
+
+function appendRuleScope(baseScope, scopeName) {
+    var scopes = Array.isArray(baseScope) ? baseScope.slice() : baseScope ? [baseScope] : [];
+    if (scopeName && scopes[scopes.length - 1] !== scopeName)
+        scopes.push(scopeName);
+    return scopes;
+}
+
+function appendCaptureScope(baseScope, scopeName) {
+    var scopes = Array.isArray(baseScope) ? baseScope.slice() : baseScope ? [baseScope] : [];
+    if (scopeName)
+        scopes.push(scopeName);
+    return scopes;
+}
+
+function expandScopeBackrefs(scope, match) {
+    if (Array.isArray(scope))
+        return scope.map(function(part) { return expandScopeBackrefs(part, match); });
+    if (typeof scope != "string")
+        return scope;
+    return scope.replace(/\$(\d+)/g, function(_, index) {
+        return match && match[Number(index)] || "";
+    });
+}
+
+function regexpFlags(re) {
+    return re instanceof RegExp ? (re.ignoreCase ? "i" : "") + (re.multiline ? "m" : "") + (re.unicode ? "u" : "") : "";
+}
+
+function tmCaptureTokens(value) {
+    if (!value)
+        return [];
+    if (!this.tmCaptureSplitRegex) {
+        var flags = (this.caseInsensitive ? "i" : "") + (this.unicode ? "u" : "");
+        try {
+            this.tmCaptureSplitRegex = new RegExp("^(?:" + this.regex + ")$", flags + "d");
+        } catch (e) {}
+    }
+    var match = this.tmCaptureSplitRegex && this.tmCaptureSplitRegex.exec(value);
+    if (!match || !match.indices || !match.indices[0])
+        return [{
+            type: this.tmCaptureDefaultType,
+            value: value,
+            ruleScope: this.tmCaptureBaseScope
+        }];
+
+    var tokens = [];
+    var fullRange = match.indices[0];
+    var captureMeta = this.tmCaptureData || [];
+    var localStack = [];
+    var baseType = this.tmCaptureDefaultType || "text";
+    var baseScope = this.tmCaptureBaseScope || [];
+    var position = fullRange[0];
+
+    function currentMeta() {
+        return localStack[localStack.length - 1] || {
+            type: baseType,
+            ruleScope: baseScope
+        };
+    }
+    function emit(end) {
+        if (end <= position)
+            return;
+        var meta = currentMeta();
+        tokens.push({
+            type: meta.type || baseType,
+            value: value.slice(position, end),
+            ruleScope: meta.ruleScope
+        });
+        position = end;
+    }
+    function getLocalCaptureMatch(captureIndex, range) {
+        var local = [match[captureIndex]];
+        for (var j = 1; j < match.indices.length; j++) {
+            if (j == captureIndex)
+                continue;
+            var childRange = match.indices[j];
+            if (!childRange || childRange[0] == null || childRange[0] < range[0] || childRange[1] > range[1])
+                continue;
+            local.push(match[j]);
+        }
+        return local.length > 1 ? local : match;
+    }
+
+    for (var i = 1; i < match.indices.length && i < captureMeta.length; i++) {
+        var meta = captureMeta[i];
+        var range = match.indices[i];
+        if (!meta || !range || range[0] == null || range[0] < 0 || range[1] <= range[0])
+            continue;
+        while (localStack.length && localStack[localStack.length - 1].end <= range[0]) {
+            emit(localStack[localStack.length - 1].end);
+            localStack.pop();
+        }
+        emit(range[0]);
+
+        var parentMeta = currentMeta();
+        var captureName = expandScopeBackrefs(meta.name, getLocalCaptureMatch(i, range));
+        var captureScope = captureName
+            ? appendCaptureScope(parentMeta.ruleScope, captureName)
+            : parentMeta.ruleScope;
+        var captureType = captureName || parentMeta.type || baseType;
+
+        if (meta.retokenizeState) {
+            tokens.push({
+                type: captureType,
+                value: value.slice(range[0], range[1]),
+                ruleScope: captureScope,
+                retokenizeState: meta.retokenizeState
+            });
+            position = range[1];
+            continue;
+        }
+        if (captureName) {
+            localStack.push({
+                end: range[1],
+                type: captureType,
+                ruleScope: captureScope
+            });
+        }
+    }
+
+    while (localStack.length) {
+        emit(localStack[localStack.length - 1].end);
+        localStack.pop();
+    }
+    emit(fullRange[1]);
+    return tokens;
+}
+
+function tmDynamicScopeToken(value) {
+    var flags = (this.caseInsensitive ? "i" : "") + (this.unicode ? "u" : "");
+    if (!this.tmDynamicScopeRegex)
+        this.tmDynamicScopeRegex = new RegExp("^(?:" + this.regex + ")$", flags);
+    var match = this.tmDynamicScopeRegex.exec(value);
+    return {
+        type: this.tmDynamicTokenType || "text",
+        value: value,
+        ruleScope: expandScopeBackrefs(this.tmDynamicRuleScope, match)
+    };
+}
+
+function transformTmRules(rules) {
+    var tmLikeRuleId = 0;
+    var pendingStates = [];
+    function enqueueState(name) {
+        if (!rules[name] || pendingStates.indexOf(name) !== -1)
+            return;
+        pendingStates.push(name);
+    }
+    function compileRetokenizeParts(parts, ownerName) {
+        if (!Array.isArray(parts))
+            return parts;
+        return parts.map(function(part, index) {
+            if (!part || !part.retokenizePatterns || !part.retokenizePatterns.length)
+                return part;
+            var captureStateName = (ownerName || "tmCapture") + ".capture." + index + "." + tmLikeRuleId++;
+            rules[captureStateName] = part.retokenizePatterns.concat([{
+                defaultToken: part.type || "text"
+            }]);
+            enqueueState(captureStateName);
+            part = Object.assign({}, part);
+            part.retokenizeState = captureStateName;
+            delete part.retokenizePatterns;
+            return part;
+        });
+    }
+    function compileTmRule(pattern) {
+        if (!pattern || pattern.regex)
+            return pattern;
+
+        if (pattern.match) {
+            var dynamicScope = hasScopeBackrefs(pattern.ruleScope || pattern.name);
+            pattern.regex = pattern.match;
+            if (pattern.$sticky)
+                pattern.sticky = true;
+            pattern.token = pattern.token || pattern.name || "text";
+            pattern.ruleScope = pattern.ruleScope || pattern.name;
+            if (pattern.name && !pattern.scope) {
+                pattern.scope = {
+                    type: "match",
+                    name: pattern.ruleScope || pattern.name
+                };
+            }
+            if (pattern.$matchConsumesLineEnd)
+                pattern.consumeLineEnd = true;
+            if (pattern.$tmCaptureRules) {
+                var wholeCapture = pattern.$tmCaptureRules[0] || pattern.$tmCaptureRules["0"];
+                var baseScope = Array.isArray(pattern.ruleScope)
+                    ? pattern.ruleScope.slice()
+                    : pattern.ruleScope ? [pattern.ruleScope] : [];
+                if (wholeCapture && wholeCapture.name)
+                    baseScope = appendRuleScope(baseScope, wholeCapture.name);
+                pattern.tmCaptureData = [];
+                Object.keys(pattern.$tmCaptureRules).forEach(function(key) {
+                    var capture = pattern.$tmCaptureRules[key];
+                    var meta = pattern.tmCaptureData[Number(key)] = {
+                        name: capture && capture.name || ""
+                    };
+                    if (capture && capture.patterns && capture.patterns.length) {
+                        var captureStateName = (pattern.name || pattern.token || "tmCapture") + ".capture." + key + "." + tmLikeRuleId++;
+                        rules[captureStateName] = capture.patterns.concat([{
+                            defaultToken: pattern.token || pattern.name || "text"
+                        }]);
+                        enqueueState(captureStateName);
+                        meta.retokenizeState = captureStateName;
+                    }
+                });
+                pattern.tmCaptureBaseScope = baseScope;
+                pattern.tmCaptureDefaultType = wholeCapture && wholeCapture.name || pattern.token || pattern.name || "text";
+                pattern.onMatch = tmCaptureTokens;
+                pattern.token = null;
+            } else if (dynamicScope) {
+                pattern.tmDynamicRuleScope = pattern.ruleScope;
+                pattern.tmDynamicTokenType = pattern.token || pattern.name || "text";
+                pattern.onMatch = tmDynamicScopeToken;
+                pattern.token = null;
+            }
+            delete pattern.match;
+            delete pattern.name;
+            return pattern;
+        }
+
+        if (pattern.begin && (pattern.end != null || pattern.while)) {
+            var outerScope = pattern.name || pattern.token;
+            var contentToken = pattern.token || outerScope || "text";
+            var beginToken = compileRetokenizeParts(
+                pattern.$beginToken || captureToken(pattern.beginCaptures, pattern.token || outerScope || "text"),
+                outerScope || pattern.token
+            );
+            var endToken = compileRetokenizeParts(
+                pattern.$endToken || captureToken(pattern.endCaptures, pattern.token || outerScope || "text"),
+                outerScope || pattern.token
+            );
+            var whileToken = compileRetokenizeParts(
+                pattern.$whileToken || captureToken(
+                    pattern.whileCaptures || pattern.beginCaptures || pattern.captures,
+                    pattern.token || contentToken
+                ),
+                outerScope || pattern.token
+            );
+            var innerScope = pattern.contentName || outerScope;
+            var beginRuleScope = pattern.$beginRuleScope || outerScope;
+            var continuationToken = pattern.while ? whileToken : endToken;
+            var continuationRuleScope = pattern.while
+                ? pattern.$whileRuleScope || outerScope
+                : pattern.$endRuleScope || outerScope;
+            var tmStateName = pattern.stateName || (outerScope || "tm") + "." + tmLikeRuleId++;
+            var beginMerge = beginToken === contentToken && sameScopeList(beginRuleScope, innerScope);
+            var continuationMerge = continuationToken === contentToken && sameScopeList(continuationRuleScope, innerScope);
+
+            rules[tmStateName] = (pattern.patterns || []).concat([{
+                defaultToken: contentToken,
+                ruleScope: innerScope
+            }]);
+            enqueueState(tmStateName);
+
+            return {
+                token: beginToken,
+                merge: beginMerge,
+                ruleScope: beginRuleScope,
+                regex: pattern.begin,
+                sticky: !!pattern.$sticky,
+                consumeLineEnd: !!pattern.$beginConsumesLineEnd,
+                scope: {
+                    type: pattern.while ? "while" : "begin",
+                    state: tmStateName,
+                    name: outerScope,
+                    contentName: innerScope,
+                    applyEndPatternLast: !!pattern.applyEndPatternLast,
+                    regex: pattern.while ? pattern.while : pattern.end,
+                    token: continuationToken,
+                    ruleScope: continuationRuleScope,
+                    merge: continuationMerge,
+                    nameRegex: pattern.$beginScopeRegex,
+                    beginFlags: regexpFlags(pattern.begin),
+                    flags: regexpFlags(pattern.while ? pattern.while : pattern.end)
+                }
+            };
+        }
+
+        return pattern;
+    }
+    function processState(key) {
+        var state = rules[key];
+        if (!state || state.$tmTransformed)
+            return;
+        state.$tmTransformed = true;
+        for (var i = 0; i < state.length; i++) {
+            state[i] = compileTmRule(state[i]);
+            var includeName = typeof state[i] == "string" ? state[i] : state[i] && state[i].include;
+            if (includeName && rules[includeName])
+                enqueueState(includeName);
+        }
+    }
+
+    Object.keys(rules).forEach(enqueueState);
+    while (pendingStates.length)
+        processState(pendingStates.shift());
+    Object.keys(rules).forEach(function(key) {
+        if (rules[key])
+            delete rules[key].$tmTransformed;
+    });
+    return rules;
+}
+
 function setWarningsEnabled(enabled) {
     warnEnabled = !!enabled;
 }
@@ -651,4 +1075,8 @@ exports.simplifyNonCapturingGroups = simplifyNonCapturingGroups;
 exports.fixGroups = fixGroups;
 exports.transformTmPattern = transformTmPattern;
 exports.transformTmGrammar = transformTmGrammar;
+exports.uniquifyPatternRegexps = uniquifyPatternRegexps;
+exports.uniquifyAceRuleRegexps = uniquifyAceRuleRegexps;
+exports.transformTmRules = transformTmRules;
+exports.expandTransformedIncludes = expandTransformedIncludes;
 exports.setWarningsEnabled = setWarningsEnabled;
