@@ -1,6 +1,7 @@
 "use strict";
 const reportError = require("./lib/report_error").reportError;
 const Scope = require("./scope").Scope;
+const ScopedFrameManager = require("./scoped_frame_manager").ScopedFrameManager;
 var HAS_INDICES = false;
 try {
     HAS_INDICES = !!new RegExp("", "d").hasIndices;
@@ -8,6 +9,7 @@ try {
 
 // tokenizing lines longer than this makes editor very slow
 var MAX_TOKEN_COUNT = 2000;
+
 /**
  * This class takes a set of highlighting rules, and creates a tokenizer out of them. For more information, see [the wiki on extending highlighters](https://github.com/ajaxorg/ace/wiki/Creating-or-Extending-an-Edit-Mode#wiki-extendingTheHighlighter).
  **/
@@ -22,6 +24,7 @@ class Tokenizer {
         this.splitRegex;
         this.states = rules;
         this.rootScope = new Scope(modeName || "root");
+        this.scopedFrames = new ScopedFrameManager(this.rootScope);
 
         this.regExps = {};
         this.stickyRegExps = {};
@@ -296,134 +299,11 @@ class Tokenizer {
     }
 
     /**
-     * @param {any[]} stack
-     */
-    getScopedFrames(stack) {
-        var frames = [];
-        for (var i = 1; i < stack.length; i++) {
-            var item = stack[i];
-            if (item && item.kind === "scope")
-                frames.push(item);
-        }
-        return frames.reverse();
-    }
-
-    /**
-     * @param {string} currentState
-     * @param {any[]} stack
-     */
-    getActiveScopedFrame(currentState, stack) {
-        if (stack[0] === currentState && stack[1] && stack[1].kind === "scope")
-            return stack[1];
-        return null;
-    }
-
-    sameScopedFrame(a, b) {
-        if (!a || !b)
-            return false;
-        if (a.state !== b.state || a.outerScope !== b.outerScope || a.innerScope !== b.innerScope)
-            return false;
-        if (a.source !== b.source || a.type !== b.type)
-            return false;
-        var aCaptures = a.captures || [];
-        var bCaptures = b.captures || [];
-        if (aCaptures.length !== bCaptures.length)
-            return false;
-        for (var i = 0; i < aCaptures.length; i++) {
-            if (aCaptures[i] !== bCaptures[i])
-                return false;
-        }
-        return true;
-    }
-
-    /**
-     * @param {string|undefined} currentState
-     * @param {any[]} stack
-     * @param {any} scopeRule
-     * @param {string} value
-     */
-    pushScopedFrame(currentState, stack, scopeRule, value) {
-        var match = scopeRule.beginRegex.exec(value);
-        var scopeMatch = scopeRule.nameRegex
-            ? scopeRule.nameRegex.exec(value)
-            : match;
-        var captures = scopeMatch ? scopeMatch.slice(1) : [];
-        var endMatchCaptures = match ? match.slice(1) : [];
-        var contentMapping = this.matchMappings[scopeRule.state] || {};
-        var contentToken = contentMapping.defaultToken || scopeRule.contentName || scopeRule.name || "text";
-        var frame = {
-            kind: "scope",
-            type: scopeRule.type,
-            state: scopeRule.state,
-            outerScope: Scope.expandBackrefs(scopeRule.name, captures),
-            contentToken: contentToken,
-            innerScope: Scope.expandBackrefs(scopeRule.contentName || scopeRule.name, captures),
-            source: scopeRule.source,
-            flags: scopeRule.flags || "",
-            token: scopeRule.token || scopeRule.name || "text",
-            captures: endMatchCaptures
-        };
-        if (scopeRule.applyEndPatternLast)
-            frame.applyEndPatternLast = true;
-        if (scopeRule.merge === false)
-            frame.merge = scopeRule.merge;
-        if (scopeRule.ruleScope && scopeRule.ruleScope !== scopeRule.name)
-            frame.ruleScope = Scope.expandBackrefs(scopeRule.ruleScope, captures);
-        stack.unshift(scopeRule.state, frame, currentState || "start");
-        return scopeRule.state;
-    }
-
-    /**
-     * @param {string} currentState
-     * @param {any[]} stack
-     */
-    popScopedFrame(currentState, stack) {
-        if (stack[0] === currentState)
-            stack.shift();
-        stack.shift();
-        return stack.shift() || "start";
-    }
-
-    /**
-     * @param {string} currentState
-     * @param {any[]} stack
-     * @param {any} frame
-     */
-    popScopedFramesThrough(currentState, stack, frame) {
-        while (true) {
-            var activeScopedFrame = this.getActiveScopedFrame(currentState, stack);
-            if (!activeScopedFrame)
-                return currentState;
-            currentState = this.popScopedFrame(currentState, stack);
-            if (activeScopedFrame === frame)
-                return currentState;
-        }
-    }
-
-    popSpecificScopedFrame(currentState, stack, frame) {
-        if (!frame)
-            return currentState;
-        if (this.getActiveScopedFrame(currentState, stack) === frame)
-            return this.popScopedFrame(currentState, stack);
-
-        for (var i = 1; i < stack.length; i++) {
-            if (stack[i] !== frame)
-                continue;
-            if (typeof stack[i - 1] == "string")
-                stack.splice(i - 1, 3);
-            else
-                stack.splice(i, 2);
-            break;
-        }
-        return currentState;
-    }
-
-    /**
      * @param {string} currentState
      * @param {any[]} stack
      */
     getDefaultToken(currentState, stack) {
-        var frame = this.getActiveScopedFrame(currentState, stack);
+        var frame = this.scopedFrames.getActive(currentState, stack);
         return frame ? frame.contentToken : this.matchMappings[currentState].defaultToken;
     }
 
@@ -434,47 +314,23 @@ class Tokenizer {
      * @returns {Scope}
      */
     getTokenScope(type, rule, mapping, currentState, stack, excludeActiveInnerScope) {
-        var scope = this.rootScope;
-        var scopedFrames = this.getScopedFrames(stack || []);
-        scopedFrames.forEach(function(frame, index) {
-            scope = scope.append(frame.outerScope);
-            if (
-                frame.innerScope &&
-                !(excludeActiveInnerScope && index === scopedFrames.length - 1)
-            )
-                scope = scope.append(Scope.tail(frame.innerScope, frame.outerScope));
-        });
+        var scope = this.scopedFrames.getContentScope(stack, excludeActiveInnerScope);
         var scopeNames = rule && rule.ruleScope;
         if (!scopeNames) {
-            var frame = this.getActiveScopedFrame(currentState || "", stack || []);
+            var frame = this.scopedFrames.getActive(currentState || "", stack || []);
             if (frame)
                 scopeNames = frame.innerScope;
         }
         if (!scopeNames)
             scopeNames = mapping.defaultScope;
         scopeNames = Scope.toNames(scopeNames);
-        var activeFrame = scopedFrames[scopedFrames.length - 1];
-        if (!(rule && rule.scope && (rule.scope.type === "begin" || rule.scope.type === "while")) && scopeNames.length && activeFrame && (
-            (!excludeActiveInnerScope && Scope.startsWith(scopeNames, activeFrame.innerScope))
-            || Scope.startsWith(scopeNames, activeFrame.outerScope)
-            || (
-                scopeNames.length === 1 &&
-                Array.isArray(activeFrame.innerScope) &&
-                activeFrame.innerScope[activeFrame.innerScope.length - 1] === scopeNames[0]
-            )
-        ))
-            scopeNames = scopeNames.slice(
-                (!excludeActiveInnerScope && Array.isArray(activeFrame.innerScope) && Scope.startsWith(scopeNames, activeFrame.innerScope))
-                        ? activeFrame.innerScope.length
-                    : Array.isArray(activeFrame.outerScope) && Scope.startsWith(scopeNames, activeFrame.outerScope)
-                        ? activeFrame.outerScope.length
-                        : (
-                            scopeNames.length === 1 &&
-                            Array.isArray(activeFrame.innerScope) &&
-                            activeFrame.innerScope[activeFrame.innerScope.length - 1] === scopeNames[0]
-                        )
-                            ? 1
-                        : 1
+        var activeFrame = this.scopedFrames.getActive(currentState || "", stack || []);
+        if (!(rule && rule.scope && (rule.scope.type === "begin" || rule.scope.type === "while")) && activeFrame)
+            scopeNames = Scope.trimActivePrefix(
+                scopeNames,
+                activeFrame.outerScope,
+                activeFrame.innerScope,
+                excludeActiveInnerScope
             );
         return scope.append(scopeNames);
     }
@@ -546,6 +402,170 @@ class Tokenizer {
         return ambientScope.merge(childScope);
     }
 
+    appendStringCapturedToken(tokens, token, type, value, ruleScope, mapping, currentState, stack, merge, excludeActiveInnerScope, isTmBegin) {
+        var scope = this.getTokenScope(
+            type,
+            this.getCaptureScopeRule(ruleScope, isTmBegin),
+            mapping,
+            currentState,
+            stack,
+            excludeActiveInnerScope
+        );
+        if (merge === false) {
+            if (token.type)
+                tokens.push(token);
+            tokens.push(this.setTokenScope({
+                type: type,
+                value: value
+            }, scope));
+            return {type: null, value: ""};
+        }
+        return this.appendScopedToken(tokens, token, type, value, scope);
+    }
+
+    hasIndexedCaptures(match, type) {
+        for (var i = 1; i < match.indices.length && i <= type.length; i++) {
+            var range = match.indices[i];
+            if (range && range[0] != null && range[0] >= 0 && range[1] > range[0])
+                return true;
+        }
+        return false;
+    }
+
+    hasIndexedCaptureGaps(match, type) {
+        var fullRange = match.indices[0];
+        var position = fullRange[0];
+        for (var i = 1; i < match.indices.length && i <= type.length; i++) {
+            var range = match.indices[i];
+            if (!range || range[0] == null || range[0] < 0 || range[1] <= range[0])
+                continue;
+            if (range[0] > position)
+                return true;
+            if (range[1] > position)
+                position = range[1];
+        }
+        return fullRange[1] > position;
+    }
+
+    createCapturePart(partType, value, range) {
+        return typeof partType == "object"
+            ? Object.assign({value: value.slice(range[0], range[1])}, partType)
+            : {
+                type: partType,
+                value: value.slice(range[0], range[1])
+            };
+    }
+
+    setCapturePartScope(part, ruleScope, mapping, currentState, stack, excludeActiveInnerScope, isTmBegin) {
+        if (part.type && !part.scope)
+            this.setTokenScope(
+                part,
+                this.getTokenScope(
+                    part.type,
+                    this.getCaptureScopeRule(part.ruleScope || ruleScope, isTmBegin),
+                    mapping,
+                    currentState,
+                    stack,
+                    excludeActiveInnerScope
+                )
+            );
+    }
+
+    appendIndexedCapturedTokens(tokens, type, value, ruleScope, mapping, currentState, stack, match, excludeActiveInnerScope, isTmBegin) {
+        var fullRange = match.indices[0];
+        var position = fullRange[0];
+        var defaultType = Array.isArray(ruleScope)
+            ? ruleScope[ruleScope.length - 1]
+            : ruleScope || mapping.defaultToken || "text";
+        var defaultScope = this.getTokenScope(
+            defaultType,
+            this.getCaptureScopeRule(ruleScope, isTmBegin),
+            mapping,
+            currentState,
+            stack,
+            excludeActiveInnerScope
+        );
+        var localStack = [];
+        var currentMeta = function() {
+            return localStack[localStack.length - 1] || {
+                type: defaultType,
+                scope: defaultScope
+            };
+        };
+        var emit = function(end) {
+            if (end <= position)
+                return;
+            var meta = currentMeta();
+            tokens.push(this.setTokenScope({
+                type: meta.type || defaultType,
+                value: value.slice(position, end)
+            }, meta.scope || defaultScope));
+            position = end;
+        }.bind(this);
+
+        for (var i = 1; i < match.indices.length && i <= type.length; i++) {
+            var range = match.indices[i];
+            if (!range || range[0] == null || range[0] < 0 || range[1] <= range[0])
+                continue;
+            while (localStack.length && localStack[localStack.length - 1].end <= range[0]) {
+                emit(localStack[localStack.length - 1].end);
+                localStack.pop();
+            }
+            emit(range[0]);
+            var partType = type[i - 1];
+            if (partType == null)
+                continue;
+            var part = this.createCapturePart(partType, value, range);
+            this.setCapturePartScope(part, ruleScope, mapping, currentState, stack, excludeActiveInnerScope, isTmBegin);
+            if (part.retokenizeState) {
+                this.appendRetokenizedTokens(tokens, part);
+                position = range[1];
+                continue;
+            }
+            localStack.push({
+                end: range[1],
+                type: part.type,
+                scope: part.scope
+            });
+        }
+        while (localStack.length) {
+            emit(localStack[localStack.length - 1].end);
+            localStack.pop();
+        }
+        emit(fullRange[1]);
+        return {type: null, value: ""};
+    }
+
+    appendArrayCapturedTokens(tokens, token, type, value, ruleScope, mapping, currentState, stack, splitRegex, excludeActiveInnerScope, isTmBegin) {
+        var parts = splitRegex
+            ? this.$arrayTokens.call({splitRegex: splitRegex, tokenArray: type}, value)
+            : type.map(function(part) {
+                return Object.assign({value: value}, part);
+            });
+
+        if (typeof parts === "string") {
+            return this.appendScopedToken(
+                tokens,
+                token,
+                parts,
+                value,
+                this.getTokenScope(parts, this.getCaptureScopeRule(ruleScope, isTmBegin), mapping, currentState, stack, excludeActiveInnerScope)
+            );
+        }
+
+        if (token.type)
+            tokens.push(token);
+        for (var i = 0; i < parts.length; i++) {
+            this.setCapturePartScope(parts[i], ruleScope, mapping, currentState, stack, excludeActiveInnerScope, isTmBegin);
+            tokens.push(parts[i]);
+            if (parts[i].retokenizeState) {
+                tokens.pop();
+                this.appendRetokenizedTokens(tokens, parts[i]);
+            }
+        }
+        return {type: null, value: ""};
+    }
+
     /**
      * @param {import("../ace-internal").Ace.Token[]} tokens
      * @param {import("../ace-internal").Ace.Token} token
@@ -561,19 +581,20 @@ class Tokenizer {
         if (!value || !type)
             return token;
 
-        if (typeof type === "string") {
-            var scope = this.getTokenScope(type, this.getCaptureScopeRule(ruleScope, isTmBegin), mapping, currentState, stack, excludeActiveInnerScope);
-            if (merge === false) {
-                if (token.type)
-                    tokens.push(token);
-                tokens.push(this.setTokenScope({
-                    type: type,
-                    value: value
-                }, scope));
-                return {type: null, value: ""};
-            }
-            return this.appendScopedToken(tokens, token, type, value, scope);
-        }
+        if (typeof type === "string")
+            return this.appendStringCapturedToken(
+                tokens,
+                token,
+                type,
+                value,
+                ruleScope,
+                mapping,
+                currentState,
+                stack,
+                merge,
+                excludeActiveInnerScope,
+                isTmBegin
+            );
 
         if (!Array.isArray(type))
             type = [type];
@@ -585,183 +606,38 @@ class Tokenizer {
                     tokens.push(token);
                 token = {type: null, value: ""};
 
-                var fullRange = match.indices[0];
-                var position = fullRange[0];
-                var hasCapturedToken = false;
-                for (var capturedTokenIndex = 1; capturedTokenIndex < match.indices.length && capturedTokenIndex <= type.length; capturedTokenIndex++) {
-                    var capturedTokenRange = match.indices[capturedTokenIndex];
-                    if (capturedTokenRange && capturedTokenRange[0] != null && capturedTokenRange[0] >= 0 && capturedTokenRange[1] > capturedTokenRange[0]) {
-                        hasCapturedToken = true;
-                        break;
-                    }
-                }
-                if (!hasCapturedToken)
-                    return this.appendCapturedTokens(
+                if (
+                    this.hasIndexedCaptures(match, type) &&
+                    this.hasIndexedCaptureGaps(match, type)
+                )
+                    return this.appendIndexedCapturedTokens(
                         tokens,
-                        token,
                         type,
                         value,
                         ruleScope,
                         mapping,
                         currentState,
                         stack,
-                        splitRegex,
-                        merge,
+                        match,
                         excludeActiveInnerScope,
-                        false,
                         isTmBegin
                     );
-                var gapPosition = fullRange[0];
-                var hasGap = false;
-                for (var gapCaptureIndex = 1; gapCaptureIndex < match.indices.length && gapCaptureIndex <= type.length; gapCaptureIndex++) {
-                    var gapRange = match.indices[gapCaptureIndex];
-                    if (!gapRange || gapRange[0] == null || gapRange[0] < 0 || gapRange[1] <= gapRange[0])
-                        continue;
-                    if (gapRange[0] > gapPosition) {
-                        hasGap = true;
-                        break;
-                    }
-                    if (gapRange[1] > gapPosition)
-                        gapPosition = gapRange[1];
-                }
-                if (!hasGap && fullRange[1] > gapPosition)
-                    hasGap = true;
-                if (!hasGap)
-                    return this.appendCapturedTokens(
-                        tokens,
-                        token,
-                        type,
-                        value,
-                        ruleScope,
-                        mapping,
-                        currentState,
-                        stack,
-                        splitRegex,
-                        merge,
-                        excludeActiveInnerScope,
-                        false,
-                        isTmBegin
-                    );
-                var defaultType = Array.isArray(ruleScope)
-                    ? ruleScope[ruleScope.length - 1]
-                    : ruleScope || mapping.defaultToken || "text";
-                var defaultScope = this.getTokenScope(
-                    defaultType,
-                    this.getCaptureScopeRule(ruleScope, isTmBegin),
-                    mapping,
-                    currentState,
-                    stack,
-                    excludeActiveInnerScope
-                );
-                var localStack = [];
-                var currentMeta = function() {
-                    return localStack[localStack.length - 1] || {
-                        type: defaultType,
-                        scope: defaultScope
-                    };
-                };
-                var emit = function(end) {
-                    if (end <= position)
-                        return;
-                    var meta = currentMeta();
-                    tokens.push(this.setTokenScope({
-                        type: meta.type || defaultType,
-                        value: value.slice(position, end)
-                    }, meta.scope || defaultScope));
-                    position = end;
-                }.bind(this);
-                var pushRetokenized = function(part, range) {
-                    this.appendRetokenizedTokens(tokens, part);
-                    position = range[1];
-                }.bind(this);
-
-                for (var captureIndex = 1; captureIndex < match.indices.length && captureIndex <= type.length; captureIndex++) {
-                    var range = match.indices[captureIndex];
-                    if (!range || range[0] == null || range[0] < 0 || range[1] <= range[0])
-                        continue;
-                    while (localStack.length && localStack[localStack.length - 1].end <= range[0]) {
-                        emit(localStack[localStack.length - 1].end);
-                        localStack.pop();
-                    }
-                    emit(range[0]);
-                    var partType = type[captureIndex - 1];
-                    if (partType == null)
-                        continue;
-                    var part = typeof partType == "object"
-                        ? Object.assign({value: value.slice(range[0], range[1])}, partType)
-                        : {
-                            type: partType,
-                            value: value.slice(range[0], range[1])
-                        };
-                    if (part.type && !part.scope)
-                        this.setTokenScope(
-                            part,
-                            this.getTokenScope(
-                                part.type,
-                                this.getCaptureScopeRule(part.ruleScope || ruleScope, isTmBegin),
-                                mapping,
-                                currentState,
-                                stack,
-                                excludeActiveInnerScope
-                            )
-                        );
-                    if (part.retokenizeState) {
-                        pushRetokenized(part, range);
-                        continue;
-                    }
-                    localStack.push({
-                        end: range[1],
-                        type: part.type,
-                        scope: part.scope
-                    });
-                }
-                while (localStack.length) {
-                    emit(localStack[localStack.length - 1].end);
-                    localStack.pop();
-                }
-                emit(fullRange[1]);
-                return {type: null, value: ""};
             }
         }
 
-        var parts = splitRegex
-            ? this.$arrayTokens.call({splitRegex: splitRegex, tokenArray: type}, value)
-            : type.map(function(part) {
-                return Object.assign({value: value}, part);
-            });
-
-        if (typeof parts === "string") {
-            return this.appendScopedToken(
-                tokens,
-                token,
-                        parts,
-                        value,
-                        this.getTokenScope(parts, this.getCaptureScopeRule(ruleScope, isTmBegin), mapping, currentState, stack, excludeActiveInnerScope)
-            );
-        }
-
-        if (token.type)
-            tokens.push(token);
-        for (var i = 0; i < parts.length; i++) {
-            if (parts[i].type && !parts[i].scope)
-                this.setTokenScope(
-                    parts[i],
-                    this.getTokenScope(
-                        parts[i].type,
-                        this.getCaptureScopeRule(parts[i].ruleScope || ruleScope, isTmBegin),
-                        mapping,
-                        currentState,
-                        stack,
-                        excludeActiveInnerScope
-                    )
-                );
-            tokens.push(parts[i]);
-            if (parts[i].retokenizeState) {
-                tokens.pop();
-                this.appendRetokenizedTokens(tokens, parts[i]);
-            }
-        }
-        return {type: null, value: ""};
+        return this.appendArrayCapturedTokens(
+            tokens,
+            token,
+            type,
+            value,
+            ruleScope,
+            mapping,
+            currentState,
+            stack,
+            splitRegex,
+            excludeActiveInnerScope,
+            isTmBegin
+        );
     }
 
     /**
@@ -811,7 +687,7 @@ class Tokenizer {
 
         var token = {type: null, value: ""};
 
-        var whileFrames = this.getScopedFrames(stack);
+        var whileFrames = this.scopedFrames.getAll(stack);
         var whileIndex = 0;
         for (var frameIndex = 0; frameIndex < whileFrames.length; frameIndex++) {
             var whileFrame = whileFrames[frameIndex];
@@ -825,12 +701,12 @@ class Tokenizer {
                 whileIndex
             );
             if (!whileMatch) {
-                currentState = this.popScopedFramesThrough(currentState, stack, whileFrame);
+                currentState = this.scopedFrames.popThrough(currentState, stack, whileFrame);
                 state = this.states[currentState] || this.states.start;
                 mapping = this.matchMappings[currentState];
                 re = this.regExps[currentState];
                 if (whileIndex === 0) {
-                    whileFrames = this.getScopedFrames(stack);
+                    whileFrames = this.scopedFrames.getAll(stack);
                     frameIndex = -1;
                 }
                 break;
@@ -873,7 +749,7 @@ class Tokenizer {
         lastIndex = whileIndex;
 
         while (lastIndex <= line.length) {
-            var activeScopedFrame = this.getActiveScopedFrame(currentState, stack);
+            var activeScopedFrame = this.scopedFrames.getActive(currentState, stack);
             var endMatch = null;
             if (activeScopedFrame && activeScopedFrame.type === "begin" && activeScopedFrame.source != null) {
                 var endSearchRegex = new RegExp(
@@ -987,7 +863,7 @@ class Tokenizer {
                     true
                 );
                 lastIndex = index;
-                currentState = this.popScopedFrame(currentState, stack);
+                currentState = this.scopedFrames.popActive(currentState, stack);
                 state = this.states[currentState] || this.states.start;
                 mapping = this.matchMappings[currentState];
                 re = this.regExps[currentState];
@@ -1137,16 +1013,19 @@ class Tokenizer {
             var advanced = index > lastIndex;
             if (rule && rule.scope && (rule.scope.type === "begin" || rule.scope.type === "while")) {
                 var previousFrame = activeScopedFrame;
-                currentState = this.pushScopedFrame(currentState, stack, rule.scope, value);
+                var contentMapping = this.matchMappings[rule.scope.state] || {};
+                var contentToken = contentMapping.defaultToken || rule.scope.contentName || rule.scope.name || "text";
+                var pushedFrame = this.scopedFrames.create(rule.scope, value, stack, contentToken);
+                stack.unshift(rule.scope.state, pushedFrame, currentState || "start");
+                currentState = rule.scope.state;
                 state = this.states[currentState];
                 mapping = this.matchMappings[currentState];
                 re = this.regExps[currentState];
                 re.lastIndex = index;
 
                 if (!advanced) {
-                    var pushedFrame = this.getActiveScopedFrame(currentState, stack);
-                    if (previousFrame && pushedFrame && this.sameScopedFrame(previousFrame, pushedFrame)) {
-                        currentState = this.popScopedFrame(currentState, stack);
+                    if (previousFrame && pushedFrame && this.scopedFrames.same(previousFrame, pushedFrame)) {
+                        currentState = this.scopedFrames.popActive(currentState, stack);
                         state = this.states[currentState] || this.states.start;
                         mapping = this.matchMappings[currentState];
                         re = this.regExps[currentState];
@@ -1203,7 +1082,7 @@ class Tokenizer {
         while (true) {
             if (lineEndConsumed)
                 break;
-            var finalFrames = this.getScopedFrames(stack);
+            var finalFrames = this.scopedFrames.getAll(stack);
             var finalFrame = finalFrames[finalFrames.length - 1];
             if (!finalFrame || finalFrame.type !== "begin" || finalFrame.source == null)
                 break;
@@ -1218,7 +1097,7 @@ class Tokenizer {
             );
             if (!finalEndMatch || finalEndMatch[0] !== "")
                 break;
-            currentState = this.popSpecificScopedFrame(currentState, stack, finalFrame);
+            currentState = this.scopedFrames.popSpecific(currentState, stack, finalFrame);
         }
         
         if (stack.length > 1) {

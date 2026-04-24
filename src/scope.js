@@ -153,6 +153,28 @@ class Scope {
     }
 
     /**
+     * @param {string[]|string|null|undefined} names
+     * @param {string[]|string|null|undefined} outerScope
+     * @param {string[]|string|null|undefined} innerScope
+     * @param {boolean} excludeInner
+     * @returns {string[]}
+     */
+    static trimActivePrefix(names, outerScope, innerScope, excludeInner) {
+        names = Scope.toNames(names);
+        outerScope = Scope.toNames(outerScope);
+        innerScope = Scope.toNames(innerScope);
+        if (!names.length)
+            return names;
+        if (!excludeInner && Scope.startsWith(names, innerScope))
+            return names.slice(innerScope.length);
+        if (Scope.startsWith(names, outerScope))
+            return names.slice(outerScope.length);
+        if (innerScope.length && names.length === 1 && innerScope[innerScope.length - 1] === names[0])
+            return names.slice(1);
+        return names;
+    }
+
+    /**
      * @param {string|string[]|null|undefined} scope
      * @param {string[]|undefined} captures
      * @returns {string|string[]|null|undefined}
