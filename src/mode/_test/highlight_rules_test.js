@@ -186,15 +186,6 @@ function generateTestData(names, force) {
         try {
             var oldOutput = require(outputPath);
         } catch(e) {}
-        if (oldOutput && !force) {
-            var oldText = oldOutput.map(function(x) {
-                if (x.length > 1 && typeof x[x.length - 1] == "string")
-                    return x[x.length - 1];
-                return x.slice(1).map(function(tok) {
-                    return tok[1];
-                }).join("");
-            }).join("\n");
-        }
         
         var filePath = "text_" + modeName + ".txt";
         if (specialDocs.indexOf(filePath) !== -1) {
@@ -203,7 +194,7 @@ function generateTestData(names, force) {
             filePath = docRoot + "/" + docName;
             // oldText = "";
         }
-        var text = oldText ||fs.readFileSync(filePath, "utf8");
+        var text = fs.readFileSync(filePath, "utf8");
         
         try {
             var Mode = require("../" + modeName).Mode;
@@ -216,15 +207,17 @@ function generateTestData(names, force) {
 
         var state = "start";
         var data = text.split(/\r\n|\r|\n/).map(function(line) {
-            var data = tokenizer.getLineTokens(line, state);
+            var resetState = /^[\x00]/.test(line);
+            var sourceLine = resetState ? line.slice(1) : line;
+            var data = tokenizer.getLineTokens(sourceLine, resetState ? "start" : state);
             var tmp = [];
-            tmp.push(JSON.stringify(data.state));
+            tmp.push(JSON.stringify(serializeState(data.state)));
             var tokenizedLine = "";
             data.tokens.forEach(function(x) {
                 tokenizedLine += x.value;
                 tmp.push(JSON.stringify([x.type, x.value]));
             });
-            if (tokenizedLine != line)
+            if (resetState || tokenizedLine != sourceLine)
                 tmp.push(JSON.stringify(line));
             state = data.state;
             return tmp.join(",\n  ");
@@ -275,12 +268,16 @@ function testMode(modeName, i) {
         if (typeof line != "string")
             line = lineData.values.join("");
 
-        var tokens = tokenizer.getLineTokens(line, state);
+        var resetState = /^[\x00]/.test(line);
+        if (resetState)
+            line = line.slice(1);
+        var tokens = tokenizer.getLineTokens(line, resetState ? "start" : state);
         var values = tokens.tokens.map(function(x) {return x.value;});
         var types = tokens.tokens.map(function(x) {return x.type;});
+        var stateString = serializeState(tokens.state);
 
         var err = testEqual([
-            JSON.stringify(lineData.state), JSON.stringify(tokens.state),
+            JSON.stringify(lineData.state), JSON.stringify(stateString),
             lineData.types, types,
             lineData.values, values]);
         
@@ -290,6 +287,40 @@ function testMode(modeName, i) {
         }
 
         state = tokens.state;
+    });
+}
+function serializeState(state) {
+    if (!Array.isArray(state))
+        return state;
+    return state.map(function(part) {
+        if (!part || typeof part != "object")
+            return part;
+        var serialized = {};
+        [
+            "kind",
+            "type",
+            "state",
+            "outerScope",
+            "innerScope",
+            "contentToken",
+            "token",
+            "ruleScope",
+            "source",
+            "flags",
+            "captures",
+            "applyEndPatternLast",
+            "merge",
+            "endSource",
+            "endFlags",
+            "tagName",
+            "returnState",
+            "htmlBlock",
+            "isRaw"
+        ].forEach(function(key) {
+            if (part[key] !== undefined)
+                serialized[key] = Array.isArray(part[key]) ? part[key].slice(0) : part[key];
+        });
+        return serialized;
     });
 }
 function testEqual(a) {

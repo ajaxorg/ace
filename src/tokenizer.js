@@ -664,10 +664,22 @@ class Tokenizer {
                     type = rule.token;
 
                 if (!(rule.scope && (rule.scope.type === "begin" || rule.scope.type === "while")) && rule.next) {
+                    var nextState = null;
                     if (typeof rule.next == "string") {
-                        currentState = rule.next;
+                        nextState = rule.next;
                     } else {
-                        currentState = rule.next(currentState, stack);
+                        nextState = rule.next(currentState, stack);
+                    }
+
+                    var activeFrameBeforeNext = this.scopedFrames.getActive(currentState, stack);
+                    if (activeFrameBeforeNext && nextState !== currentState) {
+                        currentState = this.scopedFrames.popActive(currentState, stack);
+                        while (nextState !== currentState && this.scopedFrames.getActive(currentState, stack)) {
+                            currentState = this.scopedFrames.popActive(currentState, stack);
+                        }
+                    }
+                    if (nextState != null) {
+                        currentState = nextState;
                     }
 
                     state = this.states[currentState];
@@ -876,7 +888,7 @@ class Tokenizer {
             currentState = this.scopedFrames.popSpecific(currentState, stack, finalFrame);
         }
 
-        if (stack.length > 1) {
+        if (stack.length) {
             if (stack[0] !== currentState)
                 stack.unshift("#tmp", currentState);
         }
