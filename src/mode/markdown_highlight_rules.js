@@ -1029,14 +1029,6 @@ var MarkdownHighlightRules = function () {
         ],
         "html": [
             {
-                regex: /(<)(script|style|pre)/,
-                onMatch: function (value, state, stack) {
-                    var tagName = value.substr(1);
-                    pushTagContext(stack, state, tagName, true);
-                    return tagTokens("<", tagName);
-                },
-                next: "tag_stuff"
-            }, {
                 token: "comment",
                 regex: /<!--/,
                 next: [
@@ -1114,7 +1106,12 @@ var MarkdownHighlightRules = function () {
                 regex: /(<\/?)([a-zA-Z][-_a-zA-Z0-9:.]*)/,
                 onMatch: function (value, state, stack) {
                     var match = value.match(this.regex);
-                    pushTagContext(stack, state, match[2], false);
+                    pushTagContext(
+                        stack,
+                        state,
+                        match[2],
+                        state === "html" && /^(script|style|pre)$/i.test(match[2])
+                    );
                     return tagTokens(match[1], match[2]);
                 }
                 ,

@@ -2572,7 +2572,7 @@
    "paragraph",
   ["text","main = print $ parseTags tags"]
 ],[
-   "html",
+   ["#tmp","innerTagSpace",{"tagName":"pre","returnState":"html","htmlBlock":true}],
   ["meta.tag.punctuation.end-tag-open.xml","</"],
   ["meta.tag.tag-name.xml","code"],
   ["meta.tag.punctuation.tag-close.xml",">"],
@@ -2580,7 +2580,7 @@
   ["meta.tag.tag-name.xml","pre"],
   ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
-   "start",
+   ["#tmp","innerTagSpace",{"tagName":"pre","returnState":"html","htmlBlock":true}],
   ["text","okay"]
 ],[
    "start"
