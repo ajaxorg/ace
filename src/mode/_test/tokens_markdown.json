@@ -160,7 +160,7 @@
 ],[
    "start"
 ],[
-   ["codeSpan1","listBlock","listBlock",{"kind":"scope","type":"while","state":"listBlock","outerScope":"start listBlock","innerScope":"start listBlock lineStart","contentToken":"list","token":"indent","ruleScope":"start listBlock lineStart","source":"(^[ \\t]*$)|(^(?=[ ]*[*+-](?:[ \\t]+|$)|[ ]*\\d+[.)](?:[ \\t]+|$)))|(^(?=[ ]{4,}|\\t))|(^(?= {1,3}\\S))|(^(?=[^\\s>]))","flags":"","captures":["","","- "]},"start"],
+   ["codeSpan",{"kind":"scope","type":"begin","state":"codeSpan","outerScope":"support.function","innerScope":"support.function","contentToken":"support.function","token":"support.function","source":"(?<!`)\\1(?!`)","flags":"","captures":["`"]},"listBlock","listBlock",{"kind":"scope","type":"while","state":"listBlock","outerScope":"start listBlock","innerScope":"start listBlock lineStart","contentToken":"list","token":"indent","ruleScope":"start listBlock lineStart","source":"(^[ \\t]*$)|(^(?=[ ]*[*+-](?:[ \\t]+|$)|[ ]*\\d+[.)](?:[ \\t]+|$)))|(^(?=[ ]{4,}|\\t))|(^(?= {1,3}\\S))|(^(?=[^\\s>]))","flags":"","captures":["","","- "]},"start"],
   ["markup.list.2","- "],
   ["support.function","`one"]
 ],[
@@ -955,10 +955,10 @@
 ],[
    "start"
 ],[
-   ["codeSpan1","paragraph"],
+   ["codeSpan",{"kind":"scope","type":"begin","state":"codeSpan","outerScope":"support.function","innerScope":"support.function","contentToken":"support.function","token":"support.function","source":"(?<!`)\\1(?!`)","flags":"","captures":["`"]},"paragraph"],
   ["support.function","`Foo"]
 ],[
-   ["codeSpan1","paragraph"],
+   ["codeSpan",{"kind":"scope","type":"begin","state":"codeSpan","outerScope":"support.function","innerScope":"support.function","contentToken":"support.function","token":"support.function","source":"(?<!`)\\1(?!`)","flags":"","captures":["`"]},"paragraph"],
   ["support.function","----"]
 ],[
    "paragraph",
@@ -1501,10 +1501,10 @@
 ],[
    "start"
 ],[
-   ["codeSpan2","paragraph"],
+   ["codeSpan",{"kind":"scope","type":"begin","state":"codeSpan","outerScope":"support.function","innerScope":"support.function","contentToken":"support.function","token":"support.function","source":"(?<!`)\\1(?!`)","flags":"","captures":["``"]},"paragraph"],
   ["support.function","``"]
 ],[
-   ["codeSpan2","paragraph"],
+   ["codeSpan",{"kind":"scope","type":"begin","state":"codeSpan","outerScope":"support.function","innerScope":"support.function","contentToken":"support.function","token":"support.function","source":"(?<!`)\\1(?!`)","flags":"","captures":["``"]},"paragraph"],
   ["support.function","foo"]
 ],[
    "paragraph",
@@ -1628,19 +1628,19 @@
 ],[
    "start"
 ],[
-   ["codeSpan2","blockquote"],
+   ["codeSpan",{"kind":"scope","type":"begin","state":"codeSpan","outerScope":"support.function","innerScope":"support.function","contentToken":"support.function","token":"support.function","source":"(?<!`)\\1(?!`)","flags":"","captures":["```"]},"blockquote"],
   ["string.blockquote","> "],
   ["support.function","```"]
 ],[
-   ["codeSpan2","blockquote"],
+   ["codeSpan",{"kind":"scope","type":"begin","state":"codeSpan","outerScope":"support.function","innerScope":"support.function","contentToken":"support.function","token":"support.function","source":"(?<!`)\\1(?!`)","flags":"","captures":["```"]},"blockquote"],
   ["support.function","> aaa"]
 ],[
-   ["codeSpan2","blockquote"]
+   ["codeSpan",{"kind":"scope","type":"begin","state":"codeSpan","outerScope":"support.function","innerScope":"support.function","contentToken":"support.function","token":"support.function","source":"(?<!`)\\1(?!`)","flags":"","captures":["```"]},"blockquote"]
 ],[
-   ["codeSpan2","blockquote"],
+   ["codeSpan",{"kind":"scope","type":"begin","state":"codeSpan","outerScope":"support.function","innerScope":"support.function","contentToken":"support.function","token":"support.function","source":"(?<!`)\\1(?!`)","flags":"","captures":["```"]},"blockquote"],
   ["support.function","bbb"]
 ],[
-   ["codeSpan2","blockquote"]
+   ["codeSpan",{"kind":"scope","type":"begin","state":"codeSpan","outerScope":"support.function","innerScope":"support.function","contentToken":"support.function","token":"support.function","source":"(?<!`)\\1(?!`)","flags":"","captures":["```"]},"blockquote"]
 ],[
    "paragraph",
   ["text","  test 99"],
@@ -1969,17 +1969,17 @@
 ],[
    "start"
 ],[
-   ["codeSpan2","paragraph"],
+   ["codeSpan",{"kind":"scope","type":"begin","state":"codeSpan","outerScope":"support.function","innerScope":"support.function","contentToken":"support.function","token":"support.function","source":"(?<!`)\\1(?!`)","flags":"","captures":["```"]},"paragraph"],
   ["text","~~~ aa "],
   ["support.function","``` ~~~"]
 ],[
-   ["codeSpan2","paragraph"],
+   ["codeSpan",{"kind":"scope","type":"begin","state":"codeSpan","outerScope":"support.function","innerScope":"support.function","contentToken":"support.function","token":"support.function","source":"(?<!`)\\1(?!`)","flags":"","captures":["```"]},"paragraph"],
   ["support.function","foo"]
 ],[
-   ["codeSpan2","paragraph"],
+   ["codeSpan",{"kind":"scope","type":"begin","state":"codeSpan","outerScope":"support.function","innerScope":"support.function","contentToken":"support.function","token":"support.function","source":"(?<!`)\\1(?!`)","flags":"","captures":["```"]},"paragraph"],
   ["support.function","~~~"]
 ],[
-   ["codeSpan2","paragraph"]
+   ["codeSpan",{"kind":"scope","type":"begin","state":"codeSpan","outerScope":"support.function","innerScope":"support.function","contentToken":"support.function","token":"support.function","source":"(?<!`)\\1(?!`)","flags":"","captures":["```"]},"paragraph"]
 ],[
    "paragraph",
   ["text","  test 117"],
@@ -4105,17 +4105,17 @@
 ],[
    "start"
 ],[
-   ["codeSpan2","blockquote"],
+   ["codeSpan",{"kind":"scope","type":"begin","state":"codeSpan","outerScope":"support.function","innerScope":"support.function","contentToken":"support.function","token":"support.function","source":"(?<!`)\\1(?!`)","flags":"","captures":["```"]},"blockquote"],
   ["string.blockquote","> "],
   ["support.function","```"]
 ],[
-   ["codeSpan2","blockquote"],
+   ["codeSpan",{"kind":"scope","type":"begin","state":"codeSpan","outerScope":"support.function","innerScope":"support.function","contentToken":"support.function","token":"support.function","source":"(?<!`)\\1(?!`)","flags":"","captures":["```"]},"blockquote"],
   ["support.function","foo"]
 ],[
-   ["codeSpan1","blockquote"],
+   "blockquote",
   ["support.function","```"]
 ],[
-   ["codeSpan1","blockquote"]
+   "start"
 ],[
    "paragraph",
   ["text","  test 208"],
@@ -5904,12 +5904,12 @@
 ],[
    "start"
 ],[
-   ["codeSpan1","paragraph"],
+   ["codeSpan",{"kind":"scope","type":"begin","state":"codeSpan","outerScope":"support.function","innerScope":"support.function","contentToken":"support.function","token":"support.function","source":"(?<!`)\\1(?!`)","flags":"","captures":["`"]},"paragraph"],
   ["support.function","`hi`"],
   ["text","lo"],
   ["support.function","`"]
 ],[
-   ["codeSpan1","paragraph"]
+   ["codeSpan",{"kind":"scope","type":"begin","state":"codeSpan","outerScope":"support.function","innerScope":"support.function","contentToken":"support.function","token":"support.function","source":"(?<!`)\\1(?!`)","flags":"","captures":["`"]},"paragraph"]
 ],[
    "paragraph",
   ["text","  test 298"],
@@ -5951,27 +5951,27 @@
   ["constant.language.escape","\\["],
   ["text","not a link](/foo)"]
 ],[
-   ["codeSpan1","paragraph"],
+   ["codeSpan",{"kind":"scope","type":"begin","state":"codeSpan","outerScope":"support.function","innerScope":"support.function","contentToken":"support.function","token":"support.function","source":"(?<!`)\\1(?!`)","flags":"","captures":["`"]},"paragraph"],
   ["constant.language.escape","\\`"],
   ["text","not code"],
   ["support.function","`"]
 ],[
-   ["codeSpan1","paragraph"],
+   ["codeSpan",{"kind":"scope","type":"begin","state":"codeSpan","outerScope":"support.function","innerScope":"support.function","contentToken":"support.function","token":"support.function","source":"(?<!`)\\1(?!`)","flags":"","captures":["`"]},"paragraph"],
   ["support.function","1\\. not a list"]
 ],[
-   ["codeSpan1","paragraph"],
+   ["codeSpan",{"kind":"scope","type":"begin","state":"codeSpan","outerScope":"support.function","innerScope":"support.function","contentToken":"support.function","token":"support.function","source":"(?<!`)\\1(?!`)","flags":"","captures":["`"]},"paragraph"],
   ["support.function","\\* not a list"]
 ],[
-   ["codeSpan1","paragraph"],
+   ["codeSpan",{"kind":"scope","type":"begin","state":"codeSpan","outerScope":"support.function","innerScope":"support.function","contentToken":"support.function","token":"support.function","source":"(?<!`)\\1(?!`)","flags":"","captures":["`"]},"paragraph"],
   ["support.function","\\# not a heading"]
 ],[
-   ["codeSpan1","paragraph"],
+   ["codeSpan",{"kind":"scope","type":"begin","state":"codeSpan","outerScope":"support.function","innerScope":"support.function","contentToken":"support.function","token":"support.function","source":"(?<!`)\\1(?!`)","flags":"","captures":["`"]},"paragraph"],
   ["support.function","\\[foo]: /url \"not a reference\""]
 ],[
-   ["codeSpan1","paragraph"],
+   ["codeSpan",{"kind":"scope","type":"begin","state":"codeSpan","outerScope":"support.function","innerScope":"support.function","contentToken":"support.function","token":"support.function","source":"(?<!`)\\1(?!`)","flags":"","captures":["`"]},"paragraph"],
   ["support.function","\\&ouml; not a character entity"]
 ],[
-   ["codeSpan1","paragraph"]
+   ["codeSpan",{"kind":"scope","type":"begin","state":"codeSpan","outerScope":"support.function","innerScope":"support.function","contentToken":"support.function","token":"support.function","source":"(?<!`)\\1(?!`)","flags":"","captures":["`"]},"paragraph"]
 ],[
    "paragraph",
   ["text","  test 301"],
@@ -6467,16 +6467,16 @@
 ],[
    "start"
 ],[
-   ["codeSpan2","paragraph"],
+   ["codeSpan",{"kind":"scope","type":"begin","state":"codeSpan","outerScope":"support.function","innerScope":"support.function","contentToken":"support.function","token":"support.function","source":"(?<!`)\\1(?!`)","flags":"","captures":["``"]},"paragraph"],
   ["support.function","``"]
 ],[
-   ["codeSpan2","paragraph"],
+   ["codeSpan",{"kind":"scope","type":"begin","state":"codeSpan","outerScope":"support.function","innerScope":"support.function","contentToken":"support.function","token":"support.function","source":"(?<!`)\\1(?!`)","flags":"","captures":["``"]},"paragraph"],
   ["support.function","foo"]
 ],[
-   ["codeSpan2","paragraph"],
+   ["codeSpan",{"kind":"scope","type":"begin","state":"codeSpan","outerScope":"support.function","innerScope":"support.function","contentToken":"support.function","token":"support.function","source":"(?<!`)\\1(?!`)","flags":"","captures":["``"]},"paragraph"],
   ["support.function","bar"]
 ],[
-   ["codeSpan2","paragraph"],
+   ["codeSpan",{"kind":"scope","type":"begin","state":"codeSpan","outerScope":"support.function","innerScope":"support.function","contentToken":"support.function","token":"support.function","source":"(?<!`)\\1(?!`)","flags":"","captures":["``"]},"paragraph"],
   ["support.function","baz"]
 ],[
    "paragraph",
@@ -6490,10 +6490,10 @@
 ],[
    "start"
 ],[
-   ["codeSpan2","paragraph"],
+   ["codeSpan",{"kind":"scope","type":"begin","state":"codeSpan","outerScope":"support.function","innerScope":"support.function","contentToken":"support.function","token":"support.function","source":"(?<!`)\\1(?!`)","flags":"","captures":["``"]},"paragraph"],
   ["support.function","``"]
 ],[
-   ["codeSpan2","paragraph"],
+   ["codeSpan",{"kind":"scope","type":"begin","state":"codeSpan","outerScope":"support.function","innerScope":"support.function","contentToken":"support.function","token":"support.function","source":"(?<!`)\\1(?!`)","flags":"","captures":["``"]},"paragraph"],
   ["support.function","foo"]
 ],[
    "paragraph",
@@ -6507,7 +6507,7 @@
 ],[
    "start"
 ],[
-   ["codeSpan1","paragraph"],
+   ["codeSpan",{"kind":"scope","type":"begin","state":"codeSpan","outerScope":"support.function","innerScope":"support.function","contentToken":"support.function","token":"support.function","source":"(?<!`)\\1(?!`)","flags":"","captures":["`"]},"paragraph"],
   ["support.function","`foo   bar"]
 ],[
    "paragraph",
@@ -6521,12 +6521,12 @@
 ],[
    "start"
 ],[
-   ["codeSpan1","paragraph"],
+   ["codeSpan",{"kind":"scope","type":"begin","state":"codeSpan","outerScope":"support.function","innerScope":"support.function","contentToken":"support.function","token":"support.function","source":"(?<!`)\\1(?!`)","flags":"","captures":["`"]},"paragraph"],
   ["support.function","`foo\\`"],
   ["text","bar"],
   ["support.function","`"]
 ],[
-   ["codeSpan1","paragraph"]
+   ["codeSpan",{"kind":"scope","type":"begin","state":"codeSpan","outerScope":"support.function","innerScope":"support.function","contentToken":"support.function","token":"support.function","source":"(?<!`)\\1(?!`)","flags":"","captures":["`"]},"paragraph"]
 ],[
    "paragraph",
   ["text","  test 339"],
@@ -6582,12 +6582,12 @@
 ],[
    "start"
 ],[
-   ["codeSpan1","paragraph"],
+   ["codeSpan",{"kind":"scope","type":"begin","state":"codeSpan","outerScope":"support.function","innerScope":"support.function","contentToken":"support.function","token":"support.function","source":"(?<!`)\\1(?!`)","flags":"","captures":["`"]},"paragraph"],
   ["support.function","`<a href=\"`"],
   ["text","\">"],
   ["support.function","`"]
 ],[
-   ["codeSpan1","paragraph"]
+   ["codeSpan",{"kind":"scope","type":"begin","state":"codeSpan","outerScope":"support.function","innerScope":"support.function","contentToken":"support.function","token":"support.function","source":"(?<!`)\\1(?!`)","flags":"","captures":["`"]},"paragraph"]
 ],[
    "paragraph",
   ["text","  test 344"],
@@ -6613,12 +6613,12 @@
 ],[
    "start"
 ],[
-   ["codeSpan1","paragraph"],
+   ["codeSpan",{"kind":"scope","type":"begin","state":"codeSpan","outerScope":"support.function","innerScope":"support.function","contentToken":"support.function","token":"support.function","source":"(?<!`)\\1(?!`)","flags":"","captures":["`"]},"paragraph"],
   ["support.function","`<http://foo.bar.`"],
   ["text","baz>"],
   ["support.function","`"]
 ],[
-   ["codeSpan1","paragraph"]
+   ["codeSpan",{"kind":"scope","type":"begin","state":"codeSpan","outerScope":"support.function","innerScope":"support.function","contentToken":"support.function","token":"support.function","source":"(?<!`)\\1(?!`)","flags":"","captures":["`"]},"paragraph"]
 ],[
    "paragraph",
   ["text","  test 346"],
@@ -6626,13 +6626,13 @@
 ],[
    "start"
 ],[
-   ["codeSpan1","paragraph"],
+   ["codeSpan",{"kind":"scope","type":"begin","state":"codeSpan","outerScope":"support.function","innerScope":"support.function","contentToken":"support.function","token":"support.function","source":"(?<!`)\\1(?!`)","flags":"","captures":["`"]},"paragraph"],
   ["text","<"],
   ["url","http://foo.bar.`baz"],
   ["text",">"],
   ["support.function","`"]
 ],[
-   ["codeSpan1","paragraph"]
+   ["codeSpan",{"kind":"scope","type":"begin","state":"codeSpan","outerScope":"support.function","innerScope":"support.function","contentToken":"support.function","token":"support.function","source":"(?<!`)\\1(?!`)","flags":"","captures":["`"]},"paragraph"]
 ],[
    "paragraph",
   ["text","  test 347"],
@@ -6640,10 +6640,10 @@
 ],[
    "start"
 ],[
-   "paragraph",
+   ["codeSpan",{"kind":"scope","type":"begin","state":"codeSpan","outerScope":"support.function","innerScope":"support.function","contentToken":"support.function","token":"support.function","source":"(?<!`)\\1(?!`)","flags":"","captures":["```"]},"paragraph"],
   ["support.function","```foo``"]
 ],[
-   "start"
+   ["codeSpan",{"kind":"scope","type":"begin","state":"codeSpan","outerScope":"support.function","innerScope":"support.function","contentToken":"support.function","token":"support.function","source":"(?<!`)\\1(?!`)","flags":"","captures":["```"]},"paragraph"]
 ],[
    "paragraph",
   ["text","  test 348"],
@@ -6651,10 +6651,10 @@
 ],[
    "start"
 ],[
-   ["codeSpan1","paragraph"],
+   ["codeSpan",{"kind":"scope","type":"begin","state":"codeSpan","outerScope":"support.function","innerScope":"support.function","contentToken":"support.function","token":"support.function","source":"(?<!`)\\1(?!`)","flags":"","captures":["`"]},"paragraph"],
   ["support.function","`foo"]
 ],[
-   ["codeSpan1","paragraph"]
+   ["codeSpan",{"kind":"scope","type":"begin","state":"codeSpan","outerScope":"support.function","innerScope":"support.function","contentToken":"support.function","token":"support.function","source":"(?<!`)\\1(?!`)","flags":"","captures":["`"]},"paragraph"]
 ],[
    "paragraph",
   ["text","  test 349 (not supported; difficult to solve with only RegExps)"],
@@ -6662,10 +6662,10 @@
 ],[
    "start"
 ],[
-   ["codeSpan1","paragraph"],
+   ["codeSpan",{"kind":"scope","type":"begin","state":"codeSpan","outerScope":"support.function","innerScope":"support.function","contentToken":"support.function","token":"support.function","source":"(?<!`)\\1(?!`)","flags":"","captures":["`"]},"paragraph"],
   ["support.function","`foo``bar``"]
 ],[
-   ["codeSpan1","paragraph"]
+   ["codeSpan",{"kind":"scope","type":"begin","state":"codeSpan","outerScope":"support.function","innerScope":"support.function","contentToken":"support.function","token":"support.function","source":"(?<!`)\\1(?!`)","flags":"","captures":["`"]},"paragraph"]
 ],[
    "paragraph",
   ["text","  test 350"],
@@ -7767,8 +7767,8 @@
    "start"
 ],[
    "paragraph",
-  ["text","  test 437"],
-  "\u0000  test 437"
+  ["text","  test 437 (wrong)"],
+  "\u0000  test 437 (wrong)"
 ],[
    "start"
 ],[
@@ -7807,8 +7807,8 @@
    "start"
 ],[
    "paragraph",
-  ["text","  test 440"],
-  "\u0000  test 440"
+  ["text","  test 440 (wrong)"],
+  "\u0000  test 440 (wrong)"
 ],[
    "start"
 ],[
@@ -7918,8 +7918,8 @@
    "start"
 ],[
    "paragraph",
-  ["text","  test 449"],
-  "\u0000  test 449"
+  ["text","  test 449 (wrong)"],
+  "\u0000  test 449 (wrong)"
 ],[
    "start"
 ],[
@@ -7958,8 +7958,8 @@
    "start"
 ],[
    "paragraph",
-  ["text","  test 452"],
-  "\u0000  test 452"
+  ["text","  test 452 (wrong)"],
+  "\u0000  test 452 (wrong)"
 ],[
    "start"
 ],[
@@ -8203,8 +8203,8 @@
    ["emphasisAsterisk",{"kind":"scope","type":"begin","state":"emphasisAsterisk","outerScope":"string.emphasis","innerScope":"string.emphasis","contentToken":"string.emphasis","token":"string.emphasis","source":"(?<=[^\\s])[*](?=[\\s]|$)|(?<=[^\\s*_!\"#$%&'()+,\\-./:;<=>?@\\[\\]^`{|}~¡§«¶·»¿;·՚-՟։֊־׀׃׆׳״؉؊،؍؛؞؟٪-٭۔܀-܍߷-߹࠰-࠾࡞।॥॰૰෴๏๚๛༄-༒༔༺-༽྅࿐-࿔࿙࿚၊-၏჻፠-፨᐀᙭᙮᚛᚜᛫-᛭᜵᜶។-៖៘-៚᠀-᠊᥄᥅᨞᨟᪠-᪦᪨-᪭᭚-᭠᯼-᯿᰻-᰿᱾᱿᳀-᳇᳓‐-‧‰-⁃⁅-⁑⁓-⁞⁽⁾₍₎⌈-⌋〈〉❨-❵⟅⟆⟦-⟯⦃-⦘⧘-⧛⧼⧽⳹-⳼⳾⳿⵰⸀-⸮⸰-⹂、-〃〈-】〔-〟〰〽゠・꓾꓿꘍-꘏꙳꙾꛲-꛷꡴-꡷꣎꣏꣸-꣺꣼꤮꤯꥟꧁-꧍꧞꧟꩜-꩟꫞꫟꫰꫱꯫﴾﴿︐-︙︰-﹒﹔-﹡﹣﹨﹪﹫！-＃％-＊，-／：；？＠［-］＿｛｝｟-･]|\ud800[\udd00-\udd02\udf9f\udfd0]|𐕯|\ud802[\udc57\udd1f\udd3f\ude50-\ude58\ude7f\udef0-\udef6\udf39-\udf3f\udf99-\udf9c]|\ud804[\udc47-\udc4d\udcbb\udcbc\udcbe-\udcc1\udd40-\udd43\udd74\udd75\uddc5-\uddc9\uddcd\udddb\udddd-\udddf\ude38-\ude3d\udea9]|\ud805[\udcc6\uddc1-\uddd7\ude41-\ude43\udf3c-\udf3e]|\ud809[\udc70-\udc74]|\ud81a[\ude6e\ude6f\udef5\udf37-\udf3b\udf44]|𛲟|\ud836[\ude87-\ude8b])[*](?![*](?=[^\\s*_!\"#$%&'()+,\\-./:;<=>?@\\[\\]^`{|}~¡§«¶·»¿;·՚-՟։֊־׀׃׆׳״؉؊،؍؛؞؟٪-٭۔܀-܍߷-߹࠰-࠾࡞।॥॰૰෴๏๚๛༄-༒༔༺-༽྅࿐-࿔࿙࿚၊-၏჻፠-፨᐀᙭᙮᚛᚜᛫-᛭᜵᜶។-៖៘-៚᠀-᠊᥄᥅᨞᨟᪠-᪦᪨-᪭᭚-᭠᯼-᯿᰻-᰿᱾᱿᳀-᳇᳓‐-‧‰-⁃⁅-⁑⁓-⁞⁽⁾₍₎⌈-⌋〈〉❨-❵⟅⟆⟦-⟯⦃-⦘⧘-⧛⧼⧽⳹-⳼⳾⳿⵰⸀-⸮⸰-⹂、-〃〈-】〔-〟〰〽゠・꓾꓿꘍-꘏꙳꙾꛲-꛷꡴-꡷꣎꣏꣸-꣺꣼꤮꤯꥟꧁-꧍꧞꧟꩜-꩟꫞꫟꫰꫱꯫﴾﴿︐-︙︰-﹒﹔-﹡﹣﹨﹪﹫！-＃％-＊，-／：；？＠［-］＿｛｝｟-･]|\ud800[\udd00-\udd02\udf9f\udfd0]|𐕯|\ud802[\udc57\udd1f\udd3f\ude50-\ude58\ude7f\udef0-\udef6\udf39-\udf3f\udf99-\udf9c]|\ud804[\udc47-\udc4d\udcbb\udcbc\udcbe-\udcc1\udd40-\udd43\udd74\udd75\uddc5-\uddc9\uddcd\udddb\udddd-\udddf\ude38-\ude3d\udea9]|\ud805[\udcc6\uddc1-\uddd7\ude41-\ude43\udf3c-\udf3e]|\ud809[\udc70-\udc74]|\ud81a[\ude6e\ude6f\udef5\udf37-\udf3b\udf44]|𛲟|\ud836[\ude87-\ude8b]))|(?<=[^\\s])[*](?=[!\"#$%&'()+,\\-./:;<=>?@\\[\\]^`{|}~¡§«¶·»¿;·՚-՟։֊־׀׃׆׳״؉؊،؍؛؞؟٪-٭۔܀-܍߷-߹࠰-࠾࡞।॥॰૰෴๏๚๛༄-༒༔༺-༽྅࿐-࿔࿙࿚၊-၏჻፠-፨᐀᙭᙮᚛᚜᛫-᛭᜵᜶។-៖៘-៚᠀-᠊᥄᥅᨞᨟᪠-᪦᪨-᪭᭚-᭠᯼-᯿᰻-᰿᱾᱿᳀-᳇᳓‐-‧‰-⁃⁅-⁑⁓-⁞⁽⁾₍₎⌈-⌋〈〉❨-❵⟅⟆⟦-⟯⦃-⦘⧘-⧛⧼⧽⳹-⳼⳾⳿⵰⸀-⸮⸰-⹂、-〃〈-】〔-〟〰〽゠・꓾꓿꘍-꘏꙳꙾꛲-꛷꡴-꡷꣎꣏꣸-꣺꣼꤮꤯꥟꧁-꧍꧞꧟꩜-꩟꫞꫟꫰꫱꯫﴾﴿︐-︙︰-﹒﹔-﹡﹣﹨﹪﹫！-＃％-＊，-／：；？＠［-］＿｛｝｟-･]|\ud800[\udd00-\udd02\udf9f\udfd0]|𐕯|\ud802[\udc57\udd1f\udd3f\ude50-\ude58\ude7f\udef0-\udef6\udf39-\udf3f\udf99-\udf9c]|\ud804[\udc47-\udc4d\udcbb\udcbc\udcbe-\udcc1\udd40-\udd43\udd74\udd75\uddc5-\uddc9\uddcd\udddb\udddd-\udddf\ude38-\ude3d\udea9]|\ud805[\udcc6\uddc1-\uddd7\ude41-\ude43\udf3c-\udf3e]|\ud809[\udc70-\udc74]|\ud81a[\ude6e\ude6f\udef5\udf37-\udf3b\udf44]|𛲟|\ud836[\ude87-\ude8b])(?![*](?=[^\\s*_!\"#$%&'()+,\\-./:;<=>?@\\[\\]^`{|}~¡§«¶·»¿;·՚-՟։֊־׀׃׆׳״؉؊،؍؛؞؟٪-٭۔܀-܍߷-߹࠰-࠾࡞।॥॰૰෴๏๚๛༄-༒༔༺-༽྅࿐-࿔࿙࿚၊-၏჻፠-፨᐀᙭᙮᚛᚜᛫-᛭᜵᜶។-៖៘-៚᠀-᠊᥄᥅᨞᨟᪠-᪦᪨-᪭᭚-᭠᯼-᯿᰻-᰿᱾᱿᳀-᳇᳓‐-‧‰-⁃⁅-⁑⁓-⁞⁽⁾₍₎⌈-⌋〈〉❨-❵⟅⟆⟦-⟯⦃-⦘⧘-⧛⧼⧽⳹-⳼⳾⳿⵰⸀-⸮⸰-⹂、-〃〈-】〔-〟〰〽゠・꓾꓿꘍-꘏꙳꙾꛲-꛷꡴-꡷꣎꣏꣸-꣺꣼꤮꤯꥟꧁-꧍꧞꧟꩜-꩟꫞꫟꫰꫱꯫﴾﴿︐-︙︰-﹒﹔-﹡﹣﹨﹪﹫！-＃％-＊，-／：；？＠［-］＿｛｝｟-･]|\ud800[\udd00-\udd02\udf9f\udfd0]|𐕯|\ud802[\udc57\udd1f\udd3f\ude50-\ude58\ude7f\udef0-\udef6\udf39-\udf3f\udf99-\udf9c]|\ud804[\udc47-\udc4d\udcbb\udcbc\udcbe-\udcc1\udd40-\udd43\udd74\udd75\uddc5-\uddc9\uddcd\udddb\udddd-\udddf\ude38-\ude3d\udea9]|\ud805[\udcc6\uddc1-\uddd7\ude41-\ude43\udf3c-\udf3e]|\ud809[\udc70-\udc74]|\ud81a[\ude6e\ude6f\udef5\udf37-\udf3b\udf44]|𛲟|\ud836[\ude87-\ude8b]))","flags":"","captures":[]},"paragraph"]
 ],[
    "paragraph",
-  ["text","  test 472"],
-  "\u0000  test 472"
+  ["text","  test 472 (wrong)"],
+  "\u0000  test 472 (wrong)"
 ],[
    "start"
 ],[
@@ -8220,8 +8220,8 @@
    ["emphasisAsterisk",{"kind":"scope","type":"begin","state":"emphasisAsterisk","outerScope":"string.emphasis","innerScope":"string.emphasis","contentToken":"string.emphasis","token":"string.emphasis","source":"(?<=[^\\s])[*](?=[\\s]|$)|(?<=[^\\s*_!\"#$%&'()+,\\-./:;<=>?@\\[\\]^`{|}~¡§«¶·»¿;·՚-՟։֊־׀׃׆׳״؉؊،؍؛؞؟٪-٭۔܀-܍߷-߹࠰-࠾࡞।॥॰૰෴๏๚๛༄-༒༔༺-༽྅࿐-࿔࿙࿚၊-၏჻፠-፨᐀᙭᙮᚛᚜᛫-᛭᜵᜶។-៖៘-៚᠀-᠊᥄᥅᨞᨟᪠-᪦᪨-᪭᭚-᭠᯼-᯿᰻-᰿᱾᱿᳀-᳇᳓‐-‧‰-⁃⁅-⁑⁓-⁞⁽⁾₍₎⌈-⌋〈〉❨-❵⟅⟆⟦-⟯⦃-⦘⧘-⧛⧼⧽⳹-⳼⳾⳿⵰⸀-⸮⸰-⹂、-〃〈-】〔-〟〰〽゠・꓾꓿꘍-꘏꙳꙾꛲-꛷꡴-꡷꣎꣏꣸-꣺꣼꤮꤯꥟꧁-꧍꧞꧟꩜-꩟꫞꫟꫰꫱꯫﴾﴿︐-︙︰-﹒﹔-﹡﹣﹨﹪﹫！-＃％-＊，-／：；？＠［-］＿｛｝｟-･]|\ud800[\udd00-\udd02\udf9f\udfd0]|𐕯|\ud802[\udc57\udd1f\udd3f\ude50-\ude58\ude7f\udef0-\udef6\udf39-\udf3f\udf99-\udf9c]|\ud804[\udc47-\udc4d\udcbb\udcbc\udcbe-\udcc1\udd40-\udd43\udd74\udd75\uddc5-\uddc9\uddcd\udddb\udddd-\udddf\ude38-\ude3d\udea9]|\ud805[\udcc6\uddc1-\uddd7\ude41-\ude43\udf3c-\udf3e]|\ud809[\udc70-\udc74]|\ud81a[\ude6e\ude6f\udef5\udf37-\udf3b\udf44]|𛲟|\ud836[\ude87-\ude8b])[*](?![*](?=[^\\s*_!\"#$%&'()+,\\-./:;<=>?@\\[\\]^`{|}~¡§«¶·»¿;·՚-՟։֊־׀׃׆׳״؉؊،؍؛؞؟٪-٭۔܀-܍߷-߹࠰-࠾࡞।॥॰૰෴๏๚๛༄-༒༔༺-༽྅࿐-࿔࿙࿚၊-၏჻፠-፨᐀᙭᙮᚛᚜᛫-᛭᜵᜶។-៖៘-៚᠀-᠊᥄᥅᨞᨟᪠-᪦᪨-᪭᭚-᭠᯼-᯿᰻-᰿᱾᱿᳀-᳇᳓‐-‧‰-⁃⁅-⁑⁓-⁞⁽⁾₍₎⌈-⌋〈〉❨-❵⟅⟆⟦-⟯⦃-⦘⧘-⧛⧼⧽⳹-⳼⳾⳿⵰⸀-⸮⸰-⹂、-〃〈-】〔-〟〰〽゠・꓾꓿꘍-꘏꙳꙾꛲-꛷꡴-꡷꣎꣏꣸-꣺꣼꤮꤯꥟꧁-꧍꧞꧟꩜-꩟꫞꫟꫰꫱꯫﴾﴿︐-︙︰-﹒﹔-﹡﹣﹨﹪﹫！-＃％-＊，-／：；？＠［-］＿｛｝｟-･]|\ud800[\udd00-\udd02\udf9f\udfd0]|𐕯|\ud802[\udc57\udd1f\udd3f\ude50-\ude58\ude7f\udef0-\udef6\udf39-\udf3f\udf99-\udf9c]|\ud804[\udc47-\udc4d\udcbb\udcbc\udcbe-\udcc1\udd40-\udd43\udd74\udd75\uddc5-\uddc9\uddcd\udddb\udddd-\udddf\ude38-\ude3d\udea9]|\ud805[\udcc6\uddc1-\uddd7\ude41-\ude43\udf3c-\udf3e]|\ud809[\udc70-\udc74]|\ud81a[\ude6e\ude6f\udef5\udf37-\udf3b\udf44]|𛲟|\ud836[\ude87-\ude8b]))|(?<=[^\\s])[*](?=[!\"#$%&'()+,\\-./:;<=>?@\\[\\]^`{|}~¡§«¶·»¿;·՚-՟։֊־׀׃׆׳״؉؊،؍؛؞؟٪-٭۔܀-܍߷-߹࠰-࠾࡞।॥॰૰෴๏๚๛༄-༒༔༺-༽྅࿐-࿔࿙࿚၊-၏჻፠-፨᐀᙭᙮᚛᚜᛫-᛭᜵᜶។-៖៘-៚᠀-᠊᥄᥅᨞᨟᪠-᪦᪨-᪭᭚-᭠᯼-᯿᰻-᰿᱾᱿᳀-᳇᳓‐-‧‰-⁃⁅-⁑⁓-⁞⁽⁾₍₎⌈-⌋〈〉❨-❵⟅⟆⟦-⟯⦃-⦘⧘-⧛⧼⧽⳹-⳼⳾⳿⵰⸀-⸮⸰-⹂、-〃〈-】〔-〟〰〽゠・꓾꓿꘍-꘏꙳꙾꛲-꛷꡴-꡷꣎꣏꣸-꣺꣼꤮꤯꥟꧁-꧍꧞꧟꩜-꩟꫞꫟꫰꫱꯫﴾﴿︐-︙︰-﹒﹔-﹡﹣﹨﹪﹫！-＃％-＊，-／：；？＠［-］＿｛｝｟-･]|\ud800[\udd00-\udd02\udf9f\udfd0]|𐕯|\ud802[\udc57\udd1f\udd3f\ude50-\ude58\ude7f\udef0-\udef6\udf39-\udf3f\udf99-\udf9c]|\ud804[\udc47-\udc4d\udcbb\udcbc\udcbe-\udcc1\udd40-\udd43\udd74\udd75\uddc5-\uddc9\uddcd\udddb\udddd-\udddf\ude38-\ude3d\udea9]|\ud805[\udcc6\uddc1-\uddd7\ude41-\ude43\udf3c-\udf3e]|\ud809[\udc70-\udc74]|\ud81a[\ude6e\ude6f\udef5\udf37-\udf3b\udf44]|𛲟|\ud836[\ude87-\ude8b])(?![*](?=[^\\s*_!\"#$%&'()+,\\-./:;<=>?@\\[\\]^`{|}~¡§«¶·»¿;·՚-՟։֊־׀׃׆׳״؉؊،؍؛؞؟٪-٭۔܀-܍߷-߹࠰-࠾࡞।॥॰૰෴๏๚๛༄-༒༔༺-༽྅࿐-࿔࿙࿚၊-၏჻፠-፨᐀᙭᙮᚛᚜᛫-᛭᜵᜶។-៖៘-៚᠀-᠊᥄᥅᨞᨟᪠-᪦᪨-᪭᭚-᭠᯼-᯿᰻-᰿᱾᱿᳀-᳇᳓‐-‧‰-⁃⁅-⁑⁓-⁞⁽⁾₍₎⌈-⌋〈〉❨-❵⟅⟆⟦-⟯⦃-⦘⧘-⧛⧼⧽⳹-⳼⳾⳿⵰⸀-⸮⸰-⹂、-〃〈-】〔-〟〰〽゠・꓾꓿꘍-꘏꙳꙾꛲-꛷꡴-꡷꣎꣏꣸-꣺꣼꤮꤯꥟꧁-꧍꧞꧟꩜-꩟꫞꫟꫰꫱꯫﴾﴿︐-︙︰-﹒﹔-﹡﹣﹨﹪﹫！-＃％-＊，-／：；？＠［-］＿｛｝｟-･]|\ud800[\udd00-\udd02\udf9f\udfd0]|𐕯|\ud802[\udc57\udd1f\udd3f\ude50-\ude58\ude7f\udef0-\udef6\udf39-\udf3f\udf99-\udf9c]|\ud804[\udc47-\udc4d\udcbb\udcbc\udcbe-\udcc1\udd40-\udd43\udd74\udd75\uddc5-\uddc9\uddcd\udddb\udddd-\udddf\ude38-\ude3d\udea9]|\ud805[\udcc6\uddc1-\uddd7\ude41-\ude43\udf3c-\udf3e]|\ud809[\udc70-\udc74]|\ud81a[\ude6e\ude6f\udef5\udf37-\udf3b\udf44]|𛲟|\ud836[\ude87-\ude8b]))","flags":"","captures":[]},"paragraph"]
 ],[
    "paragraph",
-  ["text","  test 473"],
-  "\u0000  test 473"
+  ["text","  test 473 (wrong)"],
+  "\u0000  test 473 (wrong)"
 ],[
    "start"
 ],[
@@ -8321,8 +8321,8 @@
    "start"
 ],[
    "paragraph",
-  ["text","  test 479"],
-  "\u0000  test 479"
+  ["text","  test 479 (wrong)"],
+  "\u0000  test 479 (wrong)"
 ],[
    "start"
 ],[
@@ -8336,8 +8336,8 @@
    "start"
 ],[
    "paragraph",
-  ["text","  test 480"],
-  "\u0000  test 480"
+  ["text","  test 480 (wrong)"],
+  "\u0000  test 480 (wrong)"
 ],[
    "start"
 ],[
@@ -8470,8 +8470,8 @@
    "start"
 ],[
    "paragraph",
-  ["text","  test 488 (not supported; interfere with HTML highlight mode)"],
-  "\u0000  test 488 (not supported; interfere with HTML highlight mode)"
+  ["text","  test 488"],
+  "\u0000  test 488"
 ],[
    "start"
 ],[
@@ -11480,7 +11480,7 @@
 ],[
    "start"
 ],[
-   ["codeSpan1","paragraph"],
+   ["codeSpan",{"kind":"scope","type":"begin","state":"codeSpan","outerScope":"support.function","innerScope":"support.function","contentToken":"support.function","token":"support.function","source":"(?<!`)\\1(?!`)","flags":"","captures":["`"]},"paragraph"],
   ["support.function","`code"]
 ],[
    "paragraph",
@@ -11494,7 +11494,7 @@
 ],[
    "start"
 ],[
-   ["codeSpan1","paragraph"],
+   ["codeSpan",{"kind":"scope","type":"begin","state":"codeSpan","outerScope":"support.function","innerScope":"support.function","contentToken":"support.function","token":"support.function","source":"(?<!`)\\1(?!`)","flags":"","captures":["`"]},"paragraph"],
   ["support.function","`code\\"]
 ],[
    "paragraph",

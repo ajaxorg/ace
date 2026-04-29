@@ -154,6 +154,21 @@ var MarkdownHighlightRules = function () {
             }
         };
     }
+    function createCodeSpanRule() {
+        return {
+            token: "support.function",
+            regex: /(?<!`)(`+)(?!`)/,
+            ruleScope: "support.function",
+            scope: {
+                type: "begin",
+                state: "codeSpan",
+                name: "support.function",
+                contentName: "support.function",
+                regex: "(?<!`)\\1(?!`)",
+                ruleScope: "support.function"
+            }
+        };
+    }
 
     function pushTagContext(stack, returnState, tagName, isRaw) {
         stack.unshift({
@@ -393,15 +408,7 @@ var MarkdownHighlightRules = function () {
             {
                 token: "constant.language.escape",
                 regex: escapeSymbols
-            }, { // code span `
-                token : "support.function",
-                regex : /``/,
-                push: "codeSpan2"
-            }, { // code span `
-                token : "support.function",
-                regex : /`/,
-                push: "codeSpan1"
-            }, { // images
+            }, createCodeSpanRule(), { // images
                 token: "text",
                 regex: /!\[(?=[^\]])/,
                 push: "imageLabel"
@@ -452,26 +459,7 @@ var MarkdownHighlightRules = function () {
         "codeSpan": [
             {
                 token: "support.function",
-                regex: /(`{1,2})/,
-                next: "pop"
-            }, {
-                defaultToken: "support.function"
-            }
-        ],
-        "codeSpan1": [
-            {
-                token: "support.function",
-                regex: /`/,
-                next: "pop"
-            }, {
-                defaultToken: "support.function"
-            }
-        ],
-        "codeSpan2": [
-            {
-                token: "support.function",
-                regex: /``/,
-                next: "pop"
+                regex: /(?=$)/
             }, {
                 defaultToken: "support.function"
             }
