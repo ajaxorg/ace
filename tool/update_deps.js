@@ -11,45 +11,10 @@ var rootDir = __dirname + "/../lib/ace/";
 var SKIP_NPM = false;
 
 var deps = {
-    csslint: {
-        path: "mode/css/csslint.js",
-        // url: "https://raw.github.com/stubbornella/csslint/master/release/csslint.js",
-        browserify: {
-            npmModule: "git+https://github.com/CSSLint/csslint.git#master",
-            path: "jshint/src/jshint.js",
-            exports: "jshint"
-        },
-        fetch: browserify,
-        wrapAmd: true
-    }, 
     requirejs: {
         path: "../../demo/kitchen-sink/require.js",
         url: "https://raw.github.com/jrburke/requirejs/master/require.js",
         wrapAmd: false
-    },
-    luaparse: {
-        path: "mode/lua/luaparse.js",
-        url: "https://raw.githubusercontent.com/fstirlitz/luaparse/master/luaparse.js",
-        wrapAmd: true,
-        postProcess: function(src) {
-            return src.replace(
-                /\(function\s*\(root,\s*name,\s*factory\)\s*{[\s\S]*?}\(this,\s*'luaparse',/,
-                "(function (root, name, factory) {\n   factory(exports)\n}(this, 'luaparse',"
-            )
-        }
-    },
-    html5: {
-        path: "mode/html/saxparser.js",
-        browserify: {
-            npmModule: "git+https://github.com/aredridel/html5.git#master",
-            path: "html5/lib/sax/SAXParser.js",  
-            exports: "SAXParser"
-        },
-        fetch: browserify,
-        wrapAmd: true,
-        postProcess: function(src) {
-            return src;
-        }
     },
     xquery: {
        path: "mode/xquery/xquery_lexer.js",
@@ -90,24 +55,6 @@ var deps = {
            return src;
        }
     },
-    jshint: {
-        path: "mode/javascript/jshint.js",
-        browserify: {
-            npmModule: "git+https://github.com/ajaxorg/jshint.git#master",
-            path: "jshint/src/jshint.js",
-            exports: "jshint"
-        },
-        fetch: browserify,
-        wrapAmd: true,
-        postProcess: function(src) {
-            src = src.replace(
-                /"Expected a conditional expression and instead saw an assignment."/g,
-                '"Assignment in conditional expression"'
-            );
-            src = src.replace(/var defaultMaxListeners = 10;/, function(a) {return a.replace("10", "200")});
-            return src;
-        }
-    }, 
     emmet: {
         path: "ext/emmet core.js",
         url: [

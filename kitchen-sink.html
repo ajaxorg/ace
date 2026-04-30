@@ -56,6 +56,7 @@
   <script src="demo/kitchen-sink/require.js" type="text/javascript"></script>
   <script>
     var useLib = /lib=1/.test(location.search);
+    var legacyLintersBuild = "node_modules/ace-legacy-linters/build/src";
     var paths = useLib ? {
       ace: "lib/ace",
       demo: "demo/kitchen-sink"
@@ -67,33 +68,28 @@
     };
     
     if (!useLib) {
+      Object.entries({
+        json_worker: "worker-json",
+        yaml_worker: "worker-yaml",
+        css_worker: "worker-css",
+        lua_worker: "worker-lua",
+        xml_worker: "worker-xml",
+        javascript_worker: "worker-javascript",
+        php_worker: "worker-php",
+        html_worker: "worker-html"
+      }).forEach(function(entry) {
+        paths["ace/mode/" + entry[0]] = legacyLintersBuild + "/" + entry[1];
+      });
+
       [
-        "json_worker",
         "xquery_worker",
-        "yaml_worker",
         "xquery/xqlint",
         "xquery/jsoniq_lexer",
         "xquery/xquery_lexer",
-        "css/csslint",
         "coffee_worker",
-        "css_worker",
         "xquery",
-        "html/saxparser",
-        "php/php",
-        "lua/luaparse",
-        "xml/sax",
-        "xml/dom-parser",
-        "xml/dom",
-        "lua_worker",
         "jsoniq",
-        "json/json_parse",
-        "xml_worker",
         "coffee/coffee",
-        "javascript_worker",
-        "php_worker",
-        "yaml/yaml-lint",
-        "javascript/jshint",
-        "html_worker",
       ].forEach(function(m) {
         paths["ace/mode/" + m] = "lib/ace/mode/" + m
       })
