@@ -1,5 +1,5 @@
 "use strict";
-/*global Uint8ClampedArray*/
+/*global Uint8ClampedArray, globalThis*/
 
 var dom = require("../lib/dom");
 
@@ -157,7 +157,199 @@ function Context2d(w, h) {
     };
 }).call(Context2d.prototype);
 
+function getBoundingClientRect(target, fromChild, ignoreTransforms, childOffset) {
+    function textWidth(str) {
+        return str.replace(/\t/g, "    ").replace(/[\u3041-\u9FBF]/g, "  ").length * CHAR_WIDTH * fontSize;
+    }
 
+    var node = target;
+    var blockParent, fontSize;
+    while (node) {
+        if (fontSize == null && node.style?.fontSize) {
+            fontSize = parseInt(node.style.fontSize) / CHAR_HEIGHT;
+        }
+        if (
+            !blockParent && node != target 
+            && (node.style?.display == "block" || /div|body|html/.test(node.localName))
+        ) {
+            blockParent = node;
+        }
+        node = node.parentNode;
+    }
+    if (fontSize == null) fontSize = 1;
+
+    var width = 0;
+    var height = 0;
+    var top = 0;
+    var left = 0;
+    if (target == document.documentElement) {
+        width = WINDOW_WIDTH;
+        height = WINDOW_HEIGHT;
+    }
+    else if (!document.contains(target) || target.style?.display == "none") {
+        width = height = 0;
+    }
+    else if (target.nodeType == 3 || target.localName == "span" || /^inline/.test(target.style.display)) {
+        var text = target.textContent;
+        var offsetLeft = 0;
+        if (childOffset != null) {
+            if (target.nodeType == 3) {
+                offsetLeft = textWidth(text.substring(0, childOffset));
+                text = "";
+            }
+        }
+        width = textWidth(text);
+        height = fontSize * CHAR_HEIGHT;
+        if (!height) height = CHAR_HEIGHT;
+        if (target.style?.leftHint) {
+            left = target.style.leftHint;
+        } else if (blockParent && (target.localName == "span" || /^inline/.test(target.style?.display) || target.nodeType == 3)) {
+            var parentRect = getBoundingClientRect(blockParent, true, true);
+            top = parentRect.top;
+            node = target;
+            left = parentRect.left;
+            while (node && node != blockParent) {
+                if (node.previousSibling) {
+                    left += textWidth(node.previousSibling.textContent);
+                    node = node.previousSibling;
+                } else {
+                    node = node.parentNode;
+                }
+            }
+        }
+        left += offsetLeft;
+    }
+    else if (target.parentNode) {
+        var isFixed = target.style.position == "fixed" 
+            || target.style.positionHint == "fixed"
+            || target.getAttribute("role") == "tooltip";
+        var isAbsolute = target.style.position == "absolute" 
+            || target.style.positionHint == "absolute";
+        // prevent recursion by passing -1
+        var rect = fromChild == -1 || isFixed
+            ? {top: 0, left: 0, width: 0, height: 0, right: 0, bottom: 0} 
+            : getBoundingClientRect(target.parentNode, undefined, true);
+        if (isFixed) {
+            rect.height = rect.bottom = WINDOW_HEIGHT;
+            rect.width = rect.right = WINDOW_WIDTH;
+        }
+
+        left = parseCssLength(target.style.left || "0", rect.width);
+        top = parseCssLength(target.style.top || "0", rect.height);
+
+        var margin = target.style.margin;
+        if (margin) {
+            var parts = margin.trim().split(/\s+/);
+            left += parseCssLength(parts[3] || parts[1] || parts[0] || "0", 0);
+            top += parseCssLength(parts[0] || parts[1] || "0", 0);
+        }
+
+        var right = parseCssLength(target.style.right || "0", rect.width);
+        var bottom = parseCssLength(target.style.bottom || "0", rect.width);
+
+        if (target.style.width)
+            width = parseCssLength(target.style.width || "100%", rect.width);
+        else if (target.style.widthHint)
+            width = target.style.widthHint;
+        else if (target.style.right || !isAbsolute)
+            width = rect.width - right - left;
+        
+        if (target.style.height)
+            height = parseCssLength(target.style.height || "100%", rect.height);
+        else if (target.style.heightHint)
+            height = target.style.heightHint;
+        else if (target.style.bottom || !isAbsolute)
+            height = rect.height - top - bottom;
+
+        if (target.style.width == "auto") { 
+            width = textWidth(target.textContent);
+            if ((!target.style.height || target.style.height == "auto") && target.textContent.trim()) {
+                height = CHAR_HEIGHT * fontSize;
+            }
+        }
+
+        var maxWidth = target.style.maxWidth && parseCssLength(target.style.maxWidth, rect.width);
+        var maxHeight = target.style.maxHeight && parseCssLength(target.style.maxHeight, rect.height);
+        
+        if (maxWidth >= 0) width = Math.min(width, maxWidth);
+        if (maxHeight >= 0) height = Math.min(height, maxHeight);
+        
+        if (!height && !target.style.height && target.firstChild && target.firstChild.getBoundingClientRect && !fromChild) {
+            height = getBoundingClientRect(target.firstChild, -1, true).height;
+        }
+
+        if (!target.style.left &&  target.style.right) {
+            left = rect.width - right - width;
+        }
+        if (!target.style.top &&  target.style.bottom) {
+            top = rect.height - bottom - height;
+        }
+        
+        top += rect.top;
+        left += rect.left;
+    }
+
+    var rect = {top: top, left: left, width: width, height: height, right: left + width, bottom: top + height};
+    if (!ignoreTransforms)
+        rect = applyTransforms(rect, target);
+    return rect;
+}
+function applyTransforms(rect, target) {
+    var left = rect.left;
+    var top = rect.top;
+    var width = rect.width;
+    var height = rect.height;
+    // Apply CSS transforms
+    var node = target;
+    var M = [1, 0, 0, 0, 1, 0, 0, 0, 1];
+    var points;
+    while (node) {
+        if (node.style?.transform) {
+            var match = node.style.transform.match(/matrix3d\(([^)]+)\)/);
+            if (match) {
+                if (!points) {
+                    points = [[left, top], [left + width, top], [left, top + height], [left + width, top + height]];
+                }
+                var v = match[1].split(",").map(parseFloat);
+                M = [v[0], v[1], v[3], v[4], v[5], v[7], v[12], v[13], v[15]];
+                var origin = node.style.transformOrigin || "50% 50%";
+                var parts = origin.split(" ");
+                var parentRect = node == target ? { top,left,width,height } : getBoundingClientRect(node, true, true);
+                var ox = parseCssLength(parts[0], parentRect.width) + parentRect.left;
+                var oy = parseCssLength(parts[1], parentRect.height) + parentRect.top;
+                var O = [ox, oy];
+                points = points.map(p => project(p, O));
+            }
+        }
+        node = node.parentNode;
+    }
+    function project(p, O) {
+        var x = p[0] - O[0];
+        var y = p[1] - O[1];
+        var w = M[2] * x + M[5] * y + M[8];
+        return [
+            (M[0] * x + M[3] * y + M[6]) / w + O[0],
+            (M[1] * x + M[4] * y + M[7]) / w + O[1]
+        ];
+    }
+    if (points) {
+        var xs = points.map(p => p[0]);
+        var ys = points.map(p => p[1]);
+        left = Math.min.apply(null, xs);
+        top = Math.min.apply(null, ys);
+        width = Math.max.apply(null, xs) - left;
+        height = Math.max.apply(null, ys) - top;
+    }
+
+    return {top: top, left: left, width: width, height: height, right: left + width, bottom: top + height};
+}
+function parseCssLength(styleString, parentSize) {
+    // TODO support calc
+    var size = parseFloat(styleString) || 0;
+    if (/%/.test(styleString))
+        size = parentSize * size / 100;
+    return size;
+}
 
 function getItem(i) { return this[i]; }
 
@@ -418,201 +610,21 @@ function Node(name) {
         var rect = this.getBoundingClientRect();
         return [rect];
     };
-    this.getBoundingClientRect = function(fromChild, ignoreTransforms) {
-        function textWidth(str) {
-            return str.replace(/\t/g, "    ").replace(/[\u3041-\u9FBF]/g, "  ").length * CHAR_WIDTH;
-        }
-        var width = 0;
-        var height = 0;
-        var top = 0;
-        var left = 0;
-        if (this == document.documentElement) {
-            width = WINDOW_WIDTH;
-            height = WINDOW_HEIGHT;
-        }
-        else if (!document.contains(this) || this.style?.display == "none") {
-            width = height = 0;
-        }
-        else if (this.nodeType == 3 || this.localName == "span" || /^inline/.test(this.style.display)) {
-            width = textWidth(this.textContent);
-            var node = this;
-            var blockParent;
-            while (node) {
-                if (node.style?.fontSize) {
-                    height = parseInt(node.style.fontSize);
-                    break;
-                }
-                if (
-                    !blockParent && node != this 
-                    && (node.style?.display == "block" || /div|body|html/.test(node.localName))
-                )
-                    blockParent = node;
-                node = node.parentNode;
-            }
-            if (!height) height = CHAR_HEIGHT;
-            if (this.style?.leftHint) {
-                left = this.style.leftHint;
-            } else if (blockParent && (this.localName == "span" || /^inline/.test(this.style?.display) || this.nodeType == 3)) {
-                var parentRect = blockParent.getBoundingClientRect(true, true);
-                top = parentRect.top;
-                node = this;
-                left = parentRect.left;
-                while (node && node != blockParent) {
-                    if (node.previousSibling) {
-                        var text = node.previousSibling.textContent
-                            .replace(/\t/g, "    ")
-                            .replace(/[\u3041-\u9FBF]/g, "  ");
-                        left += textWidth(text);
-                        node = node.previousSibling;
-                    } else {
-                        node = node.parentNode;
-                    }
-                }
-            }
-        }
-        else if (this.parentNode) {
-            var isFixed = this.style.position == "fixed" 
-                || this.style.positionHint == "fixed"
-                || this.getAttribute("role") == "tooltip";
-            var isAbsolute = this.style.position == "absolute" 
-                || this.style.positionHint == "absolute";
-            // prevent recursion by passing -1
-            var rect = fromChild == -1 || isFixed
-                ? {top: 0, left: 0, width: 0, height: 0, right: 0, bottom: 0} 
-                : this.parentNode.getBoundingClientRect(undefined, true);
-            if (isFixed) {
-                rect.height = rect.bottom = WINDOW_HEIGHT;
-                rect.width = rect.right = WINDOW_WIDTH;
-            }
-
-            left = parseCssLength(this.style.left || "0", rect.width);
-            top = parseCssLength(this.style.top || "0", rect.height);
-
-            var margin = this.style.margin;
-            if (margin) {
-                var parts = margin.trim().split(/\s+/);
-                left += parseCssLength(parts[3] || parts[1] || parts[0] || "0", 0);
-                top += parseCssLength(parts[0] || parts[1] || "0", 0);
-            }
-
-            var right = parseCssLength(this.style.right || "0", rect.width);
-            var bottom = parseCssLength(this.style.bottom || "0", rect.width);
-
-            if (this.style.width)
-                width = parseCssLength(this.style.width || "100%", rect.width);
-            else if (this.style.widthHint)
-                width = this.style.widthHint;
-            else if (this.style.right || !isAbsolute)
-                width = rect.width - right - left;
-            
-            if (this.style.height)
-                height = parseCssLength(this.style.height || "100%", rect.height);
-            else if (this.style.heightHint)
-                height = this.style.heightHint;
-            else if (this.style.bottom || !isAbsolute)
-                height = rect.height - top - bottom;
-
-            if (this.style.width == "auto") { 
-                width = textWidth(this.textContent);
-                if ((!this.style.height || this.style.height == "auto") && this.textContent.trim()) {
-                    height = CHAR_HEIGHT;
-                    var node = this;
-                    while (node) {
-                        if (node.style?.fontSize) {
-                            height = parseInt(node.style.fontSize);
-                            break;
-                        }
-                        node = node.parentNode;
-                    }
-                }
-            }
-
-            var maxWidth = this.style.maxWidth && parseCssLength(this.style.maxWidth, rect.width);
-            var maxHeight = this.style.maxHeight && parseCssLength(this.style.maxHeight, rect.height);
-            
-            if (maxWidth >= 0) width = Math.min(width, maxWidth);
-            if (maxHeight >= 0) height = Math.min(height, maxHeight);
-            
-            if (!height && !this.style.height && this.firstChild && this.firstChild.getBoundingClientRect && !fromChild) {
-                height = this.firstChild.getBoundingClientRect(-1, true).height;
-            }
-
-            if (!this.style.left &&  this.style.right) {
-                left = rect.width - right - width;
-            }
-            if (!this.style.top &&  this.style.bottom) {
-                top = rect.height - bottom - height;
-            }
-            
-            top += rect.top;
-            left += rect.left;
-        }
-        if (!ignoreTransforms) {
-            // Apply any CSS transforms
-            var node = this;
-            var M = [1, 0, 0, 0, 1, 0, 0, 0, 1];
-            var points;
-            while (node) {
-                if (node.style?.transform) {
-                    var match = node.style.transform.match(/matrix3d\(([^)]+)\)/)
-                    if (match) {
-                        if (!points) {
-                            points = [[left, top], [left + width, top], [left, top + height], [left + width, top + height]];
-                        }
-                        var v = match[1].split(",").map(parseFloat);
-                        M = [v[0], v[1], v[3], v[4], v[5], v[7], v[12], v[13], v[15]];
-                        var origin = node.style.transformOrigin || "50% 50%";
-                        var parts = origin.split(" ");
-                        var parentRect = node== this ? { top,left,width,height } : node.getBoundingClientRect(true, true);
-                        var ox = parseCssLength(parts[0], parentRect.width) + parentRect.left;
-                        var oy = parseCssLength(parts[1], parentRect.height) + parentRect.top;
-                        var O = [ox, oy];
-                        points = points.map(p => project(p, O));
-                    }
-                }
-                node = node.parentNode;
-            }
-            function project(p, O) {
-                var x = p[0] - O[0];
-                var y = p[1] - O[1];
-                var w = M[2] * x + M[5] * y + M[8];
-                return [
-                    (M[0] * x + M[3] * y + M[6]) / w + O[0],
-                    (M[1] * x + M[4] * y + M[7]) / w + O[1]
-                ];
-            }
-            if (points) {
-                var xs = points.map(p => p[0]);
-                var ys = points.map(p => p[1]);
-                left = Math.min.apply(null, xs);
-                top = Math.min.apply(null, ys);
-                width = Math.max.apply(null, xs) - left;
-                height = Math.max.apply(null, ys) - top;
-            }
-        }
-
-        return {top: top, left: left, width: width, height: height, right: left + width, bottom: top + height};
+    this.getBoundingClientRect = function() {
+        return getBoundingClientRect(this);
     };
 
-    function parseCssLength(styleString, parentSize) {
-        // TODO support calc
-        var size = parseFloat(styleString) || 0;
-        if (/%/.test(styleString))
-            size = parentSize * size / 100;
-        return size;
-    }
-
     this.__defineGetter__("clientHeight", function() {
-        return this.getBoundingClientRect(undefined, true).height;
+        return getBoundingClientRect(this, undefined, true).height;
     });
     this.__defineGetter__("clientWidth", function() {
-        return this.getBoundingClientRect(undefined, true).width;
+        return getBoundingClientRect(this, undefined, true).width;
     });
     this.__defineGetter__("offsetHeight", function() {
-        return this.getBoundingClientRect(undefined, true).height;
+        return getBoundingClientRect(this, undefined, true).height;
     });
     this.__defineGetter__("offsetWidth", function() {
-        return this.getBoundingClientRect(undefined, true).width;
+        return getBoundingClientRect(this, undefined, true).width;
     });
 
     this.__defineGetter__("lastChild", function() {
@@ -621,7 +633,7 @@ function Node(name) {
     this.__defineGetter__("firstChild", function() {
         return this.childNodes[0];
     });
-    // TODO this is a waorkaround for scrollHeight usage in virtualRenderer
+    // TODO this is a workaround for scrollHeight usage in virtualRenderer
     this.scrollHeight = 1;
 
 
@@ -980,7 +992,7 @@ window.HTMLDocument = window.XMLDocument = window.Document = function() {
                 this.endOffset = offset;
             },
             getBoundingClientRect: function() {
-                var rect1 = Element.prototype.getBoundingClientRect.call(this.startContainer);
+                var rect1 = getBoundingClientRect(this.startContainer, false, true);
                 if (this.startContainer.nodeType == 3) {
                     rect1.left += this.startOffset * CHAR_WIDTH;
                 } else {
@@ -988,19 +1000,19 @@ window.HTMLDocument = window.XMLDocument = window.Document = function() {
                     if (!child) {
                         rect1.left = rect1.right;
                     } else {
-                        rect1.left = Element.prototype.getBoundingClientRect.call(child).left;
+                        rect1.left = getBoundingClientRect(child, false, true).left;
                     }
                 }
-                var rect2 = Element.prototype.getBoundingClientRect.call(this.endContainer);
+                var rect2 = getBoundingClientRect(this.endContainer, false, true);
                 if (this.endContainer.nodeType == 3) {
                     rect2.right = rect2.left + this.endOffset * CHAR_WIDTH;
                 } else {
                     var child = this.endContainer.childNodes[this.endOffset];
                     if (child) {
-                        rect2.right = Element.prototype.getBoundingClientRect.call(child).right;
+                        rect2.right = getBoundingClientRect(child, false, true).right;
                     }
                 }
-                return {
+                var rect = {
                     top: rect1.top,
                     left: rect1.left,
                     width: rect2.right - rect1.left,
@@ -1008,6 +1020,7 @@ window.HTMLDocument = window.XMLDocument = window.Document = function() {
                     right: rect2.right,
                     bottom: rect2.bottom
                 };
+                return applyTransforms(rect, this.startContainer);
             },
             getClientRects: function() {
                 return [this.getBoundingClientRect()];
@@ -1130,6 +1143,8 @@ exports.loadInBrowser = function(global, $setSize) {
     delete global.ResizeObserver;
     global.__origRoot__ = global.document.documentElement;
     global.__origBody__ = global.document.body;
+    global.document.createElementOrig = global.document.createElement;
+    global.document.createTextNodeOrig = global.document.createTextNode;
     Object.keys(window).forEach(function(i) {
         if (i != "document" && i != "window") {
             delete global[i];
@@ -1140,7 +1155,6 @@ exports.loadInBrowser = function(global, $setSize) {
         var val = window.document[i];
         if (typeof val == "function") {
             if (i == "createElement") {
-                global.document.createElementOrig = global.document.createElement;
                 val = function(n) {
                     if (n == "script")
                         return global.document.createElementOrig(n);
@@ -1171,6 +1185,7 @@ exports.loadInBrowser = function(global, $setSize) {
             );
         }
     }
+    global.__mockdom_ = exports;
     loaded = true;
 };
 
@@ -1193,6 +1208,34 @@ exports.unload = function() {
         unloadProperty(name);
     });
     loaded = false;
+};
+
+exports.show = function(mockNode) {
+    var global = globalThis;
+    var el = global.document.createElementOrig.bind(global.document);
+    var text = global.document.createTextNodeOrig.bind(global.document);
+    function cloneNode(node) {
+        if (node.nodeType == 3) {
+            return text(node.data);
+        }
+        var newNode = el(node.localName);
+        node.attributes.forEach(function(attr) {
+            newNode.setAttribute(attr.name, attr.value);
+        });
+        node.childNodes.forEach(function(ch) {
+            newNode.appendChild(cloneNode(ch));
+        });
+        var rect = node.getBoundingClientRect(); // to compute sizes
+        newNode.style.top = rect.top + "px";
+        newNode.style.left = rect.left + "px";
+        newNode.style.height = rect.height + "px";
+        newNode.style.width = rect.width + "px";
+        newNode.style.position = "fixed";
+        return newNode;
+    }
+    var result = cloneNode(mockNode || global.document.documentElement);
+    return global.__origBody__.appendChild(result);
+
 };
 
 exports.load();
