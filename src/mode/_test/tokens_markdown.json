@@ -966,15 +966,16 @@
 ],[
    "start"
 ],[
-   ["string.attribute-value.xml1","tag_stuff",{"tagName":"a","returnState":"html","htmlBlock":true,"isRaw":false},{}],
+   ["attribute_value_double",{"kind":"scope","type":"begin","state":"attribute_value_double","outerScope":"string.attribute-value.xml","innerScope":"string.attribute-value.xml","contentToken":"string.attribute-value.xml","token":"string.attribute-value.xml","source":"\"","flags":"","captures":[]},"tag_stuff",{"tagName":"a","returnState":"html","htmlBlock":true,"isRaw":false},{}],
   ["meta.tag.punctuation.tag-open.xml","<"],
   ["meta.tag.anchor.tag-name.xml","a"],
   ["text.tag-whitespace.xml"," "],
   ["entity.other.attribute-name.xml","title"],
   ["keyword.operator.attribute-equals.xml","="],
-  ["string.attribute-value.xml","\"a lot"]
+  ["string.attribute-value.xml","\""],
+  ["string.attribute-value.xml","a lot"]
 ],[
-   ["string.attribute-value.xml1","tag_stuff",{"tagName":"a","returnState":"html","htmlBlock":true,"isRaw":false},{}],
+   ["attribute_value_double",{"kind":"scope","type":"begin","state":"attribute_value_double","outerScope":"string.attribute-value.xml","innerScope":"string.attribute-value.xml","contentToken":"string.attribute-value.xml","token":"string.attribute-value.xml","source":"\"","flags":"","captures":[]},"tag_stuff",{"tagName":"a","returnState":"html","htmlBlock":true,"isRaw":false},{}],
   ["string.attribute-value.xml","---"]
 ],[
    ["#tmp","html",{}],
@@ -2151,7 +2152,8 @@
   ["text.tag-whitespace.xml"," "],
   ["entity.other.attribute-name.xml","CLASS"],
   ["keyword.operator.attribute-equals.xml","="],
-  ["string.attribute-value.xml","\"foo\""],
+  ["string.attribute-value.xml","\""],
+  ["string.attribute-value.xml","foo\""],
   ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start"
@@ -2180,13 +2182,15 @@
   ["text.tag-whitespace.xml"," "],
   ["entity.other.attribute-name.xml","id"],
   ["keyword.operator.attribute-equals.xml","="],
-  ["string.attribute-value.xml","\"foo\""]
+  ["string.attribute-value.xml","\""],
+  ["string.attribute-value.xml","foo\""]
 ],[
    ["#tmp","html",{}],
   ["text.tag-whitespace.xml","  "],
   ["entity.other.attribute-name.xml","class"],
   ["keyword.operator.attribute-equals.xml","="],
-  ["string.attribute-value.xml","\"bar\""],
+  ["string.attribute-value.xml","\""],
+  ["string.attribute-value.xml","bar\""],
   ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    ["#tmp","html",{}],
@@ -2202,17 +2206,19 @@
 ],[
    "start"
 ],[
-   ["string.attribute-value.xml1","tag_stuff",{"tagName":"div","returnState":"html","htmlBlock":true,"isRaw":false},{}],
+   ["attribute_value_double",{"kind":"scope","type":"begin","state":"attribute_value_double","outerScope":"string.attribute-value.xml","innerScope":"string.attribute-value.xml","contentToken":"string.attribute-value.xml","token":"string.attribute-value.xml","source":"\"","flags":"","captures":[]},"tag_stuff",{"tagName":"div","returnState":"html","htmlBlock":true,"isRaw":false},{}],
   ["meta.tag.punctuation.tag-open.xml","<"],
   ["meta.tag.tag-name.xml","div"],
   ["text.tag-whitespace.xml"," "],
   ["entity.other.attribute-name.xml","id"],
   ["keyword.operator.attribute-equals.xml","="],
-  ["string.attribute-value.xml","\"foo\""],
+  ["string.attribute-value.xml","\""],
+  ["string.attribute-value.xml","foo\""],
   ["text.tag-whitespace.xml"," "],
   ["entity.other.attribute-name.xml","class"],
   ["keyword.operator.attribute-equals.xml","="],
-  ["string.attribute-value.xml","\"bar"]
+  ["string.attribute-value.xml","\""],
+  ["string.attribute-value.xml","bar"]
 ],[
    ["#tmp","html",{}],
   ["string.attribute-value.xml","  baz\""],
@@ -2258,7 +2264,8 @@
   ["text.tag-whitespace.xml"," "],
   ["entity.other.attribute-name.xml","id"],
   ["keyword.operator.attribute-equals.xml","="],
-  ["string.attribute-value.xml","\"foo\""]
+  ["string.attribute-value.xml","\""],
+  ["string.attribute-value.xml","foo\""]
 ],[
    ["#tmp","tag_stuff",{"tagName":"div","returnState":"html","htmlBlock":true,"isRaw":false},{}],
   ["text","*"],
@@ -2323,7 +2330,8 @@
   ["text.tag-whitespace.xml"," "],
   ["entity.other.attribute-name.xml","href"],
   ["keyword.operator.attribute-equals.xml","="],
-  ["string.attribute-value.xml","\"bar\""],
+  ["string.attribute-value.xml","\""],
+  ["string.attribute-value.xml","bar\""],
   ["meta.tag.punctuation.tag-close.xml",">"],
   ["text","*foo*"],
   ["meta.tag.punctuation.end-tag-open.xml","</"],
@@ -2405,7 +2413,8 @@
   ["text.tag-whitespace.xml"," "],
   ["entity.other.attribute-name.xml","href"],
   ["keyword.operator.attribute-equals.xml","="],
-  ["string.attribute-value.xml","\"foo\""],
+  ["string.attribute-value.xml","\""],
+  ["string.attribute-value.xml","foo\""],
   ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    ["#tmp","html",{}],
@@ -2451,7 +2460,8 @@
   ["text.tag-whitespace.xml"," "],
   ["entity.other.attribute-name.xml","class"],
   ["keyword.operator.attribute-equals.xml","="],
-  ["string.attribute-value.xml","\"foo\""],
+  ["string.attribute-value.xml","\""],
+  ["string.attribute-value.xml","foo\""],
   ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    ["#tmp","html",{}],
@@ -2555,7 +2565,8 @@
   ["text.tag-whitespace.xml"," "],
   ["entity.other.attribute-name.xml","language"],
   ["keyword.operator.attribute-equals.xml","="],
-  ["string.attribute-value.xml","\"haskell\""],
+  ["string.attribute-value.xml","\""],
+  ["string.attribute-value.xml","haskell\""],
   ["meta.tag.punctuation.tag-close.xml",">"],
   ["meta.tag.punctuation.tag-open.xml","<"],
   ["meta.tag.tag-name.xml","code"],
@@ -2597,7 +2608,8 @@
   ["text.tag-whitespace.xml"," "],
   ["entity.other.attribute-name.xml","type"],
   ["keyword.operator.attribute-equals.xml","="],
-  ["string.attribute-value.xml","\"text/javascript\""],
+  ["string.attribute-value.xml","\""],
+  ["string.attribute-value.xml","text/javascript\""],
   ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    ["#tmp","innerTagSpace",{"tagName":"script","returnState":"html","htmlBlock":true},{}],
@@ -2632,7 +2644,8 @@
   ["text.tag-whitespace.xml","  "],
   ["entity.other.attribute-name.xml","type"],
   ["keyword.operator.attribute-equals.xml","="],
-  ["string.attribute-value.xml","\"text/css\""],
+  ["string.attribute-value.xml","\""],
+  ["string.attribute-value.xml","text/css\""],
   ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    ["#tmp","innerTagSpace",{"tagName":"style","returnState":"html","htmlBlock":true},{}],
@@ -2669,7 +2682,8 @@
   ["text.tag-whitespace.xml","  "],
   ["entity.other.attribute-name.xml","type"],
   ["keyword.operator.attribute-equals.xml","="],
-  ["string.attribute-value.xml","\"text/css\""],
+  ["string.attribute-value.xml","\""],
+  ["string.attribute-value.xml","text/css\""],
   ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start"
@@ -2978,7 +2992,8 @@
   ["text.tag-whitespace.xml"," "],
   ["entity.other.attribute-name.xml","href"],
   ["keyword.operator.attribute-equals.xml","="],
-  ["string.attribute-value.xml","\"bar\""],
+  ["string.attribute-value.xml","\""],
+  ["string.attribute-value.xml","bar\""],
   ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start",
@@ -6067,7 +6082,8 @@
   ["text.tag-whitespace.xml"," "],
   ["entity.other.attribute-name.xml","href"],
   ["keyword.operator.attribute-equals.xml","="],
-  ["string.attribute-value.xml","\"/bar\\/)\""],
+  ["string.attribute-value.xml","\""],
+  ["string.attribute-value.xml","/bar\\/)\""],
   ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start"
@@ -6607,7 +6623,8 @@
   ["text.tag-whitespace.xml"," "],
   ["entity.other.attribute-name.xml","href"],
   ["keyword.operator.attribute-equals.xml","="],
-  ["string.attribute-value.xml","\"`\""],
+  ["string.attribute-value.xml","\""],
+  ["string.attribute-value.xml","`\""],
   ["meta.tag.punctuation.tag-close.xml",">"],
   ["text","`"]
 ],[
@@ -8255,11 +8272,13 @@
   ["text.tag-whitespace.xml"," "],
   ["entity.other.attribute-name.xml","src"],
   ["keyword.operator.attribute-equals.xml","="],
-  ["string.attribute-value.xml","\"foo\""],
+  ["string.attribute-value.xml","\""],
+  ["string.attribute-value.xml","foo\""],
   ["text.tag-whitespace.xml"," "],
   ["entity.other.attribute-name.xml","title"],
   ["keyword.operator.attribute-equals.xml","="],
-  ["string.attribute-value.xml","\"*\""],
+  ["string.attribute-value.xml","\""],
+  ["string.attribute-value.xml","*\""],
   ["meta.tag.punctuation.tag-close.xml","/>"]
 ],[
    ["#tmp","start","emphasisAsterisk",{"kind":"scope","type":"begin","state":"emphasisAsterisk","outerScope":"string.emphasis","innerScope":"string.emphasis","contentToken":"string.emphasis","token":"string.emphasis","source":"(?<=[^\\s])[*](?=[\\s]|$)|(?<=[^\\s*_!\"#$%&'()+,\\-./:;<=>?@\\[\\]^`{|}~¡§«¶·»¿;·՚-՟։֊־׀׃׆׳״؉؊،؍؛؞؟٪-٭۔܀-܍߷-߹࠰-࠾࡞।॥॰૰෴๏๚๛༄-༒༔༺-༽྅࿐-࿔࿙࿚၊-၏჻፠-፨᐀᙭᙮᚛᚜᛫-᛭᜵᜶។-៖៘-៚᠀-᠊᥄᥅᨞᨟᪠-᪦᪨-᪭᭚-᭠᯼-᯿᰻-᰿᱾᱿᳀-᳇᳓‐-‧‰-⁃⁅-⁑⁓-⁞⁽⁾₍₎⌈-⌋〈〉❨-❵⟅⟆⟦-⟯⦃-⦘⧘-⧛⧼⧽⳹-⳼⳾⳿⵰⸀-⸮⸰-⹂、-〃〈-】〔-〟〰〽゠・꓾꓿꘍-꘏꙳꙾꛲-꛷꡴-꡷꣎꣏꣸-꣺꣼꤮꤯꥟꧁-꧍꧞꧟꩜-꩟꫞꫟꫰꫱꯫﴾﴿︐-︙︰-﹒﹔-﹡﹣﹨﹪﹫！-＃％-＊，-／：；？＠［-］＿｛｝｟-･]|\ud800[\udd00-\udd02\udf9f\udfd0]|𐕯|\ud802[\udc57\udd1f\udd3f\ude50-\ude58\ude7f\udef0-\udef6\udf39-\udf3f\udf99-\udf9c]|\ud804[\udc47-\udc4d\udcbb\udcbc\udcbe-\udcc1\udd40-\udd43\udd74\udd75\uddc5-\uddc9\uddcd\udddb\udddd-\udddf\ude38-\ude3d\udea9]|\ud805[\udcc6\uddc1-\uddd7\ude41-\ude43\udf3c-\udf3e]|\ud809[\udc70-\udc74]|\ud81a[\ude6e\ude6f\udef5\udf37-\udf3b\udf44]|𛲟|\ud836[\ude87-\ude8b])[*](?![*](?=[^\\s*_!\"#$%&'()+,\\-./:;<=>?@\\[\\]^`{|}~¡§«¶·»¿;·՚-՟։֊־׀׃׆׳״؉؊،؍؛؞؟٪-٭۔܀-܍߷-߹࠰-࠾࡞।॥॰૰෴๏๚๛༄-༒༔༺-༽྅࿐-࿔࿙࿚၊-၏჻፠-፨᐀᙭᙮᚛᚜᛫-᛭᜵᜶។-៖៘-៚᠀-᠊᥄᥅᨞᨟᪠-᪦᪨-᪭᭚-᭠᯼-᯿᰻-᰿᱾᱿᳀-᳇᳓‐-‧‰-⁃⁅-⁑⁓-⁞⁽⁾₍₎⌈-⌋〈〉❨-❵⟅⟆⟦-⟯⦃-⦘⧘-⧛⧼⧽⳹-⳼⳾⳿⵰⸀-⸮⸰-⹂、-〃〈-】〔-〟〰〽゠・꓾꓿꘍-꘏꙳꙾꛲-꛷꡴-꡷꣎꣏꣸-꣺꣼꤮꤯꥟꧁-꧍꧞꧟꩜-꩟꫞꫟꫰꫱꯫﴾﴿︐-︙︰-﹒﹔-﹡﹣﹨﹪﹫！-＃％-＊，-／：；？＠［-］＿｛｝｟-･]|\ud800[\udd00-\udd02\udf9f\udfd0]|𐕯|\ud802[\udc57\udd1f\udd3f\ude50-\ude58\ude7f\udef0-\udef6\udf39-\udf3f\udf99-\udf9c]|\ud804[\udc47-\udc4d\udcbb\udcbc\udcbe-\udcc1\udd40-\udd43\udd74\udd75\uddc5-\uddc9\uddcd\udddb\udddd-\udddf\ude38-\ude3d\udea9]|\ud805[\udcc6\uddc1-\uddd7\ude41-\ude43\udf3c-\udf3e]|\ud809[\udc70-\udc74]|\ud81a[\ude6e\ude6f\udef5\udf37-\udf3b\udf44]|𛲟|\ud836[\ude87-\ude8b]))|(?<=[^\\s])[*](?=[!\"#$%&'()+,\\-./:;<=>?@\\[\\]^`{|}~¡§«¶·»¿;·՚-՟։֊־׀׃׆׳״؉؊،؍؛؞؟٪-٭۔܀-܍߷-߹࠰-࠾࡞।॥॰૰෴๏๚๛༄-༒༔༺-༽྅࿐-࿔࿙࿚၊-၏჻፠-፨᐀᙭᙮᚛᚜᛫-᛭᜵᜶។-៖៘-៚᠀-᠊᥄᥅᨞᨟᪠-᪦᪨-᪭᭚-᭠᯼-᯿᰻-᰿᱾᱿᳀-᳇᳓‐-‧‰-⁃⁅-⁑⁓-⁞⁽⁾₍₎⌈-⌋〈〉❨-❵⟅⟆⟦-⟯⦃-⦘⧘-⧛⧼⧽⳹-⳼⳾⳿⵰⸀-⸮⸰-⹂、-〃〈-】〔-〟〰〽゠・꓾꓿꘍-꘏꙳꙾꛲-꛷꡴-꡷꣎꣏꣸-꣺꣼꤮꤯꥟꧁-꧍꧞꧟꩜-꩟꫞꫟꫰꫱꯫﴾﴿︐-︙︰-﹒﹔-﹡﹣﹨﹪﹫！-＃％-＊，-／：；？＠［-］＿｛｝｟-･]|\ud800[\udd00-\udd02\udf9f\udfd0]|𐕯|\ud802[\udc57\udd1f\udd3f\ude50-\ude58\ude7f\udef0-\udef6\udf39-\udf3f\udf99-\udf9c]|\ud804[\udc47-\udc4d\udcbb\udcbc\udcbe-\udcc1\udd40-\udd43\udd74\udd75\uddc5-\uddc9\uddcd\udddb\udddd-\udddf\ude38-\ude3d\udea9]|\ud805[\udcc6\uddc1-\uddd7\ude41-\ude43\udf3c-\udf3e]|\ud809[\udc70-\udc74]|\ud81a[\ude6e\ude6f\udef5\udf37-\udf3b\udf44]|𛲟|\ud836[\ude87-\ude8b])(?![*](?=[^\\s*_!\"#$%&'()+,\\-./:;<=>?@\\[\\]^`{|}~¡§«¶·»¿;·՚-՟։֊־׀׃׆׳״؉؊،؍؛؞؟٪-٭۔܀-܍߷-߹࠰-࠾࡞।॥॰૰෴๏๚๛༄-༒༔༺-༽྅࿐-࿔࿙࿚၊-၏჻፠-፨᐀᙭᙮᚛᚜᛫-᛭᜵᜶។-៖៘-៚᠀-᠊᥄᥅᨞᨟᪠-᪦᪨-᪭᭚-᭠᯼-᯿᰻-᰿᱾᱿᳀-᳇᳓‐-‧‰-⁃⁅-⁑⁓-⁞⁽⁾₍₎⌈-⌋〈〉❨-❵⟅⟆⟦-⟯⦃-⦘⧘-⧛⧼⧽⳹-⳼⳾⳿⵰⸀-⸮⸰-⹂、-〃〈-】〔-〟〰〽゠・꓾꓿꘍-꘏꙳꙾꛲-꛷꡴-꡷꣎꣏꣸-꣺꣼꤮꤯꥟꧁-꧍꧞꧟꩜-꩟꫞꫟꫰꫱꯫﴾﴿︐-︙︰-﹒﹔-﹡﹣﹨﹪﹫！-＃％-＊，-／：；？＠［-］＿｛｝｟-･]|\ud800[\udd00-\udd02\udf9f\udfd0]|𐕯|\ud802[\udc57\udd1f\udd3f\ude50-\ude58\ude7f\udef0-\udef6\udf39-\udf3f\udf99-\udf9c]|\ud804[\udc47-\udc4d\udcbb\udcbc\udcbe-\udcc1\udd40-\udd43\udd74\udd75\uddc5-\uddc9\uddcd\udddb\udddd-\udddf\ude38-\ude3d\udea9]|\ud805[\udcc6\uddc1-\uddd7\ude41-\ude43\udf3c-\udf3e]|\ud809[\udc70-\udc74]|\ud81a[\ude6e\ude6f\udef5\udf37-\udf3b\udf44]|𛲟|\ud836[\ude87-\ude8b]))","flags":"","captures":[]},"paragraph"]
@@ -8277,7 +8296,8 @@
   ["text.tag-whitespace.xml"," "],
   ["entity.other.attribute-name.xml","href"],
   ["keyword.operator.attribute-equals.xml","="],
-  ["string.attribute-value.xml","\"**\""],
+  ["string.attribute-value.xml","\""],
+  ["string.attribute-value.xml","**\""],
   ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    ["#tmp","start","strongAsterisk",{"kind":"scope","type":"begin","state":"strongAsterisk","outerScope":"string.strong","innerScope":"string.strong","contentToken":"string.strong","token":"string.strong","source":"(?<=[^\\s])[*]{2}(?=[\\s]|$)|(?<=[^\\s*_!\"#$%&'()+,\\-./:;<=>?@\\[\\]^`{|}~¡§«¶·»¿;·՚-՟։֊־׀׃׆׳״؉؊،؍؛؞؟٪-٭۔܀-܍߷-߹࠰-࠾࡞।॥॰૰෴๏๚๛༄-༒༔༺-༽྅࿐-࿔࿙࿚၊-၏჻፠-፨᐀᙭᙮᚛᚜᛫-᛭᜵᜶។-៖៘-៚᠀-᠊᥄᥅᨞᨟᪠-᪦᪨-᪭᭚-᭠᯼-᯿᰻-᰿᱾᱿᳀-᳇᳓‐-‧‰-⁃⁅-⁑⁓-⁞⁽⁾₍₎⌈-⌋〈〉❨-❵⟅⟆⟦-⟯⦃-⦘⧘-⧛⧼⧽⳹-⳼⳾⳿⵰⸀-⸮⸰-⹂、-〃〈-】〔-〟〰〽゠・꓾꓿꘍-꘏꙳꙾꛲-꛷꡴-꡷꣎꣏꣸-꣺꣼꤮꤯꥟꧁-꧍꧞꧟꩜-꩟꫞꫟꫰꫱꯫﴾﴿︐-︙︰-﹒﹔-﹡﹣﹨﹪﹫！-＃％-＊，-／：；？＠［-］＿｛｝｟-･]|\ud800[\udd00-\udd02\udf9f\udfd0]|𐕯|\ud802[\udc57\udd1f\udd3f\ude50-\ude58\ude7f\udef0-\udef6\udf39-\udf3f\udf99-\udf9c]|\ud804[\udc47-\udc4d\udcbb\udcbc\udcbe-\udcc1\udd40-\udd43\udd74\udd75\uddc5-\uddc9\uddcd\udddb\udddd-\udddf\ude38-\ude3d\udea9]|\ud805[\udcc6\uddc1-\uddd7\ude41-\ude43\udf3c-\udf3e]|\ud809[\udc70-\udc74]|\ud81a[\ude6e\ude6f\udef5\udf37-\udf3b\udf44]|𛲟|\ud836[\ude87-\ude8b])[*]{2}|(?<=[^\\s])[*]{2}(?=[*_!\"#$%&'()+,\\-./:;<=>?@\\[\\]^`{|}~¡§«¶·»¿;·՚-՟։֊־׀׃׆׳״؉؊،؍؛؞؟٪-٭۔܀-܍߷-߹࠰-࠾࡞।॥॰૰෴๏๚๛༄-༒༔༺-༽྅࿐-࿔࿙࿚၊-၏჻፠-፨᐀᙭᙮᚛᚜᛫-᛭᜵᜶។-៖៘-៚᠀-᠊᥄᥅᨞᨟᪠-᪦᪨-᪭᭚-᭠᯼-᯿᰻-᰿᱾᱿᳀-᳇᳓‐-‧‰-⁃⁅-⁑⁓-⁞⁽⁾₍₎⌈-⌋〈〉❨-❵⟅⟆⟦-⟯⦃-⦘⧘-⧛⧼⧽⳹-⳼⳾⳿⵰⸀-⸮⸰-⹂、-〃〈-】〔-〟〰〽゠・꓾꓿꘍-꘏꙳꙾꛲-꛷꡴-꡷꣎꣏꣸-꣺꣼꤮꤯꥟꧁-꧍꧞꧟꩜-꩟꫞꫟꫰꫱꯫﴾﴿︐-︙︰-﹒﹔-﹡﹣﹨﹪﹫！-＃％-＊，-／：；？＠［-］＿｛｝｟-･]|\ud800[\udd00-\udd02\udf9f\udfd0]|𐕯|\ud802[\udc57\udd1f\udd3f\ude50-\ude58\ude7f\udef0-\udef6\udf39-\udf3f\udf99-\udf9c]|\ud804[\udc47-\udc4d\udcbb\udcbc\udcbe-\udcc1\udd40-\udd43\udd74\udd75\uddc5-\uddc9\uddcd\udddb\udddd-\udddf\ude38-\ude3d\udea9]|\ud805[\udcc6\uddc1-\uddd7\ude41-\ude43\udf3c-\udf3e]|\ud809[\udc70-\udc74]|\ud81a[\ude6e\ude6f\udef5\udf37-\udf3b\udf44]|𛲟|\ud836[\ude87-\ude8b])","flags":"","captures":[]},"paragraph"]
@@ -8295,7 +8315,8 @@
   ["text.tag-whitespace.xml"," "],
   ["entity.other.attribute-name.xml","href"],
   ["keyword.operator.attribute-equals.xml","="],
-  ["string.attribute-value.xml","\"__\""],
+  ["string.attribute-value.xml","\""],
+  ["string.attribute-value.xml","__\""],
   ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    ["#tmp","start","strongUnderscore",{"kind":"scope","type":"begin","state":"strongUnderscore","outerScope":"string.strong","innerScope":"string.strong","contentToken":"string.strong","token":"string.strong","source":"(?<=[^\\s*_!\"#$%&'()+,\\-./:;<=>?@\\[\\]^`{|}~¡§«¶·»¿;·՚-՟։֊־׀׃׆׳״؉؊،؍؛؞؟٪-٭۔܀-܍߷-߹࠰-࠾࡞।॥॰૰෴๏๚๛༄-༒༔༺-༽྅࿐-࿔࿙࿚၊-၏჻፠-፨᐀᙭᙮᚛᚜᛫-᛭᜵᜶។-៖៘-៚᠀-᠊᥄᥅᨞᨟᪠-᪦᪨-᪭᭚-᭠᯼-᯿᰻-᰿᱾᱿᳀-᳇᳓‐-‧‰-⁃⁅-⁑⁓-⁞⁽⁾₍₎⌈-⌋〈〉❨-❵⟅⟆⟦-⟯⦃-⦘⧘-⧛⧼⧽⳹-⳼⳾⳿⵰⸀-⸮⸰-⹂、-〃〈-】〔-〟〰〽゠・꓾꓿꘍-꘏꙳꙾꛲-꛷꡴-꡷꣎꣏꣸-꣺꣼꤮꤯꥟꧁-꧍꧞꧟꩜-꩟꫞꫟꫰꫱꯫﴾﴿︐-︙︰-﹒﹔-﹡﹣﹨﹪﹫！-＃％-＊，-／：；？＠［-］＿｛｝｟-･]|\ud800[\udd00-\udd02\udf9f\udfd0]|𐕯|\ud802[\udc57\udd1f\udd3f\ude50-\ude58\ude7f\udef0-\udef6\udf39-\udf3f\udf99-\udf9c]|\ud804[\udc47-\udc4d\udcbb\udcbc\udcbe-\udcc1\udd40-\udd43\udd74\udd75\uddc5-\uddc9\uddcd\udddb\udddd-\udddf\ude38-\ude3d\udea9]|\ud805[\udcc6\uddc1-\uddd7\ude41-\ude43\udf3c-\udf3e]|\ud809[\udc70-\udc74]|\ud81a[\ude6e\ude6f\udef5\udf37-\udf3b\udf44]|𛲟|\ud836[\ude87-\ude8b])[_]{2}(?=[\\s*_!\"#$%&'()+,\\-./:;<=>?@\\[\\]^`{|}~¡§«¶·»¿;·՚-՟։֊־׀׃׆׳״؉؊،؍؛؞؟٪-٭۔܀-܍߷-߹࠰-࠾࡞।॥॰૰෴๏๚๛༄-༒༔༺-༽྅࿐-࿔࿙࿚၊-၏჻፠-፨᐀᙭᙮᚛᚜᛫-᛭᜵᜶។-៖៘-៚᠀-᠊᥄᥅᨞᨟᪠-᪦᪨-᪭᭚-᭠᯼-᯿᰻-᰿᱾᱿᳀-᳇᳓‐-‧‰-⁃⁅-⁑⁓-⁞⁽⁾₍₎⌈-⌋〈〉❨-❵⟅⟆⟦-⟯⦃-⦘⧘-⧛⧼⧽⳹-⳼⳾⳿⵰⸀-⸮⸰-⹂、-〃〈-】〔-〟〰〽゠・꓾꓿꘍-꘏꙳꙾꛲-꛷꡴-꡷꣎꣏꣸-꣺꣼꤮꤯꥟꧁-꧍꧞꧟꩜-꩟꫞꫟꫰꫱꯫﴾﴿︐-︙︰-﹒﹔-﹡﹣﹨﹪﹫！-＃％-＊，-／：；？＠［-］＿｛｝｟-･]|\ud800[\udd00-\udd02\udf9f\udfd0]|𐕯|\ud802[\udc57\udd1f\udd3f\ude50-\ude58\ude7f\udef0-\udef6\udf39-\udf3f\udf99-\udf9c]|\ud804[\udc47-\udc4d\udcbb\udcbc\udcbe-\udcc1\udd40-\udd43\udd74\udd75\uddc5-\uddc9\uddcd\udddb\udddd-\udddf\ude38-\ude3d\udea9]|\ud805[\udcc6\uddc1-\uddd7\ude41-\ude43\udf3c-\udf3e]|\ud809[\udc70-\udc74]|\ud81a[\ude6e\ude6f\udef5\udf37-\udf3b\udf44]|𛲟|\ud836[\ude87-\ude8b]|$)|(?<=[^\\s])[_]{2}(?=[\\s*_!\"#$%&'()+,\\-./:;<=>?@\\[\\]^`{|}~¡§«¶·»¿;·՚-՟։֊־׀׃׆׳״؉؊،؍؛؞؟٪-٭۔܀-܍߷-߹࠰-࠾࡞।॥॰૰෴๏๚๛༄-༒༔༺-༽྅࿐-࿔࿙࿚၊-၏჻፠-፨᐀᙭᙮᚛᚜᛫-᛭᜵᜶។-៖៘-៚᠀-᠊᥄᥅᨞᨟᪠-᪦᪨-᪭᭚-᭠᯼-᯿᰻-᰿᱾᱿᳀-᳇᳓‐-‧‰-⁃⁅-⁑⁓-⁞⁽⁾₍₎⌈-⌋〈〉❨-❵⟅⟆⟦-⟯⦃-⦘⧘-⧛⧼⧽⳹-⳼⳾⳿⵰⸀-⸮⸰-⹂、-〃〈-】〔-〟〰〽゠・꓾꓿꘍-꘏꙳꙾꛲-꛷꡴-꡷꣎꣏꣸-꣺꣼꤮꤯꥟꧁-꧍꧞꧟꩜-꩟꫞꫟꫰꫱꯫﴾﴿︐-︙︰-﹒﹔-﹡﹣﹨﹪﹫！-＃％-＊，-／：；？＠［-］＿｛｝｟-･]|\ud800[\udd00-\udd02\udf9f\udfd0]|𐕯|\ud802[\udc57\udd1f\udd3f\ude50-\ude58\ude7f\udef0-\udef6\udf39-\udf3f\udf99-\udf9c]|\ud804[\udc47-\udc4d\udcbb\udcbc\udcbe-\udcc1\udd40-\udd43\udd74\udd75\uddc5-\uddc9\uddcd\udddb\udddd-\udddf\ude38-\ude3d\udea9]|\ud805[\udcc6\uddc1-\uddd7\ude41-\ude43\udf3c-\udf3e]|\ud809[\udc70-\udc74]|\ud81a[\ude6e\ude6f\udef5\udf37-\udf3b\udf44]|𛲟|\ud836[\ude87-\ude8b]|$)","flags":"","captures":[]},"paragraph"]
@@ -9127,7 +9148,8 @@
   ["text.tag-whitespace.xml"," "],
   ["entity.other.attribute-name.xml","attr"],
   ["keyword.operator.attribute-equals.xml","="],
-  ["string.attribute-value.xml","\"](baz)\""],
+  ["string.attribute-value.xml","\""],
+  ["string.attribute-value.xml","](baz)\""],
   ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    ["#tmp","start","linkLabel","paragraph"]
@@ -9419,7 +9441,8 @@
   ["text.tag-whitespace.xml"," "],
   ["entity.other.attribute-name.xml","attr"],
   ["keyword.operator.attribute-equals.xml","="],
-  ["string.attribute-value.xml","\"][ref]\""],
+  ["string.attribute-value.xml","\""],
+  ["string.attribute-value.xml","][ref]\""],
   ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    ["#tmp","start","linkLabel","paragraph"]
@@ -11100,7 +11123,8 @@
    ["#tmp","html",{}],
   ["entity.other.attribute-name.xml","data"],
   ["keyword.operator.attribute-equals.xml","="],
-  ["string.attribute-value.xml","\"foo\""],
+  ["string.attribute-value.xml","\""],
+  ["string.attribute-value.xml","foo\""],
   ["text.tag-whitespace.xml"," "],
   ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
@@ -11118,13 +11142,15 @@
   ["text.tag-whitespace.xml"," "],
   ["entity.other.attribute-name.xml","foo"],
   ["keyword.operator.attribute-equals.xml","="],
-  ["string.attribute-value.xml","\"bar\""],
+  ["string.attribute-value.xml","\""],
+  ["string.attribute-value.xml","bar\""],
   ["text.tag-whitespace.xml"," "],
   ["entity.other.attribute-name.xml","bam"],
   ["text.tag-whitespace.xml"," "],
   ["keyword.operator.attribute-equals.xml","="],
   ["text.tag-whitespace.xml"," "],
-  ["string.attribute-value.xml","'baz <em>\"</em>'"]
+  ["string.attribute-value.xml","'"],
+  ["string.attribute-value.xml","baz <em>\"</em>'"]
 ],[
    ["#tmp","html",{}],
   ["entity.other.attribute-name.xml","_boolean"],
@@ -11150,7 +11176,8 @@
   ["text.tag-whitespace.xml"," "],
   ["entity.other.attribute-name.xml","src"],
   ["keyword.operator.attribute-equals.xml","="],
-  ["string.attribute-value.xml","\"foo.jpg\""],
+  ["string.attribute-value.xml","\""],
+  ["string.attribute-value.xml","foo.jpg\""],
   ["text.tag-whitespace.xml"," "],
   ["meta.tag.punctuation.tag-close.xml","/>"]
 ],[
@@ -11182,7 +11209,8 @@
   ["text","*#"],
   ["entity.other.attribute-name.xml","ref"],
   ["keyword.operator.attribute-equals.xml","="],
-  ["string.attribute-value.xml","\"hi\""],
+  ["string.attribute-value.xml","\""],
+  ["string.attribute-value.xml","hi\""],
   ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start"
@@ -11193,15 +11221,16 @@
 ],[
    "start"
 ],[
-   ["string.attribute-value.xml1","tag_stuff",{"tagName":"a","returnState":"html","htmlBlock":true,"isRaw":false},{}],
+   ["attribute_value_double",{"kind":"scope","type":"begin","state":"attribute_value_double","outerScope":"string.attribute-value.xml","innerScope":"string.attribute-value.xml","contentToken":"string.attribute-value.xml","token":"string.attribute-value.xml","source":"\"","flags":"","captures":[]},"tag_stuff",{"tagName":"a","returnState":"html","htmlBlock":true,"isRaw":false},{}],
   ["meta.tag.punctuation.tag-open.xml","<"],
   ["meta.tag.anchor.tag-name.xml","a"],
   ["text.tag-whitespace.xml"," "],
   ["entity.other.attribute-name.xml","href"],
   ["keyword.operator.attribute-equals.xml","="],
-  ["string.attribute-value.xml","\"hi'> <a href=hi'>"]
+  ["string.attribute-value.xml","\""],
+  ["string.attribute-value.xml","hi'> <a href=hi'>"]
 ],[
-   ["string.attribute-value.xml1","tag_stuff",{"tagName":"a","returnState":"html","htmlBlock":true,"isRaw":false},{}]
+   ["attribute_value_double",{"kind":"scope","type":"begin","state":"attribute_value_double","outerScope":"string.attribute-value.xml","innerScope":"string.attribute-value.xml","contentToken":"string.attribute-value.xml","token":"string.attribute-value.xml","source":"\"","flags":"","captures":[]},"tag_stuff",{"tagName":"a","returnState":"html","htmlBlock":true,"isRaw":false},{}]
 ],[
    "paragraph",
   ["text","  test 617"],
@@ -11249,7 +11278,8 @@
   ["text.tag-whitespace.xml"," "],
   ["entity.other.attribute-name.xml","href"],
   ["keyword.operator.attribute-equals.xml","="],
-  ["string.attribute-value.xml","'bar'"],
+  ["string.attribute-value.xml","'"],
+  ["string.attribute-value.xml","bar'"],
   ["entity.other.attribute-name.xml","title"],
   ["keyword.operator.attribute-equals.xml","="],
   ["string.unquoted.attribute-value.html","title"],
@@ -11286,7 +11316,8 @@
   ["text.tag-whitespace.xml"," "],
   ["entity.other.attribute-name.xml","href"],
   ["keyword.operator.attribute-equals.xml","="],
-  ["string.attribute-value.xml","\"foo\""],
+  ["string.attribute-value.xml","\""],
+  ["string.attribute-value.xml","foo\""],
   ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start"
@@ -11406,7 +11437,8 @@
   ["text.tag-whitespace.xml"," "],
   ["entity.other.attribute-name.xml","href"],
   ["keyword.operator.attribute-equals.xml","="],
-  ["string.attribute-value.xml","\"\\*\""],
+  ["string.attribute-value.xml","\""],
+  ["string.attribute-value.xml","\\*\""],
   ["meta.tag.punctuation.tag-close.xml",">"]
 ],[
    "start"
@@ -11417,15 +11449,18 @@
 ],[
    "start"
 ],[
-   ["string.attribute-value.xml1","tag_stuff",{"tagName":"a","returnState":"html","htmlBlock":true,"isRaw":false},{}],
+   ["attribute_value_double",{"kind":"scope","type":"begin","state":"attribute_value_double","outerScope":"string.attribute-value.xml","innerScope":"string.attribute-value.xml","contentToken":"string.attribute-value.xml","token":"string.attribute-value.xml","source":"\"","flags":"","captures":[]},"tag_stuff",{"tagName":"a","returnState":"html","htmlBlock":true,"isRaw":false},{}],
   ["meta.tag.punctuation.tag-open.xml","<"],
   ["meta.tag.anchor.tag-name.xml","a"],
   ["text.tag-whitespace.xml"," "],
   ["entity.other.attribute-name.xml","href"],
   ["keyword.operator.attribute-equals.xml","="],
-  ["string.attribute-value.xml","\"\\\"\">"]
+  ["string.attribute-value.xml","\""],
+  ["string.attribute-value.xml","\\\""],
+  ["string.attribute-value.xml","\""],
+  ["string.attribute-value.xml",">"]
 ],[
-   ["string.attribute-value.xml1","tag_stuff",{"tagName":"a","returnState":"html","htmlBlock":true,"isRaw":false},{}]
+   ["attribute_value_double",{"kind":"scope","type":"begin","state":"attribute_value_double","outerScope":"string.attribute-value.xml","innerScope":"string.attribute-value.xml","contentToken":"string.attribute-value.xml","token":"string.attribute-value.xml","source":"\"","flags":"","captures":[]},"tag_stuff",{"tagName":"a","returnState":"html","htmlBlock":true,"isRaw":false},{}]
 ],[
    "paragraph",
   ["text","  test 630"],
@@ -11559,13 +11594,14 @@
 ],[
    "start"
 ],[
-   ["string.attribute-value.xml1","tag_stuff",{"tagName":"a","returnState":"html","htmlBlock":true,"isRaw":false},{}],
+   ["attribute_value_double",{"kind":"scope","type":"begin","state":"attribute_value_double","outerScope":"string.attribute-value.xml","innerScope":"string.attribute-value.xml","contentToken":"string.attribute-value.xml","token":"string.attribute-value.xml","source":"\"","flags":"","captures":[]},"tag_stuff",{"tagName":"a","returnState":"html","htmlBlock":true,"isRaw":false},{}],
   ["meta.tag.punctuation.tag-open.xml","<"],
   ["meta.tag.anchor.tag-name.xml","a"],
   ["text.tag-whitespace.xml"," "],
   ["entity.other.attribute-name.xml","href"],
   ["keyword.operator.attribute-equals.xml","="],
-  ["string.attribute-value.xml","\"foo"]
+  ["string.attribute-value.xml","\""],
+  ["string.attribute-value.xml","foo"]
 ],[
    ["#tmp","html",{}],
   ["string.attribute-value.xml","bar\""],
@@ -11579,13 +11615,14 @@
 ],[
    "start"
 ],[
-   ["string.attribute-value.xml1","tag_stuff",{"tagName":"a","returnState":"html","htmlBlock":true,"isRaw":false},{}],
+   ["attribute_value_double",{"kind":"scope","type":"begin","state":"attribute_value_double","outerScope":"string.attribute-value.xml","innerScope":"string.attribute-value.xml","contentToken":"string.attribute-value.xml","token":"string.attribute-value.xml","source":"\"","flags":"","captures":[]},"tag_stuff",{"tagName":"a","returnState":"html","htmlBlock":true,"isRaw":false},{}],
   ["meta.tag.punctuation.tag-open.xml","<"],
   ["meta.tag.anchor.tag-name.xml","a"],
   ["text.tag-whitespace.xml"," "],
   ["entity.other.attribute-name.xml","href"],
   ["keyword.operator.attribute-equals.xml","="],
-  ["string.attribute-value.xml","\"foo\\"]
+  ["string.attribute-value.xml","\""],
+  ["string.attribute-value.xml","foo\\"]
 ],[
    ["#tmp","html",{}],
   ["string.attribute-value.xml","bar\""],

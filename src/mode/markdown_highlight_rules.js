@@ -1074,27 +1074,28 @@ var MarkdownHighlightRules = function () {
             }
         ],
         "attribute_value": [
-            {
-                token: "string.attribute-value.xml",
-                regex: "'",
-                push: [
-                    {
-                        token: "string.attribute-value.xml",
-                        regex: "'",
-                        next: "pop"
-                    }, {include: "attr_reference"}, {defaultToken: "string.attribute-value.xml"}
-                ]
-            }, {
-                token: "string.attribute-value.xml",
-                regex: '"',
-                push: [
-                    {
-                        token: "string.attribute-value.xml",
-                        regex: '"',
-                        next: "pop"
-                    }, {include: "attr_reference"}, {defaultToken: "string.attribute-value.xml"}
-                ]
-            }
+            createScopedRegionRule(
+                "string.attribute-value.xml",
+                /'/,
+                "attribute_value_single",
+                /'/,
+                "string.attribute-value.xml"
+            ),
+            createScopedRegionRule(
+                "string.attribute-value.xml",
+                /"/,
+                "attribute_value_double",
+                /"/,
+                "string.attribute-value.xml"
+            )
+        ],
+        "attribute_value_single": [
+            {include: "attr_reference"},
+            {defaultToken: "string.attribute-value.xml"}
+        ],
+        "attribute_value_double": [
+            {include: "attr_reference"},
+            {defaultToken: "string.attribute-value.xml"}
         ],
         attr_reference: [
             {
