@@ -1,8 +1,8 @@
+/*global Node, NodeFilter*/
 var oop = require("../lib/oop");
 var dom = require("../lib/dom");
 var lang = require("../lib/lang");
 var event = require("../lib/event");
-var useragent = require("../lib/useragent");
 var EventEmitter = require("../lib/event_emitter").EventEmitter;
 
 var CHAR_COUNT = 512;
@@ -238,7 +238,7 @@ class FontMetrics {
             if (Math.abs(delta) < 1e-10) {
                 // At 45 deg: Wt = |m00|*w + |m01|*h
                 // We use lineHeight as h and solve for w
-                h = this.config?.lineHeight || 0;
+                h = this.config && this.config.lineHeight || 0;
                 // Solve: w = (Wt - |m01|*h) / |m00|
                 w = (Wt - absM[1] * h) / absM[0];
             } else {
@@ -257,7 +257,7 @@ class FontMetrics {
             return { left: cx - w / 2, top: cy - h / 2, width: w, height: h };
         }
 
-        return recoverRect(transform, bbox)
+        return recoverRect(transform, bbox);
     }
 
     /**
@@ -321,7 +321,7 @@ class FontMetrics {
 
             var rangeRect = this.$scratchRange.getBoundingClientRect();
             if (this.renderer.$hasCssTransforms) {
-                var tr = this.getTransform()
+                var tr = this.getTransform();
                 var transformed = this.recoverRect(tr, rangeRect);
                 var leftOffset = this.renderer.gutterWidth + this.renderer.margin.left + this.renderer.$padding - this.renderer.scrollLeft;
                 return transformed.left - leftOffset + position.overflow * this.config.characterWidth;
@@ -410,7 +410,7 @@ class FontMetrics {
                 rects = fixedRects;
             }
             return rects;
-        }
+        };
         var self = this;
         function search(node) {
             if (node.nodeType === Node.TEXT_NODE) {
@@ -418,7 +418,7 @@ class FontMetrics {
                 for (var j = 0; j < textLength; j++) {
                     scratchRange.setStart(node, j);
                     if (/[\uDC00-\uDFFF]/.test(node.nodeValue.charAt(j)))
-                        j++ // skip low surrogate
+                        j++; // skip low surrogate
                     scratchRange.setEnd(node, j + 1);
                     let rect = scratchRange.getBoundingClientRect();
                     if (hasCssTransform) {
@@ -486,7 +486,7 @@ class FontMetrics {
                     var rangeRects = this.$scratchRange.getClientRects();
                     var hasCssTransform = true;
                     if (hasCssTransform) {
-                        var tr = this.getTransform()
+                        var tr = this.getTransform();
                         var rects = [];
                         for (var i = 0; i < rangeRects.length; i++) {
                             var rangeRect = this.recoverRect(tr, rangeRects[i]);
@@ -634,17 +634,6 @@ function recoverRect(transform, bbox) {
     return result;
 }
 
-const invert3x3 = (m) => {
-    var [a, b, c, d, e, f, g, h, i] = m;
-    var det = a * (e * i - f * h) - b * (d * i - f * g) + c * (d * h - e * g);
-    if (Math.abs(det) < 1e-14) return null;
-    var invDet = 1 / det;
-    return [
-        (e * i - f * h) * invDet, (c * h - b * i) * invDet, (b * f - c * e) * invDet,
-        (f * g - d * i) * invDet, (a * i - c * g) * invDet, (c * d - a * f) * invDet,
-        (d * h - e * g) * invDet, (g * b - a * h) * invDet, (a * e - b * d) * invDet
-    ];
-};
 var project = (m, px, py) => {
     var k = m[6] * px + m[7] * py + m[8];
     return [(m[0] * px + m[1] * py + m[2]) / k, (m[3] * px + m[4] * py + m[5]) / k];
@@ -660,9 +649,9 @@ function validateSolution(M, x, y, w, h, targetBbox) {
     ];
  
     return pts.every(p => {
-        var mapped = project(M, p[0], p[1])
+        var mapped = project(M, p[0], p[1]);
         return targetBbox.left - 0.5 <= mapped[0] && mapped[0] <= targetBbox.left + targetBbox.width + 0.5
-             && targetBbox.top - 0.5 <= mapped[1] && mapped[1] <= targetBbox.top + targetBbox.height + 0.5
+             && targetBbox.top - 0.5 <= mapped[1] && mapped[1] <= targetBbox.top + targetBbox.height + 0.5;
     });
 }
 

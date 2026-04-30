@@ -92,7 +92,7 @@ module.exports = {
             m0 - H1* t1, m1 - H2* t1, 0,
             m2 - H1* t2, m3 - H2* t2, 0,
             H1,          H2,          1
-        ] 
+        ];
         function project(M, point) {
             var px = point[0], py = point[1];
             var k = 1 / (M[6] * px + M[7] * py + M[8]);
