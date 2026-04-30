@@ -2759,7 +2759,8 @@
    "start"
 ],[
    "paragraph",
-  ["comment","<!-- foo -->"],
+  ["comment","<!--"],
+  ["comment"," foo -->"],
   ["string.emphasis","*bar*"]
 ],[
    "paragraph",
@@ -2795,15 +2796,16 @@
 ],[
    "start"
 ],[
-   "comment",
-  ["comment","<!-- Foo"]
+   ["htmlComment",{"kind":"scope","type":"begin","state":"htmlComment","outerScope":"comment","innerScope":"comment","contentToken":"comment","token":"comment","source":"-->","flags":"","captures":[]},"paragraph"],
+  ["comment","<!--"],
+  ["comment"," Foo"]
 ],[
-   "comment"
+   ["htmlComment",{"kind":"scope","type":"begin","state":"htmlComment","outerScope":"comment","innerScope":"comment","contentToken":"comment","token":"comment","source":"-->","flags":"","captures":[]},"paragraph"]
 ],[
-   "comment",
+   ["htmlComment",{"kind":"scope","type":"begin","state":"htmlComment","outerScope":"comment","innerScope":"comment","contentToken":"comment","token":"comment","source":"-->","flags":"","captures":[]},"paragraph"],
   ["comment","bar"]
 ],[
-   "start",
+   "paragraph",
   ["comment","   baz -->"]
 ],[
    "paragraph",
@@ -2899,9 +2901,10 @@
 ],[
    "start"
 ],[
-   "start",
+   "paragraph",
   ["text","  "],
-  ["comment","<!-- foo -->"]
+  ["comment","<!--"],
+  ["comment"," foo -->"]
 ],[
    "start"
 ],[
@@ -11328,11 +11331,12 @@
 ],[
    "start"
 ],[
-   "comment",
+   ["htmlComment",{"kind":"scope","type":"begin","state":"htmlComment","outerScope":"comment","innerScope":"comment","contentToken":"comment","token":"comment","source":"-->","flags":"","captures":[]},"paragraph"],
   ["text","foo "],
-  ["comment","<!-- this is a"]
+  ["comment","<!--"],
+  ["comment"," this is a"]
 ],[
-   "start",
+   "paragraph",
   ["comment","comment - with hyphen -->"]
 ],[
    "start"
@@ -11343,9 +11347,10 @@
 ],[
    "start"
 ],[
-   "start",
+   "paragraph",
   ["text","foo "],
-  ["comment","<!-- not a comment -- two hyphens -->"]
+  ["comment","<!--"],
+  ["comment"," not a comment -- two hyphens -->"]
 ],[
    "start"
 ],[
@@ -11355,15 +11360,17 @@
 ],[
    "start"
 ],[
-   "start",
+   "paragraph",
   ["text","foo "],
-  ["comment","<!--> foo -->"]
+  ["comment","<!--"],
+  ["comment","> foo -->"]
 ],[
    "start"
 ],[
-   "start",
+   "paragraph",
   ["text","foo "],
-  ["comment","<!-- foo--->"]
+  ["comment","<!--"],
+  ["comment"," foo--->"]
 ],[
    "start"
 ],[

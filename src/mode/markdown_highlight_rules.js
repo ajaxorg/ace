@@ -169,6 +169,9 @@ var MarkdownHighlightRules = function () {
             }
         };
     }
+    function createHtmlCommentRule() {
+        return createScopedRegionRule("comment", /<!--/, "htmlComment", /-->/, "comment");
+    }
     function createScopedRegionRule(token, regex, state, endRegex, contentToken) {
         return {
             token: token,
@@ -488,19 +491,7 @@ var MarkdownHighlightRules = function () {
             }, { // autolink
                 token: ["text", "url.underline", "text"],
                 regex: /(<)?((?:[-.\w+]+@[-a-z0-9]+(?:\.[-a-z0-9]+)*\.[a-z]+)|(?:[a-zA-Z][a-zA-Z0-9+.-]+:[\w\/]+))(>)?/
-            }, {include: "tag"}, {
-                token: "comment",
-                regex: /<!--/,
-                next: [
-                    {
-                        token: "comment",
-                        regex: /-->/,
-                        next: "start"
-                    }, {
-                        defaultToken: "comment"
-                    }
-                ]
-            }
+            }, {include: "tag"}, createHtmlCommentRule()
         ],
         "codeSpan": [
             {
@@ -509,6 +500,9 @@ var MarkdownHighlightRules = function () {
             }, {
                 defaultToken: "support.function"
             }
+        ],
+        "htmlComment": [
+            {defaultToken: "comment"}
         ],
         "emphasisAsterisk": [
             {include: "basic"}, {
@@ -906,19 +900,7 @@ var MarkdownHighlightRules = function () {
             {defaultToken: "support.function"}
         ],
         "html": [
-            {
-                token: "comment",
-                regex: /<!--/,
-                next: [
-                    {
-                        token: "comment",
-                        regex: /-->/,
-                        next: "start"
-                    }, {
-                        defaultToken: "comment"
-                    }
-                ]
-            }, {include: "tag"}, {
+            createHtmlCommentRule(), {include: "tag"}, {
                 token: "empty",
                 regex: /^\s*$/,
                 onMatch: function(value, state, stack) {
